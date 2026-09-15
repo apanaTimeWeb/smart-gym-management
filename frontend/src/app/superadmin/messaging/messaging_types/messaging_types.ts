@@ -41,25 +41,27 @@ export type MessagingTab = 'messages' | 'notifications';
 export const TenantMessageSchema = z.object({
   id: z.string(),
   tenantId: z.string(),
+  tenantName: z.string(),
+  channel: z.enum(['EMAIL', 'SMS', 'IN_APP']),
   subject: z.string(),
-  content: z.string(),
-  senderRole: z.string(),
-  isRead: z.boolean(),
+  body: z.string(),
+  status: z.enum(['SENT', 'DRAFT', 'FAILED', 'SCHEDULED']),
+  sentAt: z.string().nullable(),
+  scheduledAt: z.string().nullable(),
   createdAt: z.string()
 });
 
 export const SuperadminNotificationSchema = z.object({
   id: z.string(),
   title: z.string(),
-  message: z.string(),
-  type: z.enum(['INFO', 'WARNING', 'ERROR', 'SUCCESS']),
-  isRead: z.boolean(),
+  body: z.string(),
+  type: z.enum(['INFO', 'WARNING', 'CRITICAL']),
+  read: z.boolean(),
   createdAt: z.string()
 });
 
 export const MessagingTenantSchema = z.object({
   id: z.string(),
   name: z.string(),
-  contactEmail: z.string(),
-  unreadCount: z.number()
+  plan: z.string()
 });

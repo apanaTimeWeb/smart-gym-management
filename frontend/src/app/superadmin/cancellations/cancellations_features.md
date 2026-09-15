@@ -32,7 +32,7 @@ is the single most impactful cancellations-reduction workflow.
 | Cancellations Alert List | `/superadmin/cancellations` | View all at-risk tenants with risk level, score, last login, member drop, MRR | `SuperadminCancellationsMain`, `SuperadminCancellationsTable` | `GET /superadmin/cancellations` | ✅ Live (mock) |
 | KPI Summary | `/superadmin/cancellations` | See total at-risk count, critical count, high count, MRR at risk | `SuperadminCancellationsKPIs` | `GET /superadmin/cancellations/kpis` | ✅ Live (mock) |
 | Filter & Search | `/superadmin/cancellations` | Filter by risk level or action status; search by gym/owner name | `SuperadminCancellationsFilters` | — (client-side) | ✅ Live |
-| Update Action | `/superadmin/cancellations` | Set action status (PENDING/CONTACTED/RESOLVED/CANCELLATIONSED) + add notes | `SuperadminCancellationsActionModal` | `PATCH /superadmin/cancellations/:id/action` | ✅ Live (mock) |
+| Update Action | `/superadmin/cancellations` | Set action status (PENDING/CONTACTED/RESOLVED/CANCELLED) + add notes | `SuperadminCancellationsActionModal` | `PATCH /superadmin/cancellations/:id/action` | ✅ Live (mock) |
 | Email / Call | `/superadmin/cancellations` | Quick mailto/tel links on each row | `SuperadminCancellationsTable` | — (native links) | ✅ Live |
 
 ## Data and State Architecture

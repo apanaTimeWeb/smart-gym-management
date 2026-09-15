@@ -14,7 +14,7 @@ export const CANCELLATIONS_ACTION_STATUS_STYLES: Record<CancellationsActionStatu
   PENDING: 'bg-warning-bg text-warning',
   CONTACTED: 'bg-info-bg text-info',
   RESOLVED: 'bg-success-bg text-success',
-  CANCELLATIONSED: 'bg-danger-bg text-danger',
+  CANCELLED: 'bg-danger-bg text-danger',
 };
 
 export const KPI_CARD_GRADIENT = 'linear-gradient(180deg, var(--warning-bg), transparent)';

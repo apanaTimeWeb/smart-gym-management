@@ -57,3 +57,17 @@ export interface BroadcastsEmptyStateProps {
   onCreateClick: () => void;
 }
 
+
+export const BroadcastResponseSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  content: z.string(),
+  status: z.enum(['SENT', 'SCHEDULED', 'DRAFT']),
+  targetGymIds: z.array(z.string()),
+  scheduledDate: z.string().nullable().optional(),
+  sentDate: z.string().nullable().optional(),
+  totalRecipients: z.number().optional(),
+  deliveredCount: z.number().optional(),
+  failedCount: z.number().optional(),
+  audience: z.enum(['ALL_TENANTS', 'PRO_ONLY', 'SUSPENDED_ONLY']).optional(),
+});

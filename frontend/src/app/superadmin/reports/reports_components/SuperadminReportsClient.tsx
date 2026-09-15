@@ -101,12 +101,12 @@ export default function SuperadminReportsClient() {
     if (tab === 'revenue') {
       csvRows = [
         ['Month', 'Monthly Income', 'New Revenue', 'Lost Income', 'Net Revenue', 'Gyms'].join(','),
-        ...revenueData.map(r => [r.month, r.mrr, r.newRevenue, r.cancellationsedRevenue, r.netRevenue, r.tenantCount].join(','))
+        ...revenueData.map(r => [r.month, r.mrr, r.newRevenue, r.cancelledRevenue, r.netRevenue, r.tenantCount].join(','))
       ];
     } else if (tab === 'cancellations') {
       csvRows = [
         ['Gym', 'Owner', 'Plan', 'Left On', 'Reason', 'Lost Monthly Income', 'Days Active'].join(','),
-        ...cancellationsData.map(c => [c.gymName, c.ownerName, c.plan, c.cancellationsedAt, c.reason, c.mrr, c.daysActive].join(','))
+        ...cancellationsData.map(c => [c.gymName, c.ownerName, c.plan, c.cancelledAt, c.reason, c.mrr, c.daysActive].join(','))
       ];
     } else {
       csvRows = [
@@ -130,7 +130,7 @@ export default function SuperadminReportsClient() {
 
   const lastRow = revenueData.length > 0 ? revenueData[revenueData.length - 1] : { mrr: 0 };
   const totalMRR = lastRow?.mrr || 0;
-  const totalCancellationsedRevenue = cancellationsData.reduce((s, c) => s + c.mrr, 0);
+  const totalCancelledRevenue = cancellationsData.reduce((s, c) => s + c.mrr, 0);
   const avgHealthScore = healthData.length > 0 ? Math.round(healthData.reduce((s, h) => s + h.score, 0) / healthData.length) : 0;
 
   const dateSuffixMap: Record<string, string> = {
@@ -174,7 +174,7 @@ export default function SuperadminReportsClient() {
 
       <SuperadminReportsSummaryCards
         totalMRR={totalMRR}
-        totalCancellationsedRevenue={totalCancellationsedRevenue}
+        totalCancelledRevenue={totalCancelledRevenue}
         cancellationsCount={cancellationsData.length}
         avgHealthScore={avgHealthScore}
         healthDataLength={healthData.length}
@@ -246,7 +246,7 @@ export default function SuperadminReportsClient() {
       </div>
 
       {tab === 'revenue' && <SuperadminReportsRevenueTab revenueData={revenueData} />}
-      {tab === 'cancellations' && <SuperadminReportsCancellationsTab cancellationsData={cancellationsData} filteredCancellationsData={filteredCancellationsData} totalCancellationsedRevenue={totalCancellationsedRevenue} avgDaysActive={avgDaysActive} />}
+      {tab === 'cancellations' && <SuperadminReportsCancellationsTab cancellationsData={cancellationsData} filteredCancellationsData={filteredCancellationsData} totalCancelledRevenue={totalCancelledRevenue} avgDaysActive={avgDaysActive} />}
       {tab === 'health' && <SuperadminReportsHealthTab sortedHealthData={sortedHealthData} />}
     </div>
   );

@@ -1,11 +1,10 @@
 import { z } from 'zod';
-// RESPONSIBILITY: TypeScript types for the Reports module.
 
 export interface RevenueRow {
   month: string;
   mrr: number;
   newRevenue: number;
-  cancellationsedRevenue: number;
+  cancelledRevenue: number;
   netRevenue: number;
   tenantCount: number;
 }
@@ -15,7 +14,7 @@ export interface CancellationsRecord {
   gymName: string;
   ownerName: string;
   plan: string;
-  cancellationsedAt: string;
+  cancelledAt: string;
   reason: string;
   mrr: number;
   daysActive: number;
@@ -34,31 +33,37 @@ export interface TenantHealthScore {
   supportTickets: number;
 }
 
-/** Tab identifiers for the reports page. */
 export type ReportsTab = 'revenue' | 'cancellations' | 'health';
 
-
 export const RevenueRowSchema = z.object({
-  id: z.string(),
-  date: z.string(),
-  amount: z.number(),
-  source: z.string(),
-  tenantId: z.string().optional()
+  month: z.string(),
+  mrr: z.number(),
+  newRevenue: z.number(),
+  cancelledRevenue: z.number(),
+  netRevenue: z.number(),
+  tenantCount: z.number()
 });
 
 export const CancellationsRecordSchema = z.object({
   id: z.string(),
-  tenantId: z.string(),
-  tenantName: z.string(),
-  cancellationsDate: z.string(),
+  gymName: z.string(),
+  ownerName: z.string(),
+  plan: z.string(),
+  cancelledAt: z.string(),
   reason: z.string(),
-  lifetimeValue: z.number()
+  mrr: z.number(),
+  daysActive: z.number()
 });
 
 export const TenantHealthScoreSchema = z.object({
-  tenantId: z.string(),
-  tenantName: z.string(),
+  id: z.string(),
+  gymName: z.string(),
+  plan: z.string(),
   score: z.number(),
-  trend: z.enum(['UP', 'DOWN', 'STABLE']),
-  lastCalculated: z.string()
+  grade: z.enum(['A', 'B', 'C', 'D', 'F']),
+  memberCount: z.number(),
+  lastLogin: z.string(),
+  paymentHealth: z.enum(['GOOD', 'AT_RISK', 'OVERDUE']),
+  featureUsage: z.number(),
+  supportTickets: z.number()
 });

@@ -95,7 +95,7 @@ export const CANCELLATIONS_WIN_BACK_TEMPLATES: Record<WinBackTemplateTier, { lab
   },
 };
 
-export const MOCK_CANCELLATIONSED_MEMBERS: ChurnedMember[] = [
+export const MOCK_CANCELLED_MEMBERS: ChurnedMember[] = [
   { memberId: 'EX001', name: 'Ravi Shankar',   phone: '9876543222', email: 'ravi@email.com',    plan: 'Monthly Premium', exitDate: '2025-09-02', daysSinceExit: 7,  reason: 'price',        lastContactedAt: null,                 recovered: false, lifetimeValue: 5000 },
   { memberId: 'EX002', name: 'Anita Desai',    phone: '9876543223', email: 'anita@email.com',   plan: 'Quarterly Elite', exitDate: '2025-08-20', daysSinceExit: 20, reason: 'relocation',   lastContactedAt: '2025-08-25T10:00:00Z', recovered: false, lifetimeValue: 12000 },
   { memberId: 'EX003', name: 'Sanjay Patel',   phone: '9876543224', email: 'sanjay@email.com',  plan: 'Monthly Basic',   exitDate: '2025-08-10', daysSinceExit: 30, reason: 'schedule',     lastContactedAt: null,                 recovered: false, lifetimeValue: 3000 },

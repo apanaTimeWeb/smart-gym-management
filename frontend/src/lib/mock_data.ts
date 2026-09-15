@@ -248,8 +248,8 @@ const INFRASTRUCTURE = [
 
 // ─── churn alerts ─────────────────────────────────────────────────────────────
 const CANCELLATIONS_ALERTS = [
-  { id: 'ca1', tenantId: 't1', tenantName: 'FitPulse Fitness', riskScore: 85, reason: 'Drop in active members', lastLoginAt: '2025-01-10T00:00:00Z', mrr: 120000 },
-  { id: 'ca2', tenantId: 't3', tenantName: 'Zenith Health Club', riskScore: 92, reason: 'Missed payment', lastLoginAt: '2024-12-15T00:00:00Z', mrr: 45000 },
+  { id: 'c1', tenantId: 't1', gymName: 'FitPulse Fitness', ownerName: 'Rajesh', adminEmail: 'admin@fitpulse.com', phone: '1234567890', plan: 'Basic', riskLevel: 'HIGH', actionStatus: 'PENDING', riskScore: 85, lastLoginDays: 14, memberDrop: 10, paymentFailures: 0, renewalDaysLeft: 5, mrrAtRisk: 1000, notes: '', flaggedAt: '2025-01-01T00:00:00Z' },
+  { id: 'c2', tenantId: 't2', gymName: 'IronCore Gym', ownerName: 'Sunita', adminEmail: 'admin@ironcore.com', phone: '1234567890', plan: 'Pro', riskLevel: 'LOW', actionStatus: 'CONTACTED', riskScore: 45, lastLoginDays: 2, memberDrop: 20, paymentFailures: 0, renewalDaysLeft: 10, mrrAtRisk: 2000, notes: '', flaggedAt: '2025-01-01T00:00:00Z' }
 ];
 
 // ─── superadmin dashboard ─────────────────────────────────────────────────────
@@ -355,20 +355,32 @@ const SUPERADMIN_COUPONS = [
 ];
 
 // ─── superadmin messaging ─────────────────────────────────────────────────────
-const MESSAGING = [
-  { id: 'm1', tenantId: 't1', tenantName: 'FitLife', status: 'ACTIVE', lastActive: '2025-01-01T00:00:00Z', unreadCount: 2, messages: [{ id: 'msg1', text: 'Hello', sender: 'TENANT', timestamp: '2025-01-01T00:00:00Z' }] }
+const MESSAGING_MESSAGES = [
+  { id: 'msg1', tenantId: 't1', tenantName: 'FitLife Andheri', channel: 'EMAIL', subject: 'System Update', body: 'Please update your system', status: 'SENT', sentAt: '2025-01-15T10:00:00Z', scheduledAt: null, createdAt: '2025-01-15T09:00:00Z' },
+  { id: 'msg2', tenantId: 't2', tenantName: 'PowerZone Bandra', channel: 'SMS', subject: 'Payment Failed', body: 'Your last payment failed', status: 'FAILED', sentAt: null, scheduledAt: null, createdAt: '2025-01-14T09:00:00Z' },
+];
+
+const MESSAGING_NOTIFICATIONS = [
+  { id: 'notif1', title: 'High CPU Usage', body: 'Server CPU is above 90%', type: 'CRITICAL', read: false, createdAt: '2025-01-16T10:00:00Z' },
+  { id: 'notif2', title: 'New Tenant Signup', body: 'FitLife Andheri joined', type: 'INFO', read: true, createdAt: '2025-01-15T10:00:00Z' },
+];
+
+const MESSAGING_TENANTS = [
+  { id: 't1', name: 'FitLife Andheri', plan: 'Enterprise' },
+  { id: 't2', name: 'PowerZone Bandra', plan: 'Pro' },
 ];
 
 // ─── superadmin broadcasts ────────────────────────────────────────────────────
 const BROADCASTS = [
-  { id: 'bc1', title: 'Maintenance', message: 'Downtime expected', type: 'INFO', isRead: false, createdAt: '2025-01-01T00:00:00Z' }
+  { id: 'bc1', title: 'System Maintenance', content: 'Downtime expected', status: 'SENT', targetGymIds: ['g1', 'g2'], scheduledDate: null, sentDate: '2025-01-01T00:00:00Z', totalRecipients: 45, deliveredCount: 45, failedCount: 0, audience: 'ALL_TENANTS' },
+  { id: 'bc2', title: 'New Feature Launch', content: 'AI Coach is here', status: 'SCHEDULED', targetGymIds: ['g1'], scheduledDate: '2025-02-01T00:00:00Z', sentDate: null, totalRecipients: 10, deliveredCount: 0, failedCount: 0, audience: 'PRO_ONLY' }
 ];
 
 // ─── superadmin reports ───────────────────────────────────────────────────────
 const REPORTS = {
-  revenue: [{ id: 'r1', date: '2025-01-01', amount: 5000, source: 'SUBSCRIPTION', month: 'Jan', mrr: 5000, newRevenue: 1000, churnedRevenue: 0, netRevenue: 6000, tenantCount: 45 }],
-  churn: [{ id: 'c1', tenantId: 't1', tenantName: 'FitLife', churnDate: '2025-01-01', reason: 'Too expensive', lifetimeValue: 50000, gymName: 'FitLife', ownerName: 'Raj', plan: 'Basic', churnedAt: '2025-01-01', mrr: 1000, daysActive: 365 }],
-  health: [{ tenantId: 't1', tenantName: 'FitLife', score: 95, trend: 'UP', lastCalculated: '2025-01-01', id: 't1', gymName: 'FitLife', plan: 'Basic', grade: 'A', memberCount: 320, lastLogin: '2025-01-01', paymentHealth: 'GOOD', featureUsage: 80, supportTickets: 0 }]
+  revenue: [{ month: 'Jan', mrr: 5000, newRevenue: 1000, cancelledRevenue: 0, netRevenue: 6000, tenantCount: 45 }],
+  cancellations: [{ id: 'c1', gymName: 'FitLife', ownerName: 'Raj', plan: 'Basic', cancelledAt: '2025-01-01', reason: 'Too expensive', mrr: 1000, daysActive: 365 }],
+  health: [{ id: 't1', gymName: 'FitLife', plan: 'Basic', score: 95, grade: 'A', memberCount: 320, lastLogin: '2025-01-01', paymentHealth: 'GOOD', featureUsage: 80, supportTickets: 0 }]
 };
 
 // ─── main router ─────────────────────────────────────────────────────────────
@@ -464,8 +476,16 @@ export function getMockResponse(path: string): unknown {
   if (p.includes('/superadmin/plans') || p.includes('/plan')) return ok(SUPERADMIN_PLANS, 'Plans fetched');
   if (p.includes('/superadmin/invoices') || p.includes('/invoice')) return ok(SUPERADMIN_INVOICES, 'Invoices fetched');
   if (p.includes('/superadmin/coupons') || p.includes('/coupon')) return ok(SUPERADMIN_COUPONS, 'Coupons fetched');
-  if (p.includes('/superadmin/messaging') || p.includes('/message')) return ok(MESSAGING, 'Messages fetched');
+  if (p.includes('/superadmin/messaging/messages')) return ok(MESSAGING_MESSAGES, 'Messages fetched');
+  if (p.includes('/superadmin/messaging/notifications')) return ok(MESSAGING_NOTIFICATIONS, 'Notifications fetched');
+  if (p.includes('/superadmin/messaging/tenants')) return ok(MESSAGING_TENANTS, 'Tenants fetched');
   if (p.includes('/superadmin/broadcast')) return ok(BROADCASTS, 'Broadcasts fetched');
+  if (p.includes('/superadmin/reports/revenue')) return ok(REPORTS.revenue, 'Revenue fetched');
+    if (p.includes('/superadmin/reports/cancellations')) return ok(REPORTS.cancellations, 'Cancellations fetched');
+    if (p.includes('/superadmin/reports/health')) return ok(REPORTS.health, 'Health fetched');
+    if (p.includes('/superadmin/reports/revenue')) return ok(REPORTS.revenue, 'Revenue fetched');
+  if (p.includes('/superadmin/reports/cancellations')) return ok(REPORTS.cancellations, 'Cancellations fetched');
+  if (p.includes('/superadmin/reports/health')) return ok(REPORTS.health, 'Health fetched');
   if (p.includes('/superadmin/reports') || p.includes('/report')) return ok(REPORTS, 'Reports fetched');
   
   if (p.includes('/franchise')) return ok(FRANCHISES, 'Franchises fetched');

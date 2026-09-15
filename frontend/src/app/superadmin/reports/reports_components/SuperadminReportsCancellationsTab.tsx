@@ -8,12 +8,12 @@ const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 export function SuperadminReportsCancellationsTab({
   cancellationsData,
   filteredCancellationsData,
-  totalCancellationsedRevenue,
+  totalCancelledRevenue,
   avgDaysActive,
 }: {
   cancellationsData: CancellationsRecord[];
   filteredCancellationsData: CancellationsRecord[];
-  totalCancellationsedRevenue: number;
+  totalCancelledRevenue: number;
   avgDaysActive: number;
 }) {
   const cancellationsReasonCounts = cancellationsData.reduce<Record<string, number>>((acc, c) => {
@@ -45,7 +45,7 @@ export function SuperadminReportsCancellationsTab({
         <div className="bg-card border border-border rounded-xl p-6 shadow-sm space-y-3">
           <h2 className="text-base font-semibold text-foreground mb-2">Lost Gyms Summary</h2>
           <div className="flex justify-between text-sm"><span className="text-secondary">Filtered Lost Gyms</span><span className="text-foreground font-medium">{filteredCancellationsData.length}</span></div>
-          <div className="flex justify-between text-sm"><span className="text-secondary">Total Lost Monthly Income</span><span className="text-danger font-medium">{formatCurrency(totalCancellationsedRevenue)}</span></div>
+          <div className="flex justify-between text-sm"><span className="text-secondary">Total Lost Monthly Income</span><span className="text-danger font-medium">{formatCurrency(totalCancelledRevenue)}</span></div>
           <div className="flex justify-between text-sm"><span className="text-secondary">Avg Days Active Before Leaving</span><span className="text-foreground font-medium">{avgDaysActive} days</span></div>
           <div className="flex justify-between text-sm"><span className="text-secondary">Top Reason for Leaving</span><span className="text-foreground font-medium">Too expensive</span></div>
         </div>
@@ -69,7 +69,7 @@ export function SuperadminReportsCancellationsTab({
                     <p className="text-xs text-secondary">{row.ownerName}</p>
                   </td>
                   <td className="px-4 py-3 text-secondary">{row.plan}</td>
-                  <td className="px-4 py-3 text-secondary">{row.cancellationsedAt}</td>
+                  <td className="px-4 py-3 text-secondary">{row.cancelledAt}</td>
                   <td className="px-4 py-3 text-secondary">{row.reason}</td>
                   <td className="px-4 py-3 text-danger font-medium">{formatCurrency(row.mrr)}</td>
                   <td className="px-4 py-3 text-secondary">{row.daysActive}d</td>

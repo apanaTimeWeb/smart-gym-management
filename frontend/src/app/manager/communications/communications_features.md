@@ -99,7 +99,7 @@ respect to member data — it never modifies member records.
   - `['managerCommunications', 'automations']`
   - `['managerCommunications', 'churn', 'members']`
   - `['managerCommunications', 'churn', 'kpis']`
-- **Fixture data:** `communications_fixtures/ManagerCommunicationsMockData.ts` — `MOCK_CAMPAIGNS`, `MOCK_AUTOMATIONS`, `MOCK_COMM_KPI`, `MOCK_CANCELLATIONSED_MEMBERS`, `MOCK_CANCELLATIONS_KPI`, `COMM_MESSAGE_TEMPLATES`, `CANCELLATIONS_WIN_BACK_TEMPLATES`
+- **Fixture data:** `communications_fixtures/ManagerCommunicationsMockData.ts` — `MOCK_CAMPAIGNS`, `MOCK_AUTOMATIONS`, `MOCK_COMM_KPI`, `MOCK_CANCELLED_MEMBERS`, `MOCK_CANCELLATIONS_KPI`, `COMM_MESSAGE_TEMPLATES`, `CANCELLATIONS_WIN_BACK_TEMPLATES`
 - **Template auto-fill:** When segment changes, `handleSegmentChange()` in the logic hook auto-fills from `COMM_MESSAGE_TEMPLATES`. When a churned member is selected, `useManagerChurnRecoveryLogic` derives `defaultTier` from `daysSinceExit` and auto-fills from `CANCELLATIONS_WIN_BACK_TEMPLATES`.
 - **Local-storage keys:** None
 - **MSW handler file:** Not yet configured

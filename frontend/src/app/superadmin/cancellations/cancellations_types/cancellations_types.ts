@@ -2,7 +2,7 @@ import { z } from 'zod';
 // RESPONSIBILITY: TypeScript types for the Superadmin Cancellations Alerts module.
 
 export type CancellationsRiskLevel = 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW';
-export type CancellationsActionStatus = 'PENDING' | 'CONTACTED' | 'RESOLVED' | 'CANCELLATIONSED';
+export type CancellationsActionStatus = 'PENDING' | 'CONTACTED' | 'RESOLVED' | 'CANCELLED';
 
 export interface CancellationsAlert {
   id: string;

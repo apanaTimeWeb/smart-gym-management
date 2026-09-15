@@ -35,7 +35,7 @@ export function SuperadminReportsRevenueTab({
 
   const revenueChartSeries = [
     { name: 'Monthly Income', data: revenueData.map((d) => d.mrr) },
-    { name: 'Lost Income', data: revenueData.map((d) => d.cancellationsedRevenue) },
+    { name: 'Lost Income', data: revenueData.map((d) => d.cancelledRevenue) },
   ];
 
   return (
@@ -63,7 +63,7 @@ export function SuperadminReportsRevenueTab({
                   <td className="px-4 py-3 font-medium text-foreground">{row.month}</td>
                   <td className="px-4 py-3 text-foreground">{formatCurrency(row.mrr)}</td>
                   <td className="px-4 py-3 text-success">+{formatCurrency(row.newRevenue)}</td>
-                  <td className="px-4 py-3 text-danger">-{formatCurrency(row.cancellationsedRevenue)}</td>
+                  <td className="px-4 py-3 text-danger">-{formatCurrency(row.cancelledRevenue)}</td>
                   <td className="px-4 py-3 font-semibold text-foreground">{formatCurrency(row.netRevenue)}</td>
                   <td className="px-4 py-3 text-secondary">{row.tenantCount}</td>
                 </tr>

@@ -9,7 +9,7 @@ import { CANCELLATIONS_ACTION_STATUS_STYLES } from '@/app/superadmin/cancellatio
 import type { CancellationsAlert, CancellationsActionStatus, CancellationsActionPayload } from '@/app/superadmin/cancellations/cancellations_types/cancellations_types';
 import { cancellationsActionSchema, type CancellationsActionFormValues } from '@/app/superadmin/cancellations/cancellations_utils/SuperadminCancellationsActionModal.schema';
 
-const ACTION_OPTIONS: CancellationsActionStatus[] = ['PENDING', 'CONTACTED', 'RESOLVED', 'CANCELLATIONSED'];
+const ACTION_OPTIONS: CancellationsActionStatus[] = ['PENDING', 'CONTACTED', 'RESOLVED', 'CANCELLED'];
 
 interface SuperadminCancellationsActionModalProps {
   alert: CancellationsAlert;

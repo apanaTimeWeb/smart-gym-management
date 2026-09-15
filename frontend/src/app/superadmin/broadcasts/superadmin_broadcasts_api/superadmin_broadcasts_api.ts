@@ -1,4 +1,4 @@
-import { BroadcastSchema } from '@/app/superadmin/broadcasts/superadmin_broadcasts_types/superadmin_broadcasts_types';
+import { BroadcastSchema, BroadcastResponseSchema } from '@/app/superadmin/broadcasts/superadmin_broadcasts_types/superadmin_broadcasts_types';
 // RESPONSIBILITY: Modularized API client for the Broadcasts module. All methods import apiFetch from src/lib/api.ts and define only superadmin-scoped endpoints. No UI logic.
 import { BroadcastsUrlConfig } from '@/app/superadmin/broadcasts/broadcasts_url_config';
 import { apiFetch } from '@/lib/api';
@@ -9,7 +9,7 @@ import { z } from "zod";
 export const broadcastsApi = {
   fetchBroadcasts: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<ApiResponse<Broadcast[]>>(`${BroadcastsUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.array(BroadcastSchema) });
+    return apiFetch<ApiResponse<Broadcast[]>>(`${BroadcastsUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.array(BroadcastResponseSchema) });
   },
   createBroadcast: (body: BroadcastFormData) => apiFetch<ApiResponse<Broadcast>>(BroadcastsUrlConfig.BACKEND_API.BASE, { method: 'POST', body: JSON.stringify(body),
       dataSchema: BroadcastSchema

@@ -142,7 +142,7 @@ export default function SuperadminAnalyticsClient() {
 
   const mrrAreaSeries = [{ name: 'Monthly Income', data: monthlyData.map((d) => d.mrr) }];
 
-  // Design §10: Grouped bar chart — new tenants (gold) vs cancellationsed (red)
+  // Design §10: Grouped bar chart — new tenants (gold) vs cancelled (red)
   const tenantBarOptions = {
     chart: { type: 'bar' as const, toolbar: { show: false }, background: 'transparent' },
     colors: [CHART_COLORS.PRIMARY, CHART_COLORS.DANGER],

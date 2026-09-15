@@ -3,7 +3,7 @@ import {
   MOCK_CAMPAIGNS,
   MOCK_COMM_KPI,
   MOCK_AUTOMATIONS,
-  MOCK_CANCELLATIONSED_MEMBERS,
+  MOCK_CANCELLED_MEMBERS,
   MOCK_CANCELLATIONS_KPI,
 } from '@/app/manager/communications/communications_fixtures/ManagerCommunicationsMockData';
 import type {
@@ -18,7 +18,7 @@ import type {
 
 let mockCampaigns = [...MOCK_CAMPAIGNS];
 let mockAutomations = [...MOCK_AUTOMATIONS];
-let mockCancellationsedMembers = [...MOCK_CANCELLATIONSED_MEMBERS];
+let mockCancelledMembers = [...MOCK_CANCELLED_MEMBERS];
 
 const MOCK_SEGMENT_MEMBERS: Record<CommSegment, CommRecipient[]> = {
   all_active: [
@@ -100,8 +100,8 @@ export const managerCommunicationsHandlers = [
     return HttpResponse.json({ success: true, message: 'Automation updated', data: mockAutomations[idx] });
   }),
 
-  http.get('http://localhost:5000/api/v1/manager/communications/cancellationsed-members', () => {
-    return HttpResponse.json({ success: true, message: 'Cancellationsed members fetched', data: mockCancellationsedMembers });
+  http.get('http://localhost:5000/api/v1/manager/communications/cancelled-members', () => {
+    return HttpResponse.json({ success: true, message: 'Cancelled members fetched', data: mockCancelledMembers });
   }),
 
   http.get('http://localhost:5000/api/v1/manager/communications/cancellations-kpis', () => {
@@ -136,7 +136,7 @@ export const managerCommunicationsHandlers = [
       sentBy: 'Manager',
     };
     mockCampaigns = [campaign, ...mockCampaigns];
-    mockCancellationsedMembers = mockCancellationsedMembers.map(m =>
+    mockCancelledMembers = mockCancelledMembers.map(m =>
       m.memberId === payload.memberId
         ? { ...m, lastContactedAt: new Date().toISOString() }
         : m
