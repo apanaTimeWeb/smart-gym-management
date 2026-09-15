@@ -1,3 +1,4 @@
+'use client';
 // RESPONSIBILITY: Renders the SuperadminInvoicesTable component.
 import React, { useState } from 'react';
 import type { SaaSInvoice } from '@/app/superadmin/invoices/superadmin_invoices_types/superadmin_invoices_types';
@@ -8,6 +9,9 @@ import SuperadminPagination from '@/app/superadmin/superadmin_components/Superad
 interface InvoicesTableProps {
   invoices: SaaSInvoice[];
   onLogPaymentClick: () => void;
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
 }
 
 const ITEMS_PER_PAGE = 10;
@@ -15,11 +19,9 @@ const ITEMS_PER_PAGE = 10;
 // Columns: Invoice ID | Gym | Plan | Type | Amount | Status | Date | Actions = 8
 const TABLE_COLUMN_COUNT = 9;
 
-export default function SuperadminInvoicesTable({ invoices, onLogPaymentClick }: InvoicesTableProps) {
-  const [currentPage, setCurrentPage] = useState(1);
-
-  const totalPages = Math.ceil(invoices.length / ITEMS_PER_PAGE) || 1;
-  const paginatedInvoices = invoices.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+export default function SuperadminInvoicesTable({ invoices, onLogPaymentClick, currentPage, totalPages, onPageChange }: InvoicesTableProps) {
+  // Server-side pagination is now used.
+  const paginatedInvoices = invoices;
 
   return (
     <div className="flex flex-col min-h-96">
@@ -51,11 +53,16 @@ export default function SuperadminInvoicesTable({ invoices, onLogPaymentClick }:
           </tbody>
         </table>
       </div>
-      <SuperadminPagination 
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={setCurrentPage}
-      />
+      {totalPages > 1 && (
+        <div className="p-4 border-t border-border">
+          <SuperadminPagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={onPageChange}
+          />
+        </div>
+      )}
     </div>
   );
 }
+

@@ -73,6 +73,43 @@ Expired or fully-redeemed coupons are automatically deactivated.
 - **Usage display** — show `usedCount / maxUses` (e.g. "45 / 100"); if `maxUses` is null, show "Unlimited".
 - **Deactivate confirmation** — MUST use `useConfirm()` before firing deactivate mutation.
 
+## UI Data Requirements
+
+The following types map directly to the UI components and define the shape of the data:
+
+```typescript
+export type CouponStatus = 'ACTIVE' | 'INACTIVE' | 'EXPIRED' | 'DEPLETED';
+
+/** KPI filter tabs on the Coupons page — controls which subset of coupons is displayed. */
+
+export type CouponKpiFilter = 'ALL' | 'ACTIVE' | 'REDEEMED';
+
+export interface Coupon {
+  id: string;
+  code: string;
+  discountType: 'PERCENTAGE' | 'EXACT';
+  discountValue: number;
+  maxUses: number;
+  currentUses: number;
+  status: CouponStatus;
+  expiryDate: string;
+  isDeleted: boolean;
+  redemptions?: RedemptionRecord[];
+}
+
+export interface RedemptionRecord {
+  id: string;
+  tenantName: string;
+  redeemedAt: string;
+  planName: string;
+  discountApplied: number;
+}
+
+import { z } from 'zod';
+
+export type CouponFormData = z.infer<typeof CouponSchema>;
+```
+
 ## Rule Compliance Checklist
 - [x] Rule 1: Micro-modularization
 - [x] Rule 3: Module prefix naming — `SuperadminCoupons*`

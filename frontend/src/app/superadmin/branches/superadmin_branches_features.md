@@ -72,6 +72,31 @@ cannot directly manage branch operations; that is the Manager's domain.
 - **Flag reason** — `FlagBranchDto.reason` is required; form must validate non-empty before submit.
 - **Pagination reset** — page resets to 1 when gym or status filter changes.
 
+## UI Data Requirements
+
+The following types map directly to the UI components and define the shape of the data:
+
+```typescript
+export type BranchStatus = 'ACTIVE' | 'INACTIVE' | 'SUSPENDED';
+
+export interface SuperadminBranch {
+  id: string;
+  tenantId: string;
+  tenantName: string;
+  branchName: string;
+  location: string;
+  city: string;
+  state: string;
+  managerName: string;
+  managerEmail: string;
+  phone: string;
+  status: BranchStatus;
+  memberCount: number;
+  staffCount: number;
+  monthlyRevenue: number;
+  // ... truncated
+```
+
 ## Rule Compliance Checklist
 - [x] Rule 1: Micro-modularization
 - [x] Rule 3: Module prefix naming — `SuperadminBranches*`

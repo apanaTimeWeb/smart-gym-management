@@ -33,7 +33,7 @@ export default function SuperadminPlanCreateModal() {
   const createMutation = useMutation({
     mutationFn: (data: CreatePlanPayload) => plansApi.createPlan(data),
     onSuccess: (res) => {
-      toast.success(res.message || 'Plan created successfully');
+      toast.success(res.message);
       queryClient.invalidateQueries({ queryKey: ['superadmin', 'plans'] });
       reset();
       closeCreateModal();

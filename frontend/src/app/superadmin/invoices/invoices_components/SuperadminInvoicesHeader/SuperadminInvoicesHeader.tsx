@@ -1,3 +1,4 @@
+'use client';
 // RESPONSIBILITY: Renders the page title and action buttons (Log Payment, Export CSV) for the Invoices page.
 import { Plus, ArrowUpRight } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -17,7 +18,7 @@ export default function SuperadminInvoicesHeader({ onLogPaymentClick }: Invoices
         window.open(res.data.downloadUrl, '_blank');
         toast.success('Export ready.', { id: 'invoice-export' });
       } else {
-        toast.error(res.message || 'Export URL not found.', { id: 'invoice-export' });
+        toast.error(res.message, { id: 'invoice-export' });
       }
     } catch {
       toast.error('Failed to export invoices.', { id: 'invoice-export' });
@@ -48,3 +49,4 @@ export default function SuperadminInvoicesHeader({ onLogPaymentClick }: Invoices
     </div>
   );
 }
+

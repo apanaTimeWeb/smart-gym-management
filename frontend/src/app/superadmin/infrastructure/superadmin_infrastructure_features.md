@@ -71,6 +71,22 @@ operations-focused module; it does not expose tenant business data.
 - **SERVICE_STATUS_STYLES** — maps `UP | DEGRADED | DOWN | UNKNOWN` to color classes; must live in constants.
 - **HEALTH_THRESHOLD** — named constants for degraded/down thresholds (e.g. latency > 500ms = DEGRADED); never inline numbers.
 
+## UI Data Requirements
+
+The following types map directly to the UI components and define the shape of the data:
+
+```typescript
+export type NodeStatus = z.infer<typeof NodeStatusSchema>;
+
+export type CacheStatus = z.infer<typeof CacheStatusSchema>;
+
+export type InfrastructureNode = z.infer<typeof InfrastructureNodeSchema>;
+
+export type RedisTelemetry = z.infer<typeof RedisTelemetrySchema>;
+
+export type SuperadminInfrastructureTenant = z.infer<typeof SuperadminInfrastructureTenantSchema>;
+```
+
 ## Rule Compliance Checklist
 - [x] Rule 1: Micro-modularization
 - [x] Rule 3: Module prefix naming — `SuperadminInfrastructure*`

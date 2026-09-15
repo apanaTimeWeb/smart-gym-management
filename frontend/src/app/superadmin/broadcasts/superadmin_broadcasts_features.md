@@ -72,6 +72,48 @@ All broadcasts are logged and visible to tenants in their notification center.
 - **Body sanitization** — broadcast body is rendered as HTML in tenant notification center; backend must sanitize; frontend must not render raw HTML from API response without sanitization.
 - **Schedule field** — optional ISO datetime; if omitted, broadcast sends immediately.
 
+## UI Data Requirements
+
+The following types map directly to the UI components and define the shape of the data:
+
+```typescript
+export type BroadcastStatus = z.infer<typeof BroadcastStatusSchema>;
+
+export type BroadcastAudience = z.infer<typeof BroadcastAudienceSchema>;
+
+export type BroadcastStatusFilter = 'ALL' | BroadcastStatus | 'FAILED';
+
+export type Broadcast = z.infer<typeof BroadcastResponseSchema>;
+
+export type BroadcastFormData = z.infer<typeof BroadcastSchema>;
+
+export interface BroadcastsHeaderProps {
+  searchQuery: string;
+  onSearchChange: (value: string) => void;
+  statusFilter?: 'ALL' | 'DRAFT' | 'SCHEDULED' | 'SENT' | 'FAILED';
+  onStatusFilterChange?: (value: 'ALL' | 'DRAFT' | 'SCHEDULED' | 'SENT' | 'FAILED') => void;
+  onCreateClick: () => void;
+}
+
+export interface BroadcastsTableProps {
+  broadcasts: Broadcast[];
+  onSend: (id: string) => void;
+  onEdit: (broadcast: Broadcast) => void;
+  onDelete: (id: string) => void;
+  onCreateClick: () => void;
+}
+
+export interface BroadcastStatusBadgeProps {
+  status: BroadcastStatus;
+}
+
+export interface BroadcastsEmptyStateProps {
+  onCreateClick: () => void;
+}
+
+export type SuperadminBroadcastsTenant = z.infer<typeof SuperadminBroadcastsTenantSchema>;
+```
+
 ## Rule Compliance Checklist
 - [x] Rule 1: Micro-modularization
 - [x] Rule 3: Module prefix naming — `SuperadminBroadcasts*`

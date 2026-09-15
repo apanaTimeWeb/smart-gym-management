@@ -53,6 +53,37 @@ All functions live in `superadmin_affiliates_api.ts` and return `ApiResponse<T>`
 - Do not use `useEffect` to sync query data into local state — consume `queryData` directly (Rule 15C)
 - Status toggle is optimistic — update query cache immediately, revert on error
 
+## UI Data Requirements
+
+The following types map directly to the UI components and define the shape of the data:
+
+```typescript
+export type AffiliateStatus = 'ACTIVE' | 'INACTIVE';
+
+/** Filter tabs for the Affiliates status dropdown. */
+
+export type AffiliateStatusFilter = 'ALL' | AffiliateStatus;
+
+export interface Affiliate {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string;
+  referralCode: string;
+  totalReferred: number;
+  commissionEarned: number;
+  commissionRate?: number;
+  pendingPayout?: number;
+  bankDetails?: string;
+  status: AffiliateStatus;
+  joinedAt: string;
+  referralCount?: number;
+  conversionRate?: number;
+  // ... truncated
+
+export type AffiliateFormData = z.infer<typeof AffiliateSchema>;
+```
+
 ## Rule Compliance Checklist
 - [x] Rule 1: Micro-modularization — each sub-component in its own folder
 - [x] Rule 4: No inline colors — status badge uses `SuperadminAffiliateStatusBadge` with token classes

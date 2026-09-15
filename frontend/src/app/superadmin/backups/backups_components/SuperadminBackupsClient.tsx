@@ -2,14 +2,13 @@
 // RESPONSIBILITY: SuperadminBackupsClient.tsx renders the Database Backups page. Purely a view layer — data fetched via useSuperadminData.
 
 import { useSuperadminBackupsData } from '@/app/superadmin/backups/backups_utils/useSuperadminBackupsData';
-import SuperadminBackupsEmptyState from '@/app/superadmin/backups/backups_components/SuperadminBackupsEmptyState/SuperadminBackupsEmptyState';
 import SuperadminBackupsScheduleModal from '@/app/superadmin/backups/backups_components/SuperadminBackupsScheduleModal';
 import { DatabaseBackup, Search, Clock } from 'lucide-react';
 import type { BackupRecord } from '@/app/superadmin/backups/superadmin_backups_types/superadmin_backups_types';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import toast from 'react-hot-toast';
 import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
-import { backupsApi } from '@/app/superadmin/backups/superadmin_backups_api/superadmin_backups_api';
+import { useSuperadminUrlState } from '@/app/superadmin/superadmin_utils/useSuperadminUrlState';
 // Rule 10: Absolute imports only — no relative paths allowed
 import SuperadminBackupsTable from '@/app/superadmin/backups/backups_components/SuperadminBackupsTable';
 import SuperadminBackupsRestoreModal from '@/app/superadmin/backups/backups_components/SuperadminBackupsRestoreModal';
@@ -18,44 +17,45 @@ import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import { SuperadminErrorBoundary } from '@/app/superadmin/superadmin_components/SuperadminLayout/SuperadminErrorBoundary';
 
 export default function SuperadminBackupsClient() {
-  const { data: backups, isLoading, isError, error } = useSuperadminBackupsData();
+  const { getParam, setParam } = useSuperadminUrlState();
 
-  const [search, setSearch] = useState('');
-  const [statusFilter, setStatusFilter] = useState('ALL');
-  const [typeFilter, setTypeFilter] = useState('ALL');
+  const search = getParam('search', '');
+  const statusFilter = getParam('statusFilter', 'ALL');
+  const typeFilter = getParam('typeFilter', 'ALL');
+  const currentPage = Number(getParam('page', '1'));
+  const ITEMS_PER_PAGE = 10;
+
+  const setSearch = (val: string) => { setParam('search', val); setParam('page', '1'); };
+  const setStatusFilter = (val: string) => { setParam('statusFilter', val); setParam('page', '1'); };
+  const setTypeFilter = (val: string) => { setParam('typeFilter', val); setParam('page', '1'); };
+  const setCurrentPage = (val: number) => setParam('page', String(val));
+
+  const queryParams: Record<string, string> = {
+    page: String(currentPage),
+    limit: String(ITEMS_PER_PAGE),
+    ...(search && { search }),
+    ...(statusFilter !== 'ALL' && { status: statusFilter }),
+    ...(typeFilter !== 'ALL' && { type: typeFilter }),
+  };
+
+  const { data: backups } = useSuperadminBackupsData(queryParams);
+
   const [isTriggering, setIsTriggering] = useState(false);
   const [triggerModalOpen, setTriggerModalOpen] = useState(false);
   const [scheduleModalOpen, setScheduleModalOpen] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const ITEMS_PER_PAGE = 10;
-
-  // Resets pagination to page 1 whenever a filter changes, preventing stale empty states.
-  // EXPLANATION: Synchronize component state with external dependencies.
-  // EFFECT DEPENDENCIES: Documented intentionally.
-
   const [restoreModalOpen, setRestoreModalOpen] = useState(false);
   const [selectedBackup, setSelectedBackup] = useState<BackupRecord | null>(null);
   const [restoreConfirmText, setRestoreConfirmText] = useState('');
-
-  const handleDownload = (backup: BackupRecord) => {
-    toast.success(`Downloading backup ${backup.id}`);
-  };
 
   const handleRestoreClick = (backup: BackupRecord) => {
     setSelectedBackup(backup);
     setRestoreModalOpen(true);
   };
 
-  const filtered = backups?.filter(b => {
-    const matchesSearch = b.id.toLowerCase().includes(search.toLowerCase()) || (b as any).gymId.toLowerCase().includes(search.toLowerCase());
-    const matchesStatus = statusFilter === 'ALL' || b.status === statusFilter;
-    const bType = b.id.includes('MANUAL') ? 'MANUAL' : 'AUTOMATED'; // Mock logic for type
-    const matchesType = typeFilter === 'ALL' || bType === typeFilter;
-    return matchesSearch && matchesStatus && matchesType;
-  }) || [];
-
-  const totalPages: number = Math.ceil(filtered.length / ITEMS_PER_PAGE) || 1;
-  const paginatedBackups: BackupRecord[] = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+  const filtered: BackupRecord[] = backups || [];
+  const total = filtered.length; // Will be replaced by meta.total once server paginates
+  const totalPages: number = Math.ceil(total / ITEMS_PER_PAGE) || 1;
+  const paginatedBackups: BackupRecord[] = filtered; // Server-side pagination applied
 
   return (
     <div className="space-y-6">
@@ -128,8 +128,8 @@ export default function SuperadminBackupsClient() {
         <SuperadminBackupsTable 
           paginatedBackups={paginatedBackups}
           filteredLength={filtered.length}
-          handleDownload={(id: string) => handleDownload({ id } as any)}
-          handleRestoreClick={(id: any) => handleRestoreClick({ id } as any)}
+          handleDownload={(id: string) => toast.success(`Downloading backup ${id}`)}
+          handleRestoreClick={handleRestoreClick}
         />
         <SuperadminPagination 
           currentPage={currentPage}

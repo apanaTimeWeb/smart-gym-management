@@ -49,3 +49,21 @@ Provides the Superadmin with a live health overview of the SaaS infrastructure: 
 - **Section-Level Error Boundaries in System:** Do not allow a single failed API fetch in System to unmount the entire page. Major components (like the System data table or metrics) must be wrapped in `<SuperadminErrorBoundary variant="inline">`.
 - **Backend-Driven Messages for System Mutations:** Do not hardcode success or error toasts like "User created". Always display the `message` string provided by the backend's JSON response envelope when creating, updating, or deleting System.
 - **No Client-Side Pagination for System:** If the dataset grows large, do not fetch all System and paginate on the client. Always implement robust server-side pagination, sorting, and filtering via query parameters.
+
+## UI Data Requirements
+
+The following types map directly to the UI components and define the shape of the data:
+
+```typescript
+export type SuperadminSystemSlaStatus = 'MET' | 'BREACHED' | 'WARNING';
+
+export interface SuperadminTenantSla {
+  id: string;
+  name: string;
+  targetSla: number;
+  actualUptime: number;
+  downtimeIncidents: number;
+  downtimeMinutes: number;
+  status: SuperadminSystemSlaStatus;
+}
+```

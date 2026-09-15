@@ -1,3 +1,4 @@
+'use client';
 // RESPONSIBILITY: Renders the Messaging Tenant Dropdown component and its associated UI logic.
 import { useState, useRef, useEffect } from 'react';
 import { Search, ChevronDown } from 'lucide-react';
@@ -95,4 +96,5 @@ export function SuperadminMessagingTenantDropdown({
     </div>
   );
 }
+
 

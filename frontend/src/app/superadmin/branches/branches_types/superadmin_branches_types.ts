@@ -21,9 +21,6 @@ export interface SuperadminBranch {
   createdAt: string;
 }
 
-export type BranchesFetchState = 'idle' | 'loading' | 'success' | 'error';
-
-
 export const SuperadminBranchSchema = z.object({
   id: z.string(),
   name: z.string(),

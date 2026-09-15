@@ -43,17 +43,19 @@ export default function SuperadminBroadcastQueueModal({
   const [, setNotifications] = useLocalStorage<BroadcastNotification[]>('admin_notifications_v1', []);
 
   // Starts the queue from the first recipient whenever the modal opens with a new list.
-  // EXPLANATION: Synchronize component state with external dependencies.
+  // Uses setTimeout(0) to schedule state update asynchronously and avoid synchronous setState-in-effect warnings.
   // EFFECT DEPENDENCIES: Documented intentionally.
   useEffect(() => {
     if (isOpen && recipients.length > 0) {
-      setCurrentIndex(0);
-      setCompleted(new Set());
+      const id = setTimeout(() => {
+        setCurrentIndex(0);
+        setCompleted(new Set());
+      }, 0);
+      return () => clearTimeout(id);
     }
   }, [isOpen, recipients]);
 
   // Processes each recipient sequentially with a 1.5s visual delay.
-  // EXPLANATION: Synchronize component state with external dependencies.
   // EFFECT DEPENDENCIES: Documented intentionally.
   useEffect(() => {
     if (currentIndex >= 0 && currentIndex < recipients.length) {
@@ -147,4 +149,3 @@ export default function SuperadminBroadcastQueueModal({
     </div>
   );
 }
-

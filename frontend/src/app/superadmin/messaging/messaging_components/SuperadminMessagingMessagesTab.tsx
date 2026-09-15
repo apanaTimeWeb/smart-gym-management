@@ -1,3 +1,4 @@
+'use client';
 // RESPONSIBILITY: Renders the Messaging Messages Tab component and its associated UI logic.
 import { Search, Mail, MessageSquare, Bell } from 'lucide-react';
 import type { TenantMessage, MessageChannel } from '@/app/superadmin/messaging/messaging_types/superadmin_messaging_types';
@@ -104,3 +105,4 @@ export function SuperadminMessagingMessagesTab({
     </div>
   );
 }
+

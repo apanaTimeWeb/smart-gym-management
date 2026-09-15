@@ -14,7 +14,7 @@ import type {
   MessagingTab,
   MessagingTenant,
 } from '@/app/superadmin/messaging/messaging_types/superadmin_messaging_types';
-import type { FetchState } from '@/app/superadmin/superadmin_utils/superadmin_shared_types';
+
 import { superadminMessagingApi } from '@/app/superadmin/messaging/messaging_api/superadmin_messaging_api';
 import { SuperadminMessagingComposeModal } from '@/app/superadmin/messaging/messaging_components/SuperadminMessagingComposeModal';
 import { SuperadminMessagingNotificationsTab } from '@/app/superadmin/messaging/messaging_components/SuperadminMessagingNotificationsTab';
@@ -28,7 +28,8 @@ export default function SuperadminMessagingClient() {
   const [messages, setMessages] = useState<TenantMessage[]>([]);
   const [notifications, setNotifications] = useState<SuperadminNotification[]>([]);
   const [tenants, setTenants] = useState<MessagingTenant[]>([]);
-  const [fetchState, setFetchState] = useState<FetchState>('loading');
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(false);
   const [search, setSearch] = useState('');
   const [channelFilter, setChannelFilter] = useState<MessageChannel | 'ALL'>('ALL');
   const [composeOpen, setComposeOpen] = useState(false);
@@ -46,7 +47,7 @@ export default function SuperadminMessagingClient() {
   useEffect(() => {
     let mounted = true;
     async function loadData() {
-      setFetchState('loading');
+      setIsLoading(true);
       try {
         const [msgsRes, notifsRes, tenantsRes] = await Promise.all([
           superadminMessagingApi.fetchMessages(),
@@ -57,10 +58,13 @@ export default function SuperadminMessagingClient() {
           if (msgsRes.success && msgsRes.data) setMessages(msgsRes.data as unknown as TenantMessage[]);
           if (notifsRes.success && notifsRes.data) setNotifications(notifsRes.data as unknown as SuperadminNotification[]);
           if (tenantsRes.success && tenantsRes.data) setTenants(tenantsRes.data as unknown as MessagingTenant[]);
-          setFetchState('success');
+          setIsLoading(false);
         }
       } catch (err) {
-        if (mounted) setFetchState('error');
+        if (mounted) {
+          setError(true);
+          setIsLoading(false);
+        }
       }
     }
     loadData();
@@ -111,7 +115,7 @@ export default function SuperadminMessagingClient() {
         setComposeBody('');
         setComposeChannel('EMAIL');
       } else {
-        toast.error(res.message || 'Failed to send message');
+        toast.error(res.message);
       }
     }).catch(() => {
       toast.error('Failed to send message', { id: 'failed-to-send-message' });
@@ -127,8 +131,6 @@ export default function SuperadminMessagingClient() {
     setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, read: true } : n)));
   }
 
-  const isLoading = fetchState === 'loading';
-  const error = fetchState === 'error';
 
   if (isLoading) return <div className="p-8 text-center text-secondary motion-safe:animate-pulse">Loading messages...</div>;
   if (error) return <div className="p-8 text-center text-danger">Failed to load data.</div>;

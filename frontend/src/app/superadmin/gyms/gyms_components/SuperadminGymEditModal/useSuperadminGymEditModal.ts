@@ -55,7 +55,7 @@ export function useSuperadminGymEditModal() {
   const editMutation = useMutation({
     mutationFn: (data: GymEditFormValues) => gymsApi.updateGym(selectedGym!.id, data),
     onSuccess: (res) => {
-      toast.success(res.message || 'Gym details updated successfully.');
+      toast.success(res.message);
       queryClient.invalidateQueries({ queryKey: ['superadmin', 'gyms'] });
       closeEditModal();
     },

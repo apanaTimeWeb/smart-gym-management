@@ -1,3 +1,4 @@
+'use client';
 // RESPONSIBILITY: Renders the Onboarding Modals component and its associated UI logic.
 import { AlertTriangle } from 'lucide-react';
 
@@ -93,3 +94,4 @@ export function SuperadminOnboardingModals({
     </>
   );
 }
+

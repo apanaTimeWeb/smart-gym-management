@@ -39,7 +39,7 @@ export function useSuperadminGymWhatsappModal() {
 
   const whatsappMutation = useMutation({
     mutationFn: (data: GymWhatsappFormValues & { phone: string; ownerName: string; gymName: string }) => 
-      gymsApi.emailGymOwner(selectedGym!.id, data as any), // Still calling API for record keeping if necessary, or just skip
+      gymsApi.emailGymOwner(selectedGym!.id, data as unknown as Parameters<typeof gymsApi.emailGymOwner>[1]), // Still calling API for record keeping if necessary, or just skip
     onSuccess: (res, data) => {
       if (data.phone) {
         const cleanPhone = String(data.phone).replace(/\D/g, '');
@@ -70,7 +70,7 @@ export function useSuperadminGymWhatsappModal() {
         window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(waText)}`, '_blank');
       }
 
-      toast.success(res.message || 'WhatsApp opened successfully.');
+      toast.success(res.message);
       closeWhatsappModal();
     },
     onError: (err: unknown) => {

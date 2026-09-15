@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import { broadcastsApi } from '@/app/superadmin/broadcasts/superadmin_broadcasts_api/superadmin_broadcasts_api';
 import type { BroadcastFormData, Broadcast, SuperadminBroadcastsTenant } from '@/app/superadmin/broadcasts/superadmin_broadcasts_types/superadmin_broadcasts_types';
 import type { UseFormReturn } from 'react-hook-form';
+import type { ApiResponse } from '@/lib/api';
 
 export const useSuperadminBroadcastsMutations = ({
   updateBroadcasts,
@@ -26,7 +27,7 @@ export const useSuperadminBroadcastsMutations = ({
 }) => {
   const createMutation = useMutation({
     mutationFn: (data: BroadcastFormData) => broadcastsApi.createBroadcast(data),
-    onSuccess: (res: any, variables: any) => {
+    onSuccess: (res: ApiResponse<Broadcast>, variables: BroadcastFormData) => {
       if (res.success && res.data) {
         updateBroadcasts(prev => [res.data!, ...prev]);
         setIsModalOpen(false);
@@ -46,14 +47,14 @@ export const useSuperadminBroadcastsMutations = ({
         toast.error(res.message);
       }
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
         toast.error(error.message);
     }
   });
 
   const updateMutation = useMutation({
     mutationFn: ({ id, data }: { id: string, data: Partial<BroadcastFormData> }) => broadcastsApi.updateBroadcast(id, data),
-    onSuccess: (res: any, variables: any) => {
+    onSuccess: (res: ApiResponse<Broadcast>, variables: { id: string, data: Partial<BroadcastFormData> }) => {
       if (res.success && res.data) {
         updateBroadcasts(prev => prev.map(b => b.id === variables.id ? res.data! : b));
         setIsModalOpen(false);
@@ -74,14 +75,14 @@ export const useSuperadminBroadcastsMutations = ({
         toast.error(res.message);
       }
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
         toast.error(error.message);
     }
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id: any) => broadcastsApi.deleteBroadcast(id),
-    onSuccess: (res: any, id: string) => {
+    mutationFn: (id: string) => broadcastsApi.deleteBroadcast(id),
+    onSuccess: (res: ApiResponse<void>, id: string) => {
       if (res.success) {
         updateBroadcasts(prev => prev.filter(b => b.id !== id));
         toast.success(res.message);
@@ -89,7 +90,7 @@ export const useSuperadminBroadcastsMutations = ({
         toast.error(res.message);
       }
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
         toast.error(error.message);
     }
   });

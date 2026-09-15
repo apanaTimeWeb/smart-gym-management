@@ -9,9 +9,7 @@ import { useSuperadminDashboardView } from '@/app/superadmin/dashboard/dashboard
 import { SuperadminErrorBoundary } from '@/app/superadmin/superadmin_components/SuperadminLayout/SuperadminErrorBoundary';
 
 export default function SuperadminDashboardView() {
-  const { fetchState, apiData, timeRange } = useSuperadminDashboardView();
-  const isLoading = fetchState === 'loading';
-  const error = fetchState === 'error';
+  const { isLoading, isError: error, apiData, timeRange } = useSuperadminDashboardView();
 
   if (isLoading) {
     return (

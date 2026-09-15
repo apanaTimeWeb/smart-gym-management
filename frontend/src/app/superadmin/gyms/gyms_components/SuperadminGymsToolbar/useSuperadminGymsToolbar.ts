@@ -29,7 +29,7 @@ export function useSuperadminGymsToolbar() {
         window.open(res.data.downloadUrl, '_blank');
         toast.success('Export ready.', { id: 'gyms-export' });
       } else {
-        toast.error(res.message || 'Export URL not found.', { id: 'gyms-export' });
+        toast.error(res.message, { id: 'gyms-export' });
       }
     } catch {
       toast.error('Failed to export gyms.', { id: 'gyms-export' });

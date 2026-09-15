@@ -171,6 +171,16 @@ Both `superadmin_gyms_api.ts` (module-scoped) and `superadmin_api.ts` (central c
 
 ---
 
+## UI Data Requirements
+
+The following types map directly to the UI components and define the shape of the data:
+
+```typescript
+export type GymEditFormValues = z.infer<typeof gymEditSchema>;
+
+export type GymWhatsappFormValues = z.infer<typeof gymWhatsappSchema>;
+```
+
 ## Rule Compliance Checklist
 
 - [x] Rule 1: Micro-modularization — module-prefixed subfolders, 300-line ceiling

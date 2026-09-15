@@ -25,7 +25,7 @@ export default function SuperadminSettingsClient() {
   const updateMutation = useMutation({
     mutationFn: ({ id, value }: { id: string, value: string }) => settingsApi.updateSetting(id, { value }),
     onSuccess: (res, variables) => {
-      toast.success(res.message || 'Setting updated successfully');
+      toast.success(res.message);
       queryClient.setQueryData(['superadmin', 'settings'], (old: { data?: PlatformSetting[] } | undefined) => {
         if (!old?.data) return old;
         return {

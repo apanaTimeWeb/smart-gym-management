@@ -3,7 +3,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'next/navigation';
 import { superadminDashboardApi } from '@/app/superadmin/dashboard/dashboard_api/superadmin_dashboard_api';
-import type { TimeRange, FetchState, SuperadminDashboardApiData } from '@/app/superadmin/dashboard/superadmin_dashboard_types/superadmin_dashboard_types';
+import type { TimeRange, SuperadminDashboardApiData } from '@/app/superadmin/dashboard/superadmin_dashboard_types/superadmin_dashboard_types';
 
 export function useSuperadminDashboardView() {
   const searchParams = useSearchParams();
@@ -24,11 +24,12 @@ export function useSuperadminDashboardView() {
     },
   });
 
-  const fetchState: FetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
+
   const apiData = fetchRes?.data;
 
   return {
-    fetchState,
+    isLoading,
+    isError,
     apiData,
     timeRange
   };

@@ -20,14 +20,14 @@ export const superadminPlansHandlers = [
   }),
   http.post(BASE_URL, async ({ request }) => {
     await delay(500);
-    const body = await request.json() as Record<string, any>;
+    const body = await request.json() as Record<string, unknown>;
     const newPlan = { ...body, id: `p${Date.now()}` };
-    mockPlansList = [...mockPlansList, newPlan as any];
+    mockPlansList = [...mockPlansList, newPlan as unknown as typeof mockPlansList[0]];
     return HttpResponse.json({ success: true, message: 'Created', data: newPlan });
   }),
   http.patch(`${BASE_URL}/:id`, async ({ params, request }) => {
     await delay(500);
-    const body = await request.json() as Record<string, any>;
+    const body = await request.json() as Record<string, unknown>;
     mockPlansList = mockPlansList.map(p => p.id === params.id ? { ...p, ...body } : p);
     return HttpResponse.json({ success: true, message: 'Updated', data: mockPlansList.find(p => p.id === params.id) });
   }),

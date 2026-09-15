@@ -29,7 +29,7 @@ export function useSuperadminGymDeleteModal() {
   const deleteMutation = useMutation({
     mutationFn: (id: string) => gymsApi.deleteGym(id),
     onSuccess: (res) => {
-      toast.success(res.message || 'Tenant deleted successfully.');
+      toast.success(res.message);
       queryClient.invalidateQueries({ queryKey: ['superadmin', 'gyms'] });
       closeDeleteModal();
     },

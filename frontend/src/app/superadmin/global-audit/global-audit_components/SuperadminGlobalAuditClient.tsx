@@ -1,6 +1,6 @@
 'use client';
 // RESPONSIBILITY: Renders the Global Audit Logs dashboard for superadmins to monitor system-wide security events.
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { auditLogsApi } from '@/app/superadmin/global-audit/superadmin_global-audit_api/superadmin_global-audit_api';
 import type { AuditLog } from '@/app/superadmin/global-audit/superadmin_global-audit_types/superadmin_global-audit_types';
@@ -9,6 +9,7 @@ import toast from 'react-hot-toast';
 
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
+import { useSuperadminUrlState } from '@/app/superadmin/superadmin_utils/useSuperadminUrlState';
 
 export type AuditSeverityFilter = 'ALL' | 'INFO' | 'WARNING' | 'CRITICAL';
 
@@ -17,46 +18,56 @@ export type AuditActorFilter = 'ALL' | 'SUPERADMIN' | 'SYSTEM' | 'TENANT';
 const TABLE_COLUMN_COUNT = 4;
 
 export default function SuperadminGlobalAuditClient() {
-  const [search, setSearch] = useState('');
-  const [severityFilter, setSeverityFilter] = useState<AuditSeverityFilter>('ALL');
-  const [actorTypeFilter, setActorTypeFilter] = useState<AuditActorFilter>('ALL');
+  const { getParam, setParam } = useSuperadminUrlState();
 
-  const [currentPage, setCurrentPage] = useState(1);
+  const search = getParam('search', '');
+  const severityFilter = getParam('severityFilter', 'ALL') as AuditSeverityFilter;
+  const actorTypeFilter = getParam('actorTypeFilter', 'ALL') as AuditActorFilter;
+  const currentPage = Number(getParam('page', '1'));
   const ITEMS_PER_PAGE = 20;
 
+  const setSearch = (val: string) => {
+    setParam('search', val);
+    setParam('page', '1');
+  };
+  const setSeverityFilter = (val: AuditSeverityFilter) => {
+    setParam('severityFilter', val);
+    setParam('page', '1');
+  };
+  const setActorTypeFilter = (val: AuditActorFilter) => {
+    setParam('actorTypeFilter', val);
+    setParam('page', '1');
+  };
+  const setCurrentPage = (val: number) => setParam('page', String(val));
+  
+  const queryParams = {
+    page: String(currentPage),
+    limit: String(ITEMS_PER_PAGE),
+    ...(search && { search }),
+    ...(severityFilter !== 'ALL' && { severity: severityFilter }),
+    ...(actorTypeFilter !== 'ALL' && { actorType: actorTypeFilter }),
+  };
+
   const { data: queryData, isLoading, isError, refetch, isFetching } = useQuery({
-    queryKey: ['superadmin', 'global-audit'],
+    queryKey: ['superadmin', 'global-audit', queryParams],
     queryFn: async () => {
-      const res = await auditLogsApi.fetchGlobalLogs();
+      const res = await auditLogsApi.fetchGlobalLogs(queryParams);
       if (res.success && res.data) {
-        return { logs: res.data };
+        return { logs: res.data, total: res.meta?.total || res.data.length };
       }
-      return { logs: [] };
+      return { logs: [], total: 0 };
     }
   });
 
   const fetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
   const displayLogs = queryData?.logs || [];
 
-  // RESPONSIBILITY: Handle side-effects for SuperadminGlobalAuditClient
-  // EXPLANATION: Synchronize component state with external dependencies.
-  // EFFECT DEPENDENCIES: Documented intentionally.
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [search, severityFilter, actorTypeFilter]);
+  const totalLogs = queryData?.total || 0;
 
-  const filteredLogs = displayLogs.filter((log: AuditLog) => {
-    const matchesSearch = log.action?.toLowerCase().includes(search.toLowerCase()) || 
-                          log.actor?.toLowerCase().includes(search.toLowerCase()) ||
-                          log.resource?.toLowerCase().includes(search.toLowerCase());
-    const matchesSeverity = severityFilter === 'ALL' || log.severity === severityFilter;
-    const matchesActorType = actorTypeFilter === 'ALL' || log.actorType === actorTypeFilter;
-    
-    return matchesSearch && matchesSeverity && matchesActorType;
-  });
+  const filteredLogs = displayLogs; // Server-side filtering applied
 
-  const totalPages = Math.ceil(filteredLogs.length / ITEMS_PER_PAGE) || 1;
-  const paginatedLogs = filteredLogs.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(totalLogs / ITEMS_PER_PAGE) || 1;
+  const paginatedLogs = filteredLogs; // Server-side pagination applied
 
   const getSeverityBadge = (severity: AuditLog['severity']) => {
     switch (severity) {

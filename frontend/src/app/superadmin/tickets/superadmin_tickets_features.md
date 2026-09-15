@@ -78,6 +78,22 @@ ticket history is immutable — responses can be added but not deleted.
 - **Thread ordering** — messages sorted by `createdAt` asc (oldest first) inside drawer.
 - **Pagination reset** — page resets to 1 when any filter changes.
 
+## UI Data Requirements
+
+The following types map directly to the UI components and define the shape of the data:
+
+```typescript
+export type TicketStatus = z.infer<typeof TicketStatusSchema>;
+
+export type TicketPriority = z.infer<typeof TicketPrioritySchema>;
+
+export type SupportTicketMessage = z.infer<typeof SupportTicketMessageSchema>;
+
+export type SupportTicket = z.infer<typeof SupportTicketSchema>;
+
+export type ReplyFormValues = z.infer<typeof replySchema>;
+```
+
 ## Rule Compliance Checklist
 - [x] Rule 1: Micro-modularization
 - [x] Rule 3: Module prefix naming — `SuperadminTickets*`

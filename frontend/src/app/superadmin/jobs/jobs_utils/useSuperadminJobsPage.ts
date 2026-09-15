@@ -8,17 +8,18 @@ import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { jobsApi } from '@/app/superadmin/jobs/superadmin_jobs_api/superadmin_jobs_api';
 import type { BackgroundJob } from '@/app/superadmin/jobs/jobs_types/superadmin_jobs_types';
-import type { FetchState } from '@/app/superadmin/superadmin_utils/superadmin_shared_types';
-import { useSuperadminJobsMutations } from '@/app/superadmin/jobs/jobs_utils/useSuperadminJobsMutations';
 
-const ITEMS_PER_PAGE = 10;
+import { useSuperadminJobsMutations } from '@/app/superadmin/jobs/jobs_utils/useSuperadminJobsMutations';
+import { useSuperadminUrlState } from '@/app/superadmin/superadmin_utils/useSuperadminUrlState';
 
 export interface UseJobsPageReturn {
-  fetchState: FetchState;
+  isLoading: boolean;
+  isError: boolean;
   filteredJobs: BackgroundJob[];
   paginatedJobs: BackgroundJob[];
   currentPage: number;
   totalPages: number;
+  total: number;
   setCurrentPage: (page: number) => void;
   statusFilter: string;
   setStatusFilter: (v: string) => void;
@@ -45,19 +46,35 @@ export interface UseJobsPageReturn {
  * Returns job data, filter state, pagination, selection state, and all action handlers.
  */
 export function useSuperadminJobsPage(): UseJobsPageReturn {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [statusFilter, setStatusFilter] = useState<string>('ALL');
-  const [queueFilter, setQueueFilter] = useState<string>('ALL');
+  const { getParam, setParam } = useSuperadminUrlState();
+
+  const statusFilter = getParam('statusFilter', 'ALL');
+  const queueFilter = getParam('queueFilter', 'ALL');
+  const currentPage = Number(getParam('page', '1'));
+  const ITEMS_PER_PAGE = 10;
+
+  const setStatusFilter = (v: string) => { setParam('statusFilter', v); setParam('page', '1'); };
+  const setQueueFilter = (v: string) => { setParam('queueFilter', v); setParam('page', '1'); };
+  const setCurrentPage = (page: number) => setParam('page', String(page));
+
   const [selectedJobIds, setSelectedJobIds] = useState<Set<string>>(new Set());
   const [inspectJob, setInspectJob] = useState<BackgroundJob | null>(null);
 
+  const queryParams: Record<string, string> = {
+    page: String(currentPage),
+    limit: String(ITEMS_PER_PAGE),
+    ...(statusFilter !== 'ALL' && { status: statusFilter }),
+    ...(queueFilter !== 'ALL' && { queue: queueFilter }),
+  };
+
   const { data: fetchRes, isLoading, isError } = useQuery({
-    queryKey: ['superadmin', 'jobs'],
-    queryFn: () => jobsApi.fetchJobs(),
+    queryKey: ['superadmin', 'jobs', queryParams],
+    queryFn: () => jobsApi.fetchJobs(queryParams),
   });
 
-  const rawJobs = (fetchRes?.data as BackgroundJob[]) ?? [];
-  const allJobs: BackgroundJob[] = rawJobs;
+  const rawJobs: BackgroundJob[] = fetchRes?.data ?? [];
+  const allJobs = rawJobs;
+  const total = (fetchRes as { meta?: { total?: number } } | undefined)?.meta?.total ?? rawJobs.length;
   const metrics = {
     activeJobs:    allJobs.filter(j => j.status === 'ACTIVE').length,
     completed24h:  allJobs.filter(j => j.status === 'COMPLETED').length,
@@ -65,16 +82,12 @@ export function useSuperadminJobsPage(): UseJobsPageReturn {
     delayed:       allJobs.filter(j => j.status === 'DELAYED').length,
   };
 
-  const filteredJobs = allJobs.filter(job => {
-    if (statusFilter !== 'ALL' && job.status !== statusFilter) return false;
-    if (queueFilter !== 'ALL' && job.queueName !== queueFilter) return false;
-    return true;
-  });
+  // Server-side filtering applied — no client-side filter needed
+  const filteredJobs = allJobs;
+  const totalPages = Math.ceil(total / ITEMS_PER_PAGE) || 1;
+  const paginatedJobs = allJobs; // Server-side pagination applied
 
-  const totalPages = Math.ceil(filteredJobs.length / ITEMS_PER_PAGE) || 1;
-  const paginatedJobs = filteredJobs.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
-
-  const mutations = useSuperadminJobsMutations({ setSelectedJobIds: setSelectedJobIds as any, selectedJobIds });
+  const mutations = useSuperadminJobsMutations({ setSelectedJobIds, selectedJobIds });
 
   function toggleSelection(id: string) {
     setSelectedJobIds(prev => {
@@ -94,11 +107,13 @@ export function useSuperadminJobsPage(): UseJobsPageReturn {
   }
 
   return {
-    fetchState: isLoading ? 'loading' : isError ? 'error' : 'success',
+    isLoading,
+    isError,
     filteredJobs,
     paginatedJobs,
     currentPage,
     totalPages,
+    total,
     setCurrentPage,
     statusFilter,
     setStatusFilter,

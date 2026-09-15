@@ -77,6 +77,18 @@ which are managed by the Manager finance module.
 - **Mark Paid confirmation** — financial mutation; MUST use `useConfirm()` before firing.
 - **Overdue detection** — `OVERDUE_THRESHOLD_DAYS` is a named constant; never write `> 30` inline.
 
+## UI Data Requirements
+
+The following types map directly to the UI components and define the shape of the data:
+
+```typescript
+export type SaaSInvoice = z.infer<typeof SaaSInvoiceSchema>;
+
+export type InvoiceLineItem = z.infer<typeof InvoiceLineItemSchema>;
+
+export type SuperadminInvoicesTenant = z.infer<typeof SuperadminInvoicesTenantSchema>;
+```
+
 ## Rule Compliance Checklist
 - [x] Rule 1: Micro-modularization
 - [x] Rule 3: Module prefix naming — `SuperadminInvoices*`

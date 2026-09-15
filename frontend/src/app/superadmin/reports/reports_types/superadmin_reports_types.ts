@@ -1,41 +1,6 @@
 // RESPONSIBILITY: Encapsulates functionality for superadmin_reports_types.ts
 import { z } from 'zod';
 
-export interface RevenueRow {
-  month: string;
-  mrr: number;
-  newRevenue: number;
-  cancelledRevenue: number;
-  netRevenue: number;
-  tenantCount: number;
-}
-
-export interface CancellationsRecord {
-  id: string;
-  gymName: string;
-  ownerName: string;
-  plan: string;
-  cancelledAt: string;
-  reason: string;
-  mrr: number;
-  daysActive: number;
-}
-
-export interface TenantHealthScore {
-  id: string;
-  gymName: string;
-  plan: string;
-  score: number;
-  grade: 'A' | 'B' | 'C' | 'D' | 'F';
-  memberCount: number;
-  lastLogin: string;
-  paymentHealth: 'GOOD' | 'AT_RISK' | 'OVERDUE';
-  featureUsage: number;
-  supportTickets: number;
-}
-
-export type ReportsTab = 'revenue' | 'cancellations' | 'health';
-
 export const RevenueRowSchema = z.object({
   month: z.string(),
   mrr: z.number(),
@@ -44,6 +9,7 @@ export const RevenueRowSchema = z.object({
   netRevenue: z.number(),
   tenantCount: z.number()
 });
+export type RevenueRow = z.infer<typeof RevenueRowSchema>;
 
 export const CancellationsRecordSchema = z.object({
   id: z.string(),
@@ -55,6 +21,7 @@ export const CancellationsRecordSchema = z.object({
   mrr: z.number(),
   daysActive: z.number()
 });
+export type CancellationsRecord = z.infer<typeof CancellationsRecordSchema>;
 
 export const TenantHealthScoreSchema = z.object({
   id: z.string(),
@@ -68,4 +35,6 @@ export const TenantHealthScoreSchema = z.object({
   featureUsage: z.number(),
   supportTickets: z.number()
 });
+export type TenantHealthScore = z.infer<typeof TenantHealthScoreSchema>;
 
+export type ReportsTab = 'revenue' | 'cancellations' | 'health';

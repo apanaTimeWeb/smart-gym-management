@@ -1,3 +1,4 @@
+'use client';
 // RESPONSIBILITY: Renders the Coupons Redemption Drawer component and its associated UI logic.
 import { useEffect } from 'react';
 import { X, History, TrendingDown } from 'lucide-react';
@@ -116,4 +117,5 @@ export default function SuperadminCouponsRedemptionDrawer({ coupon, isOpen, onCl
     </>
   );
 }
+
 

@@ -49,6 +49,12 @@ Tracks the full lifecycle of a new tenant from signup through email verification
 - Convert to Paid fires a confirmation modal before mutating state (Rule 71)
 - `TRIAL_STATUS_STYLES` and `ONBOARDING_STATUS_STYLES` live in `onboarding_constants.ts` — never inline
 
+## UI Data Requirements
+
+The following types map directly to the UI components and define the shape of the data:
+
+Types found but could not be parsed.
+
 ## Rule Compliance Checklist
 - [x] Rule 1: Micro-modularization — single client component, types isolated
 - [x] Rule 3: Module prefix naming — `SuperadminOnboardingClient`, `onboarding_types`, `onboarding_constants`

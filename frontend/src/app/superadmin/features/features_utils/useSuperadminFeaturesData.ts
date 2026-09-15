@@ -12,8 +12,8 @@ export function useSuperadminFeaturesData() {
     queryKey,
     queryFn: async () => {
       const res = await featuresApi.fetchFeatures();
-      if (!(res.data as any)) throw new Error(res.message || 'Failed to fetch features data');
-      return (res.data as any);
+      if (!res.data) throw new Error(res.message);
+      return res.data;
     }
   });
 
@@ -23,7 +23,10 @@ export function useSuperadminFeaturesData() {
       queryClient.setQueryData(queryKey, (old: { flags: FeatureFlag[]; notes: ReleaseNote[] } | undefined) => {
         if (!old) return old;
         return {
-          flags: old.flags.map((f) => (f.id === (res.data as any)?.id ? (res.data as any) : f)),
+          flags: old.flags.map((f) => {
+            const flagData = res.data as FeatureFlag;
+            return f.id === flagData?.id ? flagData : f;
+          }),
           notes: old.notes,
         };
       });
@@ -36,7 +39,10 @@ export function useSuperadminFeaturesData() {
       queryClient.setQueryData(queryKey, (old: { flags: FeatureFlag[]; notes: ReleaseNote[] } | undefined) => {
         if (!old) return old;
         return {
-          flags: old.flags.map((f) => (f.id === (res.data as any)?.id ? (res.data as any) : f)),
+          flags: old.flags.map((f) => {
+            const flagData = res.data as FeatureFlag;
+            return f.id === flagData?.id ? flagData : f;
+          }),
           notes: old.notes,
         };
       });
@@ -50,7 +56,7 @@ export function useSuperadminFeaturesData() {
         if (!old) return old;
         return {
           flags: old.flags,
-          notes: [(res.data as any), ...old.notes],
+          notes: [(res.data as ReleaseNote), ...old.notes],
         };
       });
     },

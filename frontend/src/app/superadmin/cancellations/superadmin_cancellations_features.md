@@ -57,6 +57,48 @@ is the single most impactful cancellations-reduction workflow.
 - **Action update is pessimistic** — only update local state after confirmed `onConfirm` callback; never optimistically mutate before modal confirmation.
 - **Email/phone links** — use `mailto:` and `tel:` native links; never open a custom compose modal for these quick actions.
 
+## UI Data Requirements
+
+The following types map directly to the UI components and define the shape of the data:
+
+```typescript
+export type CancellationsRiskLevel = 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW';
+
+export type CancellationsActionStatus = 'PENDING' | 'CONTACTED' | 'RESOLVED' | 'CANCELLED';
+
+export interface CancellationsAlert {
+  id: string;
+  tenantId: string;
+  gymName: string;
+  ownerName: string;
+  adminEmail: string;
+  phone: string;
+  plan: string;
+  riskLevel: CancellationsRiskLevel;
+  actionStatus: CancellationsActionStatus;
+  riskScore: number; // 0–100
+  lastLoginDays: number;
+  memberDrop: number; // % drop in last 30 days
+  paymentFailures: number;
+  renewalDaysLeft: number;
+  // ... truncated
+
+export interface CancellationsKpiData {
+  totalAtRisk: number;
+  criticalCount: number;
+  highCount: number;
+  estimatedMrrAtRisk: number;
+}
+
+export interface CancellationsActionPayload {
+  alertId: string;
+  status: CancellationsActionStatus;
+  notes: string;
+}
+
+export type CancellationsFilterStatus = 'ALL' | CancellationsRiskLevel | CancellationsActionStatus;
+```
+
 ## Rule Compliance Checklist
 - [x] Rule 1: Micro-modularization — module-prefixed subfolders
 - [x] Rule 2: Total Role Isolation — zero cross-role imports

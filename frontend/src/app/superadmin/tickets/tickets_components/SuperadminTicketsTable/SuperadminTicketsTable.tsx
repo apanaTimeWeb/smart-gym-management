@@ -1,3 +1,4 @@
+'use client';
 // RESPONSIBILITY: Renders the data table for Support Tickets
 import { MessageSquare, CheckCircle2, UserCheck, AlertOctagon, ExternalLink } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -126,3 +127,4 @@ export default function SuperadminTicketsTable({ tickets, onReply, onClose, onAs
     </div>
   );
 }
+

@@ -1,3 +1,4 @@
+'use client';
 // RESPONSIBILITY: Renders the Messaging Notifications Tab component and its associated UI logic.
 import { AlertTriangle, Info, X } from 'lucide-react';
 import type { SuperadminNotification, NotificationType } from '@/app/superadmin/messaging/messaging_types/superadmin_messaging_types';
@@ -57,3 +58,4 @@ export function SuperadminMessagingNotificationsTab({
     </div>
   );
 }
+

@@ -1,3 +1,4 @@
+'use client';
 // RESPONSIBILITY: Renders the header and filter/search controls for Support Tickets
 import { Search, Filter } from 'lucide-react';
 import type { TicketStatus, TicketPriority } from '@/app/superadmin/tickets/superadmin_tickets_types/superadmin_tickets_types';
@@ -97,3 +98,4 @@ export default function SuperadminTicketsHeader({
     </div>
   );
 }
+

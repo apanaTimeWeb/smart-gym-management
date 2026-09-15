@@ -21,7 +21,7 @@ export default function SuperadminMigrationsClient() {
     queryFn: async () => {
       const res = await migrationsApi.fetchMigrations();
       if (!res.success) {
-        throw new Error(res.message || 'Failed to fetch migrations');
+        throw new Error(res.message);
       }
       return { migrations: res.data || [] };
     }
@@ -84,7 +84,7 @@ export default function SuperadminMigrationsClient() {
       }, 3500);
 
     } catch (err) {
-      toast.error('Failed to trigger rollout', { id: 'failed-to-trigger-rollout' });
+      toast.error((err as Error).message, { id: 'failed-to-trigger-rollout' });
     }
   };
 

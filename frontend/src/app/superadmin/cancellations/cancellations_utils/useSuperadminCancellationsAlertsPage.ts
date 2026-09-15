@@ -5,8 +5,6 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { cancellationsAlertsApi } from '@/app/superadmin/cancellations/cancellations_api/superadmin_cancellations_api';
 import type { CancellationsAlert, CancellationsFilterStatus, CancellationsActionPayload } from '@/app/superadmin/cancellations/cancellations_types/superadmin_cancellations_types';
 
-import type { FetchState } from '@/app/superadmin/superadmin_utils/superadmin_shared_types';
-
 const CANCELLATIONS_PAGE_SIZE = 20;
 
 export function useSuperadminCancellationsAlertsPage() {
@@ -26,27 +24,28 @@ export function useSuperadminCancellationsAlertsPage() {
     queryFn: () => cancellationsAlertsApi.fetchKpis(),
   });
 
-  const fetchState: FetchState = (alertsLoading || kpisLoading) ? 'loading' : (alertsError) ? 'error' : 'success';
+  const isLoading = alertsLoading || kpisLoading;
+  const isError = alertsError;
 
   const updateActionMutation = useMutation({
     mutationFn: (payload: CancellationsActionPayload) => cancellationsAlertsApi.updateAction(payload),
     onSuccess: (res) => {
       queryClient.invalidateQueries({ queryKey: ['superadmin', 'cancellations'] });
-      toast.success(res.message || 'Action updated successfully.', { id: 'cancellations-update-success' });
+      toast.success(res.message);
       setActionAlert(null);
     },
     onError: (error: Error) => {
-      toast.error(error.message || 'Failed to update action.', { id: 'cancellations-update-error' });
+      toast.error(error.message);
     }
   });
 
   const bulkOutreachMutation = useMutation({
     mutationFn: (tenantIds: string[]) => cancellationsAlertsApi.bulkOutreach(tenantIds),
     onSuccess: (res) => {
-      toast.success(res.message || 'Bulk outreach emails sent!', { id: 'cancellations-bulk-success' });
+      toast.success(res.message);
     },
     onError: (error: Error) => {
-      toast.error(error.message || 'Failed to send bulk outreach.', { id: 'cancellations-bulk-error' });
+      toast.error(error.message);
     }
   });
 
@@ -76,7 +75,7 @@ export function useSuperadminCancellationsAlertsPage() {
   function handleBulkOutreach() {
     const atRiskTenants = filtered.filter(a => a.riskLevel === 'CRITICAL' || a.riskLevel === 'HIGH');
     if (atRiskTenants.length === 0) {
-      toast.error('No critical/high risk tenants found in current view.', { id: 'cancellations-bulk-empty' });
+      toast.error('No critical/high risk tenants found in current view.');
       return;
     }
     bulkOutreachMutation.mutate(atRiskTenants.map(a => a.tenantId));
@@ -89,9 +88,8 @@ export function useSuperadminCancellationsAlertsPage() {
     activeFilter, setActiveFilter,
     actionAlert, setActionAlert,
     currentPage, setCurrentPage,
-    fetchState,
+    isLoading, isError,
     kpis, filtered, paginatedAlerts, totalPages, isFiltered,
     handleActionConfirm, handleBulkOutreach
   };
 }
-

@@ -2,7 +2,24 @@
 import { z } from 'zod';
 
 export const TenantStatusSchema = z.enum(['ACTIVE', 'SUSPENDED', 'TRIAL', 'CANCELLED']);
-// TenantStatus type defined below via union
+export type TenantStatus = z.infer<typeof TenantStatusSchema>;
+
+export const SubscriptionHistoryItemSchema = z.object({
+  id: z.string(),
+  planName: z.string(),
+  startDate: z.string(),
+  endDate: z.string(),
+  status: z.enum(['ACTIVE', 'EXPIRED', 'CANCELLED']),
+  amount: z.number()
+});
+export type SubscriptionHistoryItem = z.infer<typeof SubscriptionHistoryItemSchema>;
+
+export const UsageStatsSchema = z.object({
+  storageUsedMb: z.number(),
+  apiCallsMonthly: z.number(),
+  activeMembers: z.number()
+});
+export type UsageStats = z.infer<typeof UsageStatsSchema>;
 
 export const TenantSchema = z.object({
   id: z.string(),
@@ -23,57 +40,15 @@ export const TenantSchema = z.object({
   trialEndsAt: z.string().optional(),
   lastLoginAt: z.string().optional(),
   lastActiveAt: z.string().nullable().optional(),
+  staffCount: z.number().optional(),
+  subscriptionHistory: z.array(SubscriptionHistoryItemSchema).optional(),
+  usageStats: UsageStatsSchema.optional(),
 });
+export type Tenant = z.infer<typeof TenantSchema>;
 
-export type TenantStatus = 'ACTIVE' | 'SUSPENDED' | 'TRIAL' | 'CANCELLED';
-
-export interface SubscriptionHistoryItem {
-  id: string;
-  planName: string;
-  startDate: string;
-  endDate: string;
-  status: 'ACTIVE' | 'EXPIRED' | 'CANCELLED';
-  amount: number;
-}
-
-export interface UsageStats {
-  storageUsedMb: number;
-  apiCallsMonthly: number;
-  activeMembers: number;
-}
-
-export interface Tenant {
-  id: string;
-  name: string;
-  ownerName: string;
-  adminEmail: string;
-  phone: string;
-  status: TenantStatus;
-  plan: string;
-  createdAt: string;
-  memberCount: number;
-  monthlyRevenue: number;
-  databaseVersion: string;
-  city?: string;
-  state?: string;
-  country?: string;
-  gstin?: string;
-  trialEndsAt?: string;
-  lastLoginAt?: string;
-  lastActiveAt?: string | null;
-  staffCount?: number;
-  subscriptionHistory?: SubscriptionHistoryItem[];
-  usageStats?: UsageStats;
-}
-
-export type FetchState = 'idle' | 'loading' | 'success' | 'error';
-
-/** Schema for gym platform statistics */
 export const GymStatsSchema = z.object({
   totalActive: z.number(),
   totalSuspended: z.number(),
   mrrContribution: z.number().optional(),
 }).passthrough();
-
-/** Inferred type for gym stats */
 export type GymStats = z.infer<typeof GymStatsSchema>;

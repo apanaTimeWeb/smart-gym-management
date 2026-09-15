@@ -50,7 +50,7 @@ export default function SuperadminPlanEditModal() {
   const editMutation = useMutation({
     mutationFn: (data: UpdatePlanPayload) => plansApi.updatePlan(selectedPlan!.id, data),
     onSuccess: (res) => {
-      toast.success(res.message || 'Plan updated successfully');
+      toast.success(res.message);
       queryClient.invalidateQueries({ queryKey: ['superadmin', 'plans'] });
       closeEditModal();
     },

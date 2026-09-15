@@ -1,3 +1,4 @@
+'use client';
 // RESPONSIBILITY: Renders the Onboarding Table component and its associated UI logic.
 import { useState } from 'react';
 import { 
@@ -234,3 +235,4 @@ export function SuperadminOnboardingTable({
     </div>
   );
 }
+

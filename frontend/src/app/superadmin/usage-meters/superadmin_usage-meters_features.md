@@ -44,3 +44,26 @@ Provides the Superadmin with a read-only dashboard view of per-tenant resource c
 - **Section-Level Error Boundaries in Usage-meters:** Do not allow a single failed API fetch in Usage-meters to unmount the entire page. Major components (like the Usage-meters data table or metrics) must be wrapped in `<SuperadminErrorBoundary variant="inline">`.
 - **Backend-Driven Messages for Usage-meters Mutations:** Do not hardcode success or error toasts like "User created". Always display the `message` string provided by the backend's JSON response envelope when creating, updating, or deleting Usage-meters.
 - **No Client-Side Pagination for Usage-meters:** If the dataset grows large, do not fetch all Usage-meters and paginate on the client. Always implement robust server-side pagination, sorting, and filtering via query parameters.
+
+## UI Data Requirements
+
+The following types map directly to the UI components and define the shape of the data:
+
+```typescript
+export interface UsageMeter {
+  id: string;
+  tenantId: string;
+  tenantName: string;
+  smsSent: number;
+  smsLimit: number;
+  whatsappMessagesSent: number;
+  whatsappLimit: number;
+  emailsSent: number;
+  emailLimit: number;
+  apiCallsCount: number;
+  apiCallsLimit?: number;
+  databaseGb: number;
+  mediaGb: number;
+  storageLimitGb: number;
+  // ... truncated
+```

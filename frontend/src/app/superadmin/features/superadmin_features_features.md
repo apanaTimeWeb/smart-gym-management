@@ -71,6 +71,18 @@ mechanism for plan-based feature gating across the entire platform.
 - **Override vs plan default** — tenant override takes precedence over plan default; UI must visually distinguish overridden cells.
 - **Remove override confirmation** — MUST use `useConfirm()` before `DELETE`.
 
+## UI Data Requirements
+
+The following types map directly to the UI components and define the shape of the data:
+
+```typescript
+export type FeatureFlag = z.infer<typeof FeatureFlagSchema>;
+
+export type ReleaseNote = z.infer<typeof ReleaseNoteSchema>;
+
+export type SuperadminFeaturesTenant = z.infer<typeof SuperadminFeaturesTenantSchema>;
+```
+
 ## Rule Compliance Checklist
 - [x] Rule 1: Micro-modularization
 - [x] Rule 3: Module prefix naming — `SuperadminFeatures*`

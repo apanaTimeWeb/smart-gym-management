@@ -9,6 +9,7 @@ import { plansApi } from '@/app/superadmin/plans/superadmin_plans_api/superadmin
 import { useSuperadminPlansStore } from '@/app/superadmin/plans/plans_store/useSuperadminPlansStore';
 import { formatCurrency } from '@/lib/formatters';
 import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
+import type { SubscriptionPlan } from '@/app/superadmin/plans/superadmin_plans_types/superadmin_plans_types';
 
 export default function SuperadminPlansList() {
   const openEditModal = useSuperadminPlansStore(state => state.openEditModal);
@@ -25,7 +26,7 @@ export default function SuperadminPlansList() {
   const deleteMutation = useMutation({
     mutationFn: (id: string) => plansApi.deletePlan(id),
     onSuccess: (res) => {
-      toast.success(res.message || 'Plan deleted');
+      toast.success(res.message);
       queryClient.invalidateQueries({ queryKey: ['superadmin', 'plans'] });
     },
     onError: (err: unknown) => {
@@ -35,11 +36,11 @@ export default function SuperadminPlansList() {
 
   const archiveMutation = useMutation({
     mutationFn: (id: string) => plansApi.archivePlan(id),
-    onSuccess: () => {
-      toast.success('Plan archived. Existing gyms remain unaffected.', { id: 'plan-archived-existing-gyms-remain-unaffected' });
+    onSuccess: (res) => {
+      toast.success(res.message);
       queryClient.invalidateQueries({ queryKey: ['superadmin', 'plans'] });
     },
-    onError: () => { toast.error('Failed to archive plan.', { id: 'failed-to-archive-plan' }); },
+    onError: (err: unknown) => { toast.error((err as Error).message, { id: 'failed-to-archive-plan' }); },
   });
 
   const plans = fetchRes?.data || [];
@@ -60,7 +61,7 @@ export default function SuperadminPlansList() {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {plans.map((plan: any) => {
+      {plans.map((plan: SubscriptionPlan) => {
         const isDeleting = deleteMutation.isPending && deleteMutation.variables === plan.id;
         return (
           <div
@@ -98,7 +99,7 @@ export default function SuperadminPlansList() {
                 Binary Limit (GB): <span className="text-foreground">{plan.binaryLimitGb ?? 'Unlimited'}</span>
               </p>
               <div className="pt-2">
-                {plan.features?.map((feat: any, idx: number) => (
+                {plan.features?.map((feat: string, idx: number) => (
                   <div key={feat} className="flex items-center gap-2 mb-2 text-sm text-secondary">
                     <Check className="w-4 h-4 text-success shrink-0" />
                     {feat}

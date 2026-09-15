@@ -1,24 +1,28 @@
 // RESPONSIBILITY: Defines all TypeScript types, Zod schemas, and form data shapes for the Broadcasts module. Single source of truth for broadcast data contracts.
 import { z } from 'zod';
-export type BroadcastStatus = 'SENT' | 'SCHEDULED' | 'DRAFT';
-export type BroadcastAudience = 'ALL_TENANTS' | 'PRO_ONLY' | 'SUSPENDED_ONLY';
 
-/** Filter tabs for the Broadcasts status dropdown. */
+export const BroadcastStatusSchema = z.enum(['SENT', 'SCHEDULED', 'DRAFT']);
+export type BroadcastStatus = z.infer<typeof BroadcastStatusSchema>;
+
+export const BroadcastAudienceSchema = z.enum(['ALL_TENANTS', 'PRO_ONLY', 'SUSPENDED_ONLY']);
+export type BroadcastAudience = z.infer<typeof BroadcastAudienceSchema>;
+
 export type BroadcastStatusFilter = 'ALL' | BroadcastStatus | 'FAILED';
 
-export interface Broadcast {
-  id: string;
-  title: string;
-  content: string;
-  status: BroadcastStatus;
-  targetGymIds: string[];
-  scheduledDate: string | null;
-  sentDate: string | null;
-  totalRecipients?: number;
-  deliveredCount?: number;
-  failedCount?: number;
-  audience?: BroadcastAudience;
-}
+export const BroadcastResponseSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  content: z.string(),
+  status: BroadcastStatusSchema,
+  targetGymIds: z.array(z.string()),
+  scheduledDate: z.string().nullable().optional(),
+  sentDate: z.string().nullable().optional(),
+  totalRecipients: z.number().optional(),
+  deliveredCount: z.number().optional(),
+  failedCount: z.number().optional(),
+  audience: BroadcastAudienceSchema.optional(),
+});
+export type Broadcast = z.infer<typeof BroadcastResponseSchema>;
 
 export const BroadcastSchema = z.object({
   title: z.string().min(3, 'Title must be at least 3 characters'),
@@ -57,25 +61,11 @@ export interface BroadcastsEmptyStateProps {
   onCreateClick: () => void;
 }
 
-
-export const BroadcastResponseSchema = z.object({
+export const SuperadminBroadcastsTenantSchema = z.object({
   id: z.string(),
-  title: z.string(),
-  content: z.string(),
-  status: z.enum(['SENT', 'SCHEDULED', 'DRAFT']),
-  targetGymIds: z.array(z.string()),
-  scheduledDate: z.string().nullable().optional(),
-  sentDate: z.string().nullable().optional(),
-  totalRecipients: z.number().optional(),
-  deliveredCount: z.number().optional(),
-  failedCount: z.number().optional(),
-  audience: z.enum(['ALL_TENANTS', 'PRO_ONLY', 'SUSPENDED_ONLY']).optional(),
+  name: z.string(),
+  plan: z.string(),
+  ownerName: z.string().optional(),
+  phone: z.string().optional(),
 });
-
-export interface SuperadminBroadcastsTenant {
-  id: string;
-  name: string;
-  plan: string;
-  ownerName?: string;
-  phone?: string;
-}
+export type SuperadminBroadcastsTenant = z.infer<typeof SuperadminBroadcastsTenantSchema>;

@@ -50,6 +50,10 @@ export default function SuperadminInvoicesClient() {
     pendingRevenue,
     overdueCount,
     handleLogManualPayment,
+    currentPage,
+    pageLimit,
+    setPage,
+    total,
   } = useSuperadminInvoicesPage();
 
   if (isLoading) return (
@@ -130,6 +134,9 @@ export default function SuperadminInvoicesClient() {
               <SuperadminInvoicesTable 
                 onLogPaymentClick={() => setShowAddModal(true)}
                 invoices={filteredInvoices} 
+                currentPage={currentPage}
+                totalPages={Math.ceil(total / pageLimit) || 1}
+                onPageChange={setPage}
               />
             )}
           </>

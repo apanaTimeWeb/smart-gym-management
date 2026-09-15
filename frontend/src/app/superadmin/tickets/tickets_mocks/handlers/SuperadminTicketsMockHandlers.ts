@@ -22,7 +22,7 @@ export const superadminTicketsHandlers = [
     const id = params.id as string;
     const ticket = mockTickets.find(t => t.id === id);
     if (!ticket) {
-      return HttpResponse.json<ApiResponse<SupportTicket>>({ success: false, message: 'Not found', data: null as unknown as any }, { status: 404 });
+      return HttpResponse.json<ApiResponse<SupportTicket>>({ success: false, message: 'Not found', data: null as unknown as SupportTicket }, { status: 404 });
     }
     return HttpResponse.json<ApiResponse<SupportTicket>>({
       success: true,
@@ -44,7 +44,7 @@ export const superadminTicketsHandlers = [
       return t;
     });
     if (!updated) {
-      return HttpResponse.json<ApiResponse<SupportTicket>>({ success: false, message: 'Not found', data: null as unknown as any }, { status: 404 });
+      return HttpResponse.json<ApiResponse<SupportTicket>>({ success: false, message: 'Not found', data: null as unknown as SupportTicket }, { status: 404 });
     }
     return HttpResponse.json<ApiResponse<SupportTicket>>({
       success: true,
@@ -65,7 +65,7 @@ export const superadminTicketsHandlers = [
       return t;
     });
     if (!updated) {
-      return HttpResponse.json<ApiResponse<SupportTicket>>({ success: false, message: 'Not found', data: null as unknown as any }, { status: 404 });
+      return HttpResponse.json<ApiResponse<SupportTicket>>({ success: false, message: 'Not found', data: null as unknown as SupportTicket }, { status: 404 });
     }
     return HttpResponse.json<ApiResponse<SupportTicket>>({
       success: true,
@@ -87,7 +87,7 @@ export const superadminTicketsHandlers = [
       return t;
     });
     if (!updated) {
-      return HttpResponse.json<ApiResponse<SupportTicket>>({ success: false, message: 'Not found', data: null as unknown as any }, { status: 404 });
+      return HttpResponse.json<ApiResponse<SupportTicket>>({ success: false, message: 'Not found', data: null as unknown as SupportTicket }, { status: 404 });
     }
     return HttpResponse.json<ApiResponse<SupportTicket>>({
       success: true,

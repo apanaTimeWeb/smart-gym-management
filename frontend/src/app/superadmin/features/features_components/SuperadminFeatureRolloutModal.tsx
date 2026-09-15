@@ -4,7 +4,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, Loader2, Search } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
-import { featuresApi } from '@/app/superadmin/features/superadmin_features_api/superadmin_features_api';
+import { gymsApi } from '@/app/superadmin/gyms/superadmin_gyms_api/superadmin_gyms_api';
 import type { FeatureFlag, SuperadminFeaturesTenant } from '@/app/superadmin/features/superadmin_features_types/superadmin_features_types';
 
 interface FeatureRolloutModalProps {
@@ -21,7 +21,7 @@ export default function SuperadminFeatureRolloutModal({ isOpen, onClose, flag, o
 
   const { data: fetchRes, isLoading: fetchStateLoading } = useQuery({
     queryKey: ['superadmin', 'gyms'],
-    queryFn: () => featuresApi.fetchTenants(),
+    queryFn: () => gymsApi.fetchGyms(),
     enabled: isOpen,
   });
 

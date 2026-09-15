@@ -1,3 +1,4 @@
+'use client';
 // RESPONSIBILITY: Renders the Messaging Compose Modal component and its associated UI logic.
 import { X, Send } from 'lucide-react';
 import type { MessageChannel, MessagingTenant } from '@/app/superadmin/messaging/messaging_types/superadmin_messaging_types';
@@ -108,3 +109,4 @@ export function SuperadminMessagingComposeModal({
     </div>
   );
 }
+

@@ -1,3 +1,4 @@
+'use client';
 // RESPONSIBILITY: Renders a single row in the Invoices table with WhatsApp, Email resend, and PDF download actions.
 import React from 'react';
 import { Receipt, MessageCircle, Mail } from 'lucide-react';
@@ -55,7 +56,7 @@ export default function SuperadminInvoicesTableRow({ invoice: inv }: InvoicesTab
         window.open(res.data.downloadUrl, '_blank');
         toast.success('Download started.', { id: `dl-${inv.id}` });
       } else {
-        toast.error(res.message || 'Download URL not found.', { id: `dl-${inv.id}` });
+        toast.error(res.message, { id: `dl-${inv.id}` });
       }
     } catch {
       toast.error('Failed to download invoice.', { id: `dl-${inv.id}` });
@@ -67,7 +68,7 @@ export default function SuperadminInvoicesTableRow({ invoice: inv }: InvoicesTab
     toast.loading(`Resending invoice ${inv.id}...`, { id: `resend-${inv.id}` });
     try {
       const res = await invoicesApi.resendInvoiceEmail(inv.id);
-      toast.success(res.message || 'Invoice resent successfully.', { id: `resend-${inv.id}` });
+      toast.success(res.message, { id: `resend-${inv.id}` });
     } catch {
       toast.error('Failed to resend invoice.', { id: `resend-${inv.id}` });
     }
@@ -115,3 +116,4 @@ export default function SuperadminInvoicesTableRow({ invoice: inv }: InvoicesTab
     </tr>
   );
 }
+

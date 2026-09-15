@@ -9,6 +9,7 @@ import { GymsUrlConfig } from '@/app/superadmin/gyms/superadmin_gyms_url_config'
 import { useSuperadminAddGymForm } from '@/app/superadmin/gyms/gyms_components/SuperadminAddGymForm/useSuperadminAddGymForm';
 import { useUnsavedChangesGuard } from '@/lib/useUnsavedChangesGuard';
 import { formatCurrency } from '@/lib/formatters';
+import type { SubscriptionPlan } from '@/app/superadmin/plans/superadmin_plans_types/superadmin_plans_types';
 
 export default function SuperadminAddGymForm() {
   const {
@@ -130,7 +131,7 @@ export default function SuperadminAddGymForm() {
                     <SearchableDropdown
                       value={field.value || ''}
                       onChange={field.onChange}
-                      options={plans ? plans.map((p: any) => ({ label: `${p.name} (${formatCurrency(Number(p.priceMonthly))}/mo)`, value: p.name })) : []}
+                      options={plans ? plans.map((p: SubscriptionPlan) => ({ label: `${p.name} (${formatCurrency(Number(p.priceMonthly))}/mo)`, value: p.name })) : []}
                       disabled={loadingPlans}
                       placeholder={loadingPlans ? "Loading plans..." : "Select a plan"}
                     />

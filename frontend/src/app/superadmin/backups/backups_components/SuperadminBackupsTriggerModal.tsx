@@ -1,3 +1,4 @@
+'use client';
 // RESPONSIBILITY: Renders the Backups Trigger Modal component and its associated UI logic.
 import { DatabaseBackup } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -57,3 +58,4 @@ export default function SuperadminBackupsTriggerModal({ isOpen, onClose, isTrigg
     </div>
   );
 }
+

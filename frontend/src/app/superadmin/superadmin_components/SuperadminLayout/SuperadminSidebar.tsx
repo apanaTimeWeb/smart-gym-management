@@ -5,8 +5,6 @@
 // Includes a local search filter for quick navigation.
 
 import { useState, useEffect, useMemo } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard,
   Building2,
@@ -67,14 +65,82 @@ import { JobsUrlConfig } from '@/app/superadmin/jobs/superadmin_jobs_url_config'
 import { TicketsUrlConfig } from '@/app/superadmin/tickets/superadmin_tickets_url_config';
 import { UsageMetersUrlConfig } from '@/app/superadmin/usage-meters/superadmin_usage_meters_url_config';
 import { logout } from '@/lib/api';
+import SuperadminSidebarNavSection from '@/app/superadmin/superadmin_components/SuperadminLayout/SuperadminSidebarNavSection';
 
 interface SuperadminSidebarProps {
   isCollapsed: boolean;
   setIsCollapsed: (v: boolean) => void;
 }
 
+const ALL_NAV_GROUPS = [
+  {
+    group: 'Overview',
+    items: [
+      { name: 'Dashboard', href: DashboardUrlConfig.PAGES.MAIN, icon: LayoutDashboard },
+    ]
+  },
+  {
+    group: 'Gyms & Plans',
+    items: [
+      { name: 'Gyms & Tenants', href: GymsUrlConfig.PAGES.MAIN, icon: Building2 },
+      { name: 'Gym Branches', href: BranchesUrlConfig.PAGES.MAIN, icon: ServerCog },
+      { name: 'Gym Franchises', href: FranchisesUrlConfig.PAGES.MAIN, icon: Building2 },
+      { name: 'Onboarding', href: OnboardingUrlConfig.PAGES.MAIN, icon: UserPlus },
+      { name: 'Subscription Plans', href: PlansUrlConfig.PAGES.MAIN, icon: CreditCard },
+    ]
+  },
+  {
+    group: 'Billing & Revenue',
+    items: [
+      { name: 'Revenue Analytics', href: AnalyticsUrlConfig.PAGES.MAIN, icon: BarChart2 },
+      { name: 'SaaS Invoices', href: InvoicesUrlConfig.PAGES.MAIN, icon: Receipt },
+      { name: 'Promotional Coupons', href: CouponsUrlConfig.PAGES.MAIN, icon: Tag },
+    ]
+  },
+  {
+    group: 'Communication & Support',
+    items: [
+      { name: 'Support Tickets', href: TicketsUrlConfig.PAGES.MAIN, icon: Ticket },
+      { name: 'Gym Messaging', href: MessagingUrlConfig.PAGES.MAIN, icon: MessageSquare },
+      { name: 'Broadcast Messages', href: BroadcastsUrlConfig.PAGES.MAIN, icon: Send },
+    ]
+  },
+  {
+    group: 'Insights & Reports',
+    items: [
+      { name: 'Members About to Leave', href: CancellationsUrlConfig.PAGES.MAIN, icon: TrendingDown },
+      { name: 'Usage Meters', href: UsageMetersUrlConfig.PAGES.MAIN, icon: BarChart3 },
+      { name: 'Reports & Exports', href: ReportsUrlConfig.PAGES.MAIN, icon: FileBarChart },
+    ]
+  },
+  {
+    group: 'Platform Management',
+    items: [
+      { name: 'Feature Flags', href: FeaturesUrlConfig.PAGES.MAIN, icon: ToggleLeft },
+      { name: 'Affiliate Partners', href: AffiliatesUrlConfig.PAGES.MAIN, icon: Users },
+    ]
+  },
+  {
+    group: 'System & Infra',
+    items: [
+      { name: 'Infrastructure', href: InfrastructureUrlConfig.PAGES.MAIN, icon: Server },
+      { name: 'Schema Rollouts', href: MigrationsUrlConfig.PAGES.MAIN, icon: DatabaseZap },
+      { name: 'Background Jobs', href: JobsUrlConfig.PAGES.MAIN, icon: Activity },
+      { name: 'Database Backups', href: BackupsUrlConfig.PAGES.MAIN, icon: DatabaseBackup },
+      { name: 'System Health', href: SystemUrlConfig.PAGES.MAIN, icon: ServerCog },
+      { name: 'Global Audit Logs', href: GlobalAuditUrlConfig.PAGES.MAIN, icon: History },
+      { name: 'Global Settings', href: SettingsUrlConfig.PAGES.MAIN, icon: Settings },
+    ]
+  },
+  {
+    group: 'Account',
+    items: [
+      { name: 'My Profile', href: ProfileUrlConfig.PAGES.MAIN, icon: UserCircle },
+    ]
+  }
+];
+
 export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: SuperadminSidebarProps) {
-  const pathname = usePathname();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -94,82 +160,12 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Super
   // Closes the mobile drawer whenever the route changes to avoid stale open state.
   useEffect(() => {
     Promise.resolve().then(() => setIsMobileOpen(false));
-  }, [pathname]);
+  }, []);
 
-  const allNavGroups = [
-    {
-      group: 'Overview',
-      items: [
-        { name: 'Dashboard', href: DashboardUrlConfig.PAGES.MAIN, icon: LayoutDashboard },
-      ]
-    },
-    {
-      group: 'Gyms & Plans',
-      items: [
-        { name: 'Gyms & Tenants', href: GymsUrlConfig.PAGES.MAIN, icon: Building2 },
-        { name: 'Gym Branches', href: BranchesUrlConfig.PAGES.MAIN, icon: ServerCog },
-        { name: 'Gym Franchises', href: FranchisesUrlConfig.PAGES.MAIN, icon: Building2 },
-        { name: 'Onboarding', href: OnboardingUrlConfig.PAGES.MAIN, icon: UserPlus },
-        { name: 'Subscription Plans', href: PlansUrlConfig.PAGES.MAIN, icon: CreditCard },
-      ]
-    },
-    {
-      group: 'Billing & Revenue',
-      items: [
-        { name: 'Revenue Analytics', href: AnalyticsUrlConfig.PAGES.MAIN, icon: BarChart2 },
-        { name: 'SaaS Invoices', href: InvoicesUrlConfig.PAGES.MAIN, icon: Receipt },
-        { name: 'Promotional Coupons', href: CouponsUrlConfig.PAGES.MAIN, icon: Tag },
-      ]
-    },
-    {
-      group: 'Communication & Support',
-      items: [
-        { name: 'Support Tickets', href: TicketsUrlConfig.PAGES.MAIN, icon: Ticket },
-        { name: 'Gym Messaging', href: MessagingUrlConfig.PAGES.MAIN, icon: MessageSquare },
-        { name: 'Broadcast Messages', href: BroadcastsUrlConfig.PAGES.MAIN, icon: Send },
-      ]
-    },
-    {
-      group: 'Insights & Reports',
-      items: [
-        { name: 'Members About to Leave', href: CancellationsUrlConfig.PAGES.MAIN, icon: TrendingDown },
-        { name: 'Usage Meters', href: UsageMetersUrlConfig.PAGES.MAIN, icon: BarChart3 },
-        { name: 'Reports & Exports', href: ReportsUrlConfig.PAGES.MAIN, icon: FileBarChart },
-      ]
-    },
-    {
-      group: 'Platform Management',
-      items: [
-        { name: 'Feature Flags', href: FeaturesUrlConfig.PAGES.MAIN, icon: ToggleLeft },
-        { name: 'Affiliate Partners', href: AffiliatesUrlConfig.PAGES.MAIN, icon: Users },
-      ]
-    },
-    {
-      group: 'System & Infra',
-      items: [
-        { name: 'Infrastructure', href: InfrastructureUrlConfig.PAGES.MAIN, icon: Server },
-        { name: 'Schema Rollouts', href: MigrationsUrlConfig.PAGES.MAIN, icon: DatabaseZap },
-        { name: 'Background Jobs', href: JobsUrlConfig.PAGES.MAIN, icon: Activity },
-        { name: 'Database Backups', href: BackupsUrlConfig.PAGES.MAIN, icon: DatabaseBackup },
-        { name: 'System Health', href: SystemUrlConfig.PAGES.MAIN, icon: ServerCog },
-        { name: 'Global Audit Logs', href: GlobalAuditUrlConfig.PAGES.MAIN, icon: History },
-        { name: 'Global Settings', href: SettingsUrlConfig.PAGES.MAIN, icon: Settings },
-      ]
-    },
-    {
-      group: 'Account',
-      items: [
-        { name: 'My Profile', href: ProfileUrlConfig.PAGES.MAIN, icon: UserCircle },
-      ]
-    }
-  ];
-
-  // Filter groups based on search query
   const filteredNavGroups = useMemo(() => {
-    if (!searchQuery.trim()) return allNavGroups;
+    if (!searchQuery.trim()) return ALL_NAV_GROUPS;
     const lowerQuery = searchQuery.toLowerCase();
-    
-    return allNavGroups
+    return ALL_NAV_GROUPS
       .map(group => ({
         ...group,
         items: group.items.filter(item => item.name.toLowerCase().includes(lowerQuery))
@@ -229,7 +225,7 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Super
         </div>
 
         {/* Search Box */}
-        {!isCollapsed && (
+        {!isCollapsed ? (
           <div className="px-4 py-3 border-b border-border shrink-0">
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -244,9 +240,7 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Super
               />
             </div>
           </div>
-        )}
-        
-        {isCollapsed && (
+        ) : (
           <div className="flex items-center justify-center px-4 py-3 border-b border-border shrink-0">
             <button
               onClick={() => setIsCollapsed(false)}
@@ -260,52 +254,7 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Super
 
         {/* Navigation Groups */}
         <nav className="flex-1 space-y-4 overflow-y-auto p-3 custom-scrollbar" aria-label="Sidebar navigation">
-          {filteredNavGroups.length === 0 ? (
-            <div className="text-center py-4 text-sm text-secondary">
-              No matches found
-            </div>
-          ) : (
-            filteredNavGroups.map((group) => (
-              <div key={group.group}>
-                {!isCollapsed && (
-                  <p className="text-xs font-semibold text-disabled mb-2 px-2 uppercase tracking-wider">
-                    {group.group}
-                  </p>
-                )}
-                <div className="space-y-0.5">
-                  {group.items.map((item) => {
-                    const isActive = pathname.startsWith(item.href);
-                    const Icon = item.icon;
-                    return (
-                      <Link
-                        key={item.name}
-                        href={item.href}
-                        title={isCollapsed ? item.name : undefined}
-                        aria-current={isActive ? 'page' : undefined}
-                        className={`
-                          relative flex items-center gap-3 rounded-lg px-3 py-2.5 motion-safe:transition-all motion-safe:duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1
-                          ${isActive
-                            // Design §3: Active = gold left border + primary-subtle bg + gold glow
-                            ? 'bg-primary-subtle text-primary border-l-2 border-primary shadow-[0_0_15px_var(--primary-subtle)] pl-[10px]'
-                            : 'text-secondary hover:bg-card hover:text-foreground border-l-2 border-transparent pl-[10px]'
-                          }
-                          ${isCollapsed ? 'justify-center pl-0' : ''}
-                        `}
-                      >
-                        <Icon
-                          className={`w-5 h-5 shrink-0 ${isActive ? 'text-primary' : 'text-zinc-400 group-hover:text-white'}`}
-                          strokeWidth={2}
-                        />
-                        {!isCollapsed && (
-                          <span className="font-medium text-sm leading-none">{item.name}</span>
-                        )}
-                      </Link>
-                    );
-                  })}
-                </div>
-              </div>
-            ))
-          )}
+          <SuperadminSidebarNavSection navGroups={filteredNavGroups} isCollapsed={isCollapsed} />
         </nav>
 
         {/* Sidebar Footer — Logout */}
@@ -316,7 +265,7 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Super
             className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary hover:text-danger hover:bg-danger-bg motion-safe:transition-all motion-safe:duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger ${isCollapsed ? 'justify-center' : ''
               }`}
           >
-            <LogOut className="w-5 h-5 shrink-0" strokeWidth={2}  />
+            <LogOut className="w-5 h-5 shrink-0" strokeWidth={2} />
             {!isCollapsed && <span className="font-medium text-sm">Logout</span>}
           </button>
         </div>

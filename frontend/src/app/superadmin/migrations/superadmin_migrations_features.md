@@ -148,6 +148,22 @@ export interface MigrationLog {
 
 ---
 
+## UI Data Requirements
+
+The following types map directly to the UI components and define the shape of the data:
+
+```typescript
+export type MigrationStatus = z.infer<typeof MigrationStatusSchema>;
+
+export type MigrationLog = z.infer<typeof MigrationLogSchema>;
+
+export type SuperadminMigrationsTenant = z.infer<typeof SuperadminMigrationsTenantSchema>;
+
+export type SchemaMigration = z.infer<typeof SchemaMigrationSchema>;
+
+export type MigrationsPageData = z.infer<typeof MigrationsPageDataSchema>;
+```
+
 ## Rule Compliance Checklist
 
 - [x] Rule 1: Micro-modularization — subfolders with module prefix

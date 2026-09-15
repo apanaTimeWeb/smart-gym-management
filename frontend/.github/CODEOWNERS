@@ -37,4 +37,4 @@
 /src/app/superadmin/settings/** @frontend-leads @security-team
 
 # Superadmin shell — ghost-login banner, sidebar, auth guard
-/src/components/ui/SuperadminLayout/** @frontend-leads @security-team
+/src/app/superadmin/superadmin_components/SuperadminLayout/** @frontend-leads @security-team

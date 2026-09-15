@@ -1,15 +1,14 @@
 // RESPONSIBILITY: useCouponsPage.ts encapsulates all state and async logic for the Coupons page.
-// DATA FLOW: superadminApi â†’ useCouponsPage â†’ CouponsClient
+// DATA FLOW: superadminApi → useCouponsPage → CouponsClient
 import { useState, useMemo, useCallback } from 'react';
 import { useQueryClient, useQuery } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import toast from 'react-hot-toast';
 import { useSuperadminUrlState } from '@/app/superadmin/superadmin_utils/useSuperadminUrlState';
 import { couponsApi } from '@/app/superadmin/coupons/superadmin_coupons_api/superadmin_coupons_api';
-import { useSuperadminCouponsMutation } from '@/app/superadmin/coupons/coupons_utils/useSuperadminCouponsMutation';
 import { CouponSchema, type CouponFormData } from '@/app/superadmin/coupons/superadmin_coupons_types/superadmin_coupons_types';
-import type { Coupon, CouponStatus, CouponKpiFilter } from '@/app/superadmin/coupons/superadmin_coupons_types/superadmin_coupons_types';
+import type { Coupon, CouponKpiFilter } from '@/app/superadmin/coupons/superadmin_coupons_types/superadmin_coupons_types';
+import { useSuperadminCouponsMutations } from '@/app/superadmin/coupons/coupons_utils/useSuperadminCouponsMutations';
 
 export const useSuperadminCoupons = () => {
   const queryClient = useQueryClient();
@@ -67,53 +66,22 @@ export const useSuperadminCoupons = () => {
     },
   });
 
-  const { mutate, isMutating } = useSuperadminCouponsMutation();
+  const {
+    isMutating,
+    handleCreateCoupon,
+    handleUpdateCoupon,
+    handleDeleteCoupon,
+    handleToggleRestore,
+    handleToggleStatus,
+  } = useSuperadminCouponsMutations(
+    updateCoupons,
+    setIsModalOpen,
+    setIsEditModalOpen,
+    setSelectedCoupon,
+    selectedCoupon,
+    form
+  );
 
-  const handleCreateCoupon = useCallback(async (data: CouponFormData) => {
-    await mutate(() => couponsApi.createCoupon(data), {
-      onSuccess: (newCoupon) => {
-        updateCoupons(prev => [newCoupon as Coupon, ...prev]);
-        setIsModalOpen(false);
-        form.reset();
-      },
-    });
-  }, [form, updateCoupons, mutate]);
-
-  const handleUpdateCoupon = useCallback(async (id: string, data: Partial<CouponFormData>) => {
-    if (!selectedCoupon) return;
-    await mutate(() => couponsApi.updateCoupon(id, data), {
-      onSuccess: (updatedCoupon) => {
-        updateCoupons(prev => prev.map(c => c.id === id ? { ...c, ...(updatedCoupon != null && typeof updatedCoupon === 'object' ? updatedCoupon as Partial<Coupon> : {}) } : c));
-        setIsEditModalOpen(false);
-        setSelectedCoupon(null);
-      },
-    });
-  }, [selectedCoupon, updateCoupons, mutate]);
-
-  const handleDeleteCoupon = useCallback(async (id: string) => {
-    await mutate(() => couponsApi.deleteCoupon(id), {
-      onSuccess: () => updateCoupons(prev => prev.filter(c => c.id !== id)),
-    });
-  }, [updateCoupons, mutate]);
-
-  const handleToggleRestore = useCallback(async (id: string) => {
-    await mutate(() => couponsApi.restoreCoupon(id), {
-      onSuccess: () => updateCoupons(prev => prev.map(c => c.id === id ? { ...c, isDeleted: false } : c)),
-    });
-  }, [updateCoupons, mutate]);
-
-  const handleToggleStatus = useCallback(async (id: string, currentStatus: CouponStatus) => {
-    if (currentStatus !== 'ACTIVE' && currentStatus !== 'INACTIVE') {
-      toast.error(`Cannot toggle status of ${currentStatus.toLowerCase()} coupon`, { id: 'toggle-error' });
-      return;
-    }
-    const newStatus: CouponStatus = currentStatus === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
-    await mutate(() => couponsApi.toggleStatus(id, newStatus), {
-      onSuccess: () => updateCoupons(prev => prev.map(c => c.id === id ? { ...c, status: newStatus } : c)),
-    });
-  }, [updateCoupons, mutate]);
-
-  // Filter applied via server-side URL state params
   const filteredCoupons = coupons;
 
   const activeCoupons = useMemo(
@@ -154,4 +122,3 @@ export const useSuperadminCoupons = () => {
     setStatusFilter,
   };
 };
-

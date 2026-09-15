@@ -5,10 +5,10 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { affiliatesApi } from '@/app/superadmin/affiliates/superadmin_affiliates_api/superadmin_affiliates_api';
-import { useSuperadminAffiliatesMutation } from '@/app/superadmin/affiliates/affiliates_utils/useSuperadminAffiliatesMutation';
 import { AffiliateSchema } from '@/app/superadmin/affiliates/superadmin_affiliates_types/superadmin_affiliates_types';
-import type { Affiliate, AffiliateStatus, AffiliateStatusFilter, AffiliateFormData } from '@/app/superadmin/affiliates/superadmin_affiliates_types/superadmin_affiliates_types';
+import type { Affiliate, AffiliateStatusFilter, AffiliateFormData } from '@/app/superadmin/affiliates/superadmin_affiliates_types/superadmin_affiliates_types';
 import { useSuperadminUrlState } from '@/app/superadmin/superadmin_utils/useSuperadminUrlState';
+import { useSuperadminAffiliatesMutations } from '@/app/superadmin/affiliates/affiliates_utils/useSuperadminAffiliatesMutations';
 
 export const useSuperadminAffiliatesPage = () => {
   const queryClient = useQueryClient();
@@ -56,59 +56,20 @@ export const useSuperadminAffiliatesPage = () => {
     defaultValues: { name: '', email: '', referralCode: '' },
   });
 
-  const { mutate, isMutating } = useSuperadminAffiliatesMutation();
-
-  const handleAddAffiliate = useCallback(async (data: AffiliateFormData) => {
-    await mutate<Affiliate>(
-      () => affiliatesApi.createAffiliate(data),
-      {
-        onSuccess: (res) => {
-          updateCachedAffiliates(previous => [res as Affiliate, ...previous]);
-          setIsModalOpen(false);
-          form.reset();
-        },
-      }
-    );
-  }, [form, mutate, updateCachedAffiliates]);
-
-  const handleEditAffiliate = useCallback(async (data: AffiliateFormData) => {
-    if (!editingAffiliate) return;
-    await mutate<Affiliate>(
-      () => affiliatesApi.updateAffiliate(editingAffiliate.id, data),
-      {
-        onSuccess: (res) => {
-          updateCachedAffiliates(previous => previous.map(a => a.id === editingAffiliate.id ? (res as Affiliate) : a));
-          setIsModalOpen(false);
-          setEditingAffiliate(null);
-          form.reset();
-        },
-      }
-    );
-  }, [editingAffiliate, form, mutate, updateCachedAffiliates]);
-
-  const handleToggleAffiliateStatus = useCallback(async (id: string, currentStatus: AffiliateStatus) => {
-    const newStatus: AffiliateStatus = currentStatus === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
-    await mutate<Affiliate>(
-      () => affiliatesApi.updateStatus(id, newStatus),
-      {
-        onSuccess: (updatedAffiliate) => {
-          updateCachedAffiliates(previous => previous.map(a => a.id === id ? updatedAffiliate as Affiliate : a));
-        },
-      }
-    );
-  }, [mutate, updateCachedAffiliates]);
-
-  const handleDeleteAffiliate = useCallback(async (id: string) => {
-    // Confirmation is handled by the caller via a modal — not window.confirm
-    await mutate<void>(
-      () => affiliatesApi.deleteAffiliate(id),
-      {
-        onSuccess: () => {
-          updateCachedAffiliates(previous => previous.filter(a => a.id !== id));
-        },
-      }
-    );
-  }, [mutate, updateCachedAffiliates]);
+  const {
+    isMutating,
+    handleAddAffiliate,
+    handleEditAffiliate,
+    handleToggleAffiliateStatus,
+    handleDeleteAffiliate,
+    handlePayCommission,
+  } = useSuperadminAffiliatesMutations(
+    updateCachedAffiliates,
+    setIsModalOpen,
+    setEditingAffiliate,
+    form,
+    editingAffiliate
+  );
 
   const openEditModal = useCallback((affiliate: Affiliate) => {
     setEditingAffiliate(affiliate);
@@ -126,16 +87,7 @@ export const useSuperadminAffiliatesPage = () => {
     [affiliates]
   );
 
-  // Filter applied via server-side URL state params
   const filteredAffiliates = affiliates;
-
-  const handlePayCommission = async (affiliate: Affiliate) => {
-    try {
-      await affiliatesApi.payCommission(affiliate.id);
-    } catch {
-      // handled by error boundary
-    }
-  };
 
   return {
     fetchState,

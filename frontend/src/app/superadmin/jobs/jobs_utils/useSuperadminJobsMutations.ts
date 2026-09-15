@@ -1,10 +1,11 @@
 // RESPONSIBILITY: Encapsulates functionality for useSuperadminJobsMutations.ts
 import { useState } from 'react';
+import type { Dispatch, SetStateAction } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { jobsApi } from '@/app/superadmin/jobs/superadmin_jobs_api/superadmin_jobs_api';
 
-export const useSuperadminJobsMutations = ({ setSelectedJobIds, selectedJobIds }: { setSelectedJobIds: (val: unknown) => void, selectedJobIds: Set<string> }) => {
+export const useSuperadminJobsMutations = ({ setSelectedJobIds, selectedJobIds }: { setSelectedJobIds: Dispatch<SetStateAction<Set<string>>>, selectedJobIds: Set<string> }) => {
   const queryClient = useQueryClient();
   const [isRetrying, setIsRetrying] = useState(false);
 
@@ -12,7 +13,7 @@ export const useSuperadminJobsMutations = ({ setSelectedJobIds, selectedJobIds }
     setIsRetrying(true);
     toast.promise(
       jobsApi.retryAllJobs().then((res) => {
-        if (!res.success) throw new Error(res.message || 'Failed to retry jobs.');
+        if (!res.success) throw new Error(res.message);
         return res.data;
       }),
       {

@@ -74,6 +74,16 @@ organizational layer above individual gyms.
 - **FRANCHISE_STATUS_STYLES** — maps `ACTIVE | INACTIVE` to badge classes; must live in constants.
 - **Gym search in assign modal** — MUST use `SearchableDropdown`; never a native `<select>`.
 
+## UI Data Requirements
+
+The following types map directly to the UI components and define the shape of the data:
+
+```typescript
+export type FranchiseStatus = z.infer<typeof FranchiseStatusSchema>;
+
+export type SuperadminFranchise = z.infer<typeof SuperadminFranchiseSchema>;
+```
+
 ## Rule Compliance Checklist
 - [x] Rule 1: Micro-modularization
 - [x] Rule 3: Module prefix naming — `SuperadminFranchises*`

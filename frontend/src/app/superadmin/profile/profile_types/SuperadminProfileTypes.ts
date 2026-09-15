@@ -33,9 +33,6 @@ export interface Toggle2FAPayload {
 }
 
 export type ProfileTab = 'personal' | 'security';
-export type ProfileFetchState = 'idle' | 'loading' | 'success' | 'error';
-
-
 export const SuperadminProfileDataSchema = z.object({
   id: z.string(),
   name: z.string(),

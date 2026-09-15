@@ -2,11 +2,13 @@
 // RESPONSIBILITY: Renders the System & Audit page showing migration health and global audit logs. Fetches data directly using TanStack Query.
 import { useState, useMemo } from 'react';
 import { Database, ShieldAlert, Activity, Filter, RefreshCcw, Search, Loader2, Clock, Download } from 'lucide-react';
+import { useSuperadminUrlState } from '@/app/superadmin/superadmin_utils/useSuperadminUrlState';
 import SuperadminSystemEmptyState from '@/app/superadmin/system/system_components/SuperadminSystemEmptyState/SuperadminSystemEmptyState';
 import SuperadminSystemSlaTab from '@/app/superadmin/system/system_components/SuperadminSystemSlaTab';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { migrationsApi } from '@/app/superadmin/migrations/superadmin_migrations_api/superadmin_migrations_api';
 import { auditLogsApi } from '@/app/superadmin/global-audit/superadmin_global-audit_api/superadmin_global-audit_api';
+import type { ApiResponse } from '@/lib/api';
 import toast from 'react-hot-toast';
 import type { SuperadminMigrationsTenant } from '@/app/superadmin/migrations/superadmin_migrations_types/superadmin_migrations_types';
 import type { GlobalAuditLog } from '@/app/superadmin/global-audit/superadmin_global-audit_types/superadmin_global-audit_types';
@@ -19,10 +21,29 @@ export type SystemTab = 'migrations' | 'sla';
 
 export default function SuperadminSystemClient() {
   const [tab, setTab] = useState<SystemTab>('migrations');
-  const [logSearch, setLogSearch] = useState('');
-  const [migratingTenants, setMigratingTenants] = useState<Record<string, boolean>>({});
-  const [currentPage, setCurrentPage] = useState(1);
+  const { getParam, setParam } = useSuperadminUrlState();
+  
+  const logSearch = getParam('logSearch', '');
+  const currentPage = Number(getParam('page', '1'));
   const ITEMS_PER_PAGE = 10;
+  
+  const [migratingTenants, setMigratingTenants] = useState<Record<string, boolean>>({});
+  
+  const setLogSearch = (val: string) => {
+    setParam('logSearch', val);
+    setParam('page', '1');
+  };
+  const setCurrentPage = (val: number) => setParam('page', String(val));
+  
+  const queryParams = useMemo(() => {
+    const p: Record<string, string> = {
+      page: String(currentPage),
+      limit: String(ITEMS_PER_PAGE)
+    };
+    if (logSearch) p.search = logSearch;
+    return p;
+  }, [currentPage, logSearch]);
+  
   
   const queryClient = useQueryClient();
 
@@ -32,8 +53,8 @@ export default function SuperadminSystemClient() {
   });
 
   const { data: auditRes, isLoading: isLoadingAudit, isError: isErrorAudit } = useQuery({
-    queryKey: ['superadmin', 'auditLogs'],
-    queryFn: () => auditLogsApi.fetchGlobalLogs(),
+    queryKey: ['superadmin', 'auditLogs', queryParams],
+    queryFn: () => auditLogsApi.fetchGlobalLogs(queryParams),
   });
 
   const fetchState = (isLoadingMigrations || isLoadingAudit) ? 'loading' : (isErrorMigrations || isErrorAudit) ? 'error' : 'success';
@@ -41,11 +62,10 @@ export default function SuperadminSystemClient() {
   const migrationsData = migrationsRes as { data?: { tenants?: (SuperadminMigrationsTenant & { databaseVersion?: string })[] } } | undefined;
   const tenants = (migrationsData?.data?.tenants ?? []) as (SuperadminMigrationsTenant & { databaseVersion?: string })[];
   
-  const auditData = auditRes as { data?: GlobalAuditLog[] } | undefined;
-  const rawLogs = auditData?.data ?? [];
-  const hasLogs = rawLogs.length > 0;
-  
+  const auditData = auditRes as ApiResponse<GlobalAuditLog[]> & { meta?: { total?: number } } | undefined;
+  const rawLogs: GlobalAuditLog[] = auditData?.data || [];
   const finalLogs = rawLogs;
+  const totalLogs = auditData?.meta?.total || rawLogs.length;
 
   const handleRunMigration = async (tenantId: string) => {
     setMigratingTenants(prev => ({ ...prev, [tenantId]: true }));
@@ -66,17 +86,13 @@ export default function SuperadminSystemClient() {
       });
       toast.success(`Successfully migrated database for tenant ${tenantId}`, { id: 'successfully-migrated-database-for-tenant-tenantid' });
     } catch (err) {
-      toast.error('Migration failed. Please check logs.', { id: 'migration-failed-please-check-logs' });
+      toast.error((err as Error).message, { id: 'migration-failed-please-check-logs' });
     } finally {
       setMigratingTenants(prev => ({ ...prev, [tenantId]: false }));
     }
   };
 
-  const filteredLogs = finalLogs.filter((log: GlobalAuditLog) =>
-    log.targetResource?.toLowerCase().includes(logSearch.toLowerCase()) ||
-    log.action?.toLowerCase().includes(logSearch.toLowerCase()) ||
-    log.actorName?.toLowerCase().includes(logSearch.toLowerCase())
-  );
+  const filteredLogs = finalLogs; // Server-side filtering applied
 
   const handleExportCSV = () => {
     const headers = ['Timestamp', 'Target', 'Actor', 'Role', 'Action'];
@@ -99,8 +115,8 @@ export default function SuperadminSystemClient() {
     toast.success('Audit logs exported successfully', { id: 'audit-logs-exported-successfully' });
   };
 
-  const totalPages = Math.ceil(filteredLogs.length / ITEMS_PER_PAGE) || 1;
-  const paginatedLogs = filteredLogs.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(totalLogs / ITEMS_PER_PAGE) || 1;
+  const paginatedLogs = filteredLogs; // Server-side pagination applied
 
   if (fetchState === 'loading') {
     return <div className="flex h-96 items-center justify-center"><Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" /></div>;

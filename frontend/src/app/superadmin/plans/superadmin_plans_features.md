@@ -70,6 +70,14 @@ subscriptions. Superadmin plans are platform-level SaaS products, not gym member
 - **MODULE_LIST** — the list of toggleable modules must live in `SuperadminPlansConstants.ts`, not hardcoded in the toggle component.
 - **Billing cycle** — `BILLING_CYCLE_OPTIONS` (`MONTHLY | ANNUAL`) must come from constants.
 
+## UI Data Requirements
+
+The following types map directly to the UI components and define the shape of the data:
+
+```typescript
+export type PlanFormValues = z.infer<typeof planFormSchema>;
+```
+
 ## Rule Compliance Checklist
 - [x] Rule 1: Micro-modularization
 - [x] Rule 3: Module prefix naming — `SuperadminPlans*`

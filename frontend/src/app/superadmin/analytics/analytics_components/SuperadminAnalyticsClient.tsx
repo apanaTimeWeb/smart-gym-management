@@ -16,8 +16,7 @@ import { formatCurrency, formatKPI, formatDecimal } from '@/lib/formatters';
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 export default function SuperadminAnalyticsClient() {
-  const { metrics, monthlyData, fetchState, error } = useSuperadminAnalyticsPage();
-  const isLoading = fetchState !== 'success' && fetchState !== 'error';
+  const { metrics, monthlyData, isLoading, isError: error } = useSuperadminAnalyticsPage();
   const dateSuffix = useDateRangeSuffix();
 
   if (isLoading) {

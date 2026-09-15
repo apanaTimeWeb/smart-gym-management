@@ -3,7 +3,7 @@
 // DATA FLOW: superadminFranchisesApi â†’ useSuperadminFranchisesPage â†’ SuperadminFranchisesClient
 
 import { useState } from 'react';
-import { Network, Users, TrendingUp, Ban, Search, CheckCircle2, AlertTriangle, Building2, Edit2 } from 'lucide-react';
+import { Network, Users, TrendingUp, Search, CheckCircle2, AlertTriangle, Building2, Edit2 } from 'lucide-react';
 import { useSuperadminFranchisesPage } from '@/app/superadmin/franchises/franchises_utils/useSuperadminFranchisesPage';
 import { SuperadminFranchiseModal } from '@/app/superadmin/franchises/franchises_components/SuperadminFranchiseModal/SuperadminFranchiseModal';
 import type { FranchiseFormData } from '@/app/superadmin/franchises/franchises_components/SuperadminFranchiseModal/SuperadminFranchiseModal';
@@ -13,10 +13,7 @@ import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/Sup
 import { formatCurrency, formatNumber } from '@/lib/formatters';
 
 export default function SuperadminFranchisesClient() {
-  const { franchises, fetchState, search, setSearch, handleSuspend, handleActivate, handleEdit, isEditing } = useSuperadminFranchisesPage();
-  const isLoading = fetchState === 'loading';
-  const error = fetchState === 'error';
-  const [page, setPage] = useState(1);
+  const { franchises, isLoading, isError: error, search, setSearch, currentPage, pageLimit, setPage, total, handleSuspend, handleActivate, handleEdit, isEditing } = useSuperadminFranchisesPage();
   const [editingFranchise, setEditingFranchise] = useState<SuperadminFranchise | null>(null);
   const { confirm } = useSuperadminConfirm();
 
@@ -32,8 +29,8 @@ export default function SuperadminFranchisesClient() {
     }
   };
 
-  const totalPages = Math.ceil(franchises.length / FRANCHISES_PAGE_SIZE) || 1;
-  const paginated = franchises.slice((page - 1) * FRANCHISES_PAGE_SIZE, page * FRANCHISES_PAGE_SIZE);
+  const totalPages = Math.ceil(total / pageLimit) || 1;
+  const paginated = franchises;
 
   const kpis = [
     { label: 'Total Franchises', value: franchises.length, icon: Network, color: 'text-primary', bg: 'bg-primary/10' },
@@ -89,7 +86,7 @@ export default function SuperadminFranchisesClient() {
           type="text"
           placeholder="Search franchise, owner, city..."
           value={search}
-          onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+          onChange={(e) => { setSearch(e.target.value); }}
           className="w-full pl-9 pr-4 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary"
         />
       </div>
@@ -171,11 +168,11 @@ export default function SuperadminFranchisesClient() {
         {totalPages > 1 && (
           <div className="flex items-center justify-between px-4 py-3 border-t border-border">
             <p className="text-xs text-secondary">
-              Showing {(page - 1) * FRANCHISES_PAGE_SIZE + 1}â€“{Math.min(page * FRANCHISES_PAGE_SIZE, franchises.length)} of {franchises.length}
+              Showing {(currentPage - 1) * pageLimit + 1}–{Math.min(currentPage * pageLimit, total)} of {total}
             </p>
             <div className="flex gap-2">
-              <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} className="px-3 py-1.5 rounded-lg bg-input border border-border text-xs text-secondary disabled:opacity-40 hover:text-foreground motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">Previous</button>
-              <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages} className="px-3 py-1.5 rounded-lg bg-input border border-border text-xs text-secondary disabled:opacity-40 hover:text-foreground motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">Next</button>
+              <button onClick={() => setPage(Math.max(1, currentPage - 1))} disabled={currentPage === 1} className="px-3 py-1.5 rounded-lg bg-input border border-border text-xs text-secondary disabled:opacity-40 hover:text-foreground motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">Previous</button>
+              <button onClick={() => setPage(Math.min(totalPages, currentPage + 1))} disabled={currentPage === totalPages} className="px-3 py-1.5 rounded-lg bg-input border border-border text-xs text-secondary disabled:opacity-40 hover:text-foreground motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">Next</button>
             </div>
           </div>
         )}

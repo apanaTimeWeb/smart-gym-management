@@ -49,3 +49,11 @@ Manages superadmin-level platform-wide configuration: platform name / branding, 
 - **Section-Level Error Boundaries in Settings:** Do not allow a single failed API fetch in Settings to unmount the entire page. Major components (like the Settings data table or metrics) must be wrapped in `<SuperadminErrorBoundary variant="inline">`.
 - **Backend-Driven Messages for Settings Mutations:** Do not hardcode success or error toasts like "User created". Always display the `message` string provided by the backend's JSON response envelope when creating, updating, or deleting Settings.
 - **No Client-Side Pagination for Settings:** If the dataset grows large, do not fetch all Settings and paginate on the client. Always implement robust server-side pagination, sorting, and filtering via query parameters.
+
+## UI Data Requirements
+
+The following types map directly to the UI components and define the shape of the data:
+
+```typescript
+export type PlatformSetting = z.infer<typeof PlatformSettingSchema>;
+```

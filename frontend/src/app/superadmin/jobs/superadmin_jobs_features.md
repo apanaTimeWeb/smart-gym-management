@@ -78,6 +78,16 @@ operational control panel for async platform processes.
 - **Error trace display** — render error trace as `<pre>` with monospace font; never as raw HTML.
 - **Pagination reset** — page resets to 1 when any filter changes.
 
+## UI Data Requirements
+
+The following types map directly to the UI components and define the shape of the data:
+
+```typescript
+export type BackgroundJob = z.infer<typeof BackgroundJobSchema>;
+
+export type JobsMetrics = z.infer<typeof JobsMetricsSchema>;
+```
+
 ## Rule Compliance Checklist
 - [x] Rule 1: Micro-modularization
 - [x] Rule 3: Module prefix naming — `SuperadminJobs*`

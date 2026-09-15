@@ -77,6 +77,100 @@ The Superadmin Dashboard is the command center for the entire SaaS platform. It 
 - `useSuperadminDashboardDateRangeSuffix.ts`: Derives a human-readable date range suffix from URL params for KPI labels.
 - `SuperadminDashboardDateFilterDropdown.tsx`: Pure View for selecting date ranges, updating URL params via its custom hook.
 
+## UI Data Requirements
+
+The following types map directly to the UI components and define the shape of the data:
+
+```typescript
+export type TenantStatus = 'ACTIVE' | 'SUSPENDED' | 'TRIAL' | 'CANCELLED';
+
+export type TimeRange = 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'yearly' | 'custom' | 'this_month' | 'last_month' | 'last_3_months' | 'last_6_months' | 'this_year';
+
+export interface DashboardContextType {
+  stats: unknown | null;
+  isLoading: boolean;
+  isError: boolean;
+  error: string;
+  timeRange: TimeRange;
+  setTimeRange: (range: TimeRange) => void;
+}
+
+export interface Tenant {
+  id: string;
+  name: string;
+  ownerName: string;
+  adminEmail: string;
+  phone: string;
+  status: TenantStatus;
+  plan: string;
+  createdAt: string;
+  memberCount: number;
+  monthlyRevenue: number;
+  databaseVersion: string;
+  city?: string;
+  state?: string;
+  country?: string;
+  // ... truncated
+
+export interface PlanRevenueBreakdown {
+  plan: string;
+  amount: number;
+  tenantCount: number;
+}
+
+export interface SaaSDashboardMetrics {
+  totalGyms: number;
+  activeGyms: number;
+  suspendedGyms: number;
+  trialGyms: number;
+  totalEndUsers: number;
+  monthlyRecurringRevenue: number;
+  overdueInvoicesCount: number;
+  pendingRevenue: number;
+  recentOnboards: Tenant[];
+  trialsExpiringIn7Days?: number;
+  /** MRR % change vs previous period — from API, never hardcoded */
+  mrrDeltaPercent?: number;
+  /** ARR % change vs previous year — from API, never hardcoded */
+  arrDeltaPercent?: number;
+  // ... truncated
+
+export interface RevenueChartData {
+  month: string;
+  mrr: number;
+}
+
+export interface GrowthChartData {
+  month: string;
+  gyms: number;
+}
+
+export interface SuperadminDashboardApiData {
+  metrics: SaaSDashboardMetrics;
+  revenue: RevenueChartData[];
+  growth: GrowthChartData[];
+}
+
+export interface SuperadminDashboardKpiGridProps {
+  metrics: SaaSDashboardMetrics;
+  revenueChartData: RevenueChartData[];
+  timeMultiplier: number;
+  mrrLabel: string;
+}
+
+export interface SuperadminDashboardChartsProps {
+  metrics: SaaSDashboardMetrics;
+  revenueChartData: RevenueChartData[];
+  growthChartData: GrowthChartData[];
+  timeMultiplier: number;
+  mrrLabel: string;
+}
+
+export interface SuperadminDashboardRecentOnboardsProps {
+  recentOnboards: Tenant[];
+}
+```
+
 ## Rule Compliance Checklist
 - [x] Rule 1: Micro-modularization — each section is its own component
 - [x] Rule 3: Module prefix naming — `SuperadminDashboard*` prefix on all components

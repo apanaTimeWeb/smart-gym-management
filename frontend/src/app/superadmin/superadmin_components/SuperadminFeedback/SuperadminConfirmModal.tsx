@@ -49,7 +49,7 @@ export default function SuperadminConfirmModal({
           <div className="flex gap-3 mt-6">
             <button
               onClick={onCancel}
-              className="flex-1 py-2.5 border border-border rounded-xl text-sm font-semibold text-foreground hover:bg-input transition-colors"
+              className="flex-1 py-2.5 border border-border rounded-xl text-sm font-semibold text-foreground hover:bg-input motion-safe:transition-colors"
             >
               {cancelText}
             </button>
@@ -58,7 +58,7 @@ export default function SuperadminConfirmModal({
                 onConfirm();
                 onCancel();
               }}
-              className={`flex-1 py-2.5 rounded-xl text-sm font-semibold text-white transition-opacity hover:opacity-90 ${
+              className={`flex-1 py-2.5 rounded-xl text-sm font-semibold text-white motion-safe:transition-opacity hover:opacity-90 ${
                 type === 'danger' ? 'bg-danger' :
                 type === 'warning' ? 'bg-warning' :
                 'bg-info'

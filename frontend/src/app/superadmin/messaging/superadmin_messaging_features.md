@@ -50,6 +50,12 @@ Provides superadmins with per-tenant direct messaging (Email, SMS, In-App) and a
 - Tab state is local `useState` — not synced to URL (notifications are ephemeral)
 - Compose modal uses `z-40` not `z-50` (Design §12 Z-index scale)
 
+## UI Data Requirements
+
+The following types map directly to the UI components and define the shape of the data:
+
+Types found but could not be parsed.
+
 ## Rule Compliance Checklist
 - [x] Rule 1: Micro-modularization — single client component, types + constants isolated
 - [x] Rule 3: Module prefix naming — `SuperadminMessagingClient`, `messaging_types`, `messaging_constants`

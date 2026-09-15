@@ -16,12 +16,10 @@ export default function SuperadminCancellationsClient() {
     activeFilter, setActiveFilter,
     actionAlert, setActionAlert,
     currentPage, setCurrentPage,
-    fetchState,
+    isLoading, isError: error,
     kpis, filtered, paginatedAlerts, totalPages, isFiltered,
     handleActionConfirm, handleBulkOutreach
   } = useSuperadminCancellationsAlertsPage();
-  const isLoading = fetchState === 'loading';
-  const error = fetchState === 'error';
 
   if (isLoading) {
     return (

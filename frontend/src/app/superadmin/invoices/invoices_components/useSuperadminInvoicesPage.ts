@@ -1,25 +1,40 @@
 // RESPONSIBILITY: Encapsulates local UI state for the Invoices page (filtering, modal state, derived stats).
 // DATA FLOW: useSuperadminInvoicesStore -> useSuperadminInvoicesPage -> SuperadminInvoicesClient
-import { useState, useMemo, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useState, useMemo } from 'react';
+import { useSuperadminUrlState } from '@/app/superadmin/superadmin_utils/useSuperadminUrlState';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { invoicesApi } from '@/app/superadmin/invoices/superadmin_invoices_api/superadmin_invoices_api';
 import toast from 'react-hot-toast';
+import type { ApiResponse } from '@/lib/api';
+import type { SaaSInvoice } from '@/app/superadmin/invoices/superadmin_invoices_types/superadmin_invoices_types';
 
 export function useSuperadminInvoicesPage() {
   const queryClient = useQueryClient();
 
-  const searchParams = useSearchParams();
-  const startDate = searchParams.get('startDate') || '';
-  const endDate = searchParams.get('endDate') || '';
+  const { getParam, setParam } = useSuperadminUrlState();
 
-  const [search, setSearch] = useState('');
+  const startDate = getParam('startDate', '');
+  const endDate = getParam('endDate', '');
+  const search = getParam('search', '');
+  const statusFilter = getParam('statusFilter', '');
+  const currentPage = Number(getParam('page', '1'));
+  const pageLimit = Number(getParam('limit', '10'));
+
+  const setSearch = (val: string) => {
+    setParam('search', val);
+    setParam('page', '1');
+  };
+  const setStatusFilter = (val: string | null) => {
+    setParam('statusFilter', val ?? '');
+    setParam('page', '1');
+  };
+  const setPage = (page: number) => setParam('page', String(page));
+
   const [showAddModal, setShowAddModal] = useState(false);
   const [gymSearchTerm, setGymSearchTerm] = useState('');
   const [isGymDropdownOpen, setIsGymDropdownOpen] = useState(false);
   const [selectedGymId, setSelectedGymId] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('UPI');
-  const [statusFilter, setStatusFilter] = useState<string | null>(null);
 
   const queryParams = useMemo(() => {
     const p: Record<string, string> = {};
@@ -27,8 +42,10 @@ export function useSuperadminInvoicesPage() {
     if (statusFilter) p.status = statusFilter;
     if (startDate) p.startDate = startDate;
     if (endDate) p.endDate = endDate;
+    p.page = String(currentPage);
+    p.limit = String(pageLimit);
     return p;
-  }, [search, statusFilter, startDate, endDate]);
+  }, [search, statusFilter, startDate, endDate, currentPage, pageLimit]);
 
   const { data: invoicesRes, isLoading, isError, error: queryError } = useQuery({
     queryKey: ['superadmin', 'invoices', queryParams],
@@ -43,6 +60,7 @@ export function useSuperadminInvoicesPage() {
   const invoices = invoicesRes?.data || [];
   const filteredInvoices = invoices; // Server-side filtering applied
   const tenants = tenantsRes?.data || [];
+  const total = invoicesRes?.meta?.total || invoices.length;
   const error = isError ? 'Failed to load invoices' : null;
 
   const logManualPaymentMutation = useMutation({
@@ -56,16 +74,17 @@ export function useSuperadminInvoicesPage() {
     onSuccess: (res) => {
       if (res.success && res.data) {
         queryClient.setQueryData(['superadmin', 'invoices'], (oldData: unknown) => {
-          if (!(oldData as any)?.data) return oldData;
-          return { ...(oldData as any), data: [res.data, ...(oldData as any).data] };
+          const old = oldData as ApiResponse<SaaSInvoice[]> | undefined;
+          if (!old?.data) return oldData;
+          return { ...old, data: [res.data, ...old.data] };
         });
-        toast.success(res.message || 'Payment logged successfully');
+        toast.success(res.message);
       } else {
-        toast.error(res.message || 'Failed to log payment');
+        toast.error(res.message);
       }
     },
-    onError: (err: any) => {
-      toast.error(err.message || 'Failed to log payment');
+    onError: (err: Error) => {
+      toast.error(err.message);
     }
   });
 
@@ -136,5 +155,9 @@ export function useSuperadminInvoicesPage() {
     pendingRevenue,
     overdueCount,
     handleLogManualPayment,
+    currentPage,
+    pageLimit,
+    setPage,
+    total,
   };
 }

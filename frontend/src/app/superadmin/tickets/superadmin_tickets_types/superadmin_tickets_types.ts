@@ -1,49 +1,43 @@
 import { z } from 'zod';
 // RESPONSIBILITY: Defines all TypeScript types and interfaces for the Tickets module.
-export type TicketStatus = 'OPEN' | 'IN_PROGRESS' | 'RESOLVED' | 'CLOSED';
-export type TicketPriority = 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
 
-export interface SupportTicketMessage {
-  id: string;
-  senderId: string;
-  senderName: string;
-  senderRole: 'TENANT' | 'SUPERADMIN' | 'SYSTEM';
-  content: string;
-  attachments?: string[];
-  createdAt: string;
-}
+export const TicketStatusSchema = z.enum(['OPEN', 'IN_PROGRESS', 'RESOLVED', 'CLOSED', 'WAITING']);
+export type TicketStatus = z.infer<typeof TicketStatusSchema>;
 
-export interface SupportTicket {
-  id: string;
-  tenantId: string;
-  tenantName: string;
-  reporterEmail: string;
-  subject: string;
-  description: string;
-  status: TicketStatus;
-  priority: TicketPriority;
-  assignedTo?: string;
-  attachments?: string[];
-  slaDeadline?: string;
-  firstResponseAt?: string;
-  resolutionTime?: number;
-  messages: SupportTicketMessage[];
-  createdAt: string;
-  lastUpdated: string;
-}
+export const TicketPrioritySchema = z.enum(['LOW', 'MEDIUM', 'HIGH', 'CRITICAL', 'NORMAL', 'URGENT']);
+export type TicketPriority = z.infer<typeof TicketPrioritySchema>;
 
+export const SupportTicketMessageSchema = z.object({
+  id: z.string(),
+  senderId: z.string(),
+  senderName: z.string(),
+  senderRole: z.enum(['TENANT', 'SUPERADMIN', 'SYSTEM']),
+  content: z.string(),
+  attachments: z.array(z.string()).optional(),
+  createdAt: z.string(),
+});
+export type SupportTicketMessage = z.infer<typeof SupportTicketMessageSchema>;
 
 export const SupportTicketSchema = z.object({
   id: z.string(),
   tenantId: z.string(),
+  tenantName: z.string().optional(),
+  reporterEmail: z.string().optional(),
   subject: z.string(),
   description: z.string(),
-  status: z.enum(['OPEN', 'IN_PROGRESS', 'WAITING', 'RESOLVED', 'CLOSED']),
-  priority: z.enum(['LOW', 'NORMAL', 'HIGH', 'URGENT']),
+  status: TicketStatusSchema,
+  priority: TicketPrioritySchema,
+  assignedTo: z.string().optional(),
+  attachments: z.array(z.string()).optional(),
+  slaDeadline: z.string().optional(),
+  firstResponseAt: z.string().optional(),
+  resolutionTime: z.number().optional(),
+  messages: z.array(SupportTicketMessageSchema).optional(),
   createdAt: z.string(),
-  updatedAt: z.string(),
-  assignedTo: z.string().optional()
+  lastUpdated: z.string().optional(),
+  updatedAt: z.string().optional(),
 });
+export type SupportTicket = z.infer<typeof SupportTicketSchema>;
 
 export const replySchema = z.object({
   replyText: z.string().min(1, 'Please enter a reply message.'),

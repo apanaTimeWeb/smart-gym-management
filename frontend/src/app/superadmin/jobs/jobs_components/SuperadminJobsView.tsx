@@ -14,7 +14,7 @@ import SuperadminJobInspectModal from '@/app/superadmin/jobs/jobs_components/Sup
 import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
 
 export default function SuperadminJobsView() {
-  const { fetchState,
+  const { isLoading, isError: error,
     filteredJobs,
     paginatedJobs,
     currentPage,
@@ -40,8 +40,7 @@ export default function SuperadminJobsView() {
     metrics,
   } = useSuperadminJobsPage();
 
-  const isLoading = fetchState === 'loading';
-  const error = fetchState === 'error';
+
 
   if (isLoading) {
     return (

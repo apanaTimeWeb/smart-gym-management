@@ -49,6 +49,12 @@ Provides superadmins with global financial intelligence: MRR/ARR revenue reports
 - Chart library is ApexCharts (`react-apexcharts`) — Recharts and Chart.js are forbidden (Rule 62)
 - Chart component uses `dynamic()` with `ssr: false` — required for ApexCharts (Design §10)
 
+## UI Data Requirements
+
+The following types map directly to the UI components and define the shape of the data:
+
+Types found but could not be parsed.
+
 ## Rule Compliance Checklist
 - [x] Rule 1: Micro-modularization — single client component, types + constants isolated
 - [x] Rule 3: Module prefix naming — `SuperadminReportsClient`, `reports_types`, `reports_constants`

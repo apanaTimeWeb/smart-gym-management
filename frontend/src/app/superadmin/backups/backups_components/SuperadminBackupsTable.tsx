@@ -1,3 +1,4 @@
+'use client';
 // RESPONSIBILITY: Renders the Backups Table component and its associated UI logic.
 import { Download, RotateCcw } from 'lucide-react';
 import type { BackupRecord } from '@/app/superadmin/backups/superadmin_backups_types/superadmin_backups_types';
@@ -74,3 +75,4 @@ export default function SuperadminBackupsTable({ paginatedBackups, filteredLengt
     </div>
   );
 }
+

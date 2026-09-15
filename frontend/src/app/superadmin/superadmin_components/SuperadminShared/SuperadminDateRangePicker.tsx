@@ -27,7 +27,7 @@ export default function SuperadminDateRangePicker({ onRangeChange }: SuperadminD
     if (stringVal !== "custom") {
       const today = new Date();
       let start = new Date();
-      let end = new Date();
+      const end = new Date();
       if (stringVal === "this_week") {
         start.setDate(today.getDate() - today.getDay());
       } else if (stringVal === "this_month") {

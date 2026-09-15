@@ -3,7 +3,6 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { superadminProfileApi } from '@/app/superadmin/profile/profile_api/superadmin_profile_api';
-import type { FetchState } from '@/app/superadmin/superadmin_utils/superadmin_shared_types';
 import type {
   ProfileTab,
   UpdateSuperadminProfilePayload,
@@ -14,9 +13,6 @@ import type {
 export function useSuperadminProfilePage() {
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState<ProfileTab>('personal');
-  const [personalState, setPersonalState] = useState<FetchState>('idle');
-  const [passwordState, setPasswordState] = useState<FetchState>('idle');
-  const [twoFAState, setTwoFAState] = useState<FetchState>('idle');
 
   const { data: profileRes, isLoading: profileLoading } = useQuery({
     queryKey: ['superadmin', 'profile'],
@@ -27,51 +23,41 @@ export function useSuperadminProfilePage() {
 
   const updatePersonalMutation = useMutation({
     mutationFn: (payload: UpdateSuperadminProfilePayload) => superadminProfileApi.updateProfile(payload),
-    onMutate: () => setPersonalState('loading'),
     onSuccess: (res) => {
-      setPersonalState('success');
       queryClient.invalidateQueries({ queryKey: ['superadmin', 'profile'] });
-      toast.success(res.message || 'Profile updated successfully.', { id: 'profile-update' });
+      toast.success(res.message);
     },
     onError: (err: Error) => {
-      setPersonalState('error');
-      toast.error(err.message || 'Failed to update profile.', { id: 'profile-update-error' });
+      toast.error(err.message);
     }
   });
 
   const updatePasswordMutation = useMutation({
     mutationFn: (payload: UpdateSuperadminPasswordPayload) => superadminProfileApi.updatePassword(payload),
-    onMutate: () => setPasswordState('loading'),
     onSuccess: (res) => {
-      setPasswordState('success');
-      toast.success(res.message || 'Password updated successfully.', { id: 'password-update' });
+      toast.success(res.message);
     },
     onError: (err: Error) => {
-      setPasswordState('error');
-      toast.error(err.message || 'Failed to update password.', { id: 'password-update-error' });
+      toast.error(err.message);
     }
   });
 
   const toggle2FAMutation = useMutation({
     mutationFn: (payload: Toggle2FAPayload) => superadminProfileApi.toggle2FA(payload),
-    onMutate: () => setTwoFAState('loading'),
     onSuccess: (res) => {
-      setTwoFAState('success');
       queryClient.invalidateQueries({ queryKey: ['superadmin', 'profile'] });
-      toast.success(res.message || '2FA settings updated.', { id: '2fa-update' });
+      toast.success(res.message);
     },
     onError: (err: Error) => {
-      setTwoFAState('error');
-      toast.error(err.message || 'Failed to update 2FA settings.', { id: '2fa-update-error' });
+      toast.error(err.message);
     }
   });
 
   return {
     activeTab, setActiveTab,
     profile, profileLoading,
-    personalState, updatePersonalMutation,
-    passwordState, updatePasswordMutation,
-    twoFAState, toggle2FAMutation,
+    personalState: updatePersonalMutation.isPending ? 'loading' : 'idle', updatePersonalMutation,
+    passwordState: updatePasswordMutation.isPending ? 'loading' : 'idle', updatePasswordMutation,
+    twoFAState: toggle2FAMutation.isPending ? 'loading' : 'idle', toggle2FAMutation,
   };
 }
-

@@ -1,23 +1,6 @@
 // RESPONSIBILITY: Encapsulates functionality for superadmin_features_types.ts
 import { z } from 'zod';
 
-export interface FeatureFlag {
-  id: string;
-  name: string;
-  description: string;
-  isGlobalEnabled: boolean;
-  enabledTenantIds: string[];
-}
-
-export interface ReleaseNote {
-  id: string;
-  version: string;
-  title: string;
-  content: string;
-  date: string;
-  isPublished: boolean;
-}
-
 export const FeatureFlagSchema = z.object({
   id: z.string(),
   name: z.string(),
@@ -25,6 +8,7 @@ export const FeatureFlagSchema = z.object({
   isGlobalEnabled: z.boolean(),
   enabledTenantIds: z.array(z.string())
 });
+export type FeatureFlag = z.infer<typeof FeatureFlagSchema>;
 
 export const ReleaseNoteSchema = z.object({
   id: z.string(),
@@ -34,10 +18,11 @@ export const ReleaseNoteSchema = z.object({
   date: z.string(),
   isPublished: z.boolean()
 });
+export type ReleaseNote = z.infer<typeof ReleaseNoteSchema>;
 
-export interface SuperadminFeaturesTenant {
-  id: string;
-  name: string;
-  plan: string;
-}
-
+export const SuperadminFeaturesTenantSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  plan: z.string()
+});
+export type SuperadminFeaturesTenant = z.infer<typeof SuperadminFeaturesTenantSchema>;

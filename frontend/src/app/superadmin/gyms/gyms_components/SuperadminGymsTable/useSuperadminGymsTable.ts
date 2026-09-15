@@ -2,19 +2,15 @@
 // DATA FLOW: gymsApi -> useQuery -> useSuperadminGymsTable -> SuperadminGymsTable
 
 import { useMemo } from 'react';
-import toast from 'react-hot-toast';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { gymsApi } from '@/app/superadmin/gyms/superadmin_gyms_api/superadmin_gyms_api';
 import { useSuperadminGymsStore } from '@/app/superadmin/gyms/gyms_store/useSuperadminGymsStore';
 import type { Tenant } from '@/app/superadmin/gyms/superadmin_gyms_types/superadmin_gyms_types';
-import { GymsUrlConfig } from '@/app/superadmin/gyms/superadmin_gyms_url_config';
-import { useSuperadminGhostLoginStore } from '@/app/superadmin/superadmin_components/SuperadminLayout/useSuperadminGhostLoginStore';
 import { useSuperadminUrlState } from '@/app/superadmin/superadmin_utils/useSuperadminUrlState';
-import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
+import { useSuperadminGymMutations } from '@/app/superadmin/gyms/gyms_components/SuperadminGymsTable/useSuperadminGymMutations';
 
 export function useSuperadminGymsTable() {
   const { getParam, setParam } = useSuperadminUrlState();
-  const { confirm } = useSuperadminConfirm();
   
   const search = getParam('search', '');
   const statusFilter = getParam('statusFilter', 'All');
@@ -31,11 +27,8 @@ export function useSuperadminGymsTable() {
   const openDeleteModal = useSuperadminGymsStore(state => state.openDeleteModal);
   const openEditModal = useSuperadminGymsStore(state => state.openEditModal);
   const openWhatsappModal = useSuperadminGymsStore(state => state.openWhatsappModal);
-  const startGhostLogin = useSuperadminGhostLoginStore(state => state.startGhostLogin);
 
-  const queryClient = useQueryClient();
-
-  // Fetch Gyms â€” passes server-side params (page, limit, status, plan, search, sortBy, order)
+  // Fetch Gyms
   const queryParams = {
     ...(search && { search }),
     ...(statusFilter !== 'All' && { status: statusFilter }),
@@ -54,85 +47,19 @@ export function useSuperadminGymsTable() {
   const gyms = fetchRes?.data && fetchRes.data.length > 0 ? fetchRes.data : [];
   const total = fetchRes?.meta?.total || gyms.length;
 
-  // Server-side filtering is now primary; this is a lightweight client guard
   const filteredGyms = useMemo(() => {
     if (!gyms) return [];
     return gyms;
   }, [gyms]);
 
-  // Mutations
-  const impersonateMutation = useMutation({
-    mutationFn: (id: string) => gymsApi.impersonateTenant(id),
-    onSuccess: async (res, id) => {
-      if (res.success && res.data?.token) {
-        toast.success(res.message || 'Ghost login active. Viewing as tenant admin.');
-
-        // Set impersonation cookie so Next.js middleware sees an Admin session
-        try {
-          await gymsApi.setGhostLoginCookie(res.data.token, id);
-        } catch {
-          // Cookie set failure is non-fatal â€” token is still in the response
-        }
-
-        // Find the gym to populate the banner
-        const gym = gyms.find((g) => g.id === id);
-        if (gym) {
-          startGhostLogin({ id: gym.id, name: gym.name, plan: gym.plan, adminEmail: gym.adminEmail });
-        }
-
-        window.location.href = GymsUrlConfig.GHOST_LOGIN.ADMIN_DASHBOARD;
-      } else {
-        toast.error(res.message || 'Failed to start ghost login');
-      }
-    },
-    onError: (err: unknown) => {
-      const error = err as Error;
-      toast.error(error.message || 'Failed to impersonate tenant');
-    },
-  });
-
-  const suspendMutation = useMutation({
-    mutationFn: ({ id, status }: { id: string, status: string }) => gymsApi.changeGymStatus(id, status),
-    onSuccess: (res) => {
-      toast.success(res.message || 'Status updated successfully.');
-      queryClient.invalidateQueries({ queryKey: ['superadmin', 'gyms'] });
-    },
-    onError: (err: unknown) => {
-      const error = err as Error;
-      toast.error(error.message || 'Failed to update status');
-    },
-  });
-
-  const actionLoadingId = impersonateMutation.isPending 
-    ? impersonateMutation.variables 
-    : suspendMutation.isPending 
-      ? suspendMutation.variables?.id 
-      : null;
+  const {
+    actionLoadingId,
+    onGhostLoginClick,
+    onSuspendClick,
+  } = useSuperadminGymMutations(gyms);
 
   const handleRowClick = (gym: Tenant) => {
     openEditModal(gym);
-  };
-
-  const onGhostLoginClick = (e: React.MouseEvent, gymId: string, gymName: string) => {
-    e.stopPropagation();
-    impersonateMutation.mutate(gymId);
-  };
-
-  const onSuspendClick = async (e: React.MouseEvent, gymId: string, gymName: string, currentStatus: string) => {
-    e.stopPropagation();
-    const newStatus = currentStatus === 'SUSPENDED' ? 'ACTIVE' : 'SUSPENDED';
-    const action = currentStatus === 'SUSPENDED' ? 'unsuspend' : 'suspend';
-    
-    const confirmed = await confirm({
-      title: `${action.charAt(0).toUpperCase() + action.slice(1)} Gym`,
-      message: `Are you sure you want to ${action} ${gymName}?`,
-      type: currentStatus === 'SUSPENDED' ? 'info' : 'warning',
-      confirmText: `Yes, ${action}`
-    });
-
-    if (confirmed) {
-      suspendMutation.mutate({ id: gymId, status: newStatus });
-    }
   };
 
   const onDeleteClick = (e: React.MouseEvent, gym: Tenant) => {

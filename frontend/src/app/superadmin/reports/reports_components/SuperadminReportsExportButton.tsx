@@ -1,3 +1,4 @@
+'use client';
 // RESPONSIBILITY: Renders the Reports Export Button component and its associated UI logic.
 import { Download } from 'lucide-react';
 
@@ -24,3 +25,4 @@ export function SuperadminReportsExportButton({ onExportCSV, onExportPDF }: Supe
     </div>
   );
 }
+

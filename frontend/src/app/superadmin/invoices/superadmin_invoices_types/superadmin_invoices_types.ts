@@ -1,46 +1,33 @@
 import { z } from 'zod';
 // RESPONSIBILITY: Defines all TypeScript types and interfaces for the Invoices module.
-export interface SaaSInvoice {
-  id: string;
-  tenantId: string;
-  tenantName: string;
-  amount: number;
-  currency: string;
-  status: 'PAID' | 'PENDING' | 'FAILED' | 'OVERDUE';
-  issuedAt: string;
-  dueDate: string;
-  paidAt?: string;
-  paymentMethod?: string;
-  invoiceType: 'RECURRING' | 'ONE_TIME' | 'SETUP_FEE';
-  planName: string;
-  taxId?: string;
-}
-
-
-/** Schema for a single invoice line item. */
-const InvoiceLineItemSchema = z.object({
-  description: z.string(),
-  amount: z.number(),
-  quantity: z.number().optional(),
-}).passthrough();
 
 export const SaaSInvoiceSchema = z.object({
   id: z.string(),
   tenantId: z.string(),
   tenantName: z.string(),
   amount: z.number(),
-  status: z.enum(['PAID', 'PENDING', 'OVERDUE', 'CANCELLED']),
+  currency: z.string(),
+  status: z.enum(['PAID', 'PENDING', 'FAILED', 'OVERDUE']),
+  issuedAt: z.string(),
   dueDate: z.string(),
-  issuedDate: z.string(),
-  paidDate: z.string().optional(),
-  items: z.array(InvoiceLineItemSchema).optional()
+  paidAt: z.string().optional(),
+  paymentMethod: z.string().optional(),
+  invoiceType: z.enum(['RECURRING', 'ONE_TIME', 'SETUP_FEE']),
+  planName: z.string(),
+  taxId: z.string().optional(),
 });
+export type SaaSInvoice = z.infer<typeof SaaSInvoiceSchema>;
 
-/** TypeScript type inferred from the invoice line-item schema. */
+export const InvoiceLineItemSchema = z.object({
+  description: z.string(),
+  amount: z.number(),
+  quantity: z.number().optional(),
+}).passthrough();
 export type InvoiceLineItem = z.infer<typeof InvoiceLineItemSchema>;
 
-export interface SuperadminInvoicesTenant {
-  id: string;
-  name: string;
-  plan: string;
-}
+export const SuperadminInvoicesTenantSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  plan: z.string(),
+});
+export type SuperadminInvoicesTenant = z.infer<typeof SuperadminInvoicesTenantSchema>;

@@ -1,3 +1,4 @@
+'use client';
 // RESPONSIBILITY: Renders the Backups Schedule Modal component and its associated UI logic.
 import React, { useState } from 'react';
 import { Clock, Check } from 'lucide-react';
@@ -89,3 +90,4 @@ export default function SuperadminBackupsScheduleModal({ isOpen, onClose }: Supe
     </div>
   );
 }
+

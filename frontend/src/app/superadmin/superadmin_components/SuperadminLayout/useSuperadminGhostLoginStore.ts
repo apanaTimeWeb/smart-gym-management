@@ -27,14 +27,8 @@ export const useSuperadminGhostLoginStore = create<SuperadminGhostLoginState>()(
         set({ ghostTenant: null });
         
         try {
-          await fetch('/auth/set-cookie', {
+          await fetch('/auth/exit-ghost-login', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              token: 'mock_superadmin_token_123',
-              refreshToken: 'mock_superadmin_token_123',
-              user: { role: 'SUPERADMIN', email: 'demo_admin@gym.com', name: 'Demo Superadmin', id: 'u1' }
-            }),
           });
         } catch {}
 

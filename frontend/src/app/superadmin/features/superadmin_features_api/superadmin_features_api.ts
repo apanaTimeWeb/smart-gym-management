@@ -1,65 +1,63 @@
-import { GymsUrlConfig } from '@/app/superadmin/gyms/superadmin_gyms_url_config';
-import { mockFlags, mockNotes } from '@/app/superadmin/features/features_mocks/handlers/SuperadminFeaturesMockHandlers';
-// RESPONSIBILITY: Encapsulates functionality for superadmin_features_api.ts
+// RESPONSIBILITY: API client for the Superadmin Features/Feature Flags module.
 import { FeatureFlagSchema, ReleaseNoteSchema } from '@/app/superadmin/features/superadmin_features_types/superadmin_features_types';
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
 import type { FeatureFlag, ReleaseNote } from '@/app/superadmin/features/superadmin_features_types/superadmin_features_types';
 import { FeaturesUrlConfig } from '@/app/superadmin/features/superadmin_features_url_config';
-import { z } from "zod";
+import { z } from 'zod';
 
 export const featuresApi = {
   fetchFeatures: () =>
-    apiFetch<ApiResponse<{ flags: FeatureFlag[]; notes: ReleaseNote[] }>>(FeaturesUrlConfig.BACKEND_API.BASE, { dataSchema: z.object({}).passthrough() })
-      .catch(() => ({ success: true, message: 'Fallback to mock', data: { flags: mockFlags, notes: mockNotes } as any })),
+    apiFetch<ApiResponse<{ flags: FeatureFlag[]; notes: ReleaseNote[] }>>(FeaturesUrlConfig.BACKEND_API.BASE, {
+      dataSchema: z.object({
+        flags: z.array(FeatureFlagSchema),
+        notes: z.array(ReleaseNoteSchema),
+      }),
+    }),
 
   createFlag: (body: Partial<FeatureFlag>) =>
     apiFetch<ApiResponse<FeatureFlag>>(`${FeaturesUrlConfig.BACKEND_API.BASE}/flags`, {
       method: 'POST',
       body: JSON.stringify(body),
-        dataSchema: FeatureFlagSchema
+      dataSchema: FeatureFlagSchema,
     }),
 
   updateFlag: (id: string, body: Partial<FeatureFlag>) =>
     apiFetch<ApiResponse<FeatureFlag>>(`${FeaturesUrlConfig.BACKEND_API.BASE}/flags/${id}`, {
       method: 'PATCH',
       body: JSON.stringify(body),
-        dataSchema: FeatureFlagSchema
+      dataSchema: FeatureFlagSchema,
     }),
 
   toggleFlag: (id: string) =>
     apiFetch<ApiResponse<FeatureFlag>>(`${FeaturesUrlConfig.BACKEND_API.BASE}/flags/${id}/toggle`, {
       method: 'POST',
-        dataSchema: FeatureFlagSchema
+      dataSchema: FeatureFlagSchema,
     }),
 
   removeFlag: (id: string) =>
     apiFetch<ApiResponse<void>>(`${FeaturesUrlConfig.BACKEND_API.BASE}/flags/${id}`, {
       method: 'DELETE',
-        dataSchema: z.object({}).passthrough()
+      dataSchema: z.object({}).passthrough(),
     }),
 
   createNote: (body: Partial<ReleaseNote>) =>
     apiFetch<ApiResponse<ReleaseNote>>(`${FeaturesUrlConfig.BACKEND_API.BASE}/notes`, {
       method: 'POST',
       body: JSON.stringify(body),
-        dataSchema: ReleaseNoteSchema
+      dataSchema: ReleaseNoteSchema,
     }),
 
   updateNote: (id: string, body: Partial<ReleaseNote>) =>
     apiFetch<ApiResponse<ReleaseNote>>(`${FeaturesUrlConfig.BACKEND_API.BASE}/notes/${id}`, {
       method: 'PATCH',
       body: JSON.stringify(body),
-        dataSchema: ReleaseNoteSchema
+      dataSchema: ReleaseNoteSchema,
     }),
 
   removeNote: (id: string) =>
     apiFetch<ApiResponse<void>>(`${FeaturesUrlConfig.BACKEND_API.BASE}/notes/${id}`, {
       method: 'DELETE',
-        dataSchema: z.object({}).passthrough()
+      dataSchema: z.object({}).passthrough(),
     }),
-  fetchTenants: () => {
-    return apiFetch<ApiResponse<any[]>>(GymsUrlConfig.BACKEND_API.BASE);
-  },
 };
-

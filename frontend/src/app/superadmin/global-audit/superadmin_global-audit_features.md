@@ -74,6 +74,31 @@ compliance, incident investigation, and security monitoring.
 - **Export with filters** — CSV export MUST include all currently active filters as query params; never export unfiltered full log without explicit confirmation.
 - **Pagination reset** — page resets to 1 when any filter changes.
 
+## UI Data Requirements
+
+The following types map directly to the UI components and define the shape of the data:
+
+```typescript
+export interface AuditLog {
+  id: string;
+  timestamp: string;
+  actor: string;
+  actorRole?: 'SUPERADMIN' | 'ADMIN' | 'STAFF' | 'MEMBER';
+  tenantId?: string;
+  tenantName?: string;
+  actorType?: 'SUPERADMIN' | 'SYSTEM' | 'TENANT';
+  action: string;
+  resource: string;
+  resourceId?: string;
+  details: string;
+  ipAddress: string;
+  sessionId?: string;
+  severity: 'INFO' | 'WARNING' | 'CRITICAL';
+  // ... truncated
+
+export type GlobalAuditLog = z.infer<typeof GlobalAuditLogSchema>;
+```
+
 ## Rule Compliance Checklist
 - [x] Rule 1: Micro-modularization
 - [x] Rule 3: Module prefix naming — `SuperadminGlobalAudit*`

@@ -12,9 +12,7 @@ import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/Sup
 import { formatCurrency, formatNumber } from '@/lib/formatters';
 
 export default function SuperadminBranchesClient() {
-  const { branches, fetchState, search, setSearch, handleSuspend, handleActivate } = useSuperadminBranchesPage();
-  const isLoading = fetchState === 'loading';
-  const error = fetchState === 'error';
+  const { branches, isLoading, isError: error, search, setSearch, handleSuspend, handleActivate } = useSuperadminBranchesPage();
   const [page, setPage] = useState(1);
   const { confirm } = useSuperadminConfirm();
 

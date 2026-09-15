@@ -38,9 +38,6 @@ export interface AnalyticsApiData {
 }
 
 /** Canonical async state enum — Rule 42: never use boolean `isLoading` flags */
-export type FetchState = 'idle' | 'loading' | 'success' | 'error';
-
-
 /** Schema for a single revenue history data point (API variant with generic keys). */
 const RevenueHistoryPointSchema = z.object({
   month: z.string(),

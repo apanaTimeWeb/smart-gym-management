@@ -73,6 +73,14 @@ are logged in the global audit trail.
 - **Trigger backup** — MUST use `useConfirm()` even for manual trigger (affects production data).
 - **Restore audit** — restore action MUST be logged in global audit trail; backend enforces this but frontend must not suppress the confirmation flow.
 
+## UI Data Requirements
+
+The following types map directly to the UI components and define the shape of the data:
+
+```typescript
+export type BackupRecord = z.infer<typeof BackupRecordSchema>;
+```
+
 ## Rule Compliance Checklist
 - [x] Rule 1: Micro-modularization
 - [x] Rule 3: Module prefix naming — `SuperadminBackups*`
