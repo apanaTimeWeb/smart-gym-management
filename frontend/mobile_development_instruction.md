@@ -1,4 +1,4 @@
-# Mobile Development Instructions — Framework-Agnostic (Enterprise / Industry Scale)
+﻿# Mobile Development Instructions — Framework-Agnostic (Enterprise / Industry Scale)
 
 > Applies regardless of chosen stack (React Native bare-metal, Flutter, or native
 > Swift/Kotlin). This document defines architectural discipline, not a specific
@@ -86,14 +86,60 @@ features/
 
 ### Hyper-Descriptive, Module-Prefixed Naming (AI Context Guarantee)
 
-Every file name **MUST begin with the feature name as a prefix**. When you tag a file
+Every file name MUST make the feature identity immediately explicit. When you tag a file
 in an AI prompt (e.g. `@MembersMemberCard.tsx`), the AI instantly knows which module
 it belongs to — zero ambiguity, zero cross-module hallucination risk.
 
+**Canonical filename grammar for the `members` feature:**
+
+```
+Components / Widgets (PascalCase, feature-prefixed):
+  MembersMemberCard.tsx         ← feature prefix + entity + type
+  MembersMemberListItem.tsx
+  MembersEmptyState.tsx
+  MembersListSkeleton.tsx
+
+Hooks (camelCase with required `use` prefix + feature name):
+  useMembers.ts                 ← `use` + feature name (NOT memberUse or membersHook)
+  useMembersFilters.ts
+  useMembersSearch.ts
+
+API / Types / Schema / Store (dot-notation, feature-prefixed, lowercase):
+  members.api.ts
+  members.types.ts
+  members.schema.ts
+  members.store.ts
+
+Integration tests:
+  members.integration.test.ts
+
+Mandatory documentation files:
+  members_features.md
+  members_forbidden.md
+```
+
+**Framework/architectural prefix exceptions (explicitly permitted):**
+Framework-mandated prefixes (`use` for hooks), language-standard naming conventions,
+and mandatory documentation filename formats are permitted exceptions to leading with
+the bare feature name — provided the feature identity remains explicit and unambiguous
+in the rest of the filename. The following are allowed:
+
+| Pattern | Example | Why permitted |
+|---|---|---|
+| `use` prefix on hooks | `useMembers.ts` | React/RN framework convention; feature name follows immediately |
+| dot-notation API/type files | `members.api.ts` | Feature name IS the prefix, separated by dot |
+| `*.integration.test.ts` suffix | `members.integration.test.ts` | Test type suffix is structural, feature still prefixed |
+| `*_features.md`, `*_forbidden.md` | `members_features.md` | Mandatory doc format — feature name leads |
+
+**What is forbidden regardless:**
 ```
 ❌ BAD:  Card.tsx, hook.ts, api.ts, store.ts, types.ts
-✅ GOOD: MembersMemberCard.tsx, useMembersFilters.ts, members.api.ts
+❌ BAD:  useData.ts, loadItems.ts, getData.ts   ← no feature identity
+✅ GOOD: MembersMemberCard.tsx, useMembers.ts, members.api.ts
 ```
+
+**AI warning:** Do NOT rename `useMembers.ts` to `membersUseHook.ts` or similar to
+"fix" the prefix. `useMembers.ts` is the correct, compliant filename.
 
 - **No abbreviations:** Never `Btn`, `Nav`, `Util`. Use `Button`, `Navigation`, `Utility`.
 - **Suffix by type:** `...Card`, `...List`, `...Form`, `...Modal`, `...Sheet`, `...EmptyState`.
@@ -151,14 +197,27 @@ features/
 
 ## Rule 4 — State Management (Server State vs Client State — Explicit Matrix)
 
-Exactly two categories of state exist. Do not invent a third ad-hoc pattern.
+**Two state ownership categories exist: Server State and Client State.**
+Client state may be further subdivided into shared or local depending on scope.
+Server state may optionally be persisted to local storage for offline use — persistence
+is a *storage characteristic* of server state, not a third independent state category.
+Do not invent a fourth ad-hoc pattern.
+
+```text
+State Ownership
+├── Server State
+│   └── optionally persisted to local storage (offline cache)
+└── Client State
+    ├── Shared (2+ components in one feature)
+    └── Local (exactly one component)
+```
 
 | State Type | Category | Rule |
 |---|---|---|
 | Anything from an API (lists, details, counts, status) | **Server state** | Managed by a caching/data-fetching layer with built-in loading/error/stale-tracking (e.g. TanStack Query for React Native bare-metal; Riverpod's `AsyncNotifier` or a repository+cache pattern for Flutter). Never duplicated into a separate "client" state container. |
 | UI-only state shared across 2+ components in one feature | **Client state (shared)** | A lightweight, feature-scoped state container (e.g. Zustand for RN; a `Provider`/`Bloc`/`Riverpod` scoped to the feature for Flutter). One container per feature — never one giant global store. |
 | UI-only state used by exactly one component | **Client state (local)** | Local component state (`useState`/`useReducer` equivalent, or `StatefulWidget` local fields). |
-| Data that must survive app restart offline | **Persisted server state** | Only when explicitly required — server-state cache persisted to local storage. Must be documented in the feature's `_features.md` (Rule 24), including conflict-resolution strategy. |
+| Data that must survive app restart offline | **Server state — persisted** | Only when explicitly required — server-state cache persisted to local storage. Must be documented in the feature's `_features.md` (Rule 24), including conflict-resolution strategy. Persistence does not make this a new category; it is still server state, stored locally. |
 
 **Hard rule:** never copy API response data into the shared client-state
 container "just in case." Components read server state directly through the
@@ -215,7 +274,22 @@ the same verb naming as Backend Rule 86 and Frontend Rule 72 — 1:1 symmetry:
 - `deleteMember(id)` — DELETE
 - `exportMembersReport(params)` — report/export
 
-AI agents must never invent arbitrary function names like `loadData()` or `getData()`.
+**Non-CRUD Domain Action Verbs:** For domain actions that are not standard CRUD operations,
+use the **exact backend service verb + entity/action name** as defined by the backend contract
+(Backend Rule 86). This preserves the required Backend ↔ Mobile 1:1 API naming symmetry.
+
+`	ypescript
+// Domain action verb examples — match the backend's verb exactly:
+renewMembership(memberId, dto)      // POST /members/:id/renew
+suspendMember(memberId, dto)        // POST /members/:id/suspend
+restoreMember(memberId)             // POST /members/:id/restore
+activateMember(memberId)            // POST /members/:id/activate
+assignTrainer(memberId, trainerId)  // POST /members/:id/assign-trainer
+`
+
+AI agents must never invent arbitrary function names like `loadData()`, `getData()`,
+`handleAction()`, or `doMemberThing()`. If the backend service method is `renewMembership`,
+the mobile API function MUST be `renewMembership` — no renaming, no aliasing.
 
 ## Rule 7A — Complete API Contract & UI Data Coverage
 
@@ -1334,14 +1408,39 @@ Implement through ONE central toast utility in `src/core/utils/toast.ts`:
 
 ```typescript
 // src/core/utils/toast.ts
+
+// Deduplication uses a SEMANTIC identity key, not the raw message string.
+// Two different actions (e.g. payment failure for member A vs member B)
+// that produce the same message text are DIFFERENT events and must NOT be collapsed.
+//
+// Build the key as: module + action + entityId + errorCode
+// Fall back to a simple message hash ONLY when semantic context is unavailable.
+//
+// Example: toastKey('members', 'suspend', memberId, 'MEMBER.ALREADY_SUSPENDED')
+//          → "members:suspend:abc-123:MEMBER.ALREADY_SUSPENDED"
+
 const activeToasts = new Set<string>();
 
-export function showToast(message: string, type: 'success' | 'error' | 'info' = 'info') {
-  if (activeToasts.has(message)) return;   // deduplicate
-  activeToasts.add(message);
+export function toastKey(
+  module: string,
+  action: string,
+  entityId?: string,
+  errorCode?: string,
+): string {
+  return [module, action, entityId ?? '', errorCode ?? ''].join(':');
+}
+
+export function showToast(
+  message: string,
+  type: 'success' | 'error' | 'info' = 'info',
+  dedupKey?: string,   // pass toastKey(...) for semantic dedup; omit for message-hash fallback
+) {
+  const key = dedupKey ?? message;
+  if (activeToasts.has(key)) return;
+  activeToasts.add(key);
   // call your toast library here (e.g. react-native-toast-message)
   Toast.show({ type, text1: message });
-  setTimeout(() => activeToasts.delete(message), 3000);
+  setTimeout(() => activeToasts.delete(key), 3000);
 }
 ```
 

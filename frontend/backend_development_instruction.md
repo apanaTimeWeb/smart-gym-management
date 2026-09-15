@@ -1,13 +1,13 @@
-# Enterprise-Grade, AI-Friendly Backend Architecture Guidelines
+# Enterprise-Grade, AI-Friendly NestJS Backend Architecture Guidelines
 
 ## The Core Philosophy
-This document outlines the strict architectural rules for building the backend (whether using NestJS, Django, Express, Spring Boot, etc.). The primary goal is **Extreme Isolation**. 
+This document outlines the strict architectural rules for building the backend using **NestJS (TypeScript)**. The primary goal is **Extreme Isolation**.
 
 Currently, human developers act as orchestrators, while AI (LLMs) writes the code. Because of this, the architecture must be designed to accommodate the AI's constraints (context limits, hallucination risks) and strengths (laser-focused problem solving).
 
-Tomorrow, if you ask an AI to fix a specific bug in "Payment Processing", you should only need to provide ONE exact file to the AI, completely eliminating the risk of the AI hallucinating and breaking the "User Registration" flow. 
+Tomorrow, if you ask an AI to fix a specific bug in "Payment Processing", you should only need to provide ONE exact file to the AI, completely eliminating the risk of the AI hallucinating and breaking the "User Registration" flow.
 
-**Rule of Thumb:** If an AI needs more than 3 files to fix a bug or add a minor feature, your files are too tightly coupled or too monolithic.
+**Minimum-Context Principle:** Prefer the smallest coherent change set. Single-file repair is the goal when the dependency graph permits it. Multi-file changes are **allowed — and expected** when required by architectural contracts such as transactions (Orchestrator → services → repositories), API contract updates, co-located tests, or shared infrastructure extensions. The AI MUST NOT expand context beyond the minimum required set. If a bug fix genuinely requires touching an Orchestrator, a micro-service, and a repository together, that is correct — not a sign of bad architecture. If it requires touching 10 unrelated files, the architecture is too coupled.
 
 ---
 
@@ -105,24 +105,35 @@ Never use fragile, hardcoded relative imports (e.g., `../../../utils/helpers`).
 
 ---
 
-## How to Apply This to Different Frameworks
+---
 
-### In NestJS (TypeScript)
+## Framework Reference Appendix (Non-NestJS Projects Only)
+
+> **This section is a reference appendix for teams migrating from or using a non-NestJS stack.**
+> The primary standard in this document is **NestJS (TypeScript)**. All numbered rules (1–101)
+> above are NestJS-specific. If your project uses Django, Express, or Spring Boot, translate the
+> architectural *principles* (Extreme Isolation, Use-Case Driven Files, Repository Pattern,
+> DTO Isolation, Event-Driven Decoupling, Co-located Tests) to your framework's idioms using
+> the mappings below. The specific tooling (e.g. `nestjs-pino`, `class-validator`, `@Roles()`,
+> `AsyncLocalStorage`) will differ — pick the nearest equivalent in your framework.
+
+### In NestJS (TypeScript) — Primary Standard
 - Break down monolithic `@Injectable()` classes.
 - Use `CQRS` (Command Query Responsibility Segregation) or just separate `xxx.service.ts` files.
 - Put DTOs in a `dtos/` folder.
 - Keep `@Controller()` classes incredibly thin; they should only receive the request and immediately pass it to a micro-service.
 
-### In Django (Python)
+### In Django (Python) — Reference Only
 - Avoid massive `views.py`. Create a `views/` folder and split class-based views into individual files (e.g., `member_registration_view.py`).
 - Avoid "fat models". Move complex business logic from `models.py` into a `services/` directory.
 - Keep `serializers.py` strictly for validation and data formatting.
 
-### In Express.js (Node.js)
+### In Express.js (Node.js) — Reference Only
 - Avoid putting logic inside route definitions.
 - `routes/` should only map URLs to Controllers.
 - `controllers/` handle HTTP (req, res).
 - `services/` handle the heavy lifting and should be highly split up (e.g., `paymentService.js`, `refundService.js`).
+
 
 ## 11. Co-located Testing (Unit & E2E - Extreme Isolation)
 Never put tests in a global `tests/` or `pytest_tests/` directory separate from the application code. 
@@ -139,13 +150,24 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 * **Why:** If the AI needs to add a new third-party API key or change a timeout value, it should only modify the central configuration schema, not hunt for raw env calls scattered across 50 different micro-services.
 
 ## 14. Standardized Logging & Correlation IDs (nestjs-pino & OpenTelemetry)
-* **The Rule:** Never use raw print statements (e.g., `console.log()` or `print()`). The canonical logger for this NestJS project is **`nestjs-pino`** (wrapping `pino`). Do not use Winston or any other logger. 
+* **The Rule:** Never use raw print statements (e.g., `console.log()` or `print()`). The canonical logger for this NestJS project is **`nestjs-pino`** (wrapping `pino`). Do not use Winston or any other logger.
 * **The Log Structure:** Every log entry must automatically attach the current execution context. A standard log output must include:
-  - `req` and `res` objects (for HTTP request tracking)
-  - `trace_id` and `span_id` (injected via OpenTelemetry/AsyncLocalStorage)
-  - `context` (e.g., the exact class or service name emitting the log)
-  - `responseTime` (for access logs)
-* **Why:** When logs are pushed to an aggregator like Datadog, ELK, or CloudWatch, developers can simply search for `trace_id="b8174fe8b671..."` to instantly pull up the exact journey of a request across 15 different micro-files. Standardized loggers also allow global turning on/off of debug statements and eliminate the need for manual ID passing.
+  - `method` (HTTP method: GET, POST, PATCH, etc.)
+  - `route` / `path` (the matched route template, e.g., `/api/v1/members/:id` — **not** the raw URL with substituted values)
+  - `statusCode` (HTTP response status)
+  - `requestId` (unique per-request UUID, injected at the middleware boundary)
+  - `tenantId` (where permitted by data privacy policy — never log tenant-specific personal data alongside it)
+  - `traceId` and `spanId` (injected via OpenTelemetry/AsyncLocalStorage)
+  - `context` (the exact class or service name emitting the log, e.g., `MemberRegistrationService`)
+  - `responseTime` (milliseconds, for access logs)
+* **What MUST NEVER appear in any log line:**
+  - Raw `req` or `res` objects — these contain auth headers, cookies, request bodies, and response bodies by default.
+  - `Authorization` header, Bearer tokens, API keys, session tokens, refresh tokens.
+  - Passwords, PINs, OTPs, biometric data, or any credential.
+  - Request or response body payloads (even sanitized partials — if in doubt, omit).
+  - Raw PII: full phone numbers, Aadhaar numbers, bank account numbers, card numbers, email addresses (partial masking per Rule 35 is the only exception where explicitly required).
+* **Why:** When logs are pushed to an aggregator like Datadog, ELK, or CloudWatch, developers can simply search for `traceId="b8174fe8b671..."` to instantly pull up the exact journey of a request across 15 different micro-files. This rule also ensures that a single misconfigured log line cannot constitute a data breach. Standardized loggers also allow global turning on/off of debug statements.
+
 
 ## 15. Dependency Injection & Inversion of Control
 * **The Rule:** Avoid instantiating complex service classes directly using `new MyService()` or `MyService()`. Rely on the framework's Dependency Injection system if it has one (NestJS, Spring Boot), or construct dependencies at the highest possible level (module/route boundaries) and pass them in.
@@ -361,19 +383,46 @@ the exact consequence of violating it — not just "be careful".]
 
 ## 28. Standardized Response Envelope (The API Contract)
 * **The Rule:** Every API endpoint — success or failure — must return a response in a single, predictable JSON "envelope" shape. Never return raw objects, raw arrays, or ad-hoc structures directly from controllers. Both Success and Error responses must share the EXACT SAME canonical type definition.
-* **The Shared Canonical Shape (Frontend & Backend):**
+* **The Complete Canonical Schema (all 8 fields — single source of truth):**
   ```typescript
-  {
-    success: boolean;
-    message: string;
-    data: T | null;
-    meta?: PaginationMeta;
-    error?: string;
-    statusCode?: number;
+  // src/core/types/api-response.types.ts
+  export interface ApiResponse<T> {
+    success: boolean;                        // true on 2xx, false on all errors
+    message: string;                         // human-readable, always present
+    data: T | null;                          // response payload OR null on error
+    meta?: PaginationMeta;                   // present only on paginated list responses
+    error?: string;                          // error name / category (e.g. "NOT_FOUND")
+    errorCode?: string;                      // machine-readable DOMAIN.ENTITY.REASON (e.g. "BILLING.SUBSCRIPTION.EXPIRED")
+    statusCode?: number;                     // HTTP status code, present on error responses
+    validationErrors?: ValidationErrorItem[]; // present ONLY on 400/422 validation failures
+  }
+
+  export interface ValidationErrorItem {
+    field: string;    // exact DTO property name, supports dot-notation for nested (e.g. 'address.city')
+    message: string;  // human-readable error from class-validator
   }
   ```
-* **Implement via:** A global `ResponseInterceptor` (NestJS), `APIView` / custom `Renderer` (Django), or a `res.success()` helper (Express). The AI should NEVER shape the raw response manually inside a controller or service.
-* **Why:** When an AI frontend agent hits an API, it needs a predictable contract. If success and error payloads have totally different shapes, the frontend's generic `ApiResponse<T>` parser becomes brittle. A singular standard envelope eliminates all ambiguity.
+* **Field Presence Conditions — this table is the contract AI agents must follow:**
+
+  | Field | Success (2xx) | Error (4xx/5xx) | Validation Error (400/422) |
+  |---|---|---|---|
+  | `success` | `true` | `false` | `false` |
+  | `message` | Always present | Always present | Always present |
+  | `data` | Present with payload | `null` | `null` |
+  | `meta` | Present if paginated | Absent | Absent |
+  | `error` | Absent | Present | `"VALIDATION_ERROR"` |
+  | `errorCode` | Absent | Present where applicable | Absent |
+  | `statusCode` | Absent | Present | Present (`400`) |
+  | `validationErrors` | Absent | Absent | Present (array of field errors) |
+
+* **Rules:**
+  - `data` is ALWAYS `null` on error responses. Never put error detail inside `data`.
+  - `validationErrors` is ONLY present on validation failures — never on generic errors.
+  - `errorCode` follows `DOMAIN.ENTITY.REASON` in `SCREAMING_SNAKE_CASE` (e.g., `BILLING.SUBSCRIPTION.EXPIRED`). The frontend relies on this code to trigger specific UI logic (e.g., redirecting to a payment page). See full definition in Rule 64.
+  - `meta` is present only on paginated list responses. For non-paginated lists (e.g., dropdowns), `meta` must be `undefined` — never an empty object `{}`.
+* **Implement via:** A global `ResponseInterceptor` (NestJS) that wraps all successful controller returns. A global `ValidationExceptionFilter` (Rule 98) that transforms `400` errors into the `validationErrors` shape. The AI should NEVER shape the raw response manually inside a controller or service.
+* **Why:** When an AI frontend agent hits an API, it needs a predictable contract. If success and error payloads have totally different shapes, the frontend's generic `ApiResponse<T>` parser becomes brittle. A singular standard envelope with one canonical schema — covering all 8 fields — eliminates all ambiguity and ensures Rules 64 and 98 are never treated as isolated additions.
+
 
 ---
 
