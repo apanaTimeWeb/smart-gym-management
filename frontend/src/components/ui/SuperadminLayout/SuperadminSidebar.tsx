@@ -44,7 +44,7 @@ import {
 import { AffiliatesUrlConfig } from '@/app/superadmin/affiliates/affiliates_url_config';
 import { AnalyticsUrlConfig } from '@/app/superadmin/analytics/analytics_url_config';
 import { BranchesUrlConfig } from '@/app/superadmin/branches/branches_url_config';
-import { ChurnUrlConfig } from '@/app/superadmin/churn-alerts/churn_url_config';
+import { CancellationsUrlConfig } from '@/app/superadmin/cancellations/cancellations_url_config';
 import { CouponsUrlConfig } from '@/app/superadmin/coupons/coupons_url_config';
 import { FeaturesUrlConfig } from '@/app/superadmin/features/features_url_config';
 import { FranchisesUrlConfig } from '@/app/superadmin/franchises/franchises_url_config';
@@ -132,7 +132,7 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Super
     {
       group: 'Insights & Reports',
       items: [
-        { name: 'Members About to Leave', href: ChurnUrlConfig.PAGES.MAIN, icon: TrendingDown },
+        { name: 'Members About to Leave', href: CancellationsUrlConfig.PAGES.MAIN, icon: TrendingDown },
         { name: 'Usage Meters', href: UsageMetersUrlConfig.PAGES.MAIN, icon: BarChart3 },
         { name: 'Reports & Exports', href: ReportsUrlConfig.PAGES.MAIN, icon: FileBarChart },
       ]

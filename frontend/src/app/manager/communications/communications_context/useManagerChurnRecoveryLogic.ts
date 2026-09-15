@@ -4,8 +4,8 @@
 import { useCallback, useMemo } from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { useManagerCommunicationsStore } from '@/app/manager/communications/communications_store/useManagerCommunicationsStore';
-import { CHURN_ITEMS_PER_PAGE } from '@/app/manager/communications/communications_utils/ManagerCommunicationsSharedConstants';
-import { CHURN_WIN_BACK_TEMPLATES } from '@/app/manager/communications/communications_fixtures/ManagerCommunicationsMockData';
+import { CANCELLATIONS_ITEMS_PER_PAGE } from '@/app/manager/communications/communications_utils/ManagerCommunicationsSharedConstants';
+import { CANCELLATIONS_WIN_BACK_TEMPLATES } from '@/app/manager/communications/communications_fixtures/ManagerCommunicationsMockData';
 import type { ChurnedMember, CommChannel, FetchState, WinBackTemplateTier } from '@/app/manager/communications/communications_types/communications_types';
 import { useManagerChurnRecoveryQueries } from '@/app/manager/communications/communications_context/useManagerChurnRecoveryQueries';
 import { useManagerChurnRecoveryMutations } from '@/app/manager/communications/communications_context/useManagerChurnRecoveryMutations';
@@ -58,8 +58,8 @@ export function useManagerChurnRecoveryLogic() {
     });
   }, [churnedMembers, churnSearch, churnReasonFilter]);
 
-  const totalPages = Math.max(1, Math.ceil(filteredMembers.length / CHURN_ITEMS_PER_PAGE));
-  const paginatedMembers = filteredMembers.slice((churnCurrentPage - 1) * CHURN_ITEMS_PER_PAGE, churnCurrentPage * CHURN_ITEMS_PER_PAGE);
+  const totalPages = Math.max(1, Math.ceil(filteredMembers.length / CANCELLATIONS_ITEMS_PER_PAGE));
+  const paginatedMembers = filteredMembers.slice((churnCurrentPage - 1) * CANCELLATIONS_ITEMS_PER_PAGE, churnCurrentPage * CANCELLATIONS_ITEMS_PER_PAGE);
 
   const getTemplateTier = useCallback((daysSinceExit: number): WinBackTemplateTier => {
     if (daysSinceExit <= 7) return '7_days';
@@ -105,6 +105,6 @@ export function useManagerChurnRecoveryLogic() {
     handleSendWinBack,
     isSending: winBackMutation.isPending,
     getTemplateTier,
-    CHURN_WIN_BACK_TEMPLATES,
+    CANCELLATIONS_WIN_BACK_TEMPLATES,
   };
 }

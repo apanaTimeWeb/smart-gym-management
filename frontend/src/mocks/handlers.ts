@@ -18,7 +18,7 @@ import { superadminMessagingHandlers } from './handlers/superadmin-messaging.han
 import { superadminInvoicesHandlers } from './handlers/superadmin-invoices.handlers';
 import { superadminFranchisesHandlers } from './handlers/superadmin-franchises.handlers';
 import { superadminFeaturesHandlers } from './handlers/superadmin-features.handlers';
-import { superadminChurnHandlers } from './handlers/superadmin-churn.handlers';
+import { superadminCancellationsHandlers } from './handlers/superadmin-cancellations.handlers';
 import { superadminCouponsHandlers } from './handlers/superadmin-coupons.handlers';
 import { superadminBranchesHandlers } from './handlers/superadmin-branches.handlers';
 import { superadminAnalyticsHandlers } from './handlers/superadmin-analytics.handlers';
@@ -99,7 +99,7 @@ export const handlers = [
   ...superadminInvoicesHandlers,
   ...superadminFranchisesHandlers,
   ...superadminFeaturesHandlers,
-  ...superadminChurnHandlers,
+  ...superadminCancellationsHandlers,
   ...superadminCouponsHandlers,
   ...superadminBranchesHandlers,
   ...superadminAnalyticsHandlers,

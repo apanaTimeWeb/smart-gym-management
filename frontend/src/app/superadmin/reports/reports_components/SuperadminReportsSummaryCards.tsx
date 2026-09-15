@@ -5,15 +5,15 @@ import { formatCurrency } from '@/lib/formatters';
 
 export function SuperadminReportsSummaryCards({
   totalMRR,
-  totalChurnedRevenue,
-  churnCount,
+  totalCancellationsedRevenue,
+  cancellationsCount,
   avgHealthScore,
   healthDataLength,
   dateSuffix,
 }: {
   totalMRR: number;
-  totalChurnedRevenue: number;
-  churnCount: number;
+  totalCancellationsedRevenue: number;
+  cancellationsCount: number;
   avgHealthScore: number;
   healthDataLength: number;
   dateSuffix?: string;
@@ -41,8 +41,8 @@ export function SuperadminReportsSummaryCards({
           <TrendingDown size={18} strokeWidth={2} className="text-danger" />
           <span className="text-xs text-secondary uppercase tracking-wider">Lost Income{suffix}</span>
         </div>
-        <p className="text-3xl font-bold text-foreground">{formatCurrency(totalChurnedRevenue)}</p>
-        <p className="text-xs text-danger mt-1">{churnCount} gyms left</p>
+        <p className="text-3xl font-bold text-foreground">{formatCurrency(totalCancellationsedRevenue)}</p>
+        <p className="text-xs text-danger mt-1">{cancellationsCount} gyms left</p>
       </div>
       <div
         className="bg-card border border-border rounded-xl p-5 shadow-sm motion-safe:hover:-translate-y-1 motion-safe:hover:shadow-lg motion-safe:transition-all motion-safe:duration-200"

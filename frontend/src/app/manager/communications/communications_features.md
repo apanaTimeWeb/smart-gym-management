@@ -99,8 +99,8 @@ respect to member data — it never modifies member records.
   - `['managerCommunications', 'automations']`
   - `['managerCommunications', 'churn', 'members']`
   - `['managerCommunications', 'churn', 'kpis']`
-- **Fixture data:** `communications_fixtures/ManagerCommunicationsMockData.ts` — `MOCK_CAMPAIGNS`, `MOCK_AUTOMATIONS`, `MOCK_COMM_KPI`, `MOCK_CHURNED_MEMBERS`, `MOCK_CHURN_KPI`, `COMM_MESSAGE_TEMPLATES`, `CHURN_WIN_BACK_TEMPLATES`
-- **Template auto-fill:** When segment changes, `handleSegmentChange()` in the logic hook auto-fills from `COMM_MESSAGE_TEMPLATES`. When a churned member is selected, `useManagerChurnRecoveryLogic` derives `defaultTier` from `daysSinceExit` and auto-fills from `CHURN_WIN_BACK_TEMPLATES`.
+- **Fixture data:** `communications_fixtures/ManagerCommunicationsMockData.ts` — `MOCK_CAMPAIGNS`, `MOCK_AUTOMATIONS`, `MOCK_COMM_KPI`, `MOCK_CANCELLATIONSED_MEMBERS`, `MOCK_CANCELLATIONS_KPI`, `COMM_MESSAGE_TEMPLATES`, `CANCELLATIONS_WIN_BACK_TEMPLATES`
+- **Template auto-fill:** When segment changes, `handleSegmentChange()` in the logic hook auto-fills from `COMM_MESSAGE_TEMPLATES`. When a churned member is selected, `useManagerChurnRecoveryLogic` derives `defaultTier` from `daysSinceExit` and auto-fills from `CANCELLATIONS_WIN_BACK_TEMPLATES`.
 - **Local-storage keys:** None
 - **MSW handler file:** Not yet configured
 
@@ -147,7 +147,7 @@ All calls go through `ManagerCommunicationsApi` in `communications_api/ManagerCo
 - **`sendWinBackMessage` logs a campaign entry:** Win-back sends appear in the Send History tab with segment label "Win-Back (Churned)". Do not remove this side-effect from the mock API — it ensures the history tab is a complete audit log.
 - **Churn composer `defaultTier` derives from `daysSinceExit`:** If `daysSinceExit ≤ 7` → `'7_days'`, `≤ 30` → `'30_days'`, else `'90_days'`. This is computed in `useManagerChurnRecoveryLogic.getTemplateTier()` — do not duplicate this logic in the component.
 - **`recovered: true` members show no Win-Back button:** `ManagerChurnRecoveryTableRow` conditionally hides the Win-Back CTA for recovered members. Do not remove this guard.
-- **`CHURN_WIN_BACK_TEMPLATES` is the single source of truth:** Never add inline message text in the composer component. Always add new win-back tiers to `communications_fixtures/ManagerCommunicationsMockData.ts` (fixture phase) or the API (production phase).
+- **`CANCELLATIONS_WIN_BACK_TEMPLATES` is the single source of truth:** Never add inline message text in the composer component. Always add new win-back tiers to `communications_fixtures/ManagerCommunicationsMockData.ts` (fixture phase) or the API (production phase).
 
 ## Component Responsibility Map
 
@@ -176,7 +176,7 @@ All calls go through `ManagerCommunicationsApi` in `communications_api/ManagerCo
 - [x] Rule 7: Type Isolation — all types in `communications_types/`
 - [x] Rule 8: Server/Client Boundary — `page.tsx` = Server Component
 - [x] Rule 9: `loading.tsx` + `error.tsx` present and non-generic
-- [x] Rule 11: `ManagerCommunicationsUrlConfig.ts` present with all CHURN endpoints
+- [x] Rule 11: `ManagerCommunicationsUrlConfig.ts` present with all CANCELLATIONS endpoints
 - [x] Rule 13: This document — updated in same commit
 - [x] Rule 15B: Zod schema present (`CommFormSchema`)
 - [x] Rule 19: Clickable table rows — churn table rows use `cursor-pointer`

@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import type { SuperadminDashboardKpiGridProps } from '@/app/superadmin/dashboard/superadmin_dashboard_types/superadmin_dashboard_types';
 import { useSuperadminDashboardDateRangeSuffix } from '@/app/superadmin/dashboard/dashboard_components/SuperadminDashboardView/useSuperadminDashboardDateRangeSuffix';
 import { DashboardUrlConfig } from '@/app/superadmin/dashboard/dashboard_url_config';
-import { ChurnUrlConfig } from '@/app/superadmin/churn-alerts/churn_url_config';
+import { CancellationsUrlConfig } from '@/app/superadmin/cancellations/cancellations_url_config';
 import { formatCurrency, formatNumber } from '@/lib/formatters';
 
 export function SuperadminDashboardKpiGrid({
@@ -118,7 +118,7 @@ export function SuperadminDashboardKpiGrid({
       icon: AlertCircle,
       colorClass: 'text-warning',
       iconBgClass: 'bg-warning-bg',
-      onClick: () => router.push(ChurnUrlConfig.PAGES.MAIN)
+      onClick: () => router.push(CancellationsUrlConfig.PAGES.MAIN)
     },
   ];
 

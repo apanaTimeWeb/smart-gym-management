@@ -8,7 +8,7 @@ interface ManagerChurnRecoveryKPIsProps {
   kpis: ChurnKPIData | undefined;
 }
 
-const CHURN_KPI_CARDS = [
+const CANCELLATIONS_KPI_CARDS = [
   {
     key: 'totalChurned' as keyof ChurnKPIData,
     label: 'TOTAL LOST',
@@ -50,7 +50,7 @@ const CHURN_KPI_CARDS = [
 export default function ManagerChurnRecoveryKPIs({ kpis }: ManagerChurnRecoveryKPIsProps) {
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-      {CHURN_KPI_CARDS.map((card) => {
+      {CANCELLATIONS_KPI_CARDS.map((card) => {
         const Icon = card.icon;
         const value = kpis ? (kpis[card.key] as number) : null;
         return (

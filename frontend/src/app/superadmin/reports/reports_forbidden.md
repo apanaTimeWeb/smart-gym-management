@@ -8,7 +8,7 @@
 
 3. **No Recharts or Chart.js** — The canonical chart library is ApexCharts (`react-apexcharts`). Any other chart library is forbidden (Rule 62, Design §10).
 
-4. **No hardcoded mock data inside the client component** — All static data (`REVENUE_DATA`, `CHURN_DATA`, `HEALTH_DATA`, `GRADE_STYLES`, `PAYMENT_HEALTH_STYLES`) must be imported from `reports_constants.ts`.
+4. **No hardcoded mock data inside the client component** — All static data (`REVENUE_DATA`, `CANCELLATIONS_DATA`, `HEALTH_DATA`, `GRADE_STYLES`, `PAYMENT_HEALTH_STYLES`) must be imported from `reports_constants.ts`.
 
 5. **No inline threshold magic numbers** — `TICKET_DANGER_THRESHOLD` and `TICKET_WARNING_THRESHOLD` are defined in `reports_constants.ts`. Never write `> 10` or `> 5` inline in JSX.
 

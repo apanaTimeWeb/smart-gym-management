@@ -3,7 +3,7 @@ import { formatDate } from '@/lib/formatters';
 // RESPONSIBILITY: Single churned member row in the churn recovery table. Receives member data and callbacks via props. No API calls.
 import { Send, CheckCircle } from 'lucide-react';
 import type { ChurnedMember } from '@/app/manager/communications/communications_types/communications_types';
-import { CHURN_REASON_LABEL } from '@/app/manager/communications/communications_utils/ManagerCommunicationsSharedConstants';
+import { CANCELLATIONS_REASON_LABEL } from '@/app/manager/communications/communications_utils/ManagerCommunicationsSharedConstants';
 
 interface ManagerChurnRecoveryTableRowProps {
   member: ChurnedMember;
@@ -56,7 +56,7 @@ export default function ManagerChurnRecoveryTableRow({
 
       {/* Reason */}
       <td className="px-4 py-3 text-sm text-secondary">
-        {CHURN_REASON_LABEL[member.reason]}
+        {CANCELLATIONS_REASON_LABEL[member.reason]}
       </td>
 
       {/* Recovery status */}

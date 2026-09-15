@@ -61,7 +61,7 @@ export interface SaaSDashboardMetrics {
   revenueByGeography?: { region: string; revenue: number }[];
   /**
    * Composite platform health score 0–100.
-   * Computed by backend from: churn rate, overdue invoices, system uptime, active tenant ratio.
+   * Computed by backend from: cancellations rate, overdue invoices, system uptime, active tenant ratio.
    * Audit item #34 — must come from API, never hardcoded.
    */
   platformHealthScore?: number;

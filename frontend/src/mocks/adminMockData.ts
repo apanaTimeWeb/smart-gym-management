@@ -217,7 +217,7 @@ export const MOCK_ADMIN_DASHBOARD: DashboardStats = {
   lowStockCount: 23,
   totalInquiries: 1200,
   newInquiries: 45,
-  churnRate: 3.2,
+  cancellationRate: 3.2,
   retentionRate: 85,
   arpm: 2150, // Average Revenue Per Member
   memberGrowth: [

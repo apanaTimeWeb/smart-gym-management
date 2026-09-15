@@ -4,7 +4,7 @@ import { Search, ChevronLeft, ChevronRight } from 'lucide-react';
 import ManagerChurnRecoveryTableRow from '@/app/manager/communications/communications_components/ManagerChurnRecovery/ManagerChurnRecoveryTableRow';
 import ManagerChurnRecoveryEmptyState from '@/app/manager/communications/communications_components/ManagerChurnRecovery/ManagerChurnRecoveryEmptyState';
 import type { ChurnedMember, FetchState } from '@/app/manager/communications/communications_types/communications_types';
-import { CHURN_REASON_OPTIONS, CHURN_ITEMS_PER_PAGE } from '@/app/manager/communications/communications_utils/ManagerCommunicationsSharedConstants';
+import { CANCELLATIONS_REASON_OPTIONS, CANCELLATIONS_ITEMS_PER_PAGE } from '@/app/manager/communications/communications_utils/ManagerCommunicationsSharedConstants';
 
 interface ManagerChurnRecoveryTableProps {
   members: ChurnedMember[];
@@ -43,8 +43,8 @@ export default function ManagerChurnRecoveryTable({
   onPageChange,
   onOpenComposer,
 }: ManagerChurnRecoveryTableProps) {
-  const startEntry = allFilteredCount === 0 ? 0 : (currentPage - 1) * CHURN_ITEMS_PER_PAGE + 1;
-  const endEntry   = Math.min(currentPage * CHURN_ITEMS_PER_PAGE, allFilteredCount);
+  const startEntry = allFilteredCount === 0 ? 0 : (currentPage - 1) * CANCELLATIONS_ITEMS_PER_PAGE + 1;
+  const endEntry   = Math.min(currentPage * CANCELLATIONS_ITEMS_PER_PAGE, allFilteredCount);
 
   return (
     <div className="bg-card border border-border rounded-lg overflow-hidden">
@@ -65,7 +65,7 @@ export default function ManagerChurnRecoveryTable({
 
         {/* Reason Filter */}
         <div className="flex items-center gap-2 flex-wrap">
-          {CHURN_REASON_OPTIONS.map((opt) => (
+          {CANCELLATIONS_REASON_OPTIONS.map((opt) => (
             <button
               key={opt.value}
               type="button"

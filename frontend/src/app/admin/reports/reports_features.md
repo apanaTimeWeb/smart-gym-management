@@ -16,7 +16,7 @@ is strictly read-only analytics — no mutations are performed here.
 | `reports_components/AdminReportsKPIs/` | Summary stat cards for the active report | `AdminReportsKPIs.tsx` |
 | `reports_components/AdminReportsRevenue/` | Revenue breakdown chart + table by plan and payment mode | `AdminReportsRevenue.tsx` |
 | `reports_components/AdminReportsAttendance/` | Daily/weekly attendance trend chart | `AdminReportsAttendance.tsx` |
-| `reports_components/AdminReportsMembership/` | New vs churned members over time chart | `AdminReportsMembership.tsx` |
+| `reports_components/AdminReportsMembership/` | New vs cancellationsed members over time chart | `AdminReportsMembership.tsx` |
 | `reports_components/AdminReportsPayroll/` | Staff payroll summary table | `AdminReportsPayroll.tsx` |
 | `reports_components/AdminReportsPnL/` | Branch-level P&L summary | `AdminReportsPnL.tsx` |
 | `reports_api/` | API client for all report endpoints | `reports_api.ts` |
@@ -31,7 +31,7 @@ is strictly read-only analytics — no mutations are performed here.
 |---|---|---|---|---|---|
 | Revenue Report | `/admin/reports` | Monthly revenue breakdown by plan and payment mode with chart | `AdminReportsRevenue` | `GET /admin/reports/revenue?from&to&branchId` | ✅ Live |
 | Attendance Report | `/admin/reports` | Daily/weekly attendance trends per branch | `AdminReportsAttendance` | `GET /admin/reports/attendance?from&to&branchId` | ✅ Live |
-| Membership Report | `/admin/reports` | New vs churned members over time | `AdminReportsMembership` | `GET /admin/reports/members?from&to&branchId` | ✅ Live |
+| Membership Report | `/admin/reports` | New vs cancellationsed members over time | `AdminReportsMembership` | `GET /admin/reports/members?from&to&branchId` | ✅ Live |
 | Payroll Report | `/admin/reports` | Staff payroll summary by role and branch | `AdminReportsPayroll` | `GET /admin/reports/payroll?from&to&branchId` | ✅ Live |
 | P&L Report | `/admin/reports` | Branch-level profit and loss summary | `AdminReportsPnL` | `GET /admin/reports/pnl?from&to&branchId` | ✅ Live |
 | Export Report | `/admin/reports` | Download active report as PDF or CSV | `AdminReportsMain` toolbar | `GET /admin/reports/export?type&format&from&to` | ✅ Live |

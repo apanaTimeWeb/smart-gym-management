@@ -14,6 +14,7 @@ import { formatNumber } from '@/lib/formatters';
 export default function SuperadminInfrastructureClient() {
   const [isFlushingAll, setIsFlushingAll] = useState(false);
   const [isFlushModalOpen, setIsFlushModalOpen] = useState(false);
+  const [statusFilter, setStatusFilter] = useState('ALL');
 
   const { confirm } = useSuperadminConfirm();
   const queryClient = useQueryClient();
@@ -75,14 +76,7 @@ export default function SuperadminInfrastructureClient() {
     flushTenantMutation.mutate(tenantIds);
   };
 
-  const withCpu = nodes.filter(n => n.cpuPercent !== null);
-  const avgCpu = withCpu.length ? Math.round(withCpu.reduce((acc, n) => acc + (n.cpuPercent ?? 0), 0) / withCpu.length) : 0;
-
-  const withMem = nodes.filter(n => n.memoryPercent !== null);
-  const avgMem = withMem.length ? Math.round(withMem.reduce((acc, n) => acc + (n.memoryPercent ?? 0), 0) / withMem.length) : 0;
-
-  const withDisk = nodes.filter(n => n.diskPercent !== null);
-  const avgDisk = withDisk.length ? Math.round(withDisk.reduce((acc, n) => acc + (n.diskPercent ?? 0), 0) / withDisk.length) : 0;
+  // Variables are calculated below after handling error/loading state.
 
   if (isLoadingNodes && nodes.length === 0) {
     return (
@@ -101,6 +95,16 @@ export default function SuperadminInfrastructureClient() {
     return <div className="flex h-96 items-center justify-center text-danger font-medium">Error loading data.</div>;
   }
 
+  const filteredNodes = statusFilter === 'ALL' ? nodes : nodes.filter(n => n.status === statusFilter);
+  const withCpu = filteredNodes.filter(n => n.cpuPercent !== null);
+  const avgCpu = withCpu.length ? Math.round(withCpu.reduce((acc, n) => acc + (n.cpuPercent ?? 0), 0) / withCpu.length) : 0;
+
+  const withMem = filteredNodes.filter(n => n.memoryPercent !== null);
+  const avgMem = withMem.length ? Math.round(withMem.reduce((acc, n) => acc + (n.memoryPercent ?? 0), 0) / withMem.length) : 0;
+
+  const withDisk = filteredNodes.filter(n => n.diskPercent !== null);
+  const avgDisk = withDisk.length ? Math.round(withDisk.reduce((acc, n) => acc + (n.diskPercent ?? 0), 0) / withDisk.length) : 0;
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -108,13 +112,25 @@ export default function SuperadminInfrastructureClient() {
           <h1 className="text-2xl font-bold text-foreground">Server Infrastructure</h1>
           <p className="text-secondary mt-1">Real-time health metrics of your Docker/Kubernetes cluster.</p>
         </div>
-        <button
-          onClick={() => { refetchNodes(); refetchRedis(); }}
-          disabled={isFetchingNodes || isFetchingRedis}
-          className="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:opacity-90 motion-safe:transition-opacity flex items-center gap-2 border border-primary disabled:opacity-50"
-        >
-          <RefreshCcw size={16} className={isFetchingNodes || isFetchingRedis ? 'motion-safe:animate-spin' : ''} /> Force Sync Metrics
-        </button>
+        <div className="flex items-center gap-4">
+          <select 
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="bg-card text-foreground border border-border px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-primary"
+          >
+            <option value="ALL">All Nodes</option>
+            <option value="HEALTHY">Healthy</option>
+            <option value="WARNING">Warning</option>
+            <option value="CRITICAL">Critical</option>
+          </select>
+          <button
+            onClick={() => { refetchNodes(); refetchRedis(); }}
+            disabled={isFetchingNodes || isFetchingRedis}
+            className="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:opacity-90 motion-safe:transition-opacity flex items-center gap-2 border border-primary disabled:opacity-50"
+          >
+            <RefreshCcw size={16} className={isFetchingNodes || isFetchingRedis ? 'motion-safe:animate-spin' : ''} /> Force Sync Metrics
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

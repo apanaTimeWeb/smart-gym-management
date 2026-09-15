@@ -1,7 +1,7 @@
 # Reports Module — Feature Map
 
 ## Module Purpose
-Provides superadmins with global financial intelligence: MRR/ARR revenue reports with CSV/PDF export, churn analysis with reason breakdown, and per-tenant health scoring. The single source of truth for SaaS business health metrics.
+Provides superadmins with global financial intelligence: MRR/ARR revenue reports with CSV/PDF export, cancellations analysis with reason breakdown, and per-tenant health scoring. The single source of truth for SaaS business health metrics.
 
 ## Directory Structure
 - `reports_components/` — Client UI orchestrator (`SuperadminReportsClient.tsx`)
@@ -17,11 +17,11 @@ Provides superadmins with global financial intelligence: MRR/ARR revenue reports
 | CSV Export | `SuperadminReportsClient.tsx` | Exports filtered revenue data as CSV | `GET /superadmin/reports/revenue/export?format=csv` (future) | Superadmin |
 | PDF Export | `SuperadminReportsClient.tsx` | Generates PDF revenue report | `GET /superadmin/reports/revenue/export?format=pdf` (future) | Superadmin |
 | Date range filter | `SuperadminReportsClient.tsx` | Filters all report data by date range | — (passed as query params future) | Superadmin |
-| Churn Analysis tab | `SuperadminReportsClient.tsx` | Donut chart of churn reasons + churn table | `GET /superadmin/reports/churn` (future) | Superadmin |
+| Cancellations Analysis tab | `SuperadminReportsClient.tsx` | Donut chart of cancellations reasons + cancellations table | `GET /superadmin/reports/cancellations` (future) | Superadmin |
 | Tenant Health tab | `SuperadminReportsClient.tsx` | Health score table sorted by score desc | `GET /superadmin/reports/health` (future) | Superadmin |
 
 ## Data and State Architecture
-- Server-state query keys: `['superadmin', 'reports', 'revenue']`, `['superadmin', 'reports', 'churn']`, `['superadmin', 'reports', 'health']` (future)
+- Server-state query keys: `['superadmin', 'reports', 'revenue']`, `['superadmin', 'reports', 'cancellations']`, `['superadmin', 'reports', 'health']` (future)
 - Zustand stores: none
 - Context providers: none
 - Local-storage keys: none
@@ -29,7 +29,7 @@ Provides superadmins with global financial intelligence: MRR/ARR revenue reports
 
 ## API Contract
 - `GET /superadmin/reports/revenue?from=&to=` → `ApiResponse<RevenueRow[]>`
-- `GET /superadmin/reports/churn?from=&to=` → `ApiResponse<ChurnRecord[]>`
+- `GET /superadmin/reports/cancellations?from=&to=` → `ApiResponse<CancellationsRecord[]>`
 - `GET /superadmin/reports/health` → `ApiResponse<TenantHealthScore[]>`
 - `GET /superadmin/reports/revenue/export?format=csv|pdf&from=&to=` → file download
 

@@ -1,5 +1,5 @@
 'use client';
-// RESPONSIBILITY: Global Reports page — Revenue export (CSV/PDF), Churn analysis, Tenant health scores.
+// RESPONSIBILITY: Global Reports page — Revenue export (CSV/PDF), Cancellations analysis, Tenant health scores.
 // All data imported from reports_constants. Pure view layer.
 // DATA FLOW: reports_constants → SuperadminReportsClient → tabs + charts + tables
 
@@ -7,14 +7,14 @@ import { useState, useEffect } from 'react';
 import { IndianRupee, TrendingDown, HeartPulse, Search } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
-import type { RevenueRow, ChurnRecord, TenantHealthScore, ReportsTab } from '@/app/superadmin/reports/reports_types/reports_types';
+import type { RevenueRow, CancellationsRecord, TenantHealthScore, ReportsTab } from '@/app/superadmin/reports/reports_types/reports_types';
 import { superadminReportsApi } from '@/app/superadmin/reports/reports_api/superadmin_reports_api';
 
 import { SuperadminReportsDatePresetDropdown, type DatePreset } from '@/app/superadmin/reports/reports_components/SuperadminReportsDatePresetDropdown';
 import { SuperadminReportsExportButton } from '@/app/superadmin/reports/reports_components/SuperadminReportsExportButton';
 import { SuperadminReportsSummaryCards } from '@/app/superadmin/reports/reports_components/SuperadminReportsSummaryCards';
 import { SuperadminReportsRevenueTab } from '@/app/superadmin/reports/reports_components/SuperadminReportsRevenueTab';
-import { SuperadminReportsChurnTab } from '@/app/superadmin/reports/reports_components/SuperadminReportsChurnTab';
+import { SuperadminReportsCancellationsTab } from '@/app/superadmin/reports/reports_components/SuperadminReportsCancellationsTab';
 import { SuperadminReportsHealthTab } from '@/app/superadmin/reports/reports_components/SuperadminReportsHealthTab';
 
 const PLAN_OPTIONS = [
@@ -38,7 +38,7 @@ export default function SuperadminReportsClient() {
   const [planFilter, setPlanFilter] = useState('ALL');
   
   const [revenueData, setRevenueData] = useState<RevenueRow[]>([]);
-  const [churnData, setChurnData] = useState<ChurnRecord[]>([]);
+  const [cancellationsData, setCancellationsData] = useState<CancellationsRecord[]>([]);
   const [healthData, setHealthData] = useState<TenantHealthScore[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -48,14 +48,14 @@ export default function SuperadminReportsClient() {
     async function loadData() {
       setIsLoading(true);
       try {
-        const [rev, churn, health] = await Promise.all([
+        const [rev, cancellations, health] = await Promise.all([
           superadminReportsApi.fetchRevenueData(),
-          superadminReportsApi.fetchChurnData(),
+          superadminReportsApi.fetchCancellationsData(),
           superadminReportsApi.fetchHealthData()
         ]);
         if (mounted) {
           if (rev.success && rev.data) setRevenueData(rev.data as unknown as RevenueRow[]);
-          if (churn.success && churn.data) setChurnData(churn.data as unknown as ChurnRecord[]);
+          if (cancellations.success && cancellations.data) setCancellationsData(cancellations.data as unknown as CancellationsRecord[]);
           if (health.success && health.data) setHealthData(health.data as unknown as TenantHealthScore[]);
         }
       } catch (err) {
@@ -101,12 +101,12 @@ export default function SuperadminReportsClient() {
     if (tab === 'revenue') {
       csvRows = [
         ['Month', 'Monthly Income', 'New Revenue', 'Lost Income', 'Net Revenue', 'Gyms'].join(','),
-        ...revenueData.map(r => [r.month, r.mrr, r.newRevenue, r.churnedRevenue, r.netRevenue, r.tenantCount].join(','))
+        ...revenueData.map(r => [r.month, r.mrr, r.newRevenue, r.cancellationsedRevenue, r.netRevenue, r.tenantCount].join(','))
       ];
-    } else if (tab === 'churn') {
+    } else if (tab === 'cancellations') {
       csvRows = [
         ['Gym', 'Owner', 'Plan', 'Left On', 'Reason', 'Lost Monthly Income', 'Days Active'].join(','),
-        ...churnData.map(c => [c.gymName, c.ownerName, c.plan, c.churnedAt, c.reason, c.mrr, c.daysActive].join(','))
+        ...cancellationsData.map(c => [c.gymName, c.ownerName, c.plan, c.cancellationsedAt, c.reason, c.mrr, c.daysActive].join(','))
       ];
     } else {
       csvRows = [
@@ -130,7 +130,7 @@ export default function SuperadminReportsClient() {
 
   const lastRow = revenueData.length > 0 ? revenueData[revenueData.length - 1] : { mrr: 0 };
   const totalMRR = lastRow?.mrr || 0;
-  const totalChurnedRevenue = churnData.reduce((s, c) => s + c.mrr, 0);
+  const totalCancellationsedRevenue = cancellationsData.reduce((s, c) => s + c.mrr, 0);
   const avgHealthScore = healthData.length > 0 ? Math.round(healthData.reduce((s, h) => s + h.score, 0) / healthData.length) : 0;
 
   const dateSuffixMap: Record<string, string> = {
@@ -143,14 +143,14 @@ export default function SuperadminReportsClient() {
   };
   const computedDateSuffix = dateSuffixMap[datePreset] || '';
 
-  const filteredChurnData = churnData.filter(c => {
+  const filteredCancellationsData = cancellationsData.filter(c => {
     const matchSearch = c.gymName.toLowerCase().includes(searchQuery.toLowerCase());
     const matchPlan = planFilter === 'ALL' || c.plan === planFilter;
     return matchSearch && matchPlan;
   });
 
-  const avgDaysActive = filteredChurnData.length > 0 ? Math.round(
-    filteredChurnData.reduce((s, c) => s + c.daysActive, 0) / filteredChurnData.length
+  const avgDaysActive = filteredCancellationsData.length > 0 ? Math.round(
+    filteredCancellationsData.reduce((s, c) => s + c.daysActive, 0) / filteredCancellationsData.length
   ) : 0;
 
   const filteredHealthData = healthData.filter(h => {
@@ -174,8 +174,8 @@ export default function SuperadminReportsClient() {
 
       <SuperadminReportsSummaryCards
         totalMRR={totalMRR}
-        totalChurnedRevenue={totalChurnedRevenue}
-        churnCount={churnData.length}
+        totalCancellationsedRevenue={totalCancellationsedRevenue}
+        cancellationsCount={cancellationsData.length}
         avgHealthScore={avgHealthScore}
         healthDataLength={healthData.length}
         dateSuffix={computedDateSuffix}
@@ -230,7 +230,7 @@ export default function SuperadminReportsClient() {
       <div className="flex gap-1 bg-input border border-border rounded-xl p-1 w-fit flex-wrap">
         {([
           { key: 'revenue' as const, label: 'Revenue Report', icon: IndianRupee },
-          { key: 'churn' as const, label: 'Members Lost Analysis', icon: TrendingDown },
+          { key: 'cancellations' as const, label: 'Members Lost Analysis', icon: TrendingDown },
           { key: 'health' as const, label: 'Gym Health', icon: HeartPulse },
         ]).map(({ key, label, icon: Icon }) => (
           <button
@@ -246,7 +246,7 @@ export default function SuperadminReportsClient() {
       </div>
 
       {tab === 'revenue' && <SuperadminReportsRevenueTab revenueData={revenueData} />}
-      {tab === 'churn' && <SuperadminReportsChurnTab churnData={churnData} filteredChurnData={filteredChurnData} totalChurnedRevenue={totalChurnedRevenue} avgDaysActive={avgDaysActive} />}
+      {tab === 'cancellations' && <SuperadminReportsCancellationsTab cancellationsData={cancellationsData} filteredCancellationsData={filteredCancellationsData} totalCancellationsedRevenue={totalCancellationsedRevenue} avgDaysActive={avgDaysActive} />}
       {tab === 'health' && <SuperadminReportsHealthTab sortedHealthData={sortedHealthData} />}
     </div>
   );

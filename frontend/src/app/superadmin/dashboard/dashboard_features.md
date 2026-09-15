@@ -63,7 +63,7 @@ The Superadmin Dashboard is the command center for the entire SaaS platform. It 
 - **Unified Endpoint:** Do not create separate KPI/revenue API calls unless backend contract changes. Data is currently returned unified.
 - **State Management:** Do not bypass TanStack Query for server state.
 - **Component Data-fetching:** Do not move Dashboard API calls into child UI components (`SuperadminDashboardKpiGrid`, etc.).
-- **Hardcoded Routes:** Do not hardcode navigation paths like `/superadmin/churn-alerts`; use `SuperadminDashboardUrlConfig.PAGES`.
+- **Hardcoded Routes:** Do not hardcode navigation paths like `/superadmin/cancellations`; use `SuperadminDashboardUrlConfig.PAGES`.
 - **Formatting:** Do not use `.toLocaleString()`, `.toFixed()`, or raw `₹` in components. Use `@/lib/formatters`.
 - **No hooks in Constants files:** `SuperadminDashboardConstants.ts` is a pure data file. The date range suffix hook lives in `useSuperadminDashboardDateRangeSuffix.ts` inside the View folder.
 - **Plan badge colors:** Do not add inline ternary chains for plan badge classes. Add new plans to `DASHBOARD_PLAN_BADGE_CLASSES` in `SuperadminDashboardConstants.ts`.

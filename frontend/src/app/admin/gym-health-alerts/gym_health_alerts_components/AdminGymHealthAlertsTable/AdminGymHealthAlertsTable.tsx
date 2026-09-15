@@ -16,7 +16,7 @@ const SEVERITY_STYLES: Record<AlertSeverity, string> = {
 const TYPE_LABELS: Record<AlertType, string> = {
   no_new_members: 'No New Members',
   revenue_drop: 'Revenue Drop',
-  high_churn: 'High Member Loss',
+  high_cancellations: 'High Member Loss',
   pending_payroll: 'Pending Payroll',
   low_attendance: 'Low Attendance',
   expiring_members: 'Expiring Members',

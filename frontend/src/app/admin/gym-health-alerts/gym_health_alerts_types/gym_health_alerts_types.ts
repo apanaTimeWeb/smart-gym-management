@@ -5,7 +5,7 @@ export type AlertSeverity = 'critical' | 'warning' | 'info';
 export type AlertType =
   | 'no_new_members'
   | 'revenue_drop'
-  | 'high_churn'
+  | 'high_cancellations'
   | 'pending_payroll'
   | 'low_attendance'
   | 'expiring_members';

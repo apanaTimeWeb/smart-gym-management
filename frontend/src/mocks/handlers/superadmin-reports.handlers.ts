@@ -1,18 +1,18 @@
 import { http, HttpResponse, delay } from 'msw';
-import type { RevenueRow, ChurnRecord, TenantHealthScore } from '@/app/superadmin/reports/reports_types/reports_types';
+import type { RevenueRow, CancellationsRecord, TenantHealthScore } from '@/app/superadmin/reports/reports_types/reports_types';
 import type { ApiResponse } from '@/lib/api';
 
 const BASE_URL = '*/api/v1/superadmin/reports';
 
 export const MOCK_SUPERADMIN_REPORTS_REVENUE: RevenueRow[] = [
-  { month: 'Jan', mrr: 150000, newRevenue: 10000, churnedRevenue: 2000, netRevenue: 8000, tenantCount: 50 },
-  { month: 'Feb', mrr: 160000, newRevenue: 15000, churnedRevenue: 5000, netRevenue: 10000, tenantCount: 60 },
-  { month: 'Mar', mrr: 180000, newRevenue: 25000, churnedRevenue: 5000, netRevenue: 20000, tenantCount: 75 },
+  { month: 'Jan', mrr: 150000, newRevenue: 10000, cancellationsedRevenue: 2000, netRevenue: 8000, tenantCount: 50 },
+  { month: 'Feb', mrr: 160000, newRevenue: 15000, cancellationsedRevenue: 5000, netRevenue: 10000, tenantCount: 60 },
+  { month: 'Mar', mrr: 180000, newRevenue: 25000, cancellationsedRevenue: 5000, netRevenue: 20000, tenantCount: 75 },
 ];
 
-export const MOCK_SUPERADMIN_REPORTS_CHURN: ChurnRecord[] = [
-  { id: 'ch1', gymName: 'Power Gym', ownerName: 'Bob Builder', plan: 'Enterprise', churnedAt: '2023-11-01', reason: 'Too expensive', mrr: 15000, daysActive: 650 },
-  { id: 'ch2', gymName: 'Yoga Center', ownerName: 'Alice Yoga', plan: 'Basic', churnedAt: '2023-11-15', reason: 'Closing business', mrr: 2000, daysActive: 300 },
+export const MOCK_SUPERADMIN_REPORTS_CANCELLATIONS: CancellationsRecord[] = [
+  { id: 'ch1', gymName: 'Power Gym', ownerName: 'Bob Builder', plan: 'Enterprise', cancellationsedAt: '2023-11-01', reason: 'Too expensive', mrr: 15000, daysActive: 650 },
+  { id: 'ch2', gymName: 'Yoga Center', ownerName: 'Alice Yoga', plan: 'Basic', cancellationsedAt: '2023-11-15', reason: 'Closing business', mrr: 2000, daysActive: 300 },
 ];
 
 export const MOCK_SUPERADMIN_REPORTS_HEALTH: TenantHealthScore[] = [
@@ -30,12 +30,12 @@ export const superadminReportsHandlers = [
       data: MOCK_SUPERADMIN_REPORTS_REVENUE,
     });
   }),
-  http.get(`${BASE_URL}/churn`, async () => {
+  http.get(`${BASE_URL}/cancellations`, async () => {
     await delay(400);
-    return HttpResponse.json<ApiResponse<ChurnRecord[]>>({
+    return HttpResponse.json<ApiResponse<CancellationsRecord[]>>({
       success: true,
       message: 'Success',
-      data: MOCK_SUPERADMIN_REPORTS_CHURN,
+      data: MOCK_SUPERADMIN_REPORTS_CANCELLATIONS,
     });
   }),
   http.get(`${BASE_URL}/health`, async () => {

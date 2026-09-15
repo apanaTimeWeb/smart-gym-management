@@ -56,8 +56,8 @@ export default function SuperadminAnalyticsClient() {
     ? `${metrics.arrDeltaPercent > 0 ? '+' : ''}${metrics.arrDeltaPercent}% from last year`
     : undefined;
 
-  const churnDelta = metrics.churnDeltaPercent !== undefined
-    ? `${metrics.churnDeltaPercent > 0 ? '+' : ''}${metrics.churnDeltaPercent}% vs last month`
+  const cancellationsDelta = metrics.cancellationDeltaPercent !== undefined
+    ? `${metrics.cancellationDeltaPercent > 0 ? '+' : ''}${metrics.cancellationDeltaPercent}% vs last month`
     : 'Target: < 2%';
 
   // ARPU computed from API fields (audit item #36)
@@ -84,9 +84,9 @@ export default function SuperadminAnalyticsClient() {
     },
     {
       label: 'Members Lost %' + dateSuffix,
-      value: `${metrics.churnRate}%`,
-      delta: churnDelta,
-      deltaUp: metrics.churnRate < 2,
+      value: `${metrics.cancellationRate}%`,
+      delta: cancellationsDelta,
+      deltaUp: metrics.cancellationRate < 2,
       icon: ArrowDownRight,
       iconBg: 'bg-danger-bg',
       iconColor: 'text-danger',
@@ -142,7 +142,7 @@ export default function SuperadminAnalyticsClient() {
 
   const mrrAreaSeries = [{ name: 'Monthly Income', data: monthlyData.map((d) => d.mrr) }];
 
-  // Design §10: Grouped bar chart — new tenants (gold) vs churned (red)
+  // Design §10: Grouped bar chart — new tenants (gold) vs cancellationsed (red)
   const tenantBarOptions = {
     chart: { type: 'bar' as const, toolbar: { show: false }, background: 'transparent' },
     colors: [CHART_COLORS.PRIMARY, CHART_COLORS.DANGER],
@@ -167,7 +167,7 @@ export default function SuperadminAnalyticsClient() {
 
   const tenantBarSeries = [
     { name: 'Active Gyms', data: monthlyData.map((d) => d.tenantCount) },
-    { name: 'Churned', data: monthlyData.map((d) => d.churnedCount) },
+    { name: 'Members Lost', data: monthlyData.map((d) => d.cancelledCount) },
   ];
 
   return (

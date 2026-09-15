@@ -74,7 +74,7 @@ any route under `/superadmin`.
 | System Health | `/superadmin/system` | View CPU, RAM, disk, uptime, and per-service status | `SuperadminSystemClient` | `GET /superadmin/system-health` | ✅ Live |
 | Global Audit Log | `/superadmin/global-audit` | Immutable log of all superadmin actions across all tenants. Includes CSV Export. | `SuperadminGlobalAuditClient` | `GET /superadmin/audit-logs` | ✅ Live |
 | Platform Settings | `/superadmin/settings` | Edit global key-value configuration. View platform Changelog. | `SuperadminSettingsClient` | `GET /superadmin/settings`, `PATCH /superadmin/settings/:id` | ✅ Live |
-| Analytics | `/superadmin/analytics` | MRR trends, gym growth charts, churn analysis | `SuperadminAnalyticsClient` | `GET /superadmin/analytics` | ✅ Live |
+| Analytics | `/superadmin/analytics` | MRR trends, gym growth charts, cancellations analysis | `SuperadminAnalyticsClient` | `GET /superadmin/analytics` | ✅ Live |
 | Reports | `/superadmin/reports` | Platform-wide financial and operational PDF/CSV exports | `SuperadminReportsClient` | `GET /superadmin/reports` | ✅ Live |
 | Franchises | `/superadmin/franchises` | Manage franchise groups containing multiple branches. Edit franchise details. | `SuperadminFranchisesClient`, `SuperadminFranchiseModal` | `GET/PATCH /superadmin/franchises` | ✅ Live |
 
@@ -244,7 +244,7 @@ Central client: `superadminApi` in `superadmin_api/superadmin_api.ts`
 - [x] Rule 71: Destructive actions use `useConfirm()` or type-to-confirm modal
 - [x] Rule 73: `import type` used for all type-only imports
 - [x] Rule 15A: Tests — co-located test files for hooks and utils not yet present (gap)
-- [x] Rule 15B: Forms — React Hook Form + Zod used in all forms and modals (including `SuperadminChurnActionModal` via `churnActionSchema`)
+- [x] Rule 15B: Forms — React Hook Form + Zod used in all forms and modals (including `SuperadminCancellationsActionModal` via `cancellationsActionSchema`)
 - [x] Rule 75: MSW handlers — fully configured via src/mocks/handlers/ for any superadmin module
 - [x] Design §3: Sidebar active state = subtle gold left border + `bg-primary-subtle` + glow
 - [x] Design §12: Z-index scale — header `z-20`, dropdowns `z-30`, modals `z-40`, toasts `z-50`, Ghost Login banner `z-50`

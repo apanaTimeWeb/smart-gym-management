@@ -62,7 +62,7 @@ export const dashboardStatsSchema = z.object({
     lowStockCount: z.number(),
     totalInquiries: z.number(),
     newInquiries: z.number(),
-    churnRate: z.number(),
+    cancellationRate: z.number(),
     retentionRate: z.number(),
     arpm: z.number(),
     memberGrowth: z.array(z.object({

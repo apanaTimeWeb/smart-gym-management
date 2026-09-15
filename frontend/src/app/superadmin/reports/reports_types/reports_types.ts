@@ -5,17 +5,17 @@ export interface RevenueRow {
   month: string;
   mrr: number;
   newRevenue: number;
-  churnedRevenue: number;
+  cancellationsedRevenue: number;
   netRevenue: number;
   tenantCount: number;
 }
 
-export interface ChurnRecord {
+export interface CancellationsRecord {
   id: string;
   gymName: string;
   ownerName: string;
   plan: string;
-  churnedAt: string;
+  cancellationsedAt: string;
   reason: string;
   mrr: number;
   daysActive: number;
@@ -35,7 +35,7 @@ export interface TenantHealthScore {
 }
 
 /** Tab identifiers for the reports page. */
-export type ReportsTab = 'revenue' | 'churn' | 'health';
+export type ReportsTab = 'revenue' | 'cancellations' | 'health';
 
 
 export const RevenueRowSchema = z.object({
@@ -46,11 +46,11 @@ export const RevenueRowSchema = z.object({
   tenantId: z.string().optional()
 });
 
-export const ChurnRecordSchema = z.object({
+export const CancellationsRecordSchema = z.object({
   id: z.string(),
   tenantId: z.string(),
   tenantName: z.string(),
-  churnDate: z.string(),
+  cancellationsDate: z.string(),
   reason: z.string(),
   lifetimeValue: z.number()
 });

@@ -5,14 +5,14 @@ import { z } from 'zod';
 export interface RevenueMetrics {
   mrr: number;
   arr: number;
-  churnRate: number;
+  cancellationRate: number;
   ltv: number;
   cac: number;
   activeTenants: number;
   arpu: number;
   mrrDeltaPercent: number;
   arrDeltaPercent: number;
-  churnDeltaPercent?: number;
+  cancellationDeltaPercent?: number;
 }
 
 /** Revenue breakdown by plan tier for donut/pie chart */
@@ -27,7 +27,7 @@ export interface MonthlyAnalyticsDataPoint {
   month: string;
   mrr: number;
   tenantCount: number;
-  churnedCount: number;
+  cancelledCount: number;
 }
 
 /** Shape of full analytics API response data */
@@ -56,7 +56,7 @@ const UserGrowthPointSchema = z.object({
 export const AnalyticsApiDataSchema = z.object({
   activeUsers: z.number(),
   monthlyRecurringRevenue: z.number(),
-  churnRate: z.number(),
+  cancellationRate: z.number(),
   newSignups: z.number(),
   revenueHistory: z.array(RevenueHistoryPointSchema),
   userGrowth: z.array(UserGrowthPointSchema),

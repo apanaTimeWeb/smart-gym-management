@@ -65,7 +65,7 @@ const DASHBOARD_STATS = {
   totalStaff: 34, activeStaff: 30,
   totalProducts: 86, lowStockCount: 7,
   totalInquiries: 94, newInquiries: 18,
-  churnRate: 4.2, retentionRate: 87.3, arpm: 4680,
+  cancellationRate: 4.2, retentionRate: 87.3, arpm: 4680,
   revenueGrowthPercent: 12.5, todayCollection: 45000, frozenMembershipsCount: 15, totalPTRevenue: 120000,
   memberGrowth: REVENUE_TREND.map(r => ({ month: r.month, count: Math.floor(r.revenue / 6000) })),
   revenueTrend: REVENUE_TREND,
@@ -191,23 +191,26 @@ const AFFILIATES = [
   { id: 'af2', name: 'John Doe', email: 'john@example.com', referralCode: 'JOHNFIT', totalReferred: 12, commissionEarned: 3500, status: 'ACTIVE', joinedAt: '2024-01-20T00:00:00Z', conversionRate: 8.2 },
 ];
 
-// ─── backups ──────────────────────────────────────────────────────────────────
+// ─── superadmin backups ────────────────────────────────────────────────────────
 const BACKUPS = [
-  { id: 'bk1', fileName: 'db_backup_2025_01_15.sql.gz', sizeBytes: 1024 * 1024 * 450, status: 'COMPLETED', type: 'AUTOMATED', createdAt: '2025-01-15T02:00:00Z', url: '#' },
-  { id: 'bk2', fileName: 'db_backup_2025_01_14.sql.gz', sizeBytes: 1024 * 1024 * 448, status: 'COMPLETED', type: 'AUTOMATED', createdAt: '2025-01-14T02:00:00Z', url: '#' },
+  { id: 'bk1', tenantName: 'FitLife', databaseName: 'db_fitlife_prod', sizeMB: 450, status: 'SUCCESS', timestamp: '2025-01-15T02:00:00Z' },
+  { id: 'bk2', tenantName: 'IronCore', databaseName: 'db_ironcore_prod', sizeMB: 320, status: 'SUCCESS', timestamp: '2025-01-14T02:00:00Z' },
 ];
 
-// ─── tickets ──────────────────────────────────────────────────────────────────
+// ─── superadmin tickets ───────────────────────────────────────────────────────
 const TICKETS = [
-  { id: 'tk1', tenantId: 't1', tenantName: 'FitPulse Fitness', reporterEmail: 'admin@fitpulse.com', subject: 'Billing issue for Pro plan', description: 'We were charged twice this month.', status: 'OPEN', priority: 'HIGH', createdAt: '2025-01-15T10:30:00Z', lastUpdated: '2025-01-15T10:30:00Z', messages: [] },
-  { id: 'tk2', tenantId: 't2', tenantName: 'IronCore Gym', reporterEmail: 'admin@ironcore.com', subject: 'How to add custom SMS templates?', description: 'I cannot find the SMS template settings.', status: 'RESOLVED', priority: 'LOW', createdAt: '2025-01-10T14:15:00Z', lastUpdated: '2025-01-11T09:00:00Z', messages: [] },
+  { id: 'tk1', tenantId: 't1', tenantName: 'FitPulse Fitness', reporterEmail: 'admin@fitpulse.com', subject: 'Billing issue for Pro plan', description: 'We were charged twice this month.', status: 'OPEN', priority: 'HIGH', createdAt: '2025-01-15T10:30:00Z', updatedAt: '2025-01-15T10:30:00Z', lastUpdated: '2025-01-15T10:30:00Z', messages: [] },
+  { id: 'tk2', tenantId: 't2', tenantName: 'IronCore Gym', reporterEmail: 'admin@ironcore.com', subject: 'How to add custom SMS templates?', description: 'I cannot find the SMS template settings.', status: 'RESOLVED', priority: 'NORMAL', createdAt: '2025-01-10T14:15:00Z', updatedAt: '2025-01-11T09:00:00Z', lastUpdated: '2025-01-11T09:00:00Z', messages: [] },
 ];
 
-// ─── jobs ─────────────────────────────────────────────────────────────────────
-const JOBS = [
-  { id: 'jb1', name: 'Daily Invoice Generation', type: 'CRON', status: 'COMPLETED', progress: 100, startedAt: '2025-01-15T01:00:00Z', completedAt: '2025-01-15T01:15:00Z', errorCount: 0 },
-  { id: 'jb2', name: 'Member Sync', type: 'WORKER', status: 'IN_PROGRESS', progress: 45, startedAt: '2025-01-15T12:00:00Z', errorCount: 0 },
-];
+// ─── superadmin jobs ──────────────────────────────────────────────────────────
+const JOBS = {
+  metrics: { activeJobs: 2, completed24h: 150, failed24h: 3, delayed: 1 },
+  jobs: [
+    { id: 'jb1', queueName: 'invoice_queue', jobName: 'Daily Invoice Generation', status: 'COMPLETED', attempts: 1, createdAt: '2025-01-15T01:00:00Z' },
+    { id: 'jb2', queueName: 'sync_queue', jobName: 'Member Sync', status: 'ACTIVE', attempts: 1, createdAt: '2025-01-15T12:00:00Z' },
+  ]
+};
 
 // ─── migrations ───────────────────────────────────────────────────────────────
 const MIGRATIONS = [
@@ -215,16 +218,20 @@ const MIGRATIONS = [
   { id: 'mg2', version: 'v1.6.0', name: 'Update Churn Indexes', status: 'SUCCESS', appliedAt: '2025-01-05T00:00:00Z', executionTimeMs: 320 },
 ];
 
-// ─── usage meters ─────────────────────────────────────────────────────────────
+// ─── superadmin usage meters ──────────────────────────────────────────────────
 const USAGE_METERS = [
-  { id: 'um1', tenantId: 't1', tenantName: 'FitPulse Fitness', metric: 'SMS_SENT', limit: 10000, current: 8450, percentage: 84.5, resetDate: '2025-02-01T00:00:00Z' },
-  { id: 'um2', tenantId: 't2', tenantName: 'IronCore Gym', metric: 'STORAGE_GB', limit: 50, current: 48.5, percentage: 97, resetDate: '2025-02-01T00:00:00Z' },
+  { id: 'um1', tenantId: 't1', tenantName: 'FitPulse Fitness', metricName: 'SMS', currentValue: 8450, limitValue: 10000, resetDate: '2025-02-01T00:00:00Z', smsSent: 8450, smsLimit: 10000, whatsappMessagesSent: 450, whatsappLimit: 1000, emailsSent: 12000, emailLimit: 50000, apiCallsCount: 450000, databaseGb: 4.5, mediaGb: 12.2, storageLimitGb: 50, activeMembers: 320, totalMembers: 450, memberLimit: 500, staffCount: 12, staffLimit: 20, billingCycleEnd: '2025-02-01T00:00:00Z' },
 ];
 
-// ─── features ─────────────────────────────────────────────────────────────────
+// ─── superadmin features ──────────────────────────────────────────────────────
 const FEATURES = [
-  { id: 'ft1', key: 'ENABLE_AI_COACH', name: 'AI Coach Beta', description: 'Enable AI workout generation', type: 'BETA', status: 'ENABLED', targetTenants: [] },
-  { id: 'ft2', key: 'NEW_BILLING_UI', name: 'V2 Billing Interface', description: 'Modern billing interface', type: 'GA', status: 'ENABLED', targetTenants: [] },
+  { id: 'ft1', key: 'ENABLE_AI_COACH', value: 'true', description: 'Enable AI workout generation', category: 'BETA', dataType: 'boolean' },
+];
+
+// ─── superadmin system health ─────────────────────────────────────────────────
+const SYSTEM_HEALTH = [
+  { id: 'sh1', name: 'Database primary', targetSla: 99.99, actualUptime: 99.98, downtimeIncidents: 1, downtimeMinutes: 5, status: 'WARNING' },
+  { id: 'sh2', name: 'API Gateway', targetSla: 99.99, actualUptime: 100, downtimeIncidents: 0, downtimeMinutes: 0, status: 'MET' }
 ];
 
 // ─── audit logs ───────────────────────────────────────────────────────────────
@@ -240,7 +247,7 @@ const INFRASTRUCTURE = [
 ];
 
 // ─── churn alerts ─────────────────────────────────────────────────────────────
-const CHURN_ALERTS = [
+const CANCELLATIONS_ALERTS = [
   { id: 'ca1', tenantId: 't1', tenantName: 'FitPulse Fitness', riskScore: 85, reason: 'Drop in active members', lastLoginAt: '2025-01-10T00:00:00Z', mrr: 120000 },
   { id: 'ca2', tenantId: 't3', tenantName: 'Zenith Health Club', riskScore: 92, reason: 'Missed payment', lastLoginAt: '2024-12-15T00:00:00Z', mrr: 45000 },
 ];
@@ -327,7 +334,123 @@ const ATTENDANCE = Array.from({ length: 15 }, (_, i) => ({
   duration: 90 + (i % 30),
 }));
 
+// ─── superadmin branches ──────────────────────────────────────────────────────
+const SUPERADMIN_BRANCHES = [
+  { id: 'b1', tenantId: 't1', tenantName: 'FitLife', branchName: 'Andheri East', name: 'Andheri East', location: 'Andheri', city: 'Mumbai', state: 'MH', managerName: 'Raj', managerEmail: 'raj@fit.com', phone: '999', status: 'ACTIVE', memberCount: 320, totalMembers: 320, staffCount: 12, monthlyRevenue: 450000, createdAt: '2023-01-01', updatedAt: '2023-01-01' }
+];
+
+// ─── superadmin plans ─────────────────────────────────────────────────────────
+const SUPERADMIN_PLANS = [
+  { id: 'p1', name: 'Basic', priceMonthly: 1000, priceAnnual: 10000, maxMembers: 500, maxStaff: 10, dbLimitGb: 5, binaryLimitGb: 10, features: ['Access'], activeTenants: 45, isPublic: true, trialDays: 14, setupFee: 0, currency: 'INR' },
+];
+
+// ─── superadmin invoices ──────────────────────────────────────────────────────
+const SUPERADMIN_INVOICES = [
+  { id: 'inv1', tenantId: 't1', tenantName: 'FitLife', amount: 15000, currency: 'INR', status: 'PAID', issuedAt: '2025-01-01', dueDate: '2025-01-15', issuedDate: '2025-01-01', paidDate: '2025-01-10', paidAt: '2025-01-10', paymentMethod: 'CARD', invoiceType: 'RECURRING', planName: 'Pro' }
+];
+
+// ─── superadmin coupons ───────────────────────────────────────────────────────
+const SUPERADMIN_COUPONS = [
+  { id: 'c1', code: 'WELCOME20', discountType: 'PERCENTAGE', discountValue: 20, maxUses: 100, currentUses: 42, status: 'ACTIVE', expiryDate: '2025-03-31T00:00:00Z', isDeleted: false },
+];
+
+// ─── superadmin messaging ─────────────────────────────────────────────────────
+const MESSAGING = [
+  { id: 'm1', tenantId: 't1', tenantName: 'FitLife', status: 'ACTIVE', lastActive: '2025-01-01T00:00:00Z', unreadCount: 2, messages: [{ id: 'msg1', text: 'Hello', sender: 'TENANT', timestamp: '2025-01-01T00:00:00Z' }] }
+];
+
+// ─── superadmin broadcasts ────────────────────────────────────────────────────
+const BROADCASTS = [
+  { id: 'bc1', title: 'Maintenance', message: 'Downtime expected', type: 'INFO', isRead: false, createdAt: '2025-01-01T00:00:00Z' }
+];
+
+// ─── superadmin reports ───────────────────────────────────────────────────────
+const REPORTS = {
+  revenue: [{ id: 'r1', date: '2025-01-01', amount: 5000, source: 'SUBSCRIPTION', month: 'Jan', mrr: 5000, newRevenue: 1000, churnedRevenue: 0, netRevenue: 6000, tenantCount: 45 }],
+  churn: [{ id: 'c1', tenantId: 't1', tenantName: 'FitLife', churnDate: '2025-01-01', reason: 'Too expensive', lifetimeValue: 50000, gymName: 'FitLife', ownerName: 'Raj', plan: 'Basic', churnedAt: '2025-01-01', mrr: 1000, daysActive: 365 }],
+  health: [{ tenantId: 't1', tenantName: 'FitLife', score: 95, trend: 'UP', lastCalculated: '2025-01-01', id: 't1', gymName: 'FitLife', plan: 'Basic', grade: 'A', memberCount: 320, lastLogin: '2025-01-01', paymentHealth: 'GOOD', featureUsage: 80, supportTickets: 0 }]
+};
+
 // ─── main router ─────────────────────────────────────────────────────────────
+
+// ─── ADMIN SPECIFIC MOCKS ───────────────────────────────────────────────
+const ADMIN_REPORTS = {
+  revenueByGym: BRANCHES.map(b => ({ gymId: b.id, gymName: b.name, revenue: b.revenue, expenses: b.revenue * 0.4, profit: b.revenue * 0.6, trend: b.trend, trendPercent: 12.5 })),
+  revenueByMethod: [
+    { method: 'UPI', amount: 450000, count: 120 },
+    { method: 'Card', amount: 350000, count: 85 },
+    { method: 'Cash', amount: 120000, count: 40 }
+  ],
+  revenueByPlan: PLANS.map(p => ({ planName: p.name, amount: p.price * p.membersCount, count: p.membersCount })),
+  monthlyRevenue: REVENUE_TREND.map(r => ({ month: r.month, revenue: r.revenue, expenses: r.expenses, profit: r.profit })),
+  membershipGrowth: BRANCHES.map(b => ({ gymId: b.id, gymName: b.name, newMembers: 45, renewals: 120, exits: 5, netGrowth: 40, activeMembers: b.activeMembers })),
+  attendanceSummary: BRANCHES.map(b => ({ gymId: b.id, gymName: b.name, avgDailyAttendance: Math.floor(b.activeMembers * 0.4), peakDay: 'Monday', attendanceRate: 40, totalCheckIns: b.activeMembers * 12 })),
+  payrollSummary: BRANCHES.map(b => ({ gymId: b.id, gymName: b.name, totalStaff: 8, totalPayroll: 240000, paid: 240000, pending: 0, advances: 5000 })),
+  pnlSummary: BRANCHES.map(b => ({ gymId: b.id, gymName: b.name, revenue: b.revenue, membershipRevenue: b.revenue * 0.9, storeRevenue: b.revenue * 0.1, totalExpenses: b.revenue * 0.4, staffCost: b.revenue * 0.25, operationalCost: b.revenue * 0.15, netProfit: b.revenue * 0.6, profitMargin: 60 })),
+  kpis: {
+    totalRevenue: 4850000,
+    totalExpenses: 1850000,
+    netProfit: 3000000,
+    totalMembers: 1160,
+    newMembers: 125,
+    avgAttendanceRate: 45,
+    cancellationRate: 2.1
+  }
+};
+
+const ADMIN_MEMBERS = Array.from({ length: 20 }, (_, i) => ({
+  id: `m${i + 1}`,
+  name: ['Rahul Sharma','Priya Singh','Amit Patel','Sneha Joshi','Kiran Kumar','Divya Nair','Rohan Gupta','Meera Pillai','Arjun Reddy','Pooja Iyer','Vishal Verma','Anjali Desai','Siddharth Rao','Kavya Menon','Nikhil Shah','Ritu Agarwal','Deepak Tiwari','Sunita Yadav','Manish Jain','Neha Mishra'][i],
+  email: `user${i + 1}@gymsmart.com`,
+  phone: `98${String(10000000 + i * 1111111).substring(0, 8)}`,
+  gender: i % 2 === 0 ? 'Male' : 'Female',
+  address: 'Mumbai, Maharashtra',
+  branch: BRANCHES[i % 4]!.name,
+  planId: PLANS[i % 4]!.id,
+  plan: { id: PLANS[i % 4]!.id, name: PLANS[i % 4]!.name, tier: 'pro' },
+  billingCycle: 'monthly',
+  status: ['active', 'active', 'active', 'pending', 'expired'][i % 5],
+  joinDate: `2024-0${(i % 9) + 1}-${String((i % 28) + 1).padStart(2, '0')}`,
+  expiryDate: `2025-0${(i % 9) + 1}-${String((i % 28) + 1).padStart(2, '0')}`,
+  paidAmount: PLANS[i % 4]!.price,
+  pendingAmount: i % 5 === 3 ? 1500 : 0,
+  createdAt: `2024-0${(i % 9) + 1}-${String((i % 28) + 1).padStart(2, '0')}T10:00:00Z`
+}));
+
+const ADMIN_STORE_SUMMARY = {
+  totalProducts: 45, totalOrders: 128, totalRevenue: 85000,
+  lowStockProducts: [
+    { id: 'p1', name: 'Whey Protein 1kg', category: 'Supplements', price: 2999, stock: 4, isActive: true },
+    { id: 'p2', name: 'Gym Towel', category: 'Accessories', price: 299, stock: 2, isActive: true }
+  ]
+};
+
+const ADMIN_STORE_ORDERS = Array.from({ length: 10 }, (_, i) => ({
+  id: `ord${i + 1}`,
+  total: 2999 + i * 500,
+  method: ['UPI', 'Card', 'Cash'][i % 3],
+  status: ['completed', 'pending'][i % 2],
+  createdAt: `2025-01-${String((i % 28) + 1).padStart(2, '0')}T10:00:00Z`,
+  items: [
+    { id: `item${i + 1}`, qty: 1, price: 2999, product: { name: 'Whey Protein 1kg' } }
+  ]
+}));
+
+const ADMIN_SALES_INITIAL_DATA = {
+  overviewData: REVENUE_TREND.map(r => ({ date: `2024-${r.month}-01`, revenue: r.revenue })),
+  membershipReport: [
+    { plan: 'Gold Plan', totalMembers: 390, activeMembers: 350, revenue: 2339610, receivable: 15000, received: 2339610, remaining: 15000, refund: 0 }
+  ],
+  membershipTotals: { activeCount: 980, revenue: 4850000, totalReceivable: 142000, totalReceived: 4850000, remaining: 142000, refunds: 5000 },
+  pendingPayments: ADMIN_MEMBERS.filter(m => m.pendingAmount > 0),
+  pendingTotal: 142000,
+  allMemberships: ADMIN_MEMBERS,
+  allMembershipsTotal: 1160,
+  storeOrders: ADMIN_STORE_ORDERS,
+  storeOrdersTotal: 128,
+  storeSummary: ADMIN_STORE_SUMMARY
+};
+
 export function getMockResponse(path: string): unknown {
   const p = path.toLowerCase();
 
@@ -337,6 +460,14 @@ export function getMockResponse(path: string): unknown {
 
   // Superadmin Specific
   if (p.includes('/superadmin/dashboard')) return ok(SUPERADMIN_DASHBOARD, 'Superadmin stats fetched');
+  if (p.includes('/superadmin/branches') || p.includes('/branch')) return ok(SUPERADMIN_BRANCHES, 'Branches fetched');
+  if (p.includes('/superadmin/plans') || p.includes('/plan')) return ok(SUPERADMIN_PLANS, 'Plans fetched');
+  if (p.includes('/superadmin/invoices') || p.includes('/invoice')) return ok(SUPERADMIN_INVOICES, 'Invoices fetched');
+  if (p.includes('/superadmin/coupons') || p.includes('/coupon')) return ok(SUPERADMIN_COUPONS, 'Coupons fetched');
+  if (p.includes('/superadmin/messaging') || p.includes('/message')) return ok(MESSAGING, 'Messages fetched');
+  if (p.includes('/superadmin/broadcast')) return ok(BROADCASTS, 'Broadcasts fetched');
+  if (p.includes('/superadmin/reports') || p.includes('/report')) return ok(REPORTS, 'Reports fetched');
+  
   if (p.includes('/franchise')) return ok(FRANCHISES, 'Franchises fetched');
   if (p.includes('/onboarding')) return ok(ONBOARDING, 'Onboarding data fetched');
   if (p.includes('/affiliate')) return ok(AFFILIATES, 'Affiliates fetched');
@@ -345,25 +476,26 @@ export function getMockResponse(path: string): unknown {
   if (p.includes('/job')) return ok(JOBS, 'Jobs fetched');
   if (p.includes('/migration')) return ok(MIGRATIONS, 'Migrations fetched');
   if (p.includes('/usage-meter')) return ok(USAGE_METERS, 'Usage meters fetched');
-  if (p.includes('/feature')) return ok(FEATURES, 'Features fetched');
+  if (p.includes('/feature') || p.includes('/setting')) return ok(FEATURES, 'Features fetched');
   if (p.includes('/audit')) return ok(AUDIT_LOGS, 'Audit logs fetched');
+  if (p.includes('/system')) return ok(SYSTEM_HEALTH, 'System health fetched');
   if (p.includes('/infrastructure')) return ok(INFRASTRUCTURE, 'Infrastructure fetched');
-  if (p.includes('/churn')) return ok(CHURN_ALERTS, 'Churn alerts fetched');
+  if (p.includes('/cancellations')) return ok(CANCELLATIONS_ALERTS, 'Churn alerts fetched');
   
   if (p.includes('/analytics')) {
     return ok({
       metrics: {
-        mrr: 920000, arr: 11040000, churnRate: 1.2, ltv: 250000, cac: 12000,
+        mrr: 920000, arr: 11040000, cancellationRate: 1.2, ltv: 250000, cac: 12000,
         activeTenants: 145, arpu: 28000, mrrDeltaPercent: 12.5, arrDeltaPercent: 45.2, churnDeltaPercent: -0.5
       },
       monthly: [
-        { month: 'Jul', mrr: 750000, tenantCount: 120, churnedCount: 2 },
-        { month: 'Aug', mrr: 780000, tenantCount: 125, churnedCount: 1 },
-        { month: 'Sep', mrr: 800000, tenantCount: 128, churnedCount: 3 },
-        { month: 'Oct', mrr: 820000, tenantCount: 135, churnedCount: 1 },
-        { month: 'Nov', mrr: 860000, tenantCount: 140, churnedCount: 2 },
-        { month: 'Dec', mrr: 900000, tenantCount: 142, churnedCount: 1 },
-        { month: 'Jan', mrr: 920000, tenantCount: 145, churnedCount: 0 },
+        { month: 'Jul', mrr: 750000, tenantCount: 120, cancelledCount: 2 },
+        { month: 'Aug', mrr: 780000, tenantCount: 125, cancelledCount: 1 },
+        { month: 'Sep', mrr: 800000, tenantCount: 128, cancelledCount: 3 },
+        { month: 'Oct', mrr: 820000, tenantCount: 135, cancelledCount: 1 },
+        { month: 'Nov', mrr: 860000, tenantCount: 140, cancelledCount: 2 },
+        { month: 'Dec', mrr: 900000, tenantCount: 142, cancelledCount: 1 },
+        { month: 'Jan', mrr: 920000, tenantCount: 145, cancelledCount: 0 },
       ],
       planRevenue: [
         { plan: 'Enterprise', revenue: 450000, tenantCount: 25 },
@@ -377,6 +509,14 @@ export function getMockResponse(path: string): unknown {
 
   // Trainer Dashboard
   if (p.includes('/trainer/dashboard')) return ok(TRAINER_DASHBOARD, 'Trainer stats fetched');
+
+
+  // Admin Module Specific
+  if (p.includes('/admin/dashboard'))    return ok(DASHBOARD_STATS, 'Admin dashboard stats fetched');
+  if (p.includes('/admin/reports') || (p.includes('/admin') && p.includes('report'))) return ok(ADMIN_REPORTS, 'Admin reports fetched');
+  if (p.includes('/admin/sales') || p.includes('/admin/finance')) return ok(ADMIN_SALES_INITIAL_DATA, 'Admin sales fetched');
+  if (p.includes('/admin/members'))      return ok(ADMIN_MEMBERS, 'Admin members fetched');
+  if (p.includes('/admin/attendance'))   return ok(ATTENDANCE, 'Admin attendance fetched');
 
   // Admin / Manager Dashboard
   if (p.includes('/dashboard'))    return ok(DASHBOARD_STATS);

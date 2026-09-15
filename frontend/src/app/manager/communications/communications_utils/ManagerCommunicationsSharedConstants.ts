@@ -57,9 +57,9 @@ export const COMM_STATUS_STYLES: Record<string, { bg: string; text: string; labe
 
 // ─── Churn Recovery Constants ─────────────────────────────────────────────────
 
-export const CHURN_ITEMS_PER_PAGE = 10;
+export const CANCELLATIONS_ITEMS_PER_PAGE = 10;
 
-export const CHURN_REASON_OPTIONS: { value: ChurnReasonType | 'all'; label: string }[] = [
+export const CANCELLATIONS_REASON_OPTIONS: { value: ChurnReasonType | 'all'; label: string }[] = [
   { value: 'all',          label: 'All Reasons' },
   { value: 'price',        label: 'Price / Cost' },
   { value: 'relocation',   label: 'Relocation' },
@@ -71,7 +71,7 @@ export const CHURN_REASON_OPTIONS: { value: ChurnReasonType | 'all'; label: stri
 
 
 
-export const CHURN_REASON_LABEL: Record<ChurnReasonType, string> = {
+export const CANCELLATIONS_REASON_LABEL: Record<ChurnReasonType, string> = {
   price:        'Price / Cost',
   relocation:   'Relocation',
   schedule:     'Schedule Conflict',

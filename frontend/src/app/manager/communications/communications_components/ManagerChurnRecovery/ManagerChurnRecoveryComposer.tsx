@@ -8,7 +8,7 @@ import type {
   CommChannel,
   WinBackTemplateTier,
 } from '@/app/manager/communications/communications_types/communications_types';
-import { CHURN_WIN_BACK_TEMPLATES } from '@/app/manager/communications/communications_fixtures/ManagerCommunicationsMockData';
+import { CANCELLATIONS_WIN_BACK_TEMPLATES } from '@/app/manager/communications/communications_fixtures/ManagerCommunicationsMockData';
 import { useUnsavedChangesGuard } from '@/app/manager/manager_utils/useUnsavedChangesGuard';
 
 interface ManagerChurnRecoveryComposerProps {
@@ -53,7 +53,7 @@ export default function ManagerChurnRecoveryComposer({
   // Sync state when member or default tier changes
   useEffect(() => {
     setTier(defaultTier);
-    const tpl = CHURN_WIN_BACK_TEMPLATES[defaultTier];
+    const tpl = CANCELLATIONS_WIN_BACK_TEMPLATES[defaultTier];
     setMessage(tpl.message);
     setSubject(tpl.subject);
     setChannel('whatsapp');
@@ -62,7 +62,7 @@ export default function ManagerChurnRecoveryComposer({
   // Auto-fill template when tier changes
   function handleTierChange(newTier: WinBackTemplateTier) {
     setTier(newTier);
-    const tpl = CHURN_WIN_BACK_TEMPLATES[newTier];
+    const tpl = CANCELLATIONS_WIN_BACK_TEMPLATES[newTier];
     setMessage(tpl.message);
     setSubject(tpl.subject);
   }

@@ -5,7 +5,7 @@ export const fetchStateSchema = z.union([z.literal("idle"), z.literal("loading")
 
 export const alertSeveritySchema = z.union([z.literal("critical"), z.literal("warning"), z.literal("info")]);
 
-export const alertTypeSchema = z.union([z.literal("no_new_members"), z.literal("revenue_drop"), z.literal("high_churn"), z.literal("pending_payroll"), z.literal("low_attendance"), z.literal("expiring_members")]);
+export const alertTypeSchema = z.union([z.literal("no_new_members"), z.literal("revenue_drop"), z.literal("high_cancellations"), z.literal("pending_payroll"), z.literal("low_attendance"), z.literal("expiring_members")]);
 
 export const gymHealthAlertSchema = z.object({
     id: z.string(),
