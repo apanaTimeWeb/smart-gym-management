@@ -290,7 +290,7 @@ the exact consequence of violating it — not just "be careful".]
 - [Transaction boundary]: [What must be atomic and why] — see Rule 8B
 
 ## Rule Compliance Checklist
-- [ ] Rule 7: TypeORM used for all DB access (no raw SQL outside QueryBuilder)
+- [ ] Rule 7: Approved project ORM used for all DB access (no raw SQL outside parameterized/prepared queries)
 - [ ] Rule 19: This file updated in same commit as any code change (Freshness Rule)
 - [ ] Rule 23: Heavy tasks (emails, PDFs, bulk ops) moved to background jobs
 - [ ] Rule 28: All responses wrapped in canonical envelope via ResponseInterceptor
@@ -333,7 +333,7 @@ the exact consequence of violating it — not just "be careful".]
 * **Why:** Use a Message Queue or Task Broker (e.g., BullMQ for Node, Celery for Python/Django, or Spring AMQP/RabbitMQ). The controller should immediately return `202 Accepted: Job Started`, and the background worker handles the heavy lifting safely. This prevents server timeouts and crashed requests.
 
 ## 24. Database Migrations (No Auto-Syncing & Backward Compatibility)
-* **The Rule:** In development, auto-syncing tools (like TypeORM's `synchronize: true` or Hibernate's `update`) are fine. But in an enterprise environment, database schemas must be strictly version-controlled using **Migrations** (e.g., Django `makemigrations`, Flyway/Liquibase for Java, Alembic for Python). 
+* **The Rule:** In development, auto-syncing tools (like Prisma schema push, TypeORM `synchronize: true`, or Hibernate `update`) are fine. But in an enterprise environment, database schemas must be strictly version-controlled using **Migrations** (e.g., Prisma Migrate, Django `makemigrations`, Flyway/Liquibase for Java, Alembic for Python). 
 * **Backward Compatibility Requirement:** Existing v1 clients must be supported during DB migrations. Migrations must be strictly backward-compatible. Never drop a column in the same migration that adds a `NOT NULL` replacement. Do it in two phases. Avoid single-step destructive migrations.
 * **Why:** If the AI needs to add a new column to a table, it should generate a explicit migration file. This guarantees that production databases can be safely upgraded (or rolled back) without data loss or rogue schema syncing breaking the app, and ensures no downtime for legacy clients.
 
@@ -383,7 +383,7 @@ the exact consequence of violating it — not just "be careful".]
   1. **Audit & Recovery:** If an admin accidentally deletes 1,000 members, the data is instantly recoverable.
   2. **Referential Integrity:** Foreign keys referencing a "deleted" record remain valid, preventing cascade failures.
   3. **AI Safety:** An AI asked to "implement the delete endpoint" will set a flag, not wipe database rows. This prevents catastrophic, irreversible data loss.
-* **Implementation:** Add a global query filter (e.g., TypeORM's `@DeleteDateColumn`, Django's `django-softdelete`, or a `WHERE is_deleted = false` scope in a base repository class) so that all standard `find` queries automatically exclude soft-deleted records.
+* **Implementation:** Add a global query filter (e.g., Prisma's `where: { deletedAt: null }` applied in a base repository method, Django's `django-softdelete`, or a `WHERE is_deleted = false` scope in a base repository class) so that all standard `find` queries automatically exclude soft-deleted records. For ORM-specific soft-delete column hooks (TypeORM `@DeleteDateColumn`, Prisma middleware), apply them at the repository layer only — never in services.
 
 ---
 
@@ -429,7 +429,7 @@ the exact consequence of violating it — not just "be careful".]
 
 ## 34. Database Query Optimization (The N+1 Rule & Index Strategy)
 * **The Rule:** The single most common performance killer in any ORM-backed backend is the N+1 query problem. You must proactively prevent it.
-  1. **N+1 Prevention:** Always use eager loading / `JOIN` fetching when you know you'll need related data (e.g., `prefetch_related` in Django, `relations` in TypeORM, `@EntityGraph` in JPA). Never fetch a list of 100 members and then loop to fetch each one's plan separately.
+  1. **N+1 Prevention:** Always use eager loading / `JOIN` fetching when you know you'll need related data (e.g., `prefetch_related` in Django, Prisma `include`, TypeORM `relations`). Never fetch a list of 100 members and then loop to fetch each one's plan separately.
   2. **Index Strategy:** Every foreign key column, every column used in a `WHERE` clause, and every column used in an `ORDER BY` clause MUST have a database index. Indexes should be explicitly defined in migration files — never rely on the ORM to create them automatically.
   3. **Slow Query Logging:** Enable slow query logging in the database (queries > 100ms). Review this log weekly.
 * **Why:** An AI asked to write a "Get all members with their plans" repository method will often produce an N+1 query by default. This rule forces a review gate.
@@ -484,7 +484,7 @@ the exact consequence of violating it — not just "be careful".]
   2. **Tenant Databases:** Every time a new gym registers, the backend must programmatically create a brand-new database (e.g., `tenant_db_101`) and run all schema migrations on it automatically. *(Note: All these logical databases reside within the same single MySQL/PostgreSQL server instance; do not spin up new physical servers/VPS per tenant).*
   3. **Dynamic Connection Routing (Request Scoped):** The backend must intercept every incoming API request. Using a global middleware or interceptor, it must extract the `x-tenant-id` (from HTTP headers or JWT payload) and dynamically construct or switch the database connection to point to that specific tenant's database for the lifecycle of that request. **⚠️ See Rule 63 before implementing this** — the connection pool budget must be calculated across ALL active tenant DataSources combined, not per-tenant. Blindly applying `max: 20` per tenant DataSource will exhaust the database server's connection limit under load.
 * **How to Apply to Different Frameworks:**
-  - **NestJS (Node/TypeScript):** Do not use a static `TypeOrmModule.forRoot`. Use request-scoped providers or custom connection factories that cache and resolve `DataSource` instances based on the request's tenant header.
+  - **NestJS (Node/TypeScript):** Do not use a static, monolithic ORM module root configuration. Use request-scoped providers or custom connection factories that cache and resolve database connection/client instances based on the request's tenant header.
   - **Django (Python):** Use database routers (`db_for_read`, `db_for_write`) paired with thread-local storage or middleware to dynamically route queries to the correct database alias based on the request.
   - **Spring Boot (Java):** Implement `AbstractRoutingDataSource` and use a `ThreadLocal` context holder populated via a HandlerInterceptor to route database connections dynamically.
 * **Why:** If Gym A and Gym B share the same database tables, a single missing `WHERE tenant_id = X` clause in a business query results in a catastrophic cross-tenant data breach. Database-per-tenant completely eliminates this risk at the infrastructure level. Furthermore, queries are infinitely faster because a table only contains the data of one specific gym, avoiding massive billion-row bottlenecks.
@@ -499,7 +499,7 @@ the exact consequence of violating it — not just "be careful".]
 ---
 
 ## 41. Transaction Locks & Race Condition Prevention
-* **The Rule:** For highly concurrent mutations (e.g., deducting wallet balances, booking limited seats, processing inventory), standard database transactions are not enough to prevent race conditions. You MUST implement **Pessimistic Locking** (e.g., `SELECT ... FOR UPDATE` via `QueryBuilder.setLock('pessimistic_write')` in TypeORM or `select_for_update()` in Django) or **Optimistic Locking** (using a `@VersionColumn`).
+* **The Rule:** For highly concurrent mutations (e.g., deducting wallet balances, booking limited seats, processing inventory), standard database transactions are not enough to prevent race conditions. You MUST implement **Pessimistic Locking** (e.g., `SELECT ... FOR UPDATE` via Prisma's `$transaction` with `isolationLevel`, raw SQL in a repository, or `select_for_update()` in Django) or **Optimistic Locking** (using a version/revision column checked on update).
 * **Why:** If two concurrent requests try to deduct money at the exact same millisecond, a standard transaction might allow both to succeed based on stale read data, causing negative balances. Enforcing this rule ensures AI always explicitly handles concurrency.
 
 ---
@@ -571,7 +571,7 @@ the exact consequence of violating it — not just "be careful".]
 * **The Rule:** Every endpoint must declare its SLA category in a comment (`// SLA: FAST`). FAST (< 200ms), STANDARD (< 500ms), HEAVY (> 500ms). Heavy tasks must be moved to background jobs (Rule 23). Enforce via monitoring middleware.
 
 ## 60. Strict Foreign Key Naming Convention
-* **The Rule:** Database columns must use `snake_case` (e.g., `member_id`). TypeScript entity properties must use `camelCase` (e.g., `memberId`). Explicitly map them using `@Column({ name: 'member_id' })`. Foreign key constraints must follow `FK_[table]_[referenced_table]`.
+* **The Rule:** Database columns must use `snake_case` (e.g., `member_id`). TypeScript model/entity properties must use `camelCase` (e.g., `memberId`). Explicitly map them in the ORM model definition (e.g., Prisma `@map("member_id")`, TypeORM `@Column({ name: 'member_id' })`). Foreign key constraints must follow `FK_[table]_[referenced_table]`.
 
 ## 61. Dead Letter Queue (DLQ) for Failed Background Jobs
 * **The Rule:** Every background job queue (BullMQ/Celery) MUST have a configured Dead Letter Queue. If a job fails all retries, it must be moved to the DLQ (not discarded) so admins can manually inspect and retry it.
@@ -958,7 +958,7 @@ This rule MUST remain consistent with Rule 99.
 * **The 20-Line Soft Ceiling:** A service method body (excluding JSDoc) should rarely exceed ~20 lines. If a method grows beyond this, it is a signal that it is doing too much and must be decomposed.
 * **Decomposition Pattern:**
   - ❌ **BAD:** A single `registerMember()` method that validates, saves the member, creates a subscription, charges the card, sends a welcome email, and writes an audit log — all in one 80-line function.
-  - ✅ **GOOD:** `registerMember()` is an Orchestrator (Rule 8B) that calls: `this.memberRepo.save(member)`, then emits `EventBus.emit('MEMBER.REGISTERED', ...)`. The subscription creation, payment charging, and email are handled by separate listeners.
+  - ✅ **GOOD:** `registerMember()` is an Orchestrator (Rule 8B) that calls: `this.memberRepo.createMember(data)`, then emits `EventBus.emit('MEMBER.REGISTERED', ...)`. The subscription creation, payment charging, and email are handled by separate listeners.
 * **Private Helper Rule:** If a method needs a private helper for a sub-calculation (e.g., calculating a pro-rated amount), the helper must be a `private` method with its own JSDoc (Rule 80) clearly named for its specific task (e.g., `private calculateProRatedAmount()`).
 * **Why:** An AI asked to "add audit logging to member registration" should be able to do so by touching exactly ONE file and ONE method — the event listener for `MEMBER.REGISTERED`. If the entire registration flow is monolithic, the AI must read and modify a 200-line method, risking collateral damage.
 
@@ -968,7 +968,7 @@ This rule MUST remain consistent with Rule 99.
 * **The Rule:** All backend TypeScript/JavaScript files MUST enforce a strict, consistent import order. This mirrors Frontend Rule 49. Configure ESLint's `import/order` rule to enforce the following groups in this exact sequence:
   1. **Node.js built-ins** (e.g., `node:fs`, `node:path`)
   2. **Framework core** (e.g., `@nestjs/common`, `express`, `django`)
-  3. **Third-party packages** (e.g., `typeorm`, `class-validator`, `bcrypt`)
+  3. **Third-party packages** (e.g., `@prisma/client`, `class-validator`, `bcrypt`)
   4. **Internal absolute imports — Infrastructure** (e.g., `@/config/`, `@/database/`)
   5. **Internal absolute imports — Module-specific** (e.g., `@/modules/billing/...`)
   6. **Relative imports** (strictly forbidden per Rule 10 — this group must always be empty)
@@ -980,7 +980,7 @@ This rule MUST remain consistent with Rule 99.
 
   import { Injectable } from '@nestjs/common';
 
-  import { Repository } from 'typeorm';
+  import { PrismaService } from '@/core/database/prisma.service';
   import * as bcrypt from 'bcrypt';
 
   import { DatabaseConfig } from '@/config/database.config';
@@ -997,7 +997,7 @@ This rule MUST remain consistent with Rule 99.
 ## 89. Domain Object vs. ORM Entity Separation (Anti-Persistence-Leakage Rule)
 * **The Rule:** Never use ORM Entity classes (e.g., TypeORM `@Entity()` classes, Django ORM models) directly inside business logic services. ORM entities are a **persistence infrastructure concern** — they contain database annotations, lazy-loading relations, and schema metadata that have no place in pure business logic.
 * **The Pattern — Two Distinct Objects + Mapper:**
-  1. **ORM Entity** (`member.entity.ts`): Contains only database schema definition — `@Column`, `@ManyToOne`, `@Index` decorators. Lives in the repository layer only.
+  1. **ORM Model / Entity** (`member.entity.ts` or Prisma schema model): Contains only database schema definition. Lives in the repository layer only.
   2. **Domain Object / DTO** (`member.domain.ts` or `member.dto.ts`): A plain TypeScript class/interface with pure business properties and zero ORM imports. This is what services, controllers, and event handlers receive and return.
   3. **Mapper** (`member.mapper.ts`): A dedicated class with `toDomain(entity)` and `toEntity(domain)` static methods that translate between the two. Only the repository layer calls the mapper.
 * **When it's acceptable to use a unified model:** For simple CRUD-only modules with no complex business rules, a unified ORM entity may be used provided: (a) it has no business logic methods on the class itself, and (b) you acknowledge the tradeoff in the module's `_backend_feature.md`.
@@ -1027,13 +1027,14 @@ This rule MUST remain consistent with Rule 99.
 
 ---
 
-## 92. ORM Raw Input Injection Prevention (The TypeORM Safety Rule)
-* **The Rule:** Never interpolate user-controlled input directly into ORM query methods. This is a critical AI-specific risk because AI agents frequently generate "convenient" but insecure query patterns, especially in TypeORM's QueryBuilder.
+## 92. ORM Raw Input Injection Prevention (The Query Safety Rule)
+* **The Rule:** Never interpolate user-controlled input directly into ORM query methods. This is a critical AI-specific risk because AI agents frequently generate "convenient" but insecure query patterns.
 * **The Specific Patterns to BAN:**
-  - ❌ **BAD (SQL Injection via `orderBy`):**
+  - ❌ **BAD (SQL Injection via dynamic sort field):**
     ```typescript
     // NEVER do this — sortField comes from req.query and is unvalidated
-    queryBuilder.orderBy(`member.${req.query.sortField}`, 'ASC');
+    // Works the same way in any ORM with raw query string interpolation
+    db.query(`SELECT * FROM members ORDER BY ${req.query.sortField} ASC`);
     ```
   - ✅ **GOOD (Allowlist Pattern):**
     ```typescript
@@ -1042,19 +1043,22 @@ This rule MUST remain consistent with Rule 99.
     const sortField = ALLOWED_SORT_FIELDS.includes(req.query.sortField as SortField)
       ? req.query.sortField as SortField
       : 'createdAt'; // safe default
-    queryBuilder.orderBy(`member.${sortField}`, 'ASC');
+    // Pass validated sortField to ORM method or parameterized query
     ```
   - ❌ **BAD (Raw SQL with template literals):**
     ```typescript
     // NEVER — classic SQL injection
-    queryBuilder.where(`member.name = '${req.query.name}'`);
+    db.query(`SELECT * FROM members WHERE name = '${req.query.name}'`);
     ```
   - ✅ **GOOD (Parameterized query):**
     ```typescript
-    queryBuilder.where('member.name = :name', { name: req.query.name });
+    // Prisma
+    prisma.member.findMany({ where: { name: req.query.name } });
+    // Raw SQL with parameterization
+    db.query('SELECT * FROM members WHERE name = $1', [req.query.name]);
     ```
 * **Allowlist-First Mandate:** Any query that uses a user-supplied column name, sort field, or filter key MUST validate it against a strict allowlist defined in the module's constants file before passing it to the ORM.
-* **Why:** TypeORM's query builder accepts raw column name strings in `orderBy`, `select`, and `where` which are NOT automatically parameterized. An AI will generate `orderBy(`member.${sortColumn}`)` as a clean, "logical" pattern without realizing it's an injection vulnerability. This rule makes the safe pattern the only acceptable pattern.
+* **Why:** ORM query builders that accept raw column name strings for `orderBy`, `select`, and `where` do NOT automatically parameterize field names. An AI will generate dynamic field interpolation as a clean, "logical" pattern without realizing it's an injection vulnerability. This rule makes the safe pattern the only acceptable pattern.
 
 ---
 
@@ -1138,14 +1142,18 @@ This rule MUST remain consistent with Rule 99.
   }
   ```
   ```typescript
-  // In the entity: member.entity.ts
-  @Column({ type: 'enum', enum: MemberStatus, default: MemberStatus.PENDING })
-  status: MemberStatus;
+  // In the entity/model: member.entity.ts (TypeORM) or Prisma schema
+  // TypeORM:
+  // @Column({ type: 'enum', enum: MemberStatus, default: MemberStatus.PENDING })
+  // status: MemberStatus;
+  //
+  // Prisma schema:
+  // status MemberStatus @default(PENDING)
   ```
 * **Rules:**
-  - ❌ **BAD:** `@Column({ type: 'varchar' }) status: string;` — accepts any string, including typos.
-  - ❌ **BAD:** `@Column({ type: 'varchar' }) status: 'active' | 'suspended';` — inline union, not reusable, not a runtime guard.
-  - ✅ **GOOD:** `@Column({ type: 'enum', enum: MemberStatus }) status: MemberStatus;` — compile-time AND database-level enforcement.
+  - ❌ **BAD:** A plain string column for status — accepts any string, including typos.
+  - ❌ **BAD:** Inline union type (`'active' | 'suspended'`) — not reusable, not a runtime guard.
+  - ✅ **GOOD:** ORM enum column mapped to the `MemberStatus` enum — compile-time AND database-level enforcement.
   - All enums MUST be defined in the module's `[module].constants.ts` file (Rule 5) — never inline inside the entity file.
   - Enum values MUST be `SCREAMING_SNAKE_CASE` strings (e.g., `'ACTIVE'`, `'IN_PROGRESS'`) so they are human-readable in raw database queries.
   - When adding a new enum value, a database migration MUST be generated to update the DB enum type. Never rely on ORM auto-sync in production (Rule 24).
@@ -1220,7 +1228,7 @@ This rule MUST remain consistent with Rule 99.
   ```
 * **Enforcement Rules:**
   - Every `axios` / `fetch` / `HttpService` call in an adapter (Rule 8D) MUST pass `timeout: TIMEOUT_CONFIG.EXTERNAL_API_DEFAULT_MS` (or the appropriate tier). No raw `axios.get(url)` without a timeout is permitted.
-  - TypeORM query timeouts must be set via `QueryBuilder.maxExecutionTime(TIMEOUT_CONFIG.DB_QUERY_DEFAULT_MS)` for all non-trivial queries. Report/analytics queries must explicitly use the `DB_QUERY_REPORT_MS` tier.
+  - ORM/DB query timeouts MUST be configured for all non-trivial queries using the appropriate timeout value from `TIMEOUT_CONFIG`. For Prisma, use `$transaction` with a timeout option; for raw queries, set statement_timeout at the connection or query level. Report/analytics queries must explicitly use the `DB_QUERY_REPORT_MS` tier.
   - When a timeout fires, the adapter MUST catch the `ECONNABORTED` / `ETIMEDOUT` error and throw a typed custom exception (Rule 6) — e.g., `PaymentGatewayTimeoutException` — never let the raw Axios error propagate to the service layer.
   - ❌ **BAD:** `await this.httpService.get('https://api.stripe.com/charges').toPromise()`
   - ✅ **GOOD:** `await this.httpService.get('https://api.stripe.com/charges', { timeout: TIMEOUT_CONFIG.PAYMENT_GATEWAY_MS }).toPromise()`
@@ -1323,27 +1331,25 @@ This rule MUST remain consistent with Rule 99.
   | Check Constraint | `CHK_[table]_[rule_description]` | `CHK_members_age_min_18`, `CHK_wallets_balance_non_negative` |
   | Composite Index | `IDX_[table]_[col1]_[col2]` | `IDX_members_branch_id_status` |
 
-* **Implementation in TypeORM:**
-  ```typescript
-  @Entity('members')
-  @Unique('UQ_members_email', ['email'])
-  @Index('IDX_members_status', ['status'])
-  @Index('IDX_members_branch_id_status', ['branchId', 'status'])
-  export class MemberEntity extends BaseEntity {
+* **Implementation (Prisma-equivalent naming in `schema.prisma`):**
+  ```prisma
+  model Member {
+    id       String @id @default(uuid()) @map("id") // PK_members
+    email    String @unique @map("email")
+                   // @@unique(["email"], name: "UQ_members_email")
+    branchId String @map("branch_id")
+                   // FK: FK_members_branches_branch_id
+    status   MemberStatus @default(PENDING) @map("status")
+                   // IDX: IDX_members_status
+    balance  BigInt @default(0) @map("balance")
+                   // CHK: CHK_wallets_balance_non_negative (enforced via DB migration check)
+    branch   Branch @relation(fields: [branchId], references: [id],
+                              map: "FK_members_branches_branch_id")
 
-    @Column({ unique: false }) // Uniqueness enforced via @Unique above, not inline
-    email: string;
-
-    @ManyToOne(() => BranchEntity)
-    @JoinColumn({
-      name: 'branch_id',
-      foreignKeyConstraintName: 'FK_members_branches_branch_id'
-    })
-    branch: BranchEntity;
-
-    @Check('CHK_wallets_balance_non_negative', '"balance" >= 0')
-    @Column({ type: 'bigint', default: 0 })
-    balance: number;
+    @@unique([email], name: "UQ_members_email")
+    @@index([status], name: "IDX_members_status")
+    @@index([branchId, status], name: "IDX_members_branch_id_status")
+    @@map("members")
   }
   ```
 * **Rules:**
