@@ -1,10 +1,12 @@
 // RESPONSIBILITY: Renders the data table for Support Tickets
 import { MessageSquare, CheckCircle2, UserCheck, AlertOctagon, ExternalLink } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import toast from 'react-hot-toast';
 import type { SupportTicket } from '@/app/superadmin/tickets/superadmin_tickets_types/superadmin_tickets_types';
 import { PriorityColors, StatusColors } from '@/app/superadmin/tickets/tickets_utils/SuperadminTicketsConstants';
 import SuperadminTicketsEmptyState from '@/app/superadmin/tickets/tickets_components/SuperadminTicketsEmptyState/SuperadminTicketsEmptyState';
+import { GymsUrlConfig } from '@/app/superadmin/gyms/superadmin_gyms_url_config';
+import SuperadminCopyButton from '@/components/ui/SuperadminShared/SuperadminCopyButton';
+import { formatDateTime } from '@/lib/formatters';
 
 interface SuperadminTicketsTableProps {
   tickets: SupportTicket[];
@@ -47,11 +49,23 @@ export default function SuperadminTicketsTable({ tickets, onReply, onClose, onAs
             tickets.map((ticket) => {
               const sla = getSlaStatus(ticket);
               return (
-              <tr key={ticket.id} className="hover:bg-input motion-safe:transition-colors">
-                <td className="p-4 text-sm font-medium text-foreground">{ticket.id}</td>
+              <tr 
+                key={ticket.id} 
+                className="hover:bg-input motion-safe:transition-colors cursor-pointer"
+                onClick={() => onReply(ticket.id)}
+              >
+                <td className="p-4">
+                  <span className="flex items-center gap-1 text-sm font-mono font-medium text-foreground">
+                    <span>{ticket.id}</span>
+                    <SuperadminCopyButton value={ticket.id} label={`Copy ticket ID ${ticket.id}`} />
+                  </span>
+                </td>
                 <td className="p-4 text-sm text-secondary">
                   <button
-                    onClick={() => router.push(`/superadmin/gyms?id=${ticket.tenantId}`)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      router.push(`${GymsUrlConfig.PAGES.MAIN}?id=${ticket.tenantId}`);
+                    }}
                     className="flex items-center gap-1 hover:text-primary motion-safe:transition-colors"
                     title="View Gym"
                   >
@@ -72,14 +86,15 @@ export default function SuperadminTicketsTable({ tickets, onReply, onClose, onAs
                     {sla.icon} {sla.label}
                   </span>
                 </td>
-                <td className="p-4 text-sm text-secondary">{new Date(ticket.lastUpdated).toLocaleString()}</td>
+                <td className="p-4 text-sm text-secondary">{formatDateTime(ticket.lastUpdated)}</td>
                 <td className="p-4 text-sm text-right">
                   <div className="flex items-center justify-end gap-1">
-                    <button
-                      onClick={(e) => { e.stopPropagation(); onReply(ticket.id); }}
-                      className="p-2 text-primary hover:bg-primary/10 rounded-lg motion-safe:transition-colors"
-                      title="Reply"
-                    >
+                      <button
+                        onClick={(e) => { e.stopPropagation(); onReply(ticket.id); }}
+                        className="p-2 text-primary hover:bg-primary/10 rounded-lg motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                        title="Reply to ticket"
+                        aria-label={`Reply to ticket ${ticket.id}`}
+                      >
                       <MessageSquare size={16} />
                     </button>
                     {onAssign && (

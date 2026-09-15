@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders the Backups Table component and its associated UI logic.
 import { Download, RotateCcw } from 'lucide-react';
 import type { BackupRecord } from '@/app/superadmin/backups/superadmin_backups_types/superadmin_backups_types';
 import { StatusColors } from '@/app/superadmin/backups/backups_utils/SuperadminBackupsConstants';
@@ -10,6 +11,8 @@ interface SuperadminBackupsTableProps {
   handleDownload: (id: string) => void;
   handleRestoreClick: (backup: BackupRecord) => void;
 }
+
+const TABLE_COLUMN_COUNT = 7;
 
 export default function SuperadminBackupsTable({ paginatedBackups, filteredLength, handleDownload, handleRestoreClick }: SuperadminBackupsTableProps) {
   return (
@@ -61,7 +64,7 @@ export default function SuperadminBackupsTable({ paginatedBackups, filteredLengt
           ))}
           {filteredLength === 0 && (
             <tr>
-              <td colSpan={7} className="p-8 text-center text-disabled">
+              <td colSpan={TABLE_COLUMN_COUNT} className="p-8 text-center text-disabled">
                 <SuperadminBackupsEmptyState />
               </td>
             </tr>

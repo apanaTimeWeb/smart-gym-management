@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders the Backups Trigger Modal component and its associated UI logic.
 import { DatabaseBackup } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { backupsApi } from '@/app/superadmin/backups/superadmin_backups_api/superadmin_backups_api';
@@ -27,7 +28,7 @@ export default function SuperadminBackupsTriggerModal({ isOpen, onClose, isTrigg
   };
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" role="dialog" aria-modal="true">
       <div className="bg-card w-full max-w-md rounded-2xl shadow-xl overflow-hidden border border-border motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95">
         <div className="p-6">
           <div className="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center mb-4">

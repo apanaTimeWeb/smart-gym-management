@@ -8,6 +8,7 @@ import { logger } from '@/lib/logger';
 export default function MigrationsError({ error, reset }: { error: Error & { digest?: string }, reset: () => void }) {
   // Logs the error to the server-side logger for observability.
   // Dependency: [error] — re-logs when a new error is thrown.
+  // EXPLANATION: Synchronize component state with external dependencies.
   useEffect(() => {
     logger.error('Migrations Module Error:', error);
   }, [error]);

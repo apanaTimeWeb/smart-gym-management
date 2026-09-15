@@ -1,1 +1,1 @@
-﻿export type FetchState = 'idle' | 'loading' | 'success' | 'error';
+export type FetchState = 'idle' | 'loading' | 'success' | 'error';

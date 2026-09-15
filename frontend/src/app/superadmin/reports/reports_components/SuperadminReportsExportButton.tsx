@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders the Reports Export Button component and its associated UI logic.
 import { Download } from 'lucide-react';
 
 interface SuperadminReportsExportButtonProps {

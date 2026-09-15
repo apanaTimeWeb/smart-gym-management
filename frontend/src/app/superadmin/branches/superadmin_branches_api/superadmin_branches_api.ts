@@ -2,7 +2,7 @@ import { SuperadminBranchSchema } from '@/app/superadmin/branches/branches_types
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
 import type { SuperadminBranch } from '@/app/superadmin/branches/branches_types/superadmin_branches_types';
-import { BranchesUrlConfig } from '@/app/superadmin/branches/branches_url_config';
+import { BranchesUrlConfig } from '@/app/superadmin/branches/superadmin_branches_url_config';
 import { z } from "zod";
 
 export const superadminBranchesApi = {

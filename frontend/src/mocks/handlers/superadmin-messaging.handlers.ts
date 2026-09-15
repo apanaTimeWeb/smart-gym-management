@@ -1,5 +1,5 @@
 import { http, HttpResponse, delay } from 'msw';
-import type { TenantMessage, SuperadminNotification, MessagingTenant } from '@/app/superadmin/messaging/messaging_types/messaging_types';
+import type { TenantMessage, SuperadminNotification, MessagingTenant } from '@/app/superadmin/messaging/messaging_types/superadmin_messaging_types';
 import type { ApiResponse } from '@/lib/api';
 
 const BASE_URL = '*/api/v1/superadmin/messaging';

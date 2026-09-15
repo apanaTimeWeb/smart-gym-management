@@ -38,3 +38,9 @@ export const SaaSInvoiceSchema = z.object({
 
 /** TypeScript type inferred from the invoice line-item schema. */
 export type InvoiceLineItem = z.infer<typeof InvoiceLineItemSchema>;
+
+export interface SuperadminInvoicesTenant {
+  id: string;
+  name: string;
+  plan: string;
+}

@@ -7,6 +7,7 @@ import { logger } from '@/lib/logger';
 
 export default function ErrorBoundary({ error, reset }: { error: Error & { digest?: string }, reset: () => void }) {
   // RESPONSIBILITY: Handle side-effects for error
+  // EXPLANATION: Synchronize component state with external dependencies.
   useEffect(() => {
     logger.error('Module Error:', error);
   }, [error]);

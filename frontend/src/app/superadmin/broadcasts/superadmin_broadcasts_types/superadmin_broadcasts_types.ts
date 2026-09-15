@@ -71,3 +71,11 @@ export const BroadcastResponseSchema = z.object({
   failedCount: z.number().optional(),
   audience: z.enum(['ALL_TENANTS', 'PRO_ONLY', 'SUSPENDED_ONLY']).optional(),
 });
+
+export interface SuperadminBroadcastsTenant {
+  id: string;
+  name: string;
+  plan: string;
+  ownerName?: string;
+  phone?: string;
+}

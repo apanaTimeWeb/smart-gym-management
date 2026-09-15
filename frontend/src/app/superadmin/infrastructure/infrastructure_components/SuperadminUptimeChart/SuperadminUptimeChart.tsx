@@ -10,6 +10,7 @@ const ReactApexChart = dynamic(() => import('react-apexcharts'), { ssr: false })
 export default function SuperadminUptimeChart() {
   const [mounted, setMounted] = useState(false);
   // RATIONALE: Required by architecture to sync state/lifecycle based on dependencies.
+  // EXPLANATION: Synchronize component state with external dependencies.
   useEffect(() => setMounted(true), []);
 
   const { series, options } = useMemo(() => {

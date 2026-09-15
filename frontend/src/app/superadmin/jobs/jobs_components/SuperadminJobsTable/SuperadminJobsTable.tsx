@@ -86,7 +86,7 @@ export default function SuperadminJobsTable({
                     onChange={() => toggleSelection(job.id)}
                   />
                 </td>
-                <td className="p-4 text-xs font-mono text-secondary max-w-[8rem] truncate">{job.id}</td>
+                <td className="p-4 text-xs font-mono text-secondary max-w-32 truncate">{job.id}</td>
                 <td className="p-4 text-sm font-medium text-primary">{job.queueName}</td>
                 <td className="p-4 text-sm max-w-sm">
                   <div className="font-medium text-foreground truncate">{job.jobName}</div>
@@ -100,7 +100,7 @@ export default function SuperadminJobsTable({
                       {job.status}
                     </span>
                     {job.attempts > 1 && (
-                      <span className="text-[0.65rem] text-secondary">Attempts: {job.attempts}</span>
+                      <span className="text-xs text-secondary">Attempts: {job.attempts}</span>
                     )}
                   </div>
                 </td>
@@ -110,7 +110,7 @@ export default function SuperadminJobsTable({
                   <div className="font-mono mt-1 text-foreground">Duration: {formatDuration(jobExt.durationMs)}</div>
                 </td>
                 <td className="p-4 text-right" onClick={(e) => e.stopPropagation()}>
-                  <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 motion-safe:transition-opacity">
+                  <div className="flex items-center justify-end gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 motion-safe:transition-opacity">
                     <button
                       onClick={() => onInspect(job)}
                       className="p-1.5 text-secondary hover:text-primary hover:bg-primary/10 rounded-lg motion-safe:transition-colors"

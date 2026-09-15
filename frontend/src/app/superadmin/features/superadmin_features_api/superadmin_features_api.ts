@@ -2,7 +2,7 @@ import { FeatureFlagSchema, ReleaseNoteSchema } from '@/app/superadmin/features/
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
 import type { FeatureFlag, ReleaseNote } from '@/app/superadmin/features/superadmin_features_types/superadmin_features_types';
-import { FeaturesUrlConfig } from '@/app/superadmin/features/features_url_config';
+import { FeaturesUrlConfig } from '@/app/superadmin/features/superadmin_features_url_config';
 import { z } from "zod";
 
 export const featuresApi = {
@@ -54,4 +54,7 @@ export const featuresApi = {
       method: 'DELETE',
         dataSchema: z.object({}).passthrough()
     }),
+  fetchTenants: () => {
+    return apiFetch<ApiResponse<any[]>>('/superadmin/gyms-list');
+  },
 };

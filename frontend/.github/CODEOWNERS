@@ -13,3 +13,28 @@
 /src/app/manager/finance/ @frontend-leads @finance-team
 /src/app/manager/members/members_components/ManagerPaymentModal.tsx @frontend-leads @finance-team
 /src/app/manager/members/members_components/ManagerRenewModal.tsx @frontend-leads @finance-team
+
+# ── SUPERADMIN SECURITY COVERAGE (P0-05) ──────────────────────────────────
+# All critical Superadmin paths require review from security-team.
+# PRs must include a "## Security Impact Analysis" section in the description.
+
+# Gym/Tenant management — ghost login, suspension, provisioning
+/src/app/superadmin/gyms/** @frontend-leads @security-team
+
+# Finance — invoice creation, manual payment logging
+/src/app/superadmin/invoices/** @frontend-leads @security-team @finance-team
+
+# Database backups — restore and trigger operations
+/src/app/superadmin/backups/** @frontend-leads @security-team
+
+# Server infrastructure — cache flush, node management
+/src/app/superadmin/infrastructure/** @frontend-leads @security-team
+
+# Feature flags — can enable/disable features for all tenants
+/src/app/superadmin/features/** @frontend-leads @security-team
+
+# Global platform settings — auth, billing, integration secrets
+/src/app/superadmin/settings/** @frontend-leads @security-team
+
+# Superadmin shell — ghost-login banner, sidebar, auth guard
+/src/components/ui/SuperadminLayout/** @frontend-leads @security-team

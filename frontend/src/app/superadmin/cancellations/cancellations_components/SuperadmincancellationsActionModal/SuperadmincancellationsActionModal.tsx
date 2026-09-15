@@ -5,8 +5,8 @@
 import { X } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CANCELLATIONS_ACTION_STATUS_STYLES } from '@/app/superadmin/cancellations/cancellations_utils/cancellations_constants';
-import type { CancellationsAlert, CancellationsActionStatus, CancellationsActionPayload } from '@/app/superadmin/cancellations/cancellations_types/cancellations_types';
+import { CANCELLATIONS_ACTION_STATUS_STYLES } from '@/app/superadmin/cancellations/cancellations_utils/SuperadminCancellationsConstants';
+import type { CancellationsAlert, CancellationsActionStatus, CancellationsActionPayload } from '@/app/superadmin/cancellations/cancellations_types/superadmin_cancellations_types';
 import { cancellationsActionSchema, type CancellationsActionFormValues } from '@/app/superadmin/cancellations/cancellations_utils/SuperadminCancellationsActionModal.schema';
 
 const ACTION_OPTIONS: CancellationsActionStatus[] = ['PENDING', 'CONTACTED', 'RESOLVED', 'CANCELLED'];
@@ -16,7 +16,7 @@ interface SuperadminCancellationsActionModalProps {
   onConfirm: (payload: CancellationsActionPayload) => void;
   onClose: () => void;
 }
-import { useUnsavedChangesGuard } from '@/app/superadmin/superadmin_utils/useUnsavedChangesGuard';
+import { useUnsavedChangesGuard } from '@/lib/useUnsavedChangesGuard';
 
 export default function SuperadminCancellationsActionModal({ alert, onConfirm, onClose }: SuperadminCancellationsActionModalProps) {
   const { control, handleSubmit, formState: { errors, isDirty } } = useForm<CancellationsActionFormValues>({
@@ -33,7 +33,7 @@ export default function SuperadminCancellationsActionModal({ alert, onConfirm, o
   }
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-sm" role="dialog" aria-modal="true">
       <div className="bg-overlay border border-border rounded-2xl p-6 w-full max-w-md shadow-2xl animate-superadmin-fade-in-up">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-bold text-foreground">Update Action</h2>

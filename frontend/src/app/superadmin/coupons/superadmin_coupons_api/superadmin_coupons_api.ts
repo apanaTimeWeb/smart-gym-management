@@ -3,7 +3,7 @@ import { CouponSchema } from '@/app/superadmin/coupons/superadmin_coupons_types/
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
 import type { Coupon } from '@/app/superadmin/coupons/superadmin_coupons_types/superadmin_coupons_types';
-import { CouponsUrlConfig } from '@/app/superadmin/coupons/coupons_url_config';
+import { CouponsUrlConfig } from '@/app/superadmin/coupons/superadmin_coupons_url_config';
 import { z } from "zod";
 
 export const couponsApi = {

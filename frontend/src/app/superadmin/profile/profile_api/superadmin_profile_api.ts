@@ -4,7 +4,7 @@ import { SuperadminProfileDataSchema } from '@/app/superadmin/profile/profile_ty
 
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
-import { ProfileUrlConfig } from '@/app/superadmin/profile/profile_url_config';
+import { ProfileUrlConfig } from '@/app/superadmin/profile/superadmin_profile_url_config';
 import type {
   SuperadminProfileData,
   UpdateSuperadminProfilePayload,

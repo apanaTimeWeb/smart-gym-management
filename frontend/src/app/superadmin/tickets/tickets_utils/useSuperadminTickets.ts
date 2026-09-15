@@ -2,7 +2,7 @@
 // DATA FLOW: API -> useSuperadminTicketsData -> useSuperadminTickets -> SuperadminTicketsClient
 
 import { useSuperadminTicketsData } from '@/app/superadmin/tickets/tickets_utils/useSuperadminTicketsData';
-import { TicketsUrlConfig } from '@/app/superadmin/tickets/tickets_url_config';
+import { TicketsUrlConfig } from '@/app/superadmin/tickets/superadmin_tickets_url_config';
 import type { SupportTicket } from '@/app/superadmin/tickets/superadmin_tickets_types/superadmin_tickets_types';
 import { useSuperadminTicketsStore } from '@/app/superadmin/tickets/tickets_store/useSuperadminTicketsStore';
 const ITEMS_PER_PAGE = 10;

@@ -41,31 +41,31 @@ import {
   Server,
 } from 'lucide-react';
 
-import { AffiliatesUrlConfig } from '@/app/superadmin/affiliates/affiliates_url_config';
-import { AnalyticsUrlConfig } from '@/app/superadmin/analytics/analytics_url_config';
-import { BranchesUrlConfig } from '@/app/superadmin/branches/branches_url_config';
-import { CancellationsUrlConfig } from '@/app/superadmin/cancellations/cancellations_url_config';
-import { CouponsUrlConfig } from '@/app/superadmin/coupons/coupons_url_config';
-import { FeaturesUrlConfig } from '@/app/superadmin/features/features_url_config';
-import { FranchisesUrlConfig } from '@/app/superadmin/franchises/franchises_url_config';
-import { InvoicesUrlConfig } from '@/app/superadmin/invoices/invoices_url_config';
-import { MessagingUrlConfig } from '@/app/superadmin/messaging/messaging_url_config';
-import { OnboardingUrlConfig } from '@/app/superadmin/onboarding/onboarding_url_config';
-import { ReportsUrlConfig } from '@/app/superadmin/reports/reports_url_config';
-import { BackupsUrlConfig } from '@/app/superadmin/backups/backups_url_config';
-import { SystemUrlConfig } from '@/app/superadmin/system/system_url_config';
-import { PlansUrlConfig } from '@/app/superadmin/plans/plans_url_config';
-import { ProfileUrlConfig } from '@/app/superadmin/profile/profile_url_config';
-import { SettingsUrlConfig } from '@/app/superadmin/settings/settings_url_config';
-import { GlobalAuditUrlConfig } from '@/app/superadmin/global-audit/global_audit_url_config';
-import { BroadcastsUrlConfig } from '@/app/superadmin/broadcasts/broadcasts_url_config';
-import { DashboardUrlConfig } from '@/app/superadmin/dashboard/dashboard_url_config';
-import { GymsUrlConfig } from '@/app/superadmin/gyms/gyms_url_config';
-import { InfrastructureUrlConfig } from '@/app/superadmin/infrastructure/infrastructure_url_config';
-import { MigrationsUrlConfig } from '@/app/superadmin/migrations/migrations_url_config';
-import { JobsUrlConfig } from '@/app/superadmin/jobs/jobs_url_config';
-import { TicketsUrlConfig } from '@/app/superadmin/tickets/tickets_url_config';
-import { UsageMetersUrlConfig } from '@/app/superadmin/usage-meters/usage_meters_url_config';
+import { AffiliatesUrlConfig } from '@/app/superadmin/affiliates/superadmin_affiliates_url_config';
+import { AnalyticsUrlConfig } from '@/app/superadmin/analytics/superadmin_analytics_url_config';
+import { BranchesUrlConfig } from '@/app/superadmin/branches/superadmin_branches_url_config';
+import { CancellationsUrlConfig } from '@/app/superadmin/cancellations/superadmin_cancellations_url_config';
+import { CouponsUrlConfig } from '@/app/superadmin/coupons/superadmin_coupons_url_config';
+import { FeaturesUrlConfig } from '@/app/superadmin/features/superadmin_features_url_config';
+import { FranchisesUrlConfig } from '@/app/superadmin/franchises/superadmin_franchises_url_config';
+import { InvoicesUrlConfig } from '@/app/superadmin/invoices/superadmin_invoices_url_config';
+import { MessagingUrlConfig } from '@/app/superadmin/messaging/superadmin_messaging_url_config';
+import { OnboardingUrlConfig } from '@/app/superadmin/onboarding/superadmin_onboarding_url_config';
+import { ReportsUrlConfig } from '@/app/superadmin/reports/superadmin_reports_url_config';
+import { BackupsUrlConfig } from '@/app/superadmin/backups/superadmin_backups_url_config';
+import { SystemUrlConfig } from '@/app/superadmin/system/superadmin_system_url_config';
+import { PlansUrlConfig } from '@/app/superadmin/plans/superadmin_plans_url_config';
+import { ProfileUrlConfig } from '@/app/superadmin/profile/superadmin_profile_url_config';
+import { SettingsUrlConfig } from '@/app/superadmin/settings/superadmin_settings_url_config';
+import { GlobalAuditUrlConfig } from '@/app/superadmin/global-audit/superadmin_global_audit_url_config';
+import { BroadcastsUrlConfig } from '@/app/superadmin/broadcasts/superadmin_broadcasts_url_config';
+import { DashboardUrlConfig } from '@/app/superadmin/dashboard/superadmin_dashboard_url_config';
+import { GymsUrlConfig } from '@/app/superadmin/gyms/superadmin_gyms_url_config';
+import { InfrastructureUrlConfig } from '@/app/superadmin/infrastructure/superadmin_infrastructure_url_config';
+import { MigrationsUrlConfig } from '@/app/superadmin/migrations/superadmin_migrations_url_config';
+import { JobsUrlConfig } from '@/app/superadmin/jobs/superadmin_jobs_url_config';
+import { TicketsUrlConfig } from '@/app/superadmin/tickets/superadmin_tickets_url_config';
+import { UsageMetersUrlConfig } from '@/app/superadmin/usage-meters/superadmin_usage_meters_url_config';
 import { logout } from '@/lib/api';
 
 interface SuperadminSidebarProps {
@@ -106,7 +106,7 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Super
     {
       group: 'Gyms & Plans',
       items: [
-        { name: 'Gyms & Tenants', href: GymsUrlConfig.PAGES.MAIN, icon: Dumbbell },
+        { name: 'Gyms & Tenants', href: GymsUrlConfig.PAGES.MAIN, icon: Building2 },
         { name: 'Gym Branches', href: BranchesUrlConfig.PAGES.MAIN, icon: ServerCog },
         { name: 'Gym Franchises', href: FranchisesUrlConfig.PAGES.MAIN, icon: Building2 },
         { name: 'Onboarding', href: OnboardingUrlConfig.PAGES.MAIN, icon: UserPlus },
@@ -193,8 +193,8 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Super
       )}
 
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex flex-col bg-sidebar border-r border-border motion-safe:transition-all motion-safe:duration-300 ${isCollapsed ? 'lg:w-20' : 'lg:w-64'
-          } ${isMobileOpen ? 'w-64 translate-x-0' : 'w-64 -translate-x-full lg:translate-x-0'
+        className={`fixed inset-y-0 left-0 z-30 flex flex-col bg-sidebar border-r border-border motion-safe:transition-all motion-safe:duration-300 ${isCollapsed ? 'lg:w-[60px]' : 'lg:w-60'
+          } ${isMobileOpen ? 'w-60 translate-x-0' : 'w-60 -translate-x-full lg:translate-x-0'
           }`}
       >
         {/* Logo / Branding Header */}
@@ -240,7 +240,7 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Super
                 placeholder="Search menu..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="block w-full pl-9 pr-3 py-2 border border-border rounded-lg leading-5 bg-input text-foreground placeholder-secondary focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm motion-safe:transition-colors"
+                className="block w-full pl-9 pr-3 py-2 border border-border rounded-lg leading-5 bg-input text-foreground placeholder-secondary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary sm:text-sm motion-safe:transition-colors"
               />
             </div>
           </div>
@@ -286,7 +286,7 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Super
                           relative flex items-center gap-3 rounded-lg px-3 py-2.5 motion-safe:transition-all motion-safe:duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1
                           ${isActive
                             // Design §3: Active = gold left border + primary-subtle bg + gold glow
-                            ? 'bg-primary-subtle text-primary border-l-2 border-primary shadow-[0_0_15px_rgba(250,204,21,0.15)] pl-[10px]'
+                            ? 'bg-primary-subtle text-primary border-l-2 border-primary shadow-[0_0_15px_var(--primary-subtle)] pl-[10px]'
                             : 'text-secondary hover:bg-card hover:text-foreground border-l-2 border-transparent pl-[10px]'
                           }
                           ${isCollapsed ? 'justify-center pl-0' : ''}

@@ -1,5 +1,5 @@
 import { http, HttpResponse, delay } from 'msw';
-import type { RevenueRow, CancellationsRecord, TenantHealthScore } from '@/app/superadmin/reports/reports_types/reports_types';
+import type { RevenueRow, CancellationsRecord, TenantHealthScore } from '@/app/superadmin/reports/reports_types/superadmin_reports_types';
 import type { ApiResponse } from '@/lib/api';
 
 const BASE_URL = '*/api/v1/superadmin/reports';

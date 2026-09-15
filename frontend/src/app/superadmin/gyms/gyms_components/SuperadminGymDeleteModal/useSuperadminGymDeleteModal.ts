@@ -17,6 +17,7 @@ export function useSuperadminGymDeleteModal() {
   const [confirmText, setConfirmText] = useState('');
 
   // Reset confirmation text whenever the modal opens or closes
+  // EXPLANATION: Synchronize component state with external dependencies.
   useEffect(() => {
     if (!isDeleteModalOpen) {
       // eslint-disable-next-line react-hooks/set-state-in-effect

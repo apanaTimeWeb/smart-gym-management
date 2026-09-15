@@ -46,6 +46,36 @@ const eslintConfig = defineConfig([
       "@typescript-eslint/no-explicit-any": "error",
       "@typescript-eslint/no-unused-vars": "warn",
       "tailwindcss/no-arbitrary-value": "error",
+
+      // Enforce type-only imports — required by verbatimModuleSyntax (P1-31)
+      "@typescript-eslint/consistent-type-imports": [
+        "error",
+        { prefer: "type-imports", fixStyle: "inline-type-imports" }
+      ],
+
+      // Ban @ts-ignore and @ts-nocheck — must use @ts-expect-error with a comment (P1-31)
+      "@typescript-eslint/ban-ts-comment": [
+        "error",
+        {
+          "ts-ignore": "allow-with-description",
+          "ts-nocheck": true,
+          "ts-check": false,
+          "minimumDescriptionLength": 10
+        }
+      ],
+
+      // Warn on non-null assertions (!) — prefer explicit null guards (P1-31)
+      "@typescript-eslint/no-non-null-assertion": "warn",
+
+      // Disallow raw .toFixed() in JSX — use formatters from @/lib/formatters (Rule 42, P1-31)
+      "no-restricted-syntax": [
+        "error",
+        {
+          "selector": "JSXExpressionContainer > CallExpression > MemberExpression[property.name='toFixed']",
+          "message": "Do not use .toFixed() directly in JSX. Use formatCurrency(), formatNumber(), or formatDecimal() from '@/lib/formatters' instead."
+        }
+      ],
+
       "boundaries/dependencies": [
         2,
         {

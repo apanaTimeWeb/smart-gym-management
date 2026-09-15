@@ -9,7 +9,7 @@ import { Search } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { onboardingApi } from '@/app/superadmin/onboarding/superadmin_onboarding_api/superadmin_onboarding_api';
-import type { TenantOnboarding } from '@/app/superadmin/onboarding/onboarding_types/onboarding_types';
+import type { TenantOnboarding } from '@/app/superadmin/onboarding/onboarding_types/superadmin_onboarding_types';
 import SuperadminConversionFunnel from '@/app/superadmin/onboarding/onboarding_components/SuperadminConversionFunnel/SuperadminConversionFunnel';
 import { SuperadminOnboardingStatsBar } from '@/app/superadmin/onboarding/onboarding_components/SuperadminOnboardingStatsBar';
 import { SuperadminOnboardingTable } from '@/app/superadmin/onboarding/onboarding_components/SuperadminOnboardingTable';

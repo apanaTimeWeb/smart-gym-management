@@ -12,7 +12,7 @@ import type {
   Toggle2FAPayload,
 } from '@/app/superadmin/profile/profile_types/SuperadminProfileTypes';
 import { passwordSchema, type PasswordFormValues } from '@/app/superadmin/profile/profile_utils/SuperadminProfileSecurityForm.schema';
-import { useUnsavedChangesGuard } from '@/app/superadmin/superadmin_utils/useUnsavedChangesGuard';
+import { useUnsavedChangesGuard } from '@/lib/useUnsavedChangesGuard';
 
 interface SuperadminProfileSecurityFormProps {
   profile: SuperadminProfileData;

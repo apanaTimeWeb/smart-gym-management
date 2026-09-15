@@ -7,8 +7,8 @@ import { maskSensitiveData, formatCurrency, displayValue } from '@/lib/formatter
 import {
   CANCELLATIONS_RISK_STYLES,
   CANCELLATIONS_ACTION_STATUS_STYLES,
-} from '@/app/superadmin/cancellations/cancellations_utils/cancellations_constants';
-import type { CancellationsAlert } from '@/app/superadmin/cancellations/cancellations_types/cancellations_types';
+} from '@/app/superadmin/cancellations/cancellations_utils/SuperadminCancellationsConstants';
+import type { CancellationsAlert } from '@/app/superadmin/cancellations/cancellations_types/superadmin_cancellations_types';
 
 interface SuperadminCancellationsTableProps {
   alerts: CancellationsAlert[];

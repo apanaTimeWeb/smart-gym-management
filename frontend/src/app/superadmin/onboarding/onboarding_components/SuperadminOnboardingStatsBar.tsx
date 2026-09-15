@@ -1,5 +1,6 @@
 'use client';
-import { KPI_CARD_GRADIENT } from '@/app/superadmin/onboarding/onboarding_types/onboarding_constants';
+// RESPONSIBILITY: Renders the Onboarding Stats Bar component and its associated UI logic.
+import { KPI_CARD_GRADIENT } from '@/app/superadmin/onboarding/onboarding_types/SuperadminOnboardingConstants';
 import { useDateRangeSuffix } from '@/components/ui/SuperadminShared/useDateRangeSuffix';
 
 export function SuperadminOnboardingStatsBar({

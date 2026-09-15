@@ -3,7 +3,7 @@ import { SupportTicketSchema } from '@/app/superadmin/tickets/superadmin_tickets
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
 import type { SupportTicket } from '@/app/superadmin/tickets/superadmin_tickets_types/superadmin_tickets_types';
-import { TicketsUrlConfig } from '@/app/superadmin/tickets/tickets_url_config';
+import { TicketsUrlConfig } from '@/app/superadmin/tickets/superadmin_tickets_url_config';
 import { z } from "zod";
 
 export const ticketsApi = {

@@ -1,5 +1,5 @@
 import { http, HttpResponse, delay } from 'msw';
-import { MigrationsUrlConfig } from '@/app/superadmin/migrations/migrations_url_config';
+import { MigrationsUrlConfig } from '@/app/superadmin/migrations/superadmin_migrations_url_config';
 
 import { MOCK_MIGRATIONS } from '@/app/superadmin/migrations/migrations_utils/SuperadminMigrationsConstants';
 

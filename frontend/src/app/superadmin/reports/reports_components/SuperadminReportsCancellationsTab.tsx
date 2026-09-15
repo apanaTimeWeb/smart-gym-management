@@ -1,6 +1,7 @@
+// RESPONSIBILITY: Renders the Reports Cancellations Tab component and its associated UI logic.
 import dynamic from 'next/dynamic';
 import { CHART_COLORS } from '@/app/superadmin/superadmin_utils/SuperadminChartConstants';
-import type { CancellationsRecord } from '@/app/superadmin/reports/reports_types/reports_types';
+import type { CancellationsRecord } from '@/app/superadmin/reports/reports_types/superadmin_reports_types';
 import { formatCurrency } from '@/lib/formatters';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });

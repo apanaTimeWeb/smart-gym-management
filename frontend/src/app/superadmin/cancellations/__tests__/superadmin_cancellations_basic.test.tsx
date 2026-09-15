@@ -1,4 +1,5 @@
-﻿import { describe, it, expect } from 'vitest';
+// RESPONSIBILITY: Renders the superadmin_cancellations_basic.test component and its associated UI logic.
+import { describe, it, expect } from 'vitest';
 
 describe('superadmin cancellations module', () => {
   it('should render basic components', () => {

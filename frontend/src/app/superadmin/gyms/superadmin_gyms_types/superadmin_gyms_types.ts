@@ -1,4 +1,30 @@
 // RESPONSIBILITY: Defines all TypeScript types and interfaces for the Gyms module.
+import { z } from 'zod';
+
+export const TenantStatusSchema = z.enum(['ACTIVE', 'SUSPENDED', 'TRIAL', 'CANCELLED']);
+// TenantStatus type defined below via union
+
+export const TenantSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  ownerName: z.string(),
+  adminEmail: z.string().email(),
+  phone: z.string(),
+  status: TenantStatusSchema,
+  plan: z.string(),
+  createdAt: z.string(),
+  memberCount: z.number(),
+  monthlyRevenue: z.number(),
+  databaseVersion: z.string(),
+  city: z.string().optional(),
+  state: z.string().optional(),
+  country: z.string().optional(),
+  gstin: z.string().optional(),
+  trialEndsAt: z.string().optional(),
+  lastLoginAt: z.string().optional(),
+  lastActiveAt: z.string().nullable().optional(),
+});
+
 export type TenantStatus = 'ACTIVE' | 'SUSPENDED' | 'TRIAL' | 'CANCELLED';
 
 export interface SubscriptionHistoryItem {

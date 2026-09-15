@@ -16,6 +16,7 @@ import SuperadminBackupsTable from '@/app/superadmin/backups/backups_components/
 import SuperadminBackupsRestoreModal from '@/app/superadmin/backups/backups_components/SuperadminBackupsRestoreModal';
 import SuperadminBackupsTriggerModal from '@/app/superadmin/backups/backups_components/SuperadminBackupsTriggerModal';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
+import { SuperadminErrorBoundary } from '@/components/ui/SuperadminLayout/SuperadminErrorBoundary';
 
 export default function SuperadminBackupsClient() {
   const { data: backups, fetchState, error } = useSuperadminBackupsData();
@@ -30,6 +31,7 @@ export default function SuperadminBackupsClient() {
   const ITEMS_PER_PAGE = 10;
 
   // Resets pagination to page 1 whenever a filter changes, preventing stale empty states.
+  // EXPLANATION: Synchronize component state with external dependencies.
   useEffect(() => {
     setCurrentPage(1);
   }, [search, statusFilter, typeFilter]);
@@ -101,14 +103,15 @@ export default function SuperadminBackupsClient() {
         </div>
       </div>
 
-      <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden flex flex-col min-h-96">
+      <SuperadminErrorBoundary variant="inline">
+        <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden flex flex-col min-h-96">
         <div className="p-4 border-b border-border flex flex-col sm:flex-row gap-4 justify-between items-center">
           <div className="relative w-full max-w-md">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary" />
             <input 
               type="text" 
               placeholder="Search by gym name or database..." 
-              className="w-full pl-9 pr-4 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary"
+            className="w-full pl-9 pr-4 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary"
               value={search}
               onChange={(e) => {
                 setSearch(e.target.value);
@@ -155,7 +158,8 @@ export default function SuperadminBackupsClient() {
           totalPages={totalPages}
           onPageChange={setCurrentPage}
         />
-      </div>
+        </div>
+      </SuperadminErrorBoundary>
 
       <SuperadminBackupsRestoreModal 
         isOpen={restoreModalOpen}

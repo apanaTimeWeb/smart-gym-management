@@ -44,3 +44,8 @@ export const SupportTicketSchema = z.object({
   updatedAt: z.string(),
   assignedTo: z.string().optional()
 });
+
+export const replySchema = z.object({
+  replyText: z.string().min(1, 'Please enter a reply message.'),
+});
+export type ReplyFormValues = z.infer<typeof replySchema>;

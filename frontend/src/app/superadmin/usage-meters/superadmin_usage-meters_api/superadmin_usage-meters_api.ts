@@ -2,7 +2,7 @@ import { UsageMeterSchema } from '@/app/superadmin/usage-meters/superadmin_usage
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
 import type { UsageMeter } from '@/app/superadmin/usage-meters/superadmin_usage-meters_types/superadmin_usage-meters_types';
-import { UsageMetersUrlConfig } from '@/app/superadmin/usage-meters/usage_meters_url_config';
+import { UsageMetersUrlConfig } from '@/app/superadmin/usage-meters/superadmin_usage_meters_url_config';
 import { z } from "zod";
 
 export const usageMetersApi = {

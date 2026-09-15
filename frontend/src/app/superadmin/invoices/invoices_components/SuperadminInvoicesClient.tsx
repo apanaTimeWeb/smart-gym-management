@@ -49,6 +49,7 @@ export default function SuperadminInvoicesClient() {
     setStatusFilter,
     pendingRevenue,
     overdueCount,
+    handleLogManualPayment,
   } = useSuperadminInvoicesPage();
 
   if (fetchState === 'loading') return (
@@ -148,7 +149,14 @@ export default function SuperadminInvoicesClient() {
           handleSelectGym={handleSelectGym}
           paymentMethod={paymentMethod}
           setPaymentMethod={setPaymentMethod}
-          onSave={() => setShowAddModal(false)}
+          onSave={async (amount: number) => {
+            if (!selectedGym) {
+              toast.error('Please select a gym');
+              return;
+            }
+            await handleLogManualPayment(selectedGym.id, amount, selectedGym.plan);
+            setShowAddModal(false);
+          }}
         />
       )}
     </div>

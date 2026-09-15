@@ -9,6 +9,7 @@ import SuperadminAffiliatesTable from '@/app/superadmin/affiliates/affiliates_co
 import SuperadminAffiliatesEmptyState from '@/app/superadmin/affiliates/affiliates_components/SuperadminAffiliatesEmptyState/SuperadminAffiliatesEmptyState';
 import { SuperadminAffiliateModal } from '@/app/superadmin/affiliates/affiliates_components/SuperadminAffiliateModal';
 import SuperadminAffiliatesPayoutHistory from '@/app/superadmin/affiliates/affiliates_components/SuperadminAffiliatesPayoutHistory/SuperadminAffiliatesPayoutHistory';
+import { SuperadminErrorBoundary } from '@/components/ui/SuperadminLayout/SuperadminErrorBoundary';
 
 export type AffiliatesTab = 'AFFILIATES' | 'PAYOUTS';
 
@@ -90,24 +91,26 @@ export default function SuperadminAffiliatesClient() {
           </div>
         </div>
 
-        {activeTab === 'PAYOUTS' ? (
-          <div className="p-4">
-            <SuperadminAffiliatesPayoutHistory affiliates={affiliates} />
-          </div>
-        ) : (
-          affiliates.length === 0 ? (
-            <SuperadminAffiliatesEmptyState onAddClick={() => setIsModalOpen(true)} />
+        <SuperadminErrorBoundary variant="inline">
+          {activeTab === 'PAYOUTS' ? (
+            <div className="p-4">
+              <SuperadminAffiliatesPayoutHistory affiliates={affiliates} />
+            </div>
           ) : (
-            <SuperadminAffiliatesTable
-              onAddClick={() => setIsModalOpen(true)}
-              affiliates={affiliates}
-              onToggleStatus={handleToggleAffiliateStatus}
-              onEdit={openEditModal}
-              onDelete={handleDeleteAffiliate}
-              onPayCommission={handlePayCommission}
-            />
-          )
-        )}
+            affiliates.length === 0 ? (
+              <SuperadminAffiliatesEmptyState onAddClick={() => setIsModalOpen(true)} />
+            ) : (
+              <SuperadminAffiliatesTable
+                onAddClick={() => setIsModalOpen(true)}
+                affiliates={affiliates}
+                onToggleStatus={handleToggleAffiliateStatus}
+                onEdit={openEditModal}
+                onDelete={handleDeleteAffiliate}
+                onPayCommission={handlePayCommission}
+              />
+            )
+          )}
+        </SuperadminErrorBoundary>
       </div>
 
       <SuperadminAffiliateModal

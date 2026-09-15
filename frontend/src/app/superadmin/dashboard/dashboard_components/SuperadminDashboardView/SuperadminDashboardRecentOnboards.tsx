@@ -6,6 +6,7 @@ import {
   DASHBOARD_PLAN_BADGE_CLASSES,
   DASHBOARD_PLAN_BADGE_FALLBACK_CLASS,
 } from '@/app/superadmin/dashboard/dashboard_utils/SuperadminDashboardConstants';
+import { GymsUrlConfig } from '@/app/superadmin/gyms/superadmin_gyms_url_config';
 
 export function SuperadminDashboardRecentOnboards({ recentOnboards }: SuperadminDashboardRecentOnboardsProps) {
   const router = useRouter();
@@ -20,7 +21,7 @@ export function SuperadminDashboardRecentOnboards({ recentOnboards }: Superadmin
           return (
             <div
               key={tenant.id}
-              onClick={() => router.push(`/superadmin/gyms?id=${tenant.id}`)}
+              onClick={() => router.push(`${GymsUrlConfig.PAGES.MAIN}?id=${tenant.id}`)}
               className="flex items-center justify-between p-4 bg-background rounded-lg border border-border hover:bg-input motion-safe:transition-colors motion-safe:duration-200 cursor-pointer"
             >
               <div className="min-w-0 flex-1">

@@ -12,7 +12,7 @@ export default function SuperadminGhostLoginBanner() {
   if (!ghostTenant) return null;
 
   return (
-    <div className="sticky top-0 z-50 w-full bg-warning/15 border-b-2 border-warning/40 px-4 py-2.5 flex items-center justify-between gap-3">
+    <div className="sticky top-0 z-20 w-full bg-warning/15 border-b-2 border-warning/40 px-4 py-2.5 flex items-center justify-between gap-3">
       <div className="flex items-center gap-2.5 min-w-0">
         <div className="p-1.5 bg-warning/20 rounded-lg shrink-0">
           <Eye size={16} className="text-warning" />

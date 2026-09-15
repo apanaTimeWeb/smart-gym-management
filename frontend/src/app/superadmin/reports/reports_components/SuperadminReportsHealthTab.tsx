@@ -1,12 +1,13 @@
+// RESPONSIBILITY: Renders the Reports Health Tab component and its associated UI logic.
 import { CheckCircle2, AlertTriangle, XCircle } from 'lucide-react';
-import type { TenantHealthScore } from '@/app/superadmin/reports/reports_types/reports_types';
+import type { TenantHealthScore } from '@/app/superadmin/reports/reports_types/superadmin_reports_types';
 import { formatNumber } from '@/lib/formatters';
 import {
   GRADE_STYLES,
   PAYMENT_HEALTH_STYLES,
   TICKET_DANGER_THRESHOLD,
   TICKET_WARNING_THRESHOLD,
-} from '@/app/superadmin/reports/reports_types/reports_constants';
+} from '@/app/superadmin/reports/reports_types/SuperadminReportsConstants';
 
 export function SuperadminReportsHealthTab({
   sortedHealthData,

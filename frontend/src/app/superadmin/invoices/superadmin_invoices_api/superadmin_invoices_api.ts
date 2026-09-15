@@ -2,7 +2,7 @@ import { SaaSInvoiceSchema } from '@/app/superadmin/invoices/superadmin_invoices
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
 import type { SaaSInvoice } from '@/app/superadmin/invoices/superadmin_invoices_types/superadmin_invoices_types';
-import { InvoicesUrlConfig } from '@/app/superadmin/invoices/invoices_url_config';
+import { InvoicesUrlConfig } from '@/app/superadmin/invoices/superadmin_invoices_url_config';
 import { z } from "zod";
 
 export interface CreateManualPaymentDto {
@@ -34,4 +34,8 @@ export const invoicesApi = {
       method: 'POST',
         dataSchema: z.null()
     }),
+  fetchTenants: () => {
+    // Local tenant lookup to avoid cross-module business imports
+    return apiFetch<ApiResponse<any[]>>('/superadmin/gyms-list');
+  },
 };

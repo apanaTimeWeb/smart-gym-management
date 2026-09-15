@@ -1,4 +1,10 @@
-export const SuperadminAnalyticsUrlConfig = {
-  PAGES: { ANALYTICS: "/superadmin/analytics" },
-  BACKEND_API: { ANALYTICS: "/superadmin/analytics" }
+// RESPONSIBILITY: Centralized URL configuration for the Analytics module.
+
+export const AnalyticsUrlConfig = {
+  PAGES: {
+    MAIN: '/superadmin/analytics',
+  },
+  BACKEND_API: {
+    BASE: '/superadmin/analytics',
+  },
 };

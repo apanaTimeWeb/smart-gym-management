@@ -1,5 +1,5 @@
 import { http, HttpResponse, delay } from 'msw';
-import type { TenantOnboarding } from '@/app/superadmin/onboarding/onboarding_types/onboarding_types';
+import type { TenantOnboarding } from '@/app/superadmin/onboarding/onboarding_types/superadmin_onboarding_types';
 import type { ApiResponse } from '@/lib/api';
 
 const BASE_URL = '*/api/v1/superadmin/onboarding';

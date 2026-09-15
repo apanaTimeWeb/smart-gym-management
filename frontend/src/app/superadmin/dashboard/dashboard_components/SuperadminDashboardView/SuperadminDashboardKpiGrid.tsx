@@ -4,8 +4,8 @@ import { Users, Building2, CreditCard, Activity, AlertCircle, Clock, CheckCircle
 import { useRouter } from 'next/navigation';
 import type { SuperadminDashboardKpiGridProps } from '@/app/superadmin/dashboard/superadmin_dashboard_types/superadmin_dashboard_types';
 import { useSuperadminDashboardDateRangeSuffix } from '@/app/superadmin/dashboard/dashboard_components/SuperadminDashboardView/useSuperadminDashboardDateRangeSuffix';
-import { DashboardUrlConfig } from '@/app/superadmin/dashboard/dashboard_url_config';
-import { CancellationsUrlConfig } from '@/app/superadmin/cancellations/cancellations_url_config';
+import { DashboardUrlConfig } from '@/app/superadmin/dashboard/superadmin_dashboard_url_config';
+import { CancellationsUrlConfig } from '@/app/superadmin/cancellations/superadmin_cancellations_url_config';
 import { formatCurrency, formatNumber } from '@/lib/formatters';
 
 export function SuperadminDashboardKpiGrid({

@@ -8,8 +8,8 @@ import SuperadminCancellationsTable from '@/app/superadmin/cancellations/cancell
 import SuperadminCancellationsEmptyState from '@/app/superadmin/cancellations/cancellations_components/SuperadminCancellationsEmptyState/SuperadminCancellationsEmptyState';
 import SuperadminCancellationsActionModal from '@/app/superadmin/cancellations/cancellations_components/SuperadminCancellationsActionModal/SuperadminCancellationsActionModal';
 import SuperadminPagination from '@/components/ui/SuperadminShared/SuperadminPagination';
-import type { CancellationsFilterStatus } from '@/app/superadmin/cancellations/cancellations_types/cancellations_types';
-import { useCancellationsAlertsPage } from '@/app/superadmin/cancellations/cancellations_utils/useCancellationsAlertsPage';
+import type { CancellationsFilterStatus } from '@/app/superadmin/cancellations/cancellations_types/superadmin_cancellations_types';
+import { useSuperadminCancellationsAlertsPage } from '@/app/superadmin/cancellations/cancellations_utils/useSuperadminCancellationsAlertsPage';
 
 export default function SuperadminCancellationsMain() {
   const {
@@ -17,12 +17,12 @@ export default function SuperadminCancellationsMain() {
     activeFilter, setActiveFilter,
     actionAlert, setActionAlert,
     currentPage, setCurrentPage,
-    alertsLoading, kpisLoading,
+    fetchState,
     kpis, filtered, paginatedAlerts, totalPages, isFiltered,
     handleActionConfirm, handleBulkOutreach
-  } = useCancellationsAlertsPage();
+  } = useSuperadminCancellationsAlertsPage();
 
-  if (alertsLoading || kpisLoading) {
+  if (fetchState === 'loading') {
     return (
       <div className="space-y-6">
         <div className="h-8 bg-card rounded w-48 motion-safe:animate-pulse" />
@@ -33,6 +33,12 @@ export default function SuperadminCancellationsMain() {
         </div>
         <div className="h-96 bg-card rounded-xl border border-border motion-safe:animate-pulse" />
       </div>
+    );
+  }
+
+  if (fetchState === 'error') {
+    return (
+      <div className="p-8 text-center text-danger">Failed to load cancellations data.</div>
     );
   }
 

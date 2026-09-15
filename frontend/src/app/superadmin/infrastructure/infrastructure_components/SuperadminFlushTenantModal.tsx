@@ -3,8 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { X, Loader2, Search } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
-import { gymsApi } from '@/app/superadmin/gyms/superadmin_gyms_api/superadmin_gyms_api';
-import type { Tenant } from '@/app/superadmin/gyms/gyms_types/superadmin_gyms_types';
+import { infrastructureApi } from '@/app/superadmin/infrastructure/superadmin_infrastructure_api/superadmin_infrastructure_api';
+import type { SuperadminInfrastructureTenant } from '@/app/superadmin/infrastructure/infrastructure_types/superadmin_infrastructure_types';
 
 interface FlushTenantModalProps {
   isOpen: boolean;
@@ -19,14 +19,15 @@ export default function SuperadminFlushTenantModal({ isOpen, onClose, onFlush }:
 
   const { data: fetchRes, isLoading: fetchStateLoading } = useQuery({
     queryKey: ['superadmin', 'gyms'],
-    queryFn: () => gymsApi.fetchGyms(),
+    queryFn: () => infrastructureApi.fetchTenants(),
     enabled: isOpen,
   });
 
-  const rawGyms = (fetchRes?.data as Tenant[]) ?? [];
+  const rawGyms = (fetchRes?.data as SuperadminInfrastructureTenant[]) ?? [];
   const gyms = rawGyms;
 
   // RESPONSIBILITY: Handle side-effects for SuperadminFlushTenantModal
+  // EXPLANATION: Synchronize component state with external dependencies.
   useEffect(() => {
     if (!isOpen) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -38,7 +39,7 @@ export default function SuperadminFlushTenantModal({ isOpen, onClose, onFlush }:
 
   if (!isOpen) return null;
 
-  const filteredGyms = gyms?.filter((g: Tenant) => g.name?.toLowerCase().includes(search.toLowerCase()) || g.id?.includes(search)) || [];
+  const filteredGyms = gyms?.filter((g: SuperadminInfrastructureTenant) => g.name?.toLowerCase().includes(search.toLowerCase()) || g.id?.includes(search)) || [];
 
   const handleFlush = async () => {
     if (selectedTenantIds.length === 0) return;
@@ -52,7 +53,7 @@ export default function SuperadminFlushTenantModal({ isOpen, onClose, onFlush }:
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 z-40 flex items-center justify-center p-4 backdrop-blur-sm motion-safe:animate-in motion-safe:fade-in">
+    <div className="fixed inset-0 bg-black/60 z-40 flex items-center justify-center p-4 backdrop-blur-sm motion-safe:animate-in motion-safe:fade-in" role="dialog" aria-modal="true">
       <div className="bg-overlay border border-border rounded-2xl w-full max-w-md shadow-2xl overflow-hidden flex flex-col motion-safe:animate-in motion-safe:zoom-in-95">
         <div className="flex items-center justify-between px-6 py-5 border-b border-border">
           <div>
@@ -83,7 +84,7 @@ export default function SuperadminFlushTenantModal({ isOpen, onClose, onFlush }:
             <span className="text-sm font-semibold text-secondary">Found {filteredGyms.length} gyms</span>
             <div className="space-x-3">
               <button 
-                onClick={() => setSelectedTenantIds(filteredGyms.map((g: Tenant) => g.id))}
+                onClick={() => setSelectedTenantIds(filteredGyms.map((g: SuperadminInfrastructureTenant) => g.id))}
                 className="text-xs font-semibold text-primary hover:underline"
               >
                 Select All
@@ -108,7 +109,7 @@ export default function SuperadminFlushTenantModal({ isOpen, onClose, onFlush }:
               </div>
             ) : (
               <div className="flex-1 overflow-y-auto custom-scrollbar p-2 space-y-1">
-                {filteredGyms.map((gym: Tenant) => {
+                {filteredGyms.map((gym: SuperadminInfrastructureTenant) => {
                   const isSelected = selectedTenantIds?.includes(gym.id);
                   return (
                     <button

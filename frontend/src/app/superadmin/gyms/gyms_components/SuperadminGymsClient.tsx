@@ -3,13 +3,14 @@
 import '@/app/superadmin/gyms/gyms.css';
 import Link from 'next/link';
 import { Plus } from 'lucide-react';
-import { GymsUrlConfig } from '@/app/superadmin/gyms/gyms_url_config';
+import { GymsUrlConfig } from '@/app/superadmin/gyms/superadmin_gyms_url_config';
 import SuperadminGymsToolbar from '@/app/superadmin/gyms/gyms_components/SuperadminGymsToolbar/SuperadminGymsToolbar';
 import SuperadminGymsTable from '@/app/superadmin/gyms/gyms_components/SuperadminGymsTable/SuperadminGymsTable';
 
 
 import SuperadminGymsCalendar from '@/app/superadmin/gyms/gyms_components/SuperadminGymsCalendar/SuperadminGymsCalendar';
 import { useSuperadminGymsStore } from '@/app/superadmin/gyms/gyms_store/useSuperadminGymsStore';
+import { SuperadminErrorBoundary } from '@/components/ui/SuperadminLayout/SuperadminErrorBoundary';
 
 export default function SuperadminGymsClient() {
   const viewMode = useSuperadminGymsStore(state => state.viewMode);
@@ -32,7 +33,9 @@ export default function SuperadminGymsClient() {
 
       <div className="bg-background border border-border rounded-xl overflow-hidden shadow-sm">
         <SuperadminGymsToolbar />
-        {viewMode === 'calendar' ? <SuperadminGymsCalendar /> : <SuperadminGymsTable />}
+        <SuperadminErrorBoundary variant="inline">
+          {viewMode === 'calendar' ? <SuperadminGymsCalendar /> : <SuperadminGymsTable />}
+        </SuperadminErrorBoundary>
       </div>
     </div>
   );

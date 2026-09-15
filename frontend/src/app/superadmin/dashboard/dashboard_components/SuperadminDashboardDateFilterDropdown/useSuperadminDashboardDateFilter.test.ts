@@ -5,7 +5,9 @@ import { vi, describe, it, expect, beforeEach } from 'vitest';
 
 vi.mock('next/navigation', () => ({
   useRouter: vi.fn(),
-  useSearchParams: vi.fn(),
+  useRouter: vi.fn(() => ({ replace: vi.fn() })),
+  usePathname: vi.fn(() => ''),
+  useSearchParams: vi.fn(() => ({ get: vi.fn(), set: vi.fn() })),
   usePathname: vi.fn(),
 }));
 

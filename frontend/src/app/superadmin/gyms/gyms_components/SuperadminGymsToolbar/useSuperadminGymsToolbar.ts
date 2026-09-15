@@ -6,20 +6,20 @@
 import toast from 'react-hot-toast';
 import { useSuperadminGymsStore } from '@/app/superadmin/gyms/gyms_store/useSuperadminGymsStore';
 import { gymsApi } from '@/app/superadmin/gyms/superadmin_gyms_api/superadmin_gyms_api';
+import { useSuperadminUrlState } from '@/app/superadmin/superadmin_utils/useSuperadminUrlState';
 
 export function useSuperadminGymsToolbar() {
-  const search = useSuperadminGymsStore(state => state.search);
-  const setSearch = useSuperadminGymsStore(state => state.setSearch);
-  const statusFilter = useSuperadminGymsStore(state => state.statusFilter);
-  const setStatusFilter = useSuperadminGymsStore(state => state.setStatusFilter);
-  const planFilter = useSuperadminGymsStore(state => state.planFilter);
-  const setPlanFilter = useSuperadminGymsStore(state => state.setPlanFilter);
+  const { getParam, setParam } = useSuperadminUrlState();
+  const search = getParam('search', '');
+  const statusFilter = getParam('statusFilter', 'All');
+  const planFilter = getParam('planFilter', 'All');
+
+  const handleSearchChange = (value: string) => setParam('search', value);
+  const setStatusFilter = (value: string) => setParam('statusFilter', value);
+  const setPlanFilter = (value: string) => setParam('planFilter', value);
+
   const viewMode = useSuperadminGymsStore(state => state.viewMode);
   const setViewMode = useSuperadminGymsStore(state => state.setViewMode);
-
-  const handleSearchChange = (value: string) => {
-    setSearch(value);
-  };
 
   const handleExportGyms = async () => {
     toast.loading('Exporting gyms...', { id: 'gyms-export' });

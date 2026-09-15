@@ -9,6 +9,8 @@ import toast from 'react-hot-toast';
 
 import { useSuperadminConfirm } from '@/components/ui/SuperadminFeedback/SuperadminConfirmProvider';
 
+const TABLE_COLUMN_COUNT = 5;
+
 export default function SuperadminMigrationsClient() {
   const [versionInput, setVersionInput] = useState('');
   const { confirm } = useSuperadminConfirm();
@@ -181,7 +183,7 @@ export default function SuperadminMigrationsClient() {
               
               {displayMigrations.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="px-6 py-12 text-center text-secondary">
+                  <td colSpan={TABLE_COLUMN_COUNT} className="px-6 py-12 text-center text-secondary">
                     <Database size={32} className="mx-auto mb-3 opacity-20" />
                     <p>No schema rollouts found.</p>
                   </td>

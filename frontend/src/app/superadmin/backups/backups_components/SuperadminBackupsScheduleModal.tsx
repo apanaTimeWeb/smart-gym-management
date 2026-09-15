@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders the Backups Schedule Modal component and its associated UI logic.
 import React, { useState } from 'react';
 import { Clock, Check } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -25,7 +26,7 @@ export default function SuperadminBackupsScheduleModal({ isOpen, onClose }: Supe
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" role="dialog" aria-modal="true">
       <div className="bg-card w-full max-w-md rounded-2xl shadow-xl overflow-hidden border border-border motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95">
         <div className="p-6">
           <div className="w-12 h-12 rounded-full bg-info/10 text-info flex items-center justify-center mb-4">

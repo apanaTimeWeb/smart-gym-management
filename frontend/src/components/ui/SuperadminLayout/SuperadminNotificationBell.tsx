@@ -7,7 +7,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Bell, Info, AlertTriangle, CheckCheck } from 'lucide-react';
 import Link from 'next/link';
 
-import { MessagingUrlConfig } from '@/app/superadmin/messaging/messaging_url_config';
+import { MessagingUrlConfig } from '@/app/superadmin/messaging/superadmin_messaging_url_config';
 
 type NotificationType = 'INFO' | 'WARNING' | 'CRITICAL';
 interface SuperadminNotification {

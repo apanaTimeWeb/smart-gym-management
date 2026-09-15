@@ -1,5 +1,5 @@
 import { http, HttpResponse, delay } from 'msw';
-import type { CancellationsAlert, CancellationsKpiData, CancellationsActionPayload } from '@/app/superadmin/cancellations/cancellations_types/cancellations_types';
+import type { CancellationsAlert, CancellationsKpiData, CancellationsActionPayload } from '@/app/superadmin/cancellations/cancellations_types/superadmin_cancellations_types';
 import type { ApiResponse } from '@/lib/api';
 
 const BASE_URL = '*/api/v1/superadmin/cancellations';

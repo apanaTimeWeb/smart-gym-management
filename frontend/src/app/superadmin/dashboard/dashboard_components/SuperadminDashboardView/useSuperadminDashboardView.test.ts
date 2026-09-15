@@ -9,7 +9,9 @@ vi.mock('@tanstack/react-query', () => ({
 }));
 
 vi.mock('next/navigation', () => ({
-  useSearchParams: vi.fn(),
+  useRouter: vi.fn(() => ({ replace: vi.fn() })),
+  usePathname: vi.fn(() => ''),
+  useSearchParams: vi.fn(() => ({ get: vi.fn(), set: vi.fn() })),
 }));
 
 vi.mock('@/app/superadmin/dashboard/dashboard_api/superadmin_dashboard_api', () => ({

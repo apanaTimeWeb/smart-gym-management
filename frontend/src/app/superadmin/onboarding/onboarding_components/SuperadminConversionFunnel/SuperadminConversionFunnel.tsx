@@ -3,14 +3,17 @@
 
 import React, { useMemo, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
-import type { TenantOnboarding } from '@/app/superadmin/onboarding/onboarding_types/onboarding_types';
+import type { TenantOnboarding } from '@/app/superadmin/onboarding/onboarding_types/superadmin_onboarding_types';
 
 const ReactApexChart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 export default function SuperadminConversionFunnel({ tenants }: { tenants: TenantOnboarding[] }) {
   const [mounted, setMounted] = useState(false);
   // RATIONALE: Required by architecture to sync state/lifecycle based on dependencies.
-  useEffect(() => setMounted(true), []);
+  // EXPLANATION: Synchronize component state with external dependencies.
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const { series, options } = useMemo(() => {
     const totalSignups = tenants.length;

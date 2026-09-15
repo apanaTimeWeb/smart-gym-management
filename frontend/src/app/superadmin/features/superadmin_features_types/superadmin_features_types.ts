@@ -33,3 +33,9 @@ export const ReleaseNoteSchema = z.object({
   date: z.string(),
   isPublished: z.boolean()
 });
+
+export interface SuperadminFeaturesTenant {
+  id: string;
+  name: string;
+  plan: string;
+}

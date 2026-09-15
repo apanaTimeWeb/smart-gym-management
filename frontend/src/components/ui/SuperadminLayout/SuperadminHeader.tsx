@@ -8,7 +8,7 @@ import { LogOut, Settings, Menu } from 'lucide-react';
 import Link from 'next/link';
 import { ThemeToggle } from '@/components/ThemeToggle';
 
-import { SettingsUrlConfig } from '@/app/superadmin/settings/settings_url_config';
+import { SettingsUrlConfig } from '@/app/superadmin/settings/superadmin_settings_url_config';
 import { logout } from '@/lib/api';
 import SuperadminNotificationBell from '@/components/ui/SuperadminLayout/SuperadminNotificationBell';
 

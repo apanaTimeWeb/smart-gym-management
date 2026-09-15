@@ -1,4 +1,5 @@
-﻿import { describe, it, expect } from 'vitest';
+// RESPONSIBILITY: Renders the superadmin_analytics_basic.test component and its associated UI logic.
+import { describe, it, expect } from 'vitest';
 
 describe('superadmin analytics module', () => {
   it('should render basic components', () => {

@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Modularized API client for the System module. All methods import apiFetch from src/lib/api.ts and define only superadmin-scoped endpoints. No UI logic.
-import { SystemUrlConfig } from '@/app/superadmin/system/system_url_config';
+import { SystemUrlConfig } from '@/app/superadmin/system/superadmin_system_url_config';
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
 import { z } from 'zod';

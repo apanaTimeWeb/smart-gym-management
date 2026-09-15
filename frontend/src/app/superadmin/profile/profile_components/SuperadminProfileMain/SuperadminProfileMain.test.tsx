@@ -1,14 +1,15 @@
+// RESPONSIBILITY: Renders the Profile Main.test component and its associated UI logic.
 import { render, screen, fireEvent } from '@testing-library/react';
 import SuperadminProfileMain from '@/app/superadmin/profile/profile_components/SuperadminProfileMain/SuperadminProfileMain';
-import { useProfilePage } from '@/app/superadmin/profile/profile_utils/useProfilePage';
+import { useSuperadminProfilePage } from '@/app/superadmin/profile/profile_utils/useSuperadminProfilePage';
 
-vi.mock('@/app/superadmin/profile/profile_utils/useProfilePage');
+vi.mock('@/app/superadmin/profile/profile_utils/useSuperadminProfilePage');
 vi.mock('@/app/superadmin/profile/profile_components/SuperadminProfileAvatarCard/SuperadminProfileAvatarCard', () => ({ default: () => <div data-testid="avatar-card" /> }));
 vi.mock('@/app/superadmin/profile/profile_components/SuperadminProfilePersonalForm/SuperadminProfilePersonalForm', () => ({ default: () => <div data-testid="personal-form" /> }));
 vi.mock('@/app/superadmin/profile/profile_components/SuperadminProfileSecurityForm/SuperadminProfileSecurityForm', () => ({ default: () => <div data-testid="security-form" /> }));
 
 describe('SuperadminProfileMain', () => {
-  const mockUseProfilePage = useProfilePage as import('vitest').Mock;
+  const mockUseProfilePage = useSuperadminProfilePage as import('vitest').Mock;
 
   beforeEach(() => {
     mockUseProfilePage.mockReturnValue({

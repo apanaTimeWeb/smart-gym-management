@@ -1,8 +1,8 @@
-import { RevenueRowSchema, CancellationsRecordSchema, TenantHealthScoreSchema } from '@/app/superadmin/reports/reports_types/reports_types';
+import { RevenueRowSchema, CancellationsRecordSchema, TenantHealthScoreSchema } from '@/app/superadmin/reports/reports_types/superadmin_reports_types';
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
-import type { RevenueRow, CancellationsRecord, TenantHealthScore } from '@/app/superadmin/reports/reports_types/reports_types';
-import { ReportsUrlConfig } from '@/app/superadmin/reports/reports_url_config';
+import type { RevenueRow, CancellationsRecord, TenantHealthScore } from '@/app/superadmin/reports/reports_types/superadmin_reports_types';
+import { ReportsUrlConfig } from '@/app/superadmin/reports/superadmin_reports_url_config';
 import { z } from "zod";
 
 export const superadminReportsApi = {

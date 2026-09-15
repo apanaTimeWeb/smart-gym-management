@@ -9,6 +9,7 @@ import { ArrowLeft, Building2, User, CreditCard, Activity, MapPin, Shield, Clock
 import { gymsApi } from '@/app/superadmin/gyms/superadmin_gyms_api/superadmin_gyms_api';
 import type { Tenant } from '@/app/superadmin/gyms/superadmin_gyms_types/superadmin_gyms_types';
 import { formatCurrency } from '@/lib/formatters';
+import { GymsUrlConfig } from '@/app/superadmin/gyms/superadmin_gyms_url_config';
 
 interface SuperadminGymDetailClientProps {
   gymId: string;
@@ -49,7 +50,7 @@ export default function SuperadminGymDetailClient({ gymId }: SuperadminGymDetail
     <div className="space-y-6">
       {/* Back Navigation */}
       <button
-        onClick={() => router.push('/superadmin/gyms')}
+        onClick={() => router.push(GymsUrlConfig.PAGES.MAIN)}
         className="flex items-center gap-2 text-secondary hover:text-foreground motion-safe:transition-colors text-sm"
       >
         <ArrowLeft size={16} /> Back to Gyms

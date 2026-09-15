@@ -1,5 +1,6 @@
+// RESPONSIBILITY: Renders the not-found component and its associated UI logic.
 import Link from 'next/link';
-import { DashboardUrlConfig } from '@/app/superadmin/dashboard/dashboard_url_config';
+import { DashboardUrlConfig } from '@/app/superadmin/dashboard/superadmin_dashboard_url_config';
 
 export default function OnboardingNotFound() {
   return (

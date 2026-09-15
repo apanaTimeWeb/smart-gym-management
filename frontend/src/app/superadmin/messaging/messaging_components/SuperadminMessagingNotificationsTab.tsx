@@ -1,5 +1,6 @@
+// RESPONSIBILITY: Renders the Messaging Notifications Tab component and its associated UI logic.
 import { AlertTriangle, Info, X } from 'lucide-react';
-import type { SuperadminNotification, NotificationType } from '@/app/superadmin/messaging/messaging_types/messaging_types';
+import type { SuperadminNotification, NotificationType } from '@/app/superadmin/messaging/messaging_types/superadmin_messaging_types';
 
 function NotifIcon({ type }: { type: NotificationType }) {
   if (type === 'INFO') return <Info size={18} strokeWidth={2} className="text-info shrink-0" />;

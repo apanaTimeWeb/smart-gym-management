@@ -6,19 +6,26 @@ import toast from 'react-hot-toast';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { gymsApi } from '@/app/superadmin/gyms/superadmin_gyms_api/superadmin_gyms_api';
 import { useSuperadminGymsStore } from '@/app/superadmin/gyms/gyms_store/useSuperadminGymsStore';
-import type { Tenant } from '@/app/superadmin/gyms/gyms_types/superadmin_gyms_types';
-import { GymsUrlConfig } from '@/app/superadmin/gyms/gyms_url_config';
+import type { Tenant } from '@/app/superadmin/gyms/superadmin_gyms_types/superadmin_gyms_types';
+import { GymsUrlConfig } from '@/app/superadmin/gyms/superadmin_gyms_url_config';
 import { useSuperadminGhostLoginStore } from '@/components/ui/SuperadminLayout/useSuperadminGhostLoginStore';
-
+import { useSuperadminUrlState } from '@/app/superadmin/superadmin_utils/useSuperadminUrlState';
 
 export function useSuperadminGymsTable() {
-  const search = useSuperadminGymsStore(state => state.search);
-  const statusFilter = useSuperadminGymsStore(state => state.statusFilter);
-  const planFilter = useSuperadminGymsStore(state => state.planFilter);
-  const sortBy = useSuperadminGymsStore(state => state.sortBy);
-  const sortOrder = useSuperadminGymsStore(state => state.sortOrder);
-  const currentPage = useSuperadminGymsStore(state => state.currentPage);
-  const pageLimit = useSuperadminGymsStore(state => state.pageLimit);
+  const { getParam, setParam } = useSuperadminUrlState();
+  
+  const search = getParam('search', '');
+  const statusFilter = getParam('statusFilter', 'All');
+  const planFilter = getParam('planFilter', 'All');
+  const sortBy = getParam('sortBy', 'createdAt');
+  const sortOrder = getParam('sortOrder', 'desc') as 'asc' | 'desc';
+  const currentPage = Number(getParam('page', '1'));
+  const pageLimit = Number(getParam('limit', '20'));
+
+  const setCurrentPage = (page: number) => setParam('page', String(page));
+  const setSortBy = (col: string) => setParam('sortBy', col);
+  const setSortOrder = (order: 'asc' | 'desc') => setParam('sortOrder', order);
+
   const openDeleteModal = useSuperadminGymsStore(state => state.openDeleteModal);
   const openEditModal = useSuperadminGymsStore(state => state.openEditModal);
   const openWhatsappModal = useSuperadminGymsStore(state => state.openWhatsappModal);
@@ -131,5 +138,12 @@ export function useSuperadminGymsTable() {
     onDeleteClick,
     openEditModal,
     openWhatsappModal,
+    currentPage,
+    pageLimit,
+    sortBy,
+    sortOrder,
+    setCurrentPage,
+    setSortBy,
+    setSortOrder,
   };
 }

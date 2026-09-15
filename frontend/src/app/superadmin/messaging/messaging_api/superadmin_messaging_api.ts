@@ -1,8 +1,8 @@
-import { TenantMessageSchema, SuperadminNotificationSchema, MessagingTenantSchema } from '@/app/superadmin/messaging/messaging_types/messaging_types';
+import { TenantMessageSchema, SuperadminNotificationSchema, MessagingTenantSchema } from '@/app/superadmin/messaging/messaging_types/superadmin_messaging_types';
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
-import type { TenantMessage, SuperadminNotification, MessagingTenant } from '@/app/superadmin/messaging/messaging_types/messaging_types';
-import { MessagingUrlConfig } from '@/app/superadmin/messaging/messaging_url_config';
+import type { TenantMessage, SuperadminNotification, MessagingTenant } from '@/app/superadmin/messaging/messaging_types/superadmin_messaging_types';
+import { MessagingUrlConfig } from '@/app/superadmin/messaging/superadmin_messaging_url_config';
 import { z } from "zod";
 
 export const superadminMessagingApi = {

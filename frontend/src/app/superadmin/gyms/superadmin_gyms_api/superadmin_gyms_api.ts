@@ -1,11 +1,11 @@
 // RESPONSIBILITY: Modularized API client for the Gyms module. All methods import apiFetch from src/lib/api.ts and define only superadmin-scoped endpoints. No UI logic.
 // RESPONSIBILITY: Modularized API client for the Gyms module. All methods import apiFetch from src/lib/api.ts and define only superadmin-scoped endpoints. No UI logic.
-import { GymsUrlConfig } from '@/app/superadmin/gyms/gyms_url_config';
+import { GymsUrlConfig } from '@/app/superadmin/gyms/superadmin_gyms_url_config';
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
-import type { Tenant } from '@/app/superadmin/gyms/gyms_types/superadmin_gyms_types';
+import type { Tenant } from '@/app/superadmin/gyms/superadmin_gyms_types/superadmin_gyms_types';
 import { z } from "zod";
-import { TenantSchema } from '@/app/superadmin/gyms/gyms_types/superadmin_gyms_types';
+import { TenantSchema } from '@/app/superadmin/gyms/superadmin_gyms_types/superadmin_gyms_types';
 
 /** Schema for gym platform statistics */
 const GymStatsSchema = z.object({
@@ -54,14 +54,17 @@ export const gymsApi = {
         dataSchema: TenantSchema
     }),
   /** Sends the impersonation token to the proxy endpoint to set it as an HTTP-only cookie. */
-  setGhostLoginCookie: (token: string, id: string) => 
-    apiFetch<ApiResponse<void>>(GymsUrlConfig.GHOST_LOGIN.SET_COOKIE_PROXY, {
+  setGhostLoginCookie: async (token: string, id: string) => {
+    const res = await fetch(GymsUrlConfig.GHOST_LOGIN.SET_COOKIE_PROXY, {
       method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         token,
         refreshToken: token,
         user: { role: 'ADMIN', email: `admin-${id}@gym.com`, name: 'Impersonated Admin', tenantId: id, id: `user-${id}` },
       }),
-      dataSchema: z.object({}).passthrough(),
-    }),
+    });
+    if (!res.ok) throw new Error('Failed to set ghost login cookie');
+    return { success: true, message: 'Cookie set', data: null as any };
+  },
 };

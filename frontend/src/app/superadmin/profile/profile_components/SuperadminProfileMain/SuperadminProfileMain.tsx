@@ -6,7 +6,7 @@ import SuperadminProfileAvatarCard from '@/app/superadmin/profile/profile_compon
 import SuperadminProfilePersonalForm from '@/app/superadmin/profile/profile_components/SuperadminProfilePersonalForm/SuperadminProfilePersonalForm';
 import SuperadminProfileSecurityForm from '@/app/superadmin/profile/profile_components/SuperadminProfileSecurityForm/SuperadminProfileSecurityForm';
 import type { ProfileTab } from '@/app/superadmin/profile/profile_types/SuperadminProfileTypes';
-import { useProfilePage } from '@/app/superadmin/profile/profile_utils/useProfilePage';
+import { useSuperadminProfilePage } from '@/app/superadmin/profile/profile_utils/useSuperadminProfilePage';
 
 const TABS: { id: ProfileTab; label: string }[] = [
   { id: 'personal', label: 'Personal Info' },
@@ -20,7 +20,7 @@ export default function SuperadminProfileMain() {
     personalState, updatePersonalMutation,
     passwordState, updatePasswordMutation,
     twoFAState, toggle2FAMutation,
-  } = useProfilePage();
+  } = useSuperadminProfilePage();
 
   if (profileLoading || !profile) {
     return (

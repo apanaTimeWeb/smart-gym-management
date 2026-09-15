@@ -2,50 +2,35 @@
 // RESPONSIBILITY: Logic hook for the Superadmin Branches page.
 // DATA FLOW: superadminBranchesApi → useSuperadminBranchesPage → SuperadminBranchesClient
 
-import { useState, useMemo, useEffect } from 'react';
+import { useMemo } from 'react';
 import toast from 'react-hot-toast';
-import { useRouter, useSearchParams } from 'next/navigation';
 import { superadminBranchesApi } from '@/app/superadmin/branches/superadmin_branches_api/superadmin_branches_api';
 import type { SuperadminBranch, BranchesFetchState } from '@/app/superadmin/branches/branches_types/superadmin_branches_types';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useSuperadminUrlState } from '@/app/superadmin/superadmin_utils/useSuperadminUrlState';
 
 export function useSuperadminBranchesPage() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const initialSearch = searchParams.get('search') || '';
-  const [search, setSearch] = useState(initialSearch);
   const queryClient = useQueryClient();
+  const { getParam, setParam } = useSuperadminUrlState();
+  const search = getParam('search', '');
+  
+  const setSearch = (val: string) => setParam('search', val);
 
-  // Why: Sync search state to URL parameters
-  useEffect(() => {
-    const params = new URLSearchParams(searchParams.toString());
-    if (search) {
-      params.set('search', search);
-    } else {
-      params.delete('search');
-    }
-    router.replace(`?${params.toString()}`, { scroll: false });
-  }, [search, router, searchParams]);
+  const queryParams = useMemo(() => {
+    const params: Record<string, string> = {};
+    if (search) params.search = search;
+    return params;
+  }, [search]);
+
+  const queryKey = useMemo(() => ['superadmin', 'branches', queryParams], [queryParams]);
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['superadmin', 'branches'],
-    queryFn: () => superadminBranchesApi.fetchBranches(),
+    queryKey,
+    queryFn: () => superadminBranchesApi.fetchBranches(queryParams),
   });
 
   const fetchState: BranchesFetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
-  const rawBranches: SuperadminBranch[] = data?.data || [];
-
-  const branches = useMemo(() => {
-    if (!search.trim()) return rawBranches;
-    const q = search.toLowerCase();
-    return rawBranches.filter(
-      (b) =>
-        b.branchName.toLowerCase().includes(q) ||
-        b.tenantName.toLowerCase().includes(q) ||
-        b.city.toLowerCase().includes(q) ||
-        b.managerName.toLowerCase().includes(q),
-    );
-  }, [rawBranches, search]);
+  const branches: SuperadminBranch[] = data?.data || [];
 
   const suspendMutation = useMutation({
     mutationFn: (id: string) => superadminBranchesApi.suspendBranch(id),

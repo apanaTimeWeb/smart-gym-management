@@ -8,6 +8,7 @@ import SuperadminPagination from '@/components/ui/SuperadminShared/SuperadminPag
 import SuperadminTicketsReplyModal from '@/app/superadmin/tickets/tickets_components/SuperadminTicketsReplyModal/SuperadminTicketsReplyModal';
 import toast from 'react-hot-toast';
 import { useSuperadminTicketsStore } from '@/app/superadmin/tickets/tickets_store/useSuperadminTicketsStore';
+import { SuperadminErrorBoundary } from '@/components/ui/SuperadminLayout/SuperadminErrorBoundary';
 
 export default function SuperadminTicketsClient() {
   const [assigneeInput, setAssigneeInput] = useState('');
@@ -88,14 +89,16 @@ export default function SuperadminTicketsClient() {
       />
 
       <div className="bg-card border border-border rounded-xl shadow-sm flex flex-col min-h-96">
-        <SuperadminTicketsTable
-          tickets={paginatedTickets}
-          onReply={(ticketId) => {
-            setReplyModalTicketId(ticketId);
-          }}
-          onClose={handleCloseTicket}
-          onAssign={handleOpenAssign}
-        />
+        <SuperadminErrorBoundary variant="inline">
+          <SuperadminTicketsTable
+            tickets={paginatedTickets}
+            onReply={(ticketId) => {
+              setReplyModalTicketId(ticketId);
+            }}
+            onClose={handleCloseTicket}
+            onAssign={handleOpenAssign}
+          />
+        </SuperadminErrorBoundary>
         <SuperadminPagination
           currentPage={currentPage}
           totalPages={totalPages}

@@ -3,7 +3,7 @@ import { AffiliateSchema } from '@/app/superadmin/affiliates/superadmin_affiliat
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
 import type { Affiliate } from '@/app/superadmin/affiliates/superadmin_affiliates_types/superadmin_affiliates_types';
-import { AffiliatesUrlConfig } from '@/app/superadmin/affiliates/affiliates_url_config';
+import { AffiliatesUrlConfig } from '@/app/superadmin/affiliates/superadmin_affiliates_url_config';
 import { z } from "zod";
 
 export const affiliatesApi = {

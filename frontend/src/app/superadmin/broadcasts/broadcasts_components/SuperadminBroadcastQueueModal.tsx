@@ -43,6 +43,7 @@ export default function SuperadminBroadcastQueueModal({
   const [, setNotifications] = useLocalStorage<BroadcastNotification[]>('admin_notifications_v1', []);
 
   // Starts the queue from the first recipient whenever the modal opens with a new list.
+  // EXPLANATION: Synchronize component state with external dependencies.
   useEffect(() => {
     if (isOpen && recipients.length > 0) {
       setCurrentIndex(0);
@@ -51,6 +52,7 @@ export default function SuperadminBroadcastQueueModal({
   }, [isOpen, recipients]);
 
   // Processes each recipient sequentially with a 1.5s visual delay.
+  // EXPLANATION: Synchronize component state with external dependencies.
   useEffect(() => {
     if (currentIndex >= 0 && currentIndex < recipients.length) {
       const timer = setTimeout(() => {
@@ -93,7 +95,7 @@ export default function SuperadminBroadcastQueueModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" role="dialog" aria-modal="true">
       <div className="bg-overlay rounded-2xl shadow-2xl w-full max-w-lg border border-border flex flex-col motion-safe:animate-in motion-safe:zoom-in-95 motion-safe:duration-200 overflow-hidden">
         <div className="px-6 py-4 bg-primary flex items-center justify-between">
           <div>
@@ -123,11 +125,11 @@ export default function SuperadminBroadcastQueueModal({
                 <div className="flex items-center gap-3">
                   <div className={`flex flex-col items-center gap-1 ${isDone || isProcessing ? 'text-success' : 'text-secondary/30'}`}>
                     <Phone size={14} />
-                    <span className="text-[0.65rem] font-bold">WA</span>
+                    <span className="text-xs font-bold">WA</span>
                   </div>
                   <div className={`flex flex-col items-center gap-1 ${isDone || isProcessing ? 'text-primary' : 'text-secondary/30'}`}>
                     <Bell size={14} />
-                    <span className="text-[0.65rem] font-bold">APP</span>
+                    <span className="text-xs font-bold">APP</span>
                   </div>
                   <div className="ml-3 w-6 h-6 flex items-center justify-center">
                     {isProcessing && <Loader2 className="w-5 h-5 text-primary motion-safe:animate-spin" />}

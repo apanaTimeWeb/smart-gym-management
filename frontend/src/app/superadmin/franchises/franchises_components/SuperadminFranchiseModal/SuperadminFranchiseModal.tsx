@@ -3,11 +3,12 @@
 
 import React, { useEffect } from 'react';
 import { X, Loader2, Network } from 'lucide-react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { SuperadminFranchise } from '@/app/superadmin/franchises/franchises_types/superadmin_franchises_types';
 import { franchiseSchema } from '@/app/superadmin/franchises/franchises_utils/SuperadminFranchisesSchemas';
 import { type FranchiseFormValues } from '@/app/superadmin/franchises/franchises_utils/SuperadminFranchisesSchemas';
+import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 
 export interface FranchiseFormData extends FranchiseFormValues {}
 
@@ -19,7 +20,7 @@ interface SuperadminFranchiseModalProps {
   isMutating: boolean;
 }
 
-import { useUnsavedChangesGuard } from '@/app/superadmin/superadmin_utils/useUnsavedChangesGuard';
+import { useUnsavedChangesGuard } from '@/lib/useUnsavedChangesGuard';
 
 export function SuperadminFranchiseModal({
   isOpen,
@@ -28,12 +29,13 @@ export function SuperadminFranchiseModal({
   onSubmit,
   isMutating,
 }: SuperadminFranchiseModalProps) {
-  const { register, handleSubmit, reset, formState: { errors, isDirty } } = useForm<FranchiseFormData>({
+  const { register, control, handleSubmit, reset, formState: { errors, isDirty } } = useForm<FranchiseFormData>({
     resolver: zodResolver(franchiseSchema)
   });
   useUnsavedChangesGuard(isOpen && isDirty);
 
   // RESPONSIBILITY: Handle side-effects for SuperadminFranchiseModal
+  // EXPLANATION: Synchronize component state with external dependencies.
   useEffect(() => {
     if (isOpen) {
       reset({
@@ -50,7 +52,7 @@ export function SuperadminFranchiseModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" role="dialog" aria-modal="true">
       <div className="bg-card w-full max-w-lg rounded-2xl shadow-xl overflow-hidden border border-border motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95 flex flex-col h-auto">
         
         {/* Header */}
@@ -134,14 +136,23 @@ export function SuperadminFranchiseModal({
 
             <div className="space-y-1.5">
               <label className="text-sm font-medium text-foreground">Plan Tier</label>
-              <select
-                {...register('plan', { required: 'Required' })}
-                className="w-full px-4 py-2.5 bg-input border border-border rounded-xl text-sm text-foreground focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary/20 motion-safe:transition-all appearance-none"
-              >
-                <option value="Enterprise">Enterprise</option>
-                <option value="Pro">Pro</option>
-                <option value="Scale">Scale</option>
-              </select>
+              <Controller
+                name="plan"
+                control={control}
+                rules={{ required: 'Required' }}
+                render={({ field }) => (
+                  <SearchableDropdown
+                    options={[
+                      { value: 'Enterprise', label: 'Enterprise' },
+                      { value: 'Pro', label: 'Pro' },
+                      { value: 'Scale', label: 'Scale' },
+                    ]}
+                    value={field.value}
+                    onChange={field.onChange}
+                    placeholder="Select a plan..."
+                  />
+                )}
+              />
             </div>
 
           </div>

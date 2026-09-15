@@ -1,4 +1,7 @@
+// RESPONSIBILITY: Renders the not-found component and its associated UI logic.
 import Link from 'next/link';
+
+import { GymsUrlConfig } from '@/app/superadmin/gyms/superadmin_gyms_url_config';
 
 export default function GymNotFound() {
   return (
@@ -13,7 +16,7 @@ export default function GymNotFound() {
         </p>
       </div>
       <Link 
-        href="/superadmin/gyms"
+        href={GymsUrlConfig.PAGES.MAIN}
         className="mt-4 px-5 py-2.5 bg-primary text-primary-foreground font-medium rounded-lg hover:bg-primary/90 motion-safe:transition-colors"
       >
         Back to Gyms Directory

@@ -13,6 +13,7 @@ export default function SuperadminProfileError({
   reset: () => void;
 }) {
   // RESPONSIBILITY: Handle side-effects for error
+  // EXPLANATION: Synchronize component state with external dependencies.
   useEffect(() => {
     logger.error('Superadmin Profile Module Error:', error);
   }, [error]);

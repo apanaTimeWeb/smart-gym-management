@@ -16,6 +16,7 @@ export function useSuperadminDashboardDateFilter() {
   const [customEnd, setCustomEnd] = useState(currentEndDate);
 
   // RESPONSIBILITY: Handle side-effects for useSuperadminDashboardDateFilter
+  // EXPLANATION: Synchronize component state with external dependencies.
   useEffect(() => {
     if (value === 'custom') {
       setCustomStart(currentStartDate);

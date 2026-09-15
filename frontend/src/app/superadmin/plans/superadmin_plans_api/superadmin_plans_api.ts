@@ -1,10 +1,10 @@
 // RESPONSIBILITY: Modularized API client for the Plans module. All methods import apiFetch from src/lib/api.ts and define only superadmin-scoped endpoints. No UI logic.
-import { PlansUrlConfig } from '@/app/superadmin/plans/plans_url_config';
+import { PlansUrlConfig } from '@/app/superadmin/plans/superadmin_plans_url_config';
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
-import type { SubscriptionPlan, CreatePlanPayload, UpdatePlanPayload } from '@/app/superadmin/plans/plans_types/superadmin_plans_types';
+import type { SubscriptionPlan, CreatePlanPayload, UpdatePlanPayload } from '@/app/superadmin/plans/superadmin_plans_types/superadmin_plans_types';
 import { z } from "zod";
-import { SubscriptionPlanSchema } from '@/app/superadmin/plans/plans_types/superadmin_plans_types';
+import { SubscriptionPlanSchema } from '@/app/superadmin/plans/superadmin_plans_types/superadmin_plans_types';
 
 export const plansApi = {
   fetchPlans: (params?: Record<string, string>) => {

@@ -525,6 +525,10 @@ export function getMockResponse(path: string): unknown {
     }, 'Analytics data fetched');
   }
   
+  if (p.includes('/impersonate')) {
+    return ok({ token: 'mock_ghost_token_123' }, 'Impersonation successful');
+  }
+  
   if (p.includes('/gym')) return ok(GYMS, 'Gyms fetched');
 
   // Trainer Dashboard

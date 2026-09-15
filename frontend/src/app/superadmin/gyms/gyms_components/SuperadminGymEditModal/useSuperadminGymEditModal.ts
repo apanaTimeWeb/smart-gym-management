@@ -10,19 +10,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSuperadminGymsStore } from '@/app/superadmin/gyms/gyms_store/useSuperadminGymsStore';
 import { gymsApi } from '@/app/superadmin/gyms/superadmin_gyms_api/superadmin_gyms_api';
 import { plansApi } from '@/app/superadmin/plans/superadmin_plans_api/superadmin_plans_api';
-
-const gymEditSchema = z.object({
-  name: z.string().min(1, 'Gym Name is required'),
-  ownerName: z.string().min(1, 'Owner Name is required'),
-  adminEmail: z.string().email('Invalid email address'),
-  phone: z.string().min(10, 'Valid phone number required'),
-  plan: z.string().min(1, 'Please select a plan'),
-  temporaryPassword: z.string().optional().refine(val => !val || val.length >= 8, {
-    message: "Password must be at least 8 characters",
-  }),
-});
-
-type GymEditFormValues = z.infer<typeof gymEditSchema>;
+import { gymEditSchema, type GymEditFormValues } from '@/app/superadmin/gyms/superadmin_gyms_types/superadmin_gyms_schema';
 
 export function useSuperadminGymEditModal() {
   const isEditModalOpen = useSuperadminGymsStore(state => state.isEditModalOpen);
@@ -49,6 +37,7 @@ export function useSuperadminGymEditModal() {
   });
 
   // RESPONSIBILITY: Handle side-effects for useSuperadminGymEditModal
+  // EXPLANATION: Synchronize component state with external dependencies.
   useEffect(() => {
     if (selectedGym && isEditModalOpen) {
       reset({

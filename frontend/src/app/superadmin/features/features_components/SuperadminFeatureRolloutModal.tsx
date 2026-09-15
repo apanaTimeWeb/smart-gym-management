@@ -4,9 +4,8 @@
 import React, { useState, useEffect } from 'react';
 import { X, Loader2, Search } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
-import { gymsApi } from '@/app/superadmin/gyms/superadmin_gyms_api/superadmin_gyms_api';
-import type { Tenant } from '@/app/superadmin/gyms/gyms_types/superadmin_gyms_types';
-import type { FeatureFlag } from '@/app/superadmin/features/superadmin_features_types/superadmin_features_types';
+import { featuresApi } from '@/app/superadmin/features/superadmin_features_api/superadmin_features_api';
+import type { FeatureFlag, SuperadminFeaturesTenant } from '@/app/superadmin/features/superadmin_features_types/superadmin_features_types';
 
 interface FeatureRolloutModalProps {
   isOpen: boolean;
@@ -22,14 +21,15 @@ export default function SuperadminFeatureRolloutModal({ isOpen, onClose, flag, o
 
   const { data: fetchRes, isLoading: fetchStateLoading } = useQuery({
     queryKey: ['superadmin', 'gyms'],
-    queryFn: () => gymsApi.fetchGyms(),
+    queryFn: () => featuresApi.fetchTenants(),
     enabled: isOpen,
   });
 
-  const rawGyms = (fetchRes?.data as Tenant[]) ?? [];
+  const rawGyms = (fetchRes?.data as SuperadminFeaturesTenant[]) ?? [];
   const gyms = rawGyms;
 
   // RESPONSIBILITY: Handle side-effects for SuperadminFeatureRolloutModal
+  // EXPLANATION: Synchronize component state with external dependencies.
   useEffect(() => {
     if (isOpen && flag) {
       setSelectedTenantIds(flag.enabledTenantIds || []);
@@ -54,7 +54,7 @@ export default function SuperadminFeatureRolloutModal({ isOpen, onClose, flag, o
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 z-40 flex items-center justify-center p-4 backdrop-blur-sm motion-safe:animate-in motion-safe:fade-in">
+    <div className="fixed inset-0 bg-black/60 z-40 flex items-center justify-center p-4 backdrop-blur-sm motion-safe:animate-in motion-safe:fade-in" role="dialog" aria-modal="true">
       <div className="bg-overlay border border-border rounded-2xl w-full max-w-md shadow-2xl overflow-hidden flex flex-col motion-safe:animate-in motion-safe:zoom-in-95">
         <div className="flex items-center justify-between px-6 py-5 border-b border-border">
           <div>

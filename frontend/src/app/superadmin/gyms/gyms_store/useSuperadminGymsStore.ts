@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Zustand store that manages UI state (modals, search) for the Gyms module.
+// RESPONSIBILITY: Zustand store that manages UI state (modals, view mode) for the Gyms module.
 // DATA FLOW: Component -> useSuperadminGymsStore.ts -> UI Components
 
 import { create } from 'zustand';
@@ -7,13 +7,6 @@ import type { Tenant } from '@/app/superadmin/gyms/superadmin_gyms_types/superad
 export interface GymsState {
   // UI State
   viewMode: 'list' | 'calendar';
-  search: string;
-  statusFilter: string;
-  planFilter: string;
-  sortBy: string;
-  sortOrder: 'asc' | 'desc';
-  currentPage: number;
-  pageLimit: number;
   selectedGym: Tenant | null;
   isEditModalOpen: boolean;
   isWhatsappModalOpen: boolean;
@@ -22,12 +15,6 @@ export interface GymsState {
 
   // Actions
   setViewMode: (mode: 'list' | 'calendar') => void;
-  setSearch: (search: string) => void;
-  setStatusFilter: (status: string) => void;
-  setPlanFilter: (plan: string) => void;
-  setSortBy: (sortBy: string) => void;
-  setSortOrder: (order: 'asc' | 'desc') => void;
-  setCurrentPage: (page: number) => void;
   openEditModal: (gym: Tenant) => void;
   closeEditModal: () => void;
   openWhatsappModal: (gym: Tenant) => void;
@@ -38,13 +25,6 @@ export interface GymsState {
 
 export const useSuperadminGymsStore = create<GymsState>((set) => ({
   viewMode: 'list',
-  search: '',
-  statusFilter: 'All',
-  planFilter: 'All',
-  sortBy: 'createdAt',
-  sortOrder: 'desc',
-  currentPage: 1,
-  pageLimit: 20,
   selectedGym: null,
   isEditModalOpen: false,
   isWhatsappModalOpen: false,
@@ -52,12 +32,6 @@ export const useSuperadminGymsStore = create<GymsState>((set) => ({
   gymToDelete: null,
 
   setViewMode: (viewMode) => set({ viewMode }),
-  setSearch: (search) => set({ search }),
-  setStatusFilter: (statusFilter) => set({ statusFilter }),
-  setPlanFilter: (planFilter) => set({ planFilter }),
-  setSortBy: (sortBy) => set({ sortBy }),
-  setSortOrder: (sortOrder) => set({ sortOrder }),
-  setCurrentPage: (currentPage) => set({ currentPage }),
   
   openEditModal: (gym) => set({ selectedGym: gym, isEditModalOpen: true }),
   

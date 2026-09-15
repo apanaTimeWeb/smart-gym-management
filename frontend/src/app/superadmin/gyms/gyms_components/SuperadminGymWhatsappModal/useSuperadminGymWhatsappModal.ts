@@ -10,13 +10,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSuperadminGymsStore } from '@/app/superadmin/gyms/gyms_store/useSuperadminGymsStore';
 import { gymsApi } from '@/app/superadmin/gyms/superadmin_gyms_api/superadmin_gyms_api';
 import { WhatsAppFormatter } from '@/lib/whatsapp_formatter';
-
-const gymWhatsappSchema = z.object({
-  subject: z.string().min(1, 'Subject is required'),
-  message: z.string().min(1, 'Message is required'),
-});
-
-type GymWhatsappFormValues = z.infer<typeof gymWhatsappSchema>;
+import { gymWhatsappSchema, type GymWhatsappFormValues } from '@/app/superadmin/gyms/superadmin_gyms_types/superadmin_gyms_schema';
 
 export function useSuperadminGymWhatsappModal() {
   const isWhatsappModalOpen = useSuperadminGymsStore(state => state.isWhatsappModalOpen);
@@ -35,6 +29,7 @@ export function useSuperadminGymWhatsappModal() {
   });
 
   // RESPONSIBILITY: Handle side-effects for useSuperadminGymWhatsappModal
+  // EXPLANATION: Synchronize component state with external dependencies.
   useEffect(() => {
     if (isWhatsappModalOpen) {
       reset({ subject: '', message: '' });
@@ -43,7 +38,7 @@ export function useSuperadminGymWhatsappModal() {
 
   const whatsappMutation = useMutation({
     mutationFn: (data: GymWhatsappFormValues & { phone: string; ownerName: string; gymName: string }) => 
-      gymsApi.emailGymOwner(selectedGym!.id, data), // Still calling API for record keeping if necessary, or just skip
+      gymsApi.emailGymOwner(selectedGym!.id, data as any), // Still calling API for record keeping if necessary, or just skip
     onSuccess: (res, data) => {
       if (data.phone) {
         const cleanPhone = String(data.phone).replace(/\D/g, '');

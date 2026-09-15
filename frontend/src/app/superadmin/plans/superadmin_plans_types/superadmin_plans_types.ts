@@ -27,3 +27,27 @@ export type CreatePlanPayload = Omit<SubscriptionPlan, 'id' | 'activeTenants' | 
 export type UpdatePlanPayload = Partial<CreatePlanPayload>;
 
 export type FetchState = 'idle' | 'loading' | 'success' | 'error';
+
+import { z } from 'zod';
+
+export const SubscriptionPlanSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  priceMonthly: z.number(),
+  priceAnnual: z.number(),
+  maxMembers: z.number(),
+  maxStaff: z.number(),
+  dbLimitGb: z.number(),
+  binaryLimitGb: z.number(),
+  features: z.array(z.string()),
+  activeTenants: z.number(),
+  isPublic: z.boolean(),
+  trialDays: z.number(),
+  setupFee: z.number(),
+  currency: z.string(),
+  isArchived: z.boolean().optional(),
+});
+
+export const CreatePlanPayloadSchema = SubscriptionPlanSchema.omit({ id: true, activeTenants: true });
+
+export const UpdatePlanPayloadSchema = CreatePlanPayloadSchema.partial();

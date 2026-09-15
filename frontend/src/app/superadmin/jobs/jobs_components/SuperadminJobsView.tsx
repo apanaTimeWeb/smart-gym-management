@@ -1,12 +1,12 @@
 'use client';
 // RESPONSIBILITY: SuperadminJobsView.tsx — orchestrator for the Background Jobs page.
-// Composes all isolated sub-components and passes data from useJobsPage hook.
+// Composes all isolated sub-components and passes data from useSuperadminJobsPage hook.
 // No business logic or rendering of UI primitives here (Rule 6, Rule 34).
 //
-// DATA FLOW: useJobsPage → SuperadminJobsView → SuperadminJobsHeader + StatsBar + Table + InspectModal
+// DATA FLOW: useSuperadminJobsPage → SuperadminJobsView → SuperadminJobsHeader + StatsBar + Table + InspectModal
 
 import { Loader2 } from 'lucide-react';
-import { useJobsPage } from '@/app/superadmin/jobs/jobs_utils/useJobsPage';
+import { useSuperadminJobsPage } from '@/app/superadmin/jobs/jobs_utils/useSuperadminJobsPage';
 import SuperadminJobsHeader from '@/app/superadmin/jobs/jobs_components/SuperadminJobsHeader/SuperadminJobsHeader';
 import SuperadminJobsStatsBar from '@/app/superadmin/jobs/jobs_components/SuperadminJobsStatsBar/SuperadminJobsStatsBar';
 import SuperadminJobsTable from '@/app/superadmin/jobs/jobs_components/SuperadminJobsTable/SuperadminJobsTable';
@@ -39,7 +39,7 @@ export default function SuperadminJobsView() {
     handleBulkRetry,
     handleBulkDelete,
     metrics,
-  } = useJobsPage();
+  } = useSuperadminJobsPage();
 
   if (fetchState === 'loading') {
     return (

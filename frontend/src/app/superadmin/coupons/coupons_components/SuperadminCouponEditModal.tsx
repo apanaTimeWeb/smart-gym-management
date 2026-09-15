@@ -15,7 +15,7 @@ interface SuperadminCouponEditModalProps {
   coupon: Coupon | null;
 }
 
-import { useUnsavedChangesGuard } from '@/app/superadmin/superadmin_utils/useUnsavedChangesGuard';
+import { useUnsavedChangesGuard } from '@/lib/useUnsavedChangesGuard';
 
 export const SuperadminCouponEditModal: React.FC<SuperadminCouponEditModalProps> = ({
   isOpen,
@@ -29,6 +29,7 @@ export const SuperadminCouponEditModal: React.FC<SuperadminCouponEditModalProps>
   useUnsavedChangesGuard(isOpen && isDirty);
 
   // RESPONSIBILITY: Handle side-effects for SuperadminCouponEditModal
+  // EXPLANATION: Synchronize component state with external dependencies.
   useEffect(() => {
     if (isOpen && coupon) {
       reset({
@@ -50,7 +51,7 @@ export const SuperadminCouponEditModal: React.FC<SuperadminCouponEditModalProps>
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 z-40 flex items-center justify-center p-4 backdrop-blur-sm">
+    <div className="fixed inset-0 bg-black/60 z-40 flex items-center justify-center p-4 backdrop-blur-sm" role="dialog" aria-modal="true">
       <div className="bg-overlay border border-border rounded-2xl w-full max-w-md shadow-xl overflow-hidden flex flex-col">
         <div className="flex items-center justify-between px-7 py-5 border-b border-border">
           <h2 className="text-lg font-bold text-foreground">Edit Coupon</h2>

@@ -1,6 +1,7 @@
 'use client';
+// RESPONSIBILITY: Renders the Reports Summary Cards component and its associated UI logic.
 import { TrendingDown, HeartPulse, IndianRupee } from 'lucide-react';
-import { KPI_CARD_GRADIENT } from '@/app/superadmin/reports/reports_types/reports_constants';
+import { KPI_CARD_GRADIENT } from '@/app/superadmin/reports/reports_types/SuperadminReportsConstants';
 import { formatCurrency } from '@/lib/formatters';
 
 export function SuperadminReportsSummaryCards({

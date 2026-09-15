@@ -4,7 +4,6 @@
 import { useState } from 'react';
 import { CheckCircle2, Ban, LogIn, PlayCircle, Edit2, MessageCircle, Trash2, Loader2, ArrowUpDown, ExternalLink } from 'lucide-react';
 import { useSuperadminGymsTable } from '@/app/superadmin/gyms/gyms_components/SuperadminGymsTable/useSuperadminGymsTable';
-import { useSuperadminGymsStore } from '@/app/superadmin/gyms/gyms_store/useSuperadminGymsStore';
 import { useRouter } from 'next/navigation';
 import type { Tenant } from '@/app/superadmin/gyms/superadmin_gyms_types/superadmin_gyms_types';
 import SuperadminGymEditModal from '@/app/superadmin/gyms/gyms_components/SuperadminGymEditModal/SuperadminGymEditModal';
@@ -12,8 +11,10 @@ import SuperadminGymWhatsappModal from '@/app/superadmin/gyms/gyms_components/Su
 import SuperadminGymDeleteModal from '@/app/superadmin/gyms/gyms_components/SuperadminGymDeleteModal/SuperadminGymDeleteModal';
 import SuperadminGymsEmptyState from '@/app/superadmin/gyms/gyms_components/SuperadminGymsEmptyState/SuperadminGymsEmptyState';
 import SuperadminPagination from '@/components/ui/SuperadminShared/SuperadminPagination';
+import SuperadminCopyButton from '@/components/ui/SuperadminShared/SuperadminCopyButton';
 import { GYMS_PLAN_COLORS } from '@/app/superadmin/gyms/gyms_utils/SuperadminGymsConstants';
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrency, formatDate } from '@/lib/formatters';
+import { GymsUrlConfig } from '@/app/superadmin/gyms/superadmin_gyms_url_config';
 
 // Rule 68: TABLE_COLUMN_COUNT must match <th> count AND colSpan on empty state
 const TABLE_COLUMN_COUNT = 8; // Name | Owner | Plan | Members | MRR | Status | Last Login | Actions
@@ -39,9 +40,14 @@ export default function SuperadminGymsTable() {
     onDeleteClick,
     openEditModal,
     openWhatsappModal,
+    currentPage,
+    pageLimit,
+    setCurrentPage,
+    setSortBy,
+    setSortOrder,
+    sortBy,
+    sortOrder,
   } = useSuperadminGymsTable();
-
-  const { currentPage, pageLimit, setCurrentPage, setSortBy, setSortOrder, sortBy, sortOrder } = useSuperadminGymsStore();
   const totalPages = Math.ceil(filteredGyms.length / pageLimit) || 1;
 
   const handleSort = (col: string) => {
@@ -137,7 +143,10 @@ export default function SuperadminGymsTable() {
               >
                 <td className="p-4 max-w-48">
                   <p className="font-semibold text-foreground truncate" title={gym.name}>{gym.name}</p>
-                  <p className="text-xs text-disabled mt-1 truncate" title={gym.id}>{gym.id}</p>
+                  <span className="flex items-center gap-1 text-xs text-disabled mt-1">
+                    <span className="truncate font-mono" title={gym.id}>{gym.id}</span>
+                    <SuperadminCopyButton value={gym.id} label={`Copy gym ID ${gym.id}`} />
+                  </span>
                 </td>
                 <td className="p-4 max-w-40">
                   <p className="text-secondary truncate" title={gym.ownerName}>{gym.ownerName}</p>
@@ -172,7 +181,7 @@ export default function SuperadminGymsTable() {
                 </td>
                 <td className="p-4 text-right">
                   <span className="text-xs text-secondary">
-                    {gym.lastActiveAt ? new Date(gym.lastActiveAt).toLocaleDateString('en-IN') : (gym.lastLoginAt ? new Date(gym.lastLoginAt).toLocaleDateString('en-IN') : '—')}
+                    {formatDate(gym.lastActiveAt ?? gym.lastLoginAt)}
                   </span>
                 </td>
                 <td className="p-4 text-right">
@@ -185,7 +194,7 @@ export default function SuperadminGymsTable() {
                     ) : (
                       <>
                         <button
-                          onClick={(e) => { e.stopPropagation(); router.push(`/superadmin/gyms/${gym.id}`); }}
+                          onClick={(e) => { e.stopPropagation(); router.push(`${GymsUrlConfig.PAGES.MAIN}/${gym.id}`); }}
                           className="p-1.5 text-secondary hover:bg-input hover:text-foreground rounded-lg motion-safe:transition-all"
                           title="View Gym Detail"
                           aria-label={`View detail for ${gym.name}`}

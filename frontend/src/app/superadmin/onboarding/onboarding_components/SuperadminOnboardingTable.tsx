@@ -1,12 +1,30 @@
-import {
-  CheckCircle2, XCircle, Clock, Mail, RefreshCw, ArrowUpCircle,
-  ChevronDown, ChevronUp, UserCheck, AlertTriangle,
+// RESPONSIBILITY: Renders the Onboarding Table component and its associated UI logic.
+import { useState } from 'react';
+import { 
+  Building2, 
+  MapPin, 
+  Phone, 
+  Calendar, 
+  MoreVertical,
+  CheckCircle2,
+  XCircle,
+  Clock,
+  Mail,
+  RefreshCw,
+  ArrowUpCircle,
+  ChevronDown,
+  ChevronUp,
+  UserCheck,
+  AlertTriangle
 } from 'lucide-react';
+import toast from 'react-hot-toast';
 import {
   ONBOARDING_STATUS_STYLES,
   TRIAL_STATUS_STYLES,
-} from '@/app/superadmin/onboarding/onboarding_types/onboarding_constants';
-import type { TenantOnboarding } from '@/app/superadmin/onboarding/onboarding_types/onboarding_types';
+} from '@/app/superadmin/onboarding/onboarding_types/SuperadminOnboardingConstants';
+import type { TenantOnboarding } from '@/app/superadmin/onboarding/onboarding_types/superadmin_onboarding_types';
+
+const TABLE_COLUMN_COUNT = 7;
 
 export function SuperadminOnboardingTable({
   filtered,
@@ -46,7 +64,7 @@ export function SuperadminOnboardingTable({
           <tbody className="divide-y divide-border">
             {filtered.map((tenant) => (
               <tr key={tenant.id} className="group">
-                <td colSpan={7} className="p-0 border-none">
+                <td colSpan={TABLE_COLUMN_COUNT} className="p-0 border-none">
                   <table className="w-full">
                     <tbody>
                       <tr
@@ -142,7 +160,7 @@ export function SuperadminOnboardingTable({
 
                       {expandedId === tenant.id && (
                         <tr className="bg-input/20">
-                          <td colSpan={7} className="px-6 py-4">
+                          <td colSpan={TABLE_COLUMN_COUNT} className="px-6 py-4">
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                               <div>
                                 <p className="text-xs font-semibold text-secondary uppercase tracking-wider mb-3">Onboarding Checklist</p>
@@ -203,13 +221,16 @@ export function SuperadminOnboardingTable({
                 </td>
               </tr>
             ))}
+            {filtered.length === 0 && (
+              <tr>
+                <td colSpan={TABLE_COLUMN_COUNT} className="py-16 text-center text-secondary">
+                  No gyms match your search.
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
-
-      {filtered.length === 0 && (
-        <div className="py-16 text-center text-secondary">No gyms match your search.</div>
-      )}
     </div>
   );
 }

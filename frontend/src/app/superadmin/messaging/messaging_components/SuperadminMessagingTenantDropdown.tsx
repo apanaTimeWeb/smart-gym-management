@@ -1,6 +1,7 @@
+// RESPONSIBILITY: Renders the Messaging Tenant Dropdown component and its associated UI logic.
 import { useState, useRef, useEffect } from 'react';
 import { Search, ChevronDown } from 'lucide-react';
-import type { MessagingTenant } from '@/app/superadmin/messaging/messaging_types/messaging_types';
+import type { MessagingTenant } from '@/app/superadmin/messaging/messaging_types/superadmin_messaging_types';
 
 export function SuperadminMessagingTenantDropdown({
   value,
@@ -21,6 +22,7 @@ export function SuperadminMessagingTenantDropdown({
   );
 
   // RESPONSIBILITY: Handle side-effects for SuperadminMessagingTenantDropdown
+  // EXPLANATION: Synchronize component state with external dependencies.
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (ref.current && !ref.current.contains(e.target as Node)) {

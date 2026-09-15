@@ -1,6 +1,7 @@
+// RESPONSIBILITY: Renders the Messaging Messages Tab component and its associated UI logic.
 import { Search, Mail, MessageSquare, Bell } from 'lucide-react';
-import type { TenantMessage, MessageChannel } from '@/app/superadmin/messaging/messaging_types/messaging_types';
-import { CHANNEL_STYLES, MESSAGE_STATUS_STYLES } from '@/app/superadmin/messaging/messaging_types/messaging_constants';
+import type { TenantMessage, MessageChannel } from '@/app/superadmin/messaging/messaging_types/superadmin_messaging_types';
+import { CHANNEL_STYLES, MESSAGE_STATUS_STYLES } from '@/app/superadmin/messaging/messaging_types/SuperadminMessagingConstants';
 import SuperadminDateRangePicker from '@/components/ui/SuperadminShared/SuperadminDateRangePicker';
 
 export function SuperadminMessagingMessagesTab({

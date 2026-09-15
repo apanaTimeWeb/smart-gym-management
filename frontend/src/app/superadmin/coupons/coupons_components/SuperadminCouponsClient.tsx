@@ -17,6 +17,7 @@ export default function SuperadminCouponsClient() {
   const [drawerCoupon, setDrawerCoupon] = useState<Coupon | null>(null);
 
   // RESPONSIBILITY: Handle side-effects for SuperadminCouponsClient
+  // EXPLANATION: Synchronize component state with external dependencies.
   useEffect(() => {
     const handleOpenHistory = (e: Event) => {
       const customEvent = e as CustomEvent<Coupon>;
@@ -55,15 +56,18 @@ export default function SuperadminCouponsClient() {
     setStatusFilter,
   } = useSuperadminCoupons();
 
-  if (fetchState === 'loading') return (
-    <div className="space-y-6 motion-safe:animate-pulse">
-      <div className="h-8 bg-card rounded w-48" />
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {[...Array(2)].map((_, i) => <div key={`skeleton-${i}`} className="h-24 bg-card rounded-xl border border-border" />)}
+  if (fetchState === 'pending') {
+    return (
+      <div className="space-y-6 motion-safe:animate-pulse">
+        <div className="h-8 bg-card rounded w-48" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {[...Array(2)].map((_, i) => <div key={`skeleton-${i}`} className="h-24 bg-card rounded-xl border border-border" />)}
+        </div>
+        <div className="h-96 bg-card rounded-xl border border-border" />
       </div>
-      <div className="h-96 bg-card rounded-xl border border-border" />
-    </div>
-  );
+    );
+  }
+
   if (fetchState === 'error' || error) return <div className="p-8 text-center text-danger">Error loading data.</div>;
 
   return (

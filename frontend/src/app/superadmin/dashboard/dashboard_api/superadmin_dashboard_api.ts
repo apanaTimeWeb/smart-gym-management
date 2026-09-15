@@ -1,8 +1,8 @@
-import { SuperadminDashboardApiDataSchema } from '@/app/superadmin/dashboard/dashboard_types/superadmin_dashboard_types';
+import { SuperadminDashboardApiDataSchema } from '@/app/superadmin/dashboard/superadmin_dashboard_types/superadmin_dashboard_types';
 // RESPONSIBILITY: Exposes typed API functions specific to the Dashboard module.
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
-import { DashboardUrlConfig } from '@/app/superadmin/dashboard/dashboard_url_config';
+import { DashboardUrlConfig } from '@/app/superadmin/dashboard/superadmin_dashboard_url_config';
 import type { SuperadminDashboardApiData } from '@/app/superadmin/dashboard/superadmin_dashboard_types/superadmin_dashboard_types';
 import { z } from "zod";
 

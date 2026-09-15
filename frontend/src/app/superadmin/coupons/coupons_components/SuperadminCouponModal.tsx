@@ -14,7 +14,7 @@ interface SuperadminCouponModalProps {
   onSubmit: (data: CouponFormData) => void;
 }
 
-import { useUnsavedChangesGuard } from '@/app/superadmin/superadmin_utils/useUnsavedChangesGuard';
+import { useUnsavedChangesGuard } from '@/lib/useUnsavedChangesGuard';
 
 export const SuperadminCouponModal: React.FC<SuperadminCouponModalProps> = ({
   isOpen,
@@ -27,7 +27,7 @@ export const SuperadminCouponModal: React.FC<SuperadminCouponModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/60 z-40 flex items-center justify-center p-4 backdrop-blur-sm">
+    <div className="fixed inset-0 bg-black/60 z-40 flex items-center justify-center p-4 backdrop-blur-sm" role="dialog" aria-modal="true">
       <div className="bg-overlay border border-border rounded-2xl w-full max-w-md shadow-xl overflow-hidden flex flex-col">
         <div className="flex items-center justify-between px-7 py-5 border-b border-border">
           <h2 className="text-lg font-bold text-foreground">Create Global Coupon</h2>

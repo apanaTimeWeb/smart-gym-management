@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders the loading component and its associated UI logic.
 export default function OnboardingLoading() {
   return (
     <div className="space-y-6 motion-safe:animate-pulse">

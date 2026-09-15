@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Centralized mock/fallback data constants for the Analytics module.
 // Design §3: All hardcoded UI data lives here — single source of truth until API is ready.
-// When backend is integrated, replace these constants with real API calls in useAnalyticsPage.ts.
+// When backend is integrated, replace these constants with real API calls in useSuperadminAnalyticsPage.ts.
 
 import type { RevenueMetrics, MonthlyAnalyticsDataPoint } from '@/app/superadmin/analytics/superadmin_analytics_types/superadmin_analytics_types';
 

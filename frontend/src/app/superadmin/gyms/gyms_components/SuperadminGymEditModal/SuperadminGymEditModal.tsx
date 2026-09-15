@@ -6,7 +6,7 @@ import { Controller } from 'react-hook-form';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import { X, Eye, EyeOff } from 'lucide-react';
 import { useSuperadminGymEditModal } from '@/app/superadmin/gyms/gyms_components/SuperadminGymEditModal/useSuperadminGymEditModal';
-import { useUnsavedChangesGuard } from '@/app/superadmin/superadmin_utils/useUnsavedChangesGuard';
+import { useUnsavedChangesGuard } from '@/lib/useUnsavedChangesGuard';
 import { formatCurrency } from '@/lib/formatters';
 
 export default function SuperadminGymEditModal() {
@@ -32,7 +32,7 @@ export default function SuperadminGymEditModal() {
   if (!isEditModalOpen || !selectedGym) return null;
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 p-4">
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 p-4" role="dialog" aria-modal="true">
       <div className="bg-overlay rounded-2xl p-7 max-w-md w-full border border-border shadow-2xl relative">
         <button
           onClick={closeEditModal}

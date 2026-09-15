@@ -1,8 +1,8 @@
-import { CancellationsAlertSchema, CancellationsKpiDataSchema } from '@/app/superadmin/cancellations/cancellations_types/cancellations_types';
+import { CancellationsAlertSchema, CancellationsKpiDataSchema } from '@/app/superadmin/cancellations/cancellations_types/superadmin_cancellations_types';
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
-import type { CancellationsAlert, CancellationsKpiData, CancellationsActionPayload } from '@/app/superadmin/cancellations/cancellations_types/cancellations_types';
-import { CancellationsUrlConfig } from '@/app/superadmin/cancellations/cancellations_url_config';
+import type { CancellationsAlert, CancellationsKpiData, CancellationsActionPayload } from '@/app/superadmin/cancellations/cancellations_types/superadmin_cancellations_types';
+import { CancellationsUrlConfig } from '@/app/superadmin/cancellations/superadmin_cancellations_url_config';
 import { z } from "zod";
 
 export const cancellationsAlertsApi = {

@@ -3,8 +3,8 @@
 // Display-only — no data fetching, no mutations.
 
 import { AlertTriangle, TrendingDown, DollarSign, Activity } from 'lucide-react';
-import { KPI_CARD_GRADIENT } from '@/app/superadmin/cancellations/cancellations_utils/cancellations_constants';
-import type { CancellationsKpiData } from '@/app/superadmin/cancellations/cancellations_types/cancellations_types';
+import { KPI_CARD_GRADIENT } from '@/app/superadmin/cancellations/cancellations_utils/SuperadminCancellationsConstants';
+import type { CancellationsKpiData } from '@/app/superadmin/cancellations/cancellations_types/superadmin_cancellations_types';
 import { formatKPI } from '@/lib/formatters';
 
 interface SuperadminCancellationsKPIsProps {

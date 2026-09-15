@@ -2,26 +2,59 @@
 // DATA FLOW: useSuperadminInvoicesStore -> useSuperadminInvoicesPage -> SuperadminInvoicesClient
 import { useState, useMemo, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { useSuperadminInvoicesStore } from '@/app/superadmin/invoices/invoices_store/useSuperadminInvoicesStore';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { invoicesApi } from '@/app/superadmin/invoices/superadmin_invoices_api/superadmin_invoices_api';
+import toast from 'react-hot-toast';
 
 export function useSuperadminInvoicesPage() {
-  const { invoices, tenants, fetchState, error, fetchData } = useSuperadminInvoicesStore();
+  const queryClient = useQueryClient();
 
-  // RESPONSIBILITY: Handle side-effects for useSuperadminInvoicesPage
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+  const { data: invoicesRes, isLoading: invoicesLoading, isError: invoicesError } = useQuery({
+    queryKey: ['superadmin', 'invoices'],
+    queryFn: () => invoicesApi.fetchInvoices(),
+  });
+
+  const { data: tenantsRes } = useQuery({
+    queryKey: ['superadmin', 'invoices', 'tenants'],
+    queryFn: () => invoicesApi.fetchTenants(),
+  });
+
+  const invoices = invoicesRes?.data || [];
+  const tenants = tenantsRes?.data || [];
+  const fetchState = invoicesLoading ? 'loading' : invoicesError ? 'error' : 'success';
+  const error = invoicesError ? 'Failed to load invoices' : null;
+
+  const logManualPaymentMutation = useMutation({
+    mutationFn: (data: { gymId: string, amount: number, planName: string }) => 
+      invoicesApi.createManualPayment({
+        gymId: data.gymId,
+        amount: data.amount,
+        planName: data.planName,
+        currency: 'INR',
+      }),
+    onSuccess: (res) => {
+      if (res.success && res.data) {
+        queryClient.setQueryData(['superadmin', 'invoices'], (oldData: any) => {
+          if (!oldData?.data) return oldData;
+          return { ...oldData, data: [res.data, ...oldData.data] };
+        });
+        toast.success(res.message || 'Payment logged successfully');
+      } else {
+        toast.error(res.message || 'Failed to log payment');
+      }
+    },
+    onError: (err: any) => {
+      toast.error(err.message || 'Failed to log payment');
+    }
+  });
+
+  const handleLogManualPayment = (gymId: string, amount: number, planName: string) => {
+    return logManualPaymentMutation.mutateAsync({ gymId, amount, planName });
+  };
 
   const [search, setSearch] = useState('');
   const [showAddModal, setShowAddModal] = useState(false);
   const [gymSearchTerm, setGymSearchTerm] = useState('');
-
-  // Bug 2 Fix: Trigger fetch when modal opens if tenants are missing or just fetch to ensure fresh data
-  useEffect(() => {
-    if (showAddModal) {
-      fetchData();
-    }
-  }, [showAddModal, fetchData]);
 
   const [isGymDropdownOpen, setIsGymDropdownOpen] = useState(false);
   const [selectedGymId, setSelectedGymId] = useState('');
@@ -110,6 +143,6 @@ export function useSuperadminInvoicesPage() {
     endDate,
     pendingRevenue,
     overdueCount,
+    handleLogManualPayment,
   };
 }
-

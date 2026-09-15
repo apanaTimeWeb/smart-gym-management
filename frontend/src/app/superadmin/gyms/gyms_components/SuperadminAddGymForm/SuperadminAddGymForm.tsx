@@ -5,9 +5,9 @@ import Link from 'next/link';
 import { Controller } from 'react-hook-form';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import { ArrowLeft, Database, Save, Loader2, Eye, EyeOff } from 'lucide-react';
-import { GymsUrlConfig } from '@/app/superadmin/gyms/gyms_url_config';
+import { GymsUrlConfig } from '@/app/superadmin/gyms/superadmin_gyms_url_config';
 import { useSuperadminAddGymForm } from '@/app/superadmin/gyms/gyms_components/SuperadminAddGymForm/useSuperadminAddGymForm';
-import { useUnsavedChangesGuard } from '@/app/superadmin/superadmin_utils/useUnsavedChangesGuard';
+import { useUnsavedChangesGuard } from '@/lib/useUnsavedChangesGuard';
 import { formatCurrency } from '@/lib/formatters';
 
 export default function SuperadminAddGymForm() {

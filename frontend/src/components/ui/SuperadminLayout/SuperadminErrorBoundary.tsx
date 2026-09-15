@@ -6,6 +6,7 @@ import { AlertTriangle, RefreshCcw } from 'lucide-react';
 
 interface ErrorBoundaryProps {
   children: React.ReactNode;
+  variant?: 'full' | 'inline';
 }
 
 interface ErrorBoundaryState {
@@ -23,9 +24,8 @@ export class SuperadminErrorBoundary extends React.Component<ErrorBoundaryProps,
     return { hasError: true, error };
   }
 
-  componentDidCatch(_error: Error, _errorInfo: React.ErrorInfo) {
-    // Intentionally suppressed: errors are surfaced via the fallback UI.
-    // Wire up an external error reporting service (e.g. Sentry) here when available.
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    console.error('[SuperadminErrorBoundary] Caught an error:', error, errorInfo);
   }
 
   resetErrorBoundary = () => {
@@ -34,6 +34,23 @@ export class SuperadminErrorBoundary extends React.Component<ErrorBoundaryProps,
 
   render() {
     if (this.state.hasError) {
+      const isInline = this.props.variant === 'inline';
+      
+      if (isInline) {
+        return (
+          <div className="flex flex-col items-center justify-center p-4 bg-card border border-border rounded-xl text-center w-full h-full min-h-32">
+            <AlertTriangle className="w-5 h-5 text-danger mb-2" />
+            <h3 className="text-sm font-semibold text-foreground">Section Error</h3>
+            <button
+              onClick={this.resetErrorBoundary}
+              className="mt-2 text-xs text-primary hover:underline"
+            >
+              Retry
+            </button>
+          </div>
+        );
+      }
+
       return (
         <div className="flex flex-col items-center justify-center min-h-96 p-8 bg-card border border-border rounded-xl">
           <div className="w-16 h-16 bg-danger-bg rounded-full flex items-center justify-center mb-4">
@@ -41,7 +58,7 @@ export class SuperadminErrorBoundary extends React.Component<ErrorBoundaryProps,
           </div>
           <h2 className="text-xl font-bold text-foreground mb-2">Something went wrong in the SaaS Panel</h2>
           <p className="text-secondary text-sm max-w-md text-center mb-6">
-            {this.state.error?.message || 'An unexpected error occurred while rendering this module.'}
+            An unexpected error occurred while rendering this module. Please try again or contact support if the issue persists.
           </p>
           <button
             onClick={this.resetErrorBoundary}

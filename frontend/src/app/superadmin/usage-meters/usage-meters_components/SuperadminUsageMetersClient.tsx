@@ -13,6 +13,7 @@ import { HardDrive, MessageSquare, Users, Calendar } from 'lucide-react';
 
 import { getProgressColor, getPercentage } from '@/app/superadmin/usage-meters/usage-meters_utils/SuperadminUsageMetersUtils';
 import { formatNumber } from '@/lib/formatters';
+import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 
 export default function SuperadminUsageMetersClient() {
   const [dateRange, setDateRange] = useState('this_month');
@@ -57,17 +58,16 @@ export default function SuperadminUsageMetersClient() {
         </div>
         
         <div className="flex flex-wrap items-center gap-3">
-          <div className="relative">
-            <select 
+          <div className="relative w-48">
+            <SearchableDropdown
               value={dateRange}
-              onChange={(e) => setDateRange(e.target.value)}
-              className="appearance-none bg-card border border-border rounded-lg pl-9 pr-10 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page"
-            >
-              <option value="this_week">This Week</option>
-              <option value="this_month">This Month</option>
-              <option value="custom">Custom Range</option>
-            </select>
-            <Calendar size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary pointer-events-none" />
+              onChange={(val) => setDateRange(val as string)}
+              options={[
+                { value: 'this_week', label: 'This Week' },
+                { value: 'this_month', label: 'This Month' },
+                { value: 'custom', label: 'Custom Range' },
+              ]}
+            />
           </div>
 
           {dateRange === 'custom' && (

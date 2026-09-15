@@ -10,6 +10,8 @@ import SuperadminFlushTenantModal from '@/app/superadmin/infrastructure/infrastr
 import { useSuperadminConfirm } from '@/components/ui/SuperadminFeedback/SuperadminConfirmProvider';
 import SuperadminUptimeChart from '@/app/superadmin/infrastructure/infrastructure_components/SuperadminUptimeChart/SuperadminUptimeChart';
 import { formatNumber } from '@/lib/formatters';
+import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
+import { SuperadminErrorBoundary } from '@/components/ui/SuperadminLayout/SuperadminErrorBoundary';
 
 export default function SuperadminInfrastructureClient() {
   const [isFlushingAll, setIsFlushingAll] = useState(false);
@@ -113,16 +115,17 @@ export default function SuperadminInfrastructureClient() {
           <p className="text-secondary mt-1">Real-time health metrics of your Docker/Kubernetes cluster.</p>
         </div>
         <div className="flex items-center gap-4">
-          <select 
+          <SearchableDropdown
             value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            className="bg-card text-foreground border border-border px-3 py-2 rounded-lg text-sm focus:outline-none focus:border-primary"
-          >
-            <option value="ALL">All Nodes</option>
-            <option value="HEALTHY">Healthy</option>
-            <option value="WARNING">Warning</option>
-            <option value="CRITICAL">Critical</option>
-          </select>
+            onChange={(val) => setStatusFilter(val as string)}
+            options={[
+              { value: 'ALL', label: 'All Nodes' },
+              { value: 'HEALTHY', label: 'Healthy' },
+              { value: 'WARNING', label: 'Warning' },
+              { value: 'CRITICAL', label: 'Critical' },
+            ]}
+            className="w-40"
+          />
           <button
             onClick={() => { refetchNodes(); refetchRedis(); }}
             disabled={isFetchingNodes || isFetchingRedis}
@@ -186,10 +189,13 @@ export default function SuperadminInfrastructureClient() {
         </div>
       </div>
 
-      <SuperadminUptimeChart />
+      <SuperadminErrorBoundary variant="inline">
+        <SuperadminUptimeChart />
+      </SuperadminErrorBoundary>
 
       {redisTelemetry && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <SuperadminErrorBoundary variant="inline">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* REDIS MEMORY */}
           <div className="bg-card border border-border rounded-xl p-6 relative overflow-hidden group">
             <div className="flex items-center gap-3 mb-6">
@@ -232,7 +238,8 @@ export default function SuperadminInfrastructureClient() {
             </div>
             <p className="text-xs text-secondary mt-3">Uptime: {redisTelemetry.uptimeHours} hours</p>
           </div>
-        </div>
+          </div>
+        </SuperadminErrorBoundary>
       )}
 
       <div className="bg-card border border-border rounded-xl p-6">

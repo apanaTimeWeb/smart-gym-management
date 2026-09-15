@@ -1,8 +1,8 @@
-import { TenantOnboardingSchema } from '@/app/superadmin/onboarding/onboarding_types/onboarding_types';
+import { TenantOnboardingSchema } from '@/app/superadmin/onboarding/onboarding_types/superadmin_onboarding_types';
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
-import type { TenantOnboarding } from '@/app/superadmin/onboarding/onboarding_types/onboarding_types';
-import { OnboardingUrlConfig } from '@/app/superadmin/onboarding/onboarding_url_config';
+import type { TenantOnboarding } from '@/app/superadmin/onboarding/onboarding_types/superadmin_onboarding_types';
+import { OnboardingUrlConfig } from '@/app/superadmin/onboarding/superadmin_onboarding_url_config';
 import { z } from "zod";
 
 export const onboardingApi = {

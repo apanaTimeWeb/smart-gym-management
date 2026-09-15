@@ -22,7 +22,7 @@ export default function SuperadminGymDeleteModal() {
   const isDeleting = actionLoadingId === gymToDelete.id;
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 p-4">
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 p-4" role="dialog" aria-modal="true">
       <div className="bg-overlay rounded-2xl p-7 max-w-md w-full border border-destructive shadow-2xl relative">
         <button
           onClick={closeDeleteModal}

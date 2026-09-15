@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders the Onboarding Modals component and its associated UI logic.
 import { AlertTriangle } from 'lucide-react';
 
 export function SuperadminOnboardingModals({
@@ -23,7 +24,7 @@ export function SuperadminOnboardingModals({
     <>
       {/* Extend Trial Modal */}
       {extendModalId && (
-        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-sm" role="dialog" aria-modal="true">
           <div className="bg-overlay border border-border rounded-2xl p-6 w-full max-w-sm shadow-2xl">
             <h2 className="text-lg font-bold text-foreground mb-1">Extend Trial</h2>
             <p className="text-secondary text-sm mb-4">
@@ -61,7 +62,7 @@ export function SuperadminOnboardingModals({
 
       {/* Convert to Paid — double confirmation modal */}
       {convertConfirmId && (
-        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-sm" role="dialog" aria-modal="true">
           <div className="bg-overlay border border-border rounded-2xl p-6 w-full max-w-sm shadow-2xl">
             <div className="flex items-center gap-3 mb-3">
               <div className="w-10 h-10 rounded-full bg-warning/10 flex items-center justify-center shrink-0">

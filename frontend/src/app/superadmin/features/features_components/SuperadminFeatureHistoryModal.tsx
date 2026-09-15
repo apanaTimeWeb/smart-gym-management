@@ -51,7 +51,7 @@ export default function SuperadminFeatureHistoryModal({ isOpen, onClose, flag }:
   if (!isOpen || !flag) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end bg-black/60 backdrop-blur-sm motion-safe:animate-in motion-safe:fade-in motion-safe:duration-200">
+    <div className="fixed inset-0 z-40 flex justify-end bg-black/60 backdrop-blur-sm motion-safe:animate-in motion-safe:fade-in motion-safe:duration-200">
       <div 
         className="bg-card w-full max-w-md h-full flex flex-col shadow-2xl border-l border-border motion-safe:animate-in motion-safe:slide-in-from-right-full motion-safe:duration-300"
         role="dialog"
@@ -81,7 +81,7 @@ export default function SuperadminFeatureHistoryModal({ isOpen, onClose, flag }:
                   <Clock size={14} />
                 </div>
                 {/* Card */}
-                <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded border border-border bg-card shadow-sm">
+                <div className="w-full md:w-1/2 p-4 rounded border border-border bg-card shadow-sm">
                   <div className="flex items-center justify-between space-x-2 mb-1">
                     <div className="font-bold text-foreground text-sm">{log.user}</div>
                     <time className="text-xs font-medium text-secondary">

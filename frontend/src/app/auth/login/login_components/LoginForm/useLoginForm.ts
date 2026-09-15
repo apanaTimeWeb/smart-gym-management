@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import toast from 'react-hot-toast';
 import { authApi } from '@/app/auth/auth_api/auth_api';
-import { DashboardUrlConfig } from '@/app/superadmin/dashboard/dashboard_url_config';
+import { DashboardUrlConfig } from '@/app/superadmin/dashboard/superadmin_dashboard_url_config';
 import { AuthUrlConfig } from '@/app/auth/auth_url_config';
 
 import { loginSchema } from '@/app/auth/login/login_types/login_types';

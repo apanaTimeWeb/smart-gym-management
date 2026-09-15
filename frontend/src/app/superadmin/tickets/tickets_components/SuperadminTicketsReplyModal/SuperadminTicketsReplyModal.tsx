@@ -1,21 +1,18 @@
 'use client';
+// RESPONSIBILITY: Renders the Tickets Reply Modal component and its associated UI logic.
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useUnsavedChangesGuard } from '@/lib/useUnsavedChangesGuard';
+import { replySchema, type ReplyFormValues } from '@/app/superadmin/tickets/superadmin_tickets_types/superadmin_tickets_types';
 
 interface SuperadminTicketsReplyModalProps {
   isOpen: boolean;
   onClose: () => void;
   ticketId: string | null;
 }
-
-const replySchema = z.object({
-  replyText: z.string().min(1, 'Please enter a reply message.'),
-});
-type ReplyFormValues = z.infer<typeof replySchema>;
 
 export default function SuperadminTicketsReplyModal({ isOpen, onClose, ticketId }: SuperadminTicketsReplyModalProps) {
   const { register, handleSubmit, reset, formState: { errors, isSubmitting, isDirty } } = useForm<ReplyFormValues>({
@@ -45,7 +42,7 @@ export default function SuperadminTicketsReplyModal({ isOpen, onClose, ticketId 
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm motion-safe:animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-background/80 backdrop-blur-sm motion-safe:animate-in fade-in duration-200" role="dialog" aria-modal="true">
       <div className="bg-card border border-border w-full max-w-lg rounded-xl shadow-lg p-6 relative motion-safe:animate-in zoom-in-95 duration-200">
         <h2 className="text-xl font-bold text-foreground mb-4">Reply to Ticket #{ticketId}</h2>
         <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-4">

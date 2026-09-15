@@ -6,6 +6,8 @@ import { SuperadminDashboardCharts } from '@/app/superadmin/dashboard/dashboard_
 import { SuperadminDashboardRecentOnboards } from '@/app/superadmin/dashboard/dashboard_components/SuperadminDashboardView/SuperadminDashboardRecentOnboards';
 import { useSuperadminDashboardView } from '@/app/superadmin/dashboard/dashboard_components/SuperadminDashboardView/useSuperadminDashboardView';
 
+import { SuperadminErrorBoundary } from '@/components/ui/SuperadminLayout/SuperadminErrorBoundary';
+
 export default function SuperadminDashboardView() {
   const { fetchState, apiData, timeRange } = useSuperadminDashboardView();
 
@@ -46,23 +48,29 @@ export default function SuperadminDashboardView() {
     <div className="space-y-6">
       <SuperadminDashboardHeader />
 
-      <SuperadminDashboardKpiGrid
-        metrics={metrics}
-        revenueChartData={revenueChartData}
-        timeMultiplier={timeMultiplier}
-        mrrLabel={mrrLabel}
-      />
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <SuperadminDashboardCharts
+      <SuperadminErrorBoundary variant="inline">
+        <SuperadminDashboardKpiGrid
           metrics={metrics}
           revenueChartData={revenueChartData}
-          growthChartData={growthChartData}
           timeMultiplier={timeMultiplier}
           mrrLabel={mrrLabel}
         />
+      </SuperadminErrorBoundary>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <SuperadminErrorBoundary variant="inline">
+          <SuperadminDashboardCharts
+            metrics={metrics}
+            revenueChartData={revenueChartData}
+            growthChartData={growthChartData}
+            timeMultiplier={timeMultiplier}
+            mrrLabel={mrrLabel}
+          />
+        </SuperadminErrorBoundary>
         <div className="lg:col-span-3">
-          <SuperadminDashboardRecentOnboards recentOnboards={metrics.recentOnboards} />
+          <SuperadminErrorBoundary variant="inline">
+            <SuperadminDashboardRecentOnboards recentOnboards={metrics.recentOnboards} />
+          </SuperadminErrorBoundary>
         </div>
       </div>
     </div>

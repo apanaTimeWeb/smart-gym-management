@@ -3,7 +3,7 @@ import { SuperadminFranchiseSchema } from '@/app/superadmin/franchises/franchise
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
 import type { SuperadminFranchise } from '@/app/superadmin/franchises/franchises_types/superadmin_franchises_types';
-import { FranchisesUrlConfig } from '@/app/superadmin/franchises/franchises_url_config';
+import { FranchisesUrlConfig } from '@/app/superadmin/franchises/superadmin_franchises_url_config';
 import { z } from "zod";
 
 export const superadminFranchisesApi = {

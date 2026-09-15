@@ -6,38 +6,52 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 import { BroadcastSchema, type BroadcastFormData, type Broadcast, type BroadcastStatus, type BroadcastStatusFilter } from '@/app/superadmin/broadcasts/superadmin_broadcasts_types/superadmin_broadcasts_types';
 import toast from 'react-hot-toast';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { broadcastsApi } from '@/app/superadmin/broadcasts/superadmin_broadcasts_api/superadmin_broadcasts_api';
-import { gymsApi } from '@/app/superadmin/gyms/superadmin_gyms_api/superadmin_gyms_api';
-import type { Tenant } from '@/app/superadmin/gyms/gyms_types/superadmin_gyms_types';
+import type { SuperadminBroadcastsTenant } from '@/app/superadmin/broadcasts/superadmin_broadcasts_types/superadmin_broadcasts_types';
+import { useSuperadminUrlState } from '@/app/superadmin/superadmin_utils/useSuperadminUrlState';
 
 export const useSuperadminBroadcastsPage = () => {
   const queryClient = useQueryClient();
+  const { getParam, setParam } = useSuperadminUrlState();
+
+  const searchQuery = getParam('search', '');
+  const statusFilter = getParam('status', 'ALL') as BroadcastStatusFilter;
+
+  const setSearchQuery = (val: string) => setParam('search', val);
+  const setStatusFilter = (val: BroadcastStatusFilter) => setParam('status', val);
+
+  const queryParams = useMemo(() => {
+    const params: Record<string, string> = {};
+    if (searchQuery) params.search = searchQuery;
+    if (statusFilter !== 'ALL') params.status = statusFilter;
+    return params;
+  }, [searchQuery, statusFilter]);
+
+  const queryKey = useMemo(() => ['superadmin', 'broadcasts', queryParams], [queryParams]);
 
   const { data: broadcastsRes, status: fetchState, error } = useQuery({
-    queryKey: ['superadmin', 'broadcasts'],
-    queryFn: () => broadcastsApi.fetchBroadcasts(),
+    queryKey,
+    queryFn: () => broadcastsApi.fetchBroadcasts(queryParams),
   });
 
   const { data: gymsRes } = useQuery({
     queryKey: ['superadmin', 'gyms'],
-    queryFn: () => gymsApi.fetchGyms(),
+    queryFn: () => broadcastsApi.fetchTenants(),
   });
 
   const updateBroadcasts = useCallback((updater: (prev: Broadcast[]) => Broadcast[]) => {
-    queryClient.setQueryData(['superadmin', 'broadcasts'], (oldData: { data: Broadcast[] } | undefined) => {
+    queryClient.setQueryData(queryKey, (oldData: { data: Broadcast[] } | undefined) => {
       if (!oldData?.data) return oldData;
       return { ...oldData, data: updater(oldData.data) };
     });
-  }, [queryClient]);
+  }, [queryClient, queryKey]);
 
   const broadcasts = useMemo(() => (broadcastsRes?.data as Broadcast[]) ?? [], [broadcastsRes]);
-  const gyms = useMemo(() => (gymsRes?.data as Tenant[]) ?? [], [gymsRes]);
+  const gyms = useMemo(() => (gymsRes?.data as SuperadminBroadcastsTenant[]) ?? [], [gymsRes]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState<BroadcastStatusFilter>('ALL');
 
   const [queueModalOpen, setQueueModalOpen] = useState(false);
   const [queueRecipients, setQueueRecipients] = useState<{id: string; name: string; phone: string}[]>([]);
@@ -54,55 +68,96 @@ export const useSuperadminBroadcastsPage = () => {
     },
   });
 
-  const isMutating = false;
+  const createMutation = useMutation({
+    mutationFn: (data: BroadcastFormData) => broadcastsApi.createBroadcast(data),
+    onSuccess: (res: any, variables: any) => {
+      if (res.success && res.data) {
+        updateBroadcasts(prev => [res.data!, ...prev]);
+        setIsModalOpen(false);
+        form.reset();
+        const isSendingNow = variables.status === 'SENT';
+        if (!isSendingNow) {
+            toast.success(res.message || 'Broadcast created successfully', { id: 'broadcast-created-successfully' });
+        } else {
+            const targetGymIds = res.data.targetGymIds || [];
+            const selectedGyms = gyms?.filter(g => targetGymIds.includes(g.id)) || [];
+            const recipients = selectedGyms.map(g => ({ id: g.id, name: g.name, phone: g.phone || 'N/A' }));
+            setQueueRecipients(recipients);
+            setQueueTitle(res.data.title);
+            setQueueModalOpen(true);
+        }
+      } else {
+        toast.error(res.message || 'Failed to create broadcast');
+      }
+    },
+    onError: (error: any) => {
+        toast.error(error.message || 'Failed to create broadcast');
+    }
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: ({ id, data }: { id: string, data: Partial<BroadcastFormData> }) => broadcastsApi.updateBroadcast(id, data),
+    onSuccess: (res: any, variables: any) => {
+      if (res.success && res.data) {
+        updateBroadcasts(prev => prev.map(b => b.id === variables.id ? res.data! : b));
+        setIsModalOpen(false);
+        setEditingId(null);
+        form.reset();
+        const isSendingNow = variables.data.status === 'SENT';
+        if (!isSendingNow) {
+            toast.success(res.message || 'Broadcast updated successfully', { id: 'broadcast-updated-successfully' });
+        } else {
+            const targetGymIds = res.data.targetGymIds || [];
+            const selectedGyms = gyms?.filter(g => targetGymIds.includes(g.id)) || [];
+            const recipients = selectedGyms.map(g => ({ id: g.id, name: g.name, phone: g.phone || 'N/A' }));
+            setQueueRecipients(recipients);
+            setQueueTitle(res.data.title);
+            setQueueModalOpen(true);
+        }
+      } else {
+        toast.error(res.message || 'Failed to update broadcast');
+      }
+    },
+    onError: (error: any) => {
+        toast.error(error.message || 'Failed to update broadcast');
+    }
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => broadcastsApi.deleteBroadcast(id),
+    onSuccess: (res: any, id: any) => {
+      if (res.success) {
+        updateBroadcasts(prev => prev.filter(b => b.id !== id));
+        toast.success(res.message || 'Broadcast deleted successfully', { id: 'broadcast-deleted-successfully' });
+      } else {
+        toast.error(res.message || 'Failed to delete broadcast');
+      }
+    },
+    onError: (error: any) => {
+        toast.error(error.message || 'Failed to delete broadcast');
+    }
+  });
+
+  const isMutating = createMutation.isPending || updateMutation.isPending || deleteMutation.isPending;
 
   const handleCreateBroadcast = useCallback(async (data: BroadcastFormData) => {
     const { scheduledDate, ...rest } = data;
     const payload = scheduledDate ? { ...rest, scheduledDate } : rest;
-    const isSendingNow = payload.status === 'SENT';
-
-    let newB: Broadcast | null = null;
 
     if (editingId) {
-      updateBroadcasts(prev => prev.map(b => b.id === editingId ? { ...b, ...payload } as Broadcast : b));
-      setIsModalOpen(false);
-      setEditingId(null);
-      form.reset();
-      if (!isSendingNow) toast.success('Broadcast updated successfully', { id: 'broadcast-updated-successfully' });
+      updateMutation.mutate({ id: editingId, data: payload });
     } else {
-      newB = { ...payload, id: `b-${Date.now()}`, sentDate: isSendingNow ? new Date().toISOString() : undefined } as Broadcast;
-      updateBroadcasts(prev => [newB!, ...prev]);
-      setIsModalOpen(false);
-      form.reset();
-      if (!isSendingNow) toast.success('Broadcast created successfully', { id: 'broadcast-created-successfully' });
+      createMutation.mutate(payload as BroadcastFormData);
     }
-
-    if (isSendingNow) {
-      const selectedGyms = gyms?.filter(g => payload.targetGymIds?.includes(g.id)) || [];
-      const recipients = selectedGyms.map(g => ({ id: g.id, name: ('gymName' in g ? (g as {gymName?: string}).gymName : '') || g.name, phone: g.phone || 'N/A' }));
-      setQueueRecipients(recipients);
-      setQueueTitle(payload.title);
-      setQueueModalOpen(true);
-    }
-  }, [form, editingId, updateBroadcasts, gyms]);
+  }, [editingId, updateMutation, createMutation]);
 
   const handleDeleteBroadcast = useCallback(async (id: string) => {
-    updateBroadcasts(prev => prev.filter(b => b.id !== id));
-    toast.success('Broadcast deleted successfully', { id: 'broadcast-deleted-successfully' });
-  }, [updateBroadcasts]);
+    deleteMutation.mutate(id);
+  }, [deleteMutation]);
 
   const handleSendBroadcast = useCallback(async (id: string) => {
-    const b = broadcasts.find(b => b.id === id);
-    if (!b) return;
-
-    updateBroadcasts(prev => prev.map(item => item.id === id ? { ...item, status: 'SENT', sentDate: new Date().toISOString() } : item));
-
-    const selectedGyms = gyms?.filter(g => b.targetGymIds?.includes(g.id)) || [];
-    const recipients = selectedGyms.map(g => ({ id: g.id, name: ('gymName' in g ? (g as {gymName?: string}).gymName : '') || g.name, phone: g.phone || 'N/A' }));
-    setQueueRecipients(recipients);
-    setQueueTitle(b.title);
-    setQueueModalOpen(true);
-  }, [updateBroadcasts, broadcasts, gyms]);
+    updateMutation.mutate({ id, data: { status: 'SENT' } });
+  }, [updateMutation]);
 
   const onQueueComplete = useCallback(() => {
     setQueueModalOpen(false);
@@ -135,15 +190,7 @@ export const useSuperadminBroadcastsPage = () => {
     setIsModalOpen(true);
   }, [form]);
 
-  const filteredBroadcasts = useMemo(() => {
-    const lowerQuery = searchQuery.toLowerCase();
-    return broadcasts.filter(b => {
-      const matchesSearch = (b.title || '').toLowerCase().includes(lowerQuery) ||
-                            (b.content || '').toLowerCase().includes(lowerQuery);
-      const matchesStatus = statusFilter === 'ALL' || b.status === statusFilter;
-      return matchesSearch && matchesStatus;
-    });
-  }, [broadcasts, searchQuery, statusFilter]);
+  const filteredBroadcasts = broadcasts;
 
   return {
     fetchState,

@@ -1,6 +1,6 @@
 import { BroadcastSchema, BroadcastResponseSchema } from '@/app/superadmin/broadcasts/superadmin_broadcasts_types/superadmin_broadcasts_types';
 // RESPONSIBILITY: Modularized API client for the Broadcasts module. All methods import apiFetch from src/lib/api.ts and define only superadmin-scoped endpoints. No UI logic.
-import { BroadcastsUrlConfig } from '@/app/superadmin/broadcasts/broadcasts_url_config';
+import { BroadcastsUrlConfig } from '@/app/superadmin/broadcasts/superadmin_broadcasts_url_config';
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
 import type { Broadcast, BroadcastFormData } from '@/app/superadmin/broadcasts/superadmin_broadcasts_types/superadmin_broadcasts_types';
@@ -17,5 +17,9 @@ export const broadcastsApi = {
   deleteBroadcast: (id: string) => apiFetch<ApiResponse<void>>(`${BroadcastsUrlConfig.BACKEND_API.BASE}/${id}`, { method: 'DELETE',
       dataSchema: z.object({}).passthrough()
 }),
+  updateBroadcast: (id: string, body: Partial<BroadcastFormData>) => apiFetch<ApiResponse<Broadcast>>(`${BroadcastsUrlConfig.BACKEND_API.BASE}/${id}`, { method: 'PATCH', body: JSON.stringify(body),
+      dataSchema: BroadcastResponseSchema
+}),
+  fetchTenants: () => apiFetch<ApiResponse<any[]>>('/superadmin/gyms-list'),
   fetchRecipientCount: () => apiFetch<ApiResponse<{ count: number }>>(`${BroadcastsUrlConfig.BACKEND_API.BASE}/recipient-count`, { dataSchema: z.object({}).passthrough() }),
 };

@@ -7,7 +7,8 @@ import { useState, useEffect } from 'react';
 import { IndianRupee, TrendingDown, HeartPulse, Search } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
-import type { RevenueRow, CancellationsRecord, TenantHealthScore, ReportsTab } from '@/app/superadmin/reports/reports_types/reports_types';
+import type { RevenueRow, CancellationsRecord, TenantHealthScore, ReportsTab } from '@/app/superadmin/reports/reports_types/superadmin_reports_types';
+import type { FetchState } from '@/app/superadmin/superadmin_utils/superadmin_shared_types';
 import { superadminReportsApi } from '@/app/superadmin/reports/reports_api/superadmin_reports_api';
 
 import { SuperadminReportsDatePresetDropdown, type DatePreset } from '@/app/superadmin/reports/reports_components/SuperadminReportsDatePresetDropdown';
@@ -40,13 +41,14 @@ export default function SuperadminReportsClient() {
   const [revenueData, setRevenueData] = useState<RevenueRow[]>([]);
   const [cancellationsData, setCancellationsData] = useState<CancellationsRecord[]>([]);
   const [healthData, setHealthData] = useState<TenantHealthScore[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [fetchState, setFetchState] = useState<FetchState>('loading');
 
   // RESPONSIBILITY: Handle side-effects for SuperadminReportsClient
+  // EXPLANATION: Synchronize component state with external dependencies.
   useEffect(() => {
     let mounted = true;
     async function loadData() {
-      setIsLoading(true);
+      setFetchState('loading');
       try {
         const [rev, cancellations, health] = await Promise.all([
           superadminReportsApi.fetchRevenueData(),
@@ -57,11 +59,10 @@ export default function SuperadminReportsClient() {
           if (rev.success && rev.data) setRevenueData(rev.data as unknown as RevenueRow[]);
           if (cancellations.success && cancellations.data) setCancellationsData(cancellations.data as unknown as CancellationsRecord[]);
           if (health.success && health.data) setHealthData(health.data as unknown as TenantHealthScore[]);
+          setFetchState('success');
         }
       } catch (err) {
-        // Errors are swallowed; UI handles empty/error state based on loaded data
-      } finally {
-        if (mounted) setIsLoading(false);
+        if (mounted) setFetchState('error');
       }
     }
     loadData();
@@ -160,6 +161,9 @@ export default function SuperadminReportsClient() {
   });
 
   const sortedHealthData = [...filteredHealthData].sort((a, b) => b.score - a.score);
+
+  if (fetchState === 'loading') return <div className="p-8 text-center text-secondary motion-safe:animate-pulse">Loading reports...</div>;
+  if (fetchState === 'error') return <div className="p-8 text-center text-danger">Failed to load reports data.</div>;
 
   return (
     <div className="space-y-6">

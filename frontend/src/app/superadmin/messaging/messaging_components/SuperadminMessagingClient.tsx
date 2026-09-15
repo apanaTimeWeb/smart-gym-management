@@ -13,7 +13,8 @@ import type {
   MessageChannel,
   MessagingTab,
   MessagingTenant,
-} from '@/app/superadmin/messaging/messaging_types/messaging_types';
+} from '@/app/superadmin/messaging/messaging_types/superadmin_messaging_types';
+import type { FetchState } from '@/app/superadmin/superadmin_utils/superadmin_shared_types';
 import { superadminMessagingApi } from '@/app/superadmin/messaging/messaging_api/superadmin_messaging_api';
 import { SuperadminMessagingComposeModal } from '@/app/superadmin/messaging/messaging_components/SuperadminMessagingComposeModal';
 import { SuperadminMessagingNotificationsTab } from '@/app/superadmin/messaging/messaging_components/SuperadminMessagingNotificationsTab';
@@ -27,7 +28,7 @@ export default function SuperadminMessagingClient() {
   const [messages, setMessages] = useState<TenantMessage[]>([]);
   const [notifications, setNotifications] = useState<SuperadminNotification[]>([]);
   const [tenants, setTenants] = useState<MessagingTenant[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [fetchState, setFetchState] = useState<FetchState>('loading');
   const [search, setSearch] = useState('');
   const [channelFilter, setChannelFilter] = useState<MessageChannel | 'ALL'>('ALL');
   const [composeOpen, setComposeOpen] = useState(false);
@@ -40,10 +41,11 @@ export default function SuperadminMessagingClient() {
   const [composeBody, setComposeBody] = useState('');
 
   // RESPONSIBILITY: Handle side-effects for SuperadminMessagingClient
+  // EXPLANATION: Synchronize component state with external dependencies.
   useEffect(() => {
     let mounted = true;
     async function loadData() {
-      setIsLoading(true);
+      setFetchState('loading');
       try {
         const [msgsRes, notifsRes, tenantsRes] = await Promise.all([
           superadminMessagingApi.fetchMessages(),
@@ -54,11 +56,10 @@ export default function SuperadminMessagingClient() {
           if (msgsRes.success && msgsRes.data) setMessages(msgsRes.data as unknown as TenantMessage[]);
           if (notifsRes.success && notifsRes.data) setNotifications(notifsRes.data as unknown as SuperadminNotification[]);
           if (tenantsRes.success && tenantsRes.data) setTenants(tenantsRes.data as unknown as MessagingTenant[]);
+          setFetchState('success');
         }
       } catch (err) {
-        // Errors are swallowed; UI handles empty/error state based on loaded data
-      } finally {
-        if (mounted) setIsLoading(false);
+        if (mounted) setFetchState('error');
       }
     }
     loadData();
@@ -124,6 +125,9 @@ export default function SuperadminMessagingClient() {
   function handleMarkRead(id: string) {
     setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, read: true } : n)));
   }
+
+  if (fetchState === 'loading') return <div className="p-8 text-center text-secondary motion-safe:animate-pulse">Loading messages...</div>;
+  if (fetchState === 'error') return <div className="p-8 text-center text-danger">Failed to load data.</div>;
 
   return (
     <div className="space-y-6">

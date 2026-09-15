@@ -1,22 +1,22 @@
 'use client';
 // RESPONSIBILITY: Renders the SuperadminInvoicesLogPaymentModal component.
-import React from 'react';
+import React, { useState } from 'react';
 import { X, Search, DollarSign } from 'lucide-react';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
-import type { Tenant } from '@/app/superadmin/gyms/gyms_types/superadmin_gyms_types';
+import type { SuperadminInvoicesTenant } from '@/app/superadmin/invoices/superadmin_invoices_types/superadmin_invoices_types';
 
 interface InvoicesLogPaymentModalProps {
   onClose: () => void;
-  selectedGym: Tenant | undefined;
+  selectedGym: SuperadminInvoicesTenant | undefined;
   isGymDropdownOpen: boolean;
   setIsGymDropdownOpen: (open: boolean) => void;
   gymSearchTerm: string;
   setGymSearchTerm: (term: string) => void;
-  filteredTenantsForDropdown: Tenant[];
+  filteredTenantsForDropdown: SuperadminInvoicesTenant[];
   handleSelectGym: (id: string) => void;
   paymentMethod: string;
   setPaymentMethod: (method: string) => void;
-  onSave: () => void;
+  onSave: (amount: number) => void;
 }
 
 export default function SuperadminInvoicesLogPaymentModal({
@@ -32,8 +32,10 @@ export default function SuperadminInvoicesLogPaymentModal({
   setPaymentMethod,
   onSave
 }: InvoicesLogPaymentModalProps) {
+  const [amount, setAmount] = useState('');
+
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-40 flex items-center justify-center p-4" role="dialog" aria-modal="true">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
       <div className="relative bg-overlay border border-border rounded-2xl shadow-2xl w-full max-w-md overflow-hidden motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95 motion-safe:duration-200">
         <div className="flex items-center justify-between p-5 border-b border-border">
@@ -57,7 +59,7 @@ export default function SuperadminInvoicesLogPaymentModal({
               <span className="text-secondary text-xs">▼</span>
             </div>
             {isGymDropdownOpen && (
-              <div className="absolute z-30 top-[calc(100%+4px)] left-0 right-0 bg-overlay border border-border rounded-lg shadow-2xl overflow-hidden max-h-64 flex flex-col motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95 motion-safe:duration-100">
+              <div className="absolute z-30 top-full mt-1 left-0 right-0 bg-overlay border border-border rounded-lg shadow-2xl overflow-hidden max-h-64 flex flex-col motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95 motion-safe:duration-100">
                 <div className="p-2 border-b border-border bg-header">
                   <div className="relative">
                     <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-secondary" />
@@ -95,7 +97,7 @@ export default function SuperadminInvoicesLogPaymentModal({
             <label className="block text-sm font-medium text-secondary mb-1.5">Amount (₹)</label>
             <div className="relative">
               <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary" />
-              <input type="number" min="0" onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+') e.preventDefault(); }} placeholder="e.g. 4999" className="w-full pl-9 pr-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary" />
+              <input type="number" min="0" onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+') e.preventDefault(); }} value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="e.g. 4999" className="w-full pl-9 pr-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary" />
             </div>
           </div>
 
@@ -133,7 +135,7 @@ export default function SuperadminInvoicesLogPaymentModal({
             Cancel
           </button>
           <button
-            onClick={onSave}
+            onClick={() => onSave(Number(amount))}
             className="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-hover motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-in-out motion-safe:active:scale-95"
           >
             Save Payment

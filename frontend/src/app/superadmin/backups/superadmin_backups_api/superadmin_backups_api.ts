@@ -1,7 +1,7 @@
 import { BackupRecordSchema } from '@/app/superadmin/backups/superadmin_backups_types/superadmin_backups_types';
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
-import { BackupsUrlConfig } from '@/app/superadmin/backups/backups_url_config';
+import { BackupsUrlConfig } from '@/app/superadmin/backups/superadmin_backups_url_config';
 import type { BackupRecord } from '@/app/superadmin/backups/superadmin_backups_types/superadmin_backups_types';
 import { z } from "zod";
 

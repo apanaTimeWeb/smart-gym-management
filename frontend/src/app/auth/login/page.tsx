@@ -6,7 +6,7 @@ import LoginHeroSection from '@/app/auth/login/login_components/LoginHeroSection
 import LoginMobileHeader from '@/app/auth/login/login_components/LoginMobileHeader/LoginMobileHeader';
 import LoginForm from '@/app/auth/login/login_components/LoginForm/LoginForm';
 import LoginErrorBoundary from '@/app/auth/login/login_components/LoginErrorBoundary/LoginErrorBoundary';
-import { DashboardUrlConfig } from '@/app/superadmin/dashboard/dashboard_url_config';
+import { DashboardUrlConfig } from '@/app/superadmin/dashboard/superadmin_dashboard_url_config';
 import { AuthUrlConfig } from '@/app/auth/auth_url_config';
 
 import { ThemeToggle } from '@/components/ThemeToggle';

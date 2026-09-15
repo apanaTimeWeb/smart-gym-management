@@ -8,8 +8,7 @@ import { useQuery } from '@tanstack/react-query';
 import type { BroadcastFormData } from '@/app/superadmin/broadcasts/superadmin_broadcasts_types/superadmin_broadcasts_types';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import { broadcastsApi } from '@/app/superadmin/broadcasts/superadmin_broadcasts_api/superadmin_broadcasts_api';
-import { gymsApi } from '@/app/superadmin/gyms/superadmin_gyms_api/superadmin_gyms_api';
-import type { Tenant } from '@/app/superadmin/gyms/gyms_types/superadmin_gyms_types';
+import type { SuperadminBroadcastsTenant } from '@/app/superadmin/broadcasts/superadmin_broadcasts_types/superadmin_broadcasts_types';
 
 interface SuperadminBroadcastModalProps {
   isOpen: boolean;
@@ -19,7 +18,7 @@ interface SuperadminBroadcastModalProps {
   isEditMode?: boolean;
 }
 
-import { useUnsavedChangesGuard } from '@/app/superadmin/superadmin_utils/useUnsavedChangesGuard';
+import { useUnsavedChangesGuard } from '@/lib/useUnsavedChangesGuard';
 
 export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> = ({
   isOpen,
@@ -36,7 +35,7 @@ export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> =
 
   const { data: fetchRes, isLoading } = useQuery({
     queryKey: ['superadmin', 'gyms'],
-    queryFn: () => gymsApi.fetchGyms(),
+    queryFn: () => broadcastsApi.fetchTenants(),
     enabled: isOpen,
   });
 
@@ -47,7 +46,7 @@ export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> =
     enabled: isOpen && status === 'SENT',
   });
 
-  const rawGyms = (fetchRes?.data as Tenant[]) ?? [];
+  const rawGyms = (fetchRes?.data as SuperadminBroadcastsTenant[]) ?? [];
   const gyms = rawGyms;
 
   const allGymIds = gyms.map(g => g.id) || [];
@@ -75,7 +74,7 @@ export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> =
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 z-40 flex items-center justify-center p-4 backdrop-blur-sm">
+    <div className="fixed inset-0 bg-black/60 z-40 flex items-center justify-center p-4 backdrop-blur-sm" role="dialog" aria-modal="true">
       <div className="bg-overlay border border-border rounded-2xl w-full max-w-md shadow-xl overflow-hidden flex flex-col">
         <div className="flex items-center justify-between px-7 py-5 border-b border-border">
           <h2 className="text-lg font-bold text-foreground">{isEditMode ? 'Edit Broadcast' : 'New Broadcast'}</h2>

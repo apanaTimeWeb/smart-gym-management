@@ -99,7 +99,7 @@ export default function SuperadminInvoicesTableRow({ invoice: inv }: InvoicesTab
         <button
           title="Share via WhatsApp"
           onClick={handleShareWhatsApp}
-          className="text-secondary hover:text-green-500 motion-safe:transition-colors p-1.5 bg-input hover:bg-green-500/10 rounded-md border border-border"
+          className="text-secondary hover:text-success motion-safe:transition-colors p-1.5 bg-input hover:bg-success/10 rounded-md border border-border"
           aria-label={`Share invoice ${inv.id} via WhatsApp`}
         >
           <MessageCircle className="w-4 h-4" />

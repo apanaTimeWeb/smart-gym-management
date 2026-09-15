@@ -1,12 +1,12 @@
 'use client';
 // RESPONSIBILITY: Renders the Revenue Analytics dashboard — KPI cards + ApexCharts area/bar charts.
-// Pure view layer: consumes useAnalyticsPage hook. No data-fetching or business logic here.
+// Pure view layer: consumes useSuperadminAnalyticsPage hook. No data-fetching or business logic here.
 //
-// DATA FLOW: useAnalyticsPage → SuperadminAnalyticsClient → KPI Cards + Charts
+// DATA FLOW: useSuperadminAnalyticsPage → SuperadminAnalyticsClient → KPI Cards + Charts
 
 import dynamic from 'next/dynamic';
 import { TrendingUp, Users, IndianRupee, Activity, ArrowDownRight, DollarSign } from 'lucide-react';
-import { useAnalyticsPage } from '@/app/superadmin/analytics/analytics_utils/useAnalyticsPage';
+import { useSuperadminAnalyticsPage } from '@/app/superadmin/analytics/analytics_utils/useSuperadminAnalyticsPage';
 import { CHART_COLORS } from '@/app/superadmin/superadmin_utils/SuperadminChartConstants';
 import { SuperadminDateFilterDropdown } from '@/components/ui/SuperadminShared/SuperadminDateFilterDropdown';
 import { useDateRangeSuffix } from '@/components/ui/SuperadminShared/useDateRangeSuffix';
@@ -16,7 +16,7 @@ import { formatCurrency, formatKPI, formatDecimal } from '@/lib/formatters';
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 export default function SuperadminAnalyticsClient() {
-  const { metrics, monthlyData, fetchState } = useAnalyticsPage();
+  const { metrics, monthlyData, fetchState } = useSuperadminAnalyticsPage();
   const dateSuffix = useDateRangeSuffix();
 
   if (fetchState === 'loading') {

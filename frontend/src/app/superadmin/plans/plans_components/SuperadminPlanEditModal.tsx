@@ -4,28 +4,15 @@
 import { useEffect } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import type { SubmitHandler, Resolver } from 'react-hook-form';
-import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { X, Plus, Trash2, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
 import { useSuperadminPlansStore } from '@/app/superadmin/plans/plans_store/useSuperadminPlansStore';
 import { plansApi } from '@/app/superadmin/plans/superadmin_plans_api/superadmin_plans_api';
-import { useUnsavedChangesGuard } from '@/app/superadmin/superadmin_utils/useUnsavedChangesGuard';
-import type { CreatePlanPayload, UpdatePlanPayload } from '@/app/superadmin/plans/plans_types/superadmin_plans_types';
-
-const planSchema = z.object({
-  name: z.string().min(1, 'Plan Name is required'),
-  priceMonthly: z.coerce.number().min(0),
-  priceAnnual: z.coerce.number().min(0),
-  maxMembers: z.coerce.number().min(1),
-  maxStaff: z.coerce.number().min(1),
-  dbLimitGb: z.coerce.number().min(0),
-  binaryLimitGb: z.coerce.number().min(0),
-  features: z.array(z.object({ value: z.string().min(1, 'Feature cannot be empty') })).min(1),
-});
-
-type PlanFormValues = z.infer<typeof planSchema>;
+import { useUnsavedChangesGuard } from '@/lib/useUnsavedChangesGuard';
+import type { UpdatePlanPayload } from '@/app/superadmin/plans/superadmin_plans_types/superadmin_plans_types';
+import { planFormSchema, type PlanFormValues } from '@/app/superadmin/plans/superadmin_plans_types/superadmin_plans_schema';
 
 export default function SuperadminPlanEditModal() {
   const isOpen = useSuperadminPlansStore(state => state.isEditModalOpen);
@@ -35,12 +22,13 @@ export default function SuperadminPlanEditModal() {
   const queryClient = useQueryClient();
 
   const { register, control, handleSubmit, formState: { errors, isDirty }, reset } = useForm<PlanFormValues>({
-    resolver: zodResolver(planSchema) as unknown as Resolver<PlanFormValues>,
+    resolver: zodResolver(planFormSchema) as unknown as Resolver<PlanFormValues>,
   });
 
   const { fields, append, remove } = useFieldArray({ control, name: 'features' });
 
   // Populate form when selectedPlan changes
+  // EXPLANATION: Synchronize component state with external dependencies.
   useEffect(() => {
     if (selectedPlan && isOpen) {
       reset({
@@ -81,7 +69,7 @@ export default function SuperadminPlanEditModal() {
   };
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" role="dialog" aria-modal="true">
       <div className="bg-overlay border border-border rounded-2xl w-full max-w-2xl max-h-screen overflow-hidden flex flex-col shadow-2xl shadow-black/50">
         <div className="flex items-center justify-between p-6 border-b border-border">
           <h2 className="text-xl font-bold text-foreground">Edit Subscription Plan</h2>
@@ -100,7 +88,7 @@ export default function SuperadminPlanEditModal() {
           <div className="grid grid-cols-2 gap-4">
             {(['priceMonthly', 'priceAnnual'] as const).map(field => (
               <div key={field} className="space-y-2">
-                <label className="block text-sm font-medium text-secondary">{field === 'priceMonthly' ? 'Monthly Price (â‚¹)' : 'Annual Price (â‚¹)'} <span className="text-danger">*</span></label>
+                <label className="block text-sm font-medium text-secondary">{field === 'priceMonthly' ? 'Monthly Price (₹)' : 'Annual Price (₹)'} <span className="text-danger">*</span></label>
                 <input type="number" min="0" onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+') e.preventDefault(); }} step="0.01" {...register(field, { valueAsNumber: true })} className="w-full bg-input border border-border rounded-xl px-4 py-3 text-foreground focus:border-primary outline-none motion-safe:transition-colors" />
                 {errors[field] && <p className="text-danger text-xs">{errors[field]?.message}</p>}
               </div>
@@ -157,8 +145,3 @@ export default function SuperadminPlanEditModal() {
     </div>
   );
 }
-
-
-
-
-

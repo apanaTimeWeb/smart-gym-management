@@ -3,7 +3,7 @@
 // Emits filter changes to parent via callbacks — owns no state.
 
 import { Search } from 'lucide-react';
-import type { CancellationsFilterStatus } from '@/app/superadmin/cancellations/cancellations_types/cancellations_types';
+import type { CancellationsFilterStatus } from '@/app/superadmin/cancellations/cancellations_types/superadmin_cancellations_types';
 
 const FILTER_OPTIONS: { label: string; value: CancellationsFilterStatus }[] = [
   { label: 'All', value: 'ALL' },

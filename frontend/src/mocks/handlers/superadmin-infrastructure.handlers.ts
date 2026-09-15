@@ -1,5 +1,5 @@
 import { http, HttpResponse, delay } from 'msw';
-import { InfrastructureUrlConfig } from '@/app/superadmin/infrastructure/infrastructure_url_config';
+import { InfrastructureUrlConfig } from '@/app/superadmin/infrastructure/superadmin_infrastructure_url_config';
 import { MOCK_INFRASTRUCTURE_NODES, MOCK_REDIS_TELEMETRY } from '@/app/superadmin/infrastructure/infrastructure_utils/SuperadminInfrastructureConstants';
 
 export const superadminInfrastructureHandlers = [

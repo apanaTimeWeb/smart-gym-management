@@ -1,4 +1,5 @@
 'use client';
+// RESPONSIBILITY: Renders the System Sla Tab component and its associated UI logic.
 import { useState } from 'react';
 import { ServerCog, Clock, AlertCircle, CheckCircle, Ticket, Search } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -13,6 +14,8 @@ interface SlaRecord {
   downtimeIncidents: number;
   status: 'MET' | 'WARNING' | 'BREACHED';
 }
+
+const TABLE_COLUMN_COUNT = 6;
 
 export default function SuperadminSystemSlaTab() {
   const [slaSearch, setSlaSearch] = useState('');
@@ -121,7 +124,7 @@ export default function SuperadminSystemSlaTab() {
               ))}
               {filteredSla.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="p-8 text-center text-secondary">No gyms found.</td>
+                  <td colSpan={TABLE_COLUMN_COUNT} className="p-8 text-center text-secondary">No gyms found.</td>
                 </tr>
               )}
             </tbody>

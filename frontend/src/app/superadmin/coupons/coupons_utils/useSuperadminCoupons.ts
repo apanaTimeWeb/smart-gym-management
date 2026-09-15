@@ -1,34 +1,60 @@
 // RESPONSIBILITY: useCouponsPage.ts encapsulates all state and async logic for the Coupons page.
 // DATA FLOW: superadminApi â†’ useCouponsPage â†’ CouponsClient
 import { useState, useMemo, useCallback } from 'react';
-import { useSearchParams } from 'next/navigation';
-import { useQueryClient } from '@tanstack/react-query';
+import { useQueryClient, useQuery } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import toast from 'react-hot-toast';
-import { useSuperadminCouponsData } from '@/app/superadmin/coupons/coupons_utils/useSuperadminCouponsData';
-import { CouponsUrlConfig } from '@/app/superadmin/coupons/coupons_url_config';
+import { useSuperadminUrlState } from '@/app/superadmin/superadmin_utils/useSuperadminUrlState';
 import { couponsApi } from '@/app/superadmin/coupons/superadmin_coupons_api/superadmin_coupons_api';
 import { useSuperadminCouponsMutation } from '@/app/superadmin/coupons/coupons_utils/useSuperadminCouponsMutation';
 import { CouponSchema, type CouponFormData } from '@/app/superadmin/coupons/superadmin_coupons_types/superadmin_coupons_types';
 import type { Coupon, CouponStatus, CouponKpiFilter } from '@/app/superadmin/coupons/superadmin_coupons_types/superadmin_coupons_types';
 
 export const useSuperadminCoupons = () => {
-  const { data: fetchedData, fetchState, error } = useSuperadminCouponsData<Coupon[]>(
-    CouponsUrlConfig.BACKEND_API.BASE
-  );
   const queryClient = useQueryClient();
-  const coupons = fetchedData ?? [];
+  const { getParam, setParam } = useSuperadminUrlState();
+
+  const searchQuery = getParam('search', '');
+  const activeKpi = getParam('kpi', 'ALL') as CouponKpiFilter;
+  const statusFilter = getParam('status', 'ALL');
+  const startDate = getParam('startDate', '');
+  const endDate = getParam('endDate', '');
+
+  const setSearchQuery = (val: string) => setParam('search', val);
+  const setActiveKpi = (val: CouponKpiFilter) => setParam('kpi', val);
+  const setStatusFilter = (val: string) => setParam('status', val);
+
+  const queryParams = useMemo(() => {
+    const params: Record<string, string> = {};
+    if (searchQuery) params.search = searchQuery;
+    if (statusFilter !== 'ALL') params.status = statusFilter;
+    if (activeKpi !== 'ALL') params.kpi = activeKpi;
+    if (startDate) params.startDate = startDate;
+    if (endDate) params.endDate = endDate;
+    return params;
+  }, [searchQuery, statusFilter, activeKpi, startDate, endDate]);
+
+  const queryKey = useMemo(() => ['superadmin', 'coupons', queryParams], [queryParams]);
+
+  const { data: fetchRes, status: fetchState, error: queryError } = useQuery({
+    queryKey,
+    queryFn: () => couponsApi.fetchCoupons(queryParams),
+  });
+
+  const coupons = fetchRes?.data ?? [];
+  const error = queryError instanceof Error ? queryError.message : null;
 
   const updateCoupons = useCallback((updater: (previous: Coupon[]) => Coupon[]) => {
-    queryClient.setQueryData<Coupon[]>(['superadmin', CouponsUrlConfig.BACKEND_API.BASE], previous => updater(previous ?? []));
-  }, [queryClient]);
+    queryClient.setQueryData(queryKey, (previous: typeof fetchRes | undefined) => {
+      if (!previous?.data) return previous;
+      return { ...previous, data: updater(previous.data) };
+    });
+  }, [queryClient, queryKey]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedCoupon, setSelectedCoupon] = useState<Coupon | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [activeKpi, setActiveKpi] = useState<CouponKpiFilter>('ALL');
 
   const form = useForm<CouponFormData>({
     resolver: zodResolver(CouponSchema),
@@ -87,40 +113,8 @@ export const useSuperadminCoupons = () => {
     });
   }, [updateCoupons, mutate]);
 
-  const [statusFilter, setStatusFilter] = useState<string>('ALL');
-
-  const searchParams = useSearchParams();
-  const startDate = searchParams.get('startDate');
-  const endDate = searchParams.get('endDate');
-
-  const filteredCoupons = useMemo(() => {
-    const lowerQuery = searchQuery.toLowerCase();
-    return [...coupons]
-      .filter(c => {
-        if (!startDate && !endDate) return true;
-        if (!c.expiryDate) return true;
-        const expiry = new Date(c.expiryDate);
-        if (startDate && expiry < new Date(startDate)) return false;
-        if (endDate && expiry > new Date(endDate)) return false;
-        return true;
-      })
-      .filter(c => {
-        if (activeKpi === 'ACTIVE') return c.status === 'ACTIVE' && !c.isDeleted;
-        if (activeKpi === 'REDEEMED') return c.currentUses > 0;
-        return true;
-      })
-      .filter(c => {
-        if (statusFilter === 'ACTIVE') return c.status === 'ACTIVE';
-        if (statusFilter === 'INACTIVE') return c.status === 'INACTIVE';
-        return true;
-      })
-      .sort((a, b) => {
-        if (a.isDeleted && !b.isDeleted) return 1;
-        if (!a.isDeleted && b.isDeleted) return -1;
-        return 0;
-      })
-      .filter(c => c.code?.toLowerCase().includes(lowerQuery));
-  }, [coupons, searchQuery, activeKpi, statusFilter, startDate, endDate]);
+  // Filter applied via server-side URL state params
+  const filteredCoupons = coupons;
 
   const activeCoupons = useMemo(
     () => filteredCoupons.filter(c => c.status === 'ACTIVE' && !c.isDeleted).length,

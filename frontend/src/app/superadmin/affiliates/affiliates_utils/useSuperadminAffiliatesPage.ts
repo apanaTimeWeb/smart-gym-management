@@ -8,29 +8,48 @@ import { affiliatesApi } from '@/app/superadmin/affiliates/superadmin_affiliates
 import { useSuperadminAffiliatesMutation } from '@/app/superadmin/affiliates/affiliates_utils/useSuperadminAffiliatesMutation';
 import { AffiliateSchema } from '@/app/superadmin/affiliates/superadmin_affiliates_types/superadmin_affiliates_types';
 import type { Affiliate, AffiliateStatus, AffiliateStatusFilter, AffiliateFormData } from '@/app/superadmin/affiliates/superadmin_affiliates_types/superadmin_affiliates_types';
+import { useSuperadminUrlState } from '@/app/superadmin/superadmin_utils/useSuperadminUrlState';
 
 export const useSuperadminAffiliatesPage = () => {
   const queryClient = useQueryClient();
+  const { getParam, setParam } = useSuperadminUrlState();
+
+  const searchQuery = getParam('search', '');
+  const statusFilter = getParam('status', 'ALL') as AffiliateStatusFilter;
+  const startDate = getParam('startDate', '');
+  const endDate = getParam('endDate', '');
+
+  const setSearchQuery = (val: string) => setParam('search', val);
+  const setStatusFilter = (val: AffiliateStatusFilter) => setParam('status', val);
+  const setStartDate = (val: string) => setParam('startDate', val);
+  const setEndDate = (val: string) => setParam('endDate', val);
+
+  const queryParams = useMemo(() => {
+    const params: Record<string, string> = {};
+    if (searchQuery) params.search = searchQuery;
+    if (statusFilter !== 'ALL') params.status = statusFilter;
+    if (startDate) params.startDate = startDate;
+    if (endDate) params.endDate = endDate;
+    return params;
+  }, [searchQuery, statusFilter, startDate, endDate]);
+
+  const queryKey = useMemo(() => ['superadmin', 'affiliates', queryParams], [queryParams]);
   const { data: affiliatesResponse, status: fetchState, error: queryError } = useQuery({
-    queryKey: ['superadmin', 'affiliates'],
-    queryFn: () => affiliatesApi.fetchAffiliates(),
+    queryKey,
+    queryFn: () => affiliatesApi.fetchAffiliates(queryParams),
   });
   const affiliates = affiliatesResponse?.data ?? [];
   const error = queryError instanceof Error ? queryError.message : null;
 
   const updateCachedAffiliates = useCallback((updater: (previous: Affiliate[]) => Affiliate[]) => {
-    queryClient.setQueryData(['superadmin', 'affiliates'], (previous: typeof affiliatesResponse | undefined) => {
+    queryClient.setQueryData(queryKey, (previous: typeof affiliatesResponse | undefined) => {
       if (!previous?.data) return previous;
       return { ...previous, data: updater(previous.data) };
     });
-  }, [queryClient]);
+  }, [queryClient, queryKey]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingAffiliate, setEditingAffiliate] = useState<Affiliate | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState<AffiliateStatusFilter>('ALL');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
 
   const form = useForm<AffiliateFormData>({
     resolver: zodResolver(AffiliateSchema),
@@ -107,21 +126,8 @@ export const useSuperadminAffiliatesPage = () => {
     [affiliates]
   );
 
-  const filteredAffiliates = useMemo(() => {
-    const lowerQuery = searchQuery.toLowerCase();
-    return affiliates.filter(a => {
-      const matchesSearch = (a?.name || '').toLowerCase().includes(lowerQuery) ||
-                            (a?.referralCode || '').toLowerCase().includes(lowerQuery) ||
-                            (a?.email || '').toLowerCase().includes(lowerQuery);
-      const matchesStatus = statusFilter === 'ALL' || a.status === statusFilter;
-      let matchesDate = true;
-      if (startDate && endDate && a.joinedAt) {
-        const joined = new Date(a.joinedAt);
-        matchesDate = joined >= new Date(startDate) && joined <= new Date(endDate);
-      }
-      return matchesSearch && matchesStatus && matchesDate;
-    });
-  }, [affiliates, searchQuery, statusFilter, startDate, endDate]);
+  // Filter applied via server-side URL state params
+  const filteredAffiliates = affiliates;
 
   const handlePayCommission = async (affiliate: Affiliate) => {
     try {
