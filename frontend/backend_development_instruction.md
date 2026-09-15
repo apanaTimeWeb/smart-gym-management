@@ -303,6 +303,7 @@ the exact consequence of violating it — not just "be careful".]
 - [ ] Rule 80: JSDoc on all service methods, repositories, and utilities
 - [ ] Rule 83: RBAC enforced at controller layer via @Roles() — never inline in services
 - [ ] Rule 85: Guard clauses used — no nested if/else beyond 2 levels
+- [ ] Rule 82A: Response DTO satisfies complete frontend UI Data Requirements — no missing table columns, KPI fields, chart series, or relationship fields
 - [ ] Rule 86: Verb contract naming applied (createX, findXById, findXByIdOrThrow)
 - [ ] Rule 87: Every service method ≤ 20 lines, single responsibility
 - [ ] Rule 89: Domain objects used in services — ORM entities stay in repository layer
@@ -586,8 +587,40 @@ the exact consequence of violating it — not just "be careful".]
 ## 66. Strict Database Table Naming Convention
 * **The Rule:** All table names must be `plural_snake_case` (e.g., `payment_transactions`). Junction tables must combine the two table names alphabetically (e.g., `member_plans`). Never use legacy prefixes like `tbl_`. Enforce explicitly via `@Entity('table_name')`.
 
-## 67. API Contract Freeze Before Frontend Development
-* **The Rule:** The backend developer/AI must first write the DTOs and Swagger spec. This contract must be "frozen" and approved by the frontend layer before any backend implementation code is written. This prevents data shape mismatches.
+## 67. API Contract Freeze & Cross-Layer Approval (Mutual Contract Freeze)
+* **The Rule:** The API contract between the frontend and backend MUST be mutually agreed and frozen before backend implementation code is written. This project follows a **frontend-first workflow** — the sequence is:
+
+```text
+Frontend Feature Development
+    ↓
+UI Data Requirements (Frontend Rule 13 / Rule 75A)
+    ↓
+API Contract (endpoints, request shape, response DTO shape)
+    ↓
+Frontend TypeScript types + Zod schema
+    ↓
+MSW handler (frontend mock)
+    ↓
+Mutual Contract Freeze
+    ↓
+Backend DTO + OpenAPI/Swagger documentation
+    ↓
+Backend implementation (services, repositories, DB queries)
+```
+
+* **What "Mutual Contract Freeze" means:**
+  1. The frontend publishes its `## UI Data Requirements` and `## API Contract` in the feature's `_features.md`.
+  2. The backend reviews and agrees that the response DTO shape is feasible from the data model.
+  3. **Both layers freeze** — no unilateral renaming of fields, adding required fields, or changing response structure after this point without updating both sides in the same PR.
+  4. Only then does the backend write DTOs, Swagger docs, and implementation code.
+
+* **What the backend must NOT do:**
+  - Write DTOs in isolation before inspecting the frontend's `UI Data Requirements`.
+  - Return a "minimal" response DTO and expect the frontend to adapt — see Rule 82A.
+  - Rename fields unilaterally (e.g., `ownerName` → `owner_display_name`) after the contract is frozen.
+  - Add or remove required fields without updating the frontend types, Zod schemas, MSW handlers, and tests in the same change.
+
+* **Why:** The previous "backend writes DTOs first" rule conflicted with the frontend-first workflow used in this project. The backend AI writing a DTO without inspecting the frontend's UI Data Requirements produces exactly the minimal-response failure mode that Rules 75A and 82A are designed to prevent.
 
 ## 68. Health Check Depth Levels
 * **The Rule:** Implement 3 levels of health checks: `/health/live` (Process alive? 200 OK), `/health/ready` (DB/Redis reachable? Traffic ready), and `/health/deep` (Full dependency chain check, not exposed publicly).
@@ -741,6 +774,92 @@ the exact consequence of violating it — not just "be careful".]
   - ✅ **GOOD:** Always `data: MemberEntity` — one shape, all paths.
 * **The Discriminated Union Rule for Errors:** Never put different error shapes inside `data`. All error information belongs strictly in the `error` and `errorCode` fields of the envelope (Rule 64). The `data` field must always be `null` on error responses. No exceptions.
 * **Why:** The frontend AI agent generating the type-safe API call relies on `ApiResponse<MemberEntity>` mapping exactly. If the backend AI returns `data: { member: MemberEntity }` instead of `data: MemberEntity`, the TypeScript type system on the frontend will silently pass (because of structural typing) but every `res.data.name` call will return `undefined`, creating bugs that are extremely hard to trace.
+
+---
+
+## 82A. Frontend UI Data Contract Completeness
+* **The Rule:** Every backend response DTO MUST satisfy the **complete data contract** documented by the consuming frontend feature's `## UI Data Requirements` section (Frontend Rule 13 / Rule 75A). The backend MUST NOT intentionally return a reduced or "minimal" DTO merely because the database entity contains only a subset of the fields currently visible in the UI.
+
+Before implementing an endpoint, the backend AI MUST inspect the corresponding frontend feature's:
+1. `_features.md` → `## UI Data Requirements`
+2. `_features.md` → `## API Contract`
+3. Frontend TypeScript/API types
+4. Zod response schema where available
+
+The backend MUST return every field required by the frontend UI, including fields used by:
+- Table columns
+- KPI cards
+- Charts and chart series
+- Filters and search
+- Sorting and pagination
+- Dropdowns and relational references
+- Detail views, modals, and drawers
+- Status badges and timeline/history displays
+
+### Required Contract Chain
+
+```text
+Frontend UI Data Requirements
+    ↓
+Frontend API Contract
+    ↓
+Backend Response DTO
+    ↓
+Service Layer
+    ↓
+Repository / Query
+    ↓
+Database
+```
+
+### Completeness Rule
+
+Every field consumed by the frontend MUST have:
+- An explicitly named Response DTO field
+- A defined source or derivation rule (which DB column or JOIN produces it)
+- The correct nullability matching the frontend's Zod schema
+- An OpenAPI/Swagger `@ApiProperty()` description
+- A corresponding value in the stub response during stub-first development (Rule 81)
+
+The backend MUST NOT return `undefined`, omit required fields, rename fields independently, or change nested response structure without updating the frontend contract first (Rule 67).
+
+### No Frontend Reconstruction Rule
+
+Do not force the frontend to reconstruct business-level values such as:
+- Owner name derived from owner ID alone
+- Plan name derived from plan ID alone
+- Member count derived from a separate list query
+- Revenue totals derived from individual transaction records
+- Status labels assembled from unrelated fields
+
+When the UI contract requires such information, the backend MUST provide it through a **dedicated Response DTO** that assembles the required data via JOINs, aggregations, or dedicated service methods — not by leaving the reconstruction to the frontend.
+
+### Stub Parity Rule
+
+The stub response (Rule 81) MUST contain the **same complete field structure** as the eventual real implementation. A stub is NOT contract-complete if it returns only the fields convenient for initial development. The stub is the frontend's development contract — it must be identical in shape to the final response.
+
+### Minimal DTO Anti-Pattern (Forbidden)
+
+```text
+❌ FORBIDDEN:
+UI requires: name, ownerName, planName, memberCount, revenue, status
+Backend returns: { id, name, status }
+
+✔ REQUIRED:
+Backend returns: { id, name, ownerName, planName, memberCount, revenue, status }
+with all fields assembled via JOIN or dedicated query.
+```
+
+### Contract Change Rule
+
+If a backend implementation cannot provide a field currently required by the frontend:
+1. Do NOT silently omit the field from the response.
+2. Do NOT fabricate a placeholder value in production.
+3. Document the limitation clearly in the `_backend_feature.md`.
+4. Propose the contract change explicitly.
+5. Update the frontend `## UI Data Requirements`, API Contract, TypeScript types, Zod schema, MSW handler, and tests in the same PR before merging the breaking change.
+
+* **Why:** This prevents the exact failure mode where an MSW response or backend API returns only a few fields and the remaining table columns, KPI cards, and chart series render empty or `undefined`. Frontend Rule 75A prevents the frontend from papering over the gap with hardcoded fallback data — so the backend must provide the complete contract instead.
 
 ---
 
@@ -1233,6 +1352,7 @@ the exact consequence of violating it — not just "be careful".]
    - Is there a missing null check (use `findByIdOrThrow` where needed)?
    - Is a secret hardcoded? (Auto-blocked by pre-commit hook — Rule 91)
    - Is the response wrapped in the standard envelope with a single consistent `data` shape — is `data` a single explicitly typed value, never a polymorphic bag? (Rule 82)
+   - Does the response DTO satisfy the **complete** frontend UI Data Requirements — no missing table columns, KPI fields, chart series, dropdown data, or relationship fields? (Rule 82A)
    - Is the permission guard at the controller layer using typed enums? (Rule 83)
    - Is any ORM `orderBy` or `where` using user input without an allowlist? (Rule 92)
    - Does every paginated endpoint use `PaginationQueryDto` and return the canonical `PaginationMeta` shape via `buildPaginationMeta()`? (Rule 94)
