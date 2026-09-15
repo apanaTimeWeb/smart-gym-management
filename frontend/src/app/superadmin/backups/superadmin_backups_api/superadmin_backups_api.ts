@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Encapsulates functionality for superadmin_backups_api.ts
 import { BackupRecordSchema } from '@/app/superadmin/backups/superadmin_backups_types/superadmin_backups_types';
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
@@ -27,3 +28,4 @@ export const backupsApi = {
     return `${process.env.NEXT_PUBLIC_API_URL || ''}${BackupsUrlConfig.BACKEND_API.BASE}/${id}/download`;
   }
 };
+

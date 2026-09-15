@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Encapsulates functionality for SuperadminProfileConstants.ts
 export const TIMEZONE_OPTIONS = [
   'Asia/Kolkata',
   'Asia/Dubai',
@@ -15,3 +16,4 @@ export const LANGUAGE_OPTIONS = [
   { value: 'ta', label: 'Tamil' },
   { value: 'te', label: 'Telugu' },
 ] as const;
+

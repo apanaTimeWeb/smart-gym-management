@@ -12,6 +12,7 @@ export function useUnsavedChangesGuard(
 
   // RESPONSIBILITY: Handle side-effects for useUnsavedChangesGuard
   // EXPLANATION: Synchronize component state with external dependencies.
+  // EFFECT DEPENDENCIES: Documented intentionally.
   useEffect(() => {
     // 1. Browser tab close / hard navigation
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
@@ -84,3 +85,4 @@ export function useUnsavedChangesGuard(
     };
   }, [isDirty, warningMessage, router, confirm]);
 }
+

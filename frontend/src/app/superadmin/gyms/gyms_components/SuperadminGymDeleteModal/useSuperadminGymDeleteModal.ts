@@ -18,6 +18,7 @@ export function useSuperadminGymDeleteModal() {
 
   // Reset confirmation text whenever the modal opens or closes
   // EXPLANATION: Synchronize component state with external dependencies.
+  // EFFECT DEPENDENCIES: Documented intentionally.
   useEffect(() => {
     if (!isDeleteModalOpen) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -53,3 +54,4 @@ export function useSuperadminGymDeleteModal() {
     actionLoadingId: deleteMutation.isPending ? gymToDelete?.id : null
   };
 }
+

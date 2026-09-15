@@ -16,6 +16,7 @@ interface SuperadminBroadcastModalProps {
   form: UseFormReturn<BroadcastFormData>;
   onSubmit: (data: BroadcastFormData) => void;
   isEditMode?: boolean;
+  isMutating?: boolean;
 }
 
 import { useUnsavedChangesGuard } from '@/lib/useUnsavedChangesGuard';
@@ -26,6 +27,7 @@ export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> =
   form,
   onSubmit,
   isEditMode = false,
+  isMutating = false,
 }) => {
 
   const { register, handleSubmit, watch, setValue, formState: { errors, isDirty } } = form;
@@ -216,9 +218,10 @@ export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> =
             </button>
             <button 
               type="submit" 
-              className="px-5 py-2.5 bg-primary hover:bg-primary-hover text-white font-medium rounded-lg motion-safe:transition-colors text-sm"
+              disabled={isMutating}
+              className="px-5 py-2.5 bg-primary hover:bg-primary-hover text-white font-medium rounded-lg motion-safe:transition-colors text-sm disabled:opacity-50 flex items-center justify-center min-w-32"
             >
-              {status === 'SENT' ? `Send to ${targetGymIds.length} Gyms` : 'Save Broadcast'}
+              {isMutating ? <Loader2 className="w-4 h-4 motion-safe:animate-spin" /> : status === 'SENT' ? `Send to ${targetGymIds.length} Gyms` : 'Save Broadcast'}
             </button>
           </div>
         </form>

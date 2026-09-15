@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Encapsulates functionality for SuperadminJobsConstants.ts
 import type { BackgroundJob } from '@/app/superadmin/jobs/jobs_types/superadmin_jobs_types';
 
 export const MOCK_BACKGROUND_JOBS: BackgroundJob[] = [
@@ -35,3 +36,4 @@ export const MOCK_BACKGROUND_JOBS: BackgroundJob[] = [
     createdAt: '2026-09-14T10:00:00Z',
   }
 ];
+

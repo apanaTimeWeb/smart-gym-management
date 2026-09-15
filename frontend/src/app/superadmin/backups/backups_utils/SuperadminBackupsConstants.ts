@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Encapsulates functionality for SuperadminBackupsConstants.ts
 import type { BackupRecord } from '@/app/superadmin/backups/superadmin_backups_types/superadmin_backups_types';
 
 export const StatusColors: Record<BackupRecord['status'], string> = {
@@ -5,3 +6,4 @@ export const StatusColors: Record<BackupRecord['status'], string> = {
   IN_PROGRESS: 'text-primary bg-primary/10',
   FAILED: 'text-danger bg-danger-bg/10',
 };
+

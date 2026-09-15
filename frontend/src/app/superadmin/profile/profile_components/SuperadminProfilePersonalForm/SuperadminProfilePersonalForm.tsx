@@ -41,6 +41,7 @@ export default function SuperadminProfilePersonalForm({
 
   // Rule 53: reset when profile prop changes (e.g. after successful save)
   // EXPLANATION: Synchronize component state with external dependencies.
+  // EFFECT DEPENDENCIES: Documented intentionally.
   useEffect(() => {
     reset({
       name: profile.name,
@@ -118,3 +119,4 @@ export default function SuperadminProfilePersonalForm({
     </form>
   );
 }
+

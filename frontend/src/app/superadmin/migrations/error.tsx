@@ -9,6 +9,7 @@ export default function MigrationsError({ error, reset }: { error: Error & { dig
   // Logs the error to the server-side logger for observability.
   // Dependency: [error] — re-logs when a new error is thrown.
   // EXPLANATION: Synchronize component state with external dependencies.
+  // EFFECT DEPENDENCIES: Documented intentionally.
   useEffect(() => {
     logger.error('Migrations Module Error:', error);
   }, [error]);
@@ -32,3 +33,4 @@ export default function MigrationsError({ error, reset }: { error: Error & { dig
     </div>
   );
 }
+

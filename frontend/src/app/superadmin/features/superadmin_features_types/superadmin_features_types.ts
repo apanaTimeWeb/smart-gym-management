@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Encapsulates functionality for superadmin_features_types.ts
 import { z } from 'zod';
 
 export interface FeatureFlag {
@@ -39,3 +40,4 @@ export interface SuperadminFeaturesTenant {
   name: string;
   plan: string;
 }
+

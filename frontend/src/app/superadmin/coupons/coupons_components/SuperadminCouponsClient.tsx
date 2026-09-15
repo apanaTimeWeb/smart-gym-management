@@ -18,6 +18,7 @@ export default function SuperadminCouponsClient() {
 
   // RESPONSIBILITY: Handle side-effects for SuperadminCouponsClient
   // EXPLANATION: Synchronize component state with external dependencies.
+  // EFFECT DEPENDENCIES: Documented intentionally.
   useEffect(() => {
     const handleOpenHistory = (e: Event) => {
       const customEvent = e as CustomEvent<Coupon>;
@@ -123,3 +124,4 @@ export default function SuperadminCouponsClient() {
     </div>
   );
 }
+

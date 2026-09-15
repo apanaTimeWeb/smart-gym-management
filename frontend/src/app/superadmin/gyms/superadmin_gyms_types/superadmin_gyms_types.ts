@@ -67,3 +67,13 @@ export interface Tenant {
 }
 
 export type FetchState = 'idle' | 'loading' | 'success' | 'error';
+
+/** Schema for gym platform statistics */
+export const GymStatsSchema = z.object({
+  totalActive: z.number(),
+  totalSuspended: z.number(),
+  mrrContribution: z.number().optional(),
+}).passthrough();
+
+/** Inferred type for gym stats */
+export type GymStats = z.infer<typeof GymStatsSchema>;

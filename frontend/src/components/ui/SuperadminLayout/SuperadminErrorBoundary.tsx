@@ -12,6 +12,7 @@ interface ErrorBoundaryProps {
 interface ErrorBoundaryState {
   hasError: boolean;
   error?: Error;
+  errorId?: string;
 }
 
 export class SuperadminErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
@@ -21,15 +22,16 @@ export class SuperadminErrorBoundary extends React.Component<ErrorBoundaryProps,
   }
 
   static getDerivedStateFromError(error: Error): ErrorBoundaryState {
-    return { hasError: true, error };
+    const errorId = `err_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+    return { hasError: true, error, errorId };
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error('[SuperadminErrorBoundary] Caught an error:', error, errorInfo);
+    console.error(`[SUPERADMIN_FATAL] Error ID: ${this.state.errorId}\n`, error, '\nComponent Stack:', errorInfo.componentStack);
   }
 
   resetErrorBoundary = () => {
-    this.setState({ hasError: false, error: undefined });
+    this.setState({ hasError: false, error: undefined, errorId: undefined });
   };
 
   render() {
@@ -56,9 +58,12 @@ export class SuperadminErrorBoundary extends React.Component<ErrorBoundaryProps,
           <div className="w-16 h-16 bg-danger-bg rounded-full flex items-center justify-center mb-4">
             <AlertTriangle className="w-8 h-8 text-danger" />
           </div>
-          <h2 className="text-xl font-bold text-foreground mb-2">Something went wrong in the SaaS Panel</h2>
-          <p className="text-secondary text-sm max-w-md text-center mb-6">
-            An unexpected error occurred while rendering this module. Please try again or contact support if the issue persists.
+          <h2 className="text-xl font-bold text-foreground mb-2">A system error occurred</h2>
+          <p className="text-secondary text-sm max-w-md text-center mb-2">
+            An unexpected error occurred while rendering this module. Please try again or contact infrastructure.
+          </p>
+          <p className="text-xs text-secondary/70 mb-6 bg-overlay px-3 py-1.5 rounded border border-border font-mono">
+            Error ID: {this.state.errorId}
           </p>
           <button
             onClick={this.resetErrorBoundary}

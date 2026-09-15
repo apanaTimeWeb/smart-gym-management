@@ -17,6 +17,7 @@ export function useSuperadminDashboardDateFilter() {
 
   // RESPONSIBILITY: Handle side-effects for useSuperadminDashboardDateFilter
   // EXPLANATION: Synchronize component state with external dependencies.
+  // EFFECT DEPENDENCIES: Documented intentionally.
   useEffect(() => {
     if (value === 'custom') {
       setCustomStart(currentStartDate);
@@ -91,3 +92,4 @@ export function useSuperadminDashboardDateFilter() {
     handleCustomDateChange
   };
 }
+

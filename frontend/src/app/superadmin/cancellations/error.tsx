@@ -14,6 +14,7 @@ export default function CancellationsAlertsError({
 }) {
   // RESPONSIBILITY: Handle side-effects for error
   // EXPLANATION: Synchronize component state with external dependencies.
+  // EFFECT DEPENDENCIES: Documented intentionally.
   useEffect(() => {
     logger.error('Cancellations Alerts Module Error:', error);
   }, [error]);
@@ -37,3 +38,4 @@ export default function CancellationsAlertsError({
     </div>
   );
 }
+

@@ -23,6 +23,7 @@ export function SuperadminMessagingTenantDropdown({
 
   // RESPONSIBILITY: Handle side-effects for SuperadminMessagingTenantDropdown
   // EXPLANATION: Synchronize component state with external dependencies.
+  // EFFECT DEPENDENCIES: Documented intentionally.
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (ref.current && !ref.current.contains(e.target as Node)) {
@@ -94,3 +95,4 @@ export function SuperadminMessagingTenantDropdown({
     </div>
   );
 }
+

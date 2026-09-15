@@ -45,6 +45,7 @@ export default function SuperadminReportsClient() {
 
   // RESPONSIBILITY: Handle side-effects for SuperadminReportsClient
   // EXPLANATION: Synchronize component state with external dependencies.
+  // EFFECT DEPENDENCIES: Documented intentionally.
   useEffect(() => {
     let mounted = true;
     async function loadData() {
@@ -255,3 +256,4 @@ export default function SuperadminReportsClient() {
     </div>
   );
 }
+

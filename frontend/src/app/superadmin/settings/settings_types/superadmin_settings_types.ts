@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Encapsulates functionality for superadmin_settings_types.ts
 import { z } from 'zod';
 export const PlatformSettingSchema = z.object({
   id: z.string(),
@@ -8,3 +9,4 @@ export const PlatformSettingSchema = z.object({
   dataType: z.enum(['string', 'number', 'boolean']),
 });
 export type PlatformSetting = z.infer<typeof PlatformSettingSchema>;
+

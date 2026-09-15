@@ -38,6 +38,7 @@ export function useSuperadminGymEditModal() {
 
   // RESPONSIBILITY: Handle side-effects for useSuperadminGymEditModal
   // EXPLANATION: Synchronize component state with external dependencies.
+  // EFFECT DEPENDENCIES: Documented intentionally.
   useEffect(() => {
     if (selectedGym && isEditModalOpen) {
       reset({
@@ -84,3 +85,4 @@ export function useSuperadminGymEditModal() {
     isSubmitting: isSubmitting || editMutation.isPending,
   };
 }
+

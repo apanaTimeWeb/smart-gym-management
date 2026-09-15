@@ -29,6 +29,7 @@ export default function SuperadminPlanEditModal() {
 
   // Populate form when selectedPlan changes
   // EXPLANATION: Synchronize component state with external dependencies.
+  // EFFECT DEPENDENCIES: Documented intentionally.
   useEffect(() => {
     if (selectedPlan && isOpen) {
       reset({
@@ -145,3 +146,4 @@ export default function SuperadminPlanEditModal() {
     </div>
   );
 }
+

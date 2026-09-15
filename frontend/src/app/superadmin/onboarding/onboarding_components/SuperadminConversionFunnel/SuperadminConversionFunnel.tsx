@@ -11,6 +11,7 @@ export default function SuperadminConversionFunnel({ tenants }: { tenants: Tenan
   const [mounted, setMounted] = useState(false);
   // RATIONALE: Required by architecture to sync state/lifecycle based on dependencies.
   // EXPLANATION: Synchronize component state with external dependencies.
+  // EFFECT DEPENDENCIES: Documented intentionally.
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -115,3 +116,4 @@ export default function SuperadminConversionFunnel({ tenants }: { tenants: Tenan
     </div>
   );
 }
+

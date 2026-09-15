@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Encapsulates functionality for superadmin_invoices_api.ts
 import { SaaSInvoiceSchema } from '@/app/superadmin/invoices/superadmin_invoices_types/superadmin_invoices_types';
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
@@ -39,3 +40,4 @@ export const invoicesApi = {
     return apiFetch<ApiResponse<any[]>>('/superadmin/gyms-list');
   },
 };
+

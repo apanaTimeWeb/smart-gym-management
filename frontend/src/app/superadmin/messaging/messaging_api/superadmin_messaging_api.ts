@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Encapsulates functionality for superadmin_messaging_api.ts
 import { TenantMessageSchema, SuperadminNotificationSchema, MessagingTenantSchema } from '@/app/superadmin/messaging/messaging_types/superadmin_messaging_types';
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
@@ -19,3 +20,4 @@ export const superadminMessagingApi = {
         dataSchema: TenantMessageSchema
     }),
 };
+

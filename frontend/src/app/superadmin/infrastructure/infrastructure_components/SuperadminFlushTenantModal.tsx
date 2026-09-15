@@ -28,6 +28,7 @@ export default function SuperadminFlushTenantModal({ isOpen, onClose, onFlush }:
 
   // RESPONSIBILITY: Handle side-effects for SuperadminFlushTenantModal
   // EXPLANATION: Synchronize component state with external dependencies.
+  // EFFECT DEPENDENCIES: Documented intentionally.
   useEffect(() => {
     if (!isOpen) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -156,3 +157,4 @@ export default function SuperadminFlushTenantModal({ isOpen, onClose, onFlush }:
     </div>
   );
 }
+

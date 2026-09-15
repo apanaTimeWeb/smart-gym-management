@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Encapsulates functionality for SuperadminSystemTypes.ts
 export type SuperadminSystemSlaStatus = 'MET' | 'BREACHED' | 'WARNING';
 
 export interface SuperadminTenantSla {
@@ -9,3 +10,4 @@ export interface SuperadminTenantSla {
   downtimeMinutes: number;
   status: SuperadminSystemSlaStatus;
 }
+

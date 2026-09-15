@@ -7,15 +7,7 @@ import type { Tenant } from '@/app/superadmin/gyms/superadmin_gyms_types/superad
 import { z } from "zod";
 import { TenantSchema } from '@/app/superadmin/gyms/superadmin_gyms_types/superadmin_gyms_types';
 
-/** Schema for gym platform statistics */
-const GymStatsSchema = z.object({
-  totalActive: z.number(),
-  totalSuspended: z.number(),
-  mrrContribution: z.number().optional(),
-}).passthrough();
-
-/** Inferred type for gym stats */
-export type GymStats = z.infer<typeof GymStatsSchema>;
+import { GymStatsSchema, type GymStats } from '@/app/superadmin/gyms/superadmin_gyms_types/superadmin_gyms_types';
 
 export const gymsApi = {
   fetchGyms: (params?: Record<string, string>) => {

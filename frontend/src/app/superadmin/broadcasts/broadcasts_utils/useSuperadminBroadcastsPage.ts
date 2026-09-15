@@ -1,58 +1,29 @@
 // RESPONSIBILITY: useSuperadminBroadcastsPage.ts encapsulates all state and async logic for the Broadcasts page.
 // DATA FLOW: broadcastsApi → useSuperadminBroadcastsPage → SuperadminBroadcastsClient
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-
-import { BroadcastSchema, type BroadcastFormData, type Broadcast, type BroadcastStatus, type BroadcastStatusFilter } from '@/app/superadmin/broadcasts/superadmin_broadcasts_types/superadmin_broadcasts_types';
 import toast from 'react-hot-toast';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { broadcastsApi } from '@/app/superadmin/broadcasts/superadmin_broadcasts_api/superadmin_broadcasts_api';
-import type { SuperadminBroadcastsTenant } from '@/app/superadmin/broadcasts/superadmin_broadcasts_types/superadmin_broadcasts_types';
-import { useSuperadminUrlState } from '@/app/superadmin/superadmin_utils/useSuperadminUrlState';
+
+import { BroadcastSchema, type BroadcastFormData, type Broadcast, type BroadcastStatus } from '@/app/superadmin/broadcasts/superadmin_broadcasts_types/superadmin_broadcasts_types';
+import { useSuperadminBroadcastsData } from '@/app/superadmin/broadcasts/broadcasts_utils/useSuperadminBroadcastsData';
+import { useSuperadminBroadcastsMutations } from '@/app/superadmin/broadcasts/broadcasts_utils/useSuperadminBroadcastsMutations';
 
 export const useSuperadminBroadcastsPage = () => {
-  const queryClient = useQueryClient();
-  const { getParam, setParam } = useSuperadminUrlState();
-
-  const searchQuery = getParam('search', '');
-  const statusFilter = getParam('status', 'ALL') as BroadcastStatusFilter;
-
-  const setSearchQuery = (val: string) => setParam('search', val);
-  const setStatusFilter = (val: BroadcastStatusFilter) => setParam('status', val);
-
-  const queryParams = useMemo(() => {
-    const params: Record<string, string> = {};
-    if (searchQuery) params.search = searchQuery;
-    if (statusFilter !== 'ALL') params.status = statusFilter;
-    return params;
-  }, [searchQuery, statusFilter]);
-
-  const queryKey = useMemo(() => ['superadmin', 'broadcasts', queryParams], [queryParams]);
-
-  const { data: broadcastsRes, status: fetchState, error } = useQuery({
-    queryKey,
-    queryFn: () => broadcastsApi.fetchBroadcasts(queryParams),
-  });
-
-  const { data: gymsRes } = useQuery({
-    queryKey: ['superadmin', 'gyms'],
-    queryFn: () => broadcastsApi.fetchTenants(),
-  });
-
-  const updateBroadcasts = useCallback((updater: (prev: Broadcast[]) => Broadcast[]) => {
-    queryClient.setQueryData(queryKey, (oldData: { data: Broadcast[] } | undefined) => {
-      if (!oldData?.data) return oldData;
-      return { ...oldData, data: updater(oldData.data) };
-    });
-  }, [queryClient, queryKey]);
-
-  const broadcasts = useMemo(() => (broadcastsRes?.data as Broadcast[]) ?? [], [broadcastsRes]);
-  const gyms = useMemo(() => (gymsRes?.data as SuperadminBroadcastsTenant[]) ?? [], [gymsRes]);
+  const {
+    broadcasts,
+    gyms,
+    fetchState,
+    error,
+    searchQuery,
+    setSearchQuery,
+    statusFilter,
+    setStatusFilter,
+    updateBroadcasts
+  } = useSuperadminBroadcastsData();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
-
   const [queueModalOpen, setQueueModalOpen] = useState(false);
   const [queueRecipients, setQueueRecipients] = useState<{id: string; name: string; phone: string}[]>([]);
   const [queueTitle, setQueueTitle] = useState('');
@@ -68,77 +39,16 @@ export const useSuperadminBroadcastsPage = () => {
     },
   });
 
-  const createMutation = useMutation({
-    mutationFn: (data: BroadcastFormData) => broadcastsApi.createBroadcast(data),
-    onSuccess: (res: any, variables: any) => {
-      if (res.success && res.data) {
-        updateBroadcasts(prev => [res.data!, ...prev]);
-        setIsModalOpen(false);
-        form.reset();
-        const isSendingNow = variables.status === 'SENT';
-        if (!isSendingNow) {
-            toast.success(res.message || 'Broadcast created successfully', { id: 'broadcast-created-successfully' });
-        } else {
-            const targetGymIds = res.data.targetGymIds || [];
-            const selectedGyms = gyms?.filter(g => targetGymIds.includes(g.id)) || [];
-            const recipients = selectedGyms.map(g => ({ id: g.id, name: g.name, phone: g.phone || 'N/A' }));
-            setQueueRecipients(recipients);
-            setQueueTitle(res.data.title);
-            setQueueModalOpen(true);
-        }
-      } else {
-        toast.error(res.message || 'Failed to create broadcast');
-      }
-    },
-    onError: (error: any) => {
-        toast.error(error.message || 'Failed to create broadcast');
-    }
+  const { createMutation, updateMutation, deleteMutation, isMutating } = useSuperadminBroadcastsMutations({
+    updateBroadcasts,
+    setIsModalOpen,
+    setEditingId,
+    form,
+    gyms,
+    setQueueRecipients,
+    setQueueTitle,
+    setQueueModalOpen,
   });
-
-  const updateMutation = useMutation({
-    mutationFn: ({ id, data }: { id: string, data: Partial<BroadcastFormData> }) => broadcastsApi.updateBroadcast(id, data),
-    onSuccess: (res: any, variables: any) => {
-      if (res.success && res.data) {
-        updateBroadcasts(prev => prev.map(b => b.id === variables.id ? res.data! : b));
-        setIsModalOpen(false);
-        setEditingId(null);
-        form.reset();
-        const isSendingNow = variables.data.status === 'SENT';
-        if (!isSendingNow) {
-            toast.success(res.message || 'Broadcast updated successfully', { id: 'broadcast-updated-successfully' });
-        } else {
-            const targetGymIds = res.data.targetGymIds || [];
-            const selectedGyms = gyms?.filter(g => targetGymIds.includes(g.id)) || [];
-            const recipients = selectedGyms.map(g => ({ id: g.id, name: g.name, phone: g.phone || 'N/A' }));
-            setQueueRecipients(recipients);
-            setQueueTitle(res.data.title);
-            setQueueModalOpen(true);
-        }
-      } else {
-        toast.error(res.message || 'Failed to update broadcast');
-      }
-    },
-    onError: (error: any) => {
-        toast.error(error.message || 'Failed to update broadcast');
-    }
-  });
-
-  const deleteMutation = useMutation({
-    mutationFn: (id: string) => broadcastsApi.deleteBroadcast(id),
-    onSuccess: (res: any, id: any) => {
-      if (res.success) {
-        updateBroadcasts(prev => prev.filter(b => b.id !== id));
-        toast.success(res.message || 'Broadcast deleted successfully', { id: 'broadcast-deleted-successfully' });
-      } else {
-        toast.error(res.message || 'Failed to delete broadcast');
-      }
-    },
-    onError: (error: any) => {
-        toast.error(error.message || 'Failed to delete broadcast');
-    }
-  });
-
-  const isMutating = createMutation.isPending || updateMutation.isPending || deleteMutation.isPending;
 
   const handleCreateBroadcast = useCallback(async (data: BroadcastFormData) => {
     const { scheduledDate, ...rest } = data;
@@ -190,12 +100,10 @@ export const useSuperadminBroadcastsPage = () => {
     setIsModalOpen(true);
   }, [form]);
 
-  const filteredBroadcasts = broadcasts;
-
   return {
     fetchState,
     error,
-    broadcasts: filteredBroadcasts,
+    broadcasts,
     searchQuery,
     setSearchQuery,
     statusFilter,

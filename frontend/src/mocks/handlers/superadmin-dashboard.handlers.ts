@@ -1,5 +1,5 @@
 import { http, HttpResponse, delay } from 'msw';
-import { MOCK_SUPERADMIN_DASHBOARD_DATA } from '@/app/superadmin/dashboard/dashboard_api/SuperadminDashboardMockData';
+import { MOCK_SUPERADMIN_DASHBOARD_DATA } from '@/mocks/fixtures/superadmin/SuperadminDashboardMockData';
 
 const BASE_URL = '*/superadmin/dashboard';
 

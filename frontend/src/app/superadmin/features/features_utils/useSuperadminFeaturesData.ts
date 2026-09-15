@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Encapsulates functionality for useSuperadminFeaturesData.ts
 // DATA FLOW: Component -> useSuperadminFeaturesData.ts -> API/Store
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { featuresApi } from '@/app/superadmin/features/superadmin_features_api/superadmin_features_api';
@@ -60,3 +61,4 @@ export function useSuperadminFeaturesData() {
     updateFlag: updateFlagMutation.mutateAsync
   };
 }
+

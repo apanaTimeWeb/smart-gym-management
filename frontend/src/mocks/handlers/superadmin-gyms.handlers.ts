@@ -1,5 +1,5 @@
 import { http, HttpResponse, delay } from 'msw';
-import { MOCK_GYMS, MOCK_GYM_STATS } from '@/app/superadmin/gyms/superadmin_gyms_api/SuperadminGymsMockData';
+import { MOCK_GYMS, MOCK_GYM_STATS } from '@/mocks/fixtures/superadmin/SuperadminGymsMockData';
 import { GymsUrlConfig } from '@/app/superadmin/gyms/superadmin_gyms_url_config';
 
 let mockGymsList = [...MOCK_GYMS];

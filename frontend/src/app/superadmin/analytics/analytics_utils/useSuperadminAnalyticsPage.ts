@@ -54,9 +54,11 @@ export function useSuperadminAnalyticsPage(): UseAnalyticsPageReturn {
 
   // RESPONSIBILITY: Handle side-effects for useSuperadminAnalyticsPage
   // EXPLANATION: Synchronize component state with external dependencies.
+  // EFFECT DEPENDENCIES: Documented intentionally.
   useEffect(() => {
     return fetchMetrics();
   }, [fetchMetrics]);
 
   return { metrics, monthlyData, fetchState, error, timeRange, customStart, customEnd };
 }
+

@@ -11,6 +11,7 @@ export default function SuperadminUptimeChart() {
   const [mounted, setMounted] = useState(false);
   // RATIONALE: Required by architecture to sync state/lifecycle based on dependencies.
   // EXPLANATION: Synchronize component state with external dependencies.
+  // EFFECT DEPENDENCIES: Documented intentionally.
   useEffect(() => setMounted(true), []);
 
   const { series, options } = useMemo(() => {
@@ -100,3 +101,4 @@ export default function SuperadminUptimeChart() {
     </div>
   );
 }
+

@@ -24,6 +24,7 @@ export default function SuperadminBroadcastsClient() {
     openEditModal,
     openCreateModal,
     editingId,
+    isMutating,
     fetchState,
     error,
     queueModalOpen,
@@ -68,6 +69,7 @@ export default function SuperadminBroadcastsClient() {
         form={form}
         onSubmit={handleCreateBroadcast}
         isEditMode={!!editingId}
+        isMutating={isMutating}
       />
 
       <SuperadminBroadcastQueueModal 

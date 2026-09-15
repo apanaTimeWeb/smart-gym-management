@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Encapsulates functionality for useSuperadminCancellationsAlertsPage.ts
 import { useState, useMemo } from 'react';
 import toast from 'react-hot-toast';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -93,3 +94,4 @@ export function useSuperadminCancellationsAlertsPage() {
     handleActionConfirm, handleBulkOutreach
   };
 }
+

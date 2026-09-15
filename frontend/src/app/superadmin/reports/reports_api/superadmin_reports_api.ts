@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Encapsulates functionality for superadmin_reports_api.ts
 import { RevenueRowSchema, CancellationsRecordSchema, TenantHealthScoreSchema } from '@/app/superadmin/reports/reports_types/superadmin_reports_types';
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
@@ -13,3 +14,4 @@ export const superadminReportsApi = {
   fetchHealthData: () =>
     apiFetch<ApiResponse<TenantHealthScore[]>>(`${ReportsUrlConfig.BACKEND_API.BASE}/health`, { dataSchema: z.array(TenantHealthScoreSchema) }),
 };
+

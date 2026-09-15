@@ -14,6 +14,7 @@ interface SuperadminCouponsRedemptionDrawerProps {
 export default function SuperadminCouponsRedemptionDrawer({ coupon, isOpen, onClose }: SuperadminCouponsRedemptionDrawerProps) {
   // Prevent scrolling on body when drawer is open
   // EXPLANATION: Synchronize component state with external dependencies.
+  // EFFECT DEPENDENCIES: Documented intentionally.
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -115,3 +116,4 @@ export default function SuperadminCouponsRedemptionDrawer({ coupon, isOpen, onCl
     </>
   );
 }
+

@@ -30,6 +30,7 @@ export default function SuperadminFeatureRolloutModal({ isOpen, onClose, flag, o
 
   // RESPONSIBILITY: Handle side-effects for SuperadminFeatureRolloutModal
   // EXPLANATION: Synchronize component state with external dependencies.
+  // EFFECT DEPENDENCIES: Documented intentionally.
   useEffect(() => {
     if (isOpen && flag) {
       setSelectedTenantIds(flag.enabledTenantIds || []);
@@ -157,3 +158,4 @@ export default function SuperadminFeatureRolloutModal({ isOpen, onClose, flag, o
     </div>
   );
 }
+

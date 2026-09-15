@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Encapsulates functionality for superadmin_usage-meters_types.ts
 import { z } from 'zod';
 export interface UsageMeter {
   id: string;
@@ -32,3 +33,4 @@ export const UsageMeterSchema = z.object({
   limitValue: z.number(),
   resetDate: z.string()
 });
+

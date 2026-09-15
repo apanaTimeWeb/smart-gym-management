@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Encapsulates functionality for superadmin_analytics_api.ts
 import { AnalyticsApiDataSchema } from '@/app/superadmin/analytics/superadmin_analytics_types/superadmin_analytics_types';
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
@@ -11,3 +12,4 @@ export const analyticsApi = {
     return apiFetch<ApiResponse<AnalyticsApiData>>(`${AnalyticsUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: AnalyticsApiDataSchema });
   },
 };
+

@@ -32,6 +32,7 @@ export default function SuperadminBackupsClient() {
 
   // Resets pagination to page 1 whenever a filter changes, preventing stale empty states.
   // EXPLANATION: Synchronize component state with external dependencies.
+  // EFFECT DEPENDENCIES: Documented intentionally.
   useEffect(() => {
     setCurrentPage(1);
   }, [search, statusFilter, typeFilter]);
@@ -187,3 +188,4 @@ export default function SuperadminBackupsClient() {
     </div>
   );
 }
+

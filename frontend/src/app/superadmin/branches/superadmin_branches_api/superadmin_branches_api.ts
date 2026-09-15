@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Encapsulates functionality for superadmin_branches_api.ts
 import { SuperadminBranchSchema } from '@/app/superadmin/branches/branches_types/superadmin_branches_types';
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
@@ -29,3 +30,4 @@ export const superadminBranchesApi = {
         dataSchema: z.object({}).passthrough()
     }),
 };
+

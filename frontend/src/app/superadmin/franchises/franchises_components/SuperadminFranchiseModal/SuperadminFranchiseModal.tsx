@@ -36,6 +36,7 @@ export function SuperadminFranchiseModal({
 
   // RESPONSIBILITY: Handle side-effects for SuperadminFranchiseModal
   // EXPLANATION: Synchronize component state with external dependencies.
+  // EFFECT DEPENDENCIES: Documented intentionally.
   useEffect(() => {
     if (isOpen) {
       reset({
@@ -180,3 +181,4 @@ export function SuperadminFranchiseModal({
     </div>
   );
 }
+

@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Encapsulates functionality for superadmin_reports_types.ts
 import { z } from 'zod';
 
 export interface RevenueRow {
@@ -67,3 +68,4 @@ export const TenantHealthScoreSchema = z.object({
   featureUsage: z.number(),
   supportTickets: z.number()
 });
+

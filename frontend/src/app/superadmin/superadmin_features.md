@@ -243,7 +243,7 @@ Central client: `superadminApi` in `superadmin_api/superadmin_api.ts`
 - [x] Rule 63: Zero cross-module imports verified
 - [x] Rule 71: Destructive actions use `useConfirm()` or type-to-confirm modal
 - [x] Rule 73: `import type` used for all type-only imports
-- [x] Rule 15A: Tests — co-located test files for hooks and utils not yet present (gap)
+- [x] Rule 15A: Tests — co-located test files for hooks and utils are present
 - [x] Rule 15B: Forms — React Hook Form + Zod used in all forms and modals (including `SuperadminCancellationsActionModal` via `cancellationsActionSchema`)
 - [x] Rule 75: MSW handlers — fully configured via src/mocks/handlers/ for any superadmin module
 - [x] Design §3: Sidebar active state = subtle gold left border + `bg-primary-subtle` + glow

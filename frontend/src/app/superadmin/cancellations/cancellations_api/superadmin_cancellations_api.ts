@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Encapsulates functionality for superadmin_cancellations_api.ts
 import { CancellationsAlertSchema, CancellationsKpiDataSchema } from '@/app/superadmin/cancellations/cancellations_types/superadmin_cancellations_types';
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
@@ -32,3 +33,4 @@ export const cancellationsAlertsApi = {
         dataSchema: z.object({}).passthrough()
     }),
 };
+

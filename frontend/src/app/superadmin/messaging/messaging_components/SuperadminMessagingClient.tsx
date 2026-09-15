@@ -42,6 +42,7 @@ export default function SuperadminMessagingClient() {
 
   // RESPONSIBILITY: Handle side-effects for SuperadminMessagingClient
   // EXPLANATION: Synchronize component state with external dependencies.
+  // EFFECT DEPENDENCIES: Documented intentionally.
   useEffect(() => {
     let mounted = true;
     async function loadData() {
@@ -214,3 +215,4 @@ export default function SuperadminMessagingClient() {
     </div>
   );
 }
+

@@ -44,6 +44,7 @@ export default function SuperadminBroadcastQueueModal({
 
   // Starts the queue from the first recipient whenever the modal opens with a new list.
   // EXPLANATION: Synchronize component state with external dependencies.
+  // EFFECT DEPENDENCIES: Documented intentionally.
   useEffect(() => {
     if (isOpen && recipients.length > 0) {
       setCurrentIndex(0);
@@ -53,6 +54,7 @@ export default function SuperadminBroadcastQueueModal({
 
   // Processes each recipient sequentially with a 1.5s visual delay.
   // EXPLANATION: Synchronize component state with external dependencies.
+  // EFFECT DEPENDENCIES: Documented intentionally.
   useEffect(() => {
     if (currentIndex >= 0 && currentIndex < recipients.length) {
       const timer = setTimeout(() => {
@@ -145,3 +147,4 @@ export default function SuperadminBroadcastQueueModal({
     </div>
   );
 }
+

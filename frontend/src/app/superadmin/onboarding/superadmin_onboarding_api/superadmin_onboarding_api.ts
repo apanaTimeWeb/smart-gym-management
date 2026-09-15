@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Encapsulates functionality for superadmin_onboarding_api.ts
 import { TenantOnboardingSchema } from '@/app/superadmin/onboarding/onboarding_types/superadmin_onboarding_types';
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
@@ -30,3 +31,4 @@ export const onboardingApi = {
         dataSchema: TenantOnboardingSchema
     }),
 };
+

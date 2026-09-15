@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Encapsulates functionality for superadmin_features_api.ts
 import { FeatureFlagSchema, ReleaseNoteSchema } from '@/app/superadmin/features/superadmin_features_types/superadmin_features_types';
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
@@ -58,3 +59,4 @@ export const featuresApi = {
     return apiFetch<ApiResponse<any[]>>('/superadmin/gyms-list');
   },
 };
+

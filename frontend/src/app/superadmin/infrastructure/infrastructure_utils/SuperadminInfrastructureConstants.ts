@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Encapsulates functionality for SuperadminInfrastructureConstants.ts
 import type { InfrastructureNode, RedisTelemetry } from '@/app/superadmin/infrastructure/infrastructure_types/superadmin_infrastructure_types';
 
 export const MOCK_INFRASTRUCTURE_NODES: InfrastructureNode[] = [
@@ -14,3 +15,4 @@ export const MOCK_REDIS_TELEMETRY: RedisTelemetry = {
   uptimeHours: 342,
   status: 'CONNECTED'
 };
+

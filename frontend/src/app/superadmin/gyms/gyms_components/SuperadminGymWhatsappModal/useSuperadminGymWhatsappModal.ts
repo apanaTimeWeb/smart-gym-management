@@ -30,6 +30,7 @@ export function useSuperadminGymWhatsappModal() {
 
   // RESPONSIBILITY: Handle side-effects for useSuperadminGymWhatsappModal
   // EXPLANATION: Synchronize component state with external dependencies.
+  // EFFECT DEPENDENCIES: Documented intentionally.
   useEffect(() => {
     if (isWhatsappModalOpen) {
       reset({ subject: '', message: '' });
@@ -100,3 +101,4 @@ export function useSuperadminGymWhatsappModal() {
     isDirty,
   };
 }
+

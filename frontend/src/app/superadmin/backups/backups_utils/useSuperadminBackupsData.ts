@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Encapsulates functionality for useSuperadminBackupsData.ts
 // DATA FLOW: Component -> useSuperadminBackupsData.ts -> API/Store
 import { useQuery } from '@tanstack/react-query';
 import { backupsApi } from '@/app/superadmin/backups/superadmin_backups_api/superadmin_backups_api';
@@ -25,3 +26,4 @@ export function useSuperadminBackupsData() {
     setData: (updater: React.SetStateAction<BackupRecord[] | null>) => {} // mock to keep signature
   };
 }
+

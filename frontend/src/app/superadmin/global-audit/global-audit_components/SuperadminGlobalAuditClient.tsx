@@ -40,6 +40,7 @@ export default function SuperadminGlobalAuditClient() {
 
   // RESPONSIBILITY: Handle side-effects for SuperadminGlobalAuditClient
   // EXPLANATION: Synchronize component state with external dependencies.
+  // EFFECT DEPENDENCIES: Documented intentionally.
   useEffect(() => {
     setCurrentPage(1);
   }, [search, severityFilter, actorTypeFilter]);
@@ -259,3 +260,4 @@ export default function SuperadminGlobalAuditClient() {
     </div>
   );
 }
+

@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Encapsulates functionality for superadmin_jobs_types.ts
 import { z } from 'zod';
 export const BackgroundJobSchema = z.object({
   id: z.string(),
@@ -17,3 +18,4 @@ export const JobsMetricsSchema = z.object({
   delayed: z.number(),
 });
 export type JobsMetrics = z.infer<typeof JobsMetricsSchema>;
+

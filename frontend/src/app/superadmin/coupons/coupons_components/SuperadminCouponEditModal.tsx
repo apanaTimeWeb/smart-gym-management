@@ -30,6 +30,7 @@ export const SuperadminCouponEditModal: React.FC<SuperadminCouponEditModalProps>
 
   // RESPONSIBILITY: Handle side-effects for SuperadminCouponEditModal
   // EXPLANATION: Synchronize component state with external dependencies.
+  // EFFECT DEPENDENCIES: Documented intentionally.
   useEffect(() => {
     if (isOpen && coupon) {
       reset({
@@ -155,3 +156,4 @@ export const SuperadminCouponEditModal: React.FC<SuperadminCouponEditModalProps>
     </div>
   );
 };
+

@@ -1,5 +1,5 @@
 import { http, HttpResponse, delay } from 'msw';
-import { MOCK_SUPERADMIN_GLOBAL_AUDIT } from '@/app/superadmin/global-audit/superadmin_global-audit_api/SuperadminGlobalAuditMockData';
+import { MOCK_SUPERADMIN_GLOBAL_AUDIT } from '@/mocks/fixtures/superadmin/SuperadminGlobalAuditMockData';
 const BASE_URL = '*/superadmin/audit-logs';
 
 export const superadminGlobalAuditHandlers = [

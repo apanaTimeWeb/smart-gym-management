@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Encapsulates functionality for superadmin_backups_types.ts
 import { z } from 'zod';
 export interface BackupRecord {
   id: string;
@@ -17,3 +18,4 @@ export const BackupRecordSchema = z.object({
   status: z.enum(['SUCCESS', 'FAILED', 'IN_PROGRESS']),
   timestamp: z.string()
 });
+
