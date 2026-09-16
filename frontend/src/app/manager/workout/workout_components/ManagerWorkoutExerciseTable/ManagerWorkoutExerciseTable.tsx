@@ -4,9 +4,9 @@ import { Edit2, Trash2, Loader2 } from 'lucide-react';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
 import { useWorkoutContext } from '@/app/manager/workout/workout_context/ManagerWorkoutContext';
 import { EXERCISE_TABLE_HEADERS } from '@/app/manager/workout/workout_utils/ManagerWorkoutSharedConstants';
-import { useExercisesQuery } from '@/app/manager/workout/workout_api/useManagerWorkoutQueries';
-import { useDeleteExerciseMutation } from '@/app/manager/workout/workout_api/useManagerWorkoutMutations';
-import toast from 'react-hot-toast';
+import { useExercisesQuery } from '@/app/manager/workout/workout_api/ManagerUseManagerWorkoutQueries';
+import { useDeleteExerciseMutation } from '@/app/manager/workout/workout_api/ManagerUseManagerWorkoutMutations';
+import { showManagerErrorToast, showManagerSuccessToast } from '@/app/manager/manager_utils/ManagerToastService';
 
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
@@ -88,10 +88,10 @@ export default function ManagerWorkoutExerciseTable() {
                         });
                         if (ok) {
                           try {
-                            await deleteMutation.mutateAsync(ex.id);
-                            toast.success('Exercise deleted');
+                            const response = await deleteMutation.mutateAsync(ex.id);
+                            showManagerSuccessToast(response.message, 'manager-workout-exercise-table-success');
                           } catch (err: unknown) {
-                            toast.error(err instanceof Error ? err.message : 'Failed to delete exercise');
+                            showManagerErrorToast(err, 'manager-workout-exercise-table-error');
                           }
                         }
                       }}

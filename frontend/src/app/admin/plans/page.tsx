@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 export const dynamic = 'force-dynamic';
 // RESPONSIBILITY: Server Component that fetches initial data and acts as the entry point for the Plans module.
 import AdminPlansMain from '@/app/admin/plans/plans_components/AdminPlansMain/AdminPlansMain';
@@ -16,5 +17,9 @@ export default async function PlansPage() {
     // Error logged to monitoring service
   }
 
-  return <AdminPlansMain initialData={initialData} />;
+  return (
+    <Suspense fallback={<div className="p-6 flex justify-center text-secondary">Loading...</div>}>
+      <AdminPlansMain initialData={initialData} />
+    </Suspense>
+  );
 }

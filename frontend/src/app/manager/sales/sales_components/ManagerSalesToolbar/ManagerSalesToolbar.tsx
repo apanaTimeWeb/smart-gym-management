@@ -41,7 +41,7 @@ export default function ManagerSalesToolbar() {
       value={localSearch} 
       onChange={e => setLocalSearch(e.target.value)} 
       placeholder="Search..." 
-      className="pl-9 pr-3 py-1.5 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary w-40 sm: w-full sm:w-64  bg-input text-foreground"
+      className="pl-9 pr-3 py-1.5 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary w-40 sm:w-full sm:w-64  bg-input text-foreground"
     />
   </div>
   <button 
@@ -64,7 +64,6 @@ export default function ManagerSalesToolbar() {
       }
 
       if (!csv) {
-        alert('No data to export.');
         return;
       }
 

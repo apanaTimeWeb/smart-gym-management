@@ -1,8 +1,8 @@
 'use client';
-import { formatDate } from '@/lib/formatters';
 // RESPONSIBILITY: Renders a detailed view of a selected member's profile.
 import { Edit, MessageCircle, Mail } from 'lucide-react';
 import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/ManagerHeader';
+import { displayValue, formatDate } from '@/lib/formatters';
 import { useMembersContext } from '@/app/manager/members/members_context/ManagerMembersContext';
 
 import { MEMBERS_STATUS_COLORS, MEMBERS_CYCLE_LABELS, formatCurrency, PROFILE_TABS } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
@@ -39,7 +39,7 @@ export default function ManagerMemberProfile() {
                 {(selectedMember.name || '?').charAt(0).toUpperCase()}
               </div>
               <div>
-                <h2 className="text-xl font-bold text-primary">{selectedMember.name || 'Unknown Member'}</h2>
+                <h2 className="text-xl font-bold text-primary">{displayValue(selectedMember.name)}</h2>
                 <p className="text-secondary text-sm">{selectedMember.email} · {selectedMember.phone}</p>
                 <div className="flex gap-2 mt-2 flex-wrap">
                   <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${statusStyle.bg} ${statusStyle.text}`}>
@@ -69,13 +69,13 @@ export default function ManagerMemberProfile() {
               </button>
               <button
                 onClick={() => openMsg(selectedMember, 'whatsapp')}
-                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold bg-success text-white rounded-xl hover:opacity-90 transition-all duration-200 active:scale-95"
+                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold bg-success text-primary-foreground rounded-xl hover:opacity-90 transition-all duration-200 active:scale-95"
               >
                 <MessageCircle size={14} /> WhatsApp
               </button>
               <button
                 onClick={() => openMsg(selectedMember, 'email')}
-                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold bg-info text-white rounded-xl hover:opacity-90 transition-all duration-200 active:scale-95"
+                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold bg-info text-primary-foreground rounded-xl hover:opacity-90 transition-all duration-200 active:scale-95"
               >
                 <Mail size={14} /> Email
               </button>

@@ -1,4 +1,4 @@
-import { ManagerFinanceUrlConfig } from '@/app/manager/finance/finance_url_config';
+import { ManagerFinanceUrlConfig } from '@/app/manager/Manager_url_config';
 import { apiFetch, type ApiResponse } from '@/lib/api';
 import type { Payment, FinanceSummary } from '@/app/manager/finance/finance_types/ManagerFinanceTypes';
 import { paymentSchema, financeSummarySchema } from '@/app/manager/finance/finance_types/ManagerFinanceSchema';

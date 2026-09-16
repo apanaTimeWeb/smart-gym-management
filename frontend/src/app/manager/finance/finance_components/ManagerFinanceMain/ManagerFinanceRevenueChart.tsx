@@ -1,4 +1,5 @@
 'use client';
+// RESPONSIBILITY: Renders the Manager FinanceRevenueChart presentation layer for the Manager module.
 import React from 'react';
 import dynamic from 'next/dynamic';
 import { Loader2 } from 'lucide-react';

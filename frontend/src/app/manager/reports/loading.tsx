@@ -11,7 +11,7 @@ export default function ManagerReportsLoading() {
         <div className="flex flex-col sm:flex-row justify-between gap-3">
           <div className="flex gap-1 bg-input rounded-xl p-1">
             {[1, 2, 3, 4].map(i => (
-              <div key={i} className="h-9 w-24 bg-skeleton-base rounded-lg motion-safe:animate-pulse" />
+              <div key={`skeleton-${i}`} className="h-9 w-24 bg-skeleton-base rounded-lg motion-safe:animate-pulse" />
             ))}
           </div>
           <div className="flex gap-2">
@@ -23,7 +23,7 @@ export default function ManagerReportsLoading() {
         {/* KPI skeletons */}
         <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
           {[1, 2, 3, 4, 5, 6, 7, 8].map(i => (
-            <div key={i} className="h-24 bg-card rounded-xl motion-safe:animate-pulse border border-border" />
+            <div key={`skeleton-${i}`} className="h-24 bg-card rounded-xl motion-safe:animate-pulse border border-border" />
           ))}
         </div>
         {/* Chart skeleton */}
@@ -32,7 +32,7 @@ export default function ManagerReportsLoading() {
         <div className="bg-card rounded-xl border border-border overflow-hidden">
           <div className="h-12 bg-skeleton-base motion-safe:animate-pulse border-b border-border" />
           {[1, 2, 3, 4, 5, 6].map(i => (
-            <div key={i} className="h-12 border-b border-border px-5 flex items-center gap-4">
+            <div key={`skeleton-${i}`} className="h-12 border-b border-border px-5 flex items-center gap-4">
               <div className="h-4 w-20 bg-skeleton-base rounded motion-safe:animate-pulse" />
               <div className="h-4 w-24 bg-skeleton-highlight rounded motion-safe:animate-pulse" />
               <div className="h-4 w-20 bg-skeleton-base rounded motion-safe:animate-pulse" />

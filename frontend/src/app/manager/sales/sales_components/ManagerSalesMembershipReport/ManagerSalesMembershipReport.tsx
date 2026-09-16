@@ -8,7 +8,7 @@ import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerShare
 import type { MembershipReportItem } from '@/app/manager/sales/sales_types/ManagerSalesTypes';
 
 export default function ManagerSalesMembershipReport() {
-  const { search, currentPage, setCurrentPage, membershipReport, membershipTotals, fetchState } = useSalesContext();
+  const { search, currentPage, setCurrentPage, membershipReport, membershipTotals, isLoading, isError } = useSalesContext();
   
   const filtered = membershipReport.filter((r: MembershipReportItem) => 
     (r.plan || '').toLowerCase().includes(search.toLowerCase())
@@ -18,7 +18,7 @@ export default function ManagerSalesMembershipReport() {
   const totalPages = Math.ceil(filtered.length / MANAGER_ITEMS_PER_PAGE) || 1;
   const paginated = filtered.slice((currentPage - 1) * MANAGER_ITEMS_PER_PAGE, currentPage * MANAGER_ITEMS_PER_PAGE);
 
-  if (fetchState === 'loading') {
+  if (isLoading) {
     return (
       <div className="flex justify-center py-10">
         <Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" />
@@ -26,7 +26,7 @@ export default function ManagerSalesMembershipReport() {
     );
   }
 
-  if (fetchState === 'error') {
+  if (isError) {
     return (
       <div className="text-center py-16 bg-card rounded-2xl border border-danger/30">
         <p className="text-danger font-medium">Failed to load membership report.</p>

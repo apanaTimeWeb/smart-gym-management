@@ -2,6 +2,6 @@
 export const AdminCouponsUrlConfig = {
   root: '/admin/coupons',
   api: {
-    base: '/api/admin/coupons',
+    base: '/admin/coupons',
   }
 };

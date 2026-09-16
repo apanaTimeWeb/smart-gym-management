@@ -9,30 +9,16 @@ import { useInquiriesContext } from '@/app/manager/inquiries/inquiries_context/M
 import { INQUIRIES_CYCLE_LABELS, getPriceForCycleSnapshot, ConvertLeadSchema, type ConvertLeadFormValues, EMPTY_CONVERT_FORM, INQUIRIES_GENDER_OPTIONS, type PlanSnapshot } from '@/app/manager/inquiries/inquiries_utils/ManagerInquiriesConvertConstants';
 import ManagerConvertLeadSuccess from '@/app/manager/inquiries/inquiries_components/ConvertLeadModal/ManagerConvertLeadSuccess';
 import ManagerConvertLeadForm from '@/app/manager/inquiries/inquiries_components/ConvertLeadModal/ManagerConvertLeadForm';
-import { useInquiryPlansSnapshotQuery } from '@/app/manager/inquiries/inquiries_api/useManagerInquiriesQueries';
-import { inquiriesApi } from '@/app/manager/inquiries/inquiries_api/ManagerInquiriesApi';
-import { useQueryClient } from '@tanstack/react-query';
-import toast from 'react-hot-toast';
-import { useUnsavedChangesGuard } from '@/app/manager/manager_utils/useUnsavedChangesGuard';
+import { useInquiryPlansSnapshotQuery } from '@/app/manager/inquiries/inquiries_api/ManagerUseManagerInquiriesQueries';
+import { useManagerUnsavedChangesGuard } from '@/app/manager/manager_utils/ManagerUnsavedChangesGuard';
 
 export default function ManagerConvertLeadModal() {
-  const { convertLead, closeConvert, updateStatus } = useInquiriesContext();
-  const isOpen = !!convertLead;
+  const { convertLead: activeLead, closeConvert, updateStatus, convertLeadMutation } = useInquiriesContext();
+  const isOpen = !!activeLead;
   
-  const { data: plansData, isLoading: fetchState } = useInquiryPlansSnapshotQuery();
+  const { data: plansData, isLoading: plansLoading } = useInquiryPlansSnapshotQuery();
   const plans = (plansData || []) as PlanSnapshot[];
-  const queryClient = useQueryClient();
   
-  const saveMember = async (data: ConvertLeadFormValues, _: unknown) => {
-    if (!convertLead?.id) return;
-    const payload = { ...data, status: 'ACTIVE' };
-    const res = await inquiriesApi.convertLead(convertLead.id, payload);
-    const newId = res.data?.memberId;
-    
-    queryClient.invalidateQueries({ queryKey: ['manager', 'inquiries'] });
-    toast.success('Member created successfully');
-    return res;
-  };
   const [saving, setSaving] = useState(false);
   const [successData, setSuccessData] = useState<{
     gymId: string;
@@ -46,9 +32,6 @@ export default function ManagerConvertLeadModal() {
     aadhaar?: string;
   } | null>(null);
 
-  useEffect(() => {
-    // Plans are now fetched automatically by useInquiryPlansSnapshotQuery.
-  }, [convertLead, plans.length, fetchState]);
 
   const useFormReturn = useForm<ConvertLeadFormValues>({
     resolver: zodResolver(ConvertLeadSchema),
@@ -64,15 +47,15 @@ export default function ManagerConvertLeadModal() {
   } = useFormReturn;
 
   useEffect(() => {
-    if (convertLead) {
+    if (activeLead) {
       reset({
         ...EMPTY_CONVERT_FORM,
-        name: convertLead.name,
-        phone: convertLead.phone,
-        email: convertLead.email || '',
+        name: activeLead.name,
+        phone: activeLead.phone,
+        email: activeLead.email || '',
       });
     }
-  }, [convertLead, reset]);
+  }, [activeLead, reset]);
 
   const watchPlanId = watch('planId') as string | undefined;
   const watchBillingCycle = watch('billingCycle') as string;
@@ -110,11 +93,11 @@ export default function ManagerConvertLeadModal() {
       const total = data.totalAmount || 0;
       const paid = data.paidAmount || 0;
       const pendingAmount = total - paid;
-      const res = await saveMember({ ...data, pendingAmount }, null);
+      const res = await convertLeadMutation({ id: activeLead?.id ?? '', data: { ...data, pendingAmount, status: 'ACTIVE' } });
       
       // Update the inquiry status to CONVERTED locally and via API
-      if (convertLead) {
-        await updateStatus(convertLead.id, 'CONVERTED');
+      if (activeLead) {
+        await updateStatus(activeLead.id, 'CONVERTED');
         
         const planName = plans.find(p => p.id.toString() === data.planId?.toString())?.name || 'Membership';
         setSuccessData({
@@ -138,18 +121,18 @@ export default function ManagerConvertLeadModal() {
     }
   };
 
-  useUnsavedChangesGuard(errors && Object.keys(errors).length > 0 && isOpen);
+  useManagerUnsavedChangesGuard(errors && Object.keys(errors).length > 0 && isOpen);
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/60">
+    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-foreground/60">
       <div className="bg-card rounded-2xl shadow-xl w-full max-w-xl overflow-visible border border-border max-h-full flex flex-col">
         
         <div className="sticky top-0 bg-card px-6 py-4 border-b border-border flex items-center justify-between z-10 rounded-t-2xl">
           <div>
             <h3 className="text-lg font-bold text-primary">Convert to Member</h3>
-            <p className="text-xs text-secondary mt-0.5">Complete admission for {convertLead?.name}</p>
+            <p className="text-xs text-secondary mt-0.5">Complete admission for {activeLead?.name}</p>
           </div>
           <button onClick={closeConvert} className="p-2 rounded-full hover:bg-primary/10 transition-colors text-secondary hover:text-primary">
             <X size={20} />
@@ -182,10 +165,10 @@ export default function ManagerConvertLeadModal() {
               <button
                 type="submit"
                 disabled={saving}
-                className="flex-1 py-2.5 rounded-xl text-sm font-bold bg-primary text-white flex items-center justify-center gap-2 disabled:opacity-70 hover:bg-primary-hover transition-all duration-200 active:scale-95"
+                className="flex-1 py-2.5 rounded-xl text-sm font-bold bg-primary text-primary-foreground flex items-center justify-center gap-2 disabled:opacity-70 hover:bg-primary-hover transition-all duration-200 active:scale-95"
               >
                 {saving ? (
-                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full motion-safe:animate-spin" />
+                  <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full motion-safe:animate-spin" />
                 ) : (
                   <><Save size={15} /> Convert Inquiry</>
                 )}

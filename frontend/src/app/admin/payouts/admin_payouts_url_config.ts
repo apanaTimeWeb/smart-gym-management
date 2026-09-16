@@ -2,6 +2,6 @@
 export const AdminPayoutsUrlConfig = {
   root: '/admin/payouts',
   api: {
-    base: '/api/admin/payouts',
+    base: '/admin/payouts',
   }
 };

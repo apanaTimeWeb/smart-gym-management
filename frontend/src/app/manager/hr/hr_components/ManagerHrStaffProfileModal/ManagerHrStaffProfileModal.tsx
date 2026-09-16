@@ -11,13 +11,13 @@ export default function ManagerHrStaffProfileModal() {
   const s = viewProfileData;
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-foreground/60 backdrop-blur-sm">
       <div className="rounded-2xl shadow-xl w-full max-w-lg overflow-hidden bg-card border-2 border-primary/20">
         <div className="relative h-24 bg-gradient-to-r from-primary to-primary/60">
           <button 
             type="button" 
             onClick={() => setViewProfileData(null)} 
-            className="absolute top-4 right-4 p-2 rounded-full bg-black/20 hover:bg-black/40 transition-colors text-white"
+            className="absolute top-4 right-4 p-2 rounded-full bg-foreground/20 hover:bg-foreground/40 transition-colors text-primary-foreground"
           >
             <X size={20} />
           </button>
@@ -25,7 +25,7 @@ export default function ManagerHrStaffProfileModal() {
         
         <div className="px-8 pb-8 relative">
           <div className="flex justify-between items-end -mt-10 mb-6">
-            <div className="w-24 h-24 rounded-2xl flex items-center justify-center font-bold text-4xl bg-card border-4 border-card text-primary shadow-lg shadow-black/20">
+            <div className="w-24 h-24 rounded-2xl flex items-center justify-center font-bold text-4xl bg-card border-4 border-card text-primary shadow-lg shadow-lg">
               {(s.name || '?').charAt(0).toUpperCase()}
             </div>
             <button 
@@ -54,7 +54,7 @@ export default function ManagerHrStaffProfileModal() {
               <Mail className="w-5 h-5 text-secondary mt-0.5" />
               <div>
                 <p className="text-xs text-secondary mb-0.5">Email</p>
-                <p className="text-sm font-semibold text-foreground truncate max-w-[150px]" title={s.email}>{s.email || 'N/A'}</p>
+                <p className="text-sm font-semibold text-foreground truncate max-w-40" title={s.email}>{s.email || 'N/A'}</p>
               </div>
             </div>
             

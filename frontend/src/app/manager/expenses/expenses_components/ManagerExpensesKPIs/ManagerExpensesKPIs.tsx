@@ -2,7 +2,7 @@
 // RESPONSIBILITY: Renders high-level KPIs for the Expenses module.
 import { IndianRupee, TrendingDown, Clock, CheckCircle } from 'lucide-react';
 import { formatCurrency } from '@/lib/formatters';
-import { useExpensesStatsQuery } from '@/app/manager/expenses/expenses_api/useManagerExpensesQueries';
+import { useExpensesStatsQuery } from '@/app/manager/expenses/expenses_api/ManagerUseManagerExpensesQueries';
 
 export default function ManagerExpensesKPIs() {
   const { data: stats, isLoading, isError } = useExpensesStatsQuery();

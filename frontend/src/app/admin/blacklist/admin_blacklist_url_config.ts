@@ -2,6 +2,6 @@
 export const AdminBlacklistUrlConfig = {
   root: '/admin/blacklist',
   api: {
-    base: '/api/admin/blacklist',
+    base: '/admin/blacklist',
   }
 };

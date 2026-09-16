@@ -6,7 +6,7 @@ import type {
   ChurnedMember,
   ChurnKPIData,
   WinBackTemplateTier,
-} from '@/app/manager/communications/communications_types/communications_types';
+} from '@/app/manager/communications/communications_types/ManagerCommunications_types';
 
 export const COMM_MESSAGE_TEMPLATES: Record<CommSegment, { subject: string; message: string }> = {
   all_active: {

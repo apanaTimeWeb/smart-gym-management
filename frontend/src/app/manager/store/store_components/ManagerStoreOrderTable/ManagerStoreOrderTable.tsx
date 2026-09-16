@@ -11,7 +11,7 @@ import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerShare
 
 export default function ManagerStoreOrderTable() {
   const { 
-    orders, totalOrders, fetchState, currentPage, setCurrentPage, setPrintData
+    orders, totalOrders, isLoading, isError, currentPage, setCurrentPage, setPrintData
   } = useStoreContext();
 
   const handlePrint = (o: Order) => {
@@ -46,11 +46,11 @@ export default function ManagerStoreOrderTable() {
   
   const totalPages = Math.ceil(totalOrders / MANAGER_ITEMS_PER_PAGE);
 
-  if (fetchState === 'loading') {
+  if (isLoading) {
     return (
       <div className="motion-safe:animate-pulse bg-card rounded-xl border border-border mt-4">
         {[...Array(5)].map((_, i) => (
-          <div key={i} className="h-16 border-b border-border flex items-center px-4 gap-4">
+          <div key={`skeleton-${i}`} className="h-16 border-b border-border flex items-center px-4 gap-4">
             <div className="h-4 bg-muted rounded w-16"></div>
             <div className="h-4 bg-muted rounded w-24"></div>
             <div className="h-4 bg-muted rounded w-20"></div>
@@ -62,7 +62,7 @@ export default function ManagerStoreOrderTable() {
     );
   }
 
-  if (fetchState === 'error') {
+  if (isError) {
     return (
       <div className="text-center py-16 bg-card rounded-2xl border border-danger/30 mt-4">
         <p className="text-danger font-medium">Failed to load orders.</p>

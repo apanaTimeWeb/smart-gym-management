@@ -2,6 +2,6 @@
 export const AdminDashboardUrlConfig = {
   root: '/admin/dashboard',
   api: {
-    base: '/api/admin/dashboard',
+    base: '/admin/dashboard',
   }
 };

@@ -1,4 +1,4 @@
-import { ManagerInquiriesUrlConfig } from '@/app/manager/inquiries/inquiries_url_config';
+import { ManagerInquiriesUrlConfig } from '@/app/manager/Manager_url_config';
 import { apiFetch, type ApiResponse } from '@/lib/api';
 import type { Inquiry, InquiryStats } from '@/app/manager/inquiries/inquiries_types/ManagerInquiriesTypes';
 import { inquirySchema, inquiryStatsSchema } from '@/app/manager/inquiries/inquiries_types/ManagerInquiriesSchema';
@@ -14,19 +14,19 @@ export const inquiriesApi = {
   },
   
   getPlans: async (): Promise<ApiResponse<{name: string}[]>> => {
-    return apiFetch(`${ManagerInquiriesUrlConfig.BACKEND_API.BASE}/plans`);
+    return apiFetch(`${ManagerInquiriesUrlConfig.BACKEND_API.BASE}/plans`, { dataSchema: z.array(z.object({ name: z.string() })) });
   },
 
-  getPlansSnapshot: async (): Promise<ApiResponse<any[]>> => {
-    return apiFetch(`${ManagerInquiriesUrlConfig.BACKEND_API.BASE}/plans-snapshot`);
+  getPlansSnapshot: async (): Promise<ApiResponse<{ name: string }[]>> => {
+    return apiFetch(`${ManagerInquiriesUrlConfig.BACKEND_API.BASE}/plans-snapshot`, { dataSchema: z.array(z.object({ name: z.string() })) });
   },
   
   convertLead: async (id: string, body: Record<string, unknown>): Promise<ApiResponse<{ memberId: string }>> => {
-    return apiFetch(`${ManagerInquiriesUrlConfig.BACKEND_API.BASE}/${id}/convert`, { method: 'POST', body: JSON.stringify(body) });
+    return apiFetch(`${ManagerInquiriesUrlConfig.BACKEND_API.BASE}/${id}/convert`, { method: 'POST', body: JSON.stringify(body), dataSchema: z.object({ memberId: z.string() }) });
   },
   
   getOne: async (id: string): Promise<ApiResponse<Inquiry>> => {
-    return apiFetch(`${ManagerInquiriesUrlConfig.BACKEND_API.BASE}/${id}`);
+    return apiFetch(`${ManagerInquiriesUrlConfig.BACKEND_API.BASE}/${id}`, { dataSchema: inquirySchema });
   },
   
   getStats: async (): Promise<ApiResponse<InquiryStats>> => {
@@ -42,6 +42,6 @@ export const inquiriesApi = {
   },
   
   remove: async (id: string): Promise<ApiResponse<{ id: string }>> => {
-    return apiFetch(`${ManagerInquiriesUrlConfig.BACKEND_API.BASE}/${id}`, { method: 'DELETE' });
+    return apiFetch(`${ManagerInquiriesUrlConfig.BACKEND_API.BASE}/${id}`, { method: 'DELETE', dataSchema: z.object({ id: z.string() }) });
   },
 };

@@ -11,7 +11,7 @@ import { ManagerDateFilterDropdown } from '@/app/manager/manager_components/Mana
 import { Download, RefreshCw, Loader2 } from 'lucide-react';
 
 function ReportsInner() {
-  const { tab, setTab, dateRange, setDateRange, fetchState, exporting, handleExportCSV, reload } = useReportsContext();
+  const { tab, setTab, dateRange, setDateRange, isPending, isError, exporting, handleExportCSV, reload } = useReportsContext();
 
   return (
     <div className="min-h-full pb-10">
@@ -48,8 +48,8 @@ function ReportsInner() {
             </button>
             <button
               onClick={handleExportCSV}
-              disabled={exporting || fetchState === 'loading'}
-              className="flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-lg bg-primary text-white hover:opacity-90 motion-safe:transition-opacity disabled:opacity-50"
+              disabled={exporting || isPending}
+              className="flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-lg bg-primary text-primary-foreground hover:opacity-90 motion-safe:transition-opacity disabled:opacity-50"
             >
               {exporting ? <Loader2 size={14} className="motion-safe:animate-spin" /> : <Download size={14} />}
               Export CSV
@@ -58,10 +58,10 @@ function ReportsInner() {
         </div>
 
         {/* KPIs */}
-        {fetchState === 'loading' ? (
+        {isPending ? (
           <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
             {[1, 2, 3, 4, 5, 6, 7, 8].map(i => (
-              <div key={i} className="h-24 bg-card rounded-xl motion-safe:animate-pulse border border-border" />
+              <div key={`skeleton-${i}`} className="h-24 bg-card rounded-xl motion-safe:animate-pulse border border-border" />
             ))}
           </div>
         ) : (
@@ -69,10 +69,10 @@ function ReportsInner() {
         )}
 
         {/* Chart */}
-        {fetchState === 'error' ? (
+        {isError ? (
           <div className="bg-card border border-border rounded-xl py-16 text-center space-y-3">
             <p className="text-sm text-danger font-medium">Failed to load report data</p>
-            <button onClick={reload} className="px-4 py-2 text-sm font-medium rounded-lg bg-primary text-white hover:opacity-90">
+            <button onClick={reload} className="px-4 py-2 text-sm font-medium rounded-lg bg-primary text-primary-foreground hover:opacity-90">
               Try Again
             </button>
           </div>

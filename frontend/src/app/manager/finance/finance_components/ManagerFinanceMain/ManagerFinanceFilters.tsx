@@ -1,6 +1,7 @@
+// RESPONSIBILITY: Renders the Manager FinanceFilters presentation layer for the Manager module.
 import React from 'react';
 import { Search, Download, FileText, RefreshCw } from 'lucide-react';
-import { SearchableDropdown } from '@/app/manager/manager_components/ManagerShared/SearchableDropdown';
+import { SearchableDropdown } from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
 import { ManagerDateFilterDropdown } from '@/app/manager/manager_components/ManagerShared/ManagerDateFilterDropdown';
 import { useFinanceContext } from '@/app/manager/finance/finance_context/ManagerFinanceContext';
 
@@ -58,11 +59,11 @@ export default function ManagerFinanceFilters() {
           />
         </div>
         <button onClick={exportCSV}
-          className="flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg bg-primary text-white hover:opacity-90 motion-safe:transition-opacity">
+          className="flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg bg-primary text-primary-foreground hover:opacity-90 motion-safe:transition-opacity">
           <Download size={14} /> CSV
         </button>
         <button onClick={exportPDF}
-          className="flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg bg-info text-white hover:opacity-90 motion-safe:transition-opacity">
+          className="flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg bg-info text-primary-foreground hover:opacity-90 motion-safe:transition-opacity">
           <FileText size={14} /> PDF
         </button>
         <button onClick={reload}

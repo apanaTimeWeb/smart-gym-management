@@ -7,7 +7,7 @@ export default function ScheduleError({ error, reset }: { error: Error & { diges
   useEffect(() => { console.error('Schedule module error:', error); }, [error]);
 
   return (
-    <div className="min-h-[400px] flex items-center justify-center p-6">
+    <div className="min-h-96 flex items-center justify-center p-6">
       <div className="max-w-md w-full bg-card border border-danger/20 rounded-xl p-8 text-center space-y-4">
         <div className="w-12 h-12 bg-danger/10 text-danger rounded-full flex items-center justify-center mx-auto">
           <AlertCircle size={24} />
@@ -18,7 +18,7 @@ export default function ScheduleError({ error, reset }: { error: Error & { diges
         </div>
         <button
           onClick={() => reset()}
-          className="mt-4 px-4 py-2 bg-primary text-black font-medium rounded-md hover:bg-primary-hover motion-safe:transition-colors"
+          className="mt-4 px-4 py-2 bg-primary text-primary-foreground font-medium rounded-md hover:bg-primary-hover motion-safe:transition-colors"
         >
           Try Again
         </button>

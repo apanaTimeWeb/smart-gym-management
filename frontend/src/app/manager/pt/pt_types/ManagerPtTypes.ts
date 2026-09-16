@@ -4,7 +4,6 @@
 
 export type PtSessionStatus = 'SCHEDULED' | 'COMPLETED' | 'CANCELLED' | 'MISSED';
 export type PtPaymentStatus = 'PAID' | 'PARTIAL' | 'PENDING';
-export type PtFetchState = 'idle' | 'loading' | 'success' | 'error';
 export type PtActiveTab = 'dashboard' | 'assignments' | 'packages' | 'workload';
 
 export interface PtPackage {

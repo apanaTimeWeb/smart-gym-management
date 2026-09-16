@@ -45,7 +45,7 @@ export default function ManagerReportsKPIs() {
       <KPICard label={`Avg Attendance${dateSuffix}`}   value={k ? `${k.avgAttendanceRate}%` : '—'} icon={CalendarCheck} iconBg="bg-primary/10" iconColor="text-primary" />
       <KPICard label={`New Members${dateSuffix}`}      value={k ? String(k.newMembersThisMonth) : '—'} icon={UserPlus}  iconBg="bg-success/10"  iconColor="text-success"  />
       <KPICard label={`Members Lost %${dateSuffix}`}       value={k ? `${k.churnRate}%`      : '—'} icon={UserMinus}    iconBg="bg-warning/10"   iconColor="text-warning"   />
-      <KPICard label={`Total Members${dateSuffix}`}    value={k ? String(k.totalMembers) : '—'} icon={Activity}     iconBg="bg-purple/10"    iconColor="text-purple"    />
+      <KPICard label={`Total Members${dateSuffix}`}    value={k ? String(k.totalMembers) : '—'} icon={Activity}     iconBg="bg-purple-bg"    iconColor="text-purple"    />
       <KPICard label={`Net Profit${dateSuffix}`}       value={k ? fmt(k.netProfit)       : '—'} icon={IndianRupee}  iconBg="bg-success/10"   iconColor="text-success"   />
     </div>
   );

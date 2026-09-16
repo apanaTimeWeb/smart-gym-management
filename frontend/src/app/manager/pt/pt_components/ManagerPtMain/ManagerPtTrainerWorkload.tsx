@@ -18,10 +18,10 @@ export default function ManagerPtTrainerWorkload({ workload }: ManagerPtTrainerW
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-primary/5 border-b border-border">
-              <th className="py-3 px-4 text-[11px] font-semibold text-secondary uppercase tracking-wider">Trainer</th>
-              <th className="py-3 px-4 text-[11px] font-semibold text-secondary uppercase tracking-wider">Clients</th>
-              <th className="py-3 px-4 text-[11px] font-semibold text-secondary uppercase tracking-wider">Rating</th>
-              <th className="py-3 px-4 text-[11px] font-semibold text-secondary uppercase tracking-wider text-right">Status</th>
+              <th className="py-3 px-4 text-xs font-semibold text-secondary uppercase tracking-wider">Trainer</th>
+              <th className="py-3 px-4 text-xs font-semibold text-secondary uppercase tracking-wider">Clients</th>
+              <th className="py-3 px-4 text-xs font-semibold text-secondary uppercase tracking-wider">Rating</th>
+              <th className="py-3 px-4 text-xs font-semibold text-secondary uppercase tracking-wider text-right">Status</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
@@ -55,7 +55,7 @@ export default function ManagerPtTrainerWorkload({ workload }: ManagerPtTrainerW
                     </div>
                   </td>
                   <td className="py-3 px-4 text-right">
-                    <span className={`text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider ${
+                    <span className={`text-xs font-bold px-2 py-1 rounded-full uppercase tracking-wider ${
                       trainer.status === 'Fully Booked' 
                         ? 'bg-danger/10 text-danger' 
                         : 'bg-success/10 text-success'

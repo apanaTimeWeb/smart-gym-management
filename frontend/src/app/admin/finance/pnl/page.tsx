@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 // RESPONSIBILITY: Server Component entry point for the Branch P&L Comparison page.
 // Keeps this as a Server Component (Rule 8) — no , no hooks.
 import AdminFinancePnlMain from '@/app/admin/finance/finance_components/AdminFinancePnl/AdminFinancePnlMain';
@@ -8,5 +9,9 @@ export const metadata = {
 };
 
 export default function AdminFinancePnlPage() {
-  return <AdminFinancePnlMain />;
+  return (
+    <Suspense fallback={<div className="p-6 flex justify-center text-secondary">Loading...</div>}>
+      <AdminFinancePnlMain />
+    </Suspense>
+  );
 }

@@ -1,7 +1,7 @@
 'use client';
 // RESPONSIBILITY: 4 KPI stat cards for the Churn Recovery tab — Total Churned, Churned This Month, Recovery Rate, Avg Days Since Exit.
 import { UserX, TrendingDown, RotateCcw, Clock } from 'lucide-react';
-import type { ChurnKPIData } from '@/app/manager/communications/communications_types/communications_types';
+import type { ChurnKPIData } from '@/app/manager/communications/communications_types/ManagerCommunications_types';
 import { formatNumber, formatPercent } from '@/lib/formatters';
 
 interface ManagerChurnRecoveryKPIsProps {
@@ -60,7 +60,7 @@ export default function ManagerChurnRecoveryKPIs({ kpis }: ManagerChurnRecoveryK
             style={{ background: 'linear-gradient(180deg, rgba(250,204,21,0.04), rgba(255,255,255,0.01))' }}
           >
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-medium text-secondary uppercase tracking-wider">
+              <span className="text-xs font-medium text-secondary uppercase tracking-wider">
                 {card.label}
               </span>
               <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${card.iconBg}`}>

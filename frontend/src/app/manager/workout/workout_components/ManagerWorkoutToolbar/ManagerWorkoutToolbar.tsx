@@ -63,7 +63,7 @@ export default function ManagerWorkoutToolbar() {
         )}
         <button 
           onClick={tab === 'Workout Plans' ? openAddWk : openAddEx}
-          className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-primary rounded-lg hover:opacity-90 transition-opacity"
+          className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-lg hover:opacity-90 transition-opacity"
         >
           <Plus size={15} /> <span className="hidden sm:inline">Add</span>
         </button>

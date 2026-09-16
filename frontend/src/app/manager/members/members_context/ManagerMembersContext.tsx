@@ -3,7 +3,7 @@
 // DATA FLOW: useManagerMembersLogic -> ManagerMembersContext -> Members components
 import React, { createContext, useContext } from 'react';
 import type { MembersContextType, MembersInitialData } from '@/app/manager/members/members_types/ManagerMembersTypes';
-import { useManagerMembersLogic } from '@/app/manager/members/members_context/useManagerMembersLogic';
+import { useManagerMembersLogic } from '@/app/manager/members/members_context/ManagerUseManagerMembersLogic';
 
 const ManagerMembersContext = createContext<MembersContextType | undefined>(undefined);
 

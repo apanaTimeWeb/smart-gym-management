@@ -11,7 +11,7 @@ import type {
   ChurnKPIData,
   ChurnReasonType,
   WinBackTemplateTier,
-} from '@/app/manager/communications/communications_types/communications_types';
+} from '@/app/manager/communications/communications_types/ManagerCommunications_types';
 
 export const COMM_SEGMENT_OPTIONS: { value: CommSegment; label: string; description: string }[] = [
   { value: 'all_active',       label: 'All Active Members',       description: 'Every member with an active membership' },
@@ -36,6 +36,8 @@ export const CommFormSchema = z.object({
   message: z.string().min(10, 'Message must be at least 10 characters'),
   subject: z.string().min(3, 'Subject is required for email'),
 });
+
+export type CommFormValues = z.infer<typeof CommFormSchema>;
 
 export const EMPTY_COMM_FORM = {
   title:   '',

@@ -6,7 +6,6 @@ import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback
 import type { AttendanceTab, EMPTY_ATTENDANCE_FORM } from '@/app/manager/attendance/attendance_utils/ManagerAttendanceSharedConstants';
 import type React from 'react';
 
-export type FetchState = 'idle' | 'loading' | 'success' | 'error';
 
 // CRITICAL — DB column needed for analytics
 export type CheckInMethod = 'QR' | 'Manual' | 'Biometric';
@@ -49,7 +48,8 @@ export interface AttendanceContextType {
   members: MemberSnapshot[];
   staff: StaffSnapshot[];
   totalRecords: number;
-  fetchState: FetchState;
+  isLoading: boolean;
+  isError: boolean;
   saving: boolean;
   toast: { message: string; type: ToastType } | null;
 

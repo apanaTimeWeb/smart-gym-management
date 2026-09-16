@@ -19,7 +19,7 @@ export default function ManagerInquiriesKPIs() {
     return (
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {[1, 2, 3, 4].map(i => (
-          <div key={i} className="bg-card rounded-xl p-4 shadow-sm border border-border flex items-center gap-3 motion-safe:animate-pulse">
+          <div key={`skeleton-${i}`} className="bg-card rounded-xl p-4 shadow-sm border border-border flex items-center gap-3 motion-safe:animate-pulse">
             <div className="w-10 h-10 rounded-xl bg-muted"></div>
             <div className="space-y-2">
               <div className="h-3 w-20 bg-muted rounded"></div>

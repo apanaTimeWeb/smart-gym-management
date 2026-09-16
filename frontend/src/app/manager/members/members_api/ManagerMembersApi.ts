@@ -1,4 +1,4 @@
-import { ManagerMembersUrlConfig } from '@/app/manager/members/members_url_config';
+import { ManagerMembersUrlConfig } from '@/app/manager/Manager_url_config';
 import { apiFetch, type ApiResponse } from '@/lib/api';
 import type { Member, MemberStats } from '@/app/manager/members/members_types/ManagerMembersTypes';
 import type { PlanSnapshot, PaymentSnapshot, AttendanceSnapshot, DietPlanSnapshot, WorkoutSnapshot } from '@/app/manager/members/members_types/ManagerMembersSnapshotTypes';
@@ -10,6 +10,8 @@ import {
   attendanceSnapshotSchema,
   dietPlanSnapshotSchema,
   workoutSnapshotSchema,
+  memberDeleteResponseSchema,
+  trainerListSchema,
 } from '@/app/manager/members/members_types/ManagerMembersSchema';
 import { z } from 'zod';
 
@@ -33,13 +35,13 @@ export const membersApi = {
     return apiFetch(`${ManagerMembersUrlConfig.BACKEND_API.BASE}/${id}`, { method: 'PATCH', body: JSON.stringify(body), dataSchema: populatedMemberSchema });
   },
   remove: async (id: string): Promise<ApiResponse<{ id: string }>> => {
-    return apiFetch(`${ManagerMembersUrlConfig.BACKEND_API.BASE}/${id}`, { method: 'DELETE' });
+    return apiFetch(`${ManagerMembersUrlConfig.BACKEND_API.BASE}/${id}`, { method: 'DELETE', dataSchema: memberDeleteResponseSchema });
   },
   renew: async (id: string, body: Record<string, unknown>): Promise<ApiResponse<Member>> => {
-    return apiFetch(`${ManagerMembersUrlConfig.BACKEND_API.BASE}/${id}/renew`, { method: 'POST', body: JSON.stringify(body) });
+    return apiFetch(`${ManagerMembersUrlConfig.BACKEND_API.BASE}/${id}/renew`, { method: 'POST', body: JSON.stringify(body), dataSchema: populatedMemberSchema });
   },
   getTrainers: async (): Promise<ApiResponse<{ staff: { id: string; name: string; role: string }[] }>> => {
-    return apiFetch(`${ManagerMembersUrlConfig.BACKEND_API.BASE}/trainers`);
+    return apiFetch(`${ManagerMembersUrlConfig.BACKEND_API.BASE}/trainers`, { dataSchema: trainerListSchema });
   },
   getPlans: async (): Promise<ApiResponse<PlanSnapshot[]>> => {
     return apiFetch(`${ManagerMembersUrlConfig.BACKEND_API.BASE}/plans`, { dataSchema: z.array(planSnapshotSchema) });
@@ -57,12 +59,12 @@ export const membersApi = {
     return apiFetch(`${ManagerMembersUrlConfig.BACKEND_API.BASE}/diet-plans`, { dataSchema: z.array(dietPlanSnapshotSchema) });
   },
   assignDietPlan: async (memberId: string, dietPlanId: string): Promise<ApiResponse<{ success: boolean }>> => {
-    return apiFetch(`${ManagerMembersUrlConfig.BACKEND_API.BASE}/${memberId}/diet-plans`, { method: 'POST', body: JSON.stringify({ dietPlanId }) });
+    return apiFetch(`${ManagerMembersUrlConfig.BACKEND_API.BASE}/${memberId}/diet-plans`, { method: 'POST', body: JSON.stringify({ dietPlanId }), dataSchema: z.object({ success: z.boolean() }) });
   },
   getWorkouts: async (): Promise<ApiResponse<WorkoutSnapshot[]>> => {
     return apiFetch(`${ManagerMembersUrlConfig.BACKEND_API.BASE}/workouts`, { dataSchema: z.array(workoutSnapshotSchema) });
   },
   assignWorkout: async (memberId: string, workoutId: string): Promise<ApiResponse<{ success: boolean }>> => {
-    return apiFetch(`${ManagerMembersUrlConfig.BACKEND_API.BASE}/${memberId}/workouts`, { method: 'POST', body: JSON.stringify({ workoutId }) });
+    return apiFetch(`${ManagerMembersUrlConfig.BACKEND_API.BASE}/${memberId}/workouts`, { method: 'POST', body: JSON.stringify({ workoutId }), dataSchema: z.object({ success: z.boolean() }) });
   }
 };

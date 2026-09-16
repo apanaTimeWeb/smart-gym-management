@@ -5,15 +5,15 @@ import { z } from "zod";
 import { apiFetch, type ApiResponse } from "@/lib/api";
 export const gymHealthAlertsApi = {
   fetchAlerts: async () => {
-            return apiFetch<ApiResponse<GymHealthAlert[]>>('/api/admin/gymHealthAlerts/fetchAlerts', { method: 'GET', dataSchema: z.unknown() });
+            return apiFetch<ApiResponse<GymHealthAlert[]>>('/admin/gymHealthAlerts/fetchAlerts', { method: 'GET', dataSchema: z.unknown() });
         },
   fetchKPIs: async () => {
-            return apiFetch<ApiResponse<GymHealthKPIData>>('/api/admin/gymHealthAlerts/fetchKPIs', { method: 'GET', dataSchema: z.unknown() });
+            return apiFetch<ApiResponse<GymHealthKPIData>>('/admin/gymHealthAlerts/fetchKPIs', { method: 'GET', dataSchema: z.unknown() });
         },
   resolveAlert: async (id: string) => {
-          return apiFetch<ApiResponse<void>>('/api/admin/gymHealthAlerts/resolveAlert', { method: 'POST', body: JSON.stringify(id), dataSchema: z.unknown() });
+          return apiFetch<ApiResponse<void>>('/admin/gymHealthAlerts/resolveAlert', { method: 'POST', body: JSON.stringify(id), dataSchema: z.unknown() });
       },
   dismissAlert: async (id: string) => {
-          return apiFetch<ApiResponse<void>>('/api/admin/gymHealthAlerts/dismissAlert', { method: 'POST', body: JSON.stringify(id), dataSchema: z.unknown() });
+          return apiFetch<ApiResponse<void>>('/admin/gymHealthAlerts/dismissAlert', { method: 'POST', body: JSON.stringify(id), dataSchema: z.unknown() });
       },
 };

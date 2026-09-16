@@ -29,8 +29,8 @@ export default function ManagerHrPaymentModal() {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 motion-safe:animate-in motion-safe:fade-in duration-200">
-      <div className="bg-card/95 backdrop-blur-xl rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden motion-safe:animate-in motion-safe:zoom-in-95 duration-200 border border-white/5">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/60 backdrop-blur-sm p-4 motion-safe:animate-in motion-safe:fade-in duration-200">
+      <div className="bg-card/95 backdrop-blur-xl rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden motion-safe:animate-in motion-safe:zoom-in-95 duration-200 border border-border">
         <div className="p-5 flex justify-between items-center border-b border-border">
           <h3 className="font-bold text-foreground">Pay Salary</h3>
           <button type="button" onClick={() => setPaymentModal(null)} className="p-1.5 text-secondary hover:text-foreground hover:bg-primary/10 rounded-md transition-colors"><X size={18} /></button>
@@ -80,7 +80,7 @@ export default function ManagerHrPaymentModal() {
             <button
               type="submit"
               disabled={isSubmitting || Number(amount) <= 0 || Number(amount) > paymentModal.pendingAmount}
-              className="w-full py-2.5 bg-primary text-white text-sm font-bold rounded-xl hover:bg-primary/90 transition-all hover:scale-[1.02] active:scale-[0.98] shadow-[0_0_15px_rgba(250,204,21,0.2)] disabled:opacity-50 disabled:hover:scale-100 disabled:shadow-none"
+              className="w-full py-2.5 bg-primary text-primary-foreground text-sm font-bold rounded-xl hover:bg-primary/90 transition-all hover:scale-105 active:scale-95 shadow-lg disabled:opacity-50 disabled:hover:scale-100 disabled:shadow-none"
             >
               {isSubmitting ? 'Recording...' : 'Confirm Payment'}
             </button>

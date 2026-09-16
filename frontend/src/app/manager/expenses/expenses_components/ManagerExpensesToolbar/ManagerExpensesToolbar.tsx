@@ -3,7 +3,7 @@
 import { useExpensesContext } from '@/app/manager/expenses/expenses_context/ManagerExpensesContext';
 import { Search, Plus, Download } from 'lucide-react';
 import { EXPENSE_STATUS_LABELS } from '@/app/manager/expenses/expenses_utils/ManagerExpensesSharedConstants';
-import { SearchableDropdown } from '@/app/manager/manager_components/ManagerShared/SearchableDropdown';
+import { SearchableDropdown } from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
 
 export default function ManagerExpensesToolbar() {
   const { search, setSearch, statusFilter, setStatusFilter, openAdd, exportExpenses } = useExpensesContext();

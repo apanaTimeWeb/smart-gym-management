@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { useExpensesContext } from '@/app/manager/expenses/expenses_context/ManagerExpensesContext';
 import { ExpenseSchema, EXPENSE_CATEGORIES, EXPENSE_STATUS_LABELS, type ExpenseFormValues } from '@/app/manager/expenses/expenses_utils/ManagerExpensesSharedConstants';
-import { useUnsavedChangesGuard } from '@/app/manager/manager_utils/useUnsavedChangesGuard';
+import { useManagerUnsavedChangesGuard } from '@/app/manager/manager_utils/ManagerUnsavedChangesGuard';
 import { X, Save } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -17,7 +17,7 @@ export default function ManagerExpensesModal() {
     defaultValues: editData || { status: 'PAID', date: new Date().toISOString().split('T')[0] || '' },
   });
 
-  useUnsavedChangesGuard(isDirty && showModal);
+  useManagerUnsavedChangesGuard(isDirty && showModal);
 
   useEffect(() => {
     if (showModal && editData) reset(editData);
@@ -28,7 +28,7 @@ export default function ManagerExpensesModal() {
   if (!showModal) return null;
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/60">
+    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-foreground/60">
       <div className="bg-card rounded-2xl shadow-xl w-full max-w-md overflow-visible border border-border max-h-full flex flex-col">
         <div className="sticky top-0 bg-card px-6 py-4 border-b border-border flex items-center justify-between z-10 rounded-t-2xl">
           <h3 className="text-lg font-bold text-primary">{editId ? 'Edit Expense' : 'Add Expense'}</h3>
@@ -158,10 +158,10 @@ export default function ManagerExpensesModal() {
               <button
                 type="submit"
                 disabled={saving}
-                className="flex-1 py-2.5 rounded-xl text-sm font-bold bg-primary text-white flex items-center justify-center gap-2 disabled:opacity-70 hover:bg-primary-hover transition-all duration-200 active:scale-95"
+                className="flex-1 py-2.5 rounded-xl text-sm font-bold bg-primary text-primary-foreground flex items-center justify-center gap-2 disabled:opacity-70 hover:bg-primary-hover transition-all duration-200 active:scale-95"
               >
                 {saving
-                  ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full motion-safe:animate-spin" />
+                  ? <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full motion-safe:animate-spin" />
                   : <><Save size={15} />{editId ? 'Update' : 'Save Expense'}</>
                 }
               </button>

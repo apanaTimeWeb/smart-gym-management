@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Framework route boundary for the Manager referrals module; renders the route-level shell, loading, error, or 404 state.
 export default function Loading() {
   return (
     <div className="min-h-full pb-10">
@@ -12,10 +13,10 @@ export default function Loading() {
       <div className="p-6 space-y-6">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="h-28 bg-card rounded-xl border border-border animate-pulse"></div>
+            <div key={`skeleton-${i}`} className="h-28 bg-card rounded-xl border border-border animate-pulse"></div>
           ))}
         </div>
-        <div className="h-[600px] bg-card rounded-xl border border-border animate-pulse"></div>
+        <div className="min-h-96 bg-card rounded-xl border border-border animate-pulse"></div>
       </div>
     </div>
   );

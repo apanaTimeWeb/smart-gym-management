@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders the Manager FinanceTable presentation layer for the Manager module.
 import { formatDate } from '@/lib/formatters';
 import React from 'react';
 import { Printer } from 'lucide-react';

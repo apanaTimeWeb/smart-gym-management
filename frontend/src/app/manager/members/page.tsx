@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 export const dynamic = 'force-dynamic';
 // RESPONSIBILITY: Server component that handles initial SSR data fetching for the members module.
 import ManagerMembersMain from '@/app/manager/members/members_components/ManagerMembersMain/ManagerMembersMain';
@@ -23,5 +24,9 @@ export default async function MembersPage() {
     // SSR data fetch failed gracefully — client-side hook will re-fetch
   }
 
-  return <ManagerMembersMain initialData={initialData} />;
+  return (
+    <Suspense fallback={<div className="p-6 flex justify-center text-secondary">Loading...</div>}>
+      <ManagerMembersMain initialData={initialData} />
+    </Suspense>
+  );
 }

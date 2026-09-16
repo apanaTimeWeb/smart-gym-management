@@ -107,7 +107,7 @@ function ExpensesTable() {
               <td className="px-5 py-3.5 text-sm font-semibold text-foreground">{fmt(d.amount)}</td>
               <td className="px-5 py-3.5">
                 <div className="flex items-center gap-2">
-                  <div className="flex-1 h-2 bg-input rounded-full overflow-hidden max-w-[120px]">
+                  <div className="flex-1 h-2 bg-input rounded-full overflow-hidden max-w-32">
                     <div className="h-full bg-primary rounded-full" style={{ width: `${d.percentage}%` }} />
                   </div>
                   <span className="text-xs text-secondary">{d.percentage}%</span>

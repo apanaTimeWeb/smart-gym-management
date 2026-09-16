@@ -2,12 +2,12 @@
 // and chart data shapes. CRITICAL: 5 missing KPIs added — churnRate, revenueGrowthPercent,
 // todayCollection, frozenMembershipsCount, totalPTRevenue.
 
-export type FetchState = 'idle' | 'loading' | 'success' | 'error';
+import type { QueryStatus } from '@tanstack/react-query';
 export type TimeRange = 'weekly' | 'monthly' | 'yearly' | 'custom';
 
 export interface DashboardContextType {
   stats: DashboardStats | null;
-  status: FetchState;
+  status: QueryStatus;
   error: string;
   timeRange: TimeRange;
   setTimeRange: (range: TimeRange) => void;

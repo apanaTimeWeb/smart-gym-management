@@ -14,7 +14,7 @@ export default function InquiriesLoading() {
       {/* KPI cards skeleton */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {[1, 2, 3, 4].map((i) => (
-          <div key={i} className="p-6 rounded-xl border border-border bg-card motion-safe:animate-pulse h-28" />
+          <div key={`skeleton-${i}`} className="p-6 rounded-xl border border-border bg-card motion-safe:animate-pulse h-28" />
         ))}
       </div>
 
@@ -29,7 +29,7 @@ export default function InquiriesLoading() {
       <div className="bg-card rounded-xl border border-border overflow-hidden">
         <div className="h-11 bg-input border-b border-border motion-safe:animate-pulse" />
         {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-          <div key={i} className="h-14 border-b border-border px-5 flex items-center gap-4 motion-safe:animate-pulse">
+          <div key={`skeleton-${i}`} className="h-14 border-b border-border px-5 flex items-center gap-4 motion-safe:animate-pulse">
             <div className="h-4 w-24 bg-skeleton-base rounded" />
             <div className="h-4 w-32 bg-skeleton-highlight rounded" />
             <div className="h-4 w-20 bg-skeleton-base rounded" />

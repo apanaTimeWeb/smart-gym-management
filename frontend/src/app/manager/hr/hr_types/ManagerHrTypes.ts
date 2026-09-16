@@ -5,7 +5,6 @@ import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback
 import type { EMPTY_STAFF } from '@/app/manager/hr/hr_utils/ManagerHrSharedConstants';
 import type React from 'react';
 
-export type FetchState = 'idle' | 'loading' | 'success' | 'error';
 export type SalaryType = 'Monthly' | 'Daily';
 export type PaymentCycle = 'Monthly' | 'Bi-Weekly' | 'Weekly';
 
@@ -19,7 +18,8 @@ export interface HrContextType {
   staff: Staff[];
   payrolls: Payroll[];
   summary: HrSummary | null;
-  fetchState: FetchState;
+  isLoading: boolean;
+  isError: boolean;
   error: string;
   toast: { message: string; type: ToastType } | null;
 
@@ -52,13 +52,13 @@ export interface HrContextType {
   openAdd: () => void;
   openEdit: (s: Staff) => void;
   openAddPayroll: () => void;
-  saveStaff: (data: Partial<Staff> & { joinDate?: string | Date; salary?: string | number }) => Promise<void>;
-  savePayroll: (data: Partial<Payroll> & { amount?: string | number }) => Promise<void>;
+  saveStaff: (data: Partial<Staff> & { joinDate?: string | Date; salary?: string | number }) => void;
+  savePayroll: (data: Partial<Payroll> & { amount?: string | number }) => void;
   deleteStaff: (id: string) => Promise<void>;
   toggleStaffStatus: (staff: Staff) => Promise<void>;
-  markPayrollPaid: (id: string, amount: number) => Promise<void>;
-  giveAdvance: (data: { staffId: string; amount: number; notes?: string; date?: string; paymentMode?: string }) => Promise<void>;
-  payDue: (data: { staffId: string; amount: number; notes?: string; date?: string; paymentMode?: string }) => Promise<void>;
+  markPayrollPaid: (id: string, amount: number) => void;
+  giveAdvance: (data: { staffId: string; amount: number; notes?: string; date?: string; paymentMode?: string }) => void;
+  payDue: (data: { staffId: string; amount: number; notes?: string; date?: string; paymentMode?: string }) => void;
   // Indian payroll compliance actions (CRITICAL)
   bulkGeneratePayroll: (month: string) => Promise<void>;
   downloadPayslip: (payrollId: string) => Promise<void>;

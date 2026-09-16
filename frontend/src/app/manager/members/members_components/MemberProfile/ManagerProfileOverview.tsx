@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import { MessageCircle, Mail, Snowflake, Stethoscope, Ban, UserCheck } from 'lucide-react';
 import { useMembersContext } from '@/app/manager/members/members_context/ManagerMembersContext';
 import { formatCurrency } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
-import { useFetchTrainers } from '@/app/manager/members/members_api/useManagerMembersQueries';
+import { useFetchTrainers } from '@/app/manager/members/members_api/ManagerUseManagerMembersQueries';
 
 export default function ManagerProfileOverview() {
   const { selectedMember, openMsg, freezeMember, toggleSuspend, assignTrainer } = useMembersContext();
@@ -56,7 +56,7 @@ export default function ManagerProfileOverview() {
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-bold text-foreground truncate">{selectedMember.assignedTrainerName}</span>
                   {selectedMember.isPT && (
-                    <span className="text-[10px] font-semibold px-1.5 py-0.5 bg-primary/10 text-primary rounded-full border border-primary/20 shrink-0">
+                    <span className="text-xs font-semibold px-1.5 py-0.5 bg-primary/10 text-primary rounded-full border border-primary/20 shrink-0">
                       PT
                     </span>
                   )}
@@ -85,13 +85,13 @@ export default function ManagerProfileOverview() {
           <div className="grid grid-cols-2 gap-3 mb-5">
             <button 
               onClick={() => openMsg(selectedMember, 'whatsapp')} 
-              className="flex items-center justify-center gap-2 p-3 text-sm font-semibold text-white rounded-xl transition-all hover:-translate-y-0.5 hover:shadow-md bg-success" 
+              className="flex items-center justify-center gap-2 p-3 text-sm font-semibold text-primary-foreground rounded-xl transition-all hover:-translate-y-0.5 hover:shadow-md bg-success" 
             >
               <MessageCircle size={16} /> WhatsApp
             </button>
             <button 
               onClick={() => openMsg(selectedMember, 'email')} 
-              className="flex items-center justify-center gap-2 p-3 text-sm font-semibold text-white rounded-xl transition-all hover:-translate-y-0.5 hover:shadow-md bg-info" 
+              className="flex items-center justify-center gap-2 p-3 text-sm font-semibold text-primary-foreground rounded-xl transition-all hover:-translate-y-0.5 hover:shadow-md bg-info" 
             >
               <Mail size={16} /> Email
             </button>

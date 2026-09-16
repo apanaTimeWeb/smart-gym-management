@@ -4,14 +4,14 @@
 import { createContext, useContext, useState, useCallback, useMemo } from 'react';
 import type { ReactNode } from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
-import { useFetchPlans, useRequestPlanChange } from '@/app/manager/plans/plans_api/useManagerPlansQueries';
-import toast from 'react-hot-toast';
+import { useFetchPlans, useRequestPlanChange } from '@/app/manager/plans/plans_api/ManagerUseManagerPlansQueries';
+import { showManagerErrorToast, showManagerSuccessToast } from '@/app/manager/manager_utils/ManagerToastService';
 import type { Plan } from '@/app/manager/plans/plans_types/ManagerPlansTypes';
-import { MANAGER_PLANS_MESSAGES } from '@/app/manager/plans/plans_utils/ManagerPlansSharedConstants';
 
 interface PlansContextValue {
   plans: Plan[];
-  fetchState: 'idle' | 'loading' | 'error' | 'success';
+  isPending: boolean;
+  isError: boolean;
   saving: boolean;
   search: string;
   setSearch: (v: string) => void;
@@ -59,7 +59,8 @@ export function PlansProvider({ children }: { children: ReactNode }) {
   const { data: plans = [], status } = useFetchPlans();
   const { mutateAsync: requestChange, isPending: saving } = useRequestPlanChange();
 
-  const fetchState = status === 'pending' ? 'loading' : status;
+  const isPending = status === 'pending';
+  const isError = status === 'error';
 
   const filteredPlans = useMemo(() => plans.filter(p => {
     const q = search.toLowerCase();
@@ -75,17 +76,17 @@ export function PlansProvider({ children }: { children: ReactNode }) {
   const submitChangeRequest = useCallback(async (note: string) => {
     if (!requestModalPlan) return;
     try {
-      await requestChange({ planId: requestModalPlan.id, note });
-      toast.success(MANAGER_PLANS_MESSAGES.CHANGE_REQUEST_SUCCESS);
+      const response = await requestChange({ planId: requestModalPlan.id, note });
+      showManagerSuccessToast(response.message, 'manager-plans-context-success');
       setRequestModalPlan(null);
-    } catch {
-      toast.error(MANAGER_PLANS_MESSAGES.CHANGE_REQUEST_ERROR);
+    } catch (error: unknown) {
+      showManagerErrorToast(error, 'manager-plans-context-error');
     }
   }, [requestModalPlan, requestChange]);
 
   return (
     <ManagerPlansContext.Provider value={{
-      plans, fetchState: fetchState as PlansContextValue['fetchState'], saving,
+      plans, isPending, isError, saving,
       search, setSearch,
       tierFilter, setTierFilter,
       statusFilter, setStatusFilter,

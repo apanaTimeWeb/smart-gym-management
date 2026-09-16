@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 // RESPONSIBILITY: Pure Server Component entry point for /superadmin/profile.
 import type { Metadata } from 'next';
 import SuperadminProfileMain from '@/app/superadmin/profile/profile_components/SuperadminProfileMain/SuperadminProfileMain';
@@ -8,5 +9,9 @@ export const metadata: Metadata = {
 };
 
 export default function SuperadminProfilePage() {
-  return <SuperadminProfileMain />;
+  return (
+    <Suspense fallback={<div className="p-6 flex justify-center text-secondary">Loading...</div>}>
+      <SuperadminProfileMain />
+    </Suspense>
+  );
 }

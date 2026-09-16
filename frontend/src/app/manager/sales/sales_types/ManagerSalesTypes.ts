@@ -3,7 +3,6 @@ import { type SalesTab, type DateFilter } from '@/app/manager/sales/sales_utils/
 import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
 import type { SalesMemberSnapshot } from '@/app/manager/sales/sales_types/ManagerSalesMemberSnapshot';
 
-export type FetchState = 'idle' | 'loading' | 'success' | 'error';
 
 export type PendingPaymentMember = Omit<SalesMemberSnapshot, 'plan'> & {
   plan?: string;
@@ -72,7 +71,8 @@ export interface SalesContextType {
   allMemberships: SalesMemberSnapshot[];
   allMembershipsTotal: number;
   
-  fetchState: FetchState;
+  isLoading: boolean;
+  isError: boolean;
   loadAll: () => Promise<void>;
   
   toast: { message: string; type: ToastType } | null;

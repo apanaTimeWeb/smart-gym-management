@@ -12,7 +12,7 @@ export default function ManagerSettingsError({ reset }: { reset: () => void }) {
       <p className="text-sm text-secondary text-center">Something went wrong. Please try again.</p>
       <button
         onClick={reset}
-        className="flex items-center gap-2 px-4 py-2 bg-primary text-black font-semibold rounded-lg text-sm motion-safe:transition-colors hover:bg-primary-hover"
+        className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground font-semibold rounded-lg text-sm motion-safe:transition-colors hover:bg-primary-hover"
       >
         <RefreshCcw size={15} /> Try Again
       </button>

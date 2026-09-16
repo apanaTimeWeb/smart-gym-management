@@ -27,7 +27,7 @@ export default function ManagerReportsError({
         </p>
         <button
           onClick={reset}
-          className="px-6 py-2.5 bg-primary text-white font-semibold rounded-xl hover:opacity-90 motion-safe:transition-opacity"
+          className="px-6 py-2.5 bg-primary text-primary-foreground font-semibold rounded-xl hover:opacity-90 motion-safe:transition-opacity"
         >
           Try Again
         </button>

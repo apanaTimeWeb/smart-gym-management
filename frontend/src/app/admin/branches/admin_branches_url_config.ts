@@ -2,6 +2,6 @@
 export const AdminBranchesUrlConfig = {
   root: '/admin/branches',
   api: {
-    base: '/api/admin/branches',
+    base: '/admin/branches',
   }
 };

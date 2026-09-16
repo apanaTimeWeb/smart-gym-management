@@ -4,7 +4,6 @@ import { useState, useRef, useEffect } from 'react';
 import { Bell, LogOut, Settings, User, X, Menu, QrCode } from 'lucide-react';
 import Link from 'next/link';
 import { getUser, logout } from '@/lib/api';
-import { MANAGER_PLACEHOLDER_NOTIFICATIONS } from '@/app/manager/manager_utils/ManagerSharedConstants';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import ManagerQrScannerModal from '@/app/manager/manager_components/ManagerQrScanner/ManagerQrScannerModal';
 import type { ManagerHeaderProps } from '@/app/manager/manager_components/ManagerLayout/ManagerLayoutTypes';
@@ -13,7 +12,7 @@ export default function ManagerHeader({ title, subtitle }: ManagerHeaderProps) {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [showScanner, setShowScanner] = useState(false);
-  const [notifications, setNotifications] = useState(MANAGER_PLACEHOLDER_NOTIFICATIONS);
+  const [notifications, setNotifications] = useState<{ id: string; text: string; time: string; unread: boolean }[]>([]);
   const notifRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
@@ -131,7 +130,7 @@ export default function ManagerHeader({ title, subtitle }: ManagerHeaderProps) {
           <button
             onClick={() => setShowProfile(!showProfile)}
             aria-label="Toggle profile menu"
-            className="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold cursor-pointer motion-safe:transition-transform motion-safe:hover:scale-105 border border-white/10 bg-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+            className="w-9 h-9 rounded-full flex items-center justify-center text-primary-foreground text-sm font-bold cursor-pointer motion-safe:transition-transform motion-safe:hover:scale-105 border border-border bg-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
           >
             {mounted ? (user?.name?.charAt(0)?.toUpperCase() || 'A') : 'A'}
           </button>

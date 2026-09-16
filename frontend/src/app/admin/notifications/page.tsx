@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 // RESPONSIBILITY: Server Component entry point for /admin/notifications. Rule 8 compliant — no , no AdminHeader import.
 import type { Metadata } from 'next';
 import AdminNotificationsClient from '@/app/admin/notifications/notifications_components/AdminNotificationsClient';

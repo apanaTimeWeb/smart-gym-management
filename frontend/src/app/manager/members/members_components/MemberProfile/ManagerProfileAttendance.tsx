@@ -1,7 +1,7 @@
 'use client';
 // RESPONSIBILITY: Contains logic, types, or component definition for this module.
 import { useMembersContext } from '@/app/manager/members/members_context/ManagerMembersContext';
-import { useFetchAttendance } from '@/app/manager/members/members_api/useManagerMembersQueries';
+import { useFetchAttendance } from '@/app/manager/members/members_api/ManagerUseManagerMembersQueries';
 
 export default function ManagerProfileAttendance() {
   const { selectedMember } = useMembersContext();
@@ -43,8 +43,8 @@ export default function ManagerProfileAttendance() {
           <div 
             key={day} 
             className={`h-10 w-full rounded-lg flex items-center justify-center text-xs font-bold border-none ${
-              status === 'P' ? 'bg-success text-white' 
-              : status === 'A' ? 'bg-danger text-white' 
+              status === 'P' ? 'bg-success text-primary-foreground' 
+              : status === 'A' ? 'bg-danger text-primary-foreground' 
               : 'bg-input text-secondary border border-border'
             }`}
           >

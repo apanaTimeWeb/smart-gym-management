@@ -2,6 +2,6 @@
 export const AdminAnnouncementsUrlConfig = {
   root: '/admin/announcements',
   api: {
-    base: '/api/admin/announcements',
+    base: '/admin/announcements',
   }
 };

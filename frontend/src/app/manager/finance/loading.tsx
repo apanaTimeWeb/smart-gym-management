@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Renders the loading fallback for the finance module.
-import { TableSkeleton } from '@/app/manager/manager_components/ManagerShared/TableSkeleton';
+import { TableSkeleton } from '@/app/manager/manager_components/ManagerShared/ManagerTableSkeleton';
 
 export default function Loading() {
   return (

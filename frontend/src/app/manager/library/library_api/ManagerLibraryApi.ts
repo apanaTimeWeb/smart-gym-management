@@ -1,6 +1,6 @@
-import { ManagerLibraryUrlConfig } from '@/app/manager/library/library_url_config';
+import { ManagerLibraryUrlConfig } from '@/app/manager/Manager_url_config';
 import { apiFetch, type ApiResponse } from '@/lib/api';
-import { LibraryUrlConfig } from '@/app/manager/library/ManagerLibraryUrlConfig';
+import { LibraryUrlConfig } from '@/app/manager/Manager_url_config';
 import type { DietPlan, Exercise } from '@/app/manager/library/library_types/ManagerLibraryTypes';
 import { dietPlanSchema, exerciseSchema } from '@/app/manager/library/library_types/ManagerLibrarySchema';
 import { z } from 'zod';
@@ -20,7 +20,7 @@ export const libraryApi = {
   },
   
   removeExercise: async (id: string): Promise<ApiResponse<{ id: string }>> => {
-    return apiFetch(`${ManagerLibraryUrlConfig.BACKEND_API.BASE}/exercises/${id}`, { method: 'DELETE' });
+    return apiFetch(`${ManagerLibraryUrlConfig.BACKEND_API.BASE}/exercises/${id}`, { method: 'DELETE', dataSchema: z.object({ id: z.string() }) });
   },
   
   getDietPlans: (params?: Record<string, string>) => {
@@ -33,5 +33,5 @@ export const libraryApi = {
     apiFetch<ApiResponse<DietPlan>>(LibraryUrlConfig.BACKEND_API.DIET_PLANS_BASE, { method: 'POST', body: JSON.stringify(body), dataSchema: dietPlanSchema }),
   updateDietPlan: (id: string, body: Partial<DietPlan>) =>
     apiFetch<ApiResponse<DietPlan>>(LibraryUrlConfig.BACKEND_API.DIET_PLAN_UPDATE(id), { method: 'PATCH', body: JSON.stringify(body), dataSchema: dietPlanSchema }),
-  removeDietPlan: (id: string) => apiFetch<ApiResponse<{ id: string }>>(LibraryUrlConfig.BACKEND_API.DIET_PLAN_DELETE(id), { method: 'DELETE' }),
+  removeDietPlan: (id: string) => apiFetch<ApiResponse<{ id: string }>>(LibraryUrlConfig.BACKEND_API.DIET_PLAN_DELETE(id), { method: 'DELETE', dataSchema: z.object({ id: z.string() }) }),
 };

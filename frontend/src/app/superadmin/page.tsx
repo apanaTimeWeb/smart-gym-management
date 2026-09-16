@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 // RESPONSIBILITY: page.tsx handles the logic and UI for its corresponding feature.
 import { redirect } from 'next/navigation';
 import { DashboardUrlConfig } from '@/app/superadmin/dashboard/superadmin_dashboard_url_config';

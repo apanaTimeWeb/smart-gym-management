@@ -6,6 +6,6 @@ import { z } from "zod";
 
 export const branchesApi = {
   fetchBranches: async () => {
-            return apiFetch<ApiResponse<z.infer<typeof branchSchema>[]>>('/api/admin/adminBranches/fetchBranches', { method: 'GET', dataSchema: z.array(branchSchema) });
+            return apiFetch<ApiResponse<z.infer<typeof branchSchema>[]>>('/admin/adminBranches/fetchBranches', { method: 'GET', dataSchema: z.array(branchSchema) });
         },
 };

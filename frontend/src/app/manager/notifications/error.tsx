@@ -22,7 +22,7 @@ export default function ManagerNotificationsError({
         </p>
         <button
           onClick={reset}
-          className="px-6 py-2.5 text-sm font-semibold rounded-xl bg-primary text-white hover:opacity-90 motion-safe:transition-opacity"
+          className="px-6 py-2.5 text-sm font-semibold rounded-xl bg-primary text-primary-foreground hover:opacity-90 motion-safe:transition-opacity"
         >
           Try Again
         </button>

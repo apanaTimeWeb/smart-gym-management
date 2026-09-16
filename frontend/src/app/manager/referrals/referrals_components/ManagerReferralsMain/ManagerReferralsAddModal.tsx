@@ -1,122 +1,23 @@
 'use client';
-// RESPONSIBILITY: Modal for adding a new referral manually.
-import { useState } from 'react';
+// RESPONSIBILITY: RHF + Zod form for manually creating a referral.
+import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { X, Loader2 } from 'lucide-react';
-import { useManagerReferralsLogic } from '@/app/manager/referrals/referrals_context/useManagerReferralsLogic';
-import { useUnsavedChangesGuard } from '@/app/manager/manager_utils/useUnsavedChangesGuard';
+import { useManagerReferralsLogic } from '@/app/manager/referrals/referrals_context/ManagerUseManagerReferralsLogic';
+import { useManagerUnsavedChangesGuard } from '@/app/manager/manager_utils/ManagerUnsavedChangesGuard';
+import { managerReferralFormSchema, type ManagerReferralFormValues } from '@/app/manager/referrals/referrals_utils/ManagerReferralsFormSchema';
+
+const EMPTY: ManagerReferralFormValues = { referrerName: '', referrerId: '', refereeName: '', refereePhone: '' };
 
 export default function ManagerReferralsAddModal() {
   const { isAddModalOpen, setIsAddModalOpen, createReferral, isCreating } = useManagerReferralsLogic();
-  
-  const [referrerName, setReferrerName] = useState('');
-  const [referrerId, setReferrerId] = useState('');
-  const [refereeName, setRefereeName] = useState('');
-  const [refereePhone, setRefereePhone] = useState('');
-  
-  const isDirty = Boolean(referrerName || referrerId || refereeName || refereePhone);
-  useUnsavedChangesGuard(isDirty && isAddModalOpen);
-
+  const form = useForm<ManagerReferralFormValues>({ resolver: zodResolver(managerReferralFormSchema), defaultValues: EMPTY });
+  useEffect(() => { if (!isAddModalOpen) form.reset(EMPTY); }, [isAddModalOpen, form]);
+  useManagerUnsavedChangesGuard(isAddModalOpen && form.formState.isDirty);
   if (!isAddModalOpen) return null;
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    createReferral({ referrerName, referrerId, refereeName, refereePhone });
-  };
-
-  return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-overlay backdrop-blur-sm motion-safe:animate-in motion-safe:fade-in">
-      <div className="bg-card border border-border w-full max-w-md rounded-xl shadow-lg flex flex-col max-h-[90vh] overflow-hidden">
-        
-        {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-border bg-input/10">
-          <h2 className="text-lg font-bold text-foreground">Log New Referral</h2>
-          <button 
-            onClick={() => setIsAddModalOpen(false)}
-            className="p-1 text-secondary hover:text-foreground rounded-md motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-          >
-            <X size={20} />
-          </button>
-        </div>
-
-        {/* Body */}
-        <div className="p-4 overflow-y-auto">
-          <form id="referral-form" onSubmit={handleSubmit} className="space-y-4">
-            
-            <div className="bg-input/20 p-3 rounded-lg border border-border space-y-3">
-              <h3 className="text-xs font-bold text-secondary uppercase tracking-wider">Referrer (Existing Member)</h3>
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-1">Member Name *</label>
-                <input 
-                  type="text" 
-                  required
-                  value={referrerName}
-                  onChange={(e) => setReferrerName(e.target.value)}
-                  className="w-full px-3 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary" 
-                  placeholder="e.g. Arjun Sharma"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-1">Member ID *</label>
-                <input 
-                  type="text" 
-                  required
-                  value={referrerId}
-                  onChange={(e) => setReferrerId(e.target.value)}
-                  className="w-full px-3 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary" 
-                  placeholder="e.g. M001"
-                />
-              </div>
-            </div>
-
-            <div className="bg-input/20 p-3 rounded-lg border border-border space-y-3">
-              <h3 className="text-xs font-bold text-secondary uppercase tracking-wider">Referee (New Inquiry)</h3>
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-1">Inquiry Name *</label>
-                <input 
-                  type="text" 
-                  required
-                  value={refereeName}
-                  onChange={(e) => setRefereeName(e.target.value)}
-                  className="w-full px-3 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary" 
-                  placeholder="e.g. Vikram Singh"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-1">Phone Number *</label>
-                <input 
-                  type="tel" 
-                  required
-                  value={refereePhone}
-                  onChange={(e) => setRefereePhone(e.target.value)}
-                  className="w-full px-3 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary" 
-                  placeholder="e.g. 9876543210"
-                />
-              </div>
-            </div>
-
-          </form>
-        </div>
-
-        {/* Footer */}
-        <div className="p-4 border-t border-border bg-input/10 flex justify-end gap-2 shrink-0">
-          <button 
-            type="button"
-            onClick={() => setIsAddModalOpen(false)}
-            className="px-4 py-2 text-sm font-medium text-secondary hover:text-foreground motion-safe:transition-colors focus-visible:outline-none"
-          >
-            Cancel
-          </button>
-          <button 
-            type="submit"
-            form="referral-form"
-            disabled={isCreating}
-            className="flex items-center gap-2 px-4 py-2 bg-primary text-black rounded-lg text-sm font-bold hover:bg-primary-hover motion-safe:transition-colors disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:ring-offset-background"
-          >
-            {isCreating ? <Loader2 size={16} className="motion-safe:animate-spin" /> : 'Save Referral'}
-          </button>
-        </div>
-
-      </div>
-    </div>
-  );
+  const submit = form.handleSubmit((values) => createReferral(values));
+  return <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-overlay backdrop-blur-sm"><div className="bg-card border border-border w-full max-w-md rounded-xl shadow-lg flex flex-col max-h-full overflow-hidden"><div className="flex items-center justify-between p-4 border-b border-border bg-input/10"><h2 className="text-lg font-bold text-foreground">Log New Referral</h2><button type="button" aria-label="Close referral form" onClick={() => setIsAddModalOpen(false)} className="p-1 text-secondary rounded-md"><X size={20} /></button></div><form id="manager-referral-form" onSubmit={submit} className="p-4 overflow-y-auto space-y-4">
+    {[['referrerName','Member Name'],['referrerId','Member ID'],['refereeName','Inquiry Name'],['refereePhone','Phone Number']].map(([field,label]) => { const name = field as keyof ManagerReferralFormValues; const error = form.formState.errors[name]; return <div key={field}><label htmlFor={`manager-referral-${field}`} className="block text-sm font-medium text-foreground mb-1">{label} *</label><input id={`manager-referral-${field}`} type={name === 'refereePhone' ? 'tel' : 'text'} {...form.register(name)} className="w-full px-3 py-2 bg-input border border-border rounded-lg text-sm text-foreground" />{error && <p className="text-xs text-danger mt-1">{String(error.message ?? '')}</p>}</div>; })}
+  </form><div className="p-4 border-t border-border bg-input/10 flex justify-end gap-2"><button type="button" onClick={() => setIsAddModalOpen(false)} className="px-4 py-2 text-sm font-medium text-secondary">Cancel</button><button type="submit" form="manager-referral-form" disabled={isCreating} className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-bold disabled:opacity-50">{isCreating ? <Loader2 size={16} className="animate-spin" /> : 'Save Referral'}</button></div></div></div>;
 }

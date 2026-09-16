@@ -2,8 +2,8 @@
 // RESPONSIBILITY: Renders the Automations tab in Communications, allowing managers to enable/disable and configure automated background triggers like Birthday and Anniversary messages.
 import { useState } from 'react';
 import { Loader2, Zap, Settings, MessageSquare, Clock } from 'lucide-react';
-import type { CommAutomation } from '@/app/manager/communications/communications_types/communications_types';
-import { useManagerCommunicationsLogic } from '@/app/manager/communications/communications_context/useManagerCommunicationsLogic';
+import type { CommAutomation } from '@/app/manager/communications/communications_types/ManagerCommunications_types';
+import { useManagerCommunicationsLogic } from '@/app/manager/communications/communications_context/ManagerUseManagerCommunicationsLogic';
 
 export default function ManagerCommunicationsAutomations() {
   const { automations, automationsLoading, updateAutomation, isUpdatingAutomation } = useManagerCommunicationsLogic();
@@ -80,7 +80,7 @@ export default function ManagerCommunicationsAutomations() {
                   }`}
                 >
                   <span
-                    className={`inline-block h-4 w-4 transform rounded-full bg-white motion-safe:transition-transform ${
+                    className={`inline-block h-4 w-4 transform rounded-full bg-background motion-safe:transition-transform ${
                       auto.enabled ? 'translate-x-6' : 'translate-x-1 bg-disabled'
                     }`}
                   />
@@ -125,7 +125,7 @@ export default function ManagerCommunicationsAutomations() {
                       <button
                         onClick={() => saveEditing(auto.id)}
                         disabled={isUpdatingAutomation}
-                        className="flex items-center gap-2 px-4 py-2 bg-primary text-black rounded-lg text-sm font-bold hover:bg-primary-hover motion-safe:transition-colors disabled:opacity-50"
+                        className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-bold hover:bg-primary-hover motion-safe:transition-colors disabled:opacity-50"
                       >
                         {isUpdatingAutomation ? <Loader2 size={16} className="motion-safe:animate-spin" /> : 'Save Changes'}
                       </button>
@@ -134,13 +134,13 @@ export default function ManagerCommunicationsAutomations() {
                 ) : (
                   <div className="space-y-4 opacity-80 hover:opacity-100 motion-safe:transition-opacity">
                     <div>
-                      <label className="flex items-center gap-2 text-[11px] font-semibold text-secondary uppercase tracking-wider mb-1">
+                      <label className="flex items-center gap-2 text-xs font-semibold text-secondary uppercase tracking-wider mb-1">
                         <Clock size={14} /> Send Time
                       </label>
                       <p className="text-sm font-medium text-foreground">{auto.sendTime}</p>
                     </div>
                     <div>
-                      <label className="flex items-center gap-2 text-[11px] font-semibold text-secondary uppercase tracking-wider mb-1">
+                      <label className="flex items-center gap-2 text-xs font-semibold text-secondary uppercase tracking-wider mb-1">
                         <MessageSquare size={14} /> WhatsApp Template
                       </label>
                       <div className="bg-input/50 border border-border rounded-lg p-3 text-sm text-secondary italic">

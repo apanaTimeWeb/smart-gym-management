@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders the Manager FinanceKpiCards presentation layer for the Manager module.
 import React from 'react';
 import { IndianRupee, Wallet, Clock, TrendingUp, Percent, ArrowLeftRight } from 'lucide-react';
 import { useFinanceContext } from '@/app/manager/finance/finance_context/ManagerFinanceContext';

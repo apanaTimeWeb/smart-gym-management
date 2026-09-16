@@ -3,7 +3,7 @@ import { formatDate } from '@/lib/formatters';
 // RESPONSIBILITY: Renders the payment history and transaction records for a specific member profile.
 import { Printer, MessageCircle } from 'lucide-react';
 import { useMembersContext } from '@/app/manager/members/members_context/ManagerMembersContext';
-import { useFetchPayments } from '@/app/manager/members/members_api/useManagerMembersQueries';
+import { useFetchPayments } from '@/app/manager/members/members_api/ManagerUseManagerMembersQueries';
 import { formatCurrency } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
 
 export default function ManagerProfilePayments() {
@@ -41,7 +41,7 @@ export default function ManagerProfilePayments() {
     <button onClick={() => setShowPaymentModal(true)} className="px-4 py-2 border border-primary text-primary rounded-lg text-sm font-semibold hover:bg-primary/5 transition-colors shadow-sm">
       Record Payment
     </button>
-    <button onClick={() => setShowRenewModal(true)} className="px-4 py-2 bg-primary text-white rounded-lg text-sm font-semibold hover:bg-primary/90 transition-colors shadow-sm">
+    <button onClick={() => setShowRenewModal(true)} className="px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-semibold hover:bg-primary/90 transition-colors shadow-sm">
       Renew Membership
     </button>
   </div>

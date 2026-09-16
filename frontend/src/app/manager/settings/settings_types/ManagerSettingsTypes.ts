@@ -3,7 +3,6 @@
 // Membership Settings, and Notification Templates.
 
 // ─── Enums & Literal Types ────────────────────────────────────────────────────
-export type ManagerSettingsFetchState = 'idle' | 'loading' | 'success' | 'error';
 export type SettingsTab = 'region' | 'gym_profile' | 'operating_hours' | 'membership' | 'notification_templates';
 export type NotificationTemplateType = 'renewal_reminder' | 'payment_receipt' | 'welcome_message' | 'expiry_alert' | 'payment_due';
 export type RecurringFrequency = 'Daily' | 'Weekly' | 'Monthly';

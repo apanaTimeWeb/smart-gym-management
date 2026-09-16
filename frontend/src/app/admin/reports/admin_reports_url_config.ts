@@ -2,6 +2,6 @@
 export const AdminReportsUrlConfig = {
   root: '/admin/reports',
   api: {
-    base: '/api/admin/reports',
+    base: '/admin/reports',
   }
 };

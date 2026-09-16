@@ -2,6 +2,6 @@
 export const AdminNotificationsUrlConfig = {
   root: '/admin/notifications',
   api: {
-    base: '/api/admin/notifications',
+    base: '/admin/notifications',
   }
 };

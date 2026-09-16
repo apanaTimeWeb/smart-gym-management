@@ -2,7 +2,7 @@
 import { formatDate } from '@/lib/formatters';
 // RESPONSIBILITY: Single churned member row in the churn recovery table. Receives member data and callbacks via props. No API calls.
 import { Send, CheckCircle } from 'lucide-react';
-import type { ChurnedMember } from '@/app/manager/communications/communications_types/communications_types';
+import type { ChurnedMember } from '@/app/manager/communications/communications_types/ManagerCommunications_types';
 import { CANCELLATIONS_REASON_LABEL } from '@/app/manager/communications/communications_utils/ManagerCommunicationsSharedConstants';
 
 interface ManagerChurnRecoveryTableRowProps {
@@ -32,8 +32,8 @@ export default function ManagerChurnRecoveryTableRow({
       {/* Name + Plan */}
       <td className="px-4 py-3">
         <div className="flex flex-col">
-          <span className="text-sm font-medium text-foreground truncate max-w-[160px]">{member.name}</span>
-          <span className="text-xs text-secondary truncate max-w-[160px]">{member.plan}</span>
+          <span className="text-sm font-medium text-foreground truncate max-w-40">{member.name}</span>
+          <span className="text-xs text-secondary truncate max-w-40">{member.plan}</span>
         </div>
       </td>
 
@@ -49,7 +49,7 @@ export default function ManagerChurnRecoveryTableRow({
 
       {/* Days Since Exit */}
       <td className="px-4 py-3">
-        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold ${badge.bg} ${badge.text}`}>
+        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${badge.bg} ${badge.text}`}>
           {badge.label}
         </span>
       </td>
@@ -62,15 +62,15 @@ export default function ManagerChurnRecoveryTableRow({
       {/* Recovery status */}
       <td className="px-4 py-3">
         {member.recovered ? (
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-success-bg text-success">
+          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-success-bg text-success">
             <CheckCircle size={11} /> Recovered
           </span>
         ) : member.lastContactedAt ? (
-          <span className="text-[11px] text-secondary">
+          <span className="text-xs text-secondary">
             Contacted {formatDate(member.lastContactedAt)}
           </span>
         ) : (
-          <span className="text-[11px] text-disabled">Not contacted</span>
+          <span className="text-xs text-disabled">Not contacted</span>
         )}
       </td>
 
@@ -81,7 +81,7 @@ export default function ManagerChurnRecoveryTableRow({
             type="button"
             aria-label={`Send win-back message to ${member.name}`}
             onClick={(e) => { e.stopPropagation(); onOpenComposer(member.memberId); }}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-primary text-black motion-safe:transition-all motion-safe:hover:bg-primary-hover motion-safe:active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-primary text-primary-foreground motion-safe:transition-all motion-safe:hover:bg-primary-hover motion-safe:active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
             <Send size={12} />
             Win-Back
