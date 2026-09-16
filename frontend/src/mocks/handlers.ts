@@ -29,14 +29,14 @@ import { authHandlers } from './handlers/auth.handlers';
 import { landingHandlers } from './handlers/landing.handlers';
 import { managerHandlers } from '@/app/manager/manager_mocks/ManagerMockHandlers';
 
-import { trainerAttendanceHandlers } from './handlers/trainer-attendance.handlers';
-import { trainerDashboardHandlers } from './handlers/trainer-dashboard.handlers';
-import { trainerEarningsHandlers } from './handlers/trainer-earnings.handlers';
-import { trainerMembersHandlers } from './handlers/trainer-members.handlers';
-import { trainerProgressHandlers } from './handlers/trainer-progress.handlers';
-import { trainerScheduleHandlers } from './handlers/trainer-schedule.handlers';
-import { trainerSessionsHandlers } from './handlers/trainer-sessions.handlers';
-import { trainerWorkoutHandlers } from './handlers/trainer-workout.handlers';
+import { trainerAttendanceHandlers } from '@/app/trainer/attendance/attendance_mocks/handlers/TrainerAttendanceMockHandlers';
+import { trainerDashboardHandlers } from '@/app/trainer/dashboard/dashboard_mocks/handlers/TrainerDashboardMockHandlers';
+import { trainerEarningsHandlers } from '@/app/trainer/earnings/earnings_mocks/handlers/TrainerEarningsMockHandlers';
+import { trainerMembersHandlers } from '@/app/trainer/members/members_mocks/handlers/TrainerMembersMockHandlers';
+import { trainerProgressHandlers } from '@/app/trainer/progress-tracking/progress_mocks/handlers/TrainerProgressMockHandlers';
+import { trainerScheduleHandlers } from '@/app/trainer/schedule/schedule_mocks/handlers/TrainerScheduleMockHandlers';
+import { trainerSessionsHandlers } from '@/app/trainer/sessions/sessions_mocks/handlers/TrainerSessionsMockHandlers';
+import { trainerWorkoutHandlers } from '@/app/trainer/workout/workout_mocks/handlers/TrainerWorkoutMockHandlers';
 
 export const handlers = [
   http.get("/api/health", () => {
