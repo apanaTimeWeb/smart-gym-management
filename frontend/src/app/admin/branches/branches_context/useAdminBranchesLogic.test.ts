@@ -7,7 +7,7 @@ import { describe, expect, it } from 'vitest';
  */
 describe('useAdminBranchesLogic contract', () => {
   it('contains the required responsibility/data-flow contract', () => {
-    const source = fs.readFileSync(new URL('useAdminBranchesLogic.ts', import.meta.url), 'utf8');
+    const source = fs.readFileSync(new URL('useAdminBranchesLogic', import.meta.url), 'utf8');
     expect(source).toMatch(/(RESPONSIBILITY:|DATA FLOW:)/);
   });
 });

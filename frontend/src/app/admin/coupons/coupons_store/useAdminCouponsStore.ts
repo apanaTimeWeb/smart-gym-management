@@ -17,6 +17,8 @@ interface AdminCouponsStore {
   setStatusFilter: (s: string) => void;
   currentPage: number;
   setCurrentPage: (p: number) => void;
+  dateRange: string;
+  setDateRange: (s: string) => void;
 }
 
 export const useAdminCouponsStore = create<AdminCouponsStore>((set) => ({
@@ -32,4 +34,6 @@ export const useAdminCouponsStore = create<AdminCouponsStore>((set) => ({
   setStatusFilter: (s) => set({ statusFilter: s, currentPage: 1 }),
   currentPage: 1,
   setCurrentPage: (p) => set({ currentPage: p }),
+  dateRange: 'all_time',
+  setDateRange: (s) => set({ dateRange: s, currentPage: 1 }),
 }));

@@ -3,6 +3,7 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 const moduleRoot = path.resolve(__dirname);
+const featureModules = new Set(['announcements','attendance','audit_logs','blacklist','branches','coupons','dashboard','data-export','finance','gym-health-alerts','hr','members','notifications','payouts','permissions','plans','profile','reports','sales','settings','subscriptions','usage']);
 
 function sourceFiles(root: string): string[] {
   const output: string[] = [];
@@ -21,6 +22,31 @@ describe('admin module architecture contract', () => {
       const text = fs.readFileSync(file, 'utf8');
       expect(text, file).not.toMatch(/(?:from|import)\s+['"]\./);
       expect(text, file).not.toMatch(/@ts-(?:ignore|nocheck)/);
+    }
+  });
+
+  it('blocks cross-feature Admin business imports while allowing the documented shell boundary', () => {
+    for (const file of sourceFiles(moduleRoot)) {
+      const relative = path.relative(moduleRoot, file).replaceAll('\\','/');
+      const owner = relative.split('/')[0];
+      if (!featureModules.has(owner) || relative.startsWith('admin_components/')) continue;
+      const text = fs.readFileSync(file, 'utf8');
+      for (const target of featureModules) {
+        if (target === owner) continue;
+        expect(text, `${file} imports ${target}`).not.toMatch(new RegExp(`@/app/admin/${target}/`));
+      }
+    }
+  });
+
+  it('requires module-owned mock fixtures and handlers for every feature module', () => {
+    for (const feature of featureModules) {
+      const base = path.join(moduleRoot, feature, `${feature}_mocks`);
+      expect(fs.existsSync(path.join(base, 'fixtures')), feature).toBe(true);
+      expect(fs.existsSync(path.join(base, 'handlers')), feature).toBe(true);
+      const fixtures = fs.readdirSync(path.join(base, 'fixtures')).filter((name) => /\.(ts|tsx)$/.test(name));
+      const handlers = fs.readdirSync(path.join(base, 'handlers')).filter((name) => /\.(ts|tsx)$/.test(name));
+      expect(fixtures.length, `${feature} fixtures`).toBeGreaterThan(0);
+      expect(handlers.length, `${feature} handlers`).toBeGreaterThan(0);
     }
   });
 

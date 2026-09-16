@@ -5,7 +5,7 @@ import { SettingsUrlConfig } from '@/app/admin/settings/admin_settings_url_confi
 import { AdminSettingsResponseSchema } from '@/app/admin/settings/settings_types/AdminSettings.schema';
 import type { AdminSettingsResponse } from '@/app/admin/settings/settings_types/AdminSettingsTypes';
 import { logErrorToMonitoring } from '@/app/admin/admin_utils/AdminMonitoring';
-import { z } from "zod";
+import { type z } from "zod";
 export const settingsApi = {
   fetchSettings: async () => {
             return apiFetch<z.infer<typeof AdminSettingsResponseSchema>>(`${SettingsUrlConfig.BACKEND_API.BASE}/fetchSettings`, { method: 'GET', responseSchema: AdminSettingsResponseSchema });

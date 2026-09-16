@@ -3,6 +3,8 @@
 // Shows all branch-scoped bans in one place and allows admin to propagate any entry to all branches.
 
 import { Building2, Globe, ArrowUpRight, Trash2 } from 'lucide-react';
+import { maskSensitiveData } from '@/app/admin/admin_utils/AdminMaskSensitiveData';
+import { displayValue } from '@/app/admin/admin_utils/AdminDisplayValue';
 import { useAdminBlacklistLogic } from '@/app/admin/blacklist/blacklist_context/useAdminBlacklistLogic';
 import type { BlacklistedMember } from '@/app/admin/blacklist/blacklist_types/AdminBlacklistTypes';
 import { AdminTableSkeleton } from '@/app/admin/admin_components/AdminShared/AdminTableSkeleton';
@@ -58,8 +60,8 @@ export default function AdminBlacklistCrossGymView() {
                     <p className="text-xs text-secondary">ID: {m.memberId}</p>
                   </td>
                   <td className="px-4 py-3">
-                    <p className="text-sm text-foreground">{m.memberPhone}</p>
-                    <p className="text-xs text-secondary truncate max-w-40">{m.memberEmail}</p>
+                    <p className="text-sm text-foreground">{maskSensitiveData(m.memberPhone)}</p>
+                    <p className="text-xs text-secondary truncate max-w-40">{displayValue(m.memberEmail)}</p>
                   </td>
                   <td className="px-4 py-3 max-w-56">
                     <p className="text-sm text-foreground line-clamp-2">{m.reason}</p>

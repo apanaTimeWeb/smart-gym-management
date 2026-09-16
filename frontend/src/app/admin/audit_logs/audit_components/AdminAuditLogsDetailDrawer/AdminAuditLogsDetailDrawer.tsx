@@ -2,6 +2,7 @@
 // RESPONSIBILITY: Detail drawer for a single audit log — full metadata, IP, user agent, affected record.
 
 import { X, Download, ShieldAlert, Clock, User, Building2, Monitor, Hash } from 'lucide-react';
+import { displayValue } from '@/app/admin/admin_utils/AdminDisplayValue';
 import type { AuditLog } from '@/app/admin/audit_logs/audit_types/AdminAuditTypes';
 import { useAdminAuditLogsLogic } from '@/app/admin/audit_logs/audit_context/useAdminAuditLogsLogic';
 
@@ -24,8 +25,8 @@ export default function AdminAuditLogsDetailDrawer({ log, onClose }: AdminAuditL
     { icon: User,      label: 'Performed By',     value: log.user },
     { icon: Building2, label: 'Branch',           value: log.branchId === 'all' ? 'Global (All Branches)' : log.branchId },
     { icon: Monitor,   label: 'IP Address',       value: log.ip },
-    { icon: Monitor,   label: 'User Agent',       value: log.userAgent ?? 'N/A' },
-    { icon: Hash,      label: 'Affected Record',  value: log.affectedRecordId ?? 'N/A' },
+    { icon: Monitor,   label: 'User Agent',       value: displayValue(log.userAgent) },
+    { icon: Hash,      label: 'Affected Record',  value: displayValue(log.affectedRecordId) },
   ];
 
   return (

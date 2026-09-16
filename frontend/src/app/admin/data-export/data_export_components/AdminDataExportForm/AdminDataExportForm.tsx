@@ -1,7 +1,7 @@
 "use client";
 // RESPONSIBILITY: Form for creating a new data export job with data type, format, gym, and date range filters.
 
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Download } from 'lucide-react';
 import { useAdminDataExportLogic } from '@/app/admin/data-export/data_export_context/useAdminDataExportLogic';
@@ -17,14 +17,15 @@ import type { ExportFormValues } from '@/app/admin/data-export/data_export_types
 export default function AdminDataExportForm() {
   const { createExport, creating } = useAdminDataExportLogic();
 
-  const { register, handleSubmit, watch, setValue, reset, formState: { errors } } = useForm<ExportFormValues>({
+  const { register, handleSubmit, watch, setValue, reset, control, formState: { errors } } = useForm<ExportFormValues>({
     resolver: zodResolver(ExportFormSchema),
     defaultValues: EMPTY_EXPORT_FORM,
   });
 
-  const selectedFormat = watch('format');
-  const selectedDataType = watch('dataType');
-  const selectedGyms = watch('gymIds') ?? [];
+  const formValues = useWatch({ control });
+  const selectedFormat = formValues.format ?? EMPTY_EXPORT_FORM.format;
+  const selectedDataType = formValues.dataType ?? EMPTY_EXPORT_FORM.dataType;
+  const selectedGyms = formValues.gymIds ?? EMPTY_EXPORT_FORM.gymIds ?? [];
 
   const toggleGym = (val: string) => {
     if (val === 'all') { setValue('gymIds', ['all']); return; }

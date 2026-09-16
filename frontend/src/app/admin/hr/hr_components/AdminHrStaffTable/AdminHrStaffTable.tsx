@@ -2,24 +2,32 @@
 // RESPONSIBILITY: Renders the paginated staff members table with sortable columns and inline row actions.
 
 import { useHrContext } from '@/app/admin/hr/hr_context/AdminHrContext';
+import { useMemo, useState } from 'react';
+import { ChevronDown, ChevronUp, ChevronsUpDown } from 'lucide-react';
 import { STAFF_TABLE_HEADERS } from '@/app/admin/hr/hr_utils/AdminHrSharedConstants';
 import { Edit2, Trash2, CheckCircle2, Ban, PlayCircle } from 'lucide-react';
 import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/useAdminConfirm';
 import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
 import { ADMIN_ITEMS_PER_PAGE } from '@/app/admin/admin_url_config';
 import { displayValue } from '@/app/admin/admin_utils/AdminDisplayValue';
+import { maskSensitiveData } from '@/app/admin/admin_utils/AdminMaskSensitiveData';
 import { formatCurrency } from '@/app/admin/admin_utils/AdminFormatCurrency';
 
 export default function AdminHrStaffTable() {
   const { staff, summary, status, debouncedSearch, branchFilter, roleFilter, currentPage, setCurrentPage, openEdit, openProfile, deleteStaff, toggleStaffStatus } = useHrContext();
   const { confirm } = useAdminConfirm();
+  type StaffSortKey = 'name' | 'branch' | 'role' | 'phone' | 'salary' | 'joinDate';
+  const [sortKey, setSortKey] = useState<StaffSortKey>('name');
+  const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc');
 
   const filteredStaff = staff.filter(s => 
     (roleFilter === 'All' || (s.role || '').toLowerCase().includes(roleFilter.toLowerCase())) &&
     (branchFilter === 'All' || s.branch === branchFilter)
   );
 
-  const totalStaff = summary?.totalStaff || filteredStaff.length;
+  const sortedStaff = useMemo(() => [...filteredStaff].sort((a,b) => { const av = sortKey === 'branch' ? a.branch : sortKey === 'joinDate' ? a.joinDate : a[sortKey]; const bv = sortKey === 'branch' ? b.branch : sortKey === 'joinDate' ? b.joinDate : b[sortKey]; const result = typeof av === 'number' && typeof bv === 'number' ? av - bv : String(av ?? '').localeCompare(String(bv ?? ''), undefined, { numeric: true }); return sortDir === 'asc' ? result : -result; }), [filteredStaff, sortKey, sortDir]);
+  const handleSort = (key: StaffSortKey) => { if (sortKey === key) setSortDir((d) => d === 'asc' ? 'desc' : 'asc'); else { setSortKey(key); setSortDir('asc'); } };
+  const totalStaff = summary?.totalStaff || sortedStaff.length;
   const totalPages = Math.ceil(totalStaff / ADMIN_ITEMS_PER_PAGE) || 1;
 
   if (status === 'pending') {
@@ -73,7 +81,7 @@ export default function AdminHrStaffTable() {
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
-            {filteredStaff.map(s => (
+            {sortedStaff.map(s => (
               <tr 
                 key={s.id} 
                 className="motion-safe:transition-colors hover:bg-primary/5 cursor-pointer" 
@@ -116,7 +124,7 @@ export default function AdminHrStaffTable() {
                     </span>
                   )}
                 </td>
-                <td className="px-4 py-3 text-sm text-secondary">{displayValue(s.phone)}</td>
+                <td className="px-4 py-3 text-sm text-secondary">{maskSensitiveData(s.phone)}</td>
                 <td className="px-4 py-3 text-sm font-medium text-success">{formatCurrency(s.salary)}</td>
                 <td className="px-4 py-3 text-sm font-medium text-primary text-right">{s.advanceSalary && s.advanceSalary > 0 ? formatCurrency(s.advanceSalary) : '—'}</td>
                 <td className="px-4 py-3 text-sm text-secondary">

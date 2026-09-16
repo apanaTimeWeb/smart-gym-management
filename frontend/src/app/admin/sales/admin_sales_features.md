@@ -35,7 +35,7 @@ is filterable by date range and branch.
 - Zustand stores: None — read-only module
 - Context providers: `AdminSalesContext` is a compatibility bridge only; TanStack Query remains the server-state owner
 - Local-storage keys: None
-- MSW handler: `admin/admin_mocks/handlers/AdminMockHandlers.ts` (module-owned central Admin transport)
+- MSW handler: `admin/sales/sales_mocks/handlers/AdminSalesMockHandlers.ts` (module-owned MSW transport)
 
 ## User Flows
 1. Admin opens `/admin/sales` → parallel fetch for KPIs, charts, table
@@ -104,4 +104,4 @@ is filterable by date range and branch.
 
 ## Module-Owned MSW Fixtures
 
-All Admin frontend-first API fixtures and MSW transport handlers are owned by `admin/admin_mocks/fixtures/AdminMockFixtures.ts` and `admin/admin_mocks/handlers/AdminMockHandlers.ts`. These files provide populated success responses and are the only module-owned mock transport source for Admin. Global MSW bootstrap may register these handlers, but must not contain Admin business data.
+All Admin frontend-first API fixtures and MSW transport handlers are owned by `admin/sales_mocks/fixtures/AdminSalesMockFixtures.ts` and `admin/sales/sales_mocks/handlers/AdminSalesMockHandlers.ts`. These files provide populated success responses and are the only module-owned mock transport source for Admin. Global MSW bootstrap may register these handlers, but must not contain Admin business data.

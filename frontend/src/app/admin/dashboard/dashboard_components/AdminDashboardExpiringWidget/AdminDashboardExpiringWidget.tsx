@@ -3,19 +3,13 @@
 
 import { Clock, AlertTriangle, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
-import { AdminMembersUrlConfig } from '@/app/admin/members/admin_members_url_config';
-
-const EXPIRING_MOCK = [
-  { id: 'm10', name: 'Pooja Iyer', branch: 'Downtown Core', plan: 'Silver Plan', expiryDate: '2025-01-20', daysLeft: 3 },
-  { id: 'm11', name: 'Suresh Kumar', branch: 'Uptown Plaza', plan: 'Gold Plan', expiryDate: '2025-01-18', daysLeft: 1 },
-  { id: 'm2', name: 'Priya Patel', branch: 'Uptown Plaza', plan: 'Silver Plan', expiryDate: '2025-01-28', daysLeft: 11 },
-  { id: 'm6', name: 'Divya Singh', branch: 'Westside Mall', plan: 'Silver Plan', expiryDate: '2025-02-14', daysLeft: 28 },
-  { id: 'm1', name: 'Rahul Sharma', branch: 'Downtown Core', plan: 'Gold Plan', expiryDate: '2025-02-10', daysLeft: 24 },
-];
+import { ADMIN_MEMBERS_ROUTE } from '@/app/admin/admin_url_config';
+import { useAdminDashboardLogic } from '@/app/admin/dashboard/dashboard_context/useAdminDashboardLogic';
 
 export default function AdminDashboardExpiringWidget() {
-  const critical = EXPIRING_MOCK.filter((m) => m.daysLeft <= 7);
-  const upcoming = EXPIRING_MOCK.filter((m) => m.daysLeft > 7);
+  const { stats } = useAdminDashboardLogic();
+  const expiring = (stats as any)?.expiringMemberships ?? [];
+  const critical = expiring.filter((member: any) => member.daysLeft <= 7);
 
   return (
     <div className="bg-card/60 backdrop-blur-xl border border-border rounded-2xl shadow-lg p-6 flex flex-col h-full">
@@ -42,7 +36,7 @@ export default function AdminDashboardExpiringWidget() {
             <AlertTriangle size={11} /> Expiring This Week
           </p>
         )}
-        {EXPIRING_MOCK.map((m) => (
+        {expiring.map((m: any) => (
           <div key={m.id} className={`p-3 rounded-xl border flex items-center justify-between gap-3 motion-safe:transition-colors ${
             m.daysLeft <= 7 ? 'bg-danger/10 border-danger/20' : 'bg-warning/5 border-warning/10'
           }`}>
@@ -63,7 +57,7 @@ export default function AdminDashboardExpiringWidget() {
       </div>
 
       <Link
-        href={`${AdminMembersUrlConfig.root}?expiryFilter=this_month`}
+        href={`${ADMIN_MEMBERS_ROUTE}?expiryFilter=this_month`}
         className="w-full mt-4 py-2 border border-border rounded-lg text-xs font-bold text-secondary hover:text-foreground hover:bg-primary/5 motion-safe:transition-colors flex items-center justify-center gap-1"
       >
         View All Expiring <ChevronRight size={13} />

@@ -85,3 +85,6 @@ export const STATUS_STYLES: Record<string, string> = {
 
 export const ADMIN_MONITORING_LOG_URL = '/admin/system/log';
 export const ADMIN_DASHBOARD_URL = '/admin/dashboard';
+
+export const ADMIN_DASHBOARD_ROUTE = '/admin/dashboard';
+export const ADMIN_MEMBERS_ROUTE = '/admin/members';

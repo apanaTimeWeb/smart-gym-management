@@ -36,4 +36,4 @@ export const GYM_HEALTH_ITEMS_PER_PAGE = 10;
 
 
 
-export { MOCK_GYM_HEALTH_ALERTS, MOCK_GYM_HEALTH_KPI } from '@/app/admin/admin_mocks/fixtures/AdminMockFixtures';
+export { MOCK_GYM_HEALTH_ALERTS, MOCK_GYM_HEALTH_KPI } from '@/app/admin/gym-health-alerts/gym-health-alerts_mocks/fixtures/AdminGymHealthAlertsMockFixtures';

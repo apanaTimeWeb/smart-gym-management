@@ -3,7 +3,7 @@ import { adminProfileDataSchema } from '@/app/admin/profile/profile_types/AdminP
 // RESPONSIBILITY: API client for the Admin Profile module.
 import { apiFetch, type ApiResponse } from '@/lib/api';
 import type { AdminProfileData, UpdateAdminProfilePayload, UpdateAdminPasswordPayload } from '@/app/admin/profile/profile_types/AdminProfileTypes';
-import { z } from "zod";
+import { type z } from "zod";
 
 const BASE = AdminProfileUrlConfig.api.base;
 export const adminProfileApi = {

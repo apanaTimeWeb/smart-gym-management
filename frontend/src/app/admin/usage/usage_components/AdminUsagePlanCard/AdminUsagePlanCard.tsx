@@ -4,8 +4,11 @@
 import { Check, Zap } from 'lucide-react';
 import { PLAN_TIERS } from '@/app/admin/usage/usage_utils/AdminUsageSharedConstants';
 import { formatCurrency } from '@/lib/formatters';
+import { useRouter } from 'next/navigation';
+import { AdminUsageUrlConfig } from '@/app/admin/usage/admin_usage_url_config';
 
 export default function AdminUsagePlanCard() {
+  const router = useRouter();
   return (
     <div className="bg-card rounded-xl border border-border p-6 space-y-4">
       <div className="flex items-center gap-3">
@@ -46,7 +49,7 @@ export default function AdminUsagePlanCard() {
               ))}
             </ul>
             {!plan.isCurrent && (
-              <button className="w-full py-2 rounded-lg text-xs font-bold border border-primary/40 text-primary hover:bg-primary/10 motion-safe:transition-all motion-safe:duration-200 motion-safe:active:scale-95">
+              <button onClick={() => router.push(AdminUsageUrlConfig.ui.subscriptionsPath)} className="w-full py-2 rounded-lg text-xs font-bold border border-primary/40 text-primary hover:bg-primary/10 motion-safe:transition-all motion-safe:duration-200 motion-safe:active:scale-95">
                 {plan.price === 0 ? 'Contact Sales' : 'Upgrade'}
               </button>
             )}

@@ -93,6 +93,7 @@ export const reportDataSchema = z.object({
     monthlyRevenue: z.array(monthlyRevenueSchema),
     membershipGrowth: z.array(membershipGrowthRowSchema),
     attendanceSummary: z.array(attendanceSummaryRowSchema),
+    attendanceHeatmap: z.array(attendanceHeatmapCellSchema),
     payrollSummary: z.array(payrollSummaryRowSchema),
     pnlSummary: z.array(pnLRowSchema),
     kpis: z.object({

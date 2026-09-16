@@ -47,4 +47,4 @@ export const EMPTY_BLACKLIST_FORM = {
 
 
 
-export { MOCK_BLACKLIST, MOCK_BLACKLIST_KPI } from '@/app/admin/admin_mocks/fixtures/AdminMockFixtures';
+export { MOCK_BLACKLIST, MOCK_BLACKLIST_KPI } from '@/app/admin/blacklist/blacklist_mocks/fixtures/AdminBlacklistMockFixtures';

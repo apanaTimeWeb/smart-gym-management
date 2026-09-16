@@ -35,7 +35,7 @@ actions (deactivate staff, revoke role) require `useConfirm()` double-verificati
 - Zustand stores: `useAdminHrStore` — modal open/close state
 - Context providers: `AdminHrContext.tsx` is retained only where the UI tree requires cross-tree wiring; it does not own server state
 - Local-storage keys: None
-- MSW handler: `admin/admin_mocks/handlers/AdminMockHandlers.ts` (module-owned central Admin transport)
+- MSW handler: `admin/hr/hr_mocks/handlers/AdminHrMockHandlers.ts` (module-owned MSW transport)
 
 ## User Flows
 1. Admin opens `/admin/hr` → table loads with all staff
@@ -108,4 +108,4 @@ actions (deactivate staff, revoke role) require `useConfirm()` double-verificati
 
 ## Module-Owned MSW Fixtures
 
-All Admin frontend-first API fixtures and MSW transport handlers are owned by `admin/admin_mocks/fixtures/AdminMockFixtures.ts` and `admin/admin_mocks/handlers/AdminMockHandlers.ts`. These files provide populated success responses and are the only module-owned mock transport source for Admin. Global MSW bootstrap may register these handlers, but must not contain Admin business data.
+All Admin frontend-first API fixtures and MSW transport handlers are owned by `admin/hr_mocks/fixtures/AdminHrMockFixtures.ts` and `admin/hr/hr_mocks/handlers/AdminHrMockHandlers.ts`. These files provide populated success responses and are the only module-owned mock transport source for Admin. Global MSW bootstrap may register these handlers, but must not contain Admin business data.

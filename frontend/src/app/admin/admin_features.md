@@ -14,8 +14,8 @@ The Admin module is the platform-level operational workspace for the gym-managem
 | `admin_utils/` | Admin-owned utility contracts and infrastructure adapters | `useAdminDebounce.ts`, `useAdminUrlQuerySync.ts`, `useAdminUnsavedChangesGuard.ts`, `AdminMonitoring.ts` |
 | `admin_store/` | Admin-wide UI/session-shell state only | `useAdminGlobalStore.ts`, `useAdminImpersonationStore.ts`, `useAdminToastStore.ts` |
 | `admin_types/` | Admin-wide type contracts | Admin prop/state/shared type definitions |
-| `admin_mocks/fixtures/` | Module-owned fake server datasets | `AdminMockFixtures.ts` |
-| `admin_mocks/handlers/` | Module-owned MSW handlers and response shaping | `AdminMockHandlers.ts` |
+| `<module>/<module>_mocks/fixtures/` | Module-owned feature datasets | One fixture file per Admin feature/module |
+| `<module>/<module>_mocks/handlers/` | Module-owned feature handlers | One handler file per Admin feature/module |
 | `dashboard/` | Organization-wide KPIs, charts, alerts, branch ranking | Dashboard route + module API/types/components/tests/docs |
 | `branches/` | Branch registry and branch detail/read-only metrics | Branch route + API/types/components/tests/docs |
 | `finance/` | Read-only finance/payment/revenue reporting | Finance route + API/types/components/tests/docs |
@@ -71,7 +71,7 @@ The Admin module is the platform-level operational workspace for the gym-managem
 
 ## API and State Contract
 
-All server data is owned by TanStack Query. Module Zustand stores contain UI-only state such as active filters, modal state, selected records, tabs, and pagination controls. API responses are validated at the boundary with Zod, and module API calls use centralized URL configuration files. Feature-specific mocked server data lives only in `admin_mocks/fixtures/` and `admin_mocks/handlers/`. No Admin business state is owned by React Context or a global Zustand server-data store.
+All server data is owned by TanStack Query. Module Zustand stores contain UI-only state such as active filters, modal state, selected records, tabs, and pagination controls. API responses are validated at the boundary with Zod, and module API calls use centralized URL configuration files. Feature-specific mocked server data lives inside each owning feature under `<module>/<module>_mocks/fixtures/` and `<module>/<module>_mocks/handlers/`. `admin_mocks/handlers/AdminMockHandlers.ts` is registration-only and contains no business data. No Admin business state is owned by React Context or a global Zustand server-data store.
 
 Representative namespaced query keys include `['admin','members','list',queryParams]`, `['admin','finance','payments',queryParams]`, `['admin','sales','pending-payments',queryParams,...]`, `['admin','notifications','list']`, and the corresponding feature-specific detail/KPI keys.
 
@@ -102,7 +102,7 @@ Every route has a framework-reserved `page.tsx`, `loading.tsx`, `error.tsx`, and
 
 ## Module-Owned Mock Ownership
 
-All Admin mock fixtures and handlers are intentionally co-located under `admin_mocks/`. Global MSW bootstrap is allowed only to register the module handlers. It must not contain Admin business records, Admin-specific transformations, or feature logic.
+Each Admin sub-feature owns its own fixture and handler folders. The root `admin_mocks/handlers/AdminMockHandlers.ts` only aggregates/registers those handlers. Global MSW bootstrap may register this aggregate, but must not contain Admin business records, Admin-specific transformations, or feature logic.
 
 ## External Infrastructure Dependencies
 
@@ -138,3 +138,15 @@ Approved external dependencies are limited to framework/application infrastructu
 - [ ] SCA/secret/security CI gates: NOT VERIFIED; must be executed in the consuming repository CI.
 
 The unchecked items are external execution gates, not unverified claims of code correctness. They must remain unchecked until the consuming project actually runs them successfully.
+
+## Shell Aggregation Exception
+
+`admin_components/AdminLayout/` is the approved Admin application-shell aggregation boundary. `AdminHeaderSearch`, `AdminHeaderNotifications`, `AdminHeaderProfile`, and `AdminUsageAlert` may consume minimal read-only data from Admin feature APIs because they render persistent shell affordances present across routes. This is an explicit Admin-only exception: shell components must not mutate feature state, own feature business rules, import feature fixtures/handlers, or become a substitute for feature-local query logic.
+
+## Branch Reference Isolation
+
+`members`, `attendance`, `hr`, and `reports` intentionally own minimal branch-reference contracts and MSW fixtures because they require branch dropdowns but must not import the Branches business module. Their API calls reuse the backend branch-reference endpoint with a consumer discriminator; their module-local handlers intercept only their own discriminator.
+
+## Settings Permission Reference Isolation
+
+`settings` owns a minimal role-permission reference contract for the Roles view. It does not import the Permissions business module. Its module-local MSW handler serves the Settings consumer discriminator using a settings-owned fixture.

@@ -55,7 +55,7 @@ surfacing near-limit warnings with color-coded progress bars.
 - [x] Rule 13: Feature Map — this document
 - [x] Rule 40: `usage_forbidden.md` present
 - [ ] Rule 14: Mock stub in `admin_AdminUsageApi.ts` must be replaced with real `apiFetch` call
-- [x] Rule 75: Module-owned MSW handler configured in `admin/admin_mocks/handlers/AdminMockHandlers.ts`
+- [x] Rule 75: Module-owned MSW handler configured in `admin/usage/usage_mocks/handlers/AdminUsageMockHandlers.ts`
 
 
 ## User Flows & Interactions
@@ -100,4 +100,4 @@ surfacing near-limit warnings with color-coded progress bars.
 
 ## Module-Owned MSW Fixtures
 
-All Admin frontend-first API fixtures and MSW transport handlers are owned by `admin/admin_mocks/fixtures/AdminMockFixtures.ts` and `admin/admin_mocks/handlers/AdminMockHandlers.ts`. These files provide populated success responses and are the only module-owned mock transport source for Admin. Global MSW bootstrap may register these handlers, but must not contain Admin business data.
+All Admin frontend-first API fixtures and MSW transport handlers are owned by `admin/usage_mocks/fixtures/AdminUsageMockFixtures.ts` and `admin/usage/usage_mocks/handlers/AdminUsageMockHandlers.ts`. These files provide populated success responses and are the only module-owned mock transport source for Admin. Global MSW bootstrap may register these handlers, but must not contain Admin business data.

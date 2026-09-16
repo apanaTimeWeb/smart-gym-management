@@ -53,7 +53,7 @@ requires `useConfirm()` double-verification.
 - **Zustand store:** `useAdminSubscriptionsStore.ts` — holds: `search`, `statusFilter`, `currentPage`
 - **Query keys:** `['adminSubscriptionsOverview']`, `['adminSubscriptionsInvoices', { page }]`
 - **Local-storage keys:** None
-- **MSW handler file:** `admin/admin_mocks/handlers/AdminMockHandlers.ts` (module-owned central Admin transport)
+- **MSW handler file:** `admin/subscriptions/subscriptions_mocks/handlers/AdminSubscriptionsMockHandlers.ts` (module-owned MSW transport)
 
 ## API Contract
 
@@ -114,7 +114,7 @@ All calls go through `subscriptionsApi` in `subscriptions_api/AdminSubscriptions
 - [x] Rule 40: `subscriptions_forbidden.md` present
 - [x] Rule 71: Cancel uses `useAdminConfirm()`
 - [ ] Rule 15A: Co-located tests are present; full behavioral coverage and runtime execution are NOT VERIFIED
-- [x] Rule 75: Module-owned MSW handler configured in `admin/admin_mocks/handlers/AdminMockHandlers.ts`
+- [x] Rule 75: Module-owned MSW handler configured in `admin/subscriptions/subscriptions_mocks/handlers/AdminSubscriptionsMockHandlers.ts`
 
 ## UI Data Requirements
 - Every data-driven table, KPI, chart, filter, dropdown and detail field must map to a typed API response field and be represented in module-owned fixtures where mocked.
@@ -123,4 +123,4 @@ All calls go through `subscriptionsApi` in `subscriptions_api/AdminSubscriptions
 
 ## Module-Owned MSW Fixtures
 
-All Admin frontend-first API fixtures and MSW transport handlers are owned by `admin/admin_mocks/fixtures/AdminMockFixtures.ts` and `admin/admin_mocks/handlers/AdminMockHandlers.ts`. These files provide populated success responses and are the only module-owned mock transport source for Admin. Global MSW bootstrap may register these handlers, but must not contain Admin business data.
+All Admin frontend-first API fixtures and MSW transport handlers are owned by `admin/subscriptions_mocks/fixtures/AdminSubscriptionsMockFixtures.ts` and `admin/subscriptions/subscriptions_mocks/handlers/AdminSubscriptionsMockHandlers.ts`. These files provide populated success responses and are the only module-owned mock transport source for Admin. Global MSW bootstrap may register these handlers, but must not contain Admin business data.

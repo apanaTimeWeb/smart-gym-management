@@ -33,4 +33,4 @@ export const AUDIT_GYM_OPTIONS = [
 
 
 
-export { MOCK_AUDIT_LOGS, MOCK_AUDIT_KPI } from '@/app/admin/admin_mocks/fixtures/AdminMockFixtures';
+export { MOCK_AUDIT_LOGS, MOCK_AUDIT_KPI } from '@/app/admin/audit_logs/audit_logs_mocks/fixtures/AdminAuditLogsMockFixtures';

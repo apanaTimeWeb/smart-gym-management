@@ -68,7 +68,7 @@ cross-branch visibility and performance comparison.
 - [x] Rule 13: Feature Map — this document
 - [x] Rule 40: `branches_forbidden.md` present
 - [ ] Rule 15B: Forms — no forms present (read-only module); N/A
-- [x] Rule 75: Module-owned MSW handler configured in `admin/admin_mocks/handlers/AdminMockHandlers.ts`
+- [x] Rule 75: Module-owned MSW handler configured in `admin/branches/branches_mocks/handlers/AdminBranchesMockHandlers.ts`
 
 
 ## User Flows & Interactions
@@ -109,4 +109,4 @@ cross-branch visibility and performance comparison.
 
 ## Module-Owned MSW Fixtures
 
-All Admin frontend-first API fixtures and MSW transport handlers are owned by `admin/admin_mocks/fixtures/AdminMockFixtures.ts` and `admin/admin_mocks/handlers/AdminMockHandlers.ts`. These files provide populated success responses and are the only module-owned mock transport source for Admin. Global MSW bootstrap may register these handlers, but must not contain Admin business data.
+All Admin frontend-first API fixtures and MSW transport handlers are owned by `admin/branches_mocks/fixtures/AdminBranchesMockFixtures.ts` and `admin/branches/branches_mocks/handlers/AdminBranchesMockHandlers.ts`. These files provide populated success responses and are the only module-owned mock transport source for Admin. Global MSW bootstrap may register these handlers, but must not contain Admin business data.

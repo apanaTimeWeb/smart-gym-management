@@ -3,7 +3,7 @@ import { dashboardStatsSchema } from '@/app/admin/dashboard/dashboard_types/Admi
 import type { ApiResponse } from '@/lib/api';
 import type { DashboardStats } from '@/app/admin/dashboard/dashboard_types/AdminDashboardTypes';
 import { apiFetch } from '@/lib/api';
-import { z } from "zod";
+import { type z } from "zod";
 
 export const dashboardApi = {
   fetchDashboardStats: async (range?: string) => {

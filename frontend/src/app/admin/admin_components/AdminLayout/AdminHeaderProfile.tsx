@@ -13,6 +13,7 @@ export function AdminHeaderProfile() {
   const profileRef = useRef<HTMLDivElement>(null);
   const user = getUser();
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { setMounted(true); }, []);
 
   useEffect(() => {

@@ -52,7 +52,6 @@ export const useAdminNotificationsPage = () => {
     isError: notificationsQuery.isError,
     retry: notificationsQuery.refetch,
     markAllAsRead: () => markAllAsReadMutation.mutate(),
-    clearAll: () => toast.error('Notifications cannot be cleared in bulk; use Mark all read.', { id: 'admin-error-8d4d29f3a6' }),
     markAsRead: (id: string) => markAsReadMutation.mutate(id),
   };
 };

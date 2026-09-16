@@ -15,31 +15,27 @@ import type { Coupon, CouponFormValues } from '@/app/admin/coupons/coupons_types
 export function useAdminCouponsLogic() {
   const { confirm } = useAdminConfirm();
   const qc = useQueryClient();
-  const { showModal, setShowModal, editId, setEditId, form, setForm, search, statusFilter, currentPage, setCurrentPage } = useAdminCouponsStore();
+  const { showModal, setShowModal, editId, setEditId, form, setForm, search, statusFilter, currentPage, setCurrentPage, dateRange, setDateRange } = useAdminCouponsStore();
   useAdminUrlQuerySync([
     { key: 'search', value: search, defaultValue: '', setValue: useAdminCouponsStore.getState().setSearch },
     { key: 'status', value: statusFilter, defaultValue: 'all', setValue: useAdminCouponsStore.getState().setStatusFilter },
+    { key: 'dateRange', value: dateRange, defaultValue: 'all_time', setValue: useAdminCouponsStore.getState().setDateRange },
     { key: 'page', value: currentPage, defaultValue: 1, setValue: (value) => setCurrentPage(Math.max(1, Number(value) || 1)) },
   ]);
 
   const couponsQuery = useQuery({
-    queryKey: ['admin', 'coupons', 'list'],
-    queryFn: () => couponsApi.fetchCoupons().then(r => r.data ?? []),
+    queryKey: ['admin', 'coupons', 'list', search, statusFilter, dateRange, currentPage],
+    queryFn: () => couponsApi.fetchCoupons({ page: currentPage, limit: COUPONS_ITEMS_PER_PAGE, search: search || undefined, status: statusFilter !== 'all' ? statusFilter as Coupon['status'] : undefined, dateRange }),
     staleTime: 1000 * 60 * 2,
   });
 
   const status = couponsQuery.status;
   const data = couponsQuery.data;
 
-  // Client-side filter
-  const allCoupons = data ?? [];
-  const filtered = allCoupons.filter((c: Coupon) => {
-    const matchSearch = !search || c.code.toLowerCase().includes(search.toLowerCase()) || c.description.toLowerCase().includes(search.toLowerCase());
-    const matchStatus = statusFilter === 'all' || c.status === statusFilter;
-    return matchSearch && matchStatus;
-  });
-  const totalPages = Math.max(1, Math.ceil(filtered.length / COUPONS_ITEMS_PER_PAGE));
-  const paginated = filtered.slice((currentPage - 1) * COUPONS_ITEMS_PER_PAGE, currentPage * COUPONS_ITEMS_PER_PAGE);
+  const allCoupons = data?.data ?? [];
+  const totalItems = data?.meta?.total ?? allCoupons.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / COUPONS_ITEMS_PER_PAGE));
+  const paginated = allCoupons;
 
   const createMutation = useMutation({
     mutationFn: (payload: Partial<Coupon>) => couponsApi.createCoupon(payload),
@@ -101,5 +97,5 @@ export function useAdminCouponsLogic() {
 
   const saving = createMutation.isPending || updateMutation.isPending;
 
-  return { coupons: paginated, allCoupons, status, saving, showModal, setShowModal, editId, form, setForm, openAdd, openEdit, saveCoupon, deleteCoupon, toggleCoupon, currentPage, setCurrentPage, totalPages, totalItems: filtered.length };
+  return { coupons: paginated, allCoupons, status, saving, showModal, setShowModal, editId, form, setForm, dateRange, setDateRange, openAdd, openEdit, saveCoupon, deleteCoupon, toggleCoupon, currentPage, setCurrentPage, totalPages, totalItems };
 }

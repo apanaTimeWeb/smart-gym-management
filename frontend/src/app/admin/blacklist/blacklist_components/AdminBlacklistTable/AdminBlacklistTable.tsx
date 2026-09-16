@@ -7,6 +7,8 @@ import type { BlacklistedMember } from '@/app/admin/blacklist/blacklist_types/Ad
 import { AdminTableSkeleton } from '@/app/admin/admin_components/AdminShared/AdminTableSkeleton';
 import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
 import AdminBlacklistEmptyState from '@/app/admin/blacklist/blacklist_components/AdminBlacklistEmptyState/AdminBlacklistEmptyState';
+import { maskSensitiveData } from '@/app/admin/admin_utils/AdminMaskSensitiveData';
+import { displayValue } from '@/app/admin/admin_utils/AdminDisplayValue';
 
 const HEADERS = ['Member', 'Contact', 'Reason', 'Scope', 'Blacklisted By', 'Date', 'Status', 'Actions'];
 
@@ -33,8 +35,8 @@ export default function AdminBlacklistTable() {
                   <p className="text-xs text-secondary">ID: {m.memberId}</p>
                 </td>
                 <td className="px-4 py-3">
-                  <p className="text-sm text-foreground">{m.memberPhone}</p>
-                  <p className="text-xs text-secondary truncate max-w-40">{m.memberEmail}</p>
+                  <p className="text-sm text-foreground">{maskSensitiveData(m.memberPhone)}</p>
+                  <p className="text-xs text-secondary truncate max-w-40">{displayValue(m.memberEmail)}</p>
                 </td>
                 <td className="px-4 py-3 max-w-56">
                   <p className="text-sm text-foreground line-clamp-2">{m.reason}</p>

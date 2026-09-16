@@ -1,42 +1,16 @@
-// RESPONSIBILITY: TypeScript types for the Payouts module.
+// RESPONSIBILITY: TypeScript types for the Admin Payouts module.
 
 export type PayoutTab = 'summary' | 'pnl';
+export type PayoutSortKey = 'gymName' | 'month' | 'grossRevenue' | 'staffPayroll' | 'operationalExpenses' | 'platformFee' | 'netProfit' | 'payoutStatus';
+export type PnlSortKey = 'gymName' | 'month' | 'revenue' | 'cogs' | 'grossProfit' | 'staffCost' | 'rentUtilities' | 'marketing' | 'miscExpenses' | 'ebitda' | 'tax' | 'netProfit';
+export type PnlSortDirection = 'asc' | 'desc';
+export type PayoutSortDirection = 'asc' | 'desc';
 
 export interface GymPayout {
-  gymId: string;
-  gymName: string;
-  month: string;
-  grossRevenue: number;
-  staffPayroll: number;
-  operationalExpenses: number;
-  platformFee: number;
-  netProfit: number;
-  payoutStatus: 'paid' | 'pending' | 'processing';
-  paidOn?: string;
-  approvedBy?: string;
-  approvedAt?: string;
-  rejectionReason?: string;
+  gymId: string; gymName: string; month: string; grossRevenue: number; staffPayroll: number; operationalExpenses: number; platformFee: number; netProfit: number;
+  payoutStatus: 'paid' | 'pending' | 'processing'; paidOn?: string; approvedBy?: string; approvedAt?: string; rejectionReason?: string;
 }
-
 export interface PnLEntry {
-  gymId: string;
-  gymName: string;
-  month: string;
-  revenue: number;
-  cogs: number;
-  grossProfit: number;
-  staffCost: number;
-  rentUtilities: number;
-  marketing: number;
-  miscExpenses: number;
-  ebitda: number;
-  tax: number;
-  netProfit: number;
+  gymId: string; gymName: string; month: string; revenue: number; cogs: number; grossProfit: number; staffCost: number; rentUtilities: number; marketing: number; miscExpenses: number; ebitda: number; tax: number; netProfit: number;
 }
-
-export interface PayoutsKPIData {
-  totalNetProfit: number;
-  totalGrossRevenue: number;
-  totalExpenses: number;
-  pendingPayouts: number;
-}
+export interface PayoutsKPIData { totalNetProfit: number; totalGrossRevenue: number; totalExpenses: number; pendingPayouts: number; }

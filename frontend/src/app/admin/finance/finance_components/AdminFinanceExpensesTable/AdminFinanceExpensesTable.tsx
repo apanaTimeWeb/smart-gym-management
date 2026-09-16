@@ -1,6 +1,7 @@
 "use client";
 // RESPONSIBILITY: Renders the expenses table with branch filter, category filter, and pagination for Admin Finance.
 
+import { displayValue } from '@/app/admin/admin_utils/AdminDisplayValue';
 import { useMemo, useState } from 'react';
 import { useAdminFinanceLogic } from '@/app/admin/finance/finance_context/useAdminFinanceLogic';
 import { useAdminGlobalStore } from '@/app/admin/admin_store/useAdminGlobalStore';
@@ -84,7 +85,7 @@ export default function AdminFinanceExpensesTable() {
                   </td>
                   <td className="px-4 py-3 text-sm text-foreground">{e.branchName}</td>
                   <td className="px-4 py-3 text-sm font-bold text-danger">{formatCurrency(e.amount)}</td>
-                  <td className="px-4 py-3 text-sm text-secondary max-w-xs truncate">{e.notes || '—'}</td>
+                  <td className="px-4 py-3 text-sm text-secondary max-w-xs truncate">{displayValue(e.notes)}</td>
                   <td className="px-4 py-3 text-sm text-secondary">{e.recordedBy}</td>
                 </tr>
               ))}

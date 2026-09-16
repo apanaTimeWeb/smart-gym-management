@@ -10,5 +10,6 @@ export const SettingsUrlConfig = {
     TWO_FACTOR_DISABLE: '/admin/settings/2fa/disable',
     TWO_FACTOR_VERIFY: '/admin/settings/2fa/verify',
     NOTIFICATION_PREFERENCES: '/admin/settings/notifications',
+    PERMISSIONS_REFERENCE: '/admin/permissions/fetchPermissions',
   }
 };

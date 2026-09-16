@@ -45,6 +45,8 @@ export interface BranchPerformance {
   trend: 'up' | 'down' | 'flat';
 }
 
+export interface ExpiringMembership { id: string; name: string; branch: string; plan: string; expiryDate: string; daysLeft: number; }
+
 export interface SystemAlert {
   id: string;
   message: string;
@@ -81,4 +83,6 @@ export interface DashboardStats {
   totalInquiriesOpen?: number;
   avgAttendance?: number;
   renewalsPending?: number;
+  expiringMemberships?: ExpiringMembership[];
+  attendanceTrend?: { date: string; count: number }[];
 }

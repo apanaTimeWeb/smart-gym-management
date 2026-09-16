@@ -1,5 +1,7 @@
 "use client";
 import { formatPercent1dp, formatCurrency } from '@/lib/formatters';
+import { useMemo, useState } from 'react';
+import { ChevronDown, ChevronUp, ChevronsUpDown } from 'lucide-react';
 // RESPONSIBILITY: Renders the Revenue report tab — breakdown by gym, payment method, plan, and monthly trend chart.
 
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
@@ -13,10 +15,18 @@ const TREND_ICON = {
 
 export default function AdminReportsRevenue() {
   const { reportData } = useAdminReportsLogic();
+  type RevenueSortKey = 'gymName' | 'revenue' | 'expenses' | 'profit' | 'trendPercent';
+  const [sortKey, setSortKey] = useState<RevenueSortKey>('revenue');
+  const [sortDir, setSortDir] = useState<'asc'|'desc'>('desc');
+
+  const revenueByGym = useMemo(() => {
+    if (!reportData) return [];
+    return [...reportData.revenueByGym].sort((a,b)=>{const av=a[sortKey],bv=b[sortKey];const result=typeof av==='number'&&typeof bv==='number'?av-bv:String(av??'').localeCompare(String(bv??''),undefined,{numeric:true});return sortDir==='asc'?result:-result;});
+  },[reportData,sortKey,sortDir]);
+  const handleSort=(key:RevenueSortKey)=>{if(sortKey===key)setSortDir(d=>d==='asc'?'desc':'asc');else{setSortKey(key);setSortDir('desc');}};
+  const maxRevenue = Math.max(1, ...revenueByGym.map(g => g.revenue));
 
   if (!reportData) return null;
-
-  const maxRevenue = Math.max(...reportData.revenueByGym.map(g => g.revenue));
 
   return (
     <div className="space-y-6">
@@ -29,13 +39,11 @@ export default function AdminReportsRevenue() {
           <table className="w-full">
             <thead>
               <tr className="bg-primary/5">
-                {['Gym', 'Revenue', 'Expenses', 'Net Profit', 'Margin', 'Trend'].map(h => (
-                  <th key={h} className="px-5 py-3 text-left text-xs font-semibold text-secondary uppercase tracking-wider">{h}</th>
-                ))}
+                {['Gym', 'Revenue', 'Expenses', 'Net Profit', 'Margin', 'Trend'].map((h,index) => { const keys:Array<RevenueSortKey|null>=['gymName','revenue','expenses','profit',null,'trendPercent']; const key=keys[index]; return <th key={h} onClick={()=>key&&handleSort(key)} className={`px-5 py-3 text-left text-xs font-semibold text-secondary uppercase tracking-wider ${key?'cursor-pointer select-none':''}`} aria-sort={key&&sortKey===key?(sortDir==='asc'?'ascending':'descending'):'none'}><div className="flex items-center gap-1.5">{h}{key&&(sortKey===key?(sortDir==='asc'?<ChevronUp size={13} className="text-primary"/>:<ChevronDown size={13} className="text-primary"/>):<ChevronsUpDown size={13} className="text-disabled"/>)}</div></th>; })}
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {reportData.revenueByGym.map((row) => (
+              {revenueByGym.map((row) => (
                 <tr key={row.gymId} className="hover:bg-primary/5 motion-safe:transition-colors">
                   <td className="px-5 py-4">
                     <div>
@@ -122,9 +130,7 @@ export default function AdminReportsRevenue() {
           <table className="w-full">
             <thead>
               <tr className="bg-primary/5">
-                {['Month', 'Revenue', 'Expenses', 'Net Profit', 'Margin'].map(h => (
-                  <th key={h} className="px-5 py-3 text-left text-xs font-semibold text-secondary uppercase tracking-wider">{h}</th>
-                ))}
+                {['Month', 'Revenue', 'Expenses', 'Net Profit', 'Margin'].map((h,index) => { const keys: Array<RevenueSortKey|null>=['gymName','revenue','expenses','profit',null]; const key=keys[index]; return <th key={h} className="px-5 py-3 text-left text-xs font-semibold text-secondary uppercase tracking-wider">{h}{key&&<button type="button" onClick={()=>handleSort(key)} className="ml-1 inline-flex align-middle" aria-label={`Sort by ${h}`} title={`Sort by ${h}`}>{sortKey===key?(sortDir==='asc'?<ChevronUp size={13} className="text-primary"/>:<ChevronDown size={13} className="text-primary"/>):<ChevronsUpDown size={13} className="text-disabled"/>}</button>}</th>; })}
               </tr>
             </thead>
             <tbody className="divide-y divide-border">

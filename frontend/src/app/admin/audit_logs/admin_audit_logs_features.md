@@ -53,7 +53,7 @@ Admins can export the filtered log as a CSV for compliance reporting.
 - **Zustand store:** `useAdminAuditLogsStore.ts` — holds: `dateFrom`, `dateTo`, `actorFilter`, `actionFilter`, `entityFilter`, `currentPage`, `selectedLogId`, `isDrawerOpen`
 - **Logic hook:** `useAdminAuditLogsLogic.ts` — fetches on filter change, applies server-side pagination
 - **Local-storage keys:** None
-- **MSW handler file:** `admin/admin_mocks/handlers/AdminMockHandlers.ts` (module-owned central Admin transport)
+- **MSW handler file:** `admin/audit_logs/audit_logs_mocks/handlers/AdminAuditLogsMockHandlers.ts` (module-owned MSW transport)
 
 ## API Contract
 
@@ -116,7 +116,7 @@ Backend path uses hyphens: `/admin/audit-logs` (not underscores). Always use `Ad
 - [x] Rule 13: Feature Map — this document
 - [x] Rule 40: `audit_logs_forbidden.md` present and specific
 - [ ] Rule 15A: Co-located tests are present; full behavioral coverage and runtime execution are NOT VERIFIED
-- [x] Rule 75: Module-owned MSW handler configured in `admin/admin_mocks/handlers/AdminMockHandlers.ts`
+- [x] Rule 75: Module-owned MSW handler configured in `admin/audit_logs/audit_logs_mocks/handlers/AdminAuditLogsMockHandlers.ts`
 
 ## UI Data Requirements
 - Every data-driven table, KPI, chart, filter, dropdown and detail field must map to a typed API response field and be represented in module-owned fixtures where mocked.
@@ -125,4 +125,4 @@ Backend path uses hyphens: `/admin/audit-logs` (not underscores). Always use `Ad
 
 ## Module-Owned MSW Fixtures
 
-All Admin frontend-first API fixtures and MSW transport handlers are owned by `admin/admin_mocks/fixtures/AdminMockFixtures.ts` and `admin/admin_mocks/handlers/AdminMockHandlers.ts`. These files provide populated success responses and are the only module-owned mock transport source for Admin. Global MSW bootstrap may register these handlers, but must not contain Admin business data.
+All Admin frontend-first API fixtures and MSW transport handlers are owned by `admin/audit_logs_mocks/fixtures/AdminAuditLogsMockFixtures.ts` and `admin/audit_logs/audit_logs_mocks/handlers/AdminAuditLogsMockHandlers.ts`. These files provide populated success responses and are the only module-owned mock transport source for Admin. Global MSW bootstrap may register these handlers, but must not contain Admin business data.

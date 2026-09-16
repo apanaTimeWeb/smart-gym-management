@@ -16,6 +16,8 @@ export interface FetchMembersParams {
   status?: string;
   branchId?: string;
   expiryFilter?: string;
+  gender?: string;
+  plan?: string;
   page?: number;
   limit?: number;
 }

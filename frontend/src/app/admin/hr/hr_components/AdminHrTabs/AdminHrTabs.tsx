@@ -4,8 +4,8 @@
 import { useState } from 'react';
 import { useHrContext } from '@/app/admin/hr/hr_context/AdminHrContext';
 import { HR_TABS } from '@/app/admin/hr/hr_utils/AdminHrSharedConstants';
-import { useAdminBranchesQueries } from '@/app/admin/branches/branches_context/useAdminBranchesQueries';
-import type { Branch } from '@/app/admin/branches/branches_types/AdminBranchesTypes';
+import { useAdminHrBranchReference } from '@/app/admin/hr/hr_context/useAdminHrBranchReference';
+import type { AdminHrBranchReference } from '@/app/admin/hr/hr_types/AdminHrBranchReferenceTypes';
 import { RefreshCw, Plus, Search } from 'lucide-react';
 import AdminHrStaffTable from '@/app/admin/hr/hr_components/AdminHrStaffTable/AdminHrStaffTable';
 import AdminHrPayrollTable from '@/app/admin/hr/hr_components/AdminHrPayrollTable/AdminHrPayrollTable';
@@ -16,7 +16,7 @@ import AdminHrLedgerTable from '@/app/admin/hr/hr_components/AdminHrLedgerTable/
 export default function AdminHrTabs() {
   const [activeTab, setActiveTab] = useState(HR_TABS[0]);
   const { loadAll, openAdd, openAddPayroll, status, search, setSearch, branchFilter, setBranchFilter, roleFilter, setRoleFilter, setCurrentPage, payrollMonth, setPayrollMonth } = useHrContext();
-  const { data: branches = [] } = useAdminBranchesQueries();
+  const { data: branches = [] } = useAdminHrBranchReference();
 
   return (
     <div className="rounded-xl shadow-sm border overflow-hidden bg-card border-border">
@@ -50,7 +50,7 @@ export default function AdminHrTabs() {
                 className="px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 bg-card text-foreground"
               >
                 <option value="All">All Branches</option>
-                {(branches as Branch[]).map(b => (
+                {(branches as AdminHrBranchReference[]).map(b => (
                   <option key={b.id} value={b.id}>{b.name}</option>
                 ))}
               </select>

@@ -3,6 +3,7 @@
 // Never hardcode these strings directly in components or hooks.
 
 export const AdminUsageUrlConfig = {
+  ui: { subscriptionsPath: '/admin/subscriptions' },
   PAGES: {
     USAGE: '/admin/usage',
   },
