@@ -1,6 +1,4 @@
 'use client';
-// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
-// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders the pagination bar (Previous/Next + page info + rows-per-page) shared across all TRAINER table views.
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 

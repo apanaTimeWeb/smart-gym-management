@@ -6,13 +6,13 @@
 import { useState, useMemo } from 'react';
 import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, CheckCircle2, XCircle, Clock, ShieldCheck, UserCheck } from 'lucide-react';
 import { getUser } from '@/lib/api';
-import type { AttendanceRecord } from '@/app/trainer/attendance/attendance_types/attendance_types';
+import type { AttendanceRecord } from '@/app/trainer/attendance/attendance_types/TrainerAttendance_types';
 
-interface Props {
+interface TrainerMyAttendanceCalendarProps {
   records: AttendanceRecord[];
 }
 
-export default function TrainerMyAttendanceCalendar({ records }: Props) {
+export default function TrainerMyAttendanceCalendar({ records }: TrainerMyAttendanceCalendarProps) {
   const user = getUser();
 
   const [currentDate, setCurrentDate] = useState(new Date());

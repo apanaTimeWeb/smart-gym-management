@@ -14,7 +14,7 @@ export default function TrainerProgressLoading() {
       <div className="bg-card rounded-xl border border-border p-5 space-y-4">
         <div className="flex gap-2">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="h-7 w-24 bg-skeleton-base motion-safe:animate-pulse rounded-full" />
+            <div key={`skeleton-${i}`} className="h-7 w-24 bg-skeleton-base motion-safe:animate-pulse rounded-full" />
           ))}
         </div>
         <div className="h-36 bg-skeleton-base motion-safe:animate-pulse rounded-lg" />
@@ -24,9 +24,9 @@ export default function TrainerProgressLoading() {
       <div className="bg-card rounded-xl border border-border overflow-hidden">
         <div className="h-10 bg-input border-b border-border" />
         {[1, 2, 3].map((i) => (
-          <div key={i} className="flex gap-4 px-4 py-3 border-b border-border">
+          <div key={`skeleton-${i}`} className="flex gap-4 px-4 py-3 border-b border-border">
             {[1, 2, 3, 4, 5, 6].map((j) => (
-              <div key={j} className="h-4 flex-1 bg-skeleton-base motion-safe:animate-pulse rounded" />
+              <div key={`cell-${j}`} className="h-4 flex-1 bg-skeleton-base motion-safe:animate-pulse rounded" />
             ))}
           </div>
         ))}

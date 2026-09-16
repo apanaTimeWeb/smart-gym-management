@@ -1,4 +1,4 @@
-import type { ProgressEntry, ProgressMemberBasic } from '../progress_types/progress.schema';
+import type { ProgressEntry, ProgressMemberBasic } from '@/app/trainer/progress-tracking/progress_types/TrainerProgress.schema';
 
 export const MOCK_PROGRESS_MEMBERS: ProgressMemberBasic[] = [
   { id: '1', name: 'Rahul Sharma' },

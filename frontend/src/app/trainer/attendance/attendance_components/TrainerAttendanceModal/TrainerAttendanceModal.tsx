@@ -5,16 +5,16 @@ import { useEffect } from 'react';
 import { X, CheckCircle, Loader2 } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useWarnIfUnsavedChanges } from '@/app/trainer/trainer_utils/useWarnIfUnsavedChanges';
+import { useTrainerUnsavedChangesGuard } from '@/app/trainer/trainer_utils/TrainerUseWarnIfUnsavedChanges';
 import {
   AttendanceSchema,
   type AttendanceFormValues,
   EMPTY_ATTENDANCE_FORM,
-} from '@/app/trainer/attendance/attendance_utils/AttendanceSharedConstants';
-import { SearchableDropdown } from '@/app/trainer/trainer_components/TrainerShared/SearchableDropdown';
-import type { AttendanceMemberBasic, CreateAttendanceDto } from '@/app/trainer/attendance/attendance_types/attendance_types';
+} from '@/app/trainer/attendance/attendance_utils/TrainerAttendanceSharedConstants';
+import { SearchableDropdown } from '@/app/trainer/trainer_components/TrainerShared/TrainerSearchableDropdown';
+import type { AttendanceMemberBasic, CreateAttendanceDto } from '@/app/trainer/attendance/attendance_types/TrainerAttendance_types';
 
-interface Props {
+interface TrainerAttendanceModalProps {
   isOpen: boolean;
   onClose: () => void;
   members: AttendanceMemberBasic[];
@@ -22,7 +22,7 @@ interface Props {
   onSubmit: (data: CreateAttendanceDto) => Promise<void>;
 }
 
-export default function TrainerAttendanceModal({ isOpen, onClose, members, saving, onSubmit }: Props) {
+export default function TrainerAttendanceModal({ isOpen, onClose, members, saving, onSubmit }: TrainerAttendanceModalProps) {
   const {
     register,
     handleSubmit,
@@ -35,7 +35,7 @@ export default function TrainerAttendanceModal({ isOpen, onClose, members, savin
     defaultValues: EMPTY_ATTENDANCE_FORM,
   });
 
-  useWarnIfUnsavedChanges(isDirty && !saving);
+  useTrainerUnsavedChangesGuard(isDirty && !saving);
 
   const watchType = watch('type');
 

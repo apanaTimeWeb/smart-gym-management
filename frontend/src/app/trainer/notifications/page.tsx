@@ -1,5 +1,4 @@
-// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
-// DATA FLOW: Standard component data flow.
+import { Suspense } from 'react';
 // RESPONSIBILITY: Renders the notifications page.
 import type { Metadata } from 'next';
 import TrainerNotificationsMain from '@/app/trainer/notifications/notifications_components/TrainerNotificationsMain/TrainerNotificationsMain';
@@ -10,5 +9,9 @@ export const metadata: Metadata = {
 };
 
 export default function TrainerNotificationsPage() {
-  return <TrainerNotificationsMain />;
+  return (
+    <Suspense fallback={<div className="p-6 flex justify-center text-secondary">Loading...</div>}>
+      <TrainerNotificationsMain />
+    </Suspense>
+  );
 }

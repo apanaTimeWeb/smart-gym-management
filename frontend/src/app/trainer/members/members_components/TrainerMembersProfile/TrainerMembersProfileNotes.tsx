@@ -3,10 +3,11 @@
 // DATA FLOW: TrainerMembersProfile → TrainerMembersProfileNotes
 
 import { useTrainerMembersStore } from '@/app/trainer/members/members_store/useTrainerMembersStore';
+import { useTrainerSelectedMember } from '@/app/trainer/members/members_queries/useTrainerSelectedMember';
 import { formatDate } from '@/lib/formatters';
 
 export default function TrainerMembersProfileNotes() {
-  const selectedMember = useTrainerMembersStore(s => s.selectedMember);
+  const { member: selectedMember } = useTrainerSelectedMember();
 
   if (!selectedMember) return null;
 

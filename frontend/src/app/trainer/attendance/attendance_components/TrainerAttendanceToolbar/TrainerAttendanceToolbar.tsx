@@ -3,8 +3,8 @@
 // DATA FLOW: props (from TrainerAttendanceMain) → URL state via useAttendanceFilters setters
 import { useState, useEffect } from 'react';
 import { RefreshCw, Search, Calendar as CalendarIcon, List, Plus, LogIn, LogOut, Loader2 } from 'lucide-react';
-import { ATTENDANCE_TABS, ATTENDANCE_DATE_FILTER_OPTIONS, type AttendanceTab } from '@/app/trainer/attendance/attendance_utils/AttendanceSharedConstants';
-import { SearchableDropdown } from '@/app/trainer/trainer_components/TrainerShared/SearchableDropdown';
+import { ATTENDANCE_TABS, ATTENDANCE_DATE_FILTER_OPTIONS, type AttendanceTab } from '@/app/trainer/attendance/attendance_utils/TrainerAttendanceSharedConstants';
+import { SearchableDropdown } from '@/app/trainer/trainer_components/TrainerShared/TrainerSearchableDropdown';
 
 interface TrainerAttendanceToolbarProps {
   tab: AttendanceTab;

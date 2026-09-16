@@ -7,12 +7,12 @@ import TrainerEarningsHistory from '@/app/trainer/earnings/earnings_components/T
 import { TrainerDateFilterDropdown } from '@/app/trainer/trainer_components/TrainerShared/TrainerDateFilterDropdown';
 
 export default function TrainerEarningsMain() {
-  const { isLoading, isError, error } = useTrainerEarningsQuery();
+  const { isLoading, isError, error, refetch } = useTrainerEarningsQuery();
 
   if (isLoading) {
     return (
       <div className="min-h-full flex items-center justify-center pt-20">
-        <Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" />
+        <div className="w-full max-w-4xl space-y-4"><div className="h-28 rounded-xl bg-card border border-border motion-safe:animate-pulse" /><div className="h-72 rounded-xl bg-card border border-border motion-safe:animate-pulse" /></div>
       </div>
     );
   }

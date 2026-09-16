@@ -1,19 +1,17 @@
 'use client';
-// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
-// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Form modal for creating or editing a single exercise entry in the Workout Library module.
 import { useEffect } from 'react';
 import { X, Save } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { SearchableDropdown } from '@/app/trainer/trainer_components/TrainerShared/SearchableDropdown';
-import { EQUIPMENT_OPTIONS, EXERCISE_DIFFICULTY_OPTIONS } from '@/app/trainer/workout/workout_utils/WorkoutSharedConstants';
-import { CreateExerciseSchema, type CreateExerciseFormValues, EMPTY_EXERCISE_FORM } from '@/app/trainer/workout/workout_types/workout.schema';
+import { SearchableDropdown } from '@/app/trainer/trainer_components/TrainerShared/TrainerSearchableDropdown';
+import { EQUIPMENT_OPTIONS, EXERCISE_DIFFICULTY_OPTIONS } from '@/app/trainer/workout/workout_utils/TrainerWorkoutSharedConstants';
+import { CreateExerciseSchema, type CreateExerciseFormValues, EMPTY_EXERCISE_FORM } from '@/app/trainer/workout/workout_types/TrainerWorkout.schema';
 import { useTrainerWorkoutStore } from '@/app/trainer/workout/workout_store/useTrainerWorkoutStore';
-import { useTrainerWorkoutMutations } from '@/app/trainer/workout/workout_queries/useWorkoutMutations';
-import { useWarnIfUnsavedChanges } from '@/app/trainer/trainer_utils/useWarnIfUnsavedChanges';
+import { useTrainerWorkoutMutations } from '@/app/trainer/workout/workout_queries/TrainerUseWorkoutMutations';
+import { useTrainerUnsavedChangesGuard } from '@/app/trainer/trainer_utils/TrainerUseWarnIfUnsavedChanges';
 
-export default function ExerciseModal() {
+export default function TrainerWorkoutExerciseModal() {
   const { showExModal, setShowExModal, editEx } = useTrainerWorkoutStore();
   const { createExercise, updateExercise } = useTrainerWorkoutMutations();
 
@@ -28,7 +26,7 @@ export default function ExerciseModal() {
     defaultValues: EMPTY_EXERCISE_FORM
   });
 
-  useWarnIfUnsavedChanges(isDirty);
+  useTrainerUnsavedChangesGuard(isDirty);
 
   useEffect(() => {
     if (showExModal) {

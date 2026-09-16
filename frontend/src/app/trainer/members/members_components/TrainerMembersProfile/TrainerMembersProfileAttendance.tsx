@@ -5,10 +5,11 @@
 import { useMemo } from 'react';
 import { Calendar as CalendarIcon, CheckCircle2, XCircle, AlertCircle, ShieldCheck } from 'lucide-react';
 import { useTrainerMembersStore } from '@/app/trainer/members/members_store/useTrainerMembersStore';
+import { useTrainerSelectedMember } from '@/app/trainer/members/members_queries/useTrainerSelectedMember';
 import { useTrainerMemberAttendanceQuery } from '@/app/trainer/members/members_queries/useTrainerMembersQuery';
 
 export default function TrainerMembersProfileAttendance() {
-  const selectedMember = useTrainerMembersStore(s => s.selectedMember);
+  const { member: selectedMember } = useTrainerSelectedMember();
   const { data: rawAtt = [] } = useTrainerMemberAttendanceQuery(selectedMember?.id || '');
 
   const now = new Date();
@@ -27,10 +28,7 @@ export default function TrainerMembersProfileAttendance() {
   // Map days to attendance status
   const attLookup = useMemo(() => {
     const map: Record<number, string> = {};
-                // @ts-ignore
-    rawAtt.forEach(a => {
-      map[a.day] = a.status;
-    });
+    (rawAtt as Array<{ day: number; status: string }>).forEach((entry) => { map[entry.day] = entry.status; });
     return map;
   }, [rawAtt]);
 

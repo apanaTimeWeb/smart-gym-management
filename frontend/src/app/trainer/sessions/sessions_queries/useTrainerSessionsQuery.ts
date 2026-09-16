@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Custom query hook for Trainer Sessions.
 // DATA FLOW: useTrainerSessionsQuery -> fetchTrainerSessions -> API
 import { useQuery } from '@tanstack/react-query';
-import { fetchTrainerSessions, fetchMembersBasicMock } from '../sessions_api/TrainerSessionsApi';
+import { fetchTrainerSessions, fetchTrainerSessionMembers } from '@/app/trainer/sessions/sessions_api/TrainerSessionsApi';
 
 export function useTrainerSessionsQuery(date: string) {
   return useQuery({
@@ -14,7 +14,7 @@ export function useTrainerSessionsQuery(date: string) {
 export function useMembersBasicQuery() {
   return useQuery({
     queryKey: ['trainer', 'sessions', 'membersBasic'],
-    queryFn: fetchMembersBasicMock,
+    queryFn: fetchTrainerSessionMembers,
     staleTime: 60 * 60 * 1000, // 1 hour
   });
 }

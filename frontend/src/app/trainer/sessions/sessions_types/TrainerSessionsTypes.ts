@@ -54,3 +54,11 @@ export const CreateSessionDtoSchema = z.object({
 });
 export type CreateSessionDto = z.infer<typeof CreateSessionDtoSchema>;
 
+
+
+export const TrainerSessionMemberSchema = z.object({ id: z.string(), name: z.string() });
+export const TrainerSessionMembersResponseSchema = z.object({
+  success: z.boolean(),
+  message: z.string(),
+  data: z.array(TrainerSessionMemberSchema),
+});

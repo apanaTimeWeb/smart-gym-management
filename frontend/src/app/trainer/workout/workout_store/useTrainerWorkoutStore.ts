@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { Workout, Exercise } from '@/app/trainer/workout/workout_types/workout.schema';
+import type { Workout, Exercise } from '@/app/trainer/workout/workout_types/TrainerWorkout.schema';
 
 interface TrainerWorkoutState {
   showWkModal: boolean;

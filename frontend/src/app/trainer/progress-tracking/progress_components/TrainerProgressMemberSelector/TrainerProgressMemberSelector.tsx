@@ -6,13 +6,13 @@
 import { Users } from 'lucide-react';
 import { COMPARISON_MAX_MEMBERS } from '@/app/trainer/progress-tracking/progress_utils/TrainerProgressSharedConstants';
 
-interface Props {
+interface TrainerProgressMemberSelectorProps {
   allMembers: { id: string; name: string }[];
   selectedIds: string[];
   onToggle: (memberId: string) => void;
 }
 
-export default function TrainerProgressMemberSelector({ allMembers, selectedIds, onToggle }: Props) {
+export default function TrainerProgressMemberSelector({ allMembers, selectedIds, onToggle }: TrainerProgressMemberSelectorProps) {
   return (
     <div className="bg-card rounded-xl border border-border p-4 space-y-3">
       <div className="flex items-center justify-between">

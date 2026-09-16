@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Mock data for Trainer Dashboard to prevent 'undefined' crashes.
-import type { DashboardStats } from '@/app/trainer/dashboard/dashboard_types/dashboard_types';
+import type { DashboardStats } from '@/app/trainer/dashboard/dashboard_types/TrainerDashboard_types';
 
 export const MOCK_DASHBOARD_STATS: DashboardStats = {
   todaysSessions: 8,

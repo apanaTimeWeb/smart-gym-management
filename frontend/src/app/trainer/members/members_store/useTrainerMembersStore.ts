@@ -1,15 +1,13 @@
 // RESPONSIBILITY: Zustand store for UI-only client state in the members module.
 import { create } from 'zustand';
-import type { Member } from '../members_types/members_types';
-import type { MemberFormValues } from '../members_utils/MembersSharedConstants';
+import type { MemberFormValues } from '@/app/trainer/members/members_utils/TrainerMembersSharedConstants';
 import type { ToastType } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerToast';
 import type { MessageType, TrainerMessageRecipient } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerMessageModal';
 
 interface TrainerMembersState {
   selectedMemberId: string | null;
   setSelectedMemberId: (id: string | null) => void;
-  selectedMember: Member | null;
-  setSelectedMember: (member: Member | null) => void;
+  setSelectedMember: (memberId: string | null) => void;
 
   profileTab: 'overview' | 'fitness' | 'assessment' | 'progress' | 'workout' | 'diet' | 'attendance' | 'notes';
   setProfileTab: (tab: 'overview' | 'fitness' | 'assessment' | 'progress' | 'workout' | 'diet' | 'attendance' | 'notes') => void;
@@ -33,8 +31,7 @@ interface TrainerMembersState {
 export const useTrainerMembersStore = create<TrainerMembersState>((set) => ({
   selectedMemberId: null,
   setSelectedMemberId: (id) => set({ selectedMemberId: id }),
-  selectedMember: null,
-  setSelectedMember: (member) => set({ selectedMember: member, selectedMemberId: member?.id ?? null }),
+  setSelectedMember: (memberId) => set({ selectedMemberId: memberId }),
 
   profileTab: 'overview',
   setProfileTab: (tab) => set({ profileTab: tab }),

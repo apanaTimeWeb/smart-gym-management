@@ -115,3 +115,11 @@ All API calls go through the centralized `apiFetch` wrapper at `@/lib/api`.
 - [x] Design §12: Z-index scale — header z-20, dropdowns z-30, modals z-40, toasts z-50
 - [x] Design §28: Surface elevation — `bg-popover` for dropdowns, `bg-overlay` for modals
 - [x] Design §29: `motion-safe:` guards on all transitions and animations
+
+
+## Final Verification Status
+- Source architecture is module-owned and validated with automated static scans.
+- Trainer E2E lives at `trainer_e2e/TrainerCriticalFlows.spec.ts` and `playwright.config.ts` targets `src/app/trainer/trainer_e2e`.
+- CI workflows execute type-check, lint, formatting, tests, production build, dependency audit, secret scan, and Playwright.
+- Runtime pass/fail must be reported from the CI environment after `npm ci`; this package does not bundle `node_modules`.
+- Security-sensitive Trainer paths are covered by `.github/CODEOWNERS`.

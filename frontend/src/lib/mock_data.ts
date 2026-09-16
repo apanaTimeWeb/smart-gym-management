@@ -536,10 +536,43 @@ export function getMockResponse(path: string): unknown {
   
   if (p.includes('/gym')) return ok(GYMS, 'Gyms fetched');
 
-  // Trainer Dashboard
+  // Trainer Specific
   if (p.includes('/trainer/dashboard')) return ok(TRAINER_DASHBOARD, 'Trainer stats fetched');
 
+  if (p.includes('/trainer/earnings')) {
+    const { MOCK_EARNINGS_DATA } = require('@/app/trainer/earnings/earnings_fixtures/TrainerEarningsMockData');
+    return ok(MOCK_EARNINGS_DATA, 'Trainer earnings fetched');
+  }
 
+  if (p.includes('/trainer/attendance')) {
+    const { MOCK_ATTENDANCE_RECORDS } = require('@/app/trainer/attendance/attendance_fixtures/TrainerAttendanceMockData');
+    return ok({ data: MOCK_ATTENDANCE_RECORDS, total: MOCK_ATTENDANCE_RECORDS.length }, 'Trainer attendance fetched');
+  }
+
+  if (p.includes('/trainer/members')) {
+    const { MOCK_TRAINER_MEMBERS } = require('@/app/trainer/members/members_fixtures/TrainerMembersMockData');
+    return ok({ data: MOCK_TRAINER_MEMBERS, total: MOCK_TRAINER_MEMBERS.length }, 'Trainer members fetched');
+  }
+
+  if (p.includes('/trainer/schedule')) {
+    const { MOCK_TRAINER_SCHEDULE_DATA } = require('@/app/trainer/schedule/schedule_fixtures/TrainerScheduleMockData');
+    return ok(MOCK_TRAINER_SCHEDULE_DATA, 'Trainer schedule fetched');
+  }
+
+  if (p.includes('/trainer/progress')) {
+    const { MOCK_TRAINER_PROGRESS_RECORDS } = require('@/app/trainer/progress-tracking/progress_fixtures/TrainerProgressMockData');
+    return ok({ data: MOCK_TRAINER_PROGRESS_RECORDS, total: MOCK_TRAINER_PROGRESS_RECORDS.length }, 'Trainer progress fetched');
+  }
+  
+  if (p.includes('/trainer/workout')) {
+    const { MOCK_TRAINER_WORKOUT_PLANS } = require('@/app/trainer/workout/workout_fixtures/TrainerWorkoutMockData');
+    return ok({ data: MOCK_TRAINER_WORKOUT_PLANS, total: MOCK_TRAINER_WORKOUT_PLANS.length }, 'Trainer workouts fetched');
+  }
+
+  if (p.includes('/trainer/sessions')) {
+    const { MOCK_TRAINER_SESSIONS } = require('@/app/trainer/sessions/sessions_fixtures/TrainerSessionsMockData');
+    return ok({ data: MOCK_TRAINER_SESSIONS, total: MOCK_TRAINER_SESSIONS.length }, 'Trainer sessions fetched');
+  }
   // Admin Module Specific
   if (p.includes('/admin/dashboard'))    return ok(DASHBOARD_STATS, 'Admin dashboard stats fetched');
   if (p.includes('/admin/reports') || (p.includes('/admin') && p.includes('report'))) return ok(ADMIN_REPORTS, 'Admin reports fetched');

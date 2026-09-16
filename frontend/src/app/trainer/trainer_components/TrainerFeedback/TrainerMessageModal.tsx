@@ -1,7 +1,5 @@
 'use client';
-// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
-// DATA FLOW: Standard component data flow.
-// RESPONSIBILITY: Renders the send-message modal (WhatsApp/Email) for communicating with a member. Shared across the Members and Finance modules.
+// RESPONSIBILITY: Renders the Trainer member messaging modal for WhatsApp or Email delivery.
 import { useState } from 'react';
 import { X, Send, MessageCircle, Mail, CheckCircle, Phone, AtSign } from 'lucide-react';
 
@@ -22,11 +20,11 @@ interface TrainerMessageModalProps {
   defaultMessage?: string;
   message?: string;
   subject?: string;
-  onSuccess?: (msg: string) => void;
+  onSuccess?: () => void;
 }
 
-const WA_GREEN = 'bg-green-500';
-const EMAIL_BLUE = 'bg-blue-500';
+const WA_GREEN = 'bg-social-whatsapp';
+const EMAIL_BLUE = 'bg-social-email';
 
 export default function TrainerMessageModal({
   isOpen,
@@ -68,14 +66,13 @@ export default function TrainerMessageModal({
     setTimeout(() => {
       setSent(false);
       setMessage(defaultMessage || propMessage || '');
-      onSuccess?.('Message sent successfully!');
       onClose();
+      onSuccess?.();
     }, 1500);
   };
 
   const handleClose = () => {
     if (!sending) {
-      setSent(false);
       setMessage(defaultMessage || propMessage || '');
       onClose();
     }
@@ -98,6 +95,7 @@ export default function TrainerMessageModal({
             </div>
           </div>
           <button
+            aria-label="Close message modal"
             onClick={handleClose}
             disabled={sending}
             className="w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center motion-safe:transition-colors disabled:opacity-50"
@@ -161,6 +159,7 @@ export default function TrainerMessageModal({
 
         <div className="px-6 pb-5 flex gap-3">
           <button
+            aria-label="Close message modal"
             onClick={handleClose}
             disabled={sending}
             className="flex-1 px-4 py-2.5 text-sm border border-border rounded-xl hover:bg-input text-foreground font-medium motion-safe:transition-colors disabled:opacity-50"

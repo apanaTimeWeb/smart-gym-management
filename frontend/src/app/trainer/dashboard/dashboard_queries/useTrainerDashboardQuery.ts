@@ -1,6 +1,6 @@
 // RESPONSIBILITY: TanStack Query hook for fetching Trainer Dashboard data.
 import { useQuery } from '@tanstack/react-query';
-import { dashboardApi } from '@/app/trainer/dashboard/dashboard_api/dashboard_api';
+import { dashboardApi } from '@/app/trainer/dashboard/dashboard_api/TrainerDashboard_api';
 import { useTrainerDashboardStore } from '@/app/trainer/dashboard/dashboard_store/useTrainerDashboardStore';
 
 export function useTrainerDashboardQuery() {

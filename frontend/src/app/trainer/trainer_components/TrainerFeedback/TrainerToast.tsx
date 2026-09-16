@@ -1,6 +1,4 @@
 'use client';
-// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
-// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders the fixed bottom-right toast notification. Auto-dismisses after 4 seconds. Shared across all TRAINER modules.
 import { useEffect } from 'react';
 

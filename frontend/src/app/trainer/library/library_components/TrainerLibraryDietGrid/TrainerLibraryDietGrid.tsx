@@ -1,15 +1,13 @@
 'use client';
-// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
-// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders the diet plan cards grid with macronutrient info and action buttons.
-import { useLibraryContext } from '@/app/trainer/library/library_context/LibraryContext';
+import { useLibraryContext } from '@/app/trainer/library/library_context/TrainerLibraryContext';
 import TrainerPagination from '@/app/trainer/trainer_components/TrainerShared/TrainerPagination';
-import { Apple, Edit2, Trash2, Flame, Loader2 } from 'lucide-react';
+import { Apple, Eye, Flame } from 'lucide-react';
 import { TRAINER_ITEMS_PER_PAGE } from '@/app/trainer/trainer_utils/TrainerSharedConstants';
 import { useConfirm } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerConfirmProvider';
 
 export default function TrainerLibraryDietGrid() {
-  const { dietPlans, fetchState, debouncedSearch, currentPage, setCurrentPage, openEditDiet, deleteDietPlan } = useLibraryContext();
+  const { dietPlans, isPending, isError, debouncedSearch, currentPage, setCurrentPage, openEditDiet } = useLibraryContext();
   const { confirm } = useConfirm();
 
   const filtered = dietPlans.filter(d => {
@@ -20,11 +18,13 @@ export default function TrainerLibraryDietGrid() {
   const totalPages = Math.ceil(filtered.length / TRAINER_ITEMS_PER_PAGE);
   const currentData = filtered.slice((currentPage - 1) * TRAINER_ITEMS_PER_PAGE, currentPage * TRAINER_ITEMS_PER_PAGE);
 
-  if (fetchState === 'loading') {
+  if (isError) return <div className="rounded-xl border border-danger bg-danger-bg p-5 text-danger">Unable to load diet plans. Retry from the page controls.</div>;
+
+  if (isPending) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 flex-1">
         {[...Array(6)].map((_, i) => (
-          <div key={i} className="rounded-xl border border-border bg-card p-5 motion-safe:animate-pulse h-48 flex flex-col">
+          <div key={`skeleton-${i}`} className="rounded-xl border border-border bg-card p-5 motion-safe:animate-pulse h-48 flex flex-col">
             <div className="flex justify-between items-start mb-3">
               <div className="w-10 h-10 rounded-xl bg-muted shrink-0"></div>
               <div className="flex gap-2">
@@ -57,33 +57,13 @@ export default function TrainerLibraryDietGrid() {
               <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-success/10 text-success shrink-0">
                 <Apple size={20} />
               </div>
-              <div className="flex gap-2">
-                <button 
-                  onClick={(e) => { e.stopPropagation(); openEditDiet(dp); }}
+              <button
+                  type="button"
+                  onClick={(event) => { event.stopPropagation(); openEditDiet(dp); }}
                   className="p-1.5 rounded hover:bg-primary/10 motion-safe:transition-colors text-secondary hover:text-primary"
-                  title="Edit"
-                >
-                  <Edit2 size={16} />
-                </button>
-                <button 
-                  onClick={async (e) => { 
-                    e.stopPropagation(); 
-                    const ok = await confirm({
-                      title: 'Delete Diet Plan',
-                      message: `Are you sure you want to delete diet plan "${dp.name}"?`,
-                      type: 'danger',
-                      confirmText: 'Delete'
-                    });
-                    if (ok) {
-                      deleteDietPlan(dp.id); 
-                    }
-                  }}
-                  className="p-1.5 rounded motion-safe:transition-colors text-danger hover:bg-danger/10"
-                  title="Delete"
-                >
-                  <Trash2 size={16} />
-                </button>
-              </div>
+                  title="View diet plan"
+                  aria-label={`View diet plan ${dp.name}`}
+                ><Eye size={16} /></button>
             </div>
 
             <h4 className="font-bold text-foreground line-clamp-1 mb-1">{dp.name}</h4>

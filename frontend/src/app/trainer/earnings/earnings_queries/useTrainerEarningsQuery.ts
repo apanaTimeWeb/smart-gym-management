@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { earningsApi } from '@/app/trainer/earnings/earnings_api/earnings_api';
+import { earningsApi } from '@/app/trainer/earnings/earnings_api/TrainerEarnings_api';
 import { useTrainerEarningsStore } from '@/app/trainer/earnings/earnings_store/useTrainerEarningsStore';
 
 export function useTrainerEarningsQuery() {

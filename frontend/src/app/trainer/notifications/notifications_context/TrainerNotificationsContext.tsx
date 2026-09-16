@@ -13,7 +13,7 @@ export function TrainerNotificationsProvider({ children }: { children: React.Rea
   const value = useMemo(() => logic, [
     logic.notifications,
     logic.unreadCount,
-    logic.fetchState,
+    logic.isPending,
     logic.hasMore,
     logic.loadingMore,
     logic.loadMore,

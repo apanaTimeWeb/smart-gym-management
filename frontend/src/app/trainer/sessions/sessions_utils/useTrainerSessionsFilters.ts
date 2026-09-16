@@ -2,7 +2,7 @@
 // DATA FLOW: URL search params <-> useTrainerSessionsFilters <-> useTrainerSessionsQuery
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { useCallback } from 'react';
-import { type SessionFilter, SessionFilterSchema } from '../sessions_types/TrainerSessionsTypes';
+import { type SessionFilter, SessionFilterSchema } from '@/app/trainer/sessions/sessions_types/TrainerSessionsTypes';
 
 export function useTrainerSessionsFilters() {
   const searchParams = useSearchParams();

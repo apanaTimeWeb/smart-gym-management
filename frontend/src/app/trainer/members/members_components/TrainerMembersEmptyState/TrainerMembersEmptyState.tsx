@@ -1,5 +1,3 @@
-// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
-// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders the empty state for the members list when no records exist or match filters.
 import React from 'react';
 import { Users } from 'lucide-react';

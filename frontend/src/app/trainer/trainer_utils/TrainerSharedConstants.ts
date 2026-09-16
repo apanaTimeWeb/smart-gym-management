@@ -1,5 +1,6 @@
 // RESPONSIBILITY: Centralized constants shared across all TRAINER modules — nav items, gym identity (name/phone), and pagination page size.
 // DATA FLOW: Imported directly by TrainerSidebar, TrainerHeader, and module-level utils.
+import { env } from '@/config/env';
 import {
   LayoutDashboard, Users, Utensils, Dumbbell, CalendarCheck, Clock, Bell, User, IndianRupee, Calendar
 } from 'lucide-react';
@@ -43,8 +44,8 @@ export const TRAINER_NAV_GROUPS = [
 ];
 
 export const GYM_DETAILS = {
-  name: process.env.NEXT_PUBLIC_GYM_NAME || 'GymSmart Fitness',
-  phone: process.env.NEXT_PUBLIC_GYM_PHONE || '+91 83479 77566'
+  name: env.NEXT_PUBLIC_GYM_NAME,
+  phone: env.NEXT_PUBLIC_GYM_PHONE
 };
 
 

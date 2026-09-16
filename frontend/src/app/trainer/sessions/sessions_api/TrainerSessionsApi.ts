@@ -1,15 +1,12 @@
 import { apiFetch } from '@/lib/api';
 import { z } from 'zod';
 import { TrainerSessionSchema, type TrainerSession, type CreateSessionDto } from '@/app/trainer/sessions/sessions_types/TrainerSessionsTypes';
-import { TRAINER_SESSIONS_API_ROUTES } from '@/app/trainer/sessions/sessions_utils/sessions_url_config';
+import { TRAINER_SESSIONS_API_ROUTES } from '@/app/trainer/Trainer_url_config';
+import { createTrainerApiResponseSchema } from '@/app/trainer/trainer_utils/TrainerApiResponseSchema';
 
-export async function fetchMembersBasicMock(): Promise<{ id: string; name: string }[]> {
-  await new Promise(res => setTimeout(res, 300));
-  return [
-    { id: 'm1', name: 'Rahul Sharma' },
-    { id: 'm2', name: 'Neha Gupta' },
-    { id: 'm3', name: 'Amit Kumar' }
-  ];
+export async function fetchTrainerSessionMembers(): Promise<{ id: string; name: string }[]> {
+  const raw = await apiFetch<import('@/lib/api').ApiResponse<unknown>>(TRAINER_SESSIONS_API_ROUTES.members);
+  return z.array(z.object({ id: z.string(), name: z.string() })).parse(raw.data);
 }
 
 export async function fetchTrainerSessions(date: string): Promise<TrainerSession[]> {
@@ -22,7 +19,9 @@ export async function createTrainerSession(dto: CreateSessionDto): Promise<Train
     method: 'POST',
     body: JSON.stringify(dto),
   });
-  return TrainerSessionSchema.parse(raw.data);
+  const response = createTrainerApiResponseSchema(TrainerSessionSchema).parse(raw);
+  if (!response.data) throw new Error(response.message);
+  return response.data;
 }
 
 export async function updateTrainerSession(id: string, dto: Partial<CreateSessionDto>): Promise<TrainerSession> {
@@ -30,7 +29,9 @@ export async function updateTrainerSession(id: string, dto: Partial<CreateSessio
     method: 'PATCH',
     body: JSON.stringify(dto),
   });
-  return TrainerSessionSchema.parse(raw.data);
+  const response = createTrainerApiResponseSchema(TrainerSessionSchema).parse(raw);
+  if (!response.data) throw new Error(response.message);
+  return response.data;
 }
 
 export async function cancelTrainerSession(id: string): Promise<void> {

@@ -34,5 +34,4 @@ export interface UpdateTrainerPasswordPayload {
   confirmPassword: string;
 }
 
-export type TrainerProfileFetchState = 'idle' | 'loading' | 'success' | 'error';
 export type TrainerProfileTab = 'personal' | 'security';

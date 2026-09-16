@@ -1,14 +1,12 @@
 'use client';
-// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
-// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders the exercises data table with muscle group, category, and inline edit/delete actions.
 import { useTrainerWorkoutFilters } from '@/app/trainer/workout/workout_utils/useTrainerWorkoutFilters';
-import { useTrainerExercisesQuery } from '@/app/trainer/workout/workout_queries/useWorkoutQuery';
-import { EXERCISE_TABLE_HEADERS } from '@/app/trainer/workout/workout_utils/WorkoutSharedConstants';
+import { useTrainerExercisesQuery } from '@/app/trainer/workout/workout_queries/TrainerUseWorkoutQuery';
+import { EXERCISE_TABLE_HEADERS } from '@/app/trainer/workout/workout_utils/TrainerWorkoutSharedConstants';
 import TrainerPagination from '@/app/trainer/trainer_components/TrainerShared/TrainerPagination';
 import { TRAINER_ITEMS_PER_PAGE } from '@/app/trainer/trainer_utils/TrainerSharedConstants';
 import { useTrainerWorkoutStore } from '@/app/trainer/workout/workout_store/useTrainerWorkoutStore';
-import { useTrainerWorkoutMutations } from '@/app/trainer/workout/workout_queries/useWorkoutMutations';
+import { useTrainerWorkoutMutations } from '@/app/trainer/workout/workout_queries/TrainerUseWorkoutMutations';
 import { useConfirm } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerConfirmProvider';
 import { Edit2, Trash2 } from 'lucide-react';
 

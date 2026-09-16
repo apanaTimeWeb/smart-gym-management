@@ -1,6 +1,4 @@
 'use client';
-// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
-// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders the error boundary for the Notifications module.
 import { useEffect } from 'react';
 import { AlertTriangle, RefreshCcw } from 'lucide-react';

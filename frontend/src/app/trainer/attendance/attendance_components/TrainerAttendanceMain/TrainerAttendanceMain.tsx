@@ -4,9 +4,9 @@
 // DATA FLOW: page.tsx (Server) → TrainerAttendanceMain (Client) → hooks → sub-components
 import { useState, useEffect } from 'react';
 import TrainerToast from '@/app/trainer/trainer_components/TrainerFeedback/TrainerToast';
-import { useAttendanceFilters } from '@/app/trainer/attendance/attendance_queries/useAttendanceFilters';
-import { useAttendanceRecordsQuery, useAttendanceStatsQuery, useAttendanceMembersQuery } from '@/app/trainer/attendance/attendance_queries/useAttendanceQuery';
-import { useAttendanceMutations } from '@/app/trainer/attendance/attendance_queries/useAttendanceMutations';
+import { useAttendanceFilters } from '@/app/trainer/attendance/attendance_queries/TrainerUseAttendanceFilters';
+import { useAttendanceRecordsQuery, useAttendanceStatsQuery, useAttendanceMembersQuery } from '@/app/trainer/attendance/attendance_queries/TrainerUseAttendanceQuery';
+import { useAttendanceMutations } from '@/app/trainer/attendance/attendance_queries/TrainerUseAttendanceMutations';
 import { useTrainerAttendanceStore } from '@/app/trainer/attendance/attendance_store/useTrainerAttendanceStore';
 import TrainerAttendanceKPIs from '@/app/trainer/attendance/attendance_components/TrainerAttendanceKPIs/TrainerAttendanceKPIs';
 import TrainerAttendanceSummaryCard from '@/app/trainer/attendance/attendance_components/TrainerAttendanceSummaryCard/TrainerAttendanceSummaryCard';

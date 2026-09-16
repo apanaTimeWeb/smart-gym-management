@@ -5,8 +5,8 @@ import { useState, useEffect } from 'react';
 import { Search } from 'lucide-react';
 import { useTrainerWorkoutFilters } from '@/app/trainer/workout/workout_utils/useTrainerWorkoutFilters';
 import { useTrainerWorkoutStore } from '@/app/trainer/workout/workout_store/useTrainerWorkoutStore';
-import { WORKOUT_TAB_OPTIONS, WORKOUT_FOCUS_OPTIONS, EXERCISE_MUSCLE_OPTIONS } from '@/app/trainer/workout/workout_utils/WorkoutSharedConstants';
-import { SearchableDropdown } from '@/app/trainer/trainer_components/TrainerShared/SearchableDropdown';
+import { WORKOUT_TAB_OPTIONS, WORKOUT_FOCUS_OPTIONS, EXERCISE_MUSCLE_OPTIONS } from '@/app/trainer/workout/workout_utils/TrainerWorkoutSharedConstants';
+import { SearchableDropdown } from '@/app/trainer/trainer_components/TrainerShared/TrainerSearchableDropdown';
 
 /** Build SearchableDropdown option arrays from centralized constants (Rule 3B). */
 const ALL_CATEGORIES_OPTION = { value: 'All', label: 'All Categories' };

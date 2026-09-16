@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Zustand store for Dashboard UI state (e.g., date ranges).
 import { create } from 'zustand';
-import type { TimeRange } from '@/app/trainer/dashboard/dashboard_types/dashboard_types';
+import type { TimeRange } from '@/app/trainer/dashboard/dashboard_types/TrainerDashboard_types';
 
 interface TrainerDashboardStore {
   timeRange: TimeRange;

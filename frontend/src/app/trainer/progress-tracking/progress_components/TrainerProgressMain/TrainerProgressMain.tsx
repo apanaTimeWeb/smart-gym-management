@@ -10,7 +10,7 @@ import { useTrainerProgressMembersQuery, useTrainerProgressEntriesQuery } from '
 import { useTrainerProgressMutations } from '@/app/trainer/progress-tracking/progress_queries/useTrainerProgressMutations';
 import { buildComparisonSnapshot } from '@/app/trainer/progress-tracking/progress_utils/useTrainerProgressComparison';
 import { fetchProgressEntries } from '@/app/trainer/progress-tracking/progress_api/TrainerProgressApi';
-import type { ProgressEntry } from '@/app/trainer/progress-tracking/progress_types/TrainerProgressTypes';
+import type { ProgressEntry, CreateProgressEntryDto } from '@/app/trainer/progress-tracking/progress_types/TrainerProgressTypes';
 import { useConfirm } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerConfirmProvider';
 import TrainerProgressChart from '@/app/trainer/progress-tracking/progress_components/TrainerProgressChart/TrainerProgressChart';
 import TrainerProgressTable from '@/app/trainer/progress-tracking/progress_components/TrainerProgressTable/TrainerProgressTable';
@@ -19,7 +19,7 @@ import TrainerProgressEmptyState from '@/app/trainer/progress-tracking/progress_
 import TrainerProgressMemberSelector from '@/app/trainer/progress-tracking/progress_components/TrainerProgressMemberSelector/TrainerProgressMemberSelector';
 import TrainerProgressComparisonChart from '@/app/trainer/progress-tracking/progress_components/TrainerProgressComparisonChart/TrainerProgressComparisonChart';
 import TrainerProgressComparisonTable from '@/app/trainer/progress-tracking/progress_components/TrainerProgressComparisonTable/TrainerProgressComparisonTable';
-import { SearchableDropdown } from '@/app/trainer/trainer_components/TrainerShared/SearchableDropdown';
+import { SearchableDropdown } from '@/app/trainer/trainer_components/TrainerShared/TrainerSearchableDropdown';
 
 export default function TrainerProgressMain() {
   const { selectedMemberId, setSelectedMemberId, activeTab, setActiveTab } = useTrainerProgressFilters();
@@ -40,7 +40,7 @@ export default function TrainerProgressMain() {
   const toggleComparisonMember = useTrainerProgressStore(s => s.toggleComparisonMember);
 
   const openAddModal = () => { setEditingEntry(null); setShowModal(true); };
-  const openEditModal = (entry: any) => { setEditingEntry(entry); setShowModal(true); };
+  const openEditModal = (entry: ProgressEntry) => { setEditingEntry(entry); setShowModal(true); };
   const closeModal = () => { setShowModal(false); setEditingEntry(null); };
 
   const handleDelete = async (entryId: string) => {
@@ -54,7 +54,7 @@ export default function TrainerProgressMain() {
     deleteEntry.mutate({ memberId: selectedMemberId, entryId });
   };
 
-  const handleSave = (data: any) => {
+  const handleSave = (data: CreateProgressEntryDto) => {
     if (editingEntry) {
       updateEntry.mutate({ memberId: selectedMemberId, entryId: editingEntry.id, dto: data });
     } else {

@@ -1,8 +1,7 @@
-// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
-// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Root layout for the TRAINER module. Wraps all TRAINER pages with the sidebar layout and feedback providers.
 import React from 'react';
 import TrainerLayout from '@/app/trainer/trainer_components/TrainerLayout/TrainerLayout';
+import TrainerRoleGuard from '@/app/trainer/trainer_components/TrainerRoleGuard/TrainerRoleGuard';
 import { TrainerConfirmProvider } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerConfirmProvider';
 import { TrainerNotificationsProvider } from '@/app/trainer/notifications/notifications_context/TrainerNotificationsContext';
 
@@ -13,11 +12,13 @@ export const metadata = {
 
 export default function TRAINERLayout({ children }: { children: React.ReactNode }) {
  return (
-    <TrainerConfirmProvider>
+    <TrainerRoleGuard>
+      <TrainerConfirmProvider>
       <TrainerNotificationsProvider>
         <TrainerLayout>{children}</TrainerLayout>
       </TrainerNotificationsProvider>
     </TrainerConfirmProvider>
+    </TrainerRoleGuard>
   );
 }
 

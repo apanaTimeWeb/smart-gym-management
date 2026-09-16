@@ -12,7 +12,7 @@ function TrainerNotificationsContent() {
   const {
     notifications,
     unreadCount,
-    fetchState,
+    isPending, isError,
     hasMore,
     loadingMore,
     loadMore,
@@ -27,7 +27,7 @@ function TrainerNotificationsContent() {
           <div>
             <h2 className="text-lg font-bold text-foreground">Recent Activity</h2>
             <p className="text-sm text-secondary mt-0.5">
-              {fetchState === 'loading'
+              {isPending
                 ? 'Loading notifications...'
                 : unreadCount > 0
                 ? `${unreadCount} unread notification${unreadCount === 1 ? '' : 's'}`
@@ -47,7 +47,7 @@ function TrainerNotificationsContent() {
           )}
         </div>
 
-        {fetchState === 'error' && (
+        {isError && (
           <div className="bg-danger-bg text-danger text-sm rounded-xl px-4 py-3 mb-4">
             Failed to load notifications. Please refresh.
           </div>

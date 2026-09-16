@@ -1,82 +1,90 @@
 'use client';
-// RESPONSIBILITY: Logic hook for Trainer Profile page — personal info + password change.
-// DATA FLOW: trainerProfileApi → useTrainerProfileLogic → TrainerProfileMain
-import { useState, useEffect } from 'react';
+// RESPONSIBILITY: Owns Trainer Profile query, React Hook Form state, validation, mutations, and dirty state.
+// DATA FLOW: trainerProfileApi → TanStack Query/useForm → TrainerProfileMain.
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { trainerProfileApi } from '@/app/trainer/profile/profile_api/TrainerProfileApi';
-import { getUser } from '@/lib/api';
-import type { TrainerProfileTab } from '@/app/trainer/profile/profile_types/TrainerProfileTypes';
+import type { TrainerProfileData, TrainerProfileTab } from '@/app/trainer/profile/profile_types/TrainerProfileTypes';
+import { TrainerPasswordFormSchema, TrainerProfileFormSchema } from '@/app/trainer/profile/profile_types/TrainerProfileSchema';
+import type { TrainerPasswordFormValues, TrainerProfileFormValues } from '@/app/trainer/profile/profile_types/TrainerProfileSchema';
+
+const PROFILE_QUERY_KEY = ['trainer', 'profile'] as const;
 
 export function useTrainerProfileLogic() {
+  const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState<TrainerProfileTab>('personal');
-  const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
-  const [specialization, setSpecialization] = useState<string[]>([]);
-  const [currentPassword, setCurrentPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [saving, setSaving] = useState(false);
-  const [mounted, setMounted] = useState(false);
-
-  // Dependency: [] — runs once on mount to hydrate from cookie-stored user
+  const [showCurrent, setShowCurrent] = useState(false);
+  const [showNew, setShowNew] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const profileQuery = useQuery({
+    queryKey: PROFILE_QUERY_KEY,
+    queryFn: async () => {
+      const response = await trainerProfileApi.fetchProfile();
+      if (!response.success || !response.data) throw new Error(response.message);
+      return response.data;
+    },
+  });
+  const profileForm = useForm<TrainerProfileFormValues>({
+    resolver: zodResolver(TrainerProfileFormSchema),
+    defaultValues: { name: '', phone: '', specialization: [] },
+    mode: 'onTouched',
+  });
+  const passwordForm = useForm<TrainerPasswordFormValues>({
+    resolver: zodResolver(TrainerPasswordFormSchema),
+    defaultValues: { currentPassword: '', newPassword: '', confirmPassword: '' },
+    mode: 'onTouched',
+  });
   useEffect(() => {
-    setMounted(true);
-    const user = getUser();
-    if (user) setName(user.name ?? '');
-  }, []);
-
-  const user = mounted ? getUser() : null;
-  const displayInitial = (user?.name ?? 'T').charAt(0).toUpperCase();
-
-  async function handleSaveProfile(e: React.FormEvent) {
-    e.preventDefault();
-    setSaving(true);
-    try {
-      const res = await trainerProfileApi.updateProfile({ name, phone, specialization });
-      toast.success(res.message || 'Profile updated.');
-    } catch {
-      toast.error('Failed to update profile.');
-    } finally {
-      setSaving(false);
-    }
-  }
-
-  async function handleChangePassword(e: React.FormEvent) {
-    e.preventDefault();
-    if (newPassword !== confirmPassword) {
-      toast.error('New passwords do not match.');
-      return;
-    }
-    setSaving(true);
-    try {
-      const res = await trainerProfileApi.updatePassword({ currentPassword, newPassword, confirmPassword });
-      toast.success(res.message || 'Password updated.');
-      setCurrentPassword('');
-      setNewPassword('');
-      setConfirmPassword('');
-    } catch {
-      toast.error('Failed to update password.');
-    } finally {
-      setSaving(false);
-    }
-  }
-
-  const isDirty = activeTab === 'personal'
-    ? (name !== (user?.name || '') || phone !== '' || specialization.length > 0)
-    : (currentPassword !== '' || newPassword !== '' || confirmPassword !== '');
-
+    if (!profileQuery.data) return;
+    profileForm.reset({
+      name: profileQuery.data.name,
+      phone: profileQuery.data.phone,
+      specialization: profileQuery.data.specialization,
+    });
+  }, [profileQuery.data, profileForm]);
+  const profileMutation = useMutation({
+    mutationFn: (values: TrainerProfileFormValues) => trainerProfileApi.updateProfile(values),
+    onSuccess: (response) => {
+      if (!response.success || !response.data) return;
+      queryClient.setQueryData<TrainerProfileData>(PROFILE_QUERY_KEY, response.data);
+      profileForm.reset({ name: response.data.name, phone: response.data.phone, specialization: response.data.specialization });
+      toast.success(response.message, { id: 'trainer-profile-update' });
+    },
+    onError: (error) => toast.error(error instanceof Error ? error.message : '', { id: 'trainer-profile-update-error' }),
+  });
+  const passwordMutation = useMutation({
+    mutationFn: (values: TrainerPasswordFormValues) => trainerProfileApi.updatePassword(values),
+    onSuccess: (response) => {
+      if (!response.success) return;
+      passwordForm.reset();
+      toast.success(response.message, { id: 'trainer-profile-password-update' });
+      passwordForm.reset();
+    },
+    onError: (error) => toast.error(error instanceof Error ? error.message : '', { id: 'trainer-profile-password-update-error' }),
+  });
+  const user = profileQuery.data ?? null;
+  const displayInitial = (user?.name ?? 'Trainer').charAt(0).toUpperCase();
   return {
-    activeTab, setActiveTab,
-    name, setName,
-    phone, setPhone,
-    specialization, setSpecialization,
-    toggleSpecialization: (s: string) => setSpecialization(prev => prev.includes(s) ? prev.filter(x => x !== s) : [...prev, s]),
-    currentPassword, setCurrentPassword,
-    newPassword, setNewPassword,
-    confirmPassword, setConfirmPassword,
-    saving, mounted,
-    user, displayInitial,
-    handleSaveProfile, handleChangePassword,
-    isDirty
+    activeTab,
+    setActiveTab,
+    user,
+    displayInitial,
+    mounted: profileQuery.isSuccess,
+    profileForm,
+    passwordForm,
+    profileMutation,
+    passwordMutation,
+    showCurrent,
+    setShowCurrent,
+    showNew,
+    setShowNew,
+    showConfirm,
+    setShowConfirm,
+    isDirty: activeTab === 'personal' ? profileForm.formState.isDirty : passwordForm.formState.isDirty,
+    isPending: profileQuery.isPending,
+    isError: profileQuery.isError,
   };
 }

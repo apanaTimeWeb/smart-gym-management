@@ -13,7 +13,7 @@ export default function TrainerEarningsKPIs() {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         {[1, 2, 3, 4, 5].map(i => (
-          <div key={i} className="h-28 bg-skeleton-base bg-skeleton-highlight rounded-xl border border-border motion-safe:animate-pulse" />
+          <div key={`skeleton-${i}`} className="h-28 bg-skeleton-base bg-skeleton-highlight rounded-xl border border-border motion-safe:animate-pulse" />
         ))}
       </div>
     );

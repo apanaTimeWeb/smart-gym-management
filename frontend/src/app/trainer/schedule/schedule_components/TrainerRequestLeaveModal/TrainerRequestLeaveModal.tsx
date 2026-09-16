@@ -3,7 +3,7 @@
 import { useTrainerScheduleMutations } from '@/app/trainer/schedule/schedule_queries/useTrainerScheduleMutations';
 import { useTrainerScheduleStore } from '@/app/trainer/schedule/schedule_store/useTrainerScheduleStore';
 import { LEAVE_TYPE_OPTIONS, CreateLeaveDtoSchema, type CreateLeaveDto } from '@/app/trainer/schedule/schedule_types/TrainerScheduleTypes';
-import { useWarnIfUnsavedChanges } from '@/app/trainer/trainer_utils/useWarnIfUnsavedChanges';
+import { useTrainerUnsavedChangesGuard } from '@/app/trainer/trainer_utils/TrainerUseWarnIfUnsavedChanges';
 import { X, Loader2 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -23,7 +23,7 @@ export default function TrainerRequestLeaveModal() {
     defaultValues: { leaveType: 'Casual Leave', startDate: '', endDate: '', reason: '' }
   });
 
-  useWarnIfUnsavedChanges(isDirty && !requestLeave.isPending);
+  useTrainerUnsavedChangesGuard(isDirty && !requestLeave.isPending);
 
   useEffect(() => {
     if (showLeaveModal) {
@@ -35,11 +35,11 @@ export default function TrainerRequestLeaveModal() {
 
   const onSubmit = async (data: CreateLeaveDto) => {
     try {
-      await requestLeave.mutateAsync(data);
-      showToast('Leave request submitted successfully.', 'success');
+      const response = await requestLeave.mutateAsync(data);
+      showToast(response.message || 'Leave request submitted successfully', 'success');
       closeLeaveModal();
-    } catch {
-      showToast('Failed to submit leave request.', 'error');
+    } catch (error) {
+      showToast(error instanceof Error ? error.message : 'Leave request failed.', 'error');
     }
   };
 
