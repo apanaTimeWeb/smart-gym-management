@@ -1,3 +1,4 @@
+// DATA FLOW: feature API/schema → hook/context → useSuperadminSystemClient consumers.
 
 'use client';
 // RESPONSIBILITY: Owns System page client-state, TanStack Query calls, mutation handling, URL-backed audit-log filters, and CSV export. The view consumes this hook and only renders the resulting state.

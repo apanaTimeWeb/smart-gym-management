@@ -2,8 +2,8 @@ import { http, HttpResponse, delay } from 'msw';
 const BASE_URL = '*/superadmin/plans';
 
 const MOCK_PLANS = [
-  { id: '1', name: 'Starter Plan', basePrice: 49.99, billingCycle: 'MONTHLY', maxMembers: 100, features: ['Core App', 'Basic Reports'], status: 'ACTIVE' },
-  { id: '2', name: 'Pro Plan', basePrice: 99.99, billingCycle: 'MONTHLY', maxMembers: 500, features: ['Custom App', 'Adv Reports', 'API Access'], status: 'ACTIVE' },
+  { id: '1', name: 'Starter Plan', basePrice: 49.99, priceMonthly: 4999, currency: 'INR', billingCycle: 'MONTHLY', maxMembers: 100, features: ['Core App', 'Basic Reports'], status: 'ACTIVE' },
+  { id: '2', name: 'Pro Plan', basePrice: 99.99, priceMonthly: 9999, currency: 'INR', billingCycle: 'MONTHLY', maxMembers: 500, features: ['Custom App', 'Adv Reports', 'API Access'], status: 'ACTIVE' },
 ];
 
 export let mockPlansList = [...MOCK_PLANS];

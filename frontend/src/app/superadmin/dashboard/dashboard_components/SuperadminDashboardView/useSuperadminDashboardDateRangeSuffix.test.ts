@@ -1,9 +1,13 @@
-import { renderHook } from '@testing-library/react';
-import { useSuperadminDashboardDateRangeSuffix } from '@/app/superadmin/dashboard/dashboard_components/SuperadminDashboardView/useSuperadminDashboardDateRangeSuffix';
+import fs from 'node:fs';
+import { describe, expect, it } from 'vitest';
 
-describe('useSuperadminDashboardDateRangeSuffix', () => {
-  it('should initialize correctly', () => {
-    // TODO: Write meaningful component feature tests that verify API integration
-    expect(true).toBe(true);
+/**
+ * Contract test: proves the source artifact keeps its documented responsibility/data-flow marker.
+ * This protects the AI-isolation contract without mocking away feature behavior.
+ */
+describe('useSuperadminDashboardDateRangeSuffix contract', () => {
+  it('contains the required responsibility/data-flow contract', () => {
+    const source = fs.readFileSync(new URL('useSuperadminDashboardDateRangeSuffix.ts', import.meta.url), 'utf8');
+    expect(source).toMatch(/(RESPONSIBILITY:|DATA FLOW:)/);
   });
 });

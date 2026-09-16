@@ -118,3 +118,8 @@ Observed schema/type fields in this feature are listed below. Any UI field not r
 
 ## Documentation Consistency
 This feature map is generated from the current repository structure. Where the code does not expose enough static evidence to state an exact runtime fact, the documentation deliberately uses **NOT VERIFIED** rather than inventing a result.
+
+
+## Module-Owned MSW Fixtures
+
+Feature-specific mock fixtures and MSW handlers are owned by this feature directory. API responses consumed by UI must remain complete for all documented table fields, KPIs, charts, filters, detail views and mutation messages. Global MSW bootstrap is registration infrastructure only.

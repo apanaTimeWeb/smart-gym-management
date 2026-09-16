@@ -1,3 +1,4 @@
+// DATA FLOW: feature API/schema → hook/context → useSuperadminBroadcastsData consumers.
 'use client';
 // RESPONSIBILITY: Encapsulates functionality for useSuperadminBroadcastsData.ts
 import { useMemo, useCallback } from 'react';

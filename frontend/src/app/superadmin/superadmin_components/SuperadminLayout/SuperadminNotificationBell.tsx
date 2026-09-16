@@ -65,7 +65,7 @@ export default function SuperadminNotificationBell() {
       >
         <Bell className="w-5 h-5" strokeWidth={2} />
         {unreadCount > 0 && (
-          <span className="absolute top-2 right-2 w-4 h-4 bg-danger text-white text-[0.65rem] font-bold flex items-center justify-center rounded-full border-2 border-card">
+          <span className="absolute top-2 right-2 w-4 h-4 bg-danger text-white text-xs font-bold flex items-center justify-center rounded-full border-2 border-card">
             {unreadCount > 9 ? '9+' : unreadCount}
           </span>
         )}
@@ -107,7 +107,7 @@ export default function SuperadminNotificationBell() {
                         <p className={`text-sm font-semibold truncate ${notif.read ? 'text-secondary' : 'text-foreground'}`}>
                           {notif.title}
                         </p>
-                        <span className="text-[0.65rem] text-secondary whitespace-nowrap shrink-0">
+                        <span className="text-xs text-secondary whitespace-nowrap shrink-0">
                           {new Date(notif.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </span>
                       </div>

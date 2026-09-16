@@ -1,3 +1,4 @@
+// DATA FLOW: feature API/schema → hook/context → useSuperadminDashboardDateFilter consumers.
 'use client';
 // RESPONSIBILITY: Custom hook managing the URL-backed state for the Dashboard date filter.
 import { useState, useEffect, useCallback } from 'react';

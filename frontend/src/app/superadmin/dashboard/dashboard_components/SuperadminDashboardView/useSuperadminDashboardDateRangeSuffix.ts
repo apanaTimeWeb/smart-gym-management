@@ -1,3 +1,4 @@
+// DATA FLOW: feature API/schema → hook/context → useSuperadminDashboardDateRangeSuffix consumers.
 'use client';
 // RESPONSIBILITY: Derives a human-readable date range suffix string from URL search params for KPI card labels.
 import { useSearchParams } from 'next/navigation';

@@ -1,3 +1,4 @@
+// DATA FLOW: feature API/schema → hook/context → useSuperadminTickets consumers.
 'use client';
 import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';

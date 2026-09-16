@@ -1,3 +1,4 @@
+// DATA FLOW: feature API/schema → hook/context → useSuperadminBroadcastsMutations consumers.
 'use client';
 // RESPONSIBILITY: Encapsulates functionality for useSuperadminBroadcastsMutations.ts
 import { useMutation } from '@tanstack/react-query';
