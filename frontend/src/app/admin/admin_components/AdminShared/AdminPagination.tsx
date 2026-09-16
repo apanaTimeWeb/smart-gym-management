@@ -33,7 +33,7 @@ export default function AdminPagination({
   const endItem = totalItems && itemsPerPage ? Math.min(currentPage * itemsPerPage, totalItems) : null;
 
   const bgActive = colors?.bgActive ?? 'bg-primary';
-  const textActive = colors?.textActive ?? 'text-white';
+  const textActive = colors?.textActive ?? 'text-primary-foreground';
   const textColor = colors?.text ?? 'text-secondary';
   const borderColor = colors?.border ?? 'border-border';
 
@@ -74,7 +74,7 @@ export default function AdminPagination({
         <button 
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className={`p-1.5 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors ${textColor} hover:bg-black/5 dark:hover:bg-card/5`}
+          className={`p-1.5 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed motion-safe:transition-colors ${textColor} hover:bg-foreground/5 dark:hover:bg-card/5`}
         >
           <ChevronLeft size={18} />
         </button>
@@ -87,10 +87,10 @@ export default function AdminPagination({
               <button
                 key={p}
                 onClick={() => onPageChange(p as number)}
-                className={`w-8 h-8 flex items-center justify-center rounded-lg text-sm font-medium transition-all ${
+                className={`w-8 h-8 flex items-center justify-center rounded-lg text-sm font-medium motion-safe:transition-all ${
                   currentPage === p 
                     ? `${bgActive} ${textActive}`
-                    : `${textColor} hover:bg-black/5 dark:hover:bg-card/5`
+                    : `${textColor} hover:bg-foreground/5 dark:hover:bg-card/5`
                 }`}
               >
                 {p}
@@ -102,7 +102,7 @@ export default function AdminPagination({
         <button 
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className={`p-1.5 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors ${textColor} hover:bg-black/5 dark:hover:bg-card/5`}
+          className={`p-1.5 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed motion-safe:transition-colors ${textColor} hover:bg-foreground/5 dark:hover:bg-card/5`}
         >
           <ChevronRight size={18} />
         </button>

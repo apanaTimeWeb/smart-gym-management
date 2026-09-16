@@ -2,7 +2,7 @@
 // RESPONSIBILITY: Main orchestrator for the Settings module. Switches between sub-tabs based on URL parameter.
 import { useSearchParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
-import { settingsApi } from '@/app/admin/settings/settings_api/settings_api';
+import { settingsApi } from '@/app/admin/settings/settings_api/AdminSettingsApi';
 import AdminSettingsNav from '@/app/admin/settings/settings_components/AdminSettingsNav/AdminSettingsNav';
 import { AdminSettingsGymProfile } from '@/app/admin/settings/settings_components/AdminSettingsGymProfile/AdminSettingsGymProfile';
 import { AdminSettingsNotifications } from '@/app/admin/settings/settings_components/AdminSettingsNotifications/AdminSettingsNotifications';
@@ -23,7 +23,7 @@ export default function AdminSettingsContent() {
 
   if (isLoading) {
     return (
-      <div className="max-w-7xl mx-auto space-y-6 animate-pulse">
+      <div className="max-w-7xl mx-auto space-y-6 motion-safe:animate-pulse">
         <div className="h-40 bg-card rounded-xl border border-border"></div>
         <div className="h-96 bg-card rounded-xl border border-border"></div>
       </div>

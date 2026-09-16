@@ -1,7 +1,6 @@
 "use client";
 // RESPONSIBILITY: Renders the period selection segment controls.
 
-import { Download } from 'lucide-react';
 import { REVENUE_PERIOD_OPTIONS } from '@/app/admin/plans/plans_utils/AdminPlansRevenueConstants';
 import type { RevenuePeriod } from '@/app/admin/plans/plans_types/AdminPlansRevenueTypes';
 
@@ -11,9 +10,6 @@ interface AdminPlansRevenuePeriodSelectorProps {
 }
 
 export default function AdminPlansRevenuePeriodSelector({ period, onPeriodChange }: AdminPlansRevenuePeriodSelectorProps) {
-  function handleExport() {
-    alert('Export CSV coming soon');
-  }
 
   return (
     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
@@ -24,7 +20,7 @@ export default function AdminPlansRevenuePeriodSelector({ period, onPeriodChange
             onClick={() => onPeriodChange(opt.value)}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
               period === opt.value
-                ? 'bg-primary text-white shadow-sm'
+                ? 'bg-primary text-primary-foreground shadow-sm'
                 : 'text-secondary hover:text-foreground hover:bg-card'
             }`}
           >
@@ -32,13 +28,6 @@ export default function AdminPlansRevenuePeriodSelector({ period, onPeriodChange
           </button>
         ))}
       </div>
-      <button
-        onClick={handleExport}
-        className="flex items-center gap-2 px-4 py-2 rounded-lg border border-border bg-card text-secondary hover:text-foreground hover:border-primary motion-safe:transition-colors text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-      >
-        <Download size={15} strokeWidth={2} />
-        Export CSV
-      </button>
     </div>
   );
 }

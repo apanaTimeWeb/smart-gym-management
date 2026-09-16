@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useHrContext } from '@/app/admin/hr/hr_context/AdminHrContext';
 import { HR_TABS } from '@/app/admin/hr/hr_utils/AdminHrSharedConstants';
 import { useAdminBranchesQueries } from '@/app/admin/branches/branches_context/useAdminBranchesQueries';
-import type { Branch } from '@/app/admin/branches/branches_types/branches_types';
+import type { Branch } from '@/app/admin/branches/branches_types/AdminBranchesTypes';
 import { RefreshCw, Plus, Search } from 'lucide-react';
 import AdminHrStaffTable from '@/app/admin/hr/hr_components/AdminHrStaffTable/AdminHrStaffTable';
 import AdminHrPayrollTable from '@/app/admin/hr/hr_components/AdminHrPayrollTable/AdminHrPayrollTable';
@@ -15,7 +15,7 @@ import AdminHrLedgerTable from '@/app/admin/hr/hr_components/AdminHrLedgerTable/
 
 export default function AdminHrTabs() {
   const [activeTab, setActiveTab] = useState(HR_TABS[0]);
-  const { loadAll, openAdd, openAddPayroll, fetchState, search, setSearch, branchFilter, setBranchFilter, roleFilter, setRoleFilter, setCurrentPage, payrollMonth, setPayrollMonth } = useHrContext();
+  const { loadAll, openAdd, openAddPayroll, status, search, setSearch, branchFilter, setBranchFilter, roleFilter, setRoleFilter, setCurrentPage, payrollMonth, setPayrollMonth } = useHrContext();
   const { data: branches = [] } = useAdminBranchesQueries();
 
   return (
@@ -26,7 +26,7 @@ export default function AdminHrTabs() {
             <button 
               key={t} 
               onClick={() => { setActiveTab(t);  setSearch(''); }}
-              className={`px-5 py-3.5 text-sm font-medium transition-colors border-b-2 whitespace-nowrap ${activeTab === t ? 'text-primary border-primary bg-primary/5' : 'text-secondary border-transparent hover:opacity-80 bg-transparent'}`}
+              className={`px-5 py-3.5 text-sm font-medium motion-safe:transition-colors border-b-2 whitespace-nowrap ${activeTab === t ? 'text-primary border-primary bg-primary/5' : 'text-secondary border-transparent hover:opacity-80 bg-transparent'}`}
             >
               {t}
             </button>
@@ -76,14 +76,14 @@ export default function AdminHrTabs() {
   <div className="px-4 flex flex-wrap gap-2">
     <button 
       onClick={loadAll} 
-      className="flex items-center gap-2 px-3 py-2 text-sm border border-border text-secondary rounded-lg hover:opacity-80 transition-opacity"
+      className="flex items-center gap-2 px-3 py-2 text-sm border border-border text-secondary rounded-lg hover:opacity-80 motion-safe:transition-opacity"
     >
       <RefreshCw size={14} />
     </button>
     {activeTab === 'Staff' && (
       <button 
         onClick={openAdd} 
-        className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-lg hover:opacity-90 transition-opacity" 
+        className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-lg hover:opacity-90 motion-safe:transition-opacity" 
       >
         <Plus size={14} /> Add Manager
       </button>
@@ -91,7 +91,7 @@ export default function AdminHrTabs() {
     {activeTab === 'Payroll' && (
       <button 
         onClick={openAddPayroll} 
-        className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-lg hover:opacity-90 transition-opacity" 
+        className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-lg hover:opacity-90 motion-safe:transition-opacity" 
       >
         <Plus size={14} /> Add Payroll
       </button>
@@ -101,9 +101,9 @@ export default function AdminHrTabs() {
 </div>
 
  <div className="p-5">
- {fetchState === 'loading' ? (
+ {status === 'pending' ? (
  <div className="flex justify-center py-10">
- <div className="w-8 h-8 border-4 border-t-transparent rounded-full motion-safe:animate-spin" style={{ borderColor: 'var(--hr-highlight)', borderTopColor: 'transparent' }} />
+ <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full motion-safe:animate-spin" />
  </div>
  ) : activeTab === 'Staff' ? (
  <AdminHrStaffTable />

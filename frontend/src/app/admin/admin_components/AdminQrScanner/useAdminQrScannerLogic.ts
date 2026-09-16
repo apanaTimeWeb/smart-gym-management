@@ -1,3 +1,5 @@
+"use client";
+
 // RESPONSIBILITY: Handles the state and mock verification logic for the Kiosk-mode QR Scanner.
 // DATA FLOW: Simulate Scan Button → useAdminQrScannerLogic (state machine) → AdminQrScannerModal (view)
 import { useState, useCallback } from 'react';
@@ -47,7 +49,7 @@ export function useAdminQrScannerLogic() {
       return nextCount;
     });
     // Toast message sourced from constants (Rule 14 — no hardcoded UI strings)
-    toast.success(ADMIN_QR_TOAST_CHECKIN_SUCCESS);
+    toast.success(ADMIN_QR_TOAST_CHECKIN_SUCCESS, { id: 'admin-success-5aced26f' });
     setStatus('IDLE');
   }, []);
 

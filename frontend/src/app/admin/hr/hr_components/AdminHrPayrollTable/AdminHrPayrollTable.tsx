@@ -1,4 +1,5 @@
 "use client";
+import { formatCurrency } from '@/lib/formatters';
 // RESPONSIBILITY: Renders the payroll records table with pay status badges and mark-as-paid inline action.
 
 import { useHrContext } from '@/app/admin/hr/hr_context/AdminHrContext';
@@ -8,7 +9,7 @@ import { CheckCircle2, Download } from 'lucide-react';
 import { ADMIN_ITEMS_PER_PAGE } from '@/app/admin/admin_url_config';
 
 export default function AdminHrPayrollTable() {
-  const { payrolls, search, currentPage, setCurrentPage, setPaymentModal, fetchState, payrollMonth, staff } = useHrContext();
+  const { payrolls, search, currentPage, setCurrentPage, setPaymentModal, status, payrollMonth, staff } = useHrContext();
 
   const filtered = payrolls.filter(p => {
     const nameMatch = (p.staff?.name || '').toLowerCase().includes(search.toLowerCase());
@@ -29,7 +30,7 @@ export default function AdminHrPayrollTable() {
     const totalPages = Math.ceil(filtered.length / ADMIN_ITEMS_PER_PAGE);
   const currentData = filtered.slice((currentPage - 1) * ADMIN_ITEMS_PER_PAGE, currentPage * ADMIN_ITEMS_PER_PAGE);
 
-  if (fetchState === 'loading') {
+  if (status === 'pending') {
     return (
       <div className="flex flex-col h-full">
         <div className="overflow-x-auto flex-1">
@@ -44,7 +45,7 @@ export default function AdminHrPayrollTable() {
             </thead>
             <tbody className="divide-y divide-border">
               {[...Array(5)].map((_, i) => (
-                <tr key={i} className="motion-safe:animate-pulse bg-card">
+                <tr key={`skeleton-${i}`} className="motion-safe:animate-pulse bg-card">
                   <td className="px-4 py-4">
                     <div className="h-4 bg-muted rounded w-32 mb-2"></div>
                     <div className="h-3 bg-muted rounded w-20"></div>
@@ -66,7 +67,7 @@ export default function AdminHrPayrollTable() {
   return (
     <div className="flex flex-col h-full">
       <div className="flex justify-end mb-4">
-        <button className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-semibold hover:bg-primary/90 transition-colors">
+        <button className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-semibold hover:bg-primary/90 motion-safe:transition-colors">
           Bulk Generate Payroll
         </button>
       </div>
@@ -84,7 +85,7 @@ export default function AdminHrPayrollTable() {
           </thead>
           <tbody className="divide-y divide-border">
             {currentData.map(p => (
-              <tr key={p.id} className="transition-colors hover:bg-primary/5 bg-card">
+              <tr key={p.id} className="motion-safe:transition-colors hover:bg-primary/5 bg-card">
                 <td className="px-4 py-3">
                   <p className="text-sm font-medium text-primary">
                     {p.staff?.name || `Staff #${p.staffId}`}
@@ -95,11 +96,11 @@ export default function AdminHrPayrollTable() {
                 </td>
                 <td className="px-4 py-3 text-sm text-primary">{p.month}</td>
                 <td className="px-4 py-3 text-sm font-medium text-right">
-                  {((staff.find(s => String(s.id) === String(p.staffId))?.salary) || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}
+                  {formatCurrency((staff.find(s => String(s.id) === String(p.staffId))?.salary) || 0)}
                 </td>
-                <td className="px-4 py-3 text-sm font-bold text-foreground text-right">{(p.amount || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</td>
-                <td className="px-4 py-3 text-sm font-bold text-success text-right">{(p.paidAmount || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</td>
-                <td className="px-4 py-3 text-sm font-bold text-danger text-right">{(p.pendingAmount || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</td>
+                <td className="px-4 py-3 text-sm font-bold text-foreground text-right">{formatCurrency(p.amount || 0)}</td>
+                <td className="px-4 py-3 text-sm font-bold text-success text-right">{formatCurrency(p.paidAmount || 0)}</td>
+                <td className="px-4 py-3 text-sm font-bold text-danger text-right">{formatCurrency(p.pendingAmount || 0)}</td>
                 <td className="px-4 py-3">
                   <span 
                     className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${
@@ -114,7 +115,7 @@ export default function AdminHrPayrollTable() {
                 </td>
                 <td className="px-4 py-3 text-right">
                   <div className="flex justify-end gap-2">
-                    <button className="flex items-center justify-center gap-2 px-3 py-2 text-sm font-semibold text-secondary border border-border rounded-lg hover:bg-border transition-colors">
+                    <button className="flex items-center justify-center gap-2 px-3 py-2 text-sm font-semibold text-secondary border border-border rounded-lg hover:bg-border motion-safe:transition-colors">
                       <Download size={16} /> Payslip
                     </button>
                     {p.status !== 'Paid' && (
@@ -124,7 +125,7 @@ export default function AdminHrPayrollTable() {
                           staffName: p.staff?.name || `Staff #${p.staffId}`,
                           pendingAmount: p.pendingAmount
                         })}
-                        className="flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-lg hover:bg-primary/90 transition-colors"
+                        className="flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-lg hover:bg-primary/90 motion-safe:transition-colors"
                       >
                         <CheckCircle2 size={16} /> Pay
                       </button>

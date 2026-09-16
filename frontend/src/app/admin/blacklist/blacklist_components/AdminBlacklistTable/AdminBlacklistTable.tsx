@@ -3,7 +3,7 @@
 
 import { Globe, Building2, ToggleLeft, ToggleRight, Trash2, Unlock } from 'lucide-react';
 import { useAdminBlacklistLogic } from '@/app/admin/blacklist/blacklist_context/useAdminBlacklistLogic';
-import type { BlacklistedMember } from '@/app/admin/blacklist/blacklist_types/blacklist_types';
+import type { BlacklistedMember } from '@/app/admin/blacklist/blacklist_types/AdminBlacklistTypes';
 import { AdminTableSkeleton } from '@/app/admin/admin_components/AdminShared/AdminTableSkeleton';
 import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
 import AdminBlacklistEmptyState from '@/app/admin/blacklist/blacklist_components/AdminBlacklistEmptyState/AdminBlacklistEmptyState';
@@ -11,9 +11,9 @@ import AdminBlacklistEmptyState from '@/app/admin/blacklist/blacklist_components
 const HEADERS = ['Member', 'Contact', 'Reason', 'Scope', 'Blacklisted By', 'Date', 'Status', 'Actions'];
 
 export default function AdminBlacklistTable() {
-  const { members, fetchState, removeFromBlacklist, toggleBlacklist, currentPage, setCurrentPage, totalPages, totalItems } = useAdminBlacklistLogic();
+  const { members, status, removeFromBlacklist, toggleBlacklist, currentPage, setCurrentPage, totalPages, totalItems } = useAdminBlacklistLogic();
 
-  if (fetchState === 'loading') return <AdminTableSkeleton rows={5} cols={HEADERS.length} />;
+  if (status === 'pending') return <AdminTableSkeleton rows={5} cols={HEADERS.length} />;
   if (members.length === 0) return <AdminBlacklistEmptyState />;
 
   return (
@@ -53,7 +53,7 @@ export default function AdminBlacklistTable() {
                   </span>
                 </td>
                 <td className="px-4 py-3">
-                  <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 motion-safe:transition-opacity">
+                  <div className="flex items-center gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 motion-safe:transition-opacity">
                     <button onClick={() => toggleBlacklist(m.id)} className="p-1.5 rounded-lg hover:bg-input text-secondary hover:text-foreground motion-safe:transition-colors" aria-label="Toggle blacklist">
                       {m.isActive ? <ToggleRight size={16} className="text-danger" /> : <ToggleLeft size={16} />}
                     </button>

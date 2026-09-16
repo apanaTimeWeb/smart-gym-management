@@ -3,7 +3,7 @@
 
 import { CreditCard, Smartphone, Building2, Star, Trash2, CheckCircle } from 'lucide-react';
 import { useAdminSubscriptionsLogic } from '@/app/admin/subscriptions/subscriptions_context/useAdminSubscriptionsLogic';
-import type { PaymentMethod } from '@/app/admin/subscriptions/subscriptions_types/subscriptions_types';
+import type { PaymentMethod } from '@/app/admin/subscriptions/subscriptions_types/AdminSubscriptionsTypes';
 
 function PaymentMethodIcon({ type }: { type: PaymentMethod['type'] }) {
   if (type === 'upi') return <Smartphone size={18} className="text-success" />;

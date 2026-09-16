@@ -35,7 +35,7 @@ export default function AdminAnnouncementsMain() {
           </div>
           <button
             onClick={openCreate}
-            className="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-hover text-black font-semibold rounded-xl text-sm motion-safe:transition-colors shrink-0"
+            className="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-hover text-primary-foreground font-semibold rounded-xl text-sm motion-safe:transition-colors shrink-0"
           >
             <Send size={15} />
             Send Announcement

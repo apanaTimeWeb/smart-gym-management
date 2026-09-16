@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import { useHrContext } from '@/app/admin/hr/hr_context/AdminHrContext';
 import { STAFF_MODAL_FIELDS, EMPTY_STAFF, GENDER_OPTIONS, StaffSchema, type StaffFormValues, STAFF_ROLE_OPTIONS } from '@/app/admin/hr/hr_utils/AdminHrSharedConstants';
 import { useAdminBranchesQueries } from '@/app/admin/branches/branches_context/useAdminBranchesQueries';
-import type { Branch } from '@/app/admin/branches/branches_types/branches_types';
+import type { Branch } from '@/app/admin/branches/branches_types/AdminBranchesTypes';
 import { X, Save } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -49,14 +49,14 @@ export default function AdminHrStaffModal() {
   };
 
   return (
- <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/60">
+ <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-overlay">
   <div className="rounded-2xl shadow-xl w-full max-w-2xl max-h-screen overflow-y-auto bg-card border-2 border-warning">
   <div className="sticky top-0 px-8 py-5 border-b border-border bg-card flex items-center justify-between z-10">
   <h3 className="text-xl font-bold text-foreground">{editId ? 'Edit Staff' : 'Add Staff Member'}</h3>
   <button 
   type="button" 
   onClick={() => setShowModal(false)} 
-  className="p-2 rounded-full hover:bg-primary/10 transition-colors text-secondary hover:text-primary"
+  className="p-2 rounded-full hover:bg-primary/10 motion-safe:transition-colors text-secondary hover:text-primary"
   >
   <X size={20} />
   </button>
@@ -79,7 +79,7 @@ export default function AdminHrStaffModal() {
         : undefined
   }
   {...register(f.key as keyof StaffFormValues, f.type === 'number' ? { valueAsNumber: true } : {})}
-  className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus-visible:ring-2 transition-all duration-200 ${
+  className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus-visible:ring-2 motion-safe:transition-all motion-safe:duration-200 ${
     errors[f.key as keyof StaffFormValues] ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
   } bg-input text-foreground`}
   />
@@ -95,7 +95,7 @@ export default function AdminHrStaffModal() {
         <label className="block text-sm font-medium mb-2 text-foreground">Assigned Branches</label>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           {(branches as Branch[]).map(b => (
-            <label key={b.id} className={`flex items-center gap-2 p-3 border rounded-xl cursor-pointer transition-colors ${assignedBranches.includes(b.id) ? 'border-primary bg-primary/5 text-primary' : 'border-border hover:bg-input text-secondary'}`}>
+            <label key={b.id} className={`flex items-center gap-2 p-3 border rounded-xl cursor-pointer motion-safe:transition-colors ${assignedBranches.includes(b.id) ? 'border-primary bg-primary/5 text-primary' : 'border-border hover:bg-input text-secondary'}`}>
               <input 
                 type="checkbox" 
                 value={b.id}
@@ -190,7 +190,7 @@ export default function AdminHrStaffModal() {
   <input 
   type="date" 
   {...register('joinDate')}
-  className="w-full px-4 py-3 border border-border rounded-xl text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-foreground transition-all duration-200"
+  className="w-full px-4 py-3 border border-border rounded-xl text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-foreground motion-safe:transition-all motion-safe:duration-200"
   />
   </div>
 
@@ -201,12 +201,12 @@ export default function AdminHrStaffModal() {
     type={showPassword ? "text" : "password"}
     placeholder="Min 8 characters"
     {...register('temporaryPassword')}
-    className="w-full px-4 py-3 border border-border rounded-xl text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-foreground transition-all duration-200 pr-10"
+    className="w-full px-4 py-3 border border-border rounded-xl text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-foreground motion-safe:transition-all motion-safe:duration-200 pr-10"
     />
     <button
       type="button"
       onClick={() => setShowPassword(!showPassword)}
-      className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary hover:text-foreground transition-colors"
+      className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary hover:text-foreground motion-safe:transition-colors"
       aria-label="Toggle password visibility"
     >
       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -222,7 +222,7 @@ export default function AdminHrStaffModal() {
     </div>
     <label className="relative inline-flex items-center cursor-pointer">
       <input type="checkbox" {...register('isActive')} className="sr-only peer" />
-      <div className="w-11 h-6 bg-border peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-border after:content-none after:absolute after:top-0 after:left-0 after:bg-card after:border-border after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-success"></div>
+      <div className="w-11 h-6 bg-border peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-border after:content-none after:absolute after:top-0 after:left-0 after:bg-card after:border-border after:border after:rounded-full after:h-5 after:w-5 motion-safe:after:transition-all peer-checked:bg-success"></div>
     </label>
   </div>
 
@@ -231,14 +231,14 @@ export default function AdminHrStaffModal() {
   <button 
   type="button" 
   onClick={() => setShowModal(false)} 
-  className="px-6 py-2.5 text-sm font-semibold rounded-xl border border-border text-secondary hover:bg-primary/5 hover:text-primary transition-colors"
+  className="px-6 py-2.5 text-sm font-semibold rounded-xl border border-border text-secondary hover:bg-primary/5 hover:text-primary motion-safe:transition-colors"
   >
   Cancel
   </button>
   <button 
   type="submit" 
   disabled={saving} 
-  className="px-8 py-2.5 rounded-xl text-sm font-bold text-white flex items-center justify-center gap-2 disabled:opacity-70 transition-all hover:shadow-lg hover:shadow-primary/30 active:scale-95 bg-primary" 
+  className="px-8 py-2.5 rounded-xl text-sm font-bold text-primary-foreground flex items-center justify-center gap-2 disabled:opacity-70 motion-safe:transition-all hover:shadow-lg hover:shadow-primary/30 motion-safe:active:scale-95 bg-primary" 
   >
   {saving ? <div className="w-4 h-4 border-2 border-border/30 border-t-white rounded-full motion-safe:animate-spin" /> : <><Save size={16} />{editId ? 'Update' : 'Add Staff'}</>}
   </button>

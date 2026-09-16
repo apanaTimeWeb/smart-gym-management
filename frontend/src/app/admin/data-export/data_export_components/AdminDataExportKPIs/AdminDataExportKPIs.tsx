@@ -10,10 +10,10 @@ export default function AdminDataExportKPIs() {
   if (!kpis) return null;
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-      <AdminStatCard title="Total Exports" value={kpis.totalExports} icon={Download} iconBg="rgba(250,204,21,0.15)" iconColor="var(--primary)" />
-      <AdminStatCard title="Total Rows Exported" value={kpis.totalRowsExported.toLocaleString('en-IN')} change="all time" changeType="neutral" icon={Rows3} iconBg="rgba(59,130,246,0.15)" iconColor="var(--info)" />
-      <AdminStatCard title="Last Export" value={kpis.lastExportDate} icon={CalendarCheck} iconBg="rgba(34,197,94,0.15)" iconColor="var(--success)" />
-      <AdminStatCard title="Processing Jobs" value={kpis.pendingJobs} change="in queue" changeType="neutral" icon={Loader2} iconBg="rgba(245,158,11,0.15)" iconColor="var(--warning)" />
+      <AdminStatCard title="Total Exports" value={kpis.totalExports} icon={Download} iconBg="bg-primary/10" iconColor="text-primary" />
+      <AdminStatCard title="Total Rows Exported" value={kpis.totalRowsExported.toLocaleString('en-IN')} change="all time" changeType="neutral" icon={Rows3} iconBg="bg-info/10" iconColor="text-info" />
+      <AdminStatCard title="Last Export" value={kpis.lastExportDate} icon={CalendarCheck} iconBg="bg-success/10" iconColor="text-success" />
+      <AdminStatCard title="Processing Jobs" value={kpis.pendingJobs} change="in queue" changeType="neutral" icon={Loader2} iconBg="bg-warning/10" iconColor="text-warning" />
     </div>
   );
 }

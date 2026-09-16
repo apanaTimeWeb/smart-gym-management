@@ -2,6 +2,7 @@
 // RESPONSIBILITY: Renders the cross-branch daily attendance trend chart using ApexCharts.
 
 import dynamic from 'next/dynamic';
+import { ADMIN_CHART_THEME } from '@/app/admin/admin_utils/AdminChartThemeTokens';
 import { CalendarCheck } from 'lucide-react';
 
 const ReactApexChart = dynamic(() => import('react-apexcharts'), { ssr: false });
@@ -23,7 +24,7 @@ export default function AdminDashboardAttendanceTrend() {
       background: 'transparent',
       toolbar: { show: false },
     },
-    colors: ['#FACC15'],
+    colors: [ADMIN_CHART_THEME.primary],
     plotOptions: {
       bar: {
         borderRadius: 6,
@@ -33,18 +34,18 @@ export default function AdminDashboardAttendanceTrend() {
     dataLabels: { enabled: false },
     xaxis: {
       categories: MOCK_ATTENDANCE.map((d) => d.day),
-      labels: { style: { colors: '#A1A1AA', fontSize: '12px' } },
+      labels: { style: { colors: ADMIN_CHART_THEME.textSecondary, fontSize: '12px' } },
       axisBorder: { show: false },
       axisTicks: { show: false },
     },
     yaxis: {
       labels: {
-        style: { colors: '#A1A1AA', fontSize: '12px' },
+        style: { colors: ADMIN_CHART_THEME.textSecondary, fontSize: '12px' },
         formatter: (v) => String(Math.round(v)),
       },
     },
     grid: {
-      borderColor: 'rgba(255,255,255,0.05)',
+      borderColor: ADMIN_CHART_THEME.grid,
       strokeDashArray: 4,
       xaxis: { lines: { show: false } },
     },

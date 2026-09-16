@@ -1,9 +1,11 @@
 "use client";
+import { formatKPI, formatCurrency } from '@/lib/formatters';
 // RESPONSIBILITY: Renders two ApexCharts — grouped bar (Revenue vs Expenses per branch)
 // and donut (profit share by branch). Code-split via next/dynamic to avoid SSR issues.
 
 import dynamic from 'next/dynamic';
-import type { BranchPnlRecord } from '@/app/admin/finance/finance_types/finance_types';
+import { ADMIN_CHART_THEME } from '@/app/admin/admin_utils/AdminChartThemeTokens';
+import type { BranchPnlRecord } from '@/app/admin/finance/finance_types/AdminFinanceTypes';
 
 // Lazy-load ApexCharts to prevent SSR window-is-not-defined error (Rule 15 — Lazy Loading)
 const ReactApexChart = dynamic(() => import('react-apexcharts'), { ssr: false });
@@ -33,37 +35,37 @@ export default function AdminFinancePnlCharts({ data }: AdminFinancePnlChartsPro
     plotOptions: {
       bar: { columnWidth: '55%', borderRadius: 4 },
     },
-    colors: ['#22C55E', '#EF4444'],
+    colors: [ADMIN_CHART_THEME.success, ADMIN_CHART_THEME.danger],
     dataLabels: { enabled: false },
     xaxis: {
       categories: branchNames,
       labels: {
-        style: { colors: '#A1A1AA', fontSize: '11px' },
+        style: { colors: ADMIN_CHART_THEME.textSecondary, fontSize: '11px' },
         rotate: -20,
       },
-      axisBorder: { color: '#27272A' },
-      axisTicks: { color: '#27272A' },
+      axisBorder: { color: ADMIN_CHART_THEME.border },
+      axisTicks: { color: ADMIN_CHART_THEME.border },
     },
     yaxis: {
       labels: {
-        style: { colors: '#A1A1AA', fontSize: '11px' },
-        formatter: (val: number) => `₹${val}K`,
+        style: { colors: ADMIN_CHART_THEME.textSecondary, fontSize: '11px' },
+        formatter: (val: number) => formatKPI(val * 1000),
       },
     },
     grid: {
-      borderColor: 'rgba(255,255,255,0.05)',
+      borderColor: ADMIN_CHART_THEME.grid,
       strokeDashArray: 4,
     },
     legend: {
       position: 'top',
       horizontalAlign: 'right',
-      labels: { colors: '#A1A1AA' },
+      labels: { colors: ADMIN_CHART_THEME.textSecondary },
       fontSize: '12px',
       fontFamily: CHART_FONT,
     },
     tooltip: {
       theme: 'dark',
-      y: { formatter: (val: number) => `₹${val}K` },
+      y: { formatter: (val: number) => formatKPI(val * 1000) },
     },
   };
 
@@ -78,16 +80,16 @@ export default function AdminFinancePnlCharts({ data }: AdminFinancePnlChartsPro
       background: 'transparent',
       fontFamily: CHART_FONT,
     },
-    colors: ['#FACC15', '#22C55E', '#3B82F6', '#C084FC', 'var(--warning)'],
+    colors: [ADMIN_CHART_THEME.primary, ADMIN_CHART_THEME.success, ADMIN_CHART_THEME.info, ADMIN_CHART_THEME.warning, ADMIN_CHART_THEME.warning],
     labels: profitLabels,
     dataLabels: {
       enabled: true,
-      style: { colors: ['#fff'], fontSize: '11px', fontWeight: 600 },
+      style: { colors: [ADMIN_CHART_THEME.textPrimary], fontSize: '11px', fontWeight: 600 },
       dropShadow: { enabled: false },
     },
     legend: {
       position: 'bottom',
-      labels: { colors: '#A1A1AA' },
+      labels: { colors: ADMIN_CHART_THEME.textSecondary },
       fontSize: '12px',
       fontFamily: CHART_FONT,
     },
@@ -100,12 +102,12 @@ export default function AdminFinancePnlCharts({ data }: AdminFinancePnlChartsPro
             total: {
               show: true,
               label: 'Total Profit',
-              color: '#A1A1AA',
+              color: ADMIN_CHART_THEME.textSecondary,
               fontSize: '12px',
               fontFamily: CHART_FONT,
               formatter: (w) => {
                 const total = w.globals.seriesTotals.reduce((a: number, b: number) => a + b, 0);
-                return total >= 100000 ? `₹${(total / 100000).toFixed(1)}L` : `₹${total.toLocaleString('en-IN')}`;
+                return total >= 100000 ? formatKPI(total) : formatCurrency(total);
               },
             },
           },
@@ -116,7 +118,7 @@ export default function AdminFinancePnlCharts({ data }: AdminFinancePnlChartsPro
       theme: 'dark',
       y: {
         formatter: (val: number) =>
-          val.toLocaleString('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }),
+          formatCurrency(val),
       },
     },
     stroke: { colors: ['transparent'] },

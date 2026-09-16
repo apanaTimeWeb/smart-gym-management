@@ -1,4 +1,5 @@
 "use client";
+// DATA FLOW: Admin module UI → local UI state / feature hooks → approved global infrastructure or module-owned APIs.
 // RESPONSIBILITY: Provides a programmatic confirm() API to all ADMIN components via React Context. Renders a single shared AdminConfirmModal at the root level. No async data — sync UI state only.
 
 import React, { createContext, useContext, useState, useCallback, type ReactNode } from 'react';

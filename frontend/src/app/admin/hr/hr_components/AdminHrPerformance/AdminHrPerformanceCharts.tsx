@@ -2,6 +2,7 @@
 // RESPONSIBILITY: Renders dynamic charts visualizing staff performance metrics (sessions, additions).
 
 import dynamic from 'next/dynamic';
+import { ADMIN_CHART_THEME } from '@/app/admin/admin_utils/AdminChartThemeTokens';
 import type { StaffPerformanceRecord } from '@/app/admin/hr/hr_types/AdminHrPerformanceTypes';
 
 // Rule 15: Lazy loading heavy chart libraries
@@ -35,17 +36,17 @@ export default function AdminHrPerformanceCharts({ data }: AdminHrPerformanceCha
     xaxis: {
       categories: topTrainers.map((t) => t.name),
       labels: {
-        style: { colors: '#A1A1AA' },
+        style: { colors: ADMIN_CHART_THEME.textSecondary },
       },
     },
     yaxis: {
       labels: {
-        style: { colors: '#E4E4E7', fontWeight: 600 },
+        style: { colors: ADMIN_CHART_THEME.textPrimary, fontWeight: 600 },
       },
     },
-    colors: ['#FACC15'],
+    colors: [ADMIN_CHART_THEME.primary],
     grid: {
-      borderColor: 'rgba(255,255,255,0.06)',
+      borderColor: ADMIN_CHART_THEME.grid,
       strokeDashArray: 4,
     },
     theme: { mode: 'dark' },

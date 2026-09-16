@@ -1,17 +1,17 @@
 "use client";
+import { formatCurrency } from '@/lib/formatters';
 // RESPONSIBILITY: Renders the grid of membership plan cards with edit/delete actions and pagination.
 
 import { Edit2, Trash2, Tag, CheckCircle, Loader2, Snowflake } from 'lucide-react';
 import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/useAdminConfirm';
 import { useAdminPlansLogic } from '@/app/admin/plans/plans_context/useAdminPlansLogic';
 import { useAdminPlansStore } from '@/app/admin/plans/plans_store/useAdminPlansStore';
-import { formatCurrency } from '@/app/admin/plans/plans_utils/AdminPlansSharedConstants';
 import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
 import { ADMIN_ITEMS_PER_PAGE } from '@/app/admin/admin_url_config';
 
 
 export default function AdminPlansGrid() {
-  const { plans, fetchState, saving, search, setSearch, currentPage, setCurrentPage, loadPlans, openAdd, openEdit, savePlan, deletePlan } = useAdminPlansLogic();
+  const { plans, status, saving, search, setSearch, currentPage, setCurrentPage, loadPlans, openAdd, openEdit, savePlan, deletePlan } = useAdminPlansLogic();
   const { showModal, setShowModal, editId, form, setForm } = useAdminPlansStore();
   const { confirm } = useAdminConfirm();
 
@@ -20,17 +20,17 @@ export default function AdminPlansGrid() {
   const totalPages = Math.ceil(filtered.length / ADMIN_ITEMS_PER_PAGE);
   const currentData = filtered.slice((currentPage - 1) * ADMIN_ITEMS_PER_PAGE, currentPage * ADMIN_ITEMS_PER_PAGE);
 
-  if (fetchState === 'loading') {
+  if (status === 'pending') {
     return (
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1">
-        {["row-1", "row-2", "row-3"].map(i => (
+        {["row-1", "row-2", "row-3"].map((i) => (
           <div key={i} className="h-96 bg-card rounded-2xl border border-border motion-safe:animate-pulse"></div>
         ))}
       </div>
     );
   }
 
-  if (fetchState === 'error') {
+  if (status === 'error') {
     return (
       <div className="text-center py-16 bg-card rounded-2xl border border-danger/30">
         <p className="text-danger font-medium">Failed to load membership plans.</p>
@@ -53,12 +53,12 @@ export default function AdminPlansGrid() {
         {currentData.map((p, i) => (
           <div
             key={p.id}
-            className={`bg-card border-2 rounded-2xl p-6 relative transition-all hover:scale-105 motion-safe:hover:-translate-y-1 ${
+            className={`bg-card border-2 rounded-2xl p-6 relative motion-safe:transition-all motion-safe:hover:scale-105 motion-safe:hover:-translate-y-1 ${
               i === 1 ? 'border-warning shadow-lg shadow-warning/20' : 'border-border'
             }`}
           >
             {i === 1 && (
-              <div className="bg-warning text-white text-xs font-bold uppercase tracking-wider text-center py-1 absolute top-0 w-full left-0 rounded-t-2xl">
+              <div className="bg-warning text-primary-foreground text-xs font-bold uppercase tracking-wider text-center py-1 absolute top-0 w-full left-0 rounded-t-2xl">
                 Most Popular
               </div>
             )}
@@ -73,26 +73,18 @@ export default function AdminPlansGrid() {
                 <div className="flex gap-1">
                   <button
                     onClick={() => openEdit(p)}
-                    className="p-1.5 rounded-lg text-secondary hover:text-primary hover:bg-primary-subtle transition-all duration-200"
+                    className="p-1.5 rounded-lg text-secondary hover:text-primary hover:bg-primary-subtle motion-safe:transition-all motion-safe:duration-200"
                     title="Edit Plan"
                     aria-label={`Edit ${p.name}`}
                   >
                     <Edit2 size={16} />
                   </button>
                   <button
-                  onClick={async (e) => {
+                  onClick={(e) => {
                     e.stopPropagation();
-                    const ok = await confirm({
-                      title: 'Delete Plan',
-                      message: `Are you sure you want to delete plan "${p.name}"?`,
-                      type: 'danger',
-                      confirmText: 'Delete'
-                    });
-                    if (ok) {
-                      deletePlan(p.id);
-                    }
+                    deletePlan(p.id);
                   }}
-                    className="p-1.5 rounded-lg text-danger hover:bg-danger-bg transition-all duration-200"
+                    className="p-1.5 rounded-lg text-danger hover:bg-danger-bg motion-safe:transition-all motion-safe:duration-200"
                     title="Delete Plan"
                     aria-label={`Delete ${p.name}`}
                   >

@@ -16,7 +16,7 @@ const STATUS_STYLES: Record<string, string> = {
 
 const STATUS_ICONS: Record<string, React.ReactNode> = {
   completed: <CheckCircle size={11} />,
-  processing: <Loader2 size={11} className="animate-spin" />,
+  processing: <Loader2 size={11} className="motion-safe:animate-spin" />,
   failed: <XCircle size={11} />,
 };
 
@@ -31,7 +31,7 @@ const DATA_TYPE_LABELS: Record<string, string> = {
 const HEADERS = ['Data Type', 'Format', 'Gyms', 'Date Range', 'Rows', 'Size', 'Status', 'Created', 'Actions'];
 
 export default function AdminDataExportHistory() {
-  const { jobs, fetchState, deleteJob, statusFilter, setStatusFilter, currentPage, setCurrentPage, totalPages, totalItems } = useAdminDataExportLogic();
+  const { jobs, status, deleteJob, statusFilter, setStatusFilter, currentPage, setCurrentPage, totalPages, totalItems } = useAdminDataExportLogic();
 
   return (
     <div className="space-y-3">
@@ -42,7 +42,7 @@ export default function AdminDataExportHistory() {
         </div>
       </div>
 
-      {fetchState === 'loading' ? <AdminTableSkeleton rows={5} cols={HEADERS.length} /> : (
+      {status === 'pending' ? <AdminTableSkeleton rows={5} cols={HEADERS.length} /> : (
         <div className="bg-card rounded-xl border border-border overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
@@ -74,7 +74,7 @@ export default function AdminDataExportHistory() {
                       {new Date(job.createdAt).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })}
                     </td>
                     <td className="px-4 py-3">
-                      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 motion-safe:transition-opacity">
+                      <div className="flex items-center gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 motion-safe:transition-opacity">
                         {job.status === 'completed' && (
                           <button className="p-1.5 rounded-lg hover:bg-input text-secondary hover:text-primary motion-safe:transition-colors" aria-label="Download export">
                             <Download size={15} />

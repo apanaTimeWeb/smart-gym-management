@@ -2,13 +2,13 @@
 // RESPONSIBILITY: Manages the GST & Tax settings tab.
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { GstTaxSettingsSchema } from '@/app/admin/settings/settings_types/settings.schema';
-import type { GstTaxSettingsType } from '@/app/admin/settings/settings_types/settings_types';
+import { GstTaxSettingsSchema } from '@/app/admin/settings/settings_types/AdminSettings.schema';
+import type { GstTaxSettingsType } from '@/app/admin/settings/settings_types/AdminSettingsTypes';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { settingsApi } from '@/app/admin/settings/settings_api/settings_api';
+import { settingsApi } from '@/app/admin/settings/settings_api/AdminSettingsApi';
 import toast from 'react-hot-toast';
 import { Save, RefreshCw } from 'lucide-react';
-import { useUnsavedChangesGuard } from '@/app/admin/admin_utils/useUnsavedChangesGuard';
+import { useUnsavedChangesGuard } from '@/app/admin/admin_utils/useAdminUnsavedChangesGuard';
 import { GST_STATE_CODES, TAX_RATE_OPTIONS } from '@/app/admin/settings/settings_utils/AdminSettingsSharedConstants';
 import { AdminSettingsToggleSwitch } from '@/app/admin/settings/settings_components/AdminSettingsShared/AdminSettingsToggleSwitch';
 
@@ -24,7 +24,7 @@ export function AdminSettingsGST({ initialData }: { initialData: GstTaxSettingsT
   const mutation = useMutation({
     mutationFn: (data: GstTaxSettingsType) => settingsApi.updateSettings({ gst: data }),
     onSuccess: (res) => {
-      toast.success(res.message || 'GST settings saved', { id: 'settings-gst-save' });
+      toast.success(res.message, { id: 'settings-gst-save' });
       queryClient.invalidateQueries({ queryKey: ['admin', 'settings'] });
       form.reset(form.getValues());
     },
@@ -49,7 +49,7 @@ export function AdminSettingsGST({ initialData }: { initialData: GstTaxSettingsT
           <button
             type="submit"
             disabled={mutation.isPending}
-            className="px-4 py-2 text-sm bg-primary text-white rounded-lg font-medium flex items-center gap-2 disabled:opacity-70 hover:bg-primary-hover motion-safe:transition-colors"
+            className="px-4 py-2 text-sm bg-primary text-primary-foreground rounded-lg font-medium flex items-center gap-2 disabled:opacity-70 hover:bg-primary-hover motion-safe:transition-colors"
           >
             <Save size={14} /> {mutation.isPending ? 'Saving...' : 'Save Changes'}
           </button>

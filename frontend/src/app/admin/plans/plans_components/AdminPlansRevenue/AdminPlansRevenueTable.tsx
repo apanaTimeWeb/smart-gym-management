@@ -8,7 +8,7 @@ import type {
   RevenueSortKey,
   RevenueSortDirection,
 } from '@/app/admin/plans/plans_types/AdminPlansRevenueTypes';
-import { formatCurrency } from '@/lib/formatters';
+import {formatCurrency, formatPercent1dp} from '@/lib/formatters';
 
 interface AdminPlansRevenueTableProps {
   data: PlanRevenueRecord[];
@@ -85,7 +85,7 @@ export default function AdminPlansRevenueTable({ data, sortKey, sortDir, onSort 
                   </td>
                   {/* Renewal Rate */}
                   <td className="px-4 py-3.5 text-sm font-medium text-foreground">
-                    {row.renewalRate.toFixed(1)}%
+                    {formatPercent1dp(row.renewalRate)}%
                   </td>
                   {/* Total Revenue */}
                   <td className="px-4 py-3.5 text-sm font-black text-foreground">

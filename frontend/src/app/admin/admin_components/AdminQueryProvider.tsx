@@ -1,4 +1,5 @@
 "use client";
+// DATA FLOW: Admin module UI → local UI state / feature hooks → approved global infrastructure or module-owned APIs.
 // RESPONSIBILITY: Core UI component/route for the admin module orchestrating views and displaying sub-components.
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';

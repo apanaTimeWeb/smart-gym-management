@@ -36,7 +36,7 @@ export default function AdminDashboardMain() {
   const { stats, status, error } = useAdminDashboardLogic();
   const { timeRange, setTimeRange, startDate, endDate, setCustomDateRange } = useAdminDashboardStore();
 
-  if (status === 'loading') return <div className="min-h-full"><DashboardSkeleton /></div>;
+  if (status === 'pending') return <div className="min-h-full"><DashboardSkeleton /></div>;
 
   if (status === 'error') {
     throw new Error(error || 'Failed to load dashboard');

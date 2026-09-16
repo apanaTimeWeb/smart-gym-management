@@ -35,7 +35,7 @@ export default function AdminDashboardAlerts() {
             <p className="text-xs text-secondary">Action required</p>
           </div>
         </div>
-        <span className="bg-danger text-white text-xs font-bold px-2 py-0.5 rounded-full">
+        <span className="bg-danger text-primary-foreground text-xs font-bold px-2 py-0.5 rounded-full">
           {stats.systemAlerts.filter(a => a.severity === 'high').length} Critical
         </span>
       </div>
@@ -45,7 +45,7 @@ export default function AdminDashboardAlerts() {
           <p className="text-sm text-secondary text-center py-4">No alerts at this time.</p>
         ) : (
           stats.systemAlerts.map(alert => (
-            <div key={alert.id} className={`p-3 rounded-xl border flex items-start gap-3 transition-colors hover:bg-opacity-80 ${getSeverityStyle(alert.severity)}`}>
+            <div key={alert.id} className={`p-3 rounded-xl border flex items-start gap-3 motion-safe:transition-colors hover:bg-opacity-80 ${getSeverityStyle(alert.severity)}`}>
               <div className="mt-0.5 shrink-0">
                 {getSeverityIcon(alert.severity)}
               </div>
@@ -61,7 +61,7 @@ export default function AdminDashboardAlerts() {
       </div>
       
       {stats.systemAlerts.length > 0 && (
-        <button className="w-full mt-4 py-2 border border-border rounded-lg text-xs font-bold text-secondary hover:text-foreground hover:bg-card/5 transition-colors">
+        <button className="w-full mt-4 py-2 border border-border rounded-lg text-xs font-bold text-secondary hover:text-foreground hover:bg-card/5 motion-safe:transition-colors">
           View All Alerts
         </button>
       )}

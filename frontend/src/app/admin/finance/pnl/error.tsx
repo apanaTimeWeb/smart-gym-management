@@ -21,15 +21,11 @@ export default function AdminFinancePnlError({ error, reset }: AdminFinancePnlEr
             The Branch P&amp;L Comparison page encountered an error and couldn&apos;t load.
             Your data is safe — this is a display issue.
           </p>
-          {process.env.NODE_ENV === 'development' && (
-            <p className="text-xs text-danger mt-3 font-mono bg-danger/5 border border-danger/20 rounded-lg p-2 text-left break-words">
-              {error.message}
-            </p>
-          )}
+          <p className="text-xs text-secondary mt-3">Please retry. If the issue continues, contact support.</p>
         </div>
         <button
           onClick={reset}
-          className="inline-flex items-center gap-2 px-6 py-2.5 bg-primary text-black text-sm font-semibold rounded-lg hover:bg-primary-hover motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          className="inline-flex items-center gap-2 px-6 py-2.5 bg-primary text-primary-foreground text-sm font-semibold rounded-lg hover:bg-primary-hover motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
         >
           <RefreshCw size={15} strokeWidth={2} />
           Try Again

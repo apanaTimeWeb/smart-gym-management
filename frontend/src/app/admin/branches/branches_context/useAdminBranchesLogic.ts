@@ -4,7 +4,7 @@ import type { TimeRange } from '@/app/admin/admin_types/AdminSharedTypes';
 // DATA FLOW: Centralized store/hook logic mapping API mutations and query state to UI props.
 import { useAdminBranchesStore } from "@/app/admin/branches/branches_store/useAdminBranchesStore";
 import { useAdminBranchesQueries } from "@/app/admin/branches/branches_context/useAdminBranchesQueries";
-import type { Branch } from "@/app/admin/branches/branches_types/branches_types";
+import type { Branch } from "@/app/admin/branches/branches_types/AdminBranchesTypes";
 
 export type DetailView = "revenue" | "expenses" | "staff" | "students";
 

@@ -1,8 +1,8 @@
 "use client";
+import { formatPercent1dp, formatCurrency } from '@/lib/formatters';
 // RESPONSIBILITY: Renders the P&L (Profit & Loss) report tab — full breakdown per gym with margin indicators.
 
 import { useAdminReportsLogic } from '@/app/admin/reports/reports_context/useAdminReportsLogic';
-import { formatCurrency } from '@/app/admin/reports/reports_utils/AdminReportsSharedConstants';
 
 export default function AdminReportsPnL() {
   const { reportData } = useAdminReportsLogic();
@@ -41,7 +41,7 @@ export default function AdminReportsPnL() {
                         <div className="h-2 bg-success rounded-full" style={{ width: `${row.profitMargin}%` }} />
                       </div>
                       <span className={`text-xs font-bold ${row.profitMargin >= 60 ? 'text-success' : row.profitMargin >= 40 ? 'text-warning' : 'text-danger'}`}>
-                        {row.profitMargin.toFixed(1)}%
+                        {formatPercent1dp(row.profitMargin)}%
                       </span>
                     </div>
                   </td>

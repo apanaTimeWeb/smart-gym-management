@@ -1,4 +1,5 @@
 "use client";
+import { formatPercent1dp } from '@/lib/formatters';
 // RESPONSIBILITY: Renders the Attendance report tab — attendance summary and heatmap-style grid per gym.
 
 import { useAdminReportsLogic } from '@/app/admin/reports/reports_context/useAdminReportsLogic';
@@ -6,9 +7,9 @@ import { useAdminReportsLogic } from '@/app/admin/reports/reports_context/useAdm
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
 function getHeatColor(rate: number): string {
-  if (rate >= 80) return 'bg-success text-white';
-  if (rate >= 60) return 'bg-warning text-white';
-  if (rate >= 40) return 'bg-info text-white';
+  if (rate >= 80) return 'bg-success text-primary-foreground';
+  if (rate >= 60) return 'bg-warning text-primary-foreground';
+  if (rate >= 40) return 'bg-info text-primary-foreground';
   return 'bg-danger-bg text-danger border border-danger/20';
 }
 
@@ -88,7 +89,7 @@ export default function AdminReportsAttendance() {
                     return (
                       <td key={di} className="px-1 py-1">
                         <div className={`w-full h-9 rounded-lg flex items-center justify-center text-xs font-bold ${getHeatColor(rate)}`}>
-                          {rate.toFixed(0)}%
+                          {formatPercent1dp(rate)}
                         </div>
                       </td>
                     );

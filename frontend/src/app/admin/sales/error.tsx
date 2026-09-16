@@ -5,7 +5,7 @@ import { AdminDashboardUrlConfig } from '@/app/admin/dashboard/admin_dashboard_u
 import { useEffect } from "react";
 import Link from 'next/link';
 import { StatusCodes } from 'http-status-codes';
-import { logErrorToMonitoring } from '@/app/admin/admin_utils/monitoring';
+import { logErrorToMonitoring } from '@/app/admin/admin_utils/AdminMonitoring';
 
 export default function SalesError({
   error,
@@ -15,6 +15,7 @@ export default function SalesError({
   reset: () => void;
 }) {
   useEffect(() => {
+    // Log the route-level error once while keeping internal error details out of the UI.
     logErrorToMonitoring(error, { module: 'sales' });
   }, [error]);
 
@@ -23,7 +24,7 @@ export default function SalesError({
       <div className="min-h-full flex flex-col items-center justify-center p-8 text-center">
         <h2 className="text-2xl font-bold mb-4 text-danger">Access Denied</h2>
         <p className="text-secondary mb-6">You don't have permission to view this page.</p>
-        <Link href={AdminDashboardUrlConfig.root} className="px-4 py-2 rounded-md bg-primary text-black hover:bg-primary-hover motion-safe:transition-colors">
+        <Link href={AdminDashboardUrlConfig.root} className="px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary-hover motion-safe:transition-colors">
           Return to Dashboard
         </Link>
       </div>
@@ -33,11 +34,10 @@ export default function SalesError({
   return (
     <div className="min-h-full flex items-center justify-center">
       <div className="text-center">
-        <p className="font-medium text-danger">Something went wrong!</p>
-        <p className="text-sm mt-1 text-danger">{error.message || 'An unexpected error occurred in the sales module.'}</p>
+        <p className="font-medium text-danger">Something went wrong!</p>        <p className="text-sm mt-1 text-secondary">Please retry. If the problem continues, contact support with the current request time.</p>
         <button
           onClick={() => reset()}
-          className="mt-4 px-4 py-2 rounded-md font-medium text-black bg-primary hover:bg-primary-hover motion-safe:transition-colors"
+          className="mt-4 px-4 py-2 rounded-md font-medium text-primary-foreground bg-primary hover:bg-primary-hover motion-safe:transition-colors"
         >
           Try again
         </button>

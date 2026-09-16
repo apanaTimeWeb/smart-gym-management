@@ -46,7 +46,7 @@ export default function AdminFinancePnlMain() {
             period={period}
             onPeriodChange={setPeriod}
           />
-          {isLoading && <Loader2 size={18} className="animate-spin text-secondary" />}
+          {isLoading && <Loader2 size={18} className="motion-safe:animate-spin text-secondary" />}
         </div>
 
         {/* KPI Cards */}

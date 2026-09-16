@@ -12,7 +12,7 @@ import { AdminHeaderSearch } from '@/app/admin/admin_components/AdminLayout/Admi
 import { AdminHeaderNotifications } from '@/app/admin/admin_components/AdminLayout/AdminHeaderNotifications';
 import { AdminHeaderProfile } from '@/app/admin/admin_components/AdminLayout/AdminHeaderProfile';
 import type { AdminHeaderProps } from '@/app/admin/admin_components/AdminLayout/AdminLayoutTypes';
-import type { Branch } from '@/app/admin/branches/branches_types/branches_types';
+import type { Branch } from '@/app/admin/branches/branches_types/AdminBranchesTypes';
 
 export default function AdminHeader({ title, subtitle }: AdminHeaderProps) {
   const [showScanner, setShowScanner] = useState(false);

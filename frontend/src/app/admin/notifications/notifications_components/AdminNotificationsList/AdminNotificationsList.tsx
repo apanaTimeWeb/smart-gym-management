@@ -1,21 +1,16 @@
 "use client";
-// RESPONSIBILITY: Renders the list of admin notifications with mark-read and delete actions.
+// RESPONSIBILITY: Renders the Admin notification feed and marks unread notifications as read through explicit user interaction.
 // DATA FLOW: AdminNotificationsClient → AdminNotificationsList
 
-import { X, Bell } from 'lucide-react';
-import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/useAdminConfirm';
+import { Bell } from 'lucide-react';
 import type { NotificationItem } from '@/app/admin/notifications/notifications_types/AdminNotificationsTypes';
 
-interface Props {
+interface AdminNotificationsListProps {
   notifications: NotificationItem[];
   onMarkAsRead: (id: string) => void;
-  onDelete: (id: string) => void;
-  onMarkAllAsRead?: () => void;
 }
 
-export default function AdminNotificationsList({ notifications, onMarkAsRead, onDelete, onMarkAllAsRead }: Props) {
-  const { confirm } = useAdminConfirm();
-
+export default function AdminNotificationsList({ notifications, onMarkAsRead }: AdminNotificationsListProps) {
   if (notifications.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center p-12 text-center">
@@ -30,22 +25,13 @@ export default function AdminNotificationsList({ notifications, onMarkAsRead, on
 
   return (
     <div>
-      {onMarkAllAsRead && notifications.some(n => n.unread) && (
-        <div className="flex justify-end p-3 border-b border-border bg-card">
-          <button 
-            onClick={onMarkAllAsRead} 
-            className="text-xs font-semibold text-primary hover:text-primary-hover hover:underline transition-colors"
-          >
-            Mark all as read
-          </button>
-        </div>
-      )}
       <div className="divide-y divide-border">
         {notifications.map((n) => (
-        <div
+        <button
+          type="button"
           key={n.id}
-          onMouseEnter={() => n.unread && onMarkAsRead(n.id)}
-          className={`p-4 md:px-6 flex items-start justify-between group motion-safe:transition-colors ${
+          onClick={() => n.unread && onMarkAsRead(n.id)}
+          className={`w-full text-left p-4 md:px-6 flex items-start justify-between group motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
             n.unread ? 'bg-primary-subtle hover:bg-primary-subtle/80' : 'bg-card hover:bg-input'
           }`}
         >
@@ -58,22 +44,7 @@ export default function AdminNotificationsList({ notifications, onMarkAsRead, on
               <span className="text-xs text-secondary mt-1 block">{n.time}</span>
             </div>
           </div>
-          <button
-            onClick={async () => {
-              const ok = await confirm({
-                title: 'Delete Notification',
-                message: 'Delete this notification?',
-                type: 'danger',
-                confirmText: 'Delete',
-              });
-              if (ok) onDelete(n.id);
-            }}
-            className="text-secondary hover:text-danger p-2 rounded-md hover:bg-danger-bg opacity-100 lg:opacity-0 lg:group-hover:opacity-100 motion-safe:transition-all focus:opacity-100"
-            aria-label="Delete notification"
-          >
-            <X size={18} />
-          </button>
-        </div>
+        </button>
       ))}
     </div>
     </div>

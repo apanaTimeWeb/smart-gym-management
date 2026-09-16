@@ -7,7 +7,7 @@ import { useAdminBranchesQueries } from '@/app/admin/branches/branches_context/u
 import { AdminSearchableDropdown } from '@/app/admin/admin_components/AdminShared/AdminSearchableDropdown';
 import { MEMBER_STATUS_OPTIONS, EXPIRY_FILTER_OPTIONS } from '@/app/admin/members/members_utils/AdminMembersSharedConstants';
 import type { MemberStatus } from '@/app/admin/members/members_types/AdminMembersTypes';
-import type { Branch } from '@/app/admin/branches/branches_types/branches_types';
+import type { Branch } from '@/app/admin/branches/branches_types/AdminBranchesTypes';
 
 export default function AdminMembersToolbar() {
   const { search, setSearch, statusFilter, setStatusFilter, branchFilter, setBranchFilter, expiryFilter, setExpiryFilter, genderFilter, setGenderFilter, planFilter, setPlanFilter } = useAdminMembersStore();
@@ -81,10 +81,10 @@ export default function AdminMembersToolbar() {
         />
       </div>
       <div className="flex gap-2 ml-auto">
-        <button className="flex items-center gap-2 px-4 py-2 bg-input border border-border rounded-xl text-sm font-semibold hover:bg-border transition-colors">
+        <button className="flex items-center gap-2 px-4 py-2 bg-input border border-border rounded-xl text-sm font-semibold hover:bg-border motion-safe:transition-colors">
           <Download size={16} /> CSV
         </button>
-        <button className="flex items-center gap-2 px-4 py-2 bg-input border border-border rounded-xl text-sm font-semibold hover:bg-border transition-colors">
+        <button className="flex items-center gap-2 px-4 py-2 bg-input border border-border rounded-xl text-sm font-semibold hover:bg-border motion-safe:transition-colors">
           <FileText size={16} /> PDF
         </button>
       </div>

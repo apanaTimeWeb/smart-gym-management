@@ -11,7 +11,7 @@ import { useAdminPlansStore } from '@/app/admin/plans/plans_store/useAdminPlansS
 import { TIERS, PlanSchema, type PlanFormValues, EMPTY_PLAN_FORM } from '@/app/admin/plans/plans_utils/AdminPlansSharedConstants';
 
 export default function AdminPlansModal() {
-  const { plans, fetchState, saving, search, setSearch, currentPage, setCurrentPage, loadPlans, openAdd, openEdit, savePlan, deletePlan } = useAdminPlansLogic();
+  const { plans, status, saving, search, setSearch, currentPage, setCurrentPage, loadPlans, openAdd, openEdit, savePlan, deletePlan } = useAdminPlansLogic();
   const { showModal, setShowModal, editId, form, setForm } = useAdminPlansStore();
 
   const { register, handleSubmit, reset, control, formState: { errors } } = useForm<PlanFormValues>({
@@ -27,7 +27,7 @@ export default function AdminPlansModal() {
   if (!showModal) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/60 z-40 flex items-center justify-center p-4">
+    <div className="fixed inset-0 bg-overlay z-40 flex items-center justify-center p-4">
       <div className="bg-card rounded-2xl shadow-2xl shadow-black/50 w-full max-w-lg max-h-full overflow-y-auto border border-border">
         <div className="sticky top-0 bg-card px-6 py-4 border-b border-border flex items-center justify-between">
           <h3 className="text-lg font-bold text-primary">
@@ -36,7 +36,7 @@ export default function AdminPlansModal() {
           <button
             type="button"
             onClick={() => setShowModal(false)}
-            className="p-2 rounded-lg hover:bg-primary-subtle text-secondary transition-all duration-200"
+            className="p-2 rounded-lg hover:bg-primary-subtle text-secondary motion-safe:transition-all motion-safe:duration-200"
             aria-label="Close modal"
           >
             <X size={18} />
@@ -50,7 +50,7 @@ export default function AdminPlansModal() {
                 type="text"
                 placeholder="e.g. Gold Plan"
                 {...register('name')}
-                className={`w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-colors ${
+                className={`w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary motion-safe:transition-colors ${
                   errors.name ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
                 }`}
               />
@@ -90,7 +90,7 @@ export default function AdminPlansModal() {
                   min="0"
                   onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+') e.preventDefault(); }}
                   {...register(f.key as keyof PlanFormValues)}
-                  className={`w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-colors ${
+                  className={`w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary motion-safe:transition-colors ${
                     errors[f.key as keyof PlanFormValues] ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
                   }`}
                 />
@@ -106,7 +106,7 @@ export default function AdminPlansModal() {
               rows={5}
               placeholder={"Gym Access (6am - 10pm)\nLocker Access\nFitness Assessment"}
               {...register('features')}
-              className={`w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 resize-none bg-input text-primary transition-colors ${
+              className={`w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 resize-none bg-input text-primary motion-safe:transition-colors ${
                 errors.features ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
               }`}
             />
@@ -116,14 +116,14 @@ export default function AdminPlansModal() {
             <button
               type="button"
               onClick={() => setShowModal(false)}
-              className="flex-1 py-2.5 border border-border rounded-xl text-sm font-medium text-primary hover:bg-primary-subtle transition-all duration-200 active:scale-95"
+              className="flex-1 py-2.5 border border-border rounded-xl text-sm font-medium text-primary hover:bg-primary-subtle motion-safe:transition-all motion-safe:duration-200 motion-safe:active:scale-95"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={saving}
-              className="flex-1 py-2.5 rounded-xl text-sm font-bold text-white bg-primary hover:bg-primary-hover flex items-center justify-center gap-2 disabled:opacity-70 transition-all duration-200 active:scale-95"
+              className="flex-1 py-2.5 rounded-xl text-sm font-bold text-primary-foreground bg-primary hover:bg-primary-hover flex items-center justify-center gap-2 disabled:opacity-70 motion-safe:transition-all motion-safe:duration-200 motion-safe:active:scale-95"
             >
               {saving
                 ? <Loader2 className="w-4 h-4 motion-safe:animate-spin" />

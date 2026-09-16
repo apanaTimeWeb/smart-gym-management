@@ -5,7 +5,7 @@ import { CheckCircle, X, Building2, Clock } from 'lucide-react';
 import { useAdminGymHealthAlertsLogic } from '@/app/admin/gym-health-alerts/gym_health_alerts_context/useAdminGymHealthAlertsLogic';
 import { AdminTableSkeleton } from '@/app/admin/admin_components/AdminShared/AdminTableSkeleton';
 import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
-import type { AlertSeverity, AlertType } from '@/app/admin/gym-health-alerts/gym_health_alerts_types/gym_health_alerts_types';
+import type { AlertSeverity, AlertType } from '@/app/admin/gym-health-alerts/gym_health_alerts_types/AdminGymHealthAlertsTypes';
 
 const SEVERITY_STYLES: Record<AlertSeverity, string> = {
   critical: 'bg-danger-bg text-danger',
@@ -25,9 +25,9 @@ const TYPE_LABELS: Record<AlertType, string> = {
 const HEADERS = ['Gym', 'Alert', 'Type', 'Severity', 'Metric', 'Threshold', 'Detected', 'Status', 'Actions'];
 
 export default function AdminGymHealthAlertsTable() {
-  const { alerts, fetchState, resolveAlert, dismissAlert, snoozeAlert, currentPage, setCurrentPage, totalPages, totalItems } = useAdminGymHealthAlertsLogic();
+  const { alerts, status, resolveAlert, dismissAlert, currentPage, setCurrentPage, totalPages, totalItems } = useAdminGymHealthAlertsLogic();
 
-  if (fetchState === 'loading') return <AdminTableSkeleton rows={5} cols={HEADERS.length} />;
+  if (status === 'pending') return <AdminTableSkeleton rows={5} cols={HEADERS.length} />;
 
   return (
     <div className="bg-card rounded-xl border border-border overflow-hidden">
@@ -86,7 +86,7 @@ export default function AdminGymHealthAlertsTable() {
                   )}
                 </td>
                 <td className="px-4 py-3">
-                  <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 motion-safe:transition-opacity">
+                  <div className="flex items-center gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 motion-safe:transition-opacity">
                     {!alert.isResolved && (
                       <>
                         <button
@@ -95,13 +95,6 @@ export default function AdminGymHealthAlertsTable() {
                           aria-label="Mark as resolved"
                         >
                           <CheckCircle size={15} />
-                        </button>
-                        <button
-                          onClick={() => snoozeAlert(alert.id, alert.title)}
-                          className="p-1.5 rounded-lg hover:bg-warning-bg text-secondary hover:text-warning motion-safe:transition-colors"
-                          aria-label="Snooze alert"
-                        >
-                          <Clock size={15} />
                         </button>
                       </>
                     )}

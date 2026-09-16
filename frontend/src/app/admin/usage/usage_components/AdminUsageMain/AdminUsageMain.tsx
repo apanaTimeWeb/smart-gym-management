@@ -26,7 +26,7 @@ export default function AdminUsageMain() {
       <div className="p-6 space-y-6">
         {status === 'pending' && !data ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4" aria-label="Loading usage data">
-            {Array.from({ length: 6 }, (_, index) => <div key={index} className="h-28 rounded-xl bg-skeleton-base motion-safe:animate-pulse" />)}
+            {['usage-1','usage-2','usage-3','usage-4','usage-5','usage-6'].map((skeletonId) => <div key={skeletonId} className="h-28 rounded-xl bg-skeleton-base motion-safe:animate-pulse" />)}
           </div>
         ) : null}
 
@@ -50,7 +50,7 @@ export default function AdminUsageMain() {
             <button
               onClick={() => void refresh()}
               disabled={status === 'pending'}
-              className="flex items-center gap-2 px-4 py-2 border border-border rounded-xl text-sm font-medium text-secondary hover:text-foreground hover:bg-input motion-safe:transition-all motion-safe:duration-200 active:scale-95 disabled:opacity-50"
+              className="flex items-center gap-2 px-4 py-2 border border-border rounded-xl text-sm font-medium text-secondary hover:text-foreground hover:bg-input motion-safe:transition-all motion-safe:duration-200 motion-safe:active:scale-95 disabled:opacity-50"
             >
               <RefreshCw size={14} className={status === 'pending' ? 'motion-safe:animate-spin' : ''} />
               Refresh

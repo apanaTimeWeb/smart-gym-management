@@ -2,7 +2,7 @@
 // RESPONSIBILITY: Renders a global alert banner if the gym tenant is nearing or has reached their subscription usage limits.
 
 import { useState, useEffect } from 'react';
-import { usageApi } from '@/app/admin/usage/usage_api/usage_api';
+import { usageApi } from '@/app/admin/usage/usage_api/AdminUsageApi';
 import type { AdminUsageData as UsageData } from '@/app/admin/usage/usage_types/AdminUsageTypes';
 import { AlertTriangle, X } from 'lucide-react';
 
@@ -55,7 +55,7 @@ export default function AdminUsageAlert() {
       </div>
       <button 
         onClick={() => setIsVisible(false)}
-        className="p-1 rounded-md hover:bg-black/10 motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+        className="p-1 rounded-md hover:bg-foreground/10 motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
         aria-label="Dismiss alert"
       >
         <X size={18} className="text-secondary hover:text-foreground" />

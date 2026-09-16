@@ -31,7 +31,7 @@ export default function AdminBlacklistToolbar() {
       </div>
       <button
         onClick={openAdd}
-        className="flex items-center gap-2 px-4 py-2 bg-danger text-white rounded-lg text-sm font-semibold hover:opacity-90 motion-safe:transition-opacity active:scale-95 whitespace-nowrap"
+        className="flex items-center gap-2 px-4 py-2 bg-danger text-primary-foreground rounded-lg text-sm font-semibold hover:opacity-90 motion-safe:transition-opacity motion-safe:active:scale-95 whitespace-nowrap"
       >
         <Plus size={16} />
         Blacklist Member

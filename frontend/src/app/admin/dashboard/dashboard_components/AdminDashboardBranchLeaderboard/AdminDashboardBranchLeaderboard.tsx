@@ -1,4 +1,5 @@
 "use client";
+import { formatCurrency } from '@/lib/formatters';
 // RESPONSIBILITY: Renders/orchestrates AdminDashboardBranchLeaderboard for the admin module; UI composition stays here and business/API logic remains in dedicated hooks and APIs.
 import { useAdminDashboardLogic } from '@/app/admin/dashboard/dashboard_context/useAdminDashboardLogic';
 import { useAdminGlobalStore } from '@/app/admin/admin_store/useAdminGlobalStore';
@@ -38,7 +39,7 @@ export default function AdminDashboardBranchLeaderboard() {
               return (
               <tr 
                 key={branch.id} 
-                className={`transition-colors group ${isSelected ? 'bg-primary/10 border-l-2 border-primary' : 'hover:bg-card/5'}`}
+                className={`motion-safe:transition-colors group ${isSelected ? 'bg-primary/10 border-l-2 border-primary' : 'hover:bg-card/5'}`}
               >
                 <td className="py-3 pl-2">
                   <div className="flex items-center gap-3">
@@ -48,7 +49,7 @@ export default function AdminDashboardBranchLeaderboard() {
                 </td>
                 <td className="py-3 text-right">
                   <span className="text-sm font-bold text-success">
-                    {branch.revenue.toLocaleString('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 })}
+                    {formatCurrency(branch.revenue)}
                   </span>
                 </td>
                 <td className="py-3 text-right">

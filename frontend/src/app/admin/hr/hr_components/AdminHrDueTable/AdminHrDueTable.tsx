@@ -1,4 +1,5 @@
 "use client";
+import { formatCurrency } from '@/lib/formatters';
 // RESPONSIBILITY: Renders/orchestrates AdminHrDueTable for the admin module; UI composition stays here and business/API logic remains in dedicated hooks and APIs.
 import { useState } from 'react';
 import { useHrContext } from '@/app/admin/hr/hr_context/AdminHrContext';
@@ -33,7 +34,7 @@ export default function AdminHrDueTable() {
             <h4 className="font-semibold text-warning text-sm">Outstanding Dues</h4>
             <p className="text-sm text-secondary mt-1">
               You have {staffWithDues.length} staff members with pending salary dues. Total outstanding: 
-              <strong className="ml-1 text-foreground">₹{staffWithDues.reduce((sum, s) => sum + (s.currentDue || 0), 0).toLocaleString('en-IN')}</strong>
+              <strong className="ml-1 text-foreground">{formatCurrency(staffWithDues.reduce((sum, s) => sum + (s.currentDue || 0), 0))}</strong>
             </p>
           </div>
         </div>
@@ -57,14 +58,14 @@ export default function AdminHrDueTable() {
             >
               <option value="" disabled>Select Staff</option>
               {staff.map(s => (
-                <option key={s.id} value={s.id}>{s.name} ({s.role}) - Due: ₹{s.currentDue || 0}</option>
+                <option key={s.id} value={s.id}>{s.name} ({s.role}) - Due: {formatCurrency(s.currentDue || 0)}</option>
               ))}
             </select>
           </div>
 
           {selectedStaff && (
             <div className="p-4 bg-hr-highlight/10 rounded-lg border border-hr-highlight/30 text-sm">
-              <p><strong>Current Due Amount:</strong> ₹{selectedStaff.currentDue || 0}</p>
+              <p><strong>Current Due Amount:</strong> {formatCurrency(selectedStaff.currentDue || 0)}</p>
               <p className="text-secondary text-xs mt-1">This is the unpaid portion of past payrolls.</p>
             </div>
           )}

@@ -11,7 +11,7 @@ import {
   ANNOUNCEMENT_PRIORITY_OPTIONS,
   ANNOUNCEMENT_GYM_OPTIONS,
 } from '@/app/admin/announcements/announcements_utils/AdminAnnouncementsSharedConstants';
-import type { AnnouncementStatus, AnnouncementPriority } from '@/app/admin/announcements/announcements_types/announcements_types';
+import type { AnnouncementStatus, AnnouncementPriority } from '@/app/admin/announcements/announcements_types/AdminAnnouncementsTypes';
 
 const STATUS_STYLES: Record<AnnouncementStatus, string> = {
   active:    'bg-success-bg text-success border-success/30',
@@ -28,7 +28,7 @@ const PRIORITY_STYLES: Record<AnnouncementPriority, string> = {
 
 export default function AdminAnnouncementsTable() {
   const {
-    paginated, fetchState, openCreate, openEdit,
+    paginated, status, openCreate, openEdit,
     deleteAnnouncement, togglePin,
     currentPage, setCurrentPage, totalPages, totalItems,
   } = useAdminAnnouncementsLogic();
@@ -42,9 +42,9 @@ export default function AdminAnnouncementsTable() {
 
   const hasFilters = search || statusFilter !== 'all' || priorityFilter !== 'all' || gymFilter !== 'all';
 
-  if (fetchState === 'loading') return <AdminTableSkeleton rows={6} cols={7} />;
+  if (status === 'pending') return <AdminTableSkeleton rows={6} cols={7} />;
 
-  if (fetchState === 'error') return (
+  if (status === 'error') return (
     <div className="bg-card border border-border rounded-xl p-10 text-center">
       <Megaphone size={32} className="mx-auto mb-3 text-danger opacity-60" />
       <p className="text-sm text-danger font-medium">Failed to load announcements</p>
@@ -69,7 +69,7 @@ export default function AdminAnnouncementsTable() {
           </div>
           <button
             onClick={openCreate}
-            className="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-primary-hover text-black rounded-xl text-sm font-semibold motion-safe:transition-colors shrink-0"
+            className="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-primary-hover text-primary-foreground rounded-xl text-sm font-semibold motion-safe:transition-colors shrink-0"
           >
             <Plus size={15} /> Send Announcement
           </button>
@@ -132,7 +132,7 @@ export default function AdminAnnouncementsTable() {
                     <p className="text-sm text-secondary font-medium">No announcements found</p>
                     <button
                       onClick={openCreate}
-                      className="mt-3 px-4 py-2 bg-primary hover:bg-primary-hover text-black rounded-xl text-sm font-semibold motion-safe:transition-colors"
+                      className="mt-3 px-4 py-2 bg-primary hover:bg-primary-hover text-primary-foreground rounded-xl text-sm font-semibold motion-safe:transition-colors"
                     >
                       Send First Announcement
                     </button>

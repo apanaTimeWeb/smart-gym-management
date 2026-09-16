@@ -1,142 +1,77 @@
 "use client";
-// DATA FLOW: feature API/schema → hook/context → useAdminAnnouncementsLogic consumers.
-// RESPONSIBILITY: Business logic hook for Announcements — queries, mutations, filtering.
 
+// RESPONSIBILITY: Coordinates Admin Announcements query/mutation state, URL-shareable filters, and pagination.
+// DATA FLOW: AdminAnnouncementsApi → TanStack Query → useAdminAnnouncementsLogic → AdminAnnouncementsMain/table/modal
 import { useCallback } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
-import { announcementsApi } from '@/app/admin/announcements/announcements_api/announcements_api';
+import { announcementsApi } from '@/app/admin/announcements/announcements_api/AdminAnnouncementsApi';
 import { useAdminAnnouncementsStore } from '@/app/admin/announcements/announcements_store/useAdminAnnouncementsStore';
 import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/useAdminConfirm';
+import { useAdminUrlQuerySync } from '@/app/admin/admin_utils/useAdminUrlQuerySync';
 import { ANNOUNCEMENTS_ITEMS_PER_PAGE, EMPTY_ANNOUNCEMENT_FORM } from '@/app/admin/announcements/announcements_utils/AdminAnnouncementsSharedConstants';
-import type { Announcement, AnnouncementFormValues, FetchState } from '@/app/admin/announcements/announcements_types/announcements_types';
+import type { Announcement, AnnouncementFormValues } from '@/app/admin/announcements/announcements_types/AdminAnnouncementsTypes';
 
 export function useAdminAnnouncementsLogic() {
   const { confirm } = useAdminConfirm();
   const qc = useQueryClient();
-  const {
-    search, statusFilter, priorityFilter, gymFilter,
-    currentPage, setCurrentPage,
-    showModal, setShowModal,
-    editingAnnouncement, setEditingAnnouncement,
-    setForm,
-  } = useAdminAnnouncementsStore();
+  const store = useAdminAnnouncementsStore();
+  const { search, statusFilter, priorityFilter, gymFilter, currentPage } = store;
+  useAdminUrlQuerySync([
+    { key: 'search', value: search, defaultValue: '', setValue: store.setSearch },
+    { key: 'status', value: statusFilter, defaultValue: 'all', setValue: store.setStatusFilter },
+    { key: 'priority', value: priorityFilter, defaultValue: 'all', setValue: store.setPriorityFilter },
+    { key: 'gym', value: gymFilter, defaultValue: 'all', setValue: store.setGymFilter },
+    { key: 'page', value: currentPage, defaultValue: 1, setValue: (value) => store.setCurrentPage(Math.max(1, Number(value) || 1)) },
+  ]);
 
-  const { data: announcements = [], isLoading, isError } = useQuery({
-    queryKey: ['adminAnnouncements'],
-    queryFn: () => announcementsApi.fetchAnnouncements().then((r) => r.data || []),
+  const queryParams = {
+    page: currentPage,
+    limit: ANNOUNCEMENTS_ITEMS_PER_PAGE,
+    ...(search ? { search } : {}),
+    ...(statusFilter !== 'all' ? { status: statusFilter as Announcement['status'] } : {}),
+    ...(priorityFilter !== 'all' ? { priority: priorityFilter as Announcement['priority'] } : {}),
+    ...(gymFilter !== 'all' ? { gymId: gymFilter } : {}),
+  };
+  const announcementsQuery = useQuery({
+    queryKey: ['admin', 'announcements', 'list', queryParams],
+    queryFn: () => announcementsApi.fetchAnnouncements(queryParams),
     staleTime: 1000 * 60 * 2,
   });
-
   const { data: kpis } = useQuery({
-    queryKey: ['adminAnnouncementsKPIs'],
-    queryFn: () => announcementsApi.fetchKPIs().then((r) => r.data || null),
-    staleTime: 1000 * 60 * 5,
+    queryKey: ['admin', 'announcements', 'kpis'],
+    queryFn: () => announcementsApi.fetchKPIs(), staleTime: 1000 * 60 * 5,
   });
-
-  const fetchState: FetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
-
-  const filtered = announcements.filter((a: Announcement) => {
-    const q = search.toLowerCase();
-    const matchSearch = !search || a.title.toLowerCase().includes(q) || a.body.toLowerCase().includes(q);
-    const matchStatus = statusFilter === 'all' || a.status === statusFilter;
-    const matchPriority = priorityFilter === 'all' || a.priority === priorityFilter;
-    const matchGym = gymFilter === 'all' || a.gymIds.includes(gymFilter) || a.gymIds.includes('all');
-    return matchSearch && matchStatus && matchPriority && matchGym;
-  });
-
-  const totalPages = Math.max(1, Math.ceil(filtered.length / ANNOUNCEMENTS_ITEMS_PER_PAGE));
-  const paginated = filtered.slice((currentPage - 1) * ANNOUNCEMENTS_ITEMS_PER_PAGE, currentPage * ANNOUNCEMENTS_ITEMS_PER_PAGE);
+  const response = announcementsQuery.data;
+  const paginated = response?.data ?? [];
+  const totalItems = response?.meta?.total ?? paginated.length;
+  const totalPages = Math.max(1, response?.meta?.totalPages ?? Math.ceil(totalItems / ANNOUNCEMENTS_ITEMS_PER_PAGE));
 
   const createMutation = useMutation({
     mutationFn: (payload: AnnouncementFormValues) => announcementsApi.createAnnouncement(payload),
-    onSuccess: () => {
-      toast.success('Announcement created');
-      setShowModal(false);
-      qc.invalidateQueries({ queryKey: ['adminAnnouncements'] });
-      qc.invalidateQueries({ queryKey: ['adminAnnouncementsKPIs'] });
-    },
-    onError: (err: Error) => toast.error(err.message ?? 'Failed to create announcement'),
+    onSuccess: (response) => { toast.success(response.message, { id: 'admin-success-33383590' }); store.setShowModal(false); void qc.invalidateQueries({ queryKey: ['admin', 'announcements'] }); },
+    onError: (err) => toast.error(err instanceof Error ? err.message : 'Announcement creation failed.', { id: 'admin-error-6481815840' }),
   });
-
   const updateMutation = useMutation({
-    mutationFn: ({ id, payload }: { id: string; payload: AnnouncementFormValues }) =>
-      announcementsApi.updateAnnouncement(id, payload),
-    onSuccess: () => {
-      toast.success('Announcement updated');
-      setShowModal(false);
-      setEditingAnnouncement(null);
-      qc.invalidateQueries({ queryKey: ['adminAnnouncements'] });
-    },
-    onError: (err: Error) => toast.error(err.message ?? 'Failed to update announcement'),
+    mutationFn: ({ id, payload }: { id: string; payload: AnnouncementFormValues }) => announcementsApi.updateAnnouncement(id, payload),
+    onSuccess: (response) => { toast.success(response.message, { id: 'admin-success-c151e3e9' }); store.setShowModal(false); store.setEditingAnnouncement(null); void qc.invalidateQueries({ queryKey: ['admin', 'announcements'] }); },
+    onError: (err) => toast.error(err instanceof Error ? err.message : 'Announcement update failed.', { id: 'admin-error-72b190472c' }),
   });
-
   const deleteMutation = useMutation({
     mutationFn: (id: string) => announcementsApi.deleteAnnouncement(id),
-    onSuccess: () => {
-      toast.success('Announcement deleted');
-      qc.invalidateQueries({ queryKey: ['adminAnnouncements'] });
-      qc.invalidateQueries({ queryKey: ['adminAnnouncementsKPIs'] });
-    },
-    onError: (err: Error) => toast.error(err.message ?? 'Failed to delete announcement'),
+    onSuccess: (response) => { toast.success(response.message, { id: 'admin-success-05945f3e' }); void qc.invalidateQueries({ queryKey: ['admin', 'announcements'] }); },
+    onError: (err) => toast.error(err instanceof Error ? err.message : 'Announcement deletion failed.', { id: 'admin-error-f6f10488f8' }),
   });
-
   const pinMutation = useMutation({
     mutationFn: (id: string) => announcementsApi.togglePin(id),
-    onSuccess: (res) => {
-      toast.success(res.data?.isPinned ? 'Pinned' : 'Unpinned');
-      qc.invalidateQueries({ queryKey: ['adminAnnouncements'] });
-    },
-    onError: (err: Error) => toast.error(err.message ?? 'Failed to update pin status'),
+    onSuccess: (response) => { toast.success(response.message, { id: 'admin-success-d9cfd2a7' }); void qc.invalidateQueries({ queryKey: ['admin', 'announcements', 'list'] }); },
+    onError: (err) => toast.error(err instanceof Error ? err.message : 'Announcement pin update failed.', { id: 'admin-error-01a0fd9c95' }),
   });
 
-  const openCreate = useCallback(() => {
-    setEditingAnnouncement(null);
-    setForm(EMPTY_ANNOUNCEMENT_FORM);
-    setShowModal(true);
-  }, [setEditingAnnouncement, setForm, setShowModal]);
+  const openCreate = useCallback(() => { store.setEditingAnnouncement(null); store.setForm(EMPTY_ANNOUNCEMENT_FORM); store.setShowModal(true); }, [store]);
+  const openEdit = useCallback((announcement: Announcement) => { store.setEditingAnnouncement(announcement); store.setForm({ title: announcement.title, body: announcement.body, priority: announcement.priority, audience: announcement.audience, gymIds: announcement.gymIds, publishedAt: announcement.publishedAt.slice(0, 16), expiresAt: announcement.expiresAt.slice(0, 16), isPinned: announcement.isPinned }); store.setShowModal(true); }, [store]);
+  const saveAnnouncement = useCallback((data: AnnouncementFormValues) => { if (store.editingAnnouncement) updateMutation.mutate({ id: store.editingAnnouncement.id, payload: data }); else createMutation.mutate(data); }, [createMutation, store.editingAnnouncement, updateMutation]);
+  const deleteAnnouncement = useCallback(async (id: string, _title: string) => { const ok = await confirm({ title: 'Delete Announcement', message: 'Delete this announcement? This cannot be undone.', confirmText: 'Delete', type: 'danger' }); if (ok) deleteMutation.mutate(id); }, [confirm, deleteMutation]);
 
-  const openEdit = useCallback((a: Announcement) => {
-    setEditingAnnouncement(a);
-    setForm({
-      title: a.title,
-      body: a.body,
-      priority: a.priority,
-      audience: a.audience,
-      gymIds: a.gymIds,
-      publishedAt: a.publishedAt.slice(0, 16),
-      expiresAt: a.expiresAt.slice(0, 16),
-      isPinned: a.isPinned,
-    });
-    setShowModal(true);
-  }, [setEditingAnnouncement, setForm, setShowModal]);
-
-  const saveAnnouncement = useCallback((data: AnnouncementFormValues) => {
-    if (editingAnnouncement) {
-      updateMutation.mutate({ id: editingAnnouncement.id, payload: data });
-    } else {
-      createMutation.mutate(data);
-    }
-  }, [editingAnnouncement, createMutation, updateMutation]);
-
-  const deleteAnnouncement = useCallback(async (id: string, _title: string) => {
-    const ok = await confirm({
-      title: 'Delete Announcement',
-      message: 'Delete this announcement? This cannot be undone.',
-      confirmText: 'Delete',
-      type: 'danger',
-    });
-    if (!ok) return;
-    deleteMutation.mutate(id);
-  }, [confirm, deleteMutation]);
-
-  const togglePin = useCallback((id: string) => { pinMutation.mutate(id); }, [pinMutation]);
-
-  return {
-    paginated, filtered, fetchState, kpis,
-    showModal, setShowModal, editingAnnouncement,
-    openCreate, openEdit, saveAnnouncement, deleteAnnouncement, togglePin,
-    saving: createMutation.isPending || updateMutation.isPending,
-    currentPage, setCurrentPage, totalPages, totalItems: filtered.length,
-  };
+  return { paginated, filtered: paginated, status: announcementsQuery.status, kpis: kpis?.data ?? null, showModal: store.showModal, setShowModal: store.setShowModal, editingAnnouncement: store.editingAnnouncement, openCreate, openEdit, saveAnnouncement, deleteAnnouncement, togglePin: (id: string) => pinMutation.mutate(id), saving: createMutation.isPending || updateMutation.isPending, currentPage, setCurrentPage: store.setCurrentPage, totalPages, totalItems };
 }

@@ -10,10 +10,10 @@ export default function AdminBlacklistKPIs() {
   if (!kpis) return null;
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-      <AdminStatCard title="Total Blacklisted" value={kpis.totalBlacklisted} icon={Ban} iconBg="rgba(239,68,68,0.15)" iconColor="var(--danger)" />
-      <AdminStatCard title="Global Bans" value={kpis.globalBans} change="across all gyms" changeType="neutral" icon={Globe} iconBg="rgba(239,68,68,0.15)" iconColor="var(--danger)" />
-      <AdminStatCard title="Gym-Specific Bans" value={kpis.gymSpecificBans} change="targeted branches" changeType="neutral" icon={Building2} iconBg="rgba(245,158,11,0.15)" iconColor="var(--warning)" />
-      <AdminStatCard title="Added This Month" value={kpis.addedThisMonth} icon={CalendarPlus} iconBg="rgba(250,204,21,0.15)" iconColor="var(--primary)" />
+      <AdminStatCard title="Total Blacklisted" value={kpis.totalBlacklisted} icon={Ban} iconBg="bg-danger/10" iconColor="text-danger" />
+      <AdminStatCard title="Global Bans" value={kpis.globalBans} change="across all gyms" changeType="neutral" icon={Globe} iconBg="bg-danger/10" iconColor="text-danger" />
+      <AdminStatCard title="Gym-Specific Bans" value={kpis.gymSpecificBans} change="targeted branches" changeType="neutral" icon={Building2} iconBg="bg-warning/10" iconColor="text-warning" />
+      <AdminStatCard title="Added This Month" value={kpis.addedThisMonth} icon={CalendarPlus} iconBg="bg-primary/10" iconColor="text-primary" />
     </div>
   );
 }

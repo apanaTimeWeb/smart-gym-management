@@ -30,7 +30,7 @@ export default function AdminDashboardExpiringWidget() {
           </div>
         </div>
         {critical.length > 0 && (
-          <span className="bg-danger text-white text-xs font-bold px-2 py-0.5 rounded-full">
+          <span className="bg-danger text-primary-foreground text-xs font-bold px-2 py-0.5 rounded-full">
             {critical.length} This Week
           </span>
         )}

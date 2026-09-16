@@ -1,9 +1,10 @@
 "use client";
+import { formatCurrency } from '@/lib/formatters';
 // RESPONSIBILITY: Invoice history table with status badges and PDF download.
 
 import { FileText, Download, CheckCircle, Clock, XCircle, RotateCcw } from 'lucide-react';
 import { useAdminSubscriptionsLogic } from '@/app/admin/subscriptions/subscriptions_context/useAdminSubscriptionsLogic';
-import type { InvoiceStatus } from '@/app/admin/subscriptions/subscriptions_types/subscriptions_types';
+import type { InvoiceStatus } from '@/app/admin/subscriptions/subscriptions_types/AdminSubscriptionsTypes';
 
 const STATUS_CONFIG: Record<InvoiceStatus, { label: string; bg: string; text: string; icon: React.ReactNode }> = {
   paid:     { label: 'Paid',     bg: 'bg-success-bg', text: 'text-success', icon: <CheckCircle size={12} /> },
@@ -14,7 +15,7 @@ const STATUS_CONFIG: Record<InvoiceStatus, { label: string; bg: string; text: st
 
 export default function AdminSubscriptionsInvoices() {
   const { invoices } = useAdminSubscriptionsLogic();
-  const fmt = (v: number) => `₹${v.toLocaleString('en-IN')}`;
+  const fmt = (v: number) => formatCurrency(v);
 
   return (
     <div className="bg-card border border-border rounded-xl overflow-hidden">

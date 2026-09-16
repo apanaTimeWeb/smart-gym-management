@@ -1,10 +1,6 @@
 // RESPONSIBILITY: Owns the complete MSW transport contract for the Admin module.
 // DATA FLOW: Admin API client → MSW handler → AdminMockFixtures → TanStack Query/UI
 import { http, HttpResponse } from 'msw';
-import type { AuditKPIData, AuditLog } from '@/app/admin/audit_logs/audit_types/audit_types';
-import type { BlacklistedMember, BlacklistKPIData } from '@/app/admin/blacklist/blacklist_types/blacklist_types';
-import type { Coupon, CouponsKPIData } from '@/app/admin/coupons/coupons_types/coupons_types';
-import type { ExportJob, DataExportKPIData } from '@/app/admin/data-export/data_export_types/data_export_types';
 import {
   MOCK_ANNOUNCEMENTS,
   MOCK_ANNOUNCEMENT_KPI,
@@ -33,66 +29,130 @@ import {
   MOCK_ADMIN_ALL_MEMBERSHIPS,
   MOCK_ADMIN_SETTINGS,
   MOCK_ADMIN_USAGE_DATA,
+  MOCK_ADMIN_NOTIFICATIONS,
+  MOCK_ADMIN_EXPENSES,
+  MOCK_PAYOUTS,
+  MOCK_PNL,
+  MOCK_PAYOUTS_KPI,
+  MOCK_AUDIT_LOGS,
+  MOCK_AUDIT_KPI,
+  MOCK_BLACKLIST,
+  MOCK_BLACKLIST_KPI,
+  MOCK_COUPONS,
+  MOCK_EXPORT_JOBS,
+  MOCK_DATA_EXPORT_KPI,
+  MOCK_GYM_HEALTH_ALERTS,
+  MOCK_GYM_HEALTH_KPI,
+  MOCK_ADMIN_BRANCHES,
+  MOCK_CURRENT_SUBSCRIPTION,
+  MOCK_SAAS_PLANS,
+  MOCK_INVOICES,
+  MOCK_PAYMENT_METHODS,
+  MOCK_SUBSCRIPTION_KPI,
+  MOCK_PERMISSIONS_DATA,
 } from '@/app/admin/admin_mocks/fixtures/AdminMockFixtures';
 
 const ok = <T>(data: T, message = 'Success') =>
   HttpResponse.json({ success: true, message, data, meta: { total: Array.isArray(data) ? data.length : 1, page: 1, limit: 50, totalPages: 1 } });
 
+const paged = <T>(data: T[], page: number, limit: number, message = 'Success') => {
+  const safeLimit = Math.max(1, limit);
+  const safePage = Math.max(1, page);
+  const start = (safePage - 1) * safeLimit;
+  const pageData = data.slice(start, start + safeLimit);
+  return HttpResponse.json({ success: true, message, data: pageData, meta: { total: data.length, page: safePage, limit: safeLimit, totalPages: Math.max(1, Math.ceil(data.length / safeLimit)) } });
+};
+
 export const adminHandlers = [
-  http.get('*/admin/branches/fetchBranches', () => ok([{ id: 'b1', name: 'Andheri East', city: 'Mumbai', activeMembers: 420, revenue: 185000, trend: 'up' }, { id: 'b2', name: 'Bandra West', city: 'Mumbai', activeMembers: 340, revenue: 142000, trend: 'up' }, { id: 'b3', name: 'Powai', city: 'Mumbai', activeMembers: 220, revenue: 98000, trend: 'flat' }, { id: 'b4', name: 'Thane', city: 'Thane', activeMembers: 180, revenue: 60000, trend: 'down' }])),
+  http.get('*/admin/notifications', ({ request }) => {
+    const url = new URL(request.url);
+    const unreadOnly = url.searchParams.get('read') === 'false';
+    const data = MOCK_ADMIN_NOTIFICATIONS.filter((notification) => unreadOnly ? !notification.read : true);
+    return ok(data);
+  }),
+  http.patch('*/admin/notifications/:id/read', ({ params }) => {
+    const notification = MOCK_ADMIN_NOTIFICATIONS.find((item) => item.id === String(params.id));
+    return ok(notification ? { ...notification, read: true } : null, 'Notification marked as read');
+  }),
+  http.patch('*/admin/notifications/read-all', () => ok(null, 'Notifications marked as read')),
+
+  http.get('*/admin/branches/fetchBranches', () => ok(MOCK_ADMIN_BRANCHES)),
   http.get('*/admin/usage/fetchMyUsage', () => ok(MOCK_ADMIN_USAGE_DATA)),
-  http.get('*/admin/announcements/fetchAnnouncements', () => ok(MOCK_ANNOUNCEMENTS)),
+  http.get('*/admin/announcements/fetchAnnouncements', ({ request }) => {
+    const url = new URL(request.url);
+    const page = Number(url.searchParams.get('page')) || 1;
+    const limit = Number(url.searchParams.get('limit')) || 10;
+    const search = (url.searchParams.get('search') || '').toLowerCase();
+    const status = url.searchParams.get('status');
+    const priority = url.searchParams.get('priority');
+    const gymId = url.searchParams.get('gymId');
+    const filtered = MOCK_ANNOUNCEMENTS.filter((item) => {
+      const matchSearch = !search || item.title.toLowerCase().includes(search) || item.body.toLowerCase().includes(search);
+      const matchStatus = !status || item.status === status;
+      const matchPriority = !priority || item.priority === priority;
+      const matchGym = !gymId || item.gymIds.includes(gymId) || item.gymIds.includes('all');
+      return matchSearch && matchStatus && matchPriority && matchGym;
+    });
+    return paged(filtered, page, limit);
+  }),
   http.get('*/admin/announcements/fetchKPIs', () => ok(MOCK_ANNOUNCEMENT_KPI)),
   http.post('*/admin/announcements/createAnnouncement', () => ok(MOCK_ANNOUNCEMENTS[0]!, 'Announcement created')),
   http.post('*/admin/announcements/updateAnnouncement', () => ok(MOCK_ANNOUNCEMENTS[0]!, 'Announcement updated')),
   http.delete('*/admin/announcements/deleteAnnouncement', () => ok(null, 'Announcement deleted')),
   http.post('*/admin/announcements/togglePin', () => ok(MOCK_ANNOUNCEMENTS[0]!, 'Announcement updated')),
-  http.get('*/admin/audit_logs/fetchLogs', () => ok<AuditLog[]>([
-    { id: 'al1', timestamp: '2026-09-16T09:00:00Z', action: 'Payment recorded', user: 'Admin', branchId: 'b1', details: 'Membership payment recorded for Rahul Sharma', severity: 'medium', ip: '10.0.0.10', module: 'Finance', userAgent: 'Chrome' },
-    { id: 'al2', timestamp: '2026-09-15T13:30:00Z', action: 'Member updated', user: 'Manager', branchId: 'b2', details: 'Updated contact details', severity: 'low', ip: '10.0.0.11', module: 'Members' },
-    { id: 'al3', timestamp: '2026-09-15T11:15:00Z', action: 'Permission change', user: 'Admin', branchId: 'b4', details: 'Disabled reports export for manager role', severity: 'high', ip: '10.0.0.12', module: 'Settings' },
-  ])),
-  http.get('*/admin/audit_logs/fetchKPIs', () => ok<AuditKPIData>({ totalEvents: 1284, highSeverity: 8, mediumSeverity: 64, lowSeverity: 1212, eventsToday: 37, uniqueUsers: 19 })),
-  http.get('*/admin/blacklist/fetchBlacklist', () => ok<BlacklistedMember[]>([
-    { id: 'bl1', memberId: 'm1', memberName: 'Rahul Sharma', memberPhone: '98****1234', memberEmail: 'r***@example.com', reason: 'Repeated policy violations', blacklistedBy: 'Admin', blacklistedAt: '2026-09-10T09:00:00Z', scope: 'global', assignedGyms: [], assignedGymNames: [], isActive: true, history: [] },
-    { id: 'bl2', memberId: 'm9', memberName: 'Arjun Reddy', memberPhone: '97****6789', memberEmail: 'a***@example.com', reason: 'Branch-specific incident', blacklistedBy: 'Manager', blacklistedAt: '2026-09-08T10:00:00Z', scope: 'specific', assignedGyms: ['b4'], assignedGymNames: ['Thane'], isActive: true, history: [] },
-  ])),
-  http.get('*/admin/blacklist/fetchKPIs', () => ok<BlacklistKPIData>({ totalBlacklisted: 2, globalBans: 1, gymSpecificBans: 1, addedThisMonth: 2 })),
+  http.get('*/admin/audit_logs/fetchLogs', () => ok(MOCK_AUDIT_LOGS)),
+  http.get('*/admin/audit_logs/fetchKPIs', () => ok(MOCK_AUDIT_KPI)),
+  http.get('*/admin/blacklist/fetchBlacklist', () => ok(MOCK_BLACKLIST)),
+  http.get('*/admin/blacklist/fetchKPIs', () => ok(MOCK_BLACKLIST_KPI)),
   http.post('*/admin/blacklist/addToBlacklist', () => ok(null, 'Member added to blacklist')),
   http.delete('*/admin/blacklist/removeFromBlacklist', () => ok(null, 'Member removed from blacklist')),
   http.post('*/admin/blacklist/toggleBlacklist', () => ok(null, 'Blacklist status updated')),
   http.post('*/admin/blacklist/propagateToAllBranches', () => ok(null, 'Blacklist propagated')),
-  http.get('*/admin/coupons/fetchCoupons', () => ok<Coupon[]>([
-    { id: 'c1', code: 'WELCOME20', description: 'New member discount', type: 'percentage', value: 20, minOrderAmount: 2000, maxDiscount: 1000, usageLimit: 100, usedCount: 42, assignedGyms: ['b1', 'b2'], assignedGymNames: ['Andheri East', 'Bandra West'], validFrom: '2026-09-01', validUntil: '2026-12-31', status: 'active', createdAt: '2026-08-30' },
-    { id: 'c2', code: 'FLAT500', description: 'Flat 500 discount', type: 'flat', value: 500, minOrderAmount: 5000, maxDiscount: 500, usageLimit: 50, usedCount: 23, assignedGyms: ['b3'], assignedGymNames: ['Powai'], validFrom: '2026-09-01', validUntil: '2026-11-30', status: 'active', createdAt: '2026-08-28' },
-    { id: 'c3', code: 'SUMMER30', description: 'Summer sale discount', type: 'percentage', value: 30, minOrderAmount: 3000, maxDiscount: 1500, usageLimit: 200, usedCount: 200, assignedGyms: [], assignedGymNames: [], validFrom: '2026-04-01', validUntil: '2026-06-30', status: 'expired', createdAt: '2026-03-20' },
-  ])),
+  http.get('*/admin/coupons/fetchCoupons', () => ok(MOCK_COUPONS)),
   http.post('*/admin/coupons/createCoupon', () => ok(null, 'Coupon created')),
   http.post('*/admin/coupons/updateCoupon', () => ok(null, 'Coupon updated')),
   http.delete('*/admin/coupons/deleteCoupon', () => ok(null, 'Coupon deleted')),
   http.post('*/admin/coupons/toggleCoupon', () => ok(null, 'Coupon status updated')),
   http.get('*/admin/dashboard/fetchDashboardStats', () => ok(MOCK_ADMIN_DASHBOARD)),
-  http.get('*/admin/data-export/fetchJobs', () => ok<ExportJob[]>([
-    { id: 'exp1', dataType: 'members', format: 'csv', gymIds: ['b1'], gymNames: ['Andheri East'], dateFrom: '2026-09-01', dateTo: '2026-09-15', status: 'completed', rowCount: 1250, fileSizeKb: 412, createdAt: '2026-09-15T08:00:00Z', completedAt: '2026-09-15T08:02:00Z', createdBy: 'Admin' },
-    { id: 'exp2', dataType: 'payments', format: 'excel', gymIds: ['b1', 'b2'], gymNames: ['Andheri East', 'Bandra West'], dateFrom: '2026-09-01', dateTo: '2026-09-16', status: 'processing', rowCount: 420, createdAt: '2026-09-16T08:00:00Z', createdBy: 'Admin' },
-  ])),
-  http.get('*/admin/data-export/fetchKPIs', () => ok<DataExportKPIData>({ totalExports: 24, totalRowsExported: 18450, lastExportDate: '2026-09-15', pendingJobs: 2 })),
+  http.get('*/admin/data-export/fetchJobs', () => ok(MOCK_EXPORT_JOBS)),
+  http.get('*/admin/data-export/fetchKPIs', () => ok(MOCK_DATA_EXPORT_KPI)),
   http.post('*/admin/data-export/createExport', () => ok({ id: 'exp3', status: 'PROCESSING', fileName: 'new-export.csv' }, 'Export started')),
   http.delete('*/admin/data-export/deleteJob', () => ok(null, 'Export deleted')),
   http.get('*/admin/finance/payments/fetchPayments', () => ok({ payments: MOCK_ADMIN_PAYMENTS, total: MOCK_ADMIN_PAYMENTS.length })),
   http.post('*/admin/finance/payments/createPayment', () => ok(MOCK_ADMIN_PAYMENTS[0]!, 'Payment recorded')),
   http.get('*/admin/finance/summary', () => ok(MOCK_ADMIN_FINANCE_SUMMARY)),
   http.get('*/admin/finance/pnl/comparison', () => ok(MOCK_ADMIN_BRANCH_PNL)),
-  http.get('*/admin/finance/payments/fetchExpenses', () => ok([{ id: 'e1', category: 'Rent', amount: 85000, branch: 'Andheri East', date: '2026-09-01', status: 'approved' }, { id: 'e2', category: 'Utilities', amount: 21000, branch: 'Bandra West', date: '2026-09-05', status: 'approved' }])),
-  http.get('*/admin/gym-health-alerts/fetchAlerts', () => ok([{ id: 'a1', title: 'Low Attendance', branchName: 'Thane', severity: 'high', value: 42, threshold: 60, createdAt: '2026-09-16T07:00:00Z', resolved: false }, { id: 'a2', title: 'Low Stock', branchName: 'Powai', severity: 'medium', value: 8, threshold: 10, createdAt: '2026-09-15T10:00:00Z', resolved: false }])),
-  http.get('*/admin/gym-health-alerts/fetchKPIs', () => ok({ totalAlerts: 7, criticalAlerts: 1, unresolvedAlerts: 4, resolvedToday: 3 })),
+  http.get('*/admin/finance/payments/fetchExpenses', () => ok(MOCK_ADMIN_EXPENSES)),
+  http.get('*/admin/gym-health-alerts/fetchAlerts', () => ok(MOCK_GYM_HEALTH_ALERTS)),
+  http.get('*/admin/gym-health-alerts/fetchKPIs', () => ok(MOCK_GYM_HEALTH_KPI)),
   http.post('*/admin/gym-health-alerts/resolveAlert', () => ok(null, 'Alert resolved')),
   http.post('*/admin/gym-health-alerts/dismissAlert', () => ok(null, 'Alert dismissed')),
-  http.get('*/admin/payouts/fetchPayouts', () => ok([{ id: 'po1', recipient: 'Ravi Trainer', amount: 24000, status: 'PENDING', dueDate: '2026-09-18', branch: 'Andheri East' }, { id: 'po2', recipient: 'Sunita Coach', amount: 18000, status: 'PAID', dueDate: '2026-09-10', branch: 'Bandra West' }])),
-  http.get('*/admin/payouts/fetchPnL', () => ok({ revenue: 920000, payouts: 270000, profit: 650000 })),
-  http.get('*/admin/payouts/fetchKPIs', () => ok({ pendingAmount: 24000, paidThisMonth: 310000, payoutCount: 18 })),
-  http.post('*/admin/payouts/markPaid', () => ok(null, 'Payout marked paid')),
-  http.get('*/admin/permissions/fetchPermissions', () => ok({ roleDefaults: [{ role: 'manager', permissions: { 'members.view': true, 'members.create': true, 'members.edit': true, 'finance.view': true, 'reports.view': true } }, { role: 'trainer', permissions: { 'members.view': true, 'attendance.view': true, 'attendance.mark': true } }], gymOverrides: [{ gymId: 'b4', gymName: 'Thane', role: 'manager', overrides: { 'reports.export': false } }] })),
+  http.get('*/admin/payouts/fetchPayouts', ({ request }) => {
+    const url = new URL(request.url);
+    const month = url.searchParams.get('month');
+    const gymId = url.searchParams.get('gymId');
+    const status = url.searchParams.get('status');
+    const page = Math.max(1, Number(url.searchParams.get('page')) || 1);
+    const limit = Math.max(1, Number(url.searchParams.get('limit')) || 10);
+    const filtered = MOCK_PAYOUTS.filter(p => (!month || p.month === month) && (!gymId || p.gymId === gymId) && (!status || p.payoutStatus === status));
+    const start = (page - 1) * limit;
+    const data = filtered.slice(start, start + limit);
+    return HttpResponse.json({ success: true, message: 'Success', data, meta: { total: filtered.length, page, limit, totalPages: Math.max(1, Math.ceil(filtered.length / limit)) } });
+  }),
+  http.get('*/admin/payouts/fetchPnL', ({ request }) => { const url = new URL(request.url); const month=url.searchParams.get('month'); const gymId=url.searchParams.get('gymId'); return ok(MOCK_PNL.filter(p => (!month || p.month === month) && (!gymId || p.gymId === gymId))); }),
+  http.get('*/admin/payouts/fetchKPIs', ({ request }) => {
+    const url = new URL(request.url);
+    const month = url.searchParams.get('month');
+    const gymId = url.searchParams.get('gymId');
+    const filtered = MOCK_PAYOUTS.filter(p => (!month || p.month === month) && (!gymId || p.gymId === gymId));
+    return ok({
+      totalNetProfit: filtered.reduce((sum, item) => sum + item.netProfit, 0),
+      totalGrossRevenue: filtered.reduce((sum, item) => sum + item.grossRevenue, 0),
+      totalExpenses: filtered.reduce((sum, item) => sum + item.staffPayroll + item.operationalExpenses + item.platformFee, 0),
+      pendingPayouts: filtered.filter(item => item.payoutStatus === 'pending').length,
+    });
+  }),
+  http.get('*/admin/permissions/fetchPermissions', () => ok(MOCK_PERMISSIONS_DATA)),
   http.post('*/admin/permissions/updateRolePermissions', () => ok(null, 'Permissions updated')),
   http.post('*/admin/permissions/updateGymOverride', () => ok(null, 'Gym override updated')),
   http.get('*/admin/plans/fetchAllPlans', () => ok(MOCK_ADMIN_PLANS)),
@@ -109,11 +169,11 @@ export const adminHandlers = [
   http.get('*/admin/sales/fetchAllMemberships', () => ok(MOCK_ADMIN_ALL_MEMBERSHIPS)),
   http.get('*/admin/settings/fetchSettings', () => ok(MOCK_ADMIN_SETTINGS)),
   http.post('*/admin/settings/updateSettings', () => ok(MOCK_ADMIN_SETTINGS, 'Settings updated')),
-  http.get('*/admin/subscriptions/fetchSubscription', () => ok({ plan: 'Growth', status: 'active', renewalDate: '2026-10-15', monthlyPrice: 4999, autoRenew: true })),
-  http.get('*/admin/subscriptions/fetchPlans', () => ok(MOCK_ADMIN_PLANS)),
-  http.get('*/admin/subscriptions/fetchInvoices', () => ok([{ id: 'inv1', invoiceNo: 'INV-2026-0901', amount: 4999, status: 'PAID', issuedAt: '2026-09-01' }, { id: 'inv2', invoiceNo: 'INV-2026-0801', amount: 4999, status: 'PAID', issuedAt: '2026-08-01' }])),
-  http.get('*/admin/subscriptions/fetchPaymentMethods', () => ok([{ id: 'pm1', type: 'UPI', label: 'smartgym@upi', isDefault: true } , { id: 'pm2', type: 'Card', label: '**** 4242', isDefault: false }])),
-  http.get('*/admin/subscriptions/fetchKPIs', () => ok({ monthlySpend: 4999, nextBillingAmount: 4999, invoicesCount: 12 })),
+  http.get('*/admin/subscriptions/fetchSubscription', () => ok(MOCK_CURRENT_SUBSCRIPTION)),
+  http.get('*/admin/subscriptions/fetchPlans', () => ok(MOCK_SAAS_PLANS)),
+  http.get('*/admin/subscriptions/fetchInvoices', () => ok(MOCK_INVOICES)),
+  http.get('*/admin/subscriptions/fetchPaymentMethods', () => ok(MOCK_PAYMENT_METHODS)),
+  http.get('*/admin/subscriptions/fetchKPIs', () => ok(MOCK_SUBSCRIPTION_KPI)),
   http.post('*/admin/subscriptions/upgradePlan', () => ok(null, 'Plan upgrade requested')),
   http.post('*/admin/subscriptions/toggleAutoRenew', () => ok(null, 'Auto-renewal updated')),
   http.post('*/admin/subscriptions/setDefaultPaymentMethod', () => ok(null, 'Default payment method updated')),

@@ -62,7 +62,7 @@ export default function AdminAuditLogsToolbar() {
           )}
           <button
             onClick={() => exportCSV(filtered)}
-            className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl text-sm font-semibold hover:bg-primary-hover motion-safe:transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-xl text-sm font-semibold hover:bg-primary-hover motion-safe:transition-colors"
             aria-label="Export logs as CSV"
           >
             <Download size={14} /> Export CSV

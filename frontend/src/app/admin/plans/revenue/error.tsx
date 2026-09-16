@@ -17,11 +17,11 @@ export default function Error({
       </div>
       <h2 className="text-2xl font-bold text-foreground mb-2">Something went wrong!</h2>
       <p className="text-secondary text-center max-w-md mb-6">
-        {error.message || 'We encountered an unexpected error while loading the plan revenue dashboard.'}
+        Please retry. If the issue continues, contact support.
       </p>
       <button
         onClick={() => reset()}
-        className="flex items-center gap-2 bg-primary text-white px-6 py-2.5 rounded-xl font-bold hover:bg-primary/90 motion-safe:transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+        className="flex items-center gap-2 bg-primary text-primary-foreground px-6 py-2.5 rounded-xl font-bold hover:bg-primary/90 motion-safe:transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
       >
         <RefreshCw size={18} />
         Try Again

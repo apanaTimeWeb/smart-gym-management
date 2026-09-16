@@ -1,4 +1,5 @@
 "use client";
+import { formatCurrency } from '@/lib/formatters';
 // RESPONSIBILITY: Renders the revenue distribution donut chart for Plans.
 
 import dynamic from 'next/dynamic';
@@ -20,7 +21,7 @@ export default function AdminPlansRevenueCharts({ data }: { data: PlanRevenueRec
     legend: { position: 'right' },
     tooltip: {
       y: {
-        formatter: (val) => `₹${val.toLocaleString('en-IN')}`,
+        formatter: (val) => formatCurrency(val),
       },
     },
   };

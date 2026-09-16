@@ -2,7 +2,7 @@
 // RESPONSIBILITY: Tab switcher for Payouts module (Summary vs P&L Statement).
 
 import { useAdminPayoutsLogic } from '@/app/admin/payouts/payouts_context/useAdminPayoutsLogic';
-import type { PayoutTab } from '@/app/admin/payouts/payouts_types/payouts_types';
+import type { PayoutTab } from '@/app/admin/payouts/payouts_types/AdminPayoutsTypes';
 
 const TABS: { id: PayoutTab; label: string }[] = [
   { id: 'summary', label: 'Payout Summary' },

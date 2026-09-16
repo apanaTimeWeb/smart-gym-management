@@ -1,4 +1,6 @@
 "use client";
+import { ADMIN_CHART_THEME } from '@/app/admin/admin_utils/AdminChartThemeTokens';
+import { formatCurrency, formatKPI } from '@/lib/formatters';
 // RESPONSIBILITY: Provides the implementation for AdminSalesOverview.tsx functionality within its module.
 
 import { useAdminSalesLogic } from '@/app/admin/sales/sales_context/useAdminSalesLogic';
@@ -9,25 +11,25 @@ import {
 import { Loader2 } from 'lucide-react';
 
 export default function AdminSalesOverview() {
-  const { overviewData, fetchState } = useAdminSalesLogic();
+  const { overviewData, status } = useAdminSalesLogic();
 
   const referralData = [
-    { name: 'Instagram', value: 45000, color: 'var(--danger)' },
+    { name: 'Instagram', value: 45000, color: ADMIN_CHART_THEME.danger },
     { name: 'Google Ads', value: 65000, color: 'var(--primary)' },
-    { name: 'Word of Mouth', value: 25000, color: 'var(--success)' },
+    { name: 'Word of Mouth', value: 25000, color: ADMIN_CHART_THEME.success },
     { name: 'Walk-in', value: 15000, color: 'var(--warning)' },
   ];
 
-  if (fetchState === 'loading') {
+  if (status === 'pending') {
     return (
-      <div className="space-y-6 animate-pulse">
+      <div className="space-y-6 motion-safe:animate-pulse">
         <div className="bg-card p-5 rounded-xl border border-border shadow-lg h-80"></div>
         <div className="bg-card p-5 rounded-xl border border-border shadow-lg h-80"></div>
       </div>
     );
   }
 
-  if (fetchState === 'error') {
+  if (status === 'error') {
     return (
       <div className="text-center py-16 bg-card rounded-2xl border border-danger/30">
         <p className="text-danger font-medium">Failed to load sales overview.</p>
@@ -44,12 +46,12 @@ export default function AdminSalesOverview() {
   <ResponsiveContainer width="100%" height="100%">
     <BarChart data={overviewData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
       <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" />
-      <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: 'var(--text-secondary)', fontSize: 12 }} />
-      <YAxis axisLine={false} tickLine={false} tick={{ fill: 'var(--text-secondary)', fontSize: 12 }} tickFormatter={(val) => `${(val / 1000).toFixed(0)}K`} />
+      <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: ADMIN_CHART_THEME.textSecondary, fontSize: 12 }} />
+      <YAxis axisLine={false} tickLine={false} tick={{ fill: ADMIN_CHART_THEME.textSecondary, fontSize: 12 }} tickFormatter={(val) => `${formatKPI(val)}K`} />
       <Tooltip 
         cursor={{ fill: 'var(--bg-card)', opacity: 0.5 }}
-        contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', backgroundColor: 'var(--bg-card)', color: 'var(--text-primary)' }}
-        formatter={(value: number | string | readonly (string | number)[] | undefined) => [`₹${Number(Array.isArray(value) ? value[0] : (value || 0)).toLocaleString()}`, 'Revenue']}
+        contentStyle={{ borderRadius: '8px', border: 'none', backgroundColor: 'var(--bg-card)', color: 'var(--text-primary)' }}
+        formatter={(value: number | string | readonly (string | number)[] | undefined) => [formatCurrency(Number(Array.isArray(value) ? value[0] : (value || 0))), 'Revenue']}
       />
       <Bar dataKey="revenue" fill="var(--primary)" radius={[6, 6, 0, 0]} barSize={40} />
     </BarChart>
@@ -69,10 +71,10 @@ export default function AdminSalesOverview() {
         </linearGradient>
       </defs>
       <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" />
-      <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: 'var(--text-secondary)', fontSize: 12 }} />
-      <YAxis axisLine={false} tickLine={false} tick={{ fill: 'var(--text-secondary)', fontSize: 12 }} />
+      <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: ADMIN_CHART_THEME.textSecondary, fontSize: 12 }} />
+      <YAxis axisLine={false} tickLine={false} tick={{ fill: ADMIN_CHART_THEME.textSecondary, fontSize: 12 }} />
       <Tooltip 
-        contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', backgroundColor: 'var(--bg-card)', color: 'var(--text-primary)' }}
+        contentStyle={{ borderRadius: '8px', border: 'none', backgroundColor: 'var(--bg-card)', color: 'var(--text-primary)' }}
       />
       <Area type="monotone" dataKey="newMembers" stroke="var(--danger)" strokeWidth={3} fillOpacity={1} fill="url(#colorMembers)" />
     </AreaChart>
@@ -98,7 +100,7 @@ export default function AdminSalesOverview() {
             <Cell key={`cell-${index}`} fill={entry.color} />
           ))}
         </Pie>
-        <Tooltip formatter={(value: unknown) => `₹${Number(value || 0).toLocaleString()}`} />
+        <Tooltip formatter={(value: unknown) => formatCurrency(Number(value || 0))} />
         <Legend verticalAlign="bottom" height={36} />
       </PieChart>
     </ResponsiveContainer>

@@ -40,7 +40,7 @@ export default function AdminToast({ id, message, type, onClose }: AdminToastPro
 
   return (
     <div
-      className={`fixed bottom-6 right-6 z-50 flex items-center gap-3 w-80 p-4 rounded-xl border-y border-r border-l-4 border-y-white/5 border-r-white/5 backdrop-blur-xl bg-card/90 text-foreground motion-safe:animate-in motion-safe:slide-in-from-right-8 motion-safe:fade-in duration-300 ${shadow} ${borderClass}`}
+      className={`fixed bottom-6 right-6 z-50 flex items-center gap-3 w-80 p-4 rounded-xl border-y border-r border-l-4 border-y-white/5 border-r-white/5 backdrop-blur-xl bg-card/90 text-foreground motion-safe:animate-in motion-safe:slide-in-from-right-8 motion-safe:fade-in motion-safe:duration-300 ${shadow} ${borderClass}`}
     >
       <div className={`${colorClass} flex-shrink-0`}>
         {icon}

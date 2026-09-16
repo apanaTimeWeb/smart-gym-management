@@ -12,7 +12,7 @@ vi.mock('@/app/admin/notifications/notifications_utils/useAdminNotificationsPage
     markAllAsRead: vi.fn(),
     clearAll: vi.fn(),
     markAsRead: vi.fn(),
-    deleteNotification: vi.fn(),
+    clearAll: vi.fn(),
   }),
 }));
 

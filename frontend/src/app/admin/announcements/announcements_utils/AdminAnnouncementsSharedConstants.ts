@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Constants, mock data, Zod schema for the Admin Announcements module.
 import { z } from 'zod';
-import type { Announcement, AnnouncementKPIData } from '@/app/admin/announcements/announcements_types/announcements_types';
+import type { Announcement, AnnouncementKPIData } from '@/app/admin/announcements/announcements_types/AdminAnnouncementsTypes';
 
 export const ANNOUNCEMENTS_ITEMS_PER_PAGE = 10;
 

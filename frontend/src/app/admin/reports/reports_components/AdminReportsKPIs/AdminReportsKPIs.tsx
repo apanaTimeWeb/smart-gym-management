@@ -1,10 +1,10 @@
 "use client";
+import { formatPercent1dp, formatCurrency } from '@/lib/formatters';
 // RESPONSIBILITY: Renders the KPI summary row for the Reports module — total revenue, expenses, profit, members, attendance rate.
 
 import { TrendingUp, TrendingDown, Users, IndianRupee, Activity, Wallet } from 'lucide-react';
 import AdminStatCard from '@/app/admin/admin_components/AdminShared/AdminStatCard';
 import { useAdminReportsLogic } from '@/app/admin/reports/reports_context/useAdminReportsLogic';
-import { formatCurrency } from '@/app/admin/reports/reports_utils/AdminReportsSharedConstants';
 import { useDateRangeSuffix } from '@/lib/useDateRangeSuffix';
 
 export default function AdminReportsKPIs() {
@@ -20,17 +20,17 @@ export default function AdminReportsKPIs() {
         change="vs last period"
         changeType="up"
         icon={IndianRupee}
-        iconBg="rgba(250,204,21,0.15)"
-        iconColor="var(--primary)"
+        iconBg="bg-primary/10"
+        iconColor="text-primary"
       />
       <AdminStatCard
         title={`Net Profit${dateSuffix}`}
         value={kpis ? formatCurrency(kpis.netProfit) : '—'}
-        change={kpis ? `${((kpis.netProfit / kpis.totalRevenue) * 100).toFixed(1)}% margin` : '—'}
+        change={kpis ? `${formatPercent1dp((kpis.netProfit / kpis.totalRevenue) * 100)} margin` : '—'}
         changeType="up"
         icon={TrendingUp}
-        iconBg="rgba(34,197,94,0.15)"
-        iconColor="var(--success)"
+        iconBg="bg-success/10"
+        iconColor="text-success"
       />
       <AdminStatCard
         title={`Total Expenses${dateSuffix}`}
@@ -38,8 +38,8 @@ export default function AdminReportsKPIs() {
         change="across all gyms"
         changeType="neutral"
         icon={TrendingDown}
-        iconBg="rgba(239,68,68,0.15)"
-        iconColor="var(--danger)"
+        iconBg="bg-danger/10"
+        iconColor="text-danger"
       />
       <AdminStatCard
         title={`Total Members${dateSuffix}`}
@@ -47,8 +47,8 @@ export default function AdminReportsKPIs() {
         change={kpis ? `+${kpis.newMembers} new` : '—'}
         changeType="up"
         icon={Users}
-        iconBg="rgba(59,130,246,0.15)"
-        iconColor="var(--info)"
+        iconBg="bg-info/10"
+        iconColor="text-info"
       />
       <AdminStatCard
         title={`Total Payroll${dateSuffix}`}
@@ -56,8 +56,8 @@ export default function AdminReportsKPIs() {
         change="this period"
         changeType="neutral"
         icon={Wallet}
-        iconBg="rgba(192,132,252,0.15)"
-        iconColor="var(--purple)"
+        iconBg="bg-purple/10"
+        iconColor="text-purple"
       />
       <AdminStatCard
         title={`Avg Attendance Rate${dateSuffix}`}
@@ -65,8 +65,8 @@ export default function AdminReportsKPIs() {
         change="across all gyms"
         changeType="up"
         icon={Activity}
-        iconBg="rgba(34,197,94,0.15)"
-        iconColor="var(--success)"
+        iconBg="bg-success/10"
+        iconColor="text-success"
       />
     </div>
   );

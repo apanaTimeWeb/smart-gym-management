@@ -8,10 +8,10 @@ import { useAdminPlansStore } from '@/app/admin/plans/plans_store/useAdminPlansS
 import AdminPlansToolbar from '@/app/admin/plans/plans_components/AdminPlansToolbar/AdminPlansToolbar';
 import AdminPlansGrid from '@/app/admin/plans/plans_components/AdminPlansGrid/AdminPlansGrid';
 import AdminPlansModal from '@/app/admin/plans/plans_components/AdminPlansModal/AdminPlansModal';
-import type { PlansInitialData } from '@/app/admin/plans/plans_types/plans_types';
+import type { PlansInitialData } from '@/app/admin/plans/plans_types/AdminPlansTypes';
 
 export default function AdminPlansMain({ initialData }: { initialData?: PlansInitialData | null }) {
-  const { fetchState } = useAdminPlansLogic(initialData);
+  const { status } = useAdminPlansLogic(initialData);
 
   return (
     <div className="min-h-full pb-10">

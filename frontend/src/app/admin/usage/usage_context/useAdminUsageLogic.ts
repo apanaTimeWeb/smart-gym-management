@@ -4,13 +4,13 @@
 
 import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { usageApi } from '@/app/admin/usage/usage_api/usage_api';
+import { usageApi } from '@/app/admin/usage/usage_api/AdminUsageApi';
 import { PLAN_TIERS } from '@/app/admin/usage/usage_utils/AdminUsageSharedConstants';
 import type { AdminUsageData, AdminUsageMetric } from '@/app/admin/usage/usage_types/AdminUsageTypes';
 
 export function useAdminUsageLogic() {
   const query = useQuery({
-    queryKey: ['adminUsage', 'current'],
+    queryKey: ['admin', 'usage', 'current'],
     queryFn: async () => {
       const response = await usageApi.fetchMyUsage();
       return response.data;

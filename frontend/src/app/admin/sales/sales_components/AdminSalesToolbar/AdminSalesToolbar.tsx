@@ -47,8 +47,8 @@ export default function AdminSalesToolbar() {
             />
           </div>
           <button
-            onClick={() => toast.success('Exporting sales report to CSV...')}
-            className="flex items-center gap-1.5 px-3 py-2 text-sm border border-border rounded-lg hover:bg-primary-subtle text-secondary transition-colors"
+            onClick={() => toast.success('Exporting sales report to CSV...', { id: 'admin-success-42d4e8ef5f' })}
+            className="flex items-center gap-1.5 px-3 py-2 text-sm border border-border rounded-lg hover:bg-primary-subtle text-secondary motion-safe:transition-colors"
           >
             <Download size={13} /> Export
           </button>

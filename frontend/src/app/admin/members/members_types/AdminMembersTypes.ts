@@ -1,8 +1,8 @@
+import type { QueryStatus } from '@tanstack/react-query';
 // RESPONSIBILITY: TypeScript types and interfaces for the Admin Members module.
 
 export type MemberStatus = 'active' | 'expired' | 'pending' | 'frozen';
 
-export type FetchState = 'idle' | 'loading' | 'success' | 'error';
 
 export interface AdminMember {
   id: string;
@@ -39,7 +39,7 @@ export interface AdminMembersSummary {
 export interface AdminMembersContextType {
   members: AdminMember[];
   summary: AdminMembersSummary | null;
-  fetchState: FetchState;
+  status: QueryStatus;
   error: string;
   search: string;
   setSearch: (s: string) => void;

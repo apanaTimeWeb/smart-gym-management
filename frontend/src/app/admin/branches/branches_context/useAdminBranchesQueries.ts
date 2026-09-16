@@ -4,8 +4,8 @@
 // Rule 3B: No static mock data — all data comes from the backend via apiFetch.
 
 import { useQuery } from '@tanstack/react-query';
-import { branchesApi } from '@/app/admin/branches/branches_api/branches_api';
-import type { Branch } from '@/app/admin/branches/branches_types/branches_types';
+import { branchesApi } from '@/app/admin/branches/branches_api/AdminBranchesApi';
+import type { Branch } from '@/app/admin/branches/branches_types/AdminBranchesTypes';
 
 export const useAdminBranchesQueries = () => {
   return useQuery({

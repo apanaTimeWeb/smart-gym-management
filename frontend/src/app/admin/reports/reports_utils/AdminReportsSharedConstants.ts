@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Centralized constants, mock data, and shared config for the Reports module.
-import type { ReportData, ReportDateRange, ReportTab } from '@/app/admin/reports/reports_types/reports_types';
+import type { ReportData, ReportDateRange, ReportTab } from '@/app/admin/reports/reports_types/AdminReportsTypes';
 
 export const REPORT_TABS: { value: ReportTab; label: string }[] = [
   { value: 'revenue', label: 'Revenue' },
@@ -21,7 +21,5 @@ export const DATE_RANGE_OPTIONS: { value: ReportDateRange; label: string }[] = [
 
 export const REPORTS_ITEMS_PER_PAGE = 10;
 
-export const formatCurrency = (n: number) => '₹' + (n || 0).toLocaleString('en-IN');
-export const formatPercent = (n: number) => `${n.toFixed(1)}%`;
 
 

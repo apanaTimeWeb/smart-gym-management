@@ -1,14 +1,12 @@
 "use client";
+// DATA FLOW: Admin module UI → local UI state / feature hooks → approved global infrastructure or module-owned APIs.
 // RESPONSIBILITY: Renders/orchestrates AdminHeaderSearch for the admin module; UI composition stays here and business/API logic remains in dedicated hooks and APIs.
-import { useState, useRef, useEffect, useMemo } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Search, X } from 'lucide-react';
 import Link from 'next/link';
-import { apiFetch } from '@/lib/api';
 import { STATUS_STYLES } from '@/app/admin/admin_url_config';
-import { useQuery } from '@tanstack/react-query';
-import type { AdminMember } from '@/app/admin/members/members_types/AdminMembersTypes';
-
 import { AdminMembersUrlConfig } from '@/app/admin/members/admin_members_url_config';
+import { useAdminHeaderMemberSearch } from '@/app/admin/admin_components/AdminLayout/useAdminHeaderMemberSearch';
 
 export function AdminHeaderSearch() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -24,22 +22,7 @@ export function AdminHeaderSearch() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const { data: membersData } = useQuery({
-    queryKey: ['adminMembers'],
-    queryFn: () => apiFetch<{ data: AdminMember[] }>('/api/admin/members/list').then(r => r.data || []),
-  });
-
-  const searchResults = useMemo(() => {
-    if (!searchQuery.trim()) return [];
-    const q = searchQuery.toLowerCase();
-    const membersList = membersData || [];
-    return membersList.filter(
-      (m) =>
-        m.name.toLowerCase().includes(q) ||
-        m.phone.includes(q) ||
-        m.email.toLowerCase().includes(q)
-    ).slice(0, 5);
-  }, [searchQuery, membersData]);
+  const { data: searchResults = [] } = useAdminHeaderMemberSearch(searchQuery);
 
   return (
     <div className="relative hidden md:block" ref={searchRef}>

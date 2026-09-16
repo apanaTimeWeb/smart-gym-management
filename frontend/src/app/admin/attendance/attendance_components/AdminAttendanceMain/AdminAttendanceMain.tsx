@@ -11,7 +11,7 @@ import { useAdminAttendanceLogic } from '@/app/admin/attendance/attendance_conte
 import { RefreshCw, ShieldAlert } from 'lucide-react';
 
 export default function AdminAttendanceMain() {
-  const { fetchState, error, loadAll } = useAdminAttendanceLogic();
+  const { status, error, loadAll } = useAdminAttendanceLogic();
 
   return (
     <div className="min-h-full pb-10 bg-background text-foreground">
@@ -29,7 +29,7 @@ export default function AdminAttendanceMain() {
       </div>
 
       <div className="p-6 space-y-5">
-        {fetchState === 'error' && (
+        {status === 'error' && (
           <div className="flex items-center justify-between bg-danger/10 border border-danger/20 rounded-xl px-4 py-3">
             <p className="text-sm text-danger">{error}</p>
             <button

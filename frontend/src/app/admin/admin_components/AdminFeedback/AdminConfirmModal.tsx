@@ -27,8 +27,8 @@ export default function AdminConfirmModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 motion-safe:animate-in motion-safe:fade-in duration-200">
-      <div className="bg-card/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-border/5 w-full max-w-sm overflow-hidden motion-safe:animate-in motion-safe:zoom-in-95 duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-overlay backdrop-blur-sm p-4 motion-safe:animate-in motion-safe:fade-in motion-safe:duration-200">
+      <div className="bg-card/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-border/5 w-full max-w-sm overflow-hidden motion-safe:animate-in motion-safe:zoom-in-95 motion-safe:duration-200">
         <div className="p-6">
           <div className="flex items-center gap-4 mb-4">
             <div className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 ${
@@ -49,13 +49,13 @@ export default function AdminConfirmModal({
           <div className="flex gap-3 mt-6">
             <button
               onClick={onCancel}
-              className="flex-1 py-2.5 border border-border rounded-xl text-sm font-semibold text-foreground hover:bg-card/5 transition-colors"
+              className="flex-1 py-2.5 border border-border rounded-xl text-sm font-semibold text-foreground hover:bg-card/5 motion-safe:transition-colors"
             >
               {cancelText}
             </button>
             <button
               onClick={onConfirm}
-              className={`flex-1 py-2.5 rounded-xl text-sm font-semibold text-white transition-all hover:scale-105 active:scale-95 ${
+              className={`flex-1 py-2.5 rounded-xl text-sm font-semibold text-primary-foreground motion-safe:transition-all motion-safe:hover:scale-105 motion-safe:active:scale-95 ${
                 type === 'danger' ? 'bg-danger shadow-lg' :
                 type === 'warning' ? 'bg-warning shadow-lg' :
                 'bg-info shadow-lg'
