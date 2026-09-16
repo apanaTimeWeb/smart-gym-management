@@ -19,14 +19,14 @@ export default function ManagerPtAssignmentsTable({ assignments, markingId, onMa
       </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse min-w-[700px]">
+        <table className="w-full text-left border-collapse min-w-176">
           <thead>
             <tr className="bg-primary/5 border-b border-border">
-              <th className="py-3 px-4 text-[11px] font-semibold text-secondary uppercase tracking-wider">Member</th>
-              <th className="py-3 px-4 text-[11px] font-semibold text-secondary uppercase tracking-wider">Trainer</th>
-              <th className="py-3 px-4 text-[11px] font-semibold text-secondary uppercase tracking-wider">Package</th>
-              <th className="py-3 px-4 text-[11px] font-semibold text-secondary uppercase tracking-wider min-w-40">Progress</th>
-              <th className="py-3 px-4 text-[11px] font-semibold text-secondary uppercase tracking-wider text-right">Action</th>
+              <th className="py-3 px-4 text-xs font-semibold text-secondary uppercase tracking-wider">Member</th>
+              <th className="py-3 px-4 text-xs font-semibold text-secondary uppercase tracking-wider">Trainer</th>
+              <th className="py-3 px-4 text-xs font-semibold text-secondary uppercase tracking-wider">Package</th>
+              <th className="py-3 px-4 text-xs font-semibold text-secondary uppercase tracking-wider min-w-40">Progress</th>
+              <th className="py-3 px-4 text-xs font-semibold text-secondary uppercase tracking-wider text-right">Action</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-border">

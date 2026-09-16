@@ -1,4 +1,5 @@
 'use client';
+// RESPONSIBILITY: Renders the Manager SalesOverview presentation layer for the Manager module.
 import React from 'react';
 import dynamic from 'next/dynamic';
 import { useSalesContext } from '@/app/manager/sales/sales_context/ManagerSalesContext';
@@ -12,9 +13,9 @@ const Chart = dynamic(() => import('react-apexcharts'), {
 });
 
 export default function ManagerSalesOverview() {
-  const { overviewData, fetchState } = useSalesContext();
+  const { overviewData, isLoading, isError } = useSalesContext();
 
-  if (fetchState === 'loading') {
+  if (isLoading) {
     return (
       <div className="flex justify-center py-10">
         <Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" />
@@ -22,7 +23,7 @@ export default function ManagerSalesOverview() {
     );
   }
 
-  if (fetchState === 'error') {
+  if (isError) {
     return (
       <div className="text-center py-16 bg-card rounded-2xl border border-danger/30">
         <p className="text-danger font-medium">Failed to load sales overview.</p>

@@ -5,7 +5,6 @@
 import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
 import type { AddPaymentFormValues } from '@/app/manager/finance/finance_utils/ManagerFinanceSharedConstants';
 
-export type FetchState = 'idle' | 'loading' | 'success' | 'error';
 export type PaymentStatus = 'PAID' | 'PENDING' | 'REFUNDED' | 'PARTIAL';
 export type PaymentMethod = 'UPI' | 'Cash' | 'Card' | 'NetBanking' | 'Cheque' | 'Other';
 
@@ -19,7 +18,8 @@ export interface FinanceContextType {
   payments: Payment[];
   totalPayments: number;
   summary: FinanceSummary | null;
-  fetchState: FetchState;
+  isLoading: boolean;
+  isError: boolean;
   saving: boolean;
   error: string;
   toast: { message: string; type: ToastType } | null;

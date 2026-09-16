@@ -8,8 +8,8 @@ import { X, Save } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
-import { useInquiryPlansQuery } from '@/app/manager/inquiries/inquiries_api/useManagerInquiriesQueries';
-import { useUnsavedChangesGuard } from '@/app/manager/manager_utils/useUnsavedChangesGuard';
+import { useInquiryPlansQuery } from '@/app/manager/inquiries/inquiries_api/ManagerUseManagerInquiriesQueries';
+import { useManagerUnsavedChangesGuard } from '@/app/manager/manager_utils/ManagerUnsavedChangesGuard';
 
 export default function ManagerInquiriesModal() {
   const { showModal, setShowModal, editId, editData, saveInquiry, saving } = useInquiriesContext();
@@ -19,7 +19,7 @@ export default function ManagerInquiriesModal() {
     defaultValues: editData || {},
   });
 
-  useUnsavedChangesGuard(isDirty && showModal);
+  useManagerUnsavedChangesGuard(isDirty && showModal);
 
   const { data: plansData } = useInquiryPlansQuery();
   const plans = plansData ? plansData.map((p) => ({ label: p.name, value: p.name })) : [
@@ -62,7 +62,7 @@ export default function ManagerInquiriesModal() {
   if (!showModal) return null;
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/60">
+    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-foreground/60">
       <div className="bg-card rounded-2xl shadow-xl w-full max-w-xl overflow-visible border border-border max-h-full flex flex-col">
         <div className="sticky top-0 bg-card px-6 py-4 border-b border-border flex items-center justify-between z-10 rounded-t-2xl">
           <h3 className="text-lg font-bold text-primary">{editId ? 'Edit Inquiry' : 'New Inquiry'}</h3>
@@ -177,7 +177,7 @@ export default function ManagerInquiriesModal() {
                     value={newNote}
                     onChange={(e) => setNewNote(e.target.value)}
                     placeholder="Enter call notes or remarks..."
-                    className="w-full border border-border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-primary transition-colors min-h-[80px]"
+                    className="w-full border border-border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-primary transition-colors min-h-20"
                   />
                 </div>
               </div>
@@ -194,10 +194,10 @@ export default function ManagerInquiriesModal() {
               <button
                 type="submit"
                 disabled={saving}
-                className="flex-1 py-2.5 rounded-xl text-sm font-bold bg-primary text-white flex items-center justify-center gap-2 disabled:opacity-70 hover:bg-primary-hover transition-all duration-200 active:scale-95"
+                className="flex-1 py-2.5 rounded-xl text-sm font-bold bg-primary text-primary-foreground flex items-center justify-center gap-2 disabled:opacity-70 hover:bg-primary-hover transition-all duration-200 active:scale-95"
               >
                 {saving
-                  ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full motion-safe:animate-spin" />
+                  ? <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full motion-safe:animate-spin" />
                   : <><Save size={15} />{editId ? 'Update' : 'Add Inquiry'}</>
                 }
               </button>

@@ -20,7 +20,7 @@ export default function DashboardError({
  <p className="text-sm mt-1 text-danger">{error.message || 'An unexpected error occurred in the dashboard.'}</p>
  <button
  onClick={() => reset()}
- className="mt-4 px-4 py-2 rounded-md font-medium text-white bg-primary"
+ className="mt-4 px-4 py-2 rounded-md font-medium text-primary-foreground bg-primary"
  >
  Try again
  </button>

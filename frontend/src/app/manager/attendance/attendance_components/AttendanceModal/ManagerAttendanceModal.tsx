@@ -7,7 +7,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AttendanceSchema, type AttendanceFormValues, EMPTY_ATTENDANCE_FORM } from '@/app/manager/attendance/attendance_utils/ManagerAttendanceSharedConstants';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
-import { useUnsavedChangesGuard } from '@/app/manager/manager_utils/useUnsavedChangesGuard';
+import { useManagerUnsavedChangesGuard } from '@/app/manager/manager_utils/ManagerUnsavedChangesGuard';
 
 export default function AttendanceModal() {
   const { 
@@ -34,7 +34,7 @@ export default function AttendanceModal() {
   const d = new Date();
   const todayDate = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 
-  useUnsavedChangesGuard(isDirty && showModal);
+  useManagerUnsavedChangesGuard(isDirty && showModal);
 
   useEffect(() => {
     if (showModal) {
@@ -51,7 +51,7 @@ export default function AttendanceModal() {
   if (!showModal) return null;
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 p-4">
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-foreground/60 p-4">
       <div className="bg-card rounded-2xl shadow-xl w-full max-w-md border border-border">
         <div className="flex justify-between items-center p-5 border-b border-border">
           <h3 className="font-bold text-lg text-foreground">Record Attendance</h3>
@@ -189,7 +189,7 @@ export default function AttendanceModal() {
             <button 
               type="submit" 
               disabled={saving}
-              className="px-4 py-2 rounded-lg font-medium text-white bg-primary flex items-center gap-2 hover:opacity-90 transition-opacity disabled:opacity-70" 
+              className="px-4 py-2 rounded-lg font-medium text-primary-foreground bg-primary flex items-center gap-2 hover:opacity-90 transition-opacity disabled:opacity-70" 
             >
               {saving ? <Loader2 className="w-4 h-4 motion-safe:animate-spin" /> : <><CheckCircle size={15} /> Check In</>}
             </button>

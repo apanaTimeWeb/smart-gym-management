@@ -1,8 +1,9 @@
 'use client';
+// DATA FLOW: Manager module state/API data → ManagerHrContext → owning Manager UI components.
 // RESPONSIBILITY: Provides UI orchestration state to the HR module hierarchy. Async data is managed in useManagerHrLogic.
 import React, { createContext, useContext, useMemo } from 'react';
 import type { HrContextType, HrInitialData } from '@/app/manager/hr/hr_types/ManagerHrTypes';
-import { useManagerHrLogic } from '@/app/manager/hr/hr_context/useManagerHrLogic';
+import { useManagerHrLogic } from '@/app/manager/hr/hr_context/ManagerUseManagerHrLogic';
 
 const ManagerHrContext = createContext<HrContextType | undefined>(undefined);
 
@@ -13,7 +14,7 @@ export function HrProvider({ children, initialData }: { children: React.ReactNod
    logic.staff,
    logic.payrolls,
    logic.summary,
-   logic.fetchState,
+   logic.isLoading,
    logic.error,
    logic.toast,
    logic.search,

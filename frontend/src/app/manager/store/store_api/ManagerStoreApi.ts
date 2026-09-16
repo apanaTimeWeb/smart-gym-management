@@ -1,4 +1,4 @@
-import { ManagerStoreUrlConfig } from '@/app/manager/store/store_url_config';
+import { ManagerStoreUrlConfig } from '@/app/manager/Manager_url_config';
 import { apiFetch, type ApiResponse } from '@/lib/api';
 import type { Product, Order, StoreSummary } from '@/app/manager/store/store_types/ManagerStoreTypes';
 import { productSchema, orderSchema, storeSummarySchema } from '@/app/manager/store/store_types/ManagerStoreSchema';
@@ -16,7 +16,7 @@ export const storeApi = {
     return apiFetch(`${ManagerStoreUrlConfig.BACKEND_API.BASE}/products/${id}`, { method: 'PATCH', body: JSON.stringify(body), dataSchema: productSchema });
   },
   removeProduct: async (id: string): Promise<ApiResponse<{ id: string }>> => {
-    return apiFetch(`${ManagerStoreUrlConfig.BACKEND_API.BASE}/products/${id}`, { method: 'DELETE' });
+    return apiFetch(`${ManagerStoreUrlConfig.BACKEND_API.BASE}/products/${id}`, { method: 'DELETE', dataSchema: z.object({ id: z.string() }) });
   },
   getOrders: async (params?: Record<string, string>): Promise<ApiResponse<{ orders: Order[], total: number }>> => {
     const query = new URLSearchParams(params || {}).toString();

@@ -37,7 +37,7 @@ function CheckInMethodBadge({ method }: { method?: CheckInMethod }) {
 }
 
 export default function AttendanceTable() {
-  const { records, totalRecords, fetchState, tab, currentPage, setCurrentPage, setCalendarUser } = useAttendanceContext();
+  const { records, totalRecords, isLoading, isError, tab, currentPage, setCurrentPage, setCalendarUser } = useAttendanceContext();
 
   const filteredRecords = records.filter(r =>
     tab === 'Daily Attendance Report' ||
@@ -51,7 +51,7 @@ export default function AttendanceTable() {
 
   return (
     <div className="p-5">
-      {fetchState === 'loading' ? (
+      {isLoading ? (
         <div className="motion-safe:animate-pulse bg-card rounded-xl border border-border mt-4">
           {[...Array(5)].map((_, i) => (
             <div key={`skeleton-${i}`} className="h-16 border-b border-border flex items-center px-4 gap-4">
@@ -65,7 +65,7 @@ export default function AttendanceTable() {
             </div>
           ))}
         </div>
-      ) : fetchState === 'error' ? (
+      ) : isError ? (
         <div className="text-center py-16 bg-card rounded-2xl border border-danger/30 mt-4">
           <p className="text-danger font-medium">Failed to load attendance records.</p>
           <p className="text-sm mt-1 text-secondary">Please check your connection and try again.</p>
@@ -88,7 +88,7 @@ export default function AttendanceTable() {
                   {/* Name */}
                   <td className="px-4 py-3 whitespace-nowrap">
                     <div className="flex items-center gap-2">
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold ${
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-primary-foreground text-xs font-bold ${
                         r.type === 'MEMBER' ? 'bg-info' : 'bg-success'
                       }`}>
                         {(r.member?.name || r.staff?.name || '?').charAt(0)}

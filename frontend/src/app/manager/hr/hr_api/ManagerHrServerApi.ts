@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Server-side API fetching for the hr module.
 import { ssrApiFetch } from '@/lib/server-api';
 import type { ApiResponse } from '@/lib/api';
-import { HrUrlConfig } from '@/app/manager/hr/ManagerHrUrlConfig';
+import { HrUrlConfig } from '@/app/manager/Manager_url_config';
 import type { Staff, Payroll, HrSummary } from '@/app/manager/hr/hr_types/ManagerHrTypes';
 
 export const ssrHrApi = {

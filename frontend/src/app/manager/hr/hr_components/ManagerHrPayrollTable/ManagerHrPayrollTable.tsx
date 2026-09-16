@@ -1,6 +1,6 @@
 'use client';
 // RESPONSIBILITY: Renders the payroll records table with pay status badges and mark-as-paid inline action.
-// CRITICAL FIX: Added Download Payslip per row, Bulk Generate Payroll button, and netPayable/deductions display.
+// CRITICAL FIX: Added Download Payslip per row, Generate Payroll button, and netPayable/deductions display.
 import { useHrContext } from '@/app/manager/hr/hr_context/ManagerHrContext';
 import { PAYROLL_TABLE_HEADERS } from '@/app/manager/hr/hr_utils/ManagerHrSharedConstants';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
@@ -10,7 +10,7 @@ import ManagerEmptyState from '@/app/manager/manager_components/ManagerFeedback/
 import { formatCurrency , formatDate} from '@/lib/formatters';
 
 export default function ManagerHrPayrollTable() {
-  const { search, setSearch, payrollMonth, setPayrollMonth, payrolls, markPayrollPaid, setPaymentModal, currentPage, setCurrentPage, fetchState, staff, bulkGeneratePayroll, downloadPayslip } = useHrContext();
+  const { search, setSearch, payrollMonth, setPayrollMonth, payrolls, markPayrollPaid, setPaymentModal, currentPage, setCurrentPage, isLoading, staff, bulkGeneratePayroll, downloadPayslip } = useHrContext();
 
   const filtered = payrolls.filter(p => {
     const nameMatch = (p.staff?.name || '').toLowerCase().includes(search.toLowerCase());
@@ -31,7 +31,7 @@ export default function ManagerHrPayrollTable() {
     const totalPages = Math.ceil(filtered.length / MANAGER_ITEMS_PER_PAGE);
   const currentData = filtered.slice((currentPage - 1) * MANAGER_ITEMS_PER_PAGE, currentPage * MANAGER_ITEMS_PER_PAGE);
 
-  if (fetchState === 'loading') {
+  if (isLoading) {
     return (
       <div className="flex flex-col h-full">
         <div className="overflow-x-auto flex-1">
@@ -68,14 +68,14 @@ export default function ManagerHrPayrollTable() {
 
   return (
     <div className="flex flex-col h-full">
-      {/* Toolbar: Bulk Generate Payroll — CRITICAL FIX */}
+      {/* Toolbar: Generate Payroll — CRITICAL FIX */}
       <div className="flex justify-end px-4 pt-3 pb-1">
         <button
           onClick={() => bulkGeneratePayroll(payrollMonth || new Date().toISOString().slice(0, 7))}
           className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
-          aria-label="Bulk generate payroll for current month"
+          aria-label="Generate payroll for current month"
         >
-          <RefreshCw size={13} /> Bulk Generate Payroll
+          <RefreshCw size={13} /> Generate Payroll
         </button>
       </div>
       <div className="overflow-x-auto flex-1">

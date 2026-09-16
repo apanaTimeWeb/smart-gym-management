@@ -1,4 +1,4 @@
-import { ManagerAttendanceUrlConfig } from '@/app/manager/attendance/attendance_url_config';
+import { ManagerAttendanceUrlConfig } from '@/app/manager/Manager_url_config';
 import { apiFetch, type ApiResponse } from '@/lib/api';
 import type { Attendance, AttendanceResponse, AttendanceStatsResponse } from '@/app/manager/attendance/attendance_types/ManagerAttendanceTypes';
 import type { MemberSnapshot, StaffSnapshot } from '@/app/manager/attendance/attendance_types/ManagerAttendanceSnapshotTypes';
@@ -22,10 +22,10 @@ export const attendanceApi = {
   },
   getMembers: async (params?: Record<string, string>): Promise<ApiResponse<{ members: MemberSnapshot[] }>> => {
     const query = new URLSearchParams(params || {}).toString();
-    return apiFetch(`${ManagerAttendanceUrlConfig.BACKEND_API.BASE}/members${query ? `?${query}` : ''}`);
+    return apiFetch(`${ManagerAttendanceUrlConfig.BACKEND_API.BASE}/members${query ? `?${query}` : ''}`, { dataSchema: z.object({ members: z.array(z.unknown()) }) });
   },
   getStaff: async (params?: Record<string, string>): Promise<ApiResponse<{ staff: StaffSnapshot[] }>> => {
     const query = new URLSearchParams(params || {}).toString();
-    return apiFetch(`${ManagerAttendanceUrlConfig.BACKEND_API.BASE}/staff${query ? `?${query}` : ''}`);
+    return apiFetch(`${ManagerAttendanceUrlConfig.BACKEND_API.BASE}/staff${query ? `?${query}` : ''}`, { dataSchema: z.object({ staff: z.array(z.unknown()) }) });
   },
 };

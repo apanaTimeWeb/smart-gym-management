@@ -9,15 +9,15 @@ import { MANAGER_ITEMS_PER_PAGE, GYM_DETAILS } from '@/app/manager/manager_utils
 import { WhatsAppFormatter } from '@/lib/whatsapp_formatter';
 
 export default function PendingPayments() {
-  const { currentPage, setCurrentPage, pendingPayments, pendingTotal, fetchState, showToast } = useSalesContext();
+  const { currentPage, setCurrentPage, pendingPayments, pendingTotal, isLoading, isError, showToast } = useSalesContext();
 
   const totalPages = Math.ceil(pendingTotal / MANAGER_ITEMS_PER_PAGE) || 1;
 
-  if (fetchState === 'loading') {
+  if (isLoading) {
     return (
       <div className="space-y-3">
         {[...Array(5)].map((_, i) => (
-          <div key={i} className="motion-safe:animate-pulse flex items-center justify-between p-4 border border-border rounded-xl bg-card">
+          <div key={`skeleton-${i}`} className="motion-safe:animate-pulse flex items-center justify-between p-4 border border-border rounded-xl bg-card">
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 bg-input rounded-full"></div>
               <div>
@@ -38,7 +38,7 @@ export default function PendingPayments() {
     );
   }
 
-  if (fetchState === 'error') {
+  if (isError) {
     return (
       <div className="text-center py-16 bg-card rounded-2xl border border-danger/30">
         <p className="text-danger font-medium">Failed to load pending payments.</p>
@@ -93,7 +93,7 @@ export default function PendingPayments() {
                   window.open(`https://wa.me/91${p.phone?.replace(/\D/g, '') || ''}?text=${encodeURIComponent(waText)}`, '_blank');
                   showToast(`Reminder sent via WhatsApp to ${p.name}`, 'success');
                 }}
-                className="px-3 py-1.5 text-xs text-white bg-primary rounded-lg font-medium transition-all duration-200 ease-in-out hover:bg-primary-hover active:scale-95"
+                className="px-3 py-1.5 text-xs text-primary-foreground bg-primary rounded-lg font-medium transition-all duration-200 ease-in-out hover:bg-primary-hover active:scale-95"
               >
                 Send Reminder
               </button>

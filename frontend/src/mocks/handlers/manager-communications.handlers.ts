@@ -14,7 +14,7 @@ import type {
   CommAutomation,
   CommChannel,
   WinBackTemplateTier,
-} from '@/app/manager/communications/communications_types/communications_types';
+} from '@/app/manager/communications/communications_types/ManagerCommunications_types';
 
 let mockCampaigns = [...MOCK_CAMPAIGNS];
 let mockAutomations = [...MOCK_AUTOMATIONS];

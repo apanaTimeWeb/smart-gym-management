@@ -1,4 +1,5 @@
 'use client';
+// DATA FLOW: Manager module state/API data → ManagerWorkoutContext → owning Manager UI components.
 // RESPONSIBILITY: Provides UI orchestration state to the Workout Library module hierarchy using URL parameters for filtering.
 import React, { createContext, useContext, useState, useCallback, useMemo } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';

@@ -1,4 +1,4 @@
-import { ManagerPlansUrlConfig } from '@/app/manager/plans/plans_url_config';
+import { ManagerPlansUrlConfig } from '@/app/manager/Manager_url_config';
 import { apiFetch, type ApiResponse } from '@/lib/api';
 import type { Plan } from '@/app/manager/plans/plans_types/ManagerPlansTypes';
 import { planSchema } from '@/app/manager/plans/plans_types/ManagerPlansSchema';
@@ -18,6 +18,6 @@ export const plansApi = {
     return apiFetch(`${ManagerPlansUrlConfig.BACKEND_API.BASE}/${id}`, { method: 'PATCH', body: JSON.stringify(body), dataSchema: planSchema });
   },
   remove: async (id: string): Promise<ApiResponse<{ id: string }>> => {
-    return apiFetch(`${ManagerPlansUrlConfig.BACKEND_API.BASE}/${id}`, { method: 'DELETE' });
+    return apiFetch(`${ManagerPlansUrlConfig.BACKEND_API.BASE}/${id}`, { method: 'DELETE', dataSchema: z.object({ id: z.string() }) });
   },
 };

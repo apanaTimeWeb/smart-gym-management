@@ -2,7 +2,7 @@
 // RESPONSIBILITY: Display 4 key referral stats using ManagerStatCard.
 import { Users, UserCheck, Gift, CheckCircle } from 'lucide-react';
 import ManagerStatCard from '@/app/manager/manager_components/ManagerShared/ManagerStatCard';
-import { useManagerReferralsLogic } from '@/app/manager/referrals/referrals_context/useManagerReferralsLogic';
+import { useManagerReferralsLogic } from '@/app/manager/referrals/referrals_context/ManagerUseManagerReferralsLogic';
 import { useDateRangeSuffix } from '@/lib/useDateRangeSuffix';
 
 export default function ManagerReferralsKPIs() {
@@ -13,7 +13,7 @@ export default function ManagerReferralsKPIs() {
     return (
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 animate-pulse">
         {[1, 2, 3, 4].map((i) => (
-          <div key={i} className="bg-card h-28 rounded-xl border border-border"></div>
+          <div key={`skeleton-${i}`} className="bg-card h-28 rounded-xl border border-border"></div>
         ))}
       </div>
     );

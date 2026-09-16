@@ -1,5 +1,5 @@
 import { http, HttpResponse } from 'msw';
-import { MOCK_MANAGER_EXERCISES } from '@/app/manager/library/library_api/ManagerLibraryMockData';
+import { MOCK_MANAGER_EXERCISES } from '@/app/manager/library/library_fixtures/ManagerLibraryMockData';
 import type { Exercise } from '@/app/manager/library/library_types/ManagerLibraryTypes';
 
 let mockExercises = [...MOCK_MANAGER_EXERCISES];

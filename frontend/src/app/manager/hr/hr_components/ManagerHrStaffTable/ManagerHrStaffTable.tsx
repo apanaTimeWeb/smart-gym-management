@@ -9,10 +9,10 @@ import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/Man
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
 import ManagerEmptyState from '@/app/manager/manager_components/ManagerFeedback/ManagerEmptyState';
-import { formatCurrency , formatDate} from '@/lib/formatters';
+import { displayValue, formatCurrency , formatDate} from '@/lib/formatters';
 
 export default function ManagerHrStaffTable() {
-  const { staff, summary, fetchState, debouncedSearch, roleFilter, currentPage, setCurrentPage, openEdit, deleteStaff, toggleStaffStatus, setViewProfileData, exportStaff } = useHrContext();
+  const { staff, summary, isLoading, debouncedSearch, roleFilter, currentPage, setCurrentPage, openEdit, deleteStaff, toggleStaffStatus, setViewProfileData, exportStaff } = useHrContext();
   const { confirm } = useConfirm();
 
   const filteredStaff = staff.filter(s => roleFilter === 'All' || (s.role || '').toLowerCase().includes(roleFilter.toLowerCase()));
@@ -20,7 +20,7 @@ export default function ManagerHrStaffTable() {
   const totalStaff = summary?.totalStaff || filteredStaff.length;
   const totalPages = Math.ceil(totalStaff / MANAGER_ITEMS_PER_PAGE) || 1;
 
-  if (fetchState === 'loading') {
+  if (isLoading) {
     return (
       <div className="flex flex-col h-full">
         <div className="overflow-x-auto flex-1">
@@ -93,19 +93,19 @@ export default function ManagerHrStaffTable() {
                       {(s.name || '?').charAt(0).toUpperCase()}
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-primary">{s.name || 'Unknown Staff'}</p>
-                      <p className="text-xs text-secondary">{s.email || 'No email'}</p>
+                      <p className="text-sm font-medium text-primary">{displayValue(s.name)}</p>
+                      <p className="text-xs text-secondary">{displayValue(s.email)}</p>
                     </div>
                   </div>
                 </td>
                 <td className="px-4 py-3 text-sm text-primary">{s.role}</td>
                 <td className="px-4 py-3">
                   {s.isActive === false ? (
-                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-danger/10 text-danger border border-danger/20">
+                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-danger/10 text-danger border border-danger/20">
                       <Ban className="w-3 h-3" /> Suspended
                     </span>
                   ) : (
-                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-success/10 text-success border border-success/20">
+                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-success/10 text-success border border-success/20">
                       <CheckCircle2 className="w-3 h-3" /> Active
                     </span>
                   )}

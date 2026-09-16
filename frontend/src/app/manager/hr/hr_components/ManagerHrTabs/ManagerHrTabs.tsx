@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useHrContext } from '@/app/manager/hr/hr_context/ManagerHrContext';
 import { HR_TABS } from '@/app/manager/hr/hr_utils/ManagerHrSharedConstants';
 import { RefreshCw, Plus, Search } from 'lucide-react';
-import { SearchableDropdown } from '@/app/manager/manager_components/ManagerShared/SearchableDropdown';
+import { SearchableDropdown } from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
 import ManagerHrStaffTable from '@/app/manager/hr/hr_components/ManagerHrStaffTable/ManagerHrStaffTable';
 import ManagerHrPayrollTable from '@/app/manager/hr/hr_components/ManagerHrPayrollTable/ManagerHrPayrollTable';
 import ManagerHrAdvanceTable from '@/app/manager/hr/hr_components/ManagerHrAdvanceTable/ManagerHrAdvanceTable';
@@ -13,7 +13,7 @@ import ManagerHrLedgerTable from '@/app/manager/hr/hr_components/ManagerHrLedger
 
 export default function ManagerHrTabs() {
   const [activeTab, setActiveTab] = useState(HR_TABS[0]);
-  const { loadAll, openAdd, openAddPayroll, fetchState, search, setSearch, roleFilter, setRoleFilter, setCurrentPage, payrollMonth, setPayrollMonth, staff } = useHrContext();
+  const { loadAll, openAdd, openAddPayroll, isLoading, search, setSearch, roleFilter, setRoleFilter, setCurrentPage, payrollMonth, setPayrollMonth, staff } = useHrContext();
 
   return (
     <div className="rounded-xl shadow-sm border overflow-hidden bg-card border-border">
@@ -89,7 +89,7 @@ export default function ManagerHrTabs() {
 </div>
 
   <div className="p-5">
-  {fetchState === 'loading' ? (
+  {isLoading ? (
     <div className="flex justify-center py-10">
       <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full motion-safe:animate-spin" />
     </div>
@@ -130,20 +130,8 @@ export default function ManagerHrTabs() {
     </div>
   ) : activeTab === 'Trainer-Member Assignment' ? (
     <div className="bg-card p-6 border border-border rounded-xl">
-      <h3 className="text-lg font-bold text-foreground mb-4">Assign Members to Trainers</h3>
-      <div className="space-y-4 max-w-md">
-        <div>
-          <label className="block text-sm font-medium mb-1">Select Member</label>
-          <SearchableDropdown value="" onChange={() => {}} options={[]} placeholder="Select a member..." className="bg-input" />
-        </div>
-        <div>
-          <label className="block text-sm font-medium mb-1">Select Trainer</label>
-          <SearchableDropdown value="" onChange={() => {}} options={(staff || []).map(s => ({ value: s.id, label: s.name }))} placeholder="Select a trainer..." className="bg-input" />
-        </div>
-        <button className="w-full py-2 bg-primary text-primary-foreground font-semibold rounded-lg hover:opacity-90 transition-opacity mt-2">
-          Assign Member
-        </button>
-      </div>
+      <h3 className="text-lg font-bold text-foreground mb-2">Assign Members to Trainers</h3>
+      <p className="text-sm text-secondary">Member-to-trainer assignment is not exposed by the current Manager HR API contract.</p>
     </div>
   ) : activeTab === 'Trainer Schedule' ? (
     <div className="bg-card p-6 border border-border rounded-xl">
@@ -182,7 +170,7 @@ export default function ManagerHrTabs() {
       )}
     </div>
   ) : (
-    <div className="text-center text-secondary py-10">Coming soon</div>
+    <div className="text-center text-secondary py-10">No data available for this section.</div>
   )}
   </div>
  </div>

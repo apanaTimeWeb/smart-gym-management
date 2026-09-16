@@ -1,7 +1,8 @@
 'use client';
+// RESPONSIBILITY: Renders the Manager ExpensesChart presentation layer for the Manager module.
 import React, { useMemo } from 'react';
 import dynamic from 'next/dynamic';
-import { useExpensesListQuery } from '@/app/manager/expenses/expenses_api/useManagerExpensesQueries';
+import { useExpensesListQuery } from '@/app/manager/expenses/expenses_api/ManagerUseManagerExpensesQueries';
 import { formatCurrency, formatKPI } from '@/lib/formatters';
 import { Loader2 } from 'lucide-react';
 
@@ -40,7 +41,7 @@ export default function ManagerExpensesChart() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-full min-h-[300px]">
+      <div className="flex items-center justify-center h-full min-h-72">
         <Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" />
       </div>
     );
@@ -48,7 +49,7 @@ export default function ManagerExpensesChart() {
 
   if (isError || chartData.length === 0) {
     return (
-      <div className="h-full min-h-[300px] flex items-center justify-center">
+      <div className="h-full min-h-72 flex items-center justify-center">
         <p className="text-secondary font-medium">No expense data available to chart.</p>
       </div>
     );
@@ -105,7 +106,7 @@ export default function ManagerExpensesChart() {
         </div>
       </div>
 
-      <div className="flex-1 min-h-[300px] w-full">
+      <div className="flex-1 min-h-72 w-full">
         <Chart
           type="bar"
           height="100%"

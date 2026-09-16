@@ -1,5 +1,5 @@
 import { http, HttpResponse } from 'msw';
-import { MOCK_MANAGER_WORKOUTS } from '@/app/manager/workout/workout_api/ManagerWorkoutMockData';
+import { MOCK_MANAGER_WORKOUTS } from '@/app/manager/workout/workout_fixtures/ManagerWorkoutMockData';
 import type { Workout } from '@/app/manager/workout/workout_types/ManagerWorkoutTypes';
 
 let MOCK_DB = [...MOCK_MANAGER_WORKOUTS];

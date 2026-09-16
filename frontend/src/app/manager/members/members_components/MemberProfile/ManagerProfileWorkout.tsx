@@ -1,32 +1,20 @@
 'use client';
 // RESPONSIBILITY: Renders the member's assigned workout plan and handles the assignment flow.
 // DATA FLOW: useMembersContext -> ManagerProfileWorkout -> workoutApi
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Dumbbell, Plus, Check, MessageCircle, Edit2 } from 'lucide-react';
 import { useMembersContext } from '@/app/manager/members/members_context/ManagerMembersContext';
-import { membersApi } from '@/app/manager/members/members_api/ManagerMembersApi';
+import { useManagerMembersWorkoutPlansQuery } from '@/app/manager/members/members_api/ManagerUseManagerMembersWorkoutPlansQuery';
 import type { WorkoutSnapshot } from '@/app/manager/members/members_types/ManagerMembersSnapshotTypes';
-import { MOCK_WORKOUT_EXERCISES } from '@/app/manager/members/members_utils/ManagerMembersMockData';
 
 export default function ManagerProfileWorkout() {
   const { selectedMember, assignWorkout } = useMembersContext();
   const [isAssigning, setIsAssigning] = useState(false);
-  const [availableWorkouts, setAvailableWorkouts] = useState<WorkoutSnapshot[]>([]);
-  const [fetchWorkoutsState, setFetchWorkoutsState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [selectedWorkoutId, setSelectedWorkoutId] = useState<string>('');
 
-  useEffect(() => {
-    if (isAssigning && availableWorkouts.length === 0) {
-      setTimeout(() => setFetchWorkoutsState('loading'), 0);
-      membersApi.getWorkouts().then(res => {
-        setAvailableWorkouts(res.data || []);
-        setTimeout(() => setFetchWorkoutsState('success'), 0);
-      }).catch(() => {
-        // Error logged to monitoring provider
-        setTimeout(() => setFetchWorkoutsState('error'), 0);
-      });
-    }
-  }, [isAssigning, availableWorkouts.length]);
+  const { data: workoutResponse, isPending: workoutsLoading } = useManagerMembersWorkoutPlansQuery(isAssigning);
+  const availableWorkouts = workoutResponse?.data || [];
+
 
   if (!selectedMember) return null;
 
@@ -35,7 +23,7 @@ export default function ManagerProfileWorkout() {
 
   const handleAssign = async () => {
     if (!selectedWorkoutId) return;
-    const selected = availableWorkouts.find(w => String(w.id) === selectedWorkoutId) || null;
+  const selected = availableWorkouts.find(w => String(w.id) === selectedWorkoutId) || null;
     await assignWorkout(selectedMember.id, selected);
     setIsAssigning(false);
   };
@@ -54,7 +42,7 @@ export default function ManagerProfileWorkout() {
                 const text = `*WORKOUT PLAN: ${workout?.name || 'Assigned'}*\nLevel: ${workout?.level || 'N/A'}\n\n*Routine:*\n${(workout?.days || []).map(d => `*Day ${d.day}: ${d.focus}*\n${(d.exercises || []).length === 0 ? 'Rest Day' : (d.exercises || []).map(e => `- ${e.name} (${e.sets}x${e.reps})`).join('\n')}`).join('\n\n')}`;
                 window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
               }}
-              className="flex items-center gap-2 px-4 py-2 bg-success text-white rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-success/30 transition-all active:scale-95"
+              className="flex items-center gap-2 px-4 py-2 bg-success text-primary-foreground rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-success/30 transition-all active:scale-95"
             >
               <MessageCircle size={16} /> Send via WhatsApp
             </button>
@@ -68,7 +56,7 @@ export default function ManagerProfileWorkout() {
         ) : !isAssigning && (
           <button 
             onClick={() => setIsAssigning(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-primary/30 transition-all active:scale-95"
+            className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-primary/30 transition-all active:scale-95"
           >
             <Plus size={16} /> Assign Workout
           </button>
@@ -78,7 +66,7 @@ export default function ManagerProfileWorkout() {
       {isAssigning && (
         <div className="bg-card border border-border p-6 rounded-xl space-y-4 shadow-sm">
           <h4 className="font-semibold text-primary">Assign Workout Plan from Library</h4>
-          {fetchWorkoutsState === 'loading' ? (
+          {workoutsLoading ? (
             <p className="text-sm text-secondary">Loading workout plans...</p>
           ) : (
             <div className="flex flex-col sm:flex-row gap-4">
@@ -102,7 +90,7 @@ export default function ManagerProfileWorkout() {
                 <button 
                   onClick={handleAssign}
                   disabled={!selectedWorkoutId}
-                  className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl text-sm font-semibold hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-xl text-sm font-semibold hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   <Check size={16} /> Confirm Assign
                 </button>

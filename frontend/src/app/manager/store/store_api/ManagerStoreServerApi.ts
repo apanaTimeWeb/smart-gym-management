@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Server-side API fetching for the store module.
 import { ssrApiFetch } from '@/lib/server-api';
 import type { ApiResponse } from '@/lib/api';
-import { StoreUrlConfig } from '@/app/manager/store/ManagerStoreUrlConfig';
+import { StoreUrlConfig } from '@/app/manager/Manager_url_config';
 import type { Product, Order, StoreSummary } from '@/app/manager/store/store_types/ManagerStoreTypes';
 
 export const ssrStoreApi = {

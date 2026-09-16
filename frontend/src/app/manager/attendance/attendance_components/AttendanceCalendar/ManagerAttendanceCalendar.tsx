@@ -2,7 +2,7 @@
 // RESPONSIBILITY: Renders a month-wise calendar view of attendance for a specific user.
 import React, { useState } from 'react';
 import { useAttendanceContext } from '@/app/manager/attendance/attendance_context/ManagerAttendanceContext';
-import { useAttendanceHistoryQuery } from '@/app/manager/attendance/attendance_api/useManagerAttendanceQueries';
+import { useAttendanceHistoryQuery } from '@/app/manager/attendance/attendance_api/ManagerUseManagerAttendanceQueries';
 import { X, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
 
 export default function AttendanceCalendar() {
@@ -58,8 +58,8 @@ export default function AttendanceCalendar() {
   });
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/50 p-4 motion-safe:animate-in fade-in duration-200">
-      <div className="w-full max-w-md bg-card shadow-xl flex flex-col max-h-[90vh] rounded-2xl border-2 border-primary overflow-hidden">
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-foreground/50 p-4 motion-safe:animate-in fade-in duration-200">
+      <div className="w-full max-w-md bg-card shadow-xl flex flex-col max-h-full rounded-2xl border-2 border-primary overflow-hidden">
         
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-border">
@@ -93,7 +93,7 @@ export default function AttendanceCalendar() {
         </div>
         
         {/* Stats */}
-        <div className={`px-4 pb-2 grid ${calendarUser.type === 'STAFF' ? 'grid-cols-3' : 'grid-cols-2 gap-4 max-w-[75%]'} text-xs font-bold text-secondary`}>
+        <div className={`px-4 pb-2 grid ${calendarUser.type === 'STAFF' ? 'grid-cols-3' : 'grid-cols-2 gap-4 max-w-3/4'} text-xs font-bold text-secondary`}>
           <div className="flex items-center gap-1.5"><div className="w-2.5 h-2.5 rounded-full bg-success"></div> Present: {totalP}</div>
           <div className="flex items-center gap-1.5"><div className="w-2.5 h-2.5 rounded-full bg-danger"></div> Absent: {totalA}</div>
           {calendarUser.type === 'STAFF' && (
@@ -133,9 +133,9 @@ export default function AttendanceCalendar() {
                       key={day}
                       className={`
                         aspect-square flex items-center justify-center rounded-md border-none text-xs font-bold transition-all
-                        ${isPresent ? 'bg-success text-white hover:scale-110' : ''}
-                        ${isAbsent ? 'bg-danger text-white hover:scale-110' : ''}
-                        ${isLeave ? 'bg-primary text-black hover:scale-110' : ''}
+                        ${isPresent ? 'bg-success text-primary-foreground hover:scale-110' : ''}
+                        ${isAbsent ? 'bg-danger text-primary-foreground hover:scale-110' : ''}
+                        ${isLeave ? 'bg-primary text-primary-foreground hover:scale-110' : ''}
                         ${status === 'NONE' ? 'bg-background border border-border text-secondary' : ''}
                       `}
                     >

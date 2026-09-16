@@ -1,12 +1,14 @@
 'use client';
+// DATA FLOW: Manager module state/API data → ManagerExpensesContext → owning Manager UI components.
 // RESPONSIBILITY: Provides local UI state (filtering, pagination, modal visibility) for the Expenses module.
 import { createContext, useContext, useState, useCallback, useMemo } from 'react';
 import type { ReactNode } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import type { Expense } from '@/app/manager/expenses/expenses_types/ManagerExpensesTypes';
-import toast from 'react-hot-toast';
-import { useSaveExpenseMutation, useDeleteExpenseMutation } from '@/app/manager/expenses/expenses_api/useManagerExpensesMutations';
+import { showManagerErrorToast, showManagerSuccessToast } from '@/app/manager/manager_utils/ManagerToastService';
+import { useSaveExpenseMutation, useDeleteExpenseMutation } from '@/app/manager/expenses/expenses_api/ManagerUseManagerExpensesMutations';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
+import { useExpensesListQuery } from '@/app/manager/expenses/expenses_api/ManagerUseManagerExpensesQueries';
 
 interface ExpensesContextValue {
   search: string;
@@ -62,6 +64,7 @@ export function ExpensesProvider({ children }: { children: ReactNode }) {
 
   const saveMutation = useSaveExpenseMutation();
   const deleteMutation = useDeleteExpenseMutation();
+  const exportQuery = useExpensesListQuery({ search: '', status: '', page: '1' });
   
   const saving = saveMutation.isPending || deleteMutation.isPending;
 
@@ -79,35 +82,44 @@ export function ExpensesProvider({ children }: { children: ReactNode }) {
 
   const saveExpense = async (data: Partial<Expense>) => {
     try {
-      await saveMutation.mutateAsync({ ...data, id: editId || undefined });
-      toast.success(`Expense ${editId ? 'updated' : 'added'} successfully.`);
+      const response = await saveMutation.mutateAsync({ ...data, id: editId || undefined });
+      showManagerSuccessToast(response.message, 'manager-expenses-success');
       setShowModal(false);
     } catch (e: unknown) {
-      toast.error(e instanceof Error ? e.message : 'Failed to save expense');
+      showManagerErrorToast(e, 'manager-expenses-error');
     }
   };
 
   const deleteExpense = async (id: string) => {
     try {
-      await deleteMutation.mutateAsync(id);
-      toast.success('Expense deleted successfully.');
+      const response = await deleteMutation.mutateAsync(id);
+      showManagerSuccessToast(response.message, 'manager-expenses-success');
     } catch (e: unknown) {
-      toast.error(e instanceof Error ? e.message : 'Failed to delete expense');
+      showManagerErrorToast(e, 'manager-expenses-error');
     }
   };
 
   const markAsPaid = async (id: string) => {
     try {
-      await saveMutation.mutateAsync({ id, status: 'PAID' });
-      toast.success('Expense marked as paid.');
+      const response = await saveMutation.mutateAsync({ id, status: 'PAID' });
+      showManagerSuccessToast(response.message, 'manager-expenses-success');
     } catch (e: unknown) {
-      toast.error(e instanceof Error ? e.message : 'Failed to mark as paid');
+      showManagerErrorToast(e, 'manager-expenses-error');
     }
   };
 
   const exportExpenses = () => {
-    toast.success('Exporting expenses as CSV...');
-    // Real implementation would generate and download CSV
+    const rows = exportQuery.data?.expenses ?? [];
+    const escapeCsv = (value: unknown) => `\"${String(value ?? '').replace(/\"/g, '\"\"')}\"`;
+    const header = ['ID', 'Title', 'Category', 'Amount', 'Date', 'Status'];
+    const csv = [header, ...rows.map((item) => [item.id, item.title, item.category, item.amount, item.date, item.status])].map((row) => row.map(escapeCsv).join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const href = URL.createObjectURL(blob);
+    const anchor = document.createElement('a');
+    anchor.href = href;
+    anchor.download = 'manager-expenses.csv';
+    anchor.click();
+    URL.revokeObjectURL(href);
   };
 
   const value = useMemo(() => ({
@@ -119,7 +131,7 @@ export function ExpensesProvider({ children }: { children: ReactNode }) {
     openAdd, openEdit,
     saveExpense, deleteExpense, markAsPaid, exportExpenses,
     saving
-  }), [search, statusFilter, currentPage, showModal, editId, editData, saving]);
+  }), [search, statusFilter, currentPage, showModal, editId, editData, saving, exportQuery.data]);
 
   return <ManagerExpensesContext.Provider value={value}>{children}</ManagerExpensesContext.Provider>;
 }

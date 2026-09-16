@@ -62,7 +62,7 @@ export default function ManagerSidebar({ isCollapsed, setIsCollapsed }: ManagerS
       {/* Mobile Backdrop */}
       {isMobileOpen && (
         <div
-          className="fixed inset-0 bg-black/80 backdrop-blur-sm z-40 lg:hidden motion-safe:transition-opacity"
+          className="fixed inset-0 bg-foreground/80 backdrop-blur-sm z-40 lg:hidden motion-safe:transition-opacity"
           onClick={() => setIsMobileOpen(false)}
         />
       )}
@@ -145,7 +145,7 @@ export default function ManagerSidebar({ isCollapsed, setIsCollapsed }: ManagerS
                           !showLabel ? 'justify-center px-0' : 'px-3.5'
                         } ${
                           active
-                            ? 'bg-primary-subtle text-primary border-l-2 border-primary shadow-[0_0_15px_rgba(250,204,21,0.15)]'
+                            ? 'bg-primary-subtle text-primary border-l-2 border-primary shadow-lg'
                             : 'text-secondary hover:text-primary hover:bg-primary-subtle border-l-2 border-transparent'
                         }`}
                       >
@@ -162,7 +162,7 @@ export default function ManagerSidebar({ isCollapsed, setIsCollapsed }: ManagerS
 
         {/* User */}
         <div className={`px-4 py-4 border-t border-border bg-header shrink-0 flex items-center ${(!isCollapsed || isMobileOpen) ? 'gap-3' : 'justify-center'}`}>
-          <div className="w-10 h-10 min-w-10 rounded-full flex items-center justify-center text-white text-sm font-bold border border-white/10 bg-primary">
+          <div className="w-10 h-10 min-w-10 rounded-full flex items-center justify-center text-primary-foreground text-sm font-bold border border-border bg-primary">
             {mounted ? (user?.name?.charAt(0)?.toUpperCase() || 'M') : 'M'}
           </div>
           {(!isCollapsed || isMobileOpen) && (

@@ -21,7 +21,7 @@ function getDaysLeftColorClass(daysLeft: number): string {
 
 export default function ManagerSalesAllMemberships() {
   const [filter, setFilter] = useState('All');
-  const { currentPage, setCurrentPage, allMemberships, allMembershipsTotal, fetchState } = useSalesContext();
+  const { currentPage, setCurrentPage, allMemberships, allMembershipsTotal, isLoading, isError } = useSalesContext();
   const [now] = useState(() => Date.now());
 
   const totalPages = Math.ceil(allMembershipsTotal / MANAGER_ITEMS_PER_PAGE) || 1;
@@ -37,17 +37,17 @@ export default function ManagerSalesAllMemberships() {
     return true;
   });
 
-  if (fetchState === 'loading') {
+  if (isLoading) {
     return (
       <div className="space-y-2">
         {[...Array(6)].map((_, i) => (
-          <div key={i} className="motion-safe:animate-pulse h-12 bg-card rounded border border-border" />
+          <div key={`skeleton-${i}`} className="motion-safe:animate-pulse h-12 bg-card rounded border border-border" />
         ))}
       </div>
     );
   }
 
-  if (fetchState === 'error') {
+  if (isError) {
     return (
       <div className="text-center py-16 bg-card rounded-2xl border border-danger/30">
         <p className="text-danger font-medium">Failed to load memberships.</p>
@@ -65,7 +65,7 @@ export default function ManagerSalesAllMemberships() {
             onClick={() => setFilter(f)}
             className={`px-3 py-1.5 text-xs rounded-full font-medium border transition-colors ${
               f === filter
-                ? 'bg-primary text-white border-transparent'
+                ? 'bg-primary text-primary-foreground border-transparent'
                 : 'border-border text-secondary hover:text-foreground'
             }`}
           >

@@ -1,0 +1,24 @@
+'use client';
+// DATA FLOW: Manager module state/API data → useManagerScheduleQueries → owning Manager UI components.
+/** Manages UseScheduleQueries for the Manager module. */
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { managerScheduleApi } from '@/app/manager/schedule/schedule_api/ManagerScheduleApi';
+import type { CreateShiftDto } from '@/app/manager/schedule/schedule_types/ManagerScheduleTypes';
+
+export const managerScheduleQueryKeys = {
+  all: ['manager', 'schedule'] as const,
+  list: (filters: Record<string, string>) => [...managerScheduleQueryKeys.all, 'list', filters] as const,
+};
+
+export function useManagerScheduleQuery(filters: Record<string, string>) {
+  return useQuery({ queryKey: managerScheduleQueryKeys.list(filters), queryFn: () => managerScheduleApi.getAll(filters).then(res => res.data) });
+}
+
+export function useManagerScheduleMutations() {
+  const queryClient = useQueryClient();
+  const invalidate = () => queryClient.invalidateQueries({ queryKey: managerScheduleQueryKeys.all });
+  const create = useMutation({ mutationFn: (body: CreateShiftDto) => managerScheduleApi.createShift(body), onSuccess: invalidate });
+  const update = useMutation({ mutationFn: ({ id, body }: { id: string; body: CreateShiftDto }) => managerScheduleApi.updateShift(id, body), onSuccess: invalidate });
+  const remove = useMutation({ mutationFn: (id: string) => managerScheduleApi.deleteShift(id), onSuccess: invalidate });
+  return { create, update, remove };
+}

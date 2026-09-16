@@ -4,9 +4,9 @@ import ManagerPlanCard from '@/app/manager/plans/plans_components/ManagerPlansMa
 import { usePlansContext } from '@/app/manager/plans/plans_context/ManagerPlansContext';
 
 export default function ManagerPlansGrid() {
-  const { filteredPlans, fetchState, search } = usePlansContext();
+  const { filteredPlans, isPending, isError, search } = usePlansContext();
 
-  if (fetchState === 'loading') {
+  if (isPending) {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
         {[1, 2, 3].map(i => (
@@ -16,7 +16,7 @@ export default function ManagerPlansGrid() {
     );
   }
 
-  if (fetchState === 'error') {
+  if (isError) {
     return (
       <div className="py-16 text-center space-y-3">
         <p className="text-sm text-danger font-medium">Failed to load plans</p>

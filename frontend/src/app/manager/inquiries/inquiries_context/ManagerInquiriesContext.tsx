@@ -3,7 +3,7 @@
 // DATA FLOW: useManagerInquiriesLogic -> ManagerInquiriesContext -> ManagerInquiriesKPIs, ManagerInquiriesTable, ManagerInquiriesToolbar, ManagerInquiriesModal
 import React, { createContext, useContext, useMemo } from 'react';
 import type { InquiriesContextType } from '@/app/manager/inquiries/inquiries_types/ManagerInquiriesTypes';
-import { useManagerInquiriesLogic } from '@/app/manager/inquiries/inquiries_context/useManagerInquiriesLogic';
+import { useManagerInquiriesLogic } from '@/app/manager/inquiries/inquiries_context/ManagerUseManagerInquiriesLogic';
 
 const ManagerInquiriesContext = createContext<InquiriesContextType | undefined>(undefined);
 

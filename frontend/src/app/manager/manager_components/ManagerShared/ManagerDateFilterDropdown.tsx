@@ -4,7 +4,7 @@
 
 import { useCallback } from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
-import { SearchableDropdown } from '@/app/manager/manager_components/ManagerShared/SearchableDropdown';
+import { SearchableDropdown } from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
 
 const OPTIONS = [
   { value: 'this_month', label: 'This Month' },

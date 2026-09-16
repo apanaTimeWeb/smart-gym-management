@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Plus, ShoppingCart, RefreshCw, Search } from 'lucide-react';
 import { useStoreContext } from '@/app/manager/store/store_context/ManagerStoreContext';
-import { SearchableDropdown } from '@/app/manager/manager_components/ManagerShared/SearchableDropdown';
+import { SearchableDropdown } from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
 
 export default function ManagerStoreToolbar() {
   const { tab, setTab, loadAll, openAddProduct, setShowOrderModal, search, setSearch, setCurrentPage, categoryFilter, setCategoryFilter, stockFilter, setStockFilter } = useStoreContext();
@@ -87,7 +87,7 @@ export default function ManagerStoreToolbar() {
  {tab === 'Products' && (
  <button 
  onClick={openAddProduct} 
- className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white rounded-lg bg-primary hover:opacity-90 transition-opacity" 
+ className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground rounded-lg bg-primary hover:opacity-90 transition-opacity" 
  >
  <Plus size={14} /> Add Product
  </button>
@@ -95,7 +95,7 @@ export default function ManagerStoreToolbar() {
  {tab === 'Orders' && (
  <button 
  onClick={() => setShowOrderModal(true)} 
- className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-primary rounded-lg hover:opacity-90 transition-opacity" 
+ className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-lg hover:opacity-90 transition-opacity" 
  >
  <ShoppingCart size={14} /> New Sale
  </button>

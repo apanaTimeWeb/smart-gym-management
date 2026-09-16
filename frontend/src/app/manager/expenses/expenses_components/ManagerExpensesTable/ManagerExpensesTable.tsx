@@ -3,7 +3,7 @@
 import { Edit, Trash2, Loader2, ExternalLink, CheckCircle2, Banknote } from 'lucide-react';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
 import { useExpensesContext } from '@/app/manager/expenses/expenses_context/ManagerExpensesContext';
-import { useExpensesListQuery } from '@/app/manager/expenses/expenses_api/useManagerExpensesQueries';
+import { useExpensesListQuery } from '@/app/manager/expenses/expenses_api/ManagerUseManagerExpensesQueries';
 import { EXPENSES_TABLE_HEADERS, EXPENSE_STATUS_STYLES } from '@/app/manager/expenses/expenses_utils/ManagerExpensesSharedConstants';
 import { formatCurrency , formatDate} from '@/lib/formatters';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
@@ -26,7 +26,7 @@ export default function ManagerExpensesTable() {
   const totalPages = Math.ceil(totalExpenses / MANAGER_ITEMS_PER_PAGE);
 
   return (
-    <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden flex flex-col h-full min-h-[400px]">
+    <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden flex flex-col h-full min-h-96">
       {isLoading ? (
         <div className="flex items-center justify-center py-16 flex-1">
           <Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" />

@@ -1,7 +1,7 @@
 'use client';
 // RESPONSIBILITY: KPI stat cards for the Communications module — total sent, WhatsApp, Email, campaigns this month.
 import { Send, MessageCircle, Mail, BarChart3 } from 'lucide-react';
-import { useManagerCommunicationsLogic } from '@/app/manager/communications/communications_context/useManagerCommunicationsLogic';
+import { useManagerCommunicationsLogic } from '@/app/manager/communications/communications_context/ManagerUseManagerCommunicationsLogic';
 import ManagerStatCard from '@/app/manager/manager_components/ManagerShared/ManagerStatCard';
 import { formatNumber } from '@/lib/formatters';
 

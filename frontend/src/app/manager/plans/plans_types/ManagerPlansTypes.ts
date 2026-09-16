@@ -4,7 +4,6 @@ import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback
 import type { PlanFormValues } from '@/app/manager/plans/plans_utils/ManagerPlansSharedConstants';
 import React from 'react';
 
-export type FetchState = 'idle' | 'loading' | 'success' | 'error';
 
 export interface PlansInitialData {
   plans: Plan[];
@@ -12,7 +11,8 @@ export interface PlansInitialData {
 
 export interface PlansContextType {
   plans: Plan[];
-  fetchState: FetchState;
+  isPending: boolean;
+  isError: boolean;
   saving: boolean;
   toast: { message: string; type: ToastType } | null;
 

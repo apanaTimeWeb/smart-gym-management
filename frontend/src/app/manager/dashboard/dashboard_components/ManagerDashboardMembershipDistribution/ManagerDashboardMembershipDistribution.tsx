@@ -1,7 +1,7 @@
 'use client';
 // RESPONSIBILITY: Renders the distribution of members by plan on the dashboard.
-import { useDashboardStatsQuery } from '@/app/manager/dashboard/dashboard_api/useManagerDashboardQueries';
-import { useManagerDashboardStore } from '@/app/manager/dashboard/dashboard_store/useManagerDashboardStore';
+import { useDashboardStatsQuery } from '@/app/manager/dashboard/dashboard_api/ManagerUseManagerDashboardQueries';
+import { useManagerDashboardStore } from '@/app/manager/dashboard/dashboard_store/ManagerUseManagerDashboardStore';
 import { DASHBOARD_PLAN_BG_COLORS } from '@/app/manager/dashboard/dashboard_utils/ManagerDashboardSharedConstants';
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
 

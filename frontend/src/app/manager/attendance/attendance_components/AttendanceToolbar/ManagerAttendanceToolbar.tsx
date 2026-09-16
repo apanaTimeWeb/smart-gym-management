@@ -87,7 +87,7 @@ export default function AttendanceToolbar() {
  </button>
  <button 
  onClick={() => setShowModal(true)} 
- className="flex justify-center items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-primary rounded-lg transition-opacity hover:opacity-90 w-full sm:w-auto" 
+ className="flex justify-center items-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-lg transition-opacity hover:opacity-90 w-full sm:w-auto" 
  >
  <Plus size={14} /> Mark Attendance
  </button>

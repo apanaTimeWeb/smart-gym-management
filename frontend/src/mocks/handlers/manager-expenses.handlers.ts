@@ -1,5 +1,5 @@
 import { http, HttpResponse } from 'msw';
-import { MOCK_EXPENSES_LIST, MOCK_EXPENSES_STATS } from '@/app/manager/expenses/expenses_api/ManagerExpensesMockData';
+import { MOCK_EXPENSES_LIST, MOCK_EXPENSES_STATS } from '@/app/manager/expenses/expenses_fixtures/ManagerExpensesMockData';
 import type { Expense } from '@/app/manager/expenses/expenses_types/ManagerExpensesTypes';
 
 let mockExpenses = [...MOCK_EXPENSES_LIST];

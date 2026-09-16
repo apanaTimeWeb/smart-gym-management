@@ -1,32 +1,21 @@
 'use client';
 // RESPONSIBILITY: Renders the member's assigned diet plan and handles the assignment flow.
 // DATA FLOW: useMembersContext -> ManagerProfileDiet -> libraryApi
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Utensils, Plus, Check, MessageCircle, Edit2 } from 'lucide-react';
 import { formatNumber } from '@/lib/formatters';
 import { useMembersContext } from '@/app/manager/members/members_context/ManagerMembersContext';
-import { membersApi } from '@/app/manager/members/members_api/ManagerMembersApi';
+import { useManagerMembersDietPlansQuery } from '@/app/manager/members/members_api/ManagerUseManagerMembersDietPlansQuery';
 import type { DietPlanSnapshot } from '@/app/manager/members/members_types/ManagerMembersSnapshotTypes';
 
 export default function ManagerProfileDiet() {
   const { selectedMember, assignDiet } = useMembersContext();
   const [isAssigning, setIsAssigning] = useState(false);
-  const [availableDiets, setAvailableDiets] = useState<DietPlanSnapshot[]>([]);
-  const [fetchDietsState, setFetchDietsState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [selectedDietId, setSelectedDietId] = useState<string>('');
 
-  useEffect(() => {
-    if (isAssigning && availableDiets.length === 0) {
-      setTimeout(() => setFetchDietsState('loading'), 0);
-      membersApi.getDietPlans().then(res => {
-        setAvailableDiets(res.data || []);
-        setTimeout(() => setFetchDietsState('success'), 0);
-      }).catch(() => {
-        // Error logged to monitoring provider
-        setTimeout(() => setFetchDietsState('error'), 0);
-      });
-    }
-  }, [isAssigning, availableDiets.length]);
+  const { data: dietResponse, isPending: dietsLoading } = useManagerMembersDietPlansQuery(isAssigning);
+  const availableDiets = dietResponse?.data || [];
+
 
   if (!selectedMember) return null;
 
@@ -35,7 +24,7 @@ export default function ManagerProfileDiet() {
 
   const handleAssign = async () => {
     if (!selectedDietId) return;
-    const selected = availableDiets.find(d => String(d.id) === selectedDietId) || null;
+  const selected = availableDiets.find(d => String(d.id) === selectedDietId) || null;
     await assignDiet(selectedMember.id, selected);
     setIsAssigning(false);
   };
@@ -54,7 +43,7 @@ export default function ManagerProfileDiet() {
                 const text = `*DIET PLAN: ${diet?.name || 'Assigned'}*\n\n*Macros:*\nCalories: ${diet?.calories || 0} kcal\nProtein: ${diet?.protein || 0}g\nCarbs: ${diet?.carbs || 0}g\nFats: ${diet?.fats || 0}g\n\n*Meals:*\n${diet?.meals?.map(m => `*${m.time} - ${m.name}* (${m.calories || 0} kcal)\n${(m.foods || []).map((f: string) => `- ${f}`).join('\n')}`).join('\n\n')}`;
                 window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
               }}
-              className="flex items-center gap-2 px-4 py-2 bg-success text-white rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-success/30 transition-all active:scale-95"
+              className="flex items-center gap-2 px-4 py-2 bg-success text-primary-foreground rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-success/30 transition-all active:scale-95"
             >
               <MessageCircle size={16} /> Send via WhatsApp
             </button>
@@ -68,7 +57,7 @@ export default function ManagerProfileDiet() {
         ) : !isAssigning && (
           <button 
             onClick={() => setIsAssigning(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-primary/30 transition-all active:scale-95"
+            className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-primary/30 transition-all active:scale-95"
           >
             <Plus size={16} /> Assign Diet
           </button>
@@ -78,7 +67,7 @@ export default function ManagerProfileDiet() {
       {isAssigning && (
         <div className="bg-card border border-border p-6 rounded-xl space-y-4 shadow-sm">
           <h4 className="font-semibold text-primary">Assign Diet Plan from Library</h4>
-          {fetchDietsState === 'loading' ? (
+          {dietsLoading ? (
             <p className="text-sm text-secondary">Loading diet plans...</p>
           ) : (
             <div className="flex flex-col sm:flex-row gap-4">
@@ -102,7 +91,7 @@ export default function ManagerProfileDiet() {
                 <button 
                   onClick={handleAssign}
                   disabled={!selectedDietId}
-                  className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl text-sm font-semibold hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-xl text-sm font-semibold hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   <Check size={16} /> Confirm Assign
                 </button>

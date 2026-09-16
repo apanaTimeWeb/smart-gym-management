@@ -2,9 +2,9 @@
 // RESPONSIBILITY: Renders the primary tabular list of members with actions, filtering state, and pagination.
 import { Edit, MessageCircle, Mail, Trash2, Loader2, Users, Banknote, Ban, ArrowUp, ArrowDown, ArrowUpDown } from 'lucide-react';
 import { useMembersContext } from '@/app/manager/members/members_context/ManagerMembersContext';
-import { useFetchMembers } from '@/app/manager/members/members_api/useManagerMembersQueries';
+import { useFetchMembers } from '@/app/manager/members/members_api/ManagerUseManagerMembersQueries';
 import { MEMBERS_STATUS_COLORS, MEMBERS_CYCLE_LABELS, formatCurrency } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
-import { maskSensitiveData , formatDate} from '@/lib/formatters';
+import { maskSensitiveData, formatDate, displayValue } from '@/lib/formatters';
 import ManagerEmptyState from '@/app/manager/manager_components/ManagerFeedback/ManagerEmptyState';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
@@ -36,7 +36,6 @@ export default function ManagerMembersTable() {
   });
   const members = membersRes?.members || [];
   const totalMembers = membersRes?.total || 0;
-  const fetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
 
   const totalPages = Math.ceil(totalMembers / MANAGER_ITEMS_PER_PAGE);
 
@@ -69,10 +68,12 @@ export default function ManagerMembersTable() {
 
   return (
     <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden flex flex-col h-full min-h-96">
-      {fetchState === 'loading' ? (
+      {isLoading ? (
         <div className="flex items-center justify-center py-16 flex-1">
           <Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" />
         </div>
+      ) : isError ? (
+        <div role="alert" className="p-8 text-center text-danger">Unable to load members.</div>
       ) : (
         <>
           <div className="overflow-x-auto">
@@ -87,26 +88,26 @@ export default function ManagerMembersTable() {
                       onChange={toggleAll}
                     />
                   </th>
-                  <th className="text-left text-[11px] font-bold text-secondary uppercase tracking-wider px-2 py-3 whitespace-nowrap">ID</th>
-                  <th className="text-left text-[11px] font-bold text-secondary uppercase tracking-wider px-2 py-3 whitespace-nowrap cursor-pointer hover:text-primary transition-colors" onClick={() => handleSort('name')}>
+                  <th className="text-left text-xs font-bold text-secondary uppercase tracking-wider px-2 py-3 whitespace-nowrap">ID</th>
+                  <th className="text-left text-xs font-bold text-secondary uppercase tracking-wider px-2 py-3 whitespace-nowrap cursor-pointer hover:text-primary transition-colors" onClick={() => handleSort('name')}>
                     MEMBER <SortIcon column="name" />
                   </th>
-                  <th className="text-left text-[11px] font-bold text-secondary uppercase tracking-wider px-2 py-3 whitespace-nowrap">GENDER</th>
-                  <th className="text-left text-[11px] font-bold text-secondary uppercase tracking-wider px-2 py-3 whitespace-nowrap">PLAN</th>
-                  <th className="text-left text-[11px] font-bold text-secondary uppercase tracking-wider px-2 py-3 whitespace-nowrap cursor-pointer hover:text-primary transition-colors" onClick={() => handleSort('status')}>
+                  <th className="text-left text-xs font-bold text-secondary uppercase tracking-wider px-2 py-3 whitespace-nowrap">GENDER</th>
+                  <th className="text-left text-xs font-bold text-secondary uppercase tracking-wider px-2 py-3 whitespace-nowrap">PLAN</th>
+                  <th className="text-left text-xs font-bold text-secondary uppercase tracking-wider px-2 py-3 whitespace-nowrap cursor-pointer hover:text-primary transition-colors" onClick={() => handleSort('status')}>
                     STATUS <SortIcon column="status" />
                   </th>
-                  <th className="text-left text-[11px] font-bold text-secondary uppercase tracking-wider px-2 py-3 whitespace-nowrap cursor-pointer hover:text-primary transition-colors" onClick={() => handleSort('joinDate')}>
+                  <th className="text-left text-xs font-bold text-secondary uppercase tracking-wider px-2 py-3 whitespace-nowrap cursor-pointer hover:text-primary transition-colors" onClick={() => handleSort('joinDate')}>
                     JOIN DATE <SortIcon column="joinDate" />
                   </th>
-                  <th className="text-left text-[11px] font-bold text-secondary uppercase tracking-wider px-2 py-3 whitespace-nowrap cursor-pointer hover:text-primary transition-colors" onClick={() => handleSort('expiryDate')}>
+                  <th className="text-left text-xs font-bold text-secondary uppercase tracking-wider px-2 py-3 whitespace-nowrap cursor-pointer hover:text-primary transition-colors" onClick={() => handleSort('expiryDate')}>
                     EXPIRY <SortIcon column="expiryDate" />
                   </th>
-                  <th className="text-left text-[11px] font-bold text-secondary uppercase tracking-wider px-2 py-3 whitespace-nowrap cursor-pointer hover:text-primary transition-colors" onClick={() => handleSort('paidAmount')}>
+                  <th className="text-left text-xs font-bold text-secondary uppercase tracking-wider px-2 py-3 whitespace-nowrap cursor-pointer hover:text-primary transition-colors" onClick={() => handleSort('paidAmount')}>
                     PAID <SortIcon column="paidAmount" />
                   </th>
-                  <th className="text-left text-[11px] font-bold text-secondary uppercase tracking-wider px-2 py-3 whitespace-nowrap">PENDING</th>
-                  <th className="text-left text-[11px] font-bold text-secondary uppercase tracking-wider px-2 py-3 whitespace-nowrap">ACTIONS</th>
+                  <th className="text-left text-xs font-bold text-secondary uppercase tracking-wider px-2 py-3 whitespace-nowrap">PENDING</th>
+                  <th className="text-left text-xs font-bold text-secondary uppercase tracking-wider px-2 py-3 whitespace-nowrap">ACTIONS</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
@@ -116,7 +117,11 @@ export default function ManagerMembersTable() {
                   <tr 
                     key={m.id} 
                     className="hover:bg-primary/5 transition-colors cursor-pointer"
+                    tabIndex={0}
+                    role="button"
+                    aria-label={`Open member ${m.name}`}
                     onClick={() => { setSelectedMember(m); }}
+                    onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setSelectedMember(m); } }}
                   >
                     <td className="px-2 py-3 text-center" onClick={(e) => e.stopPropagation()}>
                       <input 
@@ -135,16 +140,16 @@ export default function ManagerMembersTable() {
                           {m.name?.charAt(0) || '?'}
                         </div>
                         <div>
-                          <p className="text-xs font-semibold text-foreground">{m.name || 'Unknown'}</p>
-                          <p className="text-[11px] text-secondary">{maskSensitiveData(m.phone || '', 'phone')}</p>
+                          <p className="text-xs font-semibold text-foreground">{displayValue(m.name)}</p>
+                          <p className="text-xs text-secondary">{maskSensitiveData(m.phone || '', 'phone')}</p>
                         </div>
                       </div>
                     </td>
-                    <td className="px-2 py-3 text-xs text-secondary whitespace-nowrap">{m.gender || '—'}</td>
-                    <td className="px-2 py-3 text-xs text-foreground whitespace-nowrap">{m.plan?.name || `Plan #${m.planId}`}</td>
+                    <td className="px-2 py-3 text-xs text-secondary whitespace-nowrap">{displayValue(m.gender)}</td>
+                    <td className="px-2 py-3 text-xs text-foreground whitespace-nowrap">{displayValue(m.plan?.name)}</td>
                     <td className="px-2 py-3 whitespace-nowrap">
                       <span 
-                        className={`inline-flex px-2 py-0.5 rounded-full text-[10px] font-semibold ${statusStyle.bg} ${statusStyle.text}`}
+                        className={`inline-flex px-2 py-0.5 rounded-full text-xs font-semibold ${statusStyle.bg} ${statusStyle.text}`}
                       >
                         {m.status}
                       </span>
@@ -160,8 +165,8 @@ export default function ManagerMembersTable() {
                           <button onClick={(e) => { e.stopPropagation(); setSelectedMember(m); setShowPaymentModal(true); }} className="p-1.5 rounded-lg bg-warning/10 text-warning hover:bg-warning/20 transition-all duration-200" title="Collect Dues" aria-label={`Collect Dues for ${m.name}`}><Banknote size={14} /></button>
                         )}
                         <button onClick={(e) => { e.stopPropagation(); openEdit(m); }} className="p-1.5 rounded-lg bg-input text-secondary hover:bg-primary-subtle transition-all duration-200" title="Edit" aria-label={`Edit ${m.name}`}><Edit size={14} /></button>
-                        <button onClick={(e) => { e.stopPropagation(); openMsg(m, 'whatsapp'); }} className="p-1.5 rounded-lg bg-success text-white hover:opacity-80 transition-all duration-200" title="WhatsApp" aria-label={`Message ${m.name} on WhatsApp`}><MessageCircle size={14} /></button>
-                        <button onClick={(e) => { e.stopPropagation(); openMsg(m, 'email'); }} className="p-1.5 rounded-lg bg-info text-white hover:opacity-80 transition-all duration-200" title="Email" aria-label={`Email ${m.name}`}><Mail size={14} /></button>
+                        <button onClick={(e) => { e.stopPropagation(); openMsg(m, 'whatsapp'); }} className="p-1.5 rounded-lg bg-success text-primary-foreground hover:opacity-80 transition-all duration-200" title="WhatsApp" aria-label={`Message ${m.name} on WhatsApp`}><MessageCircle size={14} /></button>
+                        <button onClick={(e) => { e.stopPropagation(); openMsg(m, 'email'); }} className="p-1.5 rounded-lg bg-info text-primary-foreground hover:opacity-80 transition-all duration-200" title="Email" aria-label={`Email ${m.name}`}><Mail size={14} /></button>
                         {m.status !== 'SUSPENDED' && m.pendingAmount > 0 ? (
                           <button onClick={(e) => { e.stopPropagation(); setSelectedMember(m); toggleSuspend(true); }} className="p-1.5 rounded-lg bg-danger-bg text-danger hover:bg-danger/20 transition-all duration-200" title="Suspend Member" aria-label={`Suspend ${m.name}`}><Ban size={14} /></button>
                         ) : m.status === 'SUSPENDED' ? (
@@ -188,7 +193,7 @@ export default function ManagerMembersTable() {
                     </td>
                   </tr>
                 )})}
-                {members.length === 0 && fetchState === 'success' && (
+                {members.length === 0 && !isLoading && !isError && (
                   <tr>
                     <td colSpan={12} className="p-0 border-b-0">
                       <ManagerEmptyState 

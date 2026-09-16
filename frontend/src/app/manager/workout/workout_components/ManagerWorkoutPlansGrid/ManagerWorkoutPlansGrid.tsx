@@ -3,11 +3,11 @@
 import { Dumbbell, Edit2, Trash2, Loader2 } from 'lucide-react';
 import { useWorkoutContext } from '@/app/manager/workout/workout_context/ManagerWorkoutContext';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
-import { useWorkoutPlansQuery } from '@/app/manager/workout/workout_api/useManagerWorkoutQueries';
-import { useDeleteWorkoutMutation } from '@/app/manager/workout/workout_api/useManagerWorkoutMutations';
+import { useWorkoutPlansQuery } from '@/app/manager/workout/workout_api/ManagerUseManagerWorkoutQueries';
+import { useDeleteWorkoutMutation } from '@/app/manager/workout/workout_api/ManagerUseManagerWorkoutMutations';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
-import toast from 'react-hot-toast';
+import { showManagerErrorToast, showManagerSuccessToast } from '@/app/manager/manager_utils/ManagerToastService';
 
 export default function ManagerWorkoutPlansGrid() {
   const { search, levelFilter, currentPage, setCurrentPage, openEditWk } = useWorkoutContext();
@@ -72,10 +72,10 @@ export default function ManagerWorkoutPlansGrid() {
                     });
                     if (ok) {
                       try {
-                        await deleteMutation.mutateAsync(w.id);
-                        toast.success('Workout plan deleted');
+                        const response = await deleteMutation.mutateAsync(w.id);
+                        showManagerSuccessToast(response.message, 'manager-workout-plan-success');
                       } catch (e: unknown) {
-                        toast.error(e instanceof Error ? e.message : 'Failed to delete plan');
+                        showManagerErrorToast(e, 'manager-workout-plan-error');
                       }
                     }
                   }}

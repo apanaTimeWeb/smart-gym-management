@@ -101,7 +101,7 @@ export default function ManagerBulkMessageModal({
   };
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-foreground/60 backdrop-blur-sm">
       <div className="bg-card rounded-2xl shadow-2xl w-full max-w-2xl relative overflow-hidden border border-border max-h-full flex flex-col motion-safe:animate-in zoom-in-95 duration-200">
         <div
           className="px-6 py-4 flex items-center justify-between shrink-0"
@@ -112,8 +112,8 @@ export default function ManagerBulkMessageModal({
               <Icon size={18} color="white" />
             </div>
             <div>
-              <p className="text-white font-bold text-base leading-tight">Bulk {label} Message</p>
-              <p className="text-white/90 text-xs flex items-center gap-1">
+              <p className="text-primary-foreground font-bold text-base leading-tight">Bulk {label} Message</p>
+              <p className="text-primary-foreground/90 text-xs flex items-center gap-1">
                 <Users size={12} /> Sending to {recipients.length} recipients
               </p>
             </div>
@@ -177,7 +177,7 @@ export default function ManagerBulkMessageModal({
                 return (
                   <div key={stableKey} className="flex items-center justify-between p-2.5 bg-card rounded-lg border border-border">
                     <div className="flex items-center gap-3 min-w-0">
-                      <div className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-xs shrink-0 bg-primary">
+                      <div className="w-8 h-8 rounded-full flex items-center justify-center text-primary-foreground font-bold text-xs shrink-0 bg-primary">
                         {rec.name.charAt(0)}
                       </div>
                       <div className="min-w-0">
@@ -196,7 +196,7 @@ export default function ManagerBulkMessageModal({
                         className={`shrink-0 px-3 py-1.5 text-xs font-semibold rounded-lg flex items-center gap-1.5 transition-all ${
                           isSent
                             ? 'bg-success/10 text-success border border-success/20'
-                            : 'text-white hover:opacity-90 disabled:opacity-50'
+                            : 'text-primary-foreground hover:opacity-90 disabled:opacity-50'
                         }`}
                         style={!isSent ? { background: WA_GREEN } : undefined}
                       >
@@ -231,7 +231,7 @@ export default function ManagerBulkMessageModal({
             <button
               onClick={handleSendEmail}
               disabled={!message.trim()}
-              className="flex-1 px-4 py-2.5 text-sm font-semibold text-white rounded-xl flex items-center justify-center gap-2 transition-all hover:opacity-90 disabled:opacity-50 bg-info"
+              className="flex-1 px-4 py-2.5 text-sm font-semibold text-primary-foreground rounded-xl flex items-center justify-center gap-2 transition-all hover:opacity-90 disabled:opacity-50 bg-info"
             >
               <Send size={15} />
               Open Email Client (BCC All)
@@ -242,7 +242,7 @@ export default function ManagerBulkMessageModal({
                 <button
                   onClick={handleSendAllWhatsApp}
                   disabled={isSendingAll || !message.trim()}
-                  className="flex-1 px-4 py-2.5 text-sm font-semibold text-white rounded-xl flex items-center justify-center gap-2 transition-all hover:opacity-90 disabled:opacity-50"
+                  className="flex-1 px-4 py-2.5 text-sm font-semibold text-primary-foreground rounded-xl flex items-center justify-center gap-2 transition-all hover:opacity-90 disabled:opacity-50"
                   style={{ background: WA_GREEN }}
                 >
                   <MessageCircle size={15} />
@@ -252,7 +252,7 @@ export default function ManagerBulkMessageModal({
               <button
                 onClick={allWhatsAppSent ? handleDone : onClose}
                 className={`flex-1 px-4 py-2.5 text-sm font-semibold rounded-xl flex items-center justify-center gap-2 transition-all ${
-                  allWhatsAppSent ? 'bg-success text-white' : 'bg-card border border-border text-foreground'
+                  allWhatsAppSent ? 'bg-success text-primary-foreground' : 'bg-card border border-border text-foreground'
                 }`}
               >
                 {allWhatsAppSent ? (

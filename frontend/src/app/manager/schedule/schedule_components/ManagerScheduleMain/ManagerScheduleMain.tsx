@@ -14,14 +14,14 @@ import { SHIFT_DAYS } from '@/app/manager/schedule/schedule_utils/ManagerSchedul
 import type { ShiftDay } from '@/app/manager/schedule/schedule_types/ManagerScheduleTypes';
 
 function ScheduleContent() {
-  const { trainers, toast, hideToast, selectedDay, setSelectedDay, search, setSearch, fetchState, error } = useScheduleContext();
+  const { trainers, toast, hideToast, selectedDay, setSelectedDay, search, setSearch, status, error } = useScheduleContext();
   const [view, setView] = useState<'grid' | 'cards'>('grid');
 
-  if (fetchState === 'loading') {
+  if (status === 'pending') {
     return <ManagerScheduleSkeleton />;
   }
 
-  if (fetchState === 'error') {
+  if (status === 'error') {
     return (
       <div className="min-h-full pb-10">
         <ManagerHeader title="Trainer Schedule" subtitle="View trainer availability, shift timings, and weekly schedule" />
@@ -68,7 +68,7 @@ function ScheduleContent() {
             <div className="flex items-center gap-1 bg-input border border-border rounded-lg p-1">
               <button
                 onClick={() => setSelectedDay('All')}
-                className={`px-3 py-1 text-xs font-semibold rounded-md motion-safe:transition-colors ${selectedDay === 'All' ? 'bg-primary text-black' : 'text-secondary hover:text-foreground'}`}
+                className={`px-3 py-1 text-xs font-semibold rounded-md motion-safe:transition-colors ${selectedDay === 'All' ? 'bg-primary text-primary-foreground' : 'text-secondary hover:text-foreground'}`}
               >
                 All
               </button>
@@ -76,7 +76,7 @@ function ScheduleContent() {
                 <button
                   key={day}
                   onClick={() => setSelectedDay(day as ShiftDay)}
-                  className={`px-2 py-1 text-xs font-semibold rounded-md motion-safe:transition-colors ${selectedDay === day ? 'bg-primary text-black' : 'text-secondary hover:text-foreground'}`}
+                  className={`px-2 py-1 text-xs font-semibold rounded-md motion-safe:transition-colors ${selectedDay === day ? 'bg-primary text-primary-foreground' : 'text-secondary hover:text-foreground'}`}
                 >
                   {day.slice(0, 3)}
                 </button>
@@ -87,14 +87,14 @@ function ScheduleContent() {
             <div className="flex items-center gap-1 bg-input border border-border rounded-lg p-1">
               <button
                 onClick={() => setView('grid')}
-                className={`p-1.5 rounded-md motion-safe:transition-colors ${view === 'grid' ? 'bg-primary text-black' : 'text-secondary hover:text-foreground'}`}
+                className={`p-1.5 rounded-md motion-safe:transition-colors ${view === 'grid' ? 'bg-primary text-primary-foreground' : 'text-secondary hover:text-foreground'}`}
                 aria-label="Weekly grid view"
               >
                 <Table2 size={15} />
               </button>
               <button
                 onClick={() => setView('cards')}
-                className={`p-1.5 rounded-md motion-safe:transition-colors ${view === 'cards' ? 'bg-primary text-black' : 'text-secondary hover:text-foreground'}`}
+                className={`p-1.5 rounded-md motion-safe:transition-colors ${view === 'cards' ? 'bg-primary text-primary-foreground' : 'text-secondary hover:text-foreground'}`}
                 aria-label="Trainer cards view"
               >
                 <LayoutGrid size={15} />

@@ -2,9 +2,9 @@
 // RESPONSIBILITY: Display referrals table with claim reward action.
 // Rule 20 FIX: Replaced native <select> with SearchableDropdown.
 import { Loader2, Search, Gift, Check, IndianRupee } from 'lucide-react';
-import { useManagerReferralsLogic } from '@/app/manager/referrals/referrals_context/useManagerReferralsLogic';
+import { useManagerReferralsLogic } from '@/app/manager/referrals/referrals_context/ManagerUseManagerReferralsLogic';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
-import { SearchableDropdown } from '@/app/manager/manager_components/ManagerShared/SearchableDropdown';
+import { SearchableDropdown } from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
 import ManagerEmptyState from '@/app/manager/manager_components/ManagerFeedback/ManagerEmptyState';
 import { formatCurrency, maskSensitiveData , formatDate} from '@/lib/formatters';
 
@@ -25,7 +25,7 @@ export default function ManagerReferralsTable() {
   } = useManagerReferralsLogic();
 
   return (
-    <div className="bg-card border border-border rounded-xl flex flex-col h-[600px] shadow-sm">
+    <div className="bg-card border border-border rounded-xl flex flex-col min-h-96 shadow-sm">
       
       {/* Header & Filters */}
       <div className="p-4 border-b border-border flex flex-col sm:flex-row justify-between gap-4 shrink-0 bg-input/10">
@@ -119,7 +119,7 @@ export default function ManagerReferralsTable() {
                         <button
                           onClick={() => claimReward(ref.id)}
                           disabled={isClaiming}
-                          className="inline-flex items-center gap-1 px-3 py-1.5 bg-primary text-black rounded text-xs font-bold hover:bg-primary-hover motion-safe:transition-colors disabled:opacity-50"
+                          className="inline-flex items-center gap-1 px-3 py-1.5 bg-primary text-primary-foreground rounded text-xs font-bold hover:bg-primary-hover motion-safe:transition-colors disabled:opacity-50"
                         >
                           <IndianRupee size={14} /> Claim {formatCurrency(ref.rewardAmount)}
                         </button>

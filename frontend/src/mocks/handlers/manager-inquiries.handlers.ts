@@ -1,5 +1,5 @@
 import { http, HttpResponse } from 'msw';
-import { MOCK_INQUIRIES, MOCK_INQUIRY_STATS } from '@/app/manager/inquiries/inquiries_api/ManagerInquiriesMockData';
+import { MOCK_INQUIRIES, MOCK_INQUIRY_STATS } from '@/app/manager/inquiries/inquiries_fixtures/ManagerInquiriesMockData';
 import type { Inquiry } from '@/app/manager/inquiries/inquiries_types/ManagerInquiriesTypes';
 import type { InquiryFormValues } from '@/app/manager/inquiries/inquiries_utils/ManagerInquiriesSharedConstants';
 

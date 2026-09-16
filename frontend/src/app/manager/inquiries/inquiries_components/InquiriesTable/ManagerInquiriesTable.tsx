@@ -139,7 +139,7 @@ export default function ManagerInquiriesTable() {
                     <div className="flex items-center gap-2">
                       <button
                         onClick={(e) => { e.stopPropagation(); openMsg(inq, 'whatsapp'); }}
-                        className="p-1.5 rounded-lg bg-success text-white hover:opacity-80 transition-all duration-200"
+                        className="p-1.5 rounded-lg bg-success text-primary-foreground hover:opacity-80 transition-all duration-200"
                         title="WhatsApp"
                         aria-label={`Message ${inq.name} on WhatsApp`}
                       >
@@ -147,7 +147,7 @@ export default function ManagerInquiriesTable() {
                       </button>
                       <button
                         onClick={(e) => { e.stopPropagation(); openMsg(inq, 'email'); }}
-                        className="p-1.5 rounded-lg bg-info text-white hover:opacity-80 transition-all duration-200"
+                        className="p-1.5 rounded-lg bg-info text-primary-foreground hover:opacity-80 transition-all duration-200"
                         title="Email"
                         aria-label={`Email ${inq.name}`}
                       >

@@ -1,4 +1,4 @@
-import { ManagerCommunicationsUrlConfig } from '@/app/manager/communications/communications_url_config';
+import { ManagerCommunicationsUrlConfig } from '@/app/manager/Manager_url_config';
 import { apiFetch, type ApiResponse } from '@/lib/api';
 import type {
   CommCampaign,
@@ -11,7 +11,7 @@ import type {
   ChurnKPIData,
   CommChannel,
   WinBackTemplateTier,
-} from '@/app/manager/communications/communications_types/communications_types';
+} from '@/app/manager/communications/communications_types/ManagerCommunications_types';
 import {
   commCampaignSchema,
   commKPIDataSchema,
@@ -70,6 +70,6 @@ export const ManagerCommunicationsApi = {
     message: string;
     subject: string;
   }): Promise<ApiResponse<CommCampaign>> => {
-    return apiFetch(`${ManagerCommunicationsUrlConfig.BACKEND_API.BASE}/win-back`, { method: 'POST', body: JSON.stringify(payload) });
+    return apiFetch(`${ManagerCommunicationsUrlConfig.BACKEND_API.BASE}/win-back`, { method: 'POST', body: JSON.stringify(payload), dataSchema: z.unknown() });
   },
 };

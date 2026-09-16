@@ -1,4 +1,5 @@
 'use client';
+// RESPONSIBILITY: Framework route boundary for the Manager referrals module; renders the route-level shell, loading, error, or 404 state.
 import { useEffect } from 'react';
 import { AlertCircle } from 'lucide-react';
 
@@ -24,7 +25,7 @@ export default function Error({
       </p>
       <button
         onClick={() => reset()}
-        className="px-6 py-2 bg-primary text-black font-bold rounded-lg hover:bg-primary-hover motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+        className="px-6 py-2 bg-primary text-primary-foreground font-bold rounded-lg hover:bg-primary-hover motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
       >
         Try Again
       </button>

@@ -1,8 +1,8 @@
 import { http, HttpResponse } from 'msw';
-import { MOCK_SETTINGS_PREFERENCES } from '@/app/manager/settings/settings_fixtures/ManagerSettingsMockData';
+import { MOCK_MANAGER_SETTINGS } from '@/app/manager/settings/settings_fixtures/ManagerSettingsMockData';
 import type { ManagerSettingsPreferences, UpdateManagerSettingsPayload } from '@/app/manager/settings/settings_types/ManagerSettingsTypes';
 
-let settingsDb: ManagerSettingsPreferences = { ...MOCK_SETTINGS_PREFERENCES };
+let settingsDb: ManagerSettingsPreferences = { ...MOCK_MANAGER_SETTINGS.preferences };
 
 export const managerSettingsHandlers = [
   http.get('http://localhost:5000/api/v1/manager/settings', () => {

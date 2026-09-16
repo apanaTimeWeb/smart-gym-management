@@ -8,18 +8,15 @@ import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerShare
 
 export default function ManagerLibraryDietGrid() {
   const { confirm } = useConfirm();
-  const { dietPlans, fetchState, debouncedSearch, currentPage, setCurrentPage, openEditDiet, deleteDietPlan } = useLibraryContext();
+  const { dietPlans, isLoading, isError, debouncedSearch, currentPage, setCurrentPage, openEditDiet, deleteDietPlan } = useLibraryContext();
 
-  const filtered = dietPlans.filter(d => {
-    const s = debouncedSearch.toLowerCase();
-    return d.name?.toLowerCase().includes(s) || d.goal?.toLowerCase().includes(s);
-  });
+  const filtered = dietPlans;
 
   
   const totalPages = Math.ceil(filtered.length / MANAGER_ITEMS_PER_PAGE);
   const currentData = filtered.slice((currentPage - 1) * MANAGER_ITEMS_PER_PAGE, currentPage * MANAGER_ITEMS_PER_PAGE);
 
-  if (fetchState === 'loading') {
+  if (isLoading) {
     return (
       <div className="flex justify-center py-10">
         <Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" />

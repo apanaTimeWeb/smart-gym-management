@@ -10,17 +10,17 @@ import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerShare
 
 export default function ManagerStoreProductGrid() {
   const { confirm } = useConfirm();
-  const { products, summary, fetchState, debouncedSearch, currentPage, setCurrentPage, openEditProduct, deleteProduct } = useStoreContext();
+  const { products, summary, isLoading, isError, debouncedSearch, currentPage, setCurrentPage, openEditProduct, deleteProduct } = useStoreContext();
 
   
   const totalProducts = summary?.totalProducts || products.length;
   const totalPages = Math.ceil(totalProducts / MANAGER_ITEMS_PER_PAGE) || 1;
 
-  if (fetchState === 'loading') {
+  if (isLoading) {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {[...Array(8)].map((_, i) => (
-          <div key={i} className="motion-safe:animate-pulse bg-card rounded-xl border border-border p-4 h-64">
+          <div key={`skeleton-${i}`} className="motion-safe:animate-pulse bg-card rounded-xl border border-border p-4 h-64">
             <div className="h-32 bg-muted rounded-lg mb-4"></div>
             <div className="h-4 bg-muted rounded w-3/4 mb-2"></div>
             <div className="h-4 bg-muted rounded w-1/2 mb-4"></div>
@@ -34,7 +34,7 @@ export default function ManagerStoreProductGrid() {
     );
   }
 
-  if (fetchState === 'error') {
+  if (isError) {
     return (
       <div className="text-center py-16 bg-card rounded-2xl border border-danger/30 mt-4">
         <p className="text-danger font-medium">Failed to load products.</p>

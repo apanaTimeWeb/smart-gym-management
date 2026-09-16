@@ -5,7 +5,7 @@ import { formatCurrency } from '@/lib/formatters';
 
 export { formatCurrency };
 
-import { MemberFormSchema as MemberSchema, type MemberFormType as MemberFormValues } from '@/app/manager/members/members_types/members.schema';
+import { MemberFormSchema as MemberSchema, type MemberFormType as MemberFormValues } from '@/app/manager/members/members_types/ManagerMembers.schema';
 export { MemberSchema, type MemberFormValues };
 
 export const MEMBERS_STATUS_COLORS: Record<string, { bg: string; text: string }> = {

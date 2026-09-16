@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react';
 import { Search, RefreshCw, Plus, MessageCircle, Download, Calendar } from 'lucide-react';
 import { useMembersContext } from '@/app/manager/members/members_context/ManagerMembersContext';
-import { useFetchMembers, useFetchPlans } from '@/app/manager/members/members_api/useManagerMembersQueries';
+import { useFetchMembers, useFetchPlans } from '@/app/manager/members/members_api/ManagerUseManagerMembersQueries';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import {
   MEMBER_STATUS_OPTIONS,
@@ -12,6 +12,7 @@ import {
   MEMBER_EXPORT_FORMATS,
 } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
+import { downloadManagerMembersCsv, printManagerMembersPdf } from '@/app/manager/members/members_utils/ManagerMembersExportUtils';
 
 export default function ManagerMembersToolbar() {
   const {
@@ -22,7 +23,6 @@ export default function ManagerMembersToolbar() {
     expiryFrom, expiryTo, setExpiryRange,
     sortColumn, sortDirection,
     openAdd, currentPage, setCurrentPage, showToast,
-    exportMembers,
   } = useMembersContext();
   const { data: membersRes, refetch } = useFetchMembers({ 
     search, 
@@ -119,7 +119,7 @@ export default function ManagerMembersToolbar() {
           {MEMBER_EXPORT_FORMATS.map(fmt => (
             <button
               key={fmt.value}
-              onClick={() => exportMembers(fmt.value)}
+              onClick={() => fmt.value === 'csv' ? downloadManagerMembersCsv(members) : printManagerMembersPdf(members)}
               className="flex justify-center items-center gap-2 px-3 py-2.5 text-sm border border-border rounded-xl hover:bg-primary-subtle text-secondary hover:text-foreground transition-colors w-full sm:w-auto"
               aria-label={fmt.label}
             >

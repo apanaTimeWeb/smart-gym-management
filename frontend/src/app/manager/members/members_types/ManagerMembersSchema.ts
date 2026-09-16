@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { MemberSchema, MemberStatsSchema } from '@/app/manager/members/members_types/members.schema';
+import { MemberSchema, MemberStatsSchema } from '@/app/manager/members/members_types/ManagerMembers.schema';
 
 
 export const planSnapshotSchema = z.object({
@@ -74,3 +74,6 @@ export const populatedMemberSchema = MemberSchema.extend({
 });
 
 export const memberStatsSchema = MemberStatsSchema;
+
+export const memberDeleteResponseSchema = z.object({ id: z.string() });
+export const trainerListSchema = z.object({ staff: z.array(z.object({ id: z.string(), name: z.string(), role: z.string() })) });

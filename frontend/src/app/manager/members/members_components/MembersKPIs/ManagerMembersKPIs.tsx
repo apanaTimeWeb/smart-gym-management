@@ -1,7 +1,7 @@
 'use client';
 // RESPONSIBILITY: Renders the four KPI stat cards (Total, Active, Pending, Expired) for the Members module.
 import { User, CheckCircle, Clock, XCircle } from 'lucide-react';
-import { useFetchMemberStats } from '@/app/manager/members/members_api/useManagerMembersQueries';
+import { useFetchMemberStats } from '@/app/manager/members/members_api/ManagerUseManagerMembersQueries';
 
 const KPI_CONFIG = [
   { label: 'Total Members', key: 'total',   color: 'text-info',    bg: 'bg-info-bg',    icon: User         },
@@ -22,7 +22,7 @@ export default function ManagerMembersKPIs() {
           </div>
           <div>
             <p className="text-xs text-secondary font-medium">{s.label}</p>
-            <p className="text-xl font-bold text-primary">{stats?.[s.key] ?? 0}</p>
+            <p className="text-xl font-bold text-primary">{stats?.[s.key as "total" | "active" | "pending" | "expired"] ?? 0}</p>
           </div>
         </div>
       ))}

@@ -4,8 +4,8 @@ import { formatDate } from '@/lib/formatters';
 import { useState } from 'react';
 import Link from 'next/link';
 import { Search, BellRing } from 'lucide-react';
-import { useDashboardStatsQuery } from '@/app/manager/dashboard/dashboard_api/useManagerDashboardQueries';
-import { useManagerDashboardStore } from '@/app/manager/dashboard/dashboard_store/useManagerDashboardStore';
+import { useDashboardStatsQuery } from '@/app/manager/dashboard/dashboard_api/ManagerUseManagerDashboardQueries';
+import { useManagerDashboardStore } from '@/app/manager/dashboard/dashboard_store/ManagerUseManagerDashboardStore';
 
 export default function ManagerDashboardExpiringMemberships() {
   const { timeRange } = useManagerDashboardStore();

@@ -4,7 +4,7 @@
 
 import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
 
-export type FetchState = 'idle' | 'loading' | 'success' | 'error';
+import type { QueryStatus } from '@tanstack/react-query';
 export type ShiftDay = 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday';
 export type ShiftStatus = 'Active' | 'Off' | 'Leave';
 
@@ -81,12 +81,12 @@ export interface UpdateShiftDto extends Partial<CreateShiftDto> {}
 export interface ScheduleContextType {
   trainers: TrainerScheduleSummary[];
   kpis: ScheduleKPIData | null;
-  fetchState: FetchState;
+  status: QueryStatus;
   error: string;
   toast: { message: string; type: ToastType } | null;
   showToast: (msg: string, t: ToastType) => void;
   hideToast: () => void;
-  loadAll: () => Promise<void>;
+  loadAll: () => Promise<unknown>;
   selectedDay: ShiftDay | 'All';
   setSelectedDay: (day: ShiftDay | 'All') => void;
   search: string;
