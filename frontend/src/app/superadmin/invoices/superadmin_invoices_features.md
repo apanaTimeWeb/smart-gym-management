@@ -112,3 +112,19 @@ export type SuperadminInvoicesTenant = z.infer<typeof SuperadminInvoicesTenantSc
 - **Section-Level Error Boundaries in Invoices:** Do not allow a single failed API fetch in Invoices to unmount the entire page. Major components (like the Invoices data table or metrics) must be wrapped in `<SuperadminErrorBoundary variant="inline">`.
 - **Backend-Driven Messages for Invoices Mutations:** Do not hardcode success or error toasts like "User created". Always display the `message` string provided by the backend's JSON response envelope when creating, updating, or deleting Invoices.
 - **No Client-Side Pagination for Invoices:** If the dataset grows large, do not fetch all Invoices and paginate on the client. always implement robust server-side pagination, sorting, and filtering via query parameters using useSuperadminUrlState.
+
+
+## API Contract
+All calls are isolated to `superadmin_invoices_api.ts`.
+
+- `return apiFetch<ApiResponse<SaaSInvoice[]>>(`${InvoicesUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.array(SaaSInvoiceSchema) });`
+- `apiFetch<ApiResponse<SaaSInvoice>>(InvoicesUrlConfig.BACKEND_API.MANUAL_PAYMENT, {`
+- `apiFetch<ApiResponse<{ downloadUrl: string }>>(`${InvoicesUrlConfig.BACKEND_API.BASE}/${id}/download`, { dataSchema: z.object({ downloadUrl: z.string() }) }),`
+- `return apiFetch<ApiResponse<{ downloadUrl: string }>>(`${InvoicesUrlConfig.BACKEND_API.BASE}/export${q}`, { dataSchema: z.object({ downloadUrl: z.string() }) });`
+- `apiFetch<ApiResponse<null>>(`${InvoicesUrlConfig.BACKEND_API.BASE}/${id}/resend`, {`
+- `return apiFetch<ApiResponse<InvoicesTenant[]>>(GymsUrlConfig.BACKEND_API.BASE);`
+
+
+## State Architecture
+- Server State: TanStack Query
+- UI State: React `useState` or Zustand

@@ -13,4 +13,6 @@ export const CHART_COLORS = {
   DANGER: '#EF4444',         // --danger (Red) — Design §1
   WARNING: '#F59E0B',        // --warning (Amber) — Design §1
   INFO: '#3B82F6',           // --info (Blue) — Design §1
+  PURPLE: '#8B5CF6',         // Used for secondary data series
+  WHITE: '#FFFFFF',          // Used for data labels text
 } as const;

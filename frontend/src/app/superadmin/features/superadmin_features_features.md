@@ -106,3 +106,21 @@ export type SuperadminFeaturesTenant = z.infer<typeof SuperadminFeaturesTenantSc
 - **Section-Level Error Boundaries in Features:** Do not allow a single failed API fetch in Features to unmount the entire page. Major components (like the Features data table or metrics) must be wrapped in `<SuperadminErrorBoundary variant="inline">`.
 - **Backend-Driven Messages for Features Mutations:** Do not hardcode success or error toasts like "User created". Always display the `message` string provided by the backend's JSON response envelope when creating, updating, or deleting Features.
 - **No Client-Side Pagination for Features:** If the dataset grows large, do not fetch all Features and paginate on the client. always implement robust server-side pagination, sorting, and filtering via query parameters using useSuperadminUrlState.
+
+
+## API Contract
+All calls are isolated to `superadmin_features_api.ts`.
+
+- `apiFetch<ApiResponse<{ flags: FeatureFlag[]; notes: ReleaseNote[] }>>(FeaturesUrlConfig.BACKEND_API.BASE, {`
+- `apiFetch<ApiResponse<FeatureFlag>>(`${FeaturesUrlConfig.BACKEND_API.BASE}/flags`, {`
+- `apiFetch<ApiResponse<FeatureFlag>>(`${FeaturesUrlConfig.BACKEND_API.BASE}/flags/${id}`, {`
+- `apiFetch<ApiResponse<FeatureFlag>>(`${FeaturesUrlConfig.BACKEND_API.BASE}/flags/${id}/toggle`, {`
+- `apiFetch<ApiResponse<void>>(`${FeaturesUrlConfig.BACKEND_API.BASE}/flags/${id}`, {`
+- `apiFetch<ApiResponse<ReleaseNote>>(`${FeaturesUrlConfig.BACKEND_API.BASE}/notes`, {`
+- `apiFetch<ApiResponse<ReleaseNote>>(`${FeaturesUrlConfig.BACKEND_API.BASE}/notes/${id}`, {`
+- `apiFetch<ApiResponse<void>>(`${FeaturesUrlConfig.BACKEND_API.BASE}/notes/${id}`, {`
+
+
+## State Architecture
+- Server State: TanStack Query
+- UI State: React `useState` or Zustand

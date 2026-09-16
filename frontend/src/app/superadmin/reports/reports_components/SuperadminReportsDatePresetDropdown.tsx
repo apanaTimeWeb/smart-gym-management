@@ -1,3 +1,4 @@
+'use client';
 // RESPONSIBILITY: Renders the Reports Date Preset Dropdown component and its associated UI logic.
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 

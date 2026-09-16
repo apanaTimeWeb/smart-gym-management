@@ -123,3 +123,24 @@ export type CancellationsFilterStatus = 'ALL' | CancellationsRiskLevel | Cancell
 - **Section-Level Error Boundaries in Cancellations alerts:** Do not allow a single failed API fetch in Cancellations alerts to unmount the entire page. Major components (like the Cancellations alerts data table or metrics) must be wrapped in `<SuperadminErrorBoundary variant="inline">`.
 - **Backend-Driven Messages for Cancellations alerts Mutations:** Do not hardcode success or error toasts like "User created". Always display the `message` string provided by the backend's JSON response envelope when creating, updating, or deleting Cancellations alerts.
 - **No Client-Side Pagination for Cancellations alerts:** If the dataset grows large, do not fetch all Cancellations alerts and paginate on the client. always implement robust server-side pagination, sorting, and filtering via query parameters using useSuperadminUrlState.
+
+
+## State Architecture
+- Server State: TanStack Query
+- UI State: React `useState` or Zustand
+
+
+## Loading/Error/Empty
+- **Loading**: React Suspense + Skeleton
+- **Error**: `error.tsx` Boundary
+- **Empty**: Empty state components
+
+
+## Permissions
+- Restricted to SUPERADMIN role.
+
+
+## Component Responsibility Map
+
+| Component | Responsibility |
+|---|---|

@@ -4,6 +4,7 @@
 import React, { useMemo, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { formatDecimal } from '@/lib/formatters';
+import { CHART_COLORS } from '@/app/superadmin/superadmin_utils/SuperadminChartConstants';
 
 const ReactApexChart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
@@ -42,7 +43,7 @@ export default function SuperadminUptimeChart() {
         background: 'transparent',
         fontFamily: 'inherit',
       },
-      colors: ['#22c55e'], // Success color
+      colors: [CHART_COLORS.SUCCESS], // Success color
       fill: {
         type: 'gradient',
         gradient: {
@@ -57,7 +58,7 @@ export default function SuperadminUptimeChart() {
       xaxis: {
         type: 'category',
         labels: {
-          style: { colors: '#64748b' } // secondary color
+          style: { colors: CHART_COLORS.TEXT_SECONDARY } // secondary color
         },
         axisBorder: { show: false },
         axisTicks: { show: false },
@@ -67,12 +68,12 @@ export default function SuperadminUptimeChart() {
         min: 95,
         max: 100,
         labels: {
-          style: { colors: '#64748b' },
+          style: { colors: CHART_COLORS.TEXT_SECONDARY },
           formatter: (value) => `${value}%`
         }
       },
       grid: {
-        borderColor: '#334155', // border color roughly
+        borderColor: CHART_COLORS.BORDER, // border color roughly
         strokeDashArray: 4,
         xaxis: { lines: { show: true } },
         yaxis: { lines: { show: true } }
@@ -87,7 +88,7 @@ export default function SuperadminUptimeChart() {
     return { series, options };
   }, []);
 
-  if (!mounted) return <div className="h-64 bg-card rounded-xl border border-border animate-pulse" />;
+  if (!mounted) return <div className="h-64 bg-card rounded-xl border border-border motion-safe:animate-pulse" />;
 
   return (
     <div className="bg-card border border-border rounded-xl p-6">

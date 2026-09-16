@@ -67,3 +67,16 @@ export interface SuperadminTenantSla {
   status: SuperadminSystemSlaStatus;
 }
 ```
+
+
+## State Architecture
+- Server State: TanStack Query
+- UI State: React `useState` or Zustand
+
+
+## Component Responsibility Map
+
+| Component | Responsibility |
+|---|---|
+| `SuperadminSystemClient.tsx` | Renders UI for system |
+| `SuperadminSystemSlaTab.tsx` | Renders UI for system |

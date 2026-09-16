@@ -67,7 +67,7 @@ no manual SQL editing is permitted from the UI.
 - **Context providers:** Inherits `SuperadminQueryProvider` and `SuperadminConfirmProvider` from root layout
 - **Local state:** `migrations: MigrationLog[]` in `SuperadminMigrationsClient` — managed via `useState` and synced from query data via `useEffect`
 - **Local-storage keys:** None
-- **MSW handler file:** fully configured via src/mocks/handlers/ — `src/app/superadmin/migrations/migrations_mocks/handlers/SuperadminMigrationsMockHandlers.ts` (planned)
+- **MSW handler file:** fully configured via migrations_mocks/handlers/ — `src/app/superadmin/migrations/migrations_mocks/handlers/SuperadminMigrationsMockHandlers.ts` (planned)
 
 ---
 
@@ -181,4 +181,9 @@ export type MigrationsPageData = z.infer<typeof MigrationsPageDataSchema>;
 - [ ] Rule 15A: No test files present
 - [ ] Rule 26: "Deploy New Schema" button has no loading state (spinner) while the mutation is pending
 - [ ] Rule 71: `handleRollout` fires immediately on click — add `useConfirm()` before deployment
-- [ ] Rule 75: MSW handler fully configured via src/mocks/handlers/
+- [ ] Rule 75: MSW handler fully configured via migrations_mocks/handlers/
+
+
+## State Architecture
+- Server State: TanStack Query
+- UI State: React `useState` or Zustand

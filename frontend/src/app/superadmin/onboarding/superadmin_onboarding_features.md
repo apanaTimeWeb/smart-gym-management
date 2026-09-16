@@ -83,3 +83,18 @@ Types found but could not be parsed.
 - **Section-Level Error Boundaries in Onboarding:** Do not allow a single failed API fetch in Onboarding to unmount the entire page. Major components (like the Onboarding data table or metrics) must be wrapped in `<SuperadminErrorBoundary variant="inline">`.
 - **Backend-Driven Messages for Onboarding Mutations:** Do not hardcode success or error toasts like "User created". Always display the `message` string provided by the backend's JSON response envelope when creating, updating, or deleting Onboarding.
 - **No Client-Side Pagination for Onboarding:** If the dataset grows large, do not fetch all Onboarding and paginate on the client. always implement robust server-side pagination, sorting, and filtering via query parameters using useSuperadminUrlState.
+
+
+## State Architecture
+- Server State: TanStack Query
+- UI State: React `useState` or Zustand
+
+
+## Component Responsibility Map
+
+| Component | Responsibility |
+|---|---|
+| `SuperadminOnboardingClient.tsx` | Renders UI for onboarding |
+| `SuperadminOnboardingModals.tsx` | Renders UI for onboarding |
+| `SuperadminOnboardingStatsBar.tsx` | Renders UI for onboarding |
+| `SuperadminOnboardingTable.tsx` | Renders UI for onboarding |

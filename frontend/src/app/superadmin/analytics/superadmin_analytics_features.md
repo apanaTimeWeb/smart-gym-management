@@ -155,3 +155,14 @@ export type GrowthChartData = z.infer<typeof GrowthChartDataSchema>;
 - **Section-Level Error Boundaries in Analytics:** Do not allow a single failed API fetch in Analytics to unmount the entire page. Major components (like the Analytics data table or metrics) must be wrapped in `<SuperadminErrorBoundary variant="inline">`.
 - **Backend-Driven Messages for Analytics Mutations:** Do not hardcode success or error toasts like "User created". Always display the `message` string provided by the backend's JSON response envelope when creating, updating, or deleting Analytics.
 - **No Client-Side Pagination for Analytics:** If the dataset grows large, do not fetch all Analytics and paginate on the client. always implement robust server-side pagination, sorting, and filtering via query parameters using useSuperadminUrlState.
+
+
+## API Contract
+All calls are isolated to `superadmin_analytics_api.ts`.
+
+- `return apiFetch<ApiResponse<AnalyticsApiData>>(`${AnalyticsUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: AnalyticsApiDataSchema });`
+
+
+## State Architecture
+- Server State: TanStack Query
+- UI State: React `useState` or Zustand

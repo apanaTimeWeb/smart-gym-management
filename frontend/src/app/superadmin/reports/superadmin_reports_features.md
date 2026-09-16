@@ -82,3 +82,21 @@ Types found but could not be parsed.
 - **Section-Level Error Boundaries in Reports:** Do not allow a single failed API fetch in Reports to unmount the entire page. Major components (like the Reports data table or metrics) must be wrapped in `<SuperadminErrorBoundary variant="inline">`.
 - **Backend-Driven Messages for Reports Mutations:** Do not hardcode success or error toasts like "User created". Always display the `message` string provided by the backend's JSON response envelope when creating, updating, or deleting Reports.
 - **No Client-Side Pagination for Reports:** If the dataset grows large, do not fetch all Reports and paginate on the client. always implement robust server-side pagination, sorting, and filtering via query parameters using useSuperadminUrlState.
+
+
+## State Architecture
+- Server State: TanStack Query
+- UI State: React `useState` or Zustand
+
+
+## Component Responsibility Map
+
+| Component | Responsibility |
+|---|---|
+| `SuperadminReportsCancellationsTab.tsx` | Renders UI for reports |
+| `SuperadminReportsClient.tsx` | Renders UI for reports |
+| `SuperadminReportsDatePresetDropdown.tsx` | Renders UI for reports |
+| `SuperadminReportsExportButton.tsx` | Renders UI for reports |
+| `SuperadminReportsHealthTab.tsx` | Renders UI for reports |
+| `SuperadminReportsRevenueTab.tsx` | Renders UI for reports |
+| `SuperadminReportsSummaryCards.tsx` | Renders UI for reports |

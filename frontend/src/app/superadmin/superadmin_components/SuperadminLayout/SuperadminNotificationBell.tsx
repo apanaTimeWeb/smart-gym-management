@@ -65,14 +65,14 @@ export default function SuperadminNotificationBell() {
       >
         <Bell className="w-5 h-5" strokeWidth={2} />
         {unreadCount > 0 && (
-          <span className="absolute top-1 right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-danger text-[10px] font-bold text-white shadow-sm ring-2 ring-card animate-superadmin-fade-in-up">
+          <span className="absolute top-1 right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-danger text-[10px] font-bold text-white shadow-sm ring-2 ring-card motion-safe:animate-superadmin-fade-in-up">
             {unreadCount > 9 ? '9+' : unreadCount}
           </span>
         )}
       </button>
 
       {open && (
-        <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-popover rounded-2xl shadow-2xl shadow-black/50 border border-border overflow-hidden z-30 animate-superadmin-fade-in-up">
+        <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-popover rounded-2xl shadow-2xl shadow-black/50 border border-border overflow-hidden z-30 motion-safe:animate-superadmin-fade-in-up">
           <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-header">
             <div>
               <h3 className="text-sm font-bold text-foreground">Notifications</h3>

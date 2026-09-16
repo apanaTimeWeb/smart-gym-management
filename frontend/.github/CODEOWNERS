@@ -38,3 +38,4 @@
 
 # Superadmin shell — ghost-login banner, sidebar, auth guard
 /src/app/superadmin/superadmin_components/SuperadminLayout/** @frontend-leads @security-team
+/src/app/superadmin/layout.tsx @frontend-leads @security-team

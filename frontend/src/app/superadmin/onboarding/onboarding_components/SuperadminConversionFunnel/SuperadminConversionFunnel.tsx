@@ -4,6 +4,7 @@
 import React, { useMemo, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import type { TenantOnboarding } from '@/app/superadmin/onboarding/onboarding_types/superadmin_onboarding_types';
+import { CHART_COLORS } from '@/app/superadmin/superadmin_utils/SuperadminChartConstants';
 
 const ReactApexChart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
@@ -53,12 +54,12 @@ export default function SuperadminConversionFunnel({ tenants }: { tenants: Tenan
           }
         }
       },
-      colors: ['#3b82f6', '#8b5cf6', '#eab308', '#22c55e'], // primary, purple, warning, success
+      colors: [CHART_COLORS.INFO, CHART_COLORS.PURPLE, CHART_COLORS.WARNING, CHART_COLORS.SUCCESS], // primary, purple, warning, success
       dataLabels: {
         enabled: true,
         textAnchor: 'start',
         style: {
-          colors: ['#fff']
+          colors: [CHART_COLORS.WHITE]
         },
         formatter: function (val, opt) {
           if (!opt) return String(val);
@@ -71,7 +72,7 @@ export default function SuperadminConversionFunnel({ tenants }: { tenants: Tenan
       },
       stroke: {
         width: 1,
-        colors: ['#fff']
+        colors: [CHART_COLORS.WHITE]
       },
       xaxis: {
         categories: ['Total Signups', 'Email Verified', 'Onboarding Completed', 'Converted to Paid'],
@@ -102,7 +103,7 @@ export default function SuperadminConversionFunnel({ tenants }: { tenants: Tenan
     return { series, options };
   }, [tenants]);
 
-  if (!mounted) return <div className="h-80 bg-card rounded-xl border border-border animate-pulse" />;
+  if (!mounted) return <div className="h-80 bg-card rounded-xl border border-border motion-safe:animate-pulse" />;
 
   return (
     <div className="bg-card border border-border rounded-xl p-6 shadow-sm">

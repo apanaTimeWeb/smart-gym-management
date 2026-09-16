@@ -62,7 +62,7 @@ export function useSuperadminGymMutations(gyms: Tenant[]) {
       title: `${action.charAt(0).toUpperCase() + action.slice(1)} Gym`,
       message: currentStatus === 'SUSPENDED' 
         ? `Are you sure you want to unsuspend ${gymName}? This will restore access for the tenant.`
-        : `Are you sure you want to suspend ${gymName}? This will immediately block access for all branch staff under this tenant.`,
+        : `Are you sure you want to suspend ${gymName}? This will immediately block access for all managers, branch staff, and trainers under this tenant, and halt all automated billing and notifications.`,
       type: currentStatus === 'SUSPENDED' ? 'info' : 'danger',
       confirmText: `Yes, ${action}`
     });

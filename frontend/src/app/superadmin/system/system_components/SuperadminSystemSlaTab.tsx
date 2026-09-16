@@ -49,7 +49,7 @@ export default function SuperadminSystemSlaTab() {
   const avgUptime = formatNumber(Math.round(avgUptimeRaw * 100) / 100);
 
   return (
-    <div className="space-y-8 animate-superadmin-fade-in-up">
+    <div className="space-y-8 motion-safe:animate-superadmin-fade-in-up">
       {/* SLA Metrics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="bg-card border border-border rounded-xl p-6">

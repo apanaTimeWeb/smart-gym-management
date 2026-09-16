@@ -108,3 +108,18 @@ export type SuperadminFranchise = z.infer<typeof SuperadminFranchiseSchema>;
 - **Section-Level Error Boundaries in Franchises:** Do not allow a single failed API fetch in Franchises to unmount the entire page. Major components (like the Franchises data table or metrics) must be wrapped in `<SuperadminErrorBoundary variant="inline">`.
 - **Backend-Driven Messages for Franchises Mutations:** Do not hardcode success or error toasts like "User created". Always display the `message` string provided by the backend's JSON response envelope when creating, updating, or deleting Franchises.
 - **No Client-Side Pagination for Franchises:** If the dataset grows large, do not fetch all Franchises and paginate on the client. always implement robust server-side pagination, sorting, and filtering via query parameters using useSuperadminUrlState.
+
+
+## API Contract
+All calls are isolated to `superadmin_franchises_api.ts`.
+
+- `return apiFetch<ApiResponse<SuperadminFranchise[]>>(`${FranchisesUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.array(SuperadminFranchiseSchema) });`
+- `apiFetch<ApiResponse<SuperadminFranchise>>(`${FranchisesUrlConfig.BACKEND_API.BASE}/${id}`, { dataSchema: SuperadminFranchiseSchema }),`
+- `apiFetch<ApiResponse<void>>(`${FranchisesUrlConfig.BACKEND_API.BASE}/${id}/suspend`, { method: 'POST',`
+- `apiFetch<ApiResponse<void>>(`${FranchisesUrlConfig.BACKEND_API.BASE}/${id}/activate`, { method: 'POST',`
+- `apiFetch<ApiResponse<SuperadminFranchise>>(`${FranchisesUrlConfig.BACKEND_API.BASE}/${id}`, {`
+
+
+## State Architecture
+- Server State: TanStack Query
+- UI State: React `useState` or Zustand

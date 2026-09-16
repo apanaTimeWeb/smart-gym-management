@@ -83,3 +83,19 @@ Types found but could not be parsed.
 - **Section-Level Error Boundaries in Messaging:** Do not allow a single failed API fetch in Messaging to unmount the entire page. Major components (like the Messaging data table or metrics) must be wrapped in `<SuperadminErrorBoundary variant="inline">`.
 - **Backend-Driven Messages for Messaging Mutations:** Do not hardcode success or error toasts like "User created". Always display the `message` string provided by the backend's JSON response envelope when creating, updating, or deleting Messaging.
 - **No Client-Side Pagination for Messaging:** If the dataset grows large, do not fetch all Messaging and paginate on the client. always implement robust server-side pagination, sorting, and filtering via query parameters using useSuperadminUrlState.
+
+
+## State Architecture
+- Server State: TanStack Query
+- UI State: React `useState` or Zustand
+
+
+## Component Responsibility Map
+
+| Component | Responsibility |
+|---|---|
+| `SuperadminMessagingClient.tsx` | Renders UI for messaging |
+| `SuperadminMessagingComposeModal.tsx` | Renders UI for messaging |
+| `SuperadminMessagingMessagesTab.tsx` | Renders UI for messaging |
+| `SuperadminMessagingNotificationsTab.tsx` | Renders UI for messaging |
+| `SuperadminMessagingTenantDropdown.tsx` | Renders UI for messaging |

@@ -207,3 +207,8 @@ export type GymWhatsappFormValues = z.infer<typeof gymWhatsappSchema>;
 - [x] Design §12: Z-index scale respected in modals (`z-40`) and ghost banner (`z-50`)
 - [x] Design §29: `motion-safe:` prefix on all transitions and animations
 - [x] Design §64: Action buttons use `opacity-100 lg:opacity-0 lg:group-hover:opacity-100` for mobile visibility
+
+
+## State Architecture
+- Server State: TanStack Query
+- UI State: React `useState` or Zustand

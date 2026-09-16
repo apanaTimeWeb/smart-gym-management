@@ -1,14 +1,16 @@
 // RESPONSIBILITY: Centralizes Dashboard UI constants, chart colors, and plan badge mapping.
 
+import { CHART_COLORS } from '@/app/superadmin/superadmin_utils/SuperadminChartConstants';
+
 export const DASHBOARD_CHART_COLORS = {
-  PRIMARY: '#FACC15',
-  SUCCESS: '#22C55E',
-  WARNING: '#F59E0B',
-  DANGER: '#EF4444',
-  INFO: '#3B82F6',
-  PURPLE: '#C084FC',
-  TEXT_SECONDARY: '#A1A1AA',
-  BORDER: '#27272A',
+  PRIMARY: CHART_COLORS.PRIMARY,
+  SUCCESS: CHART_COLORS.SUCCESS,
+  WARNING: CHART_COLORS.WARNING,
+  DANGER: CHART_COLORS.DANGER,
+  INFO: CHART_COLORS.INFO,
+  PURPLE: CHART_COLORS.PURPLE,
+  TEXT_SECONDARY: CHART_COLORS.TEXT_SECONDARY,
+  BORDER: CHART_COLORS.BORDER,
 } as const;
 
 /** Maps time range keys to human-readable suffix labels. */

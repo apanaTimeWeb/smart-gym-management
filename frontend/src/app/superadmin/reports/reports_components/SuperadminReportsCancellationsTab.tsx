@@ -29,7 +29,7 @@ export function SuperadminReportsCancellationsTab({
     legend: { labels: { colors: CHART_COLORS.TEXT_SECONDARY }, position: 'bottom' as const },
     theme: { mode: 'dark' as const },
     tooltip: { theme: 'dark' as const },
-    dataLabels: { style: { colors: ['#fff'] } },
+    dataLabels: { style: { colors: [CHART_COLORS.WHITE] } },
   };
 
   const cancellationsPieSeries = Object.values(cancellationsReasonCounts);

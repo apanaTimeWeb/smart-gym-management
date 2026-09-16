@@ -42,8 +42,8 @@ export default function SuperadminTicketsReplyModal({ isOpen, onClose, ticketId 
   };
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center bg-background/80 backdrop-blur-sm motion-safe:animate-in fade-in duration-200" role="dialog" aria-modal="true">
-      <div className="bg-card border border-border w-full max-w-lg rounded-xl shadow-lg p-6 relative motion-safe:animate-in zoom-in-95 duration-200">
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-background/80 backdrop-blur-sm motion-safe:animate-in fade-in motion-safe:duration-200" role="dialog" aria-modal="true">
+      <div className="bg-card border border-border w-full max-w-lg rounded-xl shadow-lg p-6 relative motion-safe:animate-in zoom-in-95 motion-safe:duration-200">
         <h2 className="text-xl font-bold text-foreground mb-4">Reply to Ticket #{ticketId}</h2>
         <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-4">
           <div>

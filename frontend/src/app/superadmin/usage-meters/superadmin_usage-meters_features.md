@@ -67,3 +67,15 @@ export interface UsageMeter {
   storageLimitGb: number;
   // ... truncated
 ```
+
+
+## State Architecture
+- Server State: TanStack Query
+- UI State: React `useState` or Zustand
+
+
+## Component Responsibility Map
+
+| Component | Responsibility |
+|---|---|
+| `SuperadminUsageMetersClient.tsx` | Renders UI for usage-meters |

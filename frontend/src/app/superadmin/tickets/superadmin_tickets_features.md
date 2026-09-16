@@ -116,3 +116,18 @@ export type ReplyFormValues = z.infer<typeof replySchema>;
 - **Section-Level Error Boundaries in Tickets:** Do not allow a single failed API fetch in Tickets to unmount the entire page. Major components (like the Tickets data table or metrics) must be wrapped in `<SuperadminErrorBoundary variant="inline">`.
 - **Backend-Driven Messages for Tickets Mutations:** Do not hardcode success or error toasts like "User created". Always display the `message` string provided by the backend's JSON response envelope when creating, updating, or deleting Tickets.
 - **No Client-Side Pagination for Tickets:** If the dataset grows large, do not fetch all Tickets and paginate on the client. always implement robust server-side pagination, sorting, and filtering via query parameters using useSuperadminUrlState.
+
+
+## API Contract
+All calls are isolated to `superadmin_tickets_api.ts`.
+
+- `return apiFetch<ApiResponse<SupportTicket[]>>(`${TicketsUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.array(SupportTicketSchema) });`
+- `apiFetch<ApiResponse<SupportTicket>>(`${TicketsUrlConfig.BACKEND_API.BASE}/${id}`, { dataSchema: SupportTicketSchema }),`
+- `apiFetch<ApiResponse<SupportTicket>>(`${TicketsUrlConfig.BACKEND_API.BASE}/${id}`, {`
+- `apiFetch<ApiResponse<SupportTicket>>(`${TicketsUrlConfig.BACKEND_API.BASE}/${id}/close`, {`
+- `apiFetch<ApiResponse<SupportTicket>>(`${TicketsUrlConfig.BACKEND_API.BASE}/${id}/assign`, {`
+
+
+## State Architecture
+- Server State: TanStack Query
+- UI State: React `useState` or Zustand

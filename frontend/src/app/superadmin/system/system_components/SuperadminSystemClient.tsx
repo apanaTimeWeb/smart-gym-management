@@ -154,7 +154,7 @@ export default function SuperadminSystemClient() {
       </div>
 
       {tab === 'migrations' && (
-        <div className="space-y-8 animate-superadmin-fade-in-up">
+        <div className="space-y-8 motion-safe:animate-superadmin-fade-in-up">
           {/* Database Migration Health */}
       <div>
         <div className="flex items-center gap-2 mb-4">

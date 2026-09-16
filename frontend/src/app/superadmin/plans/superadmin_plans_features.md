@@ -101,3 +101,19 @@ export type PlanFormValues = z.infer<typeof planFormSchema>;
 - **Section-Level Error Boundaries in Plans:** Do not allow a single failed API fetch in Plans to unmount the entire page. Major components (like the Plans data table or metrics) must be wrapped in `<SuperadminErrorBoundary variant="inline">`.
 - **Backend-Driven Messages for Plans Mutations:** Do not hardcode success or error toasts like "User created". Always display the `message` string provided by the backend's JSON response envelope when creating, updating, or deleting Plans.
 - **No Client-Side Pagination for Plans:** If the dataset grows large, do not fetch all Plans and paginate on the client. always implement robust server-side pagination, sorting, and filtering via query parameters using useSuperadminUrlState.
+
+
+## API Contract
+All calls are isolated to `superadmin_plans_api.ts`.
+
+- `return apiFetch<ApiResponse<SubscriptionPlan[]>>(`${PlansUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.array(SubscriptionPlanSchema) });`
+- `fetchPlanById: (id: string) => apiFetch<ApiResponse<SubscriptionPlan>>(`${PlansUrlConfig.BACKEND_API.BASE}/${id}`, { dataSchema: SubscriptionPlanSchema }),`
+- `createPlan: (body: CreatePlanPayload) => apiFetch<ApiResponse<SubscriptionPlan>>(PlansUrlConfig.BACKEND_API.BASE, { method: 'POST', body: JSON.stringify(body),`
+- `updatePlan: (id: string, body: UpdatePlanPayload) => apiFetch<ApiResponse<SubscriptionPlan>>(`${PlansUrlConfig.BACKEND_API.BASE}/${id}`, { method: 'PATCH', body: JSON.stringify(body),`
+- `deletePlan: (id: string) => apiFetch<ApiResponse<void>>(`${PlansUrlConfig.BACKEND_API.BASE}/${id}`, { method: 'DELETE',`
+- `archivePlan: (id: string) => apiFetch<ApiResponse<void>>(`${PlansUrlConfig.BACKEND_API.BASE}/${id}/archive`, { method: 'PATCH',`
+
+
+## State Architecture
+- Server State: TanStack Query
+- UI State: React `useState` or Zustand

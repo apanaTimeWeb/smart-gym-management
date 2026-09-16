@@ -110,3 +110,15 @@ export type JobsMetrics = z.infer<typeof JobsMetricsSchema>;
 - **Section-Level Error Boundaries in Jobs:** Do not allow a single failed API fetch in Jobs to unmount the entire page. Major components (like the Jobs data table or metrics) must be wrapped in `<SuperadminErrorBoundary variant="inline">`.
 - **Backend-Driven Messages for Jobs Mutations:** Do not hardcode success or error toasts like "User created". Always display the `message` string provided by the backend's JSON response envelope when creating, updating, or deleting Jobs.
 - **No Client-Side Pagination for Jobs:** If the dataset grows large, do not fetch all Jobs and paginate on the client. always implement robust server-side pagination, sorting, and filtering via query parameters using useSuperadminUrlState.
+
+
+## API Contract
+All calls are isolated to `superadmin_jobs_api.ts`.
+
+- `return apiFetch<ApiResponse<BackgroundJob[]>>(`${JobsUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.array(BackgroundJobSchema) });`
+- `retryAllJobs: () => apiFetch<ApiResponse<{ queuedCount: number }>>(`${JobsUrlConfig.BACKEND_API.BASE}/retry-all`, { method: 'POST',`
+
+
+## State Architecture
+- Server State: TanStack Query
+- UI State: React `useState` or Zustand

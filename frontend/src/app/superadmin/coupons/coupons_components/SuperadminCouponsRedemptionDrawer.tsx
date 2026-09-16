@@ -51,7 +51,7 @@ export default function SuperadminCouponsRedemptionDrawer({ coupon, isOpen, onCl
         role="dialog"
         aria-modal="true"
         aria-label={`Redemption history for coupon ${coupon.code}`}
-        className={`fixed top-0 right-0 z-40 h-full w-full max-w-md bg-card border-l border-border shadow-2xl flex flex-col motion-safe:transition-transform motion-safe:duration-300 ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
+        className={`fixed top-0 right-0 z-40 h-full w-full max-w-md bg-card border-l border-border shadow-2xl flex flex-col motion-safe:transition-transform motion-safe:duration-300 motion-safe:ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
       >
         <div className="flex items-center justify-between p-6 border-b border-border">
           <div>

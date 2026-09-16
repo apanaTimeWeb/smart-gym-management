@@ -57,3 +57,15 @@ The following types map directly to the UI components and define the shape of th
 ```typescript
 export type PlatformSetting = z.infer<typeof PlatformSettingSchema>;
 ```
+
+
+## State Architecture
+- Server State: TanStack Query
+- UI State: React `useState` or Zustand
+
+
+## Component Responsibility Map
+
+| Component | Responsibility |
+|---|---|
+| `SuperadminSettingsClient.tsx` | Renders UI for settings |

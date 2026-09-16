@@ -198,3 +198,12 @@ export interface SuperadminDashboardRecentOnboardsProps {
 - **Section-Level Error Boundaries in Dashboard:** Do not allow a single failed API fetch in Dashboard to unmount the entire page. Major components (like the Dashboard data table or metrics) must be wrapped in `<SuperadminErrorBoundary variant="inline">`.
 - **Backend-Driven Messages for Dashboard Mutations:** Do not hardcode success or error toasts like "User created". Always display the `message` string provided by the backend's JSON response envelope when creating, updating, or deleting Dashboard.
 - **No Client-Side Pagination for Dashboard:** If the dataset grows large, do not fetch all Dashboard and paginate on the client. always implement robust server-side pagination, sorting, and filtering via query parameters using useSuperadminUrlState.
+
+
+## State Architecture
+- Server State: TanStack Query
+- UI State: React `useState` or Zustand
+
+
+## Permissions
+- Restricted to SUPERADMIN role.

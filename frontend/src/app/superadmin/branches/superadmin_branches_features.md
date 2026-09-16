@@ -119,3 +119,18 @@ export interface SuperadminBranch {
 - **Section-Level Error Boundaries in Branches:** Do not allow a single failed API fetch in Branches to unmount the entire page. Major components (like the Branches data table or metrics) must be wrapped in `<SuperadminErrorBoundary variant="inline">`.
 - **Backend-Driven Messages for Branches Mutations:** Do not hardcode success or error toasts like "User created". Always display the `message` string provided by the backend's JSON response envelope when creating, updating, or deleting Branches.
 - **No Client-Side Pagination for Branches:** If the dataset grows large, do not fetch all Branches and paginate on the client. always implement robust server-side pagination, sorting, and filtering via query parameters using useSuperadminUrlState.
+
+
+## API Contract
+All calls are isolated to `superadmin_branches_api.ts`.
+
+- `return apiFetch<ApiResponse<SuperadminBranch[]>>(`${BranchesUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.array(SuperadminBranchSchema) });`
+- `apiFetch<ApiResponse<SuperadminBranch>>(`${BranchesUrlConfig.BACKEND_API.BASE}/${id}`, { dataSchema: SuperadminBranchSchema }),`
+- `apiFetch<ApiResponse<SuperadminBranch>>(`${BranchesUrlConfig.BACKEND_API.BASE}/${id}`, {`
+- `apiFetch<ApiResponse<void>>(`${BranchesUrlConfig.BACKEND_API.BASE}/${id}/suspend`, {`
+- `apiFetch<ApiResponse<void>>(`${BranchesUrlConfig.BACKEND_API.BASE}/${id}/activate`, {`
+
+
+## State Architecture
+- Server State: TanStack Query
+- UI State: React `useState` or Zustand

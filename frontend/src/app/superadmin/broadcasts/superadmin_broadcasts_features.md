@@ -137,3 +137,19 @@ export type SuperadminBroadcastsTenant = z.infer<typeof SuperadminBroadcastsTena
 - **Section-Level Error Boundaries in Broadcasts:** Do not allow a single failed API fetch in Broadcasts to unmount the entire page. Major components (like the Broadcasts data table or metrics) must be wrapped in `<SuperadminErrorBoundary variant="inline">`.
 - **Backend-Driven Messages for Broadcasts Mutations:** Do not hardcode success or error toasts like "User created". Always display the `message` string provided by the backend's JSON response envelope when creating, updating, or deleting Broadcasts.
 - **No Client-Side Pagination for Broadcasts:** If the dataset grows large, do not fetch all Broadcasts and paginate on the client. always implement robust server-side pagination, sorting, and filtering via query parameters using useSuperadminUrlState.
+
+
+## API Contract
+All calls are isolated to `superadmin_broadcasts_api.ts`.
+
+- `return apiFetch<ApiResponse<Broadcast[]>>(`${BroadcastsUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.array(BroadcastResponseSchema) });`
+- `createBroadcast: (body: BroadcastFormData) => apiFetch<ApiResponse<Broadcast>>(BroadcastsUrlConfig.BACKEND_API.BASE, { method: 'POST', body: JSON.stringify(body),`
+- `deleteBroadcast: (id: string) => apiFetch<ApiResponse<void>>(`${BroadcastsUrlConfig.BACKEND_API.BASE}/${id}`, { method: 'DELETE',`
+- `updateBroadcast: (id: string, body: Partial<BroadcastFormData>) => apiFetch<ApiResponse<Broadcast>>(`${BroadcastsUrlConfig.BACKEND_API.BASE}/${id}`, { method: 'PATCH', body: JSON.stringify(body),`
+- `fetchTenants: () => apiFetch<ApiResponse<unknown[]>>(UrlConfig.BACKEND_API.BASE),`
+- `fetchRecipientCount: () => apiFetch<ApiResponse<{ count: number }>>(`${BroadcastsUrlConfig.BACKEND_API.BASE}/recipient-count`, { dataSchema: z.object({}).passthrough() }),`
+
+
+## State Architecture
+- Server State: TanStack Query
+- UI State: React `useState` or Zustand

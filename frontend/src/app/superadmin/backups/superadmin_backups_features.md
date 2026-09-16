@@ -103,3 +103,16 @@ export type BackupRecord = z.infer<typeof BackupRecordSchema>;
 - **Section-Level Error Boundaries in Backups:** Do not allow a single failed API fetch in Backups to unmount the entire page. Major components (like the Backups data table or metrics) must be wrapped in `<SuperadminErrorBoundary variant="inline">`.
 - **Backend-Driven Messages for Backups Mutations:** Do not hardcode success or error toasts like "User created". Always display the `message` string provided by the backend's JSON response envelope when creating, updating, or deleting Backups.
 - **No Client-Side Pagination for Backups:** If the dataset grows large, do not fetch all Backups and paginate on the client. always implement robust server-side pagination, sorting, and filtering via query parameters using useSuperadminUrlState.
+
+
+## API Contract
+All calls are isolated to `superadmin_backups_api.ts`.
+
+- `return apiFetch<ApiResponse<BackupRecord[]>>(`${BackupsUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.array(BackupRecordSchema) });`
+- `return apiFetch<ApiResponse<null>>(`${BackupsUrlConfig.BACKEND_API.BASE}/trigger`, {`
+- `return apiFetch<ApiResponse<null>>(`${BackupsUrlConfig.BACKEND_API.BASE}/${id}/restore`, {`
+
+
+## State Architecture
+- Server State: TanStack Query
+- UI State: React `useState` or Zustand

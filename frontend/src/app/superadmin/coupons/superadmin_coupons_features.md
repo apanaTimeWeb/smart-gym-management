@@ -133,3 +133,19 @@ export type CouponFormData = z.infer<typeof CouponSchema>;
 - **Section-Level Error Boundaries in Coupons:** Do not allow a single failed API fetch in Coupons to unmount the entire page. Major components (like the Coupons data table or metrics) must be wrapped in `<SuperadminErrorBoundary variant="inline">`.
 - **Backend-Driven Messages for Coupons Mutations:** Do not hardcode success or error toasts like "User created". Always display the `message` string provided by the backend's JSON response envelope when creating, updating, or deleting Coupons.
 - **No Client-Side Pagination for Coupons:** If the dataset grows large, do not fetch all Coupons and paginate on the client. always implement robust server-side pagination, sorting, and filtering via query parameters using useSuperadminUrlState.
+
+
+## API Contract
+All calls are isolated to `superadmin_coupons_api.ts`.
+
+- `return apiFetch<ApiResponse<Coupon[]>>(`${CouponsUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.array(CouponSchema) });`
+- `apiFetch<ApiResponse<Coupon>>(CouponsUrlConfig.BACKEND_API.BASE, {`
+- `apiFetch<ApiResponse<Coupon>>(`${CouponsUrlConfig.BACKEND_API.BASE}/${id}`, {`
+- `apiFetch<ApiResponse<void>>(`${CouponsUrlConfig.BACKEND_API.BASE}/${id}`, {`
+- `apiFetch<ApiResponse<Coupon>>(`${CouponsUrlConfig.BACKEND_API.BASE}/${id}/restore`, {`
+- `apiFetch<ApiResponse<Coupon>>(`${CouponsUrlConfig.BACKEND_API.BASE}/${id}/status`, {`
+
+
+## State Architecture
+- Server State: TanStack Query
+- UI State: React `useState` or Zustand

@@ -38,7 +38,7 @@ describe('SuperadminProfileMain', () => {
   it('renders loading state when profile is loading', () => {
     mockUseProfilePage.mockReturnValue({ profileLoading: true });
     const { container } = render(<SuperadminProfileMain />);
-    expect(container.querySelector('.motion-safe\\:animate-pulse')).toBeInTheDocument();
+    expect(container.querySelector('.motion-safe\\:motion-safe:animate-pulse')).toBeInTheDocument();
   });
 
   it('renders personal form by default', () => {

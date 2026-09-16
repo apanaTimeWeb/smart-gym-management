@@ -50,10 +50,10 @@ export default function SuperadminFeaturesClient() {
       if (res.data) {
         // setData removed((prev: { flags: FeatureFlag[]; notes: ReleaseNote[]; } | null) => prev ? { ...prev, notes: [res.data, ...prev.notes] } : prev);
         reset();
-        toast.success('Release note published successfully', { id: 'release-note-published-successfully' });
+        toast.success(res.message || 'Release note published successfully', { id: 'release-note-published-successfully' });
       }
-    } catch (err: unknown) {
-      toast.error('Failed to publish release note', { id: 'failed-to-publish-release-note' });
+    } catch (err: any) {
+      toast.error(err.message || 'Failed to publish release note', { id: 'failed-to-publish-release-note' });
     } finally {
       setIsPublishing(false);
     }
@@ -76,20 +76,20 @@ export default function SuperadminFeaturesClient() {
 
   const handleToggle = async (flagId: string) => {
     try {
-      await toggleFlag(flagId);
-      toast.success('Feature flag toggled', { id: 'feature-flag-toggled' });
-    } catch (e) {
-      toast.error('Failed to toggle feature flag', { id: 'failed-to-toggle-feature-flag' });
+      const res = await toggleFlag(flagId);
+      toast.success(res.message || 'Feature flag toggled', { id: 'feature-flag-toggled' });
+    } catch (e: any) {
+      toast.error(e.message || 'Failed to toggle feature flag', { id: 'failed-to-toggle-feature-flag' });
     }
   };
 
   const handleSaveRollout = async (tenantIds: string[]) => {
     if (!rolloutFlag) return;
     try {
-      await updateFlag({ id: rolloutFlag.id, body: { enabledTenantIds: tenantIds } });
-      toast.success('Canary rollout updated successfully', { id: 'canary-rollout-updated-successfully' });
-    } catch (e) {
-      toast.error('Failed to update canary rollout', { id: 'failed-to-update-canary-rollout' });
+      const res = await updateFlag({ id: rolloutFlag.id, body: { enabledTenantIds: tenantIds } });
+      toast.success(res.message || 'Canary rollout updated successfully', { id: 'canary-rollout-updated-successfully' });
+    } catch (e: any) {
+      toast.error(e.message || 'Failed to update canary rollout', { id: 'failed-to-update-canary-rollout' });
     }
   };
 

@@ -11,6 +11,8 @@ this route.
 ---
 
 ## Directory Structure
+- Handler path: `profile_mocks/handlers/`
+- Fixture path: `profile_mocks/fixtures/`
 
 | Folder | Responsibility | Key Files |
 |---|---|---|
@@ -73,7 +75,7 @@ this route.
 - **FetchState enum:** `personalState`, `passwordState`, `twoFAState` track mutation lifecycle (`'idle' | 'loading' | 'success' | 'error'`) — passed as `isSaving` booleans to child forms
 - **Context providers:** None — inherits `SuperadminQueryProvider` from root layout
 - **Local-storage keys:** None
-- **MSW handler file:** fully configured via src/mocks/handlers/ — `src/app/superadmin/profile/profile_mocks/handlers/SuperadminProfileMockHandlers.ts` (planned)
+- **MSW handler file:** fully configured via profile_mocks/handlers/ — `src/app/superadmin/profile/profile_mocks/handlers/SuperadminProfileMockHandlers.ts` (planned)
 
 ---
 
@@ -200,4 +202,9 @@ export type ProfileTab = 'personal' | 'security';
 - [x] Rule 73: `import type` used for all type-only imports
 - [x] Rule 79: Unsaved changes guard — `useWarnIfUnsavedChanges(isDirty)` on personal and security forms
 - [ ] Rule 15A: Tests — `SuperadminProfileMain.test.tsx` exists; hooks and utils need co-located tests
-- [ ] Rule 75: MSW handlers — fully configured via src/mocks/handlers/
+- [ ] Rule 75: MSW handlers — fully configured via profile_mocks/handlers/
+
+
+## State Architecture
+- Server State: TanStack Query
+- UI State: React `useState` or Zustand

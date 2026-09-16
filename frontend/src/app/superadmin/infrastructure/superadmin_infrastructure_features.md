@@ -109,3 +109,18 @@ export type SuperadminInfrastructureTenant = z.infer<typeof SuperadminInfrastruc
 - **Section-Level Error Boundaries in Infrastructure:** Do not allow a single failed API fetch in Infrastructure to unmount the entire page. Major components (like the Infrastructure data table or metrics) must be wrapped in `<SuperadminErrorBoundary variant="inline">`.
 - **Backend-Driven Messages for Infrastructure Mutations:** Do not hardcode success or error toasts like "User created". Always display the `message` string provided by the backend's JSON response envelope when creating, updating, or deleting Infrastructure.
 - **No Client-Side Pagination for Infrastructure:** If the dataset grows large, do not fetch all Infrastructure and paginate on the client. always implement robust server-side pagination, sorting, and filtering via query parameters using useSuperadminUrlState.
+
+
+## API Contract
+All calls are isolated to `superadmin_infrastructure_api.ts`.
+
+- `return apiFetch<ApiResponse<InfrastructureNode[]>>(`${InfrastructureUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.array(InfrastructureNodeSchema) });`
+- `fetchRedisTelemetry: () => apiFetch<ApiResponse<RedisTelemetry>>(InfrastructureUrlConfig.BACKEND_API.REDIS_TELEMETRY, { dataSchema: RedisTelemetrySchema }),`
+- `flushGlobalCache: () => apiFetch<ApiResponse<void>>(InfrastructureUrlConfig.BACKEND_API.REDIS_FLUSH_GLOBAL, { method: 'POST', dataSchema: z.object({}).passthrough() }),`
+- `flushTenantCache: (tenantIds: string[]) => apiFetch<ApiResponse<void>>(InfrastructureUrlConfig.BACKEND_API.REDIS_FLUSH_TENANT, { method: 'POST', body: JSON.stringify({ tenantIds }), dataSchema: z.object({}).passthrough() }),`
+- `fetchTenants: () => apiFetch<ApiResponse<SuperadminInfrastructureTenant[]>>(GymsUrlConfig.BACKEND_API.BASE, { dataSchema: z.array(SuperadminInfrastructureTenantSchema) }),`
+
+
+## State Architecture
+- Server State: TanStack Query
+- UI State: React `useState` or Zustand
