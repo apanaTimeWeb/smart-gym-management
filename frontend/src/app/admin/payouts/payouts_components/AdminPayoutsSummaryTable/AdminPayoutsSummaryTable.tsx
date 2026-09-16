@@ -1,11 +1,11 @@
 "use client";
-// RESPONSIBILITY: Table showing monthly payout summary per gym with mark-as-paid action.
+// RESPONSIBILITY: Renders the read-only monthly payout summary table with scoped filters and pagination.
 
 import { CheckCircle, Clock, Loader2 } from 'lucide-react';
 import { useAdminPayoutsLogic } from '@/app/admin/payouts/payouts_context/useAdminPayoutsLogic';
 import { AdminTableSkeleton } from '@/app/admin/admin_components/AdminShared/AdminTableSkeleton';
 import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
-import { fmt } from '@/app/admin/payouts/payouts_utils/AdminPayoutsSharedConstants';
+import { formatCurrency } from '@/lib/formatters';
 import { PAYOUT_MONTH_OPTIONS, PAYOUT_GYM_OPTIONS, PAYOUT_STATUS_OPTIONS } from '@/app/admin/payouts/payouts_utils/AdminPayoutsSharedConstants';
 import { AdminSearchableDropdown } from '@/app/admin/admin_components/AdminShared/AdminSearchableDropdown';
 
@@ -15,10 +15,10 @@ const STATUS_STYLES: Record<string, string> = {
   processing: 'bg-info-bg text-info',
 };
 
-const HEADERS = ['Gym', 'Month', 'Gross Revenue', 'Payroll', 'Expenses', 'Platform Fee', 'Net Profit', 'Status', 'Actions'];
+const HEADERS = ['Gym', 'Month', 'Gross Revenue', 'Payroll', 'Expenses', 'Platform Fee', 'Net Profit', 'Status'];
 
 export default function AdminPayoutsSummaryTable() {
-  const { payouts, fetchState, markPaid, currentPage, setCurrentPage, totalPages, totalItems, monthFilter, setMonthFilter, gymFilter, setGymFilter, statusFilter, setStatusFilter } = useAdminPayoutsLogic();
+  const { payouts, status, currentPage, setCurrentPage, totalPages, totalItems, monthFilter, setMonthFilter, gymFilter, setGymFilter, statusFilter, setStatusFilter } = useAdminPayoutsLogic();
 
   return (
     <div className="space-y-3">
@@ -28,7 +28,7 @@ export default function AdminPayoutsSummaryTable() {
         <div className="w-40"><AdminSearchableDropdown options={PAYOUT_STATUS_OPTIONS} value={statusFilter} onChange={(v) => setStatusFilter(v as string)} placeholder="All Status" /></div>
       </div>
 
-      {fetchState === 'loading' ? <AdminTableSkeleton rows={6} cols={HEADERS.length} /> : (
+      {status === 'pending' ? <AdminTableSkeleton rows={6} cols={HEADERS.length} /> : (
         <div className="bg-card rounded-xl border border-border overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
@@ -38,30 +38,20 @@ export default function AdminPayoutsSummaryTable() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
-                {payouts.map((p: any) => (
+                {payouts.map((p) => (
                   <tr key={`${p.gymId}-${p.month}`} className="hover:bg-primary/5 motion-safe:transition-colors">
                     <td className="px-4 py-3 text-sm font-medium text-foreground">{p.gymName}</td>
                     <td className="px-4 py-3 text-sm text-secondary">{p.month}</td>
-                    <td className="px-4 py-3 text-sm text-foreground font-medium">{fmt(p.grossRevenue)}</td>
-                    <td className="px-4 py-3 text-sm text-danger">{fmt(p.staffPayroll)}</td>
-                    <td className="px-4 py-3 text-sm text-danger">{fmt(p.operationalExpenses)}</td>
-                    <td className="px-4 py-3 text-sm text-secondary">{fmt(p.platformFee)}</td>
-                    <td className="px-4 py-3 text-sm font-bold text-success">{fmt(p.netProfit)}</td>
+                    <td className="px-4 py-3 text-sm text-foreground font-medium">{formatCurrency(p.grossRevenue)}</td>
+                    <td className="px-4 py-3 text-sm text-danger">{formatCurrency(p.staffPayroll)}</td>
+                    <td className="px-4 py-3 text-sm text-danger">{formatCurrency(p.operationalExpenses)}</td>
+                    <td className="px-4 py-3 text-sm text-secondary">{formatCurrency(p.platformFee)}</td>
+                    <td className="px-4 py-3 text-sm font-bold text-success">{formatCurrency(p.netProfit)}</td>
                     <td className="px-4 py-3">
                       <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold capitalize ${STATUS_STYLES[p.payoutStatus] ?? 'bg-input text-secondary'}`}>
-                        {p.payoutStatus === 'paid' ? <CheckCircle size={11} /> : p.payoutStatus === 'processing' ? <Loader2 size={11} className="animate-spin" /> : <Clock size={11} />}
+                        {p.payoutStatus === 'paid' ? <CheckCircle size={11} /> : p.payoutStatus === 'processing' ? <Loader2 size={11} className="motion-safe:animate-spin" /> : <Clock size={11} />}
                         {p.payoutStatus}
                       </span>
-                    </td>
-                    <td className="px-4 py-3">
-                      {p.payoutStatus === 'pending' && (
-                        <button
-                          onClick={() => markPaid(p.gymId, p.month)}
-                          className="px-3 py-1 bg-primary text-black rounded-lg text-xs font-semibold hover:bg-primary-hover motion-safe:transition-colors active:scale-95"
-                        >
-                          Mark Paid
-                        </button>
-                      )}
                     </td>
                   </tr>
                 ))}

@@ -13,12 +13,12 @@ export const MOCK_SUPERADMIN_DASHBOARD_DATA: SuperadminDashboardApiData = {
     recentOnboards: [
       {
         id: 't1', name: 'Iron Paradise', ownerName: 'John Doe', adminEmail: 'john@iron.com',
-        phone: '9876543210', status: 'ACTIVE', plan: 'Pro', createdAt: '2023-10-01',
+        phone: '9876543210', status: 'ACTIVE', plan: 'Pro', createdAt: '2026-08-01',
         memberCount: 200, monthlyRevenue: 5000, databaseVersion: 'v1.2'
       },
       {
         id: 't2', name: 'Fit Life Studio', ownerName: 'Jane Smith', adminEmail: 'jane@fitlife.com',
-        phone: '9876543211', status: 'TRIAL', plan: 'Basic', createdAt: '2023-10-15',
+        phone: '9876543211', status: 'TRIAL', plan: 'Basic', createdAt: '2026-08-15',
         memberCount: 50, monthlyRevenue: 0, databaseVersion: 'v1.2'
       }
     ],
@@ -32,6 +32,11 @@ export const MOCK_SUPERADMIN_DASHBOARD_DATA: SuperadminDashboardApiData = {
       { plan: 'Enterprise', amount: 50000, tenantCount: 15 }
     ],
     platformHealthScore: 92,
+    revenueByGeography: [
+      { region: 'India', revenue: 175000 },
+      { region: 'UAE', revenue: 45000 },
+      { region: 'Singapore', revenue: 30000 },
+    ],
   },
   revenue: [
     { month: 'Jan', mrr: 150000 },

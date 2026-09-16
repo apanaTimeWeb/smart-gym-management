@@ -4,79 +4,81 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
-import { subscriptionsApi } from '@/app/admin/subscriptions/subscriptions_api/subscriptions_api';
+import { subscriptionsApi } from '@/app/admin/subscriptions/subscriptions_api/AdminSubscriptionsApi';
 import { useAdminSubscriptionsStore } from '@/app/admin/subscriptions/subscriptions_store/useAdminSubscriptionsStore';
 import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/useAdminConfirm';
-import type { FetchState } from '@/app/admin/subscriptions/subscriptions_types/subscriptions_types';
 
 export function useAdminSubscriptionsLogic() {
   const { confirm } = useAdminConfirm();
   const qc = useQueryClient();
   const { showUpgradeConfirm, setShowUpgradeConfirm } = useAdminSubscriptionsStore();
 
-  const { data: subscription, isLoading: subLoading, isError: subError } = useQuery({
-    queryKey: ['adminSubscription'],
+  const subscriptionQuery = useQuery({
+    queryKey: ['admin', 'subscriptions', 'subscription'],
     queryFn: () => subscriptionsApi.fetchSubscription().then(r => r.data),
     staleTime: 1000 * 60 * 5,
   });
 
-  const { data: plans = [], isLoading: plansLoading } = useQuery({
-    queryKey: ['adminSaaSPlans'],
+  const plansQuery = useQuery({
+    queryKey: ['admin', 'subscriptions', 'plans'],
     queryFn: () => subscriptionsApi.fetchPlans().then(r => r.data || []),
     staleTime: 1000 * 60 * 10,
   });
 
-  const { data: invoices = [], isLoading: invoicesLoading } = useQuery({
-    queryKey: ['adminInvoices'],
+  const invoicesQuery = useQuery({
+    queryKey: ['admin', 'subscriptions', 'invoices'],
     queryFn: () => subscriptionsApi.fetchInvoices().then(r => r.data || []),
     staleTime: 1000 * 60 * 5,
   });
 
-  const { data: paymentMethods = [], isLoading: pmLoading } = useQuery({
-    queryKey: ['adminPaymentMethods'],
+  const paymentMethodsQuery = useQuery({
+    queryKey: ['admin', 'subscriptions', 'payment-methods'],
     queryFn: () => subscriptionsApi.fetchPaymentMethods().then(r => r.data || []),
     staleTime: 1000 * 60 * 5,
   });
 
-  const { data: kpis } = useQuery({
-    queryKey: ['adminSubscriptionKPIs'],
+  const kpisQuery = useQuery({
+    queryKey: ['admin', 'subscriptions', 'kpis'],
     queryFn: () => subscriptionsApi.fetchKPIs().then(r => r.data),
     staleTime: 1000 * 60 * 5,
   });
 
-  const fetchState: FetchState = subLoading ? 'loading' : subError ? 'error' : 'success';
+  const subscription = subscriptionQuery.data;
+  const plans = plansQuery.data ?? [];
+  const invoices = invoicesQuery.data ?? [];
+  const paymentMethods = paymentMethodsQuery.data ?? [];
+  const kpis = kpisQuery.data;
+  const status = subscriptionQuery.status;
 
   const upgradeMutation = useMutation({
     mutationFn: (planId: string) => subscriptionsApi.upgradePlan(planId),
-    onSuccess: (res: any) => {
-      toast.success(`Upgraded to ${res.data?.planName || 'new'} plan successfully!`);
+    onSuccess: (response) => { toast.success(response.message, { id: 'admin-success-22dbbbf6' });
       setShowUpgradeConfirm(null);
-      qc.invalidateQueries({ queryKey: ['adminSubscription'] });
-      qc.invalidateQueries({ queryKey: ['adminSubscriptionKPIs'] });
-      qc.invalidateQueries({ queryKey: ['adminSaaSPlans'] });
+      qc.invalidateQueries({ queryKey: ['admin', 'subscriptions', 'subscription'] });
+      qc.invalidateQueries({ queryKey: ['admin', 'subscriptions', 'kpis'] });
+      qc.invalidateQueries({ queryKey: ['admin', 'subscriptions', 'plans'] });
     },
-    onError: (err) => toast.error((err as Error).message),
+    onError: (err) => toast.error((err as Error).message, { id: 'admin-error-adfbfcf78b' }),
   });
 
   const autoRenewMutation = useMutation({
     mutationFn: subscriptionsApi.toggleAutoRenew,
-    onSuccess: (res: any) => {
-      toast.success(res.data?.autoRenew ? 'Auto-renew enabled' : 'Auto-renew disabled');
-      qc.invalidateQueries({ queryKey: ['adminSubscription'] });
+    onSuccess: (response) => { toast.success(response.message, { id: 'admin-success-8bbeec64' });
+      qc.invalidateQueries({ queryKey: ['admin', 'subscriptions', 'subscription'] });
     },
-    onError: (err) => toast.error((err as Error).message),
+    onError: (err) => toast.error((err as Error).message, { id: 'admin-error-1067ba6b06' }),
   });
 
   const setDefaultPMMutation = useMutation({
     mutationFn: (id: string) => subscriptionsApi.setDefaultPaymentMethod(id),
-    onSuccess: () => { toast.success('Default payment method updated'); qc.invalidateQueries({ queryKey: ['adminPaymentMethods'] }); },
-    onError: (err) => toast.error((err as Error).message),
+    onSuccess: (response) => { toast.success(response.message, { id: 'admin-success-235b8623c8' }); qc.invalidateQueries({ queryKey: ['admin', 'subscriptions', 'payment-methods'] }); },
+    onError: (err) => toast.error((err as Error).message, { id: 'admin-error-638550b7de' }),
   });
 
   const removePMMutation = useMutation({
     mutationFn: (id: string) => subscriptionsApi.removePaymentMethod(id),
-    onSuccess: () => { toast.success('Payment method removed'); qc.invalidateQueries({ queryKey: ['adminPaymentMethods'] }); },
-    onError: (err) => toast.error((err as Error).message),
+    onSuccess: (response) => { toast.success(response.message, { id: 'admin-success-83e444b113' }); qc.invalidateQueries({ queryKey: ['admin', 'subscriptions', 'payment-methods'] }); },
+    onError: (err) => toast.error((err as Error).message, { id: 'admin-error-3b8d91063d' }),
   });
 
   async function handleUpgrade(planId: string, planName: string) {
@@ -103,8 +105,8 @@ export function useAdminSubscriptionsLogic() {
 
   return {
     subscription, plans, invoices, paymentMethods, kpis,
-    fetchState,
-    isLoading: subLoading || plansLoading || invoicesLoading || pmLoading,
+    status,
+    isLoading: subscriptionQuery.isPending || plansQuery.isPending || invoicesQuery.isPending || paymentMethodsQuery.isPending,
     handleUpgrade, upgrading: upgradeMutation.isPending,
     toggleAutoRenew: () => autoRenewMutation.mutate(),
     togglingAutoRenew: autoRenewMutation.isPending,

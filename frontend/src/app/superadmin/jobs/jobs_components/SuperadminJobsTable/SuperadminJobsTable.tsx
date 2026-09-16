@@ -5,7 +5,7 @@
 import { RefreshCw, XCircle, Trash2, Eye, AlertTriangle, X as XIcon } from 'lucide-react';
 import type { BackgroundJob } from '@/app/superadmin/jobs/jobs_types/superadmin_jobs_types';
 import SuperadminJobsEmptyState from '@/app/superadmin/jobs/jobs_components/SuperadminJobsEmptyState/SuperadminJobsEmptyState';
-import { formatDuration } from '@/lib/formatters';
+import { formatDuration, formatDateTime } from '@/lib/formatters';
 
 /** Maps BackgroundJob status → TailwindCSS color classes */
 const STATUS_STYLES: Record<BackgroundJob['status'], string> = {
@@ -105,8 +105,8 @@ export default function SuperadminJobsTable({
                   </div>
                 </td>
                 <td className="p-4 text-xs text-secondary whitespace-nowrap">
-                  <div>Created: {new Date(job.createdAt).toLocaleTimeString()}</div>
-                  {jobExt.finishedAt && <div>Finished: {new Date(jobExt.finishedAt).toLocaleTimeString()}</div>}
+                  <div>Created: {formatDateTime(job.createdAt)}</div>
+                  {jobExt.finishedAt && <div>Finished: {formatDateTime(jobExt.finishedAt)}</div>}
                   <div className="font-mono mt-1 text-foreground">Duration: {formatDuration(jobExt.durationMs)}</div>
                 </td>
                 <td className="p-4 text-right" onClick={(e) => e.stopPropagation()}>

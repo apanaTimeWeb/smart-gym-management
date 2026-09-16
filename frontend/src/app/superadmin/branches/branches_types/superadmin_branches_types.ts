@@ -23,12 +23,18 @@ export interface SuperadminBranch {
 
 export const SuperadminBranchSchema = z.object({
   id: z.string(),
-  name: z.string(),
-  managerId: z.string().optional(),
+  tenantId: z.string(),
+  tenantName: z.string(),
+  branchName: z.string(),
   location: z.string(),
-  status: z.enum(['ACTIVE', 'INACTIVE']),
+  city: z.string(),
+  state: z.string(),
+  managerName: z.string(),
+  managerEmail: z.string().email(),
+  phone: z.string(),
+  status: z.enum(['ACTIVE', 'INACTIVE', 'SUSPENDED']),
+  memberCount: z.number(),
+  staffCount: z.number(),
+  monthlyRevenue: z.number(),
   createdAt: z.string(),
-  updatedAt: z.string(),
-  totalMembers: z.number().optional(),
-  monthlyRevenue: z.number().optional()
 });

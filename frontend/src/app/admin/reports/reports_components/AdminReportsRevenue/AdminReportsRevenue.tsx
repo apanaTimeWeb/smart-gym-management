@@ -1,9 +1,9 @@
 "use client";
+import { formatPercent1dp, formatCurrency } from '@/lib/formatters';
 // RESPONSIBILITY: Renders the Revenue report tab — breakdown by gym, payment method, plan, and monthly trend chart.
 
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { useAdminReportsLogic } from '@/app/admin/reports/reports_context/useAdminReportsLogic';
-import { formatCurrency } from '@/app/admin/reports/reports_utils/AdminReportsSharedConstants';
 
 const TREND_ICON = {
   up: <TrendingUp size={14} className="text-success" />,
@@ -48,7 +48,7 @@ export default function AdminReportsRevenue() {
                   <td className="px-5 py-4 text-sm font-semibold text-foreground">{formatCurrency(row.revenue)}</td>
                   <td className="px-5 py-4 text-sm text-danger">{formatCurrency(row.expenses)}</td>
                   <td className="px-5 py-4 text-sm font-semibold text-success">{formatCurrency(row.profit)}</td>
-                  <td className="px-5 py-4 text-sm text-foreground">{((row.profit / row.revenue) * 100).toFixed(1)}%</td>
+                  <td className="px-5 py-4 text-sm text-foreground">{formatPercent1dp((row.profit / row.revenue) * 100)}%</td>
                   <td className="px-5 py-4">
                     <div className="flex items-center gap-1.5">
                       {TREND_ICON[row.trend as keyof typeof TREND_ICON]}
@@ -73,7 +73,7 @@ export default function AdminReportsRevenue() {
           <div className="p-5 space-y-3">
             {reportData.revenueByMethod.map((row) => {
               const total = reportData.revenueByMethod.reduce((s: number, r) => s + r.amount, 0);
-              const pct = ((row.amount / total) * 100).toFixed(1);
+              const pct = formatPercent1dp((row.amount / total) * 100);
               return (
                 <div key={row.method}>
                   <div className="flex justify-between text-sm mb-1">
@@ -96,7 +96,7 @@ export default function AdminReportsRevenue() {
           <div className="p-5 space-y-3">
             {reportData.revenueByPlan.map((row) => {
               const total = reportData.revenueByPlan.reduce((s: number, r) => s + r.amount, 0);
-              const pct = ((row.amount / total) * 100).toFixed(1);
+              const pct = formatPercent1dp((row.amount / total) * 100);
               return (
                 <div key={row.planName}>
                   <div className="flex justify-between text-sm mb-1">
@@ -134,7 +134,7 @@ export default function AdminReportsRevenue() {
                   <td className="px-5 py-3 text-sm text-foreground">{formatCurrency(row.revenue)}</td>
                   <td className="px-5 py-3 text-sm text-danger">{formatCurrency(row.expenses)}</td>
                   <td className="px-5 py-3 text-sm font-semibold text-success">{formatCurrency(row.profit)}</td>
-                  <td className="px-5 py-3 text-sm text-foreground">{((row.profit / row.revenue) * 100).toFixed(1)}%</td>
+                  <td className="px-5 py-3 text-sm text-foreground">{formatPercent1dp((row.profit / row.revenue) * 100)}%</td>
                 </tr>
               ))}
             </tbody>

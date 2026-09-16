@@ -1,19 +1,20 @@
 "use client";
+import { formatCurrency } from '@/lib/formatters';
 // RESPONSIBILITY: Renders the list of members with pending payments, including skeleton loader, pagination, and overdue details. Receives data via SalesContext.
 
 import { useAdminSalesLogic } from '@/app/admin/sales/sales_context/useAdminSalesLogic';
 import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
 import AdminSalesEmptyState from '@/app/admin/sales/sales_components/AdminSalesEmptyState/AdminSalesEmptyState';
-import type { PendingPaymentMember } from '@/app/admin/sales/sales_types/sales_types';
+import type { PendingPaymentMember } from '@/app/admin/sales/sales_types/AdminSalesTypes';
 import { ADMIN_ITEMS_PER_PAGE, GYM_DETAILS } from '@/app/admin/admin_url_config';
 import { WhatsAppFormatter } from '@/lib/whatsapp_formatter';
 
-export default function PendingPayments() {
-  const { currentPage, setCurrentPage, pendingPayments, pendingTotal, fetchState, showToast } = useAdminSalesLogic();
+export default function AdminSalesPendingPayments() {
+  const { currentPage, setCurrentPage, pendingPayments, pendingTotal, status, showToast } = useAdminSalesLogic();
 
   const totalPages = Math.ceil(pendingTotal / ADMIN_ITEMS_PER_PAGE) || 1;
 
-  if (fetchState === 'loading') {
+  if (status === 'pending') {
     return (
       <div className="space-y-3">
         {[...Array(5)].map((_, i) => (
@@ -45,7 +46,7 @@ export default function PendingPayments() {
       </p>
       <div className="space-y-3">
         {pendingPayments.map((p: PendingPaymentMember) => (
-          <div key={p.id} className="flex items-center justify-between p-4 border border-border rounded-xl hover:border-warning transition-all duration-200 ease-in-out motion-safe:hover:-translate-y-1 hover:shadow-lg bg-card">
+          <div key={p.id} className="flex items-center justify-between p-4 border border-border rounded-xl hover:border-warning motion-safe:transition-all motion-safe:duration-200 ease-in-out motion-safe:hover:-translate-y-1 hover:shadow-lg bg-card">
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 bg-danger-bg rounded-full flex items-center justify-center text-danger font-semibold text-sm">
                 {p.name.charAt(0)}
@@ -57,7 +58,7 @@ export default function PendingPayments() {
             </div>
             <div className="flex items-center gap-4">
               <div className="text-right">
-                <p className="font-bold text-danger">₹{p.pendingAmount?.toLocaleString() || 0}</p>
+                <p className="font-bold text-danger">{formatCurrency(p.pendingAmount || 0)}</p>
                 <p className="text-xs text-secondary opacity-80">{p.daysOverdue || 0} days overdue</p>
               </div>
               <button
@@ -84,7 +85,7 @@ export default function PendingPayments() {
                   window.open(`https://wa.me/91${p.phone?.replace(/\D/g, '') || ''}?text=${encodeURIComponent(waText)}`, '_blank');
                   showToast(`Reminder sent via WhatsApp to ${p.name}`, 'success');
                 }}
-                className="px-3 py-1.5 text-xs text-white bg-primary rounded-lg font-medium transition-all duration-200 ease-in-out hover:bg-primary-hover active:scale-95 flex items-center gap-2"
+                className="px-3 py-1.5 text-xs text-primary-foreground bg-primary rounded-lg font-medium motion-safe:transition-all motion-safe:duration-200 ease-in-out hover:bg-primary-hover motion-safe:active:scale-95 flex items-center gap-2"
               >
                 Send Reminder
               </button>

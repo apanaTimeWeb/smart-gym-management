@@ -14,45 +14,13 @@ export const FINANCE_STATUS_STYLES: Record<string, { bg: string; text: string }>
  REFUNDED: { bg: 'bg-warning/10', text: 'text-warning' },
 };
 
-export const FINANCE_PAYMENT_METHODS = ['UPI', 'Cash', 'Card', 'NetBanking'];
+export const FINANCE_PAYMENT_METHODS = ['UPI', 'Cash', 'Card', 'NetBanking'] as const;
+export type FinancePaymentMethod = typeof FINANCE_PAYMENT_METHODS[number];
 
-export const PAYMENTS_TABLE_HEADERS = ['Invoice No', 'Member', 'Amount', 'Method', 'Status', 'Date', 'Actions'];
+export const FINANCE_PAYMENT_STATUSES = ['PAID', 'DUE', 'REFUNDED'] as const;
+export type FinancePaymentStatus = typeof FINANCE_PAYMENT_STATUSES[number];
 
-export const FINANCE_TABS = ['Payments', 'Expenses', 'Summary'];
+export const PAYMENTS_TABLE_HEADERS = ['Invoice No', 'Member', 'Amount', 'Method', 'Status', 'Date'];
+export const FINANCE_TABS = ['Payments', 'Expenses', 'Summary'] as const;
 
-export const EXPENSE_CATEGORIES = ['Rent', 'Salaries', 'Utilities', 'Equipment', 'Marketing', 'Maintenance', 'Supplies', 'Other'];
-
-
-
-export const AddExpenseSchema = z.object({
-  amount: z.string().refine(val => !isNaN(Number(val)) && Number(val) > 0, 'Valid positive amount required'),
-  category: z.string().min(1, 'Category is required'),
-  branchId: z.string().min(1, 'Branch is required'),
-  date: z.string().min(1, 'Date is required'),
-  notes: z.string().optional(),
-});
-export type AddExpenseFormValues = z.infer<typeof AddExpenseSchema>;
-
-export const EMPTY_EXPENSE_FORM: AddExpenseFormValues = {
-  amount: '',
-  category: 'Rent',
-  branchId: '',
-  date: new Date().toISOString().split('T')[0] ?? '',
-  notes: '',
-};
-
-export const AddPaymentSchema = z.object({
-  memberId: z.string().min(1, 'Valid Member ID required'),
-  amount: z.string().refine(val => !isNaN(Number(val)) && Number(val) >= 0, 'Valid positive amount required'),
-  method: z.string(),
-  notes: z.string().optional()
-});
-export type AddPaymentFormValues = z.infer<typeof AddPaymentSchema>;
-
-export const EMPTY_PAYMENT_FORM: AddPaymentFormValues = {
-  memberId: '',
-  amount: '',
-  method: 'UPI',
-  notes: ''
-};
-
+export const EXPENSE_CATEGORIES = ['Rent', 'Salaries', 'Utilities', 'Equipment', 'Marketing', 'Maintenance', 'Supplies', 'Other'] as const;

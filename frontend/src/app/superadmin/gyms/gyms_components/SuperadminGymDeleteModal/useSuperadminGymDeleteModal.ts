@@ -31,7 +31,7 @@ export function useSuperadminGymDeleteModal() {
   const deleteMutation = useMutation({
     mutationFn: (id: string) => gymsApi.deleteGym(id),
     onSuccess: (res) => {
-      toast.success(res.message);
+      toast.success(res.message, { id: 'superadmin-toast-f1e29ad0b1' });
       queryClient.invalidateQueries({ queryKey: ['superadmin', 'gyms'] });
       closeDeleteModal();
     },

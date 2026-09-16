@@ -29,7 +29,7 @@ export default function SuperadminMessagingClient() {
   const [notifications, setNotifications] = useState<SuperadminNotification[]>([]);
   const [tenants, setTenants] = useState<MessagingTenant[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState('');
   const [search, setSearch] = useState('');
   const [channelFilter, setChannelFilter] = useState<MessageChannel | 'ALL'>('ALL');
   const [composeOpen, setComposeOpen] = useState(false);
@@ -62,7 +62,7 @@ export default function SuperadminMessagingClient() {
         }
       } catch (err) {
         if (mounted) {
-          setError(true);
+          setError(err instanceof Error ? err.message : '');
           setIsLoading(false);
         }
       }
@@ -108,23 +108,23 @@ export default function SuperadminMessagingClient() {
     superadminMessagingApi.sendMessage(newMsg).then(res => {
       if (res.success && res.data) {
         setMessages((prev) => [res.data as unknown as TenantMessage, ...prev]);
-        toast.success('Message sent successfully.', { id: 'message-sent-successfully' });
+        toast.success(res.message, { id: 'message-sent-successfully' });
         setComposeOpen(false);
         setComposeTenantId('');
         setComposeSubject('');
         setComposeBody('');
         setComposeChannel('EMAIL');
       } else {
-        toast.error(res.message);
+        toast.error(res.message, { id: 'superadmin-toast-643c79992f' });
       }
     }).catch((err) => {
-      toast.error(err.message || 'Failed to send message', { id: 'failed-to-send-message' });
+      toast.error(err instanceof Error ? err.message : '', { id: 'failed-to-send-message' });
     });
   }
 
   function handleMarkAllRead() {
     setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
-    toast.success('All notifications marked as read.', { id: 'all-notifications-marked-as-read' });
+    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
   }
 
   function handleMarkRead(id: string) {
@@ -133,7 +133,7 @@ export default function SuperadminMessagingClient() {
 
 
   if (isLoading) return <div className="p-8 text-center text-secondary motion-safe:animate-pulse">Loading messages...</div>;
-  if (error) return <div className="p-8 text-center text-danger">Failed to load data.</div>;
+  if (error) return <div className="p-8 text-center text-danger">{error}</div>;
 
   return (
     <div className="space-y-6">

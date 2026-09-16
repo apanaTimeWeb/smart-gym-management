@@ -1,3 +1,4 @@
+'use client';
 "use client";
 // RESPONSIBILITY: Renders the SuperadminDateRangePicker component.
 import { useState } from "react";

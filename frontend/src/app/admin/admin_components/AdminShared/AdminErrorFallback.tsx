@@ -1,4 +1,5 @@
 "use client";
+import { ADMIN_DASHBOARD_URL } from '@/app/admin/admin_url_config';
 // RESPONSIBILITY: Shared error fallback renderer used by all admin module error.tsx boundaries.
 // Distinguishes between 403 Forbidden (permission denied) and generic errors.
 // Never expose raw error messages or stack traces to the user.
@@ -36,7 +37,7 @@ export default function AdminErrorFallback({ error, reset, moduleName }: AdminEr
           </p>
         </div>
         <Link
-          href="/admin/dashboard"
+          href={ADMIN_DASHBOARD_URL}
           className="flex items-center gap-2 px-5 py-2.5 bg-card border border-border rounded-xl text-sm font-medium text-foreground hover:bg-input motion-safe:transition-colors"
         >
           <LayoutDashboard size={15} /> Back to Dashboard
@@ -53,7 +54,7 @@ export default function AdminErrorFallback({ error, reset, moduleName }: AdminEr
       </p>
       <button
         onClick={reset}
-        className="flex items-center gap-2 px-5 py-2.5 bg-primary text-black font-semibold rounded-xl text-sm hover:bg-primary-hover motion-safe:transition-colors"
+        className="flex items-center gap-2 px-5 py-2.5 bg-primary text-primary-foreground font-semibold rounded-xl text-sm hover:bg-primary-hover motion-safe:transition-colors"
       >
         <RefreshCw size={15} /> Try Again
       </button>

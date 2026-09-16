@@ -2,7 +2,10 @@ import { http, HttpResponse, delay } from 'msw';
 import { InfrastructureUrlConfig } from '@/app/superadmin/infrastructure/superadmin_infrastructure_url_config';
 import { MOCK_INFRASTRUCTURE_NODES, MOCK_REDIS_TELEMETRY } from '@/app/superadmin/infrastructure/infrastructure_utils/SuperadminInfrastructureConstants';
 
+import { MOCK_SUPERADMIN_INFRASTRUCTURE_TENANTS } from '@/app/superadmin/infrastructure/infrastructure_mocks/fixtures/SuperadminInfrastructureMockFixtures';
+
 export const superadminInfrastructureHandlers = [
+  http.get('*/api/v1/api/gyms', async () => HttpResponse.json({ success: true, message: 'Success', data: MOCK_SUPERADMIN_INFRASTRUCTURE_TENANTS })),
   http.get(InfrastructureUrlConfig.BACKEND_API.BASE, async ({ request }) => {
     await delay(300);
     const url = new URL(request.url);

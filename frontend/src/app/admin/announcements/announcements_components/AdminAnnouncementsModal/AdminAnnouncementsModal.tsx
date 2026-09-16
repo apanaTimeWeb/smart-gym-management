@@ -13,7 +13,7 @@ import {
   ANNOUNCEMENT_AUDIENCE_OPTIONS,
   ANNOUNCEMENT_COMPOSE_GYM_OPTIONS,
 } from '@/app/admin/announcements/announcements_utils/AdminAnnouncementsSharedConstants';
-import type { AnnouncementFormValues } from '@/app/admin/announcements/announcements_types/announcements_types';
+import type { AnnouncementFormValues } from '@/app/admin/announcements/announcements_types/AdminAnnouncementsTypes';
 
 export default function AdminAnnouncementsModal() {
   const { showModal, setShowModal, editingAnnouncement, saveAnnouncement, saving } = useAdminAnnouncementsLogic();
@@ -36,7 +36,7 @@ export default function AdminAnnouncementsModal() {
 
   return (
     <>
-      <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40" onClick={() => setShowModal(false)} />
+      <div className="fixed inset-0 bg-overlay backdrop-blur-sm z-40" onClick={() => setShowModal(false)} />
       <div className="fixed inset-0 z-40 flex items-center justify-center p-4">
         <div className="bg-overlay border border-border rounded-2xl shadow-2xl w-full max-w-2xl max-h-screen flex flex-col">
 
@@ -123,7 +123,7 @@ export default function AdminAnnouncementsModal() {
                           onClick={() => field.onChange(toggleArrayValue(field.value, o.value))}
                           className={`px-3 py-1.5 rounded-lg text-xs font-semibold border motion-safe:transition-colors ${
                             selected
-                              ? 'bg-primary text-white border-primary'
+                              ? 'bg-primary text-primary-foreground border-primary'
                               : 'bg-input text-secondary border-border hover:border-primary hover:text-foreground'
                           }`}
                         >
@@ -154,7 +154,7 @@ export default function AdminAnnouncementsModal() {
                           onClick={() => field.onChange(toggleArrayValue(field.value, o.value))}
                           className={`px-3 py-1.5 rounded-lg text-xs font-semibold border motion-safe:transition-colors ${
                             selected
-                              ? 'bg-primary text-white border-primary'
+                              ? 'bg-primary text-primary-foreground border-primary'
                               : 'bg-input text-secondary border-border hover:border-primary hover:text-foreground'
                           }`}
                         >
@@ -202,7 +202,7 @@ export default function AdminAnnouncementsModal() {
               <button
                 type="submit"
                 disabled={saving}
-                className="flex-1 py-2.5 bg-primary hover:bg-primary-hover text-black rounded-xl text-sm font-semibold motion-safe:transition-colors flex items-center justify-center gap-2 disabled:opacity-60"
+                className="flex-1 py-2.5 bg-primary hover:bg-primary-hover text-primary-foreground rounded-xl text-sm font-semibold motion-safe:transition-colors flex items-center justify-center gap-2 disabled:opacity-60"
               >
                 {saving ? <Loader2 size={15} className="motion-safe:animate-spin" /> : null}
                 {isEdit ? 'Save Changes' : 'Publish Announcement'}

@@ -1,4 +1,5 @@
 "use client";
+import { formatCurrency } from '@/lib/formatters';
 // RESPONSIBILITY: Renders the top KPI stat cards (total staff, active staff, payroll metrics) for the HR module.
 
 import { useHrContext } from '@/app/admin/hr/hr_context/AdminHrContext';
@@ -7,7 +8,6 @@ import { Users, DollarSign, UserCheck, FileText } from 'lucide-react';
 export default function AdminHrKPIs() {
   const { summary } = useHrContext();
 
-  const formatCurrency = (val: number) => val.toLocaleString('en-IN', { style: 'currency', currency: 'INR' });
 
   const kpis = [
     { label: 'Total Salary Generated', value: formatCurrency(summary?.totalSalaryThisMonth || 0), icon: DollarSign, colorClass: 'text-primary', bgClass: 'bg-primary/10' },

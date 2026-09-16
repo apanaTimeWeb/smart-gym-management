@@ -4,7 +4,7 @@
 import { ShieldCheck, ShieldOff } from 'lucide-react';
 import { useAdminPermissionsLogic } from '@/app/admin/permissions/permissions_context/useAdminPermissionsLogic';
 import { PERMISSION_FEATURES } from '@/app/admin/permissions/permissions_utils/AdminPermissionsSharedConstants';
-import type { RoleType } from '@/app/admin/permissions/permissions_types/permissions_types';
+import type { RoleType } from '@/app/admin/permissions/permissions_types/AdminPermissionsTypes';
 
 interface AdminPermissionsRoleCardProps {
   role: RoleType;

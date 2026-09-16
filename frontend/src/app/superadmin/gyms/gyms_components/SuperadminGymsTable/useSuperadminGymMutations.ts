@@ -1,5 +1,5 @@
-// DATA FLOW: feature API/schema → hook/context → useSuperadminGymMutations consumers.
 'use client';
+// DATA FLOW: feature API/schema → hook/context → useSuperadminGymMutations consumers.
 import toast from 'react-hot-toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { gymsApi } from '@/app/superadmin/gyms/superadmin_gyms_api/superadmin_gyms_api';
@@ -17,7 +17,7 @@ export function useSuperadminGymMutations(gyms: Tenant[]) {
     mutationFn: (id: string) => gymsApi.impersonateTenant(id),
     onSuccess: async (res, id) => {
       if (res.success && res.data?.token) {
-        toast.success(res.message);
+        toast.success(res.message, { id: 'superadmin-toast-b800e3cdbb' });
 
         try {
           await gymsApi.setGhostLoginCookie(res.data.token, id);
@@ -30,22 +30,22 @@ export function useSuperadminGymMutations(gyms: Tenant[]) {
 
         window.location.href = GymsUrlConfig.GHOST_LOGIN.ADMIN_DASHBOARD;
       } else {
-        toast.error(res.message);
+        toast.error(res.message, { id: 'superadmin-toast-85fa002e4f' });
       }
     },
     onError: (err: unknown) => {
-      toast.error((err as Error).message);
+      toast.error((err as Error).message, { id: 'superadmin-toast-ece984cc4e' });
     },
   });
 
   const suspendMutation = useMutation({
     mutationFn: ({ id, status }: { id: string, status: string }) => gymsApi.changeGymStatus(id, status),
     onSuccess: (res) => {
-      toast.success(res.message);
+      toast.success(res.message, { id: 'superadmin-toast-4c40055ee0' });
       queryClient.invalidateQueries({ queryKey: ['superadmin', 'gyms'] });
     },
     onError: (err: unknown) => {
-      toast.error((err as Error).message);
+      toast.error((err as Error).message, { id: 'superadmin-toast-2c0343a50b' });
     },
   });
 

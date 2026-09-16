@@ -5,7 +5,7 @@ import { User, Settings, LogOut } from 'lucide-react';
 import Link from 'next/link';
 import { getUser, logout } from '@/lib/api';
 import { AdminProfileUrlConfig } from '@/app/admin/profile/admin_profile_url_config';
-import { SettingsUrlConfig } from '@/app/admin/settings/settings_url_config';
+import { SettingsUrlConfig } from '@/app/admin/settings/admin_settings_url_config';
 
 export function AdminHeaderProfile() {
   const [showProfile, setShowProfile] = useState(false);
@@ -27,7 +27,7 @@ export function AdminHeaderProfile() {
     <div className="relative" ref={profileRef}>
       <button
         onClick={() => setShowProfile(!showProfile)}
-        className="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold cursor-pointer motion-safe:transition-transform hover:scale-105 border border-primary/30 bg-primary"
+        className="w-9 h-9 rounded-full flex items-center justify-center text-primary-foreground text-sm font-bold cursor-pointer motion-safe:transition-transform motion-safe:hover:scale-105 border border-primary/30 bg-primary"
         aria-label="Profile menu"
       >
         {mounted ? (user?.name?.charAt(0)?.toUpperCase() ?? 'A') : 'A'}

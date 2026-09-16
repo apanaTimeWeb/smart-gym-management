@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Centralized mock data, filter options, table headers, and chart config for Admin Attendance module.
-import type { AdminAttendanceRecord, AdminAttendanceSummary, AdminAttendanceTrendPoint, DateRangeFilter } from '@/app/admin/attendance/attendance_types/attendance_types';
+import type { AdminAttendanceRecord, AdminAttendanceSummary, AdminAttendanceTrendPoint, DateRangeFilter } from '@/app/admin/attendance/attendance_types/AdminAttendanceTypes';
 
 export const ATTENDANCE_ITEMS_PER_PAGE = 10;
 

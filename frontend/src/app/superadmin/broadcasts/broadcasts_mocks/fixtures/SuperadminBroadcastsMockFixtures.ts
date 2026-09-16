@@ -1,19 +1,16 @@
 import type { Broadcast } from '@/app/superadmin/broadcasts/superadmin_broadcasts_types/superadmin_broadcasts_types';
 
 export const MOCK_SUPERADMIN_BROADCASTS: Broadcast[] = [
-  {
-    id: 'b1', title: 'System Maintenance', content: 'Scheduled maintenance this Sunday 2 AM.',
-    status: 'SENT', targetGymIds: ['t1', 't2', 't3'], scheduledDate: null, sentDate: '2023-11-01',
-    totalRecipients: 100, deliveredCount: 95, failedCount: 5, audience: 'ALL_TENANTS'
-  },
-  {
-    id: 'b2', title: 'New Feature: AI Workouts', content: 'AI Workouts are now available in beta.',
-    status: 'SCHEDULED', targetGymIds: ['t1'], scheduledDate: '2023-12-01', sentDate: null,
-    totalRecipients: 50, deliveredCount: 0, failedCount: 0, audience: 'PRO_ONLY'
-  },
-  {
-    id: 'b3', title: 'Urgent: Payment Failed', content: 'Your recent payment failed.',
-    status: 'DRAFT', targetGymIds: ['t3'], scheduledDate: null, sentDate: null,
-    totalRecipients: 0, deliveredCount: 0, failedCount: 0, audience: 'SUSPENDED_ONLY'
-  }
+  { id: 'b1', title: 'System Maintenance', content: 'Scheduled maintenance for all tenants.', status: 'SENT', targetGymIds: ['t1','t2'], scheduledDate: null, sentDate: '2026-09-01T02:00:00Z', totalRecipients: 100, deliveredCount: 95, failedCount: 5, audience: 'ALL_TENANTS' },
+  { id: 'b2', title: 'AI Workout Beta', content: 'AI workouts are now available in beta.', status: 'SCHEDULED', targetGymIds: ['t1'], scheduledDate: '2026-10-01T10:00:00Z', sentDate: null, totalRecipients: 50, deliveredCount: 0, failedCount: 0, audience: 'PRO_ONLY' },
+  { id: 'b3', title: 'Payment Reminder', content: 'Please review your recent payment activity.', status: 'DRAFT', targetGymIds: ['t3'], scheduledDate: null, sentDate: null, totalRecipients: 18, deliveredCount: 0, failedCount: 0, audience: 'SUSPENDED_ONLY' },
+  { id: 'b4', title: 'September Billing Notice', content: 'Invoices for September are available.', status: 'SENT', targetGymIds: [], scheduledDate: null, sentDate: '2026-09-05T04:00:00Z', totalRecipients: 125, deliveredCount: 121, failedCount: 4, audience: 'ALL_TENANTS' },
+  { id: 'b5', title: 'Pro Plan Webinar', content: 'Join the monthly Pro plan webinar.', status: 'SCHEDULED', targetGymIds: ['t2','t3'], scheduledDate: '2026-10-05T12:00:00Z', sentDate: null, totalRecipients: 40, deliveredCount: 0, failedCount: 0, audience: 'PRO_ONLY' },
+  { id: 'b6', title: 'Security Alert Draft', content: 'A security reminder for administrators.', status: 'DRAFT', targetGymIds: ['t1'], scheduledDate: null, sentDate: null, totalRecipients: 12, deliveredCount: 0, failedCount: 0, audience: 'SUSPENDED_ONLY' },
+  { id: 'b7', title: 'Holiday Hours', content: 'Updated platform support hours.', status: 'SENT', targetGymIds: ['t2'], scheduledDate: null, sentDate: '2026-09-10T06:00:00Z', totalRecipients: 30, deliveredCount: 30, failedCount: 0, audience: 'ALL_TENANTS' },
+  { id: 'b8', title: 'New Reports Module', content: 'New analytics and reporting capabilities.', status: 'SCHEDULED', targetGymIds: ['t3'], scheduledDate: '2026-10-10T09:00:00Z', sentDate: null, totalRecipients: 20, deliveredCount: 0, failedCount: 0, audience: 'PRO_ONLY' },
+  { id: 'b9', title: 'Onboarding Reminder', content: 'Complete your onboarding checklist.', status: 'DRAFT', targetGymIds: ['t2'], scheduledDate: null, sentDate: null, totalRecipients: 14, deliveredCount: 0, failedCount: 0, audience: 'ALL_TENANTS' },
+  { id: 'b10', title: 'Service Update', content: 'Platform service update and improvements.', status: 'SENT', targetGymIds: ['t1','t3'], scheduledDate: null, sentDate: '2026-09-12T11:00:00Z', totalRecipients: 55, deliveredCount: 53, failedCount: 2, audience: 'ALL_TENANTS' },
+  { id: 'b11', title: 'Enterprise Advisory', content: 'Enterprise tenant advisory notice.', status: 'SCHEDULED', targetGymIds: ['t3'], scheduledDate: '2026-10-15T08:00:00Z', sentDate: null, totalRecipients: 8, deliveredCount: 0, failedCount: 0, audience: 'PRO_ONLY' },
+  { id: 'b12', title: 'Draft Feature Survey', content: 'Tell us what you want next.', status: 'DRAFT', targetGymIds: [], scheduledDate: null, sentDate: null, totalRecipients: 75, deliveredCount: 0, failedCount: 0, audience: 'ALL_TENANTS' },
 ];

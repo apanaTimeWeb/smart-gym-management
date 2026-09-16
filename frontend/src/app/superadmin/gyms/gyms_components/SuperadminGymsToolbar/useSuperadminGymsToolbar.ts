@@ -1,3 +1,4 @@
+'use client';
 /**
  * RESPONSIBILITY: Manages the logic for the Gyms search toolbar, including search debouncing.
  * DATA FLOW: SuperadminGymsToolbar -> useSuperadminGymsToolbar -> useSuperadminGymsStore -> API

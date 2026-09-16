@@ -70,7 +70,7 @@ export default function SuperadminInvoicesClient() {
     </div>
   );
 
-  if (error) return <div className="p-8 text-center text-danger">Error loading data.</div>;
+  if (error) return <div className="p-8 text-center text-danger">{error}</div>;
 
   return (
     <div className="space-y-6 relative">
@@ -158,7 +158,7 @@ export default function SuperadminInvoicesClient() {
           setPaymentMethod={setPaymentMethod}
           onSave={async (amount: number) => {
             if (!selectedGym) {
-              toast.error('Please select a gym');
+              toast.error('Please select a gym', { id: 'superadmin-toast-d9d18899dd' });
               return;
             }
             await handleLogManualPayment(selectedGym.id, amount, selectedGym.plan);

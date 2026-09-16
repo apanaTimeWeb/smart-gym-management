@@ -7,11 +7,11 @@ import { Edit2, Trash2, CheckCircle2, Ban, PlayCircle } from 'lucide-react';
 import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/useAdminConfirm';
 import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
 import { ADMIN_ITEMS_PER_PAGE } from '@/app/admin/admin_url_config';
-import { displayValue } from '@/app/admin/admin_utils/displayValue';
-import { formatCurrency } from '@/app/admin/admin_utils/formatCurrency';
+import { displayValue } from '@/app/admin/admin_utils/AdminDisplayValue';
+import { formatCurrency } from '@/app/admin/admin_utils/AdminFormatCurrency';
 
 export default function AdminHrStaffTable() {
-  const { staff, summary, fetchState, debouncedSearch, branchFilter, roleFilter, currentPage, setCurrentPage, openEdit, openProfile, deleteStaff, toggleStaffStatus } = useHrContext();
+  const { staff, summary, status, debouncedSearch, branchFilter, roleFilter, currentPage, setCurrentPage, openEdit, openProfile, deleteStaff, toggleStaffStatus } = useHrContext();
   const { confirm } = useAdminConfirm();
 
   const filteredStaff = staff.filter(s => 
@@ -22,7 +22,7 @@ export default function AdminHrStaffTable() {
   const totalStaff = summary?.totalStaff || filteredStaff.length;
   const totalPages = Math.ceil(totalStaff / ADMIN_ITEMS_PER_PAGE) || 1;
 
-  if (fetchState === 'loading') {
+  if (status === 'pending') {
     return (
       <div className="flex flex-col h-full">
         <div className="overflow-x-auto flex-1">
@@ -37,7 +37,7 @@ export default function AdminHrStaffTable() {
             </thead>
             <tbody className="divide-y divide-border">
               {[...Array(5)].map((_, i) => (
-                <tr key={i} className="motion-safe:animate-pulse">
+                <tr key={`skeleton-${i}`} className="motion-safe:animate-pulse">
                   <td className="px-4 py-4 flex items-center gap-3">
                     <div className="w-8 h-8 rounded-full bg-muted"></div>
                     <div><div className="h-4 bg-muted rounded w-24 mb-1"></div><div className="h-3 bg-muted rounded w-32"></div></div>
@@ -76,7 +76,7 @@ export default function AdminHrStaffTable() {
             {filteredStaff.map(s => (
               <tr 
                 key={s.id} 
-                className="transition-colors hover:bg-primary/5 cursor-pointer" 
+                className="motion-safe:transition-colors hover:bg-primary/5 cursor-pointer" 
                 onClick={() => openProfile(s)}
               >
                 <td className="px-4 py-3">
@@ -127,7 +127,7 @@ export default function AdminHrStaffTable() {
                     <>
                       <button 
                         onClick={(e) => { e.stopPropagation(); toggleStaffStatus(s); }}
-                        className={`p-1.5 rounded-lg transition-all duration-200 ease-in-out ${
+                        className={`p-1.5 rounded-lg motion-safe:transition-all motion-safe:duration-200 ease-in-out ${
                           s.isActive === false 
                             ? 'text-success hover:bg-success/10' 
                             : 'text-danger hover:bg-danger/10'
@@ -138,25 +138,17 @@ export default function AdminHrStaffTable() {
                       </button>
                       <button 
                         onClick={(e) => { e.stopPropagation(); openEdit(s); }} 
-                        className="p-1.5 rounded hover:bg-primary/10 transition-colors text-secondary hover:text-primary"
+                        className="p-1.5 rounded hover:bg-primary/10 motion-safe:transition-colors text-secondary hover:text-primary"
                         title="Edit"
                       >
                         <Edit2 size={16} />
                       </button>
                       <button 
-                        onClick={async (e) => { 
-                          e.stopPropagation(); 
-                          const ok = await confirm({
-                            title: 'Delete Staff Member',
-                            message: `Are you sure you want to delete staff member "${s.name}"? This action cannot be undone.`,
-                            type: 'danger',
-                            confirmText: 'Delete'
-                          });
-                          if (ok) {
-                            deleteStaff(s.id); 
-                          }
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          deleteStaff(s.id);
                         }}
-                        className="p-1.5 rounded transition-colors text-danger hover:bg-danger/10"
+                        className="p-1.5 rounded motion-safe:transition-colors text-danger hover:bg-danger/10"
                         title="Delete"
                       >
                         <Trash2 size={16} />

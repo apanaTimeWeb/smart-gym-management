@@ -1,7 +1,7 @@
 // DATA FLOW: feature API/schema → hook/context → useAdminCouponsStore consumers.
 // RESPONSIBILITY: Zustand store for Coupons module UI state — modal, form, filters.
 import { create } from 'zustand';
-import type { CouponFormValues } from '@/app/admin/coupons/coupons_types/coupons_types';
+import type { CouponFormValues } from '@/app/admin/coupons/coupons_types/AdminCouponsTypes';
 import { EMPTY_COUPON_FORM } from '@/app/admin/coupons/coupons_utils/AdminCouponsSharedConstants';
 
 interface AdminCouponsStore {

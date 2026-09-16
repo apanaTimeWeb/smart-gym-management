@@ -25,7 +25,7 @@ export const MOCK_BRANCHES: SuperadminBranch[] = [
     memberCount: 420,
     staffCount: 12,
     monthlyRevenue: 84000,
-    createdAt: '2023-03-10T00:00:00Z',
+    createdAt: '2026-03-10T00:00:00Z',
   },
   {
     id: 'br-002',
@@ -42,7 +42,7 @@ export const MOCK_BRANCHES: SuperadminBranch[] = [
     memberCount: 310,
     staffCount: 9,
     monthlyRevenue: 62000,
-    createdAt: '2023-07-15T00:00:00Z',
+    createdAt: '2026-07-15T00:00:00Z',
   },
   {
     id: 'br-003',
@@ -59,6 +59,6 @@ export const MOCK_BRANCHES: SuperadminBranch[] = [
     memberCount: 85,
     staffCount: 4,
     monthlyRevenue: 17000,
-    createdAt: '2024-01-20T00:00:00Z',
+    createdAt: '2026-01-20T00:00:00Z',
   },
 ];

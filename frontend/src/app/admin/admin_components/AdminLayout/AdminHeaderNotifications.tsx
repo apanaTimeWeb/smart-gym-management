@@ -3,12 +3,12 @@
 import { useState, useRef, useEffect } from 'react';
 import { Bell, X } from 'lucide-react';
 import Link from 'next/link';
-import { ADMIN_PLACEHOLDER_NOTIFICATIONS } from '@/app/admin/admin_url_config';
+import { useAdminNotificationsPage } from '@/app/admin/notifications/notifications_utils/useAdminNotificationsPage';
 import { AdminNotificationsUrlConfig } from '@/app/admin/notifications/admin_notifications_url_config';
 
 export function AdminHeaderNotifications() {
   const [showNotifications, setShowNotifications] = useState(false);
-  const [notifications, setNotifications] = useState(ADMIN_PLACEHOLDER_NOTIFICATIONS);
+  const { notifications, markAsRead } = useAdminNotificationsPage();
   const notifRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -19,10 +19,6 @@ export function AdminHeaderNotifications() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const removeNotification = (id: number, e: React.MouseEvent) => {
-    e.stopPropagation();
-    setNotifications((prev) => prev.filter((n) => n.id !== id));
-  };
 
   return (
     <div className="relative" ref={notifRef}>
@@ -46,13 +42,10 @@ export function AdminHeaderNotifications() {
             {notifications.length === 0 ? (
               <div className="p-4 text-center text-sm text-secondary">No new notifications</div>
             ) : notifications.map((n) => (
-              <div key={n.id} className={`px-4 py-3 border-b border-border hover:bg-input motion-safe:transition-colors cursor-pointer relative group ${n.unread ? 'bg-primary-subtle' : ''}`}>
+              <button type="button" key={n.id} onClick={() => n.unread && markAsRead(n.id)} className={`w-full text-left px-4 py-3 border-b border-border hover:bg-input motion-safe:transition-colors cursor-pointer relative group ${n.unread ? 'bg-primary-subtle' : ''}`}>
                 <p className={`text-sm pr-6 ${n.unread ? 'text-foreground font-medium' : 'text-secondary'}`}>{n.text}</p>
                 <span className="text-xs text-secondary mt-1 block">{n.time}</span>
-                <button onClick={(e) => removeNotification(n.id, e)} className="absolute right-3 top-3 text-secondary hover:text-danger opacity-0 group-hover:opacity-100 motion-safe:transition-opacity" aria-label="Remove notification">
-                  <X size={13} />
-                </button>
-              </div>
+              </button>
             ))}
           </div>
           <div className="p-3 text-center border-t border-border">

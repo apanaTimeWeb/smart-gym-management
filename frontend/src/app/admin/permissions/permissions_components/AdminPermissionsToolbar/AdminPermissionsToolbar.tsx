@@ -2,7 +2,7 @@
 // RESPONSIBILITY: Renders the role selector tabs and gym scope selector for the Permissions module.
 
 import { useAdminPermissionsStore } from '@/app/admin/permissions/permissions_store/useAdminPermissionsStore';
-import type { RoleType } from '@/app/admin/permissions/permissions_types/permissions_types';
+import type { RoleType } from '@/app/admin/permissions/permissions_types/AdminPermissionsTypes';
 
 const ROLES: { value: RoleType; label: string; description: string }[] = [
   { value: 'manager', label: 'Manager', description: 'Full operational access by default' },

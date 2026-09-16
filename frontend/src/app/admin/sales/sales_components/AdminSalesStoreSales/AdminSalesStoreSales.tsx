@@ -1,20 +1,18 @@
 "use client";
+import { formatCurrency } from '@/lib/formatters';
 // RESPONSIBILITY: Displays store orders and summary KPIs for Admin's Sales & Reports view. Read-only analytics.
 
 import { useAdminSalesLogic } from '@/app/admin/sales/sales_context/useAdminSalesLogic';
 import { Package, ShoppingCart, IndianRupee, TrendingUp, ChevronDown, ChevronUp } from 'lucide-react';
 import { useState } from 'react';
 
-function formatCurrency(amount: number) {
-  return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(amount);
-}
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
 }
 
 export default function AdminSalesStoreSales() {
-  const { storeOrders, storeOrdersTotal, storeSummary, fetchState } = useAdminSalesLogic();
+  const { storeOrders, storeOrdersTotal, storeSummary, status } = useAdminSalesLogic();
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
 
   const methodColor: Record<string, string> = {
@@ -23,7 +21,7 @@ export default function AdminSalesStoreSales() {
     Card: 'bg-warning-bg text-warning',
   };
 
-  if (fetchState === 'loading') {
+  if (status === 'pending') {
     return (
       <div className="space-y-4 motion-safe:animate-pulse">
         {["row-1", "row-2", "row-3", "row-4"].map(i => <div key={i} className="h-14 bg-input rounded-lg" />)}
@@ -78,7 +76,7 @@ export default function AdminSalesStoreSales() {
               <div key={order.id} className="bg-card border border-border rounded-xl overflow-hidden">
                 <button
                   onClick={() => setExpandedOrder(expandedOrder === order.id ? null : order.id)}
-                  className="w-full flex items-center justify-between p-4 text-left hover:bg-input/40 transition-colors"
+                  className="w-full flex items-center justify-between p-4 text-left hover:bg-input/40 motion-safe:transition-colors"
                 >
                   <div className="flex items-center gap-4">
                     <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">

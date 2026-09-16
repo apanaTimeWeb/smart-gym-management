@@ -3,32 +3,42 @@
 // RESPONSIBILITY: Business logic hook for Audit Logs — filtering, pagination, CSV export.
 
 import { useQuery } from '@tanstack/react-query';
-import { auditLogsApi } from '@/app/admin/audit_logs/audit_api/audit_api';
+import { auditLogsApi } from '@/app/admin/audit_logs/audit_api/AdminAuditApi';
 import { useAdminAuditLogsStore } from '@/app/admin/audit_logs/audit_store/useAdminAuditLogsStore';
+import { useAdminUrlQuerySync } from '@/app/admin/admin_utils/useAdminUrlQuerySync';
 import { AUDIT_ITEMS_PER_PAGE } from '@/app/admin/audit_logs/audit_utils/AdminAuditLogsSharedConstants';
-import type { AuditLog, FetchState } from '@/app/admin/audit_logs/audit_types/audit_types';
+import type { AuditLog } from '@/app/admin/audit_logs/audit_types/AdminAuditTypes';
 
 export function useAdminAuditLogsLogic() {
   const {
     search, severityFilter, moduleFilter, branchFilter,
     dateFrom, dateTo, currentPage, setCurrentPage,
   } = useAdminAuditLogsStore();
+  useAdminUrlQuerySync([
+    { key: 'search', value: search, defaultValue: '', setValue: useAdminAuditLogsStore.getState().setSearch },
+    { key: 'severity', value: severityFilter, defaultValue: 'all', setValue: useAdminAuditLogsStore.getState().setSeverityFilter },
+    { key: 'module', value: moduleFilter, defaultValue: 'all', setValue: useAdminAuditLogsStore.getState().setModuleFilter },
+    { key: 'branch', value: branchFilter, defaultValue: 'all', setValue: useAdminAuditLogsStore.getState().setBranchFilter },
+    { key: 'dateFrom', value: dateFrom, defaultValue: '', setValue: useAdminAuditLogsStore.getState().setDateFrom },
+    { key: 'dateTo', value: dateTo, defaultValue: '', setValue: useAdminAuditLogsStore.getState().setDateTo },
+    { key: 'page', value: currentPage, defaultValue: 1, setValue: (value) => setCurrentPage(Math.max(1, Number(value) || 1)) },
+  ]);
 
-  const { data = [], isLoading, isError } = useQuery({
-    queryKey: ['adminAuditLogs'],
+  const logsQuery = useQuery({
+    queryKey: ['admin', 'audit-logs', 'list'],
     queryFn: () => auditLogsApi.fetchLogs().then((r) => r.data || []),
     staleTime: 1000 * 60 * 2,
   });
   
-  const logs = data || [];
+  const logs = logsQuery.data || [];
 
   const { data: kpis } = useQuery({
-    queryKey: ['adminAuditKPIs'],
+    queryKey: ['admin', 'audit-logs', 'kpis'],
     queryFn: () => auditLogsApi.fetchKPIs().then((r) => r.data || null),
     staleTime: 1000 * 60 * 5,
   });
 
-  const fetchState: FetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
+  const status = logsQuery.status;
 
   const filtered = logs.filter((log: AuditLog) => {
     const q = search.toLowerCase();
@@ -73,7 +83,7 @@ export function useAdminAuditLogsLogic() {
   }
 
   return {
-    paginated, filtered, fetchState, kpis,
+    paginated, filtered, status, kpis,
     currentPage, setCurrentPage, totalPages, totalItems: filtered.length,
     exportCSV,
   };

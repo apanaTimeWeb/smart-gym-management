@@ -1,7 +1,7 @@
 // DATA FLOW: feature API/schema → hook/context → useAdminAnnouncementsStore consumers.
 // RESPONSIBILITY: Zustand store for Announcements UI state — filters, pagination, modal.
 import { create } from 'zustand';
-import type { Announcement, AnnouncementFormValues } from '@/app/admin/announcements/announcements_types/announcements_types';
+import type { Announcement, AnnouncementFormValues } from '@/app/admin/announcements/announcements_types/AdminAnnouncementsTypes';
 import { EMPTY_ANNOUNCEMENT_FORM } from '@/app/admin/announcements/announcements_utils/AdminAnnouncementsSharedConstants';
 
 interface AdminAnnouncementsStore {

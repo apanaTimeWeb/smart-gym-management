@@ -45,19 +45,28 @@ export type CancellationsFilterStatus = 'ALL' | CancellationsRiskLevel | Cancell
 export const CancellationsAlertSchema = z.object({
   id: z.string(),
   tenantId: z.string(),
-  tenantName: z.string(),
-  riskScore: z.number(),
+  gymName: z.string(),
+  ownerName: z.string(),
+  adminEmail: z.string(),
+  phone: z.string(),
+  plan: z.string(),
   riskLevel: z.enum(['LOW', 'MEDIUM', 'HIGH', 'CRITICAL']),
-  reasons: z.array(z.string()),
-  lastContactDate: z.string(),
-  status: z.enum(['OPEN', 'IN_PROGRESS', 'RESOLVED']),
-  assignedTo: z.string().optional(),
-  createdAt: z.string()
+  actionStatus: z.enum(['PENDING', 'CONTACTED', 'RESOLVED', 'CANCELLED']),
+  riskScore: z.number(),
+  lastLoginDays: z.number(),
+  memberDrop: z.number(),
+  paymentFailures: z.number(),
+  renewalDaysLeft: z.number(),
+  mrrAtRisk: z.number(),
+  contractEndDate: z.string().optional(),
+  lastPaymentDate: z.string().optional(),
+  notes: z.string(),
+  flaggedAt: z.string(),
 });
 
 export const CancellationsKpiDataSchema = z.object({
   totalAtRisk: z.number(),
-  highRiskCount: z.number(),
-  averageRiskScore: z.number(),
-  resolvedThisMonth: z.number()
+  criticalCount: z.number(),
+  highCount: z.number(),
+  estimatedMrrAtRisk: z.number()
 });

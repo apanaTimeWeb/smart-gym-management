@@ -46,7 +46,7 @@ export default function AdminUsagePlanCard() {
               ))}
             </ul>
             {!plan.isCurrent && (
-              <button className="w-full py-2 rounded-lg text-xs font-bold border border-primary/40 text-primary hover:bg-primary/10 motion-safe:transition-all motion-safe:duration-200 active:scale-95">
+              <button className="w-full py-2 rounded-lg text-xs font-bold border border-primary/40 text-primary hover:bg-primary/10 motion-safe:transition-all motion-safe:duration-200 motion-safe:active:scale-95">
                 {plan.price === 0 ? 'Contact Sales' : 'Upgrade'}
               </button>
             )}

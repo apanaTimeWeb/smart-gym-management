@@ -2,7 +2,7 @@
 // RESPONSIBILITY: Detail drawer for a single audit log — full metadata, IP, user agent, affected record.
 
 import { X, Download, ShieldAlert, Clock, User, Building2, Monitor, Hash } from 'lucide-react';
-import type { AuditLog } from '@/app/admin/audit_logs/audit_types/audit_types';
+import type { AuditLog } from '@/app/admin/audit_logs/audit_types/AdminAuditTypes';
 import { useAdminAuditLogsLogic } from '@/app/admin/audit_logs/audit_context/useAdminAuditLogsLogic';
 
 const SEVERITY_STYLES: Record<string, string> = {
@@ -11,12 +11,12 @@ const SEVERITY_STYLES: Record<string, string> = {
   low:    'bg-success-bg text-success border-success/30',
 };
 
-interface Props {
+interface AdminAuditLogsDetailDrawerProps {
   log: AuditLog;
   onClose: () => void;
 }
 
-export default function AdminAuditLogsDetailDrawer({ log, onClose }: Props) {
+export default function AdminAuditLogsDetailDrawer({ log, onClose }: AdminAuditLogsDetailDrawerProps) {
   const { exportCSV } = useAdminAuditLogsLogic();
 
   const fields = [
@@ -30,7 +30,7 @@ export default function AdminAuditLogsDetailDrawer({ log, onClose }: Props) {
 
   return (
     <>
-      <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40" onClick={onClose} />
+      <div className="fixed inset-0 bg-overlay backdrop-blur-sm z-40" onClick={onClose} />
       <div className="fixed inset-y-0 right-0 z-40 w-full max-w-lg bg-overlay border-l border-border shadow-2xl flex flex-col motion-safe:animate-in motion-safe:slide-in-from-right motion-safe:duration-300">
         {/* Header */}
         <div className="flex items-center justify-between p-5 border-b border-border shrink-0">
@@ -88,7 +88,7 @@ export default function AdminAuditLogsDetailDrawer({ log, onClose }: Props) {
           </button>
           <button
             onClick={() => exportCSV([log])}
-            className="flex-1 py-2.5 bg-primary text-white rounded-xl text-sm font-semibold hover:bg-primary-hover motion-safe:transition-colors flex items-center justify-center gap-2"
+            className="flex-1 py-2.5 bg-primary text-primary-foreground rounded-xl text-sm font-semibold hover:bg-primary-hover motion-safe:transition-colors flex items-center justify-center gap-2"
           >
             <Download size={14} /> Export This Log
           </button>

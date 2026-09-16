@@ -71,7 +71,7 @@ export function useSuperadminGymWhatsappModal() {
         window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(waText)}`, '_blank');
       }
 
-      toast.success(res.message);
+      toast.success(res.message, { id: 'superadmin-toast-e6e0b4a6e8' });
       closeWhatsappModal();
     },
     onError: (err: unknown) => {

@@ -1,8 +1,10 @@
+"use client";
+
 // DATA FLOW: feature API/schema → hook/context → useAdminPlansRevenueLogic consumers.
 // RESPONSIBILITY: Logic layer for the Plan Revenue dashboard. Handles fetching, filtering, and aggregation.
 import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { plansApi } from '@/app/admin/plans/plans_api/plans_api';
+import { plansApi } from '@/app/admin/plans/plans_api/AdminPlansApi';
 import type { 
   PlanRevenueRecord, 
   RevenuePeriod, 
@@ -18,7 +20,7 @@ export function useAdminPlansRevenueLogic() {
   const [sortDir, setSortDir] = useState<RevenueSortDirection>('desc');
 
   const { data: rawResponse, isLoading, isError } = useQuery({
-    queryKey: ['admin_plans_revenue', period],
+    queryKey: ['admin', 'plans', 'revenue', period],
     queryFn: () => plansApi.fetchPlanRevenue(period),
   });
 

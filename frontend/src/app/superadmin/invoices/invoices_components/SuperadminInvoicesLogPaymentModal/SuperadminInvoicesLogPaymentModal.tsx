@@ -36,7 +36,7 @@ export default function SuperadminInvoicesLogPaymentModal({
 
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center p-4" role="dialog" aria-modal="true">
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+      <div className="absolute inset-0 bg-overlay/80 backdrop-blur-sm" onClick={onClose} />
       <div className="relative bg-overlay border border-border rounded-2xl shadow-2xl w-full max-w-md overflow-hidden motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95 motion-safe:duration-200">
         <div className="flex items-center justify-between p-5 border-b border-border">
           <h2 className="text-xl font-bold text-foreground">Log Manual Payment</h2>

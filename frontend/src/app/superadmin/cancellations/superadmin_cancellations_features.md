@@ -9,10 +9,10 @@ This Superadmin feature owns the `cancellations` route and its feature-specific 
 |---|---|---|
 | `__tests__/` | Owns the feature responsibility represented by this folder. | `superadmin_cancellations_basic.test.tsx` |
 | `cancellations_api/` | Owns the feature responsibility represented by this folder. | `superadmin_cancellations_api.ts` |
-| `cancellations_components/` | Owns the feature responsibility represented by this folder. | `SuperadminCancellationsClient.tsx`, `SuperadmincancellationsActionModal.tsx`, `SuperadmincancellationsEmptyState.tsx`, `SuperadmincancellationsFilters.tsx`, `SuperadmincancellationsKPIs.tsx`, `SuperadmincancellationsTable.tsx` |
+| `cancellations_components/` | Owns the feature responsibility represented by this folder. | `SuperadminCancellationsClient.tsx`, `SuperadminCancellationsActionModal.tsx`, `SuperadminCancellationsEmptyState.tsx`, `SuperadminCancellationsFilters.tsx`, `SuperadminCancellationsKPIs.tsx`, `SuperadminCancellationsTable.tsx` |
 | `cancellations_mocks/` | Owns the feature responsibility represented by this folder. | `SuperadminCancellationsMockHandlers.ts` |
 | `cancellations_types/` | Owns the feature responsibility represented by this folder. | `superadmin_cancellations_types.ts` |
-| `cancellations_utils/` | Owns the feature responsibility represented by this folder. | `SuperadminCancellationsConstants.ts`, `SuperadmincancellationsActionModal.schema.ts`, `useSuperadminCancellationsAlertsPage.test.ts`, `useSuperadminCancellationsAlertsPage.ts` |
+| `cancellations_utils/` | Owns the feature responsibility represented by this folder. | `SuperadminCancellationsConstants.ts`, `SuperadminCancellationsActionModal.schema.ts`, `useSuperadminCancellationsAlertsPage.test.ts`, `useSuperadminCancellationsAlertsPage.ts` |
 
 ## Feature Inventory
 
@@ -111,11 +111,11 @@ Observed schema/type fields in this feature are listed below. Any UI field not r
 |---|---|
 | `__tests__/superadmin_cancellations_basic.test.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
 | `cancellations_components/SuperadminCancellationsClient/SuperadminCancellationsClient.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
-| `cancellations_components/SuperadmincancellationsActionModal/SuperadmincancellationsActionModal.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
-| `cancellations_components/SuperadmincancellationsEmptyState/SuperadmincancellationsEmptyState.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
-| `cancellations_components/SuperadmincancellationsFilters/SuperadmincancellationsFilters.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
-| `cancellations_components/SuperadmincancellationsKPIs/SuperadmincancellationsKPIs.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
-| `cancellations_components/SuperadmincancellationsTable/SuperadmincancellationsTable.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `cancellations_components/SuperadminCancellationsActionModal/SuperadminCancellationsActionModal.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `cancellations_components/SuperadminCancellationsEmptyState/SuperadminCancellationsEmptyState.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `cancellations_components/SuperadminCancellationsFilters/SuperadminCancellationsFilters.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `cancellations_components/SuperadminCancellationsKPIs/SuperadminCancellationsKPIs.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `cancellations_components/SuperadminCancellationsTable/SuperadminCancellationsTable.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
 | `error.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
 | `loading.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
 | `page.tsx` | Owns the UI responsibility represented by its filename and current JSX. |

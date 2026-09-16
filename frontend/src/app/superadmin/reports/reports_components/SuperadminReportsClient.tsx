@@ -57,9 +57,9 @@ export default function SuperadminReportsClient() {
     return p;
   }, [searchQuery, planFilter, dateFrom, dateTo]);
 
-  const { data: revRes, isLoading: revLoading, isError: revError } = useQuery({ queryKey: ['reports', 'revenue', queryParams], queryFn: () => superadminReportsApi.fetchRevenueData(queryParams) });
-  const { data: canRes, isLoading: canLoading, isError: canError } = useQuery({ queryKey: ['reports', 'cancellations', queryParams], queryFn: () => superadminReportsApi.fetchCancellationsData(queryParams) });
-  const { data: healthRes, isLoading: healthLoading, isError: healthError } = useQuery({ queryKey: ['reports', 'health', queryParams], queryFn: () => superadminReportsApi.fetchHealthData(queryParams) });
+  const { data: revRes, isLoading: revLoading, isError: revError } = useQuery({ queryKey: ['superadmin', 'reports', 'revenue', queryParams], queryFn: () => superadminReportsApi.fetchRevenueData(queryParams) });
+  const { data: canRes, isLoading: canLoading, isError: canError } = useQuery({ queryKey: ['superadmin', 'reports', 'cancellations', queryParams], queryFn: () => superadminReportsApi.fetchCancellationsData(queryParams) });
+  const { data: healthRes, isLoading: healthLoading, isError: healthError } = useQuery({ queryKey: ['superadmin', 'reports', 'health', queryParams], queryFn: () => superadminReportsApi.fetchHealthData(queryParams) });
 
   const revenueData = (revRes?.data as unknown as RevenueRow[]) || [];
   const cancellationsData = (canRes?.data as unknown as CancellationsRecord[]) || [];
@@ -152,7 +152,7 @@ export default function SuperadminReportsClient() {
   const error = revError || canError || healthError;
 
   if (isLoading) return <div className="p-8 text-center text-secondary motion-safe:animate-pulse">Loading reports...</div>;
-  if (error) return <div className="p-8 text-center text-danger">Failed to load reports data.</div>;
+  if (error) return <div className="p-8 text-center text-danger">{error}</div>;
 
   return (
     <div className="space-y-6">

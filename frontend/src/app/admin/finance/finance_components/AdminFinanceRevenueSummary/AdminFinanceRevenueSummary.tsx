@@ -1,14 +1,13 @@
 "use client";
+import { formatCurrency } from '@/lib/formatters';
 // RESPONSIBILITY: Provides the implementation for AdminFinanceRevenueSummary.tsx functionality within its module.
 
 import { useAdminFinanceLogic } from '@/app/admin/finance/finance_context/useAdminFinanceLogic';
-import { useAdminFinanceStore } from '@/app/admin/finance/finance_store/useAdminFinanceStore';
 
-const fmt = (n: number) => '₹' + (n || 0).toLocaleString('en-IN');
+const fmt = (n: number) => formatCurrency(n || 0);
 
 export default function AdminFinanceRevenueSummary() {
- const { payments, summary, totalPayments, fetchState, saving, error, loadAll, search, setSearch, currentPage, setCurrentPage, savePayment, methodFilter, setMethodFilter } = useAdminFinanceLogic();
-  const { showModal, setShowModal } = useAdminFinanceStore();
+ const { payments, summary, totalPayments, status, loadAll, search, setSearch, currentPage, setCurrentPage, methodFilter, setMethodFilter } = useAdminFinanceLogic();
  if (!summary) return null;
 
  return (
@@ -22,10 +21,10 @@ export default function AdminFinanceRevenueSummary() {
  <span className="text-xs w-20 text-secondary">{d.month}</span>
  <div className="flex-1 h-6 rounded-full overflow-hidden bg-input">
  <div 
- className="h-full bg-primary transition-all duration-500 rounded-full" 
+ className="h-full bg-primary motion-safe:transition-all motion-safe:duration-500 rounded-full" 
  style={{ width: `${(d.revenue / max) * 100}%` }}
  />
- {d.revenue > 0 && <span className="text-xs text-white font-medium">{fmt(d.revenue)}</span>}
+ {d.revenue > 0 && <span className="text-xs text-primary-foreground font-medium">{fmt(d.revenue)}</span>}
  </div>
  </div>
  );

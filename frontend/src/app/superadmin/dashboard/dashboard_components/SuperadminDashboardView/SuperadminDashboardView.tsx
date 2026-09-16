@@ -34,7 +34,7 @@ export default function SuperadminDashboardView() {
   if (error || !apiData) {
     return (
       <div className="p-8 text-center text-danger font-medium">
-        Failed to load dashboard data. Please try again.
+        
       </div>
     );
   }

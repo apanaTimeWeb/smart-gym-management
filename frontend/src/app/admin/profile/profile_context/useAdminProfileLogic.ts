@@ -1,78 +1,93 @@
 "use client";
-// RESPONSIBILITY: Logic hook for the Admin Profile page — personal info + password change.
-// DATA FLOW: adminProfileApi → useAdminProfileLogic → AdminProfileMain
 
-
-import { useState, useEffect } from 'react';
+// RESPONSIBILITY: Owns Admin profile server state, React Hook Form setup, password/profile mutations, and unsaved-change protection.
+// DATA FLOW: AdminProfileApi → TanStack Query / React Hook Form → useAdminProfileLogic → AdminProfileMain
+import { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import toast from 'react-hot-toast';
 import { adminProfileApi } from '@/app/admin/profile/profile_api/AdminProfileApi';
-import { getUser } from '@/lib/api';
-import type { ProfileTab } from '@/app/admin/profile/profile_types/AdminProfileTypes';
+import {
+  updateAdminProfilePayloadSchema,
+  updateAdminPasswordPayloadSchema,
+} from '@/app/admin/profile/profile_types/AdminProfileSchemas';
+import type {
+  AdminProfileData,
+  UpdateAdminProfilePayload,
+  UpdateAdminPasswordPayload,
+  ProfileTab,
+} from '@/app/admin/profile/profile_types/AdminProfileTypes';
+import { useUnsavedChangesGuard } from '@/app/admin/admin_utils/useAdminUnsavedChangesGuard';
 
+const EMPTY_PROFILE_FORM: UpdateAdminProfilePayload = { name: '', phone: '' };
+const EMPTY_PASSWORD_FORM: UpdateAdminPasswordPayload = { currentPassword: '', newPassword: '', confirmPassword: '' };
+
+/**
+ * Coordinates the profile query and mutation flows while keeping field validation inside Zod/RHF.
+ */
 export function useAdminProfileLogic() {
+  const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState<ProfileTab>('personal');
-  const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
-  const [currentPassword, setCurrentPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [saving, setSaving] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const profileQuery = useQuery({
+    queryKey: ['admin', 'profile', 'detail'],
+    queryFn: () => adminProfileApi.fetchProfile(),
+    staleTime: 1000 * 60 * 5,
+  });
 
-  // Dependency: [] — runs once on mount to hydrate from cookie-stored user
-  useEffect(() => {
-    setMounted(true);
-    const user = getUser();
-    if (user) {
-      setName(user.name ?? '');
-    }
-  }, []);
+  const profile = profileQuery.data?.data ?? null;
+  const profileForm = useForm<UpdateAdminProfilePayload>({
+    resolver: zodResolver(updateAdminProfilePayloadSchema),
+    defaultValues: EMPTY_PROFILE_FORM,
+    values: profile ? { name: profile.name, phone: profile.phone } : undefined,
+    mode: 'onBlur',
+  });
+  const passwordForm = useForm<UpdateAdminPasswordPayload>({
+    resolver: zodResolver(updateAdminPasswordPayloadSchema.refine((value) => value.newPassword === value.confirmPassword, {
+      path: ['confirmPassword'],
+      message: 'New passwords must match.',
+    })),
+    defaultValues: EMPTY_PASSWORD_FORM,
+    mode: 'onBlur',
+  });
 
-  const user = mounted ? getUser() : null;
-  const displayInitial = (user?.name ?? 'A').charAt(0).toUpperCase();
+  const profileMutation = useMutation({
+    mutationFn: (payload: UpdateAdminProfilePayload) => adminProfileApi.updateProfile(payload),
+    onSuccess: async (response) => {
+      profileForm.reset({ name: response.data?.name ?? profileForm.getValues('name'), phone: response.data?.phone ?? profileForm.getValues('phone') });
+      await queryClient.invalidateQueries({ queryKey: ['admin', 'profile', 'detail'] });
+      toast.success(response.message, { id: 'admin-profile-save' });
+    },
+    onError: (error) => toast.error(error instanceof Error ? error.message : 'Profile update failed.', { id: 'admin-profile-save' }),
+  });
 
-  async function handleSaveProfile(e: React.FormEvent) {
-    e.preventDefault();
-    setSaving(true);
-    try {
-      const res = await adminProfileApi.updateProfile({ name, phone });
-      toast.success(res.message || 'Profile updated.');
-    } catch {
-      toast.error('Failed to update profile.');
-    } finally {
-      setSaving(false);
-    }
-  }
+  const passwordMutation = useMutation({
+    mutationFn: (payload: UpdateAdminPasswordPayload) => adminProfileApi.updatePassword(payload),
+    onSuccess: (response) => {
+      passwordForm.reset(EMPTY_PASSWORD_FORM);
+      toast.success(response.message, { id: 'admin-profile-password' });
+    },
+    onError: (error) => toast.error(error instanceof Error ? error.message : 'Password update failed.', { id: 'admin-profile-password' }),
+  });
 
-  async function handleChangePassword(e: React.FormEvent) {
-    e.preventDefault();
-    if (newPassword !== confirmPassword) {
-      toast.error('New passwords do not match.');
-      return;
-    }
-    setSaving(true);
-    try {
-      const res = await adminProfileApi.updatePassword({ currentPassword, newPassword, confirmPassword });
-      toast.success(res.message || 'Password updated.');
-      setCurrentPassword('');
-      setNewPassword('');
-      setConfirmPassword('');
-    } catch {
-      toast.error('Failed to update password.');
-    } finally {
-      setSaving(false);
-    }
-  }
+  const profileDirty = profileForm.formState.isDirty || passwordForm.formState.isDirty;
+  useUnsavedChangesGuard(profileDirty);
+
+  const displayInitial = (profile?.name ?? 'A').charAt(0).toUpperCase();
 
   return {
-    activeTab, setActiveTab,
-    name, setName,
-    phone, setPhone,
-    currentPassword, setCurrentPassword,
-    newPassword, setNewPassword,
-    confirmPassword, setConfirmPassword,
-    saving, mounted,
-    user, displayInitial,
-    handleSaveProfile, handleChangePassword,
+    activeTab,
+    setActiveTab,
+    profile,
+    profileQuery,
+    profileForm,
+    passwordForm,
+    savingProfile: profileMutation.isPending,
+    savingPassword: passwordMutation.isPending,
+    displayInitial,
+    handleSaveProfile: profileForm.handleSubmit((values) => profileMutation.mutate(values)),
+    handleChangePassword: passwordForm.handleSubmit((values) => passwordMutation.mutate(values)),
   };
 }
+
+export type { AdminProfileData };

@@ -25,8 +25,8 @@ export default function AdminHrLedgerTable() {
       try {
         const res = await hrApi.getLedger(selectedStaffId);
         setLedger(res.data || []);
-      } catch (e: any) {
-        showToast(e.message, 'error');
+      } catch (e: unknown) {
+        showToast((e as Error).message, 'error');
       } finally {
         setLoading(false);
       }
@@ -106,7 +106,7 @@ export default function AdminHrLedgerTable() {
                 </tr>
               ) : (
                 ledger.map(l => (
-                  <tr key={l.id} className="hover:bg-secondary/5 transition-colors">
+                  <tr key={l.id} className="hover:bg-secondary/5 motion-safe:transition-colors">
                     <td className="p-4 text-foreground whitespace-nowrap">{new Date(l.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
                     <td className="p-4">
                       <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium 

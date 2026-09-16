@@ -1,5 +1,6 @@
 'use client';
 // RESPONSIBILITY: Displays the superadmin's avatar, name, role badge, and last login info.
+import { formatDate, formatDateTime } from '@/lib/formatters';
 // Display-only — no mutations.
 
 import { ShieldCheck } from 'lucide-react';
@@ -20,7 +21,7 @@ export default function SuperadminProfileAvatarCard({ profile }: SuperadminProfi
     .slice(0, 2);
 
   const lastLogin = profile.lastLoginAt 
-    ? new Date(profile.lastLoginAt).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })
+    ? formatDateTime(profile.lastLoginAt)
     : 'Unknown';
 
   return (
@@ -50,7 +51,7 @@ export default function SuperadminProfileAvatarCard({ profile }: SuperadminProfi
         <div className="flex justify-between">
           <span className="text-secondary">Member Since</span>
           <span className="text-foreground">
-            {new Date(profile.createdAt).toLocaleDateString('en-IN', { dateStyle: 'medium' })}
+            {formatDate(profile.createdAt)}
           </span>
         </div>
       </div>

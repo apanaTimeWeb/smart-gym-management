@@ -45,7 +45,7 @@ export function useSuperadminFranchisesPage() {
   const suspendMutation = useMutation({
     mutationFn: (id: string) => superadminFranchisesApi.suspendFranchise(id),
     onSuccess: (res) => {
-      toast.success(res.message);
+      toast.success(res.message, { id: 'superadmin-toast-78c608d635' });
       queryClient.invalidateQueries({ queryKey: ['superadmin', 'franchises'] });
     },
     onError: (err: Error) => toast.error(err.message, { id: 'failed-to-suspend-franchise' }),
@@ -54,7 +54,7 @@ export function useSuperadminFranchisesPage() {
   const activateMutation = useMutation({
     mutationFn: (id: string) => superadminFranchisesApi.activateFranchise(id),
     onSuccess: (res) => {
-      toast.success(res.message);
+      toast.success(res.message, { id: 'superadmin-toast-7b30d1c68e' });
       queryClient.invalidateQueries({ queryKey: ['superadmin', 'franchises'] });
     },
     onError: (err: Error) => toast.error(err.message, { id: 'failed-to-activate-franchise' }),
@@ -64,7 +64,7 @@ export function useSuperadminFranchisesPage() {
     mutationFn: (data: { id: string; payload: FranchiseFormValues }) =>
       superadminFranchisesApi.updateFranchise(data.id, data.payload as Partial<SuperadminFranchise>),
     onSuccess: (res) => {
-      toast.success(res.message);
+      toast.success(res.message, { id: 'superadmin-toast-5cabc28fd1' });
       queryClient.invalidateQueries({ queryKey: ['superadmin', 'franchises'] });
     },
     onError: (err: Error) => toast.error(err.message, { id: 'failed-to-update-franchise' }),

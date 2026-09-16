@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { X } from 'lucide-react';
 import { useAdminBlacklistLogic } from '@/app/admin/blacklist/blacklist_context/useAdminBlacklistLogic';
 import { BlacklistSchema, BLACKLIST_GYM_OPTIONS } from '@/app/admin/blacklist/blacklist_utils/AdminBlacklistSharedConstants';
-import type { BlacklistFormValues } from '@/app/admin/blacklist/blacklist_types/blacklist_types';
+import type { BlacklistFormValues } from '@/app/admin/blacklist/blacklist_types/AdminBlacklistTypes';
 
 export default function AdminBlacklistModal() {
   const { showModal, setShowModal, form, saveBlacklist, saving } = useAdminBlacklistLogic();
@@ -37,7 +37,7 @@ export default function AdminBlacklistModal() {
 
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowModal(false)} />
+      <div className="absolute inset-0 bg-overlay backdrop-blur-sm" onClick={() => setShowModal(false)} />
       <div className="relative bg-overlay border border-border rounded-2xl shadow-2xl w-full max-w-lg max-h-screen overflow-y-auto custom-scrollbar">
         <div className="flex items-center justify-between px-6 py-4 border-b border-border sticky top-0 bg-overlay z-10">
           <h2 className="text-lg font-bold text-foreground">Blacklist Member</h2>
@@ -107,7 +107,7 @@ export default function AdminBlacklistModal() {
             <button type="button" onClick={() => setShowModal(false)} className="px-4 py-2 bg-input border border-border rounded-lg text-sm font-medium text-secondary hover:text-foreground motion-safe:transition-colors">
               Cancel
             </button>
-            <button type="submit" disabled={saving} className="px-5 py-2 bg-danger text-white rounded-lg text-sm font-semibold hover:opacity-90 motion-safe:transition-opacity disabled:opacity-60 disabled:cursor-not-allowed active:scale-95 min-w-32">
+            <button type="submit" disabled={saving} className="px-5 py-2 bg-danger text-primary-foreground rounded-lg text-sm font-semibold hover:opacity-90 motion-safe:transition-opacity disabled:opacity-60 disabled:cursor-not-allowed motion-safe:active:scale-95 min-w-32">
               {saving ? 'Blacklisting...' : 'Blacklist Member'}
             </button>
           </div>

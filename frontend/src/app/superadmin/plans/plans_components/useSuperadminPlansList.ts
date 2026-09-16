@@ -1,3 +1,4 @@
+'use client';
 // DATA FLOW: feature API/schema → hook/context → useSuperadminPlansList consumers.
 'use client';
 // RESPONSIBILITY: Owns Plans list server queries, mutations, cache invalidation and destructive confirmations.

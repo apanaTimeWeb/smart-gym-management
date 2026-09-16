@@ -2,7 +2,7 @@
 // DATA FLOW: URL query parameters → useAdminHrUrlState → Admin HR views.
 import { useCallback, useEffect } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useDebounce } from '@/app/admin/admin_utils/useDebounce';
+import { useDebounce } from '@/app/admin/admin_utils/useAdminDebounce';
 
 /** Keeps Admin HR list/search filters shareable through the URL and debounces backend search updates. */
 export function useAdminHrUrlState() {

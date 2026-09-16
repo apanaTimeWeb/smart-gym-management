@@ -1,5 +1,6 @@
 'use client';
 // RESPONSIBILITY: Renders the Global Audit Logs dashboard for superadmins to monitor system-wide security events.
+import { formatDate, formatDateTime } from '@/lib/formatters';
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { auditLogsApi } from '@/app/superadmin/global-audit/superadmin_global-audit_api/superadmin_global-audit_api';
@@ -225,7 +226,7 @@ export default function SuperadminGlobalAuditClient() {
               {paginatedLogs.map((log: AuditLog) => (
                 <tr key={log.id} className="hover:bg-card-hover motion-safe:transition-colors">
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="text-sm font-mono text-secondary">{new Date(log.timestamp).toLocaleString()}</span>
+                    <span className="text-sm font-mono text-secondary">{formatDateTime(log.timestamp)}</span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     {getSeverityBadge(log.severity)}

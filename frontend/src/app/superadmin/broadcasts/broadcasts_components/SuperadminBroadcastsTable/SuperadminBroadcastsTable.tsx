@@ -1,21 +1,14 @@
 'use client';
 // RESPONSIBILITY: Renders the Broadcasts data table shell (header + rows). Delegates row rendering to BroadcastsTableRow. No API calls.
-import { useState } from 'react';
+import { formatDate, formatDateTime } from '@/lib/formatters';
 import SuperadminBroadcastStatusBadge from '@/app/superadmin/broadcasts/broadcasts_components/SuperadminBroadcastStatusBadge/SuperadminBroadcastStatusBadge';
 import { Send, Edit2, Trash2 } from 'lucide-react';
 import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
 import SuperadminBroadcastsEmptyState from '@/app/superadmin/broadcasts/broadcasts_components/SuperadminBroadcastsEmptyState/SuperadminBroadcastsEmptyState';
 import type { BroadcastsTableProps } from '@/app/superadmin/broadcasts/superadmin_broadcasts_types/superadmin_broadcasts_types';
-import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
-
-const ITEMS_PER_PAGE = 10;
 
 export default function SuperadminBroadcastsTable({ broadcasts, onSend, onEdit, onDelete, onCreateClick }: BroadcastsTableProps) {
-  const [currentPage, setCurrentPage] = useState(1);
   const { confirm } = useSuperadminConfirm();
-
-  const totalPages = Math.ceil(broadcasts.length / ITEMS_PER_PAGE) || 1;
-  const paginatedBroadcasts = broadcasts.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
   return (
     <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm flex flex-col min-h-96">
@@ -32,12 +25,12 @@ export default function SuperadminBroadcastsTable({ broadcasts, onSend, onEdit, 
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
-            {paginatedBroadcasts.length === 0 ? (
+            {broadcasts.length === 0 ? (
               <tr>
                 <td colSpan={6}><SuperadminBroadcastsEmptyState onCreateClick={onCreateClick} /></td>
               </tr>
             ) : (
-              paginatedBroadcasts.map((bc) => (
+              broadcasts.map((bc) => (
                 <tr 
                   key={bc.id} 
                   className="hover:bg-primary/5 motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-in-out group cursor-pointer"
@@ -72,8 +65,8 @@ export default function SuperadminBroadcastsTable({ broadcasts, onSend, onEdit, 
                   )}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary">
-                  {bc.status === 'SCHEDULED' && bc.scheduledDate ? new Date(bc.scheduledDate).toLocaleString() : ''}
-                  {bc.status === 'SENT' && bc.sentDate ? new Date(bc.sentDate).toLocaleString() : ''}
+                  {bc.status === 'SCHEDULED' && bc.scheduledDate ? formatDateTime(bc.scheduledDate) : ''}
+                  {bc.status === 'SENT' && bc.sentDate ? formatDateTime(bc.sentDate) : ''}
                   {bc.status === 'DRAFT' && '-'}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-right">
@@ -123,11 +116,6 @@ export default function SuperadminBroadcastsTable({ broadcasts, onSend, onEdit, 
           </tbody>
         </table>
       </div>
-      <SuperadminPagination 
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={setCurrentPage}
-      />
     </div>
   );
 }

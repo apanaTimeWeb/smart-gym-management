@@ -1,8 +1,37 @@
 // Consolidated Admin Mock Data for MSW
-// This file is used exclusively by MSW handlers.
+import type { Announcement, AnnouncementKPIData } from '@/app/admin/announcements/announcements_types/AdminAnnouncementsTypes';
+import type { AdminAttendanceRecord, AdminAttendanceSummary, AdminAttendanceTrendPoint } from '@/app/admin/attendance/attendance_types/AdminAttendanceTypes';
+import type { AuditLog, AuditKPIData } from '@/app/admin/audit_logs/audit_types/AdminAuditTypes';
+import type { BlacklistedMember, BlacklistKPIData } from '@/app/admin/blacklist/blacklist_types/AdminBlacklistTypes';
+import type { Branch } from '@/app/admin/branches/branches_types/AdminBranchesTypes';
+import type { Coupon, CouponsKPIData } from '@/app/admin/coupons/coupons_types/AdminCouponsTypes';
+import type { DashboardStats } from '@/app/admin/dashboard/dashboard_types/AdminDashboardTypes';
+import type { ExportJob, DataExportKPIData } from '@/app/admin/data-export/data_export_types/AdminDataExportTypes';
+import type { Payment, FinanceSummary, BranchPnlRecord, Expense } from '@/app/admin/finance/finance_types/AdminFinanceTypes';
+import type { GymHealthAlert, GymHealthKPIData } from '@/app/admin/gym-health-alerts/gym_health_alerts_types/AdminGymHealthAlertsTypes';
+import type { CurrentSubscription, SaaSPlan, Invoice, PaymentMethod, SubscriptionKPIData } from '@/app/admin/subscriptions/subscriptions_types/AdminSubscriptionsTypes';
+import type { StaffPerformanceRecord } from '@/app/admin/hr/hr_types/AdminHrPerformanceTypes';
+import type { Staff, Payroll, HrSummary, LedgerEntry } from '@/app/admin/hr/hr_types/AdminHrTypes';
+import type { AdminMember, AdminMembersSummary } from '@/app/admin/members/members_types/AdminMembersTypes';
+import type { AdminNotification } from '@/app/admin/notifications/notifications_types/AdminNotificationsTypes';
+import type { GymPayout, PnLEntry, PayoutsKPIData } from '@/app/admin/payouts/payouts_types/AdminPayoutsTypes';
+import type { PermissionFeature, PermissionsData } from '@/app/admin/permissions/permissions_types/AdminPermissionsTypes';
+import type { PlanRevenueRecord } from '@/app/admin/plans/plans_types/AdminPlansRevenueTypes';
+import type { Plan } from '@/app/admin/plans/plans_types/AdminPlansTypes';
+import type { AdminProfileData } from '@/app/admin/profile/profile_types/AdminProfileTypes';
+import type { ReportData } from '@/app/admin/reports/reports_types/AdminReportsTypes';
+import type { OverviewDataPoint, MembershipReportItem, MembershipTotals, PendingPaymentMember, Member } from '@/app/admin/sales/sales_types/AdminSalesTypes';
+import type { AdminUsageData } from '@/app/admin/usage/usage_types/AdminUsageTypes';
+
+
+export const MOCK_ADMIN_BRANCHES: Branch[] = [
+  { id: 'b1', name: 'Andheri East', location: 'Mumbai', status: 'active', revenue: 185000, expenses: 72000, studentsCount: 420, staffCount: 18 },
+  { id: 'b2', name: 'Bandra West', location: 'Mumbai', status: 'active', revenue: 142000, expenses: 61000, studentsCount: 340, staffCount: 15 },
+  { id: 'b3', name: 'Powai', location: 'Mumbai', status: 'active', revenue: 98000, expenses: 50000, studentsCount: 220, staffCount: 11 },
+  { id: 'b4', name: 'Thane', location: 'Thane', status: 'active', revenue: 60000, expenses: 41000, studentsCount: 180, staffCount: 9 },
+];
 
 // --- From AdminAnnouncementsMockData.ts ---
-import type { Announcement, AnnouncementKPIData } from '@/app/admin/announcements/announcements_types/announcements_types';
 export const MOCK_ANNOUNCEMENTS: Announcement[] = [
   {
     id: 'ann1',
@@ -161,7 +190,6 @@ export const MOCK_ANNOUNCEMENT_KPI: AnnouncementKPIData = {
 
 
 // --- From AdminAttendanceMockData.ts ---
-import type { AdminAttendanceRecord, AdminAttendanceSummary, AdminAttendanceTrendPoint } from '@/app/admin/attendance/attendance_types/attendance_types';
 
 export const MOCK_ADMIN_ATTENDANCE_SUMMARY: AdminAttendanceSummary = {
   todayTotal: 1250,
@@ -200,7 +228,6 @@ export const MOCK_ADMIN_ATTENDANCE_TREND: AdminAttendanceTrendPoint[] = [
 
 
 // --- From AdminDashboardMockData.ts ---
-import type { DashboardStats } from '@/app/admin/dashboard/dashboard_types/dashboard_types';
 
 export const MOCK_ADMIN_DASHBOARD: DashboardStats = {
   totalMembers: 15400,
@@ -261,7 +288,6 @@ export const MOCK_ADMIN_DASHBOARD: DashboardStats = {
 
 
 // --- From AdminFinanceMockData.ts ---
-import type { Payment, FinanceSummary, BranchPnlRecord } from '@/app/admin/finance/finance_types/finance_types';
 
 export const MOCK_ADMIN_FINANCE_SUMMARY: FinanceSummary = {
   totalRevenue: 5400000,
@@ -311,6 +337,11 @@ export const MOCK_ADMIN_PAYMENTS: Payment[] = [
   },
 ];
 
+export const MOCK_ADMIN_EXPENSES: Expense[] = [
+  { id: 'e1', category: 'Rent', amount: 85000, branchId: 'b1', date: '2026-09-01', notes: 'Monthly branch rent', recordedBy: 'Admin' },
+  { id: 'e2', category: 'Utilities', amount: 21000, branchId: 'b2', date: '2026-09-05', notes: 'Utility bills', recordedBy: 'Admin' },
+];
+
 export const MOCK_ADMIN_BRANCH_PNL: BranchPnlRecord[] = [
   {
     branchId: 'b1',
@@ -342,8 +373,6 @@ export const MOCK_ADMIN_BRANCH_PNL: BranchPnlRecord[] = [
 
 
 // --- From AdminHrMockData.ts ---
-import type { Staff, Payroll, HrSummary, LedgerEntry } from '@/app/admin/hr/hr_types/AdminHrTypes';
-import type { StaffPerformanceRecord } from '@/app/admin/hr/hr_types/AdminHrPerformanceTypes';
 
 export const MOCK_ADMIN_HR_SUMMARY: HrSummary = {
   totalSalaryThisMonth: 850000,
@@ -418,7 +447,6 @@ export const MOCK_ADMIN_LEDGER: LedgerEntry[] = [
 
 
 // --- From AdminMembersMockData.ts ---
-import type { AdminMember, AdminMembersSummary } from '@/app/admin/members/members_types/AdminMembersTypes';
 
 export const MOCK_ADMIN_MEMBERS_SUMMARY: AdminMembersSummary = {
   totalMembers: 12500,
@@ -481,8 +509,6 @@ export const MOCK_ADMIN_MEMBERS: AdminMember[] = [
 
 
 // --- From AdminPlansMockData.ts ---
-import type { Plan } from '@/app/admin/plans/plans_types/plans_types';
-import type { PlanRevenueRecord } from '@/app/admin/plans/plans_types/AdminPlansRevenueTypes';
 
 export const MOCK_ADMIN_PLANS: Plan[] = [
   {
@@ -564,7 +590,6 @@ export const MOCK_ADMIN_PLAN_REVENUE: PlanRevenueRecord[] = [
 
 
 // --- From AdminProfileMockData.ts ---
-import type { AdminProfileData } from '@/app/admin/profile/profile_types/AdminProfileTypes';
 
 export const MOCK_ADMIN_PROFILE: AdminProfileData = {
   id: 'admin1',
@@ -579,7 +604,6 @@ export const MOCK_ADMIN_PROFILE: AdminProfileData = {
 
 
 // --- From AdminReportsMockData.ts ---
-import type { ReportData } from '@/app/admin/reports/reports_types/reports_types';
 
 export const MOCK_ADMIN_REPORTS: ReportData = {
   revenueByGym: [
@@ -635,7 +659,6 @@ export const MOCK_ADMIN_REPORTS: ReportData = {
 
 
 // --- From AdminSalesMockData.ts ---
-import type { OverviewDataPoint, MembershipReportItem, MembershipTotals, PendingPaymentMember, Member } from '@/app/admin/sales/sales_types/sales_types';
 
 export const MOCK_ADMIN_SALES_OVERVIEW: OverviewDataPoint[] = [
   { date: '2023-10-01', revenue: 15000 },
@@ -709,7 +732,6 @@ export const MOCK_ADMIN_SETTINGS = {
 
 
 // --- From AdminUsageMockData.ts ---
-import type { AdminUsageData } from '@/app/admin/usage/usage_types/AdminUsageTypes';
 
 export const MOCK_ADMIN_USAGE_DATA: AdminUsageData = {
   tenantId: 't1',
@@ -738,3 +760,299 @@ export const MOCK_ADMIN_USAGE_DATA: AdminUsageData = {
 };
 
 
+
+
+// --- Admin Notifications ---
+export const MOCK_ADMIN_NOTIFICATIONS: AdminNotification[] = [
+  { id: 'n1', title: 'Payment received', body: 'Payment received for Invoice #1245.', severity: 'INFO', read: false, createdAt: '2026-09-16T12:00:00Z' },
+  { id: 'n2', title: 'Membership expiring', body: '12 memberships expire within the next 7 days.', severity: 'WARNING', read: false, createdAt: '2026-09-16T10:30:00Z' },
+  { id: 'n3', title: 'System backup completed', body: 'The scheduled system backup completed successfully.', severity: 'INFO', read: true, createdAt: '2026-09-16T08:00:00Z' },
+  { id: 'n4', title: 'High-severity audit event', body: 'A permission change was recorded in the audit log.', severity: 'CRITICAL', read: true, createdAt: '2026-09-15T16:30:00Z' },
+];
+
+
+export const MOCK_EXPORT_JOBS: ExportJob[] = [
+  { id: 'exp1', dataType: 'members', format: 'csv', gymIds: ['all'], gymNames: ['All Gyms'], dateFrom: '2025-06-01', dateTo: '2025-06-30', status: 'completed', rowCount: 1842, fileSizeKb: 284, createdAt: '2025-07-01T10:00:00', completedAt: '2025-07-01T10:00:45', createdBy: 'Admin' },
+  { id: 'exp2', dataType: 'payments', format: 'excel', gymIds: ['g1', 'g2'], gymNames: ['Andheri East', 'Bandra West'], dateFrom: '2025-06-01', dateTo: '2025-06-30', status: 'completed', rowCount: 3241, fileSizeKb: 512, createdAt: '2025-07-01T09:30:00', completedAt: '2025-07-01T09:31:10', createdBy: 'Admin' },
+  { id: 'exp3', dataType: 'attendance', format: 'pdf', gymIds: ['g3'], gymNames: ['Powai'], dateFrom: '2025-05-01', dateTo: '2025-05-31', status: 'completed', rowCount: 8920, fileSizeKb: 1240, createdAt: '2025-06-02T08:00:00', completedAt: '2025-06-02T08:02:30', createdBy: 'Admin' },
+  { id: 'exp4', dataType: 'full_report', format: 'pdf', gymIds: ['all'], gymNames: ['All Gyms'], dateFrom: '2025-01-01', dateTo: '2025-06-30', status: 'processing', createdAt: '2025-07-08T14:00:00', createdBy: 'Admin' },
+  { id: 'exp5', dataType: 'staff', format: 'csv', gymIds: ['g4'], gymNames: ['Thane'], dateFrom: '2025-06-01', dateTo: '2025-06-30', status: 'failed', createdAt: '2025-07-05T11:00:00', createdBy: 'Admin' },
+];
+
+export const MOCK_DATA_EXPORT_KPI: DataExportKPIData = {
+  totalExports: 5,
+  totalRowsExported: 14003,
+  lastExportDate: '2025-07-01',
+  pendingJobs: 1,
+};
+
+
+export const MOCK_GYM_HEALTH_ALERTS: GymHealthAlert[] = [
+  { id: 'a1', gymId: 'g4', gymName: 'Thane', alertType: 'no_new_members', severity: 'critical', title: '0 New Members This Week', description: 'Thane branch has had zero new member registrations for 7 consecutive days.', metric: '0 new members', threshold: '< 3 per week', detectedAt: '2025-07-07T09:00:00', isResolved: false },
+  { id: 'a2', gymId: 'g3', gymName: 'Powai', alertType: 'revenue_drop', severity: 'critical', title: 'Revenue Drop > 25%', description: 'Powai branch revenue dropped 28% compared to the same period last month.', metric: '-28% MoM', threshold: '> 20% drop', detectedAt: '2025-07-06T10:00:00', isResolved: false },
+  { id: 'a3', gymId: 'g2', gymName: 'Bandra West', alertType: 'high_cancellations', severity: 'warning', title: 'High Member Loss Rate', description: 'Bandra West has a 18% leaving rate this month, significantly above the 10% threshold.', metric: '18% leaving', threshold: '> 10%', detectedAt: '2025-07-05T08:00:00', isResolved: false },
+  { id: 'a4', gymId: 'g4', gymName: 'Thane', alertType: 'pending_payroll', severity: 'critical', title: 'Payroll Overdue by 5 Days', description: 'Staff payroll for Thane branch is 5 days overdue. 8 staff members are affected.', metric: '5 days overdue', threshold: '> 3 days', detectedAt: '2025-07-04T07:00:00', isResolved: false },
+  { id: 'a5', gymId: 'g1', gymName: 'Andheri East', alertType: 'low_attendance', severity: 'warning', title: 'Attendance Below 40%', description: 'Average daily attendance at Andheri East has dropped to 38% of active members.', metric: '38% attendance', threshold: '< 40%', detectedAt: '2025-07-03T09:00:00', isResolved: false },
+  { id: 'a6', gymId: 'g2', gymName: 'Bandra West', alertType: 'expiring_members', severity: 'info', title: '42 Memberships Expiring This Week', description: '42 active memberships at Bandra West are expiring within the next 7 days with no renewal initiated.', metric: '42 expiring', threshold: '> 30 expiring', detectedAt: '2025-07-07T06:00:00', isResolved: false },
+  { id: 'a7', gymId: 'g3', gymName: 'Powai', alertType: 'no_new_members', severity: 'warning', title: 'Low New Member Acquisition', description: 'Powai had only 1 new member this week, below the expected minimum of 5.', metric: '1 new member', threshold: '< 5 per week', detectedAt: '2025-07-01T09:00:00', isResolved: true, resolvedAt: '2025-07-03T11:00:00' },
+];
+
+export const MOCK_GYM_HEALTH_KPI: GymHealthKPIData = {
+  totalAlerts: 7,
+  criticalAlerts: 3,
+  warningAlerts: 2,
+  gymsAtRisk: 3,
+};
+
+
+export const MOCK_CURRENT_SUBSCRIPTION: CurrentSubscription = {
+  planId: 'plan_growth',
+  planName: 'Growth',
+  tier: 'growth',
+  monthlyPrice: 4999,
+  annualPrice: 49990,
+  billingCycle: 'monthly',
+  status: 'active',
+  currentPeriodStart: '2025-06-01',
+  currentPeriodEnd: '2025-06-30',
+  nextBillingDate: '2025-07-01',
+  autoRenew: true,
+  gymCount: 3,
+  memberLimit: 500,
+  staffLimit: 25,
+  storageGb: 50,
+};
+
+export const MOCK_SAAS_PLANS: SaaSPlan[] = [
+  {
+    id: 'plan_starter',
+    name: 'Starter',
+    tier: 'starter',
+    monthlyPrice: 1999,
+    annualPrice: 19990,
+    gymLimit: 1,
+    memberLimit: 100,
+    staffLimit: 5,
+    storageGb: 10,
+    features: ['1 Gym Branch', 'Up to 100 Members', '5 Staff Accounts', '10 GB Storage', 'Basic Reports', 'Email Support'],
+    isPopular: false,
+    isCurrent: false,
+  },
+  {
+    id: 'plan_growth',
+    name: 'Growth',
+    tier: 'growth',
+    monthlyPrice: 4999,
+    annualPrice: 49990,
+    gymLimit: 5,
+    memberLimit: 500,
+    staffLimit: 25,
+    storageGb: 50,
+    features: ['Up to 5 Gym Branches', 'Up to 500 Members', '25 Staff Accounts', '50 GB Storage', 'Advanced Reports', 'Bulk Communications', 'Coupons & Discounts', 'Priority Support'],
+    isPopular: true,
+    isCurrent: true,
+  },
+  {
+    id: 'plan_pro',
+    name: 'Pro',
+    tier: 'pro',
+    monthlyPrice: 9999,
+    annualPrice: 99990,
+    gymLimit: 15,
+    memberLimit: 2000,
+    staffLimit: 100,
+    storageGb: 200,
+    features: ['Up to 15 Gym Branches', 'Up to 2,000 Members', '100 Staff Accounts', '200 GB Storage', 'Full Analytics Suite', 'Data Export (CSV/Excel/PDF)', 'Gym Health Alerts', 'Gym Comparison', 'Dedicated Account Manager', '24/7 Support'],
+    isPopular: false,
+    isCurrent: false,
+  },
+  {
+    id: 'plan_enterprise',
+    name: 'Enterprise',
+    tier: 'enterprise',
+    monthlyPrice: 0,
+    annualPrice: 0,
+    gymLimit: 999,
+    memberLimit: 999999,
+    staffLimit: 9999,
+    storageGb: 1000,
+    features: ['Unlimited Gym Branches', 'Unlimited Members', 'Unlimited Staff', '1 TB Storage', 'Custom Integrations', 'White-label Option', 'Uptime Guarantee', 'Dedicated Infrastructure', 'Custom Contracts'],
+    isPopular: false,
+    isCurrent: false,
+  },
+];
+
+export const MOCK_INVOICES: Invoice[] = [
+  { id: 'inv1', invoiceNo: 'INV-2025-006', date: '2025-06-01', dueDate: '2025-06-07', amount: 4999, status: 'paid',    planName: 'Growth', billingCycle: 'monthly', pdfUrl: '#' },
+  { id: 'inv2', invoiceNo: 'INV-2025-005', date: '2025-05-01', dueDate: '2025-05-07', amount: 4999, status: 'paid',    planName: 'Growth', billingCycle: 'monthly', pdfUrl: '#' },
+  { id: 'inv3', invoiceNo: 'INV-2025-004', date: '2025-04-01', dueDate: '2025-04-07', amount: 4999, status: 'paid',    planName: 'Growth', billingCycle: 'monthly', pdfUrl: '#' },
+  { id: 'inv4', invoiceNo: 'INV-2025-003', date: '2025-03-01', dueDate: '2025-03-07', amount: 4999, status: 'paid',    planName: 'Growth', billingCycle: 'monthly', pdfUrl: '#' },
+  { id: 'inv5', invoiceNo: 'INV-2025-002', date: '2025-02-01', dueDate: '2025-02-07', amount: 4999, status: 'paid',    planName: 'Growth', billingCycle: 'monthly', pdfUrl: '#' },
+  { id: 'inv6', invoiceNo: 'INV-2025-001', date: '2025-01-01', dueDate: '2025-01-07', amount: 3999, status: 'paid',    planName: 'Starter', billingCycle: 'monthly', pdfUrl: '#' },
+  { id: 'inv7', invoiceNo: 'INV-2024-012', date: '2024-12-01', dueDate: '2024-12-07', amount: 3999, status: 'failed',  planName: 'Starter', billingCycle: 'monthly', pdfUrl: '#' },
+  { id: 'inv8', invoiceNo: 'INV-2024-011', date: '2024-11-01', dueDate: '2024-11-07', amount: 3999, status: 'paid',    planName: 'Starter', billingCycle: 'monthly', pdfUrl: '#' },
+];
+
+export const MOCK_PAYMENT_METHODS: PaymentMethod[] = [
+  { id: 'pm1', type: 'card', last4: '4242', brand: 'Visa',       expiryMonth: 12, expiryYear: 2027, isDefault: true  },
+  { id: 'pm2', type: 'upi',  upiId: 'gymsmart@okaxis',                                              isDefault: false },
+  { id: 'pm3', type: 'card', last4: '5555', brand: 'Mastercard', expiryMonth: 8,  expiryYear: 2026, isDefault: false },
+];
+
+export const MOCK_SUBSCRIPTION_KPI: SubscriptionKPIData = {
+  currentPlan: 'Growth',
+  monthlySpend: 4999,
+  totalInvoices: 8,
+  nextBillingAmount: 4999,
+  daysUntilRenewal: 11,
+  savedWithAnnual: 9998,
+};
+
+
+export const MOCK_ROLES = [
+  { id: 'r1', name: 'Super Admin', description: 'Full access to all modules and branches', permissions: ['all'], color: 'text-danger', bg: 'bg-danger-bg', memberCount: 1 },
+  { id: 'r2', name: 'Branch Manager', description: 'Manage single branch operations, members, and staff', permissions: ['members', 'finance', 'hr', 'attendance'], color: 'text-warning', bg: 'bg-warning-bg', memberCount: 3 },
+  { id: 'r3', name: 'Trainer', description: 'View assigned members, mark attendance, update workouts', permissions: ['attendance', 'members_view'], color: 'text-success', bg: 'bg-success-bg', memberCount: 8 },
+  { id: 'r4', name: 'Receptionist', description: 'Handle walk-ins, collect fees, manage enquiries', permissions: ['members', 'finance_collect', 'enquiries'], color: 'text-info', bg: 'bg-info-bg', memberCount: 5 },
+  { id: 'r5', name: 'Accountant', description: 'View and manage financial reports and expenses', permissions: ['finance', 'reports'], color: 'text-purple', bg: 'bg-purple-bg', memberCount: 2 },
+];
+
+
+export const MOCK_BLACKLIST: BlacklistedMember[] = [
+  { id: 'bl1', memberId: 'M1042', memberName: 'Rajan Mehta', memberPhone: '+91 98765 43210', memberEmail: 'rajan.m@email.com', reason: 'Physical altercation with staff member at Andheri branch', blacklistedBy: 'Admin', blacklistedAt: '2025-05-12', scope: 'global', assignedGyms: ['all'], assignedGymNames: ['All Gyms'], isActive: true },
+  { id: 'bl2', memberId: 'M2087', memberName: 'Priya Sharma', memberPhone: '+91 87654 32109', memberEmail: 'priya.s@email.com', reason: 'Repeated non-payment and fraudulent membership transfer', blacklistedBy: 'Admin', blacklistedAt: '2025-04-28', scope: 'global', assignedGyms: ['all'], assignedGymNames: ['All Gyms'], isActive: true },
+  { id: 'bl3', memberId: 'M3156', memberName: 'Karan Joshi', memberPhone: '+91 76543 21098', memberEmail: 'karan.j@email.com', reason: 'Theft of equipment at Powai branch', blacklistedBy: 'Manager - Powai', blacklistedAt: '2025-06-01', scope: 'specific', assignedGyms: ['g3'], assignedGymNames: ['Powai'], isActive: true },
+  { id: 'bl4', memberId: 'M4201', memberName: 'Sneha Patil', memberPhone: '+91 65432 10987', memberEmail: 'sneha.p@email.com', reason: 'Harassment of other members', blacklistedBy: 'Admin', blacklistedAt: '2025-03-15', scope: 'specific', assignedGyms: ['g1', 'g2'], assignedGymNames: ['Andheri East', 'Bandra West'], isActive: true },
+  { id: 'bl5', memberId: 'M5312', memberName: 'Amit Verma', memberPhone: '+91 54321 09876', memberEmail: 'amit.v@email.com', reason: 'Chargebacks and payment disputes', blacklistedBy: 'Admin', blacklistedAt: '2025-02-20', scope: 'global', assignedGyms: ['all'], assignedGymNames: ['All Gyms'], isActive: false },
+];
+
+export const MOCK_BLACKLIST_KPI: BlacklistKPIData = {
+  totalBlacklisted: 5,
+  globalBans: 3,
+  gymSpecificBans: 2,
+  addedThisMonth: 1,
+};
+
+
+export const MOCK_PAYOUTS: GymPayout[] = [
+  { gymId: 'g1', gymName: 'Andheri East', month: '2025-06', grossRevenue: 420000, staffPayroll: 85000, operationalExpenses: 42000, platformFee: 12600, netProfit: 280400, payoutStatus: 'paid', paidOn: '2025-07-03' },
+  { gymId: 'g2', gymName: 'Bandra West', month: '2025-06', grossRevenue: 380000, staffPayroll: 78000, operationalExpenses: 38000, platformFee: 11400, netProfit: 252600, payoutStatus: 'paid', paidOn: '2025-07-03' },
+  { gymId: 'g3', gymName: 'Powai', month: '2025-06', grossRevenue: 310000, staffPayroll: 65000, operationalExpenses: 31000, platformFee: 9300, netProfit: 204700, payoutStatus: 'processing' },
+  { gymId: 'g4', gymName: 'Thane', month: '2025-06', grossRevenue: 195000, staffPayroll: 52000, operationalExpenses: 22000, platformFee: 5850, netProfit: 115150, payoutStatus: 'pending' },
+  { gymId: 'g1', gymName: 'Andheri East', month: '2025-05', grossRevenue: 405000, staffPayroll: 85000, operationalExpenses: 40000, platformFee: 12150, netProfit: 267850, payoutStatus: 'paid', paidOn: '2025-06-04' },
+  { gymId: 'g2', gymName: 'Bandra West', month: '2025-05', grossRevenue: 362000, staffPayroll: 78000, operationalExpenses: 36000, platformFee: 10860, netProfit: 237140, payoutStatus: 'paid', paidOn: '2025-06-04' },
+  { gymId: 'g3', gymName: 'Powai', month: '2025-05', grossRevenue: 298000, staffPayroll: 65000, operationalExpenses: 30000, platformFee: 8940, netProfit: 194060, payoutStatus: 'paid', paidOn: '2025-06-05' },
+  { gymId: 'g4', gymName: 'Thane', month: '2025-05', grossRevenue: 182000, staffPayroll: 52000, operationalExpenses: 20000, platformFee: 5460, netProfit: 104540, payoutStatus: 'paid', paidOn: '2025-06-05' },
+];
+
+export const MOCK_PNL: PnLEntry[] = [
+  { gymId: 'g1', gymName: 'Andheri East', month: '2025-06', revenue: 420000, cogs: 42000, grossProfit: 378000, staffCost: 85000, rentUtilities: 28000, marketing: 8000, miscExpenses: 6000, ebitda: 251000, tax: 50200, netProfit: 200800 },
+  { gymId: 'g2', gymName: 'Bandra West', month: '2025-06', revenue: 380000, cogs: 38000, grossProfit: 342000, staffCost: 78000, rentUtilities: 25000, marketing: 7000, miscExpenses: 6000, ebitda: 226000, tax: 45200, netProfit: 180800 },
+  { gymId: 'g3', gymName: 'Powai', month: '2025-06', revenue: 310000, cogs: 31000, grossProfit: 279000, staffCost: 65000, rentUtilities: 22000, marketing: 5000, miscExpenses: 4000, ebitda: 183000, tax: 36600, netProfit: 146400 },
+  { gymId: 'g4', gymName: 'Thane', month: '2025-06', revenue: 195000, cogs: 19500, grossProfit: 175500, staffCost: 52000, rentUtilities: 18000, marketing: 3000, miscExpenses: 3500, ebitda: 99000, tax: 19800, netProfit: 79200 },
+];
+
+export const MOCK_PAYOUTS_KPI: PayoutsKPIData = {
+  totalNetProfit: 852850,
+  totalGrossRevenue: 1305000,
+  totalExpenses: 452150,
+  pendingPayouts: 2,
+};
+
+
+export const MOCK_AUDIT_LOGS: AuditLog[] = [
+  { id: '1',  timestamp: '2025-06-20T10:30:00Z', action: 'DELETED_PAYMENT',   user: 'Rahul Verma (Manager)',  branchId: 'b1', details: 'Deleted payment INV-1042 (Amount: ₹5,000, Member: John Doe)',           severity: 'high',   ip: '192.168.1.10', module: 'Finance',    userAgent: 'Chrome/Windows', affectedRecordId: 'INV-1042' },
+  { id: '2',  timestamp: '2025-06-20T09:15:00Z', action: 'UPDATED_PLAN',      user: 'Super Admin',            branchId: 'all', details: 'Changed Annual Pro price from ₹12,000 to ₹15,000',                  severity: 'medium', ip: '10.0.0.1',    module: 'Plans',      userAgent: 'Chrome/Mac',     affectedRecordId: 'PLAN-007' },
+  { id: '3',  timestamp: '2025-06-19T18:45:00Z', action: 'ADDED_STAFF',       user: 'Super Admin',            branchId: 'b2', details: 'Added new trainer: Vikas Singh (Role: General Trainer)',              severity: 'low',    ip: '10.0.0.1',    module: 'HR',         userAgent: 'Chrome/Mac',     affectedRecordId: 'STAFF-089' },
+  { id: '4',  timestamp: '2025-06-19T14:20:00Z', action: 'REFUND_ISSUED',     user: 'Pooja Sharma (Manager)', branchId: 'b2', details: 'Refunded ₹2,000 to Member ID: MEM-009 (Ananya Reddy)',               severity: 'high',   ip: '192.168.1.22', module: 'Finance',    userAgent: 'Firefox/Windows', affectedRecordId: 'MEM-009' },
+  { id: '5',  timestamp: '2025-06-18T11:00:00Z', action: 'LOGIN_FAILED',      user: 'Unknown IP',             branchId: 'b1', details: '5 failed login attempts for manager@andheri.com',                    severity: 'high',   ip: '203.0.113.5',  module: 'Auth',       userAgent: 'Unknown',        affectedRecordId: undefined },
+  { id: '6',  timestamp: '2025-06-18T09:30:00Z', action: 'MEMBER_SUSPENDED',  user: 'Rahul Verma (Manager)',  branchId: 'b1', details: 'Suspended member Karan Mehta (MEM-005) due to non-payment',          severity: 'medium', ip: '192.168.1.10', module: 'Members',    userAgent: 'Chrome/Windows', affectedRecordId: 'MEM-005' },
+  { id: '7',  timestamp: '2025-06-17T16:00:00Z', action: 'SETTINGS_CHANGED',  user: 'Super Admin',            branchId: 'all', details: 'Updated GST number from 27AABCU9603R1ZX to 27AABCU9603R1ZY',       severity: 'medium', ip: '10.0.0.1',    module: 'Settings',   userAgent: 'Chrome/Mac',     affectedRecordId: undefined },
+  { id: '8',  timestamp: '2025-06-17T13:45:00Z', action: 'BULK_IMPORT',       user: 'Super Admin',            branchId: 'b3', details: 'Imported 45 new members from CSV file (members_jun2025.csv)',        severity: 'low',    ip: '10.0.0.1',    module: 'Members',    userAgent: 'Chrome/Mac',     affectedRecordId: undefined },
+  { id: '9',  timestamp: '2025-06-16T11:20:00Z', action: 'STAFF_DELETED',     user: 'Super Admin',            branchId: 'b2', details: 'Deleted staff record: Mohan Das (Role: Receptionist)',               severity: 'high',   ip: '10.0.0.1',    module: 'HR',         userAgent: 'Chrome/Mac',     affectedRecordId: 'STAFF-041' },
+  { id: '10', timestamp: '2025-06-16T09:00:00Z', action: 'PLAN_DELETED',      user: 'Super Admin',            branchId: 'all', details: 'Deleted plan: "Trial 7-Day" (was assigned to 0 members)',           severity: 'medium', ip: '10.0.0.1',    module: 'Plans',      userAgent: 'Chrome/Mac',     affectedRecordId: 'PLAN-002' },
+  { id: '11', timestamp: '2025-06-15T17:30:00Z', action: 'ADMIN_LOGIN',       user: 'Super Admin',            branchId: 'all', details: 'Successful admin login from new device (Chrome/Windows)',            severity: 'low',    ip: '10.0.0.1',    module: 'Auth',       userAgent: 'Chrome/Windows', affectedRecordId: undefined },
+  { id: '12', timestamp: '2025-06-15T14:10:00Z', action: 'EXPENSE_ADDED',     user: 'Pooja Sharma (Manager)', branchId: 'b2', details: 'Added expense: Rent ₹32,000 for June 2025',                          severity: 'low',    ip: '192.168.1.22', module: 'Finance',    userAgent: 'Firefox/Windows', affectedRecordId: 'EXP-112' },
+  { id: '13', timestamp: '2025-06-14T12:00:00Z', action: 'MEMBER_DELETED',    user: 'Rahul Verma (Manager)',  branchId: 'b1', details: 'Permanently deleted member record: Suresh Kumar (MEM-011)',           severity: 'high',   ip: '192.168.1.10', module: 'Members',    userAgent: 'Chrome/Windows', affectedRecordId: 'MEM-011' },
+  { id: '14', timestamp: '2025-06-14T10:30:00Z', action: 'PAYROLL_GENERATED', user: 'Super Admin',            branchId: 'all', details: 'Generated payroll for May 2025 (15 staff, Total: ₹2,45,000)',       severity: 'low',    ip: '10.0.0.1',    module: 'HR',         userAgent: 'Chrome/Mac',     affectedRecordId: undefined },
+  { id: '15', timestamp: '2025-06-13T16:45:00Z', action: 'BRANCH_UPDATED',    user: 'Super Admin',            branchId: 'b3', details: 'Updated branch details: Powai — changed manager to Priya K',         severity: 'medium', ip: '10.0.0.1',    module: 'Branches',   userAgent: 'Chrome/Mac',     affectedRecordId: 'b3' },
+  { id: '16', timestamp: '2025-06-13T11:00:00Z', action: 'PAYMENT_ADDED',     user: 'Rahul Verma (Manager)',  branchId: 'b1', details: 'Recorded payment INV-1089 ₹3,500 from Divya Singh (UPI)',             severity: 'low',    ip: '192.168.1.10', module: 'Finance',    userAgent: 'Chrome/Windows', affectedRecordId: 'INV-1089' },
+  { id: '17', timestamp: '2025-06-12T15:20:00Z', action: 'LOGIN_FAILED',      user: 'Unknown IP',             branchId: 'b2', details: '3 failed login attempts for pooja@uptown.com',                       severity: 'high',   ip: '198.51.100.7', module: 'Auth',       userAgent: 'Unknown',        affectedRecordId: undefined },
+  { id: '18', timestamp: '2025-06-12T09:45:00Z', action: 'MEMBER_FROZEN',     user: 'Pooja Sharma (Manager)', branchId: 'b2', details: 'Froze membership for Rohan Gupta (MEM-007) — medical leave',          severity: 'medium', ip: '192.168.1.22', module: 'Members',    userAgent: 'Firefox/Windows', affectedRecordId: 'MEM-007' },
+  { id: '19', timestamp: '2025-06-11T14:00:00Z', action: 'ADDED_STAFF',       user: 'Super Admin',            branchId: 'b1', details: 'Added new receptionist: Kavya Nair (Role: Receptionist)',             severity: 'low',    ip: '10.0.0.1',    module: 'HR',         userAgent: 'Chrome/Mac',     affectedRecordId: 'STAFF-092' },
+  { id: '20', timestamp: '2025-06-11T10:15:00Z', action: 'SETTINGS_CHANGED',  user: 'Super Admin',            branchId: 'all', details: 'Enabled Two-Factor Authentication for all admin accounts',           severity: 'medium', ip: '10.0.0.1',    module: 'Settings',   userAgent: 'Chrome/Mac',     affectedRecordId: undefined },
+  { id: '21', timestamp: '2025-06-10T17:00:00Z', action: 'REFUND_ISSUED',     user: 'Rahul Verma (Manager)',  branchId: 'b1', details: 'Refunded ₹1,500 to Amit Verma (MEM-003) — plan downgrade',           severity: 'high',   ip: '192.168.1.10', module: 'Finance',    userAgent: 'Chrome/Windows', affectedRecordId: 'MEM-003' },
+  { id: '22', timestamp: '2025-06-10T13:30:00Z', action: 'PLAN_CREATED',      user: 'Super Admin',            branchId: 'all', details: 'Created new plan: "Couple Fitness" ₹8,000/month',                   severity: 'low',    ip: '10.0.0.1',    module: 'Plans',      userAgent: 'Chrome/Mac',     affectedRecordId: 'PLAN-011' },
+  { id: '23', timestamp: '2025-06-09T11:45:00Z', action: 'MEMBER_SUSPENDED',  user: 'Priya K (Manager)',      branchId: 'b3', details: 'Suspended Meera Pillai (MEM-012) — 3 months non-payment',            severity: 'medium', ip: '192.168.1.33', module: 'Members',    userAgent: 'Safari/iOS',     affectedRecordId: 'MEM-012' },
+  { id: '24', timestamp: '2025-06-09T09:00:00Z', action: 'ADMIN_LOGIN',       user: 'Rahul Verma (Manager)',  branchId: 'b1', details: 'Manager login from mobile device (Safari/iOS)',                       severity: 'low',    ip: '192.168.1.10', module: 'Auth',       userAgent: 'Safari/iOS',     affectedRecordId: undefined },
+  { id: '25', timestamp: '2025-06-08T16:20:00Z', action: 'DELETED_PAYMENT',   user: 'Super Admin',            branchId: 'b3', details: 'Voided payment INV-0987 (duplicate entry, Amount: ₹4,200)',           severity: 'high',   ip: '10.0.0.1',    module: 'Finance',    userAgent: 'Chrome/Mac',     affectedRecordId: 'INV-0987' },
+  { id: '26', timestamp: '2025-06-08T12:00:00Z', action: 'BRANCH_CREATED',    user: 'Super Admin',            branchId: 'all', details: 'Created new branch: Thane Hub (Location: Thane West)',               severity: 'low',    ip: '10.0.0.1',    module: 'Branches',   userAgent: 'Chrome/Mac',     affectedRecordId: 'b4' },
+  { id: '27', timestamp: '2025-06-07T15:00:00Z', action: 'PAYROLL_PAID',      user: 'Super Admin',            branchId: 'all', details: 'Marked payroll as paid for May 2025 (₹2,38,000)',                   severity: 'low',    ip: '10.0.0.1',    module: 'HR',         userAgent: 'Chrome/Mac',     affectedRecordId: undefined },
+  { id: '28', timestamp: '2025-06-07T10:30:00Z', action: 'UPDATED_PLAN',      user: 'Super Admin',            branchId: 'all', details: 'Updated Gold Plan features — added "Personal Training 2x/week"',    severity: 'medium', ip: '10.0.0.1',    module: 'Plans',      userAgent: 'Chrome/Mac',     affectedRecordId: 'PLAN-005' },
+  { id: '29', timestamp: '2025-06-06T14:45:00Z', action: 'STAFF_DELETED',     user: 'Super Admin',            branchId: 'b3', details: 'Removed staff: Arun Pillai (Role: Trainer) — resigned',              severity: 'high',   ip: '10.0.0.1',    module: 'HR',         userAgent: 'Chrome/Mac',     affectedRecordId: 'STAFF-055' },
+  { id: '30', timestamp: '2025-06-06T09:15:00Z', action: 'EXPENSE_ADDED',     user: 'Priya K (Manager)',      branchId: 'b3', details: 'Added expense: Equipment Repair ₹8,500 (Treadmill belt replacement)', severity: 'low',    ip: '192.168.1.33', module: 'Finance',    userAgent: 'Safari/iOS',     affectedRecordId: 'EXP-098' },
+  { id: '31', timestamp: '2025-06-05T11:00:00Z', action: 'PRODUCT_ADDED',     user: 'Rahul Verma (Manager)',  branchId: 'b1', details: 'Added new product: Whey Protein 1kg (SKU: WP-001, Price: ₹2,499)',    severity: 'low',    ip: '192.168.1.10', module: 'Store',      userAgent: 'Chrome/Windows', affectedRecordId: 'SKU-WP001' },
+  { id: '32', timestamp: '2025-06-05T08:30:00Z', action: 'ATTENDANCE_MARKED', user: 'Pooja Sharma (Manager)', branchId: 'b2', details: 'Bulk attendance marked for 28 members — Morning batch (06:00–08:00)', severity: 'low',    ip: '192.168.1.22', module: 'Attendance', userAgent: 'Firefox/Windows', affectedRecordId: undefined },
+];
+
+export const MOCK_AUDIT_KPI: AuditKPIData = {
+  totalEvents: 32,
+  highSeverity: 10,
+  mediumSeverity: 9,
+  lowSeverity: 13,
+  eventsToday: 3,
+  uniqueUsers: 5,
+};
+
+
+export const MOCK_PERMISSIONS_DATA: PermissionsData = {
+  roleDefaults: [
+    {
+      role: 'manager',
+      permissions: {
+        'members.view': true, 'members.create': true, 'members.edit': true, 'members.delete': false,
+        'finance.view': true, 'finance.collect': true, 'finance.expenses': true, 'finance.refunds': false,
+        'hr.view': true, 'hr.manage': true, 'hr.payroll': false,
+        'attendance.view': true, 'attendance.mark': true,
+        'reports.view': true, 'reports.export': true,
+        'settings.view': true, 'settings.edit': true,
+        'store.view': true, 'store.manage': true,
+      },
+    },
+    {
+      role: 'trainer',
+      permissions: {
+        'members.view': true, 'members.create': false, 'members.edit': false, 'members.delete': false,
+        'finance.view': false, 'finance.collect': false, 'finance.expenses': false, 'finance.refunds': false,
+        'hr.view': false, 'hr.manage': false, 'hr.payroll': false,
+        'attendance.view': true, 'attendance.mark': true,
+        'reports.view': false, 'reports.export': false,
+        'settings.view': false, 'settings.edit': false,
+        'store.view': true, 'store.manage': false,
+      },
+    },
+  ],
+  gymOverrides: [
+    {
+      gymId: 'b4', gymName: 'Thane', role: 'manager',
+      overrides: { 'finance.expenses': false, 'hr.payroll': false, 'reports.export': false },
+    },
+  ],
+};
+
+
+export const MOCK_COUPONS: Coupon[] = [
+  { id: 'c1', code: 'WELCOME20', description: '20% off for new members', type: 'percentage', value: 20, minOrderAmount: 1000, maxDiscount: 500, usageLimit: 200, usedCount: 87, assignedGyms: ['all'], assignedGymNames: ['All Gyms'], validFrom: '2025-01-01', validUntil: '2025-06-30', status: 'active', createdAt: '2025-01-01' },
+  { id: 'c2', code: 'FLAT500', description: '₹500 flat off on annual plans', type: 'flat', value: 500, minOrderAmount: 5000, maxDiscount: 500, usageLimit: 100, usedCount: 43, assignedGyms: ['b1', 'b2'], assignedGymNames: ['Andheri East', 'Bandra West'], validFrom: '2025-01-15', validUntil: '2025-03-31', status: 'active', createdAt: '2025-01-15' },
+  { id: 'c3', code: 'SUMMER15', description: '15% summer discount', type: 'percentage', value: 15, minOrderAmount: 2000, maxDiscount: 800, usageLimit: 150, usedCount: 150, assignedGyms: ['all'], assignedGymNames: ['All Gyms'], validFrom: '2024-05-01', validUntil: '2024-08-31', status: 'expired', createdAt: '2024-04-20' },
+  { id: 'c4', code: 'POWAI10', description: '10% off at Powai branch', type: 'percentage', value: 10, minOrderAmount: 0, maxDiscount: 300, usageLimit: 50, usedCount: 12, assignedGyms: ['b3'], assignedGymNames: ['Powai'], validFrom: '2025-02-01', validUntil: '2025-04-30', status: 'active', createdAt: '2025-01-28' },
+  { id: 'c5', code: 'REFER200', description: '₹200 off for referrals', type: 'flat', value: 200, minOrderAmount: 1500, maxDiscount: 200, usageLimit: 500, usedCount: 231, assignedGyms: ['all'], assignedGymNames: ['All Gyms'], validFrom: '2025-01-01', validUntil: '2025-12-31', status: 'active', createdAt: '2025-01-01' },
+  { id: 'c6', code: 'THANE25', description: '25% off to boost Thane memberships', type: 'percentage', value: 25, minOrderAmount: 0, maxDiscount: 1000, usageLimit: 80, usedCount: 0, assignedGyms: ['b4'], assignedGymNames: ['Thane'], validFrom: '2025-03-01', validUntil: '2025-05-31', status: 'inactive', createdAt: '2025-02-20' },
+];
+
+export const MOCK_COUPONS_KPI: CouponsKPIData = {
+  totalCoupons: 6,
+  activeCoupons: 4,
+  totalRedeemed: 523,
+  revenueLost: 184500,
+};

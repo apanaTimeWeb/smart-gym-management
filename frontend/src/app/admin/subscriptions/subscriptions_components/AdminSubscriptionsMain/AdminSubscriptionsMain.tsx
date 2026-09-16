@@ -1,4 +1,5 @@
 "use client";
+import { formatCurrency } from '@/lib/formatters';
 // RESPONSIBILITY: Main orchestrator for the Subscriptions / Billing module — tabs for overview, plans, invoices, payment.
 
 import { Calendar, RefreshCw, ToggleLeft, ToggleRight, Loader2 } from 'lucide-react';
@@ -20,7 +21,7 @@ const TABS = [
 
 export default function AdminSubscriptionsMain() {
   const { activeTab, setActiveTab } = useAdminSubscriptionsStore();
-  const { subscription, toggleAutoRenew, togglingAutoRenew, fetchState } = useAdminSubscriptionsLogic();
+  const { subscription, toggleAutoRenew, togglingAutoRenew, status } = useAdminSubscriptionsLogic();
 
   const tierStyle = subscription ? PLAN_TIER_STYLES[subscription.tier] : PLAN_TIER_STYLES['growth'];
 
@@ -41,7 +42,7 @@ export default function AdminSubscriptionsMain() {
                 <p className="text-xs text-secondary uppercase tracking-wider font-semibold">Current Plan</p>
                 <p className="text-xl font-bold text-foreground">{subscription.planName}</p>
                 <p className="text-sm text-secondary mt-0.5">
-                  ₹{subscription.monthlyPrice.toLocaleString('en-IN')}/month · Renews{' '}
+                  {formatCurrency(subscription.monthlyPrice)}/month · Renews{' '}
                   <span className="font-semibold text-foreground">
                     {new Date(subscription.nextBillingDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                   </span>
@@ -70,13 +71,13 @@ export default function AdminSubscriptionsMain() {
           </div>
         )}
 
-        {fetchState === 'loading' && (
+        {status === 'pending' && (
           <div className="flex items-center justify-center py-10">
             <RefreshCw size={20} className="motion-safe:animate-spin text-primary" />
           </div>
         )}
 
-        {fetchState === 'success' && (
+        {status === 'success' && (
           <>
             {/* KPIs */}
             <AdminSubscriptionsKPIs />

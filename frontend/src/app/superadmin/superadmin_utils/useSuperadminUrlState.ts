@@ -1,6 +1,6 @@
+'use client';
 // RESPONSIBILITY: Provides a reusable hook for managing URL search parameters (query-driven server state).
 // DATA FLOW: Component -> useSuperadminUrlState -> URL Search Params -> TanStack Query
-'use client';
 
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { useCallback } from 'react';

@@ -1,21 +1,41 @@
-import { http, HttpResponse, delay } from 'msw';
+// RESPONSIBILITY: Provides deterministic MSW scenarios for the Superadmin migrations API contract.
+import { delay, http, HttpResponse } from 'msw';
+import type { ApiResponse } from '@/lib/api';
 import { MigrationsUrlConfig } from '@/app/superadmin/migrations/superadmin_migrations_url_config';
-
 import { MOCK_MIGRATIONS } from '@/app/superadmin/migrations/migrations_utils/SuperadminMigrationsConstants';
+import type { MigrationLog } from '@/app/superadmin/migrations/superadmin_migrations_types/superadmin_migrations_types';
 
-let mockMigrationsList = [...MOCK_MIGRATIONS];
+const migrationLogs: MigrationLog[] = [...MOCK_MIGRATIONS];
 
 export const superadminMigrationsHandlers = [
   http.get(MigrationsUrlConfig.BACKEND_API.BASE, async () => {
     await delay(400);
-    return HttpResponse.json({ success: true, message: 'Success', data: mockMigrationsList });
+    return HttpResponse.json<ApiResponse<MigrationLog[]>>({
+      success: true,
+      message: 'Success',
+      data: migrationLogs,
+    });
   }),
-  http.post(`${MigrationsUrlConfig.BACKEND_API.BASE}/trigger`, async ({ request }) => {
+  http.post(MigrationsUrlConfig.BACKEND_API.TRIGGER, async ({ request }) => {
     await delay(600);
-    const body = await request.json() as Record<string, unknown>;
-    const tenantId = body?.tenantId || 'unknown';
-    const newMig = { id: `mig-${Date.now()}`, version: tenantId, description: 'Manual trigger', appliedAt: null, status: 'IN_PROGRESS', targetTenants: 'ALL', durationMs: null, errorLog: null };
-    mockMigrationsList = [newMig as unknown as typeof mockMigrationsList[0], ...mockMigrationsList];
-    return HttpResponse.json({ success: true, message: 'Migration triggered' });
+    const body = (await request.json()) as { targetVersion?: unknown };
+    const targetVersion = typeof body.targetVersion === 'string' ? body.targetVersion : '';
+    const newMigration: MigrationLog = {
+      id: `migration-${Date.now()}`,
+      version: targetVersion,
+      description: 'Manual schema rollout',
+      appliedAt: null,
+      status: 'IN_PROGRESS',
+      targetTenants: 'ALL',
+      durationMs: null,
+      errorLog: null,
+    };
+    migrationLogs.unshift(newMigration);
+    return HttpResponse.json<ApiResponse<MigrationLog>>({
+      success: true,
+      message: 'Migration triggered',
+      data: newMigration,
+    });
   }),
 ];
+

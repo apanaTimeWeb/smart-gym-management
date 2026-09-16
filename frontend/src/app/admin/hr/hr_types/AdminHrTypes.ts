@@ -1,8 +1,8 @@
+import type { QueryStatus } from '@tanstack/react-query';
 // RESPONSIBILITY: Defines the TypeScript types and interfaces for the HR module.
 import type { ToastType } from '@/app/admin/admin_components/AdminFeedback/AdminToast';
 import { EMPTY_STAFF } from '@/app/admin/hr/hr_utils/AdminHrSharedConstants';
 import React from 'react';
-export type FetchState = 'idle' | 'loading' | 'success' | 'error';
 
 export interface HrInitialData {
   staff: Staff[];
@@ -14,7 +14,7 @@ export interface HrContextType {
  staff: Staff[];
  payrolls: Payroll[];
  summary: HrSummary | null;
- fetchState: FetchState;
+ status: QueryStatus;
  error: string;
 
   visibleColumns: string[];

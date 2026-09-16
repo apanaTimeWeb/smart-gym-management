@@ -330,10 +330,15 @@ const ATTENDANCE = Array.from({ length: 15 }, (_, i) => ({
   id: `att${i + 1}`,
   memberId: MEMBERS[i % 20]!.id,
   memberName: MEMBERS[i % 20]!.name,
-  branch: BRANCHES[i % 4]!.name,
-  checkIn: `2025-01-${String((i % 28) + 1).padStart(2, '0')}T0${6 + (i % 4)}:${String(i * 7 % 60).padStart(2, '0')}:00`,
-  checkOut: `2025-01-${String((i % 28) + 1).padStart(2, '0')}T${8 + (i % 4)}:${String(i * 9 % 60).padStart(2, '0')}:00`,
-  duration: 90 + (i % 30),
+  memberPhone: MEMBERS[i % 20]!.phone,
+  branchId: BRANCHES[i % 4]!.id,
+  branchName: BRANCHES[i % 4]!.name,
+  checkInTime: `0${6 + (i % 4)}:${String(i * 7 % 60).padStart(2, '0')}`,
+  checkOutTime: `0${8 + (i % 4)}:${String(i * 9 % 60).padStart(2, '0')}`,
+  date: `2025-01-${String((i % 28) + 1).padStart(2, '0')}`,
+  status: ['present', 'late', 'absent'][i % 3],
+  planName: PLANS[i % 4]!.name,
+  sessionType: ['General', 'PT', 'Class'][i % 3] as 'General' | 'PT' | 'Class'
 }));
 
 // ─── superadmin branches ──────────────────────────────────────────────────────
@@ -412,6 +417,27 @@ const ADMIN_REPORTS = {
   }
 };
 
+const ADMIN_ATTENDANCE_SUMMARY = {
+  todayTotal: 312,
+  todayPresent: 285,
+  todayLate: 27,
+  weeklyAverage: 295,
+  peakHour: '18:00',
+  trendVsLastWeek: 5.4,
+  uniqueMembersThisMonth: 850
+};
+
+const ADMIN_MEMBERS_SUMMARY = {
+  totalMembers: 1160,
+  activeMembers: 980,
+  expiredMembers: 100,
+  pendingMembers: 80,
+  expiringThisWeek: 18,
+  expiringThisMonth: 45,
+  totalOutstanding: 142000,
+  newThisMonth: 48
+};
+
 const ADMIN_MEMBERS = Array.from({ length: 20 }, (_, i) => ({
   id: `m${i + 1}`,
   name: ['Rahul Sharma','Priya Singh','Amit Patel','Sneha Joshi','Kiran Kumar','Divya Nair','Rohan Gupta','Meera Pillai','Arjun Reddy','Pooja Iyer','Vishal Verma','Anjali Desai','Siddharth Rao','Kavya Menon','Nikhil Shah','Ritu Agarwal','Deepak Tiwari','Sunita Yadav','Manish Jain','Neha Mishra'][i],
@@ -419,9 +445,9 @@ const ADMIN_MEMBERS = Array.from({ length: 20 }, (_, i) => ({
   phone: `98${String(10000000 + i * 1111111).substring(0, 8)}`,
   gender: i % 2 === 0 ? 'Male' : 'Female',
   address: 'Mumbai, Maharashtra',
-  branch: BRANCHES[i % 4]!.name,
-  planId: PLANS[i % 4]!.id,
-  plan: { id: PLANS[i % 4]!.id, name: PLANS[i % 4]!.name, tier: 'pro' },
+  branchId: BRANCHES[i % 4]!.id,
+  branchName: BRANCHES[i % 4]!.name,
+  planName: PLANS[i % 4]!.name,
   billingCycle: 'monthly',
   status: ['active', 'active', 'active', 'pending', 'expired'][i % 5],
   joinDate: `2024-0${(i % 9) + 1}-${String((i % 28) + 1).padStart(2, '0')}`,
@@ -465,6 +491,61 @@ const ADMIN_SALES_INITIAL_DATA = {
   storeSummary: ADMIN_STORE_SUMMARY
 };
 
+const ADMIN_PAYMENTS = ADMIN_MEMBERS.map((m, i) => ({
+  id: `pay${i + 1}`,
+  memberId: m.id,
+  amount: m.paidAmount,
+  method: ['UPI', 'Card', 'Cash'][i % 3],
+  status: 'COMPLETED',
+  invoiceNo: `INV-2025-${1000 + i}`,
+  paidAt: `2025-01-${String((i % 28) + 1).padStart(2, '0')}T10:00:00Z`,
+  member: { name: m.name, email: m.email, phone: m.phone, plan: { name: m.planName } }
+}));
+
+const EXPENSES = Array.from({ length: 15 }, (_, i) => ({
+  id: `exp${i + 1}`,
+  amount: 5000 + i * 1000,
+  category: ['Rent', 'Salaries', 'Utilities', 'Maintenance', 'Marketing'][i % 5],
+  branchId: BRANCHES[i % 4]!.id,
+  branchName: BRANCHES[i % 4]!.name,
+  date: `2025-01-${String((i % 28) + 1).padStart(2, '0')}`,
+  recordedBy: 'Admin',
+  vendor: ['XYZ Corp', 'City Power', 'Max Cleaners'][i % 3]
+}));
+
+const ADMIN_FINANCE_SUMMARY = {
+  totalRevenue: 4850000, monthlyRevenue: 850000, pendingAmount: 142000,
+  totalPayments: 1250,
+  totalExpenses: 1850000,
+  netProfit: 3000000,
+  revenueByMethod: { UPI: 250000, Cash: 150000, Card: 450000, NetBanking: 0 },
+  monthlyData: REVENUE_TREND.map(r => ({ month: r.month, revenue: r.revenue }))
+};
+
+const ADMIN_FINANCE_PNL = BRANCHES.map(b => ({
+  branchId: b.id,
+  branchName: b.name,
+  location: b.city,
+  revenue: b.revenue,
+  expenses: b.revenue * 0.4,
+  netProfit: b.revenue * 0.6,
+  marginPct: 60,
+  status: 'PROFITABLE',
+  momDelta: 12.5,
+  revenueBreakdown: { memberships: b.revenue * 0.7, ptSessions: b.revenue * 0.2, products: b.revenue * 0.1, other: 0 },
+  expenseBreakdown: { rent: b.revenue * 0.1, salaries: b.revenue * 0.15, utilities: b.revenue * 0.05, maintenance: b.revenue * 0.05, marketing: b.revenue * 0.05 }
+}));
+
+const ADMIN_PLANS_REVENUE = PLANS.map((p, i) => ({
+  id: p.id,
+  planName: p.name,
+  tier: ['Basic', 'Standard', 'Premium', 'VIP'][i % 4],
+  totalRevenue: p.price * p.membersCount,
+  activeSubscriptions: p.membersCount,
+  newSignups: 15,
+  renewalRate: 85.5
+}));
+
 export function getMockResponse(path: string): unknown {
   const p = path.toLowerCase();
 
@@ -475,7 +556,7 @@ export function getMockResponse(path: string): unknown {
   // Superadmin Specific
   if (p.includes('/superadmin/dashboard')) return ok(SUPERADMIN_DASHBOARD, 'Superadmin stats fetched');
   if (p.includes('/superadmin/branches') || p.includes('/branch')) return ok(SUPERADMIN_BRANCHES, 'Branches fetched');
-  if (p.includes('/superadmin/plans') || p.includes('/plan')) return ok(SUPERADMIN_PLANS, 'Plans fetched');
+  if (p.includes('/superadmin/plans')) return ok(SUPERADMIN_PLANS, 'Plans fetched');
   if (p.includes('/superadmin/invoices') || p.includes('/invoice')) return ok(SUPERADMIN_INVOICES, 'Invoices fetched');
   if (p.includes('/superadmin/coupons') || p.includes('/coupon')) return ok(SUPERADMIN_COUPONS, 'Coupons fetched');
   if (p.includes('/superadmin/messaging/messages')) return ok(MESSAGING_MESSAGES, 'Messages fetched');
@@ -483,12 +564,9 @@ export function getMockResponse(path: string): unknown {
   if (p.includes('/superadmin/messaging/tenants')) return ok(MESSAGING_TENANTS, 'Tenants fetched');
   if (p.includes('/superadmin/broadcast')) return ok(BROADCASTS, 'Broadcasts fetched');
   if (p.includes('/superadmin/reports/revenue')) return ok(REPORTS.revenue, 'Revenue fetched');
-    if (p.includes('/superadmin/reports/cancellations')) return ok(REPORTS.cancellations, 'Cancellations fetched');
-    if (p.includes('/superadmin/reports/health')) return ok(REPORTS.health, 'Health fetched');
-    if (p.includes('/superadmin/reports/revenue')) return ok(REPORTS.revenue, 'Revenue fetched');
   if (p.includes('/superadmin/reports/cancellations')) return ok(REPORTS.cancellations, 'Cancellations fetched');
   if (p.includes('/superadmin/reports/health')) return ok(REPORTS.health, 'Health fetched');
-  if (p.includes('/superadmin/reports') || p.includes('/report')) return ok(REPORTS, 'Reports fetched');
+  if (p.includes('/superadmin/reports')) return ok(REPORTS, 'Reports fetched');
   
   if (p.includes('/franchise')) return ok(FRANCHISES, 'Franchises fetched');
   if (p.includes('/onboarding')) return ok(ONBOARDING, 'Onboarding data fetched');
@@ -575,10 +653,33 @@ export function getMockResponse(path: string): unknown {
   }
   // Admin Module Specific
   if (p.includes('/admin/dashboard'))    return ok(DASHBOARD_STATS, 'Admin dashboard stats fetched');
-  if (p.includes('/admin/reports') || (p.includes('/admin') && p.includes('report'))) return ok(ADMIN_REPORTS, 'Admin reports fetched');
+
+  // Admin Sales
+  if (p.includes('/admin/sales/overview')) return ok({ monthlyRevenue: ADMIN_SALES_INITIAL_DATA.overviewData }, 'Sales overview fetched');
+  if (p.includes('/admin/sales/membership-report')) return ok({ report: ADMIN_SALES_INITIAL_DATA.membershipReport, totals: ADMIN_SALES_INITIAL_DATA.membershipTotals }, 'Sales membership report fetched');
+  if (p.includes('/admin/sales/pending-payments')) return ok({ members: ADMIN_SALES_INITIAL_DATA.pendingPayments, total: ADMIN_SALES_INITIAL_DATA.pendingTotal }, 'Sales pending payments fetched');
+  if (p.includes('/admin/sales/all-memberships')) return ok({ members: ADMIN_SALES_INITIAL_DATA.allMemberships, total: ADMIN_SALES_INITIAL_DATA.allMembershipsTotal }, 'Sales all memberships fetched');
+
+  // Admin Finance
+  if (p.includes('/fetchpayments')) return ok({ payments: ADMIN_PAYMENTS, total: ADMIN_PAYMENTS.length }, 'Payments fetched');
+  if (p.includes('/fetchexpenses')) return ok(EXPENSES, 'Expenses fetched');
+  if (p.includes('/admin/finance/summary')) return ok(ADMIN_FINANCE_SUMMARY, 'Finance summary fetched');
+  if (p.includes('/admin/finance/pnl')) return ok(ADMIN_FINANCE_PNL, 'Pnl comparison fetched');
+
+  // Admin Plans
+  if (p.includes('/admin/plans/fetchplanrevenue')) return ok(ADMIN_PLANS_REVENUE, 'Plan revenue fetched');
+  if (p.includes('/admin/plans')) return ok(SUPERADMIN_PLANS, 'Admin plans fetched');
+
+  // Admin Reports
+  if (p.includes('/admin/reports/fetchreportdata')) return ok(ADMIN_REPORTS, 'Admin reports fetched');
+
+  if (p.includes('/admin/reports')) return ok(ADMIN_REPORTS, 'Admin reports fetched');
   if (p.includes('/admin/sales') || p.includes('/admin/finance')) return ok(ADMIN_SALES_INITIAL_DATA, 'Admin sales fetched');
+  if (p.includes('/admin/members/summary')) return ok(ADMIN_MEMBERS_SUMMARY, 'Admin members summary fetched');
   if (p.includes('/admin/members'))      return ok(ADMIN_MEMBERS, 'Admin members fetched');
+  if (p.includes('/admin/attendance/summary')) return ok(ADMIN_ATTENDANCE_SUMMARY, 'Admin attendance summary fetched');
   if (p.includes('/admin/attendance'))   return ok(ATTENDANCE, 'Admin attendance fetched');
+  if (p.includes('/admin/hr'))           return ok({ staff: STAFF, total: STAFF.length }, 'Admin hr fetched');
 
   // Admin / Manager Dashboard
   if (p.includes('/dashboard'))    return ok(DASHBOARD_STATS);

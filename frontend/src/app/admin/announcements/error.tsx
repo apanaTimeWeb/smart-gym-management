@@ -9,7 +9,7 @@ export default function AdminAnnouncementsError({ reset }: { reset: () => void }
       <p className="text-foreground font-semibold">Failed to load Announcements</p>
       <button
         onClick={reset}
-        className="px-5 py-2 bg-primary text-white rounded-xl text-sm font-semibold hover:bg-primary-hover motion-safe:transition-colors"
+        className="px-5 py-2 bg-primary text-primary-foreground rounded-xl text-sm font-semibold hover:bg-primary-hover motion-safe:transition-colors"
       >
         Try Again
       </button>

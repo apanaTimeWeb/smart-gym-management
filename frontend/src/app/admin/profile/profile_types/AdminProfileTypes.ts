@@ -1,3 +1,4 @@
+import type { UseFormReturn } from 'react-hook-form';
 // RESPONSIBILITY: TypeScript types for the Admin Profile module.
 
 export interface AdminProfileData {
@@ -22,5 +23,14 @@ export interface UpdateAdminPasswordPayload {
   confirmPassword: string;
 }
 
-export type ProfileFetchState = 'idle' | 'loading' | 'success' | 'error';
 export type ProfileTab = 'personal' | 'security';
+
+export type PasswordFieldName = 'currentPassword' | 'newPassword' | 'confirmPassword';
+
+export interface AdminPasswordFieldProps {
+  label: string;
+  name: PasswordFieldName;
+  form: UseFormReturn<UpdateAdminPasswordPayload>;
+  visible: boolean;
+  onToggle: () => void;
+}

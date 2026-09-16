@@ -1,4 +1,5 @@
 "use client";
+import { formatDecimal } from '@/lib/formatters';
 // RESPONSIBILITY: Renders sortable table displaying detailed staff performance metrics.
 
 import { ChevronDown, ChevronUp, ChevronsUpDown } from 'lucide-react';
@@ -101,7 +102,7 @@ export default function AdminHrPerformanceTable({
 
                     {/* Rating */}
                     <td className="px-4 py-3.5 text-sm font-bold text-foreground">
-                      {staff.rating.toFixed(1)} <span className="text-warning text-xs">★</span>
+                      {formatDecimal(staff.rating)} <span className="text-warning text-xs">★</span>
                     </td>
 
                     {/* Status Badge */}

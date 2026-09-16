@@ -49,7 +49,7 @@ export default function SuperadminFeatureRolloutModal({ isOpen, onClose, flag, o
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 z-40 flex items-center justify-center p-4 backdrop-blur-sm motion-safe:animate-in motion-safe:fade-in" role="dialog" aria-modal="true">
+    <div className="fixed inset-0 bg-overlay/80 z-40 flex items-center justify-center p-4 backdrop-blur-sm motion-safe:animate-in motion-safe:fade-in" role="dialog" aria-modal="true">
       <div className="bg-overlay border border-border rounded-2xl w-full max-w-md shadow-2xl overflow-hidden flex flex-col motion-safe:animate-in motion-safe:zoom-in-95">
         <div className="flex items-center justify-between px-6 py-5 border-b border-border">
           <div>

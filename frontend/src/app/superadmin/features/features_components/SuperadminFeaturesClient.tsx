@@ -1,5 +1,6 @@
 'use client';
 // RESPONSIBILITY: Renders the Product Management page — feature flag toggles and release note publishing.
+import { formatDate, formatDateTime } from '@/lib/formatters';
 // Fetches data via useSuperadminFeaturesData hook. Mutations (toggle, publish) dispatched from here.
 // No raw API calls — all async state goes through the hook (Rule 6).
 //
@@ -50,7 +51,7 @@ export default function SuperadminFeaturesClient() {
       if (res.data) {
         // setData removed((prev: { flags: FeatureFlag[]; notes: ReleaseNote[]; } | null) => prev ? { ...prev, notes: [res.data, ...prev.notes] } : prev);
         reset();
-        toast.success(res.message || 'Release note published successfully', { id: 'release-note-published-successfully' });
+        toast.success(res.message, { id: 'release-note-published-successfully' });
       }
     } catch (err: unknown) {
       const errorMsg = err instanceof Error ? err.message : 'Failed to publish release note';
@@ -66,7 +67,7 @@ export default function SuperadminFeaturesClient() {
       <div className="h-96 bg-skeleton-base rounded-xl border border-border" />
     </div>
   );
-  if (error || !data) return <div className="p-8 text-center text-danger font-medium">Error loading data.</div>;
+  if (error || !data) return <div className="p-8 text-center text-danger font-medium">{error instanceof Error ? error.message : String(error)}</div>;
 
   const { flags: DUMMY_FEATURE_FLAGS, notes: DUMMY_RELEASE_NOTES } = data as { flags: FeatureFlag[]; notes: ReleaseNote[] };
 
@@ -78,7 +79,7 @@ export default function SuperadminFeaturesClient() {
   const handleToggle = async (flagId: string) => {
     try {
       const res = await toggleFlag(flagId);
-      toast.success(res.message || 'Feature flag toggled', { id: 'feature-flag-toggled' });
+      toast.success(res.message, { id: 'feature-flag-toggled' });
     } catch (e: unknown) {
       const errorMsg = e instanceof Error ? e.message : 'Failed to toggle feature flag';
       toast.error(errorMsg, { id: 'failed-to-toggle-feature-flag' });
@@ -89,7 +90,7 @@ export default function SuperadminFeaturesClient() {
     if (!rolloutFlag) return;
     try {
       const res = await updateFlag({ id: rolloutFlag.id, body: { enabledTenantIds: tenantIds } });
-      toast.success(res.message || 'Canary rollout updated successfully', { id: 'canary-rollout-updated-successfully' });
+      toast.success(res.message, { id: 'canary-rollout-updated-successfully' });
     } catch (e: unknown) {
       const errorMsg = e instanceof Error ? e.message : 'Failed to update canary rollout';
       toast.error(errorMsg, { id: 'failed-to-update-canary-rollout' });
@@ -210,7 +211,7 @@ export default function SuperadminFeaturesClient() {
                 </div>
                 <p className="text-secondary text-sm mb-4 leading-relaxed">{note.content}</p>
                 <div className="text-xs text-disabled font-medium">
-                  {note.isPublished ? `Published on ${new Date(note.date).toLocaleDateString()}` : 'Not visible to gyms yet'}
+                  {note.isPublished ? `Published on ${formatDate(note.date)}` : 'Not visible to gyms yet'}
                 </div>
               </div>
             ))}

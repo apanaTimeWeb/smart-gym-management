@@ -69,13 +69,6 @@ export const ADMIN_NAV_GROUPS = [
   }
 ];
 
-// TODO: Replace with real API call once Notifications backend module is built.
-export const ADMIN_PLACEHOLDER_NOTIFICATIONS = [
- { id: 1, text: 'New member Amit registered', time: '5m ago', unread: true },
- { id: 2, text: 'Payment received from Rahul', time: '1h ago', unread: false },
- { id: 3, text: 'Pooja requested a trial session', time: '2h ago', unread: false },
-];
-
 export const GYM_DETAILS = {
   name: env.NEXT_PUBLIC_GYM_NAME,
   phone: env.NEXT_PUBLIC_GYM_PHONE,
@@ -89,3 +82,6 @@ export const STATUS_STYLES: Record<string, string> = {
   pending: 'text-warning bg-warning-bg border-warning/20',
   frozen: 'text-info bg-info-bg border-info/20',
 };
+
+export const ADMIN_MONITORING_LOG_URL = '/admin/system/log';
+export const ADMIN_DASHBOARD_URL = '/admin/dashboard';

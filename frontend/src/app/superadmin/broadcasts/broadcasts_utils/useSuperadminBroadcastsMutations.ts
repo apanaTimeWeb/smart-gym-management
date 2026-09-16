@@ -1,3 +1,4 @@
+'use client';
 // DATA FLOW: feature API/schema → hook/context → useSuperadminBroadcastsMutations consumers.
 'use client';
 // RESPONSIBILITY: Encapsulates functionality for useSuperadminBroadcastsMutations.ts
@@ -36,7 +37,7 @@ export const useSuperadminBroadcastsMutations = ({
         form.reset();
         const isSendingNow = variables.status === 'SENT';
         if (!isSendingNow) {
-            toast.success(res.message);
+            toast.success(res.message, { id: 'superadmin-toast-31b3e26cea' });
         } else {
             const targetGymIds = res.data.targetGymIds || [];
             const selectedGyms = gyms?.filter(g => targetGymIds.includes(g.id)) || [];
@@ -46,11 +47,11 @@ export const useSuperadminBroadcastsMutations = ({
             setQueueModalOpen(true);
         }
       } else {
-        toast.error(res.message);
+        toast.error(res.message, { id: 'superadmin-toast-a262452314' });
       }
     },
     onError: (error: Error) => {
-        toast.error(error.message);
+        toast.error(error.message, { id: 'superadmin-toast-703cf4178b' });
     }
   });
 
@@ -64,7 +65,7 @@ export const useSuperadminBroadcastsMutations = ({
         form.reset();
         const isSendingNow = variables.data.status === 'SENT';
         if (!isSendingNow) {
-            toast.success(res.message);
+            toast.success(res.message, { id: 'superadmin-toast-f944ba3197' });
         } else {
             const targetGymIds = res.data.targetGymIds || [];
             const selectedGyms = gyms?.filter(g => targetGymIds.includes(g.id)) || [];
@@ -74,11 +75,11 @@ export const useSuperadminBroadcastsMutations = ({
             setQueueModalOpen(true);
         }
       } else {
-        toast.error(res.message);
+        toast.error(res.message, { id: 'superadmin-toast-158990c2be' });
       }
     },
     onError: (error: Error) => {
-        toast.error(error.message);
+        toast.error(error.message, { id: 'superadmin-toast-46f7e97dc8' });
     }
   });
 
@@ -87,13 +88,13 @@ export const useSuperadminBroadcastsMutations = ({
     onSuccess: (res: ApiResponse<void>, id: string) => {
       if (res.success) {
         updateBroadcasts(prev => prev.filter(b => b.id !== id));
-        toast.success(res.message);
+        toast.success(res.message, { id: 'superadmin-toast-1ab4bc4752' });
       } else {
-        toast.error(res.message);
+        toast.error(res.message, { id: 'superadmin-toast-3edb8dabdf' });
       }
     },
     onError: (error: Error) => {
-        toast.error(error.message);
+        toast.error(error.message, { id: 'superadmin-toast-809e8c4528' });
     }
   });
 

@@ -1,4 +1,5 @@
 "use client";
+import { formatCurrency } from '@/lib/formatters';
 // RESPONSIBILITY: Read-only profile view for Staff/Managers, showing details and assigned branches.
 
 import React from 'react';
@@ -30,7 +31,7 @@ export default function AdminHrStaffProfileModal() {
     : [editData.branch || ''];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-overlay backdrop-blur-sm">
       <div className="bg-card w-full max-w-3xl rounded-2xl shadow-2xl border border-border overflow-hidden flex flex-col max-h-screen">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-border bg-input/30">
@@ -42,7 +43,7 @@ export default function AdminHrStaffProfileModal() {
           </div>
           <button 
             onClick={() => setShowProfileModal(false)}
-            className="p-2 rounded-full hover:bg-input transition-colors text-secondary hover:text-foreground"
+            className="p-2 rounded-full hover:bg-input motion-safe:transition-colors text-secondary hover:text-foreground"
           >
             <X size={20} />
           </button>
@@ -65,7 +66,7 @@ export default function AdminHrStaffProfileModal() {
                 {isManager && (
                   <button
                     onClick={() => openEdit(editData as Staff)}
-                    className="px-4 py-2 bg-primary/10 hover:bg-primary/20 text-primary font-semibold text-sm rounded-xl transition-colors flex items-center gap-2"
+                    className="px-4 py-2 bg-primary/10 hover:bg-primary/20 text-primary font-semibold text-sm rounded-xl motion-safe:transition-colors flex items-center gap-2"
                   >
                     <Edit2 size={14} />
                     Edit Profile
@@ -107,19 +108,19 @@ export default function AdminHrStaffProfileModal() {
                 <div className="flex items-center gap-3 bg-input/50 p-3 rounded-xl border border-border/50">
                   <IndianRupee size={16} className="text-secondary" />
                   <span className="text-sm font-medium text-foreground">
-                    Salary: {(editData.salary || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}
+                    Salary: {formatCurrency(editData.salary || 0)}
                   </span>
                 </div>
                 <div className="flex items-center gap-3 bg-input/50 p-3 rounded-xl border border-danger/50">
                   <IndianRupee size={16} className="text-danger" />
                   <span className="text-sm font-medium text-danger">
-                    Advance: {(editData.advanceSalary || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}
+                    Advance: {formatCurrency(editData.advanceSalary || 0)}
                   </span>
                 </div>
                 <div className="flex items-center gap-3 bg-input/50 p-3 rounded-xl border border-warning/50">
                   <IndianRupee size={16} className="text-warning" />
                   <span className="text-sm font-medium text-warning">
-                    Due: {(editData.currentDue || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}
+                    Due: {formatCurrency(editData.currentDue || 0)}
                   </span>
                 </div>
                 <div className="flex items-center gap-3 bg-input/50 p-3 rounded-xl border border-border/50">
@@ -161,7 +162,7 @@ export default function AdminHrStaffProfileModal() {
                     const isPrimary = editData.primaryBranchId === bId || (!editData.primaryBranchId && bId === editData.branch);
                     
                     return (
-                      <tr key={bId} className="bg-card hover:bg-input/30 transition-colors">
+                      <tr key={bId} className="bg-card hover:bg-input/30 motion-safe:transition-colors">
                         <td className="px-4 py-3 text-sm font-medium text-foreground">
                           {info.name}
                         </td>

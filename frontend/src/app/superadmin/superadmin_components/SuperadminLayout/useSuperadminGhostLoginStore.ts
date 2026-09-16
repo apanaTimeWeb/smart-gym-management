@@ -1,9 +1,12 @@
+'use client';
 // RESPONSIBILITY: Zustand store for managing the active ghost-login (tenant impersonation) session.
 // Stores which tenant is being impersonated and provides start/exit actions.
 // DATA FLOW: useSuperadminGymsTable (start) → useSuperadminGhostLoginStore → SuperadminGhostLoginBanner (exit)
 
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
+import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
+import { SUPERADMIN_STORAGE_KEYS } from '@/app/superadmin/superadmin_storage_constants';
 
 export interface GhostTenant {
   id: string;
@@ -27,17 +30,17 @@ export const useSuperadminGhostLoginStore = create<SuperadminGhostLoginState>()(
         set({ ghostTenant: null });
         
         try {
-          await fetch('/auth/exit-ghost-login', {
+          await fetch(SuperadminUrlConfig.INFRASTRUCTURE.GHOST_LOGIN_EXIT_PROXY, {
             method: 'POST',
           });
         } catch {}
 
         // Redirect back to superadmin gyms list after exiting impersonation
-        window.location.href = '/superadmin/gyms';
+        window.location.href = SuperadminUrlConfig.PAGES.GYMS;
       },
     }),
     {
-      name: 'gymsmart-ghost-login',
+      name: SUPERADMIN_STORAGE_KEYS.GHOST_LOGIN_SESSION_V1,
       storage: createJSONStorage(() => sessionStorage),
     }
   )

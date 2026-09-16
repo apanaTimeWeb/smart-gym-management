@@ -71,7 +71,9 @@ export default function SuperadminTicketsHeader({
                   <option value="ALL">All Statuses</option>
                   <option value="OPEN">Open</option>
                   <option value="IN_PROGRESS">In Progress</option>
+                  <option value="WAITING">Waiting</option>
                   <option value="RESOLVED">Resolved</option>
+                  <option value="CLOSED">Closed</option>
                 </select>
               </div>
               <div className="flex flex-col gap-2">
@@ -86,7 +88,9 @@ export default function SuperadminTicketsHeader({
                 >
                   <option value="ALL">All Priorities</option>
                   <option value="LOW">Low</option>
+                  <option value="NORMAL">Normal</option>
                   <option value="MEDIUM">Medium</option>
+                  <option value="URGENT">Urgent</option>
                   <option value="HIGH">High</option>
                   <option value="CRITICAL">Critical</option>
                 </select>

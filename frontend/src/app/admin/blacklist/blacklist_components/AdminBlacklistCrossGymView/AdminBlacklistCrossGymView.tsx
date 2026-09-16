@@ -4,15 +4,15 @@
 
 import { Building2, Globe, ArrowUpRight, Trash2 } from 'lucide-react';
 import { useAdminBlacklistLogic } from '@/app/admin/blacklist/blacklist_context/useAdminBlacklistLogic';
-import type { BlacklistedMember } from '@/app/admin/blacklist/blacklist_types/blacklist_types';
+import type { BlacklistedMember } from '@/app/admin/blacklist/blacklist_types/AdminBlacklistTypes';
 import { AdminTableSkeleton } from '@/app/admin/admin_components/AdminShared/AdminTableSkeleton';
 
 const HEADERS = ['Member', 'Contact', 'Reason', 'Banned At Branches', 'Blacklisted By', 'Date', 'Actions'];
 
 export default function AdminBlacklistCrossGymView() {
-  const { gymSpecificEntries, fetchState, propagateToAllBranches, removeFromBlacklist, propagating } = useAdminBlacklistLogic();
+  const { gymSpecificEntries, status, propagateToAllBranches, removeFromBlacklist, propagating } = useAdminBlacklistLogic();
 
-  if (fetchState === 'loading') return <AdminTableSkeleton rows={4} cols={HEADERS.length} />;
+  if (status === 'pending') return <AdminTableSkeleton rows={4} cols={HEADERS.length} />;
 
   if (gymSpecificEntries.length === 0) {
     return (

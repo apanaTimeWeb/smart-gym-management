@@ -1,3 +1,5 @@
+"use client";
+
 // DATA FLOW: feature API/schema → hook/context → useAdminHrPerformanceLogic consumers.
 // RESPONSIBILITY: Logic layer for Staff Performance Dashboard. Handles API fetching,
 // client-side sorting, and deriving KPI aggregates.
@@ -19,7 +21,7 @@ export function useAdminHrPerformanceLogic() {
   const [sortDir, setSortDir] = useState<PerformanceSortDirection>('desc');
 
   const { data: rawResponse, isLoading, isError } = useQuery({
-    queryKey: ['admin_hr_performance', period],
+    queryKey: ['admin', 'hr', 'performance', period],
     queryFn: () => hrApi.fetchStaffPerformance(period),
   });
 

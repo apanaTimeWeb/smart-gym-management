@@ -1,4 +1,5 @@
 "use client";
+// DATA FLOW: Admin module UI → local UI state / feature hooks → approved global infrastructure or module-owned APIs.
 // RESPONSIBILITY: Provides UI orchestration state to the HR module hierarchy. Async data is managed in useAdminHrLogic.
 
 import React, { createContext, useContext, useMemo } from 'react';
@@ -14,7 +15,7 @@ export function HrProvider({ children, initialData }: { children: React.ReactNod
    staff: logic.staff,
    payrolls: logic.payrolls,
    summary: logic.summary,
-   fetchState: logic.fetchState,
+   status: logic.status,
    error: logic.error,
 
    showToast: logic.showToast,
@@ -61,7 +62,7 @@ export function HrProvider({ children, initialData }: { children: React.ReactNod
    logic.staff,
    logic.payrolls,
    logic.summary,
-   logic.fetchState,
+   logic.status,
    logic.error,
    logic.search,
    logic.debouncedSearch,

@@ -2,6 +2,7 @@
 // RESPONSIBILITY: Renders the 7-day attendance trend bar chart using ApexCharts. Read-only, no mutations.
 
 import dynamic from 'next/dynamic';
+import { ADMIN_CHART_THEME } from '@/app/admin/admin_utils/AdminChartThemeTokens';
 import { useAdminAttendanceLogic } from '@/app/admin/attendance/attendance_context/useAdminAttendanceLogic';
 
 const ReactApexChart = dynamic(() => import('react-apexcharts'), { ssr: false });
@@ -22,18 +23,18 @@ export default function AdminAttendanceTrendChart() {
     dataLabels: { enabled: false },
     xaxis: {
       categories: trend.map((t) => t.date),
-      labels: { style: { colors: '#A1A1AA', fontSize: '12px' } },
+      labels: { style: { colors: ADMIN_CHART_THEME.textSecondary, fontSize: '12px' } },
       axisBorder: { show: false },
       axisTicks: { show: false },
     },
     yaxis: {
-      labels: { style: { colors: '#A1A1AA', fontSize: '12px' } },
+      labels: { style: { colors: ADMIN_CHART_THEME.textSecondary, fontSize: '12px' } },
     },
     grid: {
-      borderColor: 'rgba(255,255,255,0.05)',
+      borderColor: ADMIN_CHART_THEME.grid,
       strokeDashArray: 4,
     },
-    colors: ['#FACC15'],
+    colors: [ADMIN_CHART_THEME.primary],
     tooltip: {
       theme: 'dark',
       y: { formatter: (val: number) => `${val} check-ins` },

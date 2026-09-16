@@ -17,7 +17,7 @@ export default function SuperadminTicketsClient() {
     try {
       const { ticketsApi } = await import('@/app/superadmin/tickets/superadmin_tickets_api/superadmin_tickets_api');
       const res = await ticketsApi.closeTicket(ticketId);
-      toast.success(res.message || 'Ticket closed.', { id: 'ticket-closed' });
+      toast.success(res.message, { id: 'ticket-closed' });
     } catch (err: unknown) {
       const errorMsg = err instanceof Error ? err.message : 'Failed to close ticket.';
       toast.error(errorMsg, { id: 'failed-to-close-ticket' });
@@ -34,7 +34,7 @@ export default function SuperadminTicketsClient() {
     try {
       const { ticketsApi } = await import('@/app/superadmin/tickets/superadmin_tickets_api/superadmin_tickets_api');
       const res = await ticketsApi.assignTicket(assignModalTicketId, assigneeInput.trim());
-      toast.success(res.message || `Ticket assigned to ${assigneeInput.trim()}.`, { id: 'ticket-assigned-to-assigneeinput-trim' });
+      toast.success(res.message, { id: 'ticket-assigned-to-assigneeinput-trim' });
     } catch (err: unknown) {
       const errorMsg = err instanceof Error ? err.message : 'Failed to assign ticket.';
       toast.error(errorMsg, { id: 'failed-to-assign-ticket' });
@@ -74,7 +74,7 @@ export default function SuperadminTicketsClient() {
       <div className="h-96 bg-card rounded-xl border border-border" />
     </div>
   );
-  if (error) return <div className="p-8 text-center text-danger">Error loading data.</div>;
+  if (error) return <div className="p-8 text-center text-danger">{error}</div>;
 
   return (
     <div className="space-y-6">
@@ -116,7 +116,7 @@ export default function SuperadminTicketsClient() {
 
       {/* Assign Ticket inline modal — replaces forbidden prompt() */}
       {assignModalTicketId && (
-        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+        <div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 backdrop-blur-sm p-4">
           <div className="bg-card w-full max-w-sm rounded-2xl shadow-xl border border-border p-6 space-y-4">
             <h2 className="text-base font-bold text-foreground">Assign Ticket</h2>
             <p className="text-sm text-secondary">Enter the name or email of the team member to assign this ticket to.</p>

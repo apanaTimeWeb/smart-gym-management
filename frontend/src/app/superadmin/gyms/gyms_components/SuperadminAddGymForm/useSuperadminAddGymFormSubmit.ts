@@ -1,5 +1,5 @@
-// DATA FLOW: feature API/schema → hook/context → useSuperadminAddGymFormSubmit consumers.
 'use client';
+// DATA FLOW: feature API/schema → hook/context → useSuperadminAddGymFormSubmit consumers.
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
@@ -100,13 +100,13 @@ export function useSuperadminAddGymFormSubmit() {
       addLog('Provisioning complete! Redirecting...');
       await delay(PROVISIONING_DELAYS.REDIRECT);
 
-      toast.success(response.message);
+      toast.success(response.message, { id: 'superadmin-toast-6e9918f105' });
       router.push(GymsUrlConfig.PAGES.MAIN);
     } catch (e: unknown) {
       if (waWindow) waWindow.close();
       const errMsg = e instanceof Error ? e.message : 'An error occurred';
       addLog(`Error: ${errMsg}`);
-      toast.error(errMsg);
+      toast.error(errMsg, { id: 'superadmin-toast-73ef5e9646' });
     } finally {
       setIsProvisioning(false);
     }

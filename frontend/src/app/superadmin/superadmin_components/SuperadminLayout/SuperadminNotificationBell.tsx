@@ -1,29 +1,18 @@
 'use client';
 
+// RESPONSIBILITY: Renders the Superadmin feature UI for SuperadminNotificationBell. Owns presentation and user interaction orchestration only; business data access remains in the feature API/query layer.
 // RESPONSIBILITY: Global Notification Bell for Superadmin. Displays real-time alerts.
 // DATA FLOW: Mock data -> SuperadminNotificationBell. Includes popover logic.
 
 import { useState, useRef, useEffect } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Bell, Info, AlertTriangle, CheckCheck } from 'lucide-react';
 import Link from 'next/link';
 
 import { MessagingUrlConfig } from '@/app/superadmin/messaging/superadmin_messaging_url_config';
-
-type NotificationType = 'INFO' | 'WARNING' | 'CRITICAL';
-interface SuperadminNotification {
-  id: string;
-  title: string;
-  body: string;
-  type: NotificationType;
-  read: boolean;
-  createdAt: string;
-}
-
-const MOCK_NOTIFICATIONS: SuperadminNotification[] = [
-  { id: 'notif-1', title: 'New tenant signup', body: 'FitZone Indiranagar just signed up for a trial.', type: 'INFO', read: false, createdAt: '2024-05-22T10:00:00Z' },
-  { id: 'notif-2', title: 'Payment failed', body: 'Invoice #INV-0042 for PowerHouse Gym failed to process.', type: 'WARNING', read: false, createdAt: '2024-05-21T14:30:00Z' },
-  { id: 'notif-3', title: 'System alert: High DB load', body: 'Database CPU exceeded 85% for 10 minutes.', type: 'CRITICAL', read: false, createdAt: '2024-05-21T03:15:00Z' },
-];
+import { superadminMessagingApi } from '@/app/superadmin/messaging/messaging_api/superadmin_messaging_api';
+import type { SuperadminNotification, NotificationType } from '@/app/superadmin/messaging/messaging_types/superadmin_messaging_types';
+import { formatDateTime } from '@/lib/formatters';
 
 function NotifIcon({ type }: { type: NotificationType }) {
   if (type === 'INFO') return <Info className="w-5 h-5 text-info shrink-0" strokeWidth={2}  />;
@@ -33,7 +22,14 @@ function NotifIcon({ type }: { type: NotificationType }) {
 
 export default function SuperadminNotificationBell() {
   const [open, setOpen] = useState(false);
-  const [notifications, setNotifications] = useState<SuperadminNotification[]>(MOCK_NOTIFICATIONS);
+  const notificationsQuery = useQuery({
+    queryKey: ['superadmin', 'messaging', 'notifications'],
+    queryFn: () => superadminMessagingApi.fetchNotifications(),
+  });
+  const notifications = notificationsQuery.data?.data ?? [];
+  const queryClient = useQueryClient();
+  const markAllReadMutation = useMutation({ mutationFn: () => superadminMessagingApi.markAllNotificationsRead(), onSuccess: () => { void queryClient.invalidateQueries({ queryKey: ['superadmin', 'messaging', 'notifications'] }); } });
+  const markReadMutation = useMutation({ mutationFn: (id: string) => superadminMessagingApi.markNotificationRead(id), onSuccess: () => { void queryClient.invalidateQueries({ queryKey: ['superadmin', 'messaging', 'notifications'] }); } });
   const popoverRef = useRef<HTMLDivElement>(null);
 
   const unreadCount = notifications.filter(n => !n.read).length;
@@ -49,11 +45,11 @@ export default function SuperadminNotificationBell() {
   }, []);
 
   function handleMarkAllRead() {
-    setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+    markAllReadMutation.mutate();
   }
 
   function handleMarkRead(id: string) {
-    setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
+    markReadMutation.mutate(id);
   }
 
   return (
@@ -72,7 +68,7 @@ export default function SuperadminNotificationBell() {
       </button>
 
       {open && (
-        <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-popover rounded-2xl shadow-2xl shadow-black/50 border border-border overflow-hidden z-30 motion-safe:animate-superadmin-fade-in-up">
+        <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-popover rounded-2xl shadow-2xl border border-border overflow-hidden z-30 motion-safe:animate-superadmin-fade-in-up">
           <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-header">
             <div>
               <h3 className="text-sm font-bold text-foreground">Notifications</h3>
@@ -80,7 +76,7 @@ export default function SuperadminNotificationBell() {
             </div>
             {unreadCount > 0 && (
               <button
-                onClick={handleMarkAllRead}
+                onClick={handleMarkAllRead} disabled={markAllReadMutation.isPending}
                 className="text-xs font-semibold text-primary hover:text-primary-hover motion-safe:transition-colors flex items-center gap-1 focus-visible:outline-none focus-visible:underline"
               >
                 <CheckCheck className="w-3.5 h-3.5" /> Mark all read
@@ -108,7 +104,7 @@ export default function SuperadminNotificationBell() {
                           {notif.title}
                         </p>
                         <span className="text-xs text-secondary whitespace-nowrap shrink-0">
-                          {new Date(notif.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                          {formatDateTime(notif.createdAt)}
                         </span>
                       </div>
                       <p className="text-xs text-secondary line-clamp-2">

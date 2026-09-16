@@ -1,3 +1,4 @@
+'use client';
 // DATA FLOW: feature API/schema → hook/context → useSuperadminProfilePage consumers.
 'use client';
 // RESPONSIBILITY: Encapsulates functionality for useSuperadminProfilePage.ts
@@ -27,20 +28,20 @@ export function useSuperadminProfilePage() {
     mutationFn: (payload: UpdateSuperadminProfilePayload) => superadminProfileApi.updateProfile(payload),
     onSuccess: (res) => {
       queryClient.invalidateQueries({ queryKey: ['superadmin', 'profile'] });
-      toast.success(res.message);
+      toast.success(res.message, { id: 'superadmin-toast-2b82cf8178' });
     },
     onError: (err: Error) => {
-      toast.error(err.message);
+      toast.error(err.message, { id: 'superadmin-toast-2e6ebe5e88' });
     }
   });
 
   const updatePasswordMutation = useMutation({
     mutationFn: (payload: UpdateSuperadminPasswordPayload) => superadminProfileApi.updatePassword(payload),
     onSuccess: (res) => {
-      toast.success(res.message);
+      toast.success(res.message, { id: 'superadmin-toast-3cd3251f3d' });
     },
     onError: (err: Error) => {
-      toast.error(err.message);
+      toast.error(err.message, { id: 'superadmin-toast-baed898724' });
     }
   });
 
@@ -48,10 +49,10 @@ export function useSuperadminProfilePage() {
     mutationFn: (payload: Toggle2FAPayload) => superadminProfileApi.toggle2FA(payload),
     onSuccess: (res) => {
       queryClient.invalidateQueries({ queryKey: ['superadmin', 'profile'] });
-      toast.success(res.message);
+      toast.success(res.message, { id: 'superadmin-toast-770426e425' });
     },
     onError: (err: Error) => {
-      toast.error(err.message);
+      toast.error(err.message, { id: 'superadmin-toast-4a06ecff30' });
     }
   });
 

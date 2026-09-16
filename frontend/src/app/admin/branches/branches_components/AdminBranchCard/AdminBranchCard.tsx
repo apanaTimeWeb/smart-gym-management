@@ -4,7 +4,7 @@ import { Building2, TrendingUp, TrendingDown, Users, Activity, ChevronRight, Log
 import { useAdminBranchesLogic } from "@/app/admin/branches/branches_context/useAdminBranchesLogic";
 import { formatCurrency } from "@/lib/formatters";
 import { useAdminImpersonationStore } from "@/app/admin/admin_store/useAdminImpersonationStore";
-import type { Branch } from "@/app/admin/branches/branches_types/branches_types";
+import type { Branch } from "@/app/admin/branches/branches_types/AdminBranchesTypes";
 
 function AdminBranchCardSkeleton() {
   return (
@@ -52,7 +52,7 @@ export default function AdminBranchCard() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {(branches as Branch[]).map((branch) => (
-        <div key={branch.id} className="bg-card border border-border rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow">
+        <div key={branch.id} className="bg-card border border-border rounded-xl p-5 shadow-sm hover:shadow-md motion-safe:transition-shadow">
           <div className="flex items-start gap-4">
             <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0 text-primary"><Building2 size={24} /></div>
             <div>
@@ -61,25 +61,25 @@ export default function AdminBranchCard() {
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3 mt-6">
-            <button onClick={() => openDetail(branch, "revenue")} className="bg-input/50 hover:bg-success/10 hover:border-success/40 border border-transparent rounded-xl p-3 transition-all duration-200 text-left group">
+            <button onClick={() => openDetail(branch, "revenue")} className="bg-input/50 hover:bg-success/10 hover:border-success/40 border border-transparent rounded-xl p-3 motion-safe:transition-all motion-safe:duration-200 text-left group">
               <span className="text-xs font-medium text-secondary flex items-center gap-1.5 mb-1"><TrendingUp size={12} className="text-success" /> Revenue</span>
-              <div className="font-bold text-foreground group-hover:text-success transition-colors">{formatCurrency(branch.revenue * multiplier)}</div>
-              <div className="flex items-center gap-0.5 mt-1 text-success opacity-0 group-hover:opacity-100 transition-opacity"><span className="text-xs">View details</span><ChevronRight size={11} /></div>
+              <div className="font-bold text-foreground group-hover:text-success motion-safe:transition-colors">{formatCurrency(branch.revenue * multiplier)}</div>
+              <div className="flex items-center gap-0.5 mt-1 text-success opacity-100 lg:opacity-0 lg:group-hover:opacity-100 motion-safe:transition-opacity"><span className="text-xs">View details</span><ChevronRight size={11} /></div>
             </button>
-            <button onClick={() => openDetail(branch, "expenses")} className="bg-input/50 hover:bg-danger/10 hover:border-danger/40 border border-transparent rounded-xl p-3 transition-all duration-200 text-left group">
+            <button onClick={() => openDetail(branch, "expenses")} className="bg-input/50 hover:bg-danger/10 hover:border-danger/40 border border-transparent rounded-xl p-3 motion-safe:transition-all motion-safe:duration-200 text-left group">
               <span className="text-xs font-medium text-secondary flex items-center gap-1.5 mb-1"><TrendingDown size={12} className="text-danger" /> Expenses</span>
-              <div className="font-bold text-foreground group-hover:text-danger transition-colors">{formatCurrency(branch.expenses * multiplier)}</div>
-              <div className="flex items-center gap-0.5 mt-1 text-danger opacity-0 group-hover:opacity-100 transition-opacity"><span className="text-xs">View details</span><ChevronRight size={11} /></div>
+              <div className="font-bold text-foreground group-hover:text-danger motion-safe:transition-colors">{formatCurrency(branch.expenses * multiplier)}</div>
+              <div className="flex items-center gap-0.5 mt-1 text-danger opacity-100 lg:opacity-0 lg:group-hover:opacity-100 motion-safe:transition-opacity"><span className="text-xs">View details</span><ChevronRight size={11} /></div>
             </button>
-            <button onClick={() => openDetail(branch, "students")} className="bg-input/50 hover:bg-warning/10 hover:border-warning/40 border border-transparent rounded-xl p-3 transition-all duration-200 text-left group">
+            <button onClick={() => openDetail(branch, "students")} className="bg-input/50 hover:bg-warning/10 hover:border-warning/40 border border-transparent rounded-xl p-3 motion-safe:transition-all motion-safe:duration-200 text-left group">
               <span className="text-xs font-medium text-secondary flex items-center gap-1.5 mb-1"><Users size={12} className="text-warning" /> Students</span>
-              <div className="font-bold text-foreground group-hover:text-warning transition-colors">{branch.studentsCount}</div>
-              <div className="flex items-center gap-0.5 mt-1 text-warning opacity-0 group-hover:opacity-100 transition-opacity"><span className="text-xs">View details</span><ChevronRight size={11} /></div>
+              <div className="font-bold text-foreground group-hover:text-warning motion-safe:transition-colors">{branch.studentsCount}</div>
+              <div className="flex items-center gap-0.5 mt-1 text-warning opacity-100 lg:opacity-0 lg:group-hover:opacity-100 motion-safe:transition-opacity"><span className="text-xs">View details</span><ChevronRight size={11} /></div>
             </button>
-            <button onClick={() => openDetail(branch, "staff")} className="bg-input/50 hover:bg-primary/10 hover:border-primary/40 border border-transparent rounded-xl p-3 transition-all duration-200 text-left group">
+            <button onClick={() => openDetail(branch, "staff")} className="bg-input/50 hover:bg-primary/10 hover:border-primary/40 border border-transparent rounded-xl p-3 motion-safe:transition-all motion-safe:duration-200 text-left group">
               <span className="text-xs font-medium text-secondary flex items-center gap-1.5 mb-1"><Activity size={12} className="text-primary" /> Staff</span>
-              <div className="font-bold text-foreground group-hover:text-primary transition-colors">{branch.staffCount}</div>
-              <div className="flex items-center gap-0.5 mt-1 text-primary opacity-0 group-hover:opacity-100 transition-opacity"><span className="text-xs">View details</span><ChevronRight size={11} /></div>
+              <div className="font-bold text-foreground group-hover:text-primary motion-safe:transition-colors">{branch.staffCount}</div>
+              <div className="flex items-center gap-0.5 mt-1 text-primary opacity-100 lg:opacity-0 lg:group-hover:opacity-100 motion-safe:transition-opacity"><span className="text-xs">View details</span><ChevronRight size={11} /></div>
             </button>
           </div>
           <div className="mt-5 border-t border-border pt-4 space-y-3">
@@ -89,7 +89,7 @@ export default function AdminBranchCard() {
             </div>
             <button
               onClick={() => startImpersonation({ id: branch.id, name: branch.name, location: branch.location })}
-              className="w-full flex items-center justify-center gap-2 py-2 bg-primary/10 hover:bg-primary/20 border border-primary/30 hover:border-primary/60 rounded-xl text-xs font-bold text-primary motion-safe:transition-all motion-safe:duration-200 active:scale-95"
+              className="w-full flex items-center justify-center gap-2 py-2 bg-primary/10 hover:bg-primary/20 border border-primary/30 hover:border-primary/60 rounded-xl text-xs font-bold text-primary motion-safe:transition-all motion-safe:duration-200 motion-safe:active:scale-95"
               aria-label={`Open ${branch.name} as manager`}
             >
               <LogIn size={14} />

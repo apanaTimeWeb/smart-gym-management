@@ -15,11 +15,11 @@ import AdminReportsPayroll from '@/app/admin/reports/reports_components/AdminRep
 import AdminReportsPnL from '@/app/admin/reports/reports_components/AdminReportsPnL/AdminReportsPnL';
 import { AdminSearchableDropdown } from '@/app/admin/admin_components/AdminShared/AdminSearchableDropdown';
 import { AdminDateFilterDropdown } from '@/app/admin/admin_components/AdminShared/AdminDateFilterDropdown';
-import { reportsApi } from '@/app/admin/reports/reports_api/reports_api';
-import type { ReportDateRange } from '@/app/admin/reports/reports_types/reports_types';
+import { reportsApi } from '@/app/admin/reports/reports_api/AdminReportsApi';
+import type { ReportDateRange } from '@/app/admin/reports/reports_types/AdminReportsTypes';
 
 import { useAdminBranchesQueries } from '@/app/admin/branches/branches_context/useAdminBranchesQueries';
-import type { Branch } from '@/app/admin/branches/branches_types/branches_types';
+import type { Branch } from '@/app/admin/branches/branches_types/AdminBranchesTypes';
 
 const EXPORT_FORMAT_OPTIONS = [
   { value: 'pdf', label: 'Export as PDF' },
@@ -40,7 +40,7 @@ function ReportsSkeleton() {
 
 export default function AdminReportsMain() {
   const { activeTab, dateRange, setDateRange, startDate, endDate, setCustomDateRange, selectedGymId, setSelectedGymId } = useAdminReportsStore();
-  const { fetchState } = useAdminReportsLogic();
+  const { status } = useAdminReportsLogic();
   const { data: branches = [] } = useAdminBranchesQueries();
   const [exporting, setExporting] = useState(false);
   const [exportFormat, setExportFormat] = useState<string>('pdf');
@@ -68,7 +68,7 @@ export default function AdminReportsMain() {
     }
   };
 
-  if (fetchState === 'loading') return <ReportsSkeleton />;
+  if (status === 'pending') return <ReportsSkeleton />;
 
   return (
     <div className="min-h-full pb-10">

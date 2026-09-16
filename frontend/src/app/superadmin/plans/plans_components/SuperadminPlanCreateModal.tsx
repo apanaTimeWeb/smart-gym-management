@@ -33,7 +33,7 @@ export default function SuperadminPlanCreateModal() {
   const createMutation = useMutation({
     mutationFn: (data: CreatePlanPayload) => plansApi.createPlan(data),
     onSuccess: (res) => {
-      toast.success(res.message);
+      toast.success(res.message, { id: 'superadmin-toast-da7b224bdc' });
       queryClient.invalidateQueries({ queryKey: ['superadmin', 'plans'] });
       reset();
       closeCreateModal();
@@ -61,8 +61,8 @@ export default function SuperadminPlanCreateModal() {
   };
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" role="dialog" aria-modal="true">
-      <div className="bg-overlay border border-border rounded-2xl w-full max-w-2xl max-h-screen overflow-hidden flex flex-col shadow-2xl shadow-black/50">
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 backdrop-blur-sm p-4" role="dialog" aria-modal="true">
+      <div className="bg-overlay border border-border rounded-2xl w-full max-w-2xl max-h-screen overflow-hidden flex flex-col shadow-2xl">
         <div className="flex items-center justify-between p-6 border-b border-border">
           <h2 className="text-xl font-bold text-foreground">Create New Subscription Plan</h2>
           <button onClick={handleClose} className="p-2 hover:bg-input rounded-full motion-safe:transition-colors text-secondary" aria-label="Close modal">

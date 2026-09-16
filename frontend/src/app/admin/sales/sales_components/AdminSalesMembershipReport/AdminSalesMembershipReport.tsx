@@ -1,4 +1,5 @@
 "use client";
+import { formatCurrency } from '@/lib/formatters';
 // RESPONSIBILITY: Provides the implementation for AdminSalesMembershipReport.tsx functionality within its module.
 
 
@@ -6,10 +7,10 @@ import { useAdminSalesLogic } from '@/app/admin/sales/sales_context/useAdminSale
 import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
 import { Loader2 } from 'lucide-react';
 import { ADMIN_ITEMS_PER_PAGE } from '@/app/admin/admin_url_config';
-import type { MembershipReportItem } from '@/app/admin/sales/sales_types/sales_types';
+import type { MembershipReportItem } from '@/app/admin/sales/sales_types/AdminSalesTypes';
 
 export default function AdminSalesMembershipReport() {
-  const { search, currentPage, setCurrentPage, membershipReport, membershipTotals, fetchState } = useAdminSalesLogic();
+  const { search, currentPage, setCurrentPage, membershipReport, membershipTotals, status } = useAdminSalesLogic();
   
   const filtered = membershipReport.filter((r: MembershipReportItem) => 
     (r.plan || '').toLowerCase().includes(search.toLowerCase())
@@ -19,7 +20,7 @@ export default function AdminSalesMembershipReport() {
   const totalPages = Math.ceil(filtered.length / ADMIN_ITEMS_PER_PAGE) || 1;
   const paginated = filtered.slice((currentPage - 1) * ADMIN_ITEMS_PER_PAGE, currentPage * ADMIN_ITEMS_PER_PAGE);
 
-  if (fetchState === 'loading') {
+  if (status === 'pending') {
     return (
       <div className="overflow-x-auto">
         <table className="w-full">
@@ -34,7 +35,7 @@ export default function AdminSalesMembershipReport() {
           </thead>
           <tbody className="divide-y divide-border">
             {[...Array(5)].map((_, i) => (
-              <tr key={i} className="motion-safe:animate-pulse bg-card">
+              <tr key={`skeleton-${i}`} className="motion-safe:animate-pulse bg-card">
                 <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-24"></div></td>
                 <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-20"></div></td>
                 <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-20"></div></td>
@@ -48,7 +49,7 @@ export default function AdminSalesMembershipReport() {
     );
   }
 
-  if (fetchState === 'error') {
+  if (status === 'error') {
     return (
       <div className="text-center py-16 bg-card rounded-2xl border border-danger/30">
         <p className="text-danger font-medium">Failed to load membership report.</p>
@@ -72,20 +73,20 @@ export default function AdminSalesMembershipReport() {
  </thead>
   <tbody className="divide-y divide-border">
   {paginated.map((r, i) => (
-  <tr key={i} className="hover:bg-primary-subtle transition-colors">
+  <tr key={i} className="hover:bg-primary-subtle motion-safe:transition-colors">
   <td className="px-4 py-3 text-sm font-medium text-foreground">{r.plan || ''}</td>
-  <td className="px-4 py-3 text-sm text-secondary">₹{(r.receivable || 0).toLocaleString()}</td>
-  <td className="px-4 py-3 text-sm font-medium text-success dark:text-success">₹{(r.received || 0).toLocaleString()}</td>
-  <td className="px-4 py-3 text-sm font-medium text-warning dark:text-warning">₹{(r.remaining || 0).toLocaleString()}</td>
-  <td className="px-4 py-3 text-sm text-danger">₹{(r.refund || 0).toLocaleString()}</td>
+  <td className="px-4 py-3 text-sm text-secondary">{formatCurrency(r.receivable || 0)}</td>
+  <td className="px-4 py-3 text-sm font-medium text-success dark:text-success">{formatCurrency(r.received || 0)}</td>
+  <td className="px-4 py-3 text-sm font-medium text-warning dark:text-warning">{formatCurrency(r.remaining || 0)}</td>
+  <td className="px-4 py-3 text-sm text-danger">{formatCurrency(r.refund || 0)}</td>
   </tr>
   ))}
  <tr className="bg-input font-semibold border-t-2 border-border">
  <td className="px-4 py-3 text-sm text-foreground">Total</td>
- <td className="px-4 py-3 text-sm text-foreground">₹{(membershipTotals.totalReceivable || 0).toLocaleString()}</td>
- <td className="px-4 py-3 text-sm text-success dark:text-success">₹{(membershipTotals.totalReceived || 0).toLocaleString()}</td>
- <td className="px-4 py-3 text-sm text-warning dark:text-warning">₹{(membershipTotals.remaining || 0).toLocaleString()}</td>
- <td className="px-4 py-3 text-sm text-danger dark:text-danger">₹{(membershipTotals.refunds || 0).toLocaleString()}</td>
+ <td className="px-4 py-3 text-sm text-foreground">{formatCurrency(membershipTotals.totalReceivable || 0)}</td>
+ <td className="px-4 py-3 text-sm text-success dark:text-success">{formatCurrency(membershipTotals.totalReceived || 0)}</td>
+ <td className="px-4 py-3 text-sm text-warning dark:text-warning">{formatCurrency(membershipTotals.remaining || 0)}</td>
+ <td className="px-4 py-3 text-sm text-danger dark:text-danger">{formatCurrency(membershipTotals.refunds || 0)}</td>
  </tr>
   </tbody>
   </table>

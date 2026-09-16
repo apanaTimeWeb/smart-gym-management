@@ -57,7 +57,7 @@ export default function AdminCouponsToolbar() {
       </div>
       <button
         onClick={openAdd}
-        className="flex items-center gap-2 px-4 py-2 bg-primary text-black rounded-lg text-sm font-semibold hover:bg-primary-hover motion-safe:transition-colors active:scale-95 whitespace-nowrap"
+        className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-semibold hover:bg-primary-hover motion-safe:transition-colors motion-safe:active:scale-95 whitespace-nowrap"
       >
         <Plus size={16} />
         New Coupon

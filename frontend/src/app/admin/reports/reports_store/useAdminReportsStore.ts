@@ -1,7 +1,7 @@
 // DATA FLOW: feature API/schema → hook/context → useAdminReportsStore consumers.
 // RESPONSIBILITY: Zustand store for Reports module UI state — active tab, date range, gym filter.
 import { create } from 'zustand';
-import type { ReportTab, ReportDateRange } from '@/app/admin/reports/reports_types/reports_types';
+import type { ReportTab, ReportDateRange } from '@/app/admin/reports/reports_types/AdminReportsTypes';
 
 interface AdminReportsStore {
   activeTab: ReportTab;

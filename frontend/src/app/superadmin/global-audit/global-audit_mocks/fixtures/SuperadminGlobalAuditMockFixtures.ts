@@ -1,16 +1,16 @@
 import type { AuditLog } from '@/app/superadmin/global-audit/superadmin_global-audit_types/superadmin_global-audit_types';
 
 export const MOCK_SUPERADMIN_GLOBAL_AUDIT: AuditLog[] = [
-  {
-    id: 'al1', timestamp: '2023-11-20T10:00:00Z', actor: 'superadmin@system.com',
-    actorRole: 'SUPERADMIN', actorType: 'SUPERADMIN', action: 'CREATED_TENANT',
-    resource: 'Tenant', resourceId: 't3', details: 'Created new tenant "CrossFit Box"',
-    ipAddress: '192.168.1.1', severity: 'INFO'
-  },
-  {
-    id: 'al2', timestamp: '2023-11-19T14:30:00Z', actor: 'admin@iron.com',
-    actorRole: 'ADMIN', tenantId: 't1', tenantName: 'Iron Paradise', actorType: 'TENANT',
-    action: 'DELETED_MEMBER', resource: 'Member', resourceId: 'm123',
-    details: 'Deleted member John Doe', ipAddress: '10.0.0.5', severity: 'WARNING'
-  }
+  { id: 'al1', timestamp: '2026-09-15T10:00:00Z', actor: 'superadmin@system.com', actorRole: 'SUPERADMIN', actorType: 'SUPERADMIN', action: 'CREATED_TENANT', resource: 'Tenant', resourceId: 't3', details: 'Created tenant CrossFit Box', ipAddress: '192.168.1.1', sessionId: 'ses-001', severity: 'INFO' },
+  { id: 'al2', timestamp: '2026-09-14T14:30:00Z', actor: 'admin@iron.com', actorRole: 'ADMIN', tenantId: 't1', tenantName: 'Iron Paradise', actorType: 'TENANT', action: 'DELETED_MEMBER', resource: 'Member', resourceId: 'm123', details: 'Deleted inactive member record', ipAddress: '10.0.0.5', sessionId: 'ses-002', severity: 'WARNING' },
+  { id: 'al3', timestamp: '2026-09-13T09:15:00Z', actor: 'system', actorType: 'SYSTEM', action: 'BACKUP_COMPLETED', resource: 'Backup', resourceId: 'bk-0913', details: 'Nightly tenant backup completed', ipAddress: '10.10.0.10', severity: 'INFO' },
+  { id: 'al4', timestamp: '2026-09-12T18:45:00Z', actor: 'ops@system.com', actorRole: 'SUPERADMIN', actorType: 'SUPERADMIN', action: 'CACHE_FLUSHED', resource: 'Infrastructure', resourceId: 'global-cache', details: 'Global Redis cache flushed by operations user', ipAddress: '192.168.1.8', sessionId: 'ses-004', severity: 'WARNING' },
+  { id: 'al5', timestamp: '2026-09-11T12:20:00Z', actor: 'security@system.com', actorRole: 'SUPERADMIN', actorType: 'SUPERADMIN', action: 'ROLE_UPDATED', resource: 'User', resourceId: 'u100', details: 'Updated tenant admin role permissions', ipAddress: '192.168.1.9', sessionId: 'ses-005', severity: 'CRITICAL' },
+  { id: 'al6', timestamp: '2026-09-10T08:40:00Z', actor: 'billing@system.com', actorRole: 'SUPERADMIN', actorType: 'SUPERADMIN', action: 'MANUAL_PAYMENT', resource: 'Invoice', resourceId: 'inv42', details: 'Recorded manual SaaS invoice payment', ipAddress: '192.168.1.12', sessionId: 'ses-006', severity: 'INFO' },
+  { id: 'al7', timestamp: '2026-09-09T11:10:00Z', actor: 'admin@fitlife.com', actorRole: 'ADMIN', tenantId: 't2', tenantName: 'Fit Life Studio', actorType: 'TENANT', action: 'PLAN_CHANGED', resource: 'Subscription', resourceId: 'sub-2', details: 'Changed plan from Basic to Pro', ipAddress: '10.0.0.11', sessionId: 'ses-007', severity: 'WARNING' },
+  { id: 'al8', timestamp: '2026-09-08T16:05:00Z', actor: 'system', actorType: 'SYSTEM', action: 'JOB_FAILED', resource: 'BackgroundJob', resourceId: 'job-7', details: 'Webhook processing job failed after retry limit', ipAddress: '10.10.0.11', severity: 'CRITICAL' },
+  { id: 'al9', timestamp: '2026-08-28T07:25:00Z', actor: 'superadmin@system.com', actorRole: 'SUPERADMIN', actorType: 'SUPERADMIN', action: 'FEATURE_ENABLED', resource: 'FeatureFlag', resourceId: 'ff-payments', details: 'Enabled canary rollout for payments feature', ipAddress: '192.168.1.2', sessionId: 'ses-009', severity: 'INFO' },
+  { id: 'al10', timestamp: '2026-08-21T17:30:00Z', actor: 'admin@iron.com', actorRole: 'ADMIN', tenantId: 't1', tenantName: 'Iron Paradise', actorType: 'TENANT', action: 'EXPORT_REQUESTED', resource: 'Report', resourceId: 'rep-8', details: 'Requested monthly revenue export', ipAddress: '10.0.0.21', sessionId: 'ses-010', severity: 'INFO' },
+  { id: 'al11', timestamp: '2026-08-15T13:50:00Z', actor: 'system', actorType: 'SYSTEM', action: 'MIGRATION_WARNING', resource: 'Migration', resourceId: 'mig-11', details: 'Tenant migration exceeded normal duration threshold', ipAddress: '10.10.0.15', severity: 'WARNING' },
+  { id: 'al12', timestamp: '2026-08-10T19:10:00Z', actor: 'security@system.com', actorRole: 'SUPERADMIN', actorType: 'SUPERADMIN', action: 'LOGIN_ALERT', resource: 'Session', resourceId: 'ses-12', details: 'Multiple failed login attempts detected', ipAddress: '203.0.113.12', sessionId: 'ses-012', severity: 'CRITICAL' },
 ];

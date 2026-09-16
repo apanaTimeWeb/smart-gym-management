@@ -6,7 +6,7 @@ import toast from 'react-hot-toast';
 import { WhatsAppFormatter } from '@/lib/whatsapp_formatter';
 import { invoicesApi } from '@/app/superadmin/invoices/superadmin_invoices_api/superadmin_invoices_api';
 import type { SaaSInvoice } from '@/app/superadmin/invoices/superadmin_invoices_types/superadmin_invoices_types';
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrency, formatDate } from '@/lib/formatters';
 
 const STATUS_COLORS: Record<SaaSInvoice['status'], string> = {
   PAID: 'text-success bg-success/10',
@@ -87,7 +87,7 @@ export default function SuperadminInvoicesTableRow({ invoice: inv }: InvoicesTab
           {inv.status || 'UNKNOWN'}
         </span>
       </td>
-      <td className="p-4 text-sm text-secondary">{inv.issuedAt ? new Date(inv.issuedAt).toLocaleDateString('en-IN') : 'N/A'}</td>
+      <td className="p-4 text-sm text-secondary">{inv.issuedAt ? formatDate(inv.issuedAt) : 'N/A'}</td>
       <td className="p-4 text-right flex items-center justify-end gap-2">
         <button
           title="Resend to Email"

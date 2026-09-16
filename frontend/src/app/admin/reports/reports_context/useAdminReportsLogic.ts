@@ -4,9 +4,9 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'next/navigation';
-import { reportsApi } from '@/app/admin/reports/reports_api/reports_api';
+import { reportsApi } from '@/app/admin/reports/reports_api/AdminReportsApi';
 import { useAdminReportsStore } from '@/app/admin/reports/reports_store/useAdminReportsStore';
-import type { FetchState, ReportDateRange } from '@/app/admin/reports/reports_types/reports_types';
+import type { ReportDateRange } from '@/app/admin/reports/reports_types/AdminReportsTypes';
 
 export function useAdminReportsLogic() {
   const searchParams = useSearchParams();
@@ -15,13 +15,14 @@ export function useAdminReportsLogic() {
   const endDate = searchParams.get('endDate') || '';
   const { selectedGymId } = useAdminReportsStore();
 
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ['adminReports', dateRange, startDate, endDate, selectedGymId],
+  const reportQuery = useQuery({
+    queryKey: ['admin', 'reports', 'list', dateRange, startDate, endDate, selectedGymId],
     queryFn: () => reportsApi.fetchReportData({ dateRange, gymId: selectedGymId, startDate, endDate }).then(r => r.data),
     staleTime: 1000 * 60 * 5,
   });
 
-  const fetchState: FetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
+  const status = reportQuery.status;
+  const data = reportQuery.data;
 
-  return { reportData: data ?? null, fetchState };
+  return { reportData: data ?? null, status };
 }

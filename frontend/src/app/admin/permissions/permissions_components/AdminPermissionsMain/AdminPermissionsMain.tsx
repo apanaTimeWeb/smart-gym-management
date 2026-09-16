@@ -21,9 +21,9 @@ function PermissionsSkeleton() {
 }
 
 export default function AdminPermissionsMain() {
-  const { fetchState } = useAdminPermissionsLogic();
+  const { status } = useAdminPermissionsLogic();
 
-  if (fetchState === 'loading') return <PermissionsSkeleton />;
+  if (status === 'pending') return <PermissionsSkeleton />;
 
   return (
     <div className="min-h-full pb-10">

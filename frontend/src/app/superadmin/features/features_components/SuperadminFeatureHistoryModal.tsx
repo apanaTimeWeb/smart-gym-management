@@ -1,6 +1,7 @@
 'use client';
 // RESPONSIBILITY: Renders the change history (audit log) for a specific feature flag.
 
+import { formatDate, formatDateTime } from '@/lib/formatters';
 import React, { useMemo } from 'react';
 import { X, Clock } from 'lucide-react';
 import type { FeatureFlag } from '@/app/superadmin/features/superadmin_features_types/superadmin_features_types';
@@ -51,7 +52,7 @@ export default function SuperadminFeatureHistoryModal({ isOpen, onClose, flag }:
   if (!isOpen || !flag) return null;
 
   return (
-    <div className="fixed inset-0 z-40 flex justify-end bg-black/60 backdrop-blur-sm motion-safe:animate-in motion-safe:fade-in motion-safe:duration-200">
+    <div className="fixed inset-0 z-40 flex justify-end bg-overlay/80 backdrop-blur-sm motion-safe:animate-in motion-safe:fade-in motion-safe:duration-200">
       <div 
         className="bg-card w-full max-w-md h-full flex flex-col shadow-2xl border-l border-border motion-safe:animate-in motion-safe:slide-in-from-right-full motion-safe:duration-300"
         role="dialog"
@@ -85,7 +86,7 @@ export default function SuperadminFeatureHistoryModal({ isOpen, onClose, flag }:
                   <div className="flex items-center justify-between space-x-2 mb-1">
                     <div className="font-bold text-foreground text-sm">{log.user}</div>
                     <time className="text-xs font-medium text-secondary">
-                      {new Date(log.timestamp).toLocaleDateString()}
+                      {formatDate(log.timestamp)}
                     </time>
                   </div>
                   <div className="text-secondary text-sm">{log.action}</div>

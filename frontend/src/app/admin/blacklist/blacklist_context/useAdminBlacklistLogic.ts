@@ -5,32 +5,40 @@
 import { useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
-import { blacklistApi } from '@/app/admin/blacklist/blacklist_api/blacklist_api';
+import { blacklistApi } from '@/app/admin/blacklist/blacklist_api/AdminBlacklistApi';
 import { useAdminBlacklistStore } from '@/app/admin/blacklist/blacklist_store/useAdminBlacklistStore';
+import { useAdminUrlQuerySync } from '@/app/admin/admin_utils/useAdminUrlQuerySync';
 import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/useAdminConfirm';
 import { BLACKLIST_ITEMS_PER_PAGE, EMPTY_BLACKLIST_FORM } from '@/app/admin/blacklist/blacklist_utils/AdminBlacklistSharedConstants';
-import type { BlacklistFormValues, FetchState, BlacklistedMember } from '@/app/admin/blacklist/blacklist_types/blacklist_types';
+import type { BlacklistFormValues, BlacklistedMember } from '@/app/admin/blacklist/blacklist_types/AdminBlacklistTypes';
 
 export function useAdminBlacklistLogic() {
   const { confirm } = useAdminConfirm();
   const qc = useQueryClient();
   const { activeTab, setActiveTab, showModal, setShowModal, form, setForm, search, scopeFilter, gymFilter, currentPage, setCurrentPage } = useAdminBlacklistStore();
+  useAdminUrlQuerySync([
+    { key: 'search', value: search, defaultValue: '', setValue: useAdminBlacklistStore.getState().setSearch },
+    { key: 'scope', value: scopeFilter, defaultValue: 'all', setValue: useAdminBlacklistStore.getState().setScopeFilter },
+    { key: 'gym', value: gymFilter, defaultValue: 'all', setValue: useAdminBlacklistStore.getState().setGymFilter },
+    { key: 'page', value: currentPage, defaultValue: 1, setValue: (value) => setCurrentPage(Math.max(1, Number(value) || 1)) },
+  ]);
 
-  const { data = [], isLoading, isError } = useQuery({
-    queryKey: ['adminBlacklist'],
+  const blacklistQuery = useQuery({
+    queryKey: ['admin', 'blacklist', 'list'],
     queryFn: () => blacklistApi.fetchBlacklist().then((r) => r.data as BlacklistedMember[]),
     staleTime: 1000 * 60 * 2,
   });
 
   const { data: kpis } = useQuery({
-    queryKey: ['adminBlacklistKPIs'],
+    queryKey: ['admin', 'blacklist', 'kpis'],
     queryFn: () => blacklistApi.fetchKPIs().then((r) => r.data),
     staleTime: 1000 * 60 * 5,
   });
 
-  const fetchState: FetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
+  const membersData = blacklistQuery.data ?? [];
+  const status = blacklistQuery.status;
 
-  const filtered = data.filter((m: BlacklistedMember) => {
+  const filtered = membersData.filter((m: BlacklistedMember) => {
     const matchSearch = !search || m.memberName.toLowerCase().includes(search.toLowerCase()) || m.memberId.toLowerCase().includes(search.toLowerCase()) || m.memberPhone.includes(search);
     const matchScope = scopeFilter === 'all' || m.scope === scopeFilter;
     const matchGym = gymFilter === 'all' || m.assignedGyms.includes(gymFilter) || m.assignedGyms.includes('all');
@@ -41,30 +49,30 @@ export function useAdminBlacklistLogic() {
   const paginated = filtered.slice((currentPage - 1) * BLACKLIST_ITEMS_PER_PAGE, currentPage * BLACKLIST_ITEMS_PER_PAGE);
 
   /** Cross-branch view: only gym-specific bans, grouped by member phone for deduplication. */
-  const gymSpecificEntries = data.filter((m: BlacklistedMember) => m.scope === 'specific' && m.isActive);
+  const gymSpecificEntries = membersData.filter((m: BlacklistedMember) => m.scope === 'specific' && m.isActive);
 
   const addMutation = useMutation({
     mutationFn: (payload: BlacklistFormValues) => blacklistApi.addToBlacklist(payload),
-    onSuccess: () => { toast.success('Member blacklisted successfully'); setShowModal(false); qc.invalidateQueries({ queryKey: ['adminBlacklist'] }); },
-    onError: (err) => toast.error((err as Error).message),
+    onSuccess: (response) => { toast.success(response.message, { id: 'admin-success-05f887bf44' }); setShowModal(false); qc.invalidateQueries({ queryKey: ['admin', 'blacklist', 'list'] }); },
+    onError: (err) => toast.error((err as Error).message, { id: 'admin-error-1f0bf3da16' }),
   });
 
   const removeMutation = useMutation({
     mutationFn: (id: string) => blacklistApi.removeFromBlacklist(id),
-    onSuccess: () => { toast.success('Removed from blacklist'); qc.invalidateQueries({ queryKey: ['adminBlacklist'] }); },
-    onError: (err) => toast.error((err as Error).message),
+    onSuccess: (response) => { toast.success(response.message, { id: 'admin-success-d13beab19d' }); qc.invalidateQueries({ queryKey: ['admin', 'blacklist', 'list'] }); },
+    onError: (err) => toast.error((err as Error).message, { id: 'admin-error-e6e7045880' }),
   });
 
   const toggleMutation = useMutation({
     mutationFn: (id: string) => blacklistApi.toggleBlacklist(id),
-    onSuccess: () => { toast.success('Blacklist status updated'); qc.invalidateQueries({ queryKey: ['adminBlacklist'] }); },
-    onError: (err) => toast.error((err as Error).message),
+    onSuccess: (response) => { toast.success(response.message, { id: 'admin-success-40f1704ed7' }); qc.invalidateQueries({ queryKey: ['admin', 'blacklist', 'list'] }); },
+    onError: (err) => toast.error((err as Error).message, { id: 'admin-error-547e47fc01' }),
   });
 
   const propagateMutation = useMutation({
     mutationFn: (id: string) => blacklistApi.propagateToAllBranches(id),
-    onSuccess: () => { toast.success('Ban propagated to all branches'); qc.invalidateQueries({ queryKey: ['adminBlacklist'] }); },
-    onError: (err) => toast.error((err as Error).message),
+    onSuccess: (response) => { toast.success(response.message, { id: 'admin-success-52cccb7033' }); qc.invalidateQueries({ queryKey: ['admin', 'blacklist', 'list'] }); },
+    onError: (err) => toast.error((err as Error).message, { id: 'admin-error-86b564e1d9' }),
   });
 
   const openAdd = useCallback(() => { setForm(EMPTY_BLACKLIST_FORM); setShowModal(true); }, [setForm, setShowModal]);
@@ -91,7 +99,7 @@ export function useAdminBlacklistLogic() {
   }, [confirm, propagateMutation]);
 
   return {
-    members: paginated, allMembers: filtered, gymSpecificEntries, fetchState, kpis,
+    members: paginated, allMembers: filtered, gymSpecificEntries, status, kpis,
     activeTab, setActiveTab,
     showModal, setShowModal, form, openAdd, saveBlacklist,
     removeFromBlacklist, toggleBlacklist, propagateToAllBranches,

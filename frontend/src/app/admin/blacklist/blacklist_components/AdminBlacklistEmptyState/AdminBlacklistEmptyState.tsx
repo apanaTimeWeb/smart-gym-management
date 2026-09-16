@@ -15,7 +15,7 @@ export default function AdminBlacklistEmptyState() {
         <p className="text-base font-semibold text-foreground">No blacklisted members</p>
         <p className="text-sm text-secondary mt-1">Blacklist a member to restrict their access across gyms</p>
       </div>
-      <button onClick={openAdd} className="px-4 py-2 bg-danger text-white rounded-lg text-sm font-semibold hover:opacity-90 motion-safe:transition-opacity">
+      <button onClick={openAdd} className="px-4 py-2 bg-danger text-primary-foreground rounded-lg text-sm font-semibold hover:opacity-90 motion-safe:transition-opacity">
         Blacklist Member
       </button>
     </div>
