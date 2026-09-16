@@ -1,3 +1,4 @@
+'use client';
 // RESPONSIBILITY: Encapsulates functionality for useSuperadminProfilePage.ts
 import { useState } from 'react';
 import toast from 'react-hot-toast';
@@ -61,3 +62,4 @@ export function useSuperadminProfilePage() {
     twoFAState: toggle2FAMutation.isPending ? 'loading' : 'idle', toggle2FAMutation,
   };
 }
+

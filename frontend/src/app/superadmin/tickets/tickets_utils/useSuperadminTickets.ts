@@ -1,3 +1,4 @@
+'use client';
 import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { ticketsApi } from '@/app/superadmin/tickets/superadmin_tickets_api/superadmin_tickets_api';
@@ -42,3 +43,4 @@ export function useSuperadminTickets() {
     paginatedTickets,
   };
 }
+

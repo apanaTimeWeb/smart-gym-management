@@ -1,3 +1,4 @@
+'use client';
 // RESPONSIBILITY: Data hook for the Superadmin Backups page.
 // DATA FLOW: backupsApi.fetchBackups() → useSuperadminBackupsData → SuperadminBackupsClient
 import { useQuery } from '@tanstack/react-query';
@@ -21,3 +22,4 @@ export function useSuperadminBackupsData(params?: Record<string, string>) {
     error: query.error
   };
 }
+

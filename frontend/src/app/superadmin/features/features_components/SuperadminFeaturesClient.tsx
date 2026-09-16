@@ -52,8 +52,9 @@ export default function SuperadminFeaturesClient() {
         reset();
         toast.success(res.message || 'Release note published successfully', { id: 'release-note-published-successfully' });
       }
-    } catch (err: any) {
-      toast.error(err.message || 'Failed to publish release note', { id: 'failed-to-publish-release-note' });
+    } catch (err: unknown) {
+      const errorMsg = err instanceof Error ? err.message : 'Failed to publish release note';
+      toast.error(errorMsg, { id: 'failed-to-publish-release-note' });
     } finally {
       setIsPublishing(false);
     }
@@ -78,8 +79,9 @@ export default function SuperadminFeaturesClient() {
     try {
       const res = await toggleFlag(flagId);
       toast.success(res.message || 'Feature flag toggled', { id: 'feature-flag-toggled' });
-    } catch (e: any) {
-      toast.error(e.message || 'Failed to toggle feature flag', { id: 'failed-to-toggle-feature-flag' });
+    } catch (e: unknown) {
+      const errorMsg = e instanceof Error ? e.message : 'Failed to toggle feature flag';
+      toast.error(errorMsg, { id: 'failed-to-toggle-feature-flag' });
     }
   };
 
@@ -88,8 +90,9 @@ export default function SuperadminFeaturesClient() {
     try {
       const res = await updateFlag({ id: rolloutFlag.id, body: { enabledTenantIds: tenantIds } });
       toast.success(res.message || 'Canary rollout updated successfully', { id: 'canary-rollout-updated-successfully' });
-    } catch (e: any) {
-      toast.error(e.message || 'Failed to update canary rollout', { id: 'failed-to-update-canary-rollout' });
+    } catch (e: unknown) {
+      const errorMsg = e instanceof Error ? e.message : 'Failed to update canary rollout';
+      toast.error(errorMsg, { id: 'failed-to-update-canary-rollout' });
     }
   };
 

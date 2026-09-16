@@ -2,6 +2,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import SuperadminProfileMain from '@/app/superadmin/profile/profile_components/SuperadminProfileMain/SuperadminProfileMain';
 import { useSuperadminProfilePage } from '@/app/superadmin/profile/profile_utils/useSuperadminProfilePage';
+import type { Mock } from 'vitest';
 
 vi.mock('@/app/superadmin/profile/profile_utils/useSuperadminProfilePage');
 vi.mock('@/app/superadmin/profile/profile_components/SuperadminProfileAvatarCard/SuperadminProfileAvatarCard', () => ({ default: () => <div data-testid="avatar-card" /> }));
@@ -9,7 +10,7 @@ vi.mock('@/app/superadmin/profile/profile_components/SuperadminProfilePersonalFo
 vi.mock('@/app/superadmin/profile/profile_components/SuperadminProfileSecurityForm/SuperadminProfileSecurityForm', () => ({ default: () => <div data-testid="security-form" /> }));
 
 describe('SuperadminProfileMain', () => {
-  const mockUseProfilePage = useSuperadminProfilePage as import('vitest').Mock;
+  const mockUseProfilePage = useSuperadminProfilePage as Mock;
 
   beforeEach(() => {
     mockUseProfilePage.mockReturnValue({
@@ -38,7 +39,7 @@ describe('SuperadminProfileMain', () => {
   it('renders loading state when profile is loading', () => {
     mockUseProfilePage.mockReturnValue({ profileLoading: true });
     const { container } = render(<SuperadminProfileMain />);
-    expect(container.querySelector('.motion-safe\\:motion-safe:animate-pulse')).toBeInTheDocument();
+    expect(container.querySelector('.motion-safe\\:animate-pulse')).toBeInTheDocument();
   });
 
   it('renders personal form by default', () => {

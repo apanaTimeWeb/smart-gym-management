@@ -1,3 +1,4 @@
+'use client';
 // RESPONSIBILITY: Manages form state, validation, and API submission for onboarding a new gym.
 // DATA FLOW: SuperadminAddGymForm -> useSuperadminAddGymForm -> gymsApi.createGym
 
@@ -49,3 +50,4 @@ export function useSuperadminAddGymForm() {
     loadingPlans,
   };
 }
+

@@ -1,3 +1,4 @@
+'use client';
 // RESPONSIBILITY: Generic fetch hook for Superadmin read-only data. Manages loading/error state for a single API endpoint.
 // DATA FLOW: API -> useSuperadminData -> Superadmin page components
 
@@ -37,3 +38,4 @@ export function useSuperadminData<T>(endpoint: string) {
 
   return { data, isLoading: query.isLoading, isError: query.isError, error, mutate };
 }
+

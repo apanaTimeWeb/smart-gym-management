@@ -1,3 +1,4 @@
+'use client';
 // RESPONSIBILITY: Logic hook for the Background Jobs page. Owns all data-fetching, filter state,
 // pagination, and action handlers. Exposes a clean interface to SuperadminJobsView (view only).
 // No JSX — pure logic (Rule 6, Rule 56).
@@ -128,3 +129,4 @@ export function useSuperadminJobsPage(): UseJobsPageReturn {
     metrics,
   };
 }
+

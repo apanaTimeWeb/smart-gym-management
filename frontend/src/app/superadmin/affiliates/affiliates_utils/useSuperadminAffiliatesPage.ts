@@ -1,3 +1,4 @@
+'use client';
 // RESPONSIBILITY: useSuperadminAffiliatesPage.ts encapsulates all state and async logic for the Affiliates page.
 // DATA FLOW: superadminApi → useSuperadminAffiliatesPage → SuperadminAffiliatesClient
 import { useState, useMemo, useCallback } from 'react';
@@ -128,3 +129,4 @@ export const useSuperadminAffiliatesPage = () => {
     setPage,
   };
 };
+

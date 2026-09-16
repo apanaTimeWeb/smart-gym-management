@@ -39,7 +39,7 @@ describe('useSuperadminDashboardView', () => {
     const { result } = renderHook(() => useSuperadminDashboardView());
 
     expect(result.current.timeRange).toBe('this_month');
-    expect(result.current.fetchState).toBe('success');
+    expect(result.current.isLoading).toBe(false);
   });
 
   it('should parse custom date range correctly', () => {
@@ -79,7 +79,7 @@ describe('useSuperadminDashboardView', () => {
 
     const { result } = renderHook(() => useSuperadminDashboardView());
 
-    expect(result.current.fetchState).toBe('loading');
+    expect(result.current.isLoading).toBe(true);
   });
 
   it('should return fetchState error when query is in error', () => {
@@ -95,6 +95,6 @@ describe('useSuperadminDashboardView', () => {
 
     const { result } = renderHook(() => useSuperadminDashboardView());
 
-    expect(result.current.fetchState).toBe('error');
+    expect(result.current.isError).toBe(true);
   });
 });

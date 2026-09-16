@@ -48,40 +48,11 @@ export default function SuperadminMigrationsClient() {
     try {
       const loadingToast = toast.loading(`Initializing schema rollout for ${versionInput}...`);
       
-      await migrationsApi.startMigration(versionInput);
-
-      const newMigration: MigrationLog = {
-        id: `mig-${Date.now()}`,
-        version: versionInput,
-        description: 'Manual schema deployment triggered via dashboard',
-        appliedAt: null,
-        status: 'IN_PROGRESS',
-        targetTenants: 'ALL_ACTIVE',
-        durationMs: null,
-        errorLog: null
-      };
-
-      // Optimistically add to UI at the top of the list
-      queryClient.setQueryData(['superadmin', 'migrations-log'], (old: { migrations: MigrationLog[] } | undefined) => {
-        return {
-          migrations: [newMigration, ...(old?.migrations || [])]
-        };
-      });
+      const res = await migrationsApi.startMigration(versionInput);
       
-      // Simulate the migration completing successfully after a delay
-      setTimeout(() => {
-        queryClient.setQueryData(['superadmin', 'migrations-log'], (old: { migrations: MigrationLog[] } | undefined) => {
-          return {
-            migrations: (old?.migrations || []).map(m => 
-              m.id === newMigration.id 
-                ? { ...m, status: 'COMPLETED', appliedAt: new Date().toISOString(), durationMs: 3450 } 
-                : m
-            )
-          };
-        });
-        toast.success(`Schema ${versionInput} deployed successfully across all instances!`, { id: loadingToast });
-        setVersionInput(''); // clear input
-      }, 3500);
+      toast.success(res.message || `Schema ${versionInput} deployed successfully!`, { id: loadingToast });
+      void queryClient.invalidateQueries({ queryKey: ['superadmin', 'migrations-log'] });
+      setVersionInput(''); // clear input
 
     } catch (err) {
       toast.error((err as Error).message, { id: 'failed-to-trigger-rollout' });

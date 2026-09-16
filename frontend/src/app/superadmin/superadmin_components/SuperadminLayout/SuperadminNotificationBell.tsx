@@ -65,7 +65,7 @@ export default function SuperadminNotificationBell() {
       >
         <Bell className="w-5 h-5" strokeWidth={2} />
         {unreadCount > 0 && (
-          <span className="absolute top-1 right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-danger text-[10px] font-bold text-white shadow-sm ring-2 ring-card motion-safe:animate-superadmin-fade-in-up">
+          <span className="absolute top-2 right-2 w-4 h-4 bg-danger text-white text-[0.65rem] font-bold flex items-center justify-center rounded-full border-2 border-card">
             {unreadCount > 9 ? '9+' : unreadCount}
           </span>
         )}
@@ -88,7 +88,7 @@ export default function SuperadminNotificationBell() {
             )}
           </div>
 
-          <div className="max-h-[350px] overflow-y-auto custom-scrollbar">
+          <div className="max-h-96 overflow-y-auto custom-scrollbar">
             {notifications.length === 0 ? (
               <div className="p-6 text-center text-secondary text-sm">
                 No notifications right now.
@@ -107,7 +107,7 @@ export default function SuperadminNotificationBell() {
                         <p className={`text-sm font-semibold truncate ${notif.read ? 'text-secondary' : 'text-foreground'}`}>
                           {notif.title}
                         </p>
-                        <span className="text-[10px] text-secondary whitespace-nowrap shrink-0">
+                        <span className="text-[0.65rem] text-secondary whitespace-nowrap shrink-0">
                           {new Date(notif.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </span>
                       </div>

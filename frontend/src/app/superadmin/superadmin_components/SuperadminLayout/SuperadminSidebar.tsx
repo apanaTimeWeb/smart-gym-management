@@ -189,7 +189,7 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Super
       )}
 
       <aside
-        className={`fixed inset-y-0 left-0 z-30 flex flex-col bg-sidebar border-r border-border motion-safe:transition-all motion-safe:duration-300 ${isCollapsed ? 'lg:w-[60px]' : 'lg:w-60'
+        className={`fixed inset-y-0 left-0 z-30 flex flex-col bg-sidebar border-r border-border motion-safe:transition-all motion-safe:duration-300 ${isCollapsed ? 'lg:w-16' : 'lg:w-60'
           } ${isMobileOpen ? 'w-60 translate-x-0' : 'w-60 -translate-x-full lg:translate-x-0'
           }`}
       >

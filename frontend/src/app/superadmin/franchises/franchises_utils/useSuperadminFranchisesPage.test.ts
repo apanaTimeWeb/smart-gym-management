@@ -56,7 +56,7 @@ describe('useSuperadminFranchisesPage', () => {
 
     const { result } = renderHook(() => useSuperadminFranchisesPage());
 
-    expect(result.current.fetchState).toBe('success');
+    expect(result.current.isLoading).toBe(false);
     expect(result.current.franchises).toEqual(mockFranchises);
   });
 
@@ -69,7 +69,7 @@ describe('useSuperadminFranchisesPage', () => {
 
     const { result } = renderHook(() => useSuperadminFranchisesPage());
 
-    expect(result.current.fetchState).toBe('loading');
+    expect(result.current.isLoading).toBe(true);
   });
 
   it('returns error state when franchise query fails', () => {
@@ -81,7 +81,7 @@ describe('useSuperadminFranchisesPage', () => {
 
     const { result } = renderHook(() => useSuperadminFranchisesPage());
 
-    expect(result.current.fetchState).toBe('error');
+    expect(result.current.isError).toBe(true);
   });
 
   it('handles empty franchise list gracefully', () => {
@@ -94,7 +94,7 @@ describe('useSuperadminFranchisesPage', () => {
     const { result } = renderHook(() => useSuperadminFranchisesPage());
 
     expect(result.current.franchises).toEqual([]);
-    expect(result.current.fetchState).toBe('success');
+    expect(result.current.isLoading).toBe(false);
   });
 
   it('uses the correct query key for franchise cache isolation', () => {

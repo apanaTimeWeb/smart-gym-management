@@ -20,8 +20,8 @@ export default function SuperadminSidebarNavItem({ name, href, icon: Icon, isAct
       className={`
         relative flex items-center gap-3 rounded-lg px-3 py-2.5 motion-safe:transition-all motion-safe:duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1
         ${isActive
-          ? 'bg-primary-subtle text-primary border-l-2 border-primary shadow-[0_0_15px_var(--primary-subtle)] pl-[10px]'
-          : 'text-secondary hover:bg-card hover:text-foreground border-l-2 border-transparent pl-[10px]'
+          ? 'bg-primary-subtle text-primary border-l-2 border-primary shadow-lg shadow-primary/20 pl-2.5'
+          : 'text-secondary hover:bg-card hover:text-foreground border-l-2 border-transparent pl-2.5'
         }
         ${isCollapsed ? 'justify-center pl-0' : ''}
       `}

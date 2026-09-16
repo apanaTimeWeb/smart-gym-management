@@ -1,3 +1,4 @@
+'use client';
 // RESPONSIBILITY: Provides the logic and state for the SuperadminGymsTable component using TanStack Query.
 // DATA FLOW: gymsApi -> useQuery -> useSuperadminGymsTable -> SuperadminGymsTable
 
@@ -89,3 +90,4 @@ export function useSuperadminGymsTable() {
     setSortOrder,
   };
 }
+

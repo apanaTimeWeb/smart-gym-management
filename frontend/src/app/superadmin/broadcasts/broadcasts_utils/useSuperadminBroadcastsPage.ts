@@ -1,3 +1,4 @@
+'use client';
 // RESPONSIBILITY: useSuperadminBroadcastsPage.ts encapsulates all state and async logic for the Broadcasts page.
 // DATA FLOW: broadcastsApi → useSuperadminBroadcastsPage → SuperadminBroadcastsClient
 import { useState, useCallback } from 'react';
@@ -124,3 +125,4 @@ export const useSuperadminBroadcastsPage = () => {
     onQueueComplete
   };
 };
+

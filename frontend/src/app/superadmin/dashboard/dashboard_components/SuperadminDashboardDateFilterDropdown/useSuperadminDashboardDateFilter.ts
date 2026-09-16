@@ -1,3 +1,4 @@
+'use client';
 // RESPONSIBILITY: Custom hook managing the URL-backed state for the Dashboard date filter.
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
@@ -92,4 +93,5 @@ export function useSuperadminDashboardDateFilter() {
     handleCustomDateChange
   };
 }
+
 

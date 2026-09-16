@@ -1,3 +1,4 @@
+'use client';
 // RESPONSIBILITY: Handles form validation, modal state, and API submission for editing a Gym.
 // DATA FLOW: SuperadminGymEditModal -> useSuperadminGymEditModal -> API
 
@@ -85,4 +86,5 @@ export function useSuperadminGymEditModal() {
     isSubmitting: isSubmitting || editMutation.isPending,
   };
 }
+
 

@@ -1,3 +1,4 @@
+'use client';
 // RESPONSIBILITY: Encapsulates local UI state for the Invoices page (filtering, modal state, derived stats).
 // DATA FLOW: useSuperadminInvoicesStore -> useSuperadminInvoicesPage -> SuperadminInvoicesClient
 import { useState, useMemo } from 'react';
@@ -161,3 +162,4 @@ export function useSuperadminInvoicesPage() {
     total,
   };
 }
+

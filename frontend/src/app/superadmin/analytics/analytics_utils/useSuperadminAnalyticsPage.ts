@@ -1,3 +1,4 @@
+'use client';
 // RESPONSIBILITY: Logic hook for the Analytics page. Fetches revenue metrics and monthly chart data.
 // Exposes isLoading, isError. No JSX — pure logic.
 //
@@ -43,3 +44,4 @@ export function useSuperadminAnalyticsPage(): UseAnalyticsPageReturn {
     customEnd
   };
 }
+

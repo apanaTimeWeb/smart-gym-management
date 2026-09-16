@@ -1,3 +1,4 @@
+'use client';
 // RESPONSIBILITY: Hook to manage the state and logic of the SuperadminGymDeleteModal.
 // DATA FLOW: SuperadminGymDeleteModal -> useSuperadminGymDeleteModal -> API
 
@@ -55,3 +56,4 @@ export function useSuperadminGymDeleteModal() {
     actionLoadingId: deleteMutation.isPending ? gymToDelete?.id : null
   };
 }
+

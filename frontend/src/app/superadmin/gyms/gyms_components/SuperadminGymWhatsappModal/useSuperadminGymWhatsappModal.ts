@@ -1,3 +1,4 @@
+'use client';
 // RESPONSIBILITY: Handles form validation, modal state, and API submission for sending a WhatsApp message to a Gym owner.
 // DATA FLOW: SuperadminGymWhatsappModal -> useSuperadminGymWhatsappModal -> API
 
@@ -101,4 +102,5 @@ export function useSuperadminGymWhatsappModal() {
     isDirty,
   };
 }
+
 

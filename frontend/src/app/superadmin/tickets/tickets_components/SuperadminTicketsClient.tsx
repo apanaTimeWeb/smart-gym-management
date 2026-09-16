@@ -16,10 +16,11 @@ export default function SuperadminTicketsClient() {
   const handleCloseTicket = async (ticketId: string) => {
     try {
       const { ticketsApi } = await import('@/app/superadmin/tickets/superadmin_tickets_api/superadmin_tickets_api');
-      await ticketsApi.closeTicket(ticketId);
-      toast.success('Ticket closed.', { id: 'ticket-closed' });
-    } catch {
-      toast.error('Failed to close ticket.', { id: 'failed-to-close-ticket' });
+      const res = await ticketsApi.closeTicket(ticketId);
+      toast.success(res.message || 'Ticket closed.', { id: 'ticket-closed' });
+    } catch (err: unknown) {
+      const errorMsg = err instanceof Error ? err.message : 'Failed to close ticket.';
+      toast.error(errorMsg, { id: 'failed-to-close-ticket' });
     }
   };
 
@@ -32,10 +33,11 @@ export default function SuperadminTicketsClient() {
     if (!assignModalTicketId || !assigneeInput.trim()) return;
     try {
       const { ticketsApi } = await import('@/app/superadmin/tickets/superadmin_tickets_api/superadmin_tickets_api');
-      await ticketsApi.assignTicket(assignModalTicketId, assigneeInput.trim());
-      toast.success(`Ticket assigned to ${assigneeInput.trim()}.`, { id: 'ticket-assigned-to-assigneeinput-trim' });
-    } catch {
-      toast.error('Failed to assign ticket.', { id: 'failed-to-assign-ticket' });
+      const res = await ticketsApi.assignTicket(assignModalTicketId, assigneeInput.trim());
+      toast.success(res.message || `Ticket assigned to ${assigneeInput.trim()}.`, { id: 'ticket-assigned-to-assigneeinput-trim' });
+    } catch (err: unknown) {
+      const errorMsg = err instanceof Error ? err.message : 'Failed to assign ticket.';
+      toast.error(errorMsg, { id: 'failed-to-assign-ticket' });
     } finally {
       setAssignModalTicketId(null);
       setAssigneeInput('');

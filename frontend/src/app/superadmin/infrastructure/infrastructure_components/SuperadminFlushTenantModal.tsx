@@ -33,7 +33,7 @@ export default function SuperadminFlushTenantModal({ isOpen, onClose, onFlush }:
     if (!isOpen) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setSearch('');
-      // eslint-disable-next-line react-hooks/set-state-in-effect
+       
       setSelectedTenantIds([]);
     }
   }, [isOpen]);

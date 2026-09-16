@@ -1,3 +1,4 @@
+'use client';
 // RESPONSIBILITY: useCouponsPage.ts encapsulates all state and async logic for the Coupons page.
 // DATA FLOW: superadminApi → useCouponsPage → CouponsClient
 import { useState, useMemo, useCallback } from 'react';
@@ -122,3 +123,4 @@ export const useSuperadminCoupons = () => {
     setStatusFilter,
   };
 };
+

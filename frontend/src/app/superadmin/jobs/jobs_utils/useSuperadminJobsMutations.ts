@@ -1,3 +1,4 @@
+'use client';
 // RESPONSIBILITY: Encapsulates functionality for useSuperadminJobsMutations.ts
 import { useState } from 'react';
 import type { Dispatch, SetStateAction } from 'react';
@@ -71,4 +72,5 @@ export const useSuperadminJobsMutations = ({ setSelectedJobIds, selectedJobIds }
     handleBulkDelete,
   };
 };
+
 

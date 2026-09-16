@@ -1,3 +1,4 @@
+'use client';
 // RESPONSIBILITY: Generic fetch hook for Tickets read-only data.
 // DATA FLOW: Component -> useSuperadminTicketsData.ts -> API/Store
 import { useCallback } from 'react';
@@ -23,3 +24,4 @@ export function useSuperadminTicketsData<T>(endpoint: string) {
 
   return { data, isLoading: query.isLoading, isError: query.isError, error, mutate };
 }
+

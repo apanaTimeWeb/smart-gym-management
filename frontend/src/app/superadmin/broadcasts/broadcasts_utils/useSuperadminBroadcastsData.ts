@@ -1,3 +1,4 @@
+'use client';
 // RESPONSIBILITY: Encapsulates functionality for useSuperadminBroadcastsData.ts
 import { useMemo, useCallback } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -56,4 +57,5 @@ export const useSuperadminBroadcastsData = () => {
     updateBroadcasts
   };
 };
+
 

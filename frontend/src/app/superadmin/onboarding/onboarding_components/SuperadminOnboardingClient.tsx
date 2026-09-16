@@ -52,24 +52,24 @@ export default function SuperadminOnboardingClient() {
 
   const resendMut = useMutation({
     mutationFn: onboardingApi.resendVerification,
-    onSuccess: () => {
-      toast.success('Verification email resent successfully.', { id: 'verification-email-resent-successfully' });
+    onSuccess: (res) => {
+      toast.success(res.message || 'Verification email resent successfully.', { id: 'verification-email-resent-successfully' });
       queryClient.invalidateQueries({ queryKey: ['superadmin_onboardings'] });
     },
   });
 
   const markVerifiedMut = useMutation({
     mutationFn: onboardingApi.markVerified,
-    onSuccess: () => {
-      toast.success('Email marked as verified.', { id: 'email-marked-as-verified' });
+    onSuccess: (res) => {
+      toast.success(res.message || 'Email marked as verified.', { id: 'email-marked-as-verified' });
       queryClient.invalidateQueries({ queryKey: ['superadmin_onboardings'] });
     },
   });
 
   const extendMut = useMutation({
     mutationFn: ({ id, days }: { id: string; days: number }) => onboardingApi.extendTrial(id, days),
-    onSuccess: (data, variables) => {
-      toast.success(`Trial extended by ${variables.days} days.`, { id: 'trial-extended-by-variables-days-days' });
+    onSuccess: (res, variables) => {
+      toast.success(res.message || `Trial extended by ${variables.days} days.`, { id: 'trial-extended-by-variables-days-days' });
       setExtendModalId(null);
       setExtendDays('7');
       queryClient.invalidateQueries({ queryKey: ['superadmin_onboardings'] });
@@ -78,8 +78,8 @@ export default function SuperadminOnboardingClient() {
 
   const convertMut = useMutation({
     mutationFn: onboardingApi.convertToPaid,
-    onSuccess: () => {
-      toast.success('Gym converted to paid plan.', { id: 'gym-converted-to-paid-plan' });
+    onSuccess: (res) => {
+      toast.success(res.message || 'Gym converted to paid plan.', { id: 'gym-converted-to-paid-plan' });
       setConvertConfirmId(null);
       queryClient.invalidateQueries({ queryKey: ['superadmin_onboardings'] });
     },

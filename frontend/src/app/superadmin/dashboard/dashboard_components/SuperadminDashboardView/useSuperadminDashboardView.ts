@@ -1,3 +1,4 @@
+'use client';
 // DATA FLOW: URL search params → useSuperadminDashboardView.ts → TanStack Query → SuperadminDashboardView → Dashboard child components
 // RESPONSIBILITY: Custom hook managing the data fetching for the Dashboard view using TanStack Query.
 import { useQuery } from '@tanstack/react-query';
@@ -34,3 +35,4 @@ export function useSuperadminDashboardView() {
     timeRange
   };
 }
+

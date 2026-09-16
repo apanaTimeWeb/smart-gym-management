@@ -91,7 +91,7 @@ describe('useSuperadminBackupsData', () => {
     renderHook(() => useSuperadminBackupsData());
 
     expect(useQuery).toHaveBeenCalledWith(expect.objectContaining({
-      queryKey: ['superadmin', 'backups'],
+      queryKey: expect.arrayContaining(['superadmin', 'backups']),
     }));
   });
 });

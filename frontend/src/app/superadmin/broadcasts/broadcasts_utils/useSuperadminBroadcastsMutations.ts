@@ -1,3 +1,4 @@
+'use client';
 // RESPONSIBILITY: Encapsulates functionality for useSuperadminBroadcastsMutations.ts
 import { useMutation } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
@@ -99,4 +100,5 @@ export const useSuperadminBroadcastsMutations = ({
 
   return { createMutation, updateMutation, deleteMutation, isMutating };
 };
+
 
