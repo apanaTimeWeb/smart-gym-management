@@ -1,3 +1,4 @@
+// DATA FLOW: feature API/schema → hook/context → useAdminImpersonationStore consumers.
 // RESPONSIBILITY: Zustand store for managing the "Login as Manager" branch impersonation session state.
 import { create } from 'zustand';
 

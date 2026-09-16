@@ -33,7 +33,7 @@ export default function AdminReportsAttendance() {
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {reportData.attendanceSummary.map((row: any) => (
+              {reportData.attendanceSummary.map((row) => (
                 <tr key={row.gymId} className="hover:bg-primary/5 motion-safe:transition-colors">
                   <td className="px-5 py-4 text-sm font-semibold text-foreground">{row.gymName}</td>
                   <td className="px-5 py-4 text-sm text-foreground">{row.avgDailyAttendance}</td>

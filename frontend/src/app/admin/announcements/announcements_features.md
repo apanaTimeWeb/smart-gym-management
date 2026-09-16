@@ -124,3 +124,20 @@ All calls go through the module's `announcementsApi` client in `announcements_ap
 - [x] Design §12: Modals at `z-40`, toasts at `z-50`
 - [x] Design §28: Modal uses `bg-overlay` surface elevation token
 - [x] Design §29: `motion-safe:` prefix on all transitions
+
+## UI Data Requirements
+- Every data-driven table, KPI, chart, filter, dropdown and detail field must map to a typed API response field and be represented in module-owned fixtures where mocked.
+- Verify each rendered data field against the module API schema before changing the UI.
+
+## Component Responsibility Map
+| Component | Responsibility |
+|---|---|
+| `announcements_components/AdminAnnouncementsKPIs/AdminAnnouncementsKPIs.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `announcements_components/AdminAnnouncementsMain/AdminAnnouncementsMain.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `announcements_components/AdminAnnouncementsModal/AdminAnnouncementsModal.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `announcements_components/AdminAnnouncementsTable/AdminAnnouncementsTable.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+
+
+## Module-Owned MSW Fixtures
+
+All Admin frontend-first API fixtures and MSW transport handlers are owned by `admin/admin_mocks/fixtures/AdminMockFixtures.ts` and `admin/admin_mocks/handlers/AdminMockHandlers.ts`. These files provide populated success responses and are the only module-owned mock transport source for Admin. Global MSW bootstrap may register these handlers, but must not contain Admin business data.

@@ -22,15 +22,15 @@ export const subscriptionsApi = {
     return apiFetch<ApiResponse<SubscriptionKPIData>>(`${AdminSubscriptionsUrlConfig.api.base}/fetchKPIs`, { method: 'GET', dataSchema: subscriptionKpiDataSchema });
   },
   upgradePlan: async (planId: string) => {
-          return apiFetch<ApiResponse<any>>(`${AdminSubscriptionsUrlConfig.api.base}/upgradePlan`, { method: 'POST', body: JSON.stringify(planId), dataSchema: z.any() });
+          return apiFetch<ApiResponse<null>>(`${AdminSubscriptionsUrlConfig.api.base}/upgradePlan`, { method: 'POST', body: JSON.stringify(planId), dataSchema: z.unknown() });
       },
   toggleAutoRenew: async () => {
-          return apiFetch<ApiResponse<any>>(`${AdminSubscriptionsUrlConfig.api.base}/toggleAutoRenew`, { method: 'POST', dataSchema: z.any() });
+          return apiFetch<ApiResponse<null>>(`${AdminSubscriptionsUrlConfig.api.base}/toggleAutoRenew`, { method: 'POST', dataSchema: z.unknown() });
       },
   setDefaultPaymentMethod: async (id: string) => {
-          return apiFetch<ApiResponse<any>>(`${AdminSubscriptionsUrlConfig.api.base}/setDefaultPaymentMethod`, { method: 'POST', body: JSON.stringify(id), dataSchema: z.any() });
+          return apiFetch<ApiResponse<null>>(`${AdminSubscriptionsUrlConfig.api.base}/setDefaultPaymentMethod`, { method: 'POST', body: JSON.stringify(id), dataSchema: z.unknown() });
       },
   removePaymentMethod: async (id: string) => {
-          return apiFetch<ApiResponse<any>>(`${AdminSubscriptionsUrlConfig.api.base}/removePaymentMethod`, { method: 'DELETE', body: JSON.stringify(id), dataSchema: z.any() });
+          return apiFetch<ApiResponse<null>>(`${AdminSubscriptionsUrlConfig.api.base}/removePaymentMethod`, { method: 'DELETE', body: JSON.stringify(id), dataSchema: z.unknown() });
       },
 };

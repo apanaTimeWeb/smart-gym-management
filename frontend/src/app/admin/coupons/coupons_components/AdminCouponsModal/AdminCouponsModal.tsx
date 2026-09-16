@@ -38,7 +38,7 @@ export default function AdminCouponsModal() {
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowModal(false)} />
-      <div className="relative bg-overlay border border-border rounded-2xl shadow-2xl w-full max-w-lg max-h-[90%] overflow-y-auto custom-scrollbar">
+      <div className="relative bg-overlay border border-border rounded-2xl shadow-2xl w-full max-w-lg max-h-screen overflow-y-auto custom-scrollbar">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-border sticky top-0 bg-overlay z-10">
           <h2 className="text-lg font-bold text-foreground">{editId ? 'Edit Coupon' : 'Create Coupon'}</h2>
@@ -137,7 +137,7 @@ export default function AdminCouponsModal() {
             <button type="button" onClick={() => setShowModal(false)} className="px-4 py-2 bg-input border border-border rounded-lg text-sm font-medium text-secondary hover:text-foreground motion-safe:transition-colors">
               Cancel
             </button>
-            <button type="submit" disabled={saving} className="px-5 py-2 bg-primary text-black rounded-lg text-sm font-semibold hover:bg-primary-hover motion-safe:transition-colors disabled:opacity-60 disabled:cursor-not-allowed active:scale-95 min-w-[120px]">
+            <button type="submit" disabled={saving} className="px-5 py-2 bg-primary text-black rounded-lg text-sm font-semibold hover:bg-primary-hover motion-safe:transition-colors disabled:opacity-60 disabled:cursor-not-allowed active:scale-95 min-w-32">
               {saving ? 'Saving...' : editId ? 'Update Coupon' : 'Create Coupon'}
             </button>
           </div>

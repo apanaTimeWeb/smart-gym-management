@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Core UI component/route for the admin module orchestrating views and displaying sub-components.
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
-import AdminNotificationsClient from './AdminNotificationsClient';
+import AdminNotificationsClient from '@/app/admin/notifications/notifications_components/AdminNotificationsClient';
 
 vi.mock('@/app/admin/notifications/notifications_utils/useAdminNotificationsPage', () => ({
   useAdminNotificationsPage: () => ({

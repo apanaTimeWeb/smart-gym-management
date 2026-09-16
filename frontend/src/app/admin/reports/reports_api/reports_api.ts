@@ -7,9 +7,9 @@ import { z } from "zod";
 
 export const reportsApi = {
   fetchReportData: async (params?: { dateRange?: string; gymId?: string; startDate?: string; endDate?: string }) => {
-    return apiFetch<ApiResponse<ReportData>>(`${AdminReportsUrlConfig.api.base}/fetchReportData`, { method: 'GET', dataSchema: z.any() });
+    return apiFetch<ApiResponse<ReportData>>(`${AdminReportsUrlConfig.api.base}/fetchReportData`, { method: 'GET', dataSchema: z.unknown() });
   },
   exportReport: async (_params?: { tab?: string; format?: string }) => {
-    return apiFetch<ApiResponse<any>>(`${AdminReportsUrlConfig.api.base}/exportReport`, { method: 'POST', body: JSON.stringify(_params), dataSchema: z.any() });
+    return apiFetch<ApiResponse<{ url: string; fileName?: string }>>(`${AdminReportsUrlConfig.api.base}/exportReport`, { method: 'POST', body: JSON.stringify(_params), dataSchema: z.unknown() });
   },
 };

@@ -1,80 +1,40 @@
 // RESPONSIBILITY: Core data logic hook for the admin module.
 // DATA FLOW: Centralized store/hook logic mapping API mutations and query state to UI props.
 import React, { useState, useCallback, useEffect } from 'react';
-import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import type { Staff, Payroll, HrSummary, HrContextType, HrInitialData } from '@/app/admin/hr/hr_types/AdminHrTypes';
 import { hrApi } from '@/app/admin/hr/hr_api/AdminHrApi';
 import type { ToastType } from '@/app/admin/admin_components/AdminFeedback/AdminToast';
 import { EMPTY_STAFF } from '@/app/admin/hr/hr_utils/AdminHrSharedConstants';
 import { useDebounce } from '@/app/admin/admin_utils/useDebounce';
-import { useAdminHrStaffMutations } from './useAdminHrStaffMutations';
-import { useAdminHrPayrollMutations } from './useAdminHrPayrollMutations';
+import { useAdminHrStaffMutations } from '@/app/admin/hr/hr_context/useAdminHrStaffMutations';
+import { useAdminHrPayrollMutations } from '@/app/admin/hr/hr_context/useAdminHrPayrollMutations';
+import { useAdminHrUrlState } from '@/app/admin/hr/hr_context/useAdminHrUrlState';
+import { useAdminHrModalState } from '@/app/admin/hr/hr_context/useAdminHrModalState';
 import { useAdminGlobalStore } from '@/app/admin/admin_store/useAdminGlobalStore';
 import { useAdminToastStore } from '@/app/admin/admin_store/useAdminToastStore';
 
 export function useAdminHrLogic(initialData?: HrInitialData | null): HrContextType {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-
-  const [staff, setStaff] = useState<Staff[]>([]);
-  const [payrolls, setPayrolls] = useState<Payroll[]>([]);
-  const [summary, setSummary] = useState<HrSummary | null>(null);
-  const [fetchState, setFetchState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
-  const [error, setError] = useState('');
-  const [visibleColumns, setVisibleColumns] = useState<string[]>(['Name', 'Role', 'Branch', 'Status']);
   const { showToast } = useAdminToastStore();
+  const {
+    search, currentPage, roleFilter, branchFilter, payrollMonth,
+    debouncedSearch, setSearch, setCurrentPage, setRoleFilter, setBranchFilter, setPayrollMonth,
+  } = useAdminHrUrlState();
 
-  const search = searchParams.get('search') || '';
-  const currentPage = parseInt(searchParams.get('page') || '1', 10);
-  const roleFilter = searchParams.get('role') || 'All';
-  const branchFilter = searchParams.get('branch') || 'All';
-  const payrollMonth = searchParams.get('month') || new Date().toISOString().substring(0, 7);
-  const debouncedSearch = useDebounce(search, 300);
-  const currentSearch = search;
-
-  const isFirstRender = React.useRef(true);
-
-  useEffect(() => {
-    if (initialData) {
-      setStaff(initialData.staff);
-      setPayrolls(initialData.payrolls);
-      setSummary(initialData.summary);
-      setFetchState('success');
-    }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const setUrlParam = useCallback((key: string, value: string | null) => {
-    const current = new URLSearchParams(Array.from(searchParams.entries()));
-    if (value) current.set(key, value);
-    else current.delete(key);
-    if (key !== 'page' && key !== 'month') current.set('page', '1');
-    router.push(`${pathname}?${current.toString()}`);
-  }, [searchParams, pathname, router]);
-
-  useEffect(() => {
-    if (debouncedSearch !== currentSearch) {
-      setUrlParam('search', debouncedSearch || null);
-    }
-  }, [debouncedSearch, searchParams, setUrlParam, currentSearch]);
-
-  const setSearch = useCallback((val: string) => setUrlParam('search', val || null), [setUrlParam]);
-  const setCurrentPage = useCallback((val: number) => setUrlParam('page', val.toString()), [setUrlParam]);
-  const setRoleFilter = useCallback((val: string) => setUrlParam('role', val === 'All' ? null : val), [setUrlParam]);
-  const setBranchFilter = useCallback((val: string) => setUrlParam('branch', val === 'All' ? null : val), [setUrlParam]);
-  const setPayrollMonth = useCallback((val: string) => setUrlParam('month', val), [setUrlParam]);
-
-  const [showModal, setShowModal] = useState(false);
-  const [showPayrollModal, setShowPayrollModal] = useState(false);
-  const [showProfileModal, setShowProfileModal] = useState(false);
-  const [paymentModal, setPaymentModal] = useState<{ payrollId: string; staffName: string; pendingAmount: number; } | null>(null);
-  const [editId, setEditId] = useState<string | null>(null);
-  const [editData, setEditData] = useState<Partial<Staff> | null>(null);
-  const [viewProfileData, setViewProfileData] = useState<Staff | null>(null);
-  const [saving, setSaving] = useState(false);
-
+  const {
+    showModal, setShowModal, showPayrollModal, setShowPayrollModal,
+    showProfileModal, setShowProfileModal, paymentModal, setPaymentModal,
+    editId, setEditId, editData, setEditData, viewProfileData, setViewProfileData, saving, setSaving,
+  } = useAdminHrModalState();
 
   const { selectedBranchId } = useAdminGlobalStore();
+
+  const [staff, setStaff] = useState<Staff[]>(initialData?.staff || []);
+  const [payrolls, setPayrolls] = useState<Payroll[]>(initialData?.payrolls || []);
+  const [summary, setSummary] = useState<HrSummary | null>(initialData?.summary || null);
+  const [fetchState, setFetchState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [error, setError] = useState<string>('');
+  const [visibleColumns, setVisibleColumns] = useState<string[]>(['name', 'role', 'phone', 'salary', 'status', 'actions']);
+  const isFirstRender = React.useRef(true);
 
   const loadAll = useCallback(async () => {
     setFetchState('loading');
@@ -90,8 +50,8 @@ export function useAdminHrLogic(initialData?: HrInitialData | null): HrContextTy
         hrApi.getSummary(selectedBranchId)
       ]);
       
-      let fetchedStaff = staffRes.data.staff || [];
-      let fetchedPayrolls = payrollsRes.data.payrolls || [];
+      let fetchedStaff = staffRes.data?.staff || [];
+      let fetchedPayrolls = payrollsRes.data?.payrolls || [];
 
       if (debouncedSearch) {
         const q = debouncedSearch.toLowerCase();

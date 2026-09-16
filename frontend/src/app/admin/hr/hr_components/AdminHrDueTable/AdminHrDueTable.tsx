@@ -1,4 +1,5 @@
 "use client";
+// RESPONSIBILITY: Renders/orchestrates AdminHrDueTable for the admin module; UI composition stays here and business/API logic remains in dedicated hooks and APIs.
 import { useState } from 'react';
 import { useHrContext } from '@/app/admin/hr/hr_context/AdminHrContext';
 import { AlertCircle } from 'lucide-react';
@@ -95,7 +96,7 @@ export default function AdminHrDueTable() {
             <label className="block text-sm font-medium mb-1 text-foreground">Notes</label>
             <textarea 
               value={notes} onChange={(e) => setNotes(e.target.value)}
-              className="w-full px-3 py-2 border border-border rounded-lg text-sm bg-card text-foreground min-h-[80px]"
+              className="w-full px-3 py-2 border border-border rounded-lg text-sm bg-card text-foreground min-h-20"
               placeholder="e.g. Clearing Oct pending salary..."
             />
           </div>

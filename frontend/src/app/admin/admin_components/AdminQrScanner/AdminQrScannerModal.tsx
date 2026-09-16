@@ -29,7 +29,7 @@ export default function AdminQrScannerModal({ open, onClose }: AdminQrScannerMod
           <button
             onClick={onClose}
             aria-label="Close scanner"
-            className="absolute top-6 left-6 p-3 bg-white/10 hover:bg-white/20 text-white rounded-full motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            className="absolute top-6 left-6 p-3 bg-card/10 hover:bg-card/20 text-white rounded-full motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
             <X size={24} />
           </button>
@@ -65,7 +65,7 @@ export default function AdminQrScannerModal({ open, onClose }: AdminQrScannerMod
               onClick={() => handleSimulateScan(true)}
               disabled={status === 'SCANNING'}
               aria-label="Simulate an active member scan"
-              className="px-6 py-3 bg-white/10 hover:bg-white/20 text-white text-sm font-bold rounded-xl motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:opacity-50"
+              className="px-6 py-3 bg-card/10 hover:bg-card/20 text-white text-sm font-bold rounded-xl motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:opacity-50"
             >
               Simulate Active
             </button>
@@ -73,7 +73,7 @@ export default function AdminQrScannerModal({ open, onClose }: AdminQrScannerMod
               onClick={() => handleSimulateScan(false)}
               disabled={status === 'SCANNING'}
               aria-label="Simulate an expired member scan"
-              className="px-6 py-3 bg-white/10 hover:bg-white/20 text-white text-sm font-bold rounded-xl motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:opacity-50"
+              className="px-6 py-3 bg-card/10 hover:bg-card/20 text-white text-sm font-bold rounded-xl motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:opacity-50"
             >
               Simulate Expired
             </button>

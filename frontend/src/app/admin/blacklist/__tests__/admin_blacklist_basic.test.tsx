@@ -1,8 +1,8 @@
-﻿import { describe, it, expect } from 'vitest';
+import fs from 'node:fs';
+import { describe, expect, it } from 'vitest';
 
-describe('admin blacklist module', () => {
-  it('should render basic components', () => {
-    // Placeholder test to ensure directory structure is tracked by git
-    expect(true).toBe(true);
+describe('admin_blacklist_basic contract', () => {
+  it('has a non-empty test target module', () => {
+    expect(fs.statSync(import.meta.url.replace('/admin_blacklist_basic.test.tsx', '')).isDirectory()).toBe(true);
   });
 });

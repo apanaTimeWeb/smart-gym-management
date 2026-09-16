@@ -69,3 +69,44 @@ cross-branch visibility and performance comparison.
 - [x] Rule 40: `branches_forbidden.md` present
 - [ ] Rule 15B: Forms — no forms present (read-only module); N/A
 - [ ] Rule 75: MSW handler not yet configured
+
+
+## User Flows & Interactions
+1. Enter the `/admin/branches` route and load the module UI.
+2. Use the module controls/forms/tables provided by the documented components.
+3. Submit supported mutations through the module API layer and reconcile the TanStack Query cache.
+4. On failure, preserve user input where applicable and render the module-specific error state.
+
+
+## Data and State Architecture
+- Server state: TanStack Query owns API responses, loading/error state, pagination and mutation reconciliation.
+- UI state: component-local state or module-scoped Zustand only for UI concerns.
+- Query keys observed in source: 'admin', 'branches'.
+
+
+## API Contract
+| API file | Endpoint literal observed |
+|---|---|
+| None discovered | API routes are defined through URL config; inspect module API file. |
+
+## UI Data Requirements
+- Every data-driven table, KPI, chart, filter, dropdown and detail field must map to a typed API response field and be represented in module-owned fixtures where mocked.
+- Verify each rendered data field against the module API schema before changing the UI.
+
+## Loading, Empty, and Error States
+- Route loading: `loading.tsx` where present, using skeleton layout rather than full-page generic spinners.
+- Route failure: `error.tsx` where present, with module-specific recovery via `reset()`.
+- Entity lists: use the feature's dedicated empty-state component; query failures remain inline unless explicitly configured to throw.
+
+## Component Responsibility Map
+| Component | Responsibility |
+|---|---|
+| `branches_components/AdminBranchCard/AdminBranchCard.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `branches_components/AdminBranchDetailDrawer/AdminBranchDetailDrawer.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `branches_components/AdminBranchesMain/AdminBranchesMain.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `branches_components/AdminBranchesToolbar/AdminBranchesToolbar.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+
+
+## Module-Owned MSW Fixtures
+
+All Admin frontend-first API fixtures and MSW transport handlers are owned by `admin/admin_mocks/fixtures/AdminMockFixtures.ts` and `admin/admin_mocks/handlers/AdminMockHandlers.ts`. These files provide populated success responses and are the only module-owned mock transport source for Admin. Global MSW bootstrap may register these handlers, but must not contain Admin business data.

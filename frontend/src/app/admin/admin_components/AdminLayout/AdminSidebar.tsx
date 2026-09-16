@@ -165,7 +165,7 @@ export default function AdminSidebar({ isCollapsed, setIsCollapsed }: AdminSideb
 
         {/* User */}
         <div className={`px-4 py-4 border-t border-border bg-header shrink-0 flex items-center ${(!isCollapsed || isMobileOpen) ? 'gap-3' : 'justify-center'}`}>
-          <div className="w-10 h-10 min-w-10 rounded-full flex items-center justify-center text-white text-sm font-bold border border-white/10 bg-primary">
+          <div className="w-10 h-10 min-w-10 rounded-full flex items-center justify-center text-white text-sm font-bold border border-border/10 bg-primary">
             {mounted ? (user?.name?.charAt(0)?.toUpperCase() || 'A') : 'A'}
           </div>
           {(!isCollapsed || isMobileOpen) && (

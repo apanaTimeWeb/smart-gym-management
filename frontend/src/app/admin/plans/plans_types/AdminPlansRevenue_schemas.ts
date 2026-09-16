@@ -13,7 +13,7 @@ export const planRevenueRecordSchema = z.object({
     renewalRate: z.number()
 });
 
-export const revenueSortKeySchema = z.any();
+export const revenueSortKeySchema = z.unknown();
 
 export const revenueSortDirectionSchema = z.union([z.literal("asc"), z.literal("desc")]);
 

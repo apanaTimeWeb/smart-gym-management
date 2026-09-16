@@ -21,10 +21,10 @@ export interface FetchMembersParams {
 
 export const adminMembersApi = {
   fetchMembers: async (params: FetchMembersParams) => {
-    const query = new URLSearchParams(params as any).toString();
-    return apiFetch(`${ADMIN_MEMBERS_URLS.list}${query ? '?' + query : ''}`, { dataSchema: z.any() });
+    const query = new URLSearchParams(Object.entries(params).reduce<Record<string, string>>((acc, [key, value]) => { if (value !== undefined) acc[key] = String(value); return acc; }, {})).toString();
+    return apiFetch<ApiResponse<AdminMember[]>>(`${ADMIN_MEMBERS_URLS.list}${query ? '?' + query : ''}`, { dataSchema: z.unknown() });
   },
   fetchSummary: async () => {
-    return apiFetch(ADMIN_MEMBERS_URLS.summary, { dataSchema: z.any() });
+    return apiFetch<ApiResponse<AdminMembersSummary>>(ADMIN_MEMBERS_URLS.summary, { dataSchema: z.unknown() });
   },
 };

@@ -1,29 +1,42 @@
 "use client";
-// RESPONSIBILITY: Data logic hook for Admin Usage. Fetches usage data and computes metric cards.
-// DATA FLOW: Mock API → useAdminUsageLogic → AdminUsageMain → child components
+// RESPONSIBILITY: Fetches Admin usage server state and derives presentation metrics.
+// DATA FLOW: Admin usage API → TanStack Query → useAdminUsageLogic → AdminUsageMain
 
-import { useState, useCallback, useMemo } from 'react';
-import { MOCK_USAGE_DATA } from '@/app/admin/usage/usage_utils/AdminUsageSharedConstants';
-import type { AdminUsageData, AdminUsageMetric, FetchState } from '@/app/admin/usage/usage_types/AdminUsageTypes';
+import { useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { usageApi } from '@/app/admin/usage/usage_api/usage_api';
+import { PLAN_TIERS } from '@/app/admin/usage/usage_utils/AdminUsageSharedConstants';
+import type { AdminUsageData, AdminUsageMetric } from '@/app/admin/usage/usage_types/AdminUsageTypes';
 
 export function useAdminUsageLogic() {
-  const [fetchState, setFetchState] = useState<FetchState>('success');
-  const [data] = useState<AdminUsageData>(MOCK_USAGE_DATA);
+  const query = useQuery({
+    queryKey: ['adminUsage', 'current'],
+    queryFn: async () => {
+      const response = await usageApi.fetchMyUsage();
+      return response.data;
+    },
+    staleTime: 60_000,
+  });
 
-  const loadUsage = useCallback(async () => {
-    setFetchState('loading');
-    await new Promise((r) => setTimeout(r, 500));
-    setFetchState('success');
-  }, []);
+  const data = query.data as AdminUsageData | null | undefined;
+  const metrics = useMemo<AdminUsageMetric[]>(() => {
+    if (!data) return [];
+    return [
+      { label: 'Members', used: data.activeMembers, limit: data.memberLimit, unit: 'members', warningThreshold: 80 },
+      { label: 'Staff Seats', used: data.staffCount, limit: data.staffLimit, unit: 'seats', warningThreshold: 90 },
+      { label: 'Branches', used: data.branchCount, limit: data.branchLimit, unit: 'branches', warningThreshold: 80 },
+      { label: 'SMS This Month', used: data.smsSent, limit: data.smsLimit, unit: 'SMS', warningThreshold: 85 },
+      { label: 'Storage Used', used: data.databaseGb + data.mediaGb, limit: data.storageLimitGb, unit: 'GB', warningThreshold: 80 },
+      { label: 'API Calls Today', used: data.apiCallsToday, limit: data.apiCallsLimit, unit: 'calls', warningThreshold: 75 },
+    ];
+  }, [data]);
 
-  const metrics = useMemo((): AdminUsageMetric[] => [
-    { label: 'Members', used: data.activeMembers, limit: data.memberLimit, unit: 'members', warningThreshold: 80 },
-    { label: 'Staff Seats', used: data.staffCount, limit: data.staffLimit, unit: 'seats', warningThreshold: 90 },
-    { label: 'Branches', used: data.branchCount, limit: data.branchLimit, unit: 'branches', warningThreshold: 80 },
-    { label: 'SMS This Month', used: data.smsSent, limit: data.smsLimit, unit: 'SMS', warningThreshold: 85 },
-    { label: 'Storage Used', used: data.databaseGb + data.mediaGb, limit: data.storageLimitGb, unit: 'GB', warningThreshold: 80 },
-    { label: 'API Calls Today', used: data.apiCallsToday, limit: data.apiCallsLimit, unit: 'calls', warningThreshold: 75 },
-  ], [data]);
-
-  return { fetchState, data, metrics, loadUsage };
+  return {
+    data: data ?? null,
+    metrics,
+    planTiers: PLAN_TIERS,
+    status: query.status,
+    error: query.error instanceof Error ? query.error.message : '',
+    refresh: query.refetch,
+  };
 }

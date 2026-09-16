@@ -2,7 +2,7 @@
 // DATA FLOW: Centralized store/hook logic mapping API mutations and query state to UI props.
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
-import { useAdminNotificationsPage } from './useAdminNotificationsPage';
+import { useAdminNotificationsPage } from '@/app/admin/notifications/notifications_utils/useAdminNotificationsPage';
 
 vi.mock('react-hot-toast', () => ({ default: { success: vi.fn(), error: vi.fn() } }));
 

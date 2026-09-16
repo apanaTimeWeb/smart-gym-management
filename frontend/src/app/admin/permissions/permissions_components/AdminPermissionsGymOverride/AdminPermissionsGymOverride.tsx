@@ -31,7 +31,7 @@ export default function AdminPermissionsGymOverride() {
         <span className="ml-auto text-xs bg-warning-bg text-warning px-2 py-0.5 rounded-full border border-warning/20">{overrides.length} active</span>
       </div>
       <div className="divide-y divide-border">
-        {overrides.map((override: any, i: number) => {
+        {overrides.map((override, i: number) => {
           const overrideCount = Object.keys(override.overrides).length;
           const isSelected = selectedGymId === override.gymId;
           return (

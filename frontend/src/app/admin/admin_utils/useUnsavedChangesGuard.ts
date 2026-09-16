@@ -1,4 +1,5 @@
 "use client";
+// DATA FLOW: feature API/schema → hook/context → useUnsavedChangesGuard consumers.
 // RESPONSIBILITY: Provides a generic dirty-state guard for forms to prevent accidental data loss on navigation or tab close.
 import { useEffect } from 'react';
 

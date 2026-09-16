@@ -1,4 +1,5 @@
 "use client";
+// DATA FLOW: feature API/schema → hook/context → useAdminAnnouncementsLogic consumers.
 // RESPONSIBILITY: Business logic hook for Announcements — queries, mutations, filtering.
 
 import { useCallback } from 'react';
@@ -23,13 +24,13 @@ export function useAdminAnnouncementsLogic() {
 
   const { data: announcements = [], isLoading, isError } = useQuery({
     queryKey: ['adminAnnouncements'],
-    queryFn: () => announcementsApi.fetchAnnouncements().then((r: any) => r.data || []),
+    queryFn: () => announcementsApi.fetchAnnouncements().then((r) => r.data || []),
     staleTime: 1000 * 60 * 2,
   });
 
   const { data: kpis } = useQuery({
     queryKey: ['adminAnnouncementsKPIs'],
-    queryFn: () => announcementsApi.fetchKPIs().then((r: any) => r.data || null),
+    queryFn: () => announcementsApi.fetchKPIs().then((r) => r.data || null),
     staleTime: 1000 * 60 * 5,
   });
 
@@ -82,7 +83,7 @@ export function useAdminAnnouncementsLogic() {
 
   const pinMutation = useMutation({
     mutationFn: (id: string) => announcementsApi.togglePin(id),
-    onSuccess: (res: any) => {
+    onSuccess: (res) => {
       toast.success(res.data?.isPinned ? 'Pinned' : 'Unpinned');
       qc.invalidateQueries({ queryKey: ['adminAnnouncements'] });
     },

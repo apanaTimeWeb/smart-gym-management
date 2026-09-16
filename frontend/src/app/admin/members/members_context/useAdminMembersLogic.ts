@@ -7,7 +7,8 @@ import { useAdminMembersStore } from '@/app/admin/members/members_store/useAdmin
 import { useAdminGlobalStore } from '@/app/admin/admin_store/useAdminGlobalStore';
 import { ADMIN_MEMBERS_ITEMS_PER_PAGE } from '@/app/admin/members/members_utils/AdminMembersSharedConstants';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import type { AdminMember, FetchState } from '@/app/admin/members/members_types/AdminMembersTypes';
+import type { AdminMember, FetchState, AdminMembersSummary } from '@/app/admin/members/members_types/AdminMembersTypes';
+import type { ApiResponse } from '@/lib/api';
 import { useDebounce } from '@/app/admin/admin_utils/useDebounce';
 import { adminMembersApi } from '@/app/admin/members/members_api/AdminMembersApi';
 import { useState } from 'react';
@@ -49,14 +50,14 @@ export function useAdminMembersLogic() {
   const isLoading = membersLoading || summaryLoading;
   const isError = membersError || summaryError;
   const fetchState: FetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
-  const members = (membersResponse as any)?.data ?? [];
+  const members = (membersResponse as ApiResponse<AdminMember[]>)?.data ?? [];
   const allFilteredCount = members.length;
   const totalPages = Math.max(1, Math.ceil(allFilteredCount / ADMIN_MEMBERS_ITEMS_PER_PAGE));
 
   return {
     members,
     allFilteredCount,
-    summary: (summaryResponse as any)?.data ?? null,
+    summary: (summaryResponse as ApiResponse<AdminMembersSummary>)?.data ?? null,
     fetchState,
     selectedMember,
     setSelectedMember,

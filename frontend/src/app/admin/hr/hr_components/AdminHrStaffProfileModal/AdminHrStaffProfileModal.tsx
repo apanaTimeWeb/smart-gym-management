@@ -2,6 +2,7 @@
 // RESPONSIBILITY: Read-only profile view for Staff/Managers, showing details and assigned branches.
 
 import React from 'react';
+import type { Staff } from '@/app/admin/hr/hr_types/AdminHrTypes';
 import { useHrContext } from '@/app/admin/hr/hr_context/AdminHrContext';
 import { X, Building2, User, Phone, Mail, MapPin, Calendar, Activity, CheckCircle2, Ban, Edit2, IndianRupee, Hash } from 'lucide-react';
 
@@ -30,7 +31,7 @@ export default function AdminHrStaffProfileModal() {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-      <div className="bg-card w-full max-w-3xl rounded-2xl shadow-2xl border border-border overflow-hidden flex flex-col max-h-[90%]">
+      <div className="bg-card w-full max-w-3xl rounded-2xl shadow-2xl border border-border overflow-hidden flex flex-col max-h-screen">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-border bg-input/30">
           <div className="flex items-center gap-3">
@@ -63,7 +64,7 @@ export default function AdminHrStaffProfileModal() {
                 </div>
                 {isManager && (
                   <button
-                    onClick={() => openEdit(editData as any)}
+                    onClick={() => openEdit(editData as Staff)}
                     className="px-4 py-2 bg-primary/10 hover:bg-primary/20 text-primary font-semibold text-sm rounded-xl transition-colors flex items-center gap-2"
                   >
                     <Edit2 size={14} />
@@ -92,11 +93,11 @@ export default function AdminHrStaffProfileModal() {
                   <div className="flex items-center gap-1.5">
                     <span className="text-sm text-secondary">Status:</span>
                     {editData.isActive !== false ? (
-                      <span className="flex items-center gap-1 text-[11px] font-bold text-success bg-success/10 px-2 py-0.5 rounded-md uppercase tracking-wide">
+                      <span className="flex items-center gap-1 text-xs font-bold text-success bg-success/10 px-2 py-0.5 rounded-md uppercase tracking-wide">
                         <CheckCircle2 size={12} /> Active
                       </span>
                     ) : (
-                      <span className="flex items-center gap-1 text-[11px] font-bold text-danger bg-danger/10 px-2 py-0.5 rounded-md uppercase tracking-wide">
+                      <span className="flex items-center gap-1 text-xs font-bold text-danger bg-danger/10 px-2 py-0.5 rounded-md uppercase tracking-wide">
                         <Ban size={12} /> Suspended
                       </span>
                     )}
@@ -128,8 +129,8 @@ export default function AdminHrStaffProfileModal() {
                   </span>
                 </div>
                 <div className="flex items-center gap-3 bg-input/50 p-3 rounded-xl border border-border/50">
-                  <span className="text-[10px] font-bold border border-secondary text-secondary rounded px-1">UPI</span>
-                  <span className="text-sm font-medium text-foreground truncate max-w-[150px]" title={editData.upiId}>
+                  <span className="text-xs font-bold border border-secondary text-secondary rounded px-1">UPI</span>
+                  <span className="text-sm font-medium text-foreground truncate max-w-40" title={editData.upiId}>
                     {editData.upiId || 'N/A'}
                   </span>
                 </div>
@@ -173,11 +174,11 @@ export default function AdminHrStaffProfileModal() {
                         {isManager && (
                           <td className="px-4 py-3 text-right">
                             {isPrimary ? (
-                              <span className="inline-block text-[10px] font-bold text-warning bg-warning/10 border border-warning/20 px-2 py-1 rounded-md uppercase">
+                              <span className="inline-block text-xs font-bold text-warning bg-warning/10 border border-warning/20 px-2 py-1 rounded-md uppercase">
                                 Primary Branch
                               </span>
                             ) : (
-                              <span className="inline-block text-[10px] font-bold text-secondary bg-input px-2 py-1 rounded-md uppercase">
+                              <span className="inline-block text-xs font-bold text-secondary bg-input px-2 py-1 rounded-md uppercase">
                                 Assigned
                               </span>
                             )}

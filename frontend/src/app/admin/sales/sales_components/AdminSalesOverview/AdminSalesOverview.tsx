@@ -21,8 +21,8 @@ export default function AdminSalesOverview() {
   if (fetchState === 'loading') {
     return (
       <div className="space-y-6 animate-pulse">
-        <div className="bg-card p-5 rounded-xl border border-border shadow-lg h-[340px]"></div>
-        <div className="bg-card p-5 rounded-xl border border-border shadow-lg h-[320px]"></div>
+        <div className="bg-card p-5 rounded-xl border border-border shadow-lg h-80"></div>
+        <div className="bg-card p-5 rounded-xl border border-border shadow-lg h-80"></div>
       </div>
     );
   }

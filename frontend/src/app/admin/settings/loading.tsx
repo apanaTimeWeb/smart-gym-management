@@ -7,7 +7,7 @@ export default function Loading() {
           <div key={`skeleton-nav-${id}`} className="h-32 bg-card rounded-xl motion-safe:animate-pulse"></div>
         ))}
       </div>
-      <div className="h-[500px] bg-card rounded-xl border border-border motion-safe:animate-pulse mt-6"></div>
+      <div className="h-32 bg-card rounded-xl border border-border motion-safe:animate-pulse mt-6"></div>
     </div>
   );
 }

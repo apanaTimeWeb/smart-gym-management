@@ -28,12 +28,12 @@ export default function AdminToast({ id, message, type, onClose }: AdminToastPro
   if (!visible) return null;
 
   const config: Record<ToastType, { icon: React.ReactNode, borderClass: string, colorClass: string, shadow: string }> = {
-    success: { icon: <CheckCircle size={20} />, borderClass: 'border-l-success', colorClass: 'text-success', shadow: 'shadow-[0_0_20px_rgba(34,197,94,0.15)]' },
-    error: { icon: <XCircle size={20} />, borderClass: 'border-l-danger', colorClass: 'text-danger', shadow: 'shadow-[0_0_20px_rgba(239,68,68,0.15)]' },
-    whatsapp: { icon: <MessageCircle size={20} />, borderClass: 'border-l-success', colorClass: 'text-success', shadow: 'shadow-[0_0_20px_rgba(34,197,94,0.15)]' },
-    email: { icon: <Mail size={20} />, borderClass: 'border-l-info', colorClass: 'text-info', shadow: 'shadow-[0_0_20px_rgba(59,130,246,0.15)]' },
-    info: { icon: <Info size={20} />, borderClass: 'border-l-info', colorClass: 'text-info', shadow: 'shadow-[0_0_20px_rgba(59,130,246,0.15)]' },
-    warning: { icon: <AlertTriangle size={20} />, borderClass: 'border-l-warning', colorClass: 'text-warning', shadow: 'shadow-[0_0_20px_rgba(245,158,11,0.15)]' },
+    success: { icon: <CheckCircle size={20} />, borderClass: 'border-l-success', colorClass: 'text-success', shadow: 'shadow-lg' },
+    error: { icon: <XCircle size={20} />, borderClass: 'border-l-danger', colorClass: 'text-danger', shadow: 'shadow-lg' },
+    whatsapp: { icon: <MessageCircle size={20} />, borderClass: 'border-l-success', colorClass: 'text-success', shadow: 'shadow-lg' },
+    email: { icon: <Mail size={20} />, borderClass: 'border-l-info', colorClass: 'text-info', shadow: 'shadow-lg' },
+    info: { icon: <Info size={20} />, borderClass: 'border-l-info', colorClass: 'text-info', shadow: 'shadow-lg' },
+    warning: { icon: <AlertTriangle size={20} />, borderClass: 'border-l-warning', colorClass: 'text-warning', shadow: 'shadow-lg' },
   };
 
   const { icon, borderClass, colorClass, shadow } = config[type] || config.success;
@@ -53,7 +53,7 @@ export default function AdminToast({ id, message, type, onClose }: AdminToastPro
           setVisible(false);
           setTimeout(onClose, 300);
         }}
-        className="text-secondary hover:text-foreground flex-shrink-0 motion-safe:transition-colors p-1 rounded-md hover:bg-white/10"
+        className="text-secondary hover:text-foreground flex-shrink-0 motion-safe:transition-colors p-1 rounded-md hover:bg-card/10"
       >
         <X size={16} />
       </button>

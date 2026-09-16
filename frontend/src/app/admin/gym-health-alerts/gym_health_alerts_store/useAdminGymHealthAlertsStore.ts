@@ -1,3 +1,4 @@
+// DATA FLOW: feature API/schema → hook/context → useAdminGymHealthAlertsStore consumers.
 // RESPONSIBILITY: Zustand store for Gym Health Alerts module UI state.
 import { create } from 'zustand';
 

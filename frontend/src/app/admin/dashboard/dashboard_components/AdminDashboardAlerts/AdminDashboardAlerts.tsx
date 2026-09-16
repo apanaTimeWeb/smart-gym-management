@@ -1,4 +1,5 @@
 "use client";
+// RESPONSIBILITY: Renders/orchestrates AdminDashboardAlerts for the admin module; UI composition stays here and business/API logic remains in dedicated hooks and APIs.
 import { useAdminDashboardLogic } from '@/app/admin/dashboard/dashboard_context/useAdminDashboardLogic';
 import { ShieldAlert, AlertTriangle, Info, AlertCircle } from 'lucide-react';
 
@@ -50,7 +51,7 @@ export default function AdminDashboardAlerts() {
               </div>
               <div>
                 <p className="text-sm font-medium text-foreground">{alert.message}</p>
-                <p className="text-[10px] text-secondary mt-1 uppercase font-semibold">
+                <p className="text-xs text-secondary mt-1 uppercase font-semibold">
                   {new Date(alert.date).toLocaleDateString()}
                 </p>
               </div>
@@ -60,7 +61,7 @@ export default function AdminDashboardAlerts() {
       </div>
       
       {stats.systemAlerts.length > 0 && (
-        <button className="w-full mt-4 py-2 border border-border rounded-lg text-xs font-bold text-secondary hover:text-foreground hover:bg-white/5 transition-colors">
+        <button className="w-full mt-4 py-2 border border-border rounded-lg text-xs font-bold text-secondary hover:text-foreground hover:bg-card/5 transition-colors">
           View All Alerts
         </button>
       )}

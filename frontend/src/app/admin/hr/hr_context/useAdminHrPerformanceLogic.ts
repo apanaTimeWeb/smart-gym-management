@@ -1,3 +1,4 @@
+// DATA FLOW: feature API/schema → hook/context → useAdminHrPerformanceLogic consumers.
 // RESPONSIBILITY: Logic layer for Staff Performance Dashboard. Handles API fetching,
 // client-side sorting, and deriving KPI aggregates.
 import { useState, useMemo } from 'react';
@@ -36,7 +37,7 @@ export function useAdminHrPerformanceLogic() {
   const filteredData = useMemo(() => {
     if (!searchQuery.trim()) return staffData;
     const lowerQ = searchQuery.toLowerCase();
-    return staffData.filter((s: any) => 
+    return staffData.filter((s) => 
       s.name.toLowerCase().includes(lowerQ) || 
       s.role.toLowerCase().includes(lowerQ) ||
       s.branchName.toLowerCase().includes(lowerQ)

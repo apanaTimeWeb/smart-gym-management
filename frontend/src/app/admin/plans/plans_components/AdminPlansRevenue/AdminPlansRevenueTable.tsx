@@ -63,7 +63,7 @@ export default function AdminPlansRevenueTable({ data, sortKey, sortDir, onSort 
                 </td>
               </tr>
             ) : (
-              data.map((row: any) => (
+              data.map((row) => (
                 <tr key={row.id} className="hover:bg-input motion-safe:transition-colors cursor-pointer">
                   {/* Plan Name */}
                   <td className="px-4 py-3.5">

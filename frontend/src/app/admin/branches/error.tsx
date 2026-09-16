@@ -25,7 +25,7 @@ export default function AdminBranchesError({ error, reset }: { error: Error & { 
   }
 
   return (
-    <div className="min-h-[400px] flex flex-col items-center justify-center text-center p-6 bg-card rounded-2xl border border-border mt-4">
+    <div className="min-h-96 flex flex-col items-center justify-center text-center p-6 bg-card rounded-2xl border border-border mt-4">
       <AlertTriangle className="w-12 h-12 text-danger mb-4" />
       <h3 className="text-lg font-bold text-foreground mb-2">Something went wrong</h3>
       <p className="text-secondary">{error.message}</p>

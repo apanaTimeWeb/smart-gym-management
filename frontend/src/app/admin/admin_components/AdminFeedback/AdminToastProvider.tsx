@@ -1,4 +1,5 @@
 "use client";
+// RESPONSIBILITY: Renders/orchestrates AdminToastProvider for the admin module; UI composition stays here and business/API logic remains in dedicated hooks and APIs.
 import AdminToast from '@/app/admin/admin_components/AdminFeedback/AdminToast';
 import { useAdminToastStore } from '@/app/admin/admin_store/useAdminToastStore';
 

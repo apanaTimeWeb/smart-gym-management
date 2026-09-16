@@ -1,4 +1,5 @@
 "use client";
+// RESPONSIBILITY: Renders/orchestrates AdminHeaderProfile for the admin module; UI composition stays here and business/API logic remains in dedicated hooks and APIs.
 import { useState, useRef, useEffect } from 'react';
 import { User, Settings, LogOut } from 'lucide-react';
 import Link from 'next/link';

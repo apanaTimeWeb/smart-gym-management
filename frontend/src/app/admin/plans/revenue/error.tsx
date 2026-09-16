@@ -11,7 +11,7 @@ export default function Error({
   reset: () => void;
 }) {
   return (
-    <div className="p-4 sm:p-6 max-w-7xl mx-auto flex flex-col items-center justify-center min-h-[50vh]">
+    <div className="p-4 sm:p-6 max-w-7xl mx-auto flex flex-col items-center justify-center min-h-screen">
       <div className="bg-danger/10 p-4 rounded-full mb-4">
         <AlertTriangle size={48} className="text-danger" />
       </div>

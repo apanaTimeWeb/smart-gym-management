@@ -1,4 +1,5 @@
 "use client";
+// RESPONSIBILITY: Renders/orchestrates AdminHeaderSearch for the admin module; UI composition stays here and business/API logic remains in dedicated hooks and APIs.
 import { useState, useRef, useEffect, useMemo } from 'react';
 import { Search, X } from 'lucide-react';
 import Link from 'next/link';

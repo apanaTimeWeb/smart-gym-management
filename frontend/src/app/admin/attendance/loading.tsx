@@ -4,7 +4,7 @@ export default function AdminAttendanceLoading() {
     <div className="p-6 space-y-5">
       {/* KPI skeletons */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-        {[1, 2, 3, 4].map((i: any) => (
+        {[1, 2, 3, 4].map((i) => (
           <div key={i} className="h-24 bg-card rounded-xl motion-safe:animate-pulse border border-border" />
         ))}
       </div>
@@ -19,7 +19,7 @@ export default function AdminAttendanceLoading() {
           <div className="h-10 w-44 bg-input rounded-xl motion-safe:animate-pulse" />
         </div>
         <div className="space-y-2">
-          {[1, 2, 3, 4, 5, 6, 7, 8].map((i: any) => (
+          {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
             <div key={i} className="h-12 bg-input rounded-lg motion-safe:animate-pulse" />
           ))}
         </div>

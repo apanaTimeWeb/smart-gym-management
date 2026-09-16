@@ -54,7 +54,7 @@ export default function AdminDataExportHistory() {
               <tbody className="divide-y divide-border">
                 {jobs.length === 0 ? (
                   <tr><td colSpan={HEADERS.length} className="px-4 py-16 text-center text-sm text-secondary">No export jobs found</td></tr>
-                ) : jobs.map((job: any) => (
+                ) : jobs.map((job) => (
                   <tr key={job.id} className="hover:bg-primary/5 motion-safe:transition-colors group">
                     <td className="px-4 py-3 text-sm font-medium text-foreground">{DATA_TYPE_LABELS[job.dataType] ?? job.dataType}</td>
                     <td className="px-4 py-3">

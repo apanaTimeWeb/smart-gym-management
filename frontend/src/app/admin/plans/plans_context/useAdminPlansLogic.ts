@@ -104,7 +104,7 @@ export function useAdminPlansLogic(initialData?: PlansInitialData | null): Plans
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => plansApi.deletePlan(id),
-    onSuccess: (res: ApiResponse<any>) => {
+    onSuccess: (res: ApiResponse<unknown>) => {
       showToast(res.message || 'Plan deleted', 'success');
       queryClient.invalidateQueries({ queryKey: ['adminPlans'] });
     },

@@ -9,8 +9,7 @@ import type { Branch } from "@/app/admin/branches/branches_types/branches_types"
 export type DetailView = "revenue" | "expenses" | "staff" | "students";
 
 export function useAdminBranchesLogic() {
-  const { data: branchesData = [], isLoading, isError } = useAdminBranchesQueries();
-  const branches = Array.isArray(branchesData) ? branchesData : ((branchesData as any)?.branches || []);
+  const { data: branches = [], isLoading, isError } = useAdminBranchesQueries();
   const {
     timeRange, setTimeRange, startDate, setStartDate,
     endDate, setEndDate,

@@ -74,7 +74,7 @@ export default function AdminPagination({
         <button 
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className={`p-1.5 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors ${textColor} hover:bg-black/5 dark:hover:bg-white/5`}
+          className={`p-1.5 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors ${textColor} hover:bg-black/5 dark:hover:bg-card/5`}
         >
           <ChevronLeft size={18} />
         </button>
@@ -90,7 +90,7 @@ export default function AdminPagination({
                 className={`w-8 h-8 flex items-center justify-center rounded-lg text-sm font-medium transition-all ${
                   currentPage === p 
                     ? `${bgActive} ${textActive}`
-                    : `${textColor} hover:bg-black/5 dark:hover:bg-white/5`
+                    : `${textColor} hover:bg-black/5 dark:hover:bg-card/5`
                 }`}
               >
                 {p}
@@ -102,7 +102,7 @@ export default function AdminPagination({
         <button 
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className={`p-1.5 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors ${textColor} hover:bg-black/5 dark:hover:bg-white/5`}
+          className={`p-1.5 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors ${textColor} hover:bg-black/5 dark:hover:bg-card/5`}
         >
           <ChevronRight size={18} />
         </button>

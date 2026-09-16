@@ -24,20 +24,20 @@ export function useAdminGymHealthAlertsLogic() {
 
   const { data: alerts = [], isLoading, isError } = useQuery({
     queryKey: ['adminGymHealthAlerts'],
-    queryFn: () => gymHealthAlertsApi.fetchAlerts().then((r: any) => r.data || []),
+    queryFn: () => gymHealthAlertsApi.fetchAlerts().then((r) => r.data || []),
     staleTime: 1000 * 60 * 2,
     refetchInterval: 60000,
   });
 
   const { data: kpis } = useQuery({
     queryKey: ['adminGymHealthKPIs'],
-    queryFn: () => gymHealthAlertsApi.fetchKPIs().then((r: any) => r.data || null),
+    queryFn: () => gymHealthAlertsApi.fetchKPIs().then((r) => r.data || null),
     staleTime: 1000 * 60 * 5,
   });
 
   const fetchState: FetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
 
-  const filtered = alerts.filter((a: any) => {
+  const filtered = alerts.filter((a) => {
     const matchSeverity = severityFilter === 'all' || a.severity === severityFilter;
     const matchType = typeFilter === 'all' || a.alertType === typeFilter;
     const matchGym = gymFilter === 'all' || a.gymId === gymFilter;

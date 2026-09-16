@@ -1,3 +1,4 @@
+// DATA FLOW: feature API/schema → hook/context → useAdminDataExportStore consumers.
 // RESPONSIBILITY: Zustand store for Data Export module UI state.
 import { create } from 'zustand';
 

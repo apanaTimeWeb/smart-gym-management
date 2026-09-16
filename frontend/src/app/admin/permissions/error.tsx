@@ -1,4 +1,5 @@
 "use client";
+// RESPONSIBILITY: Renders/orchestrates error for the admin module; UI composition stays here and business/API logic remains in dedicated hooks and APIs.
 export default function PermissionsError({ reset }: { reset: () => void }) {
   return (
     <div className="flex flex-col items-center justify-center min-h-96 gap-4">

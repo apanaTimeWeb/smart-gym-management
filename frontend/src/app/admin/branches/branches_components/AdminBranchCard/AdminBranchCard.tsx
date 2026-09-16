@@ -9,7 +9,7 @@ import type { Branch } from "@/app/admin/branches/branches_types/branches_types"
 function AdminBranchCardSkeleton() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {[1, 2, 3].map(i => (
+      {["row-1", "row-2", "row-3"].map(i => (
         <div key={i} className="bg-card border border-border rounded-xl p-5 motion-safe:animate-pulse">
           <div className="flex items-start gap-4">
             <div className="w-12 h-12 rounded-xl bg-input flex-shrink-0" />
@@ -19,7 +19,7 @@ function AdminBranchCardSkeleton() {
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3 mt-6">
-            {[1, 2, 3, 4].map(j => (
+            {["metric-1", "metric-2", "metric-3", "metric-4"].map(j => (
               <div key={j} className="bg-input/50 rounded-xl p-3 h-16" />
             ))}
           </div>

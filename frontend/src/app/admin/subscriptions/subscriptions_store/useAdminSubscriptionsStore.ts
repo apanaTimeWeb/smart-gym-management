@@ -1,3 +1,4 @@
+// DATA FLOW: feature API/schema → hook/context → useAdminSubscriptionsStore consumers.
 // RESPONSIBILITY: Zustand store for Subscriptions UI state.
 import { create } from 'zustand';
 

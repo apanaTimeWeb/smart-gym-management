@@ -7,7 +7,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { permissionsApi } from '@/app/admin/permissions/permissions_api/permissions_api';
 import { useAdminPermissionsStore } from '@/app/admin/permissions/permissions_store/useAdminPermissionsStore';
-import type { FetchState, RoleType } from '@/app/admin/permissions/permissions_types/permissions_types';
+import type { RolePermissions, GymPermissionOverride, PermissionsData, RoleType } from '@/app/admin/permissions/permissions_types/permissions_types';
 
 export function useAdminPermissionsLogic() {
   const qc = useQueryClient();
@@ -19,7 +19,7 @@ export function useAdminPermissionsLogic() {
     staleTime: 1000 * 60 * 5,
   });
 
-  const fetchState: FetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
+  const fetchState = isLoading ? 'pending' : isError ? 'error' : 'success' as const;
 
   const updateRoleMutation = useMutation({
     mutationFn: ({ role, permissions }: { role: RoleType; permissions: Record<string, boolean> }) =>
@@ -36,14 +36,14 @@ export function useAdminPermissionsLogic() {
   });
 
   const updateRolePermission = useCallback((role: RoleType, key: string, value: boolean) => {
-    const current = data?.roleDefaults.find((r: any) => r.role === role);
+    const current = data?.roleDefaults.find((r) => r.role === role);
     if (!current) return;
     const updated = { ...current.permissions, [key]: value };
     updateRoleMutation.mutate({ role, permissions: updated });
   }, [data, updateRoleMutation]);
 
   const updateGymOverride = useCallback((gymId: string, role: RoleType, key: string, value: boolean) => {
-    const current = data?.gymOverrides.find((o: any) => o.gymId === gymId && o.role === role);
+    const current = data?.gymOverrides.find((o) => o.gymId === gymId && o.role === role);
     const updated = { ...(current?.overrides ?? {}), [key]: value };
     updateGymMutation.mutate({ gymId, role, overrides: updated });
   }, [data, updateGymMutation]);
@@ -52,9 +52,9 @@ export function useAdminPermissionsLogic() {
 
   // Effective permissions = role defaults merged with gym overrides
   const getEffectivePermissions = useCallback((gymId: string, role: RoleType) => {
-    const roleDefaults = data?.roleDefaults.find((r: any) => r.role === role)?.permissions ?? {};
+    const roleDefaults = data?.roleDefaults.find((r) => r.role === role)?.permissions ?? {};
     if (gymId === 'default') return roleDefaults;
-    const override = data?.gymOverrides.find((o: any) => o.gymId === gymId && o.role === role)?.overrides ?? {};
+    const override = data?.gymOverrides.find((o) => o.gymId === gymId && o.role === role)?.overrides ?? {};
     return { ...roleDefaults, ...override };
   }, [data]);
 

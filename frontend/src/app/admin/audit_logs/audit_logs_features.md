@@ -117,3 +117,12 @@ Backend path uses hyphens: `/admin/audit-logs` (not underscores). Always use `Ad
 - [x] Rule 40: `audit_logs_forbidden.md` present and specific
 - [ ] Rule 15A: Tests — not yet configured
 - [ ] Rule 75: MSW handler — not yet configured
+
+## UI Data Requirements
+- Every data-driven table, KPI, chart, filter, dropdown and detail field must map to a typed API response field and be represented in module-owned fixtures where mocked.
+- Verify each rendered data field against the module API schema before changing the UI.
+
+
+## Module-Owned MSW Fixtures
+
+All Admin frontend-first API fixtures and MSW transport handlers are owned by `admin/admin_mocks/fixtures/AdminMockFixtures.ts` and `admin/admin_mocks/handlers/AdminMockHandlers.ts`. These files provide populated success responses and are the only module-owned mock transport source for Admin. Global MSW bootstrap may register these handlers, but must not contain Admin business data.

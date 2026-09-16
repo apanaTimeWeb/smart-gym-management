@@ -1,3 +1,4 @@
+// DATA FLOW: feature API/schema → hook/context → useAdminHrPayrollMutations consumers.
 // RESPONSIBILITY: Core payroll mutations hook for the admin HR module.
 import { useCallback } from 'react';
 import type { Staff, Payroll, HrSummary } from '@/app/admin/hr/hr_types/AdminHrTypes';

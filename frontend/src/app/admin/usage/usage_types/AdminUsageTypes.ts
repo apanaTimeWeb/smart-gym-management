@@ -1,7 +1,5 @@
 // RESPONSIBILITY: TypeScript types for the Admin Usage & Subscription module.
 
-export type FetchState = 'idle' | 'loading' | 'success' | 'error';
-
 export interface AdminUsageHistoryPoint {
   date: string;       // ISO date string e.g. '2025-01-15'
   membersUsed: number;

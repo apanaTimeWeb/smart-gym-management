@@ -49,7 +49,7 @@ export default function AdminSettingsContent() {
       {activeTabId === 'payment' && <AdminSettingsPaymentGateway initialData={settingsData.data.payment} />}
       {activeTabId === 'general' && <AdminSettingsGeneral initialData={settingsData.data.general} />}
       {activeTabId === 'webhooks' && (
-        <div className="bg-card rounded-xl shadow-sm border border-border mt-6 p-6 flex flex-col items-center justify-center min-h-[300px] text-center">
+        <div className="bg-card rounded-xl shadow-sm border border-border mt-6 p-6 flex flex-col items-center justify-center min-h-80 text-center">
           <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
             <span className="text-primary text-2xl font-bold">W</span>
           </div>
