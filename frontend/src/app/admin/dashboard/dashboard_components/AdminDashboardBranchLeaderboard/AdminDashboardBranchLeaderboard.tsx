@@ -1,4 +1,5 @@
 "use client";
+// RESPONSIBILITY: Renders/orchestrates AdminDashboardBranchLeaderboard for the admin module; UI composition stays here and business/API logic remains in dedicated hooks and APIs.
 import { useAdminDashboardLogic } from '@/app/admin/dashboard/dashboard_context/useAdminDashboardLogic';
 import { useAdminGlobalStore } from '@/app/admin/admin_store/useAdminGlobalStore';
 import { TrendingUp, TrendingDown, Minus, Building2 } from 'lucide-react';
@@ -24,7 +25,7 @@ export default function AdminDashboardBranchLeaderboard() {
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="border-b border-white/10 text-xs font-semibold text-secondary uppercase tracking-wider">
+            <tr className="border-b border-border/10 text-xs font-semibold text-secondary uppercase tracking-wider">
               <th className="pb-3 pl-2">Branch Name</th>
               <th className="pb-3 text-right">Revenue</th>
               <th className="pb-3 text-right">Active Members</th>
@@ -37,7 +38,7 @@ export default function AdminDashboardBranchLeaderboard() {
               return (
               <tr 
                 key={branch.id} 
-                className={`transition-colors group ${isSelected ? 'bg-primary/10 border-l-2 border-primary' : 'hover:bg-white/5'}`}
+                className={`transition-colors group ${isSelected ? 'bg-primary/10 border-l-2 border-primary' : 'hover:bg-card/5'}`}
               >
                 <td className="py-3 pl-2">
                   <div className="flex items-center gap-3">

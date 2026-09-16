@@ -5,15 +5,15 @@ import { z } from "zod";
 import { apiFetch, type ApiResponse } from "@/lib/api";
 export const dataExportApi = {
   fetchJobs: async () => {
-            return apiFetch('/api/admin/dataExport/fetchJobs', { method: 'GET', dataSchema: z.any() });
+            return apiFetch<ApiResponse<ExportJob[]>>('/api/admin/dataExport/fetchJobs', { method: 'GET', dataSchema: z.unknown() });
         },
   fetchKPIs: async () => {
-            return apiFetch('/api/admin/dataExport/fetchKPIs', { method: 'GET', dataSchema: z.any() });
+            return apiFetch<ApiResponse<DataExportKPIData>>('/api/admin/dataExport/fetchKPIs', { method: 'GET', dataSchema: z.unknown() });
         },
   createExport: async (payload: ExportFormValues) => {
-          return apiFetch('/api/admin/dataExport/createExport', { method: 'POST', body: JSON.stringify(payload), dataSchema: z.any() });
+          return apiFetch<ApiResponse<ExportJob>>('/api/admin/dataExport/createExport', { method: 'POST', body: JSON.stringify(payload), dataSchema: z.unknown() });
       },
   deleteJob: async (id: string) => {
-          return apiFetch('/api/admin/dataExport/deleteJob', { method: 'DELETE', body: JSON.stringify(id), dataSchema: z.any() });
+          return apiFetch<ApiResponse<void>>('/api/admin/dataExport/deleteJob', { method: 'DELETE', body: JSON.stringify(id), dataSchema: z.unknown() });
       },
 };

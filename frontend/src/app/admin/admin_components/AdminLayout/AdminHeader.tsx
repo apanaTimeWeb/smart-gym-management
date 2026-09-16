@@ -8,9 +8,9 @@ import { useAdminGlobalStore } from '@/app/admin/admin_store/useAdminGlobalStore
 import { useAdminBranchesQueries } from '@/app/admin/branches/branches_context/useAdminBranchesQueries';
 import { AdminSearchableDropdown } from '@/app/admin/admin_components/AdminShared/AdminSearchableDropdown';
 import AdminQrScannerModal from '@/app/admin/admin_components/AdminQrScanner/AdminQrScannerModal';
-import { AdminHeaderSearch } from './AdminHeaderSearch';
-import { AdminHeaderNotifications } from './AdminHeaderNotifications';
-import { AdminHeaderProfile } from './AdminHeaderProfile';
+import { AdminHeaderSearch } from '@/app/admin/admin_components/AdminLayout/AdminHeaderSearch';
+import { AdminHeaderNotifications } from '@/app/admin/admin_components/AdminLayout/AdminHeaderNotifications';
+import { AdminHeaderProfile } from '@/app/admin/admin_components/AdminLayout/AdminHeaderProfile';
 import type { AdminHeaderProps } from '@/app/admin/admin_components/AdminLayout/AdminLayoutTypes';
 import type { Branch } from '@/app/admin/branches/branches_types/branches_types';
 

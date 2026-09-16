@@ -1,4 +1,5 @@
 "use client";
+// RESPONSIBILITY: Renders/orchestrates error for the admin module; UI composition stays here and business/API logic remains in dedicated hooks and APIs.
 export default function AdminProfileError({ error, reset }: { error: Error; reset: () => void }) {
   return (
     <div className="max-w-3xl mx-auto flex flex-col items-center justify-center py-24 gap-4">

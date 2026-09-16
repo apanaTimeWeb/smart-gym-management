@@ -1,3 +1,4 @@
+// DATA FLOW: feature API/schema → hook/context → useAdminPayoutsStore consumers.
 // RESPONSIBILITY: Zustand store for Payouts module UI state.
 import { create } from 'zustand';
 import type { PayoutTab } from '@/app/admin/payouts/payouts_types/payouts_types';

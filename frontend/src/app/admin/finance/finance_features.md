@@ -70,3 +70,37 @@ history. All monetary values are transmitted as integers (paise) and formatted v
 - [x] Rule 13: Feature Map — this document, updated same commit as code changes
 - [x] Rule 17: Pagination + filtering on transaction table
 - [x] Rule 21: Currency as integers, formatted via `formatters.ts`
+
+
+## User Flows & Interactions
+1. Enter the `/admin/finance` route and load the module UI.
+2. Use the module controls/forms/tables provided by the documented components.
+3. Submit supported mutations through the module API layer and reconcile the TanStack Query cache.
+4. On failure, preserve user input where applicable and render the module-specific error state.
+
+
+## API Contract
+| API file | Endpoint literal observed |
+|---|---|
+| None discovered | API routes are defined through URL config; inspect module API file. |
+
+## UI Data Requirements
+- Every data-driven table, KPI, chart, filter, dropdown and detail field must map to a typed API response field and be represented in module-owned fixtures where mocked.
+- Verify each rendered data field against the module API schema before changing the UI.
+
+## Loading, Empty, and Error States
+- Route loading: `loading.tsx` where present, using skeleton layout rather than full-page generic spinners.
+- Route failure: `error.tsx` where present, with module-specific recovery via `reset()`.
+- Entity lists: use the feature's dedicated empty-state component; query failures remain inline unless explicitly configured to throw.
+
+## Edge Cases and AI Warnings
+- Do not introduce cross-role or cross-business-module imports.
+- Do not move server/API data into Zustand or Context.
+- Do not bypass the module API client or read fixtures directly from UI code.
+- Do not introduce hardcoded business records or hardcoded API URLs.
+- Preserve destructive-action confirmation and backend-driven messages.
+
+
+## Module-Owned MSW Fixtures
+
+All Admin frontend-first API fixtures and MSW transport handlers are owned by `admin/admin_mocks/fixtures/AdminMockFixtures.ts` and `admin/admin_mocks/handlers/AdminMockHandlers.ts`. These files provide populated success responses and are the only module-owned mock transport source for Admin. Global MSW bootstrap may register these handlers, but must not contain Admin business data.

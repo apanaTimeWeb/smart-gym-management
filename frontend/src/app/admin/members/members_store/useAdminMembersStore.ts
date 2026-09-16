@@ -1,3 +1,4 @@
+// DATA FLOW: feature API/schema → hook/context → useAdminMembersStore consumers.
 // RESPONSIBILITY: Zustand store for Admin Members UI state — filters, pagination, selected member.
 import { create } from 'zustand';
 import type { MemberStatus } from '@/app/admin/members/members_types/AdminMembersTypes';

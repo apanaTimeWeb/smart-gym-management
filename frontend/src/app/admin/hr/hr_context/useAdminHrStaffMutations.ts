@@ -1,3 +1,4 @@
+// DATA FLOW: feature API/schema → hook/context → useAdminHrStaffMutations consumers.
 // RESPONSIBILITY: Core staff data mutations hook for the admin HR module.
 import { useCallback } from 'react';
 import type { Staff, HrSummary } from '@/app/admin/hr/hr_types/AdminHrTypes';

@@ -14,7 +14,7 @@ export default function AdminNotFound({
   returnText?: string;
 }) {
   return (
-    <div className="min-h-[400px] flex flex-col items-center justify-center text-center p-6 bg-card rounded-2xl border border-border mt-4">
+    <div className="min-h-96 flex flex-col items-center justify-center text-center p-6 bg-card rounded-2xl border border-border mt-4">
       <AlertCircle className="w-12 h-12 text-secondary mb-4" />
       <h3 className="text-lg font-bold text-foreground mb-2">{title}</h3>
       <p className="text-secondary mb-6">{description}</p>

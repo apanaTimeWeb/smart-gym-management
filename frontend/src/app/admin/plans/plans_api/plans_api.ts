@@ -6,21 +6,21 @@ import type { PlanRevenueRecord, RevenuePeriod } from '@/app/admin/plans/plans_t
 import { z } from "zod";
 export const plansApi = {
   fetchAllPlans: async () => {
-            return apiFetch<ApiResponse<Plan[]>>(`${PlansUrlConfig.BACKEND_API.BASE}/fetchAllPlans`, { method: 'GET', dataSchema: z.any() });
+            return apiFetch<ApiResponse<Plan[]>>(`${PlansUrlConfig.BACKEND_API.BASE}/fetchAllPlans`, { method: 'GET', dataSchema: z.unknown() });
         },
   fetchPlanById: async (id: string) => {
-            return apiFetch<ApiResponse<Plan>>(`${PlansUrlConfig.BACKEND_API.BASE}/fetchPlanById`, { method: 'GET', dataSchema: z.any() });
+            return apiFetch<ApiResponse<Plan>>(`${PlansUrlConfig.BACKEND_API.BASE}/fetchPlanById`, { method: 'GET', dataSchema: z.unknown() });
         },
   createPlan: async (body: Partial<Plan>) => {
-          return apiFetch<ApiResponse<Plan>>(`${PlansUrlConfig.BACKEND_API.BASE}/createPlan`, { method: 'POST', body: JSON.stringify(body), dataSchema: z.any() });
+          return apiFetch<ApiResponse<Plan>>(`${PlansUrlConfig.BACKEND_API.BASE}/createPlan`, { method: 'POST', body: JSON.stringify(body), dataSchema: z.unknown() });
       },
   updatePlan: async (id: string, body: Partial<Plan>) => {
-          return apiFetch<ApiResponse<Plan>>(`${PlansUrlConfig.BACKEND_API.BASE}/updatePlan`, { method: 'POST', body: JSON.stringify(id), dataSchema: z.any() });
+          return apiFetch<ApiResponse<Plan>>(`${PlansUrlConfig.BACKEND_API.BASE}/updatePlan`, { method: 'POST', body: JSON.stringify(id), dataSchema: z.unknown() });
       },
   deletePlan: async (id: string) => {
-          return apiFetch<ApiResponse<any>>(`${PlansUrlConfig.BACKEND_API.BASE}/deletePlan`, { method: 'DELETE', body: JSON.stringify(id), dataSchema: z.any() });
+          return apiFetch<ApiResponse<null>>(`${PlansUrlConfig.BACKEND_API.BASE}/deletePlan`, { method: 'DELETE', body: JSON.stringify(id), dataSchema: z.unknown() });
       },
   fetchPlanRevenue: async (period: RevenuePeriod) => {
-          return apiFetch<ApiResponse<PlanRevenueRecord[]>>(`${PlansUrlConfig.BACKEND_API.BASE}/fetchPlanRevenue`, { method: 'GET', dataSchema: z.any() });
+          return apiFetch<ApiResponse<PlanRevenueRecord[]>>(`${PlansUrlConfig.BACKEND_API.BASE}/fetchPlanRevenue`, { method: 'GET', dataSchema: z.unknown() });
       },
 };

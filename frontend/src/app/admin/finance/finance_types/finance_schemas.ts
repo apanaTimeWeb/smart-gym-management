@@ -114,7 +114,7 @@ export const branchPnlAggregatesSchema = z.object({
     lossMakingBranches: z.number()
 });
 
-const toastTypeSchema = z.any();
+const toastTypeSchema = z.unknown();
 
 export const financeInitialDataSchema = z.object({
     payments: z.array(paymentSchema),

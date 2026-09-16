@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Defines mock data and constants for the Admin QR Scanner feature.
-import type { AdminQrScanHistoryRecord, AdminQrScanStatus } from './AdminQrScannerTypes';
+import type { AdminQrScanHistoryRecord, AdminQrScanStatus } from '@/app/admin/admin_components/AdminQrScanner/AdminQrScannerTypes';
 
 export const ADMIN_QR_INITIAL_HISTORY: AdminQrScanHistoryRecord[] = [];
 

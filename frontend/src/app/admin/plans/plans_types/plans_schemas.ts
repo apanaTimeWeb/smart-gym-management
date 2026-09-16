@@ -19,9 +19,9 @@ export const planSchema = z.object({
     taxRate: z.number().optional()
 });
 
-const toastTypeSchema = z.any();
+const toastTypeSchema = z.unknown();
 
-const planFormValuesSchema = z.any();
+const planFormValuesSchema = z.unknown();
 
 export const plansInitialDataSchema = z.object({
     plans: z.array(planSchema)

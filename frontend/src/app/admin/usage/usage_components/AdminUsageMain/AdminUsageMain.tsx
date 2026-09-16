@@ -10,7 +10,7 @@ import { useAdminUsageLogic } from '@/app/admin/usage/usage_context/useAdminUsag
 import { formatCurrency } from '@/lib/formatters';
 
 export default function AdminUsageMain() {
-  const { data, metrics, loadUsage, fetchState } = useAdminUsageLogic();
+  const { data, metrics, refresh, status } = useAdminUsageLogic();
   const planCardRef = useRef<HTMLDivElement>(null);
 
   const handleUpgrade = () => {
@@ -24,6 +24,11 @@ export default function AdminUsageMain() {
         subtitle="Monitor your plan limits and manage your subscription"
       />
       <div className="p-6 space-y-6">
+        {status === 'pending' && !data ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4" aria-label="Loading usage data">
+            {Array.from({ length: 6 }, (_, index) => <div key={index} className="h-28 rounded-xl bg-skeleton-base motion-safe:animate-pulse" />)}
+          </div>
+        ) : null}
 
         {/* Current Plan Banner */}
         <div className="bg-card rounded-xl border border-primary/30 p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -33,21 +38,21 @@ export default function AdminUsageMain() {
             </div>
             <div>
               <p className="text-xs text-secondary uppercase tracking-wider font-semibold">Current Plan</p>
-              <p className="text-xl font-bold text-foreground">{data.planName}</p>
-              <p className="text-sm text-secondary mt-0.5">{formatCurrency(data.monthlyPrice)} / month</p>
+              <p className="text-xl font-bold text-foreground">{data?.planName}</p>
+              <p className="text-sm text-secondary mt-0.5">{formatCurrency(data?.monthlyPrice || 0)} / month</p>
             </div>
           </div>
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
             <div className="flex items-center gap-2 text-sm text-secondary">
               <Calendar size={15} className="text-warning" />
-              <span>Renews <span className="font-semibold text-foreground">{new Date(data.billingCycleEnd).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</span></span>
+              <span>Renews <span className="font-semibold text-foreground">{data?.billingCycleEnd ? new Date(data.billingCycleEnd).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : 'N/A'}</span></span>
             </div>
             <button
-              onClick={loadUsage}
-              disabled={fetchState === 'loading'}
+              onClick={() => void refresh()}
+              disabled={status === 'pending'}
               className="flex items-center gap-2 px-4 py-2 border border-border rounded-xl text-sm font-medium text-secondary hover:text-foreground hover:bg-input motion-safe:transition-all motion-safe:duration-200 active:scale-95 disabled:opacity-50"
             >
-              <RefreshCw size={14} className={fetchState === 'loading' ? 'motion-safe:animate-spin' : ''} />
+              <RefreshCw size={14} className={status === 'pending' ? 'motion-safe:animate-spin' : ''} />
               Refresh
             </button>
           </div>

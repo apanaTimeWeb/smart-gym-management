@@ -95,7 +95,7 @@ export default function AdminHrStaffTable() {
                     <div className="flex flex-col">
                       <span className="font-medium text-primary">{displayValue(s.primaryBranchId || s.assignedBranches[0])}</span>
                       {s.assignedBranches.length > 1 && (
-                        <span className="text-[10px] bg-primary/10 text-primary px-1.5 py-0.5 rounded-full mt-1 w-max">
+                        <span className="text-xs bg-primary/10 text-primary px-1.5 py-0.5 rounded-full mt-1 w-max">
                           +{s.assignedBranches.length - 1} More
                         </span>
                       )}
@@ -107,11 +107,11 @@ export default function AdminHrStaffTable() {
                 <td className="px-4 py-3 text-sm text-primary">{displayValue(s.role)}</td>
                 <td className="px-4 py-3">
                   {s.isActive === false ? (
-                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-danger/10 text-danger border border-danger/20">
+                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-danger/10 text-danger border border-danger/20">
                       <Ban className="w-3 h-3" /> Suspended
                     </span>
                   ) : (
-                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-success/10 text-success border border-success/20">
+                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-success/10 text-success border border-success/20">
                       <CheckCircle2 className="w-3 h-3" /> Active
                     </span>
                   )}

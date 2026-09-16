@@ -1,3 +1,4 @@
+// DATA FLOW: feature API/schema → hook/context → useAdminAuditLogsStore consumers.
 // RESPONSIBILITY: Zustand store for Audit Logs UI state — filters, pagination, selected log.
 import { create } from 'zustand';
 

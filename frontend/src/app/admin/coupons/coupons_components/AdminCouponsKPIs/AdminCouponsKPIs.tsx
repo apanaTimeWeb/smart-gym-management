@@ -10,9 +10,9 @@ export default function AdminCouponsKPIs() {
   const { allCoupons } = useAdminCouponsLogic();
 
   const totalCoupons = allCoupons.length;
-  const activeCoupons = allCoupons.filter((c: any) => c.status === 'active').length;
-  const totalRedeemed = allCoupons.reduce((sum: number, c: any) => sum + c.usedCount, 0);
-  const revenueLost = allCoupons.reduce((sum: number, c: any) => {
+  const activeCoupons = allCoupons.filter((c) => c.status === 'active').length;
+  const totalRedeemed = allCoupons.reduce((sum: number, c) => sum + c.usedCount, 0);
+  const revenueLost = allCoupons.reduce((sum: number, c) => {
     const avgDiscount = c.type === 'flat' ? c.value : Math.min(c.value * 10, c.maxDiscount || c.value * 10);
     return sum + c.usedCount * avgDiscount;
   }, 0);

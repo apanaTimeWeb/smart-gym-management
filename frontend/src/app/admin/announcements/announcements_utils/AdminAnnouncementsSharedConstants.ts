@@ -24,10 +24,10 @@ export const ANNOUNCEMENT_COMPOSE_GYM_OPTIONS = [
 
 // Admin audience: no cross-gym "Managers" — admins broadcast to their own gym's people only.
 export const ANNOUNCEMENT_AUDIENCE_OPTIONS = [
-  { value: 'all',      label: 'Everyone at Branch' },
-  { value: 'members',  label: 'Members' },
-  { value: 'trainers', label: 'Trainers' },
-  { value: 'staff',    label: 'Staff' },
+  { value: 'all' as const,      label: 'Everyone at Branch' },
+  { value: 'members' as const,  label: 'Members' },
+  { value: 'trainers' as const, label: 'Trainers' },
+  { value: 'staff' as const,    label: 'Staff' },
 ];
 
 export const ANNOUNCEMENT_PRIORITY_OPTIONS = [

@@ -1,4 +1,5 @@
 "use client";
+// RESPONSIBILITY: Renders/orchestrates AdminHrLedgerTable for the admin module; UI composition stays here and business/API logic remains in dedicated hooks and APIs.
 import { useState, useEffect } from 'react';
 import { useHrContext } from '@/app/admin/hr/hr_context/AdminHrContext';
 import { hrApi } from '@/app/admin/hr/hr_api/AdminHrApi';
@@ -23,7 +24,7 @@ export default function AdminHrLedgerTable() {
       setLoading(true);
       try {
         const res = await hrApi.getLedger(selectedStaffId);
-        setLedger(res.data?.ledger || []);
+        setLedger(res.data || []);
       } catch (e: any) {
         showToast(e.message, 'error');
       } finally {
@@ -110,13 +111,13 @@ export default function AdminHrLedgerTable() {
                     <td className="p-4">
                       <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium 
                         ${l.type.includes('Advance') ? 'bg-danger/10 text-danger' : 
-                          l.type.includes('Salary Generated') ? 'bg-blue-500/10 text-blue-500' : 
+                          l.type.includes('Salary Generated') ? 'bg-info-bg text-info' : 
                           l.type.includes('Due') ? 'bg-warning/10 text-warning' :
                           'bg-success/10 text-success'}`}>
                         {l.type}
                       </span>
                     </td>
-                    <td className="p-4 text-secondary max-w-[200px] truncate" title={l.notes}>{l.notes || '-'}</td>
+                    <td className="p-4 text-secondary max-w-48 truncate" title={l.notes}>{l.notes || '-'}</td>
                     <td className="p-4 text-right text-success font-medium">{l.credit > 0 ? `+${l.credit.toLocaleString('en-IN')}` : '-'}</td>
                     <td className="p-4 text-right text-danger font-medium">{l.debit > 0 ? `-${l.debit.toLocaleString('en-IN')}` : '-'}</td>
                     <td className="p-4 text-right font-bold text-foreground bg-primary/5">{l.balance.toLocaleString('en-IN')}</td>

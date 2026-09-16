@@ -38,7 +38,7 @@ export default function AdminAnnouncementsModal() {
     <>
       <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40" onClick={() => setShowModal(false)} />
       <div className="fixed inset-0 z-40 flex items-center justify-center p-4">
-        <div className="bg-overlay border border-border rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90%] flex flex-col">
+        <div className="bg-overlay border border-border rounded-2xl shadow-2xl w-full max-w-2xl max-h-screen flex flex-col">
 
           {/* Header */}
           <div className="flex items-center justify-between p-5 border-b border-border shrink-0">
@@ -115,12 +115,12 @@ export default function AdminAnnouncementsModal() {
                 render={({ field }) => (
                   <div className="flex flex-wrap gap-2">
                     {ANNOUNCEMENT_AUDIENCE_OPTIONS.map(o => {
-                      const selected = field.value.includes(o.value as any);
+                      const selected = field.value.includes(o.value);
                       return (
                         <button
                           key={o.value}
                           type="button"
-                          onClick={() => field.onChange(toggleArrayValue(field.value, o.value as any))}
+                          onClick={() => field.onChange(toggleArrayValue(field.value, o.value))}
                           className={`px-3 py-1.5 rounded-lg text-xs font-semibold border motion-safe:transition-colors ${
                             selected
                               ? 'bg-primary text-white border-primary'

@@ -1,4 +1,5 @@
 "use client";
+// DATA FLOW: feature API/schema → hook/context → useAdminBlacklistLogic consumers.
 // RESPONSIBILITY: Business logic hook for the Blacklist module.
 
 import { useCallback } from 'react';
@@ -17,13 +18,13 @@ export function useAdminBlacklistLogic() {
 
   const { data = [], isLoading, isError } = useQuery({
     queryKey: ['adminBlacklist'],
-    queryFn: () => blacklistApi.fetchBlacklist().then((r: any) => r.data as BlacklistedMember[]),
+    queryFn: () => blacklistApi.fetchBlacklist().then((r) => r.data as BlacklistedMember[]),
     staleTime: 1000 * 60 * 2,
   });
 
   const { data: kpis } = useQuery({
     queryKey: ['adminBlacklistKPIs'],
-    queryFn: () => blacklistApi.fetchKPIs().then((r: any) => r.data),
+    queryFn: () => blacklistApi.fetchKPIs().then((r) => r.data),
     staleTime: 1000 * 60 * 5,
   });
 

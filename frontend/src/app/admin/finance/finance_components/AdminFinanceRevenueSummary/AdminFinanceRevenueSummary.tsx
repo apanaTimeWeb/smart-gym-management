@@ -15,8 +15,8 @@ export default function AdminFinanceRevenueSummary() {
  <div className="p-4 bg-card rounded-xl border border-border shadow-sm">
  <h3 className="font-semibold text-foreground">Monthly Revenue (Last 6 Months)</h3>
  <div className="space-y-2">
- {summary.monthlyData.map((d: any, i: number) => {
- const max = Math.max(...summary.monthlyData.map((x: any) => x.revenue), 1);
+ {summary.monthlyData.map((d, i: number) => {
+ const max = Math.max(...summary.monthlyData.map((x) => x.revenue), 1);
  return (
  <div key={d.month} className="flex items-center gap-3">
  <span className="text-xs w-20 text-secondary">{d.month}</span>

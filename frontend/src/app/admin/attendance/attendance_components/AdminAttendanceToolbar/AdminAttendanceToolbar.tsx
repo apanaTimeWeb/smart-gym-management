@@ -42,7 +42,7 @@ export default function AdminAttendanceToolbar() {
       </div>
       <div className="w-full sm:w-44">
         <AdminSearchableDropdown
-          options={ATTENDANCE_STATUS_OPTIONS.map((o: any) => ({ value: o.value, label: o.label }))}
+          options={ATTENDANCE_STATUS_OPTIONS.map((o) => ({ value: o.value, label: o.label }))}
           value={statusFilter}
           onChange={(v) => setStatusFilter(v as AttendanceStatus | 'all')}
           placeholder="All Status"

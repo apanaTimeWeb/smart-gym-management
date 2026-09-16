@@ -53,7 +53,7 @@ export default function AdminFinanceExpensesTable() {
             onChange={(e: any) => { setCategoryFilter(e.target.value); setCurrentPage(1); }}
             className="px-3 py-2 border border-border rounded-xl text-sm bg-input text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
-            {categories.map((c: any) => <option key={c} value={c}>{c === 'All' ? 'All Categories' : c}</option>)}
+            {categories.map((c) => <option key={c} value={c}>{c === 'All' ? 'All Categories' : c}</option>)}
           </select>
           <span className="text-sm text-secondary">
             Total: <span className="font-bold text-danger">{formatCurrency(totalAmount)}</span>

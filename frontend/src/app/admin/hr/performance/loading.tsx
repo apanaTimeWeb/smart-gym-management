@@ -12,7 +12,7 @@ export default function Loading() {
         <div className="h-10 w-64 bg-border rounded-lg"></div>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {[1, 2, 3, 4].map((i: any) => (
+        {[1, 2, 3, 4].map((i) => (
           <div key={i} className="h-24 bg-card border border-border rounded-xl"></div>
         ))}
       </div>

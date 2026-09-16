@@ -24,7 +24,7 @@ function is403(error: Error): boolean {
 export default function AdminErrorFallback({ error, reset, moduleName }: AdminErrorFallbackProps) {
   if (is403(error)) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-5 p-6 text-center">
+      <div className="flex flex-col items-center justify-center min-h-screen gap-5 p-6 text-center">
         <div className="w-16 h-16 rounded-full bg-warning-bg flex items-center justify-center">
           <ShieldOff size={32} className="text-warning" />
         </div>
@@ -46,7 +46,7 @@ export default function AdminErrorFallback({ error, reset, moduleName }: AdminEr
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4 p-6 text-center">
+    <div className="flex flex-col items-center justify-center min-h-screen gap-4 p-6 text-center">
       <p className="text-base font-semibold text-foreground">Failed to load {moduleName}</p>
       <p className="text-sm text-secondary max-w-sm">
         An unexpected error occurred. Please try again or contact support if the issue persists.

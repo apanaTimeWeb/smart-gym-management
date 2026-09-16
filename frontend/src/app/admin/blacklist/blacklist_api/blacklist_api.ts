@@ -6,22 +6,22 @@ import { z } from "zod";
 import { apiFetch, type ApiResponse } from "@/lib/api";
 export const blacklistApi = {
   fetchBlacklist: async () => {
-            return apiFetch<ApiResponse<any>>(`${AdminBlacklistUrlConfig.api.base}/fetchBlacklist`, { method: 'GET', dataSchema: z.any() });
+            return apiFetch<ApiResponse<BlacklistedMember[]>>(`${AdminBlacklistUrlConfig.api.base}/fetchBlacklist`, { method: 'GET', dataSchema: z.unknown() });
         },
   fetchKPIs: async () => {
-            return apiFetch<ApiResponse<any>>(`${AdminBlacklistUrlConfig.api.base}/fetchKPIs`, { method: 'GET', dataSchema: z.any() });
+            return apiFetch<ApiResponse<BlacklistKPIData>>(`${AdminBlacklistUrlConfig.api.base}/fetchKPIs`, { method: 'GET', dataSchema: z.unknown() });
         },
   addToBlacklist: async (payload: BlacklistFormValues) => {
-          return apiFetch<ApiResponse<any>>(`${AdminBlacklistUrlConfig.api.base}/addToBlacklist`, { method: 'POST', body: JSON.stringify(payload), dataSchema: z.any() });
+          return apiFetch<ApiResponse<BlacklistedMember>>(`${AdminBlacklistUrlConfig.api.base}/addToBlacklist`, { method: 'POST', body: JSON.stringify(payload), dataSchema: z.unknown() });
       },
   removeFromBlacklist: async (id: string) => {
-          return apiFetch<ApiResponse<any>>(`${AdminBlacklistUrlConfig.api.base}/removeFromBlacklist`, { method: 'DELETE', body: JSON.stringify(id), dataSchema: z.any() });
+          return apiFetch<ApiResponse<void>>(`${AdminBlacklistUrlConfig.api.base}/removeFromBlacklist`, { method: 'DELETE', body: JSON.stringify(id), dataSchema: z.unknown() });
       },
   toggleBlacklist: async (id: string) => {
-          return apiFetch<ApiResponse<any>>(`${AdminBlacklistUrlConfig.api.base}/toggleBlacklist`, { method: 'POST', body: JSON.stringify(id), dataSchema: z.any() });
+          return apiFetch<ApiResponse<BlacklistedMember>>(`${AdminBlacklistUrlConfig.api.base}/toggleBlacklist`, { method: 'POST', body: JSON.stringify(id), dataSchema: z.unknown() });
       },
   /** Upgrades a gym-specific ban to a global ban across all branches. */
   propagateToAllBranches: async (id: string) => {
-          return apiFetch<ApiResponse<any>>(`${AdminBlacklistUrlConfig.api.base}/propagateToAllBranches`, { method: 'POST', body: JSON.stringify(id), dataSchema: z.any() });
+          return apiFetch<ApiResponse<BlacklistedMember>>(`${AdminBlacklistUrlConfig.api.base}/propagateToAllBranches`, { method: 'POST', body: JSON.stringify(id), dataSchema: z.unknown() });
       },
 };

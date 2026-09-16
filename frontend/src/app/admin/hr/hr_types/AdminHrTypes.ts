@@ -2,7 +2,6 @@
 import type { ToastType } from '@/app/admin/admin_components/AdminFeedback/AdminToast';
 import { EMPTY_STAFF } from '@/app/admin/hr/hr_utils/AdminHrSharedConstants';
 import React from 'react';
-
 export type FetchState = 'idle' | 'loading' | 'success' | 'error';
 
 export interface HrInitialData {

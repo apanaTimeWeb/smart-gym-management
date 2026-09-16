@@ -1,3 +1,4 @@
+// DATA FLOW: feature API/schema → hook/context → useAdminBlacklistStore consumers.
 // RESPONSIBILITY: Zustand store for Blacklist module UI state.
 import { create } from 'zustand';
 import type { BlacklistFormValues } from '@/app/admin/blacklist/blacklist_types/blacklist_types';

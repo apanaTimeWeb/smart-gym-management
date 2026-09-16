@@ -24,7 +24,7 @@ export default function AdminReportsMembership() {
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {reportData.membershipGrowth.map((row: any) => (
+              {reportData.membershipGrowth.map((row) => (
                 <tr key={row.gymId} className="hover:bg-primary/5 motion-safe:transition-colors">
                   <td className="px-5 py-4 text-sm font-semibold text-foreground">{row.gymName}</td>
                   <td className="px-5 py-4 text-sm text-foreground">{row.activeMembers.toLocaleString('en-IN')}</td>
@@ -49,19 +49,19 @@ export default function AdminReportsMembership() {
               <tr className="bg-primary/5 border-t-2 border-border">
                 <td className="px-5 py-3 text-sm font-bold text-foreground">Total</td>
                 <td className="px-5 py-3 text-sm font-bold text-foreground">
-                  {reportData.membershipGrowth.reduce((s: number, r: any) => s + r.activeMembers, 0).toLocaleString('en-IN')}
+                  {reportData.membershipGrowth.reduce((s: number, r) => s + r.activeMembers, 0).toLocaleString('en-IN')}
                 </td>
                 <td className="px-5 py-3 text-sm font-bold text-success">
-                  +{reportData.membershipGrowth.reduce((s: number, r: any) => s + r.newMembers, 0)}
+                  +{reportData.membershipGrowth.reduce((s: number, r) => s + r.newMembers, 0)}
                 </td>
                 <td className="px-5 py-3 text-sm font-bold text-info">
-                  {reportData.membershipGrowth.reduce((s: number, r: any) => s + r.renewals, 0)}
+                  {reportData.membershipGrowth.reduce((s: number, r) => s + r.renewals, 0)}
                 </td>
                 <td className="px-5 py-3 text-sm font-bold text-danger">
-                  -{reportData.membershipGrowth.reduce((s: number, r: any) => s + r.exits, 0)}
+                  -{reportData.membershipGrowth.reduce((s: number, r) => s + r.exits, 0)}
                 </td>
                 <td className="px-5 py-3 text-sm font-bold text-success">
-                  +{reportData.membershipGrowth.reduce((s: number, r: any) => s + r.netGrowth, 0)}
+                  +{reportData.membershipGrowth.reduce((s: number, r) => s + r.netGrowth, 0)}
                 </td>
               </tr>
             </tfoot>

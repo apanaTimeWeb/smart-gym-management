@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates loading for the admin module; UI composition stays here and business/API logic remains in dedicated hooks and APIs.
 export default function AdminSubscriptionsLoading() {
   return (
     <div className="p-6 space-y-5">

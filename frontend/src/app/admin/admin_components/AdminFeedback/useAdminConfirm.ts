@@ -1,4 +1,5 @@
 "use client";
+// DATA FLOW: feature API/schema → hook/context → useAdminConfirm consumers.
 // RESPONSIBILITY: Custom hook to use the AdminConfirm context.
 
 import { useContext } from 'react';

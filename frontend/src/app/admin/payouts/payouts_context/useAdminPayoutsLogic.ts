@@ -1,4 +1,5 @@
 "use client";
+// DATA FLOW: feature API/schema → hook/context → useAdminPayoutsLogic consumers.
 // RESPONSIBILITY: Business logic hook for the Payouts module.
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';

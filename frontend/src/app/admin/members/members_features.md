@@ -126,3 +126,12 @@ All calls go through `AdminMembersApi.ts`. Response envelope: `{ success, messag
 - [x] Rule 43: Sensitive data masking — `maskSensitiveData()` used in list view
 - [x] Rule 55: No `key={index}` on member rows
 - [x] Rule 64: Mobile-first — responsive breakpoints on toolbar and table
+
+## UI Data Requirements
+- Every data-driven table, KPI, chart, filter, dropdown and detail field must map to a typed API response field and be represented in module-owned fixtures where mocked.
+- Verify each rendered data field against the module API schema before changing the UI.
+
+
+## Module-Owned MSW Fixtures
+
+All Admin frontend-first API fixtures and MSW transport handlers are owned by `admin/admin_mocks/fixtures/AdminMockFixtures.ts` and `admin/admin_mocks/handlers/AdminMockHandlers.ts`. These files provide populated success responses and are the only module-owned mock transport source for Admin. Global MSW bootstrap may register these handlers, but must not contain Admin business data.

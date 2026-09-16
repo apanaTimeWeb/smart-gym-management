@@ -26,7 +26,7 @@ export default function AdminSalesStoreSales() {
   if (fetchState === 'loading') {
     return (
       <div className="space-y-4 motion-safe:animate-pulse">
-        {[1,2,3,4].map(i => <div key={i} className="h-14 bg-input rounded-lg" />)}
+        {["row-1", "row-2", "row-3", "row-4"].map(i => <div key={i} className="h-14 bg-input rounded-lg" />)}
       </div>
     );
   }

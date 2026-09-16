@@ -1,4 +1,5 @@
 "use client";
+// DATA FLOW: feature API/schema → hook/context → useAdminSubscriptionsLogic consumers.
 // RESPONSIBILITY: Business logic hook for Subscriptions — queries and mutations.
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';

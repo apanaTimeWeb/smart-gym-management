@@ -1,3 +1,4 @@
+// DATA FLOW: feature API/schema → hook/context → useAdminToastStore consumers.
 // RESPONSIBILITY: Global store for Admin Toast notifications, enforcing deduplication via stable IDs.
 import { create } from 'zustand';
 import type { ToastType } from '@/app/admin/admin_components/AdminFeedback/AdminToast';

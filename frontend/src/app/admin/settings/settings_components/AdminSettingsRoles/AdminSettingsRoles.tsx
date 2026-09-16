@@ -50,7 +50,7 @@ export function AdminSettingsRoles() {
               <p className="text-sm text-secondary mb-4 flex-1">{role.description}</p>
               <div className="flex flex-wrap gap-2 pt-3 border-t border-border">
                 {role.permissions.map(p => (
-                  <span key={p} className="px-2 py-1 text-[10px] font-medium uppercase tracking-wider bg-input border border-border text-foreground rounded-full">
+                  <span key={p} className="px-2 py-1 text-xs font-medium uppercase tracking-wider bg-input border border-border text-foreground rounded-full">
                     {p.replace('_', ' ')}
                   </span>
                 ))}

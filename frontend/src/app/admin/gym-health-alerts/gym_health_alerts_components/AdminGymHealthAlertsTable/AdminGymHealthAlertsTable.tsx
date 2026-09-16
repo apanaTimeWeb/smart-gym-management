@@ -49,7 +49,7 @@ export default function AdminGymHealthAlertsTable() {
                   </div>
                 </td>
               </tr>
-            ) : alerts.map((alert: any) => (
+            ) : alerts.map((alert) => (
               <tr key={alert.id} className={`motion-safe:transition-colors group ${alert.severity === 'critical' ? 'hover:bg-danger/5' : alert.severity === 'warning' ? 'hover:bg-warning/5' : 'hover:bg-info/5'}`}>
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-2">

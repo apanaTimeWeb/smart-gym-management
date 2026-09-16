@@ -113,6 +113,6 @@ export const salesInitialDataSchema = z.object({
     storeSummary: storeSummarySchema.optional().nullable()
 });
 
-const salesTabSchema = z.any();
+const salesTabSchema = z.unknown();
 
-const dateFilterSchema = z.any();
+const dateFilterSchema = z.unknown();

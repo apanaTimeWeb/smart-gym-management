@@ -40,7 +40,7 @@ export default function AdminAttendanceTable() {
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
-            {records.map((r: any) => (
+            {records.map((r) => (
               <tr key={r.id} className="hover:bg-primary/5 motion-safe:transition-colors">
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-3">

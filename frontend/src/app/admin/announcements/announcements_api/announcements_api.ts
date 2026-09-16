@@ -20,21 +20,21 @@ function deriveStatus(publishedAt: string, expiresAt: string): Announcement['sta
 
 export const announcementsApi = {
   fetchAnnouncements: async () => {
-            return apiFetch<ApiResponse<Announcement[]>>(`${AdminAnnouncementsUrlConfig.api.base}/fetchAnnouncements`, { method: 'GET', dataSchema: z.any() });
+            return apiFetch<ApiResponse<Announcement[]>>(`${AdminAnnouncementsUrlConfig.api.base}/fetchAnnouncements`, { method: 'GET', dataSchema: z.unknown() });
         },
   fetchKPIs: async () => {
-            return apiFetch<ApiResponse<AnnouncementKPIData>>(`${AdminAnnouncementsUrlConfig.api.base}/fetchKPIs`, { method: 'GET', dataSchema: z.any() });
+            return apiFetch<ApiResponse<AnnouncementKPIData>>(`${AdminAnnouncementsUrlConfig.api.base}/fetchKPIs`, { method: 'GET', dataSchema: z.unknown() });
         },
   createAnnouncement: async (payload: AnnouncementFormValues) => {
-          return apiFetch<ApiResponse<any>>(`${AdminAnnouncementsUrlConfig.api.base}/createAnnouncement`, { method: 'POST', body: JSON.stringify(payload), dataSchema: z.any() });
+          return apiFetch<ApiResponse<Announcement>>(`${AdminAnnouncementsUrlConfig.api.base}/createAnnouncement`, { method: 'POST', body: JSON.stringify(payload), dataSchema: z.unknown() });
       },
   updateAnnouncement: async (id: string, payload: AnnouncementFormValues) => {
-          return apiFetch<ApiResponse<any>>(`${AdminAnnouncementsUrlConfig.api.base}/updateAnnouncement`, { method: 'POST', body: JSON.stringify(id), dataSchema: z.any() });
+          return apiFetch<ApiResponse<Announcement>>(`${AdminAnnouncementsUrlConfig.api.base}/updateAnnouncement`, { method: 'POST', body: JSON.stringify(id), dataSchema: z.unknown() });
       },
   deleteAnnouncement: async (id: string) => {
-          return apiFetch<ApiResponse<any>>(`${AdminAnnouncementsUrlConfig.api.base}/deleteAnnouncement`, { method: 'DELETE', body: JSON.stringify(id), dataSchema: z.any() });
+          return apiFetch<ApiResponse<Announcement>>(`${AdminAnnouncementsUrlConfig.api.base}/deleteAnnouncement`, { method: 'DELETE', body: JSON.stringify(id), dataSchema: z.unknown() });
       },
   togglePin: async (id: string) => {
-          return apiFetch<ApiResponse<Announcement>>(`${AdminAnnouncementsUrlConfig.api.base}/togglePin`, { method: 'POST', body: JSON.stringify(id), dataSchema: z.any() });
+          return apiFetch<ApiResponse<Announcement>>(`${AdminAnnouncementsUrlConfig.api.base}/togglePin`, { method: 'POST', body: JSON.stringify(id), dataSchema: z.unknown() });
       },
 };

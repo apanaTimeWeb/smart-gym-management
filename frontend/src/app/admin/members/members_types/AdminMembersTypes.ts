@@ -1,7 +1,8 @@
 // RESPONSIBILITY: TypeScript types and interfaces for the Admin Members module.
 
-export type FetchState = 'idle' | 'loading' | 'success' | 'error';
 export type MemberStatus = 'active' | 'expired' | 'pending' | 'frozen';
+
+export type FetchState = 'idle' | 'loading' | 'success' | 'error';
 
 export interface AdminMember {
   id: string;

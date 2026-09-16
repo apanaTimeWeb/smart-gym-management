@@ -1,4 +1,5 @@
 "use client";
+// DATA FLOW: feature API/schema → hook/context → useAdminBranchesQueries consumers.
 // RESPONSIBILITY: React Query hook for fetching admin branches from the real API.
 // Rule 3B: No static mock data — all data comes from the backend via apiFetch.
 

@@ -8,10 +8,10 @@ export default function AdminReportsPayroll() {
   const { reportData } = useAdminReportsLogic();
   if (!reportData) return null;
 
-  const totalPayroll = reportData.payrollSummary.reduce((s: number, r: any) => s + r.totalPayroll, 0);
-  const totalPaid = reportData.payrollSummary.reduce((s: number, r: any) => s + r.paid, 0);
-  const totalPending = reportData.payrollSummary.reduce((s: number, r: any) => s + r.pending, 0);
-  const totalAdvances = reportData.payrollSummary.reduce((s: number, r: any) => s + r.advances, 0);
+  const totalPayroll = reportData.payrollSummary.reduce((s: number, r) => s + r.totalPayroll, 0);
+  const totalPaid = reportData.payrollSummary.reduce((s: number, r) => s + r.paid, 0);
+  const totalPending = reportData.payrollSummary.reduce((s: number, r) => s + r.pending, 0);
+  const totalAdvances = reportData.payrollSummary.reduce((s: number, r) => s + r.advances, 0);
 
   return (
     <div className="space-y-6">
@@ -45,7 +45,7 @@ export default function AdminReportsPayroll() {
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {reportData.payrollSummary.map((row: any) => (
+              {reportData.payrollSummary.map((row) => (
                 <tr key={row.gymId} className="hover:bg-primary/5 motion-safe:transition-colors">
                   <td className="px-5 py-4 text-sm font-semibold text-foreground">{row.gymName}</td>
                   <td className="px-5 py-4 text-sm text-foreground">{row.totalStaff}</td>

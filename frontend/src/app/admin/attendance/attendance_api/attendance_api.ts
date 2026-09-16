@@ -4,13 +4,16 @@ import type { AdminAttendanceRecord, AdminAttendanceSummary, AdminAttendanceTren
 import { z } from "zod";
 
 export async function fetchAttendanceRecords(): Promise<AdminAttendanceRecord[]> {
-  return apiFetch(AdminAttendanceUrlConfig.api.base, { dataSchema: z.any() });
+  const res = await apiFetch<ApiResponse<AdminAttendanceRecord[]>>(AdminAttendanceUrlConfig.api.base, { dataSchema: z.unknown() });
+  return res.data || [];
 }
 
 export async function fetchAttendanceSummary(): Promise<AdminAttendanceSummary> {
-  return apiFetch(`${AdminAttendanceUrlConfig.api.base}/summary`, { dataSchema: z.any() });
+  const res = await apiFetch<ApiResponse<AdminAttendanceSummary>>(`${AdminAttendanceUrlConfig.api.base}/summary`, { dataSchema: z.unknown() });
+  return res.data as AdminAttendanceSummary;
 }
 
 export async function fetchAttendanceTrend(): Promise<AdminAttendanceTrendPoint[]> {
-  return apiFetch(`${AdminAttendanceUrlConfig.api.base}/trend`, { dataSchema: z.any() });
+  const res = await apiFetch<ApiResponse<AdminAttendanceTrendPoint[]>>(`${AdminAttendanceUrlConfig.api.base}/trend`, { dataSchema: z.unknown() });
+  return res.data || [];
 }

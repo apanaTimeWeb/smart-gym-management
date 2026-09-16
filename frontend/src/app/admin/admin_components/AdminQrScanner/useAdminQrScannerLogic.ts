@@ -2,14 +2,14 @@
 // DATA FLOW: Simulate Scan Button → useAdminQrScannerLogic (state machine) → AdminQrScannerModal (view)
 import { useState, useCallback } from 'react';
 import toast from 'react-hot-toast';
-import type { AdminQrScanStatus, AdminQrScanHistoryRecord } from './AdminQrScannerTypes';
+import type { AdminQrScanStatus, AdminQrScanHistoryRecord } from '@/app/admin/admin_components/AdminQrScanner/AdminQrScannerTypes';
 import {
   ADMIN_QR_INITIAL_HISTORY,
   ADMIN_QR_MOCK_ACTIVE_NAME,
   ADMIN_QR_TOAST_CHECKIN_SUCCESS,
   ADMIN_QR_SCAN_DELAY_MS,
   ADMIN_QR_MOCK_ID_PREFIX,
-} from './AdminQrScannerConstants';
+} from '@/app/admin/admin_components/AdminQrScanner/AdminQrScannerConstants';
 
 /**
  * useAdminQrScannerLogic

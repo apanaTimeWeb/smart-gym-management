@@ -1,14 +1,23 @@
-import { adminUsageDataSchema } from '@/app/admin/usage/usage_types/AdminUsage_schemas';
-// RESPONSIBILITY: Legacy global-level usage API stub. The canonical implementation is
-// usage/usage_api/AdminUsageApi.ts. This file is kept only for backward-compat imports
-// from AdminHeader/AdminUsageAlert. Do NOT add new types or logic here.
-// Rule 7: AdminAdminUsageData type lives in usage/usage_types/AdminUsageTypes.ts
+import { z } from 'zod';
+// RESPONSIBILITY: API boundary for Admin usage server data.
+import { AdminUsageUrlConfig } from '@/app/admin/usage/usage_url_config';
 import { apiFetch, type ApiResponse } from '@/lib/api';
+import { adminUsageDataSchema } from '@/app/admin/usage/usage_types/AdminUsage_schemas';
 import type { AdminUsageData } from '@/app/admin/usage/usage_types/AdminUsageTypes';
-import { z } from "zod";
+
+const usageResponseSchema = z.object({
+  success: z.boolean(),
+  message: z.string(),
+  data: adminUsageDataSchema.nullable(),
+  meta: z.unknown().optional(),
+  error: z.unknown().optional(),
+  statusCode: z.number().optional(),
+});
 
 export const usageApi = {
-  fetchMyUsage: async () => {
-      return apiFetch<ApiResponse<any>>('/api/admin/adminUsage/fetchMyUsage', { method: 'GET', dataSchema: z.any() });
-  },
+  fetchMyUsage: async (): Promise<ApiResponse<AdminUsageData>> =>
+    apiFetch<ApiResponse<AdminUsageData>>(`${AdminUsageUrlConfig.BACKEND_API.MY_USAGE}`, {
+      method: 'GET',
+      responseSchema: usageResponseSchema,
+    }),
 };

@@ -46,7 +46,7 @@ export default function AdminHrPayrollModal() {
 
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/60">
-      <div className="w-full max-w-md rounded-2xl shadow-xl flex flex-col max-h-[90%] bg-card border-2 border-warning">
+      <div className="w-full max-w-md rounded-2xl shadow-xl flex flex-col max-h-screen bg-card border-2 border-warning">
         
         <div className="flex items-center justify-between px-8 py-5 border-b border-border">
           <h2 className="text-xl font-bold text-foreground">
@@ -128,7 +128,7 @@ export default function AdminHrPayrollModal() {
             disabled={saving}
             className="flex items-center gap-2 px-8 py-2.5 rounded-xl text-sm font-bold text-white transition-all hover:shadow-lg hover:shadow-primary/30 active:scale-95 disabled:opacity-70 bg-primary"
           >
-            {saving ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full motion-safe:animate-spin" /> : <Check size={16} />}
+            {saving ? <div className="w-4 h-4 border-2 border-border/30 border-t-white rounded-full motion-safe:animate-spin" /> : <Check size={16} />}
             {saving ? 'Saving...' : 'Disburse Payroll'}
           </button>
         </div>
