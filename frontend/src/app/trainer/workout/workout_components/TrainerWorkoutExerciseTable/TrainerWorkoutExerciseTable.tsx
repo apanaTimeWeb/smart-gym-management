@@ -2,7 +2,7 @@
 // RESPONSIBILITY: Renders the exercises data table with muscle group, category, and inline edit/delete actions.
 import { useTrainerWorkoutFilters } from '@/app/trainer/workout/workout_utils/useTrainerWorkoutFilters';
 import { useTrainerExercisesQuery } from '@/app/trainer/workout/workout_queries/TrainerUseWorkoutQuery';
-import { EXERCISE_TABLE_HEADERS } from '@/app/trainer/workout/workout_utils/TrainerWorkoutSharedConstants';
+import { EXERCISE_TABLE_HEADERS, TRAINER_WORKOUT_DIFFICULTY_STYLES } from '@/app/trainer/workout/workout_utils/TrainerWorkoutSharedConstants';
 import TrainerPagination from '@/app/trainer/trainer_components/TrainerShared/TrainerPagination';
 import { TRAINER_ITEMS_PER_PAGE } from '@/app/trainer/trainer_utils/TrainerSharedConstants';
 import { useTrainerWorkoutStore } from '@/app/trainer/workout/workout_store/useTrainerWorkoutStore';
@@ -33,7 +33,7 @@ export default function TrainerWorkoutExerciseTable() {
   if (status === 'error') {
     return (
       <div className="text-center py-16 bg-card rounded-2xl border border-danger/30">
-        <p className="text-danger font-medium">Failed to load exercises.</p>
+        <p className="text-danger font-medium">Unable to load exercises right now. Please retry.</p>
         <p className="text-sm mt-1 text-secondary">Please check your connection and try again.</p>
       </div>
     );
@@ -65,25 +65,19 @@ export default function TrainerWorkoutExerciseTable() {
                   </span>
                 </td>
                 <td className="px-4 py-3">
-                  <span className={`text-xs px-2.5 py-0.5 rounded-full font-semibold ${
-                    ex.difficulty === 'Beginner' 
-                    ? 'bg-success-bg text-success dark:bg-success-bg dark:text-success' 
-                    : ex.difficulty === 'Intermediate' 
-                    ? 'bg-warning-bg text-warning dark:bg-warning-bg dark:text-warning' 
-                    : 'bg-danger-bg text-danger dark:bg-danger-bg dark:text-danger'
-                  }`}>
+                  <span className={`text-xs px-2.5 py-0.5 rounded-full font-semibold ${TRAINER_WORKOUT_DIFFICULTY_STYLES[ex.difficulty as keyof typeof TRAINER_WORKOUT_DIFFICULTY_STYLES] ?? 'bg-input text-secondary'}`}>
                     {ex.difficulty}
                   </span>
                 </td>
                 <td className="px-4 py-3 flex gap-1">
-                  <button onClick={() => { setEditEx(ex); setShowExModal(true); }} className="p-1.5 text-secondary hover:text-foreground hover:bg-input rounded-md transition-colors">
-                    <Edit2 size={14} />
+                  <button onClick={() => { setEditEx(ex); setShowExModal(true); }} className="p-1.5 text-secondary hover:text-foreground hover:bg-input rounded-md motion-safe:transition-colors">
+                    <Edit2 size={18} aria-hidden="true" />
                   </button>
                   <button onClick={async () => {
                     const ok = await confirm({ title: 'Delete Exercise', message: 'Delete this exercise?', type: 'danger', confirmText: 'Delete' });
                     if (ok) deleteExercise.mutate(ex.id);
-                  }} className="p-1.5 text-secondary hover:text-danger hover:bg-danger-bg rounded-md transition-colors">
-                    <Trash2 size={14} />
+                  }} className="p-1.5 text-secondary hover:text-danger hover:bg-danger-bg rounded-md motion-safe:transition-colors">
+                    <Trash2 size={18} aria-hidden="true" />
                   </button>
                 </td>
               </tr>

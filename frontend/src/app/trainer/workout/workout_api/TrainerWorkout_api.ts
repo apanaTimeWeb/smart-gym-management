@@ -3,12 +3,14 @@ import type { Workout, Exercise } from '@/app/trainer/workout/workout_types/Trai
 import { WorkoutSchema, ExerciseSchema } from '@/app/trainer/workout/workout_types/TrainerWorkout.schema';
 import { apiFetch, type ApiResponse } from '@/lib/api';
 import { WorkoutUrlConfig } from '@/app/trainer/Trainer_url_config';
+import { createTrainerApiResponseSchema } from '@/app/trainer/trainer_utils/TrainerApiResponseSchema';
 
 export const workoutApi = {
-  getWorkouts: async (params?: Record<string, string>) => {
+  fetchWorkouts: async (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    const res = await apiFetch<ApiResponse<{ workouts: unknown[]; total: number }>>(`${WorkoutUrlConfig.BACKEND_API.WORKOUTS}${q}`);
-    return { data: { workouts: z.array(WorkoutSchema).parse(res.data?.workouts || []), total: res.data?.total || 0 } };
+    const res = await apiFetch<ApiResponse<unknown>>(`${WorkoutUrlConfig.BACKEND_API.WORKOUTS}${q}`);
+    const response = createTrainerApiResponseSchema(z.object({ workouts: z.array(WorkoutSchema), total: z.number().int().nonnegative() })).parse(res);
+    return { data: response.data ?? { workouts: [], total: 0 }, message: response.message };
   },
   
   createWorkout: async (body: Partial<Workout>) => {
@@ -16,7 +18,8 @@ export const workoutApi = {
       method: 'POST',
       body: JSON.stringify(body),
     });
-    return { data: WorkoutSchema.parse(res.data) };
+    const response = createTrainerApiResponseSchema(WorkoutSchema).parse(res);
+    return { data: WorkoutSchema.parse(response.data), message: response.message };
   },
   
   updateWorkout: async (id: string, body: Partial<Workout>) => {
@@ -24,20 +27,23 @@ export const workoutApi = {
       method: 'PATCH',
       body: JSON.stringify(body),
     });
-    return { data: WorkoutSchema.parse(res.data) };
+    const response = createTrainerApiResponseSchema(WorkoutSchema).parse(res);
+    return { data: WorkoutSchema.parse(response.data), message: response.message };
   },
   
-  removeWorkout: async (id: string) => {
-    await apiFetch<ApiResponse<unknown>>(`${WorkoutUrlConfig.BACKEND_API.WORKOUTS}/${id}`, {
+  deleteWorkout: async (id: string) => {
+    const res = await apiFetch<ApiResponse<unknown>>(`${WorkoutUrlConfig.BACKEND_API.WORKOUTS}/${id}`, {
       method: 'DELETE',
     });
-    return { data: { id } };
+    const response = createTrainerApiResponseSchema(z.null()).parse(res);
+    return { data: { id }, message: response.message };
   },
   
-  getExercises: async (params?: Record<string, string>) => {
+  fetchExercises: async (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    const res = await apiFetch<ApiResponse<{ exercises: unknown[]; total: number }>>(`${WorkoutUrlConfig.BACKEND_API.EXERCISES}${q}`);
-    return { data: { exercises: z.array(ExerciseSchema).parse(res.data?.exercises || []), total: res.data?.total || 0 } };
+    const res = await apiFetch<ApiResponse<unknown>>(`${WorkoutUrlConfig.BACKEND_API.EXERCISES}${q}`);
+    const response = createTrainerApiResponseSchema(z.object({ exercises: z.array(ExerciseSchema), total: z.number().int().nonnegative() })).parse(res);
+    return { data: response.data ?? { exercises: [], total: 0 }, message: response.message };
   },
   
   createExercise: async (body: Partial<Exercise>) => {
@@ -45,7 +51,8 @@ export const workoutApi = {
       method: 'POST',
       body: JSON.stringify(body),
     });
-    return { data: ExerciseSchema.parse(res.data) };
+    const response = createTrainerApiResponseSchema(ExerciseSchema).parse(res);
+    return { data: ExerciseSchema.parse(response.data), message: response.message };
   },
   
   updateExercise: async (id: string, body: Partial<Exercise>) => {
@@ -53,13 +60,15 @@ export const workoutApi = {
       method: 'PATCH',
       body: JSON.stringify(body),
     });
-    return { data: ExerciseSchema.parse(res.data) };
+    const response = createTrainerApiResponseSchema(ExerciseSchema).parse(res);
+    return { data: ExerciseSchema.parse(response.data), message: response.message };
   },
   
-  removeExercise: async (id: string) => {
-    await apiFetch<ApiResponse<unknown>>(`${WorkoutUrlConfig.BACKEND_API.EXERCISES}/${id}`, {
+  deleteExercise: async (id: string) => {
+    const res = await apiFetch<ApiResponse<unknown>>(`${WorkoutUrlConfig.BACKEND_API.EXERCISES}/${id}`, {
       method: 'DELETE',
     });
-    return { data: { id } };
+    const response = createTrainerApiResponseSchema(z.null()).parse(res);
+    return { data: { id }, message: response.message };
   },
 };

@@ -12,7 +12,7 @@ export function useTrainerWorkoutFilters() {
   const page = Number(searchParams.get('page')) || 1;
 
   const setUrlParam = useCallback((key: string, value: string | null) => {
-    const current = new URLSearchParams(Array.from(searchParams.entries()));
+    const current = new URLSearchParams(searchParams.toString());
     if (value) current.set(key, value);
     else current.delete(key);
     if (key !== 'page' && key !== 'tab') current.set('page', '1');
@@ -20,7 +20,7 @@ export function useTrainerWorkoutFilters() {
   }, [searchParams, pathname, router]);
 
   const handleTabChange = useCallback((newTab: string) => {
-    const current = new URLSearchParams(Array.from(searchParams.entries()));
+    const current = new URLSearchParams(searchParams.toString());
     current.set('tab', newTab);
     current.delete('category'); // Reset filter
     router.push(`${pathname}?${current.toString()}`, { scroll: false });

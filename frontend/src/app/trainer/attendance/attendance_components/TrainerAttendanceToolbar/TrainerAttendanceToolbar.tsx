@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react';
 import { RefreshCw, Search, Calendar as CalendarIcon, List, Plus, LogIn, LogOut, Loader2 } from 'lucide-react';
 import { ATTENDANCE_TABS, ATTENDANCE_DATE_FILTER_OPTIONS, type AttendanceTab } from '@/app/trainer/attendance/attendance_utils/TrainerAttendanceSharedConstants';
-import { SearchableDropdown } from '@/app/trainer/trainer_components/TrainerShared/TrainerSearchableDropdown';
+import TrainerSearchableDropdown from '@/app/trainer/trainer_components/TrainerShared/TrainerSearchableDropdown/TrainerSearchableDropdown';
 
 interface TrainerAttendanceToolbarProps {
   tab: AttendanceTab;
@@ -96,10 +96,10 @@ export default function TrainerAttendanceToolbar({
         </div>
 
         {/* Date filter */}
-        <SearchableDropdown
+        <TrainerSearchableDropdown
           options={ATTENDANCE_DATE_FILTER_OPTIONS}
           value={filterDate}
-          onChange={(val) => setFilterDate(String(val))}
+          onChange={(val: string | number) => setFilterDate(String(val))}
           placeholder="Filter by date"
           className="w-36"
         />

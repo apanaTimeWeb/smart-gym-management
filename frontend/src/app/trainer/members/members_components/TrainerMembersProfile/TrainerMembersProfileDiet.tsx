@@ -3,15 +3,13 @@
 // DATA FLOW: useMembersContext -> TrainerMembersProfileDiet -> libraryApi
 
 import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
 import { Apple, Plus, Check, MessageCircle, RefreshCw, Flame, PieChart, Utensils } from 'lucide-react';
 import { useTrainerMembersStore } from '@/app/trainer/members/members_store/useTrainerMembersStore';
 import { useTrainerSelectedMember } from '@/app/trainer/members/members_queries/useTrainerSelectedMember';
-import { SearchableDropdown } from '@/app/trainer/trainer_components/TrainerShared/TrainerSearchableDropdown';
+import TrainerSearchableDropdown from '@/app/trainer/trainer_components/TrainerShared/TrainerSearchableDropdown/TrainerSearchableDropdown';
 import { displayValue } from '@/lib/formatters';
 import { useTrainerMembersMutations } from '@/app/trainer/members/members_queries/useTrainerMembersMutations';
-import { libraryApi } from '@/app/trainer/library/library_api/TrainerLibrary_api';
-import type { TrainerMemberDietSnapshot } from '@/app/trainer/members/members_types/TrainerMemberDietSnapshot';
+import { useTrainerMemberDietPlansQuery } from '@/app/trainer/members/members_queries/useTrainerMembersQuery';
 
 export default function TrainerMembersProfileDiet() {
   const { member: selectedMember } = useTrainerSelectedMember();
@@ -19,7 +17,7 @@ export default function TrainerMembersProfileDiet() {
   const [isAssigning, setIsAssigning] = useState(false);
   const [selectedDietId, setSelectedDietId] = useState('');
   const [saving, setSaving] = useState(false);
-  const dietsQuery = useQuery({ queryKey: ['trainer','members','diet-plans'], queryFn: async () => (await libraryApi.getDietPlans()).dietPlans, enabled: isAssigning });
+  const dietsQuery = useTrainerMemberDietPlansQuery(isAssigning);
   const availableDiets = dietsQuery.data ?? [];
 
   if (!selectedMember) return null;
@@ -29,7 +27,7 @@ export default function TrainerMembersProfileDiet() {
 
   const handleAssign = async () => {
     if (!selectedDietId) return;
-    const selected = availableDiets.find((d: any) => String(d.id) === selectedDietId) || null;
+    const selected = availableDiets.find((d) => String(d.id) === selectedDietId) || null;
     setSaving(true);
     try {
       await assignDiet.mutateAsync({ id: selectedMember.id, diet: selected });
@@ -57,7 +55,7 @@ export default function TrainerMembersProfileDiet() {
   };
 
   return (
-    <div className="space-y-6 motion-safe:animate-in fade-in duration-300">
+    <div className="space-y-6 motion-safe:animate-in fade-in motion-safe:duration-slow">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h3 className="text-lg font-bold text-foreground">Diet & Nutrition Plan</h3>
@@ -68,7 +66,7 @@ export default function TrainerMembersProfileDiet() {
             <>
               <button 
                 onClick={handleShareWhatsApp}
-                className="flex items-center gap-2 px-4 py-2 bg-success text-white rounded-xl text-sm font-semibold hover:opacity-90 shadow-sm transition-all active:scale-95"
+                className="flex items-center gap-2 px-4 py-2 bg-success text-white rounded-xl text-sm font-semibold hover:opacity-90 shadow-sm motion-safe:transition-all motion-safe:active:scale-95"
               >
                 <MessageCircle size={16} /> Share via WhatsApp
               </button>
@@ -77,7 +75,7 @@ export default function TrainerMembersProfileDiet() {
                   setSelectedDietId(diet.id || '');
                   setIsAssigning(true);
                 }}
-                className="flex items-center gap-2 px-4 py-2 bg-input text-foreground border border-border rounded-xl text-sm font-semibold hover:bg-primary-subtle transition-all active:scale-95"
+                className="flex items-center gap-2 px-4 py-2 bg-input text-foreground border border-border rounded-xl text-sm font-semibold hover:bg-primary-subtle motion-safe:transition-all motion-safe:active:scale-95"
               >
                 <RefreshCw size={15} /> Change Diet
               </button>
@@ -85,7 +83,7 @@ export default function TrainerMembersProfileDiet() {
           ) : !isAssigning ? (
             <button 
               onClick={() => setIsAssigning(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-primary/30 transition-all active:scale-95"
+              className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-primary/30 motion-safe:transition-all motion-safe:active:scale-95"
             >
               <Plus size={16} /> Assign Diet Plan
             </button>
@@ -112,10 +110,10 @@ export default function TrainerMembersProfileDiet() {
             <p className="text-sm text-secondary py-3">Loading available diet plans...</p>
           ) : (
             <div className="flex flex-col sm:flex-row gap-3">
-              <SearchableDropdown
-                options={availableDiets.map((diet: any) => ({ value: diet.id, label: `${diet.name} · ${displayValue(diet.goal)}` }))}
+              <TrainerSearchableDropdown
+                options={availableDiets.map((diet) => ({ value: diet.id, label: `${diet.name} · ${displayValue(diet.goal)}` }))}
                 value={selectedDietId}
-                onChange={(value) => setSelectedDietId(String(value))}
+                onChange={(value: string | number) => setSelectedDietId(String(value))}
                 placeholder="Choose a Diet Plan"
                 className="w-full"
               />
@@ -123,7 +121,7 @@ export default function TrainerMembersProfileDiet() {
                 <button 
                   onClick={handleAssign}
                   disabled={!selectedDietId || saving}
-                  className="px-5 py-2.5 bg-primary text-white rounded-xl text-sm font-semibold hover:shadow-md transition-all disabled:opacity-50 flex items-center gap-2"
+                  className="px-5 py-2.5 bg-primary text-white rounded-xl text-sm font-semibold hover:shadow-md motion-safe:transition-all disabled:opacity-50 flex items-center gap-2"
                 >
                   <Check size={16} /> {saving ? 'Assigning...' : 'Confirm Assignment'}
                 </button>
@@ -161,15 +159,15 @@ export default function TrainerMembersProfileDiet() {
           <div className="grid grid-cols-3 gap-4">
             <div className="bg-input/50 border border-border rounded-xl p-4 text-center">
               <p className="text-xs text-secondary font-medium">Protein</p>
-              <p className="text-xl font-bold text-info mt-0.5">{diet.protein || 140}g</p>
+              <p className="text-xl font-bold text-info mt-0.5">{displayValue(diet.protein)}g</p>
             </div>
             <div className="bg-input/50 border border-border rounded-xl p-4 text-center">
               <p className="text-xs text-secondary font-medium">Carbohydrates</p>
-              <p className="text-xl font-bold text-warning mt-0.5">{diet.carbs || 220}g</p>
+              <p className="text-xl font-bold text-warning mt-0.5">{displayValue(diet.carbs)}g</p>
             </div>
             <div className="bg-input/50 border border-border rounded-xl p-4 text-center">
               <p className="text-xs text-secondary font-medium">Healthy Fats</p>
-              <p className="text-xl font-bold text-purple mt-0.5">{diet.fats || 55}g</p>
+              <p className="text-xl font-bold text-purple mt-0.5">{displayValue(diet.fats)}g</p>
             </div>
           </div>
 
@@ -221,7 +219,7 @@ export default function TrainerMembersProfileDiet() {
           </p>
           <button
             onClick={() => setIsAssigning(true)}
-            className="mt-2 inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-white rounded-xl text-sm font-semibold hover:shadow-md transition-all"
+            className="mt-2 inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-white rounded-xl text-sm font-semibold hover:shadow-md motion-safe:transition-all"
           >
             <Plus size={16} /> Assign Diet Plan
           </button>

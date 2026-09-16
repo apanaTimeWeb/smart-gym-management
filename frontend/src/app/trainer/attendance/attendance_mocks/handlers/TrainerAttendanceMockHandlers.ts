@@ -79,7 +79,7 @@ export const trainerAttendanceHandlers = [
     const body = parsedBody.data;
     
     // Support self check-in which might only have staffId
-    if ((body as any).isSelfCheckIn) {
+    if (body.isSelfCheckIn) {
        return HttpResponse.json({ success: true, message: 'Attendance action completed successfully', data: null });
     }
 

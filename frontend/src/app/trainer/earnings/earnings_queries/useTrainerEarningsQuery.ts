@@ -7,7 +7,7 @@ export function useTrainerEarningsQuery() {
 
   return useQuery({
     queryKey: ['trainer', 'earnings', startDate, endDate],
-    queryFn: () => earningsApi.getEarningsData(startDate, endDate),
+    queryFn: () => earningsApi.fetchEarningsData(startDate, endDate),
     staleTime: 5 * 60 * 1000,
   });
 }

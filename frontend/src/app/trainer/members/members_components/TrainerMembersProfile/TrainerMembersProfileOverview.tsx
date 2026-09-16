@@ -4,13 +4,13 @@
 import { MessageCircle, Mail, Target } from 'lucide-react';
 import { useTrainerMembersStore } from '@/app/trainer/members/members_store/useTrainerMembersStore';
 import { useTrainerSelectedMember } from '@/app/trainer/members/members_queries/useTrainerSelectedMember';
-import { useTrainerProgressEntriesQuery } from '@/app/trainer/progress-tracking/progress_queries/useTrainerProgressQuery';
+import { useTrainerMemberProgressEntriesQuery } from '@/app/trainer/members/members_queries/useTrainerMembersQuery';
 import { displayValue, formatDate } from '@/lib/formatters';
 
 export default function TrainerMembersProfileOverview() {
   const { member: selectedMember } = useTrainerSelectedMember();
   const openMsg = useTrainerMembersStore((state) => state.openMsg);
-  const { data: progressEntries = [], isPending } = useTrainerProgressEntriesQuery(selectedMember?.id ?? '');
+  const { data: progressEntries = [], isPending } = useTrainerMemberProgressEntriesQuery(selectedMember?.id ?? '');
   if (!selectedMember) return null;
   const latest = progressEntries.at(-1);
   const previous = progressEntries.at(-2);

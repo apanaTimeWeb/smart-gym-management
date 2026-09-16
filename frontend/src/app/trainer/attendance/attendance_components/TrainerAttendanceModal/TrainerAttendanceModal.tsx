@@ -11,7 +11,7 @@ import {
   type AttendanceFormValues,
   EMPTY_ATTENDANCE_FORM,
 } from '@/app/trainer/attendance/attendance_utils/TrainerAttendanceSharedConstants';
-import { SearchableDropdown } from '@/app/trainer/trainer_components/TrainerShared/TrainerSearchableDropdown';
+import TrainerSearchableDropdown from '@/app/trainer/trainer_components/TrainerShared/TrainerSearchableDropdown/TrainerSearchableDropdown';
 import type { AttendanceMemberBasic, CreateAttendanceDto } from '@/app/trainer/attendance/attendance_types/TrainerAttendance_types';
 
 interface TrainerAttendanceModalProps {
@@ -58,7 +58,7 @@ export default function TrainerAttendanceModal({ isOpen, onClose, members, savin
   };
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 backdrop-blur-sm p-4">
       <div className="bg-card rounded-2xl shadow-xl w-full max-w-md overflow-hidden border border-border motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95 motion-safe:duration-200">
         <div className="flex justify-between items-center p-5 border-b border-border">
           <h3 className="font-bold text-lg text-foreground">Record Attendance</h3>
@@ -96,12 +96,11 @@ export default function TrainerAttendanceModal({ isOpen, onClose, members, savin
                 name="memberId"
                 control={control}
                 render={({ field }) => (
-                  <SearchableDropdown
+                  <TrainerSearchableDropdown
                     options={members.map(m => ({ label: `${m.name}${m.phone ? ` (${m.phone})` : ''}`, value: m.id }))}
                     value={field.value ?? ''}
                     onChange={field.onChange}
                     placeholder="Search Member..."
-                    containerStyle={{ zIndex: 60 }}
                   />
                 )}
               />
@@ -165,7 +164,7 @@ export default function TrainerAttendanceModal({ isOpen, onClose, members, savin
             <button
               type="submit"
               disabled={saving}
-              className="min-w-[120px] px-4 py-2 rounded-lg font-medium text-white bg-primary flex items-center justify-center gap-2 hover:opacity-90 motion-safe:transition-opacity disabled:opacity-70"
+              className="min-w-32 px-4 py-2 rounded-lg font-medium text-white bg-primary flex items-center justify-center gap-2 hover:opacity-90 motion-safe:transition-opacity disabled:opacity-70"
             >
               {saving ? <Loader2 className="w-4 h-4 motion-safe:animate-spin" /> : <><CheckCircle size={15} /> Save Record</>}
             </button>

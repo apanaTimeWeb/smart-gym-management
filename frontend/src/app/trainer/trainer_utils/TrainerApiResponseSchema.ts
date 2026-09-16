@@ -15,6 +15,6 @@ export const createTrainerApiResponseSchema = <T extends z.ZodTypeAny>(dataSchem
     message: z.string(),
     data: dataSchema.nullable(),
     meta: PaginationMetaSchema.optional(),
-    error: z.unknown().optional(),
+    error: z.string().optional(),
     statusCode: z.number().optional(),
   });

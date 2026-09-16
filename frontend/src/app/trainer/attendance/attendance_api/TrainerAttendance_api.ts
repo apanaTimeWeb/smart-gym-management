@@ -36,7 +36,7 @@ export async function fetchAttendanceRecords(params: AttendanceFetchParams): Pro
 }
 
 export async function fetchAttendanceStats(): Promise<AttendanceStats> {
-  const raw = await apiFetch<ApiResponse<unknown>>(`${AttendanceUrlConfig.BACKEND_API.BASE}/stats`);
+  const raw = await apiFetch<ApiResponse<unknown>>(`${AttendanceUrlConfig.BACKEND_API.STATS}`);
   const response = createTrainerApiResponseSchema(AttendanceStatsSchema).parse(raw);
   if (!response.data) throw new Error(response.message);
   return response.data;
@@ -49,26 +49,30 @@ export async function fetchAttendanceMembersBasic(): Promise<AttendanceMemberBas
   return response.data;
 }
 
-export async function createAttendanceRecord(dto: CreateAttendanceDto): Promise<AttendanceRecord> {
+export async function createAttendanceRecord(dto: CreateAttendanceDto): Promise<{ data: AttendanceRecord; message: string }> {
   const raw = await apiFetch<ApiResponse<unknown>>(`${AttendanceUrlConfig.BACKEND_API.BASE}`, {
     method: 'POST',
     body: JSON.stringify(dto),
   });
   const response = createTrainerApiResponseSchema(AttendanceRecordSchema).parse(raw);
   if (!response.data) throw new Error(response.message);
-  return response.data;
+  return { data: response.data, message: response.message };
 }
 
-export async function checkoutAttendance(staffId: string, checkOutTime: string): Promise<void> {
-  await apiFetch<ApiResponse<unknown>>(`${AttendanceUrlConfig.BACKEND_API.BASE}/checkout/${staffId}`, {
+export async function checkoutAttendance(staffId: string, checkOutTime: string): Promise<{ message: string }> {
+  const raw = await apiFetch<ApiResponse<unknown>>(`${AttendanceUrlConfig.BACKEND_API.CHECKOUT(staffId)}`, {
     method: 'PATCH',
     body: JSON.stringify({ checkOutTime }),
   });
+  const response = createTrainerApiResponseSchema(z.null()).parse(raw);
+  return { message: response.message };
 }
 
-export async function selfCheckInAttendance(staffId: string): Promise<void> {
-  await apiFetch<ApiResponse<unknown>>(`${AttendanceUrlConfig.BACKEND_API.BASE}`, {
+export async function selfCheckInAttendance(staffId: string): Promise<{ message: string }> {
+  const raw = await apiFetch<ApiResponse<unknown>>(`${AttendanceUrlConfig.BACKEND_API.BASE}`, {
     method: 'POST',
     body: JSON.stringify({ staffId, isSelfCheckIn: true }),
   });
+  const response = createTrainerApiResponseSchema(z.null()).parse(raw);
+  return { message: response.message };
 }

@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders the loading route/UI for the owning Trainer feature; data access remains in the feature API/query layer.
 export default function TrainerProgressLoading() {
   return (
     <div className="p-6 space-y-6">

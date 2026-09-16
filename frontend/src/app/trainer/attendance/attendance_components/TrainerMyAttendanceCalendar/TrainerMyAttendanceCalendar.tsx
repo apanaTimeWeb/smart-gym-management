@@ -64,13 +64,8 @@ export default function TrainerMyAttendanceCalendar({ records }: TrainerMyAttend
         } else if (existing) {
           status = 'P';
         } else {
-          // In demo environment, generate standard attendance pattern if not recorded yet
-          const simulatedPresent = day % 6 !== 0;
-          status = simulatedPresent ? 'P' : 'A';
-          if (simulatedPresent && !checkIn) {
-            checkIn = '06:00 AM';
-            checkOut = '02:30 PM';
-          }
+          // No record means the backend has not recorded attendance for this day.
+          status = 'A';
         }
       }
 
@@ -103,7 +98,7 @@ export default function TrainerMyAttendanceCalendar({ records }: TrainerMyAttend
     setCurrentDate(new Date());
   };
 
-  const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const;
 
   return (
     <div className="p-6 space-y-6">
@@ -129,7 +124,7 @@ export default function TrainerMyAttendanceCalendar({ records }: TrainerMyAttend
         <div className="flex items-center gap-2">
           <button
             onClick={handleJumpToday}
-            className="px-3 py-1.5 text-xs font-semibold bg-input text-foreground border border-border rounded-lg hover:bg-primary-subtle transition-all active:scale-95"
+            className="px-3 py-1.5 text-xs font-semibold bg-input text-foreground border border-border rounded-lg hover:bg-primary-subtle motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95"
           >
             Current Month
           </button>
@@ -137,7 +132,7 @@ export default function TrainerMyAttendanceCalendar({ records }: TrainerMyAttend
             <button
               onClick={handlePrevMonth}
               aria-label="Previous Month"
-              className="p-2 hover:bg-card text-secondary hover:text-foreground transition-colors"
+              className="p-2 hover:bg-card text-secondary hover:text-foreground motion-safe:transition-colors"
             >
               <ChevronLeft size={16} />
             </button>
@@ -147,7 +142,7 @@ export default function TrainerMyAttendanceCalendar({ records }: TrainerMyAttend
             <button
               onClick={handleNextMonth}
               aria-label="Next Month"
-              className="p-2 hover:bg-card text-secondary hover:text-foreground transition-colors"
+              className="p-2 hover:bg-card text-secondary hover:text-foreground motion-safe:transition-colors"
             >
               <ChevronRight size={16} />
             </button>
@@ -224,7 +219,7 @@ export default function TrainerMyAttendanceCalendar({ records }: TrainerMyAttend
             return (
               <div
                 key={day}
-                className={`h-24 rounded-xl p-2.5 border flex flex-col justify-between transition-all relative ${statusStyle} ${
+                className={`h-24 rounded-xl p-2.5 border flex flex-col justify-between motion-safe:transition-all relative ${statusStyle} ${
                   isToday ? 'ring-2 ring-primary ring-offset-2 ring-offset-bg-page' : ''
                 }`}
               >
@@ -233,7 +228,7 @@ export default function TrainerMyAttendanceCalendar({ records }: TrainerMyAttend
                     {day}
                   </span>
                   {isToday && (
-                    <span className="text-[10px] font-extrabold uppercase px-1.5 py-0.5 rounded bg-primary text-white tracking-wide">
+                    <span className="text-xs font-extrabold uppercase px-1.5 py-0.5 rounded bg-primary text-white tracking-wide">
                       Today
                     </span>
                   )}
@@ -243,20 +238,20 @@ export default function TrainerMyAttendanceCalendar({ records }: TrainerMyAttend
                   {isPastOrToday ? (
                     <>
                       <div className="flex items-center justify-between">
-                        <span className={`inline-flex items-center gap-1 text-[11px] font-bold px-1.5 py-0.5 rounded ${badgeStyle}`}>
+                        <span className={`inline-flex items-center gap-1 text-xs font-bold px-1.5 py-0.5 rounded ${badgeStyle}`}>
                           {status === 'P' && <CheckCircle2 size={10} />}
                           {status === 'A' && <XCircle size={10} />}
                           {label}
                         </span>
                       </div>
                       {status === 'P' && checkIn && (
-                        <p className="text-[10px] text-secondary truncate flex items-center gap-1">
+                        <p className="text-xs text-secondary truncate flex items-center gap-1">
                           <Clock size={10} /> {checkIn}
                         </p>
                       )}
                     </>
                   ) : (
-                    <span className="text-[10px] text-secondary/50">—</span>
+                    <span className="text-xs text-secondary/50">—</span>
                   )}
                 </div>
               </div>

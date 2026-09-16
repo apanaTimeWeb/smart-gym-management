@@ -69,3 +69,5 @@ TanStack Query owns sessions and member-option responses. Local component state 
 - [x] RHF/Zod form contracts
 - [x] Double-confirm cancellation
 - [x] TanStack Query server state
+
+- **Feedback:** Mutation success/error feedback uses `useTrainerFeedback()` with stable deduplication IDs and the role-level `TrainerToastHost`.

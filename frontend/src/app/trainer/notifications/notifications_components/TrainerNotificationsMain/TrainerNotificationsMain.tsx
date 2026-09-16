@@ -1,12 +1,9 @@
 'use client';
-// RESPONSIBILITY: Entry component for the notifications module. Mounts provider and renders notification list.
-// DATA FLOW: page.tsx (SSR) → TrainerNotificationsMain → TrainerNotificationsProvider → TrainerNotificationsContent
+// RESPONSIBILITY: Entry component for the notifications module. Runs query orchestration and renders the notification list.
+// DATA FLOW: page.tsx → TrainerNotificationsMain → useTrainerNotificationsLogic → API/query → notification list
 import { Loader2 } from 'lucide-react';
 import TrainerNotificationsList from '@/app/trainer/notifications/notifications_components/TrainerNotificationsList';
-import {
-  TrainerNotificationsProvider,
-  useTrainerNotificationsContext,
-} from '@/app/trainer/notifications/notifications_context/TrainerNotificationsContext';
+import { useTrainerNotificationsLogic } from '@/app/trainer/notifications/notifications_context/useTrainerNotificationsLogic';
 
 function TrainerNotificationsContent() {
   const {
@@ -18,7 +15,7 @@ function TrainerNotificationsContent() {
     loadMore,
     markAllAsRead,
     markAsRead,
-  } = useTrainerNotificationsContext();
+  } = useTrainerNotificationsLogic();
 
   return (
     <div className="min-h-full pb-10">
@@ -81,9 +78,5 @@ function TrainerNotificationsContent() {
 }
 
 export default function TrainerNotificationsMain() {
-  return (
-    <TrainerNotificationsProvider>
-      <TrainerNotificationsContent />
-    </TrainerNotificationsProvider>
-  );
+  return <TrainerNotificationsContent />;
 }

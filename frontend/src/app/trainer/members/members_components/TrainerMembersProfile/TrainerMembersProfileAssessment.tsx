@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders the TrainerMembersProfileAssessment route/UI for the owning Trainer feature; data access remains in the feature API/query layer.
 import { Activity } from 'lucide-react';
 
 export default function TrainerMembersProfileAssessment() {

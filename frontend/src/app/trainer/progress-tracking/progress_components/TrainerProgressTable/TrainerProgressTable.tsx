@@ -50,7 +50,7 @@ export default function TrainerProgressTable({ entries, onEdit, onDelete }: Trai
                 <td className="px-4 py-3 text-foreground">{entry.bodyFatPercent ?? '—'}</td>
                 <td className="px-4 py-3 text-foreground">{entry.muscleMassKg ?? '—'}</td>
                 <td className="px-4 py-3 text-foreground">{entry.waistCm ?? '—'}</td>
-                <td className="px-4 py-3 text-secondary max-w-[160px] truncate">{entry.notes ?? '—'}</td>
+                <td className="px-4 py-3 text-secondary max-w-40 truncate">{entry.notes ?? '—'}</td>
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-2">
                     <button

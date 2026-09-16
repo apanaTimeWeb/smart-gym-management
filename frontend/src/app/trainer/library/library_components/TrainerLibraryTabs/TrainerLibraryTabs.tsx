@@ -1,50 +1,51 @@
 'use client';
-// RESPONSIBILITY: Renders the tabbed view switching between Diet Plans and Exercises in the Diet Library.
-import { RefreshCw, Plus, Search } from 'lucide-react';
-import { useLibraryContext } from '@/app/trainer/library/library_context/TrainerLibraryContext';
+// RESPONSIBILITY: Renders Diet Library search, goal filtering, and refresh controls; does not own server data.
+import { RefreshCw, Search } from 'lucide-react';
 import { GOALS } from '@/app/trainer/library/library_utils/TrainerLibrarySharedConstants';
+import type { TrainerLibraryFilterGoal } from '@/app/trainer/library/library_types/TrainerLibrary_types';
 
-export default function TrainerLibraryTabs() {
-  const { loadAll, openAddDiet, search, setSearch, filterGoal, setFilterGoal, setCurrentPage } = useLibraryContext();
+export interface TrainerLibraryTabsProps {
+  search: string;
+  setSearch: (value: string) => void;
+  filterGoal: string | TrainerLibraryFilterGoal;
+  setFilterGoal: (value: string) => void;
+  onRefresh: () => Promise<void>;
+}
 
+export default function TrainerLibraryTabs({ search, setSearch, filterGoal, setFilterGoal, onRefresh }: TrainerLibraryTabsProps) {
   return (
     <div className="border-b border-border flex flex-wrap gap-4 justify-between items-center bg-card p-2 sm:p-0">
-      <div className="flex overflow-x-auto">
-        <h2 className="px-5 py-3.5 text-lg font-bold text-foreground whitespace-nowrap">Diet Plans</h2>
-      </div>
+      <h2 className="px-5 py-3.5 text-lg font-bold text-foreground whitespace-nowrap">Diet Plans</h2>
       <div className="px-4 flex flex-wrap gap-3 items-center">
         <div className="relative">
-          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary" />
-          <input 
-            value={search} 
-            onChange={e => { setSearch(e.target.value);  }} 
-            placeholder="Search diet plans..." 
-            className="pl-9 pr-3 py-2 border border-border rounded-lg text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page focus-visible:ring-primary w-40 sm:w-64 bg-input text-foreground" 
+          <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary" />
+          <input
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            placeholder="Search diet plans..."
+            aria-label="Search diet plans"
+            className="pl-9 pr-3 py-2 border border-border rounded-lg text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary w-40 sm:w-64 bg-input text-foreground"
           />
         </div>
-        <select 
-          value={filterGoal} 
-          onChange={e => setFilterGoal(e.target.value)} 
+        <select
+          value={filterGoal}
+          onChange={(event) => setFilterGoal(event.target.value)}
+          aria-label="Filter diet plans by goal"
           className="px-3 py-2 border border-border rounded-lg text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-foreground"
         >
           <option value="All">All Goals</option>
-          {GOALS.map(g => <option key={g} value={g}>{g}</option>)}
+          {GOALS.map((goal) => <option key={goal} value={goal}>{goal}</option>)}
         </select>
-        <button 
-          onClick={loadAll} 
-          className="flex items-center gap-2 px-3 py-2 text-sm border border-border rounded-lg hover:bg-primary-subtle text-secondary motion-safe:transition-colors"
+        <button
+          type="button"
+          onClick={() => void onRefresh()}
+          aria-label="Refresh diet plans"
+          title="Refresh diet plans"
+          className="flex items-center gap-2 px-3 py-2 text-sm border border-border rounded-lg hover:bg-primary-subtle text-secondary motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
         >
-          <RefreshCw size={14} />
-        </button>
-        <button 
-          onClick={openAddDiet} 
-          className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-lg motion-safe:transition-colors hover:bg-primary/90" 
-        >
-          <Plus size={14} /> Add Diet Plan
+          <RefreshCw size={18} />
         </button>
       </div>
     </div>
   );
 }
-
-

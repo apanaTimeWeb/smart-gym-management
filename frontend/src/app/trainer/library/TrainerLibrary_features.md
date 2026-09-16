@@ -39,7 +39,7 @@ is a read-and-assign interface only.
 
 ## Component Responsibility Map
 - `TrainerLibraryMain` — layout + provider. MUST NOT contain form logic.
-- `TrainerLibraryAssignModal` — member search uses `SearchableDropdown` scoped to assigned members only.
+- `TrainerLibraryAssignModal` — member search uses `TrainerSearchableDropdown` scoped to assigned members only.
 
 ## Permissions and Security
 | Action | Required Role |
@@ -63,4 +63,6 @@ is a read-and-assign interface only.
 - [x] Rule 8: Server/Client Boundary — `page.tsx` = Server
 - [x] Rule 9: `loading.tsx` + `error.tsx` present
 - [x] Rule 13: Feature Map — this document, updated same commit as code changes
-- [x] Rule 20: Member search uses `SearchableDropdown`
+- [x] Rule 20: Member search uses `TrainerSearchableDropdown`
+
+- **Feedback:** Mutation success/error feedback uses `useTrainerFeedback()` with stable deduplication IDs and the role-level `TrainerToastHost`.

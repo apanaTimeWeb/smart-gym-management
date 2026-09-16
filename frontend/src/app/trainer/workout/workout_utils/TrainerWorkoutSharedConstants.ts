@@ -21,3 +21,9 @@ export const EXERCISE_TABLE_HEADERS = ['Exercise', 'Primary Muscle', 'Equipment'
 
 
 
+
+export const TRAINER_WORKOUT_DIFFICULTY_STYLES = {
+  Beginner: 'bg-success-bg text-success',
+  Intermediate: 'bg-warning-bg text-warning',
+  Advanced: 'bg-danger-bg text-danger',
+} as const;

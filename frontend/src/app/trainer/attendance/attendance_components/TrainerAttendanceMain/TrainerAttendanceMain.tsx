@@ -2,8 +2,7 @@
 // RESPONSIBILITY: Root client component for the Trainer Attendance module.
 // Orchestrates query/store hooks and renders the attendance page layout.
 // DATA FLOW: page.tsx (Server) → TrainerAttendanceMain (Client) → hooks → sub-components
-import { useState, useEffect } from 'react';
-import TrainerToast from '@/app/trainer/trainer_components/TrainerFeedback/TrainerToast';
+import { useTrainerFeedback } from '@/app/trainer/trainer_components/TrainerFeedback/useTrainerFeedback';
 import { useAttendanceFilters } from '@/app/trainer/attendance/attendance_queries/TrainerUseAttendanceFilters';
 import { useAttendanceRecordsQuery, useAttendanceStatsQuery, useAttendanceMembersQuery } from '@/app/trainer/attendance/attendance_queries/TrainerUseAttendanceQuery';
 import { useAttendanceMutations } from '@/app/trainer/attendance/attendance_queries/TrainerUseAttendanceMutations';
@@ -23,7 +22,8 @@ export default function TrainerAttendanceMain() {
   const { data: stats } = useAttendanceStatsQuery();
   const { data: members = [] } = useAttendanceMembersQuery();
   const { markAttendance, selfCheckIn, selfCheckOut } = useAttendanceMutations();
-  const { showModal, openModal, closeModal, viewMode, toast, showToast, hideToast } = useTrainerAttendanceStore();
+  const { openModal, closeModal, viewMode, showModal } = useTrainerAttendanceStore();
+  const { showSuccess, showError } = useTrainerFeedback();
 
   const records = recordsData?.records ?? [];
   const totalRecords = recordsData?.total ?? 0;
@@ -31,29 +31,29 @@ export default function TrainerAttendanceMain() {
   // Wire mutations to toast feedback
   const handleMarkAttendance = async (data: Parameters<typeof markAttendance.mutateAsync>[0]) => {
     try {
-      await markAttendance.mutateAsync(data);
+      const response = await markAttendance.mutateAsync(data);
       closeModal();
-      showToast('Attendance recorded successfully', 'success');
+      showSuccess(response.message, 'trainer-attendance-success');
     } catch (err) {
-      showToast((err as Error).message ?? 'Failed to record attendance', 'error');
+      showError(err, 'trainer-attendance-error');
     }
   };
 
   const handleSelfCheckIn = async () => {
     try {
-      await selfCheckIn.mutateAsync();
-      showToast('Checked in successfully', 'success');
+      const response = await selfCheckIn.mutateAsync();
+      showSuccess(response.message, 'trainer-attendance-success');
     } catch (err) {
-      showToast((err as Error).message ?? 'Check-in failed', 'error');
+      showError(err, 'trainer-attendance-check-in-error');
     }
   };
 
   const handleSelfCheckOut = async () => {
     try {
-      await selfCheckOut.mutateAsync();
-      showToast('Checked out successfully', 'success');
+      const response = await selfCheckOut.mutateAsync();
+      showSuccess(response.message, 'trainer-attendance-success');
     } catch (err) {
-      showToast((err as Error).message ?? 'Check-out failed', 'error');
+      showError(err, 'trainer-attendance-check-out-error');
     }
   };
 
@@ -70,8 +70,14 @@ export default function TrainerAttendanceMain() {
 
         <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
           <TrainerAttendanceToolbar
-            {...filters}
+            tab={filters.tab}
+            setTab={filters.setTab}
             viewMode={viewMode}
+            setViewMode={useTrainerAttendanceStore.getState().setViewMode}
+            search={filters.search}
+            setSearch={filters.setSearch}
+            filterDate={filters.filterDate}
+            setFilterDate={filters.setFilterDate}
             onAddRecord={openModal}
             onRefresh={refetch}
             onSelfCheckIn={handleSelfCheckIn}
@@ -104,9 +110,6 @@ export default function TrainerAttendanceMain() {
         onSubmit={handleMarkAttendance}
       />
 
-      {toast && (
-        <TrainerToast message={toast.message} type={toast.type} onClose={hideToast} />
-      )}
     </div>
   );
 }

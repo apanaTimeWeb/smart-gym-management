@@ -56,3 +56,5 @@ TanStack Query owns the fetched profile. React Hook Form owns each form's draft 
 - [x] TanStack Query for server state
 - [x] Dirty-state guard
 - [x] Backend message handling
+
+- **Feedback:** Mutation success/error feedback uses `useTrainerFeedback()` with stable deduplication IDs and the role-level `TrainerToastHost`.

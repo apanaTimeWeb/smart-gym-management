@@ -3,7 +3,6 @@
 // DATA FLOW: page.tsx (SSR) → TrainerDashboardMain (Client) → hooks → child components
 import { usePermissions } from '@/lib/usePermissions';
 import { useTrainerDashboardQuery } from '@/app/trainer/dashboard/dashboard_queries/useTrainerDashboardQuery';
-import type { DashboardStats } from '@/app/trainer/dashboard/dashboard_types/TrainerDashboard_types';
 import TrainerDashboardKPIs from '@/app/trainer/dashboard/dashboard_components/TrainerDashboardKPIs/TrainerDashboardKPIs';
 import TrainerDashboardUpcomingSessions from '@/app/trainer/dashboard/dashboard_components/TrainerDashboardUpcomingSessions/TrainerDashboardUpcomingSessions';
 import TrainerDashboardRecentProgress from '@/app/trainer/dashboard/dashboard_components/TrainerDashboardRecentProgress/TrainerDashboardRecentProgress';
@@ -30,8 +29,8 @@ function DashboardSkeleton() {
   );
 }
 
-export default function TrainerDashboardMain({ initialData }: { initialData?: DashboardStats | null }) {
-  const { isLoading, isError, error, refetch } = useTrainerDashboardQuery();
+export default function TrainerDashboardMain() {
+  const { isLoading, isError, refetch } = useTrainerDashboardQuery();
 
   if (isLoading) {
     return (
@@ -47,7 +46,7 @@ export default function TrainerDashboardMain({ initialData }: { initialData?: Da
         <div className="p-6 bg-danger/10 border border-danger rounded-xl flex items-center gap-3 text-danger max-w-md w-full">
           <AlertCircle size={24} />
           <div>
-            <p className="font-bold">{error instanceof Error ? error.message : 'Dashboard request failed.'}</p>
+            <p className="font-bold">Unable to load dashboard data.</p>
             <button type="button" onClick={() => void refetch()} className="mt-3 min-w-24 px-3 py-2 rounded-lg bg-card border border-border text-sm font-semibold">Retry</button>
           </div>
         </div>

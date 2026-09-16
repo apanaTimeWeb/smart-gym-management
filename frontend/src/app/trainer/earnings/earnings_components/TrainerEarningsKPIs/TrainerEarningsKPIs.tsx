@@ -1,7 +1,8 @@
 'use client';
+// RESPONSIBILITY: Renders the TrainerEarningsKPIs UI for the owning Trainer feature; data access remains in the feature API/query layer.
 import { IndianRupee, Clock, Activity, Target, Minus } from 'lucide-react';
 import { useTrainerEarningsQuery } from '@/app/trainer/earnings/earnings_queries/useTrainerEarningsQuery';
-import { formatCurrency } from '@/app/trainer/earnings/earnings_utils/TrainerEarningsSharedConstants';
+import { formatCurrency } from '@/lib/formatters';
 import { useDateRangeSuffix } from '@/lib/useDateRangeSuffix';
 
 export default function TrainerEarningsKPIs() {
@@ -34,7 +35,7 @@ export default function TrainerEarningsKPIs() {
         return (
           <div key={c.label} className="bg-card border border-border rounded-xl p-5 flex flex-col justify-between hover:border-primary/50 motion-safe:transition-colors">
             <div className="flex items-start justify-between">
-              <p className="text-[11px] font-medium text-secondary uppercase tracking-wider">{c.label}</p>
+              <p className="text-xs font-medium text-secondary uppercase tracking-wider">{c.label}</p>
               <div className={`w-8 h-8 rounded-full flex items-center justify-center ${c.bg}`}>
                 <Icon size={16} className={c.color} />
               </div>

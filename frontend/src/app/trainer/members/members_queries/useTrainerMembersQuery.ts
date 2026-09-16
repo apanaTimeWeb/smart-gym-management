@@ -2,7 +2,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { TrainerMembersApi } from '@/app/trainer/members/members_api/TrainerMembersApi';
 
-interface MembersQueryParams {
+export interface TrainerMembersQueryParams {
   page?: string;
   limit?: string;
   search?: string;
@@ -10,12 +10,12 @@ interface MembersQueryParams {
   progressStatus?: string;
 }
 
-export function useTrainerMembersQuery(params: MembersQueryParams) {
+export function useTrainerMembersQuery(params: TrainerMembersQueryParams) {
   return useQuery({
     queryKey: ['trainer', 'members', 'list', params],
     queryFn: async () => {
       const response = await TrainerMembersApi.fetchMembers(params as Record<string, string>);
-      if (!response.success) throw new Error(response.message || 'Failed to fetch members');
+      if (!response.success) throw new Error(response.message);
       return response.data;
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
@@ -27,7 +27,7 @@ export function useTrainerMemberStatsQuery() {
     queryKey: ['trainer', 'members', 'stats'],
     queryFn: async () => {
       const response = await TrainerMembersApi.fetchMemberStats();
-      if (!response.success) throw new Error(response.message || 'Failed to fetch member stats');
+      if (!response.success) throw new Error(response.message);
       return response.data;
     },
     staleTime: 5 * 60 * 1000,
@@ -39,10 +39,47 @@ export function useTrainerMemberAttendanceQuery(memberId: string) {
     queryKey: ['trainer', 'members', 'attendance', memberId],
     queryFn: async () => {
       const response = await TrainerMembersApi.fetchMemberAttendance(memberId);
-      if (!response.success) throw new Error(response.message || 'Failed to fetch attendance');
+      if (!response.success) throw new Error(response.message);
       return response.data;
     },
     enabled: !!memberId,
+    staleTime: 5 * 60 * 1000,
+  });
+}
+
+export function useTrainerMemberDietPlansQuery(enabled: boolean) {
+  return useQuery({
+    queryKey: ['trainer', 'members', 'diet-plans'],
+    queryFn: async () => {
+      const response = await TrainerMembersApi.fetchDietPlans();
+      if (!response.success) throw new Error(response.message);
+      return response.data?.dietPlans ?? [];
+    },
+    enabled,
+  });
+}
+
+export function useTrainerMemberWorkoutPlansQuery(enabled: boolean) {
+  return useQuery({
+    queryKey: ['trainer', 'members', 'workout-plans'],
+    queryFn: async () => {
+      const response = await TrainerMembersApi.fetchWorkoutPlans();
+      if (!response.success) throw new Error(response.message);
+      return response.data?.workouts ?? [];
+    },
+    enabled,
+  });
+}
+
+export function useTrainerMemberProgressEntriesQuery(memberId: string) {
+  return useQuery({
+    queryKey: ['trainer', 'members', 'progress', memberId],
+    queryFn: async () => {
+      const response = await TrainerMembersApi.fetchMemberProgressEntries(memberId);
+      if (!response.success) throw new Error(response.message);
+      return response.data ?? [];
+    },
+    enabled: Boolean(memberId),
     staleTime: 5 * 60 * 1000,
   });
 }

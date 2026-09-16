@@ -1,4 +1,5 @@
 'use client';
+// RESPONSIBILITY: Renders the TrainerSessionAttendanceModal UI for the owning Trainer feature; data access remains in the feature API/query layer.
 import { useState } from 'react';
 import { X, Loader2, Check, Users } from 'lucide-react';
 import type { TrainerSession } from '@/app/trainer/sessions/sessions_types/TrainerSessionsTypes';
@@ -52,8 +53,8 @@ export default function TrainerSessionAttendanceModal({
   const allSelected = members.length > 0 && attendedIds.size === members.length;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-      <div className="bg-card w-full max-w-lg rounded-2xl shadow-2xl border border-border flex flex-col max-h-[90vh] overflow-hidden motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95 motion-safe:duration-200">
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 backdrop-blur-sm p-4">
+      <div className="bg-card w-full max-w-lg rounded-2xl shadow-2xl border border-border flex flex-col max-h-screen overflow-hidden motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95 motion-safe:duration-200">
         
         {/* Header */}
         <div className="flex items-center justify-between p-5 border-b border-border bg-header">

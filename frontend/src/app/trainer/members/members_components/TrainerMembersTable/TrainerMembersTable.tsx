@@ -70,7 +70,7 @@ export default function TrainerMembersTable() {
                           <div className="flex items-center gap-1.5">
                             <p className="text-sm font-semibold text-foreground">{m.name}</p>
                             {m.isPT && (
-                              <span className="text-[9px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded bg-info/10 text-info border border-info/20">PT</span>
+                              <span className="text-xs font-bold uppercase tracking-wide px-1.5 py-0.5 rounded bg-info/10 text-info border border-info/20">PT</span>
                             )}
                           </div>
                           <p className="text-xs text-secondary">{maskSensitiveData(m.phone, 'phone')}</p>

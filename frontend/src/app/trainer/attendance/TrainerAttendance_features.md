@@ -36,7 +36,7 @@ and My Attendance tabs. Trainers cannot view other staff members' attendance.
 | My Attendance Calendar | My Attendance | Monthly calendar with per-day status | `GET /trainer/attendance?type=STAFF` | ✅ Live |
 | My Attendance Table | My Attendance | List view of own check-in history | `GET /trainer/attendance?type=STAFF` | ✅ Live |
 | Record Attendance Modal | Members | Mark member check-in | `POST /trainer/attendance` | ✅ Live |
-| Search & Date Filter | Both | Client-side filter by name and date range | — | ✅ Live |
+| Search & Date Filter | Both | Debounced URL-synced search/date filters passed to the server-state query | `GET /trainer/attendance?type=&search=&date=&page=` | ✅ Live |
 | Pagination | Both | 10 records per page | URL param `page` | ✅ Live |
 
 ## Data and State Architecture
@@ -59,7 +59,7 @@ and My Attendance tabs. Trainers cannot view other staff members' attendance.
 - `TrainerAttendanceSummaryCard` — derives present/absent/weeklyOff/rate from `records` for current month, renders 4 cards
 - `TrainerAttendanceToolbar` — tab switching, view mode toggle, search input, date filter select, refresh button
 - `TrainerAttendanceTable` — reads `records`, `totalRecords`, `fetchState`, `currentPage` from context
-- `TrainerMyAttendanceCalendar` — builds calendar grid from `records`, simulates pattern for demo days without API data
+- `TrainerMyAttendanceCalendar` — builds calendar grid from API records and treats missing historical records as Absent/Weekly Off without generating synthetic attendance times
 - `TrainerAttendanceModal` — react-hook-form + zod, calls `markAttendance` from context
 - `TrainerAttendanceEmptyState` — pure display, `isFiltered` prop for contextual message
 
@@ -80,11 +80,11 @@ and My Attendance tabs. Trainers cannot view other staff members' attendance.
 - **Own records only** — My Attendance tab filters by `staffId === user.id` client-side
 - **Summary card** — only shown when `tab === 'My Attendance'`, derived from `records` not a separate API call
 - **Modal not in toolbar** — `TrainerAttendanceModal` is mounted in `TrainerAttendanceMain`, not inside toolbar
-- **Calendar simulation** — days without API records use `day % 6 !== 0` pattern for demo; real data overrides this
+- **No synthetic attendance** — calendar cells never fabricate check-in/out times; missing records use the documented absent/weekly-off display state
 - **Date is local** — `formatDate` uses `en-IN` locale; API dates are ISO strings
 
 ## Rule Compliance Checklist
-- [x] Rule 2: Total Role Isolation — own records only, no cross-role data
+- [x] Rule 2: Total Role Isolation — own records are served by the attendance feature contract; no cross-role business imports remain
 - [x] Rule 6: Logic/UI Separation — all logic in `useAttendanceLogic`, components are pure display
 - [x] Rule 8: Server/Client Boundary — `page.tsx` = Server Component
 - [x] Rule 9: `loading.tsx` + `error.tsx` present
@@ -92,4 +92,6 @@ and My Attendance tabs. Trainers cannot view other staff members' attendance.
 - [x] Rule 13: Feature Map — this document
 - [x] Rule 40: `attendance_forbidden.md` present
 - [x] Rule 26: Modal shows loading spinner during POST (`saving` state)
-- [x] Rule 63: Module Boundary Isolation — no cross-module imports except `trainer_types` and `trainer_components`
+- [x] Rule 63: Module Boundary Isolation — feature-specific business imports are local; only approved Trainer infrastructure is referenced
+
+- **Feedback:** Mutation success/error feedback uses `useTrainerFeedback()` with stable deduplication IDs and the role-level `TrainerToastHost`.

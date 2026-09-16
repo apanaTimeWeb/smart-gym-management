@@ -1,86 +1,77 @@
 # Trainer Notifications — Feature Map
 
 ## Module Purpose
-The Trainer Notifications module delivers real-time and historical in-app alerts scoped
-exclusively to the authenticated trainer. Notifications cover member assignment changes,
-workout plan feedback, attendance anomalies, and system messages from the manager. Trainers
-can only see their own notifications — cross-trainer notification access is architecturally
-forbidden.
+The Trainer Notifications feature displays notifications belonging to the authenticated Trainer and supports read-state mutations. It is a server-state feature: TanStack Query owns the notification list and mutation invalidation, while React component state is limited to presentation. Trainers can mark one notification or all notifications as read, but cannot delete or send notifications.
 
 ## Directory Structure
-| File | Responsibility |
-|---|---|
-| `page.tsx` | Server Component — auth guard |
-| `loading.tsx` | List skeleton — 8 notification row placeholders |
-| `error.tsx` | Error boundary with retry |
-| `notifications_components/TrainerNotificationsMain.tsx` | Root Client Component — layout + provider mount |
-| `notifications_components/TrainerNotificationsList.tsx` | Scrollable list of notification items |
-| `notifications_components/TrainerNotificationItem.tsx` | Single notification row — icon, message, timestamp, read state |
-| `notifications_components/TrainerNotificationsFilterBar.tsx` | Filter by type (ALL / MEMBER / WORKOUT / SYSTEM) |
-| `notifications_components/TrainerNotificationsEmptyState.tsx` | Empty state for no notifications or filtered result |
-| `notifications_context/NotificationsProvider.tsx` | Fetch state, unread count, mark-read logic |
-| `notifications_types/TrainerNotificationsTypes.ts` | `TrainerNotification`, `NotificationType`, `MarkReadDto` |
-| `notifications_api/TrainerNotificationsApi.ts` | API wrappers |
-| `notifications_utils/TrainerNotificationsUrlConfig.ts` | Centralized URL constants |
+| Folder | Responsibility | Key Files |
+|---|---|---|
+| `notifications_components/` | Notification page, list, and empty-state presentation | `TrainerNotificationsMain.tsx`, `TrainerNotificationsList.tsx`, `TrainerNotificationsEmptyState.tsx` |
+| `notifications_context/` | Query logic naming retained for compatibility; no React Context owns server state | `useTrainerNotificationsLogic.ts` |
+| `notifications_api/` | Validated API functions | `TrainerNotificationsApi.ts` |
+| `notifications_types/` | Notification response/domain schemas and types | `TrainerNotificationsTypes.ts`, `TrainerNotificationsApiSchema.ts`, `TrainerNotificationsSchemas.ts` |
+| `notifications_mocks/` / fixtures | Module-owned test/mock transport where present | feature-owned mock artifacts |
 
 ## Feature Inventory
-| Feature | Path | Purpose | Main API Calls | Status |
+| Feature | Route | Main API | State Owner | Status |
 |---|---|---|---|---|
-| Notification List | `/trainer/notifications` | View all notifications for trainer | `GET /trainer/notifications` | ✅ Live |
-| Mark Single Read | `/trainer/notifications` | Mark one notification as read | `PATCH /trainer/notifications/:id/read` | ✅ Live |
-| Mark All Read | `/trainer/notifications` | Mark all unread as read | `POST /trainer/notifications/read-all` | ✅ Live |
-| Filter by Type | `/trainer/notifications` | Client-side filter — MEMBER / WORKOUT / SYSTEM | — (client-side) | ✅ Live |
-| Unread Count Badge | Sidebar / header | Shows unread count from `NotificationsProvider` | — (derived from list) | ✅ Live |
+| Notification List | `/trainer/notifications` | `GET /trainer/notifications` | TanStack Query | Live |
+| Mark Single Read | `/trainer/notifications` | `PATCH /trainer/notifications/:id/read` | TanStack Query mutation + invalidation | Live |
+| Mark All Read | `/trainer/notifications` | `PATCH /trainer/notifications/read-all` | TanStack Query mutation + invalidation | Live |
+| Empty State | `/trainer/notifications` | Derived from query result | Component presentation | Live |
 
 ## Data and State Architecture
-- Server-state: `NotificationsProvider` — notification list, unread count
-- Zustand stores: `useTrainerNotificationsStore` — active filter tab
-- Context providers: `NotificationsProvider`
-- Local-storage keys: None
+- Server state is owned by `useTrainerNotificationsLogic` through `useInfiniteQuery` and mutations.
+- No React Context is used to own notification API data.
+- No Zustand store is required for the current read-only/read-state interaction model.
+- Pagination is implemented with `useInfiniteQuery`; each request uses the API client.
+
+## API Contract
+| Function | Method | Endpoint | Request | Response |
+|---|---|---|---|---|
+| `fetchTrainerNotifications(page, limit)` | GET | `/trainer/notifications?page=&limit=` | pagination query | validated notification list |
+| `markTrainerNotificationRead(id)` | PATCH | `/trainer/notifications/:id/read` | notification ID | validated mutation envelope |
+| `markAllTrainerNotificationsRead()` | PATCH | `/trainer/notifications/read-all` | none | validated mutation envelope |
 
 ## User Flows
-1. Trainer opens `/trainer/notifications` → `NotificationsProvider` fetches `GET /trainer/notifications` → list renders sorted by `createdAt` desc
-2. Trainer clicks a notification item → `PATCH /trainer/notifications/:id/read` → item visually transitions to read state
-3. Trainer clicks "Mark all read" → `POST /trainer/notifications/read-all` → all items update to read state, unread badge clears
-4. Trainer clicks filter tab (e.g. "WORKOUT") → client-side filter applied → list re-renders filtered subset
+### Flow 1: Mark one notification read
+1. Trainer sees an unread notification.
+2. Trainer activates the accessible `Mark notification as read` button.
+3. `markTrainerNotificationRead(id)` executes.
+4. The notifications Query cache is invalidated on success.
+5. The list re-renders with the notification read.
 
-## Component Responsibility Map
-- `TrainerNotificationsMain` — layout + provider mount. MUST NOT contain fetch or filter logic.
-- `TrainerNotificationsList` — renders items from context. MUST NOT call API directly.
-- `TrainerNotificationItem` — display + click handler only. MUST NOT manage list state.
-- `TrainerNotificationsFilterBar` — emits filter value to store. MUST NOT fetch data.
-- `NotificationsProvider` — fetch + unread count derivation. MUST NOT render JSX.
+### Flow 2: Mark all notifications read
+1. Trainer activates `Mark all as read`.
+2. `markAllTrainerNotificationsRead()` executes.
+3. The notifications Query cache is invalidated.
+4. Unread count is recalculated from returned notification data.
 
 ## Permissions and Security
-| Action | Required Role |
-|---|---|
-| View own notifications | `TRAINER` |
-| Mark own notification read | `TRAINER` |
-| Mark all own notifications read | `TRAINER` |
-| ❌ View other trainers' notifications | Forbidden |
-| ❌ Delete notifications | Forbidden — read-only lifecycle |
-| ❌ Send notifications | Manager/Admin only |
+- Required role: `TRAINER`.
+- Trainers may view only their own notification feed according to the frontend route/capability contract.
+- Trainers may mark notifications as read.
+- Delete/send operations are not exposed.
+- Frontend permission behavior is defense in depth; backend authorization remains authoritative.
 
 ## Loading, Empty, Error States
-- **Loading:** `loading.tsx` — 8 notification row skeletons with avatar + text placeholders
-- **Empty (no notifications):** `TrainerNotificationsEmptyState` — "You're all caught up" with checkmark icon
-- **Empty (filtered):** `TrainerNotificationsEmptyState` — "No [type] notifications" with filter reset link
-- **Error:** `error.tsx` with retry button
+- `loading.tsx` renders the route skeleton.
+- `TrainerNotificationsEmptyState` renders when the query has no notifications.
+- Main content renders a concise user-safe error banner when the query fails.
+- `Load More` uses button-level loading state and is disabled while fetching another page.
 
-## Edge Cases / AI Warnings
-- **Unread count** — derived from `notifications.filter(n => !n.isRead).length` inside `NotificationsProvider`. Never store unread count as a separate API field that can drift.
-- **Optimistic read state** — mark-read should optimistically update the item's `isRead` flag before the API responds; revert on error.
-- **Notification type icons** — use a component (`NotificationTypeIcon`) not a `Record<string, React.ReactNode>` const to avoid JSX in plain objects (Rule 55 variant).
-- **Polling vs WebSocket** — if real-time is needed, use polling interval in `NotificationsProvider`; never add WebSocket logic directly in a component.
-- **Timestamp display** — use relative time (e.g. "2 hours ago") via a utility, not raw ISO strings.
+## Edge Cases and AI Warnings
+- **No hover-only mutation:** Mark-read must remain keyboard/touch accessible; never rely on mouse hover.
+- **No global notification context:** Do not place API notification data in a React Context merely for deep component access.
+- **Pagination source:** `useInfiniteQuery` owns page progression; do not fetch the same notification pages manually elsewhere.
+- **Mutation reconciliation:** Successful mark-read operations invalidate the canonical notification query.
+- **No delete/send controls:** These operations are outside the Trainer capability.
 
-## Rule Compliance Checklist
-- [x] Rule 2: Total Role Isolation — trainer sees only own notifications
-- [x] Rule 6: Logic/UI Separation — fetch + unread count in context, display in components
-- [x] Rule 7: Type isolation — all types in `TrainerNotificationsTypes.ts`
-- [x] Rule 8: Server/Client Boundary — `page.tsx` = Server Component
-- [x] Rule 9: `loading.tsx` + `error.tsx` present
-- [x] Rule 13: Feature Map — this document, updated same commit as code changes
-- [x] Rule 40: `_forbidden.md` present in module directory
-- [x] Rule 55: No `key={index}` — stable notification IDs used
-- [x] Rule 63: Zero cross-module imports
+## Component Responsibility Map
+| Component | Responsibility |
+|---|---|
+| `TrainerNotificationsMain.tsx` | Runs notification query logic and orchestrates page presentation. |
+| `TrainerNotificationsList.tsx` | Renders notification records and accessible mark-read actions. |
+| `TrainerNotificationsEmptyState.tsx` | Displays the no-data state. |
+| `useTrainerNotificationsLogic.ts` | Owns Query/mutation orchestration; contains no JSX. |
+| `TrainerNotificationsApi.ts` | Network transport and response validation only. |

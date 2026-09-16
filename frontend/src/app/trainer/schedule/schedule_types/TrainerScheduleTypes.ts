@@ -70,9 +70,6 @@ export interface TrainerScheduleContextType {
   setActiveTab: (tab: 'availability' | 'leaves') => void;
   showLeaveModal: boolean;
   setShowLeaveModal: (show: boolean) => void;
-  toast: { message: string; type: 'success' | 'error' } | null;
-  showToast: (msg: string, type: 'success' | 'error') => void;
-  hideToast: () => void;
   openLeaveModal: () => void;
   submitLeave: (data: Partial<LeaveRequest>) => Promise<void>;
   saveAvailability: (data: WeeklyAvailability[]) => Promise<void>;
@@ -83,7 +80,4 @@ export interface TrainerScheduleState {
   setActiveTab: (tab: 'availability' | 'leaves') => void;
   showLeaveModal: boolean;
   setShowLeaveModal: (show: boolean) => void;
-  toast: { message: string; type: 'success' | 'error' } | null;
-  showToast: (msg: string, type: 'success' | 'error') => void;
-  hideToast: () => void;
 }

@@ -15,7 +15,7 @@ export default function NotificationsError({
   }, [error]);
 
   return (
-    <div className="p-6 md:p-10 flex flex-col items-center justify-center min-h-[50vh] text-center">
+    <div className="p-6 md:p-10 flex flex-col items-center justify-center min-h-screen text-center">
       <div className="w-16 h-16 bg-danger/10 text-danger rounded-full flex items-center justify-center mb-6">
         <AlertTriangle size={32} />
       </div>

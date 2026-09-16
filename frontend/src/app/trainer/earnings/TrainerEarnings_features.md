@@ -41,7 +41,7 @@ TanStack Query owns earnings server data. URL/query state owns shareable filter 
 
 ## Edge Cases and AI Warnings
 - **Financial actions are read-only:** Trainers cannot mark a payout as paid or edit financial records from this module.
-- **Financial formatting:** Use `formatCurrency()`/`formatNumber()`; do not concatenate currency symbols or use `.toFixed()` in JSX.
+- **Financial formatting:** Use the canonical `formatCurrency()`/`formatNumber()` from `@/lib/formatters`; do not define feature-local currency formatters or concatenate currency symbols/use `.toFixed()` in JSX.
 - **Sensitive identifiers:** Invoice/tracking identifiers must expose the required copy interaction and must not be logged with sensitive payment details.
 - **Server filters:** Search/date filters must affect the API/query request rather than merely filtering a downloaded full ledger in the component.
 - **Export failure:** Export errors surface the backend/API message through the approved toast/error path.

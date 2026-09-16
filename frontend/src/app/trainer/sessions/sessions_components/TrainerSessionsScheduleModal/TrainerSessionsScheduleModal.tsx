@@ -1,8 +1,9 @@
 'use client';
+// RESPONSIBILITY: Renders the TrainerSessionsScheduleModal UI for the owning Trainer feature; data access remains in the feature API/query layer.
 import React from 'react';
 import { X, Loader2 } from 'lucide-react';
 import { useTrainerScheduleForm } from '@/app/trainer/sessions/sessions_components/TrainerSessionsScheduleModal/useTrainerScheduleForm';
-import { SearchableDropdown } from '@/app/trainer/trainer_components/TrainerShared/TrainerSearchableDropdown';
+import TrainerSearchableDropdown from '@/app/trainer/trainer_components/TrainerShared/TrainerSearchableDropdown/TrainerSearchableDropdown';
 import { useTrainerUnsavedChangesGuard } from '@/app/trainer/trainer_utils/TrainerUseWarnIfUnsavedChanges';
 import { DURATION_OPTIONS } from '@/app/trainer/sessions/sessions_utils/TrainerSessionsSharedConstants';
 import type { CreateSessionDto } from '@/app/trainer/sessions/sessions_types/TrainerSessionsTypes';
@@ -31,7 +32,7 @@ export default function TrainerSessionsScheduleModal({
   useTrainerUnsavedChangesGuard(isDirty && !isSubmitting);
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 backdrop-blur-sm p-4">
       <div className="bg-overlay w-full max-w-md rounded-2xl shadow-2xl border border-border overflow-hidden motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95 motion-safe:duration-200">
         <div className="flex items-center justify-between p-5 border-b border-border">
           <h3 className="text-lg font-bold text-foreground">Schedule PT Session</h3>
@@ -46,20 +47,20 @@ export default function TrainerSessionsScheduleModal({
         <form onSubmit={handleSubmit} className="p-5 space-y-4">
           <div>
             <label className="block text-sm font-semibold text-secondary mb-1">Session Type</label>
-            <SearchableDropdown
+            <TrainerSearchableDropdown
               options={[{value: 'PT', label: 'Personal Training'}, {value: 'Group', label: 'Group Class'}]}
               value={selectedType}
-              onChange={(val) => setValue('type', val as 'PT' | 'Group', { shouldValidate: true })}
+              onChange={(val: string | number) => setValue('type', val as 'PT' | 'Group', { shouldValidate: true })}
               placeholder="-- Choose Type --"
             />
             {errors.type && <p className="text-xs text-danger mt-1">{errors.type.message}</p>}
           </div>
           <div>
             <label className="block text-sm font-semibold text-secondary mb-1">Select Member (Optional for Group)</label>
-            <SearchableDropdown
+            <TrainerSearchableDropdown
               options={memberOptions}
               value={selectedMemberId || ''}
-              onChange={(val) => setValue('memberId', String(val), { shouldValidate: true })}
+              onChange={(val: string | number) => setValue('memberId', String(val), { shouldValidate: true })}
               placeholder="-- Choose Member --"
             />
             {errors.memberId && <p className="text-xs text-danger mt-1">{errors.memberId.message}</p>}
@@ -86,10 +87,10 @@ export default function TrainerSessionsScheduleModal({
           </div>
           <div>
             <label className="block text-sm font-semibold text-secondary mb-1">Duration</label>
-            <SearchableDropdown
+            <TrainerSearchableDropdown
               options={durationOptions}
               value={selectedDuration}
-              onChange={(val) => setValue('duration', String(val), { shouldValidate: true })}
+              onChange={(val: string | number) => setValue('duration', String(val), { shouldValidate: true })}
               placeholder="Select duration"
             />
             {errors.duration && <p className="text-xs text-danger mt-1">{errors.duration.message}</p>}
