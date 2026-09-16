@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import TrainerScheduleMain from '@/app/trainer/schedule/schedule_components/TrainerScheduleMain/TrainerScheduleMain';
 
 export const metadata = {
@@ -5,5 +6,9 @@ export const metadata = {
 };
 
 export default function TrainerSchedulePage() {
-  return <TrainerScheduleMain />;
+  return (
+    <Suspense fallback={<div className="p-6 flex justify-center text-secondary">Loading...</div>}>
+      <TrainerScheduleMain />
+    </Suspense>
+  );
 }

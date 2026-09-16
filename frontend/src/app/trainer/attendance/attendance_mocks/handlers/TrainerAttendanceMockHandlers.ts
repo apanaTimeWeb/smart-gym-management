@@ -5,6 +5,7 @@ import {
   MOCK_ATTENDANCE_STATS,
   MOCK_ATTENDANCE_MEMBERS,
 } from '@/app/trainer/attendance/attendance_fixtures/TrainerAttendanceMockData';
+import { CreateAttendanceDtoSchema } from '@/app/trainer/attendance/attendance_types/TrainerAttendance_types';
 
 const BASE = env.NEXT_PUBLIC_API_URL;
 const MOCK_DELAY_MS = 500;
@@ -78,7 +79,7 @@ export const trainerAttendanceHandlers = [
     const body = parsedBody.data;
     
     // Support self check-in which might only have staffId
-    if (body.isSelfCheckIn) {
+    if ((body as any).isSelfCheckIn) {
        return HttpResponse.json({ success: true, message: 'Attendance action completed successfully', data: null });
     }
 

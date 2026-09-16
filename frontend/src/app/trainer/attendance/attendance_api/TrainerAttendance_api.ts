@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { apiFetch } from '@/lib/api';
+import type { ApiResponse } from '@/lib/api';
 import { AttendanceUrlConfig } from '@/app/trainer/Trainer_url_config';
 import { createTrainerApiResponseSchema } from '@/app/trainer/trainer_utils/TrainerApiResponseSchema';
 import {

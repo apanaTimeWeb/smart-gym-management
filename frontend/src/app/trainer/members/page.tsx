@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 // RESPONSIBILITY: Server component that handles initial SSR data fetching for the members module.
 import TrainerMembersMain from '@/app/trainer/members/members_components/TrainerMembersMain/TrainerMembersMain';
 import { ssrMembersApi } from '@/app/trainer/members/members_api/TrainerMembers_server_api';
@@ -24,5 +25,9 @@ export default async function MembersPage() {
     // SSR data fetch failed gracefully — client-side hook will re-fetch
   }
 
-  return <TrainerMembersMain initialData={initialData} />;
+  return (
+    <Suspense fallback={<div className="p-6 flex justify-center text-secondary">Loading...</div>}>
+      <TrainerMembersMain initialData={initialData} />
+    </Suspense>
+  );
 }

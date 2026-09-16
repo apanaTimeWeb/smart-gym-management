@@ -36,7 +36,7 @@ export const trainerScheduleHandlers = [
       ...data,
       id: `LR-${Math.floor(Math.random() * 10000)}`,
       trainerId: 'TR-101',
-      status: 'PENDING',
+      status: 'PENDING' as const,
       createdAt: new Date().toISOString(),
     };
     currentLeaves = [newLeave, ...currentLeaves];

@@ -7,7 +7,7 @@ import { TrainerLibraryDietPlansResponseSchema, TrainerLibraryMutationResponseSc
 
 export const libraryApi = {
   // Trainers can read diet plans and assign them â€” create/update/delete are Manager-only.
-  getDietPlans: (params?: Record<string, string>) => {
+  getDietPlans: async (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
     const raw = await apiFetch<ApiResponse<unknown>>(`${LibraryUrlConfig.BACKEND_API.DIET_PLANS_BASE}${q}`);
     const response = TrainerLibraryDietPlansResponseSchema.parse(raw);

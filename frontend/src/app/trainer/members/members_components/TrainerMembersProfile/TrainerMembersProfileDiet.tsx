@@ -19,7 +19,7 @@ export default function TrainerMembersProfileDiet() {
   const [isAssigning, setIsAssigning] = useState(false);
   const [selectedDietId, setSelectedDietId] = useState('');
   const [saving, setSaving] = useState(false);
-  const dietsQuery = useQuery({ queryKey: ['trainer','members','diet-plans'], queryFn: async () => (await TrainerLibraryApi.getDietPlans()).data.dietPlans, enabled: isAssigning });
+  const dietsQuery = useQuery({ queryKey: ['trainer','members','diet-plans'], queryFn: async () => (await libraryApi.getDietPlans()).dietPlans, enabled: isAssigning });
   const availableDiets = dietsQuery.data ?? [];
 
   if (!selectedMember) return null;
@@ -29,7 +29,7 @@ export default function TrainerMembersProfileDiet() {
 
   const handleAssign = async () => {
     if (!selectedDietId) return;
-    const selected = availableDiets.find(d => String(d.id) === selectedDietId) || null;
+    const selected = availableDiets.find((d: any) => String(d.id) === selectedDietId) || null;
     setSaving(true);
     try {
       await assignDiet.mutateAsync({ id: selectedMember.id, diet: selected });
@@ -113,7 +113,7 @@ export default function TrainerMembersProfileDiet() {
           ) : (
             <div className="flex flex-col sm:flex-row gap-3">
               <SearchableDropdown
-                options={availableDiets.map((diet) => ({ value: diet.id, label: `${diet.name} · ${displayValue(diet.goal)}` }))}
+                options={availableDiets.map((diet: any) => ({ value: diet.id, label: `${diet.name} · ${displayValue(diet.goal)}` }))}
                 value={selectedDietId}
                 onChange={(value) => setSelectedDietId(String(value))}
                 placeholder="Choose a Diet Plan"
@@ -181,7 +181,7 @@ export default function TrainerMembersProfileDiet() {
             {diet.meals && diet.meals.length > 0 ? (
               <div className="space-y-2.5">
                 {diet.meals.map((meal: string | { name?: string; time?: string; items?: string; description?: string }, idx: number) => (
-                  <div key={`${meal.name}-${idx}`} className="bg-input/40 border border-border rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <div key={typeof meal === 'string' ? `${meal}-${idx}` : `${meal.name}-${idx}`} className="bg-input/40 border border-border rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <div className="flex items-center gap-3">
                       <span className="w-7 h-7 rounded-lg bg-primary-subtle text-primary text-xs font-bold flex items-center justify-center shrink-0">
                         {idx + 1}

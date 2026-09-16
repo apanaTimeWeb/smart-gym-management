@@ -10,7 +10,7 @@ import { useTrainerProgressMembersQuery, useTrainerProgressEntriesQuery } from '
 import { useTrainerProgressMutations } from '@/app/trainer/progress-tracking/progress_queries/useTrainerProgressMutations';
 import { buildComparisonSnapshot } from '@/app/trainer/progress-tracking/progress_utils/useTrainerProgressComparison';
 import { fetchProgressEntries } from '@/app/trainer/progress-tracking/progress_api/TrainerProgressApi';
-import type { ProgressEntry } from '@/app/trainer/progress-tracking/progress_types/TrainerProgressTypes';
+import type { ProgressEntry, CreateProgressEntryDto } from '@/app/trainer/progress-tracking/progress_types/TrainerProgressTypes';
 import { useConfirm } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerConfirmProvider';
 import TrainerProgressChart from '@/app/trainer/progress-tracking/progress_components/TrainerProgressChart/TrainerProgressChart';
 import TrainerProgressTable from '@/app/trainer/progress-tracking/progress_components/TrainerProgressTable/TrainerProgressTable';

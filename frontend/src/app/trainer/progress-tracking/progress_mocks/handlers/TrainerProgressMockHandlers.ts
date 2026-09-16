@@ -3,6 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 import { env } from '@/config/env';
 import { MOCK_PROGRESS_ENTRIES, MOCK_PROGRESS_MEMBERS } from '@/app/trainer/progress-tracking/progress_fixtures/TrainerProgressMockData';
 import { CreateProgressEntrySchema } from '@/app/trainer/progress-tracking/progress_types/TrainerProgress.schema';
+import type { ProgressEntry } from '@/app/trainer/progress-tracking/progress_types/TrainerProgressTypes';
 
 const BASE = env.NEXT_PUBLIC_API_URL;
 
@@ -49,9 +50,9 @@ export const trainerProgressHandlers = [
     const parsedBody = CreateProgressEntrySchema.safeParse(await request.json());
     if (!parsedBody.success) return HttpResponse.json({ success: false, message: 'Invalid progress payload.', data: null });
     const body = parsedBody.data;
-    const newEntry = {
+    const newEntry: ProgressEntry = {
       id: `prog_${Date.now()}`,
-      memberId: params.memberId,
+      memberId: params.memberId as string,
       ...body,
       bmi: Math.round((body.weightKg / Math.pow(body.heightCm / 100, 2)) * 10) / 10,
       recordedBy: 'Current Trainer',

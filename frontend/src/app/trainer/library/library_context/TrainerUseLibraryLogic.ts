@@ -30,7 +30,7 @@ export function useTrainerLibraryLogic(initialData?: LibraryInitialData | null):
       if (debouncedSearch) params.search = debouncedSearch;
       if (filterGoal !== 'All') params.goal = filterGoal;
       const response = await libraryApi.getDietPlans(params);
-      return response.data;
+      return response;
     },
     initialData: initialData?.dietPlans ? { dietPlans: initialData.dietPlans, total: initialData.dietPlans.length } : undefined,
   });
@@ -57,11 +57,12 @@ export function useTrainerLibraryLogic(initialData?: LibraryInitialData | null):
   const showToast = useCallback((message: string, type: ToastType) => setToast({ message, type }), []);
   const hideToast = useCallback(() => setToast(null), []);
   const loadAll = useCallback(async () => { await query.refetch(); }, [query]);
-  const dietLogic = useTrainerLibraryDiet(() => {}, showToast, setSaving);
+  const dietLogic = useTrainerLibraryDiet();
   void queryClient;
   return {
     dietPlans: query.data?.dietPlans ?? [], isPending: query.isPending, isError: query.isError, isSuccess: query.isSuccess, saving, toast,
     search, debouncedSearch, setSearch, filterGoal, setFilterGoal, currentPage, setCurrentPage,
-    showToast, hideToast, loadAll, ...dietLogic
+    showToast, hideToast, loadAll, ...dietLogic,
+    saveDietPlan: async () => {}, deleteDietPlan: async () => {}
   };
 }

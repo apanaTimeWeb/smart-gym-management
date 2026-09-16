@@ -45,7 +45,7 @@ function MembersContent() {
             recipient={msgModal.recipient}
             message={msgModal.message}
             onClose={closeMsg} 
-            onSuccess={msg => { showToast(msg, 'success'); closeMsg(); }} 
+            onSuccess={() => { showToast('Message sent successfully', 'success'); closeMsg(); }} 
           />
         )}
 

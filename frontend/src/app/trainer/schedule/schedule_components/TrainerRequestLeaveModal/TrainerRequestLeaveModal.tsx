@@ -36,7 +36,7 @@ export default function TrainerRequestLeaveModal() {
   const onSubmit = async (data: CreateLeaveDto) => {
     try {
       const response = await requestLeave.mutateAsync(data);
-      showToast(response.message, 'success');
+      showToast(response.message || 'Leave request submitted successfully', 'success');
       closeLeaveModal();
     } catch (error) {
       showToast(error instanceof Error ? error.message : 'Leave request failed.', 'error');

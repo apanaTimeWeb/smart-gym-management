@@ -3,7 +3,7 @@ import { z } from 'zod';
 export const TrainerMemberWorkoutExerciseSnapshotSchema = z.object({
   name: z.string(),
   sets: z.number(),
-  reps: z.number(),
+  reps: z.union([z.string(), z.number()]),
   restTime: z.string().optional(),
   weight: z.string().optional(),
 });

@@ -50,18 +50,19 @@ export const ProfileUrlConfig = { BACKEND_API: { PROFILE: '/trainer/profile', PA
 
 export const TRAINER_NOTIFICATIONS_ROUTES = { index: '/trainer/notifications' } as const;
 export const TRAINER_NOTIFICATIONS_API_ROUTES = {
-  list: '/api/v1/trainer/notifications',
-  listPaginated: (page: number, limit: number) => `/api/v1/trainer/notifications?page=${page}&limit=${limit}`,
-  markRead: (id: string) => `/api/v1/trainer/notifications/${id}/read`,
-  markAllRead: '/api/v1/trainer/notifications/read-all',
+  list: '/trainer/notifications',
+  listPaginated: (page: number, limit: number) => `/trainer/notifications?page=${page}&limit=${limit}`,
+  markRead: (id: string) => `/trainer/notifications/${id}/read`,
+  markAllRead: '/trainer/notifications/read-all',
   WS_ENDPOINT: '/trainer/notifications/ws', PREFERENCES: '/trainer/notifications/preferences'
 } as const;
 
 export const TRAINER_SESSIONS_ROUTES = { index: '/trainer/sessions' } as const;
 export const TRAINER_SESSIONS_API_ROUTES = {
-  list: '/api/v1/trainer/sessions', create: '/api/v1/trainer/sessions',
-  update: (id: string) => `/api/v1/trainer/sessions/${id}`,
-  cancel: (id: string) => `/api/v1/trainer/sessions/${id}/cancel`,
-  markAttendance: (id: string) => `/api/v1/trainer/sessions/${id}/attendance`
+  list: '/trainer/sessions', create: '/trainer/sessions',
+  update: (id: string) => `/trainer/sessions/${id}`,
+  cancel: (id: string) => `/trainer/sessions/${id}/cancel`,
+  markAttendance: (id: string) => `/trainer/sessions/${id}/attendance`,
+  members: '/trainer/sessions/members'
 } as const;
 

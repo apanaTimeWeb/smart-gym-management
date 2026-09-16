@@ -40,6 +40,7 @@ export default function TrainerMessageModal({
   const [message, setMessage] = useState(defaultMessage || propMessage || '');
   const [subject, setSubject] = useState(defaultSubject);
   const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
 
   if (!(isOpen || open)) return null;
 
@@ -61,8 +62,13 @@ export default function TrainerMessageModal({
     }
 
     setSending(false);
-    setMessage(defaultMessage || propMessage || '');
-    onClose();
+    setSent(true);
+    setTimeout(() => {
+      setSent(false);
+      setMessage(defaultMessage || propMessage || '');
+      onClose();
+      onSuccess?.();
+    }, 1500);
   };
 
   const handleClose = () => {

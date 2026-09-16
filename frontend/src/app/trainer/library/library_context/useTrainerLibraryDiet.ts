@@ -9,5 +9,5 @@ export function useTrainerLibraryDiet() {
   const [selectedDiet, setSelectedDiet] = useState<DietPlan | null>(null);
   const openViewDiet = useCallback((diet: DietPlan) => { setSelectedDiet(diet); setShowDietModal(true); }, []);
   const closeDietModal = useCallback(() => { setShowDietModal(false); setSelectedDiet(null); }, []);
-  return { showDietModal, editDietId: selectedDiet?.id ?? null, editDietData: selectedDiet, openAddDiet: openViewDiet, openEditDiet: openViewDiet, closeDietModal };
+  return { showDietModal, editDietId: selectedDiet?.id ?? null, editDietData: selectedDiet, openAddDiet: () => { setSelectedDiet(null); setShowDietModal(true); }, openEditDiet: openViewDiet, closeDietModal };
 }

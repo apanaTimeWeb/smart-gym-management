@@ -166,7 +166,7 @@ export default function TrainerMembersProfileWorkout() {
             <h4 className="text-sm font-semibold text-secondary uppercase tracking-wider mb-3">Exercises Routine</h4>
             {workout.workoutExercises && workout.workoutExercises.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {workout.workoutExercises.map((ex) => (
+                {workout.workoutExercises.map((ex, idx) => (
                   <div key={`${ex.name}-${ex.sets}-${ex.reps}-${ex.restTime ?? 'none'}-${ex.weight ?? 'none'}`} className="bg-input/60 border border-border rounded-xl p-3.5 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <span className="w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center">

@@ -56,7 +56,7 @@ export default function TrainerMembersTable() {
                   <tr 
                     key={m.id} 
                     className="hover:bg-primary/5 motion-safe:transition-colors cursor-pointer"
-                    onClick={() => { setSelectedMember(m); setProfileTab('overview'); }} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setSelectedMember(m); setProfileTab('overview'); } }} role="button" tabIndex={0}
+                    onClick={() => { setSelectedMember(m.id); setProfileTab('overview'); }} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setSelectedMember(m.id); setProfileTab('overview'); } }} role="button" tabIndex={0}
                   >
                     <td className="px-5 py-3.5 text-sm text-secondary font-medium">
                       #{m.id.split('-').pop()?.substring(0, 5) || m.id.substring(0, 5)}

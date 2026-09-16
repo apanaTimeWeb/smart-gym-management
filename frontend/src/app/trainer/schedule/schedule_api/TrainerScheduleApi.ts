@@ -19,7 +19,7 @@ export const trainerScheduleApi = {
     return response.data;
   },
 
-  updateAvailability: async (data: WeeklyAvailability[]): Promise<{ success: boolean }> => {
+  updateAvailability: async (data: WeeklyAvailability[]): Promise<{ success: boolean; message?: string }> => {
     const raw = await apiFetch<ApiResponse<unknown>>(ScheduleUrlConfig.BACKEND_API.AVAILABILITY, {
       method: 'PUT',
       body: JSON.stringify(data),
@@ -28,7 +28,7 @@ export const trainerScheduleApi = {
     return { success: response.success, message: response.message };
   },
 
-  requestLeave: async (data: CreateLeaveDto): Promise<{ success: boolean; data: LeaveRequest }> => {
+  requestLeave: async (data: CreateLeaveDto): Promise<{ success: boolean; message?: string; data: LeaveRequest }> => {
     const raw = await apiFetch<ApiResponse<unknown>>(ScheduleUrlConfig.BACKEND_API.LEAVES, {
       method: 'POST',
       body: JSON.stringify(data),

@@ -54,7 +54,7 @@ export default function TrainerWeeklyAvailability() {
     try {
       const response = await updateAvailability.mutateAsync(localSchedule);
       setIsDirty(false);
-      showToast(response.message, 'success');
+      showToast(response.message || 'Availability updated successfully', 'success');
     } catch (error) {
       showToast(error instanceof Error ? error.message : 'Availability update failed.', 'error');
     }

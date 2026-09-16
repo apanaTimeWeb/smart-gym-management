@@ -12,7 +12,7 @@ import { useTrainerUnsavedChangesGuard } from '@/app/trainer/trainer_utils/Train
 
 interface TrainerProgressModalProps {
   editingEntry: ProgressEntry | null;
-  onSave: (data: Omit<ProgressEntry, 'id' | 'memberId' | 'recordedBy'>) => void;
+  onSave: (data: CreateProgressEntryDto) => void;
   onClose: () => void;
 }
 
@@ -56,8 +56,7 @@ export default function TrainerProgressModal({ editingEntry, onSave, onClose }: 
   const onSubmit = async (formData: CreateProgressEntryFormValues) => {
     // The resolver has validated the data, we parse to get the transformed output
     const data = CreateProgressEntrySchema.parse(formData);
-    const bmi = Math.round((data.weightKg / Math.pow(data.heightCm / 100, 2)) * 10) / 10;
-    onSave({ ...data, bmi });
+    onSave(data);
   };
 
   return (
