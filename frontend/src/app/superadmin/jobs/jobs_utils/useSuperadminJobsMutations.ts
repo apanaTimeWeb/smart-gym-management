@@ -1,3 +1,4 @@
+// DATA FLOW: feature API/schema → hook/context → useSuperadminJobsMutations consumers.
 'use client';
 // RESPONSIBILITY: Encapsulates functionality for useSuperadminJobsMutations.ts
 import { useState } from 'react';

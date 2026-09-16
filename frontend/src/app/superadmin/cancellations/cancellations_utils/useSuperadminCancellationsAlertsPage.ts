@@ -1,3 +1,4 @@
+// DATA FLOW: feature API/schema → hook/context → useSuperadminCancellationsAlertsPage consumers.
 'use client';
 // RESPONSIBILITY: Encapsulates functionality for useSuperadminCancellationsAlertsPage.ts
 import { useState, useMemo } from 'react';

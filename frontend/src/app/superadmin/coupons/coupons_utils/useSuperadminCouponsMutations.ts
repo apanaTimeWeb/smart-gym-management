@@ -1,3 +1,4 @@
+// DATA FLOW: feature API/schema → hook/context → useSuperadminCouponsMutations consumers.
 import { useCallback } from 'react';
 import toast from 'react-hot-toast';
 import { useSuperadminCouponsMutation } from '@/app/superadmin/coupons/coupons_utils/useSuperadminCouponsMutation';

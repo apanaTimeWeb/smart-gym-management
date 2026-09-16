@@ -1,3 +1,4 @@
+// DATA FLOW: feature API/schema → hook/context → useSuperadminUnsavedChangesGuard consumers.
 'use client';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';

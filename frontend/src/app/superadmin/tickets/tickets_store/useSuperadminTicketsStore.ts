@@ -1,3 +1,4 @@
+// DATA FLOW: feature API/schema → hook/context → useSuperadminTicketsStore consumers.
 // RESPONSIBILITY: Zustand store for Superadmin Tickets UI state (filters, pagination, modals)
 import { create } from 'zustand';
 import type { TicketStatus, TicketPriority } from '@/app/superadmin/tickets/superadmin_tickets_types/superadmin_tickets_types';

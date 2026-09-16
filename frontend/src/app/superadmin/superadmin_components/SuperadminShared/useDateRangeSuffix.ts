@@ -1,3 +1,4 @@
+// DATA FLOW: feature API/schema → hook/context → useDateRangeSuffix consumers.
 'use client';
 
 import { useSearchParams } from 'next/navigation';

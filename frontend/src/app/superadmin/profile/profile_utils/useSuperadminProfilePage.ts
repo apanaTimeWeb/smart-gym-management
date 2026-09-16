@@ -1,3 +1,4 @@
+// DATA FLOW: feature API/schema → hook/context → useSuperadminProfilePage consumers.
 'use client';
 // RESPONSIBILITY: Encapsulates functionality for useSuperadminProfilePage.ts
 import { useState } from 'react';

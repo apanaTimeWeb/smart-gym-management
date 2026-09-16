@@ -65,3 +65,111 @@ Every route-backed feature should expose `loading.tsx` and `error.tsx` where app
 
 ## Documentation Consistency
 All Superadmin feature maps in this archive use the actual current folder/file inventory rather than the former centralized business-module description.
+
+
+## User Flows & Interactions
+1. Enter the `/superadmin` route and load the module UI.
+2. Use the module controls/forms/tables provided by the documented components.
+3. Submit supported mutations through the module API layer and reconcile the TanStack Query cache.
+4. On failure, preserve user input where applicable and render the module-specific error state.
+
+## UI Data Requirements
+- Every data-driven table, KPI, chart, filter, dropdown and detail field must map to a typed API response field and be represented in module-owned fixtures where mocked.
+- Verify each rendered data field against the module API schema before changing the UI.
+
+## Component Responsibility Map
+| Component | Responsibility |
+|---|---|
+| `affiliates/affiliates_components/SuperadminAffiliateModal.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `affiliates/affiliates_components/SuperadminAffiliateStatusBadge/SuperadminAffiliateStatusBadge.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `affiliates/affiliates_components/SuperadminAffiliatesClient.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `affiliates/affiliates_components/SuperadminAffiliatesEmptyState/SuperadminAffiliatesEmptyState.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `affiliates/affiliates_components/SuperadminAffiliatesHeader/SuperadminAffiliatesHeader.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `affiliates/affiliates_components/SuperadminAffiliatesPayoutHistory/SuperadminAffiliatesPayoutHistory.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `affiliates/affiliates_components/SuperadminAffiliatesStatsBar/SuperadminAffiliatesStatsBar.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `affiliates/affiliates_components/SuperadminAffiliatesTable/SuperadminAffiliatesTable.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `affiliates/affiliates_components/SuperadminAffiliatesTable/SuperadminAffiliatesTableRow.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `analytics/analytics_components/SuperadminAnalyticsClient.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `backups/backups_components/SuperadminBackupsClient.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `backups/backups_components/SuperadminBackupsEmptyState/SuperadminBackupsEmptyState.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `backups/backups_components/SuperadminBackupsRestoreModal.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `backups/backups_components/SuperadminBackupsScheduleModal.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `backups/backups_components/SuperadminBackupsTable.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `backups/backups_components/SuperadminBackupsTriggerModal.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `branches/branches_components/SuperadminBranchesClient.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `broadcasts/broadcasts_components/SuperadminBroadcastModal.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `broadcasts/broadcasts_components/SuperadminBroadcastQueueModal.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `broadcasts/broadcasts_components/SuperadminBroadcastStatusBadge/SuperadminBroadcastStatusBadge.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `broadcasts/broadcasts_components/SuperadminBroadcastsClient.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `broadcasts/broadcasts_components/SuperadminBroadcastsEmptyState/SuperadminBroadcastsEmptyState.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `broadcasts/broadcasts_components/SuperadminBroadcastsHeader/SuperadminBroadcastsHeader.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `broadcasts/broadcasts_components/SuperadminBroadcastsTable/SuperadminBroadcastsTable.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `cancellations/cancellations_components/SuperadminCancellationsClient/SuperadminCancellationsClient.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `cancellations/cancellations_components/SuperadmincancellationsActionModal/SuperadmincancellationsActionModal.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `cancellations/cancellations_components/SuperadmincancellationsEmptyState/SuperadmincancellationsEmptyState.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `cancellations/cancellations_components/SuperadmincancellationsFilters/SuperadmincancellationsFilters.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `cancellations/cancellations_components/SuperadmincancellationsKPIs/SuperadmincancellationsKPIs.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `cancellations/cancellations_components/SuperadmincancellationsTable/SuperadmincancellationsTable.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `coupons/coupons_components/SuperadminCouponEditModal.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `coupons/coupons_components/SuperadminCouponModal.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `coupons/coupons_components/SuperadminCouponsClient.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `coupons/coupons_components/SuperadminCouponsEmptyState/SuperadminCouponsEmptyState.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `coupons/coupons_components/SuperadminCouponsHeader/SuperadminCouponsHeader.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `coupons/coupons_components/SuperadminCouponsRedemptionDrawer.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `coupons/coupons_components/SuperadminCouponsStatsBar/SuperadminCouponsStatsBar.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `coupons/coupons_components/SuperadminCouponsStatusBadge/SuperadminCouponsStatusBadge.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `coupons/coupons_components/SuperadminCouponsTable/SuperadminCouponsTable.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `coupons/coupons_components/SuperadminCouponsTable/SuperadminCouponsTableRow.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `dashboard/dashboard_components/SuperadminDashboardDateFilterDropdown/SuperadminDashboardDateFilterDropdown.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `dashboard/dashboard_components/SuperadminDashboardView/SuperadminDashboardCharts.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `dashboard/dashboard_components/SuperadminDashboardView/SuperadminDashboardHeader.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `dashboard/dashboard_components/SuperadminDashboardView/SuperadminDashboardKpiGrid.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `dashboard/dashboard_components/SuperadminDashboardView/SuperadminDashboardRecentOnboards.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `dashboard/dashboard_components/SuperadminDashboardView/SuperadminDashboardView.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `features/features_components/SuperadminFeatureHistoryModal.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `features/features_components/SuperadminFeatureRolloutModal.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `features/features_components/SuperadminFeaturesClient.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `franchises/franchises_components/SuperadminFranchiseModal/SuperadminFranchiseModal.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `franchises/franchises_components/SuperadminFranchisesClient.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `global-audit/global-audit_components/SuperadminGlobalAuditClient.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `gyms/gyms_components/SuperadminAddGymForm/SuperadminAddGymForm.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `gyms/gyms_components/SuperadminGymDeleteModal/SuperadminGymDeleteModal.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `gyms/gyms_components/SuperadminGymDetailClient/SuperadminGymDetailClient.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `gyms/gyms_components/SuperadminGymEditModal/SuperadminGymEditModal.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `gyms/gyms_components/SuperadminGymWhatsappModal/SuperadminGymWhatsappModal.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `gyms/gyms_components/SuperadminGymsCalendar/SuperadminGymsCalendar.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `gyms/gyms_components/SuperadminGymsClient.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `gyms/gyms_components/SuperadminGymsEmptyState/SuperadminGymsEmptyState.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `gyms/gyms_components/SuperadminGymsTable/SuperadminGymsTable.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `gyms/gyms_components/SuperadminGymsToolbar/SuperadminGymsToolbar.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `infrastructure/infrastructure_components/SuperadminFlushTenantModal.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `infrastructure/infrastructure_components/SuperadminInfrastructureClient.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `infrastructure/infrastructure_components/SuperadminUptimeChart/SuperadminUptimeChart.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `invoices/invoices_components/SuperadminInvoicesAgingReport/SuperadminInvoicesAgingReport.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `invoices/invoices_components/SuperadminInvoicesClient.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `invoices/invoices_components/SuperadminInvoicesEmptyState/SuperadminInvoicesEmptyState.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `invoices/invoices_components/SuperadminInvoicesHeader/SuperadminInvoicesHeader.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `invoices/invoices_components/SuperadminInvoicesLogPaymentModal/SuperadminInvoicesLogPaymentModal.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `invoices/invoices_components/SuperadminInvoicesStatsBar/SuperadminInvoicesStatsBar.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `invoices/invoices_components/SuperadminInvoicesTable/SuperadminInvoicesTable.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `invoices/invoices_components/SuperadminInvoicesTable/SuperadminInvoicesTableRow.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `jobs/jobs_components/SuperadminJobInspectModal/SuperadminJobInspectModal.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `jobs/jobs_components/SuperadminJobsEmptyState/SuperadminJobsEmptyState.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `jobs/jobs_components/SuperadminJobsHeader/SuperadminJobsHeader.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `jobs/jobs_components/SuperadminJobsStatsBar/SuperadminJobsStatsBar.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `jobs/jobs_components/SuperadminJobsTable/SuperadminJobsTable.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `jobs/jobs_components/SuperadminJobsView.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+| `messaging/messaging_components/SuperadminMessagingClient.tsx` | Renders/orchestrates this module's documented UI section; no direct business API logic unless explicitly designated by the module architecture. |
+
+## Rule Compliance Checklist
+- [ ] Static and runtime verification completed for all applicable architecture, API, state, test, accessibility and design rules.
+- [ ] No cross-module business imports.
+- [ ] All async data remains in TanStack Query.
+- [ ] All non-trivial forms use React Hook Form + Zod.
+- [ ] Module documentation matches current code.
+- [ ] Meaningful tests prove critical user-visible behavior.
+
+
+## Module-Owned MSW Fixtures
+
+Feature-specific mock fixtures and MSW handlers are owned by this feature directory. API responses consumed by UI must remain complete for all documented table fields, KPIs, charts, filters, detail views and mutation messages. Global MSW bootstrap is registration infrastructure only.
