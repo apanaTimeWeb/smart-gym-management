@@ -1,5 +1,6 @@
 'use client';
 // RESPONSIBILITY: Modal for confirming a dangerous database restore from a backup snapshot.
+import { formatDate, formatDateTime } from '@/lib/formatters';
 // Requires the user to type "RESTORE" before the action can be committed.
 
 import { RotateCcw } from 'lucide-react';
@@ -25,18 +26,18 @@ export default function SuperadminBackupsRestoreModal({
     if (restoreConfirmText !== 'RESTORE') return;
     onClose();
     
-    const loadingToastId = toast.loading(`Restoring database ${selectedBackup.databaseName} from snapshot...`);
+    const loadingToastId = toast.loading(`Restoring database ${selectedBackup.databaseName} from snapshot...`, { id: 'superadmin-toast-c4cfd62ade' });
     try {
-      await backupsApi.restoreBackupSnapshot(selectedBackup.id);
-      toast.success(`Database ${selectedBackup.databaseName} successfully restored!`, { id: loadingToastId });
+      const response = await backupsApi.restoreBackupSnapshot(selectedBackup.id);
+      toast.success(response.message, { id: loadingToastId });
       onSuccess();
-    } catch {
-      toast.error('Failed to restore snapshot', { id: loadingToastId });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : '', { id: loadingToastId });
     }
   };
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" role="dialog" aria-modal="true">
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 backdrop-blur-sm p-4" role="dialog" aria-modal="true">
       <div className="bg-card w-full max-w-md rounded-2xl shadow-xl overflow-hidden border border-border motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95">
         <div className="p-6">
           <div className="w-12 h-12 rounded-full bg-danger-bg/10 text-danger flex items-center justify-center mb-4">
@@ -48,7 +49,7 @@ export default function SuperadminBackupsRestoreModal({
           </p>
           <div className="bg-warning/10 border border-warning/20 p-3 rounded-lg mb-6">
             <p className="text-xs text-warning font-medium">
-              ⚠️ WARNING: This will immediately overwrite the live production database for <strong>{selectedBackup.tenantName}</strong>. Any data created after {new Date(selectedBackup.timestamp).toLocaleString()} will be permanently lost!
+              ⚠️ WARNING: This will immediately overwrite the live production database for <strong>{selectedBackup.tenantName}</strong>. Any data created after {formatDateTime(selectedBackup.timestamp)} will be permanently lost!
             </p>
           </div>
           <div className="mb-6">

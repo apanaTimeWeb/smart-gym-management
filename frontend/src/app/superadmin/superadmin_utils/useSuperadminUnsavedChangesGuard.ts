@@ -1,14 +1,12 @@
-// DATA FLOW: feature API/schema → hook/context → useSuperadminUnsavedChangesGuard consumers.
 'use client';
+// DATA FLOW: feature API/schema → hook/context → useSuperadminUnsavedChangesGuard consumers.
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
 
 export function useUnsavedChangesGuard(
   isDirty: boolean,
   warningMessage: string = 'You have unsaved changes. Are you sure you want to leave?'
 ) {
-  const router = useRouter();
   const { confirm } = useSuperadminConfirm();
 
   // RESPONSIBILITY: Handle side-effects for useUnsavedChangesGuard
@@ -84,6 +82,6 @@ export function useUnsavedChangesGuard(
       document.removeEventListener('click', handleAnchorClick, { capture: true });
       window.removeEventListener('popstate', handlePopState);
     };
-  }, [isDirty, warningMessage, router, confirm]);
+  }, [isDirty, warningMessage, confirm]);
 }
 

@@ -1,7 +1,7 @@
 'use client';
 // RESPONSIBILITY: Renders a single row in the Coupons data table. Handles row-level action buttons with stopPropagation. Purely presentational.
 import { Edit2, Trash2, RefreshCw, ToggleLeft, ToggleRight, MessageCircle, History } from 'lucide-react';
-import { formatINR } from '@/lib/formatters';
+import { formatINR, formatDate } from '@/lib/formatters';
 import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
 import SuperadminCouponsStatusBadge from '@/app/superadmin/coupons/coupons_components/SuperadminCouponsStatusBadge/SuperadminCouponsStatusBadge';
 import { WhatsAppFormatter } from '@/lib/whatsapp_formatter';
@@ -71,7 +71,7 @@ export default function SuperadminCouponsTableRow({ coupon, onToggleStatus, onEd
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary">{cpn.currentUses} / {cpn.maxUses}</td>
       <td className="px-6 py-4 whitespace-nowrap"><SuperadminCouponsStatusBadge status={coupon.status} /></td>
-      <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary">{new Date(cpn.expiryDate).toLocaleDateString()}</td>
+      <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary">{formatDate(cpn.expiryDate)}</td>
       <td className="px-6 py-4 whitespace-nowrap text-right flex items-center justify-end gap-2">
         {cpn.isDeleted ? (
           <button

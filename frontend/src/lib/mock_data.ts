@@ -525,7 +525,7 @@ const ADMIN_FINANCE_SUMMARY = {
 const ADMIN_FINANCE_PNL = BRANCHES.map(b => ({
   branchId: b.id,
   branchName: b.name,
-  location: b.location,
+  location: b.city,
   revenue: b.revenue,
   expenses: b.revenue * 0.4,
   netProfit: b.revenue * 0.6,

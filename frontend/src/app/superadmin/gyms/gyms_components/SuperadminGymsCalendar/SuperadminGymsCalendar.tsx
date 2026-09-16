@@ -17,7 +17,7 @@ export default function SuperadminGymsCalendar() {
     const month = today.getMonth();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const startDay = new Date(year, month, 1).getDay();
-    const monthName = today.toLocaleString('default', { month: 'long' });
+    const monthName = new Intl.DateTimeFormat('en-IN', { month: 'long' }).format(today);
     return { daysInMonth, startDay, currentYear: year, currentMonth: month, monthName };
   }, []);
 

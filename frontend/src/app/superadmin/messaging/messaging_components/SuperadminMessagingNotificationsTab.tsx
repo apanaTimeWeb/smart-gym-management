@@ -1,5 +1,6 @@
 'use client';
 // RESPONSIBILITY: Renders the Messaging Notifications Tab component and its associated UI logic.
+import { formatDate, formatDateTime } from '@/lib/formatters';
 import { AlertTriangle, Info, X } from 'lucide-react';
 import type { SuperadminNotification, NotificationType } from '@/app/superadmin/messaging/messaging_types/superadmin_messaging_types';
 
@@ -37,7 +38,7 @@ export function SuperadminMessagingNotificationsTab({
             </div>
             <p className="text-xs text-secondary mt-0.5">{notif.body}</p>
             <p className="text-xs text-disabled mt-1">
-              {new Date(notif.createdAt).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })}
+              {formatDateTime(notif.createdAt)}
             </p>
           </div>
           {!notif.read && (

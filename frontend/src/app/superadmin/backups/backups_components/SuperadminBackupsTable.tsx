@@ -4,7 +4,7 @@ import { Download, RotateCcw } from 'lucide-react';
 import type { BackupRecord } from '@/app/superadmin/backups/superadmin_backups_types/superadmin_backups_types';
 import { StatusColors } from '@/app/superadmin/backups/backups_utils/SuperadminBackupsConstants';
 import SuperadminBackupsEmptyState from '@/app/superadmin/backups/backups_components/SuperadminBackupsEmptyState/SuperadminBackupsEmptyState';
-import { formatNumber } from '@/lib/formatters';
+import { formatNumber, formatDateTime } from '@/lib/formatters';
 
 interface SuperadminBackupsTableProps {
   paginatedBackups: BackupRecord[];
@@ -32,7 +32,7 @@ export default function SuperadminBackupsTable({ paginatedBackups, filteredLengt
         </thead>
         <tbody className="divide-y divide-border">
           {paginatedBackups.map((backup: BackupRecord) => (
-            <tr key={backup.id} className="hover:bg-input motion-safe:transition-colors">
+            <tr key={backup.id} className="hover:bg-input motion-safe:transition-colors cursor-pointer" tabIndex={0}>
               <td className="p-4 text-xs font-mono text-secondary">{backup.id}</td>
               <td className="p-4 text-sm font-medium text-foreground">{backup.tenantName}</td>
               <td className="p-4 text-sm font-mono text-primary">{backup.databaseName}</td>
@@ -42,7 +42,7 @@ export default function SuperadminBackupsTable({ paginatedBackups, filteredLengt
                   {backup.status.replace('_', ' ')}
                 </span>
               </td>
-              <td className="p-4 text-sm text-secondary">{new Date(backup.timestamp).toLocaleString()}</td>
+              <td className="p-4 text-sm text-secondary">{formatDateTime(backup.timestamp)}</td>
               <td className="p-4 text-right flex items-center justify-end gap-2">
                 <button 
                   onClick={() => handleDownload(backup.id)}

@@ -1,119 +1,113 @@
 'use client';
-// RESPONSIBILITY: Renders the Schema Rollouts dashboard for superadmins to manage database migrations across tenants.
-import { useState } from 'react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { migrationsApi } from '@/app/superadmin/migrations/superadmin_migrations_api/superadmin_migrations_api';
-import type { MigrationLog } from '@/app/superadmin/migrations/superadmin_migrations_types/superadmin_migrations_types';
-import { Database, CheckCircle, AlertTriangle, Clock, RefreshCw, XCircle } from 'lucide-react';
-import toast from 'react-hot-toast';
+// RESPONSIBILITY: Renders the Superadmin schema rollout screen. Delegates query, mutation, confirmation, and cache logic to the page hook.
 
-import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
+import { useState } from 'react';
+import { AlertTriangle, CheckCircle, Clock, Database, Loader2, RefreshCw, XCircle } from 'lucide-react';
+import { formatDate } from '@/lib/formatters';
+import type { MigrationLog } from '@/app/superadmin/migrations/superadmin_migrations_types/superadmin_migrations_types';
+import SuperadminMigrationsEmptyState from '@/app/superadmin/migrations/migrations_components/SuperadminMigrationsEmptyState';
+import { useSuperadminMigrationsPage } from '@/app/superadmin/migrations/migrations_utils/useSuperadminMigrationsPage';
 
 const TABLE_COLUMN_COUNT = 5;
+const STATUS_STYLES: Record<MigrationLog['status'], string> = {
+  COMPLETED: 'bg-success/10 text-success',
+  FAILED: 'bg-danger-bg text-danger',
+  PENDING: 'bg-warning/10 text-warning',
+  IN_PROGRESS: 'bg-primary/10 text-primary',
+  ROLLED_BACK: 'bg-secondary/10 text-secondary',
+  SUCCESS: 'bg-success/10 text-success',
+  ROLLBACK: 'bg-secondary/10 text-secondary',
+};
+
+function SuperadminMigrationStatusBadge({ status }: { status: MigrationLog['status'] }) {
+  const icon = status === 'COMPLETED' || status === 'SUCCESS'
+    ? <CheckCircle className="w-3.5 h-3.5" aria-hidden="true" />
+    : status === 'FAILED'
+      ? <XCircle className="w-3.5 h-3.5" aria-hidden="true" />
+      : status === 'IN_PROGRESS'
+        ? <RefreshCw className="w-3.5 h-3.5 motion-safe:animate-spin" aria-hidden="true" />
+        : <Clock className="w-3.5 h-3.5" aria-hidden="true" />;
+
+  return (
+    <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium ${STATUS_STYLES[status]}`}>
+      {icon}
+      {status.replaceAll('_', ' ')}
+    </span>
+  );
+}
 
 export default function SuperadminMigrationsClient() {
   const [versionInput, setVersionInput] = useState('');
-  const { confirm } = useSuperadminConfirm();
-  const queryClient = useQueryClient();
-
-  const { data: queryData, isLoading, isError } = useQuery({
-    queryKey: ['superadmin', 'migrations-log'],
-    queryFn: async () => {
-      const res = await migrationsApi.fetchMigrations();
-      if (!res.success) {
-        throw new Error(res.message);
-      }
-      return { migrations: res.data || [] };
-    }
-  });
-
-  const fetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
-  const displayMigrations = queryData?.migrations || [];
+  const [validationMessage, setValidationMessage] = useState('');
+  const { migrations, isPending, isError, isDeploying, requestDeployment, refetch } = useSuperadminMigrationsPage();
 
   const handleRollout = async () => {
-    if (!versionInput.trim()) {
-      toast.error('Please enter a target schema version.', { id: 'please-enter-a-target-schema-version' });
+    const normalizedVersion = versionInput.trim();
+    if (!normalizedVersion) {
+      setValidationMessage('Enter a target schema version.');
       return;
     }
 
-    const confirmed = await confirm({
-      title: 'Deploy New Schema',
-      message: `Are you sure you want to deploy schema version ${versionInput} across ALL active tenant databases?`,
-      confirmText: 'Deploy Schema',
-      type: 'warning'
-    });
-
-    if (!confirmed) return;
-
-    try {
-      const loadingToast = toast.loading(`Initializing schema rollout for ${versionInput}...`);
-      
-      const res = await migrationsApi.startMigration(versionInput);
-      
-      toast.success(res.message || `Schema ${versionInput} deployed successfully!`, { id: loadingToast });
-      void queryClient.invalidateQueries({ queryKey: ['superadmin', 'migrations-log'] });
-      setVersionInput(''); // clear input
-
-    } catch (err) {
-      toast.error((err as Error).message, { id: 'failed-to-trigger-rollout' });
-    }
+    setValidationMessage('');
+    const completed = await requestDeployment(normalizedVersion);
+    if (completed) setVersionInput('');
   };
 
-  const getStatusBadge = (status: MigrationLog['status']) => {
-    const baseClasses = "inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium";
-    const STATUS_COLORS: Record<string, string> = {
-      COMPLETED: 'bg-success/10 text-success',
-      FAILED: 'bg-danger-bg text-danger',
-      PENDING: 'bg-warning/10 text-warning',
-      IN_PROGRESS: 'bg-primary/10 text-primary'
-    };
-    const colorClasses = STATUS_COLORS[status] || 'bg-secondary/10 text-secondary';
-    
-    switch (status) {
-      case 'COMPLETED':
-        return <span className={`${baseClasses} ${colorClasses}`}><CheckCircle className="w-3.5 h-3.5" /> Completed</span>;
-      case 'FAILED':
-        return <span className={`${baseClasses} ${colorClasses}`}><XCircle className="w-3.5 h-3.5" /> Failed</span>;
-      case 'PENDING':
-        return <span className={`${baseClasses} ${colorClasses}`}><Clock className="w-3.5 h-3.5" /> Pending</span>;
-      case 'IN_PROGRESS':
-        return <span className={`${baseClasses} ${colorClasses}`}><RefreshCw className="w-3.5 h-3.5 motion-safe:animate-spin" /> In Progress</span>;
-      default:
-        return <span className={`${baseClasses} ${colorClasses}`}>{status}</span>;
-    }
-  };
-
-  if (isLoading) {
+  if (isPending) {
     return (
-      <div className="p-6 space-y-4">
-        {[1, 2, 3].map(i => (
-          <div key={`skeleton-${i}`} className="h-24 bg-card motion-safe:animate-pulse rounded-xl" />
+      <div className="p-6 space-y-4" aria-busy="true" aria-label="Loading schema rollouts">
+        {[0, 1, 2].map((row) => (
+          <div key={row} className="h-24 rounded-xl bg-skeleton-base motion-safe:animate-pulse" />
         ))}
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="p-6">
+        <div className="rounded-xl border border-border bg-card p-8 text-center">
+          <AlertTriangle className="mx-auto mb-3 h-8 w-8 text-danger" aria-hidden="true" />
+          <p className="font-semibold text-foreground">Schema rollout history could not be loaded.</p>
+          <button type="button" onClick={() => void refetch()} className="mt-4 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+            Retry
+          </button>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-6">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+      <div className="flex flex-col gap-4 mb-8 md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Schema Rollouts</h1>
           <p className="text-secondary mt-1">Manage and track database schema migrations across all gym instances.</p>
         </div>
-        
-        <div className="flex items-center gap-3">
-          <input
-            type="text"
-            placeholder="e.g. v1.6.0"
-            value={versionInput}
-            onChange={(e) => setVersionInput(e.target.value)}
-            className="w-32 px-3 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary"
-          />
-          <button 
+
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-start">
+          <div>
+            <label htmlFor="superadmin-migration-version" className="sr-only">Target schema version</label>
+            <input
+              id="superadmin-migration-version"
+              type="text"
+              value={versionInput}
+              onChange={(event) => setVersionInput(event.target.value)}
+              placeholder="e.g. v1.6.0"
+              aria-invalid={Boolean(validationMessage)}
+              aria-describedby={validationMessage ? 'superadmin-migration-version-error' : undefined}
+              className="w-40 px-3 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            />
+            {validationMessage && <p id="superadmin-migration-version-error" className="mt-1 text-xs text-danger" role="alert">{validationMessage}</p>}
+          </div>
+          <button
+            type="button"
             onClick={handleRollout}
-            className="flex items-center justify-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-lg font-medium hover:bg-primary/90 motion-safe:transition-colors"
+            disabled={isDeploying}
+            className="min-w-40 flex items-center justify-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-lg font-medium hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
-            <Database className="w-5 h-5" /> Deploy New Schema
+            {isDeploying ? <Loader2 className="w-5 h-5 motion-safe:animate-spin" aria-hidden="true" /> : <Database className="w-5 h-5" aria-hidden="true" />}
+            {isDeploying ? 'Deploying…' : 'Deploy New Schema'}
           </button>
         </div>
       </div>
@@ -123,41 +117,27 @@ export default function SuperadminMigrationsClient() {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-card-hover border-b border-border">
-                <th className="px-6 py-4 text-sm font-semibold text-secondary">Version</th>
-                <th className="px-6 py-4 text-sm font-semibold text-secondary">Description</th>
-                <th className="px-6 py-4 text-sm font-semibold text-secondary">Target</th>
-                <th className="px-6 py-4 text-sm font-semibold text-secondary">Status</th>
-                <th className="px-6 py-4 text-sm font-semibold text-secondary">Applied Date</th>
+                {['Version', 'Description', 'Target', 'Status', 'Applied Date'].map((heading) => (
+                  <th key={heading} scope="col" className="px-6 py-4 text-sm font-semibold text-secondary">{heading}</th>
+                ))}
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {displayMigrations.map((mig: MigrationLog) => (
-                <tr key={mig.id} className="hover:bg-card-hover motion-safe:transition-colors group">
+              {migrations.map((migration) => (
+                <tr key={migration.id} className="hover:bg-card-hover motion-safe:transition-colors">
+                  <td className="px-6 py-4"><span className="font-mono font-bold text-foreground">{migration.version}</span></td>
                   <td className="px-6 py-4">
-                    <span className="font-mono font-bold text-foreground">{mig.version}</span>
+                    <p className="text-sm text-foreground">{migration.description}</p>
+                    {migration.errorLog && <p className="text-xs text-danger mt-1 flex items-center gap-1"><AlertTriangle className="w-3 h-3" aria-hidden="true" />{migration.errorLog}</p>}
                   </td>
-                  <td className="px-6 py-4">
-                    <p className="text-sm text-foreground">{mig.description}</p>
-                    {mig.errorLog && (
-                      <p className="text-xs text-danger mt-1 flex items-center gap-1">
-                        <AlertTriangle className="w-3 h-3" /> {mig.errorLog}
-                      </p>
-                    )}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-secondary">{mig.targetTenants}</td>
-                  <td className="px-6 py-4">{getStatusBadge(mig.status)}</td>
-                  <td className="px-6 py-4 text-sm text-secondary">
-                    {mig.appliedAt ? new Date(mig.appliedAt).toLocaleDateString() : '-'}
-                  </td>
+                  <td className="px-6 py-4 text-sm text-secondary">{migration.targetTenants ?? '—'}</td>
+                  <td className="px-6 py-4"><SuperadminMigrationStatusBadge status={migration.status} /></td>
+                  <td className="px-6 py-4 text-sm text-secondary">{formatDate(migration.appliedAt)}</td>
                 </tr>
               ))}
-              
-              {displayMigrations.length === 0 && (
+              {migrations.length === 0 && (
                 <tr>
-                  <td colSpan={TABLE_COLUMN_COUNT} className="px-6 py-12 text-center text-secondary">
-                    <Database size={32} className="mx-auto mb-3 opacity-20" />
-                    <p>No schema rollouts found.</p>
-                  </td>
+                  <td colSpan={TABLE_COLUMN_COUNT} className="px-6 py-3"><SuperadminMigrationsEmptyState /></td>
                 </tr>
               )}
             </tbody>

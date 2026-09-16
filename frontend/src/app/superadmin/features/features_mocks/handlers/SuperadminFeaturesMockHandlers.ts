@@ -2,6 +2,11 @@ import { http, HttpResponse, delay } from 'msw';
 import type { FeatureFlag, ReleaseNote } from '@/app/superadmin/features/superadmin_features_types/superadmin_features_types';
 import type { ApiResponse } from '@/lib/api';
 
+const MOCK_FEATURE_TENANTS = [
+  { id: 't1', name: 'Iron Paradise', plan: 'Pro' },
+  { id: 't2', name: 'Fit Life Studio', plan: 'Basic' },
+  { id: 't3', name: 'CrossFit Box', plan: 'Enterprise' },
+];
 const BASE_URL = '*/api/v1/superadmin/features';
 
 export let mockFlags: FeatureFlag[] = [
@@ -11,11 +16,13 @@ export let mockFlags: FeatureFlag[] = [
 ];
 
 export let mockNotes: ReleaseNote[] = [
-  { id: 'rn1', version: 'v2.1.0', title: 'WhatsApp Alerts Live', content: 'Added WhatsApp integration for all Enterprise users.', date: '2023-10-15', isPublished: true },
-  { id: 'rn2', version: 'v2.2.0-beta', title: 'AI Workouts Beta', content: 'Testing AI generated workouts.', date: '2023-11-01', isPublished: false },
+  { id: 'rn1', version: 'v2.1.0', title: 'WhatsApp Alerts Live', content: 'Added WhatsApp integration for all Enterprise users.', date: '2026-08-15', isPublished: true },
+  { id: 'rn2', version: 'v2.2.0-beta', title: 'AI Workouts Beta', content: 'Testing AI generated workouts.', date: '2026-09-01', isPublished: false },
 ];
 
+
 export const superadminFeaturesHandlers = [
+  http.get('*/api/v1/api/gyms', async () => HttpResponse.json({ success: true, message: 'Success', data: MOCK_FEATURE_TENANTS })),
   http.get(BASE_URL, async () => {
     await delay(400);
     return HttpResponse.json<ApiResponse<{ flags: FeatureFlag[]; notes: ReleaseNote[] }>>({

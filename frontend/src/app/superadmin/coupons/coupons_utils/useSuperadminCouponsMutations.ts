@@ -1,3 +1,4 @@
+'use client';
 // DATA FLOW: feature API/schema → hook/context → useSuperadminCouponsMutations consumers.
 import { useCallback } from 'react';
 import toast from 'react-hot-toast';

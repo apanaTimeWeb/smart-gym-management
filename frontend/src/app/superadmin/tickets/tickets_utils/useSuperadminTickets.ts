@@ -1,5 +1,5 @@
-// DATA FLOW: feature API/schema → hook/context → useSuperadminTickets consumers.
 'use client';
+// DATA FLOW: feature API/schema → hook/context → useSuperadminTickets consumers.
 import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { ticketsApi } from '@/app/superadmin/tickets/superadmin_tickets_api/superadmin_tickets_api';

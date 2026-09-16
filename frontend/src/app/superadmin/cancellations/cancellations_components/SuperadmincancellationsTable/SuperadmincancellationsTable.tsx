@@ -3,7 +3,7 @@
 // Receives filtered data from parent — owns no filter or fetch state.
 
 import { AlertTriangle, Phone, Mail, Edit2 } from 'lucide-react';
-import { maskSensitiveData, formatCurrency, displayValue } from '@/lib/formatters';
+import { maskSensitiveData, formatCurrency, displayValue, formatDate } from '@/lib/formatters';
 import {
   CANCELLATIONS_RISK_STYLES,
   CANCELLATIONS_ACTION_STATUS_STYLES,
@@ -75,12 +75,12 @@ export default function SuperadminCancellationsTable({ alerts, onActionClick }: 
               </td>
               <td className="px-4 py-3">
                 <span className="text-xs text-secondary">
-                  {displayValue(alert.lastPaymentDate ? new Date(alert.lastPaymentDate).toLocaleDateString('en-IN') : null)}
+                  {displayValue(alert.lastPaymentDate ? formatDate(alert.lastPaymentDate) : null)}
                 </span>
               </td>
               <td className="px-4 py-3">
                 <span className="text-xs text-secondary">
-                  {displayValue(alert.contractEndDate ? new Date(alert.contractEndDate).toLocaleDateString('en-IN') : null)}
+                  {displayValue(alert.contractEndDate ? formatDate(alert.contractEndDate) : null)}
                 </span>
               </td>
               <td className="px-4 py-3">

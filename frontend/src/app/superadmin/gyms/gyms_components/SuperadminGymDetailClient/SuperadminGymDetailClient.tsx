@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import { ArrowLeft, Building2, User, CreditCard, Activity, MapPin, Shield, Clock } from 'lucide-react';
 import { gymsApi } from '@/app/superadmin/gyms/superadmin_gyms_api/superadmin_gyms_api';
 import type { Tenant } from '@/app/superadmin/gyms/superadmin_gyms_types/superadmin_gyms_types';
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrency, formatDate } from '@/lib/formatters';
 import { GymsUrlConfig } from '@/app/superadmin/gyms/superadmin_gyms_url_config';
 
 interface SuperadminGymDetailClientProps {
@@ -113,8 +113,8 @@ export default function SuperadminGymDetailClient({ gymId }: SuperadminGymDetail
             <div className="flex justify-between"><span className="text-secondary">Owner</span><span className="text-foreground font-medium">{gym.ownerName}</span></div>
             <div className="flex justify-between"><span className="text-secondary">Email</span><span className="text-foreground font-medium">{gym.adminEmail}</span></div>
             <div className="flex justify-between"><span className="text-secondary">Phone</span><span className="text-foreground font-medium">{gym.phone}</span></div>
-            <div className="flex justify-between"><span className="text-secondary">Onboarded</span><span className="text-foreground font-medium">{new Date(gym.createdAt).toLocaleDateString('en-IN')}</span></div>
-            <div className="flex justify-between"><span className="text-secondary">Last Login</span><span className="text-foreground font-medium">{gym.lastLoginAt ? new Date(gym.lastLoginAt).toLocaleDateString('en-IN') : '—'}</span></div>
+            <div className="flex justify-between"><span className="text-secondary">Onboarded</span><span className="text-foreground font-medium">{formatDate(gym.createdAt)}</span></div>
+            <div className="flex justify-between"><span className="text-secondary">Last Login</span><span className="text-foreground font-medium">{gym.lastLoginAt ? formatDate(gym.lastLoginAt) : '—'}</span></div>
           </div>
         </div>
 
@@ -135,7 +135,7 @@ export default function SuperadminGymDetailClient({ gymId }: SuperadminGymDetail
             {gym.status === 'TRIAL' && gym.trialEndsAt && (
               <div className="flex justify-between">
                 <span className="text-secondary">Trial Ends</span>
-                <span className="text-warning font-medium">{new Date(gym.trialEndsAt).toLocaleDateString('en-IN')}</span>
+                <span className="text-warning font-medium">{formatDate(gym.trialEndsAt)}</span>
               </div>
             )}
           </div>

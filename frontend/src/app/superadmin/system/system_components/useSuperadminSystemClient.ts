@@ -1,6 +1,6 @@
+'use client';
 // DATA FLOW: feature API/schema → hook/context → useSuperadminSystemClient consumers.
 
-'use client';
 // RESPONSIBILITY: Owns System page client-state, TanStack Query calls, mutation handling, URL-backed audit-log filters, and CSV export. The view consumes this hook and only renders the resulting state.
 import { useMemo, useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -41,7 +41,7 @@ export function useSuperadminSystemClient() {
         if (!old?.data?.tenants) return old;
         return { ...old, data: { ...old.data, tenants: old.data.tenants.map((tenant) => tenant.id === tenantId ? { ...tenant, databaseVersion: CURRENT_SCHEMA_VERSION } : tenant) } };
       });
-      toast.success(response.message || 'Migration completed successfully', { id: 'successfully-migrated-database-for-tenant-tenantid' });
+      toast.success(response.message, { id: 'successfully-migrated-database-for-tenant-tenantid' });
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Migration failed', { id: 'migration-failed-please-check-logs' });
     } finally {

@@ -61,7 +61,7 @@ export function useSuperadminInvoicesPage() {
   const filteredInvoices = invoices; // Server-side filtering applied
   const tenants = tenantsRes?.data || [];
   const total = invoicesRes?.meta?.total || invoices.length;
-  const error = isError ? 'Failed to load invoices' : null;
+  const error = isError ? (queryError instanceof Error ? queryError.message : '') : null;
 
   const logManualPaymentMutation = useMutation({
     mutationFn: (data: { gymId: string, amount: number, planName: string }) => 
@@ -74,13 +74,13 @@ export function useSuperadminInvoicesPage() {
     onSuccess: (res) => {
       if (res.success && res.data) {
         queryClient.invalidateQueries({ queryKey: ['superadmin', 'invoices'] });
-        toast.success(res.message);
+        toast.success(res.message, { id: 'superadmin-toast-bddec4ac4d' });
       } else {
-        toast.error(res.message);
+        toast.error(res.message, { id: 'superadmin-toast-812ab1a64a' });
       }
     },
     onError: (err: Error) => {
-      toast.error(err.message);
+      toast.error(err.message, { id: 'superadmin-toast-a2194697fd' });
     }
   });
 

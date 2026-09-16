@@ -1,5 +1,5 @@
-// DATA FLOW: feature API/schema → hook/context → useSuperadminCancellationsAlertsPage consumers.
 'use client';
+// DATA FLOW: feature API/schema → hook/context → useSuperadminCancellationsAlertsPage consumers.
 // RESPONSIBILITY: Encapsulates functionality for useSuperadminCancellationsAlertsPage.ts
 import { useState, useMemo } from 'react';
 import toast from 'react-hot-toast';
@@ -33,21 +33,21 @@ export function useSuperadminCancellationsAlertsPage() {
     mutationFn: (payload: CancellationsActionPayload) => cancellationsAlertsApi.updateAction(payload),
     onSuccess: (res) => {
       queryClient.invalidateQueries({ queryKey: ['superadmin', 'cancellations'] });
-      toast.success(res.message);
+      toast.success(res.message, { id: 'superadmin-toast-50c7cafd4f' });
       setActionAlert(null);
     },
     onError: (error: Error) => {
-      toast.error(error.message);
+      toast.error(error.message, { id: 'superadmin-toast-b9237d66cf' });
     }
   });
 
   const bulkOutreachMutation = useMutation({
     mutationFn: (tenantIds: string[]) => cancellationsAlertsApi.bulkOutreach(tenantIds),
     onSuccess: (res) => {
-      toast.success(res.message);
+      toast.success(res.message, { id: 'superadmin-toast-f103a164ed' });
     },
     onError: (error: Error) => {
-      toast.error(error.message);
+      toast.error(error.message, { id: 'superadmin-toast-4bfed8c24b' });
     }
   });
 
@@ -77,7 +77,7 @@ export function useSuperadminCancellationsAlertsPage() {
   function handleBulkOutreach() {
     const atRiskTenants = filtered.filter(a => a.riskLevel === 'CRITICAL' || a.riskLevel === 'HIGH');
     if (atRiskTenants.length === 0) {
-      toast.error('No critical/high risk tenants found in current view.');
+      toast.error('No critical/high risk tenants found in current view.', { id: 'superadmin-toast-a96bfe27c8' });
       return;
     }
     bulkOutreachMutation.mutate(atRiskTenants.map(a => a.tenantId));

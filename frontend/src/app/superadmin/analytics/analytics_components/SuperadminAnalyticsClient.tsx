@@ -42,7 +42,7 @@ export default function SuperadminAnalyticsClient() {
   if (error || !metrics) {
     return (
       <div className="p-8 text-center text-danger font-medium">
-        Failed to load analytics data. Please try again.
+        
       </div>
     );
   }

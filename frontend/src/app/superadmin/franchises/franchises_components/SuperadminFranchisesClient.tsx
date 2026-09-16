@@ -36,7 +36,7 @@ export default function SuperadminFranchisesClient() {
     { label: 'Total Franchises', value: franchises.length, icon: Network, color: 'text-primary', bg: 'bg-primary/10' },
     { label: 'Active', value: franchises.filter(f => f.status === 'ACTIVE').length, icon: CheckCircle2, color: 'text-success', bg: 'bg-success/10' },
     { label: 'Total Branches', value: franchises.reduce((s, f) => s + f.branchCount, 0), icon: Building2, color: 'text-info', bg: 'bg-info/10' },
-    { label: 'Total Members', value: franchises.reduce((s, f) => s + f.totalMembers, 0).toLocaleString('en-IN'), icon: Users, color: 'text-warning', bg: 'bg-warning/10' },
+    { label: 'Total Members', value: formatNumber(franchises.reduce((s, f) => s + f.totalMembers, 0)), icon: Users, color: 'text-warning', bg: 'bg-warning/10' },
     { label: 'Combined Monthly Income', value: formatCurrency(franchises.reduce((s, f) => s + f.totalMonthlyRevenue, 0)), icon: TrendingUp, color: 'text-success', bg: 'bg-success/10' },
   ];
 

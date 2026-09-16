@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Provides a programmatic confirm() API to all SUPERADMIN components via React Context. Renders a single shared SuperadminConfirmModal at the root level. No async data — sync UI state only.
 'use client';
+// RESPONSIBILITY: Provides a programmatic confirm() API to all SUPERADMIN components via React Context. Renders a single shared SuperadminConfirmModal at the root level. No async data — sync UI state only.
 
 import React, { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
 import SuperadminConfirmModal from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmModal';

@@ -3,7 +3,7 @@
 
 import React, { useMemo } from 'react';
 import type { Affiliate } from '@/app/superadmin/affiliates/superadmin_affiliates_types/superadmin_affiliates_types';
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrency, formatDate } from '@/lib/formatters';
 
 export default function SuperadminAffiliatesPayoutHistory({ affiliates }: { affiliates: Affiliate[] }) {
   // Generate mock payout history based on affiliates
@@ -50,7 +50,7 @@ export default function SuperadminAffiliatesPayoutHistory({ affiliates }: { affi
           {payouts.map((payout) => (
             <tr key={payout.id} className="hover:bg-input/50 motion-safe:transition-colors">
               <td className="p-4 text-sm text-secondary">
-                {new Date(payout.date || '').toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' })}
+                {formatDate(payout.date)}
               </td>
               <td className="p-4">
                 <span className="text-foreground font-medium">{payout.affiliateName}</span>

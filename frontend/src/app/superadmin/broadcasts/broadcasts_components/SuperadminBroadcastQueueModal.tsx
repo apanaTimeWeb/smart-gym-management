@@ -6,6 +6,7 @@ import { X, CheckCircle, Phone, Bell, Loader2 } from 'lucide-react';
 import { maskSensitiveData } from '@/lib/formatters';
 import { useLocalStorage } from '@/lib/useLocalStorage';
 import { logger } from '@/lib/logger';
+import { SUPERADMIN_STORAGE_KEYS } from '@/app/superadmin/superadmin_storage_constants';
 
 export interface BroadcastRecipient {
   id: string;
@@ -40,7 +41,7 @@ export default function SuperadminBroadcastQueueModal({
   const [completed, setCompleted] = useState<Set<string>>(new Set());
   // Rule 58: use the shared useLocalStorage hook — never access localStorage directly in a component.
   // Key uses 'admin_notifications_v1' for versioning compatibility.
-  const [, setNotifications] = useLocalStorage<BroadcastNotification[]>('admin_notifications_v1', []);
+  const [, setNotifications] = useLocalStorage<BroadcastNotification[]>(SUPERADMIN_STORAGE_KEYS.BROADCAST_NOTIFICATIONS_V1, []);
 
   // Starts the queue from the first recipient whenever the modal opens with a new list.
   // Uses setTimeout(0) to schedule state update asynchronously and avoid synchronous setState-in-effect warnings.
@@ -99,7 +100,7 @@ export default function SuperadminBroadcastQueueModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" role="dialog" aria-modal="true">
+    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-overlay/80 backdrop-blur-sm" role="dialog" aria-modal="true">
       <div className="bg-overlay rounded-2xl shadow-2xl w-full max-w-lg border border-border flex flex-col motion-safe:animate-in motion-safe:zoom-in-95 motion-safe:duration-200 overflow-hidden">
         <div className="px-6 py-4 bg-primary flex items-center justify-between">
           <div>

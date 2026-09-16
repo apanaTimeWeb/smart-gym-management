@@ -182,7 +182,7 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Super
       {/* Mobile Backdrop — closes sidebar when tapping outside */}
       {isMobileOpen && (
         <div
-          className="fixed inset-0 bg-black/80 backdrop-blur-sm z-40 lg:hidden motion-safe:transition-opacity"
+          className="fixed inset-0 bg-overlay/90 backdrop-blur-sm z-40 lg:hidden motion-safe:transition-opacity"
           onClick={() => setIsMobileOpen(false)}
           aria-hidden="true"
         />

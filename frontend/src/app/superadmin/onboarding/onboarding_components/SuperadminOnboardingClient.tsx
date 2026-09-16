@@ -37,7 +37,7 @@ export default function SuperadminOnboardingClient() {
   }, [search, startDate, endDate]);
 
   const { data: response, isLoading } = useQuery({
-    queryKey: ['superadmin_onboardings', queryParams],
+    queryKey: ['superadmin', 'onboarding', queryParams],
     queryFn: () => onboardingApi.fetchOnboardings(queryParams),
   });
   const filtered = response?.data || [];
@@ -53,35 +53,35 @@ export default function SuperadminOnboardingClient() {
   const resendMut = useMutation({
     mutationFn: onboardingApi.resendVerification,
     onSuccess: (res) => {
-      toast.success(res.message || 'Verification email resent successfully.', { id: 'verification-email-resent-successfully' });
-      queryClient.invalidateQueries({ queryKey: ['superadmin_onboardings'] });
+      toast.success(res.message, { id: 'verification-email-resent-successfully' });
+      queryClient.invalidateQueries({ queryKey: ['superadmin', 'onboarding'] });
     },
   });
 
   const markVerifiedMut = useMutation({
     mutationFn: onboardingApi.markVerified,
     onSuccess: (res) => {
-      toast.success(res.message || 'Email marked as verified.', { id: 'email-marked-as-verified' });
-      queryClient.invalidateQueries({ queryKey: ['superadmin_onboardings'] });
+      toast.success(res.message, { id: 'email-marked-as-verified' });
+      queryClient.invalidateQueries({ queryKey: ['superadmin', 'onboarding'] });
     },
   });
 
   const extendMut = useMutation({
     mutationFn: ({ id, days }: { id: string; days: number }) => onboardingApi.extendTrial(id, days),
     onSuccess: (res, variables) => {
-      toast.success(res.message || `Trial extended by ${variables.days} days.`, { id: 'trial-extended-by-variables-days-days' });
+      toast.success(res.message, { id: 'trial-extended-by-variables-days-days' });
       setExtendModalId(null);
       setExtendDays('7');
-      queryClient.invalidateQueries({ queryKey: ['superadmin_onboardings'] });
+      queryClient.invalidateQueries({ queryKey: ['superadmin', 'onboarding'] });
     },
   });
 
   const convertMut = useMutation({
     mutationFn: onboardingApi.convertToPaid,
     onSuccess: (res) => {
-      toast.success(res.message || 'Gym converted to paid plan.', { id: 'gym-converted-to-paid-plan' });
+      toast.success(res.message, { id: 'gym-converted-to-paid-plan' });
       setConvertConfirmId(null);
-      queryClient.invalidateQueries({ queryKey: ['superadmin_onboardings'] });
+      queryClient.invalidateQueries({ queryKey: ['superadmin', 'onboarding'] });
     },
   });
 

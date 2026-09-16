@@ -13,6 +13,16 @@ export const superadminMessagingApi = {
     apiFetch<ApiResponse<SuperadminNotification[]>>(`${MessagingUrlConfig.BACKEND_API.BASE}/notifications`, { dataSchema: z.array(SuperadminNotificationSchema) }),
   fetchTenants: () =>
     apiFetch<ApiResponse<MessagingTenant[]>>(`${MessagingUrlConfig.BACKEND_API.BASE}/tenants`, { dataSchema: z.array(MessagingTenantSchema) }),
+  markNotificationRead: (id: string) =>
+    apiFetch<ApiResponse<SuperadminNotification>>(`${MessagingUrlConfig.BACKEND_API.BASE}/notifications/${id}/read`, {
+      method: 'PATCH',
+      dataSchema: SuperadminNotificationSchema,
+    }),
+  markAllNotificationsRead: () =>
+    apiFetch<ApiResponse<SuperadminNotification[]>>(`${MessagingUrlConfig.BACKEND_API.BASE}/notifications/read-all`, {
+      method: 'PATCH',
+      dataSchema: z.array(SuperadminNotificationSchema),
+    }),
   sendMessage: (payload: Partial<TenantMessage>) =>
     apiFetch<ApiResponse<TenantMessage>>(`${MessagingUrlConfig.BACKEND_API.BASE}/messages`, {
       method: 'POST',

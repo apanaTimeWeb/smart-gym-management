@@ -1,12 +1,12 @@
 'use client';
 // RESPONSIBILITY: SuperadminBackupsClient.tsx renders the Database Backups page. Purely a view layer — data fetched via useSuperadminData.
 
+import { backupsApi } from '@/app/superadmin/backups/superadmin_backups_api/superadmin_backups_api';
 import { useSuperadminBackupsData } from '@/app/superadmin/backups/backups_utils/useSuperadminBackupsData';
 import SuperadminBackupsScheduleModal from '@/app/superadmin/backups/backups_components/SuperadminBackupsScheduleModal';
 import { DatabaseBackup, Search, Clock } from 'lucide-react';
 import type { BackupRecord } from '@/app/superadmin/backups/superadmin_backups_types/superadmin_backups_types';
 import { useState } from 'react';
-import toast from 'react-hot-toast';
 import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
 import { useSuperadminUrlState } from '@/app/superadmin/superadmin_utils/useSuperadminUrlState';
 // Rule 10: Absolute imports only — no relative paths allowed
@@ -38,7 +38,7 @@ export default function SuperadminBackupsClient() {
     ...(typeFilter !== 'ALL' && { type: typeFilter }),
   };
 
-  const { data: backups } = useSuperadminBackupsData(queryParams);
+  const { data: backups, total, totalPages } = useSuperadminBackupsData(queryParams);
 
   const [isTriggering, setIsTriggering] = useState(false);
   const [triggerModalOpen, setTriggerModalOpen] = useState(false);
@@ -53,9 +53,7 @@ export default function SuperadminBackupsClient() {
   };
 
   const filtered: BackupRecord[] = backups || [];
-  const total = filtered.length; // Will be replaced by meta.total once server paginates
-  const totalPages: number = Math.ceil(total / ITEMS_PER_PAGE) || 1;
-  const paginatedBackups: BackupRecord[] = filtered; // Server-side pagination applied
+  const paginatedBackups: BackupRecord[] = filtered;
 
   return (
     <div className="space-y-6">
@@ -128,7 +126,7 @@ export default function SuperadminBackupsClient() {
         <SuperadminBackupsTable 
           paginatedBackups={paginatedBackups}
           filteredLength={filtered.length}
-          handleDownload={(id: string) => toast.success(`Downloading backup ${id}`)}
+          handleDownload={(id: string) => { window.location.href = backupsApi.fetchBackupDownloadUrl(id); }}
           handleRestoreClick={handleRestoreClick}
         />
         <SuperadminPagination 

@@ -3,6 +3,7 @@
 
 import React from 'react';
 import { AlertTriangle, RefreshCcw } from 'lucide-react';
+import { logger } from '@/lib/logger';
 
 interface ErrorBoundaryProps {
   children: React.ReactNode;
@@ -27,7 +28,7 @@ export class SuperadminErrorBoundary extends React.Component<ErrorBoundaryProps,
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error(`[SUPERADMIN_FATAL] Error ID: ${this.state.errorId}\n`, error, '\nComponent Stack:', errorInfo.componentStack);
+    logger.error(error, { route: window.location.pathname, module: 'superadmin', errorId: this.state.errorId, componentStack: errorInfo.componentStack });
   }
 
   resetErrorBoundary = () => {

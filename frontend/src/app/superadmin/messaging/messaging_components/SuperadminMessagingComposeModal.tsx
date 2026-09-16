@@ -30,7 +30,7 @@ export function SuperadminMessagingComposeModal({
   onSend: () => void;
 }) {
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" role="dialog" aria-modal="true">
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 backdrop-blur-sm p-4" role="dialog" aria-modal="true">
       <div className="bg-overlay border border-border rounded-2xl p-6 w-full max-w-lg shadow-2xl space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-bold text-foreground">Compose Message</h2>

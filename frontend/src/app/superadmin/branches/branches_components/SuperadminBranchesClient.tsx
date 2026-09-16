@@ -3,17 +3,16 @@
 // Renders KPI bar, toolbar, and branches table. Consumes useSuperadminBranchesPage hook.
 // DATA FLOW: superadminBranchesApi â†’ useSuperadminBranchesPage â†’ SuperadminBranchesClient
 
-import { useState } from 'react';
 import { Building2, Users, TrendingUp, Ban, Search, CheckCircle2, AlertTriangle } from 'lucide-react';
 import { useSuperadminBranchesPage } from '@/app/superadmin/branches/branches_utils/useSuperadminBranchesPage';
-import { BRANCH_STATUS_STYLES, BRANCHES_PAGE_SIZE } from '@/app/superadmin/branches/branches_utils/SuperadminBranchesConstants';
+import { BRANCH_STATUS_STYLES } from '@/app/superadmin/branches/branches_utils/SuperadminBranchesConstants';
 import type { SuperadminBranch } from '@/app/superadmin/branches/branches_types/superadmin_branches_types';
 import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
 import { formatCurrency, formatNumber } from '@/lib/formatters';
+import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
 
 export default function SuperadminBranchesClient() {
-  const { branches, isLoading, isError: error, search, setSearch, handleSuspend, handleActivate } = useSuperadminBranchesPage();
-  const [page, setPage] = useState(1);
+  const { branches, isLoading, isError: error, search, setSearch, statusFilter, setStatusFilter, currentPage, setCurrentPage, total, totalPages, handleSuspend, handleActivate } = useSuperadminBranchesPage();
   const { confirm } = useSuperadminConfirm();
 
   const onSuspendClick = async (id: string) => {
@@ -28,14 +27,12 @@ export default function SuperadminBranchesClient() {
     }
   };
 
-  const totalPages = Math.ceil(branches.length / BRANCHES_PAGE_SIZE) || 1;
-  const paginated = branches.slice((page - 1) * BRANCHES_PAGE_SIZE, page * BRANCHES_PAGE_SIZE);
 
   const kpis = [
-    { label: 'Total Branches', value: branches.length, icon: Building2, color: 'text-primary', bg: 'bg-primary/10' },
+    { label: 'Total Branches', value: total, icon: Building2, color: 'text-primary', bg: 'bg-primary/10' },
     { label: 'Active', value: branches.filter(b => b.status === 'ACTIVE').length, icon: CheckCircle2, color: 'text-success', bg: 'bg-success/10' },
     { label: 'Suspended', value: branches.filter(b => b.status === 'SUSPENDED').length, icon: Ban, color: 'text-danger', bg: 'bg-danger/10' },
-    { label: 'Total Members', value: branches.reduce((s, b) => s + b.memberCount, 0).toLocaleString('en-IN'), icon: Users, color: 'text-info', bg: 'bg-info/10' },
+    { label: 'Total Members', value: formatNumber(branches.reduce((s, b) => s + b.memberCount, 0)), icon: Users, color: 'text-info', bg: 'bg-info/10' },
     { label: 'Combined Monthly Income', value: formatCurrency(branches.reduce((s, b) => s + b.monthlyRevenue, 0)), icon: TrendingUp, color: 'text-warning', bg: 'bg-warning/10' },
   ];
 
@@ -80,15 +77,20 @@ export default function SuperadminBranchesClient() {
       </div>
 
       {/* Search */}
-      <div className="relative max-w-sm">
+      <div className="flex flex-col sm:flex-row gap-3">
+      <div className="relative max-w-sm flex-1">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary" />
         <input
           type="text"
           placeholder="Search branch, gym, city..."
           value={search}
-          onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+          onChange={(e) => { setSearch(e.target.value); setCurrentPage(1); }}
           className="w-full pl-9 pr-4 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary"
         />
+      </div>
+      <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value as 'ALL' | 'ACTIVE' | 'INACTIVE' | 'SUSPENDED')} className="w-full sm:w-44 px-3 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+        <option value="ALL">All Statuses</option><option value="ACTIVE">Active</option><option value="INACTIVE">Inactive</option><option value="SUSPENDED">Suspended</option>
+      </select>
       </div>
 
       {/* Table */}
@@ -103,7 +105,7 @@ export default function SuperadminBranchesClient() {
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {paginated.map((branch: SuperadminBranch) => (
+              {branches.map((branch: SuperadminBranch) => (
                 <tr key={branch.id} className="hover:bg-input/30 motion-safe:transition-colors">
                   <td className="px-4 py-3">
                     <p className="font-medium text-foreground truncate max-w-xs" title={branch.branchName}>{branch.branchName}</p>
@@ -152,31 +154,8 @@ export default function SuperadminBranchesClient() {
           </div>
         )}
 
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <div className="flex items-center justify-between px-4 py-3 border-t border-border">
-            <p className="text-xs text-secondary">
-              Showing {(page - 1) * BRANCHES_PAGE_SIZE + 1}â€“{Math.min(page * BRANCHES_PAGE_SIZE, branches.length)} of {branches.length}
-            </p>
-            <div className="flex gap-2">
-              <button
-                onClick={() => setPage(p => Math.max(1, p - 1))}
-                disabled={page === 1}
-                className="px-3 py-1.5 rounded-lg bg-input border border-border text-xs text-secondary disabled:opacity-40 hover:text-foreground motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-              >
-                Previous
-              </button>
-              <button
-                onClick={() => setPage(p => Math.min(totalPages, p + 1))}
-                disabled={page === totalPages}
-                className="px-3 py-1.5 rounded-lg bg-input border border-border text-xs text-secondary disabled:opacity-40 hover:text-foreground motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-              >
-                Next
-              </button>
-            </div>
-          </div>
-        )}
       </div>
+      {totalPages > 1 && <SuperadminPagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />}
     </div>
   );
 }

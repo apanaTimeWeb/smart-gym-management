@@ -20,7 +20,10 @@ export const useSuperadminBroadcastsPage = () => {
     setSearchQuery,
     statusFilter,
     setStatusFilter,
-    updateBroadcasts
+    updateBroadcasts,
+    currentPage,
+    totalPages,
+    setCurrentPage
   } = useSuperadminBroadcastsData();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -109,6 +112,9 @@ export const useSuperadminBroadcastsPage = () => {
     setSearchQuery,
     statusFilter,
     setStatusFilter,
+    currentPage,
+    totalPages,
+    setCurrentPage,
     isModalOpen,
     setIsModalOpen,
     form,

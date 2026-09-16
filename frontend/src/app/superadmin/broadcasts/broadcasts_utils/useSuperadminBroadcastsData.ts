@@ -1,5 +1,5 @@
-// DATA FLOW: feature API/schema → hook/context → useSuperadminBroadcastsData consumers.
 'use client';
+// DATA FLOW: feature API/schema → hook/context → useSuperadminBroadcastsData consumers.
 // RESPONSIBILITY: Encapsulates functionality for useSuperadminBroadcastsData.ts
 import { useMemo, useCallback } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -13,16 +13,21 @@ export const useSuperadminBroadcastsData = () => {
 
   const searchQuery = getParam('search', '');
   const statusFilter = getParam('status', 'ALL') as BroadcastStatusFilter;
+  const currentPage = Number(getParam('page', '1'));
+  const pageSize = 10;
 
-  const setSearchQuery = (val: string) => setParam('search', val);
-  const setStatusFilter = (val: BroadcastStatusFilter) => setParam('status', val);
+  const setSearchQuery = (val: string) => { setParam('search', val); setParam('page', '1'); };
+  const setStatusFilter = (val: BroadcastStatusFilter) => { setParam('status', val); setParam('page', '1'); };
+  const setCurrentPage = (val: number) => setParam('page', String(val));
 
   const queryParams = useMemo(() => {
     const params: Record<string, string> = {};
     if (searchQuery) params.search = searchQuery;
     if (statusFilter !== 'ALL') params.status = statusFilter;
+    params.page = String(currentPage);
+    params.limit = String(pageSize);
     return params;
-  }, [searchQuery, statusFilter]);
+  }, [searchQuery, statusFilter, currentPage]);
 
   const queryKey = useMemo(() => ['superadmin', 'broadcasts', queryParams], [queryParams]);
 
@@ -55,7 +60,11 @@ export const useSuperadminBroadcastsData = () => {
     setSearchQuery,
     statusFilter,
     setStatusFilter,
-    updateBroadcasts
+    updateBroadcasts,
+    currentPage,
+    pageSize,
+    totalPages: Math.max(1, Math.ceil(Number((broadcastsRes as { meta?: { total?: number } } | undefined)?.meta?.total ?? broadcasts.length) / pageSize)),
+    setCurrentPage
   };
 };
 

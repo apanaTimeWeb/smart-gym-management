@@ -1,5 +1,5 @@
-// DATA FLOW: feature API/schema → hook/context → useSuperadminDashboardDateFilter consumers.
 'use client';
+// DATA FLOW: feature API/schema → hook/context → useSuperadminDashboardDateFilter consumers.
 // RESPONSIBILITY: Custom hook managing the URL-backed state for the Dashboard date filter.
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';

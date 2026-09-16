@@ -4,7 +4,7 @@
 
 import { Eye, AlertTriangle, X as XIcon } from 'lucide-react';
 import type { BackgroundJob } from '@/app/superadmin/jobs/jobs_types/superadmin_jobs_types';
-import { formatDuration } from '@/lib/formatters';
+import { formatDuration, formatDateTime } from '@/lib/formatters';
 
 const STATUS_TEXT_COLORS: Record<BackgroundJob['status'], string> = {
   ACTIVE:    'text-primary',
@@ -29,7 +29,7 @@ export default function SuperadminJobInspectModal({ job, onClose }: SuperadminJo
       role="dialog"
       aria-modal="true"
       aria-label={`Inspect job ${job.id}`}
-      className="fixed inset-0 bg-black/60 z-40 flex items-center justify-center p-4 backdrop-blur-sm motion-safe:animate-in motion-safe:fade-in"
+      className="fixed inset-0 bg-overlay/80 z-40 flex items-center justify-center p-4 backdrop-blur-sm motion-safe:animate-in motion-safe:fade-in"
     >
       <div className="bg-card border border-border rounded-2xl w-full max-w-2xl shadow-2xl overflow-hidden flex flex-col max-h-screen">
         {/* Modal Header */}
@@ -68,7 +68,7 @@ export default function SuperadminJobInspectModal({ job, onClose }: SuperadminJo
               </div>
               <div>
                 <p className="text-xs text-secondary mb-1">Created At</p>
-                <p className="text-xs text-foreground">{new Date(job.createdAt).toLocaleString()}</p>
+                <p className="text-xs text-foreground">{formatDateTime(job.createdAt)}</p>
               </div>
               <div>
                 <p className="text-xs text-secondary mb-1">Duration</p>

@@ -92,7 +92,7 @@ export default function SuperadminHeader() {
             <div
               role="menu"
               aria-label="Profile menu"
-              className="absolute right-0 mt-2 w-56 bg-popover rounded-xl shadow-2xl shadow-black/50 border border-border overflow-hidden z-30 motion-safe:animate-superadmin-fade-in-up"
+              className="absolute right-0 mt-2 w-56 bg-popover rounded-xl shadow-2xl border border-border overflow-hidden z-30 motion-safe:animate-superadmin-fade-in-up"
             >
               <div className="px-4 py-3 border-b border-border bg-header">
                 <p className="text-sm font-semibold text-foreground">Superadmin</p>

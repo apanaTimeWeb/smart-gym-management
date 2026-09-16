@@ -60,4 +60,4 @@ Deleting them destroys the ability to diagnose production incidents.
 ## 8. No Leaving the `triggerMigration` Stub in Production
 **FORBIDDEN:** Shipping `superadmin_migrations_api.ts` to production with `Promise.resolve(...)` mock responses.
 **REASON:** The current stub silently succeeds without hitting any backend endpoint, creating a false sense of safety.
-**ALLOWED:** Replace the stub with real `apiFetch` calls before any production deployment. Add a `// TODO: wire to backend` comment if the backend endpoint is not yet ready, and configure an MSW handler for development.
+**REQUIRED:** Migration triggers must continue through the module API client and module-owned MSW handler. Never add a TODO-based production stub or direct fixture access from the UI.

@@ -31,7 +31,7 @@ export default function SuperadminInfrastructureClient() {
     return p;
   }, [statusFilter]);
 
-  const { data: fetchRes, isLoading: isLoadingNodes, isError: isErrorNodes, refetch: refetchNodes, isFetching: isFetchingNodes } = useQuery({
+  const { data: fetchRes, isLoading: isLoadingNodes, isError: isErrorNodes, error: errorNodes, refetch: refetchNodes, isFetching: isFetchingNodes } = useQuery({
     queryKey: ['superadmin', 'infrastructure', queryParams],
     queryFn: () => infrastructureApi.fetchInfrastructureNodes(queryParams),
     refetchInterval: 30000,
@@ -50,11 +50,11 @@ export default function SuperadminInfrastructureClient() {
     mutationFn: () => infrastructureApi.flushGlobalCache(),
     onSuccess: (res) => {
       queryClient.invalidateQueries({ queryKey: ['superadmin', 'redis'] });
-      toast.success(res?.message || 'Successfully flushed global cache');
+      toast.success(res?.message, { id: 'superadmin-toast-e0f77e3140' });
       setIsFlushingAll(false);
     },
     onError: (error: unknown) => {
-      toast.error((error as Error)?.message || 'Failed to flush global cache');
+      toast.error((error as Error)?.message, { id: 'superadmin-toast-4c249de280' });
       setIsFlushingAll(false);
     }
   });
@@ -63,10 +63,10 @@ export default function SuperadminInfrastructureClient() {
     mutationFn: (tenantIds: string[]) => infrastructureApi.flushTenantCache(tenantIds),
     onSuccess: (res) => {
       queryClient.invalidateQueries({ queryKey: ['superadmin', 'redis'] });
-      toast.success(res?.message || 'Successfully flushed cache for gym(s)');
+      toast.success(res?.message, { id: 'superadmin-toast-62077a79bd' });
     },
     onError: (error: unknown) => {
-      toast.error((error as Error)?.message || 'Failed to flush gym cache');
+      toast.error((error as Error)?.message, { id: 'superadmin-toast-6367202084' });
     }
   });
 
@@ -104,7 +104,7 @@ export default function SuperadminInfrastructureClient() {
   }
 
   if (isErrorNodes) {
-    return <div className="flex h-96 items-center justify-center text-danger font-medium">Error loading data.</div>;
+    return <div className="flex h-96 items-center justify-center text-danger font-medium">{errorNodes instanceof Error ? errorNodes.message : String(errorNodes)}</div>;
   }
 
   const filteredNodes = nodes;
@@ -131,8 +131,8 @@ export default function SuperadminInfrastructureClient() {
             options={[
               { value: 'ALL', label: 'All Nodes' },
               { value: 'HEALTHY', label: 'Healthy' },
-              { value: 'WARNING', label: 'Warning' },
-              { value: 'CRITICAL', label: 'Critical' },
+              { value: 'DEGRADED', label: 'Degraded' },
+              { value: 'DOWN', label: 'Down' },
             ]}
             className="w-40"
           />

@@ -1,5 +1,6 @@
 'use client';
 // RESPONSIBILITY: Renders the Messaging Messages Tab component and its associated UI logic.
+import { formatDate, formatDateTime } from '@/lib/formatters';
 import { Search, Mail, MessageSquare, Bell } from 'lucide-react';
 import type { TenantMessage, MessageChannel } from '@/app/superadmin/messaging/messaging_types/superadmin_messaging_types';
 import { CHANNEL_STYLES, MESSAGE_STATUS_STYLES } from '@/app/superadmin/messaging/messaging_types/SuperadminMessagingConstants';
@@ -91,7 +92,7 @@ export function SuperadminMessagingMessagesTab({
                     </span>
                   </td>
                   <td className="px-4 py-3 text-secondary text-xs">
-                    {msg.sentAt ? new Date(msg.sentAt).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }) : '—'}
+                    {msg.sentAt ? formatDateTime(msg.sentAt) : '—'}
                   </td>
                 </tr>
               ))}

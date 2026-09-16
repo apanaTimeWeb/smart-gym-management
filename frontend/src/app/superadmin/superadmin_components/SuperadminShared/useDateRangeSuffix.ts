@@ -1,5 +1,5 @@
-// DATA FLOW: feature API/schema → hook/context → useDateRangeSuffix consumers.
 'use client';
+// DATA FLOW: feature API/schema → hook/context → useDateRangeSuffix consumers.
 
 import { useSearchParams } from 'next/navigation';
 

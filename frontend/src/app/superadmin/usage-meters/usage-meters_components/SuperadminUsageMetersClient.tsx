@@ -1,4 +1,5 @@
 'use client';
+// RESPONSIBILITY: Renders the Superadmin feature UI for SuperadminUsageMetersClient. Owns presentation and user interaction orchestration only; business data access remains in the feature API/query layer.
 /**
  * RESPONSIBILITY: Renders the Usage Meters dashboard for superadmins to monitor tenant resource limits.
  * DATA FLOW: usageMetersApi -> SuperadminUsageMetersClient -> UI
@@ -11,7 +12,7 @@ import { usageMetersApi } from '@/app/superadmin/usage-meters/superadmin_usage-m
 import type { UsageMeter } from '@/app/superadmin/usage-meters/superadmin_usage-meters_types/superadmin_usage-meters_types';
 import { HardDrive, MessageSquare, Users, Calendar } from 'lucide-react';
 
-import { getProgressColor, getPercentage } from '@/app/superadmin/usage-meters/usage-meters_utils/SuperadminUsageMetersUtils';
+import { getProgressColor, getPercentage, formatUsageStorage } from '@/app/superadmin/usage-meters/usage-meters_utils/SuperadminUsageMetersUtils';
 import { formatNumber } from '@/lib/formatters';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 

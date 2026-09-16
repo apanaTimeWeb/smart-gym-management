@@ -40,7 +40,7 @@ export const MOCK_FRANCHISES: SuperadminFranchise[] = [
     plan: 'PRO',
     city: 'Mumbai',
     state: 'Maharashtra',
-    createdAt: '2023-04-15T00:00:00Z',
+    createdAt: '2026-04-15T00:00:00Z',
   },
   {
     id: 'fr-003',
@@ -56,6 +56,6 @@ export const MOCK_FRANCHISES: SuperadminFranchise[] = [
     plan: 'STARTER',
     city: 'Hyderabad',
     state: 'Telangana',
-    createdAt: '2024-01-10T00:00:00Z',
+    createdAt: '2026-01-10T00:00:00Z',
   },
 ];

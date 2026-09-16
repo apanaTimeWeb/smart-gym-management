@@ -33,7 +33,7 @@ export default function SuperadminCancellationsActionModal({ alert, onConfirm, o
   }
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-sm" role="dialog" aria-modal="true">
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 backdrop-blur-sm" role="dialog" aria-modal="true">
       <div className="bg-overlay border border-border rounded-2xl p-6 w-full max-w-md shadow-2xl motion-safe:animate-superadmin-fade-in-up">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-bold text-foreground">Update Action</h2>

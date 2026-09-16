@@ -7,6 +7,7 @@ import SuperadminBroadcastsTable from '@/app/superadmin/broadcasts/broadcasts_co
 import SuperadminBroadcastsEmptyState from '@/app/superadmin/broadcasts/broadcasts_components/SuperadminBroadcastsEmptyState/SuperadminBroadcastsEmptyState';
 import { SuperadminBroadcastModal } from '@/app/superadmin/broadcasts/broadcasts_components/SuperadminBroadcastModal';
 import SuperadminBroadcastQueueModal from '@/app/superadmin/broadcasts/broadcasts_components/SuperadminBroadcastQueueModal';
+import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
 
 export default function SuperadminBroadcastsClient() {
   const { broadcasts,
@@ -14,6 +15,9 @@ export default function SuperadminBroadcastsClient() {
     setSearchQuery,
     statusFilter,
     setStatusFilter,
+    currentPage,
+    totalPages,
+    setCurrentPage,
     isModalOpen,
     setIsModalOpen,
     form,
@@ -39,7 +43,7 @@ export default function SuperadminBroadcastsClient() {
       <div className="h-96 bg-card rounded-xl border border-border" />
     </div>
   );
-  if (error) return <div className="p-8 text-center text-danger">Error loading data.</div>;
+  if (error) return <div className="p-8 text-center text-danger">{error instanceof Error ? error.message : String(error)}</div>;
 
   return (
     <div className="flex flex-col gap-6 w-full max-w-7xl mx-auto">
@@ -54,13 +58,16 @@ export default function SuperadminBroadcastsClient() {
       {broadcasts.length === 0 ? (
         <SuperadminBroadcastsEmptyState onCreateClick={openCreateModal} />
       ) : (
-        <SuperadminBroadcastsTable
-          onCreateClick={openCreateModal}
-          broadcasts={broadcasts}
-          onSend={handleSendBroadcast}
-          onEdit={openEditModal}
-          onDelete={handleDeleteBroadcast}
-        />
+        <>
+          <SuperadminBroadcastsTable
+            onCreateClick={openCreateModal}
+            broadcasts={broadcasts}
+            onSend={handleSendBroadcast}
+            onEdit={openEditModal}
+            onDelete={handleDeleteBroadcast}
+          />
+          <SuperadminPagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+        </>
       )}
 
       <SuperadminBroadcastModal
