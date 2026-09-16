@@ -1,12 +1,14 @@
 // RESPONSIBILITY: API client for the Superadmin Features/Feature Flags module.
-import { FeatureFlagSchema, ReleaseNoteSchema } from '@/app/superadmin/features/superadmin_features_types/superadmin_features_types';
+import { FeatureFlagSchema, ReleaseNoteSchema, SuperadminFeaturesTenantSchema } from '@/app/superadmin/features/superadmin_features_types/superadmin_features_types';
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
-import type { FeatureFlag, ReleaseNote } from '@/app/superadmin/features/superadmin_features_types/superadmin_features_types';
+import type { FeatureFlag, ReleaseNote, SuperadminFeaturesTenant } from '@/app/superadmin/features/superadmin_features_types/superadmin_features_types';
 import { FeaturesUrlConfig } from '@/app/superadmin/features/superadmin_features_url_config';
 import { z } from 'zod';
 
 export const featuresApi = {
+  fetchTenants: () => apiFetch<ApiResponse<SuperadminFeaturesTenant[]>>(FeaturesUrlConfig.BACKEND_API.TENANTS, { dataSchema: z.array(SuperadminFeaturesTenantSchema) }),
+
   fetchFeatures: () =>
     apiFetch<ApiResponse<{ flags: FeatureFlag[]; notes: ReleaseNote[] }>>(FeaturesUrlConfig.BACKEND_API.BASE, {
       dataSchema: z.object({

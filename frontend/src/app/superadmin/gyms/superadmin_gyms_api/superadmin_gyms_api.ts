@@ -6,8 +6,8 @@ import type { ApiResponse } from '@/lib/api';
 import type { Tenant } from '@/app/superadmin/gyms/superadmin_gyms_types/superadmin_gyms_types';
 import { z } from "zod";
 import { TenantSchema } from '@/app/superadmin/gyms/superadmin_gyms_types/superadmin_gyms_types';
-
 import { GymStatsSchema, type GymStats } from '@/app/superadmin/gyms/superadmin_gyms_types/superadmin_gyms_types';
+import { SuperadminGymsPlanOptionSchema, type SuperadminGymsPlanOption } from '@/app/superadmin/gyms/superadmin_gyms_types/superadmin_gyms_plan_types';
 
 export const gymsApi = {
   fetchGyms: (params?: Record<string, string>) => {
@@ -15,6 +15,7 @@ export const gymsApi = {
     return apiFetch<ApiResponse<Tenant[]>>(`${GymsUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.array(TenantSchema) });
   },
   fetchGymById: (id: string) => apiFetch<ApiResponse<Tenant>>(`${GymsUrlConfig.BACKEND_API.BASE}/${id}`, { dataSchema: TenantSchema }),
+  fetchSubscriptionPlans: () => apiFetch<ApiResponse<SuperadminGymsPlanOption[]>>(GymsUrlConfig.BACKEND_API.SUBSCRIPTION_PLANS, { dataSchema: z.array(SuperadminGymsPlanOptionSchema) }),
   createGym: (body: Partial<Tenant>) => apiFetch<ApiResponse<Tenant>>(GymsUrlConfig.BACKEND_API.BASE, { method: 'POST', body: JSON.stringify(body),
       dataSchema: TenantSchema
 }),

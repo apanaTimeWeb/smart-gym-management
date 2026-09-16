@@ -1,6 +1,11 @@
 // RESPONSIBILITY: Defines all TypeScript types and interfaces for the Dashboard module.
 import { z } from 'zod';
-import { TenantSchema } from '@/app/superadmin/gyms/superadmin_gyms_types/superadmin_gyms_types';
+
+export const DashboardTenantSchema = z.object({
+  id: z.string(), name: z.string(), ownerName: z.string(), adminEmail: z.string().email(), phone: z.string(),
+  status: z.enum(['ACTIVE', 'SUSPENDED', 'TRIAL', 'CANCELLED']), plan: z.string(), createdAt: z.string(),
+  memberCount: z.number(), monthlyRevenue: z.number(), databaseVersion: z.string(), city: z.string().optional(), state: z.string().optional(), country: z.string().optional(), gstin: z.string().optional(), trialEndsAt: z.string().optional(), lastLoginAt: z.string().optional(), lastActiveAt: z.string().nullable().optional(), staffCount: z.number().optional(),
+});
 
 export const SaaSDashboardMetricsSchema = z.object({
   totalGyms: z.number(),
@@ -16,7 +21,7 @@ export const SaaSDashboardMetricsSchema = z.object({
   revenueByGeography: z.array(z.object({ region: z.string(), revenue: z.number() })).optional(),
   overdueInvoicesCount: z.number(),
   pendingRevenue: z.number(),
-  recentOnboards: z.array(TenantSchema),
+  recentOnboards: z.array(DashboardTenantSchema),
   platformHealthScore: z.number().optional(),
   trialsExpiringIn7Days: z.number().optional(),
 });

@@ -7,5 +7,6 @@ export const InfrastructureUrlConfig = {
     REDIS_TELEMETRY: "/superadmin/infrastructure/redis",
     REDIS_FLUSH_GLOBAL: "/superadmin/infrastructure/redis/flush-global",
     REDIS_FLUSH_TENANT: "/superadmin/infrastructure/redis/flush-tenant",
+    TENANTS: "/api/gyms",
   }
 };

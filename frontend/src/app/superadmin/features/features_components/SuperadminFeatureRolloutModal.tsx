@@ -4,24 +4,18 @@
 import React, { useState, useEffect } from 'react';
 import { X, Loader2, Search } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
-import { gymsApi } from '@/app/superadmin/gyms/superadmin_gyms_api/superadmin_gyms_api';
 import type { FeatureFlag, SuperadminFeaturesTenant } from '@/app/superadmin/features/superadmin_features_types/superadmin_features_types';
+import { featuresApi } from '@/app/superadmin/features/superadmin_features_api/superadmin_features_api';
+import type { SuperadminFeatureRolloutModalProps } from '@/app/superadmin/features/superadmin_features_types/superadmin_features_ui_types';
 
-interface FeatureRolloutModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  flag: FeatureFlag | null;
-  onSaveRollout: (tenantIds: string[]) => Promise<void>;
-}
-
-export default function SuperadminFeatureRolloutModal({ isOpen, onClose, flag, onSaveRollout }: FeatureRolloutModalProps) {
+export default function SuperadminFeatureRolloutModal({ isOpen, onClose, flag, onSaveRollout }: SuperadminFeatureRolloutModalProps) {
   const [search, setSearch] = useState('');
   const [selectedTenantIds, setSelectedTenantIds] = useState<string[]>([]);
   const [isSaving, setIsSaving] = useState(false);
 
   const { data: fetchRes, isLoading: fetchStateLoading } = useQuery({
-    queryKey: ['superadmin', 'gyms'],
-    queryFn: () => gymsApi.fetchGyms(),
+    queryKey: ['superadmin', 'features', 'tenants'],
+    queryFn: () => featuresApi.fetchTenants(),
     enabled: isOpen,
   });
 

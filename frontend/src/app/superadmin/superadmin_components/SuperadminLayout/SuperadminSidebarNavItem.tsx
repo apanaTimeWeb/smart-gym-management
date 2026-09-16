@@ -27,7 +27,7 @@ export default function SuperadminSidebarNavItem({ name, href, icon: Icon, isAct
       `}
     >
       <Icon
-        className={`w-5 h-5 shrink-0 ${isActive ? 'text-primary' : 'text-zinc-400 group-hover:text-white'}`}
+        className={`w-5 h-5 shrink-0 ${isActive ? 'text-primary' : 'text-secondary group-hover:text-white'}`}
         strokeWidth={2}
       />
       {!isCollapsed && (

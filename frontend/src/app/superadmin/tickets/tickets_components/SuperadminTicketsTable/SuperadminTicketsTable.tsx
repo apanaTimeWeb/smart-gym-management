@@ -3,9 +3,9 @@
 import { MessageSquare, CheckCircle2, UserCheck, AlertOctagon, ExternalLink } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import type { SupportTicket } from '@/app/superadmin/tickets/superadmin_tickets_types/superadmin_tickets_types';
+import { TicketsUrlConfig } from '@/app/superadmin/tickets/superadmin_tickets_url_config';
 import { PriorityColors, StatusColors } from '@/app/superadmin/tickets/tickets_utils/SuperadminTicketsConstants';
 import SuperadminTicketsEmptyState from '@/app/superadmin/tickets/tickets_components/SuperadminTicketsEmptyState/SuperadminTicketsEmptyState';
-import { GymsUrlConfig } from '@/app/superadmin/gyms/superadmin_gyms_url_config';
 import SuperadminCopyButton from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminCopyButton';
 import { formatDateTime } from '@/lib/formatters';
 
@@ -65,7 +65,7 @@ export default function SuperadminTicketsTable({ tickets, onReply, onClose, onAs
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      router.push(`${GymsUrlConfig.PAGES.MAIN}?id=${ticket.tenantId}`);
+                      router.push(`${TicketsUrlConfig.PAGES.GYMS}?id=${ticket.tenantId}`);
                     }}
                     className="flex items-center gap-1 hover:text-primary motion-safe:transition-colors"
                     title="View Gym"

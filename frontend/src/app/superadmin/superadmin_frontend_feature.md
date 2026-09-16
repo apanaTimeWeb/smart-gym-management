@@ -1,244 +1,94 @@
-# Superadmin Module — Feature Documentation
+# Superadmin — Feature Map
 
-## Overview
-The Master Control Panel for the Multi-Tenant SaaS platform. Strictly isolated from the ERP module. Intended exclusively for platform owners (Superadmins).
-
-## Architecture
-
-### State Management Decision (Rule 58)
-- **Zustand** (`gyms_store/useGymsStore.ts`): All async API data for the Gyms module (the most complex module with full CRUD + modals).
-- **Zustand** (`plans_store/usePlansStore.ts`): Subscription Plans module — all async API data, modal state, and CRUD actions. `plans_context/` is intentionally empty per Rule 58.
-- **Local `useState`**: All other pages (Tickets, Invoices, Coupons, Affiliates, Broadcasts, etc.) use local state via `useSuperadminData` hook or direct `superadminApi` calls.
-
-### Data Fetching
-- `superadmin_utils/useSuperadminData.ts` — Generic hook wrapping `apiFetch`. Returns `{ data, fetchState, error, mutate }`. Used by simpler pages.
-- `superadmin_api/superadmin_api.ts` — Centralized typed API client for all 16 modules. Imports `apiFetch` from `src/lib/api.ts`.
-- `superadmin_url_config.ts` — Single source of truth for all page routes and backend API paths.
-
-### Async State Pattern
-All pages use `FetchState = 'idle' | 'loading' | 'success' | 'error'` enum (never boolean `isLoading` flags).
+## Module Purpose
+The Superadmin module is the platform-owner control surface for tenant lifecycle and platform operations. Its business features are independently organized so an AI agent can work inside one feature without loading unrelated business code. Users can inspect and administer tenants, plans, billing, support, messaging, infrastructure, migrations, audits, jobs, reporting, and platform configuration. Tenant-user operational workflows outside the Superadmin role are out of scope.
 
 ## Directory Structure
 
-```
-superadmin/
-├── layout.tsx                          # Server Component shell — wraps SuperadminLayout, imports superadmin.css
-├── page.tsx                            # Redirects to /superadmin/dashboard
-├── superadmin.css                      # Module-scoped CSS (custom scrollbar, keyframe animations, print rules)
-├── superadmin_url_config.ts            # All page routes + backend API paths
-├── superadmin_frontend_feature.md      # This file
-├── superadmin_forbidden.md             # Module-level anti-pattern rules
-├── superadmin_theme_contract.md        # CSS variables and theme dependencies
-│
-├── superadmin_types/
-│   └── superadmin_types.ts             # All TypeScript types: Tenant, SubscriptionPlan, Coupon, Affiliate, Broadcast, GlobalAuditLog, etc.
-│
-├── superadmin_api/
-│   └── superadmin_api.ts               # Typed API client for all 16 modules (gyms, plans, tickets, invoices, etc.)
-│
-├── superadmin_utils/
-│   ├── useSuperadminData.ts            # Generic data-fetching hook (returns data, fetchState, error, mutate)
-│   ├── useDebounce.ts                  # Debounce utility hook (300ms default) — Frontend Rule 15
-│   ├── AuditLogsConstants.ts           # Fallback/mock data for Global Audit Logs page
-│   ├── SuperadminChartConstants.ts     # ApexCharts color constants (hex) mapped from design system tokens
-│   ├── SuperadminValidation.ts         # Pure-function validation helpers: isValidEmail, isValidSubdomain, isValidPhone, isFutureDate, etc.
-│   ├── Feature-local schema files         # Zod schemas for ALL superadmin forms: addGymSchema, couponSchema, broadcastSchema, affiliateSchema, etc.
-│   └── hooks/
-│       ├── useAffiliatesPage.ts        # Logic hook for Affiliates page
-│       ├── useBroadcastsPage.ts        # Logic hook for Broadcasts page
-│       ├── useCouponsPage.ts           # Logic hook for Coupons page
-│       └── useSuperadminMutation.ts    # Generic mutation helper with loading state
-│
-├── superadmin_components/
-│   └── SuperadminLayout/
-│       ├── SuperadminLayout.tsx        # Root layout: sidebar + header + content shell (Client Component)
-│       ├── SuperadminSidebar.tsx       # Collapsible sidebar with nav groups + logout
-│       ├── SuperadminHeader.tsx        # Top header with search, theme toggle, profile dropdown
-│       └── SuperadminErrorBoundary.tsx # Typed React Error Boundary with Retry button (Rule 43)
-│
-├── dashboard/
-│   ├── page.tsx                        # Server Component → renders SuperadminDashboardView
-│   ├── loading.tsx                     # Skeleton loader
-│   ├── error.tsx                       # Error boundary with Retry
-│   └── dashboard_components/
-│       └── SuperadminDashboardView/
-│           └── SuperadminDashboardView.tsx       # SaaS KPI cards + ApexCharts MRR area chart + recent onboards
-│
-├── gyms/                               # Most complex module — full Zustand store
-│   ├── page.tsx                        # Server Component entry point
-│   ├── loading.tsx                     # Skeleton loader
-│   ├── error.tsx                       # Error boundary
-│   ├── gyms.css                        # Module-scoped CSS (row hover, ghost-login animation, status badges)
-│   ├── GymsClient.tsx                  # Root orchestrator — imports gyms.css, renders Toolbar + Table
-│   ├── gyms_forbidden.md               # Gyms-specific anti-patterns
-│   ├── add/page.tsx                    # Onboard new gym form page
-│   ├── gyms_store/
-│   │   └── useGymsStore.ts             # Zustand store: gyms[], modals, CRUD actions, ghost login, suspend
-│   ├── gyms_utils/
-│   │   └── GymsValidationSchemas.ts    # Gyms-scoped Zod schemas (superseded by SuperadminZodSchemas for new code)
-│   └── gyms_components/
-│       ├── GymsTable/
-│       │   ├── GymsTable.tsx           # Data table with sortable columns + row click
-│       │   └── useGymsTable.ts         # Logic hook: filtering, pagination, modal triggers
-│       ├── GymsToolbar/                # Search + filter + status filter bar
-│       ├── GymEditModal/               # Edit gym details modal
-│       ├── GymEmailModal/              # Email owner modal
-│       ├── GymDeleteModal/             # Type-to-confirm delete modal (Rule 13.2)
-│       ├── GymsEmptyState/             # Empty state component (Rule 50)
-│       └── AddGymForm/
-│           ├── AddGymForm.tsx          # Multi-step onboarding form
-│           └── useAddGymForm.ts        # Logic hook for the Add Gym form
-│
-├── plans/                              # Zustand store (usePlansStore) — Rule 58
-│   ├── page.tsx
-│   ├── loading.tsx
-│   ├── error.tsx
-│   ├── PlansClient.tsx                 # Root orchestrator for plans page
-│   ├── plans_forbidden.md
-│   ├── plans_store/
-│   │   └── usePlansStore.ts            # Zustand: plans[], fetchState, modal state, CRUD actions
-│   └── plans_components/
-│       ├── PlansList.tsx               # Grid of plan cards
-│       ├── PlanCreateModal.tsx         # RHF + Zod create form
-│       └── PlanEditModal.tsx           # RHF + Zod edit form
-│
-├── tickets/                            # Local state via useSuperadminData
-│   ├── page.tsx
-│   ├── loading.tsx
-│   ├── error.tsx
-│   ├── tickets_forbidden.md
-│   └── TicketsClient.tsx
-│
-├── invoices/                           # Zustand store (useInvoicesStore) + useInvoicesPage hook
-│   ├── page.tsx
-│   ├── loading.tsx
-│   ├── error.tsx
-│   ├── invoices_forbidden.md
-│   ├── InvoicesClient.tsx
-│   ├── invoices_store/
-│   │   └── useInvoicesStore.ts
-│   └── invoices_components/
-│       ├── useInvoicesPage.ts          # Local UI state hook: search, modal state, derived stats
-│       ├── InvoicesHeader/             # Page header + CTA button
-│       ├── InvoicesTable/              # Data table
-│       ├── InvoicesStatsBar/           # KPI stat cards (total, paid, failed revenue)
-│       ├── InvoicesEmptyState/         # Empty state component
-│       └── InvoicesLogPaymentModal/    # Log manual payment drawer
-│
-├── coupons/                            # useCouponsPage hook
-│   ├── page.tsx
-│   ├── loading.tsx
-│   ├── error.tsx
-│   ├── coupons_forbidden.md
-│   ├── CouponsClient.tsx
-│   ├── coupons_types/
-│   │   └── coupons_types.ts
-│   └── coupons_components/
-│       ├── CouponsHeader/
-│       ├── CouponsTable/
-│       ├── CouponsStatsBar/
-│       ├── CouponsEmptyState/
-│       ├── CouponsStatusBadge/
-│       ├── SuperadminCouponModal.tsx   # Create coupon modal
-│       └── SuperadminCouponEditModal.tsx
-│
-├── affiliates/                         # useAffiliatesPage hook
-│   ├── page.tsx
-│   ├── loading.tsx
-│   ├── error.tsx
-│   ├── affiliates_forbidden.md
-│   ├── AffiliatesClient.tsx
-│   ├── affiliates_types/
-│   │   └── affiliates_types.ts
-│   └── affiliates_components/
-│       ├── AffiliatesHeader/
-│       ├── AffiliatesTable/
-│       ├── AffiliatesStatsBar/
-│       ├── AffiliatesEmptyState/
-│       ├── AffiliateStatusBadge/
-│       └── SuperadminAffiliateModal.tsx
-│
-├── broadcasts/                         # useBroadcastsPage hook
-│   ├── page.tsx
-│   ├── loading.tsx
-│   ├── error.tsx
-│   ├── broadcasts_forbidden.md
-│   ├── BroadcastsClient.tsx
-│   ├── broadcasts_types/
-│   │   └── broadcasts_types.ts
-│   └── broadcasts_components/
-│       ├── BroadcastsHeader/
-│       ├── BroadcastsTable/
-│       ├── BroadcastsEmptyState/
-│       ├── BroadcastStatusBadge/
-│       └── SuperadminBroadcastModal.tsx
-│
-├── features/                           # Feature flags + release notes tabs
-│   ├── page.tsx
-│   ├── loading.tsx
-│   ├── error.tsx
-│   ├── features_forbidden.md
-│   └── FeaturesClient.tsx
-│
-├── system/                             # System health dashboard
-│   ├── page.tsx
-│   ├── loading.tsx
-│   ├── error.tsx
-│   ├── system_forbidden.md
-│   └── SystemClient.tsx
-│
-├── infrastructure/                     # Server node CPU/RAM/Disk metrics
-│   ├── page.tsx
-│   ├── loading.tsx
-│   ├── error.tsx
-│   ├── infrastructure_forbidden.md
-│   └── InfrastructureClient.tsx
-│
-├── backups/                            # pg_dump backup records
-│   ├── page.tsx
-│   ├── loading.tsx
-│   ├── error.tsx
-│   ├── backups_forbidden.md
-│   └── BackupsClient.tsx
-│
-├── migrations/                         # TypeORM schema rollout management
-│   ├── page.tsx
-│   ├── loading.tsx
-│   ├── error.tsx
-│   ├── migrations_forbidden.md
-│   └── MigrationsClient.tsx
-│
-├── settings/                           # Platform-wide key-value settings
-│   ├── page.tsx
-│   ├── loading.tsx
-│   ├── error.tsx
-│   ├── settings_forbidden.md
-│   └── SettingsClient.tsx
-│
-├── jobs/                               # BullMQ background jobs table + metrics
-│   ├── page.tsx
-│   ├── loading.tsx
-│   ├── error.tsx
-│   ├── jobs_forbidden.md
-│   └── jobs_components/
-│       └── JobsView.tsx
-│
-└── audit-logs/                         # Global audit log (URL-synced pagination + debounced search)
-    ├── page.tsx                        # Server Component → renders AuditLogsClient
-    ├── loading.tsx
-    ├── error.tsx
-    ├── audit-logs_forbidden.md
-    └── audit-logs_components/
-        └── AuditLogsClient/
-            └── AuditLogsClient.tsx
-```
+| Folder | Responsibility | Key files/pattern |
+|---|---|---|
+| `affiliates/` | Owns the `affiliates` business feature and route. | `page.tsx`, `loading.tsx`, `error.tsx`, `superadmin_affiliates_api/superadmin_affiliates_api.ts` |
+| `analytics/` | Owns the `analytics` business feature and route. | `page.tsx`, `loading.tsx`, `error.tsx`, `superadmin_analytics_api/superadmin_analytics_api.ts` |
+| `backups/` | Owns the `backups` business feature and route. | `page.tsx`, `loading.tsx`, `error.tsx`, `superadmin_backups_api/superadmin_backups_api.ts` |
+| `branches/` | Owns the `branches` business feature and route. | `page.tsx`, `loading.tsx`, `error.tsx`, `superadmin_branches_api/superadmin_branches_api.ts` |
+| `broadcasts/` | Owns the `broadcasts` business feature and route. | `page.tsx`, `loading.tsx`, `error.tsx`, `superadmin_broadcasts_api/superadmin_broadcasts_api.ts` |
+| `cancellations/` | Owns the `cancellations` business feature and route. | `page.tsx`, `loading.tsx`, `error.tsx`, `cancellations_api/superadmin_cancellations_api.ts` |
+| `coupons/` | Owns the `coupons` business feature and route. | `page.tsx`, `loading.tsx`, `error.tsx`, `superadmin_coupons_api/superadmin_coupons_api.ts` |
+| `dashboard/` | Owns the `dashboard` business feature and route. | `page.tsx`, `loading.tsx`, `error.tsx`, `dashboard_api/superadmin_dashboard_api.ts` |
+| `features/` | Owns the `features` business feature and route. | `page.tsx`, `loading.tsx`, `error.tsx`, `superadmin_features_api/superadmin_features_api.ts` |
+| `franchises/` | Owns the `franchises` business feature and route. | `page.tsx`, `loading.tsx`, `error.tsx`, `superadmin_franchises_api/superadmin_franchises_api.ts` |
+| `global-audit/` | Owns the `global-audit` business feature and route. | `page.tsx`, `loading.tsx`, `error.tsx`, `superadmin_global-audit_api/superadmin_global-audit_api.ts` |
+| `gyms/` | Owns the `gyms` business feature and route. | `page.tsx`, `loading.tsx`, `error.tsx`, `superadmin_gyms_api/superadmin_gyms_api.ts` |
+| `infrastructure/` | Owns the `infrastructure` business feature and route. | `page.tsx`, `loading.tsx`, `error.tsx`, `superadmin_infrastructure_api/superadmin_infrastructure_api.ts` |
+| `invoices/` | Owns the `invoices` business feature and route. | `page.tsx`, `loading.tsx`, `error.tsx`, `superadmin_invoices_api/superadmin_invoices_api.ts` |
+| `jobs/` | Owns the `jobs` business feature and route. | `page.tsx`, `loading.tsx`, `error.tsx`, `superadmin_jobs_api/superadmin_jobs_api.ts` |
+| `messaging/` | Owns the `messaging` business feature and route. | `page.tsx`, `loading.tsx`, `error.tsx`, `messaging_api/superadmin_messaging_api.ts` |
+| `migrations/` | Owns the `migrations` business feature and route. | `page.tsx`, `loading.tsx`, `error.tsx`, `superadmin_migrations_api/superadmin_migrations_api.test.ts`, `superadmin_migrations_api/superadmin_migrations_api.ts` |
+| `onboarding/` | Owns the `onboarding` business feature and route. | `page.tsx`, `loading.tsx`, `error.tsx`, `superadmin_onboarding_api/superadmin_onboarding_api.ts` |
+| `plans/` | Owns the `plans` business feature and route. | `page.tsx`, `loading.tsx`, `error.tsx`, `superadmin_plans_api/superadmin_plans_api.ts` |
+| `profile/` | Owns the `profile` business feature and route. | `page.tsx`, `loading.tsx`, `error.tsx`, `profile_api/superadmin_profile_api.ts` |
+| `reports/` | Owns the `reports` business feature and route. | `page.tsx`, `loading.tsx`, `error.tsx`, `reports_api/superadmin_reports_api.ts` |
+| `settings/` | Owns the `settings` business feature and route. | `page.tsx`, `loading.tsx`, `error.tsx`, `superadmin_settings_api/superadmin_settings_api.ts` |
+| `system/` | Owns the `system` business feature and route. | `page.tsx`, `loading.tsx`, `error.tsx`, `superadmin_system_api/superadmin_system_api.ts`, `system_api/superadmin_system_api.ts` |
+| `tickets/` | Owns the `tickets` business feature and route. | `page.tsx`, `loading.tsx`, `error.tsx`, `superadmin_tickets_api/superadmin_tickets_api.ts` |
+| `usage-meters/` | Owns the `usage-meters` business feature and route. | `page.tsx`, `loading.tsx`, `error.tsx`, `superadmin_usage-meters_api/superadmin_usage-meters_api.ts` |
+| `superadmin_components/` | Superadmin shell, shared dumb UI and confirmation/error primitives; no business-domain API ownership. | `SuperadminLayout/`, `SuperadminFeedback/`, `SuperadminShared/` |
+| `superadmin_utils/` | Stable module-level UI helpers and URL-state utilities shared by features. | URL state, chart/date helpers |
 
-## Forbidden Patterns (see also `*_forbidden.md` per module)
-- Do NOT import from the ERP module (`/erp/`) except for shared primitives like `SearchableDropdown`.
-- Do NOT add global auth logic here — handled by `middleware.ts`.
-- Do NOT use `any` types — use `unknown` + Zod or explicit interfaces.
-- Do NOT use boolean `isLoading` flags — use `FetchState` enum.
-- Do NOT use Recharts — use ApexCharts exclusively.
-- Do NOT hardcode inline hex colors (`bg-[#1E1E2E]`) — use design token classes (`bg-input`).
-- Do NOT define Zod schemas inline in form components — import from `Feature-local schema files`.
-- Do NOT write validation helpers inline in hooks — import from `SuperadminValidation.ts`.
+## Feature Inventory
+
+| Feature | Route | User can | API owner | Status |
+|---|---|---|---|---|
+| `affiliates` | `/superadmin/affiliates` | Inspect and operate the feature's documented platform controls. | `superadmin_affiliates_api/superadmin_affiliates_api.ts` | Implemented |
+| `analytics` | `/superadmin/analytics` | Inspect and operate the feature's documented platform controls. | `superadmin_analytics_api/superadmin_analytics_api.ts` | Implemented |
+| `backups` | `/superadmin/backups` | Inspect and operate the feature's documented platform controls. | `superadmin_backups_api/superadmin_backups_api.ts` | Implemented |
+| `branches` | `/superadmin/branches` | Inspect and operate the feature's documented platform controls. | `superadmin_branches_api/superadmin_branches_api.ts` | Implemented |
+| `broadcasts` | `/superadmin/broadcasts` | Inspect and operate the feature's documented platform controls. | `superadmin_broadcasts_api/superadmin_broadcasts_api.ts` | Implemented |
+| `cancellations` | `/superadmin/cancellations` | Inspect and operate the feature's documented platform controls. | `cancellations_api/superadmin_cancellations_api.ts` | Implemented |
+| `coupons` | `/superadmin/coupons` | Inspect and operate the feature's documented platform controls. | `superadmin_coupons_api/superadmin_coupons_api.ts` | Implemented |
+| `dashboard` | `/superadmin/dashboard` | Inspect and operate the feature's documented platform controls. | `dashboard_api/superadmin_dashboard_api.ts` | Implemented |
+| `features` | `/superadmin/features` | Inspect and operate the feature's documented platform controls. | `superadmin_features_api/superadmin_features_api.ts` | Implemented |
+| `franchises` | `/superadmin/franchises` | Inspect and operate the feature's documented platform controls. | `superadmin_franchises_api/superadmin_franchises_api.ts` | Implemented |
+| `global-audit` | `/superadmin/global-audit` | Inspect and operate the feature's documented platform controls. | `superadmin_global-audit_api/superadmin_global-audit_api.ts` | Implemented |
+| `gyms` | `/superadmin/gyms` | Inspect and operate the feature's documented platform controls. | `superadmin_gyms_api/superadmin_gyms_api.ts` | Implemented |
+| `infrastructure` | `/superadmin/infrastructure` | Inspect and operate the feature's documented platform controls. | `superadmin_infrastructure_api/superadmin_infrastructure_api.ts` | Implemented |
+| `invoices` | `/superadmin/invoices` | Inspect and operate the feature's documented platform controls. | `superadmin_invoices_api/superadmin_invoices_api.ts` | Implemented |
+| `jobs` | `/superadmin/jobs` | Inspect and operate the feature's documented platform controls. | `superadmin_jobs_api/superadmin_jobs_api.ts` | Implemented |
+| `messaging` | `/superadmin/messaging` | Inspect and operate the feature's documented platform controls. | `messaging_api/superadmin_messaging_api.ts` | Implemented |
+| `migrations` | `/superadmin/migrations` | Inspect and operate the feature's documented platform controls. | `superadmin_migrations_api/superadmin_migrations_api.test.ts` | Implemented |
+| `onboarding` | `/superadmin/onboarding` | Inspect and operate the feature's documented platform controls. | `superadmin_onboarding_api/superadmin_onboarding_api.ts` | Implemented |
+| `plans` | `/superadmin/plans` | Inspect and operate the feature's documented platform controls. | `superadmin_plans_api/superadmin_plans_api.ts` | Implemented |
+| `profile` | `/superadmin/profile` | Inspect and operate the feature's documented platform controls. | `profile_api/superadmin_profile_api.ts` | Implemented |
+| `reports` | `/superadmin/reports` | Inspect and operate the feature's documented platform controls. | `reports_api/superadmin_reports_api.ts` | Implemented |
+| `settings` | `/superadmin/settings` | Inspect and operate the feature's documented platform controls. | `superadmin_settings_api/superadmin_settings_api.ts` | Implemented |
+| `system` | `/superadmin/system` | Inspect and operate the feature's documented platform controls. | `superadmin_system_api/superadmin_system_api.ts` | Implemented |
+| `tickets` | `/superadmin/tickets` | Inspect and operate the feature's documented platform controls. | `superadmin_tickets_api/superadmin_tickets_api.ts` | Implemented |
+| `usage-meters` | `/superadmin/usage-meters` | Inspect and operate the feature's documented platform controls. | `superadmin_usage-meters_api/superadmin_usage-meters_api.ts` | Implemented |
+
+## Data and State Architecture
+Server/async data is owned by TanStack Query in feature-local hooks/data layers. Zustand is reserved for UI-only shared state. Local `useState` is component-private. Feature business logic is not shared through sibling business folders; consuming features maintain local endpoint constants and response contracts when they need data from another backend resource.
+
+## API Contract
+Each feature owns one `[moduleName]_url_config.ts` and its API client. API response data is validated with Zod at the API boundary. Shared `@/lib/api` is transport infrastructure only.
+
+## Permissions and Security
+Superadmin routes are intended for the Superadmin role. Destructive actions use the Superadmin confirmation infrastructure. Frontend role/permission UI does not replace backend authorization.
+
+## Loading, Empty, and Error States
+Each feature retains framework route loading/error boundaries where present and implements feature-specific empty/request-error states in its client views. Independently fetched sections should isolate render failures where required by the host design system.
+
+## Edge Cases and AI Warnings
+- **No sibling business imports:** do not restore `feature A → feature B` imports for types, APIs, schemas or business constants.
+- **No server data in Zustand:** query cache remains the async source of truth.
+- **No hardcoded URLs:** route and backend paths belong in the owning feature URL config.
+- **No raw Tailwind theme colors:** use semantic design tokens.
+- **No fake production records:** fake backend data belongs in feature mock layers.
+- **No destructive bypasses:** preserve the Superadmin confirmation flow.
+
+## Unavoidable External Infrastructure Dependencies
+- `@/lib/api` — HTTP transport/response envelope.
+- `@/lib/formatters` and approved shared UI primitives — stable application infrastructure.
+- Approved monitoring provider — **NOT VERIFIED** in the supplied module-only archive.
+
+## Documentation Consistency
+This file reflects the feature-oriented repository currently delivered in this archive. The previous centralized Superadmin API/store description has been removed because it did not match the actual feature folders.

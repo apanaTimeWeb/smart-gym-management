@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Renders the not-found component and its associated UI logic.
 import Link from 'next/link';
-import { DashboardUrlConfig } from '@/app/superadmin/dashboard/superadmin_dashboard_url_config';
+import { ReportsUrlConfig } from '@/app/superadmin/reports/superadmin_reports_url_config';
 
 export default function ReportsNotFound() {
   return (
@@ -15,7 +15,7 @@ export default function ReportsNotFound() {
         </p>
       </div>
       <Link
-        href={DashboardUrlConfig.PAGES.MAIN}
+        href={ReportsUrlConfig.PAGES.MAIN}
         className="px-4 py-2 bg-primary hover:bg-primary-hover text-black font-semibold rounded-lg text-sm motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
       >
         Back to Dashboard

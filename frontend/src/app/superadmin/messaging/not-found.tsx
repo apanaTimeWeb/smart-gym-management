@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Renders the not-found component and its associated UI logic.
 import Link from 'next/link';
-import { DashboardUrlConfig } from '@/app/superadmin/dashboard/superadmin_dashboard_url_config';
+import { MessagingUrlConfig } from '@/app/superadmin/messaging/superadmin_messaging_url_config';
 
 export default function MessagingNotFound() {
   return (
@@ -15,7 +15,7 @@ export default function MessagingNotFound() {
         </p>
       </div>
       <Link
-        href={DashboardUrlConfig.PAGES.MAIN}
+        href={MessagingUrlConfig.PAGES.MAIN}
         className="px-4 py-2 bg-primary hover:bg-primary-hover text-black font-semibold rounded-lg text-sm motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
       >
         Back to Dashboard

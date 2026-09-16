@@ -1,9 +1,8 @@
-import { GymsUrlConfig } from '@/app/superadmin/gyms/superadmin_gyms_url_config';
 // RESPONSIBILITY: Encapsulates functionality for superadmin_invoices_api.ts
-import { SaaSInvoiceSchema } from '@/app/superadmin/invoices/superadmin_invoices_types/superadmin_invoices_types';
+import { SaaSInvoiceSchema, SuperadminInvoicesTenantSchema } from '@/app/superadmin/invoices/superadmin_invoices_types/superadmin_invoices_types';
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
-import type { SaaSInvoice } from '@/app/superadmin/invoices/superadmin_invoices_types/superadmin_invoices_types';
+import type { SaaSInvoice, SuperadminInvoicesTenant } from '@/app/superadmin/invoices/superadmin_invoices_types/superadmin_invoices_types';
 import { InvoicesUrlConfig } from '@/app/superadmin/invoices/superadmin_invoices_url_config';
 import { z } from "zod";
 
@@ -12,12 +11,6 @@ export interface CreateManualPaymentDto {
   amount: number;
   planName: string;
   currency?: string;
-}
-
-export interface InvoicesTenant {
-  id: string;
-  name: string;
-  plan: string;
 }
 
 export const invoicesApi = {
@@ -44,6 +37,6 @@ export const invoicesApi = {
     }),
   fetchTenants: () => {
     // Local tenant lookup to avoid cross-module business imports
-    return apiFetch<ApiResponse<InvoicesTenant[]>>(GymsUrlConfig.BACKEND_API.BASE);
+    return apiFetch<ApiResponse<SuperadminInvoicesTenant[]>>(InvoicesUrlConfig.BACKEND_API.TENANTS, { dataSchema: z.array(SuperadminInvoicesTenantSchema) });
   },
 };

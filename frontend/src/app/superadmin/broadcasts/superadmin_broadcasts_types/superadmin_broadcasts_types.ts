@@ -69,3 +69,6 @@ export const SuperadminBroadcastsTenantSchema = z.object({
   phone: z.string().optional(),
 });
 export type SuperadminBroadcastsTenant = z.infer<typeof SuperadminBroadcastsTenantSchema>;
+
+export const SuperadminBroadcastTenantSchema = z.object({ id: z.string(), name: z.string(), plan: z.string() });
+export type SuperadminBroadcastTenant = z.infer<typeof SuperadminBroadcastTenantSchema>;

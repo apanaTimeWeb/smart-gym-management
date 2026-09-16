@@ -6,8 +6,7 @@ import { useSuperadminUrlState } from '@/app/superadmin/superadmin_utils/useSupe
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { invoicesApi } from '@/app/superadmin/invoices/superadmin_invoices_api/superadmin_invoices_api';
 import toast from 'react-hot-toast';
-import type { ApiResponse } from '@/lib/api';
-import type { SaaSInvoice } from '@/app/superadmin/invoices/superadmin_invoices_types/superadmin_invoices_types';
+import { calculateSuperadminInvoiceMetrics } from '@/app/superadmin/invoices/invoices_utils/SuperadminInvoicesMetrics';
 
 export function useSuperadminInvoicesPage() {
   const queryClient = useQueryClient();
@@ -74,11 +73,7 @@ export function useSuperadminInvoicesPage() {
       }),
     onSuccess: (res) => {
       if (res.success && res.data) {
-        queryClient.setQueryData(['superadmin', 'invoices'], (oldData: unknown) => {
-          const old = oldData as ApiResponse<SaaSInvoice[]> | undefined;
-          if (!old?.data) return oldData;
-          return { ...old, data: [res.data, ...old.data] };
-        });
+        queryClient.invalidateQueries({ queryKey: ['superadmin', 'invoices'] });
         toast.success(res.message);
       } else {
         toast.error(res.message);
@@ -102,25 +97,7 @@ export function useSuperadminInvoicesPage() {
 
   const selectedGym = tenants.find((t) => t.id === selectedGymId);
 
-  const totalRevenue = useMemo(
-    () => invoices.filter((i) => i.status === 'PAID').reduce((acc, curr) => acc + (Number(curr.amount) || 0), 0),
-    [invoices]
-  );
-
-  const failedRevenue = useMemo(
-    () => invoices.filter((i) => i.status === 'FAILED').reduce((acc, curr) => acc + (Number(curr.amount) || 0), 0),
-    [invoices]
-  );
-
-  const pendingRevenue = useMemo(
-    () => invoices.filter((i) => i.status === 'PENDING').reduce((acc, curr) => acc + (Number(curr.amount) || 0), 0),
-    [invoices]
-  );
-
-  const overdueCount = useMemo(
-    () => invoices.filter((i) => i.status === 'OVERDUE').length,
-    [invoices]
-  );
+  const { totalRevenue, failedRevenue, pendingRevenue, overdueCount } = useMemo(() => calculateSuperadminInvoiceMetrics(invoices), [invoices]);
 
   const handleSelectGym = (id: string) => {
     setSelectedGymId(id);

@@ -67,7 +67,7 @@ export default function SuperadminBranchesClient() {
           return (
             <div
               key={k.label}
-              className="bg-card border border-border rounded-xl p-4 shadow-sm motion-safe:hover:-translate-y-1 motion-safe:transition-all motion-safe:duration-200 bg-gradient-to-b from-yellow-400/10 to-transparent"
+              className="bg-card border border-border rounded-xl p-4 shadow-sm motion-safe:hover:-translate-y-1 motion-safe:transition-all motion-safe:duration-200 bg-gradient-to-b from-warning-bg to-transparent"
             >
               <div className={`w-8 h-8 rounded-lg ${k.bg} flex items-center justify-center mb-3`}>
                 <Icon className={`w-5 h-5 ${k.color}`} strokeWidth={2} />

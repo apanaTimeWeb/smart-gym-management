@@ -1,4 +1,3 @@
-import { GymsUrlConfig } from '@/app/superadmin/gyms/superadmin_gyms_url_config';
 // RESPONSIBILITY: Modularized API client for the Infrastructure module. All methods import apiFetch from src/lib/api.ts and define only superadmin-scoped endpoints. No UI logic.
 import { InfrastructureUrlConfig } from '@/app/superadmin/infrastructure/superadmin_infrastructure_url_config';
 import { apiFetch } from '@/lib/api';
@@ -15,5 +14,5 @@ export const infrastructureApi = {
   fetchRedisTelemetry: () => apiFetch<ApiResponse<RedisTelemetry>>(InfrastructureUrlConfig.BACKEND_API.REDIS_TELEMETRY, { dataSchema: RedisTelemetrySchema }),
   flushGlobalCache: () => apiFetch<ApiResponse<void>>(InfrastructureUrlConfig.BACKEND_API.REDIS_FLUSH_GLOBAL, { method: 'POST', dataSchema: z.object({}).passthrough() }),
   flushTenantCache: (tenantIds: string[]) => apiFetch<ApiResponse<void>>(InfrastructureUrlConfig.BACKEND_API.REDIS_FLUSH_TENANT, { method: 'POST', body: JSON.stringify({ tenantIds }), dataSchema: z.object({}).passthrough() }),
-  fetchTenants: () => apiFetch<ApiResponse<SuperadminInfrastructureTenant[]>>(GymsUrlConfig.BACKEND_API.BASE, { dataSchema: z.array(SuperadminInfrastructureTenantSchema) }),
+  fetchTenants: () => apiFetch<ApiResponse<SuperadminInfrastructureTenant[]>>(InfrastructureUrlConfig.BACKEND_API.TENANTS, { dataSchema: z.array(SuperadminInfrastructureTenantSchema) }),
 };

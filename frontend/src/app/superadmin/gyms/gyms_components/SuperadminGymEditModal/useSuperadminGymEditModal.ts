@@ -10,7 +10,6 @@ import toast from 'react-hot-toast';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSuperadminGymsStore } from '@/app/superadmin/gyms/gyms_store/useSuperadminGymsStore';
 import { gymsApi } from '@/app/superadmin/gyms/superadmin_gyms_api/superadmin_gyms_api';
-import { plansApi } from '@/app/superadmin/plans/superadmin_plans_api/superadmin_plans_api';
 import { gymEditSchema, type GymEditFormValues } from '@/app/superadmin/gyms/superadmin_gyms_types/superadmin_gyms_schema';
 
 export function useSuperadminGymEditModal() {
@@ -21,8 +20,8 @@ export function useSuperadminGymEditModal() {
   const queryClient = useQueryClient();
 
   const { data: fetchRes, isLoading: loadingPlans } = useQuery({
-    queryKey: ['superadmin', 'plans'],
-    queryFn: () => plansApi.fetchPlans(),
+    queryKey: ['superadmin', 'gyms', 'subscription-plans'],
+    queryFn: () => gymsApi.fetchSubscriptionPlans(),
   });
   
   const plans = fetchRes?.data || [];

@@ -7,8 +7,8 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { OnboardGymSchema } from '@/app/superadmin/gyms/gyms_utils/SuperadminGymsValidationSchemas';
 import type { OnboardGymFormValues } from '@/app/superadmin/gyms/gyms_utils/SuperadminGymsValidationSchemas';
-import { plansApi } from '@/app/superadmin/plans/superadmin_plans_api/superadmin_plans_api';
 import { useQuery } from '@tanstack/react-query';
+import { gymsApi } from '@/app/superadmin/gyms/superadmin_gyms_api/superadmin_gyms_api';
 import { useSuperadminAddGymFormSubmit } from '@/app/superadmin/gyms/gyms_components/SuperadminAddGymForm/useSuperadminAddGymFormSubmit';
 
 /**
@@ -19,9 +19,9 @@ export function useSuperadminAddGymForm() {
   const [showPassword, setShowPassword] = useState(false);
   
   const { data: fetchRes, isLoading: loadingPlans } = useQuery({
-    queryKey: ['superadmin', 'plans'],
+    queryKey: ['superadmin', 'gyms', 'subscription-plans'],
     queryFn: async () => {
-      const res = await plansApi.fetchPlans();
+      const res = await gymsApi.fetchSubscriptionPlans();
       return res.data || [];
     },
   });

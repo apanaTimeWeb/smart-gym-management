@@ -3,47 +3,12 @@
 // DATA FLOW: superadminApi -> useQuery -> SuperadminPlansList
 
 import { Check, Edit2, Trash2, Loader2, Archive } from 'lucide-react';
-import toast from 'react-hot-toast';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { plansApi } from '@/app/superadmin/plans/superadmin_plans_api/superadmin_plans_api';
-import { useSuperadminPlansStore } from '@/app/superadmin/plans/plans_store/useSuperadminPlansStore';
 import { formatCurrency } from '@/lib/formatters';
-import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
 import type { SubscriptionPlan } from '@/app/superadmin/plans/superadmin_plans_types/superadmin_plans_types';
+import { useSuperadminPlansList } from '@/app/superadmin/plans/plans_components/useSuperadminPlansList';
 
 export default function SuperadminPlansList() {
-  const openEditModal = useSuperadminPlansStore(state => state.openEditModal);
-  const queryClient = useQueryClient();
-  const { confirm } = useSuperadminConfirm();
-
-  const { data: fetchRes, isLoading, isError } = useQuery({
-    queryKey: ['superadmin', 'plans'],
-    queryFn: () => plansApi.fetchPlans(),
-  });
-
-  const fetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
-
-  const deleteMutation = useMutation({
-    mutationFn: (id: string) => plansApi.deletePlan(id),
-    onSuccess: (res) => {
-      toast.success(res.message);
-      queryClient.invalidateQueries({ queryKey: ['superadmin', 'plans'] });
-    },
-    onError: (err: unknown) => {
-      toast.error((err as Error).message, { id: 'failed-to-delete-plan' });
-    },
-  });
-
-  const archiveMutation = useMutation({
-    mutationFn: (id: string) => plansApi.archivePlan(id),
-    onSuccess: (res) => {
-      toast.success(res.message);
-      queryClient.invalidateQueries({ queryKey: ['superadmin', 'plans'] });
-    },
-    onError: (err: unknown) => { toast.error((err as Error).message, { id: 'failed-to-archive-plan' }); },
-  });
-
-  const plans = fetchRes?.data || [];
+  const { plans, isLoading, isError, deleteMutation, archiveMutation, openEditModal, confirmPlanDestructiveAction } = useSuperadminPlansList();
 
   if (isLoading) {
     return (
@@ -118,27 +83,7 @@ export default function SuperadminPlansList() {
                 <Edit2 className="w-5 h-5" />
               </button>
               <button
-                onClick={async () => {
-                  const hasTenants = (plan.activeTenants ?? 0) > 0;
-                  if (hasTenants) {
-                    // Block delete — offer archive instead
-                    const ok = await confirm({
-                      title: 'Cannot Delete Active Plan',
-                      message: `"${plan.name}" has ${plan.activeTenants} active tenants. Archive it instead to hide it from new signups while keeping existing tenants.`,
-                      type: 'warning',
-                      confirmText: 'Archive Plan',
-                    });
-                    if (ok) archiveMutation.mutate(plan.id);
-                  } else {
-                    const ok = await confirm({
-                      title: 'Delete Plan',
-                      message: `Delete "${plan.name}"? This cannot be undone.`,
-                      type: 'danger',
-                      confirmText: 'Delete',
-                    });
-                    if (ok) deleteMutation.mutate(plan.id);
-                  }
-                }}
+                onClick={() => confirmPlanDestructiveAction(plan)}
                 disabled={isDeleting || deleteMutation.isPending || archiveMutation.isPending}
                 aria-label={`Delete or archive ${plan.name}`}
                 title={(plan.activeTenants ?? 0) > 0 ? 'Archive plan (has active gyms)' : 'Delete plan'}

@@ -190,7 +190,7 @@ export default function SuperadminAnalyticsClient() {
           return (
             <div
               key={card.label}
-              className="bg-card border border-border p-6 rounded-xl shadow-sm motion-safe:hover:-translate-y-1 motion-safe:hover:shadow-lg motion-safe:transition-all motion-safe:duration-200 bg-gradient-to-b from-yellow-400/10 to-transparent"
+              className="bg-card border border-border p-6 rounded-xl shadow-sm motion-safe:hover:-translate-y-1 motion-safe:hover:shadow-lg motion-safe:transition-all motion-safe:duration-200 bg-gradient-to-b from-warning-bg to-transparent"
             >
               <div className="flex items-center justify-between mb-4">
                 <span className="text-secondary font-medium text-xs uppercase tracking-wider">{card.label}</span>

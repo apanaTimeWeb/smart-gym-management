@@ -6,14 +6,11 @@ import { useSuperadminUrlState } from '@/app/superadmin/superadmin_utils/useSupe
 import SuperadminSystemEmptyState from '@/app/superadmin/system/system_components/SuperadminSystemEmptyState/SuperadminSystemEmptyState';
 import SuperadminSystemSlaTab from '@/app/superadmin/system/system_components/SuperadminSystemSlaTab';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { migrationsApi } from '@/app/superadmin/migrations/superadmin_migrations_api/superadmin_migrations_api';
-import { auditLogsApi } from '@/app/superadmin/global-audit/superadmin_global-audit_api/superadmin_global-audit_api';
 import type { ApiResponse } from '@/lib/api';
 import toast from 'react-hot-toast';
-import type { SuperadminMigrationsTenant } from '@/app/superadmin/migrations/superadmin_migrations_types/superadmin_migrations_types';
-import type { GlobalAuditLog } from '@/app/superadmin/global-audit/superadmin_global-audit_types/superadmin_global-audit_types';
-import type { MigrationsPageData } from '@/app/superadmin/migrations/superadmin_migrations_types/superadmin_migrations_types';
 import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
+import { systemApi } from '@/app/superadmin/system/system_api/superadmin_system_api';
+import type { SuperadminSystemTenant, SuperadminSystemAuditLog } from '@/app/superadmin/system/system_types/superadmin_system_types';
 
 const CURRENT_SCHEMA_VERSION = process.env.NEXT_PUBLIC_CURRENT_SCHEMA_VERSION || 'v2.4.1';
 
@@ -49,36 +46,36 @@ export default function SuperadminSystemClient() {
 
   const { data: migrationsRes, isLoading: isLoadingMigrations, isError: isErrorMigrations } = useQuery({
     queryKey: ['superadmin', 'system-migrations'],
-    queryFn: () => migrationsApi.fetchMigrations(),
+    queryFn: () => systemApi.fetchMigrations(),
   });
 
   const { data: auditRes, isLoading: isLoadingAudit, isError: isErrorAudit } = useQuery({
     queryKey: ['superadmin', 'auditLogs', queryParams],
-    queryFn: () => auditLogsApi.fetchGlobalLogs(queryParams),
+    queryFn: () => systemApi.fetchAuditLogs(queryParams),
   });
 
   const fetchState = (isLoadingMigrations || isLoadingAudit) ? 'loading' : (isErrorMigrations || isErrorAudit) ? 'error' : 'success';
 
-  const migrationsData = migrationsRes as { data?: { tenants?: (SuperadminMigrationsTenant & { databaseVersion?: string })[] } } | undefined;
-  const tenants = (migrationsData?.data?.tenants ?? []) as (SuperadminMigrationsTenant & { databaseVersion?: string })[];
+  const migrationsData = migrationsRes?.data;
+  const tenants = migrationsData?.tenants ?? [];
   
-  const auditData = auditRes as ApiResponse<GlobalAuditLog[]> & { meta?: { total?: number } } | undefined;
-  const rawLogs: GlobalAuditLog[] = auditData?.data || [];
+  const auditData = auditRes as ApiResponse<SuperadminSystemAuditLog[]> & { meta?: { total?: number } } | undefined;
+  const rawLogs: SuperadminSystemAuditLog[] = auditData?.data || [];
   const finalLogs = rawLogs;
   const totalLogs = auditData?.meta?.total || rawLogs.length;
 
   const handleRunMigration = async (tenantId: string) => {
     setMigratingTenants(prev => ({ ...prev, [tenantId]: true }));
     try {
-      await migrationsApi.startMigration(tenantId);
+      await systemApi.startMigration(tenantId);
       
-      queryClient.setQueryData(['superadmin', 'system-migrations'], (old: { data?: MigrationsPageData } | undefined) => {
+      queryClient.setQueryData(['superadmin', 'system-migrations'], (old: { data?: { tenants?: SuperadminSystemTenant[] } } | undefined) => {
         if (!old?.data?.tenants) return old;
         return {
           ...old,
           data: {
             ...old.data,
-            tenants: old.data.tenants.map((t: SuperadminMigrationsTenant & { databaseVersion?: string }) => 
+            tenants: old.data.tenants.map((t: SuperadminSystemTenant & { databaseVersion?: string }) => 
               t.id === tenantId ? { ...t, databaseVersion: CURRENT_SCHEMA_VERSION } : t
             )
           }
@@ -98,7 +95,7 @@ export default function SuperadminSystemClient() {
     const headers = ['Timestamp', 'Target', 'Actor', 'Role', 'Action'];
     const csvContent = [
       headers.join(','),
-      ...filteredLogs.map((log: GlobalAuditLog) => [
+      ...filteredLogs.map((log: SuperadminSystemAuditLog) => [
         new Date(log.timestamp).toISOString(),
         `"${log.targetResource}"`,
         `"${log.actorName}"`,
@@ -247,7 +244,7 @@ export default function SuperadminSystemClient() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
-                {paginatedLogs.map((log: GlobalAuditLog) => (
+                {paginatedLogs.map((log: SuperadminSystemAuditLog) => (
                   <tr key={log.id} className="superadmin-table-row group hover:bg-input motion-safe:transition-colors text-sm">
                     <td className="p-4 text-secondary whitespace-nowrap">
                       {new Date(log.timestamp).toLocaleString()}
