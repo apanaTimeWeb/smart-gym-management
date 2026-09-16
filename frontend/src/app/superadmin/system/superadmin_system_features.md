@@ -1,82 +1,108 @@
 # System Feature Map
 
 ## Module Purpose
-Provides the Superadmin with a live health overview of the SaaS infrastructure: per-tenant SLA compliance table, overall platform uptime percentage, downtime-incident count, and a health-probe status check for backend connectivity.
+This Superadmin feature owns the `system` route and its feature-specific UI, client logic, API boundary, types, schemas, constants, mocks, tests, and documentation. It is intended to be operable by the Superadmin role without importing sibling Superadmin business modules. The feature exposes only the controls represented by the current route and code in this folder. Backend authorization remains outside the frontend audit scope.
+
+## Directory Structure
+
+| Folder | Responsibility | Key files |
+|---|---|---|
+| `__tests__/` | Owns the feature responsibility represented by this folder. | `superadmin_system_basic.test.tsx` |
+| `system_api/` | Owns the feature responsibility represented by this folder. | `superadmin_system_api.ts` |
+| `system_components/` | Owns the feature responsibility represented by this folder. | `SuperadminSystemClient.tsx`, `SuperadminSystemEmptyState.tsx`, `SuperadminSystemSlaTab.tsx`, `useSuperadminSystemClient.ts` |
+| `system_mocks/` | Owns the feature responsibility represented by this folder. | `SuperadminSystemMockHandlers.ts` |
+| `system_types/` | Owns the feature responsibility represented by this folder. | `SuperadminSystemTypes.ts`, `superadmin_system_types.ts` |
+| `system_utils/` | Owns the feature responsibility represented by this folder. | `SuperadminSystemConstants.ts` |
 
 ## Feature Inventory
-| Feature | Path | Purpose | Main API Calls | Owner |
+
+| Feature | Route | User action | Key API/client owner | Status |
 |---|---|---|---|---|
-| View Tenant SLA Table | `/superadmin/system` | Display per-tenant uptime, SLA status (MET/WARNING/BREACHED), downtime minutes | `GET /superadmin/system` → `systemApi.fetchSystemInfo()` | Superadmin |
-| View Health Probe Status | `/superadmin/system` | Ping backend health endpoint and display live status | `GET /superadmin/system/health` → `systemApi.fetchHealthProbe()` | Superadmin |
+| `system` | `/superadmin/system` | Use the route's controls to perform the operations implemented by the current client UI. | `system/system_api/superadmin_system_api.ts` | Implemented in source; runtime integration **NOT VERIFIED** without installing project dependencies. |
+
+## User Flows & Interactions
+
+### Flow 1: Open Feature
+1. User navigates to the route shown above.
+2. Next.js renders the route `page.tsx` and its client view.
+3. The feature-owned client layer loads the data needed by the visible UI.
+4. Loading, empty, error, or populated state is rendered according to the current implementation.
+
+### Flow 2: Execute an Available Action
+1. User activates an action exposed by the current feature UI.
+2. The feature client/hook invokes the feature-owned API function.
+3. The API boundary validates response data using the feature schema when a schema is supplied.
+4. The UI updates local/query state and shows the resulting feedback.
 
 ## Data and State Architecture
-- Server-state query keys:
-  - `['superadmin', 'system', 'info']` — SLA data, 60s refetch interval
-  - `['superadmin', 'system', 'health']` — health probe, 30s refetch interval
-- Zustand stores: None
-- Context providers: None
-- Local-storage keys: None
-- MSW handler file: `src/app/superadmin/system/system_mocks/handlers/SuperadminSystemMockHandlers.ts`
+- **Server state:** TanStack Query where the feature currently uses async queries.
+- **UI state:** local `useState` or a feature-scoped Zustand store where present.
+- **URL state:** `useSuperadminUrlState` only where the feature currently uses query-string filters/pagination.
+- **Sibling business dependencies:** must remain zero; shared transport/UI primitives are infrastructure exceptions only.
 
 ## API Contract
-- `systemApi.fetchSystemInfo()` → `ApiResponse<SuperadminTenantSla[]>`
-  - Response: `[{ id, name, targetSla, actualUptime, downtimeIncidents, downtimeMinutes, status }]`
-- `systemApi.fetchHealthProbe()` → `ApiResponse<{ status: string; timestamp?: string; checks?: Record<string, unknown> }>`
 
-## Permissions and Security
-- **Role:** `SUPERADMIN` only — protected by Next.js middleware
-- **Risk:** SLA breach data may contain sensitive tenant operational info — do not expose to Admin or Trainer roles
-- **Risk:** Health probe result must not be cached for more than 30 seconds client-side — stale data could mask an actual outage
-
-## Loading, Empty, Error States
-- **Loading:** `loading.tsx` animates a placeholder SLA table with pulsing rows
-- **Empty:** "All tenants meeting SLA targets" rendered when array is empty
-- **Error:** `error.tsx` boundary displays "Unable to fetch system status" with a manual retry button; also reports the HTTP status code from the failed request
-
-## Edge Cases / AI Warnings
-- A tenant with `downtimeIncidents: 0` and `status: 'MET'` should show a green badge, NOT an empty cell
-- SLA status `'BREACHED'` must be rendered with a distinct error color token — not an arbitrary `bg-[#...]` class
-- Do not auto-navigate away from this page on a health probe failure — show inline alert instead
-- Polling must use `refetchInterval` on the query, not `setInterval` + manual fetch
-- If the backend returns no `checks` object, gracefully omit that section rather than throwing
-
----
-
-## Edge Cases and AI Warnings
-
-- **Delete System is permanent and irreversible:** Never use `window.confirm()` for System deletion. If a delete feature exists or is added, it MUST use a type-to-confirm modal with the exact string "DELETE" to prevent accidental data loss.
-- **System Table Row Clicks:** The `System` list view uses clickable table rows (`<tr className="cursor-pointer">`) for navigation. Ensure that any inline action buttons (like Edit or Delete) inside the table call `e.stopPropagation()` so they don't accidentally trigger the row navigation.
-- **Section-Level Error Boundaries in System:** Do not allow a single failed API fetch in System to unmount the entire page. Major components (like the System data table or metrics) must be wrapped in `<SuperadminErrorBoundary variant="inline">`.
-- **Backend-Driven Messages for System Mutations:** Do not hardcode success or error toasts like "User created". Always display the `message` string provided by the backend's JSON response envelope when creating, updating, or deleting System.
-- **No Client-Side Pagination for System:** If the dataset grows large, do not fetch all System and paginate on the client. always implement robust server-side pagination, sorting, and filtering via query parameters using useSuperadminUrlState.
+| Function | Method | Endpoint expression | API file |
+|---|---|---|---|
+| `fetchHealthProbe()` | `GET` | `${SystemUrlConfig.BACKEND_API.BASE}/health` | `system/system_api/superadmin_system_api.ts` |
 
 ## UI Data Requirements
 
-The following types map directly to the UI components and define the shape of the data:
+Observed schema/type fields in this feature are listed below. Any UI field not represented by a schema/type is **NOT VERIFIED** and must be checked by the coding agent.
 
-```typescript
-export type SuperadminSystemSlaStatus = 'MET' | 'BREACHED' | 'WARNING';
+| Field | Source location |
+|---|---|
+| `id` | Feature-owned schema/type file |
+| `name` | Feature-owned schema/type file |
+| `plan` | Feature-owned schema/type file |
+| `databaseVersion` | Feature-owned schema/type file |
+| `timestamp` | Feature-owned schema/type file |
+| `targetResource` | Feature-owned schema/type file |
+| `actorName` | Feature-owned schema/type file |
+| `actorRole` | Feature-owned schema/type file |
+| `action` | Feature-owned schema/type file |
 
-export interface SuperadminTenantSla {
-  id: string;
-  name: string;
-  targetSla: number;
-  actualUptime: number;
-  downtimeIncidents: number;
-  downtimeMinutes: number;
-  status: SuperadminSystemSlaStatus;
-}
-```
+## Permissions and Security
+- **Role:** `SUPERADMIN` UI.
+- **Frontend boundary:** route and feature UI are under `/superadmin`.
+- **Destructive actions:** must use the Superadmin confirmation infrastructure where the feature exposes destructive controls.
+- **Backend authorization:** not evaluated here and must not be inferred from frontend checks.
 
+## Loading, Empty, and Error States
+- **Route loading:** use the feature `loading.tsx` when present.
+- **Route error:** use the feature `error.tsx` when present.
+- **Feature empty/error:** use the feature-specific empty/error UI already present in the source.
+- Any runtime transition behavior not statically provable is **NOT VERIFIED**.
 
-## State Architecture
-- Server State: TanStack Query
-- UI State: React `useState` or Zustand
-
+## Edge Cases and AI Warnings
+- **No sibling business imports:** do not reintroduce imports from another Superadmin business feature.
+- **No fake production data:** server-like records belong in feature mocks/fixtures, never fallback constants inside production UI.
+- **No hardcoded URLs:** feature-owned routes belong in the single feature URL config.
+- **No async state in Zustand:** use TanStack Query for server state.
+- **Preserve destructive confirmation:** do not bypass the Superadmin confirmation flow.
 
 ## Component Responsibility Map
 
-| Component | Responsibility |
+| File | Responsibility |
 |---|---|
-| `SuperadminSystemClient.tsx` | Renders UI for system |
-| `SuperadminSystemSlaTab.tsx` | Renders UI for system |
+| `__tests__/superadmin_system_basic.test.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `error.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `loading.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `page.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `system_components/SuperadminSystemClient.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `system_components/SuperadminSystemEmptyState/SuperadminSystemEmptyState.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `system_components/SuperadminSystemSlaTab.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+
+## Rule Compliance Checklist
+- [x] Feature has a route-level `page.tsx` or the route does not require one.
+- [x] Feature has module-owned documentation file.
+- [x] Feature URL configuration is feature-owned when routes/API calls exist.
+- [x] Sibling Superadmin business imports are not allowed.
+- [x] API responses must use Zod validation at the boundary.
+- [x] Server state is owned by TanStack Query where async data is used.
+- [x] UI state remains local or feature-scoped.
+- [ ] Full typecheck/lint/test/build/E2E verification — **NOT VERIFIED** in this working environment because project dependencies are not installed.
+- [ ] Full visual comparison against `web_global_design.md` — **NOT VERIFIED** without browser execution.
+
+## Documentation Consistency
+This feature map is generated from the current repository structure. Where the code does not expose enough static evidence to state an exact runtime fact, the documentation deliberately uses **NOT VERIFIED** rather than inventing a result.

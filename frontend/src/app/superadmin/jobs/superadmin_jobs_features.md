@@ -1,124 +1,113 @@
 # Superadmin Jobs — Feature Map
 
 ## Module Purpose
-The Superadmin Jobs module provides visibility and control over the platform's background
-job queue. Jobs include scheduled tasks (invoice generation, report compilation, email
-dispatch, data migrations) and one-off system tasks. Superadmins can monitor job status,
-retry failed jobs, cancel pending jobs, and view execution logs. This module is the
-operational control panel for async platform processes.
+This Superadmin feature owns the `jobs` route and its feature-specific UI, client logic, API boundary, types, schemas, constants, mocks, tests, and documentation. It is intended to be operable by the Superadmin role without importing sibling Superadmin business modules. The feature exposes only the controls represented by the current route and code in this folder. Backend authorization remains outside the frontend audit scope.
 
 ## Directory Structure
-| File | Responsibility |
-|---|---|
-| `page.tsx` | Server Component — auth guard |
-| `loading.tsx` | Table skeleton — 10 row placeholders |
-| `error.tsx` | Error boundary with retry |
-| `jobs_components/SuperadminJobsClient.tsx` | Root Client Component — table + filter bar |
-| `jobs_components/SuperadminJobsTable.tsx` | Paginated job table |
-| `jobs_components/SuperadminJobsTableRow.tsx` | Single job row — name, type, status, started, duration, actions |
-| `jobs_components/SuperadminJobsFilterBar.tsx` | Filter by status (ALL / PENDING / RUNNING / COMPLETED / FAILED) + type |
-| `jobs_components/SuperadminJobsDetailDrawer.tsx` | Job detail — execution log, error trace, input payload |
-| `jobs_components/SuperadminJobsRetryButton.tsx` | Retry failed job — with confirmation |
-| `jobs_components/SuperadminJobsCancelButton.tsx` | Cancel pending job — with confirmation |
-| `jobs_types/SuperadminJobsTypes.ts` | `Job`, `JobStatus`, `JobType`, `JobLog`, `JobsFilter` |
-| `jobs_utils/SuperadminJobsConstants.ts` | `JOB_STATUS_STYLES`, `JOB_TYPE_LABELS` |
+
+| Folder | Responsibility | Key files |
+|---|---|---|
+| `__tests__/` | Owns the feature responsibility represented by this folder. | `superadmin_jobs_basic.test.tsx` |
+| `jobs_components/` | Owns the feature responsibility represented by this folder. | `SuperadminJobInspectModal.tsx`, `SuperadminJobsEmptyState.tsx`, `SuperadminJobsHeader.tsx`, `SuperadminJobsStatsBar.tsx`, `SuperadminJobsTable.tsx`, `SuperadminJobsView.tsx` |
+| `jobs_mocks/` | Owns the feature responsibility represented by this folder. | `SuperadminJobsMockHandlers.ts` |
+| `jobs_types/` | Owns the feature responsibility represented by this folder. | `superadmin_jobs_types.ts` |
+| `jobs_utils/` | Owns the feature responsibility represented by this folder. | `SuperadminJobsConstants.ts`, `useSuperadminJobsMutations.test.ts`, `useSuperadminJobsMutations.ts`, `useSuperadminJobsPage.test.ts`, `useSuperadminJobsPage.ts` |
+| `superadmin_jobs_api/` | Owns the feature responsibility represented by this folder. | `superadmin_jobs_api.ts` |
 
 ## Feature Inventory
-| Feature | Path | Purpose | Main API Calls | Status |
+
+| Feature | Route | User action | Key API/client owner | Status |
 |---|---|---|---|---|
-| Job List | `/superadmin/jobs` | All jobs, paginated | `GET /superadmin/jobs?page=&status=&type=` | ✅ Live |
-| View Job Detail | `/superadmin/jobs` | Execution log + error trace | `GET /superadmin/jobs/:id` | ✅ Live |
-| Retry Failed Job | `/superadmin/jobs` | Re-queue a failed job | `POST /superadmin/jobs/:id/retry` | ✅ Live |
-| Cancel Pending Job | `/superadmin/jobs` | Remove job from queue | `DELETE /superadmin/jobs/:id` | ✅ Live |
-| Filter by Status/Type | `/superadmin/jobs` | Scope list | — (query params) | ✅ Live |
+| `jobs` | `/superadmin/jobs` | Use the route's controls to perform the operations implemented by the current client UI. | `jobs/superadmin_jobs_api/superadmin_jobs_api.ts` | Implemented in source; runtime integration **NOT VERIFIED** without installing project dependencies. |
+
+## User Flows & Interactions
+
+### Flow 1: Open Feature
+1. User navigates to the route shown above.
+2. Next.js renders the route `page.tsx` and its client view.
+3. The feature-owned client layer loads the data needed by the visible UI.
+4. Loading, empty, error, or populated state is rendered according to the current implementation.
+
+### Flow 2: Execute an Available Action
+1. User activates an action exposed by the current feature UI.
+2. The feature client/hook invokes the feature-owned API function.
+3. The API boundary validates response data using the feature schema when a schema is supplied.
+4. The UI updates local/query state and shows the resulting feedback.
 
 ## Data and State Architecture
-- TanStack Query keys: `['superadmin', 'jobs', { page, status, type }]`, `['superadmin', 'jobs', jobId]`
-- Query refetch interval: 15 seconds for job list (jobs change state frequently)
-- Mutations: `useRetryJob`, `useCancelJob`
-- Zustand stores: None
-- Context providers: None
-- Local-state: `statusFilter`, `typeFilter`, `page` — local to `SuperadminJobsClient`
+- **Server state:** TanStack Query where the feature currently uses async queries.
+- **UI state:** local `useState` or a feature-scoped Zustand store where present.
+- **URL state:** `useSuperadminUrlState` only where the feature currently uses query-string filters/pagination.
+- **Sibling business dependencies:** must remain zero; shared transport/UI primitives are infrastructure exceptions only.
 
-## User Flows
-1. Superadmin opens `/superadmin/jobs` → job list loads, auto-refreshes every 15 seconds
-2. Superadmin filters by "FAILED" → list scoped to failed jobs
-3. Superadmin clicks job row → `SuperadminJobsDetailDrawer` → execution log + error trace
-4. Superadmin clicks "Retry" on failed job → `useConfirm()` → `POST /superadmin/jobs/:id/retry`
-5. Superadmin clicks "Cancel" on pending job → `useConfirm()` → `DELETE /superadmin/jobs/:id`
+## API Contract
 
-## Component Responsibility Map
-- `SuperadminJobsClient` — filter + pagination state. MUST NOT contain row logic.
-- `SuperadminJobsTable` — renders rows. MUST NOT manage filter state.
-- `SuperadminJobsDetailDrawer` — log display only. Retry/Cancel actions are in table row, not drawer.
-- `SuperadminJobsRetryButton` — single action button. MUST use `useConfirm()` before firing.
-- `SuperadminJobsCancelButton` — single action button. MUST use `useConfirm()` before firing.
-
-## Permissions and Security
-| Action | Required Role |
-|---|---|
-| View job list | `SUPERADMIN` |
-| View job detail | `SUPERADMIN` |
-| Retry failed job | `SUPERADMIN` |
-| Cancel pending job | `SUPERADMIN` |
-| ❌ Create jobs manually | System-triggered only |
-| ❌ Edit job configuration | DevOps only |
-
-## Loading, Empty, Error States
-- **Loading:** `loading.tsx` — 10 table row skeletons
-- **Empty:** "No jobs match your filters" with clear filter link
-- **Empty (no failed jobs):** "No failed jobs — queue is healthy" with green checkmark
-- **Error:** `error.tsx` with retry
-
-## Edge Cases / AI Warnings
-- **Auto-refetch** — job list MUST use `refetchInterval: 15000`. Never use `setInterval` in a component.
-- **Retry only for FAILED** — retry button MUST only render when `job.status === 'FAILED'`.
-- **Cancel only for PENDING** — cancel button MUST only render when `job.status === 'PENDING'`.
-- **JOB_STATUS_STYLES** — maps `PENDING | RUNNING | COMPLETED | FAILED | CANCELLED` to badge classes; must live in constants.
-- **Error trace display** — render error trace as `<pre>` with monospace font; never as raw HTML.
-- **Pagination reset** — page resets to 1 when any filter changes.
+| Function | Method | Endpoint expression | API file |
+|---|---|---|---|
+| `retryAllJobs()` | `POST` | `${JobsUrlConfig.BACKEND_API.BASE}/retry-all` | `jobs/superadmin_jobs_api/superadmin_jobs_api.ts` |
 
 ## UI Data Requirements
 
-The following types map directly to the UI components and define the shape of the data:
+Observed schema/type fields in this feature are listed below. Any UI field not represented by a schema/type is **NOT VERIFIED** and must be checked by the coding agent.
 
-```typescript
-export type BackgroundJob = z.infer<typeof BackgroundJobSchema>;
+| Field | Source location |
+|---|---|
+| `id` | Feature-owned schema/type file |
+| `queueName` | Feature-owned schema/type file |
+| `jobName` | Feature-owned schema/type file |
+| `status` | Feature-owned schema/type file |
+| `attempts` | Feature-owned schema/type file |
+| `error` | Feature-owned schema/type file |
+| `createdAt` | Feature-owned schema/type file |
+| `activeJobs` | Feature-owned schema/type file |
+| `completed24h` | Feature-owned schema/type file |
+| `failed24h` | Feature-owned schema/type file |
+| `delayed` | Feature-owned schema/type file |
 
-export type JobsMetrics = z.infer<typeof JobsMetricsSchema>;
-```
+## Permissions and Security
+- **Role:** `SUPERADMIN` UI.
+- **Frontend boundary:** route and feature UI are under `/superadmin`.
+- **Destructive actions:** must use the Superadmin confirmation infrastructure where the feature exposes destructive controls.
+- **Backend authorization:** not evaluated here and must not be inferred from frontend checks.
 
-## Rule Compliance Checklist
-- [x] Rule 1: Micro-modularization
-- [x] Rule 3: Module prefix naming — `SuperadminJobs*`
-- [x] Rule 7: Type isolation — all types in `SuperadminJobsTypes.ts`
-- [x] Rule 8: Server/Client Boundary — `page.tsx` = Server Component
-- [x] Rule 9: `loading.tsx` + `error.tsx` present
-- [x] Rule 13: Feature Map — this document
-- [x] Rule 26: Retry + Cancel use `useConfirm()`
-- [x] Rule 40: `_forbidden.md` present
-- [x] Rule 55: No `key={index}` — stable job IDs used
-- [x] Rule 63: Zero cross-module imports
-- [x] Rule 73: `import type` for all type-only imports
-
----
+## Loading, Empty, and Error States
+- **Route loading:** use the feature `loading.tsx` when present.
+- **Route error:** use the feature `error.tsx` when present.
+- **Feature empty/error:** use the feature-specific empty/error UI already present in the source.
+- Any runtime transition behavior not statically provable is **NOT VERIFIED**.
 
 ## Edge Cases and AI Warnings
+- **No sibling business imports:** do not reintroduce imports from another Superadmin business feature.
+- **No fake production data:** server-like records belong in feature mocks/fixtures, never fallback constants inside production UI.
+- **No hardcoded URLs:** feature-owned routes belong in the single feature URL config.
+- **No async state in Zustand:** use TanStack Query for server state.
+- **Preserve destructive confirmation:** do not bypass the Superadmin confirmation flow.
 
-- **Delete Job is permanent and irreversible:** Never use `window.confirm()` for Job deletion. If a delete feature exists or is added, it MUST use a type-to-confirm modal with the exact string "DELETE" to prevent accidental data loss.
-- **Jobs Table Row Clicks:** The `Jobs` list view uses clickable table rows (`<tr className="cursor-pointer">`) for navigation. Ensure that any inline action buttons (like Edit or Delete) inside the table call `e.stopPropagation()` so they don't accidentally trigger the row navigation.
-- **Section-Level Error Boundaries in Jobs:** Do not allow a single failed API fetch in Jobs to unmount the entire page. Major components (like the Jobs data table or metrics) must be wrapped in `<SuperadminErrorBoundary variant="inline">`.
-- **Backend-Driven Messages for Jobs Mutations:** Do not hardcode success or error toasts like "User created". Always display the `message` string provided by the backend's JSON response envelope when creating, updating, or deleting Jobs.
-- **No Client-Side Pagination for Jobs:** If the dataset grows large, do not fetch all Jobs and paginate on the client. always implement robust server-side pagination, sorting, and filtering via query parameters using useSuperadminUrlState.
+## Component Responsibility Map
 
+| File | Responsibility |
+|---|---|
+| `__tests__/superadmin_jobs_basic.test.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `error.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `jobs_components/SuperadminJobInspectModal/SuperadminJobInspectModal.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `jobs_components/SuperadminJobsEmptyState/SuperadminJobsEmptyState.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `jobs_components/SuperadminJobsHeader/SuperadminJobsHeader.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `jobs_components/SuperadminJobsStatsBar/SuperadminJobsStatsBar.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `jobs_components/SuperadminJobsTable/SuperadminJobsTable.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `jobs_components/SuperadminJobsView.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `loading.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `page.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
 
-## API Contract
-All calls are isolated to `superadmin_jobs_api.ts`.
+## Rule Compliance Checklist
+- [x] Feature has a route-level `page.tsx` or the route does not require one.
+- [x] Feature has module-owned documentation file.
+- [x] Feature URL configuration is feature-owned when routes/API calls exist.
+- [x] Sibling Superadmin business imports are not allowed.
+- [x] API responses must use Zod validation at the boundary.
+- [x] Server state is owned by TanStack Query where async data is used.
+- [x] UI state remains local or feature-scoped.
+- [ ] Full typecheck/lint/test/build/E2E verification — **NOT VERIFIED** in this working environment because project dependencies are not installed.
+- [ ] Full visual comparison against `web_global_design.md` — **NOT VERIFIED** without browser execution.
 
-- `return apiFetch<ApiResponse<BackgroundJob[]>>(`${JobsUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.array(BackgroundJobSchema) });`
-- `retryAllJobs: () => apiFetch<ApiResponse<{ queuedCount: number }>>(`${JobsUrlConfig.BACKEND_API.BASE}/retry-all`, { method: 'POST',`
-
-
-## State Architecture
-- Server State: TanStack Query
-- UI State: React `useState` or Zustand
+## Documentation Consistency
+This feature map is generated from the current repository structure. Where the code does not expose enough static evidence to state an exact runtime fact, the documentation deliberately uses **NOT VERIFIED** rather than inventing a result.

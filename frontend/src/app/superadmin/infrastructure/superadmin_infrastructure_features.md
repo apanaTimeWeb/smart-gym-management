@@ -1,126 +1,112 @@
 # Superadmin Infrastructure — Feature Map
 
 ## Module Purpose
-The Superadmin Infrastructure module provides visibility into the platform's technical
-health — server status, database connection pools, queue depths, cache hit rates, and
-active worker counts. Superadmins use this module to monitor system performance, identify
-bottlenecks, and trigger manual interventions (cache flush, queue drain). This is an
-operations-focused module; it does not expose tenant business data.
+This Superadmin feature owns the `infrastructure` route and its feature-specific UI, client logic, API boundary, types, schemas, constants, mocks, tests, and documentation. It is intended to be operable by the Superadmin role without importing sibling Superadmin business modules. The feature exposes only the controls represented by the current route and code in this folder. Backend authorization remains outside the frontend audit scope.
 
 ## Directory Structure
-| File | Responsibility |
-|---|---|
-| `page.tsx` | Server Component — auth guard |
-| `loading.tsx` | Status card grid skeleton |
-| `error.tsx` | Error boundary with retry |
-| `infrastructure_components/SuperadminInfrastructureClient.tsx` | Root Client Component — status grid + actions |
-| `infrastructure_components/SuperadminInfrastructureStatusGrid.tsx` | Grid of service health cards |
-| `infrastructure_components/SuperadminInfrastructureServiceCard.tsx` | Single service card — name, status, latency, uptime |
-| `infrastructure_components/SuperadminInfrastructureMetricsPanel.tsx` | DB pool, queue depth, cache hit rate metrics |
-| `infrastructure_components/SuperadminInfrastructureActionsPanel.tsx` | Manual actions — flush cache, drain queue |
-| `infrastructure_components/SuperadminInfrastructureAlertsBanner.tsx` | Active infrastructure alerts banner |
-| `infrastructure_types/SuperadminInfrastructureTypes.ts` | `ServiceStatus`, `InfraMetrics`, `ServiceHealth`, `InfraAction` |
-| `infrastructure_utils/SuperadminInfrastructureConstants.ts` | `SERVICE_STATUS_STYLES`, `HEALTH_THRESHOLD` |
+
+| Folder | Responsibility | Key files |
+|---|---|---|
+| `__tests__/` | Owns the feature responsibility represented by this folder. | `superadmin_infrastructure_basic.test.tsx` |
+| `infrastructure_components/` | Owns the feature responsibility represented by this folder. | `SuperadminFlushTenantModal.tsx`, `SuperadminInfrastructureClient.tsx`, `SuperadminUptimeChart.tsx` |
+| `infrastructure_mocks/` | Owns the feature responsibility represented by this folder. | `SuperadminInfrastructureMockHandlers.ts` |
+| `infrastructure_types/` | Owns the feature responsibility represented by this folder. | `superadmin_infrastructure_types.ts` |
+| `infrastructure_utils/` | Owns the feature responsibility represented by this folder. | `SuperadminInfrastructureConstants.ts` |
+| `superadmin_infrastructure_api/` | Owns the feature responsibility represented by this folder. | `superadmin_infrastructure_api.ts` |
 
 ## Feature Inventory
-| Feature | Path | Purpose | Main API Calls | Status |
+
+| Feature | Route | User action | Key API/client owner | Status |
 |---|---|---|---|---|
-| Service Health Grid | `/superadmin/infrastructure` | All service statuses | `GET /superadmin/infrastructure/health` | ✅ Live |
-| Infrastructure Metrics | `/superadmin/infrastructure` | DB pool, queue, cache metrics | `GET /superadmin/infrastructure/metrics` | ✅ Live |
-| Active Alerts | `/superadmin/infrastructure` | Current infrastructure alerts | `GET /superadmin/infrastructure/alerts` | ✅ Live |
-| Flush Cache | `/superadmin/infrastructure` | Manually flush Redis cache | `POST /superadmin/infrastructure/cache/flush` | ✅ Live |
-| Drain Queue | `/superadmin/infrastructure` | Manually drain job queue | `POST /superadmin/infrastructure/queue/drain` | ✅ Live |
+| `infrastructure` | `/superadmin/infrastructure` | Use the route's controls to perform the operations implemented by the current client UI. | `feature-local API files` | Implemented in source; runtime integration **NOT VERIFIED** without installing project dependencies. |
+
+## User Flows & Interactions
+
+### Flow 1: Open Feature
+1. User navigates to the route shown above.
+2. Next.js renders the route `page.tsx` and its client view.
+3. The feature-owned client layer loads the data needed by the visible UI.
+4. Loading, empty, error, or populated state is rendered according to the current implementation.
+
+### Flow 2: Execute an Available Action
+1. User activates an action exposed by the current feature UI.
+2. The feature client/hook invokes the feature-owned API function.
+3. The API boundary validates response data using the feature schema when a schema is supplied.
+4. The UI updates local/query state and shows the resulting feedback.
 
 ## Data and State Architecture
-- TanStack Query keys: `['superadmin', 'infrastructure', 'health']`, `['superadmin', 'infrastructure', 'metrics']`, `['superadmin', 'infrastructure', 'alerts']`
-- Query refetch interval: 30 seconds for health + metrics (live monitoring)
-- Mutations: `useFlushCache`, `useDrainQueue`
-- Zustand stores: None
-- Context providers: None
+- **Server state:** TanStack Query where the feature currently uses async queries.
+- **UI state:** local `useState` or a feature-scoped Zustand store where present.
+- **URL state:** `useSuperadminUrlState` only where the feature currently uses query-string filters/pagination.
+- **Sibling business dependencies:** must remain zero; shared transport/UI primitives are infrastructure exceptions only.
 
-## User Flows
-1. Superadmin opens `/superadmin/infrastructure` → health, metrics, and alerts queries fire in parallel
-2. Queries auto-refetch every 30 seconds — live monitoring without manual refresh
-3. Superadmin clicks "Flush Cache" → `useConfirm()` with warning → `POST /cache/flush`
-4. Superadmin clicks "Drain Queue" → `useConfirm()` with warning about job loss → `POST /queue/drain`
+## API Contract
 
-## Component Responsibility Map
-- `SuperadminInfrastructureClient` — layout orchestrator. MUST NOT contain metric logic.
-- `SuperadminInfrastructureServiceCard` — display only. Status color from `SERVICE_STATUS_STYLES`.
-- `SuperadminInfrastructureActionsPanel` — action buttons only. MUST use `useConfirm()` before any mutation.
-- `SuperadminInfrastructureMetricsPanel` — metrics display only. MUST NOT contain action logic.
-
-## Permissions and Security
-| Action | Required Role |
-|---|---|
-| View infrastructure health | `SUPERADMIN` |
-| View metrics | `SUPERADMIN` |
-| Flush cache | `SUPERADMIN` |
-| Drain queue | `SUPERADMIN` |
-| ❌ Modify server configuration | DevOps only — not from UI |
-
-## Loading, Empty, Error States
-- **Loading:** `loading.tsx` — service card grid skeleton + metrics panel placeholder
-- **Empty alerts:** "No active infrastructure alerts" with green checkmark
-- **Error:** `error.tsx` with retry; individual service card shows "Unknown" status on query error
-
-## Edge Cases / AI Warnings
-- **Auto-refetch** — health + metrics queries MUST use `refetchInterval: 30000`. Never use `setInterval` in a component.
-- **Flush cache warning** — cache flush affects ALL tenants simultaneously; confirmation must state this explicitly.
-- **Drain queue warning** — draining the queue may cause in-flight jobs to fail; confirmation must warn about data loss risk.
-- **SERVICE_STATUS_STYLES** — maps `UP | DEGRADED | DOWN | UNKNOWN` to color classes; must live in constants.
-- **HEALTH_THRESHOLD** — named constants for degraded/down thresholds (e.g. latency > 500ms = DEGRADED); never inline numbers.
+| Function | Method | Endpoint expression | API file |
+|---|---|---|---|
+| No feature API functions detected | — | — | No API service file detected by static scan |
 
 ## UI Data Requirements
 
-The following types map directly to the UI components and define the shape of the data:
+Observed schema/type fields in this feature are listed below. Any UI field not represented by a schema/type is **NOT VERIFIED** and must be checked by the coding agent.
 
-```typescript
-export type NodeStatus = z.infer<typeof NodeStatusSchema>;
+| Field | Source location |
+|---|---|
+| `id` | Feature-owned schema/type file |
+| `name` | Feature-owned schema/type file |
+| `region` | Feature-owned schema/type file |
+| `status` | Feature-owned schema/type file |
+| `cpuPercent` | Feature-owned schema/type file |
+| `memoryPercent` | Feature-owned schema/type file |
+| `diskPercent` | Feature-owned schema/type file |
+| `uptime` | Feature-owned schema/type file |
+| `lastChecked` | Feature-owned schema/type file |
+| `memoryUsagePercent` | Feature-owned schema/type file |
+| `hitRatioPercent` | Feature-owned schema/type file |
+| `totalKeysCached` | Feature-owned schema/type file |
+| `uptimeHours` | Feature-owned schema/type file |
 
-export type CacheStatus = z.infer<typeof CacheStatusSchema>;
+## Permissions and Security
+- **Role:** `SUPERADMIN` UI.
+- **Frontend boundary:** route and feature UI are under `/superadmin`.
+- **Destructive actions:** must use the Superadmin confirmation infrastructure where the feature exposes destructive controls.
+- **Backend authorization:** not evaluated here and must not be inferred from frontend checks.
 
-export type InfrastructureNode = z.infer<typeof InfrastructureNodeSchema>;
-
-export type RedisTelemetry = z.infer<typeof RedisTelemetrySchema>;
-
-export type SuperadminInfrastructureTenant = z.infer<typeof SuperadminInfrastructureTenantSchema>;
-```
-
-## Rule Compliance Checklist
-- [x] Rule 1: Micro-modularization
-- [x] Rule 3: Module prefix naming — `SuperadminInfrastructure*`
-- [x] Rule 7: Type isolation — all types in `SuperadminInfrastructureTypes.ts`
-- [x] Rule 8: Server/Client Boundary — `page.tsx` = Server Component
-- [x] Rule 9: `loading.tsx` + `error.tsx` present
-- [x] Rule 13: Feature Map — this document
-- [x] Rule 26: Cache flush + queue drain use `useConfirm()`
-- [x] Rule 40: `_forbidden.md` present
-- [x] Rule 55: No `key={index}` — stable service name keys used
-- [x] Rule 63: Zero cross-module imports
-- [x] Rule 73: `import type` for all type-only imports
-
----
+## Loading, Empty, and Error States
+- **Route loading:** use the feature `loading.tsx` when present.
+- **Route error:** use the feature `error.tsx` when present.
+- **Feature empty/error:** use the feature-specific empty/error UI already present in the source.
+- Any runtime transition behavior not statically provable is **NOT VERIFIED**.
 
 ## Edge Cases and AI Warnings
+- **No sibling business imports:** do not reintroduce imports from another Superadmin business feature.
+- **No fake production data:** server-like records belong in feature mocks/fixtures, never fallback constants inside production UI.
+- **No hardcoded URLs:** feature-owned routes belong in the single feature URL config.
+- **No async state in Zustand:** use TanStack Query for server state.
+- **Preserve destructive confirmation:** do not bypass the Superadmin confirmation flow.
 
-- **Delete Infrastructure is permanent and irreversible:** Never use `window.confirm()` for Infrastructure deletion. If a delete feature exists or is added, it MUST use a type-to-confirm modal with the exact string "DELETE" to prevent accidental data loss.
-- **Infrastructure Table Row Clicks:** The `Infrastructure` list view uses clickable table rows (`<tr className="cursor-pointer">`) for navigation. Ensure that any inline action buttons (like Edit or Delete) inside the table call `e.stopPropagation()` so they don't accidentally trigger the row navigation.
-- **Section-Level Error Boundaries in Infrastructure:** Do not allow a single failed API fetch in Infrastructure to unmount the entire page. Major components (like the Infrastructure data table or metrics) must be wrapped in `<SuperadminErrorBoundary variant="inline">`.
-- **Backend-Driven Messages for Infrastructure Mutations:** Do not hardcode success or error toasts like "User created". Always display the `message` string provided by the backend's JSON response envelope when creating, updating, or deleting Infrastructure.
-- **No Client-Side Pagination for Infrastructure:** If the dataset grows large, do not fetch all Infrastructure and paginate on the client. always implement robust server-side pagination, sorting, and filtering via query parameters using useSuperadminUrlState.
+## Component Responsibility Map
 
+| File | Responsibility |
+|---|---|
+| `__tests__/superadmin_infrastructure_basic.test.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `error.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `infrastructure_components/SuperadminFlushTenantModal.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `infrastructure_components/SuperadminInfrastructureClient.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `infrastructure_components/SuperadminUptimeChart/SuperadminUptimeChart.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `loading.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `page.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
 
-## API Contract
-All calls are isolated to `superadmin_infrastructure_api.ts`.
+## Rule Compliance Checklist
+- [x] Feature has a route-level `page.tsx` or the route does not require one.
+- [x] Feature has module-owned documentation file.
+- [x] Feature URL configuration is feature-owned when routes/API calls exist.
+- [x] Sibling Superadmin business imports are not allowed.
+- [x] API responses must use Zod validation at the boundary.
+- [x] Server state is owned by TanStack Query where async data is used.
+- [x] UI state remains local or feature-scoped.
+- [ ] Full typecheck/lint/test/build/E2E verification — **NOT VERIFIED** in this working environment because project dependencies are not installed.
+- [ ] Full visual comparison against `web_global_design.md` — **NOT VERIFIED** without browser execution.
 
-- `return apiFetch<ApiResponse<InfrastructureNode[]>>(`${InfrastructureUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.array(InfrastructureNodeSchema) });`
-- `fetchRedisTelemetry: () => apiFetch<ApiResponse<RedisTelemetry>>(InfrastructureUrlConfig.BACKEND_API.REDIS_TELEMETRY, { dataSchema: RedisTelemetrySchema }),`
-- `flushGlobalCache: () => apiFetch<ApiResponse<void>>(InfrastructureUrlConfig.BACKEND_API.REDIS_FLUSH_GLOBAL, { method: 'POST', dataSchema: z.object({}).passthrough() }),`
-- `flushTenantCache: (tenantIds: string[]) => apiFetch<ApiResponse<void>>(InfrastructureUrlConfig.BACKEND_API.REDIS_FLUSH_TENANT, { method: 'POST', body: JSON.stringify({ tenantIds }), dataSchema: z.object({}).passthrough() }),`
-- `fetchTenants: () => apiFetch<ApiResponse<SuperadminInfrastructureTenant[]>>(GymsUrlConfig.BACKEND_API.BASE, { dataSchema: z.array(SuperadminInfrastructureTenantSchema) }),`
-
-
-## State Architecture
-- Server State: TanStack Query
-- UI State: React `useState` or Zustand
+## Documentation Consistency
+This feature map is generated from the current repository structure. Where the code does not expose enough static evidence to state an exact runtime fact, the documentation deliberately uses **NOT VERIFIED** rather than inventing a result.

@@ -1,209 +1,142 @@
 # Superadmin Dashboard — Feature Map
 
 ## Module Purpose
-The Superadmin Dashboard is the command center for the entire SaaS platform. It surfaces platform-wide KPIs (total gyms, active tenants, MRR, overdue invoices), MRR trend, plan revenue breakdown, and a feed of recently onboarded tenants. This is a read-heavy, analytics-first module — no mutations originate here. All data is fetched via TanStack Query from a single unified API endpoint.
+This Superadmin feature owns the `dashboard` route and its feature-specific UI, client logic, API boundary, types, schemas, constants, mocks, tests, and documentation. It is intended to be operable by the Superadmin role without importing sibling Superadmin business modules. The feature exposes only the controls represented by the current route and code in this folder. Backend authorization remains outside the frontend audit scope.
 
 ## Directory Structure
-| File | Responsibility |
-|---|---|
-| `page.tsx` | Server Component entry point for the Dashboard page. Delegates rendering to SuperadminDashboardView. |
-| `loading.tsx` | KPI card + chart skeletons |
-| `error.tsx` | Error boundary with retry |
-| `dashboard_api/superadmin_dashboard_api.ts` | Exposes typed API functions specific to the Dashboard module. |
-| `dashboard_utils/SuperadminDashboardUrlConfig.ts` | Single source of truth for Dashboard local routes and API endpoints. |
-| `dashboard_utils/SuperadminDashboardConstants.ts` | Centralizes Dashboard UI constants: chart colors, time range labels, plan badge class map. No hooks. |
-| `dashboard_components/SuperadminDashboardView/useSuperadminDashboardView.ts` | Custom hook managing the data fetching for the Dashboard view using TanStack Query. |
-| `dashboard_components/SuperadminDashboardView/useSuperadminDashboardDateRangeSuffix.ts` | Hook that derives a human-readable date range suffix string from URL search params for KPI card labels. |
-| `dashboard_components/SuperadminDashboardView/SuperadminDashboardView.tsx` | Pure View component for the Dashboard. Renders KPI cards, charts, and recent onboards by consuming useSuperadminDashboardView. |
-| `dashboard_components/SuperadminDashboardView/SuperadminDashboardKpiGrid.tsx` | Renders the Dashboard KPI cards. No API calls. |
-| `dashboard_components/SuperadminDashboardView/SuperadminDashboardCharts.tsx` | Renders the Dashboard revenue, growth, plan, and geography ApexCharts. No data fetching. |
-| `dashboard_components/SuperadminDashboardView/SuperadminDashboardRecentOnboards.tsx` | Renders the recent tenant onboarding records and navigates to the tenant detail page. |
-| `dashboard_components/SuperadminDashboardDateFilterDropdown/useSuperadminDashboardDateFilter.ts` | Custom hook managing the URL-backed state for the Dashboard date filter. |
-| `superadmin_dashboard_types/superadmin_dashboard_types.ts` | Defines all TypeScript types and interfaces for the Dashboard module. |
+
+| Folder | Responsibility | Key files |
+|---|---|---|
+| `__tests__/` | Owns the feature responsibility represented by this folder. | `superadmin_dashboard_basic.test.tsx` |
+| `dashboard_api/` | Owns the feature responsibility represented by this folder. | `superadmin_dashboard_api.ts` |
+| `dashboard_components/` | Owns the feature responsibility represented by this folder. | `SuperadminDashboardDateFilterConstants.ts`, `SuperadminDashboardDateFilterDropdown.tsx`, `useSuperadminDashboardDateFilter.test.ts`, `useSuperadminDashboardDateFilter.ts`, `SuperadminDashboardCharts.tsx`, `SuperadminDashboardHeader.tsx`, `SuperadminDashboardKpiGrid.tsx`, `SuperadminDashboardRecentOnboards.tsx` |
+| `dashboard_mocks/` | Owns the feature responsibility represented by this folder. | `SuperadminDashboardMockFixtures.ts`, `SuperadminDashboardMockHandlers.ts` |
+| `dashboard_utils/` | Owns the feature responsibility represented by this folder. | `SuperadminDashboardConstants.ts` |
+| `superadmin_dashboard_types/` | Owns the feature responsibility represented by this folder. | `superadmin_dashboard_types.ts` |
 
 ## Feature Inventory
-| Feature | Path | Purpose | Main API Calls | Status |
-|---|---|---|---|---|
-| Platform KPIs | `/superadmin/dashboard` | Total gyms, MRR, active tenants | `GET /superadmin/dashboard` | ✅ Live |
-| MRR Trend Chart | `/superadmin/dashboard` | Area chart of monthly recurring revenue | `GET /superadmin/dashboard` | ✅ Live |
-| Gym Growth Chart | `/superadmin/dashboard` | Bar chart of new signups | `GET /superadmin/dashboard` | ✅ Live |
-| Revenue by Plan | `/superadmin/dashboard` | Donut chart of revenue by plan tier | `GET /superadmin/dashboard` | ✅ Live |
-| Revenue by Geo | `/superadmin/dashboard` | Bar chart of geographical revenue | `GET /superadmin/dashboard` | ✅ Live |
-| Recent Onboards | `/superadmin/dashboard` | List of recently registered tenants | `GET /superadmin/dashboard` | ✅ Live |
-| Date Filter | `/superadmin/dashboard` | URL-backed date range filter | Local state | ✅ Live |
 
-## User Flows
-1. Superadmin navigates to `/superadmin/dashboard`.
-2. `useSuperadminDashboardView` reads URL search params (e.g., `range=this_month`) and initiates a TanStack Query fetch.
-3. While loading, `loading` state renders skeletons in the View.
-4. On success, `SuperadminDashboardView` passes data to `SuperadminDashboardKpiGrid`, `SuperadminDashboardCharts`, and `SuperadminDashboardRecentOnboards`.
-5. Superadmin changes the date using `SuperadminDashboardDateFilterDropdown`. URL is updated via `useSuperadminDashboardDateFilter`, which triggers a new fetch.
-6. Clicking on a recent onboard navigates to `/superadmin/gyms?id={tenant.id}`.
+| Feature | Route | User action | Key API/client owner | Status |
+|---|---|---|---|---|
+| `dashboard` | `/superadmin/dashboard` | Use the route's controls to perform the operations implemented by the current client UI. | `dashboard/dashboard_api/superadmin_dashboard_api.ts` | Implemented in source; runtime integration **NOT VERIFIED** without installing project dependencies. |
+
+## User Flows & Interactions
+
+### Flow 1: Open Feature
+1. User navigates to the route shown above.
+2. Next.js renders the route `page.tsx` and its client view.
+3. The feature-owned client layer loads the data needed by the visible UI.
+4. Loading, empty, error, or populated state is rendered according to the current implementation.
+
+### Flow 2: Execute an Available Action
+1. User activates an action exposed by the current feature UI.
+2. The feature client/hook invokes the feature-owned API function.
+3. The API boundary validates response data using the feature schema when a schema is supplied.
+4. The UI updates local/query state and shows the resulting feedback.
 
 ## Data and State Architecture
-- **Hook:** `useSuperadminDashboardView`
-- **Query Key:** `['superadmin', 'dashboard', timeRange, startDate, endDate]`
-- **API File:** `dashboard_api/superadmin_dashboard_api.ts`
-- **Types File:** `superadmin_dashboard_types/superadmin_dashboard_types.ts`
-- **URL Config:** `dashboard_utils/SuperadminDashboardUrlConfig.ts`
-- **Zustand stores:** None (dashboard is read-only).
+- **Server state:** TanStack Query where the feature currently uses async queries.
+- **UI state:** local `useState` or a feature-scoped Zustand store where present.
+- **URL state:** `useSuperadminUrlState` only where the feature currently uses query-string filters/pagination.
+- **Sibling business dependencies:** must remain zero; shared transport/UI primitives are infrastructure exceptions only.
 
 ## API Contract
-`GET /superadmin/dashboard`
-- Request params: `range` (string), `startDate` (optional string), `endDate` (optional string).
-- Response shape: `{ data: { metrics: SaaSDashboardMetrics, revenue: RevenueChartData[], growth: GrowthChartData[] } }`
 
-## Loading / Empty / Error States
-- **Loading:** Derives from TanStack Query via `fetchState === 'loading'`, rendering inline skeletons in `SuperadminDashboardView.tsx`.
-- **Empty:** Derived natively in charts. E.g., Donut chart shows "No revenue data by tier" when `revenueByTier` is empty.
-- **Error:** Derives from TanStack Query via `fetchState === 'error'`, rendering an inline text error in `SuperadminDashboardView.tsx`.
-
-## Edge Cases / AI Warnings
-- **Dashboard is read-only:** Do not add mutations here.
-- **Unified Endpoint:** Do not create separate KPI/revenue API calls unless backend contract changes. Data is currently returned unified.
-- **State Management:** Do not bypass TanStack Query for server state.
-- **Component Data-fetching:** Do not move Dashboard API calls into child UI components (`SuperadminDashboardKpiGrid`, etc.).
-- **Hardcoded Routes:** Do not hardcode navigation paths like `/superadmin/cancellations`; use `SuperadminDashboardUrlConfig.PAGES`.
-- **Formatting:** Do not use `.toLocaleString()`, `.toFixed()`, or raw `₹` in components. Use `@/lib/formatters`.
-- **No hooks in Constants files:** `SuperadminDashboardConstants.ts` is a pure data file. The date range suffix hook lives in `useSuperadminDashboardDateRangeSuffix.ts` inside the View folder.
-- **Plan badge colors:** Do not add inline ternary chains for plan badge classes. Add new plans to `DASHBOARD_PLAN_BADGE_CLASSES` in `SuperadminDashboardConstants.ts`.
-
-## Component Responsibility Map
-- `SuperadminDashboardView.tsx`: Orchestrates the layout by rendering children and delegating data.
-- `SuperadminDashboardKpiGrid.tsx`: Renders the KPI cards only. No data fetching.
-- `SuperadminDashboardCharts.tsx`: Renders the ApexCharts only. No data fetching.
-- `SuperadminDashboardRecentOnboards.tsx`: Renders the recent tenants only. No data fetching.
-- `SuperadminDashboardHeader.tsx`: Renders the title and date filter dropdown. No `"use client"` — consumes only a client child component.
-- `useSuperadminDashboardDateRangeSuffix.ts`: Derives a human-readable date range suffix from URL params for KPI labels.
-- `SuperadminDashboardDateFilterDropdown.tsx`: Pure View for selecting date ranges, updating URL params via its custom hook.
+| Function | Method | Endpoint expression | API file |
+|---|---|---|---|
+| `fetchDashboardMetrics()` | `GET` | `${DashboardUrlConfig.BACKEND_API.BASE}/metrics` | `dashboard/dashboard_api/superadmin_dashboard_api.ts` |
 
 ## UI Data Requirements
 
-The following types map directly to the UI components and define the shape of the data:
+Observed schema/type fields in this feature are listed below. Any UI field not represented by a schema/type is **NOT VERIFIED** and must be checked by the coding agent.
 
-```typescript
-export type TenantStatus = 'ACTIVE' | 'SUSPENDED' | 'TRIAL' | 'CANCELLED';
+| Field | Source location |
+|---|---|
+| `id` | Feature-owned schema/type file |
+| `name` | Feature-owned schema/type file |
+| `ownerName` | Feature-owned schema/type file |
+| `adminEmail` | Feature-owned schema/type file |
+| `phone` | Feature-owned schema/type file |
+| `status` | Feature-owned schema/type file |
+| `plan` | Feature-owned schema/type file |
+| `createdAt` | Feature-owned schema/type file |
+| `memberCount` | Feature-owned schema/type file |
+| `monthlyRevenue` | Feature-owned schema/type file |
+| `databaseVersion` | Feature-owned schema/type file |
+| `city` | Feature-owned schema/type file |
+| `state` | Feature-owned schema/type file |
+| `country` | Feature-owned schema/type file |
+| `gstin` | Feature-owned schema/type file |
+| `trialEndsAt` | Feature-owned schema/type file |
+| `lastLoginAt` | Feature-owned schema/type file |
+| `lastActiveAt` | Feature-owned schema/type file |
+| `staffCount` | Feature-owned schema/type file |
+| `totalGyms` | Feature-owned schema/type file |
+| `activeGyms` | Feature-owned schema/type file |
+| `suspendedGyms` | Feature-owned schema/type file |
+| `trialGyms` | Feature-owned schema/type file |
+| `totalEndUsers` | Feature-owned schema/type file |
+| `monthlyRecurringRevenue` | Feature-owned schema/type file |
+| `mrrDeltaPercent` | Feature-owned schema/type file |
+| `arrDeltaPercent` | Feature-owned schema/type file |
+| `arpu` | Feature-owned schema/type file |
+| `revenueByTier` | Feature-owned schema/type file |
+| `amount` | Feature-owned schema/type file |
+| `region` | Feature-owned schema/type file |
+| `revenue` | Feature-owned schema/type file |
+| `totalTenants` | Feature-owned schema/type file |
+| `activeUsers` | Feature-owned schema/type file |
+| `systemHealth` | Feature-owned schema/type file |
+| `stats` | Feature-owned schema/type file |
+| `isLoading` | Feature-owned schema/type file |
+| `isError` | Feature-owned schema/type file |
+| `error` | Feature-owned schema/type file |
+| `timeRange` | Feature-owned schema/type file |
 
-export type TimeRange = 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'yearly' | 'custom' | 'this_month' | 'last_month' | 'last_3_months' | 'last_6_months' | 'this_year';
+## Permissions and Security
+- **Role:** `SUPERADMIN` UI.
+- **Frontend boundary:** route and feature UI are under `/superadmin`.
+- **Destructive actions:** must use the Superadmin confirmation infrastructure where the feature exposes destructive controls.
+- **Backend authorization:** not evaluated here and must not be inferred from frontend checks.
 
-export interface DashboardContextType {
-  stats: unknown | null;
-  isLoading: boolean;
-  isError: boolean;
-  error: string;
-  timeRange: TimeRange;
-  setTimeRange: (range: TimeRange) => void;
-}
-
-export interface Tenant {
-  id: string;
-  name: string;
-  ownerName: string;
-  adminEmail: string;
-  phone: string;
-  status: TenantStatus;
-  plan: string;
-  createdAt: string;
-  memberCount: number;
-  monthlyRevenue: number;
-  databaseVersion: string;
-  city?: string;
-  state?: string;
-  country?: string;
-  // ... truncated
-
-export interface PlanRevenueBreakdown {
-  plan: string;
-  amount: number;
-  tenantCount: number;
-}
-
-export interface SaaSDashboardMetrics {
-  totalGyms: number;
-  activeGyms: number;
-  suspendedGyms: number;
-  trialGyms: number;
-  totalEndUsers: number;
-  monthlyRecurringRevenue: number;
-  overdueInvoicesCount: number;
-  pendingRevenue: number;
-  recentOnboards: Tenant[];
-  trialsExpiringIn7Days?: number;
-  /** MRR % change vs previous period — from API, never hardcoded */
-  mrrDeltaPercent?: number;
-  /** ARR % change vs previous year — from API, never hardcoded */
-  arrDeltaPercent?: number;
-  // ... truncated
-
-export interface RevenueChartData {
-  month: string;
-  mrr: number;
-}
-
-export interface GrowthChartData {
-  month: string;
-  gyms: number;
-}
-
-export interface SuperadminDashboardApiData {
-  metrics: SaaSDashboardMetrics;
-  revenue: RevenueChartData[];
-  growth: GrowthChartData[];
-}
-
-export interface SuperadminDashboardKpiGridProps {
-  metrics: SaaSDashboardMetrics;
-  revenueChartData: RevenueChartData[];
-  timeMultiplier: number;
-  mrrLabel: string;
-}
-
-export interface SuperadminDashboardChartsProps {
-  metrics: SaaSDashboardMetrics;
-  revenueChartData: RevenueChartData[];
-  growthChartData: GrowthChartData[];
-  timeMultiplier: number;
-  mrrLabel: string;
-}
-
-export interface SuperadminDashboardRecentOnboardsProps {
-  recentOnboards: Tenant[];
-}
-```
-
-## Rule Compliance Checklist
-- [x] Rule 1: Micro-modularization — each section is its own component
-- [x] Rule 3: Module prefix naming — `SuperadminDashboard*` prefix on all components
-- [x] Rule 7: Type isolation — all types in `superadmin_dashboard_types.ts`
-- [x] Rule 8: Server/Client Boundary — `page.tsx` = Server Component
-- [x] Rule 9: `loading.tsx` + `error.tsx` present
-- [x] Rule 13: Feature Map — this document, correctly synced
-- [x] Rule 40: `dashboard_forbidden.md` present
-- [x] Rule 55: Stable IDs used, no `key={index}`
-- [x] Rule 62: ApexCharts only — loaded with `dynamic()` + `ssr: false`
-- [x] Rule 63: Zero cross-module dependencies
-- [x] No hooks in utility/constants files — `useSuperadminDashboardDateRangeSuffix` co-located in View folder
-- [x] Plan badge mapping in `DASHBOARD_PLAN_BADGE_CLASSES` constant — no inline ternary chains
-- [x] `loading.tsx` skeleton matches actual layout (10 KPI cards + 4 chart panels + recent onboards)
-- [x] Rule 73: `import type` used for types
-- [x] Local URL Config utilized
-- [x] Formatters imported from `@/lib/formatters`
-
----
+## Loading, Empty, and Error States
+- **Route loading:** use the feature `loading.tsx` when present.
+- **Route error:** use the feature `error.tsx` when present.
+- **Feature empty/error:** use the feature-specific empty/error UI already present in the source.
+- Any runtime transition behavior not statically provable is **NOT VERIFIED**.
 
 ## Edge Cases and AI Warnings
+- **No sibling business imports:** do not reintroduce imports from another Superadmin business feature.
+- **No fake production data:** server-like records belong in feature mocks/fixtures, never fallback constants inside production UI.
+- **No hardcoded URLs:** feature-owned routes belong in the single feature URL config.
+- **No async state in Zustand:** use TanStack Query for server state.
+- **Preserve destructive confirmation:** do not bypass the Superadmin confirmation flow.
 
-- **Delete Dashboard is permanent and irreversible:** Never use `window.confirm()` for Dashboard deletion. If a delete feature exists or is added, it MUST use a type-to-confirm modal with the exact string "DELETE" to prevent accidental data loss.
-- **Dashboard Table Row Clicks:** The `Dashboard` list view uses clickable table rows (`<tr className="cursor-pointer">`) for navigation. Ensure that any inline action buttons (like Edit or Delete) inside the table call `e.stopPropagation()` so they don't accidentally trigger the row navigation.
-- **Section-Level Error Boundaries in Dashboard:** Do not allow a single failed API fetch in Dashboard to unmount the entire page. Major components (like the Dashboard data table or metrics) must be wrapped in `<SuperadminErrorBoundary variant="inline">`.
-- **Backend-Driven Messages for Dashboard Mutations:** Do not hardcode success or error toasts like "User created". Always display the `message` string provided by the backend's JSON response envelope when creating, updating, or deleting Dashboard.
-- **No Client-Side Pagination for Dashboard:** If the dataset grows large, do not fetch all Dashboard and paginate on the client. always implement robust server-side pagination, sorting, and filtering via query parameters using useSuperadminUrlState.
+## Component Responsibility Map
 
+| File | Responsibility |
+|---|---|
+| `__tests__/superadmin_dashboard_basic.test.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `dashboard_components/SuperadminDashboardDateFilterDropdown/SuperadminDashboardDateFilterDropdown.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `dashboard_components/SuperadminDashboardView/SuperadminDashboardCharts.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `dashboard_components/SuperadminDashboardView/SuperadminDashboardHeader.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `dashboard_components/SuperadminDashboardView/SuperadminDashboardKpiGrid.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `dashboard_components/SuperadminDashboardView/SuperadminDashboardRecentOnboards.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `dashboard_components/SuperadminDashboardView/SuperadminDashboardView.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `error.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `loading.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `page.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
 
-## State Architecture
-- Server State: TanStack Query
-- UI State: React `useState` or Zustand
+## Rule Compliance Checklist
+- [x] Feature has a route-level `page.tsx` or the route does not require one.
+- [x] Feature has module-owned documentation file.
+- [x] Feature URL configuration is feature-owned when routes/API calls exist.
+- [x] Sibling Superadmin business imports are not allowed.
+- [x] API responses must use Zod validation at the boundary.
+- [x] Server state is owned by TanStack Query where async data is used.
+- [x] UI state remains local or feature-scoped.
+- [ ] Full typecheck/lint/test/build/E2E verification — **NOT VERIFIED** in this working environment because project dependencies are not installed.
+- [ ] Full visual comparison against `web_global_design.md` — **NOT VERIFIED** without browser execution.
 
-
-## Permissions
-- Restricted to SUPERADMIN role.
+## Documentation Consistency
+This feature map is generated from the current repository structure. Where the code does not expose enough static evidence to state an exact runtime fact, the documentation deliberately uses **NOT VERIFIED** rather than inventing a result.

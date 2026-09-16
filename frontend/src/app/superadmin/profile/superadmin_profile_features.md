@@ -1,210 +1,107 @@
 # Superadmin Profile — Feature Map
 
 ## Module Purpose
-The Superadmin Profile module is the self-service identity management surface for the platform
-operator. It allows the superadmin to update their personal information (name, phone, timezone,
-language), change their account password, and toggle two-factor authentication (2FA). This is
-the only place where the superadmin can manage their own credentials — it does not expose any
-tenant data or platform configuration. Gym owners, managers, and trainers have zero access to
-this route.
-
----
+This Superadmin feature owns the `profile` route and its feature-specific UI, client logic, API boundary, types, schemas, constants, mocks, tests, and documentation. It is intended to be operable by the Superadmin role without importing sibling Superadmin business modules. The feature exposes only the controls represented by the current route and code in this folder. Backend authorization remains outside the frontend audit scope.
 
 ## Directory Structure
-- Handler path: `profile_mocks/handlers/`
-- Fixture path: `profile_mocks/fixtures/`
 
-| Folder | Responsibility | Key Files |
+| Folder | Responsibility | Key files |
 |---|---|---|
-| `profile_components/SuperadminProfileMain/` | Root client orchestrator — tab state, delegates to child forms | `SuperadminProfileMain.tsx` |
-| `profile_components/SuperadminProfileAvatarCard/` | Display-only: initials, name, email, role badge, last login, 2FA status | `SuperadminProfileAvatarCard.tsx` |
-| `profile_components/SuperadminProfilePersonalForm/` | RHF + Zod form for name, phone, timezone, language | `SuperadminProfilePersonalForm.tsx` |
-| `profile_components/SuperadminProfileSecurityForm/` | Password change form + 2FA toggle with password confirmation | `SuperadminProfileSecurityForm.tsx` |
-| `profile_api/` | All API calls for profile CRUD | `superadmin_profile_api.ts` |
-| `profile_types/` | TypeScript interfaces for profile data and payloads | `SuperadminProfileTypes.ts` |
-| `profile_utils/` | URL config, Zod schemas, constants, page hook | `SuperadminProfileUrlConfig.ts`, `SuperadminProfileConstants.ts`, `SuperadminProfilePersonalForm.schema.ts`, `SuperadminProfileSecurityForm.schema.ts`, `useProfilePage.ts` |
-
----
+| `__tests__/` | Owns the feature responsibility represented by this folder. | `superadmin_profile_basic.test.tsx` |
+| `profile_api/` | Owns the feature responsibility represented by this folder. | `superadmin_profile_api.ts` |
+| `profile_components/` | Owns the feature responsibility represented by this folder. | `SuperadminProfileAvatarCard.tsx`, `SuperadminProfileMain.test.tsx`, `SuperadminProfileMain.tsx`, `SuperadminProfilePersonalForm.tsx`, `SuperadminProfileSecurityForm.tsx` |
+| `profile_mocks/` | Owns the feature responsibility represented by this folder. | `SuperadminProfileMockHandlers.ts` |
+| `profile_types/` | Owns the feature responsibility represented by this folder. | `SuperadminProfileTypes.ts` |
+| `profile_utils/` | Owns the feature responsibility represented by this folder. | `SuperadminProfileConstants.ts`, `SuperadminProfilePersonalForm.schema.ts`, `SuperadminProfileSecurityForm.schema.ts`, `useSuperadminProfilePage.test.ts`, `useSuperadminProfilePage.test.tsx`, `useSuperadminProfilePage.ts` |
 
 ## Feature Inventory
 
-| Feature | Route | What the User Can Do | Key Components | Main API Calls | Status |
-|---|---|---|---|---|---|
-| Personal Info | `/superadmin/profile` | Update name, phone, timezone, language. Email is read-only. | `SuperadminProfilePersonalForm` | `PATCH /superadmin/profile` | ✅ Live |
-| Change Password | `/superadmin/profile` (Security tab) | Enter current password + new password + confirm. Zod validates match. | `SuperadminProfileSecurityForm` | `PATCH /superadmin/profile/password` | ✅ Live |
-| Toggle 2FA | `/superadmin/profile` (Security tab) | Enable or disable 2FA — requires current password confirmation | `SuperadminProfileSecurityForm` | `PATCH /superadmin/profile/2fa` | ✅ Live |
-| Avatar Display | `/superadmin/profile` | View initials, role badge, last login timestamp, 2FA status badge | `SuperadminProfileAvatarCard` | `GET /superadmin/profile` | ✅ Live |
-
----
+| Feature | Route | User action | Key API/client owner | Status |
+|---|---|---|---|---|
+| `profile` | `/superadmin/profile` | Use the route's controls to perform the operations implemented by the current client UI. | `feature-local API files` | Implemented in source; runtime integration **NOT VERIFIED** without installing project dependencies. |
 
 ## User Flows & Interactions
 
-### Flow 1: Update Personal Info
-1. Superadmin navigates to `/superadmin/profile` — Personal tab is active by default
-2. `useProfilePage.ts` fires `useQuery(['superadmin', 'profile'])` → `GET /superadmin/profile`
-3. Form pre-fills with current name, phone, timezone, language via `reset()` in `useEffect`
-4. Superadmin edits a field → `isDirty` becomes `true` → Save button enables
-5. `useWarnIfUnsavedChanges(isDirty)` activates — guards both `beforeunload` and router navigation
-6. Superadmin clicks "Save Changes" → `updatePersonalMutation.mutate(data)` fires
-7. On success: `toast.success(res.message)`, query invalidated, form resets to new server values
-8. On error: `toast.error(err.message)`, form preserves entered data
+### Flow 1: Open Feature
+1. User navigates to the route shown above.
+2. Next.js renders the route `page.tsx` and its client view.
+3. The feature-owned client layer loads the data needed by the visible UI.
+4. Loading, empty, error, or populated state is rendered according to the current implementation.
 
-### Flow 2: Change Password
-1. Superadmin switches to Security tab → password form renders empty
-2. Fills Current Password, New Password, Confirm Password
-3. Zod `.refine()` validates `newPassword === confirmPassword` before submission
-4. Clicks "Update Password" → `updatePasswordMutation.mutate(values)` fires
-5. On success: `toast.success(res.message)`, form resets via `reset()`
-6. On error: `toast.error(err.message)`, form preserves entered data
-
-### Flow 3: Toggle 2FA
-1. Superadmin is on Security tab — sees current 2FA status badge (Enabled/Disabled)
-2. Enters current password in the 2FA confirmation input
-3. Clicks "Enable 2FA" or "Disable 2FA" (button is disabled until password is non-empty)
-4. `toggle2FAMutation.mutate({ enabled: !profile.twoFactorEnabled, password })` fires
-5. On success: `toast.success(res.message)`, query invalidated, avatar card updates status badge
-
----
+### Flow 2: Execute an Available Action
+1. User activates an action exposed by the current feature UI.
+2. The feature client/hook invokes the feature-owned API function.
+3. The API boundary validates response data using the feature schema when a schema is supplied.
+4. The UI updates local/query state and shows the resulting feedback.
 
 ## Data and State Architecture
-
-- **State pattern:** TanStack Query (`useQuery` / `useMutation`) via `useProfilePage.ts` — single source of truth for all server data
-- **Zustand stores:** None — no complex shared UI state needed
-- **TanStack Query keys:** `['superadmin', 'profile']`
-- **Mutations:** `updatePersonalMutation`, `updatePasswordMutation`, `toggle2FAMutation` — all in `useProfilePage.ts`
-- **FetchState enum:** `personalState`, `passwordState`, `twoFAState` track mutation lifecycle (`'idle' | 'loading' | 'success' | 'error'`) — passed as `isSaving` booleans to child forms
-- **Context providers:** None — inherits `SuperadminQueryProvider` from root layout
-- **Local-storage keys:** None
-- **MSW handler file:** fully configured via profile_mocks/handlers/ — `src/app/superadmin/profile/profile_mocks/handlers/SuperadminProfileMockHandlers.ts` (planned)
-
----
+- **Server state:** TanStack Query where the feature currently uses async queries.
+- **UI state:** local `useState` or a feature-scoped Zustand store where present.
+- **URL state:** `useSuperadminUrlState` only where the feature currently uses query-string filters/pagination.
+- **Sibling business dependencies:** must remain zero; shared transport/UI primitives are infrastructure exceptions only.
 
 ## API Contract
 
-All calls go through `apiFetch` at `@/lib/api`. Response envelope: `{ success, message, data: T | null }`
-
-| Function | Method | Endpoint | Request | Response `data` type |
-|---|---|---|---|---|
-| `fetchProfile()` | GET | `/superadmin/profile` | — | `SuperadminProfileData` |
-| `updateProfile(dto)` | PATCH | `/superadmin/profile` | `{ name, phone, timezone?, language? }` | `SuperadminProfileData` |
-| `updatePassword(dto)` | PATCH | `/superadmin/profile/password` | `{ currentPassword, newPassword, confirmPassword }` | `void` |
-| `toggle2FA(dto)` | PATCH | `/superadmin/profile/2fa` | `{ enabled: boolean, password: string }` | `SuperadminProfileData` |
-
----
-
-## Permissions and Security
-
-- **Required role:** `SUPERADMIN` — enforced by `middleware.ts` checking the `gymsmart_token` HTTP-only cookie
-- **Self-service only:** This module only exposes the currently authenticated superadmin's own data. There is no admin-impersonation or cross-user editing.
-- **Sensitive data:** Password fields use `type="password"` with show/hide toggle. Passwords are never stored in component state beyond the form submission lifecycle.
-- **2FA guard:** `toggle2FAMutation` requires the current password in the payload — backend validates before changing 2FA state.
-- **Cross-role isolation:** Zero imports from `/admin`, `/manager`, `/trainer`. `profile_forbidden.md` enforces this.
-
----
-
-## Loading, Empty, and Error States
-
-| Section | Loading State | Empty State | Error State |
+| Function | Method | Endpoint expression | API file |
 |---|---|---|---|
-| Full page | `loading.tsx` — skeleton mimicking avatar card + tabbed form layout | N/A | `error.tsx` — module-branded error card with "Try Again" calling `reset()` |
-| Profile data | Inline skeleton in `SuperadminProfileMain` when `profileLoading === true` — avatar card ghost + form ghost | N/A | `useProfilePage` `isError` — toast shown, form renders empty |
-| Save button | `Loader2` spinner + "Saving..." text while `isSaving === true`. Button disabled. | N/A | Toast error from mutation `onError` |
-
----
-
-## Edge Cases and AI Warnings
-
-- **Save button disabled when form is not dirty:** `SuperadminProfilePersonalForm` disables the submit button when `isDirty === false`. This prevents no-op API calls. Do not remove this guard.
-- **Password mismatch caught by Zod before submission:** `passwordSchema` uses `.refine()` to validate `newPassword === confirmPassword`. The error appears inline below the Confirm Password field. Never add a manual comparison check in the component.
-- **2FA toggle requires non-empty password:** `handleToggle2FA` is a no-op if `twoFAPassword.trim()` is empty. The button is also `disabled`. Do not remove either guard — both are required.
-- **Email field is permanently read-only:** `profile.email` renders as a `readOnly` input with `cursor-not-allowed`. There is no endpoint to change the superadmin email from this panel. Never add an email field to the form schema.
-- **Form resets after successful save:** `useEffect` on the `profile` prop in `SuperadminProfilePersonalForm` calls `reset()` with the latest server values after a successful mutation. This ensures `isDirty` returns to `false` and the unsaved-changes guard deactivates.
-- **Password form resets immediately after submit:** `reset()` is called in `handlePasswordSubmit` right after `onSavePassword`. This clears all password fields regardless of API outcome — intentional UX to prevent re-submission of the same password.
-- **`useWarnIfUnsavedChanges` guards both beforeunload and router navigation:** The hook intercepts `beforeunload`, anchor clicks, and browser back/forward via `popstate`. It does NOT intercept programmatic `router.push()` calls from within the same module — avoid navigating away programmatically while a form is dirty.
-
----
-
-## Component Responsibility Map
-
-| Component File | Responsibility |
-|---|---|
-| `SuperadminProfileMain.tsx` | Root client orchestrator. Owns tab state. Consumes `useProfilePage`. Passes mutation callbacks and loading states to child forms. No direct API calls. |
-| `SuperadminProfileAvatarCard.tsx` | Display-only. Shows initials avatar, name, email, role badge, last login timestamp, 2FA status badge. Receives `profile` as prop. No mutations. |
-| `SuperadminProfilePersonalForm.tsx` | RHF + Zod form for name, phone, timezone, language. Emits `onSave(payload)` to parent. Manages `isDirty` guard via `useWarnIfUnsavedChanges`. |
-| `SuperadminProfileSecurityForm.tsx` | Password change form (RHF + Zod) + 2FA toggle section. Emits `onSavePassword` and `onToggle2FA` to parent. Local state for password visibility toggles only. |
-| `useProfilePage.ts` | All TanStack Query logic — `useQuery` for profile fetch, three `useMutation` hooks for personal/password/2FA updates. Returns state and mutation functions to `SuperadminProfileMain`. |
-| `superadmin_profile_api.ts` | API layer — `fetchProfile`, `updateProfile`, `updatePassword`, `toggle2FA`. All calls via `apiFetch`. |
-| `SuperadminProfilePersonalForm.schema.ts` | Zod schema for personal form — `personalSchema` + `PersonalFormValues` type. |
-| `SuperadminProfileSecurityForm.schema.ts` | Zod schema for password form — `passwordSchema` + `PasswordFormValues` type with `.refine()` for match validation. |
-| `SuperadminProfileConstants.ts` | `TIMEZONE_OPTIONS` and `LANGUAGE_OPTIONS` arrays — single source of truth for dropdown data. |
-
----
+| No feature API functions detected | — | — | No API service file detected by static scan |
 
 ## UI Data Requirements
 
-The following types map directly to the UI components and define the shape of the data:
+Observed schema/type fields in this feature are listed below. Any UI field not represented by a schema/type is **NOT VERIFIED** and must be checked by the coding agent.
 
-```typescript
-export interface SuperadminProfileData {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  timezone?: string;
-  language?: string;
-  role: 'SUPERADMIN';
-  twoFactorEnabled: boolean;
-  lastLoginAt: string;
-  createdAt: string;
-}
+| Field | Source location |
+|---|---|
+| `name` | Feature-owned schema/type file |
+| `phone` | Feature-owned schema/type file |
+| `timezone` | Feature-owned schema/type file |
+| `language` | Feature-owned schema/type file |
+| `currentPassword` | Feature-owned schema/type file |
 
-export interface UpdateSuperadminProfilePayload {
-  name: string;
-  phone: string;
-  timezone?: string;
-  language?: string;
-}
+## Permissions and Security
+- **Role:** `SUPERADMIN` UI.
+- **Frontend boundary:** route and feature UI are under `/superadmin`.
+- **Destructive actions:** must use the Superadmin confirmation infrastructure where the feature exposes destructive controls.
+- **Backend authorization:** not evaluated here and must not be inferred from frontend checks.
 
-export interface UpdateSuperadminPasswordPayload {
-  currentPassword: string;
-  newPassword: string;
-  confirmPassword: string;
-}
+## Loading, Empty, and Error States
+- **Route loading:** use the feature `loading.tsx` when present.
+- **Route error:** use the feature `error.tsx` when present.
+- **Feature empty/error:** use the feature-specific empty/error UI already present in the source.
+- Any runtime transition behavior not statically provable is **NOT VERIFIED**.
 
-export interface Toggle2FAPayload {
-  enabled: boolean;
-  password: string;
-}
+## Edge Cases and AI Warnings
+- **No sibling business imports:** do not reintroduce imports from another Superadmin business feature.
+- **No fake production data:** server-like records belong in feature mocks/fixtures, never fallback constants inside production UI.
+- **No hardcoded URLs:** feature-owned routes belong in the single feature URL config.
+- **No async state in Zustand:** use TanStack Query for server state.
+- **Preserve destructive confirmation:** do not bypass the Superadmin confirmation flow.
 
-export type ProfileTab = 'personal' | 'security';
-```
+## Component Responsibility Map
+
+| File | Responsibility |
+|---|---|
+| `__tests__/superadmin_profile_basic.test.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `error.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `loading.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `page.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `profile_components/SuperadminProfileAvatarCard/SuperadminProfileAvatarCard.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `profile_components/SuperadminProfileMain/SuperadminProfileMain.test.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `profile_components/SuperadminProfileMain/SuperadminProfileMain.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `profile_components/SuperadminProfilePersonalForm/SuperadminProfilePersonalForm.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `profile_components/SuperadminProfileSecurityForm/SuperadminProfileSecurityForm.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `profile_utils/useSuperadminProfilePage.test.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
 
 ## Rule Compliance Checklist
+- [x] Feature has a route-level `page.tsx` or the route does not require one.
+- [x] Feature has module-owned documentation file.
+- [x] Feature URL configuration is feature-owned when routes/API calls exist.
+- [x] Sibling Superadmin business imports are not allowed.
+- [x] API responses must use Zod validation at the boundary.
+- [x] Server state is owned by TanStack Query where async data is used.
+- [x] UI state remains local or feature-scoped.
+- [ ] Full typecheck/lint/test/build/E2E verification — **NOT VERIFIED** in this working environment because project dependencies are not installed.
+- [ ] Full visual comparison against `web_global_design.md` — **NOT VERIFIED** without browser execution.
 
-- [x] Rule 1: Micro-modularization — module-prefixed subfolders, 300-line ceiling respected
-- [x] Rule 2: Total Role Isolation — zero cross-role imports verified
-- [x] Rule 3: Hyper-descriptive naming — `SuperadminProfile*` prefix on all files
-- [x] Rule 3B: Centralized data — `TIMEZONE_OPTIONS`, `LANGUAGE_OPTIONS` in `SuperadminProfileConstants.ts`
-- [x] Rule 4: Theme Independence — no hardcoded hex/Tailwind arbitrary values in JSX
-- [x] Rule 6: Logic/UI Separation — all mutations and query logic in `useProfilePage.ts`
-- [x] Rule 7: Type Isolation — all types in `SuperadminProfileTypes.ts`; Zod schemas in dedicated `.schema.ts` files
-- [x] Rule 8: Server/Client Boundary — `page.tsx` = Server Component, `SuperadminProfileMain` = Client
-- [x] Rule 9: `loading.tsx` + `error.tsx` present with non-generic content
-- [x] Rule 11: Centralized URL Config — `SuperadminProfileUrlConfig.ts` used in API layer
-- [x] Rule 13: Feature Map — this document
-- [x] Rule 14: Backend-driven messages — all toasts display `res.message` / `err.message`; no hardcoded strings
-- [x] Rule 15B: Forms use React Hook Form + Zod
-- [x] Rule 15C: Mutations use TanStack Query `useMutation` — no manual try/catch async state
-- [x] Rule 26: Loading button states — `Loader2` spinner on all async actions
-- [x] Rule 32: No barrel files — direct named imports only
-- [x] Rule 40: `profile_forbidden.md` present
-- [x] Rule 42: Network State Enum — `FetchState` enum used, not boolean flags
-- [x] Rule 73: `import type` used for all type-only imports
-- [x] Rule 79: Unsaved changes guard — `useWarnIfUnsavedChanges(isDirty)` on personal and security forms
-- [ ] Rule 15A: Tests — `SuperadminProfileMain.test.tsx` exists; hooks and utils need co-located tests
-- [ ] Rule 75: MSW handlers — fully configured via profile_mocks/handlers/
-
-
-## State Architecture
-- Server State: TanStack Query
-- UI State: React `useState` or Zustand
+## Documentation Consistency
+This feature map is generated from the current repository structure. Where the code does not expose enough static evidence to state an exact runtime fact, the documentation deliberately uses **NOT VERIFIED** rather than inventing a result.

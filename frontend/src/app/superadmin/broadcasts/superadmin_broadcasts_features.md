@@ -1,155 +1,129 @@
 # Superadmin Broadcasts — Feature Map
 
 ## Module Purpose
-The Superadmin Broadcasts module enables platform-wide mass announcements to all gym
-tenants simultaneously. Broadcasts are used for maintenance windows, feature release
-announcements, policy updates, and critical platform alerts. Unlike the Messaging module
-(1-to-1 targeted), Broadcasts are 1-to-many and cannot be targeted to individual tenants.
-All broadcasts are logged and visible to tenants in their notification center.
+This Superadmin feature owns the `broadcasts` route and its feature-specific UI, client logic, API boundary, types, schemas, constants, mocks, tests, and documentation. It is intended to be operable by the Superadmin role without importing sibling Superadmin business modules. The feature exposes only the controls represented by the current route and code in this folder. Backend authorization remains outside the frontend audit scope.
 
 ## Directory Structure
-| File | Responsibility |
-|---|---|
-| `page.tsx` | Server Component — auth guard |
-| `loading.tsx` | Table skeleton + compose area placeholder |
-| `error.tsx` | Error boundary with retry |
-| `broadcasts_components/SuperadminBroadcastsClient.tsx` | Root Client Component — broadcasts table + modals |
-| `broadcasts_components/SuperadminBroadcastsTable/` | Table of broadcasts |
-| `broadcasts_components/SuperadminBroadcastsHeader/` | Search, filter, and create button |
-| `broadcasts_components/SuperadminBroadcastsEmptyState/` | Empty state when no broadcasts |
-| `broadcasts_components/SuperadminBroadcastModal.tsx` | Compose new broadcast modal |
-| `broadcasts_components/SuperadminBroadcastQueueModal.tsx` | Modal showing queue progress when sending |
-| `broadcasts_components/SuperadminBroadcastStatusBadge/` | Status badge for broadcasts |
-| `broadcasts_types/` | Broadcast types |
-| `broadcasts_utils/` | Shared utilities and hooks (`useSuperadminBroadcastsPage`) |
+
+| Folder | Responsibility | Key files |
+|---|---|---|
+| `__tests__/` | Owns the feature responsibility represented by this folder. | `superadmin_broadcasts_basic.test.tsx` |
+| `broadcasts_components/` | Owns the feature responsibility represented by this folder. | `SuperadminBroadcastModal.tsx`, `SuperadminBroadcastQueueModal.tsx`, `SuperadminBroadcastStatusBadge.tsx`, `SuperadminBroadcastsClient.tsx`, `SuperadminBroadcastsEmptyState.tsx`, `SuperadminBroadcastsHeader.tsx`, `SuperadminBroadcastsTable.tsx` |
+| `broadcasts_mocks/` | Owns the feature responsibility represented by this folder. | `SuperadminBroadcastsMockFixtures.ts`, `SuperadminBroadcastsMockHandlers.ts` |
+| `broadcasts_utils/` | Owns the feature responsibility represented by this folder. | `SuperadminBroadcastsSchemas.ts`, `useSuperadminBroadcastsData.test.ts`, `useSuperadminBroadcastsData.ts`, `useSuperadminBroadcastsMutations.test.ts`, `useSuperadminBroadcastsMutations.ts`, `useSuperadminBroadcastsPage.test.ts`, `useSuperadminBroadcastsPage.ts` |
+| `superadmin_broadcasts_api/` | Owns the feature responsibility represented by this folder. | `superadmin_broadcasts_api.ts` |
+| `superadmin_broadcasts_types/` | Owns the feature responsibility represented by this folder. | `superadmin_broadcasts_types.ts` |
 
 ## Feature Inventory
-| Feature | Path | Purpose | Main API Calls | Status |
+
+| Feature | Route | User action | Key API/client owner | Status |
 |---|---|---|---|---|
-| Broadcast History | `/superadmin/broadcasts` | All past broadcasts with reach stats | `GET /superadmin/broadcasts?page=` | ✅ Live |
-| Compose Broadcast | `/superadmin/broadcasts` | Create and send/schedule broadcast | `POST /superadmin/broadcasts` | ✅ Live |
-| Preview Before Send | `/superadmin/broadcasts` | Preview modal before confirming send | — (client-side preview) | ✅ Live |
-| Cancel Scheduled | `/superadmin/broadcasts` | Cancel a scheduled (not yet sent) broadcast | `DELETE /superadmin/broadcasts/:id` | ✅ Live |
+| `broadcasts` | `/superadmin/broadcasts` | Use the route's controls to perform the operations implemented by the current client UI. | `broadcasts/superadmin_broadcasts_api/superadmin_broadcasts_api.ts` | Implemented in source; runtime integration **NOT VERIFIED** without installing project dependencies. |
+
+## User Flows & Interactions
+
+### Flow 1: Open Feature
+1. User navigates to the route shown above.
+2. Next.js renders the route `page.tsx` and its client view.
+3. The feature-owned client layer loads the data needed by the visible UI.
+4. Loading, empty, error, or populated state is rendered according to the current implementation.
+
+### Flow 2: Execute an Available Action
+1. User activates an action exposed by the current feature UI.
+2. The feature client/hook invokes the feature-owned API function.
+3. The API boundary validates response data using the feature schema when a schema is supplied.
+4. The UI updates local/query state and shows the resulting feedback.
 
 ## Data and State Architecture
-- TanStack Query keys: `['superadmin', 'broadcasts', { page }]`
-- Mutations: `useCreateBroadcast`, `useCancelBroadcast`
-- Zustand stores: None
-- Context providers: None
-- Local-state: `showComposeForm` (boolean) — local to `SuperadminBroadcastsClient`
+- **Server state:** TanStack Query where the feature currently uses async queries.
+- **UI state:** local `useState` or a feature-scoped Zustand store where present.
+- **URL state:** `useSuperadminUrlState` only where the feature currently uses query-string filters/pagination.
+- **Sibling business dependencies:** must remain zero; shared transport/UI primitives are infrastructure exceptions only.
 
-## User Flows
-1. Superadmin opens `/superadmin/broadcasts` → broadcast history table loads
-2. Superadmin clicks "New Broadcast" → compose form expands
-3. Superadmin fills subject, body, channel, optional schedule → clicks "Preview" → `SuperadminBroadcastsPreviewModal`
-4. Superadmin confirms in preview → `POST /superadmin/broadcasts` → history table invalidated
-5. Superadmin clicks "Cancel" on a SCHEDULED broadcast → `useConfirm()` → `DELETE /superadmin/broadcasts/:id`
+## API Contract
 
-## Component Responsibility Map
-- `SuperadminBroadcastsClient` — compose visibility state. MUST NOT contain form logic.
-- `SuperadminBroadcastModal` — handles creating/editing broadcasts. MUST use RHF + Zod.
-- `SuperadminBroadcastQueueModal` — displays queue progress during send.
-- `SuperadminBroadcastsTable` — read-only table of broadcasts.
-
-## Permissions and Security
-| Action | Required Role |
-|---|---|
-| View broadcast history | `SUPERADMIN` |
-| Send broadcast | `SUPERADMIN` |
-| Cancel scheduled broadcast | `SUPERADMIN` |
-| ❌ Target individual tenants | Use Messaging module |
-| ❌ Delete sent broadcasts | Forbidden — immutable audit record |
-
-## Loading, Empty, Error States
-- **Loading:** `loading.tsx` — compose area placeholder + 5 history row skeletons
-- **Empty:** "No broadcasts sent yet" with "Send First Broadcast" CTA
-- **Error:** `error.tsx` with retry
-
-## Edge Cases / AI Warnings
-- **Send confirmation** — sending a broadcast to ALL tenants is irreversible; MUST show preview modal before `POST`.
-- **Cancel only for SCHEDULED** — only broadcasts with `status === 'SCHEDULED'` show the cancel button; never show cancel on SENT.
-- **BROADCAST_CHANNEL_STYLES** — maps `EMAIL | SMS | IN_APP` to badge classes; must live in constants.
-- **Body sanitization** — broadcast body is rendered as HTML in tenant notification center; backend must sanitize; frontend must not render raw HTML from API response without sanitization.
-- **Schedule field** — optional ISO datetime; if omitted, broadcast sends immediately.
+| Function | Method | Endpoint expression | API file |
+|---|---|---|---|
+| `deleteBroadcast()` | `PATCH` | `${BroadcastsUrlConfig.BACKEND_API.BASE}/${id}` | `broadcasts/superadmin_broadcasts_api/superadmin_broadcasts_api.ts` |
+| `updateBroadcast()` | `PATCH` | `${BroadcastsUrlConfig.BACKEND_API.BASE}/${id}` | `broadcasts/superadmin_broadcasts_api/superadmin_broadcasts_api.ts` |
+| `fetchRecipientCount()` | `GET` | `${BroadcastsUrlConfig.BACKEND_API.BASE}/recipient-count` | `broadcasts/superadmin_broadcasts_api/superadmin_broadcasts_api.ts` |
 
 ## UI Data Requirements
 
-The following types map directly to the UI components and define the shape of the data:
+Observed schema/type fields in this feature are listed below. Any UI field not represented by a schema/type is **NOT VERIFIED** and must be checked by the coding agent.
 
-```typescript
-export type BroadcastStatus = z.infer<typeof BroadcastStatusSchema>;
+| Field | Source location |
+|---|---|
+| `id` | Feature-owned schema/type file |
+| `title` | Feature-owned schema/type file |
+| `content` | Feature-owned schema/type file |
+| `status` | Feature-owned schema/type file |
+| `targetGymIds` | Feature-owned schema/type file |
+| `scheduledDate` | Feature-owned schema/type file |
+| `sentDate` | Feature-owned schema/type file |
+| `totalRecipients` | Feature-owned schema/type file |
+| `deliveredCount` | Feature-owned schema/type file |
+| `failedCount` | Feature-owned schema/type file |
+| `audience` | Feature-owned schema/type file |
+| `name` | Feature-owned schema/type file |
+| `plan` | Feature-owned schema/type file |
+| `ownerName` | Feature-owned schema/type file |
+| `phone` | Feature-owned schema/type file |
+| `searchQuery` | Feature-owned schema/type file |
+| `onSearchChange` | Feature-owned schema/type file |
+| `statusFilter` | Feature-owned schema/type file |
+| `onStatusFilterChange` | Feature-owned schema/type file |
+| `onCreateClick` | Feature-owned schema/type file |
+| `broadcasts` | Feature-owned schema/type file |
+| `onSend` | Feature-owned schema/type file |
+| `onEdit` | Feature-owned schema/type file |
+| `onDelete` | Feature-owned schema/type file |
 
-export type BroadcastAudience = z.infer<typeof BroadcastAudienceSchema>;
+## Permissions and Security
+- **Role:** `SUPERADMIN` UI.
+- **Frontend boundary:** route and feature UI are under `/superadmin`.
+- **Destructive actions:** must use the Superadmin confirmation infrastructure where the feature exposes destructive controls.
+- **Backend authorization:** not evaluated here and must not be inferred from frontend checks.
 
-export type BroadcastStatusFilter = 'ALL' | BroadcastStatus | 'FAILED';
-
-export type Broadcast = z.infer<typeof BroadcastResponseSchema>;
-
-export type BroadcastFormData = z.infer<typeof BroadcastSchema>;
-
-export interface BroadcastsHeaderProps {
-  searchQuery: string;
-  onSearchChange: (value: string) => void;
-  statusFilter?: 'ALL' | 'DRAFT' | 'SCHEDULED' | 'SENT' | 'FAILED';
-  onStatusFilterChange?: (value: 'ALL' | 'DRAFT' | 'SCHEDULED' | 'SENT' | 'FAILED') => void;
-  onCreateClick: () => void;
-}
-
-export interface BroadcastsTableProps {
-  broadcasts: Broadcast[];
-  onSend: (id: string) => void;
-  onEdit: (broadcast: Broadcast) => void;
-  onDelete: (id: string) => void;
-  onCreateClick: () => void;
-}
-
-export interface BroadcastStatusBadgeProps {
-  status: BroadcastStatus;
-}
-
-export interface BroadcastsEmptyStateProps {
-  onCreateClick: () => void;
-}
-
-export type SuperadminBroadcastsTenant = z.infer<typeof SuperadminBroadcastsTenantSchema>;
-```
-
-## Rule Compliance Checklist
-- [x] Rule 1: Micro-modularization
-- [x] Rule 3: Module prefix naming — `SuperadminBroadcasts*`
-- [x] Rule 7: Type isolation — all types in `SuperadminBroadcastsTypes.ts`
-- [x] Rule 8: Server/Client Boundary — `page.tsx` = Server Component
-- [x] Rule 9: `loading.tsx` + `error.tsx` present
-- [x] Rule 13: Feature Map — this document
-- [x] Rule 15B: Forms use React Hook Form + Zod
-- [x] Rule 26: Cancel uses `useConfirm()`
-- [x] Rule 40: `_forbidden.md` present
-- [x] Rule 55: No `key={index}` — stable broadcast IDs used
-- [x] Rule 63: Zero cross-module imports
-- [x] Rule 73: `import type` for all type-only imports
-
----
+## Loading, Empty, and Error States
+- **Route loading:** use the feature `loading.tsx` when present.
+- **Route error:** use the feature `error.tsx` when present.
+- **Feature empty/error:** use the feature-specific empty/error UI already present in the source.
+- Any runtime transition behavior not statically provable is **NOT VERIFIED**.
 
 ## Edge Cases and AI Warnings
+- **No sibling business imports:** do not reintroduce imports from another Superadmin business feature.
+- **No fake production data:** server-like records belong in feature mocks/fixtures, never fallback constants inside production UI.
+- **No hardcoded URLs:** feature-owned routes belong in the single feature URL config.
+- **No async state in Zustand:** use TanStack Query for server state.
+- **Preserve destructive confirmation:** do not bypass the Superadmin confirmation flow.
 
-- **Delete Broadcast is permanent and irreversible:** Never use `window.confirm()` for Broadcast deletion. If a delete feature exists or is added, it MUST use a type-to-confirm modal with the exact string "DELETE" to prevent accidental data loss.
-- **Broadcasts Table Row Clicks:** The `Broadcasts` list view uses clickable table rows (`<tr className="cursor-pointer">`) for navigation. Ensure that any inline action buttons (like Edit or Delete) inside the table call `e.stopPropagation()` so they don't accidentally trigger the row navigation.
-- **Section-Level Error Boundaries in Broadcasts:** Do not allow a single failed API fetch in Broadcasts to unmount the entire page. Major components (like the Broadcasts data table or metrics) must be wrapped in `<SuperadminErrorBoundary variant="inline">`.
-- **Backend-Driven Messages for Broadcasts Mutations:** Do not hardcode success or error toasts like "User created". Always display the `message` string provided by the backend's JSON response envelope when creating, updating, or deleting Broadcasts.
-- **No Client-Side Pagination for Broadcasts:** If the dataset grows large, do not fetch all Broadcasts and paginate on the client. always implement robust server-side pagination, sorting, and filtering via query parameters using useSuperadminUrlState.
+## Component Responsibility Map
 
+| File | Responsibility |
+|---|---|
+| `__tests__/superadmin_broadcasts_basic.test.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `broadcasts_components/SuperadminBroadcastModal.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `broadcasts_components/SuperadminBroadcastQueueModal.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `broadcasts_components/SuperadminBroadcastStatusBadge/SuperadminBroadcastStatusBadge.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `broadcasts_components/SuperadminBroadcastsClient.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `broadcasts_components/SuperadminBroadcastsEmptyState/SuperadminBroadcastsEmptyState.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `broadcasts_components/SuperadminBroadcastsHeader/SuperadminBroadcastsHeader.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `broadcasts_components/SuperadminBroadcastsTable/SuperadminBroadcastsTable.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `error.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `loading.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `page.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
 
-## API Contract
-All calls are isolated to `superadmin_broadcasts_api.ts`.
+## Rule Compliance Checklist
+- [x] Feature has a route-level `page.tsx` or the route does not require one.
+- [x] Feature has module-owned documentation file.
+- [x] Feature URL configuration is feature-owned when routes/API calls exist.
+- [x] Sibling Superadmin business imports are not allowed.
+- [x] API responses must use Zod validation at the boundary.
+- [x] Server state is owned by TanStack Query where async data is used.
+- [x] UI state remains local or feature-scoped.
+- [ ] Full typecheck/lint/test/build/E2E verification — **NOT VERIFIED** in this working environment because project dependencies are not installed.
+- [ ] Full visual comparison against `web_global_design.md` — **NOT VERIFIED** without browser execution.
 
-- `return apiFetch<ApiResponse<Broadcast[]>>(`${BroadcastsUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.array(BroadcastResponseSchema) });`
-- `createBroadcast: (body: BroadcastFormData) => apiFetch<ApiResponse<Broadcast>>(BroadcastsUrlConfig.BACKEND_API.BASE, { method: 'POST', body: JSON.stringify(body),`
-- `deleteBroadcast: (id: string) => apiFetch<ApiResponse<void>>(`${BroadcastsUrlConfig.BACKEND_API.BASE}/${id}`, { method: 'DELETE',`
-- `updateBroadcast: (id: string, body: Partial<BroadcastFormData>) => apiFetch<ApiResponse<Broadcast>>(`${BroadcastsUrlConfig.BACKEND_API.BASE}/${id}`, { method: 'PATCH', body: JSON.stringify(body),`
-- `fetchTenants: () => apiFetch<ApiResponse<unknown[]>>(UrlConfig.BACKEND_API.BASE),`
-- `fetchRecipientCount: () => apiFetch<ApiResponse<{ count: number }>>(`${BroadcastsUrlConfig.BACKEND_API.BASE}/recipient-count`, { dataSchema: z.object({}).passthrough() }),`
-
-
-## State Architecture
-- Server State: TanStack Query
-- UI State: React `useState` or Zustand
+## Documentation Consistency
+This feature map is generated from the current repository structure. Where the code does not expose enough static evidence to state an exact runtime fact, the documentation deliberately uses **NOT VERIFIED** rather than inventing a result.

@@ -1,126 +1,114 @@
 # Superadmin Features — Feature Map
 
 ## Module Purpose
-The Superadmin Features module is the platform-level feature flag control panel. Superadmins
-enable or disable specific product features per SaaS plan tier or per individual tenant
-(overrides). This controls which modules appear in a tenant's sidebar, which API endpoints
-are accessible, and which UI sections are rendered. Feature flags are the enforcement
-mechanism for plan-based feature gating across the entire platform.
+This Superadmin feature owns the `features` route and its feature-specific UI, client logic, API boundary, types, schemas, constants, mocks, tests, and documentation. It is intended to be operable by the Superadmin role without importing sibling Superadmin business modules. The feature exposes only the controls represented by the current route and code in this folder. Backend authorization remains outside the frontend audit scope.
 
 ## Directory Structure
-| File | Responsibility |
-|---|---|
-| `page.tsx` | Server Component — auth guard |
-| `loading.tsx` | Feature flag table skeleton |
-| `error.tsx` | Error boundary with retry |
-| `features_components/SuperadminFeaturesClient.tsx` | Root Client Component — tabs (By Plan / By Tenant) |
-| `features_components/SuperadminFeaturesByPlanTab.tsx` | Matrix table — plans as columns, features as rows |
-| `features_components/SuperadminFeaturesByTenantTab.tsx` | Per-tenant override table |
-| `features_components/SuperadminFeaturesToggle.tsx` | Single toggle cell — enabled/disabled with optimistic update |
-| `features_components/SuperadminFeaturesTenantOverrideModal.tsx` | Add/edit per-tenant feature override |
-| `features_components/SuperadminFeaturesSearchBar.tsx` | Search features by name |
-| `features_types/SuperadminFeaturesTypes.ts` | `FeatureFlag`, `PlanFeatureMatrix`, `TenantOverride`, `ToggleFeatureDto` |
-| `features_utils/SuperadminFeaturesConstants.ts` | `FEATURE_CATEGORY_LABELS`, `FEATURE_LIST` |
+
+| Folder | Responsibility | Key files |
+|---|---|---|
+| `__tests__/` | Owns the feature responsibility represented by this folder. | `superadmin_features_basic.test.tsx` |
+| `features_components/` | Owns the feature responsibility represented by this folder. | `SuperadminFeatureHistoryModal.tsx`, `SuperadminFeatureRolloutModal.tsx`, `SuperadminFeaturesClient.tsx` |
+| `features_mocks/` | Owns the feature responsibility represented by this folder. | `SuperadminFeaturesMockHandlers.ts` |
+| `features_utils/` | Owns the feature responsibility represented by this folder. | `useSuperadminFeaturesData.test.ts`, `useSuperadminFeaturesData.ts` |
+| `superadmin_features_api/` | Owns the feature responsibility represented by this folder. | `superadmin_features_api.ts` |
+| `superadmin_features_types/` | Owns the feature responsibility represented by this folder. | `superadmin_features_types.ts`, `superadmin_features_ui_types.ts` |
 
 ## Feature Inventory
-| Feature | Path | Purpose | Main API Calls | Status |
+
+| Feature | Route | User action | Key API/client owner | Status |
 |---|---|---|---|---|
-| Plan Feature Matrix | `/superadmin/features` | Toggle features per plan tier | `GET /superadmin/features/matrix` | ✅ Live |
-| Toggle Plan Feature | `/superadmin/features` | Enable/disable feature for a plan | `PATCH /superadmin/features/plan/:planId/feature/:featureKey` | ✅ Live |
-| Tenant Overrides List | `/superadmin/features` | Per-tenant feature overrides | `GET /superadmin/features/overrides` | ✅ Live |
-| Add Tenant Override | `/superadmin/features` | Override feature for specific tenant | `POST /superadmin/features/overrides` | ✅ Live |
-| Remove Tenant Override | `/superadmin/features` | Remove override — revert to plan default | `DELETE /superadmin/features/overrides/:id` | ✅ Live |
+| `features` | `/superadmin/features` | Use the route's controls to perform the operations implemented by the current client UI. | `feature-local API files` | Implemented in source; runtime integration **NOT VERIFIED** without installing project dependencies. |
+
+## User Flows & Interactions
+
+### Flow 1: Open Feature
+1. User navigates to the route shown above.
+2. Next.js renders the route `page.tsx` and its client view.
+3. The feature-owned client layer loads the data needed by the visible UI.
+4. Loading, empty, error, or populated state is rendered according to the current implementation.
+
+### Flow 2: Execute an Available Action
+1. User activates an action exposed by the current feature UI.
+2. The feature client/hook invokes the feature-owned API function.
+3. The API boundary validates response data using the feature schema when a schema is supplied.
+4. The UI updates local/query state and shows the resulting feedback.
 
 ## Data and State Architecture
-- TanStack Query keys: `['superadmin', 'features', 'matrix']`, `['superadmin', 'features', 'overrides']`
-- Mutations: `useTogglePlanFeature`, `useAddTenantOverride`, `useRemoveTenantOverride`
-- Zustand stores: None
-- Context providers: None
-- Local-state: `activeTab`, `searchQuery` — local to `SuperadminFeaturesClient`
+- **Server state:** TanStack Query where the feature currently uses async queries.
+- **UI state:** local `useState` or a feature-scoped Zustand store where present.
+- **URL state:** `useSuperadminUrlState` only where the feature currently uses query-string filters/pagination.
+- **Sibling business dependencies:** must remain zero; shared transport/UI primitives are infrastructure exceptions only.
 
-## User Flows
-1. Superadmin opens `/superadmin/features` → "By Plan" tab loads matrix
-2. Superadmin clicks toggle cell → optimistic update → `PATCH` → revert on error
-3. Superadmin switches to "By Tenant" tab → overrides list loads
-4. Superadmin clicks "Add Override" → `SuperadminFeaturesTenantOverrideModal` → tenant + feature + enabled → `POST`
-5. Superadmin clicks "Remove Override" → `useConfirm()` → `DELETE`
+## API Contract
 
-## Component Responsibility Map
-- `SuperadminFeaturesClient` — tab state + search state. MUST NOT contain toggle logic.
-- `SuperadminFeaturesByPlanTab` — matrix display. MUST NOT manage tab state.
-- `SuperadminFeaturesToggle` — single toggle with optimistic update. MUST revert on API error.
-- `SuperadminFeaturesTenantOverrideModal` — form only. MUST use RHF + Zod.
-
-## Permissions and Security
-| Action | Required Role |
-|---|---|
-| View feature matrix | `SUPERADMIN` |
-| Toggle plan features | `SUPERADMIN` |
-| Add tenant override | `SUPERADMIN` |
-| Remove tenant override | `SUPERADMIN` |
-| ❌ Tenant self-managing features | Forbidden — superadmin only |
-
-## Loading, Empty, Error States
-- **Loading:** `loading.tsx` — matrix table skeleton (features × plans grid)
-- **Empty overrides:** "No tenant overrides — all tenants follow plan defaults"
-- **Error:** `error.tsx` with retry; toggle errors show inline toast
-
-## Edge Cases / AI Warnings
-- **Optimistic toggle** — `SuperadminFeaturesToggle` must optimistically flip the toggle and revert if the `PATCH` fails. Never wait for API before updating UI.
-- **FEATURE_LIST** — the canonical list of all feature keys must live in `SuperadminFeaturesConstants.ts`; never hardcode feature keys in components.
-- **Override vs plan default** — tenant override takes precedence over plan default; UI must visually distinguish overridden cells.
-- **Remove override confirmation** — MUST use `useConfirm()` before `DELETE`.
+| Function | Method | Endpoint expression | API file |
+|---|---|---|---|
+| No feature API functions detected | — | — | No API service file detected by static scan |
 
 ## UI Data Requirements
 
-The following types map directly to the UI components and define the shape of the data:
+Observed schema/type fields in this feature are listed below. Any UI field not represented by a schema/type is **NOT VERIFIED** and must be checked by the coding agent.
 
-```typescript
-export type FeatureFlag = z.infer<typeof FeatureFlagSchema>;
+| Field | Source location |
+|---|---|
+| `id` | Feature-owned schema/type file |
+| `name` | Feature-owned schema/type file |
+| `description` | Feature-owned schema/type file |
+| `isGlobalEnabled` | Feature-owned schema/type file |
+| `enabledTenantIds` | Feature-owned schema/type file |
+| `version` | Feature-owned schema/type file |
+| `title` | Feature-owned schema/type file |
+| `content` | Feature-owned schema/type file |
+| `date` | Feature-owned schema/type file |
+| `isPublished` | Feature-owned schema/type file |
+| `plan` | Feature-owned schema/type file |
+| `isOpen` | Feature-owned schema/type file |
+| `onClose` | Feature-owned schema/type file |
+| `flag` | Feature-owned schema/type file |
+| `onSaveRollout` | Feature-owned schema/type file |
 
-export type ReleaseNote = z.infer<typeof ReleaseNoteSchema>;
+## Permissions and Security
+- **Role:** `SUPERADMIN` UI.
+- **Frontend boundary:** route and feature UI are under `/superadmin`.
+- **Destructive actions:** must use the Superadmin confirmation infrastructure where the feature exposes destructive controls.
+- **Backend authorization:** not evaluated here and must not be inferred from frontend checks.
 
-export type SuperadminFeaturesTenant = z.infer<typeof SuperadminFeaturesTenantSchema>;
-```
-
-## Rule Compliance Checklist
-- [x] Rule 1: Micro-modularization
-- [x] Rule 3: Module prefix naming — `SuperadminFeatures*`
-- [x] Rule 7: Type isolation — all types in `SuperadminFeaturesTypes.ts`
-- [x] Rule 8: Server/Client Boundary — `page.tsx` = Server Component
-- [x] Rule 9: `loading.tsx` + `error.tsx` present
-- [x] Rule 13: Feature Map — this document
-- [x] Rule 15B: Forms use React Hook Form + Zod
-- [x] Rule 26: Remove override uses `useConfirm()`
-- [x] Rule 40: `_forbidden.md` present
-- [x] Rule 55: No `key={index}` — stable feature keys + override IDs used
-- [x] Rule 63: Zero cross-module imports
-- [x] Rule 73: `import type` for all type-only imports
-
----
+## Loading, Empty, and Error States
+- **Route loading:** use the feature `loading.tsx` when present.
+- **Route error:** use the feature `error.tsx` when present.
+- **Feature empty/error:** use the feature-specific empty/error UI already present in the source.
+- Any runtime transition behavior not statically provable is **NOT VERIFIED**.
 
 ## Edge Cases and AI Warnings
+- **No sibling business imports:** do not reintroduce imports from another Superadmin business feature.
+- **No fake production data:** server-like records belong in feature mocks/fixtures, never fallback constants inside production UI.
+- **No hardcoded URLs:** feature-owned routes belong in the single feature URL config.
+- **No async state in Zustand:** use TanStack Query for server state.
+- **Preserve destructive confirmation:** do not bypass the Superadmin confirmation flow.
 
-- **Delete Feature is permanent and irreversible:** Never use `window.confirm()` for Feature deletion. If a delete feature exists or is added, it MUST use a type-to-confirm modal with the exact string "DELETE" to prevent accidental data loss.
-- **Features Table Row Clicks:** The `Features` list view uses clickable table rows (`<tr className="cursor-pointer">`) for navigation. Ensure that any inline action buttons (like Edit or Delete) inside the table call `e.stopPropagation()` so they don't accidentally trigger the row navigation.
-- **Section-Level Error Boundaries in Features:** Do not allow a single failed API fetch in Features to unmount the entire page. Major components (like the Features data table or metrics) must be wrapped in `<SuperadminErrorBoundary variant="inline">`.
-- **Backend-Driven Messages for Features Mutations:** Do not hardcode success or error toasts like "User created". Always display the `message` string provided by the backend's JSON response envelope when creating, updating, or deleting Features.
-- **No Client-Side Pagination for Features:** If the dataset grows large, do not fetch all Features and paginate on the client. always implement robust server-side pagination, sorting, and filtering via query parameters using useSuperadminUrlState.
+## Component Responsibility Map
 
+| File | Responsibility |
+|---|---|
+| `__tests__/superadmin_features_basic.test.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `error.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `features_components/SuperadminFeatureHistoryModal.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `features_components/SuperadminFeatureRolloutModal.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `features_components/SuperadminFeaturesClient.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `loading.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `page.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
 
-## API Contract
-All calls are isolated to `superadmin_features_api.ts`.
+## Rule Compliance Checklist
+- [x] Feature has a route-level `page.tsx` or the route does not require one.
+- [x] Feature has module-owned documentation file.
+- [x] Feature URL configuration is feature-owned when routes/API calls exist.
+- [x] Sibling Superadmin business imports are not allowed.
+- [x] API responses must use Zod validation at the boundary.
+- [x] Server state is owned by TanStack Query where async data is used.
+- [x] UI state remains local or feature-scoped.
+- [ ] Full typecheck/lint/test/build/E2E verification — **NOT VERIFIED** in this working environment because project dependencies are not installed.
+- [ ] Full visual comparison against `web_global_design.md` — **NOT VERIFIED** without browser execution.
 
-- `apiFetch<ApiResponse<{ flags: FeatureFlag[]; notes: ReleaseNote[] }>>(FeaturesUrlConfig.BACKEND_API.BASE, {`
-- `apiFetch<ApiResponse<FeatureFlag>>(`${FeaturesUrlConfig.BACKEND_API.BASE}/flags`, {`
-- `apiFetch<ApiResponse<FeatureFlag>>(`${FeaturesUrlConfig.BACKEND_API.BASE}/flags/${id}`, {`
-- `apiFetch<ApiResponse<FeatureFlag>>(`${FeaturesUrlConfig.BACKEND_API.BASE}/flags/${id}/toggle`, {`
-- `apiFetch<ApiResponse<void>>(`${FeaturesUrlConfig.BACKEND_API.BASE}/flags/${id}`, {`
-- `apiFetch<ApiResponse<ReleaseNote>>(`${FeaturesUrlConfig.BACKEND_API.BASE}/notes`, {`
-- `apiFetch<ApiResponse<ReleaseNote>>(`${FeaturesUrlConfig.BACKEND_API.BASE}/notes/${id}`, {`
-- `apiFetch<ApiResponse<void>>(`${FeaturesUrlConfig.BACKEND_API.BASE}/notes/${id}`, {`
-
-
-## State Architecture
-- Server State: TanStack Query
-- UI State: React `useState` or Zustand
+## Documentation Consistency
+This feature map is generated from the current repository structure. Where the code does not expose enough static evidence to state an exact runtime fact, the documentation deliberately uses **NOT VERIFIED** rather than inventing a result.

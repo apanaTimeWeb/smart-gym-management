@@ -1,151 +1,120 @@
 # Superadmin Coupons — Feature Map
 
 ## Module Purpose
-The Superadmin Coupons module manages discount codes for SaaS subscription plans. Superadmins
-create percentage or fixed-amount coupons, set usage limits, expiry dates, and restrict
-applicability to specific plans or all plans. Coupons are applied at the tenant subscription
-checkout level — they reduce the SaaS invoice amount, not gym member membership fees.
-Expired or fully-redeemed coupons are automatically deactivated.
+This Superadmin feature owns the `coupons` route and its feature-specific UI, client logic, API boundary, types, schemas, constants, mocks, tests, and documentation. It is intended to be operable by the Superadmin role without importing sibling Superadmin business modules. The feature exposes only the controls represented by the current route and code in this folder. Backend authorization remains outside the frontend audit scope.
 
 ## Directory Structure
-| File | Responsibility |
-|---|---|
-| `page.tsx` | Server Component — auth guard |
-| `loading.tsx` | Table skeleton — 8 row placeholders |
-| `error.tsx` | Error boundary with retry |
-| `coupons_components/SuperadminCouponsClient.tsx` | Root Client Component — table + filter bar |
-| `coupons_components/SuperadminCouponsTable.tsx` | Paginated coupon table |
-| `coupons_components/SuperadminCouponsTableRow.tsx` | Single coupon row — code, type, value, usage, expiry, status |
-| `coupons_components/SuperadminCouponsFilterBar.tsx` | Filter by status (ALL / ACTIVE / EXPIRED / EXHAUSTED) |
-| `coupons_components/SuperadminCouponsCreateModal.tsx` | Create coupon — code, type, value, limit, expiry, plan scope |
-| `coupons_components/SuperadminCouponsEditModal.tsx` | Edit coupon — limit + expiry only (code + value immutable after creation) |
-| `coupons_types/SuperadminCouponsTypes.ts` | `Coupon`, `CouponType`, `CouponStatus`, `CreateCouponDto`, `UpdateCouponDto` |
-| `coupons_utils/SuperadminCouponsConstants.ts` | `COUPON_STATUS_STYLES`, `COUPON_TYPE_OPTIONS` |
+
+| Folder | Responsibility | Key files |
+|---|---|---|
+| `__tests__/` | Owns the feature responsibility represented by this folder. | `superadmin_coupons_basic.test.tsx` |
+| `coupons_components/` | Owns the feature responsibility represented by this folder. | `SuperadminCouponEditModal.tsx`, `SuperadminCouponModal.tsx`, `SuperadminCouponsClient.tsx`, `SuperadminCouponsEmptyState.tsx`, `SuperadminCouponsHeader.tsx`, `SuperadminCouponsRedemptionDrawer.tsx`, `SuperadminCouponsStatsBar.tsx`, `SuperadminCouponsStatusBadge.tsx` |
+| `coupons_mocks/` | Owns the feature responsibility represented by this folder. | `SuperadminCouponsMockHandlers.ts` |
+| `coupons_utils/` | Owns the feature responsibility represented by this folder. | `useSuperadminCoupons.test.ts`, `useSuperadminCoupons.ts`, `useSuperadminCouponsData.test.ts`, `useSuperadminCouponsData.ts`, `useSuperadminCouponsMutation.test.ts`, `useSuperadminCouponsMutation.ts`, `useSuperadminCouponsMutations.ts` |
+| `superadmin_coupons_api/` | Owns the feature responsibility represented by this folder. | `superadmin_coupons_api.ts` |
+| `superadmin_coupons_types/` | Owns the feature responsibility represented by this folder. | `superadmin_coupons_types.ts` |
 
 ## Feature Inventory
-| Feature | Path | Purpose | Main API Calls | Status |
+
+| Feature | Route | User action | Key API/client owner | Status |
 |---|---|---|---|---|
-| Coupon List | `/superadmin/coupons` | All coupons with usage stats | `GET /superadmin/coupons?page=&status=` | ✅ Live |
-| Create Coupon | `/superadmin/coupons` | New discount code | `POST /superadmin/coupons` | ✅ Live |
-| Edit Coupon | `/superadmin/coupons` | Update limit + expiry | `PATCH /superadmin/coupons/:id` | ✅ Live |
-| Deactivate Coupon | `/superadmin/coupons` | Manually deactivate active coupon | `PATCH /superadmin/coupons/:id/deactivate` | ✅ Live |
-| Filter by Status | `/superadmin/coupons` | Filter ACTIVE / EXPIRED / EXHAUSTED | — (query param) | ✅ Live |
+| `coupons` | `/superadmin/coupons` | Use the route's controls to perform the operations implemented by the current client UI. | `feature-local API files` | Implemented in source; runtime integration **NOT VERIFIED** without installing project dependencies. |
+
+## User Flows & Interactions
+
+### Flow 1: Open Feature
+1. User navigates to the route shown above.
+2. Next.js renders the route `page.tsx` and its client view.
+3. The feature-owned client layer loads the data needed by the visible UI.
+4. Loading, empty, error, or populated state is rendered according to the current implementation.
+
+### Flow 2: Execute an Available Action
+1. User activates an action exposed by the current feature UI.
+2. The feature client/hook invokes the feature-owned API function.
+3. The API boundary validates response data using the feature schema when a schema is supplied.
+4. The UI updates local/query state and shows the resulting feedback.
 
 ## Data and State Architecture
-- TanStack Query keys: `['superadmin', 'coupons', { page, status }]`
-- Mutations: `useCreateCoupon`, `useUpdateCoupon`, `useDeactivateCoupon`
-- Zustand stores: None
-- Context providers: None
-- Local-state: `statusFilter`, `page` — local to `SuperadminCouponsClient`
+- **Server state:** TanStack Query where the feature currently uses async queries.
+- **UI state:** local `useState` or a feature-scoped Zustand store where present.
+- **URL state:** `useSuperadminUrlState` only where the feature currently uses query-string filters/pagination.
+- **Sibling business dependencies:** must remain zero; shared transport/UI primitives are infrastructure exceptions only.
 
-## User Flows
-1. Superadmin opens `/superadmin/coupons` → coupon list loads with usage counts
-2. Superadmin clicks "Create Coupon" → `SuperadminCouponsCreateModal` → RHF + Zod → `POST`
-3. Superadmin clicks "Edit" on active coupon → `SuperadminCouponsEditModal` (limit + expiry only) → `PATCH`
-4. Superadmin clicks "Deactivate" → `useConfirm()` → `PATCH /superadmin/coupons/:id/deactivate`
+## API Contract
 
-## Component Responsibility Map
-- `SuperadminCouponsClient` — filter + pagination state. MUST NOT contain form logic.
-- `SuperadminCouponsTableRow` — display only. Discount value MUST use `formatCurrency()` for fixed-amount type.
-- `SuperadminCouponsCreateModal` — full create form. MUST use RHF + Zod.
-- `SuperadminCouponsEditModal` — partial edit (limit + expiry only). Code and value fields MUST be read-only.
-
-## Permissions and Security
-| Action | Required Role |
-|---|---|
-| View coupons | `SUPERADMIN` |
-| Create coupon | `SUPERADMIN` |
-| Edit coupon | `SUPERADMIN` |
-| Deactivate coupon | `SUPERADMIN` |
-| ❌ Delete coupons | Forbidden — deactivate only (audit trail) |
-| ❌ Apply to gym member fees | Manager finance module |
-
-## Loading, Empty, Error States
-- **Loading:** `loading.tsx` — 8 table row skeletons
-- **Empty:** "No coupons created yet" with "Create First Coupon" CTA
-- **Empty (filtered):** "No coupons match your filter" with clear filter link
-- **Error:** `error.tsx` with retry
-
-## Edge Cases / AI Warnings
-- **Code immutability** — coupon code and discount value MUST NOT be editable after creation; edit modal must render them as read-only display fields.
-- **COUPON_STATUS_STYLES** — maps `ACTIVE | EXPIRED | EXHAUSTED | DEACTIVATED` to badge classes; must live in constants.
-- **Percentage vs fixed** — `CouponType.PERCENTAGE` renders as "20%" and `CouponType.FIXED` renders via `formatCurrency()`; never format inline.
-- **Usage display** — show `usedCount / maxUses` (e.g. "45 / 100"); if `maxUses` is null, show "Unlimited".
-- **Deactivate confirmation** — MUST use `useConfirm()` before firing deactivate mutation.
+| Function | Method | Endpoint expression | API file |
+|---|---|---|---|
+| No feature API functions detected | — | — | No API service file detected by static scan |
 
 ## UI Data Requirements
 
-The following types map directly to the UI components and define the shape of the data:
+Observed schema/type fields in this feature are listed below. Any UI field not represented by a schema/type is **NOT VERIFIED** and must be checked by the coding agent.
 
-```typescript
-export type CouponStatus = 'ACTIVE' | 'INACTIVE' | 'EXPIRED' | 'DEPLETED';
+| Field | Source location |
+|---|---|
+| `id` | Feature-owned schema/type file |
+| `code` | Feature-owned schema/type file |
+| `discountType` | Feature-owned schema/type file |
+| `discountValue` | Feature-owned schema/type file |
+| `maxUses` | Feature-owned schema/type file |
+| `currentUses` | Feature-owned schema/type file |
+| `status` | Feature-owned schema/type file |
+| `expiryDate` | Feature-owned schema/type file |
+| `isDeleted` | Feature-owned schema/type file |
+| `redemptions` | Feature-owned schema/type file |
+| `tenantName` | Feature-owned schema/type file |
+| `redeemedAt` | Feature-owned schema/type file |
+| `planName` | Feature-owned schema/type file |
+| `discountApplied` | Feature-owned schema/type file |
 
-/** KPI filter tabs on the Coupons page — controls which subset of coupons is displayed. */
+## Permissions and Security
+- **Role:** `SUPERADMIN` UI.
+- **Frontend boundary:** route and feature UI are under `/superadmin`.
+- **Destructive actions:** must use the Superadmin confirmation infrastructure where the feature exposes destructive controls.
+- **Backend authorization:** not evaluated here and must not be inferred from frontend checks.
 
-export type CouponKpiFilter = 'ALL' | 'ACTIVE' | 'REDEEMED';
-
-export interface Coupon {
-  id: string;
-  code: string;
-  discountType: 'PERCENTAGE' | 'EXACT';
-  discountValue: number;
-  maxUses: number;
-  currentUses: number;
-  status: CouponStatus;
-  expiryDate: string;
-  isDeleted: boolean;
-  redemptions?: RedemptionRecord[];
-}
-
-export interface RedemptionRecord {
-  id: string;
-  tenantName: string;
-  redeemedAt: string;
-  planName: string;
-  discountApplied: number;
-}
-
-import { z } from 'zod';
-
-export type CouponFormData = z.infer<typeof CouponSchema>;
-```
-
-## Rule Compliance Checklist
-- [x] Rule 1: Micro-modularization
-- [x] Rule 3: Module prefix naming — `SuperadminCoupons*`
-- [x] Rule 7: Type isolation — all types in `SuperadminCouponsTypes.ts`
-- [x] Rule 8: Server/Client Boundary — `page.tsx` = Server Component
-- [x] Rule 9: `loading.tsx` + `error.tsx` present
-- [x] Rule 13: Feature Map — this document
-- [x] Rule 15B: Forms use React Hook Form + Zod
-- [x] Rule 26: Deactivate uses `useConfirm()`
-- [x] Rule 40: `_forbidden.md` present
-- [x] Rule 55: No `key={index}` — stable coupon IDs used
-- [x] Rule 63: Zero cross-module imports
-- [x] Rule 73: `import type` for all type-only imports
-
----
+## Loading, Empty, and Error States
+- **Route loading:** use the feature `loading.tsx` when present.
+- **Route error:** use the feature `error.tsx` when present.
+- **Feature empty/error:** use the feature-specific empty/error UI already present in the source.
+- Any runtime transition behavior not statically provable is **NOT VERIFIED**.
 
 ## Edge Cases and AI Warnings
+- **No sibling business imports:** do not reintroduce imports from another Superadmin business feature.
+- **No fake production data:** server-like records belong in feature mocks/fixtures, never fallback constants inside production UI.
+- **No hardcoded URLs:** feature-owned routes belong in the single feature URL config.
+- **No async state in Zustand:** use TanStack Query for server state.
+- **Preserve destructive confirmation:** do not bypass the Superadmin confirmation flow.
 
-- **Delete Coupon is permanent and irreversible:** Never use `window.confirm()` for Coupon deletion. If a delete feature exists or is added, it MUST use a type-to-confirm modal with the exact string "DELETE" to prevent accidental data loss.
-- **Coupons Table Row Clicks:** The `Coupons` list view uses clickable table rows (`<tr className="cursor-pointer">`) for navigation. Ensure that any inline action buttons (like Edit or Delete) inside the table call `e.stopPropagation()` so they don't accidentally trigger the row navigation.
-- **Section-Level Error Boundaries in Coupons:** Do not allow a single failed API fetch in Coupons to unmount the entire page. Major components (like the Coupons data table or metrics) must be wrapped in `<SuperadminErrorBoundary variant="inline">`.
-- **Backend-Driven Messages for Coupons Mutations:** Do not hardcode success or error toasts like "User created". Always display the `message` string provided by the backend's JSON response envelope when creating, updating, or deleting Coupons.
-- **No Client-Side Pagination for Coupons:** If the dataset grows large, do not fetch all Coupons and paginate on the client. always implement robust server-side pagination, sorting, and filtering via query parameters using useSuperadminUrlState.
+## Component Responsibility Map
 
+| File | Responsibility |
+|---|---|
+| `__tests__/superadmin_coupons_basic.test.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `coupons_components/SuperadminCouponEditModal.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `coupons_components/SuperadminCouponModal.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `coupons_components/SuperadminCouponsClient.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `coupons_components/SuperadminCouponsEmptyState/SuperadminCouponsEmptyState.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `coupons_components/SuperadminCouponsHeader/SuperadminCouponsHeader.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `coupons_components/SuperadminCouponsRedemptionDrawer.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `coupons_components/SuperadminCouponsStatsBar/SuperadminCouponsStatsBar.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `coupons_components/SuperadminCouponsStatusBadge/SuperadminCouponsStatusBadge.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `coupons_components/SuperadminCouponsTable/SuperadminCouponsTable.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `coupons_components/SuperadminCouponsTable/SuperadminCouponsTableRow.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `error.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `loading.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `page.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
 
-## API Contract
-All calls are isolated to `superadmin_coupons_api.ts`.
+## Rule Compliance Checklist
+- [x] Feature has a route-level `page.tsx` or the route does not require one.
+- [x] Feature has module-owned documentation file.
+- [x] Feature URL configuration is feature-owned when routes/API calls exist.
+- [x] Sibling Superadmin business imports are not allowed.
+- [x] API responses must use Zod validation at the boundary.
+- [x] Server state is owned by TanStack Query where async data is used.
+- [x] UI state remains local or feature-scoped.
+- [ ] Full typecheck/lint/test/build/E2E verification — **NOT VERIFIED** in this working environment because project dependencies are not installed.
+- [ ] Full visual comparison against `web_global_design.md` — **NOT VERIFIED** without browser execution.
 
-- `return apiFetch<ApiResponse<Coupon[]>>(`${CouponsUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.array(CouponSchema) });`
-- `apiFetch<ApiResponse<Coupon>>(CouponsUrlConfig.BACKEND_API.BASE, {`
-- `apiFetch<ApiResponse<Coupon>>(`${CouponsUrlConfig.BACKEND_API.BASE}/${id}`, {`
-- `apiFetch<ApiResponse<void>>(`${CouponsUrlConfig.BACKEND_API.BASE}/${id}`, {`
-- `apiFetch<ApiResponse<Coupon>>(`${CouponsUrlConfig.BACKEND_API.BASE}/${id}/restore`, {`
-- `apiFetch<ApiResponse<Coupon>>(`${CouponsUrlConfig.BACKEND_API.BASE}/${id}/status`, {`
-
-
-## State Architecture
-- Server State: TanStack Query
-- UI State: React `useState` or Zustand
+## Documentation Consistency
+This feature map is generated from the current repository structure. Where the code does not expose enough static evidence to state an exact runtime fact, the documentation deliberately uses **NOT VERIFIED** rather than inventing a result.

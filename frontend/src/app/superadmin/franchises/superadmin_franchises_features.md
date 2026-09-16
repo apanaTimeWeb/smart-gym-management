@@ -1,125 +1,115 @@
 # Superadmin Franchises — Feature Map
 
 ## Module Purpose
-The Superadmin Franchises module manages franchise groups — collections of gyms that operate
-under a shared brand or ownership entity. A franchise can own multiple gym tenants, share
-a billing account, and receive consolidated reporting. Superadmins create franchise records,
-assign gyms to franchises, and manage franchise-level billing contacts. This is a platform
-organizational layer above individual gyms.
+This Superadmin feature owns the `franchises` route and its feature-specific UI, client logic, API boundary, types, schemas, constants, mocks, tests, and documentation. It is intended to be operable by the Superadmin role without importing sibling Superadmin business modules. The feature exposes only the controls represented by the current route and code in this folder. Backend authorization remains outside the frontend audit scope.
 
 ## Directory Structure
-| File | Responsibility |
-|---|---|
-| `page.tsx` | Server Component — auth guard |
-| `loading.tsx` | Table skeleton — 8 row placeholders |
-| `error.tsx` | Error boundary with retry |
-| `franchises_components/SuperadminFranchisesClient.tsx` | Root Client Component — table + actions |
-| `franchises_components/SuperadminFranchisesTable.tsx` | Paginated franchise table |
-| `franchises_components/SuperadminFranchisesTableRow.tsx` | Single franchise row — name, owner, gym count, plan, status |
-| `franchises_components/SuperadminFranchisesCreateModal.tsx` | Create franchise — name, owner contact, plan |
-| `franchises_components/SuperadminFranchisesDetailDrawer.tsx` | Franchise detail — gym list, billing contact, stats |
-| `franchises_components/SuperadminFranchisesAssignGymModal.tsx` | Assign existing gym to franchise |
-| `franchises_types/SuperadminFranchisesTypes.ts` | `Franchise`, `FranchiseStatus`, `CreateFranchiseDto`, `AssignGymDto` |
-| `franchises_utils/SuperadminFranchisesConstants.ts` | `FRANCHISE_STATUS_STYLES` |
+
+| Folder | Responsibility | Key files |
+|---|---|---|
+| `__tests__/` | Owns the feature responsibility represented by this folder. | `superadmin_franchises_basic.test.tsx` |
+| `franchises_components/` | Owns the feature responsibility represented by this folder. | `SuperadminFranchiseModal.tsx`, `SuperadminFranchisesClient.tsx` |
+| `franchises_mocks/` | Owns the feature responsibility represented by this folder. | `SuperadminFranchisesMockHandlers.ts` |
+| `franchises_types/` | Owns the feature responsibility represented by this folder. | `superadmin_franchises_types.ts` |
+| `franchises_utils/` | Owns the feature responsibility represented by this folder. | `SuperadminFranchisesConstants.ts`, `SuperadminFranchisesSchemas.ts`, `useSuperadminFranchisesPage.test.ts`, `useSuperadminFranchisesPage.ts` |
+| `superadmin_franchises_api/` | Owns the feature responsibility represented by this folder. | `superadmin_franchises_api.ts` |
 
 ## Feature Inventory
-| Feature | Path | Purpose | Main API Calls | Status |
+
+| Feature | Route | User action | Key API/client owner | Status |
 |---|---|---|---|---|
-| Franchise List | `/superadmin/franchises` | All franchise groups, paginated | `GET /superadmin/franchises?page=` | ✅ Live |
-| Create Franchise | `/superadmin/franchises` | New franchise group | `POST /superadmin/franchises` | ✅ Live |
-| View Franchise Detail | `/superadmin/franchises` | Franchise profile + gym list | `GET /superadmin/franchises/:id` | ✅ Live |
-| Assign Gym to Franchise | `/superadmin/franchises` | Link existing gym to franchise | `PATCH /superadmin/franchises/:id/assign-gym` | ✅ Live |
-| Remove Gym from Franchise | `/superadmin/franchises` | Unlink gym — gym remains active | `PATCH /superadmin/franchises/:id/remove-gym` | ✅ Live |
-| Deactivate Franchise | `/superadmin/franchises` | Deactivate franchise group | `PATCH /superadmin/franchises/:id/deactivate` | ✅ Live |
+| `franchises` | `/superadmin/franchises` | Use the route's controls to perform the operations implemented by the current client UI. | `feature-local API files` | Implemented in source; runtime integration **NOT VERIFIED** without installing project dependencies. |
+
+## User Flows & Interactions
+
+### Flow 1: Open Feature
+1. User navigates to the route shown above.
+2. Next.js renders the route `page.tsx` and its client view.
+3. The feature-owned client layer loads the data needed by the visible UI.
+4. Loading, empty, error, or populated state is rendered according to the current implementation.
+
+### Flow 2: Execute an Available Action
+1. User activates an action exposed by the current feature UI.
+2. The feature client/hook invokes the feature-owned API function.
+3. The API boundary validates response data using the feature schema when a schema is supplied.
+4. The UI updates local/query state and shows the resulting feedback.
 
 ## Data and State Architecture
-- TanStack Query keys: `['superadmin', 'franchises', { page }]`, `['superadmin', 'franchises', franchiseId]`
-- Mutations: `useCreateFranchise`, `useAssignGym`, `useRemoveGym`, `useDeactivateFranchise`
-- Zustand stores: None
-- Context providers: None
-- Local-state: `page` — local to `SuperadminFranchisesClient`
+- **Server state:** TanStack Query where the feature currently uses async queries.
+- **UI state:** local `useState` or a feature-scoped Zustand store where present.
+- **URL state:** `useSuperadminUrlState` only where the feature currently uses query-string filters/pagination.
+- **Sibling business dependencies:** must remain zero; shared transport/UI primitives are infrastructure exceptions only.
 
-## User Flows
-1. Superadmin opens `/superadmin/franchises` → franchise list loads
-2. Superadmin clicks "Create Franchise" → `SuperadminFranchisesCreateModal` → RHF + Zod → `POST`
-3. Superadmin clicks franchise row → `SuperadminFranchisesDetailDrawer` → gym list + billing contact
-4. Superadmin clicks "Assign Gym" in drawer → `SuperadminFranchisesAssignGymModal` → gym search → `PATCH`
-5. Superadmin clicks "Remove Gym" → `useConfirm()` → `PATCH /remove-gym`
-6. Superadmin clicks "Deactivate" → `useConfirm()` with warning → `PATCH /deactivate`
+## API Contract
 
-## Component Responsibility Map
-- `SuperadminFranchisesClient` — pagination state. MUST NOT contain form logic.
-- `SuperadminFranchisesDetailDrawer` — read-only profile + gym list. Assign/Remove actions open modals.
-- `SuperadminFranchisesAssignGymModal` — gym search + assign. MUST use `SearchableDropdown` for gym selection.
-- `SuperadminFranchisesCreateModal` — form only. MUST use RHF + Zod.
-
-## Permissions and Security
-| Action | Required Role |
-|---|---|
-| View franchises | `SUPERADMIN` |
-| Create franchise | `SUPERADMIN` |
-| Assign/remove gym | `SUPERADMIN` |
-| Deactivate franchise | `SUPERADMIN` |
-| ❌ Delete franchise | Forbidden — deactivate only |
-| ❌ Manage franchise internal operations | Gym-level management |
-
-## Loading, Empty, Error States
-- **Loading:** `loading.tsx` — 8 table row skeletons
-- **Empty:** "No franchises registered" with "Create First Franchise" CTA
-- **Error:** `error.tsx` with retry
-
-## Edge Cases / AI Warnings
-- **Remove gym** — removing a gym from a franchise does NOT delete or suspend the gym; it only unlinks the organizational relationship. Show this clearly in the confirmation.
-- **Deactivate confirmation** — MUST use `useConfirm()` with warning text about impact on member gyms.
-- **FRANCHISE_STATUS_STYLES** — maps `ACTIVE | INACTIVE` to badge classes; must live in constants.
-- **Gym search in assign modal** — MUST use `SearchableDropdown`; never a native `<select>`.
+| Function | Method | Endpoint expression | API file |
+|---|---|---|---|
+| No feature API functions detected | — | — | No API service file detected by static scan |
 
 ## UI Data Requirements
 
-The following types map directly to the UI components and define the shape of the data:
+Observed schema/type fields in this feature are listed below. Any UI field not represented by a schema/type is **NOT VERIFIED** and must be checked by the coding agent.
 
-```typescript
-export type FranchiseStatus = z.infer<typeof FranchiseStatusSchema>;
+| Field | Source location |
+|---|---|
+| `id` | Feature-owned schema/type file |
+| `franchiseName` | Feature-owned schema/type file |
+| `ownerName` | Feature-owned schema/type file |
+| `ownerEmail` | Feature-owned schema/type file |
+| `phone` | Feature-owned schema/type file |
+| `status` | Feature-owned schema/type file |
+| `branchCount` | Feature-owned schema/type file |
+| `totalMembers` | Feature-owned schema/type file |
+| `totalStaff` | Feature-owned schema/type file |
+| `totalMonthlyRevenue` | Feature-owned schema/type file |
+| `plan` | Feature-owned schema/type file |
+| `city` | Feature-owned schema/type file |
+| `state` | Feature-owned schema/type file |
+| `gstin` | Feature-owned schema/type file |
+| `registrationNumber` | Feature-owned schema/type file |
+| `contractStartDate` | Feature-owned schema/type file |
+| `createdAt` | Feature-owned schema/type file |
 
-export type SuperadminFranchise = z.infer<typeof SuperadminFranchiseSchema>;
-```
+## Permissions and Security
+- **Role:** `SUPERADMIN` UI.
+- **Frontend boundary:** route and feature UI are under `/superadmin`.
+- **Destructive actions:** must use the Superadmin confirmation infrastructure where the feature exposes destructive controls.
+- **Backend authorization:** not evaluated here and must not be inferred from frontend checks.
 
-## Rule Compliance Checklist
-- [x] Rule 1: Micro-modularization
-- [x] Rule 3: Module prefix naming — `SuperadminFranchises*`
-- [x] Rule 7: Type isolation — all types in `SuperadminFranchisesTypes.ts`
-- [x] Rule 8: Server/Client Boundary — `page.tsx` = Server Component
-- [x] Rule 9: `loading.tsx` + `error.tsx` present
-- [x] Rule 13: Feature Map — this document
-- [x] Rule 15B: Forms use React Hook Form + Zod
-- [x] Rule 20: Gym search uses `SearchableDropdown`
-- [x] Rule 26: Remove + Deactivate use `useConfirm()`
-- [x] Rule 40: `_forbidden.md` present
-- [x] Rule 55: No `key={index}` — stable franchise + gym IDs used
-- [x] Rule 63: Zero cross-module imports
-- [x] Rule 73: `import type` for all type-only imports
-
----
+## Loading, Empty, and Error States
+- **Route loading:** use the feature `loading.tsx` when present.
+- **Route error:** use the feature `error.tsx` when present.
+- **Feature empty/error:** use the feature-specific empty/error UI already present in the source.
+- Any runtime transition behavior not statically provable is **NOT VERIFIED**.
 
 ## Edge Cases and AI Warnings
+- **No sibling business imports:** do not reintroduce imports from another Superadmin business feature.
+- **No fake production data:** server-like records belong in feature mocks/fixtures, never fallback constants inside production UI.
+- **No hardcoded URLs:** feature-owned routes belong in the single feature URL config.
+- **No async state in Zustand:** use TanStack Query for server state.
+- **Preserve destructive confirmation:** do not bypass the Superadmin confirmation flow.
 
-- **Delete Franchise is permanent and irreversible:** Never use `window.confirm()` for Franchise deletion. If a delete feature exists or is added, it MUST use a type-to-confirm modal with the exact string "DELETE" to prevent accidental data loss.
-- **Franchises Table Row Clicks:** The `Franchises` list view uses clickable table rows (`<tr className="cursor-pointer">`) for navigation. Ensure that any inline action buttons (like Edit or Delete) inside the table call `e.stopPropagation()` so they don't accidentally trigger the row navigation.
-- **Section-Level Error Boundaries in Franchises:** Do not allow a single failed API fetch in Franchises to unmount the entire page. Major components (like the Franchises data table or metrics) must be wrapped in `<SuperadminErrorBoundary variant="inline">`.
-- **Backend-Driven Messages for Franchises Mutations:** Do not hardcode success or error toasts like "User created". Always display the `message` string provided by the backend's JSON response envelope when creating, updating, or deleting Franchises.
-- **No Client-Side Pagination for Franchises:** If the dataset grows large, do not fetch all Franchises and paginate on the client. always implement robust server-side pagination, sorting, and filtering via query parameters using useSuperadminUrlState.
+## Component Responsibility Map
 
+| File | Responsibility |
+|---|---|
+| `__tests__/superadmin_franchises_basic.test.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `error.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `franchises_components/SuperadminFranchiseModal/SuperadminFranchiseModal.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `franchises_components/SuperadminFranchisesClient.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `loading.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `page.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
 
-## API Contract
-All calls are isolated to `superadmin_franchises_api.ts`.
+## Rule Compliance Checklist
+- [x] Feature has a route-level `page.tsx` or the route does not require one.
+- [x] Feature has module-owned documentation file.
+- [x] Feature URL configuration is feature-owned when routes/API calls exist.
+- [x] Sibling Superadmin business imports are not allowed.
+- [x] API responses must use Zod validation at the boundary.
+- [x] Server state is owned by TanStack Query where async data is used.
+- [x] UI state remains local or feature-scoped.
+- [ ] Full typecheck/lint/test/build/E2E verification — **NOT VERIFIED** in this working environment because project dependencies are not installed.
+- [ ] Full visual comparison against `web_global_design.md` — **NOT VERIFIED** without browser execution.
 
-- `return apiFetch<ApiResponse<SuperadminFranchise[]>>(`${FranchisesUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.array(SuperadminFranchiseSchema) });`
-- `apiFetch<ApiResponse<SuperadminFranchise>>(`${FranchisesUrlConfig.BACKEND_API.BASE}/${id}`, { dataSchema: SuperadminFranchiseSchema }),`
-- `apiFetch<ApiResponse<void>>(`${FranchisesUrlConfig.BACKEND_API.BASE}/${id}/suspend`, { method: 'POST',`
-- `apiFetch<ApiResponse<void>>(`${FranchisesUrlConfig.BACKEND_API.BASE}/${id}/activate`, { method: 'POST',`
-- `apiFetch<ApiResponse<SuperadminFranchise>>(`${FranchisesUrlConfig.BACKEND_API.BASE}/${id}`, {`
-
-
-## State Architecture
-- Server State: TanStack Query
-- UI State: React `useState` or Zustand
+## Documentation Consistency
+This feature map is generated from the current repository structure. Where the code does not expose enough static evidence to state an exact runtime fact, the documentation deliberately uses **NOT VERIFIED** rather than inventing a result.

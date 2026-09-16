@@ -1,168 +1,123 @@
 # Superadmin Analytics — Feature Map
 
 ## Module Purpose
-The Superadmin Analytics module provides deep cross-tenant business intelligence for the
-SaaS platform. It covers growth metrics (new gym signups over time), revenue breakdown by
-plan tier, feature adoption rates across tenants, and geographic distribution of gyms.
-This is a read-only, chart-heavy module — all data is fetched via TanStack Query and
-rendered exclusively with ApexCharts. No mutations occur here.
+This Superadmin feature owns the `analytics` route and its feature-specific UI, client logic, API boundary, types, schemas, constants, mocks, tests, and documentation. It is intended to be operable by the Superadmin role without importing sibling Superadmin business modules. The feature exposes only the controls represented by the current route and code in this folder. Backend authorization remains outside the frontend audit scope.
 
 ## Directory Structure
-| File | Responsibility |
-|---|---|
-| `page.tsx` | Server Component — auth guard |
-| `loading.tsx` | Tab skeleton + chart area placeholders |
-| `error.tsx` | Error boundary with retry |
-| `analytics_components/SuperadminAnalyticsClient.tsx` | Root Client Component — tab navigation + layout |
-| `analytics_components/SuperadminAnalyticsGrowthTab.tsx` | Gym signup trend — ApexCharts line chart |
-| `analytics_components/SuperadminAnalyticsRevenueTab.tsx` | Revenue by plan tier — ApexCharts bar chart |
-| `analytics_components/SuperadminAnalyticsAdoptionTab.tsx` | Feature adoption rates — ApexCharts horizontal bar |
-| `analytics_components/SuperadminAnalyticsGeoTab.tsx` | Geographic distribution table + summary |
-| `analytics_components/SuperadminAnalyticsKpiRow.tsx` | Top-level KPI summary row (total signups, avg MRR, top region) |
-| `analytics_components/SuperadminAnalyticsDateFilter.tsx` | Date range picker — from/to query params |
-| `analytics_types/SuperadminAnalyticsTypes.ts` | `GrowthDataPoint`, `RevenueTierRow`, `AdoptionRate`, `GeoRow`, `AnalyticsTab` |
-| `analytics_utils/SuperadminAnalyticsConstants.ts` | `ANALYTICS_TABS`, `CHART_COLORS`, `KPI_CARD_GRADIENT` |
+
+| Folder | Responsibility | Key files |
+|---|---|---|
+| `__tests__/` | Owns the feature responsibility represented by this folder. | `superadmin_analytics_basic.test.tsx` |
+| `analytics_components/` | Owns the feature responsibility represented by this folder. | `SuperadminAnalyticsClient.tsx` |
+| `analytics_mocks/` | Owns the feature responsibility represented by this folder. | `SuperadminAnalyticsMockHandlers.ts` |
+| `analytics_utils/` | Owns the feature responsibility represented by this folder. | `SuperadminAnalyticsConstants.ts`, `useSuperadminAnalyticsPage.test.ts`, `useSuperadminAnalyticsPage.ts` |
+| `superadmin_analytics_api/` | Owns the feature responsibility represented by this folder. | `superadmin_analytics_api.ts` |
+| `superadmin_analytics_types/` | Owns the feature responsibility represented by this folder. | `superadmin_analytics_types.ts` |
 
 ## Feature Inventory
-| Feature | Path | Purpose | Main API Calls | Status |
+
+| Feature | Route | User action | Key API/client owner | Status |
 |---|---|---|---|---|
-| Growth Chart | `/superadmin/analytics` | New gym signups per month | `GET /superadmin/analytics/growth?from=&to=` | ✅ Live |
-| Revenue by Tier | `/superadmin/analytics` | MRR breakdown by plan tier | `GET /superadmin/analytics/revenue-by-tier?from=&to=` | ✅ Live |
-| Feature Adoption | `/superadmin/analytics` | % of tenants using each feature | `GET /superadmin/analytics/adoption` | ✅ Live |
-| Geographic Distribution | `/superadmin/analytics` | Gym count by city/region | `GET /superadmin/analytics/geo` | ✅ Live |
-| Date Range Filter | `/superadmin/analytics` | Filters growth + revenue queries | — (query params) | ✅ Live |
+| `analytics` | `/superadmin/analytics` | Use the route's controls to perform the operations implemented by the current client UI. | `feature-local API files` | Implemented in source; runtime integration **NOT VERIFIED** without installing project dependencies. |
+
+## User Flows & Interactions
+
+### Flow 1: Open Feature
+1. User navigates to the route shown above.
+2. Next.js renders the route `page.tsx` and its client view.
+3. The feature-owned client layer loads the data needed by the visible UI.
+4. Loading, empty, error, or populated state is rendered according to the current implementation.
+
+### Flow 2: Execute an Available Action
+1. User activates an action exposed by the current feature UI.
+2. The feature client/hook invokes the feature-owned API function.
+3. The API boundary validates response data using the feature schema when a schema is supplied.
+4. The UI updates local/query state and shows the resulting feedback.
 
 ## Data and State Architecture
-- TanStack Query keys: `['superadmin', 'analytics', 'growth', { from, to }]`, `['superadmin', 'analytics', 'revenue-tier', { from, to }]`, `['superadmin', 'analytics', 'adoption']`, `['superadmin', 'analytics', 'geo']`
-- Zustand stores: None
-- Context providers: None
-- Local-state: `activeTab` (useState), `dateRange` (useState) — local to `SuperadminAnalyticsClient`
+- **Server state:** TanStack Query where the feature currently uses async queries.
+- **UI state:** local `useState` or a feature-scoped Zustand store where present.
+- **URL state:** `useSuperadminUrlState` only where the feature currently uses query-string filters/pagination.
+- **Sibling business dependencies:** must remain zero; shared transport/UI primitives are infrastructure exceptions only.
 
-## User Flows
-1. Superadmin opens `/superadmin/analytics` → default tab "Growth" loads → `growth` query fires
-2. Superadmin changes date range → `from`/`to` state updates → growth + revenue queries refetch with new params
-3. Superadmin switches to "Revenue" tab → revenue-by-tier query fires (if not cached)
-4. Superadmin switches to "Adoption" tab → adoption query fires (no date filter — all-time)
-5. Superadmin switches to "Geo" tab → geo query fires (no date filter)
+## API Contract
 
-## Component Responsibility Map
-- `SuperadminAnalyticsClient` — tab state + date range state. MUST NOT contain chart logic.
-- `SuperadminAnalyticsGrowthTab` — chart only. MUST use `dynamic()` with `ssr: false`.
-- `SuperadminAnalyticsDateFilter` — emits date range to parent via callback. MUST NOT fetch data.
-- All chart components — MUST use ApexCharts only. Recharts and Chart.js are forbidden (Rule 62).
-
-## Permissions and Security
-| Action | Required Role |
-|---|---|
-| View all analytics | `SUPERADMIN` |
-| ❌ Any mutation | Forbidden — analytics is read-only |
-
-## Loading, Empty, Error States
-- **Loading:** `loading.tsx` — KPI row skeleton + tab bar + chart area placeholder (300px height)
-- **Empty:** "No data available for selected date range" with date reset CTA
-- **Error:** `error.tsx` with retry; per-tab inline error if individual query fails
-
-## Edge Cases / AI Warnings
-- **Chart SSR** — all chart tab components MUST use `dynamic(() => import(...), { ssr: false })`.
-- **Date range validation** — `from` must be before `to`; validate client-side before firing query.
-- **Adoption tab** — no date filter; do not pass `from`/`to` to adoption query even if date state is set.
-- **CHART_COLORS** — must live in `SuperadminAnalyticsConstants.ts`, never inlined in chart options.
-- **Tab state** — local `useState`, not URL params (analytics tabs are ephemeral session state).
+| Function | Method | Endpoint expression | API file |
+|---|---|---|---|
+| No feature API functions detected | — | — | No API service file detected by static scan |
 
 ## UI Data Requirements
 
-The following types map directly to the UI components and define the shape of the data:
+Observed schema/type fields in this feature are listed below. Any UI field not represented by a schema/type is **NOT VERIFIED** and must be checked by the coding agent.
 
-```typescript
-export interface RevenueMetrics {
-  mrr: number;
-  arr: number;
-  cancellationRate: number;
-  ltv: number;
-  cac: number;
-  activeTenants: number;
-  arpu: number;
-  mrrDeltaPercent: number;
-  arrDeltaPercent: number;
-  cancellationDeltaPercent?: number;
-}
+| Field | Source location |
+|---|---|
+| `month` | Feature-owned schema/type file |
+| `amount` | Feature-owned schema/type file |
+| `count` | Feature-owned schema/type file |
+| `activeUsers` | Feature-owned schema/type file |
+| `monthlyRecurringRevenue` | Feature-owned schema/type file |
+| `cancellationRate` | Feature-owned schema/type file |
+| `newSignups` | Feature-owned schema/type file |
+| `revenueHistory` | Feature-owned schema/type file |
+| `userGrowth` | Feature-owned schema/type file |
+| `mrr` | Feature-owned schema/type file |
+| `gyms` | Feature-owned schema/type file |
+| `arr` | Feature-owned schema/type file |
+| `ltv` | Feature-owned schema/type file |
+| `cac` | Feature-owned schema/type file |
+| `activeTenants` | Feature-owned schema/type file |
+| `arpu` | Feature-owned schema/type file |
+| `mrrDeltaPercent` | Feature-owned schema/type file |
+| `arrDeltaPercent` | Feature-owned schema/type file |
+| `cancellationDeltaPercent` | Feature-owned schema/type file |
+| `plan` | Feature-owned schema/type file |
+| `revenue` | Feature-owned schema/type file |
+| `tenantCount` | Feature-owned schema/type file |
+| `cancelledCount` | Feature-owned schema/type file |
+| `metrics` | Feature-owned schema/type file |
+| `monthly` | Feature-owned schema/type file |
+| `planRevenue` | Feature-owned schema/type file |
 
-/** Revenue breakdown by plan tier for donut/pie chart */
+## Permissions and Security
+- **Role:** `SUPERADMIN` UI.
+- **Frontend boundary:** route and feature UI are under `/superadmin`.
+- **Destructive actions:** must use the Superadmin confirmation infrastructure where the feature exposes destructive controls.
+- **Backend authorization:** not evaluated here and must not be inferred from frontend checks.
 
-export interface PlanRevenueBreakdown {
-  plan: string;
-  revenue: number;
-  tenantCount: number;
-}
-
-/** Monthly data point for MRR area chart and tenant growth bar chart */
-
-export interface MonthlyAnalyticsDataPoint {
-  month: string;
-  mrr: number;
-  tenantCount: number;
-  cancelledCount: number;
-}
-
-/** Shape of full analytics API response data */
-
-export interface AnalyticsApiData {
-  metrics: RevenueMetrics;
-  monthly: MonthlyAnalyticsDataPoint[];
-  planRevenue?: PlanRevenueBreakdown[];
-}
-
-/** Canonical async state enum — Rule 42: never use boolean `isLoading` flags */
-/** Schema for a single revenue history data point (API variant with generic keys). */
-const RevenueHistoryPointSchema = z.object({
-  month: z.string(),
-  amount: z.number(),
-}).passthrough();
-
-/** Schema for a single user growth data point. */
-const UserGrowthPointSchema = z.object({
-  // ... truncated
-
-export type RevenueHistoryPoint = z.infer<typeof RevenueHistoryPointSchema>;
-
-export type UserGrowthPoint = z.infer<typeof UserGrowthPointSchema>;
-
-export type RevenueChartData = z.infer<typeof RevenueChartDataSchema>;
-
-export type GrowthChartData = z.infer<typeof GrowthChartDataSchema>;
-```
-
-## Rule Compliance Checklist
-- [x] Rule 1: Micro-modularization — each tab is its own component
-- [x] Rule 3: Module prefix naming — `SuperadminAnalytics*` on all components
-- [x] Rule 7: Type isolation — all types in `SuperadminAnalyticsTypes.ts`
-- [x] Rule 8: Server/Client Boundary — `page.tsx` = Server Component
-- [x] Rule 9: `loading.tsx` + `error.tsx` present
-- [x] Rule 13: Feature Map — this document
-- [x] Rule 40: `_forbidden.md` present
-- [x] Rule 55: No `key={index}` — stable IDs used
-- [x] Rule 62: ApexCharts only
-- [x] Rule 63: Zero cross-module imports
-- [x] Rule 73: `import type` for all type-only imports
-- [x] Design §10: All charts loaded with `dynamic()` + `ssr: false`
-
----
+## Loading, Empty, and Error States
+- **Route loading:** use the feature `loading.tsx` when present.
+- **Route error:** use the feature `error.tsx` when present.
+- **Feature empty/error:** use the feature-specific empty/error UI already present in the source.
+- Any runtime transition behavior not statically provable is **NOT VERIFIED**.
 
 ## Edge Cases and AI Warnings
+- **No sibling business imports:** do not reintroduce imports from another Superadmin business feature.
+- **No fake production data:** server-like records belong in feature mocks/fixtures, never fallback constants inside production UI.
+- **No hardcoded URLs:** feature-owned routes belong in the single feature URL config.
+- **No async state in Zustand:** use TanStack Query for server state.
+- **Preserve destructive confirmation:** do not bypass the Superadmin confirmation flow.
 
-- **Delete Analytic is permanent and irreversible:** Never use `window.confirm()` for Analytic deletion. If a delete feature exists or is added, it MUST use a type-to-confirm modal with the exact string "DELETE" to prevent accidental data loss.
-- **Analytics Table Row Clicks:** The `Analytics` list view uses clickable table rows (`<tr className="cursor-pointer">`) for navigation. Ensure that any inline action buttons (like Edit or Delete) inside the table call `e.stopPropagation()` so they don't accidentally trigger the row navigation.
-- **Section-Level Error Boundaries in Analytics:** Do not allow a single failed API fetch in Analytics to unmount the entire page. Major components (like the Analytics data table or metrics) must be wrapped in `<SuperadminErrorBoundary variant="inline">`.
-- **Backend-Driven Messages for Analytics Mutations:** Do not hardcode success or error toasts like "User created". Always display the `message` string provided by the backend's JSON response envelope when creating, updating, or deleting Analytics.
-- **No Client-Side Pagination for Analytics:** If the dataset grows large, do not fetch all Analytics and paginate on the client. always implement robust server-side pagination, sorting, and filtering via query parameters using useSuperadminUrlState.
+## Component Responsibility Map
 
+| File | Responsibility |
+|---|---|
+| `__tests__/superadmin_analytics_basic.test.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `analytics_components/SuperadminAnalyticsClient.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `error.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `loading.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `page.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
 
-## API Contract
-All calls are isolated to `superadmin_analytics_api.ts`.
+## Rule Compliance Checklist
+- [x] Feature has a route-level `page.tsx` or the route does not require one.
+- [x] Feature has module-owned documentation file.
+- [x] Feature URL configuration is feature-owned when routes/API calls exist.
+- [x] Sibling Superadmin business imports are not allowed.
+- [x] API responses must use Zod validation at the boundary.
+- [x] Server state is owned by TanStack Query where async data is used.
+- [x] UI state remains local or feature-scoped.
+- [ ] Full typecheck/lint/test/build/E2E verification — **NOT VERIFIED** in this working environment because project dependencies are not installed.
+- [ ] Full visual comparison against `web_global_design.md` — **NOT VERIFIED** without browser execution.
 
-- `return apiFetch<ApiResponse<AnalyticsApiData>>(`${AnalyticsUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: AnalyticsApiDataSchema });`
-
-
-## State Architecture
-- Server State: TanStack Query
-- UI State: React `useState` or Zustand
+## Documentation Consistency
+This feature map is generated from the current repository structure. Where the code does not expose enough static evidence to state an exact runtime fact, the documentation deliberately uses **NOT VERIFIED** rather than inventing a result.

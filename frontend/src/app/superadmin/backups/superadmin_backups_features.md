@@ -1,118 +1,108 @@
 # Superadmin Backups — Feature Map
 
 ## Module Purpose
-The Superadmin Backups module manages platform-level database backup operations. Superadmins
-can view backup history, trigger manual backups, monitor backup health, and initiate restore
-operations. Backups are scoped at the platform level (full database) and at the tenant level
-(per-gym data export). Restore operations are the most destructive action in the platform
-and require multi-step confirmation. This module is critical infrastructure — all actions
-are logged in the global audit trail.
+This Superadmin feature owns the `backups` route and its feature-specific UI, client logic, API boundary, types, schemas, constants, mocks, tests, and documentation. It is intended to be operable by the Superadmin role without importing sibling Superadmin business modules. The feature exposes only the controls represented by the current route and code in this folder. Backend authorization remains outside the frontend audit scope.
 
 ## Directory Structure
-| File | Responsibility |
-|---|---|
-| `page.tsx` | Server Component — auth guard |
-| `loading.tsx` | Backup list skeleton + status card placeholders |
-| `error.tsx` | Error boundary with retry |
-| `backups_components/SuperadminBackupsClient.tsx` | Root Client Component — status + history + actions |
-| `backups_components/SuperadminBackupsStatusRow.tsx` | Last backup status cards — platform + per-tenant summary |
-| `backups_components/SuperadminBackupsHistoryTable.tsx` | Paginated backup history table |
-| `backups_components/SuperadminBackupsHistoryRow.tsx` | Single backup row — type, size, duration, status, timestamp |
-| `backups_components/SuperadminBackupsTriggerModal.tsx` | Trigger manual backup — type selection + confirmation |
-| `backups_components/SuperadminBackupsRestoreModal.tsx` | Restore from backup — multi-step confirmation |
-| `backups_components/SuperadminBackupsDownloadButton.tsx` | Download backup file |
-| `backups_types/SuperadminBackupsTypes.ts` | `Backup`, `BackupType`, `BackupStatus`, `TriggerBackupDto`, `RestoreBackupDto` |
-| `backups_utils/SuperadminBackupsConstants.ts` | `BACKUP_STATUS_STYLES`, `BACKUP_TYPE_LABELS` |
+
+| Folder | Responsibility | Key files |
+|---|---|---|
+| `__tests__/` | Owns the feature responsibility represented by this folder. | `superadmin_backups_basic.test.tsx` |
+| `backups_components/` | Owns the feature responsibility represented by this folder. | `SuperadminBackupsClient.tsx`, `SuperadminBackupsEmptyState.tsx`, `SuperadminBackupsRestoreModal.tsx`, `SuperadminBackupsScheduleModal.tsx`, `SuperadminBackupsTable.tsx`, `SuperadminBackupsTriggerModal.tsx` |
+| `backups_utils/` | Owns the feature responsibility represented by this folder. | `SuperadminBackupsConstants.ts`, `useSuperadminBackupsData.test.ts`, `useSuperadminBackupsData.test.tsx`, `useSuperadminBackupsData.ts` |
+| `superadmin_backups_api/` | Owns the feature responsibility represented by this folder. | `superadmin_backups_api.ts` |
+| `superadmin_backups_types/` | Owns the feature responsibility represented by this folder. | `superadmin_backups_types.ts` |
 
 ## Feature Inventory
-| Feature | Path | Purpose | Main API Calls | Status |
+
+| Feature | Route | User action | Key API/client owner | Status |
 |---|---|---|---|---|
-| Backup Status | `/superadmin/backups` | Last backup health summary | `GET /superadmin/backups/status` | ✅ Live |
-| Backup History | `/superadmin/backups` | All backups, paginated | `GET /superadmin/backups?page=&type=` | ✅ Live |
-| Trigger Manual Backup | `/superadmin/backups` | Start a backup immediately | `POST /superadmin/backups/trigger` | ✅ Live |
-| Download Backup | `/superadmin/backups` | Download backup file | `GET /superadmin/backups/:id/download` | ✅ Live |
-| Restore from Backup | `/superadmin/backups` | Restore database — multi-step confirm | `POST /superadmin/backups/:id/restore` | ✅ Live |
+| `backups` | `/superadmin/backups` | Use the route's controls to perform the operations implemented by the current client UI. | `feature-local API files` | Implemented in source; runtime integration **NOT VERIFIED** without installing project dependencies. |
+
+## User Flows & Interactions
+
+### Flow 1: Open Feature
+1. User navigates to the route shown above.
+2. Next.js renders the route `page.tsx` and its client view.
+3. The feature-owned client layer loads the data needed by the visible UI.
+4. Loading, empty, error, or populated state is rendered according to the current implementation.
+
+### Flow 2: Execute an Available Action
+1. User activates an action exposed by the current feature UI.
+2. The feature client/hook invokes the feature-owned API function.
+3. The API boundary validates response data using the feature schema when a schema is supplied.
+4. The UI updates local/query state and shows the resulting feedback.
 
 ## Data and State Architecture
-- TanStack Query keys: `['superadmin', 'backups', 'status']`, `['superadmin', 'backups', { page, type }]`
-- Mutations: `useTriggerBackup`, `useRestoreBackup`
-- Zustand stores: None
-- Context providers: None
-- Local-state: `typeFilter`, `page` — local to `SuperadminBackupsClient`
+- **Server state:** TanStack Query where the feature currently uses async queries.
+- **UI state:** local `useState` or a feature-scoped Zustand store where present.
+- **URL state:** `useSuperadminUrlState` only where the feature currently uses query-string filters/pagination.
+- **Sibling business dependencies:** must remain zero; shared transport/UI primitives are infrastructure exceptions only.
 
-## User Flows
-1. Superadmin opens `/superadmin/backups` → status summary + history table load
-2. Superadmin clicks "Trigger Backup" → `SuperadminBackupsTriggerModal` → type selection → `useConfirm()` → `POST`
-3. Superadmin clicks "Download" on completed backup → `GET /superadmin/backups/:id/download` → browser download
-4. Superadmin clicks "Restore" → `SuperadminBackupsRestoreModal` → 3-step confirmation (type name, acknowledge data loss, final confirm) → `POST`
+## API Contract
 
-## Component Responsibility Map
-- `SuperadminBackupsClient` — layout + filter state. MUST NOT contain backup logic.
-- `SuperadminBackupsRestoreModal` — MUST implement 3-step confirmation. MUST NOT allow single-click restore.
-- `SuperadminBackupsTriggerModal` — type selection + confirmation. MUST use `useConfirm()`.
-- `SuperadminBackupsDownloadButton` — download trigger only. MUST NOT fetch binary into state.
-
-## Permissions and Security
-| Action | Required Role |
-|---|---|
-| View backup history | `SUPERADMIN` |
-| Trigger manual backup | `SUPERADMIN` |
-| Download backup | `SUPERADMIN` |
-| Restore from backup | `SUPERADMIN` |
-| ❌ Delete backup records | Forbidden — immutable audit trail |
-
-## Loading, Empty, Error States
-- **Loading:** `loading.tsx` — status card skeletons + 8 history row skeletons
-- **Empty:** "No backups found" — trigger first backup CTA
-- **Error:** `error.tsx` with retry
-
-## Edge Cases / AI Warnings
-- **Restore is catastrophic** — `SuperadminBackupsRestoreModal` MUST require the superadmin to type the backup ID or a confirmation phrase before enabling the final confirm button. Never allow single-click restore.
-- **BACKUP_STATUS_STYLES** — maps `COMPLETED | RUNNING | FAILED | PENDING` to badge classes; must live in constants.
-- **Download** — use anchor with `download` attribute or `window.open`; never fetch binary into React state.
-- **Trigger backup** — MUST use `useConfirm()` even for manual trigger (affects production data).
-- **Restore audit** — restore action MUST be logged in global audit trail; backend enforces this but frontend must not suppress the confirmation flow.
+| Function | Method | Endpoint expression | API file |
+|---|---|---|---|
+| No feature API functions detected | — | — | No API service file detected by static scan |
 
 ## UI Data Requirements
 
-The following types map directly to the UI components and define the shape of the data:
+Observed schema/type fields in this feature are listed below. Any UI field not represented by a schema/type is **NOT VERIFIED** and must be checked by the coding agent.
 
-```typescript
-export type BackupRecord = z.infer<typeof BackupRecordSchema>;
-```
+| Field | Source location |
+|---|---|
+| `id` | Feature-owned schema/type file |
+| `tenantName` | Feature-owned schema/type file |
+| `databaseName` | Feature-owned schema/type file |
+| `sizeMB` | Feature-owned schema/type file |
+| `status` | Feature-owned schema/type file |
+| `timestamp` | Feature-owned schema/type file |
 
-## Rule Compliance Checklist
-- [x] Rule 1: Micro-modularization
-- [x] Rule 3: Module prefix naming — `SuperadminBackups*`
-- [x] Rule 7: Type isolation — all types in `SuperadminBackupsTypes.ts`
-- [x] Rule 8: Server/Client Boundary — `page.tsx` = Server Component
-- [x] Rule 9: `loading.tsx` + `error.tsx` present
-- [x] Rule 13: Feature Map — this document
-- [x] Rule 26: Trigger + Restore use `useConfirm()` (restore uses 3-step)
-- [x] Rule 40: `_forbidden.md` present
-- [x] Rule 55: No `key={index}` — stable backup IDs used
-- [x] Rule 63: Zero cross-module imports
-- [x] Rule 73: `import type` for all type-only imports
+## Permissions and Security
+- **Role:** `SUPERADMIN` UI.
+- **Frontend boundary:** route and feature UI are under `/superadmin`.
+- **Destructive actions:** must use the Superadmin confirmation infrastructure where the feature exposes destructive controls.
+- **Backend authorization:** not evaluated here and must not be inferred from frontend checks.
 
----
+## Loading, Empty, and Error States
+- **Route loading:** use the feature `loading.tsx` when present.
+- **Route error:** use the feature `error.tsx` when present.
+- **Feature empty/error:** use the feature-specific empty/error UI already present in the source.
+- Any runtime transition behavior not statically provable is **NOT VERIFIED**.
 
 ## Edge Cases and AI Warnings
+- **No sibling business imports:** do not reintroduce imports from another Superadmin business feature.
+- **No fake production data:** server-like records belong in feature mocks/fixtures, never fallback constants inside production UI.
+- **No hardcoded URLs:** feature-owned routes belong in the single feature URL config.
+- **No async state in Zustand:** use TanStack Query for server state.
+- **Preserve destructive confirmation:** do not bypass the Superadmin confirmation flow.
 
-- **Delete Backup is permanent and irreversible:** Never use `window.confirm()` for Backup deletion. If a delete feature exists or is added, it MUST use a type-to-confirm modal with the exact string "DELETE" to prevent accidental data loss.
-- **Backups Table Row Clicks:** The `Backups` list view uses clickable table rows (`<tr className="cursor-pointer">`) for navigation. Ensure that any inline action buttons (like Edit or Delete) inside the table call `e.stopPropagation()` so they don't accidentally trigger the row navigation.
-- **Section-Level Error Boundaries in Backups:** Do not allow a single failed API fetch in Backups to unmount the entire page. Major components (like the Backups data table or metrics) must be wrapped in `<SuperadminErrorBoundary variant="inline">`.
-- **Backend-Driven Messages for Backups Mutations:** Do not hardcode success or error toasts like "User created". Always display the `message` string provided by the backend's JSON response envelope when creating, updating, or deleting Backups.
-- **No Client-Side Pagination for Backups:** If the dataset grows large, do not fetch all Backups and paginate on the client. always implement robust server-side pagination, sorting, and filtering via query parameters using useSuperadminUrlState.
+## Component Responsibility Map
 
+| File | Responsibility |
+|---|---|
+| `__tests__/superadmin_backups_basic.test.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `backups_components/SuperadminBackupsClient.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `backups_components/SuperadminBackupsEmptyState/SuperadminBackupsEmptyState.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `backups_components/SuperadminBackupsRestoreModal.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `backups_components/SuperadminBackupsScheduleModal.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `backups_components/SuperadminBackupsTable.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `backups_components/SuperadminBackupsTriggerModal.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `backups_utils/useSuperadminBackupsData.test.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `error.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `loading.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `page.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
 
-## API Contract
-All calls are isolated to `superadmin_backups_api.ts`.
+## Rule Compliance Checklist
+- [x] Feature has a route-level `page.tsx` or the route does not require one.
+- [x] Feature has module-owned documentation file.
+- [x] Feature URL configuration is feature-owned when routes/API calls exist.
+- [x] Sibling Superadmin business imports are not allowed.
+- [x] API responses must use Zod validation at the boundary.
+- [x] Server state is owned by TanStack Query where async data is used.
+- [x] UI state remains local or feature-scoped.
+- [ ] Full typecheck/lint/test/build/E2E verification — **NOT VERIFIED** in this working environment because project dependencies are not installed.
+- [ ] Full visual comparison against `web_global_design.md` — **NOT VERIFIED** without browser execution.
 
-- `return apiFetch<ApiResponse<BackupRecord[]>>(`${BackupsUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.array(BackupRecordSchema) });`
-- `return apiFetch<ApiResponse<null>>(`${BackupsUrlConfig.BACKEND_API.BASE}/trigger`, {`
-- `return apiFetch<ApiResponse<null>>(`${BackupsUrlConfig.BACKEND_API.BASE}/${id}/restore`, {`
-
-
-## State Architecture
-- Server State: TanStack Query
-- UI State: React `useState` or Zustand
+## Documentation Consistency
+This feature map is generated from the current repository structure. Where the code does not expose enough static evidence to state an exact runtime fact, the documentation deliberately uses **NOT VERIFIED** rather than inventing a result.

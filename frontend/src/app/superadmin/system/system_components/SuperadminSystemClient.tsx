@@ -1,290 +1,30 @@
+
 'use client';
-// RESPONSIBILITY: Renders the System & Audit page showing migration health and global audit logs. Fetches data directly using TanStack Query.
-import { useState, useMemo } from 'react';
+// RESPONSIBILITY: View-only renderer for System & Audit. All client state, query/mutation orchestration, URL-backed filters, and export logic live in useSuperadminSystemClient.ts.
 import { Database, ShieldAlert, Activity, Filter, RefreshCcw, Search, Loader2, Clock, Download } from 'lucide-react';
-import { useSuperadminUrlState } from '@/app/superadmin/superadmin_utils/useSuperadminUrlState';
 import SuperadminSystemEmptyState from '@/app/superadmin/system/system_components/SuperadminSystemEmptyState/SuperadminSystemEmptyState';
 import SuperadminSystemSlaTab from '@/app/superadmin/system/system_components/SuperadminSystemSlaTab';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import type { ApiResponse } from '@/lib/api';
-import toast from 'react-hot-toast';
 import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
-import { systemApi } from '@/app/superadmin/system/system_api/superadmin_system_api';
-import type { SuperadminSystemTenant, SuperadminSystemAuditLog } from '@/app/superadmin/system/system_types/superadmin_system_types';
-
-const CURRENT_SCHEMA_VERSION = process.env.NEXT_PUBLIC_CURRENT_SCHEMA_VERSION || 'v2.4.1';
-
-export type SystemTab = 'migrations' | 'sla';
+import { useSuperadminSystemClient } from '@/app/superadmin/system/system_components/useSuperadminSystemClient';
 
 export default function SuperadminSystemClient() {
-  const [tab, setTab] = useState<SystemTab>('migrations');
-  const { getParam, setParam } = useSuperadminUrlState();
-  
-  const logSearch = getParam('logSearch', '');
-  const currentPage = Number(getParam('page', '1'));
-  const ITEMS_PER_PAGE = 10;
-  
-  const [migratingTenants, setMigratingTenants] = useState<Record<string, boolean>>({});
-  
-  const setLogSearch = (val: string) => {
-    setParam('logSearch', val);
-    setParam('page', '1');
-  };
-  const setCurrentPage = (val: number) => setParam('page', String(val));
-  
-  const queryParams = useMemo(() => {
-    const p: Record<string, string> = {
-      page: String(currentPage),
-      limit: String(ITEMS_PER_PAGE)
-    };
-    if (logSearch) p.search = logSearch;
-    return p;
-  }, [currentPage, logSearch]);
-  
-  
-  const queryClient = useQueryClient();
-
-  const { data: migrationsRes, isLoading: isLoadingMigrations, isError: isErrorMigrations } = useQuery({
-    queryKey: ['superadmin', 'system-migrations'],
-    queryFn: () => systemApi.fetchMigrations(),
-  });
-
-  const { data: auditRes, isLoading: isLoadingAudit, isError: isErrorAudit } = useQuery({
-    queryKey: ['superadmin', 'auditLogs', queryParams],
-    queryFn: () => systemApi.fetchAuditLogs(queryParams),
-  });
-
-  const fetchState = (isLoadingMigrations || isLoadingAudit) ? 'loading' : (isErrorMigrations || isErrorAudit) ? 'error' : 'success';
-
-  const migrationsData = migrationsRes?.data;
-  const tenants = migrationsData?.tenants ?? [];
-  
-  const auditData = auditRes as ApiResponse<SuperadminSystemAuditLog[]> & { meta?: { total?: number } } | undefined;
-  const rawLogs: SuperadminSystemAuditLog[] = auditData?.data || [];
-  const finalLogs = rawLogs;
-  const totalLogs = auditData?.meta?.total || rawLogs.length;
-
-  const handleRunMigration = async (tenantId: string) => {
-    setMigratingTenants(prev => ({ ...prev, [tenantId]: true }));
-    try {
-      await systemApi.startMigration(tenantId);
-      
-      queryClient.setQueryData(['superadmin', 'system-migrations'], (old: { data?: { tenants?: SuperadminSystemTenant[] } } | undefined) => {
-        if (!old?.data?.tenants) return old;
-        return {
-          ...old,
-          data: {
-            ...old.data,
-            tenants: old.data.tenants.map((t: SuperadminSystemTenant & { databaseVersion?: string }) => 
-              t.id === tenantId ? { ...t, databaseVersion: CURRENT_SCHEMA_VERSION } : t
-            )
-          }
-        };
-      });
-      toast.success(`Successfully migrated database for tenant ${tenantId}`, { id: 'successfully-migrated-database-for-tenant-tenantid' });
-    } catch (err) {
-      toast.error((err as Error).message, { id: 'migration-failed-please-check-logs' });
-    } finally {
-      setMigratingTenants(prev => ({ ...prev, [tenantId]: false }));
-    }
-  };
-
-  const filteredLogs = finalLogs; // Server-side filtering applied
-
-  const handleExportCSV = () => {
-    const headers = ['Timestamp', 'Target', 'Actor', 'Role', 'Action'];
-    const csvContent = [
-      headers.join(','),
-      ...filteredLogs.map((log: SuperadminSystemAuditLog) => [
-        new Date(log.timestamp).toISOString(),
-        `"${log.targetResource}"`,
-        `"${log.actorName}"`,
-        `"${log.actorRole}"`,
-        `"${log.action}"`
-      ].join(','))
-    ].join('\n');
-
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `audit_logs_${new Date().toISOString().split('T')[0]}.csv`;
-    link.click();
-    toast.success('Audit logs exported successfully', { id: 'audit-logs-exported-successfully' });
-  };
-
-  const totalPages = Math.ceil(totalLogs / ITEMS_PER_PAGE) || 1;
-  const paginatedLogs = filteredLogs; // Server-side pagination applied
-
-  if (fetchState === 'loading') {
-    return <div className="flex h-96 items-center justify-center"><Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" /></div>;
-  }
-  
-  if (fetchState === 'error') {
-    return <div className="flex h-96 items-center justify-center text-danger">Error loading data.</div>;
-  }
-
+  const model = useSuperadminSystemClient();
+  if (model.isLoading) return <div className="flex h-96 items-center justify-center"><Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" /></div>;
+  if (model.isError) return <div className="flex h-96 items-center justify-center text-danger">Unable to load system data. Please retry.</div>;
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-2xl font-bold text-foreground">System & Audit</h1>
-        <p className="text-secondary mt-1">Global database migration health and cross-gym uptime tracking.</p>
-      </div>
-
-      {/* Tabs */}
+      <div><h1 className="text-2xl font-bold text-foreground">System &amp; Audit</h1><p className="text-secondary mt-1">Global database migration health and cross-gym uptime tracking.</p></div>
       <div className="flex gap-1 bg-input border border-border rounded-xl p-1 w-fit">
-        <button
-          onClick={() => setTab('migrations')}
-          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
-            tab === 'migrations' ? 'bg-card text-foreground shadow-sm' : 'text-secondary hover:text-foreground'
-          }`}
-        >
-          <Database className="w-5 h-5" strokeWidth={2} /> Migrations & Audit
-        </button>
-        <button
-          onClick={() => setTab('sla')}
-          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
-            tab === 'sla' ? 'bg-card text-foreground shadow-sm' : 'text-secondary hover:text-foreground'
-          }`}
-        >
-          <Clock className="w-5 h-5" strokeWidth={2} /> Uptime Tracker
-        </button>
+        <button onClick={() => model.setTab('migrations')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${model.tab === 'migrations' ? 'bg-card text-foreground shadow-sm' : 'text-secondary hover:text-foreground'}`}><Database className="w-5 h-5" strokeWidth={2}/> Migrations &amp; Audit</button>
+        <button onClick={() => model.setTab('sla')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${model.tab === 'sla' ? 'bg-card text-foreground shadow-sm' : 'text-secondary hover:text-foreground'}`}><Clock className="w-5 h-5" strokeWidth={2}/> Uptime Tracker</button>
       </div>
-
-      {tab === 'migrations' && (
-        <div className="space-y-8 motion-safe:animate-superadmin-fade-in-up">
-          {/* Database Migration Health */}
-      <div>
-        <div className="flex items-center gap-2 mb-4">
-          <Database className="w-5 h-5 text-primary" />
-          <h2 className="text-xl font-bold text-foreground">Migration Health</h2>
+      {model.tab === 'migrations' ? <div className="space-y-8 motion-safe:animate-superadmin-fade-in-up">
+        <div><div className="flex items-center gap-2 mb-4"><Database className="w-5 h-5 text-primary"/><h2 className="text-xl font-bold text-foreground">Migration Health</h2></div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">{model.tenants.map(tenant => { const outdated = tenant.databaseVersion !== (process.env.NEXT_PUBLIC_CURRENT_SCHEMA_VERSION || 'v2.4.1'); return <div key={tenant.id} className={`border rounded-xl p-6 ${outdated ? 'bg-warning-bg border-warning/30' : 'bg-card border-border'}`}><div className="flex justify-between items-start mb-4"><div><h3 className="font-semibold text-foreground">{tenant.name}</h3><p className="text-xs text-disabled mt-1">Database: gym_{tenant.id.replace('-', '_')}</p></div><span className={`px-2 py-1 rounded text-xs font-mono font-medium ${outdated ? 'bg-warning/20 text-warning' : 'bg-success-bg text-success'}`}>{tenant.databaseVersion}</span></div>{outdated ? <button onClick={() => model.handleRunMigration(tenant.id)} disabled={model.migratingTenants[tenant.id]} className="w-full flex justify-center items-center gap-2 bg-warning hover:bg-warning text-black py-2 rounded-lg text-sm font-medium motion-safe:transition-colors disabled:opacity-50">{model.migratingTenants[tenant.id] ? <Loader2 className="w-4 h-4 motion-safe:animate-spin"/> : <RefreshCcw className="w-4 h-4"/>}{model.migratingTenants[tenant.id] ? 'Migrating...' : 'Run Migrations'}</button> : <button disabled className="w-full flex justify-center items-center gap-2 bg-border text-disabled py-2 rounded-lg text-sm font-medium cursor-not-allowed"><Activity className="w-4 h-4"/> Fully Synced</button>}</div>; })}</div></div>
+        <div className="pt-8 border-t border-border"><div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4"><div className="flex flex-wrap items-center gap-2"><ShieldAlert className="w-5 h-5 text-primary"/><h2 className="text-xl font-bold text-foreground">Global Audit Log</h2></div><div className="flex flex-wrap items-center gap-2"><div className="relative"><Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-disabled"/><input aria-label="Search audit logs" type="text" placeholder="Search logs..." value={model.logSearch} onChange={e => model.setLogSearch(e.target.value)} className="bg-card border border-border text-foreground text-sm rounded-lg pl-9 pr-4 py-2 focus:outline-none focus:border-primary"/></div><button aria-label="Filter audit logs" className="p-2 bg-card border border-border rounded-lg text-secondary hover:text-foreground motion-safe:transition-colors"><Filter className="w-4 h-4"/></button><button onClick={model.handleExportCSV} className="flex items-center gap-2 p-2 bg-input border border-border rounded-lg text-sm font-medium text-foreground hover:bg-card-hover motion-safe:transition-colors"><Download className="w-4 h-4"/> Export CSV</button></div></div>
+          <div className="bg-card border border-border rounded-xl overflow-hidden flex flex-col min-h-96"><div className="overflow-x-auto flex-1"><table className="w-full text-left border-collapse"><thead><tr className="bg-card border-b border-border text-secondary text-sm"><th className="p-4 font-medium">Timestamp</th><th className="p-4 font-medium">Target</th><th className="p-4 font-medium">Actor</th><th className="p-4 font-medium">Action</th></tr></thead><tbody className="divide-y divide-border">{model.logs.map(log => <tr key={log.id} className="superadmin-table-row group hover:bg-input motion-safe:transition-colors text-sm"><td className="p-4 text-secondary whitespace-nowrap">{new Date(log.timestamp).toLocaleString()}</td><td className="p-4 text-primary font-medium">{log.targetResource}</td><td className="p-4"><p className="text-foreground">{log.actorName}</p><span className="text-xs text-disabled bg-border px-2 py-0.5 rounded mt-1 inline-block">{log.actorRole}</span></td><td className="p-4"><span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-info-bg text-info font-mono">{log.action}</span></td></tr>)}{model.logs.length === 0 && <SuperadminSystemEmptyState/>}</tbody></table></div><SuperadminPagination currentPage={model.currentPage} totalPages={model.totalPages} onPageChange={model.setCurrentPage}/></div>
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {tenants.map(tenant => {
-            const isOutdated = tenant.databaseVersion !== CURRENT_SCHEMA_VERSION;
-            return (
-              <div key={tenant.id} className={`border rounded-xl p-6 ${isOutdated ? 'bg-warning-bg border-warning/30' : 'bg-card border-border'}`}>
-                <div className="flex justify-between items-start mb-4">
-                  <div>
-                    <h3 className="font-semibold text-foreground">{tenant.name}</h3>
-                    <p className="text-xs text-disabled mt-1">DB: gym_{tenant.id.replace('-', '_')}</p>
-                  </div>
-                  <span className={`px-2 py-1 rounded text-xs font-mono font-medium ${isOutdated ? 'bg-warning/20 text-warning' : 'bg-success-bg text-success'}`}>
-                    {tenant.databaseVersion}
-                  </span>
-                </div>
-
-                {isOutdated ? (
-                  <button 
-                    onClick={() => handleRunMigration(tenant.id)}
-                    disabled={migratingTenants[tenant.id]}
-                    className="w-full flex justify-center items-center gap-2 bg-warning hover:bg-warning text-black py-2 rounded-lg text-sm font-medium motion-safe:transition-colors disabled:opacity-50"
-                  >
-                    {migratingTenants[tenant.id] ? (
-                      <Loader2 className="w-4 h-4 motion-safe:animate-spin" />
-                    ) : (
-                      <RefreshCcw className="w-4 h-4" />
-                    )}
-                    {migratingTenants[tenant.id] ? 'Migrating...' : 'Run Migrations'}
-                  </button>
-                ) : (
-                  <button disabled className="w-full flex justify-center items-center gap-2 bg-border text-disabled py-2 rounded-lg text-sm font-medium cursor-not-allowed">
-                    <Activity className="w-4 h-4" /> Fully Synced
-                  </button>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Master Audit Log */}
-      <div className="pt-8 border-t border-border">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
-          <div className="flex flex-wrap items-center gap-2">
-            <ShieldAlert className="w-5 h-5 text-primary" />
-            <h2 className="text-xl font-bold text-foreground">Global Audit Log</h2>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-2">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-disabled" />
-              <input
-                type="text"
-                placeholder="Search logs..."
-                value={logSearch}
-                onChange={(e) => {
-                  setLogSearch(e.target.value);
-                  setCurrentPage(1); // Reset page on search
-                }}
-                className="bg-card border border-border text-foreground text-sm rounded-lg pl-9 pr-4 py-2 focus:outline-none focus:border-primary"
-              />
-            </div>
-            <button className="p-2 bg-card border border-border rounded-lg text-secondary hover:text-foreground motion-safe:transition-colors">
-              <Filter className="w-4 h-4" />
-            </button>
-            <button
-              onClick={handleExportCSV}
-              className="flex items-center gap-2 p-2 bg-input border border-border rounded-lg text-sm font-medium text-foreground hover:bg-card-hover motion-safe:transition-colors"
-            >
-              <Download className="w-4 h-4" /> Export CSV
-            </button>
-          </div>
-        </div>
-
-        <div className="bg-card border border-border rounded-xl overflow-hidden flex flex-col min-h-96">
-          <div className="overflow-x-auto flex-1">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="bg-card border-b border-border text-secondary text-sm">
-                  <th className="p-4 font-medium">Timestamp</th>
-                  <th className="p-4 font-medium">Target</th>
-                  <th className="p-4 font-medium">Actor</th>
-                  <th className="p-4 font-medium">Action</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border">
-                {paginatedLogs.map((log: SuperadminSystemAuditLog) => (
-                  <tr key={log.id} className="superadmin-table-row group hover:bg-input motion-safe:transition-colors text-sm">
-                    <td className="p-4 text-secondary whitespace-nowrap">
-                      {new Date(log.timestamp).toLocaleString()}
-                    </td>
-                    <td className="p-4 text-primary font-medium">
-                      {log.targetResource}
-                    </td>
-                    <td className="p-4">
-                      <p className="text-foreground">{log.actorName}</p>
-                      <span className="text-xs text-disabled bg-border px-2 py-0.5 rounded mt-1 inline-block">{log.actorRole}</span>
-                    </td>
-                    <td className="p-4">
-                      <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-info-bg text-info font-mono">
-                        {log.action}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-                  {paginatedLogs.length === 0 && (
-                    <SuperadminSystemEmptyState />
-                  )}
-              </tbody>
-            </table>
-          </div>
-          <SuperadminPagination 
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-          />
-        </div>
-      </div>
-        </div>
-      )}
-
-      {tab === 'sla' && (
-        <SuperadminSystemSlaTab />
-      )}
+      </div> : <SuperadminSystemSlaTab />}
     </div>
   );
 }
-
-
-

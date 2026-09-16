@@ -1,119 +1,119 @@
 # Affiliates Feature Map
 
 ## Module Purpose
-Manages affiliate partners who refer gym tenants to the platform. Superadmins can create, edit, suspend, activate, and delete affiliates. Each affiliate has a unique referral code and earns commission tracked against their account.
+This Superadmin feature owns the `affiliates` route and its feature-specific UI, client logic, API boundary, types, schemas, constants, mocks, tests, and documentation. It is intended to be operable by the Superadmin role without importing sibling Superadmin business modules. The feature exposes only the controls represented by the current route and code in this folder. Backend authorization remains outside the frontend audit scope.
 
 ## Directory Structure
-- `affiliates_components/`: Root orchestrator (`SuperadminAffiliatesClient`) + isolated sub-components (Header, StatsBar, Table, TableRow, StatusBadge, Modal, EmptyState)
-- `superadmin_affiliates_types/`: TypeScript definitions — `Affiliate`, `AffiliateStatus`, `AffiliateFormValues`
-- `affiliates_utils/`: Page hook (`useSuperadminAffiliatesPage`), data hook (`useSuperadminAffiliatesData`), mutation hook (`useSuperadminAffiliatesMutation`)
-- `superadmin_affiliates_api/`: API layer — `superadmin_affiliates_api.ts`
+
+| Folder | Responsibility | Key files |
+|---|---|---|
+| `__tests__/` | Owns the feature responsibility represented by this folder. | `superadmin_affiliates_basic.test.tsx` |
+| `affiliates_components/` | Owns the feature responsibility represented by this folder. | `SuperadminAffiliateModal.tsx`, `SuperadminAffiliateStatusBadge.tsx`, `SuperadminAffiliatesClient.tsx`, `SuperadminAffiliatesEmptyState.tsx`, `SuperadminAffiliatesHeader.tsx`, `SuperadminAffiliatesPayoutHistory.tsx`, `SuperadminAffiliatesStatsBar.tsx`, `SuperadminAffiliatesTable.tsx` |
+| `affiliates_mocks/` | Owns the feature responsibility represented by this folder. | `SuperadminAffiliatesMockHandlers.ts` |
+| `affiliates_utils/` | Owns the feature responsibility represented by this folder. | `useSuperadminAffiliatesData.test.ts`, `useSuperadminAffiliatesData.ts`, `useSuperadminAffiliatesMutation.test.ts`, `useSuperadminAffiliatesMutation.ts`, `useSuperadminAffiliatesMutations.ts`, `useSuperadminAffiliatesPage.test.ts`, `useSuperadminAffiliatesPage.ts` |
+| `superadmin_affiliates_api/` | Owns the feature responsibility represented by this folder. | `superadmin_affiliates_api.ts` |
+| `superadmin_affiliates_types/` | Owns the feature responsibility represented by this folder. | `superadmin_affiliates_types.ts` |
 
 ## Feature Inventory
-| Feature | Component | Purpose | API Call | Status |
+
+| Feature | Route | User action | Key API/client owner | Status |
 |---|---|---|---|---|
-| List affiliates | `SuperadminAffiliatesTable` | Paginated table of all affiliates with status badge, referral code, commission | `fetchAffiliates()` | ✅ Live |
-| Search & filter | `SuperadminAffiliatesHeader` | Search by name/email, filter by status (ALL / ACTIVE / SUSPENDED) | Client-side filter | ✅ Live |
-| Stats bar | `SuperadminAffiliatesStatsBar` | Total affiliates count + total commission earned | Derived from query data | ✅ Live |
-| Add affiliate | `SuperadminAffiliateModal` | Create new affiliate with name, email, referral code (React Hook Form + Zod) | `createAffiliate(dto)` | ✅ Live |
-| Edit affiliate | `SuperadminAffiliateModal` (edit mode) | Update affiliate name, email, referral code | `updateAffiliate(id, dto)` | ✅ Live |
-| Toggle status | `SuperadminAffiliatesTableRow` | Suspend or activate an affiliate | `suspendAffiliate(id)` / `activateAffiliate(id)` | ✅ Live |
-| Delete affiliate | `SuperadminAffiliatesTableRow` | Permanently remove an affiliate record | `deleteAffiliate(id)` | ✅ Live |
-| Empty state | `SuperadminAffiliatesEmptyState` | Shown when no affiliates exist or search returns zero results | — | ✅ Live |
+| `affiliates` | `/superadmin/affiliates` | Use the route's controls to perform the operations implemented by the current client UI. | `feature-local API files` | Implemented in source; runtime integration **NOT VERIFIED** without installing project dependencies. |
+
+## User Flows & Interactions
+
+### Flow 1: Open Feature
+1. User navigates to the route shown above.
+2. Next.js renders the route `page.tsx` and its client view.
+3. The feature-owned client layer loads the data needed by the visible UI.
+4. Loading, empty, error, or populated state is rendered according to the current implementation.
+
+### Flow 2: Execute an Available Action
+1. User activates an action exposed by the current feature UI.
+2. The feature client/hook invokes the feature-owned API function.
+3. The API boundary validates response data using the feature schema when a schema is supplied.
+4. The UI updates local/query state and shows the resulting feedback.
 
 ## Data and State Architecture
-- Server-state query key: `['superadmin', 'affiliates']`
-- Mutations invalidate: `['superadmin', 'affiliates']` on success
-- Zustand stores: None — all UI state in `useSuperadminAffiliatesPage` via `useState`
-- Form state: React Hook Form + Zod (`AffiliateFormValues` schema in types file)
-- Context providers: None
-- Local-storage keys: None
+- **Server state:** TanStack Query where the feature currently uses async queries.
+- **UI state:** local `useState` or a feature-scoped Zustand store where present.
+- **URL state:** `useSuperadminUrlState` only where the feature currently uses query-string filters/pagination.
+- **Sibling business dependencies:** must remain zero; shared transport/UI primitives are infrastructure exceptions only.
 
 ## API Contract
-All functions live in `superadmin_affiliates_api.ts` and return `ApiResponse<T>`:
-- `fetchAffiliates(params?)` → `ApiResponse<Affiliate[]>`
-- `createAffiliate(dto: AffiliateFormValues)` → `ApiResponse<Affiliate>`
-- `updateAffiliate(id: string, dto: Partial<AffiliateFormValues>)` → `ApiResponse<Affiliate>`
-- `deleteAffiliate(id: string)` → `ApiResponse<void>`
-- `suspendAffiliate(id: string)` → `ApiResponse<Affiliate>`
-- `activateAffiliate(id: string)` → `ApiResponse<Affiliate>`
 
-## Permissions and Security
-- Only `SUPERADMIN` role can access this module
-- All mutations require confirmation via `useSuperadminConfirm()` for destructive actions (delete, suspend)
-
-## Loading, Empty, Error States
-- **Loading:** Structural skeleton — header bar + 2 stat card skeletons + table skeleton (Rule 9)
-- **Empty:** `<SuperadminAffiliatesEmptyState />` with CTA to add first affiliate (Rule 48)
-- **Error:** `error.tsx` React Error Boundary + inline `text-danger` fallback in client component
-
-## Edge Cases / AI Warnings
-- Do not add a second affiliates panel to `/superadmin/settings` — this module is the single source of truth
-- Referral codes must be unique — the API enforces this; surface the error message from `res.message` via `toast.error`
-- Do not use `useEffect` to sync query data into local state — consume `queryData` directly (Rule 15C)
-- Status toggle is optimistic — update query cache immediately, revert on error
+| Function | Method | Endpoint expression | API file |
+|---|---|---|---|
+| No feature API functions detected | — | — | No API service file detected by static scan |
 
 ## UI Data Requirements
 
-The following types map directly to the UI components and define the shape of the data:
+Observed schema/type fields in this feature are listed below. Any UI field not represented by a schema/type is **NOT VERIFIED** and must be checked by the coding agent.
 
-```typescript
-export type AffiliateStatus = 'ACTIVE' | 'INACTIVE';
+| Field | Source location |
+|---|---|
+| `name` | Feature-owned schema/type file |
+| `email` | Feature-owned schema/type file |
+| `referralCode` | Feature-owned schema/type file |
+| `id` | Feature-owned schema/type file |
+| `phone` | Feature-owned schema/type file |
+| `totalReferred` | Feature-owned schema/type file |
+| `commissionEarned` | Feature-owned schema/type file |
+| `commissionRate` | Feature-owned schema/type file |
+| `pendingPayout` | Feature-owned schema/type file |
+| `bankDetails` | Feature-owned schema/type file |
+| `status` | Feature-owned schema/type file |
+| `joinedAt` | Feature-owned schema/type file |
+| `referralCount` | Feature-owned schema/type file |
+| `conversionRate` | Feature-owned schema/type file |
 
-/** Filter tabs for the Affiliates status dropdown. */
+## Permissions and Security
+- **Role:** `SUPERADMIN` UI.
+- **Frontend boundary:** route and feature UI are under `/superadmin`.
+- **Destructive actions:** must use the Superadmin confirmation infrastructure where the feature exposes destructive controls.
+- **Backend authorization:** not evaluated here and must not be inferred from frontend checks.
 
-export type AffiliateStatusFilter = 'ALL' | AffiliateStatus;
-
-export interface Affiliate {
-  id: string;
-  name: string;
-  email: string;
-  phone?: string;
-  referralCode: string;
-  totalReferred: number;
-  commissionEarned: number;
-  commissionRate?: number;
-  pendingPayout?: number;
-  bankDetails?: string;
-  status: AffiliateStatus;
-  joinedAt: string;
-  referralCount?: number;
-  conversionRate?: number;
-  // ... truncated
-
-export type AffiliateFormData = z.infer<typeof AffiliateSchema>;
-```
-
-## Rule Compliance Checklist
-- [x] Rule 1: Micro-modularization — each sub-component in its own folder
-- [x] Rule 4: No inline colors — status badge uses `SuperadminAffiliateStatusBadge` with token classes
-- [x] Rule 7: Type isolation — all types in `superadmin_affiliates_types.ts`
-- [x] Rule 8: Server/client boundary — `page.tsx` is Server Component, client logic in `*Client.tsx`
-- [x] Rule 9: Structural skeleton loading state, not a spinner
-- [x] Rule 10: Absolute imports only (`@/app/superadmin/...`)
-- [x] Rule 14: No hardcoded toast messages — uses `res.message` from API response
-- [x] Rule 15C: No `useEffect` anti-pattern — TanStack Query data consumed directly
-- [x] Rule 71: Destructive actions (delete, suspend) gated by `useSuperadminConfirm()`
-
----
+## Loading, Empty, and Error States
+- **Route loading:** use the feature `loading.tsx` when present.
+- **Route error:** use the feature `error.tsx` when present.
+- **Feature empty/error:** use the feature-specific empty/error UI already present in the source.
+- Any runtime transition behavior not statically provable is **NOT VERIFIED**.
 
 ## Edge Cases and AI Warnings
-
-- **Delete Affiliate is permanent and irreversible:** Never use `window.confirm()` for Affiliate deletion. If a delete feature exists or is added, it MUST use a type-to-confirm modal with the exact string "DELETE" to prevent accidental data loss.
-- **Affiliates Table Row Clicks:** The `Affiliates` list view uses clickable table rows (`<tr className="cursor-pointer">`) for navigation. Ensure that any inline action buttons (like Edit or Delete) inside the table call `e.stopPropagation()` so they don't accidentally trigger the row navigation.
-- **Section-Level Error Boundaries in Affiliates:** Do not allow a single failed API fetch in Affiliates to unmount the entire page. Major components (like the Affiliates data table or metrics) must be wrapped in `<SuperadminErrorBoundary variant="inline">`.
-- **Backend-Driven Messages for Affiliates Mutations:** Do not hardcode success or error toasts like "User created". Always display the `message` string provided by the backend's JSON response envelope when creating, updating, or deleting Affiliates.
-- **No Client-Side Pagination for Affiliates:** If the dataset grows large, do not fetch all Affiliates and paginate on the client. always implement robust server-side pagination, sorting, and filtering via query parameters using useSuperadminUrlState.
-
-
-## State Architecture
-- Server State: TanStack Query
-- UI State: React `useState` or Zustand
-
+- **No sibling business imports:** do not reintroduce imports from another Superadmin business feature.
+- **No fake production data:** server-like records belong in feature mocks/fixtures, never fallback constants inside production UI.
+- **No hardcoded URLs:** feature-owned routes belong in the single feature URL config.
+- **No async state in Zustand:** use TanStack Query for server state.
+- **Preserve destructive confirmation:** do not bypass the Superadmin confirmation flow.
 
 ## Component Responsibility Map
 
-| Component | Responsibility |
+| File | Responsibility |
 |---|---|
-| `SuperadminAffiliateModal.tsx` | Renders UI for affiliates |
-| `SuperadminAffiliatesClient.tsx` | Renders UI for affiliates |
+| `__tests__/superadmin_affiliates_basic.test.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `affiliates_components/SuperadminAffiliateModal.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `affiliates_components/SuperadminAffiliateStatusBadge/SuperadminAffiliateStatusBadge.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `affiliates_components/SuperadminAffiliatesClient.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `affiliates_components/SuperadminAffiliatesEmptyState/SuperadminAffiliatesEmptyState.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `affiliates_components/SuperadminAffiliatesHeader/SuperadminAffiliatesHeader.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `affiliates_components/SuperadminAffiliatesPayoutHistory/SuperadminAffiliatesPayoutHistory.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `affiliates_components/SuperadminAffiliatesStatsBar/SuperadminAffiliatesStatsBar.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `affiliates_components/SuperadminAffiliatesTable/SuperadminAffiliatesTable.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `affiliates_components/SuperadminAffiliatesTable/SuperadminAffiliatesTableRow.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `error.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `loading.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `page.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+
+## Rule Compliance Checklist
+- [x] Feature has a route-level `page.tsx` or the route does not require one.
+- [x] Feature has module-owned documentation file.
+- [x] Feature URL configuration is feature-owned when routes/API calls exist.
+- [x] Sibling Superadmin business imports are not allowed.
+- [x] API responses must use Zod validation at the boundary.
+- [x] Server state is owned by TanStack Query where async data is used.
+- [x] UI state remains local or feature-scoped.
+- [ ] Full typecheck/lint/test/build/E2E verification — **NOT VERIFIED** in this working environment because project dependencies are not installed.
+- [ ] Full visual comparison against `web_global_design.md` — **NOT VERIFIED** without browser execution.
+
+## Documentation Consistency
+This feature map is generated from the current repository structure. Where the code does not expose enough static evidence to state an exact runtime fact, the documentation deliberately uses **NOT VERIFIED** rather than inventing a result.

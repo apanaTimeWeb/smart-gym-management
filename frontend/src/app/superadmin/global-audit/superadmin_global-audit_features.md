@@ -1,133 +1,116 @@
 # Superadmin Global Audit — Feature Map
 
 ## Module Purpose
-The Superadmin Global Audit module provides an immutable, cross-tenant audit log of all
-significant actions performed across the entire platform. Every destructive mutation,
-authentication event, financial transaction, and admin action is recorded here. The audit
-log is read-only — no record can be edited or deleted. Superadmins use this module for
-compliance, incident investigation, and security monitoring.
+This Superadmin feature owns the `global-audit` route and its feature-specific UI, client logic, API boundary, types, schemas, constants, mocks, tests, and documentation. It is intended to be operable by the Superadmin role without importing sibling Superadmin business modules. The feature exposes only the controls represented by the current route and code in this folder. Backend authorization remains outside the frontend audit scope.
 
 ## Directory Structure
-| File | Responsibility |
-|---|---|
-| `page.tsx` | Server Component — auth guard |
-| `loading.tsx` | Table skeleton — 15 row placeholders |
-| `error.tsx` | Error boundary with retry |
-| `global-audit_components/SuperadminGlobalAuditClient.tsx` | Root Client Component — table + filter bar |
-| `global-audit_components/SuperadminGlobalAuditTable.tsx` | Paginated audit log table |
-| `global-audit_components/SuperadminGlobalAuditTableRow.tsx` | Single audit row — actor, action, target, tenant, timestamp |
-| `global-audit_components/SuperadminGlobalAuditFilterBar.tsx` | Filter by tenant, action type, actor, date range |
-| `global-audit_components/SuperadminGlobalAuditDetailDrawer.tsx` | Full audit entry — before/after payload diff |
-| `global-audit_components/SuperadminGlobalAuditExportButton.tsx` | Export filtered log as CSV |
-| `global-audit_types/SuperadminGlobalAuditTypes.ts` | `AuditEntry`, `AuditAction`, `AuditFilter`, `AuditPayloadDiff` |
-| `global-audit_utils/SuperadminGlobalAuditConstants.ts` | `AUDIT_ACTION_STYLES`, `AUDIT_ACTION_LABELS` |
+
+| Folder | Responsibility | Key files |
+|---|---|---|
+| `__tests__/` | Owns the feature responsibility represented by this folder. | `superadmin_global-audit_basic.test.tsx` |
+| `global-audit_components/` | Owns the feature responsibility represented by this folder. | `SuperadminGlobalAuditClient.tsx` |
+| `global-audit_mocks/` | Owns the feature responsibility represented by this folder. | `SuperadminGlobalAuditMockFixtures.ts`, `SuperadminGlobalAuditMockHandlers.ts` |
+| `global-audit_utils/` | Owns the feature responsibility represented by this folder. | `SuperadminGlobalAuditConstants.ts` |
+| `superadmin_global-audit_api/` | Owns the feature responsibility represented by this folder. | `superadmin_global-audit_api.ts` |
+| `superadmin_global-audit_types/` | Owns the feature responsibility represented by this folder. | `superadmin_global-audit_types.ts` |
 
 ## Feature Inventory
-| Feature | Path | Purpose | Main API Calls | Status |
+
+| Feature | Route | User action | Key API/client owner | Status |
 |---|---|---|---|---|
-| Audit Log | `/superadmin/global-audit` | All platform audit entries, paginated | `GET /superadmin/audit?page=&tenantId=&action=&from=&to=` | ✅ Live |
-| View Entry Detail | `/superadmin/global-audit` | Full entry with before/after diff | `GET /superadmin/audit/:id` | ✅ Live |
-| Filter by Tenant | `/superadmin/global-audit` | Scope log to a specific tenant | — (query param) | ✅ Live |
-| Filter by Action | `/superadmin/global-audit` | Scope by action type | — (query param) | ✅ Live |
-| Filter by Date Range | `/superadmin/global-audit` | Scope by time window | — (query params) | ✅ Live |
-| Export CSV | `/superadmin/global-audit` | Download filtered log as CSV | `GET /superadmin/audit/export?format=csv&...` | ✅ Live |
+| `global-audit` | `/superadmin/global-audit` | Use the route's controls to perform the operations implemented by the current client UI. | `feature-local API files` | Implemented in source; runtime integration **NOT VERIFIED** without installing project dependencies. |
+
+## User Flows & Interactions
+
+### Flow 1: Open Feature
+1. User navigates to the route shown above.
+2. Next.js renders the route `page.tsx` and its client view.
+3. The feature-owned client layer loads the data needed by the visible UI.
+4. Loading, empty, error, or populated state is rendered according to the current implementation.
+
+### Flow 2: Execute an Available Action
+1. User activates an action exposed by the current feature UI.
+2. The feature client/hook invokes the feature-owned API function.
+3. The API boundary validates response data using the feature schema when a schema is supplied.
+4. The UI updates local/query state and shows the resulting feedback.
 
 ## Data and State Architecture
-- TanStack Query keys: `['superadmin', 'audit', { page, tenantId, action, from, to }]`, `['superadmin', 'audit', entryId]`
-- Mutations: None — audit log is read-only
-- Zustand stores: None
-- Context providers: None
-- Local-state: `tenantFilter`, `actionFilter`, `dateRange`, `page` — local to `SuperadminGlobalAuditClient`
+- **Server state:** TanStack Query where the feature currently uses async queries.
+- **UI state:** local `useState` or a feature-scoped Zustand store where present.
+- **URL state:** `useSuperadminUrlState` only where the feature currently uses query-string filters/pagination.
+- **Sibling business dependencies:** must remain zero; shared transport/UI primitives are infrastructure exceptions only.
 
-## User Flows
-1. Superadmin opens `/superadmin/global-audit` → full audit log loads, newest first
-2. Superadmin filters by tenant → log scoped to that tenant's actions
-3. Superadmin filters by action type (e.g. `GYM_DELETED`) → log scoped to that action
-4. Superadmin clicks audit row → `SuperadminGlobalAuditDetailDrawer` → before/after payload diff
-5. Superadmin clicks "Export CSV" → `GET /superadmin/audit/export` with current filters → browser download
+## API Contract
 
-## Component Responsibility Map
-- `SuperadminGlobalAuditClient` — filter + pagination state. MUST NOT contain table logic.
-- `SuperadminGlobalAuditTable` — renders rows. MUST NOT manage filter state.
-- `SuperadminGlobalAuditDetailDrawer` — read-only diff display. MUST NOT allow any mutations.
-- `SuperadminGlobalAuditExportButton` — triggers download only. MUST pass current filter state as query params.
-
-## Permissions and Security
-| Action | Required Role |
-|---|---|
-| View audit log | `SUPERADMIN` |
-| View entry detail | `SUPERADMIN` |
-| Export audit log | `SUPERADMIN` |
-| ❌ Edit audit entries | Forbidden — immutable by design |
-| ❌ Delete audit entries | Forbidden — compliance requirement |
-
-## Loading, Empty, Error States
-- **Loading:** `loading.tsx` — 15 table row skeletons (audit logs are dense)
-- **Empty:** "No audit entries match your filters" with clear filter link
-- **Error:** `error.tsx` with retry
-
-## Edge Cases / AI Warnings
-- **Immutability** — this module MUST have zero mutation operations. No edit, delete, or update buttons anywhere.
-- **AUDIT_ACTION_STYLES** — maps action types to badge color classes; must live in constants, never inlined.
-- **Before/after diff** — payload diff in detail drawer should render as a structured diff view, not raw JSON dump.
-- **Date range validation** — `from` must be before `to`; validate client-side before firing query.
-- **Export with filters** — CSV export MUST include all currently active filters as query params; never export unfiltered full log without explicit confirmation.
-- **Pagination reset** — page resets to 1 when any filter changes.
+| Function | Method | Endpoint expression | API file |
+|---|---|---|---|
+| No feature API functions detected | — | — | No API service file detected by static scan |
 
 ## UI Data Requirements
 
-The following types map directly to the UI components and define the shape of the data:
+Observed schema/type fields in this feature are listed below. Any UI field not represented by a schema/type is **NOT VERIFIED** and must be checked by the coding agent.
 
-```typescript
-export interface AuditLog {
-  id: string;
-  timestamp: string;
-  actor: string;
-  actorRole?: 'SUPERADMIN' | 'ADMIN' | 'STAFF' | 'MEMBER';
-  tenantId?: string;
-  tenantName?: string;
-  actorType?: 'SUPERADMIN' | 'SYSTEM' | 'TENANT';
-  action: string;
-  resource: string;
-  resourceId?: string;
-  details: string;
-  ipAddress: string;
-  sessionId?: string;
-  severity: 'INFO' | 'WARNING' | 'CRITICAL';
-  // ... truncated
+| Field | Source location |
+|---|---|
+| `id` | Feature-owned schema/type file |
+| `timestamp` | Feature-owned schema/type file |
+| `targetResource` | Feature-owned schema/type file |
+| `actorName` | Feature-owned schema/type file |
+| `actorRole` | Feature-owned schema/type file |
+| `actorType` | Feature-owned schema/type file |
+| `action` | Feature-owned schema/type file |
+| `ipAddress` | Feature-owned schema/type file |
+| `tenantId` | Feature-owned schema/type file |
+| `tenantName` | Feature-owned schema/type file |
+| `actorEmail` | Feature-owned schema/type file |
+| `targetEntity` | Feature-owned schema/type file |
+| `targetId` | Feature-owned schema/type file |
+| `details` | Feature-owned schema/type file |
+| `actor` | Feature-owned schema/type file |
+| `resource` | Feature-owned schema/type file |
+| `resourceId` | Feature-owned schema/type file |
+| `sessionId` | Feature-owned schema/type file |
+| `severity` | Feature-owned schema/type file |
 
-export type GlobalAuditLog = z.infer<typeof GlobalAuditLogSchema>;
-```
+## Permissions and Security
+- **Role:** `SUPERADMIN` UI.
+- **Frontend boundary:** route and feature UI are under `/superadmin`.
+- **Destructive actions:** must use the Superadmin confirmation infrastructure where the feature exposes destructive controls.
+- **Backend authorization:** not evaluated here and must not be inferred from frontend checks.
 
-## Rule Compliance Checklist
-- [x] Rule 1: Micro-modularization
-- [x] Rule 3: Module prefix naming — `SuperadminGlobalAudit*`
-- [x] Rule 7: Type isolation — all types in `SuperadminGlobalAuditTypes.ts`
-- [x] Rule 8: Server/Client Boundary — `page.tsx` = Server Component
-- [x] Rule 9: `loading.tsx` + `error.tsx` present
-- [x] Rule 13: Feature Map — this document
-- [x] Rule 40: `_forbidden.md` present
-- [x] Rule 55: No `key={index}` — stable audit entry IDs used
-- [x] Rule 63: Zero cross-module imports
-- [x] Rule 73: `import type` for all type-only imports
-
----
+## Loading, Empty, and Error States
+- **Route loading:** use the feature `loading.tsx` when present.
+- **Route error:** use the feature `error.tsx` when present.
+- **Feature empty/error:** use the feature-specific empty/error UI already present in the source.
+- Any runtime transition behavior not statically provable is **NOT VERIFIED**.
 
 ## Edge Cases and AI Warnings
+- **No sibling business imports:** do not reintroduce imports from another Superadmin business feature.
+- **No fake production data:** server-like records belong in feature mocks/fixtures, never fallback constants inside production UI.
+- **No hardcoded URLs:** feature-owned routes belong in the single feature URL config.
+- **No async state in Zustand:** use TanStack Query for server state.
+- **Preserve destructive confirmation:** do not bypass the Superadmin confirmation flow.
 
-- **Delete Global audit is permanent and irreversible:** Never use `window.confirm()` for Global audit deletion. If a delete feature exists or is added, it MUST use a type-to-confirm modal with the exact string "DELETE" to prevent accidental data loss.
-- **Global audit Table Row Clicks:** The `Global audit` list view uses clickable table rows (`<tr className="cursor-pointer">`) for navigation. Ensure that any inline action buttons (like Edit or Delete) inside the table call `e.stopPropagation()` so they don't accidentally trigger the row navigation.
-- **Section-Level Error Boundaries in Global audit:** Do not allow a single failed API fetch in Global audit to unmount the entire page. Major components (like the Global audit data table or metrics) must be wrapped in `<SuperadminErrorBoundary variant="inline">`.
-- **Backend-Driven Messages for Global audit Mutations:** Do not hardcode success or error toasts like "User created". Always display the `message` string provided by the backend's JSON response envelope when creating, updating, or deleting Global audit.
-- **No Client-Side Pagination for Global audit:** If the dataset grows large, do not fetch all Global audit and paginate on the client. always implement robust server-side pagination, sorting, and filtering via query parameters using useSuperadminUrlState.
+## Component Responsibility Map
 
+| File | Responsibility |
+|---|---|
+| `__tests__/superadmin_global-audit_basic.test.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `error.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `global-audit_components/SuperadminGlobalAuditClient.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `loading.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `page.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
 
-## API Contract
-All calls are isolated to `superadmin_global-audit_api.ts`.
+## Rule Compliance Checklist
+- [x] Feature has a route-level `page.tsx` or the route does not require one.
+- [x] Feature has module-owned documentation file.
+- [x] Feature URL configuration is feature-owned when routes/API calls exist.
+- [x] Sibling Superadmin business imports are not allowed.
+- [x] API responses must use Zod validation at the boundary.
+- [x] Server state is owned by TanStack Query where async data is used.
+- [x] UI state remains local or feature-scoped.
+- [ ] Full typecheck/lint/test/build/E2E verification — **NOT VERIFIED** in this working environment because project dependencies are not installed.
+- [ ] Full visual comparison against `web_global_design.md` — **NOT VERIFIED** without browser execution.
 
-- `return apiFetch<ApiResponse<AuditLog[]>>(`${GlobalAuditUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.array(AuditLogSchema) });`
-
-
-## State Architecture
-- Server State: TanStack Query
-- UI State: React `useState` or Zustand
+## Documentation Consistency
+This feature map is generated from the current repository structure. Where the code does not expose enough static evidence to state an exact runtime fact, the documentation deliberately uses **NOT VERIFIED** rather than inventing a result.

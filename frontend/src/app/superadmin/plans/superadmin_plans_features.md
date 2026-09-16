@@ -1,119 +1,120 @@
 # Superadmin Plans — Feature Map
 
 ## Module Purpose
-The Superadmin Plans module manages the SaaS subscription plan catalog — the tiers that
-gym tenants subscribe to (e.g. Starter, Pro, Enterprise). Superadmins define plan names,
-pricing, feature limits (max branches, max members, enabled modules), and billing cycles.
-This is distinct from the Manager/Admin "membership plans" module which manages gym member
-subscriptions. Superadmin plans are platform-level SaaS products, not gym membership products.
+This Superadmin feature owns the `plans` route and its feature-specific UI, client logic, API boundary, types, schemas, constants, mocks, tests, and documentation. It is intended to be operable by the Superadmin role without importing sibling Superadmin business modules. The feature exposes only the controls represented by the current route and code in this folder. Backend authorization remains outside the frontend audit scope.
 
 ## Directory Structure
-| File | Responsibility |
-|---|---|
-| `page.tsx` | Server Component — auth guard |
-| `loading.tsx` | Plan card grid skeleton |
-| `error.tsx` | Error boundary with retry |
-| `plans_components/SuperadminPlansClient.tsx` | Root Client Component — grid + actions |
-| `plans_components/SuperadminPlansGrid.tsx` | Card grid of all SaaS plans |
-| `plans_components/SuperadminPlanCard.tsx` | Single plan card — name, price, limits, subscriber count |
-| `plans_components/SuperadminPlansCreateModal.tsx` | Create new SaaS plan |
-| `plans_components/SuperadminPlansEditModal.tsx` | Edit plan — pricing, limits, features |
-| `plans_components/SuperadminPlansFeatureToggleList.tsx` | Toggle which modules are included in a plan |
-| `plans_types/SuperadminPlansTypes.ts` | `SaasPlan`, `PlanFeatureLimit`, `CreateSaasPlanDto`, `UpdateSaasPlanDto` |
-| `plans_utils/SuperadminPlansConstants.ts` | `BILLING_CYCLE_OPTIONS`, `MODULE_LIST`, `PLAN_TIER_STYLES` |
+
+| Folder | Responsibility | Key files |
+|---|---|---|
+| `__tests__/` | Owns the feature responsibility represented by this folder. | `superadmin_plans_basic.test.tsx` |
+| `plans_components/` | Owns the feature responsibility represented by this folder. | `SuperadminPlanCreateModal.tsx`, `SuperadminPlanEditModal.tsx`, `SuperadminPlansClient.tsx`, `SuperadminPlansList.tsx`, `useSuperadminPlansList.ts` |
+| `plans_mocks/` | Owns the feature responsibility represented by this folder. | `SuperadminPlansMockHandlers.ts` |
+| `plans_store/` | Owns the feature responsibility represented by this folder. | `useSuperadminPlansStore.test.ts`, `useSuperadminPlansStore.ts` |
+| `plans_types/` | Owns the feature responsibility represented by this folder. | `superadmin_plans_ui_types.ts` |
+| `plans_utils/` | Owns the feature responsibility represented by this folder. | `SuperadminPlansSchemas.ts` |
+| `superadmin_plans_api/` | Owns the feature responsibility represented by this folder. | `superadmin_plans_api.ts` |
+| `superadmin_plans_types/` | Owns the feature responsibility represented by this folder. | `superadmin_plans_schema.ts`, `superadmin_plans_types.ts` |
 
 ## Feature Inventory
-| Feature | Path | Purpose | Main API Calls | Status |
+
+| Feature | Route | User action | Key API/client owner | Status |
 |---|---|---|---|---|
-| Plan List | `/superadmin/plans` | All SaaS subscription plans | `GET /superadmin/plans` | ✅ Live |
-| Create Plan | `/superadmin/plans` | New SaaS tier with pricing + limits | `POST /superadmin/plans` | ✅ Live |
-| Edit Plan | `/superadmin/plans` | Update pricing, limits, feature toggles | `PATCH /superadmin/plans/:id` | ✅ Live |
-| Archive Plan | `/superadmin/plans` | Soft-delete — existing subscribers unaffected | `PATCH /superadmin/plans/:id/archive` | ✅ Live |
-| View Subscribers | `/superadmin/plans` | Count of gyms on each plan (read-only) | — (included in plan list response) | ✅ Live |
+| `plans` | `/superadmin/plans` | Use the route's controls to perform the operations implemented by the current client UI. | `plans/superadmin_plans_api/superadmin_plans_api.ts` | Implemented in source; runtime integration **NOT VERIFIED** without installing project dependencies. |
+
+## User Flows & Interactions
+
+### Flow 1: Open Feature
+1. User navigates to the route shown above.
+2. Next.js renders the route `page.tsx` and its client view.
+3. The feature-owned client layer loads the data needed by the visible UI.
+4. Loading, empty, error, or populated state is rendered according to the current implementation.
+
+### Flow 2: Execute an Available Action
+1. User activates an action exposed by the current feature UI.
+2. The feature client/hook invokes the feature-owned API function.
+3. The API boundary validates response data using the feature schema when a schema is supplied.
+4. The UI updates local/query state and shows the resulting feedback.
 
 ## Data and State Architecture
-- TanStack Query keys: `['superadmin', 'plans']`, `['superadmin', 'plans', planId]`
-- Mutations: `useCreateSaasPlan`, `useUpdateSaasPlan`, `useArchiveSaasPlan`
-- Zustand stores: None
-- Context providers: None
+- **Server state:** TanStack Query where the feature currently uses async queries.
+- **UI state:** local `useState` or a feature-scoped Zustand store where present.
+- **URL state:** `useSuperadminUrlState` only where the feature currently uses query-string filters/pagination.
+- **Sibling business dependencies:** must remain zero; shared transport/UI primitives are infrastructure exceptions only.
 
-## User Flows
-1. Superadmin opens `/superadmin/plans` → plan grid loads with subscriber counts
-2. Superadmin clicks "Create Plan" → `SuperadminPlansCreateModal` → RHF + Zod → `POST` → grid invalidated
-3. Superadmin clicks "Edit" on plan card → `SuperadminPlansEditModal` pre-filled → `PATCH` on submit
-4. Superadmin clicks "Archive" → `useConfirm()` with warning "Existing subscribers keep access until renewal" → `PATCH /archive`
+## API Contract
 
-## Component Responsibility Map
-- `SuperadminPlansClient` — layout + modal open state. MUST NOT contain form logic.
-- `SuperadminPlanCard` — display only. MUST NOT call mutations directly.
-- `SuperadminPlansFeatureToggleList` — toggle list inside edit modal. MUST NOT fetch plan data independently.
-- `SuperadminPlansCreateModal` / `SuperadminPlansEditModal` — form only. MUST use RHF + Zod.
-
-## Permissions and Security
-| Action | Required Role |
-|---|---|
-| View SaaS plans | `SUPERADMIN` |
-| Create SaaS plan | `SUPERADMIN` |
-| Edit SaaS plan | `SUPERADMIN` |
-| Archive SaaS plan | `SUPERADMIN` |
-| ❌ Delete plan with active subscribers | Forbidden — archive only |
-| ❌ Manage gym membership plans | Manager role — different module |
-
-## Loading, Empty, Error States
-- **Loading:** `loading.tsx` — 3 plan card skeletons in a grid
-- **Empty:** "No plans configured — create your first SaaS plan" with CTA
-- **Error:** `error.tsx` with retry
-
-## Edge Cases / AI Warnings
-- **Archive vs Delete** — plans with active subscribers MUST be archived, not deleted. Backend enforces this; frontend must show archive option only, not delete.
-- **Price change impact** — editing price on an active plan does not retroactively change existing subscriptions; show a warning in the edit modal.
-- **MODULE_LIST** — the list of toggleable modules must live in `SuperadminPlansConstants.ts`, not hardcoded in the toggle component.
-- **Billing cycle** — `BILLING_CYCLE_OPTIONS` (`MONTHLY | ANNUAL`) must come from constants.
+| Function | Method | Endpoint expression | API file |
+|---|---|---|---|
+| `fetchPlanById()` | `POST` | `${PlansUrlConfig.BACKEND_API.BASE}/${id}` | `plans/superadmin_plans_api/superadmin_plans_api.ts` |
+| `updatePlan()` | `PATCH` | `${PlansUrlConfig.BACKEND_API.BASE}/${id}` | `plans/superadmin_plans_api/superadmin_plans_api.ts` |
+| `deletePlan()` | `PATCH` | `${PlansUrlConfig.BACKEND_API.BASE}/${id}` | `plans/superadmin_plans_api/superadmin_plans_api.ts` |
+| `archivePlan()` | `PATCH` | `${PlansUrlConfig.BACKEND_API.BASE}/${id}/archive` | `plans/superadmin_plans_api/superadmin_plans_api.ts` |
 
 ## UI Data Requirements
 
-The following types map directly to the UI components and define the shape of the data:
+Observed schema/type fields in this feature are listed below. Any UI field not represented by a schema/type is **NOT VERIFIED** and must be checked by the coding agent.
 
-```typescript
-export type PlanFormValues = z.infer<typeof planFormSchema>;
-```
+| Field | Source location |
+|---|---|
+| `id` | Feature-owned schema/type file |
+| `name` | Feature-owned schema/type file |
+| `activeTenants` | Feature-owned schema/type file |
+| `priceMonthly` | Feature-owned schema/type file |
+| `priceAnnual` | Feature-owned schema/type file |
+| `maxMembers` | Feature-owned schema/type file |
+| `maxStaff` | Feature-owned schema/type file |
+| `dbLimitGb` | Feature-owned schema/type file |
+| `binaryLimitGb` | Feature-owned schema/type file |
+| `features` | Feature-owned schema/type file |
+| `isPublic` | Feature-owned schema/type file |
+| `trialDays` | Feature-owned schema/type file |
+| `setupFee` | Feature-owned schema/type file |
+| `currency` | Feature-owned schema/type file |
+| `isArchived` | Feature-owned schema/type file |
 
-## Rule Compliance Checklist
-- [x] Rule 1: Micro-modularization
-- [x] Rule 3: Module prefix naming — `SuperadminPlans*`
-- [x] Rule 7: Type isolation — all types in `SuperadminPlansTypes.ts`
-- [x] Rule 8: Server/Client Boundary — `page.tsx` = Server Component
-- [x] Rule 9: `loading.tsx` + `error.tsx` present
-- [x] Rule 13: Feature Map — this document
-- [x] Rule 15B: Forms use React Hook Form + Zod
-- [x] Rule 26: Archive uses `useConfirm()`
-- [x] Rule 40: `_forbidden.md` present
-- [x] Rule 55: No `key={index}` — stable plan IDs used
-- [x] Rule 63: Zero cross-module imports
-- [x] Rule 73: `import type` for all type-only imports
+## Permissions and Security
+- **Role:** `SUPERADMIN` UI.
+- **Frontend boundary:** route and feature UI are under `/superadmin`.
+- **Destructive actions:** must use the Superadmin confirmation infrastructure where the feature exposes destructive controls.
+- **Backend authorization:** not evaluated here and must not be inferred from frontend checks.
 
----
+## Loading, Empty, and Error States
+- **Route loading:** use the feature `loading.tsx` when present.
+- **Route error:** use the feature `error.tsx` when present.
+- **Feature empty/error:** use the feature-specific empty/error UI already present in the source.
+- Any runtime transition behavior not statically provable is **NOT VERIFIED**.
 
 ## Edge Cases and AI Warnings
+- **No sibling business imports:** do not reintroduce imports from another Superadmin business feature.
+- **No fake production data:** server-like records belong in feature mocks/fixtures, never fallback constants inside production UI.
+- **No hardcoded URLs:** feature-owned routes belong in the single feature URL config.
+- **No async state in Zustand:** use TanStack Query for server state.
+- **Preserve destructive confirmation:** do not bypass the Superadmin confirmation flow.
 
-- **Delete Plan is permanent and irreversible:** Never use `window.confirm()` for Plan deletion. If a delete feature exists or is added, it MUST use a type-to-confirm modal with the exact string "DELETE" to prevent accidental data loss.
-- **Plans Table Row Clicks:** The `Plans` list view uses clickable table rows (`<tr className="cursor-pointer">`) for navigation. Ensure that any inline action buttons (like Edit or Delete) inside the table call `e.stopPropagation()` so they don't accidentally trigger the row navigation.
-- **Section-Level Error Boundaries in Plans:** Do not allow a single failed API fetch in Plans to unmount the entire page. Major components (like the Plans data table or metrics) must be wrapped in `<SuperadminErrorBoundary variant="inline">`.
-- **Backend-Driven Messages for Plans Mutations:** Do not hardcode success or error toasts like "User created". Always display the `message` string provided by the backend's JSON response envelope when creating, updating, or deleting Plans.
-- **No Client-Side Pagination for Plans:** If the dataset grows large, do not fetch all Plans and paginate on the client. always implement robust server-side pagination, sorting, and filtering via query parameters using useSuperadminUrlState.
+## Component Responsibility Map
 
+| File | Responsibility |
+|---|---|
+| `__tests__/superadmin_plans_basic.test.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `error.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `loading.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `page.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `plans_components/SuperadminPlanCreateModal.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `plans_components/SuperadminPlanEditModal.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `plans_components/SuperadminPlansClient.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `plans_components/SuperadminPlansList.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
 
-## API Contract
-All calls are isolated to `superadmin_plans_api.ts`.
+## Rule Compliance Checklist
+- [x] Feature has a route-level `page.tsx` or the route does not require one.
+- [x] Feature has module-owned documentation file.
+- [x] Feature URL configuration is feature-owned when routes/API calls exist.
+- [x] Sibling Superadmin business imports are not allowed.
+- [x] API responses must use Zod validation at the boundary.
+- [x] Server state is owned by TanStack Query where async data is used.
+- [x] UI state remains local or feature-scoped.
+- [ ] Full typecheck/lint/test/build/E2E verification — **NOT VERIFIED** in this working environment because project dependencies are not installed.
+- [ ] Full visual comparison against `web_global_design.md` — **NOT VERIFIED** without browser execution.
 
-- `return apiFetch<ApiResponse<SubscriptionPlan[]>>(`${PlansUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.array(SubscriptionPlanSchema) });`
-- `fetchPlanById: (id: string) => apiFetch<ApiResponse<SubscriptionPlan>>(`${PlansUrlConfig.BACKEND_API.BASE}/${id}`, { dataSchema: SubscriptionPlanSchema }),`
-- `createPlan: (body: CreatePlanPayload) => apiFetch<ApiResponse<SubscriptionPlan>>(PlansUrlConfig.BACKEND_API.BASE, { method: 'POST', body: JSON.stringify(body),`
-- `updatePlan: (id: string, body: UpdatePlanPayload) => apiFetch<ApiResponse<SubscriptionPlan>>(`${PlansUrlConfig.BACKEND_API.BASE}/${id}`, { method: 'PATCH', body: JSON.stringify(body),`
-- `deletePlan: (id: string) => apiFetch<ApiResponse<void>>(`${PlansUrlConfig.BACKEND_API.BASE}/${id}`, { method: 'DELETE',`
-- `archivePlan: (id: string) => apiFetch<ApiResponse<void>>(`${PlansUrlConfig.BACKEND_API.BASE}/${id}/archive`, { method: 'PATCH',`
-
-
-## State Architecture
-- Server State: TanStack Query
-- UI State: React `useState` or Zustand
+## Documentation Consistency
+This feature map is generated from the current repository structure. Where the code does not expose enough static evidence to state an exact runtime fact, the documentation deliberately uses **NOT VERIFIED** rather than inventing a result.
