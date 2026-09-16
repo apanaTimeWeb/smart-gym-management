@@ -2,36 +2,25 @@
 // RESPONSIBILITY: Renders the member's assigned diet plan and handles diet plan assignment for trainers.
 // DATA FLOW: useMembersContext -> TrainerMembersProfileDiet -> libraryApi
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { Apple, Plus, Check, MessageCircle, RefreshCw, Flame, PieChart, Utensils } from 'lucide-react';
 import { useTrainerMembersStore } from '@/app/trainer/members/members_store/useTrainerMembersStore';
+import { useTrainerSelectedMember } from '@/app/trainer/members/members_queries/useTrainerSelectedMember';
+import { SearchableDropdown } from '@/app/trainer/trainer_components/TrainerShared/TrainerSearchableDropdown';
+import { displayValue } from '@/lib/formatters';
 import { useTrainerMembersMutations } from '@/app/trainer/members/members_queries/useTrainerMembersMutations';
-import { libraryApi } from '@/app/trainer/library/library_api/library_api';
-import type { FetchState } from '@/app/trainer/members/members_types/members_types';
+import { libraryApi } from '@/app/trainer/library/library_api/TrainerLibrary_api';
 import type { TrainerMemberDietSnapshot } from '@/app/trainer/members/members_types/TrainerMemberDietSnapshot';
 
 export default function TrainerMembersProfileDiet() {
-  const selectedMember = useTrainerMembersStore(s => s.selectedMember);
+  const { member: selectedMember } = useTrainerSelectedMember();
   const { assignDiet } = useTrainerMembersMutations();
   const [isAssigning, setIsAssigning] = useState(false);
-  const [availableDiets, setAvailableDiets] = useState<TrainerMemberDietSnapshot[]>([]);
-  const [fetchDietsState, setFetchDietsState] = useState<FetchState>('idle');
-  const [selectedDietId, setSelectedDietId] = useState<string>('');
+  const [selectedDietId, setSelectedDietId] = useState('');
   const [saving, setSaving] = useState(false);
-
-  useEffect(() => {
-    if (isAssigning && availableDiets.length === 0) {
-      setFetchDietsState('loading');
-      libraryApi.getDietPlans()
-        .then(res => {
-          setAvailableDiets(res.data?.dietPlans || []);
-          setFetchDietsState('success');
-        })
-        .catch(() => {
-          setFetchDietsState('error');
-        });
-    }
-  }, [isAssigning, availableDiets.length]);
+  const dietsQuery = useQuery({ queryKey: ['trainer','members','diet-plans'], queryFn: async () => (await TrainerLibraryApi.getDietPlans()).data.dietPlans, enabled: isAssigning });
+  const availableDiets = dietsQuery.data ?? [];
 
   if (!selectedMember) return null;
 
@@ -54,16 +43,16 @@ export default function TrainerMembersProfileDiet() {
   const handleShareWhatsApp = () => {
     if (!diet) return;
     const mealsText = Array.isArray(diet.meals) 
-      ? diet.meals.map((m: any, i: number) => typeof m === 'string' ? `• ${m}` : `• *${m.name || `Meal ${i+1}`}* (${m.time || ''}): ${m.items || m.description || ''}`).join('\n')
+      ? diet.meals.map((m: string | { name?: string; time?: string; items?: string; description?: string }, i: number) => typeof m === 'string' ? `• ${m}` : `• *${m.name || `Meal ${i+1}`}* (${m.time || ''}): ${m.items || m.description || ''}`).join('\n')
       : 'Follow balanced nutrition as advised.';
 
     const text = `*GYMSMART NUTRITION & DIET PLAN FOR ${selectedMember.name.toUpperCase()}*\n` +
       `Plan: *${diet.name}*\n` +
-      `Goal: ${diet.goal || 'Fitness Maintenance'}\n` +
-      `Target Calories: *${diet.calories || '2,000'} kcal*\n` +
-      `Macros: Protein ${diet.protein || 0}g · Carbs ${diet.carbs || 0}g · Fats ${diet.fats || 0}g\n\n` +
+      `Goal: ${displayValue(diet.goal)}\n` +
+      `Target Calories: *${displayValue(diet.calories)} kcal*\n` +
+      `Macros: Protein ${displayValue(diet.protein)}g · Carbs ${displayValue(diet.carbs)}g · Fats ${displayValue(diet.fats)}g\n\n` +
       `*Meal Schedule:*\n${mealsText}\n\n` +
-      `Stay hydrated and drink 3-4 liters of water daily! Contact your trainer for queries.`;
+      '';
     window.open(`https://wa.me/${selectedMember.phone?.replace(/[^0-9]/g, '') || ''}?text=${encodeURIComponent(text)}`, '_blank');
   };
 
@@ -119,22 +108,17 @@ export default function TrainerMembersProfileDiet() {
             </button>
           </div>
 
-          {fetchDietsState === 'loading' ? (
+          {dietsQuery.isPending ? (
             <p className="text-sm text-secondary py-3">Loading available diet plans...</p>
           ) : (
             <div className="flex flex-col sm:flex-row gap-3">
-              <select
-                className="flex-1 bg-input border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+              <SearchableDropdown
+                options={availableDiets.map((diet) => ({ value: diet.id, label: `${diet.name} · ${displayValue(diet.goal)}` }))}
                 value={selectedDietId}
-                onChange={(e) => setSelectedDietId(e.target.value)}
-              >
-                <option value="">-- Choose a Diet Plan --</option>
-                {availableDiets.map(d => (
-                  <option key={d.id} value={d.id}>
-                    {d.name} · {d.goal} ({d.calories || 2000} kcal)
-                  </option>
-                ))}
-              </select>
+                onChange={(value) => setSelectedDietId(String(value))}
+                placeholder="Choose a Diet Plan"
+                className="w-full"
+              />
               <div className="flex gap-2">
                 <button 
                   onClick={handleAssign}
@@ -159,16 +143,16 @@ export default function TrainerMembersProfileDiet() {
                   Active Diet
                 </span>
                 <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-info-bg text-info">
-                  {diet.goal || 'Weight Management'}
+                  {displayValue(diet.goal)}
                 </span>
               </div>
               <h3 className="text-2xl font-bold text-foreground">{diet.name}</h3>
-              <p className="text-sm text-secondary mt-1">{diet.description || 'Targeted dietary regime designed for optimal fitness performance.'}</p>
+              <p className="text-sm text-secondary mt-1">{displayValue(diet.description)}</p>
             </div>
             <div className="bg-input/60 border border-border rounded-xl px-4 py-3 text-right">
               <p className="text-xs text-secondary">Target Daily Calories</p>
               <p className="text-2xl font-black text-primary flex items-center gap-1 justify-end">
-                <Flame size={20} className="text-danger" /> {diet.calories || 2000} <span className="text-xs text-secondary font-normal">kcal</span>
+                <Flame size={20} className="text-danger" /> {displayValue(diet.calories)} <span className="text-xs text-secondary font-normal">kcal</span>
               </p>
             </div>
           </div>
@@ -196,8 +180,8 @@ export default function TrainerMembersProfileDiet() {
             </h4>
             {diet.meals && diet.meals.length > 0 ? (
               <div className="space-y-2.5">
-                {diet.meals.map((meal: any, idx: number) => (
-                  <div key={idx} className="bg-input/40 border border-border rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                {diet.meals.map((meal: string | { name?: string; time?: string; items?: string; description?: string }, idx: number) => (
+                  <div key={`${meal.name}-${idx}`} className="bg-input/40 border border-border rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <div className="flex items-center gap-3">
                       <span className="w-7 h-7 rounded-lg bg-primary-subtle text-primary text-xs font-bold flex items-center justify-center shrink-0">
                         {idx + 1}

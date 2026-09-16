@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { createProgressEntry, updateProgressEntry, deleteProgressEntry } from '../progress_api/TrainerProgressApi';
-import type { CreateProgressEntryDto } from '../progress_types/TrainerProgressTypes';
+import { createProgressEntry, updateProgressEntry, deleteProgressEntry } from '@/app/trainer/progress-tracking/progress_api/TrainerProgressApi';
+import type { CreateProgressEntryDto } from '@/app/trainer/progress-tracking/progress_types/TrainerProgressTypes';
 
 export function useTrainerProgressMutations() {
   const queryClient = useQueryClient();

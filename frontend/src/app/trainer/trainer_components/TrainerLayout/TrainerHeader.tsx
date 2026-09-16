@@ -1,6 +1,4 @@
 'use client';
-// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
-// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders the fixed top navigation bar — page title, global search, theme toggle, notifications dropdown, and user profile dropdown. No API calls.
 import { useState, useRef, useEffect } from 'react';
 import { Bell, Search, LogOut, Settings, User, X, Menu } from 'lucide-react';

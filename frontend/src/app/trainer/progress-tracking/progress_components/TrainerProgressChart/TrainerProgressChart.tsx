@@ -5,7 +5,7 @@
 import type { ProgressEntry, ProgressChartMetric } from '@/app/trainer/progress-tracking/progress_types/TrainerProgressTypes';
 import { PROGRESS_CHART_METRICS } from '@/app/trainer/progress-tracking/progress_utils/TrainerProgressSharedConstants';
 
-interface Props {
+interface TrainerProgressChartProps {
   entries: ProgressEntry[];
   activeMetric: ProgressChartMetric;
   onMetricChange: (m: ProgressChartMetric) => void;
@@ -18,7 +18,7 @@ const METRIC_KEY: Record<ProgressChartMetric, keyof ProgressEntry> = {
   muscleMass: 'muscleMassKg',
 };
 
-export default function TrainerProgressChart({ entries, activeMetric, onMetricChange }: Props) {
+export default function TrainerProgressChart({ entries, activeMetric, onMetricChange }: TrainerProgressChartProps) {
   const key = METRIC_KEY[activeMetric];
   const values = entries.map((e) => Number(e[key] ?? 0));
   const labels = entries.map((e) => e.date.slice(5)); // MM-DD

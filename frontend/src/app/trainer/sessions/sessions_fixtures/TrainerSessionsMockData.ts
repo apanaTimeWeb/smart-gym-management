@@ -41,3 +41,10 @@ export const MOCK_TRAINER_SESSIONS: TrainerSession[] = [
     location: 'Studio B'
   }
 ];
+
+
+export const MOCK_TRAINER_SESSION_MEMBERS = [
+  { id: 'm1', name: 'Rahul Sharma' },
+  { id: 'm2', name: 'Neha Gupta' },
+  { id: 'm3', name: 'Amit Kumar' },
+];

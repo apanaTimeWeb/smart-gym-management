@@ -1,10 +1,9 @@
 'use client';
-// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
-// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders a detailed view of a selected member's profile.
 import { MessageCircle, Mail } from 'lucide-react';
 import { useTrainerMembersStore } from '@/app/trainer/members/members_store/useTrainerMembersStore';
-import { MEMBERS_STATUS_COLORS, formatCurrency, PROFILE_TABS } from '@/app/trainer/members/members_utils/MembersSharedConstants';
+import { useTrainerSelectedMember } from '@/app/trainer/members/members_queries/useTrainerSelectedMember';
+import { MEMBERS_STATUS_COLORS, PROFILE_TABS } from '@/app/trainer/members/members_utils/TrainerMembersSharedConstants';
 import TrainerMembersProfileOverview from '@/app/trainer/members/members_components/TrainerMembersProfile/TrainerMembersProfileOverview';
 import TrainerMembersProfileAttendance from '@/app/trainer/members/members_components/TrainerMembersProfile/TrainerMembersProfileAttendance';
 import TrainerMembersProfileFitness from '@/app/trainer/members/members_components/TrainerMembersProfile/TrainerMembersProfileFitness';
@@ -13,10 +12,10 @@ import TrainerMembersProfileWorkout from '@/app/trainer/members/members_componen
 import TrainerMembersProfileDiet from '@/app/trainer/members/members_components/TrainerMembersProfile/TrainerMembersProfileDiet';
 import TrainerMembersProfileAssessment from '@/app/trainer/members/members_components/TrainerMembersProfile/TrainerMembersProfileAssessment';
 import TrainerMembersProfileNotes from '@/app/trainer/members/members_components/TrainerMembersProfile/TrainerMembersProfileNotes';
-import { maskSensitiveData } from '@/lib/formatters';
+import { maskSensitiveData, displayValue } from '@/lib/formatters';
 
 export default function TrainerMembersProfile() {
-  const selectedMember = useTrainerMembersStore(s => s.selectedMember);
+  const { member: selectedMember } = useTrainerSelectedMember();
   const setSelectedMember = useTrainerMembersStore(s => s.setSelectedMember);
   const profileTab = useTrainerMembersStore(s => s.profileTab);
   const setProfileTab = useTrainerMembersStore(s => s.setProfileTab);
@@ -51,7 +50,7 @@ export default function TrainerMembersProfile() {
                     {selectedMember.status}
                   </span>
                   <span className="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold bg-info-bg text-info">
-                    {selectedMember.plan?.name || ''}
+                    {displayValue(selectedMember.plan?.name)}
                   </span>
                   <span className="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-bg text-purple">
                     {selectedMember.billingCycle}
@@ -77,15 +76,15 @@ export default function TrainerMembersProfile() {
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             {[
-              { label: 'Member ID', value: `GS${String(selectedMember.id).padStart(4, '0')}` },
-              { label: 'Age', value: `${selectedMember.age || 25} yrs` },
-              { label: 'Gender', value: selectedMember.gender },
-              { label: 'Height', value: '175 cm' },
-              { label: 'Weight', value: '70 kg' },
-              { label: 'Join Date', value: new Date(selectedMember.joinDate).toLocaleDateString('en-IN') },
-              { label: 'Expiry Date', value: new Date(selectedMember.expiryDate).toLocaleDateString('en-IN') },
-              { label: 'Fitness Goal', value: selectedMember.fitnessGoal || 'Muscle Gain' },
-              { label: 'Address', value: selectedMember.address || 'N/A' },
+              { label: 'Member ID', value: selectedMember.membershipNumber ?? selectedMember.id },
+              { label: 'Age', value: displayValue(selectedMember.age, '0') + ' yrs' },
+              { label: 'Gender', value: displayValue(selectedMember.gender) },
+              { label: 'Height', value: selectedMember.heightCm == null ? '—' : `${displayValue(selectedMember.heightCm)} cm` },
+              { label: 'Weight', value: selectedMember.weightKg == null ? '—' : `${displayValue(selectedMember.weightKg)} kg` },
+              { label: 'Join Date', value: displayValue(selectedMember.joinDate) },
+              { label: 'Expiry Date', value: displayValue(selectedMember.expiryDate) },
+              { label: 'Fitness Goal', value: displayValue(selectedMember.fitnessGoal) },
+              { label: 'Address', value: displayValue(selectedMember.address) },
             ].map((f) => (
               <div key={f.label} className="bg-input rounded-lg p-3">
                 <p className="text-xs text-secondary mb-0.5">{f.label}</p>
@@ -101,7 +100,7 @@ export default function TrainerMembersProfile() {
             {PROFILE_TABS.map(({ id: t, label }) => (
               <button
                 key={t}
-                onClick={() => { setProfileTab(t as any); }}
+                onClick={() => { setProfileTab(t as TrainerProfileTab); }}
                 className={`whitespace-nowrap px-5 py-3.5 text-sm font-medium motion-safe:transition-all motion-safe:duration-200 border-b-2 ${
                   profileTab === t
                     ? 'text-primary bg-primary-subtle border-primary'

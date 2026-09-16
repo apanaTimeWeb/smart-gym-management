@@ -1,5 +1,3 @@
-// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
-// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Skeleton loading state for Notifications page.
 import { Bell } from 'lucide-react';
 
@@ -20,7 +18,7 @@ export default function NotificationsLoading() {
         </div>
         <div className="divide-y divide-border">
           {[...Array(5)].map((_, i) => (
-            <div key={i} className="p-4 flex gap-4 items-start">
+            <div key={`skeleton-${i}`} className="p-4 flex gap-4 items-start">
               <div className="w-2 h-2 rounded-full bg-muted mt-2"></div>
               <div className="flex-1">
                 <div className="h-4 bg-muted rounded w-3/4 mb-2"></div>

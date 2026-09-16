@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { ProgressEntry, ProgressChartMetric, ComparisonMetric } from '../progress_types/TrainerProgressTypes';
+import type { ProgressEntry, ProgressChartMetric, ComparisonMetric } from '@/app/trainer/progress-tracking/progress_types/TrainerProgressTypes';
 
 type ProgressTab = 'individual' | 'compare';
 

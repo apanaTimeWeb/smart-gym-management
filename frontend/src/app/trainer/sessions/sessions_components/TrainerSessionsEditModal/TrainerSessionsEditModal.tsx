@@ -9,8 +9,8 @@ import { X, Loader2, Save } from 'lucide-react';
 import type { TrainerSession } from '@/app/trainer/sessions/sessions_types/TrainerSessionsTypes';
 import { updateTrainerSession } from '@/app/trainer/sessions/sessions_api/TrainerSessionsApi';
 import { DURATION_OPTIONS } from '@/app/trainer/sessions/sessions_utils/TrainerSessionsSharedConstants';
-import { SearchableDropdown } from '@/app/trainer/trainer_components/TrainerShared/SearchableDropdown';
-import { useWarnIfUnsavedChanges } from '@/app/trainer/trainer_utils/useWarnIfUnsavedChanges';
+import { SearchableDropdown } from '@/app/trainer/trainer_components/TrainerShared/TrainerSearchableDropdown';
+import { useTrainerUnsavedChangesGuard } from '@/app/trainer/trainer_utils/TrainerUseWarnIfUnsavedChanges';
 
 const editSessionSchema = z.object({
   time: z.string().min(1, 'Time is required'),
@@ -42,7 +42,7 @@ export default function TrainerSessionsEditModal({
   });
 
   const [error, setError] = useState('');
-  useWarnIfUnsavedChanges(isDirty && !isSubmitting);
+  useTrainerUnsavedChangesGuard(isDirty && !isSubmitting);
 
   const durationOptions = DURATION_OPTIONS.map((d) => ({ value: d.value, label: d.label }));
   const selectedDuration = watch('duration');

@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Custom hook for fetching Trainer members list using TanStack Query.
 import { useQuery } from '@tanstack/react-query';
-import { TrainerMembersApi } from '../members_api/TrainerMembersApi';
+import { TrainerMembersApi } from '@/app/trainer/members/members_api/TrainerMembersApi';
 
 interface MembersQueryParams {
   page?: string;

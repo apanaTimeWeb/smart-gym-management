@@ -2,8 +2,8 @@
 import React from 'react';
 import { X, Loader2 } from 'lucide-react';
 import { useTrainerScheduleForm } from '@/app/trainer/sessions/sessions_components/TrainerSessionsScheduleModal/useTrainerScheduleForm';
-import { SearchableDropdown } from '@/app/trainer/trainer_components/TrainerShared/SearchableDropdown';
-import { useWarnIfUnsavedChanges } from '@/app/trainer/trainer_utils/useWarnIfUnsavedChanges';
+import { SearchableDropdown } from '@/app/trainer/trainer_components/TrainerShared/TrainerSearchableDropdown';
+import { useTrainerUnsavedChangesGuard } from '@/app/trainer/trainer_utils/TrainerUseWarnIfUnsavedChanges';
 import { DURATION_OPTIONS } from '@/app/trainer/sessions/sessions_utils/TrainerSessionsSharedConstants';
 import type { CreateSessionDto } from '@/app/trainer/sessions/sessions_types/TrainerSessionsTypes';
 
@@ -28,7 +28,7 @@ export default function TrainerSessionsScheduleModal({
   const selectedMemberId = watch('memberId');
   const selectedDuration = watch('duration');
 
-  useWarnIfUnsavedChanges(isDirty && !isSubmitting);
+  useTrainerUnsavedChangesGuard(isDirty && !isSubmitting);
 
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">

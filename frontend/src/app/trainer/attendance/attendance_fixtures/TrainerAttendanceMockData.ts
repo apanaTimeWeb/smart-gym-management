@@ -2,7 +2,7 @@
 // DATA FLOW: useAttendanceQuery → this fixture (NOW) → future: real API
 // Replace the import in attendance_api.ts with a real apiFetch when the backend is ready.
 
-import type { AttendanceRecord, AttendanceStats, AttendanceMemberBasic } from '@/app/trainer/attendance/attendance_types/attendance_types';
+import type { AttendanceRecord, AttendanceStats, AttendanceMemberBasic } from '@/app/trainer/attendance/attendance_types/TrainerAttendance_types';
 
 export const MOCK_ATTENDANCE_STATS: AttendanceStats = {
   totalCheckIns: 24,

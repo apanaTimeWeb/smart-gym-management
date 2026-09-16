@@ -1,10 +1,8 @@
 'use client';
-// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
-// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders the tabbed view switching between Diet Plans and Exercises in the Diet Library.
 import { RefreshCw, Plus, Search } from 'lucide-react';
-import { useLibraryContext } from '@/app/trainer/library/library_context/LibraryContext';
-import { GOALS } from '@/app/trainer/library/library_utils/LibrarySharedConstants';
+import { useLibraryContext } from '@/app/trainer/library/library_context/TrainerLibraryContext';
+import { GOALS } from '@/app/trainer/library/library_utils/TrainerLibrarySharedConstants';
 
 export default function TrainerLibraryTabs() {
   const { loadAll, openAddDiet, search, setSearch, filterGoal, setFilterGoal, setCurrentPage } = useLibraryContext();

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useTrainerScheduleQuery } from '@/app/trainer/schedule/schedule_queries/useTrainerScheduleQuery';
 import { useTrainerScheduleMutations } from '@/app/trainer/schedule/schedule_queries/useTrainerScheduleMutations';
 import { useTrainerScheduleStore } from '@/app/trainer/schedule/schedule_store/useTrainerScheduleStore';
-import { useWarnIfUnsavedChanges } from '@/app/trainer/trainer_utils/useWarnIfUnsavedChanges';
+import { useTrainerUnsavedChangesGuard } from '@/app/trainer/trainer_utils/TrainerUseWarnIfUnsavedChanges';
 import type { WeeklyAvailability } from '@/app/trainer/schedule/schedule_types/TrainerScheduleTypes';
 import { Loader2, Save } from 'lucide-react';
 
@@ -24,7 +24,7 @@ export default function TrainerWeeklyAvailability() {
     }
   }, [data?.availability]);
 
-  useWarnIfUnsavedChanges(isDirty && !updateAvailability.isPending);
+  useTrainerUnsavedChangesGuard(isDirty && !updateAvailability.isPending);
 
   const handleToggle = (index: number) => {
     const updated = [...localSchedule];
@@ -52,11 +52,11 @@ export default function TrainerWeeklyAvailability() {
 
   const handleSave = async () => {
     try {
-      await updateAvailability.mutateAsync(localSchedule);
+      const response = await updateAvailability.mutateAsync(localSchedule);
       setIsDirty(false);
-      showToast('Availability schedule updated.', 'success');
-    } catch {
-      showToast('Failed to update availability.', 'error');
+      showToast(response.message, 'success');
+    } catch (error) {
+      showToast(error instanceof Error ? error.message : 'Availability update failed.', 'error');
     }
   };
 

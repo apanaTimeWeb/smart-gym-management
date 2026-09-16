@@ -1,6 +1,4 @@
 'use client';
-// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
-// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Next.js error.tsx � renders the typed error boundary fallback for the Attendance tracking module with a Retry button.
 import { useEffect } from 'react';
 import { AlertTriangle } from 'lucide-react';

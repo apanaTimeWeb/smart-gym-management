@@ -2,7 +2,7 @@
 // DATA FLOW: URLSearchParams -> useTrainerMembersFilters -> Component -> Router
 import { useCallback } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
-import { useDebounce } from '@/app/trainer/trainer_utils/useDebounce';
+import { useDebounce } from '@/app/trainer/trainer_utils/TrainerUseDebounce';
 
 export function useTrainerMembersFilters() {
   const router = useRouter();

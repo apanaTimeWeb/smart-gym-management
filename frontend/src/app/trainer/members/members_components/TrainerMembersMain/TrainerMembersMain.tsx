@@ -1,16 +1,15 @@
 'use client';
-// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
-// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Entry point component for the members module that sets up context providers and layout.
 import TrainerToast from '@/app/trainer/trainer_components/TrainerFeedback/TrainerToast';
 import TrainerMessageModal from '@/app/trainer/trainer_components/TrainerFeedback/TrainerMessageModal';
 
 import { useTrainerMembersStore } from '@/app/trainer/members/members_store/useTrainerMembersStore';
+import { useTrainerSelectedMember } from '@/app/trainer/members/members_queries/useTrainerSelectedMember';
 import TrainerMembersKPIs from '@/app/trainer/members/members_components/TrainerMembersKPIs/TrainerMembersKPIs';
 import TrainerMembersToolbar from '@/app/trainer/members/members_components/TrainerMembersToolbar/TrainerMembersToolbar';
 import TrainerMembersTable from '@/app/trainer/members/members_components/TrainerMembersTable/TrainerMembersTable';
 import TrainerMembersProfile from '@/app/trainer/members/members_components/TrainerMembersProfile/TrainerMembersProfile';
-import type { MembersInitialData } from '@/app/trainer/members/members_types/members_types';
+import type { MembersInitialData } from '@/app/trainer/members/members_types/TrainerMembers_types';
 
 function MembersContent() {
   const toast = useTrainerMembersStore(s => s.toast);
@@ -18,7 +17,7 @@ function MembersContent() {
   const msgModal = useTrainerMembersStore(s => s.msgModal);
   const closeMsg = useTrainerMembersStore(s => s.closeMsg);
   const showToast = useTrainerMembersStore(s => s.showToast);
-  const selectedMember = useTrainerMembersStore(s => s.selectedMember);
+  const { member: selectedMember } = useTrainerSelectedMember();
 
   return (
     <div className="min-h-full pb-10">

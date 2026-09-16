@@ -2,36 +2,25 @@
 // RESPONSIBILITY: Renders the member's assigned workout plan and provides plan assignment capabilities for trainers.
 // DATA FLOW: useMembersContext -> TrainerMembersProfileWorkout -> workoutApi
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { Dumbbell, Plus, Check, MessageCircle, RefreshCw, Calendar, Flame, Target } from 'lucide-react';
 import { useTrainerMembersStore } from '@/app/trainer/members/members_store/useTrainerMembersStore';
+import { useTrainerSelectedMember } from '@/app/trainer/members/members_queries/useTrainerSelectedMember';
 import { useTrainerMembersMutations } from '@/app/trainer/members/members_queries/useTrainerMembersMutations';
-import { workoutApi } from '@/app/trainer/workout/workout_api/workout_api';
-import type { FetchState } from '@/app/trainer/members/members_types/members_types';
+import { workoutApi } from '@/app/trainer/workout/workout_api/TrainerWorkout_api';
+import { SearchableDropdown } from '@/app/trainer/trainer_components/TrainerShared/TrainerSearchableDropdown';
+import { displayValue } from '@/lib/formatters';
 import type { TrainerMemberWorkoutSnapshot } from '@/app/trainer/members/members_types/TrainerMemberWorkoutSnapshot';
 
 export default function TrainerMembersProfileWorkout() {
-  const selectedMember = useTrainerMembersStore(s => s.selectedMember);
+  const { member: selectedMember } = useTrainerSelectedMember();
   const { assignWorkout } = useTrainerMembersMutations();
   const [isAssigning, setIsAssigning] = useState(false);
-  const [availableWorkouts, setAvailableWorkouts] = useState<TrainerMemberWorkoutSnapshot[]>([]);
-  const [fetchWorkoutsState, setFetchWorkoutsState] = useState<FetchState>('idle');
-  const [selectedWorkoutId, setSelectedWorkoutId] = useState<string>('');
+  const [selectedWorkoutId, setSelectedWorkoutId] = useState('');
   const [saving, setSaving] = useState(false);
-
-  useEffect(() => {
-    if (isAssigning && availableWorkouts.length === 0) {
-      setFetchWorkoutsState('loading');
-      workoutApi.getWorkouts()
-        .then(res => {
-          setAvailableWorkouts((res.data?.workouts as unknown as TrainerMemberWorkoutSnapshot[]) || []);
-          setFetchWorkoutsState('success');
-        })
-        .catch(() => {
-          setFetchWorkoutsState('error');
-        });
-    }
-  }, [isAssigning, availableWorkouts.length]);
+  const workoutsQuery = useQuery({ queryKey: ['trainer','members','workouts'], queryFn: async () => (await workoutApi.getWorkouts()).data.workouts, enabled: isAssigning });
+  const availableWorkouts = workoutsQuery.data ?? [];
 
   if (!selectedMember) return null;
 
@@ -54,12 +43,12 @@ export default function TrainerMembersProfileWorkout() {
   const handleShareWhatsApp = () => {
     if (!workout) return;
     const text = `*GYMSMART WORKOUT PLAN FOR ${selectedMember.name.toUpperCase()}*\n` +
-      `Plan: *${workout.name}* (${workout.level || 'Standard'})\n` +
-      `Duration: ${workout.duration || '45 mins'}\n` +
-      `Focus: ${workout.focus || 'General Fitness'}\n\n` +
+      `Plan: *${workout.name}* (${displayValue(workout.level)})\n` +
+      `Duration: ${displayValue(workout.duration)}\n` +
+      `Focus: ${displayValue(workout.focus)}\n\n` +
       (workout.workoutExercises && workout.workoutExercises.length > 0
         ? `*Exercises:*\n` + workout.workoutExercises.map((e, idx) => `${idx + 1}. ${e.name} - ${e.sets} sets x ${e.reps} (Rest: ${e.restTime || '60s'})`).join('\n')
-        : `Stay consistent and train hard! Contact your trainer for guidance.`);
+        : `displayValue(workout.instructions)`);
     window.open(`https://wa.me/${selectedMember.phone?.replace(/[^0-9]/g, '') || ''}?text=${encodeURIComponent(text)}`, '_blank');
   };
 
@@ -115,22 +104,17 @@ export default function TrainerMembersProfileWorkout() {
             </button>
           </div>
 
-          {fetchWorkoutsState === 'loading' ? (
+          {workoutsQuery.isPending ? (
             <p className="text-sm text-secondary py-3">Loading available workout plans...</p>
           ) : (
             <div className="flex flex-col sm:flex-row gap-3">
-              <select
-                className="flex-1 bg-input border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+              <SearchableDropdown
+                options={availableWorkouts.map(w => ({ value: w.id, label: `${w.name} · ${displayValue(w.level)} (${displayValue(w.duration)})` }))}
                 value={selectedWorkoutId}
-                onChange={(e) => setSelectedWorkoutId(e.target.value)}
-              >
-                <option value="">-- Choose a Workout Plan --</option>
-                {availableWorkouts.map(w => (
-                  <option key={w.id} value={w.id}>
-                    {w.name} · {w.level} ({w.duration || '45m'})
-                  </option>
-                ))}
-              </select>
+                onChange={(value) => setSelectedWorkoutId(String(value))}
+                placeholder="Choose a Workout Plan"
+                className="flex-1"
+              />
               <div className="flex gap-2">
                 <button 
                   onClick={handleAssign}
@@ -155,23 +139,23 @@ export default function TrainerMembersProfileWorkout() {
                   Active Plan
                 </span>
                 <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-info-bg text-info">
-                  {workout.level || 'Intermediate'}
+                  {displayValue(workout.level)}
                 </span>
               </div>
               <h3 className="text-2xl font-bold text-foreground">{workout.name}</h3>
-              <p className="text-sm text-secondary mt-1">{workout.focus || 'Targeted strength and muscle conditioning'}</p>
+              <p className="text-sm text-secondary mt-1">{displayValue(workout.focus)}</p>
             </div>
             <div className="flex items-center gap-6">
               <div className="text-right">
                 <p className="text-xs text-secondary">Session Duration</p>
                 <p className="text-base font-bold text-foreground flex items-center gap-1">
-                  <Calendar size={14} className="text-primary" /> {workout.duration || '45-60 mins'}
+                  <Calendar size={14} className="text-primary" /> {displayValue(workout.duration)}
                 </p>
               </div>
               <div className="text-right">
                 <p className="text-xs text-secondary">Frequency</p>
                 <p className="text-base font-bold text-foreground flex items-center gap-1">
-                  <Flame size={14} className="text-warning" /> {workout.days || 5} days/week
+                  <Flame size={14} className="text-warning" /> {displayValue(workout.days)} days/week
                 </p>
               </div>
             </div>
@@ -182,15 +166,15 @@ export default function TrainerMembersProfileWorkout() {
             <h4 className="text-sm font-semibold text-secondary uppercase tracking-wider mb-3">Exercises Routine</h4>
             {workout.workoutExercises && workout.workoutExercises.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {workout.workoutExercises.map((ex, idx) => (
-                  <div key={idx} className="bg-input/60 border border-border rounded-xl p-3.5 flex items-center justify-between">
+                {workout.workoutExercises.map((ex) => (
+                  <div key={`${ex.name}-${ex.sets}-${ex.reps}-${ex.restTime ?? 'none'}-${ex.weight ?? 'none'}`} className="bg-input/60 border border-border rounded-xl p-3.5 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <span className="w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center">
                         {idx + 1}
                       </span>
                       <div>
                         <p className="text-sm font-bold text-foreground">{ex.name}</p>
-                        <p className="text-xs text-secondary">Rest: {ex.restTime || '60s'}</p>
+                        <p className="text-xs text-secondary">Rest: {displayValue(ex.restTime)}</p>
                       </div>
                     </div>
                     <div className="text-right">
@@ -229,11 +213,8 @@ export default function TrainerMembersProfileWorkout() {
       <div className="bg-card border border-border rounded-2xl p-6 mt-6">
         <h4 className="text-lg font-bold text-foreground mb-4">Workout History</h4>
         <div className="space-y-3">
-          {[
-            { name: 'Full Body Strength', date: 'Aug 2026 - Sep 2026', level: 'Beginner', status: 'Completed' },
-            { name: 'HIIT Fat Burn', date: 'Jul 2026 - Aug 2026', level: 'Beginner', status: 'Completed' },
-          ].map((historyItem, idx) => (
-            <div key={idx} className="bg-input rounded-xl p-4 flex items-center justify-between">
+          {(selectedMember.workoutHistory ?? []).map((historyItem) => (
+            <div key={historyItem.id} className="bg-input rounded-xl p-4 flex items-center justify-between">
               <div>
                 <h5 className="font-bold text-sm text-foreground">{historyItem.name}</h5>
                 <p className="text-xs text-secondary">{historyItem.date} · {historyItem.level}</p>

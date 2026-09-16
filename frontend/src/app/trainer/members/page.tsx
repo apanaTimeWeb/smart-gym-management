@@ -1,9 +1,7 @@
-// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
-// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Server component that handles initial SSR data fetching for the members module.
 import TrainerMembersMain from '@/app/trainer/members/members_components/TrainerMembersMain/TrainerMembersMain';
-import { ssrMembersApi } from '@/app/trainer/members/members_api/members_server_api';
-import type { MembersInitialData, Member, MemberStats } from '@/app/trainer/members/members_types/members_types';
+import { ssrMembersApi } from '@/app/trainer/members/members_api/TrainerMembers_server_api';
+import type { MembersInitialData, Member, MemberStats } from '@/app/trainer/members/members_types/TrainerMembers_types';
 
 export default async function MembersPage() {
   let initialData: MembersInitialData = {

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useTrainerEarningsStore } from '@/app/trainer/earnings/earnings_store/useTrainerEarningsStore';
 import { useTrainerEarningsQuery } from '@/app/trainer/earnings/earnings_queries/useTrainerEarningsQuery';
 import { PAYOUT_STATUS_STYLES, formatCurrency } from '@/app/trainer/earnings/earnings_utils/TrainerEarningsSharedConstants';
-import { TrainerEarningsUrlConfig } from '@/app/trainer/earnings/earnings_utils/TrainerEarningsUrlConfig';
+import { TrainerEarningsUrlConfig } from '@/app/trainer/Trainer_url_config';
 import { formatDate } from '@/lib/formatters';
 
 export default function TrainerEarningsHistory() {

@@ -12,13 +12,13 @@ const ApexChart = dynamic(() => import('react-apexcharts'), { ssr: false });
 // Gold-anchored palette for up to 4 members
 const MEMBER_COLORS = ['#FACC15', '#34D399', '#60A5FA', '#F87171'];
 
-interface Props {
+interface TrainerProgressComparisonChartProps {
   snapshots: ComparisonMemberSnapshot[];
   activeMetric: ComparisonMetric;
   onMetricChange: (m: ComparisonMetric) => void;
 }
 
-export default function TrainerProgressComparisonChart({ snapshots, activeMetric, onMetricChange }: Props) {
+export default function TrainerProgressComparisonChart({ snapshots, activeMetric, onMetricChange }: TrainerProgressComparisonChartProps) {
   const metricConfig = COMPARISON_METRICS.find(m => m.value === activeMetric)!;
 
   const series = snapshots.map((s, i) => ({

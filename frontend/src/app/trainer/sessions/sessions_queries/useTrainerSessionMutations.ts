@@ -6,8 +6,8 @@ import {
   updateTrainerSession,
   cancelTrainerSession,
   markTrainerSessionAttendance,
-} from '../sessions_api/TrainerSessionsApi';
-import type { CreateSessionDto } from '../sessions_types/TrainerSessionsTypes';
+} from '@/app/trainer/sessions/sessions_api/TrainerSessionsApi';
+import type { CreateSessionDto } from '@/app/trainer/sessions/sessions_types/TrainerSessionsTypes';
 
 export function useTrainerSessionMutations() {
   const queryClient = useQueryClient();

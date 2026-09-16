@@ -1,13 +1,12 @@
 'use client';
-// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
-// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Renders the primary tabular list of members with actions, filtering state, and pagination.
 import { MessageCircle, Mail, Loader2 } from 'lucide-react';
 import { useTrainerMembersStore } from '@/app/trainer/members/members_store/useTrainerMembersStore';
 import { useTrainerMembersFilters } from '@/app/trainer/members/members_utils/useTrainerMembersFilters';
 import { useTrainerMembersQuery } from '@/app/trainer/members/members_queries/useTrainerMembersQuery';
-import { MEMBERS_STATUS_COLORS, MEMBERS_TABLE_HEADERS, formatCurrency } from '@/app/trainer/members/members_utils/MembersSharedConstants';
-import { maskSensitiveData, formatDate } from '@/lib/formatters';
+import { MEMBERS_STATUS_COLORS, MEMBERS_TABLE_HEADERS } from '@/app/trainer/members/members_utils/TrainerMembersSharedConstants';
+import { formatCurrency } from '@/lib/formatters';
+import { maskSensitiveData, formatDate, displayValue } from '@/lib/formatters';
 import TrainerMembersEmptyState from '@/app/trainer/members/members_components/TrainerMembersEmptyState/TrainerMembersEmptyState';
 
 import TrainerPagination from '@/app/trainer/trainer_components/TrainerShared/TrainerPagination';
@@ -57,7 +56,7 @@ export default function TrainerMembersTable() {
                   <tr 
                     key={m.id} 
                     className="hover:bg-primary/5 motion-safe:transition-colors cursor-pointer"
-                    onClick={() => { setSelectedMember(m); setProfileTab('overview'); }}
+                    onClick={() => { setSelectedMember(m); setProfileTab('overview'); }} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setSelectedMember(m); setProfileTab('overview'); } }} role="button" tabIndex={0}
                   >
                     <td className="px-5 py-3.5 text-sm text-secondary font-medium">
                       #{m.id.split('-').pop()?.substring(0, 5) || m.id.substring(0, 5)}
@@ -78,7 +77,7 @@ export default function TrainerMembersTable() {
                         </div>
                       </div>
                     </td>
-                    <td className="px-5 py-3.5 text-sm text-foreground">{m.age || 25} / {m.gender || 'Unknown'}</td>
+                    <td className="px-5 py-3.5 text-sm text-foreground">{displayValue(m.age)} / {displayValue(m.gender)}</td>
                     <td className="px-5 py-3.5">
                       <span 
                         className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${statusStyle.bg} ${statusStyle.text}`}
@@ -87,22 +86,22 @@ export default function TrainerMembersTable() {
                       </span>
                     </td>
                     <td className="px-5 py-3.5 text-sm text-secondary whitespace-nowrap">{formatDate(m.expiryDate)}</td>
-                    <td className="px-5 py-3.5 text-sm text-foreground whitespace-nowrap">{m.fitnessGoal || 'General Fitness'}</td>
-                    <td className="px-5 py-3.5 text-sm text-secondary whitespace-nowrap">{m.lastWorkout || '2 days ago'}</td>
+                    <td className="px-5 py-3.5 text-sm text-foreground whitespace-nowrap">{displayValue(m.fitnessGoal)}</td>
+                    <td className="px-5 py-3.5 text-sm text-secondary whitespace-nowrap">{displayValue(m.lastWorkout)}</td>
                     <td className="px-5 py-3.5 text-sm whitespace-nowrap">
                       <div className="flex gap-2">
                         <span className={`w-2 h-2 rounded-full ${m.assignedDietId ? 'bg-success' : 'bg-input'}`} title="Diet Plan" />
                         <span className={`w-2 h-2 rounded-full ${m.assignedWorkoutId ? 'bg-primary' : 'bg-input'}`} title="Workout Plan" />
                       </div>
                     </td>
-                    <td className="px-5 py-3.5 text-sm text-secondary whitespace-nowrap">{m.daysSinceLastCheckIn ?? 2} days</td>
+                    <td className="px-5 py-3.5 text-sm text-secondary whitespace-nowrap">{displayValue(m.daysSinceLastCheckIn)}</td>
                     <td className="px-5 py-3.5 text-sm whitespace-nowrap">
                       <span className={`inline-flex px-2 py-1 rounded-md text-xs font-medium ${
                         m.progressStatus === 'Good' ? 'bg-success/10 text-success' : 
                         m.progressStatus === 'Needs Attention' ? 'bg-danger/10 text-danger' : 
                         'bg-warning/10 text-warning'
                       }`}>
-                        {m.progressStatus || 'Average'}
+                        {displayValue(m.progressStatus)}
                       </span>
                     </td>
                     <td className="px-5 py-3.5">

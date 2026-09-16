@@ -14,7 +14,7 @@ export default function TrainerProfileLoading() {
       <div className="bg-card border border-border rounded-xl p-6 space-y-5">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="space-y-2">
+            <div key={`skeleton-${i}`} className="space-y-2">
               <div className="h-4 w-24 bg-skeleton-base motion-safe:animate-pulse rounded" />
               <div className="h-10 w-full bg-skeleton-base motion-safe:animate-pulse rounded-lg" />
             </div>

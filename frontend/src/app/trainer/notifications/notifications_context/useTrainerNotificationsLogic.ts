@@ -3,77 +3,27 @@
 // DATA FLOW: fetchTrainerNotifications API → useTrainerNotificationsLogic → TrainerNotificationsMain
 // ROLE BOUNDARY: Trainers can mark notifications as read. Delete/clearAll are FORBIDDEN (Manager-only).
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
+import { useInfiniteQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import type { TrainerNotificationItem } from '@/app/trainer/notifications/notifications_types/TrainerNotificationsTypes';
 import { fetchTrainerNotifications, markTrainerNotificationRead, markAllTrainerNotificationsRead } from '@/app/trainer/notifications/notifications_api/TrainerNotificationsApi';
 
 const NOTIFICATIONS_PAGE_LIMIT = 20;
 
 export const useTrainerNotificationsLogic = () => {
-  const [notifications, setNotifications] = useState<TrainerNotificationItem[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
+  const queryClient = useQueryClient();
   const [loadingMore, setLoadingMore] = useState(false);
-  const [fetchState, setFetchState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
-
-  const loadNotifications = useCallback(async (page: number, append = false) => {
-    if (page === 1) setFetchState('loading');
-    else setLoadingMore(true);
-    try {
-      const res = await fetchTrainerNotifications(page, NOTIFICATIONS_PAGE_LIMIT);
-      const incoming = res.notifications ?? [];
-      setNotifications((prev) => (append ? [...prev, ...incoming] : incoming));
-      // If fewer than the limit are returned, there are no more pages
-      setHasMore(incoming.length >= NOTIFICATIONS_PAGE_LIMIT);
-      setFetchState('success');
-    } catch {
-      setFetchState('error');
-    } finally {
-      setLoadingMore(false);
-    }
-  }, []);
-
-  useEffect(() => { void loadNotifications(1); }, [loadNotifications]);
-
-  const loadMore = useCallback(async () => {
-    const nextPage = currentPage + 1;
-    setCurrentPage(nextPage);
-    await loadNotifications(nextPage, true);
-  }, [currentPage, loadNotifications]);
-
-  const markAsRead = useCallback(async (id: string) => {
-    // Optimistic update
-    setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, unread: false } : n)));
-    try {
-      await markTrainerNotificationRead(id);
-    } catch {
-      // Revert on failure
-      setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, unread: true } : n)));
-    }
-  }, []);
-
-  const markAllAsRead = useCallback(async () => {
-    setNotifications((prev) => prev.map((n) => ({ ...n, unread: false })));
-    try {
-      await markAllTrainerNotificationsRead();
-    } catch {
-      // Revert on failure — reload from API
-      void loadNotifications(1);
-    }
-  }, [loadNotifications]);
-
-  const unreadCount = notifications.filter((n) => n.unread).length;
-
-  return {
-    notifications,
-    unreadCount,
-    fetchState,
-    hasMore,
-    loadingMore,
-    loadMore,
-    markAllAsRead,
-    markAsRead,
-    // NOTE: clearAll and deleteNotification are FORBIDDEN for the trainer role.
-    // Notifications can only be deleted by managers. See notifications_forbidden.md.
-  };
+  const listQuery = useInfiniteQuery({
+    queryKey: ['trainer', 'notifications', 'list'],
+    initialPageParam: 1,
+    queryFn: ({ pageParam }) => fetchTrainerNotifications(pageParam, NOTIFICATIONS_PAGE_LIMIT),
+    getNextPageParam: (lastPage, pages) => (lastPage.notifications.length >= NOTIFICATIONS_PAGE_LIMIT ? pages.length + 1 : undefined),
+  });
+  const notifications = listQuery.data?.pages.flatMap((page) => page.notifications) ?? [];
+  const markReadMutation = useMutation({ mutationFn: markTrainerNotificationRead, onSuccess: () => queryClient.invalidateQueries({ queryKey: ['trainer','notifications','list'] }) });
+  const markAllMutation = useMutation({ mutationFn: markAllTrainerNotificationsRead, onSuccess: () => queryClient.invalidateQueries({ queryKey: ['trainer','notifications','list'] }) });
+  const loadMore = useCallback(async () => { setLoadingMore(true); try { await listQuery.fetchNextPage(); } finally { setLoadingMore(false); } }, [listQuery]);
+  const markAsRead = useCallback((id: string) => { markReadMutation.mutate(id); }, [markReadMutation]);
+  const markAllAsRead = useCallback(() => { markAllMutation.mutate(); }, [markAllMutation]);
+  return { notifications, unreadCount: notifications.filter((n) => n.unread).length, isPending: listQuery.isPending, isError: listQuery.isError, isSuccess: listQuery.isSuccess, hasMore: Boolean(listQuery.hasNextPage), loadingMore, loadMore, markAllAsRead, markAsRead };
 };

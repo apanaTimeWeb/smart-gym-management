@@ -1,22 +1,20 @@
 'use client';
-// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
-// DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Form modal for creating or editing a workout plan in the Workout Library module.
 import { useEffect } from 'react';
-import { X, Save, Plus, Trash2, Dumbbell } from 'lucide-react';
-import { useForm, Controller, useFieldArray } from 'react-hook-form';
+import { X, Save } from 'lucide-react';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { SearchableDropdown } from '@/app/trainer/trainer_components/TrainerShared/SearchableDropdown';
-import { CreateWorkoutPlanSchema, type CreateWorkoutFormValues, EMPTY_WORKOUT_FORM } from '@/app/trainer/workout/workout_types/workout.schema';
-import { useConfirm } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerConfirmProvider';
+import { SearchableDropdown } from '@/app/trainer/trainer_components/TrainerShared/TrainerSearchableDropdown';
+import TrainerWorkoutExerciseFields from '@/app/trainer/workout/workout_components/TrainerWorkoutModal/TrainerWorkoutExerciseFields';
+import { TRAINER_WORKOUT_LEVEL_OPTIONS } from '@/app/trainer/workout/workout_utils/TrainerWorkoutFormConstants';
+import { CreateWorkoutPlanSchema, type CreateWorkoutFormValues, EMPTY_WORKOUT_FORM } from '@/app/trainer/workout/workout_types/TrainerWorkout.schema';
 import { useTrainerWorkoutStore } from '@/app/trainer/workout/workout_store/useTrainerWorkoutStore';
-import { useTrainerWorkoutMutations } from '@/app/trainer/workout/workout_queries/useWorkoutMutations';
-import { useWarnIfUnsavedChanges } from '@/app/trainer/trainer_utils/useWarnIfUnsavedChanges';
+import { useTrainerWorkoutMutations } from '@/app/trainer/workout/workout_queries/TrainerUseWorkoutMutations';
+import { useTrainerUnsavedChangesGuard } from '@/app/trainer/trainer_utils/TrainerUseWarnIfUnsavedChanges';
 
 export default function TrainerWorkoutModal() {
   const { showWkModal, setShowWkModal, editWk } = useTrainerWorkoutStore();
   const { createWorkout, updateWorkout } = useTrainerWorkoutMutations();
-  const { confirm } = useConfirm();
 
   const {
     register,
@@ -29,12 +27,7 @@ export default function TrainerWorkoutModal() {
     defaultValues: EMPTY_WORKOUT_FORM
   });
 
-  useWarnIfUnsavedChanges(isDirty);
-
-  const { fields: exerciseFields, append: appendExercise, remove: removeExercise } = useFieldArray({
-    control,
-    name: 'workoutExercises'
-  });
+  useTrainerUnsavedChangesGuard(isDirty);
 
   useEffect(() => {
     if (showWkModal) {
@@ -113,7 +106,7 @@ export default function TrainerWorkoutModal() {
               control={control}
               render={({ field }) => (
                 <SearchableDropdown
-                  options={['Beginner', 'Intermediate', 'Advanced'].map(l => ({ label: l, value: l }))}
+                  options={[...TRAINER_WORKOUT_LEVEL_OPTIONS]}
                   value={field.value}
                   onChange={field.onChange}
                   placeholder="Select Level..."
@@ -213,92 +206,7 @@ export default function TrainerWorkoutModal() {
             />
           </div>
 
-          <div className="pt-2 border-t border-border mt-4">
-            <div className="flex items-center justify-between mb-3">
-              <label className="block text-sm font-bold text-foreground">Workout Exercises</label>
-              <button
-                type="button"
-                onClick={() => appendExercise({ name: '', sets: 3, reps: '10', weight: '', restTime: '60s', sortOrder: exerciseFields.length })}
-                className="text-xs font-semibold text-primary bg-primary-subtle px-3 py-1.5 rounded-lg flex items-center gap-1 hover:bg-primary/20 motion-safe:transition-colors"
-              >
-                <Plus size={14} /> Add Exercise
-              </button>
-            </div>
-            
-            <div className="space-y-3">
-              {exerciseFields.map((field, index) => (
-                <div key={field.id} className="bg-input/50 border border-border rounded-xl p-3 flex flex-col sm:flex-row gap-3">
-                  <div className="flex-1">
-                    <label className="block text-[10px] uppercase font-bold text-secondary mb-1">Exercise Name</label>
-                    <input
-                      type="text"
-                      placeholder="e.g. Barbell Squat"
-                      {...register(`workoutExercises.${index}.name`)}
-                      className="w-full px-2 py-1.5 text-sm bg-input border border-border rounded-lg focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary text-foreground"
-                    />
-                  </div>
-                  <div className="w-16">
-                    <label className="block text-[10px] uppercase font-bold text-secondary mb-1">Sets</label>
-                    <input
-                      type="number"
-                      {...register(`workoutExercises.${index}.sets`)}
-                      className="w-full px-2 py-1.5 text-sm bg-input border border-border rounded-lg focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary text-foreground"
-                    />
-                  </div>
-                  <div className="w-16">
-                    <label className="block text-[10px] uppercase font-bold text-secondary mb-1">Reps</label>
-                    <input
-                      type="number"
-                      {...register(`workoutExercises.${index}.reps`)}
-                      className="w-full px-2 py-1.5 text-sm bg-input border border-border rounded-lg focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary text-foreground"
-                    />
-                  </div>
-                  <div className="flex-1 sm:w-24">
-                    <label className="block text-[10px] uppercase font-bold text-secondary mb-1">Weight</label>
-                    <input
-                      type="text"
-                      placeholder="e.g. 60kg"
-                      {...register(`workoutExercises.${index}.weight`)}
-                      className="w-full px-2 py-1.5 text-sm bg-input border border-border rounded-lg focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary text-foreground"
-                    />
-                  </div>
-                  <div className="flex-1 sm:w-24">
-                    <label className="block text-[10px] uppercase font-bold text-secondary mb-1">Rest</label>
-                    <input
-                      type="text"
-                      placeholder="e.g. 90s"
-                      {...register(`workoutExercises.${index}.restTime`)}
-                      className="w-full px-2 py-1.5 text-sm bg-input border border-border rounded-lg focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary text-foreground"
-                    />
-                  </div>
-                  <div className="flex items-end pb-0.5">
-                    <button
-                      type="button"
-                      onClick={async () => {
-                        const ok = await confirm({
-                          title: 'Remove Exercise',
-                          message: 'Are you sure you want to remove this exercise from the plan?',
-                          type: 'danger',
-                          confirmText: 'Remove'
-                        });
-                        if (ok) removeExercise(index);
-                      }}
-                      className="p-2 text-danger hover:bg-danger-bg rounded-lg transition-colors"
-                    >
-                      <Trash2 size={16} />
-                    </button>
-                  </div>
-                </div>
-              ))}
-              
-              {exerciseFields.length === 0 && (
-                <div className="text-center py-6 border border-dashed border-border rounded-xl text-secondary text-sm">
-                  <Dumbbell size={24} className="mx-auto mb-2 opacity-50" />
-                  No exercises added. Click "Add Exercise" to build the plan.
-                </div>
-              )}
-            </div>
-          </div>
+          <TrainerWorkoutExerciseFields control={control} register={register} />
           
           <div className="pt-2 flex justify-end gap-3">
             <button 

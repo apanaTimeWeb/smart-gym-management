@@ -2,15 +2,15 @@
 // RESPONSIBILITY: Renders the attendance data table and pagination controls.
 // DATA FLOW: props (records, pagination) from TrainerAttendanceMain → display only
 import { Clock } from 'lucide-react';
-import { ATTENDANCE_TABLE_HEADERS, formatDate, formatTime } from '@/app/trainer/attendance/attendance_utils/AttendanceSharedConstants';
+import { ATTENDANCE_TABLE_HEADERS, formatDate, formatTime } from '@/app/trainer/attendance/attendance_utils/TrainerAttendanceSharedConstants';
 import TrainerPagination from '@/app/trainer/trainer_components/TrainerShared/TrainerPagination';
 import { TRAINER_ITEMS_PER_PAGE } from '@/app/trainer/trainer_utils/TrainerSharedConstants';
 import TrainerAttendanceEmptyState from '@/app/trainer/attendance/attendance_components/TrainerAttendanceEmptyState/TrainerAttendanceEmptyState';
-import type { AttendanceRecord } from '@/app/trainer/attendance/attendance_types/attendance_types';
+import type { AttendanceRecord } from '@/app/trainer/attendance/attendance_types/TrainerAttendance_types';
 
 const SKELETON_ROW_IDS = ['sk-att-1', 'sk-att-2', 'sk-att-3', 'sk-att-4', 'sk-att-5'];
 
-interface Props {
+interface TrainerAttendanceTableProps {
   records: AttendanceRecord[];
   totalRecords: number;
   isLoading: boolean;
@@ -22,7 +22,7 @@ interface Props {
 
 export default function TrainerAttendanceTable({
   records, totalRecords, isLoading, search, filterDate, currentPage, onPageChange,
-}: Props) {
+}: TrainerAttendanceTableProps) {
   const totalPages = Math.ceil(totalRecords / TRAINER_ITEMS_PER_PAGE) || 1;
 
   return (

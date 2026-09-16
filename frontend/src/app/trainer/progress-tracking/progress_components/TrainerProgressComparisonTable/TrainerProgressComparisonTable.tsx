@@ -6,7 +6,7 @@
 import { TrendingUp, TrendingDown, Minus, AlertCircle } from 'lucide-react';
 import type { ComparisonMemberSnapshot } from '@/app/trainer/progress-tracking/progress_types/TrainerProgressTypes';
 
-interface Props {
+interface TrainerProgressComparisonTableProps {
   snapshots: ComparisonMemberSnapshot[];
 }
 
@@ -29,7 +29,7 @@ function Delta({ value, lowerIsBetter }: { value: number | null; lowerIsBetter: 
   );
 }
 
-export default function TrainerProgressComparisonTable({ snapshots }: Props) {
+export default function TrainerProgressComparisonTable({ snapshots }: TrainerProgressComparisonTableProps) {
   if (snapshots.length === 0) {
     return (
       <div className="bg-card rounded-xl border border-border p-8 text-center text-sm text-secondary">
