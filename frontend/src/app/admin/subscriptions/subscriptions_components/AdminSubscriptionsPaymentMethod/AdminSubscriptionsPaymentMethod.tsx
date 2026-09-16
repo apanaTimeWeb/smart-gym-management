@@ -32,7 +32,7 @@ export default function AdminSubscriptionsPaymentMethod() {
           <CreditCard size={16} className="text-primary" />
           <h3 className="font-semibold text-foreground text-sm">Payment Methods</h3>
         </div>
-        <button className="text-xs font-semibold text-primary hover:underline">+ Add New</button>
+
       </div>
       <div className="divide-y divide-border">
         {paymentMethods.length === 0 ? (

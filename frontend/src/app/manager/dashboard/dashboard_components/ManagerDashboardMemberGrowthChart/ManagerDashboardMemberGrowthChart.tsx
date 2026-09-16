@@ -15,7 +15,7 @@ const Chart = dynamic(() => import('react-apexcharts'), {
 
 export default function ManagerDashboardMemberGrowthChart() {
   const { timeRange } = useManagerDashboardStore();
-  const { data: stats } = useDashboardStatsQuery(timeRange);
+  const { data: stats } = useDashboardStatsQuery({ range: timeRange });
   
   if (!stats?.memberGrowth || stats.memberGrowth.length === 0) {
     return (
@@ -27,15 +27,15 @@ export default function ManagerDashboardMemberGrowthChart() {
 
   const options = {
     chart: { background: 'transparent', toolbar: { show: false }, fontFamily: 'Inter, sans-serif' },
-    colors: ['#0ea5e9'],
+    colors: ['var(--info)'],
     grid: { borderColor: 'rgba(255,255,255,0.05)', strokeDashArray: 4 },
     tooltip: { theme: 'dark' as const },
     xaxis: {
       categories: stats.memberGrowth.map((d: DashboardGrowthChartData) => d.month),
-      labels: { style: { colors: '#A1A1AA', fontSize: '11px' } },
+      labels: { style: { colors: 'var(--text-secondary)', fontSize: '11px' } },
       axisBorder: { show: false }, axisTicks: { show: false },
     },
-    yaxis: { labels: { style: { colors: '#A1A1AA', fontSize: '11px' }, formatter: (v: number) => formatKPI(v) } },
+    yaxis: { labels: { style: { colors: 'var(--text-secondary)', fontSize: '11px' }, formatter: (v: number) => formatKPI(v) } },
     plotOptions: { bar: { borderRadius: 4, columnWidth: '50%' } },
     dataLabels: { enabled: false },
   };

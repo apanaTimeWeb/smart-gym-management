@@ -51,4 +51,4 @@ export const EMPTY_EXPORT_FORM = {
 
 
 
-export { MOCK_EXPORT_JOBS, MOCK_DATA_EXPORT_KPI } from '@/app/admin/admin_mocks/fixtures/AdminMockFixtures';
+export { MOCK_EXPORT_JOBS, MOCK_DATA_EXPORT_KPI } from '@/app/admin/data-export/data-export_mocks/fixtures/AdminDataExportMockFixtures';

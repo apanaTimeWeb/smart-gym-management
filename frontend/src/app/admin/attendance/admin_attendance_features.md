@@ -53,7 +53,7 @@ The Admin Attendance module gives the gym owner (Admin role) a **read-only** dai
 - **Zustand store:** `useAdminAttendanceStore.ts` — holds: `search`, `statusFilter`, `branchFilter`, `dateRange`, `currentPage`
 - **Logic hook:** `useAdminAttendanceLogic.ts` — fetches all data on mount, applies client-side filtering + pagination
 - **Local-storage keys:** None
-- **MSW handler file:** `admin/admin_mocks/handlers/AdminMockHandlers.ts` (module-owned central Admin transport)
+- **MSW handler file:** `admin/attendance/attendance_mocks/handlers/AdminAttendanceMockHandlers.ts` (module-owned MSW transport)
 
 ## API Contract
 
@@ -122,4 +122,4 @@ All calls go through mock functions in `AdminAttendanceApi.ts`. Replace with `ap
 
 ## Module-Owned MSW Fixtures
 
-All Admin frontend-first API fixtures and MSW transport handlers are owned by `admin/admin_mocks/fixtures/AdminMockFixtures.ts` and `admin/admin_mocks/handlers/AdminMockHandlers.ts`. These files provide populated success responses and are the only module-owned mock transport source for Admin. Global MSW bootstrap may register these handlers, but must not contain Admin business data.
+All Admin frontend-first API fixtures and MSW transport handlers are owned by `admin/attendance_mocks/fixtures/AdminAttendanceMockFixtures.ts` and `admin/attendance/attendance_mocks/handlers/AdminAttendanceMockHandlers.ts`. These files provide populated success responses and are the only module-owned mock transport source for Admin. Global MSW bootstrap may register these handlers, but must not contain Admin business data.

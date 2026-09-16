@@ -3,20 +3,20 @@
 
 import { Search } from 'lucide-react';
 import { useAdminAttendanceStore } from '@/app/admin/attendance/attendance_store/useAdminAttendanceStore';
-import { useAdminBranchesQueries } from '@/app/admin/branches/branches_context/useAdminBranchesQueries';
+import { useAdminAttendanceBranchReference } from '@/app/admin/attendance/attendance_context/useAdminAttendanceBranchReference';
 import { AdminSearchableDropdown } from '@/app/admin/admin_components/AdminShared/AdminSearchableDropdown';
 import { ATTENDANCE_STATUS_OPTIONS, DATE_RANGE_OPTIONS } from '@/app/admin/attendance/attendance_utils/AdminAttendanceSharedConstants';
 import type { AttendanceStatus, DateRangeFilter } from '@/app/admin/attendance/attendance_types/AdminAttendanceTypes';
-import type { Branch } from '@/app/admin/branches/branches_types/AdminBranchesTypes';
+import type { AdminAttendanceBranchReference } from '@/app/admin/attendance/attendance_types/AdminAttendanceBranchReferenceTypes';
 
 export default function AdminAttendanceToolbar() {
   const { search, setSearch, statusFilter, setStatusFilter, branchFilter, setBranchFilter, dateRange, setDateRange } =
     useAdminAttendanceStore();
-  const { data: branches = [] } = useAdminBranchesQueries();
+  const { data: branches = [] } = useAdminAttendanceBranchReference();
 
   const branchOptions = [
     { value: 'all', label: 'All Branches' },
-    ...(branches as Branch[]).map((b) => ({ value: b.id, label: b.name })),
+    ...(branches as AdminAttendanceBranchReference[]).map((b) => ({ value: b.id, label: b.name })),
   ];
 
   return (

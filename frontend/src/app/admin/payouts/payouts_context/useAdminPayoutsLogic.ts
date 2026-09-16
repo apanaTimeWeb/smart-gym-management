@@ -3,13 +3,19 @@
 // RESPONSIBILITY: Business logic hook for the Payouts module.
 
 import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
 import { payoutsApi } from '@/app/admin/payouts/payouts_api/AdminPayoutsApi';
 import { useAdminPayoutsStore } from '@/app/admin/payouts/payouts_store/useAdminPayoutsStore';
 import { useAdminUrlQuerySync } from '@/app/admin/admin_utils/useAdminUrlQuerySync';
 import { PAYOUTS_ITEMS_PER_PAGE } from '@/app/admin/payouts/payouts_utils/AdminPayoutsSharedConstants';
+import type { PayoutSortDirection, PayoutSortKey, PnlSortDirection, PnlSortKey } from '@/app/admin/payouts/payouts_types/AdminPayoutsTypes';
 
 export function useAdminPayoutsLogic() {
   const { activeTab, setActiveTab, monthFilter, setMonthFilter, gymFilter, setGymFilter, statusFilter, setStatusFilter, currentPage, setCurrentPage } = useAdminPayoutsStore();
+  const [payoutSortKey, setPayoutSortKey] = useState<PayoutSortKey>('month');
+  const [payoutSortDir, setPayoutSortDir] = useState<PayoutSortDirection>('desc');
+  const [pnlSortKey, setPnlSortKey] = useState<PnlSortKey>('netProfit');
+  const [pnlSortDir, setPnlSortDir] = useState<PnlSortDirection>('desc');
   useAdminUrlQuerySync([
     { key: 'month', value: monthFilter, defaultValue: '', setValue: useAdminPayoutsStore.getState().setMonthFilter },
     { key: 'gym', value: gymFilter, defaultValue: 'all', setValue: useAdminPayoutsStore.getState().setGymFilter },
@@ -18,14 +24,14 @@ export function useAdminPayoutsLogic() {
   ]);
 
   const payoutsQuery = useQuery({
-    queryKey: ['admin', 'payouts', 'list', { month: monthFilter, gymId: gymFilter, status: statusFilter, page: currentPage, limit: PAYOUTS_ITEMS_PER_PAGE }],
-    queryFn: () => payoutsApi.fetchPayouts({ month: monthFilter, gymId: gymFilter, status: statusFilter, page: currentPage, limit: PAYOUTS_ITEMS_PER_PAGE }),
+    queryKey: ['admin', 'payouts', 'list', { month: monthFilter, gymId: gymFilter, status: statusFilter, page: currentPage, limit: PAYOUTS_ITEMS_PER_PAGE, sortKey: payoutSortKey, sortDir: payoutSortDir }],
+    queryFn: () => payoutsApi.fetchPayouts({ month: monthFilter, gymId: gymFilter, status: statusFilter, page: currentPage, limit: PAYOUTS_ITEMS_PER_PAGE, sortKey: payoutSortKey, sortDir: payoutSortDir }),
     staleTime: 1000 * 60 * 5,
   });
 
   const { data: pnlData = [], isLoading: loadingPnL } = useQuery({
-    queryKey: ['admin', 'payouts', 'pnl', { month: monthFilter, gymId: gymFilter }],
-    queryFn: () => payoutsApi.fetchPnL({ month: monthFilter, gymId: gymFilter }).then((r) => r.data || []),
+    queryKey: ['admin', 'payouts', 'pnl', { month: monthFilter, gymId: gymFilter, sortKey: pnlSortKey, sortDir: pnlSortDir }],
+    queryFn: () => payoutsApi.fetchPnL({ month: monthFilter, gymId: gymFilter, sortKey: pnlSortKey, sortDir: pnlSortDir }).then((r) => r.data || []),
     staleTime: 1000 * 60 * 5,
   });
 
@@ -59,5 +65,9 @@ export function useAdminPayoutsLogic() {
     totalPages,
     totalItems: payoutsResponse?.meta?.total ?? filteredPayouts.length,
     loadingPnL,
+    payoutSortKey, payoutSortDir,
+    onPayoutSort: (key: PayoutSortKey) => { if (payoutSortKey === key) setPayoutSortDir((current: PayoutSortDirection) => current === 'asc' ? 'desc' : 'asc'); else { setPayoutSortKey(key); setPayoutSortDir('desc'); } setCurrentPage(1); },
+    pnlSortKey, pnlSortDir,
+    onPnlSort: (key: PnlSortKey) => { if (pnlSortKey === key) setPnlSortDir((current: PnlSortDirection) => current === 'asc' ? 'desc' : 'asc'); else { setPnlSortKey(key); setPnlSortDir('desc'); } },
   };
 }

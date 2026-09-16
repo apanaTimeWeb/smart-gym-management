@@ -30,7 +30,7 @@ export function printManagerMembersPdf(members: Member[]) {
   const rows = members.map((member) => `<tr><td>${escapeCsv(member.id)}</td><td>${escapeCsv(member.name)}</td><td>${escapeCsv(member.phone)}</td><td>${escapeCsv(member.plan?.name || member.planId)}</td><td>${escapeCsv(member.status)}</td><td>${escapeCsv(member.expiryDate)}</td><td>${escapeCsv(member.pendingAmount)}</td></tr>`).join('');
   const printWindow = window.open('', '_blank', 'noopener,noreferrer,width=1200,height=800');
   if (!printWindow) return;
-  printWindow.document.write(`<html><head><title>Manager Member Export</title><style>body{font-family:sans-serif;padding:24px}table{border-collapse:collapse;width:100%}th,td{border:1px solid #ccc;padding:6px;text-align:left;font-size:12px}</style></head><body><h1>Member Export</h1><table><thead><tr><th>ID</th><th>Name</th><th>Phone</th><th>Plan</th><th>Status</th><th>Expiry</th><th>Pending</th></tr></thead><tbody>${rows}</tbody></table></body></html>`);
+  printWindow.document.write(`<html><head><title>Manager Member Export</title><style>body{font-family:sans-serif;padding:24px}table{border-collapse:collapse;width:100%}th,td{border:1px solid currentColor;padding:6px;text-align:left;font-size:12px}</style></head><body><h1>Member Export</h1><table><thead><tr><th>ID</th><th>Name</th><th>Phone</th><th>Plan</th><th>Status</th><th>Expiry</th><th>Pending</th></tr></thead><tbody>${rows}</tbody></table></body></html>`);
   printWindow.document.close();
   printWindow.focus();
   printWindow.print();

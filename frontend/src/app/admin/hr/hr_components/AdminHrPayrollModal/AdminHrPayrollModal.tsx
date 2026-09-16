@@ -2,7 +2,7 @@
 // RESPONSIBILITY: Form modal for creating a new payroll entry for a staff member in the HR module.
 
 import React, { useEffect } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import { X, Check } from 'lucide-react';
@@ -19,12 +19,14 @@ export default function AdminHrPayrollModal() {
     defaultValues: EMPTY_PAYROLL_FORM
   });
 
-  const selectedStaffId = watch('staffId');
-  const selectedMonth = watch('month');
+  const formValues = useWatch({ control });
+  const selectedStaffId = formValues.staffId ?? EMPTY_PAYROLL_FORM.staffId;
+  const selectedMonth = formValues.month ?? EMPTY_PAYROLL_FORM.month;
 
   useEffect(() => {
     if (showPayrollModal) {
       reset(EMPTY_PAYROLL_FORM);
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setCalculationInfo('');
     }
   }, [showPayrollModal, reset]);

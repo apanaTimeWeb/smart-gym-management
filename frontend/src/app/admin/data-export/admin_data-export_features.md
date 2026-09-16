@@ -54,7 +54,7 @@ the first export. This module is critical for compliance, accounting, and data p
 - **Query keys:** `['adminDataExportHistory', { page }]`
 - **Polling:** `refetchInterval: 5_000` while any export has status `'PENDING'` — disabled when all are `'COMPLETED'` or `'FAILED'`
 - **Local-storage keys:** `adminDataExport_privacyAcknowledged` — persists privacy acknowledgment across sessions
-- **MSW handler file:** `admin/admin_mocks/handlers/AdminMockHandlers.ts` (module-owned central Admin transport)
+- **MSW handler file:** `admin/data-export/data-export_mocks/handlers/AdminDataExportMockHandlers.ts` (module-owned MSW transport)
 
 ## API Contract
 
@@ -115,7 +115,7 @@ All calls go through `dataExportApi` in `data_export_api/AdminDataExportApi.ts`.
 - [x] Rule 15B: Export form uses React Hook Form + Zod
 - [x] Rule 40: `data-export_forbidden.md` present
 - [ ] Rule 15A: Co-located tests are present; full behavioral coverage and runtime execution are NOT VERIFIED
-- [x] Rule 75: Module-owned MSW handler configured in `admin/admin_mocks/handlers/AdminMockHandlers.ts`
+- [x] Rule 75: Module-owned MSW handler configured in `admin/data-export/data-export_mocks/handlers/AdminDataExportMockHandlers.ts`
 
 ## UI Data Requirements
 - Every data-driven table, KPI, chart, filter, dropdown and detail field must map to a typed API response field and be represented in module-owned fixtures where mocked.
@@ -124,4 +124,4 @@ All calls go through `dataExportApi` in `data_export_api/AdminDataExportApi.ts`.
 
 ## Module-Owned MSW Fixtures
 
-All Admin frontend-first API fixtures and MSW transport handlers are owned by `admin/admin_mocks/fixtures/AdminMockFixtures.ts` and `admin/admin_mocks/handlers/AdminMockHandlers.ts`. These files provide populated success responses and are the only module-owned mock transport source for Admin. Global MSW bootstrap may register these handlers, but must not contain Admin business data.
+All Admin frontend-first API fixtures and MSW transport handlers are owned by `admin/data-export_mocks/fixtures/AdminDataExportMockFixtures.ts` and `admin/data-export/data-export_mocks/handlers/AdminDataExportMockHandlers.ts`. These files provide populated success responses and are the only module-owned mock transport source for Admin. Global MSW bootstrap may register these handlers, but must not contain Admin business data.

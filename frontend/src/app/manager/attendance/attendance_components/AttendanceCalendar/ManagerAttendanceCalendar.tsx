@@ -73,7 +73,7 @@ export default function AttendanceCalendar() {
           </div>
           <button
             onClick={() => setCalendarUser(null)}
-            className="p-2 rounded-md hover:bg-background text-secondary transition-colors"
+            className="p-2 rounded-md hover:bg-background text-secondary motion-safe:transition-colors"
           >
             <X size={20} />
           </button>
@@ -132,7 +132,7 @@ export default function AttendanceCalendar() {
                     <div
                       key={day}
                       className={`
-                        aspect-square flex items-center justify-center rounded-md border-none text-xs font-bold transition-all
+                        aspect-square flex items-center justify-center rounded-md border-none text-xs font-bold motion-safe:transition-all
                         ${isPresent ? 'bg-success text-primary-foreground hover:scale-110' : ''}
                         ${isAbsent ? 'bg-danger text-primary-foreground hover:scale-110' : ''}
                         ${isLeave ? 'bg-primary text-primary-foreground hover:scale-110' : ''}

@@ -57,7 +57,7 @@ export default function ManagerStoreProductGrid() {
         {products.map(p => (
           <div 
             key={p.id} 
-            className="border border-border rounded-xl p-4 hover:shadow-md transition-shadow bg-card"
+            className="border border-border rounded-xl p-4 hover:shadow-md motion-safe:transition-shadow bg-card"
           >
             <div className="flex justify-between items-start mb-3">
               <div>
@@ -71,7 +71,7 @@ export default function ManagerStoreProductGrid() {
               <div className="flex gap-1">
                 <button 
                   onClick={() => openEditProduct(p)} 
-                  className="p-1.5 rounded-lg bg-input text-secondary hover:bg-primary-subtle transition-colors"
+                  className="p-1.5 rounded-lg bg-input text-secondary hover:bg-primary-subtle motion-safe:transition-colors"
                   aria-label={`Edit ${p.name}`}
                 >
                   <Edit2 size={13} />
@@ -86,7 +86,7 @@ export default function ManagerStoreProductGrid() {
                     });
                     if (ok) deleteProduct(p.id);
                   }}
-                  className="p-1.5 rounded-lg bg-danger-bg dark:bg-danger-bg text-danger hover:bg-danger-bg dark:hover:bg-danger-bg transition-colors"
+                  className="p-1.5 rounded-lg bg-danger-bg dark:bg-danger-bg text-danger hover:bg-danger-bg dark:hover:bg-danger-bg motion-safe:transition-colors"
                   aria-label={`Delete ${p.name}`}
                 >
                   <Trash2 size={13} />

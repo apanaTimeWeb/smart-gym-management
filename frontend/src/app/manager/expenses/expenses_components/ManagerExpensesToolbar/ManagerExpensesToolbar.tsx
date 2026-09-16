@@ -19,7 +19,7 @@ export default function ManagerExpensesToolbar() {
             placeholder="Search expenses..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 bg-input border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 text-foreground transition-all"
+            className="w-full pl-9 pr-4 py-2 bg-input border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 text-foreground motion-safe:transition-all"
           />
         </div>
         <div className="w-full sm:w-48">
@@ -37,14 +37,14 @@ export default function ManagerExpensesToolbar() {
       <div className="flex w-full sm:w-auto items-center gap-2">
         <button
           onClick={() => exportExpenses && exportExpenses()}
-          className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-input border border-border text-secondary px-5 py-2.5 rounded-lg text-sm font-semibold hover:bg-primary-subtle hover:text-primary transition-all duration-200"
+          className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-input border border-border text-secondary px-5 py-2.5 rounded-lg text-sm font-semibold hover:bg-primary-subtle hover:text-primary motion-safe:transition-all duration-200"
         >
           <Download size={18} />
           Export
         </button>
         <button
           onClick={openAdd}
-          className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-primary text-primary-foreground px-5 py-2.5 rounded-lg text-sm font-bold shadow-md shadow-primary/20 hover:shadow-lg hover:shadow-primary/30 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200"
+          className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-primary text-primary-foreground px-5 py-2.5 rounded-lg text-sm font-bold shadow-md shadow-primary/20 hover:shadow-lg hover:shadow-primary/30 hover:-translate-y-0.5 active:translate-y-0 motion-safe:transition-all duration-200"
         >
           <Plus size={18} />
           Add Expense

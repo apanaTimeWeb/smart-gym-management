@@ -3,6 +3,7 @@
 import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
 import type { MessageType, ManagerMessageRecipient } from '@/app/manager/manager_components/ManagerFeedback/ManagerMessageModal';
 import type { InquiryFormValues } from '@/app/manager/inquiries/inquiries_utils/ManagerInquiriesSharedConstants';
+import type { ApiResponse } from '@/lib/api';
 
 export interface InquiriesContextType {
   // Query Data
@@ -56,7 +57,7 @@ export interface InquiriesContextType {
   closeBulkMsg: () => void;
 
   convertLead: Inquiry | null;
-  convertLeadMutation: (args: { id: string; data: Record<string, unknown> }) => Promise<any>;
+  convertLeadMutation: (args: { id: string; data: Record<string, unknown> }) => Promise<ApiResponse<{ memberId: string }>>;
   isConverting: boolean;
   openConvert: (inq: Inquiry) => void;
   closeConvert: () => void;

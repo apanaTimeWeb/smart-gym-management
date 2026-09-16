@@ -3,19 +3,25 @@
 import { Loader2, Dumbbell, FileWarning, ChevronLeft, ChevronRight } from 'lucide-react';
 import type { PtAssignment } from '@/app/manager/pt/pt_types/ManagerPtTypes';
 
+const PT_ASSIGNMENTS_COLUMN_COUNT = 5;
+
 interface ManagerPtAssignmentsTableProps {
   assignments: PtAssignment[];
+  totalAssignments?: number;
+  currentPage?: number;
+  totalPages?: number;
+  onPageChange?: (page: number) => void;
   markingId: string | null;
   onMarkSession: (id: string) => void;
   isLoading?: boolean;
 }
 
-export default function ManagerPtAssignmentsTable({ assignments, markingId, onMarkSession, isLoading }: ManagerPtAssignmentsTableProps) {
+export default function ManagerPtAssignmentsTable({ assignments, totalAssignments = assignments.length, currentPage = 1, totalPages = 1, onPageChange = () => undefined, markingId, onMarkSession, isLoading }: ManagerPtAssignmentsTableProps) {
   return (
     <div className="bg-card border border-border rounded-xl flex flex-col overflow-hidden">
       <div className="px-5 py-4 border-b border-border flex items-center justify-between">
         <h2 className="text-base font-semibold text-foreground">Active Assignments Tracking</h2>
-        <span className="text-xs text-secondary font-medium">{assignments.length} Total</span>
+        <span className="text-xs text-secondary font-medium">{totalAssignments} Total</span>
       </div>
 
       <div className="overflow-x-auto">
@@ -32,13 +38,13 @@ export default function ManagerPtAssignmentsTable({ assignments, markingId, onMa
           <tbody className="divide-y divide-border">
             {isLoading ? (
               <tr>
-                <td colSpan={5} className="py-16 text-center">
+                <td colSpan={PT_ASSIGNMENTS_COLUMN_COUNT} className="py-16 text-center">
                   <Loader2 size={24} className="mx-auto text-primary motion-safe:animate-spin" />
                 </td>
               </tr>
             ) : assignments.length === 0 ? (
               <tr>
-                <td colSpan={5} className="py-16 text-center">
+                <td colSpan={PT_ASSIGNMENTS_COLUMN_COUNT} className="py-16 text-center">
                   <div className="flex flex-col items-center justify-center space-y-3">
                     <FileWarning size={48} className="text-disabled" strokeWidth={1} />
                     <div>
@@ -93,7 +99,7 @@ export default function ManagerPtAssignmentsTable({ assignments, markingId, onMa
       {/* Pagination Bar */}
       <div className="flex items-center justify-between px-4 py-3 border-t border-border bg-card">
         <p className="text-xs text-secondary font-medium">
-          Showing 1–{assignments.length} of {assignments.length} results
+          Showing {assignments.length === 0 ? 0 : ((currentPage - 1) * 10) + 1}–{Math.min(currentPage * 10, totalAssignments)} of {totalAssignments} results
         </p>
         <div className="flex items-center gap-2">
           <select 
@@ -104,10 +110,11 @@ export default function ManagerPtAssignmentsTable({ assignments, markingId, onMa
             <option value="25">25 / page</option>
           </select>
           <div className="flex items-center gap-1">
-            <button className="p-1 rounded-md border border-border text-disabled cursor-not-allowed bg-input/50" disabled>
+            <button onClick={() => onPageChange(Math.max(1, currentPage - 1))} disabled={currentPage <= 1} aria-label="Previous page" className="p-1 rounded-md border border-border text-secondary bg-input/50 disabled:opacity-50 disabled:cursor-not-allowed">
               <ChevronLeft size={16} />
             </button>
-            <button className="p-1 rounded-md border border-border text-disabled cursor-not-allowed bg-input/50" disabled>
+            <span className="text-xs text-secondary">{currentPage} / {totalPages}</span>
+            <button onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))} disabled={currentPage >= totalPages} aria-label="Next page" className="p-1 rounded-md border border-border text-secondary bg-input/50 disabled:opacity-50 disabled:cursor-not-allowed">
               <ChevronRight size={16} />
             </button>
           </div>

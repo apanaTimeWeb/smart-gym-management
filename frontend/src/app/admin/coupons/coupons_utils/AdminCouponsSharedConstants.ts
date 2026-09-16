@@ -53,4 +53,4 @@ export const EMPTY_COUPON_FORM = {
 
 
 
-export { MOCK_COUPONS, MOCK_COUPONS_KPI } from '@/app/admin/admin_mocks/fixtures/AdminMockFixtures';
+export { MOCK_COUPONS, MOCK_COUPONS_KPI } from '@/app/admin/coupons/coupons_mocks/fixtures/AdminCouponsMockFixtures';

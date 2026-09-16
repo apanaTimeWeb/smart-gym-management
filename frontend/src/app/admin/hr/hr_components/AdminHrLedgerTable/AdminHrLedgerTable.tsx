@@ -1,22 +1,24 @@
 "use client";
 // RESPONSIBILITY: Renders/orchestrates AdminHrLedgerTable for the admin module; UI composition stays here and business/API logic remains in dedicated hooks and APIs.
-import { useState, useEffect } from 'react';
+import { displayValue } from '@/app/admin/admin_utils/AdminDisplayValue';
+import { useState, useEffect, useMemo } from 'react';
 import { useHrContext } from '@/app/admin/hr/hr_context/AdminHrContext';
 import { hrApi } from '@/app/admin/hr/hr_api/AdminHrApi';
 import type { LedgerEntry } from '@/app/admin/hr/hr_types/AdminHrTypes';
-import { FileText } from 'lucide-react';
+import { ChevronDown, ChevronUp, ChevronsUpDown, FileText } from 'lucide-react';
 
 export default function AdminHrLedgerTable() {
   const { staff, showToast } = useHrContext();
   const [selectedStaffId, setSelectedStaffId] = useState<string>('');
   const [ledger, setLedger] = useState<LedgerEntry[]>([]);
   const [loading, setLoading] = useState(false);
+  type LedgerSortKey = 'date' | 'type' | 'credit' | 'debit' | 'balance';
+  const [sortKey, setSortKey] = useState<LedgerSortKey>('date');
+  const [sortDir, setSortDir] = useState<'asc'|'desc'>('desc');
 
-  useEffect(() => {
-    if (staff.length > 0 && !selectedStaffId) {
-      if (staff[0]?.id) setSelectedStaffId(staff[0].id);
-    }
-  }, [staff, selectedStaffId]);
+  if (staff.length > 0 && !selectedStaffId && staff[0]?.id) {
+    setSelectedStaffId(staff[0].id);
+  }
 
   useEffect(() => {
     if (!selectedStaffId) return;
@@ -39,6 +41,8 @@ export default function AdminHrLedgerTable() {
   };
 
   const selectedStaff = staff.find(s => String(s.id) === String(selectedStaffId));
+  const sortedLedger = useMemo(() => [...ledger].sort((a,b)=>{const av=a[sortKey], bv=b[sortKey]; const result=typeof av==='number'&&typeof bv==='number'?av-bv:String(av??'').localeCompare(String(bv??''),undefined,{numeric:true}); return sortDir==='asc'?result:-result;}),[ledger,sortKey,sortDir]);
+  const handleSort=(key:LedgerSortKey)=>{if(sortKey===key)setSortDir(d=>d==='asc'?'desc':'asc');else{setSortKey(key);setSortDir('desc');}};
 
   return (
     <div className="space-y-4">
@@ -84,12 +88,7 @@ export default function AdminHrLedgerTable() {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-secondary/10 border-b border-border text-sm">
-                <th className="p-4 font-medium text-secondary whitespace-nowrap">Date</th>
-                <th className="p-4 font-medium text-secondary whitespace-nowrap">Transaction Type</th>
-                <th className="p-4 font-medium text-secondary">Notes</th>
-                <th className="p-4 font-medium text-secondary text-right">Credit (₹)</th>
-                <th className="p-4 font-medium text-secondary text-right">Debit (₹)</th>
-                <th className="p-4 font-medium text-secondary text-right bg-primary/5">Balance (₹)</th>
+                {(['date','type','notes','credit','debit','balance'] as const).map((column,index)=>{const keyMap:Array<LedgerSortKey|null>=['date','type',null,'credit','debit','balance'];const key=keyMap[index];const label=['Date','Transaction Type','Notes','Credit (₹)','Debit (₹)','Balance (₹)'][index];return <th key={column} onClick={()=>key&&handleSort(key)} className={`p-4 font-medium text-secondary whitespace-nowrap ${key?'cursor-pointer select-none':''} ${column==='balance'?'bg-primary/5 text-right':''}`} aria-sort={key&&sortKey===key?(sortDir==='asc'?'ascending':'descending'):'none'}><div className={`flex items-center gap-1.5 ${column==='balance'?'justify-end':''}`}>{label}{key&&(sortKey===key?(sortDir==='asc'?<ChevronUp size={13} className="text-primary"/>:<ChevronDown size={13} className="text-primary"/>):<ChevronsUpDown size={13} className="text-disabled"/>)}</div></th>;})}
               </tr>
             </thead>
             <tbody className="text-sm divide-y divide-border">
@@ -105,7 +104,7 @@ export default function AdminHrLedgerTable() {
                   </td>
                 </tr>
               ) : (
-                ledger.map(l => (
+                sortedLedger.map(l => (
                   <tr key={l.id} className="hover:bg-secondary/5 motion-safe:transition-colors">
                     <td className="p-4 text-foreground whitespace-nowrap">{new Date(l.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
                     <td className="p-4">
@@ -117,7 +116,7 @@ export default function AdminHrLedgerTable() {
                         {l.type}
                       </span>
                     </td>
-                    <td className="p-4 text-secondary max-w-48 truncate" title={l.notes}>{l.notes || '-'}</td>
+                    <td className="p-4 text-secondary max-w-48 truncate" title={l.notes}>{displayValue(l.notes)}</td>
                     <td className="p-4 text-right text-success font-medium">{l.credit > 0 ? `+${l.credit.toLocaleString('en-IN')}` : '-'}</td>
                     <td className="p-4 text-right text-danger font-medium">{l.debit > 0 ? `-${l.debit.toLocaleString('en-IN')}` : '-'}</td>
                     <td className="p-4 text-right font-bold text-foreground bg-primary/5">{l.balance.toLocaleString('en-IN')}</td>

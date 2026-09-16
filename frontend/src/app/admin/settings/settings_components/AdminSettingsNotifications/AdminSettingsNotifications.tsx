@@ -1,13 +1,14 @@
 "use client";
 // RESPONSIBILITY: Manages the Notifications settings tab.
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { NotificationsSettingsSchema } from '@/app/admin/settings/settings_types/AdminSettings.schema';
 import type { NotificationsSettingsType } from '@/app/admin/settings/settings_types/AdminSettingsTypes';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useState, useMemo } from 'react';
 import { settingsApi } from '@/app/admin/settings/settings_api/AdminSettingsApi';
 import toast from 'react-hot-toast';
-import { Save, RefreshCw, CheckCircle, XCircle } from 'lucide-react';
+import { Save, RefreshCw, CheckCircle, XCircle, ChevronDown, ChevronUp } from 'lucide-react';
 import { useUnsavedChangesGuard } from '@/app/admin/admin_utils/useAdminUnsavedChangesGuard';
 
 export function AdminSettingsNotifications({ initialData }: { initialData: NotificationsSettingsType }) {
@@ -16,6 +17,8 @@ export function AdminSettingsNotifications({ initialData }: { initialData: Notif
     resolver: zodResolver(NotificationsSettingsSchema),
     defaultValues: initialData,
   });
+
+  const formValues = useWatch({ control: form.control });
 
   useUnsavedChangesGuard(form.formState.isDirty);
 
@@ -37,12 +40,16 @@ export function AdminSettingsNotifications({ initialData }: { initialData: Notif
     { key: 'whatsapp', label: 'WhatsApp', color: 'text-success' },
   ] as const;
 
-  const events = [
+  const [eventSort, setEventSort] = useState<'asc' | 'desc'>('asc');
+
+  const events = useMemo(() => [
     { key: 'onJoin', label: 'New Member Joins' },
     { key: 'onExpiry', label: 'Membership Expiry Reminder' },
     { key: 'onPayment', label: 'Payment Received' },
     { key: 'onAbsence', label: 'Member Absence Alert' },
-  ] as const;
+  ] as const, []);
+
+  const sortedEvents = useMemo(() => [...events].sort((a,b) => eventSort === 'asc' ? a.label.localeCompare(b.label) : b.label.localeCompare(a.label)), [eventSort, events]);
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="bg-card rounded-xl shadow-sm border border-border mt-6">
@@ -72,19 +79,19 @@ export function AdminSettingsNotifications({ initialData }: { initialData: Notif
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-primary/5 border-b border-border">
-                <th className="px-4 py-3 text-xs font-semibold text-secondary uppercase tracking-wider">Event</th>
+                <th onClick={() => setEventSort((current) => current === 'asc' ? 'desc' : 'asc')} className="px-4 py-3 text-xs font-semibold text-secondary uppercase tracking-wider cursor-pointer select-none" aria-sort={eventSort === 'asc' ? 'ascending' : 'descending'}><div className="flex items-center gap-1.5">Event {eventSort === 'asc' ? <ChevronUp size={13} className="text-primary"/> : <ChevronDown size={13} className="text-primary"/>}</div></th>
                 {channels.map(c => (
                   <th key={c.key} className={`px-4 py-3 text-xs font-semibold uppercase tracking-wider text-center ${c.color}`}>{c.label}</th>
                 ))}
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {events.map(ev => (
+              {sortedEvents.map(ev => (
                 <tr key={ev.key} className="hover:bg-input/30 motion-safe:transition-colors">
                   <td className="px-4 py-3 text-sm text-foreground font-medium">{ev.label}</td>
                   {channels.map(c => {
                     const fieldName = `${c.key}${ev.key}` as keyof NotificationsSettingsType;
-                    const isChecked = form.watch(fieldName) as boolean;
+                    const isChecked = (formValues[fieldName] ?? initialData[fieldName]) as boolean;
                     return (
                       <td key={c.key} className="px-4 py-3 text-center">
                         <button

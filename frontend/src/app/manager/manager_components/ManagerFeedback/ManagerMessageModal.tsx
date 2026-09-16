@@ -98,7 +98,7 @@ export default function ManagerMessageModal({
  <button
  onClick={handleClose}
  disabled={sending}
- className="w-8 h-8 rounded-full bg-primary/20 hover:bg-primary/30 flex items-center justify-center transition-colors disabled:opacity-50"
+ className="w-8 h-8 rounded-full bg-primary/20 hover:bg-primary/30 flex items-center justify-center motion-safe:transition-colors disabled:opacity-50"
  >
  <X size={16} color="white" />
  </button>
@@ -160,14 +160,14 @@ export default function ManagerMessageModal({
  <button
  onClick={handleClose}
  disabled={sending}
- className="flex-1 px-4 py-2.5 text-sm border border-border rounded-xl hover:bg-input text-foreground font-medium transition-colors disabled:opacity-50"
+ className="flex-1 px-4 py-2.5 text-sm border border-border rounded-xl hover:bg-input text-foreground font-medium motion-safe:transition-colors disabled:opacity-50"
  >
  Cancel
  </button>
  <button
  onClick={handleSend}
  disabled={sending || sent || !message.trim()}
- className={`flex-1 px-4 py-2.5 text-sm font-semibold text-primary-foreground rounded-xl flex items-center justify-center gap-2 transition-all disabled:opacity-50 ${sent ? 'bg-success' : type === 'whatsapp' ? 'bg-success' : 'bg-info'}`}
+ className={`flex-1 px-4 py-2.5 text-sm font-semibold text-primary-foreground rounded-xl flex items-center justify-center gap-2 motion-safe:transition-all disabled:opacity-50 ${sent ? 'bg-success' : type === 'whatsapp' ? 'bg-success' : 'bg-info'}`}
  >
  {sent ? (
  <>

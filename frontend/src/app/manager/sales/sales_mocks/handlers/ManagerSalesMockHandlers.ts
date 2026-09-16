@@ -8,7 +8,7 @@ import {
 import type { MembershipTotals } from '@/app/manager/sales/sales_types/ManagerSalesTypes';
 
 export const managerSalesHandlers = [
-  http.get('http://localhost:5000/api/v1/manager/sales/overview', () => {
+  http.get(`/api/v1/manager/sales/overview`, () => {
     return HttpResponse.json({
       success: true,
       message: 'Overview fetched',
@@ -16,32 +16,26 @@ export const managerSalesHandlers = [
     });
   }),
 
-  http.get('http://localhost:5000/api/v1/manager/sales/membership-report', ({ request }) => {
+  http.get(`/api/v1/manager/sales/membership-report`, ({ request }) => {
     const url = new URL(request.url);
-    const search = url.searchParams.get('search')?.toLowerCase();
-    
-    let report = [...MOCK_MEMBERSHIP_REPORT];
-    if (search) {
-      report = report.filter(m => m.name?.toLowerCase().includes(search));
-    }
-    
+    const search = url.searchParams.get('search')?.trim().toLowerCase() || '';
+    const page = Math.max(Number(url.searchParams.get('page') || '1'), 1);
+    const limit = Math.max(Number(url.searchParams.get('limit') || '10'), 1);
+    const filtered = MOCK_MEMBERSHIP_REPORT.filter((item) => !search || item.plan?.toLowerCase().includes(search));
+    const startIndex = (page - 1) * limit;
+    const report = filtered.slice(startIndex, startIndex + limit);
     const totals: MembershipTotals = {
-      activeCount: report.length,
-      revenue: report.reduce((sum, item) => sum + (item.received || 0), 0),
-      totalReceivable: report.reduce((sum, item) => sum + (item.receivable || 0), 0),
-      totalReceived: report.reduce((sum, item) => sum + (item.received || 0), 0),
-      remaining: report.reduce((sum, item) => sum + (item.remaining || 0), 0),
-      refunds: report.reduce((sum, item) => sum + (item.refund || 0), 0),
+      activeCount: filtered.length,
+      revenue: filtered.reduce((sum, item) => sum + (item.received || 0), 0),
+      totalReceivable: filtered.reduce((sum, item) => sum + (item.receivable || 0), 0),
+      totalReceived: filtered.reduce((sum, item) => sum + (item.received || 0), 0),
+      remaining: filtered.reduce((sum, item) => sum + (item.remaining || 0), 0),
+      refunds: filtered.reduce((sum, item) => sum + (item.refund || 0), 0),
     };
-    
-    return HttpResponse.json({
-      success: true,
-      message: 'Report fetched',
-      data: { report, totals }
-    });
+    return HttpResponse.json({ success: true, message: 'Report fetched', data: { report, totals, total: filtered.length, page, limit } });
   }),
 
-  http.get('http://localhost:5000/api/v1/manager/sales/pending-payments', ({ request }) => {
+  http.get(`/api/v1/manager/sales/pending-payments`, ({ request }) => {
     const url = new URL(request.url);
     const search = url.searchParams.get('search')?.toLowerCase();
     
@@ -59,7 +53,7 @@ export const managerSalesHandlers = [
     });
   }),
 
-  http.get('http://localhost:5000/api/v1/manager/sales/all-memberships', ({ request }) => {
+  http.get(`/api/v1/manager/sales/all-memberships`, ({ request }) => {
     const url = new URL(request.url);
     const search = url.searchParams.get('search')?.toLowerCase();
     

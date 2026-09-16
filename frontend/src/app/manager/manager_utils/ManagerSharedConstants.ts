@@ -63,3 +63,5 @@ export const GYM_DETAILS = {
 
 
 export const MANAGER_ITEMS_PER_PAGE = 10;
+
+export const MANAGER_HOME_ROUTE = '/manager/dashboard';

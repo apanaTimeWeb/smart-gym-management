@@ -5,7 +5,7 @@ export function useManagerPlansMembershipOverviewQuery() {
   return useQuery({
     queryKey: ['manager', 'plans', 'membership-overview'],
     queryFn: async () => {
-      const response = await managerPlansMembershipApi.getOverview();
+      const response = await managerPlansMembershipApi.fetchMembershipOverview();
       if (!response.data) throw new Error(response.message);
       return response.data;
     },

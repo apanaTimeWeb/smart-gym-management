@@ -24,7 +24,7 @@ export function useDeleteWorkoutMutation() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (id: string) => {
-      return await workoutApi.removeWorkout(id);
+      return await workoutApi.deleteWorkout(id);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['manager', 'workout', 'plans'] });
@@ -51,7 +51,7 @@ export function useDeleteExerciseMutation() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (id: string) => {
-      return await workoutApi.removeExercise(id);
+      return await workoutApi.deleteExercise(id);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['manager', 'workout', 'exercises'] });

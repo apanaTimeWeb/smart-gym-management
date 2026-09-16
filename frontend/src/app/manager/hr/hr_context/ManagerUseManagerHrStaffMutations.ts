@@ -38,18 +38,18 @@ export function useManagerHrStaffMutations(
       showToast(response.message, 'success');
       setShowModal(false);
     },
-    onError: (error) => showToast(error instanceof Error ? error.message : 'Request failed', 'error'),
+    onError: (error) => { if (error instanceof Error && error.message) showToast(error.message, 'error'); },
     onSettled: () => setSaving(false),
   });
 
   const deleteStaffMutation = useMutation({
-    mutationFn: (id: string) => hrApi.removeStaff(id),
+    mutationFn: (id: string) => hrApi.deleteStaff(id),
     onSuccess: (response, id) => {
       setStaff((previous) => previous.filter((item) => String(item.id) !== String(id)));
       queryClient.invalidateQueries({ queryKey: ['manager', 'hr', 'summary'] });
       showToast(response.message, 'success');
     },
-    onError: (error) => showToast(error instanceof Error ? error.message : 'Request failed', 'error'),
+    onError: (error) => { if (error instanceof Error && error.message) showToast(error.message, 'error'); },
   });
 
   const toggleStaffStatusMutation = useMutation({
@@ -61,7 +61,7 @@ export function useManagerHrStaffMutations(
       queryClient.invalidateQueries({ queryKey: ['manager', 'hr', 'summary'] });
       showToast(response.message, 'success');
     },
-    onError: (error) => showToast(error instanceof Error ? error.message : 'Request failed', 'error'),
+    onError: (error) => { if (error instanceof Error && error.message) showToast(error.message, 'error'); },
     onSettled: () => setSaving(false),
   });
 

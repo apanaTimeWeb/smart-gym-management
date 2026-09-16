@@ -45,4 +45,5 @@ export interface AdminCouponsQueryParams {
   limit: number;
   search?: string;
   status?: CouponStatus;
+  dateRange?: string;
 }

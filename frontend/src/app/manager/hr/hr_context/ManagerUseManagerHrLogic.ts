@@ -33,7 +33,7 @@ export function useManagerHrLogic(initialData?: HrInitialData | null): HrContext
   const setPayrollMonth = useCallback((value: string) => setUrlParam('month', value), [setUrlParam]);
 
   const ui = useManagerHrUIState();
-  const queries = useManagerHrQueries({ search: debouncedSearch, role: roleFilter, month: payrollMonth }, initialData);
+  const queries = useManagerHrQueries({ search: debouncedSearch, role: roleFilter, month: payrollMonth, page: currentPage, limit: 10 }, initialData);
   const { saveStaff, savePayroll, deleteStaff, toggleStaffStatus, markPayrollPaid, giveAdvance, payDue, bulkGeneratePayroll, downloadPayslip, exportStaff } = useManagerHrMutations(
     queries.staff, queries.payrolls, queries.setStaff, queries.setPayrolls, queries.setSummary, ui.editId, ui.setShowModal, ui.setShowPayrollModal, ui.setSaving, ui.showToast,
   );
@@ -41,7 +41,7 @@ export function useManagerHrLogic(initialData?: HrInitialData | null): HrContext
   const error = useMemo(() => queries.isError ? 'Unable to load HR data.' : '', [queries.isError]);
 
   return {
-    staff: queries.staff, payrolls: queries.payrolls, summary: queries.summary, isLoading: queries.isPending, isError: queries.isError, error,
+    staff: queries.staff, totalStaff: queries.totalStaff, payrolls: queries.payrolls, totalPayrolls: queries.totalPayrolls, summary: queries.summary, isLoading: queries.isPending, isError: queries.isError, error,
     toast: ui.toast, showToast: ui.showToast, hideToast: ui.hideToast, loadAll: queries.loadAll,
     search, debouncedSearch, setSearch, roleFilter, setRoleFilter, currentPage, setCurrentPage,
     showModal: ui.showModal, setShowModal: ui.setShowModal, showPayrollModal: ui.showPayrollModal, setShowPayrollModal: ui.setShowPayrollModal,

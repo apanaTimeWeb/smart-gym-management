@@ -11,9 +11,9 @@ export function useSaveExpenseMutation() {
   return useMutation({
     mutationFn: async (data: Partial<Expense>) => {
       if (data.id) {
-        return expensesApi.update(data.id, data);
+        return expensesApi.updateExpense(data.id, data);
       }
-      return expensesApi.create(data);
+      return expensesApi.createExpense(data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: managerExpensesQueryKeys.all });
@@ -25,7 +25,7 @@ export function useDeleteExpenseMutation() {
   const queryClient = useQueryClient();
   
   return useMutation({
-    mutationFn: (id: string) => expensesApi.remove(id),
+    mutationFn: (id: string) => expensesApi.deleteExpense(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: managerExpensesQueryKeys.all });
     },

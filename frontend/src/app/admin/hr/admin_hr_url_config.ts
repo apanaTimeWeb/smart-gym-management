@@ -6,6 +6,7 @@ export const AdminHrUrlConfig = {
     PAYROLL: '/admin/hr',
   },
   BACKEND_API: {
+    BRANCH_REFERENCE: '/admin/branches/fetchBranches',
     STAFF_BASE: '/admin/hr/staff',
     STAFF_GET_ONE: (id: string) => `/admin/hr/staff/${id}`,
     STAFF_UPDATE: (id: string) => `/admin/hr/staff/${id}`,

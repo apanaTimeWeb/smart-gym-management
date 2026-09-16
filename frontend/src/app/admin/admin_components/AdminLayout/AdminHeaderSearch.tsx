@@ -49,7 +49,7 @@ export function AdminHeaderSearch() {
             </button>
           </div>
           {searchResults.length === 0 ? (
-            <div className="px-4 py-6 text-center text-sm text-secondary">No members found for "{searchQuery}"</div>
+            <div className="px-4 py-6 text-center text-sm text-secondary">No members found for &quot;{searchQuery}&quot;</div>
           ) : (
             <>
               {searchResults.map((m) => (

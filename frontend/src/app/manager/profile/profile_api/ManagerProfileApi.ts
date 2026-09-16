@@ -1,4 +1,4 @@
-import { ManagerProfileUrlConfig } from '@/app/manager/Manager_url_config';
+import { ManagerProfileUrlConfig } from '@/app/manager/profile/profile_url_config';
 import { apiFetch, type ApiResponse } from '@/lib/api';
 import type { ManagerProfileData, UpdateManagerProfilePayload, UpdateManagerPasswordPayload } from '@/app/manager/profile/profile_types/ManagerProfileTypes';
 import { managerProfileDataSchema, managerPasswordUpdateResponseSchema } from '@/app/manager/profile/profile_types/ManagerProfileSchema';

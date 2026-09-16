@@ -6,6 +6,7 @@ import { useAdminMembersStore } from '@/app/admin/members/members_store/useAdmin
 import AdminMembersEmptyState from '@/app/admin/members/members_components/AdminMembersEmptyState/AdminMembersEmptyState';
 import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
 import { formatCurrency } from '@/lib/formatters';
+import { maskSensitiveData } from '@/app/admin/admin_utils/AdminMaskSensitiveData';
 import { ADMIN_MEMBERS_ITEMS_PER_PAGE } from '@/app/admin/members/members_utils/AdminMembersSharedConstants';
 
 const STATUS_STYLES: Record<string, string> = {
@@ -54,7 +55,7 @@ export default function AdminMembersTable() {
                     </div>
                     <div>
                       <p className="text-sm font-semibold text-foreground">{m.name}</p>
-                      <p className="text-xs text-secondary">{m.phone.replace(/(\d{2})(\d{4})(\d{4})/, '$1****$3')}</p>
+                      <p className="text-xs text-secondary">{maskSensitiveData(m.phone)}</p>
                     </div>
                   </div>
                 </td>

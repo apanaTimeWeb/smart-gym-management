@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Defines all TypeScript types for the Settings module. Derived from Zod schemas — no inline interfaces.
-import { z } from 'zod';
+import { type z } from 'zod';
 import type { GymProfileSchema, NotificationsSettingsSchema, AppIntegrationSettingsSchema, GstTaxSettingsSchema, PaymentGatewaySettingsSchema, GeneralSettingsSchema, AdminSettingsResponseSchema } from '@/app/admin/settings/settings_types/AdminSettings.schema';
 
 export type GymProfileType = z.infer<typeof GymProfileSchema>;

@@ -27,7 +27,16 @@ export default function ManagerChurnRecoveryTableRow({
   return (
     <tr
       className="border-b border-border motion-safe:transition-colors hover:bg-primary-subtle cursor-pointer"
+      tabIndex={0}
+      role="button"
+      aria-label={`Open win-back composer for ${member.name}`}
       onClick={() => onOpenComposer(member.memberId)}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          onOpenComposer(member.memberId);
+        }
+      }}
     >
       {/* Name + Plan */}
       <td className="px-4 py-3">

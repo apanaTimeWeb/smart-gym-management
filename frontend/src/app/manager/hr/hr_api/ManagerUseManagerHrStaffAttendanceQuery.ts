@@ -7,7 +7,7 @@ import { hrApi } from '@/app/manager/hr/hr_api/ManagerHrApi';
 export function useManagerHrStaffAttendanceQuery(staffId: string, month: string) {
   return useQuery({
     queryKey: ['manager', 'hr', 'staff-attendance', staffId, month],
-    queryFn: () => hrApi.getStaffAttendance(staffId, month),
+    queryFn: () => hrApi.fetchStaffAttendance(staffId, month),
     enabled: Boolean(staffId && month),
   });
 }

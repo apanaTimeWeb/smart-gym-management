@@ -7,7 +7,7 @@ import { describe, expect, it } from 'vitest';
  */
 describe('AdminSettingsBanner contract', () => {
   it('contains the required responsibility/data-flow contract', () => {
-    const source = fs.readFileSync(new URL('AdminSettingsBanner.tsx', import.meta.url), 'utf8');
+    const source = fs.readFileSync(new URL('AdminSettingsBanner', import.meta.url), 'utf8');
     expect(source).toMatch(/(RESPONSIBILITY:|DATA FLOW:)/);
   });
 });

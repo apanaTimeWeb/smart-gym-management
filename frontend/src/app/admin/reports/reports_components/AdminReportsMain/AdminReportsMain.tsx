@@ -18,8 +18,8 @@ import { AdminDateFilterDropdown } from '@/app/admin/admin_components/AdminShare
 import { reportsApi } from '@/app/admin/reports/reports_api/AdminReportsApi';
 import type { ReportDateRange } from '@/app/admin/reports/reports_types/AdminReportsTypes';
 
-import { useAdminBranchesQueries } from '@/app/admin/branches/branches_context/useAdminBranchesQueries';
-import type { Branch } from '@/app/admin/branches/branches_types/AdminBranchesTypes';
+import { useAdminReportsBranchReference } from '@/app/admin/reports/reports_context/useAdminReportsBranchReference';
+import type { AdminReportsBranchReference } from '@/app/admin/reports/reports_types/AdminReportsBranchReferenceTypes';
 
 const EXPORT_FORMAT_OPTIONS = [
   { value: 'pdf', label: 'Export as PDF' },
@@ -41,13 +41,13 @@ function ReportsSkeleton() {
 export default function AdminReportsMain() {
   const { activeTab, dateRange, setDateRange, startDate, endDate, setCustomDateRange, selectedGymId, setSelectedGymId } = useAdminReportsStore();
   const { status } = useAdminReportsLogic();
-  const { data: branches = [] } = useAdminBranchesQueries();
+  const { data: branches = [] } = useAdminReportsBranchReference();
   const [exporting, setExporting] = useState(false);
   const [exportFormat, setExportFormat] = useState<string>('pdf');
 
   const gymOptions = [
     { value: 'all', label: 'All Gyms' },
-    ...(branches as Branch[]).map((b) => ({ value: b.id, label: b.name })),
+    ...(branches as AdminReportsBranchReference[]).map((b) => ({ value: b.id, label: b.name })),
   ];
 
   const handleExport = async () => {

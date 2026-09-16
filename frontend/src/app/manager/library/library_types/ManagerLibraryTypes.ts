@@ -11,6 +11,7 @@ export interface LibraryInitialData {
 export interface LibraryContextType {
 
  dietPlans: DietPlan[];
+ totalDietPlans: number;
  isLoading: boolean;
  isError: boolean;
  saving: boolean;

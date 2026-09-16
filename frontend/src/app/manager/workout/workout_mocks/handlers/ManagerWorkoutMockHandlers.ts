@@ -7,8 +7,8 @@ import { MOCK_WORKOUT_ASSIGNMENTS } from '@/app/manager/workout/workout_fixtures
 let MOCK_DB = [...MOCK_MANAGER_WORKOUTS];
 
 export const managerWorkoutHandlers = [
-  http.get('http://localhost:5000/api/v1/manager/workout/assignments', () => HttpResponse.json({ success: true, message: 'Assignments fetched', data: MOCK_WORKOUT_ASSIGNMENTS })),
-  http.get('http://localhost:5000/api/v1/manager/workouts', ({ request }) => {
+  http.get(`/api/v1/manager/workout/assignments`, () => HttpResponse.json({ success: true, message: 'Assignments fetched', data: MOCK_WORKOUT_ASSIGNMENTS })),
+  http.get(`/api/v1/manager/workouts`, ({ request }) => {
     const url = new URL(request.url);
     const search = url.searchParams.get('search')?.toLowerCase();
     const level = url.searchParams.get('level');
@@ -37,7 +37,7 @@ export const managerWorkoutHandlers = [
     });
   }),
 
-  http.post('http://localhost:5000/api/v1/manager/workouts', async ({ request }) => {
+  http.post(`/api/v1/manager/workouts`, async ({ request }) => {
     const body = await request.json() as Partial<Workout>;
     const newWorkout: Workout = {
       ...body,
@@ -59,7 +59,7 @@ export const managerWorkoutHandlers = [
     });
   }),
 
-  http.patch('http://localhost:5000/api/v1/manager/workouts/:id', async ({ request, params }) => {
+  http.patch(`/api/v1/manager/workouts/:id`, async ({ request, params }) => {
     const { id } = params;
     const body = await request.json() as Partial<Workout>;
     const index = MOCK_DB.findIndex(w => w.id === id);
@@ -74,7 +74,7 @@ export const managerWorkoutHandlers = [
     });
   }),
 
-  http.delete('http://localhost:5000/api/v1/manager/workouts/:id', ({ params }) => {
+  http.delete(`/api/v1/manager/workouts/:id`, ({ params }) => {
     const { id } = params;
     MOCK_DB = MOCK_DB.filter(w => w.id !== id);
     return HttpResponse.json({

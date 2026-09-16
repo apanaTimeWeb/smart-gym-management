@@ -21,7 +21,7 @@ export default function AdminPlansRevenueMain() {
     sortedData,
     aggregates,
     isLoading,
-    isError,
+    isError, currentPage, totalPages, totalItems, setCurrentPage,
   } = useAdminPlansRevenueLogic();
 
   if (isError) {
@@ -81,6 +81,10 @@ export default function AdminPlansRevenueMain() {
               sortKey={sortKey}
               sortDir={sortDir}
               onSort={handleSort}
+              currentPage={currentPage}
+              totalPages={totalPages}
+              totalItems={totalItems}
+              onPageChange={setCurrentPage}
             />
           </div>
         </>

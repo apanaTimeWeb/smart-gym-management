@@ -2,10 +2,11 @@
 // DATA FLOW: URL filters → TanStack Query → ManagerNotificationsContext → notification UI.
 // RESPONSIBILITY: Bridges URL-owned filter state with module server state and mutations.
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { useManagerDebounce } from '@/app/manager/manager_utils/ManagerDebounce';
 import type { ReactNode } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { showManagerErrorToast, showManagerSuccessToast } from '@/app/manager/manager_utils/ManagerToastService';
+import { showManagerSuccessToast } from '@/app/manager/manager_utils/ManagerToastService';
 import { notificationsApi } from '@/app/manager/notifications/notifications_api/ManagerNotificationsApi';
 import type { Notification, NotificationKPIData } from '@/app/manager/notifications/notifications_types/ManagerNotificationsTypes';
 
@@ -41,7 +42,8 @@ export function NotificationsProvider({ children }: { children: ReactNode }) {
   const [priorityFilter, setPriorityFilter] = useState(searchParams.get('priority') || 'ALL');
   const [statusFilter, setStatusFilter] = useState(searchParams.get('status') || 'ALL');
 
-  const queryParams = useMemo(() => ({ search, type: typeFilter, priority: priorityFilter, status: statusFilter }), [search, typeFilter, priorityFilter, statusFilter]);
+  const debouncedSearch = useManagerDebounce(search, 300);
+  const queryParams = useMemo(() => ({ search: debouncedSearch, type: typeFilter, priority: priorityFilter, status: statusFilter }), [debouncedSearch, typeFilter, priorityFilter, statusFilter]);
   useEffect(() => {
     const params = new URLSearchParams(searchParams.toString());
     if (search) params.set('search', search); else params.delete('search');
@@ -51,11 +53,11 @@ export function NotificationsProvider({ children }: { children: ReactNode }) {
     router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   }, [search, typeFilter, priorityFilter, statusFilter, pathname, router, searchParams]);
 
-  const listQuery = useQuery({ queryKey: ['manager', 'notifications', 'list', queryParams], queryFn: async () => (await notificationsApi.getAll(queryParams)).data ?? { notifications: [], total: 0 } });
-  const kpiQuery = useQuery({ queryKey: ['manager', 'notifications', 'kpis'], queryFn: async () => (await notificationsApi.getKPIs()).data ?? null });
-  const readMutation = useMutation({ mutationFn: notificationsApi.markRead, onSuccess: (response: any) => { showManagerSuccessToast(response.message, 'manager-notifications-success'); queryClient.invalidateQueries({ queryKey: ['manager', 'notifications'] }); } });
-  const readAllMutation = useMutation({ mutationFn: notificationsApi.markAllRead, onSuccess: (response: any) => { showManagerSuccessToast(response.message, 'manager-notifications-success'); queryClient.invalidateQueries({ queryKey: ['manager', 'notifications'] }); } });
-  const deleteMutation = useMutation({ mutationFn: notificationsApi.deleteNotification, onSuccess: (response: any) => { showManagerSuccessToast(response.message, 'manager-notifications-success'); queryClient.invalidateQueries({ queryKey: ['manager', 'notifications'] }); } });
+  const listQuery = useQuery({ queryKey: ['manager', 'notifications', 'list', queryParams], queryFn: async () => (await notificationsApi.fetchManagerNotifications(queryParams)).data ?? { notifications: [], total: 0 } });
+  const kpiQuery = useQuery({ queryKey: ['manager', 'notifications', 'kpis'], queryFn: async () => (await notificationsApi.fetchNotificationKPIs()).data ?? null });
+  const readMutation = useMutation({ mutationFn: notificationsApi.markNotificationRead, onSuccess: (response) => { showManagerSuccessToast(response.message, 'manager-notifications-success'); queryClient.invalidateQueries({ queryKey: ['manager', 'notifications'] }); } });
+  const readAllMutation = useMutation({ mutationFn: notificationsApi.markAllNotificationsRead, onSuccess: (response) => { showManagerSuccessToast(response.message, 'manager-notifications-success'); queryClient.invalidateQueries({ queryKey: ['manager', 'notifications'] }); } });
+  const deleteMutation = useMutation({ mutationFn: notificationsApi.deleteNotification, onSuccess: (response) => { showManagerSuccessToast(response.message, 'manager-notifications-success'); queryClient.invalidateQueries({ queryKey: ['manager', 'notifications'] }); } });
 
   const reload = useCallback(async () => { await Promise.all([listQuery.refetch(), kpiQuery.refetch()]); }, [kpiQuery, listQuery]);
   const saving = readMutation.isPending || readAllMutation.isPending || deleteMutation.isPending;

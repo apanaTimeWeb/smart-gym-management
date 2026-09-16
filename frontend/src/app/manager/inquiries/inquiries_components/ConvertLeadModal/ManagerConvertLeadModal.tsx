@@ -6,7 +6,8 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import { useInquiriesContext } from '@/app/manager/inquiries/inquiries_context/ManagerInquiriesContext';
-import { INQUIRIES_CYCLE_LABELS, getPriceForCycleSnapshot, ConvertLeadSchema, type ConvertLeadFormValues, EMPTY_CONVERT_FORM, INQUIRIES_GENDER_OPTIONS, type PlanSnapshot } from '@/app/manager/inquiries/inquiries_utils/ManagerInquiriesConvertConstants';
+import { INQUIRIES_CYCLE_LABELS, getPriceForCycleSnapshot, EMPTY_CONVERT_FORM, INQUIRIES_GENDER_OPTIONS, type PlanSnapshot } from '@/app/manager/inquiries/inquiries_utils/ManagerInquiriesConvertConstants';
+import { ConvertLeadSchema, type ConvertLeadFormValues } from '@/app/manager/inquiries/inquiries_types/ManagerConvertLeadSchema';
 import ManagerConvertLeadSuccess from '@/app/manager/inquiries/inquiries_components/ConvertLeadModal/ManagerConvertLeadSuccess';
 import ManagerConvertLeadForm from '@/app/manager/inquiries/inquiries_components/ConvertLeadModal/ManagerConvertLeadForm';
 import { useInquiryPlansSnapshotQuery } from '@/app/manager/inquiries/inquiries_api/ManagerUseManagerInquiriesQueries';
@@ -134,7 +135,7 @@ export default function ManagerConvertLeadModal() {
             <h3 className="text-lg font-bold text-primary">Convert to Member</h3>
             <p className="text-xs text-secondary mt-0.5">Complete admission for {activeLead?.name}</p>
           </div>
-          <button onClick={closeConvert} className="p-2 rounded-full hover:bg-primary/10 transition-colors text-secondary hover:text-primary">
+          <button onClick={closeConvert} className="p-2 rounded-full hover:bg-primary/10 motion-safe:transition-colors text-secondary hover:text-primary">
             <X size={20} />
           </button>
         </div>
@@ -158,14 +159,14 @@ export default function ManagerConvertLeadModal() {
               <button
                 type="button"
                 onClick={closeConvert}
-                className="flex-1 py-2.5 border border-border rounded-xl text-sm font-medium text-primary hover:bg-primary-subtle transition-all duration-200 active:scale-95"
+                className="flex-1 py-2.5 border border-border rounded-xl text-sm font-medium text-primary hover:bg-primary-subtle motion-safe:transition-all duration-200 active:scale-95"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={saving}
-                className="flex-1 py-2.5 rounded-xl text-sm font-bold bg-primary text-primary-foreground flex items-center justify-center gap-2 disabled:opacity-70 hover:bg-primary-hover transition-all duration-200 active:scale-95"
+                className="flex-1 py-2.5 rounded-xl text-sm font-bold bg-primary text-primary-foreground flex items-center justify-center gap-2 disabled:opacity-70 hover:bg-primary-hover motion-safe:transition-all duration-200 active:scale-95"
               >
                 {saving ? (
                   <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full motion-safe:animate-spin" />

@@ -11,7 +11,7 @@ export const managerScheduleQueryKeys = {
 };
 
 export function useManagerScheduleQuery(filters: Record<string, string>) {
-  return useQuery({ queryKey: managerScheduleQueryKeys.list(filters), queryFn: () => managerScheduleApi.getAll(filters).then(res => res.data) });
+  return useQuery({ queryKey: managerScheduleQueryKeys.list(filters), queryFn: () => managerScheduleApi.fetchSchedule(filters).then(res => res.data) });
 }
 
 export function useManagerScheduleMutations() {

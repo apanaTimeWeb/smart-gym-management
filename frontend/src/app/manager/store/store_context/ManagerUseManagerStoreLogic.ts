@@ -61,7 +61,7 @@ export function useManagerStoreLogic(initialData?: StoreInitialData | null): Sto
     summary, setSummary,
     isLoading, isError, loadAll
   } = useManagerStoreQueries(
-    currentPage, sortOrder, debouncedSearch, startDate, endDate, categoryFilter, stockFilter, showToast as any, initialData
+    currentPage, sortOrder, debouncedSearch, startDate, endDate, categoryFilter, stockFilter, showToast, initialData
   );
 
   const productLogic = useManagerStoreProducts(

@@ -7,7 +7,7 @@ import { membersApi } from '@/app/manager/members/members_api/ManagerMembersApi'
 export function useManagerMembersWorkoutPlansQuery(enabled: boolean) {
   return useQuery({
     queryKey: ['manager', 'members', 'workout-plans'],
-    queryFn: () => membersApi.getWorkouts(),
+    queryFn: () => membersApi.fetchMemberWorkouts(),
     enabled,
   });
 }

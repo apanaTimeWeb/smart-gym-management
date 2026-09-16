@@ -19,7 +19,8 @@ export function useAdminUrlQuerySync(bindings: readonly AdminUrlQueryBinding[]) 
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const stableBindings = useMemo(() => bindings, [JSON.stringify(bindings.map(({ key, value, defaultValue }) => ({ key, value, defaultValue })))]);
+  const deps = JSON.stringify(bindings.map(({ key, value, defaultValue }) => ({ key, value, defaultValue })));
+  const stableBindings = useMemo(() => bindings, [deps]);
 
   useEffect(() => {
     stableBindings.forEach(({ key, value, setValue }) => {
@@ -28,7 +29,7 @@ export function useAdminUrlQuerySync(bindings: readonly AdminUrlQueryBinding[]) 
       if (raw !== null && raw !== String(value)) setValue(raw);
     });
     // URL is the authoritative source only when a query parameter is explicitly present.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [searchParams, stableBindings]);
 
   useEffect(() => {

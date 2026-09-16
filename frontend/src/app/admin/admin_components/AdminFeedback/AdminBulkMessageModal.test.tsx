@@ -3,6 +3,6 @@ import { describe, expect, it } from 'vitest';
 
 describe('AdminBulkMessageModal contract', () => {
   it('has a non-empty test target module', () => {
-    expect(fs.statSync(import.meta.url.replace('/AdminBulkMessageModal.test.tsx', '')).isDirectory()).toBe(true);
+    expect(fs.statSync(import.meta.url.replace('/AdminBulkMessageModal.test', '')).isDirectory()).toBe(true);
   });
 });

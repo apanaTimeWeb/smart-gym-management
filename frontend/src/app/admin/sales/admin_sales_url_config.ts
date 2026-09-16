@@ -5,6 +5,7 @@ export const SalesUrlConfig = {
   },
   BACKEND_API: {
     OVERVIEW: '/admin/sales/overview',
+    REFERRAL_SOURCES: '/admin/sales/referral-sources',
     MEMBERSHIP_REPORT: '/admin/sales/membership-report',
     PENDING_PAYMENTS: '/admin/sales/pending-payments',
     ALL_MEMBERSHIPS: '/admin/sales/all-memberships',

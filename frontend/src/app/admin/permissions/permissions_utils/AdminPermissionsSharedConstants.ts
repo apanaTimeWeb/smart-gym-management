@@ -33,4 +33,4 @@ export const PERMISSION_FEATURES: PermissionFeature[] = [
 export const PERMISSION_GROUPS = [...new Set(PERMISSION_FEATURES.map(f => f.group))];
 
 
-export { MOCK_PERMISSIONS_DATA } from '@/app/admin/admin_mocks/fixtures/AdminMockFixtures';
+export { MOCK_PERMISSIONS_DATA } from '@/app/admin/permissions/permissions_mocks/fixtures/AdminPermissionsMockFixtures';

@@ -1,21 +1,42 @@
 'use client';
-// RESPONSIBILITY: Error boundary for /manager/settings.
-import { AlertTriangle, RefreshCcw } from 'lucide-react';
 
-export default function ManagerSettingsError({ reset }: { reset: () => void }) {
+// RESPONSIBILITY: Renders the module-specific route error fallback and records safe diagnostic metadata.
+import { useEffect } from 'react';
+import { AlertTriangle } from 'lucide-react';
+import { logger } from '@/lib/logger';
+
+export default function ManagerSettingsError({
+  error,
+  reset,
+}: {
+  error: Error & { digest?: string };
+  reset: () => void;
+}) {
+  useEffect(() => {
+    logger.error('Manager module route error', {
+      route: '/manager/settings',
+      module: 'manager/settings',
+      errorDigest: error.digest,
+      timestamp: new Date().toISOString(),
+    });
+  }, [error]);
+
   return (
-    <div className="max-w-3xl mx-auto p-6 flex flex-col items-center justify-center min-h-64 gap-4">
-      <div className="p-3 bg-danger-bg rounded-full">
-        <AlertTriangle size={28} className="text-danger" />
+    <div className="min-h-full flex items-center justify-center p-6 bg-page">
+      <div className="bg-card border border-danger/20 p-8 rounded-2xl shadow-xl max-w-md w-full text-center space-y-4">
+        <div className="w-14 h-14 bg-danger/10 rounded-full flex items-center justify-center mx-auto text-danger">
+          <AlertTriangle size={28} />
+        </div>
+        <h2 className="text-xl font-bold text-foreground">Settings Unavailable</h2>
+        <p className="text-sm text-secondary">We couldn't load the settings module. Please try again.</p>
+        {error.digest && <p className="text-xs text-secondary/60">Ref: {error.digest}</p>}
+        <button
+          onClick={reset}
+          className="px-6 py-2.5 bg-primary text-primary-foreground font-medium rounded-xl hover:opacity-90 motion-safe:transition-opacity"
+        >
+          Try Again
+        </button>
       </div>
-      <h2 className="text-lg font-bold text-foreground">Failed to load settings</h2>
-      <p className="text-sm text-secondary text-center">Something went wrong. Please try again.</p>
-      <button
-        onClick={reset}
-        className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground font-semibold rounded-lg text-sm motion-safe:transition-colors hover:bg-primary-hover"
-      >
-        <RefreshCcw size={15} /> Try Again
-      </button>
     </div>
   );
 }

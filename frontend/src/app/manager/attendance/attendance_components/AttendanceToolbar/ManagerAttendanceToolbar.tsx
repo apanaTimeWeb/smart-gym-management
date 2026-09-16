@@ -33,7 +33,7 @@ export default function AttendanceToolbar() {
  <button 
  key={t} 
  onClick={() => setTab(t)}
- className={`whitespace-nowrap px-5 py-3.5 text-sm font-medium transition-colors border-b-2 ${
+ className={`whitespace-nowrap px-5 py-3.5 text-sm font-medium motion-safe:transition-colors border-b-2 ${
  tab === t 
  ? 'text-primary bg-primary-subtle border-primary' 
  : 'border-transparent text-secondary hover:text-foreground'
@@ -75,19 +75,19 @@ export default function AttendanceToolbar() {
     <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto ml-auto">
  <button 
  onClick={loadAll} 
- className="flex justify-center items-center gap-2 px-3 py-2 text-sm border border-border rounded-lg hover:bg-primary-subtle text-secondary transition-colors w-full sm:w-auto"
+ className="flex justify-center items-center gap-2 px-3 py-2 text-sm border border-border rounded-lg hover:bg-primary-subtle text-secondary motion-safe:transition-colors w-full sm:w-auto"
  >
  <RefreshCw size={14} />
  </button>
  <button 
  onClick={() => exportAttendance && exportAttendance()} 
- className="flex justify-center items-center gap-2 px-3 py-2 text-sm border border-border rounded-lg hover:bg-info/10 text-info transition-colors w-full sm:w-auto"
+ className="flex justify-center items-center gap-2 px-3 py-2 text-sm border border-border rounded-lg hover:bg-info/10 text-info motion-safe:transition-colors w-full sm:w-auto"
  >
  <Download size={14} /> Export
  </button>
  <button 
  onClick={() => setShowModal(true)} 
- className="flex justify-center items-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-lg transition-opacity hover:opacity-90 w-full sm:w-auto" 
+ className="flex justify-center items-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-lg motion-safe:transition-opacity hover:opacity-90 w-full sm:w-auto" 
  >
  <Plus size={14} /> Mark Attendance
  </button>

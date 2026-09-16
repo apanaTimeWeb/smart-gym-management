@@ -11,7 +11,7 @@ const Chart = dynamic(() => import('react-apexcharts'), {
   loading: () => <div className="flex items-center justify-center h-64"><Loader2 className="w-6 h-6 motion-safe:animate-spin text-primary" /></div>,
 });
 
-const COLORS = ['#eab308', '#3b82f6', '#22c55e', '#ef4444', '#a855f7', '#f97316'];
+const COLORS = ['var(--warning)', 'var(--info)', 'var(--success)', 'var(--danger)', 'var(--primary)', 'var(--warning)'];
 
 export default function ManagerExpensesChart() {
   const { data, isLoading, isError } = useExpensesListQuery({ limit: '1000' });
@@ -72,12 +72,12 @@ export default function ManagerExpensesChart() {
     },
     xaxis: {
       categories: chartData.map(d => d.name),
-      labels: { style: { colors: '#A1A1AA', fontSize: '12px' } },
+      labels: { style: { colors: 'var(--text-secondary)', fontSize: '12px' } },
       axisBorder: { show: false }, 
       axisTicks: { show: false },
     },
     yaxis: { 
-      labels: { style: { colors: '#A1A1AA', fontSize: '12px' }, formatter: (v: number) => formatKPI(v) } 
+      labels: { style: { colors: 'var(--text-secondary)', fontSize: '12px' }, formatter: (v: number) => formatKPI(v) } 
     },
     dataLabels: { enabled: false },
     legend: { show: false }

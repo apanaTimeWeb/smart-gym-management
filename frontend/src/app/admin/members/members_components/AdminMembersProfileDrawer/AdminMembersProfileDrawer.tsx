@@ -3,6 +3,7 @@
 
 import { X, Phone, Mail, Building2, Calendar, IndianRupee, User } from 'lucide-react';
 import { formatCurrency } from '@/lib/formatters';
+import { displayValue } from '@/app/admin/admin_utils/AdminDisplayValue';
 import type { AdminMember } from '@/app/admin/members/members_types/AdminMembersTypes';
 
 const STATUS_STYLES: Record<string, string> = {
@@ -52,11 +53,11 @@ export default function AdminMembersProfileDrawer({ member, onClose }: AdminMemb
             <p className="text-xs font-semibold text-secondary uppercase tracking-wider">Contact Info</p>
             <div className="flex items-center gap-3">
               <Phone size={15} className="text-secondary flex-shrink-0" />
-              <span className="text-sm text-foreground">{member.phone.replace(/(\d{2})(\d{4})(\d{4})/, '$1****$3')}</span>
+              <span className="text-sm text-foreground">{displayValue(member.phone)}</span>
             </div>
             <div className="flex items-center gap-3">
               <Mail size={15} className="text-secondary flex-shrink-0" />
-              <span className="text-sm text-foreground truncate">{member.email}</span>
+              <span className="text-sm text-foreground truncate">{displayValue(member.email)}</span>
             </div>
             <div className="flex items-center gap-3">
               <User size={15} className="text-secondary flex-shrink-0" />
@@ -88,24 +89,7 @@ export default function AdminMembersProfileDrawer({ member, onClose }: AdminMemb
             )}
           </div>
 
-          {/* Quick Actions */}
-          <div className="bg-input/40 rounded-xl border border-border p-4 space-y-3">
-            <p className="text-xs font-semibold text-secondary uppercase tracking-wider">Quick Actions</p>
-            <div className="flex flex-col gap-2">
-              <button className="w-full px-4 py-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-lg text-sm font-medium motion-safe:transition-colors text-left flex items-center justify-between">
-                Renew Membership
-                <span className="text-xs">→</span>
-              </button>
-              <button className="w-full px-4 py-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-lg text-sm font-medium motion-safe:transition-colors text-left flex items-center justify-between">
-                Collect Payment
-                <span className="text-xs">→</span>
-              </button>
-              <button className="w-full px-4 py-2 bg-warning/10 hover:bg-warning/20 text-warning rounded-lg text-sm font-medium motion-safe:transition-colors text-left flex items-center justify-between">
-                {member.status === 'frozen' ? 'Unfreeze Membership' : 'Freeze Membership'}
-                <span className="text-xs">→</span>
-              </button>
-            </div>
-          </div>
+          {/* Role boundary: renewal/payment/freeze actions belong to Manager workflows per the Admin feature contract. */}
         </div>
       </div>
     </>

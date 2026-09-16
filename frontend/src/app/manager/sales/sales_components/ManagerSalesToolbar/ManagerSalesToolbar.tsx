@@ -75,7 +75,7 @@ export default function ManagerSalesToolbar() {
       a.click();
       window.URL.revokeObjectURL(url);
     }}
-    className="flex items-center gap-1.5 px-3 py-1.5 text-sm border border-border rounded-lg hover:bg-primary-subtle text-secondary transition-colors"
+    className="flex items-center gap-1.5 px-3 py-1.5 text-sm border border-border rounded-lg hover:bg-primary-subtle text-secondary motion-safe:transition-colors"
   >
     <Download size={13} /> Export
   </button>

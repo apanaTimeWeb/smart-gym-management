@@ -60,7 +60,7 @@ for compliance and reporting purposes.
 - **Query keys:** `['adminMembers', filters]`, `['adminMembers', 'detail', memberId]`, `['adminMembers', 'stats']`
 - **Logic hook:** `useAdminMembersLogic.ts` — orchestrates queries, mutations, and store interactions
 - **Local-storage keys:** None
-- **MSW handler file:** `admin/admin_mocks/handlers/AdminMockHandlers.ts` (module-owned central Admin transport)
+- **MSW handler file:** `admin/members/members_mocks/handlers/AdminMembersMockHandlers.ts` (module-owned MSW transport)
 
 ## API Contract
 
@@ -77,7 +77,7 @@ All calls go through `AdminMembersApi.ts`. Response envelope: `{ success, messag
 
 - **Required role:** `ADMIN` — enforced by `middleware.ts` checking `gymsmart_token` cookie
 - **Read-only enforcement:** Zero write operations. No Add, Edit, Renew, or Delete buttons exist anywhere in this module.
-- **Sensitive data handling:** Phone numbers masked in list view via `maskSensitiveData()` from `@/lib/utils` (`98****2310` pattern). Full number visible only in `AdminMembersProfileDrawer`.
+- **Sensitive data handling:** Phone numbers masked in list view via `maskSensitiveData()` from `@/app/admin/admin_utils/AdminMaskSensitiveData` (`98****2310` pattern). Full number visible only in `AdminMembersProfileDrawer`.
 - **Cross-role isolation:** Zero imports from `/manager`, `/trainer`, `/superadmin`. Enforced in `members_forbidden.md`.
 
 ## Loading, Empty, and Error States
@@ -134,4 +134,4 @@ All calls go through `AdminMembersApi.ts`. Response envelope: `{ success, messag
 
 ## Module-Owned MSW Fixtures
 
-All Admin frontend-first API fixtures and MSW transport handlers are owned by `admin/admin_mocks/fixtures/AdminMockFixtures.ts` and `admin/admin_mocks/handlers/AdminMockHandlers.ts`. These files provide populated success responses and are the only module-owned mock transport source for Admin. Global MSW bootstrap may register these handlers, but must not contain Admin business data.
+All Admin frontend-first API fixtures and MSW transport handlers are owned by `admin/members_mocks/fixtures/AdminMembersMockFixtures.ts` and `admin/members/members_mocks/handlers/AdminMembersMockHandlers.ts`. These files provide populated success responses and are the only module-owned mock transport source for Admin. Global MSW bootstrap may register these handlers, but must not contain Admin business data.

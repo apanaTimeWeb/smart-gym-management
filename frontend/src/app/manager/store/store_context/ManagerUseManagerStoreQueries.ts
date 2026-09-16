@@ -18,7 +18,7 @@ export function useManagerStoreQueries(
   endDate: string,
   categoryFilter: string,
   stockFilter: string,
-  _showToast: (msg: string, type: 'success' | 'error' | 'warning' | 'info') => void,
+  _showToast: (msg: string, type: import('@/app/manager/manager_components/ManagerFeedback/ManagerToast').ToastType) => void,
   initialData?: StoreInitialData | null,
 ) {
   const queryClient = useQueryClient();
@@ -47,17 +47,17 @@ export function useManagerStoreQueries(
 
   const productsQuery = useQuery({
     queryKey: productKey,
-    queryFn: async () => (await storeApi.getProducts(productParams)).data ?? { products: [], total: 0 },
+    queryFn: async () => (await storeApi.fetchProducts(productParams)).data ?? { products: [], total: 0 },
     initialData: initialData ? { products: initialData.products, total: initialData.products.length } : undefined,
   });
   const ordersQuery = useQuery({
     queryKey: orderKey,
-    queryFn: async () => (await storeApi.getOrders(orderParams)).data ?? { orders: [], total: 0 },
+    queryFn: async () => (await storeApi.fetchOrders(orderParams)).data ?? { orders: [], total: 0 },
     initialData: initialData ? { orders: initialData.orders, total: initialData.totalOrders } : undefined,
   });
   const summaryQuery = useQuery({
     queryKey: summaryKey,
-    queryFn: async () => (await storeApi.getStoreSummary()).data ?? null,
+    queryFn: async () => (await storeApi.fetchStoreSummary()).data ?? null,
     initialData: initialData?.summary ?? undefined,
   });
 

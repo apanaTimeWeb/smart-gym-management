@@ -11,6 +11,8 @@ export interface AdminPayoutsQueryParams {
   status?: string;
   page?: number;
   limit?: number;
+  sortKey?: string;
+  sortDir?: 'asc' | 'desc';
 }
 
 function buildQuery(params?: AdminPayoutsQueryParams): string {

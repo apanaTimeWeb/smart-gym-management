@@ -9,6 +9,7 @@ import type { MessageType, ManagerMessageRecipient } from '@/app/manager/manager
 import { EMPTY_INQUIRY_FORM, generateDefaultMessage, type InquiryFormValues } from '@/app/manager/inquiries/inquiries_utils/ManagerInquiriesSharedConstants';
 import { useInquiriesQuery, useInquiryStatsQuery } from '@/app/manager/inquiries/inquiries_api/ManagerUseManagerInquiriesQueries';
 import { useManagerInquiriesMutations } from '@/app/manager/inquiries/inquiries_api/ManagerUseManagerInquiriesMutations';
+import { buildManagerInquiriesQueryParams } from '@/app/manager/inquiries/inquiries_context/ManagerBuildInquiriesQueryParams';
 
 /**
  * Hook to manage inquiries data, filtering state, and all CRUD operations.
@@ -54,8 +55,8 @@ export function useManagerInquiriesLogic(): InquiriesContextType {
   const openConvert = useCallback((inq: Inquiry) => setConvertLead(inq), []);
   const closeConvert = useCallback(() => setConvertLead(null), []);
 
-  // React Query data fetching
-  const queryParams: Record<string, string> = {};
+  // React Query data fetching: every URL-controlled server-side control is propagated explicitly.
+  const queryParams = buildManagerInquiriesQueryParams({ currentPage, debouncedSearch, statusFilter, dateFilter });
 
   const { data: inqData, isLoading: isListLoading, isError: isListError } = useInquiriesQuery(queryParams);
   const { data: statsData, isLoading: isStatsLoading } = useInquiryStatsQuery();

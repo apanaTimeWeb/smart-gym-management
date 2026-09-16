@@ -60,4 +60,4 @@ export const BACKUP_FREQUENCY_OPTIONS = [
   { value: 'monthly', label: 'Monthly' },
 ];
 
-export { MOCK_ROLES } from '@/app/admin/admin_mocks/fixtures/AdminMockFixtures';
+export { MOCK_ROLES } from '@/app/admin/settings/settings_mocks/fixtures/AdminSettingsMockFixtures';

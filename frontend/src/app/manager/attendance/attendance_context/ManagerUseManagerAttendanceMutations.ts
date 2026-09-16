@@ -24,7 +24,7 @@ export function useManagerAttendanceMutations(
       const startDate = new Date(data.date);
       const endDate = (data.status === 'LEAVE' && data.endDate) ? new Date(data.endDate) : startDate;
 
-      const existingRes = await attendanceApi.getAll({ limit: '1000' });
+      const existingRes = await attendanceApi.fetchAttendanceRecords({ limit: '1000' });
       const resData = existingRes?.data;
       const existingRecords: Attendance[] = resData?.attendances || resData?.attendance || [];
 
@@ -64,7 +64,7 @@ export function useManagerAttendanceMutations(
         const payload: Record<string, unknown> = { 
           type: data.type, 
           date: dateStr, 
-          status: data.status || 'PRESENT',
+          status: data.status,
           checkIn: checkInIso,
         };
         
@@ -72,20 +72,20 @@ export function useManagerAttendanceMutations(
           payload.memberId = data.memberId ? data.memberId : undefined;
           if (payload.memberId) {
             const m = members.find(x => String(x.id) === payload.memberId);
-            payload.member = { name: m?.name || 'Unknown Member' };
+            if (m?.name) payload.member = { name: m.name };
           }
         } else {
           payload.staffId = data.staffId ? data.staffId : undefined;
           if (payload.staffId) {
             const s = staff.find(x => String(x.id) === payload.staffId);
-            payload.staff = { name: s?.name || 'Unknown Staff' };
+            if (s?.name) payload.staff = { name: s.name };
           }
         }
         payloads.push(payload as { memberId?: string; staffId?: string; date: string; checkIn?: string; type: string; });
       }
 
       for (const payload of payloads) {
-        await attendanceApi.mark(payload);
+        await attendanceApi.markAttendance(payload);
       }
       
       showToast(payloads.length > 1 ? `Marked ${data.status} for ${payloads.length} days successfully` : 'Attendance marked successfully', 'success');

@@ -3,7 +3,7 @@
 /** Manages UseMembersLogic for the Manager module. */
 import React, { useState, useCallback, useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import type { Member, MembersContextType, MembersInitialData } from '@/app/manager/members/members_types/ManagerMembersTypes';
+import type { Member, MemberProfileTab, MembersContextType, MembersInitialData } from '@/app/manager/members/members_types/ManagerMembersTypes';
 import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
 import type { MessageType, ManagerMessageRecipient } from '@/app/manager/manager_components/ManagerFeedback/ManagerMessageModal';
 import { EMPTY_MEMBER_FORM, formatCurrency, MSG_TEMPLATES } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
@@ -13,6 +13,8 @@ import { useManagerMembersPrintLogic } from '@/app/manager/members/members_conte
 import { useManagerMembersUrlState } from '@/app/manager/members/members_context/ManagerUseManagerMembersUrlState';
 
 import { useFetchMember } from '@/app/manager/members/members_api/ManagerUseManagerMembersQueries';
+import { membersApi } from '@/app/manager/members/members_api/ManagerMembersApi';
+import { downloadManagerMembersCsv, printManagerMembersPdf } from '@/app/manager/members/members_utils/ManagerMembersExportUtils';
 
 export function useManagerMembersLogic(initialData?: MembersInitialData | null): MembersContextType {
   const urlState = useManagerMembersUrlState();
@@ -32,7 +34,7 @@ export function useManagerMembersLogic(initialData?: MembersInitialData | null):
     }
     setSelectedMemberId(member?.id ?? null);
   }, [queryClient]);
-  const [profileTab, setProfileTab] = useState<'overview' | 'attendance' | 'payments' | 'workout' | 'diet'>('overview');
+  const [profileTab, setProfileTab] = useState<MemberProfileTab>('overview');
   const [msgModal, setMsgModal] = useState<{ open: boolean; recipient: ManagerMessageRecipient; type: MessageType; message: string; subject?: string } | null>(null);
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
 
@@ -41,21 +43,19 @@ export function useManagerMembersLogic(initialData?: MembersInitialData | null):
   const closeMsg = useCallback(() => setMsgModal(null), []);
 
   useEffect(() => {
-    if (urlState.searchParams.get('action') === 'add_member') {
-      const name = urlState.searchParams.get('name') || '';
-      const phone = urlState.searchParams.get('phone') || '';
-      const email = urlState.searchParams.get('email') || '';
-      setTimeout(() => {
-        setEditId(null);
-        setEditData({ ...EMPTY_MEMBER_FORM, name, phone, email });
-        setShowAddModal(true);
-        urlState.setUrlParam('action', null);
-        urlState.setUrlParam('name', null);
-        urlState.setUrlParam('phone', null);
-        urlState.setUrlParam('email', null);
-      }, 0);
-    }
-  }, [urlState]);
+    if (urlState.searchParams.get('action') !== 'add_member') return;
+
+    const name = urlState.searchParams.get('name') || '';
+    const phone = urlState.searchParams.get('phone') || '';
+    const email = urlState.searchParams.get('email') || '';
+    setEditId(null);
+    setEditData({ ...EMPTY_MEMBER_FORM, name, phone, email });
+    setShowAddModal(true);
+    urlState.setUrlParam('action', null);
+    urlState.setUrlParam('name', null);
+    urlState.setUrlParam('phone', null);
+    urlState.setUrlParam('email', null);
+  }, [urlState.searchParams, urlState.setUrlParam]);
 
   const openAdd = useCallback(() => { 
     setEditId(null); 
@@ -88,6 +88,22 @@ export function useManagerMembersLogic(initialData?: MembersInitialData | null):
     showToast, selectedMember, setSelectedMember, editId, setShowAddModal, setShowRenewModal, setShowPaymentModal
   );
 
+  const exportMembers = useCallback(async (format: 'csv' | 'pdf') => {
+    const response = await membersApi.exportMembersReport({
+      search: urlState.debouncedSearch,
+      status: urlState.statusFilter,
+      gender: urlState.genderFilter,
+      plan: urlState.planFilter,
+      expiryFrom: urlState.expiryFrom,
+      expiryTo: urlState.expiryTo,
+      sort: urlState.sortColumn,
+      dir: urlState.sortDirection,
+    });
+    const allMembers = response.data?.members ?? [];
+    if (format === 'csv') downloadManagerMembersCsv(allMembers);
+    else printManagerMembersPdf(allMembers);
+  }, [urlState.debouncedSearch, urlState.statusFilter, urlState.genderFilter, urlState.planFilter, urlState.expiryFrom, urlState.expiryTo, urlState.sortColumn, urlState.sortDirection]);
+
   const { printData, setPrintData, handlePrint, handleSharePaymentWhatsApp } = useManagerMembersPrintLogic(
     selectedMember, showToast
   );
@@ -110,6 +126,6 @@ export function useManagerMembersLogic(initialData?: MembersInitialData | null):
     showPaymentModal, setShowPaymentModal,
     openAdd, openEdit, saveMember, deleteMember, assignDiet, assignWorkout, renewMember, recordPayment, freezeMember, toggleSuspend, assignTrainer,
     msgModal, openMsg, closeMsg,
-    printData, handlePrint, handleSharePaymentWhatsApp, setPrintData
+    printData, handlePrint, handleSharePaymentWhatsApp, setPrintData, exportMembers
   };
 }

@@ -33,7 +33,7 @@ broadcasts is handled by a separate broadcast module. Mark-as-read is the only m
 - Zustand stores: None
 - Context providers: None
 - Local-storage keys: None
-- MSW handler: `admin_mocks/handlers/AdminMockHandlers.ts`
+- MSW handler: `admin/notifications/notifications_mocks/handlers/AdminNotificationsMockHandlers.ts`
 
 ## User Flows
 1. Admin opens `/admin/notifications` → list loads, unread items highlighted
@@ -103,4 +103,4 @@ broadcasts is handled by a separate broadcast module. Mark-as-read is the only m
 
 ## Module-Owned MSW Fixtures
 
-All Admin frontend-first API fixtures and MSW transport handlers are owned by `admin/admin_mocks/fixtures/AdminMockFixtures.ts` and `admin/admin_mocks/handlers/AdminMockHandlers.ts`. These files provide populated success responses and are the only module-owned mock transport source for Admin. Global MSW bootstrap may register these handlers, but must not contain Admin business data.
+All Admin frontend-first API fixtures and MSW transport handlers are owned by `admin/notifications_mocks/fixtures/AdminNotificationsMockFixtures.ts` and `admin/notifications/notifications_mocks/handlers/AdminNotificationsMockHandlers.ts`. These files provide populated success responses and are the only module-owned mock transport source for Admin. Global MSW bootstrap may register these handlers, but must not contain Admin business data.

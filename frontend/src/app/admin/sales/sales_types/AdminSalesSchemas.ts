@@ -33,6 +33,8 @@ export const pendingPaymentMemberSchema = memberSchema.omit({ "plan": true }).an
     daysOverdue: z.number().optional()
 }));
 
+export const referralDataPointSchema = z.object({ source: z.string(), revenue: z.number() });
+
 export const overviewDataPointSchema = z.object({
     date: z.string(),
     revenue: z.number()

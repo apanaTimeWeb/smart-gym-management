@@ -30,25 +30,25 @@ export default function ManagerInquiriesToolbar() {
 
   if (selectedIds.length > 0) {
     return (
-      <div className="bg-primary/10 border border-primary/30 rounded-xl p-4 flex flex-wrap gap-3 items-center justify-between transition-all">
+      <div className="bg-primary/10 border border-primary/30 rounded-xl p-4 flex flex-wrap gap-3 items-center justify-between motion-safe:transition-all">
         <div className="flex flex-wrap items-center gap-4">
           <span className="font-semibold text-primary">
             {selectedIds.length} {selectedIds.length === 1 ? 'inquiry' : 'inquiries'} selected
           </span>
-          <button onClick={clearSelection} className="text-sm font-medium text-secondary hover:text-primary transition-colors">
+          <button onClick={clearSelection} className="text-sm font-medium text-secondary hover:text-primary motion-safe:transition-colors">
             Clear Selection
           </button>
         </div>
         <div className="flex flex-col sm:flex-row gap-2">
           <button
             onClick={() => openBulkMsg('whatsapp')}
-            className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-primary-foreground rounded-xl bg-success hover:opacity-90 transition-opacity"
+            className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-primary-foreground rounded-xl bg-success hover:opacity-90 motion-safe:transition-opacity"
           >
             <MessageCircle size={15} /> Bulk WhatsApp
           </button>
           <button
             onClick={() => openBulkMsg('email')}
-            className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-primary-foreground rounded-xl bg-info hover:opacity-90 transition-opacity"
+            className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-primary-foreground rounded-xl bg-info hover:opacity-90 motion-safe:transition-opacity"
           >
             <Mail size={15} /> Bulk Email
           </button>
@@ -80,14 +80,14 @@ export default function ManagerInquiriesToolbar() {
         </div>
         <button
           onClick={() => queryClient.invalidateQueries({ queryKey: ['manager', 'inquiries'] })}
-          className="flex items-center gap-2 px-3 py-2.5 text-sm border border-border rounded-xl hover:opacity-80 transition-opacity text-secondary"
+          className="flex items-center gap-2 px-3 py-2.5 text-sm border border-border rounded-xl hover:opacity-80 motion-safe:transition-opacity text-secondary"
           aria-label="Refresh inquiries"
         >
           <RefreshCw size={14} />
         </button>
         <button
           onClick={openAdd}
-          className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-primary-foreground bg-primary rounded-xl hover:bg-primary-hover transition-all duration-200 active:scale-95"
+          className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-primary-foreground bg-primary rounded-xl hover:bg-primary-hover motion-safe:transition-all duration-200 active:scale-95"
         >
           <Plus size={16} /> Add Inquiry
         </button>

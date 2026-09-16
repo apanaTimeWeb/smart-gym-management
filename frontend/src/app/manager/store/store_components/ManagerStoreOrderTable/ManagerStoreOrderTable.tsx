@@ -9,6 +9,8 @@ import { GYM_DETAILS } from '@/app/manager/manager_utils/ManagerSharedConstants'
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
 
+const STORE_ORDER_COLUMN_COUNT = 6;
+
 export default function ManagerStoreOrderTable() {
   const { 
     orders, totalOrders, isLoading, isError, currentPage, setCurrentPage, setPrintData
@@ -89,8 +91,17 @@ export default function ManagerStoreOrderTable() {
             {orders.map(o => (
               <tr 
                 key={o.id} 
-                className="hover:bg-primary-subtle transition-colors cursor-pointer"
+                className="hover:bg-primary-subtle motion-safe:transition-colors cursor-pointer"
+                tabIndex={0}
+                role="button"
+                aria-label={`Open order ORD-${o.id}`}
                 onClick={() => handlePrint(o)}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    handlePrint(o);
+                  }
+                }}
               >
                 <td className="px-4 py-3 text-sm font-mono text-foreground">
                   ORD-{String(o.id).padStart(4, '0')}
@@ -115,7 +126,7 @@ export default function ManagerStoreOrderTable() {
                       e.stopPropagation();
                       handleWhatsApp(o);
                     }}
-                    className="p-1.5 rounded-lg bg-success-bg text-success hover:bg-success-bg/80 transition-colors"
+                    className="p-1.5 rounded-lg bg-success-bg text-success hover:bg-success-bg/80 motion-safe:transition-colors"
                     aria-label={`WhatsApp Receipt ORD-${o.id}`}
                     title="Send via WhatsApp"
                   >
@@ -126,7 +137,7 @@ export default function ManagerStoreOrderTable() {
                       e.stopPropagation();
                       handlePrint(o);
                     }}
-                    className="p-1.5 rounded-lg bg-input text-secondary hover:text-foreground transition-colors"
+                    className="p-1.5 rounded-lg bg-input text-secondary hover:text-foreground motion-safe:transition-colors"
                     aria-label={`Print Receipt ORD-${o.id}`}
                     title="Print Receipt"
                   >
@@ -137,7 +148,7 @@ export default function ManagerStoreOrderTable() {
             ))}
             {orders.length === 0 && (
               <tr>
-                <td colSpan={6} className="text-center py-10 text-secondary">
+                <td colSpan={STORE_ORDER_COLUMN_COUNT} className="text-center py-10 text-secondary">
                   No orders found.
                 </td>
               </tr>

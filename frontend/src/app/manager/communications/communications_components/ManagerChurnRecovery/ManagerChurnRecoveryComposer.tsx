@@ -153,7 +153,6 @@ export default function ManagerChurnRecoveryComposer({
                     ? 'bg-success-bg border-success text-success'
                     : 'bg-input border-border text-secondary hover:text-foreground'
                 }`}
-                style={channel === 'whatsapp' ? { color: '#25D366', borderColor: '#25D366' } : undefined}
               >
                 <MessageCircle size={15} />
                 WhatsApp

@@ -1,5 +1,5 @@
 "use client";
-import { AdminDashboardUrlConfig } from '@/app/admin/dashboard/admin_dashboard_url_config';
+import { ADMIN_DASHBOARD_ROUTE } from '@/app/admin/admin_url_config';
 // RESPONSIBILITY: Renders the error boundary fallback for the plans module.
 
 import { useEffect } from "react";
@@ -23,8 +23,8 @@ export default function PlansError({
     return (
       <div className="min-h-full flex flex-col items-center justify-center p-8 text-center">
         <h2 className="text-2xl font-bold mb-4 text-danger">Access Denied</h2>
-        <p className="text-secondary mb-6">You don't have permission to view this page.</p>
-        <Link href={AdminDashboardUrlConfig.root} className="px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary-hover motion-safe:transition-colors">
+        <p className="text-secondary mb-6">You don&apos;t have permission to view this page.</p>
+        <Link href={ADMIN_DASHBOARD_ROUTE} className="px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary-hover motion-safe:transition-colors">
           Return to Dashboard
         </Link>
       </div>

@@ -47,6 +47,11 @@ export function useAdminSalesLogic(initialData?: SalesInitialData | null): Sales
     queryFn: () => salesApi.fetchOverview(selectedBranchId, range),
     initialData: initialData?.overviewData ? { success: true, message: 'SSR', data: { monthlyRevenue: initialData.overviewData } } : undefined,
   });
+  const referralQuery = useQuery({
+    queryKey: ['admin', 'sales', 'referrals', range, selectedBranchId],
+    queryFn: () => salesApi.fetchReferralSources(selectedBranchId, range),
+  });
+
   const reportQuery = useQuery({
     queryKey: ['admin', 'sales', 'membership-report', range, selectedBranchId],
     queryFn: () => salesApi.fetchMembershipReport(selectedBranchId, range),
@@ -74,6 +79,7 @@ export function useAdminSalesLogic(initialData?: SalesInitialData | null): Sales
     currentPage,
     setCurrentPage,
     overviewData: overviewQuery.data?.data?.monthlyRevenue || [],
+    referralData: referralQuery.data?.data || [],
     membershipReport: reportQuery.data?.data?.report || [],
     membershipTotals: reportQuery.data?.data?.totals || { activeCount: 0, revenue: 0 },
     pendingPayments: (pendingQuery.data?.data?.members || []) as PendingPaymentMember[],

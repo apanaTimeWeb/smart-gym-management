@@ -2,6 +2,7 @@
 
 // RESPONSIBILITY: Renders the Admin profile summary, personal-information form, and password form without owning API or validation logic.
 // DATA FLOW: useAdminProfileLogic → AdminProfileMain → React Hook Form fields.
+import { displayValue } from '@/app/admin/admin_utils/AdminDisplayValue';
 import { useState } from 'react';
 import { User, Lock, Save, Loader2 } from 'lucide-react';
 import { useAdminProfileLogic } from '@/app/admin/profile/profile_context/useAdminProfileLogic';
@@ -50,7 +51,7 @@ export default function AdminProfileMain() {
         <div className="w-16 h-16 rounded-full bg-primary flex items-center justify-center text-2xl font-bold text-primary-foreground shrink-0">{displayInitial}</div>
         <div>
           <p className="text-lg font-bold text-foreground">{profile?.name ?? 'Admin'}</p>
-          <p className="text-sm text-secondary">{profile?.email ?? '—'}</p>
+          <p className="text-sm text-secondary">{displayValue(profile?.email)}</p>
           <span className="mt-1.5 inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-success-bg text-success text-xs font-semibold"><span className="w-1.5 h-1.5 rounded-full bg-success motion-safe:animate-pulse" />Active</span>
         </div>
       </div>

@@ -11,7 +11,7 @@ export default function ManagerLayout({ children }: { children: React.ReactNode 
  <ManagerPermissionGate capability="manager.access">
  <div className="flex h-screen overflow-hidden bg-background text-foreground">
  <ManagerSidebar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
- <main className={`flex-1 flex flex-col h-screen overflow-y-auto transition-all duration-300 ${isCollapsed ? 'lg:ml-20' : 'lg:ml-64'}`}>
+ <main className={`flex-1 flex flex-col h-screen overflow-y-auto motion-safe:transition-all duration-300 ${isCollapsed ? 'lg:ml-20' : 'lg:ml-64'}`}>
  {children}
  </main>
  </div>

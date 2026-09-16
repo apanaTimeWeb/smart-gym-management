@@ -6,7 +6,7 @@
 
 ## 2. No Unmasked Phone Numbers in List View
 **FORBIDDEN:** Displaying full phone numbers in the member table.
-**ALLOWED:** Mask with `maskSensitiveData()` from `@/lib/utils`. Full number visible only in profile modal.
+**ALLOWED:** Mask with `maskSensitiveData()` from `@/app/admin/admin_utils/AdminMaskSensitiveData`. Full number visible only in profile modal.
 
 ## 3. No View/Eye Button
 **FORBIDDEN:** A dedicated "View" or eye-icon button on table rows.

@@ -1,6 +1,6 @@
 "use client";
 // RESPONSIBILITY: Manages the General Settings tab.
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { GeneralSettingsSchema } from '@/app/admin/settings/settings_types/AdminSettings.schema';
 import type { GeneralSettingsType } from '@/app/admin/settings/settings_types/AdminSettingsTypes';
@@ -16,8 +16,9 @@ export function AdminSettingsGeneral({ initialData }: { initialData: GeneralSett
   const queryClient = useQueryClient();
   const form = useForm<GeneralSettingsType>({
     resolver: zodResolver(GeneralSettingsSchema),
-    defaultValues: initialData,
   });
+
+  const formValues = useWatch({ control: form.control });
 
   useUnsavedChangesGuard(form.formState.isDirty);
 
@@ -117,7 +118,7 @@ export function AdminSettingsGeneral({ initialData }: { initialData: GeneralSett
           {toggleFields.map(f => (
             <div key={f.key} className="flex items-center justify-between p-3 bg-input/40 rounded-xl border border-border">
               <AdminSettingsToggleSwitch
-                checked={form.watch(f.key)}
+                checked={formValues[f.key] ?? initialData[f.key]}
                 onChange={(v) => form.setValue(f.key, v, { shouldDirty: true })}
                 label={f.label}
               />

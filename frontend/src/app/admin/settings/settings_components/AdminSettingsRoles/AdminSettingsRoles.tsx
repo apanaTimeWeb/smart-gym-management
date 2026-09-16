@@ -1,42 +1,50 @@
 "use client";
-// RESPONSIBILITY: Manages the Roles & Permissions settings tab.
-import { MOCK_ROLES } from '@/app/admin/settings/settings_utils/AdminSettingsSharedConstants';
-
+// RESPONSIBILITY: Renders the read-only role permission summary for the Settings Roles tab.
+import { ShieldCheck } from 'lucide-react';
+import { useAdminSettingsRolesData } from '@/app/admin/settings/settings_context/useAdminSettingsRolesData';
 
 export function AdminSettingsRoles() {
+  const { roles, status } = useAdminSettingsRolesData();
+
+  if (status === 'pending') {
+    return <div className="bg-card rounded-xl shadow-sm border border-border mt-6 h-64 motion-safe:animate-pulse" />;
+  }
+
+  if (roles.length === 0) {
+    return <div className="bg-card rounded-xl shadow-sm border border-border mt-6 p-8 text-center text-sm text-secondary">No role permission data available.</div>;
+  }
+
   return (
     <div className="bg-card rounded-xl shadow-sm border border-border mt-6">
       <div className="px-6 py-4 border-b border-border flex items-center justify-between flex-wrap gap-3">
-        <h2 className="font-bold text-foreground text-lg">Roles & Permissions</h2>
-        <span className="text-xs text-secondary">Read-only in this settings view</span>
+        <div>
+          <h2 className="font-bold text-foreground text-lg">Roles &amp; Permissions</h2>
+          <p className="text-xs text-secondary">Read-only permission defaults from the Admin permissions API</p>
+        </div>
       </div>
-
-      <div className="p-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          {MOCK_ROLES.map(role => (
-            <div key={role.id} className="border border-border rounded-xl p-5 hover:shadow-sm motion-safe:transition-shadow bg-input/20 flex flex-col h-full">
-              <div className="flex justify-between items-start mb-3">
-                <div className="flex items-center gap-3">
-                  <div className={`w-10 h-10 rounded-xl ${role.bg} flex items-center justify-center`}>
-                    <span className={`font-bold ${role.color}`}>{role.name.charAt(0)}</span>
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-foreground text-base">{role.name}</h3>
-                    <p className="text-xs text-secondary">{role.memberCount} active members</p>
-                  </div>
+      <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-5">
+        {roles.map((role) => {
+          const granted = Object.values(role.permissions).filter(Boolean).length;
+          const total = Object.keys(role.permissions).length;
+          return (
+            <div key={role.role} className="border border-border rounded-xl p-5 bg-input/20">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary"><ShieldCheck size={18} /></div>
+                <div>
+                  <h3 className="font-semibold text-foreground text-base capitalize">{role.role}</h3>
+                  <p className="text-xs text-secondary">{granted} of {total} permissions enabled</p>
                 </div>
               </div>
-              <p className="text-sm text-secondary mb-4 flex-1">{role.description}</p>
-              <div className="flex flex-wrap gap-2 pt-3 border-t border-border">
-                {role.permissions.map(p => (
-                  <span key={p} className="px-2 py-1 text-xs font-medium uppercase tracking-wider bg-input border border-border text-foreground rounded-full">
-                    {p.replace('_', ' ')}
+              <div className="flex flex-wrap gap-2">
+                {Object.entries(role.permissions).map(([permission, enabled]) => (
+                  <span key={permission} className={`px-2 py-1 text-xs font-medium uppercase tracking-wider rounded-full border ${enabled ? 'bg-success-bg text-success border-success/20' : 'bg-input text-secondary border-border'}`}>
+                    {permission.replaceAll('_', ' ')}
                   </span>
                 ))}
               </div>
             </div>
-          ))}
-        </div>
+          );
+        })}
       </div>
     </div>
   );

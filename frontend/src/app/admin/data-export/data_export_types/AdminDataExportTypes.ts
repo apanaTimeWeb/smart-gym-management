@@ -1,8 +1,10 @@
-// RESPONSIBILITY: TypeScript types for the Data Export module.
+// RESPONSIBILITY: TypeScript types for the Admin Data Export module.
 
 export type ExportFormat = 'csv' | 'excel' | 'pdf';
 export type ExportDataType = 'members' | 'payments' | 'attendance' | 'staff' | 'full_report';
 export type ExportStatus = 'completed' | 'processing' | 'failed';
+export type DataExportSortKey = 'dataType' | 'format' | 'dateFrom' | 'rowCount' | 'fileSizeKb' | 'status' | 'createdAt';
+export type DataExportSortDirection = 'asc' | 'desc';
 
 export interface ExportJob {
   id: string;
@@ -34,8 +36,26 @@ export interface DataExportKPIData {
   lastExportDate: string;
   pendingJobs: number;
 }
+
 export interface AdminDataExportQueryParams {
   page: number;
   limit: number;
-  status?: ExportStatus;
+  status?: ExportStatus | 'all';
+  sortKey?: DataExportSortKey;
+  sortDir?: DataExportSortDirection;
+}
+
+export interface AdminDataExportHistoryProps {
+  jobs: ExportJob[];
+  status: 'pending' | 'error' | 'success';
+  statusFilter: ExportStatus | 'all';
+  setStatusFilter: (value: string) => void;
+  currentPage: number;
+  setCurrentPage: (page: number) => void;
+  totalPages: number;
+  totalItems: number;
+  sortKey: DataExportSortKey;
+  sortDir: DataExportSortDirection;
+  onSort: (key: DataExportSortKey) => void;
+  deleteJob: (id: string) => void;
 }

@@ -54,7 +54,7 @@ export default function PendingPayments() {
       </p>
       <div className="space-y-3">
         {pendingPayments.map((p: PendingPaymentMember) => (
-          <div key={p.id} className="flex items-center justify-between p-4 border border-border rounded-xl hover:border-warning transition-all duration-200 ease-in-out motion-safe:hover:-translate-y-1 hover:shadow-lg bg-card">
+          <div key={p.id} className="flex items-center justify-between p-4 border border-border rounded-xl hover:border-warning motion-safe:transition-all duration-200 ease-in-out motion-safe:hover:-translate-y-1 hover:shadow-lg bg-card">
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 bg-danger-bg rounded-full flex items-center justify-center text-danger font-semibold text-sm">
                 {p.name.charAt(0)}
@@ -93,7 +93,7 @@ export default function PendingPayments() {
                   window.open(`https://wa.me/91${p.phone?.replace(/\D/g, '') || ''}?text=${encodeURIComponent(waText)}`, '_blank');
                   showToast(`Reminder sent via WhatsApp to ${p.name}`, 'success');
                 }}
-                className="px-3 py-1.5 text-xs text-primary-foreground bg-primary rounded-lg font-medium transition-all duration-200 ease-in-out hover:bg-primary-hover active:scale-95"
+                className="px-3 py-1.5 text-xs text-primary-foreground bg-primary rounded-lg font-medium motion-safe:transition-all duration-200 ease-in-out hover:bg-primary-hover active:scale-95"
               >
                 Send Reminder
               </button>

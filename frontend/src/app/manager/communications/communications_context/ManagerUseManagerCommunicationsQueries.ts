@@ -5,17 +5,18 @@ import { useQuery } from '@tanstack/react-query';
 import { ManagerCommunicationsApi } from '@/app/manager/communications/communications_api/ManagerCommunicationsApi';
 import type { CommSegment } from '@/app/manager/communications/communications_types/ManagerCommunications_types';
 
-export function useManagerCommunicationsQueries(selectedSegment: CommSegment) {
+export function useManagerCommunicationsQueries(selectedSegment: CommSegment, search: string, channel: string, page: number) {
   const { data: campaignsResponse, isLoading: campaignsLoading, isError: campaignsError } = useQuery({
-    queryKey: ['manager', 'communications', 'campaigns'],
-    queryFn: ManagerCommunicationsApi.fetchCampaigns,
+    queryKey: ['manager', 'communications', 'campaigns', { search, channel, page, limit: 10 }],
+    queryFn: () => ManagerCommunicationsApi.fetchCampaigns({ search, channel, page: String(page), limit: '10' }),
     staleTime: 1000 * 60 * 2,
   });
-  const campaigns = campaignsResponse?.data || [];
+  const campaigns = campaignsResponse?.data?.campaigns ?? [];
+  const campaignsTotal = campaignsResponse?.data?.total ?? 0;
 
   const { data: kpisResponse } = useQuery({
     queryKey: ['manager', 'communications', 'kpis'],
-    queryFn: ManagerCommunicationsApi.fetchKPIs,
+    queryFn: ManagerCommunicationsApi.fetchCommunicationKPIs,
     staleTime: 1000 * 60 * 5,
   });
   const kpis = kpisResponse?.data || undefined;
@@ -37,6 +38,7 @@ export function useManagerCommunicationsQueries(selectedSegment: CommSegment) {
 
   return {
     campaigns,
+    campaignsTotal,
     campaignsLoading,
     campaignsError,
     kpis,

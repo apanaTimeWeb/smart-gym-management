@@ -2,9 +2,9 @@
 // RESPONSIBILITY: Renders the data table for the active report tab — Revenue, Attendance, Members, or Expenses.
 import { useReportsContext } from '@/app/manager/reports/reports_context/ManagerReportsContext';
 import { EXPENSE_CATEGORY_STYLES } from '@/app/manager/reports/reports_utils/ManagerReportsSharedConstants';
+import { formatCurrency, formatNumber } from '@/lib/formatters';
 
-const fmt = (v: number) =>
-  new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(v);
+const formatReportCurrency = (value: number) => formatCurrency(value);
 
 function RevenueTable() {
   const { summary } = useReportsContext();
@@ -22,9 +22,9 @@ function RevenueTable() {
         {data.map(d => (
           <tr key={d.month} className="hover:bg-primary/5 motion-safe:transition-colors">
             <td className="px-5 py-3.5 text-sm font-medium text-foreground">{d.month}</td>
-            <td className="px-5 py-3.5 text-sm text-success font-semibold">{fmt(d.revenue)}</td>
-            <td className="px-5 py-3.5 text-sm text-danger">{fmt(d.expenses)}</td>
-            <td className={`px-5 py-3.5 text-sm font-semibold ${d.profit >= 0 ? 'text-success' : 'text-danger'}`}>{fmt(d.profit)}</td>
+            <td className="px-5 py-3.5 text-sm text-success font-semibold">{formatReportCurrency(d.revenue)}</td>
+            <td className="px-5 py-3.5 text-sm text-danger">{formatReportCurrency(d.expenses)}</td>
+            <td className={`px-5 py-3.5 text-sm font-semibold ${d.profit >= 0 ? 'text-success' : 'text-danger'}`}>{formatReportCurrency(d.profit)}</td>
           </tr>
         ))}
       </tbody>
@@ -48,8 +48,8 @@ function AttendanceTable() {
         {data.map((d) => (
           <tr key={d.date} className="hover:bg-primary/5 motion-safe:transition-colors">
             <td className="px-5 py-3.5 text-sm text-foreground">{d.date}</td>
-            <td className="px-5 py-3.5 text-sm text-success font-semibold">{d.present}</td>
-            <td className="px-5 py-3.5 text-sm text-danger">{d.absent}</td>
+            <td className="px-5 py-3.5 text-sm text-success font-semibold">{formatNumber(d.present)}</td>
+            <td className="px-5 py-3.5 text-sm text-danger">{formatNumber(d.absent)}</td>
             <td className="px-5 py-3.5 text-sm font-semibold text-primary">{d.rate}%</td>
           </tr>
         ))}
@@ -74,9 +74,9 @@ function MembersTable() {
         {data.map(d => (
           <tr key={d.month} className="hover:bg-primary/5 motion-safe:transition-colors">
             <td className="px-5 py-3.5 text-sm font-medium text-foreground">{d.month}</td>
-            <td className="px-5 py-3.5 text-sm text-success font-semibold">+{d.newMembers}</td>
-            <td className="px-5 py-3.5 text-sm text-danger">-{d.churned}</td>
-            <td className="px-5 py-3.5 text-sm font-semibold text-foreground">{d.active}</td>
+            <td className="px-5 py-3.5 text-sm text-success font-semibold">+{formatNumber(d.newMembers)}</td>
+            <td className="px-5 py-3.5 text-sm text-danger">-{formatNumber(d.churned)}</td>
+            <td className="px-5 py-3.5 text-sm font-semibold text-foreground">{formatNumber(d.active)}</td>
           </tr>
         ))}
       </tbody>
@@ -104,7 +104,7 @@ function ExpensesTable() {
               <td className="px-5 py-3.5">
                 <span className={`text-xs font-semibold px-2.5 py-0.5 rounded-full ${style.bg} ${style.text}`}>{d.category}</span>
               </td>
-              <td className="px-5 py-3.5 text-sm font-semibold text-foreground">{fmt(d.amount)}</td>
+              <td className="px-5 py-3.5 text-sm font-semibold text-foreground">{formatReportCurrency(d.amount)}</td>
               <td className="px-5 py-3.5">
                 <div className="flex items-center gap-2">
                   <div className="flex-1 h-2 bg-input rounded-full overflow-hidden max-w-32">

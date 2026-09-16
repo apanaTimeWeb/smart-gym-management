@@ -1,6 +1,6 @@
 "use client";
 // RESPONSIBILITY: Manages the GST & Tax settings tab.
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { GstTaxSettingsSchema } from '@/app/admin/settings/settings_types/AdminSettings.schema';
 import type { GstTaxSettingsType } from '@/app/admin/settings/settings_types/AdminSettingsTypes';
@@ -16,8 +16,9 @@ export function AdminSettingsGST({ initialData }: { initialData: GstTaxSettingsT
   const queryClient = useQueryClient();
   const form = useForm<GstTaxSettingsType>({
     resolver: zodResolver(GstTaxSettingsSchema),
-    defaultValues: initialData,
   });
+
+  const formValues = useWatch({ control: form.control });
 
   useUnsavedChangesGuard(form.formState.isDirty);
 
@@ -114,14 +115,14 @@ export function AdminSettingsGST({ initialData }: { initialData: GstTaxSettingsT
           <p className="text-sm font-semibold text-foreground">Invoice Options</p>
           <div className="flex items-center justify-between p-3 bg-input/40 rounded-xl border border-border">
             <AdminSettingsToggleSwitch
-              checked={form.watch('showGstOnInvoice')}
+              checked={formValues.showGstOnInvoice ?? initialData.showGstOnInvoice}
               onChange={(v) => form.setValue('showGstOnInvoice', v, { shouldDirty: true })}
               label="Show GST breakdown on invoices & receipts"
             />
           </div>
           <div className="flex items-center justify-between p-3 bg-input/40 rounded-xl border border-border">
             <AdminSettingsToggleSwitch
-              checked={form.watch('taxInclusivePricing')}
+              checked={formValues.taxInclusivePricing ?? initialData.taxInclusivePricing}
               onChange={(v) => form.setValue('taxInclusivePricing', v, { shouldDirty: true })}
               label="Prices are tax-inclusive (GST already included in plan price)"
             />

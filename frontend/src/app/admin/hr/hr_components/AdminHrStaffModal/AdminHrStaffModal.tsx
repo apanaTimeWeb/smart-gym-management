@@ -4,10 +4,11 @@
 import { useEffect } from 'react';
 import { useHrContext } from '@/app/admin/hr/hr_context/AdminHrContext';
 import { STAFF_MODAL_FIELDS, EMPTY_STAFF, GENDER_OPTIONS, StaffSchema, type StaffFormValues, STAFF_ROLE_OPTIONS } from '@/app/admin/hr/hr_utils/AdminHrSharedConstants';
-import { useAdminBranchesQueries } from '@/app/admin/branches/branches_context/useAdminBranchesQueries';
-import type { Branch } from '@/app/admin/branches/branches_types/AdminBranchesTypes';
+import { useAdminHrBranchReference } from '@/app/admin/hr/hr_context/useAdminHrBranchReference';
+import type { AdminHrBranchReference } from '@/app/admin/hr/hr_types/AdminHrBranchReferenceTypes';
 import { X, Save } from 'lucide-react';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, useWatch } from 'react-hook-form';
+import type { Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import { Eye, EyeOff } from 'lucide-react';
@@ -16,7 +17,7 @@ import React from 'react';
 export default function AdminHrStaffModal() {
   const { showModal, setShowModal, editId, editData, saveStaff, saving } = useHrContext();
   const [showPassword, setShowPassword] = React.useState(false);
-  const { data: branches = [] } = useAdminBranchesQueries();
+  const { data: branches = [] } = useAdminHrBranchReference();
 
   const { 
     register, 
@@ -27,13 +28,14 @@ export default function AdminHrStaffModal() {
     setValue,
     formState: { errors }
   } = useForm<StaffFormValues>({
-    resolver: zodResolver(StaffSchema) as unknown as import("react-hook-form").Resolver<StaffFormValues>,
+    resolver: zodResolver(StaffSchema) as unknown as Resolver<StaffFormValues>,
     defaultValues: (editData as StaffFormValues) || {}
   });
 
- const selectedRole = watch('role');
+ const formValues = useWatch({ control });
+ const selectedRole = formValues.role ?? (editData as StaffFormValues)?.role;
  const isManager = selectedRole === 'Manager';
- const assignedBranches = watch('assignedBranches') || [];
+ const assignedBranches = formValues.assignedBranches || (editData as StaffFormValues)?.assignedBranches || [];
 
  useEffect(() => {
    if (showModal && editData) {
@@ -44,7 +46,7 @@ export default function AdminHrStaffModal() {
  if (!showModal) return null;
 
   const getBranchLabel = (id: string) => {
-    const branch = (branches as Branch[]).find(b => b.id === id);
+    const branch = (branches as AdminHrBranchReference[]).find(b => b.id === id);
     return branch ? branch.name : id;
   };
 
@@ -94,7 +96,7 @@ export default function AdminHrStaffModal() {
       <div>
         <label className="block text-sm font-medium mb-2 text-foreground">Assigned Branches</label>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-          {(branches as Branch[]).map(b => (
+          {(branches as AdminHrBranchReference[]).map(b => (
             <label key={b.id} className={`flex items-center gap-2 p-3 border rounded-xl cursor-pointer motion-safe:transition-colors ${assignedBranches.includes(b.id) ? 'border-primary bg-primary/5 text-primary' : 'border-border hover:bg-input text-secondary'}`}>
               <input 
                 type="checkbox" 
@@ -105,7 +107,7 @@ export default function AdminHrStaffModal() {
                     setValue('assignedBranches', [...assignedBranches, b.id]);
                   } else {
                     setValue('assignedBranches', assignedBranches.filter(x => x !== b.id));
-                    if (watch('primaryBranchId') === b.id) {
+                    if ((formValues.primaryBranchId ?? (editData as StaffFormValues)?.primaryBranchId) === b.id) {
                       setValue('primaryBranchId', '');
                     }
                   }
@@ -147,7 +149,7 @@ export default function AdminHrStaffModal() {
           <SearchableDropdown
             value={field.value || ''}
             onChange={field.onChange}
-            options={(branches as Branch[]).map(b => ({ label: b.name, value: b.id }))}
+            options={(branches as AdminHrBranchReference[]).map(b => ({ label: b.name, value: b.id }))}
             placeholder="Select Branch..."
           />
         )}

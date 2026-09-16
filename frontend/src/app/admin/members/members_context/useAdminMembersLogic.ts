@@ -16,7 +16,7 @@ import { useState } from 'react';
 
 export function useAdminMembersLogic() {
   const { selectedBranchId } = useAdminGlobalStore();
-  const { search, statusFilter, branchFilter, expiryFilter, currentPage, setCurrentPage } = useAdminMembersStore();
+  const { search, statusFilter, branchFilter, expiryFilter, genderFilter, planFilter, currentPage, setCurrentPage } = useAdminMembersStore();
   useAdminUrlQuerySync([
     { key: 'search', value: search, defaultValue: '', setValue: useAdminMembersStore.getState().setSearch },
     { key: 'status', value: statusFilter, defaultValue: 'all', setValue: (val) => useAdminMembersStore.getState().setStatusFilter(val as any) },
@@ -36,6 +36,8 @@ export function useAdminMembersLogic() {
     status: statusFilter !== 'all' ? statusFilter : undefined,
     branchId: activeBranch,
     expiryFilter: expiryFilter !== 'all' ? expiryFilter : undefined,
+    gender: genderFilter !== 'all' ? genderFilter : undefined,
+    plan: planFilter !== 'all' ? planFilter : undefined,
     page: currentPage,
     limit: ADMIN_MEMBERS_ITEMS_PER_PAGE,
   };
@@ -57,7 +59,7 @@ export function useAdminMembersLogic() {
 
   const status = membersQuery.status;
   const members = (membersQuery.data as ApiResponse<AdminMember[]>)?.data ?? [];
-  const allFilteredCount = members.length;
+  const allFilteredCount = (membersQuery.data as ApiResponse<AdminMember[]>)?.meta?.total ?? members.length;
   const totalPages = Math.max(1, Math.ceil(allFilteredCount / ADMIN_MEMBERS_ITEMS_PER_PAGE));
 
   return {

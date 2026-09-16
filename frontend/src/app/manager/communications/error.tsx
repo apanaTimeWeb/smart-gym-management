@@ -1,18 +1,42 @@
 'use client';
-// RESPONSIBILITY: Framework route boundary for the Manager communications module; renders the route-level shell, loading, error, or 404 state.
-import { AlertTriangle } from 'lucide-react';
 
-export default function CommunicationsError({ reset }: { reset: () => void }) {
+// RESPONSIBILITY: Renders the module-specific route error fallback and records safe diagnostic metadata.
+import { useEffect } from 'react';
+import { AlertTriangle } from 'lucide-react';
+import { logger } from '@/lib/logger';
+
+export default function ManagerCommunicationsError({
+  error,
+  reset,
+}: {
+  error: Error & { digest?: string };
+  reset: () => void;
+}) {
+  useEffect(() => {
+    logger.error('Manager module route error', {
+      route: '/manager/communications',
+      module: 'manager/communications',
+      errorDigest: error.digest,
+      timestamp: new Date().toISOString(),
+    });
+  }, [error]);
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-96 gap-4 text-center p-6">
-      <div className="w-14 h-14 rounded-full bg-danger-bg flex items-center justify-center">
-        <AlertTriangle size={24} className="text-danger" />
+    <div className="min-h-full flex items-center justify-center p-6 bg-page">
+      <div className="bg-card border border-danger/20 p-8 rounded-2xl shadow-xl max-w-md w-full text-center space-y-4">
+        <div className="w-14 h-14 bg-danger/10 rounded-full flex items-center justify-center mx-auto text-danger">
+          <AlertTriangle size={28} />
+        </div>
+        <h2 className="text-xl font-bold text-foreground">Communications Unavailable</h2>
+        <p className="text-sm text-secondary">We couldn't load the communications module. Please try again.</p>
+        {error.digest && <p className="text-xs text-secondary/60">Ref: {error.digest}</p>}
+        <button
+          onClick={reset}
+          className="px-6 py-2.5 bg-primary text-primary-foreground font-medium rounded-xl hover:opacity-90 motion-safe:transition-opacity"
+        >
+          Try Again
+        </button>
       </div>
-      <h2 className="text-lg font-bold text-foreground">Failed to load Communications</h2>
-      <p className="text-sm text-secondary max-w-sm">Something went wrong while loading the communications module. Your data is safe.</p>
-      <button onClick={reset} className="px-5 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-semibold hover:opacity-90 motion-safe:transition-opacity">
-        Try Again
-      </button>
     </div>
   );
 }

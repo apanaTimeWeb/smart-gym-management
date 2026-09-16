@@ -5,7 +5,7 @@ import type { UpdateManagerProfilePayload } from '@/app/manager/profile/profile_
 let profileDb = { ...MOCK_PROFILE };
 
 export const managerProfileHandlers = [
-  http.get('http://localhost:5000/api/v1/manager/profile', () => {
+  http.get(`/api/v1/manager/profile`, () => {
     return HttpResponse.json({
       success: true,
       message: 'Profile fetched',
@@ -13,7 +13,7 @@ export const managerProfileHandlers = [
     });
   }),
 
-  http.patch('http://localhost:5000/api/v1/manager/profile', async ({ request }) => {
+  http.patch(`/api/v1/manager/profile`, async ({ request }) => {
     const body = await request.json() as UpdateManagerProfilePayload;
     profileDb = { ...profileDb, ...body };
     return HttpResponse.json({
@@ -23,7 +23,7 @@ export const managerProfileHandlers = [
     });
   }),
 
-  http.patch('http://localhost:5000/api/v1/manager/profile/password', () => {
+  http.patch(`/api/v1/manager/profile/password`, () => {
     return HttpResponse.json({
       success: true,
       message: 'Password updated successfully'

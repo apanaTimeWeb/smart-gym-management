@@ -7,6 +7,8 @@ import type { LedgerEntry } from '@/app/manager/hr/hr_types/ManagerHrTypes';
 import { FileText, Search } from 'lucide-react';
 import { formatCurrency , formatDate} from '@/lib/formatters';
 
+const HR_LEDGER_COLUMN_COUNT = 6;
+
 export default function ManagerHrLedgerTable() {
   const { staff, showToast } = useHrContext();
   const [selectedStaffId, setSelectedStaffId] = useState<string>('');
@@ -76,10 +78,10 @@ export default function ManagerHrLedgerTable() {
             </thead>
             <tbody className="text-sm divide-y divide-border">
               {loading ? (
-                <tr><td colSpan={6} className="text-center p-8 text-secondary">Loading ledger...</td></tr>
+                <tr><td colSpan={HR_LEDGER_COLUMN_COUNT} className="text-center p-8 text-secondary">Loading ledger...</td></tr>
               ) : ledger.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="p-12 text-center text-secondary">
+                  <td colSpan={HR_LEDGER_COLUMN_COUNT} className="p-12 text-center text-secondary">
                     <div className="flex flex-col items-center gap-2">
                       <FileText size={32} className="opacity-20" />
                       <p>No transactions found for this staff member.</p>
@@ -88,7 +90,7 @@ export default function ManagerHrLedgerTable() {
                 </tr>
               ) : (
                 ledger.map(l => (
-                  <tr key={l.id} className="hover:bg-secondary/5 transition-colors">
+                  <tr key={l.id} className="hover:bg-secondary/5 motion-safe:transition-colors">
                     <td className="p-4 text-foreground whitespace-nowrap">{formatDate(l.date)}</td>
                     <td className="p-4">
                       <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium 

@@ -2,7 +2,7 @@
 // RESPONSIBILITY: Modal for adding a member to the blacklist.
 
 import { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { X } from 'lucide-react';
 import { useAdminBlacklistLogic } from '@/app/admin/blacklist/blacklist_context/useAdminBlacklistLogic';
@@ -12,15 +12,16 @@ import type { BlacklistFormValues } from '@/app/admin/blacklist/blacklist_types/
 export default function AdminBlacklistModal() {
   const { showModal, setShowModal, form, saveBlacklist, saving } = useAdminBlacklistLogic();
 
-  const { register, handleSubmit, reset, watch, setValue, formState: { errors } } = useForm<BlacklistFormValues>({
+  const { register, handleSubmit, reset, watch, setValue, control, formState: { errors } } = useForm<BlacklistFormValues>({
     resolver: zodResolver(BlacklistSchema),
     defaultValues: form,
   });
 
   useEffect(() => { if (showModal) reset(form); }, [showModal, form, reset]);
 
-  const scope = watch('scope');
-  const selectedGyms = watch('assignedGyms') ?? [];
+  const formValues = useWatch({ control });
+  const scope = formValues.scope ?? form.scope;
+  const selectedGyms = formValues.assignedGyms ?? form.assignedGyms ?? [];
 
   const toggleGym = (val: string) => {
     if (val === 'all') { setValue('assignedGyms', ['all']); return; }

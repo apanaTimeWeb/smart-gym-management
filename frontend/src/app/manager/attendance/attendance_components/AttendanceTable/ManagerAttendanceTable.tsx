@@ -1,5 +1,5 @@
 'use client';
-import { formatDate } from '@/lib/formatters';
+import { displayValue, formatDate } from '@/lib/formatters';
 // RESPONSIBILITY: Renders the attendance data table and pagination controls.
 // CRITICAL FIX: Added Check-Out, Duration, and Method columns for time-tracking analytics.
 import { Clock, Calendar, CalendarCheck, Fingerprint, QrCode, Edit } from 'lucide-react';
@@ -37,17 +37,10 @@ function CheckInMethodBadge({ method }: { method?: CheckInMethod }) {
 }
 
 export default function AttendanceTable() {
-  const { records, totalRecords, isLoading, isError, tab, currentPage, setCurrentPage, setCalendarUser } = useAttendanceContext();
+  const { records, totalRecords, isLoading, isError, currentPage, setCurrentPage, setCalendarUser } = useAttendanceContext();
 
-  const filteredRecords = records.filter(r =>
-    tab === 'Daily Attendance Report' ||
-    (tab === 'Member Attendance' && r.type === 'MEMBER') ||
-    ((tab === 'Trainer Attendance' || tab === 'Staff Attendance') && r.type === 'STAFF')
-  );
-
-  const totalPages = Math.ceil(filteredRecords.length / MANAGER_ITEMS_PER_PAGE) || 1;
-  const startIndex = (currentPage - 1) * MANAGER_ITEMS_PER_PAGE;
-  const paginatedRecords = filteredRecords.slice(startIndex, startIndex + MANAGER_ITEMS_PER_PAGE);
+  const totalPages = Math.max(1, Math.ceil(totalRecords / MANAGER_ITEMS_PER_PAGE));
+  const paginatedRecords = records;
 
   return (
     <div className="p-5">
@@ -84,7 +77,14 @@ export default function AttendanceTable() {
             </thead>
             <tbody className="divide-y divide-border">
               {paginatedRecords.map(r => (
-                <tr key={r.id} className="hover:bg-primary-subtle transition-colors">
+                <tr
+                  key={r.id}
+                  tabIndex={0}
+                  role="button"
+                  aria-label={`View attendance history for ${r.member?.name || r.staff?.name || 'record'}`}
+                  onClick={() => setCalendarUser({ id: String(r.memberId || r.staffId || r.id), name: String(r.member?.name || r.staff?.name || ''), type: r.type as 'MEMBER' | 'STAFF' })}
+                  onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setCalendarUser({ id: String(r.memberId || r.staffId || r.id), name: String(r.member?.name || r.staff?.name || ''), type: r.type as 'MEMBER' | 'STAFF' }); } }}
+                  className="cursor-pointer hover:bg-primary-subtle motion-safe:transition-colors">
                   {/* Name */}
                   <td className="px-4 py-3 whitespace-nowrap">
                     <div className="flex items-center gap-2">
@@ -94,7 +94,7 @@ export default function AttendanceTable() {
                         {(r.member?.name || r.staff?.name || '?').charAt(0)}
                       </div>
                       <span className="text-sm font-medium text-foreground">
-                        {r.member?.name || r.staff?.name || '—'}
+                        {displayValue(r.member?.name ?? r.staff?.name)}
                       </span>
                     </div>
                   </td>
@@ -143,8 +143,8 @@ export default function AttendanceTable() {
                   {/* Actions */}
                   <td className="px-4 py-3 text-sm whitespace-nowrap">
                     <button
-                      onClick={() => setCalendarUser({ id: String(r.memberId || r.staffId || r.id), name: String(r.member?.name || r.staff?.name), type: r.type as 'MEMBER' | 'STAFF' })}
-                      className="p-1.5 rounded-md hover:bg-primary-subtle text-primary transition-colors flex items-center gap-1 border border-transparent hover:border-border"
+                      onClick={(event) => { event.stopPropagation(); setCalendarUser({ id: String(r.memberId || r.staffId || r.id), name: String(r.member?.name || r.staff?.name || ''), type: r.type as 'MEMBER' | 'STAFF' }); }}
+                      className="p-1.5 rounded-md hover:bg-primary-subtle text-primary motion-safe:transition-colors flex items-center gap-1 border border-transparent hover:border-border"
                       title="View Monthly Calendar"
                       aria-label="View Monthly Attendance Calendar"
                     >

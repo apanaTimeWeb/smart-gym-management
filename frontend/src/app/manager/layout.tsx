@@ -3,6 +3,7 @@ import React from 'react';
 import ManagerLayout from '@/app/manager/manager_components/ManagerLayout/ManagerLayout';
 import { ManagerConfirmProvider } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
 import { ManagerQueryProvider } from '@/app/manager/manager_components/ManagerQueryProvider';
+import { ManagerMswBrowserBootstrap } from '@/app/manager/manager_mocks/ManagerMswBrowserBootstrap';
 
 export const metadata = {
   title: 'GymSmart MANAGER | Gym Management System',
@@ -11,10 +12,12 @@ export const metadata = {
 
 export default function MANAGERLayout({ children }: { children: React.ReactNode }) {
   return (
-    <ManagerQueryProvider>
-      <ManagerConfirmProvider>
-        <ManagerLayout>{children}</ManagerLayout>
-      </ManagerConfirmProvider>
-    </ManagerQueryProvider>
+    <ManagerMswBrowserBootstrap>
+      <ManagerQueryProvider>
+        <ManagerConfirmProvider>
+          <ManagerLayout>{children}</ManagerLayout>
+        </ManagerConfirmProvider>
+      </ManagerQueryProvider>
+    </ManagerMswBrowserBootstrap>
   );
 }

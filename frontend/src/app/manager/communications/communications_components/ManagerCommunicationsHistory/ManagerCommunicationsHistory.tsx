@@ -21,6 +21,15 @@ export default function ManagerCommunicationsHistory() {
 
   if (isLoading) return <TableSkeleton rows={5} />;
 
+  if (isError) {
+    return (
+      <div role="alert" className="bg-card border border-border rounded-xl p-12 text-center space-y-3">
+        <p className="text-sm font-semibold text-danger">Unable to load campaigns.</p>
+        <p className="text-sm text-secondary">Please retry the request or adjust the current filters.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-4">
       {/* Toolbar */}

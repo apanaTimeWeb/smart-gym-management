@@ -24,6 +24,12 @@ export type PendingPaymentMember = Omit<Member, 'plan'> & {
 export interface OverviewDataPoint {
   date: string;
   revenue: number;
+  newMembers: number;
+}
+
+export interface ReferralDataPoint {
+  source: string;
+  revenue: number;
 }
 
 export interface MembershipReportItem {
@@ -95,6 +101,7 @@ export interface SalesContextType {
   setCurrentPage: (page: number) => void;
 
   overviewData: OverviewDataPoint[];
+  referralData: ReferralDataPoint[];
   membershipReport: MembershipReportItem[];
   membershipTotals: MembershipTotals;
   pendingPayments: PendingPaymentMember[];

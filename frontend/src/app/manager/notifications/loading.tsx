@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Skeleton loading UI for the Notifications page — mimics KPI cards + list rows.
 export default function ManagerNotificationsLoading() {
   return (
-    <div className="min-h-full pb-10 animate-pulse">
+    <div className="min-h-full pb-10 motion-safe:animate-pulse">
       <div className="bg-card border-b border-border px-6 py-4">
         <div className="h-6 w-48 bg-skeleton-base rounded-lg" />
         <div className="h-4 w-72 bg-skeleton-base rounded mt-2" />

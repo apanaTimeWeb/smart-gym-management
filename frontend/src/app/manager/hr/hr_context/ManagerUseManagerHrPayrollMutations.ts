@@ -26,7 +26,7 @@ export function useManagerHrPayrollMutations(
       if (generated.length) setPayrolls((previous) => [...generated, ...previous]);
       showToast(response.message, 'success');
     },
-    onError: (error) => showToast(error instanceof Error ? error.message : 'Request failed', 'error'),
+    onError: (error) => { if (error instanceof Error && error.message) showToast(error.message, 'error'); },
     onSettled: () => setSaving(false),
   });
 
@@ -55,7 +55,7 @@ export function useManagerHrPayrollMutations(
       showToast(response.message, 'success');
       setShowPayrollModal(false);
     },
-    onError: (error) => showToast(error instanceof Error ? error.message : 'Request failed', 'error'),
+    onError: (error) => { if (error instanceof Error && error.message) showToast(error.message, 'error'); },
     onSettled: () => setSaving(false),
   });
 
@@ -74,29 +74,29 @@ export function useManagerHrPayrollMutations(
       }
       showToast(response.message, 'success');
     },
-    onError: (error) => showToast(error instanceof Error ? error.message : 'Request failed', 'error'),
+    onError: (error) => { if (error instanceof Error && error.message) showToast(error.message, 'error'); },
   });
 
   const giveAdvanceMutation = useMutation({
-    mutationFn: (data: { staffId: string; amount: number; notes?: string; date?: string; paymentMode?: string }) => hrApi.giveAdvance(data),
+    mutationFn: (data: { staffId: string; amount: number; notes?: string; date?: string; paymentMode?: string }) => hrApi.giveStaffAdvance(data),
     onMutate: () => setSaving(true),
     onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: ['manager', 'hr', 'staff'] });
       showToast(response.message, 'success');
     },
-    onError: (error) => showToast(error instanceof Error ? error.message : 'Request failed', 'error'),
+    onError: (error) => { if (error instanceof Error && error.message) showToast(error.message, 'error'); },
     onSettled: () => setSaving(false),
   });
 
   const payDueMutation = useMutation({
-    mutationFn: (data: { staffId: string; amount: number; notes?: string; date?: string; paymentMode?: string }) => hrApi.payDue(data),
+    mutationFn: (data: { staffId: string; amount: number; notes?: string; date?: string; paymentMode?: string }) => hrApi.payStaffDue(data),
     onMutate: () => setSaving(true),
     onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: ['manager', 'hr', 'staff'] });
       queryClient.invalidateQueries({ queryKey: ['manager', 'hr', 'summary'] });
       showToast(response.message, 'success');
     },
-    onError: (error) => showToast(error instanceof Error ? error.message : 'Request failed', 'error'),
+    onError: (error) => { if (error instanceof Error && error.message) showToast(error.message, 'error'); },
     onSettled: () => setSaving(false),
   });
 

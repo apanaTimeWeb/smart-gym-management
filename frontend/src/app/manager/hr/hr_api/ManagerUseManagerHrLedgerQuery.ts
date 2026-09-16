@@ -7,7 +7,7 @@ import { hrApi } from '@/app/manager/hr/hr_api/ManagerHrApi';
 export function useManagerHrLedgerQuery(staffId: string) {
   return useQuery({
     queryKey: ['manager', 'hr', 'ledger', staffId],
-    queryFn: () => hrApi.getLedger(staffId),
+    queryFn: () => hrApi.fetchLedger(staffId),
     enabled: Boolean(staffId),
   });
 }

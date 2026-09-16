@@ -9,7 +9,7 @@ import { formatCurrency , formatDate} from '@/lib/formatters';
 
 export default function ManagerDashboardPendingPayments() {
   const { timeRange } = useManagerDashboardStore();
-  const { data: stats } = useDashboardStatsQuery(timeRange);
+  const { data: stats } = useDashboardStatsQuery({ range: timeRange });
   const [search, setSearch] = useState('');
   const [remindedId, setRemindedId] = useState<string | null>(null);
 
@@ -57,10 +57,10 @@ export default function ManagerDashboardPendingPayments() {
               <p className="text-sm font-bold text-danger">{formatCurrency(p.pendingAmount)}</p>
               <button
                 onClick={() => setRemindedId(p.id)}
-                className={`p-1.5 rounded-lg transition-colors ${
+                className={`p-1.5 rounded-lg motion-safe:transition-colors ${
                   remindedId === p.id 
                     ? 'text-success bg-success-bg' 
-                    : 'text-secondary hover:text-warning hover:bg-warning-bg opacity-0 group-hover:opacity-100 focus:opacity-100 motion-safe:transition-opacity'
+                    : 'text-secondary hover:text-warning hover:bg-warning-bg opacity-100 lg:opacity-0 lg:group-hover:opacity-100 focus:opacity-100 motion-safe:transition-opacity'
                 }`}
                 title="Send Reminder"
               >

@@ -38,7 +38,7 @@ export function useManagerMembersUrlState() {
   }, [searchParams, pathname, router]);
 
   const setSortColumn = useCallback((val: 'name' | 'joinDate' | 'expiryDate' | 'paidAmount' | 'status') => setUrlParam('sort', val), [setUrlParam]);
-  const setSortDirection = useCallback((val: 'asc' | 'desc') => setUrlParam('dir', val), [setUrlParam]);
+  const setSortDirection = useCallback((val: SortDirection) => setUrlParam('dir', val), [setUrlParam]);
   const setCurrentPage = useCallback((val: number) => setUrlParam('page', val.toString()), [setUrlParam]);
 
   const genderFilter = searchParams.get('gender') || 'All';

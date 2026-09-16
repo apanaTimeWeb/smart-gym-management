@@ -9,13 +9,11 @@ export default function AdminHrPaymentModal() {
   const { paymentModal, setPaymentModal, markPayrollPaid } = useHrContext();
   const [amount, setAmount] = useState<number | ''>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-
-  useEffect(() => {
-    if (paymentModal) {
-      setAmount(paymentModal.pendingAmount);
-    }
-  }, [paymentModal]);
+  const [prevModal, setPrevModal] = useState(paymentModal);
+  if (paymentModal !== prevModal) {
+    setPrevModal(paymentModal);
+    if (paymentModal) setAmount(paymentModal.pendingAmount);
+  }
 
   if (!paymentModal) return null;
 

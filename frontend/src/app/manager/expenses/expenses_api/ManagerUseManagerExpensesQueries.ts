@@ -12,13 +12,13 @@ export const managerExpensesQueryKeys = {
 export function useExpensesListQuery(params?: Record<string, string>) {
   return useQuery({
     queryKey: managerExpensesQueryKeys.list(params),
-    queryFn: () => expensesApi.getAll(params).then(res => res.data),
+    queryFn: () => expensesApi.fetchExpenses(params).then(res => res.data),
   });
 }
 
 export function useExpensesStatsQuery() {
   return useQuery({
     queryKey: managerExpensesQueryKeys.stats(),
-    queryFn: () => expensesApi.getStats().then(res => res.data),
+    queryFn: () => expensesApi.fetchExpenseStats().then(res => res.data),
   });
 }

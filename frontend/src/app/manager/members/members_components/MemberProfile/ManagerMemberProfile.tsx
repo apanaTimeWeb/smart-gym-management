@@ -26,7 +26,7 @@ export default function ManagerMemberProfile() {
       <div className="p-6 space-y-5">
         <button
           onClick={() => setSelectedMember(null)}
-          className="text-sm text-secondary hover:text-primary flex items-center gap-1.5 transition-all duration-200"
+          className="text-sm text-secondary hover:text-primary flex items-center gap-1.5 motion-safe:transition-all duration-200"
         >
           ← Back to Members
         </button>
@@ -57,25 +57,25 @@ export default function ManagerMemberProfile() {
             <div className="flex gap-2 flex-wrap">
               <button
                 onClick={() => openEdit(selectedMember)}
-                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold border border-border rounded-xl hover:bg-primary-subtle text-primary transition-all duration-200 active:scale-95"
+                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold border border-border rounded-xl hover:bg-primary-subtle text-primary motion-safe:transition-all duration-200 active:scale-95"
               >
                 <Edit size={14} /> Edit
               </button>
               <button
                 onClick={() => setShowRenewModal(true)}
-                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold border border-border rounded-xl hover:bg-primary/10 text-primary transition-all duration-200 active:scale-95 bg-primary/5"
+                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold border border-border rounded-xl hover:bg-primary/10 text-primary motion-safe:transition-all duration-200 active:scale-95 bg-primary/5"
               >
                 Renew Plan
               </button>
               <button
                 onClick={() => openMsg(selectedMember, 'whatsapp')}
-                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold bg-success text-primary-foreground rounded-xl hover:opacity-90 transition-all duration-200 active:scale-95"
+                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold bg-success text-primary-foreground rounded-xl hover:opacity-90 motion-safe:transition-all duration-200 active:scale-95"
               >
                 <MessageCircle size={14} /> WhatsApp
               </button>
               <button
                 onClick={() => openMsg(selectedMember, 'email')}
-                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold bg-info text-primary-foreground rounded-xl hover:opacity-90 transition-all duration-200 active:scale-95"
+                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold bg-info text-primary-foreground rounded-xl hover:opacity-90 motion-safe:transition-all duration-200 active:scale-95"
               >
                 <Mail size={14} /> Email
               </button>
@@ -109,7 +109,7 @@ export default function ManagerMemberProfile() {
               <button
                 key={t}
                 onClick={() => { setProfileTab(t as "overview" | "attendance" | "payments" | "workout" | "diet"); }}
-                className={`px-5 py-3.5 text-sm font-medium transition-all duration-200 border-b-2 ${profileTab === t
+                className={`px-5 py-3.5 text-sm font-medium motion-safe:transition-all duration-200 border-b-2 ${profileTab === t
                     ? 'text-primary bg-primary-subtle border-primary'
                     : 'border-transparent text-secondary hover:text-primary'
                   }`}

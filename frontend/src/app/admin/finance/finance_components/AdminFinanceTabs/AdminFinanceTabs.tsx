@@ -15,8 +15,11 @@ export default function AdminFinanceTabs() {
   const { loadAll, search, setSearch, methodFilter, setMethodFilter, statusFilter, setStatusFilter } = useAdminFinanceLogic();
 
   const [localSearch, setLocalSearch] = useState(search);
-
-  useEffect(() => { setLocalSearch(search); }, [search]);
+  const [prevSearch, setPrevSearch] = useState(search);
+  if (search !== prevSearch) {
+    setPrevSearch(search);
+    setLocalSearch(search);
+  }
 
   useEffect(() => {
     const timer = setTimeout(() => { if (localSearch !== search) { setSearch(localSearch); } }, 300);

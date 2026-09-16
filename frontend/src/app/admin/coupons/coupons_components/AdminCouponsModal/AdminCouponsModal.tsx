@@ -2,7 +2,7 @@
 // RESPONSIBILITY: Renders the create/edit coupon modal with full form validation via React Hook Form + Zod.
 
 import { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { X } from 'lucide-react';
 import { useAdminCouponsLogic } from '@/app/admin/coupons/coupons_context/useAdminCouponsLogic';
@@ -12,7 +12,7 @@ import type { CouponFormValues } from '@/app/admin/coupons/coupons_types/AdminCo
 export default function AdminCouponsModal() {
   const { showModal, setShowModal, editId, form, saveCoupon, saving } = useAdminCouponsLogic();
 
-  const { register, handleSubmit, reset, watch, setValue, formState: { errors } } = useForm<CouponFormValues>({
+  const { register, handleSubmit, reset, watch, setValue, formState: { errors }, control } = useForm<CouponFormValues>({
     resolver: zodResolver(CouponSchema),
     defaultValues: form,
   });
@@ -20,7 +20,10 @@ export default function AdminCouponsModal() {
   // Sync external form state into RHF when modal opens
   useEffect(() => { if (showModal) reset(form); }, [showModal, form, reset]);
 
-  const selectedGyms = watch('assignedGyms') ?? [];
+  useEffect(() => { if (showModal) reset(form); }, [showModal, form, reset]);
+
+  const formValues = useWatch({ control });
+  const selectedGyms = formValues.assignedGyms ?? form.assignedGyms ?? [];
 
   const toggleGym = (val: string) => {
     if (val === 'all') { setValue('assignedGyms', ['all']); return; }

@@ -15,14 +15,14 @@ export const managerSalesQueryKeys = {
 export function useSalesOverviewQuery(params?: Record<string, string>) {
   return useQuery({
     queryKey: managerSalesQueryKeys.overview(params),
-    queryFn: () => salesApi.getOverview(params).then(res => res.data?.monthlyRevenue || []),
+    queryFn: () => salesApi.fetchSalesOverview(params).then(res => res.data?.monthlyRevenue || []),
   });
 }
 
 export function useMembershipReportQuery(params?: Record<string, string>) {
   return useQuery({
     queryKey: managerSalesQueryKeys.membershipReport(params),
-    queryFn: () => salesApi.getMembershipReport(params).then(res => ({
+    queryFn: () => salesApi.fetchMembershipReport(params).then(res => ({
       report: res.data?.report || [],
       totals: res.data?.totals || { activeCount: 0, revenue: 0, totalReceivable: 0, totalReceived: 0, remaining: 0, refunds: 0 }
     })),
@@ -32,7 +32,7 @@ export function useMembershipReportQuery(params?: Record<string, string>) {
 export function usePendingPaymentsQuery(params?: Record<string, string>) {
   return useQuery({
     queryKey: managerSalesQueryKeys.pendingPayments(params),
-    queryFn: () => salesApi.getPendingPayments(params).then(res => ({
+    queryFn: () => salesApi.fetchPendingPayments(params).then(res => ({
       members: res.data?.members || [],
       total: res.data?.total || 0
     })),
@@ -42,7 +42,7 @@ export function usePendingPaymentsQuery(params?: Record<string, string>) {
 export function useAllMembershipsQuery(params?: Record<string, string>) {
   return useQuery({
     queryKey: managerSalesQueryKeys.allMemberships(params),
-    queryFn: () => salesApi.getAllMemberships(params).then(res => ({
+    queryFn: () => salesApi.fetchAllMemberships(params).then(res => ({
       members: res.data?.members || [],
       total: res.data?.total || 0
     })),

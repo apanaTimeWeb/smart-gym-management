@@ -2,6 +2,7 @@
 // RESPONSIBILITY: React Context — bridges TanStack Query plans with UI state (search, filters, modal) synced to URL.
 // DATA FLOW: URL → usePlansContext → useManagerPlansQueries → API
 import { createContext, useContext, useState, useCallback, useMemo } from 'react';
+import { useManagerDebounce } from '@/app/manager/manager_utils/ManagerDebounce';
 import type { ReactNode } from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { useFetchPlans, useRequestPlanChange } from '@/app/manager/plans/plans_api/ManagerUseManagerPlansQueries';
@@ -41,6 +42,7 @@ export function PlansProvider({ children }: { children: ReactNode }) {
   const tierFilter = searchParams.get('tier') || 'ALL';
   const statusFilter = searchParams.get('status') || 'ALL';
   const activeTab = searchParams.get('tab') || 'View Plans';
+  const debouncedSearch = useManagerDebounce(search, 300);
 
   const updateUrl = useCallback((key: string, value: string) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -56,19 +58,15 @@ export function PlansProvider({ children }: { children: ReactNode }) {
 
   const [requestModalPlan, setRequestModalPlan] = useState<Plan | null>(null);
 
-  const { data: plans = [], status } = useFetchPlans();
+  const queryParams = useMemo(() => ({ search: debouncedSearch, tier: tierFilter, status: statusFilter }), [debouncedSearch, tierFilter, statusFilter]);
+  const { data: plansData, status } = useFetchPlans(queryParams);
+  const plans = plansData?.plans ?? [];
   const { mutateAsync: requestChange, isPending: saving } = useRequestPlanChange();
 
   const isPending = status === 'pending';
   const isError = status === 'error';
 
-  const filteredPlans = useMemo(() => plans.filter(p => {
-    const q = search.toLowerCase();
-    const matchSearch = !search || p.name?.toLowerCase().includes(q) || p.tier?.toLowerCase().includes(q);
-    const matchTier = tierFilter === 'ALL' || p.tier === tierFilter;
-    const matchStatus = statusFilter === 'ALL' || (statusFilter === 'ACTIVE' ? p.isActive : !p.isActive);
-    return matchSearch && matchTier && matchStatus;
-  }), [plans, search, tierFilter, statusFilter]);
+  const filteredPlans = plans;
 
   const openRequestModal = useCallback((plan: Plan) => setRequestModalPlan(plan), []);
   const closeRequestModal = useCallback(() => setRequestModalPlan(null), []);

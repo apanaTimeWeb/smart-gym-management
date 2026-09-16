@@ -1,111 +1,34 @@
 "use client";
-import { ADMIN_CHART_THEME } from '@/app/admin/admin_utils/AdminChartThemeTokens';
+// RESPONSIBILITY: Renders Admin Sales revenue, member-trend, and referral-source charts using ApexCharts.
+import dynamic from 'next/dynamic';
 import { formatCurrency, formatKPI } from '@/lib/formatters';
-// RESPONSIBILITY: Provides the implementation for AdminSalesOverview.tsx functionality within its module.
-
 import { useAdminSalesLogic } from '@/app/admin/sales/sales_context/useAdminSalesLogic';
-import { 
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-  AreaChart, Area, PieChart, Pie, Cell, Legend
-} from 'recharts';
-import { Loader2 } from 'lucide-react';
+
+const ReactApexChart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 export default function AdminSalesOverview() {
-  const { overviewData, status } = useAdminSalesLogic();
+  const { overviewData, referralData, status } = useAdminSalesLogic();
+  if (status === 'pending') return <div className="space-y-6 motion-safe:animate-pulse"><div className="bg-card p-5 rounded-xl border border-border shadow-lg h-80" /><div className="bg-card p-5 rounded-xl border border-border shadow-lg h-80" /><div className="bg-card p-5 rounded-xl border border-border shadow-lg h-80" /></div>;
+  if (status === 'error') return <div className="text-center py-16 bg-card rounded-2xl border border-danger/30"><p className="text-danger font-medium">Sales overview could not be loaded.</p></div>;
 
-  const referralData = [
-    { name: 'Instagram', value: 45000, color: ADMIN_CHART_THEME.danger },
-    { name: 'Google Ads', value: 65000, color: 'var(--primary)' },
-    { name: 'Word of Mouth', value: 25000, color: ADMIN_CHART_THEME.success },
-    { name: 'Walk-in', value: 15000, color: 'var(--warning)' },
-  ];
+  const months = overviewData.map((item) => item.date);
+  const revenue = overviewData.map((item) => item.revenue);
+  const members = overviewData.map((item) => item.newMembers);
+  const pieLabels = referralData.map((item) => item.source);
+  const pieSeries = referralData.map((item) => item.revenue);
 
-  if (status === 'pending') {
-    return (
-      <div className="space-y-6 motion-safe:animate-pulse">
-        <div className="bg-card p-5 rounded-xl border border-border shadow-lg h-80"></div>
-        <div className="bg-card p-5 rounded-xl border border-border shadow-lg h-80"></div>
-      </div>
-    );
-  }
-
-  if (status === 'error') {
-    return (
-      <div className="text-center py-16 bg-card rounded-2xl border border-danger/30">
-        <p className="text-danger font-medium">Failed to load sales overview.</p>
-        <p className="text-sm mt-1 text-secondary">Please check your connection and try again.</p>
-      </div>
-    );
-  }
-
- return (
- <div className="space-y-6">
- <div className="bg-card p-5 rounded-xl border border-border shadow-lg dark:shadow-none">
- <h3 className="font-bold text-foreground mb-4">Monthly Revenue (₹)</h3>
- <div className="h-72 w-full">
-  <ResponsiveContainer width="100%" height="100%">
-    <BarChart data={overviewData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" />
-      <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: ADMIN_CHART_THEME.textSecondary, fontSize: 12 }} />
-      <YAxis axisLine={false} tickLine={false} tick={{ fill: ADMIN_CHART_THEME.textSecondary, fontSize: 12 }} tickFormatter={(val) => `${formatKPI(val)}K`} />
-      <Tooltip 
-        cursor={{ fill: 'var(--bg-card)', opacity: 0.5 }}
-        contentStyle={{ borderRadius: '8px', border: 'none', backgroundColor: 'var(--bg-card)', color: 'var(--text-primary)' }}
-        formatter={(value: number | string | readonly (string | number)[] | undefined) => [formatCurrency(Number(Array.isArray(value) ? value[0] : (value || 0))), 'Revenue']}
-      />
-      <Bar dataKey="revenue" fill="var(--primary)" radius={[6, 6, 0, 0]} barSize={40} />
-    </BarChart>
-  </ResponsiveContainer>
- </div>
- </div>
- 
- <div className="bg-card p-5 rounded-xl border border-border shadow-lg dark:shadow-none">
- <h3 className="font-bold text-foreground mb-4">New Members Trend</h3>
- <div className="h-64 w-full">
-  <ResponsiveContainer width="100%" height="100%">
-    <AreaChart data={overviewData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-      <defs>
-        <linearGradient id="colorMembers" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="5%" stopColor="var(--danger)" stopOpacity={0.4}/>
-          <stop offset="95%" stopColor="var(--danger)" stopOpacity={0}/>
-        </linearGradient>
-      </defs>
-      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" />
-      <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: ADMIN_CHART_THEME.textSecondary, fontSize: 12 }} />
-      <YAxis axisLine={false} tickLine={false} tick={{ fill: ADMIN_CHART_THEME.textSecondary, fontSize: 12 }} />
-      <Tooltip 
-        contentStyle={{ borderRadius: '8px', border: 'none', backgroundColor: 'var(--bg-card)', color: 'var(--text-primary)' }}
-      />
-      <Area type="monotone" dataKey="newMembers" stroke="var(--danger)" strokeWidth={3} fillOpacity={1} fill="url(#colorMembers)" />
-    </AreaChart>
-  </ResponsiveContainer>
- </div>
- </div>
- 
- <div className="bg-card p-5 rounded-xl border border-border shadow-lg dark:shadow-none">
-   <h3 className="font-bold text-foreground mb-4">Marketing ROI: Revenue by Referral Source</h3>
-   <div className="h-64 w-full">
-    <ResponsiveContainer width="100%" height="100%">
-      <PieChart>
-        <Pie
-          data={referralData}
-          cx="50%"
-          cy="50%"
-          innerRadius={60}
-          outerRadius={80}
-          paddingAngle={5}
-          dataKey="value"
-        >
-          {referralData.map((entry, index) => (
-            <Cell key={`cell-${index}`} fill={entry.color} />
-          ))}
-        </Pie>
-        <Tooltip formatter={(value: unknown) => formatCurrency(Number(value || 0))} />
-        <Legend verticalAlign="bottom" height={36} />
-      </PieChart>
-    </ResponsiveContainer>
-   </div>
- </div>
- </div>
- );
+  return <div className="space-y-6">
+    <div className="bg-card p-5 rounded-xl border border-border shadow-lg dark:shadow-none">
+      <h3 className="font-bold text-foreground mb-4">Monthly Revenue (₹)</h3>
+      <ReactApexChart type="bar" height={288} options={{ chart: { toolbar: { show: false } }, xaxis: { categories: months, labels: { style: { colors: 'var(--text-secondary)' } } }, yaxis: { labels: { formatter: (value: number) => `${formatKPI(value)}K` } }, dataLabels: { enabled: false }, grid: { borderColor: 'var(--border)' }, tooltip: { y: { formatter: (value: number) => formatCurrency(value) } } }} series={[{ name: 'Revenue', data: revenue }]} />
+    </div>
+    <div className="bg-card p-5 rounded-xl border border-border shadow-lg dark:shadow-none">
+      <h3 className="font-bold text-foreground mb-4">New Members Trend</h3>
+      <ReactApexChart type="area" height={256} options={{ chart: { toolbar: { show: false } }, xaxis: { categories: months }, dataLabels: { enabled: false }, stroke: { curve: 'smooth', width: 3 }, fill: { opacity: 0.25 }, grid: { borderColor: 'var(--border)' }, tooltip: { y: { formatter: (value: number) => formatKPI(value) } } }} series={[{ name: 'New Members', data: members }]} />
+    </div>
+    <div className="bg-card p-5 rounded-xl border border-border shadow-lg dark:shadow-none">
+      <h3 className="font-bold text-foreground mb-4">Marketing ROI: Revenue by Referral Source</h3>
+      <ReactApexChart type="donut" height={256} options={{ labels: pieLabels, chart: { toolbar: { show: false } }, legend: { position: 'bottom' }, dataLabels: { enabled: false }, tooltip: { y: { formatter: (value: number) => formatCurrency(value) } } }} series={pieSeries} />
+    </div>
+  </div>;
 }

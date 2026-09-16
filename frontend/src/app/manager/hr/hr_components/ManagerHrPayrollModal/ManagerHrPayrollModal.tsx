@@ -72,7 +72,7 @@ export default function ManagerHrPayrollModal() {
           <h2 className="text-xl font-bold text-foreground">
             Disburse Payroll
           </h2>
-          <button onClick={async () => { if (!isDirty || await confirm({ title: 'Discard Changes', message: 'Discard unsaved changes?', confirmText: 'Discard', type: 'warning' })) setShowPayrollModal(false); }} className="p-2 rounded-full hover:bg-primary/10 transition-colors text-secondary hover:text-primary">
+          <button onClick={async () => { if (!isDirty || await confirm({ title: 'Discard Changes', message: 'Discard unsaved changes?', confirmText: 'Discard', type: 'warning' })) setShowPayrollModal(false); }} className="p-2 rounded-full hover:bg-primary/10 motion-safe:transition-colors text-secondary hover:text-primary">
             <X size={20} />
           </button>
         </div>
@@ -102,7 +102,7 @@ export default function ManagerHrPayrollModal() {
               <input 
                 type="month"
                 {...register('month')}
-                className="w-full px-4 py-3 border border-border rounded-xl text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-foreground transition-all duration-200"
+                className="w-full px-4 py-3 border border-border rounded-xl text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-foreground motion-safe:transition-all duration-200"
               />
               {errors.month && <p className="text-danger text-xs mt-1.5">{errors.month.message as string}</p>}
             </div>
@@ -112,7 +112,7 @@ export default function ManagerHrPayrollModal() {
               <input 
                 type="number" min="0" onKeyDown={(e) => { if (['e', 'E', '-', '+'].includes(e.key)) e.preventDefault(); }}
                 {...register('amount', { valueAsNumber: true })}
-                className="w-full px-4 py-3 border border-border rounded-xl text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-foreground transition-all duration-200"
+                className="w-full px-4 py-3 border border-border rounded-xl text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-foreground motion-safe:transition-all duration-200"
               />
               
               {calcData ? (
@@ -148,7 +148,7 @@ export default function ManagerHrPayrollModal() {
               <input 
                 type="number" min="0" onKeyDown={(e) => { if (['e', 'E', '-', '+'].includes(e.key)) e.preventDefault(); }}
                 {...register('paidAmount', { valueAsNumber: true })}
-                className="w-full px-4 py-3 border border-border rounded-xl text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-foreground transition-all duration-200"
+                className="w-full px-4 py-3 border border-border rounded-xl text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-foreground motion-safe:transition-all duration-200"
               />
               <p className="text-xs text-secondary mt-1.5">
                 Set to 0 if you are only recording the payroll and paying later.
@@ -161,7 +161,7 @@ export default function ManagerHrPayrollModal() {
               <textarea 
                 {...register('notes')}
                 rows={3}
-                className="w-full px-4 py-3 rounded-xl border border-border text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-all duration-200 resize-none bg-input text-foreground"
+                className="w-full px-4 py-3 rounded-xl border border-border text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-safe:transition-all duration-200 resize-none bg-input text-foreground"
                 placeholder="Optional notes..."
               />
             </div>
@@ -173,7 +173,7 @@ export default function ManagerHrPayrollModal() {
           <button 
             type="button" 
             onClick={async () => { if (!isDirty || await confirm({ title: 'Discard Changes', message: 'Discard unsaved changes?', confirmText: 'Discard', type: 'warning' })) setShowPayrollModal(false); }}
-            className="px-6 py-2.5 rounded-xl text-sm font-semibold border border-border transition-colors text-secondary hover:bg-primary/5 hover:text-foreground"
+            className="px-6 py-2.5 rounded-xl text-sm font-semibold border border-border motion-safe:transition-colors text-secondary hover:bg-primary/5 hover:text-foreground"
           >
             Cancel
           </button>
@@ -181,7 +181,7 @@ export default function ManagerHrPayrollModal() {
             type="submit" 
             form="payroll-form"
             disabled={saving}
-            className="flex items-center gap-2 px-8 py-2.5 rounded-xl text-sm font-bold text-primary-foreground transition-all hover:scale-105 active:scale-95 shadow-lg disabled:opacity-70 disabled:hover:scale-100 bg-primary"
+            className="flex items-center gap-2 px-8 py-2.5 rounded-xl text-sm font-bold text-primary-foreground motion-safe:transition-all hover:scale-105 active:scale-95 shadow-lg disabled:opacity-70 disabled:hover:scale-100 bg-primary"
           >
             {saving ? <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full motion-safe:animate-spin" /> : <Check size={16} />}
             {saving ? 'Saving...' : 'Disburse Payroll'}

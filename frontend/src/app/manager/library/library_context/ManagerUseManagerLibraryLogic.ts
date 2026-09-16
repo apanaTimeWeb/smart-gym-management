@@ -11,6 +11,7 @@ import { EMPTY_DIET_FORM, type DietFormValues } from '@/app/manager/library/libr
 import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
 import { useManagerDebounce } from '@/app/manager/manager_utils/ManagerDebounce';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
 
 export function useManagerLibraryLogic(initialData?: LibraryInitialData | null): LibraryContextType {
   const { confirm } = useConfirm();
@@ -35,17 +36,17 @@ export function useManagerLibraryLogic(initialData?: LibraryInitialData | null):
   const setSearch = useCallback((value: string) => setUrlParam('search', value || null), [setUrlParam]);
   const setCurrentPage = useCallback((page: number) => setUrlParam('page', String(page)), [setUrlParam]);
 
-  const queryKey = useMemo(() => ['manager', 'library', 'diet-plans', { search: debouncedSearch, page: currentPage, limit: 12 }] as const, [currentPage, debouncedSearch]);
-  const dietQuery = useQuery({ queryKey, queryFn: async () => (await libraryApi.getDietPlans({ search: debouncedSearch, page: String(currentPage), limit: '12' })).data ?? { dietPlans: [], total: 0 }, initialData: initialData ? { dietPlans: initialData.dietPlans, total: initialData.dietPlans.length } : undefined });
+  const queryKey = useMemo(() => ['manager', 'library', 'diet-plans', { search: debouncedSearch, page: currentPage, limit: MANAGER_ITEMS_PER_PAGE }] as const, [currentPage, debouncedSearch]);
+  const dietQuery = useQuery({ queryKey, queryFn: async () => (await libraryApi.fetchDietPlans({ search: debouncedSearch, page: String(currentPage), limit: String(MANAGER_ITEMS_PER_PAGE) })) ?? { dietPlans: [], total: 0 }, initialData: initialData ? { dietPlans: initialData.dietPlans, total: initialData.dietPlans.length } : undefined });
   const mutation = useMutation({
     mutationFn: async (input: { id: string | null; data: Partial<DietPlan> }) => input.id ? libraryApi.updateDietPlan(input.id, input.data) : libraryApi.createDietPlan(input.data),
-    onSuccess: (response) => { setToast({ message: response.message, type: 'success' }); setShowDietModal(false); queryClient.invalidateQueries({ queryKey: ['manager', 'library', 'diet-plans'] }); },
-    onError: (error) => setToast({ message: error instanceof Error ? error.message : 'Unable to save diet plan.', type: 'error' }),
+    onSuccess: (response) => { setToast({ message: 'Diet plan saved successfully.', type: 'success' }); setShowDietModal(false); queryClient.invalidateQueries({ queryKey: ['manager', 'library', 'diet-plans'] }); },
+    onError: (error) => setToast({ message: 'Unable to save diet plan.', type: 'error' }),
   });
   const deleteMutation = useMutation({
-    mutationFn: libraryApi.removeDietPlan,
-    onSuccess: (response) => { setToast({ message: response.message, type: 'success' }); queryClient.invalidateQueries({ queryKey: ['manager', 'library', 'diet-plans'] }); },
-    onError: (error) => setToast({ message: error instanceof Error ? error.message : 'Unable to delete diet plan.', type: 'error' }),
+    mutationFn: libraryApi.deleteDietPlan,
+    onSuccess: (response) => { setToast({ message: 'Diet plan deleted successfully.', type: 'success' }); queryClient.invalidateQueries({ queryKey: ['manager', 'library', 'diet-plans'] }); },
+    onError: (error) => setToast({ message: 'Unable to delete diet plan.', type: 'error' }),
   });
 
   const openAddDiet = useCallback(() => { setEditDietId(null); setEditDietData(EMPTY_DIET_FORM as unknown as DietPlan); setShowDietModal(true); }, []);
@@ -55,6 +56,7 @@ export function useManagerLibraryLogic(initialData?: LibraryInitialData | null):
 
   return {
     dietPlans: dietQuery.data?.dietPlans ?? [],
+    totalDietPlans: dietQuery.data?.total ?? 0,
     isLoading: dietQuery.isPending,
     isError: dietQuery.isError,
     saving: mutation.isPending || deleteMutation.isPending,

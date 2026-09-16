@@ -9,10 +9,9 @@ import { COUPON_STATUS_OPTIONS } from '@/app/admin/coupons/coupons_utils/AdminCo
 import { AdminSearchableDropdown } from '@/app/admin/admin_components/AdminShared/AdminSearchableDropdown';
 
 export default function AdminCouponsToolbar() {
-  const { statusFilter, setStatusFilter, setSearch } = useAdminCouponsStore();
+  const { statusFilter, setStatusFilter, setSearch, dateRange, setDateRange } = useAdminCouponsStore();
   const { openAdd } = useAdminCouponsLogic();
   const [localSearch, setLocalSearch] = useState('');
-  const [dateRange, setDateRange] = useState('all_time');
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLocalSearch(e.target.value);

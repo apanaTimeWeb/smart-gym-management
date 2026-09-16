@@ -29,7 +29,7 @@ ApexCharts exclusively. This module must never import from `/manager`, `/trainer
 - Zustand stores: None — dashboard is read-only, no UI mutations
 - Context providers: None for server-state ownership; `AdminDashboardMain` consumes `useAdminDashboardLogic` directly
 - Local-storage keys: None
-- MSW handler: `admin/admin_mocks/handlers/AdminMockHandlers.ts` (module-owned central Admin transport)
+- MSW handler: `admin/dashboard/dashboard_mocks/handlers/AdminDashboardMockHandlers.ts` (module-owned MSW transport)
 
 ## User Flows
 1. Admin navigates to `/admin/dashboard` → `page.tsx` validates cookie → renders `loading.tsx` skeleton
@@ -101,4 +101,4 @@ ApexCharts exclusively. This module must never import from `/manager`, `/trainer
 
 ## Module-Owned MSW Fixtures
 
-All Admin frontend-first API fixtures and MSW transport handlers are owned by `admin/admin_mocks/fixtures/AdminMockFixtures.ts` and `admin/admin_mocks/handlers/AdminMockHandlers.ts`. These files provide populated success responses and are the only module-owned mock transport source for Admin. Global MSW bootstrap may register these handlers, but must not contain Admin business data.
+All Admin frontend-first API fixtures and MSW transport handlers are owned by `admin/dashboard_mocks/fixtures/AdminDashboardMockFixtures.ts` and `admin/dashboard/dashboard_mocks/handlers/AdminDashboardMockHandlers.ts`. These files provide populated success responses and are the only module-owned mock transport source for Admin. Global MSW bootstrap may register these handlers, but must not contain Admin business data.

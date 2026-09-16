@@ -2,6 +2,7 @@
 export const AdminMembersUrlConfig = {
   root: '/admin/members',
   api: {
+    branchReference: '/admin/branches/fetchBranches',
     base: '/admin/members',
   }
 };

@@ -1,34 +1,34 @@
 "use client";
 import { formatCurrency } from '@/lib/formatters';
+import { displayValue } from '@/app/admin/admin_utils/AdminDisplayValue';
 // RESPONSIBILITY: Read-only profile view for Staff/Managers, showing details and assigned branches.
 
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import type { Staff } from '@/app/admin/hr/hr_types/AdminHrTypes';
 import { useHrContext } from '@/app/admin/hr/hr_context/AdminHrContext';
-import { X, Building2, User, Phone, Mail, MapPin, Calendar, Activity, CheckCircle2, Ban, Edit2, IndianRupee, Hash } from 'lucide-react';
+import { useAdminHrStaffProfileBranches } from '@/app/admin/hr/hr_context/useAdminHrStaffProfileBranches';
+import { ChevronDown, ChevronUp, X, Building2, User, Phone, Mail, MapPin, Calendar, Activity, CheckCircle2, Ban, Edit2, IndianRupee, Hash } from 'lucide-react';
 
 export default function AdminHrStaffProfileModal() {
   const { showProfileModal, setShowProfileModal, editData, openEdit } = useHrContext();
 
+  const isManager = editData?.role === 'Manager';
+
+  const branchQuery = useAdminHrStaffProfileBranches(Boolean(showProfileModal && editData));
+  const [branchSortDirection, setBranchSortDirection] = useState<'asc' | 'desc'>('asc');
+  const branchesById = useMemo(() => new Map((branchQuery.data ?? []).map((branch) => [branch.id, branch])), [branchQuery.data]);
+  const branchesToRender = useMemo(() => {
+    if (!editData) return [];
+    const values = isManager && editData.assignedBranches?.length ? editData.assignedBranches : [editData.branch || ''];
+    return [...values].filter(Boolean).sort((left, right) => {
+      const leftName = branchesById.get(left)?.name ?? left;
+      const rightName = branchesById.get(right)?.name ?? right;
+      const result = leftName.localeCompare(rightName);
+      return branchSortDirection === 'asc' ? result : -result;
+    });
+  }, [branchSortDirection, branchesById, editData, isManager]);
+
   if (!showProfileModal || !editData) return null;
-
-  const isManager = editData.role === 'Manager';
-
-  // Mock global branch data resolution (Ideally this comes from global store)
-  const resolveBranchInfo = (branchId: string) => {
-    const mockBranches: Record<string, { name: string, location: string }> = {
-      'b1': { name: 'Downtown Core', location: '123 Main St' },
-      'b2': { name: 'Westside Gym', location: '456 West Ave' },
-      'b3': { name: 'Eastside Fitness', location: '789 East Blvd' },
-      'b4': { name: 'North Park', location: '321 North Rd' },
-      'b5': { name: 'South End', location: '654 South St' },
-    };
-    return mockBranches[branchId] || { name: `Branch ${branchId}`, location: 'Unknown Location' };
-  };
-
-  const branchesToRender = isManager && editData.assignedBranches?.length 
-    ? editData.assignedBranches 
-    : [editData.branch || ''];
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-overlay backdrop-blur-sm">
@@ -77,11 +77,11 @@ export default function AdminHrStaffProfileModal() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="flex items-center gap-3 bg-input/50 p-3 rounded-xl border border-border/50">
                   <Phone size={16} className="text-secondary" />
-                  <span className="text-sm font-medium text-foreground">{editData.phone || 'N/A'}</span>
+                  <span className="text-sm font-medium text-foreground">{displayValue(editData.phone)}</span>
                 </div>
                 <div className="flex items-center gap-3 bg-input/50 p-3 rounded-xl border border-border/50">
                   <Mail size={16} className="text-secondary" />
-                  <span className="text-sm font-medium text-foreground truncate">{editData.email || 'N/A'}</span>
+                  <span className="text-sm font-medium text-foreground truncate">{displayValue(editData.email)}</span>
                 </div>
                 <div className="flex items-center gap-3 bg-input/50 p-3 rounded-xl border border-border/50">
                   <Calendar size={16} className="text-secondary" />
@@ -126,13 +126,13 @@ export default function AdminHrStaffProfileModal() {
                 <div className="flex items-center gap-3 bg-input/50 p-3 rounded-xl border border-border/50">
                   <Hash size={16} className="text-secondary" />
                   <span className="text-sm font-medium text-foreground">
-                    Aadhaar: {editData.aadhaar || 'N/A'}
+                    Aadhaar: {displayValue(editData.aadhaar)}
                   </span>
                 </div>
                 <div className="flex items-center gap-3 bg-input/50 p-3 rounded-xl border border-border/50">
                   <span className="text-xs font-bold border border-secondary text-secondary rounded px-1">UPI</span>
                   <span className="text-sm font-medium text-foreground truncate max-w-40" title={editData.upiId}>
-                    {editData.upiId || 'N/A'}
+                    {displayValue(editData.upiId)}
                   </span>
                 </div>
               </div>
@@ -150,7 +150,7 @@ export default function AdminHrStaffProfileModal() {
               <table className="w-full text-left border-collapse">
                 <thead className="bg-input/50">
                   <tr>
-                    <th className="px-4 py-3 text-xs font-semibold text-secondary uppercase tracking-wider">Branch</th>
+                    <th onClick={() => setBranchSortDirection((current) => current === 'asc' ? 'desc' : 'asc')} className="px-4 py-3 text-xs font-semibold text-secondary uppercase tracking-wider cursor-pointer select-none" aria-sort={branchSortDirection === 'asc' ? 'ascending' : 'descending'}><div className="flex items-center gap-1.5">Branch {branchSortDirection === 'asc' ? <ChevronUp size={13} className="text-primary"/> : <ChevronDown size={13} className="text-primary"/>}</div></th>
                     <th className="px-4 py-3 text-xs font-semibold text-secondary uppercase tracking-wider">Location</th>
                     {isManager && <th className="px-4 py-3 text-xs font-semibold text-secondary uppercase tracking-wider text-right">Badge</th>}
                   </tr>
@@ -158,7 +158,8 @@ export default function AdminHrStaffProfileModal() {
                 <tbody className="divide-y divide-border">
                   {branchesToRender.map((bId) => {
                     if (!bId) return null;
-                    const info = resolveBranchInfo(bId);
+                    const info = branchesById.get(bId);
+                    if (!info) return null;
                     const isPrimary = editData.primaryBranchId === bId || (!editData.primaryBranchId && bId === editData.branch);
                     
                     return (
@@ -188,7 +189,13 @@ export default function AdminHrStaffProfileModal() {
                       </tr>
                     );
                   })}
-                  {!branchesToRender.length && (
+                  {branchQuery.status === 'pending' && (
+                    <tr><td colSpan={3} className="px-4 py-8 text-center text-secondary text-sm">Loading branch assignments…</td></tr>
+                  )}
+                  {branchQuery.status === 'error' && (
+                    <tr><td colSpan={3} className="px-4 py-8 text-center text-secondary text-sm">Branch assignment data could not be loaded.</td></tr>
+                  )}
+                  {!branchesToRender.length && branchQuery.status === 'success' && (
                     <tr>
                       <td colSpan={3} className="px-4 py-8 text-center text-secondary text-sm">
                         No branches assigned.

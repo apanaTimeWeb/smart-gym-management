@@ -11,6 +11,7 @@ import ManagerDashboardExpiringMemberships from '@/app/manager/dashboard/dashboa
 import ManagerDashboardPromoCard from '@/app/manager/dashboard/dashboard_components/ManagerDashboardPromoCard/ManagerDashboardPromoCard';
 import ManagerDashboardMembershipDistribution from '@/app/manager/dashboard/dashboard_components/ManagerDashboardMembershipDistribution/ManagerDashboardMembershipDistribution';
 import { ManagerDateFilterDropdown } from '@/app/manager/manager_components/ManagerShared/ManagerDateFilterDropdown';
+import { displayValue } from '@/lib/formatters';
 import ManagerDashboardRevenueChart from '@/app/manager/dashboard/dashboard_components/ManagerDashboardRevenueChart/ManagerDashboardRevenueChart';
 import ManagerDashboardMemberGrowthChart from '@/app/manager/dashboard/dashboard_components/ManagerDashboardMemberGrowthChart/ManagerDashboardMemberGrowthChart';
 
@@ -38,7 +39,7 @@ function DashboardSkeleton() {
 
 export default function ManagerDashboardMain({ initialData }: { initialData?: DashboardStats | null }) {
   const { timeRange } = useManagerDashboardStore();
-  const { data: stats, isLoading, isError, error } = useDashboardStatsQuery(timeRange);
+  const { data: stats, isLoading, isError } = useDashboardStatsQuery({ range: timeRange });
 
   if (isLoading && !stats && !initialData) return <DashboardSkeleton />;
 
@@ -46,7 +47,7 @@ export default function ManagerDashboardMain({ initialData }: { initialData?: Da
     <div className="min-h-full flex items-center justify-center">
       <div className="text-center">
         <p className="font-medium text-danger">Failed to load dashboard</p>
-        <p className="text-sm mt-1 text-danger">{(error as Error)?.message}</p>
+        <p className="text-sm mt-1 text-secondary">Dashboard data could not be loaded. Please retry.</p>
       </div>
     </div>
   );

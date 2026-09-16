@@ -2,7 +2,9 @@ import { describe, it, expect, beforeAll, afterAll, afterEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import ManagerMembersMain from '@/app/manager/members/members_components/ManagerMembersMain/ManagerMembersMain';
 import { managerMswServer } from '@/app/manager/manager_mocks/ManagerMswTestServer';
+import { membersApi } from '@/app/manager/members/members_api/ManagerMembersApi';
 import { ManagerTestProviders } from '@/app/manager/manager_mocks/ManagerTestProviders';
+import { http, HttpResponse } from 'msw';
 
 beforeAll(() => managerMswServer.listen({ onUnhandledRequest: 'error' }));
 afterEach(() => managerMswServer.resetHandlers());
@@ -17,6 +19,42 @@ describe('Manager Members user-visible behavior', () => {
     render(<ManagerTestProviders><ManagerMembersMain initialData={null} /></ManagerTestProviders>);
     expect(await screen.findByText('Aarav Patel')).toBeInTheDocument();
     expect(screen.getByPlaceholderText('Search by name or phone...')).toBeInTheDocument();
+  });
+
+
+  it('proves module MSW supplies non-placeholder API data', async () => {
+    const response = await membersApi.fetchMembers({ page: '1', limit: '10' });
+    expect(response.success).toBe(true);
+    expect(response.data?.members?.length ?? 0).toBeGreaterThan(0);
+  });
+
+  it('renders the module empty state from an MSW empty response', async () => {
+    managerMswServer.use(
+      http.get('/api/v1/manager/members', () => HttpResponse.json({ success: true, message: 'Empty result', data: { members : [], total: 0 } }))
+    );
+    render(<ManagerTestProviders><ManagerMembersMain initialData={null} /></ManagerTestProviders>);
+    expect(await screen.findByText('No members yet')).toBeInTheDocument();
+  });
+
+  it('renders a user-facing error state when the module API fails', async () => {
+    managerMswServer.use(
+      http.get('/api/v1/manager/members', () => HttpResponse.json({ success: false, message: 'Simulated failure', data: null }, { status: 500 }))
+    );
+    render(<ManagerTestProviders><ManagerMembersMain initialData={null} /></ManagerTestProviders>);
+    const errorText = await screen.findByText(/Unable to load members\./i);
+    expect(errorText).toBeInTheDocument();
+  });
+
+  it('proves the real search input changes the rendered dataset', async () => {
+    const { default: userEvent } = await import('@testing-library/user-event');
+    const user = userEvent.setup();
+    render(<ManagerTestProviders><ManagerMembersMain initialData={null} /></ManagerTestProviders>);
+    expect(await screen.findByText('Aarav Patel')).toBeInTheDocument();
+    const search = await screen.findByPlaceholderText('Search by name or phone...');
+    await user.clear(search);
+    await user.type(search, 'ZZZ-No-Such-Member');
+    expect(await screen.findByText('No members yet')).toBeInTheDocument();
+    expect(screen.queryByText('Aarav Patel')).not.toBeInTheDocument();
   });
 
 });

@@ -106,7 +106,19 @@ export const MSG_TEMPLATES = {
   DEFAULT: (name: string) => `Hi ${name}! 👋\n\nThis is a message from GymSmart. We hope you're enjoying your fitness journey!\n\n— Team GymSmart`
 };
 
-export const MEMBERS_TABLE_HEADERS = ['ID', 'MEMBER', 'PLAN', 'STATUS', 'CYCLE', 'PAID', 'PENDING', 'EXPIRY', 'DIET', 'WORKOUT', 'TRAINER', 'ACTIONS'];
+export const MEMBERS_TABLE_HEADERS = [
+  { key: 'select', label: 'SELECT' },
+  { key: 'id', label: 'ID' },
+  { key: 'name', label: 'MEMBER', sortable: true },
+  { key: 'gender', label: 'GENDER' },
+  { key: 'plan', label: 'PLAN' },
+  { key: 'status', label: 'STATUS', sortable: true },
+  { key: 'joinDate', label: 'JOIN DATE', sortable: true },
+  { key: 'expiryDate', label: 'EXPIRY', sortable: true },
+  { key: 'paidAmount', label: 'PAID', sortable: true },
+  { key: 'pendingAmount', label: 'PENDING' },
+  { key: 'actions', label: 'ACTIONS' },
+] as const;
 export const PROFILE_TABS = [
   { id: 'overview', label: 'Overview' },
   { id: 'attendance', label: 'Attendance' },

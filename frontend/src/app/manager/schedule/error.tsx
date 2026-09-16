@@ -1,24 +1,38 @@
 'use client';
-// RESPONSIBILITY: Module-level error boundary for the Schedule module.
-import { useEffect } from 'react';
-import { AlertCircle } from 'lucide-react';
 
-export default function ScheduleError({ error, reset }: { error: Error & { digest?: string }; reset: () => void; }) {
-  useEffect(() => { console.error('Schedule module error:', error); }, [error]);
+// RESPONSIBILITY: Renders the module-specific route error fallback and records safe diagnostic metadata.
+import { useEffect } from 'react';
+import { AlertTriangle } from 'lucide-react';
+import { logger } from '@/lib/logger';
+
+export default function ManagerScheduleError({
+  error,
+  reset,
+}: {
+  error: Error & { digest?: string };
+  reset: () => void;
+}) {
+  useEffect(() => {
+    logger.error('Manager module route error', {
+      route: '/manager/schedule',
+      module: 'manager/schedule',
+      errorDigest: error.digest,
+      timestamp: new Date().toISOString(),
+    });
+  }, [error]);
 
   return (
-    <div className="min-h-96 flex items-center justify-center p-6">
-      <div className="max-w-md w-full bg-card border border-danger/20 rounded-xl p-8 text-center space-y-4">
-        <div className="w-12 h-12 bg-danger/10 text-danger rounded-full flex items-center justify-center mx-auto">
-          <AlertCircle size={24} />
+    <div className="min-h-full flex items-center justify-center p-6 bg-page">
+      <div className="bg-card border border-danger/20 p-8 rounded-2xl shadow-xl max-w-md w-full text-center space-y-4">
+        <div className="w-14 h-14 bg-danger/10 rounded-full flex items-center justify-center mx-auto text-danger">
+          <AlertTriangle size={28} />
         </div>
-        <div>
-          <h3 className="text-lg font-bold text-foreground">Failed to load schedule</h3>
-          <p className="text-sm text-secondary mt-1">{error.message || 'An unexpected error occurred while loading the trainer schedule.'}</p>
-        </div>
+        <h2 className="text-xl font-bold text-foreground">Schedule Unavailable</h2>
+        <p className="text-sm text-secondary">We couldn't load the schedule module. Please try again.</p>
+        {error.digest && <p className="text-xs text-secondary/60">Ref: {error.digest}</p>}
         <button
-          onClick={() => reset()}
-          className="mt-4 px-4 py-2 bg-primary text-primary-foreground font-medium rounded-md hover:bg-primary-hover motion-safe:transition-colors"
+          onClick={reset}
+          className="px-6 py-2.5 bg-primary text-primary-foreground font-medium rounded-xl hover:opacity-90 motion-safe:transition-opacity"
         >
           Try Again
         </button>
