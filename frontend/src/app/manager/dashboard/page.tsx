@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 export const dynamic = 'force-dynamic';
 // RESPONSIBILITY: Server Component that fetches initial SSR data for the dashboard layout.
 import ManagerDashboardMain from '@/app/manager/dashboard/dashboard_components/ManagerDashboardMain/ManagerDashboardMain';
@@ -18,5 +19,9 @@ async function getDashboardData() {
 
 export default async function DashboardPage() {
  const initialData = await getDashboardData();
- return <ManagerDashboardMain initialData={initialData} />;
+ return (
+    <Suspense fallback={<div className="p-6 flex justify-center text-secondary">Loading...</div>}>
+      <ManagerDashboardMain initialData={initialData} />
+    </Suspense>
+  );
 }

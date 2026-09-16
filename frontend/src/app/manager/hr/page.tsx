@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 export const dynamic = 'force-dynamic';
 // RESPONSIBILITY: Server Component � fetches initial SSR data and renders the HR & Payroll module entry point.
 import ManagerHrMain from '@/app/manager/hr/hr_components/ManagerHrMain/ManagerHrMain';
@@ -22,5 +23,9 @@ export default async function HrPage() {
     // Silently fail and return empty data. Client handles refetch.
   }
 
-  return <ManagerHrMain initialData={initialData} />;
+  return (
+    <Suspense fallback={<div className="p-6 flex justify-center text-secondary">Loading...</div>}>
+      <ManagerHrMain initialData={initialData} />
+    </Suspense>
+  );
 }

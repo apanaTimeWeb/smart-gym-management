@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 // RESPONSIBILITY: Server Component that fetches initial data and acts as the entry point for the Sales module.
 export const dynamic = 'force-dynamic';
 import ManagerSalesMain from '@/app/manager/sales/sales_components/ManagerSalesMain/ManagerSalesMain';
@@ -28,5 +29,9 @@ export default async function SalesPage() {
     // SSR data fetch failed gracefully — client-side hook will re-fetch
   }
 
-  return <ManagerSalesMain initialData={initialData} />;
+  return (
+    <Suspense fallback={<div className="p-6 flex justify-center text-secondary">Loading...</div>}>
+      <ManagerSalesMain initialData={initialData} />
+    </Suspense>
+  );
 }

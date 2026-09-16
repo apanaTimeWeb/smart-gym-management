@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 export const dynamic = 'force-dynamic';
 // RESPONSIBILITY: Server Component — fetches initial SSR data and renders the Gym Store module entry point.
 import ManagerStoreMain from '@/app/manager/store/store_components/ManagerStoreMain/ManagerStoreMain';
@@ -23,5 +24,9 @@ export default async function StorePage() {
     // SSR data fetch failed gracefully — client-side store will re-fetch
   }
 
-  return <ManagerStoreMain initialData={initialData} />;
+  return (
+    <Suspense fallback={<div className="p-6 flex justify-center text-secondary">Loading...</div>}>
+      <ManagerStoreMain initialData={initialData} />
+    </Suspense>
+  );
 }

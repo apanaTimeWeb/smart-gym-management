@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 // RESPONSIBILITY: Server component entry point for the Admin Staff Performance Dashboard.
 import AdminHrPerformanceMain from '@/app/admin/hr/hr_components/AdminHrPerformance/AdminHrPerformanceMain';
 
@@ -7,5 +8,9 @@ export const metadata = {
 
 export default function AdminHrPerformancePage() {
   // In a real app, Server-side auth check goes here.
-  return <AdminHrPerformanceMain />;
+  return (
+    <Suspense fallback={<div className="p-6 flex justify-center text-secondary">Loading...</div>}>
+      <AdminHrPerformanceMain />
+    </Suspense>
+  );
 }

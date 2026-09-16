@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 // RESPONSIBILITY: Pure Server Component entry point for /superadmin/cancellations.
 import type { Metadata } from 'next';
 import SuperadminCancellationsClient from '@/app/superadmin/cancellations/cancellations_components/SuperadminCancellationsClient/SuperadminCancellationsClient';
@@ -8,5 +9,9 @@ export const metadata: Metadata = {
 };
 
 export default function SuperadminCancellationsAlertsPage() {
-  return <SuperadminCancellationsClient />;
+  return (
+    <Suspense fallback={<div className="p-6 flex justify-center text-secondary">Loading...</div>}>
+      <SuperadminCancellationsClient />
+    </Suspense>
+  );
 }

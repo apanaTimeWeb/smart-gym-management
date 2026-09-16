@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 // RESPONSIBILITY: Server component entry point for the Superadmin Global Audit module.
 import type { Metadata } from 'next';
 import SuperadminGlobalAuditClient from '@/app/superadmin/global-audit/global-audit_components/SuperadminGlobalAuditClient';

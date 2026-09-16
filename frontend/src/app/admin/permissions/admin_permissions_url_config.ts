@@ -2,6 +2,6 @@
 export const AdminPermissionsUrlConfig = {
   root: '/admin/permissions',
   api: {
-    base: '/api/admin/permissions',
+    base: '/admin/permissions',
   }
 };

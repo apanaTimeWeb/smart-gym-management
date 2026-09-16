@@ -2,6 +2,6 @@
 export const AdminSubscriptionsUrlConfig = {
   root: '/admin/subscriptions',
   api: {
-    base: '/api/admin/subscriptions',
+    base: '/admin/subscriptions',
   }
 };

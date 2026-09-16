@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 export const dynamic = 'force-dynamic';
 // RESPONSIBILITY: Server Component that fetches initial data and acts as the entry point for the Finance module.
 import AdminFinanceMain from '@/app/admin/finance/finance_components/AdminFinanceMain/AdminFinanceMain';
@@ -21,5 +22,9 @@ export default async function FinancePage() {
     // SSR data fetch failed gracefully — client-side hook will re-fetch
   }
 
-  return <AdminFinanceMain initialData={initialData} />;
+  return (
+    <Suspense fallback={<div className="p-6 flex justify-center text-secondary">Loading...</div>}>
+      <AdminFinanceMain initialData={initialData} />
+    </Suspense>
+  );
 }

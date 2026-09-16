@@ -2,6 +2,6 @@
 export const AdminDataExportUrlConfig = {
   root: '/admin/data-export',
   api: {
-    base: '/api/admin/data-export',
+    base: '/admin/data-export',
   }
 };

@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 export const dynamic = 'force-dynamic';
 // RESPONSIBILITY: Server Component — fetches initial SSR data and renders the Diet Library module entry point.
 import ManagerLibraryMain from '@/app/manager/library/library_components/ManagerLibraryMain/ManagerLibraryMain';
@@ -16,5 +17,9 @@ export default async function LibraryPage() {
     // Silently fail and return empty array. Client handles refetch.
   }
 
-  return <ManagerLibraryMain initialData={initialData} />;
+  return (
+    <Suspense fallback={<div className="p-6 flex justify-center text-secondary">Loading...</div>}>
+      <ManagerLibraryMain initialData={initialData} />
+    </Suspense>
+  );
 }

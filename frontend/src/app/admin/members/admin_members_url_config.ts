@@ -2,6 +2,6 @@
 export const AdminMembersUrlConfig = {
   root: '/admin/members',
   api: {
-    base: '/api/admin/members',
+    base: '/admin/members',
   }
 };

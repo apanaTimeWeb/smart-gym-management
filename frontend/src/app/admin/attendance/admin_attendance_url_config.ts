@@ -2,6 +2,6 @@
 export const AdminAttendanceUrlConfig = {
   root: '/admin/attendance',
   api: {
-    base: '/api/admin/attendance',
+    base: '/admin/attendance',
   }
 };

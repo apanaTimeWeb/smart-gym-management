@@ -2,6 +2,6 @@
 export const AdminProfileUrlConfig = {
   root: '/admin/profile',
   api: {
-    base: '/api/admin/profile',
+    base: '/admin/profile',
   }
 };

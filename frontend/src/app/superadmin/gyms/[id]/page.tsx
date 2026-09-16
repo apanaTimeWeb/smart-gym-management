@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 // RESPONSIBILITY: Server Component entry for /superadmin/gyms/[id] — fetches gym detail server-side.
 // DATA FLOW: page.tsx (Server) → SuperadminGymDetailClient (Client)
 
@@ -11,5 +12,9 @@ interface GymDetailPageProps {
 export default async function GymDetailPage({ params }: GymDetailPageProps) {
   const { id } = await params;
   if (!id) return notFound();
-  return <SuperadminGymDetailClient gymId={id} />;
+  return (
+    <Suspense fallback={<div className="p-6 flex justify-center text-secondary">Loading...</div>}>
+      <SuperadminGymDetailClient gymId={id} />
+    </Suspense>
+  );
 }
