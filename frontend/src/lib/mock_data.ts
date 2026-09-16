@@ -497,8 +497,8 @@ export function getMockResponse(path: string): unknown {
   if (p.includes('/ticket')) return ok(TICKETS, 'Tickets fetched');
   if (p.includes('/superadmin/jobs')) return ok(JOBS.jobs, 'Jobs fetched');
   if (p.includes('/job')) return ok(JOBS, 'Jobs fetched');
-  if (p.includes('/superadmin/migrations')) return ok({ tenants: GYMS.map((g, i) => ({ id: g.id, name: g.name, plan: g.plan, databaseVersion: i === 1 ? 'v2.4.0' : 'v2.4.1' })) }, 'Migrations fetched');
-  if (p.includes('/migration')) return ok(MIGRATIONS, 'Migrations fetched');
+  if (p.includes('/superadmin/system/migrations')) return ok({ tenants: GYMS.map((g, i) => ({ id: g.id, name: g.name, plan: g.plan, databaseVersion: i === 1 ? 'v2.4.0' : 'v2.4.1' })) }, 'Migrations fetched');
+  if (p.includes('/migration') || p.includes('/superadmin/migrations')) return ok(MIGRATIONS, 'Migrations fetched');
   if (p.includes('/usage-meter')) return ok(USAGE_METERS, 'Usage meters fetched');
   if (p.includes('/superadmin/features')) return ok({ flags: mockFlags, notes: mockNotes }, 'Features fetched');
   if (p.includes('/feature') || p.includes('/setting')) return ok(FEATURES, 'Features fetched');
