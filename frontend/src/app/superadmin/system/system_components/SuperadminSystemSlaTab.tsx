@@ -5,7 +5,7 @@ import { ServerCog, Clock, AlertCircle, CheckCircle, Ticket, Search } from 'luci
 import toast from 'react-hot-toast';
 import { formatNumber } from '@/lib/formatters';
 import { useQuery } from '@tanstack/react-query';
-import { systemApi } from '@/app/superadmin/system/superadmin_system_api/superadmin_system_api';
+import { systemApi } from '@/app/superadmin/system/system_api/superadmin_system_api';
 import { useSuperadminUrlState } from '@/app/superadmin/superadmin_utils/useSuperadminUrlState';
 
 interface SlaRecord {
