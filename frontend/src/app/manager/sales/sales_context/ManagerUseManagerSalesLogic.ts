@@ -86,6 +86,9 @@ export function useManagerSalesLogic(initialData?: SalesInitialData | null): Sal
       const customEndDate = searchParams.get('endDate');
       if (customStartDate) params.startDate = customStartDate;
       if (customEndDate) params.endDate = customEndDate;
+    params.search = debouncedSearch;
+    params.page = currentPage.toString();
+    params.limit = '10';
     }
     return params;
   }, [searchParams]);
@@ -108,6 +111,7 @@ export function useManagerSalesLogic(initialData?: SalesInitialData | null): Sal
     currentPage, setCurrentPage,
     overviewData,
     membershipReport: reportData?.report || initialData?.membershipReport || [],
+    membershipReportTotal: reportData?.report?.length || (initialData?.membershipReport?.length || 0),
     membershipTotals: reportData?.totals || initialData?.membershipTotals || { activeCount: 0, revenue: 0, totalReceivable: 0, totalReceived: 0, remaining: 0, refunds: 0 },
     pendingPayments: pendingData?.members || initialData?.pendingPayments || [],
     pendingTotal: pendingData?.total || initialData?.pendingTotal || 0,

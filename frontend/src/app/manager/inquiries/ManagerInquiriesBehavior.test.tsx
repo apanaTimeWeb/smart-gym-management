@@ -2,7 +2,9 @@ import { describe, it, expect, beforeAll, afterAll, afterEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import ManagerInquiriesMain from '@/app/manager/inquiries/inquiries_components/ManagerInquiriesMain/ManagerInquiriesMain';
 import { managerMswServer } from '@/app/manager/manager_mocks/ManagerMswTestServer';
+import { inquiriesApi } from '@/app/manager/inquiries/inquiries_api/ManagerInquiriesApi';
 import { ManagerTestProviders } from '@/app/manager/manager_mocks/ManagerTestProviders';
+import { http, HttpResponse } from 'msw';
 
 beforeAll(() => managerMswServer.listen({ onUnhandledRequest: 'error' }));
 afterEach(() => managerMswServer.resetHandlers());
@@ -13,4 +15,38 @@ describe('Manager Inquiries user-visible behavior', () => {
     render(<ManagerTestProviders><ManagerInquiriesMain /></ManagerTestProviders>);
     expect(await screen.findByText('Inquiries')).toBeInTheDocument();
   });
+
+  it('proves module MSW supplies non-placeholder API data', async () => {
+    const response = await inquiriesApi.fetchInquiries({ page: '1', limit: '10' });
+    expect(response.success).toBe(true);
+    expect(response.data?.inquiries?.length ?? 0).toBeGreaterThan(0);
+  });
+
+  it('renders the module empty state from an MSW empty response', async () => {
+    managerMswServer.use(
+      http.get('/api/v1/manager/inquiries', () => HttpResponse.json({ success: true, message: 'Empty result', data: { inquiries : [], total: 0 } }))
+    );
+    render(<ManagerTestProviders><ManagerInquiriesMain /></ManagerTestProviders>);
+    expect(await screen.findByText('No inquiries yet. Add your first inquiry!')).toBeInTheDocument();
+  });
+
+  it('renders a user-facing error state when the module API fails', async () => {
+    managerMswServer.use(
+      http.get('/api/v1/manager/inquiries', () => HttpResponse.json({ success: false, message: 'Simulated failure', data: null }, { status: 500 }))
+    );
+    render(<ManagerTestProviders><ManagerInquiriesMain /></ManagerTestProviders>);
+    const errorText = await screen.findByText(/Failed to load/i);
+    expect(errorText).toBeInTheDocument();
+  });
+
+  it('proves the real inquiry search input changes the rendered dataset', async () => {
+    const { default: userEvent } = await import('@testing-library/user-event');
+    const user = userEvent.setup();
+    render(<ManagerTestProviders><ManagerInquiriesMain /></ManagerTestProviders>);
+    const search = await screen.findByPlaceholderText('Search name or phone...');
+    await user.clear(search);
+    await user.type(search, 'ZZZ-No-Such-Inquiry');
+    expect(await screen.findByText('No inquiries yet. Add your first inquiry!')).toBeInTheDocument();
+  });
+
 });

@@ -6,7 +6,7 @@ import type { Expense } from '@/app/manager/expenses/expenses_types/ManagerExpen
 let mockExpenses = [...MOCK_EXPENSES_LIST];
 
 export const managerExpensesHandlers = [
-  http.get('http://localhost:5000/api/v1/manager/expenses', ({ request }) => {
+  http.get(`/api/v1/manager/expenses`, ({ request }) => {
     const url = new URL(request.url);
     const status = url.searchParams.get('status');
     const search = url.searchParams.get('search')?.toLowerCase();
@@ -34,7 +34,7 @@ export const managerExpensesHandlers = [
     });
   }),
 
-  http.get('http://localhost:5000/api/v1/manager/expenses/stats', () => {
+  http.get(`/api/v1/manager/expenses/stats`, () => {
     return HttpResponse.json({
       success: true,
       message: 'Fetched stats',
@@ -42,20 +42,20 @@ export const managerExpensesHandlers = [
     });
   }),
 
-  http.get('http://localhost:5000/api/v1/manager/expenses/:id', ({ params }) => {
+  http.get(`/api/v1/manager/expenses/:id`, ({ params }) => {
     const expense = mockExpenses.find(e => e.id === params.id);
     if (!expense) return HttpResponse.json({ success: false, message: 'Not found' }, { status: MANAGER_HTTP_STATUS.NOT_FOUND });
     return HttpResponse.json({ success: true, message: 'Fetched expense', data: expense });
   }),
 
-  http.post('http://localhost:5000/api/v1/manager/expenses', async ({ request }) => {
+  http.post(`/api/v1/manager/expenses`, async ({ request }) => {
     const body = await request.json() as Partial<Expense>;
     const newExpense = { ...body, id: Math.random().toString(), createdAt: new Date().toISOString() } as Expense;
     mockExpenses = [newExpense, ...mockExpenses];
     return HttpResponse.json({ success: true, message: 'Created expense', data: newExpense });
   }),
 
-  http.patch('http://localhost:5000/api/v1/manager/expenses/:id', async ({ request, params }) => {
+  http.patch(`/api/v1/manager/expenses/:id`, async ({ request, params }) => {
     const body = await request.json() as Partial<Expense>;
     const idx = mockExpenses.findIndex(e => e.id === params.id);
     if (idx === -1) return HttpResponse.json({ success: false, message: 'Not found' }, { status: MANAGER_HTTP_STATUS.NOT_FOUND });
@@ -63,7 +63,7 @@ export const managerExpensesHandlers = [
     return HttpResponse.json({ success: true, message: 'Updated expense', data: mockExpenses[idx] });
   }),
 
-  http.delete('http://localhost:5000/api/v1/manager/expenses/:id', ({ params }) => {
+  http.delete(`/api/v1/manager/expenses/:id`, ({ params }) => {
     mockExpenses = mockExpenses.filter(e => e.id !== params.id);
     return HttpResponse.json({ success: true, message: 'Deleted expense', data: { id: params.id } });
   }),

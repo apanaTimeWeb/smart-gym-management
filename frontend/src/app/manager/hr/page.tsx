@@ -1,31 +1,6 @@
-import { Suspense } from 'react';
-export const dynamic = 'force-dynamic';
-// RESPONSIBILITY: Server Component � fetches initial SSR data and renders the HR & Payroll module entry point.
+// RESPONSIBILITY: Server route entry for Manager HR; delegates async data ownership to TanStack Query so browser MSW can provide frontend-first data.
 import ManagerHrMain from '@/app/manager/hr/hr_components/ManagerHrMain/ManagerHrMain';
-import { ssrHrApi } from '@/app/manager/hr/hr_api/ManagerHrServerApi';
-import type { HrInitialData } from '@/app/manager/hr/hr_types/ManagerHrTypes';
 
-export default async function HrPage() {
-  let initialData: HrInitialData | null = null;
-  
-  try {
-    const [staffRes, payrollRes, summaryRes] = await Promise.all([
-      ssrHrApi.getStaff(),
-      ssrHrApi.getPayrolls(),
-      ssrHrApi.getSummary(),
-    ]);
-    initialData = {
-      staff: staffRes.data?.staff || (Array.isArray(staffRes.data) ? staffRes.data : []),
-      payrolls: payrollRes.data?.payrolls || (Array.isArray(payrollRes.data) ? payrollRes.data : []),
-      summary: summaryRes.data || null
-    };
-  } catch (e) {
-    // Silently fail and return empty data. Client handles refetch.
-  }
-
-  return (
-    <Suspense fallback={<div className="p-6 flex justify-center text-secondary">Loading...</div>}>
-      <ManagerHrMain initialData={initialData} />
-    </Suspense>
-  );
+export default function HrPage() {
+  return <ManagerHrMain />;
 }

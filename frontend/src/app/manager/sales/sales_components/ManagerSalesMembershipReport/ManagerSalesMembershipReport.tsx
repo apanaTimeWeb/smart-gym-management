@@ -7,16 +7,13 @@ import { Loader2 } from 'lucide-react';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
 import type { MembershipReportItem } from '@/app/manager/sales/sales_types/ManagerSalesTypes';
 
-export default function ManagerSalesMembershipReport() {
-  const { search, currentPage, setCurrentPage, membershipReport, membershipTotals, isLoading, isError } = useSalesContext();
-  
-  const filtered = membershipReport.filter((r: MembershipReportItem) => 
-    (r.plan || '').toLowerCase().includes(search.toLowerCase())
-  );
+const SALES_MEMBERSHIP_REPORT_COLUMN_COUNT = 5;
 
+export default function ManagerSalesMembershipReport() {
+  const { currentPage, setCurrentPage, membershipReport, membershipReportTotal, membershipTotals, isLoading, isError } = useSalesContext();
   
-  const totalPages = Math.ceil(filtered.length / MANAGER_ITEMS_PER_PAGE) || 1;
-  const paginated = filtered.slice((currentPage - 1) * MANAGER_ITEMS_PER_PAGE, currentPage * MANAGER_ITEMS_PER_PAGE);
+  const totalPages = Math.max(1, Math.ceil(membershipReportTotal / MANAGER_ITEMS_PER_PAGE));
+  const paginated = membershipReport;
 
   if (isLoading) {
     return (
@@ -51,7 +48,7 @@ export default function ManagerSalesMembershipReport() {
   <tbody className="divide-y divide-border">
   {paginated.length > 0 ? (
     paginated.map((r) => (
-      <tr key={r.plan} className="hover:bg-primary-subtle transition-colors">
+      <tr key={r.plan} className="hover:bg-primary-subtle motion-safe:transition-colors">
       <td className="px-4 py-3 text-sm font-medium text-foreground">{r.plan || ''}</td>
       <td className="px-4 py-3 text-sm text-secondary">{formatCurrency(r.receivable || 0)}</td>
       <td className="px-4 py-3 text-sm font-medium text-success dark:text-success">{formatCurrency(r.received || 0)}</td>
@@ -61,7 +58,7 @@ export default function ManagerSalesMembershipReport() {
     ))
   ) : (
     <tr>
-      <td colSpan={5} className="px-4 py-8 text-center text-sm text-secondary">
+      <td colSpan={SALES_MEMBERSHIP_REPORT_COLUMN_COUNT} className="px-4 py-8 text-center text-sm text-secondary">
         No membership report data available.
       </td>
     </tr>

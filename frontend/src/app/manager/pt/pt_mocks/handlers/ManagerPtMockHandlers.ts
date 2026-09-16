@@ -11,23 +11,29 @@ import type { CreatePtAssignmentPayload, PtAssignment } from '@/app/manager/pt/p
 let mockAssignments = [...MOCK_PT_ASSIGNMENTS];
 
 export const managerPtHandlers = [
-  http.get('http://localhost:5000/api/v1/manager/pt/kpis', () => {
+  http.get(`/api/v1/manager/pt/kpis`, () => {
     return HttpResponse.json({ success: true, message: 'KPIs fetched', data: MOCK_PT_KPIS });
   }),
 
-  http.get('http://localhost:5000/api/v1/manager/pt/workload', () => {
+  http.get(`/api/v1/manager/pt/workload`, () => {
     return HttpResponse.json({ success: true, message: 'Workload fetched', data: MOCK_PT_WORKLOAD });
   }),
 
-  http.get('http://localhost:5000/api/v1/manager/pt/packages', () => {
+  http.get(`/api/v1/manager/pt/packages`, () => {
     return HttpResponse.json({ success: true, message: 'Packages fetched', data: MOCK_PT_PACKAGES });
   }),
 
-  http.get('http://localhost:5000/api/v1/manager/pt/assignments', () => {
-    return HttpResponse.json({ success: true, message: 'Assignments fetched', data: mockAssignments });
+  http.get(`/api/v1/manager/pt/assignments`, ({ request }) => {
+    const url = new URL(request.url);
+    const search = (url.searchParams.get('search') || '').trim().toLowerCase();
+    const page = Math.max(Number(url.searchParams.get('page') || '1'), 1);
+    const limit = Math.max(Number(url.searchParams.get('limit') || '10'), 1);
+    const filtered = mockAssignments.filter((assignment) => !search || `${assignment.memberName} ${assignment.trainerName} ${assignment.packageName}`.toLowerCase().includes(search));
+    const start = (page - 1) * limit;
+    return HttpResponse.json({ success: true, message: 'Assignments fetched', data: { assignments: filtered.slice(start, start + limit), total: filtered.length, page, limit } });
   }),
 
-  http.post('http://localhost:5000/api/v1/manager/pt/assignments', async ({ request }) => {
+  http.post(`/api/v1/manager/pt/assignments`, async ({ request }) => {
     const body = await request.json() as CreatePtAssignmentPayload;
     const newAssignment: PtAssignment = {
       id: `asg-new-${Date.now()}`,
@@ -50,7 +56,7 @@ export const managerPtHandlers = [
     return HttpResponse.json({ success: true, message: 'Trainer assigned successfully!', data: newAssignment });
   }),
 
-  http.patch('http://localhost:5000/api/v1/manager/pt/assignments/:id/complete-session', ({ params }) => {
+  http.patch(`/api/v1/manager/pt/assignments/:id/complete-session`, ({ params }) => {
     const idx = mockAssignments.findIndex(a => a.id === params.id);
     if (idx === -1) return HttpResponse.json({ success: false, message: 'Not found' }, { status: MANAGER_HTTP_STATUS.NOT_FOUND });
     const assignment = mockAssignments[idx];

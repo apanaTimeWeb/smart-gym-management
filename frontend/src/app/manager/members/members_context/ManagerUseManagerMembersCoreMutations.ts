@@ -19,14 +19,14 @@ export function useManagerMembersCoreMutations(
   const saveMutation = useMutation({
     mutationFn: async (data: MemberFormValues) => {
       if (editId) {
-        return await membersApi.update(editId, data);
+        return await membersApi.updateMember(editId, data);
       } else {
         const payload = { ...data, status: 'ACTIVE' };
-        const res = await membersApi.create(payload);
+        const res = await membersApi.createMember(payload);
         const newId = res.data?.id || (res as { id?: string }).id;
         
         if (data.paidAmount && data.paidAmount > 0 && newId) {
-           await membersApi.addPayment(newId, {
+           await membersApi.addMemberPayment(newId, {
              amount: data.paidAmount,
              method: 'UPI',
              status: 'PAID',
@@ -46,7 +46,7 @@ export function useManagerMembersCoreMutations(
   });
 
   const deleteMutation = useMutation({
-    mutationFn: async (id: string) => membersApi.remove(id),
+    mutationFn: async (id: string) => membersApi.deleteMember(id),
     onSuccess: (res, id) => {
       showToast(res.message, 'success');
       invalidateMemberQueries();
@@ -64,9 +64,9 @@ export function useManagerMembersCoreMutations(
          customDays: data.customDays,
          status: 'ACTIVE',
       };
-      await membersApi.update(data.memberId, payload);
+      await membersApi.updateMember(data.memberId, payload);
       
-      const res = await membersApi.addPayment(data.memberId, {
+      const res = await membersApi.addMemberPayment(data.memberId, {
          amount: data.amountPaid,
          method: data.paymentMethod as 'UPI' | 'Cash' | 'Card' | 'NetBanking',
          status: 'PAID',
@@ -85,7 +85,7 @@ export function useManagerMembersCoreMutations(
 
   const recordPaymentMutation = useMutation({
     mutationFn: async (data: { amount: number; method: string; memberId: string }) => {
-      const res = await membersApi.addPayment(data.memberId, {
+      const res = await membersApi.addMemberPayment(data.memberId, {
          amount: data.amount,
          method: data.method as 'UPI' | 'Cash' | 'Card' | 'NetBanking',
          status: 'PAID',

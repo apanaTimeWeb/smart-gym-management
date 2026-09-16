@@ -48,7 +48,7 @@ export default function ManagerExpensesTable() {
                 {expenses.map(e => {
                   const statusStyle = EXPENSE_STATUS_STYLES[e.status] || { bg: 'bg-input', text: 'text-secondary' };
                   return (
-                    <tr key={e.id} className="hover:bg-primary/5 transition-colors">
+                    <tr key={e.id} className="hover:bg-primary/5 motion-safe:transition-colors">
                       <td className="px-5 py-3.5 text-sm font-bold text-primary whitespace-nowrap">{e.id}</td>
                       <td className="px-5 py-3.5 text-sm font-semibold text-foreground whitespace-nowrap">
                         {e.title}
@@ -76,18 +76,18 @@ export default function ManagerExpensesTable() {
                                 });
                                 if (ok && markAsPaid) markAsPaid(e.id);
                               }}
-                              className="p-1.5 rounded-lg bg-success/10 text-success hover:bg-success/20 transition-all duration-200"
+                              className="p-1.5 rounded-lg bg-success/10 text-success hover:bg-success/20 motion-safe:transition-all duration-200"
                               title="Mark as Paid"
                             >
                               <CheckCircle2 size={14} />
                             </button>
                           )}
                           {e.receiptUrl && (
-                            <a href={e.receiptUrl} target="_blank" rel="noopener noreferrer" className="p-1.5 rounded-lg bg-input text-secondary hover:bg-primary-subtle transition-all duration-200" title="View Receipt">
+                            <a href={e.receiptUrl} target="_blank" rel="noopener noreferrer" className="p-1.5 rounded-lg bg-input text-secondary hover:bg-primary-subtle motion-safe:transition-all duration-200" title="View Receipt">
                               <ExternalLink size={14} />
                             </a>
                           )}
-                          <button onClick={() => openEdit(e)} className="p-1.5 rounded-lg bg-input text-secondary hover:bg-primary-subtle transition-all duration-200" title="Edit"><Edit size={14} /></button>
+                          <button onClick={() => openEdit(e)} className="p-1.5 rounded-lg bg-input text-secondary hover:bg-primary-subtle motion-safe:transition-all duration-200" title="Edit"><Edit size={14} /></button>
                           <button onClick={async () => { 
                             const ok = await confirm({
                               title: 'Delete Expense',
@@ -96,7 +96,7 @@ export default function ManagerExpensesTable() {
                               confirmText: 'Delete'
                             });
                             if (ok) deleteExpense(e.id); 
-                          }} className="p-1.5 rounded-lg bg-danger-bg text-danger hover:opacity-80 transition-all duration-200" title="Delete"><Trash2 size={14} /></button>
+                          }} className="p-1.5 rounded-lg bg-danger-bg text-danger hover:opacity-80 motion-safe:transition-all duration-200" title="Delete"><Trash2 size={14} /></button>
                         </div>
                       </td>
                     </tr>
@@ -104,7 +104,7 @@ export default function ManagerExpensesTable() {
                 })}
                 {expenses.length === 0 && !isLoading && (
                   <tr>
-                    <td colSpan={7} className="p-0 border-b-0">
+                    <td colSpan={EXPENSES_TABLE_HEADERS.length} className="p-0 border-b-0">
                       <ManagerEmptyState 
                         icon={<Banknote size={32} />}
                         title="No expenses found"

@@ -13,6 +13,7 @@ import type { PlanSnapshot, PaymentSnapshot, DietPlanSnapshot, WorkoutSnapshot }
 export type MemberSortColumn = 'name' | 'joinDate' | 'expiryDate' | 'paidAmount' | 'status';
 export type SortDirection = 'asc' | 'desc';
 export type ExportFormat = 'csv' | 'pdf';
+export type MemberProfileTab = 'overview' | 'attendance' | 'payments' | 'workout' | 'diet';
 
 export interface MembersInitialData {
   members: Member[];
@@ -76,8 +77,8 @@ export interface MembersContextType {
   // Member Profile
   selectedMember: Member | null;
   setSelectedMember: (m: Member | null) => void;
-  profileTab: 'overview' | 'attendance' | 'payments' | 'workout' | 'diet';
-  setProfileTab: (tab: 'overview' | 'attendance' | 'payments' | 'workout' | 'diet') => void;
+  profileTab: MemberProfileTab;
+  setProfileTab: (tab: MemberProfileTab) => void;
 
   // Add/Edit Modal
   showAddModal: boolean;
@@ -123,4 +124,5 @@ export interface MembersContextType {
   handlePrint: (p: Payment) => void;
   handleSharePaymentWhatsApp: (p: Payment) => void;
   setPrintData: (data: ManagerReceiptData | null) => void;
+  exportMembers: (format: ExportFormat) => Promise<void>;
 }

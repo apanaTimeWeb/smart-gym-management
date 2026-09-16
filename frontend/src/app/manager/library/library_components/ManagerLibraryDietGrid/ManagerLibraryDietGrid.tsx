@@ -8,18 +8,23 @@ import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerShare
 
 export default function ManagerLibraryDietGrid() {
   const { confirm } = useConfirm();
-  const { dietPlans, isLoading, isError, debouncedSearch, currentPage, setCurrentPage, openEditDiet, deleteDietPlan } = useLibraryContext();
+  const { dietPlans, totalDietPlans, isLoading, isError, debouncedSearch, currentPage, setCurrentPage, openEditDiet, deleteDietPlan } = useLibraryContext();
 
-  const filtered = dietPlans;
-
-  
-  const totalPages = Math.ceil(filtered.length / MANAGER_ITEMS_PER_PAGE);
-  const currentData = filtered.slice((currentPage - 1) * MANAGER_ITEMS_PER_PAGE, currentPage * MANAGER_ITEMS_PER_PAGE);
+  const totalPages = Math.max(1, Math.ceil(totalDietPlans / MANAGER_ITEMS_PER_PAGE));
+  const currentData = dietPlans;
 
   if (isLoading) {
     return (
       <div className="flex justify-center py-10">
         <Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div role="alert" className="py-12 text-center space-y-3">
+        <p className="text-sm font-semibold text-danger">Unable to load diet plans.</p>
       </div>
     );
   }
@@ -30,7 +35,7 @@ export default function ManagerLibraryDietGrid() {
         {currentData.map(dp => (
           <div 
             key={dp.id} 
-            className="rounded-xl border border-border bg-card p-5 hover:shadow-md transition-shadow flex flex-col cursor-pointer"
+            className="rounded-xl border border-border bg-card p-5 hover:shadow-md motion-safe:transition-shadow flex flex-col cursor-pointer"
             onClick={() => openEditDiet(dp)}
           >
             <div className="flex justify-between items-start mb-3">
@@ -40,7 +45,7 @@ export default function ManagerLibraryDietGrid() {
               <div className="flex gap-2">
                 <button 
                   onClick={(e) => { e.stopPropagation(); openEditDiet(dp); }}
-                  className="p-1.5 rounded hover:bg-primary/10 transition-colors text-secondary hover:text-primary"
+                  className="p-1.5 rounded hover:bg-primary/10 motion-safe:transition-colors text-secondary hover:text-primary"
                   title="Edit"
                 >
                   <Edit2 size={16} />
@@ -58,7 +63,7 @@ export default function ManagerLibraryDietGrid() {
                       deleteDietPlan(dp.id); 
                     }
                   }}
-                  className="p-1.5 rounded transition-colors text-danger hover:bg-danger/10"
+                  className="p-1.5 rounded motion-safe:transition-colors text-danger hover:bg-danger/10"
                   title="Delete"
                 >
                   <Trash2 size={16} />
@@ -84,7 +89,7 @@ export default function ManagerLibraryDietGrid() {
         ))}
         {currentData.length === 0 && (
           <div className="col-span-full py-10 text-center text-secondary text-sm">
-            No diet plans found.
+            No diet plans found for the current search.
           </div>
         )}
       </div>
@@ -93,7 +98,7 @@ export default function ManagerLibraryDietGrid() {
           <ManagerPagination 
             currentPage={currentPage} 
             totalPages={totalPages} 
-            totalItems={filtered.length} 
+            totalItems={totalDietPlans} 
             itemsPerPage={MANAGER_ITEMS_PER_PAGE} 
             onPageChange={setCurrentPage} 
           />

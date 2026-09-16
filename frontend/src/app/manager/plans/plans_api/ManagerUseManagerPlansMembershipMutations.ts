@@ -6,9 +6,9 @@ export function useManagerPlansMembershipMutations() {
   const queryClient = useQueryClient();
   const invalidate = () => queryClient.invalidateQueries({ queryKey: ['manager', 'plans', 'membership-overview'] });
 
-  const activateMutation = useMutation({ mutationFn: (payload: ManagerPlansActivatePayload) => managerPlansMembershipApi.activate(payload), onSuccess: invalidate });
-  const renewMutation = useMutation({ mutationFn: (payload: ManagerPlansRenewPayload) => managerPlansMembershipApi.renew(payload), onSuccess: invalidate });
-  const freezeMutation = useMutation({ mutationFn: (payload: ManagerPlansFreezePayload) => managerPlansMembershipApi.freeze(payload), onSuccess: invalidate });
+  const activateMutation = useMutation({ mutationFn: (payload: ManagerPlansActivatePayload) => managerPlansMembershipApi.activateMembership(payload), onSuccess: invalidate });
+  const renewMutation = useMutation({ mutationFn: (payload: ManagerPlansRenewPayload) => managerPlansMembershipApi.renewMembership(payload), onSuccess: invalidate });
+  const freezeMutation = useMutation({ mutationFn: (payload: ManagerPlansFreezePayload) => managerPlansMembershipApi.freezeMembership(payload), onSuccess: invalidate });
 
   return { activateMutation, renewMutation, freezeMutation };
 }

@@ -43,13 +43,13 @@ export default function ManagerProfileDiet() {
                 const text = `*DIET PLAN: ${diet?.name || 'Assigned'}*\n\n*Macros:*\nCalories: ${diet?.calories || 0} kcal\nProtein: ${diet?.protein || 0}g\nCarbs: ${diet?.carbs || 0}g\nFats: ${diet?.fats || 0}g\n\n*Meals:*\n${diet?.meals?.map(m => `*${m.time} - ${m.name}* (${m.calories || 0} kcal)\n${(m.foods || []).map((f: string) => `- ${f}`).join('\n')}`).join('\n\n')}`;
                 window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
               }}
-              className="flex items-center gap-2 px-4 py-2 bg-success text-primary-foreground rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-success/30 transition-all active:scale-95"
+              className="flex items-center gap-2 px-4 py-2 bg-success text-primary-foreground rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-success/30 motion-safe:transition-all active:scale-95"
             >
               <MessageCircle size={16} /> Send via WhatsApp
             </button>
             <button 
               onClick={() => setIsAssigning(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-input text-foreground border border-border rounded-xl text-sm font-semibold hover:bg-primary-subtle transition-all active:scale-95"
+              className="flex items-center gap-2 px-4 py-2 bg-input text-foreground border border-border rounded-xl text-sm font-semibold hover:bg-primary-subtle motion-safe:transition-all active:scale-95"
             >
               <Edit2 size={16} /> Change
             </button>
@@ -57,7 +57,7 @@ export default function ManagerProfileDiet() {
         ) : !isAssigning && (
           <button 
             onClick={() => setIsAssigning(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-primary/30 transition-all active:scale-95"
+            className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-primary/30 motion-safe:transition-all active:scale-95"
           >
             <Plus size={16} /> Assign Diet
           </button>
@@ -84,14 +84,14 @@ export default function ManagerProfileDiet() {
               <div className="flex gap-2">
                 <button 
                   onClick={() => setIsAssigning(false)}
-                  className="px-4 py-2 bg-input text-secondary hover:text-foreground rounded-xl text-sm font-semibold transition-colors"
+                  className="px-4 py-2 bg-input text-secondary hover:text-foreground rounded-xl text-sm font-semibold motion-safe:transition-colors"
                 >
                   Cancel
                 </button>
                 <button 
                   onClick={handleAssign}
                   disabled={!selectedDietId}
-                  className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-xl text-sm font-semibold hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-xl text-sm font-semibold hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed motion-safe:transition-colors"
                 >
                   <Check size={16} /> Confirm Assign
                 </button>
@@ -112,7 +112,7 @@ export default function ManagerProfileDiet() {
           </p>
           <button 
             onClick={() => setIsAssigning(true)}
-            className="px-6 py-2.5 bg-primary/10 text-primary border border-primary/20 rounded-xl font-semibold hover:bg-primary/20 transition-colors"
+            className="px-6 py-2.5 bg-primary/10 text-primary border border-primary/20 rounded-xl font-semibold hover:bg-primary/20 motion-safe:transition-colors"
           >
             Browse Diet Library
           </button>
@@ -141,7 +141,7 @@ export default function ManagerProfileDiet() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {diet.meals && diet.meals.length > 0 ? diet.meals.map((meal, idx) => {
               return (
-                <div key={`meal-${meal.name}-${idx}`} className="bg-card border border-border p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                <div key={`meal-${meal.name}-${idx}`} className="bg-card border border-border p-4 rounded-xl shadow-sm hover:shadow-md motion-safe:transition-shadow">
                   <h5 className="font-semibold text-primary mb-3 pb-2 border-b border-border text-sm flex items-center justify-between">
                     {meal.time} - {meal.name}
                     <span className="text-xs font-normal text-secondary bg-input px-2 py-1 rounded">~{meal.calories} kcal</span>

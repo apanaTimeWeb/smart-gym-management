@@ -50,7 +50,7 @@ export default function ManagerWorkoutExerciseModal() {
           <button 
             type="button"
             onClick={() => setShowExModal(false)} 
-            className="text-secondary hover:text-foreground hover:bg-primary-subtle p-1 rounded-md transition-colors"
+            className="text-secondary hover:text-foreground hover:bg-primary-subtle p-1 rounded-md motion-safe:transition-colors"
           >
             <X size={20} />
           </button>
@@ -129,14 +129,14 @@ export default function ManagerWorkoutExerciseModal() {
             <button 
               type="button" 
               onClick={() => setShowExModal(false)} 
-              className="px-4 py-2 border border-border rounded-lg font-medium text-secondary hover:text-foreground hover:bg-primary-subtle transition-colors"
+              className="px-4 py-2 border border-border rounded-lg font-medium text-secondary hover:text-foreground hover:bg-primary-subtle motion-safe:transition-colors"
             >
               Cancel
             </button>
             <button 
               type="submit" 
               disabled={saveMutation.isPending}
-              className="px-4 py-2 rounded-lg font-medium text-primary-foreground flex items-center gap-2 hover:opacity-90 transition-opacity disabled:opacity-70 bg-primary" 
+              className="px-4 py-2 rounded-lg font-medium text-primary-foreground flex items-center gap-2 hover:opacity-90 motion-safe:transition-opacity disabled:opacity-70 bg-primary" 
             >
               {saveMutation.isPending ? <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full motion-safe:animate-spin" /> : <><Save size={15} /> Save</>}
             </button>

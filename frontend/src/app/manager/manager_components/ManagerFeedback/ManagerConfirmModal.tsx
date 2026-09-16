@@ -48,7 +48,7 @@ export default function ManagerConfirmModal({
           <div className="flex gap-3 mt-6">
             <button
               onClick={onCancel}
-              className="flex-1 py-2.5 border border-border rounded-xl text-sm font-semibold text-foreground hover:bg-input transition-colors"
+              className="flex-1 py-2.5 border border-border rounded-xl text-sm font-semibold text-foreground hover:bg-input motion-safe:transition-colors"
             >
               {cancelText}
             </button>
@@ -56,7 +56,7 @@ export default function ManagerConfirmModal({
               onClick={() => {
                 onConfirm();
               }}
-              className={`flex-1 py-2.5 rounded-xl text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90 ${
+              className={`flex-1 py-2.5 rounded-xl text-sm font-semibold text-primary-foreground motion-safe:transition-opacity hover:opacity-90 ${
                 type === 'danger' ? 'bg-danger' :
                 type === 'warning' ? 'bg-warning' :
                 'bg-info'

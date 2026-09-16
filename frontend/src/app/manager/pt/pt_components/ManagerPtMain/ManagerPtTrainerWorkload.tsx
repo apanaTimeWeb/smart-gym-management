@@ -3,6 +3,8 @@
 import { Users, Star, User } from 'lucide-react';
 import type { PtTrainerWorkload } from '@/app/manager/pt/pt_types/ManagerPtTypes';
 
+const PT_TRAINER_WORKLOAD_COLUMN_COUNT = 4;
+
 interface ManagerPtTrainerWorkloadProps {
   workload: PtTrainerWorkload[];
 }
@@ -27,7 +29,7 @@ export default function ManagerPtTrainerWorkload({ workload }: ManagerPtTrainerW
           <tbody className="divide-y divide-border">
             {workload.length === 0 ? (
               <tr>
-                <td colSpan={4} className="py-10 text-center text-secondary text-sm">
+                <td colSpan={PT_TRAINER_WORKLOAD_COLUMN_COUNT} className="py-10 text-center text-secondary text-sm">
                   No trainer data available.
                 </td>
               </tr>

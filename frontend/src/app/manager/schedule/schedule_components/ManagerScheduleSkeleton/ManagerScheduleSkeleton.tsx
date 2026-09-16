@@ -3,7 +3,7 @@ import React from 'react';
 
 export default function ManagerScheduleSkeleton() {
   return (
-    <div className="min-h-full pb-10 animate-pulse motion-reduce:animate-none">
+    <div className="min-h-full pb-10 motion-safe:animate-pulse motion-reduce:animate-none">
       {/* Header Skeleton */}
       <div className="px-6 py-5 border-b border-border bg-card">
         <div className="h-6 w-48 bg-skeleton-highlight rounded mb-2"></div>

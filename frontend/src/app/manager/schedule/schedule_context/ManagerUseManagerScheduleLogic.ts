@@ -61,7 +61,7 @@ export function useManagerScheduleLogic(): ScheduleContextType {
   const trainers = scheduleQuery.data?.trainers ?? [];
   const kpis = scheduleQuery.data?.kpis ?? null;
   const status = scheduleQuery.status;
-  const error = scheduleQuery.error instanceof Error ? scheduleQuery.error.message : '';
+  const error = scheduleQuery.isError ? 'Unable to load schedule data.' : '';
 
   const saveShift = useCallback(async (data: CreateShiftDto) => {
     if (shiftModal.editShift) await scheduleMutations.update.mutateAsync({ id: shiftModal.editShift.id, body: data });

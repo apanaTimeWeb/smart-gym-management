@@ -63,19 +63,19 @@ All API calls go through the centralized `apiFetch` wrapper at `@/lib/api`. Each
 
 | Module | API File | URL Config |
 |---|---|---|
-| Members | `members_api/ManagerMembersApi.ts` | `Manager_url_config.ts` |
-| Finance | `finance_api/ManagerFinanceApi.ts` | `Manager_url_config.ts` |
-| Plans | `plans_api/ManagerPlansApi.ts` | `Manager_url_config.ts` |
-| Sales | `sales_api/ManagerSalesApi.ts` | `Manager_url_config.ts` |
-| HR | `hr_api/ManagerHrApi.ts` | `Manager_url_config.ts` |
-| Expenses | `expenses_api/ManagerExpensesApi.ts` | `Manager_url_config.ts` |
-| Store | `store_api/ManagerStoreApi.ts` | `Manager_url_config.ts` |
-| Library | `library_api/ManagerLibraryApi.ts` | `Manager_url_config.ts` |
-| Workout | `workout_api/ManagerWorkoutApi.ts` | `Manager_url_config.ts` |
-| Inquiries | `inquiries_api/ManagerInquiriesApi.ts` | `Manager_url_config.ts` |
-| Reports | `reports_api/ManagerReportsApi.ts` | `Manager_url_config.ts` |
-| Notifications | `notifications_api/ManagerNotificationsApi.ts` | `Manager_url_config.ts` |
-| Schedule | `schedule_api/ManagerScheduleApi.ts` | `ScheduleUrlConfig` in `Manager_url_config.ts` |
+| Members | `members_api/ManagerMembersApi.ts` | `members_url_config.ts` |
+| Finance | `finance_api/ManagerFinanceApi.ts` | `finance_url_config.ts` |
+| Plans | `plans_api/ManagerPlansApi.ts` | `plans_url_config.ts` |
+| Sales | `sales_api/ManagerSalesApi.ts` | `sales_url_config.ts` |
+| HR | `hr_api/ManagerHrApi.ts` | `hr_url_config.ts` |
+| Expenses | `expenses_api/ManagerExpensesApi.ts` | `expenses_url_config.ts` |
+| Store | `store_api/ManagerStoreApi.ts` | `store_url_config.ts` |
+| Library | `library_api/ManagerLibraryApi.ts` | `library_url_config.ts` |
+| Workout | `workout_api/ManagerWorkoutApi.ts` | `workout_url_config.ts` |
+| Inquiries | `inquiries_api/ManagerInquiriesApi.ts` | `inquiries_url_config.ts` |
+| Reports | `reports_api/ManagerReportsApi.ts` | `reports_url_config.ts` |
+| Notifications | `notifications_api/ManagerNotificationsApi.ts` | `notifications_url_config.ts` |
+| Schedule | `schedule_api/ManagerScheduleApi.ts` | `schedule_url_config.ts` |
 
 **Response envelope:** `{ success: boolean, message: string, data: T | null, meta?: PaginationMeta }`
 
@@ -85,7 +85,7 @@ All API calls go through the centralized `apiFetch` wrapper at `@/lib/api`. Each
 - Auth: JWT stored in `gymsmart_token` HTTP-only cookie; injected by `apiFetch` wrapper
 - Destructive actions (delete, bulk actions): Protected by `ManagerConfirmProvider` (confirm modal — `useConfirm` hook)
 - Sensitive data: Phone numbers masked using `maskSensitiveData()` from `@/lib/formatters`
-- Cross-role isolation: Zero imports from `/admin`, `/trainer`, `/superadmin` (enforced in `ManagerManager_forbidden.md`)
+- Cross-role isolation: Zero imports from `/admin`, `/trainer`, `/superadmin` (enforced in `manager_forbidden.md`)
 
 ## Loading, Empty, and Error States
 

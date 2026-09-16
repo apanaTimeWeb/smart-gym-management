@@ -42,13 +42,13 @@ export default function ManagerProfileWorkout() {
                 const text = `*WORKOUT PLAN: ${workout?.name || 'Assigned'}*\nLevel: ${workout?.level || 'N/A'}\n\n*Routine:*\n${(workout?.days || []).map(d => `*Day ${d.day}: ${d.focus}*\n${(d.exercises || []).length === 0 ? 'Rest Day' : (d.exercises || []).map(e => `- ${e.name} (${e.sets}x${e.reps})`).join('\n')}`).join('\n\n')}`;
                 window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
               }}
-              className="flex items-center gap-2 px-4 py-2 bg-success text-primary-foreground rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-success/30 transition-all active:scale-95"
+              className="flex items-center gap-2 px-4 py-2 bg-success text-primary-foreground rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-success/30 motion-safe:transition-all active:scale-95"
             >
               <MessageCircle size={16} /> Send via WhatsApp
             </button>
             <button 
               onClick={() => setIsAssigning(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-input text-foreground border border-border rounded-xl text-sm font-semibold hover:bg-primary-subtle transition-all active:scale-95"
+              className="flex items-center gap-2 px-4 py-2 bg-input text-foreground border border-border rounded-xl text-sm font-semibold hover:bg-primary-subtle motion-safe:transition-all active:scale-95"
             >
               <Edit2 size={16} /> Change
             </button>
@@ -56,7 +56,7 @@ export default function ManagerProfileWorkout() {
         ) : !isAssigning && (
           <button 
             onClick={() => setIsAssigning(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-primary/30 transition-all active:scale-95"
+            className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-primary/30 motion-safe:transition-all active:scale-95"
           >
             <Plus size={16} /> Assign Workout
           </button>
@@ -83,14 +83,14 @@ export default function ManagerProfileWorkout() {
               <div className="flex gap-2">
                 <button 
                   onClick={() => setIsAssigning(false)}
-                  className="px-4 py-2 bg-input text-secondary hover:text-foreground rounded-xl text-sm font-semibold transition-colors"
+                  className="px-4 py-2 bg-input text-secondary hover:text-foreground rounded-xl text-sm font-semibold motion-safe:transition-colors"
                 >
                   Cancel
                 </button>
                 <button 
                   onClick={handleAssign}
                   disabled={!selectedWorkoutId}
-                  className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-xl text-sm font-semibold hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-xl text-sm font-semibold hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed motion-safe:transition-colors"
                 >
                   <Check size={16} /> Confirm Assign
                 </button>
@@ -111,7 +111,7 @@ export default function ManagerProfileWorkout() {
           </p>
           <button 
             onClick={() => setIsAssigning(true)}
-            className="px-6 py-2.5 bg-primary/10 text-primary border border-primary/20 rounded-xl font-semibold hover:bg-primary/20 transition-colors"
+            className="px-6 py-2.5 bg-primary/10 text-primary border border-primary/20 rounded-xl font-semibold hover:bg-primary/20 motion-safe:transition-colors"
           >
             Browse Workout Library
           </button>
@@ -136,7 +136,7 @@ export default function ManagerProfileWorkout() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {workout.days && workout.days.length > 0 ? (
               workout.days.map((day, idx) => (
-                <div key={`actual-day-${idx}`} className="bg-card border border-border p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                <div key={`actual-day-${idx}`} className="bg-card border border-border p-4 rounded-xl shadow-sm hover:shadow-md motion-safe:transition-shadow">
                   <h5 className="font-semibold text-primary mb-3 pb-2 border-b border-border text-sm">Day {day.day || idx + 1}: {day.focus}</h5>
                   {(!day.exercises || day.exercises.length === 0) ? (
                     <p className="text-sm text-secondary italic">Rest Day - No workout assigned.</p>

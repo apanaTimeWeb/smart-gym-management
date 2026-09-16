@@ -9,7 +9,7 @@ export function useFetchMembers(params: Record<string, string>) {
   return useQuery({
     queryKey: ['manager', 'members', params],
     queryFn: async () => {
-      const res = await membersApi.getAll(params);
+      const res = await membersApi.fetchMembers(params);
       return res.data;
     },
   });
@@ -19,7 +19,7 @@ export function useFetchPlans() {
   return useQuery<PlanSnapshot[]>({
     queryKey: ['manager', 'members', 'plans-snapshot'],
     queryFn: async () => {
-      const res = await membersApi.getPlans();
+      const res = await membersApi.fetchMemberPlans();
       return (res.data as PlanSnapshot[]) || [];
     },
   });
@@ -29,7 +29,7 @@ export function useFetchMemberStats() {
   return useQuery<MemberStats | null>({
     queryKey: ['manager', 'members', 'stats'],
     queryFn: async () => {
-      const res = await membersApi.getStats();
+      const res = await membersApi.fetchMemberStats();
       return res.data ?? null;
     },
   });
@@ -39,12 +39,8 @@ export function useFetchTrainers() {
   return useQuery({
     queryKey: ['manager', 'members', 'trainers'],
     queryFn: async () => {
-      try {
-        const res = await membersApi.getTrainers();
-        return res.data?.staff?.filter((s) => s.role?.toLowerCase().includes('trainer')) || [];
-      } catch {
-        return [];
-      }
+      const res = await membersApi.fetchMemberTrainers();
+      return res.data?.staff?.filter((staff) => staff.role.toLowerCase().includes('trainer')) ?? [];
     },
   });
 }
@@ -54,7 +50,7 @@ export function useFetchPayments(memberId: string) {
     queryKey: ['manager', 'members', 'payments', memberId],
     queryFn: async () => {
       if (!memberId) return [];
-      const res = await membersApi.getPayments(memberId);
+      const res = await membersApi.fetchMemberPayments(memberId);
       return (res.data as PaymentSnapshot[]) || [];
     },
     enabled: !!memberId,
@@ -66,7 +62,7 @@ export function useFetchAttendance(memberId: string) {
     queryKey: ['manager', 'members', 'attendance', memberId],
     queryFn: async () => {
       if (!memberId) return [];
-      const res = await membersApi.getAttendance(memberId);
+      const res = await membersApi.fetchMemberAttendance(memberId);
       return (res.data as AttendanceSnapshot[]) || [];
     },
     enabled: !!memberId,
@@ -78,7 +74,7 @@ export function useFetchMember(memberId: string | null) {
     queryKey: ['manager', 'members', 'detail', memberId],
     queryFn: async () => {
       if (!memberId) return null;
-      const res = await membersApi.getOne(memberId);
+      const res = await membersApi.fetchMemberById(memberId);
       return res.data ?? null;
     },
     enabled: Boolean(memberId),

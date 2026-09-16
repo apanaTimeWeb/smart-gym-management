@@ -7,7 +7,7 @@ import { managerHrHandlers } from '@/app/manager/hr/hr_mocks/handlers/ManagerHrM
 import { managerInquiriesHandlers } from '@/app/manager/inquiries/inquiries_mocks/handlers/ManagerInquiriesMockHandlers';
 import { managerLibraryHandlers } from '@/app/manager/library/library_mocks/handlers/ManagerLibraryMockHandlers';
 import { managerMembersHandlers } from '@/app/manager/members/members_mocks/handlers/ManagerMembersMockHandlers';
-import { managerNotificationsHandlers } from '@/app/manager/notifications/notifications_mocks/ManagerNotificationsMockHandlers';
+import { managerNotificationsHandlers } from '@/app/manager/notifications/notifications_mocks/handlers/ManagerNotificationsMockHandlers';
 import { managerPlansHandlers } from '@/app/manager/plans/plans_mocks/handlers/ManagerPlansMockHandlers';
 import { managerProfileHandlers } from '@/app/manager/profile/profile_mocks/handlers/ManagerProfileMockHandlers';
 import { managerPtHandlers } from '@/app/manager/pt/pt_mocks/handlers/ManagerPtMockHandlers';

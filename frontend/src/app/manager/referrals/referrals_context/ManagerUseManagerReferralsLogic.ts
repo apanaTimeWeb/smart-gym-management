@@ -39,7 +39,7 @@ export function useManagerReferralsLogic() {
 
   const { data: kpisResponse, isLoading: isKpisLoading } = useQuery({
     queryKey: ['manager', 'referrals', 'kpis'],
-    queryFn: ManagerReferralsApi.fetchKPIs,
+    queryFn: ManagerReferralsApi.fetchReferralKPIs,
     staleTime: 1000 * 60 * 5,
   });
   const kpis = kpisResponse?.data || null;
@@ -80,6 +80,8 @@ export function useManagerReferralsLogic() {
     isKpisLoading,
     referrals,
     isReferralsLoading: referralsQuery.isLoading,
+    isReferralsError: referralsQuery.isError,
+    reloadReferrals: referralsQuery.refetch,
     
     // Store proxies
     isAddModalOpen: store.isAddModalOpen,

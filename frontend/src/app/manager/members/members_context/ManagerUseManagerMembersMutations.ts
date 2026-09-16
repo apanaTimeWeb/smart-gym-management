@@ -27,7 +27,7 @@ export function useManagerMembersMutations(
   const invalidateMemberQueries = useCallback(() => {
     queryClient.invalidateQueries({ queryKey: ['manager', 'members'] });
     queryClient.invalidateQueries({ queryKey: ['manager', 'members', 'payments'] });
-    queryClient.invalidateQueries({ queryKey: ['manager', 'stats'] });
+    queryClient.invalidateQueries({ queryKey: ['manager', 'dashboard'] });
   }, [queryClient]);
 
   const { saveMutation, deleteMutation, renewMutation, recordPaymentMutation } = useManagerMembersCoreMutations(

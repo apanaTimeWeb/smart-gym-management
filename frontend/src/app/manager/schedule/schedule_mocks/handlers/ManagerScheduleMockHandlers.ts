@@ -6,7 +6,7 @@ import type { TrainerShift } from '@/app/manager/schedule/schedule_types/Manager
 let mockTrainers = structuredClone(MOCK_TRAINERS);
 
 export const managerScheduleHandlers = [
-  http.get('http://localhost:5000/api/v1/manager/schedule', ({ request }) => {
+  http.get(`/api/v1/manager/schedule`, ({ request }) => {
     const url = new URL(request.url);
     const search = url.searchParams.get('search')?.toLowerCase() ?? '';
     const day = url.searchParams.get('day');
@@ -16,7 +16,7 @@ export const managerScheduleHandlers = [
     })).filter((trainer) => !search || trainer.trainerName.toLowerCase().includes(search) || trainer.trainerRole.toLowerCase().includes(search));
     return HttpResponse.json({ success: true, message: 'Schedule fetched', data: { trainers, kpis: MOCK_SCHEDULE_KPIS } });
   }),
-  http.post('http://localhost:5000/api/v1/manager/schedule/shifts', async ({ request }) => {
+  http.post(`/api/v1/manager/schedule/shifts`, async ({ request }) => {
     const body = await request.json() as Omit<TrainerShift, 'id'>;
     const trainer = mockTrainers.find((item) => item.trainerId === body.trainerId);
     if (!trainer) return HttpResponse.json({ success: false, message: 'Trainer not found', data: null }, { status: MANAGER_HTTP_STATUS.NOT_FOUND });
@@ -25,7 +25,7 @@ export const managerScheduleHandlers = [
     trainer.totalShiftsPerWeek += 1;
     return HttpResponse.json({ success: true, message: 'Shift created', data: shift });
   }),
-  http.patch('http://localhost:5000/api/v1/manager/schedule/shifts/:id', async ({ request, params }) => {
+  http.patch(`/api/v1/manager/schedule/shifts/:id`, async ({ request, params }) => {
     const body = await request.json() as Partial<TrainerShift>;
     for (const trainer of mockTrainers) {
       const index = trainer.shifts.findIndex((shift) => shift.id === params.id);
@@ -39,7 +39,7 @@ export const managerScheduleHandlers = [
     }
     return HttpResponse.json({ success: false, message: 'Shift not found', data: null }, { status: MANAGER_HTTP_STATUS.NOT_FOUND });
   }),
-  http.delete('http://localhost:5000/api/v1/manager/schedule/shifts/:id', ({ params }) => {
+  http.delete(`/api/v1/manager/schedule/shifts/:id`, ({ params }) => {
     for (const trainer of mockTrainers) {
       const before = trainer.shifts.length;
       trainer.shifts = trainer.shifts.filter((shift) => shift.id !== params.id);

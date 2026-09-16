@@ -19,8 +19,8 @@ export default function ManagerExpensesKPIs() {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       {KPI_CARDS.map(kpi => (
-        <div key={kpi.label} className="bg-card border border-border p-5 rounded-xl shadow-sm hover:shadow-md transition-shadow flex items-center gap-4 group">
-          <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${kpi.bg} ${kpi.color} group-hover:scale-110 transition-transform`}>
+        <div key={kpi.label} className="bg-card border border-border p-5 rounded-xl shadow-sm hover:shadow-md motion-safe:transition-shadow flex items-center gap-4 group">
+          <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${kpi.bg} ${kpi.color} group-hover:scale-110 motion-safe:transition-transform`}>
             <kpi.icon size={24} />
           </div>
           <div>

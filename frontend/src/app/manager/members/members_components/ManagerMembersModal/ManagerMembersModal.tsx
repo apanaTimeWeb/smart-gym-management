@@ -46,7 +46,7 @@ export default function ManagerMembersModal() {
           <button
             type="button"
             onClick={() => setShowAddModal(false)}
-            className="p-2 rounded-full hover:bg-primary/10 transition-colors text-secondary hover:text-primary"
+            className="p-2 rounded-full hover:bg-primary/10 motion-safe:transition-colors text-secondary hover:text-primary"
             aria-label="Close modal"
           >
             <X size={20} />
@@ -76,7 +76,7 @@ export default function ManagerMembersModal() {
                     if (e.key.length === 1 && !/^[0-9]$/.test(e.key) && !e.ctrlKey && !e.metaKey) e.preventDefault(); 
                   } : undefined}
                   {...register(f.key as keyof MemberFormValues)}
-                  className={`w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-all duration-200 ${
+                  className={`w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary motion-safe:transition-all duration-200 ${
                     errors[f.key as keyof MemberFormValues] ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
                   }`}
                 />
@@ -160,7 +160,7 @@ export default function ManagerMembersModal() {
                   onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+') e.preventDefault(); }}
                   {...register('customDays')}
                   placeholder="e.g. 15"
-                  className={`w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-all duration-200 ${
+                  className={`w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary motion-safe:transition-all duration-200 ${
                     errors.customDays ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
                   } ${editId ? 'opacity-80 cursor-not-allowed' : ''}`}
                 />
@@ -192,7 +192,7 @@ export default function ManagerMembersModal() {
                 type="date"
                 readOnly={!!editId}
                 {...register('joinDate')}
-                className={`w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-all duration-200 ${editId ? 'opacity-80 cursor-not-allowed' : ''}`}
+                className={`w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary motion-safe:transition-all duration-200 ${editId ? 'opacity-80 cursor-not-allowed' : ''}`}
               />
             </div>
             <div>
@@ -201,7 +201,7 @@ export default function ManagerMembersModal() {
                 type="date"
                 readOnly
                 {...register('expiryDate')}
-                className="w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none bg-input text-primary transition-all duration-200 opacity-80 cursor-not-allowed"
+                className="w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none bg-input text-primary motion-safe:transition-all duration-200 opacity-80 cursor-not-allowed"
               />
             </div>
 
@@ -222,7 +222,7 @@ export default function ManagerMembersModal() {
                 readOnly={!!editId}
                 onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+') e.preventDefault(); }}
                 {...register('paidAmount', { valueAsNumber: true })}
-                className={`w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-all duration-200 ${editId ? 'opacity-80 cursor-not-allowed' : ''}`}
+                className={`w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary motion-safe:transition-all duration-200 ${editId ? 'opacity-80 cursor-not-allowed' : ''}`}
               />
             </div>
             
@@ -232,7 +232,7 @@ export default function ManagerMembersModal() {
                 rows={2}
                 placeholder="e.g. Asthma, Knee injury, High BP..."
                 {...register('medicalHistory')}
-                className="w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-all duration-200 border-border focus-visible:ring-primary"
+                className="w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary motion-safe:transition-all duration-200 border-border focus-visible:ring-primary"
               />
             </div>
           </div>
@@ -241,14 +241,14 @@ export default function ManagerMembersModal() {
             <button
               type="button"
               onClick={() => setShowAddModal(false)}
-              className="px-6 py-2.5 text-sm font-semibold rounded-xl border border-border text-secondary hover:bg-primary/5 hover:text-primary transition-colors"
+              className="px-6 py-2.5 text-sm font-semibold rounded-xl border border-border text-secondary hover:bg-primary/5 hover:text-primary motion-safe:transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={saving}
-              className="px-8 py-2.5 rounded-xl text-sm font-bold text-primary-foreground flex items-center justify-center gap-2 disabled:opacity-70 transition-all hover:shadow-lg hover:shadow-primary/30 active:scale-95 bg-primary"
+              className="px-8 py-2.5 rounded-xl text-sm font-bold text-primary-foreground flex items-center justify-center gap-2 disabled:opacity-70 motion-safe:transition-all hover:shadow-lg hover:shadow-primary/30 active:scale-95 bg-primary"
             >
               {saving ? (
                 <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full motion-safe:animate-spin" />

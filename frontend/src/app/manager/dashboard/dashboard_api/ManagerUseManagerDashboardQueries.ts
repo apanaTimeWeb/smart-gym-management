@@ -5,12 +5,12 @@ import { dashboardApi } from '@/app/manager/dashboard/dashboard_api/ManagerDashb
 
 export const managerDashboardQueryKeys = {
   all: ['manager', 'dashboard'] as const,
-  stats: (range?: string) => [...managerDashboardQueryKeys.all, 'stats', range] as const,
+  stats: (params?: Record<string, string>) => [...managerDashboardQueryKeys.all, 'stats', params] as const,
 };
 
-export function useDashboardStatsQuery(range?: string) {
+export function useDashboardStatsQuery(params?: Record<string, string>) {
   return useQuery({
-    queryKey: managerDashboardQueryKeys.stats(range),
-    queryFn: () => dashboardApi.getStats(range).then(res => res.data),
+    queryKey: managerDashboardQueryKeys.stats(params),
+    queryFn: () => dashboardApi.fetchDashboardStats(params).then(res => res.data),
   });
 }

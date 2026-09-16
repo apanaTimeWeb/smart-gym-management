@@ -10,9 +10,9 @@ export const MANAGER_SETTINGS_QUERY_KEY = ['manager', 'settings'] as const;
 /** Loads all Manager settings and exposes an authoritative mutation path for updates. */
 export function useManagerSettingsQuery() {
   const queryClient = useQueryClient();
-  const query = useQuery({ queryKey: MANAGER_SETTINGS_QUERY_KEY, queryFn: managerSettingsApi.getAll });
+  const query = useQuery({ queryKey: MANAGER_SETTINGS_QUERY_KEY, queryFn: managerSettingsApi.fetchSettings });
   const updateMutation = useMutation({
-    mutationFn: managerSettingsApi.updateAll,
+    mutationFn: managerSettingsApi.updateSettings,
     onSuccess: (response) => {
       if (response.data) queryClient.setQueryData(MANAGER_SETTINGS_QUERY_KEY, response.data);
     },

@@ -6,7 +6,7 @@ import { useManagerReferralsLogic } from '@/app/manager/referrals/referrals_cont
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import { SearchableDropdown } from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
 import ManagerEmptyState from '@/app/manager/manager_components/ManagerFeedback/ManagerEmptyState';
-import { formatCurrency, maskSensitiveData , formatDate} from '@/lib/formatters';
+import { formatCurrency, maskSensitiveData, formatDate, displayValue} from '@/lib/formatters';
 
 const REFERRAL_STATUS_OPTIONS = [
   { value: 'ALL', label: 'All Statuses' },
@@ -17,7 +17,7 @@ const REFERRAL_STATUS_OPTIONS = [
 
 export default function ManagerReferralsTable() {
   const { 
-    referrals, isReferralsLoading, 
+    referrals, isReferralsLoading, isReferralsError, reloadReferrals, 
     searchQuery, setSearchQuery, 
     statusFilter, setStatusFilter,
     currentPage, setCurrentPage, totalPages,
@@ -56,6 +56,11 @@ export default function ManagerReferralsTable() {
           <div className="h-full flex flex-col items-center justify-center text-secondary">
             <Loader2 size={32} className="motion-safe:animate-spin mb-4 text-primary" />
             <p className="text-sm font-medium">Loading Referrals...</p>
+          </div>
+        ) : isReferralsError ? (
+          <div role="alert" className="h-full flex flex-col items-center justify-center gap-3 text-center p-10">
+            <p className="text-sm font-semibold text-danger">Unable to load referrals.</p>
+            <button type="button" onClick={() => void reloadReferrals()} className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-semibold motion-safe:transition-colors hover:bg-primary-hover">Try Again</button>
           </div>
         ) : referrals.length === 0 ? (
           <ManagerEmptyState
@@ -101,7 +106,7 @@ export default function ManagerReferralsTable() {
                     </td>
                     <td className="px-6 py-4">
                       {ref.rewardStatus === 'N/A' ? (
-                        <span className="text-secondary">-</span>
+                        <span className="text-secondary">{displayValue(ref.rewardStatus)}</span>
                       ) : (
                         <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${
                           ref.rewardStatus === 'CLAIMED' ? 'bg-success/10 text-success' : 'bg-warning/10 text-warning'
@@ -121,7 +126,7 @@ export default function ManagerReferralsTable() {
                           disabled={isClaiming}
                           className="inline-flex items-center gap-1 px-3 py-1.5 bg-primary text-primary-foreground rounded text-xs font-bold hover:bg-primary-hover motion-safe:transition-colors disabled:opacity-50"
                         >
-                          <IndianRupee size={14} /> Claim {formatCurrency(ref.rewardAmount)}
+                          <IndianRupee size={14} /> Claim {formatCurrency(ref.rewardAmount ?? 0)}
                         </button>
                       ) : (
                         <span className="text-secondary text-xs italic">Awaiting Join</span>

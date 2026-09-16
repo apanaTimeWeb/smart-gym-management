@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import type { ConvertLeadFormValues } from '@/app/manager/inquiries/inquiries_types/ManagerConvertLeadSchema';
 
 export const INQUIRIES_CYCLE_LABELS: Record<string, string> = {
  ONE_MONTH: '1 Month',
@@ -13,26 +13,6 @@ export const INQUIRIES_GENDER_OPTIONS = [
   { label: 'Female', value: 'FEMALE' },
   { label: 'Other', value: 'OTHER' }
 ];
-
-export const ConvertLeadSchema = z.object({
-  name: z.string().min(2, "Name is required"),
-  email: z.string().email("Invalid email").optional().or(z.literal('')),
-  phone: z.string().min(10, "Valid phone is required"),
-  address: z.string().optional(),
-  aadhaar: z.string().optional(),
-  gender: z.enum(["MALE", "FEMALE", "OTHER"]),
-  billingCycle: z.enum(["ONE_MONTH", "THREE_MONTHS", "SIX_MONTHS", "TWELVE_MONTHS", "CUSTOM"]),
-  customDays: z.number().optional(),
-  planId: z.string().min(1, "Plan is required"),
-  joinDate: z.string().min(1, "Join date is required"),
-  expiryDate: z.string().optional(),
-  totalAmount: z.number().min(0).optional(),
-  paidAmount: z.number().min(0).optional(),
-  pendingAmount: z.number().min(0).optional(),
-  medicalHistory: z.string().optional()
-});
-
-export type ConvertLeadFormValues = z.infer<typeof ConvertLeadSchema>;
 
 const today = new Date();
 const nextMonth = new Date(today);

@@ -66,7 +66,7 @@ export function useManagerStoreProducts(
     const isConfirmed = await confirm({ title: 'Remove Product', message: 'Delete this product?', confirmText: 'Delete', type: 'danger' });
     if (!isConfirmed) return;
     try {
-      const res = await storeApi.removeProduct(id);
+      const res = await storeApi.deleteProduct(id);
       setProducts(prev => prev.filter(p => String(p.id) !== String(id)));
       setSummary(prev => prev ? { ...prev, totalProducts: Math.max(0, prev.totalProducts - 1) } : null);
       showToast(res.message, 'success');

@@ -54,20 +54,27 @@ const MOCK_SEGMENT_MEMBERS: Record<CommSegment, CommRecipient[]> = {
 };
 
 export const managerCommunicationsHandlers = [
-  http.get('http://localhost:5000/api/v1/manager/communications/campaigns', () => {
-    return HttpResponse.json({ success: true, message: 'Campaigns fetched', data: mockCampaigns });
+  http.get(`/api/v1/manager/communications/campaigns`, ({ request }) => {
+    const url = new URL(request.url);
+    const search = (url.searchParams.get('search') || '').trim().toLowerCase();
+    const channel = (url.searchParams.get('channel') || '').trim().toLowerCase();
+    const page = Math.max(Number(url.searchParams.get('page') || '1'), 1);
+    const limit = Math.max(Number(url.searchParams.get('limit') || '10'), 1);
+    const filtered = mockCampaigns.filter((campaign) => (!search || campaign.title.toLowerCase().includes(search)) && (!channel || channel === 'all' || campaign.channel.toLowerCase() === channel));
+    const start = (page - 1) * limit;
+    return HttpResponse.json({ success: true, message: 'Campaigns fetched', data: { campaigns: filtered.slice(start, start + limit), total: filtered.length } });
   }),
 
-  http.get('http://localhost:5000/api/v1/manager/communications/kpis', () => {
+  http.get(`/api/v1/manager/communications/kpis`, () => {
     return HttpResponse.json({ success: true, message: 'KPIs fetched', data: MOCK_COMM_KPI });
   }),
 
-  http.get('http://localhost:5000/api/v1/manager/communications/segments/:segment', ({ params }) => {
+  http.get(`/api/v1/manager/communications/segments/:segment`, ({ params }) => {
     const { segment } = params;
     return HttpResponse.json({ success: true, message: 'Segment fetched', data: MOCK_SEGMENT_MEMBERS[segment as CommSegment] ?? [] });
   }),
 
-  http.post('http://localhost:5000/api/v1/manager/communications/campaigns', async ({ request }) => {
+  http.post(`/api/v1/manager/communications/campaigns`, async ({ request }) => {
     const payload = await request.json() as CommFormValues & { recipientCount: number; segmentLabel: string };
     const campaign: CommCampaign = {
       id: `c${Date.now()}`,
@@ -89,11 +96,11 @@ export const managerCommunicationsHandlers = [
     return HttpResponse.json({ success: true, message: 'Campaign created', data: campaign });
   }),
 
-  http.get('http://localhost:5000/api/v1/manager/communications/automations', () => {
+  http.get(`/api/v1/manager/communications/automations`, () => {
     return HttpResponse.json({ success: true, message: 'Automations fetched', data: mockAutomations });
   }),
 
-  http.patch('http://localhost:5000/api/v1/manager/communications/automations/:id', async ({ request, params }) => {
+  http.patch(`/api/v1/manager/communications/automations/:id`, async ({ request, params }) => {
     const payload = await request.json() as Partial<CommAutomation>;
     const idx = mockAutomations.findIndex(a => a.id === params.id);
     if (idx === -1) return HttpResponse.json({ success: false, message: 'Not found' }, { status: MANAGER_HTTP_STATUS.NOT_FOUND });
@@ -101,15 +108,15 @@ export const managerCommunicationsHandlers = [
     return HttpResponse.json({ success: true, message: 'Automation updated', data: mockAutomations[idx] });
   }),
 
-  http.get('http://localhost:5000/api/v1/manager/communications/cancelled-members', () => {
+  http.get(`/api/v1/manager/communications/cancelled-members`, () => {
     return HttpResponse.json({ success: true, message: 'Cancelled members fetched', data: mockCancelledMembers });
   }),
 
-  http.get('http://localhost:5000/api/v1/manager/communications/cancellations-kpis', () => {
+  http.get(`/api/v1/manager/communications/cancellations-kpis`, () => {
     return HttpResponse.json({ success: true, message: 'Cancellations KPIs fetched', data: MOCK_CANCELLATIONS_KPI });
   }),
 
-  http.post('http://localhost:5000/api/v1/manager/communications/win-back', async ({ request }) => {
+  http.post(`/api/v1/manager/communications/win-back`, async ({ request }) => {
     const payload = await request.json() as {
       memberId: string;
       memberName: string;

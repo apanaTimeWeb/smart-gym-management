@@ -3,7 +3,8 @@ import { Controller } from 'react-hook-form';
 import type { UseFormReturn } from 'react-hook-form';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import { INQUIRIES_CYCLE_LABELS, getPriceForCycleSnapshot, INQUIRIES_GENDER_OPTIONS } from '@/app/manager/inquiries/inquiries_utils/ManagerInquiriesConvertConstants';
-import type { ConvertLeadFormValues, PlanSnapshot } from '@/app/manager/inquiries/inquiries_utils/ManagerInquiriesConvertConstants';
+import type { ConvertLeadFormValues } from '@/app/manager/inquiries/inquiries_types/ManagerConvertLeadSchema';
+import type { PlanSnapshot } from '@/app/manager/inquiries/inquiries_utils/ManagerInquiriesConvertConstants';
 import { formatCurrency } from '@/lib/formatters';
 
 interface ManagerConvertLeadFormProps {
@@ -46,7 +47,7 @@ export default function ManagerConvertLeadForm({
               }
             }}
             {...register(f.key as keyof ConvertLeadFormValues)}
-            className={`w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-all duration-200 ${
+            className={`w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary motion-safe:transition-all duration-200 ${
               errors[f.key as keyof ConvertLeadFormValues] ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
             }`}
           />
@@ -106,7 +107,7 @@ export default function ManagerConvertLeadForm({
             onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+') e.preventDefault(); }}
             {...register('customDays')}
             placeholder="e.g. 15"
-            className={`w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-all duration-200 ${
+            className={`w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary motion-safe:transition-all duration-200 ${
               errors.customDays ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
             }`}
           />
@@ -132,11 +133,11 @@ export default function ManagerConvertLeadForm({
 
       <div>
         <label className="block text-sm font-medium text-secondary mb-0.5">Join Date</label>
-        <input type="date" min={new Date().toISOString().split('T')[0]} {...register('joinDate')} className="w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-all duration-200" />
+        <input type="date" min={new Date().toISOString().split('T')[0]} {...register('joinDate')} className="w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary motion-safe:transition-all duration-200" />
       </div>
       <div>
         <label className="block text-sm font-medium text-secondary mb-0.5">Expiry Date <span className="text-danger">*</span></label>
-        <input type="date" disabled min={new Date().toISOString().split('T')[0]} {...register('expiryDate')} className="w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none bg-input text-primary opacity-80 cursor-not-allowed transition-all duration-200" />
+        <input type="date" disabled min={new Date().toISOString().split('T')[0]} {...register('expiryDate')} className="w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none bg-input text-primary opacity-80 cursor-not-allowed motion-safe:transition-all duration-200" />
       </div>
 
       <div>
@@ -145,7 +146,7 @@ export default function ManagerConvertLeadForm({
       </div>
       <div>
         <label className="block text-sm font-medium text-secondary mb-0.5">Amount Paid (₹)</label>
-        <input type="number" min="0" onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+') e.preventDefault(); }} {...register('paidAmount', { valueAsNumber: true })} className="w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-all duration-200" />
+        <input type="number" min="0" onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+') e.preventDefault(); }} {...register('paidAmount', { valueAsNumber: true })} className="w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary motion-safe:transition-all duration-200" />
       </div>
     </div>
   );

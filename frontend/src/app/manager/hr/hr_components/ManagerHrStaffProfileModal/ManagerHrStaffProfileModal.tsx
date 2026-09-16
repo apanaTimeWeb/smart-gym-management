@@ -17,7 +17,7 @@ export default function ManagerHrStaffProfileModal() {
           <button 
             type="button" 
             onClick={() => setViewProfileData(null)} 
-            className="absolute top-4 right-4 p-2 rounded-full bg-foreground/20 hover:bg-foreground/40 transition-colors text-primary-foreground"
+            className="absolute top-4 right-4 p-2 rounded-full bg-foreground/20 hover:bg-foreground/40 motion-safe:transition-colors text-primary-foreground"
           >
             <X size={20} />
           </button>
@@ -30,7 +30,7 @@ export default function ManagerHrStaffProfileModal() {
             </div>
             <button 
               onClick={() => { setViewProfileData(null); openEdit(s); }}
-              className="flex items-center gap-2 px-4 py-2 bg-primary/10 hover:bg-primary/20 text-primary font-semibold rounded-xl transition-colors mb-2"
+              className="flex items-center gap-2 px-4 py-2 bg-primary/10 hover:bg-primary/20 text-primary font-semibold rounded-xl motion-safe:transition-colors mb-2"
             >
               <Edit2 size={16} /> Edit Profile
             </button>

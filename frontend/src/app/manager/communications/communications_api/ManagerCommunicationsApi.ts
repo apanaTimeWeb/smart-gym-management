@@ -1,4 +1,4 @@
-import { ManagerCommunicationsUrlConfig } from '@/app/manager/Manager_url_config';
+import { ManagerCommunicationsUrlConfig } from '@/app/manager/communications/communications_url_config';
 import { apiFetch, type ApiResponse } from '@/lib/api';
 import type {
   CommCampaign,
@@ -23,11 +23,12 @@ import {
 import { z } from 'zod';
 
 export const ManagerCommunicationsApi = {
-  fetchCampaigns: async (): Promise<ApiResponse<CommCampaign[]>> => {
-    return apiFetch(`${ManagerCommunicationsUrlConfig.BACKEND_API.BASE}/campaigns`, { dataSchema: z.array(commCampaignSchema) });
+  fetchCampaigns: async (params?: Record<string, string>): Promise<ApiResponse<{ campaigns: CommCampaign[]; total: number }>> => {
+    const query = new URLSearchParams(params ?? {}).toString();
+    return apiFetch(`${ManagerCommunicationsUrlConfig.BACKEND_API.BASE}/campaigns`, { dataSchema: z.object({ campaigns: z.array(commCampaignSchema), total: z.number() }) });
   },
 
-  fetchKPIs: async (): Promise<ApiResponse<CommKPIData>> => {
+  fetchCommunicationKPIs: async (): Promise<ApiResponse<CommKPIData>> => {
     return apiFetch(`${ManagerCommunicationsUrlConfig.BACKEND_API.BASE}/kpis`, { dataSchema: commKPIDataSchema });
   },
 
@@ -70,6 +71,6 @@ export const ManagerCommunicationsApi = {
     message: string;
     subject: string;
   }): Promise<ApiResponse<CommCampaign>> => {
-    return apiFetch(`${ManagerCommunicationsUrlConfig.BACKEND_API.BASE}/win-back`, { method: 'POST', body: JSON.stringify(payload), dataSchema: z.unknown() });
+    return apiFetch(`${ManagerCommunicationsUrlConfig.BACKEND_API.BASE}/win-back`, { method: 'POST', body: JSON.stringify(payload), dataSchema: commCampaignSchema });
   },
 };

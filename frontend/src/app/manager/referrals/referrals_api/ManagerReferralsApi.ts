@@ -1,11 +1,11 @@
 import { z } from 'zod';
-import { ManagerReferralsUrlConfig } from '@/app/manager/Manager_url_config';
+import { ManagerReferralsUrlConfig } from '@/app/manager/referrals/referrals_url_config';
 import { apiFetch, type ApiResponse } from '@/lib/api';
 import { managerReferralSchema, managerReferralsKpiSchema } from '@/app/manager/referrals/referrals_types/ManagerReferralsSchema';
 import type { ManagerReferral, ManagerReferralsKPIs, CreateReferralDto } from '@/app/manager/referrals/referrals_types/ManagerReferralsTypes';
 
 export const ManagerReferralsApi = {
-  fetchKPIs: async (): Promise<ApiResponse<ManagerReferralsKPIs>> => {
+  fetchReferralKPIs: async (): Promise<ApiResponse<ManagerReferralsKPIs>> => {
     return apiFetch(`${ManagerReferralsUrlConfig.BACKEND_API.BASE}/kpis`, { dataSchema: managerReferralsKpiSchema });
   },
 

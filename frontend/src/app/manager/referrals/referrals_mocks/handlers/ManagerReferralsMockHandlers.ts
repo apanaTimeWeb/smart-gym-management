@@ -1,12 +1,12 @@
 import { http, HttpResponse } from 'msw';
 import { MANAGER_HTTP_STATUS } from '@/app/manager/manager_utils/ManagerHttpStatus';
-import { MOCK_REFERRALS, MOCK_REFERRALS_KPIS } from '@/app/manager/referrals/referrals_utils/ManagerReferralsConstants';
+import { MOCK_REFERRALS, MOCK_REFERRALS_KPIS } from '@/app/manager/referrals/referrals_fixtures/ManagerReferralsMockData';
 import type { ManagerReferral, CreateReferralDto } from '@/app/manager/referrals/referrals_types/ManagerReferralsTypes';
 
 let mockReferrals = [...MOCK_REFERRALS];
 
 export const managerReferralsHandlers = [
-  http.get('http://localhost:5000/api/v1/manager/referrals/kpis', () => {
+  http.get(`/api/v1/manager/referrals/kpis`, () => {
     return HttpResponse.json({
       success: true,
       message: 'KPIs fetched',
@@ -14,7 +14,7 @@ export const managerReferralsHandlers = [
     });
   }),
 
-  http.get('http://localhost:5000/api/v1/manager/referrals', ({ request }) => {
+  http.get(`/api/v1/manager/referrals`, ({ request }) => {
     const url = new URL(request.url);
     const page = Number(url.searchParams.get('page') || '1');
     const limit = Number(url.searchParams.get('limit') || '10');
@@ -34,7 +34,7 @@ export const managerReferralsHandlers = [
     });
   }),
 
-  http.post('http://localhost:5000/api/v1/manager/referrals', async ({ request }) => {
+  http.post(`/api/v1/manager/referrals`, async ({ request }) => {
     const dto = await request.json() as CreateReferralDto;
     const newRef: ManagerReferral = {
       id: `ref-${Date.now()}`,
@@ -56,7 +56,7 @@ export const managerReferralsHandlers = [
     });
   }),
 
-  http.post('http://localhost:5000/api/v1/manager/referrals/:id/claim', ({ params }) => {
+  http.post(`/api/v1/manager/referrals/:id/claim`, ({ params }) => {
     const { id } = params;
     const idx = mockReferrals.findIndex(r => r.id === id);
     if (idx === -1) {

@@ -127,7 +127,7 @@ export function FinanceProvider({ children }: { children: ReactNode }) {
   }, [payments]);
 
   const exportPDF = useCallback(async () => {
-    const response = await import('@/app/manager/finance/finance_api/ManagerFinanceApi').then(({ financeApi }) => financeApi.exportPayments('pdf'));
+    const response = await import('@/app/manager/finance/finance_api/ManagerFinanceApi').then(({ financeApi }) => financeApi.exportPaymentsReport('pdf'));
     if (response.data?.url) window.open(response.data.url, '_blank', 'noopener,noreferrer');
   }, []);
 

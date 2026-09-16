@@ -55,6 +55,7 @@ export function useManagerCommunicationsLogic() {
   // --- Server state ---
   const {
     campaigns,
+    campaignsTotal,
     campaignsLoading,
     campaignsError,
     kpis,
@@ -62,23 +63,14 @@ export function useManagerCommunicationsLogic() {
     loadingRecipients,
     automations,
     automationsLoading,
-  } = useManagerCommunicationsQueries(store.selectedSegment);
+  } = useManagerCommunicationsQueries(store.selectedSegment, historySearch, historyChannelFilter, currentPage);
 
   const isLoading = campaignsLoading;
   const isError = campaignsError;
 
-  // --- Filtered history ---
-  const filteredCampaigns = campaigns.filter(c => {
-    const matchSearch = !historySearch || c.title.toLowerCase().includes(historySearch.toLowerCase());
-    const matchChannel = historyChannelFilter === 'all' || c.channel === historyChannelFilter;
-    return matchSearch && matchChannel;
-  });
-
-  const totalPages = Math.max(1, Math.ceil(filteredCampaigns.length / COMM_ITEMS_PER_PAGE));
-  const paginatedCampaigns = filteredCampaigns.slice(
-    (currentPage - 1) * COMM_ITEMS_PER_PAGE,
-    currentPage * COMM_ITEMS_PER_PAGE
-  );
+  const paginatedCampaigns = campaigns;
+  const totalPages = Math.max(1, Math.ceil((campaignsTotal || 0) / COMM_ITEMS_PER_PAGE));
+  const filteredCampaigns = campaigns;
 
   const { sendMutation, automationMutation } = useManagerCommunicationsMutations();
 

@@ -5,8 +5,8 @@ import type { ManagerAllSettings } from '@/app/manager/settings/settings_types/M
 
 let settingsDb: ManagerAllSettings = structuredClone(MOCK_MANAGER_SETTINGS);
 export const managerSettingsHandlers = [
-  http.get('http://localhost:5000/api/v1/manager/settings', () => HttpResponse.json({ success: true, message: 'Settings fetched', data: settingsDb })),
-  http.patch('http://localhost:5000/api/v1/manager/settings', async ({ request }) => {
+  http.get(`/api/v1/manager/settings`, () => HttpResponse.json({ success: true, message: 'Settings fetched', data: settingsDb })),
+  http.patch(`/api/v1/manager/settings`, async ({ request }) => {
     const raw = await request.json();
     const parsed = managerAllSettingsSchema.partial().parse(raw);
     settingsDb = managerAllSettingsSchema.parse({ ...settingsDb, ...parsed });

@@ -63,7 +63,7 @@ export default function ManagerSalesAllMemberships() {
           <button
             key={f}
             onClick={() => setFilter(f)}
-            className={`px-3 py-1.5 text-xs rounded-full font-medium border transition-colors ${
+            className={`px-3 py-1.5 text-xs rounded-full font-medium border motion-safe:transition-colors ${
               f === filter
                 ? 'bg-primary text-primary-foreground border-transparent'
                 : 'border-border text-secondary hover:text-foreground'
@@ -87,7 +87,7 @@ export default function ManagerSalesAllMemberships() {
           </thead>
           <tbody className="divide-y divide-border">
             {filteredMemberships.map((r: SalesMemberSnapshot) => (
-              <tr key={r.id} className="hover:bg-primary-subtle transition-colors">
+              <tr key={r.id} className="hover:bg-primary-subtle motion-safe:transition-colors">
                 <td className="px-4 py-3 text-sm font-medium text-foreground">{r.name}</td>
                 <td className="px-4 py-3 text-sm text-secondary">{r.plan?.name ?? `Plan #${r.planId}`}</td>
                 <td className="px-4 py-3 text-sm text-secondary">{formatDate(r.joinDate)}</td>

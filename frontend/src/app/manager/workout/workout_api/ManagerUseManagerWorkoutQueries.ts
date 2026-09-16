@@ -7,7 +7,7 @@ export function useWorkoutPlansQuery(params: Record<string, string>) {
   return useQuery({
     queryKey: ['manager', 'workout', 'plans', params],
     queryFn: async () => {
-      const res = await workoutApi.getWorkouts(params);
+      const res = await workoutApi.fetchWorkouts(params);
       return res.data;
     },
   });
@@ -17,12 +17,12 @@ export function useExercisesQuery(params: Record<string, string>) {
   return useQuery({
     queryKey: ['manager', 'workout', 'exercises', params],
     queryFn: async () => {
-      const res = await workoutApi.getExercises(params);
+      const res = await workoutApi.fetchExercises(params);
       return res.data;
     },
   });
 }
 
 export function useWorkoutAssignmentsQuery() {
-  return useQuery({ queryKey: ['manager', 'workout', 'assignments'], queryFn: async () => { const res = await workoutApi.getAssignments(); return res.data ?? []; } });
+  return useQuery({ queryKey: ['manager', 'workout', 'assignments'], queryFn: async () => { const res = await workoutApi.fetchAssignments(); return res.data ?? []; } });
 }

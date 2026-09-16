@@ -38,10 +38,10 @@ export default function ManagerProfilePayments() {
   </div>
   </div>
   <div className="flex justify-end mb-4 gap-3">
-    <button onClick={() => setShowPaymentModal(true)} className="px-4 py-2 border border-primary text-primary rounded-lg text-sm font-semibold hover:bg-primary/5 transition-colors shadow-sm">
+    <button onClick={() => setShowPaymentModal(true)} className="px-4 py-2 border border-primary text-primary rounded-lg text-sm font-semibold hover:bg-primary/5 motion-safe:transition-colors shadow-sm">
       Record Payment
     </button>
-    <button onClick={() => setShowRenewModal(true)} className="px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-semibold hover:bg-primary/90 transition-colors shadow-sm">
+    <button onClick={() => setShowRenewModal(true)} className="px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-semibold hover:bg-primary/90 motion-safe:transition-colors shadow-sm">
       Renew Membership
     </button>
   </div>
@@ -68,14 +68,14 @@ export default function ManagerProfilePayments() {
  <div className="flex items-center gap-2">
  <button 
  onClick={() => handleSharePaymentWhatsApp(p)} 
- className="p-2 rounded-lg bg-input hover:bg-success/10 text-secondary hover:text-success transition-colors"
+ className="p-2 rounded-lg bg-input hover:bg-success/10 text-secondary hover:text-success motion-safe:transition-colors"
  title="Share via WhatsApp"
  >
  <MessageCircle size={14} />
  </button>
  <button 
  onClick={() => handlePrint(p)} 
- className="p-2 rounded-lg bg-input hover:bg-primary-subtle text-secondary transition-colors"
+ className="p-2 rounded-lg bg-input hover:bg-primary-subtle text-secondary motion-safe:transition-colors"
  title="Print Receipt"
  >
  <Printer size={14} />

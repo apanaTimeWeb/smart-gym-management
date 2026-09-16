@@ -69,7 +69,7 @@ export default function ManagerInquiriesModal() {
           <button
             type="button"
             onClick={() => setShowModal(false)}
-            className="p-2 rounded-lg transition-colors hover:bg-primary-subtle text-secondary"
+            className="p-2 rounded-lg motion-safe:transition-colors hover:bg-primary-subtle text-secondary"
             aria-label="Close modal"
           >
             <X size={18} />
@@ -92,7 +92,7 @@ export default function ManagerInquiriesModal() {
                   pattern={f.type === 'email' ? '.*\\.com$' : undefined}
                   title={f.type === 'email' ? 'Email must end with .com' : undefined}
                   {...register(f.key as keyof InquiryFormValues)}
-                  className={`w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-colors ${
+                  className={`w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary motion-safe:transition-colors ${
                     errors[f.key as keyof InquiryFormValues] ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
                   }`}
                 />
@@ -177,7 +177,7 @@ export default function ManagerInquiriesModal() {
                     value={newNote}
                     onChange={(e) => setNewNote(e.target.value)}
                     placeholder="Enter call notes or remarks..."
-                    className="w-full border border-border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-primary transition-colors min-h-20"
+                    className="w-full border border-border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-primary motion-safe:transition-colors min-h-20"
                   />
                 </div>
               </div>
@@ -187,14 +187,14 @@ export default function ManagerInquiriesModal() {
               <button
                 type="button"
                 onClick={() => setShowModal(false)}
-                className="flex-1 py-2.5 border border-border rounded-xl text-sm font-medium text-primary hover:bg-primary-subtle transition-all duration-200 active:scale-95"
+                className="flex-1 py-2.5 border border-border rounded-xl text-sm font-medium text-primary hover:bg-primary-subtle motion-safe:transition-all duration-200 active:scale-95"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={saving}
-                className="flex-1 py-2.5 rounded-xl text-sm font-bold bg-primary text-primary-foreground flex items-center justify-center gap-2 disabled:opacity-70 hover:bg-primary-hover transition-all duration-200 active:scale-95"
+                className="flex-1 py-2.5 rounded-xl text-sm font-bold bg-primary text-primary-foreground flex items-center justify-center gap-2 disabled:opacity-70 hover:bg-primary-hover motion-safe:transition-all duration-200 active:scale-95"
               >
                 {saving
                   ? <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full motion-safe:animate-spin" />

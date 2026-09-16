@@ -11,7 +11,7 @@ export function useManagerMembersStatusMutations(
 ) {
   const assignDietMutation = useMutation({
     mutationFn: async ({ memberId, diet }: { memberId: string, diet: DietPlanSnapshot | null }) => 
-      membersApi.update(memberId, { assignedDietId: diet?.id || '', assignedDiet: diet || undefined }),
+      membersApi.updateMember(memberId, { assignedDietId: diet?.id || '', assignedDiet: diet || undefined }),
     onSuccess: (res, { memberId, diet }) => {
       showToast(res.message, 'success');
       invalidateMemberQueries();
@@ -21,7 +21,7 @@ export function useManagerMembersStatusMutations(
 
   const assignWorkoutMutation = useMutation({
     mutationFn: async ({ memberId, workout }: { memberId: string, workout: WorkoutSnapshot | null }) => 
-      membersApi.update(memberId, { assignedWorkoutId: workout?.id || '', assignedWorkout: workout || undefined }),
+      membersApi.updateMember(memberId, { assignedWorkoutId: workout?.id || '', assignedWorkout: workout || undefined }),
     onSuccess: (res, { memberId, workout }) => {
       showToast(res.message, 'success');
       invalidateMemberQueries();
@@ -31,7 +31,7 @@ export function useManagerMembersStatusMutations(
 
   const freezeMutation = useMutation({
     mutationFn: async ({ memberId, isFrozen }: { memberId: string, isFrozen: boolean }) => 
-      membersApi.update(memberId, { status: isFrozen ? 'FROZEN' : 'ACTIVE' }),
+      membersApi.updateMember(memberId, { status: isFrozen ? 'FROZEN' : 'ACTIVE' }),
     onSuccess: (res, { memberId, isFrozen }) => {
       showToast(res.message, 'success');
       invalidateMemberQueries();
@@ -41,7 +41,7 @@ export function useManagerMembersStatusMutations(
 
   const toggleSuspendMutation = useMutation({
     mutationFn: async ({ memberId, isSuspended }: { memberId: string, isSuspended: boolean }) => 
-      membersApi.update(memberId, { status: isSuspended ? 'SUSPENDED' : 'ACTIVE' }),
+      membersApi.updateMember(memberId, { status: isSuspended ? 'SUSPENDED' : 'ACTIVE' }),
     onSuccess: (res, { memberId, isSuspended }) => {
       showToast(res.message, 'success');
       invalidateMemberQueries();
@@ -51,7 +51,7 @@ export function useManagerMembersStatusMutations(
 
   const assignTrainerMutation = useMutation({
     mutationFn: async ({ memberId, trainerId, trainerName, isPT }: { memberId: string, trainerId: string, trainerName: string, isPT: boolean }) => 
-      membersApi.update(memberId, { assignedTrainerId: trainerId || '', assignedTrainerName: trainerName || '', isPT }),
+      membersApi.updateMember(memberId, { assignedTrainerId: trainerId || '', assignedTrainerName: trainerName || '', isPT }),
     onSuccess: (res, { memberId, trainerId, trainerName, isPT }) => {
       showToast(res.message, 'success');
       invalidateMemberQueries();

@@ -35,7 +35,7 @@ export function ReportsProvider({ children }: { children: ReactNode }) {
   });
 
   const exportMutation = useMutation({
-    mutationFn: () => reportsApi.exportReportCSV(tab, { range: dateRange }),
+    mutationFn: () => reportsApi.exportReportsReport(tab, { range: dateRange }),
     onSuccess: (blob) => {
       const url = URL.createObjectURL(blob);
       const anchor = document.createElement('a');

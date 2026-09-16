@@ -28,6 +28,13 @@ export interface PtSessionLog {
   location?: string;
 }
 
+export interface PtAssignmentsResponse {
+  assignments: PtAssignment[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
 export interface PtAssignment {
   id: string;
   memberId: string;

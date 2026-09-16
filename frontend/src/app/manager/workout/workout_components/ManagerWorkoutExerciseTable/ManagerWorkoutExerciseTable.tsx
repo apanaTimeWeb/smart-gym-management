@@ -50,7 +50,20 @@ export default function ManagerWorkoutExerciseTable() {
           </thead>
           <tbody className="divide-y divide-border">
             {exercises.map(ex => (
-              <tr key={ex.id} className="hover:bg-accent transition-colors cursor-pointer" onClick={() => openEditEx(ex)}>
+              <tr
+                key={ex.id}
+                className="hover:bg-accent motion-safe:transition-colors cursor-pointer"
+                tabIndex={0}
+                role="button"
+                aria-label={`Edit exercise ${ex.name}`}
+                onClick={() => openEditEx(ex)}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    openEditEx(ex);
+                  }
+                }}
+              >
                 <td className="px-4 py-3 text-sm font-medium text-foreground">{ex.name}</td>
                 <td className="px-4 py-3 text-sm text-secondary">{ex.muscleGroup?.join(', ')}</td>
                 <td className="px-4 py-3">
@@ -73,7 +86,7 @@ export default function ManagerWorkoutExerciseTable() {
                   <div className="flex items-center gap-2">
                     <button 
                       onClick={(e) => { e.stopPropagation(); openEditEx(ex); }} 
-                      className="text-info hover:text-info dark:hover:text-info p-1 rounded-md hover:bg-info-bg dark:hover:bg-info-bg transition-colors"
+                      className="text-info hover:text-info dark:hover:text-info p-1 rounded-md hover:bg-info-bg dark:hover:bg-info-bg motion-safe:transition-colors"
                     >
                       <Edit2 size={15} />
                     </button>
@@ -95,7 +108,7 @@ export default function ManagerWorkoutExerciseTable() {
                           }
                         }
                       }}
-                      className="text-danger hover:text-danger dark:hover:text-danger p-1 rounded-md hover:bg-danger-bg dark:hover:bg-danger-bg transition-colors"
+                      className="text-danger hover:text-danger dark:hover:text-danger p-1 rounded-md hover:bg-danger-bg dark:hover:bg-danger-bg motion-safe:transition-colors"
                     >
                       <Trash2 size={15} />
                     </button>
@@ -105,7 +118,7 @@ export default function ManagerWorkoutExerciseTable() {
             ))}
             {exercises.length === 0 && (
               <tr>
-                <td colSpan={5} className="text-center py-8 text-secondary">
+                <td colSpan={EXERCISE_TABLE_HEADERS.length} className="text-center py-8 text-secondary">
                   No exercises found matching &quot;{search}&quot;.
                 </td>
               </tr>

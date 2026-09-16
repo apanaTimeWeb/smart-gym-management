@@ -6,13 +6,12 @@ import { managerPlansChangeRequestApi } from '@/app/manager/plans/plans_api/Mana
 import type { ManagerPlansChangeRequestPayload } from '@/app/manager/plans/plans_types/ManagerPlansChangeRequestTypes';
 import { plansApi } from '@/app/manager/plans/plans_api/ManagerPlansApi';
 
-export function useFetchPlans() {
+export function useFetchPlans(params?: Record<string, string>) {
   return useQuery({
-    queryKey: ['manager', 'plans', 'list'],
+    queryKey: ['manager', 'plans', 'list', params],
     queryFn: async () => {
-      const res = await plansApi.getAll();
-      if (!res.data) throw new Error('Failed to fetch plans');
-      return res.data;
+      const res = await plansApi.fetchPlans(params);
+      return res.data ?? { plans: [], total: 0 };
     },
     staleTime: 5 * 60 * 1000,
   });
@@ -21,7 +20,7 @@ export function useFetchPlans() {
 export function useRequestPlanChange() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (payload: ManagerPlansChangeRequestPayload) => managerPlansChangeRequestApi.create(payload),
+    mutationFn: (payload: ManagerPlansChangeRequestPayload) => managerPlansChangeRequestApi.createChangeRequest(payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['manager', 'plans', 'list'] });
     },

@@ -80,6 +80,7 @@ export interface DashboardStats {
   membersByStatus: { active: number; pending: number; expired: number };
   // Lists
   recentMembers: RecentMember[];
+  totalRecentMembers?: number;
   recentPayments: RecentPayment[];
   pendingPaymentsList: PendingPayment[];
   expiringMemberships: PendingPayment[];

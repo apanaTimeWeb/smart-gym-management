@@ -3,7 +3,7 @@
 import { Edit, MessageCircle, Mail, Trash2, Loader2, Users, Banknote, Ban, ArrowUp, ArrowDown, ArrowUpDown } from 'lucide-react';
 import { useMembersContext } from '@/app/manager/members/members_context/ManagerMembersContext';
 import { useFetchMembers } from '@/app/manager/members/members_api/ManagerUseManagerMembersQueries';
-import { MEMBERS_STATUS_COLORS, MEMBERS_CYCLE_LABELS, formatCurrency } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
+import { MEMBERS_STATUS_COLORS, MEMBERS_TABLE_HEADERS, formatCurrency } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
 import { maskSensitiveData, formatDate, displayValue } from '@/lib/formatters';
 import ManagerEmptyState from '@/app/manager/manager_components/ManagerFeedback/ManagerEmptyState';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
@@ -16,7 +16,7 @@ export default function ManagerMembersTable() {
   // useConfirm provides the design-system confirm modal (Rule 71 — no window.confirm)
   const { confirm } = useConfirm();
   const { 
-    search, statusFilter, genderFilter, planFilter, expiryFrom, expiryTo, currentPage, setCurrentPage,
+    debouncedSearch, search, statusFilter, genderFilter, planFilter, expiryFrom, expiryTo, currentPage, setCurrentPage,
     setSelectedMember, openEdit, openMsg, deleteMember, setShowPaymentModal, toggleSuspend,
     sortColumn, sortDirection, setSortColumn, setSortDirection
   } = useMembersContext();
@@ -24,7 +24,7 @@ export default function ManagerMembersTable() {
   const [selectedRows, setSelectedRows] = useState<Set<string>>(new Set());
 
   const { data: membersRes, isLoading, isError } = useFetchMembers({ 
-    search, 
+    search: debouncedSearch,
     status: statusFilter, 
     gender: genderFilter, 
     plan: planFilter, 
@@ -32,7 +32,8 @@ export default function ManagerMembersTable() {
     expiryTo, 
     sort: sortColumn, 
     dir: sortDirection, 
-    page: currentPage.toString() 
+    page: currentPage.toString(),
+    limit: MANAGER_ITEMS_PER_PAGE.toString(),
   });
   const members = membersRes?.members || [];
   const totalMembers = membersRes?.total || 0;
@@ -88,26 +89,36 @@ export default function ManagerMembersTable() {
                       onChange={toggleAll}
                     />
                   </th>
-                  <th className="text-left text-xs font-bold text-secondary uppercase tracking-wider px-2 py-3 whitespace-nowrap">ID</th>
-                  <th className="text-left text-xs font-bold text-secondary uppercase tracking-wider px-2 py-3 whitespace-nowrap cursor-pointer hover:text-primary transition-colors" onClick={() => handleSort('name')}>
-                    MEMBER <SortIcon column="name" />
+                  <th className="text-left text-xs font-bold text-secondary uppercase tracking-wider px-2 py-3 whitespace-nowrap">{MEMBERS_TABLE_HEADERS[1].label}</th>
+                  <th className="text-left text-xs font-bold text-secondary uppercase tracking-wider px-2 py-3 whitespace-nowrap" aria-sort={sortColumn === 'name' ? (sortDirection === 'asc' ? 'ascending' : 'descending') : 'none'}>
+                    <button type="button" className="inline-flex items-center" onClick={() => handleSort('name')} aria-label="Sort by member">
+                      MEMBER <SortIcon column="name" />
+                    </button>
                   </th>
-                  <th className="text-left text-xs font-bold text-secondary uppercase tracking-wider px-2 py-3 whitespace-nowrap">GENDER</th>
-                  <th className="text-left text-xs font-bold text-secondary uppercase tracking-wider px-2 py-3 whitespace-nowrap">PLAN</th>
-                  <th className="text-left text-xs font-bold text-secondary uppercase tracking-wider px-2 py-3 whitespace-nowrap cursor-pointer hover:text-primary transition-colors" onClick={() => handleSort('status')}>
-                    STATUS <SortIcon column="status" />
+                  <th className="text-left text-xs font-bold text-secondary uppercase tracking-wider px-2 py-3 whitespace-nowrap">{MEMBERS_TABLE_HEADERS[3].label}</th>
+                  <th className="text-left text-xs font-bold text-secondary uppercase tracking-wider px-2 py-3 whitespace-nowrap">{MEMBERS_TABLE_HEADERS[4].label}</th>
+                  <th className="text-left text-xs font-bold text-secondary uppercase tracking-wider px-2 py-3 whitespace-nowrap" aria-sort={sortColumn === 'status' ? (sortDirection === 'asc' ? 'ascending' : 'descending') : 'none'}>
+                    <button type="button" className="inline-flex items-center" onClick={() => handleSort('status')} aria-label="Sort by status">
+                      STATUS <SortIcon column="status" />
+                    </button>
                   </th>
-                  <th className="text-left text-xs font-bold text-secondary uppercase tracking-wider px-2 py-3 whitespace-nowrap cursor-pointer hover:text-primary transition-colors" onClick={() => handleSort('joinDate')}>
-                    JOIN DATE <SortIcon column="joinDate" />
+                  <th className="text-left text-xs font-bold text-secondary uppercase tracking-wider px-2 py-3 whitespace-nowrap" aria-sort={sortColumn === 'joinDate' ? (sortDirection === 'asc' ? 'ascending' : 'descending') : 'none'}>
+                    <button type="button" className="inline-flex items-center" onClick={() => handleSort('joinDate')} aria-label="Sort by join date">
+                      JOIN DATE <SortIcon column="joinDate" />
+                    </button>
                   </th>
-                  <th className="text-left text-xs font-bold text-secondary uppercase tracking-wider px-2 py-3 whitespace-nowrap cursor-pointer hover:text-primary transition-colors" onClick={() => handleSort('expiryDate')}>
-                    EXPIRY <SortIcon column="expiryDate" />
+                  <th className="text-left text-xs font-bold text-secondary uppercase tracking-wider px-2 py-3 whitespace-nowrap" aria-sort={sortColumn === 'expiryDate' ? (sortDirection === 'asc' ? 'ascending' : 'descending') : 'none'}>
+                    <button type="button" className="inline-flex items-center" onClick={() => handleSort('expiryDate')} aria-label="Sort by expiry">
+                      EXPIRY <SortIcon column="expiryDate" />
+                    </button>
                   </th>
-                  <th className="text-left text-xs font-bold text-secondary uppercase tracking-wider px-2 py-3 whitespace-nowrap cursor-pointer hover:text-primary transition-colors" onClick={() => handleSort('paidAmount')}>
-                    PAID <SortIcon column="paidAmount" />
+                  <th className="text-left text-xs font-bold text-secondary uppercase tracking-wider px-2 py-3 whitespace-nowrap" aria-sort={sortColumn === 'paidAmount' ? (sortDirection === 'asc' ? 'ascending' : 'descending') : 'none'}>
+                    <button type="button" className="inline-flex items-center" onClick={() => handleSort('paidAmount')} aria-label="Sort by paid">
+                      PAID <SortIcon column="paidAmount" />
+                    </button>
                   </th>
-                  <th className="text-left text-xs font-bold text-secondary uppercase tracking-wider px-2 py-3 whitespace-nowrap">PENDING</th>
-                  <th className="text-left text-xs font-bold text-secondary uppercase tracking-wider px-2 py-3 whitespace-nowrap">ACTIONS</th>
+                  <th className="text-left text-xs font-bold text-secondary uppercase tracking-wider px-2 py-3 whitespace-nowrap">{MEMBERS_TABLE_HEADERS[9].label}</th>
+                  <th className="text-left text-xs font-bold text-secondary uppercase tracking-wider px-2 py-3 whitespace-nowrap">{MEMBERS_TABLE_HEADERS[10].label}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
@@ -116,7 +127,7 @@ export default function ManagerMembersTable() {
                   return (
                   <tr 
                     key={m.id} 
-                    className="hover:bg-primary/5 transition-colors cursor-pointer"
+                    className="hover:bg-primary/5 motion-safe:transition-colors cursor-pointer"
                     tabIndex={0}
                     role="button"
                     aria-label={`Open member ${m.name}`}
@@ -162,15 +173,15 @@ export default function ManagerMembersTable() {
 
                       <div className="flex items-center gap-1.5">
                         {m.pendingAmount > 0 && (
-                          <button onClick={(e) => { e.stopPropagation(); setSelectedMember(m); setShowPaymentModal(true); }} className="p-1.5 rounded-lg bg-warning/10 text-warning hover:bg-warning/20 transition-all duration-200" title="Collect Dues" aria-label={`Collect Dues for ${m.name}`}><Banknote size={14} /></button>
+                          <button onClick={(e) => { e.stopPropagation(); setSelectedMember(m); setShowPaymentModal(true); }} className="p-1.5 rounded-lg bg-warning/10 text-warning hover:bg-warning/20 motion-safe:transition-all duration-200" title="Collect Dues" aria-label={`Collect Dues for ${m.name}`}><Banknote size={14} /></button>
                         )}
-                        <button onClick={(e) => { e.stopPropagation(); openEdit(m); }} className="p-1.5 rounded-lg bg-input text-secondary hover:bg-primary-subtle transition-all duration-200" title="Edit" aria-label={`Edit ${m.name}`}><Edit size={14} /></button>
-                        <button onClick={(e) => { e.stopPropagation(); openMsg(m, 'whatsapp'); }} className="p-1.5 rounded-lg bg-success text-primary-foreground hover:opacity-80 transition-all duration-200" title="WhatsApp" aria-label={`Message ${m.name} on WhatsApp`}><MessageCircle size={14} /></button>
-                        <button onClick={(e) => { e.stopPropagation(); openMsg(m, 'email'); }} className="p-1.5 rounded-lg bg-info text-primary-foreground hover:opacity-80 transition-all duration-200" title="Email" aria-label={`Email ${m.name}`}><Mail size={14} /></button>
+                        <button onClick={(e) => { e.stopPropagation(); openEdit(m); }} className="p-1.5 rounded-lg bg-input text-secondary hover:bg-primary-subtle motion-safe:transition-all duration-200" title="Edit" aria-label={`Edit ${m.name}`}><Edit size={14} /></button>
+                        <button onClick={(e) => { e.stopPropagation(); openMsg(m, 'whatsapp'); }} className="p-1.5 rounded-lg bg-success text-primary-foreground hover:opacity-80 motion-safe:transition-all duration-200" title="WhatsApp" aria-label={`Message ${m.name} on WhatsApp`}><MessageCircle size={14} /></button>
+                        <button onClick={(e) => { e.stopPropagation(); openMsg(m, 'email'); }} className="p-1.5 rounded-lg bg-info text-primary-foreground hover:opacity-80 motion-safe:transition-all duration-200" title="Email" aria-label={`Email ${m.name}`}><Mail size={14} /></button>
                         {m.status !== 'SUSPENDED' && m.pendingAmount > 0 ? (
-                          <button onClick={(e) => { e.stopPropagation(); setSelectedMember(m); toggleSuspend(true); }} className="p-1.5 rounded-lg bg-danger-bg text-danger hover:bg-danger/20 transition-all duration-200" title="Suspend Member" aria-label={`Suspend ${m.name}`}><Ban size={14} /></button>
+                          <button onClick={(e) => { e.stopPropagation(); setSelectedMember(m); toggleSuspend(true); }} className="p-1.5 rounded-lg bg-danger-bg text-danger hover:bg-danger/20 motion-safe:transition-all duration-200" title="Suspend Member" aria-label={`Suspend ${m.name}`}><Ban size={14} /></button>
                         ) : m.status === 'SUSPENDED' ? (
-                          <button onClick={(e) => { e.stopPropagation(); setSelectedMember(m); toggleSuspend(false); }} className="p-1.5 rounded-lg bg-success-bg text-success hover:bg-success/20 transition-all duration-200" title="Unsuspend Member" aria-label={`Unsuspend ${m.name}`}><Ban size={14} /></button>
+                          <button onClick={(e) => { e.stopPropagation(); setSelectedMember(m); toggleSuspend(false); }} className="p-1.5 rounded-lg bg-success-bg text-success hover:bg-success/20 motion-safe:transition-all duration-200" title="Unsuspend Member" aria-label={`Unsuspend ${m.name}`}><Ban size={14} /></button>
                         ) : null}
                         <button
                           onClick={async (e) => { 
@@ -183,7 +194,7 @@ export default function ManagerMembersTable() {
                             });
                             if (confirmed) deleteMember(m.id);
                           }}
-                          className="p-1.5 rounded-lg bg-danger-bg text-danger hover:opacity-80 transition-all duration-200"
+                          className="p-1.5 rounded-lg bg-danger-bg text-danger hover:opacity-80 motion-safe:transition-all duration-200"
                           title="Delete"
                           aria-label={`Delete ${m.name}`}
                         >
@@ -195,7 +206,7 @@ export default function ManagerMembersTable() {
                 )})}
                 {members.length === 0 && !isLoading && !isError && (
                   <tr>
-                    <td colSpan={12} className="p-0 border-b-0">
+                    <td colSpan={MEMBERS_TABLE_HEADERS.length} className="p-0 border-b-0">
                       <ManagerEmptyState 
                         icon={<Users size={32} />}
                         title={Boolean(search || statusFilter !== 'All') ? 'No members found' : 'No members yet'}

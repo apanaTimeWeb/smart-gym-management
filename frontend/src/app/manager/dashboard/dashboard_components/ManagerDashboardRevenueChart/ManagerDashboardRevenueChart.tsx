@@ -15,7 +15,7 @@ const Chart = dynamic(() => import('react-apexcharts'), {
 
 export default function ManagerDashboardRevenueChart() {
   const { timeRange } = useManagerDashboardStore();
-  const { data: stats } = useDashboardStatsQuery(timeRange);
+  const { data: stats } = useDashboardStatsQuery({ range: timeRange });
   
   if (!stats?.revenueChart || stats.revenueChart.length === 0) {
     return (
@@ -27,7 +27,7 @@ export default function ManagerDashboardRevenueChart() {
 
   const options = {
     chart: { background: 'transparent', toolbar: { show: false }, fontFamily: 'Inter, sans-serif' },
-    colors: ['#22c55e'],
+    colors: ['var(--success)'],
     stroke: { curve: 'smooth' as const, width: 3 },
     fill: {
       type: 'gradient',
@@ -37,10 +37,10 @@ export default function ManagerDashboardRevenueChart() {
     tooltip: { theme: 'dark' as const, y: { formatter: (v: number) => formatCurrency(v) } },
     xaxis: {
       categories: stats.revenueChart.map((d: DashboardRevenueChartData) => d.month),
-      labels: { style: { colors: '#A1A1AA', fontSize: '11px' } },
+      labels: { style: { colors: 'var(--text-secondary)', fontSize: '11px' } },
       axisBorder: { show: false }, axisTicks: { show: false },
     },
-    yaxis: { labels: { style: { colors: '#A1A1AA', fontSize: '11px' }, formatter: (v: number) => formatKPI(v) } },
+    yaxis: { labels: { style: { colors: 'var(--text-secondary)', fontSize: '11px' }, formatter: (v: number) => formatKPI(v) } },
     dataLabels: { enabled: false },
   };
 

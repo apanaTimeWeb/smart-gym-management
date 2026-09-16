@@ -8,7 +8,7 @@ import { Users, DollarSign, TrendingUp, AlertCircle, CheckCircle, Clock, UserChe
 
 export default function ManagerDashboardKPIs() {
   const { timeRange } = useManagerDashboardStore();
-  const { data: stats } = useDashboardStatsQuery(timeRange);
+  const { data: stats } = useDashboardStatsQuery({ range: timeRange });
   
   if (!stats) return null;
   const s = stats;

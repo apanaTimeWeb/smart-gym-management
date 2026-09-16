@@ -33,7 +33,7 @@ export default function ManagerWorkoutToolbar() {
           <button 
             key={t} 
             onClick={() => { setTab(t);  setSearch(''); }}
-            className={`px-4 py-3 text-sm font-semibold border-b-2 transition-colors whitespace-nowrap ${tab === t ? 'text-primary border-primary' : 'text-secondary border-transparent hover:text-foreground hover:border-border'}`}
+            className={`px-4 py-3 text-sm font-semibold border-b-2 motion-safe:transition-colors whitespace-nowrap ${tab === t ? 'text-primary border-primary' : 'text-secondary border-transparent hover:text-foreground hover:border-border'}`}
           >
             {t}
           </button>
@@ -46,7 +46,7 @@ export default function ManagerWorkoutToolbar() {
             value={localSearch} 
             onChange={e => setLocalSearch(e.target.value)}  
             placeholder="Search..." 
-            className="pl-8 pr-3 py-2 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-warning w-36 lg:w-48 bg-input text-foreground transition-all" 
+            className="pl-8 pr-3 py-2 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-warning w-36 lg:w-48 bg-input text-foreground motion-safe:transition-all" 
           />
         </div>
         {tab === 'Workout Plans' && (
@@ -63,7 +63,7 @@ export default function ManagerWorkoutToolbar() {
         )}
         <button 
           onClick={tab === 'Workout Plans' ? openAddWk : openAddEx}
-          className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-lg hover:opacity-90 transition-opacity"
+          className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-lg hover:opacity-90 motion-safe:transition-opacity"
         >
           <Plus size={15} /> <span className="hidden sm:inline">Add</span>
         </button>

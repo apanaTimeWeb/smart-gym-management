@@ -16,7 +16,16 @@ export const FINANCE_STATUS_STYLES: Record<string, { bg: string; text: string }>
 
 export const FINANCE_PAYMENT_METHODS = ['UPI', 'Cash', 'Card', 'NetBanking'];
 
-export const PAYMENTS_TABLE_HEADERS = ['Invoice No', 'Member', 'Amount', 'Method', 'Status', 'Date'];
+export const PAYMENTS_TABLE_HEADERS = [
+  'Invoice No',
+  'Member',
+  'Plan',
+  'Amount',
+  'Method',
+  'Status',
+  'Date',
+  'Actions',
+] as const;
 
 export const FINANCE_TABS = ['Payments', 'Summary'];
 

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ManagerPtUrlConfig } from '@/app/manager/Manager_url_config';
+import { ManagerPtUrlConfig } from '@/app/manager/pt/pt_url_config';
 import { apiFetch, type ApiResponse } from '@/lib/api';
 import { ptDashboardKpisSchema, ptTrainerWorkloadSchema, ptPackageSchema, ptAssignmentSchema } from '@/app/manager/pt/pt_types/ManagerPtSchema';
 import type { 
@@ -23,8 +23,9 @@ export const managerPtApi = {
     return apiFetch(`${ManagerPtUrlConfig.BACKEND_API.BASE}/packages`, { dataSchema: z.array(ptPackageSchema) });
   },
 
-  fetchAssignments: async (): Promise<ApiResponse<PtAssignment[]>> => {
-    return apiFetch(`${ManagerPtUrlConfig.BACKEND_API.BASE}/assignments`, { dataSchema: z.array(ptAssignmentSchema) });
+  fetchAssignments: async (params?: Record<string, string>): Promise<ApiResponse<import('@/app/manager/pt/pt_types/ManagerPtTypes').PtAssignmentsResponse>> => {
+    const query = new URLSearchParams(params ?? {}).toString();
+    return apiFetch(`${ManagerPtUrlConfig.BACKEND_API.BASE}/assignments${query ? `?${query}` : ''}`, { dataSchema: z.object({ assignments: z.array(ptAssignmentSchema), total: z.number(), page: z.number(), limit: z.number() }) });
   },
 
   createAssignment: async (body: CreatePtAssignmentPayload): Promise<ApiResponse<PtAssignment>> => {

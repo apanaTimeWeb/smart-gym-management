@@ -7,7 +7,7 @@ import { membersApi } from '@/app/manager/members/members_api/ManagerMembersApi'
 export function useManagerMembersDietPlansQuery(enabled: boolean) {
   return useQuery({
     queryKey: ['manager', 'members', 'diet-plans'],
-    queryFn: () => membersApi.getDietPlans(),
+    queryFn: () => membersApi.fetchMemberDietPlans(),
     enabled,
   });
 }

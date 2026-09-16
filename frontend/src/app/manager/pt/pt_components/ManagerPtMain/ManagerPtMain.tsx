@@ -23,6 +23,7 @@ export default function ManagerPtMain() {
     activeTab, setActiveTab,
     packages, assignments,
     kpis, workload, expiringPackages,
+    totalAssignments, currentPage, limit, setPage,
     isPending, isError, markingId,
     handleMarkSession, createAssignment, assignmentSaving,
   } = useManagerPtLogic();
@@ -111,6 +112,10 @@ export default function ManagerPtMain() {
           {activeTab === 'assignments' && (
             <ManagerPtAssignmentsTable
               assignments={assignments}
+              totalAssignments={totalAssignments}
+              currentPage={currentPage}
+              totalPages={Math.max(1, Math.ceil(totalAssignments / limit))}
+              onPageChange={setPage}
               markingId={markingId}
               onMarkSession={handleMarkSession}
             />

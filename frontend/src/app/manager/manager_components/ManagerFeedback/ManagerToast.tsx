@@ -38,7 +38,7 @@ export default function ManagerToast({ message, type, onClose }: ManagerToastPro
  </div>
  <button
  onClick={onClose}
- className="text-secondary hover:text-foreground flex-shrink-0 transition-colors"
+ className="text-secondary hover:text-foreground flex-shrink-0 motion-safe:transition-colors"
  >
  ✕
  </button>

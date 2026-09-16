@@ -65,6 +65,7 @@ export interface SalesContextType {
   
   overviewData: OverviewDataPoint[];
   membershipReport: MembershipReportItem[];
+  membershipReportTotal: number;
   membershipTotals: MembershipTotals;
   pendingPayments: PendingPaymentMember[];
   pendingTotal: number;

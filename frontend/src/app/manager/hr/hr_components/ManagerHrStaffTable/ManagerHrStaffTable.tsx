@@ -9,16 +9,13 @@ import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/Man
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
 import ManagerEmptyState from '@/app/manager/manager_components/ManagerFeedback/ManagerEmptyState';
-import { displayValue, formatCurrency , formatDate} from '@/lib/formatters';
+import { displayValue, formatCurrency, formatDate, maskSensitiveData } from '@/lib/formatters';
 
 export default function ManagerHrStaffTable() {
-  const { staff, summary, isLoading, debouncedSearch, roleFilter, currentPage, setCurrentPage, openEdit, deleteStaff, toggleStaffStatus, setViewProfileData, exportStaff } = useHrContext();
+  const { staff, totalStaff, isLoading, debouncedSearch, currentPage, setCurrentPage, openEdit, deleteStaff, toggleStaffStatus, setViewProfileData, exportStaff } = useHrContext();
   const { confirm } = useConfirm();
 
-  const filteredStaff = staff.filter(s => roleFilter === 'All' || (s.role || '').toLowerCase().includes(roleFilter.toLowerCase()));
-
-  const totalStaff = summary?.totalStaff || filteredStaff.length;
-  const totalPages = Math.ceil(totalStaff / MANAGER_ITEMS_PER_PAGE) || 1;
+  const totalPages = Math.max(1, Math.ceil(totalStaff / MANAGER_ITEMS_PER_PAGE));
 
   if (isLoading) {
     return (
@@ -62,7 +59,7 @@ export default function ManagerHrStaffTable() {
       <div className="flex justify-end px-4 pt-3">
         <button
           onClick={() => exportStaff()}
-          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium border border-border rounded-lg hover:bg-primary-subtle text-secondary hover:text-foreground transition-colors"
+          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium border border-border rounded-lg hover:bg-primary-subtle text-secondary hover:text-foreground motion-safe:transition-colors"
           aria-label="Export staff list as CSV"
         >
           <Download size={13} /> Export CSV
@@ -81,11 +78,20 @@ export default function ManagerHrStaffTable() {
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
-            {filteredStaff.map(s => (
+            {staff.map(s => (
               <tr 
                 key={s.id} 
-                className="transition-colors hover:bg-primary/5 cursor-pointer" 
+                className="motion-safe:transition-colors hover:bg-primary/5 cursor-pointer" 
+                tabIndex={0}
+                role="button"
+                aria-label={`Open staff profile for ${s.name}`}
                 onClick={() => setViewProfileData(s)}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    setViewProfileData(s);
+                  }
+                }}
               >
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-3">
@@ -110,11 +116,11 @@ export default function ManagerHrStaffTable() {
                     </span>
                   )}
                 </td>
-                <td className="px-4 py-3 text-sm text-secondary">{s.phone}</td>
+                <td className="px-4 py-3 text-sm text-secondary">{maskSensitiveData(s.phone)}</td>
                 <td className="px-4 py-3 text-sm font-medium text-success text-right">{formatCurrency(s.salary || 0)}</td>
-                <td className="px-4 py-3 text-sm font-medium text-primary text-right">{s.advanceSalary && s.advanceSalary > 0 ? formatCurrency(s.advanceSalary) : '—'}</td>
+                <td className="px-4 py-3 text-sm font-medium text-primary text-right">{s.advanceSalary && s.advanceSalary > 0 ? formatCurrency(s.advanceSalary) : displayValue(null)}</td>
                 <td className="px-4 py-3 text-sm text-secondary">
-                  {s.joinDate ? formatDate(s.joinDate) : 'N/A'}
+                  {displayValue(s.joinDate ? formatDate(s.joinDate) : null)}
                 </td>
                 <td className="px-4 py-3 text-right">
                   <div className="flex items-center justify-end gap-2">
@@ -133,7 +139,7 @@ export default function ManagerHrStaffTable() {
                         });
                         if (ok) toggleStaffStatus(s);
                       }}
-                      className={`p-1.5 rounded-lg transition-all duration-200 ease-in-out ${
+                      className={`p-1.5 rounded-lg motion-safe:transition-all duration-200 ease-in-out ${
                         s.isActive === false
                           ? 'text-success hover:bg-success/10'
                           : 'text-danger hover:bg-danger/10'
@@ -145,7 +151,7 @@ export default function ManagerHrStaffTable() {
                     </button>
                     <button 
                       onClick={(e) => { e.stopPropagation(); openEdit(s); }} 
-                      className="p-1.5 rounded hover:bg-primary/10 transition-colors text-secondary hover:text-primary"
+                      className="p-1.5 rounded hover:bg-primary/10 motion-safe:transition-colors text-secondary hover:text-primary"
                       title="Edit"
                     >
                       <Edit2 size={16} />
@@ -163,7 +169,7 @@ export default function ManagerHrStaffTable() {
                           deleteStaff(s.id); 
                         }
                       }}
-                      className="p-1.5 rounded transition-colors text-danger hover:bg-danger/10"
+                      className="p-1.5 rounded motion-safe:transition-colors text-danger hover:bg-danger/10"
                       title="Delete"
                     >
                       <Trash2 size={16} />
@@ -172,9 +178,9 @@ export default function ManagerHrStaffTable() {
                 </td>
               </tr>
             ))}
-            {filteredStaff.length === 0 && (
+            {staff.length === 0 && (
               <tr>
-                <td colSpan={8} className="p-0 border-b-0">
+                <td colSpan={STAFF_TABLE_HEADERS.length + 1} className="p-0 border-b-0">
                   <ManagerEmptyState 
                     icon={<Users size={32} />}
                     title={debouncedSearch ? 'No staff found' : 'No staff members yet'}

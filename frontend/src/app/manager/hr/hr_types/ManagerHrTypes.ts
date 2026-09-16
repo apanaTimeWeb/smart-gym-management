@@ -16,7 +16,9 @@ export interface HrInitialData {
 
 export interface HrContextType {
   staff: Staff[];
+  totalStaff: number;
   payrolls: Payroll[];
+  totalPayrolls: number;
   summary: HrSummary | null;
   isLoading: boolean;
   isError: boolean;
