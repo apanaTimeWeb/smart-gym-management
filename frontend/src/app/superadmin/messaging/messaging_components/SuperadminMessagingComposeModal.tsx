@@ -1,4 +1,5 @@
 'use client';
+import { useSuperadminDialogAccessibility } from '@/app/superadmin/superadmin_utils/useSuperadminDialogAccessibility';
 // RESPONSIBILITY: Renders the Messaging Compose Modal component and its associated UI logic.
 import { X, Send } from 'lucide-react';
 import type { MessageChannel, MessagingTenant } from '@/app/superadmin/messaging/messaging_types/superadmin_messaging_types';
@@ -29,11 +30,13 @@ export function SuperadminMessagingComposeModal({
   onClose: () => void;
   onSend: () => void;
 }) {
+  const dialogRef = useSuperadminDialogAccessibility(true, onClose);
+
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 backdrop-blur-sm p-4" role="dialog" aria-modal="true">
+    <div ref={dialogRef}  className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 backdrop-blur-sm p-4" role="dialog" aria-modal="true" aria-labelledby="superadmin-dialog-title">
       <div className="bg-overlay border border-border rounded-2xl p-6 w-full max-w-lg shadow-2xl space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-bold text-foreground">Compose Message</h2>
+          <h2 className="text-lg font-bold text-foreground" id="superadmin-dialog-title">Compose Message</h2>
           <button
             onClick={onClose}
             aria-label="Close compose modal"

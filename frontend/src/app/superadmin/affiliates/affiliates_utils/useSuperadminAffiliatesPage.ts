@@ -10,12 +10,14 @@ import { AffiliateSchema } from '@/app/superadmin/affiliates/superadmin_affiliat
 import type { Affiliate, AffiliateStatusFilter, AffiliateFormData } from '@/app/superadmin/affiliates/superadmin_affiliates_types/superadmin_affiliates_types';
 import { useSuperadminUrlState } from '@/app/superadmin/superadmin_utils/useSuperadminUrlState';
 import { useSuperadminAffiliatesMutations } from '@/app/superadmin/affiliates/affiliates_utils/useSuperadminAffiliatesMutations';
+import { useSuperadminDebouncedValue } from '@/app/superadmin/superadmin_utils/useSuperadminDebouncedValue';
 
 export const useSuperadminAffiliatesPage = () => {
   const queryClient = useQueryClient();
   const { getParam, setParam } = useSuperadminUrlState();
 
   const searchQuery = getParam('search', '');
+  const debouncedSearchQuery = useSuperadminDebouncedValue(searchQuery);
   const statusFilter = getParam('status', 'ALL') as AffiliateStatusFilter;
   const startDate = getParam('startDate', '');
   const endDate = getParam('endDate', '');
@@ -33,12 +35,12 @@ export const useSuperadminAffiliatesPage = () => {
       page: String(currentPage),
       limit: String(pageLimit),
     };
-    if (searchQuery) params.search = searchQuery;
+    if (debouncedSearchQuery) params.search = debouncedSearchQuery;
     if (statusFilter !== 'ALL') params.status = statusFilter;
     if (startDate) params.startDate = startDate;
     if (endDate) params.endDate = endDate;
     return params;
-  }, [searchQuery, statusFilter, startDate, endDate, currentPage, pageLimit]);
+  }, [debouncedSearchQuery, statusFilter, startDate, endDate, currentPage, pageLimit]);
 
   const queryKey = useMemo(() => ['superadmin', 'affiliates', queryParams], [queryParams]);
   const { data: affiliatesResponse, status: fetchState, error: queryError } = useQuery({

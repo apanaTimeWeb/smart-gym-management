@@ -1,4 +1,5 @@
 'use client';
+import { useSuperadminDialogAccessibility } from '@/app/superadmin/superadmin_utils/useSuperadminDialogAccessibility';
 // RESPONSIBILITY: Renders the Coupons Redemption Drawer component and its associated UI logic.
 import { useEffect } from 'react';
 import { X, History, TrendingDown } from 'lucide-react';
@@ -26,6 +27,8 @@ export default function SuperadminCouponsRedemptionDrawer({ coupon, isOpen, onCl
       document.body.style.overflow = '';
     };
   }, [isOpen]);
+  const dialogRef = useSuperadminDialogAccessibility(isOpen, onClose);
+
 
   if (!isOpen || !coupon) return null;
 
@@ -47,7 +50,7 @@ export default function SuperadminCouponsRedemptionDrawer({ coupon, isOpen, onCl
       />
 
       {/* Drawer panel */}
-      <div
+      <div ref={dialogRef} 
         role="dialog"
         aria-modal="true"
         aria-label={`Redemption history for coupon ${coupon.code}`}

@@ -9,11 +9,13 @@ import { useSuperadminGymsStore } from '@/app/superadmin/gyms/gyms_store/useSupe
 import type { Tenant } from '@/app/superadmin/gyms/superadmin_gyms_types/superadmin_gyms_types';
 import { useSuperadminUrlState } from '@/app/superadmin/superadmin_utils/useSuperadminUrlState';
 import { useSuperadminGymMutations } from '@/app/superadmin/gyms/gyms_components/SuperadminGymsTable/useSuperadminGymMutations';
+import { useSuperadminDebouncedValue } from '@/app/superadmin/superadmin_utils/useSuperadminDebouncedValue';
 
 export function useSuperadminGymsTable() {
   const { getParam, setParam } = useSuperadminUrlState();
   
   const search = getParam('search', '');
+  const debouncedSearch = useSuperadminDebouncedValue(search);
   const statusFilter = getParam('statusFilter', 'All');
   const planFilter = getParam('planFilter', 'All');
   const sortBy = getParam('sortBy', 'createdAt');
@@ -31,7 +33,7 @@ export function useSuperadminGymsTable() {
 
   // Fetch Gyms
   const queryParams = {
-    ...(search && { search }),
+    ...(debouncedSearch && { search: debouncedSearch }),
     ...(statusFilter !== 'All' && { status: statusFilter }),
     ...(planFilter !== 'All' && { plan: planFilter }),
     sortBy,

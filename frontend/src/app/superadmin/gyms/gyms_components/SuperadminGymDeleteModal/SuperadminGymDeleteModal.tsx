@@ -1,4 +1,5 @@
 'use client';
+import { useSuperadminDialogAccessibility } from '@/app/superadmin/superadmin_utils/useSuperadminDialogAccessibility';
 // RESPONSIBILITY: Renders the confirmation modal for deleting a gym. Requires the user to type "DELETE".
 
 import React from 'react';
@@ -15,6 +16,8 @@ export default function SuperadminGymDeleteModal() {
     handleConfirmDelete,
     actionLoadingId
   } = useSuperadminGymDeleteModal();
+  const dialogRef = useSuperadminDialogAccessibility(isDeleteModalOpen, closeDeleteModal);
+
 
   if (!isDeleteModalOpen || !gymToDelete) return null;
 
@@ -22,13 +25,13 @@ export default function SuperadminGymDeleteModal() {
   const isDeleting = actionLoadingId === gymToDelete.id;
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 p-4" role="dialog" aria-modal="true">
+    <div ref={dialogRef}  className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 p-4" role="dialog" aria-modal="true" aria-labelledby="superadmin-dialog-title">
       <div className="bg-overlay rounded-2xl p-7 max-w-md w-full border border-destructive shadow-2xl relative">
         <button
           onClick={closeDeleteModal}
-          className="absolute top-5 right-5 text-secondary hover:text-foreground motion-safe:transition-colors"
+          className="absolute top-5 right-5 text-secondary hover:text-foreground motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           disabled={isDeleting}
-        >
+         aria-label="Close dialog">
           <X className="w-5 h-5" />
         </button>
 
@@ -36,7 +39,7 @@ export default function SuperadminGymDeleteModal() {
           <div className="bg-danger-bg p-2 rounded-full">
             <AlertTriangle className="w-6 h-6 text-danger" />
           </div>
-          <h2 className="text-lg font-bold text-foreground">Delete Gym</h2>
+          <h2 className="text-lg font-bold text-foreground" id="superadmin-dialog-title">Delete Gym</h2>
         </div>
         
         <p className="text-sm text-secondary mb-4">

@@ -4,7 +4,6 @@
 import { useState, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import toast from 'react-hot-toast';
 
 import { BroadcastSchema, type BroadcastFormData, type Broadcast, type BroadcastStatus } from '@/app/superadmin/broadcasts/superadmin_broadcasts_types/superadmin_broadcasts_types';
 import { useSuperadminBroadcastsData } from '@/app/superadmin/broadcasts/broadcasts_utils/useSuperadminBroadcastsData';
@@ -75,7 +74,6 @@ export const useSuperadminBroadcastsPage = () => {
 
   const onQueueComplete = useCallback(() => {
     setQueueModalOpen(false);
-    toast.success('Automated broadcast finished successfully!', { id: 'automated-broadcast-finished-successfully' });
   }, []);
 
   const openEditModal = useCallback((broadcast: Broadcast) => {

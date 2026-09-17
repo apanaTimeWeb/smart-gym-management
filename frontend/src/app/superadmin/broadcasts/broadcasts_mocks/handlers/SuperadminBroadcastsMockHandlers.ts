@@ -1,3 +1,4 @@
+import { StatusCodes } from 'http-status-codes';
 import { http, HttpResponse, delay } from 'msw';
 import type { Broadcast } from '@/app/superadmin/broadcasts/superadmin_broadcasts_types/superadmin_broadcasts_types';
 import type { ApiResponse } from '@/lib/api';
@@ -43,7 +44,7 @@ export const superadminBroadcastsHandlers = [
     const body = await request.json() as Partial<Broadcast>;
     let updated: Broadcast | undefined;
     mockBroadcasts = mockBroadcasts.map((b) => b.id === params.id ? (updated = { ...b, ...body, sentDate: body.status === 'SENT' && !b.sentDate ? new Date().toISOString() : b.sentDate }) : b);
-    if (!updated) return HttpResponse.json({ success: false, message: 'Broadcast not found', data: null }, { status: 404 });
+    if (!updated) return HttpResponse.json({ success: false, message: 'Broadcast not found', data: null }, { status: StatusCodes.NOT_FOUND });
     return HttpResponse.json<ApiResponse<Broadcast>>({ success: true, message: 'Broadcast updated', data: updated });
   }),
   http.delete(`${BASE_URL}/:id`, async ({ params }) => {

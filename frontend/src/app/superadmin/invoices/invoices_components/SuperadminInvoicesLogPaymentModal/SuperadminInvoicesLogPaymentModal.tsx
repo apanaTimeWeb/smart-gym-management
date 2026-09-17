@@ -1,4 +1,5 @@
 'use client';
+import { useSuperadminDialogAccessibility } from '@/app/superadmin/superadmin_utils/useSuperadminDialogAccessibility';
 // RESPONSIBILITY: Renders the SuperadminInvoicesLogPaymentModal component.
 import React, { useState } from 'react';
 import { X, Search, DollarSign } from 'lucide-react';
@@ -34,13 +35,15 @@ export default function SuperadminInvoicesLogPaymentModal({
 }: InvoicesLogPaymentModalProps) {
   const [amount, setAmount] = useState('');
 
+  const dialogRef = useSuperadminDialogAccessibility(true, onClose);
+
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center p-4" role="dialog" aria-modal="true">
+    <div ref={dialogRef}  className="fixed inset-0 z-40 flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="superadmin-dialog-title">
       <div className="absolute inset-0 bg-overlay/80 backdrop-blur-sm" onClick={onClose} />
       <div className="relative bg-overlay border border-border rounded-2xl shadow-2xl w-full max-w-md overflow-hidden motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95 motion-safe:duration-200">
         <div className="flex items-center justify-between p-5 border-b border-border">
-          <h2 className="text-xl font-bold text-foreground">Log Manual Payment</h2>
-          <button onClick={onClose} className="text-secondary hover:text-foreground motion-safe:transition-colors" aria-label="Close modal">
+          <h2 className="text-xl font-bold text-foreground" id="superadmin-dialog-title">Log Manual Payment</h2>
+          <button onClick={onClose} className="text-secondary hover:text-foreground motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background" aria-label="Close modal">
             <X className="w-5 h-5" />
           </button>
         </div>

@@ -10,10 +10,12 @@ import type { SuperadminFranchise } from '@/app/superadmin/franchises/franchises
 import type { FranchiseFormValues } from '@/app/superadmin/franchises/franchises_utils/SuperadminFranchisesSchemas';
 
 import { useSuperadminUrlState } from '@/app/superadmin/superadmin_utils/useSuperadminUrlState';
+import { useSuperadminDebouncedValue } from '@/app/superadmin/superadmin_utils/useSuperadminDebouncedValue';
 
 export function useSuperadminFranchisesPage() {
   const { getParam, setParam } = useSuperadminUrlState();
   const search = getParam('search', '');
+  const debouncedSearch = useSuperadminDebouncedValue(search);
   const currentPage = Number(getParam('page', '1'));
   const pageLimit = Number(getParam('limit', '20'));
 
@@ -26,7 +28,7 @@ export function useSuperadminFranchisesPage() {
   const queryClient = useQueryClient();
 
   const queryParams = {
-    ...(search && { search }),
+    ...(debouncedSearch && { search: debouncedSearch }),
     page: String(currentPage),
     limit: String(pageLimit),
   };

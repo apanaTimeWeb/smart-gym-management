@@ -1,4 +1,5 @@
 'use client';
+import { useSuperadminDialogAccessibility } from '@/app/superadmin/superadmin_utils/useSuperadminDialogAccessibility';
 // RESPONSIBILITY: Renders an automated queue that visually simulates sending WhatsApp messages and Notifications to selected gyms.
 
 import { useEffect, useState } from 'react';
@@ -96,18 +97,20 @@ export default function SuperadminBroadcastQueueModal({
       return () => clearTimeout(timer);
     }
   }, [currentIndex, recipients, broadcastTitle, onComplete, setNotifications]);
+  const dialogRef = useSuperadminDialogAccessibility(isOpen, onClose);
+
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-overlay/80 backdrop-blur-sm" role="dialog" aria-modal="true">
+    <div ref={dialogRef}  className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-overlay/80 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="superadmin-dialog-title">
       <div className="bg-overlay rounded-2xl shadow-2xl w-full max-w-lg border border-border flex flex-col motion-safe:animate-in motion-safe:zoom-in-95 motion-safe:duration-200 overflow-hidden">
         <div className="px-6 py-4 bg-primary flex items-center justify-between">
           <div>
-            <h2 className="text-white font-bold text-lg">Automated Broadcast</h2>
+            <h2 className="text-white font-bold text-lg" id="superadmin-dialog-title">Automated Broadcast</h2>
             <p className="text-white/80 text-xs">Sending to {recipients.length} Gyms directly...</p>
           </div>
-          <button onClick={onClose} className="text-white/80 hover:text-white motion-safe:transition-colors p-1 bg-white/10 rounded-full hover:bg-white/20">
+          <button onClick={onClose} className="text-white/80 hover:text-white motion-safe:transition-colors p-1 bg-white/10 rounded-full hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background" aria-label="Close dialog">
             <X className="w-5 h-5" />
           </button>
         </div>

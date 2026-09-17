@@ -1,12 +1,10 @@
+import { SUPERADMIN_FEATURES_MOCK_TENANTS, SUPERADMIN_FEATURE_HISTORY_MOCK_FIXTURES } from '@/app/superadmin/features/features_mocks/fixtures/SuperadminFeaturesMockFixtures';
+import { StatusCodes } from 'http-status-codes';
 import { http, HttpResponse, delay } from 'msw';
-import type { FeatureFlag, ReleaseNote } from '@/app/superadmin/features/superadmin_features_types/superadmin_features_types';
+import type { FeatureFlag, FeatureFlagHistory, ReleaseNote } from '@/app/superadmin/features/superadmin_features_types/superadmin_features_types';
 import type { ApiResponse } from '@/lib/api';
 
-const MOCK_FEATURE_TENANTS = [
-  { id: 't1', name: 'Iron Paradise', plan: 'Pro' },
-  { id: 't2', name: 'Fit Life Studio', plan: 'Basic' },
-  { id: 't3', name: 'CrossFit Box', plan: 'Enterprise' },
-];
+
 const BASE_URL = '*/api/v1/superadmin/features';
 
 export let mockFlags: FeatureFlag[] = [
@@ -22,7 +20,7 @@ export let mockNotes: ReleaseNote[] = [
 
 
 export const superadminFeaturesHandlers = [
-  http.get('*/api/v1/api/gyms', async () => HttpResponse.json({ success: true, message: 'Success', data: MOCK_FEATURE_TENANTS })),
+  http.get('*/api/v1/api/gyms', async () => HttpResponse.json({ success: true, message: 'Success', data: SUPERADMIN_FEATURES_MOCK_TENANTS })),
   http.get(BASE_URL, async () => {
     await delay(400);
     return HttpResponse.json<ApiResponse<{ flags: FeatureFlag[]; notes: ReleaseNote[] }>>({
@@ -32,6 +30,14 @@ export const superadminFeaturesHandlers = [
     });
   }),
   
+
+
+  http.get(`${BASE_URL}/flags/:id/history`, async ({ params }) => {
+    await delay(200);
+    const id = String(params.id);
+    return HttpResponse.json<ApiResponse<FeatureFlagHistory[]>>({ success: true, message: 'Success', data: (SUPERADMIN_FEATURE_HISTORY_MOCK_FIXTURES[id as keyof typeof SUPERADMIN_FEATURE_HISTORY_MOCK_FIXTURES] ?? []) as unknown as FeatureFlagHistory[] }, { status: StatusCodes.OK });
+  }),
+
   http.post(`${BASE_URL}/flags`, async ({ request }) => {
     await delay(500);
     const body = await request.json() as Partial<FeatureFlag>;
@@ -64,7 +70,7 @@ export const superadminFeaturesHandlers = [
       return f;
     });
     if (!updated) {
-      return HttpResponse.json<ApiResponse<FeatureFlag>>({ success: false, message: 'Not found', data: null }, { status: 404 });
+      return HttpResponse.json<ApiResponse<FeatureFlag>>({ success: false, message: 'Not found', data: null }, { status: StatusCodes.NOT_FOUND });
     }
     return HttpResponse.json<ApiResponse<FeatureFlag>>({
       success: true,
@@ -85,7 +91,7 @@ export const superadminFeaturesHandlers = [
       return f;
     });
     if (!updated) {
-      return HttpResponse.json<ApiResponse<FeatureFlag>>({ success: false, message: 'Not found', data: null }, { status: 404 });
+      return HttpResponse.json<ApiResponse<FeatureFlag>>({ success: false, message: 'Not found', data: null }, { status: StatusCodes.NOT_FOUND });
     }
     return HttpResponse.json<ApiResponse<FeatureFlag>>({
       success: true,
@@ -138,7 +144,7 @@ export const superadminFeaturesHandlers = [
       return n;
     });
     if (!updated) {
-      return HttpResponse.json<ApiResponse<ReleaseNote>>({ success: false, message: 'Not found', data: null }, { status: 404 });
+      return HttpResponse.json<ApiResponse<ReleaseNote>>({ success: false, message: 'Not found', data: null }, { status: StatusCodes.NOT_FOUND });
     }
     return HttpResponse.json<ApiResponse<ReleaseNote>>({
       success: true,

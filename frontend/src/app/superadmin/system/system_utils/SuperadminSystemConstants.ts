@@ -8,3 +8,5 @@ export const SUPERADMIN_SYSTEM_MOCK_SLA_DATA: SuperadminTenantSla[] = [
   { id: 'gym-4', name: 'PowerHouse Gym Koramangala', targetSla: 99.9, actualUptime: 100.0, downtimeIncidents: 0, downtimeMinutes: 0, status: 'MET' },
 ];
 
+
+export const SUPERADMIN_SYSTEM_SLA_STATUS_STYLES = { MET: 'bg-success-bg text-success', WARNING: 'bg-warning-bg text-warning', BREACHED: 'bg-danger-bg text-danger' } as const;

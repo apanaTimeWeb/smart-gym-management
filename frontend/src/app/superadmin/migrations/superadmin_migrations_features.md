@@ -114,3 +114,7 @@ The Superadmin Migrations feature provides a controlled platform-level view of s
 - Global Superadmin confirmation infrastructure in `superadmin_components/SuperadminFeedback/`.
 - Global React Query provider.
 - Global MSW bootstrap registration.
+
+## V1 Repair Notes
+
+Nullable display fields use the canonical `displayValue()` formatter. Search input state remains separate from the 300ms debounced value used by server-backed query parameters/query keys.

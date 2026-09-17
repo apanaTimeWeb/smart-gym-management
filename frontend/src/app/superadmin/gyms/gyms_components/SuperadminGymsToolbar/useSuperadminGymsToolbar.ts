@@ -28,12 +28,12 @@ export function useSuperadminGymsToolbar() {
       const res = await gymsApi.exportGymsCSV();
       if (res.data?.downloadUrl) {
         window.open(res.data.downloadUrl, '_blank');
-        toast.success('Export ready.', { id: 'gyms-export' });
+        toast.success(res.message, { id: 'gyms-export' });
       } else {
         toast.error(res.message, { id: 'gyms-export' });
       }
-    } catch {
-      toast.error('Failed to export gyms.', { id: 'gyms-export' });
+    } catch (error: unknown) {
+      toast.error(error instanceof Error ? error.message : '', { id: 'gyms-export' });
     }
   };
 

@@ -1,4 +1,5 @@
 'use client';
+import { useSuperadminDialogAccessibility } from '@/app/superadmin/superadmin_utils/useSuperadminDialogAccessibility';
 // RESPONSIBILITY: Renders the modal UI for editing Gym details. Purely a view component.
 
 import React from 'react';
@@ -6,7 +7,7 @@ import { Controller } from 'react-hook-form';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import { X, Eye, EyeOff } from 'lucide-react';
 import { useSuperadminGymEditModal } from '@/app/superadmin/gyms/gyms_components/SuperadminGymEditModal/useSuperadminGymEditModal';
-import { useUnsavedChangesGuard } from '@/lib/useUnsavedChangesGuard';
+import { useSuperadminUnsavedChangesGuard } from '@/app/superadmin/superadmin_utils/useSuperadminUnsavedChangesGuard';
 import { formatCurrency } from '@/lib/formatters';
 
 export default function SuperadminGymEditModal() {
@@ -25,23 +26,25 @@ export default function SuperadminGymEditModal() {
     isSubmitting,
   } = useSuperadminGymEditModal();
 
-  useUnsavedChangesGuard(isDirty);
+  useSuperadminUnsavedChangesGuard(isDirty);
 
   const [showPassword, setShowPassword] = React.useState(false);
+  const dialogRef = useSuperadminDialogAccessibility(isEditModalOpen, closeEditModal);
+
 
   if (!isEditModalOpen || !selectedGym) return null;
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 p-4" role="dialog" aria-modal="true">
+    <div ref={dialogRef}  className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 p-4" role="dialog" aria-modal="true" aria-labelledby="superadmin-dialog-title">
       <div className="bg-overlay rounded-2xl p-7 max-w-md w-full border border-border shadow-2xl relative">
         <button
           onClick={closeEditModal}
-          className="absolute top-5 right-5 text-secondary hover:text-foreground motion-safe:transition-colors"
-        >
+          className="absolute top-5 right-5 text-secondary hover:text-foreground motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+         aria-label="Close dialog">
           <X className="w-5 h-5" />
         </button>
 
-        <h2 className="text-lg font-bold text-foreground mb-1">Edit Gym Details</h2>
+        <h2 className="text-lg font-bold text-foreground mb-1" id="superadmin-dialog-title">Edit Gym Details</h2>
         <p className="text-sm text-secondary mb-6">Update the information for {selectedGym.name}.</p>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">

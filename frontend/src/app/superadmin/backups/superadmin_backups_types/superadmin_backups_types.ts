@@ -10,3 +10,9 @@ export const BackupRecordSchema = z.object({
   timestamp: z.string()
 });
 export type BackupRecord = z.infer<typeof BackupRecordSchema>;
+
+export const BackupScheduleSchema = z.object({
+  cronExpression: z.string().min(9).max(64),
+  retentionDays: z.number().int().min(1).max(365),
+});
+export type BackupSchedule = z.infer<typeof BackupScheduleSchema>;

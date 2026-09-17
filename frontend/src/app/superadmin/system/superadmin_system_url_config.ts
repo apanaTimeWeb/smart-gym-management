@@ -4,6 +4,7 @@ export const SystemUrlConfig = {
     BASE: "/superadmin/system-health",
     MIGRATIONS: "/superadmin/system/migrations",
     MIGRATION_TRIGGER: "/superadmin/system/migrations/trigger",
-    AUDIT_LOGS: "/superadmin/audit-logs"
+    AUDIT_LOGS: "/superadmin/audit-logs",
+    SLA_CREDIT: "/superadmin/system/sla/credit"
   }
 };

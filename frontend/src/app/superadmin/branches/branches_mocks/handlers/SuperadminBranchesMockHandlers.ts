@@ -1,3 +1,4 @@
+import { StatusCodes } from 'http-status-codes';
 import { http, HttpResponse, delay } from 'msw';
 import type { SuperadminBranch } from '@/app/superadmin/branches/branches_types/superadmin_branches_types';
 import { MOCK_SUPERADMIN_BRANCHES } from '@/app/superadmin/branches/branches_mocks/fixtures/SuperadminBranchesMockFixtures';
@@ -46,7 +47,7 @@ export const superadminBranchesHandlers = [
     const id = params.id as string;
     const branch = mockBranches.find(b => b.id === id);
     if (!branch) {
-      return HttpResponse.json<ApiResponse<SuperadminBranch>>({ success: false, message: 'Not found', data: null }, { status: 404 });
+      return HttpResponse.json<ApiResponse<SuperadminBranch>>({ success: false, message: 'Not found', data: null }, { status: StatusCodes.NOT_FOUND });
     }
     return HttpResponse.json<ApiResponse<SuperadminBranch>>({
       success: true,
@@ -68,7 +69,7 @@ export const superadminBranchesHandlers = [
       return b;
     });
     if (!updated) {
-      return HttpResponse.json<ApiResponse<SuperadminBranch>>({ success: false, message: 'Not found', data: null }, { status: 404 });
+      return HttpResponse.json<ApiResponse<SuperadminBranch>>({ success: false, message: 'Not found', data: null }, { status: StatusCodes.NOT_FOUND });
     }
     return HttpResponse.json<ApiResponse<SuperadminBranch>>({
       success: true,

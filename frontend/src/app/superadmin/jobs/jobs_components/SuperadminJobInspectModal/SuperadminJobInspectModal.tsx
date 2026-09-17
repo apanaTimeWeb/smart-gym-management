@@ -1,4 +1,5 @@
 'use client';
+import { useSuperadminDialogAccessibility } from '@/app/superadmin/superadmin_utils/useSuperadminDialogAccessibility';
 // RESPONSIBILITY: Renders the Job Payload Inspect Modal — shows timing, error trace, and JSON payload.
 // Pure view component — rendered conditionally by SuperadminJobsView (Rule 34). No state, no API calls.
 
@@ -24,8 +25,10 @@ interface SuperadminJobInspectModalProps {
 export default function SuperadminJobInspectModal({ job, onClose }: SuperadminJobInspectModalProps) {
   const jobExt = job as BackgroundJob & { durationMs?: number; finishedAt?: string; payload?: unknown };
 
+  const dialogRef = useSuperadminDialogAccessibility(true, onClose);
+
   return (
-    <div
+    <div ref={dialogRef} 
       role="dialog"
       aria-modal="true"
       aria-label={`Inspect job ${job.id}`}

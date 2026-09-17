@@ -1,4 +1,5 @@
 'use client';
+import { useSuperadminDialogAccessibility } from '@/app/superadmin/superadmin_utils/useSuperadminDialogAccessibility';
 // RESPONSIBILITY: Modal for updating the action status and notes on a cancellations alert.
 // Uses React Hook Form + Zod (cancellationsActionSchema). Emits confirmed payload to parent via onConfirm — owns no mutation or fetch logic.
 
@@ -16,7 +17,7 @@ interface SuperadminCancellationsActionModalProps {
   onConfirm: (payload: CancellationsActionPayload) => void;
   onClose: () => void;
 }
-import { useUnsavedChangesGuard } from '@/lib/useUnsavedChangesGuard';
+import { useSuperadminUnsavedChangesGuard } from '@/app/superadmin/superadmin_utils/useSuperadminUnsavedChangesGuard';
 
 export default function SuperadminCancellationsActionModal({ alert, onConfirm, onClose }: SuperadminCancellationsActionModalProps) {
   const { control, handleSubmit, formState: { errors, isDirty } } = useForm<CancellationsActionFormValues>({
@@ -26,17 +27,19 @@ export default function SuperadminCancellationsActionModal({ alert, onConfirm, o
       notes: alert.notes,
     },
   });
-  useUnsavedChangesGuard(isDirty);
+  useSuperadminUnsavedChangesGuard(isDirty);
 
   function onSubmit(data: CancellationsActionFormValues) {
     onConfirm({ alertId: alert.id, status: data.status, notes: data.notes });
   }
 
+  const dialogRef = useSuperadminDialogAccessibility(true, onClose);
+
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 backdrop-blur-sm" role="dialog" aria-modal="true">
+    <div ref={dialogRef}  className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="superadmin-dialog-title">
       <div className="bg-overlay border border-border rounded-2xl p-6 w-full max-w-md shadow-2xl motion-safe:animate-superadmin-fade-in-up">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-bold text-foreground">Update Action</h2>
+          <h2 className="text-lg font-bold text-foreground" id="superadmin-dialog-title">Update Action</h2>
           <button
             onClick={onClose}
             aria-label="Close modal"

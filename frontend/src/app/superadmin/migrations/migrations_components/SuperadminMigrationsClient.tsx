@@ -2,40 +2,14 @@
 // RESPONSIBILITY: Renders the Superadmin schema rollout screen. Delegates query, mutation, confirmation, and cache logic to the page hook.
 
 import { useState } from 'react';
-import { AlertTriangle, CheckCircle, Clock, Database, Loader2, RefreshCw, XCircle } from 'lucide-react';
-import { formatDate } from '@/lib/formatters';
+import { AlertTriangle, Database, Loader2 } from 'lucide-react';
+import { displayValue, formatDate } from '@/lib/formatters';
 import type { MigrationLog } from '@/app/superadmin/migrations/superadmin_migrations_types/superadmin_migrations_types';
 import SuperadminMigrationsEmptyState from '@/app/superadmin/migrations/migrations_components/SuperadminMigrationsEmptyState';
+import SuperadminMigrationStatusBadge from '@/app/superadmin/migrations/migrations_components/SuperadminMigrationStatusBadge';
 import { useSuperadminMigrationsPage } from '@/app/superadmin/migrations/migrations_utils/useSuperadminMigrationsPage';
 
 const TABLE_COLUMN_COUNT = 5;
-const STATUS_STYLES: Record<MigrationLog['status'], string> = {
-  COMPLETED: 'bg-success/10 text-success',
-  FAILED: 'bg-danger-bg text-danger',
-  PENDING: 'bg-warning/10 text-warning',
-  IN_PROGRESS: 'bg-primary/10 text-primary',
-  ROLLED_BACK: 'bg-secondary/10 text-secondary',
-  SUCCESS: 'bg-success/10 text-success',
-  ROLLBACK: 'bg-secondary/10 text-secondary',
-};
-
-function SuperadminMigrationStatusBadge({ status }: { status: MigrationLog['status'] }) {
-  const icon = status === 'COMPLETED' || status === 'SUCCESS'
-    ? <CheckCircle className="w-3.5 h-3.5" aria-hidden="true" />
-    : status === 'FAILED'
-      ? <XCircle className="w-3.5 h-3.5" aria-hidden="true" />
-      : status === 'IN_PROGRESS'
-        ? <RefreshCw className="w-3.5 h-3.5 motion-safe:animate-spin" aria-hidden="true" />
-        : <Clock className="w-3.5 h-3.5" aria-hidden="true" />;
-
-  return (
-    <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium ${STATUS_STYLES[status]}`}>
-      {icon}
-      {status.replaceAll('_', ' ')}
-    </span>
-  );
-}
-
 export default function SuperadminMigrationsClient() {
   const [versionInput, setVersionInput] = useState('');
   const [validationMessage, setValidationMessage] = useState('');
@@ -130,7 +104,7 @@ export default function SuperadminMigrationsClient() {
                     <p className="text-sm text-foreground">{migration.description}</p>
                     {migration.errorLog && <p className="text-xs text-danger mt-1 flex items-center gap-1"><AlertTriangle className="w-3 h-3" aria-hidden="true" />{migration.errorLog}</p>}
                   </td>
-                  <td className="px-6 py-4 text-sm text-secondary">{migration.targetTenants ?? '—'}</td>
+                  <td className="px-6 py-4 text-sm text-secondary">{displayValue(migration.targetTenants)}</td>
                   <td className="px-6 py-4"><SuperadminMigrationStatusBadge status={migration.status} /></td>
                   <td className="px-6 py-4 text-sm text-secondary">{formatDate(migration.appliedAt)}</td>
                 </tr>

@@ -1,77 +1,33 @@
 'use client';
-// DATA FLOW: feature API/schema → hook/context → useSuperadminJobsMutations consumers.
-// RESPONSIBILITY: Encapsulates functionality for useSuperadminJobsMutations.ts
+// DATA FLOW: user action → jobsApi mutation → authoritative response → TanStack Query cache → jobs view.
+// RESPONSIBILITY: Owns Background Jobs mutation orchestration and selection reconciliation.
 import { useState } from 'react';
 import type { Dispatch, SetStateAction } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { jobsApi } from '@/app/superadmin/jobs/superadmin_jobs_api/superadmin_jobs_api';
 
-export const useSuperadminJobsMutations = ({ setSelectedJobIds, selectedJobIds }: { setSelectedJobIds: Dispatch<SetStateAction<Set<string>>>, selectedJobIds: Set<string> }) => {
+interface SuperadminJobsMutationsOptions {
+  setSelectedJobIds: Dispatch<SetStateAction<Set<string>>>;
+  selectedJobIds: Set<string>;
+}
+
+export const useSuperadminJobsMutations = ({ setSelectedJobIds, selectedJobIds }: SuperadminJobsMutationsOptions) => {
   const queryClient = useQueryClient();
   const [isRetrying, setIsRetrying] = useState(false);
+  const invalidate = () => queryClient.invalidateQueries({ queryKey: ['superadmin', 'jobs'] });
 
-  function handleRetryAll() {
+  const handleRetryAll = async () => {
     setIsRetrying(true);
-    toast.promise(
-      jobsApi.retryAllJobs().then((res) => {
-        if (!res.success) throw new Error(res.message);
-        return res.data;
-      }),
-      {
-        loading: 'Retrying all failed jobs...',
-        success: (data) => `Successfully queued ${data?.queuedCount ?? 'all'} failed jobs for retry.`,
-        error: (err: Error) => err.message,
-      }
-    ).then(() => {
-      void queryClient.invalidateQueries({ queryKey: ['superadmin', 'jobs'] });
-    }).finally(() => setIsRetrying(false));
-  }
-
-  function handleRetryJob(id: string) {
-    toast.success(`Job ${id} queued for retry.`, { id: 'job-id-queued-for-retry' });
-    void queryClient.invalidateQueries({ queryKey: ['superadmin', 'jobs'] });
-  }
-
-  function handleCancelJob(id: string) {
-    toast.success(`Job ${id} cancelled successfully.`, { id: 'job-id-cancelled-successfully' });
-    void queryClient.invalidateQueries({ queryKey: ['superadmin', 'jobs'] });
-  }
-
-  function handleDeleteJob(id: string) {
-    toast.success(`Job ${id} deleted.`, { id: 'job-id-deleted' });
-    setSelectedJobIds((prev: Set<string>) => {
-      const next = new Set(prev);
-      next.delete(id);
-      return next;
-    });
-  }
-
-  function handleClearCompleted() {
-    toast.success('Cleared all completed jobs.', { id: 'cleared-all-completed-jobs' });
-    setSelectedJobIds(new Set());
-  }
-
-  function handleBulkRetry() {
-    toast.success(`Queued ${selectedJobIds.size} jobs for retry.`, { id: 'queued-selectedjobids-size-jobs-for-retry' });
-    setSelectedJobIds(new Set());
-  }
-
-  function handleBulkDelete() {
-    toast.success(`Deleted ${selectedJobIds.size} jobs.`, { id: 'deleted-selectedjobids-size-jobs' });
-    setSelectedJobIds(new Set());
-  }
-
-  return {
-    isRetrying,
-    handleRetryAll,
-    handleRetryJob,
-    handleCancelJob,
-    handleDeleteJob,
-    handleClearCompleted,
-    handleBulkRetry,
-    handleBulkDelete,
+    try { const res = await jobsApi.retryAllJobs(); toast.success(res.message, { id: 'jobs-retry-all' }); await invalidate(); }
+    catch (error: unknown) { toast.error(error instanceof Error ? error.message : 'Jobs retry request failed.', { id: 'jobs-retry-all' }); }
+    finally { setIsRetrying(false); }
   };
+  const handleRetryJob = async (id: string) => { try { const res = await jobsApi.retryJob(id); toast.success(res.message, { id: `jobs-retry-${id}` }); await invalidate(); } catch (error: unknown) { toast.error(error instanceof Error ? error.message : 'Job retry request failed.', { id: `jobs-retry-${id}` }); } };
+  const handleCancelJob = async (id: string) => { try { const res = await jobsApi.cancelJob(id); toast.success(res.message, { id: `jobs-cancel-${id}` }); await invalidate(); } catch (error: unknown) { toast.error(error instanceof Error ? error.message : 'Job cancel request failed.', { id: `jobs-cancel-${id}` }); } };
+  const handleDeleteJob = async (id: string) => { try { const res = await jobsApi.deleteJob(id); toast.success(res.message, { id: `jobs-delete-${id}` }); setSelectedJobIds((prev) => { const next = new Set(prev); next.delete(id); return next; }); await invalidate(); } catch (error: unknown) { toast.error(error instanceof Error ? error.message : 'Job delete request failed.', { id: `jobs-delete-${id}` }); } };
+  const handleClearCompleted = async () => { try { const res = await jobsApi.clearCompletedJobs(); toast.success(res.message, { id: 'jobs-clear-completed' }); setSelectedJobIds(new Set()); await invalidate(); } catch (error: unknown) { toast.error(error instanceof Error ? error.message : 'Clear completed jobs request failed.', { id: 'jobs-clear-completed' }); } };
+  const handleBulkRetry = async () => { const ids = [...selectedJobIds]; if (!ids.length) return; try { const res = await jobsApi.bulkRetryJobs(ids); toast.success(res.message, { id: 'jobs-bulk-retry' }); setSelectedJobIds(new Set()); await invalidate(); } catch (error: unknown) { toast.error(error instanceof Error ? error.message : 'Bulk retry request failed.', { id: 'jobs-bulk-retry' }); } };
+  const handleBulkDelete = async () => { const ids = [...selectedJobIds]; if (!ids.length) return; try { const res = await jobsApi.bulkDeleteJobs(ids); toast.success(res.message, { id: 'jobs-bulk-delete' }); setSelectedJobIds(new Set()); await invalidate(); } catch (error: unknown) { toast.error(error instanceof Error ? error.message : 'Bulk delete request failed.', { id: 'jobs-bulk-delete' }); } };
+  return { isRetrying, handleRetryAll, handleRetryJob, handleCancelJob, handleDeleteJob, handleClearCompleted, handleBulkRetry, handleBulkDelete };
 };
-
-

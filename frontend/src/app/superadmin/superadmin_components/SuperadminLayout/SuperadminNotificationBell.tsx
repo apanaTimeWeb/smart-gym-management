@@ -1,133 +1,61 @@
 'use client';
+// RESPONSIBILITY: Renders the global Superadmin notification bell and delegates notification data/mutations to the shell notification hook.
 
-// RESPONSIBILITY: Renders the Superadmin feature UI for SuperadminNotificationBell. Owns presentation and user interaction orchestration only; business data access remains in the feature API/query layer.
-// RESPONSIBILITY: Global Notification Bell for Superadmin. Displays real-time alerts.
-// DATA FLOW: Mock data -> SuperadminNotificationBell. Includes popover logic.
-
-import { useState, useRef, useEffect } from 'react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Bell, Info, AlertTriangle, CheckCheck } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { Bell, CheckCheck } from 'lucide-react';
 import Link from 'next/link';
-
-import { MessagingUrlConfig } from '@/app/superadmin/messaging/superadmin_messaging_url_config';
-import { superadminMessagingApi } from '@/app/superadmin/messaging/messaging_api/superadmin_messaging_api';
-import type { SuperadminNotification, NotificationType } from '@/app/superadmin/messaging/messaging_types/superadmin_messaging_types';
 import { formatDateTime } from '@/lib/formatters';
-
-function NotifIcon({ type }: { type: NotificationType }) {
-  if (type === 'INFO') return <Info className="w-5 h-5 text-info shrink-0" strokeWidth={2}  />;
-  if (type === 'WARNING') return <AlertTriangle className="w-5 h-5 text-warning shrink-0" strokeWidth={2}  />;
-  return <AlertTriangle className="w-5 h-5 text-danger shrink-0" strokeWidth={2}  />;
-}
+import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
+import SuperadminShellNotificationIcon from '@/app/superadmin/superadmin_components/SuperadminNotifications/SuperadminShellNotificationIcon';
+import { useSuperadminShellNotifications } from '@/app/superadmin/superadmin_components/SuperadminNotifications/useSuperadminShellNotifications';
 
 export default function SuperadminNotificationBell() {
   const [open, setOpen] = useState(false);
-  const notificationsQuery = useQuery({
-    queryKey: ['superadmin', 'messaging', 'notifications'],
-    queryFn: () => superadminMessagingApi.fetchNotifications(),
-  });
-  const notifications = notificationsQuery.data?.data ?? [];
-  const queryClient = useQueryClient();
-  const markAllReadMutation = useMutation({ mutationFn: () => superadminMessagingApi.markAllNotificationsRead(), onSuccess: () => { void queryClient.invalidateQueries({ queryKey: ['superadmin', 'messaging', 'notifications'] }); } });
-  const markReadMutation = useMutation({ mutationFn: (id: string) => superadminMessagingApi.markNotificationRead(id), onSuccess: () => { void queryClient.invalidateQueries({ queryKey: ['superadmin', 'messaging', 'notifications'] }); } });
   const popoverRef = useRef<HTMLDivElement>(null);
-
-  const unreadCount = notifications.filter(n => !n.read).length;
+  const { notifications, unreadCount, markAllReadMutation, markReadMutation } = useSuperadminShellNotifications();
 
   useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (popoverRef.current && !popoverRef.current.contains(event.target as Node)) {
-        setOpen(false);
-      }
-    }
+    const handleClickOutside = (event: MouseEvent) => {
+      if (popoverRef.current && !popoverRef.current.contains(event.target as Node)) setOpen(false);
+    };
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setOpen(false);
+    };
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
   }, []);
-
-  function handleMarkAllRead() {
-    markAllReadMutation.mutate();
-  }
-
-  function handleMarkRead(id: string) {
-    markReadMutation.mutate(id);
-  }
 
   return (
     <div className="relative" ref={popoverRef}>
-      <button
-        onClick={() => setOpen(!open)}
-        className="relative p-2 text-secondary hover:text-foreground hover:bg-input rounded-full motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-        aria-label="View notifications"
-      >
-        <Bell className="w-5 h-5" strokeWidth={2} />
-        {unreadCount > 0 && (
-          <span className="absolute top-2 right-2 w-4 h-4 bg-danger text-white text-xs font-bold flex items-center justify-center rounded-full border-2 border-card">
-            {unreadCount > 9 ? '9+' : unreadCount}
-          </span>
-        )}
+      <button type="button" onClick={() => setOpen((current) => !current)} aria-expanded={open} aria-haspopup="dialog" aria-label="View notifications" className="relative rounded-full p-2 text-secondary hover:bg-input hover:text-foreground motion-safe:transition-all motion-safe:duration-200">
+        <Bell size={18} strokeWidth={2} aria-hidden="true" />
+        {unreadCount > 0 && <span className="absolute right-1.5 top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full border-2 border-card bg-danger px-0.5 text-xs font-bold text-white" aria-label={`${unreadCount} unread notifications`}>{unreadCount > 9 ? '9+' : unreadCount}</span>}
       </button>
 
       {open && (
-        <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-popover rounded-2xl shadow-2xl border border-border overflow-hidden z-30 motion-safe:animate-superadmin-fade-in-up">
-          <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-header">
-            <div>
-              <h3 className="text-sm font-bold text-foreground">Notifications</h3>
-              <p className="text-xs text-secondary mt-0.5">You have {unreadCount} unread messages</p>
-            </div>
-            {unreadCount > 0 && (
-              <button
-                onClick={handleMarkAllRead} disabled={markAllReadMutation.isPending}
-                className="text-xs font-semibold text-primary hover:text-primary-hover motion-safe:transition-colors flex items-center gap-1 focus-visible:outline-none focus-visible:underline"
-              >
-                <CheckCheck className="w-3.5 h-3.5" /> Mark all read
+        <div role="dialog" aria-label="Notifications" className="absolute right-0 z-30 mt-2 superadmin-notification-popover overflow-hidden rounded-xl border border-border bg-popover shadow-2xl motion-safe:animate-superadmin-fade-in-up">
+          <div className="flex items-center justify-between gap-3 border-b border-border bg-header px-4 py-3">
+            <div className="min-w-0"><h3 className="truncate text-sm font-bold text-foreground">Notifications</h3><p className="truncate text-xs text-secondary">{unreadCount} unread notifications</p></div>
+            {unreadCount > 0 && <button type="button" onClick={() => markAllReadMutation.mutate()} disabled={markAllReadMutation.isPending} className="flex min-w-28 items-center justify-center gap-1 rounded-lg px-2 py-1 text-xs font-semibold text-primary hover:bg-primary-subtle disabled:opacity-60 motion-safe:transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"><CheckCheck size={18} strokeWidth={2} />{markAllReadMutation.isPending ? 'Marking…' : 'Mark all read'}</button>}
+          </div>
+          <div className="max-h-96 overflow-y-auto">
+            {notifications.length === 0 ? <div className="p-8 text-center text-sm text-secondary">No notifications right now.</div> : notifications.map((notification) => (
+              <button key={notification.id} type="button" onClick={() => markReadMutation.mutate(notification.id)} className="flex w-full items-start gap-3 border-b border-border p-4 text-left hover:bg-input last:border-0 motion-safe:transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary">
+                <SuperadminShellNotificationIcon type={notification.type} />
+                <span className="min-w-0 flex-1">
+                  <span className="flex items-center justify-between gap-2"><span className={`truncate text-sm font-semibold ${notification.read ? 'text-secondary' : 'text-foreground'}`}>{notification.title}</span><span className="shrink-0 text-xs text-secondary">{formatDateTime(notification.createdAt)}</span></span>
+                  <span className="mt-1 block line-clamp-2 text-xs text-secondary">{notification.body}</span>
+                </span>
+                {!notification.read && <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-primary" aria-label="Unread" />}
               </button>
-            )}
+            ))}
           </div>
-
-          <div className="max-h-96 overflow-y-auto custom-scrollbar">
-            {notifications.length === 0 ? (
-              <div className="p-6 text-center text-secondary text-sm">
-                No notifications right now.
-              </div>
-            ) : (
-              <div className="divide-y divide-border">
-                {notifications.map(notif => (
-                  <div
-                    key={notif.id}
-                    onClick={() => handleMarkRead(notif.id)}
-                    className={`flex items-start gap-3 p-4 hover:bg-input cursor-pointer motion-safe:transition-colors ${notif.read ? 'opacity-70' : ''}`}
-                  >
-                    <NotifIcon type={notif.type} />
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between gap-2 mb-1">
-                        <p className={`text-sm font-semibold truncate ${notif.read ? 'text-secondary' : 'text-foreground'}`}>
-                          {notif.title}
-                        </p>
-                        <span className="text-xs text-secondary whitespace-nowrap shrink-0">
-                          {formatDateTime(notif.createdAt)}
-                        </span>
-                      </div>
-                      <p className="text-xs text-secondary line-clamp-2">
-                        {notif.body}
-                      </p>
-                    </div>
-                    {!notif.read && (
-                      <div className="w-2 h-2 rounded-full bg-primary shrink-0 mt-1.5 shadow-sm shadow-primary/50" />
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          <div className="p-2 border-t border-border bg-header">
-            <Link
-              href={`${MessagingUrlConfig.PAGES.MAIN}?tab=notifications`}
-              onClick={() => setOpen(false)}
-              className="block w-full text-center py-2 text-sm font-semibold text-primary hover:text-primary-hover motion-safe:transition-colors rounded-lg hover:bg-primary/5 focus-visible:outline-none focus-visible:bg-primary/5"
-            >
-              View in Notification Center
-            </Link>
+          <div className="border-t border-border bg-header p-2">
+            <Link href={`${SuperadminUrlConfig.SHELL_PAGES.MESSAGING}?tab=notifications`} onClick={() => setOpen(false)} className="block rounded-lg py-2 text-center text-sm font-semibold text-primary hover:bg-primary-subtle motion-safe:transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">Open notification center</Link>
           </div>
         </div>
       )}

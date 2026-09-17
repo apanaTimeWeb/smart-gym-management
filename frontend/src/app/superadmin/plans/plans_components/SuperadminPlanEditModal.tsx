@@ -1,4 +1,5 @@
 'use client';
+import { useSuperadminDialogAccessibility } from '@/app/superadmin/superadmin_utils/useSuperadminDialogAccessibility';
 // RESPONSIBILITY: Renders the modal form for editing an existing subscription plan. Reads/writes via useSuperadminPlansStore.
 
 import { useEffect } from 'react';
@@ -10,7 +11,7 @@ import toast from 'react-hot-toast';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
 import { useSuperadminPlansStore } from '@/app/superadmin/plans/plans_store/useSuperadminPlansStore';
 import { plansApi } from '@/app/superadmin/plans/superadmin_plans_api/superadmin_plans_api';
-import { useUnsavedChangesGuard } from '@/lib/useUnsavedChangesGuard';
+import { useSuperadminUnsavedChangesGuard } from '@/app/superadmin/superadmin_utils/useSuperadminUnsavedChangesGuard';
 import type { UpdatePlanPayload } from '@/app/superadmin/plans/superadmin_plans_types/superadmin_plans_types';
 import { planFormSchema, type PlanFormValues } from '@/app/superadmin/plans/superadmin_plans_types/superadmin_plans_schema';
 
@@ -61,7 +62,9 @@ export default function SuperadminPlanEditModal() {
 
   const isSubmitting = editMutation.isPending;
 
-  useUnsavedChangesGuard(isDirty);
+  useSuperadminUnsavedChangesGuard(isDirty);
+  const dialogRef = useSuperadminDialogAccessibility(isOpen, closeEditModal);
+
 
   if (!isOpen || !selectedPlan) return null;
 
@@ -70,11 +73,11 @@ export default function SuperadminPlanEditModal() {
   };
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 backdrop-blur-sm p-4" role="dialog" aria-modal="true">
+    <div ref={dialogRef}  className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 backdrop-blur-sm p-4" role="dialog" aria-modal="true" aria-labelledby="superadmin-dialog-title">
       <div className="bg-overlay border border-border rounded-2xl w-full max-w-2xl max-h-screen overflow-hidden flex flex-col shadow-2xl">
         <div className="flex items-center justify-between p-6 border-b border-border">
-          <h2 className="text-xl font-bold text-foreground">Edit Subscription Plan</h2>
-          <button onClick={closeEditModal} className="p-2 hover:bg-input rounded-full motion-safe:transition-colors text-secondary" aria-label="Close modal">
+          <h2 className="text-xl font-bold text-foreground" id="superadmin-dialog-title">Edit Subscription Plan</h2>
+          <button onClick={closeEditModal} className="p-2 hover:bg-input rounded-full motion-safe:transition-colors text-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background" aria-label="Close modal">
             <X className="w-5 h-5" />
           </button>
         </div>

@@ -1,15 +1,15 @@
 'use client';
-// DATA FLOW: feature API/schema → hook/context → useSuperadminUnsavedChangesGuard consumers.
+// DATA FLOW: form state → useSuperadminUnsavedChangesGuard → confirmation infrastructure → navigation.
 import { useEffect } from 'react';
 import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
 
-export function useUnsavedChangesGuard(
+export function useSuperadminUnsavedChangesGuard(
   isDirty: boolean,
-  warningMessage: string = 'You have unsaved changes. Are you sure you want to leave?'
+  warningMessage: string = 'You have unsaved changes. Are you sure you want to leave? Your changes will be lost.'
 ) {
   const { confirm } = useSuperadminConfirm();
 
-  // RESPONSIBILITY: Handle side-effects for useUnsavedChangesGuard
+  // RESPONSIBILITY: Protect dirty Superadmin forms from browser and in-app navigation data loss.
   // EXPLANATION: Synchronize component state with external dependencies.
   // EFFECT DEPENDENCIES: Documented intentionally.
   useEffect(() => {
@@ -45,28 +45,25 @@ export function useUnsavedChangesGuard(
       }
     };
 
-    // 3. Browser back/forward buttons (popstate)
+    // 3. Browser back/forward buttons: preserve the user's current entry while the async confirmation is shown.
+    // EFFECT DEPENDENCIES: isDirty/warningMessage/confirm are included because the listener closes over all three values.
     const handlePopState = async () => {
       if (!isDirty) return;
-      
-      // Push state back to prevent the actual pop
-      window.history.pushState(null, '', window.location.href);
-      
+
+      window.history.pushState({ superadminDirtyGuard: true }, '', window.location.href);
       const confirmed = await confirm({
         title: 'Unsaved Changes',
         message: warningMessage,
         type: 'warning',
         confirmText: 'Leave Page',
-        cancelText: 'Stay'
+        cancelText: 'Stay',
       });
-      
+
       if (confirmed) {
-        window.history.back(); // Wait, they might have gone forward. Safe approach is to let them go back.
-        // Actually, popstate handling with async modal is tricky. We'll do our best.
-        // Since we pushed state, we just go back once to clear the push.
-        setTimeout(() => {
-          window.history.go(-2);
-        }, 0);
+        window.removeEventListener('popstate', handlePopState);
+        window.history.back();
+      } else {
+        window.history.pushState({ superadminDirtyGuard: true }, '', window.location.href);
       }
     };
 

@@ -10,12 +10,14 @@ import { couponsApi } from '@/app/superadmin/coupons/superadmin_coupons_api/supe
 import { CouponSchema, type CouponFormData } from '@/app/superadmin/coupons/superadmin_coupons_types/superadmin_coupons_types';
 import type { Coupon, CouponKpiFilter } from '@/app/superadmin/coupons/superadmin_coupons_types/superadmin_coupons_types';
 import { useSuperadminCouponsMutations } from '@/app/superadmin/coupons/coupons_utils/useSuperadminCouponsMutations';
+import { useSuperadminDebouncedValue } from '@/app/superadmin/superadmin_utils/useSuperadminDebouncedValue';
 
 export const useSuperadminCoupons = () => {
   const queryClient = useQueryClient();
   const { getParam, setParam } = useSuperadminUrlState();
 
   const searchQuery = getParam('search', '');
+  const debouncedSearchQuery = useSuperadminDebouncedValue(searchQuery);
   const activeKpi = getParam('kpi', 'ALL') as CouponKpiFilter;
   const statusFilter = getParam('status', 'ALL');
   const startDate = getParam('startDate', '');
@@ -27,13 +29,13 @@ export const useSuperadminCoupons = () => {
 
   const queryParams = useMemo(() => {
     const params: Record<string, string> = {};
-    if (searchQuery) params.search = searchQuery;
+    if (debouncedSearchQuery) params.search = debouncedSearchQuery;
     if (statusFilter !== 'ALL') params.status = statusFilter;
     if (activeKpi !== 'ALL') params.kpi = activeKpi;
     if (startDate) params.startDate = startDate;
     if (endDate) params.endDate = endDate;
     return params;
-  }, [searchQuery, statusFilter, activeKpi, startDate, endDate]);
+  }, [debouncedSearchQuery, statusFilter, activeKpi, startDate, endDate]);
 
   const queryKey = useMemo(() => ['superadmin', 'coupons', queryParams], [queryParams]);
 

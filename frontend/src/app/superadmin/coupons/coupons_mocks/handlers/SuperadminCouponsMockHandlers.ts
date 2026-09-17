@@ -1,3 +1,4 @@
+import { StatusCodes } from 'http-status-codes';
 import { http, HttpResponse, delay } from 'msw';
 import type { Coupon } from '@/app/superadmin/coupons/superadmin_coupons_types/superadmin_coupons_types';
 import type { ApiResponse } from '@/lib/api';
@@ -86,7 +87,7 @@ export const superadminCouponsHandlers = [
       return c;
     });
     if (!updated) {
-      return HttpResponse.json<ApiResponse<Coupon>>({ success: false, message: 'Not found', data: null }, { status: 404 });
+      return HttpResponse.json<ApiResponse<Coupon>>({ success: false, message: 'Not found', data: null }, { status: StatusCodes.NOT_FOUND });
     }
     return HttpResponse.json<ApiResponse<Coupon>>({
       success: true,

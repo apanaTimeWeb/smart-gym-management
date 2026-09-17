@@ -1,3 +1,4 @@
+import { StatusCodes } from 'http-status-codes';
 import { http, HttpResponse, delay } from 'msw';
 import type { TenantOnboarding } from '@/app/superadmin/onboarding/onboarding_types/superadmin_onboarding_types';
 import type { ApiResponse } from '@/lib/api';
@@ -53,7 +54,7 @@ export const superadminOnboardingHandlers = [
       return t;
     });
     if (!updated) {
-      return HttpResponse.json<ApiResponse<TenantOnboarding>>({ success: false, message: 'Not found', data: null }, { status: 404 });
+      return HttpResponse.json<ApiResponse<TenantOnboarding>>({ success: false, message: 'Not found', data: null }, { status: StatusCodes.NOT_FOUND });
     }
     return HttpResponse.json<ApiResponse<TenantOnboarding>>({
       success: true,
@@ -74,7 +75,7 @@ export const superadminOnboardingHandlers = [
       return t;
     });
     if (!updated) {
-      return HttpResponse.json<ApiResponse<TenantOnboarding>>({ success: false, message: 'Not found', data: null }, { status: 404 });
+      return HttpResponse.json<ApiResponse<TenantOnboarding>>({ success: false, message: 'Not found', data: null }, { status: StatusCodes.NOT_FOUND });
     }
     return HttpResponse.json<ApiResponse<TenantOnboarding>>({
       success: true,
@@ -96,7 +97,7 @@ export const superadminOnboardingHandlers = [
       return t;
     });
     if (!updated) {
-      return HttpResponse.json<ApiResponse<TenantOnboarding>>({ success: false, message: 'Not found', data: null }, { status: 404 });
+      return HttpResponse.json<ApiResponse<TenantOnboarding>>({ success: false, message: 'Not found', data: null }, { status: StatusCodes.NOT_FOUND });
     }
     return HttpResponse.json<ApiResponse<TenantOnboarding>>({
       success: true,
@@ -117,7 +118,7 @@ export const superadminOnboardingHandlers = [
       return t;
     });
     if (!updated) {
-      return HttpResponse.json<ApiResponse<TenantOnboarding>>({ success: false, message: 'Not found', data: null }, { status: 404 });
+      return HttpResponse.json<ApiResponse<TenantOnboarding>>({ success: false, message: 'Not found', data: null }, { status: StatusCodes.NOT_FOUND });
     }
     return HttpResponse.json<ApiResponse<TenantOnboarding>>({
       success: true,

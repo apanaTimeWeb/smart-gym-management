@@ -7,6 +7,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { invoicesApi } from '@/app/superadmin/invoices/superadmin_invoices_api/superadmin_invoices_api';
 import toast from 'react-hot-toast';
 import { calculateSuperadminInvoiceMetrics } from '@/app/superadmin/invoices/invoices_utils/SuperadminInvoicesMetrics';
+import { useSuperadminDebouncedValue } from '@/app/superadmin/superadmin_utils/useSuperadminDebouncedValue';
 
 export function useSuperadminInvoicesPage() {
   const queryClient = useQueryClient();
@@ -16,6 +17,7 @@ export function useSuperadminInvoicesPage() {
   const startDate = getParam('startDate', '');
   const endDate = getParam('endDate', '');
   const search = getParam('search', '');
+  const debouncedSearch = useSuperadminDebouncedValue(search);
   const statusFilter = getParam('statusFilter', '');
   const currentPage = Number(getParam('page', '1'));
   const pageLimit = Number(getParam('limit', '10'));
@@ -38,14 +40,14 @@ export function useSuperadminInvoicesPage() {
 
   const queryParams = useMemo(() => {
     const p: Record<string, string> = {};
-    if (search) p.search = search;
+    if (debouncedSearch) p.search = debouncedSearch;
     if (statusFilter) p.status = statusFilter;
     if (startDate) p.startDate = startDate;
     if (endDate) p.endDate = endDate;
     p.page = String(currentPage);
     p.limit = String(pageLimit);
     return p;
-  }, [search, statusFilter, startDate, endDate, currentPage, pageLimit]);
+  }, [debouncedSearch, statusFilter, startDate, endDate, currentPage, pageLimit]);
 
   const { data: invoicesRes, isLoading, isError, error: queryError } = useQuery({
     queryKey: ['superadmin', 'invoices', queryParams],

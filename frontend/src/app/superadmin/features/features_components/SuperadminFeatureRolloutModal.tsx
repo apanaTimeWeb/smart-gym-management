@@ -1,11 +1,11 @@
 'use client';
+import { useSuperadminDialogAccessibility } from '@/app/superadmin/superadmin_utils/useSuperadminDialogAccessibility';
 // RESPONSIBILITY: Renders the SuperadminFeatureRolloutModal component using TanStack Query.
 // Allows Superadmin to select specific tenants (gyms) for a canary feature rollout.
 import React, { useState, useEffect } from 'react';
 import { X, Loader2, Search } from 'lucide-react';
-import { useQuery } from '@tanstack/react-query';
-import type { FeatureFlag, SuperadminFeaturesTenant } from '@/app/superadmin/features/superadmin_features_types/superadmin_features_types';
-import { featuresApi } from '@/app/superadmin/features/superadmin_features_api/superadmin_features_api';
+import type { FeatureFlag } from '@/app/superadmin/features/superadmin_features_types/superadmin_features_types';
+import { useSuperadminFeatureRolloutTenants } from '@/app/superadmin/features/features_utils/useSuperadminFeatureRolloutTenants';
 import type { SuperadminFeatureRolloutModalProps } from '@/app/superadmin/features/superadmin_features_types/superadmin_features_ui_types';
 
 export default function SuperadminFeatureRolloutModal({ isOpen, onClose, flag, onSaveRollout }: SuperadminFeatureRolloutModalProps) {
@@ -13,14 +13,7 @@ export default function SuperadminFeatureRolloutModal({ isOpen, onClose, flag, o
   const [selectedTenantIds, setSelectedTenantIds] = useState<string[]>([]);
   const [isSaving, setIsSaving] = useState(false);
 
-  const { data: fetchRes, isLoading: fetchStateLoading } = useQuery({
-    queryKey: ['superadmin', 'features', 'tenants'],
-    queryFn: () => featuresApi.fetchTenants(),
-    enabled: isOpen,
-  });
-
-  const rawGyms = (fetchRes?.data as SuperadminFeaturesTenant[]) ?? [];
-  const gyms = rawGyms;
+  const { tenants: gyms, isLoading: fetchStateLoading } = useSuperadminFeatureRolloutTenants(isOpen);
 
   // RESPONSIBILITY: Handle side-effects for SuperadminFeatureRolloutModal
   // EXPLANATION: Synchronize component state with external dependencies.
@@ -33,6 +26,8 @@ export default function SuperadminFeatureRolloutModal({ isOpen, onClose, flag, o
       setSelectedTenantIds([]);
     }
   }, [isOpen, flag]);
+
+  const dialogRef = useSuperadminDialogAccessibility(isOpen, onClose);
 
   if (!isOpen || !flag) return null;
 
@@ -48,17 +43,19 @@ export default function SuperadminFeatureRolloutModal({ isOpen, onClose, flag, o
     }
   };
 
+
   return (
-    <div className="fixed inset-0 bg-overlay/80 z-40 flex items-center justify-center p-4 backdrop-blur-sm motion-safe:animate-in motion-safe:fade-in" role="dialog" aria-modal="true">
+    <div ref={dialogRef} className="fixed inset-0 bg-overlay/80 z-40 flex items-center justify-center p-4 backdrop-blur-sm motion-safe:animate-in motion-safe:fade-in" role="dialog" aria-modal="true" aria-labelledby="CanaryRollout-dialog-title">
       <div className="bg-overlay border border-border rounded-2xl w-full max-w-md shadow-2xl overflow-hidden flex flex-col motion-safe:animate-in motion-safe:zoom-in-95">
         <div className="flex items-center justify-between px-6 py-5 border-b border-border">
           <div>
-            <h2 className="text-xl font-bold text-foreground">Canary Rollout</h2>
+            <h2 className="text-xl font-bold text-foreground" id="CanaryRollout-dialog-title">Canary Rollout</h2>
             <p className="text-sm text-secondary">Select gyms to enable <span className="font-semibold text-foreground">{flag.name}</span></p>
           </div>
           <button 
-            onClick={onClose} 
-            className="p-2 text-secondary hover:text-foreground hover:bg-input rounded-full motion-safe:transition-colors"
+            onClick={onClose}
+            aria-label="Close dialog"
+            className="p-2 text-secondary hover:text-foreground hover:bg-input rounded-full motion-safe:transition-all motion-safe:duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
             <X className="w-5 h-5" />
           </button>

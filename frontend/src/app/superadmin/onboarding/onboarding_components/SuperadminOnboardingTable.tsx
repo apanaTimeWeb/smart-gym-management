@@ -24,6 +24,7 @@ import {
   TRIAL_STATUS_STYLES,
 } from '@/app/superadmin/onboarding/onboarding_types/SuperadminOnboardingConstants';
 import type { TenantOnboarding } from '@/app/superadmin/onboarding/onboarding_types/superadmin_onboarding_types';
+import { displayValue } from '@/lib/formatters';
 
 const TABLE_COLUMN_COUNT = 7;
 
@@ -189,7 +190,7 @@ export function SuperadminOnboardingTable({
                                   </div>
                                   <div className="flex justify-between">
                                     <span className="text-secondary">Trial Ends</span>
-                                    <span className="text-foreground">{tenant.trialEndsAt ?? '—'}</span>
+                                    <span className="text-foreground">{displayValue(tenant.trialEndsAt)}</span>
                                   </div>
                                   <div className="flex justify-between">
                                     <span className="text-secondary">Days in Trial</span>
