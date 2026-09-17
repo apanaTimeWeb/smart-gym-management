@@ -19,7 +19,7 @@ export function useSuperadminCouponsMutations(
 
   const handleCreateCoupon = useCallback(async (data: CouponFormData) => {
     await mutate(() => couponsApi.createCoupon(data), {
-      toastId: `coupon-create-${data.code || data.name}`,
+      toastId: `coupon-create-${data.code}`,
       onSuccess: (newCoupon) => {
         updateCoupons(prev => [newCoupon as Coupon, ...prev]);
         setIsModalOpen(false);

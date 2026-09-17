@@ -3,8 +3,7 @@ import { useSuperadminDialogAccessibility } from '@/app/superadmin/superadmin_ut
 // RESPONSIBILITY: Renders the API-backed change history drawer for one feature flag; owns no mock data or network calls.
 import { formatDate } from '@/lib/formatters';
 import { Clock, X } from 'lucide-react';
-import type { FeatureFlag } from '@/app/superadmin/features/superadmin_features_types/superadmin_features_types';
-import type { FeatureFlagHistory } from '@/app/superadmin/features/superadmin_features_api/superadmin_features_api';
+import type { FeatureFlag, FeatureFlagHistory } from '@/app/superadmin/features/superadmin_features_types/superadmin_features_types';
 
 export interface SuperadminFeatureHistoryModalProps {
   isOpen: boolean;

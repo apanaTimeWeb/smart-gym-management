@@ -5,7 +5,8 @@ import type { ApiResponse } from '@/lib/api';
 import { SystemUrlConfig } from '@/app/superadmin/system/superadmin_system_url_config';
 import { SuperadminSystemTenantSchema, SuperadminSystemAuditLogSchema, type SuperadminSystemTenant, type SuperadminSystemAuditLog } from '@/app/superadmin/system/system_types/superadmin_system_types';
 import { z } from 'zod';
-import type { DowntimeCredit, SuperadminTenantSla } from '@/app/superadmin/system/system_types/SuperadminSystemTypes';
+import type { DowntimeCredit } from '@/app/superadmin/system/system_types/superadmin_system_types';
+import type { SuperadminTenantSla } from '@/app/superadmin/system/system_types/SuperadminSystemTypes';
 
 const SuperadminTenantSlaSchema = z.object({ id: z.string(), name: z.string(), targetSla: z.number(), actualUptime: z.number(), downtimeIncidents: z.number(), downtimeMinutes: z.number(), status: z.enum(['MET', 'BREACHED', 'WARNING']) });
 export const systemApi = {

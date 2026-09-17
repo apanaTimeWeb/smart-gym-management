@@ -35,7 +35,7 @@ export const superadminFeaturesHandlers = [
   http.get(`${BASE_URL}/flags/:id/history`, async ({ params }) => {
     await delay(200);
     const id = String(params.id);
-    return HttpResponse.json<ApiResponse<FeatureFlagHistory[]>>({ success: true, message: 'Success', data: SUPERADMIN_FEATURE_HISTORY_MOCK_FIXTURES[id as keyof typeof SUPERADMIN_FEATURE_HISTORY_MOCK_FIXTURES] ?? [] }, { status: StatusCodes.OK });
+    return HttpResponse.json<ApiResponse<FeatureFlagHistory[]>>({ success: true, message: 'Success', data: (SUPERADMIN_FEATURE_HISTORY_MOCK_FIXTURES[id as keyof typeof SUPERADMIN_FEATURE_HISTORY_MOCK_FIXTURES] ?? []) as unknown as FeatureFlagHistory[] }, { status: StatusCodes.OK });
   }),
 
   http.post(`${BASE_URL}/flags`, async ({ request }) => {

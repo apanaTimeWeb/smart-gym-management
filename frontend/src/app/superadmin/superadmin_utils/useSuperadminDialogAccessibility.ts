@@ -49,6 +49,8 @@ export function useSuperadminDialogAccessibility<T extends HTMLElement = HTMLDiv
         }
         const first = currentFocusable[0];
         const last = currentFocusable[currentFocusable.length - 1];
+        if (!first || !last) return;
+        
         if (event.shiftKey && document.activeElement === first) {
           event.preventDefault();
           last.focus();

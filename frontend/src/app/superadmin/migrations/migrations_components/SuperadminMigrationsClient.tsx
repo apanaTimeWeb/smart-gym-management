@@ -6,6 +6,7 @@ import { AlertTriangle, Database, Loader2 } from 'lucide-react';
 import { displayValue, formatDate } from '@/lib/formatters';
 import type { MigrationLog } from '@/app/superadmin/migrations/superadmin_migrations_types/superadmin_migrations_types';
 import SuperadminMigrationsEmptyState from '@/app/superadmin/migrations/migrations_components/SuperadminMigrationsEmptyState';
+import SuperadminMigrationStatusBadge from '@/app/superadmin/migrations/migrations_components/SuperadminMigrationStatusBadge';
 import { useSuperadminMigrationsPage } from '@/app/superadmin/migrations/migrations_utils/useSuperadminMigrationsPage';
 
 const TABLE_COLUMN_COUNT = 5;
