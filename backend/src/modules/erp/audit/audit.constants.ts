@@ -1,4 +1,0 @@
-export const AUDIT_CONSTANTS = {
-  DEFAULT_PAGE: 1,
-  DEFAULT_LIMIT: 10,
-};
