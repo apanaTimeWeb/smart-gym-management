@@ -1,11 +1,11 @@
 // RESPONSIBILITY: Root client orchestrator for the Cancellations Alerts page.
 'use client';
 // Owns filter state, action modal state, and data. Delegates rendering to child components.
-import SuperadminCancellationsKPIs from '@/app/superadmin/cancellations/cancellations_components/SuperadminCancellationsKPIs/SuperadminCancellationsKPIs';
-import SuperadminCancellationsFilters from '@/app/superadmin/cancellations/cancellations_components/SuperadminCancellationsFilters/SuperadminCancellationsFilters';
-import SuperadminCancellationsTable from '@/app/superadmin/cancellations/cancellations_components/SuperadminCancellationsTable/SuperadminCancellationsTable';
-import SuperadminCancellationsEmptyState from '@/app/superadmin/cancellations/cancellations_components/SuperadminCancellationsEmptyState/SuperadminCancellationsEmptyState';
-import SuperadminCancellationsActionModal from '@/app/superadmin/cancellations/cancellations_components/SuperadminCancellationsActionModal/SuperadminCancellationsActionModal';
+import SuperadminCancellationsKPIs from '@/app/superadmin/cancellations/cancellations_components/SuperadmincancellationsKPIs/SuperadmincancellationsKPIs';
+import SuperadminCancellationsFilters from '@/app/superadmin/cancellations/cancellations_components/SuperadmincancellationsFilters/SuperadmincancellationsFilters';
+import SuperadminCancellationsTable from '@/app/superadmin/cancellations/cancellations_components/SuperadmincancellationsTable/SuperadmincancellationsTable';
+import SuperadminCancellationsEmptyState from '@/app/superadmin/cancellations/cancellations_components/SuperadmincancellationsEmptyState/SuperadmincancellationsEmptyState';
+import SuperadminCancellationsActionModal from '@/app/superadmin/cancellations/cancellations_components/SuperadmincancellationsActionModal/SuperadmincancellationsActionModal';
 import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
 import type { CancellationsFilterStatus } from '@/app/superadmin/cancellations/cancellations_types/superadmin_cancellations_types';
 import { useSuperadminCancellationsAlertsPage } from '@/app/superadmin/cancellations/cancellations_utils/useSuperadminCancellationsAlertsPage';
