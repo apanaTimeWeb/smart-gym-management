@@ -29,12 +29,12 @@ import { superadminSettingsV1Handlers } from '@/app/superadmin/settings/settings
 import { superadminTeamHandlers } from '@/app/superadmin/team/team_mocks/handlers/SuperadminTeamMockHandlers';
 import { superadminTicketsV1Handlers } from '@/app/superadmin/tickets/tickets_mocks/handlers/SuperadminTicketsV1MockHandlers';
 let isRegistered = false;
+
+if (typeof window !== 'undefined' && !isRegistered) {
+    worker.use(...superadminTeamHandlers, ...superadminIntegrationsHandlers, ...superadminOffboardingHandlers, ...superadminComplianceHandlers, ...superadminSegmentsHandlers, ...superadminDashboardV1Handlers, ...superadminGymsV1Handlers, ...superadminGymDetailV1Handlers, ...superadminPlansV1Handlers, ...superadminInvoicesV1Handlers, ...superadminAnalyticsV1Handlers, ...superadminReportsV1Handlers, ...superadminOnboardingV1Handlers, ...superadminCancellationsV1Handlers, ...superadminFranchisesV1Handlers, ...superadminBranchesV1Handlers, ...superadminBroadcastsV1Handlers, ...superadminMessagingV1Handlers, ...superadminMessagingV1WhatsAppHandlers, ...superadminTicketsV1Handlers, ...superadminFeaturesV1Handlers, ...superadminInfrastructureV1Handlers, ...superadminJobsV1Handlers, ...superadminBackupsV1Handlers, ...superadminGlobalAuditV1Handlers, ...superadminSettingsV1Handlers);
+    isRegistered = true;
+}
+
 export default function SuperadminV1MockBootstrap() {
-    useEffect(() => {
-        if (isRegistered)
-            return;
-        worker.use(...superadminTeamHandlers, ...superadminIntegrationsHandlers, ...superadminOffboardingHandlers, ...superadminComplianceHandlers, ...superadminSegmentsHandlers, ...superadminDashboardV1Handlers, ...superadminGymsV1Handlers, ...superadminGymDetailV1Handlers, ...superadminPlansV1Handlers, ...superadminInvoicesV1Handlers, ...superadminAnalyticsV1Handlers, ...superadminReportsV1Handlers, ...superadminOnboardingV1Handlers, ...superadminCancellationsV1Handlers, ...superadminFranchisesV1Handlers, ...superadminBranchesV1Handlers, ...superadminBroadcastsV1Handlers, ...superadminMessagingV1Handlers, ...superadminMessagingV1WhatsAppHandlers, ...superadminTicketsV1Handlers, ...superadminFeaturesV1Handlers, ...superadminInfrastructureV1Handlers, ...superadminJobsV1Handlers, ...superadminBackupsV1Handlers, ...superadminGlobalAuditV1Handlers, ...superadminSettingsV1Handlers);
-        isRegistered = true;
-    }, []);
     return null;
 }

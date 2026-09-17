@@ -4,7 +4,7 @@ import { StatusCodes } from 'http-status-codes';
 import { SuperadminGymDetailV1UrlConfig } from '@/app/superadmin/gyms/superadmin_gym_detail_business_overview_url_config';
 import { SUPERADMIN_GYM_DETAIL_BUSINESS_OVERVIEW_MOCK_FIXTURES } from '@/app/superadmin/gyms/gyms_mocks/fixtures/SuperadminGymDetailV1MockFixtures';
 export const superadminGymDetailV1Handlers = [
-    http.get(SuperadminGymDetailV1UrlConfig.BACKEND_API.BASE, ({ request }) => {
+    http.get('*' + SuperadminGymDetailV1UrlConfig.BACKEND_API.BASE, ({ request }) => {
         const gymId = new URL(request.url).searchParams.get('gymId');
         const fixture = gymId ? SUPERADMIN_GYM_DETAIL_BUSINESS_OVERVIEW_MOCK_FIXTURES[gymId] : undefined;
         if (!fixture) {

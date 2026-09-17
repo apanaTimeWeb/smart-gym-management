@@ -24,10 +24,9 @@ export const SaaSDashboardMetricsSchema = z.object({
     trialsExpiringIn7Days: z.number().optional(),
 });
 export const SuperadminDashboardApiDataSchema = z.object({
-    totalTenants: z.number(),
-    activeUsers: z.number(),
-    monthlyRevenue: z.number(),
-    systemHealth: z.number()
+    metrics: SaaSDashboardMetricsSchema,
+    revenue: z.array(z.object({ month: z.string(), mrr: z.number() })),
+    growth: z.array(z.object({ month: z.string(), gyms: z.number() }))
 });
 export type TenantStatus = 'ACTIVE' | 'SUSPENDED' | 'TRIAL' | 'CANCELLED';
 export type TimeRange = 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'yearly' | 'custom' | 'this_month' | 'last_month' | 'last_3_months' | 'last_6_months' | 'this_year';

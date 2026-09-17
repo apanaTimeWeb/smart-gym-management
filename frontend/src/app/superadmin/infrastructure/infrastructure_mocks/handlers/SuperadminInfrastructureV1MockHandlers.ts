@@ -3,5 +3,5 @@ import { http, HttpResponse } from 'msw';
 import { SuperadminInfrastructureV1UrlConfig } from '@/app/superadmin/infrastructure/superadmin_infrastructure_api_health_url_config';
 import { SUPERADMIN_INFRASTRUCTURE_API_HEALTH_MOCK_FIXTURE } from '@/app/superadmin/infrastructure/infrastructure_mocks/fixtures/SuperadminInfrastructureV1MockFixtures';
 export const superadminInfrastructureV1Handlers = [
-    http.get(SuperadminInfrastructureV1UrlConfig.BACKEND_API.BASE, () => HttpResponse.json({ success: true, message: 'Superadmin data loaded.', data: SUPERADMIN_INFRASTRUCTURE_API_HEALTH_MOCK_FIXTURE })),
+    http.get('*' + SuperadminInfrastructureV1UrlConfig.BACKEND_API.BASE, () => HttpResponse.json({ success: true, message: 'Superadmin data loaded.', data: SUPERADMIN_INFRASTRUCTURE_API_HEALTH_MOCK_FIXTURE })),
 ];
