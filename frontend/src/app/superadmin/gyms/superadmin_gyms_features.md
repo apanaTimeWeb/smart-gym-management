@@ -21,21 +21,24 @@ This Superadmin feature owns the `gyms` route and its feature-specific UI, clien
 
 | Feature | Route | User action | Key API/client owner | Status |
 |---|---|---|---|---|
-| `gyms` | `/superadmin/gyms` | Use the route's controls to perform the operations implemented by the current client UI. | `gyms/superadmin_gyms_api/superadmin_gyms_api.ts` | Implemented in source; runtime integration **NOT VERIFIED** without installing project dependencies. |
+| `gyms` | `/superadmin/gyms` | Search, filter, sort, paginate, add, edit, suspend/restore, delete, open tenant detail, and use the tenant-contact action from the Gym registry. | `gyms/superadmin_gyms_api/superadmin_gyms_api.ts` | Implemented in source; runtime integration **NOT VERIFIED** without installing project dependencies. |
 
 ## User Flows & Interactions
 
-### Flow 1: Open Feature
-1. User navigates to the route shown above.
-2. Next.js renders the route `page.tsx` and its client view.
-3. The feature-owned client layer loads the data needed by the visible UI.
-4. Loading, empty, error, or populated state is rendered according to the current implementation.
+### Flow 1: Browse and filter tenants
+1. User opens `/superadmin/gyms`.
+2. Search/filter/sort state is synchronized to the URL and query key.
+3. The feature API sends the current parameters.
+4. The module-owned MSW handler applies the same parameters to fixture data.
+5. The result list, pagination metadata, and empty/error states update visibly.
 
-### Flow 2: Execute an Available Action
-1. User activates an action exposed by the current feature UI.
-2. The feature client/hook invokes the feature-owned API function.
-3. The API boundary validates response data using the feature schema when a schema is supplied.
-4. The UI updates local/query state and shows the resulting feedback.
+### Flow 2: Tenant lifecycle action
+1. User selects a Gym row and opens the tenant detail/edit flow.
+2. User edits allowed tenant fields or selects a status action.
+3. The form/hook calls the feature API.
+4. The API response is validated at the boundary.
+5. On success, TanStack Query is reconciled/invalidated and the visible tenant/list state reflects the response.
+6. Destructive actions require the Superadmin confirmation flow.
 
 ## Data and State Architecture
 - **Server state:** TanStack Query where the feature currently uses async queries.
@@ -49,10 +52,10 @@ This Superadmin feature owns the `gyms` route and its feature-specific UI, clien
 |---|---|---|---|
 | `fetchGymById()` | `GET` | `${GymsUrlConfig.BACKEND_API.BASE}/${id}` | `gyms/superadmin_gyms_api/superadmin_gyms_api.ts` |
 | `updateGym()` | `PATCH` | `${GymsUrlConfig.BACKEND_API.BASE}/${id}` | `gyms/superadmin_gyms_api/superadmin_gyms_api.ts` |
-| `changeGymStatus()` | `POST` | `${GymsUrlConfig.BACKEND_API.BASE}/${id}/status` | `gyms/superadmin_gyms_api/superadmin_gyms_api.ts` |
+| `changeGymStatus()` | `PATCH` | `${GymsUrlConfig.BACKEND_API.BASE}/${id}/status` | `gyms/superadmin_gyms_api/superadmin_gyms_api.ts` |
 | `impersonateTenant()` | `POST` | `${GymsUrlConfig.BACKEND_API.IMPERSONATE}/${id}/impersonate` | `gyms/superadmin_gyms_api/superadmin_gyms_api.ts` |
 | `deleteGym()` | `DELETE` | `${GymsUrlConfig.BACKEND_API.BASE}/${id}` | `gyms/superadmin_gyms_api/superadmin_gyms_api.ts` |
-| `fetchGymStats()` | `POST` | `${GymsUrlConfig.BACKEND_API.BASE}/stats` | `gyms/superadmin_gyms_api/superadmin_gyms_api.ts` |
+| `fetchGymStats()` | `GET` | `${GymsUrlConfig.BACKEND_API.BASE}/stats` | `gyms/superadmin_gyms_api/superadmin_gyms_api.ts` |
 | `emailGymOwner()` | `POST` | `${GymsUrlConfig.BACKEND_API.BASE}/${id}/email` | `gyms/superadmin_gyms_api/superadmin_gyms_api.ts` |
 
 ## UI Data Requirements
@@ -156,7 +159,3 @@ This feature map is generated from the current repository structure. Where the c
 ## Module-Owned MSW Fixtures
 
 Feature-specific mock fixtures and MSW handlers are owned by this feature directory. API responses consumed by UI must remain complete for all documented table fields, KPIs, charts, filters, detail views and mutation messages. Global MSW bootstrap is registration infrastructure only.
-
-## V1 Repair Notes
-
-Nullable display fields use the canonical `displayValue()` formatter. Search input state remains separate from the 300ms debounced value used by server-backed query parameters/query keys.

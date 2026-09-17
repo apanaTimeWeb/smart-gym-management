@@ -1,0 +1,18 @@
+// RESPONSIBILITY: Owns realistic mock API data for this Superadmin module.
+export const SUPERADMIN_COMPLIANCE_MOCK_FIXTURE = { 'summary': { 'registeredTenants': 842, 'missingTaxDetails': 18, 'documentsExpiring': 9, 'openComplianceTasks': 6 },
+    'regions': [{ 'region': 'Maharashtra', 'registered': 248, 'missing': 4, 'taxRate': 18.0, 'status': 'READY' },
+        { 'region': 'Delhi', 'registered': 182, 'missing': 3, 'taxRate': 18.0, 'status': 'READY' },
+        { 'region': 'Karnataka', 'registered': 156, 'missing': 6, 'taxRate': 18.0, 'status': 'ATTENTION' },
+        { 'region': 'Other States', 'registered': 256, 'missing': 5, 'taxRate': 18.0, 'status': 'ATTENTION' }],
+    'documents': [{ 'tenant': 'FitLife Andheri',
+            'document': 'GST Registration',
+            'status': 'VALID',
+            'expires': '2027-04-30' },
+        { 'tenant': 'PowerZone Bandra',
+            'document': 'GST Registration',
+            'status': 'VALID',
+            'expires': null },
+        { 'tenant': 'Urban Strength',
+            'document': 'Tax Registration',
+            'status': 'EXPIRING',
+            'expires': '2026-10-02' }] };

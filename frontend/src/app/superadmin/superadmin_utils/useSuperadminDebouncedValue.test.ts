@@ -1,20 +1,18 @@
 import { act, renderHook } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { vi, describe, it, expect } from 'vitest';
 import { useSuperadminDebouncedValue } from '@/app/superadmin/superadmin_utils/useSuperadminDebouncedValue';
 
 describe('useSuperadminDebouncedValue', () => {
-  it('emits the latest value only after the debounce interval', () => {
+  it('updates only after the configured delay', () => {
     vi.useFakeTimers();
-    const { result, rerender } = renderHook(({ value }: { value: string }) => useSuperadminDebouncedValue(value), {
-      initialProps: { value: '' },
-    });
-    rerender({ value: 'a' });
-    rerender({ value: 'ab' });
-    expect(result.current).toBe('');
+    const { result, rerender } = renderHook(({ value }) => useSuperadminDebouncedValue(value, 300), { initialProps: { value: 'alpha' } });
+    expect(result.current).toBe('alpha');
+    rerender({ value: 'beta' });
+    expect(result.current).toBe('alpha');
     act(() => vi.advanceTimersByTime(299));
-    expect(result.current).toBe('');
+    expect(result.current).toBe('alpha');
     act(() => vi.advanceTimersByTime(1));
-    expect(result.current).toBe('ab');
+    expect(result.current).toBe('beta');
     vi.useRealTimers();
   });
 });

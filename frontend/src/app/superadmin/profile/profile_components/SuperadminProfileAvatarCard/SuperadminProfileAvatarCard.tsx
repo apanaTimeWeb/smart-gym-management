@@ -1,31 +1,25 @@
-'use client';
 // RESPONSIBILITY: Displays the superadmin's avatar, name, role badge, and last login info.
+'use client';
 import { formatDate, formatDateTime } from '@/lib/formatters';
 // Display-only — no mutations.
-
 import { ShieldCheck } from 'lucide-react';
 import type { SuperadminProfileData } from '@/app/superadmin/profile/profile_types/SuperadminProfileTypes';
-
 interface SuperadminProfileAvatarCardProps {
-  profile: SuperadminProfileData;
+    profile: SuperadminProfileData;
 }
-
 export default function SuperadminProfileAvatarCard({ profile }: SuperadminProfileAvatarCardProps) {
-  if (!profile) return null;
-
-  const initials = (profile.name || 'Super Admin')
-    .split(' ')
-    .map((n) => n[0])
-    .join('')
-    .toUpperCase()
-    .slice(0, 2);
-
-  const lastLogin = profile.lastLoginAt 
-    ? formatDateTime(profile.lastLoginAt)
-    : 'Unknown';
-
-  return (
-    <div className="bg-card border border-border rounded-xl p-6 flex flex-col items-center text-center gap-4 shadow-sm">
+    if (!profile)
+        return null;
+    const initials = (profile.name || 'Super Admin')
+        .split(' ')
+        .map((n) => n[0])
+        .join('')
+        .toUpperCase()
+        .slice(0, 2);
+    const lastLogin = profile.lastLoginAt
+        ? formatDateTime(profile.lastLoginAt)
+        : 'Unknown';
+    return (<div className="bg-card border border-border rounded-xl p-6 flex flex-col items-center text-center gap-4 shadow-sm">
       <div className="w-20 h-20 rounded-full bg-primary-subtle border-2 border-primary flex items-center justify-center">
         <span className="text-2xl font-bold text-primary">{initials}</span>
       </div>
@@ -34,7 +28,7 @@ export default function SuperadminProfileAvatarCard({ profile }: SuperadminProfi
         <p className="text-sm text-secondary">{profile.email}</p>
       </div>
       <div className="flex items-center gap-2 px-3 py-1.5 bg-primary-subtle rounded-full">
-        <ShieldCheck className="w-3.5 h-3.5 text-primary" strokeWidth={2}  />
+        <ShieldCheck className="w-3.5 h-3.5 text-primary" strokeWidth={2}/>
         <span className="text-xs font-semibold text-primary">SUPERADMIN</span>
       </div>
       <div className="w-full border-t border-border pt-4 space-y-2 text-sm">
@@ -55,6 +49,5 @@ export default function SuperadminProfileAvatarCard({ profile }: SuperadminProfi
           </span>
         </div>
       </div>
-    </div>
-  );
+    </div>);
 }

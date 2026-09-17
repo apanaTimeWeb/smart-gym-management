@@ -8,7 +8,7 @@ The Superadmin Migrations feature provides a controlled platform-level view of s
 | Folder | Responsibility | Key Files |
 |---|---|---|
 | `migrations_components/` | Route UI, empty state, and visual migration status rendering. | `SuperadminMigrationsClient.tsx`, `SuperadminMigrationsEmptyState.tsx` |
-| `migrations_utils/` | Query/mutation orchestration and migration-specific static configuration. | `useSuperadminMigrationsPage.ts`, `SuperadminMigrationsConstants.ts` |
+| `migrations_utils/` | Query/mutation orchestration and migration-specific static configuration. | `useSuperadminMigrationsPage.ts`, `SuperadminMigrationsConstants.ts` — status display constants |
 | `migrations_mocks/handlers/` | Frontend-first GET/PATCH/POST network scenarios for migration history and rollout. | `SuperadminMigrationsMockHandlers.ts` |
 | `superadmin_migrations_api/` | Typed API boundary and Zod validation. | `superadmin_migrations_api.ts` |
 | `superadmin_migrations_types/` | Migration domain types and runtime schemas. | `superadmin_migrations_types.ts` |
@@ -45,7 +45,7 @@ The Superadmin Migrations feature provides a controlled platform-level view of s
 - **Zustand:** None required.
 - **Context:** Uses the approved Superadmin confirmation provider only for stable cross-tree confirmation infrastructure.
 - **MSW handlers:** `migrations_mocks/handlers/SuperadminMigrationsMockHandlers.ts`.
-- **Fixtures:** `migrations_utils/SuperadminMigrationsConstants.ts`.
+- **Fixtures:** `migrations_mocks/fixtures/SuperadminMigrationsMockFixtures.ts`.
 
 ## API Contract
 
@@ -114,7 +114,3 @@ The Superadmin Migrations feature provides a controlled platform-level view of s
 - Global Superadmin confirmation infrastructure in `superadmin_components/SuperadminFeedback/`.
 - Global React Query provider.
 - Global MSW bootstrap registration.
-
-## V1 Repair Notes
-
-Nullable display fields use the canonical `displayValue()` formatter. Search input state remains separate from the 300ms debounced value used by server-backed query parameters/query keys.

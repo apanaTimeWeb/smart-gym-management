@@ -10,7 +10,7 @@ This Superadmin feature owns the `coupons` route and its feature-specific UI, cl
 | `__tests__/` | Owns the feature responsibility represented by this folder. | `superadmin_coupons_basic.test.tsx` |
 | `coupons_components/` | Owns the feature responsibility represented by this folder. | `SuperadminCouponEditModal.tsx`, `SuperadminCouponModal.tsx`, `SuperadminCouponsClient.tsx`, `SuperadminCouponsEmptyState.tsx`, `SuperadminCouponsHeader.tsx`, `SuperadminCouponsRedemptionDrawer.tsx`, `SuperadminCouponsStatsBar.tsx`, `SuperadminCouponsStatusBadge.tsx` |
 | `coupons_mocks/` | Owns the feature responsibility represented by this folder. | `SuperadminCouponsMockHandlers.ts` |
-| `coupons_utils/` | Owns the feature responsibility represented by this folder. | `useSuperadminCoupons.test.ts`, `useSuperadminCoupons.ts`, `useSuperadminCouponsData.test.ts`, `useSuperadminCouponsData.ts`, `useSuperadminCouponsMutation.test.ts`, `useSuperadminCouponsMutation.ts`, `useSuperadminCouponsMutations.ts` |
+| `coupons_utils/` | Owns the feature responsibility represented by this folder. | `useSuperadminCoupons.test.ts`, `useSuperadminCoupons.ts`, `useSuperadminCouponsMutation.test.ts`, `useSuperadminCouponsMutation.ts`, `useSuperadminCouponsMutations.ts` |
 | `superadmin_coupons_api/` | Owns the feature responsibility represented by this folder. | `superadmin_coupons_api.ts` |
 | `superadmin_coupons_types/` | Owns the feature responsibility represented by this folder. | `superadmin_coupons_types.ts` |
 

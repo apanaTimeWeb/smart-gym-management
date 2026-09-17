@@ -12,7 +12,7 @@ This Superadmin feature owns the `usage-meters` route and its feature-specific U
 | `superadmin_usage-meters_types/` | Owns the feature responsibility represented by this folder. | `superadmin_usage-meters_types.ts` |
 | `usage-meters_components/` | Owns the feature responsibility represented by this folder. | `SuperadminUsageMetersClient.tsx`, `SuperadminUsageMetersEmptyState.tsx` |
 | `usage-meters_mocks/` | Owns the feature responsibility represented by this folder. | `SuperadminUsageMetersMockHandlers.ts` |
-| `usage-meters_utils/` | Owns the feature responsibility represented by this folder. | `SuperadminUsageMetersConstants.ts`, `SuperadminUsageMetersUtils.ts` |
+| `usage-meters_utils/` | Owns filtering, formatting, and static UI configuration for the feature. | `SuperadminUsageMetersUtils.ts` |
 
 ## Feature Inventory
 

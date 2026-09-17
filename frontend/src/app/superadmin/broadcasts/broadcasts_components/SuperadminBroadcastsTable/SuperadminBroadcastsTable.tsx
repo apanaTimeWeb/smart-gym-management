@@ -1,17 +1,14 @@
-'use client';
 // RESPONSIBILITY: Renders the Broadcasts data table shell (header + rows). Delegates row rendering to BroadcastsTableRow. No API calls.
+'use client';
 import { formatDate, formatDateTime } from '@/lib/formatters';
 import SuperadminBroadcastStatusBadge from '@/app/superadmin/broadcasts/broadcasts_components/SuperadminBroadcastStatusBadge/SuperadminBroadcastStatusBadge';
 import { Send, Edit2, Trash2 } from 'lucide-react';
 import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
 import SuperadminBroadcastsEmptyState from '@/app/superadmin/broadcasts/broadcasts_components/SuperadminBroadcastsEmptyState/SuperadminBroadcastsEmptyState';
 import type { BroadcastsTableProps } from '@/app/superadmin/broadcasts/superadmin_broadcasts_types/superadmin_broadcasts_types';
-
 export default function SuperadminBroadcastsTable({ broadcasts, onSend, onEdit, onDelete, onCreateClick }: BroadcastsTableProps) {
-  const { confirm } = useSuperadminConfirm();
-
-  return (
-    <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm flex flex-col min-h-96">
+    const { confirm } = useSuperadminConfirm();
+    return (<div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm flex flex-col min-h-96">
       <div className="overflow-x-auto flex-1">
         <table className="w-full text-left border-collapse">
           <thead>
@@ -25,17 +22,9 @@ export default function SuperadminBroadcastsTable({ broadcasts, onSend, onEdit, 
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
-            {broadcasts.length === 0 ? (
-              <tr>
-                <td colSpan={6}><SuperadminBroadcastsEmptyState onCreateClick={onCreateClick} /></td>
-              </tr>
-            ) : (
-              broadcasts.map((bc) => (
-                <tr 
-                  key={bc.id} 
-                  className="hover:bg-primary/5 motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-in-out group cursor-pointer"
-                  onClick={() => onEdit(bc)}
-                >
+            {broadcasts.length === 0 ? (<tr>
+                <td colSpan={6}><SuperadminBroadcastsEmptyState onCreateClick={onCreateClick}/></td>
+              </tr>) : (broadcasts.map((bc) => (<tr key={bc.id} className="hover:bg-primary/5 motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out group cursor-pointer" onClick={() => onEdit(bc)}>
                   <td className="px-6 py-4">
                     <div className="flex flex-col">
                       <span className="text-sm font-medium text-foreground">{bc.title}</span>
@@ -48,21 +37,17 @@ export default function SuperadminBroadcastsTable({ broadcasts, onSend, onEdit, 
                   </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <SuperadminBroadcastStatusBadge status={bc.status} />
+                  <SuperadminBroadcastStatusBadge status={bc.status}/>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm">
-                  {bc.status === 'SENT' && bc.totalRecipients ? (
-                    <div>
+                  {bc.status === 'SENT' && bc.totalRecipients ? (<div>
                       <span className="text-success font-semibold">
                         {bc.deliveredCount ?? 0}/{bc.totalRecipients}
                       </span>
                       <span className="ml-1 text-secondary text-xs">
                         ({Math.round(((bc.deliveredCount ?? 0) / bc.totalRecipients) * 100)}%)
                       </span>
-                    </div>
-                  ) : (
-                    <span className="text-disabled">â€”</span>
-                  )}
+                    </div>) : (<span className="text-disabled">â€”</span>)}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary">
                   {bc.status === 'SCHEDULED' && bc.scheduledDate ? formatDateTime(bc.scheduledDate) : ''}
@@ -71,51 +56,31 @@ export default function SuperadminBroadcastsTable({ broadcasts, onSend, onEdit, 
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-right">
                   <div className="flex items-center justify-end gap-2">
-                    {bc.status === 'DRAFT' && (
-                      <button
-                        onClick={(e) => { e.stopPropagation(); onSend(bc.id); }}
-                        className="p-1.5 text-secondary hover:text-primary hover:bg-primary-subtle rounded-lg motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-in-out"
-                        title="Send Now"
-                        aria-label={`Send broadcast: ${bc.title}`}
-                      >
-                        <Send className="w-4 h-4" />
-                      </button>
-                    )}
-                    <button
-                      onClick={(e) => { e.stopPropagation(); onEdit(bc); }}
-                      className="p-1.5 text-secondary hover:text-primary hover:bg-primary-subtle rounded-lg motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-in-out"
-                      title="Edit Broadcast"
-                      aria-label={`Edit broadcast: ${bc.title}`}
-                    >
-                      <Edit2 className="w-4 h-4" />
+                    {bc.status === 'DRAFT' && (<button onClick={(e) => { e.stopPropagation(); onSend(bc.id); }} className="p-1.5 text-secondary hover:text-primary hover:bg-primary-subtle rounded-lg motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out" title="Send Now" aria-label={`Send broadcast: ${bc.title}`}>
+                        <Send className="w-4 h-4"/>
+                      </button>)}
+                    <button onClick={(e) => { e.stopPropagation(); onEdit(bc); }} className="p-1.5 text-secondary hover:text-primary hover:bg-primary-subtle rounded-lg motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out" title="Edit Broadcast" aria-label={`Edit broadcast: ${bc.title}`}>
+                      <Edit2 className="w-4 h-4"/>
                     </button>
-                    <button
-                      onClick={async (e) => { 
-                        e.stopPropagation(); 
-                        const ok = await confirm({
-                          title: 'Delete Broadcast',
-                          message: `Are you sure you want to delete broadcast "${bc.title}"? This action cannot be undone.`,
-                          type: 'danger',
-                          confirmText: 'Delete'
-                        });
-                        if (ok) {
-                          onDelete(bc.id); 
-                        }
-                      }}
-                      className="p-1.5 text-secondary hover:text-danger hover:bg-danger-bg/10 rounded-lg motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-in-out"
-                      title="Delete Broadcast"
-                      aria-label={`Delete broadcast: ${bc.title}`}
-                    >
-                      <Trash2 className="w-4 h-4" />
+                    <button onClick={async (e) => {
+                e.stopPropagation();
+                const ok = await confirm({
+                    title: 'Delete Broadcast',
+                    message: `Are you sure you want to delete broadcast "${bc.title}"? This action cannot be undone.`,
+                    type: 'danger',
+                    confirmText: 'Delete'
+                });
+                if (ok) {
+                    onDelete(bc.id);
+                }
+            }} className="p-1.5 text-secondary hover:text-danger hover:bg-danger-bg/10 rounded-lg motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out" title="Delete Broadcast" aria-label={`Delete broadcast: ${bc.title}`}>
+                      <Trash2 className="w-4 h-4"/>
                     </button>
                   </div>
                 </td>
-              </tr>
-              ))
-            )}
+              </tr>)))}
           </tbody>
         </table>
       </div>
-    </div>
-  );
+    </div>);
 }

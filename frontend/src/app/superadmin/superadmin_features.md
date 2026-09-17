@@ -32,8 +32,30 @@ The Superadmin module is the platform-owner control surface for tenant and platf
 | `system/` | Owns the `system` business feature and route. | `page.tsx`, `loading.tsx`, `error.tsx`, feature-owned API/types/docs where present |
 | `tickets/` | Owns the `tickets` business feature and route. | `page.tsx`, `loading.tsx`, `error.tsx`, feature-owned API/types/docs where present |
 | `usage-meters/` | Owns the `usage-meters` business feature and route. | `page.tsx`, `loading.tsx`, `error.tsx`, feature-owned API/types/docs where present |
+| `team/` | Owns internal Superadmin operator access, role groups, and alert preferences. | `page.tsx`, `team_components/SuperadminTeamClient.tsx`, module API/types/mocks |
+| `integrations/` | Owns platform integrations, webhook delivery, and tenant developer access metadata. | `page.tsx`, `integrations_components/SuperadminIntegrationsClient.tsx`, module API/types/mocks |
+| `offboarding/` | Owns tenant cancellation/offboarding queues, export/grace/purge policy, and safety checks. | `page.tsx`, `offboarding_components/SuperadminOffboardingClient.tsx`, module API/types/mocks |
+| `compliance/` | Owns platform tax registration coverage and compliance document readiness. | `page.tsx`, `compliance_components/SuperadminComplianceClient.tsx`, module API/types/mocks |
+| `segments/` | Owns reusable saved tenant groups and quick filter presets. | `page.tsx`, `segments_components/SuperadminSegmentsClient.tsx`, module API/types/mocks |
 | `superadmin_components/` | Shared Superadmin shell/UI primitives and confirmation/error infrastructure, not business-domain API ownership. | `SuperadminLayout/`, `SuperadminFeedback/`, `SuperadminShared/` |
 | `superadmin_utils/` | Stable Superadmin-wide UI helpers such as URL-state handling. | `useSuperadminUrlState.ts` |
+
+## V1 Business Expansion
+The V1 expansion adds platform-level SaaS intelligence and operations without moving gym-staff business workflows into Superadmin. The new areas are:
+
+- **Dashboard:** monthly income movement, retention indicators, tenant comparison, and a unified critical-alert view.
+- **Gyms:** advanced tenant filtering, saved views, bulk operations, and comparison.
+- **Gym Detail:** switchable tenant 360 sections for overview, subscription, billing, usage, health, activity, and support.
+- **Plans:** comparison, price history, add-ons, and plan-change impact preview.
+- **Invoices:** failed-payment recovery, recovery timing, and financial adjustment review.
+- **Analytics / Reports:** retention, cohort, adoption, concentration, acquisition, and period/segment comparisons.
+- **Onboarding / Cancellations:** activation journey, stall points, conversion trends, and cancellation reasons.
+- **Franchises / Branches:** franchise and branch comparison plus franchise financial control.
+- **Messaging / Broadcasts / Tickets:** reusable templates, audience building, campaign engagement, support workload, backlog age, and support categories.
+- **Features / Infrastructure / Jobs / Backups / Audit / Settings:** rollout control, release log, endpoint/queue health, backup verification, audit investigation, and governance controls.
+- **Team / Integrations / Offboarding / Tax & Compliance / Saved Segments:** delegated Superadmin access, connection/webhook/developer access, tenant data lifecycle, compliance readiness, and reusable tenant groups.
+
+User-facing V1 labels intentionally prefer plain-language names such as `Monthly income`, `Income kept from existing gyms`, `Gym retention`, `Revenue lost`, `Customer churn`, `Developer keys`, and `Extra sign-in`.
 
 ## Feature Inventory
 Each route-backed folder listed above is a separate feature boundary. See the matching `*_features.md` file inside that folder for the current route, files, API functions, state, UI data, permissions, loading/error states, edge cases, and tests.

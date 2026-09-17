@@ -11,7 +11,7 @@ This Superadmin feature owns the `jobs` route and its feature-specific UI, clien
 | `jobs_components/` | Owns the feature responsibility represented by this folder. | `SuperadminJobInspectModal.tsx`, `SuperadminJobsEmptyState.tsx`, `SuperadminJobsHeader.tsx`, `SuperadminJobsStatsBar.tsx`, `SuperadminJobsTable.tsx`, `SuperadminJobsView.tsx` |
 | `jobs_mocks/` | Owns the feature responsibility represented by this folder. | `SuperadminJobsMockHandlers.ts` |
 | `jobs_types/` | Owns the feature responsibility represented by this folder. | `superadmin_jobs_types.ts` |
-| `jobs_utils/` | Owns the feature responsibility represented by this folder. | `SuperadminJobsConstants.ts`, `useSuperadminJobsMutations.test.ts`, `useSuperadminJobsMutations.ts`, `useSuperadminJobsPage.test.ts`, `useSuperadminJobsPage.ts` |
+| `jobs_utils/` | Owns the feature responsibility represented by this folder. | `useSuperadminJobsMutations.test.ts`, `useSuperadminJobsMutations.ts`, `useSuperadminJobsPage.test.ts`, `useSuperadminJobsPage.ts` |
 | `superadmin_jobs_api/` | Owns the feature responsibility represented by this folder. | `superadmin_jobs_api.ts` |
 
 ## Feature Inventory
@@ -45,6 +45,12 @@ This Superadmin feature owns the `jobs` route and its feature-specific UI, clien
 | Function | Method | Endpoint expression | API file |
 |---|---|---|---|
 | `retryAllJobs()` | `POST` | `${JobsUrlConfig.BACKEND_API.BASE}/retry-all` | `jobs/superadmin_jobs_api/superadmin_jobs_api.ts` |
+| `retryJob(id)` | `POST` | `${JobsUrlConfig.BACKEND_API.BASE}/:id/retry` | `jobs/superadmin_jobs_api/superadmin_jobs_api.ts` |
+| `cancelJob(id)` | `POST` | `${JobsUrlConfig.BACKEND_API.BASE}/:id/cancel` | `jobs/superadmin_jobs_api/superadmin_jobs_api.ts` |
+| `deleteJob(id)` | `DELETE` | `${JobsUrlConfig.BACKEND_API.BASE}/:id` | `jobs/superadmin_jobs_api/superadmin_jobs_api.ts` |
+| `clearCompletedJobs()` | `POST` | `${JobsUrlConfig.BACKEND_API.BASE}/clear-completed` | `jobs/superadmin_jobs_api/superadmin_jobs_api.ts` |
+| `bulkRetryJobs(ids)` | `POST` | `${JobsUrlConfig.BACKEND_API.BASE}/bulk-retry` | `jobs/superadmin_jobs_api/superadmin_jobs_api.ts` |
+| `bulkDeleteJobs(ids)` | `POST` | `${JobsUrlConfig.BACKEND_API.BASE}/bulk-delete` | `jobs/superadmin_jobs_api/superadmin_jobs_api.ts` |
 
 ## UI Data Requirements
 
@@ -80,6 +86,7 @@ Observed schema/type fields in this feature are listed below. Any UI field not r
 - **No sibling business imports:** do not reintroduce imports from another Superadmin business feature.
 - **No fake production data:** server-like records belong in feature mocks/fixtures, never fallback constants inside production UI.
 - **No hardcoded URLs:** feature-owned routes belong in the single feature URL config.
+- **Mutations must change visible mock state:** retry, cancel, delete, clear-completed and bulk actions must be reflected on the next query result, not only in a toast.
 - **No async state in Zustand:** use TanStack Query for server state.
 - **Preserve destructive confirmation:** do not bypass the Superadmin confirmation flow.
 

@@ -1,10 +1,8 @@
 // RESPONSIBILITY: Renders the not-found component and its associated UI logic.
 import Link from 'next/link';
 import { OnboardingUrlConfig } from '@/app/superadmin/onboarding/superadmin_onboarding_url_config';
-
 export default function OnboardingNotFound() {
-  return (
-    <div className="empty-state-container">
+    return (<div className="empty-state-container">
       <div className="w-16 h-16 rounded-full bg-input flex items-center justify-center">
         <span className="text-3xl font-bold text-secondary">404</span>
       </div>
@@ -14,12 +12,8 @@ export default function OnboardingNotFound() {
           The onboarding entry you are looking for does not exist or has been removed.
         </p>
       </div>
-      <Link
-        href={OnboardingUrlConfig.PAGES.MAIN}
-        className="px-4 py-2 bg-primary hover:bg-primary-hover text-black font-semibold rounded-lg text-sm motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-      >
+      <Link href={OnboardingUrlConfig.PAGES.MAIN} className="px-4 py-2 bg-primary hover:bg-primary-hover text-black font-semibold rounded-lg text-sm motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
         Back to Dashboard
       </Link>
-    </div>
-  );
+    </div>);
 }

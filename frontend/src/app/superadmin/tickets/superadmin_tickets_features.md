@@ -13,7 +13,7 @@ This Superadmin feature owns the `tickets` route and its feature-specific UI, cl
 | `tickets_components/` | Owns the feature responsibility represented by this folder. | `SuperadminTicketsClient.tsx`, `SuperadminTicketsEmptyState.tsx`, `SuperadminTicketsHeader.tsx`, `SuperadminTicketsReplyModal.tsx`, `SuperadminTicketsTable.tsx` |
 | `tickets_mocks/` | Owns the feature responsibility represented by this folder. | `SuperadminTicketsMockHandlers.ts` |
 | `tickets_store/` | Owns the feature responsibility represented by this folder. | `useSuperadminTicketsStore.test.ts`, `useSuperadminTicketsStore.ts` |
-| `tickets_utils/` | Owns the feature responsibility represented by this folder. | `SuperadminTicketsConstants.ts`, `useSuperadminTickets.test.ts`, `useSuperadminTickets.ts`, `useSuperadminTicketsData.test.ts`, `useSuperadminTicketsData.ts` |
+| `tickets_utils/` | Owns the feature responsibility represented by this folder. | `SuperadminTicketsConstants.ts` — status/priority display constants, `useSuperadminTickets.test.ts`, `useSuperadminTickets.ts` |
 
 ## Feature Inventory
 

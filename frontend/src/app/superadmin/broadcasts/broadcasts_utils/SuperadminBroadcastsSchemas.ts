@@ -1,4 +1,11 @@
 // RESPONSIBILITY: Encapsulates functionality for SuperadminBroadcastsSchemas.ts
 import { z } from 'zod';
-export const broadcastSchema = z.object({ title: z.string().min(3, 'Title must be at least 3 characters.').max(120, 'Title cannot exceed 120 characters.'), content: z.string().min(10, 'Content must be at least 10 characters.').max(2000, 'Content cannot exceed 2000 characters.'), audience: z.enum(['ALL_TENANTS', 'PRO_ONLY', 'SUSPENDED_ONLY'] as const, { error: 'Select a target audience.' }), status: z.enum(['DRAFT', 'SCHEDULED', 'SENT'] as const, { error: 'Select a broadcast status.' }), scheduledDate: z.string().optional().nullable() }).superRefine(({ status, scheduledDate }, ctx) => { if (status === 'SCHEDULED') { if (!scheduledDate) { ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Scheduled date is required when status is SCHEDULED.', path: ['scheduledDate'] }); } else if (new Date(scheduledDate) <= new Date()) { ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Scheduled date must be in the future.', path: ['scheduledDate'] }); } } });
+export const broadcastSchema = z.object({ title: z.string().min(3, 'Title must be at least 3 characters.').max(120, 'Title cannot exceed 120 characters.'), content: z.string().min(10, 'Content must be at least 10 characters.').max(2000, 'Content cannot exceed 2000 characters.'), audience: z.enum(['ALL_TENANTS', 'PRO_ONLY', 'SUSPENDED_ONLY'] as const, { error: 'Select a target audience.' }), status: z.enum(['DRAFT', 'SCHEDULED', 'SENT'] as const, { error: 'Select a broadcast status.' }), scheduledDate: z.string().optional().nullable() }).superRefine(({ status, scheduledDate }, ctx) => { if (status === 'SCHEDULED') {
+    if (!scheduledDate) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Scheduled date is required when status is SCHEDULED.', path: ['scheduledDate'] });
+    }
+    else if (new Date(scheduledDate) <= new Date()) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Scheduled date must be in the future.', path: ['scheduledDate'] });
+    }
+} });
 export type BroadcastFormValues = z.infer<typeof broadcastSchema>;

@@ -1,40 +1,35 @@
-'use client';
 // RESPONSIBILITY: Renders the payout history for affiliates.
-
+'use client';
 import React, { useMemo } from 'react';
 import type { Affiliate } from '@/app/superadmin/affiliates/superadmin_affiliates_types/superadmin_affiliates_types';
 import { formatCurrency, formatDate } from '@/lib/formatters';
-
-export default function SuperadminAffiliatesPayoutHistory({ affiliates }: { affiliates: Affiliate[] }) {
-  // Generate mock payout history based on affiliates
-  const payouts = useMemo(() => {
-    return affiliates.flatMap((aff, index) => {
-      if (aff.commissionEarned <= 0) return [];
-      
-      const count = Math.max(1, index % 3);
-      return Array.from({ length: count }).map((_, i) => ({
-        id: `payout-${aff.id}-${i}`,
-        affiliateName: aff.name,
-        affiliateId: aff.id,
-        amount: Math.round(aff.commissionEarned / count),
-        status: i === 0 && index % 2 === 0 ? 'PENDING' : 'COMPLETED',
-        date: new Date(Date.now() - (i * 30 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0],
-        method: i % 2 === 0 ? 'Bank Transfer' : 'PayPal',
-        referenceId: `REF-${Math.floor(Math.random() * 100000)}`
-      }));
-    }).sort((a, b) => new Date(b.date || '').getTime() - new Date(a.date || '').getTime());
-  }, [affiliates]);
-
-  if (payouts.length === 0) {
-    return (
-      <div className="p-8 text-center text-secondary border border-border bg-card rounded-xl">
+export default function SuperadminAffiliatesPayoutHistory({ affiliates }: {
+    affiliates: Affiliate[];
+}) {
+    // Generate mock payout history based on affiliates
+    const payouts = useMemo(() => {
+        return affiliates.flatMap((aff, index) => {
+            if (aff.commissionEarned <= 0)
+                return [];
+            const count = Math.max(1, index % 3);
+            return Array.from({ length: count }).map((_, i) => ({
+                id: `payout-${aff.id}-${i}`,
+                affiliateName: aff.name,
+                affiliateId: aff.id,
+                amount: Math.round(aff.commissionEarned / count),
+                status: i === 0 && index % 2 === 0 ? 'PENDING' : 'COMPLETED',
+                date: new Date(Date.now() - (i * 30 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0],
+                method: i % 2 === 0 ? 'Bank Transfer' : 'PayPal',
+                referenceId: `REF-${Math.floor(Math.random() * 100000)}`
+            }));
+        }).sort((a, b) => new Date(b.date || '').getTime() - new Date(a.date || '').getTime());
+    }, [affiliates]);
+    if (payouts.length === 0) {
+        return (<div className="p-8 text-center text-secondary border border-border bg-card rounded-xl">
         No payout history available.
-      </div>
-    );
-  }
-
-  return (
-    <div className="overflow-x-auto bg-card border border-border rounded-xl shadow-sm">
+      </div>);
+    }
+    return (<div className="overflow-x-auto bg-card border border-border rounded-xl shadow-sm">
       <table className="w-full text-left border-collapse min-w-max">
         <thead>
           <tr className="bg-primary/10 border-b border-border text-secondary text-sm">
@@ -47,8 +42,7 @@ export default function SuperadminAffiliatesPayoutHistory({ affiliates }: { affi
           </tr>
         </thead>
         <tbody className="divide-y divide-border">
-          {payouts.map((payout) => (
-            <tr key={payout.id} className="hover:bg-input/50 motion-safe:transition-colors">
+          {payouts.map((payout) => (<tr key={payout.id} className="hover:bg-input/50 motion-safe:transition-colors">
               <td className="p-4 text-sm text-secondary">
                 {formatDate(payout.date)}
               </td>
@@ -62,20 +56,14 @@ export default function SuperadminAffiliatesPayoutHistory({ affiliates }: { affi
               <td className="p-4 text-sm text-secondary">{payout.method}</td>
               <td className="p-4 text-xs font-mono text-secondary">{payout.referenceId}</td>
               <td className="p-4">
-                {payout.status === 'COMPLETED' ? (
-                  <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-success/10 text-success border border-success/20">
+                {payout.status === 'COMPLETED' ? (<span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-success/10 text-success border border-success/20">
                     Completed
-                  </span>
-                ) : (
-                  <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-warning/10 text-warning border border-warning/20">
+                  </span>) : (<span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-warning/10 text-warning border border-warning/20">
                     Pending
-                  </span>
-                )}
+                  </span>)}
               </td>
-            </tr>
-          ))}
+            </tr>))}
         </tbody>
       </table>
-    </div>
-  );
+    </div>);
 }

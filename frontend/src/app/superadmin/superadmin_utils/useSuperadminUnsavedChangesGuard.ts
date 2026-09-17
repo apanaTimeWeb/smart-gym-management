@@ -1,84 +1,15 @@
+// DATA FLOW: Superadmin UI → useSuperadminUnsavedChangesGuard → Superadmin module API/state → consuming component
 'use client';
-// DATA FLOW: form state → useSuperadminUnsavedChangesGuard → confirmation infrastructure → navigation.
-import { useEffect } from 'react';
+// DATA FLOW: form dirty state → browser/in-app navigation interception → module confirmation → allow/block navigation.
+// RESPONSIBILITY: Protects dirty Superadmin forms from browser exits and Next.js in-app navigation without owning business state.
+import { useCallback, useEffect, useRef } from 'react';
 import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
-
-export function useSuperadminUnsavedChangesGuard(
-  isDirty: boolean,
-  warningMessage: string = 'You have unsaved changes. Are you sure you want to leave? Your changes will be lost.'
-) {
-  const { confirm } = useSuperadminConfirm();
-
-  // RESPONSIBILITY: Protect dirty Superadmin forms from browser and in-app navigation data loss.
-  // EXPLANATION: Synchronize component state with external dependencies.
-  // EFFECT DEPENDENCIES: Documented intentionally.
-  useEffect(() => {
-    // 1. Browser tab close / hard navigation
-    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      if (!isDirty) return;
-      e.preventDefault();
-      e.returnValue = warningMessage;
-      return warningMessage;
-    };
-
-    // 2. Anchor-tag clicks (non-Next.js links or Next.js Link intercepted)
-    const handleAnchorClick = async (e: MouseEvent) => {
-      if (!isDirty) return;
-      const target = (e.target as HTMLElement).closest('a');
-      if (!target?.href) return;
-      if (target.href === window.location.href) return;
-      if (target.target === '_blank') return;
-      
-      e.preventDefault();
-      e.stopPropagation();
-      
-      const confirmed = await confirm({
-        title: 'Unsaved Changes',
-        message: warningMessage,
-        type: 'warning',
-        confirmText: 'Leave Page',
-        cancelText: 'Stay'
-      });
-      
-      if (confirmed) {
-        window.location.assign(target.href);
-      }
-    };
-
-    // 3. Browser back/forward buttons: preserve the user's current entry while the async confirmation is shown.
-    // EFFECT DEPENDENCIES: isDirty/warningMessage/confirm are included because the listener closes over all three values.
-    const handlePopState = async () => {
-      if (!isDirty) return;
-
-      window.history.pushState({ superadminDirtyGuard: true }, '', window.location.href);
-      const confirmed = await confirm({
-        title: 'Unsaved Changes',
-        message: warningMessage,
-        type: 'warning',
-        confirmText: 'Leave Page',
-        cancelText: 'Stay',
-      });
-
-      if (confirmed) {
-        window.removeEventListener('popstate', handlePopState);
-        window.history.back();
-      } else {
-        window.history.pushState({ superadminDirtyGuard: true }, '', window.location.href);
-      }
-    };
-
-    if (isDirty) {
-      window.history.pushState(null, '', window.location.href);
-      window.addEventListener('beforeunload', handleBeforeUnload);
-      document.addEventListener('click', handleAnchorClick, { capture: true });
-      window.addEventListener('popstate', handlePopState);
-    }
-
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-      document.removeEventListener('click', handleAnchorClick, { capture: true });
-      window.removeEventListener('popstate', handlePopState);
-    };
-  }, [isDirty, warningMessage, confirm]);
+export function useSuperadminUnsavedChangesGuard(isDirty: boolean, warningMessage = 'You have unsaved changes. Are you sure you want to leave? Your changes will be lost.') {
+    const { confirm } = useSuperadminConfirm(); const dirtyRef=useRef(isDirty); const bypassRef=useRef(false); dirtyRef.current=isDirty;
+    const ask=useCallback(()=>confirm({title:'Unsaved Changes',message:warningMessage,type:'warning',confirmText:'Leave Page',cancelText:'Stay'}),[confirm,warningMessage]);
+    useEffect(()=>{const beforeUnload=(event:BeforeUnloadEvent)=>{if(!dirtyRef.current||bypassRef.current)return;event.preventDefault();event.returnValue='';};
+        const clickCapture=async(event:MouseEvent)=>{if(!dirtyRef.current||bypassRef.current)return;const target=(event.target as HTMLElement).closest('a') as HTMLAnchorElement|null;if(!target?.href||target.target==='_blank'||target.origin!==window.location.origin||target.href===window.location.href)return;event.preventDefault();event.stopPropagation();if(await ask()){bypassRef.current=true;window.location.assign(target.href);}};
+        window.addEventListener('beforeunload',beforeUnload);document.addEventListener('click',clickCapture,true);
+        return()=>{window.removeEventListener('beforeunload',beforeUnload);document.removeEventListener('click',clickCapture,true);};
+    },[ask]);
 }
-

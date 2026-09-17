@@ -1,11 +1,10 @@
 import { z } from 'zod';
-// RESPONSIBILITY: TypeScript types for the Tenant Messaging module.
-
+// RESPONSIBILITY: TypeScript and runtime contracts for the Superadmin tenant messaging module.
 export type MessageChannel = 'EMAIL' | 'SMS' | 'IN_APP';
 export type MessageStatus = 'SENT' | 'DRAFT' | 'FAILED' | 'SCHEDULED';
 export type NotificationType = 'INFO' | 'WARNING' | 'CRITICAL';
 
-/** Minimal tenant shape used by the messaging module — self-contained, no cross-module import. */
+/** Tenant-level recipients only. Superadmin messaging never addresses gym members. */
 export interface MessagingTenant {
   id: string;
   name: string;
@@ -34,9 +33,7 @@ export interface SuperadminNotification {
   createdAt: string;
 }
 
-/** Tab identifiers for the messaging page. */
 export type MessagingTab = 'messages' | 'notifications';
-
 
 export const TenantMessageSchema = z.object({
   id: z.string(),
@@ -48,7 +45,7 @@ export const TenantMessageSchema = z.object({
   status: z.enum(['SENT', 'DRAFT', 'FAILED', 'SCHEDULED']),
   sentAt: z.string().nullable(),
   scheduledAt: z.string().nullable(),
-  createdAt: z.string()
+  createdAt: z.string(),
 });
 
 export const SuperadminNotificationSchema = z.object({
@@ -57,11 +54,21 @@ export const SuperadminNotificationSchema = z.object({
   body: z.string(),
   type: z.enum(['INFO', 'WARNING', 'CRITICAL']),
   read: z.boolean(),
-  createdAt: z.string()
+  createdAt: z.string(),
 });
 
 export const MessagingTenantSchema = z.object({
   id: z.string(),
   name: z.string(),
-  plan: z.string()
+  plan: z.string(),
 });
+
+export const TenantMessageCreatePayloadSchema = z.object({
+  tenantId: z.string().min(1),
+  tenantName: z.string().min(1),
+  channel: z.enum(['EMAIL', 'SMS', 'IN_APP']),
+  subject: z.string().trim().min(1).max(200),
+  body: z.string().trim().min(1).max(5000),
+});
+
+export type TenantMessageCreatePayload = z.infer<typeof TenantMessageCreatePayloadSchema>;

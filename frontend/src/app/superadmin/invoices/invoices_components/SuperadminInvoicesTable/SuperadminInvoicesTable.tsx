@@ -1,30 +1,25 @@
-'use client';
 // RESPONSIBILITY: Renders the SuperadminInvoicesTable component.
+'use client';
 import React, { useState } from 'react';
 import type { SaaSInvoice } from '@/app/superadmin/invoices/superadmin_invoices_types/superadmin_invoices_types';
 import SuperadminInvoicesTableRow from '@/app/superadmin/invoices/invoices_components/SuperadminInvoicesTable/SuperadminInvoicesTableRow';
 import SuperadminInvoicesEmptyState from '@/app/superadmin/invoices/invoices_components/SuperadminInvoicesEmptyState/SuperadminInvoicesEmptyState';
 import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
-
 interface InvoicesTableProps {
-  invoices: SaaSInvoice[];
-  onLogPaymentClick: () => void;
-  currentPage: number;
-  totalPages: number;
-  onPageChange: (page: number) => void;
+    invoices: SaaSInvoice[];
+    onLogPaymentClick: () => void;
+    currentPage: number;
+    totalPages: number;
+    onPageChange: (page: number) => void;
 }
-
 const ITEMS_PER_PAGE = 10;
 // Rule 68: TABLE_COLUMN_COUNT must match <th> count AND colSpan on empty state
 // Columns: Invoice ID | Gym | Plan | Type | Amount | Status | Date | Actions = 8
 const TABLE_COLUMN_COUNT = 9;
-
 export default function SuperadminInvoicesTable({ invoices, onLogPaymentClick, currentPage, totalPages, onPageChange }: InvoicesTableProps) {
-  // Server-side pagination is now used.
-  const paginatedInvoices = invoices;
-
-  return (
-    <div className="flex flex-col min-h-96">
+    // Server-side pagination is now used.
+    const paginatedInvoices = invoices;
+    return (<div className="flex flex-col min-h-96">
       <div className="overflow-x-auto flex-1">
         <table className="w-full text-left border-collapse min-w-full">
           <thead>
@@ -41,28 +36,14 @@ export default function SuperadminInvoicesTable({ invoices, onLogPaymentClick, c
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
-            {paginatedInvoices.length === 0 ? (
-              <tr>
-                <td colSpan={TABLE_COLUMN_COUNT}><SuperadminInvoicesEmptyState onLogPaymentClick={onLogPaymentClick} /></td>
-              </tr>
-            ) : (
-              paginatedInvoices.map((inv) => (
-                <SuperadminInvoicesTableRow key={inv.id} invoice={inv} />
-              ))
-            )}
+            {paginatedInvoices.length === 0 ? (<tr>
+                <td colSpan={TABLE_COLUMN_COUNT}><SuperadminInvoicesEmptyState onLogPaymentClick={onLogPaymentClick}/></td>
+              </tr>) : (paginatedInvoices.map((inv) => (<SuperadminInvoicesTableRow key={inv.id} invoice={inv}/>)))}
           </tbody>
         </table>
       </div>
-      {totalPages > 1 && (
-        <div className="p-4 border-t border-border">
-          <SuperadminPagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={onPageChange}
-          />
-        </div>
-      )}
-    </div>
-  );
+      {totalPages > 1 && (<div className="p-4 border-t border-border">
+          <SuperadminPagination currentPage={currentPage} totalPages={totalPages} onPageChange={onPageChange}/>
+        </div>)}
+    </div>);
 }
-

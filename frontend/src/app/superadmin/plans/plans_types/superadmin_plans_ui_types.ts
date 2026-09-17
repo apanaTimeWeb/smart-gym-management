@@ -1,5 +1,5 @@
 export interface SuperadminPlansListDestructiveActionTarget {
-  id: string;
-  name: string;
-  activeTenants?: number;
+    id: string;
+    name: string;
+    activeTenants?: number;
 }

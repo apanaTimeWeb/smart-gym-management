@@ -7,17 +7,23 @@ This Superadmin feature owns the `messaging` route and its feature-specific UI, 
 
 | Folder | Responsibility | Key files |
 |---|---|---|
-| `__tests__/` | Owns the feature responsibility represented by this folder. | `superadmin_messaging_basic.test.tsx` |
-| `messaging_api/` | Owns the feature responsibility represented by this folder. | `superadmin_messaging_api.ts` |
-| `messaging_components/` | Owns the feature responsibility represented by this folder. | `SuperadminMessagingClient.tsx`, `SuperadminMessagingComposeModal.tsx`, `SuperadminMessagingMessagesTab.tsx`, `SuperadminMessagingNotificationsTab.tsx`, `SuperadminMessagingTenantDropdown.tsx` |
-| `messaging_mocks/` | Owns the feature responsibility represented by this folder. | `SuperadminMessagingMockHandlers.ts` |
-| `messaging_types/` | Owns the feature responsibility represented by this folder. | `SuperadminMessagingConstants.ts`, `superadmin_messaging_types.ts` |
+| `__tests__/` | Contract/smoke coverage for the feature. | `superadmin_messaging_basic.test.tsx` |
+| `messaging_api/` | Owns API URL/query/payload contracts and response validation. | `superadmin_messaging_api.ts` |
+| `messaging_components/` | Owns messaging presentation and form controls. | `SuperadminMessagingClient.tsx`, `SuperadminMessagingComposeModal.tsx`, `SuperadminMessagingMessagesTab.tsx`, `SuperadminMessagingNotificationsTab.tsx`, `SuperadminMessagingTenantDropdown.tsx` |
+| `messaging_mocks/` | Owns mutable MSW state and request/response behavior for core messaging. | `SuperadminMessagingMockHandlers.ts` |
+| `messaging_types/` | Owns core message/notification/tenant schemas and display constants. | `SuperadminMessagingConstants.ts`, `superadmin_messaging_types.ts` |
+| `messaging_whatsapp_api/` | Owns the free WhatsApp bulk campaign API boundary. | `superadmin_messaging_whatsapp_api.ts` |
+| `messaging_whatsapp_components/` | Owns the guided bulk WhatsApp UI. | `SuperadminMessagingV1WhatsAppBulkCenter.tsx`, focused child panels |
+| `messaging_whatsapp_mocks/` | Owns feature fixtures and MSW handlers for the WhatsApp flow. | `SuperadminMessagingV1WhatsAppMockFixtures.ts`, `SuperadminMessagingV1WhatsAppMockHandlers.ts` |
+| `messaging_whatsapp_types/` | Owns runtime schemas and types for WhatsApp audiences, templates, recipients, campaigns and queue state. | `SuperadminMessagingV1WhatsAppTypes.ts` |
+| `messaging_whatsapp_utils/` | Owns personalization, click-to-chat, audience matching and TanStack Query hook logic. | `SuperadminMessagingV1WhatsAppUtils.ts`, `useSuperadminMessagingV1WhatsApp.ts` |
 
 ## Feature Inventory
 
 | Feature | Route | User action | Key API/client owner | Status |
 |---|---|---|---|---|
-| `messaging` | `/superadmin/messaging` | Use the route's controls to perform the operations implemented by the current client UI. | `feature-local API files` | Implemented in source; runtime integration **NOT VERIFIED** without installing project dependencies. |
+| `messaging` | `/superadmin/messaging` | Search/filter/date-range/paginate tenant messages, mark notifications read, and compose a tenant-level message. | `useSuperadminMessaging.ts` + `superadmin_messaging_api.ts` | Implemented in source; runtime integration **NOT VERIFIED** without browser/tooling execution. |
+| `free-smart-whatsapp` | `/superadmin/messaging` | Build a personalized WhatsApp campaign queue for tenant owners, admins, and managers and guide the operator through each chat. | `messaging_whatsapp_*` | Implemented in source; runtime integration **NOT VERIFIED** without installing project dependencies. |
 
 ## User Flows & Interactions
 
@@ -34,7 +40,7 @@ This Superadmin feature owns the `messaging` route and its feature-specific UI, 
 4. The UI updates local/query state and shows the resulting feedback.
 
 ## Data and State Architecture
-- **Server state:** TanStack Query where the feature currently uses async queries.
+- **Server state:** TanStack Query for messages, notifications, tenants, and mutations.
 - **UI state:** local `useState` or a feature-scoped Zustand store where present.
 - **URL state:** `useSuperadminUrlState` only where the feature currently uses query-string filters/pagination.
 - **Sibling business dependencies:** must remain zero; shared transport/UI primitives are infrastructure exceptions only.
@@ -43,7 +49,14 @@ This Superadmin feature owns the `messaging` route and its feature-specific UI, 
 
 | Function | Method | Endpoint expression | API file |
 |---|---|---|---|
-| No feature API functions detected | — | — | No API service file detected by static scan |
+| `fetchMessages(params?)` | GET | `MessagingUrlConfig.BACKEND_API.BASE/messages` with query parameters | `messaging_api/superadmin_messaging_api.ts` |
+| `fetchNotifications` | GET | `MessagingUrlConfig.BACKEND_API.BASE/notifications` | `messaging_api/superadmin_messaging_api.ts` |
+| `fetchTenants` | GET | `MessagingUrlConfig.BACKEND_API.BASE/tenants` | `messaging_api/superadmin_messaging_api.ts` |
+| `markNotificationRead` | PATCH | `MessagingUrlConfig.BACKEND_API.BASE/notifications/:id/read` | `messaging_api/superadmin_messaging_api.ts` |
+| `markAllNotificationsRead` | PATCH | `MessagingUrlConfig.BACKEND_API.BASE/notifications/read-all` | `messaging_api/superadmin_messaging_api.ts` |
+| `sendMessage` | POST | `MessagingUrlConfig.BACKEND_API.BASE/messages` | `messaging_api/superadmin_messaging_api.ts` |
+| `fetchSuperadminWhatsAppBulkCenter` | GET | `MessagingUrlConfig.BACKEND_API.WHATSAPP_BULK_CENTER` | `messaging_whatsapp_api/superadmin_messaging_whatsapp_api.ts` |
+| `createSuperadminWhatsAppCampaign` | POST | `MessagingUrlConfig.BACKEND_API.WHATSAPP_CAMPAIGNS` | `messaging_whatsapp_api/superadmin_messaging_whatsapp_api.ts` |
 
 ## UI Data Requirements
 
@@ -66,6 +79,9 @@ Observed schema/type fields in this feature are listed below. Any UI field not r
 | `read` | Feature-owned schema/type file |
 | `name` | Feature-owned schema/type file |
 | `plan` | Feature-owned schema/type file |
+
+## Free Smart Bulk WhatsApp Data Requirements
+The WhatsApp extension consumes these feature-owned records: `templates`, `audiences`, `recipients`, `campaigns`, and `variables`. Recipient records include `tenantId`, `tenantName`, `contactName`, `contactRole`, `phone`, `audienceKey`, nullable subscription/onboarding/maintenance fields, support/dashboard links, and `whatsappOptIn`. Campaign records include queue totals, sent/skipped counts, status, and creation time.
 
 ## Permissions and Security
 - **Role:** `SUPERADMIN` UI.
@@ -91,15 +107,15 @@ Observed schema/type fields in this feature are listed below. Any UI field not r
 | File | Responsibility |
 |---|---|
 | `__tests__/superadmin_messaging_basic.test.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
-| `error.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
-| `loading.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
-| `messaging_components/SuperadminMessagingClient.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
-| `messaging_components/SuperadminMessagingComposeModal.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
-| `messaging_components/SuperadminMessagingMessagesTab.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
-| `messaging_components/SuperadminMessagingNotificationsTab.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
-| `messaging_components/SuperadminMessagingTenantDropdown.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
-| `not-found.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
-| `page.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `error.tsx` | Route-level error boundary for messaging. |
+| `loading.tsx` | Route-level loading UI for messaging. |
+| `messaging_components/SuperadminMessagingClient.tsx` | Renders core tenant messaging and notification flows from `useSuperadminMessaging`. |
+| `messaging_components/SuperadminMessagingComposeModal.tsx` | React Hook Form + Zod tenant message composer. |
+| `messaging_components/SuperadminMessagingMessagesTab.tsx` | Search/filter/date-range/pagination table for tenant messages. |
+| `messaging_components/SuperadminMessagingNotificationsTab.tsx` | Notification list with mark-read actions. |
+| `messaging_components/SuperadminMessagingTenantDropdown.tsx` | Searchable tenant-only recipient selector with keyboard-reachable options. |
+| `not-found.tsx` | Route-level not-found UI. |
+| `page.tsx` | Route entry that mounts the core Messaging client and supplementary V1 insights/WhatsApp panels. |
 
 ## Rule Compliance Checklist
 - [x] Feature has a route-level `page.tsx` or the route does not require one.
@@ -119,7 +135,3 @@ This feature map is generated from the current repository structure. Where the c
 ## Module-Owned MSW Fixtures
 
 Feature-specific mock fixtures and MSW handlers are owned by this feature directory. API responses consumed by UI must remain complete for all documented table fields, KPIs, charts, filters, detail views and mutation messages. Global MSW bootstrap is registration infrastructure only.
-
-## V1 Repair Notes
-
-Nullable display fields use the canonical `displayValue()` formatter. Search input state remains separate from the 300ms debounced value used by server-backed query parameters/query keys.

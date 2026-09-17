@@ -1,110 +1,88 @@
+// RESPONSIBILITY: Renders the searchable, filterable, URL-backed Superadmin tenant message table.
 'use client';
-// RESPONSIBILITY: Renders the Messaging Messages Tab component and its associated UI logic.
-import { formatDate, formatDateTime } from '@/lib/formatters';
-import { Search, Mail, MessageSquare, Bell } from 'lucide-react';
-import type { TenantMessage, MessageChannel } from '@/app/superadmin/messaging/messaging_types/superadmin_messaging_types';
-import { CHANNEL_STYLES, MESSAGE_STATUS_STYLES } from '@/app/superadmin/messaging/messaging_types/SuperadminMessagingConstants';
-import SuperadminDateRangePicker from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminDateRangePicker';
-import { displayValue } from '@/lib/formatters';
 
-export function SuperadminMessagingMessagesTab({
-  search,
-  setSearch,
-  channelFilter,
-  setChannelFilter,
-  setStartDate,
-  setEndDate,
-  filteredMessages,
-}: {
+import { Bell, Mail, MessageSquare, Search } from 'lucide-react';
+import { formatDateTime } from '@/lib/formatters';
+import SuperadminDateRangePicker from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminDateRangePicker';
+import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
+import type { MessageChannel, TenantMessage } from '@/app/superadmin/messaging/messaging_types/superadmin_messaging_types';
+import { CHANNEL_STYLES, MESSAGE_STATUS_STYLES } from '@/app/superadmin/messaging/messaging_types/SuperadminMessagingConstants';
+
+type Props = {
   search: string;
-  setSearch: (s: string) => void;
+  setSearch: (value: string) => void;
   channelFilter: MessageChannel | 'ALL';
-  setChannelFilter: (c: MessageChannel | 'ALL') => void;
-  setStartDate: (s: string) => void;
-  setEndDate: (s: string) => void;
-  filteredMessages: TenantMessage[];
-}) {
+  setChannelFilter: (value: MessageChannel | 'ALL') => void;
+  setRange: (start: string, end: string) => void;
+  messages: TenantMessage[];
+  currentPage: number;
+  totalPages: number;
+  totalItems: number;
+  onPageChange: (page: number) => void;
+  isFetching: boolean;
+};
+
+export function SuperadminMessagingMessagesTab({ search, setSearch, channelFilter, setChannelFilter, setRange, messages, currentPage, totalPages, totalItems, onPageChange, isFetching }: Props) {
   return (
     <div className="space-y-4">
-      <div className="flex flex-col sm:flex-row gap-3">
-        <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary" />
-          <input
-            type="text"
-            placeholder="Search gym or subject..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary"
-          />
-        </div>
-        <div className="flex gap-2 flex-wrap">
-          {(['ALL', 'EMAIL', 'SMS', 'IN_APP'] as const).map((ch) => (
-            <button
-              key={ch}
-              onClick={() => setChannelFilter(ch)}
-              className={`px-3 py-2 rounded-lg text-xs font-medium border motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
-                channelFilter === ch
-                  ? 'bg-primary/10 text-primary border-primary/30'
-                  : 'bg-input text-secondary border-border hover:text-foreground'
-              }`}
-            >
-              {ch}
-            </button>
-          ))}
-        </div>
-        <div className="flex gap-2">
-          <SuperadminDateRangePicker 
-            onRangeChange={(start, end) => {
-              setStartDate(start);
-              setEndDate(end);
-            }}
-          />
+      <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
+        <label className="relative block w-full max-w-md">
+          <span className="sr-only">Search tenant messages</span>
+          <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-secondary" size={18} strokeWidth={2} />
+          <input type="search" value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search tenant, subject, or message..." className="w-full rounded-lg border border-border bg-input py-2 pl-10 pr-3 text-sm text-foreground focus:border-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary" />
+        </label>
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <div className="flex flex-wrap gap-2">
+            {(['ALL', 'EMAIL', 'SMS', 'IN_APP'] as const).map((channel) => (
+              <button key={channel} type="button" onClick={() => setChannelFilter(channel)} className={`rounded-lg border px-3 py-2 text-xs font-medium motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${channelFilter === channel ? 'border-primary/30 bg-primary/10 text-primary' : 'border-border bg-input text-secondary hover:text-foreground'}`}>
+                {channel}
+              </button>
+            ))}
+          </div>
+          <SuperadminDateRangePicker onRangeChange={setRange} />
         </div>
       </div>
 
-      <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
+      <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
+            <caption className="sr-only">Superadmin tenant messages</caption>
             <thead>
               <tr className="border-b border-border bg-input/40">
-                <th className="text-left px-4 py-3 text-xs font-semibold text-secondary uppercase tracking-wider">Gym</th>
-                <th className="text-left px-4 py-3 text-xs font-semibold text-secondary uppercase tracking-wider">Channel</th>
-                <th className="text-left px-4 py-3 text-xs font-semibold text-secondary uppercase tracking-wider">Subject</th>
-                <th className="text-left px-4 py-3 text-xs font-semibold text-secondary uppercase tracking-wider">Status</th>
-                <th className="text-left px-4 py-3 text-xs font-semibold text-secondary uppercase tracking-wider">Sent At</th>
+                <th scope="col" className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-secondary">Tenant</th>
+                <th scope="col" className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-secondary">Channel</th>
+                <th scope="col" className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-secondary">Subject</th>
+                <th scope="col" className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-secondary">Status</th>
+                <th scope="col" className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-secondary">Sent At</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {filteredMessages.map((msg) => (
-                <tr key={msg.id} className="hover:bg-input/30 motion-safe:transition-colors">
-                  <td className="px-4 py-3 font-medium text-foreground">{msg.tenantName}</td>
+              {messages.map((message) => (
+                <tr key={message.id} className="motion-safe:transition-colors hover:bg-input/30">
+                  <td className="px-4 py-3 font-medium text-foreground">{message.tenantName}</td>
                   <td className="px-4 py-3">
-                    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold ${CHANNEL_STYLES[msg.channel]}`}>
-                      {msg.channel === 'EMAIL' && <Mail size={11} />}
-                      {msg.channel === 'SMS' && <MessageSquare size={11} />}
-                      {msg.channel === 'IN_APP' && <Bell size={11} />}
-                      {msg.channel}
+                    <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold ${CHANNEL_STYLES[message.channel]}`}>
+                      {message.channel === 'EMAIL' && <Mail size={11} aria-hidden="true" />}
+                      {message.channel === 'SMS' && <MessageSquare size={11} aria-hidden="true" />}
+                      {message.channel === 'IN_APP' && <Bell size={11} aria-hidden="true" />}
+                      {message.channel}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-secondary max-w-xs truncate">{msg.subject}</td>
-                  <td className="px-4 py-3">
-                    <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-semibold ${MESSAGE_STATUS_STYLES[msg.status]}`}>
-                      {msg.status}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-secondary text-xs">
-                    {displayValue(msg.sentAt ? formatDateTime(msg.sentAt) : null)}
-                  </td>
+                  <td className="max-w-xs truncate px-4 py-3 text-secondary">{message.subject}</td>
+                  <td className="px-4 py-3"><span className={`inline-flex rounded-full px-2 py-0.5 text-xs font-semibold ${MESSAGE_STATUS_STYLES[message.status]}`}>{message.status}</span></td>
+                  <td className="px-4 py-3 text-xs text-secondary">{message.sentAt ? formatDateTime(message.sentAt) : '—'}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-        {filteredMessages.length === 0 && (
-          <div className="py-16 text-center text-secondary">No messages found.</div>
+
+        {messages.length === 0 && (
+          <div className="px-6 py-16 text-center text-secondary">No messages match the current search and filters.</div>
         )}
+        {isFetching && <div className="border-t border-border px-5 py-2 text-xs text-secondary">Refreshing message results...</div>}
+        <SuperadminPagination currentPage={currentPage} totalPages={totalPages} onPageChange={onPageChange} totalItems={totalItems} itemsPerPage={10} />
       </div>
     </div>
   );
 }
-
