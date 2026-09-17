@@ -49,7 +49,7 @@ Admins can export the filtered log as a CSV for compliance reporting.
 
 ## Data and State Architecture
 
-- **State pattern:** Zustand for UI filter/pagination/drawer state. Direct mock API calls (no TanStack Query yet).
+- **State pattern:** Zustand owns UI filters/pagination/drawer state. TanStack Query owns server state and module-owned MSW handlers/fixtures provide frontend-first demo responses.
 - **Zustand store:** `useAdminAuditLogsStore.ts` — holds: `dateFrom`, `dateTo`, `actorFilter`, `actionFilter`, `entityFilter`, `currentPage`, `selectedLogId`, `isDrawerOpen`
 - **Logic hook:** `useAdminAuditLogsLogic.ts` — fetches on filter change, applies server-side pagination
 - **Local-storage keys:** None
@@ -57,7 +57,7 @@ Admins can export the filtered log as a CSV for compliance reporting.
 
 ## API Contract
 
-All calls go through mock functions in `AdminAuditApi.ts`. Replace with `apiFetch` when backend is ready.
+All calls go through the typed `AdminAuditApi.ts` client and `apiFetch`; module-owned MSW handlers provide frontend-first demo responses.
 Backend path uses hyphens: `/admin/audit-logs` (not underscores). Always use `AdminAuditLogsUrlConfig`.
 
 | Function | Method | Endpoint | Request | Response `data` type |

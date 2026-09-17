@@ -69,8 +69,8 @@ export default function AdminSidebar({ isCollapsed, setIsCollapsed }: AdminSideb
         />
       )}
 
-      <aside className={`fixed left-0 top-0 h-full bg-sidebar border-r border-border z-50 flex flex-col motion-safe:transition-all motion-safe:duration-300 ${
-        isCollapsed ? 'lg:w-20' : 'lg:w-64'
+      <aside className={`fixed left-0 top-16 h-[calc(100vh-4rem)] bg-sidebar border-r border-border z-20 flex flex-col motion-safe:transition-all motion-safe:duration-300 ${
+        isCollapsed ? 'lg:w-[60px]' : 'lg:w-60'
       } ${
         isMobileOpen ? 'w-64 translate-x-0' : 'w-64 -translate-x-full lg:translate-x-0'
       }`}>
@@ -100,7 +100,7 @@ export default function AdminSidebar({ isCollapsed, setIsCollapsed }: AdminSideb
                 placeholder="Search menu..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="block w-full pl-9 pr-3 py-2 border border-border rounded-lg leading-5 bg-input text-foreground placeholder-secondary focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm motion-safe:transition-colors"
+                className="block w-full pl-9 pr-3 py-2 min-h-11 border border-border rounded-lg leading-5 bg-input text-foreground placeholder-secondary focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm motion-safe:transition-colors"
               />
             </div>
           </div>

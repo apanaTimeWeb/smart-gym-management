@@ -4,14 +4,7 @@
 import { useEffect, useState } from 'react';
 import { CheckCircle, XCircle, MessageCircle, Mail, Info, AlertTriangle, X } from 'lucide-react';
 
-export type ToastType = 'whatsapp' | 'email' | 'error' | 'success' | 'info' | 'warning';
-
-interface AdminToastProps {
-  id?: string;
-  message: string;
-  type: ToastType;
-  onClose: () => void;
-}
+import type { AdminToastProps, AdminToastType } from '@/app/admin/admin_components/AdminFeedback/AdminToastTypes';
 
 export default function AdminToast({ id, message, type, onClose }: AdminToastProps) {
   const [visible, setVisible] = useState(true);
@@ -28,7 +21,7 @@ export default function AdminToast({ id, message, type, onClose }: AdminToastPro
 
   if (!visible) return null;
 
-  const config: Record<ToastType, { icon: React.ReactNode, borderClass: string, colorClass: string, shadow: string }> = {
+  const config: Record<AdminToastType, { icon: React.ReactNode, borderClass: string, colorClass: string, shadow: string }> = {
     success: { icon: <CheckCircle size={20} />, borderClass: 'border-l-success', colorClass: 'text-success', shadow: 'shadow-lg' },
     error: { icon: <XCircle size={20} />, borderClass: 'border-l-danger', colorClass: 'text-danger', shadow: 'shadow-lg' },
     whatsapp: { icon: <MessageCircle size={20} />, borderClass: 'border-l-success', colorClass: 'text-success', shadow: 'shadow-lg' },
@@ -54,7 +47,8 @@ export default function AdminToast({ id, message, type, onClose }: AdminToastPro
           setVisible(false);
           setTimeout(onClose, 300);
         }}
-        className="text-secondary hover:text-foreground flex-shrink-0 motion-safe:transition-colors p-1 rounded-md hover:bg-card/10"
+        className="min-h-11 min-w-11 inline-flex items-center justify-center text-secondary hover:text-foreground flex-shrink-0 motion-safe:transition-colors p-1 rounded-md hover:bg-card/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+        aria-label="Dismiss notification"
       >
         <X size={16} />
       </button>

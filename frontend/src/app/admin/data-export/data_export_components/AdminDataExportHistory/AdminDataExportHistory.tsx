@@ -8,7 +8,7 @@ import { AdminTableSkeleton } from '@/app/admin/admin_components/AdminShared/Adm
 import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
 import { AdminSearchableDropdown } from '@/app/admin/admin_components/AdminShared/AdminSearchableDropdown';
 import { EXPORT_STATUS_OPTIONS } from '@/app/admin/data-export/data_export_utils/AdminDataExportSharedConstants';
-import type { DataExportSortDirection, DataExportSortKey, ExportJob } from '@/app/admin/data-export/data_export_types/AdminDataExportTypes';
+import type { DataExportSortDirection, DataExportSortKey, ExportJob, ExportStatus } from '@/app/admin/data-export/data_export_types/AdminDataExportTypes';
 
 const STATUS_STYLES: Record<string, string> = { completed: 'bg-success-bg text-success', processing: 'bg-warning-bg text-warning', failed: 'bg-danger-bg text-danger' };
 const STATUS_ICONS: Record<string, React.ReactNode> = { completed: <CheckCircle size={11} />, processing: <Loader2 size={11} className="motion-safe:animate-spin" />, failed: <XCircle size={11} /> };
@@ -39,22 +39,22 @@ export default function AdminDataExportHistory() {
     <div className="space-y-3">
       <div className="flex items-center justify-between flex-wrap gap-3">
         <p className="text-sm font-semibold text-foreground">Export History</p>
-        <div className="w-44"><AdminSearchableDropdown options={EXPORT_STATUS_OPTIONS} value={logic.statusFilter} onChange={(val) => logic.setStatusFilter(val as any)} placeholder="All Status" /></div>
+        <div className="w-44"><AdminSearchableDropdown options={EXPORT_STATUS_OPTIONS} value={logic.statusFilter} onChange={(val) => { if (val === 'all' || val === 'completed' || val === 'processing' || val === 'failed') logic.setStatusFilter(val as ExportStatus | 'all'); }} placeholder="All Status" /></div>
       </div>
       {logic.status === 'pending' ? <AdminTableSkeleton rows={5} cols={HEADERS.length} /> : (
         <div className="bg-card rounded-xl border border-border overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full">
+            <table data-admin-responsive-table className="w-full">
               <thead><tr className="bg-primary/5 border-b border-border">
                 {HEADERS.map((header) => (
-                  <th key={header.key} className={`px-4 py-3 text-left text-xs font-semibold text-secondary uppercase tracking-wider whitespace-nowrap ${header.sortable ? 'cursor-pointer' : ''}`} onClick={() => header.sortable && logic.onSort(header.key as DataExportSortKey)}>
+                  <th role="button" tabIndex={0} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); event.currentTarget.click(); } }}  key={header.key} className={`px-4 py-3 text-left text-xs font-semibold text-secondary uppercase tracking-wider whitespace-nowrap ${header.sortable ? 'cursor-pointer' : ''}`} onClick={() => header.sortable && logic.onSort(header.key as DataExportSortKey)}>
                     <div className="flex items-center gap-1.5">{header.label}{header.sortable && getSortIcon(header.key as DataExportSortKey, logic.sortKey, logic.sortDir)}</div>
                   </th>
                 ))}
               </tr></thead>
               <tbody className="divide-y divide-border">
                 {logic.jobs.length === 0 ? <tr><td colSpan={HEADERS.length} className="px-4 py-16 text-center text-sm text-secondary">No export jobs found for the current filters.</td></tr> : logic.jobs.map((job) => (
-                  <tr key={job.id} className="hover:bg-primary/5 motion-safe:transition-colors group cursor-pointer" tabIndex={0} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') downloadExport(job); }}>
+                  <tr key={job.id} className="hover:bg-primary/5 motion-safe:transition-colors group">
                     <td className="px-4 py-3 text-sm font-medium text-foreground">{DATA_TYPE_LABELS[job.dataType] ?? job.dataType}</td>
                     <td className="px-4 py-3 text-sm text-secondary uppercase">{job.format}</td>
                     <td className="px-4 py-3 text-xs text-secondary whitespace-nowrap"><span className="block max-w-36 truncate">{job.gymNames.join(', ')}</span><span>{job.dateFrom} → {job.dateTo}</span></td>

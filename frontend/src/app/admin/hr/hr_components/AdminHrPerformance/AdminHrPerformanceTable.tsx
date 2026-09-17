@@ -33,11 +33,11 @@ export default function AdminHrPerformanceTable({
   return (
     <div className="bg-card border border-border rounded-xl overflow-hidden">
       <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse">
+        <table data-admin-responsive-table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-primary/5 border-b border-border">
               {PERFORMANCE_TABLE_HEADERS.map((h) => (
-                <th
+                <th role="button" tabIndex={0} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); event.currentTarget.click(); } }} 
                   key={h.key}
                   className={`px-4 py-3 text-xs font-semibold text-secondary uppercase tracking-wider select-none whitespace-nowrap ${
                     h.sortable ? 'cursor-pointer hover:text-foreground motion-safe:transition-colors' : ''
@@ -66,7 +66,7 @@ export default function AdminHrPerformanceTable({
                 const statusCfg = PERFORMANCE_STATUS_CONFIG[staff.status];
                 
                 return (
-                  <tr key={staff.id} className="hover:bg-input motion-safe:transition-colors cursor-pointer">
+                  <tr key={staff.id} className="hover:bg-input motion-safe:transition-colors">
                     {/* Staff Name & Branch */}
                     <td className="px-4 py-3.5">
                       <div className="flex items-center gap-2.5">

@@ -49,7 +49,7 @@ The Admin Attendance module gives the gym owner (Admin role) a **read-only** dai
 
 ## Data and State Architecture
 
-- **State pattern:** Zustand for UI filter/pagination state. Direct mock API calls (no TanStack Query yet).
+- **State pattern:** URL state for shareable filters/pagination where applicable; TanStack Query owns server state. Module-owned MSW handlers/fixtures provide frontend-first demo responses.
 - **Zustand store:** `useAdminAttendanceStore.ts` — holds: `search`, `statusFilter`, `branchFilter`, `dateRange`, `currentPage`
 - **Logic hook:** `useAdminAttendanceLogic.ts` — fetches all data on mount, applies client-side filtering + pagination
 - **Local-storage keys:** None

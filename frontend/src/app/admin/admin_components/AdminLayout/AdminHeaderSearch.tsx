@@ -39,7 +39,7 @@ export function AdminHeaderSearch() {
         aria-label="Search members globally"
       />
       {showSearch && searchQuery && (
-        <div className="absolute top-full mt-2 w-72 bg-popover border border-border rounded-xl shadow-2xl z-50 overflow-hidden">
+        <div className="absolute top-full mt-2 w-72 bg-popover border border-border rounded-xl shadow-2xl z-30 overflow-hidden">
           <div className="flex justify-between items-center px-3 py-2 border-b border-border">
             <p className="text-xs text-secondary uppercase font-bold tracking-wider">
               {searchResults.length > 0 ? `${searchResults.length} result${searchResults.length > 1 ? 's' : ''}` : 'No results'}
@@ -55,7 +55,7 @@ export function AdminHeaderSearch() {
               {searchResults.map((m) => (
                 <Link
                   key={m.id}
-                  href={AdminMembersUrlConfig.root}
+                  href={AdminMembersUrlConfig.detail(m.id)}
                   onClick={() => { setSearchQuery(''); setShowSearch(false); }}
                   className="flex items-center justify-between px-3 py-2.5 hover:bg-input motion-safe:transition-colors border-b border-border last:border-0"
                 >

@@ -36,7 +36,7 @@ export default function AdminReportsPayroll() {
           <h2 className="text-base font-semibold text-foreground">Staff Payroll by Gym</h2>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table data-admin-responsive-table className="w-full">
             <thead>
               <tr className="bg-primary/5">
                 {['Gym', 'Staff Count', 'Total Payroll', 'Paid', 'Pending', 'Advances', 'Status'].map(h => (

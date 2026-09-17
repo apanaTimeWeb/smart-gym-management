@@ -1,36 +1,13 @@
 "use client";
 // RESPONSIBILITY: Manages the GST & Tax settings tab.
-import { useForm, useWatch } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { GstTaxSettingsSchema } from '@/app/admin/settings/settings_types/AdminSettings.schema';
 import type { GstTaxSettingsType } from '@/app/admin/settings/settings_types/AdminSettingsTypes';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { settingsApi } from '@/app/admin/settings/settings_api/AdminSettingsApi';
-import toast from 'react-hot-toast';
+import { useAdminSettingsGstForm } from '@/app/admin/settings/settings_context/useAdminSettingsForms';
 import { Save, RefreshCw } from 'lucide-react';
-import { useUnsavedChangesGuard } from '@/app/admin/admin_utils/useAdminUnsavedChangesGuard';
 import { GST_STATE_CODES, TAX_RATE_OPTIONS } from '@/app/admin/settings/settings_utils/AdminSettingsSharedConstants';
 import { AdminSettingsToggleSwitch } from '@/app/admin/settings/settings_components/AdminSettingsShared/AdminSettingsToggleSwitch';
 
 export function AdminSettingsGST({ initialData }: { initialData: GstTaxSettingsType }) {
-  const queryClient = useQueryClient();
-  const form = useForm<GstTaxSettingsType>({
-    resolver: zodResolver(GstTaxSettingsSchema),
-  });
-
-  const formValues = useWatch({ control: form.control });
-
-  useUnsavedChangesGuard(form.formState.isDirty);
-
-  const mutation = useMutation({
-    mutationFn: (data: GstTaxSettingsType) => settingsApi.updateSettings({ gst: data }),
-    onSuccess: (res) => {
-      toast.success(res.message, { id: 'settings-gst-save' });
-      queryClient.invalidateQueries({ queryKey: ['admin', 'settings'] });
-      form.reset(form.getValues());
-    },
-    onError: (err) => toast.error((err as Error).message, { id: 'settings-gst-save' }),
-  });
+  const { form, formValues, mutation } = useAdminSettingsGstForm(initialData);
 
   const onSubmit = (data: GstTaxSettingsType) => mutation.mutate(data);
 

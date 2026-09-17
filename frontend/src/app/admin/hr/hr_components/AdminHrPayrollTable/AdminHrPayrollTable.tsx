@@ -3,6 +3,8 @@ import { formatCurrency } from '@/lib/formatters';
 // RESPONSIBILITY: Renders the payroll records table with pay status badges and mark-as-paid inline action.
 
 import { useHrContext } from '@/app/admin/hr/hr_context/AdminHrContext';
+import type { AdminHrPayrollSortKey } from '@/app/admin/hr/hr_types/AdminHrUiTypes';
+import type { AdminSortDirection } from '@/app/admin/admin_types/AdminSortTypes';
 import { useMemo, useState } from 'react';
 import { PAYROLL_TABLE_HEADERS } from '@/app/admin/hr/hr_utils/AdminHrSharedConstants';
 import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
@@ -11,9 +13,8 @@ import { ADMIN_ITEMS_PER_PAGE } from '@/app/admin/admin_url_config';
 
 export default function AdminHrPayrollTable() {
   const { payrolls, search, currentPage, setCurrentPage, setPaymentModal, setShowPayrollModal, status, payrollMonth, staff } = useHrContext();
-  type PayrollSortKey = 'month' | 'amount' | 'paidAmount' | 'pendingAmount' | 'status';
-  const [sortKey, setSortKey] = useState<PayrollSortKey>('month');
-  const [sortDir, setSortDir] = useState<'asc'|'desc'>('desc');
+  const [sortKey, setSortKey] = useState<AdminHrPayrollSortKey>('month');
+  const [sortDir, setSortDir] = useState<AdminSortDirection>('desc');
 
   const filtered = payrolls.filter(p => {
     const nameMatch = (p.staff?.name || '').toLowerCase().includes(search.toLowerCase());
@@ -32,7 +33,7 @@ export default function AdminHrPayrollTable() {
   });
 
     const sorted = useMemo(() => [...filtered].sort((a,b)=>{const av=a[sortKey], bv=b[sortKey]; const result=typeof av==='number'&&typeof bv==='number'?av-bv:String(av??'').localeCompare(String(bv??''),undefined,{numeric:true}); return sortDir==='asc'?result:-result;}), [filtered,sortKey,sortDir]);
-  const handleSort=(key:PayrollSortKey)=>{if(sortKey===key)setSortDir(d=>d==='asc'?'desc':'asc');else{setSortKey(key);setSortDir('asc');}};
+  const handleSort=(key:AdminHrPayrollSortKey)=>{if(sortKey===key)setSortDir(d=>d==='asc'?'desc':'asc');else{setSortKey(key);setSortDir('asc');}};
   const totalPages = Math.ceil(sorted.length / ADMIN_ITEMS_PER_PAGE);
   const currentData = sorted.slice((currentPage - 1) * ADMIN_ITEMS_PER_PAGE, currentPage * ADMIN_ITEMS_PER_PAGE);
 
@@ -40,7 +41,7 @@ export default function AdminHrPayrollTable() {
     return (
       <div className="flex flex-col h-full">
         <div className="overflow-x-auto flex-1">
-          <table className="w-full">
+          <table data-admin-responsive-table className="w-full">
             <thead className="bg-input text-secondary">
               <tr>
                 {PAYROLL_TABLE_HEADERS.map(h => (
@@ -78,7 +79,7 @@ export default function AdminHrPayrollTable() {
         </button>
       </div>
       <div className="overflow-x-auto flex-1">
-        <table className="w-full">
+        <table data-admin-responsive-table className="w-full">
           <thead className="bg-input text-secondary">
             <tr>
               {PAYROLL_TABLE_HEADERS.map(h => (

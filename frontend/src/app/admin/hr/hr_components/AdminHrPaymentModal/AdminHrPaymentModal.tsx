@@ -27,7 +27,7 @@ export default function AdminHrPaymentModal() {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-overlay backdrop-blur-sm p-4 motion-safe:animate-in motion-safe:fade-in motion-safe:duration-200">
+    <div data-admin-dialog="true" role="dialog" aria-modal="true" tabIndex={-1} className="fixed inset-0 z-40 flex items-center justify-center bg-overlay backdrop-blur-sm p-4 motion-safe:animate-in motion-safe:fade-in motion-safe:duration-200">
       <div className="bg-card/95 backdrop-blur-xl rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden motion-safe:animate-in motion-safe:zoom-in-95 motion-safe:duration-200 border border-border/5">
         <div className="p-5 flex justify-between items-center border-b border-border">
           <h3 className="font-bold text-foreground">Pay Salary</h3>

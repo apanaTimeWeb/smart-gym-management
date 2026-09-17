@@ -27,7 +27,7 @@ export default function AdminSubscriptionsInvoices() {
         <span className="text-xs text-secondary">{invoices.length} invoices</span>
       </div>
       <div className="overflow-x-auto">
-        <table className="w-full text-left">
+        <table data-admin-responsive-table className="w-full text-left">
           <thead>
             <tr className="bg-primary/5 border-b border-border">
               {['Invoice #', 'Date', 'Plan', 'Billing', 'Amount', 'Status', ''].map(h => (

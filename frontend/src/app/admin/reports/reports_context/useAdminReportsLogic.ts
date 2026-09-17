@@ -1,19 +1,21 @@
 "use client";
-// RESPONSIBILITY: Custom hook managing async fetching and state for the Reports module.
-// DATA FLOW: page.tsx → AdminReportsMain → useAdminReportsLogic → reportsApi
+// RESPONSIBILITY: Owns Reports server queries and export mutations while the page components remain view-only.
+// DATA FLOW: URL/store filters → TanStack Query → report API → typed data; export action → mutation → feedback/file.
 
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useSearchParams } from 'next/navigation';
+import { adminToast } from '@/app/admin/admin_components/AdminFeedback/AdminToastService';
 import { reportsApi } from '@/app/admin/reports/reports_api/AdminReportsApi';
 import { useAdminReportsStore } from '@/app/admin/reports/reports_store/useAdminReportsStore';
-import type { ReportDateRange } from '@/app/admin/reports/reports_types/AdminReportsTypes';
+import type { AdminReportsExportFormat, AdminReportsExportResponse, ReportDateRange } from '@/app/admin/reports/reports_types/AdminReportsTypes';
 
 export function useAdminReportsLogic() {
   const searchParams = useSearchParams();
+  const queryClient = useQueryClient();
   const dateRange = (searchParams.get('range') as ReportDateRange) || 'this_month';
   const startDate = searchParams.get('startDate') || '';
   const endDate = searchParams.get('endDate') || '';
-  const { selectedGymId } = useAdminReportsStore();
+  const { activeTab, selectedGymId } = useAdminReportsStore();
 
   const reportQuery = useQuery({
     queryKey: ['admin', 'reports', 'list', dateRange, startDate, endDate, selectedGymId],
@@ -21,8 +23,36 @@ export function useAdminReportsLogic() {
     staleTime: 1000 * 60 * 5,
   });
 
-  const status = reportQuery.status;
-  const data = reportQuery.data;
+  const exportMutation = useMutation<AdminReportsExportResponse, Error, AdminReportsExportFormat>({
+    mutationFn: async (format) => {
+      const response = await reportsApi.exportReport({ tab: activeTab, format });
+      if (!response.data?.url || response.data.url === '#') {
+        throw new Error('Export service did not provide a downloadable file.');
+      }
+      return response.data;
+    },
+    onSuccess: (response, format) => {
+      const extension = format === 'excel' ? 'xlsx' : 'pdf';
+      const fileName = response.fileName ?? `report-${activeTab}-${dateRange}.${extension}`;
+      const link = document.createElement('a');
+      link.href = response.url;
+      link.download = fileName;
+      link.rel = 'noopener';
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      adminToast.success('Report exported successfully.', 'admin-reports-export');
+      void queryClient.invalidateQueries({ queryKey: ['admin', 'reports'] });
+    },
+    onError: (error) => {
+      adminToast.error(error.message, 'admin-reports-export');
+    },
+  });
 
-  return { reportData: data ?? null, status };
+  return {
+    reportData: reportQuery.data ?? null,
+    status: reportQuery.status,
+    exportReport: exportMutation.mutate,
+    isExporting: exportMutation.isPending,
+  };
 }

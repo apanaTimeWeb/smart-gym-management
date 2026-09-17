@@ -2,48 +2,25 @@
 // RESPONSIBILITY: Renders the two rows of KPI metric stat cards on the dashboard using live data from AdminDashboardContext.
 
 import { useAdminDashboardLogic } from '@/app/admin/dashboard/dashboard_context/useAdminDashboardLogic';
-import { useAdminDashboardStore } from '@/app/admin/dashboard/dashboard_store/useAdminDashboardStore';
 import AdminStatCard from '@/app/admin/admin_components/AdminShared/AdminStatCard';
 import { formatCurrency } from '@/lib/formatters';
-import { Users, DollarSign, TrendingUp, AlertCircle, CheckCircle, Clock, UserCheck, ShoppingCart } from 'lucide-react';
-import { useAdminGlobalStore } from '@/app/admin/admin_store/useAdminGlobalStore';
+import { Users, DollarSign, TrendingUp, AlertCircle, Clock, UserCheck } from 'lucide-react';
 import { useDateRangeSuffix } from '@/lib/useDateRangeSuffix';
 
 export default function AdminDashboardKPIs() {
-  const { stats, status, error } = useAdminDashboardLogic();
-  const { timeRange, setTimeRange, startDate, endDate, setCustomDateRange } = useAdminDashboardStore();
-  const { selectedBranchId } = useAdminGlobalStore();
+  const { stats } = useAdminDashboardLogic();
   const dateSuffix = useDateRangeSuffix();
   
   if (!stats) return null;
   
-  // Simulated API response behavior: scale down metrics if a specific branch is selected.
-  const scale = selectedBranchId === 'all' ? 1 : 0.35;
-  const s = {
-    ...stats,
-    totalMembers: Math.floor(stats.totalMembers * scale),
-    monthlyRevenue: stats.monthlyRevenue * scale,
-    activeMembers: Math.floor(stats.activeMembers * scale),
-    pendingPayments: stats.pendingPayments * scale,
-    newMembersThisMonth: Math.floor(stats.newMembersThisMonth * scale),
-    activeStaff: Math.floor(stats.activeStaff * scale),
-    totalProducts: Math.floor(stats.totalProducts * scale),
-    lowStockCount: Math.floor(stats.lowStockCount * scale),
-    newInquiries: Math.floor(stats.newInquiries * scale),
-    totalInquiries: Math.floor(stats.totalInquiries * scale),
-    membersByStatus: {
-      pending: Math.floor((stats.membersByStatus?.pending || 0) * scale),
-      active: Math.floor((stats.membersByStatus?.active || 0) * scale),
-      expired: Math.floor((stats.membersByStatus?.expired || 0) * scale)
-    }
-  };
+  const s = stats;
 
   return (
     <>
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 mb-4">
       <AdminStatCard
         title={`Avg. Attendance/Day${dateSuffix}`}
-        value={(s.avgAttendance || 124).toLocaleString()}
+        value={(s.avgAttendance ?? 0).toLocaleString()}
         change="This month"
         changeType="up"
         icon={Users}
@@ -52,7 +29,7 @@ export default function AdminDashboardKPIs() {
       />
       <AdminStatCard
         title={`Renewals Pending${dateSuffix}`}
-        value={(s.renewalsPending || 15).toLocaleString()}
+        value={(s.renewalsPending ?? 0).toLocaleString()}
         change="Next 7 days"
         changeType="down"
         icon={Clock}

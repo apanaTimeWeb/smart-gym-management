@@ -4,7 +4,7 @@
 
 import { useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import toast from 'react-hot-toast';
+import { adminToast } from '@/app/admin/admin_components/AdminFeedback/AdminToastService';
 import { blacklistApi } from '@/app/admin/blacklist/blacklist_api/AdminBlacklistApi';
 import { useAdminBlacklistStore } from '@/app/admin/blacklist/blacklist_store/useAdminBlacklistStore';
 import { useAdminUrlQuerySync } from '@/app/admin/admin_utils/useAdminUrlQuerySync';
@@ -53,26 +53,26 @@ export function useAdminBlacklistLogic() {
 
   const addMutation = useMutation({
     mutationFn: (payload: BlacklistFormValues) => blacklistApi.addToBlacklist(payload),
-    onSuccess: (response) => { toast.success(response.message, { id: 'admin-success-05f887bf44' }); setShowModal(false); qc.invalidateQueries({ queryKey: ['admin', 'blacklist', 'list'] }); },
-    onError: (err) => toast.error((err as Error).message, { id: 'admin-error-1f0bf3da16' }),
+    onSuccess: (response) => { adminToast.success(response.message, 'admin-success-05f887bf44'); setShowModal(false); qc.invalidateQueries({ queryKey: ['admin', 'blacklist', 'list'] }); },
+    onError: (err) => adminToast.error((err as Error).message, 'admin-error-1f0bf3da16'),
   });
 
   const removeMutation = useMutation({
     mutationFn: (id: string) => blacklistApi.removeFromBlacklist(id),
-    onSuccess: (response) => { toast.success(response.message, { id: 'admin-success-d13beab19d' }); qc.invalidateQueries({ queryKey: ['admin', 'blacklist', 'list'] }); },
-    onError: (err) => toast.error((err as Error).message, { id: 'admin-error-e6e7045880' }),
+    onSuccess: (response) => { adminToast.success(response.message, 'admin-success-d13beab19d'); qc.invalidateQueries({ queryKey: ['admin', 'blacklist', 'list'] }); },
+    onError: (err) => adminToast.error((err as Error).message, 'admin-error-e6e7045880'),
   });
 
   const toggleMutation = useMutation({
     mutationFn: (id: string) => blacklistApi.toggleBlacklist(id),
-    onSuccess: (response) => { toast.success(response.message, { id: 'admin-success-40f1704ed7' }); qc.invalidateQueries({ queryKey: ['admin', 'blacklist', 'list'] }); },
-    onError: (err) => toast.error((err as Error).message, { id: 'admin-error-547e47fc01' }),
+    onSuccess: (response) => { adminToast.success(response.message, 'admin-success-40f1704ed7'); qc.invalidateQueries({ queryKey: ['admin', 'blacklist', 'list'] }); },
+    onError: (err) => adminToast.error((err as Error).message, 'admin-error-547e47fc01'),
   });
 
   const propagateMutation = useMutation({
     mutationFn: (id: string) => blacklistApi.propagateToAllBranches(id),
-    onSuccess: (response) => { toast.success(response.message, { id: 'admin-success-52cccb7033' }); qc.invalidateQueries({ queryKey: ['admin', 'blacklist', 'list'] }); },
-    onError: (err) => toast.error((err as Error).message, { id: 'admin-error-86b564e1d9' }),
+    onSuccess: (response) => { adminToast.success(response.message, 'admin-success-52cccb7033'); qc.invalidateQueries({ queryKey: ['admin', 'blacklist', 'list'] }); },
+    onError: (err) => adminToast.error((err as Error).message, 'admin-error-86b564e1d9'),
   });
 
   const openAdd = useCallback(() => { setForm(EMPTY_BLACKLIST_FORM); setShowModal(true); }, [setForm, setShowModal]);
@@ -85,7 +85,21 @@ export function useAdminBlacklistLogic() {
     removeMutation.mutate(id);
   }, [confirm, removeMutation]);
 
-  const toggleBlacklist = useCallback((id: string) => { toggleMutation.mutate(id); }, [toggleMutation]);
+  const toggleBlacklist = useCallback(async (id: string) => {
+    const target = filtered.find((member) => member.id === id);
+    if (!target) return;
+    const nextAction = target.isActive ? 'restore' : 'blacklist';
+    const confirmed = await confirm({
+      title: nextAction === 'blacklist' ? 'Add to Blacklist' : 'Restore Member',
+      message: nextAction === 'blacklist'
+        ? `Blacklist ${target.memberName}? They will be blocked according to the selected scope.`
+        : `Restore ${target.memberName}? Their current blacklist restriction will be removed.`,
+      confirmText: nextAction === 'blacklist' ? 'Blacklist' : 'Restore',
+      type: 'danger',
+    });
+    if (!confirmed) return;
+    toggleMutation.mutate(id);
+  }, [confirm, filtered, toggleMutation]);
 
   const propagateToAllBranches = useCallback(async (id: string, name: string) => {
     const ok = await confirm({

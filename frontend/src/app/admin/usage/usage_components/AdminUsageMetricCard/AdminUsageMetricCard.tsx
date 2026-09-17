@@ -10,10 +10,11 @@ interface AdminUsageMetricCardProps {
 }
 
 export default function AdminUsageMetricCard({ metric, onUpgrade }: AdminUsageMetricCardProps) {
-  const pct = Math.min(100, Math.round((metric.used / metric.limit) * 100));
-  const isCritical = pct >= metric.warningThreshold + 10;
-  const isWarning = pct >= metric.warningThreshold && !isCritical;
-  const showUpgradeCta = pct >= 80;
+  const usageRatio = metric.limit > 0 ? Math.min(1, Math.max(0, metric.used / metric.limit)) : 0;
+  const pct = Math.round(usageRatio * 100);
+  const isCritical = usageRatio >= metric.criticalThreshold;
+  const isWarning = usageRatio >= metric.warningThreshold && !isCritical;
+  const showUpgradeCta = usageRatio >= metric.warningThreshold;
 
   const barColor = isCritical ? 'bg-danger' : isWarning ? 'bg-warning' : 'bg-success';
   const textColor = isCritical ? 'text-danger' : isWarning ? 'text-warning' : 'text-success';

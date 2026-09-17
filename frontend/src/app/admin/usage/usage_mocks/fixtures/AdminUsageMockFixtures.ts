@@ -5,10 +5,10 @@ import type { AdminUsageData } from '@/app/admin/usage/usage_types/AdminUsageTyp
 
 export const MOCK_ADMIN_USAGE_DATA: AdminUsageData = {
   tenantId: 't1',
-  planName: 'Growth Plan',
+  planName: 'Growth',
   planTier: 'Growth',
   billingCycleEnd: '2026-11-15T00:00:00Z',
-  monthlyPrice: 9999,
+  monthlyPrice: 4999,
   smsSent: 8500,
   smsLimit: 10000,
   databaseGb: 3.5,

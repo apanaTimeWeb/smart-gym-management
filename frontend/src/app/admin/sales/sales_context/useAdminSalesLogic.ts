@@ -11,7 +11,7 @@ import { useAdminGlobalStore } from '@/app/admin/admin_store/useAdminGlobalStore
 import { useDebounce } from '@/app/admin/admin_utils/useAdminDebounce';
 import { salesApi } from '@/app/admin/sales/sales_api/AdminSalesApi';
 import type { SalesContextType, SalesInitialData, PendingPaymentMember, StoreOrder } from '@/app/admin/sales/sales_types/AdminSalesTypes';
-import type { SalesTab, DateFilter } from '@/app/admin/sales/sales_utils/AdminSalesSharedConstants';
+import type { SalesTab } from '@/app/admin/sales/sales_utils/AdminSalesSharedConstants';
 
 export function useAdminSalesLogic(initialData?: SalesInitialData | null): SalesContextType {
   const router = useRouter();
@@ -72,8 +72,6 @@ export function useAdminSalesLogic(initialData?: SalesInitialData | null): Sales
   return {
     tab,
     setTab,
-    dateFilter: 'This Month' as DateFilter,
-    setDateFilter: () => {},
     search,
     setSearch,
     currentPage,

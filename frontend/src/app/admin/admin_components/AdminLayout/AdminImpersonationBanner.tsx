@@ -10,7 +10,7 @@ export default function AdminImpersonationBanner() {
   if (!impersonatedBranch) return null;
 
   return (
-    <div className="sticky top-0 z-50 w-full bg-warning/15 border-b-2 border-warning/40 px-4 py-2.5 flex items-center justify-between gap-3">
+    <div className="sticky top-16 z-20 w-full bg-warning/15 border-b-2 border-warning/40 px-4 py-2.5 flex items-center justify-between gap-3">
       <div className="flex items-center gap-2.5">
         <div className="p-1.5 bg-warning/20 rounded-lg">
           <Eye size={16} className="text-warning" />
@@ -27,7 +27,7 @@ export default function AdminImpersonationBanner() {
       </div>
       <button
         onClick={stopImpersonation}
-        className="flex items-center gap-1.5 px-3 py-1.5 bg-warning/20 hover:bg-warning/30 border border-warning/40 rounded-lg text-xs font-bold text-warning motion-safe:transition-all motion-safe:duration-200 motion-safe:active:scale-95"
+        className="flex items-center gap-1.5 px-3 py-1.5 bg-warning/20 hover:bg-warning/30 border border-warning/40 rounded-lg text-xs font-bold text-warning motion-safe:transition-all motion-safe:duration-200 motion-safe:active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
         aria-label="Exit manager view"
       >
         <LogOut size={13} />

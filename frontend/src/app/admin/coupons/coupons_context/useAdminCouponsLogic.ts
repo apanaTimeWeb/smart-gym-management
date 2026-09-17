@@ -4,7 +4,7 @@
 
 import { useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import toast from 'react-hot-toast';
+import { adminToast } from '@/app/admin/admin_components/AdminFeedback/AdminToastService';
 import { couponsApi } from '@/app/admin/coupons/coupons_api/AdminCouponsApi';
 import { useAdminCouponsStore } from '@/app/admin/coupons/coupons_store/useAdminCouponsStore';
 import { useAdminUrlQuerySync } from '@/app/admin/admin_utils/useAdminUrlQuerySync';
@@ -39,26 +39,26 @@ export function useAdminCouponsLogic() {
 
   const createMutation = useMutation({
     mutationFn: (payload: Partial<Coupon>) => couponsApi.createCoupon(payload),
-    onSuccess: (res) => { toast.success(res.message, { id: 'admin-success-28c64429b0' }); setShowModal(false); qc.invalidateQueries({ queryKey: ['admin', 'coupons', 'list'] }); },
-    onError: (err) => toast.error((err as Error).message, { id: 'admin-error-000fe5d6ed' }),
+    onSuccess: (res) => { adminToast.success(res.message, 'admin-success-28c64429b0'); setShowModal(false); qc.invalidateQueries({ queryKey: ['admin', 'coupons', 'list'] }); },
+    onError: (err) => adminToast.error((err as Error).message, 'admin-error-000fe5d6ed'),
   });
 
   const updateMutation = useMutation({
     mutationFn: ({ id, payload }: { id: string; payload: Partial<Coupon> }) => couponsApi.updateCoupon(id, payload),
-    onSuccess: (res) => { toast.success(res.message, { id: 'admin-success-268a88738b' }); setShowModal(false); qc.invalidateQueries({ queryKey: ['admin', 'coupons', 'list'] }); },
-    onError: (err) => toast.error((err as Error).message, { id: 'admin-error-1bf98dcfe1' }),
+    onSuccess: (res) => { adminToast.success(res.message, 'admin-success-268a88738b'); setShowModal(false); qc.invalidateQueries({ queryKey: ['admin', 'coupons', 'list'] }); },
+    onError: (err) => adminToast.error((err as Error).message, 'admin-error-1bf98dcfe1'),
   });
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => couponsApi.deleteCoupon(id),
-    onSuccess: (res) => { toast.success(res.message, { id: 'admin-success-1eef48be92' }); qc.invalidateQueries({ queryKey: ['admin', 'coupons', 'list'] }); },
-    onError: (err) => toast.error((err as Error).message, { id: 'admin-error-aedbe2342a' }),
+    onSuccess: (res) => { adminToast.success(res.message, 'admin-success-1eef48be92'); qc.invalidateQueries({ queryKey: ['admin', 'coupons', 'list'] }); },
+    onError: (err) => adminToast.error((err as Error).message, 'admin-error-aedbe2342a'),
   });
 
   const toggleMutation = useMutation({
     mutationFn: (id: string) => couponsApi.toggleCoupon(id),
-    onSuccess: (res) => { toast.success(res.message, { id: 'admin-success-c9f979e51f' }); qc.invalidateQueries({ queryKey: ['admin', 'coupons', 'list'] }); },
-    onError: (err) => toast.error((err as Error).message, { id: 'admin-error-4febc5f64f' }),
+    onSuccess: (res) => { adminToast.success(res.message, 'admin-success-c9f979e51f'); qc.invalidateQueries({ queryKey: ['admin', 'coupons', 'list'] }); },
+    onError: (err) => adminToast.error((err as Error).message, 'admin-error-4febc5f64f'),
   });
 
   const openAdd = useCallback(() => { setEditId(null); setForm(EMPTY_COUPON_FORM); setShowModal(true); }, [setEditId, setForm, setShowModal]);

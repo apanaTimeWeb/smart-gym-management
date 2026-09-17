@@ -3,14 +3,13 @@
 
 import { useRef } from 'react';
 import { RefreshCw, Calendar, CreditCard } from 'lucide-react';
-import AdminHeader from '@/app/admin/admin_components/AdminLayout/AdminHeader';
 import AdminUsageMetricCard from '@/app/admin/usage/usage_components/AdminUsageMetricCard/AdminUsageMetricCard';
 import AdminUsagePlanCard from '@/app/admin/usage/usage_components/AdminUsagePlanCard/AdminUsagePlanCard';
 import { useAdminUsageLogic } from '@/app/admin/usage/usage_context/useAdminUsageLogic';
 import { formatCurrency } from '@/lib/formatters';
 
 export default function AdminUsageMain() {
-  const { data, metrics, refresh, status } = useAdminUsageLogic();
+  const { data, metrics, planTiers, refresh, status, requestUpgrade, pendingUpgradePlan } = useAdminUsageLogic();
   const planCardRef = useRef<HTMLDivElement>(null);
 
   const handleUpgrade = () => {
@@ -19,10 +18,6 @@ export default function AdminUsageMain() {
 
   return (
     <div className="min-h-full pb-10 bg-background text-foreground">
-      <AdminHeader
-        title="Usage & Subscription"
-        subtitle="Monitor your plan limits and manage your subscription"
-      />
       <div className="p-6 space-y-6">
         {status === 'pending' && !data ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4" aria-label="Loading usage data">
@@ -70,7 +65,7 @@ export default function AdminUsageMain() {
 
         {/* Plan Comparison */}
         <div ref={planCardRef}>
-          <AdminUsagePlanCard />
+          <AdminUsagePlanCard planTiers={planTiers} onRequestUpgrade={requestUpgrade} pendingUpgradePlan={pendingUpgradePlan} />
         </div>
       </div>
     </div>

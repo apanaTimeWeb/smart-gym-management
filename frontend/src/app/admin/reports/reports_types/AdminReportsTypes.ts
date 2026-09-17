@@ -1,8 +1,9 @@
 import type { QueryStatus } from '@tanstack/react-query';
 // RESPONSIBILITY: Defines all TypeScript types for the Reports module. Single source of truth for all report data shapes.
 
-export type ReportTab = 'revenue' | 'membership' | 'attendance' | 'payroll' | 'pnl' | 'tax';
+export type ReportTab = 'revenue' | 'membership' | 'attendance' | 'payroll' | 'pnl';
 export type ReportDateRange = 'this_month' | 'last_month' | 'last_3_months' | 'last_6_months' | 'this_year' | 'custom';
+export type AdminReportsExportFormat = 'pdf' | 'excel';
 
 export interface ReportsContextType {
   activeTab: ReportTab;
@@ -97,6 +98,18 @@ export interface PnLRow {
   profitMargin: number;
 }
 
+export interface AdminReportsExportResponse {
+  url: string;
+  fileName?: string;
+}
+
+export interface AdminReportsQueryParams {
+  dateRange?: string;
+  gymId?: string;
+  startDate?: string;
+  endDate?: string;
+}
+
 export interface ReportData {
   revenueByGym: RevenueByGym[];
   revenueByMethod: RevenueByMethod[];
@@ -104,6 +117,7 @@ export interface ReportData {
   monthlyRevenue: MonthlyRevenue[];
   membershipGrowth: MembershipGrowthRow[];
   attendanceSummary: AttendanceSummaryRow[];
+  attendanceHeatmap?: AttendanceHeatmapCell[];
   payrollSummary: PayrollSummaryRow[];
   pnlSummary: PnLRow[];
   kpis: {

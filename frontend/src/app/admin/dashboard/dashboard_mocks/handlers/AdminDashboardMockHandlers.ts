@@ -1,30 +1,22 @@
-// RESPONSIBILITY: Owns MSW handlers for the Admin dashboard feature.
-// DATA FLOW: dashboard API client → module-owned MSW handler → module-owned fixture → TanStack Query/UI.
+// RESPONSIBILITY: Owns MSW transport for the Admin Dashboard. Branch identity is resolved against module-owned fixtures before response generation.
 import { http, HttpResponse } from 'msw';
-
-type JsonObject = Record<string, unknown>;
-
-async function parseRequestBody(request: Request): Promise<unknown> {
-  try { return await request.clone().json(); } catch { return undefined; }
-}
-
-function asRecord(value: unknown): JsonObject {
-  return value && typeof value === 'object' && !Array.isArray(value) ? value as JsonObject : {};
-}
-
-const ok = <T>(data: T, message = 'Success') =>
-  HttpResponse.json({ success: true, message, data, meta: { total: Array.isArray(data) ? data.length : 1, page: 1, limit: 50, totalPages: 1 } });
-
-const paged = <T>(data: T[], page: number, limit: number, message = 'Success') => {
-  const safeLimit = Math.max(1, limit);
-  const safePage = Math.max(1, page);
-  const start = (safePage - 1) * safeLimit;
-  const pageData = data.slice(start, start + safeLimit);
-  return HttpResponse.json({ success: true, message, data: pageData, meta: { total: data.length, page: safePage, limit: safeLimit, totalPages: Math.max(1, Math.ceil(data.length / safeLimit)) } });
-};
-
-import { MOCK_ADMIN_DASHBOARD } from '@/app/admin/dashboard/dashboard_mocks/fixtures/AdminDashboardMockFixtures';
+import { StatusCodes } from 'http-status-codes';
+import { getAdminDashboardFixture, type AdminDashboardRange } from '@/app/admin/dashboard/dashboard_mocks/fixtures/AdminDashboardMockFixtures';
 
 export const adminDashboardMockHandlers = [
-  http.get('*/admin/dashboard/fetchDashboardStats', () => ok(MOCK_ADMIN_DASHBOARD))
+  http.get('*/admin/dashboard/fetchDashboardStats', ({ request }) => {
+    const url = new URL(request.url);
+    const branchId = url.searchParams.get('branchId') || undefined;
+    const range = (url.searchParams.get('range') || 'this_month') as AdminDashboardRange;
+    const data = getAdminDashboardFixture(branchId, range);
+    if (branchId && data === null) {
+      return HttpResponse.json({ success: false, message: 'Dashboard branch not found.', data: null }, { status: StatusCodes.NOT_FOUND });
+    }
+    return HttpResponse.json({
+      success: true,
+      message: 'Dashboard data loaded',
+      data,
+      meta: { total: 1, page: 1, limit: 1, totalPages: 1 },
+    });
+  }),
 ];

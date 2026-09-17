@@ -1,9 +1,10 @@
-// RESPONSIBILITY: Root layout for the ADMIN module. Wraps all ADMIN pages with the sidebar layout and feedback providers.
+// RESPONSIBILITY: Root layout for the ADMIN module. The application-level QueryProvider is the single server-state cache boundary.
 import React from 'react';
 import AdminLayout from '@/app/admin/admin_components/AdminLayout/AdminLayout';
 import { AdminConfirmProvider } from '@/app/admin/admin_components/AdminFeedback/AdminConfirmProvider';
 import { AdminToastProvider } from '@/app/admin/admin_components/AdminFeedback/AdminToastProvider';
-import AdminQueryProvider from '@/app/admin/admin_components/AdminQueryProvider';
+import AdminDialogAccessibilityProvider from '@/app/admin/admin_components/AdminFeedback/AdminDialogAccessibilityProvider';
+import AdminToastBridge from '@/app/admin/admin_components/AdminFeedback/AdminToastBridge';
 
 export const metadata = {
   title: 'GymSmart ADMIN | Gym Management System',
@@ -12,11 +13,11 @@ export const metadata = {
 
 export default function ADMINLayout({ children }: { children: React.ReactNode }) {
   return (
-    <AdminQueryProvider>
-      <AdminConfirmProvider>
-        <AdminToastProvider />
-        <AdminLayout>{children}</AdminLayout>
-      </AdminConfirmProvider>
-    </AdminQueryProvider>
+    <AdminConfirmProvider>
+      <AdminToastProvider />
+      <AdminDialogAccessibilityProvider />
+      <AdminToastBridge />
+      <AdminLayout>{children}</AdminLayout>
+    </AdminConfirmProvider>
   );
 }

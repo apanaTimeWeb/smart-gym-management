@@ -12,6 +12,7 @@ import AdminHrPayrollTable from '@/app/admin/hr/hr_components/AdminHrPayrollTabl
 import AdminHrAdvanceTable from '@/app/admin/hr/hr_components/AdminHrAdvanceTable/AdminHrAdvanceTable';
 import AdminHrDueTable from '@/app/admin/hr/hr_components/AdminHrDueTable/AdminHrDueTable';
 import AdminHrLedgerTable from '@/app/admin/hr/hr_components/AdminHrLedgerTable/AdminHrLedgerTable';
+import AdminTableSkeleton from '@/app/admin/admin_components/AdminShared/AdminTableSkeleton';
 
 export default function AdminHrTabs() {
   const [activeTab, setActiveTab] = useState(HR_TABS[0]);
@@ -23,10 +24,11 @@ export default function AdminHrTabs() {
       <div className="border-b border-border flex flex-wrap gap-4 justify-between items-center p-2 sm:p-0">
         <div className="flex overflow-x-auto">
           {HR_TABS.map(t => (
-            <button 
+            <button
+              type="button"
               key={t} 
               onClick={() => { setActiveTab(t);  setSearch(''); }}
-              className={`px-5 py-3.5 text-sm font-medium motion-safe:transition-colors border-b-2 whitespace-nowrap ${activeTab === t ? 'text-primary border-primary bg-primary/5' : 'text-secondary border-transparent hover:opacity-80 bg-transparent'}`}
+              className={`px-5 py-3.5 text-sm font-medium motion-safe:transition-colors border-b-2 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${activeTab === t ? 'text-primary border-primary bg-primary/5' : 'text-secondary border-transparent hover:opacity-80 bg-transparent'}`}
             >
               {t}
             </button>
@@ -39,7 +41,7 @@ export default function AdminHrTabs() {
               value={search} 
               onChange={e => { setSearch(e.target.value);  }} 
               placeholder={`Search ${activeTab?.toLowerCase() || 'staff'}...`} 
-              className="pl-9 pr-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 w-40 sm: w-full sm:w-64  bg-card text-foreground"
+              className="pl-9 pr-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus-visible:outline-none focus-visible:ring-2 w-40 sm:w-full sm:w-64  bg-card text-foreground"
             />
           </div>
           {activeTab === 'Staff' && (
@@ -102,9 +104,7 @@ export default function AdminHrTabs() {
 
  <div className="p-5">
  {status === 'pending' ? (
- <div className="flex justify-center py-10">
- <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full motion-safe:animate-spin" />
- </div>
+ <AdminTableSkeleton rows={6} cols={6} />
  ) : activeTab === 'Staff' ? (
  <AdminHrStaffTable />
  ) : activeTab === 'Payroll' ? (

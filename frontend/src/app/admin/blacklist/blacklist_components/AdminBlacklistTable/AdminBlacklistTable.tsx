@@ -21,7 +21,7 @@ export default function AdminBlacklistTable() {
   return (
     <div className="bg-card rounded-xl border border-border overflow-hidden">
       <div className="overflow-x-auto">
-        <table className="w-full">
+        <table data-admin-responsive-table className="w-full">
           <thead>
             <tr className="bg-danger/5">
               {HEADERS.map(h => <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-secondary uppercase tracking-wider whitespace-nowrap">{h}</th>)}

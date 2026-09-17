@@ -24,6 +24,8 @@ const paged = <T>(data: T[], page: number, limit: number, message = 'Success') =
 };
 
 import { MOCK_DATA_EXPORT_KPI, MOCK_EXPORT_JOBS_EXPANDED } from '@/app/admin/data-export/data-export_mocks/fixtures/AdminDataExportMockFixtures';
+import type { ExportJob } from '@/app/admin/data-export/data_export_types/AdminDataExportTypes';
+let exportJobsState: ExportJob[] = structuredClone(MOCK_EXPORT_JOBS_EXPANDED);
 
 export const adminDataExportMockHandlers = [
   http.get('*/admin/data-export/fetchJobs', ({ request }) => {
@@ -33,7 +35,7 @@ export const adminDataExportMockHandlers = [
     const status = url.searchParams.get('status');
     const sortKey = url.searchParams.get('sortKey') || 'createdAt';
     const sortDir = url.searchParams.get('sortDir') || 'desc';
-    const filtered = MOCK_EXPORT_JOBS_EXPANDED.filter((job) => !status || status === 'all' || job.status === status);
+    const filtered = exportJobsState.filter((job) => !status || status === 'all' || job.status === status);
     const sorted = [...filtered].sort((a, b) => {
       const av = a[sortKey as keyof typeof a];
       const bv = b[sortKey as keyof typeof b];
@@ -43,6 +45,6 @@ export const adminDataExportMockHandlers = [
     return paged(sorted, page, limit);
   }),
   http.get('*/admin/data-export/fetchKPIs', () => ok(MOCK_DATA_EXPORT_KPI)),
-  http.post('*/admin/data-export/createExport', () => ok({ id: 'exp3', status: 'PROCESSING', fileName: 'new-export.csv' }, 'Export started')),
-  http.delete('*/admin/data-export/deleteJob', () => ok(null, 'Export deleted'))
+  http.post('*/admin/data-export/createExport', async ({ request }) => { const body = asRecord(await parseRequestBody(request)); const job: ExportJob = { id: `exp-demo-${Date.now()}`, dataType: String(body.dataType ?? 'members') as ExportJob['dataType'], format: String(body.format ?? 'csv') as ExportJob['format'], gymIds: Array.isArray(body.gymIds) ? body.gymIds.map(String) : ['all'], gymNames: Array.isArray(body.gymNames) ? body.gymNames.map(String) : ['All Gyms'], dateFrom: String(body.dateFrom ?? new Date().toISOString().slice(0, 10)), dateTo: String(body.dateTo ?? new Date().toISOString().slice(0, 10)), status: 'processing', createdAt: new Date().toISOString(), createdBy: 'Admin' }; exportJobsState.unshift(job); return ok(job, 'Export started'); }),
+  http.delete('*/admin/data-export/deleteJob', async ({ request }) => { const body = asRecord(await parseRequestBody(request)); const index = exportJobsState.findIndex((job) => job.id === String(body.id)); if (index < 0) return HttpResponse.json({ success: false, message: 'Export job not found', data: null }, { status: 404 }); exportJobsState.splice(index, 1); return ok(null, 'Export deleted'); })
 ];

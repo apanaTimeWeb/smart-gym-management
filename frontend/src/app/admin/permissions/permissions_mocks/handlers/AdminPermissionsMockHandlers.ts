@@ -24,9 +24,12 @@ const paged = <T>(data: T[], page: number, limit: number, message = 'Success') =
 };
 
 import { MOCK_PERMISSIONS_DATA } from '@/app/admin/permissions/permissions_mocks/fixtures/AdminPermissionsMockFixtures';
+import type { PermissionsData, RoleType } from '@/app/admin/permissions/permissions_types/AdminPermissionsTypes';
+
+let permissionsState: PermissionsData = structuredClone(MOCK_PERMISSIONS_DATA);
 
 export const adminPermissionsMockHandlers = [
-  http.get('*/admin/permissions/fetchPermissions', ({ request }) => { const url = new URL(request.url); if (url.searchParams.has('consumer')) return; return ok(MOCK_PERMISSIONS_DATA); }),
-  http.post('*/admin/permissions/updateRolePermissions', () => ok(null, 'Permissions updated')),
-  http.post('*/admin/permissions/updateGymOverride', () => ok(null, 'Gym override updated'))
+  http.get('*/admin/permissions/fetchPermissions', ({ request }) => { const url = new URL(request.url); if (url.searchParams.has('consumer')) return; return ok(permissionsState); }),
+  http.post('*/admin/permissions/updateRolePermissions', async ({ request }) => { const body = asRecord(await parseRequestBody(request)); const role = String(body.role) as RoleType; const permissions = body.permissions && typeof body.permissions === 'object' && !Array.isArray(body.permissions) ? body.permissions as Record<string, boolean> : {}; const index = permissionsState.roleDefaults.findIndex((item) => item.role === role); if (index < 0) return HttpResponse.json({ success: false, message: 'Role not found', data: null }, { status: 404 }); permissionsState.roleDefaults[index] = { ...permissionsState.roleDefaults[index]!, permissions }; return ok(permissionsState, 'Permissions updated'); }),
+  http.post('*/admin/permissions/updateGymOverride', async ({ request }) => { const body = asRecord(await parseRequestBody(request)); const gymId = String(body.gymId); const role = String(body.role) as RoleType; const overrides = body.overrides && typeof body.overrides === 'object' && !Array.isArray(body.overrides) ? body.overrides as Record<string, boolean> : {}; const index = permissionsState.gymOverrides.findIndex((item) => item.gymId === gymId && item.role === role); if (index < 0) { permissionsState.gymOverrides.push({ gymId, gymName: gymId, role, overrides }); } else { permissionsState.gymOverrides[index] = { ...permissionsState.gymOverrides[index]!, overrides }; } return ok(permissionsState, 'Gym override updated'); })
 ];

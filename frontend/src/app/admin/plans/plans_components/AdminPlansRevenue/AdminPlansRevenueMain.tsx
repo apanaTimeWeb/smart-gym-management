@@ -8,6 +8,7 @@ import AdminPlansRevenueKPIs from '@/app/admin/plans/plans_components/AdminPlans
 import AdminPlansRevenueCharts from '@/app/admin/plans/plans_components/AdminPlansRevenue/AdminPlansRevenueCharts';
 import AdminPlansRevenueTable from '@/app/admin/plans/plans_components/AdminPlansRevenue/AdminPlansRevenueTable';
 import { IndianRupee, Search } from 'lucide-react';
+import AdminTableSkeleton from '@/app/admin/admin_components/AdminShared/AdminTableSkeleton';
 
 export default function AdminPlansRevenueMain() {
   const {
@@ -50,9 +51,13 @@ export default function AdminPlansRevenueMain() {
       </div>
 
       {isLoading ? (
-        <div className="h-64 flex items-center justify-center">
-          <div className="w-8 h-8 border-4 border-t-transparent rounded-full motion-safe:animate-spin border-primary" />
-        </div>
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+            {['revenue-1', 'revenue-2', 'revenue-3', 'revenue-4'].map((id) => <div key={id} className="h-28 rounded-xl bg-skeleton-base motion-safe:animate-pulse" />)}
+          </div>
+          <div className="h-72 rounded-xl bg-skeleton-base motion-safe:animate-pulse" />
+          <AdminTableSkeleton rows={8} cols={6} />
+        </>
       ) : (
         <>
           {/* KPIs */}

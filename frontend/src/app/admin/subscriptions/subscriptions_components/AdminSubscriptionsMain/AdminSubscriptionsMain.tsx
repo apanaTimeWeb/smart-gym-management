@@ -3,7 +3,6 @@ import { formatCurrency } from '@/lib/formatters';
 // RESPONSIBILITY: Main orchestrator for the Subscriptions / Billing module — tabs for overview, plans, invoices, payment.
 
 import { Calendar, RefreshCw, ToggleLeft, ToggleRight, Loader2 } from 'lucide-react';
-import AdminHeader from '@/app/admin/admin_components/AdminLayout/AdminHeader';
 import AdminSubscriptionsKPIs from '@/app/admin/subscriptions/subscriptions_components/AdminSubscriptionsKPIs/AdminSubscriptionsKPIs';
 import AdminSubscriptionsPlanCards from '@/app/admin/subscriptions/subscriptions_components/AdminSubscriptionsPlanCards/AdminSubscriptionsPlanCards';
 import AdminSubscriptionsInvoices from '@/app/admin/subscriptions/subscriptions_components/AdminSubscriptionsInvoices/AdminSubscriptionsInvoices';
@@ -27,7 +26,6 @@ export default function AdminSubscriptionsMain() {
 
   return (
     <div className="min-h-full pb-10">
-      <AdminHeader title="Subscription & Billing" subtitle="Manage your GymSmart SaaS plan, invoices, and payment methods." />
 
       <div className="p-6 space-y-6">
 

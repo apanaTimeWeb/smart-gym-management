@@ -1,5 +1,7 @@
 "use client";
 import { formatPercent1dp, formatCurrency } from '@/lib/formatters';
+import type { AdminReportsRevenueSortKey } from '@/app/admin/reports/reports_types/AdminReportsUiTypes';
+import type { AdminSortDirection } from '@/app/admin/admin_types/AdminSortTypes';
 import { useMemo, useState } from 'react';
 import { ChevronDown, ChevronUp, ChevronsUpDown } from 'lucide-react';
 // RESPONSIBILITY: Renders the Revenue report tab — breakdown by gym, payment method, plan, and monthly trend chart.
@@ -15,15 +17,14 @@ const TREND_ICON = {
 
 export default function AdminReportsRevenue() {
   const { reportData } = useAdminReportsLogic();
-  type RevenueSortKey = 'gymName' | 'revenue' | 'expenses' | 'profit' | 'trendPercent';
-  const [sortKey, setSortKey] = useState<RevenueSortKey>('revenue');
-  const [sortDir, setSortDir] = useState<'asc'|'desc'>('desc');
+  const [sortKey, setSortKey] = useState<AdminReportsRevenueSortKey>('revenue');
+  const [sortDir, setSortDir] = useState<AdminSortDirection>('desc');
 
   const revenueByGym = useMemo(() => {
     if (!reportData) return [];
     return [...reportData.revenueByGym].sort((a,b)=>{const av=a[sortKey],bv=b[sortKey];const result=typeof av==='number'&&typeof bv==='number'?av-bv:String(av??'').localeCompare(String(bv??''),undefined,{numeric:true});return sortDir==='asc'?result:-result;});
   },[reportData,sortKey,sortDir]);
-  const handleSort=(key:RevenueSortKey)=>{if(sortKey===key)setSortDir(d=>d==='asc'?'desc':'asc');else{setSortKey(key);setSortDir('desc');}};
+  const handleSort=(key:AdminReportsRevenueSortKey)=>{if(sortKey===key)setSortDir(d=>d==='asc'?'desc':'asc');else{setSortKey(key);setSortDir('desc');}};
   const maxRevenue = Math.max(1, ...revenueByGym.map(g => g.revenue));
 
   if (!reportData) return null;
@@ -36,10 +37,10 @@ export default function AdminReportsRevenue() {
           <h2 className="text-base font-semibold text-foreground">Revenue by Gym</h2>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table data-admin-responsive-table className="w-full">
             <thead>
               <tr className="bg-primary/5">
-                {['Gym', 'Revenue', 'Expenses', 'Net Profit', 'Margin', 'Trend'].map((h,index) => { const keys:Array<RevenueSortKey|null>=['gymName','revenue','expenses','profit',null,'trendPercent']; const key=keys[index]; return <th key={h} onClick={()=>key&&handleSort(key)} className={`px-5 py-3 text-left text-xs font-semibold text-secondary uppercase tracking-wider ${key?'cursor-pointer select-none':''}`} aria-sort={key&&sortKey===key?(sortDir==='asc'?'ascending':'descending'):'none'}><div className="flex items-center gap-1.5">{h}{key&&(sortKey===key?(sortDir==='asc'?<ChevronUp size={13} className="text-primary"/>:<ChevronDown size={13} className="text-primary"/>):<ChevronsUpDown size={13} className="text-disabled"/>)}</div></th>; })}
+                {['Gym', 'Revenue', 'Expenses', 'Net Profit', 'Margin', 'Trend'].map((h,index) => { const keys:Array<AdminReportsRevenueSortKey|null>=['gymName','revenue','expenses','profit',null,'trendPercent']; const key=keys[index]; return <th role="button" tabIndex={0} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); event.currentTarget.click(); } }}  key={h} onClick={()=>key&&handleSort(key)} className={`px-5 py-3 text-left text-xs font-semibold text-secondary uppercase tracking-wider ${key?'cursor-pointer select-none':''}`} aria-sort={key&&sortKey===key?(sortDir==='asc'?'ascending':'descending'):'none'}><div className="flex items-center gap-1.5">{h}{key&&(sortKey===key?(sortDir==='asc'?<ChevronUp size={13} className="text-primary"/>:<ChevronDown size={13} className="text-primary"/>):<ChevronsUpDown size={13} className="text-disabled"/>)}</div></th>; })}
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
@@ -127,10 +128,10 @@ export default function AdminReportsRevenue() {
           <h2 className="text-base font-semibold text-foreground">Monthly Revenue Trend</h2>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table data-admin-responsive-table className="w-full">
             <thead>
               <tr className="bg-primary/5">
-                {['Month', 'Revenue', 'Expenses', 'Net Profit', 'Margin'].map((h,index) => { const keys: Array<RevenueSortKey|null>=['gymName','revenue','expenses','profit',null]; const key=keys[index]; return <th key={h} className="px-5 py-3 text-left text-xs font-semibold text-secondary uppercase tracking-wider">{h}{key&&<button type="button" onClick={()=>handleSort(key)} className="ml-1 inline-flex align-middle" aria-label={`Sort by ${h}`} title={`Sort by ${h}`}>{sortKey===key?(sortDir==='asc'?<ChevronUp size={13} className="text-primary"/>:<ChevronDown size={13} className="text-primary"/>):<ChevronsUpDown size={13} className="text-disabled"/>}</button>}</th>; })}
+                {['Month', 'Revenue', 'Expenses', 'Net Profit', 'Margin'].map((h,index) => { const keys: Array<AdminReportsRevenueSortKey|null>=['gymName','revenue','expenses','profit',null]; const key=keys[index]; return <th key={h} className="px-5 py-3 text-left text-xs font-semibold text-secondary uppercase tracking-wider">{h}{key&&<button type="button" onClick={()=>handleSort(key)} className="ml-1 inline-flex align-middle" aria-label={`Sort by ${h}`} title={`Sort by ${h}`}>{sortKey===key?(sortDir==='asc'?<ChevronUp size={13} className="text-primary"/>:<ChevronDown size={13} className="text-primary"/>):<ChevronsUpDown size={13} className="text-disabled"/>}</button>}</th>; })}
               </tr>
             </thead>
             <tbody className="divide-y divide-border">

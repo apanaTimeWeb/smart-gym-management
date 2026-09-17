@@ -47,7 +47,6 @@ export const plansContextTypeSchema = z.object({
     form: planFormValuesSchema,
     setForm: z.function({ input: [planFormValuesSchema], output: z.void() }),
     showToast: z.function({ input: [z.string(), toastTypeSchema], output: z.void() }),
-    hideToast: z.function({ input: [], output: z.void() }),
     loadPlans: z.function({ input: [], output: z.custom<Promise<void>>(() => z.promise(z.void())) }),
     openAdd: z.function({ input: [], output: z.void() }),
     openEdit: z.function({ input: [planSchema], output: z.void() }),

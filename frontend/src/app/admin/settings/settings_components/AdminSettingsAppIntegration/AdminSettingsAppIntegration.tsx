@@ -1,38 +1,14 @@
 "use client";
 // RESPONSIBILITY: Manages the App Integration settings tab.
-import { useForm, useWatch } from 'react-hook-form';
 import { useState } from 'react';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { AppIntegrationSettingsSchema } from '@/app/admin/settings/settings_types/AdminSettings.schema';
 import type { AppIntegrationSettingsType } from '@/app/admin/settings/settings_types/AdminSettingsTypes';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { settingsApi } from '@/app/admin/settings/settings_api/AdminSettingsApi';
+import { useAdminSettingsAppIntegrationForm } from '@/app/admin/settings/settings_context/useAdminSettingsForms';
 import { Save, RefreshCw, ExternalLink, Copy } from 'lucide-react';
-import toast from 'react-hot-toast';
-import { useUnsavedChangesGuard } from '@/app/admin/admin_utils/useAdminUnsavedChangesGuard';
 import { AdminSettingsToggleSwitch } from '@/app/admin/settings/settings_components/AdminSettingsShared/AdminSettingsToggleSwitch';
 
 export function AdminSettingsAppIntegration({ initialData }: { initialData: AppIntegrationSettingsType }) {
-  const queryClient = useQueryClient();
   const [copiedApiKey, setCopiedApiKey] = useState(false);
-  const form = useForm<AppIntegrationSettingsType>({
-    resolver: zodResolver(AppIntegrationSettingsSchema),
-    defaultValues: initialData,
-  });
-
-  const formValues = useWatch({ control: form.control });
-
-  useUnsavedChangesGuard(form.formState.isDirty);
-
-  const mutation = useMutation({
-    mutationFn: (data: AppIntegrationSettingsType) => settingsApi.updateSettings({ integration: data }),
-    onSuccess: (res) => {
-      toast.success(res.message, { id: 'settings-integration-save' });
-      void queryClient.invalidateQueries({ queryKey: ['admin', 'settings'] });
-      form.reset(form.getValues());
-    },
-    onError: (err) => toast.error((err as Error).message, { id: 'settings-integration-save' }),
-  });
+  const { form, formValues, mutation } = useAdminSettingsAppIntegrationForm(initialData);
 
   const onSubmit = (data: AppIntegrationSettingsType) => mutation.mutate(data);
 

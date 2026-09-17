@@ -2,6 +2,8 @@
 // RESPONSIBILITY: Renders the paginated staff members table with sortable columns and inline row actions.
 
 import { useHrContext } from '@/app/admin/hr/hr_context/AdminHrContext';
+import type { AdminHrStaffSortKey } from '@/app/admin/hr/hr_types/AdminHrUiTypes';
+import type { AdminSortDirection } from '@/app/admin/admin_types/AdminSortTypes';
 import { useMemo, useState } from 'react';
 import { ChevronDown, ChevronUp, ChevronsUpDown } from 'lucide-react';
 import { STAFF_TABLE_HEADERS } from '@/app/admin/hr/hr_utils/AdminHrSharedConstants';
@@ -16,9 +18,8 @@ import { formatCurrency } from '@/app/admin/admin_utils/AdminFormatCurrency';
 export default function AdminHrStaffTable() {
   const { staff, summary, status, debouncedSearch, branchFilter, roleFilter, currentPage, setCurrentPage, openEdit, openProfile, deleteStaff, toggleStaffStatus } = useHrContext();
   const { confirm } = useAdminConfirm();
-  type StaffSortKey = 'name' | 'branch' | 'role' | 'phone' | 'salary' | 'joinDate';
-  const [sortKey, setSortKey] = useState<StaffSortKey>('name');
-  const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc');
+  const [sortKey, setSortKey] = useState<AdminHrStaffSortKey>('name');
+  const [sortDir, setSortDir] = useState<AdminSortDirection>('asc');
 
   const filteredStaff = staff.filter(s => 
     (roleFilter === 'All' || (s.role || '').toLowerCase().includes(roleFilter.toLowerCase())) &&
@@ -26,7 +27,7 @@ export default function AdminHrStaffTable() {
   );
 
   const sortedStaff = useMemo(() => [...filteredStaff].sort((a,b) => { const av = sortKey === 'branch' ? a.branch : sortKey === 'joinDate' ? a.joinDate : a[sortKey]; const bv = sortKey === 'branch' ? b.branch : sortKey === 'joinDate' ? b.joinDate : b[sortKey]; const result = typeof av === 'number' && typeof bv === 'number' ? av - bv : String(av ?? '').localeCompare(String(bv ?? ''), undefined, { numeric: true }); return sortDir === 'asc' ? result : -result; }), [filteredStaff, sortKey, sortDir]);
-  const handleSort = (key: StaffSortKey) => { if (sortKey === key) setSortDir((d) => d === 'asc' ? 'desc' : 'asc'); else { setSortKey(key); setSortDir('asc'); } };
+  const handleSort = (key: AdminHrStaffSortKey) => { if (sortKey === key) setSortDir((d) => d === 'asc' ? 'desc' : 'asc'); else { setSortKey(key); setSortDir('asc'); } };
   const totalStaff = summary?.totalStaff || sortedStaff.length;
   const totalPages = Math.ceil(totalStaff / ADMIN_ITEMS_PER_PAGE) || 1;
 
@@ -34,7 +35,7 @@ export default function AdminHrStaffTable() {
     return (
       <div className="flex flex-col h-full">
         <div className="overflow-x-auto flex-1">
-          <table className="w-full">
+          <table data-admin-responsive-table className="w-full">
             <thead className="bg-input text-secondary">
               <tr>
                 {STAFF_TABLE_HEADERS.map(h => (
@@ -69,7 +70,7 @@ export default function AdminHrStaffTable() {
   return (
     <div className="flex flex-col h-full">
       <div className="overflow-x-auto flex-1">
-        <table className="w-full">
+        <table data-admin-responsive-table className="w-full">
           <thead className="bg-input text-secondary">
             <tr>
               {STAFF_TABLE_HEADERS.map(h => (
@@ -84,8 +85,17 @@ export default function AdminHrStaffTable() {
             {sortedStaff.map(s => (
               <tr 
                 key={s.id} 
-                className="motion-safe:transition-colors hover:bg-primary/5 cursor-pointer" 
+                className="motion-safe:transition-colors hover:bg-primary/5 cursor-pointer"
+                role="button"
+                tabIndex={0}
+                aria-label={`Open profile for ${s.name || 'staff member'}`}
                 onClick={() => openProfile(s)}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    openProfile(s);
+                  }
+                }}
               >
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-3">

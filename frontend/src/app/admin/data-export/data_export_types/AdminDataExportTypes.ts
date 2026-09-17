@@ -49,7 +49,7 @@ export interface AdminDataExportHistoryProps {
   jobs: ExportJob[];
   status: 'pending' | 'error' | 'success';
   statusFilter: ExportStatus | 'all';
-  setStatusFilter: (value: string) => void;
+  setStatusFilter: (value: ExportStatus | 'all') => void;
   currentPage: number;
   setCurrentPage: (page: number) => void;
   totalPages: number;

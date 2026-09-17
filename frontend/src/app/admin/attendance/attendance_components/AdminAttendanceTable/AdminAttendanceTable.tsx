@@ -28,7 +28,7 @@ export default function AdminAttendanceTable() {
   return (
     <div className="bg-card rounded-xl border border-border overflow-hidden">
       <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse">
+        <table data-admin-responsive-table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-primary/5 border-b border-border">
               {ATTENDANCE_TABLE_HEADERS.map((h) => (

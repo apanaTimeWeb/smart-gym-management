@@ -1,33 +1,11 @@
 "use client";
 // RESPONSIBILITY: Manages the Gym Profile settings form.
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { GymProfileSchema } from '@/app/admin/settings/settings_types/AdminSettings.schema';
 import type { GymProfileType } from '@/app/admin/settings/settings_types/AdminSettingsTypes';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { settingsApi } from '@/app/admin/settings/settings_api/AdminSettingsApi';
-import toast from 'react-hot-toast';
+import { useAdminSettingsGymProfileForm } from '@/app/admin/settings/settings_context/useAdminSettingsForms';
 import { Save, RefreshCw } from 'lucide-react';
-import { useUnsavedChangesGuard } from '@/app/admin/admin_utils/useAdminUnsavedChangesGuard';
 
 export function AdminSettingsGymProfile({ initialData }: { initialData: GymProfileType }) {
-  const queryClient = useQueryClient();
-  const form = useForm<GymProfileType>({
-    resolver: zodResolver(GymProfileSchema),
-    defaultValues: initialData,
-  });
-
-  useUnsavedChangesGuard(form.formState.isDirty);
-
-  const mutation = useMutation({
-    mutationFn: (data: GymProfileType) => settingsApi.updateSettings({ profile: data }),
-    onSuccess: (res) => {
-      toast.success(res.message, { id: 'settings-profile-save' });
-      queryClient.invalidateQueries({ queryKey: ['admin', 'settings'] });
-      form.reset(form.getValues()); // Reset dirty state
-    },
-    onError: (err) => toast.error((err as Error).message, { id: 'settings-profile-save' }),
-  });
+  const { form, mutation } = useAdminSettingsGymProfileForm(initialData);
 
   const onSubmit = (data: GymProfileType) => mutation.mutate(data);
 

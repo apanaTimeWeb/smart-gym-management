@@ -37,7 +37,7 @@ export default function AdminBlacklistModal() {
   if (!showModal) return null;
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center p-4">
+    <div data-admin-dialog="true" role="dialog" aria-modal="true" tabIndex={-1} className="fixed inset-0 z-40 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-overlay backdrop-blur-sm" onClick={() => setShowModal(false)} />
       <div className="relative bg-overlay border border-border rounded-2xl shadow-2xl w-full max-w-lg max-h-screen overflow-y-auto custom-scrollbar">
         <div className="flex items-center justify-between px-6 py-4 border-b border-border sticky top-0 bg-overlay z-10">

@@ -3,7 +3,7 @@ import { z } from "zod";
 
 export const statusSchema = z.union([z.literal("idle"), z.literal("loading"), z.literal("success"), z.literal("error")]);
 
-export const reportTabSchema = z.union([z.literal("revenue"), z.literal("membership"), z.literal("attendance"), z.literal("payroll"), z.literal("pnl"), z.literal("tax")]);
+export const reportTabSchema = z.union([z.literal("revenue"), z.literal("membership"), z.literal("attendance"), z.literal("payroll"), z.literal("pnl")]);
 
 export const reportDateRangeSchema = z.union([z.literal("this_month"), z.literal("last_month"), z.literal("last_3_months"), z.literal("last_6_months"), z.literal("this_year"), z.literal("custom")]);
 

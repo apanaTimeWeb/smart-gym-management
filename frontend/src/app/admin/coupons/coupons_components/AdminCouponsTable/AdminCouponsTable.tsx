@@ -29,7 +29,7 @@ export default function AdminCouponsTable() {
   return (
     <div className="bg-card rounded-xl border border-border overflow-hidden">
       <div className="overflow-x-auto">
-        <table className="w-full">
+        <table data-admin-responsive-table className="w-full">
           <thead>
             <tr className="bg-primary/5">
               {TABLE_HEADERS.map(h => (
@@ -42,7 +42,16 @@ export default function AdminCouponsTable() {
               <tr
                 key={coupon.id}
                 className="hover:bg-primary/5 motion-safe:transition-colors cursor-pointer group"
+                role="button"
+                tabIndex={0}
+                aria-label={`Edit coupon ${coupon.code}`}
                 onClick={() => openEdit(coupon)}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    openEdit(coupon);
+                  }
+                }}
               >
                 <td className="px-5 py-4">
                   <div className="flex items-center gap-2">

@@ -1,8 +1,6 @@
 import type { QueryStatus } from '@tanstack/react-query';
-// RESPONSIBILITY: Defines the TypeScript types and interfaces for the HR module.
-import type { ToastType } from '@/app/admin/admin_components/AdminFeedback/AdminToast';
-import { EMPTY_STAFF } from '@/app/admin/hr/hr_utils/AdminHrSharedConstants';
-import React from 'react';
+// RESPONSIBILITY: TypeScript contracts for the Admin HR module.
+import type { AdminToastType } from '@/app/admin/admin_components/AdminFeedback/AdminToastTypes';
 
 export interface HrInitialData {
   staff: Staff[];
@@ -10,16 +8,15 @@ export interface HrInitialData {
   summary: HrSummary | null;
 }
 
-export interface HrContextType {
- staff: Staff[];
- payrolls: Payroll[];
- summary: HrSummary | null;
- status: QueryStatus;
- error: string;
+export interface HrPaymentModalState {
+  payrollId: string;
+  staffName: string;
+  pendingAmount: number;
+}
 
+export interface HrUiContextType {
   visibleColumns: string[];
   setVisibleColumns: (cols: string[]) => void;
-  
   search: string;
   debouncedSearch: string;
   setSearch: (s: string) => void;
@@ -29,30 +26,37 @@ export interface HrContextType {
   setRoleFilter: (s: string) => void;
   currentPage: number;
   setCurrentPage: (p: number) => void;
-  
-  showToast: (msg: string, t: ToastType) => void;
- loadAll: () => Promise<void>;
- 
- // Form / Modal State
- showModal: boolean;
- setShowModal: (show: boolean) => void;
- showPayrollModal: boolean;
- setShowPayrollModal: (show: boolean) => void;
- paymentModal: { payrollId: string; staffName: string; pendingAmount: number; } | null;
- setPaymentModal: (modal: { payrollId: string; staffName: string; pendingAmount: number; } | null) => void;
- showProfileModal: boolean;
- setShowProfileModal: (show: boolean) => void;
- editId: string | null;
- editData: Partial<Staff> | null;
- viewProfileData: Staff | null;
- setViewProfileData: (s: Staff | null) => void;
- saving: boolean;
- 
- // Actions
- openAdd: () => void;
- openEdit: (s: Staff) => void;
- openProfile: (s: Staff) => void;
+  showToast: (msg: string, type: AdminToastType) => void;
+  showModal: boolean;
+  setShowModal: (show: boolean) => void;
+  showPayrollModal: boolean;
+  setShowPayrollModal: (show: boolean) => void;
+  paymentModal: HrPaymentModalState | null;
+  setPaymentModal: (modal: HrPaymentModalState | null) => void;
+  showProfileModal: boolean;
+  setShowProfileModal: (show: boolean) => void;
+  editId: string | null;
+  setEditId: (id: string | null) => void;
+  editData: Partial<Staff> | null;
+  setEditData: (data: Partial<Staff> | null) => void;
+  viewProfileData: Staff | null;
+  setViewProfileData: (staff: Staff | null) => void;
+  payrollMonth: string;
+  setPayrollMonth: (month: string) => void;
+  openAdd: () => void;
+  openEdit: (staff: Staff) => void;
+  openProfile: (staff: Staff) => void;
   openAddPayroll: () => void;
+}
+
+export interface HrServerState {
+  staff: Staff[];
+  payrolls: Payroll[];
+  summary: HrSummary | null;
+  status: QueryStatus;
+  error: string;
+  saving: boolean;
+  loadAll: () => Promise<void>;
   saveStaff: (data: Partial<Staff> & { joinDate?: string | Date; salary?: string | number }) => Promise<void>;
   savePayroll: (data: Partial<Payroll> & { amount?: string | number }) => Promise<void>;
   deleteStaff: (id: string) => Promise<void>;
@@ -60,33 +64,33 @@ export interface HrContextType {
   markPayrollPaid: (id: string, amount: number) => Promise<void>;
   giveAdvance: (data: { staffId: string; amount: number; notes?: string; date?: string; paymentMode?: string }) => Promise<void>;
   payDue: (data: { staffId: string; amount: number; notes?: string; date?: string; paymentMode?: string }) => Promise<void>;
- payrollMonth: string;
- setPayrollMonth: (m: string) => void;
 }
 
+export type HrContextType = HrUiContextType & HrServerState;
+
 export interface Staff {
-  id: string; 
+  id: string;
   employeeId?: string;
-  name: string; 
-  email: string; 
+  name: string;
+  email: string;
   phone: string;
-  role: string; 
-  salary: number; 
-  branch: string; 
+  role: string;
+  salary: number;
+  branch: string;
   gender: string;
-  address?: string; 
-  aadhaar?: string; 
-  upiId?: string; 
+  address?: string;
+  aadhaar?: string;
+  upiId?: string;
   bankAccountNumber?: string;
-  advanceSalary?: number; 
-  joinDate: string; 
+  advanceSalary?: number;
+  joinDate: string;
   joiningDate?: string;
   isActive: boolean;
-  salaryType?: 'Monthly' | 'Daily'; 
-  paymentCycle?: string; 
+  salaryType?: 'Monthly' | 'Daily';
+  paymentCycle?: string;
   currentDue?: number;
-  assignedBranches?: string[]; // Array of branch IDs assigned to the manager
-  primaryBranchId?: string; // The primary branch ID for this manager
+  assignedBranches?: string[];
+  primaryBranchId?: string;
   emergencyContactName?: string;
   emergencyContactPhone?: string;
   department?: string;
@@ -94,12 +98,20 @@ export interface Staff {
   contractType?: string;
   terminationDate?: string;
 }
+
 export interface Payroll {
-  id: string; staffId: string; month: string; amount: number;
-  paidAmount: number; pendingAmount: number;
-  status: string; paidAt?: string; notes?: string;
+  id: string;
+  staffId: string;
+  month: string;
+  amount: number;
+  paidAmount: number;
+  pendingAmount: number;
+  status: string;
+  paidAt?: string;
+  notes?: string;
   staff?: { name: string; role: string };
 }
+
 export interface HrSummary {
   totalSalaryThisMonth: number;
   totalSalaryPaid: number;
@@ -113,6 +125,9 @@ export interface HrSummary {
   pendingCount: number;
 }
 
+
+export type AdminHrLedgerSortKey = 'date' | 'type' | 'credit' | 'debit' | 'balance';
+export type AdminHrLedgerSortDirection = 'asc' | 'desc';
 export interface LedgerEntry {
   id: string;
   staffId: string;

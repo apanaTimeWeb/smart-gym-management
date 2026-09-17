@@ -4,7 +4,7 @@
 
 import { useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import toast from 'react-hot-toast';
+import { adminToast } from '@/app/admin/admin_components/AdminFeedback/AdminToastService';
 import { gymHealthAlertsApi } from '@/app/admin/gym-health-alerts/gym_health_alerts_api/AdminGymHealthAlertsApi';
 import { useAdminGymHealthAlertsStore } from '@/app/admin/gym-health-alerts/gym_health_alerts_store/useAdminGymHealthAlertsStore';
 import { useAdminUrlQuerySync } from '@/app/admin/admin_utils/useAdminUrlQuerySync';
@@ -58,14 +58,14 @@ export function useAdminGymHealthAlertsLogic() {
 
   const resolveMutation = useMutation({
     mutationFn: (id: string) => gymHealthAlertsApi.resolveAlert(id),
-    onSuccess: (response) => { toast.success(response.message, { id: 'admin-success-ef21bd0191' }); qc.invalidateQueries({ queryKey: ['admin', 'gym-health-alerts', 'alerts'] }); },
-    onError: (err) => toast.error((err as Error).message, { id: 'admin-error-dd598eaa1a' }),
+    onSuccess: (response) => { adminToast.success(response.message, 'admin-success-ef21bd0191'); qc.invalidateQueries({ queryKey: ['admin', 'gym-health-alerts', 'alerts'] }); },
+    onError: (err) => adminToast.error((err as Error).message, 'admin-error-dd598eaa1a'),
   });
 
   const dismissMutation = useMutation({
     mutationFn: (id: string) => gymHealthAlertsApi.dismissAlert(id),
-    onSuccess: (response) => { toast.success(response.message, { id: 'admin-success-7946fe9ad1' }); qc.invalidateQueries({ queryKey: ['admin', 'gym-health-alerts', 'alerts'] }); },
-    onError: (err) => toast.error((err as Error).message, { id: 'admin-error-0b8d3968ae' }),
+    onSuccess: (response) => { adminToast.success(response.message, 'admin-success-7946fe9ad1'); qc.invalidateQueries({ queryKey: ['admin', 'gym-health-alerts', 'alerts'] }); },
+    onError: (err) => adminToast.error((err as Error).message, 'admin-error-0b8d3968ae'),
   });
 
   const resolveAlert = useCallback((id: string) => { resolveMutation.mutate(id); }, [resolveMutation]);

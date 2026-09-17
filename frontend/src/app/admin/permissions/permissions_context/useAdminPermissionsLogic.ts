@@ -4,13 +4,15 @@
 
 import { useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import toast from 'react-hot-toast';
+import { adminToast } from '@/app/admin/admin_components/AdminFeedback/AdminToastService';
 import { permissionsApi } from '@/app/admin/permissions/permissions_api/AdminPermissionsApi';
+import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/useAdminConfirm';
 import { useAdminPermissionsStore } from '@/app/admin/permissions/permissions_store/useAdminPermissionsStore';
 import type { RolePermissions, GymPermissionOverride, PermissionsData, RoleType } from '@/app/admin/permissions/permissions_types/AdminPermissionsTypes';
 
 export function useAdminPermissionsLogic() {
   const qc = useQueryClient();
+  const { confirm } = useAdminConfirm();
   const { activeRole, selectedGymId } = useAdminPermissionsStore();
 
   const permissionsQuery = useQuery({
@@ -25,29 +27,48 @@ export function useAdminPermissionsLogic() {
   const updateRoleMutation = useMutation({
     mutationFn: ({ role, permissions }: { role: RoleType; permissions: Record<string, boolean> }) =>
       permissionsApi.updateRolePermissions(role, permissions),
-    onSuccess: (res) => { toast.success(res.message, { id: 'admin-success-87279cf87a' }); qc.invalidateQueries({ queryKey: ['admin', 'permissions', 'matrix'] }); },
-    onError: (err) => toast.error((err as Error).message, { id: 'admin-error-3f24a2a070' }),
+    onSuccess: (res) => { adminToast.success(res.message, 'admin-success-87279cf87a'); qc.invalidateQueries({ queryKey: ['admin', 'permissions', 'matrix'] }); },
+    onError: (err) => adminToast.error((err as Error).message, 'admin-error-3f24a2a070'),
   });
 
   const updateGymMutation = useMutation({
     mutationFn: ({ gymId, role, overrides }: { gymId: string; role: RoleType; overrides: Record<string, boolean> }) =>
       permissionsApi.updateGymOverride(gymId, role, overrides),
-    onSuccess: (res) => { toast.success(res.message, { id: 'admin-success-b366e427f2' }); qc.invalidateQueries({ queryKey: ['admin', 'permissions', 'matrix'] }); },
-    onError: (err) => toast.error((err as Error).message, { id: 'admin-error-8ed3db0d3e' }),
+    onSuccess: (res) => { adminToast.success(res.message, 'admin-success-b366e427f2'); qc.invalidateQueries({ queryKey: ['admin', 'permissions', 'matrix'] }); },
+    onError: (err) => adminToast.error((err as Error).message, 'admin-error-8ed3db0d3e'),
   });
 
-  const updateRolePermission = useCallback((role: RoleType, key: string, value: boolean) => {
-    const current = data?.roleDefaults.find((r) => r.role === role);
+  const updateRolePermission = useCallback(async (role: RoleType, key: string, value: boolean) => {
+    const current = data?.roleDefaults.find((item) => item.role === role);
     if (!current) return;
+    if (!value && current.permissions[key]) {
+      const confirmed = await confirm({
+        title: 'Revoke Permission',
+        message: `Remove ${key} access from the ${role} role?`,
+        confirmText: 'Revoke',
+        type: 'danger',
+      });
+      if (!confirmed) return;
+    }
     const updated = { ...current.permissions, [key]: value };
     updateRoleMutation.mutate({ role, permissions: updated });
-  }, [data, updateRoleMutation]);
+  }, [confirm, data, updateRoleMutation]);
 
-  const updateGymOverride = useCallback((gymId: string, role: RoleType, key: string, value: boolean) => {
-    const current = data?.gymOverrides.find((o) => o.gymId === gymId && o.role === role);
+  const updateGymOverride = useCallback(async (gymId: string, role: RoleType, key: string, value: boolean) => {
+    const current = data?.gymOverrides.find((item) => item.gymId === gymId && item.role === role);
+    const currentValue = current?.overrides?.[key] ?? false;
+    if (!value && currentValue) {
+      const confirmed = await confirm({
+        title: 'Revoke Gym Permission Override',
+        message: `Revoke ${key} override for the ${role} role in this gym?`,
+        confirmText: 'Revoke',
+        type: 'danger',
+      });
+      if (!confirmed) return;
+    }
     const updated = { ...(current?.overrides ?? {}), [key]: value };
     updateGymMutation.mutate({ gymId, role, overrides: updated });
-  }, [data, updateGymMutation]);
+  }, [confirm, data, updateGymMutation]);
 
   const saving = updateRoleMutation.isPending || updateGymMutation.isPending;
 

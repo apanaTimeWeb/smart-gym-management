@@ -58,9 +58,9 @@ be blocked at the API level; the UI must show a clear error from `response.messa
 ## Permissions and Security
 | Action | Required Role |
 |---|---|
-| View plans | `SUPERADMIN` |
-| Create / Edit plans | `SUPERADMIN` |
-| Delete plan | `SUPERADMIN` — requires `useConfirm()` |
+| View plans | `ADMIN` |
+| Create / Edit plans | `ADMIN` |
+| Delete plan | `ADMIN` — requires `useConfirm()` |
 
 ## Loading, Empty, Error States
 - **Loading:** `loading.tsx` — 6 plan card skeletons in a grid

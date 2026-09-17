@@ -1,10 +1,6 @@
 "use client";
 // RESPONSIBILITY: Main entry point for the dashboard module. Renders layout, handles high-level loading/error states, and sets up Context.
-
-import AdminHeader from '@/app/admin/admin_components/AdminLayout/AdminHeader';
 import { useAdminDashboardLogic } from '@/app/admin/dashboard/dashboard_context/useAdminDashboardLogic';
-import { useAdminDashboardStore } from '@/app/admin/dashboard/dashboard_store/useAdminDashboardStore';
-import type { TimeRange } from '@/app/admin/admin_types/AdminSharedTypes';
 import AdminDashboardKPIs from '@/app/admin/dashboard/dashboard_components/AdminDashboardKPIs/AdminDashboardKPIs';
 import AdminDashboardBranchLeaderboard from '@/app/admin/dashboard/dashboard_components/AdminDashboardBranchLeaderboard/AdminDashboardBranchLeaderboard';
 import AdminDashboardAlerts from '@/app/admin/dashboard/dashboard_components/AdminDashboardAlerts/AdminDashboardAlerts';
@@ -34,7 +30,6 @@ function DashboardSkeleton() {
 
 export default function AdminDashboardMain() {
   const { stats, status, error } = useAdminDashboardLogic();
-  const { timeRange, setTimeRange, startDate, endDate, setCustomDateRange } = useAdminDashboardStore();
 
   if (status === 'pending') return <div className="min-h-full"><DashboardSkeleton /></div>;
 
@@ -44,7 +39,6 @@ export default function AdminDashboardMain() {
 
   return (
     <div className="min-h-full">
-      <AdminHeader title="Dashboard" subtitle="Welcome back, Admin! Here's your business overview." />
       <div className="p-6 space-y-6">
 
         {/* Time Range Selector */}

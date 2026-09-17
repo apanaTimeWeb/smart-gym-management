@@ -34,14 +34,14 @@ surfacing near-limit warnings with color-coded progress bars.
 |---|---|---|---|---|---|
 | Usage Dashboard | `/admin/usage` | View all plan limits and current consumption with progress bars | `AdminUsageMain`, `AdminUsageMetricCard` | `GET /admin/usage` | ✅ Live (mock data) |
 | Current Plan Banner | `/admin/usage` | View active plan name, monthly price, billing cycle end date | `AdminUsagePlanCard` | — | ✅ Live |
-| Plan Comparison | `/admin/usage` | Compare current plan vs available upgrade tiers | `AdminUsagePlanCard` | `GET /admin/usage/plans` | ⚠️ Stub |
-| Request Upgrade | `/admin/usage` | Send upgrade request to Superadmin | `AdminUsagePlanCard` | `POST /admin/usage/upgrade-request` | ⚠️ Stub |
+| Plan Comparison | `/admin/usage` | Compare current plan vs available upgrade tiers | `AdminUsagePlanCard` | `GET /admin/usage/plans` | ⚠️ Backend contract pending |
+| Request Upgrade | `/admin/usage` | Send upgrade request to Superadmin | `AdminUsagePlanCard` | `POST /admin/usage/upgrade-request` | ✅ Frontend mutation + MSW |
 
 ---
 
 ## Edge Cases and AI Warnings
 
-- **The current `adminUsageApi` in `admin_api/admin_AdminUsageApi.ts` is a mock stub** — it resolves with hardcoded data via `setTimeout`. The canonical implementation must use `adminUsageApi.fetchMyUsage()` from `usage_api/AdminUsageApi.ts` via `apiFetch`.
+- **Usage data:** `usage_api/AdminUsageApi.ts` uses the module URL configuration and `apiFetch`; MSW fixtures provide frontend-first demo data.
 - **Near-limit warning threshold** — when usage reaches ≥80% of a limit, the progress bar must turn amber (`text-warning`). When ≥95%, it must turn red (`text-danger`). This threshold must be defined as `USAGE_WARNING_THRESHOLD = 0.8` and `USAGE_CRITICAL_THRESHOLD = 0.95` in `usage_utils/`, never hardcoded in components.
 - **Admins cannot change their plan directly.** The "Upgrade" action sends a request to the Superadmin — it does not charge or change anything immediately. The UI must make this clear.
 
@@ -54,8 +54,8 @@ surfacing near-limit warnings with color-coded progress bars.
 - [x] Rule 11: Centralized URL Config — `AdminUsageUrlConfig` in `usage_url_config.ts`
 - [x] Rule 13: Feature Map — this document
 - [x] Rule 40: `usage_forbidden.md` present
-- [ ] Rule 14: Mock stub in `admin_AdminUsageApi.ts` must be replaced with real `apiFetch` call
-- [x] Rule 75: Module-owned MSW handler configured in `admin/usage/usage_mocks/handlers/AdminUsageMockHandlers.ts`
+- [x] Rule 14: Usage client uses the module `apiFetch` implementation; legacy mock-stub path is removed
+- [x] Rule 75: Module-owned MSW handler configured in `usage_mocks/handlers/AdminUsageMockHandlers.ts`
 
 
 ## User Flows & Interactions
@@ -68,7 +68,7 @@ surfacing near-limit warnings with color-coded progress bars.
 ## Data and State Architecture
 - Server state: TanStack Query owns API responses, loading/error state, pagination and mutation reconciliation.
 - UI state: component-local state or module-scoped Zustand only for UI concerns.
-- Query keys observed in source: none discovered.
+- Query key observed in source: `admin/usage`. Upgrade mutations invalidate this key after a successful request.
 
 
 ## API Contract

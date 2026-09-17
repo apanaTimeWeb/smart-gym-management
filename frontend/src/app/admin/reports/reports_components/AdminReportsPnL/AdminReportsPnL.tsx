@@ -16,7 +16,7 @@ export default function AdminReportsPnL() {
           <p className="text-xs text-secondary mt-0.5">Full revenue, cost, and profit breakdown for the selected period</p>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table data-admin-responsive-table className="w-full">
             <thead>
               <tr className="bg-primary/5">
                 {['Gym', 'Total Revenue', 'Membership Rev.', 'Store Rev.', 'Staff Cost', 'Operational Cost', 'Total Expenses', 'Net Profit', 'Margin'].map(h => (

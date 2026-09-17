@@ -2,6 +2,8 @@
 
 // RESPONSIBILITY: Renders the read-only paginated Finance payment history returned by TanStack Query.
 import { formatCurrency } from '@/lib/formatters';
+import type { AdminFinancePaymentSortKey } from '@/app/admin/finance/finance_types/AdminFinanceUiTypes';
+import type { AdminSortDirection } from '@/app/admin/admin_types/AdminSortTypes';
 import { useMemo, useState } from 'react';
 import { ChevronDown, ChevronUp, ChevronsUpDown } from 'lucide-react';
 import { useAdminFinanceLogic } from '@/app/admin/finance/finance_context/useAdminFinanceLogic';
@@ -11,19 +13,18 @@ import { ADMIN_ITEMS_PER_PAGE } from '@/app/admin/admin_url_config';
 
 export default function AdminFinancePaymentsTable() {
   const { payments, totalPayments, status, currentPage, setCurrentPage } = useAdminFinanceLogic();
-  type PaymentSortKey = 'invoiceNo' | 'member' | 'amount' | 'method' | 'status' | 'paidAt';
-  const [sortKey, setSortKey] = useState<PaymentSortKey>('paidAt');
-  const [sortDir, setSortDir] = useState<'asc'|'desc'>('desc');
+  const [sortKey, setSortKey] = useState<AdminFinancePaymentSortKey>('paidAt');
+  const [sortDir, setSortDir] = useState<AdminSortDirection>('desc');
   const sortedPayments = useMemo(() => [...payments].sort((a,b)=>{const av=sortKey==='member'?a.member?.name:a[sortKey]; const bv=sortKey==='member'?b.member?.name:b[sortKey]; const result=typeof av==='number'&&typeof bv==='number'?av-bv:String(av??'').localeCompare(String(bv??''),undefined,{numeric:true}); return sortDir==='asc'?result:-result;}), [payments,sortKey,sortDir]);
-  const handleSort=(key:PaymentSortKey)=>{if(sortKey===key)setSortDir(d=>d==='asc'?'desc':'asc');else{setSortKey(key);setSortDir('desc');}};
+  const handleSort=(key:AdminFinancePaymentSortKey)=>{if(sortKey===key)setSortDir(d=>d==='asc'?'desc':'asc');else{setSortKey(key);setSortDir('desc');}};
   const totalPages = Math.max(1, Math.ceil(totalPayments / ADMIN_ITEMS_PER_PAGE));
 
   if (status === 'pending') {
     return (
       <div className="overflow-x-auto" aria-busy="true" aria-label="Loading payments">
-        <table className="w-full">
+        <table data-admin-responsive-table className="w-full">
           <thead className="bg-input text-secondary">
-            <tr>{PAYMENTS_TABLE_HEADERS.map((header,index) => { const keys: PaymentSortKey[]=['invoiceNo','member','amount','method','status','paidAt']; const key=keys[index]; return <th key={header} className="text-left text-xs font-semibold uppercase tracking-wider px-4 py-3">{header}{key && <button type="button" onClick={()=>handleSort(key)} className="ml-1 inline-flex align-middle" aria-label={`Sort by ${header}`} title={`Sort by ${header}`}>{sortKey===key?(sortDir==='asc'?<ChevronUp size={13} className="text-primary"/>:<ChevronDown size={13} className="text-primary"/>):<ChevronsUpDown size={13} className="text-disabled"/>}</button>}</th>; })}</tr>
+            <tr>{PAYMENTS_TABLE_HEADERS.map((header,index) => { const keys: AdminFinancePaymentSortKey[]=['invoiceNo','member','amount','method','status','paidAt']; const key=keys[index]; return <th key={header} className="text-left text-xs font-semibold uppercase tracking-wider px-4 py-3">{header}{key && <button type="button" onClick={()=>handleSort(key)} className="ml-1 inline-flex align-middle" aria-label={`Sort by ${header}`} title={`Sort by ${header}`}>{sortKey===key?(sortDir==='asc'?<ChevronUp size={13} className="text-primary"/>:<ChevronDown size={13} className="text-primary"/>):<ChevronsUpDown size={13} className="text-disabled"/>}</button>}</th>; })}</tr>
           </thead>
           <tbody className="divide-y divide-border">
             {Array.from({ length: 5 }, (_, index) => (
@@ -44,9 +45,9 @@ export default function AdminFinancePaymentsTable() {
   return (
     <>
       <div className="overflow-x-auto">
-        <table className="w-full">
+        <table data-admin-responsive-table className="w-full">
           <thead className="bg-input text-secondary">
-            <tr>{PAYMENTS_TABLE_HEADERS.map((header,index) => { const keys: PaymentSortKey[]=['invoiceNo','member','amount','method','status','paidAt']; const key=keys[index]; return <th key={header} scope="col" className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider">{header}{key && <button type="button" onClick={()=>handleSort(key)} className="ml-1 inline-flex align-middle" aria-label={`Sort by ${header}`} title={`Sort by ${header}`}>{sortKey===key?(sortDir==='asc'?<ChevronUp size={13} className="text-primary"/>:<ChevronDown size={13} className="text-primary"/>):<ChevronsUpDown size={13} className="text-disabled"/>}</button>}</th>; })}</tr>
+            <tr>{PAYMENTS_TABLE_HEADERS.map((header,index) => { const keys: AdminFinancePaymentSortKey[]=['invoiceNo','member','amount','method','status','paidAt']; const key=keys[index]; return <th key={header} scope="col" className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider">{header}{key && <button type="button" onClick={()=>handleSort(key)} className="ml-1 inline-flex align-middle" aria-label={`Sort by ${header}`} title={`Sort by ${header}`}>{sortKey===key?(sortDir==='asc'?<ChevronUp size={13} className="text-primary"/>:<ChevronDown size={13} className="text-primary"/>):<ChevronsUpDown size={13} className="text-disabled"/>}</button>}</th>; })}</tr>
           </thead>
           <tbody className="divide-y divide-border">
             {payments.length === 0 ? (

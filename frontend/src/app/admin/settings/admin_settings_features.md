@@ -10,7 +10,9 @@ The Admin Settings module manages system-wide configuration for the gym platform
 | `page.tsx` | Server Component — auth guard |
 | `loading.tsx` | Skeleton for settings form sections |
 | `error.tsx` | Error boundary |
-| `settings_components/AdminSettingsContent/AdminSettingsContent.tsx` | Root Client Component (tab orchestrator) |
+| `settings_components/AdminSettingsContent/AdminSettingsContent.tsx` | Root Client Component (tab orchestrator/view) |
+| `settings_context/useAdminSettingsData.ts` | TanStack Query owner for settings server state |
+| `settings_context/useAdminSettingsForms.ts` | RHF/Zod + mutation owner for settings section forms |
 | `settings_components/AdminSettingsNav/AdminSettingsNav.tsx` | Navigation menu connecting to URL `?tab=` |
 | `settings_components/AdminSettingsGymProfile/AdminSettingsGymProfile.tsx` | Gym Profile Form (RHF + Zod) |
 | `settings_components/AdminSettingsNotifications/AdminSettingsNotifications.tsx` | Notifications Form (RHF + Zod) |
@@ -36,9 +38,9 @@ The Admin Settings module manages system-wide configuration for the gym platform
 | General | `/admin/settings?tab=general` | Timezone, language, backups | `GET/POST /admin/settings` | ✅ Live |
 
 ## Data and State Architecture
-- **Server-state**: Fetched by TanStack Query in `AdminSettingsContent` and passed down as `initialData`.
+- **Server-state**: Fetched and owned by `useAdminSettingsData` through TanStack Query; `AdminSettingsContent` consumes the query result and passes section data to view components.
 - **URL State**: Active tab is managed via `useSearchParams` (`?tab=profile`). No Zustand.
-- **Form State**: Each sub-component manages its own `react-hook-form` and tracks `isDirty` state independently.
+- **Form State**: `useAdminSettingsForms` creates the section-specific RHF/Zod form and owns mutation/loading/error/cache invalidation; each view component consumes the returned form state.
 - **Unsaved Changes**: Hook `useUnsavedChangesGuard` leverages the `beforeunload` event to prevent accidental navigation when forms are dirty.
 
 ## User Flows
@@ -55,7 +57,7 @@ The Admin Settings module manages system-wide configuration for the gym platform
 
 ## Rule Compliance Checklist
 - [x] Rule 1: Micro-modularization — module-prefixed files
-- [x] Rule 6: Logic/UI Separation — form logic in section components, not in Main
+- [x] Rule 6: Logic/UI Separation — server query and form/mutation logic are owned by Settings context hooks
 - [x] Rule 8: Server/Client Boundary — `page.tsx` = Server
 - [x] Rule 9: `loading.tsx` + `error.tsx` present
 - [x] Rule 13: Feature Map — this document, accurately reflecting the new RHF split
