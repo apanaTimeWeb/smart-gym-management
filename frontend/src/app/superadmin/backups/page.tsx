@@ -1,11 +1,11 @@
 import { Suspense } from 'react';
+import SuperadminPageSuspenseSkeleton from '@/app/superadmin/superadmin_components/SuperadminPageSuspenseSkeleton';
 // RESPONSIBILITY: Pure Server Component for the backups page. Renders the interactive client component.
 import SuperadminBackupsClient from '@/app/superadmin/backups/backups_components/SuperadminBackupsClient';
-
+import SuperadminBackupsV1Client from '@/app/superadmin/backups/backups_components/SuperadminBackupsV1Client';
 export default function Page() {
-  return (
-    <Suspense fallback={<div className="p-6 flex justify-center text-secondary">Loading...</div>}>
+    return (<Suspense fallback={<SuperadminPageSuspenseSkeleton />}>
       <SuperadminBackupsClient />
-    </Suspense>
-  );
+      <SuperadminBackupsV1Client />
+    </Suspense>);
 }

@@ -6,21 +6,22 @@ import type { ApiResponse } from '@/lib/api';
 import type { Broadcast, BroadcastFormData, SuperadminBroadcastTenant } from '@/app/superadmin/broadcasts/superadmin_broadcasts_types/superadmin_broadcasts_types';
 import { SuperadminBroadcastTenantSchema } from '@/app/superadmin/broadcasts/superadmin_broadcasts_types/superadmin_broadcasts_types';
 import { z } from "zod";
-
 export const broadcastsApi = {
-  fetchBroadcasts: (params?: Record<string, string>) => {
-    const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<ApiResponse<Broadcast[]>>(`${BroadcastsUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.array(BroadcastResponseSchema) });
-  },
-  createBroadcast: (body: BroadcastFormData) => apiFetch<ApiResponse<Broadcast>>(BroadcastsUrlConfig.BACKEND_API.BASE, { method: 'POST', body: JSON.stringify(body),
-      dataSchema: BroadcastSchema
-}),
-  deleteBroadcast: (id: string) => apiFetch<ApiResponse<void>>(`${BroadcastsUrlConfig.BACKEND_API.BASE}/${id}`, { method: 'DELETE',
-      dataSchema: z.object({}).passthrough()
-}),
-  updateBroadcast: (id: string, body: Partial<BroadcastFormData>) => apiFetch<ApiResponse<Broadcast>>(`${BroadcastsUrlConfig.BACKEND_API.BASE}/${id}`, { method: 'PATCH', body: JSON.stringify(body),
-      dataSchema: BroadcastResponseSchema
-}),
-  fetchTenants: () => apiFetch<ApiResponse<SuperadminBroadcastTenant[]>>(BroadcastsUrlConfig.BACKEND_API.TENANTS, { dataSchema: z.array(SuperadminBroadcastTenantSchema) }),
-  fetchRecipientCount: () => apiFetch<ApiResponse<{ count: number }>>(`${BroadcastsUrlConfig.BACKEND_API.BASE}/recipient-count`, { dataSchema: z.object({}).passthrough() }),
+    fetchBroadcasts: (params?: Record<string, string>) => {
+        const q = params ? '?' + new URLSearchParams(params).toString() : '';
+        return apiFetch<ApiResponse<Broadcast[]>>(`${BroadcastsUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.array(BroadcastResponseSchema) });
+    },
+    createBroadcast: (body: BroadcastFormData) => apiFetch<ApiResponse<Broadcast>>(BroadcastsUrlConfig.BACKEND_API.BASE, { method: 'POST', body: JSON.stringify(body),
+        dataSchema: BroadcastSchema
+    }),
+    deleteBroadcast: (id: string) => apiFetch<ApiResponse<void>>(`${BroadcastsUrlConfig.BACKEND_API.BASE}/${id}`, { method: 'DELETE',
+        dataSchema: z.object({}).passthrough()
+    }),
+    updateBroadcast: (id: string, body: Partial<BroadcastFormData>) => apiFetch<ApiResponse<Broadcast>>(`${BroadcastsUrlConfig.BACKEND_API.BASE}/${id}`, { method: 'PATCH', body: JSON.stringify(body),
+        dataSchema: BroadcastResponseSchema
+    }),
+    fetchTenants: () => apiFetch<ApiResponse<SuperadminBroadcastTenant[]>>(BroadcastsUrlConfig.BACKEND_API.TENANTS, { dataSchema: z.array(SuperadminBroadcastTenantSchema) }),
+    fetchRecipientCount: () => apiFetch<ApiResponse<{
+        count: number;
+    }>>(`${BroadcastsUrlConfig.BACKEND_API.BASE}/recipient-count`, { dataSchema: z.object({}).passthrough() }),
 };

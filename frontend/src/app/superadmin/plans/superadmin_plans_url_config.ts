@@ -1,4 +1,4 @@
 export const PlansUrlConfig = {
-  PAGES: { MAIN: "/superadmin/plans" },
-  BACKEND_API: { BASE: "/superadmin/plans" }
+    PAGES: { MAIN: "/superadmin/plans" },
+    BACKEND_API: { BASE: "/superadmin/plans" }
 };

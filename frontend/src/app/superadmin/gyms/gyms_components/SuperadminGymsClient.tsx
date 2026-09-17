@@ -1,32 +1,24 @@
-'use client';
 // RESPONSIBILITY: Root orchestrator for the Gyms page. Renders the layout, toolbar, and table.
-import '@/app/superadmin/gyms/gyms.css';
+'use client';
+import '@/app/superadmin/gyms/SuperadminGyms.css';
 import Link from 'next/link';
 import { Plus } from 'lucide-react';
 import { GymsUrlConfig } from '@/app/superadmin/gyms/superadmin_gyms_url_config';
 import SuperadminGymsToolbar from '@/app/superadmin/gyms/gyms_components/SuperadminGymsToolbar/SuperadminGymsToolbar';
 import SuperadminGymsTable from '@/app/superadmin/gyms/gyms_components/SuperadminGymsTable/SuperadminGymsTable';
-
-
 import SuperadminGymsCalendar from '@/app/superadmin/gyms/gyms_components/SuperadminGymsCalendar/SuperadminGymsCalendar';
 import { useSuperadminGymsStore } from '@/app/superadmin/gyms/gyms_store/useSuperadminGymsStore';
 import { SuperadminErrorBoundary } from '@/app/superadmin/superadmin_components/SuperadminLayout/SuperadminErrorBoundary';
-
 export default function SuperadminGymsClient() {
-  const viewMode = useSuperadminGymsStore(state => state.viewMode);
-
-  return (
-    <div className="space-y-6">
+    const viewMode = useSuperadminGymsStore(state => state.viewMode);
+    return (<div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Gyms</h1>
           <p className="text-secondary mt-1">Manage your SaaS clients, subscriptions, and access.</p>
         </div>
-        <Link 
-          href={GymsUrlConfig.PAGES.ADD}
-          className="flex items-center gap-2 bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-lg font-medium motion-safe:transition-colors shadow-lg shadow-primary/20"
-        >
-          <Plus className="w-5 h-5" />
+        <Link href={GymsUrlConfig.PAGES.ADD} className="flex items-center gap-2 bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-lg font-medium motion-safe:transition-colors shadow-lg shadow-primary/20">
+          <Plus size={18}/>
           Onboard New Gym
         </Link>
       </div>
@@ -37,6 +29,5 @@ export default function SuperadminGymsClient() {
           {viewMode === 'calendar' ? <SuperadminGymsCalendar /> : <SuperadminGymsTable />}
         </SuperadminErrorBoundary>
       </div>
-    </div>
-  );
+    </div>);
 }

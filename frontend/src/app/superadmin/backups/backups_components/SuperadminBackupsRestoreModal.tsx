@@ -1,52 +1,43 @@
-'use client';
-import { useSuperadminDialogAccessibility } from '@/app/superadmin/superadmin_utils/useSuperadminDialogAccessibility';
 // RESPONSIBILITY: Modal for confirming a dangerous database restore from a backup snapshot.
+'use client';
 import { formatDate, formatDateTime } from '@/lib/formatters';
 // Requires the user to type "RESTORE" before the action can be committed.
-
 import { RotateCcw } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { backupsApi } from '@/app/superadmin/backups/superadmin_backups_api/superadmin_backups_api';
+import * as backupsApi from '@/app/superadmin/backups/superadmin_backups_api/superadmin_backups_api';
 import type { BackupRecord } from '@/app/superadmin/backups/superadmin_backups_types/superadmin_backups_types';
-
 interface SuperadminBackupsRestoreModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  selectedBackup: BackupRecord | null;
-  restoreConfirmText: string;
-  setRestoreConfirmText: (val: string) => void;
-  onSuccess: () => void;
+    isOpen: boolean;
+    onClose: () => void;
+    selectedBackup: BackupRecord | null;
+    restoreConfirmText: string;
+    setRestoreConfirmText: (val: string) => void;
+    onSuccess: () => void;
 }
-
-export default function SuperadminBackupsRestoreModal({ 
-  isOpen, onClose, selectedBackup, restoreConfirmText, setRestoreConfirmText, onSuccess 
-}: SuperadminBackupsRestoreModalProps) {
-  const dialogRef = useSuperadminDialogAccessibility(isOpen, onClose);
-
-  if (!isOpen || !selectedBackup) return null;
-
-  const confirmRestore = async () => {
-    if (restoreConfirmText !== 'RESTORE') return;
-    onClose();
-    
-    const loadingToastId = toast.loading(`Restoring database ${selectedBackup.databaseName} from snapshot...`, { id: 'superadmin-toast-c4cfd62ade' });
-    try {
-      const response = await backupsApi.restoreBackupSnapshot(selectedBackup.id);
-      toast.success(response.message, { id: loadingToastId });
-      onSuccess();
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : '', { id: loadingToastId });
-    }
-  };
-
-  return (
-    <div ref={dialogRef}  className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 backdrop-blur-sm p-4" role="dialog" aria-modal="true" aria-labelledby="superadmin-dialog-title">
+export default function SuperadminBackupsRestoreModal({ isOpen, onClose, selectedBackup, restoreConfirmText, setRestoreConfirmText, onSuccess }: SuperadminBackupsRestoreModalProps) {
+    if (!isOpen || !selectedBackup)
+        return null;
+    const confirmRestore = async () => {
+        if (restoreConfirmText !== 'RESTORE')
+            return;
+        onClose();
+        const loadingToastId = toast.loading(`Restoring database ${selectedBackup.databaseName} from snapshot...`, { id: 'superadmin-toast-c4cfd62ade' });
+        try {
+            const response = await backupsApi.restoreBackupSnapshot(selectedBackup.id);
+            toast.success(response.message, { id: loadingToastId });
+            onSuccess();
+        }
+        catch (err) {
+            toast.error(err instanceof Error ? err.message : '', { id: loadingToastId });
+        }
+    };
+    return (<div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 backdrop-blur-sm p-4" role="dialog" aria-modal="true">
       <div className="bg-card w-full max-w-md rounded-2xl shadow-xl overflow-hidden border border-border motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95">
         <div className="p-6">
           <div className="w-12 h-12 rounded-full bg-danger-bg/10 text-danger flex items-center justify-center mb-4">
-            <RotateCcw className="w-6 h-6" />
+            <RotateCcw className="w-6 h-6"/>
           </div>
-          <h2 className="text-xl font-bold text-foreground mb-2" id="superadmin-dialog-title">Restore Database Snapshot</h2>
+          <h2 className="text-xl font-bold text-foreground mb-2">Restore Database Snapshot</h2>
           <p className="text-sm text-secondary mb-4">
             Are you absolutely sure you want to restore the <strong className="text-foreground">{selectedBackup.databaseName}</strong> database using snapshot <strong className="text-foreground font-mono">{selectedBackup.id}</strong>?
           </p>
@@ -57,31 +48,17 @@ export default function SuperadminBackupsRestoreModal({
           </div>
           <div className="mb-6">
             <label className="block text-sm font-medium text-foreground mb-2">Type <span className="font-mono text-danger font-bold">RESTORE</span> to confirm</label>
-            <input 
-              type="text" 
-              value={restoreConfirmText}
-              onChange={(e) => setRestoreConfirmText(e.target.value)}
-              className="w-full px-3 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-danger"
-              placeholder="RESTORE"
-            />
+            <input type="text" value={restoreConfirmText} onChange={(e) => setRestoreConfirmText(e.target.value)} className="w-full px-3 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page focus:border-danger" placeholder="RESTORE"/>
           </div>
           <div className="flex gap-3 justify-end">
-            <button 
-              onClick={() => { onClose(); setRestoreConfirmText(''); }}
-              className="px-4 py-2 rounded-lg font-medium border border-border text-foreground hover:bg-card-hover motion-safe:transition-colors"
-            >
+            <button onClick={() => { onClose(); setRestoreConfirmText(''); }} className="px-4 py-2 rounded-lg font-medium border border-border text-foreground hover:bg-card-hover motion-safe:transition-colors">
               Cancel
             </button>
-            <button 
-              onClick={confirmRestore}
-              disabled={restoreConfirmText !== 'RESTORE'}
-              className="px-4 py-2 rounded-lg font-medium bg-danger hover:bg-danger/90 text-white motion-safe:transition-colors disabled:opacity-50"
-            >
+            <button onClick={confirmRestore} disabled={restoreConfirmText !== 'RESTORE'} className="px-4 py-2 rounded-lg font-medium bg-danger hover:bg-danger/90 text-white motion-safe:transition-colors disabled:opacity-50">
               Yes, Restore Snapshot
             </button>
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>);
 }

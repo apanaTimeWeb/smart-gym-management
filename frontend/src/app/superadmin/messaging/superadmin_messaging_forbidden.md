@@ -6,9 +6,9 @@
 
 2. **No inline JSX in `const` objects** — `NOTIF_ICON` style patterns using `React.ReactNode` in plain constants are forbidden. Use a dedicated render function or small component (e.g., `NotifIcon`) instead.
 
-3. **No hardcoded mock data inside the client component** — All static data (`INITIAL_MESSAGES`, `INITIAL_NOTIFICATIONS`, `CHANNEL_STYLES`, `MESSAGE_STATUS_STYLES`) must be imported from `messaging_constants.ts`.
+3. **No hardcoded server records inside the client component** — Messages, notifications, and tenants must come from `useSuperadminMessaging`/module API state. Display-only constants such as channel/status classes remain in `SuperadminMessagingConstants.ts`.
 
-4. **No native `<select>` for large tenant datasets** — When tenant count exceeds ~20, replace with a searchable custom dropdown (Rule 20). The current `<select>` is acceptable only while tenant count is small.
+4. **Tenant recipient selection must remain searchable and tenant-scoped** — Use the module searchable dropdown; Superadmin messaging must not expose gym-member recipients.
 
 5. **No `any` type** — Strictly forbidden. Use typed interfaces from `messaging_types.ts`.
 
@@ -18,6 +18,6 @@
 
 8. **No hardcoded Tailwind colors** — Use design system tokens only. Never `bg-[#111]` or arbitrary hex values.
 
-9. **No cross-module business component imports** — Only `@/app/superadmin/gyms/gyms_utils/SuperadminGymsConstants` is permitted for shared tenant data.
+9. **No cross-feature business component imports** — Use only shared Superadmin infrastructure or messaging-owned contracts; do not reach into another business feature for recipient data.
 
 10. **No modal z-index above `z-40`** — Modals use `z-40` per the design system Z-index scale (Design §12). Toast notifications own `z-50`.

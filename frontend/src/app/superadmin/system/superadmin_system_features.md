@@ -1,7 +1,7 @@
 # System Feature Map
 
 ## Module Purpose
-This Superadmin feature owns the `system` route and its feature-specific UI, client logic, API boundary, types, schemas, constants, mocks, tests, and documentation. It is intended to be operable by the Superadmin role without importing sibling Superadmin business modules. The feature exposes only the controls represented by the current route and code in this folder. Backend authorization remains outside the frontend audit scope.
+This Superadmin feature owns the `system` route and its feature-specific UI, client logic, API boundary, types, schemas, constants, mocks, tests, and documentation. It is intended to be operable by the Superadmin role without importing sibling Superadmin business modules. The feature exposes migration controls, SLA investigation, tenant search, audit-log filtering/export, and a tenant-level downtime-credit action for breached SLA records. Backend authorization remains outside the frontend audit scope.
 
 ## Directory Structure
 
@@ -18,7 +18,7 @@ This Superadmin feature owns the `system` route and its feature-specific UI, cli
 
 | Feature | Route | User action | Key API/client owner | Status |
 |---|---|---|---|---|
-| `system` | `/superadmin/system` | Use the route's controls to perform the operations implemented by the current client UI. | `system/system_api/superadmin_system_api.ts` | Implemented in source; runtime integration **NOT VERIFIED** without installing project dependencies. |
+| `System operations` | `/superadmin/system` | Review tenant migration state, run a migration for an outdated tenant, inspect SLA records, issue a downtime credit for a breached tenant, and inspect/filter audit logs. | `system/system_api/superadmin_system_api.ts` | Source repaired; runtime integration **NOT VERIFIED** without installed project dependencies. |
 
 ## User Flows & Interactions
 
@@ -45,6 +45,11 @@ This Superadmin feature owns the `system` route and its feature-specific UI, cli
 | Function | Method | Endpoint expression | API file |
 |---|---|---|---|
 | `fetchHealthProbe()` | `GET` | `${SystemUrlConfig.BACKEND_API.BASE}/health` | `system/system_api/superadmin_system_api.ts` |
+| `fetchSystemInfo(params)` | `GET` | `${SystemUrlConfig.BACKEND_API.BASE}?search=...` | `system/system_api/superadmin_system_api.ts` |
+| `fetchMigrations()` | `GET` | `${SystemUrlConfig.BACKEND_API.MIGRATIONS}` | `system/system_api/superadmin_system_api.ts` |
+| `startMigration(tenantId)` | `POST` | `${SystemUrlConfig.BACKEND_API.MIGRATION_TRIGGER}` | `system/system_api/superadmin_system_api.ts` |
+| `fetchAuditLogs(params)` | `GET` | `${SystemUrlConfig.BACKEND_API.AUDIT_LOGS}?page&limit&search` | `system/system_api/superadmin_system_api.ts` |
+| `issueDowntimeCredit(tenantId)` | `POST` | `${SystemUrlConfig.BACKEND_API.SLA_CREDIT(tenantId)}` | `system/system_api/superadmin_system_api.ts` |
 
 ## UI Data Requirements
 
@@ -110,4 +115,4 @@ This feature map is generated from the current repository structure. Where the c
 
 ## Module-Owned MSW Fixtures
 
-Feature-specific mock fixtures and MSW handlers are owned by this feature directory. API responses consumed by UI must remain complete for all documented table fields, KPIs, charts, filters, detail views and mutation messages. Global MSW bootstrap is registration infrastructure only.
+Feature-specific mock fixtures and MSW handlers are owned by this feature directory. SLA records are owned by `system/system_mocks/handlers/SuperadminSystemMockHandlers.ts`; mutation state remains module-owned. API responses consumed by UI must remain complete for all documented table fields, KPIs, charts, filters, detail views and mutation messages. Global MSW bootstrap is registration infrastructure only.

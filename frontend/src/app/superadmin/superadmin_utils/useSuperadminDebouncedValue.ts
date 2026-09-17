@@ -1,19 +1,15 @@
-'use client';
-// RESPONSIBILITY: Debounces a rapidly changing Superadmin UI value before it participates in server queries.
-// DATA FLOW: raw input/URL state → useSuperadminDebouncedValue → query params/query key → API.
-
+// DATA FLOW: Component search input → useSuperadminDebouncedValue → query parameters → API/MSW request.
+// RESPONSIBILITY: Delays module-owned user-entered query values before they reach API-backed data requests.
 import { useEffect, useState } from 'react';
 
-const SUPERADMIN_SEARCH_DEBOUNCE_MS = 300;
-
-/** Delays propagation of a changing value so search-driven server requests are not fired per keystroke. */
-export function useSuperadminDebouncedValue<T>(value: T, delayMs = SUPERADMIN_SEARCH_DEBOUNCE_MS): T {
+/** Delays a value before API-backed Superadmin query state is recalculated. */
+export function useSuperadminDebouncedValue<T>(value: T, delayMs = 300): T {
   const [debouncedValue, setDebouncedValue] = useState(value);
 
   useEffect(() => {
-    const timer = window.setTimeout(() => setDebouncedValue(value), delayMs);
-    return () => window.clearTimeout(timer);
-  }, [value, delayMs]);
+    const timeoutId = window.setTimeout(() => setDebouncedValue(value), delayMs);
+    return () => window.clearTimeout(timeoutId);
+  }, [delayMs, value]);
 
   return debouncedValue;
 }

@@ -1,10 +1,8 @@
 import { z } from 'zod';
-
 export const personalSchema = z.object({
-  name: z.string().min(2, 'Name must be at least 2 characters'),
-  phone: z.string().min(10, 'Enter a valid phone number').max(15),
-  timezone: z.string().optional(),
-  language: z.string().optional(),
+    name: z.string().min(2, 'Name must be at least 2 characters'),
+    phone: z.string().min(10, 'Enter a valid phone number').max(15),
+    timezone: z.string().optional(),
+    language: z.string().optional(),
 });
-
 export type PersonalFormValues = z.infer<typeof personalSchema>;

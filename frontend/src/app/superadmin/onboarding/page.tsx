@@ -1,11 +1,11 @@
 import { Suspense } from 'react';
+import SuperadminPageSuspenseSkeleton from '@/app/superadmin/superadmin_components/SuperadminPageSuspenseSkeleton';
 // RESPONSIBILITY: Renders the page component and its associated UI logic.
 import SuperadminOnboardingClient from '@/app/superadmin/onboarding/onboarding_components/SuperadminOnboardingClient';
-
+import SuperadminOnboardingV1Client from '@/app/superadmin/onboarding/onboarding_components/SuperadminOnboardingV1Client';
 export default function OnboardingPage() {
-  return (
-    <Suspense fallback={<div className="p-6 flex justify-center text-secondary">Loading...</div>}>
+    return (<Suspense fallback={<SuperadminPageSuspenseSkeleton />}>
       <SuperadminOnboardingClient />
-    </Suspense>
-  );
+      <SuperadminOnboardingV1Client />
+    </Suspense>);
 }

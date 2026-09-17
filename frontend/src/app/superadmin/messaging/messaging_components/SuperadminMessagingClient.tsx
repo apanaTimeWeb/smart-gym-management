@@ -1,71 +1,126 @@
+// RESPONSIBILITY: Renders the Superadmin tenant messaging workspace using the module's URL-backed query state.
 'use client';
-// RESPONSIBILITY: Orchestrates the tenant Messaging page view, URL-synced filters, tabs, and modal visibility.
-// DATA FLOW: useSuperadminMessagingData → SuperadminMessagingClient → messages/notifications views.
-import { useMemo, useState } from 'react';
-import { Mail, Bell, Plus, CheckCheck } from 'lucide-react';
+
+import { useState } from 'react';
+import { Bell, CheckCheck, Mail, Plus } from 'lucide-react';
 import toast from 'react-hot-toast';
-import type { TenantMessage, MessageChannel, MessagingTab } from '@/app/superadmin/messaging/messaging_types/superadmin_messaging_types';
+import { useSuperadminMessaging } from '@/app/superadmin/messaging/messaging_utils/useSuperadminMessaging';
 import { SuperadminMessagingComposeModal } from '@/app/superadmin/messaging/messaging_components/SuperadminMessagingComposeModal';
-import { SuperadminMessagingNotificationsTab } from '@/app/superadmin/messaging/messaging_components/SuperadminMessagingNotificationsTab';
 import { SuperadminMessagingMessagesTab } from '@/app/superadmin/messaging/messaging_components/SuperadminMessagingMessagesTab';
-import { useSuperadminMessagingData } from '@/app/superadmin/messaging/messaging_utils/useSuperadminMessagingData';
-import { useSuperadminUrlState } from '@/app/superadmin/superadmin_utils/useSuperadminUrlState';
-import { useSuperadminDebouncedValue } from '@/app/superadmin/superadmin_utils/useSuperadminDebouncedValue';
+import { SuperadminMessagingNotificationsTab } from '@/app/superadmin/messaging/messaging_components/SuperadminMessagingNotificationsTab';
+import type { SuperadminMessagingComposeValues } from '@/app/superadmin/messaging/messaging_schemas/SuperadminMessagingComposeSchema';
 
 export default function SuperadminMessagingClient() {
-  const { getParam, setParam } = useSuperadminUrlState();
-  const tab = getParam('tab', 'messages') as MessagingTab;
-  const search = getParam('search', '');
-  const debouncedSearch = useSuperadminDebouncedValue(search);
-  const channelFilter = getParam('channel', 'ALL') as MessageChannel | 'ALL';
-  const startDate = getParam('startDate', '');
-  const endDate = getParam('endDate', '');
+  const messaging = useSuperadminMessaging();
   const [composeOpen, setComposeOpen] = useState(false);
-  const [composeTenantId, setComposeTenantId] = useState('');
-  const [composeChannel, setComposeChannel] = useState<MessageChannel>('EMAIL');
-  const [composeSubject, setComposeSubject] = useState('');
-  const [composeBody, setComposeBody] = useState('');
-  const { messages, notifications, tenants, isLoading, error, sendMessage, markRead, markAllRead } = useSuperadminMessagingData();
-  const filteredMessages = useMemo(() => messages.filter((message) => {
-    const matchSearch = !debouncedSearch || `${message.tenantName} ${message.subject}`.toLowerCase().includes(debouncedSearch.toLowerCase());
-    const matchChannel = channelFilter === 'ALL' || message.channel === channelFilter;
-    let matchDate = true;
-    if (startDate && endDate && message.sentAt) {
-      const timestamp = new Date(message.sentAt).getTime();
-      matchDate = timestamp >= new Date(startDate).getTime() && timestamp <= new Date(`${endDate}T23:59:59`).getTime();
+
+  async function handleSend(values: SuperadminMessagingComposeValues) {
+    const tenant = messaging.tenants.find((candidate) => candidate.id === values.tenantId);
+    if (!tenant) {
+      toast.error('Select a valid tenant.', { id: 'superadmin-messaging-invalid-tenant' });
+      return;
     }
-    return matchSearch && matchChannel && matchDate;
-  }), [messages, debouncedSearch, channelFilter, startDate, endDate]);
-  const unreadCount = notifications.filter((notification) => !notification.read).length;
-  const handleSend = async () => {
-    if (!composeTenantId || !composeSubject.trim() || !composeBody.trim()) return;
-    const tenant = tenants.find((item) => item.id === composeTenantId);
     try {
-      const response = await sendMessage.mutateAsync({ tenantId: composeTenantId, tenantName: tenant?.name ?? '', channel: composeChannel, subject: composeSubject.trim(), body: composeBody.trim() });
-      toast.success(response.message, { id: `message-${composeTenantId}` });
-      setComposeOpen(false); setComposeTenantId(''); setComposeSubject(''); setComposeBody(''); setComposeChannel('EMAIL');
-    } catch (errorValue: unknown) {
-      toast.error(errorValue instanceof Error ? errorValue.message : 'Message send failed.', { id: `message-${composeTenantId}` });
+      const response = await messaging.sendMessage({ ...values, tenantName: tenant.name });
+      if (!response.success || !response.data) {
+        toast.error(response.message || 'Message could not be sent.', { id: 'superadmin-message-send-error' });
+        return;
+      }
+      toast.success(response.message || 'Message sent.', { id: 'superadmin-message-send-success' });
+      setComposeOpen(false);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Message could not be sent.', { id: 'superadmin-message-send-error' });
     }
-  };
-  const handleMarkAllRead = async () => { try { const response = await markAllRead.mutateAsync(); toast.success(response.message, { id: 'messages-mark-all-read' }); } catch (errorValue: unknown) { toast.error(errorValue instanceof Error ? errorValue.message : 'Notification update failed.', { id: 'messages-mark-all-read' }); } };
-  const handleMarkRead = async (id: string) => { try { const response = await markRead.mutateAsync(id); toast.success(response.message, { id: `message-read-${id}` }); } catch (errorValue: unknown) { toast.error(errorValue instanceof Error ? errorValue.message : 'Notification update failed.', { id: `message-read-${id}` }); } };
-  const handleSetTab = (nextTab: MessagingTab) => setParam('tab', nextTab);
-  if (isLoading) return <div className="space-y-4 motion-safe:animate-pulse"><div className="h-8 w-56 bg-skeleton-base rounded" /><div className="h-72 bg-skeleton-base rounded-xl border border-border" /></div>;
-  if (error) return <div role="alert" className="p-8 text-center text-danger">{error instanceof Error ? error.message : 'Messaging data could not be loaded.'}</div>;
+  }
+
+  async function handleMarkRead(id: string) {
+    try {
+      await messaging.markRead(id);
+      toast.success('Notification marked as read.', { id: `superadmin-notification-read-${id}` });
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Notification could not be updated.', { id: 'superadmin-notification-read-error' });
+    }
+  }
+
+  async function handleMarkAllRead() {
+    try {
+      await messaging.markAllRead();
+      toast.success('Notifications marked as read.', { id: 'superadmin-notifications-read-all' });
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Notifications could not be updated.', { id: 'superadmin-notifications-read-all-error' });
+    }
+  }
+
+  if (messaging.isLoading) {
+    return <div className="p-8 text-center text-secondary motion-safe:animate-pulse">Loading messages...</div>;
+  }
+
+  if (messaging.isError) {
+    return (
+      <div className="rounded-xl border border-danger/30 bg-danger-bg p-6 text-center">
+        <p className="font-semibold text-danger">{messaging.error}</p>
+        <button type="button" onClick={() => { void messaging.refetchAll(); }} className="mt-4 rounded-lg border border-border bg-input px-4 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+          Retry
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div><h1 className="text-2xl font-bold text-foreground">Gym Messaging</h1><p className="text-secondary mt-1 text-sm">Direct tenant messages and in-app notification management.</p></div>
-        {tab === 'messages' && <button onClick={() => setComposeOpen(true)} className="flex items-center gap-2 bg-primary hover:bg-primary-hover text-black font-semibold px-4 py-2 rounded-lg text-sm motion-safe:transition-all motion-safe:duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"><Plus size={18} strokeWidth={2} /> Compose Message</button>}
-        {tab === 'notifications' && unreadCount > 0 && <button onClick={handleMarkAllRead} disabled={markAllRead.isPending} className="min-w-32 flex items-center justify-center gap-2 bg-input border border-border text-secondary hover:text-foreground px-4 py-2 rounded-lg text-sm motion-safe:transition-all motion-safe:duration-200 disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"><CheckCheck size={18} strokeWidth={2} /> {markAllRead.isPending ? 'Marking...' : 'Mark All Read'}</button>}
+      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+        <div>
+          <h1 className="text-2xl font-bold text-foreground">Tenant Messaging</h1>
+          <p className="mt-1 text-sm text-secondary">Direct tenant-owner/admin/manager email or SMS and in-app notifications.</p>
+        </div>
+        {messaging.tab === 'messages' ? (
+          <button type="button" onClick={() => setComposeOpen(true)} className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-black shadow-lg shadow-primary/20 motion-safe:transition-colors hover:bg-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+            <Plus size={18} strokeWidth={2} /> Compose Message
+          </button>
+        ) : messaging.unreadCount > 0 ? (
+          <button type="button" onClick={() => { void handleMarkAllRead(); }} disabled={messaging.isMarkingAllRead} className="flex items-center gap-2 rounded-lg border border-border bg-input px-4 py-2 text-sm text-secondary motion-safe:transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-60">
+            <CheckCheck size={18} strokeWidth={2} /> {messaging.isMarkingAllRead ? 'Marking...' : 'Mark All Read'}
+          </button>
+        ) : null}
       </div>
-      <div className="flex gap-1 bg-input border border-border rounded-xl p-1 w-fit">
-        {([{ key: 'messages', label: 'Messages', icon: Mail }, { key: 'notifications', label: `Notifications${unreadCount ? ` (${unreadCount})` : ''}`, icon: Bell }]).map(({ key, label, icon: Icon }) => <button key={key} onClick={() => handleSetTab(key as MessagingTab)} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium motion-safe:transition-all motion-safe:duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${tab === key ? 'bg-card text-foreground shadow-sm' : 'text-secondary hover:text-foreground'}`}><Icon size={18} strokeWidth={2} /> {label}</button>)}
+
+      <div className="flex w-fit gap-1 rounded-xl border border-border bg-input p-1">
+        {([
+          { key: 'messages' as const, label: 'Messages', icon: Mail },
+          { key: 'notifications' as const, label: `Notifications${messaging.unreadCount > 0 ? ` (${messaging.unreadCount})` : ''}`, icon: Bell },
+        ]).map(({ key, label, icon: Icon }) => (
+          <button key={key} type="button" onClick={() => messaging.setTab(key)} className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${messaging.tab === key ? 'bg-card text-foreground shadow-sm' : 'text-secondary hover:text-foreground'}`}>
+            <Icon size={18} strokeWidth={2} /> {label}
+          </button>
+        ))}
       </div>
-      {tab === 'messages' && <SuperadminMessagingMessagesTab search={search} setSearch={(value) => setParam('search', value)} channelFilter={channelFilter} setChannelFilter={(value) => setParam('channel', String(value))} setStartDate={(value) => setParam('startDate', value)} setEndDate={(value) => setParam('endDate', value)} filteredMessages={filteredMessages as TenantMessage[]} />}
-      {tab === 'notifications' && <SuperadminMessagingNotificationsTab notifications={notifications} handleMarkRead={handleMarkRead} />}
-      {composeOpen && <SuperadminMessagingComposeModal composeTenantId={composeTenantId} setComposeTenantId={setComposeTenantId} tenants={tenants} composeChannel={composeChannel} setComposeChannel={setComposeChannel} composeSubject={composeSubject} setComposeSubject={setComposeSubject} composeBody={composeBody} setComposeBody={setComposeBody} onClose={() => setComposeOpen(false)} onSend={handleSend} />}
+
+      {messaging.tab === 'messages' ? (
+        <SuperadminMessagingMessagesTab
+          search={messaging.search}
+          setSearch={messaging.setSearch}
+          channelFilter={messaging.channelFilter}
+          setChannelFilter={messaging.setChannelFilter}
+          setRange={messaging.setRange}
+          messages={messaging.messages}
+          currentPage={messaging.currentPage}
+          totalPages={messaging.totalPages}
+          totalItems={messaging.totalItems}
+          onPageChange={messaging.setPage}
+          isFetching={messaging.isFetchingMessages}
+        />
+      ) : (
+        <SuperadminMessagingNotificationsTab notifications={messaging.notifications} handleMarkRead={handleMarkRead} isMarkingRead={messaging.isMarkingRead} />
+      )}
+
+      {composeOpen && (
+        <SuperadminMessagingComposeModal
+          tenants={messaging.tenants}
+          isSubmitting={messaging.isSending}
+          onClose={() => setComposeOpen(false)}
+          onSend={handleSend}
+        />
+      )}
     </div>
   );
 }

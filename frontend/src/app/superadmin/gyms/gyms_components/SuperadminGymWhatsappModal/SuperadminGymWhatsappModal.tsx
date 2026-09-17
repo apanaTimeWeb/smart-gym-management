@@ -1,88 +1,46 @@
-'use client';
-import { useSuperadminDialogAccessibility } from '@/app/superadmin/superadmin_utils/useSuperadminDialogAccessibility';
 // RESPONSIBILITY: Renders the modal UI for sending a WhatsApp message to a Gym owner. Purely a view component.
-
+'use client';
 import React from 'react';
 import { X } from 'lucide-react';
 import { maskSensitiveData } from '@/lib/formatters';
 import { useSuperadminGymWhatsappModal } from '@/app/superadmin/gyms/gyms_components/SuperadminGymWhatsappModal/useSuperadminGymWhatsappModal';
-
 import { useSuperadminUnsavedChangesGuard } from '@/app/superadmin/superadmin_utils/useSuperadminUnsavedChangesGuard';
-
 export default function SuperadminGymWhatsappModal() {
-  const {
-    isWhatsappModalOpen,
-    closeWhatsappModal,
-    selectedGym,
-    register,
-    handleSubmit,
-    onSubmit,
-    errors,
-    isSubmitting,
-    isDirty,
-  } = useSuperadminGymWhatsappModal();
-
-  useSuperadminUnsavedChangesGuard(isWhatsappModalOpen && isDirty);
-  const dialogRef = useSuperadminDialogAccessibility(isWhatsappModalOpen, closeWhatsappModal);
-
-
-  if (!isWhatsappModalOpen || !selectedGym) return null;
-
-  return (
-    <div ref={dialogRef}  className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 p-4" role="dialog" aria-modal="true" aria-labelledby="superadmin-dialog-title">
+    const { isWhatsappModalOpen, closeWhatsappModal, selectedGym, register, handleSubmit, onSubmit, errors, isSubmitting, isDirty, } = useSuperadminGymWhatsappModal();
+    useSuperadminUnsavedChangesGuard(isWhatsappModalOpen && isDirty);
+    if (!isWhatsappModalOpen || !selectedGym)
+        return null;
+    return (<div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 p-4" role="dialog" aria-modal="true">
       <div className="bg-overlay rounded-2xl p-7 max-w-md w-full border border-border shadow-2xl relative">
-        <button
-          onClick={closeWhatsappModal}
-          className="absolute top-5 right-5 text-secondary hover:text-foreground motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-         aria-label="Close dialog">
-          <X className="w-5 h-5" />
+        <button onClick={closeWhatsappModal} className="absolute top-5 right-5 text-secondary hover:text-foreground motion-safe:transition-colors">
+          <X size={18}/>
         </button>
 
-        <h2 className="text-lg font-bold text-foreground mb-1" id="superadmin-dialog-title">WhatsApp Gym Owner</h2>
+        <h2 className="text-lg font-bold text-foreground mb-1">WhatsApp Gym Owner</h2>
         <p className="text-sm text-secondary mb-6">Send a WhatsApp message to {selectedGym.ownerName} ({maskSensitiveData(selectedGym.phone, 'phone')}).</p>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
             <label className="block text-sm font-bold text-secondary mb-1">Subject <span className="text-danger">*</span></label>
-            <input
-              type="text"
-              {...register('subject')}
-              className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none motion-safe:transition-colors"
-              placeholder="e.g., Important update about your subscription"
-            />
+            <input type="text" {...register('subject')} className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page motion-safe:transition-colors" placeholder="e.g., Important update about your subscription"/>
             {errors.subject && <p className="text-xs text-danger mt-1">{errors.subject.message}</p>}
           </div>
 
           <div>
             <label className="block text-sm font-bold text-secondary mb-1">Message <span className="text-danger">*</span></label>
-            <textarea
-              {...register('message')}
-              rows={5}
-              className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none motion-safe:transition-colors resize-none"
-              placeholder="Type your message here..."
-            />
+            <textarea {...register('message')} rows={5} className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page motion-safe:transition-colors resize-none" placeholder="Type your message here..."/>
             {errors.message && <p className="text-xs text-danger mt-1">{errors.message.message}</p>}
           </div>
 
           <div className="flex justify-end gap-3 pt-4 mt-6">
-            <button
-              type="button"
-              onClick={closeWhatsappModal}
-              className="px-5 py-2.5 rounded-lg text-sm font-medium text-foreground border border-border hover:bg-background motion-safe:transition-colors"
-              disabled={isSubmitting}
-            >
+            <button type="button" onClick={closeWhatsappModal} className="px-5 py-2.5 rounded-lg text-sm font-medium text-foreground border border-border hover:bg-background motion-safe:transition-colors" disabled={isSubmitting}>
               Cancel
             </button>
-            <button
-              type="submit"
-              className="px-5 py-2.5 rounded-lg text-sm font-medium text-white bg-success hover:bg-success-hover motion-safe:transition-colors disabled:opacity-50"
-              disabled={isSubmitting}
-            >
+            <button type="submit" className="px-5 py-2.5 rounded-lg text-sm font-medium text-white bg-success hover:bg-success-hover motion-safe:transition-colors disabled:opacity-50" disabled={isSubmitting}>
               {isSubmitting ? 'Sending...' : 'Send WhatsApp'}
             </button>
           </div>
         </form>
       </div>
-    </div>
-  );
+    </div>);
 }

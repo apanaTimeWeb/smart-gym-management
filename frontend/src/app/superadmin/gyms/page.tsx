@@ -3,18 +3,15 @@ import { Suspense } from 'react';
 import type { Metadata } from 'next';
 import SuperadminGymsClient from '@/app/superadmin/gyms/gyms_components/SuperadminGymsClient';
 import { SuperadminErrorBoundary } from '@/app/superadmin/superadmin_components/SuperadminLayout/SuperadminErrorBoundary';
-
 export const metadata: Metadata = {
-  title: 'Gyms | Superadmin',
-  description: 'Manage gyms.',
+    title: 'Gyms | Superadmin',
+    description: 'Manage gyms.',
 };
-
+import SuperadminGymsV1Client from '@/app/superadmin/gyms/gyms_components/SuperadminGymsV1Client';
 export default function GymsPage() {
-  // In the future, server-side fetching can happen here before passing data to SuperadminGymsClient
-  return (
-    <SuperadminErrorBoundary>
+    // In the future, server-side fetching can happen here before passing data to SuperadminGymsClient
+    return (<SuperadminErrorBoundary>
       <SuperadminGymsClient />
-    </SuperadminErrorBoundary>
-  );
+      <SuperadminGymsV1Client />
+    </SuperadminErrorBoundary>);
 }
-

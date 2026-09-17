@@ -10,7 +10,7 @@ This Superadmin feature owns the `affiliates` route and its feature-specific UI,
 | `__tests__/` | Owns the feature responsibility represented by this folder. | `superadmin_affiliates_basic.test.tsx` |
 | `affiliates_components/` | Owns the feature responsibility represented by this folder. | `SuperadminAffiliateModal.tsx`, `SuperadminAffiliateStatusBadge.tsx`, `SuperadminAffiliatesClient.tsx`, `SuperadminAffiliatesEmptyState.tsx`, `SuperadminAffiliatesHeader.tsx`, `SuperadminAffiliatesPayoutHistory.tsx`, `SuperadminAffiliatesStatsBar.tsx`, `SuperadminAffiliatesTable.tsx` |
 | `affiliates_mocks/` | Owns the feature responsibility represented by this folder. | `SuperadminAffiliatesMockHandlers.ts` |
-| `affiliates_utils/` | Owns the feature responsibility represented by this folder. | `useSuperadminAffiliatesData.test.ts`, `useSuperadminAffiliatesData.ts`, `useSuperadminAffiliatesMutation.test.ts`, `useSuperadminAffiliatesMutation.ts`, `useSuperadminAffiliatesMutations.ts`, `useSuperadminAffiliatesPage.test.ts`, `useSuperadminAffiliatesPage.ts` |
+| `affiliates_utils/` | Owns the feature responsibility represented by this folder. | `useSuperadminAffiliatesMutation.test.ts`, `useSuperadminAffiliatesMutation.ts`, `useSuperadminAffiliatesMutations.ts`, `useSuperadminAffiliatesPage.test.ts`, `useSuperadminAffiliatesPage.ts` |
 | `superadmin_affiliates_api/` | Owns the feature responsibility represented by this folder. | `superadmin_affiliates_api.ts` |
 | `superadmin_affiliates_types/` | Owns the feature responsibility represented by this folder. | `superadmin_affiliates_types.ts` |
 

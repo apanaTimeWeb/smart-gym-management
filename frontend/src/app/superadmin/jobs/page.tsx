@@ -1,11 +1,11 @@
 import { Suspense } from 'react';
+import SuperadminPageSuspenseSkeleton from '@/app/superadmin/superadmin_components/SuperadminPageSuspenseSkeleton';
 // RESPONSIBILITY: page.tsx acts as a Server Component entry point.
 import SuperadminJobsView from '@/app/superadmin/jobs/jobs_components/SuperadminJobsView';
-
+import SuperadminJobsV1Client from '@/app/superadmin/jobs/jobs_components/SuperadminJobsV1Client';
 export default function JobsPage() {
-  return (
-    <Suspense fallback={<div className="p-6 flex justify-center text-secondary">Loading...</div>}>
+    return (<Suspense fallback={<SuperadminPageSuspenseSkeleton />}>
       <SuperadminJobsView />
-    </Suspense>
-  );
+      <SuperadminJobsV1Client />
+    </Suspense>);
 }

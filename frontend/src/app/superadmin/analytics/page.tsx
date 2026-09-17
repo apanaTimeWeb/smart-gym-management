@@ -1,11 +1,11 @@
 import { Suspense } from 'react';
+import SuperadminPageSuspenseSkeleton from '@/app/superadmin/superadmin_components/SuperadminPageSuspenseSkeleton';
 // RESPONSIBILITY: Renders the page component.
 import SuperadminAnalyticsClient from '@/app/superadmin/analytics/analytics_components/SuperadminAnalyticsClient';
-
+import SuperadminAnalyticsV1Client from '@/app/superadmin/analytics/analytics_components/SuperadminAnalyticsV1Client';
 export default function AnalyticsPage() {
-  return (
-    <Suspense fallback={<div className="p-6 flex justify-center text-secondary">Loading...</div>}>
+    return (<Suspense fallback={<SuperadminPageSuspenseSkeleton />}>
       <SuperadminAnalyticsClient />
-    </Suspense>
-  );
+      <SuperadminAnalyticsV1Client />
+    </Suspense>);
 }

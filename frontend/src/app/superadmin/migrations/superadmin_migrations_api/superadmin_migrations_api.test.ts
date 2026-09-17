@@ -3,89 +3,68 @@
 import { renderHook } from '@testing-library/react';
 import { useQuery } from '@tanstack/react-query';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
-
 vi.mock('@tanstack/react-query', () => ({
-  useQuery: vi.fn(),
+    useQuery: vi.fn(),
 }));
-
 vi.mock('@/app/superadmin/migrations/superadmin_migrations_api/superadmin_migrations_api', () => ({
-  migrationsApi: {
-    fetchMigrations: vi.fn(),
-    startMigration: vi.fn(),
-  },
+    migrationsApi: {
+        fetchMigrations: vi.fn(),
+        startMigration: vi.fn(),
+    },
 }));
-
 vi.mock('@/lib/api', () => ({
-  apiFetch: vi.fn(),
+    apiFetch: vi.fn(),
 }));
-
 import { migrationsApi } from '@/app/superadmin/migrations/superadmin_migrations_api/superadmin_migrations_api';
-
 describe('migrationsApi contract', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
-  it('fetchMigrations resolves with migration data', async () => {
-    const mockData = [
-      { id: 'MIG-001', tenantId: 'GYM-001', status: 'COMPLETED', startedAt: '2024-01-01T10:00:00Z', completedAt: '2024-01-01T10:05:00Z' },
-    ];
-
-    (migrationsApi.fetchMigrations as ReturnType<typeof vi.fn>).mockResolvedValue({
-      success: true,
-      data: mockData,
+    beforeEach(() => {
+        vi.clearAllMocks();
     });
-
-    const result = await migrationsApi.fetchMigrations();
-
-    expect(result.success).toBe(true);
-    expect(result.data).toEqual(mockData);
-  });
-
-  it('fetchMigrations with params appends query string correctly', async () => {
-    (migrationsApi.fetchMigrations as ReturnType<typeof vi.fn>).mockResolvedValue({
-      success: true,
-      data: [],
+    it('fetchMigrations resolves with migration data', async () => {
+        const mockData = [
+            { id: 'MIG-001', tenantId: 'GYM-001', status: 'COMPLETED', startedAt: '2024-01-01T10:00:00Z', completedAt: '2024-01-01T10:05:00Z' },
+        ];
+        (migrationsApi.fetchMigrations as ReturnType<typeof vi.fn>).mockResolvedValue({
+            success: true,
+            data: mockData,
+        });
+        const result = await migrationsApi.fetchMigrations();
+        expect(result.success).toBe(true);
+        expect(result.data).toEqual(mockData);
     });
-
-    await migrationsApi.fetchMigrations({ status: 'FAILED', page: '1' });
-
-    expect(migrationsApi.fetchMigrations).toHaveBeenCalledWith({ status: 'FAILED', page: '1' });
-  });
-
-  it('fetchMigrations returns empty array without crashing', async () => {
-    (migrationsApi.fetchMigrations as ReturnType<typeof vi.fn>).mockResolvedValue({
-      success: true,
-      data: [],
+    it('fetchMigrations with params appends query string correctly', async () => {
+        (migrationsApi.fetchMigrations as ReturnType<typeof vi.fn>).mockResolvedValue({
+            success: true,
+            data: [],
+        });
+        await migrationsApi.fetchMigrations({ status: 'FAILED', page: '1' });
+        expect(migrationsApi.fetchMigrations).toHaveBeenCalledWith({ status: 'FAILED', page: '1' });
     });
-
-    const result = await migrationsApi.fetchMigrations();
-
-    expect(result.data).toEqual([]);
-  });
-
-  it('startMigration posts with the correct tenantId', async () => {
-    (migrationsApi.startMigration as ReturnType<typeof vi.fn>).mockResolvedValue({
-      success: true,
-      message: 'Migration triggered successfully',
-      data: undefined,
+    it('fetchMigrations returns empty array without crashing', async () => {
+        (migrationsApi.fetchMigrations as ReturnType<typeof vi.fn>).mockResolvedValue({
+            success: true,
+            data: [],
+        });
+        const result = await migrationsApi.fetchMigrations();
+        expect(result.data).toEqual([]);
     });
-
-    const result = await migrationsApi.startMigration('GYM-001');
-
-    expect(migrationsApi.startMigration).toHaveBeenCalledWith('GYM-001');
-    expect(result.success).toBe(true);
-  });
-
-  it('startMigration surfaces server error message on failure', async () => {
-    (migrationsApi.startMigration as ReturnType<typeof vi.fn>).mockResolvedValue({
-      success: false,
-      message: 'Tenant database is locked',
+    it('startMigration posts with the correct tenantId', async () => {
+        (migrationsApi.startMigration as ReturnType<typeof vi.fn>).mockResolvedValue({
+            success: true,
+            message: 'Migration triggered successfully',
+            data: undefined,
+        });
+        const result = await migrationsApi.startMigration('GYM-001');
+        expect(migrationsApi.startMigration).toHaveBeenCalledWith('GYM-001');
+        expect(result.success).toBe(true);
     });
-
-    const result = await migrationsApi.startMigration('GYM-LOCKED');
-
-    expect(result.success).toBe(false);
-    expect(result.message).toContain('locked');
-  });
+    it('startMigration surfaces server error message on failure', async () => {
+        (migrationsApi.startMigration as ReturnType<typeof vi.fn>).mockResolvedValue({
+            success: false,
+            message: 'Tenant database is locked',
+        });
+        const result = await migrationsApi.startMigration('GYM-LOCKED');
+        expect(result.success).toBe(false);
+        expect(result.message).toContain('locked');
+    });
 });

@@ -11,7 +11,7 @@ This Superadmin feature owns the `settings` route and its feature-specific UI, c
 | `settings_components/` | Owns the feature responsibility represented by this folder. | `SuperadminSettingsClient.tsx` |
 | `settings_mocks/` | Owns the feature responsibility represented by this folder. | `SuperadminSettingsMockHandlers.ts` |
 | `settings_types/` | Owns the feature responsibility represented by this folder. | `superadmin_settings_types.ts` |
-| `settings_utils/` | Owns the feature responsibility represented by this folder. | `SuperadminSettingsConstants.ts`, `SuperadminSettingsSchemas.ts` |
+| `settings_utils/` | Owns the feature responsibility represented by this folder. | `SuperadminSettingsSchemas.ts` |
 | `superadmin_settings_api/` | Owns the feature responsibility represented by this folder. | `superadmin_settings_api.ts` |
 
 ## Feature Inventory

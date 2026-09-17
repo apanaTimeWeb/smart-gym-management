@@ -1,7 +1,7 @@
+// DATA FLOW: Superadmin UI → useSuperadminAddGymForm → Superadmin module API/state → consuming component
 'use client';
 // RESPONSIBILITY: Manages form state, validation, and API submission for onboarding a new gym.
 // DATA FLOW: SuperadminAddGymForm -> useSuperadminAddGymForm -> gymsApi.createGym
-
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -10,44 +10,38 @@ import type { OnboardGymFormValues } from '@/app/superadmin/gyms/gyms_utils/Supe
 import { useQuery } from '@tanstack/react-query';
 import { gymsApi } from '@/app/superadmin/gyms/superadmin_gyms_api/superadmin_gyms_api';
 import { useSuperadminAddGymFormSubmit } from '@/app/superadmin/gyms/gyms_components/SuperadminAddGymForm/useSuperadminAddGymFormSubmit';
-
 /**
  * Custom hook to encapsulate the logic for the SuperadminAddGymForm component.
  * Handles form validation, UI state (provisioning logs), and API submission.
  */
 export function useSuperadminAddGymForm() {
-  const [showPassword, setShowPassword] = useState(false);
-  
-  const { data: fetchRes, isLoading: loadingPlans } = useQuery({
-    queryKey: ['superadmin', 'gyms', 'subscription-plans'],
-    queryFn: async () => {
-      const res = await gymsApi.fetchSubscriptionPlans();
-      return res.data || [];
-    },
-  });
-  const plans = fetchRes || [];
-
-  const form = useForm<OnboardGymFormValues>({
-    resolver: zodResolver(OnboardGymSchema),
-    defaultValues: { plan: '' },
-  });
-
-  const { onSubmit, isProvisioning, provisioningLogs } = useSuperadminAddGymFormSubmit();
-
-  return {
-    form,
-    register: form.register,
-    handleSubmit: form.handleSubmit,
-    onSubmit,
-    control: form.control,
-    errors: form.formState.errors,
-    isDirty: form.formState.isDirty,
-    isProvisioning,
-    provisioningLogs,
-    showPassword,
-    setShowPassword,
-    plans,
-    loadingPlans,
-  };
+    const [showPassword, setShowPassword] = useState(false);
+    const { data: fetchRes, isLoading: loadingPlans } = useQuery({
+        queryKey: ['superadmin', 'gyms', 'subscription-plans'],
+        queryFn: async () => {
+            const res = await gymsApi.fetchSubscriptionPlans();
+            return res.data || [];
+        },
+    });
+    const plans = fetchRes || [];
+    const form = useForm<OnboardGymFormValues>({
+        resolver: zodResolver(OnboardGymSchema),
+        defaultValues: { plan: '' },
+    });
+    const { onSubmit, isProvisioning, provisioningLogs } = useSuperadminAddGymFormSubmit();
+    return {
+        form,
+        register: form.register,
+        handleSubmit: form.handleSubmit,
+        onSubmit,
+        control: form.control,
+        errors: form.formState.errors,
+        isDirty: form.formState.isDirty,
+        isProvisioning,
+        provisioningLogs,
+        showPassword,
+        setShowPassword,
+        plans,
+        loadingPlans,
+    };
 }
-

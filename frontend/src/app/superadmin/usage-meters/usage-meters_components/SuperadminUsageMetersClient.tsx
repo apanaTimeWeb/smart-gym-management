@@ -1,57 +1,47 @@
-'use client';
 // RESPONSIBILITY: Renders the Superadmin feature UI for SuperadminUsageMetersClient. Owns presentation and user interaction orchestration only; business data access remains in the feature API/query layer.
+'use client';
 /**
  * RESPONSIBILITY: Renders the Usage Meters dashboard for superadmins to monitor tenant resource limits.
  * DATA FLOW: usageMetersApi -> SuperadminUsageMetersClient -> UI
  */
-
 // RESPONSIBILITY: Renders the SuperadminUsageMetersClient component.
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { usageMetersApi } from '@/app/superadmin/usage-meters/superadmin_usage-meters_api/superadmin_usage-meters_api';
 import type { UsageMeter } from '@/app/superadmin/usage-meters/superadmin_usage-meters_types/superadmin_usage-meters_types';
 import { HardDrive, MessageSquare, Users, Calendar } from 'lucide-react';
-
 import { getProgressColor, getPercentage, formatUsageStorage } from '@/app/superadmin/usage-meters/usage-meters_utils/SuperadminUsageMetersUtils';
 import { formatNumber } from '@/lib/formatters';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
-
 export default function SuperadminUsageMetersClient() {
-  const [dateRange, setDateRange] = useState('this_month');
-  const [customFrom, setCustomFrom] = useState('');
-  const [customTo, setCustomTo] = useState('');
-
-  const { data: queryData, isLoading, isError } = useQuery({
-    queryKey: ['superadmin', 'usage-meters', dateRange, customFrom, customTo],
-    queryFn: async () => {
-      const params: Record<string, string> = { range: dateRange };
-      if (dateRange === 'custom') {
-        if (customFrom) params.from = customFrom;
-        if (customTo) params.to = customTo;
-      }
-      const res = await usageMetersApi.fetchUsageMeters(params);
-      if (res.success && res.data) {
-        return { meters: res.data };
-      }
-      return { meters: [] };
+    const [dateRange, setDateRange] = useState('this_month');
+    const [customFrom, setCustomFrom] = useState('');
+    const [customTo, setCustomTo] = useState('');
+    const { data: queryData, isLoading, isError } = useQuery({
+        queryKey: ['superadmin', 'usage-meters', dateRange, customFrom, customTo],
+        queryFn: async () => {
+            const params: Record<string, string> = { range: dateRange };
+            if (dateRange === 'custom') {
+                if (customFrom)
+                    params.from = customFrom;
+                if (customTo)
+                    params.to = customTo;
+            }
+            const res = await usageMetersApi.fetchUsageMeters(params);
+            if (res.success && res.data) {
+                return { meters: res.data };
+            }
+            return { meters: [] };
+        }
+    });
+    const fetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
+    const displayMeters = queryData?.meters || [];
+    if (isLoading) {
+        return (<div className="p-6 space-y-4">
+        {[1, 2, 3].map(i => (<div key={`skeleton-${i}`} className="h-32 bg-card motion-safe:animate-pulse rounded-xl"/>))}
+      </div>);
     }
-  });
-
-  const fetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
-  const displayMeters = queryData?.meters || [];
-
-  if (isLoading) {
-    return (
-      <div className="p-6 space-y-4">
-        {[1, 2, 3].map(i => (
-          <div key={`skeleton-${i}`} className="h-32 bg-card motion-safe:animate-pulse rounded-xl" />
-        ))}
-      </div>
-    );
-  }
-
-  return (
-    <div className="max-w-7xl mx-auto space-y-6">
+    return (<div className="max-w-7xl mx-auto space-y-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Usage Meters</h1>
@@ -60,45 +50,27 @@ export default function SuperadminUsageMetersClient() {
         
         <div className="flex flex-wrap items-center gap-3">
           <div className="relative w-48">
-            <SearchableDropdown
-              value={dateRange}
-              onChange={(val) => setDateRange(val as string)}
-              options={[
-                { value: 'this_week', label: 'This Week' },
-                { value: 'this_month', label: 'This Month' },
-                { value: 'custom', label: 'Custom Range' },
-              ]}
-            />
+            <SearchableDropdown value={dateRange} onChange={(val) => setDateRange(val as string)} options={[
+            { value: 'this_week', label: 'This Week' },
+            { value: 'this_month', label: 'This Month' },
+            { value: 'custom', label: 'Custom Range' },
+        ]}/>
           </div>
 
-          {dateRange === 'custom' && (
-            <div className="flex items-center gap-2">
-              <input 
-                type="date" 
-                value={customFrom}
-                onChange={(e) => setCustomFrom(e.target.value)}
-                className="bg-card border border-border rounded-lg px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page" 
-              />
+          {dateRange === 'custom' && (<div className="flex items-center gap-2">
+              <input type="date" value={customFrom} onChange={(e) => setCustomFrom(e.target.value)} className="bg-card border border-border rounded-lg px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page"/>
               <span className="text-secondary">to</span>
-              <input 
-                type="date" 
-                value={customTo}
-                onChange={(e) => setCustomTo(e.target.value)}
-                className="bg-card border border-border rounded-lg px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page" 
-              />
-            </div>
-          )}
+              <input type="date" value={customTo} onChange={(e) => setCustomTo(e.target.value)} className="bg-card border border-border rounded-lg px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page"/>
+            </div>)}
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {displayMeters.map((meter: UsageMeter) => {
-          const dbGb = meter.databaseGb || 0;
-          const mediaGb = meter.mediaGb || ((meter as unknown as Record<string, unknown>).storageGb as number) || 0;
-          const totalStorage = dbGb + mediaGb;
-
-          return (
-          <div key={meter.id} className="bg-card border border-border rounded-xl p-6 shadow-sm hover:shadow-md motion-safe:transition-shadow">
+            const dbGb = meter.databaseGb || 0;
+            const mediaGb = meter.mediaGb || ((meter as unknown as Record<string, unknown>).storageGb as number) || 0;
+            const totalStorage = dbGb + mediaGb;
+            return (<div key={meter.id} className="bg-card border border-border rounded-xl p-6 shadow-sm hover:shadow-md motion-safe:transition-shadow">
             <h3 className="text-lg font-bold text-primary mb-4 truncate" title={meter.tenantName}>{meter.tenantName}</h3>
             
             <div className="space-y-5">
@@ -106,15 +78,12 @@ export default function SuperadminUsageMetersClient() {
               <div>
                 <div className="flex justify-between text-sm mb-1.5">
                   <span className="flex items-center gap-1.5 text-secondary font-medium">
-                    <MessageSquare className="w-5 h-5" /> Total SMS Sent
+                    <MessageSquare size={18}/> Total SMS Sent
                   </span>
                   <span className="text-foreground font-semibold">{formatNumber(meter.smsSent)}</span>
                 </div>
                 <div className="h-2 w-full bg-input rounded-full overflow-hidden">
-                  <div 
-                    className={`h-full rounded-full ${getProgressColor(meter.smsSent, meter.smsLimit)}`} 
-                    style={{ width: `${getPercentage(meter.smsSent, meter.smsLimit)}%` }}
-                  />
+                  <div className={`h-full rounded-full ${getProgressColor(meter.smsSent, meter.smsLimit)}`} style={{ width: `${getPercentage(meter.smsSent, meter.smsLimit)}%` }}/>
                 </div>
                 <p className="text-xs text-secondary mt-1.5">Limit: {formatNumber(meter.smsLimit)}</p>
               </div>
@@ -123,30 +92,22 @@ export default function SuperadminUsageMetersClient() {
               <div>
                 <div className="flex justify-between text-sm mb-1.5">
                   <span className="flex items-center gap-1.5 text-secondary font-medium">
-                    <HardDrive className="w-5 h-5" /> Total Storage (GB)
+                    <HardDrive size={18}/> Total Storage (GB)
                   </span>
                   <span className="text-foreground font-semibold">formatCurrency(totalStorage) GB
                   </span>
                 </div>
                 <div className="h-2 w-full bg-input rounded-full overflow-hidden flex">
-                  <div 
-                    className="h-full bg-primary"
-                    style={{ width: `${getPercentage(dbGb, meter.storageLimitGb)}%` }}
-                    title={`Database: ${dbGb} GB`}
-                  />
-                  <div 
-                    className="h-full bg-warning"
-                    style={{ width: `${getPercentage(mediaGb, meter.storageLimitGb)}%` }}
-                    title={`Binary: ${mediaGb} GB`}
-                  />
+                  <div className="h-full bg-primary" style={{ width: `${getPercentage(dbGb, meter.storageLimitGb)}%` }} title={`Database: ${dbGb} GB`}/>
+                  <div className="h-full bg-warning" style={{ width: `${getPercentage(mediaGb, meter.storageLimitGb)}%` }} title={`Binary: ${mediaGb} GB`}/>
                 </div>
                 <div className="flex justify-between text-xs mt-1.5 text-secondary">
                   <div className="flex items-center gap-1">
-                    <div className="w-2 h-2 rounded-full bg-primary" />
+                    <div className="w-2 h-2 rounded-full bg-primary"/>
                     <span>DB: {dbGb} GB</span>
                   </div>
                   <div className="flex items-center gap-1">
-                    <div className="w-2 h-2 rounded-full bg-warning" />
+                    <div className="w-2 h-2 rounded-full bg-warning"/>
                     <span>Binary: {mediaGb} GB</span>
                   </div>
                 </div>
@@ -158,17 +119,14 @@ export default function SuperadminUsageMetersClient() {
                 <div>
                   <div className="flex justify-between text-sm mb-1.5">
                     <span className="flex items-center gap-1.5 text-secondary font-medium">
-                      <Users className="w-5 h-5" /> Members
+                      <Users size={18}/> Members
                     </span>
                     <span className="text-foreground font-semibold">
                       {formatNumber((meter.activeMembers ?? 0))} <span className="text-xs text-secondary font-normal">Active</span> / {formatNumber((meter.totalMembers ?? meter.activeMembers ?? 0))} <span className="text-xs text-secondary font-normal">Total</span>
                     </span>
                   </div>
                   <div className="h-2 w-full bg-input rounded-full overflow-hidden">
-                    <div 
-                      className={`h-full rounded-full ${getProgressColor(meter.activeMembers ?? 0, meter.memberLimit ?? 1)}`} 
-                      style={{ width: `${getPercentage(meter.activeMembers ?? 0, meter.memberLimit ?? 1)}%` }}
-                    />
+                    <div className={`h-full rounded-full ${getProgressColor(meter.activeMembers ?? 0, meter.memberLimit ?? 1)}`} style={{ width: `${getPercentage(meter.activeMembers ?? 0, meter.memberLimit ?? 1)}%` }}/>
                   </div>
                   <p className="text-xs text-secondary mt-1.5">Limit: {formatNumber((meter.memberLimit ?? 0))}</p>
                 </div>
@@ -177,15 +135,12 @@ export default function SuperadminUsageMetersClient() {
                 <div>
                   <div className="flex justify-between text-sm mb-1.5">
                     <span className="flex items-center gap-1.5 text-secondary font-medium">
-                      <Users className="w-5 h-5" /> Staff
+                      <Users size={18}/> Staff
                     </span>
                     <span className="text-foreground font-semibold">{formatNumber((meter.staffCount ?? 0))}</span>
                   </div>
                   <div className="h-2 w-full bg-input rounded-full overflow-hidden">
-                    <div 
-                      className={`h-full rounded-full ${getProgressColor(meter.staffCount ?? 0, meter.staffLimit ?? 1)}`} 
-                      style={{ width: `${getPercentage(meter.staffCount ?? 0, meter.staffLimit ?? 1)}%` }}
-                    />
+                    <div className={`h-full rounded-full ${getProgressColor(meter.staffCount ?? 0, meter.staffLimit ?? 1)}`} style={{ width: `${getPercentage(meter.staffCount ?? 0, meter.staffLimit ?? 1)}%` }}/>
                   </div>
                   <p className="text-xs text-secondary mt-1.5">Limit: {formatNumber((meter.staffLimit ?? 0))}</p>
                 </div>
@@ -196,11 +151,8 @@ export default function SuperadminUsageMetersClient() {
               <span>Billing Cycle Ends:</span>
               <span className="font-semibold text-foreground">{meter.billingCycleEnd}</span>
             </div>
-          </div>
-        )})}
+          </div>);
+        })}
       </div>
-    </div>
-  );
+    </div>);
 }
-
-

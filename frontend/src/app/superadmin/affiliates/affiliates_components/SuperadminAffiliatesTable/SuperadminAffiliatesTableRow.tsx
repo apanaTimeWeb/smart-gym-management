@@ -1,27 +1,21 @@
-'use client';
 // RESPONSIBILITY: Renders a single row in the Affiliates data table. Handles row-level action buttons with stopPropagation. Purely presentational.
+'use client';
 import { Pencil, Trash2, Power, Check, Banknote } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
 import SuperadminAffiliateStatusBadge from '@/app/superadmin/affiliates/affiliates_components/SuperadminAffiliateStatusBadge/SuperadminAffiliateStatusBadge';
 import type { Affiliate, AffiliateStatus } from '@/app/superadmin/affiliates/superadmin_affiliates_types/superadmin_affiliates_types';
 import { formatCurrency, formatNumber } from '@/lib/formatters';
-
 interface AffiliatesTableRowProps {
-  affiliate: Affiliate;
-  onToggleStatus: (id: string, currentStatus: AffiliateStatus) => void;
-  onEdit: (affiliate: Affiliate) => void;
-  onDelete: (id: string) => void;
-  onPayCommission?: (affiliate: Affiliate) => void;
+    affiliate: Affiliate;
+    onToggleStatus: (id: string, currentStatus: AffiliateStatus) => void;
+    onEdit: (affiliate: Affiliate) => void;
+    onDelete: (id: string) => void;
+    onPayCommission?: (affiliate: Affiliate) => void;
 }
-
 export default function SuperadminAffiliatesTableRow({ affiliate: aff, onToggleStatus, onEdit, onDelete, onPayCommission }: AffiliatesTableRowProps) {
-  const { confirm } = useSuperadminConfirm();
-  return (
-    <tr 
-      className="hover:bg-primary/5 motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-in-out group cursor-pointer"
-      onClick={() => onEdit(aff)}
-    >
+    const { confirm } = useSuperadminConfirm();
+    return (<tr className="hover:bg-primary/5 motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out group cursor-pointer" onClick={() => onEdit(aff)}>
       <td className="px-6 py-4">
         <div className="flex flex-col">
           <span className="text-sm font-medium text-foreground truncate" title={aff.name}>{aff.name}</span>
@@ -39,90 +33,69 @@ export default function SuperadminAffiliatesTableRow({ affiliate: aff, onToggleS
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-success font-medium">
         {formatCurrency(aff.commissionEarned)}
-        {aff.pendingPayout ? (
-          <span className="ml-2 text-xs text-warning">({formatCurrency(aff.pendingPayout)} pending)</span>
-        ) : null}
+        {aff.pendingPayout ? (<span className="ml-2 text-xs text-warning">({formatCurrency(aff.pendingPayout)} pending)</span>) : null}
       </td>
       <td className="px-6 py-4 whitespace-nowrap">
-        <SuperadminAffiliateStatusBadge status={aff.status} />
+        <SuperadminAffiliateStatusBadge status={aff.status}/>
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
         <div className="flex items-center justify-end gap-2 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 motion-safe:transition-opacity">
-          <button
-            onClick={async (e) => {
-              e.stopPropagation();
-              if (aff.status === 'ACTIVE') {
+          <button onClick={async (e) => {
+            e.stopPropagation();
+            if (aff.status === 'ACTIVE') {
                 const ok = await confirm({
-                  title: 'Suspend Affiliate',
-                  message: `Are you sure you want to suspend ${aff.name}? Their referral links will stop working and they will not earn further commission.`,
-                  type: 'danger',
-                  confirmText: 'Suspend',
+                    title: 'Suspend Affiliate',
+                    message: `Are you sure you want to suspend ${aff.name}? Their referral links will stop working and they will not earn further commission.`,
+                    type: 'danger',
+                    confirmText: 'Suspend',
                 });
-                if (ok) onToggleStatus(aff.id, aff.status);
-              } else {
+                if (ok)
+                    onToggleStatus(aff.id, aff.status);
+            }
+            else {
                 const ok = await confirm({
-                  title: 'Activate Affiliate',
-                  message: `Are you sure you want to activate ${aff.name}? Their referral links will be active again.`,
-                  type: 'info',
-                  confirmText: 'Activate',
+                    title: 'Activate Affiliate',
+                    message: `Are you sure you want to activate ${aff.name}? Their referral links will be active again.`,
+                    type: 'info',
+                    confirmText: 'Activate',
                 });
-                if (ok) onToggleStatus(aff.id, aff.status);
-              }
-            }}
-            className="p-1.5 text-secondary hover:text-primary motion-safe:transition-colors"
-            title={aff.status === 'ACTIVE' ? 'Suspend Affiliate' : 'Activate Affiliate'}
-            aria-label={aff.status === 'ACTIVE' ? `Suspend ${aff.name}` : `Activate ${aff.name}`}
-          >
-            {aff.status === 'ACTIVE' ? <Power className="w-4 h-4" /> : <Check className="w-4 h-4" />}
+                if (ok)
+                    onToggleStatus(aff.id, aff.status);
+            }
+        }} className="p-1.5 text-secondary hover:text-primary motion-safe:transition-colors" title={aff.status === 'ACTIVE' ? 'Suspend Affiliate' : 'Activate Affiliate'} aria-label={aff.status === 'ACTIVE' ? `Suspend ${aff.name}` : `Activate ${aff.name}`}>
+            {aff.status === 'ACTIVE' ? <Power className="w-4 h-4"/> : <Check className="w-4 h-4"/>}
           </button>
-          {onPayCommission && (aff.pendingPayout ?? 0) > 0 && (
-            <button
-              onClick={async (e) => {
+          {onPayCommission && (aff.pendingPayout ?? 0) > 0 && (<button onClick={async (e) => {
                 e.stopPropagation();
                 const ok = await confirm({
-                  title: 'Pay Commission',
-                  message: `Pay ${formatCurrency(aff.pendingPayout || 0)} to ${aff.name}? This will trigger a bank transfer.`,
-                  type: 'warning',
-                  confirmText: 'Pay Now',
+                    title: 'Pay Commission',
+                    message: `Pay ${formatCurrency(aff.pendingPayout || 0)} to ${aff.name}? This will trigger a bank transfer.`,
+                    type: 'warning',
+                    confirmText: 'Pay Now',
                 });
-                if (ok) onPayCommission(aff);
-              }}
-              className="p-1.5 text-secondary hover:text-success motion-safe:transition-colors"
-              title="Pay Commission"
-              aria-label={`Pay commission to ${aff.name}`}
-            >
-              <Banknote className="w-4 h-4" />
-            </button>
-          )}
-          <button
-            onClick={(e) => { e.stopPropagation(); onEdit(aff); }}
-            className="p-1.5 text-secondary hover:text-info motion-safe:transition-colors"
-            title="Edit Affiliate"
-            aria-label={`Edit ${aff.name}`}
-          >
-            <Pencil className="w-4 h-4" />
+                if (ok)
+                    onPayCommission(aff);
+            }} className="p-1.5 text-secondary hover:text-success motion-safe:transition-colors" title="Pay Commission" aria-label={`Pay commission to ${aff.name}`}>
+              <Banknote className="w-4 h-4"/>
+            </button>)}
+          <button onClick={(e) => { e.stopPropagation(); onEdit(aff); }} className="p-1.5 text-secondary hover:text-info motion-safe:transition-colors" title="Edit Affiliate" aria-label={`Edit ${aff.name}`}>
+            <Pencil className="w-4 h-4"/>
           </button>
-          <button
-            onClick={async (e) => { 
-              e.stopPropagation(); 
-              const ok = await confirm({
+          <button onClick={async (e) => {
+            e.stopPropagation();
+            const ok = await confirm({
                 title: 'Delete Affiliate',
                 message: `Are you sure you want to delete affiliate "${aff.name}"? This action cannot be undone.`,
                 type: 'danger',
                 confirmText: 'Delete'
-              });
-              if (ok) {
-                onDelete(aff.id); 
-              }
-            }}
-            className="p-1.5 text-secondary hover:text-danger motion-safe:transition-colors"
-            title="Delete Affiliate"
-            aria-label={`Delete ${aff.name}`}
-          >
-            <Trash2 className="w-4 h-4" />
+            });
+            if (ok) {
+                onDelete(aff.id);
+            }
+        }} className="p-1.5 text-secondary hover:text-danger motion-safe:transition-colors" title="Delete Affiliate" aria-label={`Delete ${aff.name}`}>
+            <Trash2 className="w-4 h-4"/>
           </button>
         </div>
       </td>
-    </tr>
-  );
+    </tr>);
 }

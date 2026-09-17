@@ -1,0 +1,1 @@
+export const SuperadminSegmentsUrlConfig = { PAGES: { MAIN: '/superadmin/segments' }, BACKEND_API: { BASE: '/superadmin/segments', BY_ID: (id: string) => `/superadmin/segments/${encodeURIComponent(id)}` } } as const;

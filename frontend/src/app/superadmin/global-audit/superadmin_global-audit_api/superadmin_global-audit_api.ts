@@ -5,10 +5,9 @@ import type { ApiResponse } from '@/lib/api';
 import type { AuditLog } from '@/app/superadmin/global-audit/superadmin_global-audit_types/superadmin_global-audit_types';
 import { z } from "zod";
 import { AuditLogSchema } from '@/app/superadmin/global-audit/superadmin_global-audit_types/superadmin_global-audit_types';
-
 export const auditLogsApi = {
-  fetchGlobalLogs: (params?: Record<string, string>) => {
-    const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<ApiResponse<AuditLog[]>>(`${GlobalAuditUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.array(AuditLogSchema) });
-  },
+    fetchGlobalLogs: (params?: Record<string, string>) => {
+        const q = params ? '?' + new URLSearchParams(params).toString() : '';
+        return apiFetch<ApiResponse<AuditLog[]>>(`${GlobalAuditUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.array(AuditLogSchema) });
+    },
 };
