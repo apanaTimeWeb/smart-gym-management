@@ -5,7 +5,7 @@ import { SUPERADMIN_SEGMENTS_MOCK_FIXTURE } from '@/app/superadmin/segments/segm
 let mockSegments = [...SUPERADMIN_SEGMENTS_MOCK_FIXTURE.segments];
 const presets = [...SUPERADMIN_SEGMENTS_MOCK_FIXTURE.presets];
 export const superadminSegmentsHandlers = [
-    http.get(SuperadminSegmentsUrlConfig.BACKEND_API.BASE, () => HttpResponse.json({ success: true, message: 'Superadmin segments loaded.', data: { segments: mockSegments, presets } })),
+    http.get('*' + SuperadminSegmentsUrlConfig.BACKEND_API.BASE, () => HttpResponse.json({ success: true, message: 'Superadmin segments loaded.', data: { segments: mockSegments, presets } })),
     http.post(SuperadminSegmentsUrlConfig.BACKEND_API.BASE, async ({ request }) => {
         const payload = await request.json() as { name: string; description: string; rules: number; usedIn: string };
         const segment = { id: `seg-${Date.now()}`, ...payload, tenantCount: 0, updatedAt: new Date().toISOString(), usedIn: payload.usedIn };
