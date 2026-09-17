@@ -18,7 +18,7 @@ export const DietSchema = z.object({
 
 export type DietFormValues = z.infer<typeof DietSchema>;
 
-export const GOALS = ['Weight Loss', 'Muscle Gain', 'Maintenance', 'Endurance', 'Flexibility'];
+export const GOALS = ['Weight Loss', 'Muscle Gain', 'Maintenance', 'Endurance', 'Flexibility'] as const;
 
 export const EMPTY_DIET_FORM = { 
  name: '', 

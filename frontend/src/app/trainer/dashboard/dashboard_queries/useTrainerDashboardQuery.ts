@@ -8,7 +8,7 @@ export function useTrainerDashboardQuery() {
 
   return useQuery({
     queryKey: ['trainer', 'dashboard', timeRange, startDate, endDate],
-    queryFn: () => dashboardApi.getStats(timeRange, startDate, endDate),
+    queryFn: () => dashboardApi.fetchDashboardStats(timeRange, startDate, endDate),
     staleTime: 5 * 60 * 1000,
   });
 }

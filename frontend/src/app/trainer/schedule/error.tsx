@@ -1,4 +1,5 @@
 'use client';
+// RESPONSIBILITY: Renders the error UI for the owning Trainer feature; data access remains in the feature API/query layer.
 import { AlertTriangle, RefreshCcw } from 'lucide-react';
 
 export default function ErrorBoundary({
@@ -9,7 +10,7 @@ export default function ErrorBoundary({
   reset: () => void
 }) {
   return (
-    <div className="min-h-[400px] flex flex-col items-center justify-center p-6 text-center space-y-4">
+    <div className="min-h-96 flex flex-col items-center justify-center p-6 text-center space-y-4">
       <div className="w-16 h-16 bg-danger/10 rounded-full flex items-center justify-center text-danger">
         <AlertTriangle size={32} />
       </div>
@@ -19,7 +20,7 @@ export default function ErrorBoundary({
       </p>
       <button
         onClick={reset}
-        className="mt-4 flex items-center gap-2 px-6 py-2.5 bg-primary text-primary-foreground font-bold rounded-xl hover:opacity-90 transition-opacity"
+        className="mt-4 flex items-center gap-2 px-6 py-2.5 bg-primary text-primary-foreground font-bold rounded-xl hover:opacity-90 motion-safe:transition-opacity"
       >
         <RefreshCcw size={18} /> Try again
       </button>

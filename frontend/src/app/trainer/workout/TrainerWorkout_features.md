@@ -44,7 +44,7 @@ at the trainer level.
 
 ## User Flows
 1. Trainer opens `/trainer/workout` → `WorkoutProvider` fetches `GET /trainer/workout/plans` → grid renders
-2. Trainer clicks "New Plan" → `TrainerWorkoutCreateModal` → RHF + Zod form → `POST` → optimistic add to grid
+2. Trainer clicks "New Plan" → `TrainerWorkoutCreateModal` → RHF + Zod form → `POST` → mutation followed by TanStack Query cache reconciliation from the authoritative backend response
 3. Trainer clicks plan card "Edit" → `TrainerWorkoutEditModal` pre-filled → `PATCH` on submit
 4. Trainer clicks "Delete" → `useConfirm()` confirmation → `DELETE` → plan removed from grid
 5. Trainer clicks plan card title → `TrainerWorkoutDetailDrawer` slides in → exercise list renders
@@ -90,7 +90,7 @@ at the trainer level.
 - [x] Rule 9: `loading.tsx` + `error.tsx` present
 - [x] Rule 13: Feature Map — this document, updated same commit as code changes
 - [x] Rule 15B: Forms use React Hook Form + Zod
-- [x] Rule 20: Member search uses `SearchableDropdown` scoped to assigned members
+- [x] Rule 20: Member search uses `TrainerSearchableDropdown` scoped to assigned members
 - [x] Rule 26: Delete uses `useConfirm()` — no `window.confirm()`
 - [x] Rule 40: `_forbidden.md` present in module directory
 - [x] Rule 55: No `key={index}` — stable plan IDs used

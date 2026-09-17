@@ -100,14 +100,11 @@ export async function apiFetch<T = unknown, Z extends z.ZodTypeAny = z.ZodTypeAn
   }
   let finalRes!: Response;
 
-  // ── DEMO MODE: skip real network call entirely and return mock data ─────────
-  const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === 'true';
-  if (isDemoMode) {
-    console.info(`[MOCK] ${rest.method ?? 'GET'} ${path}`);
-    return getMockResponse(path) as T;
-  }
-
   // ── Network call with automatic mock fallback ──────────────────────────────
+  // DEMO MODE note: demo mode intentionally still performs the request so that the
+  // globally registered MSW handlers (which own the per-module fixture data) can
+  // answer it. The local hardcoded mock_data is only a last-resort fallback for
+  // requests that no handler/backend can serve (see catch/5xx branches below).
   try {
     finalRes = await fetch(`${BASE_URL}${path}`, { ...rest, headers });
 

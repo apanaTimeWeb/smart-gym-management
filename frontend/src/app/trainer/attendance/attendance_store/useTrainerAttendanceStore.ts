@@ -13,10 +13,6 @@ interface TrainerAttendanceStore {
   viewMode: 'calendar' | 'table';
   setViewMode: (v: 'calendar' | 'table') => void;
 
-  // Toast notification (ephemeral UI — not server state)
-  toast: { message: string; type: 'success' | 'error' } | null;
-  showToast: (message: string, type: 'success' | 'error') => void;
-  hideToast: () => void;
 }
 
 export const useTrainerAttendanceStore = create<TrainerAttendanceStore>((set) => ({
@@ -28,7 +24,4 @@ export const useTrainerAttendanceStore = create<TrainerAttendanceStore>((set) =>
   viewMode: 'calendar',
   setViewMode: (viewMode) => set({ viewMode }),
 
-  toast: null,
-  showToast: (message, type) => set({ toast: { message, type } }),
-  hideToast: () => set({ toast: null }),
 }));

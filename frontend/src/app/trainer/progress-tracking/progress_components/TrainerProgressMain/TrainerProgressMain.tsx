@@ -19,7 +19,7 @@ import TrainerProgressEmptyState from '@/app/trainer/progress-tracking/progress_
 import TrainerProgressMemberSelector from '@/app/trainer/progress-tracking/progress_components/TrainerProgressMemberSelector/TrainerProgressMemberSelector';
 import TrainerProgressComparisonChart from '@/app/trainer/progress-tracking/progress_components/TrainerProgressComparisonChart/TrainerProgressComparisonChart';
 import TrainerProgressComparisonTable from '@/app/trainer/progress-tracking/progress_components/TrainerProgressComparisonTable/TrainerProgressComparisonTable';
-import { SearchableDropdown } from '@/app/trainer/trainer_components/TrainerShared/TrainerSearchableDropdown';
+import TrainerSearchableDropdown from '@/app/trainer/trainer_components/TrainerShared/TrainerSearchableDropdown/TrainerSearchableDropdown';
 
 export default function TrainerProgressMain() {
   const { selectedMemberId, setSelectedMemberId, activeTab, setActiveTab } = useTrainerProgressFilters();
@@ -139,9 +139,9 @@ export default function TrainerProgressMain() {
           <>
             <div className="flex items-center justify-between bg-card p-4 rounded-xl border border-border">
               <span className="text-sm font-semibold text-foreground">Select Member:</span>
-              <SearchableDropdown
+              <TrainerSearchableDropdown
                 value={selectedMemberId}
-                onChange={(val) => setSelectedMemberId(String(val))}
+                onChange={(val: string | number) => setSelectedMemberId(String(val))}
                 options={[
                   { label: 'Select a Member...', value: '' },
                   ...allComparisonMembers.map(m => ({ label: m.name, value: m.id }))

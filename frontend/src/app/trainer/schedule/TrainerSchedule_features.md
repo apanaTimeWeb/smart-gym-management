@@ -59,3 +59,5 @@ TanStack Query owns availability/leave server responses. Zustand stores only act
 - [x] RHF/Zod form handling
 - [x] Dirty-state guard
 - [x] Loading/error/not-found route files
+
+- **Feedback:** Mutation success/error feedback uses `useTrainerFeedback()` with stable deduplication IDs and the role-level `TrainerToastHost`.

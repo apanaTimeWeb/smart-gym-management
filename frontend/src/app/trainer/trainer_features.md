@@ -1,125 +1,151 @@
-# Trainer Module — Feature Map
+# Trainer — Feature Map
 
 ## Module Purpose
-The Trainer module is the primary operational interface for gym trainers. It provides role-isolated access to member management (assigned members only), attendance tracking, workout plans, diet library, and notifications. 
-**Strict Role Isolation:** Each sub-module is fully isolated from Admin and Manager roles. Trainers are strictly forbidden from accessing financial data, global member lists, gym revenue, membership plan pricing, and HR data (other staff's payroll/attendance).
+The Trainer module is the authenticated Trainer role surface of Smart Gym 360. It lets trainers manage their own assigned-member coaching workflow, attendance actions, workout and diet assignments, progress tracking, scheduling, sessions, earnings visibility, notifications, and profile settings. The module deliberately isolates feature-specific business code so an AI repair can normally be performed from one feature root without importing another feature's business implementation. Trainers do not receive manager/admin business capabilities such as branch management, permissions, finance administration, or other trainers' private records.
 
 ## Directory Structure
-
-| Folder | Responsibility |
-|---|---|
-| `trainer_components/TrainerLayout/` | App shell: fixed sidebar, sticky header, collapsible navigation |
-| `trainer_components/TrainerFeedback/` | Shared feedback: toast, confirm modal, message modal, bulk messaging |
-| `trainer_components/TrainerShared/` | Generic primitives: pagination, stat card, searchable dropdown |
-| `trainer_utils/` | Shared constants: nav items, notifications, items-per-page |
-| `dashboard/` | Real-time KPI overview, recent assigned members, upcoming sessions |
-| `members/` | Assigned members directory, profile viewing, progress tracking |
-| `attendance/` | Staff check-in/check-out tracking, schedule viewing |
-| `library/` | Diet plan library — create, view, assign to members |
-| `workout/` | Workout plan library — create, view, assign to members |
-| `notifications/` | Real-time alerts for member activity and manager messages |
+| Folder | Responsibility | Key Files |
+|---|---|---|
+| `attendance/` | Member/staff attendance views, mutations, filters, MSW, tests and docs | `attendance_components/*`, `attendance_api/TrainerAttendance_api.ts`, `attendance_queries/*`, `attendance_mocks/handlers/*`, `attendance_fixtures/*` |
+| `dashboard/` | Trainer landing dashboard and read-only coaching metrics | `dashboard_components/*`, `dashboard_api/TrainerDashboard_api.ts`, `dashboard_queries/useTrainerDashboardQuery.ts` |
+| `earnings/` | Trainer earnings/payout views | `earnings_components/*`, `earnings_api/TrainerEarnings_api.ts`, `earnings_queries/*` |
+| `library/` | Trainer diet-plan browsing and assignment | `library_components/*`, `library_api/TrainerLibrary_api.ts`, `library_queries/*` |
+| `members/` | Assigned member list/profile plus member-local attendance/diet/workout/progress supporting data | `members_components/*`, `members_api/TrainerMembersApi.ts`, `members_queries/*`, `members_types/*` |
+| `notifications/` | Trainer notification list and read-state mutations | `notifications_components/*`, `notifications_api/TrainerNotificationsApi.ts`, `notifications_context/*` |
+| `profile/` | Trainer profile and password forms | `profile_components/*`, `profile_api/TrainerProfileApi.ts`, `profile_context/useTrainerProfileLogic.ts` |
+| `progress-tracking/` | Member progress entries, charts and comparison UI | `progress_components/*`, `progress_api/TrainerProgressApi.ts`, `progress_queries/*` |
+| `schedule/` | Weekly availability and leave requests | `schedule_components/*`, `schedule_api/TrainerScheduleApi.ts`, `schedule_queries/*` |
+| `sessions/` | PT/group session list and scheduling/attendance mutations | `sessions_components/*`, `sessions_api/TrainerSessionsApi.ts`, `sessions_queries/*` |
+| `workout/` | Workout plans and exercise library CRUD | `workout_components/*`, `workout_api/TrainerWorkout_api.ts`, `workout_queries/*` |
+| `trainer_components/` | Trainer shell and generic Trainer feedback/shared UI only | `TrainerLayout/*`, `TrainerFeedback/*`, `TrainerShared/*` |
+| `trainer_utils/` | Trainer-wide infrastructure utilities | `TrainerNavigationGuardStore.ts`, `TrainerUseDebounce.ts`, `TrainerUseWarnIfUnsavedChanges.ts`, `TrainerSharedConstants.ts` |
+| `trainer_types/` | Trainer-wide infrastructure types | `TrainerRoleGuardTypes.ts` |
+| `trainer_e2e/` | Critical Playwright flows | `TrainerCriticalFlows.spec.ts` |
 
 ## Feature Inventory
-
-| Feature | Path | Purpose | Main API Calls | Status |
+| Feature | Route | Main API Calls | State Owner | Status |
 |---|---|---|---|---|
-| Dashboard | `/trainer/dashboard` | KPI overview (own clients), upcoming sessions | `GET /trainer/dashboard/stats` | ✅ Live |
-| Members | `/trainer/members` | Assigned members ONLY (profile, BMI/measurements, attendance, NO finance) | `GET/PATCH /trainer/members` | ✅ Live |
-| Attendance | `/trainer/attendance` | Own daily check-in and attendance history | `GET/POST /trainer/attendance` | ✅ Live |
-| Diet Library | `/trainer/library` | View diet plans + assign to own clients (No creating/editing global plans) | `GET/POST /trainer/library/*` | ✅ Live |
-| Workout Library | `/trainer/workout` | View workout plans + assign to own clients (No creating/editing global plans) | `GET/POST /trainer/workout/*` | ✅ Live |
-| Notifications | `/trainer/notifications` | Alerts relevant to trainer (e.g., manager msgs) | `GET/POST /trainer/notifications` | ✅ Live |
+| Dashboard | `/trainer/dashboard` | `GET /trainer/dashboard/stats` | TanStack Query + dashboard UI store | Live; MSW present |
+| Attendance | `/trainer/attendance` | `GET /trainer/attendance`, `/stats`, `/members-basic`, `POST /trainer/attendance`, `PATCH /trainer/attendance/checkout/:staffId` | URL params + Attendance Zustand | Live; MSW present |
+| Earnings | `/trainer/earnings` | `GET /trainer/earnings` | TanStack Query + Earnings store | Live |
+| Diet Library | `/trainer/library` | `GET /trainer/library/diet-plans`, `PATCH /trainer/members/:id/diet` | TanStack Query + local UI | Live |
+| Members | `/trainer/members` | `GET /trainer/members`, `/stats`, `GET /trainer/members/:id`, member supporting-data endpoints, `PATCH /trainer/members/:id` | TanStack Query + Members Zustand | Live |
+| Notifications | `/trainer/notifications` | `GET /trainer/notifications`, notification read mutations | TanStack Query | Live |
+| Profile | `/trainer/profile` | `GET/PATCH /trainer/profile`, `PATCH /trainer/profile/password` | TanStack Query + RHF local form state | Live |
+| Progress Tracking | `/trainer/progress-tracking` | member/entry/summary GET plus create/update/delete entry endpoints | TanStack Query + Progress Zustand | Live |
+| Schedule | `/trainer/schedule` | schedule/availability/leaves GET/PATCH/POST | TanStack Query + Schedule Zustand | Live |
+| Sessions | `/trainer/sessions` | sessions/member options GET, session POST/PATCH/DELETE, attendance POST | TanStack Query + local modal state | Live; MSW present |
+| Workout | `/trainer/workout` | workout/exercise GET, POST, PATCH, DELETE | TanStack Query + Workout Zustand | Live; MSW present |
 
-## Forbidden Features (STRICTLY ENFORCED)
-- **Finance/Sales**: No dashboards, widgets, or APIs exposing gym revenue.
-- **Member Payments**: No viewing membership fees, pending payments, or transaction history.
-- **Global Member List**: Trainers can only view members explicitly assigned to them.
-- **HR & Payroll**: Trainers cannot see other staff members' profiles, attendance, or salaries. (They may only view their own attendance/salary if enabled).
-- **Store & Expenses**: Complete restriction from operational inventory or expense tracking.
-- **Membership Plans**: Complete restriction from managing pricing tiers.
+## User Flows & Interactions
+### Flow 1: Record Member Attendance
+1. Trainer opens `/trainer/attendance`.
+2. URL-backed tab/search/date state feeds the Attendance Query hook.
+3. Trainer opens the record modal from the Members tab.
+4. RHF + Zod validates the payload.
+5. `createAttendanceRecord()` sends the request through the Attendance API boundary.
+6. Success uses the backend `message`, invalidates Attendance queries, and closes the modal.
+7. Failure preserves entered form state and surfaces the API message or safe fallback.
+
+### Flow 2: Update Member Coaching Assignment
+1. Trainer selects a member from `/trainer/members`.
+2. The Members feature loads member detail plus member-local supporting data through `TrainerMembersApi`.
+3. Trainer selects a diet/workout plan using the Trainer-owned searchable dropdown.
+4. Mutation runs through the Members API and Query layer.
+5. On success, authoritative response data reconciles the Query cache.
+6. No Library/Workout/Progress business module is imported into Members.
+
+### Flow 3: Schedule a Session
+1. Trainer opens `/trainer/sessions` and selects a date.
+2. TanStack Query requests the server-backed session list with the selected date.
+3. Trainer opens the schedule modal and selects an API-backed member option.
+4. RHF + Zod validates the session payload.
+5. `createTrainerSession()` posts the payload.
+6. The Query cache is invalidated/reconciled and the backend `message` is shown.
 
 ## Data and State Architecture
+- **Server state:** TanStack Query only; API responses are never stored as the primary source in Context/Zustand.
+- **URL state:** Searchable/filterable/paginated list features use URL parameters and pass those parameters explicitly to their query/API layer.
+- **UI shared state:** Feature-local Zustand stores own modal selection, view modes, local filters, and other UI-only state.
+- **Forms:** React Hook Form + Zod own form state/validation; dirty guards use `useTrainerUnsavedChangesGuard`.
+- **Navigation guard:** `trainer_utils/TrainerNavigationGuardStore.ts` registers dirty feature sources; Trainer sidebar navigation confirms before leaving a dirty feature.
+- **API envelope:** Trainer API clients validate the canonical `{ success, message, data, meta?, error?, statusCode? }` envelope with `TrainerApiResponseSchema` plus feature-specific schemas.
 
-- **Server-state query keys:** N/A — this module uses Context + Zustand
-- **Zustand stores:** Module-scoped stores for UI client state
-- **Context providers:** `DashboardProvider`, `MembersProvider`, `AttendanceProvider`, `LibraryProvider`, `WorkoutProvider`, `TrainerConfirmProvider`
-- **Local-storage keys:** None — auth token stored in HTTP-only cookie
-- **MSW handler file:** Not yet configured — all API calls go to real backend
+## Query Keys
+| Feature | Query Keys |
+|---|---|
+| Attendance | `['trainer','attendance','records', params]`, `['trainer','attendance','stats']`, `['trainer','attendance','members']` |
+| Dashboard | `['trainer','dashboard', timeRange, startDate, endDate]` |
+| Earnings | `['trainer','earnings', startDate, endDate]` |
+| Library | `['trainer','library','diet-plans', { search, goal, page }]` |
+| Members | `['trainer','members','list', params]`, `['trainer','members','stats']`, detail/supporting-data keys under `trainer/members/*` |
+| Notifications | `['trainer','notifications','list']` |
+| Progress | `['trainer','progress','members']`, `entries/memberId`, `summary/memberId` |
+| Schedule | `['trainer','schedule']` |
+| Sessions | `['trainer','sessions','list', { date }]`, `['trainer','sessions','membersBasic']` |
+| Workout | `['trainer','workout','plans', { search, category, page }]`, `['trainer','workout','exercises', { search, category, page }]` |
 
 ## API Contract
+All module API call sites use the centralized Trainer URL configuration in `Trainer_url_config.ts` and the global `apiFetch` transport. Feature-specific response data is validated at the API boundary before Query/UI consumption.
 
-All API calls go through the centralized `apiFetch` wrapper at `@/lib/api`.
+| API Area | Methods |
+|---|---|
+| Attendance | `fetchAttendanceRecords`, `fetchAttendanceStats`, `fetchAttendanceMembersBasic`, `createAttendanceRecord`, `checkoutAttendance`, `selfCheckInAttendance` |
+| Dashboard | `getStats` (existing exported API object method; endpoint is centralized and response validated) |
+| Earnings | `getEarningsData` (existing exported API object method; endpoint is centralized and response validated) |
+| Library | `getDietPlans`, `assignDietPlan` |
+| Members | `fetchMembers`, `fetchMemberById`, `fetchMemberStats`, `updateMember`, `assignDiet`, `assignWorkout`, `fetchMemberAttendance`, `fetchDietPlans`, `fetchWorkoutPlans`, `fetchMemberProgressEntries` |
+| Notifications | `fetchTrainerNotifications`, `markTrainerNotificationRead`, `markAllTrainerNotificationsRead` |
+| Profile | `fetchProfile`, `updateProfile`, `updatePassword` |
+| Progress | member/entry/summary fetches and create/update/delete entry operations |
+| Schedule | schedule read, availability update, leave request |
+| Sessions | session/member-option fetch, create/update/cancel, attendance mutation |
+| Workout | workout/exercise list, create/update/delete |
 
-| Module | API File | URL Config |
-|---|---|---|
-| Members | `members_api/members_api.ts` | `members_api/members_server_api.ts` |
-| Attendance| `attendance_api/` | |
-| Library | `library_api/` | |
-| Workout | `workout_api/` | |
-| Notifications| `notifications_utils/` | |
-
-**Response envelope:** `{ success: boolean, message: string, data: T | null, meta?: PaginationMeta }`
+## UI Data Requirements
+Every feature-level `_features.md` remains the authoritative field map for its own UI. At Trainer root, the required contract is that rendered data must originate from the corresponding feature API/query layer, not component fallback business data. Critical requirements include member names/statuses/IDs, attendance dates/check-in/out/duration, plan metadata, session date/time/member/location, progress metrics, earnings amounts/statuses, notification message/read state, and profile form fields.
 
 ## Permissions and Security
+- Required role for all routes: `TRAINER`.
+- Trainer UI must hide or disable actions that are not part of the Trainer capability set.
+- Members data is restricted to Trainer-owned/assigned scope by the feature contract.
+- Sensitive values are masked in list views where applicable.
+- Frontend permission checks are UX/security-defense-in-depth only; backend authorization remains authoritative.
+- Destructive and critical financial actions use `useConfirm()`; highly irreversible actions must use type-to-confirm.
+- Security-sensitive project-level CODEOWNERS/CI gates are **NOT VERIFIED** from this module-only archive.
 
-- Role: `TRAINER` — all routes under `/trainer/*` require authenticated session with Trainer role
-- Auth: JWT stored in `gymsmart_token` HTTP-only cookie; injected by `apiFetch` wrapper
-- Destructive actions: Protected by `TrainerConfirmProvider` (confirm modal — `useConfirm` hook)
-- Sensitive data: Phone numbers masked using `maskSensitiveData()` from `@/lib/formatters`
-- Cross-role isolation: Zero imports from `/admin`, `/manager`, `/superadmin` (enforced in `trainer_forbidden.md`)
+## Loading, Empty, and Error States
+- Every route has `loading.tsx`, `error.tsx`, and `not-found.tsx` where applicable.
+- Major data sections use structural skeletons; short async button actions may use `Loader2`.
+- Empty list/table states have dedicated entity-specific empty-state components.
+- User-facing error UI uses safe text and Retry where retry is meaningful; technical stack traces/raw backend objects are not rendered.
+- Section failures should not unnecessarily crash unrelated sections.
 
-## Loading, Empty, Error States
+## Edge Cases and AI Warnings
+- **No cross-feature business imports:** Members must not import Library/Workout/Progress business code; localized Member supporting-data contracts live inside Members.
+- **No synthetic business data:** Components must never invent attendance, revenue, member, or plan records when API data is absent.
+- **No duplicate SSR/client fetch:** A page and client Query hook must not independently fetch the same endpoint without an explicit hydration strategy.
+- **No hardcoded routes:** All Trainer routes and feature API endpoints must come from `Trainer_url_config.ts`.
+- **No raw API error rendering:** Route/section UI must not display raw `Error.message` values unless the error has explicitly been normalized as a safe backend user message by the API layer.
+- **No optimistic financial/destructive updates:** Workout/member destructive and financial operations must reconcile against authoritative responses.
+- **No undocumented mock data:** Feature mock fixtures/handlers belong inside their owning feature and must satisfy the consuming UI contract.
+- **No `any`:** Unknown external/API values must be validated/narrowed with Zod.
 
-| Module | Loading | Empty | Error |
-|---|---|---|---|
-| Dashboard | Structural skeleton via `loading.tsx` | N/A | `error.tsx` |
-| Members | `loading.tsx` + `Loader2` spinner | Empty state component | `error.tsx` |
-| Attendance | `loading.tsx` | Inline empty message | `error.tsx` |
-| Library | Skeleton grid cards | Inline empty with icon | Inline retry button |
-| Workout | Skeleton grid cards | Inline empty with icon | Inline retry button |
-| Notifications| Inline `Loader2` | `TrainerNotificationsEmptyState` | `error.tsx` |
-
-## Edge Cases / AI Warnings
-
-- **Never use `window.confirm()`** for destructive actions — always use `useConfirm()` hook from `TrainerConfirmProvider`
-- **No cross-module imports** — if you need a type from another module, duplicate it (intentional pattern per Rule 2)
-- **Server Components** (`page.tsx`) must never import or render Client-Component providers directly
-- **Sidebar active state** uses `bg-primary-subtle` + `border-l-2 border-primary` with glow shadow — NOT solid `bg-primary`
-- **Z-index scale**: header = `z-20`, dropdowns = `z-30`, modals = `z-40`, toasts = `z-50`
+## Component Responsibility Map
+The root orchestrators and major shared UI files follow single-responsibility comments in their source. For detailed component ownership, use the individual feature maps under `attendance/`, `dashboard/`, `earnings/`, `library/`, `members/`, `notifications/`, `profile/`, `progress-tracking/`, `schedule/`, `sessions/`, and `workout/`.
 
 ## Rule Compliance Checklist
-
-- [x] Rule 1: Micro-modularization — module-prefixed subfolders, file size ceilings
-- [x] Rule 2: Total Role Isolation — zero cross-role imports
-- [x] Rule 3: Hyper-descriptive naming — `Trainer` prefix on all files
-- [x] Rule 3B: Centralized data — status maps in `statusBadgeConfig.ts`, URLs in `trainer_url_config.ts`
-- [x] Rule 4: Theme Independence — Tailwind tokens via `globals.css`, no hardcoded hex
-- [x] Rule 5: Smart State Management — Context for stable cross-tree, Zustand for UI state
-- [x] Rule 6: Logic/UI Separation — custom hooks extract all useEffect/logic
-- [x] Rule 7: Type Isolation — `*_types/` folders, no inline interfaces
-- [x] Rule 8: Server/Client Boundary — `page.tsx` = Server, `*Main.tsx` = Client
-- [x] Rule 9: Loading/error/not-found — `loading.tsx` + `error.tsx` in every module
-- [x] Rule 10: Absolute imports — `@/app/trainer/...` throughout
-- [x] Rule 11: Centralized URL Config — `trainer_url_config.ts` per module
-- [x] Rule 13: Feature Map — this document, updated same commit as code changes
-- [x] Rule 14: Backend-driven messages — toasts display backend `message` strings
-- [x] Rule 19: Clickable table rows — all tables use `cursor-pointer`, no View/Eye button
-- [x] Rule 26: Loading button states — `Loader2` spinners on all async actions
-- [x] Rule 32: No barrel files — direct named imports only
-- [x] Rule 40: `_forbidden.md` present with 5+ specific entries
-- [x] Rule 43: Sensitive data masked — phone numbers use `maskSensitiveData()` from `@/lib/formatters`
-- [x] Rule 44: No console.log — removed from all production files
-- [x] Rule 71: Double verification — destructive actions use `useConfirm()` modal
-- [x] Rule 73: `import type` — used for all type-only imports
-- [x] Design §3: Sidebar active = subtle gold border + bg (NOT solid primary)
-- [x] Design §12: Z-index scale — header z-20, dropdowns z-30, modals z-40, toasts z-50
-- [x] Design §28: Surface elevation — `bg-popover` for dropdowns, `bg-overlay` for modals
-- [x] Design §29: `motion-safe:` guards on all transitions and animations
-
-
-## Final Verification Status
-- Source architecture is module-owned and validated with automated static scans.
-- Trainer E2E lives at `trainer_e2e/TrainerCriticalFlows.spec.ts` and `playwright.config.ts` targets `src/app/trainer/trainer_e2e`.
-- CI workflows execute type-check, lint, formatting, tests, production build, dependency audit, secret scan, and Playwright.
-- Runtime pass/fail must be reported from the CI environment after `npm ci`; this package does not bundle `node_modules`.
-- Security-sensitive Trainer paths are covered by `.github/CODEOWNERS`.
+- [x] Feature-specific business dependencies are isolated within Trainer feature roots.
+- [x] Member profile supporting data is owned by Members rather than imported from unrelated Trainer business modules.
+- [x] Component-generated synthetic attendance data removed.
+- [x] Central Trainer route/API URL configuration is used by production call sites.
+- [x] API clients validate response envelopes with Zod.
+- [x] Workout Query keys are module-namespaced.
+- [x] Complex form flows use RHF + Zod where implemented.
+- [x] Unsaved form state is guarded for browser and in-app navigation through Trainer navigation infrastructure.
+- [x] Module-owned MSW fixtures/handlers remain inside their owning feature.
+- [x] `any`, TS-ignore and TS-nocheck patterns removed from Trainer source.
+- [x] Motion utilities are motion-safe guarded in Trainer TSX.
+- [x] Trainer shell uses 240px/60px sidebar and 64px header alignment with documented breakpoints.
+- [ ] Project-level ESLint/Tailwind/Husky/CI/security/CODEOWNERS gates — NOT VERIFIED because the supplied archive is module-only.
+- [ ] Full browser/E2E execution — NOT VERIFIED in this environment because project dependencies/configuration are outside the supplied module archive.

@@ -6,11 +6,7 @@ import TrainerScheduleEmptyState from '@/app/trainer/schedule/schedule_component
 import { Plus, Loader2 } from 'lucide-react';
 import { formatDate } from '@/lib/formatters';
 
-const STATUS_COLORS: Record<string, { bg: string, text: string }> = {
-  PENDING: { bg: 'bg-warning/10', text: 'text-warning' },
-  APPROVED: { bg: 'bg-success/10', text: 'text-success' },
-  REJECTED: { bg: 'bg-danger/10', text: 'text-danger' },
-};
+import { TRAINER_SCHEDULE_STATUS_STYLES, TRAINER_SCHEDULE_DEFAULT_STATUS_STYLE } from '@/app/trainer/schedule/schedule_utils/TrainerScheduleSharedConstants';
 
 export default function TrainerLeaveRequests() {
   const { data, isLoading } = useTrainerScheduleQuery();
@@ -27,13 +23,10 @@ export default function TrainerLeaveRequests() {
   const leaveRequests = data?.leaves ?? [];
 
   return (
-    <div className="flex flex-col h-full min-h-[500px]">
+    <div className="flex flex-col h-full min-h-96">
       <div className="p-4 border-b border-border flex justify-between items-center bg-input/50">
         <div className="flex items-center gap-4">
           <h2 className="text-lg font-bold text-foreground">Time Off Requests</h2>
-          <span className="text-sm font-semibold bg-primary/10 text-primary px-3 py-1 rounded-full">
-            12 days remaining
-          </span>
         </div>
         <button 
           onClick={openLeaveModal}
@@ -47,16 +40,16 @@ export default function TrainerLeaveRequests() {
         <table className="w-full">
           <thead className="bg-primary/5">
             <tr>
-              <th className="text-left text-[11px] font-bold text-secondary uppercase tracking-wider px-4 py-3 whitespace-nowrap">ID</th>
-              <th className="text-left text-[11px] font-bold text-secondary uppercase tracking-wider px-4 py-3 whitespace-nowrap">Date Range</th>
-              <th className="text-left text-[11px] font-bold text-secondary uppercase tracking-wider px-4 py-3 whitespace-nowrap">Reason</th>
-              <th className="text-left text-[11px] font-bold text-secondary uppercase tracking-wider px-4 py-3 whitespace-nowrap">Status</th>
-              <th className="text-left text-[11px] font-bold text-secondary uppercase tracking-wider px-4 py-3 whitespace-nowrap">Requested On</th>
+              <th className="text-left text-xs font-bold text-secondary uppercase tracking-wider px-4 py-3 whitespace-nowrap">ID</th>
+              <th className="text-left text-xs font-bold text-secondary uppercase tracking-wider px-4 py-3 whitespace-nowrap">Date Range</th>
+              <th className="text-left text-xs font-bold text-secondary uppercase tracking-wider px-4 py-3 whitespace-nowrap">Reason</th>
+              <th className="text-left text-xs font-bold text-secondary uppercase tracking-wider px-4 py-3 whitespace-nowrap">Status</th>
+              <th className="text-left text-xs font-bold text-secondary uppercase tracking-wider px-4 py-3 whitespace-nowrap">Requested On</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
             {leaveRequests.map(leave => {
-              const statusStyle = STATUS_COLORS[leave.status] || { bg: 'bg-input', text: 'text-secondary' };
+              const statusStyle = TRAINER_SCHEDULE_STATUS_STYLES[leave.status] ?? TRAINER_SCHEDULE_DEFAULT_STATUS_STYLE;
               return (
                 <tr key={leave.id} className="hover:bg-primary/5 motion-safe:transition-colors cursor-pointer">
                   <td className="px-4 py-4 text-xs font-bold text-primary whitespace-nowrap">{leave.id}</td>

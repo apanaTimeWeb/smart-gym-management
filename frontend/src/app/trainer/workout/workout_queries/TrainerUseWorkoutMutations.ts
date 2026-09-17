@@ -11,7 +11,7 @@ export function useTrainerWorkoutMutations() {
       return res.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['trainerWorkouts'] });
+      queryClient.invalidateQueries({ queryKey: ['trainer', 'workout', 'plans'] });
     },
   });
 
@@ -21,17 +21,17 @@ export function useTrainerWorkoutMutations() {
       return res.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['trainerWorkouts'] });
+      queryClient.invalidateQueries({ queryKey: ['trainer', 'workout', 'plans'] });
     },
   });
 
   const deleteWorkout = useMutation({
     mutationFn: async (id: string) => {
-      const res = await workoutApi.removeWorkout(id);
+      const res = await workoutApi.deleteWorkout(id);
       return res.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['trainerWorkouts'] });
+      queryClient.invalidateQueries({ queryKey: ['trainer', 'workout', 'plans'] });
     },
   });
 
@@ -41,7 +41,7 @@ export function useTrainerWorkoutMutations() {
       return res.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['trainerExercises'] });
+      queryClient.invalidateQueries({ queryKey: ['trainer', 'workout', 'exercises'] });
     },
   });
 
@@ -51,17 +51,17 @@ export function useTrainerWorkoutMutations() {
       return res.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['trainerExercises'] });
+      queryClient.invalidateQueries({ queryKey: ['trainer', 'workout', 'exercises'] });
     },
   });
 
   const deleteExercise = useMutation({
     mutationFn: async (id: string) => {
-      const res = await workoutApi.removeExercise(id);
+      const res = await workoutApi.deleteExercise(id);
       return res.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['trainerExercises'] });
+      queryClient.invalidateQueries({ queryKey: ['trainer', 'workout', 'exercises'] });
     },
   });
 

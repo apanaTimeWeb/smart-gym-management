@@ -23,12 +23,12 @@ export default function TrainerStatCard({ title, value, change, changeType = 'ne
  changeType === 'up' ? 'text-success' :
  changeType === 'down' ? 'text-danger' : 'text-secondary'
  }`}>
- {changeType === 'up' ? '?' : changeType === 'down' ? '?' : ''} {change}
+ {changeType === 'up' ? '↑' : changeType === 'down' ? '↓' : ''} {change}
  </p>
  )}
  </div>
- <div className={`w-12 h-12 rounded-xl flex items-center justify-center`} style={{ background: iconBg }}>
- <Icon size={22} style={{ color: iconColor }} />
+ <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${iconBg}`}>
+ <Icon size={18} strokeWidth={2} className={iconColor} />
  </div>
  </div>
  </div>

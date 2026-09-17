@@ -34,7 +34,12 @@ export const adminNotificationsMockHandlers = [
   }),
   http.patch('*/admin/notifications/:id/read', ({ params }) => {
     const notification = MOCK_ADMIN_NOTIFICATIONS.find((item) => item.id === String(params.id));
-    return ok(notification ? { ...notification, read: true } : null, 'Notification marked as read');
+    if (!notification) return HttpResponse.json({ success: false, message: 'Notification not found' }, { status: 404 });
+    notification.read = true;
+    return ok(notification, 'Notification marked as read');
   }),
-  http.patch('*/admin/notifications/read-all', () => ok(null, 'Notifications marked as read'))
+  http.patch('*/admin/notifications/read-all', () => {
+    for (const notification of MOCK_ADMIN_NOTIFICATIONS) notification.read = true;
+    return ok(null, 'Notifications marked as read');
+  })
 ];

@@ -1,18 +1,15 @@
 'use client';
+import { TrainerPageUrlConfig } from '@/app/trainer/Trainer_url_config';
 // RESPONSIBILITY: Renders the fixed top navigation bar — page title, global search, theme toggle, notifications dropdown, and user profile dropdown. No API calls.
 import { useState, useRef, useEffect } from 'react';
 import { Bell, Search, LogOut, Settings, User, X, Menu } from 'lucide-react';
 import Link from 'next/link';
 import { getUser, logout } from '@/lib/api';
-// Notifications are fetched from the API — placeholder array removed (Rule 75).
 import { ThemeToggle } from '@/components/ThemeToggle';
-import { useTrainerNotificationsContext } from '@/app/trainer/notifications/notifications_context/TrainerNotificationsContext';
-
 import type { TrainerHeaderProps } from '@/app/trainer/trainer_components/TrainerLayout/TrainerLayoutTypes';
 
 export default function TrainerHeader({ title, subtitle }: TrainerHeaderProps) {
   const [showNotifications, setShowNotifications] = useState(false);
-  const { unreadCount } = useTrainerNotificationsContext();
   const [showProfile, setShowProfile] = useState(false);
   const notifRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
@@ -46,7 +43,7 @@ export default function TrainerHeader({ title, subtitle }: TrainerHeaderProps) {
           onClick={() => window.dispatchEvent(new Event('toggle-sidebar'))}
           title="Toggle Sidebar"
         >
-          <Menu size={20} />
+          <Menu size={18} strokeWidth={2} />
         </button>
         <div>
           <h1 className="text-xl font-bold text-foreground">{title}</h1>
@@ -62,22 +59,20 @@ export default function TrainerHeader({ title, subtitle }: TrainerHeaderProps) {
         {/* Notifications */}
         <div className="relative" ref={notifRef}>
           <button
+            type="button"
+            aria-label="Open notifications"
+            aria-expanded={showNotifications}
             onClick={() => setShowNotifications(!showNotifications)}
-            className="relative p-2 text-secondary hover:text-foreground hover:bg-input rounded-lg motion-safe:transition-colors border border-transparent hover:border-border"
+            className="relative p-2 text-secondary hover:text-foreground hover:bg-input rounded-lg motion-safe:transition-colors border border-transparent hover:border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
-            <Bell size={19} />
-            {unreadCount > 0 && (
-              <span className="absolute top-1.5 right-1.5 flex h-3 w-3 items-center justify-center rounded-full bg-primary text-[9px] font-bold text-white">
-                {unreadCount > 9 ? '9+' : unreadCount}
-              </span>
-            )}
+            <Bell size={18} strokeWidth={2} />
           </button>
 
           {showNotifications && (
             <div className="absolute right-0 mt-2 w-80 bg-popover rounded-xl shadow-2xl border border-border overflow-hidden z-30">
               <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-header">
                 <h3 className="font-semibold text-foreground">Notifications</h3>
-                <button onClick={() => setShowNotifications(false)} className="text-secondary hover:text-foreground"><X size={16} /></button>
+                <button onClick={() => setShowNotifications(false)} className="text-secondary hover:text-foreground"><X size={18} strokeWidth={2} /></button>
               </div>
               <div className="max-h-75 overflow-y-auto">
                 <div className="px-4 py-6 text-center text-sm text-secondary">
@@ -86,7 +81,7 @@ export default function TrainerHeader({ title, subtitle }: TrainerHeaderProps) {
               </div>
               <div className="p-3 text-center border-t border-border bg-header">
                 <Link 
-                  href="/trainer/notifications"
+                  href={TrainerPageUrlConfig.NOTIFICATIONS}
                   onClick={() => setShowNotifications(false)} 
                   className="text-sm font-medium text-primary hover:underline"
                 >
@@ -114,8 +109,8 @@ export default function TrainerHeader({ title, subtitle }: TrainerHeaderProps) {
                 {(mounted && user?.role) && <p className="text-xs text-warning font-medium mt-0.5">{user.role}</p>}
               </div>
               <div className="py-1">
-                <Link href="/trainer/profile" className="flex items-center gap-2 px-4 py-2 text-sm text-secondary hover:text-foreground hover:bg-input motion-safe:transition-colors" onClick={() => setShowProfile(false)}>
-                  <User size={15} /> My Profile
+                <Link href={TrainerPageUrlConfig.PROFILE} className="flex items-center gap-2 px-4 py-2 text-sm text-secondary hover:text-foreground hover:bg-input motion-safe:transition-colors" onClick={() => setShowProfile(false)}>
+                  <User size={18} strokeWidth={2} /> My Profile
                 </Link>
               </div>
               <div className="border-t border-border py-1 bg-header">
@@ -123,7 +118,7 @@ export default function TrainerHeader({ title, subtitle }: TrainerHeaderProps) {
                   className="w-full flex items-center gap-2 px-4 py-2 text-sm text-danger hover:bg-danger-bg font-medium motion-safe:transition-colors"
                   onClick={() => { setShowProfile(false); logout(); }}
                 >
-                  <LogOut size={15} /> Log out
+                  <LogOut size={18} strokeWidth={2} /> Log out
                 </button>
               </div>
             </div>

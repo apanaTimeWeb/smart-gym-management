@@ -5,7 +5,7 @@ import { TrainerEarningsDataSchema, type TrainerEarningsData } from '@/app/train
 import { createTrainerApiResponseSchema } from '@/app/trainer/trainer_utils/TrainerApiResponseSchema';
 
 export const earningsApi = {
-  getEarningsData: async (startDate?: string, endDate?: string): Promise<TrainerEarningsData> => {
+  fetchEarningsData: async (startDate?: string, endDate?: string): Promise<TrainerEarningsData> => {
     const params = new URLSearchParams();
     if (startDate) params.append('startDate', startDate);
     if (endDate) params.append('endDate', endDate);

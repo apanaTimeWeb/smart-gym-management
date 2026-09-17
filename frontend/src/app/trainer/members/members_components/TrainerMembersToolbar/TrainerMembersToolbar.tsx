@@ -5,7 +5,7 @@ import { Search, RefreshCw, Plus } from 'lucide-react';
 import { useTrainerMembersStore } from '@/app/trainer/members/members_store/useTrainerMembersStore';
 import { useTrainerMembersFilters } from '@/app/trainer/members/members_utils/useTrainerMembersFilters';
 import { useQueryClient } from '@tanstack/react-query';
-import { SearchableDropdown } from '@/app/trainer/trainer_components/TrainerShared/TrainerSearchableDropdown';
+import TrainerSearchableDropdown from '@/app/trainer/trainer_components/TrainerShared/TrainerSearchableDropdown/TrainerSearchableDropdown';
 import { MEMBER_STATUS_OPTIONS } from '@/app/trainer/members/members_utils/TrainerMembersSharedConstants';
 
 export default function TrainerMembersToolbar() {
@@ -40,15 +40,15 @@ export default function TrainerMembersToolbar() {
         />
       </div>
       <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-        <SearchableDropdown
+        <TrainerSearchableDropdown
           value={statusFilter}
-          onChange={(val) => setStatusFilter(String(val))}
+          onChange={(val: string | number) => setStatusFilter(String(val))}
           className="w-48"
           options={MEMBER_STATUS_OPTIONS}
         />
-        <SearchableDropdown
+        <TrainerSearchableDropdown
           value={progressStatusFilter}
-          onChange={(val) => setProgressStatusFilter(String(val))}
+          onChange={(val: string | number) => setProgressStatusFilter(String(val))}
           className="w-48"
           options={[
             { label: 'All Progress', value: 'All' },

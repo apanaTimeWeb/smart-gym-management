@@ -1,7 +1,9 @@
 'use client';
+// RESPONSIBILITY: Renders the TrainerEarningsPending UI for the owning Trainer feature; data access remains in the feature API/query layer.
 import { CalendarClock } from 'lucide-react';
 import { useTrainerEarningsQuery } from '@/app/trainer/earnings/earnings_queries/useTrainerEarningsQuery';
-import { PAYOUT_STATUS_STYLES, formatCurrency } from '@/app/trainer/earnings/earnings_utils/TrainerEarningsSharedConstants';
+import { PAYOUT_STATUS_STYLES } from '@/app/trainer/earnings/earnings_utils/TrainerEarningsSharedConstants';
+import { formatCurrency } from '@/lib/formatters';
 import { formatDate } from '@/lib/formatters';
 
 export default function TrainerEarningsPending() {
@@ -9,14 +11,14 @@ export default function TrainerEarningsPending() {
   const pendingPayouts = data?.pendingPayouts || [];
 
   if (!data) {
-    return <div className="h-[300px] bg-skeleton-base bg-skeleton-highlight rounded-xl border border-border motion-safe:animate-pulse" />;
+    return <div className="h-72 bg-skeleton-base bg-skeleton-highlight rounded-xl border border-border motion-safe:animate-pulse" />;
   }
 
   return (
     <div className="bg-card border border-border rounded-xl overflow-hidden flex flex-col h-full">
       <div className="px-5 py-4 border-b border-border flex items-center justify-between bg-header">
         <h2 className="text-base font-semibold text-foreground">Upcoming Payouts</h2>
-        <button className="px-3 py-1.5 bg-primary/10 text-primary hover:bg-primary/20 rounded-lg text-sm font-semibold transition-colors">
+        <button className="px-3 py-1.5 bg-primary/10 text-primary hover:bg-primary/20 rounded-lg text-sm font-semibold motion-safe:transition-colors">
           Request Payout
         </button>
       </div>
@@ -37,7 +39,7 @@ export default function TrainerEarningsPending() {
                     <p className="text-sm font-semibold text-foreground">{formatCurrency(p.amount)}</p>
                     <p className="text-xs text-secondary mt-0.5">{p.period}</p>
                   </div>
-                  <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider ${style?.bg || 'bg-secondary/10'} ${style?.text || 'text-secondary'}`}>
+                  <span className={`px-2 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wider ${style?.bg || 'bg-secondary/10'} ${style?.text || 'text-secondary'}`}>
                     {style?.label || p.status}
                   </span>
                 </div>

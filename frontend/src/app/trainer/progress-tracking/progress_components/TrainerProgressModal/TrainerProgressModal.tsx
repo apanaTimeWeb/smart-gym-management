@@ -60,7 +60,7 @@ export default function TrainerProgressModal({ editingEntry, onSave, onClose }: 
   };
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 backdrop-blur-sm p-4">
       <div className="bg-overlay w-full max-w-lg rounded-2xl shadow-2xl border border-border overflow-hidden motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95 motion-safe:duration-200">
         <div className="flex items-center justify-between p-5 border-b border-border">
           <h3 className="text-lg font-bold text-foreground">
@@ -75,7 +75,7 @@ export default function TrainerProgressModal({ editingEntry, onSave, onClose }: 
           </button>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="p-5 space-y-4 max-h-[70vh] overflow-y-auto">
+        <form onSubmit={handleSubmit(onSubmit)} className="p-5 space-y-4 max-h-3/4 overflow-y-auto">
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-semibold text-secondary mb-1">Date</label>

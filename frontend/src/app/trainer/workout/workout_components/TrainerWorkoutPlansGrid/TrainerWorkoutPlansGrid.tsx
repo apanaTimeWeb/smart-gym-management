@@ -1,6 +1,7 @@
 'use client';
 // RESPONSIBILITY: Renders the grid of workout plan cards with exercises count and action buttons.
 import { Dumbbell } from 'lucide-react';
+import { TRAINER_WORKOUT_DIFFICULTY_STYLES } from '@/app/trainer/workout/workout_utils/TrainerWorkoutSharedConstants';
 import { useTrainerWorkoutFilters } from '@/app/trainer/workout/workout_utils/useTrainerWorkoutFilters';
 import { useTrainerWorkoutsQuery } from '@/app/trainer/workout/workout_queries/TrainerUseWorkoutQuery';
 import TrainerPagination from '@/app/trainer/trainer_components/TrainerShared/TrainerPagination';
@@ -33,7 +34,7 @@ export default function TrainerWorkoutPlansGrid() {
   if (status === 'error') {
     return (
       <div className="text-center py-16 bg-card rounded-2xl border border-danger/30">
-        <p className="text-danger font-medium">Failed to load workout plans.</p>
+        <p className="text-danger font-medium">Unable to load workout plans right now. Please retry.</p>
         <p className="text-sm mt-1 text-secondary">Please check your connection and try again.</p>
       </div>
     );
@@ -52,13 +53,7 @@ export default function TrainerWorkoutPlansGrid() {
                 <Dumbbell size={17} className="text-info dark:text-info" />
               </div>
               <div className="flex items-center gap-1">
-                <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-                  w.level === 'Beginner' 
-                    ? 'bg-success-bg text-success dark:bg-success-bg dark:text-success' 
-                    : w.level === 'Intermediate' 
-                    ? 'bg-warning-bg text-warning dark:bg-warning-bg dark:text-warning' 
-                    : 'bg-danger-bg text-danger dark:bg-danger-bg dark:text-danger'
-                }`}>
+                <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${TRAINER_WORKOUT_DIFFICULTY_STYLES[w.level as keyof typeof TRAINER_WORKOUT_DIFFICULTY_STYLES] ?? 'bg-input text-secondary'}`}>
                   {w.level}
                 </span>
               </div>
@@ -67,13 +62,13 @@ export default function TrainerWorkoutPlansGrid() {
             <div className="flex items-center justify-between mb-3">
               <h3 className="font-semibold text-foreground truncate mr-2">{w.name}</h3>
               <div className="flex gap-1 shrink-0">
-                <button onClick={() => { setEditWk(w); setShowWkModal(true); }} className="p-1.5 text-secondary hover:text-foreground hover:bg-input rounded-md transition-colors">
+                <button onClick={() => { setEditWk(w); setShowWkModal(true); }} className="p-1.5 text-secondary hover:text-foreground hover:bg-input rounded-md motion-safe:transition-colors">
                   <Edit2 size={14} />
                 </button>
                 <button onClick={async () => {
                   const ok = await confirm({ title: 'Delete Plan', message: 'Delete this plan?', type: 'danger', confirmText: 'Delete' });
                   if (ok) deleteWorkout.mutate(w.id);
-                }} className="p-1.5 text-secondary hover:text-danger hover:bg-danger-bg rounded-md transition-colors">
+                }} className="p-1.5 text-secondary hover:text-danger hover:bg-danger-bg rounded-md motion-safe:transition-colors">
                   <Trash2 size={14} />
                 </button>
               </div>

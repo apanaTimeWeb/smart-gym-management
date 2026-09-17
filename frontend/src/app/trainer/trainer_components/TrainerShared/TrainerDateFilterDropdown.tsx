@@ -1,15 +1,11 @@
 'use client';
+// RESPONSIBILITY: Renders the TrainerDateFilterDropdown UI for the owning Trainer feature; data access remains in the feature API/query layer.
+import type { ChangeEvent } from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { Calendar } from 'lucide-react';
+import { TRAINER_DATE_RANGE_OPTIONS } from '@/app/trainer/trainer_utils/TrainerSharedConstants';
 
-const FILTER_OPTIONS = [
-  { label: 'This Month', value: 'this_month' },
-  { label: 'Last Month', value: 'last_month' },
-  { label: 'Last 3 Months', value: 'last_3_months' },
-  { label: 'Last 6 Months', value: 'last_6_months' },
-  { label: 'This Year', value: 'this_year' },
-  { label: 'Custom', value: 'custom' },
-];
+
 
 export function TrainerDateFilterDropdown() {
   const router = useRouter();
@@ -20,7 +16,7 @@ export function TrainerDateFilterDropdown() {
   const customStartDate = searchParams.get('startDate') || '';
   const customEndDate = searchParams.get('endDate') || '';
 
-  const handleRangeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleRangeChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const newRange = e.target.value;
     const params = new URLSearchParams(searchParams.toString());
     params.set('range', newRange);
@@ -34,14 +30,14 @@ export function TrainerDateFilterDropdown() {
     router.push(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
-  const handleStartDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleStartDateChange = (e: ChangeEvent<HTMLInputElement>) => {
     const params = new URLSearchParams(searchParams.toString());
     if (e.target.value) params.set('startDate', e.target.value);
     else params.delete('startDate');
     router.push(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
-  const handleEndDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleEndDateChange = (e: ChangeEvent<HTMLInputElement>) => {
     const params = new URLSearchParams(searchParams.toString());
     if (e.target.value) params.set('endDate', e.target.value);
     else params.delete('endDate');
@@ -50,14 +46,14 @@ export function TrainerDateFilterDropdown() {
 
   return (
     <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
-      <div className="relative min-w-[160px]">
+      <div className="relative min-w-40">
         <Calendar size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary pointer-events-none" />
         <select
           value={currentRange}
           onChange={handleRangeChange}
           className="w-full pl-9 pr-8 py-2 text-sm bg-input border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary appearance-none cursor-pointer"
         >
-          {FILTER_OPTIONS.map((opt) => (
+          {TRAINER_DATE_RANGE_OPTIONS.map((opt) => (
             <option key={opt.value} value={opt.value}>
               {opt.label}
             </option>

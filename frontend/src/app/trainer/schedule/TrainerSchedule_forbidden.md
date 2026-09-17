@@ -5,7 +5,7 @@
 - All schedule logic must live in /trainer/schedule/**
 
 ## Banned APIs
-- NEVER use window.confirm() or alert()  use TrainerToast
+- NEVER use window.confirm() or alert() for critical actions. Use the shared TrainerConfirmProvider/useConfirm flow; use useTrainerFeedback for success/error feedback.
 - NEVER use Math.random() for IDs in production paths
 
 ## Animation / Motion

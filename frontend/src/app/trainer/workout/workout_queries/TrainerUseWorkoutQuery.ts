@@ -7,13 +7,13 @@ export function useTrainerWorkoutsQuery(
   page: number
 ) {
   return useQuery({
-    queryKey: ['trainerWorkouts', { search, category, page }],
+    queryKey: ['trainer', 'workout', 'plans', { search, category, page }],
     queryFn: async () => {
       const params: Record<string, string> = { page: page.toString(), limit: '12' };
       if (search) params.search = search;
       if (category && category !== 'All') params.category = category;
       
-      const res = await workoutApi.getWorkouts(params);
+      const res = await workoutApi.fetchWorkouts(params);
       return res.data;
     },
     staleTime: 1000 * 60 * 5, // 5 mins
@@ -26,13 +26,13 @@ export function useTrainerExercisesQuery(
   page: number
 ) {
   return useQuery({
-    queryKey: ['trainerExercises', { search, category, page }],
+    queryKey: ['trainer', 'workout', 'exercises', { search, category, page }],
     queryFn: async () => {
       const params: Record<string, string> = { page: page.toString(), limit: '12' };
       if (search) params.search = search;
       if (category && category !== 'All') params.category = category;
 
-      const res = await workoutApi.getExercises(params);
+      const res = await workoutApi.fetchExercises(params);
       return res.data;
     },
     staleTime: 1000 * 60 * 5, // 5 mins

@@ -26,5 +26,6 @@ const paged = <T>(data: T[], page: number, limit: number, message = 'Success') =
 import { MOCK_ADMIN_USAGE_DATA } from '@/app/admin/usage/usage_mocks/fixtures/AdminUsageMockFixtures';
 
 export const adminUsageMockHandlers = [
-  http.get('*/admin/usage/fetchMyUsage', () => ok(MOCK_ADMIN_USAGE_DATA))
+  // Endpoint is owned by AdminUsageUrlConfig.BACKEND_API.MY_USAGE ('/admin/usage').
+  http.get('*/admin/usage', () => ok(MOCK_ADMIN_USAGE_DATA))
 ];

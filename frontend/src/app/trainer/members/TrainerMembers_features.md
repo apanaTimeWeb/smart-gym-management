@@ -74,3 +74,5 @@ strictly forbidden. Phone numbers are masked in list view.
 - [x] Rule 9: `loading.tsx` + `error.tsx` present
 - [x] Rule 13: Feature Map — this document, updated same commit as code changes
 - [x] Rule 43: Phone numbers masked in table view
+
+- **Feedback:** Mutation success/error feedback uses `useTrainerFeedback()` with stable deduplication IDs and the role-level `TrainerToastHost`.

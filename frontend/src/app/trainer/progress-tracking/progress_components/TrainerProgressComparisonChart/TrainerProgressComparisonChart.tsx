@@ -4,13 +4,14 @@
 // Uses dynamic import (no SSR) per web_global_design.md Rule — ApexCharts only.
 
 import dynamic from 'next/dynamic';
+import { useEffect, useState } from 'react';
 import type { ComparisonMemberSnapshot, ComparisonMetric } from '@/app/trainer/progress-tracking/progress_types/TrainerProgressTypes';
 import { COMPARISON_METRICS } from '@/app/trainer/progress-tracking/progress_utils/TrainerProgressSharedConstants';
+import type { ApexOptions } from 'apexcharts';
 
 const ApexChart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
-// Gold-anchored palette for up to 4 members
-const MEMBER_COLORS = ['#FACC15', '#34D399', '#60A5FA', '#F87171'];
+const THEME_MEMBER_TOKENS = ['--primary', '--success', '--info', '--danger'] as const;
 
 interface TrainerProgressComparisonChartProps {
   snapshots: ComparisonMemberSnapshot[];
@@ -20,14 +21,20 @@ interface TrainerProgressComparisonChartProps {
 
 export default function TrainerProgressComparisonChart({ snapshots, activeMetric, onMetricChange }: TrainerProgressComparisonChartProps) {
   const metricConfig = COMPARISON_METRICS.find(m => m.value === activeMetric)!;
+  const [chartColors, setChartColors] = useState<string[]>([]);
+
+  useEffect(() => {
+    const styles = getComputedStyle(document.documentElement);
+    setChartColors(THEME_MEMBER_TOKENS.map((token) => styles.getPropertyValue(token).trim()).filter(Boolean));
+  }, []);
 
   const series = snapshots.map((s, i) => ({
     name: s.memberName,
     data: [s[activeMetric] ?? 0],
-    color: MEMBER_COLORS[i % MEMBER_COLORS.length] || '#FACC15',
+    color: chartColors[i % chartColors.length],
   }));
 
-  const options: ApexCharts.ApexOptions = {
+  const options: ApexOptions = {
     chart: {
       type: 'bar',
       background: 'transparent',
@@ -45,35 +52,35 @@ export default function TrainerProgressComparisonChart({ snapshots, activeMetric
     dataLabels: {
       enabled: true,
       formatter: (val: number) => `${val}${metricConfig.unit}`,
-      style: { fontSize: '11px', colors: ['#94A3B8'] },
+      style: { fontSize: '11px', colors: chartColors.length ? [chartColors[0] as string] : undefined },
       offsetY: -20,
     },
     xaxis: {
       categories: [metricConfig.label],
-      labels: { style: { colors: '#94A3B8', fontSize: '12px' } },
+      labels: { style: { colors: chartColors.length ? [chartColors[0] as string] : undefined, fontSize: '12px' } },
       axisBorder: { show: false },
       axisTicks: { show: false },
     },
     yaxis: {
       labels: {
-        style: { colors: '#94A3B8', fontSize: '11px' },
+        style: { colors: chartColors.length ? [chartColors[0] as string] : undefined, fontSize: '11px' },
         formatter: (val: number) => `${val}${metricConfig.unit}`,
       },
     },
     grid: {
-      borderColor: '#1E293B',
+      borderColor: 'var(--border)',
       strokeDashArray: 4,
     },
     legend: {
       position: 'top',
-      labels: { colors: '#94A3B8' },
+      labels: { colors: chartColors.length ? chartColors[0] : undefined },
       markers: { size: 8 },
     },
     tooltip: {
       theme: 'dark',
       y: { formatter: (val: number) => `${val}${metricConfig.unit}` },
     },
-    colors: snapshots.map((_, i) => MEMBER_COLORS[i % MEMBER_COLORS.length] || '#FACC15'),
+    colors: chartColors.length ? chartColors : undefined,
   };
 
   if (snapshots.length === 0) {

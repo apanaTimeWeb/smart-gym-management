@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import toast from 'react-hot-toast';
+import { useTrainerFeedback } from '@/app/trainer/trainer_components/TrainerFeedback/useTrainerFeedback';
 import { trainerProfileApi } from '@/app/trainer/profile/profile_api/TrainerProfileApi';
 import type { TrainerProfileData, TrainerProfileTab } from '@/app/trainer/profile/profile_types/TrainerProfileTypes';
 import { TrainerPasswordFormSchema, TrainerProfileFormSchema } from '@/app/trainer/profile/profile_types/TrainerProfileSchema';
@@ -15,6 +15,7 @@ const PROFILE_QUERY_KEY = ['trainer', 'profile'] as const;
 
 export function useTrainerProfileLogic() {
   const queryClient = useQueryClient();
+  const { showSuccess, showError } = useTrainerFeedback();
   const [activeTab, setActiveTab] = useState<TrainerProfileTab>('personal');
   const [showCurrent, setShowCurrent] = useState(false);
   const [showNew, setShowNew] = useState(false);
@@ -51,19 +52,19 @@ export function useTrainerProfileLogic() {
       if (!response.success || !response.data) return;
       queryClient.setQueryData<TrainerProfileData>(PROFILE_QUERY_KEY, response.data);
       profileForm.reset({ name: response.data.name, phone: response.data.phone, specialization: response.data.specialization });
-      toast.success(response.message, { id: 'trainer-profile-update' });
+      showSuccess(response.message, 'trainer-profile-update');
     },
-    onError: (error) => toast.error(error instanceof Error ? error.message : '', { id: 'trainer-profile-update-error' }),
+    onError: (error) => showError(error, 'trainer-profile-update-error'),
   });
   const passwordMutation = useMutation({
     mutationFn: (values: TrainerPasswordFormValues) => trainerProfileApi.updatePassword(values),
     onSuccess: (response) => {
       if (!response.success) return;
       passwordForm.reset();
-      toast.success(response.message, { id: 'trainer-profile-password-update' });
+      showSuccess(response.message, 'trainer-profile-password-update');
       passwordForm.reset();
     },
-    onError: (error) => toast.error(error instanceof Error ? error.message : '', { id: 'trainer-profile-password-update-error' }),
+    onError: (error) => showError(error, 'trainer-profile-password-update-error'),
   });
   const user = profileQuery.data ?? null;
   const displayInitial = (user?.name ?? 'Trainer').charAt(0).toUpperCase();

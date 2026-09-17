@@ -4,14 +4,16 @@ import { useState, useEffect } from 'react';
 import { useTrainerScheduleQuery } from '@/app/trainer/schedule/schedule_queries/useTrainerScheduleQuery';
 import { useTrainerScheduleMutations } from '@/app/trainer/schedule/schedule_queries/useTrainerScheduleMutations';
 import { useTrainerScheduleStore } from '@/app/trainer/schedule/schedule_store/useTrainerScheduleStore';
+import { useTrainerFeedback } from '@/app/trainer/trainer_components/TrainerFeedback/useTrainerFeedback';
 import { useTrainerUnsavedChangesGuard } from '@/app/trainer/trainer_utils/TrainerUseWarnIfUnsavedChanges';
 import type { WeeklyAvailability } from '@/app/trainer/schedule/schedule_types/TrainerScheduleTypes';
 import { Loader2, Save } from 'lucide-react';
+import { TRAINER_DEFAULT_AVAILABILITY_TIMES } from '@/app/trainer/schedule/schedule_utils/TrainerScheduleSharedConstants';
 
 export default function TrainerWeeklyAvailability() {
   const { data, isLoading, isError } = useTrainerScheduleQuery();
   const { updateAvailability } = useTrainerScheduleMutations();
-  const showToast = useTrainerScheduleStore(s => s.showToast);
+  const { showSuccess, showError } = useTrainerFeedback();
 
   const [localSchedule, setLocalSchedule] = useState<WeeklyAvailability[]>([]);
   const [isDirty, setIsDirty] = useState(false);
@@ -35,8 +37,8 @@ export default function TrainerWeeklyAvailability() {
       updated[index].startTime = '00:00';
       updated[index].endTime = '00:00';
     } else if (updated[index].startTime === '00:00') {
-      updated[index].startTime = '06:00';
-      updated[index].endTime = '18:00';
+      updated[index].startTime = TRAINER_DEFAULT_AVAILABILITY_TIMES.startTime;
+      updated[index].endTime = TRAINER_DEFAULT_AVAILABILITY_TIMES.endTime;
     }
     setLocalSchedule(updated);
     setIsDirty(true);
@@ -54,9 +56,9 @@ export default function TrainerWeeklyAvailability() {
     try {
       const response = await updateAvailability.mutateAsync(localSchedule);
       setIsDirty(false);
-      showToast(response.message || 'Availability updated successfully', 'success');
+      showSuccess(response.message, 'trainer-schedule-availability-success');
     } catch (error) {
-      showToast(error instanceof Error ? error.message : 'Availability update failed.', 'error');
+      showError(error, 'trainer-schedule-availability-error');
     }
   };
 
@@ -69,7 +71,7 @@ export default function TrainerWeeklyAvailability() {
   }
 
   if (isError) {
-    return <div className="p-6 text-danger">Failed to load schedule.</div>;
+    return <div className="p-6 text-danger">Unable to load schedule right now. Please retry.</div>;
   }
 
   return (
@@ -90,7 +92,8 @@ export default function TrainerWeeklyAvailability() {
                   checked={day.isAvailable}
                   onChange={() => handleToggle(idx)}
                 />
-                <div className="w-11 h-6 bg-border peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                <span className="w-11 h-6 bg-border peer-focus:outline-none rounded-full peer-checked:bg-primary motion-safe:transition-colors" aria-hidden="true" />
+                <span className="absolute left-0.5 top-0.5 h-5 w-5 rounded-full border border-border bg-card motion-safe:transition-transform peer-checked:translate-x-5" aria-hidden="true" />
               </label>
               <span className={`font-semibold w-24 ${day.isAvailable ? 'text-foreground' : 'text-secondary line-through'}`}>{day.day}</span>
             </div>

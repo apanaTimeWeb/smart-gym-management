@@ -16,7 +16,7 @@ export const MOCK_EXPORT_JOBS_EXPANDED: typeof MOCK_EXPORT_JOBS = [
   ...Array.from({ length: 10 }, (_, index) => {
     const n = index + 3;
     const base = MOCK_EXPORT_JOBS[index % MOCK_EXPORT_JOBS.length]!;
-    return { ...base, id: `exp${n}`, fileName: `admin-export-${n}.csv`, status: index % 4 === 0 ? 'PROCESSING' : 'COMPLETED', createdAt: `2026-09-${String((index % 12) + 1).padStart(2, '0')}T10:00:00Z`    };
+    return { ...base, id: `exp${n}`, fileName: `admin-export-${n}.csv`, status: index % 4 === 0 ? 'processing' : 'completed', createdAt: `2026-09-${String((index % 12) + 1).padStart(2, '0')}T10:00:00Z`    };
   }),
 ] as ExportJob[];
 

@@ -1,4 +1,5 @@
 'use client';
+// RESPONSIBILITY: Renders the error UI for the owning Trainer feature; data access remains in the feature API/query layer.
 export default function TrainerSessionsError({
   error,
   reset,

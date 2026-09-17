@@ -1,6 +1,6 @@
 'use client';
 // RESPONSIBILITY: Renders the Trainer member messaging modal for WhatsApp or Email delivery.
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { X, Send, MessageCircle, Mail, CheckCircle, Phone, AtSign } from 'lucide-react';
 
 export type MessageType = 'whatsapp' | 'email';
@@ -44,10 +44,26 @@ export default function TrainerMessageModal({
 
   if (!(isOpen || open)) return null;
 
-  const accentColor = type === 'whatsapp' ? WA_GREEN : EMAIL_BLUE;
   const Icon = type === 'whatsapp' ? MessageCircle : Mail;
   const label = type === 'whatsapp' ? 'WhatsApp' : 'Email';
   const contactInfo = type === 'whatsapp' ? recipient.phone : recipient.email;
+  const dialogRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!(isOpen || open)) return undefined;
+    const previous = document.activeElement as HTMLElement | null;
+    dialogRef.current?.focus();
+    return () => previous?.focus?.();
+  }, [isOpen, open]);
+
+  useEffect(() => {
+    if (!(isOpen || open)) return undefined;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && !sending) onClose();
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [isOpen, open, sending, onClose]);
 
   const handleSend = async () => {
     setSending(true);
@@ -79,10 +95,14 @@ export default function TrainerMessageModal({
   };
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-overlay/80 backdrop-blur-sm" role="presentation">
       <div
-        className="bg-card rounded-2xl shadow-2xl w-full max-w-lg relative overflow-hidden border border-border"
-        style={{ animation: 'fadeScaleIn 0.2s ease' }}
+        ref={dialogRef}
+        tabIndex={-1}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="trainer-message-dialog-title"
+        className="bg-overlay rounded-2xl shadow-2xl w-full max-w-lg relative overflow-hidden border border-border motion-safe:transition-all motion-safe:duration-slow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
       >
         <div className={`px-6 py-4 flex items-center justify-between ${type === 'whatsapp' ? WA_GREEN : EMAIL_BLUE}`}>
           <div className="flex flex-wrap items-center gap-3">
@@ -90,7 +110,7 @@ export default function TrainerMessageModal({
               <Icon size={18} color="white" />
             </div>
             <div>
-              <p className="text-white font-bold text-base leading-tight">{label} Message</p>
+              <p id="trainer-message-dialog-title" className="text-white font-bold text-base leading-tight">{label} Message</p>
               <p className="text-white/80 text-xs">Sending to {recipient.name}</p>
             </div>
           </div>
@@ -107,8 +127,7 @@ export default function TrainerMessageModal({
         <div className="px-6 pt-4 pb-2">
           <div className="flex items-center gap-3 p-3 bg-input rounded-xl border border-border">
             <div
-              className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0"
-              style={{ background: 'var(--primary)' }}
+              className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold text-sm flex-shrink-0"
             >
               {recipient.name.charAt(0)}
             </div>
@@ -169,8 +188,7 @@ export default function TrainerMessageModal({
           <button
             onClick={handleSend}
             disabled={sending || sent || !message.trim()}
-            className="flex-1 px-4 py-2.5 text-sm font-semibold text-white rounded-xl flex items-center justify-center gap-2 motion-safe:transition-all disabled:opacity-50"
-            style={{ background: sent ? 'var(--success)' : (type === 'whatsapp' ? WA_GREEN : 'var(--info)') }}
+            className={`flex-1 px-4 py-2.5 text-sm font-semibold text-white rounded-xl flex items-center justify-center gap-2 motion-safe:transition-all disabled:opacity-50 ${sent ? 'bg-success' : (type === 'whatsapp' ? WA_GREEN : 'bg-info')}`}
           >
             {sent ? (
               <>

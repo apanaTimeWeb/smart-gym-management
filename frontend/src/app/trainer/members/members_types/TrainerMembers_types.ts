@@ -1,5 +1,4 @@
 // RESPONSIBILITY: Defines all TypeScript types, interfaces, for the Members module. Single source of truth for member data shapes.
-import type { ToastType } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerToast';
 import type { MessageType, TrainerMessageRecipient } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerMessageModal';
 import type { MemberFormValues } from '@/app/trainer/members/members_utils/TrainerMembersSharedConstants';
 import { z } from 'zod';
@@ -44,9 +43,6 @@ export interface MembersContextType {
   currentPage: number;
   setCurrentPage: (p: number) => void;
 
-  toast: { message: string; type: ToastType } | null;
-  showToast: (msg: string, t: ToastType) => void;
-  hideToast: () => void;
 
   // Member Profile
   selectedMember: Member | null;

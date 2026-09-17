@@ -10,7 +10,7 @@ export default function TrainerWorkoutBanner() {
   const { data: eData } = useTrainerExercisesQuery(search, category, page);
 
  return (
- <div className="rounded-xl p-5 text-white shadow-lg shadow-info/20" style={{ background: 'linear-gradient(135deg, var(--workout-banner-gradient-start), var(--workout-banner-gradient-end))' }}>
+ <div className="rounded-xl p-5 text-primary-foreground bg-card border border-primary shadow-lg">
  <div className="flex items-center justify-between">
  <div>
  <h2 className="text-xl font-bold">Complete Workout Database</h2>

@@ -1,4 +1,5 @@
 'use client';
+// RESPONSIBILITY: Renders the TrainerScheduleEmptyState UI for the owning Trainer feature; data access remains in the feature API/query layer.
 import { CalendarX } from 'lucide-react';
 
 export default function TrainerScheduleEmptyState() {

@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders the TrainerEarningsRouteStates.test route/UI for the owning Trainer feature; data access remains in the feature API/query layer.
 import { describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';

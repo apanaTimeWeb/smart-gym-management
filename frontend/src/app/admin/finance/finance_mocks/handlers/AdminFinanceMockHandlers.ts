@@ -29,6 +29,7 @@ export const adminFinanceMockHandlers = [
   http.get('*/admin/finance/payments/fetchPayments', ({ request }) => { const url=new URL(request.url); const search=(url.searchParams.get('search')??'').toLowerCase(); const method=(url.searchParams.get('method')??'').toLowerCase().replaceAll('_',''); const status=(url.searchParams.get('status')??'').toLowerCase(); const page=Math.max(1,Number(url.searchParams.get('page'))||1), limit=Math.max(1,Number(url.searchParams.get('limit'))||10); const filtered=MOCK_ADMIN_PAYMENTS_EXPANDED.filter(p => (!search || `${p.member?.name || ''} ${p.invoiceNo || ''}`.toLowerCase().includes(search)) && (!method || method==='all' || p.method.toLowerCase().replaceAll(' ','')===method || (p.paymentMode || '').toLowerCase().replaceAll('_','')===method) && (!status || status==='all' || (status==='due' ? p.status==='PENDING' : p.status.toLowerCase()===status))); const start=(page-1)*limit; return HttpResponse.json({ success:true,message:'Success',data:{payments:filtered.slice(start,start+limit),total:filtered.length},meta:{total:filtered.length,page,limit,totalPages:Math.max(1,Math.ceil(filtered.length/limit))}}); }),
   http.post('*/admin/finance/payments/createPayment', () => ok(MOCK_ADMIN_PAYMENTS[0]!, 'Payment recorded')),
   http.get('*/admin/finance/summary', () => ok(MOCK_ADMIN_FINANCE_SUMMARY)),
-  http.get('*/admin/finance/pnl/comparison', () => ok(MOCK_ADMIN_BRANCH_PNL)),
+  // Endpoint is owned by FinanceUrlConfig.BACKEND_API.PNL_COMPARISON ('/admin/finance/pnl').
+  http.get('*/admin/finance/pnl', () => ok(MOCK_ADMIN_BRANCH_PNL)),
   http.get('*/admin/finance/payments/fetchExpenses', () => ok(MOCK_ADMIN_EXPENSES))
 ];

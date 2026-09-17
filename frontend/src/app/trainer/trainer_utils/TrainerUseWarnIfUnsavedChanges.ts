@@ -1,11 +1,19 @@
 'use client';
-// RESPONSIBILITY: Protects dirty Trainer forms from browser exits and provides a modal-confirmed navigation gate.
-// DATA FLOW: formState.isDirty → useUnsavedChangesGuard → TrainerConfirmProvider → approved navigation callback.
-import { useCallback, useEffect } from 'react';
+// RESPONSIBILITY: Protects dirty Trainer forms from browser exits and registers dirty state for in-app navigation interception.
+// DATA FLOW: formState.isDirty → TrainerNavigationGuardStore → TrainerSidebar/guarded navigation → TrainerConfirmProvider.
+import { useCallback, useEffect, useId } from 'react';
 import { useConfirm } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerConfirmProvider';
+import { useTrainerNavigationGuardStore } from '@/app/trainer/trainer_utils/TrainerNavigationGuardStore';
 
 export function useTrainerUnsavedChangesGuard(isDirty: boolean) {
   const { confirm } = useConfirm();
+  const sourceId = useId();
+  const setSourceDirty = useTrainerNavigationGuardStore((state) => state.setSourceDirty);
+
+  useEffect(() => {
+    setSourceDirty(sourceId, isDirty);
+    return () => setSourceDirty(sourceId, false);
+  }, [isDirty, setSourceDirty, sourceId]);
 
   useEffect(() => {
     if (!isDirty) return undefined;
@@ -33,4 +41,3 @@ export function useTrainerUnsavedChangesGuard(isDirty: boolean) {
     return approved;
   }, [confirm, isDirty]);
 }
-

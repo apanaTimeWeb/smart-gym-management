@@ -1,17 +1,22 @@
 'use client';
 // RESPONSIBILITY: Renders the collapsible left navigation sidebar for the Trainer portal. No API calls.
 import { useState, useEffect, useMemo } from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Search } from 'lucide-react';
 import { getUser } from '@/lib/api';
 import { TRAINER_NAV_GROUPS } from '@/app/trainer/trainer_utils/TrainerSharedConstants';
+import { useConfirm } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerConfirmProvider';
+import { useTrainerNavigationGuardStore } from '@/app/trainer/trainer_utils/TrainerNavigationGuardStore';
 
 import type { TrainerSidebarProps } from '@/app/trainer/trainer_components/TrainerLayout/TrainerLayoutTypes';
 
 export default function TrainerSidebar({ isCollapsed, setIsCollapsed }: TrainerSidebarProps) {
   const pathname = usePathname();
+  const router = useRouter();
+  const { confirm } = useConfirm();
+  const hasDirtySources = useTrainerNavigationGuardStore((state) => state.hasDirtySources());
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -27,7 +32,7 @@ export default function TrainerSidebar({ isCollapsed, setIsCollapsed }: TrainerS
   // Listens for the global 'toggle-sidebar' event dispatched by TrainerHeader's hamburger button.
   useEffect(() => {
     const handleToggle = () => {
-      if (window.innerWidth < 1024) {
+      if (window.innerWidth < 768) {
         setIsMobileOpen(v => !v);
       } else {
         setIsCollapsed(!isCollapsed);
@@ -62,15 +67,15 @@ export default function TrainerSidebar({ isCollapsed, setIsCollapsed }: TrainerS
       {/* Mobile Backdrop */}
       {isMobileOpen && (
         <div
-          className="fixed inset-0 bg-black/80 backdrop-blur-sm z-40 lg:hidden transition-opacity"
+          className="fixed inset-0 bg-overlay/80 backdrop-blur-sm z-40 lg:hidden motion-safe:transition-opacity"
           onClick={() => setIsMobileOpen(false)}
         />
       )}
 
-      <aside className={`fixed left-0 top-0 h-full bg-sidebar border-r border-border z-50 flex flex-col motion-safe:transition-all motion-safe:duration-300 ${
-        isCollapsed ? 'lg:w-20' : 'lg:w-64'
+      <aside className={`fixed left-0 top-0 h-full bg-sidebar border-r border-border z-20 flex flex-col motion-safe:transition-all motion-safe:duration-slow ${
+        isCollapsed ? 'lg:w-15' : 'lg:w-60'
       } ${
-        isMobileOpen ? 'w-64 translate-x-0' : 'w-64 -translate-x-full lg:translate-x-0'
+        isMobileOpen ? 'w-60 translate-x-0' : 'w-60 -translate-x-full lg:translate-x-0'
       }`}>
 
         {/* Logo & Toggle */}
@@ -78,7 +83,7 @@ export default function TrainerSidebar({ isCollapsed, setIsCollapsed }: TrainerS
           <div className="flex items-center gap-3 overflow-hidden">
             <Image src="/logo.png" alt="GymSmart TRAINER" width={44} height={44} className="object-contain min-w-11 rounded-lg" />
             {(!isCollapsed || isMobileOpen) && (
-              <div className="whitespace-nowrap transition-opacity duration-300 flex flex-col">
+              <div className="whitespace-nowrap motion-safe:transition-opacity motion-safe:duration-base flex flex-col">
                 <span className="text-foreground font-bold text-lg leading-tight tracking-tight">GymSmart</span>
                 <span className="text-xs text-warning font-bold uppercase tracking-wider -mt-0.5">TRAINER App</span>
               </div>
@@ -132,7 +137,7 @@ export default function TrainerSidebar({ isCollapsed, setIsCollapsed }: TrainerS
                 )}
                 <div className="space-y-1">
                   {group.items.map((item) => {
-                    const active = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href));
+                    const active = pathname === item.href || ((item.href as string) !== '/' && pathname.startsWith(item.href));
                     const Icon = item.icon;
                     const showLabel = !isCollapsed || isMobileOpen;
 
@@ -141,16 +146,29 @@ export default function TrainerSidebar({ isCollapsed, setIsCollapsed }: TrainerS
                         key={item.href}
                         href={item.href}
                         title={!showLabel ? item.label : ''}
-                        className={`flex items-center gap-3 py-2.5 rounded-xl font-medium transition-all duration-200 group cursor-pointer ${
+                        onClick={(event) => {
+                          if (!hasDirtySources || pathname === item.href) return;
+                          event.preventDefault();
+                          void confirm({
+                            title: 'Unsaved changes',
+                            message: 'You have unsaved changes. Are you sure you want to leave? Your changes will be lost.',
+                            confirmText: 'Leave',
+                            cancelText: 'Stay',
+                            type: 'warning',
+                          }).then((approved) => {
+                            if (approved) router.push(item.href);
+                          });
+                        }}
+                        className={`flex items-center gap-3 py-2.5 rounded-xl font-medium motion-safe:transition-all motion-safe:duration-base group cursor-pointer ${
                           !showLabel ? 'justify-center px-0' : 'px-3.5'
                         } ${
                           active
                             ? 'bg-primary-subtle text-primary border-l-2 border-primary'
                             : 'text-secondary hover:text-primary hover:bg-primary-subtle border-l-2 border-transparent'
                         }`}
-                        style={active ? { boxShadow: '0 0 15px rgba(250,204,21,0.15)' } : undefined}
+                        
                       >
-                        <Icon size={22} className={active ? 'text-primary' : 'text-secondary group-hover:text-primary transition-colors'} />
+                        <Icon size={18} strokeWidth={2} className={active ? 'text-primary' : 'text-secondary group-hover:text-primary motion-safe:transition-colors'} />
                         {showLabel && <span className="text-sm whitespace-nowrap">{item.label}</span>}
                       </Link>
                     );

@@ -86,7 +86,7 @@ export default function TrainerAttendanceTable({
                   <td className="px-4 py-3 text-sm text-secondary">{formatTime(r.checkOut)}</td>
                   <td className="px-4 py-3 text-sm text-secondary">{r.durationMinutes ? `${r.durationMinutes}m` : '—'}</td>
                   <td className="px-4 py-3">
-                    <span className="inline-flex px-2 py-0.5 rounded-md text-[10px] font-medium bg-secondary/10 text-secondary border border-border">
+                    <span className="inline-flex px-2 py-0.5 rounded-md text-xs font-medium bg-secondary/10 text-secondary border border-border">
                       {r.checkInMethod ?? 'Manual'}
                     </span>
                   </td>

@@ -13,6 +13,7 @@ import TrainerMembersProfileDiet from '@/app/trainer/members/members_components/
 import TrainerMembersProfileAssessment from '@/app/trainer/members/members_components/TrainerMembersProfile/TrainerMembersProfileAssessment';
 import TrainerMembersProfileNotes from '@/app/trainer/members/members_components/TrainerMembersProfile/TrainerMembersProfileNotes';
 import { maskSensitiveData, displayValue } from '@/lib/formatters';
+import type { TrainerProfileTab } from '@/app/trainer/members/members_types/TrainerMembers_types';
 
 export default function TrainerMembersProfile() {
   const { member: selectedMember } = useTrainerSelectedMember();
@@ -61,13 +62,13 @@ export default function TrainerMembersProfile() {
             <div className="flex gap-2 flex-wrap">
               <button
                 onClick={() => openMsg({ name: selectedMember.name, email: selectedMember.email, phone: selectedMember.phone }, 'whatsapp', '')}
-                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold bg-success text-white rounded-xl hover:opacity-90 motion-safe:transition-all motion-safe:duration-200 active:scale-95"
+                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold bg-success text-white rounded-xl hover:opacity-90 motion-safe:transition-all motion-safe:duration-200 motion-safe:active:scale-95"
               >
                 <MessageCircle size={14} /> WhatsApp
               </button>
               <button
                 onClick={() => openMsg({ name: selectedMember.name, email: selectedMember.email, phone: selectedMember.phone }, 'email', '')}
-                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold bg-info text-white rounded-xl hover:opacity-90 motion-safe:transition-all motion-safe:duration-200 active:scale-95"
+                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold bg-info text-white rounded-xl hover:opacity-90 motion-safe:transition-all motion-safe:duration-200 motion-safe:active:scale-95"
               >
                 <Mail size={14} /> Email
               </button>
@@ -100,7 +101,7 @@ export default function TrainerMembersProfile() {
             {PROFILE_TABS.map(({ id: t, label }) => (
               <button
                 key={t}
-                onClick={() => { setProfileTab(t as any); }}
+                onClick={() => { setProfileTab(t as TrainerProfileTab); }}
                 className={`whitespace-nowrap px-5 py-3.5 text-sm font-medium motion-safe:transition-all motion-safe:duration-200 border-b-2 ${
                   profileTab === t
                     ? 'text-primary bg-primary-subtle border-primary'

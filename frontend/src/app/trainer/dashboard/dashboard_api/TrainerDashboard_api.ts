@@ -5,7 +5,7 @@ import { DashboardStatsSchema, type DashboardStats } from '@/app/trainer/dashboa
 import { createTrainerApiResponseSchema } from '@/app/trainer/trainer_utils/TrainerApiResponseSchema';
 
 export const dashboardApi = {
-  getStats: async (range?: string, startDate?: string, endDate?: string): Promise<DashboardStats> => {
+  fetchDashboardStats: async (range?: string, startDate?: string, endDate?: string): Promise<DashboardStats> => {
     const params = new URLSearchParams();
     if (range) params.append('range', range);
     if (startDate) params.append('startDate', startDate);

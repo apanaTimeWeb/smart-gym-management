@@ -1,15 +1,14 @@
 'use client';
 // RESPONSIBILITY: Renders the member's assigned workout plan and provides plan assignment capabilities for trainers.
-// DATA FLOW: useMembersContext -> TrainerMembersProfileWorkout -> workoutApi
+// DATA FLOW: useTrainerSelectedMember/useTrainerMembersQuery → Members API → TrainerMembersProfileWorkout
 
 import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
 import { Dumbbell, Plus, Check, MessageCircle, RefreshCw, Calendar, Flame, Target } from 'lucide-react';
 import { useTrainerMembersStore } from '@/app/trainer/members/members_store/useTrainerMembersStore';
 import { useTrainerSelectedMember } from '@/app/trainer/members/members_queries/useTrainerSelectedMember';
 import { useTrainerMembersMutations } from '@/app/trainer/members/members_queries/useTrainerMembersMutations';
-import { workoutApi } from '@/app/trainer/workout/workout_api/TrainerWorkout_api';
-import { SearchableDropdown } from '@/app/trainer/trainer_components/TrainerShared/TrainerSearchableDropdown';
+import { useTrainerMemberWorkoutPlansQuery } from '@/app/trainer/members/members_queries/useTrainerMembersQuery';
+import TrainerSearchableDropdown from '@/app/trainer/trainer_components/TrainerShared/TrainerSearchableDropdown/TrainerSearchableDropdown';
 import { displayValue } from '@/lib/formatters';
 import type { TrainerMemberWorkoutSnapshot } from '@/app/trainer/members/members_types/TrainerMemberWorkoutSnapshot';
 
@@ -19,7 +18,7 @@ export default function TrainerMembersProfileWorkout() {
   const [isAssigning, setIsAssigning] = useState(false);
   const [selectedWorkoutId, setSelectedWorkoutId] = useState('');
   const [saving, setSaving] = useState(false);
-  const workoutsQuery = useQuery({ queryKey: ['trainer','members','workouts'], queryFn: async () => (await workoutApi.getWorkouts()).data.workouts, enabled: isAssigning });
+  const workoutsQuery = useTrainerMemberWorkoutPlansQuery(isAssigning);
   const availableWorkouts = workoutsQuery.data ?? [];
 
   if (!selectedMember) return null;
@@ -48,12 +47,12 @@ export default function TrainerMembersProfileWorkout() {
       `Focus: ${displayValue(workout.focus)}\n\n` +
       (workout.workoutExercises && workout.workoutExercises.length > 0
         ? `*Exercises:*\n` + workout.workoutExercises.map((e, idx) => `${idx + 1}. ${e.name} - ${e.sets} sets x ${e.reps} (Rest: ${e.restTime || '60s'})`).join('\n')
-        : `displayValue(workout.instructions)`);
+        : displayValue((workout as any).instructions));
     window.open(`https://wa.me/${selectedMember.phone?.replace(/[^0-9]/g, '') || ''}?text=${encodeURIComponent(text)}`, '_blank');
   };
 
   return (
-    <div className="space-y-6 motion-safe:animate-in fade-in duration-300">
+    <div className="space-y-6 motion-safe:animate-in fade-in motion-safe:duration-slow">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h3 className="text-lg font-bold text-foreground">Workout Plan</h3>
@@ -64,7 +63,7 @@ export default function TrainerMembersProfileWorkout() {
             <>
               <button 
                 onClick={handleShareWhatsApp}
-                className="flex items-center gap-2 px-4 py-2 bg-success text-white rounded-xl text-sm font-semibold hover:opacity-90 shadow-sm transition-all active:scale-95"
+                className="flex items-center gap-2 px-4 py-2 bg-success text-white rounded-xl text-sm font-semibold hover:opacity-90 shadow-sm motion-safe:transition-all motion-safe:active:scale-95"
               >
                 <MessageCircle size={16} /> Share via WhatsApp
               </button>
@@ -73,7 +72,7 @@ export default function TrainerMembersProfileWorkout() {
                   setSelectedWorkoutId(workout.id || '');
                   setIsAssigning(true);
                 }}
-                className="flex items-center gap-2 px-4 py-2 bg-input text-foreground border border-border rounded-xl text-sm font-semibold hover:bg-primary-subtle transition-all active:scale-95"
+                className="flex items-center gap-2 px-4 py-2 bg-input text-foreground border border-border rounded-xl text-sm font-semibold hover:bg-primary-subtle motion-safe:transition-all motion-safe:active:scale-95"
               >
                 <RefreshCw size={15} /> Change Plan
               </button>
@@ -81,7 +80,7 @@ export default function TrainerMembersProfileWorkout() {
           ) : !isAssigning ? (
             <button 
               onClick={() => setIsAssigning(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-primary/30 transition-all active:scale-95"
+              className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-primary/30 motion-safe:transition-all motion-safe:active:scale-95"
             >
               <Plus size={16} /> Assign Workout Plan
             </button>
@@ -108,10 +107,10 @@ export default function TrainerMembersProfileWorkout() {
             <p className="text-sm text-secondary py-3">Loading available workout plans...</p>
           ) : (
             <div className="flex flex-col sm:flex-row gap-3">
-              <SearchableDropdown
+              <TrainerSearchableDropdown
                 options={availableWorkouts.map(w => ({ value: w.id, label: `${w.name} · ${displayValue(w.level)} (${displayValue(w.duration)})` }))}
                 value={selectedWorkoutId}
-                onChange={(value) => setSelectedWorkoutId(String(value))}
+                onChange={(value: string | number) => setSelectedWorkoutId(String(value))}
                 placeholder="Choose a Workout Plan"
                 className="flex-1"
               />
@@ -119,7 +118,7 @@ export default function TrainerMembersProfileWorkout() {
                 <button 
                   onClick={handleAssign}
                   disabled={!selectedWorkoutId || saving}
-                  className="px-5 py-2.5 bg-primary text-white rounded-xl text-sm font-semibold hover:shadow-md transition-all disabled:opacity-50 flex items-center gap-2"
+                  className="px-5 py-2.5 bg-primary text-white rounded-xl text-sm font-semibold hover:shadow-md motion-safe:transition-all disabled:opacity-50 flex items-center gap-2"
                 >
                   <Check size={16} /> {saving ? 'Assigning...' : 'Confirm Assignment'}
                 </button>
@@ -202,7 +201,7 @@ export default function TrainerMembersProfileWorkout() {
           </p>
           <button
             onClick={() => setIsAssigning(true)}
-            className="mt-2 inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-white rounded-xl text-sm font-semibold hover:shadow-md transition-all"
+            className="mt-2 inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-white rounded-xl text-sm font-semibold hover:shadow-md motion-safe:transition-all"
           >
             <Plus size={16} /> Assign Workout Plan
           </button>

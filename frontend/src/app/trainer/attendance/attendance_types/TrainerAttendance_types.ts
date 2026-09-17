@@ -1,7 +1,6 @@
 // RESPONSIBILITY: Zod schemas and derived types for the Attendance module.
 // DATA FLOW: API layer → Zod parse → typed domain types → TanStack Query → UI
 import { z } from 'zod';
-import type { ToastType } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerToast';
 import type { AttendanceTab } from '@/app/trainer/attendance/attendance_utils/TrainerAttendanceSharedConstants';
 
 // ─── Domain Schemas ─────────────────────────────────────────────────────────
@@ -61,36 +60,6 @@ export const CreateAttendanceDtoSchema = z.object({
   checkIn: z.string().optional(),
   checkOut: z.string().optional(),
   notes: z.string().optional(),
+  isSelfCheckIn: z.boolean().optional(),
 });
 export type CreateAttendanceDto = z.infer<typeof CreateAttendanceDtoSchema>;
-
-// ─── Legacy context shape kept for transition (will be removed after full migration) ──
-
-/** @deprecated — replaced by query/store hooks. Use useAttendanceQuery + useTrainerAttendanceStore */
-export interface AttendanceContextType {
-  records: AttendanceRecord[];
-  todayStats: AttendanceStats;
-  members: AttendanceMemberBasic[];
-  totalRecords: number;
-  isFetching: boolean;
-  saving: boolean;
-  toast: { message: string; type: ToastType } | null;
-  tab: AttendanceTab;
-  setTab: (tab: AttendanceTab) => void;
-  viewMode: 'calendar' | 'table';
-  setViewMode: (v: 'calendar' | 'table') => void;
-  search: string;
-  setSearch: (s: string) => void;
-  filterDate: string;
-  setFilterDate: (d: string) => void;
-  currentPage: number;
-  setCurrentPage: (p: number) => void;
-  showModal: boolean;
-  setShowModal: (show: boolean) => void;
-  showToast: (msg: string, t: ToastType) => void;
-  hideToast: () => void;
-  refetch: () => void;
-  markAttendance: (data: import('@/app/trainer/attendance/attendance_utils/TrainerAttendanceSharedConstants').AttendanceFormValues) => Promise<void>;
-  selfCheckIn: () => Promise<void>;
-  selfCheckOut: () => Promise<void>;
-}

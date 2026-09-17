@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { X, Save } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { SearchableDropdown } from '@/app/trainer/trainer_components/TrainerShared/TrainerSearchableDropdown';
+import TrainerSearchableDropdown from '@/app/trainer/trainer_components/TrainerShared/TrainerSearchableDropdown/TrainerSearchableDropdown';
 import { EQUIPMENT_OPTIONS, EXERCISE_DIFFICULTY_OPTIONS } from '@/app/trainer/workout/workout_utils/TrainerWorkoutSharedConstants';
 import { CreateExerciseSchema, type CreateExerciseFormValues, EMPTY_EXERCISE_FORM } from '@/app/trainer/workout/workout_types/TrainerWorkout.schema';
 import { useTrainerWorkoutStore } from '@/app/trainer/workout/workout_store/useTrainerWorkoutStore';
@@ -62,7 +62,7 @@ export default function TrainerWorkoutExerciseModal() {
   if (!showExModal) return null;
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 p-4">
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 p-4">
       <div className="bg-card rounded-2xl shadow-xl w-full max-w-md overflow-hidden">
         <div className="flex justify-between items-center p-5 border-b border-border">
           <h3 className="font-bold text-lg text-foreground">
@@ -107,7 +107,7 @@ export default function TrainerWorkoutExerciseModal() {
                 name="equipment"
                 control={control}
                 render={({ field }) => (
-                  <SearchableDropdown
+                  <TrainerSearchableDropdown
                     value={field.value || ''}
                     onChange={field.onChange}
                     options={EQUIPMENT_OPTIONS.map(eq => ({ label: eq, value: eq }))}
@@ -121,7 +121,7 @@ export default function TrainerWorkoutExerciseModal() {
                 name="difficulty"
                 control={control}
                 render={({ field }) => (
-                  <SearchableDropdown
+                  <TrainerSearchableDropdown
                     value={field.value || ''}
                     onChange={field.onChange}
                     options={EXERCISE_DIFFICULTY_OPTIONS.map(d => ({ label: d, value: d }))}
@@ -160,8 +160,7 @@ export default function TrainerWorkoutExerciseModal() {
             <button 
               type="submit" 
               disabled={isSaving}
-              className="px-4 py-2 rounded-lg font-medium text-white flex items-center gap-2 hover:opacity-90 motion-safe:transition-opacity disabled:opacity-70" 
-              style={{ background: 'var(--workout-highlight)' }}
+              className="px-4 py-2 rounded-lg font-medium text-primary-foreground bg-primary flex items-center gap-2 hover:bg-primary-hover motion-safe:transition-colors disabled:opacity-70"
             >
               {isSaving ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full motion-safe:animate-spin" /> : <><Save size={15} /> Save</>}
             </button>
