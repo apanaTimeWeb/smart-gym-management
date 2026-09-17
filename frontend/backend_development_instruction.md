@@ -146,7 +146,7 @@ Never put tests in a global `tests/` or `pytest_tests/` directory separate from 
 * **Why:** AI relies heavily on interface contracts. Keeping them mandatory and co-located with the controllers ensures frontend developers (and AI frontend agents) always have a mathematically accurate, up-to-date API contract to work with.
 
 ## 13. Environment & Configuration Management
-* **The Rule:** Never use raw environment variables (e.g., `process.env.XXX` or `os.environ.get()`) directly inside business logic. Always use a centralized, strongly-typed Config Service or Settings class (e.g., `@nestjs/config` in NestJS, `settings.py` with `django-environ` in Django).
+* **The Rule:** Never use raw environment variables (e.g., `process.env.XXX` or `os.environ.get()`) directly inside business logic. Always use a centralized, strongly-typed Config Service or Settings class (e.g., `@nestjs/config` in NestJS, `settings.py` with `django-environ` in Django). The configuration service MUST validate all environment variables at application startup using a strict schema (e.g., Zod or `class-validator`). The app must throw a fatal error and refuse to boot if any required environment variable is missing or incorrectly typed.
 * **Why:** If the AI needs to add a new third-party API key or change a timeout value, it should only modify the central configuration schema, not hunt for raw env calls scattered across 50 different micro-services.
 
 ## 14. Standardized Logging & Correlation IDs (nestjs-pino & OpenTelemetry)
@@ -370,7 +370,7 @@ the exact consequence of violating it — not just "be careful".]
 ## 27. API Testing Strategy (Two-Tier: Jest Unit + Pytest E2E)
 * **The Rule:** This project uses a strict two-tier testing strategy:
   1. **Jest `.spec.ts` (Unit Tests):** Co-located with source files (see Rule 11). Tests individual service methods, DTOs, and utilities in isolation with mocked dependencies. This is the AI's primary safety net when modifying a micro-file.
-  2. **Python `pytest` (Black-Box E2E / API Tests):** Lives in a top-level `e2e/` directory, completely decoupled from the Node.js runtime. Tests the running API as a true external client — no knowledge of internal implementation. QA engineers and CI pipelines use this tier.
+  2. **Python `pytest` (Black-Box E2E / API Tests):** Lives in a top-level `e2e/` directory, completely decoupled from the Node.js runtime. **CRITICAL: While the `e2e/` folder is separated from `src/`, its internal directory structure MUST strictly mirror the domain-driven grouping of the backend (e.g., `e2e/superadmin/dashboard/test_dashboard_api.py`). Never dump test files into a flat `e2e/` root folder.** Tests the running API as a true external client — no knowledge of internal implementation. QA engineers and CI pipelines use this tier.
 * **Strict Boundary:** Jest is NEVER used for API/E2E testing. Pytest is NEVER used for unit testing internal service logic. These two tiers must never overlap.
 
 ## Summary Checklist for Developers Providing Context to AI:
@@ -378,6 +378,7 @@ the exact consequence of violating it — not just "be careful".]
 2. Select the **one or two** micro-files associated with that layer.
 3. Pass ONLY those files to the AI.
 4. Review the AI's isolated changes.
+* **For E2E Test Fixes/Updates:** If an API contract changes and the E2E test needs updating, provide the AI with ONLY the specific feature's E2E folder (e.g., `e2e/superadmin/dashboard/`) and the corresponding backend module. Do NOT feed the entire `e2e/` directory to the AI to prevent token explosion.
 
 ---
 
@@ -521,7 +522,7 @@ the exact consequence of violating it — not just "be careful".]
 * **Frontend-First Naming Lock:** Since this project follows a frontend-first workflow (UI built with mock data before backend), the frontend feature folder names are the canonical source of truth. When backend development begins, the backend AI/developer MUST reuse the EXACT same folder/module name as the frontend. Renaming a feature during backend development is strictly forbidden without updating the frontend folder to match first.
 * **Casing Translation Rule:** The semantic name stays identical across frontend/backend; only the casing style changes per language/framework convention (e.g., frontend `auth` folder → backend `auth/` folder with `AuthModule` classes — never changing to a different semantic word like `identity`).
 * **API Route Grouping & Mirroring:** The API endpoint URLs must strictly mirror this domain grouping (e.g., `/api/erp/billing`, `/api/superadmin/stats`). Furthermore, page-to-endpoint naming must mirror exactly: if the frontend `/auth/` module calls an API, the route MUST be `/api/v1/auth/...`, not `/api/v1/session/...`. This ensures the debugging flow from UI page -> Frontend Folder -> Backend Folder -> Backend Route is 100% identically named.
-* **1:1 Mirror Mapping:** The backend folder structure MUST strictly mirror the frontend route structure. If the frontend `(superadmin)` domain has 5 feature folders (e.g., `broadcasts`, `coupons`, `affiliates`), the backend `superadmin` domain MUST have exactly 5 matching modules. 
+* **1:1 Mirror Mapping:** The backend folder structure (AND the `e2e/` test folder structure) MUST strictly mirror the frontend route structure. If the frontend `(superadmin)` domain has 5 feature folders (e.g., `broadcasts`, `coupons`, `affiliates`), the backend `superadmin` domain MUST have exactly 5 matching modules. 
 * **Why:** This creates a perfect 1:1 mapped architecture. If a bug occurs in the "Coupons" feature, you provide the AI with exactly two things: `frontend/.../superadmin/coupons/` and `backend/.../superadmin/coupons/`. The AI gets the complete vertical slice (Frontend UI + Backend Logic) for that specific feature without seeing the rest of the application. This guarantees zero hallucination, massive token savings, and perfect separation of concerns.
 
 ---
@@ -686,6 +687,7 @@ Backend implementation (services, repositories, DB queries)
 
 ## 71. UTC Datetime Storage Format
 * **The Rule:** ALL dates and times MUST be stored in the database as UTC. The backend must never store local timezones. Any datetime conversion for display purposes should happen purely on the frontend.
+* **API Transmission:** All dates and timestamps MUST be serialized and returned in API responses strictly as **ISO-8601 formatted strings** (e.g., `2023-10-25T10:30:00Z`). Never return raw Unix epoch milliseconds or local date strings to the frontend.
 
 ## 72. Per-Endpoint Payload Size Limits
 * **The Rule:** The default global `1mb` limit (Rule 37) can be overridden per-endpoint for specific use cases. General endpoints must reject payloads >1MB. File-upload endpoints must explicitly declare their own larger limit (e.g., `10mb` for profile images, `50mb` for bulk import CSVs). These overrides must be declared in the endpoint's controller decorator, not scattered in middleware.
