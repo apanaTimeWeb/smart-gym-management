@@ -6,7 +6,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CANCELLATIONS_ACTION_STATUS_STYLES } from '@/app/superadmin/cancellations/cancellations_utils/SuperadminCancellationsConstants';
 import type { CancellationsAlert, CancellationsActionStatus, CancellationsActionPayload } from '@/app/superadmin/cancellations/cancellations_types/superadmin_cancellations_types';
-import { cancellationsActionSchema, type CancellationsActionFormValues } from '@/app/superadmin/cancellations/cancellations_utils/SuperadminCancellationsActionModal.schema';
+import { cancellationsActionSchema, type CancellationsActionFormValues } from '@/app/superadmin/cancellations/cancellations_utils/SuperadmincancellationsActionModal.schema';
 const ACTION_OPTIONS: CancellationsActionStatus[] = ['PENDING', 'CONTACTED', 'RESOLVED', 'CANCELLED'];
 interface SuperadminCancellationsActionModalProps {
     alert: CancellationsAlert;
