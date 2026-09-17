@@ -1,25 +1,21 @@
-// RESPONSIBILITY: Entry component for the notifications module. Mounts provider and renders notification list.
-// DATA FLOW: page.tsx (SSR) → TrainerNotificationsMain → TrainerNotificationsProvider → TrainerNotificationsContent
 'use client';
-
+// RESPONSIBILITY: Entry component for the notifications module. Runs query orchestration and renders the notification list.
+// DATA FLOW: page.tsx → TrainerNotificationsMain → useTrainerNotificationsLogic → API/query → notification list
 import { Loader2 } from 'lucide-react';
 import TrainerNotificationsList from '@/app/trainer/notifications/notifications_components/TrainerNotificationsList';
-import {
-  TrainerNotificationsProvider,
-  useTrainerNotificationsContext,
-} from '@/app/trainer/notifications/notifications_context/TrainerNotificationsContext';
+import { useTrainerNotificationsLogic } from '@/app/trainer/notifications/notifications_context/useTrainerNotificationsLogic';
 
 function TrainerNotificationsContent() {
   const {
     notifications,
     unreadCount,
-    fetchState,
+    isPending, isError,
     hasMore,
     loadingMore,
     loadMore,
     markAllAsRead,
     markAsRead,
-  } = useTrainerNotificationsContext();
+  } = useTrainerNotificationsLogic();
 
   return (
     <div className="min-h-full pb-10">
@@ -28,7 +24,7 @@ function TrainerNotificationsContent() {
           <div>
             <h2 className="text-lg font-bold text-foreground">Recent Activity</h2>
             <p className="text-sm text-secondary mt-0.5">
-              {fetchState === 'loading'
+              {isPending
                 ? 'Loading notifications...'
                 : unreadCount > 0
                 ? `${unreadCount} unread notification${unreadCount === 1 ? '' : 's'}`
@@ -48,7 +44,7 @@ function TrainerNotificationsContent() {
           )}
         </div>
 
-        {fetchState === 'error' && (
+        {isError && (
           <div className="bg-danger-bg text-danger text-sm rounded-xl px-4 py-3 mb-4">
             Failed to load notifications. Please refresh.
           </div>
@@ -82,9 +78,5 @@ function TrainerNotificationsContent() {
 }
 
 export default function TrainerNotificationsMain() {
-  return (
-    <TrainerNotificationsProvider>
-      <TrainerNotificationsContent />
-    </TrainerNotificationsProvider>
-  );
+  return <TrainerNotificationsContent />;
 }

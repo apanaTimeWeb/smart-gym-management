@@ -1,44 +1,33 @@
-// RESPONSIBILITY: Mock API client for Manager Referrals.
+import { z } from 'zod';
+import { ManagerReferralsUrlConfig } from '@/app/manager/referrals/referrals_url_config';
+import { apiFetch, type ApiResponse } from '@/lib/api';
+import { managerReferralSchema, managerReferralsKpiSchema } from '@/app/manager/referrals/referrals_types/ManagerReferralsSchema';
 import type { ManagerReferral, ManagerReferralsKPIs, CreateReferralDto } from '@/app/manager/referrals/referrals_types/ManagerReferralsTypes';
-import { MOCK_REFERRALS, MOCK_REFERRALS_KPIS } from '@/app/manager/referrals/referrals_utils/ManagerReferralsConstants';
-
-let mockReferrals = [...MOCK_REFERRALS];
 
 export const ManagerReferralsApi = {
-  fetchKPIs: async (): Promise<ManagerReferralsKPIs> => {
-    await new Promise(resolve => setTimeout(resolve, 300));
-    return MOCK_REFERRALS_KPIS;
+  fetchReferralKPIs: async (): Promise<ApiResponse<ManagerReferralsKPIs>> => {
+    return apiFetch(`${ManagerReferralsUrlConfig.BACKEND_API.BASE}/kpis`, { dataSchema: managerReferralsKpiSchema });
   },
 
-  fetchReferrals: async (): Promise<ManagerReferral[]> => {
-    await new Promise(resolve => setTimeout(resolve, 500));
-    return mockReferrals;
+  fetchReferrals: async (params: { page: number; limit: number; search?: string; status?: string }): Promise<ApiResponse<ManagerReferral[]>> => {
+    const query = new URLSearchParams({ page: String(params.page), limit: String(params.limit) });
+    if (params.search) query.set('search', params.search);
+    if (params.status && params.status !== 'ALL') query.set('status', params.status);
+    return apiFetch(`${ManagerReferralsUrlConfig.BACKEND_API.BASE}?${query.toString()}`, { dataSchema: z.array(managerReferralSchema) });
   },
 
-  createReferral: async (dto: CreateReferralDto): Promise<ManagerReferral> => {
-    await new Promise(resolve => setTimeout(resolve, 600));
-    const newRef: ManagerReferral = {
-      id: `ref-${Date.now()}`,
-      referrerName: dto.referrerName,
-      referrerId: dto.referrerId,
-      refereeName: dto.refereeName,
-      refereePhone: dto.refereePhone,
-      dateReferred: new Date().toISOString().split('T')[0] || '',
-      status: 'PENDING',
-      rewardStatus: 'N/A',
-      rewardAmount: 500,
-      rewardType: 'CASH',
-    };
-    mockReferrals = [newRef, ...mockReferrals];
-    return newRef;
+  createReferral: async (dto: CreateReferralDto): Promise<ApiResponse<ManagerReferral>> => {
+    return apiFetch(ManagerReferralsUrlConfig.BACKEND_API.BASE, {
+      method: 'POST',
+      body: JSON.stringify(dto),
+      dataSchema: managerReferralSchema
+    });
   },
 
-  claimReward: async (referralId: string): Promise<ManagerReferral> => {
-    await new Promise(resolve => setTimeout(resolve, 500));
-    const idx = mockReferrals.findIndex(r => r.id === referralId);
-    if (idx === -1) throw new Error('Referral not found');
-    
-    mockReferrals[idx] = { ...mockReferrals[idx]!, rewardStatus: 'CLAIMED' } as ManagerReferral;
-    return mockReferrals[idx]!;
+  claimReward: async (referralId: string): Promise<ApiResponse<ManagerReferral>> => {
+    return apiFetch(`${ManagerReferralsUrlConfig.BACKEND_API.BASE}/${referralId}/claim`, {
+      method: 'POST',
+      dataSchema: managerReferralSchema
+    });
   },
 };

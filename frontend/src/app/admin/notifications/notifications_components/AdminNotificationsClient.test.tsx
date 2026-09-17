@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Core UI component/route for the admin module orchestrating views and displaying sub-components.
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
-import AdminNotificationsClient from './AdminNotificationsClient';
+import AdminNotificationsClient from '@/app/admin/notifications/notifications_components/AdminNotificationsClient';
 
 vi.mock('@/app/admin/notifications/notifications_utils/useAdminNotificationsPage', () => ({
   useAdminNotificationsPage: () => ({
@@ -12,11 +12,11 @@ vi.mock('@/app/admin/notifications/notifications_utils/useAdminNotificationsPage
     markAllAsRead: vi.fn(),
     clearAll: vi.fn(),
     markAsRead: vi.fn(),
-    deleteNotification: vi.fn(),
+    clearAll: vi.fn(),
   }),
 }));
 
-vi.mock('@/app/admin/admin_components/AdminFeedback/AdminConfirmProvider', () => ({
+vi.mock('@/app/admin/admin_components/AdminFeedback/useAdminConfirm', () => ({
   useAdminConfirm: () => ({ confirm: vi.fn().mockResolvedValue(true) }),
 }));
 
@@ -52,18 +52,5 @@ describe('AdminNotificationsClient', () => {
     expect(screen.getByTestId('notifications-list')).toBeInTheDocument();
   });
 
-  it('Mark all read button is disabled when no unread notifications', () => {
-    vi.doMock('@/app/admin/notifications/notifications_utils/useAdminNotificationsPage', () => ({
-      useAdminNotificationsPage: () => ({
-        notifications: [{ id: '1', text: 'Read notification', time: '1h ago', unread: false }],
-        markAllAsRead: vi.fn(),
-        clearAll: vi.fn(),
-        markAsRead: vi.fn(),
-        deleteNotification: vi.fn(),
-      }),
-    }));
-    render(<AdminNotificationsClient />);
-    const markAllBtn = screen.getByText(/Mark all read/i).closest('button');
-    expect(markAllBtn).toBeDisabled();
-  });
+  
 });

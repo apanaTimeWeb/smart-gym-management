@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders the left-side vertical navigation tabs for different settings sections.
-'use client';
 
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { SETTINGS_TABS } from '@/app/admin/settings/settings_utils/AdminSettingsSharedConstants';
@@ -21,16 +21,17 @@ export default function AdminSettingsNav() {
       {SETTINGS_TABS.map((s) => {
         const isActive = activeTabId === s.id;
         return (
-          <button 
+          <button
+            type="button"
             key={s.id} 
             onClick={() => handleTabChange(s.id)}
-            className={`bg-card border rounded-xl p-5 text-left transition-all group ${
+            className={`bg-card border rounded-xl p-5 text-left motion-safe:transition-all group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
               isActive 
                 ? 'border-warning shadow-md ring-1 ring-warning' 
                 : 'border-border hover:border-warning dark:hover:border-warning hover:shadow-sm'
             }`}
           >
-            <div className={`w-10 h-10 rounded-xl ${s.bg} flex items-center justify-center mb-3 group-hover:scale-110 transition-transform`}>
+            <div className={`w-10 h-10 rounded-xl ${s.bg} flex items-center justify-center mb-3 motion-safe:group-hover:scale-110 motion-safe:transition-transform`}>
               <s.icon size={19} className={s.color} />
             </div>
             <h3 className="font-semibold text-foreground mb-1">{s.title}</h3>
@@ -41,4 +42,3 @@ export default function AdminSettingsNav() {
     </div>
   );
 }
-

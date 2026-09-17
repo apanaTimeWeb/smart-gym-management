@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Shows a list of members whose PT packages are nearing completion (< 3 sessions left).
 'use client';
-
+// RESPONSIBILITY: Shows a list of members whose PT packages are nearing completion (< 3 sessions left).
 import { AlertTriangle, Dumbbell } from 'lucide-react';
 import type { PtAssignment } from '@/app/manager/pt/pt_types/ManagerPtTypes';
 

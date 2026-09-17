@@ -1,38 +1,31 @@
-// RESPONSIBILITY: Provides strongly-typed network calls for attendance operations.
-import type { ApiResponse } from '@/lib/api';
-import type { Attendance, AttendanceResponse } from '@/app/manager/attendance/attendance_types/ManagerAttendanceTypes';
-import { MOCK_ATTENDANCE_RECORDS, MOCK_ATTENDANCE_STATS } from '@/app/manager/attendance/attendance_api/ManagerAttendanceMockData';
+import { ManagerAttendanceUrlConfig } from '@/app/manager/attendance/attendance_url_config';
+import { apiFetch, type ApiResponse } from '@/lib/api';
+import type { Attendance, AttendanceResponse, AttendanceStatsResponse } from '@/app/manager/attendance/attendance_types/ManagerAttendanceTypes';
+import type { MemberSnapshot, StaffSnapshot } from '@/app/manager/attendance/attendance_types/ManagerAttendanceSnapshotTypes';
+import { attendanceSchema, attendanceResponseSchema, attendanceStatsSchema } from '@/app/manager/attendance/attendance_types/ManagerAttendanceSchema';
+import { z } from 'zod';
 
 export const attendanceApi = {
-  mark: async (body: { memberId?: string; staffId?: string; date: string; checkIn?: string; type: string }) => {
-    await new Promise(resolve => setTimeout(resolve, 300));
-    return { success: true, message: 'Attendance marked' };
+  markAttendance: async (body: { memberId?: string; staffId?: string; date: string; checkIn?: string; type: string }): Promise<ApiResponse<Attendance>> => {
+    return apiFetch(ManagerAttendanceUrlConfig.BACKEND_API.BASE, { method: 'POST', body: JSON.stringify(body), dataSchema: attendanceSchema });
   },
-  getAll: async (params?: Record<string, string>): Promise<ApiResponse<AttendanceResponse>> => {
-    await new Promise(resolve => setTimeout(resolve, 300));
-    return {
-      success: true,
-      message: 'Fetched attendance records',
-      data: {
-        attendances: MOCK_ATTENDANCE_RECORDS,
-        total: MOCK_ATTENDANCE_RECORDS.length,
-      }
-    };
+  fetchAttendanceRecords: async (params?: Record<string, string>): Promise<ApiResponse<AttendanceResponse>> => {
+    const query = new URLSearchParams(params || {}).toString();
+    return apiFetch(`${ManagerAttendanceUrlConfig.BACKEND_API.BASE}${query ? `?${query}` : ''}`, { dataSchema: attendanceResponseSchema });
   },
-  getTodayStats: async () => {
-    await new Promise(resolve => setTimeout(resolve, 300));
-    return {
-      success: true,
-      message: 'Fetched stats',
-      data: MOCK_ATTENDANCE_STATS,
-    };
+  fetchAttendanceStats: async (): Promise<ApiResponse<AttendanceStatsResponse>> => {
+    return apiFetch(`${ManagerAttendanceUrlConfig.BACKEND_API.BASE}/stats`, { dataSchema: attendanceStatsSchema });
   },
-  getHistory: async (userId: string, type: 'MEMBER' | 'STAFF', month: string): Promise<ApiResponse<Attendance[]>> => {
-    await new Promise(resolve => setTimeout(resolve, 300));
-    return {
-      success: true,
-      message: 'Fetched history',
-      data: MOCK_ATTENDANCE_RECORDS.filter(r => r.type === type && (type === 'MEMBER' ? String(r.memberId) === userId : String(r.staffId) === userId)),
-    };
+  fetchAttendanceHistory: async (userId: string, type: 'MEMBER' | 'STAFF', month: string): Promise<ApiResponse<Attendance[]>> => {
+    const query = new URLSearchParams({ userId, type, month }).toString();
+    return apiFetch(`${ManagerAttendanceUrlConfig.BACKEND_API.BASE}/history?${query}`, { dataSchema: z.array(attendanceSchema) });
+  },
+  fetchAttendanceMembers: async (params?: Record<string, string>): Promise<ApiResponse<{ members: MemberSnapshot[] }>> => {
+    const query = new URLSearchParams(params || {}).toString();
+    return apiFetch(`${ManagerAttendanceUrlConfig.BACKEND_API.BASE}/members${query ? `?${query}` : ''}`, { dataSchema: z.object({ members: z.array(z.object({ id: z.string(), name: z.string(), phone: z.string(), status: z.enum(['ACTIVE', 'PENDING', 'EXPIRED', 'FROZEN', 'SUSPENDED', 'BANNED']), planName: z.string().optional(), joinDate: z.string().optional() })) }) });
+  },
+  fetchAttendanceStaff: async (params?: Record<string, string>): Promise<ApiResponse<{ staff: StaffSnapshot[] }>> => {
+    const query = new URLSearchParams(params || {}).toString();
+    return apiFetch(`${ManagerAttendanceUrlConfig.BACKEND_API.BASE}/staff${query ? `?${query}` : ''}`, { dataSchema: z.object({ staff: z.array(z.object({ id: z.string(), name: z.string(), role: z.string(), phone: z.string(), status: z.enum(['ACTIVE', 'INACTIVE', 'ON_LEAVE']) })) }) });
   },
 };

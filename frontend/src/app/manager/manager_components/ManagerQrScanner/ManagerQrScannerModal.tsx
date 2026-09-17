@@ -1,10 +1,9 @@
+'use client';
 // RESPONSIBILITY: Renders the Kiosk-mode QR Scanner for the front desk. Handles face verification and check-in.
 // DATA FLOW: ManagerHeader button → ManagerQrScannerModal → useManagerQrScannerLogic → attendance log
-'use client';
-
 import Image from 'next/image';
 import { X, ScanLine, UserCheck, AlertCircle, Loader2 } from 'lucide-react';
-import { useManagerQrScannerLogic } from '@/app/manager/manager_components/ManagerQrScanner/useManagerQrScannerLogic';
+import { useManagerQrScannerLogic } from '@/app/manager/manager_components/ManagerQrScanner/ManagerUseManagerQrScannerLogic';
 import {
   MANAGER_QR_MOCK_ACTIVE_NAME,
   MANAGER_QR_MOCK_ACTIVE_ID,
@@ -21,20 +20,20 @@ export default function ManagerQrScannerModal({ open, onClose }: ManagerQrScanne
 
   return (
     // z-40 = Modal layer per Design §12 Z-Index Scale
-    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm motion-safe:transition-opacity">
+    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 sm:p-6 bg-foreground/60 backdrop-blur-sm motion-safe:transition-opacity">
       <div className="w-full max-w-5xl max-h-screen bg-overlay rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row border border-border motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95">
 
         {/* Left Side — The Scanner Viewport */}
-        <div className="flex-1 bg-black/95 relative flex flex-col items-center justify-center p-8 border-b md:border-b-0 md:border-r border-border min-h-96">
+        <div className="flex-1 bg-foreground/95 relative flex flex-col items-center justify-center p-8 border-b md:border-b-0 md:border-r border-border min-h-96">
           <button
             onClick={onClose}
             aria-label="Close scanner"
-            className="absolute top-6 left-6 p-3 bg-white/10 hover:bg-white/20 text-white rounded-full motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            className="absolute top-6 left-6 p-3 bg-background/10 hover:bg-background/20 text-primary-foreground rounded-full motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
             <X size={24} />
           </button>
 
-          <h2 className="absolute top-8 text-xl font-bold text-white tracking-widest uppercase opacity-80">Front Desk Kiosk</h2>
+          <h2 className="absolute top-8 text-xl font-bold text-primary-foreground tracking-widest uppercase opacity-80">Front Desk Kiosk</h2>
 
           {/* Scanner Frame — corner markers + animated scan line */}
           <div className="relative w-64 h-64 sm:w-80 sm:h-80 mb-10">
@@ -51,11 +50,11 @@ export default function ManagerQrScannerModal({ open, onClose }: ManagerQrScanne
 
             {/* Center Icon Watermark */}
             <div className="absolute inset-0 flex items-center justify-center opacity-20">
-              <ScanLine size={80} className="text-white" />
+              <ScanLine size={80} className="text-primary-foreground" />
             </div>
           </div>
 
-          <p className="text-white/60 mb-6 font-medium text-center max-w-xs">
+          <p className="text-primary-foreground/60 mb-6 font-medium text-center max-w-xs">
             Align the member&apos;s QR Code within the frame to scan.
           </p>
 
@@ -65,7 +64,7 @@ export default function ManagerQrScannerModal({ open, onClose }: ManagerQrScanne
               onClick={() => handleSimulateScan(true)}
               disabled={status === 'SCANNING'}
               aria-label="Simulate an active member scan"
-              className="px-6 py-3 bg-white/10 hover:bg-white/20 text-white text-sm font-bold rounded-xl motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:opacity-50"
+              className="px-6 py-3 bg-background/10 hover:bg-background/20 text-primary-foreground text-sm font-bold rounded-xl motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:opacity-50"
             >
               Simulate Active
             </button>
@@ -73,7 +72,7 @@ export default function ManagerQrScannerModal({ open, onClose }: ManagerQrScanne
               onClick={() => handleSimulateScan(false)}
               disabled={status === 'SCANNING'}
               aria-label="Simulate an expired member scan"
-              className="px-6 py-3 bg-white/10 hover:bg-white/20 text-white text-sm font-bold rounded-xl motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:opacity-50"
+              className="px-6 py-3 bg-background/10 hover:bg-background/20 text-primary-foreground text-sm font-bold rounded-xl motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:opacity-50"
             >
               Simulate Expired
             </button>
@@ -134,14 +133,14 @@ export default function ManagerQrScannerModal({ open, onClose }: ManagerQrScanne
                   {status === 'ACTIVE' ? (
                     <button
                       onClick={handleCheckIn}
-                      className="w-full py-4 bg-success hover:bg-success/90 text-white text-lg font-black rounded-2xl motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-success flex items-center justify-center gap-2"
+                      className="w-full py-4 bg-success hover:bg-success/90 text-primary-foreground text-lg font-black rounded-2xl motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-success flex items-center justify-center gap-2"
                     >
                       <UserCheck size={24} /> Verify Face &amp; Check-in
                     </button>
                   ) : (
                     <button
                       onClick={resetStatus}
-                      className="w-full py-4 bg-danger hover:bg-danger/90 text-white text-lg font-black rounded-2xl motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-danger flex items-center justify-center gap-2"
+                      className="w-full py-4 bg-danger hover:bg-danger/90 text-primary-foreground text-lg font-black rounded-2xl motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-danger flex items-center justify-center gap-2"
                     >
                       <AlertCircle size={24} /> Block &amp; Collect Payment
                     </button>

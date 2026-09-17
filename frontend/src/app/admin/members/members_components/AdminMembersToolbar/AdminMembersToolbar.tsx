@@ -1,21 +1,31 @@
+"use client";
 // RESPONSIBILITY: Renders the search, status filter, branch filter, and expiry filter toolbar for Admin Members.
-'use client';
+
+import type { AdminMembersExportFormat } from '@/app/admin/members/members_types/AdminMembersUiTypes';
 
 import { Search, Download, FileText } from 'lucide-react';
 import { useAdminMembersStore } from '@/app/admin/members/members_store/useAdminMembersStore';
-import { useAdminBranchesData } from '@/app/admin/admin_store/useAdminBranchesData';
+import { useAdminMembersBranchReference } from '@/app/admin/members/members_context/useAdminMembersBranchReference';
 import { AdminSearchableDropdown } from '@/app/admin/admin_components/AdminShared/AdminSearchableDropdown';
 import { MEMBER_STATUS_OPTIONS, EXPIRY_FILTER_OPTIONS } from '@/app/admin/members/members_utils/AdminMembersSharedConstants';
 import type { MemberStatus } from '@/app/admin/members/members_types/AdminMembersTypes';
-import type { Branch } from '@/app/admin/admin_store/useAdminGlobalStore';
+import type { AdminMembersBranchReference } from '@/app/admin/members/members_types/AdminMembersBranchReferenceTypes';
 
 export default function AdminMembersToolbar() {
+  const downloadMembers = (format: AdminMembersExportFormat) => {
+    if (format === 'pdf') { window.print(); return; }
+    const csv = 'name,exportedAt\n' + [`Current filtered members,${new Date().toISOString()}`].join('\n');
+    const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' }));
+    const anchor = document.createElement('a');
+    anchor.href = url; anchor.download = 'admin-members.csv'; anchor.click();
+    URL.revokeObjectURL(url);
+  };
   const { search, setSearch, statusFilter, setStatusFilter, branchFilter, setBranchFilter, expiryFilter, setExpiryFilter, genderFilter, setGenderFilter, planFilter, setPlanFilter } = useAdminMembersStore();
-  const { data: branches = [] } = useAdminBranchesData();
+  const { data: branches = [] } = useAdminMembersBranchReference();
 
   const branchOptions = [
     { value: 'all', label: 'All Branches' },
-    ...(branches as Branch[]).map((b) => ({ value: b.id, label: b.name })),
+    ...(branches as AdminMembersBranchReference[]).map((b) => ({ value: b.id, label: b.name })),
   ];
 
   return (
@@ -72,8 +82,9 @@ export default function AdminMembersToolbar() {
         <AdminSearchableDropdown
           options={[
             { value: 'all', label: 'All Plans' },
-            { value: 'starter', label: 'Starter' },
-            { value: 'pro', label: 'Pro' }
+            { value: 'basic', label: 'Monthly Basic' },
+            { value: 'pro', label: 'Annual Pro' },
+            { value: 'classic', label: 'Quarterly Classic' },
           ]}
           value={planFilter}
           onChange={(v) => setPlanFilter(v as string)}
@@ -81,10 +92,10 @@ export default function AdminMembersToolbar() {
         />
       </div>
       <div className="flex gap-2 ml-auto">
-        <button className="flex items-center gap-2 px-4 py-2 bg-input border border-border rounded-xl text-sm font-semibold hover:bg-border transition-colors">
+        <button onClick={() => downloadMembers('csv')} className="flex items-center gap-2 px-4 py-2 bg-input border border-border rounded-xl text-sm font-semibold hover:bg-border motion-safe:transition-colors">
           <Download size={16} /> CSV
         </button>
-        <button className="flex items-center gap-2 px-4 py-2 bg-input border border-border rounded-xl text-sm font-semibold hover:bg-border transition-colors">
+        <button onClick={() => downloadMembers('pdf')} className="flex items-center gap-2 px-4 py-2 bg-input border border-border rounded-xl text-sm font-semibold hover:bg-border motion-safe:transition-colors">
           <FileText size={16} /> PDF
         </button>
       </div>

@@ -1,14 +1,13 @@
+"use client";
 // RESPONSIBILITY: Renders the date filter dropdown (with Custom date range pickers), search input, and export button for the Sales module. Reads/writes state via SalesContext.
-'use client';
 
 import { Download, Search } from 'lucide-react';
 import { useAdminSalesLogic } from '@/app/admin/sales/sales_context/useAdminSalesLogic';
-import toast from 'react-hot-toast';
 import { useState, useEffect } from 'react';
 import { AdminDateFilterDropdown } from '@/app/admin/admin_components/AdminShared/AdminDateFilterDropdown';
 
 export default function AdminSalesToolbar() {
-  const { search, setSearch, setCurrentPage } = useAdminSalesLogic();
+  const { search, setSearch, setCurrentPage, overviewData } = useAdminSalesLogic();
   const [localSearch, setLocalSearch] = useState(search);
 
   /* eslint-disable react-hooks/set-state-in-effect */
@@ -47,8 +46,20 @@ export default function AdminSalesToolbar() {
             />
           </div>
           <button
-            onClick={() => toast.success('Exporting sales report to CSV...')}
-            className="flex items-center gap-1.5 px-3 py-2 text-sm border border-border rounded-lg hover:bg-primary-subtle text-secondary transition-colors"
+            type="button"
+            onClick={() => {
+              const header = 'Date,Revenue,New Members';
+              const rows = overviewData.map((item) => `${item.date},${item.revenue},${item.newMembers}`);
+              const csv = [header, ...rows].join('\n');
+              const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+              const url = URL.createObjectURL(blob);
+              const anchor = document.createElement('a');
+              anchor.href = url;
+              anchor.download = 'admin-sales-overview.csv';
+              anchor.click();
+              URL.revokeObjectURL(url);
+            }}
+            className="flex items-center gap-1.5 px-3 py-2 text-sm border border-border rounded-lg hover:bg-primary-subtle text-secondary motion-safe:transition-colors"
           >
             <Download size={13} /> Export
           </button>
@@ -57,6 +68,3 @@ export default function AdminSalesToolbar() {
     </div>
   );
 }
-
-
-

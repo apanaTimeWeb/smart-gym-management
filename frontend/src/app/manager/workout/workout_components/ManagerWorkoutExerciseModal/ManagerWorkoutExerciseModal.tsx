@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Form modal for creating or editing a single exercise entry in the Workout Library module.
 'use client';
-
+// RESPONSIBILITY: Form modal for creating or editing a single exercise entry in the Workout Library module.
 import { useEffect } from 'react';
 import { X, Save } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
@@ -8,9 +7,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import { useWorkoutContext } from '@/app/manager/workout/workout_context/ManagerWorkoutContext';
 import { EQUIPMENT_OPTIONS, EXERCISE_DIFFICULTY_OPTIONS, ExerciseSchema, type ExerciseFormValues, EMPTY_EXERCISE_FORM } from '@/app/manager/workout/workout_utils/ManagerWorkoutSharedConstants';
-import { useSaveExerciseMutation } from '@/app/manager/workout/workout_api/useManagerWorkoutMutations';
-import { useUnsavedChangesGuard } from '@/app/manager/manager_utils/useUnsavedChangesGuard';
-import toast from 'react-hot-toast';
+import { useSaveExerciseMutation } from '@/app/manager/workout/workout_api/ManagerUseManagerWorkoutMutations';
+import { useManagerUnsavedChangesGuard } from '@/app/manager/manager_utils/ManagerUnsavedChangesGuard';
+import { showManagerErrorToast, showManagerSuccessToast } from '@/app/manager/manager_utils/ManagerToastService';
 
 export default function ManagerWorkoutExerciseModal() {
   const { 
@@ -31,7 +30,7 @@ export default function ManagerWorkoutExerciseModal() {
     defaultValues: exForm || EMPTY_EXERCISE_FORM
   });
 
-  useUnsavedChangesGuard(showExModal && isDirty);
+  useManagerUnsavedChangesGuard(showExModal && isDirty);
 
   useEffect(() => {
     if (showExModal) {
@@ -42,7 +41,7 @@ export default function ManagerWorkoutExerciseModal() {
   if (!showExModal) return null;
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 p-4">
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-foreground/60 p-4">
       <div className="bg-card rounded-2xl shadow-xl w-full max-w-md overflow-hidden border-2 border-warning">
         <div className="flex justify-between items-center p-5 border-b border-border">
           <h3 className="font-bold text-lg text-foreground">
@@ -51,7 +50,7 @@ export default function ManagerWorkoutExerciseModal() {
           <button 
             type="button"
             onClick={() => setShowExModal(false)} 
-            className="text-secondary hover:text-foreground hover:bg-primary-subtle p-1 rounded-md transition-colors"
+            className="text-secondary hover:text-foreground hover:bg-primary-subtle p-1 rounded-md motion-safe:transition-colors"
           >
             <X size={20} />
           </button>
@@ -65,11 +64,11 @@ export default function ManagerWorkoutExerciseModal() {
               category: equipment,
               muscleGroup: muscle.split(',').map(s => s.trim()) 
             };
-            await saveMutation.mutateAsync(payload);
-            toast.success(editExId ? 'Exercise updated successfully' : 'Exercise created successfully');
+            const response = await saveMutation.mutateAsync(payload);
+            showManagerSuccessToast(response.message, 'manager-workout-exercise-save-success');
             setShowExModal(false);
           } catch (err: unknown) {
-            toast.error(err instanceof Error ? err.message : 'Failed to save exercise');
+            showManagerErrorToast(err, 'manager-workout-exercise-error');
           }
         })} className="p-5 space-y-4">
           <div>
@@ -130,16 +129,16 @@ export default function ManagerWorkoutExerciseModal() {
             <button 
               type="button" 
               onClick={() => setShowExModal(false)} 
-              className="px-4 py-2 border border-border rounded-lg font-medium text-secondary hover:text-foreground hover:bg-primary-subtle transition-colors"
+              className="px-4 py-2 border border-border rounded-lg font-medium text-secondary hover:text-foreground hover:bg-primary-subtle motion-safe:transition-colors"
             >
               Cancel
             </button>
             <button 
               type="submit" 
               disabled={saveMutation.isPending}
-              className="px-4 py-2 rounded-lg font-medium text-white flex items-center gap-2 hover:opacity-90 transition-opacity disabled:opacity-70 bg-primary" 
+              className="px-4 py-2 rounded-lg font-medium text-primary-foreground flex items-center gap-2 hover:opacity-90 motion-safe:transition-opacity disabled:opacity-70 bg-primary" 
             >
-              {saveMutation.isPending ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full motion-safe:animate-spin" /> : <><Save size={15} /> Save</>}
+              {saveMutation.isPending ? <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full motion-safe:animate-spin" /> : <><Save size={15} /> Save</>}
             </button>
           </div>
         </form>

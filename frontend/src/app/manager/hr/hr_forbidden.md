@@ -4,7 +4,7 @@ To maintain extreme isolation and enterprise-grade architecture in the Manager H
 
 ## 1. UI vs State Authority
 - **No Local Fallbacks for Filters:** Search, pagination, role, and month filters MUST be synced to the URL via `useManagerHrLogic`. Do not keep primary list states strictly in React state without URL mirroring.
-- **No Global Shared Mutations:** HR staff and payroll mutations belong in `useManagerHrStaffMutations.ts` and `useManagerHrPayrollMutations.ts`. Do not place them in global API files.
+- **No Global Shared Mutations:** HR staff and payroll mutations belong in `ManagerUseManagerHrStaffMutations.ts` and `ManagerUseManagerHrPayrollMutations.ts`. Do not place them in global API files.
 
 ## 2. Component Boundaries
 - **Component File Limits:** Do not combine `ManagerHrStaffModal`, `ManagerHrPayrollModal`, and `ManagerHrPaymentModal` into one giant file. They must remain isolated in their respective folders.

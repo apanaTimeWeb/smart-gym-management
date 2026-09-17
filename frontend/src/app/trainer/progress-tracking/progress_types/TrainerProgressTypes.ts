@@ -1,9 +1,8 @@
 // RESPONSIBILITY: TypeScript types for the Trainer Progress Tracking module.
 
 // Types inferred from Zod schemas
-export type { ProgressEntry, ProgressSummary, CreateProgressEntryDto, ProgressMemberBasic } from './progress.schema';
+export type { ProgressEntry, ProgressSummary, CreateProgressEntryDto, ProgressMemberBasic } from '@/app/trainer/progress-tracking/progress_types/TrainerProgress.schema';
 
-export type ProgressFetchState = 'idle' | 'loading' | 'success' | 'error';
 
 export type ProgressChartMetric = 'weight' | 'bmi' | 'bodyFat' | 'muscleMass';
 

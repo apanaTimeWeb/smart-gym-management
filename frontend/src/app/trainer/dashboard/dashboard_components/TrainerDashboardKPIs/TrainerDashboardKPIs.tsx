@@ -1,13 +1,11 @@
-// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
-// DATA FLOW: Standard component data flow.
-// RESPONSIBILITY: Renders the two rows of KPI metric stat cards on the dashboard using live data from DashboardContext.
 'use client';
-
+// RESPONSIBILITY: Renders the two rows of KPI metric stat cards on the dashboard using live data from DashboardContext.
+import { formatNumber } from '@/lib/formatters';
 import { useTrainerDashboardQuery } from '@/app/trainer/dashboard/dashboard_queries/useTrainerDashboardQuery';
 import TrainerStatCard from '@/app/trainer/trainer_components/TrainerShared/TrainerStatCard';
 import { Users, UserCheck, CalendarCheck, Clock, Dumbbell, Activity, DollarSign, Star, CalendarClock, TrendingUp } from 'lucide-react';
 import { useDateRangeSuffix } from '@/lib/useDateRangeSuffix';
-import { formatCurrency } from '@/app/trainer/dashboard/dashboard_utils/DashboardSharedConstants';
+import { formatCurrency } from '@/lib/formatters';
 
 export default function TrainerDashboardKPIs() {
   const { data: stats } = useTrainerDashboardQuery();
@@ -75,7 +73,7 @@ export default function TrainerDashboardKPIs() {
         />
         <TrainerStatCard
           title={`Avg Session Rating${dateSuffix}`}
-          value={s.avgSessionRating?.toFixed(1) ?? '0.0'}
+          value={formatNumber(s.avgSessionRating ?? 0)}
           change="Out of 5.0"
           changeType="neutral"
           icon={Star}

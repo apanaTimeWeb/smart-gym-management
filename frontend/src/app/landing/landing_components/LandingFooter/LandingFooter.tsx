@@ -1,6 +1,6 @@
+'use client';
 // RESPONSIBILITY: Encapsulates logic, UI, or types for this module.
 // DATA FLOW: Standard component data flow.
-"use client";
 // RESPONSIBILITY: Renders the site footer — brand column, quick links, programs, and newsletter.
 // All navigation links use LandingUrlConfig anchors. Social icon SVGs are inlined for zero external requests.
 import Link from 'next/link';

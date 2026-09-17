@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the reusable confirmation/destructive action modal used across all MANAGER modules. Receives config via ManagerConfirmProvider. No API calls.
 'use client';
-
+// RESPONSIBILITY: Renders the reusable confirmation/destructive action modal used across all MANAGER modules. Receives config via ManagerConfirmProvider. No API calls.
 import { AlertTriangle } from 'lucide-react';
 
 interface ManagerConfirmModalProps {
@@ -27,7 +26,7 @@ export default function ManagerConfirmModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 p-4">
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-foreground/60 p-4">
       <div className="bg-card rounded-2xl shadow-xl w-full max-w-sm overflow-hidden motion-safe:animate-in fade-in zoom-in duration-200">
         <div className="p-6">
           <div className="flex items-center gap-4 mb-4">
@@ -49,7 +48,7 @@ export default function ManagerConfirmModal({
           <div className="flex gap-3 mt-6">
             <button
               onClick={onCancel}
-              className="flex-1 py-2.5 border border-border rounded-xl text-sm font-semibold text-foreground hover:bg-input transition-colors"
+              className="flex-1 py-2.5 border border-border rounded-xl text-sm font-semibold text-foreground hover:bg-input motion-safe:transition-colors"
             >
               {cancelText}
             </button>
@@ -57,7 +56,7 @@ export default function ManagerConfirmModal({
               onClick={() => {
                 onConfirm();
               }}
-              className={`flex-1 py-2.5 rounded-xl text-sm font-semibold text-white transition-opacity hover:opacity-90 ${
+              className={`flex-1 py-2.5 rounded-xl text-sm font-semibold text-primary-foreground motion-safe:transition-opacity hover:opacity-90 ${
                 type === 'danger' ? 'bg-danger' :
                 type === 'warning' ? 'bg-warning' :
                 'bg-info'

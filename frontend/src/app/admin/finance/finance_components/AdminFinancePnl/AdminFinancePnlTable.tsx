@@ -1,10 +1,10 @@
+"use client";
 // RESPONSIBILITY: Renders the sortable branch-wise P&L comparison table with
 // clickable row expansion. Handles sorting indicators and inline breakdown toggle.
-'use client';
 
 import { ChevronDown, ChevronUp, ChevronsUpDown, ChevronRight } from 'lucide-react';
 import { PNL_TABLE_HEADERS, PNL_STATUS_CONFIG } from '@/app/admin/finance/finance_utils/AdminFinancePnlConstants';
-import { formatCurrency } from '@/lib/formatters';
+import {formatCurrency, formatPercent1dp} from '@/lib/formatters';
 import AdminFinancePnlRowBreakdown from '@/app/admin/finance/finance_components/AdminFinancePnl/AdminFinancePnlRowBreakdown';
 import AdminFinancePnlEmptyState from '@/app/admin/finance/finance_components/AdminFinancePnl/AdminFinancePnlEmptyState';
 import type {
@@ -12,7 +12,7 @@ import type {
   PnlSortKey,
   PnlSortDirection,
   PnlStatusFilter,
-} from '@/app/admin/finance/finance_types/finance_types';
+} from '@/app/admin/finance/finance_types/AdminFinanceTypes';
 
 interface AdminFinancePnlTableProps {
   data: BranchPnlRecord[];
@@ -46,11 +46,11 @@ export default function AdminFinancePnlTable({
   return (
     <div className="bg-card border border-border rounded-xl overflow-hidden">
       <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse">
+        <table data-admin-responsive-table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-primary/5 border-b border-border">
               {PNL_TABLE_HEADERS.map((h) => (
-                <th
+                <th role="button" tabIndex={0} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); event.currentTarget.click(); } }} 
                   key={h.key}
                   className={`px-4 py-3 text-xs font-semibold text-secondary uppercase tracking-wider select-none whitespace-nowrap ${
                     h.sortable ? 'cursor-pointer hover:text-foreground motion-safe:transition-colors' : ''
@@ -121,12 +121,12 @@ export default function AdminFinancePnlTable({
 
                       {/* Margin % */}
                       <td className={`px-4 py-3.5 text-sm font-semibold text-right ${profitColor}`}>
-                        {branch.marginPct.toFixed(1)}%
+                        {formatPercent1dp(branch.marginPct)}%
                       </td>
 
                       {/* MoM Delta */}
                       <td className={`px-4 py-3.5 text-xs font-semibold text-right ${momColor}`}>
-                        {branch.momDelta > 0 ? '+' : ''}{branch.momDelta.toFixed(1)}%
+                        {branch.momDelta > 0 ? '+' : ''}{formatPercent1dp(branch.momDelta)}%
                       </td>
 
                       {/* Status Badge */}

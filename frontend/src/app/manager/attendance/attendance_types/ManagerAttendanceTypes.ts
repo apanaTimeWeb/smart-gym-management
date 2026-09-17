@@ -1,13 +1,11 @@
 // RESPONSIBILITY: Defines strict types and API response interfaces for the Attendance module.
 // Includes durationMinutes, lateMinutes, checkInMethod for time-tracking analytics.
 
-import type { Member } from '@/app/manager/members/members_types/ManagerMembersTypes';
-import type { Staff } from '@/app/manager/hr/hr_types/ManagerHrTypes';
+import type { MemberSnapshot, StaffSnapshot } from '@/app/manager/attendance/attendance_types/ManagerAttendanceSnapshotTypes';
 import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
 import type { AttendanceTab, EMPTY_ATTENDANCE_FORM } from '@/app/manager/attendance/attendance_utils/ManagerAttendanceSharedConstants';
 import type React from 'react';
 
-export type FetchState = 'idle' | 'loading' | 'success' | 'error';
 
 // CRITICAL — DB column needed for analytics
 export type CheckInMethod = 'QR' | 'Manual' | 'Biometric';
@@ -47,10 +45,11 @@ export interface AttendanceResponse {
 export interface AttendanceContextType {
   records: Attendance[];
   todayStats: AttendanceStatsResponse;
-  members: Member[];
-  staff: Staff[];
+  members: MemberSnapshot[];
+  staff: StaffSnapshot[];
   totalRecords: number;
-  fetchState: FetchState;
+  isLoading: boolean;
+  isError: boolean;
   saving: boolean;
   toast: { message: string; type: ToastType } | null;
 

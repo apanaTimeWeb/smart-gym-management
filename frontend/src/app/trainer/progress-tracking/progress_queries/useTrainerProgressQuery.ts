@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetchProgressEntries, fetchProgressSummary, fetchProgressMembers } from '../progress_api/TrainerProgressApi';
+import { fetchProgressEntries, fetchProgressSummary, fetchProgressMembers } from '@/app/trainer/progress-tracking/progress_api/TrainerProgressApi';
 
 export function useTrainerProgressMembersQuery() {
   return useQuery({

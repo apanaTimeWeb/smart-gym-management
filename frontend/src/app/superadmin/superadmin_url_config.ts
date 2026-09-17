@@ -1,68 +1,10 @@
+// RESPONSIBILITY: Centralizes Superadmin shell navigation and cross-feature infrastructure routes.
 export const SuperadminUrlConfig = {
-  PAGES: {
-    DASHBOARD: "/superadmin/dashboard",
-    BRANCHES: "/superadmin/branches",
-    FRANCHISES: "/superadmin/franchises",
-    SETTINGS: "/superadmin/settings",
-    USAGE_METERS: "/superadmin/usage-meters",
-    GLOBAL_AUDIT: "/superadmin/global-audit",
-    ANALYTICS: "/superadmin/analytics",
-    COUPONS: "/superadmin/coupons",
-    AFFILIATES: "/superadmin/affiliates",
-    GYMS_LIST: "/superadmin/gyms",
-    INVOICES: "/superadmin/invoices",
-    TICKETS: "/superadmin/tickets",
-    BROADCASTS: "/superadmin/broadcasts",
-    FEATURES: "/superadmin/features",
-    INFRASTRUCTURE: "/superadmin/infrastructure",
-    MIGRATIONS: "/superadmin/migrations",
-    JOBS: "/superadmin/jobs",
-    BACKUPS: "/superadmin/backups",
-    SYSTEM_HEALTH: "/superadmin/system",
-    PLANS: "/superadmin/plans",
-    GYM_ADD: "/superadmin/gyms/add",
-    ONBOARDING: "/superadmin/onboarding",
-    MESSAGING: "/superadmin/messaging",
-    REPORTS: "/superadmin/reports",
-    TENANT_PREVIEW: "/superadmin/tenant-preview", // removed — kept for type safety, route deleted
-    CHURN_ALERTS: "/superadmin/churn-alerts",
-    PROFILE: "/superadmin/profile",
-  },
-  BACKEND_API: {
-    BRANCHES: "/superadmin/branches",
-    FRANCHISES: "/superadmin/franchises",
-    USAGE_METERS: "/superadmin/usage-meters",
-    GLOBAL_AUDIT: "/superadmin/global-audit",
-    ANALYTICS: "/superadmin/analytics",
-    TICKETS_BASE: "/superadmin/tickets",
-    PLANS_BASE: "/superadmin/plans",
-    GYMS_BASE: "/superadmin/gyms-list",
-    JOBS_BASE: "/superadmin/jobs",
-    MIGRATIONS_BASE: "/superadmin/migrations",
-    DASHBOARD_BASE: "/superadmin/dashboard",
-    SETTINGS_BASE: "/superadmin/settings",
-    SYSTEM_BASE: "/superadmin/system-health",
-    INFRASTRUCTURE_BASE: "/superadmin/infrastructure",
-    REDIS_TELEMETRY: "/superadmin/infrastructure/redis",
-    REDIS_FLUSH_GLOBAL: "/superadmin/infrastructure/redis/flush-global",
-    REDIS_FLUSH_TENANT: "/superadmin/infrastructure/redis/flush-tenant",
-    BACKUPS_BASE: "/superadmin/backups",
-    BROADCASTS_BASE: "/superadmin/broadcasts",
-    COUPONS_BASE: "/superadmin/coupons",
-    FEATURES_BASE: "/superadmin/features",
-    INVOICES_BASE: "/superadmin/invoices",
-    INVOICES_MANUAL_PAYMENT: "/superadmin/invoices/manual-payment",
-    AUDIT_LOGS_BASE: "/superadmin/audit-logs",
-    AFFILIATES_BASE: "/superadmin/affiliates",
-    // Ghost login / impersonation — tenant-scoped path, :id injected at call site
-    IMPERSONATE_BASE: "/superadmin/gyms-list",
-    // Additional module API roots
-    ONBOARDING_BASE: "/superadmin/onboarding",
-    MESSAGING_BASE: "/superadmin/messaging",
-    REPORTS_BASE: "/superadmin/reports",
-    TENANT_PREVIEW_BASE: "/superadmin/tenant-preview", // removed — kept for type safety, route deleted
-    // Note: USAGE_METERS and FRANCHISES keys above already cover these paths — no _BASE duplicates needed
-    CHURN_ALERTS_BASE: "/superadmin/churn-alerts",
-    PROFILE_BASE: "/superadmin/profile",
-  }
-};
+    PAGES: {
+        GYMS: '/superadmin/gyms',
+        ADMIN_DASHBOARD: '/admin/dashboard',
+    },
+    INFRASTRUCTURE: {
+        GHOST_LOGIN_EXIT_PROXY: '/auth/exit-ghost-login',
+    },
+} as const;

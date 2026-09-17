@@ -1,9 +1,8 @@
+"use client";
 // RESPONSIBILITY: Main orchestrator for the Admin Announcements module.
 // Renders the compose CTA banner, KPIs, and the announcement table with full CRUD.
-'use client';
 
 import { Megaphone, Send } from 'lucide-react';
-import AdminHeader from '@/app/admin/admin_components/AdminLayout/AdminHeader';
 import AdminAnnouncementsKPIs from '@/app/admin/announcements/announcements_components/AdminAnnouncementsKPIs/AdminAnnouncementsKPIs';
 import AdminAnnouncementsTable from '@/app/admin/announcements/announcements_components/AdminAnnouncementsTable/AdminAnnouncementsTable';
 import AdminAnnouncementsModal from '@/app/admin/announcements/announcements_components/AdminAnnouncementsModal/AdminAnnouncementsModal';
@@ -14,10 +13,6 @@ export default function AdminAnnouncementsMain() {
 
   return (
     <div className="min-h-full pb-10">
-      <AdminHeader
-        title="Announcements"
-        subtitle="Broadcast notices to members, trainers, and staff across your branches"
-      />
       <div className="p-6 space-y-5">
 
         {/* Branch Broadcast CTA — the primary send capability for admin role */}
@@ -35,7 +30,7 @@ export default function AdminAnnouncementsMain() {
           </div>
           <button
             onClick={openCreate}
-            className="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-hover text-black font-semibold rounded-xl text-sm motion-safe:transition-colors shrink-0"
+            className="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-hover text-primary-foreground font-semibold rounded-xl text-sm motion-safe:transition-colors shrink-0"
           >
             <Send size={15} />
             Send Announcement

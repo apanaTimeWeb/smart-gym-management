@@ -1,12 +1,11 @@
-// RESPONSIBILITY: Defines all TypeScript types, interfaces, and the FetchState enum for the Store module.
+// RESPONSIBILITY: Defines the Store domain types, interfaces, and state contracts for the Store module.
 // HIGHLY RECOMMENDED additions: sku, barcode, costPrice, reorderThreshold on Product;
 // customerId, gstAmount, returnStatus on Order.
 
 import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
-import type { ManagerReceiptData } from '@/app/manager/members/members_components/ManagerMembersThermalReceipt';
+import type { ManagerReceiptData } from '@/app/manager/manager_components/ManagerFeedback/ManagerThermalReceipt';
 import type { ProductFormValues } from '@/app/manager/store/store_utils/ManagerStoreSharedConstants';
 
-export type FetchState = 'idle' | 'loading' | 'success' | 'error';
 export type ReturnStatus = 'NONE' | 'PARTIAL' | 'FULL';
 
 export interface StoreInitialData {
@@ -32,7 +31,8 @@ export interface StoreContextType {
   orders: Order[];
   totalOrders: number;
   summary: StoreSummary | null;
-  fetchState: FetchState;
+  isLoading: boolean;
+  isError: boolean;
   saving: boolean;
 
   toast: { message: string; type: ToastType } | null;

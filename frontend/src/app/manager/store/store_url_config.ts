@@ -1,0 +1,15 @@
+// RESPONSIBILITY: Owns every route path used by the Manager store module.
+export const ManagerStoreUrlConfig = {
+  PAGES: {
+    PRODUCTS: '/manager/store',
+    ORDERS: '/manager/store',
+  },
+  BACKEND_API: {
+    BASE: '/manager/store',
+    PRODUCTS_BASE: '/manager/store/products',
+    PRODUCT_UPDATE: (id: string) => `/manager/store/products/${id}`,
+    PRODUCT_DELETE: (id: string) => `/manager/store/products/${id}`,
+    ORDERS_BASE: '/manager/store/orders',
+    SUMMARY: '/manager/store/summary',
+  }
+};

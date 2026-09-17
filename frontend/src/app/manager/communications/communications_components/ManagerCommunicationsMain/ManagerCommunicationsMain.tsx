@@ -1,14 +1,13 @@
-// RESPONSIBILITY: Root client orchestrator for the Communications module — renders KPIs, tab switcher, and conditionally Composer, History, Automations, or Churn Recovery.
 'use client';
-
+// RESPONSIBILITY: Root client orchestrator for the Communications module — renders KPIs, tab switcher, and conditionally Composer, History, Automations, or Churn Recovery.
 import { MessageCircle, History, Zap, UserX } from 'lucide-react';
 import ManagerCommunicationsKPIs from '@/app/manager/communications/communications_components/ManagerCommunicationsKPIs/ManagerCommunicationsKPIs';
 import ManagerCommunicationsComposer from '@/app/manager/communications/communications_components/ManagerCommunicationsComposer/ManagerCommunicationsComposer';
 import ManagerCommunicationsHistory from '@/app/manager/communications/communications_components/ManagerCommunicationsHistory/ManagerCommunicationsHistory';
 import ManagerCommunicationsAutomations from '@/app/manager/communications/communications_components/ManagerCommunicationsAutomations/ManagerCommunicationsAutomations';
 import ManagerChurnRecoveryTab from '@/app/manager/communications/communications_components/ManagerChurnRecovery/ManagerChurnRecoveryTab';
-import { useManagerCommunicationsLogic } from '@/app/manager/communications/communications_context/useManagerCommunicationsLogic';
-import type { CommActiveTab } from '@/app/manager/communications/communications_store/useManagerCommunicationsStore';
+import { useManagerCommunicationsLogic } from '@/app/manager/communications/communications_context/ManagerUseManagerCommunicationsLogic';
+import type { CommActiveTab } from '@/app/manager/communications/communications_store/ManagerUseManagerCommunicationsStore';
 
 const TABS: { value: CommActiveTab; label: string; Icon: React.ElementType }[] = [
   { value: 'compose',        label: 'Compose',       Icon: MessageCircle },
@@ -53,7 +52,7 @@ export default function ManagerCommunicationsMain() {
                 />
                 {tab.label}
                 {tab.value === 'churn_recovery' && (
-                  <span className="ml-1 px-1.5 py-0.5 rounded-full text-[10px] font-semibold bg-danger-bg text-danger">
+                  <span className="ml-1 px-1.5 py-0.5 rounded-full text-xs font-semibold bg-danger-bg text-danger">
                     NEW
                   </span>
                 )}

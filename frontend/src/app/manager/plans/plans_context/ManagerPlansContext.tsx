@@ -1,18 +1,18 @@
+'use client';
 // RESPONSIBILITY: React Context — bridges TanStack Query plans with UI state (search, filters, modal) synced to URL.
 // DATA FLOW: URL → usePlansContext → useManagerPlansQueries → API
-'use client';
-
 import { createContext, useContext, useState, useCallback, useMemo } from 'react';
+import { useManagerDebounce } from '@/app/manager/manager_utils/ManagerDebounce';
 import type { ReactNode } from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
-import { useFetchPlans, useRequestPlanChange } from '@/app/manager/plans/plans_api/useManagerPlansQueries';
-import toast from 'react-hot-toast';
+import { useFetchPlans, useRequestPlanChange } from '@/app/manager/plans/plans_api/ManagerUseManagerPlansQueries';
+import { showManagerErrorToast, showManagerSuccessToast } from '@/app/manager/manager_utils/ManagerToastService';
 import type { Plan } from '@/app/manager/plans/plans_types/ManagerPlansTypes';
-import { MANAGER_PLANS_MESSAGES } from '@/app/manager/plans/plans_utils/ManagerPlansSharedConstants';
 
 interface PlansContextValue {
   plans: Plan[];
-  fetchState: 'idle' | 'loading' | 'error' | 'success';
+  isPending: boolean;
+  isError: boolean;
   saving: boolean;
   search: string;
   setSearch: (v: string) => void;
@@ -42,6 +42,7 @@ export function PlansProvider({ children }: { children: ReactNode }) {
   const tierFilter = searchParams.get('tier') || 'ALL';
   const statusFilter = searchParams.get('status') || 'ALL';
   const activeTab = searchParams.get('tab') || 'View Plans';
+  const debouncedSearch = useManagerDebounce(search, 300);
 
   const updateUrl = useCallback((key: string, value: string) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -57,18 +58,15 @@ export function PlansProvider({ children }: { children: ReactNode }) {
 
   const [requestModalPlan, setRequestModalPlan] = useState<Plan | null>(null);
 
-  const { data: plans = [], status } = useFetchPlans();
+  const queryParams = useMemo(() => ({ search: debouncedSearch, tier: tierFilter, status: statusFilter }), [debouncedSearch, tierFilter, statusFilter]);
+  const { data: plansData, status } = useFetchPlans(queryParams);
+  const plans = plansData?.plans ?? [];
   const { mutateAsync: requestChange, isPending: saving } = useRequestPlanChange();
 
-  const fetchState = status === 'pending' ? 'loading' : status;
+  const isPending = status === 'pending';
+  const isError = status === 'error';
 
-  const filteredPlans = useMemo(() => plans.filter(p => {
-    const q = search.toLowerCase();
-    const matchSearch = !search || p.name?.toLowerCase().includes(q) || p.tier?.toLowerCase().includes(q);
-    const matchTier = tierFilter === 'ALL' || p.tier === tierFilter;
-    const matchStatus = statusFilter === 'ALL' || (statusFilter === 'ACTIVE' ? p.isActive : !p.isActive);
-    return matchSearch && matchTier && matchStatus;
-  }), [plans, search, tierFilter, statusFilter]);
+  const filteredPlans = plans;
 
   const openRequestModal = useCallback((plan: Plan) => setRequestModalPlan(plan), []);
   const closeRequestModal = useCallback(() => setRequestModalPlan(null), []);
@@ -76,17 +74,17 @@ export function PlansProvider({ children }: { children: ReactNode }) {
   const submitChangeRequest = useCallback(async (note: string) => {
     if (!requestModalPlan) return;
     try {
-      await requestChange({ planId: requestModalPlan.id, note });
-      toast.success(MANAGER_PLANS_MESSAGES.CHANGE_REQUEST_SUCCESS);
+      const response = await requestChange({ planId: requestModalPlan.id, note });
+      showManagerSuccessToast(response.message, 'manager-plans-context-success');
       setRequestModalPlan(null);
-    } catch {
-      toast.error(MANAGER_PLANS_MESSAGES.CHANGE_REQUEST_ERROR);
+    } catch (error: unknown) {
+      showManagerErrorToast(error, 'manager-plans-context-error');
     }
   }, [requestModalPlan, requestChange]);
 
   return (
     <ManagerPlansContext.Provider value={{
-      plans, fetchState: fetchState as PlansContextValue['fetchState'], saving,
+      plans, isPending, isError, saving,
       search, setSearch,
       tierFilter, setTierFilter,
       statusFilter, setStatusFilter,

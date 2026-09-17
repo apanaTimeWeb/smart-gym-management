@@ -1,10 +1,10 @@
+"use client";
 // RESPONSIBILITY: Encapsulates all P&L state, sorting, filtering, and derived aggregates.
 // DATA FLOW: AdminFinancePnlConstants → useAdminFinancePnlLogic → AdminFinancePnlMain → child components
-'use client';
 
 import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { financeApi } from '@/app/admin/finance/finance_api/finance_api';
+import { financeApi } from '@/app/admin/finance/finance_api/AdminFinanceApi';
 import type {
   BranchPnlRecord,
   BranchPnlAggregates,
@@ -12,7 +12,7 @@ import type {
   PnlStatusFilter,
   PnlSortKey,
   PnlSortDirection,
-} from '@/app/admin/finance/finance_types/finance_types';
+} from '@/app/admin/finance/finance_types/AdminFinanceTypes';
 
 /**
  * Custom hook for the Branch P&L Comparison page.

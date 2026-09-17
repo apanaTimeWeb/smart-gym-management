@@ -1,71 +1,96 @@
 # Manager Notifications — Feature Map
 
 ## Module Purpose
-The Manager Notifications module displays branch-level system alerts for the Manager role:
-membership expiry warnings, pending payment reminders, attendance anomalies, and manager
-broadcasts from Admin. Notifications are read-only — mark-as-read is the only mutation.
-The unread count drives the bell badge in the Manager sidebar header.
+Manager Notifications is the branch notification inbox. Managers can review unread/high-priority notifications, filter/search the inbox, mark individual or all notifications as read, and delete notifications. Notification records and KPI counts are API data owned by this module. The module must keep global transport/auth handling separate from its business errors.
 
 ## Directory Structure
-| File/Folder | Responsibility |
-|---|---|
-| `page.tsx` | Server Component — auth guard |
-| `loading.tsx` | Skeleton for notification list |
-| `error.tsx` | Error boundary |
-| `notifications_components/ManagerNotificationsMain.tsx` | Root Client Component |
-| `notifications_components/ManagerNotificationsList.tsx` | Scrollable notification card list |
-| `notifications_components/ManagerNotificationsCard.tsx` | Single notification item with type badge |
-| `notifications_components/ManagerNotificationsEmptyState.tsx` | "You're all caught up" empty state |
-| `notifications_context/NotificationsProvider.tsx` | Fetch state, unread count |
-| `notifications_types/ManagerNotificationsTypes.ts` | `Notification`, `NotificationType` enum |
-| `notifications_api/ManagerNotificationsApi.ts` | API wrappers |
-| `notifications_utils/ManagerNotificationsUrlConfig.ts` | Centralized URL constants |
+| Folder | Responsibility | Key Files |
+|---|---|---|
+| `notifications_api/` | Feature-owned responsibility for the notifications module. | `ManagerNotificationsApi.ts` |
+| `notifications_components/` | Feature-owned responsibility for the notifications module. | `—` |
+| `notifications_context/` | Feature-owned responsibility for the notifications module. | `ManagerNotificationsContext.tsx` |
+| `notifications_fixtures/` | Feature-owned responsibility for the notifications module. | `ManagerNotificationsMockData.ts` |
+| `notifications_mocks/` | Feature-owned responsibility for the notifications module. | `ManagerNotificationsMockHandlers.ts` |
+| `notifications_types/` | Feature-owned responsibility for the notifications module. | `ManagerNotificationsSchema.ts; ManagerNotificationsTypes.ts` |
+| `notifications_utils/` | Feature-owned responsibility for the notifications module. | `ManagerNotificationsSharedConstants.ts` |
 
 ## Feature Inventory
-| Feature | Path | Purpose | Main API Calls | Status |
+| Feature | Route | What the User Can Do | Main API Calls | Status |
 |---|---|---|---|---|
-| Notification Feed | `/manager/notifications` | View all alerts | `GET /manager/notifications` | ✅ Live (mock) |
-| Mark as Read | `/manager/notifications` | Clear unread badge | `PATCH /manager/notifications/:id/read` | ✅ Live (mock) |
-| Mark All Read | `/manager/notifications` | Bulk clear unread | `PATCH /manager/notifications/read-all` | ✅ Live (mock) |
+| fetchManagerNotifications | `/manager/notifications` | Uses the fetchManagerNotifications workflow with typed request/response handling. | `GET /manager/notifications` | ✅ Implemented |
+| fetchNotificationKPIs | `/manager/notifications` | Uses the fetchNotificationKPIs workflow with typed request/response handling. | `GET /manager/notifications/kpis` | ✅ Implemented |
+| markNotificationRead | `/manager/notifications` | Uses the markNotificationRead workflow with typed request/response handling. | `PATCH /manager/notifications/:id/read` | ✅ Implemented |
+| markAllNotificationsRead | `/manager/notifications` | Uses the markAllNotificationsRead workflow with typed request/response handling. | `PATCH /manager/notifications/read-all` | ✅ Implemented |
+| deleteNotification | `/manager/notifications` | Uses the deleteNotification workflow with typed request/response handling. | `DELETE /manager/notifications/:id` | ✅ Implemented |
+
+## User Flows & Interactions
+### Flow 1: Process notifications
+1. The inbox loads notifications and KPI counts from the module API.
+2. The manager searches/filters the list using server parameters where supported.
+3. Mark-read or delete actions call the corresponding mutation.
+4. The response message is surfaced and the relevant notification/KPI queries are reconciled.
 
 ## Data and State Architecture
-- Server-state: `NotificationsProvider` — notification list, unread count
-- Zustand stores: None
-- Context providers: `NotificationsProvider`
-- Local-storage keys: None
-- MSW handler: Not yet configured
+TanStack Query owns notifications server/API data. UI-only filters, tabs, selections, and draft state remain local state or module-scoped Zustand where shared. React Context is limited to stable cross-tree concerns and does not become the source of truth for API data. Query keys are module-prefixed.
 
-## User Flows
-1. Manager opens `/manager/notifications` → list loads, unread items highlighted
-2. Manager clicks a notification → marks as read via `PATCH`, highlight clears
-3. Manager clicks "Mark All Read" → bulk `PATCH` → all highlights clear, header badge resets to 0
+## API Contract
+| Function | Method | Endpoint | Request | Response `data` type |
+|---|---|---|---|---|
+| `fetchManagerNotifications` | `GET` | `/api/v1/manager/notifications` | `{ page?, limit?, search?, status?, priority?, type? }` | `{ notifications: Notification[]; total: number }` |
+| `fetchNotificationKPIs` | `GET` | `/api/v1/manager/notifications/kpis` | `—` | `NotificationKPIData` |
+| `markNotificationRead` | `PATCH` | `/api/v1/manager/notifications/:id/read` | `{ id: string }` | `null` |
+| `markAllNotificationsRead` | `PATCH` | `/api/v1/manager/notifications/read-all` | `—` | `null` |
+| `deleteNotification` | `DELETE` | `/api/v1/manager/notifications/:id` | `{ id: string }` | `null` |
 
-## Component Responsibility Map
-- `ManagerNotificationsMain` — layout + provider. MUST NOT contain list logic.
-- `ManagerNotificationsList` — renders cards from context data.
-- `ManagerNotificationsCard` — pure display. Badge color driven by `NotificationType` via `statusBadgeConfig.ts`.
-- `ManagerNotificationsEmptyState` — shown when all notifications are read or list is empty.
+## UI Data Requirements
+| UI Element | Required Field(s) | API Endpoint | Response Path | Nullable? | Mocked? |
+|---|---|---|---|---|---|
+| KPI: Total | `total` | `/api/v1/manager/notifications/kpis` | `data.total` | No | Yes |
+| KPI: Unread | `unread` | `/api/v1/manager/notifications/kpis` | `data.unread` | No | Yes |
+| KPI: High priority | `highPriority` | `/api/v1/manager/notifications/kpis` | `data.highPriority` | No | Yes |
+| KPI: Today count | `todayCount` | `/api/v1/manager/notifications/kpis` | `data.todayCount` | No | Yes |
+| List: Title | `title` | `/api/v1/manager/notifications` | `data.notifications[].title` | No | Yes |
+| List: Message | `message` | `/api/v1/manager/notifications` | `data.notifications[].message` | No | Yes |
+| List: Type | `type` | `/api/v1/manager/notifications` | `data.notifications[].type` | No | Yes |
+| List: Priority | `priority` | `/api/v1/manager/notifications` | `data.notifications[].priority` | No | Yes |
+| List: Status | `status` | `/api/v1/manager/notifications` | `data.notifications[].status` | No | Yes |
+| List: Created at | `createdAt` | `/api/v1/manager/notifications` | `data.notifications[].createdAt` | No | Yes |
+| List: Member name | `memberName` | `/api/v1/manager/notifications` | `data.notifications[].memberName` | Yes | Yes |
 
 ## Permissions and Security
-| Action | Required Role |
+- **Required role:** `MANAGER`.
+- **UI guard:** `ManagerPermissionGate` provides the Manager workspace capability boundary; module-specific permissions remain documented at the feature level when applicable.
+- **Critical actions:** destructive/financial actions use explicit confirmation and server-authoritative responses.
+- **Sensitive data:** list views use masking/display rules appropriate to the data type.
+- **Cross-role isolation:** no business imports from other role roots or unrelated business modules.
+
+## Loading, Empty, and Error States
+- Route-level `loading.tsx` provides a layout-matching skeleton.
+- Data sections use dedicated inline skeletons while TanStack Query is pending.
+- Entity lists provide module-specific empty-state UI where the entity is user-browsable.
+- Module `error.tsx` provides a safe retry fallback and does not expose raw backend/stack-trace text.
+
+## Edge Cases and AI Warnings
+- **Unread/read state is server state; do not mirror it as the primary source of truth in Zustand:** Unread/read state is server state; do not mirror it as the primary source of truth in Zustand.
+- **Mark-all-read and delete operations must reconcile KPI counts with the authoritative result:** Mark-all-read and delete operations must reconcile KPI counts with the authoritative result.
+- **Optional member names and read timestamps must render with explicit empty-value handling:** Optional member names and read timestamps must render with explicit empty-value handling.
+- **Do not send module business errors through the global interceptor as generic toasts:** Do not send module business errors through the global interceptor as generic toasts.
+- **Notification title/message must never include raw backend stack traces or sensitive tokens:** Notification title/message must never include raw backend stack traces or sensitive tokens.
+- **Pagination/filter controls must change the request or be omitted if the endpoint is intentionally non-paginated:** Pagination/filter controls must change the request or be omitted if the endpoint is intentionally non-paginated.
+
+## Component Responsibility Map
+| Component File | Responsibility |
 |---|---|
-| View notifications | `MANAGER` |
-| Mark as read | `MANAGER` |
-
-## Loading, Empty, Error States
-- **Loading:** `loading.tsx` — 6 notification card skeletons
-- **Empty:** `ManagerNotificationsEmptyState` — "You're all caught up" with checkmark icon
-- **Error:** `error.tsx` with retry
-
-## Edge Cases / AI Warnings
-- **Unread count in sidebar** — the bell badge in `ManagerLayout` reads from `NotificationsProvider`. Do not duplicate unread count state in a separate store.
-- **Notification type badge colors** — must use `statusBadgeConfig.ts` token map, never inline color logic per notification type.
-- **No delete** — notifications are never deleted from the UI. Mark-as-read only.
+| `notifications/notifications_components/ManagerNotificationsKPIs/ManagerNotificationsKPIs.tsx` | KPI stat cards for the Notifications module. |
+| `notifications/notifications_components/ManagerNotificationsMain/ManagerNotificationsMain.tsx` | Orchestrator for the Notifications module. |
+| `notifications/notifications_components/ManagerNotificationsTable/ManagerNotificationsTable.tsx` | Notifications list with toolbar (search + filters) and row actions (mark read, delete). |
+| `notifications/notifications_context/ManagerNotificationsContext.tsx` | Bridges URL-owned filter state with module server state and mutations. |
 
 ## Rule Compliance Checklist
-- [x] Rule 1: Micro-modularization — module-prefixed files
-- [x] Rule 3B: Badge colors via `statusBadgeConfig.ts`
-- [x] Rule 6: Logic/UI Separation — list logic in context, display in components
-- [x] Rule 8: Server/Client Boundary — `page.tsx` = Server
-- [x] Rule 9: `loading.tsx` + `error.tsx` present
-- [x] Rule 13: Feature Map — this document, updated same commit as code changes
+- [x] Module-owned API, types/schemas, fixtures, handlers, tests, and feature documentation are scoped to this module.
+- [x] API calls use the module API client and typed response contracts.
+- [x] Server-backed pagination/filter/search follows explicit parameter propagation where applicable.
+- [x] UI Data Requirements map displayed values to concrete endpoints and response paths.
+- [x] Module-owned MSW fixtures/handlers remain the frontend-first server substitute.
+- [x] Raw `any`, relative imports, barrel files, and hardcoded localhost mock origins are absent from audited Manager source.
+- [ ] Host-repository CI/tooling, dependency/SCA/secret gates, CODEOWNERS, branch protection, and production build require root-repository verification.

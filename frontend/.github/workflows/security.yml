@@ -26,10 +26,15 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run npm audit
-        run: npm audit --audit-level=high
+      - name: Run npm audit (moderate+ vulnerabilities)
+        # Fail if any moderate, high, or critical vulnerabilities are found
+        run: npm audit --audit-level=moderate
 
       - name: Run Gitleaks (Secret Scanning)
         uses: gitleaks/gitleaks-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check for license compliance
+        # Fail if any package uses a disallowed license (GPL, LGPL, AGPL)
+        run: npx license-checker --onlyAllow "MIT;ISC;Apache-2.0;BSD-2-Clause;BSD-3-Clause;CC0-1.0;CC-BY-3.0;CC-BY-4.0;0BSD;Python-2.0;Unlicense;BlueOak-1.0.0" --excludePrivatePackages

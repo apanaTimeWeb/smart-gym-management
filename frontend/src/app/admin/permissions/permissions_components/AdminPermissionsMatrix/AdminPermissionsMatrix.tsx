@@ -1,10 +1,10 @@
+"use client";
 // RESPONSIBILITY: Renders the full permission toggle matrix grouped by feature group for the active role + scope.
-'use client';
 
 import { useAdminPermissionsLogic } from '@/app/admin/permissions/permissions_context/useAdminPermissionsLogic';
 import { useAdminPermissionsStore } from '@/app/admin/permissions/permissions_store/useAdminPermissionsStore';
 import { PERMISSION_FEATURES, PERMISSION_GROUPS } from '@/app/admin/permissions/permissions_utils/AdminPermissionsSharedConstants';
-import type { RoleType } from '@/app/admin/permissions/permissions_types/permissions_types';
+import type { RoleType } from '@/app/admin/permissions/permissions_types/AdminPermissionsTypes';
 
 export default function AdminPermissionsMatrix() {
   const { getEffectivePermissions, updateRolePermission, updateGymOverride, saving } = useAdminPermissionsLogic();
@@ -32,7 +32,7 @@ export default function AdminPermissionsMatrix() {
             {selectedGymId === 'default' ? 'Changes apply to all gyms by default' : 'Changes override defaults for this gym only'}
           </p>
         </div>
-        {saving && <span className="text-xs text-secondary animate-pulse">Saving...</span>}
+        {saving && <span className="text-xs text-secondary motion-safe:animate-pulse">Saving...</span>}
       </div>
 
       <div className="divide-y divide-border">
@@ -69,7 +69,7 @@ export default function AdminPermissionsMatrix() {
                       }`}
                     >
                       <span
-                        className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 motion-safe:transition motion-safe:duration-200 ${
+                        className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-card shadow-lg ring-0 motion-safe:transition motion-safe:duration-200 ${
                           isEnabled ? 'translate-x-5' : 'translate-x-0'
                         }`}
                       />

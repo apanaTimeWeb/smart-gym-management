@@ -1,77 +1,47 @@
-// RESPONSIBILITY: API functions for the Trainer Sessions module. All calls go through apiFetch.
-// DATA FLOW: TrainerSessionsApi → sessions_context → TrainerSessionsMain
-
 import { apiFetch } from '@/lib/api';
 import { z } from 'zod';
 import { TrainerSessionSchema, type TrainerSession, type CreateSessionDto } from '@/app/trainer/sessions/sessions_types/TrainerSessionsTypes';
-import { TRAINER_SESSIONS_API_ROUTES } from '@/app/trainer/sessions/sessions_utils/sessions_url_config';
+import { TRAINER_SESSIONS_API_ROUTES } from '@/app/trainer/Trainer_url_config';
+import { createTrainerApiResponseSchema } from '@/app/trainer/trainer_utils/TrainerApiResponseSchema';
 
-/**
- * MOCK ONLY: Local fetch of members to replace global trainer_api dependency.
- * Future: replace with actual endpoint.
- */
-export async function fetchMembersBasicMock(): Promise<{ id: string; name: string }[]> {
-  await new Promise(res => setTimeout(res, 300));
-  return [
-    { id: 'm1', name: 'Rahul Sharma' },
-    { id: 'm2', name: 'Neha Gupta' },
-    { id: 'm3', name: 'Amit Kumar' }
-  ];
+export async function fetchTrainerSessionMembers(): Promise<{ id: string; name: string }[]> {
+  const raw = await apiFetch<import('@/lib/api').ApiResponse<unknown>>(TRAINER_SESSIONS_API_ROUTES.members);
+  return z.array(z.object({ id: z.string(), name: z.string() })).parse(createTrainerApiResponseSchema(z.array(z.object({ id: z.string(), name: z.string() }))).parse(raw).data);
 }
 
-import { MOCK_TRAINER_SESSIONS } from '@/app/trainer/sessions/sessions_fixtures/TrainerSessionsMockData';
-
-/**
- * Fetches all sessions for the authenticated trainer on a given date.
- */
 export async function fetchTrainerSessions(date: string): Promise<TrainerSession[]> {
-  await new Promise(res => setTimeout(res, 600)); // Simulate latency
-  return z.array(TrainerSessionSchema).parse(MOCK_TRAINER_SESSIONS);
+  const raw = await apiFetch<import('@/lib/api').ApiResponse<unknown>>(`${TRAINER_SESSIONS_API_ROUTES.list}?date=${date}`);
+  return z.array(TrainerSessionSchema).parse(createTrainerApiResponseSchema(z.array(TrainerSessionSchema)).parse(raw).data);
 }
 
-/**
- * Creates a new PT session.
- */
-export async function createTrainerSession(dto: CreateSessionDto): Promise<TrainerSession> {
-  await new Promise(res => setTimeout(res, 600));
-  const newSession: TrainerSession = {
-    id: `s${Math.random().toString(36).substring(7)}`,
-    title: dto.type === 'PT' ? 'PT Session' : 'Group Session',
-    type: dto.type,
-    sessionDate: dto.date,
-    time: dto.time,
-    duration: dto.duration,
-    status: 'Upcoming',
-    attendees: 0,
-    isOnline: false,
-    member: dto.memberId || undefined,
-    location: dto.location,
-    room: dto.room,
-  };
-  return TrainerSessionSchema.parse(newSession);
+export async function createTrainerSession(dto: CreateSessionDto): Promise<{ data: TrainerSession; message: string }> {
+  const raw = await apiFetch<import('@/lib/api').ApiResponse<unknown>>(TRAINER_SESSIONS_API_ROUTES.create, {
+    method: 'POST',
+    body: JSON.stringify(dto),
+  });
+  const response = createTrainerApiResponseSchema(TrainerSessionSchema).parse(raw);
+  if (!response.data) throw new Error(response.message);
+  return { data: response.data, message: response.message };
 }
 
-/**
- * Updates an existing session by ID.
- */
-export async function updateTrainerSession(id: string, dto: Partial<CreateSessionDto>): Promise<TrainerSession> {
-  await new Promise(res => setTimeout(res, 600));
-  const session = MOCK_TRAINER_SESSIONS.find(s => s.id === id) || MOCK_TRAINER_SESSIONS[0];
-  return TrainerSessionSchema.parse({ ...session, ...dto });
+export async function updateTrainerSession(id: string, dto: Partial<CreateSessionDto>): Promise<{ data: TrainerSession; message: string }> {
+  const raw = await apiFetch<import('@/lib/api').ApiResponse<unknown>>(TRAINER_SESSIONS_API_ROUTES.update(id), {
+    method: 'PATCH',
+    body: JSON.stringify(dto),
+  });
+  const response = createTrainerApiResponseSchema(TrainerSessionSchema).parse(raw);
+  if (!response.data) throw new Error(response.message);
+  return { data: response.data, message: response.message };
 }
 
-/**
- * Cancels a session by ID.
- */
-export async function cancelTrainerSession(id: string): Promise<void> {
-  await new Promise(res => setTimeout(res, 600));
-  return;
+export async function cancelTrainerSession(id: string): Promise<{ message: string }> {
+  const raw = await apiFetch<import('@/lib/api').ApiResponse<unknown>>(TRAINER_SESSIONS_API_ROUTES.cancel(id), { method: 'DELETE' });
+  const response = createTrainerApiResponseSchema(z.null()).parse(raw);
+  return { message: response.message };
 }
 
-/**
- * Marks attendance for a session by ID.
- */
-export async function markTrainerSessionAttendance(id: string, memberIds: string[]): Promise<void> {
-  await new Promise(res => setTimeout(res, 600));
-  return;
+export async function markTrainerSessionAttendance(id: string, memberIds: string[]): Promise<{ message: string }> {
+  const raw = await apiFetch<import('@/lib/api').ApiResponse<unknown>>(TRAINER_SESSIONS_API_ROUTES.markAttendance(id), { method: 'POST', body: JSON.stringify({ memberIds }) });
+  const response = createTrainerApiResponseSchema(z.null()).parse(raw);
+  return { message: response.message };
 }

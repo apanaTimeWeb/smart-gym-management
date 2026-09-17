@@ -1,7 +1,8 @@
+export const dynamic = 'force-dynamic';
 // RESPONSIBILITY: Server Component that fetches initial data and acts as the entry point for the Plans module.
 import AdminPlansMain from '@/app/admin/plans/plans_components/AdminPlansMain/AdminPlansMain';
-import { ssrPlansApi } from '@/app/admin/plans/plans_api/plans_server_api';
-import type { PlansInitialData } from '@/app/admin/plans/plans_types/plans_types';
+import { ssrPlansApi } from '@/app/admin/plans/plans_api/AdminPlansServerApi';
+import type { PlansInitialData } from '@/app/admin/plans/plans_types/AdminPlansTypes';
 
 export default async function PlansPage() {
   let initialData: PlansInitialData | null = null;
@@ -15,5 +16,7 @@ export default async function PlansPage() {
     // Error logged to monitoring service
   }
 
-  return <AdminPlansMain initialData={initialData} />;
+  return (
+      <AdminPlansMain initialData={initialData} />
+  );
 }

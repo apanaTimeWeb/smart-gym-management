@@ -1,9 +1,11 @@
+// DATA FLOW: feature API/schema → hook/context → useAdminSubscriptionsStore consumers.
 // RESPONSIBILITY: Zustand store for Subscriptions UI state.
 import { create } from 'zustand';
+import type { AdminSubscriptionsTab } from '@/app/admin/subscriptions/subscriptions_types/AdminSubscriptionsUiTypes';
 
 interface AdminSubscriptionsStore {
-  activeTab: 'overview' | 'plans' | 'invoices' | 'payment';
-  setActiveTab: (t: 'overview' | 'plans' | 'invoices' | 'payment') => void;
+  activeTab: AdminSubscriptionsTab;
+  setActiveTab: (t: AdminSubscriptionsTab) => void;
   showUpgradeConfirm: string | null;
   setShowUpgradeConfirm: (planId: string | null) => void;
 }

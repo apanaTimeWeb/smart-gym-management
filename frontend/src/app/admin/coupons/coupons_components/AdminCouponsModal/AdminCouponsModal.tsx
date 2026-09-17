@@ -1,18 +1,18 @@
+"use client";
 // RESPONSIBILITY: Renders the create/edit coupon modal with full form validation via React Hook Form + Zod.
-'use client';
 
 import { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { X } from 'lucide-react';
 import { useAdminCouponsLogic } from '@/app/admin/coupons/coupons_context/useAdminCouponsLogic';
 import { CouponSchema, COUPON_TYPE_OPTIONS, GYM_OPTIONS } from '@/app/admin/coupons/coupons_utils/AdminCouponsSharedConstants';
-import type { CouponFormValues } from '@/app/admin/coupons/coupons_types/coupons_types';
+import type { CouponFormValues } from '@/app/admin/coupons/coupons_types/AdminCouponsTypes';
 
 export default function AdminCouponsModal() {
   const { showModal, setShowModal, editId, form, saveCoupon, saving } = useAdminCouponsLogic();
 
-  const { register, handleSubmit, reset, watch, setValue, formState: { errors } } = useForm<CouponFormValues>({
+  const { register, handleSubmit, reset, watch, setValue, formState: { errors }, control } = useForm<CouponFormValues>({
     resolver: zodResolver(CouponSchema),
     defaultValues: form,
   });
@@ -20,7 +20,10 @@ export default function AdminCouponsModal() {
   // Sync external form state into RHF when modal opens
   useEffect(() => { if (showModal) reset(form); }, [showModal, form, reset]);
 
-  const selectedGyms = watch('assignedGyms') ?? [];
+  useEffect(() => { if (showModal) reset(form); }, [showModal, form, reset]);
+
+  const formValues = useWatch({ control });
+  const selectedGyms = formValues.assignedGyms ?? form.assignedGyms ?? [];
 
   const toggleGym = (val: string) => {
     if (val === 'all') { setValue('assignedGyms', ['all']); return; }
@@ -36,9 +39,9 @@ export default function AdminCouponsModal() {
   if (!showModal) return null;
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowModal(false)} />
-      <div className="relative bg-overlay border border-border rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto custom-scrollbar">
+    <div data-admin-dialog="true" role="dialog" aria-modal="true" tabIndex={-1} className="fixed inset-0 z-40 flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-overlay backdrop-blur-sm" onClick={() => setShowModal(false)} />
+      <div className="relative bg-overlay border border-border rounded-2xl shadow-2xl w-full max-w-lg max-h-screen overflow-y-auto custom-scrollbar">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-border sticky top-0 bg-overlay z-10">
           <h2 className="text-lg font-bold text-foreground">{editId ? 'Edit Coupon' : 'Create Coupon'}</h2>
@@ -137,7 +140,7 @@ export default function AdminCouponsModal() {
             <button type="button" onClick={() => setShowModal(false)} className="px-4 py-2 bg-input border border-border rounded-lg text-sm font-medium text-secondary hover:text-foreground motion-safe:transition-colors">
               Cancel
             </button>
-            <button type="submit" disabled={saving} className="px-5 py-2 bg-primary text-black rounded-lg text-sm font-semibold hover:bg-primary-hover motion-safe:transition-colors disabled:opacity-60 disabled:cursor-not-allowed active:scale-95 min-w-[120px]">
+            <button type="submit" disabled={saving} className="px-5 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-semibold hover:bg-primary-hover motion-safe:transition-colors disabled:opacity-60 disabled:cursor-not-allowed motion-safe:active:scale-95 min-w-32">
               {saving ? 'Saving...' : editId ? 'Update Coupon' : 'Create Coupon'}
             </button>
           </div>

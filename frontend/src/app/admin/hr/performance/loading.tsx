@@ -3,7 +3,7 @@ import { Target } from 'lucide-react';
 
 export default function Loading() {
   return (
-    <div className="p-4 sm:p-6 space-y-6 max-w-7xl mx-auto animate-pulse">
+    <div className="p-4 sm:p-6 space-y-6 max-w-7xl mx-auto motion-safe:animate-pulse">
       <div className="flex justify-between items-center">
         <div>
           <div className="h-8 w-48 bg-border rounded-lg mb-2"></div>

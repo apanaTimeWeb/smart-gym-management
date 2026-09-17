@@ -1,108 +1,87 @@
-import { X, Send } from 'lucide-react';
-import type { MessageChannel, MessagingTenant } from '@/app/superadmin/messaging/messaging_types/messaging_types';
-import { SuperadminMessagingTenantDropdown } from './SuperadminMessagingTenantDropdown';
+// RESPONSIBILITY: Owns Superadmin Messaging form presentation and client-side Zod validation.
+'use client';
 
-export function SuperadminMessagingComposeModal({
-  composeTenantId,
-  setComposeTenantId,
-  tenants,
-  composeChannel,
-  setComposeChannel,
-  composeSubject,
-  setComposeSubject,
-  composeBody,
-  setComposeBody,
-  onClose,
-  onSend,
-}: {
-  composeTenantId: string;
-  setComposeTenantId: (id: string) => void;
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm, Controller } from 'react-hook-form';
+import { Send, X } from 'lucide-react';
+import { SuperadminMessagingTenantDropdown } from '@/app/superadmin/messaging/messaging_components/SuperadminMessagingTenantDropdown';
+import { SuperadminMessagingComposeSchema, type SuperadminMessagingComposeValues } from '@/app/superadmin/messaging/messaging_schemas/SuperadminMessagingComposeSchema';
+import type { MessagingTenant } from '@/app/superadmin/messaging/messaging_types/superadmin_messaging_types';
+
+type Props = {
   tenants: MessagingTenant[];
-  composeChannel: MessageChannel;
-  setComposeChannel: (ch: MessageChannel) => void;
-  composeSubject: string;
-  setComposeSubject: (s: string) => void;
-  composeBody: string;
-  setComposeBody: (b: string) => void;
+  isSubmitting: boolean;
   onClose: () => void;
-  onSend: () => void;
-}) {
+  onSend: (values: SuperadminMessagingComposeValues) => Promise<void>;
+};
+
+export function SuperadminMessagingComposeModal({ tenants, isSubmitting, onClose, onSend }: Props) {
+  const { control, register, handleSubmit, formState: { errors } } = useForm<SuperadminMessagingComposeValues>({
+    resolver: zodResolver(SuperadminMessagingComposeSchema),
+    defaultValues: { tenantId: '', channel: 'EMAIL', subject: '', body: '' },
+    mode: 'onSubmit',
+  });
+
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-      <div className="bg-overlay border border-border rounded-2xl p-6 w-full max-w-lg shadow-2xl space-y-4">
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="superadmin-compose-title">
+      <div className="w-full max-w-lg space-y-4 rounded-2xl border border-border bg-overlay p-6 shadow-2xl">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-bold text-foreground">Compose Message</h2>
-          <button
-            onClick={onClose}
-            aria-label="Close compose modal"
-            className="p-1.5 rounded-lg text-secondary hover:text-foreground hover:bg-input motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-          >
+          <h2 id="superadmin-compose-title" className="text-lg font-bold text-foreground">Compose Message</h2>
+          <button type="button" onClick={onClose} disabled={isSubmitting} aria-label="Close compose modal" className="rounded-lg p-1.5 text-secondary motion-safe:transition-colors hover:bg-input hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:opacity-50">
             <X size={18} strokeWidth={2} />
           </button>
         </div>
 
-        <div className="space-y-3">
+        <form onSubmit={handleSubmit(onSend)} className="space-y-4">
           <div>
-            <label className="text-xs font-medium text-secondary uppercase tracking-wider block mb-1">Gym</label>
-            <SuperadminMessagingTenantDropdown value={composeTenantId} onChange={setComposeTenantId} tenants={tenants} />
-          </div>
-
-          <div>
-            <label className="text-xs font-medium text-secondary uppercase tracking-wider block mb-1">Channel</label>
-            <div className="flex gap-2">
-              {(['EMAIL', 'SMS', 'IN_APP'] as const).map((ch) => (
-                <button
-                  key={ch}
-                  onClick={() => setComposeChannel(ch)}
-                  className={`flex-1 py-2 rounded-lg text-xs font-medium border motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
-                    composeChannel === ch
-                      ? 'bg-primary/10 text-primary border-primary/30'
-                      : 'bg-input text-secondary border-border hover:text-foreground'
-                  }`}
-                >
-                  {ch}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <label className="text-xs font-medium text-secondary uppercase tracking-wider block mb-1">Subject</label>
-            <input
-              type="text"
-              value={composeSubject}
-              onChange={(e) => setComposeSubject(e.target.value)}
-              placeholder="Message subject..."
-              className="w-full px-3 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary"
+            <label className="mb-1 block text-xs font-medium uppercase tracking-wider text-secondary">Tenant recipient</label>
+            <Controller
+              name="tenantId"
+              control={control}
+              render={({ field }) => <SuperadminMessagingTenantDropdown value={field.value} onChange={field.onChange} tenants={tenants} />}
             />
+            {errors.tenantId && <p role="alert" className="mt-1 text-xs text-danger">{errors.tenantId.message}</p>}
+          </div>
+
+          <fieldset>
+            <legend className="mb-1 block text-xs font-medium uppercase tracking-wider text-secondary">Channel</legend>
+            <Controller
+              name="channel"
+              control={control}
+              render={({ field }) => (
+                <div className="flex gap-2">
+                  {(['EMAIL', 'SMS', 'IN_APP'] as const).map((channel) => (
+                    <button key={channel} type="button" onClick={() => field.onChange(channel)} className={`flex-1 rounded-lg border py-2 text-xs font-medium motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${field.value === channel ? 'border-primary/30 bg-primary/10 text-primary' : 'border-border bg-input text-secondary hover:text-foreground'}`}>
+                      {channel}
+                    </button>
+                  ))}
+                </div>
+              )}
+            />
+            {errors.channel && <p role="alert" className="mt-1 text-xs text-danger">{errors.channel.message}</p>}
+          </fieldset>
+
+          <div>
+            <label htmlFor="superadmin-message-subject" className="mb-1 block text-xs font-medium uppercase tracking-wider text-secondary">Subject</label>
+            <input id="superadmin-message-subject" type="text" autoComplete="off" maxLength={200} {...register('subject')} placeholder="Message subject..." className="w-full rounded-lg border border-border bg-input px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary" />
+            {errors.subject && <p role="alert" className="mt-1 text-xs text-danger">{errors.subject.message}</p>}
           </div>
 
           <div>
-            <label className="text-xs font-medium text-secondary uppercase tracking-wider block mb-1">Body</label>
-            <textarea
-              value={composeBody}
-              onChange={(e) => setComposeBody(e.target.value)}
-              rows={4}
-              placeholder="Write your message..."
-              className="w-full px-3 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary resize-none"
-            />
+            <label htmlFor="superadmin-message-body" className="mb-1 block text-xs font-medium uppercase tracking-wider text-secondary">Body</label>
+            <textarea id="superadmin-message-body" rows={5} maxLength={5000} {...register('body')} placeholder="Write your tenant-level message..." className="w-full resize-none rounded-lg border border-border bg-input px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary" />
+            {errors.body && <p role="alert" className="mt-1 text-xs text-danger">{errors.body.message}</p>}
           </div>
-        </div>
 
-        <div className="flex gap-3 justify-end pt-2">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 rounded-lg bg-input text-secondary hover:text-foreground text-sm motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={onSend}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary hover:bg-primary-hover text-black font-semibold text-sm motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-          >
-            <Send size={18} strokeWidth={2} /> Send
-          </button>
-        </div>
+          <p className="text-xs text-secondary">Superadmin messaging is restricted to tenant owners, admins, and managers. Gym member communication remains in Admin / Manager.</p>
+
+          <div className="flex justify-end gap-3 pt-2">
+            <button type="button" onClick={onClose} disabled={isSubmitting} className="rounded-lg bg-input px-4 py-2 text-sm text-secondary motion-safe:transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:opacity-50">Cancel</button>
+            <button type="submit" disabled={isSubmitting} className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-black motion-safe:transition-colors hover:bg-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-60">
+              <Send size={18} strokeWidth={2} /> {isSubmitting ? 'Sending...' : 'Send'}
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );

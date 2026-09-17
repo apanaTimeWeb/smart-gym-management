@@ -2,5 +2,7 @@
 import AdminSettingsMain from '@/app/admin/settings/settings_components/AdminSettingsMain/AdminSettingsMain';
 
 export default function SettingsPage() {
- return <AdminSettingsMain />;
+ return (
+      <AdminSettingsMain />
+  );
 }

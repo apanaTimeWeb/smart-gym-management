@@ -1,11 +1,10 @@
+'use client';
 // RESPONSIBILITY: Renders the toolbar for searching, filtering, and initiating the "Add Member" action.
 // CRITICAL FIX: Added gender filter, plan filter, expiry date range, and Export CSV/PDF buttons.
-'use client';
-
 import { useState, useEffect } from 'react';
 import { Search, RefreshCw, Plus, MessageCircle, Download, Calendar } from 'lucide-react';
 import { useMembersContext } from '@/app/manager/members/members_context/ManagerMembersContext';
-import { useFetchMembers, useFetchPlans } from '@/app/manager/members/members_api/useManagerMembersQueries';
+import { useFetchMembers, useFetchPlans } from '@/app/manager/members/members_api/ManagerUseManagerMembersQueries';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import {
   MEMBER_STATUS_OPTIONS,
@@ -13,20 +12,20 @@ import {
   MEMBER_EXPORT_FORMATS,
 } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
+import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
 
 export default function ManagerMembersToolbar() {
   const {
-    search, setSearch,
+    search, debouncedSearch, setSearch,
     statusFilter, setStatusFilter,
     genderFilter, setGenderFilter,
     planFilter, setPlanFilter,
     expiryFrom, expiryTo, setExpiryRange,
     sortColumn, sortDirection,
-    openAdd, currentPage, setCurrentPage, showToast,
-    exportMembers,
+    openAdd, currentPage, showToast, exportMembers
   } = useMembersContext();
   const { data: membersRes, refetch } = useFetchMembers({ 
-    search, 
+    search: debouncedSearch,
     status: statusFilter, 
     gender: genderFilter, 
     plan: planFilter, 
@@ -34,7 +33,8 @@ export default function ManagerMembersToolbar() {
     expiryTo, 
     sort: sortColumn, 
     dir: sortDirection, 
-    page: currentPage.toString() 
+    page: currentPage.toString(),
+    limit: MANAGER_ITEMS_PER_PAGE.toString(),
   });
   const members = membersRes?.members || [];
   const { data: plansData } = useFetchPlans();
@@ -112,7 +112,7 @@ export default function ManagerMembersToolbar() {
           </button>
           <button
             onClick={handleBulkReminder}
-            className="flex justify-center items-center gap-2 px-3 py-2.5 text-sm border border-success text-success rounded-xl hover:bg-success/10 transition-colors w-full sm:w-auto"
+            className="flex justify-center items-center gap-2 px-3 py-2.5 text-sm border border-success text-success rounded-xl hover:bg-success/10 motion-safe:transition-colors w-full sm:w-auto"
           >
             <MessageCircle size={14} /> Bulk Reminder
           </button>
@@ -120,8 +120,8 @@ export default function ManagerMembersToolbar() {
           {MEMBER_EXPORT_FORMATS.map(fmt => (
             <button
               key={fmt.value}
-              onClick={() => exportMembers(fmt.value)}
-              className="flex justify-center items-center gap-2 px-3 py-2.5 text-sm border border-border rounded-xl hover:bg-primary-subtle text-secondary hover:text-foreground transition-colors w-full sm:w-auto"
+              onClick={() => void exportMembers(fmt.value)}
+              className="flex justify-center items-center gap-2 px-3 py-2.5 text-sm border border-border rounded-xl hover:bg-primary-subtle text-secondary hover:text-foreground motion-safe:transition-colors w-full sm:w-auto"
               aria-label={fmt.label}
             >
               <Download size={14} /> {fmt.label}
@@ -129,7 +129,7 @@ export default function ManagerMembersToolbar() {
           ))}
           <button
             onClick={openAdd}
-            className="flex justify-center items-center gap-2 px-4 py-2.5 text-sm font-semibold text-primary-foreground bg-primary rounded-xl hover:opacity-90 transition-opacity w-full sm:w-auto"
+            className="flex justify-center items-center gap-2 px-4 py-2.5 text-sm font-semibold text-primary-foreground bg-primary rounded-xl hover:opacity-90 motion-safe:transition-opacity w-full sm:w-auto"
           >
             <Plus size={16} /> Add Member
           </button>

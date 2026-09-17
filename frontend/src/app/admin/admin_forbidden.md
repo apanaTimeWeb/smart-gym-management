@@ -1,13 +1,24 @@
-# Forbidden Patterns for the Admin Module
+# Admin — Forbidden Patterns
 
-This file documents explicit anti-patterns that must **NEVER** be used in the `admin` module.
-Future AI sessions: read this file before touching any component in this module.
+Future AI agents must read this file before modifying the module.
 
-1. **Zero Cross-Module Imports**: Do NOT import anything from `/manager`, `/trainer`, or `/superadmin`. The Admin module must be 100% self-contained.
-2. **No Generic Naming**: Every file and component MUST start with `Admin...` (e.g., `AdminMembersTable.tsx`, `useAdminDashboard.ts`).
-3. **No Inline Styling**: Do NOT use arbitrary Tailwind values (e.g., `w-[325px]`, `text-[15px]`) or inline hex codes. Strictly follow `admin_theme_contract.md`.
-4. **No Fat Components**: Do NOT mix heavy data fetching, formatting logic, and complex UI in one `.tsx` file. Extract logic to `use[ComponentName].ts`.
-5. **No Barrel Files**: Do NOT use `index.ts` files for exporting. Use direct absolute imports (`@/app/admin/...`).
-6. **No Client-Side Pagination for Large Sets**: Do NOT fetch all members/inquiries and paginate on the client. Always use server-side pagination.
-7. **No UI-Side HTTP Status Codes**: Do NOT hardcode `401` or `500` inside UI files. Intercept them centrally in the API wrapper.
-8. **No Hardcoded URLs**: Do NOT hardcode `/api/admin/members` directly in fetch calls. Add them to `admin_utils/admin_url_config.ts`.
+1. **No cross-role business imports.** Do not import Manager, Trainer, Superadmin, or another role's business components, types, stores, hooks, fixtures, or handlers.
+2. **No server-data storage in Zustand/Context.** TanStack Query is the source of truth for API data, loading/error state, cache, pagination, and mutations.
+3. **No direct fixture access from UI.** Production components must call the Admin API layer; MSW fixtures are transport-test data only.
+4. **No hardcoded API URLs in components/hooks.** Routes belong in the module's centralized `*_url_config.ts` files.
+5. **No relative imports.** Use the Admin `@/app/admin/...` absolute import path.
+6. **No arbitrary Tailwind values or hardcoded theme colors.** Use the global semantic design tokens documented by `admin_theme_contract.md`.
+7. **No raw browser storage in React components.** Authentication/session tokens must never be placed in browser storage.
+8. **No `console.log`, `any`, `@ts-ignore`, `@ts-nocheck`, or raw numeric HTTP status codes in API/transport logic.**
+9. **No `index.ts` barrel exports.** Import directly from the named Admin file.
+10. **No fake business fallback records.** Empty/error states must remain explicit and distinguishable from successful server data.
+11. **No client-only pagination/filtering when an endpoint is server-browsable.** Query parameters and query keys must carry the filter/search/page state.
+12. **No single-click destructive or financial mutations.** Use the Admin confirmation provider and the documented double-verification flow.
+13. **No hardcoded backend mutation success messages.** Use the response `message` supplied by the API; non-API local UI notices must be explicit UI copy rather than masquerading as backend results.
+14. **No unguarded complex forms.** React Hook Form + Zod + the Admin unsaved-changes guard are required for complex workflows.
+15. **No accessibility regressions.** Icon-only actions require labels/tooltips, entity rows need keyboard-equivalent interaction, and modal focus/Escape behavior must remain intact.
+16. **No mobile-only hover actions.** Touch devices must retain visible row actions; hover can progressively enhance desktop presentation only.
+17. **No stale feature documentation.** Any route, API, state, mock, field, or user-flow change must update the relevant Admin feature map in the same change.
+
+- Admin shell aggregation is allowed only in `admin_components/AdminLayout/` as documented in `admin_features.md`; it must remain read-only and must not import feature mocks or own feature business logic.
+- **Shell Aggregation Exception:** `admin_components/AdminLayout/` may import minimal read-only selectors/query hooks from Admin feature modules for persistent header/search/notification/profile/usage affordances. This is the only cross-feature shell exception; it must not perform feature mutations, import feature mocks/fixtures, or become a replacement for module-local business/query logic.

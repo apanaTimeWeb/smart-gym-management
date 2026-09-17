@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 // RESPONSIBILITY: Server component entry point for the Trainer Schedule module.
 import type { Metadata } from 'next';
 import ManagerScheduleMain from '@/app/manager/schedule/schedule_components/ManagerScheduleMain/ManagerScheduleMain';
@@ -8,5 +9,9 @@ export const metadata: Metadata = {
 };
 
 export default function ManagerSchedulePage() {
-  return <ManagerScheduleMain />;
+  return (
+    <Suspense fallback={<div className="p-6 flex justify-center text-secondary">Loading...</div>}>
+      <ManagerScheduleMain />
+    </Suspense>
+  );
 }

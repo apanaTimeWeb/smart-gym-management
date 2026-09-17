@@ -1,7 +1,8 @@
+export const dynamic = 'force-dynamic';
 // RESPONSIBILITY: Server Component that fetches initial data and acts as the entry point for the Sales module.
 import AdminSalesMain from '@/app/admin/sales/sales_components/AdminSalesMain/AdminSalesMain';
-import { ssrSalesApi } from '@/app/admin/sales/sales_api/sales_server_api';
-import type { SalesInitialData, OverviewDataPoint, MembershipReportItem, MembershipTotals, PendingPaymentMember, Member } from '@/app/admin/sales/sales_types/sales_types';
+import { ssrSalesApi } from '@/app/admin/sales/sales_api/AdminSalesServerApi';
+import type { SalesInitialData, OverviewDataPoint, MembershipReportItem, MembershipTotals, PendingPaymentMember, Member } from '@/app/admin/sales/sales_types/AdminSalesTypes';
 
 export default async function SalesPage() {
   let initialData: SalesInitialData | null = null;
@@ -27,5 +28,7 @@ export default async function SalesPage() {
     // Silently ignore or rely on global error boundary
   }
 
-  return <AdminSalesMain initialData={initialData} />;
+  return (
+      <AdminSalesMain initialData={initialData} />
+  );
 }

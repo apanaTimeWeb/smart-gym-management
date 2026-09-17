@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Form modal for creating or editing a diet plan in the Diet Library module.
 'use client';
-
+// RESPONSIBILITY: Form modal for creating or editing a diet plan in the Diet Library module.
 import { useEffect } from 'react';
 import { X, Save, Loader2 } from 'lucide-react';
 import { useLibraryContext } from '@/app/manager/library/library_context/ManagerLibraryContext';
@@ -42,15 +41,15 @@ export default function ManagerLibraryDietModal() {
  if (!showDietModal) return null;
 
  return (
- <div className="fixed inset-0 bg-black/60 z-40 flex items-center justify-center p-4">
- <div className="bg-card rounded-2xl shadow-xl w-full max-w-2xl overflow-hidden border-2 border-primary max-h-[90vh] flex flex-col">
+ <div className="fixed inset-0 bg-foreground/60 z-40 flex items-center justify-center p-4">
+ <div className="bg-card rounded-2xl shadow-xl w-full max-w-2xl overflow-hidden border-2 border-primary max-h-full flex flex-col">
  <div className="sticky top-0 bg-card px-6 py-4 border-b border-border flex items-center justify-between">
  <h3 className="text-lg font-bold text-foreground">
  {editDietId ? 'Edit Diet Plan' : 'Add Diet Plan'}
  </h3>
  <button 
  onClick={() => setShowDietModal(false)} 
- className="p-2 rounded-lg hover:bg-primary-subtle text-secondary transition-colors"
+ className="p-2 rounded-lg hover:bg-primary-subtle text-secondary motion-safe:transition-colors"
  >
  <X size={18} />
  </button>
@@ -97,14 +96,14 @@ export default function ManagerLibraryDietModal() {
  <button 
  type="button" 
  onClick={() => setShowDietModal(false)} 
- className="flex-1 py-2.5 border border-border rounded-xl text-sm font-medium text-foreground hover:bg-primary-subtle transition-colors"
+ className="flex-1 py-2.5 border border-border rounded-xl text-sm font-medium text-foreground hover:bg-primary-subtle motion-safe:transition-colors"
  >
  Cancel
  </button>
  <button 
  type="submit" 
  disabled={saving} 
- className="flex-1 py-2.5 rounded-xl text-sm font-bold text-primary-foreground bg-primary hover:bg-primary/90 flex items-center justify-center gap-2 disabled:opacity-70 transition-colors" 
+ className="flex-1 py-2.5 rounded-xl text-sm font-bold text-primary-foreground bg-primary hover:bg-primary/90 flex items-center justify-center gap-2 disabled:opacity-70 motion-safe:transition-colors" 
  >
  {saving ? <Loader2 className="w-4 h-4 motion-safe:animate-spin" /> : <><Save size={15} />{editDietId ? 'Update' : 'Add'}</>}
  </button>

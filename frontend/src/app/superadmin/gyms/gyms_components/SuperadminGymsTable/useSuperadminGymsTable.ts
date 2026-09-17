@@ -1,144 +1,79 @@
+// DATA FLOW: Superadmin UI → useSuperadminGymsTable → Superadmin module API/state → consuming component
+'use client';
 // RESPONSIBILITY: Provides the logic and state for the SuperadminGymsTable component using TanStack Query.
-// DATA FLOW: superadminApi -> useQuery -> useSuperadminGymsTable -> SuperadminGymsTable
-
+// DATA FLOW: gymsApi -> useQuery -> useSuperadminGymsTable -> SuperadminGymsTable
 import { useMemo } from 'react';
-import toast from 'react-hot-toast';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
+import { useRouter } from 'next/navigation';
+import { useQuery } from '@tanstack/react-query';
+import { gymsApi } from '@/app/superadmin/gyms/superadmin_gyms_api/superadmin_gyms_api';
 import { useSuperadminGymsStore } from '@/app/superadmin/gyms/gyms_store/useSuperadminGymsStore';
-import type { Tenant } from '@/app/superadmin/superadmin_types/superadmin_types';
-import { AuthUrlConfig } from '@/app/auth/auth_url_config';
-import { useSuperadminGhostLoginStore } from '@/app/superadmin/superadmin_components/SuperadminLayout/useSuperadminGhostLoginStore';
-
-import { MOCK_GYMS } from '@/app/superadmin/gyms/gyms_utils/SuperadminGymsConstants';
-
+import type { Tenant } from '@/app/superadmin/gyms/superadmin_gyms_types/superadmin_gyms_types';
+import { useSuperadminUrlState } from '@/app/superadmin/superadmin_utils/useSuperadminUrlState';
+import { useSuperadminGymMutations } from '@/app/superadmin/gyms/gyms_components/SuperadminGymsTable/useSuperadminGymMutations';
+import { GymsUrlConfig } from '@/app/superadmin/gyms/superadmin_gyms_url_config';
 export function useSuperadminGymsTable() {
-  const search = useSuperadminGymsStore(state => state.search);
-  const statusFilter = useSuperadminGymsStore(state => state.statusFilter);
-  const planFilter = useSuperadminGymsStore(state => state.planFilter);
-  const sortBy = useSuperadminGymsStore(state => state.sortBy);
-  const sortOrder = useSuperadminGymsStore(state => state.sortOrder);
-  const currentPage = useSuperadminGymsStore(state => state.currentPage);
-  const pageLimit = useSuperadminGymsStore(state => state.pageLimit);
-  const openDeleteModal = useSuperadminGymsStore(state => state.openDeleteModal);
-  const openEditModal = useSuperadminGymsStore(state => state.openEditModal);
-  const openWhatsappModal = useSuperadminGymsStore(state => state.openWhatsappModal);
-  const startGhostLogin = useSuperadminGhostLoginStore(state => state.startGhostLogin);
-
-  const queryClient = useQueryClient();
-
-  // Fetch Gyms — passes server-side params (page, limit, status, plan, search, sortBy, order)
-  const queryParams = {
-    ...(search && { search }),
-    ...(statusFilter !== 'All' && { status: statusFilter }),
-    ...(planFilter !== 'All' && { plan: planFilter }),
-    sortBy,
-    order: sortOrder,
-    page: String(currentPage),
-    limit: String(pageLimit),
-  };
-
-  const { data: fetchRes, isLoading, isError } = useQuery({
-    queryKey: ['superadmin', 'gyms', queryParams],
-    queryFn: () => superadminApi.gyms.fetchGyms(queryParams),
-  });
-
-  const gyms = fetchRes?.data && fetchRes.data.length > 0 ? fetchRes.data : MOCK_GYMS;
-  const fetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
-
-  // Server-side filtering is now primary; this is a lightweight client guard
-  const filteredGyms = useMemo(() => {
-    if (!gyms) return [];
-    return gyms;
-  }, [gyms]);
-
-  // Mutations
-  const impersonateMutation = useMutation({
-    mutationFn: (id: string) => superadminApi.gyms.impersonateTenant(id),
-    onSuccess: async (res, id) => {
-      if (res.success && res.data?.token) {
-        toast.success(res.message || 'Ghost login active. Viewing as tenant admin.');
-
-        // Set impersonation cookie so Next.js middleware sees an Admin session
-        try {
-          await fetch(AuthUrlConfig.PROXY_API.SET_COOKIE, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              token: res.data.token,
-              refreshToken: res.data.token,
-              user: { role: 'ADMIN', email: `admin-${id}@gym.com`, name: 'Impersonated Admin', tenantId: id, id: `user-${id}` },
-            }),
-          });
-        } catch {
-          // Cookie set failure is non-fatal — token is still in the response
-        }
-
-        // Find the gym to populate the banner
-        const gym = gyms.find((g) => g.id === id);
-        if (gym) {
-          startGhostLogin({ id: gym.id, name: gym.name, plan: gym.plan, adminEmail: gym.adminEmail });
-        }
-
-        window.location.href = AuthUrlConfig.PAGES.ADMIN_DASHBOARD;
-      } else {
-        toast.error(res.message || 'Failed to start ghost login');
-      }
-    },
-    onError: (err: unknown) => {
-      const error = err as Error;
-      toast.error(error.message || 'Failed to impersonate tenant');
-    },
-  });
-
-  const suspendMutation = useMutation({
-    mutationFn: ({ id, status }: { id: string, status: string }) => superadminApi.gyms.changeGymStatus(id, status),
-    onSuccess: (res) => {
-      toast.success(res.message || 'Status updated successfully.');
-      queryClient.invalidateQueries({ queryKey: ['superadmin', 'gyms'] });
-    },
-    onError: (err: unknown) => {
-      const error = err as Error;
-      toast.error(error.message || 'Failed to update status');
-    },
-  });
-
-  const actionLoadingId = impersonateMutation.isPending 
-    ? impersonateMutation.variables 
-    : suspendMutation.isPending 
-      ? suspendMutation.variables?.id 
-      : null;
-
-  const handleRowClick = (gym: Tenant) => {
-    openEditModal(gym);
-  };
-
-  const onGhostLoginClick = (e: React.MouseEvent, gymId: string, gymName: string) => {
-    e.stopPropagation();
-    impersonateMutation.mutate(gymId);
-  };
-
-  const onSuspendClick = (e: React.MouseEvent, gymId: string, gymName: string, currentStatus: string) => {
-    e.stopPropagation();
-    const newStatus = currentStatus === 'SUSPENDED' ? 'ACTIVE' : 'SUSPENDED';
-    suspendMutation.mutate({ id: gymId, status: newStatus });
-  };
-
-  const onDeleteClick = (e: React.MouseEvent, gym: Tenant) => {
-    e.stopPropagation();
-    openDeleteModal(gym);
-  };
-
-  return {
-    filteredGyms,
-    fetchState,
-    error: isError ? 'Error loading gyms' : null,
-    actionLoadingId,
-    handleRowClick,
-    onGhostLoginClick,
-    onSuspendClick,
-    onDeleteClick,
-    openEditModal,
-    openWhatsappModal,
-  };
+    const router = useRouter();
+    const { getParam, setParam } = useSuperadminUrlState();
+    const search = getParam('search', '');
+    const statusFilter = getParam('statusFilter', 'All');
+    const planFilter = getParam('planFilter', 'All');
+    const sortBy = getParam('sortBy', 'createdAt');
+    const sortOrder = getParam('sortOrder', 'desc') as 'asc' | 'desc';
+    const segmentId = getParam('segmentId', '');
+    const currentPage = Number(getParam('page', '1'));
+    const pageLimit = Number(getParam('limit', '20'));
+    const setCurrentPage = (page: number) => setParam('page', String(page));
+    const setSortBy = (col: string) => setParam('sortBy', col);
+    const setSortOrder = (order: 'asc' | 'desc') => setParam('sortOrder', order);
+    const openDeleteModal = useSuperadminGymsStore(state => state.openDeleteModal);
+    const openWhatsappModal = useSuperadminGymsStore(state => state.openWhatsappModal);
+    // Fetch Gyms
+    const queryParams = {
+        ...(search && { search }),
+        ...(statusFilter !== 'All' && { status: statusFilter }),
+        ...(planFilter !== 'All' && { plan: planFilter }),
+        ...(segmentId && { segmentId }),
+        sortBy,
+        order: sortOrder,
+        page: String(currentPage),
+        limit: String(pageLimit),
+    };
+    const { data: fetchRes, isLoading, isError } = useQuery({
+        queryKey: ['superadmin', 'gyms', queryParams],
+        queryFn: () => gymsApi.fetchGyms(queryParams),
+    });
+    const gyms = fetchRes?.data && fetchRes.data.length > 0 ? fetchRes.data : [];
+    const total = fetchRes?.meta?.total || gyms.length;
+    const filteredGyms = useMemo(() => {
+        if (!gyms)
+            return [];
+        return gyms;
+    }, [gyms]);
+    const { actionLoadingId, onGhostLoginClick, onSuspendClick, } = useSuperadminGymMutations(gyms);
+    const handleRowClick = (gym: Tenant) => { router.push(`${GymsUrlConfig.PAGES.MAIN}/${encodeURIComponent(gym.id)}`); };
+    const onDeleteClick = (e: React.MouseEvent, gym: Tenant) => {
+        e.stopPropagation();
+        openDeleteModal(gym);
+    };
+    return {
+        filteredGyms,
+        isLoading,
+        isError,
+        error: isError ? 'Error loading gyms' : null,
+        total,
+        actionLoadingId,
+        handleRowClick,
+        onGhostLoginClick,
+        onSuspendClick,
+        onDeleteClick,
+        openWhatsappModal,
+        currentPage,
+        pageLimit,
+        sortBy,
+        sortOrder,
+        segmentId,
+        setCurrentPage,
+        setSortBy,
+        setSortOrder,
+    };
 }

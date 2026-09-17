@@ -1,6 +1,8 @@
+"use client";
 // RESPONSIBILITY: Renders the read-only paginated attendance records table with status badges and duration.
-'use client';
 
+import { displayValue } from '@/app/admin/admin_utils/AdminDisplayValue';
+import { maskSensitiveData } from '@/app/admin/admin_utils/AdminMaskSensitiveData';
 import { useAdminAttendanceLogic } from '@/app/admin/attendance/attendance_context/useAdminAttendanceLogic';
 import { useAdminAttendanceStore } from '@/app/admin/attendance/attendance_store/useAdminAttendanceStore';
 import AdminAttendanceEmptyState from '@/app/admin/attendance/attendance_components/AdminAttendanceEmptyState/AdminAttendanceEmptyState';
@@ -26,7 +28,7 @@ export default function AdminAttendanceTable() {
   return (
     <div className="bg-card rounded-xl border border-border overflow-hidden">
       <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse">
+        <table data-admin-responsive-table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-primary/5 border-b border-border">
               {ATTENDANCE_TABLE_HEADERS.map((h) => (
@@ -50,7 +52,7 @@ export default function AdminAttendanceTable() {
                     <div>
                       <p className="text-sm font-semibold text-foreground">{r.memberName}</p>
                       <p className="text-xs text-secondary">
-                        {r.memberPhone.replace(/(\d{2})(\d{4})(\d{4})/, '$1****$3')}
+                        {maskSensitiveData(r.memberPhone)}
                       </p>
                     </div>
                   </div>
@@ -63,17 +65,17 @@ export default function AdminAttendanceTable() {
                 </td>
                 <td className="px-4 py-3">
                   <span className="text-sm text-foreground">
-                    {r.sessionType === 'PT' ? (r.trainerName || 'Unassigned') : '—'}
+                    {r.sessionType === 'PT' ? displayValue(r.trainerName) : '—'}
                   </span>
                 </td>
                 <td className="px-4 py-3">
                   <span className="text-sm text-foreground whitespace-nowrap">
-                    {r.checkInTime || '—'}
+                    {displayValue(r.checkInTime)}
                   </span>
                 </td>
                 <td className="px-4 py-3">
                   <span className="text-sm text-foreground whitespace-nowrap">
-                    {r.checkOutTime ?? '—'}
+                    {displayValue(r.checkOutTime)}
                   </span>
                 </td>
                 <td className="px-4 py-3">

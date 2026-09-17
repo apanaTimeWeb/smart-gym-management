@@ -4,5 +4,7 @@ import AdminUsageMain from '@/app/admin/usage/usage_components/AdminUsageMain/Ad
 export const metadata = { title: 'Usage & Subscription — Admin | Smart Gym 360' };
 
 export default function AdminUsagePage() {
-  return <AdminUsageMain />;
+  return (
+      <AdminUsageMain />
+  );
 }

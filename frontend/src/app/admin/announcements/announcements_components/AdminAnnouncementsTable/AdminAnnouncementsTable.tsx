@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Announcements table with search/filter toolbar, status badges, pin/edit/delete row actions.
-'use client';
 
 import { Search, Plus, Pin, PinOff, Edit2, Trash2, Eye, Megaphone, RotateCcw } from 'lucide-react';
 import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
@@ -11,7 +11,7 @@ import {
   ANNOUNCEMENT_PRIORITY_OPTIONS,
   ANNOUNCEMENT_GYM_OPTIONS,
 } from '@/app/admin/announcements/announcements_utils/AdminAnnouncementsSharedConstants';
-import type { AnnouncementStatus, AnnouncementPriority } from '@/app/admin/announcements/announcements_types/announcements_types';
+import type { AnnouncementStatus, AnnouncementPriority } from '@/app/admin/announcements/announcements_types/AdminAnnouncementsTypes';
 
 const STATUS_STYLES: Record<AnnouncementStatus, string> = {
   active:    'bg-success-bg text-success border-success/30',
@@ -28,7 +28,7 @@ const PRIORITY_STYLES: Record<AnnouncementPriority, string> = {
 
 export default function AdminAnnouncementsTable() {
   const {
-    paginated, fetchState, openCreate, openEdit,
+    paginated, status, openCreate, openEdit,
     deleteAnnouncement, togglePin,
     currentPage, setCurrentPage, totalPages, totalItems,
   } = useAdminAnnouncementsLogic();
@@ -42,9 +42,9 @@ export default function AdminAnnouncementsTable() {
 
   const hasFilters = search || statusFilter !== 'all' || priorityFilter !== 'all' || gymFilter !== 'all';
 
-  if (fetchState === 'loading') return <AdminTableSkeleton rows={6} cols={7} />;
+  if (status === 'pending') return <AdminTableSkeleton rows={6} cols={7} />;
 
-  if (fetchState === 'error') return (
+  if (status === 'error') return (
     <div className="bg-card border border-border rounded-xl p-10 text-center">
       <Megaphone size={32} className="mx-auto mb-3 text-danger opacity-60" />
       <p className="text-sm text-danger font-medium">Failed to load announcements</p>
@@ -69,7 +69,7 @@ export default function AdminAnnouncementsTable() {
           </div>
           <button
             onClick={openCreate}
-            className="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-primary-hover text-black rounded-xl text-sm font-semibold motion-safe:transition-colors shrink-0"
+            className="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-primary-hover text-primary-foreground rounded-xl text-sm font-semibold motion-safe:transition-colors shrink-0"
           >
             <Plus size={15} /> Send Announcement
           </button>
@@ -116,7 +116,7 @@ export default function AdminAnnouncementsTable() {
       {/* Table */}
       <div className="bg-card border border-border rounded-xl overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+          <table data-admin-responsive-table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-primary/5 border-b border-border">
                 {['', 'Title & Preview', 'Audience', 'Branches', 'Schedule', 'Priority', 'Status', 'Views', 'Acknowledged', 'Delivery', 'Actions'].map((h, i) => (
@@ -132,13 +132,13 @@ export default function AdminAnnouncementsTable() {
                     <p className="text-sm text-secondary font-medium">No announcements found</p>
                     <button
                       onClick={openCreate}
-                      className="mt-3 px-4 py-2 bg-primary hover:bg-primary-hover text-black rounded-xl text-sm font-semibold motion-safe:transition-colors"
+                      className="mt-3 px-4 py-2 bg-primary hover:bg-primary-hover text-primary-foreground rounded-xl text-sm font-semibold motion-safe:transition-colors"
                     >
                       Send First Announcement
                     </button>
                   </td>
                 </tr>
-              ) : paginated.map(a => (
+              ) : paginated.map((a) => (
                 <tr key={a.id} className="hover:bg-input/40 motion-safe:transition-colors group">
                   {/* Pin indicator */}
                   <td className="p-4 w-8">
@@ -152,7 +152,7 @@ export default function AdminAnnouncementsTable() {
                   {/* Audience */}
                   <td className="p-4">
                     <div className="flex flex-wrap gap-1">
-                      {a.audience.map(aud => (
+                      {a.audience.map((aud: string) => (
                         <span key={aud} className="px-2 py-0.5 bg-primary/10 text-primary text-xs rounded-full font-medium capitalize">{aud}</span>
                       ))}
                     </div>
@@ -166,29 +166,29 @@ export default function AdminAnnouncementsTable() {
                   </td>
                   {/* Priority */}
                   <td className="p-4">
-                    <span className={`px-2.5 py-1 rounded-full text-xs font-bold uppercase ${PRIORITY_STYLES[a.priority]}`}>
+                    <span className={`px-2.5 py-1 rounded-full text-xs font-bold uppercase ${PRIORITY_STYLES[a.priority as AnnouncementPriority]}`}>
                       {a.priority}
                     </span>
                   </td>
                   {/* Status */}
                   <td className="p-4">
-                    <span className={`px-2.5 py-1 rounded-full text-xs font-bold border capitalize ${STATUS_STYLES[a.status]}`}>
+                    <span className={`px-2.5 py-1 rounded-full text-xs font-bold border capitalize ${STATUS_STYLES[a.status as AnnouncementStatus]}`}>
                       {a.status}
                     </span>
                   </td>
                   {/* Views */}
                   <td className="p-4">
                     <div className="flex items-center gap-1 text-xs text-secondary">
-                      <Eye size={12} /> {(a as any).viewCount?.toLocaleString('en-IN') || 0}
+                      <Eye size={12} /> {a.viewCount?.toLocaleString('en-IN') || 0}
                     </div>
                   </td>
                   {/* Acknowledged */}
                   <td className="p-4 text-xs text-secondary whitespace-nowrap">
-                    {(a as any).acknowledgedCount?.toLocaleString('en-IN') || 0}
+                    {a.acknowledgedCount?.toLocaleString('en-IN') || 0}
                   </td>
                   {/* Delivery */}
                   <td className="p-4 text-xs text-secondary whitespace-nowrap capitalize">
-                    {(a as any).deliveryStatus || 'Sent'}
+                    {a.deliveryStatus || 'Sent'}
                   </td>
                   {/* Actions */}
                   <td className="p-4">

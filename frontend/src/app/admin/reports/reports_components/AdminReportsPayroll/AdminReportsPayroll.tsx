@@ -1,17 +1,17 @@
+"use client";
+import { formatCurrency } from '@/lib/formatters';
 // RESPONSIBILITY: Renders the Payroll summary report tab — staff count, total payroll, paid, pending, advances per gym.
-'use client';
 
 import { useAdminReportsLogic } from '@/app/admin/reports/reports_context/useAdminReportsLogic';
-import { formatCurrency } from '@/app/admin/reports/reports_utils/AdminReportsSharedConstants';
 
 export default function AdminReportsPayroll() {
   const { reportData } = useAdminReportsLogic();
   if (!reportData) return null;
 
-  const totalPayroll = reportData.payrollSummary.reduce((s, r) => s + r.totalPayroll, 0);
-  const totalPaid = reportData.payrollSummary.reduce((s, r) => s + r.paid, 0);
-  const totalPending = reportData.payrollSummary.reduce((s, r) => s + r.pending, 0);
-  const totalAdvances = reportData.payrollSummary.reduce((s, r) => s + r.advances, 0);
+  const totalPayroll = reportData.payrollSummary.reduce((s: number, r) => s + r.totalPayroll, 0);
+  const totalPaid = reportData.payrollSummary.reduce((s: number, r) => s + r.paid, 0);
+  const totalPending = reportData.payrollSummary.reduce((s: number, r) => s + r.pending, 0);
+  const totalAdvances = reportData.payrollSummary.reduce((s: number, r) => s + r.advances, 0);
 
   return (
     <div className="space-y-6">
@@ -36,7 +36,7 @@ export default function AdminReportsPayroll() {
           <h2 className="text-base font-semibold text-foreground">Staff Payroll by Gym</h2>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table data-admin-responsive-table className="w-full">
             <thead>
               <tr className="bg-primary/5">
                 {['Gym', 'Staff Count', 'Total Payroll', 'Paid', 'Pending', 'Advances', 'Status'].map(h => (

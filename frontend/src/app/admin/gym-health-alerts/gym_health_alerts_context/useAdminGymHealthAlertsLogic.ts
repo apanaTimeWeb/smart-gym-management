@@ -1,15 +1,15 @@
+"use client";
 // RESPONSIBILITY: Business logic hook for the Gym Health Alerts module.
 // DATA FLOW: API → useAdminGymHealthAlertsLogic → components
-'use client';
 
 import { useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import toast from 'react-hot-toast';
-import { gymHealthAlertsApi } from '@/app/admin/gym-health-alerts/gym_health_alerts_api/gym_health_alerts_api';
+import { adminToast } from '@/app/admin/admin_components/AdminFeedback/AdminToastService';
+import { gymHealthAlertsApi } from '@/app/admin/gym-health-alerts/gym_health_alerts_api/AdminGymHealthAlertsApi';
 import { useAdminGymHealthAlertsStore } from '@/app/admin/gym-health-alerts/gym_health_alerts_store/useAdminGymHealthAlertsStore';
+import { useAdminUrlQuerySync } from '@/app/admin/admin_utils/useAdminUrlQuerySync';
 import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/useAdminConfirm';
 import { GYM_HEALTH_ITEMS_PER_PAGE } from '@/app/admin/gym-health-alerts/gym_health_alerts_utils/AdminGymHealthAlertsSharedConstants';
-import type { FetchState } from '@/app/admin/gym-health-alerts/gym_health_alerts_types/gym_health_alerts_types';
 
 export function useAdminGymHealthAlertsLogic() {
   const { confirm } = useAdminConfirm();
@@ -21,23 +21,31 @@ export function useAdminGymHealthAlertsLogic() {
     resolvedFilter, setResolvedFilter,
     currentPage, setCurrentPage,
   } = useAdminGymHealthAlertsStore();
+  useAdminUrlQuerySync([
+    { key: 'severity', value: severityFilter, defaultValue: 'all', setValue: useAdminGymHealthAlertsStore.getState().setSeverityFilter },
+    { key: 'type', value: typeFilter, defaultValue: 'all', setValue: useAdminGymHealthAlertsStore.getState().setTypeFilter },
+    { key: 'gym', value: gymFilter, defaultValue: 'all', setValue: useAdminGymHealthAlertsStore.getState().setGymFilter },
+    { key: 'resolved', value: resolvedFilter, defaultValue: 'active', setValue: useAdminGymHealthAlertsStore.getState().setResolvedFilter },
+    { key: 'page', value: currentPage, defaultValue: 1, setValue: (value) => setCurrentPage(Math.max(1, Number(value) || 1)) },
+  ]);
 
-  const { data: alerts = [], isLoading, isError } = useQuery({
-    queryKey: ['adminGymHealthAlerts'],
-    queryFn: gymHealthAlertsApi.fetchAlerts,
+  const alertsQuery = useQuery({
+    queryKey: ['admin', 'gym-health-alerts', 'alerts'],
+    queryFn: () => gymHealthAlertsApi.fetchAlerts().then((r) => r.data || []),
     staleTime: 1000 * 60 * 2,
     refetchInterval: 60000,
   });
 
   const { data: kpis } = useQuery({
-    queryKey: ['adminGymHealthKPIs'],
-    queryFn: gymHealthAlertsApi.fetchKPIs,
+    queryKey: ['admin', 'gym-health-alerts', 'kpis'],
+    queryFn: () => gymHealthAlertsApi.fetchKPIs().then((r) => r.data || null),
     staleTime: 1000 * 60 * 5,
   });
 
-  const fetchState: FetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
+  const alerts = alertsQuery.data ?? [];
+  const status = alertsQuery.status;
 
-  const filtered = alerts.filter(a => {
+  const filtered = alerts.filter((a) => {
     const matchSeverity = severityFilter === 'all' || a.severity === severityFilter;
     const matchType = typeFilter === 'all' || a.alertType === typeFilter;
     const matchGym = gymFilter === 'all' || a.gymId === gymFilter;
@@ -50,22 +58,18 @@ export function useAdminGymHealthAlertsLogic() {
 
   const resolveMutation = useMutation({
     mutationFn: (id: string) => gymHealthAlertsApi.resolveAlert(id),
-    onSuccess: () => { toast.success('Alert marked as resolved'); qc.invalidateQueries({ queryKey: ['adminGymHealthAlerts'] }); },
-    onError: (err) => toast.error((err as Error).message),
+    onSuccess: (response) => { adminToast.success(response.message, 'admin-success-ef21bd0191'); qc.invalidateQueries({ queryKey: ['admin', 'gym-health-alerts', 'alerts'] }); },
+    onError: (err) => adminToast.error((err as Error).message, 'admin-error-dd598eaa1a'),
   });
 
   const dismissMutation = useMutation({
     mutationFn: (id: string) => gymHealthAlertsApi.dismissAlert(id),
-    onSuccess: () => { toast.success('Alert dismissed'); qc.invalidateQueries({ queryKey: ['adminGymHealthAlerts'] }); },
-    onError: (err) => toast.error((err as Error).message),
+    onSuccess: (response) => { adminToast.success(response.message, 'admin-success-7946fe9ad1'); qc.invalidateQueries({ queryKey: ['admin', 'gym-health-alerts', 'alerts'] }); },
+    onError: (err) => adminToast.error((err as Error).message, 'admin-error-0b8d3968ae'),
   });
 
   const resolveAlert = useCallback((id: string) => { resolveMutation.mutate(id); }, [resolveMutation]);
 
-  const snoozeAlert = useCallback(async (id: string, title: string) => {
-    toast.success('Alert snoozed for 24 hours');
-    qc.invalidateQueries({ queryKey: ['adminGymHealthAlerts'] });
-  }, [qc]);
 
   const dismissAlert = useCallback(async (id: string, title: string) => {
     const ok = await confirm({ title: 'Dismiss Alert', message: `Dismiss "${title}"? It will be permanently removed.`, confirmText: 'Dismiss', type: 'warning' });
@@ -74,13 +78,13 @@ export function useAdminGymHealthAlertsLogic() {
   }, [confirm, dismissMutation]);
 
   return {
-    alerts: paginated, allAlerts: filtered, fetchState, kpis,
+    alerts: paginated, allAlerts: filtered, status, kpis,
     severityFilter, setSeverityFilter,
     typeFilter, setTypeFilter,
     gymFilter, setGymFilter,
     resolvedFilter, setResolvedFilter,
     currentPage, setCurrentPage,
     totalPages, totalItems: filtered.length,
-    resolveAlert, dismissAlert, snoozeAlert,
+    resolveAlert, dismissAlert,
   };
 }

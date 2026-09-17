@@ -1,9 +1,9 @@
+"use client";
 // RESPONSIBILITY: Renders the tab navigation bar for the Reports module.
-'use client';
 
 import { REPORT_TABS } from '@/app/admin/reports/reports_utils/AdminReportsSharedConstants';
 import { useAdminReportsStore } from '@/app/admin/reports/reports_store/useAdminReportsStore';
-import type { ReportTab } from '@/app/admin/reports/reports_types/reports_types';
+import type { ReportTab } from '@/app/admin/reports/reports_types/AdminReportsTypes';
 
 export default function AdminReportsTabs() {
   const { activeTab, setActiveTab } = useAdminReportsStore();

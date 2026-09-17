@@ -1,13 +1,14 @@
+"use client";
 // RESPONSIBILITY: Form modal for creating or editing a staff member profile in the HR module.
-'use client';
 
 import { useEffect } from 'react';
 import { useHrContext } from '@/app/admin/hr/hr_context/AdminHrContext';
 import { STAFF_MODAL_FIELDS, EMPTY_STAFF, GENDER_OPTIONS, StaffSchema, type StaffFormValues, STAFF_ROLE_OPTIONS } from '@/app/admin/hr/hr_utils/AdminHrSharedConstants';
-import { useAdminBranchesData } from '@/app/admin/admin_store/useAdminBranchesData';
-import type { Branch } from '@/app/admin/admin_store/useAdminGlobalStore';
+import { useAdminHrBranchReference } from '@/app/admin/hr/hr_context/useAdminHrBranchReference';
+import type { AdminHrBranchReference } from '@/app/admin/hr/hr_types/AdminHrBranchReferenceTypes';
 import { X, Save } from 'lucide-react';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, useWatch } from 'react-hook-form';
+import type { Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import { Eye, EyeOff } from 'lucide-react';
@@ -16,7 +17,7 @@ import React from 'react';
 export default function AdminHrStaffModal() {
   const { showModal, setShowModal, editId, editData, saveStaff, saving } = useHrContext();
   const [showPassword, setShowPassword] = React.useState(false);
-  const { data: branches = [] } = useAdminBranchesData();
+  const { data: branches = [] } = useAdminHrBranchReference();
 
   const { 
     register, 
@@ -27,13 +28,14 @@ export default function AdminHrStaffModal() {
     setValue,
     formState: { errors }
   } = useForm<StaffFormValues>({
-    resolver: zodResolver(StaffSchema) as unknown as import("react-hook-form").Resolver<StaffFormValues>,
+    resolver: zodResolver(StaffSchema) as unknown as Resolver<StaffFormValues>,
     defaultValues: (editData as StaffFormValues) || {}
   });
 
- const selectedRole = watch('role');
+ const formValues = useWatch({ control });
+ const selectedRole = formValues.role ?? (editData as StaffFormValues)?.role;
  const isManager = selectedRole === 'Manager';
- const assignedBranches = watch('assignedBranches') || [];
+ const assignedBranches = formValues.assignedBranches || (editData as StaffFormValues)?.assignedBranches || [];
 
  useEffect(() => {
    if (showModal && editData) {
@@ -44,19 +46,19 @@ export default function AdminHrStaffModal() {
  if (!showModal) return null;
 
   const getBranchLabel = (id: string) => {
-    const branch = (branches as Branch[]).find(b => b.id === id);
+    const branch = (branches as AdminHrBranchReference[]).find(b => b.id === id);
     return branch ? branch.name : id;
   };
 
   return (
- <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/60">
-  <div className="rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-card border-2 border-warning">
+ <div data-admin-dialog="true" role="dialog" aria-modal="true" tabIndex={-1} className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-overlay">
+  <div className="rounded-2xl shadow-xl w-full max-w-2xl max-h-screen overflow-y-auto bg-card border-2 border-warning">
   <div className="sticky top-0 px-8 py-5 border-b border-border bg-card flex items-center justify-between z-10">
   <h3 className="text-xl font-bold text-foreground">{editId ? 'Edit Staff' : 'Add Staff Member'}</h3>
   <button 
   type="button" 
   onClick={() => setShowModal(false)} 
-  className="p-2 rounded-full hover:bg-primary/10 transition-colors text-secondary hover:text-primary"
+  className="p-2 rounded-full hover:bg-primary/10 motion-safe:transition-colors text-secondary hover:text-primary"
   >
   <X size={20} />
   </button>
@@ -79,7 +81,7 @@ export default function AdminHrStaffModal() {
         : undefined
   }
   {...register(f.key as keyof StaffFormValues, f.type === 'number' ? { valueAsNumber: true } : {})}
-  className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus-visible:ring-2 transition-all duration-200 ${
+  className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus-visible:ring-2 motion-safe:transition-all motion-safe:duration-200 ${
     errors[f.key as keyof StaffFormValues] ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
   } bg-input text-foreground`}
   />
@@ -94,8 +96,8 @@ export default function AdminHrStaffModal() {
       <div>
         <label className="block text-sm font-medium mb-2 text-foreground">Assigned Branches</label>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-          {(branches as Branch[]).map(b => (
-            <label key={b.id} className={`flex items-center gap-2 p-3 border rounded-xl cursor-pointer transition-colors ${assignedBranches.includes(b.id) ? 'border-primary bg-primary/5 text-primary' : 'border-border hover:bg-input text-secondary'}`}>
+          {(branches as AdminHrBranchReference[]).map(b => (
+            <label key={b.id} className={`flex items-center gap-2 p-3 border rounded-xl cursor-pointer motion-safe:transition-colors ${assignedBranches.includes(b.id) ? 'border-primary bg-primary/5 text-primary' : 'border-border hover:bg-input text-secondary'}`}>
               <input 
                 type="checkbox" 
                 value={b.id}
@@ -105,7 +107,7 @@ export default function AdminHrStaffModal() {
                     setValue('assignedBranches', [...assignedBranches, b.id]);
                   } else {
                     setValue('assignedBranches', assignedBranches.filter(x => x !== b.id));
-                    if (watch('primaryBranchId') === b.id) {
+                    if ((formValues.primaryBranchId ?? (editData as StaffFormValues)?.primaryBranchId) === b.id) {
                       setValue('primaryBranchId', '');
                     }
                   }
@@ -147,7 +149,7 @@ export default function AdminHrStaffModal() {
           <SearchableDropdown
             value={field.value || ''}
             onChange={field.onChange}
-            options={(branches as Branch[]).map(b => ({ label: b.name, value: b.id }))}
+            options={(branches as AdminHrBranchReference[]).map(b => ({ label: b.name, value: b.id }))}
             placeholder="Select Branch..."
           />
         )}
@@ -190,7 +192,7 @@ export default function AdminHrStaffModal() {
   <input 
   type="date" 
   {...register('joinDate')}
-  className="w-full px-4 py-3 border border-border rounded-xl text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-foreground transition-all duration-200"
+  className="w-full px-4 py-3 border border-border rounded-xl text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-foreground motion-safe:transition-all motion-safe:duration-200"
   />
   </div>
 
@@ -201,12 +203,12 @@ export default function AdminHrStaffModal() {
     type={showPassword ? "text" : "password"}
     placeholder="Min 8 characters"
     {...register('temporaryPassword')}
-    className="w-full px-4 py-3 border border-border rounded-xl text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-foreground transition-all duration-200 pr-10"
+    className="w-full px-4 py-3 border border-border rounded-xl text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-foreground motion-safe:transition-all motion-safe:duration-200 pr-10"
     />
     <button
       type="button"
       onClick={() => setShowPassword(!showPassword)}
-      className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary hover:text-foreground transition-colors"
+      className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary hover:text-foreground motion-safe:transition-colors"
       aria-label="Toggle password visibility"
     >
       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -222,7 +224,7 @@ export default function AdminHrStaffModal() {
     </div>
     <label className="relative inline-flex items-center cursor-pointer">
       <input type="checkbox" {...register('isActive')} className="sr-only peer" />
-      <div className="w-11 h-6 bg-border peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-success"></div>
+      <div className="w-11 h-6 bg-border peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-border after:content-none after:absolute after:top-0 after:left-0 after:bg-card after:border-border after:border after:rounded-full after:h-5 after:w-5 motion-safe:after:transition-all peer-checked:bg-success"></div>
     </label>
   </div>
 
@@ -231,16 +233,16 @@ export default function AdminHrStaffModal() {
   <button 
   type="button" 
   onClick={() => setShowModal(false)} 
-  className="px-6 py-2.5 text-sm font-semibold rounded-xl border border-border text-secondary hover:bg-primary/5 hover:text-primary transition-colors"
+  className="px-6 py-2.5 text-sm font-semibold rounded-xl border border-border text-secondary hover:bg-primary/5 hover:text-primary motion-safe:transition-colors"
   >
   Cancel
   </button>
   <button 
   type="submit" 
   disabled={saving} 
-  className="px-8 py-2.5 rounded-xl text-sm font-bold text-white flex items-center justify-center gap-2 disabled:opacity-70 transition-all hover:shadow-lg hover:shadow-primary/30 active:scale-95 bg-primary" 
+  className="px-8 py-2.5 rounded-xl text-sm font-bold text-primary-foreground flex items-center justify-center gap-2 disabled:opacity-70 motion-safe:transition-all hover:shadow-lg hover:shadow-primary/30 motion-safe:active:scale-95 bg-primary" 
   >
-  {saving ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full motion-safe:animate-spin" /> : <><Save size={16} />{editId ? 'Update' : 'Add Staff'}</>}
+  {saving ? <div className="w-4 h-4 border-2 border-border/30 border-t-white rounded-full motion-safe:animate-spin" /> : <><Save size={16} />{editId ? 'Update' : 'Add Staff'}</>}
   </button>
   </div>
   </form>

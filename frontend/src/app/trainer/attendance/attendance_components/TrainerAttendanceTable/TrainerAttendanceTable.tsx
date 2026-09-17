@@ -1,17 +1,16 @@
+'use client';
 // RESPONSIBILITY: Renders the attendance data table and pagination controls.
 // DATA FLOW: props (records, pagination) from TrainerAttendanceMain → display only
-'use client';
-
 import { Clock } from 'lucide-react';
-import { ATTENDANCE_TABLE_HEADERS, formatDate, formatTime } from '@/app/trainer/attendance/attendance_utils/AttendanceSharedConstants';
+import { ATTENDANCE_TABLE_HEADERS, formatDate, formatTime } from '@/app/trainer/attendance/attendance_utils/TrainerAttendanceSharedConstants';
 import TrainerPagination from '@/app/trainer/trainer_components/TrainerShared/TrainerPagination';
 import { TRAINER_ITEMS_PER_PAGE } from '@/app/trainer/trainer_utils/TrainerSharedConstants';
 import TrainerAttendanceEmptyState from '@/app/trainer/attendance/attendance_components/TrainerAttendanceEmptyState/TrainerAttendanceEmptyState';
-import type { AttendanceRecord } from '@/app/trainer/attendance/attendance_types/attendance_types';
+import type { AttendanceRecord } from '@/app/trainer/attendance/attendance_types/TrainerAttendance_types';
 
 const SKELETON_ROW_IDS = ['sk-att-1', 'sk-att-2', 'sk-att-3', 'sk-att-4', 'sk-att-5'];
 
-interface Props {
+interface TrainerAttendanceTableProps {
   records: AttendanceRecord[];
   totalRecords: number;
   isLoading: boolean;
@@ -23,7 +22,7 @@ interface Props {
 
 export default function TrainerAttendanceTable({
   records, totalRecords, isLoading, search, filterDate, currentPage, onPageChange,
-}: Props) {
+}: TrainerAttendanceTableProps) {
   const totalPages = Math.ceil(totalRecords / TRAINER_ITEMS_PER_PAGE) || 1;
 
   return (
@@ -87,7 +86,7 @@ export default function TrainerAttendanceTable({
                   <td className="px-4 py-3 text-sm text-secondary">{formatTime(r.checkOut)}</td>
                   <td className="px-4 py-3 text-sm text-secondary">{r.durationMinutes ? `${r.durationMinutes}m` : '—'}</td>
                   <td className="px-4 py-3">
-                    <span className="inline-flex px-2 py-0.5 rounded-md text-[10px] font-medium bg-secondary/10 text-secondary border border-border">
+                    <span className="inline-flex px-2 py-0.5 rounded-md text-xs font-medium bg-secondary/10 text-secondary border border-border">
                       {r.checkInMethod ?? 'Manual'}
                     </span>
                   </td>

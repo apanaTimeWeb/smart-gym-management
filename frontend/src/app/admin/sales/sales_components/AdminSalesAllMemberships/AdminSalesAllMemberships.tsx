@@ -1,17 +1,18 @@
+"use client";
+import { formatCurrency } from '@/lib/formatters';
+import type { MembershipFilter } from '@/app/admin/sales/sales_types/AdminSalesAllMembershipsTypes';
 // RESPONSIBILITY: Renders the paginated, filterable table of all gym memberships. KPI cards (Rule 74) double as interactive filters. Receives data via SalesContext. No API calls.
-'use client';
 
 import { useState, useMemo } from 'react';
 import { useAdminSalesLogic } from '@/app/admin/sales/sales_context/useAdminSalesLogic';
 import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
 import AdminSalesEmptyState from '@/app/admin/sales/sales_components/AdminSalesEmptyState/AdminSalesEmptyState';
-import type { Member } from '@/app/admin/sales/sales_types/sales_types';
+import type { Member } from '@/app/admin/sales/sales_types/AdminSalesTypes';
 import { ADMIN_ITEMS_PER_PAGE } from '@/app/admin/admin_url_config';
 import { Users, CheckCircle, AlertTriangle, XCircle } from 'lucide-react';
 
-type MembershipFilter = 'All' | 'Active' | 'Expiring Soon' | 'Expired';
 
-const MEMBERSHIP_FILTERS: MembershipFilter[] = ['All', 'Active', 'Expiring Soon', 'Expired'];
+
 const TABLE_HEADERS = ['Member', 'Plan', 'Start', 'End Date', 'Status', 'Amount', 'Days Left'] as const;
 
 function getDaysLeft(expiryDate: string): number {
@@ -35,7 +36,7 @@ function getMembershipFilter(member: Member): MembershipFilter {
 
 export default function AdminSalesAllMemberships() {
   const [activeFilter, setActiveFilter] = useState<MembershipFilter>('All');
-  const { currentPage, setCurrentPage, allMemberships, allMembershipsTotal, fetchState } = useAdminSalesLogic();
+  const { currentPage, setCurrentPage, allMemberships, allMembershipsTotal, status } = useAdminSalesLogic();
 
   // Compute per-status counts for the KPI bar (Rule 74)
   const counts = useMemo(() => ({
@@ -60,11 +61,11 @@ export default function AdminSalesAllMemberships() {
     { filter: 'Expired' as MembershipFilter, label: 'Expired', count: counts.Expired, icon: XCircle, color: 'text-danger', bg: 'bg-danger/10', activeBorder: 'border-danger' },
   ];
 
-  if (fetchState === 'loading') {
+  if (status === 'pending') {
     return (
       <div className="space-y-4">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          {[1,2,3,4].map(i => <div key={i} className="motion-safe:animate-pulse h-20 bg-input rounded-xl border border-border" />)}
+          {["row-1", "row-2", "row-3", "row-4"].map(i => <div key={i} className="motion-safe:animate-pulse h-20 bg-input rounded-xl border border-border" />)}
         </div>
         <div className="space-y-2">
           {[...Array(6)].map((_, i) => (
@@ -83,7 +84,7 @@ export default function AdminSalesAllMemberships() {
           <button
             key={filter}
             onClick={() => { setActiveFilter(filter);  }}
-            className={`text-left p-4 rounded-xl border-2 transition-all duration-200 bg-card hover:shadow-md ${
+            className={`text-left p-4 rounded-xl border-2 motion-safe:transition-all motion-safe:duration-200 bg-card hover:shadow-md ${
               activeFilter === filter
                 ? `${activeBorder} shadow-sm`
                 : 'border-border hover:border-border/80'
@@ -104,7 +105,7 @@ export default function AdminSalesAllMemberships() {
 
       {/* Table */}
       <div className="overflow-x-auto rounded-xl border border-border">
-        <table className="w-full">
+        <table data-admin-responsive-table className="w-full">
           <thead className="bg-input">
             <tr>
               {TABLE_HEADERS.map(h => (
@@ -118,7 +119,7 @@ export default function AdminSalesAllMemberships() {
             {filtered.map((r: Member) => {
               const daysLeft = getDaysLeft(r.expiryDate);
               return (
-                <tr key={r.id} className="hover:bg-primary/5 transition-colors bg-card cursor-pointer">
+                <tr key={r.id} className="hover:bg-primary/5 motion-safe:transition-colors bg-card">
                   <td className="px-4 py-3 text-sm font-medium text-foreground">{r.name}</td>
                   <td className="px-4 py-3 text-sm text-secondary">{r.plan?.name ?? `Plan #${r.planId}`}</td>
                   <td className="px-4 py-3 text-sm text-secondary">{new Date(r.joinDate).toLocaleDateString('en-IN')}</td>
@@ -132,7 +133,7 @@ export default function AdminSalesAllMemberships() {
                       {r.status}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-sm font-medium text-foreground">₹{r.paidAmount?.toLocaleString('en-IN') || 0}</td>
+                  <td className="px-4 py-3 text-sm font-medium text-foreground">{formatCurrency(r.paidAmount || 0)}</td>
                   <td className={`px-4 py-3 text-sm font-medium ${getDaysLeftColorClass(daysLeft)}`}>
                     {daysLeft <= 0 ? 'Expired' : `${daysLeft}d`}
                   </td>
@@ -157,5 +158,3 @@ export default function AdminSalesAllMemberships() {
     </div>
   );
 }
-
-

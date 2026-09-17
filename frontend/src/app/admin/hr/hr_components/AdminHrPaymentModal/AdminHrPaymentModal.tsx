@@ -1,5 +1,6 @@
-'use client';
-
+"use client";
+import { formatCurrency } from '@/lib/formatters';
+// RESPONSIBILITY: Renders/orchestrates AdminHrPaymentModal for the admin module; UI composition stays here and business/API logic remains in dedicated hooks and APIs.
 import { useState, useEffect } from 'react';
 import { IndianRupee, X } from 'lucide-react';
 import { useHrContext } from '@/app/admin/hr/hr_context/AdminHrContext';
@@ -8,16 +9,11 @@ export default function AdminHrPaymentModal() {
   const { paymentModal, setPaymentModal, markPayrollPaid } = useHrContext();
   const [amount, setAmount] = useState<number | ''>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(amount);
-  };
-
-  useEffect(() => {
-    if (paymentModal) {
-      setAmount(paymentModal.pendingAmount);
-    }
-  }, [paymentModal]);
+  const [prevModal, setPrevModal] = useState(paymentModal);
+  if (paymentModal !== prevModal) {
+    setPrevModal(paymentModal);
+    if (paymentModal) setAmount(paymentModal.pendingAmount);
+  }
 
   if (!paymentModal) return null;
 
@@ -31,15 +27,15 @@ export default function AdminHrPaymentModal() {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 motion-safe:animate-in motion-safe:fade-in duration-200">
-      <div className="bg-card/95 backdrop-blur-xl rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden motion-safe:animate-in motion-safe:zoom-in-95 duration-200 border border-white/5">
+    <div data-admin-dialog="true" role="dialog" aria-modal="true" tabIndex={-1} className="fixed inset-0 z-40 flex items-center justify-center bg-overlay backdrop-blur-sm p-4 motion-safe:animate-in motion-safe:fade-in motion-safe:duration-200">
+      <div className="bg-card/95 backdrop-blur-xl rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden motion-safe:animate-in motion-safe:zoom-in-95 motion-safe:duration-200 border border-border/5">
         <div className="p-5 flex justify-between items-center border-b border-border">
           <h3 className="font-bold text-foreground">Pay Salary</h3>
-          <button type="button" onClick={() => setPaymentModal(null)} className="p-1.5 text-secondary hover:text-foreground hover:bg-white/10 rounded-md transition-colors"><X size={18} /></button>
+          <button type="button" onClick={() => setPaymentModal(null)} className="p-1.5 text-secondary hover:text-foreground hover:bg-card/10 rounded-md motion-safe:transition-colors"><X size={18} /></button>
         </div>
         
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          <div className="p-4 rounded-xl bg-white/5 border border-white/5 mb-2">
+          <div className="p-4 rounded-xl bg-card/5 border border-border/5 mb-2">
             <p className="text-sm text-secondary mb-1">
               Staff: <strong className="text-foreground">{paymentModal.staffName}</strong>
             </p>
@@ -54,7 +50,7 @@ export default function AdminHrPaymentModal() {
               <button 
                 type="button" 
                 onClick={() => setAmount(paymentModal.pendingAmount)}
-                className="text-xs font-bold text-primary hover:text-primary/80 transition-colors"
+                className="text-xs font-bold text-primary hover:text-primary/80 motion-safe:transition-colors"
               >
                 Pay Full
               </button>
@@ -73,7 +69,7 @@ export default function AdminHrPaymentModal() {
                   const val = e.target.value;
                   setAmount(val === '' ? '' : Number(val));
                 }}
-                className="w-full pl-9 pr-4 py-2.5 bg-input/50 border border-border rounded-xl text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-foreground transition-all"
+                className="w-full pl-9 pr-4 py-2.5 bg-input/50 border border-border rounded-xl text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-foreground motion-safe:transition-all"
               />
             </div>
           </div>
@@ -82,7 +78,7 @@ export default function AdminHrPaymentModal() {
             <button
               type="submit"
               disabled={isSubmitting || Number(amount) <= 0 || Number(amount) > paymentModal.pendingAmount}
-              className="w-full py-2.5 bg-primary text-white text-sm font-bold rounded-xl hover:bg-primary/90 transition-all hover:scale-[1.02] active:scale-[0.98] shadow-[0_0_15px_rgba(250,204,21,0.2)] disabled:opacity-50 disabled:hover:scale-100 disabled:shadow-none"
+              className="w-full py-2.5 bg-primary text-primary-foreground text-sm font-bold rounded-xl hover:bg-primary/90 motion-safe:transition-all motion-safe:hover:scale-105 motion-safe:active:scale-95 shadow-lg disabled:opacity-50 disabled:hover:scale-100 disabled:shadow-none"
             >
               {isSubmitting ? 'Recording...' : 'Confirm Payment'}
             </button>

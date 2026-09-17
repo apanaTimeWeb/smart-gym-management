@@ -1,0 +1,5 @@
+// RESPONSIBILITY: Defines namespaced, versioned browser-storage keys owned by the Superadmin shell.
+export const SUPERADMIN_STORAGE_KEYS = {
+    GHOST_LOGIN_SESSION_V1: 'APP_SUPERADMIN_GHOST_LOGIN_SESSION_V1',
+    BROADCAST_NOTIFICATIONS_V1: 'APP_SUPERADMIN_BROADCAST_NOTIFICATIONS_V1',
+} as const;

@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders the empty state for the Coupons table when no coupons match filters.
-'use client';
 
 import { Tag } from 'lucide-react';
 import { useAdminCouponsLogic } from '@/app/admin/coupons/coupons_context/useAdminCouponsLogic';
@@ -17,7 +17,7 @@ export default function AdminCouponsEmptyState() {
       </div>
       <button
         onClick={openAdd}
-        className="px-4 py-2 bg-primary text-black rounded-lg text-sm font-semibold hover:bg-primary-hover motion-safe:transition-colors"
+        className="px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-semibold hover:bg-primary-hover motion-safe:transition-colors"
       >
         Create Coupon
       </button>

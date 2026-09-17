@@ -1,0 +1,58 @@
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { fireEvent, render, screen } from '@testing-library/react';
+import SuperadminTeamClient from '@/app/superadmin/team/team_components/SuperadminTeamClient';
+import { SUPERADMIN_TEAM_MOCK_FIXTURE } from '@/app/superadmin/team/team_mocks/fixtures/SuperadminTeamMockFixtures';
+import { useSuperadminTeamPage } from '@/app/superadmin/team/team_utils/useSuperadminTeamPage';
+vi.mock('@/app/superadmin/team/team_utils/useSuperadminTeamPage', () => ({ useSuperadminTeamPage: vi.fn() }));
+const mockedUsePage = vi.mocked(useSuperadminTeamPage);
+describe('Superadmin Platform Team', () => {
+    beforeEach(() => {
+        mockedUsePage.mockReset();
+    });
+    it('renders loading and real fixture-backed success states', () => {
+        mockedUsePage.mockReturnValue({
+            data: null,
+            isLoading: true,
+            isError: false,
+            refetch: vi.fn(),
+        });
+        const { unmount } = render(<SuperadminTeamClient />);
+        expect(document.querySelector('[aria-busy="true"]')).not.toBeNull();
+        unmount();
+        mockedUsePage.mockReturnValue({
+            data: SUPERADMIN_TEAM_MOCK_FIXTURE,
+            isLoading: false,
+            isError: false,
+            refetch: vi.fn(),
+        });
+        render(<SuperadminTeamClient />);
+        expect(screen.getByText('Platform Team')).toBeInTheDocument();
+        expect(screen.getByText('Aarav Mehta')).toBeInTheDocument();
+        expect(screen.getByText('—')).toBeInTheDocument();
+    });
+    it('surfaces a retryable error state', () => {
+        const refetch = vi.fn();
+        mockedUsePage.mockReturnValue({
+            data: null,
+            isLoading: false,
+            isError: true,
+            refetch,
+        });
+        render(<SuperadminTeamClient />);
+        expect(screen.getByRole('alert')).toHaveTextContent('Platform team data could not be loaded.');
+        fireEvent.click(screen.getByRole('button', { name: 'Retry' }));
+        expect(refetch).toHaveBeenCalledTimes(1);
+    });
+    it('renders dedicated empty states when lists contain no records', () => {
+        mockedUsePage.mockReturnValue({
+            data: { ...SUPERADMIN_TEAM_MOCK_FIXTURE, users: [], roles: [], alerts: [] },
+            isLoading: false,
+            isError: false,
+            refetch: vi.fn(),
+        });
+        render(<SuperadminTeamClient />);
+        expect(screen.getByText('Team members')).toBeInTheDocument();
+        expect(screen.getByText('Role groups')).toBeInTheDocument();
+        expect(screen.getByText('Alert preferences')).toBeInTheDocument();
+    });
+});

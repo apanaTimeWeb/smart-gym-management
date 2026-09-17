@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Custom hook for Trainer member mutations using TanStack Query.
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { TrainerMembersApi } from '../members_api/TrainerMembersApi';
-import type { Member, DietPlan, Workout } from '../members_types/members_types';
+import { TrainerMembersApi } from '@/app/trainer/members/members_api/TrainerMembersApi';
+import type { Member, DietPlan, Workout } from '@/app/trainer/members/members_types/TrainerMembers_types';
 
 export function useTrainerMembersMutations() {
   const queryClient = useQueryClient();

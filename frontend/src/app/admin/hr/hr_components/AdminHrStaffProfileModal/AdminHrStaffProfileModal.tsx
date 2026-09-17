@@ -1,36 +1,38 @@
+"use client";
+import { formatCurrency } from '@/lib/formatters';
+import { displayValue } from '@/app/admin/admin_utils/AdminDisplayValue';
 // RESPONSIBILITY: Read-only profile view for Staff/Managers, showing details and assigned branches.
-'use client';
 
-import React from 'react';
+import React, { useMemo, useState } from 'react';
+import type { Staff } from '@/app/admin/hr/hr_types/AdminHrTypes';
 import { useHrContext } from '@/app/admin/hr/hr_context/AdminHrContext';
-import { X, Building2, User, Phone, Mail, MapPin, Calendar, Activity, CheckCircle2, Ban, Edit2, IndianRupee, Hash } from 'lucide-react';
+import { useAdminHrStaffProfileBranches } from '@/app/admin/hr/hr_context/useAdminHrStaffProfileBranches';
+import { ChevronDown, ChevronUp, X, Building2, User, Phone, Mail, MapPin, Calendar, Activity, CheckCircle2, Ban, Edit2, IndianRupee, Hash } from 'lucide-react';
 
 export default function AdminHrStaffProfileModal() {
   const { showProfileModal, setShowProfileModal, editData, openEdit } = useHrContext();
 
+  const isManager = editData?.role === 'Manager';
+
+  const branchQuery = useAdminHrStaffProfileBranches(Boolean(showProfileModal && editData));
+  const [branchSortDirection, setBranchSortDirection] = useState<'asc' | 'desc'>('asc');
+  const branchesById = useMemo(() => new Map((branchQuery.data ?? []).map((branch) => [branch.id, branch])), [branchQuery.data]);
+  const branchesToRender = useMemo(() => {
+    if (!editData) return [];
+    const values = isManager && editData.assignedBranches?.length ? editData.assignedBranches : [editData.branch || ''];
+    return [...values].filter(Boolean).sort((left, right) => {
+      const leftName = branchesById.get(left)?.name ?? left;
+      const rightName = branchesById.get(right)?.name ?? right;
+      const result = leftName.localeCompare(rightName);
+      return branchSortDirection === 'asc' ? result : -result;
+    });
+  }, [branchSortDirection, branchesById, editData, isManager]);
+
   if (!showProfileModal || !editData) return null;
 
-  const isManager = editData.role === 'Manager';
-
-  // Mock global branch data resolution (Ideally this comes from global store)
-  const resolveBranchInfo = (branchId: string) => {
-    const mockBranches: Record<string, { name: string, location: string }> = {
-      'b1': { name: 'Downtown Core', location: '123 Main St' },
-      'b2': { name: 'Westside Gym', location: '456 West Ave' },
-      'b3': { name: 'Eastside Fitness', location: '789 East Blvd' },
-      'b4': { name: 'North Park', location: '321 North Rd' },
-      'b5': { name: 'South End', location: '654 South St' },
-    };
-    return mockBranches[branchId] || { name: `Branch ${branchId}`, location: 'Unknown Location' };
-  };
-
-  const branchesToRender = isManager && editData.assignedBranches?.length 
-    ? editData.assignedBranches 
-    : [editData.branch || ''];
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-      <div className="bg-card w-full max-w-3xl rounded-2xl shadow-2xl border border-border overflow-hidden flex flex-col max-h-[90vh]">
+    <div data-admin-dialog="true" role="dialog" aria-modal="true" tabIndex={-1} className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-overlay backdrop-blur-sm">
+      <div className="bg-card w-full max-w-3xl rounded-2xl shadow-2xl border border-border overflow-hidden flex flex-col max-h-screen">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-border bg-input/30">
           <div className="flex items-center gap-3">
@@ -41,7 +43,7 @@ export default function AdminHrStaffProfileModal() {
           </div>
           <button 
             onClick={() => setShowProfileModal(false)}
-            className="p-2 rounded-full hover:bg-input transition-colors text-secondary hover:text-foreground"
+            className="p-2 rounded-full hover:bg-input motion-safe:transition-colors text-secondary hover:text-foreground"
           >
             <X size={20} />
           </button>
@@ -63,8 +65,8 @@ export default function AdminHrStaffProfileModal() {
                 </div>
                 {isManager && (
                   <button
-                    onClick={() => openEdit(editData as any)}
-                    className="px-4 py-2 bg-primary/10 hover:bg-primary/20 text-primary font-semibold text-sm rounded-xl transition-colors flex items-center gap-2"
+                    onClick={() => openEdit(editData as Staff)}
+                    className="px-4 py-2 bg-primary/10 hover:bg-primary/20 text-primary font-semibold text-sm rounded-xl motion-safe:transition-colors flex items-center gap-2"
                   >
                     <Edit2 size={14} />
                     Edit Profile
@@ -75,11 +77,11 @@ export default function AdminHrStaffProfileModal() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="flex items-center gap-3 bg-input/50 p-3 rounded-xl border border-border/50">
                   <Phone size={16} className="text-secondary" />
-                  <span className="text-sm font-medium text-foreground">{editData.phone || 'N/A'}</span>
+                  <span className="text-sm font-medium text-foreground">{displayValue(editData.phone)}</span>
                 </div>
                 <div className="flex items-center gap-3 bg-input/50 p-3 rounded-xl border border-border/50">
                   <Mail size={16} className="text-secondary" />
-                  <span className="text-sm font-medium text-foreground truncate">{editData.email || 'N/A'}</span>
+                  <span className="text-sm font-medium text-foreground truncate">{displayValue(editData.email)}</span>
                 </div>
                 <div className="flex items-center gap-3 bg-input/50 p-3 rounded-xl border border-border/50">
                   <Calendar size={16} className="text-secondary" />
@@ -92,11 +94,11 @@ export default function AdminHrStaffProfileModal() {
                   <div className="flex items-center gap-1.5">
                     <span className="text-sm text-secondary">Status:</span>
                     {editData.isActive !== false ? (
-                      <span className="flex items-center gap-1 text-[11px] font-bold text-success bg-success/10 px-2 py-0.5 rounded-md uppercase tracking-wide">
+                      <span className="flex items-center gap-1 text-xs font-bold text-success bg-success/10 px-2 py-0.5 rounded-md uppercase tracking-wide">
                         <CheckCircle2 size={12} /> Active
                       </span>
                     ) : (
-                      <span className="flex items-center gap-1 text-[11px] font-bold text-danger bg-danger/10 px-2 py-0.5 rounded-md uppercase tracking-wide">
+                      <span className="flex items-center gap-1 text-xs font-bold text-danger bg-danger/10 px-2 py-0.5 rounded-md uppercase tracking-wide">
                         <Ban size={12} /> Suspended
                       </span>
                     )}
@@ -106,31 +108,31 @@ export default function AdminHrStaffProfileModal() {
                 <div className="flex items-center gap-3 bg-input/50 p-3 rounded-xl border border-border/50">
                   <IndianRupee size={16} className="text-secondary" />
                   <span className="text-sm font-medium text-foreground">
-                    Salary: {(editData.salary || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}
+                    Salary: {formatCurrency(editData.salary || 0)}
                   </span>
                 </div>
-                <div className="flex items-center gap-3 bg-input/50 p-3 rounded-xl border border-[var(--danger)]/50">
-                  <IndianRupee size={16} className="text-[var(--danger)]" />
-                  <span className="text-sm font-medium text-[var(--danger)]">
-                    Advance: {(editData.advanceSalary || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}
+                <div className="flex items-center gap-3 bg-input/50 p-3 rounded-xl border border-danger/50">
+                  <IndianRupee size={16} className="text-danger" />
+                  <span className="text-sm font-medium text-danger">
+                    Advance: {formatCurrency(editData.advanceSalary || 0)}
                   </span>
                 </div>
-                <div className="flex items-center gap-3 bg-input/50 p-3 rounded-xl border border-[var(--warning)]/50">
-                  <IndianRupee size={16} className="text-[var(--warning)]" />
-                  <span className="text-sm font-medium text-[var(--warning)]">
-                    Due: {(editData.currentDue || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}
+                <div className="flex items-center gap-3 bg-input/50 p-3 rounded-xl border border-warning/50">
+                  <IndianRupee size={16} className="text-warning" />
+                  <span className="text-sm font-medium text-warning">
+                    Due: {formatCurrency(editData.currentDue || 0)}
                   </span>
                 </div>
                 <div className="flex items-center gap-3 bg-input/50 p-3 rounded-xl border border-border/50">
                   <Hash size={16} className="text-secondary" />
                   <span className="text-sm font-medium text-foreground">
-                    Aadhaar: {editData.aadhaar || 'N/A'}
+                    Aadhaar: {displayValue(editData.aadhaar)}
                   </span>
                 </div>
                 <div className="flex items-center gap-3 bg-input/50 p-3 rounded-xl border border-border/50">
-                  <span className="text-[10px] font-bold border border-secondary text-secondary rounded px-1">UPI</span>
-                  <span className="text-sm font-medium text-foreground truncate max-w-[150px]" title={editData.upiId}>
-                    {editData.upiId || 'N/A'}
+                  <span className="text-xs font-bold border border-secondary text-secondary rounded px-1">UPI</span>
+                  <span className="text-sm font-medium text-foreground truncate max-w-40" title={editData.upiId}>
+                    {displayValue(editData.upiId)}
                   </span>
                 </div>
               </div>
@@ -145,10 +147,10 @@ export default function AdminHrStaffProfileModal() {
             </div>
             
             <div className="border border-border rounded-xl overflow-hidden">
-              <table className="w-full text-left border-collapse">
+              <table data-admin-responsive-table className="w-full text-left border-collapse">
                 <thead className="bg-input/50">
                   <tr>
-                    <th className="px-4 py-3 text-xs font-semibold text-secondary uppercase tracking-wider">Branch</th>
+                    <th role="button" tabIndex={0} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); event.currentTarget.click(); } }}  onClick={() => setBranchSortDirection((current) => current === 'asc' ? 'desc' : 'asc')} className="px-4 py-3 text-xs font-semibold text-secondary uppercase tracking-wider cursor-pointer select-none" aria-sort={branchSortDirection === 'asc' ? 'ascending' : 'descending'}><div className="flex items-center gap-1.5">Branch {branchSortDirection === 'asc' ? <ChevronUp size={13} className="text-primary"/> : <ChevronDown size={13} className="text-primary"/>}</div></th>
                     <th className="px-4 py-3 text-xs font-semibold text-secondary uppercase tracking-wider">Location</th>
                     {isManager && <th className="px-4 py-3 text-xs font-semibold text-secondary uppercase tracking-wider text-right">Badge</th>}
                   </tr>
@@ -156,11 +158,12 @@ export default function AdminHrStaffProfileModal() {
                 <tbody className="divide-y divide-border">
                   {branchesToRender.map((bId) => {
                     if (!bId) return null;
-                    const info = resolveBranchInfo(bId);
+                    const info = branchesById.get(bId);
+                    if (!info) return null;
                     const isPrimary = editData.primaryBranchId === bId || (!editData.primaryBranchId && bId === editData.branch);
                     
                     return (
-                      <tr key={bId} className="bg-card hover:bg-input/30 transition-colors">
+                      <tr key={bId} className="bg-card hover:bg-input/30 motion-safe:transition-colors">
                         <td className="px-4 py-3 text-sm font-medium text-foreground">
                           {info.name}
                         </td>
@@ -173,11 +176,11 @@ export default function AdminHrStaffProfileModal() {
                         {isManager && (
                           <td className="px-4 py-3 text-right">
                             {isPrimary ? (
-                              <span className="inline-block text-[10px] font-bold text-warning bg-warning/10 border border-warning/20 px-2 py-1 rounded-md uppercase">
+                              <span className="inline-block text-xs font-bold text-warning bg-warning/10 border border-warning/20 px-2 py-1 rounded-md uppercase">
                                 Primary Branch
                               </span>
                             ) : (
-                              <span className="inline-block text-[10px] font-bold text-secondary bg-input px-2 py-1 rounded-md uppercase">
+                              <span className="inline-block text-xs font-bold text-secondary bg-input px-2 py-1 rounded-md uppercase">
                                 Assigned
                               </span>
                             )}
@@ -186,7 +189,13 @@ export default function AdminHrStaffProfileModal() {
                       </tr>
                     );
                   })}
-                  {!branchesToRender.length && (
+                  {branchQuery.status === 'pending' && (
+                    <tr><td colSpan={3} className="px-4 py-8 text-center text-secondary text-sm">Loading branch assignments…</td></tr>
+                  )}
+                  {branchQuery.status === 'error' && (
+                    <tr><td colSpan={3} className="px-4 py-8 text-center text-secondary text-sm">Branch assignment data could not be loaded.</td></tr>
+                  )}
+                  {!branchesToRender.length && branchQuery.status === 'success' && (
                     <tr>
                       <td colSpan={3} className="px-4 py-8 text-center text-secondary text-sm">
                         No branches assigned.

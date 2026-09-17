@@ -1,9 +1,6 @@
-// RESPONSIBILITY: Main container for the Expenses module. Owns the ExpensesProvider and assembles Header, Toolbar, KPIs, Table, and Modal.
 'use client';
-
-import { Suspense, useState, useEffect } from 'react';
-import { Loader2, Save } from 'lucide-react';
-import toast from 'react-hot-toast';
+// RESPONSIBILITY: Main container for the Expenses module. Owns the ExpensesProvider and assembles Header, Toolbar, KPIs, Table, and Modal.
+import { Suspense, useState } from 'react';
 import { ExpensesProvider, useExpensesContext } from '@/app/manager/expenses/expenses_context/ManagerExpensesContext';
 import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/ManagerHeader';
 import ManagerExpensesToolbar from '@/app/manager/expenses/expenses_components/ManagerExpensesToolbar/ManagerExpensesToolbar';
@@ -11,9 +8,6 @@ import ManagerExpensesKPIs from '@/app/manager/expenses/expenses_components/Mana
 import ManagerExpensesTable from '@/app/manager/expenses/expenses_components/ManagerExpensesTable/ManagerExpensesTable';
 import ManagerExpensesModal from '@/app/manager/expenses/expenses_components/ManagerExpensesModal/ManagerExpensesModal';
 import ManagerExpensesChart from '@/app/manager/expenses/expenses_components/ManagerExpensesMain/ManagerExpensesChart';
-import type { ExpenseStatus } from '@/app/manager/expenses/expenses_types/ManagerExpensesTypes';
-import { useUnsavedChangesGuard } from '@/app/manager/manager_utils/useUnsavedChangesGuard';
-import { useExpensesListQuery } from '@/app/manager/expenses/expenses_api/useManagerExpensesQueries';
 
 const EXPENSE_CATEGORIES = [
   'Equipment Maintenance',
@@ -24,157 +18,9 @@ const EXPENSE_CATEGORIES = [
   'Miscellaneous',
 ];
 
-function AddExpenseForm({ onSaved }: { onSaved: () => void }) {
-  const { saveExpense, saving } = useExpensesContext();
-  const [category, setCategory]       = useState(EXPENSE_CATEGORIES[0]);
-  const [title, setTitle]             = useState('');
-  const [amount, setAmount]           = useState('');
-  const [date, setDate]               = useState('');
-  const [status, setStatus]           = useState<ExpenseStatus>('PAID');
-  const [notes, setNotes]             = useState('');
-
-  const isDirty = title.trim() !== '' || amount !== '' || date !== '' || notes.trim() !== '';
-  useUnsavedChangesGuard(isDirty);
-
-  const handleSave = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!title.trim() || !amount || !date) {
-      toast.error('Please fill in all required fields.');
-      return;
-    }
-    const parsedAmount = parseFloat(amount);
-    if (isNaN(parsedAmount) || parsedAmount <= 0) {
-      toast.error('Amount must be a positive number.');
-      return;
-    }
-    try {
-      await saveExpense({
-        title: title.trim(),
-        category,
-        amount: parsedAmount,
-        date,
-        status,
-        notes: notes.trim() || undefined,
-        createdAt: new Date().toISOString(),
-      });
-      setTitle(''); setAmount(''); setDate(''); setNotes(''); setStatus('PAID');
-      setCategory(EXPENSE_CATEGORIES[0]);
-      onSaved();
-    } catch {
-      toast.error('Failed to save expense. Please try again.');
-    }
-  };
-
-  return (
-    <div className="bg-card border border-border rounded-xl p-6 max-w-xl">
-      <h3 className="text-lg font-bold text-foreground mb-5">Record New Expense</h3>
-      <form onSubmit={handleSave} className="space-y-4">
-        <div>
-          <label className="block text-sm font-semibold text-foreground mb-1.5">
-            Title <span className="text-danger">*</span>
-          </label>
-          <input
-            required
-            value={title}
-            onChange={e => setTitle(e.target.value)}
-            placeholder="e.g. Monthly Gym Rent"
-            className="w-full bg-input border border-border rounded-lg px-3 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary motion-safe:transition-all"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-semibold text-foreground mb-1.5">Expense Category</label>
-          <select
-            value={category}
-            onChange={e => setCategory(e.target.value)}
-            className="w-full bg-input border border-border rounded-lg px-3 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary motion-safe:transition-all"
-          >
-            {EXPENSE_CATEGORIES.map(c => <option key={c}>{c}</option>)}
-          </select>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-semibold text-foreground mb-1.5">
-              Amount (₹) <span className="text-danger">*</span>
-            </label>
-            <input
-              type="number"
-              min="1"
-              required
-              value={amount}
-              onChange={e => setAmount(e.target.value)}
-              placeholder="0.00"
-              className="w-full bg-input border border-border rounded-lg px-3 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary motion-safe:transition-all"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-semibold text-foreground mb-1.5">
-              Date <span className="text-danger">*</span>
-            </label>
-            <input
-              type="date"
-              required
-              value={date}
-              onChange={e => setDate(e.target.value)}
-              className="w-full bg-input border border-border rounded-lg px-3 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary motion-safe:transition-all"
-            />
-          </div>
-        </div>
-
-        <div>
-          <label className="block text-sm font-semibold text-foreground mb-1.5">Payment Status</label>
-          <select
-            value={status}
-            onChange={e => setStatus(e.target.value as ExpenseStatus)}
-            className="w-full bg-input border border-border rounded-lg px-3 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary motion-safe:transition-all"
-          >
-            <option value="PAID">Paid</option>
-            <option value="PENDING">Pending</option>
-          </select>
-        </div>
-
-        <div>
-          <label className="block text-sm font-semibold text-foreground mb-1.5">Notes (optional)</label>
-          <textarea
-            rows={3}
-            value={notes}
-            onChange={e => setNotes(e.target.value)}
-            placeholder="Any additional context..."
-            className="w-full bg-input border border-border rounded-lg px-3 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary motion-safe:transition-all resize-none"
-          />
-        </div>
-
-        <button
-          type="submit"
-          disabled={saving}
-          className="flex items-center justify-center gap-2 w-full py-2.5 bg-primary text-primary-foreground font-bold rounded-lg hover:opacity-90 motion-safe:transition-opacity disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-        >
-          {saving ? <Loader2 size={18} className="motion-safe:animate-spin" /> : <Save size={18} />}
-          Save Expense
-        </button>
-      </form>
-    </div>
-  );
-}
-
 function ExpensesContent() {
-  const { search, statusFilter, currentPage } = useExpensesContext();
-  const { isError } = useExpensesListQuery({
-    search,
-    status: statusFilter !== 'All' ? statusFilter : '',
-    page: currentPage.toString(),
-  });
+  const { setShowModal } = useExpensesContext();
   const [activeTab, setActiveTab] = useState('View Expenses');
-
-  if (isError) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <p className="text-danger font-medium">Failed to load expenses. Please try again.</p>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-full pb-10">
@@ -186,7 +32,7 @@ function ExpensesContent() {
             <button
               key={t}
               onClick={() => setActiveTab(t)}
-              className={`px-4 py-2 text-sm font-semibold rounded-lg transition-colors ${
+              className={`px-4 py-2 text-sm font-semibold rounded-lg motion-safe:transition-colors ${
                 activeTab === t ? 'bg-primary text-primary-foreground shadow' : 'text-secondary hover:text-foreground hover:bg-accent'
               }`}
             >
@@ -212,11 +58,21 @@ function ExpensesContent() {
         )}
 
         {activeTab === 'Add Expense' && (
-          <AddExpenseForm onSaved={() => setActiveTab('View Expenses')} />
+          <div className="bg-card border border-border rounded-xl p-6 max-w-xl">
+            <h3 className="text-lg font-bold text-foreground mb-2">Record New Expense</h3>
+            <p className="text-sm text-secondary mb-5">Use the validated expense form to create a new operational cost.</p>
+            <button
+              type="button"
+              onClick={() => setShowModal(true)}
+              className="px-4 py-2.5 bg-primary text-primary-foreground rounded-lg text-sm font-semibold"
+            >
+              Open Expense Form
+            </button>
+          </div>
         )}
 
         {activeTab === 'Expense Report' && (
-          <div className="bg-card border border-border rounded-xl p-2 min-h-[500px]">
+          <div className="bg-card border border-border rounded-xl p-2 min-h-96">
             <ManagerExpensesChart />
           </div>
         )}

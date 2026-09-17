@@ -4,8 +4,7 @@
 
 import { useCallback } from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
-import { SearchableDropdown } from '@/app/manager/manager_components/ManagerShared/SearchableDropdown';
-import type { TimeRange } from '@/app/manager/dashboard/dashboard_types/ManagerDashboardTypes';
+import { SearchableDropdown } from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
 
 const OPTIONS = [
   { value: 'this_month', label: 'This Month' },
@@ -23,7 +22,7 @@ export function ManagerDateFilterDropdown() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
 
-  const value = (searchParams.get('range') as TimeRange) ?? 'this_month';
+  const value = searchParams.get('range') ?? 'this_month';
 
   const handlePresetChange = useCallback((preset: string) => {
     const today = new Date();

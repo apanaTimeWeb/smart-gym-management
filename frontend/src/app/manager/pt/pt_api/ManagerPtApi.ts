@@ -1,5 +1,7 @@
-// RESPONSIBILITY: API client for the Manager PT module using hardcoded mock data for now.
-import type { ApiResponse } from '@/lib/api';
+import { z } from 'zod';
+import { ManagerPtUrlConfig } from '@/app/manager/pt/pt_url_config';
+import { apiFetch, type ApiResponse } from '@/lib/api';
+import { ptDashboardKpisSchema, ptTrainerWorkloadSchema, ptPackageSchema, ptAssignmentSchema } from '@/app/manager/pt/pt_types/ManagerPtSchema';
 import type { 
   PtPackage, 
   PtAssignment, 
@@ -7,68 +9,30 @@ import type {
   PtDashboardKpis,
   CreatePtAssignmentPayload 
 } from '@/app/manager/pt/pt_types/ManagerPtTypes';
-import { 
-  MOCK_PT_PACKAGES, 
-  MOCK_PT_ASSIGNMENTS, 
-  MOCK_PT_WORKLOAD, 
-  MOCK_PT_KPIS 
-} from '@/app/manager/pt/pt_fixtures/ManagerPtMockData';
-
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const managerPtApi = {
   fetchDashboardKpis: async (): Promise<ApiResponse<PtDashboardKpis>> => {
-    await delay(600);
-    return { success: true, message: 'KPIs fetched', data: MOCK_PT_KPIS };
+    return apiFetch(`${ManagerPtUrlConfig.BACKEND_API.BASE}/kpis`, { dataSchema: ptDashboardKpisSchema });
   },
 
   fetchWorkload: async (): Promise<ApiResponse<PtTrainerWorkload[]>> => {
-    await delay(700);
-    return { success: true, message: 'Workload fetched', data: MOCK_PT_WORKLOAD };
+    return apiFetch(`${ManagerPtUrlConfig.BACKEND_API.BASE}/workload`, { dataSchema: z.array(ptTrainerWorkloadSchema) });
   },
 
   fetchPackages: async (): Promise<ApiResponse<PtPackage[]>> => {
-    await delay(500);
-    return { success: true, message: 'Packages fetched', data: MOCK_PT_PACKAGES };
+    return apiFetch(`${ManagerPtUrlConfig.BACKEND_API.BASE}/packages`, { dataSchema: z.array(ptPackageSchema) });
   },
 
-  fetchAssignments: async (): Promise<ApiResponse<PtAssignment[]>> => {
-    await delay(800);
-    return { success: true, message: 'Assignments fetched', data: MOCK_PT_ASSIGNMENTS };
+  fetchAssignments: async (params?: Record<string, string>): Promise<ApiResponse<import('@/app/manager/pt/pt_types/ManagerPtTypes').PtAssignmentsResponse>> => {
+    const query = new URLSearchParams(params ?? {}).toString();
+    return apiFetch(`${ManagerPtUrlConfig.BACKEND_API.BASE}/assignments${query ? `?${query}` : ''}`, { dataSchema: z.object({ assignments: z.array(ptAssignmentSchema), total: z.number(), page: z.number(), limit: z.number() }) });
   },
 
   createAssignment: async (body: CreatePtAssignmentPayload): Promise<ApiResponse<PtAssignment>> => {
-    await delay(1000);
-    const newAssignment: PtAssignment = {
-      id: `asg-new-${Date.now()}`,
-      memberId: body.memberId,
-      memberName: 'New Member', // Mocked name
-      trainerId: body.trainerId,
-      trainerName: 'Assigned Trainer', // Mocked name
-      packageId: body.packageId,
-      packageName: 'Assigned Package', // Mocked name
-      totalSessions: 12,
-      completedSessions: 0,
-      sessionsRemaining: 12,
-      startDate: body.startDate,
-      endDate: '2024-01-01',
-      paymentStatus: 'PAID',
-      amountPaid: 0,
-      totalAmount: 0,
-    };
-    return { success: true, message: 'Trainer assigned successfully!', data: newAssignment };
+    return apiFetch(`${ManagerPtUrlConfig.BACKEND_API.BASE}/assignments`, { method: 'POST', body: JSON.stringify(body), dataSchema: ptAssignmentSchema });
   },
 
   markSessionComplete: async (assignmentId: string): Promise<ApiResponse<PtAssignment>> => {
-    await delay(800);
-    const assignment = MOCK_PT_ASSIGNMENTS.find(a => a.id === assignmentId);
-    if (!assignment) {
-      throw new Error('Assignment not found');
-    }
-    const updated = { 
-      ...assignment, 
-      completedSessions: Math.min(assignment.completedSessions + 1, assignment.totalSessions) 
-    };
-    return { success: true, message: 'Session marked as complete.', data: updated };
+    return apiFetch(`${ManagerPtUrlConfig.BACKEND_API.BASE}/assignments/${assignmentId}/complete-session`, { method: 'PATCH', dataSchema: ptAssignmentSchema });
   },
 };

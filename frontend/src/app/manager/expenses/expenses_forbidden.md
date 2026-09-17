@@ -8,4 +8,4 @@ To maintain enterprise-grade architecture in this module, the following are stri
 4. **No Recharts or Chart.js:** The only allowed charting library is `react-apexcharts`.
 5. **No Context for Async Cache:** Do not store API responses manually in React Context state. Let TanStack Query manage the cache within individual components (like `ManagerExpensesTable`), while Context distributes the active filter states.
 6. **No Local State for Filters:** The search, status, and page filters MUST sync to the URL. Do not keep them only in `useState` or `Zustand`.
-7. **No Arbitrary Colors:** Do not use `bg-green-500`, `text-[var(--primary)]`, or raw hex codes in JSX (except within ApexCharts config objects where canvas rendering requires hex). Follow `manager_expenses_theme_contract.md`.
+7. **No Arbitrary Colors:** Do not use `bg-green-500`, `text-[var(--primary)]`, or raw hex codes in JSX (except within ApexCharts config objects where canvas rendering requires hex). Follow `expenses_theme_contract.md`.

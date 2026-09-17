@@ -1,51 +1,108 @@
 # Manager Attendance — Feature Map
 
 ## Module Purpose
-The Manager Attendance module tracks daily member and staff check-in and check-out for the branch.
-It provides a calendar view of attendance history, daily attendance KPIs, and manual
-check-in capability for walk-in members/staff. The module relies heavily on URL state for active tabs, dates, and search filters.
+Manager Attendance is the branch attendance workspace for recording and reviewing member and staff check-ins. Managers use it to inspect the current-day attendance list, filter the dataset, open attendance history, and record attendance events. The module owns attendance-specific queries, filters, fixtures, and handlers so it can be given to an AI without unrelated business modules. It does not own member billing, payroll, or other role-specific business workflows.
 
 ## Directory Structure
-| File/Folder | Responsibility |
-|---|---|
-| `page.tsx` | Server Component — auth guard |
-| `loading.tsx` | Skeleton for KPI cards + calendar |
-| `error.tsx` | Error boundary |
-| `attendance_components/ManagerAttendanceMain.tsx` | Root Client Component orchestrator |
-| `attendance_components/ManagerAttendanceKpiCards.tsx` | Today's count, weekly avg, absentees KPIs |
-| `attendance_components/ManagerAttendanceCalendar.tsx` | Monthly calendar with daily attendance |
-| `attendance_components/ManagerAttendanceDailyTable.tsx` | List of check-ins for selected date |
-| `attendance_components/ManagerAttendanceCheckInModal.tsx` | Manual check-in form |
-| `attendance_context/useManagerAttendanceLogic.ts` | Data fetching via TanStack Query and URL sync |
-| `attendance_utils/ManagerAttendanceFilterUtils.ts` | Data processing layer for client-side fixture sorting |
-| `attendance_api/useManagerAttendanceQueries.ts` | Query keys and TanStack hooks |
+| Folder | Responsibility | Key Files |
+|---|---|---|
+| `attendance_api/` | Feature-owned responsibility for the attendance module. | `ManagerAttendanceApi.ts; ManagerUseManagerAttendanceQueries.ts` |
+| `attendance_components/` | Feature-owned responsibility for the attendance module. | `—` |
+| `attendance_context/` | Feature-owned responsibility for the attendance module. | `ManagerAttendanceContext.tsx; ManagerUseManagerAttendanceLogic.ts; ManagerUseManagerAttendanceMutations.ts` |
+| `attendance_fixtures/` | Feature-owned responsibility for the attendance module. | `ManagerAttendanceMockData.ts` |
+| `attendance_mocks/` | Feature-owned responsibility for the attendance module. | `—` |
+| `attendance_types/` | Feature-owned responsibility for the attendance module. | `ManagerAttendanceSchema.ts; ManagerAttendanceSnapshotTypes.ts; ManagerAttendanceTypes.ts` |
+| `attendance_utils/` | Feature-owned responsibility for the attendance module. | `ManagerAttendanceSharedConstants.ts` |
 
 ## Feature Inventory
-| Feature | Path | Purpose | Main API Calls | Status |
+| Feature | Route | What the User Can Do | Main API Calls | Status |
 |---|---|---|---|---|
-| Attendance KPIs | `/manager/attendance` | Today's stats | `GET /manager/attendance/stats` | ✅ Live |
-| Daily Records | `/manager/attendance` | Check-ins for selected date | `GET /manager/attendance/daily?date=` | ✅ Live |
-| Manual Check-In | `/manager/attendance` | Log walk-in attendance | `POST /manager/attendance/checkin` | ✅ Live |
+| markAttendance | `/manager/attendance` | Uses the markAttendance workflow with typed request/response handling. | `POST /manager/attendance` | ✅ Implemented |
+| fetchAttendanceRecords | `/manager/attendance` | Uses the fetchAttendanceRecords workflow with typed request/response handling. | `GET /manager/attendance` | ✅ Implemented |
+| fetchAttendanceStats | `/manager/attendance` | Uses the fetchAttendanceStats workflow with typed request/response handling. | `GET /manager/attendance/stats` | ✅ Implemented |
+| fetchAttendanceHistory | `/manager/attendance` | Uses the fetchAttendanceHistory workflow with typed request/response handling. | `GET /manager/attendance/history` | ✅ Implemented |
+| fetchAttendanceMembers | `/manager/attendance` | Uses the fetchAttendanceMembers workflow with typed request/response handling. | `GET /manager/attendance/members` | ✅ Implemented |
+| fetchAttendanceStaff | `/manager/attendance` | Uses the fetchAttendanceStaff workflow with typed request/response handling. | `GET /manager/attendance/staff` | ✅ Implemented |
+
+## User Flows & Interactions
+### Flow 1: Record attendance
+1. Manager opens Attendance and selects a member or staff entry in the attendance modal.
+2. The form validates the date, type, member/staff identifier, and optional check-in details.
+3. markAttendance() sends the mutation through the Attendance API client.
+4. The MSW handler returns the authoritative Attendance response in development/test; TanStack Query reconciles the affected list/stats queries.
+### Flow 2: Filter and browse records
+1. The manager changes search, date, status, or page controls.
+2. The attendance logic builds the complete server query from URL/UI state.
+3. fetchAttendanceRecords(params) sends those parameters to the API client.
+4. The MSW handler filters and paginates module-owned fixtures and returns the filtered total.
+5. The table renders the returned page without client-side dataset slicing.
 
 ## Data and State Architecture
-- **Server-state (Async):** TanStack Query (`useAttendanceListQuery`, `useTodayStatsQuery`). 
-- **Query Keys:** `['manager', 'attendance', 'list', params]`
-- **Client-state (Sync):** URL query parameters (`?tab=`, `?search=`, `?date=`, `?status=`) for all lists.
-- **Context providers:** `AttendanceProvider` distributes logic layer.
-- **Zustand stores:** None.
+TanStack Query owns attendance server/API data. UI-only filters, tabs, selections, and draft state remain local state or module-scoped Zustand where shared. React Context is limited to stable cross-tree concerns and does not become the source of truth for API data. Query keys are module-prefixed.
+
+## API Contract
+| Function | Method | Endpoint | Request | Response `data` type |
+|---|---|---|---|---|
+| `markAttendance` | `POST` | `/api/v1/manager/attendance` | `{ memberId?: string; staffId?: string; date: string; checkIn?: string; type: string }` | `Attendance` |
+| `fetchAttendanceRecords` | `GET` | `/api/v1/manager/attendance` | `{ page?, limit?, search?, date?, status?, type? }` | `AttendanceResponse` |
+| `fetchAttendanceStats` | `GET` | `/api/v1/manager/attendance/stats` | `—` | `AttendanceStatsResponse` |
+| `fetchAttendanceHistory` | `GET` | `/api/v1/manager/attendance/history` | `{ userId: string; type: MEMBER | STAFF; month: string }` | `Attendance[]` |
+| `fetchAttendanceMembers` | `GET` | `/api/v1/manager/attendance/members` | `{ search?/status? }` | `{ members: MemberSnapshot[] }` |
+| `fetchAttendanceStaff` | `GET` | `/api/v1/manager/attendance/staff` | `{ search?/status? }` | `{ staff: StaffSnapshot[] }` |
+
+## UI Data Requirements
+| UI Element | Required Field(s) | API Endpoint | Response Path | Nullable? | Mocked? |
+|---|---|---|---|---|---|
+| KPI: Total check-ins | `totalCheckIns` | `/api/v1/manager/attendance/stats` | `data.totalCheckIns` | No | Yes |
+| KPI: Member check-ins | `memberCheckIns` | `/api/v1/manager/attendance/stats` | `data.memberCheckIns` | No | Yes |
+| KPI: Staff check-ins | `staffCheckIns` | `/api/v1/manager/attendance/stats` | `data.staffCheckIns` | No | Yes |
+| Table: Record ID | `id` | `/api/v1/manager/attendance` | `data.attendances[].id` | No | Yes |
+| Table: Member name | `member.name` | `/api/v1/manager/attendance` | `data.attendances[].member.name` | Yes | Yes |
+| Table: Staff name | `staff.name` | `/api/v1/manager/attendance` | `data.attendances[].staff.name` | Yes | Yes |
+| Table: Date | `date` | `/api/v1/manager/attendance` | `data.attendances[].date` | No | Yes |
+| Table: Status | `status` | `/api/v1/manager/attendance` | `data.attendances[].status` | Yes | Yes |
+| Table: Check-in | `checkIn` | `/api/v1/manager/attendance` | `data.attendances[].checkIn` | Yes | Yes |
+| Table: Check-out | `checkOut/checkOutTime` | `/api/v1/manager/attendance` | `data.attendances[].checkOut | data.attendances[].checkOutTime` | Yes | Yes |
+| Table: Type | `type` | `/api/v1/manager/attendance` | `data.attendances[].type` | No | Yes |
+| Table: Duration | `durationMinutes` | `/api/v1/manager/attendance` | `data.attendances[].durationMinutes` | Yes | Yes |
+
+## Permissions and Security
+- **Required role:** `MANAGER`.
+- **UI guard:** `ManagerPermissionGate` provides the Manager workspace capability boundary; module-specific permissions remain documented at the feature level when applicable.
+- **Critical actions:** destructive/financial actions use explicit confirmation and server-authoritative responses.
+- **Sensitive data:** list views use masking/display rules appropriate to the data type.
+- **Cross-role isolation:** no business imports from other role roots or unrelated business modules.
+
+## Loading, Empty, and Error States
+- Route-level `loading.tsx` provides a layout-matching skeleton.
+- Data sections use dedicated inline skeletons while TanStack Query is pending.
+- Entity lists provide module-specific empty-state UI where the entity is user-browsable.
+- Module `error.tsx` provides a safe retry fallback and does not expose raw backend/stack-trace text.
+
+## Edge Cases and AI Warnings
+- **Attendance filtering must remain server-side; never restore client-side slicing for paginated data:** Attendance filtering must remain server-side; never restore client-side slicing for paginated data.
+- **The record response uses `data:** The record response uses `data.attendances[]`; do not reintroduce a second undocumented `data.attendance[]` contract.
+- **Member and staff identifiers are mutually exclusive by attendance type; send only the appropriate identifier:** Member and staff identifiers are mutually exclusive by attendance type; send only the appropriate identifier.
+- **History requests require the user type and month together; do not omit either parameter:** History requests require the user type and month together; do not omit either parameter.
+- **Nullable check-out, status, trainer, and duration fields must render through the canonical nullable fallback:** Nullable check-out, status, trainer, and duration fields must render through the canonical nullable fallback.
+- **Attendance export/CSV logic must never invent a status such as Present when the API returned no status:** Attendance export/CSV logic must never invent a status such as Present when the API returned no status.
 
 ## Component Responsibility Map
-- `ManagerAttendanceMain` — layout orchestrator.
-- `useManagerAttendanceLogic` — URL sync, query execution, mutation handler.
-- `ManagerAttendanceFilterUtils` — extracted processing layer to keep hooks small and isolate fixture-sorting from UI.
-- `ManagerAttendanceCalendar` — renders calendar.
+| Component File | Responsibility |
+|---|---|
+| `attendance/attendance_components/AttendanceCalendar/ManagerAttendanceCalendar.tsx` | Renders a month-wise calendar view of attendance for a specific user. |
+| `attendance/attendance_components/AttendanceModal/ManagerAttendanceModal.tsx` | Renders the modal for marking new attendance records for members or staff. |
+| `attendance/attendance_components/AttendanceTable/ManagerAttendanceTable.tsx` | Renders the attendance data table and pagination controls. |
+| `attendance/attendance_components/AttendanceToolbar/ManagerAttendanceToolbar.tsx` | Provides the search, filter tabs, and action buttons for the Attendance module. |
+| `attendance/attendance_components/ManagerAttendanceKPIs/ManagerAttendanceKPIs.tsx` | Renders the top KPI stat cards (total check-ins, member check-ins, staff check-ins) for the Attendance module. |
+| `attendance/attendance_components/ManagerAttendanceMain/ManagerAttendanceMain.tsx` | Entry component for the Attendance module that wraps the UI in the context provider and handles the core page layout. |
+| `attendance/attendance_context/ManagerAttendanceContext.tsx` | Provides UI orchestration state to the attendance module hierarchy. Async data is managed in useManagerAttendanceLogic. |
 
-## Loading, Empty, Error States
-- **Loading:** `loading.tsx` renders structural skeleton matching KPI grid + calendar layout.
-- **Empty:** Daily table shows empty state card.
-- **Error:** Route-level `error.tsx` catches rendering or boundary errors.
-
-## Edge Cases / AI Warnings
-- **No inline sorting/filtering** — do not use `.filter()` inside the UI components or the main logic hook for hardcoded data. Use `ManagerAttendanceFilterUtils.ts`.
-- **Date is UTC** — all date values sent to the API must be in UTC ISO format.
-- **URL State sync** — any new filters added must be synchronized to the URL.
+## Rule Compliance Checklist
+- [x] Module-owned API, types/schemas, fixtures, handlers, tests, and feature documentation are scoped to this module.
+- [x] API calls use the module API client and typed response contracts.
+- [x] Server-backed pagination/filter/search follows explicit parameter propagation where applicable.
+- [x] UI Data Requirements map displayed values to concrete endpoints and response paths.
+- [x] Module-owned MSW fixtures/handlers remain the frontend-first server substitute.
+- [x] Raw `any`, relative imports, barrel files, and hardcoded localhost mock origins are absent from audited Manager source.
+- [ ] Host-repository CI/tooling, dependency/SCA/secret gates, CODEOWNERS, branch protection, and production build require root-repository verification.

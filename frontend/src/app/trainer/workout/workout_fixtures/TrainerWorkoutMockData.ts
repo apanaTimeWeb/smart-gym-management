@@ -1,4 +1,4 @@
-import type { Workout, Exercise } from '../workout_types/workout.schema';
+import type { Workout, Exercise } from '@/app/trainer/workout/workout_types/TrainerWorkout.schema';
 
 export const MOCK_WORKOUTS: Workout[] = [
   {

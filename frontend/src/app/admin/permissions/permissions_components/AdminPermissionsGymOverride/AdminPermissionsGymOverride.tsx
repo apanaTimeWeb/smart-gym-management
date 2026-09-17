@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders the gym-specific override summary panel — shows which gyms have custom overrides.
-'use client';
 
 import { Building2, AlertTriangle } from 'lucide-react';
 import { useAdminPermissionsLogic } from '@/app/admin/permissions/permissions_context/useAdminPermissionsLogic';
@@ -31,7 +31,7 @@ export default function AdminPermissionsGymOverride() {
         <span className="ml-auto text-xs bg-warning-bg text-warning px-2 py-0.5 rounded-full border border-warning/20">{overrides.length} active</span>
       </div>
       <div className="divide-y divide-border">
-        {overrides.map((override, i) => {
+        {overrides.map((override, i: number) => {
           const overrideCount = Object.keys(override.overrides).length;
           const isSelected = selectedGymId === override.gymId;
           return (

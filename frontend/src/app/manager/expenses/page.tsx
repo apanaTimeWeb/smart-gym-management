@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 // RESPONSIBILITY: Server Component — entry point for the Expenses module. Fetches no initial data (expenses use client-side fetching via Zustand store). Delegates rendering to ManagerExpensesMain which owns its own Provider.
 import type { Metadata } from 'next';
 import ManagerExpensesMain from '@/app/manager/expenses/expenses_components/ManagerExpensesMain/ManagerExpensesMain';
@@ -8,5 +9,9 @@ export const metadata: Metadata = {
 };
 
 export default function ExpensesPage() {
-  return <ManagerExpensesMain />;
+  return (
+    <Suspense fallback={<div className="p-6 flex justify-center text-secondary">Loading...</div>}>
+      <ManagerExpensesMain />
+    </Suspense>
+  );
 }

@@ -1,10 +1,13 @@
-'use client';
-
+"use client";
+// RESPONSIBILITY: Renders/orchestrates AdminDashboardAlerts for the admin module; UI composition stays here and business/API logic remains in dedicated hooks and APIs.
 import { useAdminDashboardLogic } from '@/app/admin/dashboard/dashboard_context/useAdminDashboardLogic';
 import { ShieldAlert, AlertTriangle, Info, AlertCircle } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { AdminDashboardUrlConfig } from '@/app/admin/dashboard/admin_dashboard_url_config';
 
 export default function AdminDashboardAlerts() {
   const { stats } = useAdminDashboardLogic();
+  const router = useRouter();
   if (!stats?.systemAlerts) return null;
 
   const getSeverityIcon = (severity: string) => {
@@ -35,7 +38,7 @@ export default function AdminDashboardAlerts() {
             <p className="text-xs text-secondary">Action required</p>
           </div>
         </div>
-        <span className="bg-danger text-white text-xs font-bold px-2 py-0.5 rounded-full">
+        <span className="bg-danger text-primary-foreground text-xs font-bold px-2 py-0.5 rounded-full">
           {stats.systemAlerts.filter(a => a.severity === 'high').length} Critical
         </span>
       </div>
@@ -45,13 +48,13 @@ export default function AdminDashboardAlerts() {
           <p className="text-sm text-secondary text-center py-4">No alerts at this time.</p>
         ) : (
           stats.systemAlerts.map(alert => (
-            <div key={alert.id} className={`p-3 rounded-xl border flex items-start gap-3 transition-colors hover:bg-opacity-80 ${getSeverityStyle(alert.severity)}`}>
+            <div key={alert.id} className={`p-3 rounded-xl border flex items-start gap-3 motion-safe:transition-colors hover:bg-opacity-80 ${getSeverityStyle(alert.severity)}`}>
               <div className="mt-0.5 shrink-0">
                 {getSeverityIcon(alert.severity)}
               </div>
               <div>
                 <p className="text-sm font-medium text-foreground">{alert.message}</p>
-                <p className="text-[10px] text-secondary mt-1 uppercase font-semibold">
+                <p className="text-xs text-secondary mt-1 uppercase font-semibold">
                   {new Date(alert.date).toLocaleDateString()}
                 </p>
               </div>
@@ -61,7 +64,7 @@ export default function AdminDashboardAlerts() {
       </div>
       
       {stats.systemAlerts.length > 0 && (
-        <button className="w-full mt-4 py-2 border border-border rounded-lg text-xs font-bold text-secondary hover:text-foreground hover:bg-white/5 transition-colors">
+        <button onClick={() => router.push('/admin/audit_logs')} className="w-full mt-4 py-2 border border-border rounded-lg text-xs font-bold text-secondary hover:text-foreground hover:bg-card/5 motion-safe:transition-colors">
           View All Alerts
         </button>
       )}

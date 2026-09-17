@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Renders a single trainer's availability summary card — total shifts, hours, and per-day status dots.
 'use client';
+// RESPONSIBILITY: Renders a single trainer's availability summary card — total shifts, hours, and per-day status dots.
 import { Clock, CalendarDays, Plus } from 'lucide-react';
 import type { TrainerScheduleSummary } from '@/app/manager/schedule/schedule_types/ManagerScheduleTypes';
 import { SHIFT_DAYS, SHIFT_STATUS_STYLES } from '@/app/manager/schedule/schedule_utils/ManagerScheduleSharedConstants';
@@ -20,7 +20,7 @@ export default function ManagerScheduleTrainerCard({ trainer }: ManagerScheduleT
           <p className="text-sm font-semibold text-foreground">{trainer.trainerName}</p>
           <p className="text-xs text-secondary">{trainer.trainerRole}</p>
         </div>
-        <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${trainer.isActive ? 'bg-success/10 text-success' : 'bg-border/40 text-secondary'}`}>
+        <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${trainer.isActive ? 'bg-success/10 text-success' : 'bg-border/40 text-secondary'}`}>
           {trainer.isActive ? 'Active' : 'Inactive'}
         </span>
       </div>
@@ -40,7 +40,7 @@ export default function ManagerScheduleTrainerCard({ trainer }: ManagerScheduleT
             <div
               key={day}
               title={shift ? `${day}: ${shift.startTime}–${shift.endTime} (${shift.status})` : `${day}: No shift`}
-              className={`w-7 h-7 rounded-md flex items-center justify-center text-[9px] font-bold cursor-default ${
+              className={`w-7 h-7 rounded-md flex items-center justify-center text-xs font-bold cursor-default ${
                 styles ? `${styles.bg} ${styles.text}` : 'bg-border/30 text-secondary'
               }`}
             >

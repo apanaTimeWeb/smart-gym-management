@@ -1,21 +1,8 @@
-// RESPONSIBILITY: Server Component that fetches initial SSR data for the dashboard layout.
+// RESPONSIBILITY: Server route entry for the Manager Dashboard; delegates data fetching to the client query layer so browser MSW can provide frontend-first data.
 import ManagerDashboardMain from '@/app/manager/dashboard/dashboard_components/ManagerDashboardMain/ManagerDashboardMain';
-import { cookies } from 'next/headers';
-import type { DashboardStats } from '@/app/manager/dashboard/dashboard_types/ManagerDashboardTypes';
-import type { ApiResponse } from '@/lib/api';
-import { DashboardUrlConfig } from '@/app/manager/dashboard/ManagerDashboardUrlConfig';
-import { ssrDashboardApi } from '@/app/manager/dashboard/dashboard_api/ManagerDashboardServerApi';
 
-async function getDashboardData() {
-  try {
-    const res = await ssrDashboardApi.getStats();
-    return res.data || null;
-  } catch (e) {
-    return null;
-  }
-}
+export const dynamic = 'force-dynamic';
 
-export default async function DashboardPage() {
- const initialData = await getDashboardData();
- return <ManagerDashboardMain initialData={initialData} />;
+export default function DashboardPage() {
+  return <ManagerDashboardMain />;
 }

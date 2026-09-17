@@ -1,24 +1,22 @@
-// RESPONSIBILITY: Modular API client for the Superadmin Migrations module.
+// RESPONSIBILITY: Owns all Superadmin migration API calls and validates every response at the API boundary.
+import { z } from 'zod';
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
-import type { MigrationLog } from '@/app/superadmin/migrations/superadmin_migrations_types/superadmin_migrations_types';
-import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
-
+import { MigrationsUrlConfig } from '@/app/superadmin/migrations/superadmin_migrations_url_config';
+import { MigrationLogSchema, type MigrationLog } from '@/app/superadmin/migrations/superadmin_migrations_types/superadmin_migrations_types';
+const MigrationTriggerResponseSchema = z.object({
+    id: z.string(),
+    version: z.string(),
+    status: z.string(),
+});
 export const migrationsApi = {
-  fetchMigrations: () => {
-    // Return a mocked API promise if endpoint doesn't exist yet
-    return Promise.resolve({
-      success: true,
-      message: 'Migrations fetched successfully',
-      data: [] // We'll inject mock data in the client for UI purposes
-    } as ApiResponse<MigrationLog[]>);
-  },
-  
-  triggerMigration: (version: string, targetTenants: string) => {
-    return Promise.resolve({
-      success: true,
-      message: `Migration to ${version} triggered for ${targetTenants}`,
-      data: null
-    } as ApiResponse<null>);
-  }
+    fetchMigrations: (params?: Record<string, string>) => {
+        const search = params ? `?${new URLSearchParams(params).toString()}` : '';
+        return apiFetch<ApiResponse<MigrationLog[]>>(`${MigrationsUrlConfig.BACKEND_API.BASE}${search}`, { dataSchema: z.array(MigrationLogSchema) });
+    },
+    triggerMigration: (targetVersion: string) => apiFetch<ApiResponse<z.infer<typeof MigrationTriggerResponseSchema>>>(MigrationsUrlConfig.BACKEND_API.TRIGGER, {
+        method: 'POST',
+        body: JSON.stringify({ targetVersion }),
+        dataSchema: MigrationTriggerResponseSchema,
+    }),
 };

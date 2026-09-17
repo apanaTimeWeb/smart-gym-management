@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the top KPI stat cards (total staff, active staff, payroll metrics) for the HR module.
 'use client';
-
+// RESPONSIBILITY: Renders the top KPI stat cards (total staff, active staff, payroll metrics) for the HR module.
 import { useHrContext } from '@/app/manager/hr/hr_context/ManagerHrContext';
 import { Users, DollarSign, UserCheck, FileText } from 'lucide-react';
 import { formatCurrency } from '@/lib/formatters';

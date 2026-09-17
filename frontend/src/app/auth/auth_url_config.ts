@@ -12,6 +12,7 @@ export const AuthUrlConfig = {
     REFRESH: '/auth/refresh',
     LOGOUT: '/auth/logout',
     SET_COOKIE: '/auth/set-cookie',
+    EXIT_GHOST_LOGIN: '/auth/exit-ghost-login',
     TOKEN: '/auth/token',
   },
   BACKEND_API: {

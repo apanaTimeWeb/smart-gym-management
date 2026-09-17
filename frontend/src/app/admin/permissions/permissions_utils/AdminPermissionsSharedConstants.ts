@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Centralized constants, feature list, and mock data for the Permissions module.
-import type { PermissionFeature, PermissionsData } from '@/app/admin/permissions/permissions_types/permissions_types';
+import type { PermissionFeature, PermissionsData } from '@/app/admin/permissions/permissions_types/AdminPermissionsTypes';
 
 export const PERMISSION_FEATURES: PermissionFeature[] = [
   // Members
@@ -32,37 +32,5 @@ export const PERMISSION_FEATURES: PermissionFeature[] = [
 
 export const PERMISSION_GROUPS = [...new Set(PERMISSION_FEATURES.map(f => f.group))];
 
-export const MOCK_PERMISSIONS_DATA: PermissionsData = {
-  roleDefaults: [
-    {
-      role: 'manager',
-      permissions: {
-        'members.view': true, 'members.create': true, 'members.edit': true, 'members.delete': false,
-        'finance.view': true, 'finance.collect': true, 'finance.expenses': true, 'finance.refunds': false,
-        'hr.view': true, 'hr.manage': true, 'hr.payroll': false,
-        'attendance.view': true, 'attendance.mark': true,
-        'reports.view': true, 'reports.export': true,
-        'settings.view': true, 'settings.edit': true,
-        'store.view': true, 'store.manage': true,
-      },
-    },
-    {
-      role: 'trainer',
-      permissions: {
-        'members.view': true, 'members.create': false, 'members.edit': false, 'members.delete': false,
-        'finance.view': false, 'finance.collect': false, 'finance.expenses': false, 'finance.refunds': false,
-        'hr.view': false, 'hr.manage': false, 'hr.payroll': false,
-        'attendance.view': true, 'attendance.mark': true,
-        'reports.view': false, 'reports.export': false,
-        'settings.view': false, 'settings.edit': false,
-        'store.view': true, 'store.manage': false,
-      },
-    },
-  ],
-  gymOverrides: [
-    {
-      gymId: 'b4', gymName: 'Thane', role: 'manager',
-      overrides: { 'finance.expenses': false, 'hr.payroll': false, 'reports.export': false },
-    },
-  ],
-};
+
+export { MOCK_PERMISSIONS_DATA } from '@/app/admin/permissions/permissions_mocks/fixtures/AdminPermissionsMockFixtures';

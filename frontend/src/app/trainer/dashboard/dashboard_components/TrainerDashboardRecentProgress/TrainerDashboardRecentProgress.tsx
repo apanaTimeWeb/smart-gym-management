@@ -1,5 +1,6 @@
 'use client';
-
+// RESPONSIBILITY: Renders the TrainerDashboardRecentProgress route/UI for the owning Trainer feature.
+import { TrainerPageUrlConfig } from '@/app/trainer/Trainer_url_config';
 import { useTrainerDashboardQuery } from '@/app/trainer/dashboard/dashboard_queries/useTrainerDashboardQuery';
 import { Activity, ArrowRight, User } from 'lucide-react';
 import Link from 'next/link';
@@ -33,7 +34,7 @@ export default function TrainerDashboardRecentProgress() {
         )}
       </div>
       <div className="mt-4 pt-4 border-t border-border">
-        <Link href="/trainer/progress-tracking" className="text-sm text-primary font-medium hover:underline flex items-center justify-center gap-1">
+        <Link href={TrainerPageUrlConfig.PROGRESS_TRACKING} className="text-sm text-primary font-medium hover:underline flex items-center justify-center gap-1">
           View All Progress <ArrowRight size={14} />
         </Link>
       </div>

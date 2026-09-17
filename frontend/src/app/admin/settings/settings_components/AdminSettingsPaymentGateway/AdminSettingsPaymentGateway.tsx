@@ -1,34 +1,12 @@
-'use client';
+"use client";
 // RESPONSIBILITY: Manages the Payment Gateway settings tab.
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { PaymentGatewaySettingsSchema } from '@/app/admin/settings/settings_types/settings.schema';
-import type { PaymentGatewaySettingsType } from '@/app/admin/settings/settings_types/settings_types';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { settingsApi } from '@/app/admin/settings/settings_api/settings_api';
-import toast from 'react-hot-toast';
+import type { PaymentGatewaySettingsType } from '@/app/admin/settings/settings_types/AdminSettingsTypes';
+import { useAdminSettingsPaymentGatewayForm } from '@/app/admin/settings/settings_context/useAdminSettingsForms';
 import { Save, RefreshCw, CreditCard, Receipt } from 'lucide-react';
-import { useUnsavedChangesGuard } from '@/app/admin/admin_utils/useUnsavedChangesGuard';
 import { AdminSettingsToggleSwitch } from '@/app/admin/settings/settings_components/AdminSettingsShared/AdminSettingsToggleSwitch';
 
 export function AdminSettingsPaymentGateway({ initialData }: { initialData: PaymentGatewaySettingsType }) {
-  const queryClient = useQueryClient();
-  const form = useForm<PaymentGatewaySettingsType>({
-    resolver: zodResolver(PaymentGatewaySettingsSchema),
-    defaultValues: initialData,
-  });
-
-  useUnsavedChangesGuard(form.formState.isDirty);
-
-  const mutation = useMutation({
-    mutationFn: (data: PaymentGatewaySettingsType) => settingsApi.updateSettings({ payment: data }),
-    onSuccess: (res) => {
-      toast.success(res.message || 'Payment settings saved', { id: 'settings-payment-save' });
-      queryClient.invalidateQueries({ queryKey: ['admin', 'settings'] });
-      form.reset(form.getValues());
-    },
-    onError: (err) => toast.error((err as Error).message, { id: 'settings-payment-save' }),
-  });
+  const { form, formValues, mutation } = useAdminSettingsPaymentGatewayForm(initialData);
 
   const onSubmit = (data: PaymentGatewaySettingsType) => mutation.mutate(data);
 
@@ -48,7 +26,7 @@ export function AdminSettingsPaymentGateway({ initialData }: { initialData: Paym
           <button
             type="submit"
             disabled={mutation.isPending}
-            className="px-4 py-2 text-sm bg-primary text-white rounded-lg font-medium flex items-center gap-2 disabled:opacity-70 hover:bg-primary-hover motion-safe:transition-colors"
+            className="px-4 py-2 text-sm bg-primary text-primary-foreground rounded-lg font-medium flex items-center gap-2 disabled:opacity-70 hover:bg-primary-hover motion-safe:transition-colors"
           >
             <Save size={14} /> {mutation.isPending ? 'Saving...' : 'Save Changes'}
           </button>
@@ -66,13 +44,13 @@ export function AdminSettingsPaymentGateway({ initialData }: { initialData: Paym
             </div>
             <div className="w-48">
               <AdminSettingsToggleSwitch
-                checked={form.watch('razorpayEnabled')}
+                checked={formValues.razorpayEnabled ?? initialData.razorpayEnabled}
                 onChange={(v) => form.setValue('razorpayEnabled', v, { shouldDirty: true })}
                 label=""
               />
             </div>
           </div>
-          {form.watch('razorpayEnabled') && (
+          {formValues.razorpayEnabled && (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs font-medium text-secondary mb-1">Key ID</label>
@@ -106,13 +84,13 @@ export function AdminSettingsPaymentGateway({ initialData }: { initialData: Paym
             </div>
             <div className="w-48">
               <AdminSettingsToggleSwitch
-                checked={form.watch('upiEnabled')}
+                checked={formValues.upiEnabled ?? initialData.upiEnabled}
                 onChange={(v) => form.setValue('upiEnabled', v, { shouldDirty: true })}
                 label=""
               />
             </div>
           </div>
-          {form.watch('upiEnabled') && (
+          {formValues.upiEnabled && (
             <div>
               <label className="block text-xs font-medium text-secondary mb-1">UPI ID</label>
               <input
@@ -129,14 +107,14 @@ export function AdminSettingsPaymentGateway({ initialData }: { initialData: Paym
           <p className="text-sm font-semibold text-foreground">Receipt Settings</p>
           <div className="flex items-center justify-between p-3 bg-input/40 rounded-xl border border-border">
             <AdminSettingsToggleSwitch
-              checked={form.watch('cashEnabled')}
+              checked={formValues.cashEnabled ?? initialData.cashEnabled}
               onChange={(v) => form.setValue('cashEnabled', v, { shouldDirty: true })}
               label="Accept Cash Payments"
             />
           </div>
           <div className="flex items-center justify-between p-3 bg-input/40 rounded-xl border border-border">
             <AdminSettingsToggleSwitch
-              checked={form.watch('autoReceiptEnabled')}
+              checked={formValues.autoReceiptEnabled ?? initialData.autoReceiptEnabled}
               onChange={(v) => form.setValue('autoReceiptEnabled', v, { shouldDirty: true })}
               label="Auto-generate receipt on payment"
             />

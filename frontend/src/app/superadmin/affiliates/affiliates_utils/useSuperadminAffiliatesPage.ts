@@ -1,177 +1,108 @@
+// DATA FLOW: Superadmin UI → useSuperadminAffiliatesPage → Superadmin module API/state → consuming component
+'use client';
 // RESPONSIBILITY: useSuperadminAffiliatesPage.ts encapsulates all state and async logic for the Affiliates page.
 // DATA FLOW: superadminApi → useSuperadminAffiliatesPage → SuperadminAffiliatesClient
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useSuperadminAffiliatesData } from '@/app/superadmin/affiliates/affiliates_utils/useSuperadminAffiliatesData';
-import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { affiliatesApi } from '@/app/superadmin/affiliates/superadmin_affiliates_api/superadmin_affiliates_api';
-import { useSuperadminAffiliatesMutation } from '@/app/superadmin/affiliates/affiliates_utils/useSuperadminAffiliatesMutation';
 import { AffiliateSchema } from '@/app/superadmin/affiliates/superadmin_affiliates_types/superadmin_affiliates_types';
-import type { Affiliate, AffiliateStatus, AffiliateFormData } from '@/app/superadmin/affiliates/superadmin_affiliates_types/superadmin_affiliates_types';
-
+import type { Affiliate, AffiliateStatusFilter, AffiliateFormData } from '@/app/superadmin/affiliates/superadmin_affiliates_types/superadmin_affiliates_types';
+import { useSuperadminUrlState } from '@/app/superadmin/superadmin_utils/useSuperadminUrlState';
+import { useSuperadminAffiliatesMutations } from '@/app/superadmin/affiliates/affiliates_utils/useSuperadminAffiliatesMutations';
 export const useSuperadminAffiliatesPage = () => {
-  const [affiliates, setAffiliates] = useState<Affiliate[]>([
-    { id: '1', name: 'Fitness Influencer', email: 'fit@example.com', referralCode: 'FIT100', totalReferred: 10, commissionEarned: 5000, joinedAt: '2023-01-10', status: 'ACTIVE' },
-    { id: '2', name: 'Local Supplement Store', email: 'store@example.com', referralCode: 'LOCALSUPP', totalReferred: 24, commissionEarned: 12000, joinedAt: '2022-11-20', status: 'ACTIVE' }
-  ]);
-  
-  // Ignore API fetch error and return success state
-  const fetchState = 'success';
-  const error = null;
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingAffiliate, setEditingAffiliate] = useState<Affiliate | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState<'ALL' | 'ACTIVE' | 'INACTIVE'>('ALL');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
-
-  const form = useForm<AffiliateFormData>({
-    resolver: zodResolver(AffiliateSchema),
-    defaultValues: { name: '', email: '', referralCode: '' },
-  });
-
-  const { mutate, isMutating } = useSuperadminAffiliatesMutation();
-
-  const handleAddAffiliate = useCallback(async (data: AffiliateFormData) => {
-    await mutate<Affiliate>(
-      () => Promise.resolve({
-        success: true,
-        message: 'Affiliate added successfully',
-        data: {
-          id: `aff-${Date.now()}`,
-          name: data.name,
-          email: data.email,
-          referralCode: data.referralCode,
-          totalReferred: 0,
-          commissionEarned: 0,
-          joinedAt: new Date().toISOString(),
-          status: 'ACTIVE'
-        } as Affiliate
-      }),
-      {
-        successMessage: 'Affiliate added successfully',
-        onSuccess: (res) => {
-          setAffiliates(prev => [res as Affiliate, ...prev]);
-          setIsModalOpen(false);
-          form.reset();
-        },
-      }
-    );
-  }, [form, mutate]);
-
-  const handleEditAffiliate = useCallback(async (data: AffiliateFormData) => {
-    if (!editingAffiliate) return;
-    await mutate<Affiliate>(
-      () => Promise.resolve({
-        success: true,
-        message: 'Affiliate updated successfully',
-        data: { ...editingAffiliate, ...data } as Affiliate
-      }),
-      {
-        successMessage: 'Affiliate updated successfully',
-        onSuccess: (res) => {
-          setAffiliates(prev => prev.map(a => a.id === editingAffiliate.id ? (res as Affiliate) : a));
-          setIsModalOpen(false);
-          setEditingAffiliate(null);
-          form.reset();
-        },
-      }
-    );
-  }, [editingAffiliate, form, mutate]);
-
-  const handleToggleAffiliateStatus = useCallback(async (id: string, currentStatus: AffiliateStatus) => {
-    const newStatus: AffiliateStatus = currentStatus === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
-    await mutate<Affiliate>(
-      () => Promise.resolve({ success: true, message: 'Status updated' }),
-      {
-        successMessage: 'Affiliate status updated successfully',
-        onSuccess: () => {
-          setAffiliates(prev => prev.map(a => a.id === id ? { ...a, status: newStatus } : a));
-        },
-      }
-    );
-  }, [mutate]);
-
-  const handleDeleteAffiliate = useCallback(async (id: string) => {
-    // Confirmation is handled by the caller via a modal — not window.confirm
-    await mutate<void>(
-      () => Promise.resolve({ success: true, message: 'Deleted' }),
-      {
-        successMessage: 'Affiliate deleted successfully',
-        onSuccess: () => {
-          setAffiliates(prev => prev.filter(a => a.id !== id));
-        },
-      }
-    );
-  }, [mutate]);
-
-  const openEditModal = useCallback((affiliate: Affiliate) => {
-    setEditingAffiliate(affiliate);
-    form.reset({
-      name: affiliate.name,
-      email: affiliate.email,
-      referralCode: affiliate.referralCode,
+    const queryClient = useQueryClient();
+    const { getParam, setParam } = useSuperadminUrlState();
+    const searchQuery = getParam('search', '');
+    const statusFilter = getParam('status', 'ALL') as AffiliateStatusFilter;
+    const startDate = getParam('startDate', '');
+    const endDate = getParam('endDate', '');
+    const currentPage = Number(getParam('page', '1'));
+    const pageLimit = Number(getParam('limit', '10'));
+    const setSearchQuery = (val: string) => { setParam('search', val); setParam('page', '1'); };
+    const setStatusFilter = (val: AffiliateStatusFilter) => { setParam('status', val); setParam('page', '1'); };
+    const setStartDate = (val: string) => { setParam('startDate', val); setParam('page', '1'); };
+    const setEndDate = (val: string) => { setParam('endDate', val); setParam('page', '1'); };
+    const setPage = (page: number) => setParam('page', String(page));
+    const queryParams = useMemo(() => {
+        const params: Record<string, string> = {
+            page: String(currentPage),
+            limit: String(pageLimit),
+        };
+        if (searchQuery)
+            params.search = searchQuery;
+        if (statusFilter !== 'ALL')
+            params.status = statusFilter;
+        if (startDate)
+            params.startDate = startDate;
+        if (endDate)
+            params.endDate = endDate;
+        return params;
+    }, [searchQuery, statusFilter, startDate, endDate, currentPage, pageLimit]);
+    const queryKey = useMemo(() => ['superadmin', 'affiliates', queryParams], [queryParams]);
+    const { data: affiliatesResponse, status: fetchState, error: queryError } = useQuery({
+        queryKey,
+        queryFn: () => affiliatesApi.fetchAffiliates(queryParams),
     });
-    setIsModalOpen(true);
-  }, [form]);
-
-  const totalAffiliates = affiliates.length;
-  const totalCommission = useMemo(
-    () => affiliates.reduce((sum, a) => sum + a.commissionEarned, 0),
-    [affiliates]
-  );
-
-  const filteredAffiliates = useMemo(() => {
-    const lowerQuery = searchQuery.toLowerCase();
-    return affiliates.filter(a => {
-      const matchesSearch = (a?.name || '').toLowerCase().includes(lowerQuery) ||
-                            (a?.referralCode || '').toLowerCase().includes(lowerQuery) ||
-                            (a?.email || '').toLowerCase().includes(lowerQuery);
-      const matchesStatus = statusFilter === 'ALL' || a.status === statusFilter;
-      let matchesDate = true;
-      if (startDate && endDate && a.joinedAt) {
-        const joined = new Date(a.joinedAt);
-        matchesDate = joined >= new Date(startDate) && joined <= new Date(endDate);
-      }
-      return matchesSearch && matchesStatus && matchesDate;
+    const affiliates = affiliatesResponse?.data ?? [];
+    const total = affiliatesResponse?.meta?.total ?? affiliates.length;
+    const totalPages = Math.ceil(total / pageLimit) || 1;
+    const error = queryError instanceof Error ? queryError.message : null;
+    const updateCachedAffiliates = useCallback((updater: (previous: Affiliate[]) => Affiliate[]) => {
+        queryClient.setQueryData(queryKey, (previous: typeof affiliatesResponse | undefined) => {
+            if (!previous?.data)
+                return previous;
+            return { ...previous, data: updater(previous.data) };
+        });
+    }, [queryClient, queryKey]);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [editingAffiliate, setEditingAffiliate] = useState<Affiliate | null>(null);
+    const form = useForm<AffiliateFormData>({
+        resolver: zodResolver(AffiliateSchema),
+        defaultValues: { name: '', email: '', referralCode: '' },
     });
-  }, [affiliates, searchQuery, statusFilter, startDate, endDate]);
-
-  const handlePayCommission = async (affiliate: Affiliate) => {
-    try {
-      await affiliatesApi.payCommission(affiliate.id);
-    } catch {
-      // handled by error boundary
-    }
-  };
-
-  return {
-    fetchState,
-    error,
-    affiliates: filteredAffiliates,
-    searchQuery,
-    setSearchQuery,
-    statusFilter,
-    setStatusFilter,
-    isModalOpen,
-    setIsModalOpen,
-    form,
-    handleAddAffiliate,
-    handleEditAffiliate,
-    handleToggleAffiliateStatus,
-    handleDeleteAffiliate,
-    handlePayCommission,
-    openEditModal,
-    editingAffiliate,
-    setEditingAffiliate,
-    isMutating,
-    totalAffiliates,
-    totalCommission,
-    startDate,
-    setStartDate,
-    endDate,
-    setEndDate,
-  };
+    const { isMutating, handleAddAffiliate, handleEditAffiliate, handleToggleAffiliateStatus, handleDeleteAffiliate, handlePayCommission, } = useSuperadminAffiliatesMutations(updateCachedAffiliates, setIsModalOpen, setEditingAffiliate, form, editingAffiliate);
+    const openEditModal = useCallback((affiliate: Affiliate) => {
+        setEditingAffiliate(affiliate);
+        form.reset({
+            name: affiliate.name,
+            email: affiliate.email,
+            referralCode: affiliate.referralCode,
+        });
+        setIsModalOpen(true);
+    }, [form]);
+    const totalAffiliates = affiliates.length;
+    const totalCommission = useMemo(() => affiliates.reduce((sum, a) => sum + a.commissionEarned, 0), [affiliates]);
+    const filteredAffiliates = affiliates;
+    return {
+        fetchState,
+        error,
+        affiliates: filteredAffiliates,
+        searchQuery,
+        setSearchQuery,
+        statusFilter,
+        setStatusFilter,
+        isModalOpen,
+        setIsModalOpen,
+        form,
+        handleAddAffiliate,
+        handleEditAffiliate,
+        handleToggleAffiliateStatus,
+        handleDeleteAffiliate,
+        handlePayCommission,
+        openEditModal,
+        editingAffiliate,
+        setEditingAffiliate,
+        isMutating,
+        totalAffiliates,
+        totalCommission,
+        startDate,
+        setStartDate,
+        endDate,
+        setEndDate,
+        currentPage,
+        totalPages,
+        setPage,
+    };
 };

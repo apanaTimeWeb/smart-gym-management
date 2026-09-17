@@ -1,29 +1,30 @@
-// RESPONSIBILITY: Custom hook managing the asynchronous fetching of dashboard statistics.
-// DATA FLOW: page.tsx (SSR) → AdminDashboardMain → useAdminDashboardLogic
-'use client';
+"use client";
+// RESPONSIBILITY: Owns the Admin Dashboard server-state query and keeps date/branch identity in the query key and request.
+// DATA FLOW: URL range/date state + Admin branch selector -> Dashboard API -> TanStack Query -> dashboard views.
 
 import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'next/navigation';
-import { dashboardApi } from '@/app/admin/dashboard/dashboard_api/dashboard_api';
-import type { FetchState, DashboardStats } from '@/app/admin/dashboard/dashboard_types/dashboard_types';
+import { dashboardApi } from '@/app/admin/dashboard/dashboard_api/AdminDashboardApi';
+import type { DashboardStats } from '@/app/admin/dashboard/dashboard_types/AdminDashboardTypes';
+import { useAdminGlobalStore } from '@/app/admin/admin_store/useAdminGlobalStore';
 
 export function useAdminDashboardLogic(initialData?: DashboardStats | null) {
   const searchParams = useSearchParams();
+  const { selectedBranchId } = useAdminGlobalStore();
   const range = searchParams.get('range') || 'this_month';
+  const startDate = searchParams.get('startDate') || undefined;
+  const endDate = searchParams.get('endDate') || undefined;
 
-  const { data, isLoading, isError, error: queryError } = useQuery({
-    queryKey: ['adminDashboardStats', range],
-    queryFn: () => dashboardApi.fetchDashboardStats(range).then(r => r.data),
+  const query = useQuery({
+    queryKey: ['admin', 'dashboard', 'stats', { range, startDate, endDate, branchId: selectedBranchId }],
+    queryFn: () => dashboardApi.fetchDashboardStats({ range, startDate, endDate, branchId: selectedBranchId === 'all' ? undefined : selectedBranchId }).then((response) => response.data),
     initialData: initialData ?? undefined,
-    staleTime: Infinity,
+    staleTime: 60 * 1000,
   });
 
-  const status: FetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
-
   return {
-    stats: data ?? null,
-    status,
-    error: isError ? (queryError as Error).message : '',
+    stats: query.data ?? null,
+    status: query.status,
+    error: query.error instanceof Error ? query.error.message : '',
   };
 }
-

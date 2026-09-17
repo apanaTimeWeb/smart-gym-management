@@ -1,8 +1,7 @@
-// RESPONSIBILITY: Renders the list of members with pending payments, including skeleton loader, pagination, and overdue details. Receives data via ManagerSalesContext.
 'use client';
-
+// RESPONSIBILITY: Renders the list of members with pending payments, including skeleton loader, pagination, and overdue details. Receives data via ManagerSalesContext.
 import { useSalesContext } from '@/app/manager/sales/sales_context/ManagerSalesContext';
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrency , formatDate} from '@/lib/formatters';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import ManagerSalesEmptyState from '@/app/manager/sales/sales_components/ManagerSalesEmptyState/ManagerSalesEmptyState';
 import type { PendingPaymentMember } from '@/app/manager/sales/sales_types/ManagerSalesTypes';
@@ -10,15 +9,15 @@ import { MANAGER_ITEMS_PER_PAGE, GYM_DETAILS } from '@/app/manager/manager_utils
 import { WhatsAppFormatter } from '@/lib/whatsapp_formatter';
 
 export default function PendingPayments() {
-  const { currentPage, setCurrentPage, pendingPayments, pendingTotal, fetchState, showToast } = useSalesContext();
+  const { currentPage, setCurrentPage, pendingPayments, pendingTotal, isLoading, isError, showToast } = useSalesContext();
 
   const totalPages = Math.ceil(pendingTotal / MANAGER_ITEMS_PER_PAGE) || 1;
 
-  if (fetchState === 'loading') {
+  if (isLoading) {
     return (
       <div className="space-y-3">
         {[...Array(5)].map((_, i) => (
-          <div key={i} className="motion-safe:animate-pulse flex items-center justify-between p-4 border border-border rounded-xl bg-card">
+          <div key={`skeleton-${i}`} className="motion-safe:animate-pulse flex items-center justify-between p-4 border border-border rounded-xl bg-card">
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 bg-input rounded-full"></div>
               <div>
@@ -39,7 +38,7 @@ export default function PendingPayments() {
     );
   }
 
-  if (fetchState === 'error') {
+  if (isError) {
     return (
       <div className="text-center py-16 bg-card rounded-2xl border border-danger/30">
         <p className="text-danger font-medium">Failed to load pending payments.</p>
@@ -55,7 +54,7 @@ export default function PendingPayments() {
       </p>
       <div className="space-y-3">
         {pendingPayments.map((p: PendingPaymentMember) => (
-          <div key={p.id} className="flex items-center justify-between p-4 border border-border rounded-xl hover:border-warning transition-all duration-200 ease-in-out motion-safe:hover:-translate-y-1 hover:shadow-lg bg-card">
+          <div key={p.id} className="flex items-center justify-between p-4 border border-border rounded-xl hover:border-warning motion-safe:transition-all duration-200 ease-in-out motion-safe:hover:-translate-y-1 hover:shadow-lg bg-card">
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 bg-danger-bg rounded-full flex items-center justify-center text-danger font-semibold text-sm">
                 {p.name.charAt(0)}
@@ -75,7 +74,7 @@ export default function PendingPayments() {
                   const waText = WhatsAppFormatter.formatReceipt({
                     title: GYM_DETAILS.name,
                     subtitle: 'Payment Reminder',
-                    date: new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }),
+                    date: formatDate(new Date().toISOString()),
                     customerInfo: {
                       'Member': p.name,
                       'Plan': p.plan || 'Standard',
@@ -94,7 +93,7 @@ export default function PendingPayments() {
                   window.open(`https://wa.me/91${p.phone?.replace(/\D/g, '') || ''}?text=${encodeURIComponent(waText)}`, '_blank');
                   showToast(`Reminder sent via WhatsApp to ${p.name}`, 'success');
                 }}
-                className="px-3 py-1.5 text-xs text-white bg-primary rounded-lg font-medium transition-all duration-200 ease-in-out hover:bg-primary-hover active:scale-95"
+                className="px-3 py-1.5 text-xs text-primary-foreground bg-primary rounded-lg font-medium motion-safe:transition-all duration-200 ease-in-out hover:bg-primary-hover active:scale-95"
               >
                 Send Reminder
               </button>

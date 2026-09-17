@@ -1,10 +1,9 @@
+'use client';
 // RESPONSIBILITY: Root client component for Trainer Sessions. Renders session list, filter toolbar, schedule modal, and edit/attendance modals.
 // DATA FLOW: page.tsx (Server) → TrainerSessionsMain (Client) → useTrainerSessionsLogic → TrainerSessionsApi
-'use client';
-
 import { useState } from 'react';
-import { Calendar as CalendarIcon, Clock, Users, User, CheckCircle, XCircle, Plus, X, Loader2, Pencil } from 'lucide-react';
-import type { TrainerSession } from '@/app/trainer/sessions/sessions_types/TrainerSessionsTypes';
+import { Calendar as CalendarIcon, Clock, Users, User, CheckCircle, XCircle, Plus, Loader2, Pencil } from 'lucide-react';
+import type { TrainerSession, CreateSessionDto } from '@/app/trainer/sessions/sessions_types/TrainerSessionsTypes';
 import {
   SESSION_FILTER_OPTIONS,
   SESSION_STATUS_STYLES,
@@ -15,6 +14,7 @@ import { useTrainerSessionsQuery } from '@/app/trainer/sessions/sessions_queries
 import { useTrainerSessionMutations } from '@/app/trainer/sessions/sessions_queries/useTrainerSessionMutations';
 import { useMembersBasicQuery } from '@/app/trainer/sessions/sessions_queries/useTrainerSessionsQuery';
 import { useConfirm } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerConfirmProvider';
+import { useTrainerFeedback } from '@/app/trainer/trainer_components/TrainerFeedback/useTrainerFeedback';
 import TrainerSessionAttendanceModal from '@/app/trainer/sessions/sessions_components/TrainerSessionAttendanceModal/TrainerSessionAttendanceModal';
 import TrainerSessionsEditModal from '@/app/trainer/sessions/sessions_components/TrainerSessionsEditModal/TrainerSessionsEditModal';
 import TrainerSessionsKPIs from '@/app/trainer/sessions/sessions_components/TrainerSessionsKPIs/TrainerSessionsKPIs';
@@ -27,14 +27,11 @@ export default function TrainerSessionsMain() {
   const memberOptions = memberOptionsRaw.map(m => ({ value: m.id, label: m.name }));
   const { createSession, cancelSession, markAttendance } = useTrainerSessionMutations();
   const { confirm } = useConfirm();
+  const { showSuccess, showError } = useTrainerFeedback();
 
   const [showScheduleModal, setShowScheduleModal] = useState(false);
   const [attendanceSession, setAttendanceSession] = useState<TrainerSession | null>(null);
   const [editingSession, setEditingSession] = useState<TrainerSession | null>(null);
-  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
-
-  const clearToast = () => setToast(null);
-  const showToast = (message: string, type: 'success' | 'error') => setToast({ message, type });
 
   const filteredSessions: TrainerSession[] = sessions.filter(
     (s) => filter === 'All' || s.type === filter
@@ -42,11 +39,11 @@ export default function TrainerSessionsMain() {
 
   const handleAttendanceSubmit = async (sessionId: string, attendedMemberIds: string[]) => {
     try {
-      await markAttendance.mutateAsync({ id: sessionId, memberIds: attendedMemberIds });
+      const response = await markAttendance.mutateAsync({ id: sessionId, memberIds: attendedMemberIds });
       setAttendanceSession(null);
-      showToast('Attendance marked successfully', 'success');
-    } catch {
-      showToast('Failed to mark attendance', 'error');
+      showSuccess(response.message, 'trainer-sessions-attendance-success');
+    } catch (err) {
+      showError(err, 'trainer-sessions-attendance-error');
     }
   };
 
@@ -59,41 +56,25 @@ export default function TrainerSessionsMain() {
     });
     if (!ok) return;
     try {
-      await cancelSession.mutateAsync(sessionId);
-      showToast('Session cancelled', 'success');
+      const response = await cancelSession.mutateAsync(sessionId);
+      showSuccess(response.message, 'trainer-sessions-cancel-success');
     } catch (err) {
-      showToast((err as Error).message ?? 'Failed to cancel session', 'error');
+      showError(err, 'trainer-sessions-cancel-error');
     }
   };
 
-  const handleScheduleSubmit = async (dto: any) => {
+  const handleScheduleSubmit = async (dto: CreateSessionDto) => {
     try {
-      await createSession.mutateAsync(dto);
+      const response = await createSession.mutateAsync(dto);
       setShowScheduleModal(false);
-      showToast('Session scheduled successfully', 'success');
+      showSuccess(response.message, 'trainer-sessions-schedule-success');
     } catch (err) {
-      showToast((err as Error).message ?? 'Failed to schedule session', 'error');
+      showError(err, 'trainer-sessions-schedule-error');
     }
   };
 
   return (
     <div className="min-h-full pb-10">
-      {/* Toast notification */}
-      {toast && (
-        <div
-          className={`fixed top-4 right-4 z-50 px-4 py-3 rounded-xl shadow-lg text-sm font-semibold motion-safe:animate-in fade-in slide-in-from-top-2 ${
-            toast.type === 'success' ? 'bg-success text-white' : 'bg-danger text-white'
-          }`}
-        >
-          <div className="flex items-center gap-2">
-            <span>{toast.message}</span>
-            <button onClick={clearToast} className="ml-2 opacity-70 hover:opacity-100" aria-label="Dismiss">
-              <X size={14} />
-            </button>
-          </div>
-        </div>
-      )}
-
       <div className="p-6 space-y-6">
         <TrainerSessionsKPIs sessions={sessions} />
         {/* Toolbar */}
@@ -137,7 +118,7 @@ export default function TrainerSessionsMain() {
           </div>
         ) : isError ? (
           <div className="flex items-center justify-center py-20">
-            <p className="text-danger">Failed to load sessions. Please try again.</p>
+            <p className="text-danger">Unable to load sessions right now. Please retry.</p>
           </div>
         ) : (
           <div className="grid gap-4">
@@ -153,7 +134,7 @@ export default function TrainerSessionsMain() {
                   <div>
                     <div className="flex items-center gap-2 mb-1">
                       <h3 className="font-bold text-foreground text-lg">{session.title}</h3>
-                      <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${SESSION_TYPE_STYLES[session.type]}`}>
+                      <span className={`text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${SESSION_TYPE_STYLES[session.type]}`}>
                         {session.type}
                       </span>
                     </div>
@@ -235,9 +216,9 @@ export default function TrainerSessionsMain() {
         <TrainerSessionsEditModal
           session={editingSession}
           onClose={() => setEditingSession(null)}
-          onSuccess={() => {
+          onSuccess={(_updatedSession, message) => {
             setEditingSession(null);
-            showToast('Session updated successfully', 'success');
+            showSuccess(message, 'trainer-sessions-update-success');
           }}
         />
       )}

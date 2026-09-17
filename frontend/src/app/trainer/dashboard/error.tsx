@@ -1,8 +1,5 @@
-// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
-// DATA FLOW: Standard component data flow.
-// RESPONSIBILITY: Renders the error boundary fallback for the dashboard module.
 'use client';
-
+// RESPONSIBILITY: Renders the error boundary fallback for the dashboard module.
 import { useEffect } from "react";
 
 export default function DashboardError({
@@ -20,7 +17,7 @@ export default function DashboardError({
  <div className="min-h-full flex items-center justify-center">
  <div className="text-center">
  <p className="font-medium text-danger">Something went wrong!</p>
- <p className="text-sm mt-1 text-danger">{error.message || 'An unexpected error occurred in the dashboard.'}</p>
+ <p className="text-sm mt-1 text-danger">Unable to load this dashboard section. Please retry.</p>
  <button
  onClick={() => reset()}
  className="mt-4 px-4 py-2 rounded-md font-medium text-white bg-primary"

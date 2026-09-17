@@ -245,3 +245,8 @@ html { scroll-behavior: smooth; }
 @theme inline {
   --animate-qr-scan: qr-scan 2.5s ease-in-out infinite;
 }
+
+@layer components {
+  .modal-scroll-area { @apply max-h-[70vh] overflow-y-auto; }
+  .empty-state-container { @apply min-h-[400px] flex flex-col items-center justify-center gap-4 text-center p-8; }
+}

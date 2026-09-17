@@ -3,11 +3,11 @@
 
 import { TrendingUp } from 'lucide-react';
 
-interface Props {
+interface TrainerProgressEmptyStateProps {
   onAdd: () => void;
 }
 
-export default function TrainerProgressEmptyState({ onAdd }: Props) {
+export default function TrainerProgressEmptyState({ onAdd }: TrainerProgressEmptyStateProps) {
   return (
     <div className="flex flex-col items-center justify-center py-16 text-center px-4">
       <div className="w-14 h-14 rounded-full bg-muted flex items-center justify-center mb-4">

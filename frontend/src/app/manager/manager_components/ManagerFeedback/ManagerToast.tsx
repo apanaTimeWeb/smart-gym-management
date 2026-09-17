@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the fixed bottom-right toast notification. Auto-dismisses after 4 seconds. Shared across all MANAGER modules.
 'use client';
-
+// RESPONSIBILITY: Renders the fixed bottom-right toast notification. Auto-dismisses after 4 seconds. Shared across all MANAGER modules.
 import { useEffect } from 'react';
 
 export type ToastType = 'whatsapp' | 'email' | 'error' | 'success';
@@ -28,7 +27,7 @@ export default function ManagerToast({ message, type, onClose }: ManagerToastPro
 
  return (
  <div
- className="fixed top-6 right-6 sm:top-8 sm:right-8 z-[100] flex items-center gap-3 w-[90vw] sm:w-80 max-w-sm p-4 rounded-xl shadow-2xl bg-card text-foreground border border-border"
+ className="fixed top-6 right-6 sm:top-8 sm:right-8 z-50 flex items-center gap-3 w-full sm:w-80 max-w-sm p-4 rounded-xl shadow-2xl bg-card text-foreground border border-border"
  style={{ 
  borderLeft: `4px solid ${border}`,
  animation: 'toastIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards'
@@ -39,7 +38,7 @@ export default function ManagerToast({ message, type, onClose }: ManagerToastPro
  </div>
  <button
  onClick={onClose}
- className="text-secondary hover:text-foreground flex-shrink-0 transition-colors"
+ className="text-secondary hover:text-foreground flex-shrink-0 motion-safe:transition-colors"
  >
  ✕
  </button>

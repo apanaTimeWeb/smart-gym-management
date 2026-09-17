@@ -1,14 +1,13 @@
-// RESPONSIBILITY: Renders the grid of workout plan cards with exercises count and action buttons.
 'use client';
-
+// RESPONSIBILITY: Renders the grid of workout plan cards with exercises count and action buttons.
 import { Dumbbell, Edit2, Trash2, Loader2 } from 'lucide-react';
 import { useWorkoutContext } from '@/app/manager/workout/workout_context/ManagerWorkoutContext';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
-import { useWorkoutPlansQuery } from '@/app/manager/workout/workout_api/useManagerWorkoutQueries';
-import { useDeleteWorkoutMutation } from '@/app/manager/workout/workout_api/useManagerWorkoutMutations';
+import { useWorkoutPlansQuery } from '@/app/manager/workout/workout_api/ManagerUseManagerWorkoutQueries';
+import { useDeleteWorkoutMutation } from '@/app/manager/workout/workout_api/ManagerUseManagerWorkoutMutations';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
-import toast from 'react-hot-toast';
+import { showManagerErrorToast, showManagerSuccessToast } from '@/app/manager/manager_utils/ManagerToastService';
 
 export default function ManagerWorkoutPlansGrid() {
   const { search, levelFilter, currentPage, setCurrentPage, openEditWk } = useWorkoutContext();
@@ -41,7 +40,7 @@ export default function ManagerWorkoutPlansGrid() {
         {workouts.map(w => (
           <div 
             key={w.id} 
-            className="border border-border rounded-xl p-4 hover:border-info dark:hover:border-info hover:shadow-sm transition-all bg-card"
+            className="border border-border rounded-xl p-4 hover:border-info dark:hover:border-info hover:shadow-sm motion-safe:transition-all bg-card"
           >
             <div className="flex items-start justify-between mb-3">
               <div className="w-10 h-10 bg-info-bg dark:bg-info-bg rounded-xl flex items-center justify-center">
@@ -59,7 +58,7 @@ export default function ManagerWorkoutPlansGrid() {
                 </span>
                 <button 
                   onClick={() => openEditWk(w)} 
-                  className="p-1.5 text-info hover:text-info hover:bg-info-bg dark:hover:bg-info-bg rounded-lg transition-colors"
+                  className="p-1.5 text-info hover:text-info hover:bg-info-bg dark:hover:bg-info-bg rounded-lg motion-safe:transition-colors"
                 >
                   <Edit2 size={13} />
                 </button>
@@ -73,14 +72,14 @@ export default function ManagerWorkoutPlansGrid() {
                     });
                     if (ok) {
                       try {
-                        await deleteMutation.mutateAsync(w.id);
-                        toast.success('Workout plan deleted');
+                        const response = await deleteMutation.mutateAsync(w.id);
+                        showManagerSuccessToast(response.message, 'manager-workout-plan-success');
                       } catch (e: unknown) {
-                        toast.error(e instanceof Error ? e.message : 'Failed to delete plan');
+                        showManagerErrorToast(e, 'manager-workout-plan-error');
                       }
                     }
                   }}
-                  className="p-1.5 text-danger hover:text-danger hover:bg-danger-bg dark:hover:bg-danger-bg rounded-lg transition-colors"
+                  className="p-1.5 text-danger hover:text-danger hover:bg-danger-bg dark:hover:bg-danger-bg rounded-lg motion-safe:transition-colors"
                 >
                   <Trash2 size={13} />
                 </button>

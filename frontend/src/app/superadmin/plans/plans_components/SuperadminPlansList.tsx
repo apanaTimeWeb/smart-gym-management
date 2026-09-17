@@ -1,77 +1,27 @@
 // RESPONSIBILITY: Renders the grid of subscription plan cards using TanStack Query.
-// DATA FLOW: superadminApi -> useQuery -> SuperadminPlansList
-
 'use client';
-
+// DATA FLOW: superadminApi -> useQuery -> SuperadminPlansList
 import { Check, Edit2, Trash2, Loader2, Archive } from 'lucide-react';
-import toast from 'react-hot-toast';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
-import { useSuperadminPlansStore } from '@/app/superadmin/plans/plans_store/useSuperadminPlansStore';
-import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
-
+import { formatCurrency } from '@/lib/formatters';
+import type { SubscriptionPlan } from '@/app/superadmin/plans/superadmin_plans_types/superadmin_plans_types';
+import { useSuperadminPlansList } from '@/app/superadmin/plans/plans_components/useSuperadminPlansList';
 export default function SuperadminPlansList() {
-  const openEditModal = useSuperadminPlansStore(state => state.openEditModal);
-  const queryClient = useQueryClient();
-  const { confirm } = useSuperadminConfirm();
-
-  const { data: fetchRes, isLoading, isError } = useQuery({
-    queryKey: ['superadmin', 'plans'],
-    queryFn: () => superadminApi.plans.fetchPlans(),
-  });
-
-  const fetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
-
-  const deleteMutation = useMutation({
-    mutationFn: (id: string) => superadminApi.plans.deletePlan(id),
-    onSuccess: (res) => {
-      toast.success(res.message || 'Plan deleted');
-      queryClient.invalidateQueries({ queryKey: ['superadmin', 'plans'] });
-    },
-    onError: (err: unknown) => {
-      toast.error((err as Error).message || 'Failed to delete plan');
+    const { plans, isLoading, isError, deleteMutation, archiveMutation, openEditModal, confirmPlanDestructiveAction } = useSuperadminPlansList();
+    if (isLoading) {
+        return (<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {[...Array(3)].map((_, i) => (<div key={`skeleton-${i}`} className="h-64 bg-card border border-border rounded-2xl motion-safe:animate-pulse"/>))}
+      </div>);
     }
-  });
-
-  const archiveMutation = useMutation({
-    mutationFn: (id: string) => superadminApi.plans.archivePlan(id),
-    onSuccess: () => {
-      toast.success('Plan archived. Existing gyms remain unaffected.');
-      queryClient.invalidateQueries({ queryKey: ['superadmin', 'plans'] });
-    },
-    onError: () => { toast.error('Failed to archive plan.'); },
-  });
-
-  const plans = fetchRes?.data || [];
-
-  if (fetchState === 'loading') {
-    return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {[...Array(3)].map((_, i) => (
-          <div key={`skeleton-${i}`} className="h-64 bg-card border border-border rounded-2xl motion-safe:animate-pulse" />
-        ))}
-      </div>
-    );
-  }
-
-  if (fetchState === 'error') {
-    return <div className="p-8 text-center text-danger">Error loading plans.</div>;
-  }
-
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {plans.map((plan) => {
-        const isDeleting = deleteMutation.isPending && deleteMutation.variables === plan.id;
-        return (
-          <div
-            key={plan.id}
-            className="bg-card border border-border rounded-2xl p-6 flex flex-col relative overflow-hidden group hover:border-primary motion-safe:transition-colors motion-safe:duration-200"
-          >
-            {plan.isArchived && (
-              <div className="absolute top-0 left-0 bg-secondary/20 text-secondary px-3 py-1 text-xs font-bold rounded-br-lg">
+    if (isError) {
+        return <div className="p-8 text-center text-danger">Error loading plans.</div>;
+    }
+    return (<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {plans.map((plan: SubscriptionPlan) => {
+            const isDeleting = deleteMutation.isPending && deleteMutation.variables === plan.id;
+            return (<div key={plan.id} className="bg-card border border-border rounded-2xl p-6 flex flex-col relative overflow-hidden group hover:border-primary motion-safe:transition-colors motion-safe:duration-base">
+            {plan.isArchived && (<div className="absolute top-0 left-0 bg-secondary/20 text-secondary px-3 py-1 text-xs font-bold rounded-br-lg">
                 ARCHIVED
-              </div>
-            )}
+              </div>)}
             <div className="absolute top-0 right-0 bg-primary/10 text-primary px-3 py-1 text-xs font-bold rounded-bl-lg">
               {plan.activeTenants ?? 0} Gyms Active
             </div>
@@ -79,7 +29,7 @@ export default function SuperadminPlansList() {
             <div className="mb-4">
               <h2 className="text-xl font-bold text-foreground">{plan.name}</h2>
               <div className="flex items-end gap-1 mt-2">
-                <span className="text-3xl font-extrabold text-foreground">₹{Number(plan.priceMonthly).toFixed(2)}</span>
+                <span className="text-3xl font-extrabold text-foreground">{formatCurrency(Number(plan.priceMonthly))}</span>
                 <span className="text-secondary font-medium mb-1">/ mo</span>
               </div>
             </div>
@@ -98,61 +48,26 @@ export default function SuperadminPlansList() {
                 Binary Limit (GB): <span className="text-foreground">{plan.binaryLimitGb ?? 'Unlimited'}</span>
               </p>
               <div className="pt-2">
-                {plan.features?.map((feat) => (
-                  <div key={feat} className="flex items-center gap-2 mb-2 text-sm text-secondary">
-                    <Check className="w-4 h-4 text-success shrink-0" />
+                {plan.features?.map((feat: string, idx: number) => (<div key={feat} className="flex items-center gap-2 mb-2 text-sm text-secondary">
+                    <Check className="w-4 h-4 text-success shrink-0"/>
                     {feat}
-                  </div>
-                ))}
+                  </div>))}
               </div>
             </div>
 
             <div className="flex gap-2">
-              <button
-                onClick={() => openEditModal(plan)}
-                disabled={isDeleting || deleteMutation.isPending}
-                aria-label={`Edit ${plan.name}`}
-                className="flex-1 py-2.5 flex items-center justify-center bg-input hover:bg-primary hover:text-white text-foreground rounded-xl motion-safe:transition-colors border border-border disabled:opacity-50"
-              >
-                <Edit2 size={18} />
+              <button onClick={() => openEditModal(plan)} disabled={isDeleting || deleteMutation.isPending} aria-label={`Edit ${plan.name}`} className="flex-1 py-2.5 flex items-center justify-center bg-input hover:bg-primary hover:text-white text-foreground rounded-xl motion-safe:transition-colors border border-border disabled:opacity-50">
+                <Edit2 size={18}/>
               </button>
-              <button
-                onClick={async () => {
-                  const hasTenants = (plan.activeTenants ?? 0) > 0;
-                  if (hasTenants) {
-                    // Block delete — offer archive instead
-                    const ok = await confirm({
-                      title: 'Cannot Delete Active Plan',
-                      message: `"${plan.name}" has ${plan.activeTenants} active tenants. Archive it instead to hide it from new signups while keeping existing tenants.`,
-                      type: 'warning',
-                      confirmText: 'Archive Plan',
-                    });
-                    if (ok) archiveMutation.mutate(plan.id);
-                  } else {
-                    const ok = await confirm({
-                      title: 'Delete Plan',
-                      message: `Delete "${plan.name}"? This cannot be undone.`,
-                      type: 'danger',
-                      confirmText: 'Delete',
-                    });
-                    if (ok) deleteMutation.mutate(plan.id);
-                  }
-                }}
-                disabled={isDeleting || deleteMutation.isPending || archiveMutation.isPending}
-                aria-label={`Delete or archive ${plan.name}`}
-                title={(plan.activeTenants ?? 0) > 0 ? 'Archive plan (has active gyms)' : 'Delete plan'}
-                className="flex-1 py-2.5 flex items-center justify-center bg-input hover:bg-danger hover:text-white text-secondary rounded-xl motion-safe:transition-colors border border-border disabled:opacity-50"
-              >
+              <button onClick={() => confirmPlanDestructiveAction(plan)} disabled={isDeleting || deleteMutation.isPending || archiveMutation.isPending} aria-label={`Delete or archive ${plan.name}`} title={(plan.activeTenants ?? 0) > 0 ? 'Archive plan (has active gyms)' : 'Delete plan'} className="flex-1 py-2.5 flex items-center justify-center bg-input hover:bg-danger hover:text-white text-secondary rounded-xl motion-safe:transition-colors border border-border disabled:opacity-50">
                 {isDeleting || archiveMutation.isPending
-                  ? <Loader2 size={18} className="motion-safe:animate-spin" />
-                  : (plan.activeTenants ?? 0) > 0
-                    ? <Archive size={18} />
-                    : <Trash2 size={18} />}
+                    ? <Loader2 className="w-5 h-5 motion-safe:animate-spin"/>
+                    : (plan.activeTenants ?? 0) > 0
+                        ? <Archive size={18}/>
+                        : <Trash2 size={18}/>}
               </button>
             </div>
-          </div>
-        );
-      })}
-    </div>
-  );
+          </div>);
+        })}
+    </div>);
 }

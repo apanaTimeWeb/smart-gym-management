@@ -1,4 +1,4 @@
-# Mobile Development Instructions — Framework-Agnostic (Enterprise / Industry Scale)
+﻿# Mobile Development Instructions — Framework-Agnostic (Enterprise / Industry Scale)
 
 > Applies regardless of chosen stack (React Native bare-metal, Flutter, or native
 > Swift/Kotlin). This document defines architectural discipline, not a specific
@@ -86,14 +86,60 @@ features/
 
 ### Hyper-Descriptive, Module-Prefixed Naming (AI Context Guarantee)
 
-Every file name **MUST begin with the feature name as a prefix**. When you tag a file
+Every file name MUST make the feature identity immediately explicit. When you tag a file
 in an AI prompt (e.g. `@MembersMemberCard.tsx`), the AI instantly knows which module
 it belongs to — zero ambiguity, zero cross-module hallucination risk.
 
+**Canonical filename grammar for the `members` feature:**
+
+```
+Components / Widgets (PascalCase, feature-prefixed):
+  MembersMemberCard.tsx         ← feature prefix + entity + type
+  MembersMemberListItem.tsx
+  MembersEmptyState.tsx
+  MembersListSkeleton.tsx
+
+Hooks (camelCase with required `use` prefix + feature name):
+  useMembers.ts                 ← `use` + feature name (NOT memberUse or membersHook)
+  useMembersFilters.ts
+  useMembersSearch.ts
+
+API / Types / Schema / Store (dot-notation, feature-prefixed, lowercase):
+  members.api.ts
+  members.types.ts
+  members.schema.ts
+  members.store.ts
+
+Integration tests:
+  members.integration.test.ts
+
+Mandatory documentation files:
+  members_features.md
+  members_forbidden.md
+```
+
+**Framework/architectural prefix exceptions (explicitly permitted):**
+Framework-mandated prefixes (`use` for hooks), language-standard naming conventions,
+and mandatory documentation filename formats are permitted exceptions to leading with
+the bare feature name — provided the feature identity remains explicit and unambiguous
+in the rest of the filename. The following are allowed:
+
+| Pattern | Example | Why permitted |
+|---|---|---|
+| `use` prefix on hooks | `useMembers.ts` | React/RN framework convention; feature name follows immediately |
+| dot-notation API/type files | `members.api.ts` | Feature name IS the prefix, separated by dot |
+| `*.integration.test.ts` suffix | `members.integration.test.ts` | Test type suffix is structural, feature still prefixed |
+| `*_features.md`, `*_forbidden.md` | `members_features.md` | Mandatory doc format — feature name leads |
+
+**What is forbidden regardless:**
 ```
 ❌ BAD:  Card.tsx, hook.ts, api.ts, store.ts, types.ts
-✅ GOOD: MembersMemberCard.tsx, useMembersFilters.ts, members.api.ts
+❌ BAD:  useData.ts, loadItems.ts, getData.ts   ← no feature identity
+✅ GOOD: MembersMemberCard.tsx, useMembers.ts, members.api.ts
 ```
+
+**AI warning:** Do NOT rename `useMembers.ts` to `membersUseHook.ts` or similar to
+"fix" the prefix. `useMembers.ts` is the correct, compliant filename.
 
 - **No abbreviations:** Never `Btn`, `Nav`, `Util`. Use `Button`, `Navigation`, `Utility`.
 - **Suffix by type:** `...Card`, `...List`, `...Form`, `...Modal`, `...Sheet`, `...EmptyState`.
@@ -151,14 +197,27 @@ features/
 
 ## Rule 4 — State Management (Server State vs Client State — Explicit Matrix)
 
-Exactly two categories of state exist. Do not invent a third ad-hoc pattern.
+**Two state ownership categories exist: Server State and Client State.**
+Client state may be further subdivided into shared or local depending on scope.
+Server state may optionally be persisted to local storage for offline use — persistence
+is a *storage characteristic* of server state, not a third independent state category.
+Do not invent a fourth ad-hoc pattern.
+
+```text
+State Ownership
+├── Server State
+│   └── optionally persisted to local storage (offline cache)
+└── Client State
+    ├── Shared (2+ components in one feature)
+    └── Local (exactly one component)
+```
 
 | State Type | Category | Rule |
 |---|---|---|
 | Anything from an API (lists, details, counts, status) | **Server state** | Managed by a caching/data-fetching layer with built-in loading/error/stale-tracking (e.g. TanStack Query for React Native bare-metal; Riverpod's `AsyncNotifier` or a repository+cache pattern for Flutter). Never duplicated into a separate "client" state container. |
 | UI-only state shared across 2+ components in one feature | **Client state (shared)** | A lightweight, feature-scoped state container (e.g. Zustand for RN; a `Provider`/`Bloc`/`Riverpod` scoped to the feature for Flutter). One container per feature — never one giant global store. |
 | UI-only state used by exactly one component | **Client state (local)** | Local component state (`useState`/`useReducer` equivalent, or `StatefulWidget` local fields). |
-| Data that must survive app restart offline | **Persisted server state** | Only when explicitly required — server-state cache persisted to local storage. Must be documented in the feature's `_features.md` (Rule 24), including conflict-resolution strategy. |
+| Data that must survive app restart offline | **Server state — persisted** | Only when explicitly required — server-state cache persisted to local storage. Must be documented in the feature's `_features.md` (Rule 24), including conflict-resolution strategy. Persistence does not make this a new category; it is still server state, stored locally. |
 
 **Hard rule:** never copy API response data into the shared client-state
 container "just in case." Components read server state directly through the
@@ -215,7 +274,156 @@ the same verb naming as Backend Rule 86 and Frontend Rule 72 — 1:1 symmetry:
 - `deleteMember(id)` — DELETE
 - `exportMembersReport(params)` — report/export
 
-AI agents must never invent arbitrary function names like `loadData()` or `getData()`.
+**Non-CRUD Domain Action Verbs:** For domain actions that are not standard CRUD operations,
+use the **exact backend service verb + entity/action name** as defined by the backend contract
+(Backend Rule 86). This preserves the required Backend ↔ Mobile 1:1 API naming symmetry.
+
+`	ypescript
+// Domain action verb examples — match the backend's verb exactly:
+renewMembership(memberId, dto)      // POST /members/:id/renew
+suspendMember(memberId, dto)        // POST /members/:id/suspend
+restoreMember(memberId)             // POST /members/:id/restore
+activateMember(memberId)            // POST /members/:id/activate
+assignTrainer(memberId, trainerId)  // POST /members/:id/assign-trainer
+`
+
+AI agents must never invent arbitrary function names like `loadData()`, `getData()`,
+`handleAction()`, or `doMemberThing()`. If the backend service method is `renewMembership`,
+the mobile API function MUST be `renewMembership` — no renaming, no aliasing.
+
+## Rule 7A — Complete API Contract & UI Data Coverage
+
+This rule is the mobile equivalent of Web Rule 75A and Backend Rule 82A. It closes
+the same gap on mobile: API/mock responses being incomplete while the UI silently
+renders empty cards, lists, and charts.
+
+### The Required Chain
+
+For every data-consuming feature, the following chain MUST be fully aligned before
+the feature is considered complete:
+
+```text
+UI Requirement
+      ↓
+Feature API Contract (_features.md § API Contract)
+      ↓
+Type / Model (*.types.ts / models/*.dart)
+      ↓
+Schema / Validator (Zod schema or validator class)
+      ↓
+Mock / Stub Response (test boundary mock or backend stub)
+      ↓
+Server-State Cache (TanStack Query / Riverpod AsyncNotifier)
+      ↓
+UI Rendering
+```
+
+### UI Data Coverage Requirement
+
+Before creating or modifying a feature's API function or mock response, the AI agent
+MUST inspect the complete consuming UI and identify the exact data required by:
+
+- Every card and list-item field
+- Every KPI / count / statistic widget
+- Every chart and chart series
+- Every filter, search, and sort parameter
+- Every dropdown or picker option source
+- Every detail-screen field
+- Every modal / bottom-sheet field
+- Every badge / status indicator
+- Every relationship or reference displayed (e.g. plan name, owner name)
+- Every pagination control
+- Loading, empty, and error states
+
+### Mock / Stub Response Completeness
+
+During the frontend-first development phase (before a real backend endpoint exists),
+the mock response used in tests and development MUST:
+
+1. Contain **every field** that the UI actually consumes — not just the fields
+   convenient for initial development.
+2. Include realistic value variation across multiple records:
+   - Different statuses
+   - Different plan/category combinations
+   - Different dates and numeric values
+   - Nullable/optional fields present and absent
+   - Long text values where truncation is expected
+   - Enough records to exercise pagination
+3. Support an **empty-result scenario** (zero records) that visibly triggers the
+   `EmptyState` component.
+4. Support an **error scenario** that visibly triggers the error fallback.
+
+### Forbidden: Minimal Mock / Stub
+
+```text
+❌ INVALID — UI needs all of these:
+name, phone, membershipPlan, status, expiryDate, paymentStatus
+
+Mock returns only:
+id, name, status
+→ Remaining fields render empty or undefined. FORBIDDEN.
+
+✔ REQUIRED — Mock returns:
+id, name, phone, membershipPlan, status, expiryDate, paymentStatus
+→ Every rendered field has a source in the mock response.
+```
+
+### Forbidden: Component-Level Hardcoded Fallback Data
+
+This pattern is **forbidden**:
+
+```dart
+// ❌ Flutter — FORBIDDEN
+final planName = member.planName ?? 'Basic Plan';
+final revenue = stats.revenue ?? 125000;
+```
+
+```typescript
+// ❌ React Native — FORBIDDEN
+const planName = member.planName ?? 'Basic Plan';
+const revenue = stats.revenue ?? 125000;
+```
+
+when those values are required fields of the API contract. Hardcoded fallback
+business data hides an incomplete mock/API response. The correct fix is:
+
+```text
+UI requires field
+→ update API contract in _features.md
+→ update Type / Model
+→ update Schema / Validator
+→ update mock/stub response
+→ render from response
+```
+
+### Backend Transition Rule
+
+When the real backend endpoint becomes available:
+- The UI MUST continue consuming the same API contract — no screen rewrites.
+- The feature API client MUST remain the same unless the backend contract
+  legitimately changes (see Backend Rule 67).
+- Any contract change MUST update the corresponding Type/Model, Schema/Validator,
+  mock response, `_features.md` API Contract, and tests in the same change.
+
+### AI Verification Requirement
+
+Before declaring a mobile feature complete, the AI MUST verify:
+
+1. Every displayed data field has a documented source in `_features.md § API Contract`.
+2. Every source field exists in the feature's Type/Model.
+3. Every required field is present in the mock/stub response.
+4. Every mock field is consumed correctly by the UI.
+5. Cards and list items display populated values in all intended fields.
+6. KPI and count widgets display non-placeholder values.
+7. Charts receive complete series data.
+8. Filters/search/sort/pagination produce different mocked results where applicable.
+9. Empty state can actually be triggered.
+10. Error state can actually be triggered.
+11. No component contains hidden hardcoded business fallback data.
+12. The feature works using the same API path that will be used with the real backend.
+
+A feature MUST NOT be marked complete merely because the app builds or the screen
+visually renders with placeholder values.
 
 ## Rule 8 — Lists & Rendering Performance
 
@@ -308,23 +516,72 @@ AI agents must never invent arbitrary function names like `loadData()` or `getDa
 
 ## Rule 17 — Testing (Full Pyramid)
 
-- **Unit tests:** pure logic, validators, utility functions — fast, no
-  framework rendering involved.
-- **Component/widget tests:** every non-trivial component/widget in a feature
-  folder has a matching test in that folder's `tests/` directory (Jest +
-  Testing Library for RN; Flutter's built-in widget-test framework).
-- **Integration tests:** critical user flows tested end-to-end within the app
-  process (RN's integration-test tooling; Flutter's `integration_test`
-  package).
-- **E2E tests (real device/simulator):** pick ONE tool project-wide for
-  black-box, full-app-flow testing (e.g. Maestro or a comparable YAML/script-
-  driven E2E runner works across both RN and Flutter) and document the choice
-  once — do not mix multiple E2E tools in the same repo.
+- **Unit tests:** Pure business logic, validators, formatters, and utility functions
+  are co-located directly beside the source file they test.
+- **Component/widget tests:** Every non-trivial component/widget MUST have its
+  matching test file co-located directly beside the component/widget file it tests.
+  The feature-level `tests/` directory is reserved ONLY for integration-level tests
+  that exercise multiple feature files together.
+- **Integration tests:** Live inside the feature's `tests/` directory and verify
+  multi-file feature flows, API/mock integration, state coordination, and critical
+  feature behavior.
+- **E2E tests:** Live in the project-level E2E suite and verify complete user
+  journeys through the real application (e.g. Maestro or a comparable YAML/script-
+  driven E2E runner works across both RN and Flutter — choose ONE tool project-wide
+  and document the choice; do not mix multiple E2E tools in the same repo).
 - Native modules (camera, biometrics, secure storage, notifications) are
   mocked at the test boundary — unit and component tests never touch a real
   native API.
 - No feature is considered complete without its core logic/component tests
   passing — tracked in that feature's `_features.md` checklist.
+
+### AI Test Integrity Gate
+
+A test file existing is NOT sufficient evidence of testing.
+
+The AI MUST NOT satisfy a test requirement with:
+- Placeholder assertions (e.g. `expect(true).toBe(true)`, `expect(1).toEqual(1)`)
+- Empty test bodies or `// TODO: add assertions`
+- Snapshot-only tests for behavior that requires interaction testing
+- Tests that only verify a component or widget mounts without asserting rendered data
+- Mocked values that are completely unrelated to the feature's API contract
+- Tests that pass while the UI visibly renders empty or incorrect data
+
+Every required test MUST verify **observable behavior**, not implementation details.
+
+For API-driven features, tests MUST verify:
+
+1. Mock/stub response is returned through the real feature API path (not injected
+   directly into the widget/component).
+2. All required UI fields render the correct values from the mock response —
+   this directly verifies Rule 7A fixture completeness.
+3. Loading state appears while the request is pending.
+4. Empty state component appears when the mock response contains zero records.
+5. Error fallback appears when the mock request fails.
+6. Search/filter/sort/pagination interactions change the requested parameters
+   where applicable (verify the outgoing request, not just the rendered result).
+7. Mutation success updates the UI only according to the feature's mutation
+   policy (pessimistic — wait for 2xx, per Rule 4).
+8. Backend `response.message` is surfaced for all user-facing API errors and
+   successes — no hardcoded strings (Rule 7).
+9. Critical user flows (add, edit, delete, renewal, payment) are covered by
+   integration or E2E tests with a real app process.
+
+**A test suite is considered incomplete if the application can visually fail
+while all tests still pass.**
+
+```text
+npm test → PASS
+
+does NOT mean:
+
+feature is correct
+
+It means:
+the tests that were written happened to pass.
+If those tests did not verify the right behavior,
+the feature can be broken and PASS at the same time.
+```
 
 ## Rule 18 — Native Build & Code Signing
 
@@ -611,9 +868,10 @@ which file to open for any task without reading all files.]
 - [ ] Rule 6: Auth tokens in hardware-backed secure storage only
 - [ ] Rule 7 (API): All API calls through central network client, typed verb contract
 - [ ] Rule 7 (messages): User-facing messages come from backend response.message — never hardcoded
+- [ ] Rule 7A: API/mock response covers ALL UI fields — no missing card fields, KPI fields, chart series, filter fields, or relationship fields; no hardcoded business fallback data in components
 - [ ] Rule 8: Lists use virtualized component for >20 items
 - [ ] Rule 8: Search/filter inputs debounced — minimum 300ms before API call
-- [ ] Rule 17: Co-located unit tests present; E2E for critical flows
+- [ ] Rule 17: Co-located unit tests present; E2E for critical flows; AI Test Integrity Gate satisfied — no placeholder assertions, all required API-driven behaviors verified
 - [ ] Rule 22: No unapproved dependencies added
 - [ ] Rule 23: Observability wired for critical error paths
 - [ ] Rule 24: This _features.md is complete, specific, and non-generic
@@ -692,20 +950,47 @@ future AI agents.
 
 ## Rule 28 — Zero Cross-Feature Imports (The Portable Folder Rule)
 
-Feature A (`members`) is **explicitly FORBIDDEN** from importing anything from
-Feature B (`attendance`) — no components, no hooks, no types, no constants.
+Every feature folder must be a **completely self-contained BUSINESS unit**.
 
-Every feature folder must be a **completely self-contained unit**. It may depend ONLY on:
-- (a) npm / pub packages
-- (b) Generic zero-business-logic primitives from `src/core/ui/` (shared UI atoms)
-- (c) Its own internal files
+A feature MUST NOT import or depend on another feature's business logic.
 
-This guarantees the entire feature folder can be deleted, copied, and pasted
-into a different project with **zero broken imports** — the drag-and-drop-to-AI
-workflow depends entirely on this guarantee.
+A feature **MAY** depend on:
+
+- **(a)** Approved framework/package dependencies.
+- **(b)** Approved zero-business-logic primitives from `src/core/ui/`.
+- **(c)** Approved framework-level infrastructure from `src/core/`, such as:
+  - network client
+  - API response types (`ApiResponse<T>`, `PaginationMeta`)
+  - authentication/session infrastructure
+  - secure storage abstraction
+  - navigation infrastructure
+  - route constants
+  - pagination types
+  - formatting primitives (`formatCurrency`, `formatNumber`, `displayValue`, `maskSensitiveData`)
+  - logging/observability infrastructure
+  - accessibility infrastructure
+  - app-wide configuration required for correctness
+- **(d)** Its own internal files.
+
+A feature **MUST NEVER** depend on:
+- another feature's components
+- another feature's hooks/controllers/notifiers
+- another feature's stores/providers/blocs
+- another feature's schemas/validators
+- another feature's business types/models
+- another feature's API services
+- another feature's business constants
+- another feature's business utilities
+
+`src/core/` is an **infrastructure boundary**, NOT a business-logic sharing layer.
+
+If business logic is required by two features, duplicate it inside each feature
+rather than moving it into `src/core/`. This preserves portability without
+artificially duplicating mandatory application infrastructure.
 
 Enforce mechanically via `eslint-plugin-boundaries` (React Native) or equivalent
-static analysis / import linter (Flutter) so violations are caught in CI, not in code review.
+static analysis / import linter (Flutter) so violations are caught in CI, not in
+code review.
 
 ---
 
@@ -1123,14 +1408,39 @@ Implement through ONE central toast utility in `src/core/utils/toast.ts`:
 
 ```typescript
 // src/core/utils/toast.ts
+
+// Deduplication uses a SEMANTIC identity key, not the raw message string.
+// Two different actions (e.g. payment failure for member A vs member B)
+// that produce the same message text are DIFFERENT events and must NOT be collapsed.
+//
+// Build the key as: module + action + entityId + errorCode
+// Fall back to a simple message hash ONLY when semantic context is unavailable.
+//
+// Example: toastKey('members', 'suspend', memberId, 'MEMBER.ALREADY_SUSPENDED')
+//          → "members:suspend:abc-123:MEMBER.ALREADY_SUSPENDED"
+
 const activeToasts = new Set<string>();
 
-export function showToast(message: string, type: 'success' | 'error' | 'info' = 'info') {
-  if (activeToasts.has(message)) return;   // deduplicate
-  activeToasts.add(message);
+export function toastKey(
+  module: string,
+  action: string,
+  entityId?: string,
+  errorCode?: string,
+): string {
+  return [module, action, entityId ?? '', errorCode ?? ''].join(':');
+}
+
+export function showToast(
+  message: string,
+  type: 'success' | 'error' | 'info' = 'info',
+  dedupKey?: string,   // pass toastKey(...) for semantic dedup; omit for message-hash fallback
+) {
+  const key = dedupKey ?? message;
+  if (activeToasts.has(key)) return;
+  activeToasts.add(key);
   // call your toast library here (e.g. react-native-toast-message)
   Toast.show({ type, text1: message });
-  setTimeout(() => activeToasts.delete(message), 3000);
+  setTimeout(() => activeToasts.delete(key), 3000);
 }
 ```
 

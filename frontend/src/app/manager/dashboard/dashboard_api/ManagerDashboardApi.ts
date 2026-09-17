@@ -1,18 +1,12 @@
-// RESPONSIBILITY: Provides strongly-typed network calls for dashboard metrics.
-import { apiFetch } from '@/lib/api';
-import type { ApiResponse } from '@/lib/api';
-import { DashboardUrlConfig } from '@/app/manager/dashboard/ManagerDashboardUrlConfig';
+import { z } from 'zod';
+import { apiFetch, type ApiResponse } from '@/lib/api';
+import { ManagerDashboardUrlConfig } from '@/app/manager/dashboard/dashboard_url_config';
+import { dashboardStatsSchema } from '@/app/manager/dashboard/dashboard_types/ManagerDashboardSchema';
 import type { DashboardStats } from '@/app/manager/dashboard/dashboard_types/ManagerDashboardTypes';
-import { MOCK_DASHBOARD_STATS } from '@/app/manager/dashboard/dashboard_api/ManagerDashboardMockData';
 
 export const dashboardApi = {
-  getStats: async (range?: string): Promise<ApiResponse<DashboardStats>> => {
-    // Simulate network delay
-    await new Promise(resolve => setTimeout(resolve, 500));
-    return {
-      success: true,
-      message: 'Stats fetched successfully',
-      data: MOCK_DASHBOARD_STATS,
-    };
+  fetchDashboardStats: async (params?: Record<string, string>): Promise<ApiResponse<DashboardStats>> => {
+    const query = new URLSearchParams(params ?? {}).toString();
+    return apiFetch(`${ManagerDashboardUrlConfig.BACKEND_API.STATS}${query ? `?${query}` : ''}`, { dataSchema: dashboardStatsSchema });
   },
 };

@@ -1,29 +1,30 @@
-// RESPONSIBILITY: Defines all TypeScript types, interfaces, and the FetchState enum for the Members module.
+// RESPONSIBILITY: Defines all TypeScript types and interfaces for the Members module.
 // Single source of truth for member data shapes.
 // CRITICAL additions: freezeUntil, emergencyContact, referralCode, bloodGroup, membershipNumber,
 // genderFilter, planFilter, expiryRange — all required for filter/export API params and DB schema.
 
-import type { Plan } from '@/app/manager/plans/plans_types/ManagerPlansTypes';
-import type { Payment } from '@/app/manager/finance/finance_types/ManagerFinanceTypes';
 import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
 import type { MessageType, ManagerMessageRecipient } from '@/app/manager/manager_components/ManagerFeedback/ManagerMessageModal';
-import type { ManagerReceiptData } from '@/app/manager/members/members_components/ManagerMembersThermalReceipt';
+import type { ManagerReceiptData } from '@/app/manager/manager_components/ManagerFeedback/ManagerThermalReceipt';
 import type { MemberFormValues } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
-import type { DietPlan } from '@/app/manager/library/library_types/ManagerLibraryTypes';
-import type { Workout } from '@/app/manager/workout/workout_types/ManagerWorkoutTypes';
-import type { MemberType, MemberStatsType } from '@/app/manager/members/members_types/members.schema';
+import type { MemberType, MemberStatsType } from '@/app/manager/members/members_types/ManagerMembers.schema';
+import type { PlanSnapshot, PaymentSnapshot, DietPlanSnapshot, WorkoutSnapshot } from '@/app/manager/members/members_types/ManagerMembersSnapshotTypes';
 
-export type FetchState = 'idle' | 'loading' | 'success' | 'error';
 export type MemberSortColumn = 'name' | 'joinDate' | 'expiryDate' | 'paidAmount' | 'status';
 export type SortDirection = 'asc' | 'desc';
 export type ExportFormat = 'csv' | 'pdf';
+export type MemberProfileTab = 'overview' | 'attendance' | 'payments' | 'workout' | 'diet';
 
 export interface MembersInitialData {
   members: Member[];
-  plans: Plan[];
+  plans: PlanSnapshot[];
   stats: MemberStats;
   totalMembers: number;
 }
+
+export type DietPlan = DietPlanSnapshot;
+export type Workout = WorkoutSnapshot;
+export type Payment = PaymentSnapshot;
 
 // ─── Member ───────────────────────────────────────────────────────────────────
 export interface MemberEmergencyContact {
@@ -31,18 +32,20 @@ export interface MemberEmergencyContact {
   phone: string;
 }
 
-export interface Member extends Omit<MemberType, 'assignedDiet' | 'assignedWorkout'> {
-  assignedDiet?: DietPlan;
-  assignedWorkout?: Workout;
+export interface Member extends Omit<MemberType, 'assignedDiet' | 'assignedWorkout' | 'plan'> {
+  plan?: PlanSnapshot;
+  recentPayments?: PaymentSnapshot[];
+  dietPlan?: DietPlanSnapshot;
+  workoutPlan?: WorkoutSnapshot;
+  assignedDiet?: DietPlanSnapshot;
+  assignedWorkout?: WorkoutSnapshot;
 }
 
 // ─── Member Stats ─────────────────────────────────────────────────────────────
-export interface MemberStats extends MemberStatsType {}
+export type MemberStats = MemberStatsType;
 
 /** Extends Plan with an optional per-day custom price used in the billing cycle calculator. */
-export interface PlanWithCustom extends Plan {
-  priceCustom?: number;
-}
+export type PlanWithCustom = PlanSnapshot;
 
 // ─── Context ──────────────────────────────────────────────────────────────────
 export interface MembersContextType {
@@ -74,8 +77,8 @@ export interface MembersContextType {
   // Member Profile
   selectedMember: Member | null;
   setSelectedMember: (m: Member | null) => void;
-  profileTab: 'overview' | 'attendance' | 'payments' | 'workout' | 'diet';
-  setProfileTab: (tab: 'overview' | 'attendance' | 'payments' | 'workout' | 'diet') => void;
+  profileTab: MemberProfileTab;
+  setProfileTab: (tab: MemberProfileTab) => void;
 
   // Add/Edit Modal
   showAddModal: boolean;
@@ -110,7 +113,6 @@ export interface MembersContextType {
   freezeMember: (isFrozen: boolean, freezeUntil?: string) => Promise<unknown>;
   toggleSuspend: (isSuspended: boolean) => Promise<unknown>;
   assignTrainer: (memberId: string, trainerId: string, trainerName: string, isPT: boolean) => Promise<unknown>;
-  exportMembers: (format: ExportFormat) => void;
 
   // Message Modal
   msgModal: { open: boolean; recipient: ManagerMessageRecipient; type: MessageType; message: string; subject?: string } | null;
@@ -122,4 +124,5 @@ export interface MembersContextType {
   handlePrint: (p: Payment) => void;
   handleSharePaymentWhatsApp: (p: Payment) => void;
   setPrintData: (data: ManagerReceiptData | null) => void;
+  exportMembers: (format: ExportFormat) => Promise<void>;
 }

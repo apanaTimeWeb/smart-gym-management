@@ -4,5 +4,7 @@ import AdminMembersMain from '@/app/admin/members/members_components/AdminMember
 export const metadata = { title: 'Members — Admin | Smart Gym 360' };
 
 export default function AdminMembersPage() {
-  return <AdminMembersMain />;
+  return (
+      <AdminMembersMain />
+  );
 }

@@ -1,47 +1,40 @@
-// RESPONSIBILITY: Custom hook for managing the logic of the Support Tickets page
-// DATA FLOW: API -> useSuperadminTicketsData -> useSuperadminTickets -> SuperadminTicketsClient
-
-import { useSuperadminTicketsData } from '@/app/superadmin/tickets/tickets_utils/useSuperadminTicketsData';
-import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
+// RESPONSIBILITY: Provide ticket list/query state for the Superadmin Tickets surface.
+// DATA FLOW: Superadmin UI → useSuperadminTickets → Superadmin module API/state → consuming component
+'use client';
+// DATA FLOW: feature API/schema → hook/context → useSuperadminTickets consumers.
+import { useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { ticketsApi } from '@/app/superadmin/tickets/superadmin_tickets_api/superadmin_tickets_api';
 import type { SupportTicket } from '@/app/superadmin/tickets/superadmin_tickets_types/superadmin_tickets_types';
 import { useSuperadminTicketsStore } from '@/app/superadmin/tickets/tickets_store/useSuperadminTicketsStore';
-import { MOCK_TICKETS } from '@/app/superadmin/tickets/tickets_utils/SuperadminTicketsConstants';
-
-const IS_DEV = process.env.NODE_ENV === 'development';
 const ITEMS_PER_PAGE = 10;
-
 export function useSuperadminTickets() {
-  const { data: apiTickets, fetchState, error } = useSuperadminTicketsData<SupportTicket[]>(SuperadminUrlConfig.BACKEND_API.TICKETS_BASE);
-
-  const {
-    search,
-    statusFilter,
-    priorityFilter,
-    currentPage,
-  } = useSuperadminTicketsStore();
-
-  // Use mock data in development when API returns empty or null
-  const tickets: SupportTicket[] = (() => {
-    if (apiTickets && (apiTickets as SupportTicket[]).length > 0) return apiTickets as SupportTicket[];
-    return IS_DEV ? MOCK_TICKETS : [];
-  })();
-
-  const filtered = tickets.filter(t => {
-    const matchesSearch = t.tenantName?.toLowerCase().includes(search.toLowerCase()) ||
-                          t.subject?.toLowerCase().includes(search.toLowerCase()) ||
-                          t.id?.toLowerCase().includes(search.toLowerCase());
-    const matchesStatus = statusFilter === 'ALL' || t.status === statusFilter;
-    const matchesPriority = priorityFilter === 'ALL' || t.priority === priorityFilter;
-    return matchesSearch && matchesStatus && matchesPriority;
-  });
-
-  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE) || 1;
-  const paginatedTickets = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
-
-  return {
-    fetchState,
-    error,
-    totalPages,
-    paginatedTickets,
-  };
+    const { search, statusFilter, priorityFilter, currentPage, } = useSuperadminTicketsStore();
+    const queryParams = useMemo(() => {
+        const params: Record<string, string> = {
+            page: String(currentPage),
+            limit: String(ITEMS_PER_PAGE),
+        };
+        if (search)
+            params.search = search;
+        if (statusFilter && statusFilter !== 'ALL')
+            params.status = statusFilter;
+        if (priorityFilter && priorityFilter !== 'ALL')
+            params.priority = priorityFilter;
+        return params;
+    }, [search, statusFilter, priorityFilter, currentPage]);
+    const { data: apiResponse, isLoading, error: queryError } = useQuery({
+        queryKey: ['superadmin', 'tickets', queryParams],
+        queryFn: () => ticketsApi.fetchTickets(queryParams),
+    });
+    const paginatedTickets = apiResponse?.data || [];
+    const totalItems = apiResponse?.meta?.total || paginatedTickets.length;
+    const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE) || 1;
+    const error = queryError instanceof Error ? queryError.message : null;
+    return {
+        isLoading,
+        error,
+        totalPages,
+        paginatedTickets,
+    };
 }

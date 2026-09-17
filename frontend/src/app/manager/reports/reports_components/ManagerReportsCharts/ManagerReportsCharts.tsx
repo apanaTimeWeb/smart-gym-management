@@ -1,6 +1,5 @@
-// RESPONSIBILITY: ApexCharts-based charts for each report tab — Revenue, Attendance, Members, Expenses.
 'use client';
-
+// RESPONSIBILITY: ApexCharts-based charts for each report tab — Revenue, Attendance, Members, Expenses.
 import dynamic from 'next/dynamic';
 import { useReportsContext } from '@/app/manager/reports/reports_context/ManagerReportsContext';
 import { EXPENSE_CATEGORY_STYLES } from '@/app/manager/reports/reports_utils/ManagerReportsSharedConstants';
@@ -14,9 +13,9 @@ const CHART_BASE = {
   chart: { background: 'transparent', toolbar: { show: false }, fontFamily: 'Inter, sans-serif' },
   grid: { borderColor: 'rgba(255,255,255,0.05)', strokeDashArray: 4 },
   tooltip: { theme: 'dark' as const },
-  xaxis: { labels: { style: { colors: '#A1A1AA', fontSize: '11px' } }, axisBorder: { show: false }, axisTicks: { show: false } },
-  yaxis: { labels: { style: { colors: '#A1A1AA', fontSize: '11px' } } },
-  legend: { labels: { colors: '#A1A1AA' } },
+  xaxis: { labels: { style: { colors: 'var(--secondary)', fontSize: '11px' } }, axisBorder: { show: false }, axisTicks: { show: false } },
+  yaxis: { labels: { style: { colors: 'var(--secondary)', fontSize: '11px' } } },
+  legend: { labels: { colors: 'var(--secondary)' } },
 };
 
 function RevenueChart() {
@@ -27,7 +26,7 @@ function RevenueChart() {
     ...CHART_BASE,
     chart: { ...CHART_BASE.chart, type: 'bar' as const, stacked: false },
     plotOptions: { bar: { borderRadius: 4, columnWidth: '55%' } },
-    colors: ['#FACC15', '#EF4444', '#22C55E'],
+    colors: ['var(--primary)', 'var(--danger)', 'var(--success)'],
     xaxis: { ...CHART_BASE.xaxis, categories: data.map(d => d.month) },
     dataLabels: { enabled: false },
   };
@@ -53,7 +52,7 @@ function AttendanceChart() {
   const options = {
     ...CHART_BASE,
     chart: { ...CHART_BASE.chart, type: 'area' as const },
-    colors: ['#22C55E', '#EF4444'],
+    colors: ['var(--success)', 'var(--danger)'],
     fill: { type: 'gradient', gradient: { opacityFrom: 0.3, opacityTo: 0.05 } },
     stroke: { curve: 'smooth' as const, width: 2 },
     xaxis: { ...CHART_BASE.xaxis, categories: data.map(d => d.date) },
@@ -80,7 +79,7 @@ function MembersChart() {
   const options = {
     ...CHART_BASE,
     chart: { ...CHART_BASE.chart, type: 'line' as const },
-    colors: ['#22C55E', '#EF4444', '#FACC15'],
+    colors: ['var(--success)', 'var(--danger)', 'var(--primary)'],
     stroke: { curve: 'smooth' as const, width: 2 },
     xaxis: { ...CHART_BASE.xaxis, categories: data.map(d => d.month) },
     dataLabels: { enabled: false },
@@ -108,9 +107,9 @@ function ExpensesChart() {
   const options = {
     ...CHART_BASE,
     chart: { ...CHART_BASE.chart, type: 'donut' as const },
-    colors: ['#EF4444', '#F59E0B', '#3B82F6', '#FACC15', '#22C55E', '#C084FC', '#A1A1AA'],
+    colors: ['var(--danger)', 'var(--warning)', 'var(--info)', 'var(--primary)', 'var(--success)', 'var(--secondary)', 'var(--muted)'],
     labels: data.map(d => d.category),
-    legend: { position: 'bottom' as const, labels: { colors: '#A1A1AA' } },
+    legend: { position: 'bottom' as const, labels: { colors: 'var(--secondary)' } },
     dataLabels: { style: { fontSize: '11px' } },
     plotOptions: { pie: { donut: { size: '65%' } } },
   };

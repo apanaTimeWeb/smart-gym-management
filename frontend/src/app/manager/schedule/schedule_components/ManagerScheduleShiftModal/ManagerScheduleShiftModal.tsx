@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Add/Edit shift modal with React Hook Form + Zod validation.
 'use client';
+// RESPONSIBILITY: Add/Edit shift modal with React Hook Form + Zod validation.
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -31,7 +31,7 @@ export default function ManagerScheduleShiftModal() {
   const onSubmit = (data: ShiftFormValues) => { void saveShift(data); };
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-sm" role="dialog" aria-modal="true">
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-foreground/60 backdrop-blur-sm" role="dialog" aria-modal="true">
       <div className="bg-overlay border border-border rounded-2xl shadow-2xl w-full max-w-md mx-4 p-6 space-y-5">
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -98,7 +98,7 @@ export default function ManagerScheduleShiftModal() {
             <button type="button" onClick={closeShiftModal} className="px-4 py-2 text-sm font-medium text-secondary border border-border rounded-lg hover:bg-border/30 motion-safe:transition-colors">
               Cancel
             </button>
-            <button type="submit" disabled={saving} className="px-5 py-2 text-sm font-semibold bg-primary text-black rounded-lg hover:opacity-90 disabled:opacity-60 flex items-center gap-2 motion-safe:transition-opacity">
+            <button type="submit" disabled={saving} className="px-5 py-2 text-sm font-semibold bg-primary text-primary-foreground rounded-lg hover:opacity-90 disabled:opacity-60 flex items-center gap-2 motion-safe:transition-opacity">
               {saving && <Loader2 size={14} className="motion-safe:animate-spin" />}
               {editShift ? 'Save Changes' : 'Add Shift'}
             </button>

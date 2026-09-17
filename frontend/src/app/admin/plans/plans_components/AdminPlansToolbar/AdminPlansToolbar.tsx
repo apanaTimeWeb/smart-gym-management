@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders the search input and "Create Plan" CTA button for the Plans module toolbar.
-'use client';
 
 import { useState, useEffect } from 'react';
 import { RefreshCw, Plus, Search } from 'lucide-react';
@@ -8,7 +8,7 @@ import { useAdminPlansStore } from '@/app/admin/plans/plans_store/useAdminPlansS
 import { TIERS } from '@/app/admin/plans/plans_utils/AdminPlansSharedConstants';
 
 export default function AdminPlansToolbar() {
-  const { plans, fetchState, saving, search, setSearch, tierFilter, setTierFilter, currentPage, setCurrentPage, loadPlans, openAdd, openEdit, savePlan, deletePlan } = useAdminPlansLogic();
+  const { plans, status, saving, search, setSearch, tierFilter, setTierFilter, currentPage, setCurrentPage, loadPlans, openAdd, openEdit, savePlan, deletePlan } = useAdminPlansLogic();
   const { showModal, setShowModal, editId, form, setForm } = useAdminPlansStore();
 
   const [localSearch, setLocalSearch] = useState(search);
@@ -41,7 +41,7 @@ export default function AdminPlansToolbar() {
             value={localSearch} 
             onChange={e => setLocalSearch(e.target.value)} 
             placeholder="Search plans..." 
-            className="pl-9 pr-3 py-2 border border-border rounded-lg text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page w-48 sm: w-full sm:w-64  bg-input text-primary" 
+            className="pl-9 pr-3 py-2 border border-border rounded-lg text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page w-48 sm:w-full sm:w-64  bg-input text-primary" 
           />
         </div>
         <select 
@@ -58,13 +58,13 @@ export default function AdminPlansToolbar() {
       <div className="flex flex-wrap gap-2">
  <button 
  onClick={loadPlans} 
- className="flex items-center gap-2 px-3 py-2 text-sm border border-border rounded-lg hover:bg-primary-subtle text-secondary transition-colors"
+ className="flex items-center gap-2 px-3 py-2 text-sm border border-border rounded-lg hover:bg-primary-subtle text-secondary motion-safe:transition-colors"
  >
  <RefreshCw size={14} />
  </button>
  <button 
  onClick={openAdd} 
- className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-lg transition-colors hover:bg-primary/90" 
+ className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-lg motion-safe:transition-colors hover:bg-primary/90" 
  >
  <Plus size={16} /> Create Plan
  </button>
@@ -72,6 +72,3 @@ export default function AdminPlansToolbar() {
  </div>
  );
 }
-
-
-

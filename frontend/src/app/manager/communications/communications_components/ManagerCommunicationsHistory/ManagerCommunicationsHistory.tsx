@@ -1,9 +1,9 @@
-// RESPONSIBILITY: Paginated history table of past communication campaigns with search and channel filter.
 'use client';
-
+import { formatDate } from '@/lib/formatters';
+// RESPONSIBILITY: Paginated history table of past communication campaigns with search and channel filter.
 import { Search, MessageCircle, Mail, Users } from 'lucide-react';
-import { useManagerCommunicationsLogic } from '@/app/manager/communications/communications_context/useManagerCommunicationsLogic';
-import { TableSkeleton } from '@/app/manager/manager_components/ManagerShared/TableSkeleton';
+import { useManagerCommunicationsLogic } from '@/app/manager/communications/communications_context/ManagerUseManagerCommunicationsLogic';
+import { TableSkeleton } from '@/app/manager/manager_components/ManagerShared/ManagerTableSkeleton';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import { COMM_STATUS_STYLES } from '@/app/manager/communications/communications_utils/ManagerCommunicationsSharedConstants';
 
@@ -12,14 +12,23 @@ const HEADERS = ['Campaign', 'Channel', 'Segment', 'Recipients', 'Sent', 'Status
 
 export default function ManagerCommunicationsHistory() {
   const {
-    paginatedCampaigns, fetchState,
+    paginatedCampaigns, isLoading, isError,
     historySearch, setHistorySearch,
     historyChannelFilter, setHistoryChannelFilter,
     currentPage, setCurrentPage, totalPages,
     filteredCampaigns,
   } = useManagerCommunicationsLogic();
 
-  if (fetchState === 'loading') return <TableSkeleton rows={5} />;
+  if (isLoading) return <TableSkeleton rows={5} />;
+
+  if (isError) {
+    return (
+      <div role="alert" className="bg-card border border-border rounded-xl p-12 text-center space-y-3">
+        <p className="text-sm font-semibold text-danger">Unable to load campaigns.</p>
+        <p className="text-sm text-secondary">Please retry the request or adjust the current filters.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4">
@@ -84,7 +93,7 @@ export default function ManagerCommunicationsHistory() {
                       </td>
                       <td className="px-4 py-3">
                         <span
-                          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold text-white ${isWA ? 'bg-[#25D366]' : 'bg-info-bg text-info'}`}
+                          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold text-primary-foreground ${isWA ? 'bg-success' : 'bg-info-bg text-info'}`}
                         >
                           {isWA ? <MessageCircle size={11} /> : <Mail size={11} />}
                           {isWA ? 'WhatsApp' : 'Email'}
@@ -104,7 +113,7 @@ export default function ManagerCommunicationsHistory() {
                         </span>
                       </td>
                       <td className="px-4 py-3 text-sm text-secondary whitespace-nowrap">
-                        {new Date(c.sentAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
+                        {formatDate(c.sentAt)}
                       </td>
                     </tr>
                   );

@@ -1,8 +1,8 @@
 'use client';
-
+// RESPONSIBILITY: Renders the Manager ExpensesChart presentation layer for the Manager module.
 import React, { useMemo } from 'react';
 import dynamic from 'next/dynamic';
-import { useExpensesListQuery } from '@/app/manager/expenses/expenses_api/useManagerExpensesQueries';
+import { useExpensesListQuery } from '@/app/manager/expenses/expenses_api/ManagerUseManagerExpensesQueries';
 import { formatCurrency, formatKPI } from '@/lib/formatters';
 import { Loader2 } from 'lucide-react';
 
@@ -11,7 +11,7 @@ const Chart = dynamic(() => import('react-apexcharts'), {
   loading: () => <div className="flex items-center justify-center h-64"><Loader2 className="w-6 h-6 motion-safe:animate-spin text-primary" /></div>,
 });
 
-const COLORS = ['#eab308', '#3b82f6', '#22c55e', '#ef4444', '#a855f7', '#f97316'];
+const COLORS = ['var(--warning)', 'var(--info)', 'var(--success)', 'var(--danger)', 'var(--primary)', 'var(--warning)'];
 
 export default function ManagerExpensesChart() {
   const { data, isLoading, isError } = useExpensesListQuery({ limit: '1000' });
@@ -41,7 +41,7 @@ export default function ManagerExpensesChart() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-full min-h-[300px]">
+      <div className="flex items-center justify-center h-full min-h-72">
         <Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" />
       </div>
     );
@@ -49,7 +49,7 @@ export default function ManagerExpensesChart() {
 
   if (isError || chartData.length === 0) {
     return (
-      <div className="h-full min-h-[300px] flex items-center justify-center">
+      <div className="h-full min-h-72 flex items-center justify-center">
         <p className="text-secondary font-medium">No expense data available to chart.</p>
       </div>
     );
@@ -72,12 +72,12 @@ export default function ManagerExpensesChart() {
     },
     xaxis: {
       categories: chartData.map(d => d.name),
-      labels: { style: { colors: '#A1A1AA', fontSize: '12px' } },
+      labels: { style: { colors: 'var(--text-secondary)', fontSize: '12px' } },
       axisBorder: { show: false }, 
       axisTicks: { show: false },
     },
     yaxis: { 
-      labels: { style: { colors: '#A1A1AA', fontSize: '12px' }, formatter: (v: number) => formatKPI(v) } 
+      labels: { style: { colors: 'var(--text-secondary)', fontSize: '12px' }, formatter: (v: number) => formatKPI(v) } 
     },
     dataLabels: { enabled: false },
     legend: { show: false }
@@ -106,7 +106,7 @@ export default function ManagerExpensesChart() {
         </div>
       </div>
 
-      <div className="flex-1 min-h-[300px] w-full">
+      <div className="flex-1 min-h-72 w-full">
         <Chart
           type="bar"
           height="100%"

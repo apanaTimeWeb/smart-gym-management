@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Point-of-sale modal for processing a new product sale/order in the Store module.
 'use client';
-
+// RESPONSIBILITY: Point-of-sale modal for processing a new product sale/order in the Store module.
 import { X, Printer, Plus, Minus, Send } from 'lucide-react';
 import { useStoreContext } from '@/app/manager/store/store_context/ManagerStoreContext';
 import { PAYMENT_METHODS } from '@/app/manager/store/store_utils/ManagerStoreSharedConstants';
@@ -20,13 +19,13 @@ export default function ManagerStorePosModal() {
   if (!showOrderModal) return null;
 
  return (
- <div className="fixed inset-0 bg-black/60 z-40 flex items-center justify-center p-4">
+ <div className="fixed inset-0 bg-foreground/60 z-40 flex items-center justify-center p-4">
  <div className="bg-card rounded-2xl shadow-xl w-full max-w-2xl max-h-full overflow-y-auto border-2 border-warning">
  <div className="sticky top-0 bg-card px-6 py-4 border-b border-border flex items-center justify-between">
  <h3 className="text-lg font-bold text-foreground">New Sale — POS</h3>
  <button 
  onClick={() => setShowOrderModal(false)} 
- className="p-2 rounded-lg hover:bg-primary-subtle text-secondary transition-colors"
+ className="p-2 rounded-lg hover:bg-primary-subtle text-secondary motion-safe:transition-colors"
  >
  <X size={18} />
  </button>
@@ -69,7 +68,7 @@ export default function ManagerStorePosModal() {
    <div className="flex items-center bg-card rounded border border-border">
      <button 
        onClick={() => updateOrderQty(i.productId, i.qty - 1)}
-       className="p-1 text-secondary hover:text-foreground transition-colors"
+       className="p-1 text-secondary hover:text-foreground motion-safe:transition-colors"
      >
        <Minus size={12} />
      </button>
@@ -82,7 +81,7 @@ export default function ManagerStorePosModal() {
          }
        }}
        disabled={!products.find(p => p.id === i.productId) || i.qty >= (products.find(p => p.id === i.productId)?.stock || 0)}
-       className="p-1 text-secondary hover:text-foreground disabled:opacity-50 transition-colors"
+       className="p-1 text-secondary hover:text-foreground disabled:opacity-50 motion-safe:transition-colors"
      >
        <Plus size={12} />
      </button>
@@ -90,7 +89,7 @@ export default function ManagerStorePosModal() {
    <p className="text-xs font-bold text-foreground w-16 text-right">{formatCurrency(i.price * i.qty)}</p>
    <button 
      onClick={() => removeFromOrder(i.productId)} 
-     className="p-1 text-danger hover:text-danger dark:hover:text-danger transition-colors ml-1"
+     className="p-1 text-danger hover:text-danger dark:hover:text-danger motion-safe:transition-colors ml-1"
    >
      <X size={14} />
    </button>
@@ -135,9 +134,9 @@ export default function ManagerStorePosModal() {
  <button 
  onClick={placeOrder} 
  disabled={saving || orderItems.length === 0 || (sendViaWhatsapp && customerPhone.length !== 10)} 
- className="w-full py-3 rounded-xl text-sm font-bold text-white flex items-center justify-center gap-2 disabled:opacity-70 transition-colors bg-primary hover:bg-primary-hover" 
+ className="w-full py-3 rounded-xl text-sm font-bold text-primary-foreground flex items-center justify-center gap-2 disabled:opacity-70 motion-safe:transition-colors bg-primary hover:bg-primary-hover" 
  >
- {saving ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full motion-safe:animate-spin" /> : (sendViaWhatsapp ? <><Send size={15} /> Send WhatsApp</> : <><Printer size={15} /> Print Bill</>)}
+ {saving ? <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full motion-safe:animate-spin" /> : (sendViaWhatsapp ? <><Send size={15} /> Send WhatsApp</> : <><Printer size={15} /> Print Bill</>)}
  </button>
  </div>
  </div>

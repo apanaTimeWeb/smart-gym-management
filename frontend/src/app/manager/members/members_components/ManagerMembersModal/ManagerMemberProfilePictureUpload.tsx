@@ -1,7 +1,6 @@
+'use client';
 // RESPONSIBILITY: Renders the profile picture upload placeholder in the Add Member form.
 // Used by ManagerMembersModal. Extracted to keep the modal under the 300-line ceiling (Rule 1).
-'use client';
-
 import { Camera } from 'lucide-react';
 
 /**

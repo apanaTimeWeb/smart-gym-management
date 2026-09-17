@@ -1,10 +1,9 @@
-// RESPONSIBILITY: Provides sales module state (revenue data, membership reports, pending payments) to all Sales components via React Context. Sync UI state only — async data must migrate to Zustand (see useManagerSalesLogic.ts).
-// DATA FLOW: useManagerSalesLogic → ManagerSalesContext → Sales components
 'use client';
-
+// RESPONSIBILITY: Provides sales module state (revenue data, membership reports, pending payments) to all Sales components via React Context. Sync UI state only — async data must migrate to Zustand (see ManagerUseManagerSalesLogic.ts).
+// DATA FLOW: useManagerSalesLogic → ManagerSalesContext → Sales components
 import React, { createContext, useContext } from 'react';
 import type { SalesContextType, SalesInitialData } from '@/app/manager/sales/sales_types/ManagerSalesTypes';
-import { useManagerSalesLogic } from '@/app/manager/sales/sales_context/useManagerSalesLogic';
+import { useManagerSalesLogic } from '@/app/manager/sales/sales_context/ManagerUseManagerSalesLogic';
 
 const ManagerSalesContext = createContext<SalesContextType | undefined>(undefined);
 

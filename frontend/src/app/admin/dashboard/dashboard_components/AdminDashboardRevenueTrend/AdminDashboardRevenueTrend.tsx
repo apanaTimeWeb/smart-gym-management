@@ -1,7 +1,9 @@
+"use client";
+import { formatKPI } from '@/lib/formatters';
 // RESPONSIBILITY: Renders the Revenue & Profit Trend area chart using ApexCharts (Recharts is forbidden per Rule 62).
-'use client';
 
 import dynamic from 'next/dynamic';
+import { ADMIN_CHART_THEME } from '@/app/admin/admin_utils/AdminChartThemeTokens';
 import { BarChart3 } from 'lucide-react';
 import { useAdminDashboardLogic } from '@/app/admin/dashboard/dashboard_context/useAdminDashboardLogic';
 
@@ -22,7 +24,7 @@ export default function AdminDashboardRevenueTrend() {
       toolbar: { show: false },
       zoom: { enabled: false },
     },
-    colors: ['#FACC15', '#22C55E'],
+    colors: [ADMIN_CHART_THEME.primary, ADMIN_CHART_THEME.success],
     fill: {
       type: 'gradient',
       gradient: {
@@ -36,18 +38,18 @@ export default function AdminDashboardRevenueTrend() {
     dataLabels: { enabled: false },
     xaxis: {
       categories: months,
-      labels: { style: { colors: '#A1A1AA', fontSize: '12px' } },
+      labels: { style: { colors: ADMIN_CHART_THEME.textSecondary, fontSize: '12px' } },
       axisBorder: { show: false },
       axisTicks: { show: false },
     },
     yaxis: {
       labels: {
-        style: { colors: '#A1A1AA', fontSize: '12px' },
-        formatter: (v) => `₹${v >= 1000 ? (v / 1000).toFixed(0) + 'k' : v}`,
+        style: { colors: ADMIN_CHART_THEME.textSecondary, fontSize: '12px' },
+        formatter: (v) => formatKPI(v),
       },
     },
     grid: {
-      borderColor: 'rgba(255,255,255,0.05)',
+      borderColor: ADMIN_CHART_THEME.grid,
       strokeDashArray: 4,
       xaxis: { lines: { show: false } },
     },
@@ -59,7 +61,7 @@ export default function AdminDashboardRevenueTrend() {
       },
     },
     legend: {
-      labels: { colors: '#A1A1AA' },
+      labels: { colors: ADMIN_CHART_THEME.textSecondary },
       position: 'top',
       horizontalAlign: 'right',
     },

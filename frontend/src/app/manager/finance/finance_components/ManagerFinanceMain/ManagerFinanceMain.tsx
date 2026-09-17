@@ -1,7 +1,6 @@
+'use client';
 // RESPONSIBILITY: Orchestrator for the Finance module — KPIs, tabbed Payments table + Summary chart.
 // DATA FLOW: FinanceProvider → useFinanceContext → sub-sections
-'use client';
-
 import { FinanceProvider, useFinanceContext } from '@/app/manager/finance/finance_context/ManagerFinanceContext';
 import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/ManagerHeader';
 import { Wallet, Loader2 } from 'lucide-react';
@@ -12,7 +11,7 @@ import ManagerFinanceTable from '@/app/manager/finance/finance_components/Manage
 import ManagerFinanceRevenueChart from '@/app/manager/finance/finance_components/ManagerFinanceMain/ManagerFinanceRevenueChart';
 
 function FinanceInner() {
-  const { tab, setTab, payments, fetchState, reload } = useFinanceContext();
+  const { tab, setTab, payments, isLoading, isError, reload } = useFinanceContext();
 
   return (
     <div className="min-h-full pb-10">
@@ -43,14 +42,14 @@ function FinanceInner() {
             {/* Toolbar */}
             <ManagerFinanceFilters />
 
-            {fetchState === 'loading' ? (
+            {isLoading ? (
               <div className="flex items-center justify-center py-20">
                 <Loader2 className="w-7 h-7 motion-safe:animate-spin text-primary" />
               </div>
-            ) : fetchState === 'error' ? (
+            ) : isError ? (
               <div className="py-16 text-center space-y-3">
                 <p className="text-sm text-danger font-medium">Failed to load payments</p>
-                <button onClick={reload} className="px-4 py-2 text-sm font-medium rounded-lg bg-primary text-white hover:opacity-90">Try Again</button>
+                <button onClick={reload} className="px-4 py-2 text-sm font-medium rounded-lg bg-primary text-primary-foreground hover:opacity-90">Try Again</button>
               </div>
             ) : payments.length === 0 ? (
               <div className="py-16 text-center space-y-2">

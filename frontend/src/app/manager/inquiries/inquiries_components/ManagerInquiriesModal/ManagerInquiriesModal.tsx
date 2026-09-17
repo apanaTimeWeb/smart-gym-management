@@ -1,6 +1,6 @@
-// RESPONSIBILITY: Renders the modal form for creating or editing an inquiry lead. Uses React Hook Form + Zod validation.
 'use client';
-
+import { formatDate } from '@/lib/formatters';
+// RESPONSIBILITY: Renders the modal form for creating or editing an inquiry lead. Uses React Hook Form + Zod validation.
 import { useEffect, useState } from 'react';
 import { useInquiriesContext } from '@/app/manager/inquiries/inquiries_context/ManagerInquiriesContext';
 import { INQUIRY_MODAL_FIELDS, INQUIRIES_STATUS_LABELS, INQUIRY_SOURCES, InquirySchema, EMPTY_INQUIRY_FORM, type InquiryFormValues } from '@/app/manager/inquiries/inquiries_utils/ManagerInquiriesSharedConstants';
@@ -8,8 +8,8 @@ import { X, Save } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
-import { useInquiryPlansQuery } from '@/app/manager/inquiries/inquiries_api/useManagerInquiriesQueries';
-import { useUnsavedChangesGuard } from '@/app/manager/manager_utils/useUnsavedChangesGuard';
+import { useInquiryPlansQuery } from '@/app/manager/inquiries/inquiries_api/ManagerUseManagerInquiriesQueries';
+import { useManagerUnsavedChangesGuard } from '@/app/manager/manager_utils/ManagerUnsavedChangesGuard';
 
 export default function ManagerInquiriesModal() {
   const { showModal, setShowModal, editId, editData, saveInquiry, saving } = useInquiriesContext();
@@ -19,7 +19,7 @@ export default function ManagerInquiriesModal() {
     defaultValues: editData || {},
   });
 
-  useUnsavedChangesGuard(isDirty && showModal);
+  useManagerUnsavedChangesGuard(isDirty && showModal);
 
   const { data: plansData } = useInquiryPlansQuery();
   const plans = plansData ? plansData.map((p) => ({ label: p.name, value: p.name })) : [
@@ -62,14 +62,14 @@ export default function ManagerInquiriesModal() {
   if (!showModal) return null;
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/60">
+    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-foreground/60">
       <div className="bg-card rounded-2xl shadow-xl w-full max-w-xl overflow-visible border border-border max-h-full flex flex-col">
         <div className="sticky top-0 bg-card px-6 py-4 border-b border-border flex items-center justify-between z-10 rounded-t-2xl">
           <h3 className="text-lg font-bold text-primary">{editId ? 'Edit Inquiry' : 'New Inquiry'}</h3>
           <button
             type="button"
             onClick={() => setShowModal(false)}
-            className="p-2 rounded-lg transition-colors hover:bg-primary-subtle text-secondary"
+            className="p-2 rounded-lg motion-safe:transition-colors hover:bg-primary-subtle text-secondary"
             aria-label="Close modal"
           >
             <X size={18} />
@@ -92,7 +92,7 @@ export default function ManagerInquiriesModal() {
                   pattern={f.type === 'email' ? '.*\\.com$' : undefined}
                   title={f.type === 'email' ? 'Email must end with .com' : undefined}
                   {...register(f.key as keyof InquiryFormValues)}
-                  className={`w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary transition-colors ${
+                  className={`w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary motion-safe:transition-colors ${
                     errors[f.key as keyof InquiryFormValues] ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
                   }`}
                 />
@@ -161,7 +161,7 @@ export default function ManagerInquiriesModal() {
                     {editData.followUpLogs.map((log) => (
                       <div key={log.date} className="bg-primary-subtle p-3 rounded-lg border border-primary/20">
                         <div className="text-xs text-secondary font-medium mb-1">
-                          {new Date(log.date).toLocaleDateString()} {new Date(log.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                          {formatDate(log.date)} {new Date(log.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </div>
                         <div className="text-sm text-foreground">{log.note}</div>
                       </div>
@@ -177,7 +177,7 @@ export default function ManagerInquiriesModal() {
                     value={newNote}
                     onChange={(e) => setNewNote(e.target.value)}
                     placeholder="Enter call notes or remarks..."
-                    className="w-full border border-border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-primary transition-colors min-h-[80px]"
+                    className="w-full border border-border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-primary motion-safe:transition-colors min-h-20"
                   />
                 </div>
               </div>
@@ -187,17 +187,17 @@ export default function ManagerInquiriesModal() {
               <button
                 type="button"
                 onClick={() => setShowModal(false)}
-                className="flex-1 py-2.5 border border-border rounded-xl text-sm font-medium text-primary hover:bg-primary-subtle transition-all duration-200 active:scale-95"
+                className="flex-1 py-2.5 border border-border rounded-xl text-sm font-medium text-primary hover:bg-primary-subtle motion-safe:transition-all duration-200 active:scale-95"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={saving}
-                className="flex-1 py-2.5 rounded-xl text-sm font-bold bg-primary text-white flex items-center justify-center gap-2 disabled:opacity-70 hover:bg-primary-hover transition-all duration-200 active:scale-95"
+                className="flex-1 py-2.5 rounded-xl text-sm font-bold bg-primary text-primary-foreground flex items-center justify-center gap-2 disabled:opacity-70 hover:bg-primary-hover motion-safe:transition-all duration-200 active:scale-95"
               >
                 {saving
-                  ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full motion-safe:animate-spin" />
+                  ? <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full motion-safe:animate-spin" />
                   : <><Save size={15} />{editId ? 'Update' : 'Add Inquiry'}</>
                 }
               </button>

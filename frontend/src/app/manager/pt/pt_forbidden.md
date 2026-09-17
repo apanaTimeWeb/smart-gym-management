@@ -8,7 +8,7 @@
 
 3. **No cross-role imports** — Zero imports from `/admin`, `/trainer`, or `/superadmin`.
 
-4. **No hardcoded API URLs** — All endpoints must be imported from `ManagerPtUrlConfig.ts`.
+4. **No hardcoded API URLs** — All endpoints must be imported from `pt_url_config.ts`.
 
 5. **No `alert()` or `window.confirm()`** — Use `useConfirm()` from `ManagerConfirmProvider` for all destructive actions.
 

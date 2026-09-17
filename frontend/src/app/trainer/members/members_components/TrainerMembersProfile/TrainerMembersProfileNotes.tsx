@@ -1,11 +1,13 @@
+'use client';
 // RESPONSIBILITY: Renders the trainer notes tab for a member profile.
 // DATA FLOW: TrainerMembersProfile → TrainerMembersProfileNotes
 
-'use client';
 import { useTrainerMembersStore } from '@/app/trainer/members/members_store/useTrainerMembersStore';
+import { useTrainerSelectedMember } from '@/app/trainer/members/members_queries/useTrainerSelectedMember';
+import { formatDate } from '@/lib/formatters';
 
 export default function TrainerMembersProfileNotes() {
-  const selectedMember = useTrainerMembersStore(s => s.selectedMember);
+  const { member: selectedMember } = useTrainerSelectedMember();
 
   if (!selectedMember) return null;
 
@@ -21,7 +23,7 @@ export default function TrainerMembersProfileNotes() {
       ) : (
         notes.map(note => (
           <div key={note.id} className="p-4 bg-card border border-border rounded-xl">
-            <div className="text-xs text-secondary mb-1">{new Date(note.date).toLocaleDateString()}</div>
+            <div className="text-xs text-secondary mb-1">{formatDate(note.date)}</div>
             <p className="text-sm text-foreground">{note.text}</p>
           </div>
         ))

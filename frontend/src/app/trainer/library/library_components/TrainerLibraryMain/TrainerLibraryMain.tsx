@@ -1,42 +1,59 @@
-// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
-// DATA FLOW: Standard component data flow.
-// RESPONSIBILITY: Entry component for the Diet Library module. Wraps the UI in the context provider and handles page layout.
 'use client';
-
-import TrainerToast from '@/app/trainer/trainer_components/TrainerFeedback/TrainerToast';
-import { LibraryProvider, useLibraryContext } from '@/app/trainer/library/library_context/LibraryContext';
+// RESPONSIBILITY: Orchestrates the Trainer Diet Library query state and feature-local presentation components.
+// DATA FLOW: URL filter state → useTrainerLibraryLogic → TanStack Query/API → TrainerLibraryDietGrid/TrainerLibraryTabs.
+import { useTrainerLibraryLogic } from '@/app/trainer/library/library_context/TrainerUseLibraryLogic';
 import TrainerLibraryTabs from '@/app/trainer/library/library_components/TrainerLibraryTabs/TrainerLibraryTabs';
 import TrainerLibraryDietModal from '@/app/trainer/library/library_components/TrainerLibraryDietModal/TrainerLibraryDietModal';
 import TrainerLibraryDietGrid from '@/app/trainer/library/library_components/TrainerLibraryDietGrid/TrainerLibraryDietGrid';
-import type { LibraryInitialData } from '@/app/trainer/library/library_types/library_types';
 
-function LibraryContent() {
- const { toast, hideToast } = useLibraryContext();
+export default function TrainerLibraryMain() {
+  const logic = useTrainerLibraryLogic();
+  const {
+    dietPlans,
+    totalDietPlans,
+    isPending,
+    isError,
+    search,
+    filterGoal,
+    currentPage,
+    setSearch,
+    setFilterGoal,
+    setCurrentPage,
+    loadAll,
+    showDietModal,
+    editDietData,
+    openEditDiet,
+    closeDietModal,
+  } = logic;
 
- return (
- <div className="min-h-full pb-10 bg-background text-foreground">
-  <div className="p-6 space-y-5">
- <TrainerLibraryTabs />
- 
- <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden p-5">
-   <TrainerLibraryDietGrid />
- </div>
- </div>
-
- <TrainerLibraryDietModal />
-
- {toast && (
- <TrainerToast message={toast.message} type={toast.type} onClose={hideToast} />
- )}
- </div>
- );
+  return (
+    <div className="min-h-full pb-10 bg-background text-foreground">
+      <div className="p-6 space-y-5">
+        <TrainerLibraryTabs
+          search={search}
+          setSearch={setSearch}
+          filterGoal={filterGoal}
+          setFilterGoal={(goal) => setFilterGoal(goal as any)}
+          onRefresh={loadAll}
+        />
+        <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden p-5">
+          <TrainerLibraryDietGrid
+            dietPlans={dietPlans}
+            totalDietPlans={totalDietPlans}
+            currentPage={currentPage}
+            isPending={isPending}
+            isError={isError}
+            search={search}
+            onPageChange={setCurrentPage}
+            onViewDiet={openEditDiet}
+          />
+        </div>
+      </div>
+      <TrainerLibraryDietModal
+        isOpen={showDietModal}
+        plan={editDietData}
+        onClose={closeDietModal}
+      />
+    </div>
+  );
 }
-
-export default function TrainerLibraryMain({ initialData }: { initialData?: LibraryInitialData | null }) {
- return (
- <LibraryProvider initialData={initialData}>
- <LibraryContent />
- </LibraryProvider>
- );
-}
-

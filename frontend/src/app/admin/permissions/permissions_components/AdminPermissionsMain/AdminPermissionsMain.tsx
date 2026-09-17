@@ -1,7 +1,5 @@
+"use client";
 // RESPONSIBILITY: Main entry point for the Permissions module. Composes toolbar, role cards, matrix, and gym overrides panel.
-'use client';
-
-import AdminHeader from '@/app/admin/admin_components/AdminLayout/AdminHeader';
 import { useAdminPermissionsLogic } from '@/app/admin/permissions/permissions_context/useAdminPermissionsLogic';
 import AdminPermissionsToolbar from '@/app/admin/permissions/permissions_components/AdminPermissionsToolbar/AdminPermissionsToolbar';
 import AdminPermissionsRoleCard from '@/app/admin/permissions/permissions_components/AdminPermissionsRoleCard/AdminPermissionsRoleCard';
@@ -12,7 +10,7 @@ function PermissionsSkeleton() {
   return (
     <div className="p-6 space-y-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {[1, 2].map(i => <div key={i} className="h-24 bg-card rounded-xl motion-safe:animate-pulse border border-border" />)}
+        {["row-1", "row-2"].map(i => <div key={i} className="h-24 bg-card rounded-xl motion-safe:animate-pulse border border-border" />)}
       </div>
       <div className="h-12 bg-card rounded-xl motion-safe:animate-pulse border border-border" />
       <div className="h-96 bg-card rounded-xl motion-safe:animate-pulse border border-border" />
@@ -21,16 +19,12 @@ function PermissionsSkeleton() {
 }
 
 export default function AdminPermissionsMain() {
-  const { fetchState } = useAdminPermissionsLogic();
+  const { status } = useAdminPermissionsLogic();
 
-  if (fetchState === 'loading') return <PermissionsSkeleton />;
+  if (status === 'pending') return <PermissionsSkeleton />;
 
   return (
     <div className="min-h-full pb-10">
-      <AdminHeader
-        title="Permissions"
-        subtitle="Define what each role can access across your gyms"
-      />
       <div className="p-6 space-y-6">
 
         {/* Role Summary Cards */}

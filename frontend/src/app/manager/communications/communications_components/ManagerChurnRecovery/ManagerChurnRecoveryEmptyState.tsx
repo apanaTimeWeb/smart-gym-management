@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Empty state shown when no churned members exist — positive framing with a motivational message.
 'use client';
-
+// RESPONSIBILITY: Empty state shown when no churned members exist — positive framing with a motivational message.
 import { ShieldCheck } from 'lucide-react';
 
 export default function ManagerChurnRecoveryEmptyState() {

@@ -1,15 +1,14 @@
-// RESPONSIBILITY: 4 KPI stat cards for the Churn Recovery tab — Total Churned, Churned This Month, Recovery Rate, Avg Days Since Exit.
 'use client';
-
+// RESPONSIBILITY: 4 KPI stat cards for the Churn Recovery tab — Total Churned, Churned This Month, Recovery Rate, Avg Days Since Exit.
 import { UserX, TrendingDown, RotateCcw, Clock } from 'lucide-react';
-import type { ChurnKPIData } from '@/app/manager/communications/communications_types/communications_types';
+import type { ChurnKPIData } from '@/app/manager/communications/communications_types/ManagerCommunications_types';
 import { formatNumber, formatPercent } from '@/lib/formatters';
 
 interface ManagerChurnRecoveryKPIsProps {
   kpis: ChurnKPIData | undefined;
 }
 
-const CHURN_KPI_CARDS = [
+const CANCELLATIONS_KPI_CARDS = [
   {
     key: 'totalChurned' as keyof ChurnKPIData,
     label: 'TOTAL LOST',
@@ -51,7 +50,7 @@ const CHURN_KPI_CARDS = [
 export default function ManagerChurnRecoveryKPIs({ kpis }: ManagerChurnRecoveryKPIsProps) {
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-      {CHURN_KPI_CARDS.map((card) => {
+      {CANCELLATIONS_KPI_CARDS.map((card) => {
         const Icon = card.icon;
         const value = kpis ? (kpis[card.key] as number) : null;
         return (
@@ -61,7 +60,7 @@ export default function ManagerChurnRecoveryKPIs({ kpis }: ManagerChurnRecoveryK
             style={{ background: 'linear-gradient(180deg, rgba(250,204,21,0.04), rgba(255,255,255,0.01))' }}
           >
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-medium text-secondary uppercase tracking-wider">
+              <span className="text-xs font-medium text-secondary uppercase tracking-wider">
                 {card.label}
               </span>
               <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${card.iconBg}`}>

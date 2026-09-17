@@ -1,35 +1,13 @@
-'use client';
+"use client";
 // RESPONSIBILITY: Manages the GST & Tax settings tab.
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { GstTaxSettingsSchema } from '@/app/admin/settings/settings_types/settings.schema';
-import type { GstTaxSettingsType } from '@/app/admin/settings/settings_types/settings_types';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { settingsApi } from '@/app/admin/settings/settings_api/settings_api';
-import toast from 'react-hot-toast';
+import type { GstTaxSettingsType } from '@/app/admin/settings/settings_types/AdminSettingsTypes';
+import { useAdminSettingsGstForm } from '@/app/admin/settings/settings_context/useAdminSettingsForms';
 import { Save, RefreshCw } from 'lucide-react';
-import { useUnsavedChangesGuard } from '@/app/admin/admin_utils/useUnsavedChangesGuard';
 import { GST_STATE_CODES, TAX_RATE_OPTIONS } from '@/app/admin/settings/settings_utils/AdminSettingsSharedConstants';
 import { AdminSettingsToggleSwitch } from '@/app/admin/settings/settings_components/AdminSettingsShared/AdminSettingsToggleSwitch';
 
 export function AdminSettingsGST({ initialData }: { initialData: GstTaxSettingsType }) {
-  const queryClient = useQueryClient();
-  const form = useForm<GstTaxSettingsType>({
-    resolver: zodResolver(GstTaxSettingsSchema),
-    defaultValues: initialData,
-  });
-
-  useUnsavedChangesGuard(form.formState.isDirty);
-
-  const mutation = useMutation({
-    mutationFn: (data: GstTaxSettingsType) => settingsApi.updateSettings({ gst: data }),
-    onSuccess: (res) => {
-      toast.success(res.message || 'GST settings saved', { id: 'settings-gst-save' });
-      queryClient.invalidateQueries({ queryKey: ['admin', 'settings'] });
-      form.reset(form.getValues());
-    },
-    onError: (err) => toast.error((err as Error).message, { id: 'settings-gst-save' }),
-  });
+  const { form, formValues, mutation } = useAdminSettingsGstForm(initialData);
 
   const onSubmit = (data: GstTaxSettingsType) => mutation.mutate(data);
 
@@ -49,7 +27,7 @@ export function AdminSettingsGST({ initialData }: { initialData: GstTaxSettingsT
           <button
             type="submit"
             disabled={mutation.isPending}
-            className="px-4 py-2 text-sm bg-primary text-white rounded-lg font-medium flex items-center gap-2 disabled:opacity-70 hover:bg-primary-hover motion-safe:transition-colors"
+            className="px-4 py-2 text-sm bg-primary text-primary-foreground rounded-lg font-medium flex items-center gap-2 disabled:opacity-70 hover:bg-primary-hover motion-safe:transition-colors"
           >
             <Save size={14} /> {mutation.isPending ? 'Saving...' : 'Save Changes'}
           </button>
@@ -114,14 +92,14 @@ export function AdminSettingsGST({ initialData }: { initialData: GstTaxSettingsT
           <p className="text-sm font-semibold text-foreground">Invoice Options</p>
           <div className="flex items-center justify-between p-3 bg-input/40 rounded-xl border border-border">
             <AdminSettingsToggleSwitch
-              checked={form.watch('showGstOnInvoice')}
+              checked={formValues.showGstOnInvoice ?? initialData.showGstOnInvoice}
               onChange={(v) => form.setValue('showGstOnInvoice', v, { shouldDirty: true })}
               label="Show GST breakdown on invoices & receipts"
             />
           </div>
           <div className="flex items-center justify-between p-3 bg-input/40 rounded-xl border border-border">
             <AdminSettingsToggleSwitch
-              checked={form.watch('taxInclusivePricing')}
+              checked={formValues.taxInclusivePricing ?? initialData.taxInclusivePricing}
               onChange={(v) => form.setValue('taxInclusivePricing', v, { shouldDirty: true })}
               label="Prices are tax-inclusive (GST already included in plan price)"
             />

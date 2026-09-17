@@ -1,4 +1,4 @@
-'use client';
+"use client";
 // RESPONSIBILITY: Error boundary for Admin Attendance page.
 import { RefreshCw } from 'lucide-react';
 
@@ -11,7 +11,7 @@ export default function AdminAttendanceError({ reset }: { reset: () => void }) {
       </p>
       <button
         onClick={reset}
-        className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl text-sm font-medium active:scale-95 motion-safe:transition-all"
+        className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-xl text-sm font-medium motion-safe:active:scale-95 motion-safe:transition-all"
       >
         <RefreshCw size={15} /> Try Again
       </button>

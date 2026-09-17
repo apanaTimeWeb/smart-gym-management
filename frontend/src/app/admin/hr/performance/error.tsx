@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Handles and displays errors encountered while loading the Staff Performance Dashboard.
-'use client';
 
 import { AlertTriangle, RefreshCw } from 'lucide-react';
 
@@ -18,11 +18,11 @@ export default function Error({
         </div>
         <h2 className="text-xl font-bold text-foreground mb-2">Failed to load Staff Performance</h2>
         <p className="text-secondary text-sm mb-6 max-w-md">
-          {error.message || 'An unexpected error occurred while loading the dashboard.'}
+          Please retry. If the issue continues, contact support.
         </p>
         <button
           onClick={reset}
-          className="flex items-center gap-2 px-5 py-2.5 bg-danger text-white font-semibold rounded-xl hover:bg-danger/90 motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger"
+          className="flex items-center gap-2 px-5 py-2.5 bg-danger text-primary-foreground font-semibold rounded-xl hover:bg-danger/90 motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger"
         >
           <RefreshCw size={16} strokeWidth={2.5} />
           Try Again

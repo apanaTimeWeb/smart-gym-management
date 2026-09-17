@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders 4 read-only KPI stat cards for Admin Attendance — today's count, present, late, weekly avg.
-'use client';
 
 import { CalendarCheck, UserCheck, Clock, TrendingUp } from 'lucide-react';
 import { useAdminAttendanceLogic } from '@/app/admin/attendance/attendance_context/useAdminAttendanceLogic';

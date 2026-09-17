@@ -2,5 +2,7 @@
 import AdminReportsMain from '@/app/admin/reports/reports_components/AdminReportsMain/AdminReportsMain';
 
 export default function ReportsPage() {
-  return <AdminReportsMain />;
+  return (
+      <AdminReportsMain />
+  );
 }

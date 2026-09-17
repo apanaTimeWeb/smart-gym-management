@@ -1,8 +1,7 @@
+'use client';
 // RESPONSIBILITY: Encapsulates logic, UI, or types for this module.
 // DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Typed Error Boundary component that wraps the login client components and displays a module-specific fallback UI on crash.
-'use client';
-
 import React, { Component } from 'react';
 import type { ErrorInfo, ReactNode } from 'react';
 import { AuthUrlConfig } from '@/app/auth/auth_url_config';

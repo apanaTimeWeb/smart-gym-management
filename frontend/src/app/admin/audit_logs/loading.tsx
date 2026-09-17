@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates loading for the admin module; UI composition stays here and business/API logic remains in dedicated hooks and APIs.
 import AdminTableSkeleton from '@/app/admin/admin_components/AdminShared/AdminTableSkeleton';
 
 export default function AdminAuditLogsLoading() {

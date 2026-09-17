@@ -1,22 +1,22 @@
+"use client";
 // RESPONSIBILITY: Renders search input, status filter, branch filter, and date range filter for Admin Attendance.
-'use client';
 
 import { Search } from 'lucide-react';
 import { useAdminAttendanceStore } from '@/app/admin/attendance/attendance_store/useAdminAttendanceStore';
-import { useAdminBranchesData } from '@/app/admin/admin_store/useAdminBranchesData';
+import { useAdminAttendanceBranchReference } from '@/app/admin/attendance/attendance_context/useAdminAttendanceBranchReference';
 import { AdminSearchableDropdown } from '@/app/admin/admin_components/AdminShared/AdminSearchableDropdown';
 import { ATTENDANCE_STATUS_OPTIONS, DATE_RANGE_OPTIONS } from '@/app/admin/attendance/attendance_utils/AdminAttendanceSharedConstants';
-import type { AttendanceStatus, DateRangeFilter } from '@/app/admin/attendance/attendance_types/attendance_types';
-import type { Branch } from '@/app/admin/admin_store/useAdminGlobalStore';
+import type { AttendanceStatus, DateRangeFilter } from '@/app/admin/attendance/attendance_types/AdminAttendanceTypes';
+import type { AdminAttendanceBranchReference } from '@/app/admin/attendance/attendance_types/AdminAttendanceBranchReferenceTypes';
 
 export default function AdminAttendanceToolbar() {
   const { search, setSearch, statusFilter, setStatusFilter, branchFilter, setBranchFilter, dateRange, setDateRange } =
     useAdminAttendanceStore();
-  const { data: branches = [] } = useAdminBranchesData();
+  const { data: branches = [] } = useAdminAttendanceBranchReference();
 
   const branchOptions = [
     { value: 'all', label: 'All Branches' },
-    ...(branches as Branch[]).map((b) => ({ value: b.id, label: b.name })),
+    ...(branches as AdminAttendanceBranchReference[]).map((b) => ({ value: b.id, label: b.name })),
   ];
 
   return (

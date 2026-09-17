@@ -1,6 +1,7 @@
+// DATA FLOW: feature API/schema → hook/context → useAdminAttendanceStore consumers.
 // RESPONSIBILITY: Zustand store for Admin Attendance UI state — filters, pagination, date range.
 import { create } from 'zustand';
-import type { AttendanceStatus, DateRangeFilter } from '@/app/admin/attendance/attendance_types/attendance_types';
+import type { AttendanceStatus, DateRangeFilter } from '@/app/admin/attendance/attendance_types/AdminAttendanceTypes';
 
 interface AdminAttendanceStoreState {
   search: string;

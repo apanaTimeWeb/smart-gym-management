@@ -1,6 +1,6 @@
-// RESPONSIBILITY: Notifications list with toolbar (search + filters) and row actions (mark read, delete).
 'use client';
-
+import { formatDate } from '@/lib/formatters';
+// RESPONSIBILITY: Notifications list with toolbar (search + filters) and row actions (mark read, delete).
 import { useNotificationsContext } from '@/app/manager/notifications/notifications_context/ManagerNotificationsContext';
 import {
   NOTIFICATION_TYPE_STYLES,
@@ -13,7 +13,7 @@ import { Search, Loader2, Bell, CheckCheck, Trash2, CheckCircle } from 'lucide-r
 
 export default function ManagerNotificationsTable() {
   const {
-    notifications, fetchState, saving,
+    notifications, isPending, isError, saving,
     search, setSearch,
     typeFilter, setTypeFilter,
     priorityFilter, setPriorityFilter,
@@ -51,7 +51,7 @@ export default function ManagerNotificationsTable() {
           <button
             onClick={handleMarkAllRead}
             disabled={saving}
-            className="flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg bg-primary text-white hover:opacity-90 motion-safe:transition-opacity disabled:opacity-50"
+            className="flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg bg-primary text-primary-foreground hover:opacity-90 motion-safe:transition-opacity disabled:opacity-50"
           >
             <CheckCheck size={14} /> Mark All Read
           </button>
@@ -59,11 +59,11 @@ export default function ManagerNotificationsTable() {
       </div>
 
       {/* List */}
-      {fetchState === 'loading' ? (
+      {isPending ? (
         <div className="flex items-center justify-center py-20">
           <Loader2 className="w-7 h-7 motion-safe:animate-spin text-primary" />
         </div>
-      ) : fetchState === 'error' ? (
+      ) : isError ? (
         <div className="py-16 text-center">
           <p className="text-sm text-danger font-medium">Failed to load notifications</p>
         </div>
@@ -80,7 +80,7 @@ export default function ManagerNotificationsTable() {
             const isUnread = n.status === 'UNREAD';
 
             return (
-              <li key={n.id} className={`group flex items-start gap-4 px-5 py-4 motion-safe:transition-colors hover:bg-primary/5 ${isUnread ? 'bg-primary/[0.02]' : ''}`}>
+              <li key={n.id} className={`group flex items-start gap-4 px-5 py-4 motion-safe:transition-colors hover:bg-primary/5 ${isUnread ? 'bg-primary/5' : ''}`}>
                 {/* Unread dot */}
                 <div className="mt-1.5 shrink-0">
                   {isUnread
@@ -99,7 +99,7 @@ export default function ManagerNotificationsTable() {
                   <p className={`text-sm font-semibold ${isUnread ? 'text-foreground' : 'text-secondary'}`}>{n.title}</p>
                   <p className="text-xs text-secondary mt-0.5 line-clamp-2">{n.message}</p>
                   <p className="text-xs text-secondary/60 mt-1">
-                    {new Date(n.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                    {formatDate(n.createdAt)}
                   </p>
                 </div>
 

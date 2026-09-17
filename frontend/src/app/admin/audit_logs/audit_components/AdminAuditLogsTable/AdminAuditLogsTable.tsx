@@ -1,15 +1,15 @@
+"use client";
 // RESPONSIBILITY: Paginated table of audit log events with severity color coding and row-click detail drawer.
-'use client';
 
 import { useState } from 'react';
 import {
-  Trash2, Edit, PlusCircle, AlertCircle, LogIn, Users, CreditCard, Settings, ShieldAlert, Eye,
+  Trash2, Edit, PlusCircle, AlertCircle, LogIn, Users, CreditCard, Settings, ShieldAlert ,
 } from 'lucide-react';
 import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
 import AdminTableSkeleton from '@/app/admin/admin_components/AdminShared/AdminTableSkeleton';
 import AdminAuditLogsDetailDrawer from '@/app/admin/audit_logs/audit_components/AdminAuditLogsDetailDrawer/AdminAuditLogsDetailDrawer';
 import { useAdminAuditLogsLogic } from '@/app/admin/audit_logs/audit_context/useAdminAuditLogsLogic';
-import type { AuditLog } from '@/app/admin/audit_logs/audit_types/audit_types';
+import type { AuditLog } from '@/app/admin/audit_logs/audit_types/AdminAuditTypes';
 
 const SEVERITY_STYLES: Record<string, string> = {
   high:   'bg-danger-bg text-danger border border-danger/30',
@@ -29,12 +29,12 @@ function getActionIcon(action: string) {
 }
 
 export default function AdminAuditLogsTable() {
-  const { paginated, fetchState, currentPage, setCurrentPage, totalPages, totalItems } = useAdminAuditLogsLogic();
+  const { paginated, status, currentPage, setCurrentPage, totalPages, totalItems } = useAdminAuditLogsLogic();
   const [selectedLog, setSelectedLog] = useState<AuditLog | null>(null);
 
-  if (fetchState === 'loading') return <AdminTableSkeleton rows={8} cols={6} />;
+  if (status === 'pending') return <AdminTableSkeleton rows={8} cols={6} />;
 
-  if (fetchState === 'error') return (
+  if (status === 'error') return (
     <div className="bg-card border border-border rounded-xl p-10 text-center">
       <ShieldAlert size={32} className="mx-auto mb-3 text-danger opacity-60" />
       <p className="text-sm text-danger font-medium">Failed to load audit logs</p>
@@ -45,10 +45,10 @@ export default function AdminAuditLogsTable() {
     <>
       <div className="bg-card border border-border rounded-xl overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+          <table data-admin-responsive-table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-primary/5 border-b border-border">
-                {['Timestamp', 'Action & Module', 'Performed By', 'Branch', 'Details', 'Severity', ''].map(h => (
+                {['Timestamp', 'Action & Module', 'Performed By', 'Branch', 'Details', 'Severity'].map(h => (
                   <th key={h} className="p-4 text-xs font-semibold text-secondary uppercase tracking-wider whitespace-nowrap">{h}</th>
                 ))}
               </tr>
@@ -56,16 +56,25 @@ export default function AdminAuditLogsTable() {
             <tbody className="divide-y divide-border">
               {paginated.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="p-12 text-center">
+                  <td colSpan={6} className="p-12 text-center">
                     <ShieldAlert size={32} className="mx-auto mb-3 opacity-30 text-secondary" />
                     <p className="text-sm text-secondary">No logs match your filters</p>
                   </td>
                 </tr>
-              ) : paginated.map(log => (
+              ) : paginated.map((log: AuditLog) => (
                 <tr
                   key={log.id}
                   className="hover:bg-input/40 motion-safe:transition-colors cursor-pointer group"
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`Open audit log ${log.action.replace(/_/g, ' ')}`}
                   onClick={() => setSelectedLog(log)}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                      event.preventDefault();
+                      setSelectedLog(log);
+                    }
+                  }}
                 >
                   <td className="p-4 text-xs text-secondary whitespace-nowrap">
                     {new Date(log.timestamp).toLocaleString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}
@@ -90,15 +99,6 @@ export default function AdminAuditLogsTable() {
                     <span className={`px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wide inline-block ${SEVERITY_STYLES[log.severity]}`}>
                       {log.severity}
                     </span>
-                  </td>
-                  <td className="p-4">
-                    <button
-                      onClick={e => { e.stopPropagation(); setSelectedLog(log); }}
-                      className="p-1.5 rounded-lg text-secondary hover:text-primary hover:bg-input motion-safe:transition-colors opacity-0 group-hover:opacity-100"
-                      aria-label="View log details"
-                    >
-                      <Eye size={15} />
-                    </button>
                   </td>
                 </tr>
               ))}

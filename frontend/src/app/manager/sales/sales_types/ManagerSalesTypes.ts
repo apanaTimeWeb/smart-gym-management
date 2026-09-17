@@ -1,11 +1,10 @@
 // RESPONSIBILITY: Provides the implementation for ManagerSalesTypes.ts functionality within its module.
 import { type SalesTab, type DateFilter } from '@/app/manager/sales/sales_utils/ManagerSalesSharedConstants';
 import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
-import type { Member } from '@/app/manager/members/members_types/ManagerMembersTypes';
+import type { SalesMemberSnapshot } from '@/app/manager/sales/sales_types/ManagerSalesMemberSnapshot';
 
-export type FetchState = 'idle' | 'loading' | 'success' | 'error';
 
-export type PendingPaymentMember = Omit<Member, 'plan'> & {
+export type PendingPaymentMember = Omit<SalesMemberSnapshot, 'plan'> & {
   plan?: string;
   pendingAmount?: number;
   daysOverdue?: number;
@@ -46,7 +45,7 @@ export interface SalesInitialData {
   membershipTotals?: MembershipTotals;
   pendingPayments?: PendingPaymentMember[];
   pendingTotal?: number;
-  allMemberships?: Member[];
+  allMemberships?: SalesMemberSnapshot[];
   allMembershipsTotal?: number;
 }
 
@@ -66,13 +65,15 @@ export interface SalesContextType {
   
   overviewData: OverviewDataPoint[];
   membershipReport: MembershipReportItem[];
+  membershipReportTotal: number;
   membershipTotals: MembershipTotals;
   pendingPayments: PendingPaymentMember[];
   pendingTotal: number;
-  allMemberships: Member[];
+  allMemberships: SalesMemberSnapshot[];
   allMembershipsTotal: number;
   
-  fetchState: FetchState;
+  isLoading: boolean;
+  isError: boolean;
   loadAll: () => Promise<void>;
   
   toast: { message: string; type: ToastType } | null;

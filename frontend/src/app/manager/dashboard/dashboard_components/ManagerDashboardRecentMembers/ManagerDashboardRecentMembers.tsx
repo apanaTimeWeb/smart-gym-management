@@ -1,32 +1,46 @@
-// RESPONSIBILITY: Renders the recent members table on the dashboard with a local search filter.
 'use client';
-
-import { useState } from 'react';
+// RESPONSIBILITY: Renders the recent members table on the dashboard with a local search filter.
+import { useMemo, useState } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useManagerDebounce } from '@/app/manager/manager_utils/ManagerDebounce';
 import Link from 'next/link';
 import { Search, ArrowRight, UserPlus } from 'lucide-react';
 import { DASHBOARD_RECENT_MEMBERS_PAGE_SIZE, RECENT_MEMBERS_HEADERS, DASHBOARD_STATUS_STYLES } from '@/app/manager/dashboard/dashboard_utils/ManagerDashboardSharedConstants';
-import { formatCurrency } from '@/lib/formatters';
-import { useDashboardStatsQuery } from '@/app/manager/dashboard/dashboard_api/useManagerDashboardQueries';
-import { useManagerDashboardStore } from '@/app/manager/dashboard/dashboard_store/useManagerDashboardStore';
+import { formatCurrency, formatDate, displayValue } from '@/lib/formatters';
+import { useDashboardStatsQuery } from '@/app/manager/dashboard/dashboard_api/ManagerUseManagerDashboardQueries';
+import { useManagerDashboardStore } from '@/app/manager/dashboard/dashboard_store/ManagerUseManagerDashboardStore';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 
 export default function ManagerDashboardRecentMembers() {
   const { timeRange } = useManagerDashboardStore();
-  const { data: stats } = useDashboardStatsQuery(timeRange);
-  const [search, setSearch] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const search = searchParams.get('recentMembersSearch') || '';
+  const currentPage = Number(searchParams.get('recentMembersPage') || '1');
+  const [localSearch, setLocalSearch] = useState(search);
+  const debouncedSearch = useManagerDebounce(localSearch, 300);
+  const queryParams = useMemo(() => ({ range: timeRange, recentMembersSearch: debouncedSearch, recentMembersPage: String(currentPage), recentMembersLimit: String(DASHBOARD_RECENT_MEMBERS_PAGE_SIZE) }), [timeRange, debouncedSearch, currentPage]);
+  const { data: stats } = useDashboardStatsQuery(queryParams);
 
   if (!stats) return null;
-  const members = stats.recentMembers || [];
+  const paginated = stats.recentMembers || [];
+  const totalRecentMembers = stats.totalRecentMembers ?? paginated.length;
+  const totalPages = Math.max(1, Math.ceil(totalRecentMembers / DASHBOARD_RECENT_MEMBERS_PAGE_SIZE));
 
-  const filtered = members.filter(m => {
-    const planName = typeof m.plan === 'string' ? m.plan : m.plan?.name || '';
-    return m.name?.toLowerCase().includes(search.toLowerCase()) ||
-           planName?.toLowerCase().includes(search.toLowerCase());
-  });
+  const handleSearchChange = (value: string) => {
+    setLocalSearch(value);
+    const params = new URLSearchParams(searchParams.toString());
+    if (value) params.set('recentMembersSearch', value); else params.delete('recentMembersSearch');
+    params.set('recentMembersPage', '1');
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+  };
 
-  const totalPages = Math.ceil(filtered.length / DASHBOARD_RECENT_MEMBERS_PAGE_SIZE) || 1;
-  const paginated = filtered.slice((currentPage - 1) * DASHBOARD_RECENT_MEMBERS_PAGE_SIZE, currentPage * DASHBOARD_RECENT_MEMBERS_PAGE_SIZE);
+  const handlePageChange = (page: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('recentMembersPage', String(page));
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+  };
 
   return (
     <div className="xl:col-span-2 rounded-xl shadow-sm border overflow-hidden bg-card border-border">
@@ -36,8 +50,8 @@ export default function ManagerDashboardRecentMembers() {
           <div className="relative">
             <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-secondary" />
             <input
-              value={search}
-              onChange={e => { setSearch(e.target.value);  }}
+              value={localSearch}
+              onChange={e => handleSearchChange(e.target.value)}
               placeholder="Search members..."
               className="pl-8 pr-3 py-1.5 text-sm border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page w-40 sm:w-52 bg-input text-primary"
             />
@@ -59,17 +73,17 @@ export default function ManagerDashboardRecentMembers() {
             {paginated.map(m => {
               const statusStyle = DASHBOARD_STATUS_STYLES[m.status] || { bg: 'bg-input', text: 'text-secondary' };
               return (
-                <tr key={m.id} className="transition-colors hover:bg-primary/5 bg-card">
+                <tr key={m.id} className="motion-safe:transition-colors hover:bg-primary/5 bg-card">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded-full flex items-center justify-center font-semibold text-sm bg-primary/10 text-primary">
-                        {m.name.charAt(0)}
+                        {m.name.charAt(0) || '?'}
                       </div>
                       <span className="text-sm font-medium text-primary">{m.name}</span>
                     </div>
                   </td>
                   <td className="px-6 py-4 text-sm text-secondary">
-                    {typeof m.plan === 'string' ? m.plan : m.plan?.name || 'N/A'}
+                    {typeof m.plan === 'string' ? m.plan : displayValue(m.plan?.name)}
                   </td>
                   <td className="px-6 py-4">
                     <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${statusStyle.bg} ${statusStyle.text}`}>
@@ -77,15 +91,15 @@ export default function ManagerDashboardRecentMembers() {
                     </span>
                   </td>
                   <td className="px-6 py-4 text-sm text-secondary">
-                    {new Date(m.joinDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
+                    {formatDate(m.joinDate)}
                   </td>
                   <td className="px-6 py-4 text-sm font-medium text-primary">{formatCurrency(m.paidAmount)}</td>
                 </tr>
               );
             })}
-            {filtered.length === 0 && (
+            {paginated.length === 0 && (
               <tr>
-                <td colSpan={5} className="text-center py-8 text-sm text-secondary">
+                <td colSpan={RECENT_MEMBERS_HEADERS.length} className="text-center py-8 text-sm text-secondary">
                   {search ? `No members matching "${search}"` : 'No members yet. Add your first member!'}
                 </td>
               </tr>
@@ -98,7 +112,9 @@ export default function ManagerDashboardRecentMembers() {
           <ManagerPagination 
             currentPage={currentPage}
             totalPages={totalPages}
-            onPageChange={setCurrentPage}
+            totalItems={totalRecentMembers}
+            itemsPerPage={DASHBOARD_RECENT_MEMBERS_PAGE_SIZE}
+            onPageChange={handlePageChange}
           />
         </div>
     </div>

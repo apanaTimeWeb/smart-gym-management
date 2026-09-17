@@ -1,6 +1,7 @@
+// DATA FLOW: feature API/schema → hook/context → useAdminCouponsStore consumers.
 // RESPONSIBILITY: Zustand store for Coupons module UI state — modal, form, filters.
 import { create } from 'zustand';
-import type { CouponFormValues } from '@/app/admin/coupons/coupons_types/coupons_types';
+import type { CouponFormValues } from '@/app/admin/coupons/coupons_types/AdminCouponsTypes';
 import { EMPTY_COUPON_FORM } from '@/app/admin/coupons/coupons_utils/AdminCouponsSharedConstants';
 
 interface AdminCouponsStore {
@@ -16,6 +17,8 @@ interface AdminCouponsStore {
   setStatusFilter: (s: string) => void;
   currentPage: number;
   setCurrentPage: (p: number) => void;
+  dateRange: string;
+  setDateRange: (s: string) => void;
 }
 
 export const useAdminCouponsStore = create<AdminCouponsStore>((set) => ({
@@ -31,4 +34,6 @@ export const useAdminCouponsStore = create<AdminCouponsStore>((set) => ({
   setStatusFilter: (s) => set({ statusFilter: s, currentPage: 1 }),
   currentPage: 1,
   setCurrentPage: (p) => set({ currentPage: p }),
+  dateRange: 'all_time',
+  setDateRange: (s) => set({ dateRange: s, currentPage: 1 }),
 }));

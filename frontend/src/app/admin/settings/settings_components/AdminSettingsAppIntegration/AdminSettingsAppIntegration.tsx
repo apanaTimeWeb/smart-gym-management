@@ -1,34 +1,14 @@
-'use client';
+"use client";
 // RESPONSIBILITY: Manages the App Integration settings tab.
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { AppIntegrationSettingsSchema } from '@/app/admin/settings/settings_types/settings.schema';
-import type { AppIntegrationSettingsType } from '@/app/admin/settings/settings_types/settings_types';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { settingsApi } from '@/app/admin/settings/settings_api/settings_api';
-import toast from 'react-hot-toast';
+import { useState } from 'react';
+import type { AppIntegrationSettingsType } from '@/app/admin/settings/settings_types/AdminSettingsTypes';
+import { useAdminSettingsAppIntegrationForm } from '@/app/admin/settings/settings_context/useAdminSettingsForms';
 import { Save, RefreshCw, ExternalLink, Copy } from 'lucide-react';
-import { useUnsavedChangesGuard } from '@/app/admin/admin_utils/useUnsavedChangesGuard';
 import { AdminSettingsToggleSwitch } from '@/app/admin/settings/settings_components/AdminSettingsShared/AdminSettingsToggleSwitch';
 
 export function AdminSettingsAppIntegration({ initialData }: { initialData: AppIntegrationSettingsType }) {
-  const queryClient = useQueryClient();
-  const form = useForm<AppIntegrationSettingsType>({
-    resolver: zodResolver(AppIntegrationSettingsSchema),
-    defaultValues: initialData,
-  });
-
-  useUnsavedChangesGuard(form.formState.isDirty);
-
-  const mutation = useMutation({
-    mutationFn: (data: AppIntegrationSettingsType) => settingsApi.updateSettings({ integration: data }),
-    onSuccess: (res) => {
-      toast.success(res.message || 'Integration settings saved', { id: 'settings-integration-save' });
-      queryClient.invalidateQueries({ queryKey: ['admin', 'settings'] });
-      form.reset(form.getValues());
-    },
-    onError: (err) => toast.error((err as Error).message, { id: 'settings-integration-save' }),
-  });
+  const [copiedApiKey, setCopiedApiKey] = useState(false);
+  const { form, formValues, mutation } = useAdminSettingsAppIntegrationForm(initialData);
 
   const onSubmit = (data: AppIntegrationSettingsType) => mutation.mutate(data);
 
@@ -58,7 +38,7 @@ export function AdminSettingsAppIntegration({ initialData }: { initialData: AppI
           <button
             type="submit"
             disabled={mutation.isPending}
-            className="px-4 py-2 text-sm bg-primary text-white rounded-lg font-medium flex items-center gap-2 disabled:opacity-70 hover:bg-primary-hover motion-safe:transition-colors"
+            className="px-4 py-2 text-sm bg-primary text-primary-foreground rounded-lg font-medium flex items-center gap-2 disabled:opacity-70 hover:bg-primary-hover motion-safe:transition-colors"
           >
             <Save size={14} /> {mutation.isPending ? 'Saving...' : 'Save Changes'}
           </button>
@@ -70,7 +50,7 @@ export function AdminSettingsAppIntegration({ initialData }: { initialData: AppI
           {features.map(f => (
             <div key={f.key} className="flex items-center justify-between p-3 bg-input/40 rounded-xl border border-border">
               <AdminSettingsToggleSwitch
-                checked={form.watch(f.key)}
+                checked={formValues[f.key] ?? initialData[f.key]}
                 onChange={(v) => form.setValue(f.key, v, { shouldDirty: true })}
                 label={f.label}
               />
@@ -84,7 +64,7 @@ export function AdminSettingsAppIntegration({ initialData }: { initialData: AppI
             { label: 'App Store (iOS)', key: 'appStoreLink' as const },
             { label: 'Play Store (Android)', key: 'playStoreLink' as const },
           ].map(f => {
-            const link = form.watch(f.key);
+            const link = formValues[f.key] ?? initialData[f.key];
             return (
               <div key={f.key}>
                 <label className="block text-sm font-medium text-secondary mb-1">{f.label}</label>
@@ -122,12 +102,11 @@ export function AdminSettingsAppIntegration({ initialData }: { initialData: AppI
                 type="button"
                 onClick={() => {
                   const key = form.getValues('apiKey');
-                  if (key) {
-                    navigator.clipboard.writeText(key);
-                    toast.success('API key copied!', { id: 'copy-key' });
-                  } else {
-                    toast.error('No API key available to copy', { id: 'copy-key' });
-                  }
+                  if (!key) return;
+                  void navigator.clipboard.writeText(key).then(() => {
+                    setCopiedApiKey(true);
+                    window.setTimeout(() => setCopiedApiKey(false), 2000);
+                  });
                 }}
                 className="p-2.5 border border-border rounded-lg text-secondary hover:text-primary hover:bg-input motion-safe:transition-colors"
                 aria-label="Copy API key"
@@ -135,6 +114,7 @@ export function AdminSettingsAppIntegration({ initialData }: { initialData: AppI
                 <Copy size={16} />
               </button>
             </div>
+            {copiedApiKey && <p className="text-xs text-success mt-1">Copied</p>}
             <p className="text-xs text-secondary mt-1">Contact support to regenerate your API key.</p>
           </div>
           <div>

@@ -1,27 +1,24 @@
-// RESPONSIBILITY: Provides strongly-typed network calls for the plans module.
-import { MOCK_PLANS } from '@/app/manager/plans/plans_fixtures/ManagerPlansMockData';
+import { ManagerPlansUrlConfig } from '@/app/manager/plans/plans_url_config';
+import { apiFetch, type ApiResponse } from '@/lib/api';
 import type { Plan } from '@/app/manager/plans/plans_types/ManagerPlansTypes';
+import { planSchema } from '@/app/manager/plans/plans_types/ManagerPlansSchema';
+import { z } from 'zod';
 
 export const plansApi = {
-  getAll: async () => {
-    await new Promise(res => setTimeout(res, 400));
-    return { success: true, message: 'Success', data: MOCK_PLANS };
+  fetchPlans: async (params?: Record<string, string>): Promise<ApiResponse<{ plans: Plan[]; total: number }>> => {
+    const query = new URLSearchParams(params ?? {}).toString();
+    return apiFetch(`${ManagerPlansUrlConfig.BACKEND_API.BASE}${query ? `?${query}` : ''}`, { dataSchema: z.object({ plans: z.array(planSchema), total: z.number() }) });
   },
-  getOne: async (id: string) => {
-    await new Promise(res => setTimeout(res, 400));
-    const plan = MOCK_PLANS.find(p => p.id === id) || MOCK_PLANS[0];
-    return { success: true, message: 'Success', data: plan };
+  fetchPlanById: async (id: string): Promise<ApiResponse<Plan>> => {
+    return apiFetch(`${ManagerPlansUrlConfig.BACKEND_API.BASE}/${id}`, { dataSchema: planSchema });
   },
-  create: async (body: Partial<Plan>) => {
-    await new Promise(res => setTimeout(res, 400));
-    return { success: true, message: 'Created', data: MOCK_PLANS[0] };
+  createPlan: async (body: Partial<Plan>): Promise<ApiResponse<Plan>> => {
+    return apiFetch(ManagerPlansUrlConfig.BACKEND_API.BASE, { method: 'POST', body: JSON.stringify(body), dataSchema: planSchema });
   },
-  update: async (id: string, body: Partial<Plan>) => {
-    await new Promise(res => setTimeout(res, 400));
-    return { success: true, message: 'Updated', data: MOCK_PLANS[0] };
+  updatePlan: async (id: string, body: Partial<Plan>): Promise<ApiResponse<Plan>> => {
+    return apiFetch(`${ManagerPlansUrlConfig.BACKEND_API.BASE}/${id}`, { method: 'PATCH', body: JSON.stringify(body), dataSchema: planSchema });
   },
-  remove: async (id: string) => {
-    await new Promise(res => setTimeout(res, 400));
-    return { success: true, message: 'Removed', data: { id } };
+  deletePlan: async (id: string): Promise<ApiResponse<{ id: string }>> => {
+    return apiFetch(`${ManagerPlansUrlConfig.BACKEND_API.BASE}/${id}`, { method: 'DELETE', dataSchema: z.object({ id: z.string() }) });
   },
 };

@@ -1,5 +1,6 @@
+"use client";
+import { formatPercent1dp, formatDecimal } from '@/lib/formatters';
 // RESPONSIBILITY: Renders the top-level KPI cards for the Performance Dashboard.
-'use client';
 
 import { UserPlus, Calendar, Star, Users } from 'lucide-react';
 import type { PerformanceAggregates } from '@/app/admin/hr/hr_types/AdminHrPerformanceTypes';
@@ -26,14 +27,14 @@ export default function AdminHrPerformanceKPIs({ aggregates }: AdminHrPerformanc
     },
     {
       label: 'Avg Attendance',
-      value: `${aggregates.avgAttendance.toFixed(1)}%`,
+      value: `${formatPercent1dp(aggregates.avgAttendance)}%`,
       icon: Users,
       iconColor: 'text-info',
       iconBg: 'bg-info/10',
     },
     {
       label: 'Avg Rating',
-      value: aggregates.avgRating.toFixed(1),
+      value: formatDecimal(aggregates.avgRating),
       icon: Star,
       iconColor: 'text-warning',
       iconBg: 'bg-warning/10',

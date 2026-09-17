@@ -1,11 +1,10 @@
-// RESPONSIBILITY: Renders a modal to record a new payment for a member.
 'use client';
-
+// RESPONSIBILITY: Renders a modal to record a new payment for a member.
 import { useState } from 'react';
 import { Calendar, CheckCircle2, Copy, FileText, Share2, Wallet, X } from 'lucide-react';
 import { formatCurrency } from '@/lib/formatters';
 import { useMembersContext } from '@/app/manager/members/members_context/ManagerMembersContext';
-import { useUnsavedChangesGuard } from '@/app/manager/manager_utils/useUnsavedChangesGuard';
+import { useManagerUnsavedChangesGuard } from '@/app/manager/manager_utils/ManagerUnsavedChangesGuard';
 
 export default function ManagerAddPaymentModal() {
   const { showPaymentModal, setShowPaymentModal, recordPayment, selectedMember } = useMembersContext();
@@ -13,7 +12,7 @@ export default function ManagerAddPaymentModal() {
   const [method, setMethod] = useState('UPI');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  useUnsavedChangesGuard(!!amount && !isSubmitting);
+  useManagerUnsavedChangesGuard(!!amount && !isSubmitting);
 
   if (!showPaymentModal || !selectedMember) return null;
 
@@ -29,11 +28,11 @@ export default function ManagerAddPaymentModal() {
   };
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-foreground/40 backdrop-blur-sm p-4">
       <div className="bg-card w-full max-w-md rounded-2xl shadow-xl overflow-hidden flex flex-col">
         <div className="px-6 py-4 border-b border-border flex items-center justify-between">
           <h2 className="text-xl font-bold text-foreground">Record Payment</h2>
-          <button onClick={() => setShowPaymentModal(false)} className="p-2 text-secondary hover:text-foreground rounded-full hover:bg-input transition-colors">
+          <button onClick={() => setShowPaymentModal(false)} className="p-2 text-secondary hover:text-foreground rounded-full hover:bg-input motion-safe:transition-colors">
             <X size={20} />
           </button>
         </div>
@@ -57,7 +56,7 @@ export default function ManagerAddPaymentModal() {
               min="1"
               value={amount}
               onChange={e => setAmount(e.target.value ? Number(e.target.value) : '')}
-              className="w-full bg-input border border-border rounded-xl px-4 py-2.5 text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+              className="w-full bg-input border border-border rounded-xl px-4 py-2.5 text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary motion-safe:transition-all"
               placeholder="e.g. 1500"
             />
           </div>
@@ -67,7 +66,7 @@ export default function ManagerAddPaymentModal() {
             <select
               value={method}
               onChange={(e) => setMethod(e.target.value)}
-              className="w-full bg-input border border-border rounded-xl px-4 py-2.5 text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+              className="w-full bg-input border border-border rounded-xl px-4 py-2.5 text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary motion-safe:transition-all"
             >
               <option value="UPI">UPI</option>
               <option value="CARD">Card</option>
@@ -80,14 +79,14 @@ export default function ManagerAddPaymentModal() {
             <button
               type="button"
               onClick={() => setShowPaymentModal(false)}
-              className="flex-1 px-4 py-2.5 text-sm font-semibold text-secondary hover:text-foreground bg-input hover:bg-input/80 rounded-xl transition-colors"
+              className="flex-1 px-4 py-2.5 text-sm font-semibold text-secondary hover:text-foreground bg-input hover:bg-input/80 rounded-xl motion-safe:transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSubmitting || !amount}
-              className="flex-1 px-4 py-2.5 text-sm font-semibold text-white bg-primary hover:bg-primary/90 rounded-xl transition-colors disabled:opacity-50"
+              className="flex-1 px-4 py-2.5 text-sm font-semibold text-primary-foreground bg-primary hover:bg-primary/90 rounded-xl motion-safe:transition-colors disabled:opacity-50"
             >
               {isSubmitting ? 'Recording...' : 'Confirm Payment'}
             </button>

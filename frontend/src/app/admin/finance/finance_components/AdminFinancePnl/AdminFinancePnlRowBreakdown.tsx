@@ -1,10 +1,10 @@
+"use client";
 // RESPONSIBILITY: Renders the inline branch breakdown panel that expands inside the P&L table row.
 // Shows revenue source split + expense category split + MoM delta context. No API calls.
-'use client';
 
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
-import type { BranchPnlRecord } from '@/app/admin/finance/finance_types/finance_types';
-import { formatCurrency } from '@/lib/formatters';
+import type { BranchPnlRecord } from '@/app/admin/finance/finance_types/AdminFinanceTypes';
+import {formatCurrency, formatPercent1dp} from '@/lib/formatters';
 
 interface AdminFinancePnlRowBreakdownProps {
   branch: BranchPnlRecord;
@@ -100,7 +100,7 @@ export default function AdminFinancePnlRowBreakdown({ branch, colSpan }: AdminFi
                 <span className="text-xs text-secondary">MoM Change</span>
                 <div className={`flex items-center gap-1 text-xs font-semibold ${momColor}`}>
                   <MomIcon size={12} strokeWidth={2} />
-                  {momDelta > 0 ? '+' : ''}{momDelta.toFixed(1)}%
+                  {momDelta > 0 ? '+' : ''}{formatPercent1dp(momDelta)}%
                 </div>
               </div>
             </div>

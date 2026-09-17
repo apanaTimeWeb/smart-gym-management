@@ -1,31 +1,42 @@
-// RESPONSIBILITY: Next.js error.tsx — renders the typed error boundary fallback for the Inquiries & Leads module with a Retry button.
 'use client';
 
-import { useEffect } from "react";
+// RESPONSIBILITY: Renders the module-specific route error fallback and records safe diagnostic metadata.
+import { useEffect } from 'react';
+import { AlertTriangle } from 'lucide-react';
+import { logger } from '@/lib/logger';
 
-export default function InquiriesError({
- error,
- reset,
+export default function ManagerInquiriesError({
+  error,
+  reset,
 }: {
- error: Error & { digest?: string };
- reset: () => void;
+  error: Error & { digest?: string };
+  reset: () => void;
 }) {
- useEffect(() => {
- // Error logged to monitoring provider
- }, [error]);
+  useEffect(() => {
+    logger.error('Manager module route error', {
+      route: '/manager/inquiries',
+      module: 'manager/inquiries',
+      errorDigest: error.digest,
+      timestamp: new Date().toISOString(),
+    });
+  }, [error]);
 
- return (
- <div className="min-h-full flex items-center justify-center inquiries-module">
- <div className="text-center">
- <p className="font-medium text-danger">Something went wrong!</p>
- <p className="text-sm mt-1 text-danger">{error.message || 'An unexpected error occurred in the Inquiries module.'}</p>
- <button
- onClick={() => reset()}
- className="mt-4 px-4 py-2 rounded-md font-medium text-primary-foreground bg-primary"
- >
- Try again
- </button>
- </div>
- </div>
- );
+  return (
+    <div className="min-h-full flex items-center justify-center p-6 bg-page">
+      <div className="bg-card border border-danger/20 p-8 rounded-2xl shadow-xl max-w-md w-full text-center space-y-4">
+        <div className="w-14 h-14 bg-danger/10 rounded-full flex items-center justify-center mx-auto text-danger">
+          <AlertTriangle size={28} />
+        </div>
+        <h2 className="text-xl font-bold text-foreground">Inquiries Unavailable</h2>
+        <p className="text-sm text-secondary">We couldn't load the inquiries module. Please try again.</p>
+        {error.digest && <p className="text-xs text-secondary/60">Ref: {error.digest}</p>}
+        <button
+          onClick={reset}
+          className="px-6 py-2.5 bg-primary text-primary-foreground font-medium rounded-xl hover:opacity-90 motion-safe:transition-opacity"
+        >
+          Try Again
+        </button>
+      </div>
+    </div>
+  );
 }

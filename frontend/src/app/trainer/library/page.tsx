@@ -1,24 +1,11 @@
-// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
-// DATA FLOW: Standard component data flow.
-// RESPONSIBILITY: Server Component � fetches initial SSR data and renders the Diet Library module entry point.
+import { Suspense } from 'react';
+// RESPONSIBILITY: Server route entry that renders the Library client boundary without duplicating client query requests.
 import TrainerLibraryMain from '@/app/trainer/library/library_components/TrainerLibraryMain/TrainerLibraryMain';
-import { ssrLibraryApi } from '@/app/trainer/library/library_api/library_server_api';
-import type { LibraryInitialData } from '@/app/trainer/library/library_types/library_types';
 
-export default async function LibraryPage() {
-  let initialData: LibraryInitialData | null = null;
-  
-  try {
-    const [dietRes] = await Promise.all([
-      ssrLibraryApi.getDietPlans(),
-    ]);
-    initialData = {
-      dietPlans: dietRes.data?.dietPlans || dietRes.data || [],
-    };
-  } catch (e) {
-    // Error logged to monitoring provider
-  }
-
-  return <TrainerLibraryMain initialData={initialData} />;
+export default function LibraryPage() {
+  return (
+    <Suspense fallback={<div className="p-6 text-secondary">Loading library…</div>}>
+      <TrainerLibraryMain />
+    </Suspense>
+  );
 }
-

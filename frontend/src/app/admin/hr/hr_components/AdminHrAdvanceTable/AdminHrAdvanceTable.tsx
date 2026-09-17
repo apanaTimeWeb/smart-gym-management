@@ -1,5 +1,6 @@
-'use client';
-
+"use client";
+import { formatCurrency } from '@/lib/formatters';
+// RESPONSIBILITY: Renders/orchestrates AdminHrAdvanceTable for the admin module; UI composition stays here and business/API logic remains in dedicated hooks and APIs.
 import { useState } from 'react';
 import { useHrContext } from '@/app/admin/hr/hr_context/AdminHrContext';
 
@@ -35,14 +36,14 @@ export default function AdminHrAdvanceTable() {
           >
             <option value="" disabled>Select Staff</option>
             {staff.map(s => (
-              <option key={s.id} value={s.id}>{s.name} ({s.role}) - Balance: ₹{s.advanceSalary || 0}</option>
+              <option key={s.id} value={s.id}>{s.name} ({s.role}) - Balance: {formatCurrency(s.advanceSalary || 0)}</option>
             ))}
           </select>
         </div>
 
         {selectedStaff && (
           <div className="p-4 bg-primary/5 rounded-lg border border-primary/20 text-sm">
-            <p><strong>Current Advance Balance:</strong> ₹{selectedStaff.advanceSalary || 0}</p>
+            <p><strong>Current Advance Balance:</strong> {formatCurrency(selectedStaff.advanceSalary || 0)}</p>
             <p className="text-secondary text-xs mt-1">Advances are automatically deducted from the next payroll calculation.</p>
           </div>
         )}
@@ -74,7 +75,7 @@ export default function AdminHrAdvanceTable() {
           <label className="block text-sm font-medium mb-1 text-foreground">Notes / Reason</label>
           <textarea 
             value={notes} onChange={(e) => setNotes(e.target.value)}
-            className="w-full px-3 py-2 border border-border rounded-lg text-sm bg-card text-foreground min-h-[80px]"
+            className="w-full px-3 py-2 border border-border rounded-lg text-sm bg-card text-foreground min-h-20"
             placeholder="e.g. Festival advance, medical emergency..."
           />
         </div>

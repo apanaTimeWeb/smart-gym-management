@@ -1,6 +1,6 @@
 'use client';
-
-import { AlertCircle, Loader2 } from 'lucide-react';
+// RESPONSIBILITY: Renders the TrainerEarningsMain UI for the owning Trainer feature; data access remains in the feature API/query layer.
+import { AlertCircle } from 'lucide-react';
 import { useTrainerEarningsQuery } from '@/app/trainer/earnings/earnings_queries/useTrainerEarningsQuery';
 import TrainerEarningsKPIs from '@/app/trainer/earnings/earnings_components/TrainerEarningsKPIs/TrainerEarningsKPIs';
 import TrainerEarningsPending from '@/app/trainer/earnings/earnings_components/TrainerEarningsPending/TrainerEarningsPending';
@@ -8,12 +8,12 @@ import TrainerEarningsHistory from '@/app/trainer/earnings/earnings_components/T
 import { TrainerDateFilterDropdown } from '@/app/trainer/trainer_components/TrainerShared/TrainerDateFilterDropdown';
 
 export default function TrainerEarningsMain() {
-  const { isLoading, isError, error } = useTrainerEarningsQuery();
+  const { isLoading, isError, error, refetch } = useTrainerEarningsQuery();
 
   if (isLoading) {
     return (
       <div className="min-h-full flex items-center justify-center pt-20">
-        <Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" />
+        <div className="w-full max-w-4xl space-y-4"><div className="h-28 rounded-xl bg-card border border-border motion-safe:animate-pulse" /><div className="h-72 rounded-xl bg-card border border-border motion-safe:animate-pulse" /></div>
       </div>
     );
   }
@@ -25,7 +25,7 @@ export default function TrainerEarningsMain() {
           <AlertCircle size={24} />
           <div>
             <p className="font-bold">Failed to load earnings data</p>
-            <p className="text-sm mt-1">{error?.message || 'Please try again later.'}</p>
+            <p className="text-sm mt-1">Unable to load earnings right now. Please retry.</p>
           </div>
         </div>
       </div>

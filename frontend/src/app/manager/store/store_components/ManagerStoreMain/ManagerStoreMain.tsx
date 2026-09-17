@@ -1,9 +1,8 @@
-// RESPONSIBILITY: Entry component for the Store module. Wraps the UI in the context provider and handles page layout.
 'use client';
-
+// RESPONSIBILITY: Entry component for the Store module. Wraps the UI in the context provider and handles page layout.
 import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/ManagerHeader';
 import ManagerToast from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
-import ManagerMembersThermalReceipt from '@/app/manager/members/members_components/ManagerMembersThermalReceipt';
+import ManagerThermalReceipt from '@/app/manager/manager_components/ManagerFeedback/ManagerThermalReceipt';
 
 import { StoreProvider, useStoreContext } from '@/app/manager/store/store_context/ManagerStoreContext';
 import ManagerStoreKPIs from '@/app/manager/store/store_components/ManagerStoreKPIs/ManagerStoreKPIs';
@@ -46,7 +45,7 @@ function StoreContent() {
       )}
       
       {printData && (
-        <ManagerMembersThermalReceipt data={printData} />
+        <ManagerThermalReceipt data={printData} />
       )}
     </div>
   );

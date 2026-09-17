@@ -1,34 +1,29 @@
-// RESPONSIBILITY: Centralizes Dashboard UI constants, chart colors, and plan badge mapping.
-
-export const DASHBOARD_CHART_COLORS = {
-  PRIMARY: '#FACC15',
-  SUCCESS: '#22C55E',
-  WARNING: '#F59E0B',
-  DANGER: '#EF4444',
-  INFO: '#3B82F6',
-  PURPLE: '#C084FC',
-  TEXT_SECONDARY: '#A1A1AA',
-  BORDER: '#27272A',
+export const SUPERADMIN_DASHBOARD_ALERT_TONE_CLASSES = {
+    HIGH: { badge: 'bg-danger-bg text-danger', icon: 'text-danger' },
+    MEDIUM: { badge: 'bg-warning-bg text-warning', icon: 'text-warning' },
+    LOW: { badge: 'bg-info-bg text-info', icon: 'text-info' },
 } as const;
 
-/** Maps time range keys to human-readable suffix labels. */
-export const DASHBOARD_TIME_RANGE_LABELS: Record<string, string> = {
-  this_month: 'this month',
-  last_month: 'last month',
-  last_3_months: 'last 3 months',
-  last_6_months: 'last 6 months',
-  this_year: 'this year',
-  monthly: 'all time (monthly)',
-  yearly: 'all time (yearly)',
+export const DASHBOARD_CHART_COLORS = {
+    PRIMARY: '#3b82f6',
+    INFO: '#3b82f6',
+    SUCCESS: '#10b981',
+    WARNING: '#f59e0b',
+    DANGER: '#ef4444',
+    TEXT_SECONDARY: '#6b7280',
+    BORDER: '#e5e7eb'
 };
-
-/** Maps plan names to Tailwind token class strings for the Recent Onboards list. */
 export const DASHBOARD_PLAN_BADGE_CLASSES: Record<string, string> = {
-  ENTERPRISE: 'bg-purple-bg text-purple border border-purple/20',
-  PRO: 'bg-primary-subtle text-primary border border-primary/20',
-  STARTER: 'bg-success-bg text-success border border-success/20',
-  BASIC: 'bg-success-bg text-success border border-success/20',
+    'Enterprise': 'bg-primary-bg text-primary',
+    'Pro': 'bg-success-bg text-success',
+    'Starter': 'bg-info-bg text-info'
 };
 
-export const DASHBOARD_PLAN_BADGE_FALLBACK_CLASS =
-  'bg-input text-secondary border border-border';
+export const DASHBOARD_PLAN_BADGE_FALLBACK_CLASS = 'bg-secondary-bg text-secondary';
+
+export const DASHBOARD_TIME_RANGE_LABELS: Record<string, string> = {
+    '7d': 'Last 7 Days',
+    '30d': 'Last 30 Days',
+    '90d': 'Last 90 Days',
+    '12m': 'Last 12 Months'
+};

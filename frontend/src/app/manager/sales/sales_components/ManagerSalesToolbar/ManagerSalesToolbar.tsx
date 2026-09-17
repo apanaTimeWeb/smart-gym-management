@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Provides the implementation for ManagerSalesToolbar.tsx functionality within its module.
 'use client';
-
+// RESPONSIBILITY: Provides the implementation for ManagerSalesToolbar.tsx functionality within its module.
 import { useState, useEffect } from 'react';
 import { Download, Search } from 'lucide-react';
 import { useSalesContext } from '@/app/manager/sales/sales_context/ManagerSalesContext';
@@ -42,7 +41,7 @@ export default function ManagerSalesToolbar() {
       value={localSearch} 
       onChange={e => setLocalSearch(e.target.value)} 
       placeholder="Search..." 
-      className="pl-9 pr-3 py-1.5 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary w-40 sm: w-full sm:w-64  bg-input text-foreground"
+      className="pl-9 pr-3 py-1.5 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary w-40 sm:w-full sm:w-64  bg-input text-foreground"
     />
   </div>
   <button 
@@ -65,7 +64,6 @@ export default function ManagerSalesToolbar() {
       }
 
       if (!csv) {
-        alert('No data to export.');
         return;
       }
 
@@ -77,7 +75,7 @@ export default function ManagerSalesToolbar() {
       a.click();
       window.URL.revokeObjectURL(url);
     }}
-    className="flex items-center gap-1.5 px-3 py-1.5 text-sm border border-border rounded-lg hover:bg-primary-subtle text-secondary transition-colors"
+    className="flex items-center gap-1.5 px-3 py-1.5 text-sm border border-border rounded-lg hover:bg-primary-subtle text-secondary motion-safe:transition-colors"
   >
     <Download size={13} /> Export
   </button>

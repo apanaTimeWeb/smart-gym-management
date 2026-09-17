@@ -8,9 +8,6 @@ interface TrainerScheduleStore {
   setShowLeaveModal: (show: boolean) => void;
   openLeaveModal: () => void;
   closeLeaveModal: () => void;
-  toast: { message: string; type: 'success' | 'error' } | null;
-  showToast: (message: string, type: 'success' | 'error') => void;
-  hideToast: () => void;
 }
 
 export const useTrainerScheduleStore = create<TrainerScheduleStore>((set) => ({
@@ -22,7 +19,4 @@ export const useTrainerScheduleStore = create<TrainerScheduleStore>((set) => ({
   openLeaveModal: () => set({ showLeaveModal: true }),
   closeLeaveModal: () => set({ showLeaveModal: false }),
   
-  toast: null,
-  showToast: (message, type) => set({ toast: { message, type } }),
-  hideToast: () => set({ toast: null }),
 }));

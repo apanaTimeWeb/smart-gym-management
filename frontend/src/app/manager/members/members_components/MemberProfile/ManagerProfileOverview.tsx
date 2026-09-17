@@ -1,14 +1,11 @@
-// RESPONSIBILITY: Contains logic, types, or component definition for this module.
 'use client';
-
 // RESPONSIBILITY: Contains logic, types, or component definition for this module.
-'use client';
-
+// RESPONSIBILITY: Contains logic, types, or component definition for this module.
 import React, { useState } from 'react';
 import { MessageCircle, Mail, Snowflake, Stethoscope, Ban, UserCheck } from 'lucide-react';
 import { useMembersContext } from '@/app/manager/members/members_context/ManagerMembersContext';
 import { formatCurrency } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
-import { useFetchTrainers } from '@/app/manager/members/members_api/useManagerMembersQueries';
+import { useFetchTrainers } from '@/app/manager/members/members_api/ManagerUseManagerMembersQueries';
 
 export default function ManagerProfileOverview() {
   const { selectedMember, openMsg, freezeMember, toggleSuspend, assignTrainer } = useMembersContext();
@@ -59,7 +56,7 @@ export default function ManagerProfileOverview() {
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-bold text-foreground truncate">{selectedMember.assignedTrainerName}</span>
                   {selectedMember.isPT && (
-                    <span className="text-[10px] font-semibold px-1.5 py-0.5 bg-primary/10 text-primary rounded-full border border-primary/20 shrink-0">
+                    <span className="text-xs font-semibold px-1.5 py-0.5 bg-primary/10 text-primary rounded-full border border-primary/20 shrink-0">
                       PT
                     </span>
                   )}
@@ -88,27 +85,27 @@ export default function ManagerProfileOverview() {
           <div className="grid grid-cols-2 gap-3 mb-5">
             <button 
               onClick={() => openMsg(selectedMember, 'whatsapp')} 
-              className="flex items-center justify-center gap-2 p-3 text-sm font-semibold text-white rounded-xl transition-all hover:-translate-y-0.5 hover:shadow-md bg-success" 
+              className="flex items-center justify-center gap-2 p-3 text-sm font-semibold text-primary-foreground rounded-xl motion-safe:transition-all hover:-translate-y-0.5 hover:shadow-md bg-success" 
             >
               <MessageCircle size={16} /> WhatsApp
             </button>
             <button 
               onClick={() => openMsg(selectedMember, 'email')} 
-              className="flex items-center justify-center gap-2 p-3 text-sm font-semibold text-white rounded-xl transition-all hover:-translate-y-0.5 hover:shadow-md bg-info" 
+              className="flex items-center justify-center gap-2 p-3 text-sm font-semibold text-primary-foreground rounded-xl motion-safe:transition-all hover:-translate-y-0.5 hover:shadow-md bg-info" 
             >
               <Mail size={16} /> Email
             </button>
             {selectedMember.status !== 'FROZEN' ? (
               <button 
                 onClick={() => freezeMember(true)} 
-                className="flex items-center justify-center gap-2 p-3 text-sm font-semibold text-info bg-info-bg border border-info/30 rounded-xl transition-all hover:-translate-y-0.5 hover:shadow-md" 
+                className="flex items-center justify-center gap-2 p-3 text-sm font-semibold text-info bg-info-bg border border-info/30 rounded-xl motion-safe:transition-all hover:-translate-y-0.5 hover:shadow-md" 
               >
                 <Snowflake size={16} /> Freeze
               </button>
             ) : (
               <button 
                 onClick={() => freezeMember(false)} 
-                className="flex items-center justify-center gap-2 p-3 text-sm font-semibold text-success bg-success-bg border border-success/30 rounded-xl transition-all hover:-translate-y-0.5 hover:shadow-md" 
+                className="flex items-center justify-center gap-2 p-3 text-sm font-semibold text-success bg-success-bg border border-success/30 rounded-xl motion-safe:transition-all hover:-translate-y-0.5 hover:shadow-md" 
               >
                 Unfreeze
               </button>
@@ -116,14 +113,14 @@ export default function ManagerProfileOverview() {
             {selectedMember.status !== 'SUSPENDED' && selectedMember.pendingAmount > 0 ? (
               <button 
                 onClick={() => toggleSuspend(true)} 
-                className="flex items-center justify-center gap-2 p-3 text-sm font-semibold text-danger bg-danger-bg border border-danger/30 rounded-xl transition-all hover:-translate-y-0.5 hover:shadow-md" 
+                className="flex items-center justify-center gap-2 p-3 text-sm font-semibold text-danger bg-danger-bg border border-danger/30 rounded-xl motion-safe:transition-all hover:-translate-y-0.5 hover:shadow-md" 
               >
                 <Ban size={16} /> Suspend
               </button>
             ) : selectedMember.status === 'SUSPENDED' ? (
               <button 
                 onClick={() => toggleSuspend(false)} 
-                className="flex items-center justify-center gap-2 p-3 text-sm font-semibold text-success bg-success-bg border border-success/30 rounded-xl transition-all hover:-translate-y-0.5 hover:shadow-md" 
+                className="flex items-center justify-center gap-2 p-3 text-sm font-semibold text-success bg-success-bg border border-success/30 rounded-xl motion-safe:transition-all hover:-translate-y-0.5 hover:shadow-md" 
               >
                 Unsuspend
               </button>
@@ -133,7 +130,7 @@ export default function ManagerProfileOverview() {
               !isAssigningTrainer ? (
                 <button 
                   onClick={() => setIsAssigningTrainer(true)}
-                  className="flex items-center justify-center gap-2 p-3 text-sm font-semibold text-primary bg-primary/10 border border-primary/20 rounded-xl transition-all hover:-translate-y-0.5 hover:shadow-md"
+                  className="flex items-center justify-center gap-2 p-3 text-sm font-semibold text-primary bg-primary/10 border border-primary/20 rounded-xl motion-safe:transition-all hover:-translate-y-0.5 hover:shadow-md"
                 >
                   <UserCheck size={16} /> Assign Trainer
                 </button>
@@ -142,7 +139,7 @@ export default function ManagerProfileOverview() {
                   <select 
                     value={selectedTrainerId} 
                     onChange={(e) => setSelectedTrainerId(e.target.value)}
-                    className="w-full p-2.5 bg-background border border-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
+                    className="w-full p-2.5 bg-background border border-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 motion-safe:transition-all"
                   >
                     <option value="">Select Trainer</option>
                     {trainers.map((t) => (
@@ -162,13 +159,13 @@ export default function ManagerProfileOverview() {
                           setIsAssigningTrainer(false);
                         }
                       }}
-                      className="flex-1 p-2.5 bg-primary text-primary-foreground text-sm font-semibold rounded-xl hover:opacity-90 transition-opacity shadow-sm"
+                      className="flex-1 p-2.5 bg-primary text-primary-foreground text-sm font-semibold rounded-xl hover:opacity-90 motion-safe:transition-opacity shadow-sm"
                     >
                       Save Changes
                     </button>
                     <button 
                       onClick={() => setIsAssigningTrainer(false)}
-                      className="flex-1 p-2.5 bg-secondary/10 text-secondary text-sm font-semibold rounded-xl hover:bg-secondary/20 transition-colors"
+                      className="flex-1 p-2.5 bg-secondary/10 text-secondary text-sm font-semibold rounded-xl hover:bg-secondary/20 motion-safe:transition-colors"
                     >
                       Cancel
                     </button>

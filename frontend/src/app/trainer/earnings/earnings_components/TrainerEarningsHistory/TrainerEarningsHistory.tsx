@@ -1,10 +1,13 @@
 'use client';
+// RESPONSIBILITY: Renders the TrainerEarningsHistory UI for the owning Trainer feature; data access remains in the feature API/query layer.
 import { Search, FileText, Download, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { useTrainerEarningsStore } from '@/app/trainer/earnings/earnings_store/useTrainerEarningsStore';
 import { useTrainerEarningsQuery } from '@/app/trainer/earnings/earnings_queries/useTrainerEarningsQuery';
-import { PAYOUT_STATUS_STYLES, formatCurrency } from '@/app/trainer/earnings/earnings_utils/TrainerEarningsSharedConstants';
-import { TrainerEarningsUrlConfig } from '@/app/trainer/earnings/earnings_utils/TrainerEarningsUrlConfig';
+import { PAYOUT_STATUS_STYLES } from '@/app/trainer/earnings/earnings_utils/TrainerEarningsSharedConstants';
+import { formatCurrency } from '@/lib/formatters';
+import { TrainerEarningsUrlConfig } from '@/app/trainer/Trainer_url_config';
+import { formatDate } from '@/lib/formatters';
 
 export default function TrainerEarningsHistory() {
   const { search, setSearch, currentPage, setCurrentPage, startDate, setStartDate, endDate, setEndDate } = useTrainerEarningsStore();
@@ -42,7 +45,7 @@ export default function TrainerEarningsHistory() {
   };
 
   if (!data) {
-    return <div className="h-[400px] bg-skeleton-base bg-skeleton-highlight rounded-xl border border-border motion-safe:animate-pulse" />;
+    return <div className="h-96 bg-skeleton-base bg-skeleton-highlight rounded-xl border border-border motion-safe:animate-pulse" />;
   }
 
   return (
@@ -95,7 +98,7 @@ export default function TrainerEarningsHistory() {
             <p className="text-xs text-secondary mt-1">Try adjusting your search criteria.</p>
           </div>
         ) : (
-          <table className="w-full text-left border-collapse min-w-[500px]">
+          <table className="w-full text-left border-collapse min-w-full">
             <thead>
               <tr className="bg-primary/5 border-b border-border">
                 <th className="py-3 px-4 text-xs font-semibold text-secondary uppercase tracking-wider">Date</th>
@@ -110,7 +113,7 @@ export default function TrainerEarningsHistory() {
                 return (
                   <tr key={row.id} className="hover:bg-primary/5 motion-safe:transition-colors">
                     <td className="py-3 px-4 text-sm text-secondary whitespace-nowrap">
-                      {new Date(row.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
+                      {formatDate(row.date)}
                     </td>
                     <td className="py-3 px-4">
                       <p className="text-sm font-medium text-foreground">{row.description}</p>
@@ -120,7 +123,7 @@ export default function TrainerEarningsHistory() {
                       {formatCurrency(row.amount)}
                     </td>
                     <td className="py-3 px-4 text-right">
-                      <span className={`inline-flex px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider ${style?.bg || 'bg-secondary/10'} ${style?.text || 'text-secondary'}`}>
+                      <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wider ${style?.bg || 'bg-secondary/10'} ${style?.text || 'text-secondary'}`}>
                         {style?.label || row.status}
                       </span>
                     </td>

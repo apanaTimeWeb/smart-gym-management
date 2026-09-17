@@ -1,39 +1,25 @@
 'use client';
-
+// RESPONSIBILITY: Renders the Manager HrLedgerTable presentation layer for the Manager module.
 import { useState, useEffect } from 'react';
 import { useHrContext } from '@/app/manager/hr/hr_context/ManagerHrContext';
-import { hrApi } from '@/app/manager/hr/hr_api/ManagerHrApi';
+import { useManagerHrLedgerQuery } from '@/app/manager/hr/hr_api/ManagerUseManagerHrLedgerQuery';
 import type { LedgerEntry } from '@/app/manager/hr/hr_types/ManagerHrTypes';
 import { FileText, Search } from 'lucide-react';
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrency , formatDate} from '@/lib/formatters';
+
+const HR_LEDGER_COLUMN_COUNT = 6;
 
 export default function ManagerHrLedgerTable() {
   const { staff, showToast } = useHrContext();
   const [selectedStaffId, setSelectedStaffId] = useState<string>('');
-  const [ledger, setLedger] = useState<LedgerEntry[]>([]);
-  const [loading, setLoading] = useState(false);
+  const { data: ledgerResponse, isPending: loading, isError } = useManagerHrLedgerQuery(selectedStaffId);
+  const ledger = ledgerResponse?.data?.ledger ?? [];
 
   useEffect(() => {
     if (staff.length > 0 && !selectedStaffId) {
       if (staff[0]?.id) setSelectedStaffId(staff[0].id);
     }
   }, [staff, selectedStaffId]);
-
-  useEffect(() => {
-    if (!selectedStaffId) return;
-    const fetchLedger = async () => {
-      setLoading(true);
-      try {
-        const res = await hrApi.getLedger(selectedStaffId);
-        setLedger(res.data?.ledger || []);
-      } catch (e) {
-        showToast((e as Error).message, 'error');
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchLedger();
-  }, [selectedStaffId, showToast]);
 
 
   const selectedStaff = staff.find(s => String(s.id) === String(selectedStaffId));
@@ -92,10 +78,10 @@ export default function ManagerHrLedgerTable() {
             </thead>
             <tbody className="text-sm divide-y divide-border">
               {loading ? (
-                <tr><td colSpan={6} className="text-center p-8 text-secondary">Loading ledger...</td></tr>
+                <tr><td colSpan={HR_LEDGER_COLUMN_COUNT} className="text-center p-8 text-secondary">Loading ledger...</td></tr>
               ) : ledger.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="p-12 text-center text-secondary">
+                  <td colSpan={HR_LEDGER_COLUMN_COUNT} className="p-12 text-center text-secondary">
                     <div className="flex flex-col items-center gap-2">
                       <FileText size={32} className="opacity-20" />
                       <p>No transactions found for this staff member.</p>
@@ -104,8 +90,8 @@ export default function ManagerHrLedgerTable() {
                 </tr>
               ) : (
                 ledger.map(l => (
-                  <tr key={l.id} className="hover:bg-secondary/5 transition-colors">
-                    <td className="p-4 text-foreground whitespace-nowrap">{new Date(l.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
+                  <tr key={l.id} className="hover:bg-secondary/5 motion-safe:transition-colors">
+                    <td className="p-4 text-foreground whitespace-nowrap">{formatDate(l.date)}</td>
                     <td className="p-4">
                       <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium 
                         ${l.type.includes('Advance') ? 'bg-danger-bg text-danger' : 
@@ -115,7 +101,7 @@ export default function ManagerHrLedgerTable() {
                         {l.type}
                       </span>
                     </td>
-                    <td className="p-4 text-secondary max-w-[200px] truncate" title={l.notes}>{l.notes || '-'}</td>
+                    <td className="p-4 text-secondary max-w-50 truncate" title={l.notes}>{l.notes || '-'}</td>
                     <td className="p-4 text-right text-success font-medium">{l.credit > 0 ? `+${formatCurrency(l.credit)}` : '-'}</td>
                     <td className="p-4 text-right text-danger font-medium">{l.debit > 0 ? `-${formatCurrency(l.debit)}` : '-'}</td>
                     <td className="p-4 text-right font-bold text-foreground bg-primary/5">{formatCurrency(l.balance)}</td>

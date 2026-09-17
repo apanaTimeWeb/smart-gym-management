@@ -8,5 +8,7 @@ export const metadata: Metadata = {
 };
 
 export default function AdminPlanRevenuePage() {
-  return <AdminPlansRevenueMain />;
+  return (
+      <AdminPlansRevenueMain />
+  );
 }

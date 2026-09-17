@@ -1,10 +1,10 @@
+'use client';
+import { displayValue, formatDate } from '@/lib/formatters';
 // RESPONSIBILITY: Renders the attendance data table and pagination controls.
 // CRITICAL FIX: Added Check-Out, Duration, and Method columns for time-tracking analytics.
-'use client';
-
 import { Clock, Calendar, CalendarCheck, Fingerprint, QrCode, Edit } from 'lucide-react';
 import { useAttendanceContext } from '@/app/manager/attendance/attendance_context/ManagerAttendanceContext';
-import { ATTENDANCE_TABLE_HEADERS, formatDate, formatTime } from '@/app/manager/attendance/attendance_utils/ManagerAttendanceSharedConstants';
+import { ATTENDANCE_TABLE_HEADERS, formatTime } from '@/app/manager/attendance/attendance_utils/ManagerAttendanceSharedConstants';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import ManagerEmptyState from '@/app/manager/manager_components/ManagerFeedback/ManagerEmptyState';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
@@ -37,21 +37,14 @@ function CheckInMethodBadge({ method }: { method?: CheckInMethod }) {
 }
 
 export default function AttendanceTable() {
-  const { records, totalRecords, fetchState, tab, currentPage, setCurrentPage, setCalendarUser } = useAttendanceContext();
+  const { records, totalRecords, isLoading, isError, currentPage, setCurrentPage, setCalendarUser } = useAttendanceContext();
 
-  const filteredRecords = records.filter(r =>
-    tab === 'Daily Attendance Report' ||
-    (tab === 'Member Attendance' && r.type === 'MEMBER') ||
-    ((tab === 'Trainer Attendance' || tab === 'Staff Attendance') && r.type === 'STAFF')
-  );
-
-  const totalPages = Math.ceil(filteredRecords.length / MANAGER_ITEMS_PER_PAGE) || 1;
-  const startIndex = (currentPage - 1) * MANAGER_ITEMS_PER_PAGE;
-  const paginatedRecords = filteredRecords.slice(startIndex, startIndex + MANAGER_ITEMS_PER_PAGE);
+  const totalPages = Math.max(1, Math.ceil(totalRecords / MANAGER_ITEMS_PER_PAGE));
+  const paginatedRecords = records;
 
   return (
     <div className="p-5">
-      {fetchState === 'loading' ? (
+      {isLoading ? (
         <div className="motion-safe:animate-pulse bg-card rounded-xl border border-border mt-4">
           {[...Array(5)].map((_, i) => (
             <div key={`skeleton-${i}`} className="h-16 border-b border-border flex items-center px-4 gap-4">
@@ -65,7 +58,7 @@ export default function AttendanceTable() {
             </div>
           ))}
         </div>
-      ) : fetchState === 'error' ? (
+      ) : isError ? (
         <div className="text-center py-16 bg-card rounded-2xl border border-danger/30 mt-4">
           <p className="text-danger font-medium">Failed to load attendance records.</p>
           <p className="text-sm mt-1 text-secondary">Please check your connection and try again.</p>
@@ -84,17 +77,24 @@ export default function AttendanceTable() {
             </thead>
             <tbody className="divide-y divide-border">
               {paginatedRecords.map(r => (
-                <tr key={r.id} className="hover:bg-primary-subtle transition-colors">
+                <tr
+                  key={r.id}
+                  tabIndex={0}
+                  role="button"
+                  aria-label={`View attendance history for ${r.member?.name || r.staff?.name || 'record'}`}
+                  onClick={() => setCalendarUser({ id: String(r.memberId || r.staffId || r.id), name: String(r.member?.name || r.staff?.name || ''), type: r.type as 'MEMBER' | 'STAFF' })}
+                  onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setCalendarUser({ id: String(r.memberId || r.staffId || r.id), name: String(r.member?.name || r.staff?.name || ''), type: r.type as 'MEMBER' | 'STAFF' }); } }}
+                  className="cursor-pointer hover:bg-primary-subtle motion-safe:transition-colors">
                   {/* Name */}
                   <td className="px-4 py-3 whitespace-nowrap">
                     <div className="flex items-center gap-2">
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold ${
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-primary-foreground text-xs font-bold ${
                         r.type === 'MEMBER' ? 'bg-info' : 'bg-success'
                       }`}>
                         {(r.member?.name || r.staff?.name || '?').charAt(0)}
                       </div>
                       <span className="text-sm font-medium text-foreground">
-                        {r.member?.name || r.staff?.name || '—'}
+                        {displayValue(r.member?.name ?? r.staff?.name)}
                       </span>
                     </div>
                   </td>
@@ -143,8 +143,8 @@ export default function AttendanceTable() {
                   {/* Actions */}
                   <td className="px-4 py-3 text-sm whitespace-nowrap">
                     <button
-                      onClick={() => setCalendarUser({ id: String(r.memberId || r.staffId || r.id), name: String(r.member?.name || r.staff?.name), type: r.type as 'MEMBER' | 'STAFF' })}
-                      className="p-1.5 rounded-md hover:bg-primary-subtle text-primary transition-colors flex items-center gap-1 border border-transparent hover:border-border"
+                      onClick={(event) => { event.stopPropagation(); setCalendarUser({ id: String(r.memberId || r.staffId || r.id), name: String(r.member?.name || r.staff?.name || ''), type: r.type as 'MEMBER' | 'STAFF' }); }}
+                      className="p-1.5 rounded-md hover:bg-primary-subtle text-primary motion-safe:transition-colors flex items-center gap-1 border border-transparent hover:border-border"
                       title="View Monthly Calendar"
                       aria-label="View Monthly Attendance Calendar"
                     >

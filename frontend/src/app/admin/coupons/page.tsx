@@ -2,5 +2,7 @@
 import AdminCouponsMain from '@/app/admin/coupons/coupons_components/AdminCouponsMain/AdminCouponsMain';
 
 export default function CouponsPage() {
-  return <AdminCouponsMain />;
+  return (
+      <AdminCouponsMain />
+  );
 }

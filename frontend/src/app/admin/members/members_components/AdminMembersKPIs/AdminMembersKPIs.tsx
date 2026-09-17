@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders the 4 KPI stat cards for the Admin Members module (total, active, expiring, outstanding).
-'use client';
 
 import { Users, UserCheck, Clock, IndianRupee } from 'lucide-react';
 import { useAdminMembersLogic } from '@/app/admin/members/members_context/useAdminMembersLogic';

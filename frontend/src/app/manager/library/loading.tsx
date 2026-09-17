@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Next.js loading.tsx � renders skeleton loader fallback while Diet Library module data loads.
-import { TableSkeleton } from '@/app/manager/manager_components/ManagerShared/TableSkeleton';
+import { TableSkeleton } from '@/app/manager/manager_components/ManagerShared/ManagerTableSkeleton';
 export default function Loading() {
  return (
  <div className="min-h-screen flex flex-col p-6 space-y-5 bg-background">

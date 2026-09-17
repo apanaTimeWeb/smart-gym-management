@@ -1,32 +1,41 @@
+"use client";
 // RESPONSIBILITY: Renders the paginated staff members table with sortable columns and inline row actions.
-'use client';
 
 import { useHrContext } from '@/app/admin/hr/hr_context/AdminHrContext';
+import type { AdminHrStaffSortKey } from '@/app/admin/hr/hr_types/AdminHrUiTypes';
+import type { AdminSortDirection } from '@/app/admin/admin_types/AdminSortTypes';
+import { useMemo, useState } from 'react';
+import { ChevronDown, ChevronUp, ChevronsUpDown } from 'lucide-react';
 import { STAFF_TABLE_HEADERS } from '@/app/admin/hr/hr_utils/AdminHrSharedConstants';
 import { Edit2, Trash2, CheckCircle2, Ban, PlayCircle } from 'lucide-react';
 import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/useAdminConfirm';
 import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
 import { ADMIN_ITEMS_PER_PAGE } from '@/app/admin/admin_url_config';
-import { displayValue } from '@/app/admin/admin_utils/displayValue';
-import { formatCurrency } from '@/app/admin/admin_utils/formatCurrency';
+import { displayValue } from '@/app/admin/admin_utils/AdminDisplayValue';
+import { maskSensitiveData } from '@/app/admin/admin_utils/AdminMaskSensitiveData';
+import { formatCurrency } from '@/app/admin/admin_utils/AdminFormatCurrency';
 
 export default function AdminHrStaffTable() {
-  const { staff, summary, fetchState, debouncedSearch, branchFilter, roleFilter, currentPage, setCurrentPage, openEdit, openProfile, deleteStaff, toggleStaffStatus } = useHrContext();
+  const { staff, summary, status, debouncedSearch, branchFilter, roleFilter, currentPage, setCurrentPage, openEdit, openProfile, deleteStaff, toggleStaffStatus } = useHrContext();
   const { confirm } = useAdminConfirm();
+  const [sortKey, setSortKey] = useState<AdminHrStaffSortKey>('name');
+  const [sortDir, setSortDir] = useState<AdminSortDirection>('asc');
 
   const filteredStaff = staff.filter(s => 
     (roleFilter === 'All' || (s.role || '').toLowerCase().includes(roleFilter.toLowerCase())) &&
     (branchFilter === 'All' || s.branch === branchFilter)
   );
 
-  const totalStaff = summary?.totalStaff || filteredStaff.length;
+  const sortedStaff = useMemo(() => [...filteredStaff].sort((a,b) => { const av = sortKey === 'branch' ? a.branch : sortKey === 'joinDate' ? a.joinDate : a[sortKey]; const bv = sortKey === 'branch' ? b.branch : sortKey === 'joinDate' ? b.joinDate : b[sortKey]; const result = typeof av === 'number' && typeof bv === 'number' ? av - bv : String(av ?? '').localeCompare(String(bv ?? ''), undefined, { numeric: true }); return sortDir === 'asc' ? result : -result; }), [filteredStaff, sortKey, sortDir]);
+  const handleSort = (key: AdminHrStaffSortKey) => { if (sortKey === key) setSortDir((d) => d === 'asc' ? 'desc' : 'asc'); else { setSortKey(key); setSortDir('asc'); } };
+  const totalStaff = summary?.totalStaff || sortedStaff.length;
   const totalPages = Math.ceil(totalStaff / ADMIN_ITEMS_PER_PAGE) || 1;
 
-  if (fetchState === 'loading') {
+  if (status === 'pending') {
     return (
       <div className="flex flex-col h-full">
         <div className="overflow-x-auto flex-1">
-          <table className="w-full">
+          <table data-admin-responsive-table className="w-full">
             <thead className="bg-input text-secondary">
               <tr>
                 {STAFF_TABLE_HEADERS.map(h => (
@@ -37,7 +46,7 @@ export default function AdminHrStaffTable() {
             </thead>
             <tbody className="divide-y divide-border">
               {[...Array(5)].map((_, i) => (
-                <tr key={i} className="motion-safe:animate-pulse">
+                <tr key={`skeleton-${i}`} className="motion-safe:animate-pulse">
                   <td className="px-4 py-4 flex items-center gap-3">
                     <div className="w-8 h-8 rounded-full bg-muted"></div>
                     <div><div className="h-4 bg-muted rounded w-24 mb-1"></div><div className="h-3 bg-muted rounded w-32"></div></div>
@@ -61,7 +70,7 @@ export default function AdminHrStaffTable() {
   return (
     <div className="flex flex-col h-full">
       <div className="overflow-x-auto flex-1">
-        <table className="w-full">
+        <table data-admin-responsive-table className="w-full">
           <thead className="bg-input text-secondary">
             <tr>
               {STAFF_TABLE_HEADERS.map(h => (
@@ -73,11 +82,20 @@ export default function AdminHrStaffTable() {
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
-            {filteredStaff.map(s => (
+            {sortedStaff.map(s => (
               <tr 
                 key={s.id} 
-                className="transition-colors hover:bg-primary/5 cursor-pointer" 
+                className="motion-safe:transition-colors hover:bg-primary/5 cursor-pointer"
+                role="button"
+                tabIndex={0}
+                aria-label={`Open profile for ${s.name || 'staff member'}`}
                 onClick={() => openProfile(s)}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    openProfile(s);
+                  }
+                }}
               >
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-3">
@@ -95,7 +113,7 @@ export default function AdminHrStaffTable() {
                     <div className="flex flex-col">
                       <span className="font-medium text-primary">{displayValue(s.primaryBranchId || s.assignedBranches[0])}</span>
                       {s.assignedBranches.length > 1 && (
-                        <span className="text-[10px] bg-primary/10 text-primary px-1.5 py-0.5 rounded-full mt-1 w-max">
+                        <span className="text-xs bg-primary/10 text-primary px-1.5 py-0.5 rounded-full mt-1 w-max">
                           +{s.assignedBranches.length - 1} More
                         </span>
                       )}
@@ -107,16 +125,16 @@ export default function AdminHrStaffTable() {
                 <td className="px-4 py-3 text-sm text-primary">{displayValue(s.role)}</td>
                 <td className="px-4 py-3">
                   {s.isActive === false ? (
-                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-danger/10 text-danger border border-danger/20">
+                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-danger/10 text-danger border border-danger/20">
                       <Ban className="w-3 h-3" /> Suspended
                     </span>
                   ) : (
-                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-success/10 text-success border border-success/20">
+                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-success/10 text-success border border-success/20">
                       <CheckCircle2 className="w-3 h-3" /> Active
                     </span>
                   )}
                 </td>
-                <td className="px-4 py-3 text-sm text-secondary">{displayValue(s.phone)}</td>
+                <td className="px-4 py-3 text-sm text-secondary">{maskSensitiveData(s.phone)}</td>
                 <td className="px-4 py-3 text-sm font-medium text-success">{formatCurrency(s.salary)}</td>
                 <td className="px-4 py-3 text-sm font-medium text-primary text-right">{s.advanceSalary && s.advanceSalary > 0 ? formatCurrency(s.advanceSalary) : '—'}</td>
                 <td className="px-4 py-3 text-sm text-secondary">
@@ -127,7 +145,7 @@ export default function AdminHrStaffTable() {
                     <>
                       <button 
                         onClick={(e) => { e.stopPropagation(); toggleStaffStatus(s); }}
-                        className={`p-1.5 rounded-lg transition-all duration-200 ease-in-out ${
+                        className={`p-1.5 rounded-lg motion-safe:transition-all motion-safe:duration-200 ease-in-out ${
                           s.isActive === false 
                             ? 'text-success hover:bg-success/10' 
                             : 'text-danger hover:bg-danger/10'
@@ -138,25 +156,17 @@ export default function AdminHrStaffTable() {
                       </button>
                       <button 
                         onClick={(e) => { e.stopPropagation(); openEdit(s); }} 
-                        className="p-1.5 rounded hover:bg-primary/10 transition-colors text-secondary hover:text-primary"
+                        className="p-1.5 rounded hover:bg-primary/10 motion-safe:transition-colors text-secondary hover:text-primary"
                         title="Edit"
                       >
                         <Edit2 size={16} />
                       </button>
                       <button 
-                        onClick={async (e) => { 
-                          e.stopPropagation(); 
-                          const ok = await confirm({
-                            title: 'Delete Staff Member',
-                            message: `Are you sure you want to delete staff member "${s.name}"? This action cannot be undone.`,
-                            type: 'danger',
-                            confirmText: 'Delete'
-                          });
-                          if (ok) {
-                            deleteStaff(s.id); 
-                          }
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          deleteStaff(s.id);
                         }}
-                        className="p-1.5 rounded transition-colors text-danger hover:bg-danger/10"
+                        className="p-1.5 rounded motion-safe:transition-colors text-danger hover:bg-danger/10"
                         title="Delete"
                       >
                         <Trash2 size={16} />

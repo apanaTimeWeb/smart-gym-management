@@ -4,5 +4,7 @@ import AdminAttendanceMain from '@/app/admin/attendance/attendance_components/Ad
 export const metadata = { title: 'Attendance Overview — Admin | Smart Gym 360' };
 
 export default function AdminAttendancePage() {
-  return <AdminAttendanceMain />;
+  return (
+      <AdminAttendanceMain />
+  );
 }

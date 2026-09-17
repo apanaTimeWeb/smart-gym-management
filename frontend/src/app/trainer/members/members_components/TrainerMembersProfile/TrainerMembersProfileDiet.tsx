@@ -2,35 +2,23 @@
 // RESPONSIBILITY: Renders the member's assigned diet plan and handles diet plan assignment for trainers.
 // DATA FLOW: useMembersContext -> TrainerMembersProfileDiet -> libraryApi
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Apple, Plus, Check, MessageCircle, RefreshCw, Flame, PieChart, Utensils } from 'lucide-react';
 import { useTrainerMembersStore } from '@/app/trainer/members/members_store/useTrainerMembersStore';
+import { useTrainerSelectedMember } from '@/app/trainer/members/members_queries/useTrainerSelectedMember';
+import TrainerSearchableDropdown from '@/app/trainer/trainer_components/TrainerShared/TrainerSearchableDropdown/TrainerSearchableDropdown';
+import { displayValue } from '@/lib/formatters';
 import { useTrainerMembersMutations } from '@/app/trainer/members/members_queries/useTrainerMembersMutations';
-import { libraryApi } from '@/app/trainer/library/library_api/library_api';
-import type { DietPlan, FetchState } from '@/app/trainer/trainer_types/trainer_types';
+import { useTrainerMemberDietPlansQuery } from '@/app/trainer/members/members_queries/useTrainerMembersQuery';
 
 export default function TrainerMembersProfileDiet() {
-  const selectedMember = useTrainerMembersStore(s => s.selectedMember);
+  const { member: selectedMember } = useTrainerSelectedMember();
   const { assignDiet } = useTrainerMembersMutations();
   const [isAssigning, setIsAssigning] = useState(false);
-  const [availableDiets, setAvailableDiets] = useState<DietPlan[]>([]);
-  const [fetchDietsState, setFetchDietsState] = useState<FetchState>('idle');
-  const [selectedDietId, setSelectedDietId] = useState<string>('');
+  const [selectedDietId, setSelectedDietId] = useState('');
   const [saving, setSaving] = useState(false);
-
-  useEffect(() => {
-    if (isAssigning && availableDiets.length === 0) {
-      setFetchDietsState('loading');
-      libraryApi.getDietPlans()
-        .then(res => {
-          setAvailableDiets(res.data?.dietPlans || []);
-          setFetchDietsState('success');
-        })
-        .catch(() => {
-          setFetchDietsState('error');
-        });
-    }
-  }, [isAssigning, availableDiets.length]);
+  const dietsQuery = useTrainerMemberDietPlansQuery(isAssigning);
+  const availableDiets = dietsQuery.data ?? [];
 
   if (!selectedMember) return null;
 
@@ -39,7 +27,7 @@ export default function TrainerMembersProfileDiet() {
 
   const handleAssign = async () => {
     if (!selectedDietId) return;
-    const selected = availableDiets.find(d => String(d.id) === selectedDietId) || null;
+    const selected = availableDiets.find((d) => String(d.id) === selectedDietId) || null;
     setSaving(true);
     try {
       await assignDiet.mutateAsync({ id: selectedMember.id, diet: selected });
@@ -53,21 +41,21 @@ export default function TrainerMembersProfileDiet() {
   const handleShareWhatsApp = () => {
     if (!diet) return;
     const mealsText = Array.isArray(diet.meals) 
-      ? diet.meals.map((m: any, i: number) => typeof m === 'string' ? `• ${m}` : `• *${m.name || `Meal ${i+1}`}* (${m.time || ''}): ${m.items || m.description || ''}`).join('\n')
+      ? diet.meals.map((m: string | { name?: string; time?: string; items?: string; description?: string }, i: number) => typeof m === 'string' ? `• ${m}` : `• *${m.name || `Meal ${i+1}`}* (${m.time || ''}): ${m.items || m.description || ''}`).join('\n')
       : 'Follow balanced nutrition as advised.';
 
     const text = `*GYMSMART NUTRITION & DIET PLAN FOR ${selectedMember.name.toUpperCase()}*\n` +
       `Plan: *${diet.name}*\n` +
-      `Goal: ${diet.goal || 'Fitness Maintenance'}\n` +
-      `Target Calories: *${diet.calories || '2,000'} kcal*\n` +
-      `Macros: Protein ${diet.protein || 0}g · Carbs ${diet.carbs || 0}g · Fats ${diet.fats || 0}g\n\n` +
+      `Goal: ${displayValue(diet.goal)}\n` +
+      `Target Calories: *${displayValue(diet.calories)} kcal*\n` +
+      `Macros: Protein ${displayValue(diet.protein)}g · Carbs ${displayValue(diet.carbs)}g · Fats ${displayValue(diet.fats)}g\n\n` +
       `*Meal Schedule:*\n${mealsText}\n\n` +
-      `Stay hydrated and drink 3-4 liters of water daily! Contact your trainer for queries.`;
+      '';
     window.open(`https://wa.me/${selectedMember.phone?.replace(/[^0-9]/g, '') || ''}?text=${encodeURIComponent(text)}`, '_blank');
   };
 
   return (
-    <div className="space-y-6 motion-safe:animate-in fade-in duration-300">
+    <div className="space-y-6 motion-safe:animate-in fade-in motion-safe:duration-slow">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h3 className="text-lg font-bold text-foreground">Diet & Nutrition Plan</h3>
@@ -78,7 +66,7 @@ export default function TrainerMembersProfileDiet() {
             <>
               <button 
                 onClick={handleShareWhatsApp}
-                className="flex items-center gap-2 px-4 py-2 bg-success text-white rounded-xl text-sm font-semibold hover:opacity-90 shadow-sm transition-all active:scale-95"
+                className="flex items-center gap-2 px-4 py-2 bg-success text-white rounded-xl text-sm font-semibold hover:opacity-90 shadow-sm motion-safe:transition-all motion-safe:active:scale-95"
               >
                 <MessageCircle size={16} /> Share via WhatsApp
               </button>
@@ -87,7 +75,7 @@ export default function TrainerMembersProfileDiet() {
                   setSelectedDietId(diet.id || '');
                   setIsAssigning(true);
                 }}
-                className="flex items-center gap-2 px-4 py-2 bg-input text-foreground border border-border rounded-xl text-sm font-semibold hover:bg-primary-subtle transition-all active:scale-95"
+                className="flex items-center gap-2 px-4 py-2 bg-input text-foreground border border-border rounded-xl text-sm font-semibold hover:bg-primary-subtle motion-safe:transition-all motion-safe:active:scale-95"
               >
                 <RefreshCw size={15} /> Change Diet
               </button>
@@ -95,7 +83,7 @@ export default function TrainerMembersProfileDiet() {
           ) : !isAssigning ? (
             <button 
               onClick={() => setIsAssigning(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-primary/30 transition-all active:scale-95"
+              className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-primary/30 motion-safe:transition-all motion-safe:active:scale-95"
             >
               <Plus size={16} /> Assign Diet Plan
             </button>
@@ -118,27 +106,22 @@ export default function TrainerMembersProfileDiet() {
             </button>
           </div>
 
-          {fetchDietsState === 'loading' ? (
+          {dietsQuery.isPending ? (
             <p className="text-sm text-secondary py-3">Loading available diet plans...</p>
           ) : (
             <div className="flex flex-col sm:flex-row gap-3">
-              <select
-                className="flex-1 bg-input border border-border rounded-xl px-4 py-2.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+              <TrainerSearchableDropdown
+                options={availableDiets.map((diet) => ({ value: diet.id, label: `${diet.name} · ${displayValue(diet.goal)}` }))}
                 value={selectedDietId}
-                onChange={(e) => setSelectedDietId(e.target.value)}
-              >
-                <option value="">-- Choose a Diet Plan --</option>
-                {availableDiets.map(d => (
-                  <option key={d.id} value={d.id}>
-                    {d.name} · {d.goal} ({d.calories || 2000} kcal)
-                  </option>
-                ))}
-              </select>
+                onChange={(value: string | number) => setSelectedDietId(String(value))}
+                placeholder="Choose a Diet Plan"
+                className="w-full"
+              />
               <div className="flex gap-2">
                 <button 
                   onClick={handleAssign}
                   disabled={!selectedDietId || saving}
-                  className="px-5 py-2.5 bg-primary text-white rounded-xl text-sm font-semibold hover:shadow-md transition-all disabled:opacity-50 flex items-center gap-2"
+                  className="px-5 py-2.5 bg-primary text-white rounded-xl text-sm font-semibold hover:shadow-md motion-safe:transition-all disabled:opacity-50 flex items-center gap-2"
                 >
                   <Check size={16} /> {saving ? 'Assigning...' : 'Confirm Assignment'}
                 </button>
@@ -158,16 +141,16 @@ export default function TrainerMembersProfileDiet() {
                   Active Diet
                 </span>
                 <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-info-bg text-info">
-                  {diet.goal || 'Weight Management'}
+                  {displayValue(diet.goal)}
                 </span>
               </div>
               <h3 className="text-2xl font-bold text-foreground">{diet.name}</h3>
-              <p className="text-sm text-secondary mt-1">{diet.description || 'Targeted dietary regime designed for optimal fitness performance.'}</p>
+              <p className="text-sm text-secondary mt-1">{displayValue(diet.description)}</p>
             </div>
             <div className="bg-input/60 border border-border rounded-xl px-4 py-3 text-right">
               <p className="text-xs text-secondary">Target Daily Calories</p>
               <p className="text-2xl font-black text-primary flex items-center gap-1 justify-end">
-                <Flame size={20} className="text-danger" /> {diet.calories || 2000} <span className="text-xs text-secondary font-normal">kcal</span>
+                <Flame size={20} className="text-danger" /> {displayValue(diet.calories)} <span className="text-xs text-secondary font-normal">kcal</span>
               </p>
             </div>
           </div>
@@ -176,15 +159,15 @@ export default function TrainerMembersProfileDiet() {
           <div className="grid grid-cols-3 gap-4">
             <div className="bg-input/50 border border-border rounded-xl p-4 text-center">
               <p className="text-xs text-secondary font-medium">Protein</p>
-              <p className="text-xl font-bold text-info mt-0.5">{diet.protein || 140}g</p>
+              <p className="text-xl font-bold text-info mt-0.5">{displayValue(diet.protein)}g</p>
             </div>
             <div className="bg-input/50 border border-border rounded-xl p-4 text-center">
               <p className="text-xs text-secondary font-medium">Carbohydrates</p>
-              <p className="text-xl font-bold text-warning mt-0.5">{diet.carbs || 220}g</p>
+              <p className="text-xl font-bold text-warning mt-0.5">{displayValue(diet.carbs)}g</p>
             </div>
             <div className="bg-input/50 border border-border rounded-xl p-4 text-center">
               <p className="text-xs text-secondary font-medium">Healthy Fats</p>
-              <p className="text-xl font-bold text-purple mt-0.5">{diet.fats || 55}g</p>
+              <p className="text-xl font-bold text-purple mt-0.5">{displayValue(diet.fats)}g</p>
             </div>
           </div>
 
@@ -195,8 +178,8 @@ export default function TrainerMembersProfileDiet() {
             </h4>
             {diet.meals && diet.meals.length > 0 ? (
               <div className="space-y-2.5">
-                {diet.meals.map((meal: any, idx: number) => (
-                  <div key={idx} className="bg-input/40 border border-border rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                {diet.meals.map((meal: string | { name?: string; time?: string; items?: string; description?: string }, idx: number) => (
+                  <div key={typeof meal === 'string' ? `${meal}-${idx}` : `${meal.name}-${idx}`} className="bg-input/40 border border-border rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <div className="flex items-center gap-3">
                       <span className="w-7 h-7 rounded-lg bg-primary-subtle text-primary text-xs font-bold flex items-center justify-center shrink-0">
                         {idx + 1}
@@ -236,7 +219,7 @@ export default function TrainerMembersProfileDiet() {
           </p>
           <button
             onClick={() => setIsAssigning(true)}
-            className="mt-2 inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-white rounded-xl text-sm font-semibold hover:shadow-md transition-all"
+            className="mt-2 inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-white rounded-xl text-sm font-semibold hover:shadow-md motion-safe:transition-all"
           >
             <Plus size={16} /> Assign Diet Plan
           </button>

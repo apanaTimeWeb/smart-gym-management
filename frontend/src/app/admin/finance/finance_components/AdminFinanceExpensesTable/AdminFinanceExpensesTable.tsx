@@ -1,12 +1,12 @@
+"use client";
 // RESPONSIBILITY: Renders the expenses table with branch filter, category filter, and pagination for Admin Finance.
-'use client';
 
-import { useState, useMemo } from 'react';
-import { Plus } from 'lucide-react';
+import { displayValue } from '@/app/admin/admin_utils/AdminDisplayValue';
+import { useMemo, useState } from 'react';
 import { useAdminFinanceLogic } from '@/app/admin/finance/finance_context/useAdminFinanceLogic';
 import { useAdminGlobalStore } from '@/app/admin/admin_store/useAdminGlobalStore';
 import { formatCurrency } from '@/lib/formatters';
-import AdminFinanceAddExpenseModal from '@/app/admin/finance/finance_components/AdminFinanceAddExpenseModal/AdminFinanceAddExpenseModal';
+import type { Expense } from '@/app/admin/finance/finance_types/AdminFinanceTypes';
 import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
 
 const ITEMS_PER_PAGE = 8;
@@ -25,23 +25,22 @@ const CATEGORY_COLORS: Record<string, string> = {
 export default function AdminFinanceExpensesTable() {
   const { selectedBranchId } = useAdminGlobalStore();
   const [categoryFilter, setCategoryFilter] = useState('All');
-  const [showModal, setShowModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const { expenses = [] } = useAdminFinanceLogic();
 
   const filtered = useMemo(() => {
-    return expenses.filter((e: any) => {
+    return expenses.filter((e: Expense) => {
       const matchesBranch = selectedBranchId === 'all' || e.branchId === selectedBranchId;
       const matchesCategory = categoryFilter === 'All' || e.category === categoryFilter;
       return matchesBranch && matchesCategory;
     });
-  }, [selectedBranchId, categoryFilter]);
+  }, [selectedBranchId, categoryFilter, expenses]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / ITEMS_PER_PAGE));
   const paginated = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
-  const totalAmount = filtered.reduce((sum: number, e: any) => sum + e.amount, 0);
+  const totalAmount = filtered.reduce((sum: number, e: Expense) => sum + e.amount, 0);
 
-  const categories = ['All', ...Array.from(new Set(expenses.map((e: any) => e.category)))];
+  const categories = ['All', ...Array.from(new Set(expenses.map((e: Expense) => e.category)))];
 
   return (
     <div className="space-y-4">
@@ -59,18 +58,13 @@ export default function AdminFinanceExpensesTable() {
             Total: <span className="font-bold text-danger">{formatCurrency(totalAmount)}</span>
           </span>
         </div>
-        <button
-          onClick={() => setShowModal(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl text-sm font-bold hover:bg-primary-hover motion-safe:transition-all motion-safe:duration-200 active:scale-95"
-        >
-          <Plus size={15} /> Add Expense
-        </button>
+        <span className="text-xs text-secondary">Read-only analytics</span>
       </div>
 
       {/* Table */}
       <div className="rounded-xl border border-border overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+          <table data-admin-responsive-table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-primary/5 border-b border-border">
                 {['Date', 'Category', 'Branch', 'Amount', 'Notes', 'Recorded By'].map((h) => (
@@ -83,7 +77,7 @@ export default function AdminFinanceExpensesTable() {
                 <tr>
                   <td colSpan={6} className="px-4 py-12 text-center text-sm text-secondary">No expenses found.</td>
                 </tr>
-              ) : paginated.map((e: any) => (
+              ) : paginated.map((e: Expense) => (
                 <tr key={e.id} className="hover:bg-primary/5 motion-safe:transition-colors">
                   <td className="px-4 py-3 text-sm text-foreground whitespace-nowrap">{new Date(e.date).toLocaleDateString('en-IN')}</td>
                   <td className="px-4 py-3">
@@ -91,7 +85,7 @@ export default function AdminFinanceExpensesTable() {
                   </td>
                   <td className="px-4 py-3 text-sm text-foreground">{e.branchName}</td>
                   <td className="px-4 py-3 text-sm font-bold text-danger">{formatCurrency(e.amount)}</td>
-                  <td className="px-4 py-3 text-sm text-secondary max-w-xs truncate">{e.notes || '—'}</td>
+                  <td className="px-4 py-3 text-sm text-secondary max-w-xs truncate">{displayValue(e.notes)}</td>
                   <td className="px-4 py-3 text-sm text-secondary">{e.recordedBy}</td>
                 </tr>
               ))}
@@ -103,7 +97,6 @@ export default function AdminFinanceExpensesTable() {
         </div>
       </div>
 
-      {showModal && <AdminFinanceAddExpenseModal onClose={() => setShowModal(false)} />}
     </div>
   );
 }

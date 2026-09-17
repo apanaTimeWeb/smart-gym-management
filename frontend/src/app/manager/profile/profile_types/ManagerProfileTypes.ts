@@ -22,5 +22,4 @@ export interface UpdateManagerPasswordPayload {
   confirmPassword: string;
 }
 
-export type ManagerProfileFetchState = 'idle' | 'loading' | 'success' | 'error';
 export type ManagerProfileTab = 'personal' | 'security';

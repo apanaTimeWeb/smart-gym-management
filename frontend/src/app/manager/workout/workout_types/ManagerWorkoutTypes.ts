@@ -1,11 +1,12 @@
-// RESPONSIBILITY: Defines all TypeScript types, interfaces, and the FetchState enum for the Workout Library module.
+// RESPONSIBILITY: Defines all TypeScript types, interfaces, for the Workout Library module.
 import { EMPTY_WORKOUT_FORM, EMPTY_EXERCISE_FORM } from '@/app/manager/workout/workout_utils/ManagerWorkoutSharedConstants';
 import React from 'react';
 
-import type { Exercise } from '@/app/manager/library/library_types/ManagerLibraryTypes';
+import type { ExerciseSnapshot } from '@/app/manager/workout/workout_types/ManagerWorkoutSnapshotTypes';
 import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
 
-export type FetchState = 'idle' | 'loading' | 'success' | 'error';
+
+export type Exercise = ExerciseSnapshot;
 
 export interface WorkoutContextType {
  tab: string;
@@ -19,10 +20,10 @@ export interface WorkoutContextType {
  
  workouts: Workout[];
  totalWorkouts: number;
- exercises: Exercise[];
+  exercises: ExerciseSnapshot[];
  totalExercises: number;
  
- fetchState: FetchState;
+
  saving: boolean;
  toast: { message: string; type: ToastType } | null;
  showToast: (msg: string, type: ToastType) => void;

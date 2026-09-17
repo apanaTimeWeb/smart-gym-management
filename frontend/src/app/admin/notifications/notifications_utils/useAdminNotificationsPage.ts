@@ -1,39 +1,57 @@
-// RESPONSIBILITY: Logic hook for the Admin Notifications page — local state management with seed data.
-// DATA FLOW: AdminNotificationsClient → useAdminNotificationsPage → AdminNotificationsList
-import { useState, useCallback } from 'react';
-import toast from 'react-hot-toast';
+"use client";
+
+// RESPONSIBILITY: Owns TanStack Query state and notification mutations for the Admin notification page.
+// DATA FLOW: AdminNotificationsApi → TanStack Query → AdminNotificationsClient → AdminNotificationsList
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { adminToast } from '@/app/admin/admin_components/AdminFeedback/AdminToastService';
+import { AdminNotificationsApi } from '@/app/admin/notifications/notifications_api/AdminNotificationsApi';
 import type { NotificationItem } from '@/app/admin/notifications/notifications_types/AdminNotificationsTypes';
 
 export type { NotificationItem };
 
-const initialNotifications: NotificationItem[] = [
-  { id: '1', text: 'New member registration: John Doe', time: '5 minutes ago', unread: true },
-  { id: '2', text: 'Payment received for Invoice #1245', time: '1 hour ago', unread: true },
-  { id: '3', text: 'System backup completed successfully', time: '3 hours ago', unread: false },
-  { id: '4', text: 'Trainer Mark requested schedule change', time: 'Yesterday', unread: false },
-];
+function mapNotificationToItem(notification: { id: string; title: string; body: string; createdAt: string; read: boolean }): NotificationItem {
+  return {
+    id: notification.id,
+    text: `${notification.title}: ${notification.body}`,
+    time: new Date(notification.createdAt).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }),
+    unread: !notification.read,
+  };
+}
 
 export const useAdminNotificationsPage = () => {
-  const [notifications, setNotifications] = useState<NotificationItem[]>(initialNotifications);
+  const queryClient = useQueryClient();
+  const notificationsQuery = useQuery({
+    queryKey: ['admin', 'notifications', 'list'],
+    queryFn: () => AdminNotificationsApi.fetchNotifications(),
+    staleTime: 1000 * 60,
+  });
 
-  const markAllAsRead = useCallback(() => {
-    setNotifications((prev) => prev.map((n) => ({ ...n, unread: false })));
-    toast.success('All notifications marked as read');
-  }, []);
+  const notifications = (notificationsQuery.data?.data ?? []).map(mapNotificationToItem);
 
-  const clearAll = useCallback(() => {
-    setNotifications([]);
-    toast.success('All notifications cleared');
-  }, []);
+  const markAsReadMutation = useMutation({
+    mutationFn: (id: string) => AdminNotificationsApi.markNotificationAsRead(id),
+    onSuccess: async (response) => {
+      adminToast.success(response.message, 'admin-success-0b7060fa');
+      await queryClient.invalidateQueries({ queryKey: ['admin', 'notifications', 'list'] });
+    },
+    onError: (error) => adminToast.error(error instanceof Error ? error.message : 'Unable to mark notification as read', 'admin-error-d646d93256'),
+  });
 
-  const markAsRead = useCallback((id: string) => {
-    setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, unread: false } : n)));
-  }, []);
+  const markAllAsReadMutation = useMutation({
+    mutationFn: () => AdminNotificationsApi.markAllNotificationsAsRead(),
+    onSuccess: async (response) => {
+      adminToast.success(response.message, 'admin-success-84f4aebf');
+      await queryClient.invalidateQueries({ queryKey: ['admin', 'notifications', 'list'] });
+    },
+    onError: (error) => adminToast.error(error instanceof Error ? error.message : 'Unable to update notifications', 'admin-error-cfe272030b'),
+  });
 
-  const deleteNotification = useCallback((id: string) => {
-    setNotifications((prev) => prev.filter((n) => n.id !== id));
-    toast.success('Notification removed');
-  }, []);
-
-  return { notifications, markAllAsRead, clearAll, markAsRead, deleteNotification };
+  return {
+    notifications,
+    status: notificationsQuery.status,
+    isError: notificationsQuery.isError,
+    retry: notificationsQuery.refetch,
+    markAllAsRead: () => markAllAsReadMutation.mutate(),
+    markAsRead: (id: string) => markAsReadMutation.mutate(id),
+  };
 };

@@ -2,7 +2,6 @@
 
 export type ReportTab = 'Revenue' | 'Attendance' | 'Members' | 'Expenses';
 export type ExportFormat = 'CSV' | 'PDF';
-export type FetchState = 'idle' | 'loading' | 'success' | 'error';
 
 export interface ReportKPIData {
   totalRevenue: number;

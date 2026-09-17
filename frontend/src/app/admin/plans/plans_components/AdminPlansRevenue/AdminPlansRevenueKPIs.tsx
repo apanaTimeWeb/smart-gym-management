@@ -1,9 +1,9 @@
+"use client";
 // RESPONSIBILITY: Renders KPI cards for the Plan Revenue dashboard.
-'use client';
 
 import { IndianRupee, Users, TrendingUp, Award } from 'lucide-react';
 import type { RevenueAggregates } from '@/app/admin/plans/plans_types/AdminPlansRevenueTypes';
-import { formatKPI } from '@/lib/formatters';
+import {formatKPI, formatPercent1dp} from '@/lib/formatters';
 import { useDateRangeSuffix } from '@/lib/useDateRangeSuffix';
 
 export default function AdminPlansRevenueKPIs({ aggregates }: { aggregates: RevenueAggregates }) {
@@ -25,7 +25,7 @@ export default function AdminPlansRevenueKPIs({ aggregates }: { aggregates: Reve
     },
     {
       label: 'Avg Renewal Rate' + dateSuffix,
-      value: `${aggregates.avgRenewalRate.toFixed(1)}%`,
+      value: `${formatPercent1dp(aggregates.avgRenewalRate)}%`,
       icon: TrendingUp,
       iconColor: 'text-info',
       iconBg: 'bg-info/10',

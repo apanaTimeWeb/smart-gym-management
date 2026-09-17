@@ -1,20 +1,21 @@
+"use client";
+import { formatCurrency } from '@/lib/formatters';
 // RESPONSIBILITY: SaaS plan comparison cards with upgrade CTA.
-'use client';
 
 import { CheckCircle, Zap, Star } from 'lucide-react';
 import { useAdminSubscriptionsLogic } from '@/app/admin/subscriptions/subscriptions_context/useAdminSubscriptionsLogic';
 import { PLAN_TIER_STYLES } from '@/app/admin/subscriptions/subscriptions_utils/AdminSubscriptionsSharedConstants';
-import type { SaaSPlan } from '@/app/admin/subscriptions/subscriptions_types/subscriptions_types';
+import type { SaaSPlan } from '@/app/admin/subscriptions/subscriptions_types/AdminSubscriptionsTypes';
 
 function PlanCard({ plan, onUpgrade, upgrading }: { plan: SaaSPlan; onUpgrade: (id: string, name: string) => void; upgrading: boolean }) {
   const style = PLAN_TIER_STYLES[plan.tier];
-  const fmt = (v: number) => v === 0 ? 'Custom' : `₹${v.toLocaleString('en-IN')}`;
+  const fmt = (v: number) => v === 0 ? 'Custom' : formatCurrency(v);
 
   return (
     <div className={`relative bg-card border rounded-xl p-5 flex flex-col gap-4 motion-safe:transition-all motion-safe:duration-200 motion-safe:hover:-translate-y-1 hover:shadow-lg ${plan.isCurrent ? 'border-primary shadow-md' : 'border-border'}`}>
       {plan.isPopular && (
         <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-          <span className="flex items-center gap-1 px-3 py-1 bg-primary text-white text-xs font-bold rounded-full shadow">
+          <span className="flex items-center gap-1 px-3 py-1 bg-primary text-primary-foreground text-xs font-bold rounded-full shadow">
             <Star size={10} fill="currentColor" /> Most Popular
           </span>
         </div>
@@ -60,7 +61,7 @@ function PlanCard({ plan, onUpgrade, upgrading }: { plan: SaaSPlan; onUpgrade: (
         <button
           onClick={() => onUpgrade(plan.id, plan.name)}
           disabled={upgrading}
-          className="py-2.5 text-sm font-semibold bg-primary text-white rounded-xl hover:bg-primary-hover motion-safe:transition-colors flex items-center justify-center gap-2 disabled:opacity-60"
+          className="py-2.5 text-sm font-semibold bg-primary text-primary-foreground rounded-xl hover:bg-primary-hover motion-safe:transition-colors flex items-center justify-center gap-2 disabled:opacity-60"
         >
           <Zap size={14} /> Upgrade to {plan.name}
         </button>

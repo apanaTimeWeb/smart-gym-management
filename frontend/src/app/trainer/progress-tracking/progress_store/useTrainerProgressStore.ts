@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { ProgressEntry, ProgressChartMetric, ComparisonMetric } from '../progress_types/TrainerProgressTypes';
+import type { ProgressEntry, ProgressChartMetric, ComparisonMetric } from '@/app/trainer/progress-tracking/progress_types/TrainerProgressTypes';
 
 type ProgressTab = 'individual' | 'compare';
 
@@ -14,7 +14,6 @@ interface TrainerProgressStore {
   setActiveComparisonMetric: (metric: ComparisonMetric) => void;
   selectedComparisonIds: string[];
   toggleComparisonMember: (memberId: string) => void;
-  showToast: (message: string, type: 'success' | 'error') => void;
 }
 
 export const useTrainerProgressStore = create<TrainerProgressStore>((set) => ({
@@ -35,8 +34,4 @@ export const useTrainerProgressStore = create<TrainerProgressStore>((set) => ({
     if (ids.length >= 3) return state; // max 3 members
     return { selectedComparisonIds: [...ids, memberId] };
   }),
-  showToast: (message, type) => {
-    // Basic fallback logic for toast; actual toast implementation can integrate here.
-    alert(`${type.toUpperCase()}: ${message}`);
-  }
 }));

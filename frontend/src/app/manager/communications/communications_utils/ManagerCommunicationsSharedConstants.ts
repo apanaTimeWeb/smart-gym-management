@@ -11,7 +11,7 @@ import type {
   ChurnKPIData,
   ChurnReasonType,
   WinBackTemplateTier,
-} from '@/app/manager/communications/communications_types/communications_types';
+} from '@/app/manager/communications/communications_types/ManagerCommunications_types';
 
 export const COMM_SEGMENT_OPTIONS: { value: CommSegment; label: string; description: string }[] = [
   { value: 'all_active',       label: 'All Active Members',       description: 'Every member with an active membership' },
@@ -37,6 +37,8 @@ export const CommFormSchema = z.object({
   subject: z.string().min(3, 'Subject is required for email'),
 });
 
+export type CommFormValues = z.infer<typeof CommFormSchema>;
+
 export const EMPTY_COMM_FORM = {
   title:   '',
   channel: 'whatsapp' as CommChannel,
@@ -57,9 +59,9 @@ export const COMM_STATUS_STYLES: Record<string, { bg: string; text: string; labe
 
 // ─── Churn Recovery Constants ─────────────────────────────────────────────────
 
-export const CHURN_ITEMS_PER_PAGE = 10;
+export const CANCELLATIONS_ITEMS_PER_PAGE = 10;
 
-export const CHURN_REASON_OPTIONS: { value: ChurnReasonType | 'all'; label: string }[] = [
+export const CANCELLATIONS_REASON_OPTIONS: { value: ChurnReasonType | 'all'; label: string }[] = [
   { value: 'all',          label: 'All Reasons' },
   { value: 'price',        label: 'Price / Cost' },
   { value: 'relocation',   label: 'Relocation' },
@@ -71,7 +73,7 @@ export const CHURN_REASON_OPTIONS: { value: ChurnReasonType | 'all'; label: stri
 
 
 
-export const CHURN_REASON_LABEL: Record<ChurnReasonType, string> = {
+export const CANCELLATIONS_REASON_LABEL: Record<ChurnReasonType, string> = {
   price:        'Price / Cost',
   relocation:   'Relocation',
   schedule:     'Schedule Conflict',

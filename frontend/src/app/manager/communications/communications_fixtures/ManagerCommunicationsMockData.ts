@@ -6,7 +6,7 @@ import type {
   ChurnedMember,
   ChurnKPIData,
   WinBackTemplateTier,
-} from '@/app/manager/communications/communications_types/communications_types';
+} from '@/app/manager/communications/communications_types/ManagerCommunications_types';
 
 export const COMM_MESSAGE_TEMPLATES: Record<CommSegment, { subject: string; message: string }> = {
   all_active: {
@@ -72,7 +72,7 @@ export const MOCK_COMM_KPI: CommKPIData = {
   campaignsThisMonth: 4,
 };
 
-export const CHURN_WIN_BACK_TEMPLATES: Record<WinBackTemplateTier, { label: string; subject: string; message: string }> = {
+export const CANCELLATIONS_WIN_BACK_TEMPLATES: Record<WinBackTemplateTier, { label: string; subject: string; message: string }> = {
   '7_days': {
     label: 'Lost < 7 Days',
     subject: 'We noticed you left — come back today!',
@@ -95,7 +95,7 @@ export const CHURN_WIN_BACK_TEMPLATES: Record<WinBackTemplateTier, { label: stri
   },
 };
 
-export const MOCK_CHURNED_MEMBERS: ChurnedMember[] = [
+export const MOCK_CANCELLED_MEMBERS: ChurnedMember[] = [
   { memberId: 'EX001', name: 'Ravi Shankar',   phone: '9876543222', email: 'ravi@email.com',    plan: 'Monthly Premium', exitDate: '2025-09-02', daysSinceExit: 7,  reason: 'price',        lastContactedAt: null,                 recovered: false, lifetimeValue: 5000 },
   { memberId: 'EX002', name: 'Anita Desai',    phone: '9876543223', email: 'anita@email.com',   plan: 'Quarterly Elite', exitDate: '2025-08-20', daysSinceExit: 20, reason: 'relocation',   lastContactedAt: '2025-08-25T10:00:00Z', recovered: false, lifetimeValue: 12000 },
   { memberId: 'EX003', name: 'Sanjay Patel',   phone: '9876543224', email: 'sanjay@email.com',  plan: 'Monthly Basic',   exitDate: '2025-08-10', daysSinceExit: 30, reason: 'schedule',     lastContactedAt: null,                 recovered: false, lifetimeValue: 3000 },
@@ -106,7 +106,7 @@ export const MOCK_CHURNED_MEMBERS: ChurnedMember[] = [
   { memberId: 'EX008', name: 'Divya Kapoor',   phone: '9876543229', email: 'divya2@email.com',  plan: 'Monthly Basic',   exitDate: '2025-05-20', daysSinceExit: 112, reason: 'personal',    lastContactedAt: '2025-06-01T11:00:00Z', recovered: true,  lifetimeValue: 4500 },
 ];
 
-export const MOCK_CHURN_KPI: ChurnKPIData = {
+export const MOCK_CANCELLATIONS_KPI: ChurnKPIData = {
   totalChurned: 47,
   churnedThisMonth: 8,
   recoveryRate: 12.5,

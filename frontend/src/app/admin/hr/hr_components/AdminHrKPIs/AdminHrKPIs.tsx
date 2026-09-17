@@ -1,5 +1,6 @@
+"use client";
+import { formatCurrency } from '@/lib/formatters';
 // RESPONSIBILITY: Renders the top KPI stat cards (total staff, active staff, payroll metrics) for the HR module.
-'use client';
 
 import { useHrContext } from '@/app/admin/hr/hr_context/AdminHrContext';
 import { Users, DollarSign, UserCheck, FileText } from 'lucide-react';
@@ -7,13 +8,12 @@ import { Users, DollarSign, UserCheck, FileText } from 'lucide-react';
 export default function AdminHrKPIs() {
   const { summary } = useHrContext();
 
-  const formatCurrency = (val: number) => val.toLocaleString('en-IN', { style: 'currency', currency: 'INR' });
 
   const kpis = [
-    { label: 'Total Salary Generated', value: formatCurrency(summary?.totalSalaryThisMonth || 0), icon: DollarSign, colorClass: 'text-[var(--primary)]', bgClass: 'bg-[var(--primary)]/10' },
-    { label: 'Total Paid', value: formatCurrency(summary?.totalSalaryPaid || 0), icon: UserCheck, colorClass: 'text-[var(--success)]', bgClass: 'bg-[var(--success)]/10' },
-    { label: 'Outstanding Due', value: formatCurrency(summary?.totalSalaryDue || 0), icon: FileText, colorClass: 'text-[var(--warning)]', bgClass: 'bg-[var(--warning)]/10' },
-    { label: 'Advance Given', value: formatCurrency(summary?.totalAdvanceGiven || 0), icon: DollarSign, colorClass: 'text-[var(--danger)]', bgClass: 'bg-[var(--danger)]/10' },
+    { label: 'Total Salary Generated', value: formatCurrency(summary?.totalSalaryThisMonth || 0), icon: DollarSign, colorClass: 'text-primary', bgClass: 'bg-primary/10' },
+    { label: 'Total Paid', value: formatCurrency(summary?.totalSalaryPaid || 0), icon: UserCheck, colorClass: 'text-success', bgClass: 'bg-success/10' },
+    { label: 'Outstanding Due', value: formatCurrency(summary?.totalSalaryDue || 0), icon: FileText, colorClass: 'text-warning', bgClass: 'bg-warning/10' },
+    { label: 'Advance Given', value: formatCurrency(summary?.totalAdvanceGiven || 0), icon: DollarSign, colorClass: 'text-danger', bgClass: 'bg-danger/10' },
   ];
 
   return (

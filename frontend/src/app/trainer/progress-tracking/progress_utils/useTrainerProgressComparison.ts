@@ -1,4 +1,4 @@
-import type { ProgressEntry, ComparisonMemberSnapshot } from '../progress_types/TrainerProgressTypes';
+import type { ProgressEntry, ComparisonMemberSnapshot } from '@/app/trainer/progress-tracking/progress_types/TrainerProgressTypes';
 
 export function buildComparisonSnapshot(memberId: string, memberName: string, entries: ProgressEntry[]): ComparisonMemberSnapshot {
   const memberEntries = [...entries].sort((a, b) => a.date.localeCompare(b.date));

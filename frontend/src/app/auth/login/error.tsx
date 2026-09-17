@@ -1,8 +1,7 @@
+'use client';
 // RESPONSIBILITY: Encapsulates logic, UI, or types for this module.
 // DATA FLOW: Standard component data flow.
 // RESPONSIBILITY: Next.js Error Boundary specifically for the Login route to catch and display unhandled exceptions gracefully.
-'use client';
-
 import { useEffect } from 'react';
 
 export default function Error({ error, reset }: { error: Error & { digest?: string }, reset: () => void }) {

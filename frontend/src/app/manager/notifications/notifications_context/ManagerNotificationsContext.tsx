@@ -1,16 +1,20 @@
-// RESPONSIBILITY: React Context — bridges Zustand notifications store with UI state (filters, pagination).
 'use client';
-
-import { createContext, useContext, useState, useEffect, useCallback } from 'react';
+// DATA FLOW: URL filters → TanStack Query → ManagerNotificationsContext → notification UI.
+// RESPONSIBILITY: Bridges URL-owned filter state with module server state and mutations.
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { useManagerDebounce } from '@/app/manager/manager_utils/ManagerDebounce';
 import type { ReactNode } from 'react';
-import { useRouter, usePathname, useSearchParams } from 'next/navigation';
-import { useManagerNotificationsStore } from '@/app/manager/notifications/notifications_store/useManagerNotificationsStore';
-import toast from 'react-hot-toast';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { showManagerSuccessToast } from '@/app/manager/manager_utils/ManagerToastService';
+import { notificationsApi } from '@/app/manager/notifications/notifications_api/ManagerNotificationsApi';
+import type { Notification, NotificationKPIData } from '@/app/manager/notifications/notifications_types/ManagerNotificationsTypes';
 
 interface NotificationsContextValue {
-  notifications: ReturnType<typeof useManagerNotificationsStore.getState>['notifications'];
-  kpis: ReturnType<typeof useManagerNotificationsStore.getState>['kpis'];
-  fetchState: ReturnType<typeof useManagerNotificationsStore.getState>['fetchState'];
+  notifications: Notification[];
+  kpis: NotificationKPIData | null;
+  isPending: boolean;
+  isError: boolean;
   saving: boolean;
   search: string;
   setSearch: (v: string) => void;
@@ -20,9 +24,10 @@ interface NotificationsContextValue {
   setPriorityFilter: (v: string) => void;
   statusFilter: string;
   setStatusFilter: (v: string) => void;
-  handleMarkRead: (id: string) => Promise<void>;
-  handleMarkAllRead: () => Promise<void>;
-  handleDelete: (id: string) => Promise<void>;
+  handleMarkRead: (id: string) => Promise<unknown>;
+  handleMarkAllRead: () => Promise<unknown>;
+  handleDelete: (id: string) => Promise<unknown>;
+  reload: () => Promise<void>;
 }
 
 const ManagerNotificationsContext = createContext<NotificationsContextValue | undefined>(undefined);
@@ -31,12 +36,14 @@ export function NotificationsProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-
+  const queryClient = useQueryClient();
   const [search, setSearch] = useState(searchParams.get('search') || '');
   const [typeFilter, setTypeFilter] = useState(searchParams.get('type') || 'ALL');
   const [priorityFilter, setPriorityFilter] = useState(searchParams.get('priority') || 'ALL');
   const [statusFilter, setStatusFilter] = useState(searchParams.get('status') || 'ALL');
 
+  const debouncedSearch = useManagerDebounce(search, 300);
+  const queryParams = useMemo(() => ({ search: debouncedSearch, type: typeFilter, priority: priorityFilter, status: statusFilter }), [debouncedSearch, typeFilter, priorityFilter, statusFilter]);
   useEffect(() => {
     const params = new URLSearchParams(searchParams.toString());
     if (search) params.set('search', search); else params.delete('search');
@@ -46,40 +53,27 @@ export function NotificationsProvider({ children }: { children: ReactNode }) {
     router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   }, [search, typeFilter, priorityFilter, statusFilter, pathname, router, searchParams]);
 
-  const { notifications, kpis, fetchState, saving, loadAll, markRead, markAllRead, deleteNotification } = useManagerNotificationsStore();
+  const listQuery = useQuery({ queryKey: ['manager', 'notifications', 'list', queryParams], queryFn: async () => (await notificationsApi.fetchManagerNotifications(queryParams)).data ?? { notifications: [], total: 0 } });
+  const kpiQuery = useQuery({ queryKey: ['manager', 'notifications', 'kpis'], queryFn: async () => (await notificationsApi.fetchNotificationKPIs()).data ?? null });
+  const readMutation = useMutation({ mutationFn: notificationsApi.markNotificationRead, onSuccess: (response) => { showManagerSuccessToast(response.message, 'manager-notifications-success'); queryClient.invalidateQueries({ queryKey: ['manager', 'notifications'] }); } });
+  const readAllMutation = useMutation({ mutationFn: notificationsApi.markAllNotificationsRead, onSuccess: (response) => { showManagerSuccessToast(response.message, 'manager-notifications-success'); queryClient.invalidateQueries({ queryKey: ['manager', 'notifications'] }); } });
+  const deleteMutation = useMutation({ mutationFn: notificationsApi.deleteNotification, onSuccess: (response) => { showManagerSuccessToast(response.message, 'manager-notifications-success'); queryClient.invalidateQueries({ queryKey: ['manager', 'notifications'] }); } });
 
-  const reload = useCallback(() => {
-    loadAll({ search, type: typeFilter, priority: priorityFilter, status: statusFilter });
-  }, [search, typeFilter, priorityFilter, statusFilter, loadAll]);
-
-  useEffect(() => {
-    const t = setTimeout(reload, 300);
-    return () => clearTimeout(t);
-  }, [reload]);
-
-  const handleMarkRead = useCallback(async (id: string) => {
-    await markRead(id);
-    toast.success('Marked as read.');
-  }, [markRead]);
-
-  const handleMarkAllRead = useCallback(async () => {
-    await markAllRead();
-    toast.success('All notifications marked as read.');
-  }, [markAllRead]);
-
-  const handleDelete = useCallback(async (id: string) => {
-    await deleteNotification(id);
-    toast.success('Notification dismissed.');
-  }, [deleteNotification]);
+  const reload = useCallback(async () => { await Promise.all([listQuery.refetch(), kpiQuery.refetch()]); }, [kpiQuery, listQuery]);
+  const saving = readMutation.isPending || readAllMutation.isPending || deleteMutation.isPending;
 
   return (
     <ManagerNotificationsContext.Provider value={{
-      notifications, kpis, fetchState, saving,
-      search, setSearch,
-      typeFilter, setTypeFilter,
-      priorityFilter, setPriorityFilter,
-      statusFilter, setStatusFilter,
-      handleMarkRead, handleMarkAllRead, handleDelete,
+      notifications: listQuery.data?.notifications ?? [],
+      kpis: kpiQuery.data ?? null,
+      isPending: listQuery.isPending || kpiQuery.isPending,
+      isError: listQuery.isError || kpiQuery.isError,
+      saving,
+      search, setSearch, typeFilter, setTypeFilter, priorityFilter, setPriorityFilter, statusFilter, setStatusFilter,
+      handleMarkRead: readMutation.mutateAsync,
+      handleMarkAllRead: readAllMutation.mutateAsync,
+      handleDelete: deleteMutation.mutateAsync,
+      reload,
     }}>
       {children}
     </ManagerNotificationsContext.Provider>

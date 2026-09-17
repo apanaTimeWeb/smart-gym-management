@@ -1,25 +1,10 @@
-// RESPONSIBILITY: Renders a custom searchable popover dropdown for large datasets (Rule 20). Replaces native <select> for all gyms/plans/user selectors.
-'use client';
-
-import React, { useState, useRef, useEffect } from 'react';
+"use client";
+// RESPONSIBILITY: Renders an accessible searchable popover selector for Admin feature filters and entity selectors.
+import React, { useEffect, useId, useRef, useState } from 'react';
 import { Search, ChevronDown, Check } from 'lucide-react';
+import type { AdminSearchableDropdownOption, AdminSearchableDropdownProps } from '@/app/admin/admin_types/AdminSharedTypes';
 
-interface Option {
-  value: string | number;
-  label: string;
-}
-
-interface SearchableDropdownProps {
-  options: Option[];
-  value: string | number;
-  onChange: (value: string | number) => void;
-  placeholder?: string;
-  className?: string;
-  disabled?: boolean;
-  containerStyle?: React.CSSProperties;
-}
-
-export const AdminSearchableDropdown: React.FC<SearchableDropdownProps> = ({
+export const AdminSearchableDropdown: React.FC<AdminSearchableDropdownProps> = ({
   options,
   value,
   onChange,
@@ -30,12 +15,10 @@ export const AdminSearchableDropdown: React.FC<SearchableDropdownProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const listboxId = useId();
 
   const selectedOption = options.find((opt) => opt.value === value);
-
-  const filteredOptions = options.filter((opt) =>
-    opt.label?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredOptions = options.filter((opt) => opt.label.toLowerCase().includes(searchTerm.toLowerCase()));
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -44,9 +27,19 @@ export const AdminSearchableDropdown: React.FC<SearchableDropdownProps> = ({
         setSearchTerm('');
       }
     };
-
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsOpen(false);
+        setSearchTerm('');
+      }
+    };
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
   }, []);
 
   const handleSelect = (optionValue: string | number) => {
@@ -57,46 +50,54 @@ export const AdminSearchableDropdown: React.FC<SearchableDropdownProps> = ({
 
   return (
     <div className={`relative w-full ${className}`} ref={dropdownRef}>
-      <div
-        className={`w-full bg-input border border-border rounded-lg px-4 py-2.5 flex items-center justify-between cursor-pointer ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
-        onClick={() => !disabled && setIsOpen(!isOpen)}
+      <button
+        type="button"
+        className={`w-full min-h-11 bg-input border border-border rounded-lg px-4 py-2.5 flex items-center justify-between text-left ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background`}
+        onClick={() => !disabled && setIsOpen((open) => !open)}
+        aria-haspopup="listbox"
+        aria-expanded={isOpen}
+        aria-controls={isOpen ? listboxId : undefined}
+        disabled={disabled}
       >
         <span className={`text-sm ${!selectedOption ? 'text-muted-foreground' : 'text-foreground'} truncate`}>
           {selectedOption ? selectedOption.label : placeholder}
         </span>
-        <ChevronDown size={16} className="text-muted-foreground" />
-      </div>
+        <ChevronDown size={16} className="text-muted-foreground" aria-hidden="true" />
+      </button>
 
       {isOpen && !disabled && (
-        <div className="absolute z-30 w-full mt-1 bg-card border border-border rounded-lg shadow-lg overflow-hidden motion-safe:animate-in fade-in zoom-in-95 duration-100">
+        <div className="absolute z-30 w-full mt-1 bg-card border border-border rounded-lg shadow-lg overflow-hidden motion-safe:animate-in fade-in zoom-in-95 motion-safe:duration-100">
           <div className="p-2 border-b border-border relative">
-            <Search size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
+            <Search size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
+            <label htmlFor={`${listboxId}-search`} className="sr-only">Search options</label>
             <input
+              id={`${listboxId}-search`}
               type="text"
-              className="w-full pl-8 pr-4 py-1.5 text-sm bg-input border border-border rounded-md focus:outline-none focus:border-primary text-foreground placeholder-muted-foreground"
+              className="w-full min-h-11 pl-8 pr-4 py-1.5 text-sm bg-input border border-border rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary text-foreground placeholder-muted-foreground"
               placeholder="Search..."
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={(event) => setSearchTerm(event.target.value)}
               autoFocus
             />
           </div>
 
-          <div className="max-h-60 overflow-y-auto p-1 custom-scrollbar">
+          <div id={listboxId} className="max-h-60 overflow-y-auto p-1 custom-scrollbar" role="listbox" aria-label={placeholder}>
             {filteredOptions.length > 0 ? (
-              filteredOptions.map((option) => (
-                <div
+              filteredOptions.map((option: AdminSearchableDropdownOption) => (
+                <button
                   key={option.value}
-                  className={`flex items-center justify-between px-3 py-2 text-sm rounded-md cursor-pointer hover:bg-input ${
-                    option.value === value ? 'text-primary font-medium' : 'text-foreground'
-                  }`}
+                  type="button"
+                  className={`w-full min-h-11 flex items-center justify-between px-3 py-2 text-sm rounded-md text-left cursor-pointer hover:bg-input focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset ${option.value === value ? 'text-primary font-medium' : 'text-foreground'}`}
                   onClick={() => handleSelect(option.value)}
+                  role="option"
+                  aria-selected={option.value === value}
                 >
                   <span className="truncate">{option.label}</span>
-                  {option.value === value && <Check size={14} className="text-primary" />}
-                </div>
+                  {option.value === value && <Check size={14} className="text-primary" aria-hidden="true" />}
+                </button>
               ))
             ) : (
-              <div className="px-3 py-4 text-sm text-center text-muted-foreground">
+              <div className="px-3 py-4 text-sm text-center text-muted-foreground" role="status">
                 No results found
               </div>
             )}

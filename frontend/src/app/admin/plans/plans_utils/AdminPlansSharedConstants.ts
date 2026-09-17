@@ -26,4 +26,3 @@ export const EMPTY_PLAN_FORM: PlanFormValues = {
  features: '' 
 };
 
-export const formatCurrency = (n: number) => '₹' + (n || 0).toLocaleString('en-IN');

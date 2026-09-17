@@ -1,88 +1,79 @@
 // RESPONSIBILITY: Renders the Platform Settings page. Fetches settings from API and allows inline editing per setting using TanStack Query.
 'use client';
-
 import { useState } from 'react';
 import { Settings, Loader2, Save, FileText } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { superadminApi } from '@/app/superadmin/superadmin_api/superadmin_api';
+import { settingsApi } from '@/app/superadmin/settings/superadmin_settings_api/superadmin_settings_api';
 import toast from 'react-hot-toast';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
-import type { PlatformSetting } from '@/app/superadmin/superadmin_types/superadmin_types';
-import { MOCK_PLATFORM_SETTINGS } from '@/app/superadmin/settings/settings_utils/SuperadminSettingsConstants';
-
+import type { PlatformSetting } from '@/app/superadmin/settings/settings_types/superadmin_settings_types';
 export default function SuperadminSettingsClient() {
-  const [editedValues, setEditedValues] = useState<Record<string, string>>({});
-  const queryClient = useQueryClient();
-
-  const { data: fetchRes, isLoading, isError } = useQuery({
-    queryKey: ['superadmin', 'settings'],
-    queryFn: () => superadminApi.settings.fetchSettings(),
-  });
-
-  const fetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
-
-  const responseData = fetchRes as { data?: PlatformSetting[] } | undefined;
-  const settings = responseData?.data && responseData.data.length > 0 ? responseData.data : MOCK_PLATFORM_SETTINGS;
-
-  const updateMutation = useMutation({
-    mutationFn: ({ id, value }: { id: string, value: string }) => superadminApi.settings.updateSetting(id, { value }),
-    onSuccess: (res, variables) => {
-      toast.success(res.message || 'Setting updated successfully');
-      queryClient.setQueryData(['superadmin', 'settings'], (old: { data?: PlatformSetting[] } | undefined) => {
-        if (!old?.data) return old;
-        return {
-          ...old,
-          data: old.data.map((s: PlatformSetting) => s.id === variables.id ? { ...s, value: variables.value } : s)
-        };
-      });
-      setEditedValues(prev => {
-        const next = { ...prev };
-        delete next[variables.id];
-        return next;
-      });
-    },
-    onError: (err: unknown) => {
-      toast.error((err as Error).message || 'Failed to update setting');
-    }
-  });
-
-
-
-  const handleSave = (id: string) => {
-    const newValue = editedValues[id];
-    if (newValue === undefined) return;
-    updateMutation.mutate({ id, value: newValue });
-  };
-
-  if (fetchState === 'loading') {
-    return (
-      <div className="space-y-6">
+    const [editedValues, setEditedValues] = useState<Record<string, string>>({});
+    const queryClient = useQueryClient();
+    const { data: fetchRes, isLoading, isError } = useQuery({
+        queryKey: ['superadmin', 'settings'],
+        queryFn: () => settingsApi.fetchSettings(),
+    });
+    const fetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
+    const responseData = fetchRes as {
+        data?: PlatformSetting[];
+    } | undefined;
+    const settings = responseData?.data && responseData.data.length > 0 ? responseData.data : [];
+    const updateMutation = useMutation({
+        mutationFn: ({ id, value }: {
+            id: string;
+            value: string;
+        }) => settingsApi.updateSetting(id, { value }),
+        onSuccess: (res, variables) => {
+            toast.success(res.message, { id: 'superadmin-toast-5fc85faf8e' });
+            queryClient.setQueryData(['superadmin', 'settings'], (old: {
+                data?: PlatformSetting[];
+            } | undefined) => {
+                if (!old?.data)
+                    return old;
+                return {
+                    ...old,
+                    data: old.data.map((s: PlatformSetting) => s.id === variables.id ? { ...s, value: variables.value } : s)
+                };
+            });
+            setEditedValues(prev => {
+                const next = { ...prev };
+                delete next[variables.id];
+                return next;
+            });
+        },
+        onError: (err: unknown) => {
+            toast.error((err as Error).message, { id: 'failed-to-update-setting' });
+        }
+    });
+    const handleSave = (id: string) => {
+        const newValue = editedValues[id];
+        if (newValue === undefined)
+            return;
+        updateMutation.mutate({ id, value: newValue });
+    };
+    if (isLoading) {
+        return (<div className="space-y-6">
         <div>
-          <div className="h-8 w-48 bg-skeleton-base motion-safe:animate-pulse rounded" />
-          <div className="h-4 w-96 bg-skeleton-base motion-safe:animate-pulse rounded mt-2" />
+          <div className="h-8 w-48 bg-skeleton-base motion-safe:animate-pulse rounded"/>
+          <div className="h-4 w-96 bg-skeleton-base motion-safe:animate-pulse rounded mt-2"/>
         </div>
         <div className="max-w-4xl space-y-6">
-          {[1, 2].map((i) => (
-            <div key={`sk-${i}`} className="bg-skeleton-base border border-border rounded-xl p-6 h-48 motion-safe:animate-pulse" />
-          ))}
+          {[1, 2].map((i) => (<div key={`sk-${i}`} className="bg-skeleton-base border border-border rounded-xl p-6 h-48 motion-safe:animate-pulse"/>))}
         </div>
-      </div>
-    );
-  }
-  
-  if (fetchState === 'error') {
-    return <div className="flex h-96 items-center justify-center text-danger font-medium">Error loading settings.</div>;
-  }
-
-  const groupedSettings = settings.reduce<Record<string, PlatformSetting[]>>((acc, curr) => {
-    const cat = curr.category || 'general';
-    if (!acc[cat]) acc[cat] = [];
-    acc[cat].push(curr);
-    return acc;
-  }, {});
-
-  return (
-    <div className="space-y-6">
+      </div>);
+    }
+    if (isError) {
+        return <div className="flex h-96 items-center justify-center text-danger font-medium">Error loading settings.</div>;
+    }
+    const groupedSettings = settings.reduce<Record<string, PlatformSetting[]>>((acc, curr) => {
+        const cat = curr.category || 'general';
+        if (!acc[cat])
+            acc[cat] = [];
+        acc[cat].push(curr);
+        return acc;
+    }, {});
+    return (<div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-foreground">Platform Settings</h1>
         <p className="text-secondary mt-1">Configure global SaaS limits, master credentials, and system defaults.</p>
@@ -90,65 +81,40 @@ export default function SuperadminSettingsClient() {
 
       <div className="max-w-4xl space-y-6">
         <div>
-          {Object.entries(groupedSettings).map(([category, items]) => (
-            <div key={category} className="bg-card border border-border rounded-xl p-6">
+          {Object.entries(groupedSettings).map(([category, items]) => (<div key={category} className="bg-card border border-border rounded-xl p-6">
               <div className="flex items-center gap-2 mb-4 border-b border-border pb-4">
-                <Settings className="w-5 h-5 text-primary" />
+                <Settings className="w-5 h-5 text-primary"/>
                 <h2 className="text-lg font-bold text-foreground uppercase">{category}</h2>
               </div>
 
               <div className="space-y-4 text-sm">
                 {items.map(setting => {
-                  const hasChanges = editedValues[setting.id] !== undefined && editedValues[setting.id] !== setting.value;
-                  const currentValue = editedValues[setting.id] !== undefined ? editedValues[setting.id] : setting.value;
-
-                  return (
-                    <div key={setting.id} className="flex flex-col md:flex-row md:items-center justify-between gap-4 py-2 border-b border-border last:border-0">
+                const hasChanges = editedValues[setting.id] !== undefined && editedValues[setting.id] !== setting.value;
+                const currentValue = editedValues[setting.id] !== undefined ? editedValues[setting.id] : setting.value;
+                return (<div key={setting.id} className="flex flex-col md:flex-row md:items-center justify-between gap-4 py-2 border-b border-border last:border-0">
                       <div className="flex-1">
                         <h3 className="font-medium text-foreground">{setting.key}</h3>
                         <p className="text-xs text-secondary mt-1">{setting.description}</p>
                       </div>
                       <div className="flex flex-wrap items-center gap-2">
-                        {setting.dataType === 'boolean' ? (
-                          <SearchableDropdown
-                            value={String(currentValue)}
-                            onChange={(val) => setEditedValues(prev => ({ ...prev, [setting.id]: String(val) }))}
-                            className="w-32"
-                            options={[
-                              { label: 'Enabled', value: 'true' },
-                              { label: 'Disabled', value: 'false' }
-                            ]}
-                          />
-                        ) : (
-                          <input
-                            type={setting.dataType === 'number' ? 'number' : 'text'}
-                            value={currentValue}
-                            onChange={(e) => setEditedValues(prev => ({ ...prev, [setting.id]: e.target.value }))}
-                            className="bg-input border border-border text-foreground rounded-lg px-3 py-1.5 focus:outline-none focus:border-primary"
-                          />
-                        )}
-                        {hasChanges && (
-                          <button
-                            onClick={() => handleSave(setting.id)}
-                            disabled={updateMutation.isPending && updateMutation.variables?.id === setting.id}
-                            className="p-1.5 bg-primary/10 text-primary hover:bg-primary hover:text-white rounded-lg motion-safe:transition-colors"
-                          >
-                            <Save className="w-4 h-4" />
-                          </button>
-                        )}
+                        {setting.dataType === 'boolean' ? (<SearchableDropdown value={String(currentValue)} onChange={(val) => setEditedValues(prev => ({ ...prev, [setting.id]: String(val) }))} className="w-32" options={[
+                            { label: 'Enabled', value: 'true' },
+                            { label: 'Disabled', value: 'false' }
+                        ]}/>) : (<input type={setting.dataType === 'number' ? 'number' : 'text'} value={currentValue} onChange={(e) => setEditedValues(prev => ({ ...prev, [setting.id]: e.target.value }))} className="bg-input border border-border text-foreground rounded-lg px-3 py-1.5 focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page focus:border-primary"/>)}
+                        {hasChanges && (<button onClick={() => handleSave(setting.id)} disabled={updateMutation.isPending && updateMutation.variables?.id === setting.id} className="p-1.5 bg-primary/10 text-primary hover:bg-primary hover:text-white rounded-lg motion-safe:transition-colors">
+                            <Save className="w-4 h-4"/>
+                          </button>)}
                       </div>
-                    </div>
-                  );
-                })}
+                    </div>);
+            })}
               </div>
-            </div>
-          ))}
+            </div>))}
         </div>
 
         {/* Changelog UI Mock */}
         <div className="bg-card border border-border rounded-xl p-6">
           <div className="flex items-center gap-2 mb-4 border-b border-border pb-4">
-            <FileText className="w-5 h-5 text-primary" />
+            <FileText className="w-5 h-5 text-primary"/>
             <h2 className="text-lg font-bold text-foreground uppercase">Changelog</h2>
           </div>
           
@@ -160,7 +126,7 @@ export default function SuperadminSettingsClient() {
               <ul className="list-disc pl-4 text-secondary space-y-1">
                 <li>Added support for trialGyms count in dashboard.</li>
                 <li>Fixed overdue invoices KPI aggregation bug.</li>
-                <li>Added "Revenue by Plan Tier" donut chart.</li>
+                <li>Added &quot;Revenue by Plan Tier&quot; donut chart.</li>
               </ul>
             </div>
             <div className="relative pl-6 border-l-2 border-primary/20 pb-2">
@@ -176,7 +142,5 @@ export default function SuperadminSettingsClient() {
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>);
 }
-

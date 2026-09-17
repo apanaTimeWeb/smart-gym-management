@@ -1,14 +1,13 @@
+"use client";
+import { formatCurrency } from '@/lib/formatters';
 // RESPONSIBILITY: Provides the implementation for AdminFinanceRevenueByMethod.tsx functionality within its module.
-'use client';
 
 import { useAdminFinanceLogic } from '@/app/admin/finance/finance_context/useAdminFinanceLogic';
-import { useAdminFinanceStore } from '@/app/admin/finance/finance_store/useAdminFinanceStore';
 
-const fmt = (n: number) => '₹' + (n || 0).toLocaleString('en-IN');
+const fmt = (n: number) => formatCurrency(n || 0);
 
 export default function AdminFinanceRevenueByMethod() {
- const { payments, summary, totalPayments, fetchState, saving, error, loadAll, search, setSearch, currentPage, setCurrentPage, savePayment, methodFilter, setMethodFilter } = useAdminFinanceLogic();
-  const { showModal, setShowModal } = useAdminFinanceStore();
+ const { payments, summary, totalPayments, status, loadAll, search, setSearch, currentPage, setCurrentPage, methodFilter, setMethodFilter } = useAdminFinanceLogic();
  if (!summary) return null;
 
  return (
@@ -22,5 +21,3 @@ export default function AdminFinanceRevenueByMethod() {
  </div>
  );
 }
-
-

@@ -1,8 +1,8 @@
+"use client";
 // RESPONSIBILITY: Empty state shown when the status filter returns zero branches.
-'use client';
 
 import { BarChart3 } from 'lucide-react';
-import type { PnlStatusFilter } from '@/app/admin/finance/finance_types/finance_types';
+import type { PnlStatusFilter } from '@/app/admin/finance/finance_types/AdminFinanceTypes';
 
 interface AdminFinancePnlEmptyStateProps {
   statusFilter: PnlStatusFilter;
@@ -29,7 +29,7 @@ export default function AdminFinancePnlEmptyState({ statusFilter, onReset }: Adm
           {statusFilter !== 'ALL' && (
             <button
               onClick={onReset}
-              className="mt-1 px-4 py-2 text-xs font-semibold bg-primary text-white rounded-lg hover:bg-primary-hover motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              className="mt-1 px-4 py-2 text-xs font-semibold bg-primary text-primary-foreground rounded-lg hover:bg-primary-hover motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
               Clear Filter
             </button>

@@ -2,18 +2,19 @@
 // RESPONSIBILITY: Renders the progress entries table with edit/delete actions.
 // DATA FLOW: useTrainerProgressLogic → TrainerProgressTable
 
+import { formatNumber } from '@/lib/formatters';
 import { Pencil, Trash2 } from 'lucide-react';
 import type { ProgressEntry } from '@/app/trainer/progress-tracking/progress_types/TrainerProgressTypes';
 import { PROGRESS_TABLE_HEADERS } from '@/app/trainer/progress-tracking/progress_utils/TrainerProgressSharedConstants';
 import { useConfirm } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerConfirmProvider';
 
-interface Props {
+interface TrainerProgressTableProps {
   entries: ProgressEntry[];
   onEdit: (entry: ProgressEntry) => void;
   onDelete: (entryId: string) => void;
 }
 
-export default function TrainerProgressTable({ entries, onEdit, onDelete }: Props) {
+export default function TrainerProgressTable({ entries, onEdit, onDelete }: TrainerProgressTableProps) {
   const { confirm } = useConfirm();
 
   const handleDelete = async (entry: ProgressEntry) => {
@@ -45,11 +46,11 @@ export default function TrainerProgressTable({ entries, onEdit, onDelete }: Prop
                 <td className="px-4 py-3 text-foreground whitespace-nowrap">{entry.date}</td>
                 <td className="px-4 py-3 text-foreground">{entry.weightKg}</td>
                 <td className="px-4 py-3 text-foreground">{entry.heightCm}</td>
-                <td className="px-4 py-3 text-foreground">{entry.bmi.toFixed(1)}</td>
+                <td className="px-4 py-3 text-foreground">{formatNumber(entry.bmi)}</td>
                 <td className="px-4 py-3 text-foreground">{entry.bodyFatPercent ?? '—'}</td>
                 <td className="px-4 py-3 text-foreground">{entry.muscleMassKg ?? '—'}</td>
                 <td className="px-4 py-3 text-foreground">{entry.waistCm ?? '—'}</td>
-                <td className="px-4 py-3 text-secondary max-w-[160px] truncate">{entry.notes ?? '—'}</td>
+                <td className="px-4 py-3 text-secondary max-w-40 truncate">{entry.notes ?? '—'}</td>
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-2">
                     <button

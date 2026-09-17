@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 // RESPONSIBILITY: Server Component � fetches initial SSR data and renders the HR & Payroll module entry point.
 import AdminHrMain from '@/app/admin/hr/hr_components/AdminHrMain/AdminHrMain';
 import { ssrHrApi } from '@/app/admin/hr/hr_api/AdminHrServerApi';
@@ -13,13 +14,15 @@ export default async function HrPage() {
       ssrHrApi.getSummary(),
     ]);
     initialData = {
-      staff: staffRes.data?.staff || staffRes.data || [],
-      payrolls: payrollRes.data?.payrolls || payrollRes.data || [],
+      staff: staffRes.data?.staff || (Array.isArray(staffRes.data) ? staffRes.data : []),
+      payrolls: payrollRes.data?.payrolls || (Array.isArray(payrollRes.data) ? payrollRes.data : []),
       summary: summaryRes.data || null
     };
   } catch {
     // SSR data fetch failed gracefully — client-side hook will re-fetch
   }
 
-  return <AdminHrMain initialData={initialData} />;
+  return (
+      <AdminHrMain initialData={initialData} />
+  );
 }

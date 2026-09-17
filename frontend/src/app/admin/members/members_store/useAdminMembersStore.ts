@@ -1,5 +1,7 @@
+// DATA FLOW: feature API/schema → hook/context → useAdminMembersStore consumers.
 // RESPONSIBILITY: Zustand store for Admin Members UI state — filters, pagination, selected member.
 import { create } from 'zustand';
+import type { AdminMembersExpiryFilter } from '@/app/admin/members/members_types/AdminMembersUiTypes';
 import type { MemberStatus } from '@/app/admin/members/members_types/AdminMembersTypes';
 
 interface AdminMembersStoreState {
@@ -9,8 +11,8 @@ interface AdminMembersStoreState {
   setStatusFilter: (s: MemberStatus | 'all') => void;
   branchFilter: string;
   setBranchFilter: (s: string) => void;
-  expiryFilter: 'all' | 'this_week' | 'this_month';
-  setExpiryFilter: (s: 'all' | 'this_week' | 'this_month') => void;
+  expiryFilter: AdminMembersExpiryFilter;
+  setExpiryFilter: (s: AdminMembersExpiryFilter) => void;
   genderFilter: string;
   setGenderFilter: (s: string) => void;
   planFilter: string;

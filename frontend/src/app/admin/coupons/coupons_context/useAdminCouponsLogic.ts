@@ -1,61 +1,64 @@
+"use client";
 // RESPONSIBILITY: Custom hook encapsulating all business logic for the Coupons module.
 // DATA FLOW: AdminCouponsMain → useAdminCouponsLogic → couponsApi
-'use client';
 
 import { useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import toast from 'react-hot-toast';
-import { couponsApi } from '@/app/admin/coupons/coupons_api/coupons_api';
+import { adminToast } from '@/app/admin/admin_components/AdminFeedback/AdminToastService';
+import { couponsApi } from '@/app/admin/coupons/coupons_api/AdminCouponsApi';
 import { useAdminCouponsStore } from '@/app/admin/coupons/coupons_store/useAdminCouponsStore';
+import { useAdminUrlQuerySync } from '@/app/admin/admin_utils/useAdminUrlQuerySync';
 import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/useAdminConfirm';
 import { EMPTY_COUPON_FORM, COUPONS_ITEMS_PER_PAGE } from '@/app/admin/coupons/coupons_utils/AdminCouponsSharedConstants';
-import type { Coupon, CouponFormValues, FetchState } from '@/app/admin/coupons/coupons_types/coupons_types';
+import type { Coupon, CouponFormValues } from '@/app/admin/coupons/coupons_types/AdminCouponsTypes';
 
 export function useAdminCouponsLogic() {
   const { confirm } = useAdminConfirm();
   const qc = useQueryClient();
-  const { showModal, setShowModal, editId, setEditId, form, setForm, search, statusFilter, currentPage, setCurrentPage } = useAdminCouponsStore();
+  const { showModal, setShowModal, editId, setEditId, form, setForm, search, statusFilter, currentPage, setCurrentPage, dateRange, setDateRange } = useAdminCouponsStore();
+  useAdminUrlQuerySync([
+    { key: 'search', value: search, defaultValue: '', setValue: useAdminCouponsStore.getState().setSearch },
+    { key: 'status', value: statusFilter, defaultValue: 'all', setValue: useAdminCouponsStore.getState().setStatusFilter },
+    { key: 'dateRange', value: dateRange, defaultValue: 'all_time', setValue: useAdminCouponsStore.getState().setDateRange },
+    { key: 'page', value: currentPage, defaultValue: 1, setValue: (value) => setCurrentPage(Math.max(1, Number(value) || 1)) },
+  ]);
 
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ['adminCoupons'],
-    queryFn: () => couponsApi.fetchCoupons().then(r => r.data ?? []),
+  const couponsQuery = useQuery({
+    queryKey: ['admin', 'coupons', 'list', search, statusFilter, dateRange, currentPage],
+    queryFn: () => couponsApi.fetchCoupons({ page: currentPage, limit: COUPONS_ITEMS_PER_PAGE, search: search || undefined, status: statusFilter !== 'all' ? statusFilter as Coupon['status'] : undefined, dateRange }),
     staleTime: 1000 * 60 * 2,
   });
 
-  const fetchState: FetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
+  const status = couponsQuery.status;
+  const data = couponsQuery.data;
 
-  // Client-side filter
-  const allCoupons = data ?? [];
-  const filtered = allCoupons.filter(c => {
-    const matchSearch = !search || c.code.toLowerCase().includes(search.toLowerCase()) || c.description.toLowerCase().includes(search.toLowerCase());
-    const matchStatus = statusFilter === 'all' || c.status === statusFilter;
-    return matchSearch && matchStatus;
-  });
-  const totalPages = Math.max(1, Math.ceil(filtered.length / COUPONS_ITEMS_PER_PAGE));
-  const paginated = filtered.slice((currentPage - 1) * COUPONS_ITEMS_PER_PAGE, currentPage * COUPONS_ITEMS_PER_PAGE);
+  const allCoupons = data?.data ?? [];
+  const totalItems = data?.meta?.total ?? allCoupons.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / COUPONS_ITEMS_PER_PAGE));
+  const paginated = allCoupons;
 
   const createMutation = useMutation({
     mutationFn: (payload: Partial<Coupon>) => couponsApi.createCoupon(payload),
-    onSuccess: (res) => { toast.success(res.message); setShowModal(false); qc.invalidateQueries({ queryKey: ['adminCoupons'] }); },
-    onError: (err) => toast.error((err as Error).message),
+    onSuccess: (res) => { adminToast.success(res.message, 'admin-success-28c64429b0'); setShowModal(false); qc.invalidateQueries({ queryKey: ['admin', 'coupons', 'list'] }); },
+    onError: (err) => adminToast.error((err as Error).message, 'admin-error-000fe5d6ed'),
   });
 
   const updateMutation = useMutation({
     mutationFn: ({ id, payload }: { id: string; payload: Partial<Coupon> }) => couponsApi.updateCoupon(id, payload),
-    onSuccess: (res) => { toast.success(res.message); setShowModal(false); qc.invalidateQueries({ queryKey: ['adminCoupons'] }); },
-    onError: (err) => toast.error((err as Error).message),
+    onSuccess: (res) => { adminToast.success(res.message, 'admin-success-268a88738b'); setShowModal(false); qc.invalidateQueries({ queryKey: ['admin', 'coupons', 'list'] }); },
+    onError: (err) => adminToast.error((err as Error).message, 'admin-error-1bf98dcfe1'),
   });
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => couponsApi.deleteCoupon(id),
-    onSuccess: (res) => { toast.success(res.message); qc.invalidateQueries({ queryKey: ['adminCoupons'] }); },
-    onError: (err) => toast.error((err as Error).message),
+    onSuccess: (res) => { adminToast.success(res.message, 'admin-success-1eef48be92'); qc.invalidateQueries({ queryKey: ['admin', 'coupons', 'list'] }); },
+    onError: (err) => adminToast.error((err as Error).message, 'admin-error-aedbe2342a'),
   });
 
   const toggleMutation = useMutation({
     mutationFn: (id: string) => couponsApi.toggleCoupon(id),
-    onSuccess: (res) => { toast.success(res.message); qc.invalidateQueries({ queryKey: ['adminCoupons'] }); },
-    onError: (err) => toast.error((err as Error).message),
+    onSuccess: (res) => { adminToast.success(res.message, 'admin-success-c9f979e51f'); qc.invalidateQueries({ queryKey: ['admin', 'coupons', 'list'] }); },
+    onError: (err) => adminToast.error((err as Error).message, 'admin-error-4febc5f64f'),
   });
 
   const openAdd = useCallback(() => { setEditId(null); setForm(EMPTY_COUPON_FORM); setShowModal(true); }, [setEditId, setForm, setShowModal]);
@@ -94,5 +97,5 @@ export function useAdminCouponsLogic() {
 
   const saving = createMutation.isPending || updateMutation.isPending;
 
-  return { coupons: paginated, allCoupons, fetchState, saving, showModal, setShowModal, editId, form, setForm, openAdd, openEdit, saveCoupon, deleteCoupon, toggleCoupon, currentPage, setCurrentPage, totalPages, totalItems: filtered.length };
+  return { coupons: paginated, allCoupons, status, saving, showModal, setShowModal, editId, form, setForm, dateRange, setDateRange, openAdd, openEdit, saveCoupon, deleteCoupon, toggleCoupon, currentPage, setCurrentPage, totalPages, totalItems };
 }

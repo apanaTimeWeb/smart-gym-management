@@ -2,5 +2,7 @@
 import AdminPermissionsMain from '@/app/admin/permissions/permissions_components/AdminPermissionsMain/AdminPermissionsMain';
 
 export default function PermissionsPage() {
-  return <AdminPermissionsMain />;
+  return (
+      <AdminPermissionsMain />
+  );
 }

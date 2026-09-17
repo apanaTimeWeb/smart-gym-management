@@ -1,29 +1,25 @@
+"use client";
 // RESPONSIBILITY: Renders the cross-branch daily attendance trend chart using ApexCharts.
-'use client';
 
 import dynamic from 'next/dynamic';
+import { ADMIN_CHART_THEME } from '@/app/admin/admin_utils/AdminChartThemeTokens';
 import { CalendarCheck } from 'lucide-react';
+import { useAdminDashboardLogic } from '@/app/admin/dashboard/dashboard_context/useAdminDashboardLogic';
 
 const ReactApexChart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
-const MOCK_ATTENDANCE = [
-  { day: 'Mon', checkins: 312 },
-  { day: 'Tue', checkins: 287 },
-  { day: 'Wed', checkins: 345 },
-  { day: 'Thu', checkins: 298 },
-  { day: 'Fri', checkins: 378 },
-  { day: 'Sat', checkins: 421 },
-  { day: 'Sun', checkins: 195 },
-];
-
 export default function AdminDashboardAttendanceTrend() {
+  const { stats } = useAdminDashboardLogic();
+  const attendance = stats?.attendanceTrend ?? [];
+  const labels = attendance.map((item) => new Date(item.date).toLocaleDateString('en-IN', { weekday: 'short' }));
+  const values = attendance.map((item) => item.count);
   const options: ApexCharts.ApexOptions = {
     chart: {
       type: 'bar',
       background: 'transparent',
       toolbar: { show: false },
     },
-    colors: ['#FACC15'],
+    colors: [ADMIN_CHART_THEME.primary],
     plotOptions: {
       bar: {
         borderRadius: 6,
@@ -32,19 +28,19 @@ export default function AdminDashboardAttendanceTrend() {
     },
     dataLabels: { enabled: false },
     xaxis: {
-      categories: MOCK_ATTENDANCE.map((d) => d.day),
-      labels: { style: { colors: '#A1A1AA', fontSize: '12px' } },
+      categories: labels,
+      labels: { style: { colors: ADMIN_CHART_THEME.textSecondary, fontSize: '12px' } },
       axisBorder: { show: false },
       axisTicks: { show: false },
     },
     yaxis: {
       labels: {
-        style: { colors: '#A1A1AA', fontSize: '12px' },
+        style: { colors: ADMIN_CHART_THEME.textSecondary, fontSize: '12px' },
         formatter: (v) => String(Math.round(v)),
       },
     },
     grid: {
-      borderColor: 'rgba(255,255,255,0.05)',
+      borderColor: ADMIN_CHART_THEME.grid,
       strokeDashArray: 4,
       xaxis: { lines: { show: false } },
     },
@@ -54,9 +50,9 @@ export default function AdminDashboardAttendanceTrend() {
     },
   };
 
-  const series = [{ name: 'Check-ins', data: MOCK_ATTENDANCE.map((d) => d.checkins) }];
-  const total = MOCK_ATTENDANCE.reduce((s, d) => s + d.checkins, 0);
-  const avg = Math.round(total / MOCK_ATTENDANCE.length);
+  const series = [{ name: 'Check-ins', data: values }];
+  const total = values.reduce((sum: number, value: number) => sum + value, 0);
+  const avg = values.length ? Math.round(total / values.length) : 0;
 
   return (
     <div className="bg-card/60 backdrop-blur-xl border border-border rounded-2xl shadow-lg p-6">
@@ -75,7 +71,7 @@ export default function AdminDashboardAttendanceTrend() {
           <p className="text-xs text-secondary">Avg {avg}/day</p>
         </div>
       </div>
-      <ReactApexChart options={options} series={series} type="bar" height={220} />
+      {values.length > 0 ? <ReactApexChart options={options} series={series} type="bar" height={220} /> : <div className="h-56 flex items-center justify-center text-sm text-secondary">No attendance trend data available.</div>}
     </div>
   );
 }

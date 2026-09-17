@@ -7,12 +7,12 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
 import type { ProgressEntry, CreateProgressEntryDto } from '@/app/trainer/progress-tracking/progress_types/TrainerProgressTypes';
-import { CreateProgressEntrySchema, type CreateProgressEntryFormValues } from '@/app/trainer/progress-tracking/progress_types/progress.schema';
-import { useWarnIfUnsavedChanges } from '@/app/trainer/trainer_utils/useWarnIfUnsavedChanges';
+import { CreateProgressEntrySchema, type CreateProgressEntryFormValues } from '@/app/trainer/progress-tracking/progress_types/TrainerProgress.schema';
+import { useTrainerUnsavedChangesGuard } from '@/app/trainer/trainer_utils/TrainerUseWarnIfUnsavedChanges';
 
-interface Props {
+interface TrainerProgressModalProps {
   editingEntry: ProgressEntry | null;
-  onSave: (data: Omit<ProgressEntry, 'id' | 'memberId' | 'recordedBy'>) => void;
+  onSave: (data: CreateProgressEntryDto) => void;
   onClose: () => void;
 }
 
@@ -22,7 +22,7 @@ const EMPTY: CreateProgressEntryFormValues = {
   heightCm: 0,
 };
 
-export default function TrainerProgressModal({ editingEntry, onSave, onClose }: Props) {
+export default function TrainerProgressModal({ editingEntry, onSave, onClose }: TrainerProgressModalProps) {
   const {
     register,
     handleSubmit,
@@ -33,7 +33,7 @@ export default function TrainerProgressModal({ editingEntry, onSave, onClose }: 
     defaultValues: EMPTY,
   });
 
-  useWarnIfUnsavedChanges(isDirty);
+  useTrainerUnsavedChangesGuard(isDirty);
 
   useEffect(() => {
     if (editingEntry) {
@@ -56,12 +56,11 @@ export default function TrainerProgressModal({ editingEntry, onSave, onClose }: 
   const onSubmit = async (formData: CreateProgressEntryFormValues) => {
     // The resolver has validated the data, we parse to get the transformed output
     const data = CreateProgressEntrySchema.parse(formData);
-    const bmi = Math.round((data.weightKg / Math.pow(data.heightCm / 100, 2)) * 10) / 10;
-    onSave({ ...data, bmi });
+    onSave(data);
   };
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 backdrop-blur-sm p-4">
       <div className="bg-overlay w-full max-w-lg rounded-2xl shadow-2xl border border-border overflow-hidden motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95 motion-safe:duration-200">
         <div className="flex items-center justify-between p-5 border-b border-border">
           <h3 className="text-lg font-bold text-foreground">
@@ -76,7 +75,7 @@ export default function TrainerProgressModal({ editingEntry, onSave, onClose }: 
           </button>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="p-5 space-y-4 max-h-[70vh] overflow-y-auto">
+        <form onSubmit={handleSubmit(onSubmit)} className="p-5 space-y-4 max-h-3/4 overflow-y-auto">
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-semibold text-secondary mb-1">Date</label>

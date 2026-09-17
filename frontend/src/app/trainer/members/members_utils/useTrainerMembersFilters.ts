@@ -2,7 +2,7 @@
 // DATA FLOW: URLSearchParams -> useTrainerMembersFilters -> Component -> Router
 import { useCallback } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
-import { useDebounce } from '@/app/trainer/trainer_utils/useDebounce';
+import { useDebounce } from '@/app/trainer/trainer_utils/TrainerUseDebounce';
 
 export function useTrainerMembersFilters() {
   const router = useRouter();
@@ -16,7 +16,7 @@ export function useTrainerMembersFilters() {
   const debouncedSearch = useDebounce(search, 300);
 
   const setUrlParam = useCallback((key: string, value: string | null) => {
-    const current = new URLSearchParams(Array.from(searchParams.entries()));
+    const current = new URLSearchParams(searchParams.toString());
     if (value) current.set(key, value);
     else current.delete(key);
     if (key !== 'page') current.set('page', '1'); // reset page on filter change

@@ -1,8 +1,8 @@
+"use client";
+import { formatPercent1dp, formatCurrency } from '@/lib/formatters';
 // RESPONSIBILITY: Renders the P&L (Profit & Loss) report tab — full breakdown per gym with margin indicators.
-'use client';
 
 import { useAdminReportsLogic } from '@/app/admin/reports/reports_context/useAdminReportsLogic';
-import { formatCurrency } from '@/app/admin/reports/reports_utils/AdminReportsSharedConstants';
 
 export default function AdminReportsPnL() {
   const { reportData } = useAdminReportsLogic();
@@ -16,7 +16,7 @@ export default function AdminReportsPnL() {
           <p className="text-xs text-secondary mt-0.5">Full revenue, cost, and profit breakdown for the selected period</p>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table data-admin-responsive-table className="w-full">
             <thead>
               <tr className="bg-primary/5">
                 {['Gym', 'Total Revenue', 'Membership Rev.', 'Store Rev.', 'Staff Cost', 'Operational Cost', 'Total Expenses', 'Net Profit', 'Margin'].map(h => (
@@ -41,7 +41,7 @@ export default function AdminReportsPnL() {
                         <div className="h-2 bg-success rounded-full" style={{ width: `${row.profitMargin}%` }} />
                       </div>
                       <span className={`text-xs font-bold ${row.profitMargin >= 60 ? 'text-success' : row.profitMargin >= 40 ? 'text-warning' : 'text-danger'}`}>
-                        {row.profitMargin.toFixed(1)}%
+                        {formatPercent1dp(row.profitMargin)}%
                       </span>
                     </div>
                   </td>
@@ -51,13 +51,13 @@ export default function AdminReportsPnL() {
             <tfoot>
               <tr className="bg-primary/5 border-t-2 border-border">
                 <td className="px-4 py-3 text-sm font-bold text-foreground">Total</td>
-                <td className="px-4 py-3 text-sm font-bold text-foreground">{formatCurrency(reportData.pnlSummary.reduce((s, r) => s + r.revenue, 0))}</td>
-                <td className="px-4 py-3 text-sm font-bold text-foreground">{formatCurrency(reportData.pnlSummary.reduce((s, r) => s + r.membershipRevenue, 0))}</td>
-                <td className="px-4 py-3 text-sm font-bold text-foreground">{formatCurrency(reportData.pnlSummary.reduce((s, r) => s + r.storeRevenue, 0))}</td>
-                <td className="px-4 py-3 text-sm font-bold text-danger">{formatCurrency(reportData.pnlSummary.reduce((s, r) => s + r.staffCost, 0))}</td>
-                <td className="px-4 py-3 text-sm font-bold text-danger">{formatCurrency(reportData.pnlSummary.reduce((s, r) => s + r.operationalCost, 0))}</td>
-                <td className="px-4 py-3 text-sm font-bold text-danger">{formatCurrency(reportData.pnlSummary.reduce((s, r) => s + r.totalExpenses, 0))}</td>
-                <td className="px-4 py-3 text-sm font-bold text-success">{formatCurrency(reportData.pnlSummary.reduce((s, r) => s + r.netProfit, 0))}</td>
+                <td className="px-4 py-3 text-sm font-bold text-foreground">{formatCurrency(reportData.pnlSummary.reduce((s: number, r) => s + r.revenue, 0))}</td>
+                <td className="px-4 py-3 text-sm font-bold text-foreground">{formatCurrency(reportData.pnlSummary.reduce((s: number, r) => s + r.membershipRevenue, 0))}</td>
+                <td className="px-4 py-3 text-sm font-bold text-foreground">{formatCurrency(reportData.pnlSummary.reduce((s: number, r) => s + r.storeRevenue, 0))}</td>
+                <td className="px-4 py-3 text-sm font-bold text-danger">{formatCurrency(reportData.pnlSummary.reduce((s: number, r) => s + r.staffCost, 0))}</td>
+                <td className="px-4 py-3 text-sm font-bold text-danger">{formatCurrency(reportData.pnlSummary.reduce((s: number, r) => s + r.operationalCost, 0))}</td>
+                <td className="px-4 py-3 text-sm font-bold text-danger">{formatCurrency(reportData.pnlSummary.reduce((s: number, r) => s + r.totalExpenses, 0))}</td>
+                <td className="px-4 py-3 text-sm font-bold text-success">{formatCurrency(reportData.pnlSummary.reduce((s: number, r) => s + r.netProfit, 0))}</td>
                 <td className="px-4 py-3" />
               </tr>
             </tfoot>

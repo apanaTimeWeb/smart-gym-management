@@ -1,5 +1,5 @@
 'use client';
-
+// RESPONSIBILITY: Renders the Manager FinanceRevenueChart presentation layer for the Manager module.
 import React from 'react';
 import dynamic from 'next/dynamic';
 import { Loader2 } from 'lucide-react';
@@ -23,16 +23,16 @@ function RevenueExpenseChart({ data }: { data: { month: string; revenue: number;
   const options = {
     chart: { background: 'transparent', toolbar: { show: false }, fontFamily: 'Inter, sans-serif' },
     plotOptions: { bar: { borderRadius: 4, columnWidth: '55%' } },
-    colors: ['#FACC15', '#EF4444'],
+    colors: ['var(--warning)', 'var(--danger)'],
     grid: { borderColor: 'rgba(255,255,255,0.05)', strokeDashArray: 4 },
     tooltip: { theme: 'dark' as const },
     xaxis: {
       categories: data.map(d => d.month),
-      labels: { style: { colors: '#A1A1AA', fontSize: '11px' } },
+      labels: { style: { colors: 'var(--text-secondary)', fontSize: '11px' } },
       axisBorder: { show: false }, axisTicks: { show: false },
     },
-    yaxis: { labels: { style: { colors: '#A1A1AA', fontSize: '11px' }, formatter: (v: number) => formatKPI(v) } },
-    legend: { labels: { colors: '#A1A1AA' } },
+    yaxis: { labels: { style: { colors: 'var(--text-secondary)', fontSize: '11px' }, formatter: (v: number) => formatKPI(v) } },
+    legend: { labels: { colors: 'var(--text-secondary)' } },
     dataLabels: { enabled: false },
   };
   

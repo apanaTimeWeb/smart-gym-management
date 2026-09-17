@@ -12,6 +12,6 @@
 
 5. **No cross-role imports** — Zero imports from `/admin`, `/trainer`, or `/superadmin`.
 
-6. **No hardcoded API URLs** — All endpoints must be imported from `ManagerSettingsUrlConfig.ts`.
+6. **No hardcoded API URLs** — All endpoints must be imported from `settings_url_config.ts`.
 
 7. **No `'use client'` in page.tsx** — `page.tsx` must remain a Server Component. All interactivity lives in `ManagerSettingsMain.tsx`. Rule 8.

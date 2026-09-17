@@ -1,14 +1,12 @@
-// RESPONSIBILITY: Root client orchestrator for the Trainer Schedule module.
 'use client';
-
+// RESPONSIBILITY: Root client orchestrator for the Trainer Schedule module.
 import { useTrainerScheduleStore } from '@/app/trainer/schedule/schedule_store/useTrainerScheduleStore';
 import TrainerWeeklyAvailability from '@/app/trainer/schedule/schedule_components/TrainerWeeklyAvailability/TrainerWeeklyAvailability';
 import TrainerLeaveRequests from '@/app/trainer/schedule/schedule_components/TrainerLeaveRequests/TrainerLeaveRequests';
 import TrainerRequestLeaveModal from '@/app/trainer/schedule/schedule_components/TrainerRequestLeaveModal/TrainerRequestLeaveModal';
-import TrainerToast from '@/app/trainer/trainer_components/TrainerFeedback/TrainerToast';
 
 export default function TrainerScheduleMain() {
-  const { activeTab, setActiveTab, toast, hideToast } = useTrainerScheduleStore();
+  const { activeTab, setActiveTab } = useTrainerScheduleStore();
 
   return (
     <div className="min-h-full pb-10">
@@ -34,14 +32,13 @@ export default function TrainerScheduleMain() {
         </div>
 
         {/* Tab Content */}
-        <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden min-h-[500px]">
+        <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden min-h-96">
           {activeTab === 'availability' && <TrainerWeeklyAvailability />}
           {activeTab === 'leaves' && <TrainerLeaveRequests />}
         </div>
       </div>
 
       <TrainerRequestLeaveModal />
-      {toast && <TrainerToast message={toast.message} type={toast.type} onClose={hideToast} />}
     </div>
   );
 }

@@ -1,124 +1,80 @@
-// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
-// DATA FLOW: Standard component data flow.
-// RESPONSIBILITY: Renders the diet plan cards grid with macronutrient info and action buttons.
 'use client';
-
-import { useLibraryContext } from '@/app/trainer/library/library_context/LibraryContext';
+// RESPONSIBILITY: Renders server-filtered and server-paginated Diet Plan records with read-only actions.
+import { Apple, Eye, Flame } from 'lucide-react';
 import TrainerPagination from '@/app/trainer/trainer_components/TrainerShared/TrainerPagination';
-import { Apple, Edit2, Trash2, Flame, Loader2 } from 'lucide-react';
 import { TRAINER_ITEMS_PER_PAGE } from '@/app/trainer/trainer_utils/TrainerSharedConstants';
-import { useConfirm } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerConfirmProvider';
+import type { DietPlan } from '@/app/trainer/library/library_types/TrainerLibrary_types';
+import TrainerLibraryEmptyState from '@/app/trainer/library/library_components/TrainerLibraryEmptyState/TrainerLibraryEmptyState';
 
-export default function TrainerLibraryDietGrid() {
-  const { dietPlans, fetchState, debouncedSearch, currentPage, setCurrentPage, openEditDiet, deleteDietPlan } = useLibraryContext();
-  const { confirm } = useConfirm();
+export interface TrainerLibraryDietGridProps {
+  dietPlans: DietPlan[];
+  totalDietPlans: number;
+  currentPage: number;
+  isPending: boolean;
+  isError: boolean;
+  search: string;
+  onPageChange: (page: number) => void;
+  onViewDiet: (plan: DietPlan) => void;
+}
 
-  const filtered = dietPlans.filter(d => {
-    const s = debouncedSearch.toLowerCase();
-    return d.name?.toLowerCase().includes(s) || d.goal?.toLowerCase().includes(s);
-  });
+export default function TrainerLibraryDietGrid({
+  dietPlans,
+  totalDietPlans,
+  currentPage,
+  isPending,
+  isError,
+  search,
+  onPageChange,
+  onViewDiet,
+}: TrainerLibraryDietGridProps) {
+  const totalPages = Math.max(1, Math.ceil(totalDietPlans / TRAINER_ITEMS_PER_PAGE));
 
-  const totalPages = Math.ceil(filtered.length / TRAINER_ITEMS_PER_PAGE);
-  const currentData = filtered.slice((currentPage - 1) * TRAINER_ITEMS_PER_PAGE, currentPage * TRAINER_ITEMS_PER_PAGE);
-
-  if (fetchState === 'loading') {
+  if (isError) return <div className="rounded-xl border border-danger bg-danger-bg p-5 text-danger">Unable to load diet plans. Please retry.</div>;
+  if (isPending) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 flex-1">
-        {[...Array(6)].map((_, i) => (
-          <div key={i} className="rounded-xl border border-border bg-card p-5 motion-safe:animate-pulse h-48 flex flex-col">
-            <div className="flex justify-between items-start mb-3">
-              <div className="w-10 h-10 rounded-xl bg-muted shrink-0"></div>
-              <div className="flex gap-2">
-                <div className="w-8 h-8 rounded bg-muted"></div>
-                <div className="w-8 h-8 rounded bg-muted"></div>
-              </div>
-            </div>
-            <div className="w-3/4 h-5 rounded bg-muted mb-2"></div>
-            <div className="w-1/2 h-4 rounded bg-muted mb-4"></div>
-            <div className="mt-auto pt-3 border-t border-border space-y-2">
-              <div className="w-1/3 h-4 rounded bg-muted"></div>
-              <div className="w-2/3 h-4 rounded bg-muted"></div>
-            </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        {['diet-1','diet-2','diet-3','diet-4','diet-5','diet-6'].map((id) => (
+          <div key={id} className="rounded-xl border border-border bg-card p-5 motion-safe:animate-pulse h-48">
+            <div className="w-10 h-10 rounded-xl bg-skeleton-base mb-4" />
+            <div className="w-3/4 h-5 rounded bg-skeleton-base mb-2" />
+            <div className="w-1/2 h-4 rounded bg-skeleton-base mb-4" />
+            <div className="w-full h-10 rounded bg-skeleton-base" />
           </div>
         ))}
       </div>
     );
   }
+  if (dietPlans.length === 0) return <TrainerLibraryEmptyState search={search} />;
 
   return (
     <div className="flex flex-col h-full">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 flex-1">
-        {currentData.map(dp => (
-          <div 
-            key={dp.id} 
-            className="rounded-xl border border-border bg-card p-5 hover:shadow-md motion-safe:transition-shadow flex flex-col cursor-pointer"
-            onClick={() => openEditDiet(dp)}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        {dietPlans.map((plan) => (
+          <button
+            type="button"
+            key={plan.id}
+            onClick={() => onViewDiet(plan)}
+            title={plan.name}
+            className="text-left rounded-xl border border-border bg-card p-5 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-safe:transition-shadow flex flex-col"
           >
             <div className="flex justify-between items-start mb-3">
               <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-success/10 text-success shrink-0">
-                <Apple size={20} />
+                <Apple size={18} />
               </div>
-              <div className="flex gap-2">
-                <button 
-                  onClick={(e) => { e.stopPropagation(); openEditDiet(dp); }}
-                  className="p-1.5 rounded hover:bg-primary/10 motion-safe:transition-colors text-secondary hover:text-primary"
-                  title="Edit"
-                >
-                  <Edit2 size={16} />
-                </button>
-                <button 
-                  onClick={async (e) => { 
-                    e.stopPropagation(); 
-                    const ok = await confirm({
-                      title: 'Delete Diet Plan',
-                      message: `Are you sure you want to delete diet plan "${dp.name}"?`,
-                      type: 'danger',
-                      confirmText: 'Delete'
-                    });
-                    if (ok) {
-                      deleteDietPlan(dp.id); 
-                    }
-                  }}
-                  className="p-1.5 rounded motion-safe:transition-colors text-danger hover:bg-danger/10"
-                  title="Delete"
-                >
-                  <Trash2 size={16} />
-                </button>
-              </div>
+              <span className="p-1.5 rounded text-secondary" title="View diet plan" aria-hidden="true"><Eye size={18} /></span>
             </div>
-
-            <h4 className="font-bold text-foreground line-clamp-1 mb-1">{dp.name}</h4>
-            <p className="text-xs text-secondary mb-3">{dp.goal}</p>
-            
+            <h4 className="font-bold text-foreground truncate mb-1">{plan.name}</h4>
+            <p className="text-xs text-secondary mb-3 truncate">{plan.goal}</p>
             <div className="mt-auto pt-3 border-t border-border space-y-1">
-              {dp.calories && (
-                <div className="flex items-center gap-2 text-xs text-secondary">
-                  <Flame size={14} className="text-warning" />
-                  <span>{dp.calories} kcal/day</span>
-                </div>
-              )}
-              {dp.protein && (
-                <p className="text-xs text-secondary">🥩 Protein: {dp.protein}g · Carbs: {dp.carbs}g · Fats: {dp.fats}g</p>
-              )}
+              {plan.calories ? <div className="flex items-center gap-2 text-xs text-secondary"><Flame size={18} className="text-warning" /><span>{plan.calories} kcal/day</span></div> : null}
+              {plan.protein ? <p className="text-xs text-secondary">Protein: {plan.protein}g · Carbs: {plan.carbs}g · Fats: {plan.fats}g</p> : null}
             </div>
-          </div>
+          </button>
         ))}
-        {currentData.length === 0 && (
-          <div className="col-span-full py-10 text-center text-secondary text-sm">
-            No diet plans found.
-          </div>
-        )}
       </div>
-
       <div className="mt-6">
-          <TrainerPagination 
-            currentPage={currentPage} 
-            totalPages={totalPages} 
-            totalItems={filtered.length} 
-            itemsPerPage={TRAINER_ITEMS_PER_PAGE} 
-            onPageChange={setCurrentPage} 
-          />
-        </div>
+        <TrainerPagination currentPage={currentPage} totalPages={totalPages} totalItems={totalDietPlans} itemsPerPage={TRAINER_ITEMS_PER_PAGE} onPageChange={onPageChange} />
+      </div>
     </div>
   );
 }

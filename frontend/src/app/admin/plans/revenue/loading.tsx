@@ -21,7 +21,7 @@ export default function Loading() {
         ))}
       </div>
 
-      <div className="h-[250px] bg-card border border-border rounded-xl p-5" />
+      <div className="h-64 bg-card border border-border rounded-xl p-5" />
       <div className="h-64 bg-card border border-border rounded-xl" />
     </div>
   );

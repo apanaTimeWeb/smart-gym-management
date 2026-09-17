@@ -1,9 +1,11 @@
+// DATA FLOW: feature API/schema → hook/context → useAdminDataExportStore consumers.
 // RESPONSIBILITY: Zustand store for Data Export module UI state.
 import { create } from 'zustand';
+import type { ExportStatus } from '@/app/admin/data-export/data_export_types/AdminDataExportTypes';
 
 interface AdminDataExportStore {
-  statusFilter: string;
-  setStatusFilter: (s: string) => void;
+  statusFilter: ExportStatus | 'all';
+  setStatusFilter: (s: ExportStatus | 'all') => void;
   currentPage: number;
   setCurrentPage: (p: number) => void;
 }

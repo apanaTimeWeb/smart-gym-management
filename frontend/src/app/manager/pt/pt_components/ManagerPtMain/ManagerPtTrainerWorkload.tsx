@@ -1,8 +1,9 @@
-// RESPONSIBILITY: Renders the trainer workload to help managers balance assignment distribution.
 'use client';
-
+// RESPONSIBILITY: Renders the trainer workload to help managers balance assignment distribution.
 import { Users, Star, User } from 'lucide-react';
 import type { PtTrainerWorkload } from '@/app/manager/pt/pt_types/ManagerPtTypes';
+
+const PT_TRAINER_WORKLOAD_COLUMN_COUNT = 4;
 
 interface ManagerPtTrainerWorkloadProps {
   workload: PtTrainerWorkload[];
@@ -19,16 +20,16 @@ export default function ManagerPtTrainerWorkload({ workload }: ManagerPtTrainerW
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-primary/5 border-b border-border">
-              <th className="py-3 px-4 text-[11px] font-semibold text-secondary uppercase tracking-wider">Trainer</th>
-              <th className="py-3 px-4 text-[11px] font-semibold text-secondary uppercase tracking-wider">Clients</th>
-              <th className="py-3 px-4 text-[11px] font-semibold text-secondary uppercase tracking-wider">Rating</th>
-              <th className="py-3 px-4 text-[11px] font-semibold text-secondary uppercase tracking-wider text-right">Status</th>
+              <th className="py-3 px-4 text-xs font-semibold text-secondary uppercase tracking-wider">Trainer</th>
+              <th className="py-3 px-4 text-xs font-semibold text-secondary uppercase tracking-wider">Clients</th>
+              <th className="py-3 px-4 text-xs font-semibold text-secondary uppercase tracking-wider">Rating</th>
+              <th className="py-3 px-4 text-xs font-semibold text-secondary uppercase tracking-wider text-right">Status</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
             {workload.length === 0 ? (
               <tr>
-                <td colSpan={4} className="py-10 text-center text-secondary text-sm">
+                <td colSpan={PT_TRAINER_WORKLOAD_COLUMN_COUNT} className="py-10 text-center text-secondary text-sm">
                   No trainer data available.
                 </td>
               </tr>
@@ -56,7 +57,7 @@ export default function ManagerPtTrainerWorkload({ workload }: ManagerPtTrainerW
                     </div>
                   </td>
                   <td className="py-3 px-4 text-right">
-                    <span className={`text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider ${
+                    <span className={`text-xs font-bold px-2 py-1 rounded-full uppercase tracking-wider ${
                       trainer.status === 'Fully Booked' 
                         ? 'bg-danger/10 text-danger' 
                         : 'bg-success/10 text-success'

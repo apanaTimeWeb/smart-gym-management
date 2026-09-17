@@ -1,10 +1,9 @@
-// RESPONSIBILITY: Renders the search input, category filter, and Add Product CTA for the Store module.
 'use client';
-
+// RESPONSIBILITY: Renders the search input, category filter, and Add Product CTA for the Store module.
 import { useState, useEffect } from 'react';
 import { Plus, ShoppingCart, RefreshCw, Search } from 'lucide-react';
 import { useStoreContext } from '@/app/manager/store/store_context/ManagerStoreContext';
-import { SearchableDropdown } from '@/app/manager/manager_components/ManagerShared/SearchableDropdown';
+import { SearchableDropdown } from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
 
 export default function ManagerStoreToolbar() {
   const { tab, setTab, loadAll, openAddProduct, setShowOrderModal, search, setSearch, setCurrentPage, categoryFilter, setCategoryFilter, stockFilter, setStockFilter } = useStoreContext();
@@ -33,7 +32,7 @@ export default function ManagerStoreToolbar() {
  <button 
  key={t} 
  onClick={() => setTab(t)}
- className={`px-4 py-3 text-sm font-semibold border-b-2 transition-colors whitespace-nowrap ${tab === t ? 'text-primary border-primary' : 'text-secondary border-transparent hover:text-foreground hover:border-border'}`}
+ className={`px-4 py-3 text-sm font-semibold border-b-2 motion-safe:transition-colors whitespace-nowrap ${tab === t ? 'text-primary border-primary' : 'text-secondary border-transparent hover:text-foreground hover:border-border'}`}
  >
  {t}
  </button>
@@ -81,14 +80,14 @@ export default function ManagerStoreToolbar() {
         )}
         <button 
  onClick={loadAll}  
- className="flex items-center gap-2 px-3 py-2 text-sm border border-border rounded-lg hover:bg-primary-subtle text-secondary transition-colors"
+ className="flex items-center gap-2 px-3 py-2 text-sm border border-border rounded-lg hover:bg-primary-subtle text-secondary motion-safe:transition-colors"
  >
  <RefreshCw size={14} />
  </button>
  {tab === 'Products' && (
  <button 
  onClick={openAddProduct} 
- className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white rounded-lg bg-primary hover:opacity-90 transition-opacity" 
+ className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground rounded-lg bg-primary hover:opacity-90 motion-safe:transition-opacity" 
  >
  <Plus size={14} /> Add Product
  </button>
@@ -96,7 +95,7 @@ export default function ManagerStoreToolbar() {
  {tab === 'Orders' && (
  <button 
  onClick={() => setShowOrderModal(true)} 
- className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-primary rounded-lg hover:opacity-90 transition-opacity" 
+ className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-lg hover:opacity-90 motion-safe:transition-opacity" 
  >
  <ShoppingCart size={14} /> New Sale
  </button>

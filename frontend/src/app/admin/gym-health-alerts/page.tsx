@@ -4,5 +4,7 @@ import AdminGymHealthAlertsMain from '@/app/admin/gym-health-alerts/gym_health_a
 export const metadata = { title: 'Gym Health Alerts — Admin | Smart Gym 360' };
 
 export default function GymHealthAlertsPage() {
-  return <AdminGymHealthAlertsMain />;
+  return (
+      <AdminGymHealthAlertsMain />
+  );
 }

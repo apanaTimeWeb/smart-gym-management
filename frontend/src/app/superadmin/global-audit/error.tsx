@@ -1,36 +1,28 @@
-// RESPONSIBILITY: Core infrastructure component for routing, loading, and error boundaries in the module.
 'use client';
-import { AlertCircle, RefreshCw } from 'lucide-react';
+// RESPONSIBILITY: error.tsx handles module-level rendering errors.
 import { useEffect } from 'react';
-
-export default function ErrorBoundary({
-  error,
-  reset,
-}: {
-  error: Error & { digest?: string };
-  reset: () => void;
+import { AlertTriangle, RefreshCcw } from 'lucide-react';
+import { logger } from '@/lib/logger';
+export default function ErrorBoundary({ error, reset }: {
+    error: Error & {
+        digest?: string;
+    };
+    reset: () => void;
 }) {
-  // Log error locally
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-page p-6">
-      <div className="w-full max-w-md bg-card border border-border rounded-xl shadow-2xl p-8 text-center space-y-6">
-        <div className="w-16 h-16 rounded-full bg-danger-bg flex items-center justify-center mx-auto">
-          <AlertCircle className="text-danger w-8 h-8" />
-        </div>
-        <div className="space-y-2">
-          <h2 className="text-xl font-bold text-foreground">Failed to Load Audits</h2>
-          <p className="text-sm text-secondary">
-            We encountered an unexpected error while rendering the audit logs.
-          </p>
-        </div>
-        <button
-          onClick={() => reset()}
-          className="flex items-center gap-2 bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-lg font-medium motion-safe:transition-colors mx-auto"
-        >
-          <RefreshCw className="w-4 h-4" /> Try again
-        </button>
+    useEffect(() => {
+        logger.error('Module Error:', error);
+    }, [error]);
+    return (<div className="flex flex-col items-center justify-center min-h-96 p-8 bg-card border border-border rounded-xl shadow-sm">
+      <div className="w-16 h-16 bg-danger-bg rounded-full flex items-center justify-center mb-4">
+        <AlertTriangle className="w-8 h-8 text-danger"/>
       </div>
-    </div>
-  );
+      <h2 className="text-xl font-bold text-foreground mb-2">Failed to load view</h2>
+      <p className="text-secondary text-sm max-w-md text-center mb-6">
+        An unexpected error occurred while rendering this module. Please try again or contact support if the issue persists.
+      </p>
+      <button onClick={reset} className="flex items-center gap-2 bg-primary hover:bg-primary-hover text-white px-6 py-2.5 rounded-lg font-medium motion-safe:transition-colors shadow-sm">
+        <RefreshCcw className="w-4 h-4"/>
+        Try Again
+      </button>
+    </div>);
 }
-

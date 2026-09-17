@@ -1,7 +1,6 @@
-// RESPONSIBILITY: Root orchestrator for the Churn Recovery / Win-Back tab. Renders KPIs, table, and composer drawer. No direct API calls.
 'use client';
-
-import { useManagerChurnRecoveryLogic } from '@/app/manager/communications/communications_context/useManagerChurnRecoveryLogic';
+// RESPONSIBILITY: Root orchestrator for the Churn Recovery / Win-Back tab. Renders KPIs, table, and composer drawer. No direct API calls.
+import { useManagerChurnRecoveryLogic } from '@/app/manager/communications/communications_context/ManagerUseManagerChurnRecoveryLogic';
 import ManagerChurnRecoveryKPIs from '@/app/manager/communications/communications_components/ManagerChurnRecovery/ManagerChurnRecoveryKPIs';
 import ManagerChurnRecoveryTable from '@/app/manager/communications/communications_components/ManagerChurnRecovery/ManagerChurnRecoveryTable';
 import ManagerChurnRecoveryComposer from '@/app/manager/communications/communications_components/ManagerChurnRecovery/ManagerChurnRecoveryComposer';
@@ -11,7 +10,7 @@ export default function ManagerChurnRecoveryTab() {
     churnKPIs,
     paginatedMembers,
     filteredMembers,
-    fetchState,
+    isLoading, isError,
     totalPages,
     churnSearch,
     setChurnSearch,
@@ -52,7 +51,7 @@ export default function ManagerChurnRecoveryTab() {
       <ManagerChurnRecoveryTable
         members={paginatedMembers}
         allFilteredCount={filteredMembers.length}
-        fetchState={fetchState}
+        isLoading={isLoading} isError={isError}
         churnSearch={churnSearch}
         onSearchChange={setChurnSearch}
         churnReasonFilter={churnReasonFilter}

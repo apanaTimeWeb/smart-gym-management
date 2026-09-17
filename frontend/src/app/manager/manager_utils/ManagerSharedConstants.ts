@@ -49,20 +49,19 @@ export const MANAGER_NAV_GROUPS = [
   },
 ];
 
-// TODO: Replace with real API call once Notifications backend module is built.
-export const MANAGER_PLACEHOLDER_NOTIFICATIONS = [
- { id: 1, text: 'New member Amit registered', time: '5m ago', unread: true },
- { id: 2, text: 'Payment received from Rahul', time: '1h ago', unread: false },
- { id: 3, text: 'Pooja requested a trial session', time: '2h ago', unread: false },
-];
+// Notifications are sourced from the Manager notification API; these defaults are UI-safe empty-state metadata only.
+
+import { ManagerEnvConfig } from '@/app/manager/manager_utils/ManagerEnvConfig';
 
 export const GYM_DETAILS = {
-  name: process.env.NEXT_PUBLIC_GYM_NAME || 'GymSmart Fitness',
-  phone: process.env.NEXT_PUBLIC_GYM_PHONE || '+91 83479 77566',
-  gstNumber: process.env.NEXT_PUBLIC_GYM_GST || '29ABCDE1234F1Z5',
-  address: process.env.NEXT_PUBLIC_GYM_ADDRESS || '123 Fitness Street, Banglore'
+  name: ManagerEnvConfig.gymName,
+  phone: ManagerEnvConfig.gymPhone,
+  gstNumber: ManagerEnvConfig.gymGstNumber,
+  address: ManagerEnvConfig.gymAddress,
 };
 
 
 
 export const MANAGER_ITEMS_PER_PAGE = 10;
+
+export const MANAGER_HOME_ROUTE = '/manager/dashboard';

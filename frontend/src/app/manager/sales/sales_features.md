@@ -1,74 +1,101 @@
 # Manager Sales — Feature Map
 
 ## Module Purpose
-The Manager Sales module provides branch-level membership sales analytics across four tabs:
-Revenue Overview, Membership Report, Pending Payments, and All Memberships. It is read-only
-analytics — no payment collection happens here. All monetary values arrive as paise integers
-and are formatted via `formatters.ts`.
+Manager Sales is the membership-sales and collections reporting workspace. Managers can inspect sales overview revenue trends, membership reports, pending payments, and all memberships, with server-side search/date/page controls where applicable. Sales records are server data owned by this module. Financial values must use centralized formatters and critical collection actions must be guarded.
 
 ## Directory Structure
-| File/Folder | Responsibility |
-|---|---|
-| `page.tsx` | Server Component — auth guard |
-| `loading.tsx` | Skeleton for KPI cards + tabs |
-| `error.tsx` | Error boundary |
-| `sales_components/ManagerSalesMain.tsx` | Root Client Component, tab switcher |
-| `sales_components/ManagerSalesRevenueTab.tsx` | Revenue KPIs + trend chart |
-| `sales_components/ManagerSalesMembershipTab.tsx` | Membership breakdown table |
-| `sales_components/ManagerSalesPendingTab.tsx` | Pending payments list |
-| `sales_components/ManagerSalesAllTab.tsx` | All memberships paginated table |
-| `sales_components/ManagerSalesEmptyState.tsx` | Empty state component |
-| `sales_context/SalesProvider.tsx` | Fetch state per active tab |
-| `sales_types/ManagerSalesTypes.ts` | `SalesStat`, `MembershipRecord` types |
-| `sales_api/ManagerSalesApi.ts` | API wrappers |
-| `sales_utils/ManagerSalesUrlConfig.ts` | Centralized URL constants |
+| Folder | Responsibility | Key Files |
+|---|---|---|
+| `sales_api/` | Feature-owned responsibility for the sales module. | `ManagerSalesApi.ts; ManagerSalesServerApi.ts; ManagerUseManagerSalesQueries.ts` |
+| `sales_components/` | Feature-owned responsibility for the sales module. | `—` |
+| `sales_context/` | Feature-owned responsibility for the sales module. | `ManagerSalesContext.tsx; ManagerUseManagerSalesLogic.ts` |
+| `sales_fixtures/` | Feature-owned responsibility for the sales module. | `ManagerSalesMockData.ts` |
+| `sales_mocks/` | Feature-owned responsibility for the sales module. | `—` |
+| `sales_types/` | Feature-owned responsibility for the sales module. | `ManagerSalesMemberSnapshot.ts; ManagerSalesSchema.ts; ManagerSalesTypes.ts` |
+| `sales_utils/` | Feature-owned responsibility for the sales module. | `ManagerSalesSharedConstants.ts` |
 
 ## Feature Inventory
-| Feature | Path | Purpose | Main API Calls | Status |
+| Feature | Route | What the User Can Do | Main API Calls | Status |
 |---|---|---|---|---|
-| Revenue Overview | `/manager/sales` | KPI cards + revenue chart | `GET /manager/sales/revenue` | ✅ Live |
-| Membership Report | `/manager/sales` | Plan-wise breakdown | `GET /manager/sales/memberships` | ✅ Live |
-| Pending Payments | `/manager/sales` | Overdue payment list | `GET /manager/sales/pending` | ✅ Live |
-| All Memberships | `/manager/sales` | Full paginated membership list | `GET /manager/sales/all` | ✅ Live |
+| fetchSalesOverview | `/manager/sales` | Uses the fetchSalesOverview workflow with typed request/response handling. | `GET /manager/sales/overview` | ✅ Implemented |
+| fetchMembershipReport | `/manager/sales` | Uses the fetchMembershipReport workflow with typed request/response handling. | `GET /manager/sales/membership-report` | ✅ Implemented |
+| fetchPendingPayments | `/manager/sales` | Uses the fetchPendingPayments workflow with typed request/response handling. | `GET /manager/sales/pending-payments` | ✅ Implemented |
+| fetchAllMemberships | `/manager/sales` | Uses the fetchAllMemberships workflow with typed request/response handling. | `GET /manager/sales/all-memberships` | ✅ Implemented |
+
+## User Flows & Interactions
+### Flow 1: Review sales
+1. Manager selects a sales tab and date/search/page filters.
+2. The sales logic propagates those parameters to the corresponding API request.
+3. MSW returns filtered/paginated fixture data and totals.
+4. The selected tab renders only its response contract.
 
 ## Data and State Architecture
-- Server-state: `SalesProvider` — active tab data, filters
-- Zustand stores: None — read-only module
-- Context providers: `SalesProvider`
-- Local-storage keys: None
-- MSW handler: Not yet configured
+TanStack Query owns sales server/API data. UI-only filters, tabs, selections, and draft state remain local state or module-scoped Zustand where shared. React Context is limited to stable cross-tree concerns and does not become the source of truth for API data. Query keys are module-prefixed.
 
-## User Flows
-1. Manager opens `/manager/sales` → Revenue tab loads by default with KPIs + chart
-2. Manager switches tab → `SalesProvider` fetches data for that tab
-3. Manager clicks a pending payment row → navigates to member profile in Members module
+## API Contract
+| Function | Method | Endpoint | Request | Response `data` type |
+|---|---|---|---|---|
+| `fetchSalesOverview` | `GET` | `/api/v1/manager/sales/overview` | `{ startDate?, endDate? }` | `{ monthlyRevenue: OverviewDataPoint[] }` |
+| `fetchMembershipReport` | `GET` | `/api/v1/manager/sales/membership-report` | `{ startDate?, endDate?, page?, limit? }` | `{ report: MembershipReportItem[]; totals: MembershipTotals }` |
+| `fetchPendingPayments` | `GET` | `/api/v1/manager/sales/pending-payments` | `{ page?, limit?, search? }` | `{ members: PendingPaymentMember[]; total: number }` |
+| `fetchAllMemberships` | `GET` | `/api/v1/manager/sales/all-memberships` | `{ page?, limit?, search? }` | `{ members: SalesMemberSnapshot[]; total: number }` |
 
-## Component Responsibility Map
-- `ManagerSalesMain` — tab switcher + provider. MUST NOT contain chart logic.
-- `ManagerSalesRevenueTab` — wraps `react-apexcharts`. MUST NOT use Recharts.
-- `ManagerSalesPendingTab` — read-only list. Row click navigates to Members module.
-- `ManagerSalesEmptyState` — reusable empty state, receives entity name as prop.
+## UI Data Requirements
+| UI Element | Required Field(s) | API Endpoint | Response Path | Nullable? | Mocked? |
+|---|---|---|---|---|---|
+| Overview: Month | `month` | `/api/v1/manager/sales/overview` | `data.monthlyRevenue[].month` | No | Yes |
+| Overview: Revenue | `revenue` | `/api/v1/manager/sales/overview` | `data.monthlyRevenue[].revenue` | No | Yes |
+| Membership report: Plan | `plan` | `/api/v1/manager/sales/membership-report` | `data.report[].plan` | Yes | Yes |
+| Membership report: Revenue | `revenue` | `/api/v1/manager/sales/membership-report` | `data.report[].revenue` | Yes | Yes |
+| Membership report: Remaining | `remaining` | `/api/v1/manager/sales/membership-report` | `data.report[].remaining` | Yes | Yes |
+| Membership report: Refund | `refund` | `/api/v1/manager/sales/membership-report` | `data.report[].refund` | Yes | Yes |
+| Pending: Member name | `name` | `/api/v1/manager/sales/pending-payments` | `data.members[].name` | No | Yes |
+| Pending: Pending amount | `pendingAmount` | `/api/v1/manager/sales/pending-payments` | `data.members[].pendingAmount` | No | Yes |
+| Pending: Expiry date | `expiryDate` | `/api/v1/manager/sales/pending-payments` | `data.members[].expiryDate` | No | Yes |
+| All memberships: Name | `name` | `/api/v1/manager/sales/all-memberships` | `data.members[].name` | No | Yes |
+| All memberships: Phone | `phone` | `/api/v1/manager/sales/all-memberships` | `data.members[].phone` | No | Yes |
+| All memberships: Plan | `plan` | `/api/v1/manager/sales/all-memberships` | `data.members[].plan` | No | Yes |
+| All memberships: Pending amount | `pendingAmount` | `/api/v1/manager/sales/all-memberships` | `data.members[].pendingAmount` | No | Yes |
+| All memberships: Status | `status` | `/api/v1/manager/sales/all-memberships` | `data.members[].status` | No | Yes |
 
 ## Permissions and Security
-| Action | Required Role |
+- **Required role:** `MANAGER`.
+- **UI guard:** `ManagerPermissionGate` provides the Manager workspace capability boundary; module-specific permissions remain documented at the feature level when applicable.
+- **Critical actions:** destructive/financial actions use explicit confirmation and server-authoritative responses.
+- **Sensitive data:** list views use masking/display rules appropriate to the data type.
+- **Cross-role isolation:** no business imports from other role roots or unrelated business modules.
+
+## Loading, Empty, and Error States
+- Route-level `loading.tsx` provides a layout-matching skeleton.
+- Data sections use dedicated inline skeletons while TanStack Query is pending.
+- Entity lists provide module-specific empty-state UI where the entity is user-browsable.
+- Module `error.tsx` provides a safe retry fallback and does not expose raw backend/stack-trace text.
+
+## Edge Cases and AI Warnings
+- **Do not perform pagination with array slicing after the server has paginated the dataset:** Do not perform pagination with array slicing after the server has paginated the dataset.
+- **Sales and payment amounts must use centralized currency formatting:** Sales and payment amounts must use centralized currency formatting.
+- **Pending payment numbers are financial and should not use optimistic destructive updates:** Pending payment numbers are financial and should not use optimistic destructive updates.
+- **Sensitive phone data must be masked where the list contract requires it:** Sensitive phone data must be masked where the list contract requires it.
+- **The selected sales tab must determine which endpoint/data source is rendered:** The selected sales tab must determine which endpoint/data source is rendered.
+
+## Component Responsibility Map
+| Component File | Responsibility |
 |---|---|
-| View sales analytics | `MANAGER` |
-
-## Loading, Empty, Error States
-- **Loading:** `loading.tsx` — 3 KPI shimmer cards + chart placeholder + table skeleton
-- **Empty:** `ManagerSalesEmptyState` — "No sales data for this period"
-- **Error:** `error.tsx` with retry
-
-## Edge Cases / AI Warnings
-- **No mutations** — this is a read-only analytics module.
-- **ApexCharts only** — never use Recharts or Chart.js.
-- **Currency formatting** — all amounts arrive as paise integers. Always use `formatCurrency()` from `@/lib/formatters`.
+| `sales/sales_components/ManagerSalesAllMemberships/ManagerSalesAllMemberships.tsx` | Renders the paginated table of all gym memberships with status filter tabs. Receives data via ManagerSalesContext. No API calls. |
+| `sales/sales_components/ManagerSalesEmptyState/ManagerSalesEmptyState.tsx` | Renders the empty state UI for Sales module lists. Receives a message and optional subtext via props. No API calls. |
+| `sales/sales_components/ManagerSalesMain/ManagerSalesMain.tsx` | Provides the implementation for ManagerSalesMain.tsx functionality within its module. |
+| `sales/sales_components/ManagerSalesMembershipReport/ManagerSalesMembershipReport.tsx` | Provides the implementation for ManagerSalesMembershipReport.tsx functionality within its module. |
+| `sales/sales_components/ManagerSalesOverview/ManagerSalesOverview.tsx` | Renders the Manager SalesOverview presentation layer for the Manager module. |
+| `sales/sales_components/ManagerSalesPendingPayments/ManagerSalesPendingPayments.tsx` | Renders the list of members with pending payments, including skeleton loader, pagination, and overdue details. Receives data via ManagerSalesContext. |
+| `sales/sales_components/ManagerSalesTabs/ManagerSalesTabs.tsx` | Provides the implementation for ManagerSalesTabs.tsx functionality within its module. |
+| `sales/sales_components/ManagerSalesToolbar/ManagerSalesToolbar.tsx` | Provides the implementation for ManagerSalesToolbar.tsx functionality within its module. |
+| `sales/sales_context/ManagerSalesContext.tsx` | Provides sales module state (revenue data, membership reports, pending payments) to all Sales components via React Context. Sync UI state only — async data must migrate to Zustand (see ManagerUseManagerSalesLogic.ts). |
 
 ## Rule Compliance Checklist
-- [x] Rule 1: Micro-modularization — module-prefixed files
-- [x] Rule 6: Logic/UI Separation — fetch in context, display in tab components
-- [x] Rule 8: Server/Client Boundary — `page.tsx` = Server
-- [x] Rule 9: `loading.tsx` + `error.tsx` present
-- [x] Rule 13: Feature Map — this document, updated same commit as code changes
-- [x] Rule 21: Currency formatted via `formatters.ts`
-- [x] Design §10: ApexCharts with correct color tokens
+- [x] Module-owned API, types/schemas, fixtures, handlers, tests, and feature documentation are scoped to this module.
+- [x] API calls use the module API client and typed response contracts.
+- [x] Server-backed pagination/filter/search follows explicit parameter propagation where applicable.
+- [x] UI Data Requirements map displayed values to concrete endpoints and response paths.
+- [x] Module-owned MSW fixtures/handlers remain the frontend-first server substitute.
+- [x] Raw `any`, relative imports, barrel files, and hardcoded localhost mock origins are absent from audited Manager source.
+- [ ] Host-repository CI/tooling, dependency/SCA/secret gates, CODEOWNERS, branch protection, and production build require root-repository verification.

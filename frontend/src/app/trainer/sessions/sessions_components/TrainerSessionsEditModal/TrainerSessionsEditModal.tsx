@@ -1,7 +1,6 @@
+'use client';
 // RESPONSIBILITY: Modal for editing an existing trainer session (title, time, duration, location, room).
 // DATA FLOW: TrainerSessionsMain → TrainerSessionsEditModal → updateTrainerSession API
-'use client';
-
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -10,8 +9,8 @@ import { X, Loader2, Save } from 'lucide-react';
 import type { TrainerSession } from '@/app/trainer/sessions/sessions_types/TrainerSessionsTypes';
 import { updateTrainerSession } from '@/app/trainer/sessions/sessions_api/TrainerSessionsApi';
 import { DURATION_OPTIONS } from '@/app/trainer/sessions/sessions_utils/TrainerSessionsSharedConstants';
-import { SearchableDropdown } from '@/app/trainer/trainer_components/TrainerShared/SearchableDropdown';
-import { useWarnIfUnsavedChanges } from '@/app/trainer/trainer_utils/useWarnIfUnsavedChanges';
+import TrainerSearchableDropdown from '@/app/trainer/trainer_components/TrainerShared/TrainerSearchableDropdown/TrainerSearchableDropdown';
+import { useTrainerUnsavedChangesGuard } from '@/app/trainer/trainer_utils/TrainerUseWarnIfUnsavedChanges';
 
 const editSessionSchema = z.object({
   time: z.string().min(1, 'Time is required'),
@@ -24,7 +23,7 @@ type EditSessionValues = z.infer<typeof editSessionSchema>;
 interface TrainerSessionsEditModalProps {
   session: TrainerSession;
   onClose: () => void;
-  onSuccess: (updatedSession: TrainerSession) => void;
+  onSuccess: (updatedSession: TrainerSession, message: string) => void;
 }
 
 export default function TrainerSessionsEditModal({
@@ -43,7 +42,7 @@ export default function TrainerSessionsEditModal({
   });
 
   const [error, setError] = useState('');
-  useWarnIfUnsavedChanges(isDirty && !isSubmitting);
+  useTrainerUnsavedChangesGuard(isDirty && !isSubmitting);
 
   const durationOptions = DURATION_OPTIONS.map((d) => ({ value: d.value, label: d.label }));
   const selectedDuration = watch('duration');
@@ -51,25 +50,25 @@ export default function TrainerSessionsEditModal({
   const onSubmitForm = async (data: EditSessionValues) => {
     setError('');
     try {
-      const updated = await updateTrainerSession(session.id, {
+      const response = await updateTrainerSession(session.id, {
         time: data.time,
         duration: data.duration,
         location: data.location || undefined,
         room: data.room || undefined,
       });
-      onSuccess(updated);
+      onSuccess(response.data, response.message);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Failed to update session.');
     }
   };
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-      <div className="bg-overlay w-full max-w-md rounded-2xl shadow-2xl border border-border overflow-hidden motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95 motion-safe:duration-200">
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 backdrop-blur-sm p-4">
+      <div className="bg-overlay w-full max-w-md rounded-2xl shadow-2xl border border-border overflow-hidden motion-safe:transition-all motion-safe:duration-slow">
         <div className="flex items-center justify-between p-5 border-b border-border">
           <div>
             <h3 className="text-lg font-bold text-foreground">Edit Session</h3>
-            <p className="text-xs text-secondary mt-0.5 truncate max-w-[260px]">{session.title}</p>
+            <p className="text-xs text-secondary mt-0.5 truncate max-w-xs">{session.title}</p>
           </div>
           <button
             onClick={onClose}
@@ -101,10 +100,10 @@ export default function TrainerSessionsEditModal({
             </div>
             <div>
               <label className="block text-sm font-semibold text-secondary mb-1">Duration</label>
-              <SearchableDropdown
+              <TrainerSearchableDropdown
                 options={durationOptions}
                 value={selectedDuration}
-                onChange={(val) => setValue('duration', String(val), { shouldValidate: true })}
+                onChange={(val: string | number) => setValue('duration', String(val), { shouldValidate: true })}
                 placeholder="Select duration"
               />
               {errors.duration && <p className="text-xs text-danger mt-1">{errors.duration.message}</p>}

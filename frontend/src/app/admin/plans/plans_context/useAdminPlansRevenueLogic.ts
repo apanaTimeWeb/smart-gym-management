@@ -1,104 +1,44 @@
-// RESPONSIBILITY: Logic layer for the Plan Revenue dashboard. Handles fetching, filtering, and aggregation.
-import { useState, useMemo } from 'react';
+"use client";
+// RESPONSIBILITY: Query and control logic for the Admin Plan Revenue page.
+// DATA FLOW: URL/query controls → AdminPlansApi → module-owned MSW → Query cache → view.
+import { useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { plansApi } from '@/app/admin/plans/plans_api/plans_api';
-import type { 
-  PlanRevenueRecord, 
-  RevenuePeriod, 
-  RevenueSortKey, 
-  RevenueSortDirection,
-  RevenueAggregates
-} from '@/app/admin/plans/plans_types/AdminPlansRevenueTypes';
+import { plansApi } from '@/app/admin/plans/plans_api/AdminPlansApi';
+import { useDebounce } from '@/app/admin/admin_utils/useAdminDebounce';
+import { useAdminUrlQuerySync } from '@/app/admin/admin_utils/useAdminUrlQuerySync';
+import type { PlanRevenueRecord, RevenueAggregates, RevenuePeriod, RevenueSortDirection, RevenueSortKey } from '@/app/admin/plans/plans_types/AdminPlansRevenueTypes';
+import { ADMIN_ITEMS_PER_PAGE } from '@/app/admin/admin_url_config';
 
 export function useAdminPlansRevenueLogic() {
   const [period, setPeriod] = useState<RevenuePeriod>('THIS_MONTH');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortKey, setSortKey] = useState<RevenueSortKey>('totalRevenue');
   const [sortDir, setSortDir] = useState<RevenueSortDirection>('desc');
+  const [currentPage, setCurrentPage] = useState(1);
+  const debouncedSearch = useDebounce(searchQuery, 300);
 
-  const { data: rawResponse, isLoading, isError } = useQuery({
-    queryKey: ['admin_plans_revenue', period],
-    queryFn: () => plansApi.fetchPlanRevenue(period),
+  useAdminUrlQuerySync([
+    { key: 'period', value: period, defaultValue: 'THIS_MONTH', setValue: (value) => setPeriod(value as RevenuePeriod) },
+    { key: 'search', value: searchQuery, defaultValue: '', setValue: setSearchQuery },
+    { key: 'page', value: currentPage, defaultValue: 1, setValue: (value) => setCurrentPage(Math.max(1, Number(value) || 1)) },
+  ]);
+
+  const query = useQuery({
+    queryKey: ['admin', 'plans', 'revenue', { period, search: debouncedSearch, sortKey, sortDir, page: currentPage, limit: ADMIN_ITEMS_PER_PAGE }],
+    queryFn: () => plansApi.fetchPlanRevenue(period, { search: debouncedSearch, sortKey, sortDir, page: currentPage, limit: ADMIN_ITEMS_PER_PAGE }),
   });
-
-  const revenueData = rawResponse?.data || [];
-
-  const handleSort = (key: RevenueSortKey) => {
-    if (sortKey === key) {
-      setSortDir((prev) => (prev === 'asc' ? 'desc' : 'asc'));
-    } else {
-      setSortKey(key);
-      setSortDir('desc'); // Default new sort to desc
-    }
-  };
-
-  const filteredData = useMemo(() => {
-    if (!searchQuery.trim()) return revenueData;
-    const lowerQ = searchQuery.toLowerCase();
-    return revenueData.filter(r => 
-      r.planName.toLowerCase().includes(lowerQ) || 
-      r.tier.toLowerCase().includes(lowerQ)
-    );
-  }, [revenueData, searchQuery]);
-
-  const sortedData = useMemo(() => {
-    return [...filteredData].sort((a, b) => {
-      const aVal = a[sortKey];
-      const bVal = b[sortKey];
-
-      if (typeof aVal === 'string' && typeof bVal === 'string') {
-        return sortDir === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
-      }
-      if (typeof aVal === 'number' && typeof bVal === 'number') {
-        return sortDir === 'asc' ? aVal - bVal : bVal - aVal;
-      }
-      return 0;
-    });
-  }, [filteredData, sortKey, sortDir]);
-
+  const revenueData = query.data?.data ?? [];
+  const handleSort = (key: RevenueSortKey) => { if (sortKey === key) setSortDir((prev) => prev === 'asc' ? 'desc' : 'asc'); else { setSortKey(key); setSortDir('desc'); } setCurrentPage(1); };
   const aggregates = useMemo<RevenueAggregates>(() => {
-    if (revenueData.length === 0) {
-      return {
-        totalRevenue: 0,
-        totalSubscriptions: 0,
-        avgRenewalRate: 0,
-        topPerformingPlanName: 'N/A',
-      };
-    }
-
-    let revenue = 0;
-    let subscriptions = 0;
-    let rateSum = 0;
-    let topPlan = revenueData[0]!;
-
-    for (const r of revenueData) {
-      revenue += r.totalRevenue;
-      subscriptions += r.activeSubscriptions;
-      rateSum += r.renewalRate;
-      if (r.totalRevenue > topPlan.totalRevenue) {
-        topPlan = r;
-      }
-    }
-
-    return {
-      totalRevenue: revenue,
-      totalSubscriptions: subscriptions,
-      avgRenewalRate: rateSum / revenueData.length,
-      topPerformingPlanName: topPlan.planName,
-    };
-  }, [revenueData]);
-
-  return {
-    period,
-    setPeriod,
-    searchQuery,
-    setSearchQuery,
-    sortKey,
-    sortDir,
-    handleSort,
-    sortedData,
-    aggregates,
-    isLoading,
-    isError,
-  };
+    const source = query.data?.data ?? [];
+    if (!source.length) return { totalRevenue: 0, totalSubscriptions: 0, avgRenewalRate: 0, topPerformingPlanName: '—' };
+    return source.reduce((acc, row) => ({
+      totalRevenue: acc.totalRevenue + row.totalRevenue,
+      totalSubscriptions: acc.totalSubscriptions + row.activeSubscriptions,
+      avgRenewalRate: acc.avgRenewalRate + row.renewalRate,
+      topPerformingPlanName: row.totalRevenue > (source.find((item) => item.planName === acc.topPerformingPlanName)?.totalRevenue ?? -1) ? row.planName : acc.topPerformingPlanName,
+    }), { totalRevenue: 0, totalSubscriptions: 0, avgRenewalRate: 0, topPerformingPlanName: source[0]!.planName });
+  }, [query.data?.data]);
+  const avgRenewalRate = revenueData.length ? aggregates.avgRenewalRate / revenueData.length : 0;
+  return { period, setPeriod, searchQuery, setSearchQuery, sortKey, sortDir, handleSort, sortedData: revenueData as PlanRevenueRecord[], aggregates: { ...aggregates, avgRenewalRate }, isLoading: query.isLoading, isError: query.isError, currentPage, setCurrentPage, totalPages: query.data?.meta?.totalPages ?? 1, totalItems: query.data?.meta?.total ?? 0 };
 }

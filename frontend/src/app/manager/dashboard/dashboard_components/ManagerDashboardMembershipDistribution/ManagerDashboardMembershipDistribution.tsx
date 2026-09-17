@@ -1,14 +1,13 @@
-// RESPONSIBILITY: Renders the distribution of members by plan on the dashboard.
 'use client';
-
-import { useDashboardStatsQuery } from '@/app/manager/dashboard/dashboard_api/useManagerDashboardQueries';
-import { useManagerDashboardStore } from '@/app/manager/dashboard/dashboard_store/useManagerDashboardStore';
+// RESPONSIBILITY: Renders the distribution of members by plan on the dashboard.
+import { useDashboardStatsQuery } from '@/app/manager/dashboard/dashboard_api/ManagerUseManagerDashboardQueries';
+import { useManagerDashboardStore } from '@/app/manager/dashboard/dashboard_store/ManagerUseManagerDashboardStore';
 import { DASHBOARD_PLAN_BG_COLORS } from '@/app/manager/dashboard/dashboard_utils/ManagerDashboardSharedConstants';
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
 
 export default function ManagerDashboardMembershipDistribution() {
   const { timeRange } = useManagerDashboardStore();
-  const { data: stats } = useDashboardStatsQuery(timeRange);
+  const { data: stats } = useDashboardStatsQuery({ range: timeRange });
   if (!stats) return null;
   const data = stats?.membersByPlan || [];
  const s = stats;

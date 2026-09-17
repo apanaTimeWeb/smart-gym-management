@@ -1,15 +1,14 @@
-// RESPONSIBILITY: Server Component entry for /superadmin/gyms/[id] — fetches gym detail server-side.
-// DATA FLOW: page.tsx (Server) → SuperadminGymDetailClient (Client)
-
-import { notFound } from 'next/navigation';
+// RESPONSIBILITY: Server entry for the Superadmin gym detail route; passes the route gym ID to client views.
 import SuperadminGymDetailClient from '@/app/superadmin/gyms/gyms_components/SuperadminGymDetailClient/SuperadminGymDetailClient';
-
-interface GymDetailPageProps {
-  params: Promise<{ id: string }>;
-}
-
-export default async function GymDetailPage({ params }: GymDetailPageProps) {
-  const { id } = await params;
-  if (!id) return notFound();
-  return <SuperadminGymDetailClient gymId={id} />;
+import SuperadminGymDetailV1Client from '@/app/superadmin/gyms/gyms_components/SuperadminGymDetailV1Client';
+import { notFound } from 'next/navigation';
+import type { SuperadminGymDetailPageProps } from '@/app/superadmin/gyms/gyms_types/SuperadminGymDetailPageTypes';
+export default async function GymDetailPage({ params }: SuperadminGymDetailPageProps) {
+    const { id } = await params;
+    if (!id)
+        return notFound();
+    return (<>
+      <SuperadminGymDetailClient gymId={id}/>
+      <SuperadminGymDetailV1Client gymId={id}/>
+    </>);
 }

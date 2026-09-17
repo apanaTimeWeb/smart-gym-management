@@ -1,33 +1,27 @@
 'use client';
-
+// RESPONSIBILITY: Renders permission-aware Trainer dashboard shortcuts and navigates only to supported Trainer routes.
 import { Dumbbell, Utensils, Users, CalendarCheck } from 'lucide-react';
 import Link from 'next/link';
+import { TrainerPageUrlConfig } from '@/app/trainer/Trainer_url_config';
+
+const QUICK_ACTIONS = [
+  { href: TrainerPageUrlConfig.WORKOUT, label: 'Workout Library', icon: Dumbbell, tone: 'primary' },
+  { href: TrainerPageUrlConfig.ATTENDANCE, label: 'View Attendance', icon: CalendarCheck, tone: 'success' },
+  { href: TrainerPageUrlConfig.MEMBERS, label: 'View Members', icon: Users, tone: 'info' },
+  { href: TrainerPageUrlConfig.LIBRARY, label: 'Diet Library', icon: Utensils, tone: 'warning' },
+] as const;
 
 export default function TrainerDashboardQuickActions() {
   return (
     <div className="bg-card border border-border rounded-2xl p-5 shadow-sm">
-      <div className="flex items-center justify-between mb-5">
-        <h3 className="font-bold text-foreground text-lg flex items-center gap-2">
-          Quick Actions
-        </h3>
-      </div>
+      <div className="flex items-center justify-between mb-5"><h3 className="font-bold text-foreground text-lg">Quick Actions</h3></div>
       <div className="grid grid-cols-2 gap-3">
-        <Link href="/trainer/workout" className="flex flex-col items-center justify-center p-4 rounded-xl border border-border/50 bg-background/50 hover:bg-primary-subtle hover:text-primary transition-colors hover:border-primary/30 group">
-          <Dumbbell className="text-secondary group-hover:text-primary mb-2 transition-colors" size={24} />
-          <span className="text-xs font-semibold text-center text-foreground group-hover:text-primary transition-colors">Add Workout</span>
-        </Link>
-        <Link href="/trainer/attendance" className="flex flex-col items-center justify-center p-4 rounded-xl border border-border/50 bg-background/50 hover:bg-success-bg hover:text-success transition-colors hover:border-success/30 group">
-          <CalendarCheck className="text-secondary group-hover:text-success mb-2 transition-colors" size={24} />
-          <span className="text-xs font-semibold text-center text-foreground group-hover:text-success transition-colors">View Attendance</span>
-        </Link>
-        <Link href="/trainer/members" className="flex flex-col items-center justify-center p-4 rounded-xl border border-border/50 bg-background/50 hover:bg-info-bg hover:text-info transition-colors hover:border-info/30 group">
-          <Users className="text-secondary group-hover:text-info mb-2 transition-colors" size={24} />
-          <span className="text-xs font-semibold text-center text-foreground group-hover:text-info transition-colors">View Members</span>
-        </Link>
-        <Link href="/trainer/diet-plans" className="flex flex-col items-center justify-center p-4 rounded-xl border border-border/50 bg-background/50 hover:bg-warning-bg hover:text-warning transition-colors hover:border-warning/30 group">
-          <Utensils className="text-secondary group-hover:text-warning mb-2 transition-colors" size={24} />
-          <span className="text-xs font-semibold text-center text-foreground group-hover:text-warning transition-colors">Create Diet Plan</span>
-        </Link>
+        {QUICK_ACTIONS.map(({ href, label, icon: Icon, tone }) => (
+          <Link key={href} href={href} className="flex flex-col items-center justify-center p-4 rounded-xl border border-border bg-bg-page motion-safe:transition-colors hover:bg-primary-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+            <Icon size={18} strokeWidth={2} className={{primary:'mb-2 text-primary',success:'mb-2 text-success',info:'mb-2 text-info',warning:'mb-2 text-warning'}[tone]} />
+            <span className="text-xs font-semibold text-center text-foreground">{label}</span>
+          </Link>
+        ))}
       </div>
     </div>
   );

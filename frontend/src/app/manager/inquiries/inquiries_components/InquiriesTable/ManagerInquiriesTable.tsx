@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the paginated, filterable table of inquiries with row actions, status updates, and bulk selection.
 'use client';
-
+// RESPONSIBILITY: Renders the paginated, filterable table of inquiries with row actions, status updates, and bulk selection.
 import { useInquiriesContext } from '@/app/manager/inquiries/inquiries_context/ManagerInquiriesContext';
 import { INQUIRIES_TABLE_HEADERS, INQUIRIES_STATUS_LABELS } from '@/app/manager/inquiries/inquiries_utils/ManagerInquiriesSharedConstants';
 import { displayValue, formatDate } from '@/lib/formatters';
@@ -100,8 +99,17 @@ export default function ManagerInquiriesTable() {
               return (
                 <tr
                   key={inq.id}
-                  className={`transition-colors cursor-pointer ${selected ? 'bg-primary/10' : 'hover:bg-primary/5'}`}
+                  className={`motion-safe:transition-colors cursor-pointer ${selected ? 'bg-primary/10' : 'hover:bg-primary/5'}`}
+                  tabIndex={0}
+                  role="button"
+                  aria-label={`Edit inquiry ${inq.name}`}
                   onClick={() => openEdit(inq)}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                      event.preventDefault();
+                      openEdit(inq);
+                    }
+                  }}
                 >
                   <td className="px-5 py-3.5 w-12" onClick={e => e.stopPropagation()}>
                     <input
@@ -140,7 +148,7 @@ export default function ManagerInquiriesTable() {
                     <div className="flex items-center gap-2">
                       <button
                         onClick={(e) => { e.stopPropagation(); openMsg(inq, 'whatsapp'); }}
-                        className="p-1.5 rounded-lg bg-success text-white hover:opacity-80 transition-all duration-200"
+                        className="p-1.5 rounded-lg bg-success text-primary-foreground hover:opacity-80 motion-safe:transition-all duration-200"
                         title="WhatsApp"
                         aria-label={`Message ${inq.name} on WhatsApp`}
                       >
@@ -148,7 +156,7 @@ export default function ManagerInquiriesTable() {
                       </button>
                       <button
                         onClick={(e) => { e.stopPropagation(); openMsg(inq, 'email'); }}
-                        className="p-1.5 rounded-lg bg-info text-white hover:opacity-80 transition-all duration-200"
+                        className="p-1.5 rounded-lg bg-info text-primary-foreground hover:opacity-80 motion-safe:transition-all duration-200"
                         title="Email"
                         aria-label={`Email ${inq.name}`}
                       >
@@ -156,7 +164,7 @@ export default function ManagerInquiriesTable() {
                       </button>
                       <button
                         onClick={(e) => { e.stopPropagation(); updateStatus(inq.id, 'CONVERTED'); }}
-                        className="p-1.5 rounded-lg bg-primary-subtle text-primary hover:opacity-80 transition-all duration-200"
+                        className="p-1.5 rounded-lg bg-primary-subtle text-primary hover:opacity-80 motion-safe:transition-all duration-200"
                         title="Convert to Member"
                         aria-label={`Convert ${inq.name} to Member`}
                       >
@@ -164,7 +172,7 @@ export default function ManagerInquiriesTable() {
                       </button>
                       <button
                         onClick={(e) => { e.stopPropagation(); openEdit(inq); }}
-                        className="p-1.5 rounded-lg bg-input text-secondary hover:bg-primary-subtle transition-all duration-200"
+                        className="p-1.5 rounded-lg bg-input text-secondary hover:bg-primary-subtle motion-safe:transition-all duration-200"
                         title="Edit"
                         aria-label={`Edit ${inq.name}`}
                       >
@@ -183,7 +191,7 @@ export default function ManagerInquiriesTable() {
                             deleteInquiry(inq.id);
                           }
                         }}
-                        className="p-1.5 rounded-lg bg-danger-bg text-danger hover:opacity-80 transition-all duration-200"
+                        className="p-1.5 rounded-lg bg-danger-bg text-danger hover:opacity-80 motion-safe:transition-all duration-200"
                         title="Delete"
                         aria-label={`Delete ${inq.name}`}
                       >
@@ -196,7 +204,7 @@ export default function ManagerInquiriesTable() {
             })}
             {inquiries.length === 0 && !isLoading && !isError && (
               <tr>
-                <td colSpan={7} className="text-center py-12 text-sm text-secondary">
+                <td colSpan={INQUIRIES_TABLE_HEADERS.length + 1} className="text-center py-12 text-sm text-secondary">
                   {search || statusFilter !== 'All' ? 'No inquiries match the filter.' : 'No inquiries yet. Add your first inquiry!'}
                 </td>
               </tr>

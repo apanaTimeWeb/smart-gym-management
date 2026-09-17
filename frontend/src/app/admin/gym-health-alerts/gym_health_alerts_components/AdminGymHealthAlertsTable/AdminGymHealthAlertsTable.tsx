@@ -1,11 +1,11 @@
+"use client";
 // RESPONSIBILITY: Table of gym health alerts with severity badges, metrics, and resolve/dismiss actions.
-'use client';
 
 import { CheckCircle, X, Building2, Clock } from 'lucide-react';
 import { useAdminGymHealthAlertsLogic } from '@/app/admin/gym-health-alerts/gym_health_alerts_context/useAdminGymHealthAlertsLogic';
 import { AdminTableSkeleton } from '@/app/admin/admin_components/AdminShared/AdminTableSkeleton';
 import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
-import type { AlertSeverity, AlertType } from '@/app/admin/gym-health-alerts/gym_health_alerts_types/gym_health_alerts_types';
+import type { AlertSeverity, AlertType } from '@/app/admin/gym-health-alerts/gym_health_alerts_types/AdminGymHealthAlertsTypes';
 
 const SEVERITY_STYLES: Record<AlertSeverity, string> = {
   critical: 'bg-danger-bg text-danger',
@@ -16,7 +16,7 @@ const SEVERITY_STYLES: Record<AlertSeverity, string> = {
 const TYPE_LABELS: Record<AlertType, string> = {
   no_new_members: 'No New Members',
   revenue_drop: 'Revenue Drop',
-  high_churn: 'High Member Loss',
+  high_cancellations: 'High Member Loss',
   pending_payroll: 'Pending Payroll',
   low_attendance: 'Low Attendance',
   expiring_members: 'Expiring Members',
@@ -25,14 +25,14 @@ const TYPE_LABELS: Record<AlertType, string> = {
 const HEADERS = ['Gym', 'Alert', 'Type', 'Severity', 'Metric', 'Threshold', 'Detected', 'Status', 'Actions'];
 
 export default function AdminGymHealthAlertsTable() {
-  const { alerts, fetchState, resolveAlert, dismissAlert, snoozeAlert, currentPage, setCurrentPage, totalPages, totalItems } = useAdminGymHealthAlertsLogic();
+  const { alerts, status, resolveAlert, dismissAlert, currentPage, setCurrentPage, totalPages, totalItems } = useAdminGymHealthAlertsLogic();
 
-  if (fetchState === 'loading') return <AdminTableSkeleton rows={5} cols={HEADERS.length} />;
+  if (status === 'pending') return <AdminTableSkeleton rows={5} cols={HEADERS.length} />;
 
   return (
     <div className="bg-card rounded-xl border border-border overflow-hidden">
       <div className="overflow-x-auto">
-        <table className="w-full">
+        <table data-admin-responsive-table className="w-full">
           <thead>
             <tr className="bg-warning/5">
               {HEADERS.map(h => <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-secondary uppercase tracking-wider whitespace-nowrap">{h}</th>)}
@@ -63,11 +63,11 @@ export default function AdminGymHealthAlertsTable() {
                 </td>
                 <td className="px-4 py-3">
                   <span className="inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium bg-input text-secondary whitespace-nowrap">
-                    {TYPE_LABELS[alert.alertType]}
+                    {TYPE_LABELS[alert.alertType as AlertType]}
                   </span>
                 </td>
                 <td className="px-4 py-3">
-                  <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold capitalize ${SEVERITY_STYLES[alert.severity]}`}>
+                  <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold capitalize ${SEVERITY_STYLES[alert.severity as AlertSeverity]}`}>
                     {alert.severity}
                   </span>
                 </td>
@@ -86,7 +86,7 @@ export default function AdminGymHealthAlertsTable() {
                   )}
                 </td>
                 <td className="px-4 py-3">
-                  <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 motion-safe:transition-opacity">
+                  <div className="flex items-center gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 motion-safe:transition-opacity">
                     {!alert.isResolved && (
                       <>
                         <button
@@ -95,13 +95,6 @@ export default function AdminGymHealthAlertsTable() {
                           aria-label="Mark as resolved"
                         >
                           <CheckCircle size={15} />
-                        </button>
-                        <button
-                          onClick={() => snoozeAlert(alert.id, alert.title)}
-                          className="p-1.5 rounded-lg hover:bg-warning-bg text-secondary hover:text-warning motion-safe:transition-colors"
-                          aria-label="Snooze alert"
-                        >
-                          <Clock size={15} />
                         </button>
                       </>
                     )}

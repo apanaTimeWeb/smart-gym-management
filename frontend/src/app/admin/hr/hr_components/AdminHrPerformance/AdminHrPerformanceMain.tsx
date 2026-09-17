@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Root client orchestrator for Staff Performance Dashboard.
-'use client';
 
 import { useAdminHrPerformanceLogic } from '@/app/admin/hr/hr_context/useAdminHrPerformanceLogic';
 import AdminHrPerformancePeriodSelector from '@/app/admin/hr/hr_components/AdminHrPerformance/AdminHrPerformancePeriodSelector';
@@ -7,6 +7,7 @@ import AdminHrPerformanceKPIs from '@/app/admin/hr/hr_components/AdminHrPerforma
 import AdminHrPerformanceTable from '@/app/admin/hr/hr_components/AdminHrPerformance/AdminHrPerformanceTable';
 import AdminHrPerformanceCharts from '@/app/admin/hr/hr_components/AdminHrPerformance/AdminHrPerformanceCharts';
 import { Target, Search } from 'lucide-react';
+import AdminTableSkeleton from '@/app/admin/admin_components/AdminShared/AdminTableSkeleton';
 
 export default function AdminHrPerformanceMain() {
   const {
@@ -49,9 +50,13 @@ export default function AdminHrPerformanceMain() {
       </div>
 
       {isLoading ? (
-        <div className="h-64 flex items-center justify-center">
-          <div className="w-8 h-8 border-4 border-t-transparent rounded-full motion-safe:animate-spin border-primary" />
-        </div>
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+            {['performance-1', 'performance-2', 'performance-3', 'performance-4'].map((id) => <div key={id} className="h-28 rounded-xl bg-skeleton-base motion-safe:animate-pulse" />)}
+          </div>
+          <div className="h-80 rounded-xl bg-skeleton-base motion-safe:animate-pulse" />
+          <AdminTableSkeleton rows={8} cols={7} />
+        </>
       ) : (
         <>
           {/* KPIs */}

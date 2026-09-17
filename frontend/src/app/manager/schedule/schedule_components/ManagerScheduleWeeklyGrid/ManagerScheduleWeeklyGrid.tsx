@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Renders the 7-day weekly schedule grid showing all trainer shifts per day column.
 'use client';
+// RESPONSIBILITY: Renders the 7-day weekly schedule grid showing all trainer shifts per day column.
 import { Plus, Pencil, Trash2, CalendarX } from 'lucide-react';
 import { useScheduleContext } from '@/app/manager/schedule/schedule_context/ManagerScheduleContext';
 import { SHIFT_DAYS, SHIFT_STATUS_STYLES } from '@/app/manager/schedule/schedule_utils/ManagerScheduleSharedConstants';
@@ -36,7 +36,7 @@ export default function ManagerScheduleWeeklyGrid() {
 
   return (
     <div className="overflow-x-auto rounded-xl border border-border bg-card">
-      <table className="w-full text-left border-collapse min-w-[900px]">
+      <table className="w-full text-left border-collapse min-w-224">
         <thead>
           <tr className="border-b border-border bg-primary/5">
             <th className="py-3 px-4 text-xs font-semibold text-secondary uppercase tracking-wider w-44 sticky left-0 bg-primary/5 z-10">
@@ -54,10 +54,10 @@ export default function ManagerScheduleWeeklyGrid() {
             <tr key={trainer.trainerId} className="hover:bg-primary/5 motion-safe:transition-colors">
               <td className="py-3 px-4 sticky left-0 bg-card z-10 flex flex-col items-start justify-center gap-0.5">
                 <ManagerTooltip content={trainer.trainerName}>
-                  <p className="text-sm font-semibold text-foreground truncate max-w-[160px]">{trainer.trainerName}</p>
+                  <p className="text-sm font-semibold text-foreground truncate max-w-40">{trainer.trainerName}</p>
                 </ManagerTooltip>
                 <ManagerTooltip content={trainer.trainerRole}>
-                  <p className="text-xs text-secondary truncate max-w-[160px]">{trainer.trainerRole}</p>
+                  <p className="text-xs text-secondary truncate max-w-40">{trainer.trainerRole}</p>
                 </ManagerTooltip>
               </td>
               {days.map(day => {
@@ -74,7 +74,7 @@ export default function ManagerScheduleWeeklyGrid() {
                         {shift.notes && (
                           <div className="mt-0.5">
                             <ManagerTooltip content={shift.notes}>
-                              <p className="text-secondary text-[10px] truncate max-w-[80px]">{shift.notes}</p>
+                              <p className="text-secondary text-xs truncate max-w-20">{shift.notes}</p>
                             </ManagerTooltip>
                           </div>
                         )}

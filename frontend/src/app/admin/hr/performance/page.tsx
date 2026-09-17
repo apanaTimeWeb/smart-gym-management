@@ -7,5 +7,7 @@ export const metadata = {
 
 export default function AdminHrPerformancePage() {
   // In a real app, Server-side auth check goes here.
-  return <AdminHrPerformanceMain />;
+  return (
+      <AdminHrPerformanceMain />
+  );
 }

@@ -2,5 +2,7 @@
 import AdminDashboardMain from '@/app/admin/dashboard/dashboard_components/AdminDashboardMain/AdminDashboardMain';
 
 export default function DashboardPage() {
-  return <AdminDashboardMain />;
+  return (
+      <AdminDashboardMain />
+  );
 }

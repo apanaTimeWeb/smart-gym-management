@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the product cards grid with stock status, price, and quick-action buttons.
 'use client';
-
+// RESPONSIBILITY: Renders the product cards grid with stock status, price, and quick-action buttons.
 import { Edit2, Trash2 } from 'lucide-react';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
 import { useStoreContext } from '@/app/manager/store/store_context/ManagerStoreContext';
@@ -11,17 +10,17 @@ import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerShare
 
 export default function ManagerStoreProductGrid() {
   const { confirm } = useConfirm();
-  const { products, summary, fetchState, debouncedSearch, currentPage, setCurrentPage, openEditProduct, deleteProduct } = useStoreContext();
+  const { products, summary, isLoading, isError, debouncedSearch, currentPage, setCurrentPage, openEditProduct, deleteProduct } = useStoreContext();
 
   
   const totalProducts = summary?.totalProducts || products.length;
   const totalPages = Math.ceil(totalProducts / MANAGER_ITEMS_PER_PAGE) || 1;
 
-  if (fetchState === 'loading') {
+  if (isLoading) {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {[...Array(8)].map((_, i) => (
-          <div key={i} className="motion-safe:animate-pulse bg-card rounded-xl border border-border p-4 h-64">
+          <div key={`skeleton-${i}`} className="motion-safe:animate-pulse bg-card rounded-xl border border-border p-4 h-64">
             <div className="h-32 bg-muted rounded-lg mb-4"></div>
             <div className="h-4 bg-muted rounded w-3/4 mb-2"></div>
             <div className="h-4 bg-muted rounded w-1/2 mb-4"></div>
@@ -35,7 +34,7 @@ export default function ManagerStoreProductGrid() {
     );
   }
 
-  if (fetchState === 'error') {
+  if (isError) {
     return (
       <div className="text-center py-16 bg-card rounded-2xl border border-danger/30 mt-4">
         <p className="text-danger font-medium">Failed to load products.</p>
@@ -58,7 +57,7 @@ export default function ManagerStoreProductGrid() {
         {products.map(p => (
           <div 
             key={p.id} 
-            className="border border-border rounded-xl p-4 hover:shadow-md transition-shadow bg-card"
+            className="border border-border rounded-xl p-4 hover:shadow-md motion-safe:transition-shadow bg-card"
           >
             <div className="flex justify-between items-start mb-3">
               <div>
@@ -72,7 +71,7 @@ export default function ManagerStoreProductGrid() {
               <div className="flex gap-1">
                 <button 
                   onClick={() => openEditProduct(p)} 
-                  className="p-1.5 rounded-lg bg-input text-secondary hover:bg-primary-subtle transition-colors"
+                  className="p-1.5 rounded-lg bg-input text-secondary hover:bg-primary-subtle motion-safe:transition-colors"
                   aria-label={`Edit ${p.name}`}
                 >
                   <Edit2 size={13} />
@@ -87,7 +86,7 @@ export default function ManagerStoreProductGrid() {
                     });
                     if (ok) deleteProduct(p.id);
                   }}
-                  className="p-1.5 rounded-lg bg-danger-bg dark:bg-danger-bg text-danger hover:bg-danger-bg dark:hover:bg-danger-bg transition-colors"
+                  className="p-1.5 rounded-lg bg-danger-bg dark:bg-danger-bg text-danger hover:bg-danger-bg dark:hover:bg-danger-bg motion-safe:transition-colors"
                   aria-label={`Delete ${p.name}`}
                 >
                   <Trash2 size={13} />

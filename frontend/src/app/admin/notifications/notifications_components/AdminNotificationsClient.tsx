@@ -1,14 +1,11 @@
-'use client';
+"use client";
 // RESPONSIBILITY: Orchestrates the notifications list and actions (mark all read, clear all).
 import { useAdminNotificationsPage } from '@/app/admin/notifications/notifications_utils/useAdminNotificationsPage';
-import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/useAdminConfirm';
 import AdminNotificationsList from '@/app/admin/notifications/notifications_components/AdminNotificationsList/AdminNotificationsList';
-import { CheckCheck, Trash2 } from 'lucide-react';
+import { CheckCheck } from 'lucide-react';
 
 export default function AdminNotificationsClient() {
-  const { notifications, markAllAsRead, clearAll, markAsRead, deleteNotification } = useAdminNotificationsPage();
-  const { confirm } = useAdminConfirm();
-
+  const { notifications, status, isError, retry, markAllAsRead, markAsRead } = useAdminNotificationsPage();
   const unreadCount = notifications.filter(n => n.unread).length;
 
   return (
@@ -26,35 +23,20 @@ export default function AdminNotificationsClient() {
           <button 
             onClick={markAllAsRead}
             disabled={unreadCount === 0}
-            className="flex items-center gap-2 text-sm text-secondary hover:text-primary transition-colors disabled:opacity-50 disabled:hover:text-secondary"
+            className="flex items-center gap-2 text-sm text-secondary hover:text-primary motion-safe:transition-colors disabled:opacity-50 disabled:hover:text-secondary"
           >
             <CheckCheck size={16} /> Mark all read
           </button>
-          <button 
-            onClick={async () => {
-              const ok = await confirm({
-                title: 'Clear Notifications',
-                message: 'Are you sure you want to clear all notifications?',
-                type: 'danger',
-                confirmText: 'Clear All'
-              });
-              if (ok) {
-                clearAll();
-              }
-            }}
-            disabled={notifications.length === 0}
-            className="flex items-center gap-2 text-sm text-secondary hover:text-danger transition-colors disabled:opacity-50 disabled:hover:text-secondary"
-          >
-            <Trash2 size={16} /> Clear all
-          </button>
+
         </div>
       </div>
       
-      <AdminNotificationsList 
+      {status === 'pending' && <div className="p-6 text-sm text-secondary">Loading notifications…</div>}
+      {isError && <div className="p-6 text-sm text-danger flex items-center justify-between"><span>Unable to load notifications.</span><button type="button" onClick={() => retry()} className="font-semibold text-primary">Retry</button></div>}
+      {status === 'success' && <AdminNotificationsList 
         notifications={notifications} 
-        onMarkAsRead={markAsRead} 
-        onDelete={deleteNotification} 
-      />
+        onMarkAsRead={markAsRead}
+      />}
     </div>
   );
 }

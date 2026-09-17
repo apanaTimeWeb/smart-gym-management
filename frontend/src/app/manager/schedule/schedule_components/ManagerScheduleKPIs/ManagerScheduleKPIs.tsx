@@ -1,19 +1,19 @@
-// RESPONSIBILITY: Renders the 4 KPI stat cards for the Schedule module (total trainers, on duty today, on leave, shifts this week).
 'use client';
+// RESPONSIBILITY: Renders the 4 KPI stat cards for the Schedule module (total trainers, on duty today, on leave, shifts this week).
 import { Users, UserCheck, UserX, CalendarDays } from 'lucide-react';
 import ManagerStatCard from '@/app/manager/manager_components/ManagerShared/ManagerStatCard';
 import { useScheduleContext } from '@/app/manager/schedule/schedule_context/ManagerScheduleContext';
 import { useDateRangeSuffix } from '@/lib/useDateRangeSuffix';
 
 export default function ManagerScheduleKPIs() {
-  const { kpis, fetchState } = useScheduleContext();
+  const { kpis, status } = useScheduleContext();
   const dateSuffix = useDateRangeSuffix();
 
-  if (fetchState === 'loading' || !kpis) {
+  if (status === 'pending' || !kpis) {
     return (
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
         {[1, 2, 3, 4].map(i => (
-          <div key={i} className="h-28 bg-skeleton-base bg-skeleton-highlight rounded-xl border border-border motion-safe:animate-pulse" />
+          <div key={`skeleton-${i}`} className="h-28 bg-skeleton-base bg-skeleton-highlight rounded-xl border border-border motion-safe:animate-pulse" />
         ))}
       </div>
     );

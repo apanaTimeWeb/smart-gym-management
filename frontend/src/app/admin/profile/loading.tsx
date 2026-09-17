@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders/orchestrates loading for the admin module; UI composition stays here and business/API logic remains in dedicated hooks and APIs.
 export default function AdminProfileLoading() {
   return (
     <div className="max-w-3xl mx-auto space-y-6">

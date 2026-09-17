@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders the search + status filter toolbar for the Coupons module.
-'use client';
 
 import { Search, Plus } from 'lucide-react';
 import { useState } from 'react';
@@ -9,10 +9,9 @@ import { COUPON_STATUS_OPTIONS } from '@/app/admin/coupons/coupons_utils/AdminCo
 import { AdminSearchableDropdown } from '@/app/admin/admin_components/AdminShared/AdminSearchableDropdown';
 
 export default function AdminCouponsToolbar() {
-  const { statusFilter, setStatusFilter, setSearch } = useAdminCouponsStore();
+  const { statusFilter, setStatusFilter, setSearch, dateRange, setDateRange } = useAdminCouponsStore();
   const { openAdd } = useAdminCouponsLogic();
   const [localSearch, setLocalSearch] = useState('');
-  const [dateRange, setDateRange] = useState('all_time');
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLocalSearch(e.target.value);
@@ -57,7 +56,7 @@ export default function AdminCouponsToolbar() {
       </div>
       <button
         onClick={openAdd}
-        className="flex items-center gap-2 px-4 py-2 bg-primary text-black rounded-lg text-sm font-semibold hover:bg-primary-hover motion-safe:transition-colors active:scale-95 whitespace-nowrap"
+        className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-semibold hover:bg-primary-hover motion-safe:transition-colors motion-safe:active:scale-95 whitespace-nowrap"
       >
         <Plus size={16} />
         New Coupon

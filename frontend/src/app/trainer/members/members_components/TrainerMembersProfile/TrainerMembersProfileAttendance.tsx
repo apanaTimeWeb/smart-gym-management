@@ -5,10 +5,11 @@
 import { useMemo } from 'react';
 import { Calendar as CalendarIcon, CheckCircle2, XCircle, AlertCircle, ShieldCheck } from 'lucide-react';
 import { useTrainerMembersStore } from '@/app/trainer/members/members_store/useTrainerMembersStore';
+import { useTrainerSelectedMember } from '@/app/trainer/members/members_queries/useTrainerSelectedMember';
 import { useTrainerMemberAttendanceQuery } from '@/app/trainer/members/members_queries/useTrainerMembersQuery';
 
 export default function TrainerMembersProfileAttendance() {
-  const selectedMember = useTrainerMembersStore(s => s.selectedMember);
+  const { member: selectedMember } = useTrainerSelectedMember();
   const { data: rawAtt = [] } = useTrainerMemberAttendanceQuery(selectedMember?.id || '');
 
   const now = new Date();
@@ -27,9 +28,7 @@ export default function TrainerMembersProfileAttendance() {
   // Map days to attendance status
   const attLookup = useMemo(() => {
     const map: Record<number, string> = {};
-    rawAtt.forEach(a => {
-      map[a.day] = a.status;
-    });
+    (rawAtt as Array<{ day: number; status: string }>).forEach((entry) => { map[entry.day] = entry.status; });
     return map;
   }, [rawAtt]);
 
@@ -51,7 +50,7 @@ export default function TrainerMembersProfileAttendance() {
   const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
   return (
-    <div className="space-y-6 motion-safe:animate-in fade-in duration-300">
+    <div className="space-y-6 motion-safe:animate-in fade-in motion-safe:duration-slow">
       {/* Month Header & Overview Stats */}
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
@@ -138,7 +137,7 @@ export default function TrainerMembersProfileAttendance() {
             return (
               <div
                 key={day}
-                className={`h-20 rounded-xl p-2.5 border flex flex-col justify-between transition-all relative ${statusStyle} ${
+                className={`h-20 rounded-xl p-2.5 border flex flex-col justify-between motion-safe:transition-all relative ${statusStyle} ${
                   isToday ? 'ring-2 ring-primary ring-offset-2 ring-offset-bg-page' : ''
                 }`}
               >
@@ -147,7 +146,7 @@ export default function TrainerMembersProfileAttendance() {
                     {day}
                   </span>
                   {isToday && (
-                    <span className="text-[10px] font-extrabold uppercase px-1.5 py-0.5 rounded bg-primary text-white tracking-wide">
+                    <span className="text-xs font-extrabold uppercase px-1.5 py-0.5 rounded bg-primary text-white tracking-wide">
                       Today
                     </span>
                   )}
@@ -155,14 +154,14 @@ export default function TrainerMembersProfileAttendance() {
 
                 <div className="mt-auto">
                   {isPastOrToday ? (
-                    <span className={`inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-md ${badgeStyle}`}>
+                    <span className={`inline-flex items-center gap-1 text-xs font-bold px-2 py-0.5 rounded-md ${badgeStyle}`}>
                       {status === 'P' && <CheckCircle2 size={11} />}
                       {status === 'A' && <XCircle size={11} />}
                       {status === 'L' && <AlertCircle size={11} />}
                       {label}
                     </span>
                   ) : (
-                    <span className="text-[10px] text-secondary/60">
+                    <span className="text-xs text-secondary/60">
                       —
                     </span>
                   )}

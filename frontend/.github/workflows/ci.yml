@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main", "develop" ]
+  pull_request:
+    branches: [ "main", "develop" ]
+
+jobs:
+  ci:
+    name: Type Check · Lint · Test · Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies (reproducible)
+        run: npm ci
+
+      - name: TypeScript — type check
+        run: npx tsc --noEmit
+
+      - name: Formatting check
+        run: npx prettier --check "src/**/*.{ts,tsx,css,json}"
+
+      - name: ESLint — lint
+        run: npm run lint
+
+      - name: Vitest — unit & hook tests
+        run: npm run test
+
+      - name: Next.js — production build
+        run: npm run build
+        env:
+          # Provide dummy values so the build doesn't fail on missing env vars
+          NEXT_PUBLIC_API_URL: http://localhost:3001

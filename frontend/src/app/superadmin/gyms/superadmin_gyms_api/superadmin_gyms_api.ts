@@ -1,57 +1,67 @@
-// RESPONSIBILITY: Modularized API client for the Gyms module. All methods import apiFetch from src/lib/api.ts.
-import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
+// RESPONSIBILITY: Modularized API client for the Gyms module. All methods import apiFetch from src/lib/api.ts and define only superadmin-scoped endpoints. No UI logic.
+// RESPONSIBILITY: Modularized API client for the Gyms module. All methods import apiFetch from src/lib/api.ts and define only superadmin-scoped endpoints. No UI logic.
+import { GymsUrlConfig } from '@/app/superadmin/gyms/superadmin_gyms_url_config';
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
 import type { Tenant } from '@/app/superadmin/gyms/superadmin_gyms_types/superadmin_gyms_types';
-
-import { MOCK_GYMS, MOCK_GYM_STATS } from '@/app/superadmin/gyms/superadmin_gyms_api/SuperadminGymsMockData';
-
-let mockGymsList = [...MOCK_GYMS];
-
+import { z } from "zod";
+import { TenantSchema } from '@/app/superadmin/gyms/superadmin_gyms_types/superadmin_gyms_types';
+import { GymStatsSchema, type GymStats } from '@/app/superadmin/gyms/superadmin_gyms_types/superadmin_gyms_types';
+import { SuperadminGymsPlanOptionSchema, type SuperadminGymsPlanOption } from '@/app/superadmin/gyms/superadmin_gyms_types/superadmin_gyms_plan_types';
 export const gymsApi = {
-  fetchGyms: async (params?: Record<string, string>) => {
-    await new Promise(r => setTimeout(r, 400));
-    return { success: true, message: 'Success', data: mockGymsList };
-  },
-  fetchGymById: async (id: string) => {
-    await new Promise(r => setTimeout(r, 300));
-    return { success: true, message: 'Success', data: mockGymsList.find(g => g.id === id) as Tenant };
-  },
-  createGym: async (body: Partial<Tenant>) => {
-    await new Promise(r => setTimeout(r, 500));
-    const newGym = { ...body, id: `t${Date.now()}`, createdAt: new Date().toISOString() } as Tenant;
-    mockGymsList = [newGym, ...mockGymsList];
-    return { success: true, message: 'Created', data: newGym };
-  },
-  updateGym: async (id: string, body: Partial<Tenant>) => {
-    await new Promise(r => setTimeout(r, 500));
-    mockGymsList = mockGymsList.map(g => g.id === id ? { ...g, ...body } : g);
-    return { success: true, message: 'Updated', data: mockGymsList.find(g => g.id === id) as Tenant };
-  },
-  changeGymStatus: async (id: string, status: string) => {
-    await new Promise(r => setTimeout(r, 300));
-    mockGymsList = mockGymsList.map(g => g.id === id ? { ...g, status: status as Tenant['status'] } : g);
-    return { success: true, message: 'Status updated', data: mockGymsList.find(g => g.id === id) as Tenant };
-  },
-  deleteGym: async (id: string) => {
-    await new Promise(r => setTimeout(r, 400));
-    mockGymsList = mockGymsList.filter(g => g.id !== id);
-    return { success: true, message: 'Deleted', data: undefined };
-  },
-  fetchGymStats: async () => {
-    await new Promise(r => setTimeout(r, 200));
-    return { success: true, message: 'Success', data: MOCK_GYM_STATS };
-  },
-  impersonateTenant: async (id: string) => {
-    await new Promise(r => setTimeout(r, 400));
-    return { success: true, message: 'Impersonating', data: { token: 'mock-jwt-token' } };
-  },
-  emailGymOwner: async (id: string, body: { subject: string; message: string; [key: string]: unknown }) => {
-    await new Promise(r => setTimeout(r, 500));
-    return { success: true, message: 'Email sent', data: undefined };
-  },
-  exportGymsCSV: async (params?: Record<string, string>) => {
-    await new Promise(r => setTimeout(r, 600));
-    return { success: true, message: 'Success', data: { downloadUrl: '/mock-download-url.csv' } };
-  },
+    fetchGyms: (params?: Record<string, string>) => {
+        const q = params ? '?' + new URLSearchParams(params).toString() : '';
+        return apiFetch<ApiResponse<Tenant[]>>(`${GymsUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.array(TenantSchema) });
+    },
+    fetchGymById: (id: string) => apiFetch<ApiResponse<Tenant>>(`${GymsUrlConfig.BACKEND_API.BASE}/${id}`, { dataSchema: TenantSchema }),
+    fetchSubscriptionPlans: () => apiFetch<ApiResponse<SuperadminGymsPlanOption[]>>(GymsUrlConfig.BACKEND_API.SUBSCRIPTION_PLANS, { dataSchema: z.array(SuperadminGymsPlanOptionSchema) }),
+    createGym: (body: Partial<Tenant>) => apiFetch<ApiResponse<Tenant>>(GymsUrlConfig.BACKEND_API.BASE, { method: 'POST', body: JSON.stringify(body),
+        dataSchema: TenantSchema
+    }),
+    updateGym: (id: string, body: Partial<Tenant>) => apiFetch<ApiResponse<Tenant>>(`${GymsUrlConfig.BACKEND_API.BASE}/${id}`, { method: 'PATCH', body: JSON.stringify(body),
+        dataSchema: TenantSchema
+    }),
+    changeGymStatus: (id: string, status: string) => apiFetch<ApiResponse<Tenant>>(`${GymsUrlConfig.BACKEND_API.BASE}/${id}/status`, { method: 'PATCH', body: JSON.stringify({ status }),
+        dataSchema: TenantSchema
+    }),
+    impersonateTenant: (id: string) => apiFetch<ApiResponse<{
+        token: string;
+    }>>(`${GymsUrlConfig.BACKEND_API.IMPERSONATE}/${id}/impersonate`, { method: 'POST',
+        dataSchema: z.object({ token: z.string() })
+    }),
+    deleteGym: (id: string) => apiFetch<ApiResponse<void>>(`${GymsUrlConfig.BACKEND_API.BASE}/${id}`, { method: 'DELETE',
+        dataSchema: z.object({}).passthrough()
+    }),
+    fetchGymStats: () => apiFetch<ApiResponse<GymStats>>(`${GymsUrlConfig.BACKEND_API.BASE}/stats`, { dataSchema: GymStatsSchema }),
+    emailGymOwner: (id: string, body: {
+        subject: string;
+        message: string;
+        [key: string]: unknown;
+    }) => apiFetch<ApiResponse<void>>(`${GymsUrlConfig.BACKEND_API.BASE}/${id}/email`, { method: 'POST', body: JSON.stringify(body),
+        dataSchema: z.object({}).passthrough()
+    }),
+    exportGymsCSV: (params?: Record<string, string>) => {
+        const q = params ? '?' + new URLSearchParams(params).toString() : '';
+        return apiFetch<ApiResponse<{
+            downloadUrl: string;
+        }>>(`${GymsUrlConfig.BACKEND_API.BASE}/export${q}`, { dataSchema: z.object({ downloadUrl: z.string() }) });
+    },
+    /** Provisions a brand-new isolated tenant database and creates the gym in the SaaS system. */
+    provisionGym: (body: Record<string, unknown>) => apiFetch<ApiResponse<Tenant>>(`${GymsUrlConfig.BACKEND_API.BASE}/provision`, {
+        method: 'POST',
+        body: JSON.stringify(body),
+        dataSchema: TenantSchema
+    }),
+    /** Sends the impersonation token to the proxy endpoint to set it as an HTTP-only cookie. */
+    setGhostLoginCookie: async (token: string, id: string) => {
+        return apiFetch<ApiResponse<null>>(GymsUrlConfig.GHOST_LOGIN.SET_COOKIE_PROXY, {
+            method: 'POST',
+            body: JSON.stringify({
+                token,
+                refreshToken: token,
+                user: { role: 'ADMIN', email: `admin-${id}@gym.com`, name: 'Impersonated Admin', tenantId: id, id: `user-${id}` },
+            }),
+            dataSchema: z.null(),
+        });
+    },
 };

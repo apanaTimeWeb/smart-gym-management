@@ -1,9 +1,8 @@
-// RESPONSIBILITY: Display 4 key referral stats using ManagerStatCard.
 'use client';
-
+// RESPONSIBILITY: Display 4 key referral stats using ManagerStatCard.
 import { Users, UserCheck, Gift, CheckCircle } from 'lucide-react';
 import ManagerStatCard from '@/app/manager/manager_components/ManagerShared/ManagerStatCard';
-import { useManagerReferralsLogic } from '@/app/manager/referrals/referrals_context/useManagerReferralsLogic';
+import { useManagerReferralsLogic } from '@/app/manager/referrals/referrals_context/ManagerUseManagerReferralsLogic';
 import { useDateRangeSuffix } from '@/lib/useDateRangeSuffix';
 
 export default function ManagerReferralsKPIs() {
@@ -12,9 +11,9 @@ export default function ManagerReferralsKPIs() {
 
   if (isKpisLoading || !kpis) {
     return (
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 animate-pulse">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 motion-safe:animate-pulse">
         {[1, 2, 3, 4].map((i) => (
-          <div key={i} className="bg-card h-28 rounded-xl border border-border"></div>
+          <div key={`skeleton-${i}`} className="bg-card h-28 rounded-xl border border-border"></div>
         ))}
       </div>
     );
@@ -38,7 +37,7 @@ export default function ManagerReferralsKPIs() {
         change="+5"
         changeType="up"
         iconBg="rgba(34, 197, 94, 0.1)"
-        iconColor="#22c55e"
+        iconColor="var(--success)"
       />
       <ManagerStatCard 
         title={`Pending Rewards${dateSuffix}`} 
@@ -47,7 +46,7 @@ export default function ManagerReferralsKPIs() {
         change={kpis.pendingRewards > 5 ? 'Action Needed' : ''}
         changeType={kpis.pendingRewards > 5 ? 'down' : 'neutral'}
         iconBg="rgba(234, 179, 8, 0.1)"
-        iconColor="#eab308"
+        iconColor="var(--warning)"
       />
       <ManagerStatCard 
         title={`Claimed Rewards${dateSuffix}`} 

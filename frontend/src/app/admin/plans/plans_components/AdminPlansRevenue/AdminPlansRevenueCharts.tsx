@@ -1,5 +1,6 @@
+"use client";
+import { formatCurrency } from '@/lib/formatters';
 // RESPONSIBILITY: Renders the revenue distribution donut chart for Plans.
-'use client';
 
 import dynamic from 'next/dynamic';
 import type { PlanRevenueRecord } from '@/app/admin/plans/plans_types/AdminPlansRevenueTypes';
@@ -20,7 +21,7 @@ export default function AdminPlansRevenueCharts({ data }: { data: PlanRevenueRec
     legend: { position: 'right' },
     tooltip: {
       y: {
-        formatter: (val) => `₹${val.toLocaleString('en-IN')}`,
+        formatter: (val) => formatCurrency(val),
       },
     },
   };
@@ -34,7 +35,7 @@ export default function AdminPlansRevenueCharts({ data }: { data: PlanRevenueRec
       <h3 className="text-sm font-bold text-secondary uppercase tracking-wider mb-4">
         Revenue Distribution by Plan
       </h3>
-      <div className="h-[250px] w-full flex justify-center">
+      <div className="h-64 w-full flex justify-center">
         <Chart options={chartOptions} series={chartSeries} type="donut" height="100%" />
       </div>
     </div>

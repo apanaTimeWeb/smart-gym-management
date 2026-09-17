@@ -1,54 +1,25 @@
-// RESPONSIBILITY: Renders the Add Member form specifically for converting a lead within the Inquiries page.
 'use client';
-
+// RESPONSIBILITY: Renders the Add Member form specifically for converting a lead within the Inquiries page.
 import { useEffect, useState } from 'react';
 import { X, Save } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import { useInquiriesContext } from '@/app/manager/inquiries/inquiries_context/ManagerInquiriesContext';
-import { useManagerMembersStore } from '@/app/manager/members/members_store/useManagerMembersStore';
-import { MEMBERS_CYCLE_LABELS, getPriceForCycle, formatCurrency, MemberSchema, type MemberFormValues, EMPTY_MEMBER_FORM, GENDER_OPTIONS } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
-import type { PlanWithCustom } from '@/app/manager/members/members_types/ManagerMembersTypes';
+import { INQUIRIES_CYCLE_LABELS, getPriceForCycleSnapshot, EMPTY_CONVERT_FORM, INQUIRIES_GENDER_OPTIONS, type PlanSnapshot } from '@/app/manager/inquiries/inquiries_utils/ManagerInquiriesConvertConstants';
+import { ConvertLeadSchema, type ConvertLeadFormValues } from '@/app/manager/inquiries/inquiries_types/ManagerConvertLeadSchema';
 import ManagerConvertLeadSuccess from '@/app/manager/inquiries/inquiries_components/ConvertLeadModal/ManagerConvertLeadSuccess';
 import ManagerConvertLeadForm from '@/app/manager/inquiries/inquiries_components/ConvertLeadModal/ManagerConvertLeadForm';
-import { useFetchPlans } from '@/app/manager/members/members_api/useManagerMembersQueries';
-import { membersApi } from '@/app/manager/members/members_api/ManagerMembersApi';
-import { financeApi } from '@/app/manager/finance/finance_api/ManagerFinanceApi';
-import { useQueryClient } from '@tanstack/react-query';
-import toast from 'react-hot-toast';
-import { useUnsavedChangesGuard } from '@/app/manager/manager_utils/useUnsavedChangesGuard';
-import type { ApiResponse } from '@/lib/api';
+import { useInquiryPlansSnapshotQuery } from '@/app/manager/inquiries/inquiries_api/ManagerUseManagerInquiriesQueries';
+import { useManagerUnsavedChangesGuard } from '@/app/manager/manager_utils/ManagerUnsavedChangesGuard';
 
 export default function ManagerConvertLeadModal() {
-  const { convertLead, closeConvert, updateStatus } = useInquiriesContext();
-  const isOpen = !!convertLead;
+  const { convertLead: activeLead, closeConvert, updateStatus, convertLeadMutation } = useInquiriesContext();
+  const isOpen = !!activeLead;
   
-  const { data: plansData, isLoading: fetchState } = useFetchPlans();
-  const plans = plansData || [];
-  const queryClient = useQueryClient();
+  const { data: plansData, isLoading: plansLoading } = useInquiryPlansSnapshotQuery();
+  const plans = (plansData || []) as PlanSnapshot[];
   
-  const saveMember = async (data: MemberFormValues, _: unknown) => {
-    const payload = { ...data, status: 'ACTIVE' };
-    const res = await membersApi.create(payload) as ApiResponse<{id: string}>;
-    const newId = res.data?.id;
-    
-    if (data.paidAmount && data.paidAmount > 0 && newId) {
-       await financeApi.createPayment({
-         memberId: newId,
-         amount: data.paidAmount,
-         method: 'UPI',
-         status: 'PAID',
-         paidAt: new Date().toISOString(),
-         invoiceNumber: `INV-${Date.now().toString().slice(-6)}`
-       });
-    }
-    queryClient.invalidateQueries({ queryKey: ['manager', 'members'] });
-    queryClient.invalidateQueries({ queryKey: ['manager', 'payments'] });
-    queryClient.invalidateQueries({ queryKey: ['manager', 'stats'] });
-    toast.success('Member created successfully');
-    return res;
-  };
   const [saving, setSaving] = useState(false);
   const [successData, setSuccessData] = useState<{
     gymId: string;
@@ -62,13 +33,10 @@ export default function ManagerConvertLeadModal() {
     aadhaar?: string;
   } | null>(null);
 
-  useEffect(() => {
-    // Plans are now fetched automatically by useFetchPlans.
-  }, [convertLead, plans.length, fetchState]);
 
-  const useFormReturn = useForm<MemberFormValues>({
-    resolver: zodResolver(MemberSchema),
-    defaultValues: EMPTY_MEMBER_FORM
+  const useFormReturn = useForm<ConvertLeadFormValues>({
+    resolver: zodResolver(ConvertLeadSchema),
+    defaultValues: EMPTY_CONVERT_FORM
   });
 
   const {
@@ -80,15 +48,15 @@ export default function ManagerConvertLeadModal() {
   } = useFormReturn;
 
   useEffect(() => {
-    if (convertLead) {
+    if (activeLead) {
       reset({
-        ...EMPTY_MEMBER_FORM,
-        name: convertLead.name,
-        phone: convertLead.phone,
-        email: convertLead.email || '',
+        ...EMPTY_CONVERT_FORM,
+        name: activeLead.name,
+        phone: activeLead.phone,
+        email: activeLead.email || '',
       });
     }
-  }, [convertLead, reset]);
+  }, [activeLead, reset]);
 
   const watchPlanId = watch('planId') as string | undefined;
   const watchBillingCycle = watch('billingCycle') as string;
@@ -97,8 +65,8 @@ export default function ManagerConvertLeadModal() {
 
   useEffect(() => {
     if (watchPlanId && watchBillingCycle) {
-      const selectedPlan = plans.find(p => p.id.toString() === watchPlanId.toString()) as PlanWithCustom | undefined;
-      const price = getPriceForCycle(selectedPlan, watchBillingCycle, Number(watchCustomDays) || 0);
+      const selectedPlan = plans.find(p => p.id.toString() === watchPlanId.toString()) as PlanSnapshot | undefined;
+      const price = getPriceForCycleSnapshot(selectedPlan, watchBillingCycle, Number(watchCustomDays) || 0);
       useFormReturn.setValue('totalAmount', price, { shouldValidate: true });
       useFormReturn.setValue('paidAmount', price, { shouldValidate: true });
     }
@@ -120,21 +88,21 @@ export default function ManagerConvertLeadModal() {
     }
   }, [watchJoinDate, watchBillingCycle, watchCustomDays, useFormReturn]);
 
-  const onSubmit = async (data: MemberFormValues) => {
+  const onSubmit = async (data: ConvertLeadFormValues) => {
     setSaving(true);
     try {
       const total = data.totalAmount || 0;
       const paid = data.paidAmount || 0;
       const pendingAmount = total - paid;
-      const res = await saveMember({ ...data, pendingAmount }, null);
+      const res = await convertLeadMutation({ id: activeLead?.id ?? '', data: { ...data, pendingAmount, status: 'ACTIVE' } });
       
       // Update the inquiry status to CONVERTED locally and via API
-      if (convertLead) {
-        await updateStatus(convertLead.id, 'CONVERTED');
+      if (activeLead) {
+        await updateStatus(activeLead.id, 'CONVERTED');
         
         const planName = plans.find(p => p.id.toString() === data.planId?.toString())?.name || 'Membership';
         setSuccessData({
-          gymId: res.data?.id || 'N/A',
+          gymId: res?.data?.memberId || 'N/A',
           name: data.name,
           phone: data.phone,
           planName,
@@ -154,20 +122,20 @@ export default function ManagerConvertLeadModal() {
     }
   };
 
-  useUnsavedChangesGuard(errors && Object.keys(errors).length > 0 && isOpen);
+  useManagerUnsavedChangesGuard(errors && Object.keys(errors).length > 0 && isOpen);
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/60">
+    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-foreground/60">
       <div className="bg-card rounded-2xl shadow-xl w-full max-w-xl overflow-visible border border-border max-h-full flex flex-col">
         
         <div className="sticky top-0 bg-card px-6 py-4 border-b border-border flex items-center justify-between z-10 rounded-t-2xl">
           <div>
             <h3 className="text-lg font-bold text-primary">Convert to Member</h3>
-            <p className="text-xs text-secondary mt-0.5">Complete admission for {convertLead?.name}</p>
+            <p className="text-xs text-secondary mt-0.5">Complete admission for {activeLead?.name}</p>
           </div>
-          <button onClick={closeConvert} className="p-2 rounded-full hover:bg-primary/10 transition-colors text-secondary hover:text-primary">
+          <button onClick={closeConvert} className="p-2 rounded-full hover:bg-primary/10 motion-safe:transition-colors text-secondary hover:text-primary">
             <X size={20} />
           </button>
         </div>
@@ -191,17 +159,17 @@ export default function ManagerConvertLeadModal() {
               <button
                 type="button"
                 onClick={closeConvert}
-                className="flex-1 py-2.5 border border-border rounded-xl text-sm font-medium text-primary hover:bg-primary-subtle transition-all duration-200 active:scale-95"
+                className="flex-1 py-2.5 border border-border rounded-xl text-sm font-medium text-primary hover:bg-primary-subtle motion-safe:transition-all duration-200 active:scale-95"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={saving}
-                className="flex-1 py-2.5 rounded-xl text-sm font-bold bg-primary text-white flex items-center justify-center gap-2 disabled:opacity-70 hover:bg-primary-hover transition-all duration-200 active:scale-95"
+                className="flex-1 py-2.5 rounded-xl text-sm font-bold bg-primary text-primary-foreground flex items-center justify-center gap-2 disabled:opacity-70 hover:bg-primary-hover motion-safe:transition-all duration-200 active:scale-95"
               >
                 {saving ? (
-                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full motion-safe:animate-spin" />
+                  <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full motion-safe:animate-spin" />
                 ) : (
                   <><Save size={15} /> Convert Inquiry</>
                 )}

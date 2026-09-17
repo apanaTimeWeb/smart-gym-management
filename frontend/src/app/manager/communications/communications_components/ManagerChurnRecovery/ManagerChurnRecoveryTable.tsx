@@ -1,16 +1,16 @@
-// RESPONSIBILITY: Paginated, searchable, filterable table of churned/exited members in the Churn Recovery tab.
 'use client';
-
+// RESPONSIBILITY: Paginated, searchable, filterable table of churned/exited members in the Churn Recovery tab.
 import { Search, ChevronLeft, ChevronRight } from 'lucide-react';
 import ManagerChurnRecoveryTableRow from '@/app/manager/communications/communications_components/ManagerChurnRecovery/ManagerChurnRecoveryTableRow';
 import ManagerChurnRecoveryEmptyState from '@/app/manager/communications/communications_components/ManagerChurnRecovery/ManagerChurnRecoveryEmptyState';
-import type { ChurnedMember, FetchState } from '@/app/manager/communications/communications_types/communications_types';
-import { CHURN_REASON_OPTIONS, CHURN_ITEMS_PER_PAGE } from '@/app/manager/communications/communications_utils/ManagerCommunicationsSharedConstants';
+import type { ChurnedMember } from '@/app/manager/communications/communications_types/ManagerCommunications_types';
+import { CANCELLATIONS_REASON_OPTIONS, CANCELLATIONS_ITEMS_PER_PAGE } from '@/app/manager/communications/communications_utils/ManagerCommunicationsSharedConstants';
 
 interface ManagerChurnRecoveryTableProps {
   members: ChurnedMember[];
   allFilteredCount: number;
-  fetchState: FetchState;
+  isLoading: boolean;
+  isError: boolean;
   churnSearch: string;
   onSearchChange: (s: string) => void;
   churnReasonFilter: string;
@@ -34,7 +34,7 @@ const SKELETON_ROW_COUNT = 5;
 export default function ManagerChurnRecoveryTable({
   members,
   allFilteredCount,
-  fetchState,
+  isLoading, isError,
   churnSearch,
   onSearchChange,
   churnReasonFilter,
@@ -44,8 +44,8 @@ export default function ManagerChurnRecoveryTable({
   onPageChange,
   onOpenComposer,
 }: ManagerChurnRecoveryTableProps) {
-  const startEntry = allFilteredCount === 0 ? 0 : (currentPage - 1) * CHURN_ITEMS_PER_PAGE + 1;
-  const endEntry   = Math.min(currentPage * CHURN_ITEMS_PER_PAGE, allFilteredCount);
+  const startEntry = allFilteredCount === 0 ? 0 : (currentPage - 1) * CANCELLATIONS_ITEMS_PER_PAGE + 1;
+  const endEntry   = Math.min(currentPage * CANCELLATIONS_ITEMS_PER_PAGE, allFilteredCount);
 
   return (
     <div className="bg-card border border-border rounded-lg overflow-hidden">
@@ -66,14 +66,14 @@ export default function ManagerChurnRecoveryTable({
 
         {/* Reason Filter */}
         <div className="flex items-center gap-2 flex-wrap">
-          {CHURN_REASON_OPTIONS.map((opt) => (
+          {CANCELLATIONS_REASON_OPTIONS.map((opt) => (
             <button
               key={opt.value}
               type="button"
               onClick={() => onReasonFilterChange(opt.value)}
               className={`px-3 py-1.5 rounded-lg text-xs font-medium motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
                 churnReasonFilter === opt.value
-                  ? 'bg-primary text-black'
+                  ? 'bg-primary text-primary-foreground'
                   : 'bg-input border border-border text-secondary hover:text-foreground'
               }`}
             >
@@ -92,7 +92,7 @@ export default function ManagerChurnRecoveryTable({
                 <th
                   key={h}
                   scope="col"
-                  className="px-4 py-3 text-[11px] font-semibold text-secondary uppercase tracking-wider whitespace-nowrap"
+                  className="px-4 py-3 text-xs font-semibold text-secondary uppercase tracking-wider whitespace-nowrap"
                 >
                   {h}
                 </th>
@@ -100,9 +100,9 @@ export default function ManagerChurnRecoveryTable({
             </tr>
           </thead>
           <tbody>
-            {fetchState === 'loading' ? (
+            {isLoading ? (
               Array.from({ length: SKELETON_ROW_COUNT }).map((_, i) => (
-                <tr key={i} className="border-b border-border">
+                <tr key={`churn-skeleton-${i}`} className="border-b border-border">
                   {TABLE_HEADERS.map((h) => (
                     <td key={h} className="px-4 py-3">
                       <div className="h-4 bg-skeleton-base rounded motion-safe:animate-pulse" style={{ width: `${60 + Math.random() * 40}%` }} />
@@ -110,6 +110,8 @@ export default function ManagerChurnRecoveryTable({
                   ))}
                 </tr>
               ))
+            ) : isError ? (
+              <tr><td colSpan={TABLE_HEADERS.length} className="py-12 text-center text-danger text-sm">Unable to load churned members.</td></tr>
             ) : members.length === 0 ? (
               <tr>
                 <td colSpan={TABLE_HEADERS.length}>

@@ -1,9 +1,10 @@
 'use client';
-
+// RESPONSIBILITY: Renders the TrainerDashboardUpcomingSessions route/UI for the owning Trainer feature.
+import { TrainerPageUrlConfig } from '@/app/trainer/Trainer_url_config';
 import { useTrainerDashboardQuery } from '@/app/trainer/dashboard/dashboard_queries/useTrainerDashboardQuery';
-import { CalendarClock, Clock, User, Users, Calendar } from 'lucide-react';
+import { Clock, Calendar } from 'lucide-react';
 import Link from 'next/link';
-import { SESSION_TYPE_STYLES } from '@/app/trainer/sessions/sessions_utils/TrainerSessionsSharedConstants';
+
 
 export default function TrainerDashboardUpcomingSessions() {
   const { data: stats } = useTrainerDashboardQuery();
@@ -16,7 +17,7 @@ export default function TrainerDashboardUpcomingSessions() {
           <Calendar className="text-primary" size={20} />
           Upcoming Sessions
         </h3>
-        <Link href="/trainer/schedule" className="text-sm text-primary font-medium hover:underline">View Schedule</Link>
+        <Link href={TrainerPageUrlConfig.SCHEDULE} className="text-sm text-primary font-medium hover:underline">View Schedule</Link>
       </div>
 
       <div className="space-y-3">
@@ -24,7 +25,7 @@ export default function TrainerDashboardUpcomingSessions() {
           <p className="text-secondary text-sm">No upcoming sessions today.</p>
         ) : (
           stats.upcomingSessions.map(session => (
-            <div key={session.id} className="flex items-center justify-between p-3 rounded-xl border border-border/50 bg-background/50 hover:bg-background transition-colors">
+            <div key={session.id} className="flex items-center justify-between p-3 rounded-xl border border-border/50 bg-background/50 hover:bg-background motion-safe:transition-colors">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold">
                   {session.name.charAt(0)}

@@ -1,15 +1,15 @@
-// RESPONSIBILITY: Renders the expiring memberships list on the dashboard.
 'use client';
-
+import { formatDate } from '@/lib/formatters';
+// RESPONSIBILITY: Renders the expiring memberships list on the dashboard.
 import { useState } from 'react';
 import Link from 'next/link';
 import { Search, BellRing } from 'lucide-react';
-import { useDashboardStatsQuery } from '@/app/manager/dashboard/dashboard_api/useManagerDashboardQueries';
-import { useManagerDashboardStore } from '@/app/manager/dashboard/dashboard_store/useManagerDashboardStore';
+import { useDashboardStatsQuery } from '@/app/manager/dashboard/dashboard_api/ManagerUseManagerDashboardQueries';
+import { useManagerDashboardStore } from '@/app/manager/dashboard/dashboard_store/ManagerUseManagerDashboardStore';
 
 export default function ManagerDashboardExpiringMemberships() {
   const { timeRange } = useManagerDashboardStore();
-  const { data: stats } = useDashboardStatsQuery(timeRange);
+  const { data: stats } = useDashboardStatsQuery({ range: timeRange });
   const [search, setSearch] = useState('');
   const [remindedId, setRemindedId] = useState<string | null>(null);
 
@@ -46,17 +46,17 @@ export default function ManagerDashboardExpiringMemberships() {
               <div>
                 <p className="text-sm font-medium text-primary">{m.name}</p>
                 <p className="text-xs text-secondary">
-                  Expires: {new Date(m.expiryDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
+                  Expires: {formatDate(m.expiryDate)}
                 </p>
               </div>
             </div>
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setRemindedId(m.id)}
-                className={`p-1.5 rounded-lg transition-colors ${
+                className={`p-1.5 rounded-lg motion-safe:transition-colors ${
                   remindedId === m.id 
                     ? 'text-success bg-success-bg' 
-                    : 'text-secondary hover:text-warning hover:bg-warning-bg opacity-0 group-hover:opacity-100 focus:opacity-100 motion-safe:transition-opacity'
+                    : 'text-secondary hover:text-warning hover:bg-warning-bg opacity-100 lg:opacity-0 lg:group-hover:opacity-100 focus:opacity-100 motion-safe:transition-opacity'
                 }`}
                 title="Send Reminder"
               >

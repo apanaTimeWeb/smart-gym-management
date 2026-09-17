@@ -4,7 +4,6 @@
 
 export type PtSessionStatus = 'SCHEDULED' | 'COMPLETED' | 'CANCELLED' | 'MISSED';
 export type PtPaymentStatus = 'PAID' | 'PARTIAL' | 'PENDING';
-export type PtFetchState = 'idle' | 'loading' | 'success' | 'error';
 export type PtActiveTab = 'dashboard' | 'assignments' | 'packages' | 'workload';
 
 export interface PtPackage {
@@ -27,6 +26,13 @@ export interface PtSessionLog {
   sessionNumber: number;   // 1-based index within the package (e.g. "Session 3 of 10")
   durationMinutes?: number;
   location?: string;
+}
+
+export interface PtAssignmentsResponse {
+  assignments: PtAssignment[];
+  total: number;
+  page: number;
+  limit: number;
 }
 
 export interface PtAssignment {

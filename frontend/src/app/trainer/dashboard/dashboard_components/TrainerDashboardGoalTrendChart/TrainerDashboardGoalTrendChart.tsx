@@ -1,59 +1,31 @@
 'use client';
-
-import { useTrainerDashboardQuery } from '@/app/trainer/dashboard/dashboard_queries/useTrainerDashboardQuery';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+// RESPONSIBILITY: Renders the dashboard goal-completion trend from TanStack Query data without owning server state.
+// DATA FLOW: Dashboard API → useTrainerDashboardQuery → chart data → responsive SVG visualization.
 import { Target } from 'lucide-react';
+import { useTrainerDashboardQuery } from '@/app/trainer/dashboard/dashboard_queries/useTrainerDashboardQuery';
 
 export default function TrainerDashboardGoalTrendChart() {
-  const { data: stats } = useTrainerDashboardQuery();
-
-  if (!stats?.goalCompletionTrend || stats.goalCompletionTrend.length === 0) {
-    return (
-      <div className="bg-card rounded-xl shadow-sm border border-border p-5 h-[300px] flex items-center justify-center">
-        <p className="text-secondary text-sm">No goal completion data available.</p>
-      </div>
-    );
-  }
-
-  const data = stats.goalCompletionTrend.map(d => ({
-    month: d.month,
-    rate: d.rate
-  }));
-
+  const { data: stats, isPending, isError } = useTrainerDashboardQuery();
+  if (isPending) return <div className="bg-card rounded-xl border border-border p-5 min-h-72 motion-safe:animate-pulse" aria-label="Loading goal trend" />;
+  if (isError || !stats?.goalCompletionTrend?.length) return <div className="bg-card rounded-xl border border-border p-5 min-h-72 flex items-center justify-center"><p className="text-secondary text-sm">No goal completion data available.</p></div>;
+  const values = stats.goalCompletionTrend.map((point) => point.rate);
+  const max = Math.max(...values, 100);
+  const min = Math.min(...values, 0);
+  const width = 760; const height = 220; const pad = 24;
+  const step = values.length > 1 ? (width - pad * 2) / (values.length - 1) : width - pad * 2;
+  const points = stats.goalCompletionTrend.map((point, index) => {
+    const x = pad + index * step;
+    const y = height - pad - ((point.rate - min) / Math.max(max - min, 1)) * (height - pad * 2);
+    return `${x},${y}`;
+  }).join(' ');
   return (
-    <div className="bg-card rounded-xl shadow-sm border border-border p-5 flex flex-col h-full min-h-[300px]">
-      <h3 className="text-base font-bold text-foreground mb-2">Goal Completion Trend</h3>
-      <div className="h-[240px] w-full mt-4">
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={data} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" />
-            <XAxis 
-              dataKey="month" 
-              axisLine={false} 
-              tickLine={false} 
-              tick={{ fill: 'hsl(var(--secondary))', fontSize: 12 }}
-              dy={10}
-            />
-            <YAxis 
-              axisLine={false} 
-              tickLine={false} 
-              tick={{ fill: 'hsl(var(--secondary))', fontSize: 12 }}
-              tickFormatter={(value) => `${value}%`}
-            />
-            <Tooltip 
-              contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', borderRadius: '0.5rem', color: 'hsl(var(--foreground))' }}
-              formatter={(value: any) => [`${value}%`, 'Completion Rate']}
-            />
-            <Line 
-              type="monotone" 
-              dataKey="rate" 
-              stroke="#3b82f6" 
-              strokeWidth={3} 
-              dot={{ r: 4, fill: '#3b82f6', strokeWidth: 0 }} 
-              activeDot={{ r: 6, fill: '#3b82f6' }}
-            />
-          </LineChart>
-        </ResponsiveContainer>
+    <div className="bg-card rounded-xl border border-border p-5 min-h-72">
+      <div className="flex items-center gap-2 mb-4"><Target size={18} className="text-primary" /><h3 className="text-base font-bold text-foreground">Goal Completion Trend</h3></div>
+      <div className="w-full overflow-x-auto" role="img" aria-label="Goal completion trend chart">
+        <svg viewBox={`0 0 ${width} ${height + 40}`} className="w-full min-w-full h-56" preserveAspectRatio="none">
+          <polyline points={points} fill="none" stroke="currentColor" className="text-primary" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+          {stats.goalCompletionTrend.map((point, index) => { const x = pad + index * step; const y = height - pad - ((point.rate - min) / Math.max(max - min, 1)) * (height - pad * 2); return <g key={point.month}><circle cx={x} cy={y} r="5" fill="currentColor" className="text-primary" /><text x={x} y={height + 20} textAnchor="middle" className="fill-secondary text-xs">{point.month}</text></g>; })}
+        </svg>
       </div>
     </div>
   );

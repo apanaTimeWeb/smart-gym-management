@@ -1,143 +1,97 @@
-// RESPONSIBILITY: Custom hook encapsulating all UI state and API orchestration for the Finance module.
-// DATA FLOW: Centralized store/hook logic mapping API mutations and query state to UI props.
+"use client";
+
+// RESPONSIBILITY: Owns Finance URL filter state and TanStack Query server-state orchestration for read-only finance analytics.
+// DATA FLOW: URL state -> query parameters/query keys -> Admin Finance API -> Zod-validated response -> read-only views.
 import { useCallback } from 'react';
-import { financeApi } from '@/app/admin/finance/finance_api/finance_api';
-import type { Payment, FinanceSummary } from '@/app/admin/finance/finance_types/finance_types';
-import type { ToastType } from '@/app/admin/admin_components/AdminFeedback/AdminToast';
-import { useAdminToastStore } from '@/app/admin/admin_store/useAdminToastStore';
-import type { FinanceInitialData } from '@/app/admin/finance/finance_types/finance_types';
-import type { AddPaymentFormValues } from '@/app/admin/finance/finance_utils/AdminFinanceSharedConstants';
-import type { FetchState } from '@/app/admin/finance/finance_types/finance_types';
-import { useDebounce } from '@/app/admin/admin_utils/useDebounce';
-import { useRouter, usePathname, useSearchParams } from 'next/navigation';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import toast from 'react-hot-toast';
-import { useAdminFinanceStore } from '@/app/admin/finance/finance_store/useAdminFinanceStore';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useQuery } from '@tanstack/react-query';
+import { financeApi } from '@/app/admin/finance/finance_api/AdminFinanceApi';
+import type { FinanceInitialData } from '@/app/admin/finance/finance_types/AdminFinanceTypes';
+import { useDebounce } from '@/app/admin/admin_utils/useAdminDebounce';
 import { useAdminGlobalStore } from '@/app/admin/admin_store/useAdminGlobalStore';
 
 export function useAdminFinanceLogic(initialData?: FinanceInitialData | null) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const queryClient = useQueryClient();
-  const { showModal, setShowModal } = useAdminFinanceStore();
-  const { showToast } = useAdminToastStore();
   const { selectedBranchId } = useAdminGlobalStore();
 
-  // URL State
-  const search = searchParams.get('search') || '';
-  const methodFilter = searchParams.get('method') || 'All';
-  const statusFilter = searchParams.get('status') || 'All';
-  const currentPage = parseInt(searchParams.get('page') || '1', 10);
+  const search = searchParams.get('search') ?? '';
+  const methodFilter = searchParams.get('method') ?? 'All';
+  const statusFilter = searchParams.get('status') ?? 'All';
+  const currentPage = Math.max(1, Number(searchParams.get('page') ?? '1') || 1);
+  const range = searchParams.get('range') ?? 'this_month';
   const debouncedSearch = useDebounce(search, 300);
 
   const setUrlParam = useCallback((key: string, value: string | null) => {
-    const current = new URLSearchParams(Array.from(searchParams.entries()));
-    if (value) current.set(key, value);
-    else current.delete(key);
-    if (key !== 'page') current.set('page', '1');
-    router.push(`${pathname}?${current.toString()}`);
-  }, [searchParams, pathname, router]);
+    const next = new URLSearchParams(searchParams.toString());
+    if (value) next.set(key, value);
+    else next.delete(key);
+    if (key !== 'page') next.set('page', '1');
+    const query = next.toString();
+    router.push(query ? `${pathname}?${query}` : pathname);
+  }, [pathname, router, searchParams]);
 
-  const setSearch = useCallback((val: string) => setUrlParam('search', val || null), [setUrlParam]);
-  const setCurrentPage = useCallback((val: number) => setUrlParam('page', val.toString()), [setUrlParam]);
-  const setMethodFilter = useCallback((val: string) => setUrlParam('method', val === 'All' ? null : val), [setUrlParam]);
-  const setStatusFilter = useCallback((val: string) => setUrlParam('status', val === 'All' ? null : val), [setUrlParam]);
+  const setSearch = useCallback((value: string) => setUrlParam('search', value || null), [setUrlParam]);
+  const setCurrentPage = useCallback((value: number) => setUrlParam('page', String(Math.max(1, value))), [setUrlParam]);
+  const setMethodFilter = useCallback((value: string) => setUrlParam('method', value === 'All' ? null : value), [setUrlParam]);
+  const setStatusFilter = useCallback((value: string) => setUrlParam('status', value === 'All' ? null : value), [setUrlParam]);
+  const setRange = useCallback((value: string) => setUrlParam('range', value === 'this_month' ? null : value), [setUrlParam]);
 
-  const hideToast = useCallback(() => {}, []);
+  const queryParams = {
+    limit: '10',
+    page: String(currentPage),
+    branchId: selectedBranchId,
+    ...(debouncedSearch ? { search: debouncedSearch } : {}),
+    ...(methodFilter !== 'All' ? { method: methodFilter } : {}),
+    ...(statusFilter !== 'All' ? { status: statusFilter } : {}),
+  };
 
-  const queryParams = { limit: '10', page: currentPage.toString(), branchId: selectedBranchId, ...(debouncedSearch ? { search: debouncedSearch } : {}) };
-
-  const { data: paymentsRes, isLoading: paymentsLoading, isError: isPaymentsError, error: paymentsError } = useQuery({
-    queryKey: ['financePayments', queryParams, selectedBranchId],
+  const paymentsQuery = useQuery({
+    queryKey: ['admin', 'finance', 'payments', queryParams],
     queryFn: () => financeApi.fetchPayments(queryParams),
-    initialData: initialData?.payments ? { success: true, message: 'SSR', data: { payments: initialData.payments, total: initialData.totalPayments || 0 } } : undefined,
+    initialData: initialData?.payments ? {
+      success: true,
+      message: 'SSR',
+      data: { payments: initialData.payments, total: initialData.totalPayments ?? 0 },
+    } : undefined,
   });
 
-  const range = searchParams.get('range') || 'this_month';
-
-  const { data: summaryRes, isLoading: summaryLoading, isError: isSummaryError } = useQuery({
-    queryKey: ['financeSummary', selectedBranchId, range],
+  const summaryQuery = useQuery({
+    queryKey: ['admin', 'finance', 'summary', selectedBranchId, range],
     queryFn: () => financeApi.fetchSummary(selectedBranchId, range),
     initialData: initialData?.summary ? { success: true, message: 'SSR', data: initialData.summary } : undefined,
   });
 
-  const { data: expensesRes, isLoading: expensesLoading, isError: isExpensesError } = useQuery({
-    queryKey: ['financeExpenses', queryParams, selectedBranchId],
-    queryFn: () => financeApi.fetchExpenses(queryParams),
+  const expensesQuery = useQuery({
+    queryKey: ['admin', 'finance', 'expenses', selectedBranchId],
+    queryFn: () => financeApi.fetchExpenses({ branchId: selectedBranchId }),
   });
 
-  const createPaymentMutation = useMutation({
-    mutationFn: (newPayment: Partial<Payment>) => financeApi.createPayment(newPayment),
-    onSuccess: (res) => {
-      showToast(res.message || 'Payment created successfully', 'success');
-      setShowModal(false);
-      queryClient.invalidateQueries({ queryKey: ['financePayments'] });
-      queryClient.invalidateQueries({ queryKey: ['financeSummary'] });
-    },
-    onError: (err) => {
-      showToast((err as Error).message, 'error');
-    },
-  });
+  const isError = paymentsQuery.isError || summaryQuery.isError || expensesQuery.isError;
+  const status = paymentsQuery.status;
 
-  const savePayment = useCallback(async (data: AddPaymentFormValues) => {
-    const newPayment = {
-      memberId: data.memberId,
-      amount: Number(data.amount),
-      method: data.method,
-      notes: data.notes,
-      paidAt: new Date().toISOString(),
-      status: 'PAID',
-      invoiceNo: 'INV-' + Math.floor(Math.random() * 10000),
-      member: { name: 'Unknown Member', email: 'unknown@example.com', phone: '0000000000', plan: { name: 'Basic' } }
-    };
-    createPaymentMutation.mutate(newPayment as Partial<Payment>);
-  }, [createPaymentMutation]);
-
-  const isLoading = paymentsLoading || summaryLoading || expensesLoading;
-  const isError = isPaymentsError || isSummaryError || isExpensesError;
-  const fetchState: FetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
-
-  let fetchedPayments = paymentsRes?.data?.payments || [];
-  if (debouncedSearch) {
-    fetchedPayments = fetchedPayments.filter(p =>
-      p.member?.name?.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
-      p.memberId?.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
-      p.invoiceNo?.toLowerCase().includes(debouncedSearch.toLowerCase())
-    );
-  }
-  
-  if (methodFilter !== 'All') {
-    fetchedPayments = fetchedPayments.filter(p => p.method === methodFilter);
-  }
-  
-  if (statusFilter !== 'All') {
-    fetchedPayments = fetchedPayments.filter(p => p.status === statusFilter);
-  }
+  const loadAll = useCallback(async () => {
+    await Promise.all([paymentsQuery.refetch(), summaryQuery.refetch(), expensesQuery.refetch()]);
+  }, [expensesQuery, paymentsQuery, summaryQuery]);
 
   return {
-    payments: fetchedPayments,
-    expenses: expensesRes?.data || [],
-    totalPayments: paymentsRes?.data?.total || 0,
-    summary: summaryRes?.data || null,
-    fetchState,
-    saving: createPaymentMutation.isPending,
-    error: isError ? 'An error occurred' : '',
-    showToast,
-    hideToast: () => {},
-    loadAll: async () => {}, // Mocked for context compatibility
-    showModal,
-    setShowModal,
+    payments: paymentsQuery.data?.data?.payments ?? [],
+    expenses: expensesQuery.data?.data ?? [],
+    totalPayments: paymentsQuery.data?.data?.total ?? 0,
+    summary: summaryQuery.data?.data ?? null,
+    status,
+    error: isError ? 'Unable to load finance data. Please try again.' : '',
+    loadAll,
     search,
     setSearch,
     currentPage,
     setCurrentPage,
-    savePayment,
     methodFilter,
     setMethodFilter,
     statusFilter,
-    setStatusFilter
+    setStatusFilter,
+    range,
+    setRange,
   };
 }
-
-

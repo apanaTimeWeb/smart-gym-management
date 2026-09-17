@@ -1,9 +1,7 @@
+"use client";
 // RESPONSIBILITY: Root client orchestrator for the Branch P&L Comparison page.
 // Owns layout and composition. Delegates all logic to useAdminFinancePnlLogic. No direct API calls.
 // DATA FLOW: page.tsx → AdminFinancePnlMain → useAdminFinancePnlLogic → child components
-'use client';
-
-import AdminHeader from '@/app/admin/admin_components/AdminLayout/AdminHeader';
 import { useAdminFinancePnlLogic } from '@/app/admin/finance/finance_context/useAdminFinancePnlLogic';
 import AdminFinancePnlKPIs from '@/app/admin/finance/finance_components/AdminFinancePnl/AdminFinancePnlKPIs';
 import AdminFinancePnlPeriodSelector from '@/app/admin/finance/finance_components/AdminFinancePnl/AdminFinancePnlPeriodSelector';
@@ -33,10 +31,6 @@ export default function AdminFinancePnlMain() {
 
   return (
     <div className="min-h-full pb-10 bg-background text-foreground">
-      <AdminHeader
-        title="Branch P&L Comparison"
-        subtitle={`Profit & Loss analysis across all branches — ${periodLabel}`}
-      />
 
       <div className="p-6 space-y-6">
 
@@ -46,7 +40,7 @@ export default function AdminFinancePnlMain() {
             period={period}
             onPeriodChange={setPeriod}
           />
-          {isLoading && <Loader2 size={18} className="animate-spin text-secondary" />}
+          {isLoading && <Loader2 size={18} className="motion-safe:animate-spin text-secondary" />}
         </div>
 
         {/* KPI Cards */}

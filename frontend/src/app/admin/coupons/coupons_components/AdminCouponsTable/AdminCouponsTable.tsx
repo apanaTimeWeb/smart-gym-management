@@ -1,13 +1,13 @@
+"use client";
+import { formatCurrency } from '@/lib/formatters';
 // RESPONSIBILITY: Renders the coupons data table with edit, delete, and toggle actions.
-'use client';
 
 import { Edit2, Trash2, ToggleLeft, ToggleRight, Copy } from 'lucide-react';
 import { useAdminCouponsLogic } from '@/app/admin/coupons/coupons_context/useAdminCouponsLogic';
 import AdminCouponsEmptyState from '@/app/admin/coupons/coupons_components/AdminCouponsEmptyState/AdminCouponsEmptyState';
 import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
 import { AdminTableSkeleton } from '@/app/admin/admin_components/AdminShared/AdminTableSkeleton';
-import { formatCurrency } from '@/app/admin/coupons/coupons_utils/AdminCouponsSharedConstants';
-import type { Coupon } from '@/app/admin/coupons/coupons_types/coupons_types';
+import type { Coupon } from '@/app/admin/coupons/coupons_types/AdminCouponsTypes';
 
 const STATUS_STYLES: Record<string, string> = {
   active: 'bg-success-bg text-success',
@@ -18,9 +18,9 @@ const STATUS_STYLES: Record<string, string> = {
 const TABLE_HEADERS = ['Code', 'Type / Value', 'Assigned Gyms', 'Usage', 'Valid Until', 'Status', 'Actions'];
 
 export default function AdminCouponsTable() {
-  const { coupons, fetchState, openEdit, deleteCoupon, toggleCoupon, currentPage, setCurrentPage, totalPages, totalItems } = useAdminCouponsLogic();
+  const { coupons, status, openEdit, deleteCoupon, toggleCoupon, currentPage, setCurrentPage, totalPages, totalItems } = useAdminCouponsLogic();
 
-  if (fetchState === 'loading') return <AdminTableSkeleton rows={6} cols={TABLE_HEADERS.length} />;
+  if (status === 'pending') return <AdminTableSkeleton rows={6} cols={TABLE_HEADERS.length} />;
 
   if (coupons.length === 0) return <AdminCouponsEmptyState />;
 
@@ -29,7 +29,7 @@ export default function AdminCouponsTable() {
   return (
     <div className="bg-card rounded-xl border border-border overflow-hidden">
       <div className="overflow-x-auto">
-        <table className="w-full">
+        <table data-admin-responsive-table className="w-full">
           <thead>
             <tr className="bg-primary/5">
               {TABLE_HEADERS.map(h => (
@@ -42,14 +42,23 @@ export default function AdminCouponsTable() {
               <tr
                 key={coupon.id}
                 className="hover:bg-primary/5 motion-safe:transition-colors cursor-pointer group"
+                role="button"
+                tabIndex={0}
+                aria-label={`Edit coupon ${coupon.code}`}
                 onClick={() => openEdit(coupon)}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    openEdit(coupon);
+                  }
+                }}
               >
                 <td className="px-5 py-4">
                   <div className="flex items-center gap-2">
                     <span className="font-mono text-sm font-bold text-primary bg-primary-subtle px-2 py-0.5 rounded">{coupon.code}</span>
                     <button
                       onClick={(e) => { e.stopPropagation(); handleCopy(coupon.code); }}
-                      className="opacity-0 group-hover:opacity-100 motion-safe:transition-opacity text-secondary hover:text-foreground"
+                      className="opacity-100 lg:opacity-0 lg:group-hover:opacity-100 motion-safe:transition-opacity text-secondary hover:text-foreground"
                       aria-label="Copy coupon code"
                     >
                       <Copy size={13} />
@@ -86,7 +95,7 @@ export default function AdminCouponsTable() {
                   </span>
                 </td>
                 <td className="px-5 py-4">
-                  <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 motion-safe:transition-opacity">
+                  <div className="flex items-center gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 motion-safe:transition-opacity">
                     <button
                       onClick={(e) => { e.stopPropagation(); toggleCoupon(coupon.id); }}
                       className="p-1.5 rounded-lg hover:bg-input text-secondary hover:text-foreground motion-safe:transition-colors"

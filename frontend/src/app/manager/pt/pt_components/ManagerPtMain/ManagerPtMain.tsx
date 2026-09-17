@@ -1,13 +1,10 @@
+'use client';
 // RESPONSIBILITY: Root client component for Manager PT page.
 // THEME PORTABILITY CONTRACT: Depends on variables --bg-page, --bg-card, --bg-input, --border, --primary, --success, --info, --warning, --danger, --text-primary, --text-secondary, --disabled.
-'use client';
-
 import { useState } from 'react';
-import { Loader2, Dumbbell, X, UserPlus } from 'lucide-react';
-import { useManagerPtLogic } from '@/app/manager/pt/pt_context/useManagerPtLogic';
+import { Loader2, Dumbbell, UserPlus } from 'lucide-react';
+import { useManagerPtLogic } from '@/app/manager/pt/pt_context/ManagerUseManagerPtLogic';
 import { PT_TAB_OPTIONS } from '@/app/manager/pt/pt_types/ManagerPtTypes';
-import { managerPtApi } from '@/app/manager/pt/pt_api/ManagerPtApi';
-import toast from 'react-hot-toast';
 import { formatCurrency } from '@/lib/formatters';
 
 // Child Components
@@ -15,143 +12,10 @@ import ManagerPtKPIs from '@/app/manager/pt/pt_components/ManagerPtMain/ManagerP
 import ManagerPtTrainerWorkload from '@/app/manager/pt/pt_components/ManagerPtMain/ManagerPtTrainerWorkload';
 import ManagerPtExpiringSoon from '@/app/manager/pt/pt_components/ManagerPtMain/ManagerPtExpiringSoon';
 import ManagerPtAssignmentsTable from '@/app/manager/pt/pt_components/ManagerPtMain/ManagerPtAssignmentsTable';
+import ManagerPtAssignmentForm from '@/app/manager/pt/pt_components/ManagerPtMain/ManagerPtAssignmentForm';
+import type { ManagerPtAssignmentFormValues } from '@/app/manager/pt/pt_types/ManagerPtAssignmentSchema';
 
-// ── Assign Trainer Modal ────────────────────────────────────────────────────
-// Self-contained slide-over modal. Uses local state only — no prop-drilling.
-// Rule 71: no window.confirm / alert. Destructive submit uses the server API.
-function AssignTrainerModal({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const [memberId, setMemberId]     = useState('');
-  const [trainerId, setTrainerId]   = useState('');
-  const [packageId, setPackageId]   = useState('');
-  const [startDate, setStartDate]   = useState('');
-  const [saving, setSaving]         = useState(false);
-
-  if (!open) return null;
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!memberId || !trainerId || !packageId || !startDate) return;
-    setSaving(true);
-    try {
-      const res = await managerPtApi.createAssignment({ memberId, trainerId, packageId, startDate });
-      toast.success(res.message || 'Trainer assigned successfully!');
-      setMemberId(''); setTrainerId(''); setPackageId(''); setStartDate('');
-      onClose();
-    } catch {
-      toast.error('Failed to assign trainer. Please try again.');
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  return (
-    <>
-      {/* Backdrop */}
-      <div
-        className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 motion-safe:transition-opacity"
-        onClick={onClose}
-      />
-      {/* Slide-over panel */}
-      <div className="fixed right-0 top-0 h-full w-full sm:w-[440px] bg-card border-l border-border shadow-2xl z-50 flex flex-col motion-safe:transition-transform motion-safe:duration-300">
-        {/* Header */}
-        <div className="flex items-center justify-between p-5 border-b border-border bg-header">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-primary/10 rounded-lg">
-              <UserPlus size={20} className="text-primary" />
-            </div>
-            <div>
-              <h2 className="text-lg font-black text-foreground">Assign Trainer</h2>
-              <p className="text-xs text-secondary mt-0.5">Create a new PT assignment</p>
-            </div>
-          </div>
-          <button
-            onClick={onClose}
-            className="p-2 bg-input hover:bg-border text-secondary rounded-full motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-          >
-            <X size={18} />
-          </button>
-        </div>
-
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-5 space-y-5 custom-scrollbar">
-          <div>
-            <label className="block text-sm font-bold text-foreground mb-1.5">Member ID</label>
-            <input
-              required
-              value={memberId}
-              onChange={e => setMemberId(e.target.value)}
-              placeholder="e.g. M-00045"
-              className="w-full bg-input border border-border rounded-xl px-4 py-3 text-sm text-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary motion-safe:transition-all placeholder:text-secondary"
-            />
-            <p className="text-xs text-secondary mt-1">Enter the member's ID from the Members module.</p>
-          </div>
-
-          <div>
-            <label className="block text-sm font-bold text-foreground mb-1.5">Trainer ID</label>
-            <select
-              required
-              value={trainerId}
-              onChange={e => setTrainerId(e.target.value)}
-              className="w-full bg-input border border-border rounded-xl px-4 py-3 text-sm text-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary motion-safe:transition-all"
-            >
-              <option value="">Select a trainer...</option>
-              <option value="TR-001">Rajesh Kumar (TR-001)</option>
-              <option value="TR-002">Priya Sharma (TR-002)</option>
-              <option value="TR-003">Amit Singh (TR-003)</option>
-              <option value="TR-004">Sunita Reddy (TR-004)</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-sm font-bold text-foreground mb-1.5">PT Package</label>
-            <select
-              required
-              value={packageId}
-              onChange={e => setPackageId(e.target.value)}
-              className="w-full bg-input border border-border rounded-xl px-4 py-3 text-sm text-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary motion-safe:transition-all"
-            >
-              <option value="">Select a package...</option>
-              <option value="PKG-001">Starter (12 sessions) — ₹3,000</option>
-              <option value="PKG-002">Pro (24 sessions) — ₹5,500</option>
-              <option value="PKG-003">Elite (36 sessions) — ₹7,500</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-sm font-bold text-foreground mb-1.5">Start Date</label>
-            <input
-              type="date"
-              required
-              value={startDate}
-              onChange={e => setStartDate(e.target.value)}
-              className="w-full bg-input border border-border rounded-xl px-4 py-3 text-sm text-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary motion-safe:transition-all"
-            />
-          </div>
-        </form>
-
-        {/* Footer */}
-        <div className="p-5 border-t border-border bg-header flex justify-end gap-3">
-          <button
-            type="button"
-            onClick={onClose}
-            className="px-5 py-2.5 text-sm font-bold text-secondary bg-input hover:bg-border rounded-xl motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={handleSubmit}
-            disabled={saving || !memberId || !trainerId || !packageId || !startDate}
-            className="flex items-center gap-2 px-6 py-2.5 text-sm font-bold text-primary-foreground bg-primary hover:opacity-90 rounded-xl motion-safe:transition-opacity disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-          >
-            {saving ? <Loader2 size={16} className="motion-safe:animate-spin" /> : <UserPlus size={16} />}
-            Assign Trainer
-          </button>
-        </div>
-      </div>
-    </>
-  );
-}
-
+// Assign Trainer form is isolated in ManagerPtAssignmentForm.tsx so the page remains a view/orchestrator.
 export default function ManagerPtMain() {
   const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
 
@@ -159,15 +23,25 @@ export default function ManagerPtMain() {
     activeTab, setActiveTab,
     packages, assignments,
     kpis, workload, expiringPackages,
-    fetchState, markingId,
-    handleMarkSession,
+    totalAssignments, currentPage, limit, setPage,
+    isPending, isError, markingId,
+    handleMarkSession, createAssignment, assignmentSaving,
   } = useManagerPtLogic();
+
+  const handleCreateAssignment = async (values: ManagerPtAssignmentFormValues) => {
+    await createAssignment(values);
+    setIsAssignModalOpen(false);
+  };
 
   return (
     <div className="max-w-7xl mx-auto space-y-6 p-4 sm:p-6">
-      <AssignTrainerModal 
-        open={isAssignModalOpen} 
-        onClose={() => setIsAssignModalOpen(false)} 
+      <ManagerPtAssignmentForm
+        open={isAssignModalOpen}
+        packages={packages}
+        trainers={workload}
+        saving={assignmentSaving}
+        onClose={() => setIsAssignModalOpen(false)}
+        onSubmit={handleCreateAssignment}
       />
 
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -179,7 +53,7 @@ export default function ManagerPtMain() {
         {/* Quick Assign Action — opens a proper slide-over modal, no alert() */}
         <button
           onClick={() => setIsAssignModalOpen(true)}
-          className="flex items-center gap-2 bg-primary text-black px-5 py-2.5 rounded-xl font-bold hover:bg-primary-hover motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary shadow-sm"
+          className="flex items-center gap-2 bg-primary text-primary-foreground px-5 py-2.5 rounded-xl font-bold hover:bg-primary-hover motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary shadow-sm"
         >
           <UserPlus size={18} />
           Assign Trainer
@@ -204,15 +78,19 @@ export default function ManagerPtMain() {
         ))}
       </div>
 
-      {/* Loading Overlay State for initial fetch */}
-      {fetchState === 'loading' && (
+      {/* Loading state from TanStack Query */}
+      {isPending && (
         <div className="flex flex-col items-center justify-center py-24 space-y-4">
           <Loader2 size={32} className="text-primary motion-safe:animate-spin" />
           <p className="text-sm font-medium text-secondary">Loading PT Data...</p>
         </div>
       )}
 
-      {fetchState === 'success' && (
+      {isError && (
+        <div role="alert" className="rounded-xl border border-danger bg-danger-bg p-5 text-sm text-danger">Unable to load PT data. Retry by refreshing this route.</div>
+      )}
+
+      {!isPending && !isError && (
         <div className="space-y-6 motion-safe:animate-in motion-safe:fade-in duration-500">
           
           {/* Dashboard Tab */}
@@ -234,6 +112,10 @@ export default function ManagerPtMain() {
           {activeTab === 'assignments' && (
             <ManagerPtAssignmentsTable
               assignments={assignments}
+              totalAssignments={totalAssignments}
+              currentPage={currentPage}
+              totalPages={Math.max(1, Math.ceil(totalAssignments / limit))}
+              onPageChange={setPage}
               markingId={markingId}
               onMarkSession={handleMarkSession}
             />

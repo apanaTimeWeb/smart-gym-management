@@ -1,18 +1,9 @@
-// RESPONSIBILITY: API client for the Manager Settings module.
-import { apiFetch } from '@/lib/api';
-import type { ApiResponse } from '@/lib/api';
-import type { ManagerSettingsPreferences, UpdateManagerSettingsPayload } from '@/app/manager/settings/settings_types/ManagerSettingsTypes';
-
-import { MOCK_SETTINGS_PREFERENCES } from '@/app/manager/settings/settings_fixtures/ManagerSettingsMockData';
+import { ManagerSettingsUrlConfig } from '@/app/manager/settings/settings_url_config';
+import { apiFetch, type ApiResponse } from '@/lib/api';
+import type { ManagerAllSettings } from '@/app/manager/settings/settings_types/ManagerSettingsTypes';
+import { managerAllSettingsSchema } from '@/app/manager/settings/settings_types/ManagerSettingsSchema';
 
 export const managerSettingsApi = {
-  fetchSettings: async () => {
-    await new Promise(res => setTimeout(res, 300));
-    return { success: true, message: 'Success', data: MOCK_SETTINGS_PREFERENCES };
-  },
-
-  updateSettings: async (body: UpdateManagerSettingsPayload) => {
-    await new Promise(res => setTimeout(res, 400));
-    return { success: true, message: 'Success', data: { ...MOCK_SETTINGS_PREFERENCES, ...body } };
-  },
+  fetchSettings: async (): Promise<ApiResponse<ManagerAllSettings>> => apiFetch(ManagerSettingsUrlConfig.BACKEND_API.BASE, { dataSchema: managerAllSettingsSchema }),
+  updateSettings: async (body: Partial<ManagerAllSettings>): Promise<ApiResponse<ManagerAllSettings>> => apiFetch(ManagerSettingsUrlConfig.BACKEND_API.BASE, { method: 'PATCH', body: JSON.stringify(body), dataSchema: managerAllSettingsSchema }),
 };

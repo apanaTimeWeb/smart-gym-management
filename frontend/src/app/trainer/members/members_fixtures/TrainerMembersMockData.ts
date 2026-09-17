@@ -1,4 +1,4 @@
-import type { Member, MemberStats } from '../members_types/members_types';
+import type { Member, MemberStats } from '@/app/trainer/members/members_types/TrainerMembers_types';
 
 export const MOCK_MEMBER_STATS: MemberStats = {
   total: 145,
@@ -23,10 +23,20 @@ export const MOCK_MEMBERS: Member[] = [
     expiryDate: "2024-01-15T00:00:00Z",
     createdAt: "2023-01-15T00:00:00Z",
     age: 28,
+    heightCm: 175,
+    weightKg: 70,
     progressStatus: "Good",
     fitnessGoal: "Weight Loss",
+    fitnessLevel: "Intermediate",
+    targetWeightKg: 65,
+    bmi: 22.9,
+    medicalRestrictions: "None reported",
     daysSinceLastCheckIn: 2,
-    membershipNumber: "M-2023-001"
+    membershipNumber: "M-2023-001",
+    workoutHistory: [
+      { id: "WH-001", name: "Full Body Fundamentals", date: "2023-08-01 - 2023-09-01", level: "Beginner", status: "Completed" },
+      { id: "WH-002", name: "Conditioning Basics", date: "2023-07-01 - 2023-08-01", level: "Beginner", status: "Completed" }
+    ]
   },
   {
     id: "MEM-002",
@@ -43,9 +53,18 @@ export const MOCK_MEMBERS: Member[] = [
     expiryDate: "2023-09-01T00:00:00Z",
     createdAt: "2023-08-01T00:00:00Z",
     age: 24,
+    heightCm: 162,
+    weightKg: 58,
     progressStatus: "Needs Attention",
     fitnessGoal: "Muscle Gain",
+    fitnessLevel: "Beginner",
+    targetWeightKg: 62,
+    bmi: 22.1,
+    medicalRestrictions: "None reported",
     daysSinceLastCheckIn: 5,
-    membershipNumber: "M-2023-002"
+    membershipNumber: "M-2023-002",
+    workoutHistory: [
+      { id: "WH-003", name: "Strength Foundation", date: "2023-09-01 - 2023-10-01", level: "Beginner", status: "Completed" }
+    ]
   }
 ];

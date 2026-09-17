@@ -124,9 +124,39 @@ export function maskSensitiveData(
 }
 
 
+
 export function displayValue(value: string | number | null | undefined, fallback: string = '-'): string {
   if (value === null || value === undefined || value === '') {
     return fallback;
   }
   return String(value);
+}
+
+/**
+ * Formats a millisecond duration to a human-readable string.
+ * e.g. 500 → "500ms", 1500 → "1.50s"
+ */
+export function formatDuration(ms: number | undefined): string {
+  if (!ms) return '-';
+  if (ms < 1000) return `${ms}ms`;
+  return `${(ms / 1000).toFixed(2)}s`;
+}
+
+/**
+ * Formats a number as a percentage to 1 decimal place (without multiplying by 100).
+ * Use when the value is already a 0–100 scale percent.
+ * e.g. 99.1234 → "99.1%"
+ */
+export function formatPercent1dp(value: number): string {
+  if (isNaN(value)) return '0.0%';
+  return `${value.toFixed(1)}%`;
+}
+
+/**
+ * Formats a number to a fixed decimal point (e.g. ratios, multipliers).
+ * e.g. 1.256 -> "1.3"
+ */
+export function formatDecimal(value: number, decimals: number = 1): string {
+  if (isNaN(value)) return '0';
+  return value.toFixed(decimals);
 }

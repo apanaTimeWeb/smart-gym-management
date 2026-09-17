@@ -6,7 +6,7 @@ import { trainerScheduleApi } from '@/app/trainer/schedule/schedule_api/TrainerS
 export function useTrainerScheduleQuery() {
   return useQuery({
     queryKey: ['trainer', 'schedule'],
-    queryFn: trainerScheduleApi.getSchedule,
+    queryFn: trainerScheduleApi.fetchSchedule,
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }

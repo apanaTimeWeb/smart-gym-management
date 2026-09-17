@@ -1,26 +1,19 @@
+import { AdminProfileUrlConfig } from '@/app/admin/profile/admin_profile_url_config';
+import { adminProfileDataSchema } from '@/app/admin/profile/profile_types/AdminProfileSchemas';
 // RESPONSIBILITY: API client for the Admin Profile module.
-import { apiFetch } from '@/lib/api';
-import type { ApiResponse } from '@/app/superadmin/superadmin_types/superadmin_types';
+import { apiFetch, type ApiResponse } from '@/lib/api';
 import type { AdminProfileData, UpdateAdminProfilePayload, UpdateAdminPasswordPayload } from '@/app/admin/profile/profile_types/AdminProfileTypes';
+import { type z } from "zod";
 
-const BASE = '/admin/profile';
-
-import { MOCK_ADMIN_PROFILE } from '@/app/admin/profile/profile_api/AdminProfileMockData';
-
-let mockProfile = { ...MOCK_ADMIN_PROFILE };
-
+const BASE = AdminProfileUrlConfig.api.base;
 export const adminProfileApi = {
   fetchProfile: async () => {
-    await new Promise(res => setTimeout(res, 300));
-    return { success: true, message: 'Success', data: mockProfile };
-  },
+            return apiFetch<ApiResponse<z.infer<typeof adminProfileDataSchema>>>(`${AdminProfileUrlConfig.api.fetchProfile}`, { method: 'GET', dataSchema: adminProfileDataSchema });
+        },
   updateProfile: async (body: UpdateAdminProfilePayload) => {
-    await new Promise(res => setTimeout(res, 400));
-    mockProfile = { ...mockProfile, ...body };
-    return { success: true, message: 'Profile updated', data: mockProfile };
-  },
+            return apiFetch<ApiResponse<z.infer<typeof adminProfileDataSchema>>>(`${AdminProfileUrlConfig.api.updateProfile}`, { method: 'POST', body: JSON.stringify(body), dataSchema: adminProfileDataSchema });
+        },
   updatePassword: async (body: UpdateAdminPasswordPayload) => {
-    await new Promise(res => setTimeout(res, 400));
-    return { success: true, message: 'Password updated', data: undefined };
-  },
+          return apiFetch<ApiResponse<z.infer<typeof adminProfileDataSchema>>>(`${AdminProfileUrlConfig.api.updatePassword}`, { method: 'POST', body: JSON.stringify(body), dataSchema: adminProfileDataSchema });
+      },
 };

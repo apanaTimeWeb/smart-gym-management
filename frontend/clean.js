@@ -1,12 +1,7 @@
 const fs = require('fs');
-const dirs = ['.next', '.cache', '.junks'];
+const path = require('path');
 
-dirs.forEach(d => {
-  try {
-    fs.rmSync(d, { recursive: true, force: true });
-    console.log(`Cleaned ${d}`);
-  } catch (err) {
-    // Ignore errors like file locks, just continue starting the server
-    console.log(`Skipped ${d} cleanup: ${err.message}`);
-  }
-});
+const dir = path.join(__dirname, '.next');
+if (fs.existsSync(dir)) {
+    fs.rmSync(dir, { recursive: true, force: true });
+}

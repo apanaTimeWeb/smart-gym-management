@@ -1,0 +1,15 @@
+// RESPONSIBILITY: Server-side API fetching for the finance module.
+import { ssrApiFetch } from '@/lib/server-api';
+import { FinanceUrlConfig } from '@/app/admin/finance/admin_finance_url_config';
+import type { Payment, FinanceSummary } from '@/app/admin/finance/finance_types/AdminFinanceTypes';
+import { paymentSchema, financeSummarySchema } from '@/app/admin/finance/finance_types/AdminFinanceSchemas';
+import { z } from 'zod';
+import type { ApiResponse } from '@/lib/api';
+
+export const ssrFinanceApi = {
+  getPayments: (params?: Record<string, string>) => {
+    const q = params ? '?' + new URLSearchParams(params).toString() : '';
+    return ssrApiFetch<ApiResponse<{ payments: Payment[]; total: number }>>(`${FinanceUrlConfig.BACKEND_API.PAYMENTS_BASE}${q}`);
+  },
+  getSummary: () => ssrApiFetch<ApiResponse<FinanceSummary>>(FinanceUrlConfig.BACKEND_API.SUMMARY),
+};

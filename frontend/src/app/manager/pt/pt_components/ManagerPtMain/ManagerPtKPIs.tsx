@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the top-level KPI stat cards for the PT Dashboard.
 'use client';
-
+// RESPONSIBILITY: Renders the top-level KPI stat cards for the PT Dashboard.
 import { Users, CalendarCheck, TrendingUp, AlertCircle } from 'lucide-react';
 import type { PtDashboardKpis } from '@/app/manager/pt/pt_types/ManagerPtTypes';
 import { formatKPI } from '@/lib/formatters';
@@ -22,7 +21,7 @@ export default function ManagerPtKPIs({ kpis }: ManagerPtKPIsProps) {
           <div className="p-2 bg-primary/10 rounded-lg">
             <Users size={20} className="text-primary" />
           </div>
-          <span className="text-[11px] font-medium text-secondary uppercase tracking-wider">
+          <span className="text-xs font-medium text-secondary uppercase tracking-wider">
             {`Active PT Members${dateSuffix}`}
           </span>
         </div>
@@ -37,7 +36,7 @@ export default function ManagerPtKPIs({ kpis }: ManagerPtKPIsProps) {
           <div className="p-2 bg-success/10 rounded-lg">
             <CalendarCheck size={20} className="text-success" />
           </div>
-          <span className="text-[11px] font-medium text-secondary uppercase tracking-wider">
+          <span className="text-xs font-medium text-secondary uppercase tracking-wider">
             {`Sessions Today${dateSuffix}`}
           </span>
         </div>
@@ -52,7 +51,7 @@ export default function ManagerPtKPIs({ kpis }: ManagerPtKPIsProps) {
           <div className="p-2 bg-warning/10 rounded-lg">
             <AlertCircle size={20} className="text-warning" />
           </div>
-          <span className="text-[11px] font-medium text-secondary uppercase tracking-wider">
+          <span className="text-xs font-medium text-secondary uppercase tracking-wider">
             {`Expiring Packages${dateSuffix}`}
           </span>
         </div>
@@ -67,7 +66,7 @@ export default function ManagerPtKPIs({ kpis }: ManagerPtKPIsProps) {
           <div className="p-2 bg-info/10 rounded-lg">
             <TrendingUp size={20} className="text-info" />
           </div>
-          <span className="text-[11px] font-medium text-secondary uppercase tracking-wider">
+          <span className="text-xs font-medium text-secondary uppercase tracking-wider">
             {`Monthly PT Revenue${dateSuffix}`}
           </span>
         </div>

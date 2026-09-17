@@ -1,17 +1,18 @@
-// RESPONSIBILITY: Modal for trainers to submit a new leave request.
 'use client';
-
+// RESPONSIBILITY: Modal for trainers to submit a new leave request.
 import { useTrainerScheduleMutations } from '@/app/trainer/schedule/schedule_queries/useTrainerScheduleMutations';
 import { useTrainerScheduleStore } from '@/app/trainer/schedule/schedule_store/useTrainerScheduleStore';
+import { useTrainerFeedback } from '@/app/trainer/trainer_components/TrainerFeedback/useTrainerFeedback';
 import { LEAVE_TYPE_OPTIONS, CreateLeaveDtoSchema, type CreateLeaveDto } from '@/app/trainer/schedule/schedule_types/TrainerScheduleTypes';
-import { useWarnIfUnsavedChanges } from '@/app/trainer/trainer_utils/useWarnIfUnsavedChanges';
+import { useTrainerUnsavedChangesGuard } from '@/app/trainer/trainer_utils/TrainerUseWarnIfUnsavedChanges';
 import { X, Loader2 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
 
 export default function TrainerRequestLeaveModal() {
-  const { showLeaveModal, closeLeaveModal, showToast } = useTrainerScheduleStore();
+  const { showLeaveModal, closeLeaveModal } = useTrainerScheduleStore();
+  const { showSuccess, showError } = useTrainerFeedback();
   const { requestLeave } = useTrainerScheduleMutations();
   
   const {
@@ -24,7 +25,7 @@ export default function TrainerRequestLeaveModal() {
     defaultValues: { leaveType: 'Casual Leave', startDate: '', endDate: '', reason: '' }
   });
 
-  useWarnIfUnsavedChanges(isDirty && !requestLeave.isPending);
+  useTrainerUnsavedChangesGuard(isDirty && !requestLeave.isPending);
 
   useEffect(() => {
     if (showLeaveModal) {
@@ -36,18 +37,18 @@ export default function TrainerRequestLeaveModal() {
 
   const onSubmit = async (data: CreateLeaveDto) => {
     try {
-      await requestLeave.mutateAsync(data);
-      showToast('Leave request submitted successfully.', 'success');
+      const response = await requestLeave.mutateAsync(data);
+      showSuccess(response.message, 'trainer-schedule-leave-success');
       closeLeaveModal();
-    } catch {
-      showToast('Failed to submit leave request.', 'error');
+    } catch (error) {
+      showError(error, 'trainer-schedule-leave-error');
     }
   };
 
   return (
     <>
-      <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 motion-safe:transition-opacity" onClick={closeLeaveModal} />
-      <div className="fixed right-0 top-0 h-full w-full sm:w-[450px] bg-card border-l border-border shadow-2xl z-50 flex flex-col motion-safe:transition-transform motion-safe:duration-300">
+      <div className="fixed inset-0 bg-overlay/80 backdrop-blur-sm z-40 motion-safe:transition-opacity" onClick={closeLeaveModal} />
+      <div className="fixed right-0 top-0 h-full w-full sm:w-full max-w-xl bg-card border-l border-border shadow-2xl z-40 flex flex-col motion-safe:transition-transform motion-safe:duration-slow">
         
         <div className="flex items-center justify-between p-4 sm:p-6 border-b border-border bg-header">
           <div>
@@ -61,8 +62,11 @@ export default function TrainerRequestLeaveModal() {
 
         <form id="leave-form" onSubmit={handleSubmit(onSubmit)} className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-5 custom-scrollbar">
           <div>
-            <label className="block text-sm font-bold text-foreground mb-1.5">Leave Type</label>
+            <label htmlFor="trainer-leave-type" className="block text-sm font-bold text-foreground mb-1.5">Leave Type</label>
             <select
+              id="trainer-leave-type"
+              aria-invalid={Boolean(errors.leaveType)}
+              aria-describedby={errors.leaveType ? "trainer-leave-type-error" : undefined}
               {...register('leaveType')}
               className={`w-full bg-input border rounded-xl px-4 py-3 text-sm text-foreground focus:outline-none focus:ring-1 motion-safe:transition-all ${errors.leaveType ? 'border-danger focus:border-danger focus:ring-danger' : 'border-border focus:border-primary focus:ring-primary'}`}
             >
@@ -70,38 +74,47 @@ export default function TrainerRequestLeaveModal() {
                 <option key={opt} value={opt}>{opt}</option>
               ))}
             </select>
-            {errors.leaveType && <p className="text-danger text-xs mt-1">{errors.leaveType.message}</p>}
+            {errors.leaveType && <p id="trainer-leave-type-error" className="text-danger text-xs mt-1">{errors.leaveType.message}</p>}
           </div>
 
           <div>
-            <label className="block text-sm font-bold text-foreground mb-1.5">Start Date</label>
+            <label htmlFor="trainer-leave-start-date" className="block text-sm font-bold text-foreground mb-1.5">Start Date</label>
             <input 
+              id="trainer-leave-start-date"
               type="date"
+              aria-invalid={Boolean(errors.startDate)}
+              aria-describedby={errors.startDate ? "trainer-leave-start-date-error" : undefined}
               {...register('startDate')}
               className={`w-full bg-input border rounded-xl px-4 py-3 text-sm text-foreground focus:outline-none focus:ring-1 motion-safe:transition-all ${errors.startDate ? 'border-danger focus:border-danger focus:ring-danger' : 'border-border focus:border-primary focus:ring-primary'}`}
             />
-            {errors.startDate && <p className="text-danger text-xs mt-1">{errors.startDate.message}</p>}
+            {errors.startDate && <p id="trainer-leave-start-date-error" className="text-danger text-xs mt-1">{errors.startDate.message}</p>}
           </div>
           
           <div>
-            <label className="block text-sm font-bold text-foreground mb-1.5">End Date</label>
+            <label htmlFor="trainer-leave-end-date" className="block text-sm font-bold text-foreground mb-1.5">End Date</label>
             <input 
+              id="trainer-leave-end-date"
               type="date"
+              aria-invalid={Boolean(errors.endDate)}
+              aria-describedby={errors.endDate ? "trainer-leave-end-date-error" : undefined}
               {...register('endDate')}
               className={`w-full bg-input border rounded-xl px-4 py-3 text-sm text-foreground focus:outline-none focus:ring-1 motion-safe:transition-all ${errors.endDate ? 'border-danger focus:border-danger focus:ring-danger' : 'border-border focus:border-primary focus:ring-primary'}`}
             />
-            {errors.endDate && <p className="text-danger text-xs mt-1">{errors.endDate.message}</p>}
+            {errors.endDate && <p id="trainer-leave-end-date-error" className="text-danger text-xs mt-1">{errors.endDate.message}</p>}
           </div>
 
           <div>
-            <label className="block text-sm font-bold text-foreground mb-1.5">Reason for Leave</label>
-            <textarea 
+            <label htmlFor="trainer-leave-reason" className="block text-sm font-bold text-foreground mb-1.5">Reason for Leave</label>
+            <textarea
+              id="trainer-leave-reason"
+              aria-invalid={Boolean(errors.reason)}
+              aria-describedby={errors.reason ? "trainer-leave-reason-error" : undefined}
               rows={4}
               {...register('reason')}
               placeholder="E.g., Medical reasons, family function..."
               className={`w-full bg-input border rounded-xl px-4 py-3 text-sm text-foreground focus:outline-none focus:ring-1 motion-safe:transition-all resize-none ${errors.reason ? 'border-danger focus:border-danger focus:ring-danger' : 'border-border focus:border-primary focus:ring-primary'}`}
             />
-            {errors.reason && <p className="text-danger text-xs mt-1">{errors.reason.message}</p>}
+            {errors.reason && <p id="trainer-leave-reason-error" className="text-danger text-xs mt-1">{errors.reason.message}</p>}
           </div>
         </form>
 

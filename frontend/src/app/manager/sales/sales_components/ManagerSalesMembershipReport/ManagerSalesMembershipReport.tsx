@@ -1,7 +1,5 @@
-// RESPONSIBILITY: Provides the implementation for ManagerSalesMembershipReport.tsx functionality within its module.
 'use client';
-
-
+// RESPONSIBILITY: Provides the implementation for ManagerSalesMembershipReport.tsx functionality within its module.
 import { useSalesContext } from '@/app/manager/sales/sales_context/ManagerSalesContext';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import { formatCurrency } from '@/lib/formatters';
@@ -9,18 +7,15 @@ import { Loader2 } from 'lucide-react';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
 import type { MembershipReportItem } from '@/app/manager/sales/sales_types/ManagerSalesTypes';
 
+const SALES_MEMBERSHIP_REPORT_COLUMN_COUNT = 5;
+
 export default function ManagerSalesMembershipReport() {
-  const { search, currentPage, setCurrentPage, membershipReport, membershipTotals, fetchState } = useSalesContext();
+  const { currentPage, setCurrentPage, membershipReport, membershipReportTotal, membershipTotals, isLoading, isError } = useSalesContext();
   
-  const filtered = membershipReport.filter((r: MembershipReportItem) => 
-    (r.plan || '').toLowerCase().includes(search.toLowerCase())
-  );
+  const totalPages = Math.max(1, Math.ceil(membershipReportTotal / MANAGER_ITEMS_PER_PAGE));
+  const paginated = membershipReport;
 
-  
-  const totalPages = Math.ceil(filtered.length / MANAGER_ITEMS_PER_PAGE) || 1;
-  const paginated = filtered.slice((currentPage - 1) * MANAGER_ITEMS_PER_PAGE, currentPage * MANAGER_ITEMS_PER_PAGE);
-
-  if (fetchState === 'loading') {
+  if (isLoading) {
     return (
       <div className="flex justify-center py-10">
         <Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" />
@@ -28,7 +23,7 @@ export default function ManagerSalesMembershipReport() {
     );
   }
 
-  if (fetchState === 'error') {
+  if (isError) {
     return (
       <div className="text-center py-16 bg-card rounded-2xl border border-danger/30">
         <p className="text-danger font-medium">Failed to load membership report.</p>
@@ -53,7 +48,7 @@ export default function ManagerSalesMembershipReport() {
   <tbody className="divide-y divide-border">
   {paginated.length > 0 ? (
     paginated.map((r) => (
-      <tr key={r.plan} className="hover:bg-primary-subtle transition-colors">
+      <tr key={r.plan} className="hover:bg-primary-subtle motion-safe:transition-colors">
       <td className="px-4 py-3 text-sm font-medium text-foreground">{r.plan || ''}</td>
       <td className="px-4 py-3 text-sm text-secondary">{formatCurrency(r.receivable || 0)}</td>
       <td className="px-4 py-3 text-sm font-medium text-success dark:text-success">{formatCurrency(r.received || 0)}</td>
@@ -63,7 +58,7 @@ export default function ManagerSalesMembershipReport() {
     ))
   ) : (
     <tr>
-      <td colSpan={5} className="px-4 py-8 text-center text-sm text-secondary">
+      <td colSpan={SALES_MEMBERSHIP_REPORT_COLUMN_COUNT} className="px-4 py-8 text-center text-sm text-secondary">
         No membership report data available.
       </td>
     </tr>

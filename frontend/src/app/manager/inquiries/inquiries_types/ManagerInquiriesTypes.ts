@@ -1,15 +1,9 @@
-// RESPONSIBILITY: Defines all TypeScript types, interfaces, and the FetchState enum for the Inquiries module.
+// RESPONSIBILITY: Defines all TypeScript types and interfaces for the Inquiries module.
 
 import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
 import type { MessageType, ManagerMessageRecipient } from '@/app/manager/manager_components/ManagerFeedback/ManagerMessageModal';
 import type { InquiryFormValues } from '@/app/manager/inquiries/inquiries_utils/ManagerInquiriesSharedConstants';
-
-export enum FetchState {
-  IDLE = 'IDLE',
-  LOADING = 'LOADING',
-  SUCCESS = 'SUCCESS',
-  ERROR = 'ERROR',
-}
+import type { ApiResponse } from '@/lib/api';
 
 export interface InquiriesContextType {
   // Query Data
@@ -63,6 +57,8 @@ export interface InquiriesContextType {
   closeBulkMsg: () => void;
 
   convertLead: Inquiry | null;
+  convertLeadMutation: (args: { id: string; data: Record<string, unknown> }) => Promise<ApiResponse<{ memberId: string }>>;
+  isConverting: boolean;
   openConvert: (inq: Inquiry) => void;
   closeConvert: () => void;
 }

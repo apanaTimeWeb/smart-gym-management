@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the modal for marking new attendance records for members or staff.
 'use client';
-
+// RESPONSIBILITY: Renders the modal for marking new attendance records for members or staff.
 import { useEffect } from 'react';
 import { useAttendanceContext } from '@/app/manager/attendance/attendance_context/ManagerAttendanceContext';
 import { X, CheckCircle, Loader2 } from 'lucide-react';
@@ -8,6 +7,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AttendanceSchema, type AttendanceFormValues, EMPTY_ATTENDANCE_FORM } from '@/app/manager/attendance/attendance_utils/ManagerAttendanceSharedConstants';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
+import { useManagerUnsavedChangesGuard } from '@/app/manager/manager_utils/ManagerUnsavedChangesGuard';
 
 export default function AttendanceModal() {
   const { 
@@ -22,7 +22,7 @@ export default function AttendanceModal() {
     watch,
     reset,
     control,
-    formState: { errors }
+    formState: { errors, isDirty }
   } = useForm<AttendanceFormValues>({
     resolver: zodResolver(AttendanceSchema),
     defaultValues: EMPTY_ATTENDANCE_FORM
@@ -33,6 +33,8 @@ export default function AttendanceModal() {
   
   const d = new Date();
   const todayDate = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+
+  useManagerUnsavedChangesGuard(isDirty && showModal);
 
   useEffect(() => {
     if (showModal) {
@@ -49,14 +51,14 @@ export default function AttendanceModal() {
   if (!showModal) return null;
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 p-4">
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-foreground/60 p-4">
       <div className="bg-card rounded-2xl shadow-xl w-full max-w-md border border-border">
         <div className="flex justify-between items-center p-5 border-b border-border">
           <h3 className="font-bold text-lg text-foreground">Record Attendance</h3>
           <button 
             type="button"
             onClick={() => setShowModal(false)} 
-            className="text-secondary hover:text-foreground hover:bg-primary/10 p-1 rounded-md transition-colors"
+            className="text-secondary hover:text-foreground hover:bg-primary/10 p-1 rounded-md motion-safe:transition-colors"
           >
             <X size={20} />
           </button>
@@ -180,14 +182,14 @@ export default function AttendanceModal() {
             <button 
               type="button" 
               onClick={() => setShowModal(false)} 
-              className="px-4 py-2 border border-border rounded-lg font-medium text-secondary hover:text-foreground hover:bg-primary/10 transition-colors"
+              className="px-4 py-2 border border-border rounded-lg font-medium text-secondary hover:text-foreground hover:bg-primary/10 motion-safe:transition-colors"
             >
               Cancel
             </button>
             <button 
               type="submit" 
               disabled={saving}
-              className="px-4 py-2 rounded-lg font-medium text-white bg-primary flex items-center gap-2 hover:opacity-90 transition-opacity disabled:opacity-70" 
+              className="px-4 py-2 rounded-lg font-medium text-primary-foreground bg-primary flex items-center gap-2 hover:opacity-90 motion-safe:transition-opacity disabled:opacity-70" 
             >
               {saving ? <Loader2 className="w-4 h-4 motion-safe:animate-spin" /> : <><CheckCircle size={15} /> Check In</>}
             </button>

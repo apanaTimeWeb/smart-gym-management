@@ -1,7 +1,8 @@
+export const dynamic = 'force-dynamic';
 // RESPONSIBILITY: Server Component that fetches initial data and acts as the entry point for the Finance module.
 import AdminFinanceMain from '@/app/admin/finance/finance_components/AdminFinanceMain/AdminFinanceMain';
-import { ssrFinanceApi } from '@/app/admin/finance/finance_api/finance_server_api';
-import type { FinanceInitialData } from '@/app/admin/finance/finance_types/finance_types';
+import { ssrFinanceApi } from '@/app/admin/finance/finance_api/AdminFinanceServerApi';
+import type { FinanceInitialData } from '@/app/admin/finance/finance_types/AdminFinanceTypes';
 
 export default async function FinancePage() {
   let initialData: FinanceInitialData | null = null;
@@ -20,5 +21,7 @@ export default async function FinancePage() {
     // SSR data fetch failed gracefully — client-side hook will re-fetch
   }
 
-  return <AdminFinanceMain initialData={initialData} />;
+  return (
+      <AdminFinanceMain initialData={initialData} />
+  );
 }

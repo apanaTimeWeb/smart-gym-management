@@ -1,54 +1,41 @@
-// RESPONSIBILITY: Modularized API client for the Invoices module.
-import { SuperadminUrlConfig } from '@/app/superadmin/superadmin_url_config';
+// RESPONSIBILITY: Encapsulates functionality for superadmin_invoices_api.ts
+import { SaaSInvoiceSchema, SuperadminInvoicesTenantSchema } from '@/app/superadmin/invoices/superadmin_invoices_types/superadmin_invoices_types';
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
-import type { SaaSInvoice } from '@/app/superadmin/invoices/superadmin_invoices_types/superadmin_invoices_types';
-
+import type { SaaSInvoice, SuperadminInvoicesTenant } from '@/app/superadmin/invoices/superadmin_invoices_types/superadmin_invoices_types';
+import { InvoicesUrlConfig } from '@/app/superadmin/invoices/superadmin_invoices_url_config';
+import { z } from "zod";
 export interface CreateManualPaymentDto {
-  gymId: string;
-  amount: number;
-  planName: string;
-  currency?: string;
+    gymId: string;
+    amount: number;
+    planName: string;
+    currency?: string;
 }
-
-import { MOCK_SUPERADMIN_INVOICES } from '@/app/superadmin/invoices/superadmin_invoices_api/SuperadminInvoicesMockData';
-
-let mockInvoices = [...MOCK_SUPERADMIN_INVOICES];
-
 export const invoicesApi = {
-  fetchInvoices: async (params?: Record<string, string>) => {
-    await new Promise(r => setTimeout(r, 400));
-    return { success: true, message: 'Success', data: mockInvoices };
-  },
-  createManualPayment: async (dto: CreateManualPaymentDto) => {
-    await new Promise(r => setTimeout(r, 500));
-    const newInvoice = {
-      id: `inv${Date.now()}`,
-      tenantId: dto.gymId,
-      tenantName: 'Mock Gym', // Simplified
-      amount: dto.amount,
-      currency: dto.currency || 'INR',
-      status: 'PAID',
-      issuedAt: new Date().toISOString(),
-      dueDate: new Date().toISOString(),
-      paidAt: new Date().toISOString(),
-      paymentMethod: 'Manual',
-      invoiceType: 'ONE_TIME',
-      planName: dto.planName
-    } as SaaSInvoice;
-    mockInvoices = [newInvoice, ...mockInvoices];
-    return { success: true, message: 'Created', data: newInvoice };
-  },
-  getDownloadUrl: async (id: string) => {
-    await new Promise(r => setTimeout(r, 300));
-    return { success: true, message: 'Success', data: { downloadUrl: '/mock-invoice.pdf' } };
-  },
-  exportInvoicesCSV: async (params?: Record<string, string>) => {
-    await new Promise(r => setTimeout(r, 600));
-    return { success: true, message: 'Success', data: { downloadUrl: '/mock-invoices.csv' } };
-  },
-  resendInvoiceEmail: async (id: string) => {
-    await new Promise(r => setTimeout(r, 400));
-    return { success: true, message: 'Email resent', data: null };
-  },
+    fetchInvoices: (params?: Record<string, string>) => {
+        const q = params ? '?' + new URLSearchParams(params).toString() : '';
+        return apiFetch<ApiResponse<SaaSInvoice[]>>(`${InvoicesUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.array(SaaSInvoiceSchema) });
+    },
+    createManualPayment: (dto: CreateManualPaymentDto) => apiFetch<ApiResponse<SaaSInvoice>>(InvoicesUrlConfig.BACKEND_API.MANUAL_PAYMENT, {
+        method: 'POST',
+        body: JSON.stringify(dto),
+        dataSchema: SaaSInvoiceSchema
+    }),
+    fetchInvoiceDownloadUrl: (id: string) => apiFetch<ApiResponse<{
+        downloadUrl: string;
+    }>>(`${InvoicesUrlConfig.BACKEND_API.BASE}/${id}/download`, { dataSchema: z.object({ downloadUrl: z.string() }) }),
+    exportInvoicesCSV: (params?: Record<string, string>) => {
+        const q = params ? '?' + new URLSearchParams(params).toString() : '';
+        return apiFetch<ApiResponse<{
+            downloadUrl: string;
+        }>>(`${InvoicesUrlConfig.BACKEND_API.BASE}/export${q}`, { dataSchema: z.object({ downloadUrl: z.string() }) });
+    },
+    resendInvoiceEmail: (id: string) => apiFetch<ApiResponse<null>>(`${InvoicesUrlConfig.BACKEND_API.BASE}/${id}/resend`, {
+        method: 'POST',
+        dataSchema: z.null()
+    }),
+    fetchTenants: () => {
+        // Local tenant lookup to avoid cross-module business imports
+        return apiFetch<ApiResponse<SuperadminInvoicesTenant[]>>(InvoicesUrlConfig.BACKEND_API.TENANTS, { dataSchema: z.array(SuperadminInvoicesTenantSchema) });
+    },
 };

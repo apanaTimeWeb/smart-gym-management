@@ -1,5 +1,5 @@
 'use client';
-
+// RESPONSIBILITY: Renders the Manager SalesOverview presentation layer for the Manager module.
 import React from 'react';
 import dynamic from 'next/dynamic';
 import { useSalesContext } from '@/app/manager/sales/sales_context/ManagerSalesContext';
@@ -13,9 +13,9 @@ const Chart = dynamic(() => import('react-apexcharts'), {
 });
 
 export default function ManagerSalesOverview() {
-  const { overviewData, fetchState } = useSalesContext();
+  const { overviewData, isLoading, isError } = useSalesContext();
 
-  if (fetchState === 'loading') {
+  if (isLoading) {
     return (
       <div className="flex justify-center py-10">
         <Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" />
@@ -23,7 +23,7 @@ export default function ManagerSalesOverview() {
     );
   }
 
-  if (fetchState === 'error') {
+  if (isError) {
     return (
       <div className="text-center py-16 bg-card rounded-2xl border border-danger/30">
         <p className="text-danger font-medium">Failed to load sales overview.</p>
@@ -34,23 +34,23 @@ export default function ManagerSalesOverview() {
 
   const revenueOptions = {
     chart: { background: 'transparent', toolbar: { show: false }, fontFamily: 'Inter, sans-serif', stacked: true },
-    colors: ['#4F46E5', '#10B981'],
+    colors: ['var(--primary)', 'var(--success)'],
     grid: { borderColor: 'rgba(255,255,255,0.05)', strokeDashArray: 4 },
     tooltip: { theme: 'dark' as const, y: { formatter: (v: number) => formatCurrency(v) } },
     xaxis: {
       categories: overviewData.map((d: OverviewDataPoint) => d.month),
-      labels: { style: { colors: '#A1A1AA', fontSize: '11px' } },
+      labels: { style: { colors: 'var(--text-secondary)', fontSize: '11px' } },
       axisBorder: { show: false }, axisTicks: { show: false },
     },
-    yaxis: { labels: { style: { colors: '#A1A1AA', fontSize: '11px' }, formatter: (v: number) => formatKPI(v) } },
-    legend: { labels: { colors: '#A1A1AA' }, position: 'top' as const },
+    yaxis: { labels: { style: { colors: 'var(--text-secondary)', fontSize: '11px' }, formatter: (v: number) => formatKPI(v) } },
+    legend: { labels: { colors: 'var(--text-secondary)' }, position: 'top' as const },
     dataLabels: { enabled: false },
     plotOptions: { bar: { borderRadius: 4, columnWidth: '55%' } },
   };
 
   const membersOptions = {
     chart: { background: 'transparent', toolbar: { show: false }, fontFamily: 'Inter, sans-serif' },
-    colors: ['#F43F5E'],
+    colors: ['var(--danger)'],
     stroke: { curve: 'smooth' as const, width: 3 },
     fill: {
       type: 'gradient',
@@ -60,10 +60,10 @@ export default function ManagerSalesOverview() {
     tooltip: { theme: 'dark' as const },
     xaxis: {
       categories: overviewData.map((d: OverviewDataPoint) => d.month),
-      labels: { style: { colors: '#A1A1AA', fontSize: '11px' } },
+      labels: { style: { colors: 'var(--text-secondary)', fontSize: '11px' } },
       axisBorder: { show: false }, axisTicks: { show: false },
     },
-    yaxis: { labels: { style: { colors: '#A1A1AA', fontSize: '11px' } } },
+    yaxis: { labels: { style: { colors: 'var(--text-secondary)', fontSize: '11px' } } },
     dataLabels: { enabled: false },
   };
 

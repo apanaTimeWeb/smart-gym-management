@@ -6,7 +6,7 @@ import type {
   BranchPnlRecord,
   BranchPnlStatus,
   PnlPeriod,
-} from '@/app/admin/finance/finance_types/finance_types';
+} from '@/app/admin/finance/finance_types/AdminFinanceTypes';
 
 // ─── Period Options ────────────────────────────────────────────────────────────
 

@@ -1,18 +1,19 @@
-// RESPONSIBILITY: Renders the paginated order history table with status badges and customer info.
 'use client';
-
+// RESPONSIBILITY: Renders the paginated order history table with status badges and customer info.
 import { Printer, MessageCircle } from 'lucide-react';
 import type { Order } from '@/app/manager/store/store_types/ManagerStoreTypes';
 import { useStoreContext } from '@/app/manager/store/store_context/ManagerStoreContext';
-import { formatCurrency, displayValue } from '@/lib/formatters';
+import { formatCurrency, displayValue , formatDate} from '@/lib/formatters';
 import { GYM_DETAILS } from '@/app/manager/manager_utils/ManagerSharedConstants';
 
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
 
+const STORE_ORDER_COLUMN_COUNT = 6;
+
 export default function ManagerStoreOrderTable() {
   const { 
-    orders, totalOrders, fetchState, currentPage, setCurrentPage, setPrintData
+    orders, totalOrders, isLoading, isError, currentPage, setCurrentPage, setPrintData
   } = useStoreContext();
 
   const handlePrint = (o: Order) => {
@@ -20,7 +21,7 @@ export default function ManagerStoreOrderTable() {
       gymName: GYM_DETAILS.name, 
       gymPhone: GYM_DETAILS.phone, 
       receiptNo: `ORD-${o.id}`, 
-      date: new Date(o.createdAt).toLocaleDateString('en-IN'), 
+      date: formatDate(o.createdAt), 
       customerName: 'Customer', 
       items: (o.items || []).map((i) => ({ 
         name: i.product?.name ? (i.product?.unit ? `${i.product.name} (${i.product.unit})` : i.product.name) : '', 
@@ -39,7 +40,7 @@ export default function ManagerStoreOrderTable() {
       return `- ${name}\n  ${i.qty} x ${formatCurrency(i.price)} = ${formatCurrency(i.qty * i.price)}`;
     }).join('\n');
 
-    const text = `*${GYM_DETAILS.name.toUpperCase()}*\nPh: ${GYM_DETAILS.phone}\n\n*PAYMENT RECEIPT*\nReceipt No: ORD-${o.id}\nDate: ${new Date(o.createdAt).toLocaleDateString('en-IN')}\n\n*ITEMS:*\n${itemsText}\n\n*TOTAL: ${formatCurrency(o.total)}*\nPaid via: ${o.method}\n\nThank You!`;
+    const text = `*${GYM_DETAILS.name.toUpperCase()}*\nPh: ${GYM_DETAILS.phone}\n\n*PAYMENT RECEIPT*\nReceipt No: ORD-${o.id}\nDate: ${formatDate(o.createdAt)}\n\n*ITEMS:*\n${itemsText}\n\n*TOTAL: ${formatCurrency(o.total)}*\nPaid via: ${o.method}\n\nThank You!`;
     const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
     window.open(url, '_blank');
   };
@@ -47,11 +48,11 @@ export default function ManagerStoreOrderTable() {
   
   const totalPages = Math.ceil(totalOrders / MANAGER_ITEMS_PER_PAGE);
 
-  if (fetchState === 'loading') {
+  if (isLoading) {
     return (
       <div className="motion-safe:animate-pulse bg-card rounded-xl border border-border mt-4">
         {[...Array(5)].map((_, i) => (
-          <div key={i} className="h-16 border-b border-border flex items-center px-4 gap-4">
+          <div key={`skeleton-${i}`} className="h-16 border-b border-border flex items-center px-4 gap-4">
             <div className="h-4 bg-muted rounded w-16"></div>
             <div className="h-4 bg-muted rounded w-24"></div>
             <div className="h-4 bg-muted rounded w-20"></div>
@@ -63,7 +64,7 @@ export default function ManagerStoreOrderTable() {
     );
   }
 
-  if (fetchState === 'error') {
+  if (isError) {
     return (
       <div className="text-center py-16 bg-card rounded-2xl border border-danger/30 mt-4">
         <p className="text-danger font-medium">Failed to load orders.</p>
@@ -90,8 +91,17 @@ export default function ManagerStoreOrderTable() {
             {orders.map(o => (
               <tr 
                 key={o.id} 
-                className="hover:bg-primary-subtle transition-colors cursor-pointer"
+                className="hover:bg-primary-subtle motion-safe:transition-colors cursor-pointer"
+                tabIndex={0}
+                role="button"
+                aria-label={`Open order ORD-${o.id}`}
                 onClick={() => handlePrint(o)}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    handlePrint(o);
+                  }
+                }}
               >
                 <td className="px-4 py-3 text-sm font-mono text-foreground">
                   ORD-{String(o.id).padStart(4, '0')}
@@ -108,7 +118,7 @@ export default function ManagerStoreOrderTable() {
                   </span>
                 </td>
                 <td className="px-4 py-3 text-sm text-secondary">
-                  {new Date(o.createdAt).toLocaleDateString('en-IN')}
+                  {formatDate(o.createdAt)}
                 </td>
                 <td className="px-4 py-3 flex items-center gap-2">
                   <button 
@@ -116,7 +126,7 @@ export default function ManagerStoreOrderTable() {
                       e.stopPropagation();
                       handleWhatsApp(o);
                     }}
-                    className="p-1.5 rounded-lg bg-success-bg text-success hover:bg-success-bg/80 transition-colors"
+                    className="p-1.5 rounded-lg bg-success-bg text-success hover:bg-success-bg/80 motion-safe:transition-colors"
                     aria-label={`WhatsApp Receipt ORD-${o.id}`}
                     title="Send via WhatsApp"
                   >
@@ -127,7 +137,7 @@ export default function ManagerStoreOrderTable() {
                       e.stopPropagation();
                       handlePrint(o);
                     }}
-                    className="p-1.5 rounded-lg bg-input text-secondary hover:text-foreground transition-colors"
+                    className="p-1.5 rounded-lg bg-input text-secondary hover:text-foreground motion-safe:transition-colors"
                     aria-label={`Print Receipt ORD-${o.id}`}
                     title="Print Receipt"
                   >
@@ -138,7 +148,7 @@ export default function ManagerStoreOrderTable() {
             ))}
             {orders.length === 0 && (
               <tr>
-                <td colSpan={6} className="text-center py-10 text-secondary">
+                <td colSpan={STORE_ORDER_COLUMN_COUNT} className="text-center py-10 text-secondary">
                   No orders found.
                 </td>
               </tr>

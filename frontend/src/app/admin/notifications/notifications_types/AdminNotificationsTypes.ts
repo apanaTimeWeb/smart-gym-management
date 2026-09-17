@@ -21,4 +21,3 @@ export interface NotificationItem {
   unread: boolean;
 }
 
-export type NotificationsFetchState = 'idle' | 'loading' | 'success' | 'error';

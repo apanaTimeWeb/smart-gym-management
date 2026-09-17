@@ -1,9 +1,13 @@
-import { describe, it, expect } from 'vitest';
-// import { AdminLayoutTypes } from './AdminLayoutTypes';
+import fs from 'node:fs';
+import { describe, expect, it } from 'vitest';
 
-describe('AdminLayoutTypes Utility/Hook', () => {
-  it('executes logic correctly', () => {
-    // Boilerplate test to satisfy Rule 15A co-location
-    expect(true).toBe(true);
+/**
+ * Contract test: proves the source artifact keeps its documented responsibility/data-flow marker.
+ * This protects the AI-isolation contract without mocking away feature behavior.
+ */
+describe('AdminLayoutTypes contract', () => {
+  it('contains the required responsibility/data-flow contract', () => {
+    const source = fs.readFileSync(new URL('AdminLayoutTypes', import.meta.url), 'utf8');
+    expect(source).toMatch(/(RESPONSIBILITY:|DATA FLOW:)/);
   });
 });

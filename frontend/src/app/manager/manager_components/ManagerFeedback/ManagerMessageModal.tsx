@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Renders the send-message modal (WhatsApp/Email) for communicating with a member. Shared across the Members and Finance modules.
 'use client';
-
+// RESPONSIBILITY: Renders the send-message modal (WhatsApp/Email) for communicating with a member. Shared across the Members and Finance modules.
 import { useState } from 'react';
 import { X, Send, MessageCircle, Mail, CheckCircle, Phone, AtSign } from 'lucide-react';
 
@@ -79,7 +78,7 @@ export default function ManagerMessageModal({
  };
 
  return (
- <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+ <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-foreground/60 backdrop-blur-sm">
  <div
  className="bg-card rounded-2xl shadow-2xl w-full max-w-lg relative overflow-hidden border border-border"
  style={{ animation: 'fadeScaleIn 0.2s ease' }}
@@ -92,14 +91,14 @@ export default function ManagerMessageModal({
  <Icon size={18} color="white" />
  </div>
  <div>
- <p className="text-white font-bold text-base leading-tight">{label} Message</p>
- <p className="text-white/80 text-xs">Sending to {recipient.name}</p>
+ <p className="text-primary-foreground font-bold text-base leading-tight">{label} Message</p>
+ <p className="text-primary-foreground/80 text-xs">Sending to {recipient.name}</p>
  </div>
  </div>
  <button
  onClick={handleClose}
  disabled={sending}
- className="w-8 h-8 rounded-full bg-primary/20 hover:bg-primary/30 flex items-center justify-center transition-colors disabled:opacity-50"
+ className="w-8 h-8 rounded-full bg-primary/20 hover:bg-primary/30 flex items-center justify-center motion-safe:transition-colors disabled:opacity-50"
  >
  <X size={16} color="white" />
  </button>
@@ -108,7 +107,7 @@ export default function ManagerMessageModal({
  <div className="px-6 pt-4 pb-2">
  <div className="flex items-center gap-3 p-3 bg-input rounded-xl border border-border">
  <div
- className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0 bg-primary"
+ className="w-10 h-10 rounded-full flex items-center justify-center text-primary-foreground font-bold text-sm flex-shrink-0 bg-primary"
  >
  {recipient.name.charAt(0)}
  </div>
@@ -161,14 +160,14 @@ export default function ManagerMessageModal({
  <button
  onClick={handleClose}
  disabled={sending}
- className="flex-1 px-4 py-2.5 text-sm border border-border rounded-xl hover:bg-input text-foreground font-medium transition-colors disabled:opacity-50"
+ className="flex-1 px-4 py-2.5 text-sm border border-border rounded-xl hover:bg-input text-foreground font-medium motion-safe:transition-colors disabled:opacity-50"
  >
  Cancel
  </button>
  <button
  onClick={handleSend}
  disabled={sending || sent || !message.trim()}
- className={`flex-1 px-4 py-2.5 text-sm font-semibold text-white rounded-xl flex items-center justify-center gap-2 transition-all disabled:opacity-50 ${sent ? 'bg-success' : type === 'whatsapp' ? 'bg-success' : 'bg-info'}`}
+ className={`flex-1 px-4 py-2.5 text-sm font-semibold text-primary-foreground rounded-xl flex items-center justify-center gap-2 motion-safe:transition-all disabled:opacity-50 ${sent ? 'bg-success' : type === 'whatsapp' ? 'bg-success' : 'bg-info'}`}
  >
  {sent ? (
  <>
@@ -177,7 +176,7 @@ export default function ManagerMessageModal({
  </>
  ) : sending ? (
  <>
- <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full motion-safe:animate-spin" />
+ <span className="w-4 h-4 border-2 border-primary-foreground/40 border-t-primary-foreground rounded-full motion-safe:animate-spin" />
  Sending...
  </>
  ) : (

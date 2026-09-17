@@ -1,155 +1,40 @@
 'use client';
-// RESPONSIBILITY: Root client component for Trainer Profile page.
-// DATA FLOW: useTrainerProfileLogic → TrainerProfileMain
-
-import { User, Lock, Save, Loader2, Eye, EyeOff } from 'lucide-react';
+// RESPONSIBILITY: Renders the Trainer Profile personal/security forms and delegates state, validation, and mutations to the profile hook.
+// DATA FLOW: useTrainerProfileLogic → RHF/TanStack Query → TrainerProfileApi.
 import { useState } from 'react';
+import { Controller } from 'react-hook-form';
+import { Eye, EyeOff, Loader2, Lock, Save, User } from 'lucide-react';
 import { useTrainerProfileLogic } from '@/app/trainer/profile/profile_context/useTrainerProfileLogic';
 import { TRAINER_SPECIALIZATIONS } from '@/app/trainer/profile/profile_utils/TrainerProfileSharedConstants';
+import { useTrainerUnsavedChangesGuard } from '@/app/trainer/trainer_utils/TrainerUseWarnIfUnsavedChanges';
 
 export default function TrainerProfileMain() {
-  const {
-    activeTab, setActiveTab,
-    name, setName,
-    phone, setPhone,
-    specialization, toggleSpecialization,
-    currentPassword, setCurrentPassword,
-    newPassword, setNewPassword,
-    confirmPassword, setConfirmPassword,
-    saving, mounted,
-    user, displayInitial,
-    handleSaveProfile, handleChangePassword,
-  } = useTrainerProfileLogic();
+  const logic = useTrainerProfileLogic();
+  const { profileForm, passwordForm, user, activeTab, setActiveTab, profileMutation, passwordMutation, isPending, isError, isDirty } = logic;
+  const guardNavigation = useTrainerUnsavedChangesGuard(isDirty);
+  const [passwordVisibility, setPasswordVisibility] = useState({ current: false, next: false, confirm: false });
 
-  const [showCurrent, setShowCurrent] = useState(false);
-  const [showNew, setShowNew] = useState(false);
-  const [showConfirm, setShowConfirm] = useState(false);
+  if (isPending) return <div className="max-w-3xl mx-auto p-6 space-y-6"><div className="h-24 rounded-xl bg-card border border-border motion-safe:animate-pulse" /><div className="h-72 rounded-xl bg-card border border-border motion-safe:animate-pulse" /></div>;
+  if (isError || !user) return <div role="alert" className="max-w-3xl mx-auto p-6 text-sm text-danger">Unable to load your profile.</div>;
 
-  const tabs = [
-    { id: 'personal' as const, label: 'Personal Info', icon: User },
-    { id: 'security' as const, label: 'Security', icon: Lock },
+  const passwordFields = [
+    { name: 'currentPassword' as const, label: 'Current Password', key: 'current' as const },
+    { name: 'newPassword' as const, label: 'New Password', key: 'next' as const },
+    { name: 'confirmPassword' as const, label: 'Confirm New Password', key: 'confirm' as const },
   ];
 
-  return (
-    <div className="min-h-full pb-10">
-            <div className="max-w-3xl mx-auto space-y-6 p-6">
-
-      {/* Avatar card */}
-      <div
-        className="bg-card border border-border rounded-xl p-6 flex items-center gap-5 bg-gradient-to-b from-primary/10 to-white/5"
-      >
-        <div className="w-16 h-16 rounded-full bg-primary flex items-center justify-center text-2xl font-bold text-black shrink-0">
-          {mounted ? displayInitial : 'T'}
-        </div>
-        <div>
-          <p className="text-lg font-bold text-foreground">{mounted ? (user?.name ?? 'Trainer') : 'Trainer'}</p>
-          <p className="text-sm text-secondary">{mounted ? (user?.email ?? '') : ''}</p>
-          <span className="mt-1.5 inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-success-bg text-success text-xs font-semibold">
-            <span className="w-1.5 h-1.5 rounded-full bg-success motion-safe:animate-pulse" />
-            Active
-          </span>
-        </div>
-      </div>
-
-      {/* Tabs */}
-      <div className="flex gap-1 bg-input border border-border rounded-xl p-1 w-fit">
-        {tabs.map(({ id, label, icon: Icon }) => (
-          <button
-            key={id}
-            onClick={() => setActiveTab(id)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
-              activeTab === id ? 'bg-card text-foreground shadow-sm' : 'text-secondary hover:text-foreground'
-            }`}
-          >
-            <Icon size={16} strokeWidth={2} /> {label}
-          </button>
-        ))}
-      </div>
-
-      {/* Personal Info */}
-      {activeTab === 'personal' && (
-        <form onSubmit={handleSaveProfile} className="bg-card border border-border rounded-xl p-6 space-y-5">
-          <h2 className="text-base font-semibold text-foreground">Personal Information</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            <div>
-              <label className="block text-sm font-medium text-secondary mb-1.5">Full Name <span className="text-danger">*</span></label>
-              <input type="text" value={name} onChange={(e) => setName(e.target.value)} required
-                className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-foreground text-sm focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-secondary mb-1.5">Email Address</label>
-              <input type="email" value={mounted ? (user?.email ?? '') : ''} readOnly
-                className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-secondary text-sm cursor-not-allowed opacity-60" />
-              <p className="text-xs text-secondary mt-1">Email cannot be changed here.</p>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-secondary mb-1.5">Phone Number</label>
-              <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+91 XXXXX XXXXX"
-                className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-foreground text-sm focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-secondary mb-2">Specialization <span className="text-secondary font-normal">(select all that apply)</span></label>
-              <div className="flex flex-wrap gap-2">
-                {TRAINER_SPECIALIZATIONS.map((s) => (
-                  <button
-                    key={s}
-                    type="button"
-                    onClick={() => toggleSpecialization(s)}
-                    className={`px-3 py-1.5 rounded-full text-xs font-semibold border motion-safe:transition-all ${
-                      specialization.includes(s)
-                        ? 'bg-primary text-white border-primary shadow-sm'
-                        : 'bg-input text-secondary border-border hover:border-primary hover:text-foreground'
-                    }`}
-                  >
-                    {s}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-          <div className="flex justify-end pt-2">
-            <button type="submit" disabled={saving}
-              className="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-hover text-black font-semibold rounded-lg text-sm shadow-lg shadow-primary/20 motion-safe:transition-colors disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
-              {saving ? <Loader2 size={16} strokeWidth={2} className="motion-safe:animate-spin" /> : <Save size={16} strokeWidth={2} />}
-              Save Changes
-            </button>
-          </div>
-        </form>
-      )}
-
-      {/* Security */}
-      {activeTab === 'security' && (
-        <form onSubmit={handleChangePassword} className="bg-card border border-border rounded-xl p-6 space-y-5">
-          <h2 className="text-base font-semibold text-foreground">Change Password</h2>
-          <div className="space-y-4 max-w-md">
-            {[
-              { label: 'Current Password', value: currentPassword, setter: setCurrentPassword, show: showCurrent, toggle: () => setShowCurrent(v => !v) },
-              { label: 'New Password', value: newPassword, setter: setNewPassword, show: showNew, toggle: () => setShowNew(v => !v) },
-              { label: 'Confirm New Password', value: confirmPassword, setter: setConfirmPassword, show: showConfirm, toggle: () => setShowConfirm(v => !v) },
-            ].map(({ label, value, setter, show, toggle }) => (
-              <div key={label}>
-                <label className="block text-sm font-medium text-secondary mb-1.5">{label} <span className="text-danger">*</span></label>
-                <div className="relative">
-                  <input type={show ? 'text' : 'password'} value={value} onChange={(e) => setter(e.target.value)} required placeholder="••••••••"
-                    className="w-full px-4 py-2.5 pr-10 bg-input border border-border rounded-lg text-foreground text-sm focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary" />
-                  <button type="button" onClick={toggle} aria-label={show ? 'Hide password' : 'Show password'}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary hover:text-foreground focus-visible:outline-none">
-                    {show ? <EyeOff size={16} strokeWidth={2} /> : <Eye size={16} strokeWidth={2} />}
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className="flex justify-end pt-2">
-            <button type="submit" disabled={saving}
-              className="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-hover text-black font-semibold rounded-lg text-sm shadow-lg shadow-primary/20 motion-safe:transition-colors disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
-              {saving ? <Loader2 size={16} strokeWidth={2} className="motion-safe:animate-spin" /> : <Lock size={16} strokeWidth={2} />}
-              Update Password
-            </button>
-          </div>
-        </form>
-      )}
+  return <div className="min-h-full pb-10"><div className="max-w-3xl mx-auto space-y-6 p-6">
+    <div className="bg-card border border-border rounded-xl p-6 flex items-center gap-5"><div className="w-16 h-16 rounded-full bg-primary flex items-center justify-center text-2xl font-bold text-black shrink-0">{logic.displayInitial}</div><div><p className="text-lg font-bold text-foreground">{user.name}</p><p className="text-sm text-secondary">{user.email}</p></div></div>
+    <div className="flex flex-wrap gap-1 bg-input border border-border rounded-xl p-1 w-fit">
+      <button type="button" onClick={() => void guardNavigation(() => setActiveTab('personal'))} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium motion-safe:transition-colors ${activeTab === 'personal' ? 'bg-card text-foreground shadow-sm' : 'text-secondary hover:text-foreground'}`}><User size={16} />Personal Info</button>
+      <button type="button" onClick={() => void guardNavigation(() => setActiveTab('security'))} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium motion-safe:transition-colors ${activeTab === 'security' ? 'bg-card text-foreground shadow-sm' : 'text-secondary hover:text-foreground'}`}><Lock size={16} />Security</button>
     </div>
-    </div>
-  );
+    {activeTab === 'personal' && (<form onSubmit={profileForm.handleSubmit((values) => profileMutation.mutate(values))} className="bg-card border border-border rounded-xl p-6 space-y-5"><h2 className="text-base font-semibold text-foreground">Personal Information</h2><div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+      <div><label htmlFor="trainer-profile-name" className="block text-sm font-medium text-secondary mb-1.5">Full Name</label><input id="trainer-profile-name" {...profileForm.register('name')} className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-foreground text-sm" />{profileForm.formState.errors.name && <p className="text-xs text-danger mt-1">{profileForm.formState.errors.name.message}</p>}</div>
+      <div><label htmlFor="trainer-profile-email" className="block text-sm font-medium text-secondary mb-1.5">Email Address</label><input id="trainer-profile-email" value={user.email} readOnly className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-secondary text-sm cursor-not-allowed opacity-60" /></div>
+      <div><label htmlFor="trainer-profile-phone" className="block text-sm font-medium text-secondary mb-1.5">Phone Number</label><input id="trainer-profile-phone" {...profileForm.register('phone')} className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-foreground text-sm" />{profileForm.formState.errors.phone && <p className="text-xs text-danger mt-1">{profileForm.formState.errors.phone.message}</p>}</div>
+      <Controller control={profileForm.control} name="specialization" render={({ field }) => <div><span className="block text-sm font-medium text-secondary mb-2">Specialization</span><div className="flex flex-wrap gap-2">{TRAINER_SPECIALIZATIONS.map((item) => { const selected = field.value.includes(item); return <button key={item} type="button" aria-pressed={selected} onClick={() => field.onChange(selected ? field.value.filter((value) => value !== item) : [...field.value, item])} className={`px-3 py-1.5 rounded-full text-xs font-semibold border motion-safe:transition-all ${selected ? 'bg-primary text-white border-primary' : 'bg-input text-secondary border-border'}`}>{item}</button>; })}</div></div>} />
+    </div><div className="flex justify-end"><button type="submit" disabled={profileMutation.isPending} className="min-w-32 flex items-center justify-center gap-2 px-5 py-2.5 bg-primary text-black font-semibold rounded-lg disabled:opacity-60">{profileMutation.isPending ? <><Loader2 size={16} className="motion-safe:animate-spin" />Saving…</> : <><Save size={16} />Save Changes</>}</button></div></form>)}
+    {activeTab === 'security' && (<form onSubmit={passwordForm.handleSubmit((values) => passwordMutation.mutate(values))} className="bg-card border border-border rounded-xl p-6 space-y-5"><h2 className="text-base font-semibold text-foreground">Change Password</h2>{passwordFields.map((field) => { const visible = passwordVisibility[field.key]; return <div key={field.name} className="max-w-md"><label htmlFor={`trainer-${field.name}`} className="block text-sm font-medium text-secondary mb-1.5">{field.label}</label><div className="relative"><input id={`trainer-${field.name}`} type={visible ? 'text' : 'password'} {...passwordForm.register(field.name)} className="w-full px-4 py-2.5 pr-10 bg-input border border-border rounded-lg text-foreground text-sm" /> <button type="button" aria-label={visible ? 'Hide password' : 'Show password'} onClick={() => setPasswordVisibility((current) => ({ ...current, [field.key]: !current[field.key] }))} className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary hover:text-foreground">{visible ? <EyeOff size={16} /> : <Eye size={16} />}</button></div>{passwordForm.formState.errors[field.name] && <p className="text-xs text-danger mt-1">{passwordForm.formState.errors[field.name]?.message}</p>}</div>; })}<div className="flex justify-end"><button type="submit" disabled={passwordMutation.isPending} className="min-w-36 flex items-center justify-center gap-2 px-5 py-2.5 bg-primary text-black font-semibold rounded-lg disabled:opacity-60">{passwordMutation.isPending ? <><Loader2 size={16} className="motion-safe:animate-spin" />Updating…</> : <><Lock size={16} />Update Password</>}</button></div></form>)}
+  </div></div>;
 }

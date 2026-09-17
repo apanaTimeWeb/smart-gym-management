@@ -1,99 +1,152 @@
-# Admin Module — Feature Map
+# Admin — Feature Map
 
 ## Module Purpose
-The Admin module is the overarching control center for gym operations. It provides full access to manage branches, global settings, staff (HR), global plans, and overall finance/sales metrics. It enforces role isolation from Manager and Trainer modules.
+The Admin module is the platform-level operational workspace for the gym-management application. It is used by the Admin role to monitor organization-wide performance, manage branches, members, plans, staff, settings, financial reporting, operational exceptions, and security/audit information exposed to the Admin role. Users can review business metrics, perform documented Admin-only configuration and CRUD workflows, investigate operational issues, and use supported reports and exports. The module is strictly isolated from Manager, Trainer, and other role-specific business modules; only approved global framework, session, API transport, design-system, and monitoring infrastructure may be imported.
 
 ## Directory Structure
 
-| Folder | Responsibility |
-|---|---|
-| `admin_components/AdminLayout/` | App shell: fixed sidebar, sticky header, collapsible navigation |
-| `admin_components/AdminFeedback/` | Shared feedback: toast, confirm modal, message modal, bulk messaging |
-| `admin_components/AdminShared/` | Generic primitives: pagination, stat card, searchable dropdown |
-| `admin_utils/` | Shared constants: nav items, items-per-page, placeholders |
-| `admin_store/` | Global state (Zustand) for branches and selected branch filter |
-| `dashboard/` | High-level analytics, revenue trends, global alerts |
-| `branches/` | CRUD operations for physical gym locations |
-| `finance/` | Global payment tracking, revenue reporting |
-| `sales/` | Membership sales reports, aggregate performance |
-| `hr/` | Staff management (Managers, Trainers, Admins) |
-| `plans/` | Global membership plans and pricing definitions |
-| `settings/` | System-wide configuration |
-| `notifications/` | Admin-level alerts and global communication |
+| Folder | Responsibility | Key Files / Contents |
+|---|---|---|
+| `admin_components/AdminLayout/` | Admin shell, navigation, header search, notifications, profile entry, usage alert | `AdminLayout.tsx`, `AdminHeader.tsx`, `AdminSidebar.tsx`, `AdminHeaderSearch.tsx`, `useAdminHeaderMemberSearch.ts` |
+| `admin_components/AdminFeedback/` | Confirmation, toast, message, and bulk-message primitives | `AdminConfirmProvider.tsx`, `AdminConfirmModal.tsx`, `AdminToast.tsx`, `AdminMessageModal.tsx` |
+| `admin_components/AdminShared/` | Zero-business-logic Admin UI primitives | `AdminPagination.tsx`, `AdminSearchableDropdown.tsx`, `AdminTableSkeleton.tsx`, `AdminStatCard.tsx` |
+| `admin_components/AdminQrScanner/` | Admin QR scan workflow UI and client-private scan state | `AdminQrScannerModal.tsx`, `useAdminQrScannerLogic.ts` |
+| `admin_utils/` | Admin-owned utility contracts and infrastructure adapters | `useAdminDebounce.ts`, `useAdminUrlQuerySync.ts`, `useAdminUnsavedChangesGuard.ts`, `AdminMonitoring.ts` |
+| `admin_store/` | Admin-wide UI/session-shell state only | `useAdminGlobalStore.ts`, `useAdminImpersonationStore.ts`, `useAdminToastStore.ts` |
+| `admin_types/` | Admin-wide type contracts | Admin prop/state/shared type definitions |
+| `<module>/<module>_mocks/fixtures/` | Module-owned feature datasets | One fixture file per Admin feature/module |
+| `<module>/<module>_mocks/handlers/` | Module-owned feature handlers | One handler file per Admin feature/module |
+| `dashboard/` | Organization-wide KPIs, charts, alerts, branch ranking | Dashboard route + module API/types/components/tests/docs |
+| `branches/` | Branch registry and branch detail/read-only metrics | Branch route + API/types/components/tests/docs |
+| `finance/` | Read-only finance/payment/revenue reporting | Finance route + API/types/components/tests/docs |
+| `finance/pnl/` | Branch P&L comparison/reporting | P&L route + charts/table/period controls |
+| `sales/` | Sales and membership reporting | Sales route + overview/report tables |
+| `hr/` | Staff, payroll, performance, ledger workflows | HR route + staff/payroll/performance subfeatures |
+| `plans/` | Membership plan catalog and plan revenue views | Plans route + CRUD form/grid + revenue view |
+| `settings/` | Admin configuration and security settings | Settings route + form sections |
+| `notifications/` | Admin notification feed and read-state mutations | Notifications route + API/query/list |
+| `members/` | Admin member directory, search/filtering and profile workflow | Members route + API/types/query/table/profile |
+| `attendance/` | Read-only attendance records, summary and trend | Attendance route + table/KPIs/trend |
+| `announcements/` | Admin announcement creation, editing, publication and pinning | Announcements route + form/table/API/MSW |
+| `audit_logs/` | Security/audit event investigation | Audit route + filters/table/detail drawer/API/MSW |
+| `blacklist/` | Blacklist lifecycle and branch-scope workflows | Blacklist route + table/form/cross-gym view/API/MSW |
+| `coupons/` | Coupon CRUD and status workflows | Coupons route + form/table/API/MSW |
+| `data-export/` | Export creation and export-job history | Data Export route + RHF/Zod form/history/API/MSW |
+| `gym-health-alerts/` | Operational alert monitoring and resolution/dismissal | Health Alerts route + table/KPIs/API/MSW |
+| `payouts/` | Read-only payout and P&L summaries | Payout route + query-driven reporting |
+| `permissions/` | Admin permission/capability administration UI | Permissions route + API/query/UI |
+| `profile/` | Admin profile and password management | Profile route + RHF/Zod + API/query |
+| `reports/` | Date-range report aggregation and report views | Reports route + URL-driven range state |
+| `subscriptions/` | Subscription/plans/invoice/payment-method administration | Subscription route + API/query/mutations |
+| `usage/` | Usage limits, plan usage and upgrade request workflow | Usage route + usage API/UI |
 
-## Feature Inventory
+## Route / Feature Inventory
 
-| Feature | Path | Purpose | Main API Calls | Status |
+| Feature | Route | User Capability | Main API Areas | State Pattern |
 |---|---|---|---|---|
-| Dashboard | `/admin/dashboard` | KPI overview, global charts | `GET /admin/dashboard/*` | ✅ Live |
-| Branches | `/admin/branches` | Manage gym locations | `GET/POST /admin/branches` | ✅ Live |
-| Finance | `/admin/finance` | System-wide payments | `GET /admin/finance/*` | ✅ Live |
-| Sales | `/admin/sales` | Aggregate membership sales | `GET /admin/sales/*` | ✅ Live |
-| HR | `/admin/hr` | Staff directory & roles | `GET/POST /admin/hr` | ✅ Live |
-| Plans | `/admin/plans` | Manage membership pricing | `GET/POST /admin/plans` | ✅ Live |
-| Settings | `/admin/settings` | Global configuration | `GET/PATCH /admin/settings` | ✅ Live |
-| Notifications | `/admin/notifications` | Alerts and messages | `GET/POST /admin/notifications` | ✅ Live |
+| Dashboard | `/admin/dashboard` | Review platform KPIs, trends, expiring members and alerts | `/admin/dashboard/*` | TanStack Query + URL range |
+| Members | `/admin/members` | Search, filter, paginate and inspect Admin member records | `/admin/members/*` | TanStack Query + module Zustand + URL state |
+| Attendance | `/admin/attendance` | Review attendance records and trends | `/admin/attendance/*` | TanStack Query + module Zustand + URL state |
+| Plans | `/admin/plans` | Review/create/update/delete plans and inspect plan revenue | `/admin/plans/*` | TanStack Query + URL state |
+| Sales | `/admin/sales` | Review sales summaries, membership report and pending payments | `/admin/sales/*` | TanStack Query + URL state |
+| Finance | `/admin/finance` | Review payments, revenue and expenses; finance view remains reporting-oriented | `/admin/finance/*` | TanStack Query + URL state |
+| Branch P&L | `/admin/finance/pnl` | Compare branch profitability across configured periods | `/admin/finance/pnl/*` | TanStack Query + URL period/filter state |
+| HR | `/admin/hr` | Manage Admin-visible staff/payroll workflows and inspect performance | `/admin/hr/*` | TanStack Query + UI state + URL state |
+| Staff Performance | `/admin/hr/performance` | Review performance metrics by period/search | `/admin/hr/performance` | TanStack Query |
+| Branches | `/admin/branches` | Review branch registry and branch detail metrics | `/admin/branches/*` | TanStack Query |
+| Payouts | `/admin/payouts` | Review payout and P&L summaries | `/admin/payouts/*` | TanStack Query + URL state |
+| Announcements | `/admin/announcements` | Create/edit/delete/pin announcements | `/admin/announcements/*` | TanStack Query + Zustand + URL state |
+| Audit Logs | `/admin/audit_logs` | Search/filter/paginate audit events and inspect detail | `/admin/audit_logs/*` | TanStack Query + Zustand + URL state |
+| Blacklist | `/admin/blacklist` | Add/remove/toggle/propagate blacklist entries | `/admin/blacklist/*` | TanStack Query + Zustand + URL state |
+| Coupons | `/admin/coupons` | Create/update/delete/toggle coupons | `/admin/coupons/*` | TanStack Query + Zustand + URL state |
+| Data Export | `/admin/data-export` | Create export jobs and manage export history | `/admin/data-export/*` | TanStack Query + Zustand + RHF/Zod |
+| Gym Health Alerts | `/admin/gym-health-alerts` | Review alerts and resolve/dismiss supported alerts | `/admin/gym-health-alerts/*` | TanStack Query + Zustand + URL state |
+| Notifications | `/admin/notifications` | Review notifications and mark one/all as read | `/admin/notifications/*` | TanStack Query |
+| Permissions | `/admin/permissions` | Review and manage Admin-visible permissions | `/admin/permissions/*` | TanStack Query + UI state |
+| Profile | `/admin/profile` | Update profile and change password | `/admin/adminProfile/*` | TanStack Query + RHF/Zod + dirty guard |
+| Reports | `/admin/reports` | Review configured reports over shareable date ranges | `/admin/reports/*` | TanStack Query + URL state |
+| Settings | `/admin/settings` | Update Admin-configurable system settings | `/admin/settings/*` | TanStack Query + RHF/Zod + dirty guard |
+| Subscriptions | `/admin/subscriptions` | Review subscription, plans, invoices and payment methods; execute documented subscription mutations | `/admin/subscriptions/*` | TanStack Query + confirm |
+| Usage | `/admin/usage` | Review usage limits and submit supported upgrade request | `/admin/usage/*` | TanStack Query |
 
-## Data and State Architecture
+## API and State Contract
 
-- **Server-state query keys:** N/A — this module uses Context + Zustand
-- **Zustand stores:** `useAdminGlobalStore` for selected branch, plus module-scoped stores (e.g., `useAdminPlansStore`)
-- **Context providers:** Contexts for complex module data flow (e.g., `AdminHrContext`, `AdminPlansContext`, `AdminConfirmProvider`)
-- **Local-storage keys:** None — auth token stored in HTTP-only cookie
-- **MSW handler file:** Not yet configured — all API calls go to real backend
+All server data is owned by TanStack Query. Module Zustand stores contain UI-only state such as active filters, modal state, selected records, tabs, and pagination controls. API responses are validated at the boundary with Zod, and module API calls use centralized URL configuration files. Feature-specific mocked server data lives inside each owning feature under `<module>/<module>_mocks/fixtures/` and `<module>/<module>_mocks/handlers/`. `admin_mocks/handlers/AdminMockHandlers.ts` is registration-only and contains no business data. No Admin business state is owned by React Context or a global Zustand server-data store.
 
-## API Contract
+Representative namespaced query keys include `['admin','members','list',queryParams]`, `['admin','finance','payments',queryParams]`, `['admin','sales','pending-payments',queryParams,...]`, `['admin','notifications','list']`, and the corresponding feature-specific detail/KPI keys.
 
-All API calls go through the centralized `apiFetch` wrapper at `@/lib/api`.
+## Shareable List State
 
-**Response envelope:** `{ success: boolean, message: string, data: T | null, meta?: PaginationMeta }`
+Filterable/paginated Admin views use URL query parameters through `useAdminUrlQuerySync.ts` or an equivalent feature-owned URL-state implementation. Search inputs that trigger backend requests use the Admin debounce utility with the documented delay. Query keys contain the active request parameters so cached results cannot collide across filter/page combinations.
 
-## Permissions and Security
+## Security / Permissions
 
-- Role: `SUPERADMIN` — all routes under `/admin/*` require authenticated session with Super Admin role
-- Auth: JWT stored in `gymsmart_token` HTTP-only cookie; injected by `apiFetch` wrapper
-- Destructive actions: Protected by `AdminConfirmProvider` (confirm modal — `useConfirm` hook)
-- Cross-role isolation: Zero imports from `/manager` or `/trainer` (enforced in `admin_forbidden.md`)
+The Admin module is intended for the documented Admin role. Frontend permission UI is not treated as a replacement for backend authorization. Restricted/destructive UI actions are hidden or confirmed through the Admin confirmation infrastructure before mutation. Sensitive identifiers are displayed with copy affordances where required, and sensitive personal fields are masked in list views through the approved masking utility. No cross-role business imports are allowed.
 
-## Loading, Empty, Error States
+## Loading / Empty / Error Contract
 
-- Uses Next.js `loading.tsx` and `error.tsx` patterns in every sub-module.
-- Uses skeleton loading states for tables and grid cards.
-- Fallback empty states provided when no data exists.
+Every route has a framework-reserved `page.tsx`, `loading.tsx`, `error.tsx`, and `not-found.tsx` where applicable. Complex data sections use shape-matched skeletons rather than full-page generic spinners. Entity lists expose dedicated empty-state components. Query failures remain inline unless explicitly configured to enter an Error Boundary; route errors render a module-specific retry action without exposing internal stack traces.
 
 ## Edge Cases / AI Warnings
 
-- **Never use `window.confirm()`** for destructive actions — always use `useConfirm()` hook from `AdminConfirmProvider`
-- **No cross-module imports** — if you need a type from another module, duplicate it (intentional pattern per Rule 2)
-- **Server Components** (`page.tsx`) must never import or render Client-Component providers directly
-- **Sidebar active state** uses `bg-primary-subtle` + `border-l-2 border-primary` with glow shadow — NOT solid `bg-primary`
-- **Z-index scale**: header = `z-20`, dropdowns = `z-30`, modals = `z-40`, toasts = `z-50`
+1. Never reintroduce imports from Manager, Trainer, Superadmin, or another role-owned business module.
+2. Never place backend responses, API loading state, or API errors in Zustand or Context.
+3. Never bypass the module API client by reading MSW fixtures directly from production UI code.
+4. Never use client-only list slicing as the source of truth when an endpoint has server-side pagination/filter parameters.
+5. Never execute destructive or financial Admin mutations on a single click; use the documented confirmation workflow.
+6. Never hardcode backend success/error messages when the mutation response supplies `message`.
+7. Never use arbitrary Tailwind colors or direct `text-white`/`text-black` color utilities; use documented semantic tokens.
+8. Never use `key={index}` for dynamic/filterable entities.
+9. Never remove the Admin dirty-state guard from complex forms or password/profile/settings workflows.
+10. Never mark runtime/build/security verification as PASS unless the consuming project actually runs those gates successfully.
+
+## Module-Owned Mock Ownership
+
+Each Admin sub-feature owns its own fixture and handler folders. The root `admin_mocks/handlers/AdminMockHandlers.ts` only aggregates/registers those handlers. Global MSW bootstrap may register this aggregate, but must not contain Admin business records, Admin-specific transformations, or feature logic.
+
+## External Infrastructure Dependencies
+
+Approved external dependencies are limited to framework/application infrastructure such as `@/lib/api`, `@/lib/logger`, global authentication/session/permission infrastructure, the global design token system, Next.js routing, TanStack Query, Zod, React Hook Form, and the application MSW bootstrap. Any unavoidable dependency outside this list requires an update to this feature map.
+
 
 ## Rule Compliance Checklist
 
-- [x] Rule 1: Micro-modularization — module-prefixed subfolders, file size ceilings
-- [x] Rule 2: Total Role Isolation — zero cross-role imports
-- [x] Rule 3: Hyper-descriptive naming — `Admin` prefix on all files
-- [x] Rule 3B: Centralized data — status maps in `statusBadgeConfig.ts`, URLs in `admin_url_config.ts`
-- [x] Rule 4: Theme Independence — Tailwind tokens via `globals.css`, no hardcoded hex
-- [x] Rule 5: Smart State Management — Context/Zustand combination, no server state in Zustand
-- [x] Rule 6: Logic/UI Separation — custom hooks extract all useEffect/logic
-- [x] Rule 7: Type Isolation — `*_types/` folders, no inline interfaces
-- [x] Rule 8: Server/Client Boundary — `page.tsx` = Server, `*Main.tsx` = Client
-- [x] Rule 9: Loading/error/not-found — `loading.tsx` + `error.tsx` in every module
-- [x] Rule 10: Absolute imports — `@/app/admin/...` throughout, no relative paths
-- [x] Rule 11: Centralized URL Config — `admin_url_config.ts` per module
-- [x] Rule 13: Feature Map — this document, updated same commit as code changes
-- [x] Rule 14: Backend-driven messages — toasts display backend `message` strings
-- [x] Rule 19: Clickable table rows — all tables use `cursor-pointer`, no View/Eye button
-- [x] Rule 26: Loading button states — `Loader2` spinners on all async actions
-- [x] Rule 32: No barrel files — direct named imports only
-- [x] Rule 40: `_forbidden.md` present with 5+ specific entries
-- [x] Rule 43: Sensitive data masked — phone numbers use `maskSensitiveData()`
-- [x] Rule 44: No console.log — removed from all production files
-- [x] Rule 71: Double verification — destructive actions use `useConfirm()` modal
-- [x] Rule 73: `import type` — used for all type-only imports
-- [x] Design §3: Sidebar active = subtle gold border + bg (NOT solid primary)
-- [x] Design §12: Z-index scale — header z-20, dropdowns z-30, modals z-40, toasts z-50
-- [x] Design §28: Surface elevation — `bg-popover` for dropdowns, `bg-overlay` for modals
-- [x] Design §29: `motion-safe:` guards on all transitions and animations
+- [x] Module isolation: no Admin source import crosses into another business/role module in the static scan.
+- [x] Feature ownership: Admin business code, mock fixtures, MSW handlers, tests and module docs are owned by `admin/`.
+- [x] File-size ceilings: no component, hook, store, schema/type or API ceiling violation in the final static scan.
+- [x] Naming and reserved routes: framework-reserved route filenames are preserved; non-reserved Admin-owned source filenames use the Admin/module naming convention.
+- [x] Absolute imports: no relative source imports detected.
+- [x] Type safety syntax scan: no explicit `any`, `@ts-ignore`, or `@ts-nocheck` directives detected.
+- [x] Server/client boundary markers: files using client-only hooks/browser listeners carry the required client marker; route entry files remain server-oriented.
+- [x] API boundary: Admin APIs use centralized URL configuration and Zod response schemas through `apiFetch`.
+- [x] URL-shareable list state: Admin list filters/pagination are synchronized through `useAdminUrlQuerySync` where module stores own those values; existing URL-native features retain their own implementations.
+- [x] Backend-driven mutation feedback: supported API mutation success messages use the response `message` rather than invented success copy.
+- [x] Toast deduplication: every Admin toast call has an explicit stable `id`.
+- [x] Theme token scan: no hardcoded color utilities/hex values remain in Admin production TS/TSX; modal/popover/shell surfaces use documented tokens.
+- [x] Motion safety: transition/animation utilities in Admin production UI are guarded by `motion-safe:`.
+- [x] Mobile hover safety: hover-revealed table actions use the required mobile-visible fallback pattern.
+- [x] Loading/error/not-found: every Admin route has the expected framework state files; route errors provide retry behavior.
+- [x] Storage/logging safety: no direct browser storage access or `console.log` remains in Admin source.
+- [x] Media safety: no raw `<img>` element remains in Admin source.
+- [x] Dynamic key safety: Admin entity collections do not rely on `key={index}` patterns in the static scan.
+- [x] Destructive confirmations: documented destructive Admin mutations route through the Admin confirmation provider.
+- [x] Complex form architecture: Profile and Settings complex forms use React Hook Form + Zod and the Admin unsaved-changes guard.
+- [ ] Full dependency-backed TypeScript/lint suite: NOT VERIFIED in this environment because the repository dependency installation could not be completed.
+- [ ] Full Vitest/RTL suite: NOT VERIFIED for the same dependency/runtime limitation; test source was statically inspected.
+- [ ] Playwright critical journeys: NOT VERIFIED; must be run in the consuming application.
+- [ ] Production Next.js build: NOT VERIFIED; must be run after dependency installation.
+- [ ] SCA/secret/security CI gates: NOT VERIFIED; must be executed in the consuming repository CI.
+
+The unchecked items are external execution gates, not unverified claims of code correctness. They must remain unchecked until the consuming project actually runs them successfully.
+
+## Shell Aggregation Exception
+
+`admin_components/AdminLayout/` is the approved Admin application-shell aggregation boundary. `AdminHeaderSearch`, `AdminHeaderNotifications`, `AdminHeaderProfile`, and `AdminUsageAlert` may consume minimal read-only data from Admin feature APIs because they render persistent shell affordances present across routes. This is an explicit Admin-only exception: shell components must not mutate feature state, own feature business rules, import feature fixtures/handlers, or become a substitute for feature-local query logic.
+
+## Branch Reference Isolation
+
+`members`, `attendance`, `hr`, and `reports` intentionally own minimal branch-reference contracts and MSW fixtures because they require branch dropdowns but must not import the Branches business module. Their API calls reuse the backend branch-reference endpoint with a consumer discriminator; their module-local handlers intercept only their own discriminator.
+
+## Settings Permission Reference Isolation
+
+`settings` owns a minimal role-permission reference contract for the Roles view. It does not import the Permissions business module. Its module-local MSW handler serves the Settings consumer discriminator using a settings-owned fixture.

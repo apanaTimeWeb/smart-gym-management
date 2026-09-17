@@ -1,17 +1,16 @@
+'use client';
 // RESPONSIBILITY: Renders the trainer's own monthly attendance summary (present, absent, weekly-off, rate).
 // DATA FLOW: props (records from useAttendanceRecordsQuery via TrainerAttendanceMain) → computed display
-'use client';
-
 import { useMemo } from 'react';
 import { CheckCircle2, XCircle, Coffee, TrendingUp } from 'lucide-react';
 import { getUser } from '@/lib/api';
-import type { AttendanceRecord } from '@/app/trainer/attendance/attendance_types/attendance_types';
+import type { AttendanceRecord } from '@/app/trainer/attendance/attendance_types/TrainerAttendance_types';
 
-interface Props {
+interface TrainerAttendanceSummaryCardProps {
   records: AttendanceRecord[];
 }
 
-export default function TrainerAttendanceSummaryCard({ records }: Props) {
+export default function TrainerAttendanceSummaryCard({ records }: TrainerAttendanceSummaryCardProps) {
   const user = getUser();
 
   const summary = useMemo(() => {

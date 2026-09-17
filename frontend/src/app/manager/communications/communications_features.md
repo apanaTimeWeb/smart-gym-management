@@ -1,191 +1,121 @@
 # Manager Communications — Feature Map
 
 ## Module Purpose
-The Communications module is the manager's dedicated bulk messaging hub. It solves the core
-daily task of sending targeted renewal reminders, payment due alerts, promotional messages,
-and event announcements to filtered member segments — without needing to go through the
-Members table and message each person individually. The manager selects an audience segment
-(e.g. "expiring in 7 days"), picks a channel (WhatsApp or Email), customises a pre-filled
-template, previews the recipient list, and dispatches the campaign.
-
-It also includes an **Automations** system where managers can toggle and configure background triggers like Birthday and Work Anniversary messages to automatically dispatch without manual intervention.
-
-A **Churn Recovery / Win-Back** sub-section allows the manager to see all exited/churned members in a dedicated table, understand how long ago they left, filter by exit reason, and send a personalised win-back message (with auto-filled templates based on days since exit) in a single flow — without navigating to the Members list or manually building a segment.
-
-A full send history with status tracking is available in the History tab. This module is strictly read-only with
-respect to member data — it never modifies member records.
+Manager Communications is the tenant-scoped outbound messaging workspace. Managers can review campaign history, see communication KPIs, choose recipient segments, send WhatsApp or Email campaigns, manage scheduled automations, and run churn-recovery outreach. The module owns its message/campaign data, query state, forms, fixtures, and MSW handlers. It does not own member master-data business logic or billing workflows.
 
 ## Directory Structure
-
 | Folder | Responsibility | Key Files |
 |---|---|---|
-| `communications_components/ManagerCommunicationsMain/` | Root client orchestrator — KPIs, tab switcher, conditionally renders Composer, History, Automations, or ChurnRecoveryTab | `ManagerCommunicationsMain.tsx` |
-| `communications_components/ManagerCommunicationsKPIs/` | 4 stat cards: Total Sent, WhatsApp Sent, Emails Sent, Campaigns This Month | `ManagerCommunicationsKPIs.tsx` |
-| `communications_components/ManagerCommunicationsSegmentPicker/` | Grid of audience segment cards with live recipient count badge | `ManagerCommunicationsSegmentPicker.tsx` |
-| `communications_components/ManagerCommunicationsComposer/` | Full compose UI — segment picker, channel toggle, title, subject, message body, send action, preview modal | `ManagerCommunicationsComposer.tsx` |
-| `communications_components/ManagerCommunicationsAutomations/` | UI for enabling/disabling automated background triggers (Birthdays, Anniversaries) and editing their WhatsApp templates. | `ManagerCommunicationsAutomations.tsx` |
-| `communications_components/ManagerCommunicationsHistory/` | Paginated history table of past campaigns with search + channel filter | `ManagerCommunicationsHistory.tsx` |
-| `communications_components/ManagerChurnRecovery/` | Churn Recovery tab: KPIs, churned member table, win-back composer drawer | `ManagerChurnRecoveryTab.tsx`, `ManagerChurnRecoveryKPIs.tsx`, `ManagerChurnRecoveryTable.tsx`, `ManagerChurnRecoveryTableRow.tsx`, `ManagerChurnRecoveryComposer.tsx`, `ManagerChurnRecoveryEmptyState.tsx` |
-| `communications_api/` | Mock API: fetchCampaigns, fetchKPIs, fetchSegmentRecipients, sendCampaign, fetchChurnedMembers, fetchChurnKPIs, sendWinBackMessage | `ManagerCommunicationsApi.ts` |
-| `communications_context/` | Business logic hooks — queries, mutations, filtered data | `useManagerCommunicationsLogic.ts`, `useManagerChurnRecoveryLogic.ts` |
-| `communications_store/` | Zustand store — activeTab, composer fields, history filters, churn filters, pagination | `useManagerCommunicationsStore.ts` |
-| `communications_types/` | TypeScript types: CommCampaign, CommRecipient, CommKPIData, CommFormValues, CommSegment, CommChannel, CommStatus, ChurnedMember, ChurnKPIData, WinBackRecord, ChurnReasonType, WinBackTemplateTier | `communications_types.ts` |
-| `communications_utils/` | Constants, Zod schema, status styles, churn reason labels | `ManagerCommunicationsSharedConstants.ts` |
-| `communications_fixtures/` | Mock data, message templates, win-back templates, automations mocks | `ManagerCommunicationsMockData.ts` |
+| `communications_api/` | Feature-owned responsibility for the communications module. | `ManagerCommunicationsApi.ts` |
+| `communications_components/` | Feature-owned responsibility for the communications module. | `—` |
+| `communications_context/` | Feature-owned responsibility for the communications module. | `ManagerUseManagerChurnRecoveryLogic.ts; ManagerUseManagerChurnRecoveryMutations.ts; ManagerUseManagerChurnRecoveryQueries.ts; ManagerUseManagerCommunicationsLogic.ts; ManagerUseManagerCommunicationsMutations.ts; ManagerUseManagerCommunicationsQueries.ts` |
+| `communications_fixtures/` | Feature-owned responsibility for the communications module. | `ManagerCommunicationsMockData.ts` |
+| `communications_mocks/` | Feature-owned responsibility for the communications module. | `—` |
+| `communications_store/` | Feature-owned responsibility for the communications module. | `ManagerUseManagerCommunicationsStore.ts` |
+| `communications_types/` | Feature-owned responsibility for the communications module. | `ManagerCommunicationsSchema.ts; ManagerCommunications_types.ts` |
+| `communications_utils/` | Feature-owned responsibility for the communications module. | `ManagerCommunicationsSharedConstants.ts` |
 
 ## Feature Inventory
-
-| Feature | Route | What the Manager Can Do | Key Components | Main API Calls | Status |
-|---|---|---|---|---|---|
-| KPI Overview | `/manager/communications` | See total messages sent, WhatsApp vs Email breakdown, campaigns this month | `ManagerCommunicationsKPIs` | `GET /manager/communications/kpis` | ✅ Live |
-| Segment Picker | `/manager/communications` (Compose tab) | Choose audience: All Active, Expiring 7 Days, Expiring 30 Days, Expired, Pending Payment, Custom | `ManagerCommunicationsSegmentPicker` | `GET /manager/communications/segments?type=X` | ✅ Live |
-| Message Composer | `/manager/communications` (Compose tab) | Set campaign title, pick channel (WhatsApp/Email), customise pre-filled template, set email subject | `ManagerCommunicationsComposer` | — | ✅ Live |
-| Preview & Send | `/manager/communications` (Compose tab) | Preview full recipient list in `ManagerBulkMessageModal` before dispatching | `ManagerBulkMessageModal` (shared) | — | ✅ Live |
-| Send Campaign | `/manager/communications` (Compose tab) | Dispatch campaign — records it in history, resets composer, switches to History tab | `ManagerCommunicationsComposer` | `POST /manager/communications/send` | ✅ Live |
-| Manage Automations | `/manager/communications` (Automations tab) | Toggle Birthday/Anniversary auto-messages and customize their templates | `ManagerCommunicationsAutomations` | `GET/PATCH /manager/communications/automations` | ✅ Live (UI) |
-| Send History | `/manager/communications` (History tab) | View all past campaigns with channel badge, segment, recipient count, sent count, status, date | `ManagerCommunicationsHistory` | `GET /manager/communications/campaigns` | ✅ Live |
-| History Filters | `/manager/communications` (History tab) | Search by campaign title; filter by channel (All / WhatsApp / Email) | `ManagerCommunicationsHistory` | — (client-side) | ✅ Live |
-| **Churn KPIs** | `/manager/communications` (Win-Back tab) | See Total Churned, Churned This Month, Recovery Rate, Avg Days Since Exit | `ManagerChurnRecoveryKPIs` | `GET /manager/communications/churn/kpis` | ✅ Live (Mock) |
-| **Churned Members Table** | `/manager/communications` (Win-Back tab) | View all exited members with exit date, days since exit (colour-coded), reason, plan, contact status | `ManagerChurnRecoveryTable`, `ManagerChurnRecoveryTableRow` | `GET /manager/communications/churn/members` | ✅ Live (Mock) |
-| **Win-Back Composer** | `/manager/communications` (Win-Back tab) | Select template tier (7/30/90 days), pick channel, edit message, send to individual churned member | `ManagerChurnRecoveryComposer` | `POST /manager/communications/churn/win-back` | ✅ Live (Mock) |
+| Feature | Route | What the User Can Do | Main API Calls | Status |
+|---|---|---|---|---|
+| fetchCampaigns | `/manager/communications` | Uses the fetchCampaigns workflow with typed request/response handling. | `GET /manager/communications/campaigns` | ✅ Implemented |
+| fetchCommunicationKPIs | `/manager/communications` | Uses the fetchCommunicationKPIs workflow with typed request/response handling. | `GET /manager/communications/kpis` | ✅ Implemented |
+| fetchSegmentRecipients | `/manager/communications` | Uses the fetchSegmentRecipients workflow with typed request/response handling. | `GET /manager/communications/segments/:segment` | ✅ Implemented |
+| sendCampaign | `/manager/communications` | Uses the sendCampaign workflow with typed request/response handling. | `POST /manager/communications/campaigns` | ✅ Implemented |
+| fetchAutomations | `/manager/communications` | Uses the fetchAutomations workflow with typed request/response handling. | `GET /manager/communications/automations` | ✅ Implemented |
+| updateAutomation | `/manager/communications` | Uses the updateAutomation workflow with typed request/response handling. | `PATCH /manager/communications/automations/:id` | ✅ Implemented |
+| fetchChurnedMembers | `/manager/communications` | Uses the fetchChurnedMembers workflow with typed request/response handling. | `GET /manager/communications/churned-members` | ✅ Implemented |
+| fetchChurnKPIs | `/manager/communications` | Uses the fetchChurnKPIs workflow with typed request/response handling. | `GET /manager/communications/churn-kpis` | ✅ Implemented |
+| sendWinBackMessage | `/manager/communications` | Uses the sendWinBackMessage workflow with typed request/response handling. | `POST /manager/communications/win-back` | ✅ Implemented |
 
 ## User Flows & Interactions
-
-### Flow 1: Send a Renewal Reminder to Expiring Members
-1. Manager navigates to `/manager/communications` — lands on Compose tab
-2. In Segment Picker, clicks "Expiring in 7 Days" — card highlights, recipient count loads (e.g. "3 recipients")
-3. Message body auto-fills with the renewal reminder template; subject auto-fills for email
-4. Manager types a campaign title: "June Renewal Reminder"
-5. Channel is WhatsApp (default) — no subject needed
-6. Manager clicks "Preview & Send" → `ManagerBulkMessageModal` opens showing all 3 recipients
-7. Manager sends each WhatsApp individually (WhatsApp prevents automated bulk)
-8. Closes modal → OR clicks "Send Campaign" to log it in history
-9. On success: toast "Campaign queued successfully", composer resets, tab switches to History
-
-### Flow 2: Send a Bulk Email Newsletter
-1. Manager selects "All Active Members" segment — count loads (e.g. "5 recipients")
-2. Clicks "Email" channel button
-3. Subject field appears — pre-filled from template, manager edits it
-4. Edits message body
-5. Clicks "Send Campaign" → `POST /manager/communications/send`
-6. History tab shows new entry with Email badge, "Sent" status
-
-### Flow 3: Review Past Campaigns
-1. Manager clicks "Send History" tab
-2. Table shows all past campaigns sorted by date
-3. Manager types in search box to find "June" campaigns
-4. Clicks "WhatsApp" filter to see only WhatsApp campaigns
-
-### Flow 4: Win-Back a Churned Member
-1. Manager clicks the "Win-Back" tab — sees Churn KPIs + churned members table
-2. Scans the table — each row shows days since exit colour-coded (red ≤7d, amber ≤30d, blue >30d)
-3. Manager clicks a row (e.g. Ravi Shankar, 7 days since exit)
-4. `ManagerChurnRecoveryComposer` drawer slides in from the right
-5. Template tier auto-selects "< 7 Days" — message pre-fills with the aggressive win-back copy
-6. Manager edits the message body if needed
-7. Selects WhatsApp → drawer shows "WhatsApp cannot be bulk-sent" notice
-8. Clicks "Send Win-Back" → WhatsApp link opens; campaign logged in Send History tab
-9. Toast: "Win-back message sent successfully"; member row shows "Contacted [date]"
+### Flow 1: Send campaign
+1. Manager opens the composer and selects a channel and recipient segment.
+2. The recipient endpoint supplies the current segment audience through the module API.
+3. React Hook Form + Zod validates the message payload before submission.
+4. sendCampaign() submits the campaign; the backend/MSW response message is shown and the campaign history query is reconciled.
+### Flow 2: Run churn recovery
+1. Manager opens Churn Recovery and reviews churn KPIs and members.
+2. Manager chooses a member and a win-back template tier/channel.
+3. sendWinBackMessage() submits the outreach payload.
+4. The module consumes the authoritative backend response and refreshes the affected churn/campaign views.
 
 ## Data and State Architecture
-
-- **State pattern:** Zustand for all composer/churn UI state + TanStack Query for server state (campaigns, KPIs, segment recipients, churned members, churn KPIs)
-- **URL state:** Tab selection (`?tab=`), history search (`?search=`), history channel filter (`?channel=`), history page (`?page=`), churn search (`?c_search=`), churn reason (`?c_reason=`), churn page (`?c_page=`) are all synced to URL via `useRouter` + `useSearchParams`.
-- **Zustand store:** `useManagerCommunicationsStore.ts` — UI-only: `activeTab`, `selectedSegment`, `selectedChannel`, `composerTitle`, `composerMessage`, `composerSubject`, `historySearch`, `historyChannelFilter`, `currentPage`, `churnSearch`, `churnReasonFilter`, `churnCurrentPage`, `isChurnComposerOpen`, `selectedChurnedMemberId`
-- **TanStack Query keys (canonical format):**
-  - `['managerCommunications', 'campaigns']` (TODO migrate to `['manager', 'communications', 'campaigns']`)
-  - `['managerCommunications', 'kpis']`
-  - `['managerCommunications', 'segment', selectedSegment]`
-  - `['managerCommunications', 'automations']`
-  - `['managerCommunications', 'churn', 'members']`
-  - `['managerCommunications', 'churn', 'kpis']`
-- **Fixture data:** `communications_fixtures/ManagerCommunicationsMockData.ts` — `MOCK_CAMPAIGNS`, `MOCK_AUTOMATIONS`, `MOCK_COMM_KPI`, `MOCK_CHURNED_MEMBERS`, `MOCK_CHURN_KPI`, `COMM_MESSAGE_TEMPLATES`, `CHURN_WIN_BACK_TEMPLATES`
-- **Template auto-fill:** When segment changes, `handleSegmentChange()` in the logic hook auto-fills from `COMM_MESSAGE_TEMPLATES`. When a churned member is selected, `useManagerChurnRecoveryLogic` derives `defaultTier` from `daysSinceExit` and auto-fills from `CHURN_WIN_BACK_TEMPLATES`.
-- **Local-storage keys:** None
-- **MSW handler file:** Not yet configured
+TanStack Query owns communications server/API data. UI-only filters, tabs, selections, and draft state remain local state or module-scoped Zustand where shared. React Context is limited to stable cross-tree concerns and does not become the source of truth for API data. Query keys are module-prefixed.
 
 ## API Contract
-
-All calls go through `ManagerCommunicationsApi` in `communications_api/ManagerCommunicationsApi.ts`.
-
 | Function | Method | Endpoint | Request | Response `data` type |
 |---|---|---|---|---|
-| `fetchCampaigns()` | GET | `/manager/communications/campaigns` | — | `CommCampaign[]` |
-| `fetchKPIs()` | GET | `/manager/communications/kpis` | — | `CommKPIData` |
-| `fetchSegmentRecipients(segment)` | GET | `/manager/communications/segments?type=segment` | `CommSegment` | `CommRecipient[]` |
-| `sendCampaign(payload)` | POST | `/manager/communications/send` | `CommFormValues & { recipientCount, segmentLabel }` | `CommCampaign` |
-| `fetchAutomations()` | GET | `/manager/communications/automations` | — | `CommAutomation[]` |
-| `updateAutomation(id, payload)` | PATCH | `/manager/communications/automations/:id` | `Partial<CommAutomation>` | `CommAutomation` |
-| `fetchChurnedMembers()` | GET | `/manager/communications/churn/members` | — | `ChurnedMember[]` |
-| `fetchChurnKPIs()` | GET | `/manager/communications/churn/kpis` | — | `ChurnKPIData` |
-| `sendWinBackMessage(payload)` | POST | `/manager/communications/churn/win-back` | `{ memberId, memberName, phone, email, channel, templateTier, message, subject }` | `CommCampaign` |
+| `fetchCampaigns` | `GET` | `/api/v1/manager/communications/campaigns` | `{ page?, limit?, search?, channel?, status? }` | `{ campaigns: CommCampaign[]; total: number }` |
+| `fetchCommunicationKPIs` | `GET` | `/api/v1/manager/communications/kpis` | `—` | `CommKPIData` |
+| `fetchSegmentRecipients` | `GET` | `/api/v1/manager/communications/segments/:segment` | `{ segment: CommSegment }` | `CommRecipient[]` |
+| `sendCampaign` | `POST` | `/api/v1/manager/communications/campaigns` | `{ title; channel; segment; message; subject; recipientCount; segmentLabel }` | `CommCampaign` |
+| `fetchAutomations` | `GET` | `/api/v1/manager/communications/automations` | `—` | `CommAutomation[]` |
+| `updateAutomation` | `PATCH` | `/api/v1/manager/communications/automations/:id` | `Partial<CommAutomation>` | `CommAutomation` |
+| `fetchChurnedMembers` | `GET` | `/api/v1/manager/communications/churned-members` | `—` | `ChurnedMember[]` |
+| `fetchChurnKPIs` | `GET` | `/api/v1/manager/communications/churn-kpis` | `—` | `ChurnKPIData` |
+| `sendWinBackMessage` | `POST` | `/api/v1/manager/communications/win-back` | `{ memberId; memberName; phone; email; channel; templateTier; message; subject }` | `CommCampaign` |
+
+## UI Data Requirements
+| UI Element | Required Field(s) | API Endpoint | Response Path | Nullable? | Mocked? |
+|---|---|---|---|---|---|
+| KPI: Total sent | `totalSent` | `/api/v1/manager/communications/kpis` | `data.totalSent` | No | Yes |
+| KPI: WhatsApp sent | `whatsappSent` | `/api/v1/manager/communications/kpis` | `data.whatsappSent` | No | Yes |
+| KPI: Email sent | `emailSent` | `/api/v1/manager/communications/kpis` | `data.emailSent` | No | Yes |
+| KPI: Campaigns this month | `campaignsThisMonth` | `/api/v1/manager/communications/kpis` | `data.campaignsThisMonth` | No | Yes |
+| History: Title | `title` | `/api/v1/manager/communications/campaigns` | `data.campaigns[].title` | No | Yes |
+| History: Channel | `channel` | `/api/v1/manager/communications/campaigns` | `data.campaigns[].channel` | No | Yes |
+| History: Segment | `segmentLabel` | `/api/v1/manager/communications/campaigns` | `data.campaigns[].segmentLabel` | No | Yes |
+| History: Sent count | `sentCount` | `/api/v1/manager/communications/campaigns` | `data.campaigns[].sentCount` | No | Yes |
+| History: Status | `status` | `/api/v1/manager/communications/campaigns` | `data.campaigns[].status` | No | Yes |
+| Churn: Member name | `name` | `/api/v1/manager/communications/churned-members` | `data[].name` | No | Yes |
+| Churn: Plan | `plan` | `/api/v1/manager/communications/churned-members` | `data[].plan` | No | Yes |
+| Churn: Exit date | `exitDate` | `/api/v1/manager/communications/churned-members` | `data[].exitDate` | No | Yes |
+| Churn: Recovery | `recovered` | `/api/v1/manager/communications/churned-members` | `data[].recovered` | No | Yes |
+| Churn KPI: Recovery rate | `recoveryRate` | `/api/v1/manager/communications/churn-kpis` | `data.recoveryRate` | No | Yes |
 
 ## Permissions and Security
-
-- **Required role:** `MANAGER` — enforced by `middleware.ts`
-- **Read-only for member data:** This module never calls any member mutation API. It only reads segment and churn data.
-- **No automated WhatsApp bulk send:** `ManagerBulkMessageModal` and `ManagerChurnRecoveryComposer` require per-recipient manual send — this is intentional and compliant with WhatsApp's terms of service.
-- **Sensitive data:** Phone numbers in the churn table are masked (`98****2310`) via `maskPhone()` inside `ManagerChurnRecoveryTable`.
-- **Cross-role isolation:** Zero imports from `/admin`, `/trainer`, `/superadmin`
+- **Required role:** `MANAGER`.
+- **UI guard:** `ManagerPermissionGate` provides the Manager workspace capability boundary; module-specific permissions remain documented at the feature level when applicable.
+- **Critical actions:** destructive/financial actions use explicit confirmation and server-authoritative responses.
+- **Sensitive data:** list views use masking/display rules appropriate to the data type.
+- **Cross-role isolation:** no business imports from other role roots or unrelated business modules.
 
 ## Loading, Empty, and Error States
-
-| Section | Loading State | Empty State | Error State |
-|---|---|---|---|
-| Full page | `loading.tsx` — skeleton mimicking KPIs + tab + composer | N/A | `error.tsx` — branded error with Retry |
-| Segment recipient count | `Loader2` spinner inside segment card | "0 recipients" shown | Shared with main query |
-| History table | `TableSkeleton` (5 rows, 7 cols) | Inline empty state — icon + "No campaigns yet" + CTA | Shared with main query |
-| Churn KPIs | Skeleton pulse blocks per card | N/A (cards show 0) | Shared with churn query |
-| Churn members table | 5 skeleton rows (7 cols) | `ManagerChurnRecoveryEmptyState` — ShieldCheck icon + "Great retention!" message | Shared with churn query |
+- Route-level `loading.tsx` provides a layout-matching skeleton.
+- Data sections use dedicated inline skeletons while TanStack Query is pending.
+- Entity lists provide module-specific empty-state UI where the entity is user-browsable.
+- Module `error.tsx` provides a safe retry fallback and does not expose raw backend/stack-trace text.
 
 ## Edge Cases and AI Warnings
-
-- **Template auto-fill on segment change:** `handleSegmentChange()` in `useManagerCommunicationsLogic` auto-fills both `composerMessage` and `composerSubject`. If you add a new segment to `COMM_SEGMENT_OPTIONS`, you MUST also add a corresponding entry to `COMM_MESSAGE_TEMPLATES` — otherwise the auto-fill will silently use `undefined`.
-- **WhatsApp cannot be automated:** `ManagerBulkMessageModal` opens `wa.me` links one at a time. Do NOT attempt to loop `window.open` calls — browsers block popups after the first one. The same rule applies to `ManagerChurnRecoveryComposer`.
-- **`{name}` placeholder is display-only:** The `{name}` token in templates is shown as a tip to the manager. Actual personalisation must happen server-side when the real API is integrated.
-- **`sendCampaign` resets composer and switches tab:** After a successful send, `resetComposer()` is called and `setActiveTab('history')` fires. Do NOT add any additional state resets in the component.
-- **`sendWinBackMessage` logs a campaign entry:** Win-back sends appear in the Send History tab with segment label "Win-Back (Churned)". Do not remove this side-effect from the mock API — it ensures the history tab is a complete audit log.
-- **Churn composer `defaultTier` derives from `daysSinceExit`:** If `daysSinceExit ≤ 7` → `'7_days'`, `≤ 30` → `'30_days'`, else `'90_days'`. This is computed in `useManagerChurnRecoveryLogic.getTemplateTier()` — do not duplicate this logic in the component.
-- **`recovered: true` members show no Win-Back button:** `ManagerChurnRecoveryTableRow` conditionally hides the Win-Back CTA for recovered members. Do not remove this guard.
-- **`CHURN_WIN_BACK_TEMPLATES` is the single source of truth:** Never add inline message text in the composer component. Always add new win-back tiers to `communications_fixtures/ManagerCommunicationsMockData.ts` (fixture phase) or the API (production phase).
+- **Never place live recipient/campaign records in constants; those belong to module fixtures:** Never place live recipient/campaign records in constants; those belong to module fixtures.
+- **Recipient phone numbers are sensitive and should remain masked outside the composer context:** Recipient phone numbers are sensitive and should remain masked outside the composer context.
+- **A campaign mutation must use the backend response message and reconcile the campaign list rather than inventing success copy:** A campaign mutation must use the backend response message and reconcile the campaign list rather than inventing success copy.
+- **Automation updates must remain module-scoped; do not move automation business rules into global infrastructure:** Automation updates must remain module-scoped; do not move automation business rules into global infrastructure.
+- **Churn recovery must preserve the selected member/template context while a send request is pending:** Churn recovery must preserve the selected member/template context while a send request is pending.
+- **Do not allow both WhatsApp and Email to be selected when the UI contract requires a single medium choice:** Do not allow both WhatsApp and Email to be selected when the UI contract requires a single medium choice.
 
 ## Component Responsibility Map
-
 | Component File | Responsibility |
 |---|---|
-| `ManagerCommunicationsMain.tsx` | Root orchestrator. Renders KPIs, 4-tab switcher (Compose / History / Automations / Win-Back), conditionally renders the active tab's component. No direct API calls. |
-| `ManagerCommunicationsKPIs.tsx` | 4 read-only stat cards. Reads `kpis` from logic hook. |
-| `ManagerCommunicationsSegmentPicker.tsx` | Segment card grid. Calls `handleSegmentChange`. Shows live recipient count with loading state. |
-| `ManagerCommunicationsComposer.tsx` | Full compose form. Channel toggle, title, subject, message body, send button, preview modal trigger. |
-| `ManagerCommunicationsHistory.tsx` | Paginated history table. Search + channel filter. Reads `paginatedCampaigns` from logic hook. |
-| `ManagerChurnRecoveryTab.tsx` | Root orchestrator for the Win-Back tab. Distributes logic hook data to KPIs, Table, and Composer. |
-| `ManagerChurnRecoveryKPIs.tsx` | 4 churn-specific stat cards: Total Churned, Churned This Month, Recovery Rate, Avg Days Since Exit. |
-| `ManagerChurnRecoveryTable.tsx` | Paginated churned member table with search + reason filter pill buttons. Skeleton loading rows. |
-| `ManagerChurnRecoveryTableRow.tsx` | Single churned member row. Days-since-exit badge, masked phone, reason label, recovery status, Win-Back CTA. |
-| `ManagerChurnRecoveryComposer.tsx` | Right-side slide-in drawer. Template tier selector, channel toggle, editable message, send button. |
-| `ManagerChurnRecoveryEmptyState.tsx` | Empty state shown when no churned members exist. Positive "Great retention!" framing. |
+| `communications/communications_components/ManagerChurnRecovery/ManagerChurnRecoveryComposer.tsx` | Slide-in drawer composer for sending win-back messages to a single churned member. |
+| `communications/communications_components/ManagerChurnRecovery/ManagerChurnRecoveryEmptyState.tsx` | Empty state shown when no churned members exist — positive framing with a motivational message. |
+| `communications/communications_components/ManagerChurnRecovery/ManagerChurnRecoveryKPIs.tsx` | 4 KPI stat cards for the Churn Recovery tab — Total Churned, Churned This Month, Recovery Rate, Avg Days Since Exit. |
+| `communications/communications_components/ManagerChurnRecovery/ManagerChurnRecoveryTab.tsx` | Root orchestrator for the Churn Recovery / Win-Back tab. Renders KPIs, table, and composer drawer. No direct API calls. |
+| `communications/communications_components/ManagerChurnRecovery/ManagerChurnRecoveryTable.tsx` | Paginated, searchable, filterable table of churned/exited members in the Churn Recovery tab. |
+| `communications/communications_components/ManagerChurnRecovery/ManagerChurnRecoveryTableRow.tsx` | Single churned member row in the churn recovery table. Receives member data and callbacks via props. No API calls. |
+| `communications/communications_components/ManagerCommunicationsAutomations/ManagerCommunicationsAutomations.tsx` | Renders the Automations tab in Communications, allowing managers to enable/disable and configure automated background triggers like Birthday and Anniversary messages. |
+| `communications/communications_components/ManagerCommunicationsComposer/ManagerCommunicationsComposer.tsx` | Full campaign composer. RHF owns draft state; the communications logic hook owns server data and mutation orchestration. |
+| `communications/communications_components/ManagerCommunicationsHistory/ManagerCommunicationsHistory.tsx` | Paginated history table of past communication campaigns with search and channel filter. |
+| `communications/communications_components/ManagerCommunicationsKPIs/ManagerCommunicationsKPIs.tsx` | KPI stat cards for the Communications module — total sent, WhatsApp, Email, campaigns this month. |
+| `communications/communications_components/ManagerCommunicationsMain/ManagerCommunicationsMain.tsx` | Root client orchestrator for the Communications module — renders KPIs, tab switcher, and conditionally Composer, History, Automations, or Churn Recovery. |
+| `communications/communications_components/ManagerCommunicationsSegmentPicker/ManagerCommunicationsSegmentPicker.tsx` | Segment picker — shows all audience segments as selectable cards with description and live recipient count. |
 
 ## Rule Compliance Checklist
-
-- [x] Rule 1: Micro-modularization — module-prefixed subfolders, file size ceiling respected
-- [x] Rule 2: Total Role Isolation — zero cross-role imports
-- [x] Rule 3: Hyper-descriptive naming — role prefix on all files
-- [x] Rule 4: Theme Independence — no hardcoded hex/Tailwind colors (WA_GREEN documented as brand exception)
-- [x] Rule 5: Smart State Management — Zustand for UI, TanStack Query for server state
-- [x] Rule 6: Logic/UI Separation — `useManagerCommunicationsLogic` and `useManagerChurnRecoveryLogic` extract all logic
-- [x] Rule 7: Type Isolation — all types in `communications_types/`
-- [x] Rule 8: Server/Client Boundary — `page.tsx` = Server Component
-- [x] Rule 9: `loading.tsx` + `error.tsx` present and non-generic
-- [x] Rule 11: `ManagerCommunicationsUrlConfig.ts` present with all CHURN endpoints
-- [x] Rule 13: This document — updated in same commit
-- [x] Rule 15B: Zod schema present (`CommFormSchema`)
-- [x] Rule 19: Clickable table rows — churn table rows use `cursor-pointer`
-- [x] Rule 26: Loading button state — `Loader2` spinner on "Send Win-Back" button
-- [x] Rule 40: `communications_forbidden.md` present
-- [x] Rule 43: Sensitive data masking — `maskPhone()` in churn table
-- [x] Rule 48: Empty state component present (`ManagerChurnRecoveryEmptyState`)
-- [x] Rule 72: API functions follow verb contract (fetchChurnedMembers, sendWinBackMessage)
-- [x] Design §5j: Composer as a right-side drawer (Confirmation Drawer pattern)
-- [x] Design §12: z-40 for drawer, z-50 for toasts
-- [x] Design §28: `bg-overlay` used for drawer background
-- [x] Design §29: `motion-safe:` guards on all transitions and animations
+- [x] Module-owned API, types/schemas, fixtures, handlers, tests, and feature documentation are scoped to this module.
+- [x] API calls use the module API client and typed response contracts.
+- [x] Server-backed pagination/filter/search follows explicit parameter propagation where applicable.
+- [x] UI Data Requirements map displayed values to concrete endpoints and response paths.
+- [x] Module-owned MSW fixtures/handlers remain the frontend-first server substitute.
+- [x] Raw `any`, relative imports, barrel files, and hardcoded localhost mock origins are absent from audited Manager source.
+- [ ] Host-repository CI/tooling, dependency/SCA/secret gates, CODEOWNERS, branch protection, and production build require root-repository verification.

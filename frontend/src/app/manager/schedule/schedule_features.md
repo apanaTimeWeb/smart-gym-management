@@ -1,45 +1,99 @@
-# Manager Schedule Module — Feature Map
+# Manager Schedule — Feature Map
 
 ## Module Purpose
-The Manager Schedule module provides gym managers with a complete interface to oversee trainer availability, shifts, and weekly rosters. It empowers managers to ensure adequate floor coverage, assign specific trainers to peak hours, and manage time-off requests. Crucially, this module allows managers to view the schedule from a high-level operational perspective, and any changes made here are instantly reflected in the trainers' individual apps. It is strictly isolated from Admin and Trainer roles.
+Manager Schedule is the trainer scheduling workspace. Managers can review trainer schedule summaries and KPIs, search the schedule, select a day, and create/update/delete shifts. Schedule data is server state owned by this module. Shift deletion and other critical scheduling changes require confirmation and authoritative reconciliation.
 
 ## Directory Structure
-
-| Folder / File | Responsibility |
-|---|---|
-| `schedule_components/ManagerScheduleMain.tsx` | Root Client Component; wraps the providers and layout |
-| `schedule_components/ManagerScheduleWeeklyGrid.tsx` | Main calendar grid view for visualizing shifts across the week |
-| `schedule_components/ManagerScheduleShiftModal.tsx` | Form modal to create or edit a trainer's shift |
-| `schedule_api/ManagerScheduleApi.ts` | API wrappers for fetching and updating schedule data |
-| `schedule_types/ManagerScheduleTypes.ts` | Types for `Shift`, `ScheduleFilters`, etc. |
-| `schedule_utils/ManagerScheduleUrlConfig.ts` | Centralized URL constants for schedule endpoints |
+| Folder | Responsibility | Key Files |
+|---|---|---|
+| `schedule_api/` | Feature-owned responsibility for the schedule module. | `ManagerScheduleApi.ts; ManagerUseManagerScheduleQueries.ts` |
+| `schedule_components/` | Feature-owned responsibility for the schedule module. | `—` |
+| `schedule_context/` | Feature-owned responsibility for the schedule module. | `ManagerScheduleContext.tsx; ManagerUseManagerScheduleLogic.ts` |
+| `schedule_fixtures/` | Feature-owned responsibility for the schedule module. | `ManagerScheduleMockData.ts` |
+| `schedule_mocks/` | Feature-owned responsibility for the schedule module. | `—` |
+| `schedule_types/` | Feature-owned responsibility for the schedule module. | `ManagerScheduleSchema.ts; ManagerScheduleTypes.ts` |
+| `schedule_utils/` | Feature-owned responsibility for the schedule module. | `ManagerScheduleSharedConstants.ts` |
 
 ## Feature Inventory
-
-| Feature | Path | Purpose | Main API Calls | Status |
+| Feature | Route | What the User Can Do | Main API Calls | Status |
 |---|---|---|---|---|
-| View Weekly Roster | `/manager/schedule` | See all trainer shifts for the week | `GET /manager/schedule/shifts` | ✅ Live |
-| Create Shift | `/manager/schedule` (Modal) | Assign a shift to a trainer | `POST /manager/schedule/shifts` | ✅ Live |
-| Edit Shift | `/manager/schedule` (Modal) | Modify shift timings or reassign | `PATCH /manager/schedule/shifts/:id` | ✅ Live |
-| Delete Shift | `/manager/schedule` (Modal) | Remove a shift | `DELETE /manager/schedule/shifts/:id` | ✅ Live |
-| Time-off Approvals | `/manager/schedule/time-off` | Approve or reject trainer leave | `PATCH /manager/schedule/time-off/:id` | 🚧 Planned |
+| fetchSchedule | `/manager/schedule` | Uses the fetchSchedule workflow with typed request/response handling. | `GET /manager/schedule` | ✅ Implemented |
+| createShift | `/manager/schedule` | Uses the createShift workflow with typed request/response handling. | `POST /manager/schedule/shifts` | ✅ Implemented |
+| updateShift | `/manager/schedule` | Uses the updateShift workflow with typed request/response handling. | `PATCH /manager/schedule/shifts/:id` | ✅ Implemented |
+| deleteShift | `/manager/schedule` | Uses the deleteShift workflow with typed request/response handling. | `DELETE /manager/schedule/shifts/:id` | ✅ Implemented |
+
+## User Flows & Interactions
+### Flow 1: Browse and edit schedule
+1. Manager selects/searches a day or trainer view.
+2. fetchSchedule(params) loads the trainer summaries and KPI snapshot.
+3. The weekly grid renders trainer shifts from the response.
+4. Create/update/delete actions use the schedule API and reconcile Query state.
 
 ## Data and State Architecture
-- Server-state: `TanStack Query` (`useManagerScheduleQueries`, `useManagerScheduleMutations`)
-- Zustand stores: `useManagerScheduleStore` — strictly transient UI state (e.g. selected shift IDs, modal visibility)
-- Context providers: `ManagerScheduleContext` — coordinates UI interactions
-- Local-storage keys: None
-- MSW handler: `manager-schedule.handlers.ts`
+TanStack Query owns schedule server/API data. UI-only filters, tabs, selections, and draft state remain local state or module-scoped Zustand where shared. React Context is limited to stable cross-tree concerns and does not become the source of truth for API data. Query keys are module-prefixed.
 
-## Edge Cases / AI Warnings
-- **Timezone Handling**: All shifts must be saved and transmitted in UTC, but displayed in the local timezone of the branch.
-- **Overlapping Shifts**: The frontend must warn the manager if they attempt to schedule a trainer for overlapping shifts.
-- **No cross-module imports**: Do not import types directly from the `/trainer` module. Any shared types (like `Shift`) should be redefined in `schedule_types` per Rule 2 (Total Role Isolation).
+## API Contract
+| Function | Method | Endpoint | Request | Response `data` type |
+|---|---|---|---|---|
+| `fetchSchedule` | `GET` | `/api/v1/manager/schedule` | `{ search?, day? }` | `{ trainers: TrainerScheduleSummary[]; kpis: ScheduleKPIData }` |
+| `createShift` | `POST` | `/api/v1/manager/schedule/shifts` | `CreateShiftDto` | `TrainerShift` |
+| `updateShift` | `PATCH` | `/api/v1/manager/schedule/shifts/:id` | `{ id: string; body: CreateShiftDto }` | `TrainerShift` |
+| `deleteShift` | `DELETE` | `/api/v1/manager/schedule/shifts/:id` | `{ id: string }` | `{ id: string }` |
+
+## UI Data Requirements
+| UI Element | Required Field(s) | API Endpoint | Response Path | Nullable? | Mocked? |
+|---|---|---|---|---|---|
+| KPI: Total trainers | `totalTrainers` | `/api/v1/manager/schedule` | `data.kpis.totalTrainers` | No | Yes |
+| KPI: On duty today | `trainersOnDutyToday` | `/api/v1/manager/schedule` | `data.kpis.trainersOnDutyToday` | No | Yes |
+| KPI: On leave today | `trainersOnLeaveToday` | `/api/v1/manager/schedule` | `data.kpis.trainersOnLeaveToday` | No | Yes |
+| KPI: Shifts this week | `totalShiftsThisWeek` | `/api/v1/manager/schedule` | `data.kpis.totalShiftsThisWeek` | No | Yes |
+| KPI: Classes this week | `totalClassesThisWeek` | `/api/v1/manager/schedule` | `data.kpis.totalClassesThisWeek` | No | Yes |
+| KPI: Occupancy rate | `avgOccupancyRate` | `/api/v1/manager/schedule` | `data.kpis.avgOccupancyRate` | No | Yes |
+| Trainer: Name | `trainerName` | `/api/v1/manager/schedule` | `data.trainers[].trainerName` | No | Yes |
+| Trainer: Role | `trainerRole` | `/api/v1/manager/schedule` | `data.trainers[].trainerRole` | No | Yes |
+| Shift: ID | `id` | `/api/v1/manager/schedule` | `data.trainers[].shifts[].id` | No | Yes |
+| Shift: Day | `day` | `/api/v1/manager/schedule` | `data.trainers[].shifts[].day` | No | Yes |
+| Shift: Start time | `startTime` | `/api/v1/manager/schedule` | `data.trainers[].shifts[].startTime` | No | Yes |
+| Shift: End time | `endTime` | `/api/v1/manager/schedule` | `data.trainers[].shifts[].endTime` | No | Yes |
+| Shift: Status | `status` | `/api/v1/manager/schedule` | `data.trainers[].shifts[].status` | No | Yes |
+| Shift: Notes | `notes` | `/api/v1/manager/schedule` | `data.trainers[].shifts[].notes` | Yes | Yes |
+
+## Permissions and Security
+- **Required role:** `MANAGER`.
+- **UI guard:** `ManagerPermissionGate` provides the Manager workspace capability boundary; module-specific permissions remain documented at the feature level when applicable.
+- **Critical actions:** destructive/financial actions use explicit confirmation and server-authoritative responses.
+- **Sensitive data:** list views use masking/display rules appropriate to the data type.
+- **Cross-role isolation:** no business imports from other role roots or unrelated business modules.
+
+## Loading, Empty, and Error States
+- Route-level `loading.tsx` provides a layout-matching skeleton.
+- Data sections use dedicated inline skeletons while TanStack Query is pending.
+- Entity lists provide module-specific empty-state UI where the entity is user-browsable.
+- Module `error.tsx` provides a safe retry fallback and does not expose raw backend/stack-trace text.
+
+## Edge Cases and AI Warnings
+- **Schedule shifts must remain nested under the trainer summary response shape used by the UI:** Schedule shifts must remain nested under the trainer summary response shape used by the UI.
+- **Do not invent `trainerId`/`shiftId` values when the backend fixture already provides them:** Do not invent `trainerId`/`shiftId` values when the backend fixture already provides them.
+- **Shift deletion is destructive and requires double confirmation:** Shift deletion is destructive and requires double confirmation.
+- **Time values must be serialized/displayed with timezone-safe conventions:** Time values must be serialized/displayed with timezone-safe conventions.
+- **Search/day state must influence the schedule query rather than only the visual grid:** Search/day state must influence the schedule query rather than only the visual grid.
+
+## Component Responsibility Map
+| Component File | Responsibility |
+|---|---|
+| `schedule/schedule_components/ManagerScheduleKPIs/ManagerScheduleKPIs.tsx` | Renders the 4 KPI stat cards for the Schedule module (total trainers, on duty today, on leave, shifts this week). |
+| `schedule/schedule_components/ManagerScheduleMain/ManagerScheduleMain.tsx` | Root client orchestrator for the Schedule module. Owns layout, toolbar, view toggle, and renders sub-components. |
+| `schedule/schedule_components/ManagerScheduleShiftModal/ManagerScheduleShiftModal.tsx` | Add/Edit shift modal with React Hook Form + Zod validation. |
+| `schedule/schedule_components/ManagerScheduleSkeleton/ManagerScheduleSkeleton.tsx` | Skeleton loader for the Schedule module |
+| `schedule/schedule_components/ManagerScheduleTrainerCard/ManagerScheduleTrainerCard.tsx` | Renders a single trainer's availability summary card — total shifts, hours, and per-day status dots. |
+| `schedule/schedule_components/ManagerScheduleWeeklyGrid/ManagerScheduleWeeklyGrid.tsx` | Renders the 7-day weekly schedule grid showing all trainer shifts per day column. |
+| `schedule/schedule_context/ManagerScheduleContext.tsx` | Provides Schedule module state to the component tree via React Context. |
 
 ## Rule Compliance Checklist
-- [x] Rule 1: Micro-modularization — module-prefixed subfolders
-- [x] Rule 2: Total Role Isolation — zero cross-role imports
-- [x] Rule 3: Hyper-descriptive naming — `ManagerSchedule` prefix on all files
-- [x] Rule 5: Smart State Management — Zustand for UI state, TanStack Query for server state
-- [x] Rule 7: Type Isolation — `schedule_types/` folders used
-- [x] Rule 13: Feature Map — this detailed document
+- [x] Module-owned API, types/schemas, fixtures, handlers, tests, and feature documentation are scoped to this module.
+- [x] API calls use the module API client and typed response contracts.
+- [x] Server-backed pagination/filter/search follows explicit parameter propagation where applicable.
+- [x] UI Data Requirements map displayed values to concrete endpoints and response paths.
+- [x] Module-owned MSW fixtures/handlers remain the frontend-first server substitute.
+- [x] Raw `any`, relative imports, barrel files, and hardcoded localhost mock origins are absent from audited Manager source.
+- [ ] Host-repository CI/tooling, dependency/SCA/secret gates, CODEOWNERS, branch protection, and production build require root-repository verification.

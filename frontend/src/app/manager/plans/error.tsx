@@ -1,10 +1,11 @@
-// RESPONSIBILITY: Renders the error boundary fallback for the plans module.
 'use client';
 
+// RESPONSIBILITY: Renders the module-specific route error fallback and records safe diagnostic metadata.
 import { useEffect } from 'react';
 import { AlertTriangle } from 'lucide-react';
+import { logger } from '@/lib/logger';
 
-export default function Error({
+export default function ManagerPlansError({
   error,
   reset,
 }: {
@@ -12,30 +13,29 @@ export default function Error({
   reset: () => void;
 }) {
   useEffect(() => {
-    // Error logged to monitoring provider
+    logger.error('Manager module route error', {
+      route: '/manager/plans',
+      module: 'manager/plans',
+      errorDigest: error.digest,
+      timestamp: new Date().toISOString(),
+    });
   }, [error]);
 
   return (
     <div className="min-h-full flex items-center justify-center p-6 bg-page">
       <div className="bg-card border border-danger/20 p-8 rounded-2xl shadow-xl max-w-md w-full text-center space-y-4">
-        <div className="w-16 h-16 bg-danger/10 rounded-full flex items-center justify-center mx-auto text-danger mb-2">
-          <AlertTriangle size={32} />
+        <div className="w-14 h-14 bg-danger/10 rounded-full flex items-center justify-center mx-auto text-danger">
+          <AlertTriangle size={28} />
         </div>
-        
-        <h2 className="text-xl font-bold text-primary">Something went wrong!</h2>
-        
-        <p className="text-sm text-secondary">
-          We encountered an issue loading the plans dashboard.
-        </p>
-
-        <div className="pt-4">
-          <button
-            onClick={() => reset()}
-            className="px-6 py-2.5 bg-danger hover:bg-danger text-white font-medium rounded-xl transition-colors shadow-sm shadow-danger/20"
-          >
-            Try again
-          </button>
-        </div>
+        <h2 className="text-xl font-bold text-foreground">Plans Unavailable</h2>
+        <p className="text-sm text-secondary">We couldn't load the plans module. Please try again.</p>
+        {error.digest && <p className="text-xs text-secondary/60">Ref: {error.digest}</p>}
+        <button
+          onClick={reset}
+          className="px-6 py-2.5 bg-primary text-primary-foreground font-medium rounded-xl hover:opacity-90 motion-safe:transition-opacity"
+        >
+          Try Again
+        </button>
       </div>
     </div>
   );

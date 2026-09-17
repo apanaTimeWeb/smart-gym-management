@@ -4,8 +4,3 @@ export interface AdminSidebarProps {
   isCollapsed: boolean;
   setIsCollapsed: (v: boolean) => void;
 }
-
-export interface AdminHeaderProps {
-  title: string;
-  subtitle?: string;
-}

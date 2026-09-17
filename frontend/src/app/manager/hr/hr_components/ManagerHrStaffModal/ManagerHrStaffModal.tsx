@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Form modal for creating or editing a staff member profile in the HR module.
 'use client';
-
+// RESPONSIBILITY: Form modal for creating or editing a staff member profile in the HR module.
 import { useEffect } from 'react';
 import { useHrContext } from '@/app/manager/hr/hr_context/ManagerHrContext';
 import { STAFF_MODAL_FIELDS, EMPTY_STAFF, GENDER_OPTIONS, StaffSchema, type StaffFormValues, STAFF_ROLE_OPTIONS } from '@/app/manager/hr/hr_utils/ManagerHrSharedConstants';
@@ -10,11 +9,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import { Eye, EyeOff } from 'lucide-react';
 import React from 'react';
-import { useUnsavedChangesGuard } from '@/app/manager/manager_utils/useUnsavedChangesGuard';
+import { useManagerUnsavedChangesGuard } from '@/app/manager/manager_utils/ManagerUnsavedChangesGuard';
+import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
 
-export default function ManagerHrStaffModal() {
- const { showModal, setShowModal, editId, editData, saveStaff, saving } = useHrContext();
- const [showPassword, setShowPassword] = React.useState(false);
+ export default function ManagerHrStaffModal() {
+  const { showModal, setShowModal, editId, editData, saveStaff, saving } = useHrContext();
+  const { confirm } = useConfirm();
+  const [showPassword, setShowPassword] = React.useState(false);
 
   const { 
     register, 
@@ -27,7 +28,7 @@ export default function ManagerHrStaffModal() {
     defaultValues: (editData as StaffFormValues) || {}
   });
   
-  useUnsavedChangesGuard(isDirty && showModal);
+  useManagerUnsavedChangesGuard(isDirty && showModal);
 
  useEffect(() => {
    if (showModal && editData) {
@@ -38,14 +39,14 @@ export default function ManagerHrStaffModal() {
  if (!showModal) return null;
 
  return (
- <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/60">
-  <div className="rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-card border-2 border-warning">
+ <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-foreground/60">
+  <div className="rounded-2xl shadow-xl w-full max-w-2xl max-h-full overflow-y-auto bg-card border-2 border-warning">
   <div className="sticky top-0 px-8 py-5 border-b border-border bg-card flex items-center justify-between z-10">
   <h3 className="text-xl font-bold text-foreground">{editId ? 'Edit Staff' : 'Add Staff Member'}</h3>
   <button 
   type="button" 
-  onClick={() => { if (!isDirty || window.confirm('Discard unsaved changes?')) setShowModal(false); }} 
-  className="p-2 rounded-full hover:bg-primary/10 transition-colors text-secondary hover:text-primary"
+  onClick={async () => { if (!isDirty || await confirm({ title: 'Discard Changes', message: 'Discard unsaved changes?', confirmText: 'Discard', type: 'warning' })) setShowModal(false); }}
+  className="p-2 rounded-full hover:bg-primary/10 motion-safe:transition-colors text-secondary hover:text-primary"
   >
   <X size={20} />
   </button>
@@ -68,7 +69,7 @@ export default function ManagerHrStaffModal() {
         : undefined
   }
   {...register(f.key as keyof StaffFormValues, f.type === 'number' ? { valueAsNumber: true } : {})}
-  className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus-visible:ring-2 transition-all duration-200 ${
+  className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus-visible:ring-2 motion-safe:transition-all duration-200 ${
     errors[f.key as keyof StaffFormValues] ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
   } bg-input text-foreground`}
   />
@@ -112,7 +113,7 @@ export default function ManagerHrStaffModal() {
   <input 
   type="date" 
   {...register('joinDate')}
-  className="w-full px-4 py-3 border border-border rounded-xl text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-foreground transition-all duration-200"
+  className="w-full px-4 py-3 border border-border rounded-xl text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-foreground motion-safe:transition-all duration-200"
   />
   </div>
 
@@ -123,12 +124,12 @@ export default function ManagerHrStaffModal() {
     type={showPassword ? "text" : "password"}
     placeholder="Min 8 characters"
     {...register('temporaryPassword')}
-    className="w-full px-4 py-3 border border-border rounded-xl text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-foreground transition-all duration-200 pr-10"
+    className="w-full px-4 py-3 border border-border rounded-xl text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-foreground motion-safe:transition-all duration-200 pr-10"
     />
     <button
       type="button"
       onClick={() => setShowPassword(!showPassword)}
-      className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary hover:text-foreground transition-colors"
+      className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary hover:text-foreground motion-safe:transition-colors"
       aria-label="Toggle password visibility"
     >
       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -144,7 +145,7 @@ export default function ManagerHrStaffModal() {
     </div>
     <label className="relative inline-flex items-center cursor-pointer">
       <input type="checkbox" {...register('isActive')} className="sr-only peer" />
-      <div className="w-11 h-6 bg-border peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-background after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-background after:border-border after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-success"></div>
+      <div className="w-11 h-6 bg-border peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-background after:content-none after:absolute after:top-0.5 after:left-0.5 after:bg-background after:border-border after:border after:rounded-full after:h-5 after:w-5 after:motion-safe:transition-all peer-checked:bg-success"></div>
     </label>
   </div>
 
@@ -152,17 +153,17 @@ export default function ManagerHrStaffModal() {
   <div className="flex justify-end gap-3 mt-8 pt-6 border-t border-border">
   <button 
   type="button" 
-  onClick={() => { if (!isDirty || window.confirm('Discard unsaved changes?')) setShowModal(false); }} 
-  className="px-6 py-2.5 text-sm font-semibold rounded-xl border border-border text-secondary hover:bg-primary/5 hover:text-primary transition-colors"
+  onClick={async () => { if (!isDirty || await confirm({ title: 'Discard Changes', message: 'Discard unsaved changes?', confirmText: 'Discard', type: 'warning' })) setShowModal(false); }}
+  className="px-6 py-2.5 text-sm font-semibold rounded-xl border border-border text-secondary hover:bg-primary/5 hover:text-primary motion-safe:transition-colors"
   >
   Cancel
   </button>
   <button 
   type="submit" 
   disabled={saving} 
-  className="px-8 py-2.5 rounded-xl text-sm font-bold text-white flex items-center justify-center gap-2 disabled:opacity-70 transition-all hover:shadow-lg hover:shadow-primary/30 active:scale-95 bg-primary" 
+  className="px-8 py-2.5 rounded-xl text-sm font-bold text-primary-foreground flex items-center justify-center gap-2 disabled:opacity-70 motion-safe:transition-all hover:shadow-lg hover:shadow-primary/30 active:scale-95 bg-primary" 
   >
-  {saving ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full motion-safe:animate-spin" /> : <><Save size={16} />{editId ? 'Update' : 'Add Staff'}</>}
+  {saving ? <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full motion-safe:animate-spin" /> : <><Save size={16} />{editId ? 'Update' : 'Add Staff'}</>}
   </button>
   </div>
   </form>

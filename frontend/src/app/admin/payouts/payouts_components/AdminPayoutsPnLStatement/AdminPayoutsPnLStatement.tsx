@@ -1,50 +1,15 @@
-// RESPONSIBILITY: Tax-ready P&L statement table per gym.
-'use client';
+"use client";
+// RESPONSIBILITY: Renders the tax-ready P&L statement with functional sortable headers and empty state.
 
+import { ChevronDown, ChevronUp, ChevronsUpDown } from 'lucide-react';
 import { useAdminPayoutsLogic } from '@/app/admin/payouts/payouts_context/useAdminPayoutsLogic';
 import { AdminTableSkeleton } from '@/app/admin/admin_components/AdminShared/AdminTableSkeleton';
-import { fmt } from '@/app/admin/payouts/payouts_utils/AdminPayoutsSharedConstants';
+import { formatCurrency } from '@/lib/formatters';
+import type { PnlSortDirection, PnlSortKey } from '@/app/admin/payouts/payouts_types/AdminPayoutsTypes';
 
-const HEADERS = ['Gym', 'Month', 'Revenue', 'COGS', 'Gross Profit', 'Staff Cost', 'Rent & Utilities', 'Marketing', 'Misc', 'EBITDA', 'Tax', 'Net Profit'];
-
-export default function AdminPayoutsPnLStatement() {
-  const { pnlData, loadingPnL } = useAdminPayoutsLogic();
-
-  if (loadingPnL) return <AdminTableSkeleton rows={4} cols={HEADERS.length} />;
-
-  return (
-    <div className="bg-card rounded-xl border border-border overflow-hidden">
-      <div className="px-5 py-3 border-b border-border">
-        <p className="text-sm font-semibold text-foreground">Profit & Loss Statement</p>
-        <p className="text-xs text-secondary mt-0.5">Tax-ready breakdown per gym per month</p>
-      </div>
-      <div className="overflow-x-auto">
-        <table className="w-full">
-          <thead>
-            <tr className="bg-primary/5">
-              {HEADERS.map(h => <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-secondary uppercase tracking-wider whitespace-nowrap">{h}</th>)}
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-border">
-            {pnlData.map((p) => (
-              <tr key={`${p.gymId}-${p.month}`} className="hover:bg-primary/5 motion-safe:transition-colors">
-                <td className="px-4 py-3 text-sm font-medium text-foreground">{p.gymName}</td>
-                <td className="px-4 py-3 text-sm text-secondary">{p.month}</td>
-                <td className="px-4 py-3 text-sm text-foreground">{fmt(p.revenue)}</td>
-                <td className="px-4 py-3 text-sm text-danger">{fmt(p.cogs)}</td>
-                <td className="px-4 py-3 text-sm font-medium text-foreground">{fmt(p.grossProfit)}</td>
-                <td className="px-4 py-3 text-sm text-danger">{fmt(p.staffCost)}</td>
-                <td className="px-4 py-3 text-sm text-danger">{fmt(p.rentUtilities)}</td>
-                <td className="px-4 py-3 text-sm text-danger">{fmt(p.marketing)}</td>
-                <td className="px-4 py-3 text-sm text-danger">{fmt(p.miscExpenses)}</td>
-                <td className="px-4 py-3 text-sm font-semibold text-info">{fmt(p.ebitda)}</td>
-                <td className="px-4 py-3 text-sm text-danger">{fmt(p.tax)}</td>
-                <td className="px-4 py-3 text-sm font-bold text-success">{fmt(p.netProfit)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-}
+const HEADERS: ReadonlyArray<{ key: PnlSortKey; label: string }> = [
+  {key:'gymName',label:'Gym'},{key:'month',label:'Month'},{key:'revenue',label:'Revenue'},{key:'cogs',label:'COGS'},{key:'grossProfit',label:'Gross Profit'},{key:'staffCost',label:'Staff Cost'},{key:'rentUtilities',label:'Rent & Utilities'},{key:'marketing',label:'Marketing'},{key:'miscExpenses',label:'Misc'},{key:'ebitda',label:'EBITDA'},{key:'tax',label:'Tax'},{key:'netProfit',label:'Net Profit'}
+];
+function SortIcon({column,sortKey,sortDir}:{column:PnlSortKey;sortKey:PnlSortKey;sortDir:PnlSortDirection}){if(column!==sortKey)return <ChevronsUpDown size={13} className="text-disabled"/>;return sortDir==='asc'?<ChevronUp size={13} className="text-primary"/>:<ChevronDown size={13} className="text-primary"/>;}
+function Cell({value, tone}:{value:number; tone?:string}){return <td className={`px-4 py-3 text-sm ${tone??'text-foreground'}`}>{formatCurrency(value)}</td>;}
+export default function AdminPayoutsPnLStatement(){const logic=useAdminPayoutsLogic();if(logic.loadingPnL)return <AdminTableSkeleton rows={4} cols={HEADERS.length}/>;return <div className="bg-card rounded-xl border border-border overflow-hidden"><div className="px-5 py-3 border-b border-border"><p className="text-sm font-semibold text-foreground">Profit &amp; Loss Statement</p><p className="text-xs text-secondary mt-0.5">Tax-ready breakdown per gym per month</p></div><div className="overflow-x-auto"><table data-admin-responsive-table className="w-full"><thead><tr className="bg-primary/5 border-b border-border">{HEADERS.map(h=><th role="button" tabIndex={0} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); event.currentTarget.click(); } }}  key={h.key} onClick={()=>logic.onPnlSort(h.key)} className="px-4 py-3 text-left text-xs font-semibold text-secondary uppercase tracking-wider whitespace-nowrap cursor-pointer select-none" aria-sort={logic.pnlSortKey===h.key?(logic.pnlSortDir==='asc'?'ascending':'descending'):'none'}><div className="flex items-center gap-1.5">{h.label}<SortIcon column={h.key} sortKey={logic.pnlSortKey} sortDir={logic.pnlSortDir}/></div></th>)}</tr></thead><tbody className="divide-y divide-border">{logic.pnlData.length===0?<tr><td colSpan={HEADERS.length} className="px-4 py-14 text-center text-sm text-secondary">No P&amp;L records found for the current filters.</td></tr>:logic.pnlData.map(p=><tr key={`${p.gymId}-${p.month}`} className="hover:bg-primary/5 motion-safe:transition-colors"> <td className="px-4 py-3 text-sm font-medium text-foreground">{p.gymName}</td><td className="px-4 py-3 text-sm text-secondary">{p.month}</td><Cell value={p.revenue}/><Cell value={p.cogs} tone="text-danger"/><Cell value={p.grossProfit}/><Cell value={p.staffCost} tone="text-danger"/><Cell value={p.rentUtilities} tone="text-danger"/><Cell value={p.marketing} tone="text-danger"/><Cell value={p.miscExpenses} tone="text-danger"/><Cell value={p.ebitda} tone="text-info"/><Cell value={p.tax} tone="text-danger"/><Cell value={p.netProfit} tone="font-bold text-success"/></tr>)}</tbody></table></div></div>}

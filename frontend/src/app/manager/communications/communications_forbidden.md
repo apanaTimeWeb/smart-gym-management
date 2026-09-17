@@ -53,6 +53,6 @@
 
 ## Key Components That Must Not Be Changed Without Review
 - `ManagerBulkMessageModal.tsx` — controls the manual per-recipient WhatsApp UX. Any change here could accidentally enable automated bulk sends.
-- `useManagerChurnRecoveryLogic.ts` — owns the win-back flow. Adding side effects here could unintentionally modify member records.
+- `ManagerUseManagerChurnRecoveryLogic.ts` — owns the win-back flow. Adding side effects here could unintentionally modify member records.
 - `ManagerCommunicationsApi.ts` — API contract boundary. Changes here affect all callers simultaneously.
-- `communications_types/communications_types.ts` — all consumers depend on this type contract. Breaking changes here require a full module audit.
+- `communications_types/ManagerCommunications_types.ts` — all consumers depend on this type contract. Breaking changes here require a full module audit.

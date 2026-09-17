@@ -1,12 +1,11 @@
-// RESPONSIBILITY: Renders the paginated table of all gym memberships with status filter tabs. Receives data via ManagerSalesContext. No API calls.
 'use client';
-
+// RESPONSIBILITY: Renders the paginated table of all gym memberships with status filter tabs. Receives data via ManagerSalesContext. No API calls.
 import { useState } from 'react';
 import { useSalesContext } from '@/app/manager/sales/sales_context/ManagerSalesContext';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrency , formatDate} from '@/lib/formatters';
 import ManagerSalesEmptyState from '@/app/manager/sales/sales_components/ManagerSalesEmptyState/ManagerSalesEmptyState';
-import type { Member } from '@/app/manager/members/members_types/ManagerMembersTypes';
+import type { SalesMemberSnapshot } from '@/app/manager/sales/sales_types/ManagerSalesMemberSnapshot';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
 
 const MEMBERSHIP_FILTERS = ['All', 'Active', 'Expiring Soon', 'Expired'] as const;
@@ -22,12 +21,12 @@ function getDaysLeftColorClass(daysLeft: number): string {
 
 export default function ManagerSalesAllMemberships() {
   const [filter, setFilter] = useState('All');
-  const { currentPage, setCurrentPage, allMemberships, allMembershipsTotal, fetchState } = useSalesContext();
+  const { currentPage, setCurrentPage, allMemberships, allMembershipsTotal, isLoading, isError } = useSalesContext();
   const [now] = useState(() => Date.now());
 
   const totalPages = Math.ceil(allMembershipsTotal / MANAGER_ITEMS_PER_PAGE) || 1;
 
-  const filteredMemberships = allMemberships.filter((m: Member) => {
+  const filteredMemberships = allMemberships.filter((m: SalesMemberSnapshot) => {
     if (filter === 'All') return true;
     if (filter === 'Active') return m.status === 'ACTIVE' && new Date(m.expiryDate).getTime() >= now;
     if (filter === 'Expired') return new Date(m.expiryDate).getTime() < now;
@@ -38,17 +37,17 @@ export default function ManagerSalesAllMemberships() {
     return true;
   });
 
-  if (fetchState === 'loading') {
+  if (isLoading) {
     return (
       <div className="space-y-2">
         {[...Array(6)].map((_, i) => (
-          <div key={i} className="motion-safe:animate-pulse h-12 bg-card rounded border border-border" />
+          <div key={`skeleton-${i}`} className="motion-safe:animate-pulse h-12 bg-card rounded border border-border" />
         ))}
       </div>
     );
   }
 
-  if (fetchState === 'error') {
+  if (isError) {
     return (
       <div className="text-center py-16 bg-card rounded-2xl border border-danger/30">
         <p className="text-danger font-medium">Failed to load memberships.</p>
@@ -64,9 +63,9 @@ export default function ManagerSalesAllMemberships() {
           <button
             key={f}
             onClick={() => setFilter(f)}
-            className={`px-3 py-1.5 text-xs rounded-full font-medium border transition-colors ${
+            className={`px-3 py-1.5 text-xs rounded-full font-medium border motion-safe:transition-colors ${
               f === filter
-                ? 'bg-primary text-white border-transparent'
+                ? 'bg-primary text-primary-foreground border-transparent'
                 : 'border-border text-secondary hover:text-foreground'
             }`}
           >
@@ -87,12 +86,12 @@ export default function ManagerSalesAllMemberships() {
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
-            {filteredMemberships.map((r: Member) => (
-              <tr key={r.id} className="hover:bg-primary-subtle transition-colors">
+            {filteredMemberships.map((r: SalesMemberSnapshot) => (
+              <tr key={r.id} className="hover:bg-primary-subtle motion-safe:transition-colors">
                 <td className="px-4 py-3 text-sm font-medium text-foreground">{r.name}</td>
                 <td className="px-4 py-3 text-sm text-secondary">{r.plan?.name ?? `Plan #${r.planId}`}</td>
-                <td className="px-4 py-3 text-sm text-secondary">{new Date(r.joinDate).toLocaleDateString('en-IN')}</td>
-                <td className="px-4 py-3 text-sm text-secondary">{new Date(r.expiryDate).toLocaleDateString('en-IN')}</td>
+                <td className="px-4 py-3 text-sm text-secondary">{formatDate(r.joinDate)}</td>
+                <td className="px-4 py-3 text-sm text-secondary">{formatDate(r.expiryDate)}</td>
                 <td className="px-4 py-3">
                   <span className={`text-xs px-2.5 py-0.5 rounded-full font-semibold ${
                     r.status === 'ACTIVE'

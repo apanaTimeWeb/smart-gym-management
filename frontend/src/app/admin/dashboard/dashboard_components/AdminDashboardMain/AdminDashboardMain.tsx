@@ -1,10 +1,6 @@
+"use client";
 // RESPONSIBILITY: Main entry point for the dashboard module. Renders layout, handles high-level loading/error states, and sets up Context.
-'use client';
-
-import AdminHeader from '@/app/admin/admin_components/AdminLayout/AdminHeader';
 import { useAdminDashboardLogic } from '@/app/admin/dashboard/dashboard_context/useAdminDashboardLogic';
-import { useAdminDashboardStore } from '@/app/admin/dashboard/dashboard_store/useAdminDashboardStore';
-import type { TimeRange } from '@/app/admin/dashboard/dashboard_types/dashboard_types';
 import AdminDashboardKPIs from '@/app/admin/dashboard/dashboard_components/AdminDashboardKPIs/AdminDashboardKPIs';
 import AdminDashboardBranchLeaderboard from '@/app/admin/dashboard/dashboard_components/AdminDashboardBranchLeaderboard/AdminDashboardBranchLeaderboard';
 import AdminDashboardAlerts from '@/app/admin/dashboard/dashboard_components/AdminDashboardAlerts/AdminDashboardAlerts';
@@ -18,7 +14,7 @@ function DashboardSkeleton() {
   return (
     <div className="p-6 space-y-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-        {[1, 2, 3, 4].map(i => <div key={i} className="h-28 bg-card rounded-xl motion-safe:animate-pulse border border-border" />)}
+        {["row-1", "row-2", "row-3", "row-4"].map(i => <div key={i} className="h-28 bg-card rounded-xl motion-safe:animate-pulse border border-border" />)}
       </div>
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         <div className="xl:col-span-2 h-80 bg-card rounded-xl motion-safe:animate-pulse border border-border" />
@@ -34,9 +30,8 @@ function DashboardSkeleton() {
 
 export default function AdminDashboardMain() {
   const { stats, status, error } = useAdminDashboardLogic();
-  const { timeRange, setTimeRange, startDate, endDate, setCustomDateRange } = useAdminDashboardStore();
 
-  if (status === 'loading') return <div className="min-h-full"><DashboardSkeleton /></div>;
+  if (status === 'pending') return <div className="min-h-full"><DashboardSkeleton /></div>;
 
   if (status === 'error') {
     throw new Error(error || 'Failed to load dashboard');
@@ -44,7 +39,6 @@ export default function AdminDashboardMain() {
 
   return (
     <div className="min-h-full">
-      <AdminHeader title="Dashboard" subtitle="Welcome back, Admin! Here's your business overview." />
       <div className="p-6 space-y-6">
 
         {/* Time Range Selector */}

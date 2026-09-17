@@ -1,33 +1,11 @@
-'use client';
+"use client";
 // RESPONSIBILITY: Manages the Gym Profile settings form.
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { GymProfileSchema } from '@/app/admin/settings/settings_types/settings.schema';
-import type { GymProfileType } from '@/app/admin/settings/settings_types/settings_types';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { settingsApi } from '@/app/admin/settings/settings_api/settings_api';
-import toast from 'react-hot-toast';
+import type { GymProfileType } from '@/app/admin/settings/settings_types/AdminSettingsTypes';
+import { useAdminSettingsGymProfileForm } from '@/app/admin/settings/settings_context/useAdminSettingsForms';
 import { Save, RefreshCw } from 'lucide-react';
-import { useUnsavedChangesGuard } from '@/app/admin/admin_utils/useUnsavedChangesGuard';
 
 export function AdminSettingsGymProfile({ initialData }: { initialData: GymProfileType }) {
-  const queryClient = useQueryClient();
-  const form = useForm<GymProfileType>({
-    resolver: zodResolver(GymProfileSchema),
-    defaultValues: initialData,
-  });
-
-  useUnsavedChangesGuard(form.formState.isDirty);
-
-  const mutation = useMutation({
-    mutationFn: (data: GymProfileType) => settingsApi.updateSettings({ profile: data }),
-    onSuccess: (res) => {
-      toast.success(res.message || 'Profile saved', { id: 'settings-profile-save' });
-      queryClient.invalidateQueries({ queryKey: ['admin', 'settings'] });
-      form.reset(form.getValues()); // Reset dirty state
-    },
-    onError: (err) => toast.error((err as Error).message, { id: 'settings-profile-save' }),
-  });
+  const { form, mutation } = useAdminSettingsGymProfileForm(initialData);
 
   const onSubmit = (data: GymProfileType) => mutation.mutate(data);
 
@@ -56,7 +34,7 @@ export function AdminSettingsGymProfile({ initialData }: { initialData: GymProfi
           <button
             type="submit"
             disabled={mutation.isPending}
-            className="px-4 py-2 text-sm bg-primary text-white rounded-lg font-medium flex items-center gap-2 disabled:opacity-70 hover:bg-primary-hover motion-safe:transition-colors"
+            className="px-4 py-2 text-sm bg-primary text-primary-foreground rounded-lg font-medium flex items-center gap-2 disabled:opacity-70 hover:bg-primary-hover motion-safe:transition-colors"
           >
             <Save size={14} /> {mutation.isPending ? 'Saving...' : 'Save Changes'}
           </button>

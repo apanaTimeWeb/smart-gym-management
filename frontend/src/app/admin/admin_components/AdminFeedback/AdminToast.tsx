@@ -1,22 +1,16 @@
+"use client";
 // RESPONSIBILITY: Renders the fixed bottom-right toast notification. Auto-dismisses after 4 seconds. Shared across all ADMIN modules.
-'use client';
 
 import { useEffect, useState } from 'react';
 import { CheckCircle, XCircle, MessageCircle, Mail, Info, AlertTriangle, X } from 'lucide-react';
 
-export type ToastType = 'whatsapp' | 'email' | 'error' | 'success' | 'info' | 'warning';
-
-interface AdminToastProps {
-  id?: string;
-  message: string;
-  type: ToastType;
-  onClose: () => void;
-}
+import type { AdminToastProps, AdminToastType } from '@/app/admin/admin_components/AdminFeedback/AdminToastTypes';
 
 export default function AdminToast({ id, message, type, onClose }: AdminToastProps) {
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setVisible(true);
     const timer = setTimeout(() => {
       setVisible(false);
@@ -27,20 +21,20 @@ export default function AdminToast({ id, message, type, onClose }: AdminToastPro
 
   if (!visible) return null;
 
-  const config: Record<ToastType, { icon: React.ReactNode, borderClass: string, colorClass: string, shadow: string }> = {
-    success: { icon: <CheckCircle size={20} />, borderClass: 'border-l-success', colorClass: 'text-success', shadow: 'shadow-[0_0_20px_rgba(34,197,94,0.15)]' },
-    error: { icon: <XCircle size={20} />, borderClass: 'border-l-danger', colorClass: 'text-danger', shadow: 'shadow-[0_0_20px_rgba(239,68,68,0.15)]' },
-    whatsapp: { icon: <MessageCircle size={20} />, borderClass: 'border-l-success', colorClass: 'text-success', shadow: 'shadow-[0_0_20px_rgba(34,197,94,0.15)]' },
-    email: { icon: <Mail size={20} />, borderClass: 'border-l-info', colorClass: 'text-info', shadow: 'shadow-[0_0_20px_rgba(59,130,246,0.15)]' },
-    info: { icon: <Info size={20} />, borderClass: 'border-l-info', colorClass: 'text-info', shadow: 'shadow-[0_0_20px_rgba(59,130,246,0.15)]' },
-    warning: { icon: <AlertTriangle size={20} />, borderClass: 'border-l-warning', colorClass: 'text-warning', shadow: 'shadow-[0_0_20px_rgba(245,158,11,0.15)]' },
+  const config: Record<AdminToastType, { icon: React.ReactNode, borderClass: string, colorClass: string, shadow: string }> = {
+    success: { icon: <CheckCircle size={20} />, borderClass: 'border-l-success', colorClass: 'text-success', shadow: 'shadow-lg' },
+    error: { icon: <XCircle size={20} />, borderClass: 'border-l-danger', colorClass: 'text-danger', shadow: 'shadow-lg' },
+    whatsapp: { icon: <MessageCircle size={20} />, borderClass: 'border-l-success', colorClass: 'text-success', shadow: 'shadow-lg' },
+    email: { icon: <Mail size={20} />, borderClass: 'border-l-info', colorClass: 'text-info', shadow: 'shadow-lg' },
+    info: { icon: <Info size={20} />, borderClass: 'border-l-info', colorClass: 'text-info', shadow: 'shadow-lg' },
+    warning: { icon: <AlertTriangle size={20} />, borderClass: 'border-l-warning', colorClass: 'text-warning', shadow: 'shadow-lg' },
   };
 
   const { icon, borderClass, colorClass, shadow } = config[type] || config.success;
 
   return (
     <div
-      className={`fixed bottom-6 right-6 z-50 flex items-center gap-3 w-80 p-4 rounded-xl border-y border-r border-l-4 border-y-white/5 border-r-white/5 backdrop-blur-xl bg-card/90 text-foreground motion-safe:animate-in motion-safe:slide-in-from-right-8 motion-safe:fade-in duration-300 ${shadow} ${borderClass}`}
+      className={`fixed bottom-6 right-6 z-50 flex items-center gap-3 w-80 p-4 rounded-xl border-y border-r border-l-4 border-y-white/5 border-r-white/5 backdrop-blur-xl bg-card/90 text-foreground motion-safe:animate-in motion-safe:slide-in-from-right-8 motion-safe:fade-in motion-safe:duration-300 ${shadow} ${borderClass}`}
     >
       <div className={`${colorClass} flex-shrink-0`}>
         {icon}
@@ -53,7 +47,8 @@ export default function AdminToast({ id, message, type, onClose }: AdminToastPro
           setVisible(false);
           setTimeout(onClose, 300);
         }}
-        className="text-secondary hover:text-foreground flex-shrink-0 motion-safe:transition-colors p-1 rounded-md hover:bg-white/10"
+        className="min-h-11 min-w-11 inline-flex items-center justify-center text-secondary hover:text-foreground flex-shrink-0 motion-safe:transition-colors p-1 rounded-md hover:bg-card/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+        aria-label="Dismiss notification"
       >
         <X size={16} />
       </button>

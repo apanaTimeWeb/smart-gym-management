@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders the Membership Growth report tab — new members, renewals, exits, net growth per gym.
-'use client';
 
 import { useAdminReportsLogic } from '@/app/admin/reports/reports_context/useAdminReportsLogic';
 
@@ -15,7 +15,7 @@ export default function AdminReportsMembership() {
           <p className="text-xs text-secondary mt-0.5">New members, renewals, exits and net growth for the selected period</p>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table data-admin-responsive-table className="w-full">
             <thead>
               <tr className="bg-primary/5">
                 {['Gym', 'Active Members', 'New Members', 'Renewals', 'Exits', 'Net Growth'].map(h => (
@@ -49,19 +49,19 @@ export default function AdminReportsMembership() {
               <tr className="bg-primary/5 border-t-2 border-border">
                 <td className="px-5 py-3 text-sm font-bold text-foreground">Total</td>
                 <td className="px-5 py-3 text-sm font-bold text-foreground">
-                  {reportData.membershipGrowth.reduce((s, r) => s + r.activeMembers, 0).toLocaleString('en-IN')}
+                  {reportData.membershipGrowth.reduce((s: number, r) => s + r.activeMembers, 0).toLocaleString('en-IN')}
                 </td>
                 <td className="px-5 py-3 text-sm font-bold text-success">
-                  +{reportData.membershipGrowth.reduce((s, r) => s + r.newMembers, 0)}
+                  +{reportData.membershipGrowth.reduce((s: number, r) => s + r.newMembers, 0)}
                 </td>
                 <td className="px-5 py-3 text-sm font-bold text-info">
-                  {reportData.membershipGrowth.reduce((s, r) => s + r.renewals, 0)}
+                  {reportData.membershipGrowth.reduce((s: number, r) => s + r.renewals, 0)}
                 </td>
                 <td className="px-5 py-3 text-sm font-bold text-danger">
-                  -{reportData.membershipGrowth.reduce((s, r) => s + r.exits, 0)}
+                  -{reportData.membershipGrowth.reduce((s: number, r) => s + r.exits, 0)}
                 </td>
                 <td className="px-5 py-3 text-sm font-bold text-success">
-                  +{reportData.membershipGrowth.reduce((s, r) => s + r.netGrowth, 0)}
+                  +{reportData.membershipGrowth.reduce((s: number, r) => s + r.netGrowth, 0)}
                 </td>
               </tr>
             </tfoot>

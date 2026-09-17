@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Renders the empty state for Admin Members when no results match filters.
-'use client';
 
 import { Users } from 'lucide-react';
 

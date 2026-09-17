@@ -1,7 +1,7 @@
+"use client";
 // RESPONSIBILITY: Form for creating a new data export job with data type, format, gym, and date range filters.
-'use client';
 
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Download } from 'lucide-react';
 import { useAdminDataExportLogic } from '@/app/admin/data-export/data_export_context/useAdminDataExportLogic';
@@ -12,19 +12,20 @@ import {
   FORMAT_OPTIONS,
   GYM_OPTIONS,
 } from '@/app/admin/data-export/data_export_utils/AdminDataExportSharedConstants';
-import type { ExportFormValues } from '@/app/admin/data-export/data_export_types/data_export_types';
+import type { ExportFormValues } from '@/app/admin/data-export/data_export_types/AdminDataExportTypes';
 
 export default function AdminDataExportForm() {
   const { createExport, creating } = useAdminDataExportLogic();
 
-  const { register, handleSubmit, watch, setValue, reset, formState: { errors } } = useForm<ExportFormValues>({
+  const { register, handleSubmit, watch, setValue, reset, control, formState: { errors } } = useForm<ExportFormValues>({
     resolver: zodResolver(ExportFormSchema),
     defaultValues: EMPTY_EXPORT_FORM,
   });
 
-  const selectedFormat = watch('format');
-  const selectedDataType = watch('dataType');
-  const selectedGyms = watch('gymIds') ?? [];
+  const formValues = useWatch({ control });
+  const selectedFormat = formValues.format ?? EMPTY_EXPORT_FORM.format;
+  const selectedDataType = formValues.dataType ?? EMPTY_EXPORT_FORM.dataType;
+  const selectedGyms = formValues.gymIds ?? EMPTY_EXPORT_FORM.gymIds ?? [];
 
   const toggleGym = (val: string) => {
     if (val === 'all') { setValue('gymIds', ['all']); return; }
@@ -107,7 +108,7 @@ export default function AdminDataExportForm() {
           <button type="button" onClick={() => reset(EMPTY_EXPORT_FORM)} className="px-4 py-2 bg-input border border-border rounded-lg text-sm font-medium text-secondary hover:text-foreground motion-safe:transition-colors">
             Clear
           </button>
-          <button type="submit" disabled={creating} className="flex items-center gap-2 px-5 py-2 bg-primary text-black rounded-lg text-sm font-semibold hover:bg-primary-hover motion-safe:transition-colors disabled:opacity-60 disabled:cursor-not-allowed active:scale-95 min-w-[120px]">
+          <button type="submit" disabled={creating} className="flex items-center gap-2 px-5 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-semibold hover:bg-primary-hover motion-safe:transition-colors disabled:opacity-60 disabled:cursor-not-allowed motion-safe:active:scale-95 min-w-32">
             <Download size={15} />
             {creating ? 'Starting Export...' : 'Start Export'}
           </button>

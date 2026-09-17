@@ -1,6 +1,5 @@
-// RESPONSIBILITY: Form modal for creating or editing a gym store product in the Store module.
 'use client';
-
+// RESPONSIBILITY: Form modal for creating or editing a gym store product in the Store module.
 import { useEffect } from 'react';
 import { X, Save } from 'lucide-react';
 import { useStoreContext } from '@/app/manager/store/store_context/ManagerStoreContext';
@@ -36,7 +35,7 @@ export default function ManagerStoreProductModal() {
  if (!showProductModal) return null;
 
  return (
- <div className="fixed inset-0 bg-black/60 z-40 flex items-center justify-center p-4">
+ <div className="fixed inset-0 bg-foreground/60 z-40 flex items-center justify-center p-4">
  <div className="bg-card rounded-2xl shadow-xl w-full max-w-md max-h-full overflow-y-auto border-2 border-warning">
  <div className="sticky top-0 bg-card px-6 py-4 border-b border-border flex items-center justify-between">
  <h3 className="text-lg font-bold text-foreground">
@@ -44,7 +43,7 @@ export default function ManagerStoreProductModal() {
  </h3>
  <button 
  onClick={() => setShowProductModal(false)} 
- className="p-2 rounded-lg hover:bg-primary-subtle text-secondary transition-colors"
+ className="p-2 rounded-lg hover:bg-primary-subtle text-secondary motion-safe:transition-colors"
  >
  <X size={18} />
  </button>
@@ -93,16 +92,16 @@ export default function ManagerStoreProductModal() {
  <button 
  type="button" 
  onClick={() => setShowProductModal(false)} 
- className="flex-1 py-2.5 border border-border rounded-xl text-sm font-medium text-foreground hover:bg-primary-subtle transition-colors"
+ className="flex-1 py-2.5 border border-border rounded-xl text-sm font-medium text-foreground hover:bg-primary-subtle motion-safe:transition-colors"
  >
  Cancel
  </button>
  <button 
  type="submit" 
  disabled={saving} 
- className="flex-1 py-2.5 rounded-xl text-sm font-bold text-white flex items-center justify-center gap-2 disabled:opacity-70 transition-colors bg-primary"
+ className="flex-1 py-2.5 rounded-xl text-sm font-bold text-primary-foreground flex items-center justify-center gap-2 disabled:opacity-70 motion-safe:transition-colors bg-primary"
  >
- {saving ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full motion-safe:animate-spin" /> : <><Save size={15} />{editProductId ? 'Update' : 'Add Product'}</>}
+ {saving ? <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full motion-safe:animate-spin" /> : <><Save size={15} />{editProductId ? 'Update' : 'Add Product'}</>}
  </button>
  </div>
  </form>

@@ -1,9 +1,9 @@
+"use client";
 // RESPONSIBILITY: Renders 4 clickable aggregate KPI cards (Total Revenue, Total Expenses,
 // Net Profit, Margin %). Clicking a Profitable/Loss card filters the table below.
-'use client';
 
 import { TrendingUp, TrendingDown, IndianRupee, Percent, Building2, AlertTriangle } from 'lucide-react';
-import type { BranchPnlAggregates, PnlStatusFilter } from '@/app/admin/finance/finance_types/finance_types';
+import type { BranchPnlAggregates, PnlStatusFilter } from '@/app/admin/finance/finance_types/AdminFinanceTypes';
 
 interface AdminFinancePnlKPIsProps {
   aggregates: BranchPnlAggregates;
@@ -11,7 +11,7 @@ interface AdminFinancePnlKPIsProps {
   onStatusFilterChange: (f: PnlStatusFilter) => void;
 }
 
-import { formatKPI } from '@/lib/formatters';
+import {formatKPI, formatPercent1dp} from '@/lib/formatters';
 
 export default function AdminFinancePnlKPIs({
   aggregates,
@@ -47,7 +47,7 @@ export default function AdminFinancePnlKPIs({
       iconBg: aggregates.totalNetProfit >= 0 ? 'bg-success/10' : 'bg-danger/10',
       activeBorder: aggregates.totalNetProfit >= 0 ? 'border-success' : 'border-danger',
       filter: 'ALL' as PnlStatusFilter,
-      subtext: `${aggregates.overallMarginPct.toFixed(1)}% margin`,
+      subtext: `${formatPercent1dp(aggregates.overallMarginPct)}% margin`,
     },
     {
       label: 'Profitable Branches',
@@ -71,7 +71,7 @@ export default function AdminFinancePnlKPIs({
     },
     {
       label: 'Avg Profit Margin',
-      value: `${aggregates.overallMarginPct.toFixed(1)}%`,
+      value: `${formatPercent1dp(aggregates.overallMarginPct)}%`,
       icon: Percent,
       iconColor: 'text-warning',
       iconBg: 'bg-warning/10',
@@ -94,7 +94,7 @@ export default function AdminFinancePnlKPIs({
               onStatusFilterChange(isActive ? 'ALL' : k.filter);
             }}
             className={`text-left rounded-xl p-4 border-2 bg-card motion-safe:transition-all motion-safe:duration-200 ${
-              isInteractive ? 'cursor-pointer hover:shadow-md hover:motion-safe:-translate-y-0.5' : 'cursor-default'
+              isInteractive ? 'cursor-pointer hover:shadow-md motion-safe:hover:-translate-y-0.5' : 'cursor-default'
             } ${isActive ? k.activeBorder : 'border-border'}`}
             aria-pressed={isInteractive ? isActive : undefined}
             aria-label={isInteractive ? `Filter by ${k.label}` : undefined}

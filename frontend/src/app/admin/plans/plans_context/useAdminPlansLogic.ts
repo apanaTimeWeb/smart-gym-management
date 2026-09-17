@@ -1,16 +1,18 @@
+"use client";
+
 import { useAdminPlansStore } from '@/app/admin/plans/plans_store/useAdminPlansStore';
+import { buildAdminPlansQueryString } from '@/app/admin/plans/plans_utils/AdminPlansUrlState';
 import { useAdminToastStore } from '@/app/admin/admin_store/useAdminToastStore';
 // RESPONSIBILITY: Custom hook encapsulating all business logic, state, and API interactions for the Plans module.
 // DATA FLOW: Centralized store/hook logic mapping API mutations and query state to UI props.
-import { useState, useCallback } from 'react';
+import { useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { plansApi } from '@/app/admin/plans/plans_api/plans_api';
-import type { Plan, PlansContextType, PlansInitialData, FetchState } from '@/app/admin/plans/plans_types/plans_types';
-import type { ToastType } from '@/app/admin/admin_components/AdminFeedback/AdminToast';
+import { plansApi } from '@/app/admin/plans/plans_api/AdminPlansApi';
+import type { Plan, PlansContextType, PlansInitialData } from '@/app/admin/plans/plans_types/AdminPlansTypes';
+import type { ApiResponse } from '@/lib/api';
 import { EMPTY_PLAN_FORM, type PlanFormValues } from '@/app/admin/plans/plans_utils/AdminPlansSharedConstants';
 import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/useAdminConfirm';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import toast from 'react-hot-toast';
 
 export function useAdminPlansLogic(initialData?: PlansInitialData | null): PlansContextType {
   const { confirm } = useAdminConfirm();
@@ -22,39 +24,27 @@ export function useAdminPlansLogic(initialData?: PlansInitialData | null): Plans
   const tierFilter = searchParams.get('tier') || 'All';
   const currentPage = Number(searchParams.get('page')) || 1;
 
-  const setSearch = useCallback((val: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-    if (val) { params.set('search', val); params.set('page', '1'); }
-    else { params.delete('search'); params.set('page', '1'); }
-    router.push(`?${params.toString()}`, { scroll: false });
+  const updateUrl = useCallback((update: Parameters<typeof buildAdminPlansQueryString>[1]) => {
+    router.push(buildAdminPlansQueryString(searchParams, update), { scroll: false });
   }, [router, searchParams]);
 
-  const setTierFilter = useCallback((val: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-    if (val !== 'All') { params.set('tier', val); params.set('page', '1'); }
-    else { params.delete('tier'); params.set('page', '1'); }
-    router.push(`?${params.toString()}`, { scroll: false });
-  }, [router, searchParams]);
-
-  const setCurrentPage = useCallback((page: number) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set('page', page.toString());
-    router.push(`?${params.toString()}`, { scroll: false });
-  }, [router, searchParams]);
+  const setSearch = useCallback((val: string) => updateUrl({ search: val || null }), [updateUrl]);
+  const setTierFilter = useCallback((val: string) => updateUrl({ tier: val === 'All' ? null : val }), [updateUrl]);
+  const setCurrentPage = useCallback((page: number) => updateUrl({ page }), [updateUrl]);
 
   const { showModal, setShowModal, editId, setEditId, form, setForm } = useAdminPlansStore();
   const { showToast } = useAdminToastStore();
 
 
-  const { data: plansRes, isLoading, isError } = useQuery({
-    queryKey: ['adminPlans'],
+  const plansQuery = useQuery({
+    queryKey: ['admin', 'plans', 'list'],
     queryFn: () => plansApi.fetchAllPlans(),
     initialData: initialData ? { success: true, message: 'SSR', data: initialData.plans } : undefined,
   });
 
-  const fetchState: FetchState = isLoading ? 'loading' : isError ? 'error' : 'success';
+  const status = plansQuery.status;
 
-  let fetchedPlans = plansRes?.data || [];
+  let fetchedPlans = plansQuery.data?.data || [];
   
   if (tierFilter !== 'All') {
     fetchedPlans = fetchedPlans.filter((p: Plan) => p.tier === tierFilter);
@@ -83,29 +73,29 @@ export function useAdminPlansLogic(initialData?: PlansInitialData | null): Plans
 
   const createMutation = useMutation({
     mutationFn: (payload: Partial<Plan>) => plansApi.createPlan(payload),
-    onSuccess: (res) => {
-      showToast(res.message || 'Plan created', 'success');
+    onSuccess: (res: ApiResponse<Plan>) => {
+      showToast(res.message, 'success');
       setShowModal(false);
-      queryClient.invalidateQueries({ queryKey: ['adminPlans'] });
+      queryClient.invalidateQueries({ queryKey: ['admin', 'plans', 'list'] });
     },
     onError: (err) => showToast((err as Error).message, 'error')
   });
 
   const updateMutation = useMutation({
     mutationFn: ({ id, payload }: { id: string, payload: Partial<Plan> }) => plansApi.updatePlan(id, payload),
-    onSuccess: (res) => {
-      showToast(res.message || 'Plan updated', 'success');
+    onSuccess: (res: ApiResponse<Plan>) => {
+      showToast(res.message, 'success');
       setShowModal(false);
-      queryClient.invalidateQueries({ queryKey: ['adminPlans'] });
+      queryClient.invalidateQueries({ queryKey: ['admin', 'plans', 'list'] });
     },
     onError: (err) => showToast((err as Error).message, 'error')
   });
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => plansApi.deletePlan(id),
-    onSuccess: (res) => {
-      showToast(res.message || 'Plan deleted', 'success');
-      queryClient.invalidateQueries({ queryKey: ['adminPlans'] });
+    onSuccess: (res: ApiResponse<unknown>) => {
+      showToast(res.message, 'success');
+      queryClient.invalidateQueries({ queryKey: ['admin', 'plans', 'list'] });
     },
     onError: (err) => showToast((err as Error).message, 'error')
   });
@@ -137,12 +127,15 @@ export function useAdminPlansLogic(initialData?: PlansInitialData | null): Plans
   }, [confirm, deleteMutation]);
 
   const saving = createMutation.isPending || updateMutation.isPending;
+  const loadPlans = useCallback(async () => {
+    await plansQuery.refetch();
+  }, [plansQuery]);
 
   return {
-    plans: fetchedPlans, fetchState, saving, toast: null,
+    plans: fetchedPlans, status, saving, toast: null,
     search, setSearch, tierFilter, setTierFilter, currentPage, setCurrentPage,
     showModal, setShowModal, editId, form, setForm,
-    showToast, hideToast: () => {}, loadPlans: async () => {}, // Mocked for context
+    showToast, loadPlans,
     openAdd, openEdit, savePlan, deletePlan,
   };
 }

@@ -1,17 +1,20 @@
+"use client";
 // RESPONSIBILITY: Consolidated cross-branch view of gym-specific blacklist entries.
 // Shows all branch-scoped bans in one place and allows admin to propagate any entry to all branches.
-'use client';
 
 import { Building2, Globe, ArrowUpRight, Trash2 } from 'lucide-react';
+import { maskSensitiveData } from '@/app/admin/admin_utils/AdminMaskSensitiveData';
+import { displayValue } from '@/app/admin/admin_utils/AdminDisplayValue';
 import { useAdminBlacklistLogic } from '@/app/admin/blacklist/blacklist_context/useAdminBlacklistLogic';
+import type { BlacklistedMember } from '@/app/admin/blacklist/blacklist_types/AdminBlacklistTypes';
 import { AdminTableSkeleton } from '@/app/admin/admin_components/AdminShared/AdminTableSkeleton';
 
 const HEADERS = ['Member', 'Contact', 'Reason', 'Banned At Branches', 'Blacklisted By', 'Date', 'Actions'];
 
 export default function AdminBlacklistCrossGymView() {
-  const { gymSpecificEntries, fetchState, propagateToAllBranches, removeFromBlacklist, propagating } = useAdminBlacklistLogic();
+  const { gymSpecificEntries, status, propagateToAllBranches, removeFromBlacklist, propagating } = useAdminBlacklistLogic();
 
-  if (fetchState === 'loading') return <AdminTableSkeleton rows={4} cols={HEADERS.length} />;
+  if (status === 'pending') return <AdminTableSkeleton rows={4} cols={HEADERS.length} />;
 
   if (gymSpecificEntries.length === 0) {
     return (
@@ -39,7 +42,7 @@ export default function AdminBlacklistCrossGymView() {
 
       <div className="bg-card rounded-xl border border-border overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table data-admin-responsive-table className="w-full">
             <thead>
               <tr className="bg-warning/5">
                 {HEADERS.map(h => (
@@ -50,22 +53,22 @@ export default function AdminBlacklistCrossGymView() {
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {gymSpecificEntries.map((m) => (
+              {gymSpecificEntries.map((m: BlacklistedMember) => (
                 <tr key={m.id} className="hover:bg-warning/5 motion-safe:transition-colors group">
                   <td className="px-4 py-3">
                     <p className="text-sm font-medium text-foreground">{m.memberName}</p>
                     <p className="text-xs text-secondary">ID: {m.memberId}</p>
                   </td>
                   <td className="px-4 py-3">
-                    <p className="text-sm text-foreground">{m.memberPhone}</p>
-                    <p className="text-xs text-secondary truncate max-w-40">{m.memberEmail}</p>
+                    <p className="text-sm text-foreground">{maskSensitiveData(m.memberPhone)}</p>
+                    <p className="text-xs text-secondary truncate max-w-40">{displayValue(m.memberEmail)}</p>
                   </td>
                   <td className="px-4 py-3 max-w-56">
                     <p className="text-sm text-foreground line-clamp-2">{m.reason}</p>
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex flex-wrap gap-1">
-                      {m.assignedGymNames.map((gym) => (
+                      {m.assignedGymNames.map((gym: string) => (
                         <span key={gym} className="inline-flex items-center gap-1 px-2 py-0.5 bg-warning-bg text-warning rounded-full text-xs font-medium">
                           <Building2 size={10} />
                           {gym}

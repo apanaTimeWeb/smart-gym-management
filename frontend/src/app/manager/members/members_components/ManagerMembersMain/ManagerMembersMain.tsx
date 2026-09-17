@@ -1,10 +1,9 @@
-// RESPONSIBILITY: Entry point component for the members module that sets up context providers and layout.
 'use client';
-
+// RESPONSIBILITY: Entry point component for the members module that sets up context providers and layout.
 import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/ManagerHeader';
 import ManagerToast from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
 import ManagerMessageModal from '@/app/manager/manager_components/ManagerFeedback/ManagerMessageModal';
-import ManagerMembersThermalReceipt from '@/app/manager/members/members_components/ManagerMembersThermalReceipt';
+import ManagerThermalReceipt from '@/app/manager/manager_components/ManagerFeedback/ManagerThermalReceipt';
 
 import { MembersProvider, useMembersContext } from '@/app/manager/members/members_context/ManagerMembersContext';
 import ManagerMembersKPIs from '@/app/manager/members/members_components/MembersKPIs/ManagerMembersKPIs';
@@ -58,7 +57,7 @@ function MembersContent() {
       </div>
 
       {printData && (
-        <ManagerMembersThermalReceipt data={printData} />
+        <ManagerThermalReceipt data={printData} />
       )}
     </div>
   );

@@ -1,5 +1,5 @@
 'use client';
-
+// RESPONSIBILITY: Renders the Manager StoreFilters presentation layer for the Manager module.
 import { useStoreContext } from '@/app/manager/store/store_context/ManagerStoreContext';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 

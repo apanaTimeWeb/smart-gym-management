@@ -1,7 +1,8 @@
+"use client";
 // RESPONSIBILITY: Renders dynamic charts visualizing staff performance metrics (sessions, additions).
-'use client';
 
 import dynamic from 'next/dynamic';
+import { ADMIN_CHART_THEME } from '@/app/admin/admin_utils/AdminChartThemeTokens';
 import type { StaffPerformanceRecord } from '@/app/admin/hr/hr_types/AdminHrPerformanceTypes';
 
 // Rule 15: Lazy loading heavy chart libraries
@@ -35,17 +36,17 @@ export default function AdminHrPerformanceCharts({ data }: AdminHrPerformanceCha
     xaxis: {
       categories: topTrainers.map((t) => t.name),
       labels: {
-        style: { colors: '#A1A1AA' },
+        style: { colors: ADMIN_CHART_THEME.textSecondary },
       },
     },
     yaxis: {
       labels: {
-        style: { colors: '#E4E4E7', fontWeight: 600 },
+        style: { colors: ADMIN_CHART_THEME.textPrimary, fontWeight: 600 },
       },
     },
-    colors: ['#FACC15'],
+    colors: [ADMIN_CHART_THEME.primary],
     grid: {
-      borderColor: 'rgba(255,255,255,0.06)',
+      borderColor: ADMIN_CHART_THEME.grid,
       strokeDashArray: 4,
     },
     theme: { mode: 'dark' },
@@ -65,7 +66,7 @@ export default function AdminHrPerformanceCharts({ data }: AdminHrPerformanceCha
       <h3 className="text-sm font-bold text-secondary uppercase tracking-wider mb-4">
         Top Trainers by Sessions
       </h3>
-      <div className="h-[250px] w-full">
+      <div className="h-64 w-full">
         <Chart options={chartOptions} series={chartSeries} type="bar" height="100%" />
       </div>
     </div>

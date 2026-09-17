@@ -1,16 +1,15 @@
+'use client';
 // RESPONSIBILITY: Slide-in drawer composer for sending win-back messages to a single churned member.
 // Renders template tier selector, channel toggle, editable message body, and send button.
-'use client';
-
 import { X, MessageCircle, Mail, Send, Loader2 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import type {
   ChurnedMember,
   CommChannel,
   WinBackTemplateTier,
-} from '@/app/manager/communications/communications_types/communications_types';
-import { CHURN_WIN_BACK_TEMPLATES } from '@/app/manager/communications/communications_fixtures/ManagerCommunicationsMockData';
-import { useUnsavedChangesGuard } from '@/app/manager/manager_utils/useUnsavedChangesGuard';
+} from '@/app/manager/communications/communications_types/ManagerCommunications_types';
+import { CANCELLATIONS_WIN_BACK_TEMPLATES } from '@/app/manager/communications/communications_fixtures/ManagerCommunicationsMockData';
+import { useManagerUnsavedChangesGuard } from '@/app/manager/manager_utils/ManagerUnsavedChangesGuard';
 
 interface ManagerChurnRecoveryComposerProps {
   member: ChurnedMember | null;
@@ -49,12 +48,12 @@ export default function ManagerChurnRecoveryComposer({
 
   // Protect against accidental navigation if the drawer is open and not sending
   const isDirty = isOpen && !isSending;
-  useUnsavedChangesGuard(isDirty);
+  useManagerUnsavedChangesGuard(isDirty);
 
   // Sync state when member or default tier changes
   useEffect(() => {
     setTier(defaultTier);
-    const tpl = CHURN_WIN_BACK_TEMPLATES[defaultTier];
+    const tpl = CANCELLATIONS_WIN_BACK_TEMPLATES[defaultTier];
     setMessage(tpl.message);
     setSubject(tpl.subject);
     setChannel('whatsapp');
@@ -63,7 +62,7 @@ export default function ManagerChurnRecoveryComposer({
   // Auto-fill template when tier changes
   function handleTierChange(newTier: WinBackTemplateTier) {
     setTier(newTier);
-    const tpl = CHURN_WIN_BACK_TEMPLATES[newTier];
+    const tpl = CANCELLATIONS_WIN_BACK_TEMPLATES[newTier];
     setMessage(tpl.message);
     setSubject(tpl.subject);
   }
@@ -81,7 +80,7 @@ export default function ManagerChurnRecoveryComposer({
       {/* Backdrop */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 motion-safe:transition-opacity"
+          className="fixed inset-0 bg-foreground/60 backdrop-blur-sm z-40 motion-safe:transition-opacity"
           onClick={onClose}
           aria-hidden="true"
         />
@@ -92,7 +91,7 @@ export default function ManagerChurnRecoveryComposer({
         aria-label="Win-Back Message Composer"
         aria-modal="true"
         role="dialog"
-        className={`fixed top-0 right-0 h-full w-full sm:w-[480px] bg-overlay border-l border-border z-40 flex flex-col shadow-2xl shadow-black/50 motion-safe:transition-transform motion-safe:duration-300 ${
+        className={`fixed top-0 right-0 h-full w-full sm:w-120 bg-overlay border-l border-border z-40 flex flex-col shadow-2xl shadow-2xl motion-safe:transition-transform motion-safe:duration-300 ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
@@ -132,7 +131,7 @@ export default function ManagerChurnRecoveryComposer({
                   onClick={() => handleTierChange(opt.value)}
                   className={`px-3 py-1.5 rounded-lg text-xs font-medium border motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
                     tier === opt.value
-                      ? 'bg-primary text-black border-primary'
+                      ? 'bg-primary text-primary-foreground border-primary'
                       : 'bg-input border-border text-secondary hover:text-foreground'
                   }`}
                 >
@@ -154,7 +153,6 @@ export default function ManagerChurnRecoveryComposer({
                     ? 'bg-success-bg border-success text-success'
                     : 'bg-input border-border text-secondary hover:text-foreground'
                 }`}
-                style={channel === 'whatsapp' ? { color: '#25D366', borderColor: '#25D366' } : undefined}
               >
                 <MessageCircle size={15} />
                 WhatsApp
@@ -233,7 +231,7 @@ export default function ManagerChurnRecoveryComposer({
             type="button"
             onClick={handleSend}
             disabled={!canSend || isSending || !member}
-            className="flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-medium bg-primary text-black disabled:opacity-50 disabled:cursor-not-allowed motion-safe:transition-all motion-safe:hover:bg-primary-hover motion-safe:active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            className="flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-medium bg-primary text-primary-foreground disabled:opacity-50 disabled:cursor-not-allowed motion-safe:transition-all motion-safe:hover:bg-primary-hover motion-safe:active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
             {isSending ? (
               <Loader2 size={15} className="motion-safe:animate-spin" />

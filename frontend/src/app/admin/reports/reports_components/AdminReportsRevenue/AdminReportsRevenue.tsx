@@ -1,9 +1,13 @@
+"use client";
+import { formatPercent1dp, formatCurrency } from '@/lib/formatters';
+import type { AdminReportsRevenueSortKey } from '@/app/admin/reports/reports_types/AdminReportsUiTypes';
+import type { AdminSortDirection } from '@/app/admin/admin_types/AdminSortTypes';
+import { useMemo, useState } from 'react';
+import { ChevronDown, ChevronUp, ChevronsUpDown } from 'lucide-react';
 // RESPONSIBILITY: Renders the Revenue report tab — breakdown by gym, payment method, plan, and monthly trend chart.
-'use client';
 
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { useAdminReportsLogic } from '@/app/admin/reports/reports_context/useAdminReportsLogic';
-import { formatCurrency } from '@/app/admin/reports/reports_utils/AdminReportsSharedConstants';
 
 const TREND_ICON = {
   up: <TrendingUp size={14} className="text-success" />,
@@ -13,10 +17,17 @@ const TREND_ICON = {
 
 export default function AdminReportsRevenue() {
   const { reportData } = useAdminReportsLogic();
+  const [sortKey, setSortKey] = useState<AdminReportsRevenueSortKey>('revenue');
+  const [sortDir, setSortDir] = useState<AdminSortDirection>('desc');
+
+  const revenueByGym = useMemo(() => {
+    if (!reportData) return [];
+    return [...reportData.revenueByGym].sort((a,b)=>{const av=a[sortKey],bv=b[sortKey];const result=typeof av==='number'&&typeof bv==='number'?av-bv:String(av??'').localeCompare(String(bv??''),undefined,{numeric:true});return sortDir==='asc'?result:-result;});
+  },[reportData,sortKey,sortDir]);
+  const handleSort=(key:AdminReportsRevenueSortKey)=>{if(sortKey===key)setSortDir(d=>d==='asc'?'desc':'asc');else{setSortKey(key);setSortDir('desc');}};
+  const maxRevenue = Math.max(1, ...revenueByGym.map(g => g.revenue));
 
   if (!reportData) return null;
-
-  const maxRevenue = Math.max(...reportData.revenueByGym.map(g => g.revenue));
 
   return (
     <div className="space-y-6">
@@ -26,16 +37,14 @@ export default function AdminReportsRevenue() {
           <h2 className="text-base font-semibold text-foreground">Revenue by Gym</h2>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table data-admin-responsive-table className="w-full">
             <thead>
               <tr className="bg-primary/5">
-                {['Gym', 'Revenue', 'Expenses', 'Net Profit', 'Margin', 'Trend'].map(h => (
-                  <th key={h} className="px-5 py-3 text-left text-xs font-semibold text-secondary uppercase tracking-wider">{h}</th>
-                ))}
+                {['Gym', 'Revenue', 'Expenses', 'Net Profit', 'Margin', 'Trend'].map((h,index) => { const keys:Array<AdminReportsRevenueSortKey|null>=['gymName','revenue','expenses','profit',null,'trendPercent']; const key=keys[index]; return <th role="button" tabIndex={0} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); event.currentTarget.click(); } }}  key={h} onClick={()=>key&&handleSort(key)} className={`px-5 py-3 text-left text-xs font-semibold text-secondary uppercase tracking-wider ${key?'cursor-pointer select-none':''}`} aria-sort={key&&sortKey===key?(sortDir==='asc'?'ascending':'descending'):'none'}><div className="flex items-center gap-1.5">{h}{key&&(sortKey===key?(sortDir==='asc'?<ChevronUp size={13} className="text-primary"/>:<ChevronDown size={13} className="text-primary"/>):<ChevronsUpDown size={13} className="text-disabled"/>)}</div></th>; })}
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {reportData.revenueByGym.map((row) => (
+              {revenueByGym.map((row) => (
                 <tr key={row.gymId} className="hover:bg-primary/5 motion-safe:transition-colors">
                   <td className="px-5 py-4">
                     <div>
@@ -48,10 +57,10 @@ export default function AdminReportsRevenue() {
                   <td className="px-5 py-4 text-sm font-semibold text-foreground">{formatCurrency(row.revenue)}</td>
                   <td className="px-5 py-4 text-sm text-danger">{formatCurrency(row.expenses)}</td>
                   <td className="px-5 py-4 text-sm font-semibold text-success">{formatCurrency(row.profit)}</td>
-                  <td className="px-5 py-4 text-sm text-foreground">{((row.profit / row.revenue) * 100).toFixed(1)}%</td>
+                  <td className="px-5 py-4 text-sm text-foreground">{formatPercent1dp((row.profit / row.revenue) * 100)}%</td>
                   <td className="px-5 py-4">
                     <div className="flex items-center gap-1.5">
-                      {TREND_ICON[row.trend]}
+                      {TREND_ICON[row.trend as keyof typeof TREND_ICON]}
                       <span className={`text-xs font-medium ${row.trend === 'up' ? 'text-success' : row.trend === 'down' ? 'text-danger' : 'text-secondary'}`}>
                         {row.trendPercent > 0 ? '+' : ''}{row.trendPercent}%
                       </span>
@@ -72,8 +81,8 @@ export default function AdminReportsRevenue() {
           </div>
           <div className="p-5 space-y-3">
             {reportData.revenueByMethod.map((row) => {
-              const total = reportData.revenueByMethod.reduce((s, r) => s + r.amount, 0);
-              const pct = ((row.amount / total) * 100).toFixed(1);
+              const total = reportData.revenueByMethod.reduce((s: number, r) => s + r.amount, 0);
+              const pct = formatPercent1dp((row.amount / total) * 100);
               return (
                 <div key={row.method}>
                   <div className="flex justify-between text-sm mb-1">
@@ -95,8 +104,8 @@ export default function AdminReportsRevenue() {
           </div>
           <div className="p-5 space-y-3">
             {reportData.revenueByPlan.map((row) => {
-              const total = reportData.revenueByPlan.reduce((s, r) => s + r.amount, 0);
-              const pct = ((row.amount / total) * 100).toFixed(1);
+              const total = reportData.revenueByPlan.reduce((s: number, r) => s + r.amount, 0);
+              const pct = formatPercent1dp((row.amount / total) * 100);
               return (
                 <div key={row.planName}>
                   <div className="flex justify-between text-sm mb-1">
@@ -119,12 +128,10 @@ export default function AdminReportsRevenue() {
           <h2 className="text-base font-semibold text-foreground">Monthly Revenue Trend</h2>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table data-admin-responsive-table className="w-full">
             <thead>
               <tr className="bg-primary/5">
-                {['Month', 'Revenue', 'Expenses', 'Net Profit', 'Margin'].map(h => (
-                  <th key={h} className="px-5 py-3 text-left text-xs font-semibold text-secondary uppercase tracking-wider">{h}</th>
-                ))}
+                {['Month', 'Revenue', 'Expenses', 'Net Profit', 'Margin'].map((h,index) => { const keys: Array<AdminReportsRevenueSortKey|null>=['gymName','revenue','expenses','profit',null]; const key=keys[index]; return <th key={h} className="px-5 py-3 text-left text-xs font-semibold text-secondary uppercase tracking-wider">{h}{key&&<button type="button" onClick={()=>handleSort(key)} className="ml-1 inline-flex align-middle" aria-label={`Sort by ${h}`} title={`Sort by ${h}`}>{sortKey===key?(sortDir==='asc'?<ChevronUp size={13} className="text-primary"/>:<ChevronDown size={13} className="text-primary"/>):<ChevronsUpDown size={13} className="text-disabled"/>}</button>}</th>; })}
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
@@ -134,7 +141,7 @@ export default function AdminReportsRevenue() {
                   <td className="px-5 py-3 text-sm text-foreground">{formatCurrency(row.revenue)}</td>
                   <td className="px-5 py-3 text-sm text-danger">{formatCurrency(row.expenses)}</td>
                   <td className="px-5 py-3 text-sm font-semibold text-success">{formatCurrency(row.profit)}</td>
-                  <td className="px-5 py-3 text-sm text-foreground">{((row.profit / row.revenue) * 100).toFixed(1)}%</td>
+                  <td className="px-5 py-3 text-sm text-foreground">{formatPercent1dp((row.profit / row.revenue) * 100)}%</td>
                 </tr>
               ))}
             </tbody>

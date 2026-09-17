@@ -1,35 +1,19 @@
-'use client';
-
-import { useState, useRef, useEffect, useMemo } from 'react';
+"use client";
+// DATA FLOW: Admin module UI → local UI state / feature hooks → approved global infrastructure or module-owned APIs.
+// RESPONSIBILITY: Renders/orchestrates AdminHeaderSearch for the admin module; UI composition stays here and business/API logic remains in dedicated hooks and APIs.
+import { useState, useRef, useEffect } from 'react';
 import { Search, X } from 'lucide-react';
 import Link from 'next/link';
-import { apiFetch } from '@/lib/api';
 import { STATUS_STYLES } from '@/app/admin/admin_url_config';
-import { useQuery } from '@tanstack/react-query';
-import type { AdminMember } from '@/app/admin/members/members_types/AdminMembersTypes';
+import { AdminMembersUrlConfig } from '@/app/admin/members/admin_members_url_config';
+import { useAdminHeaderMemberSearch } from '@/app/admin/admin_components/AdminLayout/useAdminHeaderMemberSearch';
 
 export function AdminHeaderSearch() {
   const [searchQuery, setSearchQuery] = useState('');
   const [showSearch, setShowSearch] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
 
-  const { data: membersData } = useQuery({
-    queryKey: ['adminMembers'],
-    queryFn: () => apiFetch<{ data: AdminMember[] }>('/api/admin/members/list').then(r => r.data || []),
-  });
-
-  const searchResults = useMemo(() => {
-    if (!searchQuery.trim()) return [];
-    const q = searchQuery.toLowerCase();
-    const membersList = membersData || [];
-    return membersList.filter(
-      (m) =>
-        m.name.toLowerCase().includes(q) ||
-        m.phone.includes(q) ||
-        m.email.toLowerCase().includes(q)
-    ).slice(0, 5);
-  }, [searchQuery, membersData]);
-
+  // RATIONALE: Required by architecture to sync state/lifecycle based on dependencies.
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (searchRef.current && !searchRef.current.contains(event.target as Node)) setShowSearch(false);
@@ -37,6 +21,8 @@ export function AdminHeaderSearch() {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  const { data: searchResults = [] } = useAdminHeaderMemberSearch(searchQuery);
 
   return (
     <div className="relative hidden md:block" ref={searchRef}>
@@ -53,7 +39,7 @@ export function AdminHeaderSearch() {
         aria-label="Search members globally"
       />
       {showSearch && searchQuery && (
-        <div className="absolute top-full mt-2 w-72 bg-popover border border-border rounded-xl shadow-2xl z-50 overflow-hidden">
+        <div className="absolute top-full mt-2 w-72 bg-popover border border-border rounded-xl shadow-2xl z-30 overflow-hidden">
           <div className="flex justify-between items-center px-3 py-2 border-b border-border">
             <p className="text-xs text-secondary uppercase font-bold tracking-wider">
               {searchResults.length > 0 ? `${searchResults.length} result${searchResults.length > 1 ? 's' : ''}` : 'No results'}
@@ -63,13 +49,13 @@ export function AdminHeaderSearch() {
             </button>
           </div>
           {searchResults.length === 0 ? (
-            <div className="px-4 py-6 text-center text-sm text-secondary">No members found for "{searchQuery}"</div>
+            <div className="px-4 py-6 text-center text-sm text-secondary">No members found for &quot;{searchQuery}&quot;</div>
           ) : (
             <>
               {searchResults.map((m) => (
                 <Link
                   key={m.id}
-                  href="/admin/members"
+                  href={AdminMembersUrlConfig.detail(m.id)}
                   onClick={() => { setSearchQuery(''); setShowSearch(false); }}
                   className="flex items-center justify-between px-3 py-2.5 hover:bg-input motion-safe:transition-colors border-b border-border last:border-0"
                 >
@@ -88,7 +74,7 @@ export function AdminHeaderSearch() {
                 </Link>
               ))}
               <Link
-                href="/admin/members"
+                href={AdminMembersUrlConfig.root}
                 onClick={() => { setSearchQuery(''); setShowSearch(false); }}
                 className="block px-3 py-2.5 text-center text-xs font-bold text-primary hover:bg-input motion-safe:transition-colors border-t border-border"
               >

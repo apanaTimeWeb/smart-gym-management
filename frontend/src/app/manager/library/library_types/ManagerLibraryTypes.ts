@@ -1,5 +1,4 @@
-// RESPONSIBILITY: Defines all TypeScript types, interfaces, and the FetchState enum for the Diet Library module.
-import type { } from '@/lib/api';
+// RESPONSIBILITY: Defines all TypeScript domain types and context contracts for the Diet Library module.
 import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
 import { EMPTY_DIET_FORM } from '@/app/manager/library/library_utils/ManagerLibrarySharedConstants';
 
@@ -8,12 +7,13 @@ export interface LibraryInitialData {
   dietPlans: DietPlan[];
 }
 
- export type FetchState = 'idle' | 'loading' | 'success' | 'error';
 
 export interface LibraryContextType {
 
  dietPlans: DietPlan[];
- fetchState: FetchState;
+ totalDietPlans: number;
+ isLoading: boolean;
+ isError: boolean;
  saving: boolean;
   toast: { message: string; type: ToastType } | null;
   

@@ -1,28 +1,10 @@
-// RESPONSIBILITY: API client for the Manager Profile module.
-// DATA FLOW: ManagerProfileApi → useManagerProfileLogic → ManagerProfileMain
-
-import { apiFetch } from '@/lib/api';
-import type { ApiResponse } from '@/lib/api';
-import type {
-  ManagerProfileData,
-  UpdateManagerProfilePayload,
-  UpdateManagerPasswordPayload,
-} from '@/app/manager/profile/profile_types/ManagerProfileTypes';
-import { MOCK_PROFILE } from '@/app/manager/profile/profile_fixtures/ManagerProfileMockData';
+import { ManagerProfileUrlConfig } from '@/app/manager/profile/profile_url_config';
+import { apiFetch, type ApiResponse } from '@/lib/api';
+import type { ManagerProfileData, UpdateManagerProfilePayload, UpdateManagerPasswordPayload } from '@/app/manager/profile/profile_types/ManagerProfileTypes';
+import { managerProfileDataSchema, managerPasswordUpdateResponseSchema } from '@/app/manager/profile/profile_types/ManagerProfileSchema';
 
 export const managerProfileApi = {
-  fetchProfile: async () => {
-    await new Promise(res => setTimeout(res, 300));
-    return { success: true, message: 'Success', data: MOCK_PROFILE };
-  },
-
-  updateProfile: async (body: UpdateManagerProfilePayload) => {
-    await new Promise(res => setTimeout(res, 400));
-    return { success: true, message: 'Success', data: { ...MOCK_PROFILE, ...body } };
-  },
-
-  updatePassword: async (body: UpdateManagerPasswordPayload) => {
-    await new Promise(res => setTimeout(res, 500));
-    return { success: true, message: 'Password updated', data: undefined };
-  },
+  fetchProfile: async (): Promise<ApiResponse<ManagerProfileData>> => apiFetch(ManagerProfileUrlConfig.BACKEND_API.BASE, { dataSchema: managerProfileDataSchema }),
+  updateProfile: async (body: UpdateManagerProfilePayload): Promise<ApiResponse<ManagerProfileData>> => apiFetch(ManagerProfileUrlConfig.BACKEND_API.BASE, { method: 'PATCH', body: JSON.stringify(body), dataSchema: managerProfileDataSchema }),
+  updatePassword: async (body: UpdateManagerPasswordPayload): Promise<ApiResponse<Record<string, unknown>>> => apiFetch(`${ManagerProfileUrlConfig.BACKEND_API.BASE}/password`, { method: 'PATCH', body: JSON.stringify(body), dataSchema: managerPasswordUpdateResponseSchema }),
 };

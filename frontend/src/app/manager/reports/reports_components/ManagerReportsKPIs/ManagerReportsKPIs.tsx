@@ -1,12 +1,11 @@
-// RESPONSIBILITY: KPI stat cards row for the Manager Reports module.
 'use client';
-
+// RESPONSIBILITY: KPI stat cards row for the Manager Reports module.
 import { useReportsContext } from '@/app/manager/reports/reports_context/ManagerReportsContext';
 import { TrendingUp, Users, CalendarCheck, TrendingDown, IndianRupee, UserPlus, UserMinus, Activity } from 'lucide-react';
 import { useDateRangeSuffix } from '@/lib/useDateRangeSuffix';
+import { formatCurrency, formatNumber } from '@/lib/formatters';
 
-const fmt = (v: number) =>
-  new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(v);
+const formatReportCurrency = (value: number) => formatCurrency(value);
 
 interface KPICardProps {
   label: string;
@@ -40,14 +39,14 @@ export default function ManagerReportsKPIs() {
 
   return (
     <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
-      <KPICard label={`Total Income${dateSuffix}`}    value={k ? fmt(k.totalRevenue)    : '—'} icon={TrendingUp}   iconBg="bg-success/10"   iconColor="text-success"   sub={k ? `Net: ${fmt(k.netProfit)}` : undefined} subColor="text-success" />
-      <KPICard label={`Total Expenses${dateSuffix}`}   value={k ? fmt(k.totalExpenses)   : '—'} icon={TrendingDown} iconBg="bg-danger/10"    iconColor="text-danger"    />
-      <KPICard label={`Active Members${dateSuffix}`}   value={k ? String(k.activeMembers): '—'} icon={Users}        iconBg="bg-info/10"      iconColor="text-info"      sub={k ? `+${k.newMembersThisMonth} this month` : undefined} subColor="text-success" />
+      <KPICard label={`Total Income${dateSuffix}`}    value={k ? formatReportCurrency(k.totalRevenue)    : '—'} icon={TrendingUp}   iconBg="bg-success/10"   iconColor="text-success"   sub={k ? `Net: ${formatReportCurrency(k.netProfit)}` : undefined} subColor="text-success" />
+      <KPICard label={`Total Expenses${dateSuffix}`}   value={k ? formatReportCurrency(k.totalExpenses)   : '—'} icon={TrendingDown} iconBg="bg-danger/10"    iconColor="text-danger"    />
+      <KPICard label={`Active Members${dateSuffix}`}   value={k ? formatNumber(k.activeMembers): '—'} icon={Users}        iconBg="bg-info/10"      iconColor="text-info"      sub={k ? `+${k.newMembersThisMonth} this month` : undefined} subColor="text-success" />
       <KPICard label={`Avg Attendance${dateSuffix}`}   value={k ? `${k.avgAttendanceRate}%` : '—'} icon={CalendarCheck} iconBg="bg-primary/10" iconColor="text-primary" />
-      <KPICard label={`New Members${dateSuffix}`}      value={k ? String(k.newMembersThisMonth) : '—'} icon={UserPlus}  iconBg="bg-success/10"  iconColor="text-success"  />
+      <KPICard label={`New Members${dateSuffix}`}      value={k ? formatNumber(k.newMembersThisMonth) : '—'} icon={UserPlus}  iconBg="bg-success/10"  iconColor="text-success"  />
       <KPICard label={`Members Lost %${dateSuffix}`}       value={k ? `${k.churnRate}%`      : '—'} icon={UserMinus}    iconBg="bg-warning/10"   iconColor="text-warning"   />
-      <KPICard label={`Total Members${dateSuffix}`}    value={k ? String(k.totalMembers) : '—'} icon={Activity}     iconBg="bg-purple/10"    iconColor="text-purple"    />
-      <KPICard label={`Net Profit${dateSuffix}`}       value={k ? fmt(k.netProfit)       : '—'} icon={IndianRupee}  iconBg="bg-success/10"   iconColor="text-success"   />
+      <KPICard label={`Total Members${dateSuffix}`}    value={k ? formatNumber(k.totalMembers) : '—'} icon={Activity}     iconBg="bg-purple-bg"    iconColor="text-purple"    />
+      <KPICard label={`Net Profit${dateSuffix}`}       value={k ? formatReportCurrency(k.netProfit)       : '—'} icon={IndianRupee}  iconBg="bg-success/10"   iconColor="text-success"   />
     </div>
   );
 }

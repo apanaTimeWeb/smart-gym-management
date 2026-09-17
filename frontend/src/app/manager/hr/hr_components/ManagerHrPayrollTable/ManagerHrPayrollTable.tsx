@@ -1,38 +1,22 @@
-// RESPONSIBILITY: Renders the payroll records table with pay status badges and mark-as-paid inline action.
-// CRITICAL FIX: Added Download Payslip per row, Bulk Generate Payroll button, and netPayable/deductions display.
 'use client';
-
+// RESPONSIBILITY: Renders the payroll records table with pay status badges and mark-as-paid inline action.
+// CRITICAL FIX: Added Download Payslip per row, Generate Payroll button, and netPayable/deductions display.
 import { useHrContext } from '@/app/manager/hr/hr_context/ManagerHrContext';
 import { PAYROLL_TABLE_HEADERS } from '@/app/manager/hr/hr_utils/ManagerHrSharedConstants';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import { CheckCircle2, Search, Banknote, Download, RefreshCw } from 'lucide-react';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
 import ManagerEmptyState from '@/app/manager/manager_components/ManagerFeedback/ManagerEmptyState';
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrency , formatDate} from '@/lib/formatters';
 
 export default function ManagerHrPayrollTable() {
-  const { search, setSearch, payrollMonth, setPayrollMonth, payrolls, markPayrollPaid, setPaymentModal, currentPage, setCurrentPage, fetchState, staff, bulkGeneratePayroll, downloadPayslip } = useHrContext();
+  const { search, setSearch, payrollMonth, setPayrollMonth, payrolls, totalPayrolls, markPayrollPaid, setPaymentModal, currentPage, setCurrentPage, isLoading, staff, bulkGeneratePayroll, downloadPayslip } = useHrContext();
 
-  const filtered = payrolls.filter(p => {
-    const nameMatch = (p.staff?.name || '').toLowerCase().includes(search.toLowerCase());
-    const roleMatch = (p.staff?.role || '').toLowerCase().includes(search.toLowerCase());
-    
-    // payrollMonth is YYYY-MM
-    let isTargetMonth = true;
-    if (payrollMonth) {
-      const [y, m] = payrollMonth.split('-');
-      const d = new Date(Number(y), Number(m) - 1, 1);
-      const targetStr = d.toLocaleString('en-US', { month: 'long', year: 'numeric' });
-      isTargetMonth = (p.month === targetStr) || (p.month === payrollMonth);
-    }
-    
-    return (nameMatch || roleMatch) && isTargetMonth;
-  });
+  const totalPages = Math.max(1, Math.ceil(totalPayrolls / MANAGER_ITEMS_PER_PAGE));
+  const currentData = payrolls;
+  const payrollColumnCount = PAYROLL_TABLE_HEADERS.length + 1;
 
-    const totalPages = Math.ceil(filtered.length / MANAGER_ITEMS_PER_PAGE);
-  const currentData = filtered.slice((currentPage - 1) * MANAGER_ITEMS_PER_PAGE, currentPage * MANAGER_ITEMS_PER_PAGE);
-
-  if (fetchState === 'loading') {
+  if (isLoading) {
     return (
       <div className="flex flex-col h-full">
         <div className="overflow-x-auto flex-1">
@@ -57,6 +41,8 @@ export default function ManagerHrPayrollTable() {
                   <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-24"></div></td>
                   <td className="px-4 py-4"><div className="h-5 bg-muted rounded-full w-16"></div></td>
                   <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-20"></div></td>
+                  <td className="px-4 py-4"><div className="h-5 bg-muted rounded-full w-16"></div></td>
+                  <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-20"></div></td>
                   <td className="px-4 py-4 text-right"><div className="h-8 bg-muted rounded-lg w-24 ml-auto"></div></td>
                 </tr>
               ))}
@@ -69,14 +55,14 @@ export default function ManagerHrPayrollTable() {
 
   return (
     <div className="flex flex-col h-full">
-      {/* Toolbar: Bulk Generate Payroll — CRITICAL FIX */}
+      {/* Toolbar: Generate Payroll — CRITICAL FIX */}
       <div className="flex justify-end px-4 pt-3 pb-1">
         <button
           onClick={() => bulkGeneratePayroll(payrollMonth || new Date().toISOString().slice(0, 7))}
-          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
-          aria-label="Bulk generate payroll for current month"
+          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-primary text-primary-foreground rounded-lg hover:opacity-90 motion-safe:transition-opacity"
+          aria-label="Generate payroll for current month"
         >
-          <RefreshCw size={13} /> Bulk Generate Payroll
+          <RefreshCw size={13} /> Generate Payroll
         </button>
       </div>
       <div className="overflow-x-auto flex-1">
@@ -93,7 +79,7 @@ export default function ManagerHrPayrollTable() {
           </thead>
           <tbody className="divide-y divide-border">
             {currentData.map(p => (
-              <tr key={p.id} className="transition-colors hover:bg-primary/5 bg-card">
+              <tr key={p.id} className="motion-safe:transition-colors hover:bg-primary/5 bg-card">
                 <td className="px-4 py-3">
                   <p className="text-sm font-medium text-primary">
                     {p.staff?.name || `Staff #${p.staffId}`}
@@ -119,14 +105,14 @@ export default function ManagerHrPayrollTable() {
                   </span>
                 </td>
                 <td className="px-4 py-3 text-sm text-secondary">
-                  {p.paidAt ? new Date(p.paidAt).toLocaleDateString('en-IN') : '—'}
+                  {p.paidAt ? formatDate(p.paidAt) : '—'}
                 </td>
                 <td className="px-4 py-3 text-right">
                   <div className="flex items-center justify-end gap-2">
                     {/* Download Payslip — CRITICAL FIX */}
                     <button
                       onClick={() => downloadPayslip(p.id)}
-                      className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium border border-border rounded-lg hover:bg-primary-subtle text-secondary hover:text-foreground transition-colors"
+                      className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium border border-border rounded-lg hover:bg-primary-subtle text-secondary hover:text-foreground motion-safe:transition-colors"
                       title="Download Payslip"
                       aria-label={`Download payslip for ${p.staff?.name ?? p.staffId}`}
                     >
@@ -135,7 +121,7 @@ export default function ManagerHrPayrollTable() {
                     {p.status !== 'Paid' && (
                       <button
                         onClick={() => setPaymentModal({ payrollId: p.id, staffName: p.staff?.name || `Staff #${p.staffId}`, pendingAmount: p.pendingAmount || p.amount })}
-                        className="flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-lg hover:bg-primary/90 transition-colors"
+                        className="flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-lg hover:bg-primary/90 motion-safe:transition-colors"
                       >
                         <Banknote size={16} /> Pay Salary
                       </button>
@@ -146,7 +132,7 @@ export default function ManagerHrPayrollTable() {
             ))}
             {currentData.length === 0 && (
               <tr>
-                <td colSpan={6} className="p-0 border-b-0">
+                <td colSpan={payrollColumnCount} className="p-0 border-b-0">
                   <ManagerEmptyState 
                     icon={<Banknote size={32} />}
                     title="No payroll records found"
@@ -161,7 +147,7 @@ export default function ManagerHrPayrollTable() {
       <ManagerPagination 
         currentPage={currentPage} 
         totalPages={totalPages} 
-        totalItems={filtered.length} 
+        totalItems={totalPayrolls} 
         itemsPerPage={MANAGER_ITEMS_PER_PAGE} 
         onPageChange={setCurrentPage} 
       />

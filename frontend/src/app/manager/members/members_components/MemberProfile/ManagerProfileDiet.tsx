@@ -1,32 +1,21 @@
 'use client';
 // RESPONSIBILITY: Renders the member's assigned diet plan and handles the assignment flow.
 // DATA FLOW: useMembersContext -> ManagerProfileDiet -> libraryApi
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Utensils, Plus, Check, MessageCircle, Edit2 } from 'lucide-react';
 import { formatNumber } from '@/lib/formatters';
 import { useMembersContext } from '@/app/manager/members/members_context/ManagerMembersContext';
-import { libraryApi } from '@/app/manager/library/library_api/ManagerLibraryApi';
-import type { DietPlan, FetchState } from '@/app/manager/library/library_types/ManagerLibraryTypes';
+import { useManagerMembersDietPlansQuery } from '@/app/manager/members/members_api/ManagerUseManagerMembersDietPlansQuery';
+import type { DietPlanSnapshot } from '@/app/manager/members/members_types/ManagerMembersSnapshotTypes';
 
 export default function ManagerProfileDiet() {
   const { selectedMember, assignDiet } = useMembersContext();
   const [isAssigning, setIsAssigning] = useState(false);
-  const [availableDiets, setAvailableDiets] = useState<DietPlan[]>([]);
-  const [fetchDietsState, setFetchDietsState] = useState<FetchState>('idle');
   const [selectedDietId, setSelectedDietId] = useState<string>('');
 
-  useEffect(() => {
-    if (isAssigning && availableDiets.length === 0) {
-      setTimeout(() => setFetchDietsState('loading'), 0);
-      libraryApi.getDietPlans().then(res => {
-        setAvailableDiets(res.data?.dietPlans || []);
-        setTimeout(() => setFetchDietsState('success'), 0);
-      }).catch(() => {
-        // Error logged to monitoring provider
-        setTimeout(() => setFetchDietsState('error'), 0);
-      });
-    }
-  }, [isAssigning, availableDiets.length]);
+  const { data: dietResponse, isPending: dietsLoading } = useManagerMembersDietPlansQuery(isAssigning);
+  const availableDiets = dietResponse?.data || [];
+
 
   if (!selectedMember) return null;
 
@@ -35,7 +24,7 @@ export default function ManagerProfileDiet() {
 
   const handleAssign = async () => {
     if (!selectedDietId) return;
-    const selected = availableDiets.find(d => String(d.id) === selectedDietId) || null;
+  const selected = availableDiets.find(d => String(d.id) === selectedDietId) || null;
     await assignDiet(selectedMember.id, selected);
     setIsAssigning(false);
   };
@@ -51,16 +40,16 @@ export default function ManagerProfileDiet() {
           <div className="flex items-center gap-2">
             <button 
               onClick={() => {
-                const text = `*DIET PLAN: ${diet?.name || 'Assigned'}*\n\n*Macros:*\nCalories: ${diet?.calories || 0} kcal\nProtein: ${diet?.protein || 0}g\nCarbs: ${diet?.carbs || 0}g\nFats: ${diet?.fats || 0}g\n\n*Meals:*\n${diet?.meals?.map((m: import("@/app/manager/library/library_types/ManagerLibraryTypes").DietMeal | string) => `*${typeof m === 'string' ? '' : m.time} - ${typeof m === 'string' ? m : m.name}* (${typeof m === 'string' ? 0 : m.calories || 0} kcal)\n${(typeof m === 'string' ? [] : m.foods || []).map((f: string) => `- ${f}`).join('\n')}`).join('\n\n')}`;
+                const text = `*DIET PLAN: ${diet?.name || 'Assigned'}*\n\n*Macros:*\nCalories: ${diet?.calories || 0} kcal\nProtein: ${diet?.protein || 0}g\nCarbs: ${diet?.carbs || 0}g\nFats: ${diet?.fats || 0}g\n\n*Meals:*\n${diet?.meals?.map(m => `*${m.time} - ${m.name}* (${m.calories || 0} kcal)\n${(m.foods || []).map((f: string) => `- ${f}`).join('\n')}`).join('\n\n')}`;
                 window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
               }}
-              className="flex items-center gap-2 px-4 py-2 bg-success text-white rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-success/30 transition-all active:scale-95"
+              className="flex items-center gap-2 px-4 py-2 bg-success text-primary-foreground rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-success/30 motion-safe:transition-all active:scale-95"
             >
               <MessageCircle size={16} /> Send via WhatsApp
             </button>
             <button 
               onClick={() => setIsAssigning(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-input text-foreground border border-border rounded-xl text-sm font-semibold hover:bg-primary-subtle transition-all active:scale-95"
+              className="flex items-center gap-2 px-4 py-2 bg-input text-foreground border border-border rounded-xl text-sm font-semibold hover:bg-primary-subtle motion-safe:transition-all active:scale-95"
             >
               <Edit2 size={16} /> Change
             </button>
@@ -68,7 +57,7 @@ export default function ManagerProfileDiet() {
         ) : !isAssigning && (
           <button 
             onClick={() => setIsAssigning(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-primary/30 transition-all active:scale-95"
+            className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-primary/30 motion-safe:transition-all active:scale-95"
           >
             <Plus size={16} /> Assign Diet
           </button>
@@ -78,7 +67,7 @@ export default function ManagerProfileDiet() {
       {isAssigning && (
         <div className="bg-card border border-border p-6 rounded-xl space-y-4 shadow-sm">
           <h4 className="font-semibold text-primary">Assign Diet Plan from Library</h4>
-          {fetchDietsState === 'loading' ? (
+          {dietsLoading ? (
             <p className="text-sm text-secondary">Loading diet plans...</p>
           ) : (
             <div className="flex flex-col sm:flex-row gap-4">
@@ -89,20 +78,20 @@ export default function ManagerProfileDiet() {
               >
                 <option value="">Select a Diet Plan...</option>
                 {availableDiets.map(d => (
-                  <option key={d.id} value={d.id}>{d.name} ({d.goal})</option>
+                  <option key={d.id} value={d.id}>{d.name} ({d.type})</option>
                 ))}
               </select>
               <div className="flex gap-2">
                 <button 
                   onClick={() => setIsAssigning(false)}
-                  className="px-4 py-2 bg-input text-secondary hover:text-foreground rounded-xl text-sm font-semibold transition-colors"
+                  className="px-4 py-2 bg-input text-secondary hover:text-foreground rounded-xl text-sm font-semibold motion-safe:transition-colors"
                 >
                   Cancel
                 </button>
                 <button 
                   onClick={handleAssign}
                   disabled={!selectedDietId}
-                  className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl text-sm font-semibold hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-xl text-sm font-semibold hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed motion-safe:transition-colors"
                 >
                   <Check size={16} /> Confirm Assign
                 </button>
@@ -123,7 +112,7 @@ export default function ManagerProfileDiet() {
           </p>
           <button 
             onClick={() => setIsAssigning(true)}
-            className="px-6 py-2.5 bg-primary/10 text-primary border border-primary/20 rounded-xl font-semibold hover:bg-primary/20 transition-colors"
+            className="px-6 py-2.5 bg-primary/10 text-primary border border-primary/20 rounded-xl font-semibold hover:bg-primary/20 motion-safe:transition-colors"
           >
             Browse Diet Library
           </button>
@@ -150,23 +139,15 @@ export default function ManagerProfileDiet() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {diet.meals && diet.meals.length > 0 ? diet.meals.map((meal: import("@/app/manager/library/library_types/ManagerLibraryTypes").DietMeal | string, idx: number) => {
-              if (typeof meal === 'string') {
-                return (
-                  <div key={`meal-str-${idx}`} className="bg-card border border-border p-4 rounded-xl shadow-sm">
-                    <h5 className="font-semibold text-primary mb-2 text-sm">Meal {idx + 1}</h5>
-                    <p className="text-sm text-secondary">{meal}</p>
-                  </div>
-                );
-              }
+            {diet.meals && diet.meals.length > 0 ? diet.meals.map((meal, idx) => {
               return (
-                <div key={`meal-${typeof meal === 'string' ? idx : meal.name}-${idx}`} className="bg-card border border-border p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                <div key={`meal-${meal.name}-${idx}`} className="bg-card border border-border p-4 rounded-xl shadow-sm hover:shadow-md motion-safe:transition-shadow">
                   <h5 className="font-semibold text-primary mb-3 pb-2 border-b border-border text-sm flex items-center justify-between">
-                    {typeof meal === 'string' ? '' : meal.time} - {typeof meal === 'string' ? '' : meal.name}
-                    <span className="text-xs font-normal text-secondary bg-input px-2 py-1 rounded">~{typeof meal === 'string' ? 0 : meal.calories} kcal</span>
+                    {meal.time} - {meal.name}
+                    <span className="text-xs font-normal text-secondary bg-input px-2 py-1 rounded">~{meal.calories} kcal</span>
                   </h5>
                   <ul className="space-y-2 text-sm text-secondary">
-                    {(typeof meal === 'string' ? [] : meal.foods || []).map((f: string, i: number) => (
+                    {(meal.foods || []).map((f: string, i: number) => (
                       <li key={`food-${idx}-${i}`} className="flex items-center gap-2">
                         <span className="text-primary">•</span> {f}
                       </li>

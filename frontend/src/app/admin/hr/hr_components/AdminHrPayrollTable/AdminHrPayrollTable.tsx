@@ -1,14 +1,20 @@
+"use client";
+import { formatCurrency } from '@/lib/formatters';
 // RESPONSIBILITY: Renders the payroll records table with pay status badges and mark-as-paid inline action.
-'use client';
 
 import { useHrContext } from '@/app/admin/hr/hr_context/AdminHrContext';
+import type { AdminHrPayrollSortKey } from '@/app/admin/hr/hr_types/AdminHrUiTypes';
+import type { AdminSortDirection } from '@/app/admin/admin_types/AdminSortTypes';
+import { useMemo, useState } from 'react';
 import { PAYROLL_TABLE_HEADERS } from '@/app/admin/hr/hr_utils/AdminHrSharedConstants';
 import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
-import { CheckCircle2, Download } from 'lucide-react';
+import { CheckCircle2, Download, ChevronDown, ChevronUp, ChevronsUpDown } from 'lucide-react';
 import { ADMIN_ITEMS_PER_PAGE } from '@/app/admin/admin_url_config';
 
 export default function AdminHrPayrollTable() {
-  const { payrolls, search, currentPage, setCurrentPage, setPaymentModal, fetchState, payrollMonth, staff } = useHrContext();
+  const { payrolls, search, currentPage, setCurrentPage, setPaymentModal, setShowPayrollModal, status, payrollMonth, staff } = useHrContext();
+  const [sortKey, setSortKey] = useState<AdminHrPayrollSortKey>('month');
+  const [sortDir, setSortDir] = useState<AdminSortDirection>('desc');
 
   const filtered = payrolls.filter(p => {
     const nameMatch = (p.staff?.name || '').toLowerCase().includes(search.toLowerCase());
@@ -26,14 +32,16 @@ export default function AdminHrPayrollTable() {
     return (nameMatch || roleMatch) && isTargetMonth;
   });
 
-    const totalPages = Math.ceil(filtered.length / ADMIN_ITEMS_PER_PAGE);
-  const currentData = filtered.slice((currentPage - 1) * ADMIN_ITEMS_PER_PAGE, currentPage * ADMIN_ITEMS_PER_PAGE);
+    const sorted = useMemo(() => [...filtered].sort((a,b)=>{const av=a[sortKey], bv=b[sortKey]; const result=typeof av==='number'&&typeof bv==='number'?av-bv:String(av??'').localeCompare(String(bv??''),undefined,{numeric:true}); return sortDir==='asc'?result:-result;}), [filtered,sortKey,sortDir]);
+  const handleSort=(key:AdminHrPayrollSortKey)=>{if(sortKey===key)setSortDir(d=>d==='asc'?'desc':'asc');else{setSortKey(key);setSortDir('asc');}};
+  const totalPages = Math.ceil(sorted.length / ADMIN_ITEMS_PER_PAGE);
+  const currentData = sorted.slice((currentPage - 1) * ADMIN_ITEMS_PER_PAGE, currentPage * ADMIN_ITEMS_PER_PAGE);
 
-  if (fetchState === 'loading') {
+  if (status === 'pending') {
     return (
       <div className="flex flex-col h-full">
         <div className="overflow-x-auto flex-1">
-          <table className="w-full">
+          <table data-admin-responsive-table className="w-full">
             <thead className="bg-input text-secondary">
               <tr>
                 {PAYROLL_TABLE_HEADERS.map(h => (
@@ -44,7 +52,7 @@ export default function AdminHrPayrollTable() {
             </thead>
             <tbody className="divide-y divide-border">
               {[...Array(5)].map((_, i) => (
-                <tr key={i} className="motion-safe:animate-pulse bg-card">
+                <tr key={`skeleton-${i}`} className="motion-safe:animate-pulse bg-card">
                   <td className="px-4 py-4">
                     <div className="h-4 bg-muted rounded w-32 mb-2"></div>
                     <div className="h-3 bg-muted rounded w-20"></div>
@@ -66,12 +74,12 @@ export default function AdminHrPayrollTable() {
   return (
     <div className="flex flex-col h-full">
       <div className="flex justify-end mb-4">
-        <button className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-semibold hover:bg-primary/90 transition-colors">
+        <button onClick={() => setShowPayrollModal(true)} className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-semibold hover:bg-primary/90 motion-safe:transition-colors">
           Bulk Generate Payroll
         </button>
       </div>
       <div className="overflow-x-auto flex-1">
-        <table className="w-full">
+        <table data-admin-responsive-table className="w-full">
           <thead className="bg-input text-secondary">
             <tr>
               {PAYROLL_TABLE_HEADERS.map(h => (
@@ -84,7 +92,7 @@ export default function AdminHrPayrollTable() {
           </thead>
           <tbody className="divide-y divide-border">
             {currentData.map(p => (
-              <tr key={p.id} className="transition-colors hover:bg-primary/5 bg-card">
+              <tr key={p.id} className="motion-safe:transition-colors hover:bg-primary/5 bg-card">
                 <td className="px-4 py-3">
                   <p className="text-sm font-medium text-primary">
                     {p.staff?.name || `Staff #${p.staffId}`}
@@ -95,15 +103,15 @@ export default function AdminHrPayrollTable() {
                 </td>
                 <td className="px-4 py-3 text-sm text-primary">{p.month}</td>
                 <td className="px-4 py-3 text-sm font-medium text-right">
-                  {((staff.find(s => String(s.id) === String(p.staffId))?.salary) || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}
+                  {formatCurrency((staff.find(s => String(s.id) === String(p.staffId))?.salary) || 0)}
                 </td>
-                <td className="px-4 py-3 text-sm font-bold text-foreground text-right">{(p.amount || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</td>
-                <td className="px-4 py-3 text-sm font-bold text-success text-right">{(p.paidAmount || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</td>
-                <td className="px-4 py-3 text-sm font-bold text-danger text-right">{(p.pendingAmount || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR' })}</td>
+                <td className="px-4 py-3 text-sm font-bold text-foreground text-right">{formatCurrency(p.amount || 0)}</td>
+                <td className="px-4 py-3 text-sm font-bold text-success text-right">{formatCurrency(p.paidAmount || 0)}</td>
+                <td className="px-4 py-3 text-sm font-bold text-danger text-right">{formatCurrency(p.pendingAmount || 0)}</td>
                 <td className="px-4 py-3">
                   <span 
                     className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${
-                      p.status === 'Paid' ? 'bg-success/10 text-success' : 'bg-warning/10 text-warning'
+                      p.status.toLowerCase() === 'paid' ? 'bg-success/10 text-success' : 'bg-warning/10 text-warning'
                     }`}
                   >
                     {p.status}
@@ -114,17 +122,17 @@ export default function AdminHrPayrollTable() {
                 </td>
                 <td className="px-4 py-3 text-right">
                   <div className="flex justify-end gap-2">
-                    <button className="flex items-center justify-center gap-2 px-3 py-2 text-sm font-semibold text-secondary border border-border rounded-lg hover:bg-border transition-colors">
+                    <button onClick={() => { const csv = `Employee,Month,Amount,Status\n${p.staff?.name ?? p.staffId},${p.month},${p.amount},${p.status}`; const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' })); const anchor = document.createElement('a'); anchor.href = url; anchor.download = `payslip-${p.id}.csv`; anchor.click(); URL.revokeObjectURL(url); }} className="flex items-center justify-center gap-2 px-3 py-2 text-sm font-semibold text-secondary border border-border rounded-lg hover:bg-border motion-safe:transition-colors">
                       <Download size={16} /> Payslip
                     </button>
-                    {p.status !== 'Paid' && (
+                    {p.status.toLowerCase() !== 'paid' && (
                       <button 
                         onClick={() => setPaymentModal({
                           payrollId: p.id,
                           staffName: p.staff?.name || `Staff #${p.staffId}`,
                           pendingAmount: p.pendingAmount
                         })}
-                        className="flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-lg hover:bg-primary/90 transition-colors"
+                        className="flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-lg hover:bg-primary/90 motion-safe:transition-colors"
                       >
                         <CheckCircle2 size={16} /> Pay
                       </button>
@@ -135,7 +143,7 @@ export default function AdminHrPayrollTable() {
             ))}
             {currentData.length === 0 && (
               <tr>
-                <td colSpan={6} className="text-center py-10 text-sm text-secondary">
+                <td colSpan={PAYROLL_TABLE_HEADERS.length + 1} className="text-center py-10 text-sm text-secondary">
                   No payroll records found.
                 </td>
               </tr>

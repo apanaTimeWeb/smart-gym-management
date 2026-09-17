@@ -1,9 +1,9 @@
 'use client';
-
+// RESPONSIBILITY: Renders the Manager DashboardMemberGrowthChart presentation layer for the Manager module.
 import React from 'react';
 import dynamic from 'next/dynamic';
-import { useDashboardStatsQuery } from '@/app/manager/dashboard/dashboard_api/useManagerDashboardQueries';
-import { useManagerDashboardStore } from '@/app/manager/dashboard/dashboard_store/useManagerDashboardStore';
+import { useDashboardStatsQuery } from '@/app/manager/dashboard/dashboard_api/ManagerUseManagerDashboardQueries';
+import { useManagerDashboardStore } from '@/app/manager/dashboard/dashboard_store/ManagerUseManagerDashboardStore';
 import { formatKPI } from '@/lib/formatters';
 import { Loader2 } from 'lucide-react';
 import type { DashboardGrowthChartData } from '@/app/manager/dashboard/dashboard_types/ManagerDashboardTypes';
@@ -15,11 +15,11 @@ const Chart = dynamic(() => import('react-apexcharts'), {
 
 export default function ManagerDashboardMemberGrowthChart() {
   const { timeRange } = useManagerDashboardStore();
-  const { data: stats } = useDashboardStatsQuery(timeRange);
+  const { data: stats } = useDashboardStatsQuery({ range: timeRange });
   
   if (!stats?.memberGrowth || stats.memberGrowth.length === 0) {
     return (
-      <div className="bg-card rounded-xl shadow-sm border border-border p-5 h-[300px] flex items-center justify-center">
+      <div className="bg-card rounded-xl shadow-sm border border-border p-5 h-72 flex items-center justify-center">
         <p className="text-secondary text-sm">No member growth data available.</p>
       </div>
     );
@@ -27,23 +27,23 @@ export default function ManagerDashboardMemberGrowthChart() {
 
   const options = {
     chart: { background: 'transparent', toolbar: { show: false }, fontFamily: 'Inter, sans-serif' },
-    colors: ['#0ea5e9'],
+    colors: ['var(--info)'],
     grid: { borderColor: 'rgba(255,255,255,0.05)', strokeDashArray: 4 },
     tooltip: { theme: 'dark' as const },
     xaxis: {
       categories: stats.memberGrowth.map((d: DashboardGrowthChartData) => d.month),
-      labels: { style: { colors: '#A1A1AA', fontSize: '11px' } },
+      labels: { style: { colors: 'var(--text-secondary)', fontSize: '11px' } },
       axisBorder: { show: false }, axisTicks: { show: false },
     },
-    yaxis: { labels: { style: { colors: '#A1A1AA', fontSize: '11px' }, formatter: (v: number) => formatKPI(v) } },
+    yaxis: { labels: { style: { colors: 'var(--text-secondary)', fontSize: '11px' }, formatter: (v: number) => formatKPI(v) } },
     plotOptions: { bar: { borderRadius: 4, columnWidth: '50%' } },
     dataLabels: { enabled: false },
   };
 
   return (
-    <div className="bg-card rounded-xl shadow-sm border border-border p-5 flex flex-col h-full min-h-[300px]">
+    <div className="bg-card rounded-xl shadow-sm border border-border p-5 flex flex-col h-full min-h-72">
       <h3 className="text-base font-bold text-foreground mb-4">Member Growth</h3>
-      <div className="flex-1 w-full h-[220px]">
+      <div className="flex-1 w-full h-56">
         <Chart
           type="bar"
           height={220}

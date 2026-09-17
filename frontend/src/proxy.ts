@@ -59,7 +59,10 @@ export function proxy(req: NextRequest) {
     pathname.startsWith("/__turbopack") ||
     pathname === "/favicon.ico" ||
     pathname === "/icon.png" ||
-    pathname === "/opengraph.jpg";
+    pathname === "/opengraph.jpg" ||
+    // MSW service-worker script must never be redirected, otherwise the browser
+    // refuses to register it ("script resource is behind a redirect").
+    pathname === "/mockServiceWorker.js";
 
   if (isPublicRoute) {
     // Redirect authenticated users away from /auth/login to their dashboard

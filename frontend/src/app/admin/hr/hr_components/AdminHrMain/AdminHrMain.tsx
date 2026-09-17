@@ -1,7 +1,5 @@
+"use client";
 // RESPONSIBILITY: Entry component for the HR module. Wraps the UI in the context provider and handles page layout.
-'use client';
-
-import AdminHeader from '@/app/admin/admin_components/AdminLayout/AdminHeader';
 import { HrProvider, useHrContext } from '@/app/admin/hr/hr_context/AdminHrContext';
 import AdminHrKPIs from '@/app/admin/hr/hr_components/AdminHrKPIs/AdminHrKPIs';
 import AdminHrTabs from '@/app/admin/hr/hr_components/AdminHrTabs/AdminHrTabs';
@@ -15,7 +13,6 @@ function HrContent() {
 
  return (
  <div className="min-h-full pb-10 bg-background text-foreground">
- <AdminHeader title="HR & Managers" subtitle="Manage branch managers, view staff profiles, and oversee payroll" />
  <div className="p-6 space-y-5">
  <AdminHrKPIs />
  <AdminHrTabs />

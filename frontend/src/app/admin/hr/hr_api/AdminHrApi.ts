@@ -1,90 +1,32 @@
-// RESPONSIBILITY: Provides strongly-typed network calls for the hr module.
-import { apiFetch } from '@/lib/api';
-import type { ApiResponse } from '@/lib/api';
-import { HrUrlConfig } from '@/app/admin/hr/hr_url_config';
-import { MOCK_ADMIN_STAFF, MOCK_ADMIN_PAYROLLS, MOCK_ADMIN_HR_SUMMARY, MOCK_ADMIN_LEDGER, MOCK_ADMIN_STAFF_PERFORMANCE } from '@/app/admin/hr/hr_api/AdminHrMockData';
+// RESPONSIBILITY: Owns the Admin HR HTTP contract for staff, payroll, ledger, advances, dues, and performance.
+import { z } from 'zod';
+import { apiFetch, type ApiResponse } from '@/lib/api';
+import { AdminHrUrlConfig } from '@/app/admin/hr/admin_hr_url_config';
 import type { Staff, Payroll, HrSummary, LedgerEntry } from '@/app/admin/hr/hr_types/AdminHrTypes';
 import type { StaffPerformanceRecord, PerformancePeriod } from '@/app/admin/hr/hr_types/AdminHrPerformanceTypes';
-
-let mockStaff = [...MOCK_ADMIN_STAFF];
-let mockPayrolls = [...MOCK_ADMIN_PAYROLLS];
+import { staffSchema, payrollSchema, hrSummarySchema, ledgerEntrySchema } from '@/app/admin/hr/hr_types/AdminHrSchemas';
+import { staffPerformanceRecordSchema } from '@/app/admin/hr/hr_types/AdminHrPerformanceSchemas';
 
 export const hrApi = {
   getStaff: async (params?: Record<string, string>) => {
-    await new Promise(res => setTimeout(res, 300));
-    return { success: true, message: 'Success', data: { staff: mockStaff, total: mockStaff.length } };
+    const query = new URLSearchParams(params ?? {}).toString();
+    return apiFetch<ApiResponse<{ staff: Staff[]; total: number }>>(`${AdminHrUrlConfig.BACKEND_API.STAFF_BASE}${query ? `?${query}` : ''}`, { dataSchema: z.object({ staff: z.array(staffSchema), total: z.number() }) });
   },
-  getOneStaff: async (id: string) => {
-    await new Promise(res => setTimeout(res, 300));
-    const staff = mockStaff.find(s => s.id === id);
-    if (!staff) throw new Error('Not found');
-    return { success: true, message: 'Success', data: staff };
-  },
-  createStaff: async (body: Partial<Staff>) => {
-    await new Promise(res => setTimeout(res, 400));
-    const newStaff = { ...body, id: `s${Date.now()}` } as Staff;
-    mockStaff.push(newStaff);
-    return { success: true, message: 'Created', data: newStaff };
-  },
-  updateStaff: async (id: string, body: Partial<Staff>) => {
-    await new Promise(res => setTimeout(res, 400));
-    const idx = mockStaff.findIndex(s => s.id === id);
-    if (idx === -1) throw new Error('Not found');
-    mockStaff[idx] = { ...mockStaff[idx], ...body } as Staff;
-    return { success: true, message: 'Updated', data: mockStaff[idx] };
-  },
-  removeStaff: async (id: string) => {
-    await new Promise(res => setTimeout(res, 400));
-    mockStaff = mockStaff.filter(s => s.id !== id);
-    return { success: true, message: 'Deleted', data: { id } };
-  },
-  bulkDeactivateStaff: async (ids: string[]) => {
-    await new Promise(res => setTimeout(res, 400));
-    mockStaff = mockStaff.map(s => (ids.includes(s.id) ? { ...s, isActive: false } : s));
-    return { success: true, message: 'Deactivated', data: { count: ids.length } };
-  },
+  getOneStaff: async (id: string) => apiFetch<ApiResponse<Staff>>(AdminHrUrlConfig.BACKEND_API.STAFF_GET_ONE(id), { dataSchema: staffSchema }),
+  createStaff: async (body: Partial<Staff>) => apiFetch<ApiResponse<Staff>>(AdminHrUrlConfig.BACKEND_API.STAFF_BASE, { method: 'POST', body: JSON.stringify(body), dataSchema: staffSchema }),
+  updateStaff: async (id: string, body: Partial<Staff>) => apiFetch<ApiResponse<Staff>>(AdminHrUrlConfig.BACKEND_API.STAFF_UPDATE(id), { method: 'PATCH', body: JSON.stringify({ id, ...body }), dataSchema: staffSchema }),
+  removeStaff: async (id: string) => apiFetch<ApiResponse<null>>(AdminHrUrlConfig.BACKEND_API.STAFF_DELETE(id), { method: 'DELETE', dataSchema: z.null() }),
+  bulkDeactivateStaff: async (ids: string[]) => apiFetch<ApiResponse<null>>(AdminHrUrlConfig.BACKEND_API.BULK_DEACTIVATE, { method: 'POST', body: JSON.stringify({ ids }), dataSchema: z.null() }),
   getPayrolls: async (params?: Record<string, string>) => {
-    await new Promise(res => setTimeout(res, 300));
-    return { success: true, message: 'Success', data: { payrolls: mockPayrolls, total: mockPayrolls.length } };
+    const query = new URLSearchParams(params ?? {}).toString();
+    return apiFetch<ApiResponse<{ payrolls: Payroll[]; total: number }>>(`${AdminHrUrlConfig.BACKEND_API.PAYROLLS_BASE}${query ? `?${query}` : ''}`, { dataSchema: z.object({ payrolls: z.array(payrollSchema), total: z.number() }) });
   },
-  createPayroll: async (body: Partial<Payroll>) => {
-    await new Promise(res => setTimeout(res, 400));
-    const newPayroll = { ...body, id: `pr${Date.now()}` } as Payroll;
-    mockPayrolls.push(newPayroll);
-    return { success: true, message: 'Created', data: newPayroll };
-  },
-  updatePayroll: async (id: string, body: Partial<Payroll>) => {
-    await new Promise(res => setTimeout(res, 400));
-    const idx = mockPayrolls.findIndex(p => p.id === id);
-    if (idx === -1) throw new Error('Not found');
-    mockPayrolls[idx] = { ...mockPayrolls[idx], ...body } as Payroll;
-    return { success: true, message: 'Updated', data: mockPayrolls[idx] };
-  },
-  updatePayrollStatus: async (id: string, status: string) => {
-    await new Promise(res => setTimeout(res, 400));
-    const idx = mockPayrolls.findIndex(p => p.id === id);
-    if (idx === -1) throw new Error('Not found');
-    mockPayrolls[idx] = { ...mockPayrolls[idx], status } as Payroll;
-    return { success: true, message: 'Updated', data: mockPayrolls[idx] };
-  },
-  getSummary: async (branchId?: string) => {
-    await new Promise(res => setTimeout(res, 300));
-    return { success: true, message: 'Success', data: MOCK_ADMIN_HR_SUMMARY };
-  },
-  getLedger: async (staffId: string) => {
-    await new Promise(res => setTimeout(res, 300));
-    return { success: true, message: 'Success', data: { ledger: MOCK_ADMIN_LEDGER, total: MOCK_ADMIN_LEDGER.length } };
-  },
-  giveAdvance: async (data: { staffId: string; amount: number; notes?: string; date?: string; paymentMode?: string }) => {
-    await new Promise(res => setTimeout(res, 400));
-    return { success: true, message: 'Advance recorded', data: { advanceAmount: data.amount } };
-  },
-  payDue: async (data: { staffId: string; amount: number; notes?: string; date?: string; paymentMode?: string }) => {
-    await new Promise(res => setTimeout(res, 400));
-    return { success: true, message: 'Due paid', data: { paidAmount: data.amount } };
-  },
-  fetchStaffPerformance: async (period: PerformancePeriod) => {
-    await new Promise(res => setTimeout(res, 300));
-    return { success: true, message: 'Success', data: MOCK_ADMIN_STAFF_PERFORMANCE };
-  },
+  createPayroll: async (body: Partial<Payroll>) => apiFetch<ApiResponse<Payroll>>(AdminHrUrlConfig.BACKEND_API.PAYROLLS_BASE, { method: 'POST', body: JSON.stringify(body), dataSchema: payrollSchema }),
+  updatePayroll: async (id: string, body: Partial<Payroll>) => apiFetch<ApiResponse<Payroll>>(AdminHrUrlConfig.BACKEND_API.PAYROLL_UPDATE(id), { method: 'PATCH', body: JSON.stringify({ id, ...body }), dataSchema: payrollSchema }),
+  updatePayrollStatus: async (id: string, status: string) => apiFetch<ApiResponse<Payroll>>(AdminHrUrlConfig.BACKEND_API.PAYROLL_STATUS_UPDATE(id), { method: 'PATCH', body: JSON.stringify({ id, status }), dataSchema: payrollSchema }),
+  getSummary: async (branchId?: string) => apiFetch<ApiResponse<HrSummary>>(`${AdminHrUrlConfig.BACKEND_API.SUMMARY}${branchId ? `?branchId=${encodeURIComponent(branchId)}` : ''}`, { dataSchema: hrSummarySchema }),
+  getLedger: async (staffId: string) => apiFetch<ApiResponse<LedgerEntry[]>>(`${AdminHrUrlConfig.BACKEND_API.STAFF_GET_ONE(staffId)}/ledger`, { dataSchema: z.array(ledgerEntrySchema) }),
+  giveAdvance: async (data: Record<string, unknown>) => apiFetch<ApiResponse<null>>(AdminHrUrlConfig.BACKEND_API.ADVANCES, { method: 'POST', body: JSON.stringify(data), dataSchema: z.null() }),
+  payDue: async (data: Record<string, unknown>) => apiFetch<ApiResponse<null>>(AdminHrUrlConfig.BACKEND_API.DUES_PAY, { method: 'POST', body: JSON.stringify(data), dataSchema: z.null() }),
+  fetchStaffPerformance: async (period: PerformancePeriod) => apiFetch<ApiResponse<StaffPerformanceRecord[]>>(`${AdminHrUrlConfig.BACKEND_API.PERFORMANCE}?period=${encodeURIComponent(period)}`, { dataSchema: z.array(staffPerformanceRecordSchema) }),
 };

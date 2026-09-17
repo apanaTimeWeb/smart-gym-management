@@ -10,20 +10,16 @@ import { LandingUrlConfig } from '@/app/landing/landing_url_config';
 
 export const landingApi = {
   submitBooking: async (data: { name: string; email: string; phone: string; date: string; type: string }) => {
-    await new Promise(r => setTimeout(r, 600));
-    return {
-      success: true,
-      message: 'Booking submitted successfully',
-      data: null
-    } as ApiResponse<unknown>;
+    return apiFetch<null>(LandingUrlConfig.BACKEND_API.BOOKING, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
   },
 
   submitContact: async (data: { name: string; email: string; message: string }) => {
-    await new Promise(r => setTimeout(r, 600));
-    return {
-      success: true,
-      message: 'Message sent successfully',
-      data: null
-    } as ApiResponse<unknown>;
+    return apiFetch<null>(LandingUrlConfig.BACKEND_API.CONTACT, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
   },
 };

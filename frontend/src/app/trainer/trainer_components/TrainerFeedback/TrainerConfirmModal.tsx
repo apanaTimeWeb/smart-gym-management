@@ -1,8 +1,5 @@
-// RESPONSIBILITY: Encapsulates logic, UI, or types for the trainer module.
-// DATA FLOW: Standard component data flow.
-// RESPONSIBILITY: Renders the reusable confirmation/destructive action modal used across all TRAINER modules. Receives config via TrainerConfirmProvider. No API calls.
 'use client';
-
+// RESPONSIBILITY: Renders the reusable confirmation/destructive action modal used across all TRAINER modules. Receives config via TrainerConfirmProvider. No API calls.
 import { AlertTriangle, X } from 'lucide-react';
 
 interface TrainerConfirmModalProps {
@@ -29,7 +26,7 @@ export default function TrainerConfirmModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 p-4">
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 p-4">
       <div className="bg-card rounded-2xl shadow-xl w-full max-w-sm overflow-hidden motion-safe:animate-in fade-in zoom-in motion-safe:duration-200">
         <div className="p-6">
           <div className="flex items-center gap-4 mb-4">

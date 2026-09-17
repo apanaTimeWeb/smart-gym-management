@@ -1,11 +1,10 @@
-// RESPONSIBILITY: Renders the tabbed view switching between the Staff and Payroll tables in the HR module.
 'use client';
-
+// RESPONSIBILITY: Renders the tabbed view switching between the Staff and Payroll tables in the HR module.
 import { useState } from 'react';
 import { useHrContext } from '@/app/manager/hr/hr_context/ManagerHrContext';
-import { HR_TABS } from '@/app/manager/hr/hr_utils/ManagerHrSharedConstants';
+import { HR_TABS, STAFF_TABLE_HEADERS } from '@/app/manager/hr/hr_utils/ManagerHrSharedConstants';
 import { RefreshCw, Plus, Search } from 'lucide-react';
-import { SearchableDropdown } from '@/app/manager/manager_components/ManagerShared/SearchableDropdown';
+import { SearchableDropdown } from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
 import ManagerHrStaffTable from '@/app/manager/hr/hr_components/ManagerHrStaffTable/ManagerHrStaffTable';
 import ManagerHrPayrollTable from '@/app/manager/hr/hr_components/ManagerHrPayrollTable/ManagerHrPayrollTable';
 import ManagerHrAdvanceTable from '@/app/manager/hr/hr_components/ManagerHrAdvanceTable/ManagerHrAdvanceTable';
@@ -14,7 +13,7 @@ import ManagerHrLedgerTable from '@/app/manager/hr/hr_components/ManagerHrLedger
 
 export default function ManagerHrTabs() {
   const [activeTab, setActiveTab] = useState(HR_TABS[0]);
-  const { loadAll, openAdd, openAddPayroll, fetchState, search, setSearch, roleFilter, setRoleFilter, setCurrentPage, payrollMonth, setPayrollMonth, staff } = useHrContext();
+  const { loadAll, openAdd, openAddPayroll, isLoading, search, setSearch, roleFilter, setRoleFilter, setCurrentPage, payrollMonth, setPayrollMonth, staff } = useHrContext();
 
   return (
     <div className="rounded-xl shadow-sm border overflow-hidden bg-card border-border">
@@ -24,7 +23,7 @@ export default function ManagerHrTabs() {
             <button 
               key={t} 
               onClick={() => { setActiveTab(t);  setSearch(''); }}
-              className={`px-5 py-3.5 text-sm font-medium transition-colors border-b-2 whitespace-nowrap ${activeTab === t ? 'text-primary border-primary bg-primary/5' : 'text-secondary border-transparent hover:opacity-80 bg-transparent'}`}
+              className={`px-5 py-3.5 text-sm font-medium motion-safe:transition-colors border-b-2 whitespace-nowrap ${activeTab === t ? 'text-primary border-primary bg-primary/5' : 'text-secondary border-transparent hover:opacity-80 bg-transparent'}`}
             >
               {t}
             </button>
@@ -65,14 +64,14 @@ export default function ManagerHrTabs() {
   <div className="px-4 flex flex-wrap gap-2">
     <button 
       onClick={loadAll} 
-      className="flex items-center gap-2 px-3 py-2 text-sm border border-border text-secondary rounded-lg hover:opacity-80 transition-opacity"
+      className="flex items-center gap-2 px-3 py-2 text-sm border border-border text-secondary rounded-lg hover:opacity-80 motion-safe:transition-opacity"
     >
       <RefreshCw size={14} />
     </button>
     {activeTab === 'Trainer List' && (
       <button 
         onClick={openAdd} 
-        className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-lg hover:opacity-90 transition-opacity" 
+        className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-lg hover:opacity-90 motion-safe:transition-opacity" 
       >
         <Plus size={14} /> Add Trainer
       </button>
@@ -80,7 +79,7 @@ export default function ManagerHrTabs() {
     {activeTab === 'Salary & Payments' && (
       <button 
         onClick={openAddPayroll} 
-        className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-lg hover:opacity-90 transition-opacity" 
+        className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-lg hover:opacity-90 motion-safe:transition-opacity" 
       >
         <Plus size={14} /> Add Payroll
       </button>
@@ -90,7 +89,7 @@ export default function ManagerHrTabs() {
 </div>
 
   <div className="p-5">
-  {fetchState === 'loading' ? (
+  {isLoading ? (
     <div className="flex justify-center py-10">
       <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full motion-safe:animate-spin" />
     </div>
@@ -111,7 +110,7 @@ export default function ManagerHrTabs() {
           </thead>
           <tbody className="divide-y divide-border">
             {(!staff || staff.length === 0) ? (
-              <tr><td colSpan={4} className="py-8 text-center text-secondary text-sm">No staff found</td></tr>
+              <tr><td colSpan={STAFF_TABLE_HEADERS.length + 1} className="py-8 text-center text-secondary text-sm">No staff found</td></tr>
             ) : (
               staff.map(s => (
                 <tr key={s.id}>
@@ -119,8 +118,8 @@ export default function ManagerHrTabs() {
                   <td className="py-3 px-4 text-sm text-secondary">Morning (6 AM - 2 PM)</td>
                   <td className="py-3 px-4 text-sm font-bold text-warning">Pending</td>
                   <td className="py-3 px-4 text-right flex justify-end gap-2">
-                    <button className="px-3 py-1.5 text-xs font-semibold bg-success text-success-foreground rounded-lg hover:opacity-90 transition-opacity">Mark Present</button>
-                    <button className="px-3 py-1.5 text-xs font-semibold bg-danger text-danger-foreground rounded-lg hover:opacity-90 transition-opacity">Mark Absent</button>
+                    <button className="px-3 py-1.5 text-xs font-semibold bg-success text-success-foreground rounded-lg hover:opacity-90 motion-safe:transition-opacity">Mark Present</button>
+                    <button className="px-3 py-1.5 text-xs font-semibold bg-danger text-danger-foreground rounded-lg hover:opacity-90 motion-safe:transition-opacity">Mark Absent</button>
                   </td>
                 </tr>
               ))
@@ -131,20 +130,8 @@ export default function ManagerHrTabs() {
     </div>
   ) : activeTab === 'Trainer-Member Assignment' ? (
     <div className="bg-card p-6 border border-border rounded-xl">
-      <h3 className="text-lg font-bold text-foreground mb-4">Assign Members to Trainers</h3>
-      <div className="space-y-4 max-w-md">
-        <div>
-          <label className="block text-sm font-medium mb-1">Select Member</label>
-          <SearchableDropdown value="" onChange={() => {}} options={[]} placeholder="Select a member..." className="bg-input" />
-        </div>
-        <div>
-          <label className="block text-sm font-medium mb-1">Select Trainer</label>
-          <SearchableDropdown value="" onChange={() => {}} options={(staff || []).map(s => ({ value: s.id, label: s.name }))} placeholder="Select a trainer..." className="bg-input" />
-        </div>
-        <button className="w-full py-2 bg-primary text-primary-foreground font-semibold rounded-lg hover:opacity-90 transition-opacity mt-2">
-          Assign Member
-        </button>
-      </div>
+      <h3 className="text-lg font-bold text-foreground mb-2">Assign Members to Trainers</h3>
+      <p className="text-sm text-secondary">Member-to-trainer assignment is not exposed by the current Manager HR API contract.</p>
     </div>
   ) : activeTab === 'Trainer Schedule' ? (
     <div className="bg-card p-6 border border-border rounded-xl">
@@ -183,7 +170,7 @@ export default function ManagerHrTabs() {
       )}
     </div>
   ) : (
-    <div className="text-center text-secondary py-10">Coming soon</div>
+    <div className="text-center text-secondary py-10">No data available for this section.</div>
   )}
   </div>
  </div>

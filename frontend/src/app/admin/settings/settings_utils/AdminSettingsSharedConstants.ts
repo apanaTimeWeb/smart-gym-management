@@ -1,12 +1,11 @@
 // RESPONSIBILITY: Centralized constants, schema, and shared utilities for the Settings module.
-import { Building, Bell, Shield, Smartphone, Settings as SettingsIcon, Webhook, Receipt, CreditCard } from 'lucide-react';
+import { Building, Bell, Shield, Smartphone, Settings as SettingsIcon, Receipt, CreditCard } from 'lucide-react';
 
 export const SETTINGS_TABS = [
   { id: 'profile', icon: Building, title: 'Gym Profile', desc: 'Update gym name, logo, address, and contact details', color: 'text-info', bg: 'bg-info-bg' },
   { id: 'notifications', icon: Bell, title: 'Notifications', desc: 'Configure SMS, email and WhatsApp alerts', color: 'text-warning', bg: 'bg-warning-bg' },
   { id: 'roles', icon: Shield, title: 'Roles & Permissions', desc: 'Manage admin roles and access control', color: 'text-purple', bg: 'bg-purple-bg' },
   { id: 'integration', icon: Smartphone, title: 'App Integration', desc: 'Member app settings and configurations', color: 'text-success', bg: 'bg-success-bg' },
-  { id: 'webhooks', icon: Webhook, title: 'Webhooks', desc: 'Configure API webhooks and integrations', color: 'text-primary', bg: 'bg-primary/20' },
   { id: 'gst', icon: Receipt, title: 'GST & Tax', desc: 'Configure GST number, tax rates, and invoice settings', color: 'text-warning', bg: 'bg-warning-bg' },
   { id: 'payment', icon: CreditCard, title: 'Payment Gateway', desc: 'Manage Razorpay, Stripe, and UPI payment configurations', color: 'text-success', bg: 'bg-success-bg' },
   { id: 'general', icon: SettingsIcon, title: 'General Settings', desc: 'System preferences, timezone, language', color: 'text-secondary', bg: 'bg-card' },
@@ -41,13 +40,6 @@ export const TAX_RATE_OPTIONS = [
   { value: '28', label: '28% — GST (Luxury)' },
 ];
 
-export const MOCK_ROLES = [
-  { id: 'r1', name: 'Super Admin', description: 'Full access to all modules and branches', permissions: ['all'], color: 'text-danger', bg: 'bg-danger-bg', memberCount: 1 },
-  { id: 'r2', name: 'Branch Manager', description: 'Manage single branch operations, members, and staff', permissions: ['members', 'finance', 'hr', 'attendance'], color: 'text-warning', bg: 'bg-warning-bg', memberCount: 3 },
-  { id: 'r3', name: 'Trainer', description: 'View assigned members, mark attendance, update workouts', permissions: ['attendance', 'members_view'], color: 'text-success', bg: 'bg-success-bg', memberCount: 8 },
-  { id: 'r4', name: 'Receptionist', description: 'Handle walk-ins, collect fees, manage enquiries', permissions: ['members', 'finance_collect', 'enquiries'], color: 'text-info', bg: 'bg-info-bg', memberCount: 5 },
-  { id: 'r5', name: 'Accountant', description: 'View and manage financial reports and expenses', permissions: ['finance', 'reports'], color: 'text-purple', bg: 'bg-purple-bg', memberCount: 2 },
-];
 
 export const TIMEZONE_OPTIONS = [
   { value: 'Asia/Kolkata', label: 'IST — Asia/Kolkata (UTC+5:30)' },
@@ -66,3 +58,5 @@ export const BACKUP_FREQUENCY_OPTIONS = [
   { value: 'weekly', label: 'Weekly' },
   { value: 'monthly', label: 'Monthly' },
 ];
+
+export { MOCK_ROLES } from '@/app/admin/settings/settings_mocks/fixtures/AdminSettingsMockFixtures';

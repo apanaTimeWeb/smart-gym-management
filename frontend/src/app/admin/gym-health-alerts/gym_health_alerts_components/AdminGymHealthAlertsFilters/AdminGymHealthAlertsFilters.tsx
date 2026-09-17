@@ -1,5 +1,5 @@
+"use client";
 // RESPONSIBILITY: Filter controls for the Gym Health Alerts table (severity, type, gym, resolved status).
-'use client';
 
 import { AdminSearchableDropdown } from '@/app/admin/admin_components/AdminShared/AdminSearchableDropdown';
 import { useAdminGymHealthAlertsLogic } from '@/app/admin/gym-health-alerts/gym_health_alerts_context/useAdminGymHealthAlertsLogic';

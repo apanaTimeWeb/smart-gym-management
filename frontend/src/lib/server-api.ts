@@ -37,9 +37,8 @@ async function ssrApiFetch<T = unknown>(path: string): Promise<T> {
     }
     res = await fetch(`${BASE_URL}${path}`, { headers });
   } catch (error) {
-    if (error instanceof TypeError || (error as Error).message === 'DEMO_MODE_ACTIVE') {
-      const { routeMockRequest } = await import('./mock_router');
-      return await routeMockRequest<T>(path, 'GET') as unknown as T;
+    if (isDemoMode) {
+      throw new Error('DEMO_MODE_ACTIVE (server API)');
     }
     throw error;
   }

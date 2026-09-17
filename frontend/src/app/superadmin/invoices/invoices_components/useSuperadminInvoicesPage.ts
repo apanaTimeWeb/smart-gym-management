@@ -1,114 +1,130 @@
+// DATA FLOW: Superadmin UI → useSuperadminInvoicesPage → Superadmin module API/state → consuming component
+'use client';
 // RESPONSIBILITY: Encapsulates local UI state for the Invoices page (filtering, modal state, derived stats).
 // DATA FLOW: useSuperadminInvoicesStore -> useSuperadminInvoicesPage -> SuperadminInvoicesClient
-import { useState, useMemo, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
-import { useSuperadminInvoicesStore } from '@/app/superadmin/invoices/invoices_store/useSuperadminInvoicesStore';
-
+import { useState, useMemo } from 'react';
+import { useSuperadminUrlState } from '@/app/superadmin/superadmin_utils/useSuperadminUrlState';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { invoicesApi } from '@/app/superadmin/invoices/superadmin_invoices_api/superadmin_invoices_api';
+import toast from 'react-hot-toast';
+import { calculateSuperadminInvoiceMetrics } from '@/app/superadmin/invoices/invoices_utils/SuperadminInvoicesMetrics';
 export function useSuperadminInvoicesPage() {
-  const { invoices, tenants, fetchState, error, fetchData } = useSuperadminInvoicesStore();
-
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
-
-  const [search, setSearch] = useState('');
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [gymSearchTerm, setGymSearchTerm] = useState('');
-
-  // Bug 2 Fix: Trigger fetch when modal opens if tenants are missing or just fetch to ensure fresh data
-  useEffect(() => {
-    if (showAddModal) {
-      fetchData();
-    }
-  }, [showAddModal, fetchData]);
-
-  const [isGymDropdownOpen, setIsGymDropdownOpen] = useState(false);
-  const [selectedGymId, setSelectedGymId] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState('UPI');
-  const [statusFilter, setStatusFilter] = useState<string | null>(null);
-
-  const searchParams = useSearchParams();
-  const startDate = searchParams.get('startDate') || '';
-  const endDate = searchParams.get('endDate') || '';
-
-  const filteredInvoices = useMemo(() => {
-    const lower = search.toLowerCase();
-    return invoices.filter((i) => {
-      const matchSearch = ((i.tenantName || '').toLowerCase().includes(lower) || (i.id || '').toLowerCase().includes(lower));
-      const matchStatus = statusFilter ? i.status === statusFilter : true;
-      let matchDate = true;
-      if (startDate && endDate && i.issuedAt && startDate !== 'this_month' && startDate !== 'this_week' && startDate !== 'this_year' && startDate !== 'today') {
-        const iDate = new Date(i.issuedAt);
-        const sDate = new Date(startDate);
-        const eDate = new Date(endDate);
-        if (!isNaN(iDate.getTime()) && !isNaN(sDate.getTime()) && !isNaN(eDate.getTime())) {
-          eDate.setHours(23, 59, 59, 999);
-          matchDate = iDate >= sDate && iDate <= eDate;
-        }
-      }
-      return matchSearch && matchStatus && matchDate;
+    const queryClient = useQueryClient();
+    const { getParam, setParam } = useSuperadminUrlState();
+    const startDate = getParam('startDate', '');
+    const endDate = getParam('endDate', '');
+    const search = getParam('search', '');
+    const statusFilter = getParam('statusFilter', '');
+    const currentPage = Number(getParam('page', '1'));
+    const pageLimit = Number(getParam('limit', '10'));
+    const setSearch = (val: string) => {
+        setParam('search', val);
+        setParam('page', '1');
+    };
+    const setStatusFilter = (val: string | null) => {
+        setParam('statusFilter', val ?? '');
+        setParam('page', '1');
+    };
+    const setPage = (page: number) => setParam('page', String(page));
+    const [showAddModal, setShowAddModal] = useState(false);
+    const [gymSearchTerm, setGymSearchTerm] = useState('');
+    const [isGymDropdownOpen, setIsGymDropdownOpen] = useState(false);
+    const [selectedGymId, setSelectedGymId] = useState('');
+    const [paymentMethod, setPaymentMethod] = useState('UPI');
+    const queryParams = useMemo(() => {
+        const p: Record<string, string> = {};
+        if (search)
+            p.search = search;
+        if (statusFilter)
+            p.status = statusFilter;
+        if (startDate)
+            p.startDate = startDate;
+        if (endDate)
+            p.endDate = endDate;
+        p.page = String(currentPage);
+        p.limit = String(pageLimit);
+        return p;
+    }, [search, statusFilter, startDate, endDate, currentPage, pageLimit]);
+    const { data: invoicesRes, isLoading, isError, error: queryError } = useQuery({
+        queryKey: ['superadmin', 'invoices', queryParams],
+        queryFn: () => invoicesApi.fetchInvoices(queryParams),
     });
-  }, [invoices, search, statusFilter, startDate, endDate]);
-
-  const filteredTenantsForDropdown = useMemo(
-    () => tenants.filter((t) => (t.name || '').toLowerCase().includes(gymSearchTerm.toLowerCase())),
-    [tenants, gymSearchTerm]
-  );
-
-  const selectedGym = tenants.find((t) => t.id === selectedGymId);
-
-  const totalRevenue = useMemo(
-    () => invoices.filter((i) => i.status === 'PAID').reduce((acc, curr) => acc + (Number(curr.amount) || 0), 0),
-    [invoices]
-  );
-
-  const failedRevenue = useMemo(
-    () => invoices.filter((i) => i.status === 'FAILED').reduce((acc, curr) => acc + (Number(curr.amount) || 0), 0),
-    [invoices]
-  );
-
-  const pendingRevenue = useMemo(
-    () => invoices.filter((i) => i.status === 'PENDING').reduce((acc, curr) => acc + (Number(curr.amount) || 0), 0),
-    [invoices]
-  );
-
-  const overdueCount = useMemo(
-    () => invoices.filter((i) => i.status === 'OVERDUE').length,
-    [invoices]
-  );
-
-  const handleSelectGym = (id: string) => {
-    setSelectedGymId(id);
-    setIsGymDropdownOpen(false);
-    setGymSearchTerm('');
-  };
-
-  return {
-    fetchState,
-    error,
-    invoices,
-    filteredInvoices,
-    filteredTenantsForDropdown,
-    selectedGym,
-    totalRevenue,
-    failedRevenue,
-    search,
-    setSearch,
-    showAddModal,
-    setShowAddModal,
-    gymSearchTerm,
-    setGymSearchTerm,
-    isGymDropdownOpen,
-    setIsGymDropdownOpen,
-    paymentMethod,
-    setPaymentMethod,
-    handleSelectGym,
-    statusFilter,
-    setStatusFilter,
-    startDate,
-    endDate,
-    pendingRevenue,
-    overdueCount,
-  };
+    const { data: tenantsRes } = useQuery({
+        queryKey: ['superadmin', 'invoices', 'tenants'],
+        queryFn: () => invoicesApi.fetchTenants(),
+    });
+    const invoices = invoicesRes?.data || [];
+    const filteredInvoices = invoices; // Server-side filtering applied
+    const tenants = tenantsRes?.data || [];
+    const total = invoicesRes?.meta?.total || invoices.length;
+    const error = isError ? (queryError instanceof Error ? queryError.message : '') : null;
+    const logManualPaymentMutation = useMutation({
+        mutationFn: (data: {
+            gymId: string;
+            amount: number;
+            planName: string;
+        }) => invoicesApi.createManualPayment({
+            gymId: data.gymId,
+            amount: data.amount,
+            planName: data.planName,
+            currency: 'INR',
+        }),
+        onSuccess: (res) => {
+            if (res.success && res.data) {
+                queryClient.invalidateQueries({ queryKey: ['superadmin', 'invoices'] });
+                toast.success(res.message, { id: 'superadmin-toast-bddec4ac4d' });
+            }
+            else {
+                toast.error(res.message, { id: 'superadmin-toast-812ab1a64a' });
+            }
+        },
+        onError: (err: Error) => {
+            toast.error(err.message, { id: 'superadmin-toast-a2194697fd' });
+        }
+    });
+    const handleLogManualPayment = (gymId: string, amount: number, planName: string) => {
+        return logManualPaymentMutation.mutateAsync({ gymId, amount, planName });
+    };
+    // filtering moved to server
+    const filteredTenantsForDropdown = useMemo(() => tenants.filter((t) => (t.name || '').toLowerCase().includes(gymSearchTerm.toLowerCase())), [tenants, gymSearchTerm]);
+    const selectedGym = tenants.find((t) => t.id === selectedGymId);
+    const { totalRevenue, failedRevenue, pendingRevenue, overdueCount } = useMemo(() => calculateSuperadminInvoiceMetrics(invoices), [invoices]);
+    const handleSelectGym = (id: string) => {
+        setSelectedGymId(id);
+        setIsGymDropdownOpen(false);
+        setGymSearchTerm('');
+    };
+    return {
+        isLoading,
+        isError,
+        error,
+        invoices,
+        filteredInvoices,
+        filteredTenantsForDropdown,
+        selectedGym,
+        totalRevenue,
+        failedRevenue,
+        search,
+        setSearch,
+        showAddModal,
+        setShowAddModal,
+        gymSearchTerm,
+        setGymSearchTerm,
+        isGymDropdownOpen,
+        setIsGymDropdownOpen,
+        paymentMethod,
+        setPaymentMethod,
+        handleSelectGym,
+        statusFilter,
+        setStatusFilter,
+        startDate,
+        endDate,
+        pendingRevenue,
+        overdueCount,
+        handleLogManualPayment,
+        currentPage,
+        pageLimit,
+        setPage,
+        total,
+    };
 }
-
