@@ -11,7 +11,7 @@
 **ALLOWED:** Import `USAGE_WARNING_THRESHOLD` and `USAGE_CRITICAL_THRESHOLD` from `usage_utils/`.
 
 ## 3. No Mock Stubs in Production
-**FORBIDDEN:** Shipping `admin_api/admin_AdminUsageApi.ts` with `Promise.resolve(hardcoded_data)` to production.
+**FORBIDDEN:** Shipping any legacy mock-only usage API path or bypassing `usage_api/AdminUsageApi.ts`/`apiFetch` in production.
 **ALLOWED:** Use `adminUsageApi.fetchMyUsage()` from `usage_api/AdminUsageApi.ts` which calls `apiFetch`.
 
 ## 4. No Cross-Role Imports

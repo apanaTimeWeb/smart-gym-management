@@ -1,36 +1,13 @@
 "use client";
 // RESPONSIBILITY: Manages the Notifications settings tab.
-import { useForm, useWatch } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { NotificationsSettingsSchema } from '@/app/admin/settings/settings_types/AdminSettings.schema';
 import type { NotificationsSettingsType } from '@/app/admin/settings/settings_types/AdminSettingsTypes';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useAdminSettingsNotificationsForm } from '@/app/admin/settings/settings_context/useAdminSettingsForms';
+import type { AdminSortDirection } from '@/app/admin/admin_types/AdminSortTypes';
 import { useState, useMemo } from 'react';
-import { settingsApi } from '@/app/admin/settings/settings_api/AdminSettingsApi';
-import toast from 'react-hot-toast';
 import { Save, RefreshCw, CheckCircle, XCircle, ChevronDown, ChevronUp } from 'lucide-react';
-import { useUnsavedChangesGuard } from '@/app/admin/admin_utils/useAdminUnsavedChangesGuard';
 
 export function AdminSettingsNotifications({ initialData }: { initialData: NotificationsSettingsType }) {
-  const queryClient = useQueryClient();
-  const form = useForm<NotificationsSettingsType>({
-    resolver: zodResolver(NotificationsSettingsSchema),
-    defaultValues: initialData,
-  });
-
-  const formValues = useWatch({ control: form.control });
-
-  useUnsavedChangesGuard(form.formState.isDirty);
-
-  const mutation = useMutation({
-    mutationFn: (data: NotificationsSettingsType) => settingsApi.updateSettings({ notifications: data }),
-    onSuccess: (res) => {
-      toast.success(res.message, { id: 'settings-notifications-save' });
-      queryClient.invalidateQueries({ queryKey: ['admin', 'settings'] });
-      form.reset(form.getValues());
-    },
-    onError: (err) => toast.error((err as Error).message, { id: 'settings-notifications-save' }),
-  });
+  const { form, formValues, mutation } = useAdminSettingsNotificationsForm(initialData);
 
   const onSubmit = (data: NotificationsSettingsType) => mutation.mutate(data);
 
@@ -40,7 +17,7 @@ export function AdminSettingsNotifications({ initialData }: { initialData: Notif
     { key: 'whatsapp', label: 'WhatsApp', color: 'text-success' },
   ] as const;
 
-  const [eventSort, setEventSort] = useState<'asc' | 'desc'>('asc');
+  const [eventSort, setEventSort] = useState<AdminSortDirection>('asc');
 
   const events = useMemo(() => [
     { key: 'onJoin', label: 'New Member Joins' },
@@ -76,10 +53,10 @@ export function AdminSettingsNotifications({ initialData }: { initialData: Notif
 
       <div className="p-6 space-y-6">
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+          <table data-admin-responsive-table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-primary/5 border-b border-border">
-                <th onClick={() => setEventSort((current) => current === 'asc' ? 'desc' : 'asc')} className="px-4 py-3 text-xs font-semibold text-secondary uppercase tracking-wider cursor-pointer select-none" aria-sort={eventSort === 'asc' ? 'ascending' : 'descending'}><div className="flex items-center gap-1.5">Event {eventSort === 'asc' ? <ChevronUp size={13} className="text-primary"/> : <ChevronDown size={13} className="text-primary"/>}</div></th>
+                <th role="button" tabIndex={0} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); event.currentTarget.click(); } }}  onClick={() => setEventSort((current) => current === 'asc' ? 'desc' : 'asc')} className="px-4 py-3 text-xs font-semibold text-secondary uppercase tracking-wider cursor-pointer select-none" aria-sort={eventSort === 'asc' ? 'ascending' : 'descending'}><div className="flex items-center gap-1.5">Event {eventSort === 'asc' ? <ChevronUp size={13} className="text-primary"/> : <ChevronDown size={13} className="text-primary"/>}</div></th>
                 {channels.map(c => (
                   <th key={c.key} className={`px-4 py-3 text-xs font-semibold uppercase tracking-wider text-center ${c.color}`}>{c.label}</th>
                 ))}

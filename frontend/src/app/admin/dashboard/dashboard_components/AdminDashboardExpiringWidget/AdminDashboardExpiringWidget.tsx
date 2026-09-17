@@ -8,8 +8,8 @@ import { useAdminDashboardLogic } from '@/app/admin/dashboard/dashboard_context/
 
 export default function AdminDashboardExpiringWidget() {
   const { stats } = useAdminDashboardLogic();
-  const expiring = (stats as any)?.expiringMemberships ?? [];
-  const critical = expiring.filter((member: any) => member.daysLeft <= 7);
+  const expiring = stats?.expiringMemberships ?? [];
+  const critical = expiring.filter((member) => member.daysLeft <= 7);
 
   return (
     <div className="bg-card/60 backdrop-blur-xl border border-border rounded-2xl shadow-lg p-6 flex flex-col h-full">
@@ -36,7 +36,7 @@ export default function AdminDashboardExpiringWidget() {
             <AlertTriangle size={11} /> Expiring This Week
           </p>
         )}
-        {expiring.map((m: any) => (
+        {expiring.map((m) => (
           <div key={m.id} className={`p-3 rounded-xl border flex items-center justify-between gap-3 motion-safe:transition-colors ${
             m.daysLeft <= 7 ? 'bg-danger/10 border-danger/20' : 'bg-warning/5 border-warning/10'
           }`}>

@@ -2,6 +2,8 @@
 import { ssrApiFetch } from '@/lib/server-api';
 import { FinanceUrlConfig } from '@/app/admin/finance/admin_finance_url_config';
 import type { Payment, FinanceSummary } from '@/app/admin/finance/finance_types/AdminFinanceTypes';
+import { paymentSchema, financeSummarySchema } from '@/app/admin/finance/finance_types/AdminFinanceSchemas';
+import { z } from 'zod';
 import type { ApiResponse } from '@/lib/api';
 
 export const ssrFinanceApi = {

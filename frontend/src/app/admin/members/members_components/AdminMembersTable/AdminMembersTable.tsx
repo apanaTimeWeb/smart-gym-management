@@ -2,6 +2,8 @@
 // RESPONSIBILITY: Renders the paginated members table with clickable rows, status badges, and branch info.
 
 import { useAdminMembersLogic } from '@/app/admin/members/members_context/useAdminMembersLogic';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { AdminMembersUrlConfig } from '@/app/admin/members/admin_members_url_config';
 import { useAdminMembersStore } from '@/app/admin/members/members_store/useAdminMembersStore';
 import AdminMembersEmptyState from '@/app/admin/members/members_components/AdminMembersEmptyState/AdminMembersEmptyState';
 import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
@@ -19,7 +21,9 @@ const STATUS_STYLES: Record<string, string> = {
 const TABLE_HEADERS = ['Member', 'Branch', 'Plan', 'Join Date', 'Status', 'Expiry', 'Outstanding'];
 
 export default function AdminMembersTable() {
-  const { members, allFilteredCount, totalPages, selectedMember, setSelectedMember } = useAdminMembersLogic();
+  const { members, allFilteredCount, totalPages } = useAdminMembersLogic();
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const { search, statusFilter, branchFilter, expiryFilter, currentPage, setCurrentPage } = useAdminMembersStore();
 
   const hasFilters = search !== '' || statusFilter !== 'all' || branchFilter !== 'all' || expiryFilter !== 'all';
@@ -31,7 +35,7 @@ export default function AdminMembersTable() {
   return (
     <div className="bg-card rounded-xl border border-border overflow-hidden">
       <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse">
+        <table data-admin-responsive-table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-primary/5 border-b border-border">
               {TABLE_HEADERS.map((h) => (
@@ -45,8 +49,23 @@ export default function AdminMembersTable() {
             {members.map((m) => (
               <tr
                 key={m.id}
-                onClick={() => setSelectedMember(m)}
-                className="hover:bg-primary/5 cursor-pointer motion-safe:transition-colors group"
+                onClick={() => {
+                  const next = new URLSearchParams(searchParams.toString());
+                  next.set('memberId', m.id);
+                  router.replace(`${AdminMembersUrlConfig.root}?${next.toString()}`, { scroll: false });
+                }}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    const next = new URLSearchParams(searchParams.toString());
+                    next.set('memberId', m.id);
+                    router.replace(`${AdminMembersUrlConfig.root}?${next.toString()}`, { scroll: false });
+                  }
+                }}
+                tabIndex={0}
+                role="link"
+                aria-label={`Open ${m.name} profile`}
+                className="hover:bg-primary/5 cursor-pointer motion-safe:transition-colors group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               >
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-3">

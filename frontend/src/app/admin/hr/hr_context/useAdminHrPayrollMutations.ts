@@ -7,13 +7,13 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { hrApi } from '@/app/admin/hr/hr_api/AdminHrApi';
 import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/useAdminConfirm';
 import type { Payroll, Staff } from '@/app/admin/hr/hr_types/AdminHrTypes';
-import type { ToastType } from '@/app/admin/admin_components/AdminFeedback/AdminToast';
+import type { AdminToastType } from '@/app/admin/admin_components/AdminFeedback/AdminToastTypes';
 
 export function useAdminHrPayrollMutations(
   staff: Staff[],
   payrolls: Payroll[],
   setShowPayrollModal: (open: boolean) => void,
-  showToast: (message: string, type: ToastType) => void,
+  showToast: (message: string, type: AdminToastType) => void,
 ) {
   const { confirm } = useAdminConfirm();
   const queryClient = useQueryClient();
@@ -30,7 +30,7 @@ export function useAdminHrPayrollMutations(
     const amount = Number(data.amount ?? 0);
     const paidAmount = Number(data.paidAmount ?? 0);
     const pendingAmount = Math.max(0, amount - paidAmount);
-    const status = pendingAmount === 0 ? 'Paid' : 'PENDING';
+    const status = pendingAmount === 0 ? 'PAID' : paidAmount > 0 ? 'PARTIAL' : 'PENDING';
     if (staffMember?.advanceSalary && staffMember.advanceSalary > 0) {
       const deduction = Math.min(staffMember.salary || 0, staffMember.advanceSalary);
       await updateStaffMutation.mutateAsync({ id: staffMember.id, payload: { advanceSalary: staffMember.advanceSalary - deduction } });
@@ -57,7 +57,7 @@ export function useAdminHrPayrollMutations(
     if (!confirmed) return;
     const paidAmount = (payroll.paidAmount || 0) + amount;
     const pendingAmount = Math.max(0, payroll.amount - paidAmount);
-    const response = await updatePayrollMutation.mutateAsync({ id, payload: { paidAmount, pendingAmount, status: pendingAmount === 0 ? 'Paid' : 'PENDING' } });
+    const response = await updatePayrollMutation.mutateAsync({ id, payload: { paidAmount, pendingAmount, status: pendingAmount === 0 ? 'PAID' : paidAmount > 0 ? 'PARTIAL' : 'PENDING' } });
     showToast(response.message, 'success');
     await invalidateHr();
   }, [confirm, invalidateHr, payrolls, showToast, updatePayrollMutation]);

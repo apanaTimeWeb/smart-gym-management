@@ -1,6 +1,8 @@
 "use client";
 // RESPONSIBILITY: Renders the search, status filter, branch filter, and expiry filter toolbar for Admin Members.
 
+import type { AdminMembersExportFormat } from '@/app/admin/members/members_types/AdminMembersUiTypes';
+
 import { Search, Download, FileText } from 'lucide-react';
 import { useAdminMembersStore } from '@/app/admin/members/members_store/useAdminMembersStore';
 import { useAdminMembersBranchReference } from '@/app/admin/members/members_context/useAdminMembersBranchReference';
@@ -10,7 +12,7 @@ import type { MemberStatus } from '@/app/admin/members/members_types/AdminMember
 import type { AdminMembersBranchReference } from '@/app/admin/members/members_types/AdminMembersBranchReferenceTypes';
 
 export default function AdminMembersToolbar() {
-  const downloadMembers = (format: 'csv' | 'pdf') => {
+  const downloadMembers = (format: AdminMembersExportFormat) => {
     if (format === 'pdf') { window.print(); return; }
     const csv = 'name,exportedAt\n' + [`Current filtered members,${new Date().toISOString()}`].join('\n');
     const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' }));

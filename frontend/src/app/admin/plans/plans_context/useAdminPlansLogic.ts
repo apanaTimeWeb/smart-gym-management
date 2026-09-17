@@ -127,12 +127,15 @@ export function useAdminPlansLogic(initialData?: PlansInitialData | null): Plans
   }, [confirm, deleteMutation]);
 
   const saving = createMutation.isPending || updateMutation.isPending;
+  const loadPlans = useCallback(async () => {
+    await plansQuery.refetch();
+  }, [plansQuery]);
 
   return {
     plans: fetchedPlans, status, saving, toast: null,
     search, setSearch, tierFilter, setTierFilter, currentPage, setCurrentPage,
     showModal, setShowModal, editId, form, setForm,
-    showToast, hideToast: () => {}, loadPlans: async () => {}, // Mocked for context
+    showToast, loadPlans,
     openAdd, openEdit, savePlan, deletePlan,
   };
 }

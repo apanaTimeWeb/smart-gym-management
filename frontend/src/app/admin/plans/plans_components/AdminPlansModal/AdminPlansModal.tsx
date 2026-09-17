@@ -27,7 +27,7 @@ export default function AdminPlansModal() {
   if (!showModal) return null;
 
   return (
-    <div className="fixed inset-0 bg-overlay z-40 flex items-center justify-center p-4">
+    <div data-admin-dialog="true" role="dialog" aria-modal="true" tabIndex={-1} className="fixed inset-0 bg-overlay z-40 flex items-center justify-center p-4">
       <div className="bg-card rounded-2xl shadow-2xl shadow-black/50 w-full max-w-lg max-h-full overflow-y-auto border border-border">
         <div className="sticky top-0 bg-card px-6 py-4 border-b border-border flex items-center justify-between">
           <h3 className="text-lg font-bold text-primary">

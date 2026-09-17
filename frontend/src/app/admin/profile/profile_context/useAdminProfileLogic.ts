@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import toast from 'react-hot-toast';
+import { adminToast } from '@/app/admin/admin_components/AdminFeedback/AdminToastService';
 import { adminProfileApi } from '@/app/admin/profile/profile_api/AdminProfileApi';
 import {
   updateAdminProfilePayloadSchema,
@@ -56,18 +56,18 @@ export function useAdminProfileLogic() {
     onSuccess: async (response) => {
       profileForm.reset({ name: response.data?.name ?? profileForm.getValues('name'), phone: response.data?.phone ?? profileForm.getValues('phone') });
       await queryClient.invalidateQueries({ queryKey: ['admin', 'profile', 'detail'] });
-      toast.success(response.message, { id: 'admin-profile-save' });
+      adminToast.success(response.message, 'admin-profile-save');
     },
-    onError: (error) => toast.error(error instanceof Error ? error.message : 'Profile update failed.', { id: 'admin-profile-save' }),
+    onError: (error) => adminToast.error(error instanceof Error ? error.message : 'Profile update failed.', 'admin-profile-save'),
   });
 
   const passwordMutation = useMutation({
     mutationFn: (payload: UpdateAdminPasswordPayload) => adminProfileApi.updatePassword(payload),
     onSuccess: (response) => {
       passwordForm.reset(EMPTY_PASSWORD_FORM);
-      toast.success(response.message, { id: 'admin-profile-password' });
+      adminToast.success(response.message, 'admin-profile-password');
     },
-    onError: (error) => toast.error(error instanceof Error ? error.message : 'Password update failed.', { id: 'admin-profile-password' }),
+    onError: (error) => adminToast.error(error instanceof Error ? error.message : 'Password update failed.', 'admin-profile-password'),
   });
 
   const profileDirty = profileForm.formState.isDirty || passwordForm.formState.isDirty;

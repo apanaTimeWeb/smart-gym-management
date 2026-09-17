@@ -10,9 +10,9 @@ const ReactApexChart = dynamic(() => import('react-apexcharts'), { ssr: false })
 
 export default function AdminDashboardAttendanceTrend() {
   const { stats } = useAdminDashboardLogic();
-  const attendance = (stats as any)?.attendanceTrend ?? [];
-  const labels = attendance.map((item: any) => new Date(item.date).toLocaleDateString('en-IN', { weekday: 'short' }));
-  const values = attendance.map((item: any) => item.count);
+  const attendance = stats?.attendanceTrend ?? [];
+  const labels = attendance.map((item) => new Date(item.date).toLocaleDateString('en-IN', { weekday: 'short' }));
+  const values = attendance.map((item) => item.count);
   const options: ApexCharts.ApexOptions = {
     chart: {
       type: 'bar',

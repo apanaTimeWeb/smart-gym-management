@@ -7,7 +7,6 @@ export const REPORT_TABS: { value: ReportTab; label: string }[] = [
   { value: 'attendance', label: 'Attendance' },
   { value: 'payroll', label: 'Payroll' },
   { value: 'pnl', label: 'P&L' },
-  { value: 'tax', label: 'Tax Liability Report' },
 ];
 
 export const DATE_RANGE_OPTIONS: { value: ReportDateRange; label: string }[] = [
@@ -20,6 +19,11 @@ export const DATE_RANGE_OPTIONS: { value: ReportDateRange; label: string }[] = [
 ];
 
 export const REPORTS_ITEMS_PER_PAGE = 10;
+
+export const EXPORT_FORMAT_OPTIONS: { value: import('@/app/admin/reports/reports_types/AdminReportsTypes').AdminReportsExportFormat; label: string }[] = [
+  { value: 'pdf', label: 'Export as PDF' },
+  { value: 'excel', label: 'Export as Excel' },
+];
 
 
 

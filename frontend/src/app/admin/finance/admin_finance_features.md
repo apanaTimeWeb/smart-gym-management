@@ -50,7 +50,7 @@ history. All monetary values are transmitted as integers (paise) and formatted v
 ## Permissions and Security
 | Action | Required Role |
 |---|---|
-| View finance data | `SUPERADMIN` (Admin role) |
+| View finance data | `ADMIN` |
 
 ## Loading, Empty, Error States
 - **Loading:** Skeleton — 3 KPI shimmer cards + 8-row table skeleton

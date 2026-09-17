@@ -1,5 +1,6 @@
 "use client";
 import { formatCurrency } from '@/lib/formatters';
+import type { MembershipFilter } from '@/app/admin/sales/sales_types/AdminSalesAllMembershipsTypes';
 // RESPONSIBILITY: Renders the paginated, filterable table of all gym memberships. KPI cards (Rule 74) double as interactive filters. Receives data via SalesContext. No API calls.
 
 import { useState, useMemo } from 'react';
@@ -10,9 +11,8 @@ import type { Member } from '@/app/admin/sales/sales_types/AdminSalesTypes';
 import { ADMIN_ITEMS_PER_PAGE } from '@/app/admin/admin_url_config';
 import { Users, CheckCircle, AlertTriangle, XCircle } from 'lucide-react';
 
-type MembershipFilter = 'All' | 'Active' | 'Expiring Soon' | 'Expired';
 
-const MEMBERSHIP_FILTERS: MembershipFilter[] = ['All', 'Active', 'Expiring Soon', 'Expired'];
+
 const TABLE_HEADERS = ['Member', 'Plan', 'Start', 'End Date', 'Status', 'Amount', 'Days Left'] as const;
 
 function getDaysLeft(expiryDate: string): number {
@@ -105,7 +105,7 @@ export default function AdminSalesAllMemberships() {
 
       {/* Table */}
       <div className="overflow-x-auto rounded-xl border border-border">
-        <table className="w-full">
+        <table data-admin-responsive-table className="w-full">
           <thead className="bg-input">
             <tr>
               {TABLE_HEADERS.map(h => (
@@ -119,7 +119,7 @@ export default function AdminSalesAllMemberships() {
             {filtered.map((r: Member) => {
               const daysLeft = getDaysLeft(r.expiryDate);
               return (
-                <tr key={r.id} className="hover:bg-primary/5 motion-safe:transition-colors bg-card cursor-pointer">
+                <tr key={r.id} className="hover:bg-primary/5 motion-safe:transition-colors bg-card">
                   <td className="px-4 py-3 text-sm font-medium text-foreground">{r.name}</td>
                   <td className="px-4 py-3 text-sm text-secondary">{r.plan?.name ?? `Plan #${r.planId}`}</td>
                   <td className="px-4 py-3 text-sm text-secondary">{new Date(r.joinDate).toLocaleDateString('en-IN')}</td>

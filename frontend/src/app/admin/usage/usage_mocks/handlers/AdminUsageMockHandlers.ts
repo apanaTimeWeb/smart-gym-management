@@ -1,31 +1,45 @@
-// RESPONSIBILITY: Owns MSW handlers for the Admin usage feature.
-// DATA FLOW: usage API client → module-owned MSW handler → module-owned fixture → TanStack Query/UI.
+// RESPONSIBILITY: Owns MSW handlers for the Admin Usage workflow.
+// DATA FLOW: Usage API client → module-owned MSW handler → module-owned fixture/state → TanStack Query/UI.
 import { http, HttpResponse } from 'msw';
-
-type JsonObject = Record<string, unknown>;
-
-async function parseRequestBody(request: Request): Promise<unknown> {
-  try { return await request.clone().json(); } catch { return undefined; }
-}
-
-function asRecord(value: unknown): JsonObject {
-  return value && typeof value === 'object' && !Array.isArray(value) ? value as JsonObject : {};
-}
-
-const ok = <T>(data: T, message = 'Success') =>
-  HttpResponse.json({ success: true, message, data, meta: { total: Array.isArray(data) ? data.length : 1, page: 1, limit: 50, totalPages: 1 } });
-
-const paged = <T>(data: T[], page: number, limit: number, message = 'Success') => {
-  const safeLimit = Math.max(1, limit);
-  const safePage = Math.max(1, page);
-  const start = (safePage - 1) * safeLimit;
-  const pageData = data.slice(start, start + safeLimit);
-  return HttpResponse.json({ success: true, message, data: pageData, meta: { total: data.length, page: safePage, limit: safeLimit, totalPages: Math.max(1, Math.ceil(data.length / safeLimit)) } });
-};
-
+import { StatusCodes } from 'http-status-codes';
 import { MOCK_ADMIN_USAGE_DATA } from '@/app/admin/usage/usage_mocks/fixtures/AdminUsageMockFixtures';
+import type { AdminUsageUpgradeRequest } from '@/app/admin/usage/usage_types/AdminUsageUpgradeTypes';
+
+let latestUpgradeRequest: AdminUsageUpgradeRequest | null = null;
 
 export const adminUsageMockHandlers = [
-  // Endpoint is owned by AdminUsageUrlConfig.BACKEND_API.MY_USAGE ('/admin/usage').
-  http.get('*/admin/usage', () => ok(MOCK_ADMIN_USAGE_DATA))
+  http.get('*/admin/usage', () => HttpResponse.json({
+    success: true,
+    message: 'Usage data loaded',
+    data: MOCK_ADMIN_USAGE_DATA,
+    meta: { total: 1, page: 1, limit: 1, totalPages: 1 },
+  })),
+  http.post('*/admin/usage/upgrade-request', async ({ request }) => {
+    const body = await request.json().catch(() => null) as unknown;
+    const planName =
+      typeof body === 'object' && body !== null && 'planName' in body && typeof (body as { planName?: unknown }).planName === 'string'
+        ? (body as { planName: string }).planName
+        : '';
+
+    if (!planName) {
+      return HttpResponse.json({ success: false, message: 'A plan must be selected.', data: null }, { status: StatusCodes.BAD_REQUEST });
+    }
+
+    latestUpgradeRequest = {
+      requestId: `upgrade-${Date.now()}`,
+      planName,
+      status: 'pending',
+      requestedAt: new Date().toISOString(),
+    };
+
+    return HttpResponse.json({
+      success: true,
+      message: `Upgrade request for ${planName} sent to Superadmin.`,
+      data: latestUpgradeRequest,
+    });
+  }),
 ];
+
+export function getAdminUsageMockUpgradeRequest(): AdminUsageUpgradeRequest | null {
+  return latestUpgradeRequest;
+}

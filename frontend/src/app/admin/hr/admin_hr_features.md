@@ -52,9 +52,9 @@ actions (deactivate staff, revoke role) require `useConfirm()` double-verificati
 ## Permissions and Security
 | Action | Required Role |
 |---|---|
-| View staff | `SUPERADMIN` |
-| Add / Edit staff | `SUPERADMIN` |
-| Deactivate staff | `SUPERADMIN` — requires `useConfirm()` |
+| View staff | `ADMIN` |
+| Add / Edit staff | `ADMIN` |
+| Deactivate staff | `ADMIN` — requires `useConfirm()` |
 
 ## Loading, Empty, Error States
 - **Loading:** `loading.tsx` — 8-row table skeleton

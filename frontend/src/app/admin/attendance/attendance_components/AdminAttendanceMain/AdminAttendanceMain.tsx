@@ -1,8 +1,6 @@
 "use client";
 // RESPONSIBILITY: Root client orchestrator for Admin Attendance. Composes KPIs, trend chart, toolbar, and table.
 // No manual check-in button — this is a read-only view for the gym owner (Admin role).
-
-import AdminHeader from '@/app/admin/admin_components/AdminLayout/AdminHeader';
 import AdminAttendanceKPIs from '@/app/admin/attendance/attendance_components/AdminAttendanceKPIs/AdminAttendanceKPIs';
 import AdminAttendanceTrendChart from '@/app/admin/attendance/attendance_components/AdminAttendanceTrendChart/AdminAttendanceTrendChart';
 import AdminAttendanceToolbar from '@/app/admin/attendance/attendance_components/AdminAttendanceToolbar/AdminAttendanceToolbar';
@@ -15,10 +13,6 @@ export default function AdminAttendanceMain() {
 
   return (
     <div className="min-h-full pb-10 bg-background text-foreground">
-      <AdminHeader
-        title="Attendance Overview"
-        subtitle="Read-only daily attendance analytics across all branches"
-      />
 
       {/* Read-only notice banner */}
       <div className="mx-6 mt-4 flex items-center gap-2.5 px-4 py-2.5 bg-info/10 border border-info/20 rounded-xl">

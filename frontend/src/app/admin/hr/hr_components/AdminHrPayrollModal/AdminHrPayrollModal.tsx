@@ -47,7 +47,7 @@ export default function AdminHrPayrollModal() {
   if (!showPayrollModal) return null;
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-overlay">
+    <div data-admin-dialog="true" role="dialog" aria-modal="true" tabIndex={-1} className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-overlay">
       <div className="w-full max-w-md rounded-2xl shadow-xl flex flex-col max-h-screen bg-card border-2 border-warning">
         
         <div className="flex items-center justify-between px-8 py-5 border-b border-border">

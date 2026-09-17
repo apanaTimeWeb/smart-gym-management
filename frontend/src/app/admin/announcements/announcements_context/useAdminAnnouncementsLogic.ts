@@ -4,7 +4,7 @@
 // DATA FLOW: AdminAnnouncementsApi → TanStack Query → useAdminAnnouncementsLogic → AdminAnnouncementsMain/table/modal
 import { useCallback } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import toast from 'react-hot-toast';
+import { adminToast } from '@/app/admin/admin_components/AdminFeedback/AdminToastService';
 import { announcementsApi } from '@/app/admin/announcements/announcements_api/AdminAnnouncementsApi';
 import { useAdminAnnouncementsStore } from '@/app/admin/announcements/announcements_store/useAdminAnnouncementsStore';
 import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/useAdminConfirm';
@@ -49,23 +49,23 @@ export function useAdminAnnouncementsLogic() {
 
   const createMutation = useMutation({
     mutationFn: (payload: AnnouncementFormValues) => announcementsApi.createAnnouncement(payload),
-    onSuccess: (response) => { toast.success(response.message, { id: 'admin-success-33383590' }); store.setShowModal(false); void qc.invalidateQueries({ queryKey: ['admin', 'announcements'] }); },
-    onError: (err) => toast.error(err instanceof Error ? err.message : 'Announcement creation failed.', { id: 'admin-error-6481815840' }),
+    onSuccess: (response) => { adminToast.success(response.message, 'admin-success-33383590'); store.setShowModal(false); void qc.invalidateQueries({ queryKey: ['admin', 'announcements'] }); },
+    onError: (err) => adminToast.error(err instanceof Error ? err.message : 'Announcement creation failed.', 'admin-error-6481815840'),
   });
   const updateMutation = useMutation({
     mutationFn: ({ id, payload }: { id: string; payload: AnnouncementFormValues }) => announcementsApi.updateAnnouncement(id, payload),
-    onSuccess: (response) => { toast.success(response.message, { id: 'admin-success-c151e3e9' }); store.setShowModal(false); store.setEditingAnnouncement(null); void qc.invalidateQueries({ queryKey: ['admin', 'announcements'] }); },
-    onError: (err) => toast.error(err instanceof Error ? err.message : 'Announcement update failed.', { id: 'admin-error-72b190472c' }),
+    onSuccess: (response) => { adminToast.success(response.message, 'admin-success-c151e3e9'); store.setShowModal(false); store.setEditingAnnouncement(null); void qc.invalidateQueries({ queryKey: ['admin', 'announcements'] }); },
+    onError: (err) => adminToast.error(err instanceof Error ? err.message : 'Announcement update failed.', 'admin-error-72b190472c'),
   });
   const deleteMutation = useMutation({
     mutationFn: (id: string) => announcementsApi.deleteAnnouncement(id),
-    onSuccess: (response) => { toast.success(response.message, { id: 'admin-success-05945f3e' }); void qc.invalidateQueries({ queryKey: ['admin', 'announcements'] }); },
-    onError: (err) => toast.error(err instanceof Error ? err.message : 'Announcement deletion failed.', { id: 'admin-error-f6f10488f8' }),
+    onSuccess: (response) => { adminToast.success(response.message, 'admin-success-05945f3e'); void qc.invalidateQueries({ queryKey: ['admin', 'announcements'] }); },
+    onError: (err) => adminToast.error(err instanceof Error ? err.message : 'Announcement deletion failed.', 'admin-error-f6f10488f8'),
   });
   const pinMutation = useMutation({
     mutationFn: (id: string) => announcementsApi.togglePin(id),
-    onSuccess: (response) => { toast.success(response.message, { id: 'admin-success-d9cfd2a7' }); void qc.invalidateQueries({ queryKey: ['admin', 'announcements', 'list'] }); },
-    onError: (err) => toast.error(err instanceof Error ? err.message : 'Announcement pin update failed.', { id: 'admin-error-01a0fd9c95' }),
+    onSuccess: (response) => { adminToast.success(response.message, 'admin-success-d9cfd2a7'); void qc.invalidateQueries({ queryKey: ['admin', 'announcements', 'list'] }); },
+    onError: (err) => adminToast.error(err instanceof Error ? err.message : 'Announcement pin update failed.', 'admin-error-01a0fd9c95'),
   });
 
   const openCreate = useCallback(() => { store.setEditingAnnouncement(null); store.setForm(EMPTY_ANNOUNCEMENT_FORM); store.setShowModal(true); }, [store]);

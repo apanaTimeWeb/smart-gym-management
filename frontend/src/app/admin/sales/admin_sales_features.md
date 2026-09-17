@@ -51,7 +51,7 @@ is filterable by date range and branch.
 ## Permissions and Security
 | Action | Required Role |
 |---|---|
-| View sales analytics | `SUPERADMIN` |
+| View sales analytics | `ADMIN` |
 
 ## Loading, Empty, Error States
 - **Loading:** `loading.tsx` — 3 KPI shimmer cards + 2 chart placeholders + table skeleton

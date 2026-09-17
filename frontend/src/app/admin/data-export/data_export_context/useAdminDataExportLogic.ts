@@ -4,13 +4,13 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import toast from 'react-hot-toast';
+import { adminToast } from '@/app/admin/admin_components/AdminFeedback/AdminToastService';
 import { dataExportApi } from '@/app/admin/data-export/data_export_api/AdminDataExportApi';
 import { useAdminDataExportStore } from '@/app/admin/data-export/data_export_store/useAdminDataExportStore';
 import { useAdminUrlQuerySync } from '@/app/admin/admin_utils/useAdminUrlQuerySync';
 import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/useAdminConfirm';
 import { DATA_EXPORT_ITEMS_PER_PAGE } from '@/app/admin/data-export/data_export_utils/AdminDataExportSharedConstants';
-import type { DataExportSortDirection, DataExportSortKey, ExportFormValues } from '@/app/admin/data-export/data_export_types/AdminDataExportTypes';
+import type { DataExportSortDirection, DataExportSortKey, ExportFormValues, ExportStatus } from '@/app/admin/data-export/data_export_types/AdminDataExportTypes';
 
 export function useAdminDataExportLogic() {
   const { confirm } = useAdminConfirm();
@@ -20,13 +20,17 @@ export function useAdminDataExportLogic() {
   const [sortDir, setSortDir] = useState<DataExportSortDirection>('desc');
 
   useAdminUrlQuerySync([
-    { key: 'status', value: statusFilter, defaultValue: 'all', setValue: ((val: string) => useAdminDataExportStore.getState().setStatusFilter(val as any)) as any },
+    { key: 'status', value: statusFilter, defaultValue: 'all', setValue: (value) => {
+      if (value === 'all' || value === 'completed' || value === 'processing' || value === 'failed') {
+        useAdminDataExportStore.getState().setStatusFilter(value as ExportStatus | 'all');
+      }
+    } },
     { key: 'page', value: currentPage, defaultValue: 1, setValue: (value) => setCurrentPage(Math.max(1, Number(value) || 1)) },
   ]);
 
   const jobsQuery = useQuery({
     queryKey: ['admin', 'data-export', 'jobs', { status: statusFilter, page: currentPage, limit: DATA_EXPORT_ITEMS_PER_PAGE, sortKey, sortDir }],
-    queryFn: () => dataExportApi.fetchJobs({ page: currentPage, limit: DATA_EXPORT_ITEMS_PER_PAGE, status: statusFilter as any, sortKey, sortDir }),
+    queryFn: () => dataExportApi.fetchJobs({ page: currentPage, limit: DATA_EXPORT_ITEMS_PER_PAGE, status: statusFilter, sortKey, sortDir }),
     staleTime: 1000 * 30,
     refetchInterval: 10000,
   });
@@ -40,19 +44,19 @@ export function useAdminDataExportLogic() {
   const createMutation = useMutation({
     mutationFn: (payload: ExportFormValues) => dataExportApi.createExport(payload),
     onSuccess: (response) => {
-      toast.success(response.message, { id: 'admin-success-4cabe2e5' });
+      adminToast.success(response.message, 'admin-success-4cabe2e5');
       qc.invalidateQueries({ queryKey: ['admin', 'data-export', 'jobs'] });
     },
-    onError: (err) => toast.error((err as Error).message, { id: 'admin-error-e59d0b4c54' }),
+    onError: (err) => adminToast.error((err as Error).message, 'admin-error-e59d0b4c54'),
   });
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => dataExportApi.deleteJob(id),
     onSuccess: (response) => {
-      toast.success(response.message, { id: 'admin-success-abc17580ff' });
+      adminToast.success(response.message, 'admin-success-abc17580ff');
       qc.invalidateQueries({ queryKey: ['admin', 'data-export', 'jobs'] });
     },
-    onError: (err) => toast.error((err as Error).message, { id: 'admin-error-d87a5f59fd' }),
+    onError: (err) => adminToast.error((err as Error).message, 'admin-error-d87a5f59fd'),
   });
 
   useEffect(() => {

@@ -31,7 +31,7 @@ export default function AdminHrStaffProfileModal() {
   if (!showProfileModal || !editData) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-overlay backdrop-blur-sm">
+    <div data-admin-dialog="true" role="dialog" aria-modal="true" tabIndex={-1} className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-overlay backdrop-blur-sm">
       <div className="bg-card w-full max-w-3xl rounded-2xl shadow-2xl border border-border overflow-hidden flex flex-col max-h-screen">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-border bg-input/30">
@@ -147,10 +147,10 @@ export default function AdminHrStaffProfileModal() {
             </div>
             
             <div className="border border-border rounded-xl overflow-hidden">
-              <table className="w-full text-left border-collapse">
+              <table data-admin-responsive-table className="w-full text-left border-collapse">
                 <thead className="bg-input/50">
                   <tr>
-                    <th onClick={() => setBranchSortDirection((current) => current === 'asc' ? 'desc' : 'asc')} className="px-4 py-3 text-xs font-semibold text-secondary uppercase tracking-wider cursor-pointer select-none" aria-sort={branchSortDirection === 'asc' ? 'ascending' : 'descending'}><div className="flex items-center gap-1.5">Branch {branchSortDirection === 'asc' ? <ChevronUp size={13} className="text-primary"/> : <ChevronDown size={13} className="text-primary"/>}</div></th>
+                    <th role="button" tabIndex={0} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); event.currentTarget.click(); } }}  onClick={() => setBranchSortDirection((current) => current === 'asc' ? 'desc' : 'asc')} className="px-4 py-3 text-xs font-semibold text-secondary uppercase tracking-wider cursor-pointer select-none" aria-sort={branchSortDirection === 'asc' ? 'ascending' : 'descending'}><div className="flex items-center gap-1.5">Branch {branchSortDirection === 'asc' ? <ChevronUp size={13} className="text-primary"/> : <ChevronDown size={13} className="text-primary"/>}</div></th>
                     <th className="px-4 py-3 text-xs font-semibold text-secondary uppercase tracking-wider">Location</th>
                     {isManager && <th className="px-4 py-3 text-xs font-semibold text-secondary uppercase tracking-wider text-right">Badge</th>}
                   </tr>

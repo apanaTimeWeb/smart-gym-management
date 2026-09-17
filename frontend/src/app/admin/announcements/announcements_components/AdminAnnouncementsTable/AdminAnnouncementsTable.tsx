@@ -116,7 +116,7 @@ export default function AdminAnnouncementsTable() {
       {/* Table */}
       <div className="bg-card border border-border rounded-xl overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+          <table data-admin-responsive-table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-primary/5 border-b border-border">
                 {['', 'Title & Preview', 'Audience', 'Branches', 'Schedule', 'Priority', 'Status', 'Views', 'Acknowledged', 'Delivery', 'Actions'].map((h, i) => (

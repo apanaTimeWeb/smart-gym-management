@@ -3,7 +3,7 @@
 // RESPONSIBILITY: Business logic hook for Subscriptions — queries and mutations.
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import toast from 'react-hot-toast';
+import { adminToast } from '@/app/admin/admin_components/AdminFeedback/AdminToastService';
 import { subscriptionsApi } from '@/app/admin/subscriptions/subscriptions_api/AdminSubscriptionsApi';
 import { useAdminSubscriptionsStore } from '@/app/admin/subscriptions/subscriptions_store/useAdminSubscriptionsStore';
 import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/useAdminConfirm';
@@ -52,33 +52,33 @@ export function useAdminSubscriptionsLogic() {
 
   const upgradeMutation = useMutation({
     mutationFn: (planId: string) => subscriptionsApi.upgradePlan(planId),
-    onSuccess: (response) => { toast.success(response.message, { id: 'admin-success-22dbbbf6' });
+    onSuccess: (response) => { adminToast.success(response.message, 'admin-success-22dbbbf6');
       setShowUpgradeConfirm(null);
       qc.invalidateQueries({ queryKey: ['admin', 'subscriptions', 'subscription'] });
       qc.invalidateQueries({ queryKey: ['admin', 'subscriptions', 'kpis'] });
       qc.invalidateQueries({ queryKey: ['admin', 'subscriptions', 'plans'] });
     },
-    onError: (err) => toast.error((err as Error).message, { id: 'admin-error-adfbfcf78b' }),
+    onError: (err) => adminToast.error((err as Error).message, 'admin-error-adfbfcf78b'),
   });
 
   const autoRenewMutation = useMutation({
     mutationFn: subscriptionsApi.toggleAutoRenew,
-    onSuccess: (response) => { toast.success(response.message, { id: 'admin-success-8bbeec64' });
+    onSuccess: (response) => { adminToast.success(response.message, 'admin-success-8bbeec64');
       qc.invalidateQueries({ queryKey: ['admin', 'subscriptions', 'subscription'] });
     },
-    onError: (err) => toast.error((err as Error).message, { id: 'admin-error-1067ba6b06' }),
+    onError: (err) => adminToast.error((err as Error).message, 'admin-error-1067ba6b06'),
   });
 
   const setDefaultPMMutation = useMutation({
     mutationFn: (id: string) => subscriptionsApi.setDefaultPaymentMethod(id),
-    onSuccess: (response) => { toast.success(response.message, { id: 'admin-success-235b8623c8' }); qc.invalidateQueries({ queryKey: ['admin', 'subscriptions', 'payment-methods'] }); },
-    onError: (err) => toast.error((err as Error).message, { id: 'admin-error-638550b7de' }),
+    onSuccess: (response) => { adminToast.success(response.message, 'admin-success-235b8623c8'); qc.invalidateQueries({ queryKey: ['admin', 'subscriptions', 'payment-methods'] }); },
+    onError: (err) => adminToast.error((err as Error).message, 'admin-error-638550b7de'),
   });
 
   const removePMMutation = useMutation({
     mutationFn: (id: string) => subscriptionsApi.removePaymentMethod(id),
-    onSuccess: (response) => { toast.success(response.message, { id: 'admin-success-83e444b113' }); qc.invalidateQueries({ queryKey: ['admin', 'subscriptions', 'payment-methods'] }); },
-    onError: (err) => toast.error((err as Error).message, { id: 'admin-error-3b8d91063d' }),
+    onSuccess: (response) => { adminToast.success(response.message, 'admin-success-83e444b113'); qc.invalidateQueries({ queryKey: ['admin', 'subscriptions', 'payment-methods'] }); },
+    onError: (err) => adminToast.error((err as Error).message, 'admin-error-3b8d91063d'),
   });
 
   async function handleUpgrade(planId: string, planName: string) {

@@ -46,7 +46,7 @@ ApexCharts exclusively. This module must never import from `/manager`, `/trainer
 ## Permissions and Security
 | Action | Required Role |
 |---|---|
-| View dashboard | `SUPERADMIN` (Admin role) |
+| View dashboard | `ADMIN` |
 
 ## Loading, Empty, Error States
 - **Loading:** `loading.tsx` skeleton — 4 KPI card shimmer blocks + chart placeholder rectangle

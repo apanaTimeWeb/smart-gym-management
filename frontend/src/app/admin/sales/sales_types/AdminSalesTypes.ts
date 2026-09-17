@@ -1,7 +1,7 @@
 import type { QueryStatus } from '@tanstack/react-query';
 // RESPONSIBILITY: Defines all types for the Admin Sales & Reports module — membership, payments, store sales.
 import { type SalesTab, type DateFilter } from '@/app/admin/sales/sales_utils/AdminSalesSharedConstants';
-import type { ToastType } from '@/app/admin/admin_components/AdminFeedback/AdminToast';
+import type { AdminToastType } from '@/app/admin/admin_components/AdminFeedback/AdminToastTypes';
 
 
 // ------- Membership Types -------
@@ -93,8 +93,6 @@ export interface SalesInitialData {
 export interface SalesContextType {
   tab: SalesTab;
   setTab: (tab: SalesTab) => void;
-  dateFilter: DateFilter;
-  setDateFilter: (filter: DateFilter) => void;
   search: string;
   setSearch: (search: string) => void;
   currentPage: number;
@@ -116,6 +114,6 @@ export interface SalesContextType {
   loadAll: () => Promise<void>;
 
 
-  showToast: (message: string, type: ToastType) => void;
+  showToast: (message: string, type: AdminToastType) => void;
 }
 

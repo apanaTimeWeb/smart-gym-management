@@ -15,7 +15,7 @@ export default function AdminReportsMembership() {
           <p className="text-xs text-secondary mt-0.5">New members, renewals, exits and net growth for the selected period</p>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table data-admin-responsive-table className="w-full">
             <thead>
               <tr className="bg-primary/5">
                 {['Gym', 'Active Members', 'New Members', 'Renewals', 'Exits', 'Net Growth'].map(h => (

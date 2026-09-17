@@ -1,36 +1,12 @@
 "use client";
 // RESPONSIBILITY: Manages the Payment Gateway settings tab.
-import { useForm, useWatch } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { PaymentGatewaySettingsSchema } from '@/app/admin/settings/settings_types/AdminSettings.schema';
 import type { PaymentGatewaySettingsType } from '@/app/admin/settings/settings_types/AdminSettingsTypes';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { settingsApi } from '@/app/admin/settings/settings_api/AdminSettingsApi';
-import toast from 'react-hot-toast';
+import { useAdminSettingsPaymentGatewayForm } from '@/app/admin/settings/settings_context/useAdminSettingsForms';
 import { Save, RefreshCw, CreditCard, Receipt } from 'lucide-react';
-import { useUnsavedChangesGuard } from '@/app/admin/admin_utils/useAdminUnsavedChangesGuard';
 import { AdminSettingsToggleSwitch } from '@/app/admin/settings/settings_components/AdminSettingsShared/AdminSettingsToggleSwitch';
 
 export function AdminSettingsPaymentGateway({ initialData }: { initialData: PaymentGatewaySettingsType }) {
-  const queryClient = useQueryClient();
-  const form = useForm<PaymentGatewaySettingsType>({
-    resolver: zodResolver(PaymentGatewaySettingsSchema),
-    defaultValues: initialData,
-  });
-
-  const formValues = useWatch({ control: form.control });
-
-  useUnsavedChangesGuard(form.formState.isDirty);
-
-  const mutation = useMutation({
-    mutationFn: (data: PaymentGatewaySettingsType) => settingsApi.updateSettings({ payment: data }),
-    onSuccess: (res) => {
-      toast.success(res.message, { id: 'settings-payment-save' });
-      queryClient.invalidateQueries({ queryKey: ['admin', 'settings'] });
-      form.reset(form.getValues());
-    },
-    onError: (err) => toast.error((err as Error).message, { id: 'settings-payment-save' }),
-  });
+  const { form, formValues, mutation } = useAdminSettingsPaymentGatewayForm(initialData);
 
   const onSubmit = (data: PaymentGatewaySettingsType) => mutation.mutate(data);
 

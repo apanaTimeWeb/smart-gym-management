@@ -24,9 +24,11 @@ const paged = <T>(data: T[], page: number, limit: number, message = 'Success') =
 };
 
 import { MOCK_ADMIN_PROFILE } from '@/app/admin/profile/profile_mocks/fixtures/AdminProfileMockFixtures';
+import type { AdminProfileData } from '@/app/admin/profile/profile_types/AdminProfileTypes';
+let profileState: AdminProfileData = structuredClone(MOCK_ADMIN_PROFILE);
 
 export const adminProfileMockHandlers = [
-  http.get('*/admin/adminProfile/fetchProfile', () => ok(MOCK_ADMIN_PROFILE)),
-  http.post('*/admin/adminProfile/updateProfile', () => ok(MOCK_ADMIN_PROFILE, 'Profile updated')),
+  http.get('*/admin/adminProfile/fetchProfile', () => ok(profileState)),
+  http.post('*/admin/adminProfile/updateProfile', async ({ request }) => { const raw = await parseRequestBody(request); const body = raw && typeof raw === 'object' && !Array.isArray(raw) ? raw as Record<string, unknown> : {}; profileState = { ...profileState, ...(body as Partial<AdminProfileData>) }; return ok(profileState, 'Profile updated'); }),
   http.post('*/admin/adminProfile/updatePassword', () => ok(null, 'Password updated'))
 ];

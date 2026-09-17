@@ -21,10 +21,11 @@ export default function AdminSettingsNav() {
       {SETTINGS_TABS.map((s) => {
         const isActive = activeTabId === s.id;
         return (
-          <button 
+          <button
+            type="button"
             key={s.id} 
             onClick={() => handleTabChange(s.id)}
-            className={`bg-card border rounded-xl p-5 text-left motion-safe:transition-all group ${
+            className={`bg-card border rounded-xl p-5 text-left motion-safe:transition-all group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
               isActive 
                 ? 'border-warning shadow-md ring-1 ring-warning' 
                 : 'border-border hover:border-warning dark:hover:border-warning hover:shadow-sm'

@@ -6,6 +6,8 @@ import { formatCurrency } from '@/lib/formatters';
 import { useAdminSalesLogic } from '@/app/admin/sales/sales_context/useAdminSalesLogic';
 import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
 import { ChevronDown, ChevronUp, ChevronsUpDown, Loader2 } from 'lucide-react';
+import type { AdminSalesMembershipSortKey } from '@/app/admin/sales/sales_types/AdminSalesUiTypes';
+import type { AdminSortDirection } from '@/app/admin/admin_types/AdminSortTypes';
 import { useMemo, useState } from 'react';
 import { ADMIN_ITEMS_PER_PAGE } from '@/app/admin/admin_url_config';
 import type { MembershipReportItem } from '@/app/admin/sales/sales_types/AdminSalesTypes';
@@ -13,26 +15,25 @@ import type { MembershipReportItem } from '@/app/admin/sales/sales_types/AdminSa
 export default function AdminSalesMembershipReport() {
   const { search, currentPage, setCurrentPage, membershipReport, membershipTotals, status } = useAdminSalesLogic();
   
-  type SortKey = 'plan' | 'receivable' | 'received' | 'remaining' | 'refund';
-  const [sortKey, setSortKey] = useState<SortKey>('receivable');
-  const [sortDir, setSortDir] = useState<'asc'|'desc'>('desc');
+  const [sortKey, setAdminSalesMembershipSortKey] = useState<AdminSalesMembershipSortKey>('receivable');
+  const [sortDir, setSortDir] = useState<AdminSortDirection>('desc');
   const filtered = membershipReport.filter((r: MembershipReportItem) => 
     (r.plan || '').toLowerCase().includes(search.toLowerCase())
   );
 
   
   const sorted = useMemo(() => [...filtered].sort((a,b)=>{const av=a[sortKey],bv=b[sortKey]; const result=typeof av==='number'&&typeof bv==='number'?av-bv:String(av??'').localeCompare(String(bv??''),undefined,{numeric:true}); return sortDir==='asc'?result:-result;}), [filtered,sortKey,sortDir]);
-  const handleSort=(key:SortKey)=>{if(sortKey===key)setSortDir(d=>d==='asc'?'desc':'asc');else{setSortKey(key);setSortDir('desc');}};
+  const handleSort=(key:AdminSalesMembershipSortKey)=>{if(sortKey===key)setSortDir(d=>d==='asc'?'desc':'asc');else{setAdminSalesMembershipSortKey(key);setSortDir('desc');}};
   const totalPages = Math.ceil(sorted.length / ADMIN_ITEMS_PER_PAGE) || 1;
   const paginated = sorted.slice((currentPage - 1) * ADMIN_ITEMS_PER_PAGE, currentPage * ADMIN_ITEMS_PER_PAGE);
 
   if (status === 'pending') {
     return (
       <div className="overflow-x-auto">
-        <table className="w-full">
+        <table data-admin-responsive-table className="w-full">
           <thead className="bg-input">
             <tr>
-              {['Plan', 'Total Receivable', 'Amount Received', 'Remaining', 'Refund'].map((h,index) => { const keys: SortKey[]=['plan','receivable','received','remaining','refund']; const key=keys[index] as SortKey; return <th key={h} onClick={()=>handleSort(key)} className="text-left text-xs font-semibold text-secondary uppercase tracking-wider px-4 py-3 cursor-pointer select-none" aria-sort={sortKey===key?(sortDir==='asc'?'ascending':'descending'):'none'}><div className="flex items-center gap-1.5">{h}{sortKey===key?(sortDir==='asc'?<ChevronUp size={13} className="text-primary"/>:<ChevronDown size={13} className="text-primary"/>):<ChevronsUpDown size={13} className="text-disabled"/>}</div></th>; })}
+              {['Plan', 'Total Receivable', 'Amount Received', 'Remaining', 'Refund'].map((h,index) => { const keys: AdminSalesMembershipSortKey[]=['plan','receivable','received','remaining','refund']; const key=keys[index] as AdminSalesMembershipSortKey; return <th role="button" tabIndex={0} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); event.currentTarget.click(); } }}  key={h} onClick={()=>handleSort(key)} className="text-left text-xs font-semibold text-secondary uppercase tracking-wider px-4 py-3 cursor-pointer select-none" aria-sort={sortKey===key?(sortDir==='asc'?'ascending':'descending'):'none'}><div className="flex items-center gap-1.5">{h}{sortKey===key?(sortDir==='asc'?<ChevronUp size={13} className="text-primary"/>:<ChevronDown size={13} className="text-primary"/>):<ChevronsUpDown size={13} className="text-disabled"/>}</div></th>; })}
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
@@ -63,7 +64,7 @@ export default function AdminSalesMembershipReport() {
   return (
   <>
  <div className="overflow-x-auto">
- <table className="w-full">
+ <table data-admin-responsive-table className="w-full">
  <thead className="bg-input">
  <tr>
  {['Plan', 'Total Receivable', 'Amount Received', 'Remaining', 'Refund'].map(h => (

@@ -7,12 +7,12 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { hrApi } from '@/app/admin/hr/hr_api/AdminHrApi';
 import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/useAdminConfirm';
 import type { Staff } from '@/app/admin/hr/hr_types/AdminHrTypes';
-import type { ToastType } from '@/app/admin/admin_components/AdminFeedback/AdminToast';
+import type { AdminToastType } from '@/app/admin/admin_components/AdminFeedback/AdminToastTypes';
 
 export function useAdminHrStaffMutations(
   editId: string | null,
   setShowModal: (open: boolean) => void,
-  showToast: (message: string, type: ToastType) => void,
+  showToast: (message: string, type: AdminToastType) => void,
 ) {
   const { confirm } = useAdminConfirm();
   const queryClient = useQueryClient();

@@ -1,17 +1,4 @@
-import type { QueryStatus } from '@tanstack/react-query';
-// RESPONSIBILITY: Defines strict types for the Dashboard module, including comprehensive KPI stats and recent activity shapes.
-import type { TimeRange } from '@/app/admin/admin_types/AdminSharedTypes';
-export interface DashboardContextType { 
-  stats: DashboardStats | null; 
-  status: QueryStatus; 
-  error: string;
-  timeRange: TimeRange;
-  setTimeRange: (range: TimeRange) => void;
-  startDate: string;
-  endDate: string;
-  setCustomDateRange: (start: string, end: string) => void;
-}
-
+// RESPONSIBILITY: Defines strict types for the Admin Dashboard API and UI data shapes.
 export interface RecentMember {
   id: string; 
   name: string; 
@@ -37,12 +24,20 @@ export interface PendingPayment {
   expiryDate: string;
 }
 
+export type DashboardTrendDirection = 'up' | 'down' | 'flat';
+export type DashboardAlertSeverity = 'high' | 'medium' | 'low';
+
+export interface AttendanceTrendPoint {
+  date: string;
+  count: number;
+}
+
 export interface BranchPerformance {
   id: string;
   name: string;
   revenue: number;
   activeMembers: number;
-  trend: 'up' | 'down' | 'flat';
+  trend: DashboardTrendDirection;
 }
 
 export interface ExpiringMembership { id: string; name: string; branch: string; plan: string; expiryDate: string; daysLeft: number; }
@@ -50,7 +45,7 @@ export interface ExpiringMembership { id: string; name: string; branch: string; 
 export interface SystemAlert {
   id: string;
   message: string;
-  severity: 'high' | 'medium' | 'low';
+  severity: DashboardAlertSeverity;
   date: string;
 }
 
@@ -84,5 +79,5 @@ export interface DashboardStats {
   avgAttendance?: number;
   renewalsPending?: number;
   expiringMemberships?: ExpiringMembership[];
-  attendanceTrend?: { date: string; count: number }[];
+  attendanceTrend?: AttendanceTrendPoint[];
 }

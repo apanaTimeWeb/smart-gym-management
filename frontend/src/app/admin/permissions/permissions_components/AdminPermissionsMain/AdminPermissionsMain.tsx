@@ -1,7 +1,5 @@
 "use client";
 // RESPONSIBILITY: Main entry point for the Permissions module. Composes toolbar, role cards, matrix, and gym overrides panel.
-
-import AdminHeader from '@/app/admin/admin_components/AdminLayout/AdminHeader';
 import { useAdminPermissionsLogic } from '@/app/admin/permissions/permissions_context/useAdminPermissionsLogic';
 import AdminPermissionsToolbar from '@/app/admin/permissions/permissions_components/AdminPermissionsToolbar/AdminPermissionsToolbar';
 import AdminPermissionsRoleCard from '@/app/admin/permissions/permissions_components/AdminPermissionsRoleCard/AdminPermissionsRoleCard';
@@ -27,10 +25,6 @@ export default function AdminPermissionsMain() {
 
   return (
     <div className="min-h-full pb-10">
-      <AdminHeader
-        title="Permissions"
-        subtitle="Define what each role can access across your gyms"
-      />
       <div className="p-6 space-y-6">
 
         {/* Role Summary Cards */}

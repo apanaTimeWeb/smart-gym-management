@@ -31,8 +31,8 @@ export default function AdminAuditLogsDetailDrawer({ log, onClose }: AdminAuditL
 
   return (
     <>
-      <div className="fixed inset-0 bg-overlay backdrop-blur-sm z-40" onClick={onClose} />
-      <div className="fixed inset-y-0 right-0 z-40 w-full max-w-lg bg-overlay border-l border-border shadow-2xl flex flex-col motion-safe:animate-in motion-safe:slide-in-from-right motion-safe:duration-300">
+      <div aria-hidden="true" className="fixed inset-0 bg-overlay backdrop-blur-sm z-40" onClick={onClose} />
+      <div data-admin-dialog="true" role="dialog" aria-modal="true" tabIndex={-1} className="fixed inset-y-0 right-0 z-40 w-full max-w-lg bg-overlay border-l border-border shadow-2xl flex flex-col motion-safe:animate-in motion-safe:slide-in-from-right motion-safe:duration-300">
         {/* Header */}
         <div className="flex items-center justify-between p-5 border-b border-border shrink-0">
           <div>

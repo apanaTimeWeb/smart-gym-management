@@ -2,6 +2,7 @@
 // RESPONSIBILITY: Renders the slide-in profile drawer for a selected member showing full details.
 
 import { X, Phone, Mail, Building2, Calendar, IndianRupee, User } from 'lucide-react';
+import type { AdminMembersProfileDrawerProps } from '@/app/admin/members/members_types/AdminMembersProfileDrawerTypes';
 import { formatCurrency } from '@/lib/formatters';
 import { displayValue } from '@/app/admin/admin_utils/AdminDisplayValue';
 import type { AdminMember } from '@/app/admin/members/members_types/AdminMembersTypes';
@@ -13,16 +14,13 @@ const STATUS_STYLES: Record<string, string> = {
   frozen: 'bg-info-bg text-info',
 };
 
-interface AdminMembersProfileDrawerProps {
-  member: AdminMember;
-  onClose: () => void;
-}
+
 
 export default function AdminMembersProfileDrawer({ member, onClose }: AdminMembersProfileDrawerProps) {
   return (
     <>
-      <div className="fixed inset-0 bg-overlay backdrop-blur-sm z-40" onClick={onClose} />
-      <div className="fixed right-0 top-0 h-full w-full max-w-md bg-overlay border-l border-border z-40 flex flex-col shadow-2xl">
+      <div aria-hidden="true" className="fixed inset-0 bg-overlay backdrop-blur-sm z-40" onClick={onClose} />
+      <div data-admin-dialog="true" role="dialog" aria-modal="true" tabIndex={-1} className="fixed right-0 top-0 h-full w-full max-w-md bg-overlay border-l border-border z-40 flex flex-col shadow-2xl">
         <div className="flex items-center justify-between p-5 border-b border-border">
           <h2 className="font-bold text-foreground text-lg">Member Profile</h2>
           <button

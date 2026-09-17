@@ -21,7 +21,7 @@ export default function AdminQrScannerModal({ open, onClose }: AdminQrScannerMod
 
   return (
     // z-40 = Modal layer per Design §12 Z-Index Scale
-    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 sm:p-6 bg-overlay backdrop-blur-sm motion-safe:transition-opacity">
+    <div data-admin-dialog="true" role="dialog" aria-modal="true" tabIndex={-1} className="fixed inset-0 z-40 flex items-center justify-center p-4 sm:p-6 bg-overlay backdrop-blur-sm motion-safe:transition-opacity">
       <div className="w-full max-w-5xl max-h-screen bg-overlay rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row border border-border motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95">
 
         {/* Left Side — The Scanner Viewport */}

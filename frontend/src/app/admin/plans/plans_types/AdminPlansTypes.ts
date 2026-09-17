@@ -1,7 +1,8 @@
 import type { QueryStatus } from '@tanstack/react-query';
 // RESPONSIBILITY: Defines all TypeScript types and interfaces for the Plans module. Single source of truth for plan data shapes.
 
-import type { ToastType } from '@/app/admin/admin_components/AdminFeedback/AdminToast';
+import type { AdminToastType } from '@/app/admin/admin_components/AdminFeedback/AdminToastTypes';
+
 import type { PlanFormValues } from '@/app/admin/plans/plans_utils/AdminPlansSharedConstants';
 import React from 'react';
 
@@ -14,7 +15,7 @@ export interface PlansContextType {
   plans: Plan[];
   status: QueryStatus;
   saving: boolean;
-  toast: { message: string; type: ToastType } | null;
+  toast: { message: string; type: AdminToastType } | null;
 
   search: string;
   setSearch: (s: string) => void;
@@ -29,9 +30,7 @@ export interface PlansContextType {
   form: PlanFormValues;
   setForm: (form: PlanFormValues) => void;
 
-  showToast: (msg: string, t: ToastType) => void;
-  hideToast: () => void;
-
+  showToast: (msg: string, t: AdminToastType) => void;
   loadPlans: () => Promise<void>;
   openAdd: () => void;
   openEdit: (p: Plan) => void;

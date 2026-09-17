@@ -36,7 +36,7 @@ export default function AdminAnnouncementsModal() {
 
   return (
     <>
-      <div className="fixed inset-0 bg-overlay backdrop-blur-sm z-40" onClick={() => setShowModal(false)} />
+      <div data-admin-dialog="true" role="dialog" aria-modal="true" tabIndex={-1} className="fixed inset-0 bg-overlay backdrop-blur-sm z-40" onClick={() => setShowModal(false)} />
       <div className="fixed inset-0 z-40 flex items-center justify-center p-4">
         <div className="bg-overlay border border-border rounded-2xl shadow-2xl w-full max-w-2xl max-h-screen flex flex-col">
 

@@ -46,11 +46,11 @@ export default function AdminFinancePnlTable({
   return (
     <div className="bg-card border border-border rounded-xl overflow-hidden">
       <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse">
+        <table data-admin-responsive-table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-primary/5 border-b border-border">
               {PNL_TABLE_HEADERS.map((h) => (
-                <th
+                <th role="button" tabIndex={0} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); event.currentTarget.click(); } }} 
                   key={h.key}
                   className={`px-4 py-3 text-xs font-semibold text-secondary uppercase tracking-wider select-none whitespace-nowrap ${
                     h.sortable ? 'cursor-pointer hover:text-foreground motion-safe:transition-colors' : ''

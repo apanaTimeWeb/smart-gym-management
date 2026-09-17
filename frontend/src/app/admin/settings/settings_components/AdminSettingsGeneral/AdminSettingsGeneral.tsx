@@ -1,36 +1,13 @@
 "use client";
 // RESPONSIBILITY: Manages the General Settings tab.
-import { useForm, useWatch } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { GeneralSettingsSchema } from '@/app/admin/settings/settings_types/AdminSettings.schema';
 import type { GeneralSettingsType } from '@/app/admin/settings/settings_types/AdminSettingsTypes';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { settingsApi } from '@/app/admin/settings/settings_api/AdminSettingsApi';
-import toast from 'react-hot-toast';
+import { useAdminSettingsGeneralForm } from '@/app/admin/settings/settings_context/useAdminSettingsForms';
 import { Save, RefreshCw } from 'lucide-react';
-import { useUnsavedChangesGuard } from '@/app/admin/admin_utils/useAdminUnsavedChangesGuard';
 import { TIMEZONE_OPTIONS, LANGUAGE_OPTIONS, BACKUP_FREQUENCY_OPTIONS } from '@/app/admin/settings/settings_utils/AdminSettingsSharedConstants';
 import { AdminSettingsToggleSwitch } from '@/app/admin/settings/settings_components/AdminSettingsShared/AdminSettingsToggleSwitch';
 
 export function AdminSettingsGeneral({ initialData }: { initialData: GeneralSettingsType }) {
-  const queryClient = useQueryClient();
-  const form = useForm<GeneralSettingsType>({
-    resolver: zodResolver(GeneralSettingsSchema),
-  });
-
-  const formValues = useWatch({ control: form.control });
-
-  useUnsavedChangesGuard(form.formState.isDirty);
-
-  const mutation = useMutation({
-    mutationFn: (data: GeneralSettingsType) => settingsApi.updateSettings({ general: data }),
-    onSuccess: (res) => {
-      toast.success(res.message, { id: 'settings-general-save' });
-      queryClient.invalidateQueries({ queryKey: ['admin', 'settings'] });
-      form.reset(form.getValues());
-    },
-    onError: (err) => toast.error((err as Error).message, { id: 'settings-general-save' }),
-  });
+  const { form, formValues, mutation } = useAdminSettingsGeneralForm(initialData);
 
   const onSubmit = (data: GeneralSettingsType) => mutation.mutate(data);
 

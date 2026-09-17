@@ -9,6 +9,7 @@ import { adminMemberSchema, adminMembersSummarySchema } from '@/app/admin/member
 export const ADMIN_MEMBERS_URLS = {
   list: AdminMembersUrlConfig.api.base,
   summary: `${AdminMembersUrlConfig.api.base}/summary`,
+  detail: (memberId: string) => AdminMembersUrlConfig.api.detail(memberId),
 } as const;
 
 export interface FetchMembersParams {
@@ -29,5 +30,8 @@ export const adminMembersApi = {
   },
   fetchSummary: async () => {
     return apiFetch<ApiResponse<AdminMembersSummary>>(ADMIN_MEMBERS_URLS.summary, { dataSchema: adminMembersSummarySchema });
+  },
+  fetchMemberById: async (memberId: string) => {
+    return apiFetch<ApiResponse<AdminMember>>(ADMIN_MEMBERS_URLS.detail(memberId), { dataSchema: adminMemberSchema });
   },
 };

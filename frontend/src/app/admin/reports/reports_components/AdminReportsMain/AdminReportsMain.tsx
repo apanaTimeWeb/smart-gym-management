@@ -1,9 +1,9 @@
 "use client";
 // RESPONSIBILITY: Main entry point for the Reports module. Composes toolbar, tabs, KPIs, and tab content panels.
 
+import type { AdminReportsExportFormat } from '@/app/admin/reports/reports_types/AdminReportsUiTypes';
 import { useState } from 'react';
 import { Download, Loader2 } from 'lucide-react';
-import AdminHeader from '@/app/admin/admin_components/AdminLayout/AdminHeader';
 import { useAdminReportsStore } from '@/app/admin/reports/reports_store/useAdminReportsStore';
 import { useAdminReportsLogic } from '@/app/admin/reports/reports_context/useAdminReportsLogic';
 import AdminReportsTabs from '@/app/admin/reports/reports_components/AdminReportsTabs/AdminReportsTabs';
@@ -15,16 +15,10 @@ import AdminReportsPayroll from '@/app/admin/reports/reports_components/AdminRep
 import AdminReportsPnL from '@/app/admin/reports/reports_components/AdminReportsPnL/AdminReportsPnL';
 import { AdminSearchableDropdown } from '@/app/admin/admin_components/AdminShared/AdminSearchableDropdown';
 import { AdminDateFilterDropdown } from '@/app/admin/admin_components/AdminShared/AdminDateFilterDropdown';
-import { reportsApi } from '@/app/admin/reports/reports_api/AdminReportsApi';
-import type { ReportDateRange } from '@/app/admin/reports/reports_types/AdminReportsTypes';
 
 import { useAdminReportsBranchReference } from '@/app/admin/reports/reports_context/useAdminReportsBranchReference';
 import type { AdminReportsBranchReference } from '@/app/admin/reports/reports_types/AdminReportsBranchReferenceTypes';
-
-const EXPORT_FORMAT_OPTIONS = [
-  { value: 'pdf', label: 'Export as PDF' },
-  { value: 'excel', label: 'Export as Excel' },
-];
+import { EXPORT_FORMAT_OPTIONS } from '@/app/admin/reports/reports_utils/AdminReportsSharedConstants';
 
 function ReportsSkeleton() {
   return (
@@ -39,40 +33,22 @@ function ReportsSkeleton() {
 }
 
 export default function AdminReportsMain() {
-  const { activeTab, dateRange, setDateRange, startDate, endDate, setCustomDateRange, selectedGymId, setSelectedGymId } = useAdminReportsStore();
-  const { status } = useAdminReportsLogic();
+  const { activeTab, selectedGymId, setSelectedGymId } = useAdminReportsStore();
+  const { status, exportReport, isExporting } = useAdminReportsLogic();
   const { data: branches = [] } = useAdminReportsBranchReference();
-  const [exporting, setExporting] = useState(false);
-  const [exportFormat, setExportFormat] = useState<string>('pdf');
+  const [exportFormat, setExportFormat] = useState<AdminReportsExportFormat>('pdf');
 
   const gymOptions = [
     { value: 'all', label: 'All Gyms' },
     ...(branches as AdminReportsBranchReference[]).map((b) => ({ value: b.id, label: b.name })),
   ];
 
-  const handleExport = async () => {
-    setExporting(true);
-    try {
-      const res = await reportsApi.exportReport({ tab: activeTab, format: exportFormat });
-      if (res.success && res.data?.url && res.data.url !== '#') {
-        const link = document.createElement('a');
-        link.href = res.data.url;
-        link.download = `report-${activeTab}-${dateRange}.${exportFormat === 'excel' ? 'xlsx' : 'pdf'}`;
-        link.click();
-      } else {
-        // Mock: show browser print dialog as PDF fallback
-        if (exportFormat === 'pdf') window.print();
-      }
-    } finally {
-      setExporting(false);
-    }
-  };
+  const handleExport = () => exportReport(exportFormat);
 
   if (status === 'pending') return <ReportsSkeleton />;
 
   return (
     <div className="min-h-full pb-10">
-      <AdminHeader title="Reports" subtitle="Consolidated cross-gym analytics and performance reports" />
       <div className="p-6 space-y-5">
 
         {/* Toolbar */}
@@ -95,15 +71,15 @@ export default function AdminReportsMain() {
               <AdminSearchableDropdown
                 options={EXPORT_FORMAT_OPTIONS}
                 value={exportFormat}
-                onChange={(v) => setExportFormat(v as string)}
+                onChange={(v) => setExportFormat(v as 'pdf' | 'excel')}
               />
             </div>
             <button
               onClick={handleExport}
-              disabled={exporting}
+              disabled={isExporting}
               className="flex items-center gap-2 px-4 py-2 bg-input border border-border rounded-lg text-sm font-medium text-secondary hover:text-foreground hover:border-primary motion-safe:transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              {exporting
+              {isExporting
                 ? <><Loader2 size={15} className="motion-safe:animate-spin" /> Exporting...</>
                 : <><Download size={15} /> Export</>
               }

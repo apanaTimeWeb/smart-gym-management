@@ -37,5 +37,6 @@ export const adminUsageMetricSchema = z.object({
     used: z.number(),
     limit: z.number(),
     unit: z.string(),
-    warningThreshold: z.number()
+    warningThreshold: z.number(),
+    criticalThreshold: z.number()
 });

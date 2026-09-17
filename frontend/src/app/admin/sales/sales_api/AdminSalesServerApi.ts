@@ -1,7 +1,9 @@
 // RESPONSIBILITY: Server-side API fetching for the sales module.
 import { ssrApiFetch } from '@/lib/server-api';
 import { SalesUrlConfig } from '@/app/admin/sales/admin_sales_url_config';
+import { z } from 'zod';
 import type { ApiResponse } from '@/lib/api';
+import { overviewDataPointSchema, membershipReportItemSchema, membershipTotalsSchema, pendingPaymentMemberSchema, memberSchema } from '@/app/admin/sales/sales_types/AdminSalesSchemas';
 
 export const ssrSalesApi = {
   fetchOverview: () => ssrApiFetch<ApiResponse<Record<string, unknown>>>(SalesUrlConfig.BACKEND_API.OVERVIEW),
