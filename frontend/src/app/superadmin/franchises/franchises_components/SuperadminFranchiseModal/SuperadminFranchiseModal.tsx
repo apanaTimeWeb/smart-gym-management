@@ -1,4 +1,5 @@
 'use client';
+import { useSuperadminDialogAccessibility } from '@/app/superadmin/superadmin_utils/useSuperadminDialogAccessibility';
 // RESPONSIBILITY: Renders the modal for editing a Superadmin Franchise's details.
 
 import React, { useEffect } from 'react';
@@ -20,7 +21,7 @@ interface SuperadminFranchiseModalProps {
   isMutating: boolean;
 }
 
-import { useUnsavedChangesGuard } from '@/lib/useUnsavedChangesGuard';
+import { useSuperadminUnsavedChangesGuard } from '@/app/superadmin/superadmin_utils/useSuperadminUnsavedChangesGuard';
 
 export function SuperadminFranchiseModal({
   isOpen,
@@ -32,7 +33,7 @@ export function SuperadminFranchiseModal({
   const { register, control, handleSubmit, reset, formState: { errors, isDirty } } = useForm<FranchiseFormData>({
     resolver: zodResolver(franchiseSchema)
   });
-  useUnsavedChangesGuard(isOpen && isDirty);
+  useSuperadminUnsavedChangesGuard(isOpen && isDirty);
 
   // RESPONSIBILITY: Handle side-effects for SuperadminFranchiseModal
   // EXPLANATION: Synchronize component state with external dependencies.
@@ -49,11 +50,13 @@ export function SuperadminFranchiseModal({
       });
     }
   }, [isOpen, franchise, reset]);
+  const dialogRef = useSuperadminDialogAccessibility(isOpen, onClose);
+
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 backdrop-blur-sm p-4" role="dialog" aria-modal="true">
+    <div ref={dialogRef}  className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 backdrop-blur-sm p-4" role="dialog" aria-modal="true" aria-labelledby="superadmin-dialog-title">
       <div className="bg-card w-full max-w-lg rounded-2xl shadow-xl overflow-hidden border border-border motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95 flex flex-col h-auto">
         
         {/* Header */}
@@ -63,7 +66,7 @@ export function SuperadminFranchiseModal({
               <Network className="w-5 h-5" strokeWidth={2.5} />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-foreground">Edit Franchise</h2>
+              <h2 className="text-xl font-bold text-foreground" id="superadmin-dialog-title">Edit Franchise</h2>
               <p className="text-xs text-secondary mt-0.5">Update details for {franchise.franchiseName}</p>
             </div>
           </div>

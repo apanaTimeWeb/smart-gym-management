@@ -6,12 +6,14 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { broadcastsApi } from '@/app/superadmin/broadcasts/superadmin_broadcasts_api/superadmin_broadcasts_api';
 import type { Broadcast, SuperadminBroadcastsTenant, BroadcastStatusFilter } from '@/app/superadmin/broadcasts/superadmin_broadcasts_types/superadmin_broadcasts_types';
 import { useSuperadminUrlState } from '@/app/superadmin/superadmin_utils/useSuperadminUrlState';
+import { useSuperadminDebouncedValue } from '@/app/superadmin/superadmin_utils/useSuperadminDebouncedValue';
 
 export const useSuperadminBroadcastsData = () => {
   const queryClient = useQueryClient();
   const { getParam, setParam } = useSuperadminUrlState();
 
   const searchQuery = getParam('search', '');
+  const debouncedSearchQuery = useSuperadminDebouncedValue(searchQuery);
   const statusFilter = getParam('status', 'ALL') as BroadcastStatusFilter;
   const currentPage = Number(getParam('page', '1'));
   const pageSize = 10;
@@ -22,12 +24,12 @@ export const useSuperadminBroadcastsData = () => {
 
   const queryParams = useMemo(() => {
     const params: Record<string, string> = {};
-    if (searchQuery) params.search = searchQuery;
+    if (debouncedSearchQuery) params.search = debouncedSearchQuery;
     if (statusFilter !== 'ALL') params.status = statusFilter;
     params.page = String(currentPage);
     params.limit = String(pageSize);
     return params;
-  }, [searchQuery, statusFilter, currentPage]);
+  }, [debouncedSearchQuery, statusFilter, currentPage]);
 
   const queryKey = useMemo(() => ['superadmin', 'broadcasts', queryParams], [queryParams]);
 

@@ -1,7 +1,7 @@
 'use client';
 // RESPONSIBILITY: Full Tenant Onboarding page — email verification tracking, onboarding checklist,
-// trial management (extend trial, convert to paid). All data is static/hardcoded.
-// DATA FLOW: MOCK_ONBOARDINGS → SuperadminOnboardingClient → table rows + expand + modals
+// trial management (extend trial, convert to paid). Data is consumed through the module API/MSW contract.
+// DATA FLOW: onboarding API → TanStack Query → SuperadminOnboardingClient → table rows + modals
 
 import { useState, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
@@ -15,10 +15,12 @@ import { SuperadminOnboardingStatsBar } from '@/app/superadmin/onboarding/onboar
 import { SuperadminOnboardingTable } from '@/app/superadmin/onboarding/onboarding_components/SuperadminOnboardingTable';
 import { SuperadminOnboardingModals } from '@/app/superadmin/onboarding/onboarding_components/SuperadminOnboardingModals';
 import { SuperadminDateFilterDropdown } from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminDateFilterDropdown';
+import { useSuperadminDebouncedValue } from '@/app/superadmin/superadmin_utils/useSuperadminDebouncedValue';
 
 export default function SuperadminOnboardingClient() {
   const queryClient = useQueryClient();
   const [search, setSearch] = useState('');
+  const debouncedSearch = useSuperadminDebouncedValue(search);
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [extendModalId, setExtendModalId] = useState<string | null>(null);
   const [extendDays, setExtendDays] = useState('7');
@@ -30,11 +32,11 @@ export default function SuperadminOnboardingClient() {
 
   const queryParams = useMemo(() => {
     const params: Record<string, string> = {};
-    if (search) params.search = search;
+    if (debouncedSearch) params.search = debouncedSearch;
     if (startDate) params.startDate = startDate;
     if (endDate) params.endDate = endDate;
     return params;
-  }, [search, startDate, endDate]);
+  }, [debouncedSearch, startDate, endDate]);
 
   const { data: response, isLoading } = useQuery({
     queryKey: ['superadmin', 'onboarding', queryParams],

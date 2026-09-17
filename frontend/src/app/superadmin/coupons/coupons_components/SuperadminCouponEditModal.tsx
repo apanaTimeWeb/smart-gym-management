@@ -1,4 +1,5 @@
 'use client';
+import { useSuperadminDialogAccessibility } from '@/app/superadmin/superadmin_utils/useSuperadminDialogAccessibility';
 // RESPONSIBILITY: Renders the Edit Coupon modal form. Manages its own local form state via React Hook Form. No API calls — delegates save to onSubmit prop.
 import React, { useEffect } from 'react';
 import { X } from 'lucide-react';
@@ -15,7 +16,7 @@ interface SuperadminCouponEditModalProps {
   coupon: Coupon | null;
 }
 
-import { useUnsavedChangesGuard } from '@/lib/useUnsavedChangesGuard';
+import { useSuperadminUnsavedChangesGuard } from '@/app/superadmin/superadmin_utils/useSuperadminUnsavedChangesGuard';
 
 export const SuperadminCouponEditModal: React.FC<SuperadminCouponEditModalProps> = ({
   isOpen,
@@ -26,7 +27,7 @@ export const SuperadminCouponEditModal: React.FC<SuperadminCouponEditModalProps>
   const { register, handleSubmit, watch, control, formState: { errors, isDirty }, reset } = useForm<CouponFormData>({
     resolver: zodResolver(CouponSchema),
   });
-  useUnsavedChangesGuard(isOpen && isDirty);
+  useSuperadminUnsavedChangesGuard(isOpen && isDirty);
 
   // RESPONSIBILITY: Handle side-effects for SuperadminCouponEditModal
   // EXPLANATION: Synchronize component state with external dependencies.
@@ -42,6 +43,8 @@ export const SuperadminCouponEditModal: React.FC<SuperadminCouponEditModalProps>
       });
     }
   }, [isOpen, coupon, reset]);
+  const dialogRef = useSuperadminDialogAccessibility(isOpen, onClose);
+
 
   if (!isOpen || !coupon) return null;
 
@@ -52,11 +55,11 @@ export const SuperadminCouponEditModal: React.FC<SuperadminCouponEditModalProps>
   };
 
   return (
-    <div className="fixed inset-0 bg-overlay/80 z-40 flex items-center justify-center p-4 backdrop-blur-sm" role="dialog" aria-modal="true">
+    <div ref={dialogRef}  className="fixed inset-0 bg-overlay/80 z-40 flex items-center justify-center p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="superadmin-dialog-title">
       <div className="bg-overlay border border-border rounded-2xl w-full max-w-md shadow-xl overflow-hidden flex flex-col">
         <div className="flex items-center justify-between px-7 py-5 border-b border-border">
-          <h2 className="text-lg font-bold text-foreground">Edit Coupon</h2>
-          <button onClick={onClose} className="text-secondary hover:text-foreground motion-safe:transition-colors">
+          <h2 className="text-lg font-bold text-foreground" id="superadmin-dialog-title">Edit Coupon</h2>
+          <button onClick={onClose} className="text-secondary hover:text-foreground motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background" aria-label="Close dialog">
             <X className="w-5 h-5" />
           </button>
         </div>

@@ -19,6 +19,7 @@ export function useSuperadminAffiliatesMutations(
     await mutate<Affiliate>(
       () => affiliatesApi.createAffiliate(data),
       {
+        toastId: `affiliate-create-${data.referralCode}`,
         onSuccess: (res) => {
           updateCachedAffiliates(previous => [res as Affiliate, ...previous]);
           setIsModalOpen(false);
@@ -33,6 +34,7 @@ export function useSuperadminAffiliatesMutations(
     await mutate<Affiliate>(
       () => affiliatesApi.updateAffiliate(editingAffiliate.id, data),
       {
+        toastId: `affiliate-update-${editingAffiliate.id}`,
         onSuccess: (res) => {
           updateCachedAffiliates(previous => previous.map(a => a.id === editingAffiliate.id ? (res as Affiliate) : a));
           setIsModalOpen(false);
@@ -48,6 +50,7 @@ export function useSuperadminAffiliatesMutations(
     await mutate<Affiliate>(
       () => affiliatesApi.updateStatus(id, newStatus),
       {
+        toastId: `affiliate-status-${id}`,
         onSuccess: (updatedAffiliate) => {
           updateCachedAffiliates(previous => previous.map(a => a.id === id ? updatedAffiliate as Affiliate : a));
         },
@@ -59,6 +62,7 @@ export function useSuperadminAffiliatesMutations(
     await mutate<void>(
       () => affiliatesApi.deleteAffiliate(id),
       {
+        toastId: `affiliate-delete-${id}`,
         onSuccess: () => {
           updateCachedAffiliates(previous => previous.filter(a => a.id !== id));
         },

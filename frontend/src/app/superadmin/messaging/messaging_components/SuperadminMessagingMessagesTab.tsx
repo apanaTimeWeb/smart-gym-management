@@ -5,6 +5,7 @@ import { Search, Mail, MessageSquare, Bell } from 'lucide-react';
 import type { TenantMessage, MessageChannel } from '@/app/superadmin/messaging/messaging_types/superadmin_messaging_types';
 import { CHANNEL_STYLES, MESSAGE_STATUS_STYLES } from '@/app/superadmin/messaging/messaging_types/SuperadminMessagingConstants';
 import SuperadminDateRangePicker from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminDateRangePicker';
+import { displayValue, formatDateTime } from '@/lib/formatters';
 
 export function SuperadminMessagingMessagesTab({
   search,
@@ -92,7 +93,7 @@ export function SuperadminMessagingMessagesTab({
                     </span>
                   </td>
                   <td className="px-4 py-3 text-secondary text-xs">
-                    {msg.sentAt ? formatDateTime(msg.sentAt) : '—'}
+                    {displayValue(msg.sentAt ? formatDateTime(msg.sentAt) : null)}
                   </td>
                 </tr>
               ))}

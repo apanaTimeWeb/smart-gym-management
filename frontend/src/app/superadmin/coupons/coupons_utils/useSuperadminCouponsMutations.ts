@@ -19,6 +19,7 @@ export function useSuperadminCouponsMutations(
 
   const handleCreateCoupon = useCallback(async (data: CouponFormData) => {
     await mutate(() => couponsApi.createCoupon(data), {
+      toastId: `coupon-create-${data.code || data.name}`,
       onSuccess: (newCoupon) => {
         updateCoupons(prev => [newCoupon as Coupon, ...prev]);
         setIsModalOpen(false);
@@ -30,6 +31,7 @@ export function useSuperadminCouponsMutations(
   const handleUpdateCoupon = useCallback(async (id: string, data: Partial<CouponFormData>) => {
     if (!selectedCoupon) return;
     await mutate(() => couponsApi.updateCoupon(id, data), {
+      toastId: `coupon-update-${id}`,
       onSuccess: (updatedCoupon) => {
         updateCoupons(prev => prev.map(c => c.id === id ? { ...c, ...(updatedCoupon != null && typeof updatedCoupon === 'object' ? updatedCoupon as Partial<Coupon> : {}) } : c));
         setIsEditModalOpen(false);
@@ -40,23 +42,26 @@ export function useSuperadminCouponsMutations(
 
   const handleDeleteCoupon = useCallback(async (id: string) => {
     await mutate(() => couponsApi.deleteCoupon(id), {
+      toastId: `coupon-delete-${id}`,
       onSuccess: () => updateCoupons(prev => prev.filter(c => c.id !== id)),
     });
   }, [updateCoupons, mutate]);
 
   const handleToggleRestore = useCallback(async (id: string) => {
     await mutate(() => couponsApi.restoreCoupon(id), {
+      toastId: `coupon-restore-${id}`,
       onSuccess: () => updateCoupons(prev => prev.map(c => c.id === id ? { ...c, isDeleted: false } : c)),
     });
   }, [updateCoupons, mutate]);
 
   const handleToggleStatus = useCallback(async (id: string, currentStatus: CouponStatus) => {
     if (currentStatus !== 'ACTIVE' && currentStatus !== 'INACTIVE') {
-      toast.error(`Cannot toggle status of ${currentStatus.toLowerCase()} coupon`, { id: 'toggle-error' });
+      toast.error(`Cannot toggle status of ${currentStatus.toLowerCase()} coupon`, { id: `coupon-toggle-invalid-${id}` });
       return;
     }
     const newStatus: CouponStatus = currentStatus === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
     await mutate(() => couponsApi.toggleStatus(id, newStatus), {
+      toastId: `coupon-toggle-${id}`,
       onSuccess: () => updateCoupons(prev => prev.map(c => c.id === id ? { ...c, status: newStatus } : c)),
     });
   }, [updateCoupons, mutate]);

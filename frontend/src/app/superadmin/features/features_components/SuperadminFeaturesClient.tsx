@@ -1,63 +1,51 @@
 'use client';
 // RESPONSIBILITY: Renders the Product Management page — feature flag toggles and release note publishing.
-import { formatDate, formatDateTime } from '@/lib/formatters';
 // Fetches data via useSuperadminFeaturesData hook. Mutations (toggle, publish) dispatched from here.
 // No raw API calls — all async state goes through the hook (Rule 6).
 //
 // DATA FLOW: featuresApi → useSuperadminFeaturesData → SuperadminFeaturesClient → FeatureFlags/ReleaseNotes JSX
 import { useSuperadminFeaturesData } from '@/app/superadmin/features/features_utils/useSuperadminFeaturesData';
+import { useSuperadminFeatureFlagHistory } from '@/app/superadmin/features/features_utils/useSuperadminFeatureFlagHistory';
+import { SuperadminReleaseNoteSchema, type SuperadminReleaseNoteFormValues } from '@/app/superadmin/features/features_utils/SuperadminReleaseNoteSchema';
 
 import { ToggleLeft, Send, Search, Users, Clock } from 'lucide-react';
+import { formatDate } from '@/lib/formatters';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { useUnsavedChangesGuard } from '@/lib/useUnsavedChangesGuard';
+import { useSuperadminUnsavedChangesGuard } from '@/app/superadmin/superadmin_utils/useSuperadminUnsavedChangesGuard';
 import type { FeatureFlag, ReleaseNote } from '@/app/superadmin/features/superadmin_features_types/superadmin_features_types';
-import { featuresApi } from '@/app/superadmin/features/superadmin_features_api/superadmin_features_api';
 import toast from 'react-hot-toast';
 import SuperadminFeatureRolloutModal from '@/app/superadmin/features/features_components/SuperadminFeatureRolloutModal';
 import SuperadminFeatureHistoryModal from '@/app/superadmin/features/features_components/SuperadminFeatureHistoryModal';
-
-const releaseNoteSchema = z.object({
-  version: z.string().min(1, 'Version is required'),
-  title: z.string().min(1, 'Title is required'),
-  content: z.string().min(1, 'Content is required'),
-});
-type ReleaseNoteFormValues = z.infer<typeof releaseNoteSchema>;
 
 export type FeaturesTab = 'FLAGS' | 'NOTES';
 
 export default function SuperadminFeaturesClient() {
   const [activeTab, setActiveTab] = useState<FeaturesTab>('FLAGS');
-  const [isPublishing, setIsPublishing] = useState(false);
   const [rolloutFlag, setRolloutFlag] = useState<FeatureFlag | null>(null);
   const [historyFlag, setHistoryFlag] = useState<FeatureFlag | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
 
-  const { register, handleSubmit, reset, formState: { errors, isDirty } } = useForm<ReleaseNoteFormValues>({
-    resolver: zodResolver(releaseNoteSchema),
+  const { register, handleSubmit, reset, formState: { errors, isDirty } } = useForm<SuperadminReleaseNoteFormValues>({
+    resolver: zodResolver(SuperadminReleaseNoteSchema),
     defaultValues: { version: '', title: '', content: '' }
   });
 
-  useUnsavedChangesGuard(isDirty && activeTab === 'NOTES', 'You have an unsaved release note. Discard?');
+  useSuperadminUnsavedChangesGuard(isDirty && activeTab === 'NOTES', 'You have an unsaved release note. Discard?');
 
-  const { data, isLoading, isError, error, toggleFlag, updateFlag, publishNote } = useSuperadminFeaturesData();
+  const { data, isLoading, isError, error, toggleFlag, updateFlag, publishNote, isPublishing } = useSuperadminFeaturesData();
+  const { history: featureHistory } = useSuperadminFeatureFlagHistory(historyFlag?.id ?? null);
 
-  const onPublishNote = async (formData: ReleaseNoteFormValues) => {
-    setIsPublishing(true);
+  const onPublishNote = async (formData: SuperadminReleaseNoteFormValues) => {
     try {
-      const res = await featuresApi.createNote({ ...formData, isPublished: true, date: new Date().toISOString() });
-      if (res.data) {
-        // setData removed((prev: { flags: FeatureFlag[]; notes: ReleaseNote[]; } | null) => prev ? { ...prev, notes: [res.data, ...prev.notes] } : prev);
+      const response = await publishNote({ ...formData, isPublished: true, date: new Date().toISOString() });
+      if (response.data) {
         reset();
-        toast.success(res.message, { id: 'release-note-published-successfully' });
+        toast.success(response.message, { id: 'release-note-published-successfully' });
       }
     } catch (err: unknown) {
-      const errorMsg = err instanceof Error ? err.message : 'Failed to publish release note';
-      toast.error(errorMsg, { id: 'failed-to-publish-release-note' });
-    } finally {
-      setIsPublishing(false);
+      toast.error(err instanceof Error ? err.message : 'Release note request failed.', { id: 'release-note-publish-error' });
     }
   };
 
@@ -258,6 +246,7 @@ export default function SuperadminFeaturesClient() {
         isOpen={!!historyFlag}
         onClose={() => setHistoryFlag(null)}
         flag={historyFlag}
+        history={featureHistory}
       />
     </div>
   );

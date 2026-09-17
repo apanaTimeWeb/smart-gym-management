@@ -42,3 +42,10 @@ Used to convey visual depth in dark mode where shadows are invisible.
 Used for Enterprise plan badges and end-user count metrics.
 - `--purple`: Text color for purple accent elements (e.g., `text-purple`).
 - `--purple-bg` / `bg-purple-bg`: Background for purple badge chips.
+
+## Shell Notifications
+- `--bg-popover` for the notification popover surface.
+- `--bg-header` for the notification header/footer surfaces.
+- `--bg-card` and `--bg-input` for nested notification surfaces.
+- `--text-primary` / `--text-secondary` for notification text.
+- `--primary`, `--primary-subtle`, `--info`, `--warning`, `--danger` for notification states.

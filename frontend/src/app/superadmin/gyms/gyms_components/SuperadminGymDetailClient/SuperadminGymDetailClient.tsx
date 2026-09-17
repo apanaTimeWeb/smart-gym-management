@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import { ArrowLeft, Building2, User, CreditCard, Activity, MapPin, Shield, Clock } from 'lucide-react';
 import { gymsApi } from '@/app/superadmin/gyms/superadmin_gyms_api/superadmin_gyms_api';
 import type { Tenant } from '@/app/superadmin/gyms/superadmin_gyms_types/superadmin_gyms_types';
-import { formatCurrency, formatDate } from '@/lib/formatters';
+import { displayValue, formatCurrency, formatDate } from '@/lib/formatters';
 import { GymsUrlConfig } from '@/app/superadmin/gyms/superadmin_gyms_url_config';
 
 interface SuperadminGymDetailClientProps {
@@ -90,14 +90,14 @@ export default function SuperadminGymDetailClient({ gymId }: SuperadminGymDetail
           <div className="p-3 bg-purple/10 rounded-lg"><Activity className="w-5 h-5 text-purple" /></div>
           <div>
             <p className="text-xs text-secondary uppercase tracking-wider">Plan</p>
-            <p className="text-2xl font-bold text-foreground">{gym.plan?.toUpperCase() || '—'}</p>
+            <p className="text-2xl font-bold text-foreground">{displayValue(gym.plan?.toUpperCase())}</p>
           </div>
         </div>
         <div className="bg-card border border-border rounded-xl p-5 flex items-center gap-4">
           <div className="p-3 bg-warning/10 rounded-lg"><Clock className="w-5 h-5 text-warning" /></div>
           <div>
             <p className="text-xs text-secondary uppercase tracking-wider">DB Version</p>
-            <p className="text-lg font-bold text-foreground">{gym.databaseVersion || '—'}</p>
+            <p className="text-lg font-bold text-foreground">{displayValue(gym.databaseVersion)}</p>
           </div>
         </div>
       </div>
@@ -114,7 +114,7 @@ export default function SuperadminGymDetailClient({ gymId }: SuperadminGymDetail
             <div className="flex justify-between"><span className="text-secondary">Email</span><span className="text-foreground font-medium">{gym.adminEmail}</span></div>
             <div className="flex justify-between"><span className="text-secondary">Phone</span><span className="text-foreground font-medium">{gym.phone}</span></div>
             <div className="flex justify-between"><span className="text-secondary">Onboarded</span><span className="text-foreground font-medium">{formatDate(gym.createdAt)}</span></div>
-            <div className="flex justify-between"><span className="text-secondary">Last Login</span><span className="text-foreground font-medium">{gym.lastLoginAt ? formatDate(gym.lastLoginAt) : '—'}</span></div>
+            <div className="flex justify-between"><span className="text-secondary">Last Login</span><span className="text-foreground font-medium">{displayValue(gym.lastLoginAt ? formatDate(gym.lastLoginAt) : null)}</span></div>
           </div>
         </div>
 
@@ -124,9 +124,9 @@ export default function SuperadminGymDetailClient({ gymId }: SuperadminGymDetail
             <MapPin className="w-4 h-4 text-primary" /> Location & Legal
           </h2>
           <div className="space-y-3 text-sm">
-            <div className="flex justify-between"><span className="text-secondary">City</span><span className="text-foreground font-medium">{gym.city || '—'}</span></div>
-            <div className="flex justify-between"><span className="text-secondary">State</span><span className="text-foreground font-medium">{gym.state || '—'}</span></div>
-            <div className="flex justify-between"><span className="text-secondary">Country</span><span className="text-foreground font-medium">{gym.country || '—'}</span></div>
+            <div className="flex justify-between"><span className="text-secondary">City</span><span className="text-foreground font-medium">{displayValue(gym.city)}</span></div>
+            <div className="flex justify-between"><span className="text-secondary">State</span><span className="text-foreground font-medium">{displayValue(gym.state)}</span></div>
+            <div className="flex justify-between"><span className="text-secondary">Country</span><span className="text-foreground font-medium">{displayValue(gym.country)}</span></div>
             <div className="flex justify-between"><span className="text-secondary">GSTIN</span>
               <span className={`font-mono font-medium ${gym.gstin ? 'text-foreground' : 'text-danger'}`}>
                 {gym.gstin || '⚠ Not set'}

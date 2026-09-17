@@ -12,7 +12,7 @@ import type {
   Toggle2FAPayload,
 } from '@/app/superadmin/profile/profile_types/SuperadminProfileTypes';
 import { passwordSchema, type PasswordFormValues } from '@/app/superadmin/profile/profile_utils/SuperadminProfileSecurityForm.schema';
-import { useUnsavedChangesGuard } from '@/lib/useUnsavedChangesGuard';
+import { useSuperadminUnsavedChangesGuard } from '@/app/superadmin/superadmin_utils/useSuperadminUnsavedChangesGuard';
 
 interface SuperadminProfileSecurityFormProps {
   profile: SuperadminProfileData;
@@ -42,7 +42,7 @@ export default function SuperadminProfileSecurityForm({
     formState: { errors, isDirty },
   } = useForm<PasswordFormValues>({ resolver: zodResolver(passwordSchema) });
 
-  useUnsavedChangesGuard(isDirty, "You have unsaved changes in your password form. Are you sure you want to leave?");
+  useSuperadminUnsavedChangesGuard(isDirty, "You have unsaved changes in your password form. Are you sure you want to leave?");
 
   function handlePasswordSubmit(values: PasswordFormValues) {
     onSavePassword(values);

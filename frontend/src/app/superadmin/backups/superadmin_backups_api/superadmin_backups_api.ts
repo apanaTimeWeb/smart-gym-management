@@ -1,31 +1,18 @@
-// RESPONSIBILITY: Encapsulates functionality for superadmin_backups_api.ts
-import { BackupRecordSchema } from '@/app/superadmin/backups/superadmin_backups_types/superadmin_backups_types';
+// RESPONSIBILITY: Provides typed API operations for Superadmin backup records and backup scheduling.
+import { BackupRecordSchema, BackupScheduleSchema, type BackupSchedule } from '@/app/superadmin/backups/superadmin_backups_types/superadmin_backups_types';
+import { BackupsUrlConfig } from '@/app/superadmin/backups/superadmin_backups_url_config';
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
-import { BackupsUrlConfig } from '@/app/superadmin/backups/superadmin_backups_url_config';
+import { z } from 'zod';
 import type { BackupRecord } from '@/app/superadmin/backups/superadmin_backups_types/superadmin_backups_types';
-import { z } from "zod";
 
 export const backupsApi = {
   fetchBackups: (params?: Record<string, string>) => {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
     return apiFetch<ApiResponse<BackupRecord[]>>(`${BackupsUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.array(BackupRecordSchema) });
   },
-  createBackupSnapshot: () => {
-    return apiFetch<ApiResponse<null>>(`${BackupsUrlConfig.BACKEND_API.BASE}/trigger`, {
-      method: 'POST',
-        dataSchema: z.null()
-    });
-  },
-  restoreBackupSnapshot: (id: string) => {
-    return apiFetch<ApiResponse<null>>(`${BackupsUrlConfig.BACKEND_API.BASE}/${id}/restore`, {
-      method: 'POST',
-        dataSchema: z.null()
-    });
-  },
-  fetchBackupDownloadUrl: (id: string) => {
-    // In a real app, this might return a signed URL or stream a blob. We just construct a relative API URL for the <a> tag.
-    return `${process.env.NEXT_PUBLIC_API_URL || ''}${BackupsUrlConfig.BACKEND_API.BASE}/${id}/download`;
-  }
+  createBackupSnapshot: () => apiFetch<ApiResponse<null>>(`${BackupsUrlConfig.BACKEND_API.BASE}/trigger`, { method: 'POST', dataSchema: z.null() }),
+  restoreBackupSnapshot: (id: string) => apiFetch<ApiResponse<null>>(`${BackupsUrlConfig.BACKEND_API.BASE}/${id}/restore`, { method: 'POST', dataSchema: z.null() }),
+  updateBackupSchedule: (schedule: BackupSchedule) => apiFetch<ApiResponse<BackupSchedule>>(BackupsUrlConfig.BACKEND_API.SCHEDULE, { method: 'PATCH', body: JSON.stringify(schedule), dataSchema: BackupScheduleSchema }),
+  fetchBackupDownloadUrl: (id: string) => `${BackupsUrlConfig.BACKEND_API.BASE}/${id}/download`,
 };
-

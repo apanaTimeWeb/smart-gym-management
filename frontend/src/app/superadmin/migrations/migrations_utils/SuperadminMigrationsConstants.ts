@@ -43,3 +43,14 @@ export const MOCK_MIGRATIONS: MigrationLog[] = [
     errorLog: 'Relation "attendance_logs" is locked by concurrent transaction'
   }
 ];
+
+
+export const SUPERADMIN_MIGRATION_STATUS_STYLES = {
+  COMPLETED: 'bg-success/10 text-success',
+  FAILED: 'bg-danger-bg text-danger',
+  PENDING: 'bg-warning/10 text-warning',
+  IN_PROGRESS: 'bg-primary/10 text-primary',
+  ROLLED_BACK: 'bg-secondary/10 text-secondary',
+  SUCCESS: 'bg-success/10 text-success',
+  ROLLBACK: 'bg-secondary/10 text-secondary',
+} as const;

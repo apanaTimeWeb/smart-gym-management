@@ -5,7 +5,6 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { IndianRupee, TrendingDown, HeartPulse, Search } from 'lucide-react';
-import toast from 'react-hot-toast';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import type { RevenueRow, CancellationsRecord, TenantHealthScore, ReportsTab } from '@/app/superadmin/reports/reports_types/superadmin_reports_types';
 import { useQuery } from '@tanstack/react-query';
@@ -18,16 +17,12 @@ import { SuperadminReportsSummaryCards } from '@/app/superadmin/reports/reports_
 import { SuperadminReportsRevenueTab } from '@/app/superadmin/reports/reports_components/SuperadminReportsRevenueTab';
 import { SuperadminReportsCancellationsTab } from '@/app/superadmin/reports/reports_components/SuperadminReportsCancellationsTab';
 import { SuperadminReportsHealthTab } from '@/app/superadmin/reports/reports_components/SuperadminReportsHealthTab';
+import { useSuperadminDebouncedValue } from '@/app/superadmin/superadmin_utils/useSuperadminDebouncedValue';
 
-const PLAN_OPTIONS = [
-  { value: 'ALL', label: 'All Plans' },
-  { value: 'ENTERPRISE', label: 'Enterprise' },
-  { value: 'PRO', label: 'Pro' },
-  { value: 'STARTER', label: 'Starter' },
-  { value: 'BASIC', label: 'Basic' },
-];
+
 
 export default function SuperadminReportsClient() {
+  const [validationError, setValidationError] = useState('');
   const { getParam, setParam, setParams } = useSuperadminUrlState();
   const tab = (getParam('tab', 'revenue') as ReportsTab);
   const setTab = (t: string) => setParam('tab', t);
@@ -40,6 +35,7 @@ export default function SuperadminReportsClient() {
   const dateFrom = getParam('startDate', firstDay);
   const dateTo = getParam('endDate', lastDay);
   const searchQuery = getParam('search', '');
+  const debouncedSearchQuery = useSuperadminDebouncedValue(searchQuery);
   const planFilter = getParam('planFilter', 'ALL');
 
   const setDatePreset = (p: string) => setParam('preset', p);
@@ -50,12 +46,12 @@ export default function SuperadminReportsClient() {
 
   const queryParams = useMemo(() => {
     const p: Record<string, string> = {};
-    if (searchQuery) p.search = searchQuery;
+    if (debouncedSearchQuery) p.search = debouncedSearchQuery;
     if (planFilter && planFilter !== 'ALL') p.planFilter = planFilter;
     if (dateFrom) p.startDate = dateFrom;
     if (dateTo) p.endDate = dateTo;
     return p;
-  }, [searchQuery, planFilter, dateFrom, dateTo]);
+  }, [debouncedSearchQuery, planFilter, dateFrom, dateTo]);
 
   const { data: revRes, isLoading: revLoading, isError: revError } = useQuery({ queryKey: ['superadmin', 'reports', 'revenue', queryParams], queryFn: () => superadminReportsApi.fetchRevenueData(queryParams) });
   const { data: canRes, isLoading: canLoading, isError: canError } = useQuery({ queryKey: ['superadmin', 'reports', 'cancellations', queryParams], queryFn: () => superadminReportsApi.fetchCancellationsData(queryParams) });
@@ -78,7 +74,7 @@ export default function SuperadminReportsClient() {
   const handleDateFromChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     if (dateTo && val > dateTo) {
-      toast.error('Start date cannot be after end date', { id: 'start-date-cannot-be-after-end-date' });
+      setValidationError('Start date cannot be after end date');
       return;
     }
     setDatePreset('CUSTOM');
@@ -88,7 +84,7 @@ export default function SuperadminReportsClient() {
   const handleDateToChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     if (dateFrom && val < dateFrom) {
-      toast.error('End date cannot be before start date', { id: 'end-date-cannot-be-before-start-date' });
+      setValidationError('End date cannot be before start date');
       return;
     }
     setDatePreset('CUSTOM');
@@ -120,7 +116,6 @@ export default function SuperadminReportsClient() {
     a.href = url;
     a.download = `superadmin_${tab}_report.csv`;
     a.click();
-    toast.success('Report downloaded successfully', { id: 'report-downloaded-successfully' });
   }
 
   function handleExportPDF() {
@@ -156,6 +151,7 @@ export default function SuperadminReportsClient() {
 
   return (
     <div className="space-y-6">
+      {validationError && <div role="alert" className="text-sm text-danger bg-danger/10 border border-danger/30 rounded-lg px-4 py-3">{validationError}</div>}
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
@@ -209,7 +205,7 @@ export default function SuperadminReportsClient() {
             </div>
             <div className="w-40 border-none bg-input rounded-lg">
               <SearchableDropdown
-                options={PLAN_OPTIONS}
+                options={SUPERADMIN_REPORT_PLAN_OPTIONS}
                 value={planFilter}
                 onChange={(val) => setPlanFilter(String(val))}
                 className="bg-transparent border-border"

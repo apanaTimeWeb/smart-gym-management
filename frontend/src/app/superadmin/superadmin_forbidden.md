@@ -1,27 +1,25 @@
-﻿# Forbidden Architectural Patterns in Superadmin Module
+# Superadmin — Forbidden Patterns
 
-This file strictly dictates what is **NOT ALLOWED** anywhere within src/app/superadmin. AI Agents and developers must abort operations if they are about to perform any of the following:
+These rules apply throughout `src/app/superadmin` and are enforced or reviewed as part of the module acceptance process.
 
-## 1. No Component-Level Fetching
-**FORBIDDEN:** Direct API calls (piFetch, etch) inside .tsx components (except for Server Components).
-**ALLOWED:** All fetching MUST happen via useQuery or useMutation in custom hooks (e.g., useGymsTable.ts), which then import from [module]_api.ts.
+- **No cross-role business imports:** Superadmin must not import business code from `/admin`, `/manager`, `/trainer`, or another role root.
+- **No sibling feature business imports from shell code:** global shell components may depend on shell-owned contracts/infrastructure and dumb UI primitives, but not on another feature's API/domain implementation.
+- **No component-level API fetching:** API access belongs in feature hooks/query layers; Server Components are the documented exception for initial server-only work.
+- **No API data in Zustand or Context:** server data belongs to TanStack Query.
+- **No fake business fallbacks in UI:** mock server records belong in the owning feature's `*_mocks/fixtures/`; components must not invent missing business data.
+- **No hardcoded module URLs:** use the single feature URL configuration.
+- **No raw numeric HTTP status codes in API/mocking layers:** use `http-status-codes` constants.
+- **No arbitrary Tailwind values:** use documented design tokens/framework scales unless a documented exception exists.
+- **No generic `Props`/`Data` interfaces:** primary component props/types must be descriptively named.
+- **No multi-component dumping files:** one primary React component per `.tsx` file.
+- **No destructive action without confirmation:** critical/destructive mutations must use the Superadmin confirmation infrastructure and type-to-confirm where the action is irreversible.
+- **No production `console.log`:** use the centralized logger.
+- **No client-side auth/authorization replacement:** frontend visibility controls never replace backend authorization.
 
-## 2. No Tailwind Arbitrary Values
-**FORBIDDEN:** Arbitrary tailwind pixel values like h-[400px], w-[32px], g-[#1A1A1A].
-**ALLOWED:** Strictly use standard tokens (h-96, w-8, g-card, 	ext-primary).
+## Permission Boundary
 
-## 3. No Pure Server State in Global Stores
-**FORBIDDEN:** Caching API responses in Zustand.
-**ALLOWED:** Zustand is strictly for complex UI state (modals, wizards). Server state MUST live in TanStack Query.
+This module does not invent a second permission model. Permission/UI capability checks, when required by the host product, must consume the approved application/session permission infrastructure. Frontend checks are a UI control only and do not replace backend authorization.
 
-## 4. No Default Type Imports
-**FORBIDDEN:** import { Tenant } from './types'
-**ALLOWED:** You must use explicit type imports: import type { Tenant } from './types'
+## Permission Boundary
 
-## 5. No Unsafe Destructive Operations
-**FORBIDDEN:** Standard single-click confirmation modals for highly destructive operations (Delete Gym).
-**ALLOWED:** Destructive operations MUST implement the "Type-to-Confirm" UI requiring the exact word "DELETE".
-
-## 6. No Generic Loading Spinners
-**FORBIDDEN:** Displaying full-page generic spinners (<Loader2 />) while a page loads.
-**ALLOWED:** loading.tsx MUST use structural skeletons mimicking the layout via g-skeleton-base.
+This module does not invent a second permission model. Permission/UI capability checks, when required by the host product, must consume the approved application/session permission infrastructure. Frontend checks are a UI control only and do not replace backend authorization.

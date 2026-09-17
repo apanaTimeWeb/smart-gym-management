@@ -15,11 +15,13 @@ import SuperadminBackupsRestoreModal from '@/app/superadmin/backups/backups_comp
 import SuperadminBackupsTriggerModal from '@/app/superadmin/backups/backups_components/SuperadminBackupsTriggerModal';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import { SuperadminErrorBoundary } from '@/app/superadmin/superadmin_components/SuperadminLayout/SuperadminErrorBoundary';
+import { useSuperadminDebouncedValue } from '@/app/superadmin/superadmin_utils/useSuperadminDebouncedValue';
 
 export default function SuperadminBackupsClient() {
   const { getParam, setParam } = useSuperadminUrlState();
 
   const search = getParam('search', '');
+  const debouncedSearch = useSuperadminDebouncedValue(search);
   const statusFilter = getParam('statusFilter', 'ALL');
   const typeFilter = getParam('typeFilter', 'ALL');
   const currentPage = Number(getParam('page', '1'));
@@ -33,7 +35,7 @@ export default function SuperadminBackupsClient() {
   const queryParams: Record<string, string> = {
     page: String(currentPage),
     limit: String(ITEMS_PER_PAGE),
-    ...(search && { search }),
+    ...(debouncedSearch && { search: debouncedSearch }),
     ...(statusFilter !== 'ALL' && { status: statusFilter }),
     ...(typeFilter !== 'ALL' && { type: typeFilter }),
   };

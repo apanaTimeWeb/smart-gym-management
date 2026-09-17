@@ -24,6 +24,13 @@ export const ticketsApi = {
       method: 'POST',
         dataSchema: SupportTicketSchema
     }),
+
+  replyToTicket: (id: string, content: string) =>
+    apiFetch<ApiResponse<SupportTicket>>(`${TicketsUrlConfig.BACKEND_API.BASE}/${id}/reply`, {
+      method: 'POST',
+      body: JSON.stringify({ content }),
+      dataSchema: SupportTicketSchema,
+    }),
   assignTicket: (id: string, assignee: string) =>
     apiFetch<ApiResponse<SupportTicket>>(`${TicketsUrlConfig.BACKEND_API.BASE}/${id}/assign`, {
       method: 'POST',

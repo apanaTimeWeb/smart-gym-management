@@ -1,4 +1,5 @@
 'use client';
+import { useSuperadminDialogAccessibility } from '@/app/superadmin/superadmin_utils/useSuperadminDialogAccessibility';
 // RESPONSIBILITY: Renders the Create/Edit Broadcast modal form. Receives form state via props from useSuperadminBroadcastsPage. No API calls except recipient count preview.
 import React from 'react';
 import { X, Loader2, Users } from 'lucide-react';
@@ -19,7 +20,7 @@ interface SuperadminBroadcastModalProps {
   isMutating?: boolean;
 }
 
-import { useUnsavedChangesGuard } from '@/lib/useUnsavedChangesGuard';
+import { useSuperadminUnsavedChangesGuard } from '@/app/superadmin/superadmin_utils/useSuperadminUnsavedChangesGuard';
 
 export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> = ({
   isOpen,
@@ -31,7 +32,7 @@ export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> =
 }) => {
 
   const { register, handleSubmit, watch, setValue, formState: { errors, isDirty } } = form;
-  useUnsavedChangesGuard(isOpen && isDirty);
+  useSuperadminUnsavedChangesGuard(isOpen && isDirty);
   const status = watch('status');
   const targetGymIds = watch('targetGymIds') || [];
 
@@ -56,6 +57,8 @@ export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> =
 
   // Recipient count: use API value if available, else fall back to selected gym count
   const recipientCount = recipientCountRes?.data?.count ?? targetGymIds.length;
+  const dialogRef = useSuperadminDialogAccessibility(isOpen, onClose);
+
 
   if (!isOpen) return null;
 
@@ -76,11 +79,11 @@ export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> =
   };
 
   return (
-    <div className="fixed inset-0 bg-overlay/80 z-40 flex items-center justify-center p-4 backdrop-blur-sm" role="dialog" aria-modal="true">
+    <div ref={dialogRef}  className="fixed inset-0 bg-overlay/80 z-40 flex items-center justify-center p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="superadmin-dialog-title">
       <div className="bg-overlay border border-border rounded-2xl w-full max-w-md shadow-xl overflow-hidden flex flex-col">
         <div className="flex items-center justify-between px-7 py-5 border-b border-border">
-          <h2 className="text-lg font-bold text-foreground">{isEditMode ? 'Edit Broadcast' : 'New Broadcast'}</h2>
-          <button onClick={onClose} className="text-secondary hover:text-foreground motion-safe:transition-colors">
+          <h2 className="text-lg font-bold text-foreground" id="superadmin-dialog-title">{isEditMode ? 'Edit Broadcast' : 'New Broadcast'}</h2>
+          <button onClick={onClose} className="text-secondary hover:text-foreground motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background" aria-label="Close dialog">
             <X className="w-5 h-5" />
           </button>
         </div>

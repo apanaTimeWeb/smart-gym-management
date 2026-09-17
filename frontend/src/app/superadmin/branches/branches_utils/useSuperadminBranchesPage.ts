@@ -1,3 +1,4 @@
+// DATA FLOW: URL state → useSuperadminBranchesPage → superadminBranchesApi → SuperadminBranchesClient
 'use client';
 // RESPONSIBILITY: Owns URL-backed search/filter/pagination and server-state for the Superadmin Branches list.
 import { useMemo } from 'react';
@@ -6,6 +7,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { superadminBranchesApi } from '@/app/superadmin/branches/superadmin_branches_api/superadmin_branches_api';
 import type { BranchStatus, SuperadminBranch } from '@/app/superadmin/branches/branches_types/superadmin_branches_types';
 import { useSuperadminUrlState } from '@/app/superadmin/superadmin_utils/useSuperadminUrlState';
+import { useSuperadminDebouncedValue } from '@/app/superadmin/superadmin_utils/useSuperadminDebouncedValue';
 
 const BRANCH_PAGE_SIZE = 10;
 
@@ -13,12 +15,13 @@ export function useSuperadminBranchesPage() {
   const queryClient = useQueryClient();
   const { getParam, setParam } = useSuperadminUrlState();
   const search = getParam('search', '');
+  const debouncedSearch = useSuperadminDebouncedValue(search);
   const statusFilter = getParam('statusFilter', 'ALL') as 'ALL' | BranchStatus;
   const currentPage = Math.max(1, Number(getParam('page', '1')) || 1);
   const setSearch = (value: string) => { setParam('search', value); setParam('page', '1'); };
   const setStatusFilter = (value: 'ALL' | BranchStatus) => { setParam('statusFilter', value); setParam('page', '1'); };
   const setCurrentPage = (value: number) => setParam('page', String(value));
-  const queryParams = useMemo(() => ({ page: String(currentPage), limit: String(BRANCH_PAGE_SIZE), ...(search ? { search } : {}), ...(statusFilter !== 'ALL' ? { statusFilter } : {}) }), [currentPage, search, statusFilter]);
+  const queryParams = useMemo(() => ({ page: String(currentPage), limit: String(BRANCH_PAGE_SIZE), ...(debouncedSearch ? { search: debouncedSearch } : {}), ...(statusFilter !== 'ALL' ? { statusFilter } : {}) }), [currentPage, debouncedSearch, statusFilter]);
   const queryKey = useMemo(() => ['superadmin', 'branches', queryParams], [queryParams]);
   const query = useQuery({ queryKey, queryFn: () => superadminBranchesApi.fetchBranches(queryParams), placeholderData: (previous) => previous });
   const branches: SuperadminBranch[] = query.data?.data ?? [];

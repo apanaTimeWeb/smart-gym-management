@@ -4,6 +4,7 @@ import { MOCK_SYSTEM_TENANTS, MOCK_SYSTEM_AUDIT_LOGS } from '@/app/superadmin/sy
 const BASE_URL = '*/superadmin/system-health';
 const MIGRATIONS_URL = '*/superadmin/system/migrations';
 const AUDIT_URL = '*/superadmin/audit-logs';
+const SLA_CREDIT_URL = '*/superadmin/system/sla/credit';
 const mockSlaRecords = [
   { id: 't1', name: 'Flex Fitness Central', targetSla: 99.9, actualUptime: 99.95, downtimeMinutes: 20, downtimeIncidents: 1, status: 'MET' },
   { id: 't2', name: 'Iron Temple Barbell Club', targetSla: 99.9, actualUptime: 99.5, downtimeMinutes: 216, downtimeIncidents: 3, status: 'BREACHED' },
@@ -17,6 +18,7 @@ export const superadminSystemHandlers = [
     const filtered = search ? mockSlaRecords.filter((r) => r.name.toLowerCase().includes(search)) : mockSlaRecords;
     return HttpResponse.json<ApiResponse<typeof mockSlaRecords>>({ success: true, message: 'Success', data: filtered, meta: { total: filtered.length, page: 1, limit: filtered.length, totalPages: 1 } });
   }),
+  http.post(SLA_CREDIT_URL, async ({ request }) => { const body = await request.json() as { tenantId?: string }; const tenantId = body.tenantId ?? ''; return HttpResponse.json({ success: true, message: 'Downtime credit invoice generated', data: { invoiceId: `credit-${Date.now()}`, tenantId, amount: 1000, currency: 'INR' } }); }),
   http.get(`${BASE_URL}/health`, async () => HttpResponse.json({ success: true, message: 'Success', data: { status: 'healthy', timestamp: '2026-09-16T00:00:00Z', checks: { database: 'healthy', api: 'healthy', cache: 'healthy' } } })),
   http.get(MIGRATIONS_URL, async () => HttpResponse.json<ApiResponse<{ tenants: typeof MOCK_SYSTEM_TENANTS }>>({ success: true, message: 'Success', data: { tenants: [...MOCK_SYSTEM_TENANTS] } })),
   http.post(`${MIGRATIONS_URL}/trigger`, async ({ request }) => {

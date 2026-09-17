@@ -1,3 +1,4 @@
+// DATA FLOW: URL/filter state → useSuperadminBackupsData → superadmin_backups_api → SuperadminBackupsClient
 'use client';
 // RESPONSIBILITY: Retrieves authoritative backup data and server pagination metadata.
 import { useQuery } from '@tanstack/react-query';

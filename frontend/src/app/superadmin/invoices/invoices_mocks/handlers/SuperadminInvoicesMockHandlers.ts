@@ -1,13 +1,10 @@
+import { SUPERADMIN_INVOICES_MOCK_TENANTS } from '@/app/superadmin/invoices/invoices_mocks/fixtures/SuperadminInvoicesMockFixtures';
 import { http, HttpResponse, delay } from 'msw';
 import type { SaaSInvoice } from '@/app/superadmin/invoices/superadmin_invoices_types/superadmin_invoices_types';
 import type { CreateManualPaymentDto } from '@/app/superadmin/invoices/superadmin_invoices_api/superadmin_invoices_api';
 import type { ApiResponse } from '@/lib/api';
 
-const MOCK_INVOICE_TENANTS = [
-  { id: 't1', name: 'Iron Paradise', plan: 'Pro' },
-  { id: 't2', name: 'Fit Life Studio', plan: 'Basic' },
-  { id: 't3', name: 'CrossFit Box', plan: 'Enterprise' },
-];
+
 const BASE_URL = '*/api/v1/superadmin/invoices';
 
 let mockInvoices: SaaSInvoice[] = [
@@ -27,7 +24,7 @@ let mockInvoices: SaaSInvoice[] = [
 
 
 export const superadminInvoicesHandlers = [
-  http.get('*/api/v1/api/gyms', async () => HttpResponse.json({ success: true, message: 'Success', data: MOCK_INVOICE_TENANTS })),
+  http.get('*/api/v1/api/gyms', async () => HttpResponse.json({ success: true, message: 'Success', data: SUPERADMIN_INVOICES_MOCK_TENANTS })),
   http.get(BASE_URL, async ({ request }) => {
     await delay(400);
     const url = new URL(request.url);

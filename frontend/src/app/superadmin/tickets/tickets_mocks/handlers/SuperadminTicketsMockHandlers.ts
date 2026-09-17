@@ -1,3 +1,4 @@
+import { StatusCodes } from 'http-status-codes';
 import { http, HttpResponse, delay } from 'msw';
 import type { SupportTicket } from '@/app/superadmin/tickets/superadmin_tickets_types/superadmin_tickets_types';
 import { MOCK_TICKETS } from '@/app/superadmin/tickets/tickets_utils/SuperadminTicketsConstants';
@@ -49,7 +50,7 @@ export const superadminTicketsHandlers = [
     const id = params.id as string;
     const ticket = mockTickets.find(t => t.id === id);
     if (!ticket) {
-      return HttpResponse.json<ApiResponse<SupportTicket>>({ success: false, message: 'Not found', data: null as unknown as SupportTicket }, { status: 404 });
+      return HttpResponse.json<ApiResponse<SupportTicket>>({ success: false, message: 'Not found', data: null as unknown as SupportTicket }, { status: StatusCodes.NOT_FOUND });
     }
     return HttpResponse.json<ApiResponse<SupportTicket>>({
       success: true,
@@ -71,7 +72,7 @@ export const superadminTicketsHandlers = [
       return t;
     });
     if (!updated) {
-      return HttpResponse.json<ApiResponse<SupportTicket>>({ success: false, message: 'Not found', data: null as unknown as SupportTicket }, { status: 404 });
+      return HttpResponse.json<ApiResponse<SupportTicket>>({ success: false, message: 'Not found', data: null as unknown as SupportTicket }, { status: StatusCodes.NOT_FOUND });
     }
     return HttpResponse.json<ApiResponse<SupportTicket>>({
       success: true,
@@ -92,7 +93,7 @@ export const superadminTicketsHandlers = [
       return t;
     });
     if (!updated) {
-      return HttpResponse.json<ApiResponse<SupportTicket>>({ success: false, message: 'Not found', data: null as unknown as SupportTicket }, { status: 404 });
+      return HttpResponse.json<ApiResponse<SupportTicket>>({ success: false, message: 'Not found', data: null as unknown as SupportTicket }, { status: StatusCodes.NOT_FOUND });
     }
     return HttpResponse.json<ApiResponse<SupportTicket>>({
       success: true,
@@ -101,6 +102,21 @@ export const superadminTicketsHandlers = [
     });
   }),
 
+
+  http.post(`${BASE_URL}/:id/reply`, async ({ params, request }) => {
+    await delay(300);
+    const id = String(params.id);
+    const body = await request.json() as { content?: string };
+    let updated: SupportTicket | null = null;
+    mockTickets = mockTickets.map((ticket) => {
+      if (ticket.id !== id) return ticket;
+      const message = { id: `msg-${Date.now()}`, senderId: 'superadmin-demo', senderName: 'Superadmin', senderRole: 'SUPERADMIN' as const, content: body.content ?? '', createdAt: new Date().toISOString() };
+      updated = { ...ticket, status: 'IN_PROGRESS', messages: [...(ticket.messages ?? []), message], lastUpdated: new Date().toISOString() };
+      return updated;
+    });
+    if (!updated) return HttpResponse.json<ApiResponse<SupportTicket>>({ success: false, message: 'Ticket not found', data: null }, { status: StatusCodes.NOT_FOUND });
+    return HttpResponse.json<ApiResponse<SupportTicket>>({ success: true, message: 'Reply sent', data: updated });
+  }),
   http.post(`${BASE_URL}/:id/assign`, async ({ params, request }) => {
     await delay(400);
     const id = params.id as string;
@@ -114,7 +130,7 @@ export const superadminTicketsHandlers = [
       return t;
     });
     if (!updated) {
-      return HttpResponse.json<ApiResponse<SupportTicket>>({ success: false, message: 'Not found', data: null as unknown as SupportTicket }, { status: 404 });
+      return HttpResponse.json<ApiResponse<SupportTicket>>({ success: false, message: 'Not found', data: null as unknown as SupportTicket }, { status: StatusCodes.NOT_FOUND });
     }
     return HttpResponse.json<ApiResponse<SupportTicket>>({
       success: true,

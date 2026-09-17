@@ -1,5 +1,6 @@
 'use client';
-// RESPONSIBILITY: Renders the Onboarding Modals component and its associated UI logic.
+// RESPONSIBILITY: Renders the extend-trial and convert-to-paid dialogs with keyboard-accessible confirmation controls; mutation orchestration stays in the parent hook.
+import { useSuperadminDialogAccessibility } from '@/app/superadmin/superadmin_utils/useSuperadminDialogAccessibility';
 import { AlertTriangle } from 'lucide-react';
 
 export function SuperadminOnboardingModals({
@@ -21,13 +22,16 @@ export function SuperadminOnboardingModals({
   setConvertConfirmId: (id: string | null) => void;
   handleConvertToPaidConfirmed: (id: string) => void;
 }) {
+  const extendDialogRef = useSuperadminDialogAccessibility(Boolean(extendModalId), () => setExtendModalId(null));
+  const convertDialogRef = useSuperadminDialogAccessibility(Boolean(convertConfirmId), () => setConvertConfirmId(null));
+
   return (
     <>
       {/* Extend Trial Modal */}
       {extendModalId && (
-        <div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 backdrop-blur-sm" role="dialog" aria-modal="true">
+        <div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 backdrop-blur-sm" ref={extendDialogRef} role="dialog" aria-modal="true" aria-labelledby="superadmin-onboarding-extend-title" tabIndex={-1}>
           <div className="bg-overlay border border-border rounded-2xl p-6 w-full max-w-sm shadow-2xl">
-            <h2 className="text-lg font-bold text-foreground mb-1">Extend Trial</h2>
+            <h2 id="superadmin-onboarding-extend-title" className="text-lg font-bold text-foreground mb-1">Extend Trial</h2>
             <p className="text-secondary text-sm mb-4">
               How many additional days would you like to grant?
             </p>
@@ -63,13 +67,13 @@ export function SuperadminOnboardingModals({
 
       {/* Convert to Paid — double confirmation modal */}
       {convertConfirmId && (
-        <div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 backdrop-blur-sm" role="dialog" aria-modal="true">
+        <div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 backdrop-blur-sm" ref={convertDialogRef} role="dialog" aria-modal="true" aria-labelledby="superadmin-onboarding-convert-title" tabIndex={-1}>
           <div className="bg-overlay border border-border rounded-2xl p-6 w-full max-w-sm shadow-2xl">
             <div className="flex items-center gap-3 mb-3">
               <div className="w-10 h-10 rounded-full bg-warning/10 flex items-center justify-center shrink-0">
                 <AlertTriangle className="w-5 h-5 text-warning" strokeWidth={2}  />
               </div>
-              <h2 className="text-lg font-bold text-foreground">Convert to Paid?</h2>
+              <h2 id="superadmin-onboarding-convert-title" className="text-lg font-bold text-foreground">Convert to Paid?</h2>
             </div>
             <p className="text-secondary text-sm mb-5">
               This will mark the tenant as a paid subscriber and end their trial. This action cannot be undone.

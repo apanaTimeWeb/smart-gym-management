@@ -1,4 +1,5 @@
 'use client';
+import { useSuperadminDialogAccessibility } from '@/app/superadmin/superadmin_utils/useSuperadminDialogAccessibility';
 // RESPONSIBILITY: Renders the Create Coupon modal form. Receives form state via props from useCouponsPage. No API calls.
 import React from 'react';
 import { X } from 'lucide-react';
@@ -14,7 +15,7 @@ interface SuperadminCouponModalProps {
   onSubmit: (data: CouponFormData) => void;
 }
 
-import { useUnsavedChangesGuard } from '@/lib/useUnsavedChangesGuard';
+import { useSuperadminUnsavedChangesGuard } from '@/app/superadmin/superadmin_utils/useSuperadminUnsavedChangesGuard';
 
 export const SuperadminCouponModal: React.FC<SuperadminCouponModalProps> = ({
   isOpen,
@@ -22,16 +23,18 @@ export const SuperadminCouponModal: React.FC<SuperadminCouponModalProps> = ({
   form,
   onSubmit,
 }) => {
-  useUnsavedChangesGuard(isOpen && form.formState.isDirty);
+  useSuperadminUnsavedChangesGuard(isOpen && form.formState.isDirty);
+  const dialogRef = useSuperadminDialogAccessibility(isOpen, onClose);
+
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-overlay/80 z-40 flex items-center justify-center p-4 backdrop-blur-sm" role="dialog" aria-modal="true">
+    <div ref={dialogRef}  className="fixed inset-0 bg-overlay/80 z-40 flex items-center justify-center p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="superadmin-dialog-title">
       <div className="bg-overlay border border-border rounded-2xl w-full max-w-md shadow-xl overflow-hidden flex flex-col">
         <div className="flex items-center justify-between px-7 py-5 border-b border-border">
-          <h2 className="text-lg font-bold text-foreground">Create Global Coupon</h2>
-          <button onClick={onClose} className="text-secondary hover:text-foreground motion-safe:transition-colors">
+          <h2 className="text-lg font-bold text-foreground" id="superadmin-dialog-title">Create Global Coupon</h2>
+          <button onClick={onClose} className="text-secondary hover:text-foreground motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background" aria-label="Close dialog">
             <X className="w-5 h-5" />
           </button>
         </div>

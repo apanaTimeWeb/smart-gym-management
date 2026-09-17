@@ -1,3 +1,4 @@
+import { StatusCodes } from 'http-status-codes';
 import { http, HttpResponse, delay } from 'msw';
 import type { SubscriptionPlan } from '@/app/superadmin/plans/superadmin_plans_types/superadmin_plans_types';
 
@@ -36,7 +37,7 @@ export const superadminPlansHandlers = [
     const plan = mockPlansList.find((item) => item.id === params.id);
     return plan
       ? HttpResponse.json({ success: true, message: 'Success', data: plan })
-      : HttpResponse.json({ success: false, message: 'Plan not found', data: null }, { status: 404 });
+      : HttpResponse.json({ success: false, message: 'Plan not found', data: null }, { status: StatusCodes.NOT_FOUND });
   }),
   http.post(BASE_URL, async ({ request }) => {
     await delay(350);
@@ -49,7 +50,7 @@ export const superadminPlansHandlers = [
     await delay(350);
     const body = await request.json() as Partial<SubscriptionPlan>;
     const current = mockPlansList.find((item) => item.id === params.id);
-    if (!current) return HttpResponse.json({ success: false, message: 'Plan not found', data: null }, { status: 404 });
+    if (!current) return HttpResponse.json({ success: false, message: 'Plan not found', data: null }, { status: StatusCodes.NOT_FOUND });
     const updated = { ...current, ...body };
     mockPlansList = mockPlansList.map((item) => item.id === params.id ? updated : item);
     return HttpResponse.json({ success: true, message: 'Updated', data: updated });
@@ -62,7 +63,7 @@ export const superadminPlansHandlers = [
   http.patch(`${BASE_URL}/:id/archive`, async ({ params }) => {
     await delay(300);
     const updated = mockPlansList.find((item) => item.id === params.id);
-    if (!updated) return HttpResponse.json({ success: false, message: 'Plan not found', data: null }, { status: 404 });
+    if (!updated) return HttpResponse.json({ success: false, message: 'Plan not found', data: null }, { status: StatusCodes.NOT_FOUND });
     mockPlansList = mockPlansList.map((item) => item.id === params.id ? { ...item, isArchived: true } : item);
     return HttpResponse.json({ success: true, message: 'Archived', data: { ...updated, isArchived: true } });
   }),

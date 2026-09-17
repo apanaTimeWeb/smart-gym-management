@@ -156,3 +156,7 @@ This feature map is generated from the current repository structure. Where the c
 ## Module-Owned MSW Fixtures
 
 Feature-specific mock fixtures and MSW handlers are owned by this feature directory. API responses consumed by UI must remain complete for all documented table fields, KPIs, charts, filters, detail views and mutation messages. Global MSW bootstrap is registration infrastructure only.
+
+## V1 Repair Notes
+
+Nullable display fields use the canonical `displayValue()` formatter. Search input state remains separate from the 300ms debounced value used by server-backed query parameters/query keys.

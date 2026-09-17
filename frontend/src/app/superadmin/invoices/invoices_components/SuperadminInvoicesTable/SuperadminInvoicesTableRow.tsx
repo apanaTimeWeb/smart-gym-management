@@ -54,12 +54,12 @@ export default function SuperadminInvoicesTableRow({ invoice: inv }: InvoicesTab
       const res = await invoicesApi.fetchInvoiceDownloadUrl(inv.id);
       if (res.data?.downloadUrl) {
         window.open(res.data.downloadUrl, '_blank');
-        toast.success('Download started.', { id: `dl-${inv.id}` });
+        toast.success(res.message, { id: `dl-${inv.id}` });
       } else {
         toast.error(res.message, { id: `dl-${inv.id}` });
       }
-    } catch {
-      toast.error('Failed to download invoice.', { id: `dl-${inv.id}` });
+    } catch (error: unknown) {
+      toast.error(error instanceof Error ? error.message : '', { id: `dl-${inv.id}` });
     }
   };
 
@@ -69,8 +69,8 @@ export default function SuperadminInvoicesTableRow({ invoice: inv }: InvoicesTab
     try {
       const res = await invoicesApi.resendInvoiceEmail(inv.id);
       toast.success(res.message, { id: `resend-${inv.id}` });
-    } catch {
-      toast.error('Failed to resend invoice.', { id: `resend-${inv.id}` });
+    } catch (error: unknown) {
+      toast.error(error instanceof Error ? error.message : '', { id: `resend-${inv.id}` });
     }
   };
 
@@ -95,7 +95,7 @@ export default function SuperadminInvoicesTableRow({ invoice: inv }: InvoicesTab
           className="text-secondary hover:text-primary motion-safe:transition-colors p-1.5 bg-input hover:bg-primary/10 rounded-md border border-border"
           aria-label={`Resend invoice ${inv.id} to email`}
         >
-          <Mail className="w-4 h-4" />
+          <Mail size={18} strokeWidth={2} />
         </button>
         <button
           title="Share via WhatsApp"
@@ -103,14 +103,14 @@ export default function SuperadminInvoicesTableRow({ invoice: inv }: InvoicesTab
           className="text-secondary hover:text-success motion-safe:transition-colors p-1.5 bg-input hover:bg-success/10 rounded-md border border-border"
           aria-label={`Share invoice ${inv.id} via WhatsApp`}
         >
-          <MessageCircle className="w-4 h-4" />
+          <MessageCircle size={18} strokeWidth={2} />
         </button>
         <button
           onClick={handleDownload}
           className="text-sm font-medium text-primary hover:underline flex items-center gap-1"
           aria-label={`Download PDF for invoice ${inv.id}`}
         >
-          <Receipt className="w-3.5 h-3.5" /> View
+          <Receipt size={18} strokeWidth={2} /> View
         </button>
       </td>
     </tr>

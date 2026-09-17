@@ -1,3 +1,4 @@
+import { StatusCodes } from 'http-status-codes';
 import { http, HttpResponse, delay } from 'msw';
 import type { CancellationsAlert, CancellationsKpiData, CancellationsActionPayload } from '@/app/superadmin/cancellations/cancellations_types/superadmin_cancellations_types';
 import type { ApiResponse } from '@/lib/api';
@@ -49,7 +50,7 @@ export const superadminCancellationsHandlers = [
     const payload = await request.json() as CancellationsActionPayload;
     let updated: CancellationsAlert | null = null;
     mockAlerts = mockAlerts.map((a) => { if (a.id !== alertId) return a; updated = { ...a, actionStatus: payload.status, notes: payload.notes || a.notes }; return updated; });
-    if (!updated) return HttpResponse.json<ApiResponse<CancellationsAlert>>({ success: false, message: 'Not found', data: null }, { status: 404 });
+    if (!updated) return HttpResponse.json<ApiResponse<CancellationsAlert>>({ success: false, message: 'Not found', data: null }, { status: StatusCodes.NOT_FOUND });
     return HttpResponse.json<ApiResponse<CancellationsAlert>>({ success: true, message: 'Updated', data: updated });
   }),
   http.delete(`${BASE_URL}/:alertId`, async ({ params }) => { const id = String(params.alertId); mockAlerts = mockAlerts.filter((a) => a.id !== id); return HttpResponse.json<ApiResponse<null>>({ success: true, message: 'Dismissed', data: null }); }),

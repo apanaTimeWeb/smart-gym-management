@@ -13,3 +13,5 @@ export const MOCK_SUPERADMIN_BACKUPS: BackupRecord[] = [
   { id: 'bk11', tenantName: 'Fit Republic', databaseName: 'db_fit_republic', sizeMB: 266, status: 'SUCCESS', timestamp: '2026-09-07T02:00:00Z' },
   { id: 'bk12', tenantName: 'MaxFit Studio', databaseName: 'db_maxfit', sizeMB: 735, status: 'IN_PROGRESS', timestamp: '2026-09-08T02:00:00Z' },
 ];
+
+export const MOCK_SUPERADMIN_BACKUP_SCHEDULE = { cronExpression: '0 2 * * *', retentionDays: 30 };

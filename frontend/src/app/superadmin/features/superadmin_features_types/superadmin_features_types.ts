@@ -26,3 +26,11 @@ export const SuperadminFeaturesTenantSchema = z.object({
   plan: z.string()
 });
 export type SuperadminFeaturesTenant = z.infer<typeof SuperadminFeaturesTenantSchema>;
+
+export const FeatureFlagHistorySchema = z.object({
+  id: z.string(),
+  action: z.string(),
+  user: z.string(),
+  timestamp: z.string(),
+});
+export type FeatureFlagHistory = z.infer<typeof FeatureFlagHistorySchema>;

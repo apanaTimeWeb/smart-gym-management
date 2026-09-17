@@ -5,3 +5,6 @@ export const SuperadminSystemAuditLogSchema = z.object({ id: z.string(), timesta
 export type SuperadminSystemAuditLog = z.infer<typeof SuperadminSystemAuditLogSchema>;
 
 export type SuperadminSystemTab = 'migrations' | 'sla';
+
+export const DowntimeCreditSchema = z.object({ invoiceId: z.string(), tenantId: z.string(), amount: z.number(), currency: z.string() });
+export type DowntimeCredit = z.infer<typeof DowntimeCreditSchema>;

@@ -5,6 +5,7 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 
 interface MutationOptions {
+  toastId: string;
   onSuccess?: (data: unknown) => void;
   onError?: (error: Error) => void;
 }
@@ -17,7 +18,7 @@ export function useSuperadminAffiliatesMutation() {
 
   const mutate = async <T,>(
     mutationFn: () => Promise<{ success: boolean; data?: T | null; message?: string }>,
-    options?: MutationOptions
+    options: MutationOptions
   ) => {
     setIsMutating(true);
     try {
@@ -25,7 +26,7 @@ export function useSuperadminAffiliatesMutation() {
       const responseData = response.data !== undefined ? response.data : response;
       
       if (response.message) {
-        toast.success(response.message, { id: response.message });
+        toast.success(response.message, { id: options.toastId });
       }
       
       if (options?.onSuccess) {
@@ -35,7 +36,7 @@ export function useSuperadminAffiliatesMutation() {
       return responseData;
     } catch (error: unknown) {
       const errorObj = error instanceof Error ? error : new Error(String(error));
-      toast.error(errorObj.message, { id: errorObj.message });
+      toast.error(errorObj.message, { id: options.toastId });
       
       if (options?.onError) {
         options.onError(errorObj);

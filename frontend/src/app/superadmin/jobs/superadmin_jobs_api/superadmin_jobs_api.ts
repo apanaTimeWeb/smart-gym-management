@@ -11,6 +11,12 @@ export const jobsApi = {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
     return apiFetch<ApiResponse<BackgroundJob[]>>(`${JobsUrlConfig.BACKEND_API.BASE}${q}`, { dataSchema: z.array(BackgroundJobSchema) });
   },
+  retryJob: (id: string) => apiFetch<ApiResponse<BackgroundJob>>(`${JobsUrlConfig.BACKEND_API.BASE}/${id}/retry`, { method: 'POST', dataSchema: BackgroundJobSchema }),
+  cancelJob: (id: string) => apiFetch<ApiResponse<BackgroundJob>>(`${JobsUrlConfig.BACKEND_API.BASE}/${id}/cancel`, { method: 'POST', dataSchema: BackgroundJobSchema }),
+  deleteJob: (id: string) => apiFetch<ApiResponse<null>>(`${JobsUrlConfig.BACKEND_API.BASE}/${id}`, { method: 'DELETE', dataSchema: z.null() }),
+  clearCompletedJobs: () => apiFetch<ApiResponse<{ deletedCount: number }>>(`${JobsUrlConfig.BACKEND_API.BASE}/completed`, { method: 'DELETE', dataSchema: z.object({ deletedCount: z.number() }) }),
+  bulkRetryJobs: (ids: string[]) => apiFetch<ApiResponse<{ queuedCount: number }>>(`${JobsUrlConfig.BACKEND_API.BASE}/bulk-retry`, { method: 'POST', body: JSON.stringify({ ids }), dataSchema: z.object({ queuedCount: z.number() }) }),
+  bulkDeleteJobs: (ids: string[]) => apiFetch<ApiResponse<{ deletedCount: number }>>(`${JobsUrlConfig.BACKEND_API.BASE}/bulk-delete`, { method: 'POST', body: JSON.stringify({ ids }), dataSchema: z.object({ deletedCount: z.number() }) }),
   retryAllJobs: () => apiFetch<ApiResponse<{ queuedCount: number }>>(`${JobsUrlConfig.BACKEND_API.BASE}/retry-all`, { method: 'POST',
       dataSchema: z.object({ queuedCount: z.number() })
 }),

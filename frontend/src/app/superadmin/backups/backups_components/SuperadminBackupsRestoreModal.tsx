@@ -1,4 +1,5 @@
 'use client';
+import { useSuperadminDialogAccessibility } from '@/app/superadmin/superadmin_utils/useSuperadminDialogAccessibility';
 // RESPONSIBILITY: Modal for confirming a dangerous database restore from a backup snapshot.
 import { formatDate, formatDateTime } from '@/lib/formatters';
 // Requires the user to type "RESTORE" before the action can be committed.
@@ -20,6 +21,8 @@ interface SuperadminBackupsRestoreModalProps {
 export default function SuperadminBackupsRestoreModal({ 
   isOpen, onClose, selectedBackup, restoreConfirmText, setRestoreConfirmText, onSuccess 
 }: SuperadminBackupsRestoreModalProps) {
+  const dialogRef = useSuperadminDialogAccessibility(isOpen, onClose);
+
   if (!isOpen || !selectedBackup) return null;
 
   const confirmRestore = async () => {
@@ -37,13 +40,13 @@ export default function SuperadminBackupsRestoreModal({
   };
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 backdrop-blur-sm p-4" role="dialog" aria-modal="true">
+    <div ref={dialogRef}  className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 backdrop-blur-sm p-4" role="dialog" aria-modal="true" aria-labelledby="superadmin-dialog-title">
       <div className="bg-card w-full max-w-md rounded-2xl shadow-xl overflow-hidden border border-border motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95">
         <div className="p-6">
           <div className="w-12 h-12 rounded-full bg-danger-bg/10 text-danger flex items-center justify-center mb-4">
             <RotateCcw className="w-6 h-6" />
           </div>
-          <h2 className="text-xl font-bold text-foreground mb-2">Restore Database Snapshot</h2>
+          <h2 className="text-xl font-bold text-foreground mb-2" id="superadmin-dialog-title">Restore Database Snapshot</h2>
           <p className="text-sm text-secondary mb-4">
             Are you absolutely sure you want to restore the <strong className="text-foreground">{selectedBackup.databaseName}</strong> database using snapshot <strong className="text-foreground font-mono">{selectedBackup.id}</strong>?
           </p>

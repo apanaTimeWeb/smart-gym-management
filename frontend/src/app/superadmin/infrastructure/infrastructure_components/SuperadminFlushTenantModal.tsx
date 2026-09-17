@@ -1,4 +1,5 @@
 'use client';
+import { useSuperadminDialogAccessibility } from '@/app/superadmin/superadmin_utils/useSuperadminDialogAccessibility';
 // RESPONSIBILITY: Renders the SuperadminFlushTenantModal component using TanStack Query.
 import React, { useState, useEffect } from 'react';
 import { X, Loader2, Search } from 'lucide-react';
@@ -38,6 +39,8 @@ export default function SuperadminFlushTenantModal({ isOpen, onClose, onFlush }:
     }
   }, [isOpen]);
 
+  const dialogRef = useSuperadminDialogAccessibility(isOpen, onClose);
+
   if (!isOpen) return null;
 
   const filteredGyms = gyms?.filter((g: SuperadminInfrastructureTenant) => g.name?.toLowerCase().includes(search.toLowerCase()) || g.id?.includes(search)) || [];
@@ -53,17 +56,19 @@ export default function SuperadminFlushTenantModal({ isOpen, onClose, onFlush }:
     }
   };
 
+
   return (
-    <div className="fixed inset-0 bg-overlay/80 z-40 flex items-center justify-center p-4 backdrop-blur-sm motion-safe:animate-in motion-safe:fade-in" role="dialog" aria-modal="true">
+    <div ref={dialogRef} className="fixed inset-0 bg-overlay/80 z-40 flex items-center justify-center p-4 backdrop-blur-sm motion-safe:animate-in motion-safe:fade-in" role="dialog" aria-modal="true" aria-labelledby="FlushSpecificGym-dialog-title">
       <div className="bg-overlay border border-border rounded-2xl w-full max-w-md shadow-2xl overflow-hidden flex flex-col motion-safe:animate-in motion-safe:zoom-in-95">
         <div className="flex items-center justify-between px-6 py-5 border-b border-border">
           <div>
-            <h2 className="text-xl font-bold text-foreground">Flush Specific Gym</h2>
+            <h2 className="text-xl font-bold text-foreground" id="FlushSpecificGym-dialog-title">Flush Specific Gym</h2>
             <p className="text-sm text-secondary">Select a gym to clear its Redis cache.</p>
           </div>
           <button 
-            onClick={onClose} 
-            className="p-2 text-secondary hover:text-foreground hover:bg-input rounded-full motion-safe:transition-colors"
+            onClick={onClose}
+            aria-label="Close dialog"
+            className="p-2 text-secondary hover:text-foreground hover:bg-input rounded-full motion-safe:transition-all motion-safe:duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
             <X className="w-5 h-5" />
           </button>

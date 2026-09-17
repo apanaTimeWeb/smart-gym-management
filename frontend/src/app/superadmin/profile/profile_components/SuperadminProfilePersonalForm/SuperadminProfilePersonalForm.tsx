@@ -9,7 +9,7 @@ import { Loader2 } from 'lucide-react';
 import type { SuperadminProfileData, UpdateSuperadminProfilePayload } from '@/app/superadmin/profile/profile_types/SuperadminProfileTypes';
 import { TIMEZONE_OPTIONS, LANGUAGE_OPTIONS } from '@/app/superadmin/profile/profile_utils/SuperadminProfileConstants';
 import { personalSchema, type PersonalFormValues } from '@/app/superadmin/profile/profile_utils/SuperadminProfilePersonalForm.schema';
-import { useUnsavedChangesGuard } from '@/lib/useUnsavedChangesGuard';
+import { useSuperadminUnsavedChangesGuard } from '@/app/superadmin/superadmin_utils/useSuperadminUnsavedChangesGuard';
 
 interface SuperadminProfilePersonalFormProps {
   profile: SuperadminProfileData;
@@ -37,7 +37,7 @@ export default function SuperadminProfilePersonalForm({
     },
   });
 
-  useUnsavedChangesGuard(isDirty, "You have unsaved changes in your profile. Are you sure you want to leave?");
+  useSuperadminUnsavedChangesGuard(isDirty, "You have unsaved changes in your profile. Are you sure you want to leave?");
 
   // Rule 53: reset when profile prop changes (e.g. after successful save)
   // EXPLANATION: Synchronize component state with external dependencies.

@@ -1,3 +1,4 @@
+import { StatusCodes } from 'http-status-codes';
 import { http, HttpResponse, delay } from 'msw';
 import type { Affiliate } from '@/app/superadmin/affiliates/superadmin_affiliates_types/superadmin_affiliates_types';
 import type { ApiResponse } from '@/lib/api';
@@ -113,7 +114,7 @@ export const superadminAffiliatesHandlers = [
     });
 
     if (!updatedAffiliate) {
-      return HttpResponse.json<ApiResponse<Affiliate>>({ success: false, message: 'Not found', data: null }, { status: 404 });
+      return HttpResponse.json<ApiResponse<Affiliate>>({ success: false, message: 'Not found', data: null }, { status: StatusCodes.NOT_FOUND });
     }
 
     return HttpResponse.json<ApiResponse<Affiliate>>({
@@ -138,7 +139,7 @@ export const superadminAffiliatesHandlers = [
     });
 
     if (!updatedAffiliate) {
-      return HttpResponse.json<ApiResponse<Affiliate>>({ success: false, message: 'Not found', data: null }, { status: 404 });
+      return HttpResponse.json<ApiResponse<Affiliate>>({ success: false, message: 'Not found', data: null }, { status: StatusCodes.NOT_FOUND });
     }
 
     return HttpResponse.json<ApiResponse<Affiliate>>({

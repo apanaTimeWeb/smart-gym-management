@@ -1,5 +1,7 @@
 'use client';
 // RESPONSIBILITY: Renders the Dashboard KPI cards. No API calls.
+import { displayValue } from '@/lib/formatters';
+
 import { Users, Building2, CreditCard, Activity, AlertCircle, Clock, CheckCircle2, DollarSign } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import type { SuperadminDashboardKpiGridProps } from '@/app/superadmin/dashboard/superadmin_dashboard_types/superadmin_dashboard_types';
@@ -23,7 +25,7 @@ export function SuperadminDashboardKpiGrid({
   const mrrTrendStr = mrrTrendNum ? `${mrrTrendNum > 0 ? '+' : ''}${mrrTrendNum}% vs last month` : undefined;
 
   const healthScore = metrics.platformHealthScore;
-  const healthDisplay = healthScore !== undefined ? `${healthScore}/100` : '—';
+  const healthDisplay = displayValue(healthScore !== undefined ? `${healthScore}/100` : null);
 
   const kpiCards = [
     {

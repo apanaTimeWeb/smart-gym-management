@@ -6,11 +6,11 @@ import { useQuery } from '@tanstack/react-query';
 import { auditLogsApi } from '@/app/superadmin/global-audit/superadmin_global-audit_api/superadmin_global-audit_api';
 import type { AuditLog } from '@/app/superadmin/global-audit/superadmin_global-audit_types/superadmin_global-audit_types';
 import { ShieldAlert, Search, Filter, AlertTriangle, Info, Download } from 'lucide-react';
-import toast from 'react-hot-toast';
 
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
 import { useSuperadminUrlState } from '@/app/superadmin/superadmin_utils/useSuperadminUrlState';
+import { useSuperadminDebouncedValue } from '@/app/superadmin/superadmin_utils/useSuperadminDebouncedValue';
 
 export type AuditSeverityFilter = 'ALL' | 'INFO' | 'WARNING' | 'CRITICAL';
 
@@ -22,6 +22,7 @@ export default function SuperadminGlobalAuditClient() {
   const { getParam, setParam } = useSuperadminUrlState();
 
   const search = getParam('search', '');
+  const debouncedSearch = useSuperadminDebouncedValue(search);
   const severityFilter = getParam('severityFilter', 'ALL') as AuditSeverityFilter;
   const actorTypeFilter = getParam('actorTypeFilter', 'ALL') as AuditActorFilter;
   const currentPage = Number(getParam('page', '1'));
@@ -44,7 +45,7 @@ export default function SuperadminGlobalAuditClient() {
   const queryParams = {
     page: String(currentPage),
     limit: String(ITEMS_PER_PAGE),
-    ...(search && { search }),
+    ...(debouncedSearch && { search: debouncedSearch }),
     ...(severityFilter !== 'ALL' && { severity: severityFilter }),
     ...(actorTypeFilter !== 'ALL' && { actorType: actorTypeFilter }),
   };
@@ -83,7 +84,6 @@ export default function SuperadminGlobalAuditClient() {
 
   const exportLogs = () => {
     if (filteredLogs.length === 0) {
-      toast.error('No logs to export', { id: 'no-logs-to-export' });
       return;
     }
     const headers = ['Timestamp', 'Severity', 'Action', 'Resource', 'Details', 'Actor', 'IP Address'];
@@ -111,7 +111,6 @@ export default function SuperadminGlobalAuditClient() {
     link.click();
     document.body.removeChild(link);
     
-    toast.success('Exporting global audit logs as CSV...', { id: 'exporting-global-audit-logs-as-csv' });
   };
 
   const severityOptions = [
