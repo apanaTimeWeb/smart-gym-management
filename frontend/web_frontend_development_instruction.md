@@ -561,6 +561,7 @@ If initial server data is passed into a Client Component:
 
 9. **Leverage Next.js Native Features & Typed Error Boundaries**: 
 Ensure that the module properly utilizes Next.js native routing features for a great user experience.
+- **Top Routing Progress:** Every Next.js route transition MUST trigger a top progress bar (`nextjs-toploader`) to indicate background navigation. Color: `--primary`.
 - **`loading.tsx` (Skeleton UI):** You MUST extract loading states into a `loading.tsx` file wherever applicable in the module's directory. Never use a generic spinning circle for a full page load. Instead, design a premium Skeleton UI that mimics the actual layout of the page (using `bg-skeleton-base` and `bg-skeleton-highlight`).
 - **`error.tsx` (Error Boundaries):** Beyond the global `error.tsx`, every module must have a typed React Error Boundary component (`[ModuleName]ErrorBoundary.tsx` or a standard Next.js `error.tsx`) that serves as the route-segment error boundary. It must display a module-specific fallback UI matching the app shell (not a generic "Something went wrong" browser error) and include a primary "Retry" button that calls `reset()`.
 
