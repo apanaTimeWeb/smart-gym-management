@@ -1,4 +1,4 @@
-﻿# Mobile Development Instructions — Framework-Agnostic (Enterprise / Industry Scale)
+# Mobile Development Instructions — Framework-Agnostic (Enterprise / Industry Scale)
 
 > Applies regardless of chosen stack (React Native bare-metal, Flutter, or native
 > Swift/Kotlin). This document defines architectural discipline, not a specific
@@ -21,6 +21,37 @@ Choose ONE framework for the whole app and record the decision + reasoning in
 Whichever is chosen, mandate the framework's **current-generation architecture**
 (e.g. RN's New Architecture — Fabric + TurboModules; Flutter's Impeller renderer)
 — never start a new enterprise project on a legacy/deprecated engine.
+
+## Rule 0A — Feature Module Is the AI Repair Boundary
+
+```text
+APPLICATION
+  └── ROLE CONTAINER
+        └── FEATURE MODULE
+              └── SUB-FEATURE / USE CASE
+```
+
+AI Repair Boundary = FEATURE MODULE
+Role Container = NOT the repair boundary
+
+## Rule 0B — Hard Feature Write Boundary
+
+For a feature-specific task:
+Default writable scope = `[owning-feature]/**`
+
+AI MUST NOT modify:
+- a sibling feature
+- another role's feature
+- another domain's business code
+- global business folders
+
+Only explicitly approved core/infrastructure files may be changed.
+
+CI Mechanical Gate: The CI pipeline MUST include a mechanical diff gate (e.g., a script or tool) that explicitly fails the build if changes leak outside `[owning-feature]/**` without an authorized infrastructure exception. Import linting is insufficient; file modifications themselves must be constrained.
+
+## Rule 0C — Change Scope Failure Condition
+
+If an AI repair attempts to modify business logic in a sibling feature module to fulfill a requirement of the current feature module, the architecture gate FAILS. Feature isolation is absolute.
 
 ## Rule 1 — Micro-Modularization (One Feature = One Self-Contained Folder)
 
@@ -60,6 +91,10 @@ Adapt file extensions to the framework (`*.ts`/`*.tsx` for React Native; `*.dart
 ```
 features/
 └── members/                              ← entire feature lives here
+    ├── screens/                          ← thin composition only
+    │   ├── MembersListScreen.tsx         
+    │   ├── MembersDetailScreen.tsx
+    │   └── MembersAddScreen.tsx
     ├── components/                       (or widgets/ in Flutter)
     │   ├── MembersMemberCard.tsx         ← module-prefixed component
     │   ├── MembersMemberCard.test.tsx    ← co-located test
@@ -182,9 +217,7 @@ features/
 
 ## Rule 3 — Styling & Design Tokens (No Magic Values, Anywhere)
 
-- Every color, spacing value, font size, radius, and shadow used in the app MUST
-  come from the single design-token source defined in `mobile_global_design.md`.
-  No raw hex codes, no arbitrary pixel/dp values typed directly into a component.
+- `mobile_global_design.md` serves as the design specification. However, every color, spacing value, font size, radius, and shadow used in the code MUST come from the executable token contract defined in `mobile_theme_contract.md`. No raw hex codes, no arbitrary pixel/dp values typed directly into a component.
 - Implementation mechanism differs by framework but the discipline is identical:
   - React Native: a central theming module (e.g. NativeWind config, or a plain
     TypeScript theme object) that every component imports from.
@@ -256,9 +289,20 @@ stored data and route it accordingly:
 - ONE central network-client module for the whole app — one HTTP client
   instance, one place where auth headers, tenant headers (`x-tenant-id`), and
   correlation IDs are attached. No feature creates its own separate HTTP client.
-- Every response is normalized into ONE shared `ApiResponse<T>` shape:
-  `{ success, message, data: T | null, meta?, error?, statusCode? }`
-  This matches the backend's canonical envelope exactly (Backend Rule 28).
+- Every response is normalized into ONE canonical 8-field `ApiResponse<T>` shape:
+  ```typescript
+  export interface ApiResponse<T> {
+    success: boolean;
+    message: string;
+    data: T | null;
+    meta?: PaginationMeta;
+    error?: string;
+    errorCode?: string;
+    statusCode?: number;
+    validationErrors?: ValidationErrorItem[];
+  }
+  ```
+  This matches the backend's canonical envelope exactly. There is NO second or partial mobile version.
   Every feature's API layer returns this shape — never raw, un-normalized responses.
 - User-facing error messages come from the backend's `message` field —
   never hardcoded strings duplicated across screens.
@@ -275,21 +319,19 @@ the same verb naming as Backend Rule 86 and Frontend Rule 72 — 1:1 symmetry:
 - `exportMembersReport(params)` — report/export
 
 **Non-CRUD Domain Action Verbs:** For domain actions that are not standard CRUD operations,
-use the **exact backend service verb + entity/action name** as defined by the backend contract
-(Backend Rule 86). This preserves the required Backend ↔ Mobile 1:1 API naming symmetry.
+use the **exact API endpoint operation/contract name** as defined by the external API specification. Mobile architecture MUST remain decoupled from internal backend service method names. If the backend renames an internal service class or method, the mobile API contract should not break.
 
-`	ypescript
-// Domain action verb examples — match the backend's verb exactly:
-renewMembership(memberId, dto)      // POST /members/:id/renew
-suspendMember(memberId, dto)        // POST /members/:id/suspend
-restoreMember(memberId)             // POST /members/:id/restore
-activateMember(memberId)            // POST /members/:id/activate
-assignTrainer(memberId, trainerId)  // POST /members/:id/assign-trainer
-`
+```typescript
+// Domain action verb examples — match the external API contract exactly:
+renewMembership(memberId, dto)      // POST /api/v1/members/:id/renew
+suspendMember(memberId, dto)        // POST /api/v1/members/:id/suspend
+restoreMember(memberId)             // POST /api/v1/members/:id/restore
+activateMember(memberId)            // POST /api/v1/members/:id/activate
+assignTrainer(memberId, trainerId)  // POST /api/v1/members/:id/assign-trainer
+```
 
 AI agents must never invent arbitrary function names like `loadData()`, `getData()`,
-`handleAction()`, or `doMemberThing()`. If the backend service method is `renewMembership`,
-the mobile API function MUST be `renewMembership` — no renaming, no aliasing.
+`handleAction()`, or `doMemberThing()`. The mobile API function MUST strictly mirror the documented endpoint operation intent — no arbitrary aliasing.
 
 ## Rule 7A — Complete API Contract & UI Data Coverage
 
@@ -448,7 +490,7 @@ visually renders with placeholder values.
 
 - Use ONE icon library/family for the entire app — never mix icon sets.
 - Icon sizes and stroke/weight values must reference tokens from
-  `mobile_global_design.md` — never arbitrary numeric values per usage.
+  `mobile_theme_contract.md` — never arbitrary numeric values per usage.
 
 ## Rule 11 — Animations & Gestures
 
@@ -600,10 +642,7 @@ the feature can be broken and PASS at the same time.
 
 ## Rule 19 — CI/CD Pipeline
 
-> Note: as of 2025, hosted all-in-one mobile DevOps platforms bundled with
-> some frameworks' managed toolchains have been retired industry-wide for
-> non-managed projects. The current enterprise-standard approach separates
-> concerns explicitly:
+> Note: The architecture explicitly separates CI/CD concerns to prevent vendor lock-in.
 
 - **CI (every pull request):** format check, static analysis/lint, run the
   full test pyramid (Rule 17), produce an unsigned development build. Must
@@ -611,12 +650,9 @@ the feature can be broken and PASS at the same time.
 - **CD (on release tag / manual approval):** restore signing credentials from
   protected secrets, produce a signed release artifact (Android App
   Bundle / iOS IPA), upload to the store's internal/beta testing track.
-- Use a general-purpose CI orchestrator (GitHub Actions, Azure Pipelines,
-  Bitrise, or Codemagic) paired with a dedicated mobile release-automation
-  tool (fastlane is the current industry standard for both Android and iOS
-  signing + store upload) — do not rely on a single vendor's bundled
-  build+test+distribute+analytics stack; treat each capability (build, test,
-  distribute, monitor) as independently replaceable.
+- Use a general-purpose CI orchestrator paired with a dedicated mobile release-automation
+  tool for signing and store upload. Do not tightly couple to a single vendor's all-in-one
+  stack; treat each capability (build, test, distribute, monitor) as independently replaceable.
 - Production deployment jobs sit behind a protected environment requiring
   manual approval and branch restrictions — no direct, unreviewed path from a
   feature branch to a store release.
@@ -804,15 +840,36 @@ understand the full journey without reading every file.]
 endpoint, request shape, and response type. "TBD" is not acceptable.]
 
 All calls go through the central network client. Response envelope:
-`{ success, message, data: T | null, meta?: PaginationMeta }`
+`{ success, message, data: T | null, meta?: PaginationMeta, error?: string, errorCode?: string, statusCode?: number, validationErrors?: ValidationErrorItem[] }`
 
 | Function | Method | Endpoint | Request | Response data type |
 |---|---|---|---|---|
-| `fetchMembers(params)` | GET | `/manager/members` | `{ page, limit, search, status }` | `Member[]` + PaginationMeta |
-| `fetchMemberById(id)` | GET | `/manager/members/:id` | — | `MemberDetail` |
-| `createMember(dto)` | POST | `/manager/members` | `CreateMemberDto` | `Member` |
-| `updateMember(id, dto)` | PATCH | `/manager/members/:id` | `UpdateMemberDto` | `Member` |
-| `deleteMember(id)` | DELETE | `/manager/members/:id` | — | `null` |
+| `fetchMembers(params)` | GET | `/api/v1/manager/members` | `{ page, limit, search, status }` | `Member[]` + PaginationMeta |
+| `fetchMemberById(id)` | GET | `/api/v1/manager/members/:id` | — | `MemberDetail` |
+| `createMember(dto)` | POST | `/api/v1/manager/members` | `CreateMemberDto` | `Member` |
+| `updateMember(id, dto)` | PATCH | `/api/v1/manager/members/:id` | `UpdateMemberDto` | `Member` |
+| `deleteMember(id)` | DELETE | `/api/v1/manager/members/:id` | — | `null` |
+
+## Approved External Dependencies
+[REQUIRED: Must list all cross-layer and external packages. AI must not import anything outside this list.]
+
+### Feature Business Dependencies
+- None
+
+### Core Infrastructure Dependencies
+- `src/core/network/networkClient.ts`
+- `src/core/navigation/routes.ts`
+- `src/core/utils/formatters.ts`
+
+### Allowed Packages
+- `@tanstack/react-query`
+- `react-hook-form`
+- `zod`
+
+### Forbidden Dependencies
+- Any other feature folder
+- Any role sibling feature
+- Any business logic from `src/core`
 
 ## Permissions Used
 [REQUIRED: "None" is a valid and complete answer if no device permissions are used.]
@@ -837,6 +894,10 @@ is not enough — describe what the skeleton mimics.]
 | Members list | `MembersListSkeleton.tsx` — 5 ghost card rows matching MembersMemberCard height | `MembersEmptyState.tsx` — icon + "No members yet" + "Add Member" CTA | `MembersErrorFallback.tsx` — retry button re-runs the query |
 | Detail screen | Skeleton matching header + 3 tab sections | N/A | Inline retry |
 
+## Background Tasks
+[REQUIRED: Must explicitly list any scheduled jobs, push handlers, or periodic syncs.]
+None
+
 ## Edge Cases and AI Warnings
 [REQUIRED: Minimum 5 items for any feature with CRUD. Must be feature-specific and
 actionable — not generic advice. Format: bold title + explanation.]
@@ -851,7 +912,7 @@ which file to open for any task without reading all files.]
 |---|---|
 | `MembersListScreen.tsx` | Entry screen. Renders toolbar + filter bar + FlatList. No direct API calls. |
 | `MembersMemberCard.tsx` | Single list item. Displays masked phone. Tap navigates to detail screen. |
-| `MembersDetailScreen.tsx` | Full member profile with tabs. Fetches own data via fetchMemberById. |
+| `MembersDetailScreen.tsx` | Full member profile with tabs. Composes useMemberDetail(). Does not call members.api.ts directly. |
 | `MembersEmptyState.tsx` | Empty state shown when list has zero items. Has "Add Member" CTA. |
 | `MembersListSkeleton.tsx` | Loading skeleton — 5 ghost rows matching MembersMemberCard layout. |
 
@@ -884,7 +945,7 @@ which file to open for any task without reading all files.]
 - [ ] Rule 34: Status/type fields use string enums — no magic string literals
 - [ ] Rule 35: All navigation calls use `ROUTES` constants — no hardcoded route strings
 - [ ] Rule 36: Type-only imports use `import type`
-- [ ] Rule 37: Currency/numbers formatted via `formatCurrency()` / `formatNumber()` — no inline `toFixed()`
+- [ ] Rule 37: Currency/numbers formatted via `formatCurrencyFromMinorUnits()` / `formatNumber()` — no inline `toFixed()`
 - [ ] Rule 38: Null/empty fields use `displayValue()` — no blank cells or "N/A" strings
 - [ ] Rule 39: Async-submit buttons have `minWidth` — no layout shift on loading state
 - [ ] Rule 40: All toasts go through `showToast()` — no direct library calls
@@ -904,8 +965,7 @@ which file to open for any task without reading all files.]
 ## Known Issues / Tech Debt
 [REQUIRED: "None" is acceptable. Never leave blank without explicitly stating no known issues.]
 
-| Issue | Reason deferred | Tracking reference |
-|---|---|---|
+None
 ```
 
 ### Documentation Freshness Rule
@@ -920,7 +980,7 @@ future AI agents.
 - Every interactive element exposes an accessible role/label — no exceptions
   for "obviously self-explanatory" icons or buttons.
 - Minimum touch target: 44×44pt (iOS) / 48×48dp (Android) — enforced via the
-  shared minimum-touch-target token in `mobile_global_design.md`, not
+  shared minimum-touch-target token in `mobile_theme_contract.md`, not
   per-component guesses.
 - Respect system font-scaling accessibility settings — never disable dynamic
   text scaling unless a specific pixel-perfect element requires it, and
@@ -984,6 +1044,10 @@ A feature **MUST NEVER** depend on:
 
 `src/core/` is an **infrastructure boundary**, NOT a business-logic sharing layer.
 
+The AI must understand the feature's business behavior from only the feature folder + `_features.md`.
+Any external dependency must be explicitly documented in Approved External Dependencies with its integration contract.
+The AI MUST NOT need unrelated business modules.
+
 If business logic is required by two features, duplicate it inside each feature
 rather than moving it into `src/core/`. This preserves portability without
 artificially duplicating mandatory application infrastructure.
@@ -997,8 +1061,11 @@ code review.
 ## Rule 29 — Forbidden Patterns Per Feature (`_forbidden.md`)
 
 Every feature folder MUST have a `[featureName]_forbidden.md` file listing
-what is explicitly NOT allowed in that specific feature. This is the first file
-an AI agent reads before making any change to a feature.
+what is explicitly NOT allowed in that specific feature.
+The canonical read order for AI agents is:
+1. `_features.md`
+2. `_forbidden.md`
+3. only then source files
 
 ### `_forbidden.md` Content Quality Standard
 
@@ -1024,7 +1091,7 @@ feature with CRUD operations.
 - NEVER store API response data in members.store.ts — the TanStack Query / Riverpod cache is the single source of truth for server data
 - NEVER execute delete/suspend actions on single tap — always show the centralized confirmation bottom sheet first (Rule 31)
 - NEVER add a new dependency without checking approved-dependencies.md first (Rule 22)
-- NEVER hardcode hex colors, dp values, or font sizes — use design tokens from mobile_global_design.md only (Rule 3)
+- NEVER hardcode hex colors, dp values, or font sizes — use design tokens from mobile_theme_contract.md only (Rule 3)
 - NEVER log auth tokens, phone numbers, payment amounts, or full API response bodies — sanitize before any log call (Rule 6)
 - NEVER display raw phone numbers or payment amounts in list/card views — use maskSensitiveData() (Rule 30)
 ```
@@ -1109,7 +1176,7 @@ inline — always import from this central hook.
 
 ## Workflow Checklist — What to Verify After AI Writes Code
 
-1. Read the feature's `_features.md` and `_forbidden.md` before giving the AI any files.
+1. Read the feature's `_features.md` and then `_forbidden.md` before giving the AI any files.
 2. Identify the exact layer (UI? Hook? API? Schema? State?) and pass only those files.
 3. After the AI writes code, verify:
    - All styles use design tokens — no raw hex/dp values? (Rule 3)
@@ -1185,20 +1252,19 @@ Define enums in the feature's `*.types.ts` file:
 if (member.status === 'active') { ... }
 if (member.status === 'suspended') { ... }
 
-// ✅ GOOD — enum-driven, refactor-safe
+// ✅ GOOD — enum-driven, refactor-safe, matches backend SCREAMING_SNAKE_CASE exactly
 export enum MemberStatus {
-  Active    = 'active',
-  Suspended = 'suspended',
-  Expired   = 'expired',
-  Pending   = 'pending',
+  ACTIVE    = 'ACTIVE',
+  SUSPENDED = 'SUSPENDED',
+  EXPIRED   = 'EXPIRED',
+  PENDING   = 'PENDING',
 }
 
-if (member.status === MemberStatus.Active) { ... }
+if (member.status === MemberStatus.ACTIVE) { ... }
 ```
 
 Rules:
-- Enum values MUST match the backend's string values exactly — verified against
-  the backend's enum definition (Backend Rule 95).
+- Enum values MUST exactly match backend API wire values (typically `SCREAMING_SNAKE_CASE`) — verified against the backend's enum definition (Backend Rule 95). If the backend contract changes, mobile type/schema/tests must update in the same change.
 - Never use numeric enums for API-bound fields — string enums survive serialization.
 - Filter dropdowns, badge colors, and conditional rendering all branch on the enum,
   never on a raw string.
@@ -1252,18 +1318,21 @@ constants are a `core/` primitive, not a feature file).
 
 ---
 
-## Rule 36 — `import type` Mandate for Type-Only Imports
+## Rule 36A — React Native / TypeScript: `import type` Mandate
 
 Any import that brings in ONLY a TypeScript type, interface, or enum (no runtime
-value) MUST use `import type`. This is enforced by ESLint (`@typescript-eslint/
-consistent-type-imports`).
+value) MUST use `import type`. This is enforced by ESLint (`@typescript-eslint/consistent-type-imports`).
+
+## Rule 36B — Flutter / Dart
+
+Follow Dart's explicit import/export rules; no TypeScript `import type` rule applies.
 
 ```typescript
 // ❌ BAD — runtime import for a type-only symbol
-import { MemberStatus } from '../types/members.types';
+import { Member } from '../types/members.types';
 
 // ✅ GOOD — erased at compile time, zero bundle impact
-import type { MemberStatus } from '../types/members.types';
+import type { Member } from '../types/members.types';
 ```
 
 Why it matters on mobile: Metro bundler (React Native) and the Dart AOT compiler
@@ -1282,18 +1351,24 @@ Cross-reference: Frontend Rule 36 (same mandate on web).
 ## Rule 37 — Currency and Number Formatting Utility (Mobile Equivalent of Frontend Rule 80)
 
 All monetary amounts, percentages, and large numbers displayed in the UI MUST be
-formatted through ONE central utility. No component may call `toFixed()`,
-`toLocaleString()`, or construct a currency string inline.
+formatted through ONE central utility. No UI component may call `toFixed()` / `toLocaleString()` directly. Central formatter utilities may use them internally where appropriate.
 
 Define in `src/core/utils/formatters.ts`:
 
 ```typescript
 // src/core/utils/formatters.ts
-export function formatCurrency(
-  amount: number | null | undefined,
+/**
+ * API monetary values = minor units (e.g., paise, cents)
+ * UI formatter converts minor units → display amount
+ */
+export function formatCurrencyFromMinorUnits(
+  amountMinor: number | null | undefined,
   currency = 'INR',
 ): string {
-  if (amount == null || isNaN(amount)) return '—';
+  if (amountMinor == null || isNaN(amountMinor)) return '—';
+  const factors: Record<string, number> = { INR: 100, USD: 100, JPY: 1 };
+  const factor = factors[currency] || 100;
+  const amount = amountMinor / factor;
   return new Intl.NumberFormat('en-IN', {
     style: 'currency',
     currency,
@@ -1317,7 +1392,7 @@ export function formatPercent(value: number | null | undefined): string {
 <Text>₹{member.fee.toFixed(2)}</Text>
 
 // ✅ GOOD — central utility
-<Text>{formatCurrency(member.fee)}</Text>
+<Text>{formatCurrencyFromMinorUnits(member.fee)}</Text>
 ```
 
 Note: `Intl.NumberFormat` is available in Hermes (React Native ≥ 0.70) and Dart's
@@ -1433,14 +1508,16 @@ export function toastKey(
 export function showToast(
   message: string,
   type: 'success' | 'error' | 'info' = 'info',
-  dedupKey?: string,   // pass toastKey(...) for semantic dedup; omit for message-hash fallback
+  dedupKey?: string,   // semantic dedup key mandatory for actionable toasts
 ) {
-  const key = dedupKey ?? message;
+  // Use semantic key if provided, else generate a deterministic string hash fallback
+  const key = dedupKey ?? String(message.split('').reduce((a, b) => { a = ((a << 5) - a) + b.charCodeAt(0); return a & a }, 0));
   if (activeToasts.has(key)) return;
   activeToasts.add(key);
   // call your toast library here (e.g. react-native-toast-message)
-  Toast.show({ type, text1: message });
-  setTimeout(() => activeToasts.delete(key), 3000);
+  const timeoutDuration = type === 'error' ? 5000 : 3000;
+  Toast.show({ type, text1: message, visibilityTime: timeoutDuration });
+  setTimeout(() => activeToasts.delete(key), timeoutDuration);
 }
 ```
 
@@ -1579,7 +1656,7 @@ Minimum JSDoc fields for hooks: `@param`, `@returns`, cache key (if server state
 and any non-obvious side effects or constraints.
 
 Minimum JSDoc fields for utilities: `@param`, `@returns`, and one example if the
-output format is non-obvious (e.g. `formatCurrency(1500) → "₹1,500.00"`).
+output format is non-obvious (e.g. `formatCurrencyFromMinorUnits(150000) → "₹1,500.00"`).
 
 Cross-reference: Rule 24 (documentation quality standard), Rule 43 applies at the
 function level what Rule 24 applies at the feature level.
@@ -1589,7 +1666,7 @@ function level what Rule 24 applies at the feature level.
 ## Rule 44 — `RESPONSIBILITY:` + `FLOW:` Comment Mandate on Every File
 
 Every file in a feature folder (component, hook, API, store, schema) MUST begin
-with a two-line structured comment block immediately after imports:
+with a two-line structured comment block at the very top of the file (before any imports):
 
 ```typescript
 // RESPONSIBILITY: Renders a single member card in the list. Displays masked phone,
@@ -1619,7 +1696,7 @@ import React from 'react';
 //   manage UI state (filter panel open/close lives in useMembersFilters.ts).
 //
 // FLOW: MembersListScreen → useMembers(params) → members.api.ts → fetchMembers()
-//   → GET /manager/members → ApiResponse<Member[]> + PaginationMeta
+//   → GET /api/v1/manager/members → ApiResponse<Member[]> + PaginationMeta
 import { useQuery } from '@tanstack/react-query';
 ...
 ```
@@ -1642,7 +1719,7 @@ export type NetworkState<T> =
   | { status: 'idle' }
   | { status: 'loading' }
   | { status: 'success'; data: T }
-  | { status: 'error';   error: string };
+  | { status: 'error';   error: { message: string; code?: string; validationErrors?: ValidationErrorItem[] } };
 ```
 
 ```typescript
@@ -1658,7 +1735,7 @@ switch (state.status) {
   case 'idle':    return <MembersEmptyState />;
   case 'loading': return <MembersListSkeleton />;
   case 'success': return <MembersList data={state.data} />;
-  case 'error':   return <MembersErrorFallback message={state.error} />;
+  case 'error':   return <MembersErrorFallback message={state.error.message} />;
 }
 ```
 
@@ -1696,14 +1773,14 @@ Rules:
 - Any task that can run while the app is in the background (not just foregrounded)
   must be noted explicitly — these have different lifecycle constraints on iOS vs Android.
 
-Cross-reference: Backend Rule 97 (scheduled job registry), Rule 7 (API layer),
+Cross-reference: Backend Rule 96 (scheduled job registry), Rule 7 (API layer),
 Rule 6 (secure storage), Rule 24 (_features.md documentation).
 
 ---
 
 ## Rule 47 — API Call Timeout Policy
 
-Every API call MUST have an explicit timeout. Silent hangs on mobile are worse
+Every API request MUST execute with a timeout defined by `TIMEOUT_CONFIG`. The default timeout is inherited automatically unless a category-specific override applies. Silent hangs on mobile are worse
 than on web — the user has no browser loading indicator and no way to cancel.
 
 Define once in `src/core/network/networkClient.ts`:
@@ -1724,10 +1801,10 @@ const client = axios.create({ timeout: TIMEOUT_CONFIG.DEFAULT });
 
 ```typescript
 // ❌ BAD — no timeout; hangs indefinitely on poor mobile networks
-const response = await axios.get('/manager/members');
+const response = await axios.get('/api/v1/manager/members');
 
 // ✅ GOOD — explicit timeout per call category
-const response = await client.get('/manager/members');                          // inherits DEFAULT
+const response = await client.get('/api/v1/manager/members');                          // inherits DEFAULT
 const response = await client.post('/reports/export', dto,
   { timeout: TIMEOUT_CONFIG.REPORT });                                          // explicit override
 ```
@@ -1735,18 +1812,18 @@ const response = await client.post('/reports/export', dto,
 On timeout: surface `showToast('Request timed out. Please try again.', 'error')`
 (Rule 40) — never a blank screen or silent failure.
 
-Cross-reference: Backend Rule 98 (server-side timeout policy), Rule 7 (API layer),
+Cross-reference: Backend Rule 97 (server-side timeout policy), Rule 7 (API layer),
 Rule 40 (toast utility).
 
 ---
 
-## Rule 48 — Structured Validation Error Handling Shape (Mobile Equivalent of Backend Rule 99)
+## Rule 48 — Structured Validation Error Handling Shape (Mobile Equivalent of Backend Rule 98)
 
 When the backend returns a 422 validation error, the response MUST be parsed into
 a structured shape and mapped to individual form fields — never displayed as a
 raw string dump.
 
-The backend's canonical validation error envelope (Backend Rule 99):
+The backend's canonical validation error envelope (Backend Rule 98):
 
 ```typescript
 // Shape returned by backend on 422
@@ -1792,7 +1869,7 @@ const onSubmit = async (dto: CreateMemberDto) => {
 };
 ```
 
-Cross-reference: Backend Rule 99, Rule 5 (forms), Rule 40 (toast for non-field errors).
+Cross-reference: Backend Rule 98, Rule 5 (forms), Rule 40 (toast for non-field errors).
 
 ---
 
@@ -1837,7 +1914,7 @@ paginated lists always have entity IDs).
 
 ---
 
-## Rule 50 — Copy-to-Clipboard for Sensitive IDs
+## Rule 50 — Copy-to-Clipboard for Permitted Record Identifiers
 
 Any screen displaying a record ID, transaction reference, invoice number, or
 other identifier that a user may need to share or reference MUST provide a
@@ -1893,8 +1970,8 @@ Every empty-state component MUST include:
 3. A primary CTA where applicable (e.g. "Add Member" button for an empty
    unfiltered list; "Clear Filters" for an empty filtered list).
 
-Naming convention: `[Feature][Entity]EmptyState.tsx` — e.g.
-`MembersMemberEmptyState.tsx`, `AttendanceSessionEmptyState.tsx`.
+Naming convention: `[Feature]EmptyState.tsx` or `[Feature][Entity]EmptyState.tsx` — e.g.
+`MembersEmptyState.tsx`, `AttendanceEmptyState.tsx`.
 
 The empty-state component is listed in the feature's `_features.md` under
 "Loading, Empty, and Error States" (Rule 24 template).
@@ -1963,12 +2040,60 @@ Cross-reference: Rule 3 (design tokens), Rule 10 (icon tokens), Rule 25
 
 ---
 
+## Rule 53 — Idempotency-Key for Irreversible Mutations
+
+Any financial or irreversible mutation (payment, renewal, payroll, purchase) MUST generate an `Idempotency-Key` exactly once per user intent.
+
+Rules:
+- Generate the UUID when the user confirms the action (e.g., in the confirmation bottom sheet).
+- Attach it to the HTTP request headers as `Idempotency-Key`.
+- If the network request times out or fails (5xx), and the client automatically or manually retries, it MUST send the exact same `Idempotency-Key`.
+- Never generate a new key for a retry of the same intent.
+
+---
+
+## Rule 54 — Single-Flight Token Refresh
+
+401 Unauthorized token-refresh operations MUST be "single-flight". If 10 concurrent API requests fail with 401, they must not trigger 10 simultaneous refresh calls.
+
+Rules:
+- Only one refresh operation may be active at a time.
+- Concurrent 401 requests must await the same shared refresh promise.
+- After the refresh succeeds, the queued requests retry exactly once with the new token.
+- If the refresh fails, clear the session and force a single logout operation.
+
+---
+
+## Rule 55 — Trusted Tenant Context for `x-tenant-id`
+
+A feature module MUST NOT freely choose, guess, or derive the `x-tenant-id` header from untrusted local state or route parameters.
+
+Rules:
+- The `x-tenant-id` comes ONLY from the authenticated, trusted tenant context (e.g., the global session state set upon secure login or authorized tenant switch).
+- The central network client automatically attaches this header to all outgoing requests.
+- Feature modules never manually pass a tenant ID to API endpoints unless explicitly acting as a global administrator switching tenants.
+
+---
+
+## Rule 56 — Enterprise Security & Robustness
+
+The mobile architecture MUST enforce the following security and robustness constraints globally:
+
+- **Offline Cache Security**: Any persisted server state containing sensitive PII MUST use encrypted storage or explicitly exclude the data from OS-level backups.
+- **Network Retry Policy**: Failed requests (timeout/5xx) must use exponential backoff with jitter. Financial or destructive mutations MUST NOT blind auto-retry; they require explicit user confirmation.
+- **Request Cancellation**: All data-fetching hooks and screen navigations must wire an AbortSignal. Navigating away from a loading screen (e.g., search, detail, or upload) MUST cancel the stale request.
+- **Deep-Link Authorization**: Matching a route is not enough. Deep-link resolution MUST re-evaluate auth status, role, tenant, and resource authorization before rendering the target screen.
+- **Notification Payload Validation**: Treat all push notification payloads as untrusted user input. Validate the payload against a schema before triggering any navigation or side effects.
+- **Clipboard Policy**: Sensitive IDs, credentials, reset tokens, OTPs, and full Aadhaar/bank identifiers MUST be excluded from copy-to-clipboard functionality.
+
+---
+
 ## Updated Workflow Checklist — What to Verify After AI Writes Code
 
 > Replaces the original checklist at the end of Rule 32. All prior items retained;
 > new items for Rules 33–52 appended.
 
-1. Read the feature's `_features.md` and `_forbidden.md` before giving the AI any files.
+1. Read the feature's `_features.md` and then `_forbidden.md` before giving the AI any files.
 2. Identify the exact layer (UI? Hook? API? Schema? State?) and pass only those files.
 3. After the AI writes code, verify:
    - All styles use design tokens — no raw hex/dp values? (Rule 3)
@@ -1993,7 +2118,7 @@ Cross-reference: Rule 3 (design tokens), Rule 10 (icon tokens), Rule 25
    - Status/type fields use enums — no magic strings? (Rule 34)
    - Navigation calls use `ROUTES` constants — no hardcoded strings? (Rule 35)
    - Type-only imports use `import type`? (Rule 36)
-   - Currency/numbers formatted via `formatCurrency()` / `formatNumber()`? (Rule 37)
+   - Currency/numbers formatted via `formatCurrencyFromMinorUnits()` / `formatNumber()`? (Rule 37)
    - Null/empty fields render `displayValue()` en-dash fallback? (Rule 38)
    - Async buttons have `minWidth` — no layout shift on loading? (Rule 39)
    - Toasts go through `showToast()` — no direct library calls? (Rule 40)
@@ -2009,5 +2134,9 @@ Cross-reference: Rule 3 (design tokens), Rule 10 (icon tokens), Rule 25
    - Sensitive IDs have copy-to-clipboard affordance? (Rule 50)
    - Every list screen has a dedicated `EmptyState` component? (Rule 51)
    - New tokens added to `mobile_theme_contract.md` before implementation? (Rule 52)
-4. Run CI gates: lint (`eslint-plugin-boundaries`, `consistent-type-imports`), type check, test pyramid, SCA scan, secrets scan.
+   - Irreversible mutations use stable Idempotency-Keys on retry? (Rule 53)
+   - Token refresh is single-flight? (Rule 54)
+   - x-tenant-id derived from secure context only? (Rule 55)
+   - Enterprise security constraints respected? (Rule 56)
+4. Run CI gates: lint (`eslint-plugin-boundaries`, `consistent-type-imports`), type check, test pyramid, SCA scan, secrets scan, hard-write-boundary diff check.
 5. For auth, payment, storage, or tenant-routing changes: ensure CODEOWNERS human review.
