@@ -1,7 +1,13 @@
 # Mobile Global Design System — Framework-Agnostic Token Source
 
-> This is the single source of truth for every visual value used in the app.
-> Implementation module differs by framework (a theme object/config for React
+> This file is the **canonical visual values source** — it defines what every
+> token is worth in light and dark mode. `mobile_theme_contract.md` is the
+> **AI-readable catalogue** derived from this file; it lists every token name,
+> value, and usage context in one scannable table. The two-layer hierarchy is:
+> `mobile_global_design.md` (values specification) →
+> `mobile_theme_contract.md` (executable AI reference) →
+> Framework theme module → Feature UI.
+> Implementation differs by framework (a theme object/config for React
 > Native, a `ThemeData`/`ColorScheme` extension for Flutter) — but the VALUES
 > below and the "no magic values anywhere" discipline are universal.
 

@@ -952,7 +952,7 @@ without reading every component file. Example:]
 HTTP method, endpoint, request shape, and response type. "List all endpoint builders"
 is not acceptable — actually list them.]
 
-All calls go through `apiFetch` at `@/lib/api`. Response envelope: `{ success: boolean, message: string, data: T | null, meta?: PaginationMeta, error?: string, statusCode?: number }`
+All calls go through `apiFetch` at `@/lib/api`. Response envelope: `{ success: boolean, message: string, data: T | null, meta?: PaginationMeta, error?: string, errorCode?: string, statusCode?: number, validationErrors?: ValidationErrorItem[] }`
 
 | Function | Method | Endpoint | Request | Response `data` type |
 |---|---|---|---|---|
@@ -1076,7 +1076,7 @@ actually implemented. An honest [ ] is better than a false [x].]
 - [ ] Rule 76: CODEOWNERS covers security-critical paths
 - [ ] Rule 78: En-dash fallback — `displayValue()` used for all nullable fields in tables and profiles
 - [ ] Rule 79: Unsaved changes guard — `useUnsavedChangesGuard(isDirty)` on all complex forms and wizards
-- [ ] Rule 80: Currency/number formatting — `formatCurrency()` and `formatNumber()` used, no raw `.toFixed()` in JSX
+- [ ] Rule 80: Currency/number formatting - `formatCurrencyFromMinorUnits()` used for all monetary values (minor-unit input), `formatNumber()` used for counts, no raw `.toFixed()` in JSX
 - [ ] Rule 81: Button loading width stability — no layout shift on loading state, `min-w` or text+spinner pattern used
 - [ ] Rule 82: Toast deduplication — all `toast()` calls pass a stable `id`, no stacking identical toasts
 - [ ] Design §3: Sidebar active = subtle gold border + bg (NOT solid primary)
@@ -1431,8 +1431,8 @@ Every custom hook and utility function must have a co-located test file (`use[X]
 46. **Unsaved Changes Warning**:
 Any modified form/modal must intercept `beforeunload` to warn the user: "You have unsaved changes."
 
-47. **Copy-to-Clipboard on Sensitive IDs**:
-Any field displaying a unique ID/tracking code must have a small copy icon next to it.
+47. **Copy-to-Clipboard on Permitted Identifiers**:
+Any field displaying a unique, non-sensitive identifier or tracking code may have a small copy icon next to it. **Forbidden from copying:** credentials, OTPs, reset tokens, full Aadhaar/national ID numbers, full bank account numbers, full card numbers, and any other explicitly sensitive secret. These fields must never expose a copy affordance.
 
 48. **Consistent Empty State per Entity**:
 Every list/table MUST have a dedicated empty state component (`[Module]EmptyState.tsx`) with an icon and message. Include a CTA when a meaningful user action can resolve the empty state; otherwise the empty state may be informational/read-only.
@@ -1483,7 +1483,35 @@ Example:
 
 59. **Standardized `ApiResponse<T>` Generic (The API Contract)**:
 Every API call must be typed using a global `ApiResponse<T>` generic interface that perfectly matches the backend response envelope (Backend Rule 28). Both Success and Error responses must share this exact canonical shape:
-`{ success: boolean, message: string, data: T | null, meta?: PaginationMeta, error?: string, statusCode?: number }`
+
+```typescript
+export interface ApiResponse<T> {
+  success: boolean;                         // true on 2xx, false on all errors
+  message: string;                          // human-readable, always present
+  data: T | null;                           // response payload OR null on error
+  meta?: PaginationMeta;                    // present only on paginated list responses
+  error?: string;                           // error name / category (e.g. "NOT_FOUND")
+  errorCode?: string;                       // machine-readable DOMAIN.ENTITY.REASON code
+  statusCode?: number;                      // HTTP status code, present on error responses
+  validationErrors?: ValidationErrorItem[]; // present ONLY on 400 validation failures
+}
+
+export interface ValidationErrorItem {
+  field: string;    // exact DTO property name, dot-notation for nested fields
+  message: string;  // human-readable error from class-validator
+}
+
+export interface PaginationMeta {
+  total: number;       // total records matching the query
+  page: number;        // current page (1-based)
+  limit: number;       // records per page
+  totalPages: number;  // Math.ceil(total / limit)
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+}
+```
+
+This interface is the single source of truth for all API response parsing across the application. Never define a partial or alternative shape.
 
 60. **No Direct `router.push('/login')` in Components**:
 Handle unauthenticated redirects centrally in `middleware.ts` or an API interceptor.
@@ -1648,7 +1676,7 @@ AI agents frequently install redundant packages. **An AI cannot add a new depend
   - `src/components/ui/` — dumb reusable UI primitives
   - `src/lib/api.ts` — canonical network/API infrastructure
   - `src/lib/logger.ts` — centralized logging infrastructure
-  - `src/lib/formatters.ts` — canonical formatting infrastructure (`formatCurrency`, `formatNumber`, `displayValue`, `maskSensitiveData`)
+  - `src/lib/formatters.ts` — canonical formatting infrastructure (`formatCurrencyFromMinorUnits`, `formatNumber`, `displayValue`, `maskSensitiveData`)
   - authentication/session infrastructure
   - approved configuration and observability infrastructure
 - `src/lib/` MUST NOT become a generic business-logic dumping ground. Feature-specific business logic MUST remain inside the owning feature/module.
@@ -1694,8 +1722,7 @@ Every function defined inside a module's `[moduleName]_api.ts` file MUST follow 
 - `update[Entity](id, dto)` — For PATCH/PUT updates (e.g., `updateMember(id, dto)`)
 - `delete[Entity](id)` — For DELETE (e.g., `deleteMember(id)`)
 - `export[Entity]Report(params)` — For report/export generation
-- For non-CRUD domain actions, use an explicit verb + entity/action name that exactly mirrors the backend service method (e.g., `renew[Entity]`, `suspend[Entity]`, `restore[Entity]`, `activate[Entity]`, `assign[Entity]`).
-- This naming MUST exactly mirror Backend Rule 86's method naming table. When a backend AI agent writes `createMember()` on the service, the frontend AI agent must write `createMember()` in the API client — **1:1 verb symmetry, zero ambiguity**.
+- For non-CRUD domain actions, use the exact operation name from the **external API contract** (e.g., `renew[Entity]`, `suspend[Entity]`, `restore[Entity]`, `activate[Entity]`, `assign[Entity]`). Do NOT couple frontend API client names to backend internal service method names. If the backend renames an internal service class or method, the frontend API contract must not break.
 
 73. **`import type` Mandate for Type-Only Imports**:
 Whenever importing a TypeScript type, interface, or enum that is used purely for type-checking (not as a runtime value), you MUST use the `import type` syntax. Never use a regular `import` for type-only constructs.
@@ -2150,12 +2177,13 @@ Any complex form or multi-step wizard MUST implement a "Dirty State Guard" to pr
 
 80. **Currency & Number Formatting Standardization**:
 Never manually concatenate currency symbols, format numbers with raw `.toFixed()`, or build locale strings directly inside JSX or component logic. All financial values and large numeric metrics MUST be piped through a centralized formatting utility.
-- **Required utility:** Define `formatCurrency(value: number, currencyCode?: string): string` and `formatNumber(value: number): string` in `src/lib/formatters.ts`. This is the single source of truth for all numeric display formatting across the entire application.
+- **Minor-unit contract:** API monetary values are stored as minor units (paise, cents). Use `formatCurrencyFromMinorUnits(value, currencyCode)` which divides by 100 before formatting. Never pass a raw API minor-unit value to a display formatter that expects major units — this causes a 100× display error.
+- **Required utilities:** Define `formatCurrencyFromMinorUnits(amountMinor: number, currencyCode?: string): string` and `formatNumber(value: number): string` in `src/lib/formatters.ts`. This is the single source of truth for all numeric display formatting across the entire application.
 - **Locale consistency:** The utility must use the `Intl.NumberFormat` API to ensure consistent comma separators, decimal places, and currency symbol placement based on the app's configured locale — never hardcoded.
 - **Decimal precision:** Financial values MUST use the centralized currency formatter. Default precision is 2 decimals unless the product/UI contract explicitly specifies another precision. Metric counts (e.g., total members) must display with comma separators but no decimals.
 - **This rule is the numeric parallel to Rule 24** (which standardizes date/time formatting via `date-fns`/`dayjs`). Just as Rule 24 forbids raw `new Date()` in JSX, this rule forbids raw number concatenation.
-- ❌ **BAD:** `<td>₹{payment.amount.toFixed(2)}</td>`
-- ✅ **GOOD:** `<td>{formatCurrency(payment.amount, 'INR')}</td>`
+- ❌ **BAD:** `<td>₹{payment.amount.toFixed(2)}</td>` — `payment.amount` is in paise; this displays 100× too large.
+- ✅ **GOOD:** `<td>{formatCurrencyFromMinorUnits(payment.amount, 'INR')}</td>`
 - **ESLint enforcement:** Add a custom ESLint rule or `no-restricted-syntax` pattern to flag direct `.toFixed()` calls and currency symbol string concatenation in `.tsx` files.
 
 81. **Button Loading Width Stability (No Layout Shifts)**:
@@ -2184,6 +2212,17 @@ Global toast notifications MUST be deduplicated. If a specific toast (identified
 - **ESLint note:** All raw `toast()` calls outside of `src/lib/api.ts` or the approved toast utility wrapper should be flagged for review to ensure the `id` field is always passed.
 
 
+
+83. **Idempotency-Key for Financial and Irreversible Mutations (Web Equivalent of Mobile Rule 53)**:
+Any mutation that is financial, irreversible, or non-duplicable (payment recording, invoice creation, payroll processing, membership renewal) MUST attach an `Idempotency-Key` header to the HTTP request.
+- **Key generation:** Generate a UUID exactly once per user intent — at the moment the user confirms the action (e.g., inside the `useConfirm()` handler, not at the `onClick` of the trigger button).
+- **Retry behavior:** If the request times out or returns a 5xx response and the user or the app retries, it MUST send the **exact same** `Idempotency-Key`. Never generate a fresh key for a retry of the same intent.
+- **Key scope:** One key per user-initiated action. If the user cancels and re-opens the confirmation dialog, a new key is generated.
+- **Implementation:** Add the key in `apiFetch` via an optional `idempotencyKey` parameter, or accept it as a per-request header override in the module's API client.
+- ❌ **BAD:** Generating `crypto.randomUUID()` on every retry attempt — the backend may process the request twice, creating duplicate payments.
+- ✅ **GOOD:** Generate the key in the confirm handler, store it in a `useRef`, and reuse it on all retries until the mutation succeeds or is explicitly abandoned.
+
+Cross-reference: Backend Rule 31 (idempotency contract), Mobile Rule 53 (same requirement on mobile).
 
 ---
 Think step-by-step. Create a detailed implementation plan first so I can review it, and then execute it perfectly without breaking existing data flows!

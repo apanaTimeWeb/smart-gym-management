@@ -43,6 +43,8 @@ A feature repair FAILS the architecture gate when the AI:
 * moves feature business logic into a domain-level folder;
 * modifies another feature's database queries or mock handlers.
 
+**Clarification — Event-Based Runtime Dependencies:** A direct business-code import from a sibling feature is forbidden and fails this gate. A declared, runtime event-based dependency (Rule 49) is explicitly permitted — emitting or consuming a named event from `event-registry.constants.ts` is NOT a sibling-feature code dependency. The distinction is: direct business-code dependency is forbidden; declared event-based runtime dependency is allowed.
+
 ---
 
 ## 1. Micro-Modularization & Feature-Sliced Logic (Crucial)
@@ -105,7 +107,7 @@ Extract complex queries into a dedicated Repository or Query file (e.g., `member
 ### Edge Case A: Cross-Module Dependencies (Tight Coupling)
 *Scenario:* The `MemberRegistrationService` needs to trigger the `FinanceService` to generate an invoice, and the `EmailService` to send a welcome email. If they are tightly coupled, the AI will need all three files to understand the flow.
 *Solution:* **Event-Driven Architecture (Pub/Sub).**
-The `MemberRegistrationService` should only save the user and emit an event: `EventBus.emit('MEMBER_REGISTERED', user)`. The Finance and Email modules listen to this event independently. Now, the modules are 100% decoupled.
+The `MemberRegistrationService` should only save the user and emit an event: `EventBus.emit('MEMBERS.MEMBER.REGISTERED', user)`. The Finance and Email modules listen to this event independently. Now, the modules are 100% decoupled.
 
 ### Edge Case B: Database Transactions (All-or-Nothing Operations)
 *Scenario:* You split your logic into `BillingService` and `MembershipService`. But creating a member and charging their card MUST happen in the same database transaction.
@@ -361,6 +363,33 @@ the exact consequence of violating it — not just "be careful".]
 - [Concurrency risk]: [Race condition scenario] — requires pessimistic lock (Rule 41)
 - [Transaction boundary]: [What must be atomic and why] — see Rule 8B
 
+## Frozen API Contract
+[REQUIRED at API Contract Freeze (Rule 67). Copy the exact frozen contract from the frontend
+`_features.md`. Backend AI reads THIS section instead of needing the frontend folder.]
+
+### Request Shape
+| Endpoint | Method | Request DTO fields |
+|---|---|---|
+| [e.g. POST /billing/wallet/topup] | POST | [e.g. memberId: string, amountMinor: number] |
+
+### Response Shape
+| Endpoint | Response DTO fields | Notes |
+|---|---|---|
+| [e.g. POST /billing/wallet/topup] | [e.g. walletId, newBalanceMinor, processedAt] | [any computed/joined fields] |
+
+### UI-Required Fields
+[REQUIRED: List every field consumed by the frontend UI — table columns, KPIs, charts, badges,
+filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
+- Table: [field list]
+- KPI cards: [field list]
+- Charts: [series names and their data fields]
+- Status badges: [field list]
+
+### Pagination / Error Contract
+- Pagination: [paginated? yes/no — if yes, include PaginationMeta]
+- Validation errors: statusCode 400, errorCode `VALIDATION.DTO.FAILED`, validationErrors array
+- Business errors: errorCode `DOMAIN.ENTITY.REASON` format
+
 ## Rule Compliance Checklist
 - [ ] Rule 7: Approved project ORM used for all DB access (no raw SQL outside parameterized/prepared queries)
 - [ ] Rule 19: This file updated in same commit as any code change (Freshness Rule)
@@ -379,7 +408,8 @@ the exact consequence of violating it — not just "be careful".]
 - [ ] Rule 80: JSDoc on all service methods, repositories, and utilities
 - [ ] Rule 83: RBAC enforced at controller layer via @Roles() — never inline in services
 - [ ] Rule 85: Guard clauses used — no nested if/else beyond 2 levels
-- [ ] Rule 82A: Response DTO satisfies complete frontend UI Data Requirements — no missing table columns, KPI fields, chart series, or relationship fields
+- [ ] Rule 82A: Response DTO satisfies complete frontend UI Data Requirements from the Frozen API Contract section in this `_backend_feature.md` — no missing table columns, KPI fields, chart series, or relationship fields
+- [ ] Rule 82A-SYNC: Frozen API Contract section in this file is up-to-date with frontend `_features.md` API contract
 - [ ] Rule 86: Verb contract naming applied (createX, findXById, findXByIdOrThrow)
 - [ ] Rule 87: Every service method ≤ 20 lines, single responsibility
 - [ ] Rule 89: Domain objects used in services — ORM entities stay in repository layer
@@ -462,7 +492,7 @@ the exact consequence of violating it — not just "be careful".]
   | `data` | Present with payload | `null` | `null` |
   | `meta` | Present if paginated | Absent | Absent |
   | `error` | Absent | Present | `"VALIDATION_ERROR"` |
-  | `errorCode` | Absent | Present where applicable | Absent |
+  | `errorCode` | Absent | Present where applicable | `"VALIDATION.DTO.FAILED"` |
   | `statusCode` | Absent | Present | Present (`400`) |
   | `validationErrors` | Absent | Absent | Present (array of field errors) |
 
@@ -644,7 +674,7 @@ the exact consequence of violating it — not just "be careful".]
 * **Event Dependency Rule:** Event publication/subscription is a runtime dependency. Every published/consumed event MUST be explicitly listed in `[module]_dependencies.md`. Undeclared event subscriptions are forbidden. Event payload contracts must be strictly validated at the consumer boundary.
 
 ## 50. Standardized Event Naming Convention
-* **The Rule:** Event names MUST follow `DOMAIN.ENTITY.ACTION` in SCREAMING_SNAKE_CASE (e.g., `BILLING.PAYMENT.FAILED`) and be registered in a centralized `event-registry.constants.ts`.
+* **The Rule:** Event names MUST follow `DOMAIN.ENTITY.ACTION` in SCREAMING_SNAKE_CASE (e.g., `BILLING.PAYMENT.FAILED`, `MEMBERS.MEMBER.REGISTERED`, `ATTENDANCE.SESSION.CLOSED`) and be registered in a centralized `event-registry.constants.ts`. Two-part forms like `MEMBER_REGISTERED` or `MEMBER.REGISTERED` are non-compliant.
 
 ## 51. API Changelog & Deprecation Policy
 * **The Rule:** When an endpoint changes destructively, do not delete it immediately. Return a `Deprecation` header with a sunset date, track it in `CHANGELOG.md`, and maintain it for the deprecation window.
@@ -675,7 +705,7 @@ the exact consequence of violating it — not just "be careful".]
 * **The Rule:** Every endpoint must declare its SLA category in a comment (`// SLA: FAST`). FAST (< 200ms), STANDARD (< 500ms), HEAVY (> 500ms). Heavy tasks must be moved to background jobs (Rule 23). Enforce via monitoring middleware.
 
 ## 60. Strict Foreign Key Naming Convention
-* **The Rule:** Database columns must use `snake_case` (e.g., `member_id`). TypeScript model/entity properties must use `camelCase` (e.g., `memberId`). Explicitly map them in the ORM model definition (e.g., Prisma `@map("member_id")`, TypeORM `@Column({ name: 'member_id' })`). Foreign key constraints must follow `FK_[table]_[referenced_table]`.
+* **The Rule:** Database columns must use `snake_case` (e.g., `member_id`). TypeScript model/entity properties must use `camelCase` (e.g., `memberId`). Explicitly map them in the ORM model definition (e.g., Prisma `@map("member_id")`, TypeORM `@Column({ name: 'member_id' })`). Foreign key constraints MUST follow the canonical 3-part form `FK_[table]_[referenced_table]_[column]` (e.g., `FK_subscriptions_members_member_id`). This is the same pattern as Rule 100 — the 2-part form `FK_[table]_[referenced_table]` is deprecated and non-compliant.
 
 ## 61. Dead Letter Queue (DLQ) for Failed Background Jobs
 * **The Rule:** Every background job queue (BullMQ/Celery) MUST have a configured Dead Letter Queue. If a job fails all retries, it must be moved to the DLQ (not discarded) so admins can manually inspect and retry it.
@@ -889,11 +919,20 @@ Backend implementation (services, repositories, DB queries)
 ## 82A. Frontend UI Data Contract Completeness
 * **The Rule:** Every backend response DTO MUST satisfy the **complete data contract** documented by the consuming frontend feature's `## UI Data Requirements` section (Frontend Rule 13 / Rule 75A). The backend MUST NOT intentionally return a reduced or "minimal" DTO merely because the database entity contains only a subset of the fields currently visible in the UI.
 
-Before implementing an endpoint, the backend AI MUST inspect the corresponding frontend feature's:
-1. `_features.md` → `## UI Data Requirements`
-2. `_features.md` → `## API Contract`
+Before implementing an endpoint, the backend AI MUST verify the corresponding frontend feature's
+frozen API contract from the `## Frozen API Contract` section inside the backend feature's own
+`_backend_feature.md`. At API Contract Freeze (Rule 67), the frontend publishes its complete
+data requirements and the backend copies a snapshot into its own `_backend_feature.md` — then
+the backend AI can remain inside `/backend/[feature]/**` without needing the frontend folder.
+
+**If the `## Frozen API Contract` section is not yet populated,** the backend AI MUST inspect:
+1. Frontend `_features.md` → `## UI Data Requirements`
+2. Frontend `_features.md` → `## API Contract`
 3. Frontend TypeScript/API types
 4. Zod response schema where available
+
+and immediately copy the result into the backend feature's `## Frozen API Contract` section
+before implementing any code.
 
 The backend MUST return every field required by the frontend UI, including fields used by:
 - Table columns
@@ -1353,6 +1392,7 @@ This rule MUST remain consistent with Rule 99.
     "message": "Validation failed. Please check the highlighted fields.",
     "data": null,
     "error": "VALIDATION_ERROR",
+    "errorCode": "VALIDATION.DTO.FAILED",
     "statusCode": 400,
     "validationErrors": [
       { "field": "email",    "message": "email must be a valid email address" },

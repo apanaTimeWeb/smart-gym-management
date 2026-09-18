@@ -956,7 +956,7 @@ which file to open for any task without reading all files.]
 - [ ] Rule 45: Async state uses `NetworkState<T>` — no boolean `isLoading`/`isError` flag pairs
 - [ ] Rule 46: Background tasks documented in `_features.md` `## Background Tasks` section
 - [ ] Rule 47: All API calls have explicit timeouts from `TIMEOUT_CONFIG`
-- [ ] Rule 48: 422 validation errors mapped to form fields via `handleValidationErrors()`
+- [ ] Rule 48: 400 validation errors mapped to form fields via `handleValidationErrors()` (422 only if explicitly approved by API contract)
 - [ ] Rule 49: List items keyed by entity ID — no array index keys
 - [ ] Rule 50: Permitted record identifiers have copy-to-clipboard affordance in detail screens
 - [ ] Rule 51: Every list screen has a dedicated named `EmptyState` component
@@ -1819,17 +1819,21 @@ Rule 40 (toast utility).
 
 ## Rule 48 — Structured Validation Error Handling Shape (Mobile Equivalent of Backend Rule 98)
 
-When the backend returns a 422 validation error, the response MUST be parsed into
-a structured shape and mapped to individual form fields — never displayed as a
-raw string dump.
+When the backend returns the canonical validation error response (statusCode `400`;
+a `422` is only valid if an explicitly approved API contract requires it), the
+response MUST be parsed into a structured shape and mapped to individual form
+fields — never displayed as a raw string dump.
 
 The backend's canonical validation error envelope (Backend Rule 98):
 
 ```typescript
-// Shape returned by backend on 422
+// Shape returned by backend on 400 validation failure
 {
   success: false,
   message: 'Validation failed',
+  error: 'VALIDATION_ERROR',
+  errorCode: 'VALIDATION.DTO.FAILED',
+  statusCode: 400,
   validationErrors: [
     { field: 'email',  message: 'Email is already registered' },
     { field: 'phone',  message: 'Phone number is invalid' },
@@ -1998,33 +2002,43 @@ Minimum required sections:
 ## Color Tokens
 | Token | Light value | Dark value | Usage |
 |---|---|---|---|
-| color.primary | #1A73E8 | #4DA3FF | Primary buttons, active tab indicators |
-| color.surface | #FFFFFF | #1E1E1E | Card backgrounds, bottom sheets |
-| color.textPrimary | #111827 | #F9FAFB | Body text, headings |
-| color.error | #DC2626 | #F87171 | Error states, destructive action buttons |
-| color.success | #16A34A | #4ADE80 | Success toasts, active status badges |
+| `background` | #FFFFFF | #0B0B0F | Screen background |
+| `foreground` | #0B0B0F | #F5F5F7 | Primary text |
+| `card` | #F8F8FA | #16161C | Card/surface background |
+| `primary` | #4F46E5 | #6366F1 | Primary actions, active states |
+| `destructive` | #DC2626 | #EF4444 | Errors, delete actions |
+| `on-primary` | #FFFFFF | #FFFFFF | Text/icon on primary fill |
+| `on-destructive` | #FFFFFF | #FFFFFF | Text/icon on destructive fill |
+| `focus-ring` | #A16207 | #EAB308 | Input/keyboard focus ring |
+| `status-success-text` | #064E3B | #22C55E | Success badge text |
+| `status-success-bg` | #D1FAE5 | #064E3B | Success badge background |
+| `skeleton-base` | #E5E5EA | #2A2A32 | Skeleton shimmer base |
+| `skeleton-highlight` | #F5F5F7 | #3F3F46 | Skeleton shimmer highlight |
 
 ## Spacing Tokens
 | Token | Value | Usage |
 |---|---|---|
-| spacing.xs | 4dp | Icon padding, tight gaps |
-| spacing.sm | 8dp | Component internal padding |
-| spacing.md | 16dp | Screen horizontal padding, card padding |
-| spacing.lg | 24dp | Section gaps |
-| spacing.xl | 32dp | Screen top padding |
+| `space-1` | 4dp | Tight gaps, icon padding |
+| `space-2` | 8dp | Component internal padding |
+| `space-4` | 16dp | Screen horizontal padding, card padding |
+| `space-6` | 24dp | Section gaps |
+| `space-7` | 32dp | Screen top padding |
 
 ## Typography Tokens
 | Token | Size | Weight | Line height | Usage |
 |---|---|---|---|---|
-| text.heading1 | 24sp | 700 | 32sp | Screen titles |
-| text.body | 14sp | 400 | 20sp | Body copy, list items |
-| text.caption | 12sp | 400 | 16sp | Timestamps, secondary labels |
+| `heading-lg` | 22 | 700 | 1.2× | Screen titles |
+| `body` | 16 | 400 | 1.5× | Body copy, list items |
+| `body-sm` | 14 | 400 | 1.5× | Body secondary |
+| `caption` | 12 | 400 | 1.5× | Timestamps, secondary labels |
 
 ## Border Radius Tokens
 ## Shadow / Elevation Tokens
 ## Icon Size Tokens
 ## Touch Target Tokens (minimum 44pt / 48dp)
 ## Z-Index / Elevation Layer Tokens
+## Motion / Duration Tokens
+## Opacity Tokens
 ```
 
 Rules:

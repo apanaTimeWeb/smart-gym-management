@@ -535,7 +535,7 @@ Charts must follow the approved chart library and this visual token contract. Th
 | Pie / Donut Chart | Slice colors: `--chart-primary`, `--chart-success`, `--chart-warning`, `--chart-info`, `--chart-secondary`, `--chart-danger` (in that order) |
 | Horizontal Bar | Single color: `var(--chart-primary)` |
 
-All charts: dark background (`var(--bg-card)`), `--text-secondary` axis labels, gridlines `var(--chart-grid)`, tooltips with dark card style `var(--chart-tooltip-bg)` matching the design system.
+All charts: theme-controlled chart surface background (`var(--bg-card)` — resolves per light/dark mode), `--text-secondary` axis labels, gridlines `var(--chart-grid)`, tooltips with `var(--chart-tooltip-bg)` matching the design system.
 
 ---
 
@@ -544,7 +544,7 @@ All charts: dark background (`var(--bg-card)`), `--text-secondary` axis labels, 
 This design system intrinsically supports both Dark and Light modes using CSS variables. 
 When building modules or components, **ALWAYS follow these rules** to ensure seamless theme switching:
 
-1. **Never use hardcoded Tailwind colors** for backgrounds or text (e.g., `bg-white`, `bg-gray-900`, `text-black`, `text-white`) unless explicitly required for a specific UI element (like a primary button where text is always white).
+1. **Never use hardcoded Tailwind colors** for backgrounds or text (e.g., `bg-white`, `bg-gray-900`, `text-black`, `text-white`). Primary button text must use the semantic `text-on-primary` token — never the hardcoded `text-white` class, as this prevents the theme from centralizing foreground color changes.
 2. **The One Canonical Pattern for CSS Variables:** Define the variable in `globals.css` → map it as a named token in `tailwind.config.ts` → use the Tailwind class name in JSX (e.g., `bg-card`, `text-primary`). **Never use `bg-[var(--bg-card)]` or `bg-[#1A1A2E]` directly in JSX.** This is the single source of truth that resolves any ambiguity between Rule 4 and Rule 36 of the Frontend Instructions.
 3. **Theme Provider**: Ensure the app is wrapped in a `ThemeProvider` (like `next-themes`) that toggles a `.dark` class on the `<html>` or `<body>` tag.
 4. **CSS Setup**: In your global CSS file (e.g., `globals.css`), define the light mode variables inside `:root { ... }` and the dark mode variables inside `.dark { ... }`.
