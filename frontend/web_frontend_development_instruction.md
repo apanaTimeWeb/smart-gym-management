@@ -55,44 +55,359 @@ The purpose of this rule is AI context isolation:
 
 If an AI agent is asked to fix a bug inside one module, the preferred context should be the module folder itself. The module should contain the code, tests, mock behavior, and documentation required to understand and safely modify that module.
 
-### Global Infrastructure Exception
+### Application Infrastructure Boundary
 
-Some framework/application infrastructure MUST remain global when duplicating it per module would create conflicting or invalid application behavior.
+Some framework/application infrastructure MUST remain outside feature modules because it represents application-wide plumbing that cannot safely or meaningfully be duplicated per feature.
 
-Examples include:
+Allowed application-level infrastructure includes only genuinely global infrastructure such as:
 
-- Global API transport/base client
-- Global authentication/token interceptor
-- Global error-monitoring adapter
-- Global application configuration
-- Global design-system primitives
-- Global MSW bootstrap/registration mechanism
-- Other framework-level infrastructure explicitly documented as global
+* Framework-required application routing/layout infrastructure
+* Global API transport/base HTTP client
+* Global authentication/session/token infrastructure
+* Global error-monitoring adapter
+* Global application configuration
+* Global logging infrastructure
+* Global design-system primitives that contain zero business logic
+* Global MSW bootstrap/registration infrastructure
+* Other framework/application plumbing that is explicitly documented as global
 
-The global infrastructure exception does NOT permit business logic to be placed in global folders.
+IMPORTANT:
 
-A file is not global infrastructure merely because multiple modules happen to import it.
+The existence of multiple consumers does NOT automatically make a file global infrastructure.
 
-Global infrastructure must:
-1. Be framework/application plumbing.
-2. Contain no module-specific business behavior.
-3. Remain intentionally small and stable.
-4. Have a clearly documented responsibility.
+A file qualifies as application infrastructure only when ALL of the following are true:
 
-### Module Portability Goal
+1. It provides framework/application plumbing.
+2. It contains zero feature-specific business behavior.
+3. It is intentionally application-wide.
+4. Duplicating it per feature would create conflicting, invalid, or unnecessary framework behavior.
+5. Its responsibility is stable and explicitly documented.
 
-A module should be independently understandable and portable for AI-assisted development.
+The following are NOT global infrastructure:
 
-If an AI is given only:
+* feature-specific business components
+* feature-specific hooks
+* feature-specific stores
+* feature-specific API services
+* feature-specific types
+* feature-specific schemas
+* feature-specific constants
+* feature-specific utilities
+* feature-specific validators
+* feature-specific formatters
+* feature-specific mock fixtures
+* feature-specific MSW handlers
+* feature-specific tests
+* feature-specific business workflows
+* feature-specific permissions
+* feature-specific business configuration
 
-@ModuleRoot/
+Do NOT create a global business layer merely to avoid duplication.
 
-it should be able to understand, test, and modify that module without requiring unrelated business modules.
+If two features contain similar business behavior, duplication is allowed and is preferred when duplication improves AI isolation and feature portability.
 
-Any unavoidable external infrastructure dependency must be documented in the module's `[moduleName]_features.md`.
+---
+
+### 1B. HIERARCHICAL MODULE BOUNDARY — FEATURE MODULE IS THE AI REPAIR UNIT
+
+The project MUST use the following architectural hierarchy:
+
+```text
+APPLICATION
+  └── ROLE CONTAINER
+        └── FEATURE MODULE
+              └── FEATURE SUB-FEATURES / CHILD COMPONENTS
+```
+
+This hierarchy applies to EVERY frontend project regardless of business domain.
+
+Examples:
+
+```text
+src/app/admin/
+src/app/manager/
+src/app/superadmin/
+src/app/trainer/
+```
+
+are ROLE CONTAINERS.
+
+Examples of FEATURE MODULES may include:
+
+```text
+src/app/admin/members/
+src/app/admin/billing/
+src/app/manager/attendance/
+src/app/superadmin/plans/
+src/app/superadmin/reports/
+src/app/superadmin/gyms/
+src/app/settings/profile/
+src/app/analytics/
+```
+
+The exact names will differ by project.
+
+IMPORTANT:
+
+A ROLE CONTAINER is NOT itself the default AI repair boundary.
+
+A FEATURE MODULE is the default AI repair boundary.
+
+For example:
+
+```text
+ROLE CONTAINER:
+`/superadmin/`
+
+FEATURE MODULE:
+`/superadmin/plans/`
+```
+
+Therefore:
+
+```text
+/superadmin/
+```
+
+is not the normal context that should be provided to an AI for a Plans bug.
+
+The normal repair context is:
+
+```text
+/superadmin/plans/
+```
+
+---
+
+### Feature Module Self-Containment Requirement
+
+Every feature module MUST own all business-specific artifacts required to understand, test, mock, document, and modify that feature.
+
+Where applicable, the feature module MUST contain:
+
+```text
+[feature]/
+├── [feature]_components/
+├── [feature]_hooks/
+├── [feature]_store/
+├── [feature]_context/
+├── [feature]_api/
+├── [feature]_types/
+├── [feature]_schemas/
+├── [feature]_constants/
+├── [feature]_utils/
+├── [feature]_mocks/
+├── [feature]_tests/
+├── [feature]_features.md
+├── [feature]_forbidden.md
+├── [feature]_theme_contract.md
+└── [feature]_url_config.ts
+```
+
+Only folders that are actually required by the feature need to exist.
+
+The important requirement is ownership, not the creation of empty folders.
+
+Anything containing business behavior specific to the feature MUST live inside that feature module.
+
+---
+
+### NO ROLE-WIDE BUSINESS BUCKETS
+
+The project MUST NOT create role-wide business folders such as:
+
+```text
+superadmin_components/
+superadmin_hooks/
+superadmin_store/
+superadmin_api/
+superadmin_types/
+superadmin_schemas/
+superadmin_constants/
+superadmin_utils/
+superadmin_mocks/
+superadmin_tests/
+```
+
+when those files contain business behavior belonging to individual features.
+
+Instead, feature-specific responsibilities MUST remain inside the owning feature:
+
+```text
+superadmin/
+├── plans/
+│   ├── plans_components/
+│   ├── plans_hooks/
+│   ├── plans_api/
+│   ├── plans_types/
+│   ├── plans_schemas/
+│   ├── plans_constants/
+│   ├── plans_utils/
+│   ├── plans_mocks/
+│   └── plans_tests/
+│
+├── invoices/
+│   ├── invoices_components/
+│   ├── invoices_hooks/
+│   ├── invoices_api/
+│   ├── invoices_types/
+│   ├── invoices_schemas/
+│   ├── invoices_utils/
+│   ├── invoices_mocks/
+│   └── invoices_tests/
+│
+└── reports/
+    └── ...
+```
+
+The same principle applies to every role and every domain.
+
+---
+
+### AI PORTABILITY CONTRACT
+
+A feature module is considered AI-portable only when an AI can receive the feature directory as its primary context and understand the feature's:
+
+* purpose
+* user flows
+* UI
+* state ownership
+* API contract
+* schemas
+* business constants
+* business utilities
+* mock behavior
+* tests
+* error handling
+* loading/empty behavior
+* permissions
+* documented external application dependencies
+
+without receiving unrelated sibling business modules.
+
+The canonical workflow is:
+
+```text
+FEATURE BUG
+   ↓
+PROVIDE ONLY THE FEATURE MODULE
+   ↓
+AI READS THE FEATURE'S FEATURE MAP
+   ↓
+AI UNDERSTANDS THE FEATURE
+   ↓
+AI REPAIRS THE FEATURE
+   ↓
+AI RUNS FEATURE TESTS
+   ↓
+ONLY FEATURE FILES ARE CHANGED
+```
+
+For example, if a bug exists in:
+
+```text
+/admin/billing/
+```
+
+the preferred AI context is:
+
+```text
+/admin/billing/
+```
+
+NOT:
+
+```text
+/admin/
+```
+
+and NOT:
+
+```text
+the entire application
+```
+
+unless the feature documentation explicitly identifies an unavoidable application-infrastructure dependency that is genuinely required for the repair.
+
+---
+
+### PORTABILITY TO OTHER PROJECTS
+
+Feature modules SHOULD be designed so that they can be copied into another compatible frontend application with minimal integration work.
+
+A copied feature MUST NOT depend on hidden business files from its previous application.
+
+After copying, only application-specific integration work should normally be necessary, such as:
+
+* route registration
+* application configuration
+* authentication wiring
+* approved global UI/infrastructure integration
+* backend endpoint/environment configuration
+* project-specific styling or branding adjustments
+
+Hidden business dependencies from the source application's other modules are forbidden.
+
+---
+
+### DUPLICATION IS ALLOWED AND PREFERRED WHEN IT IMPROVES ISOLATION
+
+Traditional DRY principles MUST NOT override the project's AI isolation requirement.
+
+If two independent features need similar business behavior, they MAY contain duplicated implementations.
+
+Example:
+
+```text
+/admin/billing/billing_utils/
+```
+
+and
+
+```text
+/manager/billing/billing_utils/
+```
+
+may contain similar code.
+
+This is intentional when duplication prevents cross-feature business coupling.
+
+The primary optimization target is:
+
+```text
+AI CONTEXT ISOLATION
++
+BOUNDED CHANGE BLAST RADIUS
++
+FEATURE PORTABILITY
+```
+
+not minimum source-code duplication.
+
+---
+
+### Canonical Definition
+
+For this document:
+
+```text
+Application
+= entire frontend application
+
+Role Container
+= route/organizational boundary for a role or application area
+
+Feature Module
+= smallest independently understandable business unit
+
+AI Repair Boundary
+= Feature Module
+```
+
+The term "module" in all isolation, portability, dependency, and AI repair rules MUST refer to the FEATURE MODULE unless a rule explicitly states otherwise.
 
 2. **Total Role Isolation (No Shared Business Components)**:
-To completely eliminate the risk of cross-role AI hallucinations, there is no unified `/erp` folder. Each role gets a completely isolated root folder (e.g., `/admin`, `/manager`, `/trainer`). Business components (like `MembersTable`) must be duplicated into each role's folder (`AdminMembersTable.tsx`, `ManagerMembersTable.tsx`). Only dumb UI components (like `Button`) are shared in `src/components/ui`.
+To completely eliminate the risk of cross-role AI hallucinations, there is no unified global business folder across roles or application areas. Each role gets a completely isolated root folder (e.g., `/admin`, `/manager`, `/trainer`). Business components (like `MembersTable`) must be duplicated into the owning feature module of each role (`AdminMembersTable.tsx` inside `/admin/members/`, `ManagerMembersTable.tsx` inside `/manager/members/`). Business components MUST NOT be placed directly in the role container merely because they belong to that role. Only dumb UI components (like `Button`) are shared in `src/components/ui`.
 
 3. **Hyper-Descriptive Naming & Mandatory Module Prefix**: 
 Rename all components, files, and folders to be extremely descriptive based on exactly what they do. **It does not matter if a filename becomes exceptionally long** (e.g., `AdminMembersSubscriptionRenewalForm.tsx`). Meaningfulness and convenience are the only priorities. 
@@ -282,7 +597,7 @@ Error fallback hierarchy:
 - **`not-found.tsx` (404 Handling):** Handle missing dynamic routes gracefully by defining a `not-found.tsx` file. It should be beautifully branded and offer a clear "Back to Dashboard" button.
 
 10. **Absolute Imports Only (No Relative Paths)**: 
-Never use relative imports (like `../../` or `./`) for importing components, contexts, utilities, or types. Always use absolute imports starting with `@/` (e.g., `@/app/(erp)/workout/workout_context/WorkoutContext`).
+Never use relative imports (like `../../` or `./`) for importing components, contexts, utilities, or types. Always use absolute imports starting with `@/` (e.g., `@/app/superadmin/gyms/gyms_context/GymsContext`).
 *Why?* This allows files to be moved around easily without breaking import paths and makes it much easier to copy-paste code snippets or have an AI generate standalone code without worrying about relative directory depth.
 
 11. **Centralized URL Configuration (No Hardcoded URLs)**: 
@@ -293,26 +608,193 @@ Never hardcode numeric HTTP status codes (e.g., `401`, `500`, `200`) in API rout
 
 ## AI Context Isolation Contract
 
-The preferred AI context for a module-specific bug is the module root folder.
+The FEATURE MODULE is the canonical AI context boundary.
 
-An AI agent should NOT need unrelated business modules to understand a normal feature bug.
+For a feature-specific task, the AI MUST begin with the owning feature folder and MUST NOT automatically expand context to the role container or application.
 
-When a module-specific issue is being fixed:
+Example:
 
-1. Start with the module folder.
-2. Read the module's `[moduleName]_features.md`.
-3. Read the relevant feature files.
-4. Read module-owned tests.
-5. Read module-owned mocks/fixtures/handlers when API behavior is involved.
-6. Only access external infrastructure when the feature documentation identifies it as an approved dependency.
+```text
+Bug:
+Billing invoice filter is broken
 
-The agent MUST NOT expand context into unrelated business modules merely because a similar type, mock, constant, or handler already exists there.
+Preferred AI context:
 
-Local duplication is preferred over unnecessary business coupling when required for AI isolation.
+/billing/
+```
+
+NOT:
+
+```text
+/admin/
+/manager/
+/superadmin/
+```
+
+and NOT the entire application.
+
+The AI may expand context only when:
+
+1. the feature's documentation explicitly identifies an external application-infrastructure dependency;
+2. the dependency is genuinely infrastructure rather than business behavior;
+3. the feature cannot be correctly repaired without inspecting that dependency.
+
+The AI MUST NOT expand context merely because another feature contains similar code.
+
+---
+
+### FEATURE-TO-FEATURE BUSINESS DEPENDENCY FIREWALL
+
+Every feature module is an independent business boundary.
+
+Sibling feature modules MUST be treated as isolated business systems even when they exist under the same role container.
+
+For example:
+
+```text
+/admin/members/
+/admin/billing/
+/admin/reports/
+```
+
+are independent business modules.
+
+Therefore:
+
+```text
+members → billing business logic       FORBIDDEN
+billing → members business logic       FORBIDDEN
+reports → billing business logic       FORBIDDEN
+```
+
+The same rule applies to all roles and all application areas.
+
+A feature MUST NOT import business behavior from:
+
+* sibling feature components
+* sibling feature hooks
+* sibling feature stores
+* sibling feature contexts
+* sibling feature API services
+* sibling feature types
+* sibling feature schemas
+* sibling feature constants
+* sibling feature utilities
+* sibling feature fixtures
+* sibling feature MSW handlers
+* sibling feature tests
+* role-level business folders
+* another role's feature modules
+
+---
+
+### Allowed External Dependencies
+
+A feature MAY depend on:
+
+* framework packages
+* third-party packages
+* approved application infrastructure
+* genuinely generic zero-business-logic UI primitives
+* explicitly documented framework/application bootstrap mechanisms
+
+These dependencies MUST be stable infrastructure contracts.
+
+A feature MUST NOT treat another business feature as infrastructure.
+
+---
+
+### LOCAL OWNERSHIP OVER CROSS-FEATURE REUSE
+
+When a feature requires business behavior similar to another feature, the default action is to implement or duplicate the required feature-specific behavior locally.
+
+Do NOT create:
+
+```text
+global business utils
+global business hooks
+global business components
+global business API services
+global role-wide domain types
+global role-wide fixtures
+```
+
+merely to avoid duplication.
+
+If extracting shared code would create hidden business coupling or increase AI context requirements, prefer local duplication.
 
 ### AI Change Scope Integrity Gate
 
 AI MUST produce a changed-file list and MUST fail the task if files outside the owning module changed unexpectedly, except approved global infrastructure files explicitly listed in the module feature map.
+
+### HARD FEATURE WRITE BOUNDARY
+
+For a feature-specific repair, the default writable scope is:
+
+```text
+[owning-feature]/**
+```
+
+The AI MUST NOT modify sibling business features or unrelated application code.
+
+Example:
+
+```text
+Task:
+Fix bug in `/admin/billing/`
+
+Allowed by default:
+
+/admin/billing/**
+```
+
+Not allowed:
+
+```text
+/admin/members/**
+/admin/reports/**
+/superadmin/**
+/manager/**
+```
+
+even if those modules contain similar code.
+
+If a feature-local bug appears to require another business feature to be changed, the AI MUST NOT silently modify that other feature.
+
+Instead, the AI MUST first determine whether:
+
+1. the dependency should be moved into the owning feature;
+2. the required behavior should be duplicated locally;
+3. the dependency is actually application infrastructure;
+4. the issue is outside the feature's documented scope.
+
+Normal feature repairs should end with changes contained within the owning feature.
+
+---
+
+### CHANGE SCOPE FAILURE CONDITION
+
+A feature repair FAILS the architecture gate when the AI:
+
+* changes an unrelated business module;
+* creates a new sibling-feature dependency;
+* moves feature business logic into a role-level folder;
+* creates a new global business helper merely to solve the local bug;
+* imports another feature's business fixtures;
+* modifies another feature's mock handlers;
+* modifies unrelated feature state;
+* changes unrelated routes without documented necessity.
+
+The AI MUST report the complete changed-file list at the end of the task.
+
+The expected normal result is:
+
+```text
+Changed files:
+[feature]/**
+```
+
+with only documented application-infrastructure changes allowed as exceptions.
 
 13. **Update AI-Context Documentation (The Feature Map)**:
 Once the entire refactor is complete, generate or update a `[moduleName]_features.md` documentation file inside the module's root folder. This document MUST serve as a master map for future AI sessions and human developers. A future AI reading only this file must be able to answer: What does this module do? What can the user do in it? What files handle what? What are the API endpoints? What must never be broken?
@@ -387,6 +869,43 @@ each folder, not just the folder name. Example:]
 | `members_context/` | React Context bridging store state to deeply nested components | `ManagerMembersContext.tsx`, `ManagerMembersProvider.tsx` |
 | `members_mocks/handlers/` | Module-specific MSW handlers for member endpoints | `ManagerMembersMockHandlers.ts` |
 | `members_mocks/fixtures/` | Complete mock API datasets used by the member handlers | `ManagerMembersMockFixtures.ts` |
+
+### Approved External Dependencies
+
+This section MUST contain an explicit inventory of everything outside the feature module that the feature imports or relies upon.
+
+Example:
+
+```text
+## Approved External Dependencies
+
+### Application Infrastructure
+- `@/lib/api` — global HTTP transport only
+- `@/lib/logger` — application logging infrastructure
+- `@/components/ui/Dialog` — zero-business-logic dialog primitive
+
+### Business Feature Dependencies
+- None
+
+### Role-Level Business Dependencies
+- None
+```
+
+A feature that has no external business dependency MUST explicitly say:
+
+```text
+Business Feature Dependencies:
+- None
+
+Role-Level Business Dependencies:
+- None
+```
+
+This is mandatory.
+
+The AI MUST use this section as the dependency allowlist during future repairs.
+
+If a new external dependency is introduced, the feature documentation MUST be updated in the same change.
 
 ## Feature Inventory
 [REQUIRED: Every distinct user-facing feature gets its own row. "Core UI" is NOT a feature.
@@ -520,7 +1039,7 @@ actually implemented. An honest [ ] is better than a false [x].]
 - [ ] Rule 7: Type Isolation — all types in `*_types/` folder, no inline interfaces
 - [ ] Rule 8: Server/Client Boundary — `page.tsx` = Server Component, `*Main.tsx` = Client
 - [ ] Rule 9: Loading/error/not-found — `loading.tsx` + `error.tsx` present and non-generic
-- [ ] Rule 11: Centralized URL Config — `*UrlConfig.ts` file present, no hardcoded URLs
+- [ ] Rule 11: Centralized URL Config — `[moduleName]_url_config.ts` file present, no hardcoded URLs
 - [ ] Rule 13: Feature Map — this document is complete and non-generic
 - [ ] Rule 14: Backend-driven messages — no hardcoded toast/alert strings
 - [ ] Rule 15A: Tests present — co-located test files for hooks and utils
@@ -547,8 +1066,11 @@ actually implemented. An honest [ ] is better than a false [x].]
 - [ ] Module-Owned Fixtures — feature-specific mock data lives inside the owning module
 - [ ] Global MSW Bootstrap Isolation — global MSW code contains infrastructure only
 - [ ] Rule 75D: MSW fixture covers ALL UI fields — no missing table columns, KPIs, chart series, filters, or detail fields; `## UI Data Requirements` section in `_features.md` is complete
-- [ ] Module Self-Containment — all feature-specific code, tests, mocks, fixtures, and handlers are inside the module
-- [ ] AI Portability — module can be provided independently to an AI with only documented global infrastructure dependencies
+- [ ] Module Self-Containment — all feature-specific business code, components, hooks, state, API clients, types, schemas, constants, utilities, tests, mocks, fixtures, handlers, and documentation are owned by this feature module
+- [ ] Feature Dependency Firewall — zero imports from sibling business features or role-level business folders
+- [ ] AI Portability — this feature can be provided independently to an AI as the default repair context
+- [ ] Hard Write Boundary — normal feature repairs can be completed without changing sibling business modules
+- [ ] Approved External Dependencies — every external application-infrastructure dependency is explicitly documented
 - [ ] Mock Ownership documented in `[moduleName]_features.md`
 - [ ] Rule 76: CODEOWNERS covers security-critical paths
 - [ ] Rule 78: En-dash fallback — `displayValue()` used for all nullable fields in tables and profiles
@@ -915,7 +1437,7 @@ Any field displaying a unique ID/tracking code must have a small copy icon next 
 Every list/table MUST have a dedicated empty state component (`[Module]EmptyState.tsx`) with an icon and message. Include a CTA when a meaningful user action can resolve the empty state; otherwise the empty state may be informational/read-only.
 
 49. **Strict Import Order Convention**:
-Enforce a strict order using ESLint `import/order`: React core, Third-party, Absolute internal (`@/lib`), Module-specific (`@/app/(erp)/...`), Types-only.
+Enforce a strict order using ESLint `import/order`: React core, Third-party, Absolute internal (`@/lib`), Module-specific (`@/app/superadmin/gyms/...`), Types-only.
 
 50. **Prop Spreading is Forbidden (`...props` ban)**:
 Never write `<Component {...props} />`. All props must be explicitly named, except for primitive HTML wrappers.
@@ -973,7 +1495,117 @@ You MUST physically block these using the following exact mechanical ESLint/tool
 - `Rule 36 (arbitrary Tailwind)` -> `tailwindcss/no-arbitrary-value`
 - `Rule 44 (console.log)` -> `no-console`
 - `Rule 57 (TS ignore)` -> `@typescript-eslint/ban-ts-comment`
-- `Rule 63 (cross-module imports)` -> `eslint-plugin-boundaries` / `no-restricted-imports`
+- `Rule 63 (cross-module imports)` -> enforcement MUST distinguish:
+  ```text
+  GLOBAL APPLICATION INFRASTRUCTURE
+  ROLE CONTAINER
+  FEATURE MODULE
+  ```
+  and MUST block:
+  ```text
+  FEATURE → SIBLING FEATURE
+  FEATURE → ROLE-LEVEL BUSINESS FOLDER
+  FEATURE → OTHER ROLE BUSINESS MODULE
+  ```
+  unless the import is explicitly classified as approved application infrastructure.
+
+  Mechanical tooling SHOULD use:
+  * `eslint-plugin-boundaries`
+  * `no-restricted-imports`
+  * TypeScript path aliases where useful
+  * repository-level architecture validation where necessary
+
+  The architectural rule is:
+  ```text
+  Feature → Global Infrastructure       ALLOWED
+  Feature → Own Feature                 ALLOWED
+  Feature → Child Feature               ALLOWED when ownership remains inside the module
+  Feature → Sibling Business Feature    FORBIDDEN
+  Feature → Role Business Bucket        FORBIDDEN
+  Feature → Other Role Feature          FORBIDDEN
+  ```
+
+---
+
+### FINAL FEATURE PORTABILITY ACCEPTANCE TEST
+
+A feature MUST NOT be marked AI-portable merely because its files happen to be stored under one directory.
+
+The following test MUST be satisfied:
+
+```text
+STEP 1
+Give an AI only:
+
+@/role/feature/
+
+STEP 2
+The AI reads the feature's feature map.
+
+STEP 3
+The AI identifies:
+- business purpose
+- routes
+- user flows
+- UI ownership
+- state ownership
+- API contracts
+- schemas
+- mocks
+- tests
+- permissions
+- error/loading/empty behavior
+- approved external dependencies
+
+STEP 4
+The AI can identify which files it must modify for a normal feature bug.
+
+STEP 5
+The AI does not require unrelated business modules.
+
+STEP 6
+The AI's normal repair changes only the owning feature.
+```
+
+If these conditions are not satisfied, the feature is NOT considered fully modular or AI-portable.
+
+---
+
+### FINAL ARCHITECTURAL PRINCIPLE
+
+The project prioritizes:
+
+```text
+AI CONTEXT ISOLATION
+>
+BUSINESS CODE REUSE
+```
+
+and:
+
+```text
+BOUNDED CHANGE BLAST RADIUS
+>
+MINIMUM FILE DUPLICATION
+```
+
+The purpose of this architecture is to ensure that a feature can be:
+
+```text
+understood independently
++
+tested independently
++
+repaired independently
++
+mocked independently
++
+copied independently
++
+evolved independently
+```
+
+without requiring unrelated business modules.
 - `Rule 35 (magic values)` -> custom `no-restricted-syntax` / custom rule
 
 You MUST implement a **pre-commit hook** (`husky` + `lint-staged`) that runs `tsc --noEmit` and linters before any commit. These rules must be physically blocked by tooling to ensure extreme safety in an AI-driven codebase. Detailed test practices should reside in Rule 15A.
