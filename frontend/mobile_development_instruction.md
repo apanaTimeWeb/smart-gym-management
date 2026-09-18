@@ -958,7 +958,7 @@ which file to open for any task without reading all files.]
 - [ ] Rule 47: All API calls have explicit timeouts from `TIMEOUT_CONFIG`
 - [ ] Rule 48: 422 validation errors mapped to form fields via `handleValidationErrors()`
 - [ ] Rule 49: List items keyed by entity ID — no array index keys
-- [ ] Rule 50: Sensitive IDs have copy-to-clipboard affordance in detail screens
+- [ ] Rule 50: Permitted record identifiers have copy-to-clipboard affordance in detail screens
 - [ ] Rule 51: Every list screen has a dedicated named `EmptyState` component
 - [ ] Rule 52: New design tokens added to `mobile_theme_contract.md` before implementation
 
@@ -1451,7 +1451,7 @@ touch targets.
 
 // ✅ GOOD — fixed minimum width, content swaps in place
 <TouchableOpacity
-  style={[styles.button, { minWidth: 140 }]}
+  style={[styles.button, { minWidth: tokens.layout.buttonMinWidth }]}
   disabled={isLoading}
 >
   {isLoading
@@ -1531,7 +1531,7 @@ showToast(response.message, 'error');
 
 Rules:
 - No component or hook calls the toast library directly — always `showToast()`.
-- Toast messages come from `response.message` (Rule 7) — never hardcoded strings.
+- For backend operations, toast messages MUST come from `response.message` (Rule 7). For purely local system feedback (e.g. "Copied to clipboard"), hardcoded system strings are acceptable.
 - Success toasts auto-dismiss after 3 s; error toasts persist until dismissed or
   5 s, whichever comes first — configure once in the central utility.
 
@@ -2131,7 +2131,7 @@ The mobile architecture MUST enforce the following security and robustness const
    - API calls have explicit timeouts from `TIMEOUT_CONFIG`? (Rule 47)
    - 422 validation errors mapped to form fields via `handleValidationErrors()`? (Rule 48)
    - List items keyed by entity ID — no index keys? (Rule 49)
-   - Sensitive IDs have copy-to-clipboard affordance? (Rule 50)
+   - Permitted record identifiers have copy-to-clipboard affordance? (Rule 50)
    - Every list screen has a dedicated `EmptyState` component? (Rule 51)
    - New tokens added to `mobile_theme_contract.md` before implementation? (Rule 52)
    - Irreversible mutations use stable Idempotency-Keys on retry? (Rule 53)
