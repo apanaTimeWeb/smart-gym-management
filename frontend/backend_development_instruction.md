@@ -5,9 +5,43 @@ This document outlines the strict architectural rules for building the backend u
 
 Currently, human developers act as orchestrators, while AI (LLMs) writes the code. Because of this, the architecture must be designed to accommodate the AI's constraints (context limits, hallucination risks) and strengths (laser-focused problem solving).
 
-Tomorrow, if you ask an AI to fix a specific bug in "Payment Processing", you should only need to provide ONE exact file to the AI, completely eliminating the risk of the AI hallucinating and breaking the "User Registration" flow.
+Tomorrow, if you ask an AI to fix a specific bug in "Payment Processing", the primary AI context MUST be restricted to the owning feature module. The preferred code repair is a single file, but multi-file repairs within the feature's dependency graph are allowed when genuinely required. The default writable scope is the owning feature module only.
 
 **Minimum-Context Principle:** Prefer the smallest coherent change set. Single-file repair is the goal when the dependency graph permits it. Multi-file changes are **allowed — and expected** when required by architectural contracts such as transactions (Orchestrator → services → repositories), API contract updates, co-located tests, or shared infrastructure extensions. The AI MUST NOT expand context beyond the minimum required set. If a bug fix genuinely requires touching an Orchestrator, a micro-service, and a repository together, that is correct — not a sign of bad architecture. If it requires touching 10 unrelated files, the architecture is too coupled.
+
+### 0A. HIERARCHICAL MODULE BOUNDARY — FEATURE MODULE IS THE AI REPAIR UNIT
+
+The backend strictly follows a 3-tier hierarchy:
+
+```text
+APPLICATION
+  └── DOMAIN / ROLE CONTAINER
+        └── FEATURE MODULE
+              └── SUB-FEATURE / USE CASE
+```
+
+**AI Repair Boundary = FEATURE MODULE**
+**Role/Domain Container = NOT the default repair boundary**
+
+When fixing a bug in `modules/superadmin/billing`, the AI repair boundary is `billing`, not the entire `superadmin` domain container.
+
+### 0B. HARD FEATURE WRITE BOUNDARY
+
+For a feature-specific task, the default writable scope is:
+
+```text
+[owning-feature]/**
+```
+
+The AI MUST NOT modify sibling feature modules, other domain business modules, or global business folders. Only explicitly documented core/infrastructure files may be modified as exceptions.
+
+### 0C. CHANGE SCOPE FAILURE CONDITION
+
+A feature repair FAILS the architecture gate when the AI:
+* changes an unrelated business module;
+* creates a new sibling-feature dependency;
+* moves feature business logic into a domain-level folder;
+* modifies another feature's database queries or mock handlers.
 
 ---
 
@@ -75,8 +109,18 @@ The `MemberRegistrationService` should only save the user and emit an event: `Ev
 
 ### Edge Case B: Database Transactions (All-or-Nothing Operations)
 *Scenario:* You split your logic into `BillingService` and `MembershipService`. But creating a member and charging their card MUST happen in the same database transaction.
-*Solution:* **Orchestrator Pattern.** 
-Create a higher-level "Facade" or "Orchestrator" whose ONLY job is to open a transaction, call the micro-services passing the transaction object (`tx`), and commit/rollback. The micro-services themselves should remain pure and unaware of transaction boundaries.
+*Solution:* **Orchestrator Pattern with UnitOfWork Abstraction.** 
+Create a higher-level "Facade" or "Orchestrator" whose ONLY job is to open a transaction, call the micro-services passing a `TransactionContext` or `UnitOfWork` abstraction, and commit/rollback. The micro-services themselves must remain pure and decoupled from the raw ORM transaction object. Direct passing of an ORM-specific `tx` object leaks the ORM abstraction into the business service layer.
+
+```text
+Orchestrator
+   ↓
+TransactionContext / UnitOfWork abstraction
+   ↓
+Repositories
+   ↓
+ORM
+```
 
 ### Edge Case C: Shared Utility Bloat (The "No Common Folder" Rule)
 *Scenario:* Developers dump code into a global `utils/`, `common/`, or `shared/` folder to adhere to the DRY (Don't Repeat Yourself) principle. 
@@ -269,6 +313,12 @@ should an AI NEVER do in this module?]
 | Controller/Endpoint | HTTP | Path | Purpose | Request DTO | Response DTO |
 |---|---|---|---|---|---|
 
+## Approved External Dependencies
+[REQUIRED: Explicitly list all external dependencies. If none, write "None".]
+- **Business Feature Dependencies**: [e.g., MemberModule]
+- **Infrastructure Dependencies**: [e.g., CacheManager, Database]
+- **Runtime/Event Dependencies**: [e.g., BILLING.PAYMENT.FAILED]
+
 ## Data and State Architecture
 [REQUIRED: Fill every field. Write "none" only if genuinely none.]
 - DB Entities: [entity names and their table names]
@@ -439,8 +489,9 @@ the exact consequence of violating it — not just "be careful".]
 
 ## 30. Audit Trail / Activity Log (Who Did What & When)
 * **The Rule:** Every meaningful state change to critical entities (Members, Payments, Staff, Settings) MUST be recorded in an `audit_logs` table. At minimum, log: `actor_id`, `actor_role`, `action` (e.g., `MEMBER_UPDATED`), `entity_type`, `entity_id`, `old_value` (JSON), `new_value` (JSON), `ip_address`, `timestamp`.
+* **Completeness Rule:** Mutations occur from HTTP requests, Background Jobs, Event Consumers, Scheduled Jobs, Webhooks, and Internal Commands. The audit trail architecture MUST integrate with the mutation layer (e.g., repository or orchestrator) rather than relying solely on HTTP interceptors to guarantee completeness.
 * **How:** Implement this as a cross-cutting concern using:
-  - **NestJS/Express:** An interceptor or middleware that fires an event after mutating requests.
+  - **NestJS/Express:** An interceptor, event listener, or AOP-style wrapper around repositories that fires after mutating actions.
   - **Django:** Model `post_save` / `post_delete` signals.
   - **Spring Boot:** AOP (Aspect-Oriented Programming) with `@AfterReturning` advice.
 * **Why:** Regulators, auditors, and enterprise clients will always ask "who changed this record and when?". Building this from day one costs almost nothing. Retrofitting it onto a live production system costs weeks. It also gives AI agents an immutable history to reason about when debugging.
@@ -532,7 +583,9 @@ the exact consequence of violating it — not just "be careful".]
 * **Architecture Strategy:**
   1. **Master Database:** A central database (e.g., `gymsmart_master`) must exist solely to manage global resources: Users, Authentication, Tenants (Gyms), Subscriptions, and Feature Flags.
   2. **Tenant Databases:** Every time a new gym registers, the backend must programmatically create a brand-new database (e.g., `tenant_db_101`) and run all schema migrations on it automatically. *(Note: All these logical databases reside within the same single MySQL/PostgreSQL server instance; do not spin up new physical servers/VPS per tenant).*
-  3. **Dynamic Connection Routing (Request Scoped):** The backend must intercept every incoming API request. Using a global middleware or interceptor, it must extract the `x-tenant-id` (from HTTP headers or JWT payload) and dynamically construct or switch the database connection to point to that specific tenant's database for the lifecycle of that request. **⚠️ See Rule 63 before implementing this** — the connection pool budget must be calculated across ALL active tenant DataSources combined, not per-tenant. Blindly applying `max: 20` per tenant DataSource will exhaust the database server's connection limit under load.
+  3. **Dynamic Connection Routing (Request Scoped):** The backend must intercept every incoming API request. Using a global middleware or interceptor, it must extract the `x-tenant-id` (from HTTP headers or JWT payload) and dynamically construct or switch the database connection to point to that specific tenant's database for the lifecycle of that request.
+  4. **Strict Tenant Authorization (CRITICAL):** `x-tenant-id` MUST NOT be trusted merely because the client supplied it. The server MUST verify that the authenticated actor is explicitly authorized to access that tenant in the master database before selecting the tenant DataSource. The flow must be: `Request → Authentication → Tenant Authorization → Trusted Tenant Context → DataSource Resolver`.
+  5. **Connection Pool Limits:** **⚠️ See Rule 63 before implementing this** — the connection pool budget must be calculated across ALL active tenant DataSources combined, not per-tenant. Blindly applying `max: 20` per tenant DataSource will exhaust the database server's connection limit under load.
 * **How to Apply to Different Frameworks:**
   - **NestJS (Node/TypeScript):** Do not use a static, monolithic ORM module root configuration. Use request-scoped providers or custom connection factories that cache and resolve database connection/client instances based on the request's tenant header.
   - **Django (Python):** Use database routers (`db_for_read`, `db_for_write`) paired with thread-local storage or middleware to dynamically route queries to the correct database alias based on the request.
@@ -586,8 +639,9 @@ the exact consequence of violating it — not just "be careful".]
 ## 48. CQRS Lite (Query vs Command Controllers)
 * **The Rule:** Read operations (GET) and Write operations (POST/PATCH/DELETE) must be split into separate controllers (e.g., `[module]-query.controller.ts` and `[module]-command.controller.ts`). This guarantees AI never accidentally touches mutation logic when fixing a read query.
 
-## 49. Explicit Module Dependency Graph
+## 49. Explicit Module Dependency Graph (Including Runtime Events)
 * **The Rule:** Every module must have a `[module]_dependencies.md` detailing which other modules it depends on, and which modules depend on it. This maps downstream impact instantly.
+* **Event Dependency Rule:** Event publication/subscription is a runtime dependency. Every published/consumed event MUST be explicitly listed in `[module]_dependencies.md`. Undeclared event subscriptions are forbidden. Event payload contracts must be strictly validated at the consumer boundary.
 
 ## 50. Standardized Event Naming Convention
 * **The Rule:** Event names MUST follow `DOMAIN.ENTITY.ACTION` in SCREAMING_SNAKE_CASE (e.g., `BILLING.PAYMENT.FAILED`) and be registered in a centralized `event-registry.constants.ts`.
@@ -613,8 +667,8 @@ the exact consequence of violating it — not just "be careful".]
 ## 57. Request Context Propagation (AsyncLocalStorage)
 * **The Rule:** Use Node's `AsyncLocalStorage` to store context (tenant_id, user_id, trace_id) at the request boundary. Deep services/repositories must pull from this context rather than prop-drilling parameters through 5 layers of functions.
 
-## 58. Standardized Database Entity Base Class
-* **The Rule:** All database entities MUST extend a common `BaseEntity` class that explicitly defines `id` (UUID), `createdAt` (timestamp with timezone), `updatedAt` (timestamp with timezone), and `deletedAt` (nullable timestamp for soft deletes). AI must never manually define these fields per entity.
+## 58. Standardized Database Entity Base Abstraction
+* **The Rule:** All database entities MUST implement a common standard abstraction for `id` (UUID), `createdAt` (timestamp with timezone), `updatedAt` (timestamp with timezone), and `deletedAt` (nullable timestamp for soft deletes). For TypeORM, use a common `BaseEntity` class inheritance. For Prisma, use a common mixin/schema middleware, or explicit schema base models. AI must never manually define these fields per entity from scratch without reusing the core abstraction.
 * **Base Repository Enforcement:** The global query filter for soft deletes (from Rule 29) MUST be implemented as a base repository method that ALL repositories extend from. Never duplicate the soft-delete query scope logic per-repository.
 
 ## 59. API Response Time SLA Categories
@@ -627,7 +681,7 @@ the exact consequence of violating it — not just "be careful".]
 * **The Rule:** Every background job queue (BullMQ/Celery) MUST have a configured Dead Letter Queue. If a job fails all retries, it must be moved to the DLQ (not discarded) so admins can manually inspect and retry it.
 
 ## 62. Explicit Return Types on ALL Service Methods
-* **The Rule:** Relying on TypeScript implicit `any` or inferred returns is forbidden for async operations. Every service method and repository method MUST have an explicitly declared return type (e.g., `Promise<MemberEntity>`).
+* **The Rule:** Relying on TypeScript implicit `any` or inferred returns is forbidden for async operations. Every service method and repository method MUST have an explicitly declared return type (e.g., `Promise<MemberDomainModel>`).
 
 ## 63. Database Connection Pool Configuration
 * **The Rule:** Default ORM connection pools are forbidden. The `database.config.ts` must explicitly define `max` connections (e.g., 20), `acquireTimeout` (30000ms), and `idleTimeoutMillis` (10000ms). **CRITICAL for Multi-Tenancy (Rule 39):** This pool configuration applies to the GLOBAL connection manager, not per-tenant DataSource. With N tenants on the same DB server, the total active connections across all tenant DataSources must be budgeted carefully. Do NOT blindly apply `max: 20` per tenant DataSource or you will exhaust the database server's connection limit.
@@ -798,12 +852,12 @@ Backend implementation (services, repositories, DB queries)
    * @description Suspends a member by setting their status to SUSPENDED and emitting the lifecycle event.
    * @param memberId - The UUID of the member to suspend.
    * @param actorId - The UUID of the staff member performing the action (for audit log).
-   * @returns The updated MemberEntity with status SUSPENDED.
+   * @returns The updated MemberDomainModel with status SUSPENDED.
    * @throws MemberNotFoundException if the memberId does not exist.
    * @throws MemberAlreadySuspendedException if the member is already suspended.
    * @remarks Uses a database transaction to ensure the audit log write and status update are atomic.
    */
-  async suspendMember(memberId: string, actorId: string): Promise<MemberEntity> { ... }
+  async suspendMember(memberId: string, actorId: string): Promise<MemberDomainModel> { ... }
   ```
 * **Why:** An AI fixing a bug in a billing service shouldn't need to read 300 lines to understand what `chargeWallet()` can throw. The JSDoc block is the file's self-contained API contract, drastically reducing token usage and hallucination risk.
 
@@ -1051,7 +1105,7 @@ This rule MUST remain consistent with Rule 99.
   1. **ORM Model / Entity** (`member.entity.ts` or Prisma schema model): Contains only database schema definition. Lives in the repository layer only.
   2. **Domain Object / DTO** (`member.domain.ts` or `member.dto.ts`): A plain TypeScript class/interface with pure business properties and zero ORM imports. This is what services, controllers, and event handlers receive and return.
   3. **Mapper** (`member.mapper.ts`): A dedicated class with `toDomain(entity)` and `toEntity(domain)` static methods that translate between the two. Only the repository layer calls the mapper.
-* **When it's acceptable to use a unified model:** For simple CRUD-only modules with no complex business rules, a unified ORM entity may be used provided: (a) it has no business logic methods on the class itself, and (b) you acknowledge the tradeoff in the module's `_backend_feature.md`.
+* **Absolute Rule:** The exception for a "unified model" is strictly forbidden. Maximum AI isolation requires a predictable, exception-free architecture. A mapper must be used even for simple CRUD modules.
 * **Why:** AI agents default to using ORM entities everywhere — passing `MemberEntity` into services, emitting it over the EventBus, returning it from controllers. This "persistence leakage" means a database schema change (e.g., renaming a column) breaks business logic files that should be completely unaware of the database. A Mapper is the single controlled translation point, and it is the only file the AI needs to touch when the schema changes.
 
 ---
@@ -1066,8 +1120,8 @@ This rule MUST remain consistent with Rule 99.
 
 ---
 
-## 91. Mandatory Backend Pre-Commit Hooks (Blocking Gates Before Push)
-* **The Rule:** This mirrors Frontend Rule 61's `husky + lint-staged` mandate. The backend repository MUST configure pre-commit hooks using `husky` (Node.js) or `pre-commit` framework (Python) to run fast, blocking checks before every `git push`. These hooks run locally on the developer/AI agent's machine — they are the first line of defense before code reaches CI.
+## 91. Mandatory Backend Pre-Commit Hooks (Blocking Gates Before Commit)
+* **The Rule:** This mirrors Frontend Rule 61's `husky + lint-staged` mandate. The backend repository MUST configure pre-commit hooks using `husky` (Node.js) or `pre-commit` framework (Python) to run fast, blocking checks before every `git commit`. A pre-push hook is an optional additional gate, but pre-commit is mandatory. These hooks run locally on the developer/AI agent's machine — they are the first line of defense before code reaches CI.
 * **Required Pre-Commit Checks (must all pass):**
   1. `tsc --noEmit` — TypeScript type check. Zero errors required.
   2. `eslint --fix` — Auto-fix lint violations; fail if unfixable violations remain.
@@ -1283,7 +1337,7 @@ This rule MUST remain consistent with Rule 99.
   - When a timeout fires, the adapter MUST catch the `ECONNABORTED` / `ETIMEDOUT` error and throw a typed custom exception (Rule 6) — e.g., `PaymentGatewayTimeoutException` — never let the raw Axios error propagate to the service layer.
   - ❌ **BAD:** `await this.httpService.get('https://api.stripe.com/charges').toPromise()`
   - ✅ **GOOD:** `await this.httpService.get('https://api.stripe.com/charges', { timeout: TIMEOUT_CONFIG.PAYMENT_GATEWAY_MS }).toPromise()`
-* **SLA Category Integration:** Timeout values must align with the SLA categories defined in Rule 59. A `FAST` endpoint (`< 200ms`) must have downstream timeouts that sum to less than 200ms. If a downstream call has a 5s timeout, the endpoint cannot be classified as `FAST`.
+* **SLA Category Integration:** Timeout values must align with the SLA categories defined in Rule 59. The critical-path timeout budget must fit within the endpoint SLA, including application processing overhead. If a downstream call has a 5s timeout, the endpoint cannot be classified as `FAST`.
 * **Why:** A single slow WhatsApp API call with no timeout can hold a Node.js async thread for 60+ seconds. Under load, 50 concurrent requests to the same slow endpoint will queue 50 threads, exhausting the connection pool and making the entire application unresponsive — not just the WhatsApp feature. Explicit timeouts are the difference between a degraded feature and a full application outage.
 
 ---
@@ -1336,7 +1390,7 @@ This rule MUST remain consistent with Rule 99.
 * **The Forbidden Pattern:**
   ```typescript
   // ❌ BAD — Service directly mutates entity and calls save()
-  async suspendMember(id: string): Promise<MemberEntity> {
+  async suspendMember(id: string): Promise<MemberDomainModel> {
     const member = await this.memberRepo.findByIdOrThrow(id);
     member.status = MemberStatus.SUSPENDED;   // Direct mutation
     member.suspendedAt = new Date();           // Direct mutation
@@ -1347,13 +1401,14 @@ This rule MUST remain consistent with Rule 99.
   ```typescript
   // ✅ GOOD — Repository exposes a named, intention-revealing method
   // In member.repository.ts:
-  async suspendById(id: string, suspendedAt: Date): Promise<MemberEntity> {
+  async suspendById(id: string, suspendedAt: Date): Promise<MemberDomainModel> {
     // All mutation logic, audit hooks, and constraint checks live here
-    return this.repo.save({ id, status: MemberStatus.SUSPENDED, suspendedAt });
+    const entity = await this.repo.save({ id, status: MemberStatus.SUSPENDED, suspendedAt });
+    return this.mapper.toDomain(entity);
   }
 
   // In member-suspension.service.ts:
-  async suspendMember(id: string): Promise<MemberEntity> {
+  async suspendMember(id: string): Promise<MemberDomainModel> {
     await this.memberRepo.findByIdOrThrow(id); // Existence check
     return this.memberRepo.suspendById(id, new Date()); // Repository owns the mutation
   }
@@ -1364,7 +1419,7 @@ This rule MUST remain consistent with Rule 99.
   - Services must NEVER call the generic `repo.save(entity)` directly after mutating entity properties inline.
   - The generic `save()` method on the repository is `protected` or `private` — only callable from within the repository class itself.
   - Every repository mutation method must have its own JSDoc (Rule 80) and be listed in the module's `_backend_feature.md` File Responsibility Map (Rule 19).
-* **The `partial update` exception:** For simple field updates driven by a DTO (e.g., `PATCH /members/:id`), the repository may expose a generic `updateById(id: string, dto: UpdateMemberDto): Promise<MemberEntity>` that internally calls `repo.update(id, dto)`. This is acceptable because the DTO is already validated (Rule 3) and the update is not bypassing any business invariant.
+* **The `partial update` exception:** For simple field updates, the repository may expose a generic `updateById(id: string, updateInput: MemberUpdateInput): Promise<MemberDomainModel>` that internally maps the application-layer input to the ORM and calls `repo.update(id, entityUpdate)`. The repository must never accept HTTP DTOs like `UpdateMemberDto` directly, ensuring the domain layer remains decoupled from the API layer.
 * **Why:** When an AI is asked to "add an audit log entry whenever a member is suspended", the correct answer is to add it inside `memberRepo.suspendById()`. If suspension logic is scattered across 5 different service methods that all do `member.status = 'SUSPENDED'; repo.save(member)`, the AI must find and modify all 5 — and will inevitably miss one. A single named repository method is the single place to add cross-cutting concerns.
 
 ---
@@ -1386,7 +1441,7 @@ This rule MUST remain consistent with Rule 99.
   ```prisma
   model Member {
     id       String @id @default(uuid()) @map("id") // PK_members
-    email    String @unique @map("email")
+    email    String @map("email")
                    // @@unique(["email"], name: "UQ_members_email")
     branchId String @map("branch_id")
                    // FK: FK_members_branches_branch_id
