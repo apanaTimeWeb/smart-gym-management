@@ -29,7 +29,7 @@ export function SuperadminDashboardKpiGrid({ metrics, revenueChartData, timeMult
             iconBgClass: 'bg-success-bg',
         },
         {
-            label: 'TOTAL GYMS' + dateSuffix,
+            label: 'TOTAL GYMS',
             value: String(metrics.totalGyms),
             trend: undefined,
             trendUp: true,
@@ -38,7 +38,7 @@ export function SuperadminDashboardKpiGrid({ metrics, revenueChartData, timeMult
             iconBgClass: 'bg-primary-subtle',
         },
         {
-            label: 'ACTIVE GYMS' + dateSuffix,
+            label: 'ACTIVE GYMS',
             value: String(metrics.activeGyms),
             trend: undefined,
             trendUp: true,
@@ -47,7 +47,7 @@ export function SuperadminDashboardKpiGrid({ metrics, revenueChartData, timeMult
             iconBgClass: 'bg-primary-subtle',
         },
         {
-            label: 'TOTAL END USERS' + dateSuffix,
+            label: 'TOTAL END USERS',
             value: formatNumber(metrics.totalEndUsers || 0),
             trend: undefined,
             trendUp: true,
@@ -56,7 +56,7 @@ export function SuperadminDashboardKpiGrid({ metrics, revenueChartData, timeMult
             iconBgClass: 'bg-purple-bg',
         },
         {
-            label: 'Avg. Income per Gym' + dateSuffix,
+            label: 'Avg. Income per Gym',
             value: formatCurrency(metrics.arpu || 0),
             trend: undefined,
             trendUp: true,
@@ -65,7 +65,7 @@ export function SuperadminDashboardKpiGrid({ metrics, revenueChartData, timeMult
             iconBgClass: 'bg-success-bg',
         },
         {
-            label: 'TRIAL GYMS' + dateSuffix,
+            label: 'TRIAL GYMS',
             value: String(metrics.trialGyms || 0),
             trend: undefined,
             trendUp: true,
@@ -74,7 +74,7 @@ export function SuperadminDashboardKpiGrid({ metrics, revenueChartData, timeMult
             iconBgClass: 'bg-warning-bg',
         },
         {
-            label: 'OVERDUE INVOICES' + dateSuffix,
+            label: 'OVERDUE INVOICES',
             value: String(metrics.overdueInvoicesCount || 0),
             trend: undefined,
             trendUp: false,
@@ -83,7 +83,7 @@ export function SuperadminDashboardKpiGrid({ metrics, revenueChartData, timeMult
             iconBgClass: 'bg-danger-bg',
         },
         {
-            label: 'PENDING REVENUE' + dateSuffix,
+            label: 'PENDING REVENUE',
             value: formatCurrency(metrics.pendingRevenue || 0),
             trend: undefined,
             trendUp: true,
@@ -92,7 +92,7 @@ export function SuperadminDashboardKpiGrid({ metrics, revenueChartData, timeMult
             iconBgClass: 'bg-warning-bg',
         },
         {
-            label: 'PLATFORM HEALTH' + dateSuffix,
+            label: 'PLATFORM HEALTH',
             value: healthDisplay,
             trend: undefined,
             trendUp: healthScore !== undefined ? healthScore >= 80 : true,

@@ -1,9 +1,43 @@
 # Mobile Global Design System — Framework-Agnostic Token Source
 
-> This is the single source of truth for every visual value used in the app.
-> Implementation module differs by framework (a theme object/config for React
+> This file is the **canonical visual values source** — it defines what every
+> token is worth in light and dark mode. `mobile_theme_contract.md` is the
+> **AI-readable catalogue** derived from this file; it lists every token name,
+> value, and usage context in one scannable table. The two-layer hierarchy is:
+> `mobile_global_design.md` (values specification) →
+> `mobile_theme_contract.md` (executable AI reference) →
+> Framework theme module → Feature UI.
+> Implementation differs by framework (a theme object/config for React
 > Native, a `ThemeData`/`ColorScheme` extension for Flutter) — but the VALUES
 > below and the "no magic values anywhere" discipline are universal.
+
+## Global Token Enforcement Rule
+
+No feature/screen/component may contain:
+- raw hex/RGB colors
+- arbitrary spacing values
+- arbitrary font sizes
+- arbitrary radius values
+- arbitrary icon sizes
+- arbitrary animation durations
+- arbitrary shadow/elevation values
+- arbitrary z-index/elevation values
+
+Every visual value must resolve through a documented global token, unless the exception is explicitly documented.
+
+## Token Architecture Chain
+
+`mobile_global_design.md`
+→ framework theme module
+→ `mobile_theme_contract.md`
+→ feature UI
+
+- This file owns canonical visual values.
+- The framework theme module implements them.
+- The theme contract catalogs the exact dependencies.
+- Feature UI consumes semantic tokens only.
+- Feature UI never hardcodes global values.
+- Feature UI never guesses token names.
 
 ## 1. Color Tokens
 
@@ -16,12 +50,45 @@
 | `destructive` | #DC2626 | #EF4444 | Errors, delete actions |
 | `border` | #E5E5EA | #2A2A32 | Dividers, input borders |
 | `muted` | #71717A | #A1A1AA | Secondary/disabled text |
+| `on-primary` | #FFFFFF | #FFFFFF | Text/icon on primary fill |
+| `on-destructive` | #FFFFFF | #FFFFFF | Text/icon on destructive fill |
+| `on-success` | #064E3B | #FFFFFF | Text/icon on success fill |
+| `on-info` | #1E3A8A | #FFFFFF | Text/icon on info fill |
+| `focus-ring` | #A16207 | #EAB308 | Input focus and keyboard focus |
+| `skeleton-base` | #E5E5EA | #2A2A32 | Skeleton shimmer base |
+| `skeleton-highlight` | #F5F5F7 | #3F3F46 | Skeleton shimmer highlight |
+
+### Opacity Tokens
+| Token | Value | Usage |
+|---|---|---|
+| `opacity-disabled` | 0.5 | Disabled interactive elements |
+| `opacity-loading` | 0.7 | Button loading states |
+| `opacity-masked` | 0.8 | Sensitive data masking |
 
 ## 2. Spacing Scale
-`4, 8, 12, 16, 20, 24, 32, 40, 48` (density-independent units). Never use a
-value outside this scale without a documented exception.
+Feature UI must use these named spacing tokens and may not invent arbitrary spacing:
+`space-1 = 4`
+`space-2 = 8`
+`space-3 = 12`
+`space-4 = 16`
+`space-5 = 20`
+`space-6 = 24`
+`space-7 = 32`
+`space-8 = 40`
+`space-9 = 48`
 
 ## 3. Typography Scale
+
+- **Font-family strategy:** System UI font stack is default. Framework may substitute platform-native equivalent.
+- **Line-height:**
+  - `line-height-body = 1.5`
+  - `line-height-heading = 1.2`
+- **Letter-spacing:**
+  - `letter-spacing-caption = 0.5`
+  - `letter-spacing-heading = -0.5`
+
+Every typography visual value must resolve to a named token unless an explicit exception is documented.
+Size values are expressed in platform-independent typography units; framework theme modules MUST translate them to native text units.
 
 | Token | Size | Weight | Usage |
 |---|---|---|---|
@@ -38,14 +105,18 @@ value outside this scale without a documented exception.
 ## 5. Icon Sizes
 `icon-sm (16)`, `icon-md (20)`, `icon-lg (24)` — default stroke/weight `1.75`.
 
+Never use 17, 18, 21, 22, 23 etc. 
+**Note:** Icon visual size and interactive hit area are separate concepts. No arbitrary icon sizes. Touch targets remain governed by the 44 iOS pt / 48 Android dp rule.
+
 ## 6. Touch Targets
 `min-touch-target = 44` (iOS pt) / `48` (Android dp) — every tappable element
 must meet this via minimum height/width or padding.
 
 ## 7. Motion
-- Standard press feedback: scale to `0.96` on press, spring back with medium
-  damping.
-- Standard screen-transition fade/slide: `~250ms` duration, ease-out curve.
+- **Press configuration:** 
+  - `press-scale = 0.96`
+  - `spring-medium` = canonical framework-specific preset defined in the shared animation-config module. Feature UI MUST never define its own spring parameters.
+- Standard screen-transition fade/slide: `duration-slow` (300ms) duration, ease-out curve.
 - All presets centralized in one shared animation-config module — never
   redefined inline per screen.
 - **`prefers-reduced-motion` compliance (mandatory):** Always check the OS
@@ -74,37 +145,51 @@ All animation durations MUST use these named tokens — never arbitrary inline v
 ## 8. Status & Semantic Colors
 
 Every status badge, label, and icon color MUST use these tokens — never raw hex
-values inline. Maps 1:1 with the enum values defined in each feature's `*.types.ts`
-(mobile Rule 34).
+values inline. Global design defines only semantic visual meaning such as success, warning, danger, info, neutral, and purple.
 
-| Token | Text color | Background color | Enum values it covers |
-|---|---|---|---|
-| `status-success` | `#22C55E` | `#064E3B` | `Active`, `Present`, `Paid`, `Delivered`, `Resolved` |
-| `status-warning` | `#F59E0B` | `#451A03` | `Pending`, `Expiring`, `Held`, `InProgress` |
-| `status-danger` | `#EF4444` | `#450A0A` | `Suspended`, `Overdue`, `Failed`, `Expired` |
-| `status-info` | `#3B82F6` | `#1E3A5F` | `New`, `Interested`, `Visited` |
-| `status-neutral` | `#A1A1AA` | `#1E1E2E` | `Inactive`, `Cancelled`, `Exited` |
-| `status-purple` | `#C084FC` | `#3B0764` | `Alumni`, `ExMember`, custom tags |
+| Token | Light | Dark |
+|---|---|---|
+| `status-success-text` | `#064E3B` | `#22C55E` |
+| `status-success-bg` | `#D1FAE5` | `#064E3B` |
+| `status-warning-text` | `#92400E` | `#F59E0B` |
+| `status-warning-bg` | `#FEF3C7` | `#451A03` |
+| `status-danger-text` | `#7F1D1D` | `#EF4444` |
+| `status-danger-bg` | `#FEE2E2` | `#450A0A` |
+| `status-info-text` | `#1E3A8A` | `#3B82F6` |
+| `status-info-bg` | `#DBEAFE` | `#1E3A5F` |
+| `status-neutral-text` | `#3F3F46` | `#A1A1AA` |
+| `status-neutral-bg` | `#F4F4F5` | `#1E1E2E` |
+| `status-purple-text` | `#581C87` | `#C084FC` |
+| `status-purple-bg` | `#F3E8FF` | `#3B0764` |
 
-**Rule:** The status-to-token mapping MUST live in one central constants file
-(e.g. `src/core/config/statusBadgeConfig.ts`) — never as inline conditionals
-inside individual components. This is the mobile equivalent of the web's
-`statusBadgeConfig.ts` (web design Section 4).
+**Rule:** Each feature owns its own status-to-semantic-token mapping inside its feature folder (e.g., `/features/members/config/membersStatusConfig.ts`). Do NOT make global design responsible for feature business-status mapping (like `Active`, `Paid`, `Pending`).
 
 ## 8a. Payment Mode Color Tokens
 
-Payment mode colors are separated from status colors to avoid visual collision.
+Payment mode colors are separated from status colors to avoid visual collision. Keep payment visual tokens global, but do not put payment business logic or feature mappings in this file.
 
-| Token | Text color | Background color | Usage |
-|---|---|---|---|
-| `pay-cash` | `#5EEAD4` | `#134E4A` | Cash payments |
-| `pay-upi` | `#67E8F9` | `#164E63` | UPI payments |
-| `pay-card` | `#94A3B8` | `#1E293B` | Card payments |
-| `pay-bank` | `#38BDF8` | `#0C4A6E` | Bank transfers |
+| Token | Light | Dark |
+|---|---|---|
+| `pay-cash-text` | `#0F766E` | `#5EEAD4` |
+| `pay-cash-bg` | `#CCFBF1` | `#134E4A` |
+| `pay-upi-text` | `#0E7490` | `#67E8F9` |
+| `pay-upi-bg` | `#CFFAFE` | `#164E63` |
+| `pay-card-text` | `#334155` | `#94A3B8` |
+| `pay-card-bg` | `#F1F5F9` | `#1E293B` |
+| `pay-bank-text` | `#0369A1` | `#38BDF8` |
+| `pay-bank-bg` | `#E0F2FE` | `#0C4A6E` |
 
 ## 9. Chart Palette
-Series color order (applied consistently across every chart in the app):
-`primary, #22C55E, #F59E0B, #EC4899, #06B6D4`.
+Series color order (applied consistently across every chart in the app). Charts in feature UI must consume only these semantic tokens.
+
+| Token | Light | Dark |
+|---|---|---|
+| `chart-primary` | `#4F46E5` | `#6366F1` |
+| `chart-success` | `#10B981` | `#22C55E` |
+| `chart-warning` | `#F59E0B` | `#F59E0B` |
+| `chart-danger` | `#EF4444` | `#EF4444` |
+| `chart-secondary`| `#DB2777` | `#EC4899` |
+| `chart-info` | `#0891B2` | `#06B6D4` |
 
 ## 9. Elevation / Shadow
 
@@ -114,19 +199,27 @@ Series color order (applied consistently across every chart in the app):
 | `shadow-md` | opacity 0.1, radius 6 | elevation 3 |
 | `shadow-lg` | opacity 0.15, radius 12 | elevation 8 |
 
-## 10. Semantic Color Usage (How to Apply Tokens — No Guessing)
+## 10. Core Semantic Color Usage (How to Apply Tokens — No Guessing)
 
 Every color token has ONE canonical usage. Never apply a token outside its role.
 
 | Token | Foreground (text/icon) | Background | Border |
 |---|---|---|---|
-| `primary` | Active tab label, selected icon | Primary button fill | Active input ring |
+| `primary` | Active tab label, selected icon | Primary button fill | — |
 | `destructive` | Error message text, delete icon | Destructive button fill | Error input border |
-| `muted` | Placeholder text, disabled label | Skeleton shimmer base | Disabled input border |
+| `muted` | Placeholder text, disabled label | — | Disabled input border |
 | `foreground` | All body text | — | — |
 | `background` | — | Screen root background | — |
 | `card` | — | Card / surface / bottom sheet | — |
 | `border` | — | — | Dividers, default input border |
+| `on-*` | Text/icon over corresponding fill | — | — |
+| `focus-ring` | — | — | Input/keyboard focus ring |
+| `skeleton-*` | — | Skeleton shimmer effects | — |
+| `status-*-text` | Status badge text | — | — |
+| `status-*-bg` | — | Status badge background | — |
+| `pay-*-text` | Payment badge text | — | — |
+| `pay-*-bg` | — | Payment badge background | — |
+| `chart-*` | Chart series data | Chart fill | Chart border |
 
 **Rule:** Never use `primary` for body text. Never use `foreground` as a background.
 Token names describe intent, not appearance — they resolve differently in light vs dark mode.
@@ -139,14 +232,14 @@ Token values below are used for the input **border and label color** only.
 | State | Border color token | Label color token | Notes |
 |---|---|---|---|
 | `default` | `border` | `muted` | Resting state |
-| `focused` | `primary` | `primary` | Active input — platform focus ring |
+| `focused` | `focus-ring` | `primary` | Active input — platform focus ring |
 | `filled` | `border` | `foreground` | Has a value, not focused |
 | `error` | `destructive` | `destructive` | After validation failure |
-| `success` | `#22C55E` (chart green) | `#22C55E` | After successful validation |
-| `disabled` | `border` (50% opacity) | `muted` (50% opacity) | Non-interactive |
+| `success` | `status-success-text` | `status-success-text` | After successful validation |
+| `disabled` | `border` (`opacity-disabled`) | `muted` (`opacity-disabled`) | Non-interactive |
 | `read-only` | `border` (dashed) | `muted` | Displayed but not editable |
 | `loading` | `border` | `muted` | Async options loading (e.g. remote select) |
-| `warning` | `#F59E0B` (chart amber) | `#F59E0B` | Soft advisory — not a hard error |
+| `warning` | `status-warning-text` | `status-warning-text` | Soft advisory — not a hard error |
 
 Inline validation error messages appear **below** the field in `caption` typography, `destructive` color.
 
@@ -157,7 +250,7 @@ No component may ship without its loading, empty, and error states.
 
 | State | When to show | Implementation |
 |---|---|---|
-| **Loading / skeleton** | Data fetch in progress | A skeleton component that mimics the exact layout of the real content. Use `muted` at 30% opacity for shimmer base, 50% for shimmer highlight. **Never a full-screen spinner for content areas** — spinner only for button-level actions. |
+| **Loading / skeleton** | Data fetch in progress | A skeleton component that mimics the exact layout of the real content. Use `skeleton-base` for shimmer base, `skeleton-highlight` for shimmer highlight. **Never a full-screen spinner for content areas** — spinner only for button-level actions. |
 | **Empty** | Fetch succeeded, zero results | A dedicated `[Feature]EmptyState` component with a contextual icon, a short human-readable message, and a primary CTA (e.g. "Add your first member"). Never a blank white screen. |
 | **Error** | Fetch failed or network error | A `[Feature]ErrorFallback` component showing a brief message from `response.message` (backend-driven), a "Try again" retry button, and optionally a help link. Never expose raw error objects. |
 | **Permission denied** | User lacks role access to the resource | A `[Feature]PermissionDenied` component explaining the access restriction. Never show a blank screen or a cryptic error code. |
@@ -197,7 +290,7 @@ Define a named z-index scale so overlapping elements are never resolved with arb
 **Rule:** Never use a raw z-index / elevation number outside this table.
 If a new layer type is needed, extend this table — don't invent an arbitrary value inline.
 
-## 15. Sensitive Data Masking — Visual Specification (Rule 30)
+## 15. Sensitive Data Masking — Visual Specification
 
 Any field displaying sensitive personal or financial data MUST be masked by default
 in list views, card components, and summary screens. Full values appear ONLY in
@@ -210,20 +303,12 @@ dedicated detail/profile screens.
 | Bank account / card | `**** 2310` (last 4 only) | Full number |
 | Payment amount (bulk list) | Summarized total only | Per-record amount |
 
-**Token:** Masked text uses `muted` color token at 80% opacity — visually distinct
+**Token:** Masked text uses `muted` color token at `opacity-masked` — visually distinct
 from real data without being invisible.
-
-**Implementation:** ONE central `maskSensitiveData(value, type)` utility in
-`src/core/utils/maskSensitiveData.ts`. No component may implement its own masking
-logic inline.
 
 ---
 
-## 16. Confirmation Bottom Sheet — Visual Specification (Rule 31)
-
-Every destructive or financial action MUST route through a single shared
-`ConfirmBottomSheet` component before executing. Never use ad-hoc `Alert.alert()`
-or per-screen confirmation dialogs.
+## 16. Confirmation Bottom Sheet — Visual Specification
 
 ### Layout
 ```
@@ -246,17 +331,25 @@ or per-screen confirmation dialogs.
 | Title | `foreground`, `heading-sm` |
 | Description | `muted`, `body-sm` |
 | Cancel button | `border` outline, `foreground` text |
-| Confirm button | `destructive` fill, white text |
+| Confirm button | `destructive` fill, `on-destructive` text |
 | Confirm (loading) | `destructive` fill, `Loader` spinner, `disabled` |
 
 **Z-index:** `z-bottom-sheet` (40) from Section 14.
 
-**Rule:** The confirm button MUST show a loading spinner and be `disabled` while
-the mutation is in flight — never allow double-submission.
-
 ---
 
-## 17. Loading Button State & Pessimistic UI Tokens (Rule 32)
+## 17. Button Visual Hierarchy & Loading State
+
+### General Button Visual Hierarchy
+
+| Button Type | Visual Contract |
+|---|---|
+| Primary | `primary` fill + `on-primary` text |
+| Secondary / Outlined | `border` outline + `foreground` text |
+| Ghost | transparent fill + `foreground` text |
+| Destructive | `destructive` fill + `on-destructive` text |
+| Icon button | icon token + `min-touch-target` |
+| Text button / link | `primary` text |
 
 ### Loading Button State
 When any button triggers an async action it MUST transition to a loading state
@@ -265,29 +358,16 @@ immediately on tap — retaining its size so the layout does not shift.
 | State | Visual |
 |---|---|
 | Default | Label text, `primary` fill |
-| Loading | Label hidden (or shifted), `Loader` icon `animate-spin`, `disabled=true`, same fill color at 70% opacity |
-| Success | Brief checkmark flash (150ms), then revert or navigate |
+| Loading | Label hidden (or shifted), `Loader` icon `animate-spin`, `disabled=true`, same fill color at `opacity-loading` |
+| Success | Brief checkmark flash (`duration-fast`), then revert or navigate |
 | Error | Revert to default state — error shown in toast or inline field |
 
-**Token:** Loading spinner uses white on `primary`/`destructive` fill buttons.
+**Token:** Loading spinner uses `on-primary` / `on-destructive` on primary/destructive fill buttons.
 Spinner size: `icon-sm` (16px).
-
-### Pessimistic UI Rule
-For financial and destructive mutations the UI list/store/cache MUST only update
-AFTER a `2xx` response — never before.
-
-| Mutation type | UI update timing | On error |
-|---|---|---|
-| Financial (payment, refund, payroll) | After `2xx` only | Restore previous state + toast `response.message` |
-| Destructive (delete, suspend, exit) | After `2xx` only | Restore previous state + toast `response.message` |
-| Non-destructive (rename, add note) | Optimistic allowed | Roll back cleanly + toast |
-
-**Rule:** Never hardcode error strings in the UI — always surface `response.message`
-from the backend envelope (consistent with mobile Rule 32 and backend Rule 28).
 
 ---
 
-## 18. Theme Contract Cross-Reference (Rule 52)
+## 18. Theme Contract Cross-Reference
 
 This file (`mobile_global_design.md`) is the VALUES source — it defines what every
 token is worth in light and dark mode.
@@ -306,14 +386,24 @@ scannable table that AI agents read before writing any styled component.
   documentation bug — fix it in the same commit.
 
 **Token categories that MUST appear in `mobile_theme_contract.md`:**
-- Color tokens (Section 1 of this file)
-- Status & semantic color tokens (Section 8)
-- Payment mode color tokens (Section 8a)
-- Spacing scale (Section 2)
-- Typography scale (Section 3)
-- Border radius scale (Section 4)
+- Color tokens (Section 1)
+- Status text/background tokens (Section 8)
+- Payment text/background tokens (Section 8a)
+- Spacing tokens (Section 2)
+- Typography line-height tokens (Section 3)
+- Typography letter-spacing tokens (Section 3)
+- Border radius tokens (Section 4)
 - Icon size tokens (Section 5)
 - Touch target tokens (Section 6)
 - Motion duration tokens (Section 7)
-- Elevation/shadow tokens (Section 10)
+- Press-scale/spring tokens (Section 7)
+- Opacity tokens (Section 1)
+- Skeleton tokens (Section 1)
+- Elevation/shadow tokens (Section 9)
 - Z-index/elevation stack (Section 14)
+
+**CI Check Requirements (Mandatory Sync):**
+CI MUST fail when:
+- a global token exists in this file but is omitted from `mobile_theme_contract.md`
+- the contract references an unknown token
+- a required Light/Dark token pair is incomplete
