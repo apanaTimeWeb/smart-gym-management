@@ -475,7 +475,7 @@ filters, dropdowns, detail views. Backend MUST return all of them (Rule 82A).]
     error?: string;                          // error name / category (e.g. "NOT_FOUND")
     errorCode?: string;                      // machine-readable DOMAIN.ENTITY.REASON (e.g. "BILLING.SUBSCRIPTION.EXPIRED")
     statusCode?: number;                     // HTTP status code, present on error responses
-    validationErrors?: ValidationErrorItem[]; // present ONLY on 400/422 validation failures
+    validationErrors?: ValidationErrorItem[]; // present on canonical 400 validation failures; 422 only when explicitly approved by the endpoint API contract
   }
 
   export interface ValidationErrorItem {
@@ -1102,9 +1102,9 @@ This rule MUST remain consistent with Rule 99.
 * **The 20-Line Soft Ceiling:** A service method body (excluding JSDoc) should rarely exceed ~20 lines. If a method grows beyond this, it is a signal that it is doing too much and must be decomposed.
 * **Decomposition Pattern:**
   - ❌ **BAD:** A single `registerMember()` method that validates, saves the member, creates a subscription, charges the card, sends a welcome email, and writes an audit log — all in one 80-line function.
-  - ✅ **GOOD:** `registerMember()` is an Orchestrator (Rule 8B) that calls: `this.memberRepo.createMember(data)`, then emits `EventBus.emit('MEMBER.REGISTERED', ...)`. The subscription creation, payment charging, and email are handled by separate listeners.
+  - ✅ **GOOD:** `registerMember()` is an Orchestrator (Rule 8B) that calls: `this.memberRepo.createMember(data)`, then emits `EventBus.emit('MEMBERS.MEMBER.REGISTERED', ...)`. The subscription creation, payment charging, and email are handled by separate listeners.
 * **Private Helper Rule:** If a method needs a private helper for a sub-calculation (e.g., calculating a pro-rated amount), the helper must be a `private` method with its own JSDoc (Rule 80) clearly named for its specific task (e.g., `private calculateProRatedAmount()`).
-* **Why:** An AI asked to "add audit logging to member registration" should be able to do so by touching exactly ONE file and ONE method — the event listener for `MEMBER.REGISTERED`. If the entire registration flow is monolithic, the AI must read and modify a 200-line method, risking collateral damage.
+* **Why:** An AI asked to "add audit logging to member registration" should be able to do so by touching exactly ONE file and ONE method — the event listener for `MEMBERS.MEMBER.REGISTERED`. If the entire registration flow is monolithic, the AI must read and modify a 200-line method, risking collateral damage.
 
 ---
 

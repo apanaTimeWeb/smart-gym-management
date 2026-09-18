@@ -454,7 +454,7 @@ For example:
 
 4. **Theme Independence & Portability Contract (No Inline Colors)**: 
 Remove all hardcoded Tailwind color utilities from the JSX. Map all CSS variables (e.g., `--bg-card`, `--text-primary`) in `tailwind.config.ts` as named tokens so you can use standard Tailwind classes like `bg-card` or `text-primary` **without** arbitrary bracket values. **The one canonical pattern is: define the variable in `globals.css`, map it in `tailwind.config.ts`, and use the Tailwind class name (e.g., `bg-card`) in JSX. Never use `bg-[var(--bg-card)]` or `bg-[#1A1A2E]` directly in JSX.**
-- **Theme Portability Contract:** Every module must have a small `[moduleName]_theme_contract.md` or a dedicated comment listing exactly which CSS variables it depends on (e.g., `--bg-card`, `--text-primary`, `--danger`). This ensures that when copying the module into a new project, we know exactly what variables need to be defined in the new `globals.css`.
+- **Theme Portability Contract:** Every module must have a small `[moduleName]_theme_contract.md` or a dedicated comment listing exactly which CSS variables it depends on (e.g., `--bg-card`, `--text-primary`, `--danger-text`, `--danger-bg`). This ensures that when copying the module into a new project, we know exactly what variables need to be defined in the new `globals.css`.
 
 ## 4A. Module Portability Contract
 

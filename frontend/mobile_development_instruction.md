@@ -2143,7 +2143,7 @@ The mobile architecture MUST enforce the following security and robustness const
    - Async state uses `NetworkState<T>` enum — no boolean flag pairs? (Rule 45)
    - Background tasks documented in `_features.md`? (Rule 46)
    - API calls have explicit timeouts from `TIMEOUT_CONFIG`? (Rule 47)
-   - 422 validation errors mapped to form fields via `handleValidationErrors()`? (Rule 48)
+   - 400 validation errors mapped to form fields via `handleValidationErrors()`? (422 only if explicitly approved by API contract) (Rule 48)
    - List items keyed by entity ID — no index keys? (Rule 49)
    - Permitted record identifiers have copy-to-clipboard affordance? (Rule 50)
    - Every list screen has a dedicated `EmptyState` component? (Rule 51)
