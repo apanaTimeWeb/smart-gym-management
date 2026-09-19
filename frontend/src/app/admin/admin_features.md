@@ -10,7 +10,6 @@ The Admin module is the platform-level operational workspace for the gym-managem
 | `admin_components/AdminLayout/` | Admin shell, navigation, header search, notifications, profile entry, usage alert | `AdminLayout.tsx`, `AdminHeader.tsx`, `AdminSidebar.tsx`, `AdminHeaderSearch.tsx`, `useAdminHeaderMemberSearch.ts` |
 | `admin_components/AdminFeedback/` | Confirmation, toast, message, and bulk-message primitives | `AdminConfirmProvider.tsx`, `AdminConfirmModal.tsx`, `AdminToast.tsx`, `AdminMessageModal.tsx` |
 | `admin_components/AdminShared/` | Zero-business-logic Admin UI primitives | `AdminPagination.tsx`, `AdminSearchableDropdown.tsx`, `AdminTableSkeleton.tsx`, `AdminStatCard.tsx` |
-| `admin_components/AdminQrScanner/` | Admin QR scan workflow UI and client-private scan state | `AdminQrScannerModal.tsx`, `useAdminQrScannerLogic.ts` |
 | `admin_utils/` | Admin-owned utility contracts and infrastructure adapters | `useAdminDebounce.ts`, `useAdminUrlQuerySync.ts`, `useAdminUnsavedChangesGuard.ts`, `AdminMonitoring.ts`, `AdminCreateIdempotencyKey.ts`, `AdminIdempotencyIntentStore.ts` |
 | `admin_store/` | Admin-wide UI/session-shell state only | `useAdminGlobalStore.ts`, `useAdminImpersonationStore.ts`, `useAdminToastStore.ts` |
 | `admin_types/` | Admin-wide type contracts | Admin prop/state/shared type definitions |
