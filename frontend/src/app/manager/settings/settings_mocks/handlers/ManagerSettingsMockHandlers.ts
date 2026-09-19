@@ -5,6 +5,8 @@ import { managerAllSettingsSchema } from '@/app/manager/settings/settings_schema
 import type { ManagerAllSettings } from '@/app/manager/settings/settings_types/ManagerSettingsTypes';
 import { ManagerSettingsUrlConfig } from '@/app/manager/settings/settings_url_config';
 
+import { managerMockApiUrl } from '@/app/manager/manager_infrastructure/ManagerMockApiUrl';
+
 let settingsDb: ManagerAllSettings = structuredClone(MOCK_MANAGER_SETTINGS);
 
 export function resetManagerSettingsMockState(): void {
@@ -12,8 +14,8 @@ export function resetManagerSettingsMockState(): void {
 }
 
 export const managerSettingsHandlers = [
-  http.get(ManagerSettingsUrlConfig.BACKEND_API.BASE, () => HttpResponse.json({ success: true, message: 'Settings fetched', data: settingsDb })),
-  http.patch(ManagerSettingsUrlConfig.BACKEND_API.BASE, async ({ request }) => {
+  http.get(managerMockApiUrl(ManagerSettingsUrlConfig.BACKEND_API.BASE), () => HttpResponse.json({ success: true, message: 'Settings fetched', data: settingsDb })),
+  http.patch(managerMockApiUrl(ManagerSettingsUrlConfig.BACKEND_API.BASE), async ({ request }) => {
     const raw: unknown = await request.json();
     const parsed = managerAllSettingsSchema.partial().parse(raw);
     settingsDb = managerAllSettingsSchema.parse({ ...settingsDb, ...parsed });

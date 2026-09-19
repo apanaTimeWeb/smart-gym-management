@@ -3,6 +3,7 @@ import { MANAGER_HTTP_STATUS } from '@/app/manager/manager_infrastructure/Manage
 import { MOCK_MANAGER_EXERCISES } from '@/app/manager/library/library_fixtures/ManagerLibraryMockData';
 import { MOCK_MANAGER_DIET_PLANS } from '@/app/manager/library/library_fixtures/ManagerLibraryDietMockData';
 import { ManagerLibraryUrlConfig } from '@/app/manager/library/library_url_config';
+import { managerMockApiUrl } from '@/app/manager/manager_infrastructure/ManagerMockApiUrl';
 import type { Exercise, DietPlan } from '@/app/manager/library/library_types/ManagerLibraryTypes';
 
 let mockExercises = [...MOCK_MANAGER_EXERCISES];
@@ -18,7 +19,7 @@ export function resetManagerLibraryMockState(): void {
   mockDietPlanIdCounter = 1000;
 }
 export const managerLibraryHandlers = [
-  http.get(ManagerLibraryUrlConfig.BACKEND_API.EXERCISES_BASE, ({ request }) => {
+  http.get(managerMockApiUrl(ManagerLibraryUrlConfig.BACKEND_API.EXERCISES_BASE), ({ request }) => {
     const url = new URL(request.url);
     const search = url.searchParams.get('search')?.toLowerCase();
     const page = Math.max(parseInt(url.searchParams.get('page') || '1', 10), 1);
@@ -30,14 +31,14 @@ export const managerLibraryHandlers = [
     return HttpResponse.json({ success: true, message: 'Exercises fetched', data: { exercises: results.slice(start, start + limit), total, page, limit } });
   }),
 
-  http.post(ManagerLibraryUrlConfig.BACKEND_API.EXERCISES_BASE, async ({ request }) => {
+  http.post(managerMockApiUrl(ManagerLibraryUrlConfig.BACKEND_API.EXERCISES_BASE), async ({ request }) => {
     const body = await request.json() as Partial<Exercise>;
     const newExercise: Exercise = { ...body, id: `ex-${mockExerciseIdCounter++}`, name: body.name || 'New Exercise', muscleGroup: body.muscleGroup || [], category: body.category || '', difficulty: body.difficulty || 'ALL', isActive: body.isActive !== undefined ? body.isActive : true };
     mockExercises = [newExercise, ...mockExercises];
     return HttpResponse.json({ success: true, message: 'Exercise created successfully', data: newExercise });
   }),
 
-  http.patch(`${ManagerLibraryUrlConfig.BACKEND_API.EXERCISES_BASE}/:id`, async ({ request, params }) => {
+  http.patch(managerMockApiUrl(ManagerLibraryUrlConfig.BACKEND_API.EXERCISE_UPDATE(':id')), async ({ request, params }) => {
     const body = await request.json() as Partial<Exercise>;
     const index = mockExercises.findIndex(e => e.id === params.id);
     if (index === -1) return HttpResponse.json({ success: false, message: 'Exercise not found', data: null }, { status: MANAGER_HTTP_STATUS.NOT_FOUND });
@@ -45,12 +46,12 @@ export const managerLibraryHandlers = [
     return HttpResponse.json({ success: true, message: 'Exercise updated successfully', data: mockExercises[index] });
   }),
 
-  http.delete(`${ManagerLibraryUrlConfig.BACKEND_API.EXERCISES_BASE}/:id`, ({ params }) => {
+  http.delete(managerMockApiUrl(ManagerLibraryUrlConfig.BACKEND_API.EXERCISE_DELETE(':id')), ({ params }) => {
     mockExercises = mockExercises.filter(e => e.id !== params.id);
     return HttpResponse.json({ success: true, message: 'Exercise deleted successfully', data: { id: params.id } });
   }),
 
-  http.get(ManagerLibraryUrlConfig.BACKEND_API.DIET_PLANS_BASE, ({ request }) => {
+  http.get(managerMockApiUrl(ManagerLibraryUrlConfig.BACKEND_API.DIET_PLANS_BASE), ({ request }) => {
     const url = new URL(request.url);
     const search = url.searchParams.get('search')?.trim().toLowerCase() || '';
     const goal = url.searchParams.get('goal')?.trim().toLowerCase() || '';
@@ -64,14 +65,14 @@ export const managerLibraryHandlers = [
     return HttpResponse.json({ success: true, message: 'Diet plans fetched', data: { dietPlans: results.slice(start, start + limit), total, page, limit } });
   }),
 
-  http.post(ManagerLibraryUrlConfig.BACKEND_API.DIET_PLANS_BASE, async ({ request }) => {
+  http.post(managerMockApiUrl(ManagerLibraryUrlConfig.BACKEND_API.DIET_PLANS_BASE), async ({ request }) => {
     const body = await request.json() as Partial<DietPlan>;
     const newDietPlan: DietPlan = { ...body, id: `dp-${mockDietPlanIdCounter++}`, name: body.name || 'New Diet Plan', goal: body.goal || 'Maintenance', meals: body.meals || [], isActive: body.isActive !== undefined ? body.isActive : true } as DietPlan;
     mockDietPlans = [newDietPlan, ...mockDietPlans];
     return HttpResponse.json({ success: true, message: 'Diet plan created successfully', data: newDietPlan });
   }),
 
-  http.patch(`${ManagerLibraryUrlConfig.BACKEND_API.DIET_PLANS_BASE}/:id`, async ({ request, params }) => {
+  http.patch(managerMockApiUrl(ManagerLibraryUrlConfig.BACKEND_API.DIET_PLAN_UPDATE(':id')), async ({ request, params }) => {
     const body = await request.json() as Partial<DietPlan>;
     const index = mockDietPlans.findIndex(plan => plan.id === params.id);
     if (index === -1) return HttpResponse.json({ success: false, message: 'Diet plan not found', data: null }, { status: MANAGER_HTTP_STATUS.NOT_FOUND });
@@ -79,7 +80,7 @@ export const managerLibraryHandlers = [
     return HttpResponse.json({ success: true, message: 'Diet plan updated successfully', data: mockDietPlans[index] });
   }),
 
-  http.delete(`${ManagerLibraryUrlConfig.BACKEND_API.DIET_PLANS_BASE}/:id`, ({ params }) => {
+  http.delete(managerMockApiUrl(ManagerLibraryUrlConfig.BACKEND_API.DIET_PLAN_DELETE(':id')), ({ params }) => {
     mockDietPlans = mockDietPlans.filter(plan => plan.id !== params.id);
     return HttpResponse.json({ success: true, message: 'Diet plan deleted successfully', data: { id: params.id } });
   }),

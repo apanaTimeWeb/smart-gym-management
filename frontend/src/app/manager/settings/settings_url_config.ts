@@ -2,6 +2,6 @@
 export const ManagerSettingsUrlConfig = {
   PAGES: { SETTINGS: '/manager/settings' },
   BACKEND_API: {
-    BASE: '/api/v1/manager/settings',
+    BASE: '/manager/settings',
   },
 } as const;
