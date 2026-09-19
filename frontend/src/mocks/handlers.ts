@@ -37,6 +37,9 @@ import { trainerProgressHandlers } from '@/app/trainer/progress-tracking/progres
 import { trainerScheduleHandlers } from '@/app/trainer/schedule/schedule_mocks/handlers/TrainerScheduleMockHandlers';
 import { trainerSessionsHandlers } from '@/app/trainer/sessions/sessions_mocks/handlers/TrainerSessionsMockHandlers';
 import { trainerWorkoutHandlers } from '@/app/trainer/workout/workout_mocks/handlers/TrainerWorkoutMockHandlers';
+import { trainerLibraryHandlers } from '@/app/trainer/library/library_mocks/handlers/TrainerLibraryMockHandlers';
+import { trainerProfileHandlers } from '@/app/trainer/profile/profile_mocks/handlers/TrainerProfileMockHandlers';
+import { trainerNotificationsHandlers } from '@/app/trainer/notifications/notifications_mocks/handlers/TrainerNotificationsMockHandlers';
 
 export const handlers = [
   http.get("/api/health", () => {
@@ -78,4 +81,7 @@ export const handlers = [
   ...trainerScheduleHandlers,
   ...trainerSessionsHandlers,
   ...trainerWorkoutHandlers,
+  ...trainerLibraryHandlers,
+  ...trainerProfileHandlers,
+  ...trainerNotificationsHandlers,
 ];
