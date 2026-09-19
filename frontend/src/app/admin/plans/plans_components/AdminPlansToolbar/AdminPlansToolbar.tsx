@@ -30,7 +30,7 @@ export default function AdminPlansToolbar() {
   }, [localSearch, search, setSearch, setCurrentPage]);
 
   return (
-    <div className="bg-card rounded-xl shadow-sm border border-border p-4 flex flex-wrap gap-3 justify-between items-center mb-6">
+    <div className="bg-card rounded-xl shadow-card border border-border p-4 flex flex-wrap gap-3 justify-between items-center mb-6">
       <div className="flex flex-wrap items-center gap-4">
         <p className="text-sm text-secondary hidden sm:block">
           Active Plans: <span className="font-bold text-primary">{plans.length}</span>
@@ -41,13 +41,13 @@ export default function AdminPlansToolbar() {
             value={localSearch} 
             onChange={e => setLocalSearch(e.target.value)} 
             placeholder="Search plans..." 
-            className="pl-9 pr-3 py-2 border border-border rounded-lg text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page w-48 sm:w-full sm:w-64  bg-input text-primary" 
+            className="pl-9 pr-3 py-2 border border-border rounded-lg text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary w-48 sm:w-full sm:w-64  bg-input text-primary" 
           />
         </div>
         <select 
           value={tierFilter} 
           onChange={e => setTierFilter(e.target.value)} 
-          className="px-3 py-2 border border-border rounded-lg text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-foreground"
+          className="px-3 py-2 border border-border rounded-lg text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-primary"
         >
           <option value="All">All Tiers</option>
           {TIERS.map(t => (
@@ -58,13 +58,13 @@ export default function AdminPlansToolbar() {
       <div className="flex flex-wrap gap-2">
  <button 
  onClick={loadPlans} 
- className="flex items-center gap-2 px-3 py-2 text-sm border border-border rounded-lg hover:bg-primary-subtle text-secondary motion-safe:transition-colors"
+ className="flex items-center gap-2 px-3 py-2 text-sm border border-border rounded-lg hover:bg-primary-subtle text-secondary motion-safe:transition-colors motion-safe:duration-base"
  >
  <RefreshCw size={14} />
  </button>
  <button 
  onClick={openAdd} 
- className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-lg motion-safe:transition-colors hover:bg-primary/90" 
+ className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-on-primary bg-primary rounded-lg motion-safe:transition-colors hover:bg-primary-hover motion-safe:duration-base" 
  >
  <Plus size={16} /> Create Plan
  </button>

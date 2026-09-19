@@ -2,10 +2,11 @@
 // RESPONSIBILITY: Renders the sortable branch-wise P&L comparison table with
 // clickable row expansion. Handles sorting indicators and inline breakdown toggle.
 
-import { ChevronDown, ChevronUp, ChevronsUpDown, ChevronRight } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 import { PNL_TABLE_HEADERS, PNL_STATUS_CONFIG } from '@/app/admin/finance/finance_utils/AdminFinancePnlConstants';
 import {formatCurrency, formatPercent1dp} from '@/lib/formatters';
 import AdminFinancePnlRowBreakdown from '@/app/admin/finance/finance_components/AdminFinancePnl/AdminFinancePnlRowBreakdown';
+import AdminFinancePnlTableSortIcon from '@/app/admin/finance/finance_components/AdminFinancePnl/AdminFinancePnlTableSortIcon';
 import AdminFinancePnlEmptyState from '@/app/admin/finance/finance_components/AdminFinancePnl/AdminFinancePnlEmptyState';
 import type {
   BranchPnlRecord,
@@ -14,22 +15,7 @@ import type {
   PnlStatusFilter,
 } from '@/app/admin/finance/finance_types/AdminFinanceTypes';
 
-interface AdminFinancePnlTableProps {
-  data: BranchPnlRecord[];
-  sortKey: PnlSortKey;
-  sortDir: PnlSortDirection;
-  onSort: (key: PnlSortKey) => void;
-  expandedBranchId: string | null;
-  onToggleExpand: (branchId: string) => void;
-  statusFilter: PnlStatusFilter;
-  onResetFilter: () => void;
-}
-function SortIcon({ col, sortKey, sortDir }: { col: string; sortKey: PnlSortKey; sortDir: PnlSortDirection }) {
-  if (col !== sortKey) return <ChevronsUpDown size={12} className="text-disabled" />;
-  return sortDir === 'asc'
-    ? <ChevronUp size={12} className="text-primary" />
-    : <ChevronDown size={12} className="text-primary" />;
-}
+import type { AdminFinancePnlTableProps } from '@/app/admin/finance/finance_types/AdminFinancePnlTablePropsTypes';
 
 const TOTAL_COLS = PNL_TABLE_HEADERS.length;
 
@@ -48,12 +34,12 @@ export default function AdminFinancePnlTable({
       <div className="overflow-x-auto">
         <table data-admin-responsive-table className="w-full text-left border-collapse">
           <thead>
-            <tr className="bg-primary/5 border-b border-border">
+            <tr className="bg-surface-highlight border-b border-border">
               {PNL_TABLE_HEADERS.map((h) => (
                 <th role="button" tabIndex={0} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); event.currentTarget.click(); } }} 
                   key={h.key}
                   className={`px-4 py-3 text-xs font-semibold text-secondary uppercase tracking-wider select-none whitespace-nowrap ${
-                    h.sortable ? 'cursor-pointer hover:text-foreground motion-safe:transition-colors' : ''
+                    h.sortable ? 'cursor-pointer hover:text-primary motion-safe:transition-colors' : ''
                   }`}
                   onClick={() => {
                     if (h.sortable) onSort(h.key as PnlSortKey);
@@ -66,7 +52,7 @@ export default function AdminFinancePnlTable({
                 >
                   <div className="flex items-center gap-1.5">
                     {h.label}
-                    {h.sortable && <SortIcon col={h.key} sortKey={sortKey} sortDir={sortDir} />}
+                    {h.sortable && <AdminFinancePnlTableSortIcon column={h.key} sortKey={sortKey} sortDir={sortDir} />}
                   </div>
                 </th>
               ))}
@@ -88,17 +74,17 @@ export default function AdminFinancePnlTable({
                       key={branch.branchId}
                       onClick={() => onToggleExpand(branch.branchId)}
                       className={`cursor-pointer group motion-safe:transition-colors ${
-                        isExpanded ? 'bg-primary/5' : 'hover:bg-input'
+                        isExpanded ? 'bg-surface-highlight' : 'hover:bg-input'
                       }`}
                     >
                       {/* Branch Name */}
                       <td className="px-4 py-3.5">
                         <div className="flex items-center gap-2.5">
-                          <div className={`w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary text-xs font-bold flex-shrink-0`}>
+                          <div className={`w-8 h-8 rounded-lg bg-primary-subtle flex items-center justify-center text-primary text-xs font-bold flex-shrink-0`}>
                             {branch.branchName.charAt(0)}
                           </div>
                           <div className="min-w-0">
-                            <p className="text-sm font-semibold text-foreground truncate">{branch.branchName}</p>
+                            <p className="text-sm font-semibold text-primary truncate">{branch.branchName}</p>
                             <p className="text-xs text-disabled truncate">{branch.location}</p>
                           </div>
                         </div>
@@ -163,7 +149,7 @@ export default function AdminFinancePnlTable({
           {/* Footer Totals Row */}
           {data.length > 0 && (
             <tfoot>
-              <tr className="bg-primary/5 border-t-2 border-primary/20">
+              <tr className="bg-surface-highlight border-t-2 border-border">
                 <td className="px-4 py-3 text-xs font-bold text-secondary uppercase tracking-wider">
                   {data.length} Branch{data.length !== 1 ? 'es' : ''} Total
                 </td>

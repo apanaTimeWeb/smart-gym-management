@@ -4,10 +4,8 @@
 import { PERFORMANCE_PERIOD_OPTIONS } from '@/app/admin/hr/hr_utils/AdminHrPerformanceConstants';
 import type { PerformancePeriod } from '@/app/admin/hr/hr_types/AdminHrPerformanceTypes';
 
-interface AdminHrPerformancePeriodSelectorProps {
-  period: PerformancePeriod;
-  onPeriodChange: (p: PerformancePeriod) => void;
-}
+import type { AdminHrPerformancePeriodSelectorProps } from '@/app/admin/hr/hr_types/AdminHrPerformancePeriodSelectorPropsTypes';
+
 
 export default function AdminHrPerformancePeriodSelector({ period, onPeriodChange }: AdminHrPerformancePeriodSelectorProps) {
 
@@ -20,8 +18,8 @@ export default function AdminHrPerformancePeriodSelector({ period, onPeriodChang
             onClick={() => onPeriodChange(opt.value)}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
               period === opt.value
-                ? 'bg-primary text-primary-foreground shadow-sm'
-                : 'text-secondary hover:text-foreground hover:bg-card'
+                ? 'bg-primary text-on-primary shadow-card'
+                : 'text-secondary hover:text-primary hover:bg-card'
             }`}
           >
             {opt.label}

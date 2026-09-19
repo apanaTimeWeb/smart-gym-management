@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Owns typed HTTP access for payout summaries, P&L rows, and KPI data.
 import { z } from "zod";
 import { apiFetch, type ApiResponse } from "@/lib/api";
-import type { AdminSortDirection } from '@/app/admin/admin_types/AdminSortTypes';
+import type { AdminPayoutsSortDirection } from '@/app/admin/payouts/payouts_types/AdminPayoutsSortTypes';
 import { AdminPayoutsUrlConfig } from "@/app/admin/payouts/admin_payouts_url_config";
 import { gymPayoutSchema, pnLEntrySchema, payoutsKpiDataSchema } from "@/app/admin/payouts/payouts_types/AdminPayoutsSchemas";
 import type { GymPayout, PnLEntry, PayoutsKPIData } from "@/app/admin/payouts/payouts_types/AdminPayoutsTypes";
@@ -13,7 +13,7 @@ export interface AdminPayoutsQueryParams {
   page?: number;
   limit?: number;
   sortKey?: string;
-  sortDir?: AdminSortDirection;
+  sortDir?: AdminPayoutsSortDirection;
 }
 
 function buildQuery(params?: AdminPayoutsQueryParams): string {

@@ -4,26 +4,34 @@
 
 import { useMemo } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { superadminMessagingApi } from '@/app/superadmin/messaging/messaging_api/superadmin_messaging_api';
-import { useSuperadminDebouncedValue } from '@/app/superadmin/superadmin_utils/useSuperadminDebouncedValue';
-import { useSuperadminUrlState } from '@/app/superadmin/superadmin_utils/useSuperadminUrlState';
-import type { MessageChannel, MessagingTab } from '@/app/superadmin/messaging/messaging_types/superadmin_messaging_types';
+import { superadminMessagingApi } from '@/app/superadmin/messaging/messaging_api/SuperadminMessagingApi';
+import { useDebouncedValue } from '@/hooks/useDebouncedValue';
+import { useUrlState } from '@/hooks/useUrlState';
+import { useSuperadminMessagingNotificationMutations } from '@/app/superadmin/messaging/messaging_utils/useSuperadminMessagingNotificationMutations';
+import type { MessageChannel, MessagingTab } from '@/app/superadmin/messaging/messaging_types/SuperadminMessagingTypes';
 import { ITEMS_PER_PAGE } from '@/app/superadmin/messaging/messaging_types/SuperadminMessagingConstants';
 
 const MESSAGE_QUERY_KEY = ['superadmin', 'messaging', 'messages'] as const;
 const NOTIFICATION_QUERY_KEY = ['superadmin', 'messaging', 'notifications'] as const;
 const TENANT_QUERY_KEY = ['superadmin', 'messaging', 'tenants'] as const;
 
+/**
+ * Purpose: Owns server-state fetching and mutations for the Superadmin tenant messaging workspace. No JSX.
+ * Inputs: values defined by the exported hook signature.
+ * Output: the hook's typed state/actions/query contract.
+ * Side effects: remain scoped to the owning feature or approved application infrastructure.
+ * Invariant: does not move feature business state into unrelated modules.
+ */
 export function useSuperadminMessaging() {
   const queryClient = useQueryClient();
-  const { getParam, setParams } = useSuperadminUrlState();
+  const { getParam, setParams } = useUrlState();
   const tab = getParam('tab', 'messages') as MessagingTab;
   const search = getParam('search', '');
   const channel = getParam('channel', 'ALL') as MessageChannel | 'ALL';
   const startDate = getParam('startDate', '');
   const endDate = getParam('endDate', '');
   const currentPage = Math.max(Number(getParam('page', '1')) || 1, 1);
-  const debouncedSearch = useSuperadminDebouncedValue(search, 300);
+  const debouncedSearch = useDebouncedValue(search, 300);
 
   const queryParams = useMemo(() => {
     const params: Record<string, string> = {
@@ -51,27 +59,7 @@ export function useSuperadminMessaging() {
     queryFn: superadminMessagingApi.fetchTenants,
   });
 
-  const markReadMutation = useMutation({
-    mutationFn: (id: string) => superadminMessagingApi.markNotificationRead(id),
-    onSuccess: (response) => {
-      if (!response.data) return;
-      queryClient.setQueryData<typeof notificationsQuery.data>(NOTIFICATION_QUERY_KEY, (old) => {
-        if (!old?.data) return old;
-        return {
-          ...old,
-          data: old.data.map((notification) => notification.id === response.data?.id ? response.data : notification),
-        };
-      });
-    },
-  });
-
-  const markAllReadMutation = useMutation({
-    mutationFn: superadminMessagingApi.markAllNotificationsRead,
-    onSuccess: (response) => {
-      if (response.data) queryClient.setQueryData(NOTIFICATION_QUERY_KEY, response);
-    },
-  });
-
+  const notificationMutations = useSuperadminMessagingNotificationMutations();
   const sendMessageMutation = useMutation({
     mutationFn: (payload: Parameters<typeof superadminMessagingApi.sendMessage>[0]) => superadminMessagingApi.sendMessage(payload),
     onSuccess: () => {
@@ -110,14 +98,11 @@ export function useSuperadminMessaging() {
     notifications,
     tenants,
     unreadCount: notifications.filter((notification) => !notification.read).length,
-    isLoading: messagesQuery.isLoading || notificationsQuery.isLoading || tenantsQuery.isLoading,
+    isPending: messagesQuery.isPending || notificationsQuery.isPending || tenantsQuery.isPending,
     isFetchingMessages: messagesQuery.isFetching,
     isError: Boolean(queryError),
     error: queryError instanceof Error ? queryError.message : 'Messaging data could not be loaded.',
-    markRead: markReadMutation.mutateAsync,
-    isMarkingRead: markReadMutation.isPending,
-    markAllRead: markAllReadMutation.mutateAsync,
-    isMarkingAllRead: markAllReadMutation.isPending,
+    ...notificationMutations,
     sendMessage: sendMessageMutation.mutateAsync,
     isSending: sendMessageMutation.isPending,
     refetchAll: async () => {

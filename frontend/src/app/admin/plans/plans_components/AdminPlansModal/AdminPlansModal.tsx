@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import { X, Save, Loader2 } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { AdminSearchableDropdown } from '@/app/admin/admin_components/AdminShared/AdminSearchableDropdown';
+import { AdminSearchableDropdown } from '@/app/admin/admin_layout/AdminShared/AdminSearchableDropdown/AdminSearchableDropdown';
 import { useAdminPlansLogic } from '@/app/admin/plans/plans_context/useAdminPlansLogic';
 import { useAdminPlansStore } from '@/app/admin/plans/plans_store/useAdminPlansStore';
 import { TIERS, PlanSchema, type PlanFormValues, EMPTY_PLAN_FORM } from '@/app/admin/plans/plans_utils/AdminPlansSharedConstants';
@@ -28,7 +28,7 @@ export default function AdminPlansModal() {
 
   return (
     <div data-admin-dialog="true" role="dialog" aria-modal="true" tabIndex={-1} className="fixed inset-0 bg-overlay z-40 flex items-center justify-center p-4">
-      <div className="bg-card rounded-2xl shadow-2xl shadow-black/50 w-full max-w-lg max-h-full overflow-y-auto border border-border">
+      <div className="bg-card rounded-2xl shadow-dialog shadow-dialog w-full max-w-lg max-h-full overflow-y-auto border border-border">
         <div className="sticky top-0 bg-card px-6 py-4 border-b border-border flex items-center justify-between">
           <h3 className="text-lg font-bold text-primary">
             {editId ? 'Edit Plan' : 'Create New Plan'}
@@ -36,7 +36,7 @@ export default function AdminPlansModal() {
           <button
             type="button"
             onClick={() => setShowModal(false)}
-            className="p-2 rounded-lg hover:bg-primary-subtle text-secondary motion-safe:transition-all motion-safe:duration-200"
+            className="p-2 rounded-lg hover:bg-primary-subtle text-secondary motion-safe:transition-all motion-safe:duration-base"
             aria-label="Close modal"
           >
             <X size={18} />
@@ -116,17 +116,17 @@ export default function AdminPlansModal() {
             <button
               type="button"
               onClick={() => setShowModal(false)}
-              className="flex-1 py-2.5 border border-border rounded-xl text-sm font-medium text-primary hover:bg-primary-subtle motion-safe:transition-all motion-safe:duration-200 motion-safe:active:scale-95"
+              className="flex-1 py-2.5 border border-border rounded-xl text-sm font-medium text-primary hover:bg-primary-subtle motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={saving}
-              className="flex-1 py-2.5 rounded-xl text-sm font-bold text-primary-foreground bg-primary hover:bg-primary-hover flex items-center justify-center gap-2 disabled:opacity-70 motion-safe:transition-all motion-safe:duration-200 motion-safe:active:scale-95"
+              className="flex-1 py-2.5 rounded-xl text-sm font-bold text-on-primary bg-primary hover:bg-primary-hover flex items-center justify-center gap-2 disabled:opacity-70 motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95"
             >
               {saving
-                ? <Loader2 className="w-4 h-4 motion-safe:animate-spin" />
+                ? <Loader2 className="w-4 h-4 motion-safe:animate-spin motion-safe:duration-base" />
                 : <><Save size={15} />{editId ? 'Update' : 'Create Plan'}</>
               }
             </button>

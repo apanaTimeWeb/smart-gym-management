@@ -27,3 +27,4 @@ export interface Branch {
   staffList?: BranchStaffMember[];
   studentList?: BranchStudent[];
 }
+export type AdminBranchesTimeRange = "weekly" | "monthly" | "yearly" | "custom" | string;

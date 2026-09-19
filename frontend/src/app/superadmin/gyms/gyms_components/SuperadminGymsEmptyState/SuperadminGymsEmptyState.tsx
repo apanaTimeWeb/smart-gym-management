@@ -6,7 +6,7 @@ export default function SuperadminGymsEmptyState() {
       <div className="bg-card p-4 rounded-full border border-border mb-3">
         <Ban className="w-8 h-8 opacity-50"/>
       </div>
-      <h3 className="text-base font-medium text-foreground">No gyms found</h3>
+      <h3 className="text-base font-medium text-primary">No gyms found</h3>
       <p className="text-sm mt-1 max-w-sm text-center">We couldn&apos;t find any gyms matching your current search. Try adjusting your filters.</p>
     </div>);
 }

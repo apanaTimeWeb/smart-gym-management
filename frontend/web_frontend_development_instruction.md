@@ -106,6 +106,11 @@ Do NOT create a global business layer merely to avoid duplication.
 
 If two features contain similar business behavior, duplication is allowed and is preferred when duplication improves AI isolation and feature portability.
 
+> **CRITICAL WARNING TO AI AGENTS:** 
+> Do NOT attempt to "DRY up" business components by moving them to global folders like `src/components/ui/`. 
+> Components like "Date Filters", "Business Dropdowns", or "Status Badges" that contain domain-specific data/constants (e.g. "Last 3 Months", "Active") MUST be duplicated per feature, NEVER globalized. 
+> `src/components/ui/` is strictly for dumb, zero-business primitives (like raw Buttons, Inputs, Dialogs).
+
 ---
 
 ### 1B. HIERARCHICAL MODULE BOUNDARY — FEATURE MODULE IS THE AI REPAIR UNIT

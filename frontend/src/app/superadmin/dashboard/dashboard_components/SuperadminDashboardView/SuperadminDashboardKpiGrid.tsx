@@ -2,7 +2,7 @@
 'use client';
 import { Users, Building2, CreditCard, Activity, AlertCircle, Clock, CheckCircle2, DollarSign } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import type { SuperadminDashboardKpiGridProps } from '@/app/superadmin/dashboard/superadmin_dashboard_types/superadmin_dashboard_types';
+import type { SuperadminDashboardKpiGridProps } from '@/app/superadmin/dashboard/dashboard_types/SuperadminDashboardTypes';
 import { useSuperadminDashboardDateRangeSuffix } from '@/app/superadmin/dashboard/dashboard_components/SuperadminDashboardView/useSuperadminDashboardDateRangeSuffix';
 import { DashboardUrlConfig } from '@/app/superadmin/dashboard/superadmin_dashboard_url_config';
 import { formatCurrency, formatNumber } from '@/lib/formatters';
@@ -52,7 +52,7 @@ export function SuperadminDashboardKpiGrid({ metrics, revenueChartData, timeMult
             trend: undefined,
             trendUp: true,
             icon: Users,
-            colorClass: 'text-purple',
+            colorClass: 'text-purple-text',
             iconBgClass: 'bg-purple-bg',
         },
         {
@@ -114,12 +114,12 @@ export function SuperadminDashboardKpiGrid({ metrics, revenueChartData, timeMult
     return (<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
       {kpiCards.map((card) => {
             const Icon = card.icon;
-            return (<div key={card.label} onClick={card.onClick} className={`relative overflow-hidden bg-card border border-border rounded-xl p-6 shadow-sm motion-safe:hover:-translate-y-1 motion-safe:hover:shadow-lg motion-safe:transition-all motion-safe:duration-base bg-gradient-to-b from-primary-subtle to-transparent ${card.onClick ? 'cursor-pointer' : ''}`}>
+            return (<div key={card.label} onClick={card.onClick} className={`relative overflow-hidden bg-card border border-border rounded-xl p-6 shadow-card motion-safe:hover:-translate-y-1 motion-safe:hover:shadow-card motion-safe:transition-all motion-safe:duration-base ${card.onClick ? 'cursor-pointer' : ''}`}>
             <div className="flex items-center justify-between mb-4">
               <span className="text-secondary font-medium text-xs uppercase tracking-wider">{card.label}</span>
                 <Icon className={`w-5 h-5 ${card.colorClass}`}/>
             </div>
-            <div className="text-3xl font-bold text-foreground">{card.value}</div>
+            <div className="text-3xl font-bold text-primary">{card.value}</div>
             {card.trend && (<p className={`text-xs mt-2 font-medium ${card.trendUp ? 'text-success' : 'text-danger'}`}>
                 {card.trendUp ? '↑' : '↓'} {card.trend}
               </p>)}

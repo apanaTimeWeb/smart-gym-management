@@ -28,9 +28,9 @@ export const PNL_PERIOD_OPTIONS: PnlPeriodOption[] = [
 // ─── Status Badge Config ───────────────────────────────────────────────────────
 
 export const PNL_STATUS_CONFIG: Record<BranchPnlStatus, { label: string; textClass: string; bgClass: string }> = {
-  PROFITABLE: { label: 'Profitable', textClass: 'text-success', bgClass: 'bg-success/10' },
-  BREAKEVEN:  { label: 'Break-even', textClass: 'text-warning',  bgClass: 'bg-warning/10'  },
-  LOSS:       { label: 'Loss-making', textClass: 'text-danger',  bgClass: 'bg-danger/10'   },
+  PROFITABLE: { label: 'Profitable', textClass: 'text-success', bgClass: 'bg-success' },
+  BREAKEVEN:  { label: 'Break-even', textClass: 'text-warning',  bgClass: 'bg-warning'  },
+  LOSS:       { label: 'Loss-making', textClass: 'text-danger',  bgClass: 'bg-danger'   },
 };
 
 // ─── Table Headers ─────────────────────────────────────────────────────────────

@@ -1,13 +1,13 @@
 // RESPONSIBILITY: Renders the Superadmin backups V1 Restore test history view.
 'use client';
-import SuperadminV1Panel from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminV1Panel';
+import Panel from '@/components/ui/Panel';
 import type { SuperadminBackupsV1SectionProps } from '@/app/superadmin/backups/backups_types/SuperadminBackupsV1Types.ts';
 export default function SuperadminBackupsV1RestoreTestHistoryPanel({ data }: SuperadminBackupsV1SectionProps) {
-    return <SuperadminV1Panel title="Restore test history" description="A backup existing on disk is not enough; restore tests prove that recovery works.">
+    return <Panel title="Restore test history" description="A backup existing on disk is not enough; restore tests prove that recovery works.">
   <div className="space-y-3">
     {data.restoreHistory.map((h) => <div key={h.date} className="flex items-center justify-between rounded-lg border border-border p-3">
       <div>
-        <p className="font-medium text-foreground">
+        <p className="font-medium text-primary">
           {h.date}
         </p>
         <p className="text-xs text-secondary">
@@ -22,5 +22,5 @@ export default function SuperadminBackupsV1RestoreTestHistoryPanel({ data }: Sup
       </span>
     </div>)}
   </div>
-    </SuperadminV1Panel>;
+    </Panel>;
 }

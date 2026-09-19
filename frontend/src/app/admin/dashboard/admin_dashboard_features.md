@@ -13,9 +13,9 @@ ApexCharts exclusively. This module must never import from `/manager`, `/trainer
 | `loading.tsx` | Structural skeleton matching KPI card grid + chart layout |
 | `error.tsx` | Error boundary with retry button |
 | `dashboard_components/AdminDashboardMain.tsx` | Root Client Component — composes all sections |
-| `dashboard_components/AdminDashboardKpiCards.tsx` | Row of 4–5 stat cards (revenue, members, sign-ups, pending) |
-| `dashboard_components/AdminDashboardRevenueChart.tsx` | ApexCharts line/bar chart for monthly revenue trend |
-| `dashboard_components/AdminDashboardRecentActivity.tsx` | Latest member sign-ups and payment events table |
+| `dashboard_components/AdminDashboardKPIs.tsx` | Row of 4–5 stat cards (revenue, members, sign-ups, pending) |
+| `dashboard_components/AdminDashboardRevenueTrend.tsx` | ApexCharts line/bar chart for monthly revenue trend |
+| `dashboard_components/AdminDashboardAlerts.tsx` | Latest member sign-ups and payment events table |
 
 ## Feature Inventory
 | Feature | Path | Purpose | Main API Calls | Status |
@@ -80,7 +80,7 @@ ApexCharts exclusively. This module must never import from `/manager`, `/trainer
 ## API Contract
 | API file | Endpoint literal observed |
 |---|---|
-| API client | `AdminDashboardApi.ts` + `AdminDashboardServerApi.ts` for server prefetch | Module-owned typed API boundary; exact endpoint constants are defined in the feature URL configuration and consumed by the API client. |
+| API client | `dashboard_api/AdminDashboardApi.ts` for server prefetch | Module-owned typed API boundary; exact endpoint constants are defined in the feature URL configuration and consumed by the API client. |
 
 ## UI Data Requirements
 - Every data-driven table, KPI, chart, filter, dropdown and detail field must map to a typed API response field and be represented in module-owned fixtures where mocked.

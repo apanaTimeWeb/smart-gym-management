@@ -5,55 +5,49 @@ import type { SubmitHandler, Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { X, Plus, Trash2, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { useQueryClient, useMutation } from '@tanstack/react-query';
 import { useSuperadminPlansStore } from '@/app/superadmin/plans/plans_store/useSuperadminPlansStore';
-import { plansApi } from '@/app/superadmin/plans/superadmin_plans_api/superadmin_plans_api';
-import type { CreatePlanPayload } from '@/app/superadmin/plans/superadmin_plans_types/superadmin_plans_types';
-import { useSuperadminUnsavedChangesGuard } from '@/app/superadmin/superadmin_utils/useSuperadminUnsavedChangesGuard';
-import { planFormSchema, type PlanFormValues } from '@/app/superadmin/plans/superadmin_plans_types/superadmin_plans_schema';
+import { useSuperadminPlanMutations } from '@/app/superadmin/plans/plans_utils/useSuperadminPlanMutations';
+import { useUnsavedChangesGuard } from '@/hooks/useUnsavedChangesGuard';
+import { planFormSchema } from '@/app/superadmin/plans/plans_types/SuperadminPlansSchema';
+import type { SuperadminPlansFormValues } from '@/app/superadmin/plans/plans_types/SuperadminPlansFormTypes';
 export default function SuperadminPlanCreateModal() {
     const isOpen = useSuperadminPlansStore(state => state.isCreateModalOpen);
     const closeCreateModal = useSuperadminPlansStore(state => state.closeCreateModal);
-    const queryClient = useQueryClient();
-    const { register, control, handleSubmit, formState: { errors, isDirty }, reset } = useForm<PlanFormValues>({
-        resolver: zodResolver(planFormSchema) as unknown as Resolver<PlanFormValues>,
+    const { createPlan, isCreating } = useSuperadminPlanMutations();
+    const { register, control, handleSubmit, formState: { errors, isDirty }, reset } = useForm<SuperadminPlansFormValues>({
+        resolver: zodResolver(planFormSchema) as unknown as Resolver<SuperadminPlansFormValues>,
         defaultValues: {
             name: '', priceMonthly: 0, priceAnnual: 0, maxMembers: 100, maxStaff: 5, dbLimitGb: 1.0, binaryLimitGb: 10.0,
             features: [{ value: 'Core Gym Management' }],
         },
     });
-    useSuperadminUnsavedChangesGuard(isDirty);
+    useUnsavedChangesGuard(isDirty);
     const { fields, append, remove } = useFieldArray({ control, name: 'features' });
-    const createMutation = useMutation({
-        mutationFn: (data: CreatePlanPayload) => plansApi.createPlan(data),
-        onSuccess: (res) => {
-            toast.success(res.message, { id: 'superadmin-toast-da7b224bdc' });
-            queryClient.invalidateQueries({ queryKey: ['superadmin', 'plans'] });
-            reset();
-            closeCreateModal();
-        },
-        onError: (err: unknown) => {
-            toast.error((err as Error).message, { id: 'failed-to-create-plan' });
-        }
-    });
-    const isSubmitting = createMutation.isPending;
+
     if (!isOpen)
         return null;
     const handleClose = () => { reset(); closeCreateModal(); };
-    const onSubmit: SubmitHandler<PlanFormValues> = async (data) => {
-        createMutation.mutate({
+    const onSubmit: SubmitHandler<SuperadminPlansFormValues> = async (data) => {
+        try {
+          const response = await createPlan({
             ...data,
             features: data.features.map(f => f.value),
             currency: 'INR',
             isPublic: true,
             trialDays: 14,
-            setupFee: 0
-        });
+            setupFee: 0,
+          });
+          toast.success(response.message, { id: 'superadmin-plan-create' });
+          reset();
+          closeCreateModal();
+        } catch (error: unknown) {
+          toast.error(error instanceof Error ? error.message : '', { id: 'superadmin-plan-create' });
+        }
     };
     return (<div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 backdrop-blur-sm p-4" role="dialog" aria-modal="true">
-      <div className="bg-overlay border border-border rounded-2xl w-full max-w-2xl max-h-screen overflow-hidden flex flex-col shadow-2xl">
+      <div className="bg-overlay border border-border rounded-2xl w-full max-w-2xl max-h-screen overflow-hidden flex flex-col shadow-dialog">
         <div className="flex items-center justify-between p-6 border-b border-border">
-          <h2 className="text-xl font-bold text-foreground">Create New Subscription Plan</h2>
+          <h2 className="text-xl font-bold text-primary">Create New Subscription Plan</h2>
           <button onClick={handleClose} className="p-2 hover:bg-input rounded-full motion-safe:transition-colors text-secondary" aria-label="Close modal">
             <X size={18}/>
           </button>
@@ -62,7 +56,7 @@ export default function SuperadminPlanCreateModal() {
         <form onSubmit={handleSubmit(onSubmit)} className="flex-1 overflow-y-auto p-6 space-y-6">
           <div className="space-y-2">
             <label className="block text-sm font-medium text-secondary">Plan Name <span className="text-danger">*</span></label>
-            <input {...register('name')} placeholder="e.g. Pro Tier" className="w-full bg-input border border-border rounded-xl px-4 py-3 text-foreground focus:border-primary outline-none motion-safe:transition-colors"/>
+            <input {...register('name')} placeholder="e.g. Pro Tier" className="w-full bg-input border border-border rounded-xl px-4 py-3 text-primary focus:border-primary outline-none motion-safe:transition-colors"/>
             {errors.name && <p className="text-danger text-xs">{errors.name.message}</p>}
           </div>
 
@@ -70,7 +64,7 @@ export default function SuperadminPlanCreateModal() {
             {(['priceMonthly', 'priceAnnual'] as const).map(field => (<div key={field} className="space-y-2">
                 <label className="block text-sm font-medium text-secondary">{field === 'priceMonthly' ? 'Monthly Price (₹)' : 'Annual Price (₹)'} <span className="text-danger">*</span></label>
                 <input type="number" min="0" onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+')
-            e.preventDefault(); }} step="0.01" {...register(field, { valueAsNumber: true })} className="w-full bg-input border border-border rounded-xl px-4 py-3 text-foreground focus:border-primary outline-none motion-safe:transition-colors"/>
+            e.preventDefault(); }} step="0.01" {...register(field, { valueAsNumber: true })} className="w-full bg-input border border-border rounded-xl px-4 py-3 text-primary focus:border-primary outline-none motion-safe:transition-colors"/>
                 {errors[field] && <p className="text-danger text-xs">{errors[field]?.message}</p>}
               </div>))}
           </div>
@@ -79,7 +73,7 @@ export default function SuperadminPlanCreateModal() {
             {(['maxMembers', 'maxStaff'] as const).map(field => (<div key={field} className="space-y-2">
                 <label className="block text-sm font-medium text-secondary">{field === 'maxMembers' ? 'Max Members' : 'Max Staff'} <span className="text-danger">*</span></label>
                 <input type="number" min="0" onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+')
-            e.preventDefault(); }} {...register(field, { valueAsNumber: true })} className="w-full bg-input border border-border rounded-xl px-4 py-3 text-foreground focus:border-primary outline-none motion-safe:transition-colors"/>
+            e.preventDefault(); }} {...register(field, { valueAsNumber: true })} className="w-full bg-input border border-border rounded-xl px-4 py-3 text-primary focus:border-primary outline-none motion-safe:transition-colors"/>
                 {errors[field] && <p className="text-danger text-xs">{errors[field]?.message}</p>}
               </div>))}
           </div>
@@ -88,7 +82,7 @@ export default function SuperadminPlanCreateModal() {
             {(['dbLimitGb', 'binaryLimitGb'] as const).map(field => (<div key={field} className="space-y-2">
                 <label className="block text-sm font-medium text-secondary">{field === 'dbLimitGb' ? 'DB Limit (GB)' : 'Binary Limit (GB)'} <span className="text-danger">*</span></label>
                 <input type="number" min="0" step="0.1" onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+')
-            e.preventDefault(); }} {...register(field, { valueAsNumber: true })} className="w-full bg-input border border-border rounded-xl px-4 py-3 text-foreground focus:border-primary outline-none motion-safe:transition-colors"/>
+            e.preventDefault(); }} {...register(field, { valueAsNumber: true })} className="w-full bg-input border border-border rounded-xl px-4 py-3 text-primary focus:border-primary outline-none motion-safe:transition-colors"/>
                 {errors[field] && <p className="text-danger text-xs">{errors[field]?.message}</p>}
               </div>))}
           </div>
@@ -97,11 +91,11 @@ export default function SuperadminPlanCreateModal() {
             <div className="flex items-center justify-between">
               <label className="block text-sm font-medium text-secondary">Features List <span className="text-danger">*</span></label>
               <button type="button" onClick={() => append({ value: '' })} className="flex items-center gap-1 text-sm text-primary hover:text-primary-hover font-medium">
-                <Plus className="w-4 h-4"/> Add Feature
+                <Plus size={18} strokeWidth={2}/> Add Feature
               </button>
             </div>
             {fields.map((field, index) => (<div key={field.id} className="flex flex-wrap items-center gap-2">
-                <input {...register(`features.${index}.value`)} placeholder="e.g. Advanced Analytics" className="flex-1 bg-input border border-border rounded-xl px-4 py-2.5 text-foreground focus:border-primary outline-none motion-safe:transition-colors"/>
+                <input {...register(`features.${index}.value`)} placeholder="e.g. Advanced Analytics" className="flex-1 bg-input border border-border rounded-xl px-4 py-2.5 text-primary focus:border-primary outline-none motion-safe:transition-colors"/>
                 {fields.length > 1 && (<button type="button" onClick={() => remove(index)} className="p-2.5 text-secondary hover:text-danger hover:bg-danger/10 rounded-xl motion-safe:transition-colors" aria-label="Remove feature">
                     <Trash2 size={18}/>
                   </button>)}
@@ -111,8 +105,8 @@ export default function SuperadminPlanCreateModal() {
 
         <div className="p-6 border-t border-border bg-sidebar flex justify-end gap-3">
           <button type="button" onClick={handleClose} className="px-6 py-2.5 rounded-xl font-medium text-secondary hover:bg-input motion-safe:transition-colors">Cancel</button>
-          <button onClick={handleSubmit(onSubmit)} disabled={isSubmitting} className="px-6 py-2.5 rounded-xl font-medium bg-primary text-white hover:bg-primary-hover motion-safe:transition-colors disabled:opacity-50 flex items-center gap-2 motion-safe:active:scale-95">
-            {isSubmitting ? <><Loader2 className="w-4 h-4 motion-safe:animate-spin"/> Creating...</> : 'Create Plan'}
+          <button onClick={handleSubmit(onSubmit)} disabled={isCreating} className="px-6 py-2.5 rounded-xl font-medium bg-primary text-on-primary hover:bg-primary-hover motion-safe:transition-colors disabled:opacity-50 flex items-center gap-2 motion-safe:active:scale-95">
+            {isCreating ? <><Loader2 size={18} strokeWidth={2} className="motion-safe:animate-spin"/> Creating...</> : 'Create Plan'}
           </button>
         </div>
       </div>

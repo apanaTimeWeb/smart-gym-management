@@ -1,6 +1,16 @@
-import { describe, expect, it } from 'vitest';
+import { resetSuperadminMessagingMockState } from '@/app/superadmin/messaging/messaging_mocks/handlers/SuperadminMessagingMockHandlers';
+import { resetSuperadminMessagingV1WhatsAppMockState } from '@/app/superadmin/messaging/messaging_whatsapp_mocks/handlers/SuperadminMessagingV1WhatsAppMockHandlers';
+import {describe, expect, it, beforeEach} from 'vitest';
 import { SUPERADMIN_WHATSAPP_BULK_CENTER_MOCK_FIXTURE } from '@/app/superadmin/messaging/messaging_whatsapp_mocks/fixtures/SuperadminMessagingV1WhatsAppMockFixtures';
 import { SuperadminWhatsAppBulkCenterDataSchema } from '@/app/superadmin/messaging/messaging_whatsapp_types/SuperadminMessagingV1WhatsAppTypes';
+beforeEach(() => {
+  resetSuperadminMessagingV1WhatsAppMockState();
+});
+
+beforeEach(() => {
+  resetSuperadminMessagingMockState();
+});
+
 describe('Superadmin tenant Smart Bulk WhatsApp contract', () => {
     it('accepts the complete tenant-facing fixture', () => {
         const result = SuperadminWhatsAppBulkCenterDataSchema.safeParse(SUPERADMIN_WHATSAPP_BULK_CENTER_MOCK_FIXTURE);

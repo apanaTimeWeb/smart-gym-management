@@ -1,10 +1,9 @@
 // RESPONSIBILITY: Renders the status badge pill for a single coupon. Purely presentational — maps CouponStatus to design system colors.
 'use client';
-import type { CouponStatus } from '@/app/superadmin/coupons/superadmin_coupons_types/superadmin_coupons_types';
-interface CouponsStatusBadgeProps {
-    status: CouponStatus;
-}
-export default function SuperadminCouponsStatusBadge({ status }: CouponsStatusBadgeProps) {
+import type { CouponStatus } from '@/app/superadmin/coupons/coupons_types/SuperadminCouponsTypes';
+import type { SuperadminCouponsStatusBadgeProps } from '@/app/superadmin/coupons/coupons_types/SuperadminCouponsStatusBadgeTypes';
+
+export default function SuperadminCouponsStatusBadge({ status }: SuperadminCouponsStatusBadgeProps) {
     switch (status) {
         case 'ACTIVE':
             return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-success-bg text-success">ACTIVE</span>;

@@ -1,99 +1,54 @@
-# Tax & Compliance — Feature Map
+# Superadmin Compliance — Feature Map
 
 ## Module Purpose
-This Superadmin-only module provides platform-level visibility into tax registration and compliance readiness across gym tenants and regions. It solves the problem of scattered tax information by giving the platform owner a regional coverage view, tenant document list, and readiness summary. A Superadmin can identify missing tax details and documents nearing expiry before they become an operational or billing problem. The module does not replace tenant accounting workflows; it provides the platform governance layer above them.
+This feature owns the Superadmin business workflow implemented under `compliance/`. The active route is `/superadmin/compliance`. Business behavior, API contracts, validation, server-state hooks, fixtures, MSW handlers, and tests are kept within this feature boundary. Cross-feature business logic is outside this module.
 
 ## Directory Structure
+
 | Folder | Responsibility | Key Files |
 |---|---|---|
-| `compliance_components/` | Regional coverage, document readiness, and summary sections | `SuperadminComplianceClient.tsx`, `SuperadminCompliancePageHeader.tsx`, `SuperadminComplianceSummaryCards.tsx`, `SuperadminComplianceRegionalCoveragePanel.tsx`, `SuperadminComplianceDocumentsPanel.tsx`, `SuperadminComplianceReadinessPanel.tsx` |
-| `compliance_api/` | API boundary | `superadmin_compliance_api.ts` |
-| `compliance_types/` | Zod contract and inferred types | `SuperadminComplianceTypes.ts` |
-| `compliance_mocks/fixtures/` | Complete regional and document fixtures | `SuperadminComplianceMockFixtures.ts` |
-| `compliance_mocks/handlers/` | MSW handler | `SuperadminComplianceMockHandlers.ts` |
-| `compliance_utils/` | TanStack Query orchestration | `useSuperadminCompliancePage.ts` |
+| `compliance_api/` | Feature-owned responsibility for compliance api. | `SuperadminComplianceApi.ts` |
+| `compliance_components/` | Feature-owned responsibility for compliance components. | `SuperadminComplianceClient.tsx`, `SuperadminComplianceDocumentsEmptyState.tsx`, `SuperadminComplianceDocumentsPanel.tsx`, `SuperadminCompliancePageHeader.tsx`, `SuperadminComplianceReadinessPanel.tsx`, `SuperadminComplianceRegionalCoverageEmptyState.tsx`, `SuperadminComplianceRegionalCoveragePanel.tsx`, `SuperadminComplianceSummaryCards.tsx` |
+| `compliance_mocks/` | Feature-owned responsibility for compliance mocks. | `(directory present; no direct files)` |
+| `compliance_tests/` | Feature-owned responsibility for compliance tests. | `SuperadminComplianceBasic.test.tsx` |
+| `compliance_types/` | Feature-owned responsibility for compliance types. | `SuperadminComplianceTypes.ts`, `SuperadminRouteErrorTypes.ts` |
+| `compliance_utils/` | Feature-owned responsibility for compliance utils. | `SuperadminComplianceStatusBadgeConfig.ts`, `useSuperadminCompliancePage.test.tsx`, `useSuperadminCompliancePage.ts` |
+
+## Approved External Dependencies
+
+### Application Infrastructure
+- `@/app/superadmin/superadmin_components` — role-shell/generic interaction infrastructure only.
+- `@/lib/*` and `@/components/*` — only approved application infrastructure imported by this feature.
+
+### Business Feature Dependencies
+- None
+
+### Role-Level Business Dependencies
+- None
 
 ## Feature Inventory
-| Feature | Route | What the Superadmin Can Do | Main API Calls | Status |
+
+| Surface | Route | Implemented User Actions | API Boundary | Status |
 |---|---|---|---|---|
-| Regional Coverage | `/superadmin/compliance` | Compare registration completeness and configured tax rates by region | `GET /api/superadmin/compliance` | Implemented in source; runtime build not verified here |
-| Compliance Documents | `/superadmin/compliance` | Review tenant registrations, validity, and expiry dates | `GET /api/superadmin/compliance` | Implemented in source; runtime build not verified here |
-| Readiness | `/superadmin/compliance` | Review missing tax details and open compliance work | `GET /api/superadmin/compliance` | Implemented in source; runtime build not verified here |
+| Superadmin Compliance | `/superadmin/compliance` | view the module surface; use the documented filters and controls; open supported detail/edit surfaces | `SuperadminComplianceApi.ts` | Source-verified; host runtime pending |
 
 ## User Flows & Interactions
-1. Superadmin opens the compliance page.
-2. The query retrieves summary, regional coverage, and document records.
-3. Zod validates the response before UI consumption.
-4. The Superadmin identifies regions requiring attention and documents nearing expiry.
 
-## Data and State Architecture
-- Query key: `['superadmin', 'compliance', 'overview']`.
-- Server state: TanStack Query.
-- UI state: local only.
-- MSW fixtures and handlers remain module-owned.
+1. Open the active route and load the feature-owned query/API boundary.
+2. Apply the available search, filter, sort, pagination, form, or row actions exposed by the current client surface.
+3. Mutations go through feature-owned API contracts and, in MSW mode, feature-owned handlers/fixtures.
+4. Success/error state is reconciled back into the same feature surface.
 
-## API Contract
-| Function | Method | Endpoint | Request | Response `data` |
-|---|---|---|---|---|
-| `fetchComplianceData()` | GET | `/api/superadmin/compliance` | None | `SuperadminComplianceResponse` |
+## Verification Notes
+- Active route pages mount one primary client tree; no `V1Client` import is mounted from route `page.tsx`.
+- Mutable mock-state handlers have reset functions covered by tests where present.
+- Deprecated marker-only and JSON-stringify tautology tests were removed from the module test tree.
+- Dependency-backed `tsc`, lint, Vitest runtime, Playwright, and real browser responsive execution require the host application environment and remain unverified here.
 
-## UI Data Requirements
-| UI Element | Required Field(s) | Response Path | Nullable? |
-|---|---|---|---|
-| Registered tenants | `registeredTenants` | `data.summary.registeredTenants` | No |
-| Missing tax details | `missingTaxDetails` | `data.summary.missingTaxDetails` | No |
-| Expiring documents | `documentsExpiring` | `data.summary.documentsExpiring` | No |
-| Open compliance tasks | `openComplianceTasks` | `data.summary.openComplianceTasks` | No |
-| Region | `region` | `data.regions[].region` | No |
-| Registered count | `registered` | `data.regions[].registered` | No |
-| Missing count | `missing` | `data.regions[].missing` | No |
-| Tax rate | `taxRate` | `data.regions[].taxRate` | No |
-| Regional status | `status` | `data.regions[].status` | No |
-| Tenant | `tenant` | `data.documents[].tenant` | No |
-| Document | `document` | `data.documents[].document` | No |
-| Document status | `status` | `data.documents[].status` | No |
-| Expiry | `expires` | `data.documents[].expires` | Yes |
-
-## Permissions and Security
-- Required role: `SUPERADMIN`.
-- Compliance records are sensitive platform data; only approved role capabilities may access the route.
-- Tax/document mutations must be audited and confirmation-protected when mutation controls are added.
-- No cross-role business imports.
-
-## Loading, Empty, and Error States
-- `loading.tsx` provides structural skeletons.
-- `error.tsx` provides the branded retry state.
-- Nullable document expiry uses the canonical en dash fallback.
-
-## Edge Cases and AI Warnings
-- **Expiry may be unknown:** `expires = null` is valid and must render as `—`.
-- **Region can require attention:** do not imply a region is ready solely because its tax rate exists.
-- **Counts are API data:** never hardcode a registration count into JSX.
-- **Status colors stay centralized:** use `SuperadminStatusBadgeConfig.ts` for status presentation.
-- **Do not import tenant accounting data from another role module:** use the compliance API contract.
-- **Tax rules are region-sensitive:** the response must remain authoritative when a real backend replaces the mock.
-
-## Component Responsibility Map
-| Component | Responsibility |
-|---|---|
-| `SuperadminComplianceClient.tsx` | Orchestrates page query state and sections. |
-| `SuperadminCompliancePageHeader.tsx` | Renders title and description. |
-| `SuperadminComplianceSummaryCards.tsx` | Renders readiness summary metrics. |
-| `SuperadminComplianceRegionalCoveragePanel.tsx` | Renders region-by-region coverage comparison. |
-| `SuperadminComplianceDocumentsPanel.tsx` | Renders tenant compliance documents and expiry. |
-| `SuperadminComplianceRegionalCoverageEmptyState.tsx` | Renders the empty state for regional coverage. |
-| `SuperadminComplianceDocumentsEmptyState.tsx` | Renders the empty state for compliance documents. |
-| `SuperadminComplianceReadinessPanel.tsx` | Renders readiness follow-up signals. |
-
-## External Infrastructure Dependencies
-- `@/lib/api`
-- `@/lib/formatters`
-- `@tanstack/react-query`
-- `msw`
-- Superadmin shared UI primitives.
-
-## Final Component Additions
-- `SuperadminComplianceRegionalCoverageEmptyState.tsx` — renders the regional coverage empty state.
-- `SuperadminComplianceDocumentsEmptyState.tsx` — renders the compliance-document empty state.
-
-Regional percentage calculations safely return zero when no regional records are present.
+## Rule Compliance Checklist
+- [x] Canonical feature-owned API/type directories are used.
+- [x] No active route page mounts a parallel `V1Client` tree.
+- [x] Module-owned mock reset coverage is present where mutable handlers exist.
+- [x] Feature docs contain a concrete directory map and compliance checklist.
+- [x] No marker-only or JSON-stringify tautology test remains.
+- [ ] Host dependency-backed build/lint/runtime verification — unavailable in source-only package.

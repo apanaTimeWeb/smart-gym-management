@@ -1,11 +1,13 @@
+import { resetSuperadminGymsMockState } from '@/app/superadmin/gyms/gyms_mocks/handlers/SuperadminGymsMockHandlers';
+import { resetSuperadminGymsMockState } from '@/app/superadmin/gyms/gyms_mocks/handlers/SuperadminGymsV1MockHandlers';
 import { renderHook, waitFor, act } from '@testing-library/react';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { useSuperadminAddGymForm } from '@/app/superadmin/gyms/gyms_components/SuperadminAddGymForm/useSuperadminAddGymForm';
-import { gymsApi } from '@/app/superadmin/gyms/superadmin_gyms_api/superadmin_gyms_api';
+import { gymsApi } from '@/app/superadmin/gyms/gyms_api/SuperadminGymsApi';
 import { useQueryClient, useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
-vi.mock('@/app/superadmin/gyms/superadmin_gyms_api/superadmin_gyms_api');
+vi.mock('@/app/superadmin/gyms/gyms_api/SuperadminGymsApi');
 vi.mock('@tanstack/react-query', () => ({
     useQueryClient: vi.fn(),
     useQuery: vi.fn()
@@ -14,6 +16,14 @@ vi.mock('next/navigation', () => ({
     useRouter: vi.fn()
 }));
 vi.mock('react-hot-toast');
+beforeEach(() => {
+  resetSuperadminGymsMockState();
+});
+
+beforeEach(() => {
+  resetSuperadminGymsMockState();
+});
+
 describe('useSuperadminAddGymForm', () => {
     const mockRouter = { push: vi.fn() };
     const mockQueryClient = { invalidateQueries: vi.fn() };

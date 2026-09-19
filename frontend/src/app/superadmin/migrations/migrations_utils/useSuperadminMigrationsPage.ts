@@ -4,24 +4,31 @@
 // RESPONSIBILITY: Owns Superadmin migration query state, deployment mutation state, confirmation, and query reconciliation.
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
-import { migrationsApi } from '@/app/superadmin/migrations/superadmin_migrations_api/superadmin_migrations_api';
-import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
+import { migrationsApi } from '@/app/superadmin/migrations/migrations_api/SuperadminMigrationsApi';
+import { useConfirm } from '@/components/ui/Feedback/ConfirmProvider';
 const MIGRATIONS_QUERY_KEY = ['superadmin', 'migrations', 'list'] as const;
+/**
+ * Purpose: Owns Superadmin migration query state, deployment mutation state, confirmation, and query reconciliation.
+ * Inputs: values defined by the exported hook signature.
+ * Output: the hook's typed state/actions/query contract.
+ * Side effects: remain scoped to the owning feature or approved application infrastructure.
+ * Invariant: does not move feature business state into unrelated modules.
+ */
 export function useSuperadminMigrationsPage() {
     const queryClient = useQueryClient();
-    const { confirm } = useSuperadminConfirm();
+    const { confirm } = useConfirm();
     const migrationsQuery = useQuery({
         queryKey: MIGRATIONS_QUERY_KEY,
         queryFn: () => migrationsApi.fetchMigrations(),
     });
     const deployMutation = useMutation({
-        mutationFn: (targetVersion: string) => migrationsApi.triggerMigration(targetVersion),
+        mutationFn: ({ targetVersion, idempotencyKey }: { targetVersion: string; idempotencyKey: string }) => migrationsApi.startMigration(targetVersion, idempotencyKey),
         onSuccess: (response) => {
             toast.success(response.message, { id: 'superadmin-migrations-deploy-success' });
             void queryClient.invalidateQueries({ queryKey: MIGRATIONS_QUERY_KEY });
         },
         onError: (error: unknown) => {
-            toast.error(error instanceof Error ? error.message : 'Migration request failed.', {
+            toast.error(error instanceof Error ? error.message : '', {
                 id: 'superadmin-migrations-deploy-error',
             });
         },
@@ -39,7 +46,7 @@ export function useSuperadminMigrationsPage() {
         });
         if (!confirmed)
             return false;
-        await deployMutation.mutateAsync(normalizedVersion);
+        await deployMutation.mutateAsync({ targetVersion: normalizedVersion, idempotencyKey: crypto.randomUUID() });
         return true;
     };
     return {

@@ -1,22 +1,17 @@
 // RESPONSIBILITY: Renders the SuperadminInvoicesTable component.
 'use client';
 import React, { useState } from 'react';
-import type { SaaSInvoice } from '@/app/superadmin/invoices/superadmin_invoices_types/superadmin_invoices_types';
+import type { SaaSInvoice } from '@/app/superadmin/invoices/invoices_types/SuperadminInvoicesTypes';
 import SuperadminInvoicesTableRow from '@/app/superadmin/invoices/invoices_components/SuperadminInvoicesTable/SuperadminInvoicesTableRow';
 import SuperadminInvoicesEmptyState from '@/app/superadmin/invoices/invoices_components/SuperadminInvoicesEmptyState/SuperadminInvoicesEmptyState';
-import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
-interface InvoicesTableProps {
-    invoices: SaaSInvoice[];
-    onLogPaymentClick: () => void;
-    currentPage: number;
-    totalPages: number;
-    onPageChange: (page: number) => void;
-}
+import Pagination from '@/components/ui/Pagination';
+import type { SuperadminInvoicesTableProps } from '@/app/superadmin/invoices/invoices_types/SuperadminInvoicesTableTypes';
+
 const ITEMS_PER_PAGE = 10;
 // Rule 68: TABLE_COLUMN_COUNT must match <th> count AND colSpan on empty state
 // Columns: Invoice ID | Gym | Plan | Type | Amount | Status | Date | Actions = 8
 const TABLE_COLUMN_COUNT = 9;
-export default function SuperadminInvoicesTable({ invoices, onLogPaymentClick, currentPage, totalPages, onPageChange }: InvoicesTableProps) {
+export default function SuperadminInvoicesTable({ invoices, onLogPaymentClick, currentPage, totalPages, onPageChange }: SuperadminInvoicesTableProps) {
     // Server-side pagination is now used.
     const paginatedInvoices = invoices;
     return (<div className="flex flex-col min-h-96">
@@ -43,7 +38,7 @@ export default function SuperadminInvoicesTable({ invoices, onLogPaymentClick, c
         </table>
       </div>
       {totalPages > 1 && (<div className="p-4 border-t border-border">
-          <SuperadminPagination currentPage={currentPage} totalPages={totalPages} onPageChange={onPageChange}/>
+          <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={onPageChange}/>
         </div>)}
     </div>);
 }

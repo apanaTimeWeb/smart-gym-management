@@ -6,12 +6,19 @@
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { superadminProfileApi } from '@/app/superadmin/profile/profile_api/superadmin_profile_api';
+import { superadminProfileApi } from '@/app/superadmin/profile/profile_api/SuperadminProfileApi';
 import type { ProfileTab, UpdateSuperadminProfilePayload, UpdateSuperadminPasswordPayload, Toggle2FAPayload, } from '@/app/superadmin/profile/profile_types/SuperadminProfileTypes';
+/**
+ * Purpose: Encapsulates functionality for useSuperadminProfilePage.ts.
+ * Inputs: values defined by the exported hook signature.
+ * Output: the hook's typed state/actions/query contract.
+ * Side effects: remain scoped to the owning feature or approved application infrastructure.
+ * Invariant: does not move feature business state into unrelated modules.
+ */
 export function useSuperadminProfilePage() {
     const queryClient = useQueryClient();
     const [activeTab, setActiveTab] = useState<ProfileTab>('personal');
-    const { data: profileRes, isLoading: profileLoading } = useQuery({
+    const { data: profileRes, isPending: profileLoading } = useQuery({
         queryKey: ['superadmin', 'profile'],
         queryFn: () => superadminProfileApi.fetchProfile(),
     });
@@ -36,7 +43,7 @@ export function useSuperadminProfilePage() {
         }
     });
     const toggle2FAMutation = useMutation({
-        mutationFn: (payload: Toggle2FAPayload) => superadminProfileApi.toggle2FA(payload),
+        mutationFn: (payload: Toggle2FAPayload) => superadminProfileApi.updateTwoFactor(payload),
         onSuccess: (res) => {
             queryClient.invalidateQueries({ queryKey: ['superadmin', 'profile'] });
             toast.success(res.message, { id: 'superadmin-toast-770426e425' });

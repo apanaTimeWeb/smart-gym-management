@@ -12,8 +12,9 @@ export const subscriptionsApi = {
   fetchPlans: async () => {
     return apiFetch<ApiResponse<SaaSPlan[]>>(`${AdminSubscriptionsUrlConfig.api.base}/fetchPlans`, { method: 'GET', dataSchema: z.array(saaSPlanSchema) });
   },
-  fetchInvoices: async () => {
-    return apiFetch<ApiResponse<Invoice[]>>(`${AdminSubscriptionsUrlConfig.api.base}/fetchInvoices`, { method: 'GET', dataSchema: z.array(invoiceSchema) });
+  fetchInvoices: async (params: { page: number; limit: number }) => {
+    const query = new URLSearchParams({ page: String(params.page), limit: String(params.limit) }).toString();
+    return apiFetch<ApiResponse<Invoice[]>>(`${AdminSubscriptionsUrlConfig.api.base}/fetchInvoices?${query}`, { method: 'GET', dataSchema: z.array(invoiceSchema) });
   },
   fetchPaymentMethods: async () => {
     return apiFetch<ApiResponse<PaymentMethod[]>>(`${AdminSubscriptionsUrlConfig.api.base}/fetchPaymentMethods`, { method: 'GET', dataSchema: z.array(paymentMethodSchema) });
@@ -21,16 +22,16 @@ export const subscriptionsApi = {
   fetchKPIs: async () => {
     return apiFetch<ApiResponse<SubscriptionKPIData>>(`${AdminSubscriptionsUrlConfig.api.base}/fetchKPIs`, { method: 'GET', dataSchema: subscriptionKpiDataSchema });
   },
-  upgradePlan: async (planId: string) => {
-          return apiFetch<ApiResponse<null>>(`${AdminSubscriptionsUrlConfig.api.base}/upgradePlan`, { method: 'POST', body: JSON.stringify(planId), dataSchema: z.null() });
+  upgradePlan: async (planId: string, idempotencyKey: string) => {
+          return apiFetch<ApiResponse<null>>(`${AdminSubscriptionsUrlConfig.api.base}/upgradePlan`, { method: 'POST', body: JSON.stringify(planId), headers: { 'Idempotency-Key': idempotencyKey }, dataSchema: z.null() });
       },
-  toggleAutoRenew: async () => {
-          return apiFetch<ApiResponse<null>>(`${AdminSubscriptionsUrlConfig.api.base}/toggleAutoRenew`, { method: 'POST', dataSchema: z.null() });
+  toggleAutoRenew: async (idempotencyKey: string) => {
+          return apiFetch<ApiResponse<null>>(`${AdminSubscriptionsUrlConfig.api.base}/toggleAutoRenew`, { method: 'POST', headers: { 'Idempotency-Key': idempotencyKey }, dataSchema: z.null() });
       },
   setDefaultPaymentMethod: async (id: string) => {
           return apiFetch<ApiResponse<null>>(`${AdminSubscriptionsUrlConfig.api.base}/setDefaultPaymentMethod`, { method: 'POST', body: JSON.stringify(id), dataSchema: z.null() });
       },
-  removePaymentMethod: async (id: string) => {
-          return apiFetch<ApiResponse<null>>(`${AdminSubscriptionsUrlConfig.api.base}/removePaymentMethod`, { method: 'DELETE', body: JSON.stringify(id), dataSchema: z.null() });
+  removePaymentMethod: async (id: string, idempotencyKey: string) => {
+          return apiFetch<ApiResponse<null>>(`${AdminSubscriptionsUrlConfig.api.base}/removePaymentMethod`, { method: 'DELETE', body: JSON.stringify(id), headers: { 'Idempotency-Key': idempotencyKey }, dataSchema: z.null() });
       },
 };

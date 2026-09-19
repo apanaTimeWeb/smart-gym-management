@@ -1,4 +1,4 @@
-import type { SuperadminFranchise } from '@/app/superadmin/franchises/franchises_types/superadmin_franchises_types';
+import type { SuperadminFranchise } from '@/app/superadmin/franchises/franchises_types/SuperadminFranchisesTypes';
 export const MOCK_SUPERADMIN_FRANCHISES: SuperadminFranchise[] = [
     { id: 'f1', franchiseName: 'Gold Gym Group', ownerName: 'Alice Johnson', ownerEmail: 'alice@goldgym.com', phone: '9876543210', status: 'ACTIVE', branchCount: 15, totalMembers: 5000, totalStaff: 150, totalMonthlyRevenue: 500000, plan: 'Enterprise', city: 'Mumbai', state: 'MH', gstin: '27AABCU9603R1ZX', createdAt: '2026-09-02' },
     { id: 'f2', franchiseName: 'Anytime Fitness India', ownerName: 'Bob Smith', ownerEmail: 'bob@anytime.com', phone: '9876543211', status: 'ACTIVE', branchCount: 8, totalMembers: 2500, totalStaff: 80, totalMonthlyRevenue: 250000, plan: 'Pro', city: 'Delhi', state: 'DL', createdAt: '2026-08-15' },

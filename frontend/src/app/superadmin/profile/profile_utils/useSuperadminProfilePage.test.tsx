@@ -1,3 +1,5 @@
+import { beforeEach } from 'vitest';
+import { resetSuperadminProfileMockState } from '@/app/superadmin/profile/profile_mocks/handlers/SuperadminProfileMockHandlers';
 // RESPONSIBILITY: Renders the use Superadmin Profile Page.test component and its associated UI logic.
 import { renderHook, act } from '@testing-library/react';
 import { useSuperadminProfilePage } from '@/app/superadmin/profile/profile_utils/useSuperadminProfilePage';
@@ -12,6 +14,10 @@ const wrapper = ({ children }: {
 }) => (<QueryClientProvider client={queryClient}>
     {children}
   </QueryClientProvider>);
+beforeEach(() => {
+  resetSuperadminProfileMockState();
+});
+
 describe('useSuperadminProfilePage hook', () => {
     it('initializes with default state', () => {
         const { result } = renderHook(() => useSuperadminProfilePage(), { wrapper });

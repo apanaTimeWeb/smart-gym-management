@@ -66,7 +66,7 @@ All calls go through `payoutsApi` in `payouts_api/AdminPayoutsApi.ts`.
 
 ## Permissions and Security
 
-- **Required role:** `ADMIN` — enforced by `middleware.ts`
+- **Required role:** `ADMIN` — enforced by `@/middleware.ts`
 - **Read-only:** Zero write operations. No approve/reject/create payout buttons exist anywhere in this module.
 - **Cross-role isolation:** Zero imports from `/manager`, `/trainer`, `/superadmin`
 - **Amount formatting:** All amounts use `formatCurrency()` from `@/lib/formatters` — never raw `.toFixed()`
@@ -107,7 +107,7 @@ All calls go through `payoutsApi` in `payouts_api/AdminPayoutsApi.ts`.
 - [x] Rule 7: Type Isolation — all types in `payouts_types/`
 - [x] Rule 8: Server/Client Boundary — `page.tsx` = Server Component
 - [x] Rule 9: `loading.tsx` + `error.tsx` + `not-found.tsx` present
-- [x] Rule 11: `payouts_url_config.ts` present
+- [x] Rule 11: `admin_payouts_url_config.ts` present
 - [x] Rule 13: Feature Map — this document
 - [x] Rule 40: `payouts_forbidden.md` present
 - [x] Rule 80: `formatCurrency()` used — no raw `.toFixed()` in JSX

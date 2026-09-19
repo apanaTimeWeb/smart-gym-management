@@ -38,10 +38,10 @@ export default function AdminSubscriptionsMain() {
               </div>
               <div>
                 <p className="text-xs text-secondary uppercase tracking-wider font-semibold">Current Plan</p>
-                <p className="text-xl font-bold text-foreground">{subscription.planName}</p>
+                <p className="text-xl font-bold text-primary">{subscription.planName}</p>
                 <p className="text-sm text-secondary mt-0.5">
                   {formatCurrency(subscription.monthlyPrice)}/month · Renews{' '}
-                  <span className="font-semibold text-foreground">
+                  <span className="font-semibold text-primary">
                     {new Date(subscription.nextBillingDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                   </span>
                 </p>
@@ -52,17 +52,17 @@ export default function AdminSubscriptionsMain() {
               <button
                 onClick={toggleAutoRenew}
                 disabled={togglingAutoRenew}
-                className="flex items-center gap-1.5 text-sm font-medium motion-safe:transition-colors disabled:opacity-50"
+                className="flex items-center gap-1.5 text-sm font-medium motion-safe:transition-colors disabled:opacity-50 motion-safe:duration-base"
                 aria-label="Toggle auto-renew"
               >
                 {togglingAutoRenew
-                  ? <Loader2 size={20} className="motion-safe:animate-spin text-primary" />
+                  ? <Loader2 size={20} className="motion-safe:animate-spin text-primary motion-safe:duration-base" />
                   : subscription.autoRenew
                     ? <ToggleRight size={28} className="text-success" />
                     : <ToggleLeft size={28} className="text-secondary" />
                 }
                 <span className={subscription.autoRenew ? 'text-success' : 'text-secondary'}>
-                  {subscription.autoRenew ? 'On' : 'Off'}
+                  {togglingAutoRenew ? 'Saving...' : subscription.autoRenew ? 'On' : 'Off'}
                 </span>
               </button>
             </div>
@@ -71,7 +71,7 @@ export default function AdminSubscriptionsMain() {
 
         {status === 'pending' && (
           <div className="flex items-center justify-center py-10">
-            <RefreshCw size={20} className="motion-safe:animate-spin text-primary" />
+            <RefreshCw size={20} className="motion-safe:animate-spin text-primary motion-safe:duration-base" />
           </div>
         )}
 
@@ -88,8 +88,8 @@ export default function AdminSubscriptionsMain() {
                   onClick={() => setActiveTab(tab.key)}
                   className={`px-4 py-2 rounded-lg text-sm font-medium motion-safe:transition-colors ${
                     activeTab === tab.key
-                      ? 'bg-card text-foreground shadow-sm border border-border'
-                      : 'text-secondary hover:text-foreground'
+                      ? 'bg-card text-primary shadow-card border border-border'
+                      : 'text-secondary hover:text-primary'
                   }`}
                 >
                   {tab.label}

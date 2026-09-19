@@ -52,13 +52,13 @@ export default function AdminHrStaffModal() {
 
   return (
  <div data-admin-dialog="true" role="dialog" aria-modal="true" tabIndex={-1} className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-overlay">
-  <div className="rounded-2xl shadow-xl w-full max-w-2xl max-h-screen overflow-y-auto bg-card border-2 border-warning">
+  <div className="rounded-2xl shadow-dialog w-full max-w-2xl max-h-screen overflow-y-auto bg-card border-2 border-warning">
   <div className="sticky top-0 px-8 py-5 border-b border-border bg-card flex items-center justify-between z-10">
-  <h3 className="text-xl font-bold text-foreground">{editId ? 'Edit Staff' : 'Add Staff Member'}</h3>
+  <h3 className="text-xl font-bold text-primary">{editId ? 'Edit Staff' : 'Add Staff Member'}</h3>
   <button 
   type="button" 
   onClick={() => setShowModal(false)} 
-  className="p-2 rounded-full hover:bg-primary/10 motion-safe:transition-colors text-secondary hover:text-primary"
+  className="p-2 rounded-full hover:bg-primary-subtle motion-safe:transition-colors text-secondary hover:text-primary motion-safe:duration-base"
   >
   <X size={20} />
   </button>
@@ -81,9 +81,9 @@ export default function AdminHrStaffModal() {
         : undefined
   }
   {...register(f.key as keyof StaffFormValues, f.type === 'number' ? { valueAsNumber: true } : {})}
-  className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus-visible:ring-2 motion-safe:transition-all motion-safe:duration-200 ${
+  className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus-visible:ring-2 motion-safe:transition-all motion-safe:duration-base ${
     errors[f.key as keyof StaffFormValues] ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
-  } bg-input text-foreground`}
+  } bg-input text-primary`}
   />
   {errors[f.key as keyof StaffFormValues] && (
     <p className="text-danger text-xs mt-1.5">{errors[f.key as keyof StaffFormValues]?.message as string}</p>
@@ -92,12 +92,12 @@ export default function AdminHrStaffModal() {
   ))}
   
   {isManager ? (
-    <div className="sm:col-span-2 space-y-4 p-5 border border-border rounded-xl bg-input/20">
+    <div className="sm:col-span-2 space-y-4 p-5 border border-border rounded-xl bg-input">
       <div>
-        <label className="block text-sm font-medium mb-2 text-foreground">Assigned Branches</label>
+        <label className="block text-sm font-medium mb-2 text-primary">Assigned Branches</label>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           {(branches as AdminHrBranchReference[]).map(b => (
-            <label key={b.id} className={`flex items-center gap-2 p-3 border rounded-xl cursor-pointer motion-safe:transition-colors ${assignedBranches.includes(b.id) ? 'border-primary bg-primary/5 text-primary' : 'border-border hover:bg-input text-secondary'}`}>
+            <label key={b.id} className={`flex items-center gap-2 p-3 border rounded-xl cursor-pointer motion-safe:transition-colors ${assignedBranches.includes(b.id) ? 'border-primary bg-surface-highlight text-primary' : 'border-border hover:bg-input text-secondary'}`}>
               <input 
                 type="checkbox" 
                 value={b.id}
@@ -192,7 +192,7 @@ export default function AdminHrStaffModal() {
   <input 
   type="date" 
   {...register('joinDate')}
-  className="w-full px-4 py-3 border border-border rounded-xl text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-foreground motion-safe:transition-all motion-safe:duration-200"
+  className="w-full px-4 py-3 border border-border rounded-xl text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-primary motion-safe:transition-all motion-safe:duration-base"
   />
   </div>
 
@@ -203,12 +203,12 @@ export default function AdminHrStaffModal() {
     type={showPassword ? "text" : "password"}
     placeholder="Min 8 characters"
     {...register('temporaryPassword')}
-    className="w-full px-4 py-3 border border-border rounded-xl text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-foreground motion-safe:transition-all motion-safe:duration-200 pr-10"
+    className="w-full px-4 py-3 border border-border rounded-xl text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-primary motion-safe:transition-all motion-safe:duration-base pr-10"
     />
     <button
       type="button"
       onClick={() => setShowPassword(!showPassword)}
-      className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary hover:text-foreground motion-safe:transition-colors"
+      className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary hover:text-primary motion-safe:transition-colors motion-safe:duration-base"
       aria-label="Toggle password visibility"
     >
       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -217,14 +217,14 @@ export default function AdminHrStaffModal() {
   {errors.temporaryPassword && <p className="text-danger text-xs mt-1.5">{errors.temporaryPassword.message as string}</p>}
   </div>
 
-  <div className="sm:col-span-2 flex items-center justify-between p-4 border border-border rounded-xl bg-input/50">
+  <div className="sm:col-span-2 flex items-center justify-between p-4 border border-border rounded-xl bg-input">
     <div>
-      <label className="block text-sm font-medium text-foreground">Login Access</label>
+      <label className="block text-sm font-medium text-primary">Login Access</label>
       <p className="text-xs text-secondary mt-0.5">Allow this staff member to log in to the portal.</p>
     </div>
     <label className="relative inline-flex items-center cursor-pointer">
       <input type="checkbox" {...register('isActive')} className="sr-only peer" />
-      <div className="w-11 h-6 bg-border peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-border after:content-none after:absolute after:top-0 after:left-0 after:bg-card after:border-border after:border after:rounded-full after:h-5 after:w-5 motion-safe:after:transition-all peer-checked:bg-success"></div>
+      <div className="w-11 h-6 bg-input peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-border after:content-none after:absolute after:top-0 after:left-0 after:bg-card after:border-border after:border after:rounded-full after:h-5 after:w-5 motion-safe:after:transition-all peer-checked:bg-success"></div>
     </label>
   </div>
 
@@ -233,16 +233,16 @@ export default function AdminHrStaffModal() {
   <button 
   type="button" 
   onClick={() => setShowModal(false)} 
-  className="px-6 py-2.5 text-sm font-semibold rounded-xl border border-border text-secondary hover:bg-primary/5 hover:text-primary motion-safe:transition-colors"
+  className="px-6 py-2.5 text-sm font-semibold rounded-xl border border-border text-secondary hover:bg-surface-highlight hover:text-primary motion-safe:transition-colors motion-safe:duration-base"
   >
   Cancel
   </button>
   <button 
   type="submit" 
   disabled={saving} 
-  className="px-8 py-2.5 rounded-xl text-sm font-bold text-primary-foreground flex items-center justify-center gap-2 disabled:opacity-70 motion-safe:transition-all hover:shadow-lg hover:shadow-primary/30 motion-safe:active:scale-95 bg-primary" 
+  className="px-8 py-2.5 rounded-xl text-sm font-bold text-primary flex items-center justify-center gap-2 disabled:opacity-70 motion-safe:transition-all hover:shadow-dialog motion-safe:active:scale-95 bg-primary motion-safe:duration-base" 
   >
-  {saving ? <div className="w-4 h-4 border-2 border-border/30 border-t-white rounded-full motion-safe:animate-spin" /> : <><Save size={16} />{editId ? 'Update' : 'Add Staff'}</>}
+  {saving ? <div className="w-4 h-4 border-2 border-border border-t-white rounded-full motion-safe:animate-spin motion-safe:duration-base" /> : <><Save size={16} />{editId ? 'Update' : 'Add Staff'}</>}
   </button>
   </div>
   </form>

@@ -8,22 +8,22 @@ import SuperadminGymsToolbar from '@/app/superadmin/gyms/gyms_components/Superad
 import SuperadminGymsTable from '@/app/superadmin/gyms/gyms_components/SuperadminGymsTable/SuperadminGymsTable';
 import SuperadminGymsCalendar from '@/app/superadmin/gyms/gyms_components/SuperadminGymsCalendar/SuperadminGymsCalendar';
 import { useSuperadminGymsStore } from '@/app/superadmin/gyms/gyms_store/useSuperadminGymsStore';
-import { SuperadminErrorBoundary } from '@/app/superadmin/superadmin_components/SuperadminLayout/SuperadminErrorBoundary';
+import { SuperadminErrorBoundary } from '@/app/superadmin/superadmin_layout/SuperadminLayout/SuperadminErrorBoundary';
 export default function SuperadminGymsClient() {
     const viewMode = useSuperadminGymsStore(state => state.viewMode);
     return (<div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Gyms</h1>
+          <h1 className="text-2xl font-bold text-primary">Gyms</h1>
           <p className="text-secondary mt-1">Manage your SaaS clients, subscriptions, and access.</p>
         </div>
-        <Link href={GymsUrlConfig.PAGES.ADD} className="flex items-center gap-2 bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-lg font-medium motion-safe:transition-colors shadow-lg shadow-primary/20">
+        <Link href={GymsUrlConfig.PAGES.ADD} className="flex items-center gap-2 bg-primary hover:bg-primary-hover text-on-primary px-4 py-2 rounded-lg font-medium motion-safe:transition-colors shadow-card shadow-primary/20">
           <Plus size={18}/>
           Onboard New Gym
         </Link>
       </div>
 
-      <div className="bg-background border border-border rounded-xl overflow-hidden shadow-sm">
+      <div className="bg-page border border-border rounded-xl overflow-hidden shadow-card">
         <SuperadminGymsToolbar />
         <SuperadminErrorBoundary variant="inline">
           {viewMode === 'calendar' ? <SuperadminGymsCalendar /> : <SuperadminGymsTable />}

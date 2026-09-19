@@ -3,7 +3,7 @@ import { delay, http, HttpResponse } from 'msw';
 import type { ApiResponse } from '@/lib/api';
 import { MigrationsUrlConfig } from '@/app/superadmin/migrations/superadmin_migrations_url_config';
 import { MOCK_MIGRATIONS } from '@/app/superadmin/migrations/migrations_mocks/fixtures/SuperadminMigrationsMockData';
-import type { MigrationLog } from '@/app/superadmin/migrations/superadmin_migrations_types/superadmin_migrations_types';
+import type { MigrationLog } from '@/app/superadmin/migrations/migrations_types/SuperadminMigrationsTypes';
 const migrationLogs: MigrationLog[] = [...MOCK_MIGRATIONS];
 export const superadminMigrationsHandlers = [
     http.get(MigrationsUrlConfig.BACKEND_API.BASE, async () => {

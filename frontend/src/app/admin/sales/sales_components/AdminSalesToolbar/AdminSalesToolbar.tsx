@@ -4,7 +4,7 @@
 import { Download, Search } from 'lucide-react';
 import { useAdminSalesLogic } from '@/app/admin/sales/sales_context/useAdminSalesLogic';
 import { useState, useEffect } from 'react';
-import { AdminDateFilterDropdown } from '@/app/admin/admin_components/AdminShared/AdminDateFilterDropdown';
+import { AdminSalesDateFilterDropdown } from '@/app/admin/sales/sales_components/AdminSalesDateFilter/AdminSalesDateFilterDropdown';
 
 export default function AdminSalesToolbar() {
   const { search, setSearch, setCurrentPage, overviewData } = useAdminSalesLogic();
@@ -27,11 +27,11 @@ export default function AdminSalesToolbar() {
 
 
   return (
-    <div className="bg-card rounded-xl shadow-sm border border-border p-4 space-y-3 mb-5">
+    <div className="bg-card rounded-xl shadow-card border border-border p-4 space-y-3 mb-5">
       <div className="flex flex-wrap gap-3 items-center justify-between">
         {/* Date Filter Dropdown */}
         <div className="flex items-center gap-3 flex-wrap">
-          <AdminDateFilterDropdown />
+          <AdminSalesDateFilterDropdown />
         </div>
 
         {/* Search + Export */}
@@ -42,7 +42,7 @@ export default function AdminSalesToolbar() {
               value={localSearch}
               onChange={e => setLocalSearch(e.target.value)}
               placeholder="Search..."
-              className="pl-9 pr-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary w-40 sm:w-56 bg-input text-foreground"
+              className="pl-9 pr-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary w-40 sm:w-56 bg-input text-primary"
             />
           </div>
           <button
@@ -59,7 +59,7 @@ export default function AdminSalesToolbar() {
               anchor.click();
               URL.revokeObjectURL(url);
             }}
-            className="flex items-center gap-1.5 px-3 py-2 text-sm border border-border rounded-lg hover:bg-primary-subtle text-secondary motion-safe:transition-colors"
+            className="flex items-center gap-1.5 px-3 py-2 text-sm border border-border rounded-lg hover:bg-primary-subtle text-secondary motion-safe:transition-colors motion-safe:duration-base"
           >
             <Download size={13} /> Export
           </button>

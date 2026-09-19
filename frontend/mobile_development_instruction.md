@@ -189,6 +189,11 @@ app MUST follow the same pattern. A `MemberCard` in `admin/members/` is **never*
 into `manager/members/`. Duplicate it — AI writes the code, so duplication cost is near
 zero but isolation value is massive.
 
+> **CRITICAL WARNING TO AI AGENTS:** 
+> Do NOT attempt to "DRY up" business components by moving them to global folders like `src/components/ui/` or `widgets/common/`. 
+> Components that contain domain-specific data/constants MUST be duplicated per feature, NEVER globalized. 
+> Global folders are strictly for dumb, zero-business primitives (like raw Buttons, Inputs, Dialogs).
+
 ```
 features/
 ├── admin/

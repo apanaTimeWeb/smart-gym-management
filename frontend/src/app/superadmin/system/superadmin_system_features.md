@@ -1,118 +1,54 @@
-# System Feature Map
+# Superadmin System — Feature Map
 
 ## Module Purpose
-This Superadmin feature owns the `system` route and its feature-specific UI, client logic, API boundary, types, schemas, constants, mocks, tests, and documentation. It is intended to be operable by the Superadmin role without importing sibling Superadmin business modules. The feature exposes migration controls, SLA investigation, tenant search, audit-log filtering/export, and a tenant-level downtime-credit action for breached SLA records. Backend authorization remains outside the frontend audit scope.
+This feature owns the Superadmin business workflow implemented under `system/`. The active route is `/superadmin/system`. Business behavior, API contracts, validation, server-state hooks, fixtures, MSW handlers, and tests are kept within this feature boundary. Cross-feature business logic is outside this module.
 
 ## Directory Structure
 
-| Folder | Responsibility | Key files |
+| Folder | Responsibility | Key Files |
 |---|---|---|
-| `__tests__/` | Owns the feature responsibility represented by this folder. | `superadmin_system_basic.test.tsx` |
-| `system_api/` | Owns the feature responsibility represented by this folder. | `superadmin_system_api.ts` |
-| `system_components/` | Owns the feature responsibility represented by this folder. | `SuperadminSystemClient.tsx`, `SuperadminSystemEmptyState.tsx`, `SuperadminSystemSlaTab.tsx`, `useSuperadminSystemClient.ts` |
-| `system_mocks/` | Owns the feature responsibility represented by this folder. | `SuperadminSystemMockHandlers.ts` |
-| `system_types/` | Owns the feature responsibility represented by this folder. | `SuperadminSystemTypes.ts`, `superadmin_system_types.ts` |
-| `system_utils/` | Owns the feature responsibility represented by this folder. | `SuperadminSystemConstants.ts` |
+| `system_api/` | Feature-owned responsibility for system api. | `SuperadminSystemApi.ts` |
+| `system_components/` | Feature-owned responsibility for system components. | `SuperadminSystemClient.tsx`, `SuperadminSystemSlaTab.tsx`, `useSuperadminSystemClient.ts` |
+| `system_mocks/` | Feature-owned responsibility for system mocks. | `(directory present; no direct files)` |
+| `system_tests/` | Feature-owned responsibility for system tests. | `SuperadminSystemBasic.test.tsx` |
+| `system_types/` | Feature-owned responsibility for system types. | `SuperadminSystemSlaTypes.ts`, `SuperadminSystemTypes.ts`, `system_\1.ts` |
+| `system_utils/` | Feature-owned responsibility for system utils. | `SuperadminSystemRuntimeConfig.ts`, `useSuperadminSystemSla.ts` |
+
+## Approved External Dependencies
+
+### Application Infrastructure
+- `@/app/superadmin/superadmin_components` — role-shell/generic interaction infrastructure only.
+- `@/lib/*` and `@/components/*` — only approved application infrastructure imported by this feature.
+
+### Business Feature Dependencies
+- None
+
+### Role-Level Business Dependencies
+- None
 
 ## Feature Inventory
 
-| Feature | Route | User action | Key API/client owner | Status |
+| Surface | Route | Implemented User Actions | API Boundary | Status |
 |---|---|---|---|---|
-| `System operations` | `/superadmin/system` | Review tenant migration state, run a migration for an outdated tenant, inspect SLA records, issue a downtime credit for a breached tenant, and inspect/filter audit logs. | `system/system_api/superadmin_system_api.ts` | Source repaired; runtime integration **NOT VERIFIED** without installed project dependencies. |
+| Superadmin System | `/superadmin/system` | export c s v; issue credit; run migration | `SuperadminSystemApi.ts` | Source-verified; host runtime pending |
 
 ## User Flows & Interactions
 
-### Flow 1: Open Feature
-1. User navigates to the route shown above.
-2. Next.js renders the route `page.tsx` and its client view.
-3. The feature-owned client layer loads the data needed by the visible UI.
-4. Loading, empty, error, or populated state is rendered according to the current implementation.
+1. Open the active route and load the feature-owned query/API boundary.
+2. Apply the available search, filter, sort, pagination, form, or row actions exposed by the current client surface.
+3. Mutations go through feature-owned API contracts and, in MSW mode, feature-owned handlers/fixtures.
+4. Success/error state is reconciled back into the same feature surface.
 
-### Flow 2: Execute an Available Action
-1. User activates an action exposed by the current feature UI.
-2. The feature client/hook invokes the feature-owned API function.
-3. The API boundary validates response data using the feature schema when a schema is supplied.
-4. The UI updates local/query state and shows the resulting feedback.
-
-## Data and State Architecture
-- **Server state:** TanStack Query where the feature currently uses async queries.
-- **UI state:** local `useState` or a feature-scoped Zustand store where present.
-- **URL state:** `useSuperadminUrlState` only where the feature currently uses query-string filters/pagination.
-- **Sibling business dependencies:** must remain zero; shared transport/UI primitives are infrastructure exceptions only.
-
-## API Contract
-
-| Function | Method | Endpoint expression | API file |
-|---|---|---|---|
-| `fetchHealthProbe()` | `GET` | `${SystemUrlConfig.BACKEND_API.BASE}/health` | `system/system_api/superadmin_system_api.ts` |
-| `fetchSystemInfo(params)` | `GET` | `${SystemUrlConfig.BACKEND_API.BASE}?search=...` | `system/system_api/superadmin_system_api.ts` |
-| `fetchMigrations()` | `GET` | `${SystemUrlConfig.BACKEND_API.MIGRATIONS}` | `system/system_api/superadmin_system_api.ts` |
-| `startMigration(tenantId)` | `POST` | `${SystemUrlConfig.BACKEND_API.MIGRATION_TRIGGER}` | `system/system_api/superadmin_system_api.ts` |
-| `fetchAuditLogs(params)` | `GET` | `${SystemUrlConfig.BACKEND_API.AUDIT_LOGS}?page&limit&search` | `system/system_api/superadmin_system_api.ts` |
-| `issueDowntimeCredit(tenantId)` | `POST` | `${SystemUrlConfig.BACKEND_API.SLA_CREDIT(tenantId)}` | `system/system_api/superadmin_system_api.ts` |
-
-## UI Data Requirements
-
-Observed schema/type fields in this feature are listed below. Any UI field not represented by a schema/type is **NOT VERIFIED** and must be checked by the coding agent.
-
-| Field | Source location |
-|---|---|
-| `id` | Feature-owned schema/type file |
-| `name` | Feature-owned schema/type file |
-| `plan` | Feature-owned schema/type file |
-| `databaseVersion` | Feature-owned schema/type file |
-| `timestamp` | Feature-owned schema/type file |
-| `targetResource` | Feature-owned schema/type file |
-| `actorName` | Feature-owned schema/type file |
-| `actorRole` | Feature-owned schema/type file |
-| `action` | Feature-owned schema/type file |
-
-## Permissions and Security
-- **Role:** `SUPERADMIN` UI.
-- **Frontend boundary:** route and feature UI are under `/superadmin`.
-- **Destructive actions:** must use the Superadmin confirmation infrastructure where the feature exposes destructive controls.
-- **Backend authorization:** not evaluated here and must not be inferred from frontend checks.
-
-## Loading, Empty, and Error States
-- **Route loading:** use the feature `loading.tsx` when present.
-- **Route error:** use the feature `error.tsx` when present.
-- **Feature empty/error:** use the feature-specific empty/error UI already present in the source.
-- Any runtime transition behavior not statically provable is **NOT VERIFIED**.
-
-## Edge Cases and AI Warnings
-- **No sibling business imports:** do not reintroduce imports from another Superadmin business feature.
-- **No fake production data:** server-like records belong in feature mocks/fixtures, never fallback constants inside production UI.
-- **No hardcoded URLs:** feature-owned routes belong in the single feature URL config.
-- **No async state in Zustand:** use TanStack Query for server state.
-- **Preserve destructive confirmation:** do not bypass the Superadmin confirmation flow.
-
-## Component Responsibility Map
-
-| File | Responsibility |
-|---|---|
-| `__tests__/superadmin_system_basic.test.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
-| `error.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
-| `loading.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
-| `page.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
-| `system_components/SuperadminSystemClient.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
-| `system_components/SuperadminSystemEmptyState/SuperadminSystemEmptyState.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
-| `system_components/SuperadminSystemSlaTab.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+## Verification Notes
+- Active route pages mount one primary client tree; no `V1Client` import is mounted from route `page.tsx`.
+- Mutable mock-state handlers have reset functions covered by tests where present.
+- Deprecated marker-only and JSON-stringify tautology tests were removed from the module test tree.
+- Dependency-backed `tsc`, lint, Vitest runtime, Playwright, and real browser responsive execution require the host application environment and remain unverified here.
 
 ## Rule Compliance Checklist
-- [x] Feature has a route-level `page.tsx` or the route does not require one.
-- [x] Feature has module-owned documentation file.
-- [x] Feature URL configuration is feature-owned when routes/API calls exist.
-- [x] Sibling Superadmin business imports are not allowed.
-- [x] API responses must use Zod validation at the boundary.
-- [x] Server state is owned by TanStack Query where async data is used.
-- [x] UI state remains local or feature-scoped.
-- [ ] Full typecheck/lint/test/build/E2E verification — **NOT VERIFIED** in this working environment because project dependencies are not installed.
-- [ ] Full visual comparison against `web_global_design.md` — **NOT VERIFIED** without browser execution.
-
-## Documentation Consistency
-This feature map is generated from the current repository structure. Where the code does not expose enough static evidence to state an exact runtime fact, the documentation deliberately uses **NOT VERIFIED** rather than inventing a result.
-
-
-## Module-Owned MSW Fixtures
-
-Feature-specific mock fixtures and MSW handlers are owned by this feature directory. SLA records are owned by `system/system_mocks/handlers/SuperadminSystemMockHandlers.ts`; mutation state remains module-owned. API responses consumed by UI must remain complete for all documented table fields, KPIs, charts, filters, detail views and mutation messages. Global MSW bootstrap is registration infrastructure only.
+- [x] Canonical feature-owned API/type directories are used.
+- [x] No active route page mounts a parallel `V1Client` tree.
+- [x] Module-owned mock reset coverage is present where mutable handlers exist.
+- [x] Feature docs contain a concrete directory map and compliance checklist.
+- [x] No marker-only or JSON-stringify tautology test remains.
+- [ ] Host dependency-backed build/lint/runtime verification — unavailable in source-only package.

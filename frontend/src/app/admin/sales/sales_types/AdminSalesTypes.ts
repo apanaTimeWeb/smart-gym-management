@@ -1,7 +1,6 @@
 import type { QueryStatus } from '@tanstack/react-query';
 // RESPONSIBILITY: Defines all types for the Admin Sales & Reports module — membership, payments, store sales.
 import { type SalesTab, type DateFilter } from '@/app/admin/sales/sales_utils/AdminSalesSharedConstants';
-import type { AdminToastType } from '@/app/admin/admin_components/AdminFeedback/AdminToastTypes';
 
 
 // ------- Membership Types -------
@@ -76,6 +75,24 @@ export interface StoreSummary {
   totalRevenue: number; lowStockProducts: StoreProduct[];
 }
 
+
+export interface StoreOrdersQuery {
+  branchId?: string;
+  range?: string;
+  search?: string;
+  page: number;
+  limit: number;
+}
+
+export interface StoreOrdersResponse {
+  orders: StoreOrder[];
+  total: number;
+}
+
+export interface StoreSummaryResponse {
+  summary: StoreSummary;
+}
+
 // ------- Aggregate Data Shapes -------
 export interface SalesInitialData {
   overviewData?: OverviewDataPoint[];
@@ -111,9 +128,9 @@ export interface SalesContextType {
   storeSummary: StoreSummary | null;
 
   status: QueryStatus;
+  storeStatus: QueryStatus;
+  storeError: string;
   loadAll: () => Promise<void>;
 
-
-  showToast: (message: string, type: AdminToastType) => void;
 }
 

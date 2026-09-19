@@ -2,11 +2,11 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderHook, waitFor } from '@testing-library/react';
 import { SUPERADMIN_OFFBOARDING_MOCK_FIXTURE } from '@/app/superadmin/offboarding/offboarding_mocks/fixtures/SuperadminOffboardingMockFixtures';
-import { fetchOffboardingData } from '@/app/superadmin/offboarding/offboarding_api/superadmin_offboarding_api';
+import { fetchOffboardingRequests } from '@/app/superadmin/offboarding/offboarding_api/SuperadminOffboardingApi';
 import { useSuperadminOffboardingPage } from '@/app/superadmin/offboarding/offboarding_utils/useSuperadminOffboardingPage';
 import type { ReactNode } from 'react';
-vi.mock('@/app/superadmin/offboarding/offboarding_api/superadmin_offboarding_api', () => ({ fetchOffboardingData: vi.fn() }));
-const mockedFetch = vi.mocked(fetchOffboardingData);
+vi.mock('@/app/superadmin/offboarding/offboarding_api/SuperadminOffboardingApi', () => ({ fetchOffboardingRequests: vi.fn() }));
+const mockedFetch = vi.mocked(fetchOffboardingRequests);
 describe('useSuperadminOffboardingPage integration', () => {
     let queryClient: QueryClient;
     function TestQueryProvider({ children }: {

@@ -1,3 +1,4 @@
+import { StatusCodes } from 'http-status-codes';
 // RESPONSIBILITY: Owns MSW handlers for the Admin blacklist feature.
 // DATA FLOW: blacklist API client → module-owned MSW handler → module-owned fixture → TanStack Query/UI.
 import { http, HttpResponse } from 'msw';
@@ -13,14 +14,14 @@ function asRecord(value: unknown): JsonObject {
 }
 
 const ok = <T>(data: T, message = 'Success') =>
-  HttpResponse.json({ success: true, message, data, meta: { total: Array.isArray(data) ? data.length : 1, page: 1, limit: 50, totalPages: 1 } });
+  HttpResponse.json({ success: true, message, data });
 
 const paged = <T>(data: T[], page: number, limit: number, message = 'Success') => {
   const safeLimit = Math.max(1, limit);
   const safePage = Math.max(1, page);
   const start = (safePage - 1) * safeLimit;
   const pageData = data.slice(start, start + safeLimit);
-  return HttpResponse.json({ success: true, message, data: pageData, meta: { total: data.length, page: safePage, limit: safeLimit, totalPages: Math.max(1, Math.ceil(data.length / safeLimit)) } });
+  return HttpResponse.json({ success: true, message, data: pageData, meta: { total: data.length, page: safePage, limit: safeLimit, totalPages: Math.max(1, Math.ceil(data.length / safeLimit)), hasNextPage: safePage < Math.max(1, Math.ceil(data.length / safeLimit)), hasPrevPage: safePage > 1 } });
 };
 
 import { MOCK_BLACKLIST_EXPANDED } from '@/app/admin/blacklist/blacklist_mocks/fixtures/AdminBlacklistMockFixtures';
@@ -53,7 +54,7 @@ function buildBlacklistRecord(input: JsonObject): BlacklistRecord {
 }
 
 export const adminBlacklistMockHandlers = [
-  http.get('*/admin/blacklist/fetchBlacklist', ({ request }) => { const url = new URL(request.url); const search=(url.searchParams.get('search')??'').toLowerCase(); const active=url.searchParams.get('isActive'); const all=MOCK_BLACKLIST_EXPANDED.filter(x => (!search || `${x.memberName} ${x.memberEmail} ${x.memberId}`.toLowerCase().includes(search)) && (!active || active === 'all' || String(x.isActive) === active)); const page=Math.max(1,Number(url.searchParams.get('page'))||1), limit=Math.max(1,Number(url.searchParams.get('limit'))||10); return paged(all,page,limit); }),
+  http.get('*/admin/blacklist/fetchBlacklist', ({ request }) => { const url = new URL(request.url); const search=(url.searchParams.get('search')??'').toLowerCase(); const active=url.searchParams.get('isActive'); const scope=url.searchParams.get('scope'); const gymId=url.searchParams.get('gymId'); const all=MOCK_BLACKLIST_EXPANDED.filter(x => (!search || `${x.memberName} ${x.memberEmail} ${x.memberId}`.toLowerCase().includes(search)) && (!active || active === 'all' || String(x.isActive) === active) && (!scope || scope === 'all' || x.scope === scope) && (!gymId || gymId === 'all' || x.assignedGyms.includes(gymId) || x.scope === 'global')); const page=Math.max(1,Number(url.searchParams.get('page'))||1), limit=Math.max(1,Number(url.searchParams.get('limit'))||10); return paged(all,page,limit); }),
   http.get('*/admin/blacklist/fetchKPIs', () => ok({
     totalBlacklisted: MOCK_BLACKLIST_EXPANDED.filter((entry) => entry.isActive).length,
     globalBans: MOCK_BLACKLIST_EXPANDED.filter((entry) => entry.isActive && entry.scope === 'global').length,
@@ -68,21 +69,21 @@ export const adminBlacklistMockHandlers = [
   http.delete('*/admin/blacklist/removeFromBlacklist', async ({ request }) => {
     const body = asRecord(await parseRequestBody(request));
     const index = MOCK_BLACKLIST_EXPANDED.findIndex((entry) => entry.id === String(body.id));
-    if (index === -1) return HttpResponse.json({ success: false, message: 'Blacklist entry not found' }, { status: 404 });
+    if (index === -1) return HttpResponse.json({ success: false, message: 'Blacklist entry not found' }, { status: StatusCodes.NOT_FOUND });
     MOCK_BLACKLIST_EXPANDED.splice(index, 1);
     return ok(null, 'Member removed from blacklist');
   }),
   http.post('*/admin/blacklist/toggleBlacklist', async ({ request }) => {
     const body = asRecord(await parseRequestBody(request));
     const record = MOCK_BLACKLIST_EXPANDED.find((entry) => entry.id === String(body.id));
-    if (!record) return HttpResponse.json({ success: false, message: 'Blacklist entry not found' }, { status: 404 });
+    if (!record) return HttpResponse.json({ success: false, message: 'Blacklist entry not found' }, { status: StatusCodes.NOT_FOUND });
     record.isActive = !record.isActive;
     return ok(record, 'Blacklist status updated');
   }),
   http.post('*/admin/blacklist/propagateToAllBranches', async ({ request }) => {
     const body = asRecord(await parseRequestBody(request));
     const record = MOCK_BLACKLIST_EXPANDED.find((entry) => entry.id === String(body.id));
-    if (!record) return HttpResponse.json({ success: false, message: 'Blacklist entry not found' }, { status: 404 });
+    if (!record) return HttpResponse.json({ success: false, message: 'Blacklist entry not found' }, { status: StatusCodes.NOT_FOUND });
     record.scope = 'global';
     record.assignedGyms = ['all'];
     record.assignedGymNames = ['All Gyms'];

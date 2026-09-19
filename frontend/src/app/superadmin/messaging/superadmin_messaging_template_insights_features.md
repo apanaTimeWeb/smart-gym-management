@@ -1,89 +1,60 @@
-# Messaging Template & Campaign Insights — Feature Map
+# Superadmin Messaging Template Insights — Feature Map
 
 ## Module Purpose
-This Superadmin-only feature gives platform operators a focused workspace for messaging template & campaign insights. It exists at `/superadmin/messaging` and is intentionally limited to platform-level tenant/SaaS operations; gym-staff daily operations are outside this boundary. The V1 layer keeps the UI backend-ready by flowing server data through its module API, Zod contract, module-owned MSW fixture/handler, and TanStack Query hook.
+This feature owns the Superadmin business workflow implemented under `messaging/`. The active route is `/superadmin/messaging`. Business behavior, API contracts, validation, server-state hooks, fixtures, MSW handlers, and tests are kept within this feature boundary. Cross-feature business logic is outside this module.
 
 ## Directory Structure
+
 | Folder | Responsibility | Key Files |
 |---|---|---|
-| `messaging/` | Owns this Superadmin route and all feature-specific artifacts. | `page.tsx`, `loading.tsx`, `error.tsx`, `SuperadminMessagingV1Client.tsx` |
-| `messaging_api/` | Calls the feature endpoint and validates the response data. | API service for `GET /api/superadmin/messaging/template-insights` |
-| `messaging_types/` | Owns the response data contract and runtime validation. | V1 type/schema file |
-| `messaging_mocks/handlers/` | Intercepts the V1 endpoint in frontend-first development. | V1 MSW handler |
-| `messaging_mocks/fixtures/` | Owns realistic V1 server-like data. | V1 mock fixture |
-| `messaging_utils/` | Orchestrates TanStack Query for this feature. | `useSuperadminMessagingV1.ts` |
+| `messaging_api/` | Feature-owned responsibility for messaging api. | `SuperadminMessagingApi.ts`, `SuperadminMessagingTemplateInsightsApi.ts` |
+| `messaging_mocks/` | Feature-owned responsibility for messaging mocks. | `(directory present; no direct files)` |
+| `messaging_schemas/` | Feature-owned responsibility for messaging schemas. | `SuperadminMessagingComposeSchema.test.ts`, `SuperadminMessagingComposeSchema.ts` |
+| `messaging_tests/` | Feature-owned responsibility for messaging tests. | `SuperadminMessagingBasic.test.tsx`, `SuperadminMessagingTemplateInsights.test.ts` |
+| `messaging_types/` | Feature-owned responsibility for messaging types. | `SuperadminMessagingComposeModalTypes.ts`, `SuperadminMessagingConstants.ts`, `SuperadminMessagingMessagesTabTypes.ts`, `SuperadminMessagingNotificationIconTypes.ts`, `SuperadminMessagingNotificationsTabTypes.ts`, `SuperadminMessagingTenantDropdownTypes.ts`, `SuperadminMessagingTypes.ts`, `SuperadminMessagingV1Types.ts`, `SuperadminMessagingV1WhatsAppAudiencePanelTypes.ts`, `SuperadminMessagingV1WhatsAppCampaignHistoryPanelTypes.ts`, `SuperadminMessagingV1WhatsAppCampaignSummaryCardsTypes.ts`, `SuperadminMessagingV1WhatsAppComposerPanelTypes.ts` |
+| `messaging_utils/` | Feature-owned responsibility for messaging utils. | `SuperadminMessagingStatusBadgeConfig.ts`, `useSuperadminMessaging.test.tsx`, `useSuperadminMessaging.ts`, `useSuperadminMessagingNotificationMutations.ts`, `useSuperadminMessagingNotifications.ts`, `useSuperadminMessagingV1.ts` |
+| `messaging_whatsapp_api/` | Feature-owned responsibility for messaging whatsapp api. | `SuperadminMessagingWhatsappApi.ts` |
+| `messaging_whatsapp_components/` | Feature-owned responsibility for messaging whatsapp components. | `SuperadminMessagingV1WhatsAppAudiencePanel.tsx`, `SuperadminMessagingV1WhatsAppBulkCenter.tsx`, `SuperadminMessagingV1WhatsAppCampaignHistoryPanel.tsx`, `SuperadminMessagingV1WhatsAppCampaignSummaryCards.tsx`, `SuperadminMessagingV1WhatsAppComposerPanel.tsx`, `SuperadminMessagingV1WhatsAppPreviewPanel.tsx`, `SuperadminMessagingV1WhatsAppQueuePanel.tsx`, `SuperadminMessagingV1WhatsAppTemplatePicker.tsx` |
+| `messaging_whatsapp_mocks/` | Feature-owned responsibility for messaging whatsapp mocks. | `(directory present; no direct files)` |
+| `messaging_whatsapp_tests/` | Feature-owned responsibility for messaging whatsapp tests. | `SuperadminMessagingV1WhatsAppBulkCenter.test.tsx`, `SuperadminMessagingV1WhatsAppSchema.test.ts` |
+| `messaging_whatsapp_types/` | Feature-owned responsibility for messaging whatsapp types. | `SuperadminMessagingV1WhatsAppTypes.ts`, `SuperadminMessagingWhatsAppTypes.ts` |
+| `messaging_whatsapp_utils/` | Feature-owned responsibility for messaging whatsapp utils. | `SuperadminMessagingV1WhatsApp.test.ts`, `SuperadminMessagingV1WhatsAppUtils.ts`, `useSuperadminMessagingV1WhatsApp.test.tsx`, `useSuperadminMessagingV1WhatsApp.ts`, `useSuperadminMessagingV1WhatsAppCampaign.ts` |
+
+## Approved External Dependencies
+
+### Application Infrastructure
+- `@/app/superadmin/superadmin_components` — role-shell/generic interaction infrastructure only.
+- `@/lib/*` and `@/components/*` — only approved application infrastructure imported by this feature.
+
+### Business Feature Dependencies
+- None
+
+### Role-Level Business Dependencies
+- None
 
 ## Feature Inventory
-| Feature | Route | What the User Can Do | Main API Calls | Status |
+
+| Surface | Route | Implemented User Actions | API Boundary | Status |
 |---|---|---|---|---|
-| Messaging Template & Campaign Insights | `/superadmin/messaging` | template library, campaign engagement. | `GET /api/superadmin/messaging/template-insights` | ✅ V1 mocked and rendered |
+| Superadmin Messaging Template Insights | `/superadmin/messaging` | clear queue; click outside; complete; mark all read; mark read; open; select; send | `SuperadminMessagingTemplateInsightsApi.ts`, `SuperadminMessagingApi.ts`, `SuperadminMessagingWhatsappApi.ts` | Source-verified; host runtime pending |
 
 ## User Flows & Interactions
-1. Superadmin opens `/superadmin/messaging` and the client view requests the feature payload through `useSuperadminMessagingV1.ts`.
-2. TanStack Query receives the module API response and renders the documented panels, metrics, comparisons, charts, tables, and/or alerts.
-3. The module fixture supplies realistic values for the visible UI while the backend is unavailable.
-4. A request failure stays inside the module and exposes a user-safe Retry action rather than a raw backend error.
 
-## Data and State Architecture
-- **Server state:** TanStack Query; no API response data is stored in Zustand or React Context.
-- **UI state:** local component state only where the feature has private display state; shared UI state stays module-scoped if added later.
-- **Query key:** feature hook owns a Superadmin-namespaced query key.
-- **Mock ownership:** fixture and MSW handler both remain inside `messaging/`.
+1. Open the active route and load the feature-owned query/API boundary.
+2. Apply the available search, filter, sort, pagination, form, or row actions exposed by the current client surface.
+3. Mutations go through feature-owned API contracts and, in MSW mode, feature-owned handlers/fixtures.
+4. Success/error state is reconciled back into the same feature surface.
 
-## API Contract
-All calls use the global transport `@/lib/api` and the feature URL config.
+## Verification Notes
+- Active route pages mount one primary client tree; no `V1Client` import is mounted from route `page.tsx`.
+- Mutable mock-state handlers have reset functions covered by tests where present.
+- Deprecated marker-only and JSON-stringify tautology tests were removed from the module test tree.
+- Dependency-backed `tsc`, lint, Vitest runtime, Playwright, and real browser responsive execution require the host application environment and remain unverified here.
 
-| Function | Method | Endpoint | Request | Response `data` type |
-|---|---|---|---|---|
-| `fetchMessagingTemplateInsights` | GET | `GET /api/superadmin/messaging/template-insights` | None in V1 | Module V1 data schema |
-
-The V1 handler returns the canonical flat `ApiResponse<T>` payload. Response data is validated at the API boundary using the module-owned Zod schema.
-
-## UI Data Requirements
-| UI Data | Source | Validation/Mock Ownership |
-|---|---|---|
-| `data.templates` | GET /api/superadmin/messaging/template-insights | Module-owned Zod contract + MSW fixture |
-| `data.name` | GET /api/superadmin/messaging/template-insights | Module-owned Zod contract + MSW fixture |
-| `data.channel` | GET /api/superadmin/messaging/template-insights | Module-owned Zod contract + MSW fixture |
-| `data.uses` | GET /api/superadmin/messaging/template-insights | Module-owned Zod contract + MSW fixture |
-| `data.status` | GET /api/superadmin/messaging/template-insights | Module-owned Zod contract + MSW fixture |
-| `data.campaigns` | GET /api/superadmin/messaging/template-insights | Module-owned Zod contract + MSW fixture |
-| `data.sent` | GET /api/superadmin/messaging/template-insights | Module-owned Zod contract + MSW fixture |
-| `data.delivered` | GET /api/superadmin/messaging/template-insights | Module-owned Zod contract + MSW fixture |
-| `data.opened` | GET /api/superadmin/messaging/template-insights | Module-owned Zod contract + MSW fixture |
-| `data.responded` | GET /api/superadmin/messaging/template-insights | Module-owned Zod contract + MSW fixture |
-| `data.channels` | GET /api/superadmin/messaging/template-insights | Module-owned Zod contract + MSW fixture |
-| `data.message` | GET /api/superadmin/messaging/template-insights | Module-owned Zod contract + MSW fixture |
-| `data.success` | GET /api/superadmin/messaging/template-insights | Module-owned Zod contract + MSW fixture |
-
-The consuming component is the source for the exact rendered sub-fields. V1 business values are not embedded in JSX.
-
-## Permissions and Security
-- **Required role:** `SUPERADMIN`, with backend authorization remaining authoritative.
-- **Cross-role isolation:** no Admin, Manager, Trainer, or other business-role implementation is imported.
-- **Financial/destructive controls:** any future mutation must use the existing Superadmin confirmation contract and authoritative backend response.
-- **Sensitive data:** user-facing identifiers and long dynamic text must follow the existing Superadmin masking/truncation rules.
-
-## Loading, Empty, and Error States
-- **Loading:** route `loading.tsx` or V1 client structural skeleton mirrors the major content blocks rather than using a full-page spinner.
-- **Error:** route `error.tsx` and/or V1 client retry state shows a concise user-safe explanation and Retry action.
-- **Empty:** entity/list sections use the module's existing empty-state pattern where applicable.
-
-## Edge Cases and AI Warnings
-- **Do not hardcode server records in JSX:** all business data belongs to the API contract and module-owned fixture.
-- **Do not import sibling business logic:** duplicate small domain contracts locally rather than creating cross-module coupling.
-- **Do not bypass the module API:** UI must not read fixtures directly.
-- **Keep response shape flat:** V1 handlers return `ApiResponse<T>` with the V1 data object directly under `data`.
-- **Keep user-facing terms simple:** technical SaaS abbreviations should remain internal; display plain labels such as `Monthly income`, `Gym retention`, and `Income lost`.
-- **Keep documentation fresh:** update this feature map when the route, endpoint, UI fields, or flow changes.
-
-## Component Responsibility Map
-| Component | Responsibility |
-|---|---|
-| `SuperadminMessagingV1Client.tsx` | Renders the Superadmin-only feature view and consumes the query state. |
-| `useSuperadminMessagingV1.ts` | Owns TanStack Query orchestration and exposes server state without JSX. |
-
-## External Infrastructure Dependencies
-- `@/lib/api` — global API transport.
-- `@/lib/formatters` — centralized numeric/date/currency formatting where needed.
-- Existing Superadmin shared presentation primitives and authentication infrastructure.
+## Rule Compliance Checklist
+- [x] Canonical feature-owned API/type directories are used.
+- [x] No active route page mounts a parallel `V1Client` tree.
+- [x] Module-owned mock reset coverage is present where mutable handlers exist.
+- [x] Feature docs contain a concrete directory map and compliance checklist.
+- [x] No marker-only or JSON-stringify tautology test remains.
+- [ ] Host dependency-backed build/lint/runtime verification — unavailable in source-only package.

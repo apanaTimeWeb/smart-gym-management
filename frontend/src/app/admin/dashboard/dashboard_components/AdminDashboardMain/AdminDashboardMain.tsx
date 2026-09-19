@@ -7,31 +7,14 @@ import AdminDashboardAlerts from '@/app/admin/dashboard/dashboard_components/Adm
 import AdminDashboardRevenueTrend from '@/app/admin/dashboard/dashboard_components/AdminDashboardRevenueTrend/AdminDashboardRevenueTrend';
 import AdminDashboardExpiringWidget from '@/app/admin/dashboard/dashboard_components/AdminDashboardExpiringWidget/AdminDashboardExpiringWidget';
 import AdminDashboardAttendanceTrend from '@/app/admin/dashboard/dashboard_components/AdminDashboardAttendanceTrend/AdminDashboardAttendanceTrend';
-import { AdminSearchableDropdown } from '@/app/admin/admin_components/AdminShared/AdminSearchableDropdown';
-import { AdminDateFilterDropdown } from '@/app/admin/admin_components/AdminShared/AdminDateFilterDropdown';
-
-function DashboardSkeleton() {
-  return (
-    <div className="p-6 space-y-6">
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-        {["row-1", "row-2", "row-3", "row-4"].map(i => <div key={i} className="h-28 bg-card rounded-xl motion-safe:animate-pulse border border-border" />)}
-      </div>
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-        <div className="xl:col-span-2 h-80 bg-card rounded-xl motion-safe:animate-pulse border border-border" />
-        <div className="h-80 bg-card rounded-xl motion-safe:animate-pulse border border-border" />
-      </div>
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-        <div className="xl:col-span-2 h-64 bg-card rounded-xl motion-safe:animate-pulse border border-border" />
-        <div className="h-64 bg-card rounded-xl motion-safe:animate-pulse border border-border" />
-      </div>
-    </div>
-  );
-}
+import { AdminSearchableDropdown } from '@/app/admin/admin_layout/AdminShared/AdminSearchableDropdown/AdminSearchableDropdown';
+import { AdminDashboardDateFilterDropdown } from '@/app/admin/dashboard/dashboard_components/AdminDashboardDateFilter/AdminDashboardDateFilterDropdown';
+import AdminDashboardSkeleton from '@/app/admin/dashboard/dashboard_components/AdminDashboardMain/AdminDashboardSkeleton';
 
 export default function AdminDashboardMain() {
   const { stats, status, error } = useAdminDashboardLogic();
 
-  if (status === 'pending') return <div className="min-h-full"><DashboardSkeleton /></div>;
+  if (status === 'pending') return <div className="min-h-full"><AdminDashboardSkeleton /></div>;
 
   if (status === 'error') {
     throw new Error(error || 'Failed to load dashboard');
@@ -43,7 +26,7 @@ export default function AdminDashboardMain() {
 
         {/* Time Range Selector */}
         <div className="flex justify-end items-center">
-          <AdminDateFilterDropdown />
+          <AdminDashboardDateFilterDropdown />
         </div>
 
         {/* KPIs */}

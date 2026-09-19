@@ -1,126 +1,143 @@
 # Admin Subscriptions — Feature Map
 
 ## Module Purpose
-The Subscriptions module gives gym admins visibility into all active, expired, and pending
-member subscription records. Admins can view subscription history, check renewal dates, see
-which plan a member is on, send renewal reminders, and cancel active subscriptions. The primary
-value is catching expiring subscriptions before they lapse. Bulk renewals and plan changes are
-handled in Finance and Members modules respectively. Cancel is irreversible mid-cycle and
-requires `useConfirm()` double-verification.
+The Admin Subscriptions module manages the gym's own SaaS subscription and billing configuration. Admins can view the current subscription, compare available SaaS plans, initiate a plan upgrade, review paginated invoice history, manage stored payment methods, and toggle auto-renewal. This module does not manage individual member subscriptions.
 
 ## Directory Structure
-
 | Folder | Responsibility | Key Files |
 |---|---|---|
-| `subscriptions_components/AdminSubscriptionsMain/` | Root client orchestrator — renders KPIs, plan cards, invoices, payment method | `AdminSubscriptionsMain.tsx` |
-| `subscriptions_components/AdminSubscriptionsKPIs/` | Stat cards: Total Active, Expiring Soon, Expired, Revenue This Month | `AdminSubscriptionsKPIs.tsx` |
-| `subscriptions_components/AdminSubscriptionsPlanCards/` | Current plan info + available upgrade tiers | `AdminSubscriptionsPlanCards.tsx` |
-| `subscriptions_components/AdminSubscriptionsInvoices/` | Paginated invoice history table | `AdminSubscriptionsInvoices.tsx` |
-| `subscriptions_components/AdminSubscriptionsPaymentMethod/` | Current payment method display + update CTA | `AdminSubscriptionsPaymentMethod.tsx` |
-| `subscriptions_api/` | API client for subscription endpoints | `AdminSubscriptionsApi.ts` |
-| `subscriptions_context/` | Data logic hook — fetches subscriptions, handles remind/cancel mutations | `useAdminSubscriptionsLogic.ts` |
-| `subscriptions_store/` | Zustand store — search, statusFilter, currentPage | `useAdminSubscriptionsStore.ts` |
-| `subscriptions_types/` | TypeScript types: Subscription, SubscriptionStatus, Invoice, PlanCard | `AdminSubscriptionsTypes.ts` |
-| `subscriptions_utils/` | Constants: status styles, plan tier options | `AdminSubscriptionsSharedConstants.ts` |
+| `subscriptions_components/AdminSubscriptionsMain/` | Root client orchestrator, current-plan banner, tabs and auto-renew action | `AdminSubscriptionsMain.tsx` |
+| `subscriptions_components/AdminSubscriptionsKPIs/` | Subscription billing KPIs | `AdminSubscriptionsKPIs.tsx` |
+| `subscriptions_components/AdminSubscriptionsPlanCards/` | Current SaaS plan and upgrade choices | `AdminSubscriptionsPlanCards.tsx` |
+| `subscriptions_components/AdminSubscriptionsInvoices/` | Server-paginated invoice history table | `AdminSubscriptionsInvoices.tsx` |
+| `subscriptions_components/AdminSubscriptionsPaymentMethod/` | Stored payment-method list and default/remove actions | `AdminSubscriptionsPaymentMethod.tsx` |
+| `subscriptions_api/` | Typed module API client | `AdminSubscriptionsApi.ts` |
+| `subscriptions_context/` | TanStack Query orchestration and mutation confirmation | `useAdminSubscriptionsLogic.ts` |
+| `subscriptions_store/` | UI-only state such as active tab and invoice page | `useAdminSubscriptionsStore.ts` |
+| `subscriptions_types/` | API/domain types and Zod schemas | `AdminSubscriptionsTypes.ts`, `AdminSubscriptionsSchemas.ts` |
+| `subscriptions_utils/` | Static UI constants and theme mappings | `AdminSubscriptionsSharedConstants.ts` |
+| `subscriptions_mocks/` | Module-owned fixtures and MSW handlers | `AdminSubscriptionsMockFixtures.ts`, `AdminSubscriptionsMockHandlers.ts` |
 
 ## Feature Inventory
-
-| Feature | Route | What the Admin Can Do | Key Components | Main API Calls | Status |
-|---|---|---|---|---|---|
-| Subscription Overview | `/admin/subscriptions` | View current plan, billing cycle, usage limits, invoice history | `AdminSubscriptionsPlanCards`, `AdminSubscriptionsInvoices` | `GET /admin/subscriptions/overview` | ✅ Live |
-| Invoice History | `/admin/subscriptions` | Paginated table of all past invoices with download links | `AdminSubscriptionsInvoices` | `GET /admin/subscriptions/invoices?page&limit` | ✅ Live |
-| Renewal Reminder | `/admin/subscriptions` | Send WhatsApp/SMS renewal reminder to a member | `AdminSubscriptionsInvoices` (row action) | `POST /admin/subscriptions/:id/remind` | ✅ Live |
-| Cancel Subscription | `/admin/subscriptions` | Cancel an active subscription — requires `useConfirm()` | `AdminSubscriptionsPlanCards` | `POST /admin/subscriptions/:id/cancel` | ✅ Live |
-| Update Payment Method | `/admin/subscriptions` | Update the gym's billing payment method | `AdminSubscriptionsPaymentMethod` | `PATCH /admin/subscriptions/payment-method` | ✅ Live |
+| Feature | Route | What the Admin Can Do | Main API Calls | Status |
+|---|---|---|---|---|
+| Subscription Overview | `/admin/subscriptions` | View current plan, billing cycle, limits and auto-renewal state | `fetchSubscription`, `fetchKPIs` | Live |
+| Plan Comparison / Upgrade | `/admin/subscriptions` | Compare SaaS plans and confirm an upgrade | `fetchPlans`, `upgradePlan` | Live |
+| Invoice History | `/admin/subscriptions` | Browse invoices with server-side pagination and open invoice PDF | `fetchInvoices` | Live |
+| Payment Methods | `/admin/subscriptions` | View saved methods, set a default method, remove a saved method | `fetchPaymentMethods`, `setDefaultPaymentMethod`, `removePaymentMethod` | Live |
+| Auto-Renewal | `/admin/subscriptions` | Turn subscription auto-renewal on/off with confirmation | `toggleAutoRenew` | Live |
 
 ## User Flows & Interactions
 
-### Flow 1: View Subscription Status
-1. Admin navigates to `/admin/subscriptions`
-2. KPI cards show active count, expiring soon, expired, and monthly revenue
-3. Plan cards show current tier with usage bars and available upgrade options
-4. Invoice table shows paginated billing history
+### Flow 1: Review Subscription and Billing
+1. Admin opens `/admin/subscriptions`.
+2. TanStack Query loads subscription, KPI, plan, invoice, and payment-method data through the module API client.
+3. Current plan, billing cycle, next billing date, and auto-renewal state are visible.
+4. Admin switches tabs to review plans, invoices, or payment methods.
 
-### Flow 2: Cancel a Subscription
-1. Admin clicks "Cancel" on the active plan card
-2. `useAdminConfirm()` dialog: "Cancel subscription? This is irreversible mid-cycle. Access continues until [date]."
-3. On confirm: `subscriptionsApi.cancelSubscription(id)` called
-4. On success: plan card updates to cancelled state, toast shows backend message
+### Flow 2: Upgrade SaaS Plan
+1. Admin opens the Plans tab.
+2. Admin selects an available plan and initiates the upgrade confirmation.
+3. `useAdminSubscriptionsLogic.ts` waits for confirmation before generating the intent-scoped `Idempotency-Key`.
+4. `upgradePlan(planId, idempotencyKey)` sends the confirmed mutation.
+5. On success, the module reconciles relevant TanStack Query caches and displays the backend message.
+6. On retry of the same confirmed intent, the same key is reused; cancel/reopen creates a new key.
+
+### Flow 3: Browse Invoice History
+1. Invoice history starts at page 1.
+2. `currentInvoicePage` lives in the module store and is synchronized into the URL query state by the route logic where applicable.
+3. `fetchInvoices({ page, limit })` requests only the selected page.
+4. MSW returns `PaginationMeta` with `total`, `page`, `limit`, `totalPages`, `hasNextPage`, and `hasPrevPage`.
+5. The table renders the current page and pagination controls; changing page causes a distinct query key/request/result.
+
+### Flow 4: Change Auto-Renewal
+1. Admin clicks Auto-renew.
+2. `useAdminConfirm()` asks for confirmation before the billing-affecting mutation.
+3. One intent key is generated at confirmation time.
+4. `toggleAutoRenew(idempotencyKey)` is called and the mock mutates module-owned subscription state.
+5. On success, the subscription query is invalidated and the new state is visible.
 
 ## Data and State Architecture
-
-- **State pattern:** Zustand for UI state + TanStack Query for server state
-- **Zustand store:** `useAdminSubscriptionsStore.ts` — holds: `search`, `statusFilter`, `currentPage`
-- **Query keys:** `['adminSubscriptionsOverview']`, `['adminSubscriptionsInvoices', { page }]`
-- **Local-storage keys:** None
-- **MSW handler file:** `admin/subscriptions/subscriptions_mocks/handlers/AdminSubscriptionsMockHandlers.ts` (module-owned MSW transport)
+- **Server state:** TanStack Query is the sole source of truth for subscription, plans, invoices, payment methods and KPIs.
+- **Module UI state:** `useAdminSubscriptionsStore.ts` owns `activeTab`, `showUpgradeConfirm`, and `currentInvoicePage`.
+- **Query keys:**
+  - `['admin', 'subscriptions', 'subscription']`
+  - `['admin', 'subscriptions', 'plans']`
+  - `['admin', 'subscriptions', 'invoices', { page, limit }]`
+  - `['admin', 'subscriptions', 'payment-methods']`
+  - `['admin', 'subscriptions', 'kpis']`
+- **Local-storage keys:** None.
+- **MSW handler:** `subscriptions_mocks/handlers/AdminSubscriptionsMockHandlers.ts`.
+- **MSW fixture:** `subscriptions_mocks/fixtures/AdminSubscriptionsMockFixtures.ts`.
+- **External infrastructure:** `@/lib/api`, `@/lib/formatters`, `@/components/ui`, shared Admin confirmation/toast infrastructure.
+- **Business feature dependencies:** None.
+- **Role-level business dependencies:** None.
 
 ## API Contract
-
-All calls go through `subscriptionsApi` in `subscriptions_api/AdminSubscriptionsApi.ts`.
-
-| Function | Method | Endpoint | Request | Response `data` type |
+| Function | Method | Endpoint | Request | Response `data` |
 |---|---|---|---|---|
-| `fetchOverview()` | GET | `/admin/subscriptions/overview` | — | `SubscriptionOverview` |
-| `fetchInvoices(params)` | GET | `/admin/subscriptions/invoices` | `{ page, limit }` | `Invoice[]` + `PaginationMeta` |
-| `sendReminder(id)` | POST | `/admin/subscriptions/:id/remind` | — | `null` |
-| `cancelSubscription(id)` | POST | `/admin/subscriptions/:id/cancel` | — | `null` |
-| `updatePaymentMethod(dto)` | PATCH | `/admin/subscriptions/payment-method` | `PaymentMethodDto` | `null` |
+| `fetchSubscription()` | GET | `/admin/subscriptions/fetchSubscription` | — | `CurrentSubscription` |
+| `fetchPlans()` | GET | `/admin/subscriptions/fetchPlans` | — | `SaaSPlan[]` |
+| `fetchInvoices(params)` | GET | `/admin/subscriptions/fetchInvoices?page&limit` | `{ page, limit }` | `Invoice[]` + `PaginationMeta` |
+| `fetchPaymentMethods()` | GET | `/admin/subscriptions/fetchPaymentMethods` | — | `PaymentMethod[]` |
+| `fetchKPIs()` | GET | `/admin/subscriptions/fetchKPIs` | — | `SubscriptionKPIData` |
+| `upgradePlan(planId, idempotencyKey)` | POST | `/admin/subscriptions/upgradePlan` | `planId` | `null` |
+| `toggleAutoRenew(idempotencyKey)` | POST | `/admin/subscriptions/toggleAutoRenew` | — | `null` |
+| `setDefaultPaymentMethod(id)` | POST | `/admin/subscriptions/setDefaultPaymentMethod` | `id` | `null` |
+| `removePaymentMethod(id, idempotencyKey)` | DELETE | `/admin/subscriptions/removePaymentMethod` | `id` | `null` |
 
 ## Permissions and Security
-
-- **Required role:** `ADMIN` — enforced by `middleware.ts`
-- **Destructive actions:** Cancel uses `useAdminConfirm()` with explicit mid-cycle warning
-- **`SUBSCRIPTION_STATUS_STYLES`** lives in `subscriptions_utils/` — never inline status badge colors
-- **Cross-role isolation:** Zero imports from `/manager`, `/trainer`, `/superadmin`
+- **Required role:** `ADMIN` according to the module route/security contract.
+- **Financial mutations:** Plan upgrade and auto-renewal changes use `useAdminConfirm()` and an intent-scoped `Idempotency-Key`; payment-method removal is also protected by confirmation and idempotency.
+- **Backend authorization:** Frontend visibility is not a replacement for backend authorization.
+- **Sensitive payment data:** UI renders tokenized/last-four metadata supplied by the API; secrets are not persisted in browser storage.
+- **Cross-role isolation:** No business imports from `/manager`, `/trainer`, `/superadmin`, sibling Admin feature modules, or role-wide business buckets.
 
 ## Loading, Empty, and Error States
-
-| Section | Loading State | Empty State | Error State |
+| Section | Loading | Empty | Error / Recovery |
 |---|---|---|---|
-| Full page | `loading.tsx` — skeleton: KPI cards + plan cards + invoice table | N/A | `error.tsx` — module-branded with Retry |
-| Invoice table | Skeleton rows while loading | Inline "No invoices found" | Inline via TanStack Query `isError` |
-
-## Edge Cases and AI Warnings
-
-- **Cancel is irreversible mid-cycle** — always use `useAdminConfirm()` with explicit warning stating the access end date. Never soften the message.
-- **`SUBSCRIPTION_STATUS_STYLES` is the single source of truth** — never add inline color ternaries for subscription status.
-- **Server-side pagination is mandatory** — never fetch all invoices and paginate client-side.
-- **Reminder sends a real WhatsApp/SMS** — the confirm dialog must make this clear to avoid accidental spam.
-
-## Component Responsibility Map
-
-| Component File | Responsibility |
-|---|---|
-| `AdminSubscriptionsMain.tsx` | Root orchestrator. Renders KPIs, plan cards, invoices, payment method. No direct API calls. |
-| `AdminSubscriptionsKPIs.tsx` | 4 read-only stat cards. Reads from logic hook. |
-| `AdminSubscriptionsPlanCards.tsx` | Current plan + upgrade tiers. Cancel CTA calls `useAdminConfirm`. |
-| `AdminSubscriptionsInvoices.tsx` | Paginated invoice table. Reminder row action. Download link per row. |
-| `AdminSubscriptionsPaymentMethod.tsx` | Current payment method display + update CTA. |
-
-## Rule Compliance Checklist
-
-- [x] Rule 1: Micro-modularization — module-prefixed subfolders
-- [x] Rule 2: Total Role Isolation — zero cross-role imports
-- [x] Rule 3: Hyper-descriptive naming — Admin prefix on all files
-- [x] Rule 4: Theme Independence — no hardcoded colors in JSX
-- [x] Rule 5: Smart State Management — Zustand + TanStack Query
-- [x] Rule 6: Logic/UI Separation — `useAdminSubscriptionsLogic` extracts all logic
-- [x] Rule 7: Type Isolation — all types in `subscriptions_types/`
-- [x] Rule 8: Server/Client Boundary — `page.tsx` = Server Component
-- [x] Rule 9: `loading.tsx` + `error.tsx` + `not-found.tsx` present
-- [x] Rule 11: `subscriptions_url_config.ts` present
-- [x] Rule 13: Feature Map — this document
-- [x] Rule 40: `subscriptions_forbidden.md` present
-- [x] Rule 71: Cancel uses `useAdminConfirm()`
-- [ ] Rule 15A: Co-located tests are present; full behavioral coverage and runtime execution are NOT VERIFIED
-- [x] Rule 75: Module-owned MSW handler configured in `admin/subscriptions/subscriptions_mocks/handlers/AdminSubscriptionsMockHandlers.ts`
+| Full route | `loading.tsx` skeleton matching KPI/plan/invoice surfaces | N/A | `error.tsx` with module-specific Retry |
+| Subscription banner | Query pending state with stable layout; button loading preserves its label | N/A | Subscription query error is surfaced through route/section error strategy |
+| Invoice table | Table-shaped skeleton | No invoices state with pagination hidden/disabled as appropriate | Inline query error with retry through approved pattern |
+| Payment methods | Section skeleton | No saved payment methods message | Inline error/retry |
 
 ## UI Data Requirements
-- Every data-driven table, KPI, chart, filter, dropdown and detail field must map to a typed API response field and be represented in module-owned fixtures where mocked.
-- Verify each rendered data field against the module API schema before changing the UI.
+- Current plan: `planName`, `tier`, `monthlyPrice`, `annualPrice`, `billingCycle`, `nextBillingDate`, `autoRenew`.
+- Limits: `gymCount`, `memberLimit`, `staffLimit`, `storageGb`.
+- Invoice table: `invoiceNo`, `date`, `planName`, `billingCycle`, `amount`, `status`, `pdfUrl`.
+- Invoice pagination: `meta.total`, `meta.page`, `meta.limit`, `meta.totalPages`, `meta.hasNextPage`, `meta.hasPrevPage`.
+- Payment methods: `type`, `last4`, `brand`, `upiId`, `bankName`, `expiryMonth`, `expiryYear`, `isDefault`.
+- KPI data: `currentPlan`, `monthlySpend`, `totalInvoices`, `nextBillingAmount`, `daysUntilRenewal`, `savedWithAnnual`.
 
+## Edge Cases / AI Warnings
+- **Never add member-subscription behavior here:** this module is SaaS subscription billing for the gym account.
+- **Never regenerate an idempotency key during retry:** reuse the same key for the same confirmed financial intent.
+- **Cancel confirmation must clear an unsent key:** cancellation/reopen represents a new user intent and therefore a new key.
+- **Invoice pagination is server-side:** never fetch the full invoice history and paginate only in React.
+- **Mock mutations must mutate visible state:** returning a success message without changing `subscriptionState` is forbidden.
+- **API response contracts are exact:** upgrade, auto-renew and payment-method mutations return `data: null`; do not return convenience objects that violate the Zod schema.
+- **Do not resurrect stale endpoints:** `sendReminder`, `cancelSubscription`, and `updatePaymentMethod` are not part of the current API contract and must not be documented or implemented without an explicit product requirement.
+
+## Component Responsibility Map
+| Component | Responsibility |
+|---|---|
+| `AdminSubscriptionsMain.tsx` | Root client orchestrator; current-plan banner, tabs, auto-renew action. |
+| `AdminSubscriptionsKPIs.tsx` | Read-only KPI presentation. |
+| `AdminSubscriptionsPlanCards.tsx` | Displays available SaaS plans and starts upgrade flow. |
+| `AdminSubscriptionsInvoices.tsx` | Displays paginated invoice table and invoice PDF actions. |
+| `AdminSubscriptionsPaymentMethod.tsx` | Displays stored payment methods and guarded actions. |
+
+## Rule Compliance Checklist
+- [x] Feature self-containment and no sibling business dependencies
+- [x] Module-prefixed structure and descriptive naming
+- [x] TanStack Query owns server state
+- [x] Invoice pagination is server-side and reflected in query key/API/mock/UI
+- [x] Financial mutations use confirmation + intent-scoped `Idempotency-Key`
+- [x] Mock mutation state changes are visible after success
+- [x] API mutation response schemas match mock responses
+- [x] Canonical pagination metadata includes `hasNextPage` / `hasPrevPage`
+- [x] Feature map reflects the actual API surface
+- [ ] Full browser/typecheck/lint/E2E execution — NOT VERIFIED until the consuming app is present
 
 ## Module-Owned MSW Fixtures
-
-All Admin frontend-first API fixtures and MSW transport handlers are owned by `admin/subscriptions_mocks/fixtures/AdminSubscriptionsMockFixtures.ts` and `admin/subscriptions/subscriptions_mocks/handlers/AdminSubscriptionsMockHandlers.ts`. These files provide populated success responses and are the only module-owned mock transport source for Admin. Global MSW bootstrap may register these handlers, but must not contain Admin business data.
+`AdminSubscriptionsMockFixtures.ts` and `AdminSubscriptionsMockHandlers.ts` are the only business-data mock sources for this module. Global MSW bootstrap may register them but must not own subscription business data.

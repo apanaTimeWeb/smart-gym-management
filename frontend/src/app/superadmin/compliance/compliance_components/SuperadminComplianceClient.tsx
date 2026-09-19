@@ -8,8 +8,8 @@ import SuperadminComplianceSummaryCards from '@/app/superadmin/compliance/compli
 import { useSuperadminCompliancePage } from '@/app/superadmin/compliance/compliance_utils/useSuperadminCompliancePage';
 export default function SuperadminComplianceClient() {
     // DATA FLOW: API → useSuperadminCompliancePage → focused child views.
-    const { data, isLoading, isError, refetch } = useSuperadminCompliancePage();
-    if (isLoading) {
+    const { data, isPending, isError, refetch } = useSuperadminCompliancePage();
+    if (isPending) {
         return (<div className="space-y-4" aria-busy="true">
         <div className="h-32 rounded-xl bg-skeleton-base motion-safe:animate-pulse"/>
         <div className="h-96 rounded-xl bg-skeleton-base motion-safe:animate-pulse"/>
@@ -20,7 +20,7 @@ export default function SuperadminComplianceClient() {
   <p className="font-semibold text-danger">
     Compliance data could not be loaded.
   </p>
-  <button type="button" onClick={() => refetch()} className="mt-3 rounded-md border border-border px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95">
+  <button type="button" onClick={() => refetch()} className="mt-3 rounded-md border border-border px-3 py-2 text-sm text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95">
     Retry
   </button>
         </div>);

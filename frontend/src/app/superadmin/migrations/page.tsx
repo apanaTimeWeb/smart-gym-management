@@ -7,7 +7,7 @@ export const metadata: Metadata = {
     description: 'Manage and track database schema migrations across all gym instances.',
 };
 export default function SuperadminMigrationsPage() {
-    return (<main className="w-full h-full bg-background min-h-screen">
+    return (<main className="w-full h-full bg-page min-h-screen">
       <SuperadminMigrationsClient />
     </main>);
 }

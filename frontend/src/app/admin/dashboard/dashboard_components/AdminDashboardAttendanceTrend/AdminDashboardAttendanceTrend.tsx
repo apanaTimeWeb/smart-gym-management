@@ -2,7 +2,7 @@
 // RESPONSIBILITY: Renders the cross-branch daily attendance trend chart using ApexCharts.
 
 import dynamic from 'next/dynamic';
-import { ADMIN_CHART_THEME } from '@/app/admin/admin_utils/AdminChartThemeTokens';
+import { ADMIN_CHART_THEME } from '@/app/admin/admin_layout/admin_utils/AdminChartThemeTokens';
 import { CalendarCheck } from 'lucide-react';
 import { useAdminDashboardLogic } from '@/app/admin/dashboard/dashboard_context/useAdminDashboardLogic';
 
@@ -55,19 +55,19 @@ export default function AdminDashboardAttendanceTrend() {
   const avg = values.length ? Math.round(total / values.length) : 0;
 
   return (
-    <div className="bg-card/60 backdrop-blur-xl border border-border rounded-2xl shadow-lg p-6">
+    <div className="bg-card backdrop-blur-xl border border-border rounded-2xl shadow-card p-6">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 bg-info/20 rounded-xl">
+          <div className="p-2.5 bg-info rounded-xl">
             <CalendarCheck size={18} strokeWidth={2} className="text-info" />
           </div>
           <div>
-            <h2 className="text-base font-bold text-foreground">Weekly Attendance</h2>
+            <h2 className="text-base font-bold text-primary">Weekly Attendance</h2>
             <p className="text-xs text-secondary">Cross-branch daily check-ins</p>
           </div>
         </div>
         <div className="text-right">
-          <p className="text-lg font-bold text-foreground">{total.toLocaleString('en-IN')}</p>
+          <p className="text-lg font-bold text-primary">{total.toLocaleString('en-IN')}</p>
           <p className="text-xs text-secondary">Avg {avg}/day</p>
         </div>
       </div>

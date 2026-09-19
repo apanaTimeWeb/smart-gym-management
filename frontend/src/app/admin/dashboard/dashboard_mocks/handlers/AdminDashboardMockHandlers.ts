@@ -16,7 +16,6 @@ export const adminDashboardMockHandlers = [
       success: true,
       message: 'Dashboard data loaded',
       data,
-      meta: { total: 1, page: 1, limit: 1, totalPages: 1 },
     });
   }),
 ];

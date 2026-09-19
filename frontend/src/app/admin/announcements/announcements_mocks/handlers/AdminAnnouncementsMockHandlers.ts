@@ -1,3 +1,4 @@
+import { StatusCodes } from 'http-status-codes';
 // RESPONSIBILITY: Owns MSW handlers for the Admin announcements feature.
 // DATA FLOW: announcements API client → module-owned MSW handler → module-owned fixture → TanStack Query/UI.
 import { http, HttpResponse } from 'msw';
@@ -13,14 +14,14 @@ function asRecord(value: unknown): JsonObject {
 }
 
 const ok = <T>(data: T, message = 'Success') =>
-  HttpResponse.json({ success: true, message, data, meta: { total: Array.isArray(data) ? data.length : 1, page: 1, limit: 50, totalPages: 1 } });
+  HttpResponse.json({ success: true, message, data });
 
 const paged = <T>(data: T[], page: number, limit: number, message = 'Success') => {
   const safeLimit = Math.max(1, limit);
   const safePage = Math.max(1, page);
   const start = (safePage - 1) * safeLimit;
   const pageData = data.slice(start, start + safeLimit);
-  return HttpResponse.json({ success: true, message, data: pageData, meta: { total: data.length, page: safePage, limit: safeLimit, totalPages: Math.max(1, Math.ceil(data.length / safeLimit)) } });
+  return HttpResponse.json({ success: true, message, data: pageData, meta: { total: data.length, page: safePage, limit: safeLimit, totalPages: Math.max(1, Math.ceil(data.length / safeLimit)), hasNextPage: safePage < Math.max(1, Math.ceil(data.length / safeLimit)), hasPrevPage: safePage > 1 } });
 };
 
 import { MOCK_ANNOUNCEMENTS } from '@/app/admin/announcements/announcements_mocks/fixtures/AdminAnnouncementsMockFixtures';
@@ -102,7 +103,7 @@ export const adminAnnouncementsMockHandlers = [
   http.post('*/admin/announcements/updateAnnouncement', async ({ request }) => {
     const body = asRecord(await parseRequestBody(request));
     const index = MOCK_ANNOUNCEMENTS.findIndex((item) => item.id === String(body.id));
-    if (index === -1) return HttpResponse.json({ success: false, message: 'Announcement not found' }, { status: 404 });
+    if (index === -1) return HttpResponse.json({ success: false, message: 'Announcement not found' }, { status: StatusCodes.NOT_FOUND });
     const updated = applyAnnouncementUpdate(MOCK_ANNOUNCEMENTS[index]!, body);
     MOCK_ANNOUNCEMENTS[index] = updated;
     return ok(updated, 'Announcement updated');
@@ -110,14 +111,14 @@ export const adminAnnouncementsMockHandlers = [
   http.delete('*/admin/announcements/deleteAnnouncement', async ({ request }) => {
     const body = asRecord(await parseRequestBody(request));
     const index = MOCK_ANNOUNCEMENTS.findIndex((item) => item.id === String(body.id));
-    if (index === -1) return HttpResponse.json({ success: false, message: 'Announcement not found' }, { status: 404 });
+    if (index === -1) return HttpResponse.json({ success: false, message: 'Announcement not found' }, { status: StatusCodes.NOT_FOUND });
     MOCK_ANNOUNCEMENTS.splice(index, 1);
     return ok(null, 'Announcement deleted');
   }),
   http.post('*/admin/announcements/togglePin', async ({ request }) => {
     const body = asRecord(await parseRequestBody(request));
     const record = MOCK_ANNOUNCEMENTS.find((item) => item.id === String(body.id));
-    if (!record) return HttpResponse.json({ success: false, message: 'Announcement not found' }, { status: 404 });
+    if (!record) return HttpResponse.json({ success: false, message: 'Announcement not found' }, { status: StatusCodes.NOT_FOUND });
     record.isPinned = !record.isPinned;
     return ok(record, 'Announcement updated');
   })

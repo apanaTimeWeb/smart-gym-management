@@ -8,7 +8,7 @@ import { EMPTY_STAFF } from '@/app/admin/hr/hr_utils/AdminHrSharedConstants';
 import { useAdminHrUrlState } from '@/app/admin/hr/hr_context/useAdminHrUrlState';
 import { useAdminHrModalState } from '@/app/admin/hr/hr_context/useAdminHrModalState';
 import { useAdminHrLogic } from '@/app/admin/hr/hr_context/useAdminHrLogic';
-import { useAdminToastStore } from '@/app/admin/admin_store/useAdminToastStore';
+import { useAdminToastStore } from '@/app/admin/admin_layout/admin_store/useAdminToastStore';
 import type { Staff } from '@/app/admin/hr/hr_types/AdminHrTypes';
 
 const AdminHrContext = createContext<HrUiContextType | undefined>(undefined);
@@ -46,6 +46,10 @@ export function HrProvider({ children, initialData }: { children: React.ReactNod
     setVisibleColumns,
     ...urlState,
     showToast,
+    staffSortKey: urlState.staffSortKey,
+    staffSortDir: urlState.staffSortDir as 'asc' | 'desc',
+    payrollSortKey: urlState.payrollSortKey,
+    payrollSortDir: urlState.payrollSortDir as 'asc' | 'desc',
     showModal: modalState.showModal,
     setShowModal: modalState.setShowModal,
     showPayrollModal: modalState.showPayrollModal,

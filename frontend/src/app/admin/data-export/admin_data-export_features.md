@@ -68,7 +68,7 @@ All calls go through `dataExportApi` in `data_export_api/AdminDataExportApi.ts`.
 
 ## Permissions and Security
 
-- **Required role:** `ADMIN` — enforced by `middleware.ts`
+- **Required role:** `ADMIN` — enforced by `@/middleware.ts`
 - **Privacy notice:** Must be acknowledged before the first export. Persisted in localStorage key `adminDataExport_privacyAcknowledged`.
 - **Download uses anchor link** — never use `fetch()` to stream file bytes without Blob handling. Use `<a href={url} download>` pattern only.
 - **Expired links:** Show expiry timestamp in history table. Disable download button and show "Expired" badge when `expiresAt < Date.now()`.
@@ -110,7 +110,7 @@ All calls go through `dataExportApi` in `data_export_api/AdminDataExportApi.ts`.
 - [x] Rule 7: Type Isolation — all types in `data_export_types/`
 - [x] Rule 8: Server/Client Boundary — `page.tsx` = Server Component
 - [x] Rule 9: `loading.tsx` + `error.tsx` + `not-found.tsx` present
-- [x] Rule 11: `data-export_url_config.ts` present
+- [x] Rule 11: `admin_data_export_url_config.ts` present
 - [x] Rule 13: Feature Map — this document
 - [x] Rule 15B: Export form uses React Hook Form + Zod
 - [x] Rule 40: `data-export_forbidden.md` present

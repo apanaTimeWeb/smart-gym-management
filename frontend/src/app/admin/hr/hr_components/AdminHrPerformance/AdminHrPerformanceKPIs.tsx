@@ -5,9 +5,8 @@ import { formatPercent1dp, formatDecimal } from '@/lib/formatters';
 import { UserPlus, Calendar, Star, Users } from 'lucide-react';
 import type { PerformanceAggregates } from '@/app/admin/hr/hr_types/AdminHrPerformanceTypes';
 
-interface AdminHrPerformanceKPIsProps {
-  aggregates: PerformanceAggregates;
-}
+import type { AdminHrPerformanceKPIsProps } from '@/app/admin/hr/hr_types/AdminHrPerformanceKPIsPropsTypes';
+
 
 export default function AdminHrPerformanceKPIs({ aggregates }: AdminHrPerformanceKPIsProps) {
   const kpis = [
@@ -16,28 +15,28 @@ export default function AdminHrPerformanceKPIs({ aggregates }: AdminHrPerformanc
       value: aggregates.totalSessions.toLocaleString('en-IN'),
       icon: Calendar,
       iconColor: 'text-primary',
-      iconBg: 'bg-primary/10',
+      iconBg: 'bg-primary-subtle',
     },
     {
       label: 'Members Added',
       value: aggregates.totalMembersAdded.toLocaleString('en-IN'),
       icon: UserPlus,
       iconColor: 'text-success',
-      iconBg: 'bg-success/10',
+      iconBg: 'bg-success',
     },
     {
       label: 'Avg Attendance',
       value: `${formatPercent1dp(aggregates.avgAttendance)}%`,
       icon: Users,
       iconColor: 'text-info',
-      iconBg: 'bg-info/10',
+      iconBg: 'bg-info',
     },
     {
       label: 'Avg Rating',
       value: formatDecimal(aggregates.avgRating),
       icon: Star,
       iconColor: 'text-warning',
-      iconBg: 'bg-warning/10',
+      iconBg: 'bg-warning',
     },
   ];
 
@@ -55,7 +54,7 @@ export default function AdminHrPerformanceKPIs({ aggregates }: AdminHrPerformanc
             </div>
             <div>
               <p className="text-xs font-bold text-secondary uppercase tracking-wider mb-1">{kpi.label}</p>
-              <p className="text-2xl font-black text-foreground">{kpi.value}</p>
+              <p className="text-2xl font-black text-primary">{kpi.value}</p>
             </div>
           </div>
         );

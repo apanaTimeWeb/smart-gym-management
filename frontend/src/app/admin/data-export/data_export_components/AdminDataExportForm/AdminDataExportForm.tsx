@@ -42,7 +42,7 @@ export default function AdminDataExportForm() {
   return (
     <div className="bg-card rounded-xl border border-border p-6">
       <div className="mb-5">
-        <p className="text-base font-semibold text-foreground">New Export</p>
+        <p className="text-base font-semibold text-primary">New Export</p>
         <p className="text-sm text-secondary mt-0.5">Select data type, format, gyms, and date range</p>
       </div>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
@@ -94,21 +94,21 @@ export default function AdminDataExportForm() {
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-secondary mb-1">From Date <span className="text-danger">*</span></label>
-            <input {...register('dateFrom')} type="date" className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" />
+            <input {...register('dateFrom')} type="date" className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" />
             {errors.dateFrom && <p className="text-xs text-danger mt-1">{errors.dateFrom.message}</p>}
           </div>
           <div>
             <label className="block text-sm font-medium text-secondary mb-1">To Date <span className="text-danger">*</span></label>
-            <input {...register('dateTo')} type="date" className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" />
+            <input {...register('dateTo')} type="date" className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" />
             {errors.dateTo && <p className="text-xs text-danger mt-1">{errors.dateTo.message}</p>}
           </div>
         </div>
 
         <div className="flex justify-end gap-3 pt-2 border-t border-border">
-          <button type="button" onClick={() => reset(EMPTY_EXPORT_FORM)} className="px-4 py-2 bg-input border border-border rounded-lg text-sm font-medium text-secondary hover:text-foreground motion-safe:transition-colors">
+          <button type="button" onClick={() => reset(EMPTY_EXPORT_FORM)} className="px-4 py-2 bg-input border border-border rounded-lg text-sm font-medium text-secondary hover:text-primary motion-safe:transition-colors motion-safe:duration-base">
             Clear
           </button>
-          <button type="submit" disabled={creating} className="flex items-center gap-2 px-5 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-semibold hover:bg-primary-hover motion-safe:transition-colors disabled:opacity-60 disabled:cursor-not-allowed motion-safe:active:scale-95 min-w-32">
+          <button type="submit" disabled={creating} className="flex items-center gap-2 px-5 py-2 bg-primary text-on-primary rounded-lg text-sm font-semibold hover:bg-primary-hover motion-safe:transition-colors disabled:opacity-60 disabled:cursor-not-allowed motion-safe:active:scale-95 min-w-32 motion-safe:duration-base">
             <Download size={15} />
             {creating ? 'Starting Export...' : 'Start Export'}
           </button>

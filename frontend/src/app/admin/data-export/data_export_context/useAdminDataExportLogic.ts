@@ -2,19 +2,23 @@
 // RESPONSIBILITY: Business logic hook for the Data Export module.
 // DATA FLOW: URL filters → TanStack Query → AdminDataExportApi → module-owned MSW → table rendering.
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { adminToast } from '@/app/admin/admin_components/AdminFeedback/AdminToastService';
+import { adminToast } from '@/app/admin/admin_layout/AdminFeedback/AdminToastService';
 import { dataExportApi } from '@/app/admin/data-export/data_export_api/AdminDataExportApi';
 import { useAdminDataExportStore } from '@/app/admin/data-export/data_export_store/useAdminDataExportStore';
-import { useAdminUrlQuerySync } from '@/app/admin/admin_utils/useAdminUrlQuerySync';
-import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/useAdminConfirm';
+import { useAdminUrlQuerySync } from '@/app/admin/admin_layout/admin_utils/useAdminUrlQuerySync';
+import { useAdminConfirm } from '@/app/admin/admin_layout/AdminFeedback/useAdminConfirm';
+import { clearAdminIdempotencyKey, getAdminIdempotencyKey } from '@/app/admin/admin_layout/admin_utils/AdminIdempotencyIntentStore';
 import { DATA_EXPORT_ITEMS_PER_PAGE } from '@/app/admin/data-export/data_export_utils/AdminDataExportSharedConstants';
 import type { DataExportSortDirection, DataExportSortKey, ExportFormValues, ExportStatus } from '@/app/admin/data-export/data_export_types/AdminDataExportTypes';
 
 export function useAdminDataExportLogic() {
   const { confirm } = useAdminConfirm();
   const qc = useQueryClient();
+  const idempotencyKeysRef = useRef(new Map<string, string>());
+  const getIntentKey = useCallback((intentId: string) => getAdminIdempotencyKey(idempotencyKeysRef.current, intentId), []);
+  const clearIntentKey = useCallback((intentId: string) => clearAdminIdempotencyKey(idempotencyKeysRef.current, intentId), []);
   const { statusFilter, setStatusFilter, currentPage, setCurrentPage } = useAdminDataExportStore();
   const [sortKey, setSortKey] = useState<DataExportSortKey>('createdAt');
   const [sortDir, setSortDir] = useState<DataExportSortDirection>('desc');
@@ -51,8 +55,9 @@ export function useAdminDataExportLogic() {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id: string) => dataExportApi.deleteJob(id),
-    onSuccess: (response) => {
+    mutationFn: ({ id, idempotencyKey }: { id: string; idempotencyKey: string }) => dataExportApi.deleteJob(id, idempotencyKey),
+    onSuccess: (response, variables) => {
+      idempotencyKeysRef.current.delete(`delete-export-job:${variables.id}`);
       adminToast.success(response.message, 'admin-success-abc17580ff');
       qc.invalidateQueries({ queryKey: ['admin', 'data-export', 'jobs'] });
     },
@@ -68,9 +73,10 @@ export function useAdminDataExportLogic() {
 
   const deleteJob = useCallback(async (id: string) => {
     const ok = await confirm({ title: 'Delete Export', message: 'Delete this export job? This cannot be undone.', confirmText: 'Delete', type: 'danger' });
-    if (!ok) return;
-    deleteMutation.mutate(id);
-  }, [confirm, deleteMutation]);
+    const intentId = `delete-export-job:${id}`;
+    if (!ok) { clearIntentKey(intentId); return; }
+    deleteMutation.mutate({ id, idempotencyKey: getIntentKey(intentId) });
+  }, [clearIntentKey, confirm, deleteMutation, getIntentKey]);
 
   return {
     jobs: jobsQuery.data?.data ?? [],

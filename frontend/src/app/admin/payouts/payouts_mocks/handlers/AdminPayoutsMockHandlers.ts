@@ -13,14 +13,14 @@ function asRecord(value: unknown): JsonObject {
 }
 
 const ok = <T>(data: T, message = 'Success') =>
-  HttpResponse.json({ success: true, message, data, meta: { total: Array.isArray(data) ? data.length : 1, page: 1, limit: 50, totalPages: 1 } });
+  HttpResponse.json({ success: true, message, data });
 
 const paged = <T>(data: T[], page: number, limit: number, message = 'Success') => {
   const safeLimit = Math.max(1, limit);
   const safePage = Math.max(1, page);
   const start = (safePage - 1) * safeLimit;
   const pageData = data.slice(start, start + safeLimit);
-  return HttpResponse.json({ success: true, message, data: pageData, meta: { total: data.length, page: safePage, limit: safeLimit, totalPages: Math.max(1, Math.ceil(data.length / safeLimit)) } });
+  return HttpResponse.json({ success: true, message, data: pageData, meta: { total: data.length, page: safePage, limit: safeLimit, totalPages: Math.max(1, Math.ceil(data.length / safeLimit)), hasNextPage: safePage < Math.max(1, Math.ceil(data.length / safeLimit)), hasPrevPage: safePage > 1 } });
 };
 
 import { MOCK_PAYOUTS, MOCK_PNL } from '@/app/admin/payouts/payouts_mocks/fixtures/AdminPayoutsMockFixtures';
@@ -34,7 +34,7 @@ export const adminPayoutsMockHandlers = [
     const filtered = MOCK_PAYOUTS.filter(p => (!month || p.month === month) && (!gymId || p.gymId === gymId) && (!status || p.payoutStatus === status));
     const sorted = [...filtered].sort((a,b) => { const av=a[sortKey as keyof typeof a]; const bv=b[sortKey as keyof typeof b]; if (typeof av === 'number' && typeof bv === 'number') return sortDir==='asc'?av-bv:bv-av; return String(av??'').localeCompare(String(bv??''),undefined,{numeric:true})*(sortDir==='asc'?1:-1); });
     const start = (page - 1) * limit; const data = sorted.slice(start, start + limit);
-    return HttpResponse.json({ success: true, message: 'Success', data, meta: { total: sorted.length, page, limit, totalPages: Math.max(1, Math.ceil(sorted.length / limit)) } });
+    return HttpResponse.json({ success: true, message: 'Success', data, meta: { total: sorted.length, page, limit, totalPages: Math.max(1, Math.ceil(sorted.length / limit)), hasNextPage: page < Math.max(1, Math.ceil(sorted.length / limit)), hasPrevPage: page > 1 } });
   }),
   http.get('*/admin/payouts/fetchPnL', ({ request }) => { const url = new URL(request.url); const month=url.searchParams.get('month'); const gymId=url.searchParams.get('gymId'); const sortKey=url.searchParams.get('sortKey')||'netProfit'; const sortDir=url.searchParams.get('sortDir')||'desc'; const filtered=MOCK_PNL.filter(p => (!month || p.month === month) && (!gymId || p.gymId === gymId)); const sorted=[...filtered].sort((a,b)=>{const av=a[sortKey as keyof typeof a]; const bv=b[sortKey as keyof typeof b]; if(typeof av==='number'&&typeof bv==='number') return sortDir==='asc'?av-bv:bv-av; return String(av??'').localeCompare(String(bv??''),undefined,{numeric:true})*(sortDir==='asc'?1:-1);}); return ok(sorted); }),
   http.get('*/admin/payouts/fetchKPIs', ({ request }) => {

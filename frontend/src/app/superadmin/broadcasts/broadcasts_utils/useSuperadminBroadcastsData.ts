@@ -2,14 +2,20 @@
 'use client';
 // DATA FLOW: feature API/schema → hook/context → useSuperadminBroadcastsData consumers.
 // RESPONSIBILITY: Encapsulates functionality for useSuperadminBroadcastsData.ts
-import { useMemo, useCallback } from 'react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { broadcastsApi } from '@/app/superadmin/broadcasts/superadmin_broadcasts_api/superadmin_broadcasts_api';
-import type { Broadcast, SuperadminBroadcastsTenant, BroadcastStatusFilter } from '@/app/superadmin/broadcasts/superadmin_broadcasts_types/superadmin_broadcasts_types';
-import { useSuperadminUrlState } from '@/app/superadmin/superadmin_utils/useSuperadminUrlState';
+import { useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { broadcastsApi } from '@/app/superadmin/broadcasts/broadcasts_api/SuperadminBroadcastsApi';
+import type { Broadcast, SuperadminBroadcastsTenant, BroadcastStatusFilter } from '@/app/superadmin/broadcasts/broadcasts_types/SuperadminBroadcastsTypes';
+import { useUrlState } from '@/hooks/useUrlState';
+/**
+ * Purpose: Encapsulates functionality for useSuperadminBroadcastsData.ts.
+ * Inputs: values defined by the exported hook signature.
+ * Output: the hook's typed state/actions/query contract.
+ * Side effects: remain scoped to the owning feature or approved application infrastructure.
+ * Invariant: does not move feature business state into unrelated modules.
+ */
 export const useSuperadminBroadcastsData = () => {
-    const queryClient = useQueryClient();
-    const { getParam, setParam } = useSuperadminUrlState();
+    const { getParam, setParam } = useUrlState();
     const searchQuery = getParam('search', '');
     const statusFilter = getParam('status', 'ALL') as BroadcastStatusFilter;
     const currentPage = Number(getParam('page', '1'));
@@ -33,18 +39,9 @@ export const useSuperadminBroadcastsData = () => {
         queryFn: () => broadcastsApi.fetchBroadcasts(queryParams),
     });
     const { data: gymsRes } = useQuery({
-        queryKey: ['superadmin', 'gyms'],
+        queryKey: ['superadmin', 'broadcasts', 'tenants'],
         queryFn: () => broadcastsApi.fetchTenants(),
     });
-    const updateBroadcasts = useCallback((updater: (prev: Broadcast[]) => Broadcast[]) => {
-        queryClient.setQueryData(queryKey, (oldData: {
-            data: Broadcast[];
-        } | undefined) => {
-            if (!oldData?.data)
-                return oldData;
-            return { ...oldData, data: updater(oldData.data) };
-        });
-    }, [queryClient, queryKey]);
     const broadcasts = useMemo(() => (broadcastsRes?.data as Broadcast[]) ?? [], [broadcastsRes]);
     const gyms = useMemo(() => (gymsRes?.data as SuperadminBroadcastsTenant[]) ?? [], [gymsRes]);
     return {
@@ -56,7 +53,6 @@ export const useSuperadminBroadcastsData = () => {
         setSearchQuery,
         statusFilter,
         setStatusFilter,
-        updateBroadcasts,
         currentPage,
         pageSize,
         totalPages: Math.max(1, Math.ceil(Number((broadcastsRes as {

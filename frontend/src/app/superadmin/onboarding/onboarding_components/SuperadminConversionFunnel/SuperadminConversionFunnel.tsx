@@ -2,16 +2,15 @@
 'use client';
 import React, { useMemo, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
-import type { TenantOnboarding } from '@/app/superadmin/onboarding/onboarding_types/superadmin_onboarding_types';
-import { CHART_COLORS } from '@/app/superadmin/superadmin_utils/SuperadminChartConstants';
+import type { SuperadminConversionFunnelProps } from '@/app/superadmin/onboarding/onboarding_types/SuperadminConversionFunnelTypes';
+import { CHART_COLORS } from '@/components/ui/ChartConstants';
 const ReactApexChart = dynamic(() => import('react-apexcharts'), { ssr: false });
-export default function SuperadminConversionFunnel({ tenants }: {
-    tenants: TenantOnboarding[];
-}) {
+export default function SuperadminConversionFunnel({ tenants }: SuperadminConversionFunnelProps) {
     const [mounted, setMounted] = useState(false);
     // RATIONALE: Required by architecture to sync state/lifecycle based on dependencies.
     // EXPLANATION: Synchronize component state with external dependencies.
     // EFFECT DEPENDENCIES: Documented intentionally.
+    // EFFECT INTENT: Synchronize local UI state with the listed inputs and clean up any browser/resource subscription created by this effect.
     useEffect(() => {
         setMounted(true);
     }, []);
@@ -99,9 +98,9 @@ export default function SuperadminConversionFunnel({ tenants }: {
     }, [tenants]);
     if (!mounted)
         return <div className="h-80 bg-card rounded-xl border border-border motion-safe:animate-pulse"/>;
-    return (<div className="bg-card border border-border rounded-xl p-6 shadow-sm">
+    return (<div className="bg-card border border-border rounded-xl p-6 shadow-card">
       <div className="mb-4">
-        <h2 className="text-xl font-bold text-foreground">Conversion Funnel</h2>
+        <h2 className="text-xl font-bold text-primary">Conversion Funnel</h2>
         <p className="text-sm text-secondary mt-1">Track drop-offs from signup to paid conversion.</p>
       </div>
       <div className="h-80 w-full">

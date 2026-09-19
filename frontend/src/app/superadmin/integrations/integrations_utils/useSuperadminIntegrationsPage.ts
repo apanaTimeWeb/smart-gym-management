@@ -2,5 +2,12 @@
 // RESPONSIBILITY: Owns TanStack Query state for this Superadmin page.
 'use client';
 import { useQuery } from '@tanstack/react-query';
-import { fetchIntegrationsData } from '@/app/superadmin/integrations/integrations_api/superadmin_integrations_api';
-export function useSuperadminIntegrationsPage() { const query = useQuery({ queryKey: ['superadmin', 'integrations', 'overview'], queryFn: fetchIntegrationsData }); return { data: query.data?.data ?? null, isLoading: query.isPending, isError: query.isError, refetch: query.refetch }; }
+import { fetchIntegrations } from '@/app/superadmin/integrations/integrations_api/SuperadminIntegrationsApi';
+/**
+ * Purpose: Owns TanStack Query state for this Superadmin page.
+ * Inputs: values defined by the exported hook signature.
+ * Output: the hook's typed state/actions/query contract.
+ * Side effects: remain scoped to the owning feature or approved application infrastructure.
+ * Invariant: does not move feature business state into unrelated modules.
+ */
+export function useSuperadminIntegrationsPage() { const query = useQuery({ queryKey: ['superadmin', 'integrations', 'overview'], queryFn: fetchIntegrations }); return { data: query.data?.data ?? null, isPending: query.isPending, isError: query.isError, refetch: query.refetch }; }

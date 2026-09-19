@@ -1,3 +1,4 @@
+import { resetSuperadminAffiliatesMockState } from '@/app/superadmin/affiliates/affiliates_mocks/handlers/SuperadminAffiliatesMockHandlers';
 // Test: useSuperadminAffiliatesPage — covers success, loading, error, empty, and query-key (P1-29)
 import { renderHook } from '@testing-library/react';
 import { useSuperadminAffiliatesPage } from '@/app/superadmin/affiliates/affiliates_utils/useSuperadminAffiliatesPage';
@@ -13,11 +14,15 @@ vi.mock('next/navigation', () => ({
     usePathname: vi.fn(() => ''),
     useSearchParams: vi.fn(() => ({ get: vi.fn(), set: vi.fn() })),
 }));
-vi.mock('@/app/superadmin/affiliates/superadmin_affiliates_api/superadmin_affiliates_api', () => ({
+vi.mock('@/app/superadmin/affiliates/affiliates_api/SuperadminAffiliatesApi', () => ({
     affiliatesApi: {
         fetchAffiliates: vi.fn(),
     },
 }));
+beforeEach(() => {
+  resetSuperadminAffiliatesMockState();
+});
+
 describe('useSuperadminAffiliatesPage', () => {
     beforeEach(() => {
         vi.clearAllMocks();
@@ -77,7 +82,7 @@ describe('useSuperadminAffiliatesPage', () => {
             },
         });
         (useQuery as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
-            data: null, isLoading: false, isError: false,
+            data: null, isPending: false, isError: false,
         });
         renderHook(() => useSuperadminAffiliatesPage());
         // Query key must include filter params for server-driven filtering

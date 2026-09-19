@@ -37,7 +37,8 @@ export const referralDataPointSchema = z.object({ source: z.string(), revenue: z
 
 export const overviewDataPointSchema = z.object({
     date: z.string(),
-    revenue: z.number()
+    revenue: z.number(),
+    newMembers: z.number()
 });
 
 export const membershipReportItemSchema = z.object({
@@ -118,3 +119,12 @@ export const salesInitialDataSchema = z.object({
 const salesTabSchema = z.unknown();
 
 const dateFilterSchema = z.unknown();
+
+export const storeOrdersResponseSchema = z.object({
+  orders: z.array(storeOrderSchema),
+  total: z.number(),
+});
+
+export const storeOrdersSummaryResponseSchema = z.object({
+  summary: storeSummarySchema,
+});

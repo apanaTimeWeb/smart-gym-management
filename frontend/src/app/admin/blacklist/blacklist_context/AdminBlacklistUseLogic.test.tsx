@@ -3,10 +3,10 @@ import { renderHook, act } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
 import { useAdminBlacklistLogic } from '@/app/admin/blacklist/blacklist_context/useAdminBlacklistLogic';
-import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/useAdminConfirm';
+import { useAdminConfirm } from '@/app/admin/admin_layout/AdminFeedback/useAdminConfirm';
 import { blacklistApi } from '@/app/admin/blacklist/blacklist_api/AdminBlacklistApi';
 
-vi.mock('@/app/admin/admin_components/AdminFeedback/useAdminConfirm', () => ({ useAdminConfirm: vi.fn() }));
+vi.mock('@/app/admin/admin_layout/AdminFeedback/useAdminConfirm', () => ({ useAdminConfirm: vi.fn() }));
 vi.mock('@/app/admin/blacklist/blacklist_api/AdminBlacklistApi', () => ({
   blacklistApi: {
     fetchBlacklist: vi.fn().mockResolvedValue({ data: [{ id: 'm1', memberId: 'M1', memberName: 'Test Member', memberPhone: '9000000000', memberEmail: 'test@example.com', reason: 'Test', blacklistedBy: 'Admin', blacklistedAt: '2026-09-18', scope: 'global', assignedGyms: ['all'], assignedGymNames: ['All Gyms'], isActive: true }] }),

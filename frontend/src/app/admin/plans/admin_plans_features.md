@@ -14,16 +14,16 @@ be blocked at the API level; the UI must show a clear error from `response.messa
 | `error.tsx` | Error boundary |
 | `plans_components/AdminPlansMain.tsx` | Root Client Component, wraps `AdminPlansProvider` |
 | `plans_components/AdminPlansGrid.tsx` | Card grid of all membership plans |
-| `plans_components/AdminPlanCard.tsx` | Single plan card with price, duration, features |
-| `plans_components/AdminPlansAddModal.tsx` | Create new plan form modal |
-| `plans_components/AdminPlansEditModal.tsx` | Edit existing plan form modal |
+| `plans_components/AdminPlansGrid.tsx` | Single plan card with price, duration, features |
+| `plans_components/AdminPlansModal.tsx` | Create new plan form modal |
+| `plans_components/AdminPlansModal.tsx` | Edit existing plan form modal |
 | `plans_components/AdminPlansRevenue/` | Sub-folder for Plan Revenue attribution dashboard components |
 | `revenue/page.tsx` | Plan Revenue attribution dashboard server route |
 | `plans_types/AdminPlansTypes.ts` | `Plan`, `CreatePlanDto`, `UpdatePlanDto` types |
 | `plans_types/AdminPlansRevenueTypes.ts` | `PlanRevenueRecord`, `RevenuePeriod` types |
 | `plans_api/AdminPlansApi.ts` | API wrappers |
 | `plans_context/useAdminPlansRevenueLogic.ts`| Data fetching hook for Plan Revenue |
-| `plans_utils/AdminPlansUrlConfig.ts` | Centralized URL constants |
+| `plans_url_config.ts` | Centralized URL constants |
 
 ## Feature Inventory
 | Feature | Path | Purpose | Main API Calls | Status |
@@ -52,7 +52,7 @@ be blocked at the API level; the UI must show a clear error from `response.messa
 ## Component Responsibility Map
 - `AdminPlansMain` — layout + provider. MUST NOT contain form logic.
 - `AdminPlansGrid` — renders plan cards from context. MUST NOT fetch directly.
-- `AdminPlanCard` — pure display. Status badge uses `statusBadgeConfig.ts`.
+- `AdminPlanCard` — pure display. Status badge uses `AdminPlansSharedConstants.ts`.
 - `AdminPlansAddModal` / `AdminPlansEditModal` — own form state via React Hook Form + Zod.
 
 ## Permissions and Security
@@ -80,7 +80,7 @@ be blocked at the API level; the UI must show a clear error from `response.messa
 - [x] Rule 13: Feature Map — this document, updated same commit as code changes
 - [x] Rule 14: Backend-driven messages — delete error uses `response.message`
 - [x] Rule 16: Forms use React Hook Form + Zod
-- [x] Rule 21: Currency formatted via `formatters.ts`
+- [x] Rule 21: Currency formatted via `@/lib/formatters.ts`
 - [x] Rule 71: Delete uses `useConfirm()` double-verification
 
 
@@ -94,7 +94,7 @@ be blocked at the API level; the UI must show a clear error from `response.messa
 ## API Contract
 | API file | Endpoint literal observed |
 |---|---|
-| API client | `AdminPlansApi.ts` + `AdminPlansServerApi.ts` for server prefetch | Module-owned typed API boundary; exact endpoint constants are defined in the feature URL configuration and consumed by the API client. |
+| API client | `plans_api/AdminPlansApi.ts` for server prefetch | Module-owned typed API boundary; exact endpoint constants are defined in the feature URL configuration and consumed by the API client. |
 
 ## UI Data Requirements
 - Every data-driven table, KPI, chart, filter, dropdown and detail field must map to a typed API response field and be represented in module-owned fixtures where mocked.

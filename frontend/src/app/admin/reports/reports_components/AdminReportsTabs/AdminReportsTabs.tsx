@@ -14,10 +14,10 @@ export default function AdminReportsTabs() {
         <button
           key={tab.value}
           onClick={() => setActiveTab(tab.value as ReportTab)}
-          className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap motion-safe:transition-all motion-safe:duration-200 ${
+          className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap motion-safe:transition-all motion-safe:duration-base ${
             activeTab === tab.value
-              ? 'bg-card text-primary shadow-sm border border-border'
-              : 'text-secondary hover:text-foreground'
+              ? 'bg-card text-primary shadow-card border border-border'
+              : 'text-secondary hover:text-primary'
           }`}
         >
           {tab.label}

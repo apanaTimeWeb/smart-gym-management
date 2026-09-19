@@ -30,7 +30,7 @@ for compliance and reporting purposes.
 |---|---|---|---|---|---|
 | Member List | `/admin/members` | Browse paginated, searchable, filterable member directory with status badges | `AdminMembersTable`, `AdminMembersToolbar` | `GET /admin/members?page&limit&search&status&branchId` | ✅ Live |
 | Member Profile | `/admin/members` | View full profile: personal info, active plan, attendance summary, payment history | `AdminMembersProfileDrawer` | `GET /admin/members/:id` | ✅ Live |
-| KPI Overview | `/admin/members` | See total, active, expired, and due-today member counts | `AdminMembersKPIs` | `GET /admin/members/stats` | ✅ Live |
+| KPI Overview | `/admin/members` | See total, active, expired, and due-today member counts | `AdminMembersKPIs` | `GET /admin/members/summary` | ✅ Live |
 | Export Members | `/admin/members` | Download filtered member list as CSV | `AdminMembersToolbar` | `GET /admin/members/export` | ✅ Live |
 
 ## User Flows & Interactions
@@ -57,7 +57,7 @@ for compliance and reporting purposes.
 
 - **State pattern:** Zustand for UI state (filters, pagination, drawer) + TanStack Query for server state
 - **Zustand store:** `useAdminMembersStore.ts` — holds: `search`, `statusFilter`, `branchFilter`, `currentPage`, `selectedMemberId`, `isDrawerOpen`
-- **Query keys:** `['adminMembers', filters]`, `['adminMembers', 'detail', memberId]`, `['adminMembers', 'stats']`
+- **Query keys:** `['admin', 'members', filters]`, `['admin', 'members', 'detail', memberId]`, `['admin', 'members', 'stats']`
 - **Logic hook:** `useAdminMembersLogic.ts` — orchestrates queries, mutations, and store interactions
 - **Local-storage keys:** None
 - **MSW handler file:** `admin/members/members_mocks/handlers/AdminMembersMockHandlers.ts` (module-owned MSW transport)
@@ -71,11 +71,11 @@ All calls go through `AdminMembersApi.ts`. Response envelope: `{ success, messag
 | `fetchMembers(params)` | GET | `/admin/members` | `{ page, limit, search, status, branchId }` | `Member[]` + `PaginationMeta` |
 | `fetchMemberById(id)` | GET | `/admin/members/:id` | — | `MemberDetail` |
 | `fetchMemberStats()` | GET | `/admin/members/stats` | — | `MemberStats` |
-| `exportMembers(filters)` | GET | `/admin/members/export` | `{ search, status, branchId }` | `Blob` (CSV) |
+| `exportMembers(filters)` | GET | `/admin/members/export` | `{ search, status, branchId }` | `string` (CSV payload)
 
 ## Permissions and Security
 
-- **Required role:** `ADMIN` — enforced by `middleware.ts` checking `gymsmart_token` cookie
+- **Required role:** `ADMIN` — enforced by `@/middleware.ts` checking `gymsmart_token` cookie
 - **Read-only enforcement:** Zero write operations. No Add, Edit, Renew, or Delete buttons exist anywhere in this module.
 - **Sensitive data handling:** Phone numbers masked in list view via `maskSensitiveData()` from `@/app/admin/admin_utils/AdminMaskSensitiveData` (`98****2310` pattern). Full number visible only in `AdminMembersProfileDrawer`.
 - **Cross-role isolation:** Zero imports from `/manager`, `/trainer`, `/superadmin`. Enforced in `members_forbidden.md`.
@@ -94,7 +94,7 @@ All calls go through `AdminMembersApi.ts`. Response envelope: `{ success, messag
 - **Phone masking applies to list view only:** `AdminMembersTable` uses `maskSensitiveData()`. `AdminMembersProfileDrawer` shows the full number. Do not add masking to the profile drawer.
 - **Row click opens profile drawer — no View/Eye button:** The entire `<tr>` is clickable with `cursor-pointer`. Do not add a separate View icon button (Rule 19).
 - **Server-side pagination is mandatory:** Never fetch all members and paginate client-side. Always pass `page` + `limit` to the API.
-- **Export uses anchor download, not fetch streaming:** `exportMembers()` returns a URL or triggers a download link — do not use `fetch()` to stream CSV bytes without Blob handling.
+- **Export contract:** `exportMembers()` returns the backend CSV payload as text; `AdminMembersAgentLogic` creates the browser download from the returned CSV. Do not invent static CSV rows in the toolbar.
 - **`AdminMembersTypes.ts` is the canonical member type for this module:** Do not import `Member` or `Branch` types from other modules. Duplicate if needed (Rule 2).
 
 ## Component Responsibility Map
@@ -119,7 +119,7 @@ All calls go through `AdminMembersApi.ts`. Response envelope: `{ success, messag
 - [x] Rule 7: Type Isolation — all types in `members_types/`
 - [x] Rule 8: Server/Client Boundary — `page.tsx` = Server Component, `*Main.tsx` = Client
 - [x] Rule 9: Loading/error/not-found — `loading.tsx` + `error.tsx` + `not-found.tsx` present
-- [x] Rule 11: Centralized URL Config — `members_url_config.ts` present, no hardcoded URLs
+- [x] Rule 11: Centralized URL Config — `admin_members_url_config.ts` present, no hardcoded URLs
 - [x] Rule 13: Feature Map — this document
 - [x] Rule 19: Clickable table rows — `cursor-pointer` on all `<tr>` elements, no View/Eye button
 - [x] Rule 40: `members_forbidden.md` present and specific

@@ -67,7 +67,7 @@ All calls go through mock functions in `AdminAttendanceApi.ts`. Replace with `ap
 
 ## Permissions and Security
 
-- **Required role:** `ADMIN` — enforced by `middleware.ts`
+- **Required role:** `ADMIN` — enforced by `@/middleware.ts`
 - **Read-only enforcement:** Zero write operations in this module. No check-in button, no QR scanner, no manual entry form exists anywhere in this module.
 - **Cross-role isolation:** Zero imports from `/manager`, `/trainer`, `/superadmin`.
 - **Sensitive data handling:** Phone numbers masked in table view via inline regex (`98****2310` pattern).
@@ -109,7 +109,7 @@ All calls go through mock functions in `AdminAttendanceApi.ts`. Replace with `ap
 - [x] Rule 7: Type Isolation — all types in `attendance_types/`
 - [x] Rule 8: Server/Client Boundary — `page.tsx` = Server Component, `*Main.tsx` = Client
 - [x] Rule 9: Loading/error — `loading.tsx` + `error.tsx` present and non-generic
-- [x] Rule 11: Centralized URL Config — `attendance_url_config.ts` present, no hardcoded URLs
+- [x] Rule 11: Centralized URL Config — `admin_attendance_url_config.ts` present, no hardcoded URLs
 - [x] Rule 13: Feature Map — this document
 - [x] Rule 29: `motion-safe:` prefix on all transitions and animations
 - [x] Rule 40: `attendance_forbidden.md` present and specific

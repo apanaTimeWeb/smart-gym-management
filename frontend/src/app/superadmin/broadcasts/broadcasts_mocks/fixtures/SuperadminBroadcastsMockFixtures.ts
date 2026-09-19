@@ -1,4 +1,4 @@
-import type { Broadcast } from '@/app/superadmin/broadcasts/superadmin_broadcasts_types/superadmin_broadcasts_types';
+import type { Broadcast } from '@/app/superadmin/broadcasts/broadcasts_types/SuperadminBroadcastsTypes';
 export const MOCK_SUPERADMIN_BROADCASTS: Broadcast[] = [
     { id: 'b1', title: 'System Maintenance', content: 'Scheduled maintenance for all tenants.', status: 'SENT', targetGymIds: ['t1', 't2'], scheduledDate: null, sentDate: '2026-09-01T02:00:00Z', totalRecipients: 100, deliveredCount: 95, failedCount: 5, audience: 'ALL_TENANTS' },
     { id: 'b2', title: 'AI Workout Beta', content: 'AI workouts are now available in beta.', status: 'SCHEDULED', targetGymIds: ['t1'], scheduledDate: '2026-10-01T10:00:00Z', sentDate: null, totalRecipients: 50, deliveredCount: 0, failedCount: 0, audience: 'PRO_ONLY' },

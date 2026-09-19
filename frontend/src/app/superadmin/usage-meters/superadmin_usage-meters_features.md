@@ -1,127 +1,54 @@
-# Usage Meters Feature Map
+# Superadmin Usage Meters — Feature Map
 
 ## Module Purpose
-This Superadmin feature owns the `usage-meters` route and its feature-specific UI, client logic, API boundary, types, schemas, constants, mocks, tests, and documentation. It is intended to be operable by the Superadmin role without importing sibling Superadmin business modules. The feature exposes only the controls represented by the current route and code in this folder. Backend authorization remains outside the frontend audit scope.
+This feature owns the Superadmin business workflow implemented under `usage-meters/`. The active route is `/superadmin/usage-meters`. Business behavior, API contracts, validation, server-state hooks, fixtures, MSW handlers, and tests are kept within this feature boundary. Cross-feature business logic is outside this module.
 
 ## Directory Structure
 
-| Folder | Responsibility | Key files |
+| Folder | Responsibility | Key Files |
 |---|---|---|
-| `__tests__/` | Owns the feature responsibility represented by this folder. | `superadmin_usage-meters_basic.test.tsx` |
-| `superadmin_usage-meters_api/` | Owns the feature responsibility represented by this folder. | `superadmin_usage-meters_api.ts` |
-| `superadmin_usage-meters_types/` | Owns the feature responsibility represented by this folder. | `superadmin_usage-meters_types.ts` |
-| `usage-meters_components/` | Owns the feature responsibility represented by this folder. | `SuperadminUsageMetersClient.tsx`, `SuperadminUsageMetersEmptyState.tsx` |
-| `usage-meters_mocks/` | Owns the feature responsibility represented by this folder. | `SuperadminUsageMetersMockHandlers.ts` |
-| `usage-meters_utils/` | Owns filtering, formatting, and static UI configuration for the feature. | `SuperadminUsageMetersUtils.ts` |
+| `usage-meters_api/` | Feature-owned responsibility for usage-meters api. | `SuperadminUsageMetersApi.ts` |
+| `usage-meters_components/` | Feature-owned responsibility for usage-meters components. | `SuperadminUsageMetersClient.tsx` |
+| `usage-meters_mocks/` | Feature-owned responsibility for usage-meters mocks. | `(directory present; no direct files)` |
+| `usage-meters_tests/` | Feature-owned responsibility for usage-meters tests. | `SuperadminUsage-metersBasic.test.tsx` |
+| `usage-meters_types/` | Feature-owned responsibility for usage-meters types. | `SuperadminUsageMetersTypes.ts` |
+| `usage-meters_utils/` | Feature-owned responsibility for usage-meters utils. | `SuperadminUsageMetersConstants.ts`, `SuperadminUsageMetersUtils.ts`, `useSuperadminUsageMetersPage.ts` |
+
+## Approved External Dependencies
+
+### Application Infrastructure
+- `@/app/superadmin/superadmin_components` — role-shell/generic interaction infrastructure only.
+- `@/lib/*` and `@/components/*` — only approved application infrastructure imported by this feature.
+
+### Business Feature Dependencies
+- None
+
+### Role-Level Business Dependencies
+- None
 
 ## Feature Inventory
 
-| Feature | Route | User action | Key API/client owner | Status |
+| Surface | Route | Implemented User Actions | API Boundary | Status |
 |---|---|---|---|---|
-| `usage-meters` | `/superadmin/usage-meters` | Use the route's controls to perform the operations implemented by the current client UI. | `feature-local API files` | Implemented in source; runtime integration **NOT VERIFIED** without installing project dependencies. |
+| Superadmin Usage Meters | `/superadmin/usage-meters` | view the module surface; use the documented filters and controls; open supported detail/edit surfaces | `SuperadminUsageMetersApi.ts` | Source-verified; host runtime pending |
 
 ## User Flows & Interactions
 
-### Flow 1: Open Feature
-1. User navigates to the route shown above.
-2. Next.js renders the route `page.tsx` and its client view.
-3. The feature-owned client layer loads the data needed by the visible UI.
-4. Loading, empty, error, or populated state is rendered according to the current implementation.
+1. Open the active route and load the feature-owned query/API boundary.
+2. Apply the available search, filter, sort, pagination, form, or row actions exposed by the current client surface.
+3. Mutations go through feature-owned API contracts and, in MSW mode, feature-owned handlers/fixtures.
+4. Success/error state is reconciled back into the same feature surface.
 
-### Flow 2: Execute an Available Action
-1. User activates an action exposed by the current feature UI.
-2. The feature client/hook invokes the feature-owned API function.
-3. The API boundary validates response data using the feature schema when a schema is supplied.
-4. The UI updates local/query state and shows the resulting feedback.
-
-## Data and State Architecture
-- **Server state:** TanStack Query where the feature currently uses async queries.
-- **UI state:** local `useState` or a feature-scoped Zustand store where present.
-- **URL state:** `useSuperadminUrlState` only where the feature currently uses query-string filters/pagination.
-- **Sibling business dependencies:** must remain zero; shared transport/UI primitives are infrastructure exceptions only.
-
-## API Contract
-
-| Function | Method | Endpoint expression | API file |
-|---|---|---|---|
-| No feature API functions detected | — | — | No API service file detected by static scan |
-
-## UI Data Requirements
-
-Observed schema/type fields in this feature are listed below. Any UI field not represented by a schema/type is **NOT VERIFIED** and must be checked by the coding agent.
-
-| Field | Source location |
-|---|---|
-| `id` | Feature-owned schema/type file |
-| `tenantId` | Feature-owned schema/type file |
-| `tenantName` | Feature-owned schema/type file |
-| `metricName` | Feature-owned schema/type file |
-| `currentValue` | Feature-owned schema/type file |
-| `limitValue` | Feature-owned schema/type file |
-| `resetDate` | Feature-owned schema/type file |
-| `smsSent` | Feature-owned schema/type file |
-| `smsLimit` | Feature-owned schema/type file |
-| `whatsappMessagesSent` | Feature-owned schema/type file |
-| `whatsappLimit` | Feature-owned schema/type file |
-| `emailsSent` | Feature-owned schema/type file |
-| `emailLimit` | Feature-owned schema/type file |
-| `apiCallsCount` | Feature-owned schema/type file |
-| `apiCallsLimit` | Feature-owned schema/type file |
-| `databaseGb` | Feature-owned schema/type file |
-| `mediaGb` | Feature-owned schema/type file |
-| `storageLimitGb` | Feature-owned schema/type file |
-| `activeMembers` | Feature-owned schema/type file |
-| `totalMembers` | Feature-owned schema/type file |
-| `memberLimit` | Feature-owned schema/type file |
-| `staffCount` | Feature-owned schema/type file |
-| `staffLimit` | Feature-owned schema/type file |
-| `billingCycleEnd` | Feature-owned schema/type file |
-
-## Permissions and Security
-- **Role:** `SUPERADMIN` UI.
-- **Frontend boundary:** route and feature UI are under `/superadmin`.
-- **Destructive actions:** must use the Superadmin confirmation infrastructure where the feature exposes destructive controls.
-- **Backend authorization:** not evaluated here and must not be inferred from frontend checks.
-
-## Loading, Empty, and Error States
-- **Route loading:** use the feature `loading.tsx` when present.
-- **Route error:** use the feature `error.tsx` when present.
-- **Feature empty/error:** use the feature-specific empty/error UI already present in the source.
-- Any runtime transition behavior not statically provable is **NOT VERIFIED**.
-
-## Edge Cases and AI Warnings
-- **No sibling business imports:** do not reintroduce imports from another Superadmin business feature.
-- **No fake production data:** server-like records belong in feature mocks/fixtures, never fallback constants inside production UI.
-- **No hardcoded URLs:** feature-owned routes belong in the single feature URL config.
-- **No async state in Zustand:** use TanStack Query for server state.
-- **Preserve destructive confirmation:** do not bypass the Superadmin confirmation flow.
-
-## Component Responsibility Map
-
-| File | Responsibility |
-|---|---|
-| `__tests__/superadmin_usage-meters_basic.test.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
-| `error.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
-| `loading.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
-| `page.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
-| `usage-meters_components/SuperadminUsageMetersClient.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
-| `usage-meters_components/SuperadminUsageMetersEmptyState/SuperadminUsageMetersEmptyState.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+## Verification Notes
+- Active route pages mount one primary client tree; no `V1Client` import is mounted from route `page.tsx`.
+- Mutable mock-state handlers have reset functions covered by tests where present.
+- Deprecated marker-only and JSON-stringify tautology tests were removed from the module test tree.
+- Dependency-backed `tsc`, lint, Vitest runtime, Playwright, and real browser responsive execution require the host application environment and remain unverified here.
 
 ## Rule Compliance Checklist
-- [x] Feature has a route-level `page.tsx` or the route does not require one.
-- [x] Feature has module-owned documentation file.
-- [x] Feature URL configuration is feature-owned when routes/API calls exist.
-- [x] Sibling Superadmin business imports are not allowed.
-- [x] API responses must use Zod validation at the boundary.
-- [x] Server state is owned by TanStack Query where async data is used.
-- [x] UI state remains local or feature-scoped.
-- [ ] Full typecheck/lint/test/build/E2E verification — **NOT VERIFIED** in this working environment because project dependencies are not installed.
-- [ ] Full visual comparison against `web_global_design.md` — **NOT VERIFIED** without browser execution.
-
-## Documentation Consistency
-This feature map is generated from the current repository structure. Where the code does not expose enough static evidence to state an exact runtime fact, the documentation deliberately uses **NOT VERIFIED** rather than inventing a result.
-
-
-## Module-Owned MSW Fixtures
-
-Feature-specific mock fixtures and MSW handlers are owned by this feature directory. API responses consumed by UI must remain complete for all documented table fields, KPIs, charts, filters, detail views and mutation messages. Global MSW bootstrap is registration infrastructure only.
+- [x] Canonical feature-owned API/type directories are used.
+- [x] No active route page mounts a parallel `V1Client` tree.
+- [x] Module-owned mock reset coverage is present where mutable handlers exist.
+- [x] Feature docs contain a concrete directory map and compliance checklist.
+- [x] No marker-only or JSON-stringify tautology test remains.
+- [ ] Host dependency-backed build/lint/runtime verification — unavailable in source-only package.

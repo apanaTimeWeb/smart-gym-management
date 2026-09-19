@@ -1,3 +1,4 @@
+import { resetSuperadminBroadcastsMockState } from '@/app/superadmin/broadcasts/broadcasts_mocks/handlers/SuperadminBroadcastsMockHandlers';
 // Test: useSuperadminBroadcastsPage — covers success, loading, error, empty, and mutation (P1-29)
 import { renderHook } from '@testing-library/react';
 import { useSuperadminBroadcastsPage } from '@/app/superadmin/broadcasts/broadcasts_utils/useSuperadminBroadcastsPage';
@@ -16,7 +17,7 @@ vi.mock('next/navigation', () => ({
     usePathname: vi.fn(() => ''),
     useSearchParams: vi.fn(() => ({ get: vi.fn(), set: vi.fn() })),
 }));
-vi.mock('@/app/superadmin/broadcasts/superadmin_broadcasts_api/superadmin_broadcasts_api', () => ({
+vi.mock('@/app/superadmin/broadcasts/broadcasts_api/SuperadminBroadcastsApi', () => ({
     broadcastsApi: {
         fetchBroadcasts: vi.fn(),
         createBroadcast: vi.fn(),
@@ -25,6 +26,10 @@ vi.mock('@/app/superadmin/broadcasts/superadmin_broadcasts_api/superadmin_broadc
     },
 }));
 const mockQueryClient = { invalidateQueries: vi.fn(), setQueryData: vi.fn() };
+beforeEach(() => {
+  resetSuperadminBroadcastsMockState();
+});
+
 describe('useSuperadminBroadcastsPage', () => {
     beforeEach(() => {
         vi.clearAllMocks();
@@ -73,7 +78,7 @@ describe('useSuperadminBroadcastsPage', () => {
     });
     it('uses the correct query key for broadcasts cache', () => {
         (useQuery as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
-            data: null, isLoading: false, isError: false,
+            data: null, isPending: false, isError: false,
         });
         renderHook(() => useSuperadminBroadcastsPage());
         expect(useQuery).toHaveBeenCalledWith(expect.objectContaining({

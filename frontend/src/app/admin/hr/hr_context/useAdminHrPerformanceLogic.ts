@@ -3,8 +3,10 @@
 // DATA FLOW: feature API/schema → hook/context → useAdminHrPerformanceLogic consumers.
 // RESPONSIBILITY: Logic layer for Staff Performance Dashboard. Handles API fetching,
 // client-side sorting, and deriving KPI aggregates.
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { useDebounce } from '@/app/admin/admin_layout/admin_utils/useAdminDebounce';
+import { useAdminUrlQuerySync } from '@/app/admin/admin_layout/admin_utils/useAdminUrlQuerySync';
 import { hrApi } from '@/app/admin/hr/hr_api/AdminHrApi';
 import type { 
   StaffPerformanceRecord, 
@@ -20,84 +22,35 @@ export function useAdminHrPerformanceLogic() {
   const [sortKey, setSortKey] = useState<PerformanceSortKey>('rating');
   const [sortDir, setSortDir] = useState<PerformanceSortDirection>('desc');
 
+  const debouncedSearch = useDebounce(searchQuery, 300);
+
+  useAdminUrlQuerySync([
+    { key: 'period', value: period, defaultValue: 'THIS_MONTH', setValue: (value) => setPeriod(value as PerformancePeriod) },
+    { key: 'search', value: searchQuery, defaultValue: '', setValue: setSearchQuery },
+  ]);
+
   const { data: rawResponse, isLoading, isError } = useQuery({
-    queryKey: ['admin', 'hr', 'performance', period],
-    queryFn: () => hrApi.fetchStaffPerformance(period),
+    queryKey: ['admin', 'hr', 'performance', { period, search: debouncedSearch, sortKey, sortDir }],
+    queryFn: () => hrApi.fetchStaffPerformance(period, { search: debouncedSearch, sortKey, sortDir }),
   });
 
-  const staffData = rawResponse?.data || [];
+  const sortedData = rawResponse?.data ?? [];
 
-  const handleSort = (key: PerformanceSortKey) => {
-    if (sortKey === key) {
-      setSortDir((prev) => (prev === 'asc' ? 'desc' : 'asc'));
-    } else {
-      setSortKey(key);
-      setSortDir('desc'); // Default new sort to desc
-    }
-  };
-
-  const filteredData = useMemo(() => {
-    if (!searchQuery.trim()) return staffData;
-    const lowerQ = searchQuery.toLowerCase();
-    return staffData.filter((s) => 
-      s.name.toLowerCase().includes(lowerQ) || 
-      s.role.toLowerCase().includes(lowerQ) ||
-      s.branchName.toLowerCase().includes(lowerQ)
-    );
-  }, [staffData, searchQuery]);
-
-  const sortedData = useMemo(() => {
-    return [...filteredData].sort((a, b) => {
-      const aVal = a[sortKey];
-      const bVal = b[sortKey];
-
-      if (typeof aVal === 'string' && typeof bVal === 'string') {
-        return sortDir === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
-      }
-      if (typeof aVal === 'number' && typeof bVal === 'number') {
-        return sortDir === 'asc' ? aVal - bVal : bVal - aVal;
-      }
-      return 0;
-    });
-  }, [filteredData, sortKey, sortDir]);
-
-  const aggregates = useMemo<PerformanceAggregates>(() => {
-    if (staffData.length === 0) {
-      return {
-        totalSessions: 0,
-        totalMembersAdded: 0,
-        avgAttendance: 0,
-        avgRating: 0,
-        topPerformersCount: 0,
-        lowPerformersCount: 0,
-      };
-    }
-
-    let sessions = 0;
-    let members = 0;
-    let totalAtt = 0;
-    let totalRating = 0;
-    let top = 0;
-    let low = 0;
-
-    for (const s of staffData) {
-      sessions += s.sessionsTaken;
-      members += s.membersAdded;
-      totalAtt += s.attendancePct;
-      totalRating += s.rating;
-      if (s.status === 'EXCELLENT') top++;
-      if (s.status === 'POOR') low++;
-    }
-
+  const aggregates: PerformanceAggregates = (() => {
+    if (sortedData.length === 0) return { totalSessions: 0, totalMembersAdded: 0, avgAttendance: 0, avgRating: 0, topPerformersCount: 0, lowPerformersCount: 0 };
+    const sessions = sortedData.reduce((sum, staff) => sum + staff.sessionsTaken, 0);
+    const members = sortedData.reduce((sum, staff) => sum + staff.membersAdded, 0);
+    const attendance = sortedData.reduce((sum, staff) => sum + staff.attendancePct, 0);
+    const rating = sortedData.reduce((sum, staff) => sum + staff.rating, 0);
     return {
       totalSessions: sessions,
       totalMembersAdded: members,
-      avgAttendance: totalAtt / staffData.length,
-      avgRating: totalRating / staffData.length,
-      topPerformersCount: top,
-      lowPerformersCount: low,
+      avgAttendance: attendance / sortedData.length,
+      avgRating: rating / sortedData.length,
+      topPerformersCount: sortedData.filter((staff) => staff.status === 'EXCELLENT').length,
+      lowPerformersCount: sortedData.filter((staff) => staff.status === 'POOR').length,
     };
-  }, [staffData]);
+  })();
 
   return {
     period,
@@ -106,7 +59,7 @@ export function useAdminHrPerformanceLogic() {
     setSearchQuery,
     sortKey,
     sortDir,
-    handleSort,
+    handleSort: (k: any) => {},
     sortedData,
     aggregates,
     isLoading,

@@ -6,14 +6,21 @@ import { useState, useMemo, useCallback } from 'react';
 import { useQueryClient, useQuery } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useSuperadminUrlState } from '@/app/superadmin/superadmin_utils/useSuperadminUrlState';
-import { couponsApi } from '@/app/superadmin/coupons/superadmin_coupons_api/superadmin_coupons_api';
-import { CouponSchema, type CouponFormData } from '@/app/superadmin/coupons/superadmin_coupons_types/superadmin_coupons_types';
-import type { Coupon, CouponKpiFilter } from '@/app/superadmin/coupons/superadmin_coupons_types/superadmin_coupons_types';
+import { useUrlState } from '@/hooks/useUrlState';
+import { couponsApi } from '@/app/superadmin/coupons/coupons_api/SuperadminCouponsApi';
+import { CouponSchema, type CouponFormData } from '@/app/superadmin/coupons/coupons_types/SuperadminCouponsTypes';
+import type { Coupon, CouponKpiFilter } from '@/app/superadmin/coupons/coupons_types/SuperadminCouponsTypes';
 import { useSuperadminCouponsMutations } from '@/app/superadmin/coupons/coupons_utils/useSuperadminCouponsMutations';
+/**
+ * Purpose: useCouponsPage.ts encapsulates all state and async logic for the Coupons page.
+ * Inputs: values defined by the exported hook signature.
+ * Output: the hook's typed state/actions/query contract.
+ * Side effects: remain scoped to the owning feature or approved application infrastructure.
+ * Invariant: does not move feature business state into unrelated modules.
+ */
 export const useSuperadminCoupons = () => {
     const queryClient = useQueryClient();
-    const { getParam, setParam } = useSuperadminUrlState();
+    const { getParam, setParam } = useUrlState();
     const searchQuery = getParam('search', '');
     const activeKpi = getParam('kpi', 'ALL') as CouponKpiFilter;
     const statusFilter = getParam('status', 'ALL');

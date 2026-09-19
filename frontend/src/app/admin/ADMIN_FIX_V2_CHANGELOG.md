@@ -1,41 +1,53 @@
-# Admin Fix V2 — Changelog
+# Admin Fix V2 — Changelog (Final)
 
-Scope: `src/app/admin` only.
+Scope: `admin/` role container and its 22 feature modules.
 
 ## Completed repairs
 
-- Complete Admin table keyboard behavior for interactive rows and sortable headers.
-- Mobile card-stack presentation wired to every Admin `<table>` through the module responsive table provider.
-- Persistent Admin shell header mounted once at Admin layout level; sidebar uses 240px/60px desktop widths and mobile drawer behavior.
-- Admin feedback calls are routed through the Admin toast service while the Admin shell is mounted.
-- Remaining flagged inline report view-model type moved into the Admin reports type folder.
-- Dashboard branch scope uses distinct branch-owned fixtures; aggregate scope remains distinct.
-- Blacklist toggle now uses `isActive`/`memberName` from the real Admin contract and requires destructive confirmation.
-- Permission revocations require destructive confirmation; grants remain immediate.
-- Usage upgrade flow has behavior tests and mutable mock-session state.
-- Admin critical workflow tests were added for Usage, Blacklist, and Permissions.
-- Active Admin Playwright journeys are included under `admin_e2e/` for Usage, Blacklist, Members search, and HR payroll rendering.
-- Old placeholder structural-test naming was cleaned up; Admin tests now use module-prefixed filenames.
-- Stale Admin tracking documents from earlier repair versions were removed to prevent documentation drift.
-- Admin full-page loading spinners in Plan Revenue and Staff Performance were replaced with layout-matching skeletons.
-- Admin toast type imports were corrected to use the dedicated `AdminToastTypes` contract.
-- All Admin module tables are annotated for the responsive mobile card-stack pattern.
+### Critical data-integrity / mutation safety
+- Added intent-scoped Admin idempotency-key infrastructure and unit tests.
+- Applied confirmation + idempotency-key handling to HR payroll/advance/due mutations and staff deletion.
+- Applied confirmation + idempotency-key handling to Plans, Coupons, Announcements, Blacklist, Subscriptions and Data Export irreversible mutations.
 
-## Verification status
+### API / state / mock contracts
+- Members export now uses real filtered records and module-owned CSV generation.
+- Finance P&L period/status state now reaches the API request, query key and mock result.
+- Subscription invoice history is server-paginated end-to-end.
+- Subscription auto-renew mock state now mutates and is reconciled through TanStack Query.
+- Pagination metadata now includes `hasNextPage` and `hasPrevPage`.
+- Sales range/branch/search flows were reconciled with request/mock/result state.
 
-Static TypeScript/TSX transpilation: PASS (0 syntax diagnostics).
+### Forms / type safety
+- Removed the remaining explicit `any` from Admin Settings form schema handling.
+- Preserved RHF + Zod resolver inference.
 
-Runtime dependency-backed Next/Vitest/Playwright execution: NOT VERIFIED in this isolated repair environment.
+### Modularity / isolation
+- Extracted mixed component responsibilities into module-owned child components and utilities.
+- Kept feature business logic inside owning modules; no role-wide global business layer was introduced.
+- Added module-owned EmptyState components to applicable data tables.
 
+### Design system
+- Normalized Admin production source to the canonical semantic theme-token vocabulary.
+- Corrected chart/payment/status token usage.
+- Regenerated/reconciled module theme contracts.
+- Removed arbitrary theme color patterns from production Admin TS/TSX.
 
-## Final static gate summary
+### Documentation
+- Updated `admin_features.md`.
+- Updated affected feature maps, forbidden docs and theme contracts.
+- Updated repair checklist and verification record.
 
-- Admin source files checked: 609 TypeScript/TSX files.
-- TypeScript transpilation diagnostics: 0.
-- Explicit `any` matches: 0.
-- Relative imports: 0.
-- Empty-lambda no-op stubs: 0.
-- Placeholder boolean assertions: 0.
-- `BRANCH_RATIOS` references: 0.
-- Production component/hook/API size-ceiling violations: 0.
-- Admin production tables: 30; all are marked for the module responsive card-stack presentation.
+## Static verification
+- TS/TSX parser diagnostics: **0** across **654** files.
+- Relative imports: **0**.
+- Cross-feature business imports: **0**.
+- `@ts-ignore` / `@ts-nocheck`: **0**.
+- `console.*`: **0**.
+- Legacy theme token matches: **0**.
+- Arbitrary Tailwind value patterns: **0**.
+- Tables missing dedicated EmptyState: **0**.
+- Component/hook/store/API/type/schema size-ceiling violations: **0**.
+
+## Runtime verification
+
+**NOT VERIFIED.** The archive did not contain the consuming application's package/dependency/configuration surface required to execute the real TypeScript, ESLint, Vitest/RTL, Playwright, build, browser accessibility/responsive, and CI security gates.

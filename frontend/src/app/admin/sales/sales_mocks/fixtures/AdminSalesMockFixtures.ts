@@ -3,7 +3,7 @@ import type { OverviewDataPoint } from '@/app/admin/sales/sales_types/AdminSales
 import type { MembershipReportItem } from '@/app/admin/sales/sales_types/AdminSalesTypes';
 import type { MembershipTotals } from '@/app/admin/sales/sales_types/AdminSalesTypes';
 import type { PendingPaymentMember } from '@/app/admin/sales/sales_types/AdminSalesTypes';
-import type { Member } from '@/app/admin/sales/sales_types/AdminSalesTypes';
+import type { Member, StoreProduct, StoreOrder } from '@/app/admin/sales/sales_types/AdminSalesTypes';
 
 // RESPONSIBILITY: Owns module-specific MSW fixture data for the Admin sales feature.
 
@@ -60,3 +60,33 @@ export const MOCK_ADMIN_SALES_REFERRALS = [
   { source: 'Word of Mouth', revenue: 25000 },
   { source: 'Walk-in', revenue: 15000 },
 ] as const;
+
+export const MOCK_ADMIN_STORE_PRODUCTS: StoreProduct[] = [
+  { id: 'sp-1', name: 'Protein Shaker', category: 'Accessories', price: 499, stock: 22, isActive: true },
+  { id: 'sp-2', name: 'Gym Towel', category: 'Accessories', price: 299, stock: 45, isActive: true },
+  { id: 'sp-3', name: 'Whey Protein 1kg', category: 'Supplements', price: 2499, stock: 8, isActive: true },
+  { id: 'sp-4', name: 'Resistance Band', category: 'Equipment', price: 799, stock: 16, isActive: true },
+];
+
+export const MOCK_ADMIN_STORE_ORDERS: StoreOrder[] = [
+  { id: 'ord-1001', total: 2798, method: 'UPI', status: 'paid', createdAt: '2026-09-18T10:30:00Z', items: [
+    { id: 'ord-1001-1', qty: 1, price: 2499, product: { name: 'Whey Protein 1kg' } },
+    { id: 'ord-1001-2', qty: 1, price: 299, product: { name: 'Gym Towel' } },
+  ] },
+  { id: 'ord-1002', total: 1298, method: 'Card', status: 'paid', createdAt: '2026-09-17T14:15:00Z', items: [
+    { id: 'ord-1002-1', qty: 1, price: 499, product: { name: 'Protein Shaker' } },
+    { id: 'ord-1002-2', qty: 1, price: 799, product: { name: 'Resistance Band' } },
+  ] },
+  { id: 'ord-1003', total: 998, method: 'Cash', status: 'paid', createdAt: '2026-09-16T18:00:00Z', items: [
+    { id: 'ord-1003-1', qty: 2, price: 499, product: { name: 'Protein Shaker' } },
+  ] },
+  { id: 'ord-1004', total: 299, method: 'UPI', status: 'paid', createdAt: '2026-09-15T08:40:00Z', items: [
+    { id: 'ord-1004-1', qty: 1, price: 299, product: { name: 'Gym Towel' } },
+  ] },
+  { id: 'ord-1005', total: 1598, method: 'Card', status: 'paid', createdAt: '2026-09-13T12:20:00Z', items: [
+    { id: 'ord-1005-1', qty: 2, price: 799, product: { name: 'Resistance Band' } },
+  ] },
+  { id: 'ord-1006', total: 4998, method: 'UPI', status: 'paid', createdAt: '2026-09-10T16:45:00Z', items: [
+    { id: 'ord-1006-1', qty: 2, price: 2499, product: { name: 'Whey Protein 1kg' } },
+  ] },
+];

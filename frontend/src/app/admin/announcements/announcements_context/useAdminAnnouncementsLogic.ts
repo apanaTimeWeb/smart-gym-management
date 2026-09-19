@@ -2,19 +2,23 @@
 
 // RESPONSIBILITY: Coordinates Admin Announcements query/mutation state, URL-shareable filters, and pagination.
 // DATA FLOW: AdminAnnouncementsApi → TanStack Query → useAdminAnnouncementsLogic → AdminAnnouncementsMain/table/modal
-import { useCallback } from 'react';
+import { useCallback, useRef } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { adminToast } from '@/app/admin/admin_components/AdminFeedback/AdminToastService';
+import { adminToast } from '@/app/admin/admin_layout/AdminFeedback/AdminToastService';
 import { announcementsApi } from '@/app/admin/announcements/announcements_api/AdminAnnouncementsApi';
 import { useAdminAnnouncementsStore } from '@/app/admin/announcements/announcements_store/useAdminAnnouncementsStore';
-import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/useAdminConfirm';
-import { useAdminUrlQuerySync } from '@/app/admin/admin_utils/useAdminUrlQuerySync';
+import { useAdminConfirm } from '@/app/admin/admin_layout/AdminFeedback/useAdminConfirm';
+import { clearAdminIdempotencyKey, getAdminIdempotencyKey } from '@/app/admin/admin_layout/admin_utils/AdminIdempotencyIntentStore';
+import { useAdminUrlQuerySync } from '@/app/admin/admin_layout/admin_utils/useAdminUrlQuerySync';
 import { ANNOUNCEMENTS_ITEMS_PER_PAGE, EMPTY_ANNOUNCEMENT_FORM } from '@/app/admin/announcements/announcements_utils/AdminAnnouncementsSharedConstants';
 import type { Announcement, AnnouncementFormValues } from '@/app/admin/announcements/announcements_types/AdminAnnouncementsTypes';
 
 export function useAdminAnnouncementsLogic() {
   const { confirm } = useAdminConfirm();
   const qc = useQueryClient();
+  const idempotencyKeysRef = useRef(new Map<string, string>());
+  const getIntentKey = useCallback((intentId: string) => getAdminIdempotencyKey(idempotencyKeysRef.current, intentId), []);
+  const clearIntentKey = useCallback((intentId: string) => clearAdminIdempotencyKey(idempotencyKeysRef.current, intentId), []);
   const store = useAdminAnnouncementsStore();
   const { search, statusFilter, priorityFilter, gymFilter, currentPage } = store;
   useAdminUrlQuerySync([
@@ -58,8 +62,8 @@ export function useAdminAnnouncementsLogic() {
     onError: (err) => adminToast.error(err instanceof Error ? err.message : 'Announcement update failed.', 'admin-error-72b190472c'),
   });
   const deleteMutation = useMutation({
-    mutationFn: (id: string) => announcementsApi.deleteAnnouncement(id),
-    onSuccess: (response) => { adminToast.success(response.message, 'admin-success-05945f3e'); void qc.invalidateQueries({ queryKey: ['admin', 'announcements'] }); },
+    mutationFn: ({ id, idempotencyKey }: { id: string; idempotencyKey: string }) => announcementsApi.deleteAnnouncement(id, idempotencyKey),
+    onSuccess: (response, variables) => { adminToast.success(response.message, 'admin-success-05945f3e'); idempotencyKeysRef.current.delete(`delete-announcement:${variables.id}`); void qc.invalidateQueries({ queryKey: ['admin', 'announcements'] }); },
     onError: (err) => adminToast.error(err instanceof Error ? err.message : 'Announcement deletion failed.', 'admin-error-f6f10488f8'),
   });
   const pinMutation = useMutation({
@@ -71,7 +75,7 @@ export function useAdminAnnouncementsLogic() {
   const openCreate = useCallback(() => { store.setEditingAnnouncement(null); store.setForm(EMPTY_ANNOUNCEMENT_FORM); store.setShowModal(true); }, [store]);
   const openEdit = useCallback((announcement: Announcement) => { store.setEditingAnnouncement(announcement); store.setForm({ title: announcement.title, body: announcement.body, priority: announcement.priority, audience: announcement.audience, gymIds: announcement.gymIds, publishedAt: announcement.publishedAt.slice(0, 16), expiresAt: announcement.expiresAt.slice(0, 16), isPinned: announcement.isPinned }); store.setShowModal(true); }, [store]);
   const saveAnnouncement = useCallback((data: AnnouncementFormValues) => { if (store.editingAnnouncement) updateMutation.mutate({ id: store.editingAnnouncement.id, payload: data }); else createMutation.mutate(data); }, [createMutation, store.editingAnnouncement, updateMutation]);
-  const deleteAnnouncement = useCallback(async (id: string, _title: string) => { const ok = await confirm({ title: 'Delete Announcement', message: 'Delete this announcement? This cannot be undone.', confirmText: 'Delete', type: 'danger' }); if (ok) deleteMutation.mutate(id); }, [confirm, deleteMutation]);
+  const deleteAnnouncement = useCallback(async (id: string, _title: string) => { const intentId = `delete-announcement:${id}`; const ok = await confirm({ title: 'Delete Announcement', message: 'Delete this announcement? This cannot be undone.', confirmText: 'Delete', type: 'danger' }); if (ok) deleteMutation.mutate({ id, idempotencyKey: getIntentKey(intentId) }); else clearIntentKey(intentId); }, [clearIntentKey, confirm, deleteMutation, getIntentKey]);
 
   return { paginated, filtered: paginated, status: announcementsQuery.status, kpis: kpis?.data ?? null, showModal: store.showModal, setShowModal: store.setShowModal, editingAnnouncement: store.editingAnnouncement, openCreate, openEdit, saveAnnouncement, deleteAnnouncement, togglePin: (id: string) => pinMutation.mutate(id), saving: createMutation.isPending || updateMutation.isPending, currentPage, setCurrentPage: store.setCurrentPage, totalPages, totalItems };
 }

@@ -16,6 +16,6 @@ export const announcementsApi = {
   fetchKPIs: async () => apiFetch<ApiResponse<AnnouncementKPIData>>(`${AdminAnnouncementsUrlConfig.api.base}/fetchKPIs`, { method: 'GET', dataSchema: announcementKpiDataSchema }),
   createAnnouncement: async (payload: AnnouncementFormValues) => apiFetch<ApiResponse<Announcement>>(`${AdminAnnouncementsUrlConfig.api.base}/createAnnouncement`, { method: 'POST', body: JSON.stringify(payload), dataSchema: announcementSchema }),
   updateAnnouncement: async (id: string, payload: AnnouncementFormValues) => apiFetch<ApiResponse<Announcement>>(`${AdminAnnouncementsUrlConfig.api.base}/updateAnnouncement`, { method: 'POST', body: JSON.stringify({ id, ...payload }), dataSchema: announcementSchema }),
-  deleteAnnouncement: async (id: string) => apiFetch<ApiResponse<null>>(`${AdminAnnouncementsUrlConfig.api.base}/deleteAnnouncement`, { method: 'DELETE', body: JSON.stringify({ id }), dataSchema: z.null() }),
+  deleteAnnouncement: async (id: string, idempotencyKey: string) => apiFetch<ApiResponse<null>>(`${AdminAnnouncementsUrlConfig.api.base}/deleteAnnouncement`, { method: 'DELETE', body: JSON.stringify({ id }), headers: { 'Idempotency-Key': idempotencyKey }, dataSchema: z.null() }),
   togglePin: async (id: string) => apiFetch<ApiResponse<Announcement>>(`${AdminAnnouncementsUrlConfig.api.base}/togglePin`, { method: 'POST', body: JSON.stringify({ id }), dataSchema: announcementSchema }),
 };

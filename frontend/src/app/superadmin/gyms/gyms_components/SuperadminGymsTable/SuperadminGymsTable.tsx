@@ -1,19 +1,18 @@
 // RESPONSIBILITY: Renders the table view of Gym tenants. Purely a view component that consumes useSuperadminGymsTable hook.
 'use client';
-import { useState } from 'react';
-import { CheckCircle2, Ban, LogIn, PlayCircle, Edit2, MessageCircle, Trash2, Loader2, ArrowUpDown } from 'lucide-react';
+import { CheckCircle2, Ban, LogIn, PlayCircle, MessageCircle, Trash2, Loader2 } from 'lucide-react';
 import { useSuperadminGymsTable } from '@/app/superadmin/gyms/gyms_components/SuperadminGymsTable/useSuperadminGymsTable';
-import { useRouter } from 'next/navigation';
-import type { Tenant } from '@/app/superadmin/gyms/superadmin_gyms_types/superadmin_gyms_types';
+import type { Tenant } from '@/app/superadmin/gyms/gyms_types/SuperadminGymsTypes';
 import SuperadminGymEditModal from '@/app/superadmin/gyms/gyms_components/SuperadminGymEditModal/SuperadminGymEditModal';
 import SuperadminGymWhatsappModal from '@/app/superadmin/gyms/gyms_components/SuperadminGymWhatsappModal/SuperadminGymWhatsappModal';
 import SuperadminGymDeleteModal from '@/app/superadmin/gyms/gyms_components/SuperadminGymDeleteModal/SuperadminGymDeleteModal';
 import SuperadminGymsEmptyState from '@/app/superadmin/gyms/gyms_components/SuperadminGymsEmptyState/SuperadminGymsEmptyState';
-import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
-import SuperadminCopyButton from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminCopyButton';
+import Pagination from '@/components/ui/Pagination';
+import CopyButton from '@/components/ui/CopyButton';
+import type { KeyboardEvent } from 'react';
 import { GYMS_PLAN_COLORS } from '@/app/superadmin/gyms/gyms_utils/SuperadminGymsConstants';
 import { formatCurrency, formatDate } from '@/lib/formatters';
-import { GymsUrlConfig } from '@/app/superadmin/gyms/superadmin_gyms_url_config';
+import SuperadminGymsTableSortIcon from '@/app/superadmin/gyms/gyms_components/SuperadminGymsTable/SuperadminGymsTableSortIcon';
 // Rule 68: TABLE_COLUMN_COUNT must match <th> count AND colSpan on empty state
 const TABLE_COLUMN_COUNT = 8; // Name | Owner | Plan | Members | MRR | Status | Last Login | Actions
 /**
@@ -25,8 +24,7 @@ function getPlanBadgeClasses(plan: string | undefined): string {
     return GYMS_PLAN_COLORS[key] ?? GYMS_PLAN_COLORS.DEFAULT;
 }
 export default function SuperadminGymsTable() {
-    const router = useRouter();
-    const { filteredGyms, isLoading, isError, total, actionLoadingId, handleRowClick, onGhostLoginClick, onSuspendClick, onDeleteClick, openWhatsappModal, currentPage, pageLimit, setCurrentPage, setSortBy, setSortOrder, sortBy, sortOrder, } = useSuperadminGymsTable();
+    const { filteredGyms, isPending, isError, total, actionLoadingId, handleRowClick, onGhostLoginClick, onSuspendClick, onDeleteClick, openWhatsappModal, currentPage, pageLimit, setCurrentPage, setSortBy, setSortOrder, sortBy, sortOrder, refetch } = useSuperadminGymsTable();
     const totalPages = Math.ceil(total / pageLimit) || 1;
     const handleSort = (col: string) => {
         if (sortBy === col) {
@@ -37,10 +35,7 @@ export default function SuperadminGymsTable() {
             setSortOrder('desc');
         }
     };
-    const SortIcon = ({ col }: {
-        col: string;
-    }) => (<ArrowUpDown className={`inline ml-1 w-3 h-3 ${sortBy === col ? 'text-primary' : 'text-disabled'}`}/>);
-    if (isLoading) {
+    if (isPending) {
         return (<div className="overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
@@ -65,8 +60,11 @@ export default function SuperadminGymsTable() {
         </table>
       </div>);
     }
-    if (false) {
-        return <div className="p-8 text-center text-danger">Error loading gyms. Please try again.</div>;
+    if (isError) {
+        return (<div role="alert" className="flex min-h-80 flex-col items-center justify-center gap-3 rounded-xl border border-danger/30 bg-danger-bg p-8 text-center">
+        <p className="text-danger">Unable to load gyms.</p>
+        <button type="button" onClick={() => void refetch()} className="min-h-11 rounded-md border border-border px-4 py-2 text-sm text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">Retry</button>
+      </div>);
     }
     return (<div className="overflow-x-auto flex flex-col min-h-96">
       <table className="w-full text-left border-collapse flex-1">
@@ -75,15 +73,21 @@ export default function SuperadminGymsTable() {
             <th className="p-4 font-semibold uppercase text-xs tracking-wider w-48">Gym Name</th>
             <th className="p-4 font-semibold uppercase text-xs tracking-wider min-w-40">Owner</th>
             <th className="p-4 font-semibold uppercase text-xs tracking-wider w-32">Plan</th>
-            <th className="p-4 font-semibold uppercase text-xs tracking-wider text-right w-24 cursor-pointer hover:text-foreground motion-safe:transition-colors" onClick={() => handleSort('memberCount')}>
-              Members <SortIcon col="memberCount"/>
+            <th className="p-2 font-semibold uppercase text-xs tracking-wider text-right w-24" aria-sort={sortBy === 'memberCount' ? (sortOrder === 'asc' ? 'ascending' : 'descending') : 'none'}>
+              <button type="button" onClick={() => handleSort('memberCount')} className="min-h-11 w-full justify-end rounded-md px-2 text-right hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-safe:transition-colors" aria-label={`Sort gyms by member count${sortBy === 'memberCount' ? (sortOrder === 'asc' ? ', descending' : ', ascending') : ', descending'}`}>
+                <span className="inline-flex items-center gap-1">Members <SuperadminGymsTableSortIcon col="memberCount" active={sortBy === 'memberCount'} /></span>
+              </button>
             </th>
-            <th className="p-4 font-semibold uppercase text-xs tracking-wider text-right w-32 cursor-pointer hover:text-foreground motion-safe:transition-colors" onClick={() => handleSort('monthlyRevenue')}>
-              MRR <SortIcon col="monthlyRevenue"/>
+            <th className="p-2 font-semibold uppercase text-xs tracking-wider text-right w-32" aria-sort={sortBy === 'monthlyRevenue' ? (sortOrder === 'asc' ? 'ascending' : 'descending') : 'none'}>
+              <button type="button" onClick={() => handleSort('monthlyRevenue')} className="min-h-11 w-full justify-end rounded-md px-2 text-right hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-safe:transition-colors" aria-label={`Sort gyms by monthly revenue${sortBy === 'monthlyRevenue' ? (sortOrder === 'asc' ? ', descending' : ', ascending') : ', descending'}`}>
+                <span className="inline-flex items-center gap-1">MRR <SuperadminGymsTableSortIcon col="monthlyRevenue" active={sortBy === 'monthlyRevenue'} /></span>
+              </button>
             </th>
             <th className="p-4 font-semibold uppercase text-xs tracking-wider text-center w-32">Status</th>
-            <th className="p-4 font-semibold uppercase text-xs tracking-wider text-right w-32 cursor-pointer hover:text-foreground motion-safe:transition-colors" onClick={() => handleSort('lastActiveAt')}>
-              Last Active <SortIcon col="lastActiveAt"/>
+            <th className="p-2 font-semibold uppercase text-xs tracking-wider text-right w-32" aria-sort={sortBy === 'lastActiveAt' ? (sortOrder === 'asc' ? 'ascending' : 'descending') : 'none'}>
+              <button type="button" onClick={() => handleSort('lastActiveAt')} className="min-h-11 w-full justify-end rounded-md px-2 text-right hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-safe:transition-colors" aria-label={`Sort gyms by last active time${sortBy === 'lastActiveAt' ? (sortOrder === 'asc' ? ', descending' : ', ascending') : ', descending'}`}>
+                <span className="inline-flex items-center gap-1">Last Active <SuperadminGymsTableSortIcon col="lastActiveAt" active={sortBy === 'lastActiveAt'} /></span>
+              </button>
             </th>
             <th className="p-4 font-semibold uppercase text-xs tracking-wider text-right w-40">Actions</th>
           </tr>
@@ -91,7 +95,7 @@ export default function SuperadminGymsTable() {
         <tbody className="divide-y divide-border">
           {filteredGyms.map((gym: Tenant) => {
             const isActionLoading = actionLoadingId === gym.id;
-            const handleRowKeyDown = (event: React.KeyboardEvent<HTMLTableRowElement>) => {
+            const handleRowKeyDown = (event: KeyboardEvent<HTMLTableRowElement>) => {
               if (event.key === 'Enter' || event.key === ' ') {
                 event.preventDefault();
                 handleRowClick(gym);
@@ -99,10 +103,10 @@ export default function SuperadminGymsTable() {
             };
             return (<tr key={gym.id} onClick={() => handleRowClick(gym)} onKeyDown={handleRowKeyDown} tabIndex={0} className="hover:bg-card/50 focus-visible:bg-card/50 motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset">
                 <td className="p-4 max-w-48">
-                  <p className="font-semibold text-foreground truncate" title={gym.name}>{gym.name}</p>
+                  <p className="font-semibold text-primary truncate" title={gym.name}>{gym.name}</p>
                   <span className="flex items-center gap-1 text-xs text-disabled mt-1">
                     <span className="truncate font-mono" title={gym.id}>{gym.id}</span>
-                    <SuperadminCopyButton value={gym.id} label={`Copy gym ID ${gym.id}`}/>
+                    <CopyButton value={gym.id} label={`Copy gym ID ${gym.id}`}/>
                   </span>
                 </td>
                 <td className="p-4 max-w-40">
@@ -124,9 +128,9 @@ export default function SuperadminGymsTable() {
                 <td className="p-4">
                   <div className="flex justify-center">
                     {gym.status === 'ACTIVE' ? (<span className="flex items-center gap-1 text-success text-xs font-semibold bg-success-bg px-2.5 py-1 rounded-full border border-success/20">
-                        <CheckCircle2 className="w-3 h-3"/> Active
-                      </span>) : gym.status === 'SUSPENDED' ? (<span className="flex items-center gap-1 text-danger text-xs font-semibold bg-danger-bg px-2.5 py-1 rounded-full border border-destructive/20">
-                        <Ban className="w-3 h-3"/> Suspended
+                        <CheckCircle2 size={18}/> Active
+                      </span>) : gym.status === 'SUSPENDED' ? (<span className="flex items-center gap-1 text-danger text-xs font-semibold bg-danger-bg px-2.5 py-1 rounded-full border border-danger/20">
+                        <Ban size={18}/> Suspended
                       </span>) : (<span className="text-secondary text-xs font-semibold bg-input px-2.5 py-1 rounded-full border border-border">{gym.status}</span>)}
                   </div>
                 </td>
@@ -139,22 +143,22 @@ export default function SuperadminGymsTable() {
                   {/* Rule 64: opacity-100 on mobile, hover-only on lg+ */}
                   <div className="flex items-center justify-end gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 motion-safe:transition-opacity">
                     {isActionLoading ? (<div className="p-2 text-primary">
-                        <Loader2 className="w-4 h-4 motion-safe:animate-spin"/>
+                        <Loader2 size={18} className="motion-safe:animate-spin"/>
                       </div>) : (<>
-                        <button onClick={(e) => onGhostLoginClick(e, gym.id, gym.name)} className="p-1.5 text-primary hover:bg-primary-subtle rounded-lg motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page" title="Ghost Login (Login As Admin)" aria-label={`Ghost Login to ${gym.name}`}>
-                          <LogIn className="w-4 h-4"/>
+                        <button onClick={(e) => onGhostLoginClick(e, gym.id, gym.name)} className="min-h-11 min-w-11 p-2 text-primary hover:bg-primary-subtle rounded-lg motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page" title="Ghost Login (Login As Admin)" aria-label={`Ghost Login to ${gym.name}`}>
+                          <LogIn size={18}/>
                         </button>
-                        <button onClick={(e) => onSuspendClick(e, gym.id, gym.name, gym.status)} className={`p-1.5 rounded-lg motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page ${gym.status === 'SUSPENDED'
+                        <button onClick={(e) => onSuspendClick(e, gym.id, gym.name, gym.status)} className={`min-h-11 min-w-11 p-2 rounded-lg motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page ${gym.status === 'SUSPENDED'
                         ? 'text-success hover:bg-success/10'
                         : 'text-danger hover:bg-danger-bg/10'}`} title={gym.status === 'SUSPENDED' ? 'Activate Gym' : 'Suspend Gym'} aria-label={gym.status === 'SUSPENDED' ? `Activate ${gym.name}` : `Suspend ${gym.name}`}>
-                          {gym.status === 'SUSPENDED' ? <PlayCircle className="w-4 h-4"/> : <Ban className="w-4 h-4"/>}
+                          {gym.status === 'SUSPENDED' ? <PlayCircle size={18}/> : <Ban size={18}/>}
                         </button>
-                        <button onClick={(e) => { e.stopPropagation(); openWhatsappModal(gym); }} className="p-1.5 text-secondary hover:bg-success/10 hover:text-success rounded-lg motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page" title="WhatsApp Owner" aria-label={`WhatsApp owner of ${gym.name}`}>
-                          <MessageCircle className="w-4 h-4"/>
+                        <button onClick={(e) => { e.stopPropagation(); openWhatsappModal(gym); }} className="min-h-11 min-w-11 p-2 text-secondary hover:bg-success/10 hover:text-success rounded-lg motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page" title="WhatsApp Owner" aria-label={`WhatsApp owner of ${gym.name}`}>
+                          <MessageCircle size={18}/>
                         </button>
 
-                        <button onClick={(e) => onDeleteClick(e, gym)} className="p-1.5 text-secondary hover:bg-danger-bg/10 hover:text-danger rounded-lg motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page" title="Delete Gym" aria-label={`Delete ${gym.name}`}>
-                          <Trash2 className="w-4 h-4"/>
+                        <button onClick={(e) => onDeleteClick(e, gym)} className="min-h-11 min-w-11 p-2 text-secondary hover:bg-danger-bg/10 hover:text-danger rounded-lg motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page" title="Delete Gym" aria-label={`Delete ${gym.name}`}>
+                          <Trash2 size={18}/>
                         </button>
                       </>)}
                   </div>
@@ -169,7 +173,7 @@ export default function SuperadminGymsTable() {
         </tbody>
       </table>
 
-      <SuperadminPagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage}/>
+      <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage}/>
 
       <SuperadminGymEditModal />
       <SuperadminGymWhatsappModal />

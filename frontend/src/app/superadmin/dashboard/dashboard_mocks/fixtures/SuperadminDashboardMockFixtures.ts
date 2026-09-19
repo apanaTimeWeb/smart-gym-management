@@ -1,4 +1,4 @@
-import type { SuperadminDashboardApiData } from '@/app/superadmin/dashboard/superadmin_dashboard_types/superadmin_dashboard_types';
+import type { SuperadminDashboardApiData } from '@/app/superadmin/dashboard/dashboard_types/SuperadminDashboardTypes';
 export const MOCK_SUPERADMIN_DASHBOARD_DATA: SuperadminDashboardApiData = {
     metrics: {
         totalGyms: 120,

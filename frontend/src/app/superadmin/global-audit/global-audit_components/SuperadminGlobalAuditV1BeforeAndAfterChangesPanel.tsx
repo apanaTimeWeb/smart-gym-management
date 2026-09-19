@@ -1,15 +1,15 @@
 // RESPONSIBILITY: Renders the Superadmin global-audit V1 Before & after changes view.
 'use client';
 import { formatDateTime } from '@/lib/formatters';
-import SuperadminV1Panel from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminV1Panel';
+import Panel from '@/components/ui/Panel';
 import type { SuperadminGlobalAuditV1SectionProps } from '@/app/superadmin/global-audit/global-audit_types/SuperadminGlobalAuditV1Types.ts';
 export default function SuperadminGlobalAuditV1BeforeAndAfterChangesPanel({ data }: SuperadminGlobalAuditV1SectionProps) {
-    return <SuperadminV1Panel title="Before & after changes" description="Inspect exactly what changed instead of reading only the event name.">
+    return <Panel title="Before & after changes" description="Inspect exactly what changed instead of reading only the event name.">
   <div className="space-y-3">
     {data.changes.map((c) => <div key={`${c.time}-${c.resource}`} className="rounded-lg border border-border p-4">
       <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
         <div>
-          <p className="font-medium text-foreground">
+          <p className="font-medium text-primary">
             {c.action}
             ·
             {c.resource}
@@ -29,7 +29,7 @@ export default function SuperadminGlobalAuditV1BeforeAndAfterChangesPanel({ data
           <p className="text-xs uppercase text-secondary">
             Before
           </p>
-          <p className="mt-1 truncate text-sm text-foreground">
+          <p className="mt-1 truncate text-sm text-primary">
             {c.before}
           </p>
         </div>
@@ -37,12 +37,12 @@ export default function SuperadminGlobalAuditV1BeforeAndAfterChangesPanel({ data
           <p className="text-xs uppercase text-primary">
             After
           </p>
-          <p className="mt-1 truncate text-sm text-foreground">
+          <p className="mt-1 truncate text-sm text-primary">
             {c.after}
           </p>
         </div>
       </div>
     </div>)}
   </div>
-    </SuperadminV1Panel>;
+    </Panel>;
 }

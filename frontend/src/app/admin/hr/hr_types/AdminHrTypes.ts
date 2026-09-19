@@ -1,10 +1,12 @@
 import type { QueryStatus } from '@tanstack/react-query';
 // RESPONSIBILITY: TypeScript contracts for the Admin HR module.
-import type { AdminToastType } from '@/app/admin/admin_components/AdminFeedback/AdminToastTypes';
+import type { AdminToastType } from '@/app/admin/admin_layout/AdminFeedback/AdminToastTypes';
 
 export interface HrInitialData {
   staff: Staff[];
+  totalStaff: number;
   payrolls: Payroll[];
+  totalPayrolls: number;
   summary: HrSummary | null;
 }
 
@@ -26,7 +28,13 @@ export interface HrUiContextType {
   setRoleFilter: (s: string) => void;
   currentPage: number;
   setCurrentPage: (p: number) => void;
-  showToast: (msg: string, type: AdminToastType) => void;
+  staffSortKey: string;
+  staffSortDir: 'asc' | 'desc';
+  setStaffSort: (key: string, direction: 'asc' | 'desc') => void;
+  payrollSortKey: string;
+  payrollSortDir: 'asc' | 'desc';
+  setPayrollSort: (key: string, direction: 'asc' | 'desc') => void;
+  showToast: (msg: string, type: AdminToastType, id?: string) => void;
   showModal: boolean;
   setShowModal: (show: boolean) => void;
   showPayrollModal: boolean;
@@ -51,7 +59,9 @@ export interface HrUiContextType {
 
 export interface HrServerState {
   staff: Staff[];
+  totalStaff: number;
   payrolls: Payroll[];
+  totalPayrolls: number;
   summary: HrSummary | null;
   status: QueryStatus;
   error: string;

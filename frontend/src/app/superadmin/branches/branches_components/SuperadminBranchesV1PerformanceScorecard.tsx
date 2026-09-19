@@ -1,10 +1,10 @@
 // RESPONSIBILITY: Renders the Superadmin branches V1 Branch scorecard view.
 'use client';
 import { formatCurrency, formatNumber, formatPercent1dp } from '@/lib/formatters';
-import SuperadminV1Panel from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminV1Panel';
+import Panel from '@/components/ui/Panel';
 import type { SuperadminBranchesV1SectionProps } from '@/app/superadmin/branches/branches_types/SuperadminBranchesV1Types.ts';
 export default function SuperadminBranchesV1PerformanceScorecard({ data }: SuperadminBranchesV1SectionProps) {
-    return <SuperadminV1Panel title="Branch scorecard" description="Income, members, growth, and health on one table.">
+    return <Panel title="Branch scorecard" description="Income, members, growth, and health on one table.">
   <div className="overflow-x-auto">
     <table className="w-full text-sm">
       <thead>
@@ -31,7 +31,7 @@ export default function SuperadminBranchesV1PerformanceScorecard({ data }: Super
       </thead>
       <tbody>
         {data.branches.map((b) => <tr key={b.name} className="border-b border-border">
-          <td className="px-3 py-3 font-medium text-foreground">
+          <td className="px-3 py-3 font-medium text-primary">
             {b.name}
           </td>
           <td className="px-3 py-3 text-secondary">
@@ -43,13 +43,13 @@ export default function SuperadminBranchesV1PerformanceScorecard({ data }: Super
           <td className="px-3 py-3 text-secondary">
             {formatNumber(b.members)}
           </td>
-          <td className="px-3 py-3 text-foreground">
+          <td className="px-3 py-3 text-primary">
             {formatCurrency(b.income)}
           </td>
           <td className="px-3 py-3 text-secondary">
             {formatPercent1dp(b.growth)}
           </td>
-          <td className="px-3 py-3 text-foreground">
+          <td className="px-3 py-3 text-primary">
             {formatNumber(b.health)}
             /100
           </td>
@@ -57,5 +57,5 @@ export default function SuperadminBranchesV1PerformanceScorecard({ data }: Super
       </tbody>
     </table>
   </div>
-    </SuperadminV1Panel>;
+    </Panel>;
 }

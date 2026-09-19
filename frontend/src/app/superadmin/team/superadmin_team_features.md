@@ -1,110 +1,54 @@
-# Superadmin Team & Access — Feature Map
+# Superadmin Team — Feature Map
 
 ## Module Purpose
-This Superadmin-only module gives the platform owner a controlled view of internal operators who can access the SaaS control plane. It solves the accountability problem created by shared full-access accounts by keeping operator identity, role, sign-in protection, and alert preferences visible in one place. A Superadmin can review named team members, compare internal role scopes, and review platform alert preferences. This module does not manage gym staff, trainers, managers, or any other tenant-facing users.
+This feature owns the Superadmin business workflow implemented under `team/`. The active route is `/superadmin/team`. Business behavior, API contracts, validation, server-state hooks, fixtures, MSW handlers, and tests are kept within this feature boundary. Cross-feature business logic is outside this module.
 
 ## Directory Structure
+
 | Folder | Responsibility | Key Files |
 |---|---|---|
-| `team_components/` | Route presentation, operator list, role groups, alert preferences, and dedicated empty states | `SuperadminTeamClient.tsx`, `SuperadminTeamPageHeader.tsx`, `SuperadminTeamSummaryCards.tsx`, `SuperadminTeamMembersPanel.tsx`, `SuperadminTeamMembersEmptyState.tsx`, `SuperadminTeamRolesAndAlertPreferencesPanel.tsx`, `SuperadminTeamRoleGroupsEmptyState.tsx`, `SuperadminTeamAlertPreferencesEmptyState.tsx` |
-| `team_api/` | API boundary for platform team data | `superadmin_team_api.ts` |
-| `team_types/` | Response contract and inferred TypeScript types | `SuperadminTeamTypes.ts` |
-| `team_mocks/fixtures/` | Complete mock operator, role, and alert records | `SuperadminTeamMockFixtures.ts` |
-| `team_mocks/handlers/` | MSW handler for the team endpoint | `SuperadminTeamMockHandlers.ts` |
-| `team_utils/` | TanStack Query orchestration | `useSuperadminTeamPage.ts` |
+| `team_api/` | Feature-owned responsibility for team api. | `SuperadminTeamApi.ts` |
+| `team_components/` | Feature-owned responsibility for team components. | `SuperadminTeamAlertPreferencesEmptyState.tsx`, `SuperadminTeamClient.tsx`, `SuperadminTeamMembersEmptyState.tsx`, `SuperadminTeamMembersPanel.tsx`, `SuperadminTeamPageHeader.tsx`, `SuperadminTeamRoleGroupsEmptyState.tsx`, `SuperadminTeamRolesAndAlertPreferencesPanel.tsx`, `SuperadminTeamSummaryCards.tsx` |
+| `team_mocks/` | Feature-owned responsibility for team mocks. | `(directory present; no direct files)` |
+| `team_tests/` | Feature-owned responsibility for team tests. | `SuperadminTeamBasic.test.tsx` |
+| `team_types/` | Feature-owned responsibility for team types. | `SuperadminRouteErrorTypes.ts`, `SuperadminTeamTypes.ts` |
+| `team_utils/` | Feature-owned responsibility for team utils. | `SuperadminTeamStatusBadgeConfig.ts`, `useSuperadminTeamAlertPreferences.ts`, `useSuperadminTeamPage.test.tsx`, `useSuperadminTeamPage.ts` |
+
+## Approved External Dependencies
+
+### Application Infrastructure
+- `@/app/superadmin/superadmin_components` — role-shell/generic interaction infrastructure only.
+- `@/lib/*` and `@/components/*` — only approved application infrastructure imported by this feature.
+
+### Business Feature Dependencies
+- None
+
+### Role-Level Business Dependencies
+- None
 
 ## Feature Inventory
-| Feature | Route | What the Superadmin Can Do | Key Components | Main API Calls | Status |
-|---|---|---|---|---|---|
-| Team Members | `/superadmin/team` | Review named operators, roles, sign-in protection, and last sign-in | `SuperadminTeamMembersPanel.tsx` | `GET /api/superadmin/team` | Implemented in source; runtime build not verified here |
-| Role Groups | `/superadmin/team` | Review internal platform access scopes and permission counts | `SuperadminTeamRolesAndAlertPreferencesPanel.tsx` | `GET /api/superadmin/team` | Implemented in source; runtime build not verified here |
-| Alert Preferences | `/superadmin/team` | Review alert channel, threshold, and enabled state for platform operators | `SuperadminTeamRolesAndAlertPreferencesPanel.tsx` | `GET /api/superadmin/team` | Implemented in source; runtime build not verified here |
+
+| Surface | Route | Implemented User Actions | API Boundary | Status |
+|---|---|---|---|---|
+| Superadmin Team | `/superadmin/team` | save | `SuperadminTeamApi.ts` | Source-verified; host runtime pending |
 
 ## User Flows & Interactions
-### Flow 1: Review platform access
-1. Superadmin opens `/superadmin/team`.
-2. `useSuperadminTeamPage.ts` requests the module endpoint through the API layer.
-3. Zod validates the response before the page consumes the data.
-4. Team Members, Role Groups, and Alert Preferences panels render from the response.
 
-### Flow 2: Investigate a disabled operator
-1. Superadmin scans the Team Members table.
-2. The operator status badge shows the current account state.
-3. Last sign-in uses the nullable display fallback when no sign-in exists.
-4. Role scope and alert settings can be reviewed without opening a tenant module.
+1. Open the active route and load the feature-owned query/API boundary.
+2. Apply the available search, filter, sort, pagination, form, or row actions exposed by the current client surface.
+3. Mutations go through feature-owned API contracts and, in MSW mode, feature-owned handlers/fixtures.
+4. Success/error state is reconciled back into the same feature surface.
 
-## Data and State Architecture
-- Server state: TanStack Query only.
-- UI state: local component state only; no Zustand is currently required.
-- Query key: `['superadmin', 'team', 'overview']`.
-- MSW handler: `team_mocks/handlers/SuperadminTeamMockHandlers.ts`.
-- MSW fixture: `team_mocks/fixtures/SuperadminTeamMockFixtures.ts`.
-- Fixture scenarios: populated data plus nullable last sign-in to exercise the empty display fallback.
+## Verification Notes
+- Active route pages mount one primary client tree; no `V1Client` import is mounted from route `page.tsx`.
+- Mutable mock-state handlers have reset functions covered by tests where present.
+- Deprecated marker-only and JSON-stringify tautology tests were removed from the module test tree.
+- Dependency-backed `tsc`, lint, Vitest runtime, Playwright, and real browser responsive execution require the host application environment and remain unverified here.
 
-## API Contract
-| Function | Method | Endpoint | Request | Response `data` |
-|---|---|---|---|---|
-| `fetchTeamData()` | GET | `/api/superadmin/team` | None | `SuperadminTeamResponse` |
-
-The API layer uses the canonical global `apiFetch` transport and `SuperadminTeamResponseSchema` for response validation.
-
-## UI Data Requirements
-| UI Element | Required Field(s) | API Endpoint | Response Path | Nullable? | Mocked? |
-|---|---|---|---|---|---|
-| Team table name | `name` | GET team | `data.users[].name` | No | Yes |
-| Team table email | `email` | GET team | `data.users[].email` | No | Yes |
-| Team table role | `role` | GET team | `data.users[].role` | No | Yes |
-| Sign-in protection | `mfa` | GET team | `data.users[].mfa` | Yes | Yes |
-| Last sign-in | `lastLogin` | GET team | `data.users[].lastLogin` | Yes | Yes |
-| Team status | `status` | GET team | `data.users[].status` | No | Yes |
-| Role scope | `scope` | GET team | `data.roles[].scope` | No | Yes |
-| Role permission count | `permissions` | GET team | `data.roles[].permissions` | No | Yes |
-| Alert name | `name` | GET team | `data.alerts[].name` | No | Yes |
-| Alert channel | `channel` | GET team | `data.alerts[].channel` | No | Yes |
-| Alert threshold | `threshold` | GET team | `data.alerts[].threshold` | No | Yes |
-| Alert enabled state | `enabled` | GET team | `data.alerts[].enabled` | No | Yes |
-
-Dedicated empty states are used for Team Members, Role Groups, and Alert Preferences when their respective arrays are empty.
-
-## Permissions and Security
-- Required role: `SUPERADMIN`.
-- Cross-role rule: zero imports from Admin, Manager, Trainer, or tenant business modules.
-- Secrets: no passwords, tokens, private keys, or API secrets are rendered.
-- Future account mutation actions must use the approved double-confirm/type-to-confirm safeguards where applicable.
-
-## Loading, Empty, and Error States
-- `loading.tsx` provides the page skeleton.
-- `error.tsx` provides the route-level branded retry state.
-- Team list sections use module-owned data rendering and must never silently render `undefined`; nullable fields use the canonical display fallback.
-
-## Edge Cases and AI Warnings
-- **Never share accounts:** each operator record has its own stable ID so audit entries can be attributable.
-- **Nullable last sign-in:** a disabled or never-used account may have `lastLogin = null`; always render the canonical en dash fallback.
-- **Never display secrets:** role management must expose permission metadata, never credentials or secret values.
-- **Do not move team fixtures globally:** all operator/role/alert fixture records remain in `team_mocks/fixtures/`.
-- **Do not import tenant users:** tenant staff are outside this module's business boundary.
-- **Keep status styling centralized:** add new account states to `SuperadminStatusBadgeConfig.ts`, not to JSX conditionals.
-
-## Component Responsibility Map
-| Component | Responsibility |
-|---|---|
-| `SuperadminTeamClient.tsx` | Orchestrates query state and child sections. |
-| `SuperadminTeamPageHeader.tsx` | Renders the module title and description. |
-| `SuperadminTeamSummaryCards.tsx` | Renders operator/role/alert summary metrics. |
-| `SuperadminTeamMembersPanel.tsx` | Renders the named operator table. |
-| `SuperadminTeamMembersEmptyState.tsx` | Renders the empty state for the operator table. |
-| `SuperadminTeamRolesAndAlertPreferencesPanel.tsx` | Renders role scopes and alert preferences. |
-| `SuperadminTeamRoleGroupsEmptyState.tsx` | Renders the empty state for role groups. |
-| `SuperadminTeamAlertPreferencesEmptyState.tsx` | Renders the empty state for alert preferences. |
-
-## External Infrastructure Dependencies
-- `@/lib/api` — global API transport and response validation plumbing.
-- `@/lib/formatters` — date/number/null display formatting.
-- `@tanstack/react-query` — server state.
-- `msw` — development/test transport.
-- Superadmin shared UI primitives.
-
-## Final Component Additions
-- `SuperadminTeamMembersEmptyState.tsx` — renders the operator-list empty state.
-- `SuperadminTeamRoleGroupsEmptyState.tsx` — renders the role-group empty state.
-- `SuperadminTeamAlertPreferencesEmptyState.tsx` — renders the alert-preference empty state.
+## Rule Compliance Checklist
+- [x] Canonical feature-owned API/type directories are used.
+- [x] No active route page mounts a parallel `V1Client` tree.
+- [x] Module-owned mock reset coverage is present where mutable handlers exist.
+- [x] Feature docs contain a concrete directory map and compliance checklist.
+- [x] No marker-only or JSON-stringify tautology test remains.
+- [ ] Host dependency-backed build/lint/runtime verification — unavailable in source-only package.

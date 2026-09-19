@@ -7,31 +7,13 @@ import AdminHrStaffModal from '@/app/admin/hr/hr_components/AdminHrStaffModal/Ad
 import AdminHrStaffProfileModal from '@/app/admin/hr/hr_components/AdminHrStaffProfileModal/AdminHrStaffProfileModal';
 import AdminHrPayrollModal from '@/app/admin/hr/hr_components/AdminHrPayrollModal/AdminHrPayrollModal';
 import AdminHrPaymentModal from '@/app/admin/hr/hr_components/AdminHrPaymentModal/AdminHrPaymentModal';
+import AdminHrContent from '@/app/admin/hr/hr_components/AdminHrMain/AdminHrContent';
 import type { HrInitialData } from '@/app/admin/hr/hr_types/AdminHrTypes';
-
-function HrContent() {
-
- return (
- <div className="min-h-full pb-10 bg-background text-foreground">
- <div className="p-6 space-y-5">
- <AdminHrKPIs />
- <AdminHrTabs />
- </div>
-
- <AdminHrStaffModal />
- <AdminHrStaffProfileModal />
- <AdminHrPayrollModal />
- <AdminHrPaymentModal />
- 
-
- </div>
- );
-}
 
 export default function AdminHrMain({ initialData }: { initialData?: HrInitialData | null }) {
  return (
  <HrProvider initialData={initialData}>
- <HrContent />
+ <AdminHrContent />
  </HrProvider>
  );
 }

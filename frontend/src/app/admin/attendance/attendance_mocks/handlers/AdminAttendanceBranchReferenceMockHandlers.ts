@@ -6,6 +6,6 @@ export const adminAttendanceBranchReferenceMockHandlers = [
   http.get('*/admin/branches/fetchBranches', ({ request }) => {
     const url = new URL(request.url);
     if (url.searchParams.get('consumer') !== 'attendance') return;
-    return HttpResponse.json({ success: true, message: 'Success', data: MOCK_ATTENDANCE_BRANCH_REFERENCES, meta: { total: MOCK_ATTENDANCE_BRANCH_REFERENCES.length, page: 1, limit: 50, totalPages: 1 } });
+    return HttpResponse.json({ success: true, message: 'Success', data: MOCK_ATTENDANCE_BRANCH_REFERENCES });
   }),
 ];

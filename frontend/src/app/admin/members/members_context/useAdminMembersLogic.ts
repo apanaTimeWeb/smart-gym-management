@@ -4,18 +4,19 @@
 
 import { useCallback } from 'react';
 import { useAdminMembersStore } from '@/app/admin/members/members_store/useAdminMembersStore';
-import { useAdminGlobalStore } from '@/app/admin/admin_store/useAdminGlobalStore';
-import { useAdminUrlQuerySync } from '@/app/admin/admin_utils/useAdminUrlQuerySync';
+import { useAdminUrlQuerySync } from '@/app/admin/admin_layout/admin_utils/useAdminUrlQuerySync';
 import { ADMIN_MEMBERS_ITEMS_PER_PAGE } from '@/app/admin/members/members_utils/AdminMembersSharedConstants';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import type { AdminMember, AdminMembersSummary, MemberStatus } from '@/app/admin/members/members_types/AdminMembersTypes';
-import { useDebounce } from '@/app/admin/admin_utils/useAdminDebounce';
-import { adminMembersApi } from '@/app/admin/members/members_api/AdminMembersApi';
+import { useDebounce } from '@/app/admin/admin_layout/admin_utils/useAdminDebounce';
+import { adminMembersApi, type FetchMembersParams } from '@/app/admin/members/members_api/AdminMembersApi';
+import { adminToast } from '@/app/admin/admin_layout/AdminFeedback/AdminToastService';
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 
 export function useAdminMembersLogic() {
-  const { selectedBranchId } = useAdminGlobalStore();
+  const searchParams = useSearchParams();
+  const selectedBranchId = searchParams.get('branchId') || 'all';
   const { search, statusFilter, branchFilter, expiryFilter, genderFilter, planFilter, currentPage, setCurrentPage } = useAdminMembersStore();
   useAdminUrlQuerySync([
     { key: 'search', value: search, defaultValue: '', setValue: useAdminMembersStore.getState().setSearch },
@@ -24,7 +25,6 @@ export function useAdminMembersLogic() {
     { key: 'expiry', value: expiryFilter, defaultValue: 'all', setValue: (val) => { if (val === 'all' || val === 'this_week' || val === 'this_month') useAdminMembersStore.getState().setExpiryFilter(val); } },
     { key: 'page', value: currentPage, defaultValue: 1, setValue: (value) => setCurrentPage(Math.max(1, Number(value) || 1)) },
   ]);
-  const searchParams = useSearchParams();
   const memberId = searchParams.get('memberId');
   const [selectedMember, setSelectedMember] = useState<AdminMember | null>(null);
   const queryClient = useQueryClient();
@@ -68,6 +68,29 @@ export function useAdminMembersLogic() {
     setSelectedMember(memberDetailQuery.data?.data ?? null);
   }, [memberId, memberDetailQuery.data]);
 
+  const exportMembers = useCallback(async () => {
+    try {
+      const response = await adminMembersApi.exportMembers({
+        search: debouncedSearch || undefined,
+        status: statusFilter !== 'all' ? statusFilter : undefined,
+        branchId: activeBranch,
+        expiryFilter: expiryFilter !== 'all' ? expiryFilter : undefined,
+        gender: genderFilter !== 'all' ? genderFilter : undefined,
+        plan: planFilter !== 'all' ? planFilter : undefined,
+      } as Omit<FetchMembersParams, 'page' | 'limit'>);
+      if (!response.data) return;
+      const url = URL.createObjectURL(new Blob([response.data], { type: 'text/csv;charset=utf-8;' }));
+      const anchor = document.createElement('a');
+      anchor.href = url;
+      anchor.download = 'admin-members.csv';
+      anchor.click();
+      URL.revokeObjectURL(url);
+      adminToast.success(response.message, 'admin-members-export-success');
+    } catch (error) {
+      adminToast.error((error as Error).message, 'admin-members-export-error');
+    }
+  }, [activeBranch, debouncedSearch, expiryFilter, genderFilter, planFilter, statusFilter]);
+
   const loadAll = useCallback(async () => {
     await queryClient.invalidateQueries({ queryKey: ['admin', 'members', 'list'] });
     await queryClient.invalidateQueries({ queryKey: ['admin', 'members', 'summary'] });
@@ -88,6 +111,7 @@ export function useAdminMembersLogic() {
     currentPage,
     setCurrentPage,
     totalPages,
+    exportMembers,
     loadAll,
   };
 }

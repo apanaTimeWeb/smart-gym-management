@@ -43,7 +43,7 @@ broadcasts is handled by a separate broadcast module. Mark-as-read is the only m
 ## Component Responsibility Map
 - `AdminNotificationsMain` — layout + provider. MUST NOT contain list logic.
 - `AdminNotificationsList` — renders notification cards from context data.
-- `AdminNotificationsCard` — pure display. Badge color driven by `NotificationType` enum via `statusBadgeConfig.ts`.
+- `AdminNotificationsCard` — pure display. Badge color driven by `NotificationType` enum via `AdminNotificationsTypes.ts`.
 - `AdminNotificationsFilters` — owns filter state, dispatches to context.
 
 ## Permissions and Security
@@ -64,7 +64,7 @@ broadcasts is handled by a separate broadcast module. Mark-as-read is the only m
 
 ## Rule Compliance Checklist
 - [x] Rule 1: Micro-modularization — module-prefixed files
-- [x] Rule 3B: Badge colors via `statusBadgeConfig.ts`
+- [x] Rule 3B: Badge colors via `AdminNotificationsTypes.ts`
 - [x] Rule 6: Logic/UI Separation — list logic in context, display in components
 - [x] Rule 8: Server/Client Boundary — `page.tsx` = Server
 - [x] Rule 9: `loading.tsx` + `error.tsx` present

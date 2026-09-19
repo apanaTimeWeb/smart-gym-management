@@ -24,22 +24,22 @@ export function AdminSettingsGeneral({ initialData }: { initialData: GeneralSett
   ];
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="bg-card rounded-xl shadow-sm border border-border mt-6">
+    <form onSubmit={form.handleSubmit(onSubmit)} className="bg-card rounded-xl shadow-card border border-border mt-6">
       <div className="px-6 py-4 border-b border-border flex items-center justify-between flex-wrap gap-3">
-        <h2 className="font-bold text-foreground text-lg">General Settings</h2>
+        <h2 className="font-bold text-primary text-lg">General Settings</h2>
         <div className="flex gap-2">
           <button
             type="button"
             onClick={() => form.reset(initialData)}
             disabled={!form.formState.isDirty || mutation.isPending}
-            className="px-4 py-2 text-sm border border-border rounded-lg hover:bg-input text-secondary flex items-center gap-2 motion-safe:transition-colors disabled:opacity-50"
+            className="px-4 py-2 text-sm border border-border rounded-lg hover:bg-input text-secondary flex items-center gap-2 motion-safe:transition-colors disabled:opacity-50 motion-safe:duration-base"
           >
             <RefreshCw size={14} /> Reset
           </button>
           <button
             type="submit"
             disabled={mutation.isPending}
-            className="px-4 py-2 text-sm bg-primary text-primary-foreground rounded-lg font-medium flex items-center gap-2 disabled:opacity-70 hover:bg-primary-hover motion-safe:transition-colors"
+            className="px-4 py-2 text-sm bg-primary text-on-primary rounded-lg font-medium flex items-center gap-2 disabled:opacity-70 hover:bg-primary-hover motion-safe:transition-colors motion-safe:duration-base"
           >
             <Save size={14} /> {mutation.isPending ? 'Saving...' : 'Save Changes'}
           </button>
@@ -53,7 +53,7 @@ export function AdminSettingsGeneral({ initialData }: { initialData: GeneralSett
               <label className="block text-sm font-medium text-secondary mb-1">{f.label}</label>
               <select
                 {...form.register(f.key)}
-                className="w-full px-3 py-2.5 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-input text-foreground"
+                className="w-full px-3 py-2.5 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-input text-primary"
               >
                 {f.options.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
               </select>
@@ -63,7 +63,7 @@ export function AdminSettingsGeneral({ initialData }: { initialData: GeneralSett
             <label className="block text-sm font-medium text-secondary mb-1">Date Format</label>
             <select
               {...form.register('dateFormat')}
-              className="w-full px-3 py-2.5 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-input text-foreground"
+              className="w-full px-3 py-2.5 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-input text-primary"
             >
               <option value="DD/MM/YYYY">DD/MM/YYYY</option>
               <option value="MM/DD/YYYY">MM/DD/YYYY</option>
@@ -75,25 +75,25 @@ export function AdminSettingsGeneral({ initialData }: { initialData: GeneralSett
             <input
               type="number"
               {...form.register('sessionTimeoutMinutes', { valueAsNumber: true })}
-              className="w-full px-3 py-2.5 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-input text-foreground"
+              className="w-full px-3 py-2.5 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-input text-primary"
             />
-            {form.formState.errors.sessionTimeoutMinutes && <p className="text-xs text-danger mt-1">{form.formState.errors.sessionTimeoutMinutes.message}</p>}
+            {form.formState.errors.sessionTimeoutMinutes && <p className="text-xs text-danger mt-1">{form.formState.errors.sessionTimeoutMinutes.message as string}</p>}
           </div>
           <div>
             <label className="block text-sm font-medium text-secondary mb-1">Data Retention (months)</label>
             <input
               type="number"
               {...form.register('dataRetentionMonths', { valueAsNumber: true })}
-              className="w-full px-3 py-2.5 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-input text-foreground"
+              className="w-full px-3 py-2.5 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-input text-primary"
             />
-            {form.formState.errors.dataRetentionMonths && <p className="text-xs text-danger mt-1">{form.formState.errors.dataRetentionMonths.message}</p>}
+            {form.formState.errors.dataRetentionMonths && <p className="text-xs text-danger mt-1">{form.formState.errors.dataRetentionMonths.message as string}</p>}
           </div>
         </div>
 
         <div className="space-y-3 pt-2 border-t border-border">
-          <p className="text-sm font-semibold text-foreground">System Toggles</p>
+          <p className="text-sm font-semibold text-primary">System Toggles</p>
           {toggleFields.map(f => (
-            <div key={f.key} className="flex items-center justify-between p-3 bg-input/40 rounded-xl border border-border">
+            <div key={f.key} className="flex items-center justify-between p-3 bg-input rounded-xl border border-border">
               <AdminSettingsToggleSwitch
                 checked={formValues[f.key] ?? initialData[f.key]}
                 onChange={(v) => form.setValue(f.key, v, { shouldDirty: true })}

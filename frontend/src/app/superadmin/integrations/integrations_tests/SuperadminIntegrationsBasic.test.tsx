@@ -12,7 +12,7 @@ describe('Superadmin Integrations & Developer Access', () => {
     it('renders loading and real fixture-backed success states', () => {
         mockedUsePage.mockReturnValue({
             data: null,
-            isLoading: true,
+            isPending: true,
             isError: false,
             refetch: vi.fn(),
         });
@@ -21,7 +21,7 @@ describe('Superadmin Integrations & Developer Access', () => {
         unmount();
         mockedUsePage.mockReturnValue({
             data: SUPERADMIN_INTEGRATIONS_MOCK_FIXTURE,
-            isLoading: false,
+            isPending: false,
             isError: false,
             refetch: vi.fn(),
         });
@@ -34,7 +34,7 @@ describe('Superadmin Integrations & Developer Access', () => {
         const refetch = vi.fn();
         mockedUsePage.mockReturnValue({
             data: null,
-            isLoading: false,
+            isPending: false,
             isError: true,
             refetch,
         });
@@ -46,7 +46,7 @@ describe('Superadmin Integrations & Developer Access', () => {
     it('renders dedicated empty states when connection data is empty', () => {
         mockedUsePage.mockReturnValue({
             data: { ...SUPERADMIN_INTEGRATIONS_MOCK_FIXTURE, integrations: [], webhooks: [], keys: [] },
-            isLoading: false,
+            isPending: false,
             isError: false,
             refetch: vi.fn(),
         });

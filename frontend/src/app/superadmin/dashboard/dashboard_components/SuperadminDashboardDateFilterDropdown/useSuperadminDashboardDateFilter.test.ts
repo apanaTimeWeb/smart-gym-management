@@ -3,11 +3,9 @@ import { useSuperadminDashboardDateFilter } from '@/app/superadmin/dashboard/das
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 vi.mock('next/navigation', () => ({
-    useRouter: vi.fn(),
     useRouter: vi.fn(() => ({ replace: vi.fn() })),
     usePathname: vi.fn(() => ''),
     useSearchParams: vi.fn(() => ({ get: vi.fn(), set: vi.fn() })),
-    usePathname: vi.fn(),
 }));
 describe('useSuperadminDashboardDateFilter', () => {
     const replaceMock = vi.fn();

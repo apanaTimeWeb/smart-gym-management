@@ -3,14 +3,15 @@
 
 import { CheckCircle, X, Building2, Clock } from 'lucide-react';
 import { useAdminGymHealthAlertsLogic } from '@/app/admin/gym-health-alerts/gym_health_alerts_context/useAdminGymHealthAlertsLogic';
-import { AdminTableSkeleton } from '@/app/admin/admin_components/AdminShared/AdminTableSkeleton';
-import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
+import AdminTableSkeleton from '@/app/admin/admin_layout/AdminShared/AdminTableSkeleton';
+import AdminPagination from '@/app/admin/admin_layout/AdminShared/AdminPagination';
 import type { AlertSeverity, AlertType } from '@/app/admin/gym-health-alerts/gym_health_alerts_types/AdminGymHealthAlertsTypes';
+import AdminGymHealthAlertsEmptyState from '@/app/admin/gym-health-alerts/gym_health_alerts_components/AdminGymHealthAlertsEmptyState/AdminGymHealthAlertsEmptyState';
 
 const SEVERITY_STYLES: Record<AlertSeverity, string> = {
-  critical: 'bg-danger-bg text-danger',
-  warning: 'bg-warning-bg text-warning',
-  info: 'bg-info-bg text-info',
+  critical: 'bg-danger text-danger',
+  warning: 'bg-warning text-warning',
+  info: 'bg-info text-info',
 };
 
 const TYPE_LABELS: Record<AlertType, string> = {
@@ -34,31 +35,23 @@ export default function AdminGymHealthAlertsTable() {
       <div className="overflow-x-auto">
         <table data-admin-responsive-table className="w-full">
           <thead>
-            <tr className="bg-warning/5">
+            <tr className="bg-warning">
               {HEADERS.map(h => <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-secondary uppercase tracking-wider whitespace-nowrap">{h}</th>)}
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
             {alerts.length === 0 ? (
-              <tr>
-                <td colSpan={HEADERS.length} className="px-4 py-16 text-center">
-                  <div className="flex flex-col items-center gap-2">
-                    <CheckCircle size={32} className="text-success" />
-                    <p className="text-sm font-medium text-foreground">All gyms are healthy!</p>
-                    <p className="text-xs text-secondary">No alerts match the current filters.</p>
-                  </div>
-                </td>
-              </tr>
+              <tr><td colSpan={HEADERS.length}><AdminGymHealthAlertsEmptyState /></td></tr>
             ) : alerts.map((alert) => (
-              <tr key={alert.id} className={`motion-safe:transition-colors group ${alert.severity === 'critical' ? 'hover:bg-danger/5' : alert.severity === 'warning' ? 'hover:bg-warning/5' : 'hover:bg-info/5'}`}>
+              <tr key={alert.id} className={`motion-safe:transition-colors group ${alert.severity === 'critical' ? 'hover:bg-danger' : alert.severity === 'warning' ? 'hover:bg-warning' : 'hover:bg-info'}`}>
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-2">
                     <Building2 size={14} className="text-secondary shrink-0" />
-                    <span className="text-sm font-medium text-foreground">{alert.gymName}</span>
+                    <span className="text-sm font-medium text-primary">{alert.gymName}</span>
                   </div>
                 </td>
                 <td className="px-4 py-3 max-w-56">
-                  <p className="text-sm font-medium text-foreground">{alert.title}</p>
+                  <p className="text-sm font-medium text-primary">{alert.title}</p>
                   <p className="text-xs text-secondary mt-0.5 line-clamp-2">{alert.description}</p>
                 </td>
                 <td className="px-4 py-3">
@@ -71,27 +64,27 @@ export default function AdminGymHealthAlertsTable() {
                     {alert.severity}
                   </span>
                 </td>
-                <td className="px-4 py-3 text-sm font-semibold text-foreground whitespace-nowrap">{alert.metric}</td>
+                <td className="px-4 py-3 text-sm font-semibold text-primary whitespace-nowrap">{alert.metric}</td>
                 <td className="px-4 py-3 text-xs text-secondary whitespace-nowrap">{alert.threshold}</td>
                 <td className="px-4 py-3 text-xs text-secondary whitespace-nowrap">
                   {new Date(alert.detectedAt).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })}
                 </td>
                 <td className="px-4 py-3">
                   {alert.isResolved ? (
-                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-success-bg text-success">
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-success text-success">
                       <CheckCircle size={11} /> Resolved
                     </span>
                   ) : (
-                    <span className="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold bg-danger-bg text-danger">Active</span>
+                    <span className="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold bg-danger text-danger">Active</span>
                   )}
                 </td>
                 <td className="px-4 py-3">
-                  <div className="flex items-center gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 motion-safe:transition-opacity">
+                  <div className="flex items-center gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 motion-safe:transition-opacity motion-safe:duration-base">
                     {!alert.isResolved && (
                       <>
                         <button
                           onClick={() => resolveAlert(alert.id)}
-                          className="p-1.5 rounded-lg hover:bg-success-bg text-secondary hover:text-success motion-safe:transition-colors"
+                          className="p-1.5 rounded-lg hover:bg-success text-secondary hover:text-success motion-safe:transition-colors motion-safe:duration-base"
                           aria-label="Mark as resolved"
                         >
                           <CheckCircle size={15} />
@@ -100,7 +93,7 @@ export default function AdminGymHealthAlertsTable() {
                     )}
                     <button
                       onClick={() => dismissAlert(alert.id, alert.title)}
-                      className="p-1.5 rounded-lg hover:bg-danger-bg text-secondary hover:text-danger motion-safe:transition-colors"
+                      className="p-1.5 rounded-lg hover:bg-danger text-secondary hover:text-danger motion-safe:transition-colors motion-safe:duration-base"
                       aria-label="Dismiss alert"
                     >
                       <X size={15} />

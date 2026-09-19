@@ -6,10 +6,8 @@ export const metadata: Metadata = {
     title: 'Global Audit Logs | Superadmin Dashboard',
     description: 'Immutable security ledger for system-wide infrastructure and billing events.',
 };
-import SuperadminGlobalAuditV1Client from '@/app/superadmin/global-audit/global-audit_components/SuperadminGlobalAuditV1Client';
 export default function SuperadminGlobalAuditPage() {
-    return (<main className="w-full h-full bg-background min-h-screen">
+    return (<main className="w-full h-full bg-page min-h-screen">
       <SuperadminGlobalAuditClient />
-      <SuperadminGlobalAuditV1Client />
     </main>);
 }

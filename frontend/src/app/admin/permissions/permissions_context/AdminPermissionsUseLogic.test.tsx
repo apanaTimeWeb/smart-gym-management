@@ -3,10 +3,10 @@ import { renderHook, act } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
 import { useAdminPermissionsLogic } from '@/app/admin/permissions/permissions_context/useAdminPermissionsLogic';
-import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/useAdminConfirm';
+import { useAdminConfirm } from '@/app/admin/admin_layout/AdminFeedback/useAdminConfirm';
 import { permissionsApi } from '@/app/admin/permissions/permissions_api/AdminPermissionsApi';
 
-vi.mock('@/app/admin/admin_components/AdminFeedback/useAdminConfirm', () => ({ useAdminConfirm: vi.fn() }));
+vi.mock('@/app/admin/admin_layout/AdminFeedback/useAdminConfirm', () => ({ useAdminConfirm: vi.fn() }));
 vi.mock('@/app/admin/permissions/permissions_api/AdminPermissionsApi', () => ({
   permissionsApi: {
     fetchPermissions: vi.fn().mockResolvedValue({ data: { roleDefaults: [{ role: 'manager', permissions: { 'members.read': true } }], gymOverrides: [] } }),

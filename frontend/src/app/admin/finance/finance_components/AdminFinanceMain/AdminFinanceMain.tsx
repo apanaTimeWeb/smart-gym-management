@@ -6,16 +6,16 @@ import AdminFinanceRevenueByMethod from '@/app/admin/finance/finance_components/
 import AdminFinanceTabs from '@/app/admin/finance/finance_components/AdminFinanceTabs/AdminFinanceTabs';
 import type { FinanceInitialData } from '@/app/admin/finance/finance_types/AdminFinanceTypes';
 
-import { AdminDateFilterDropdown } from '@/app/admin/admin_components/AdminShared/AdminDateFilterDropdown';
+import { AdminFinanceDateFilterDropdown } from '@/app/admin/finance/finance_components/AdminFinanceDateFilter/AdminFinanceDateFilterDropdown';
 
 export default function AdminFinanceMain({ initialData }: { initialData?: FinanceInitialData | null }) {
   const { status } = useAdminFinanceLogic(initialData);
 
   return (
-    <div className="min-h-full pb-10 bg-background text-foreground">
+    <div className="min-h-full pb-10 bg-page text-primary">
       <div className="p-6 space-y-5">
         <div className="flex justify-end items-center">
-          <AdminDateFilterDropdown />
+          <AdminFinanceDateFilterDropdown />
         </div>
         <AdminFinanceKPIs />
         <AdminFinanceRevenueByMethod />

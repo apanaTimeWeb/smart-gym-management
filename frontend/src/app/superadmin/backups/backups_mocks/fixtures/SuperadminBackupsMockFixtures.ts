@@ -1,4 +1,4 @@
-import type { BackupRecord } from '@/app/superadmin/backups/superadmin_backups_types/superadmin_backups_types';
+import type { BackupRecord } from '@/app/superadmin/backups/backups_types/SuperadminBackupsTypes';
 export const MOCK_SUPERADMIN_BACKUPS: BackupRecord[] = [
     { id: 'bk1', tenantName: 'Iron Paradise', databaseName: 'db_iron_paradise', sizeMB: 482, status: 'SUCCESS', timestamp: '2026-09-01T02:00:00Z' },
     { id: 'bk2', tenantName: 'Fit Life Studio', databaseName: 'db_fit_life', sizeMB: 316, status: 'SUCCESS', timestamp: '2026-09-02T02:00:00Z' },

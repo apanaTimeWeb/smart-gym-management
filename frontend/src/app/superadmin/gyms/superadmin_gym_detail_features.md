@@ -1,71 +1,56 @@
-# Superadmin Gym Detail 360 — Feature Map
+# Superadmin Gym Detail — Feature Map
 
 ## Module Purpose
-This is the Superadmin-only tenant detail workspace for one specific gym ID. It consolidates commercial, billing, resource-use, health, activity, and support signals into one route so a platform operator can understand one tenant without jumping across unrelated modules. The route is keyed by `/superadmin/gyms/[id]`, and every Gym 360 API request must carry that same gym ID. No other gym may reuse the selected tenant's response.
+This feature owns the Superadmin business workflow implemented under `gyms/`. The active route is `/superadmin/gyms`. Business behavior, API contracts, validation, server-state hooks, fixtures, MSW handlers, and tests are kept within this feature boundary. Cross-feature business logic is outside this module.
 
 ## Directory Structure
+
 | Folder | Responsibility | Key Files |
 |---|---|---|
-| `gyms_components/` | Tenant detail presentation | `SuperadminGymDetailV1Client.tsx`, `SuperadminGymDetailClient/SuperadminGymDetailClient.tsx` |
-| `gyms_api/` | Gym 360 API boundary | `superadmin_gym_detail_business_overview_api.ts` |
-| `gyms_types/` | Gym 360 data/schema/page-prop contracts | `SuperadminGymDetailV1Types.ts`, `SuperadminGymDetailPageTypes.ts` |
-| `gyms_utils/` | TanStack Query orchestration | `useSuperadminGymDetailV1.ts` |
-| `gyms_mocks/handlers/` | Gym-ID-aware MSW handler | `SuperadminGymDetailV1MockHandlers.ts` |
-| `gyms_mocks/fixtures/` | Full fixture per gym ID | `SuperadminGymDetailV1MockFixtures.ts` |
+| `[id]/` | Feature-owned responsibility for [id]. | `error.tsx`, `loading.tsx`, `not-found.tsx`, `page.tsx` |
+| `add/` | Feature-owned responsibility for add. | `error.tsx`, `loading.tsx`, `page.tsx` |
+| `gyms_api/` | Feature-owned responsibility for gyms api. | `SuperadminGymDetailBusinessOverviewApi.ts`, `SuperadminGymsApi.ts`, `SuperadminGymsBusinessControlsApi.ts` |
+| `gyms_mocks/` | Feature-owned responsibility for gyms mocks. | `(directory present; no direct files)` |
+| `gyms_store/` | Feature-owned responsibility for gyms store. | `useSuperadminGymGhostLoginStore.ts`, `useSuperadminGymsStore.ts` |
+| `gyms_tests/` | Feature-owned responsibility for gyms tests. | `SuperadminGymDetailBusinessOverview.test.ts`, `SuperadminGymsBasic.test.tsx`, `SuperadminGymsBusinessControls.test.ts` |
+| `gyms_types/` | Feature-owned responsibility for gyms types. | `SuperadminGymDetailClientTypes.ts`, `SuperadminGymDetailPageTypes.ts`, `SuperadminGymDetailTypes.ts`, `SuperadminGymsPlanTypes.ts`, `SuperadminGymsSchema.ts`, `SuperadminGymsTableSortIconTypes.ts`, `SuperadminGymsTableTypes.ts`, `SuperadminGymsTypes.ts`, `SuperadminGymsV1Types.ts` |
+| `gyms_utils/` | Feature-owned responsibility for gyms utils. | `SuperadminGymsConstants.ts`, `SuperadminGymsSchemas.ts`, `SuperadminGymsV1Constants.ts`, `SuperadminGymsValidationSchemas.ts`, `useSuperadminGymDetail.ts`, `useSuperadminGymDetail.test.tsx`, `useSuperadminGymDetail.ts`, `useSuperadminGymsV1.ts` |
+
+## Approved External Dependencies
+
+### Application Infrastructure
+- `@/app/superadmin/superadmin_components` — role-shell/generic interaction infrastructure only.
+- `@/lib/*` and `@/components/*` — only approved application infrastructure imported by this feature.
+
+### Business Feature Dependencies
+- None
+
+### Role-Level Business Dependencies
+- None
 
 ## Feature Inventory
-| Feature | Route | What the Superadmin Can Do | Main API Calls | Status |
+
+| Surface | Route | Implemented User Actions | API Boundary | Status |
 |---|---|---|---|---|
-| Overview | `/superadmin/gyms/[id]` | Review the selected gym's health, recurring income, and support signals | `GET /api/superadmin/gym-detail/business-overview?gymId=:id` | Implemented; gym-ID wiring fixed |
-| Subscription | `/superadmin/gyms/[id]` | Review plan, start date, next renewal, and monthly income | Same endpoint | Implemented |
-| Billing | `/superadmin/gyms/[id]` | Review next payment, failed payments, discount, monthly income | Same endpoint | Implemented |
-| Usage | `/superadmin/gyms/[id]` | Review members, storage, messaging, and staff usage against limits | Same endpoint | Implemented |
-| Health | `/superadmin/gyms/[id]` | Review combined health, login trend, member trend, payment failures, and open tickets | Same endpoint | Implemented |
-| Activity | `/superadmin/gyms/[id]` | Review recent account activity | Same endpoint | Implemented |
-| Support | `/superadmin/gyms/[id]` | Review open tickets, response time, and satisfaction | Same endpoint | Implemented |
+| Superadmin Gym Detail | `/superadmin/gyms` | bulk action; confirm delete; export gyms; row click; row key down; search change; sort; submit | `SuperadminGymDetailBusinessOverviewApi.ts`, `SuperadminGymsApi.ts`, `SuperadminGymsBusinessControlsApi.ts` | Source-verified; host runtime pending |
 
-## Data and State Architecture
-- Query key: `['superadmin', 'gym', 'detail-business-overview', gymId]`.
-- API call: `fetchGymDetailBusinessOverview(gymId)`.
-- URL builder: `SuperadminGymDetailV1UrlConfig.BACKEND_API.BY_GYM(gymId)`.
-- MSW fixture lookup: exact `gymId` key; missing IDs return a not-found response.
-- The route Server Component passes the same `id` to both Gym Detail clients.
+## User Flows & Interactions
 
-## API Contract
-| Function | Method | Endpoint | Request | Response `data` |
-|---|---|---|---|---|
-| `fetchGymDetailBusinessOverview(gymId)` | GET | `/api/superadmin/gym-detail/business-overview?gymId=:gymId` | `gymId` | `SuperadminGymDetailV1Data` |
+1. Open the active route and load the feature-owned query/API boundary.
+2. Apply the available search, filter, sort, pagination, form, or row actions exposed by the current client surface.
+3. Mutations go through feature-owned API contracts and, in MSW mode, feature-owned handlers/fixtures.
+4. Success/error state is reconciled back into the same feature surface.
 
-## UI Data Requirements
-Every Gym 360 section is backed by `SuperadminGymDetailV1Data`: `gymId`, `gymName`, `tabs`, health score/trends/failures/tickets, usage labels/used/limit/percent, billing dates/failures/discount/income, support tickets/response/satisfaction, activity date/event, subscription plan/dates/income.
+## Verification Notes
+- Active route pages mount one primary client tree; no `V1Client` import is mounted from route `page.tsx`.
+- Mutable mock-state handlers have reset functions covered by tests where present.
+- Deprecated marker-only and JSON-stringify tautology tests were removed from the module test tree.
+- Dependency-backed `tsc`, lint, Vitest runtime, Playwright, and real browser responsive execution require the host application environment and remain unverified here.
 
-## Permissions and Security
-- Required role: `SUPERADMIN`.
-- The gym ID is a route identifier, not an authorization boundary. Backend authorization remains authoritative.
-- No cross-role business imports.
-
-## Loading, Empty, and Error States
-- Gym detail route has `loading.tsx`, `error.tsx`, and `not-found.tsx`.
-- Gym 360 client shows a structure-matching loading skeleton.
-- API errors show a safe retry state without raw server details.
-
-## Edge Cases and AI Warnings
-- **Never omit gymId:** the selected route ID must be present in the hook query key and API request.
-- **Never reuse another gym fixture:** mock lookup is keyed by the requested ID.
-- **Never use array index as a key:** usage and activity entries have stable derived domain keys.
-- **Keep the response complete:** subscription, billing, usage, health, activity, and support fields must all remain in the schema and fixture.
-- **Do not add a second endpoint contract just for the client:** the same module contract must serve mock and real backend paths.
-- **Nullable fields must use `displayValue()` where applicable.**
-
-## Component Responsibility Map
-| Component | Responsibility |
-|---|---|
-| `SuperadminGymDetailV1Client.tsx` | Renders Gym 360 tabs and the selected gym's business overview. |
-| `SuperadminGymDetailClient.tsx` | Preserves the existing Superadmin gym profile/detail experience. |
-
-## External Infrastructure Dependencies
-- `@/lib/api`
-- `@/lib/formatters`
-- `@tanstack/react-query`
-- `msw`
-- Next.js App Router route infrastructure.
+## Rule Compliance Checklist
+- [x] Canonical feature-owned API/type directories are used.
+- [x] No active route page mounts a parallel `V1Client` tree.
+- [x] Module-owned mock reset coverage is present where mutable handlers exist.
+- [x] Feature docs contain a concrete directory map and compliance checklist.
+- [x] No marker-only or JSON-stringify tautology test remains.
+- [ ] Host dependency-backed build/lint/runtime verification — unavailable in source-only package.

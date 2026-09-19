@@ -3,9 +3,8 @@
 
 import { Users } from 'lucide-react';
 
-interface AdminMembersEmptyStateProps {
-  hasFilters: boolean;
-}
+import type { AdminMembersEmptyStateProps } from '@/app/admin/members/members_types/AdminMembersEmptyStatePropsTypes';
+
 
 export default function AdminMembersEmptyState({ hasFilters }: AdminMembersEmptyStateProps) {
   return (
@@ -14,7 +13,7 @@ export default function AdminMembersEmptyState({ hasFilters }: AdminMembersEmpty
         <Users size={28} className="text-secondary" />
       </div>
       <div>
-        <p className="text-base font-semibold text-foreground">
+        <p className="text-base font-semibold text-primary">
           {hasFilters ? 'No members match your filters' : 'No members found'}
         </p>
         <p className="text-sm text-secondary mt-1">

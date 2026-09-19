@@ -12,7 +12,7 @@ import AdminHrPayrollTable from '@/app/admin/hr/hr_components/AdminHrPayrollTabl
 import AdminHrAdvanceTable from '@/app/admin/hr/hr_components/AdminHrAdvanceTable/AdminHrAdvanceTable';
 import AdminHrDueTable from '@/app/admin/hr/hr_components/AdminHrDueTable/AdminHrDueTable';
 import AdminHrLedgerTable from '@/app/admin/hr/hr_components/AdminHrLedgerTable/AdminHrLedgerTable';
-import AdminTableSkeleton from '@/app/admin/admin_components/AdminShared/AdminTableSkeleton';
+import AdminTableSkeleton from '@/app/admin/admin_layout/AdminShared/AdminTableSkeleton';
 
 export default function AdminHrTabs() {
   const [activeTab, setActiveTab] = useState(HR_TABS[0]);
@@ -20,7 +20,7 @@ export default function AdminHrTabs() {
   const { data: branches = [] } = useAdminHrBranchReference();
 
   return (
-    <div className="rounded-xl shadow-sm border overflow-hidden bg-card border-border">
+    <div className="rounded-xl shadow-card border overflow-hidden bg-card border-border">
       <div className="border-b border-border flex flex-wrap gap-4 justify-between items-center p-2 sm:p-0">
         <div className="flex overflow-x-auto">
           {HR_TABS.map(t => (
@@ -28,7 +28,7 @@ export default function AdminHrTabs() {
               type="button"
               key={t} 
               onClick={() => { setActiveTab(t);  setSearch(''); }}
-              className={`px-5 py-3.5 text-sm font-medium motion-safe:transition-colors border-b-2 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${activeTab === t ? 'text-primary border-primary bg-primary/5' : 'text-secondary border-transparent hover:opacity-80 bg-transparent'}`}
+              className={`px-5 py-3.5 text-sm font-medium motion-safe:transition-colors border-b-2 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${activeTab === t ? 'text-primary border-primary bg-surface-highlight' : 'text-secondary border-transparent hover:opacity-80 bg-transparent'}`}
             >
               {t}
             </button>
@@ -41,7 +41,7 @@ export default function AdminHrTabs() {
               value={search} 
               onChange={e => { setSearch(e.target.value);  }} 
               placeholder={`Search ${activeTab?.toLowerCase() || 'staff'}...`} 
-              className="pl-9 pr-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus-visible:outline-none focus-visible:ring-2 w-40 sm:w-full sm:w-64  bg-card text-foreground"
+              className="pl-9 pr-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus-visible:outline-none focus-visible:ring-2 w-40 sm:w-full sm:w-64  bg-card text-primary"
             />
           </div>
           {activeTab === 'Staff' && (
@@ -49,7 +49,7 @@ export default function AdminHrTabs() {
               <select
                 value={branchFilter}
                 onChange={e => { setBranchFilter(e.target.value);  }}
-                className="px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 bg-card text-foreground"
+                className="px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 bg-card text-primary"
               >
                 <option value="All">All Branches</option>
                 {(branches as AdminHrBranchReference[]).map(b => (
@@ -59,7 +59,7 @@ export default function AdminHrTabs() {
               <select
                 value={roleFilter}
                 onChange={e => { setRoleFilter(e.target.value);  }}
-                className="px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 bg-card text-foreground"
+                className="px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 bg-card text-primary"
               >
                 <option value="All">All Roles</option>
                 <option value="Admin">Admin</option>
@@ -72,20 +72,20 @@ export default function AdminHrTabs() {
               type="month"
               value={payrollMonth}
               onChange={e => { setPayrollMonth(e.target.value);  }}
-              className="px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 bg-card text-foreground"
+              className="px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 bg-card text-primary"
             />
           )}
   <div className="px-4 flex flex-wrap gap-2">
     <button 
       onClick={loadAll} 
-      className="flex items-center gap-2 px-3 py-2 text-sm border border-border text-secondary rounded-lg hover:opacity-80 motion-safe:transition-opacity"
+      className="flex items-center gap-2 px-3 py-2 text-sm border border-border text-secondary rounded-lg hover:opacity-80 motion-safe:transition-opacity motion-safe:duration-base"
     >
       <RefreshCw size={14} />
     </button>
     {activeTab === 'Staff' && (
       <button 
         onClick={openAdd} 
-        className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-lg hover:opacity-90 motion-safe:transition-opacity" 
+        className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-on-primary bg-primary rounded-lg hover:opacity-90 motion-safe:transition-opacity motion-safe:duration-base" 
       >
         <Plus size={14} /> Add Manager
       </button>
@@ -93,7 +93,7 @@ export default function AdminHrTabs() {
     {activeTab === 'Payroll' && (
       <button 
         onClick={openAddPayroll} 
-        className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-lg hover:opacity-90 motion-safe:transition-opacity" 
+        className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-on-primary bg-primary rounded-lg hover:opacity-90 motion-safe:transition-opacity motion-safe:duration-base" 
       >
         <Plus size={14} /> Add Payroll
       </button>

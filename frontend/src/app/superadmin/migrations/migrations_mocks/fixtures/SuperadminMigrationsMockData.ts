@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Module-owned mock fixture data for Superadmin.
-import type { MigrationLog } from '@/app/superadmin/migrations/superadmin_migrations_types/superadmin_migrations_types';
+import type { MigrationLog } from '@/app/superadmin/migrations/migrations_types/SuperadminMigrationsTypes';
 export const MOCK_MIGRATIONS: MigrationLog[] = [
     {
         id: 'mig-1',

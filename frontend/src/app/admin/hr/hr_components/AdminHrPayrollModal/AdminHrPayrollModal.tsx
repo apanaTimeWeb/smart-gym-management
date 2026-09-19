@@ -48,13 +48,13 @@ export default function AdminHrPayrollModal() {
 
   return (
     <div data-admin-dialog="true" role="dialog" aria-modal="true" tabIndex={-1} className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-overlay">
-      <div className="w-full max-w-md rounded-2xl shadow-xl flex flex-col max-h-screen bg-card border-2 border-warning">
+      <div className="w-full max-w-md rounded-2xl shadow-dialog flex flex-col max-h-screen bg-card border-2 border-warning">
         
         <div className="flex items-center justify-between px-8 py-5 border-b border-border">
-          <h2 className="text-xl font-bold text-foreground">
+          <h2 className="text-xl font-bold text-primary">
             Disburse Payroll
           </h2>
-          <button onClick={() => setShowPayrollModal(false)} className="p-2 rounded-full hover:bg-primary/10 motion-safe:transition-colors text-secondary hover:text-primary">
+          <button onClick={() => setShowPayrollModal(false)} className="p-2 rounded-full hover:bg-primary-subtle motion-safe:transition-colors text-secondary hover:text-primary motion-safe:duration-base">
             <X size={20} />
           </button>
         </div>
@@ -84,7 +84,7 @@ export default function AdminHrPayrollModal() {
               <input 
                 type="month"
                 {...register('month')}
-                className="w-full px-4 py-3 border border-border rounded-xl text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-foreground motion-safe:transition-all motion-safe:duration-200"
+                className="w-full px-4 py-3 border border-border rounded-xl text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-primary motion-safe:transition-all motion-safe:duration-base"
               />
               {errors.month && <p className="text-danger text-xs mt-1.5">{errors.month.message as string}</p>}
             </div>
@@ -95,7 +95,7 @@ export default function AdminHrPayrollModal() {
                 type="number" min="0" onKeyDown={(e) => { if (['e', 'E', '-', '+'].includes(e.key)) e.preventDefault(); }}
                 {...register('amount', { valueAsNumber: true })}
                 readOnly
-                className="w-full px-4 py-3 border border-border rounded-xl text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-foreground cursor-not-allowed opacity-80"
+                className="w-full px-4 py-3 border border-border rounded-xl text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-primary cursor-not-allowed opacity-80"
               />
               <p className="text-xs text-secondary mt-1.5">
                 {calculationInfo ? calculationInfo : "Amount is automatically set to the staff's base salary."}
@@ -108,7 +108,7 @@ export default function AdminHrPayrollModal() {
               <textarea 
                 {...register('notes')}
                 rows={3}
-                className="w-full px-4 py-3 rounded-xl border border-border text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-safe:transition-all motion-safe:duration-200 resize-none bg-input text-foreground"
+                className="w-full px-4 py-3 rounded-xl border border-border text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-safe:transition-all motion-safe:duration-base resize-none bg-input text-primary"
                 placeholder="Optional notes..."
               />
             </div>
@@ -116,11 +116,11 @@ export default function AdminHrPayrollModal() {
           </form>
         </div>
 
-        <div className="px-8 py-5 border-t border-border flex justify-end gap-3 bg-card/50">
+        <div className="px-8 py-5 border-t border-border flex justify-end gap-3 bg-card">
           <button 
             type="button" 
             onClick={() => setShowPayrollModal(false)}
-            className="px-6 py-2.5 rounded-xl text-sm font-semibold border border-border motion-safe:transition-colors text-secondary hover:bg-primary/5 hover:text-primary"
+            className="px-6 py-2.5 rounded-xl text-sm font-semibold border border-border motion-safe:transition-colors text-secondary hover:bg-surface-highlight hover:text-primary motion-safe:duration-base"
           >
             Cancel
           </button>
@@ -128,9 +128,9 @@ export default function AdminHrPayrollModal() {
             type="submit" 
             form="payroll-form"
             disabled={saving}
-            className="flex items-center gap-2 px-8 py-2.5 rounded-xl text-sm font-bold text-primary-foreground motion-safe:transition-all hover:shadow-lg hover:shadow-primary/30 motion-safe:active:scale-95 disabled:opacity-70 bg-primary"
+            className="flex items-center gap-2 px-8 py-2.5 rounded-xl text-sm font-bold text-primary motion-safe:transition-all hover:shadow-dialog motion-safe:active:scale-95 disabled:opacity-70 bg-primary motion-safe:duration-base"
           >
-            {saving ? <div className="w-4 h-4 border-2 border-border/30 border-t-white rounded-full motion-safe:animate-spin" /> : <Check size={16} />}
+            {saving ? <div className="w-4 h-4 border-2 border-border border-t-white rounded-full motion-safe:animate-spin motion-safe:duration-base" /> : <Check size={16} />}
             {saving ? 'Saving...' : 'Disburse Payroll'}
           </button>
         </div>

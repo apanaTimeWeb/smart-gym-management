@@ -1,7 +1,6 @@
 "use client";
 // RESPONSIBILITY: Provides the implementation for AdminSalesMain.tsx functionality within its module.
 import { useAdminSalesLogic } from '@/app/admin/sales/sales_context/useAdminSalesLogic';
-import { useAdminSalesStore } from '@/app/admin/sales/sales_store/useAdminSalesStore';
 import AdminSalesToolbar from '@/app/admin/sales/sales_components/AdminSalesToolbar/AdminSalesToolbar';
 import AdminSalesTabs from '@/app/admin/sales/sales_components/AdminSalesTabs/AdminSalesTabs';
 import AdminSalesOverview from '@/app/admin/sales/sales_components/AdminSalesOverview/AdminSalesOverview';
@@ -9,7 +8,6 @@ import AdminSalesMembershipReport from '@/app/admin/sales/sales_components/Admin
 import AdminSalesPendingPayments from '@/app/admin/sales/sales_components/AdminSalesPendingPayments/AdminSalesPendingPayments';
 import AdminSalesAllMemberships from '@/app/admin/sales/sales_components/AdminSalesAllMemberships/AdminSalesAllMemberships';
 import AdminSalesStoreSales from '@/app/admin/sales/sales_components/AdminSalesStoreSales/AdminSalesStoreSales';
-import AdminToast from '@/app/admin/admin_components/AdminFeedback/AdminToast';
 import type { SalesInitialData } from '@/app/admin/sales/sales_types/AdminSalesTypes';
 
 export default function AdminSalesMain({ initialData }: { initialData?: SalesInitialData | null }) {
@@ -17,11 +15,11 @@ export default function AdminSalesMain({ initialData }: { initialData?: SalesIni
 
 
   return (
-    <div className="min-h-full pb-10 bg-background text-foreground">
+    <div className="min-h-full pb-10 bg-page text-primary">
       <div className="p-6 space-y-5">
         <AdminSalesToolbar />
 
-        <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
+        <div className="bg-card rounded-xl shadow-card border border-border overflow-hidden">
           <AdminSalesTabs />
 
           <div className="p-5">

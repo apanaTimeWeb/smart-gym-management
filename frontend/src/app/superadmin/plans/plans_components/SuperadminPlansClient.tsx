@@ -10,10 +10,10 @@ export default function SuperadminPlansClient() {
     return (<div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">Subscription Plans</h1>
+          <h1 className="text-3xl font-bold text-primary">Subscription Plans</h1>
           <p className="text-secondary mt-1">Manage pricing tiers and limits for gyms.</p>
         </div>
-        <button onClick={openCreateModal} className="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-hover motion-safe:transition-colors motion-safe:active:scale-95">
+        <button onClick={openCreateModal} className="bg-primary text-on-primary px-4 py-2 rounded-lg font-medium hover:bg-primary-hover motion-safe:transition-colors motion-safe:active:scale-95">
           Create New Plan
         </button>
       </div>

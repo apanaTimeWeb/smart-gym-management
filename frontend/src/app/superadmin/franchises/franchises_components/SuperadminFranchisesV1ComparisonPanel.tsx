@@ -1,10 +1,10 @@
 // RESPONSIBILITY: Renders the Superadmin franchises V1 Franchise comparison view.
 'use client';
 import { formatCurrency, formatNumber, formatPercent1dp } from '@/lib/formatters';
-import SuperadminV1Panel from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminV1Panel';
+import Panel from '@/components/ui/Panel';
 import type { SuperadminFranchisesV1SectionProps } from '@/app/superadmin/franchises/franchises_types/SuperadminFranchisesV1Types.ts';
 export default function SuperadminFranchisesV1ComparisonPanel({ data }: SuperadminFranchisesV1SectionProps) {
-    return <SuperadminV1Panel title="Franchise comparison" description="Income, growth, branch count, and health by franchise group.">
+    return <Panel title="Franchise comparison" description="Income, growth, branch count, and health by franchise group.">
   <div className="overflow-x-auto">
     <table className="w-full text-sm">
       <thead>
@@ -28,19 +28,19 @@ export default function SuperadminFranchisesV1ComparisonPanel({ data }: Superadm
       </thead>
       <tbody>
         {data.franchises.map((f) => <tr key={f.name} className="border-b border-border">
-          <td className="px-3 py-3 font-medium text-foreground">
+          <td className="px-3 py-3 font-medium text-primary">
             {f.name}
           </td>
           <td className="px-3 py-3 text-secondary">
             {f.branches}
           </td>
-          <td className="px-3 py-3 text-foreground">
+          <td className="px-3 py-3 text-primary">
             {formatCurrency(f.income)}
           </td>
           <td className={f.growth >= 0 ? 'px-3 py-3 text-success' : 'px-3 py-3 text-danger'}>
             {formatPercent1dp(f.growth)}
           </td>
-          <td className="px-3 py-3 text-foreground">
+          <td className="px-3 py-3 text-primary">
             {formatNumber(f.health)}
             /100
           </td>
@@ -48,5 +48,5 @@ export default function SuperadminFranchisesV1ComparisonPanel({ data }: Superadm
       </tbody>
     </table>
   </div>
-    </SuperadminV1Panel>;
+    </Panel>;
 }

@@ -9,12 +9,12 @@ export default function AdminNotificationsClient() {
   const unreadCount = notifications.filter(n => n.unread).length;
 
   return (
-    <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
+    <div className="bg-card border border-border rounded-xl shadow-card overflow-hidden">
       <div className="flex items-center justify-between p-4 border-b border-border bg-header">
         <div className="flex flex-wrap items-center gap-2">
-          <span className="font-semibold text-foreground">All Notifications</span>
+          <span className="font-semibold text-primary">All Notifications</span>
           {unreadCount > 0 && (
-            <span className="bg-primary text-primary-foreground text-xs font-bold px-2 py-0.5 rounded-full">
+            <span className="bg-primary text-on-primary text-xs font-bold px-2 py-0.5 rounded-full">
               {unreadCount} New
             </span>
           )}
@@ -23,7 +23,7 @@ export default function AdminNotificationsClient() {
           <button 
             onClick={markAllAsRead}
             disabled={unreadCount === 0}
-            className="flex items-center gap-2 text-sm text-secondary hover:text-primary motion-safe:transition-colors disabled:opacity-50 disabled:hover:text-secondary"
+            className="flex items-center gap-2 text-sm text-secondary hover:text-primary motion-safe:transition-colors disabled:opacity-50 disabled:hover:text-secondary motion-safe:duration-base"
           >
             <CheckCheck size={16} /> Mark all read
           </button>

@@ -1,3 +1,4 @@
+import { StatusCodes } from 'http-status-codes';
 // RESPONSIBILITY: Owns MSW handlers for the Admin coupons feature.
 // DATA FLOW: coupons API client → module-owned MSW handler → module-owned fixture → TanStack Query/UI.
 import { http, HttpResponse } from 'msw';
@@ -13,14 +14,14 @@ function asRecord(value: unknown): JsonObject {
 }
 
 const ok = <T>(data: T, message = 'Success') =>
-  HttpResponse.json({ success: true, message, data, meta: { total: Array.isArray(data) ? data.length : 1, page: 1, limit: 50, totalPages: 1 } });
+  HttpResponse.json({ success: true, message, data });
 
 const paged = <T>(data: T[], page: number, limit: number, message = 'Success') => {
   const safeLimit = Math.max(1, limit);
   const safePage = Math.max(1, page);
   const start = (safePage - 1) * safeLimit;
   const pageData = data.slice(start, start + safeLimit);
-  return HttpResponse.json({ success: true, message, data: pageData, meta: { total: data.length, page: safePage, limit: safeLimit, totalPages: Math.max(1, Math.ceil(data.length / safeLimit)) } });
+  return HttpResponse.json({ success: true, message, data: pageData, meta: { total: data.length, page: safePage, limit: safeLimit, totalPages: Math.max(1, Math.ceil(data.length / safeLimit)), hasNextPage: safePage < Math.max(1, Math.ceil(data.length / safeLimit)), hasPrevPage: safePage > 1 } });
 };
 
 import { MOCK_COUPONS_EXPANDED } from '@/app/admin/coupons/coupons_mocks/fixtures/AdminCouponsMockFixtures';
@@ -87,7 +88,7 @@ export const adminCouponsMockHandlers = [
   http.post('*/admin/coupons/updateCoupon', async ({ request }) => {
     const body = asRecord(await parseRequestBody(request));
     const index = MOCK_COUPONS_EXPANDED.findIndex((c) => c.id === String(body.id));
-    if (index === -1) return HttpResponse.json({ success: false, message: 'Coupon not found' }, { status: 404 });
+    if (index === -1) return HttpResponse.json({ success: false, message: 'Coupon not found' }, { status: StatusCodes.NOT_FOUND });
     const updated = applyCouponUpdate(MOCK_COUPONS_EXPANDED[index]!, body);
     MOCK_COUPONS_EXPANDED[index] = updated;
     return ok(updated, 'Coupon updated');
@@ -95,14 +96,14 @@ export const adminCouponsMockHandlers = [
   http.delete('*/admin/coupons/deleteCoupon', async ({ request }) => {
     const body = asRecord(await parseRequestBody(request));
     const index = MOCK_COUPONS_EXPANDED.findIndex((c) => c.id === String(body.id));
-    if (index === -1) return HttpResponse.json({ success: false, message: 'Coupon not found' }, { status: 404 });
+    if (index === -1) return HttpResponse.json({ success: false, message: 'Coupon not found' }, { status: StatusCodes.NOT_FOUND });
     MOCK_COUPONS_EXPANDED.splice(index, 1);
     return ok(null, 'Coupon deleted');
   }),
   http.post('*/admin/coupons/toggleCoupon', async ({ request }) => {
     const body = asRecord(await parseRequestBody(request));
     const record = MOCK_COUPONS_EXPANDED.find((c) => c.id === String(body.id));
-    if (!record) return HttpResponse.json({ success: false, message: 'Coupon not found' }, { status: 404 });
+    if (!record) return HttpResponse.json({ success: false, message: 'Coupon not found' }, { status: StatusCodes.NOT_FOUND });
     record.status = record.status === 'active' ? 'inactive' : 'active';
     return ok(record, 'Coupon status updated');
   })

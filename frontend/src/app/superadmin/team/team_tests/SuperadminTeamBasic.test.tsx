@@ -1,3 +1,4 @@
+import { resetSuperadminTeamMockState } from '@/app/superadmin/team/team_mocks/handlers/SuperadminTeamMockHandlers';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
 import SuperadminTeamClient from '@/app/superadmin/team/team_components/SuperadminTeamClient';
@@ -5,6 +6,10 @@ import { SUPERADMIN_TEAM_MOCK_FIXTURE } from '@/app/superadmin/team/team_mocks/f
 import { useSuperadminTeamPage } from '@/app/superadmin/team/team_utils/useSuperadminTeamPage';
 vi.mock('@/app/superadmin/team/team_utils/useSuperadminTeamPage', () => ({ useSuperadminTeamPage: vi.fn() }));
 const mockedUsePage = vi.mocked(useSuperadminTeamPage);
+beforeEach(() => {
+  resetSuperadminTeamMockState();
+});
+
 describe('Superadmin Platform Team', () => {
     beforeEach(() => {
         mockedUsePage.mockReset();
@@ -12,7 +17,7 @@ describe('Superadmin Platform Team', () => {
     it('renders loading and real fixture-backed success states', () => {
         mockedUsePage.mockReturnValue({
             data: null,
-            isLoading: true,
+            isPending: true,
             isError: false,
             refetch: vi.fn(),
         });
@@ -21,7 +26,7 @@ describe('Superadmin Platform Team', () => {
         unmount();
         mockedUsePage.mockReturnValue({
             data: SUPERADMIN_TEAM_MOCK_FIXTURE,
-            isLoading: false,
+            isPending: false,
             isError: false,
             refetch: vi.fn(),
         });
@@ -34,7 +39,7 @@ describe('Superadmin Platform Team', () => {
         const refetch = vi.fn();
         mockedUsePage.mockReturnValue({
             data: null,
-            isLoading: false,
+            isPending: false,
             isError: true,
             refetch,
         });
@@ -46,7 +51,7 @@ describe('Superadmin Platform Team', () => {
     it('renders dedicated empty states when lists contain no records', () => {
         mockedUsePage.mockReturnValue({
             data: { ...SUPERADMIN_TEAM_MOCK_FIXTURE, users: [], roles: [], alerts: [] },
-            isLoading: false,
+            isPending: false,
             isError: false,
             refetch: vi.fn(),
         });

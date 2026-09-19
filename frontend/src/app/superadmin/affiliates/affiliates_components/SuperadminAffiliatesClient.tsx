@@ -8,11 +8,12 @@ import SuperadminAffiliatesTable from '@/app/superadmin/affiliates/affiliates_co
 import SuperadminAffiliatesEmptyState from '@/app/superadmin/affiliates/affiliates_components/SuperadminAffiliatesEmptyState/SuperadminAffiliatesEmptyState';
 import { SuperadminAffiliateModal } from '@/app/superadmin/affiliates/affiliates_components/SuperadminAffiliateModal';
 import SuperadminAffiliatesPayoutHistory from '@/app/superadmin/affiliates/affiliates_components/SuperadminAffiliatesPayoutHistory/SuperadminAffiliatesPayoutHistory';
-import { SuperadminErrorBoundary } from '@/app/superadmin/superadmin_components/SuperadminLayout/SuperadminErrorBoundary';
-export type AffiliatesTab = 'AFFILIATES' | 'PAYOUTS';
+import { SuperadminErrorBoundary } from '@/app/superadmin/superadmin_layout/SuperadminLayout/SuperadminErrorBoundary';
+import type { AffiliatesTab } from '@/app/superadmin/affiliates/affiliates_types/SuperadminAffiliatesClientTypes';
+
 export default function SuperadminAffiliatesClient() {
     const [activeTab, setActiveTab] = useState<AffiliatesTab>('AFFILIATES');
-    const { affiliates, searchQuery, setSearchQuery, statusFilter, setStatusFilter, isModalOpen, setIsModalOpen, form, handleAddAffiliate, handleEditAffiliate, handleToggleAffiliateStatus, handleDeleteAffiliate, handlePayCommission, openEditModal, editingAffiliate, setEditingAffiliate, totalAffiliates, totalCommission, fetchState, error, isMutating, startDate, setStartDate, endDate, setEndDate, currentPage, totalPages, setPage, } = useSuperadminAffiliatesPage();
+    const { affiliates, searchQuery, setSearchQuery, statusFilter, setStatusFilter, isModalOpen, setIsModalOpen, form, handleAddAffiliate, handleEditAffiliate, handleToggleAffiliateStatus, handleDeleteAffiliate, handlePayCommission, openEditModal, editingAffiliate, setEditingAffiliate, totalAffiliates, totalCommission, payoutHistory, payoutHistoryLoading, payoutHistoryError, retryPayoutHistory, fetchState, error, isMutating, startDate, setStartDate, endDate, setEndDate, currentPage, totalPages, setPage, } = useSuperadminAffiliatesPage();
     if (fetchState === 'pending')
         return (<div className="space-y-6 motion-safe:animate-pulse">
       <div className="h-8 bg-card rounded w-48"/>
@@ -28,13 +29,13 @@ export default function SuperadminAffiliatesClient() {
 
       <SuperadminAffiliatesStatsBar totalAffiliates={totalAffiliates} totalCommission={totalCommission}/>
 
-      <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
+      <div className="bg-card border border-border rounded-xl shadow-card overflow-hidden">
         <div className="p-4 border-b border-border flex flex-col md:flex-row gap-4 justify-between items-center bg-input/20">
           <div className="flex bg-input border border-border rounded-lg p-1 w-full md:w-auto">
-            <button onClick={() => setActiveTab('AFFILIATES')} className={`flex-1 md:flex-none px-4 py-2 text-sm rounded-md font-medium motion-safe:transition-colors ${activeTab === 'AFFILIATES' ? 'bg-background text-foreground shadow-sm' : 'text-secondary hover:text-foreground hover:bg-background/50'}`}>
+            <button onClick={() => setActiveTab('AFFILIATES')} className={`flex-1 md:flex-none px-4 py-2 text-sm rounded-md font-medium motion-safe:transition-colors ${activeTab === 'AFFILIATES' ? 'bg-page text-primary shadow-card' : 'text-secondary hover:text-primary hover:bg-page/50'}`}>
               Affiliates List
             </button>
-            <button onClick={() => setActiveTab('PAYOUTS')} className={`flex-1 md:flex-none px-4 py-2 text-sm rounded-md font-medium motion-safe:transition-colors ${activeTab === 'PAYOUTS' ? 'bg-background text-foreground shadow-sm' : 'text-secondary hover:text-foreground hover:bg-background/50'}`}>
+            <button onClick={() => setActiveTab('PAYOUTS')} className={`flex-1 md:flex-none px-4 py-2 text-sm rounded-md font-medium motion-safe:transition-colors ${activeTab === 'PAYOUTS' ? 'bg-page text-primary shadow-card' : 'text-secondary hover:text-primary hover:bg-page/50'}`}>
               Payout History
             </button>
           </div>
@@ -42,7 +43,7 @@ export default function SuperadminAffiliatesClient() {
 
         <SuperadminErrorBoundary variant="inline">
           {activeTab === 'PAYOUTS' ? (<div className="p-4">
-              <SuperadminAffiliatesPayoutHistory affiliates={affiliates}/>
+              <SuperadminAffiliatesPayoutHistory payouts={payoutHistory} isPending={payoutHistoryLoading} isError={payoutHistoryError} onRetry={retryPayoutHistory}/>
             </div>) : (affiliates.length === 0 ? (<SuperadminAffiliatesEmptyState onAddClick={() => setIsModalOpen(true)}/>) : (<SuperadminAffiliatesTable onAddClick={() => setIsModalOpen(true)} affiliates={affiliates} onToggleStatus={handleToggleAffiliateStatus} onEdit={openEditModal} onDelete={handleDeleteAffiliate} onPayCommission={handlePayCommission} currentPage={currentPage} totalPages={totalPages} setPage={setPage}/>))}
         </SuperadminErrorBoundary>
       </div>
@@ -54,3 +55,5 @@ export default function SuperadminAffiliatesClient() {
         }} form={form} onSubmit={editingAffiliate ? handleEditAffiliate : handleAddAffiliate} isEdit={!!editingAffiliate} isMutating={isMutating}/>
     </div>);
 }
+
+export type { AffiliatesTab } from '@/app/superadmin/affiliates/affiliates_types/SuperadminAffiliatesClientTypes';

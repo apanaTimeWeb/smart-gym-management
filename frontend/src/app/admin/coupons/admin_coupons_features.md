@@ -74,7 +74,7 @@ All calls go through `couponsApi` in `coupons_api/AdminCouponsApi.ts`.
 
 ## Permissions and Security
 
-- **Required role:** `ADMIN` — enforced by `middleware.ts`
+- **Required role:** `ADMIN` — enforced by `@/middleware.ts`
 - **Destructive actions:** Delete uses `useAdminConfirm()` — never `window.confirm()`
 - **Expired coupon guard:** Edit button disabled when `coupon.status === 'EXPIRED'`
 - **Cross-role isolation:** Zero imports from `/manager`, `/trainer`, `/superadmin`
@@ -116,7 +116,7 @@ All calls go through `couponsApi` in `coupons_api/AdminCouponsApi.ts`.
 - [x] Rule 7: Type Isolation — all types in `coupons_types/`
 - [x] Rule 8: Server/Client Boundary — `page.tsx` = Server Component
 - [x] Rule 9: `loading.tsx` + `error.tsx` + `not-found.tsx` present
-- [x] Rule 11: `coupons_url_config.ts` present
+- [x] Rule 11: `admin_coupons_url_config.ts` present
 - [x] Rule 13: Feature Map — this document
 - [x] Rule 15B: Modal uses React Hook Form + Zod
 - [x] Rule 40: `coupons_forbidden.md` present

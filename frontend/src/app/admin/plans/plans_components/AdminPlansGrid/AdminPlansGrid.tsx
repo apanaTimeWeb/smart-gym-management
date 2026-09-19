@@ -3,28 +3,25 @@ import { formatCurrency } from '@/lib/formatters';
 // RESPONSIBILITY: Renders the grid of membership plan cards with edit/delete actions and pagination.
 
 import { Edit2, Trash2, Tag, CheckCircle, Loader2, Snowflake } from 'lucide-react';
-import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/useAdminConfirm';
+import { useAdminConfirm } from '@/app/admin/admin_layout/AdminFeedback/useAdminConfirm';
 import { useAdminPlansLogic } from '@/app/admin/plans/plans_context/useAdminPlansLogic';
 import { useAdminPlansStore } from '@/app/admin/plans/plans_store/useAdminPlansStore';
-import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
-import { ADMIN_ITEMS_PER_PAGE } from '@/app/admin/admin_url_config';
+import AdminPagination from '@/app/admin/admin_layout/AdminShared/AdminPagination';
+import { PLANS_ITEMS_PER_PAGE } from '@/app/admin/plans/plans_utils/AdminPlansSharedConstants';
 
 
 export default function AdminPlansGrid() {
-  const { plans, status, saving, search, setSearch, currentPage, setCurrentPage, loadPlans, openAdd, openEdit, savePlan, deletePlan } = useAdminPlansLogic();
-  const { showModal, setShowModal, editId, form, setForm } = useAdminPlansStore();
-  const { confirm } = useAdminConfirm();
+  const { plans, totalItems, totalPages, status, currentPage, setCurrentPage, openEdit, deletePlan } = useAdminPlansLogic();
 
-  // Client-side filter on the already-fetched plans list (plans count is typically small, <100)
-  const filtered = plans.filter(p => p.name?.toLowerCase().includes(search.toLowerCase()));
-  const totalPages = Math.ceil(filtered.length / ADMIN_ITEMS_PER_PAGE);
-  const currentData = filtered.slice((currentPage - 1) * ADMIN_ITEMS_PER_PAGE, currentPage * ADMIN_ITEMS_PER_PAGE);
+  // Search/tier/pagination are server-backed; this component renders the query result directly.
+  const currentData = plans;
+
 
   if (status === 'pending') {
     return (
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1">
         {["row-1", "row-2", "row-3"].map((i) => (
-          <div key={i} className="h-96 bg-card rounded-2xl border border-border motion-safe:animate-pulse"></div>
+          <div key={i} className="h-96 bg-skeleton-base rounded-2xl border border-border motion-safe:animate-pulse motion-safe:duration-base"></div>
         ))}
       </div>
     );
@@ -32,7 +29,7 @@ export default function AdminPlansGrid() {
 
   if (status === 'error') {
     return (
-      <div className="text-center py-16 bg-card rounded-2xl border border-danger/30">
+      <div className="text-center py-16 bg-card rounded-2xl border border-danger">
         <p className="text-danger font-medium">Failed to load membership plans.</p>
         <p className="text-sm mt-1 text-secondary">Please check your connection and try again.</p>
       </div>
@@ -54,11 +51,11 @@ export default function AdminPlansGrid() {
           <div
             key={p.id}
             className={`bg-card border-2 rounded-2xl p-6 relative motion-safe:transition-all motion-safe:hover:scale-105 motion-safe:hover:-translate-y-1 ${
-              i === 1 ? 'border-warning shadow-lg shadow-warning/20' : 'border-border'
+              i === 1 ? 'border-warning shadow-card' : 'border-border'
             }`}
           >
             {i === 1 && (
-              <div className="bg-warning text-primary-foreground text-xs font-bold uppercase tracking-wider text-center py-1 absolute top-0 w-full left-0 rounded-t-2xl">
+              <div className="bg-warning text-warning text-xs font-bold uppercase tracking-wider text-center py-1 absolute top-0 w-full left-0 rounded-t-2xl">
                 Most Popular
               </div>
             )}
@@ -73,7 +70,7 @@ export default function AdminPlansGrid() {
                 <div className="flex gap-1">
                   <button
                     onClick={() => openEdit(p)}
-                    className="p-1.5 rounded-lg text-secondary hover:text-primary hover:bg-primary-subtle motion-safe:transition-all motion-safe:duration-200"
+                    className="p-1.5 rounded-lg text-secondary hover:text-primary hover:bg-primary-subtle motion-safe:transition-all motion-safe:duration-base"
                     title="Edit Plan"
                     aria-label={`Edit ${p.name}`}
                   >
@@ -84,7 +81,7 @@ export default function AdminPlansGrid() {
                     e.stopPropagation();
                     deletePlan(p.id);
                   }}
-                    className="p-1.5 rounded-lg text-danger hover:bg-danger-bg motion-safe:transition-all motion-safe:duration-200"
+                    className="p-1.5 rounded-lg text-danger hover:bg-danger motion-safe:transition-all motion-safe:duration-base"
                     title="Delete Plan"
                     aria-label={`Delete ${p.name}`}
                   >
@@ -117,10 +114,10 @@ export default function AdminPlansGrid() {
                   <Tag size={12} /> Features
                 </p>
                 <ul className="space-y-2.5">
-                  {p.features.map((f, idx) => (
-                    <li key={idx} className="flex items-start gap-2 text-sm text-secondary">
+                  {p.features.map((feature) => (
+                    <li key={`${p.id}-${feature}`} className="flex items-start gap-2 text-sm text-secondary">
                       <CheckCircle size={16} className="text-success flex-shrink-0 mt-0.5" />
-                      <span>{f}</span>
+                      <span>{feature}</span>
                     </li>
                   ))}
                   {p.freezeAllowed && (
@@ -139,8 +136,8 @@ export default function AdminPlansGrid() {
         <AdminPagination
           currentPage={currentPage}
           totalPages={totalPages}
-          totalItems={filtered.length}
-          itemsPerPage={ADMIN_ITEMS_PER_PAGE}
+          totalItems={totalItems}
+          itemsPerPage={PLANS_ITEMS_PER_PAGE}
           onPageChange={setCurrentPage}
         />
       </div>

@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Module-owned mock fixture data for Superadmin.
-import type { AnalyticsApiData, RevenueMetrics, MonthlyAnalyticsDataPoint, PlanRevenueBreakdown } from '@/app/superadmin/analytics/superadmin_analytics_types/superadmin_analytics_types';
+import type { AnalyticsApiData, RevenueMetrics, MonthlyAnalyticsDataPoint, PlanRevenueBreakdown } from '@/app/superadmin/analytics/analytics_types/SuperadminAnalyticsTypes';
 export const MOCK_REVENUE_METRICS: RevenueMetrics = {
     mrr: 150000,
     arr: 1800000,

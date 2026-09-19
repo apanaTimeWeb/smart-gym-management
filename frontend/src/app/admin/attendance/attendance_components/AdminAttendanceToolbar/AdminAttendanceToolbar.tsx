@@ -4,7 +4,7 @@
 import { Search } from 'lucide-react';
 import { useAdminAttendanceStore } from '@/app/admin/attendance/attendance_store/useAdminAttendanceStore';
 import { useAdminAttendanceBranchReference } from '@/app/admin/attendance/attendance_context/useAdminAttendanceBranchReference';
-import { AdminSearchableDropdown } from '@/app/admin/admin_components/AdminShared/AdminSearchableDropdown';
+import { AdminSearchableDropdown } from '@/app/admin/admin_layout/AdminShared/AdminSearchableDropdown/AdminSearchableDropdown';
 import { ATTENDANCE_STATUS_OPTIONS, DATE_RANGE_OPTIONS } from '@/app/admin/attendance/attendance_utils/AdminAttendanceSharedConstants';
 import type { AttendanceStatus, DateRangeFilter } from '@/app/admin/attendance/attendance_types/AdminAttendanceTypes';
 import type { AdminAttendanceBranchReference } from '@/app/admin/attendance/attendance_types/AdminAttendanceBranchReferenceTypes';
@@ -28,7 +28,7 @@ export default function AdminAttendanceToolbar() {
           placeholder="Search by member name or phone..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full pl-9 pr-4 py-2.5 bg-input border border-border rounded-xl text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary placeholder:text-secondary"
+          className="w-full pl-9 pr-4 py-2.5 bg-input border border-border rounded-xl text-sm text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary placeholder:text-secondary"
           aria-label="Search attendance records"
         />
       </div>

@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Owns feature-owned mock records and feature flag history used only by development/test handlers.
-import type { FeatureFlag, ReleaseNote, SuperadminFeatureHistoryEntry } from '@/app/superadmin/features/superadmin_features_types/superadmin_features_types';
+import type { FeatureFlag, ReleaseNote, SuperadminFeatureHistoryEntry } from '@/app/superadmin/features/features_types/SuperadminFeaturesTypes';
 export const SUPERADMIN_FEATURE_TENANTS = [
   { id: 't1', name: 'Iron Paradise', plan: 'Pro' }, { id: 't2', name: 'Fit Life Studio', plan: 'Basic' }, { id: 't3', name: 'CrossFit Box', plan: 'Enterprise' },
 ] as const;

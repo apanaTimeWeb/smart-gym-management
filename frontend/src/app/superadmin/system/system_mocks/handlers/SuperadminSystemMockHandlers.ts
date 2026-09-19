@@ -1,3 +1,4 @@
+import { StatusCodes } from 'http-status-codes';
 import { http, HttpResponse, delay } from 'msw';
 import type { ApiResponse } from '@/lib/api';
 import type { SuperadminSystemSlaRecord } from '@/app/superadmin/system/system_types/SuperadminSystemSlaTypes';
@@ -8,6 +9,10 @@ const MIGRATIONS_URL = '*/superadmin/system/migrations';
 const AUDIT_URL = '*/superadmin/audit-logs';
 const SLA_CREDIT_URL = '*/superadmin/system/sla/:tenantId/credit';
 let mockSlaRecords = SUPERADMIN_SYSTEM_MOCK_SLA_DATA.map((record) => ({ ...record }));
+
+export function resetSuperadminSystemMockState(): void {
+  mockSlaRecords = SUPERADMIN_SYSTEM_MOCK_SLA_DATA.map((record) => ({ ...record }));
+}
 export const superadminSystemHandlers = [
     http.get(BASE_URL, async ({ request }) => {
         await delay(250);
@@ -19,7 +24,7 @@ export const superadminSystemHandlers = [
     http.get(MIGRATIONS_URL, async () => HttpResponse.json<ApiResponse<{
         tenants: typeof MOCK_SYSTEM_TENANTS;
     }>>({ success: true, message: 'Success', data: { tenants: [...MOCK_SYSTEM_TENANTS] } })),
-    http.post(SLA_CREDIT_URL, async ({ params }) => { const tenantId = String(params.tenantId); const record = mockSlaRecords.find((item) => item.id === tenantId); if (!record) return HttpResponse.json<ApiResponse<null>>({ success: false, message: 'SLA tenant record was not found.', data: null }, { status: 404 }); record.creditIssued = true; return HttpResponse.json<ApiResponse<null>>({ success: true, message: `Downtime credit issued for ${record.name}.`, data: null }); }),
+    http.post(SLA_CREDIT_URL, async ({ params }) => { const tenantId = String(params.tenantId); const record = mockSlaRecords.find((item) => item.id === tenantId); if (!record) return HttpResponse.json<ApiResponse<null>>({ success: false, message: 'SLA tenant record was not found.', data: null }, { status: StatusCodes.NOT_FOUND }); record.creditIssued = true; return HttpResponse.json<ApiResponse<null>>({ success: true, message: `Downtime credit issued for ${record.name}.`, data: null }); }),
     http.post(`${MIGRATIONS_URL}/trigger`, async ({ request }) => {
         const body = await request.json() as {
             tenantId?: string;

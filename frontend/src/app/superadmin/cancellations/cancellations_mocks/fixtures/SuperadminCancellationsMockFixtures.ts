@@ -1,4 +1,4 @@
-import type { CancellationsAlert } from '@/app/superadmin/cancellations/cancellations_types/superadmin_cancellations_types';
+import type { CancellationsAlert } from '@/app/superadmin/cancellations/cancellations_types/SuperadminCancellationsTypes';
 
 export const MOCK_SUPERADMIN_CANCELLATIONS: CancellationsAlert[] = [
     { id: 'ca1', tenantId: 't1', gymName: 'Iron Paradise', ownerName: 'Alice', adminEmail: 'alice@iron.com', phone: '9876543210', plan: 'Pro', riskLevel: 'CRITICAL', actionStatus: 'PENDING', riskScore: 92, lastLoginDays: 30, memberDrop: 18, paymentFailures: 3, renewalDaysLeft: 5, mrrAtRisk: 5000, notes: 'High churn risk after payment failures', flaggedAt: '2026-09-15T10:00:00Z' },

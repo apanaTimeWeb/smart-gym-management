@@ -3,6 +3,9 @@ export const SalesUrlConfig = {
   PAGES: {
     SALES: '/admin/sales',
   },
+  EXTERNAL: {
+    WHATSAPP_WEB: (phone: string, message: string) => `https://wa.me/91${phone.replace(/\D/g, '')}?text=${encodeURIComponent(message)}`,
+  },
   BACKEND_API: {
     OVERVIEW: '/admin/sales/overview',
     REFERRAL_SOURCES: '/admin/sales/referral-sources',
@@ -10,5 +13,7 @@ export const SalesUrlConfig = {
     PENDING_PAYMENTS: '/admin/sales/pending-payments',
     ALL_MEMBERSHIPS: '/admin/sales/all-memberships',
     SUMMARY: '/admin/sales/summary',
+    STORE_ORDERS: '/admin/sales/store-orders',
+    STORE_SUMMARY: '/admin/sales/store-summary',
   }
 };

@@ -15,5 +15,5 @@ export const dataExportApi = {
   fetchJobs: async (params?: AdminDataExportQueryParams) => apiFetch<ApiResponse<ExportJob[]>>(`${AdminDataExportUrlConfig.api.base}/fetchJobs${buildQuery(params)}`, { method: 'GET', dataSchema: z.array(exportJobSchema) }),
   fetchKPIs: async () => apiFetch<ApiResponse<DataExportKPIData>>(`${AdminDataExportUrlConfig.api.base}/fetchKPIs`, { method: 'GET', dataSchema: dataExportKpiDataSchema }),
   createExport: async (payload: ExportFormValues) => apiFetch<ApiResponse<ExportJob>>(`${AdminDataExportUrlConfig.api.base}/createExport`, { method: 'POST', body: JSON.stringify(payload), dataSchema: exportJobSchema }),
-  deleteJob: async (id: string) => apiFetch<ApiResponse<null>>(`${AdminDataExportUrlConfig.api.base}/deleteJob`, { method: 'DELETE', body: JSON.stringify({ id }), dataSchema: z.null() }),
+  deleteJob: async (id: string, idempotencyKey: string) => apiFetch<ApiResponse<null>>(`${AdminDataExportUrlConfig.api.base}/deleteJob`, { method: 'DELETE', body: JSON.stringify({ id }), headers: { 'Idempotency-Key': idempotencyKey }, dataSchema: z.null() }),
 };

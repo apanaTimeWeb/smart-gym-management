@@ -3,7 +3,7 @@ import { SuperadminDashboardDateFilterDropdown } from '@/app/superadmin/dashboar
 export function SuperadminDashboardHeader() {
     return (<div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
       <div>
-        <h1 className="text-2xl font-bold text-foreground">SaaS Overview</h1>
+        <h1 className="text-2xl font-bold text-primary">SaaS Overview</h1>
         <p className="text-secondary mt-1 text-sm">
           Monitor the health and growth of your Multi-Tenant SaaS platform.
         </p>

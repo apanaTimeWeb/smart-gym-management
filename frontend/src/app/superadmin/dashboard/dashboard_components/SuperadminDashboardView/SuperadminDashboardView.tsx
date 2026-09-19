@@ -5,10 +5,10 @@ import { SuperadminDashboardKpiGrid } from '@/app/superadmin/dashboard/dashboard
 import { SuperadminDashboardCharts } from '@/app/superadmin/dashboard/dashboard_components/SuperadminDashboardView/SuperadminDashboardCharts';
 import { SuperadminDashboardRecentOnboards } from '@/app/superadmin/dashboard/dashboard_components/SuperadminDashboardView/SuperadminDashboardRecentOnboards';
 import { useSuperadminDashboardView } from '@/app/superadmin/dashboard/dashboard_components/SuperadminDashboardView/useSuperadminDashboardView';
-import { SuperadminErrorBoundary } from '@/app/superadmin/superadmin_components/SuperadminLayout/SuperadminErrorBoundary';
+import { SuperadminErrorBoundary } from '@/app/superadmin/superadmin_layout/SuperadminLayout/SuperadminErrorBoundary';
 export default function SuperadminDashboardView() {
-    const { isLoading, isError: error, apiData, timeRange } = useSuperadminDashboardView();
-    if (isLoading) {
+    const { isPending, isError: error, apiData, timeRange } = useSuperadminDashboardView();
+    if (isPending) {
         return (<div className="space-y-6">
         <div>
           <div className="h-8 w-48 bg-skeleton-base motion-safe:animate-pulse rounded"/>

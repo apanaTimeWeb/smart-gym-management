@@ -1,8 +1,6 @@
 // RESPONSIBILITY: Static hardcoded data and style constants for the Reports module.
 // All mock data lives here so the client component stays pure UI. Replace with API calls tomorrow.
-import type { RevenueRow, CancellationsRecord, TenantHealthScore } from '@/app/superadmin/reports/reports_types/superadmin_reports_types';
-/** Premium gold gradient applied to all KPI stat cards. Design §5a. */
-export const KPI_CARD_GRADIENT = 'linear-gradient(180deg, rgba(250,204,21,0.08), rgba(255,255,255,0.02))';
+import type { RevenueRow, CancellationsRecord, TenantHealthScore } from '@/app/superadmin/reports/reports_types/SuperadminReportsTypes';
 // Removed REVENUE_DATA, CANCELLATIONS_DATA, and HEALTH_DATA to enforce dynamic API usage.
 export const GRADE_STYLES: Record<string, string> = {
     A: 'bg-success/10 text-success border border-success/30',

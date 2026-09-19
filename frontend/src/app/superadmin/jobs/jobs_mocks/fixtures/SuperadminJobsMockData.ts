@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Module-owned mock fixture data for Superadmin.
-import type { BackgroundJob } from '@/app/superadmin/jobs/jobs_types/superadmin_jobs_types';
+import type { BackgroundJob } from '@/app/superadmin/jobs/jobs_types/SuperadminJobsTypes';
 export const MOCK_BACKGROUND_JOBS: BackgroundJob[] = [
     { id: 'job-1', queueName: 'billing', jobName: 'Process Monthly Invoices', status: 'COMPLETED', attempts: 1, createdAt: '2026-09-15T01:00:00Z' },
     { id: 'job-2', queueName: 'export', jobName: 'Export Tenant Data', status: 'FAILED', attempts: 3, error: 'Connection timeout to replica DB', createdAt: '2026-09-15T08:30:00Z' },

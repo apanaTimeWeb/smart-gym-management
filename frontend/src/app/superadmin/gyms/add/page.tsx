@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import SuperadminPageSuspenseSkeleton from '@/app/superadmin/superadmin_components/SuperadminPageSuspenseSkeleton';
+import SuperadminPageSuspenseSkeleton from '@/app/superadmin/superadmin_layout/SuperadminPageSuspenseSkeleton';
 // RESPONSIBILITY: Server Component that acts as the entry point for the Add Gym page.
 import SuperadminAddGymForm from '@/app/superadmin/gyms/gyms_components/SuperadminAddGymForm/SuperadminAddGymForm';
 export default function AddGymPage() {

@@ -1,9 +1,9 @@
 // RESPONSIBILITY: Renders the Superadmin jobs V1 Queue health view.
 'use client';
-import SuperadminV1Panel from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminV1Panel';
+import Panel from '@/components/ui/Panel';
 import type { SuperadminJobsV1SectionProps } from '@/app/superadmin/jobs/jobs_types/SuperadminJobsV1Types.ts';
 export default function SuperadminJobsV1QueueHealthTable({ data }: SuperadminJobsV1SectionProps) {
-    return <SuperadminV1Panel title="Queue health" description="See where background work is building up.">
+    return <Panel title="Queue health" description="See where background work is building up.">
   <div className="overflow-x-auto">
     <table className="w-full text-sm">
       <thead>
@@ -27,7 +27,7 @@ export default function SuperadminJobsV1QueueHealthTable({ data }: SuperadminJob
       </thead>
       <tbody>
         {data.queues.map((q) => <tr key={q.name} className="border-b border-border">
-          <td className="px-3 py-3 font-medium text-foreground">
+          <td className="px-3 py-3 font-medium text-primary">
             {q.name}
           </td>
           <td className="px-3 py-3 text-secondary">
@@ -46,5 +46,5 @@ export default function SuperadminJobsV1QueueHealthTable({ data }: SuperadminJob
       </tbody>
     </table>
   </div>
-    </SuperadminV1Panel>;
+    </Panel>;
 }

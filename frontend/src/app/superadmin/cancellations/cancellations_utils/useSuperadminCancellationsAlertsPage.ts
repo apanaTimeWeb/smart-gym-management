@@ -3,29 +3,36 @@
 // DATA FLOW: feature API/schema → hook/context → useSuperadminCancellationsAlertsPage consumers.
 // RESPONSIBILITY: Encapsulates functionality for useSuperadminCancellationsAlertsPage.ts
 import { useState, useMemo } from 'react';
-import toast from 'react-hot-toast';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { cancellationsAlertsApi } from '@/app/superadmin/cancellations/cancellations_api/superadmin_cancellations_api';
-import type { CancellationsAlert, CancellationsFilterStatus, CancellationsActionPayload } from '@/app/superadmin/cancellations/cancellations_types/superadmin_cancellations_types';
+import { cancellationsAlertsApi } from '@/app/superadmin/cancellations/cancellations_api/SuperadminCancellationsApi';
+import type { CancellationsAlert, CancellationsFilterStatus, CancellationsActionPayload } from '@/app/superadmin/cancellations/cancellations_types/SuperadminCancellationsTypes';
+import toast from 'react-hot-toast';
 const CANCELLATIONS_PAGE_SIZE = 20;
+/**
+ * Purpose: Encapsulates functionality for useSuperadminCancellationsAlertsPage.ts.
+ * Inputs: values defined by the exported hook signature.
+ * Output: the hook's typed state/actions/query contract.
+ * Side effects: remain scoped to the owning feature or approved application infrastructure.
+ * Invariant: does not move feature business state into unrelated modules.
+ */
 export function useSuperadminCancellationsAlertsPage() {
     const queryClient = useQueryClient();
     const [search, setSearch] = useState('');
     const [activeFilter, setActiveFilter] = useState<CancellationsFilterStatus>('ALL');
     const [actionAlert, setActionAlert] = useState<CancellationsAlert | null>(null);
     const [currentPage, setCurrentPage] = useState(1);
-    const { data: alertsRes, isLoading: alertsLoading, isError: alertsError } = useQuery({
+    const { data: alertsRes, isPending: alertsLoading, isError: alertsError } = useQuery({
         queryKey: ['superadmin', 'cancellations'],
         queryFn: () => cancellationsAlertsApi.fetchAlerts(),
     });
-    const { data: kpisRes, isLoading: kpisLoading } = useQuery({
+    const { data: kpisRes, isPending: kpisPending } = useQuery({
         queryKey: ['superadmin', 'cancellations-kpis'],
-        queryFn: () => cancellationsAlertsApi.fetchKpis(),
+        queryFn: () => cancellationsAlertsApi.fetchCancellationKpis(),
     });
-    const isLoading = alertsLoading || kpisLoading;
+    const isPending = alertsLoading || kpisPending;
     const isError = alertsError;
     const updateActionMutation = useMutation({
-        mutationFn: (payload: CancellationsActionPayload) => cancellationsAlertsApi.updateAction(payload),
+        mutationFn: (payload: CancellationsActionPayload) => cancellationsAlertsApi.updateCancellationAction(payload),
         onSuccess: (res) => {
             queryClient.invalidateQueries({ queryKey: ['superadmin', 'cancellations'] });
             toast.success(res.message, { id: 'superadmin-toast-50c7cafd4f' });
@@ -36,7 +43,7 @@ export function useSuperadminCancellationsAlertsPage() {
         }
     });
     const bulkOutreachMutation = useMutation({
-        mutationFn: (tenantIds: string[]) => cancellationsAlertsApi.bulkOutreach(tenantIds),
+        mutationFn: (tenantIds: string[]) => cancellationsAlertsApi.sendCancellationOutreach(tenantIds),
         onSuccess: (res) => {
             toast.success(res.message, { id: 'superadmin-toast-f103a164ed' });
         },
@@ -64,7 +71,7 @@ export function useSuperadminCancellationsAlertsPage() {
     function handleBulkOutreach() {
         const atRiskTenants = filtered.filter(a => a.riskLevel === 'CRITICAL' || a.riskLevel === 'HIGH');
         if (atRiskTenants.length === 0) {
-            toast.error('No critical/high risk tenants found in current view.', { id: 'superadmin-toast-a96bfe27c8' });
+            
             return;
         }
         bulkOutreachMutation.mutate(atRiskTenants.map(a => a.tenantId));
@@ -75,7 +82,7 @@ export function useSuperadminCancellationsAlertsPage() {
         activeFilter, setActiveFilter,
         actionAlert, setActionAlert,
         currentPage, setCurrentPage,
-        isLoading, isError,
+        isPending, isError,
         kpis, filtered, paginatedAlerts, totalPages, isFiltered,
         handleActionConfirm, handleBulkOutreach
     };

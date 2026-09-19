@@ -2,13 +2,13 @@
 // DATA FLOW: Centralized store/hook logic mapping API mutations and query state to UI props.
 import { create } from 'zustand';
 import type { Branch } from '@/app/admin/branches/branches_types/AdminBranchesTypes';
-import type { TimeRange } from '@/app/admin/admin_types/AdminSharedTypes';
+import type { AdminBranchesTimeRange } from '@/app/admin/branches/branches_types/AdminBranchesTypes';
 
 export type DetailView = "revenue" | "expenses" | "staff" | "students";
 
 interface AdminBranchesStore {
-  timeRange: TimeRange;
-  setTimeRange: (range: TimeRange) => void;
+  timeRange: AdminBranchesTimeRange;
+  setTimeRange: (range: AdminBranchesTimeRange) => void;
   startDate: string;
   setStartDate: (date: string) => void;
   endDate: string;

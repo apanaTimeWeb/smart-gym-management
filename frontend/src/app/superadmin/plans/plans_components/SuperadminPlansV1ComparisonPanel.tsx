@@ -1,10 +1,10 @@
 // RESPONSIBILITY: Renders the Superadmin plans V1 Plan comparison view.
 'use client';
 import { displayValue, formatCurrency, formatNumber } from '@/lib/formatters';
-import SuperadminV1Panel from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminV1Panel';
+import Panel from '@/components/ui/Panel';
 import type { SuperadminPlansV1SectionProps } from '@/app/superadmin/plans/plans_types/SuperadminPlansV1Types.ts';
 export default function SuperadminPlansV1ComparisonPanel({ data }: SuperadminPlansV1SectionProps) {
-    return <SuperadminV1Panel title="Plan comparison" description="Simple plan comparison for pricing and limit decisions.">
+    return <Panel title="Plan comparison" description="Simple plan comparison for pricing and limit decisions.">
   <div className="overflow-x-auto">
     <table className="w-full text-sm">
       <thead>
@@ -28,10 +28,10 @@ export default function SuperadminPlansV1ComparisonPanel({ data }: SuperadminPla
       </thead>
       <tbody>
         {data.plans.map((p) => <tr key={p.name} className="border-b border-border">
-          <td className="px-3 py-3 font-medium text-foreground">
+          <td className="px-3 py-3 font-medium text-primary">
             {p.name}
           </td>
-          <td className="px-3 py-3 text-foreground">
+          <td className="px-3 py-3 text-primary">
             {formatCurrency(p.monthly)}
           </td>
           <td className="px-3 py-3 text-secondary">
@@ -48,5 +48,5 @@ export default function SuperadminPlansV1ComparisonPanel({ data }: SuperadminPla
       </tbody>
     </table>
   </div>
-    </SuperadminV1Panel>;
+    </Panel>;
 }

@@ -2,16 +2,9 @@
 'use client';
 // Pure view component — no state, no API calls. Receives all data via props (Rule 34).
 import { Play, Activity, XCircle, AlertTriangle } from 'lucide-react';
-interface JobsMetrics {
-    activeJobs: number;
-    completed24h: number;
-    failed24h: number;
-    delayed: number;
-}
-interface SuperadminJobsStatsBarProps {
-    metrics: JobsMetrics;
-    onFilterSelect?: (status: string) => void;
-}
+import type { JobsMetrics, SuperadminJobsStatsBarProps } from '@/app/superadmin/jobs/jobs_types/SuperadminJobsStatsBarTypes';
+
+
 /**
  * Renders 4 KPI stat cards: Active Jobs, Completed (24h), Failed (24h), Delayed.
  * Applies gold gradient bg per Design §5a.
@@ -26,7 +19,7 @@ export default function SuperadminJobsStatsBar({ metrics, onFilterSelect }: Supe
     return (<div className="grid grid-cols-1 md:grid-cols-4 gap-4">
       {stats.map((stat) => {
             const Icon = stat.icon;
-            return (<button key={stat.label} onClick={() => onFilterSelect?.(stat.filter)} className="bg-card border border-border rounded-xl p-5 flex items-center gap-4 motion-safe:hover:-translate-y-0.5 motion-safe:transition-transform cursor-pointer text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-primary" style={{ background: 'linear-gradient(180deg, rgba(250,204,21,0.06), rgba(255,255,255,0.01))' }}>
+            return (<button key={stat.label} onClick={() => onFilterSelect?.(stat.filter)} className="bg-card border border-border rounded-xl p-5 flex items-center gap-4 motion-safe:hover:-translate-y-0.5 motion-safe:transition-transform cursor-pointer text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
             <div className={`w-10 h-10 rounded-lg ${stat.iconBg} flex items-center justify-center shrink-0`}>
               <Icon size={22} className={stat.color}/>
             </div>

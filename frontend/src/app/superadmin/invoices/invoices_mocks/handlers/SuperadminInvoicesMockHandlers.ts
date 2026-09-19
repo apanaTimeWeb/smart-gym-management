@@ -1,10 +1,15 @@
 import { http, HttpResponse, delay } from 'msw';
-import type { SaaSInvoice } from '@/app/superadmin/invoices/superadmin_invoices_types/superadmin_invoices_types';
-import type { CreateManualPaymentDto } from '@/app/superadmin/invoices/superadmin_invoices_api/superadmin_invoices_api';
+import { StatusCodes } from 'http-status-codes';
+import type { CreateManualPaymentDto, SaaSInvoice } from '@/app/superadmin/invoices/invoices_types/SuperadminInvoicesTypes';
+import { CreateManualPaymentDtoSchema } from '@/app/superadmin/invoices/invoices_types/SuperadminInvoicesTypes';
 import type { ApiResponse } from '@/lib/api';
 import { MOCK_INVOICE_TENANTS, MOCK_SUPERADMIN_INVOICES } from '@/app/superadmin/invoices/invoices_mocks/fixtures/SuperadminInvoicesMockFixtures';
 const BASE_URL = '*/api/v1/superadmin/invoices';
 let mockInvoices: SaaSInvoice[] = [...MOCK_SUPERADMIN_INVOICES];
+
+export function resetSuperadminInvoicesMockState(): void {
+  mockInvoices = [...MOCK_SUPERADMIN_INVOICES];
+}
 export const superadminInvoicesHandlers = [
     http.get('*/api/v1/api/gyms', async () => HttpResponse.json({ success: true, message: 'Success', data: MOCK_INVOICE_TENANTS })),
     http.get(BASE_URL, async ({ request }) => {
@@ -33,11 +38,15 @@ export const superadminInvoicesHandlers = [
     }),
     http.post(`${BASE_URL}/manual-payment`, async ({ request }) => {
         await delay(500);
-        const dto = await request.json() as CreateManualPaymentDto;
+        const parsed = CreateManualPaymentDtoSchema.safeParse(await request.json());
+        if (!parsed.success) return HttpResponse.json<ApiResponse<SaaSInvoice>>({ success: false, message: 'Invalid manual payment request', data: null }, { status: StatusCodes.BAD_REQUEST });
+        const dto: CreateManualPaymentDto = parsed.data;
+        const tenant = MOCK_INVOICE_TENANTS.find((item) => item.id === dto.gymId);
+        if (!tenant) return HttpResponse.json<ApiResponse<SaaSInvoice>>({ success: false, message: 'Tenant not found', data: null }, { status: StatusCodes.NOT_FOUND });
         const newInvoice: SaaSInvoice = {
             id: `inv${Date.now()}`,
             tenantId: dto.gymId,
-            tenantName: 'Mock Gym', // Simplified
+            tenantName: tenant.name,
             amount: dto.amount,
             currency: dto.currency || 'INR',
             status: 'PAID',

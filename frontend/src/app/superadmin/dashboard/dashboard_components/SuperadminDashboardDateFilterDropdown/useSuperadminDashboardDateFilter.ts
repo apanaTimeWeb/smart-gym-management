@@ -4,7 +4,16 @@
 // RESPONSIBILITY: Custom hook managing the URL-backed state for the Dashboard date filter.
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
-import type { TimeRange } from '@/app/superadmin/dashboard/superadmin_dashboard_types/superadmin_dashboard_types';
+type SuperadminDashboardCustomDateField = 'start' | 'end';
+
+import type { TimeRange } from '@/app/superadmin/dashboard/dashboard_types/SuperadminDashboardTypes';
+/**
+ * Purpose: Custom hook managing the URL-backed state for the Dashboard date filter.
+ * Inputs: values defined by the exported hook signature.
+ * Output: the hook's typed state/actions/query contract.
+ * Side effects: remain scoped to the owning feature or approved application infrastructure.
+ * Invariant: does not move feature business state into unrelated modules.
+ */
 export function useSuperadminDashboardDateFilter() {
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -17,13 +26,14 @@ export function useSuperadminDashboardDateFilter() {
     // RESPONSIBILITY: Handle side-effects for useSuperadminDashboardDateFilter
     // EXPLANATION: Synchronize component state with external dependencies.
     // EFFECT DEPENDENCIES: Documented intentionally.
+    // EFFECT INTENT: Synchronize local/UI state with the listed external dependencies.
     useEffect(() => {
         if (value === 'custom') {
             setCustomStart(currentStartDate);
             setCustomEnd(currentEndDate);
         }
     }, [value, currentStartDate, currentEndDate]);
-    const handleCustomDateChange = useCallback((type: 'start' | 'end', val: string) => {
+    const handleCustomDateChange = useCallback((type: SuperadminDashboardCustomDateField, val: string) => {
         const params = new URLSearchParams(searchParams.toString());
         params.set('range', 'custom');
         if (type === 'start') {

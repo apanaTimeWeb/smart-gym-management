@@ -1,90 +1,54 @@
-# Saved Tenant Segments — Feature Map
+# Superadmin Segments — Feature Map
 
 ## Module Purpose
-This Superadmin-only module provides reusable tenant audience groups for platform operations, reporting, messaging, and retention workflows. It solves the problem of repeatedly rebuilding the same tenant filters by giving the platform team named saved groups and quick presets. A Superadmin can review segment rules, tenant counts, update dates, and where each segment is used. It does not own tenant records themselves; those remain server data in the owning tenant modules and are never copied into segment UI constants.
+This feature owns the Superadmin business workflow implemented under `segments/`. The active route is `/superadmin/segments`. Business behavior, API contracts, validation, server-state hooks, fixtures, MSW handlers, and tests are kept within this feature boundary. Cross-feature business logic is outside this module.
 
 ## Directory Structure
+
 | Folder | Responsibility | Key Files |
 |---|---|---|
-| `segments_components/` | Segment overview, saved groups, and quick presets | `SuperadminSegmentsClient.tsx`, `SuperadminSegmentsPageHeader.tsx`, `SuperadminSegmentsSummaryCards.tsx`, `SuperadminSegmentsSavedGroupsPanel.tsx`, `SuperadminSegmentsQuickPresetsPanel.tsx` |
-| `segments_api/` | API boundary | `superadmin_segments_api.ts` |
-| `segments_types/` | Zod contract and types | `SuperadminSegmentsTypes.ts` |
-| `segments_mocks/fixtures/` | Realistic saved-segment and preset fixtures | `SuperadminSegmentsMockFixtures.ts` |
-| `segments_mocks/handlers/` | MSW handler | `SuperadminSegmentsMockHandlers.ts` |
-| `segments_utils/` | TanStack Query orchestration | `useSuperadminSegmentsPage.ts` |
+| `segments_api/` | Feature-owned responsibility for segments api. | `SuperadminSegmentsApi.ts` |
+| `segments_components/` | Feature-owned responsibility for segments components. | `SuperadminSegmentEditorModal.tsx`, `SuperadminSegmentsClient.tsx`, `SuperadminSegmentsPageHeader.tsx`, `SuperadminSegmentsQuickPresetsEmptyState.tsx`, `SuperadminSegmentsQuickPresetsPanel.tsx`, `SuperadminSegmentsSavedGroupsEmptyState.tsx`, `SuperadminSegmentsSavedGroupsPanel.tsx`, `SuperadminSegmentsSummaryCards.tsx` |
+| `segments_mocks/` | Feature-owned responsibility for segments mocks. | `(directory present; no direct files)` |
+| `segments_tests/` | Feature-owned responsibility for segments tests. | `SuperadminSegmentsBasic.test.tsx` |
+| `segments_types/` | Feature-owned responsibility for segments types. | `SuperadminRouteErrorTypes.ts`, `SuperadminSegmentsTypes.ts`, `SuperadminSegmentsValidationSchema.ts` |
+| `segments_utils/` | Feature-owned responsibility for segments utils. | `useSuperadminSegmentMutations.ts`, `useSuperadminSegmentsPage.test.tsx`, `useSuperadminSegmentsPage.ts` |
+
+## Approved External Dependencies
+
+### Application Infrastructure
+- `@/app/superadmin/superadmin_components` — role-shell/generic interaction infrastructure only.
+- `@/lib/*` and `@/components/*` — only approved application infrastructure imported by this feature.
+
+### Business Feature Dependencies
+- None
+
+### Role-Level Business Dependencies
+- None
 
 ## Feature Inventory
-| Feature | Route | What the Superadmin Can Do | Main API Calls | Status |
+
+| Surface | Route | Implemented User Actions | API Boundary | Status |
 |---|---|---|---|---|
-| Saved Groups | `/superadmin/segments` | Review saved audience groups, rules, counts, usage, and updates | `GET /api/superadmin/segments` | Implemented in source; runtime build not verified here |
-| Quick Presets | `/superadmin/segments` | Review common tenant questions such as high-value, low-use, and at-risk groups | `GET /api/superadmin/segments` | Implemented in source; runtime build not verified here |
+| Superadmin Segments | `/superadmin/segments` | apply; submit | `SuperadminSegmentsApi.ts` | Source-verified; host runtime pending |
 
 ## User Flows & Interactions
-1. Superadmin opens the page and retrieves the saved segment response.
-2. Zod validates the response at the API boundary.
-3. Saved Groups shows named segments and their tenant counts.
-4. Quick Presets shows ready-made segment definitions for future audience actions.
 
-## Data and State Architecture
-- Query key: `['superadmin', 'segments', 'overview']`.
-- Server state: TanStack Query.
-- UI state: local only.
-- Fixture/handler ownership stays inside `segments_mocks/`.
+1. Open the active route and load the feature-owned query/API boundary.
+2. Apply the available search, filter, sort, pagination, form, or row actions exposed by the current client surface.
+3. Mutations go through feature-owned API contracts and, in MSW mode, feature-owned handlers/fixtures.
+4. Success/error state is reconciled back into the same feature surface.
 
-## API Contract
-| Function | Method | Endpoint | Request | Response `data` |
-|---|---|---|---|---|
-| `fetchSegmentsData()` | GET | `/api/superadmin/segments` | None | `SuperadminSegmentsResponse` |
+## Verification Notes
+- Active route pages mount one primary client tree; no `V1Client` import is mounted from route `page.tsx`.
+- Mutable mock-state handlers have reset functions covered by tests where present.
+- Deprecated marker-only and JSON-stringify tautology tests were removed from the module test tree.
+- Dependency-backed `tsc`, lint, Vitest runtime, Playwright, and real browser responsive execution require the host application environment and remain unverified here.
 
-## UI Data Requirements
-| UI Element | Required Field(s) | Response Path | Nullable? |
-|---|---|---|---|
-| Segment ID | `id` | `data.segments[].id` | No |
-| Segment name | `name` | `data.segments[].name` | No |
-| Segment description | `description` | `data.segments[].description` | Yes |
-| Rule count | `rules` | `data.segments[].rules` | No |
-| Gym count | `tenantCount` | `data.segments[].tenantCount` | No |
-| Last updated | `updatedAt` | `data.segments[].updatedAt` | Yes |
-| Used in | `usedIn` | `data.segments[].usedIn` | No |
-| Preset name | `name` | `data.presets[].name` | No |
-| Preset rule | `rule` | `data.presets[].rule` | No |
-
-## Permissions and Security
-- Required role: `SUPERADMIN`.
-- Tenant records are not stored in the module as fake business data.
-- Any future segment mutation must use the module API contract and audited permissions.
-- No cross-role business imports.
-
-## Loading, Empty, and Error States
-- `loading.tsx` uses the page-shaped skeleton.
-- `error.tsx` provides retryable branded feedback.
-- Nullable description and update date use the canonical en dash fallback.
-
-## Edge Cases and AI Warnings
-- **Do not store tenant records in segment fixtures:** only audience metadata belongs here.
-- **Nullable description:** some saved groups may not have a description.
-- **Nullable update date:** an older or imported segment can have no recorded update date.
-- **Counts are server data:** never replace a missing count with a component-level fake number.
-- **Status/color logic must stay centralized:** do not create inline status palettes in this module.
-
-## Component Responsibility Map
-| Component | Responsibility |
-|---|---|
-| `SuperadminSegmentsClient.tsx` | Orchestrates query loading/error/success. |
-| `SuperadminSegmentsPageHeader.tsx` | Renders title and the page action area. |
-| `SuperadminSegmentsSummaryCards.tsx` | Renders segment totals. |
-| `SuperadminSegmentsSavedGroupsPanel.tsx` | Renders saved segment cards and metadata. |
-| `SuperadminSegmentsQuickPresetsPanel.tsx` | Renders preset segment definitions. |
-
-## External Infrastructure Dependencies
-- `@/lib/api`
-- `@/lib/formatters`
-- `@tanstack/react-query`
-- `msw`
-- Superadmin shared UI primitives.
-
-## Final Component Additions
-- `SuperadminSegmentsSavedGroupsEmptyState.tsx` — renders the saved-group empty state.
-- `SuperadminSegmentsQuickPresetsEmptyState.tsx` — renders the quick-preset empty state.
-
-The saved-group summary safely reports zero for an empty dataset instead of using an invalid maximum value.
+## Rule Compliance Checklist
+- [x] Canonical feature-owned API/type directories are used.
+- [x] No active route page mounts a parallel `V1Client` tree.
+- [x] Module-owned mock reset coverage is present where mutable handlers exist.
+- [x] Feature docs contain a concrete directory map and compliance checklist.
+- [x] No marker-only or JSON-stringify tautology test remains.
+- [ ] Host dependency-backed build/lint/runtime verification — unavailable in source-only package.

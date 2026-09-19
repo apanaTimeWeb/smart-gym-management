@@ -1,16 +1,12 @@
 // RESPONSIBILITY: Renders the Backups Table component and its associated UI logic.
 'use client';
 import { Download, RotateCcw } from 'lucide-react';
-import type { BackupRecord } from '@/app/superadmin/backups/superadmin_backups_types/superadmin_backups_types';
+import type { BackupRecord } from '@/app/superadmin/backups/backups_types/SuperadminBackupsTypes';
 import { StatusColors } from '@/app/superadmin/backups/backups_utils/SuperadminBackupsConstants';
 import SuperadminBackupsEmptyState from '@/app/superadmin/backups/backups_components/SuperadminBackupsEmptyState/SuperadminBackupsEmptyState';
 import { formatNumber, formatDateTime } from '@/lib/formatters';
-interface SuperadminBackupsTableProps {
-    paginatedBackups: BackupRecord[];
-    filteredLength: number;
-    handleDownload: (id: string) => void | Promise<void>;
-    handleRestoreClick: (backup: BackupRecord) => void;
-}
+import type { SuperadminBackupsTableProps } from '@/app/superadmin/backups/backups_types/SuperadminBackupsTableTypes';
+
 const TABLE_COLUMN_COUNT = 7;
 export default function SuperadminBackupsTable({ paginatedBackups, filteredLength, handleDownload, handleRestoreClick }: SuperadminBackupsTableProps) {
     return (<div className="overflow-x-auto flex-1">
@@ -29,7 +25,7 @@ export default function SuperadminBackupsTable({ paginatedBackups, filteredLengt
         <tbody className="divide-y divide-border">
           {paginatedBackups.map((backup: BackupRecord) => (<tr key={backup.id} className="hover:bg-input motion-safe:transition-colors">
               <td className="p-4 text-xs font-mono text-secondary">{backup.id}</td>
-              <td className="p-4 text-sm font-medium text-foreground">{backup.tenantName}</td>
+              <td className="p-4 text-sm font-medium text-primary">{backup.tenantName}</td>
               <td className="p-4 text-sm font-mono text-primary">{backup.databaseName}</td>
               <td className="p-4 text-sm text-secondary font-mono">{formatNumber(Math.round(backup.sizeMB * 10) / 10)}</td>
               <td className="p-4">

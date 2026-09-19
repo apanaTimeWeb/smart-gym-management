@@ -19,14 +19,14 @@ export default function AdminBlacklistTabs() {
             onClick={() => setActiveTab(tab.value)}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium motion-safe:transition-all ${
               isActive
-                ? 'bg-card text-foreground shadow-sm border border-border'
-                : 'text-secondary hover:text-foreground'
+                ? 'bg-card text-primary shadow-card border border-border'
+                : 'text-secondary hover:text-primary'
             }`}
           >
             {tab.value === 'cross-branch' && <Globe size={14} />}
             {tab.label}
             {badge !== null && badge > 0 && (
-              <span className={`px-1.5 py-0.5 rounded-full text-xs font-semibold ${isActive ? 'bg-warning-bg text-warning' : 'bg-input text-secondary'}`}>
+              <span className={`px-1.5 py-0.5 rounded-full text-xs font-semibold ${isActive ? 'bg-warning text-warning' : 'bg-input text-secondary'}`}>
                 {badge}
               </span>
             )}

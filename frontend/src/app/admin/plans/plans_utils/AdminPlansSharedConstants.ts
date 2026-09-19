@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Centralized constants, Zod schema, and shared data for the Plans module. Single source of truth for tiers, pricing, and form defaults.
 import { z } from 'zod';
 
-export const TIERS = ['BASIC', 'GOLD', 'PREMIUM'];
+export const TIERS = ['Bronze', 'Silver', 'Gold'] as const;
 
 export const PlanSchema = z.object({
   name: z.string().min(2, 'Name is required'),
@@ -17,7 +17,7 @@ export type PlanFormValues = z.infer<typeof PlanSchema>;
 
 export const EMPTY_PLAN_FORM: PlanFormValues = { 
  name: '', 
- tier: 'BASIC', 
+ tier: 'Gold', 
  price1Month: '', 
  price3Month: '', 
  price6Month: '', 
@@ -26,3 +26,4 @@ export const EMPTY_PLAN_FORM: PlanFormValues = {
  features: '' 
 };
 
+export const PLANS_ITEMS_PER_PAGE = 10;

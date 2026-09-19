@@ -16,7 +16,7 @@ export default function AdminPermissionsGymOverride() {
       <div className="bg-card rounded-xl border border-border p-5">
         <div className="flex items-center gap-2 mb-3">
           <Building2 size={16} className="text-primary" />
-          <h3 className="text-sm font-semibold text-foreground">Gym-Specific Overrides</h3>
+          <h3 className="text-sm font-semibold text-primary">Gym-Specific Overrides</h3>
         </div>
         <p className="text-xs text-secondary">No gym-specific overrides configured. All gyms use the default role permissions.</p>
       </div>
@@ -27,8 +27,8 @@ export default function AdminPermissionsGymOverride() {
     <div className="bg-card rounded-xl border border-border overflow-hidden">
       <div className="px-5 py-4 border-b border-border flex items-center gap-2">
         <Building2 size={16} className="text-primary" />
-        <h3 className="text-sm font-semibold text-foreground">Gym-Specific Overrides</h3>
-        <span className="ml-auto text-xs bg-warning-bg text-warning px-2 py-0.5 rounded-full border border-warning/20">{overrides.length} active</span>
+        <h3 className="text-sm font-semibold text-primary">Gym-Specific Overrides</h3>
+        <span className="ml-auto text-xs bg-warning text-warning px-2 py-0.5 rounded-full border border-border">{overrides.length} active</span>
       </div>
       <div className="divide-y divide-border">
         {overrides.map((override, i: number) => {
@@ -38,11 +38,11 @@ export default function AdminPermissionsGymOverride() {
             <button
               key={i}
               onClick={() => { setSelectedGymId(override.gymId); setActiveRole(override.role); }}
-              className={`w-full px-5 py-3.5 flex items-center gap-3 text-left hover:bg-primary/5 motion-safe:transition-colors ${isSelected ? 'bg-primary/5' : ''}`}
+              className={`w-full px-5 py-3.5 flex items-center gap-3 text-left hover:bg-surface-highlight motion-safe:transition-colors ${isSelected ? 'bg-surface-highlight' : ''}`}
             >
               <AlertTriangle size={14} className="text-warning flex-shrink-0" />
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-foreground">{override.gymName}</p>
+                <p className="text-sm font-medium text-primary">{override.gymName}</p>
                 <p className="text-xs text-secondary capitalize">{override.role} · {overrideCount} custom rule{overrideCount !== 1 ? 's' : ''}</p>
               </div>
               {isSelected && <span className="text-xs text-primary font-medium">Viewing</span>}

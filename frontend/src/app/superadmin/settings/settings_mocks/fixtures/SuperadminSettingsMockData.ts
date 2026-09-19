@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Module-owned mock fixture data for Superadmin.
-import type { PlatformSetting } from '@/app/superadmin/settings/settings_types/superadmin_settings_types';
+import type { PlatformSetting } from '@/app/superadmin/settings/settings_types/SuperadminSettingsTypes';
 export const MOCK_PLATFORM_SETTINGS: PlatformSetting[] = [
     { id: 'set_001', key: 'PLATFORM_MAINTENANCE_MODE', value: 'false', description: 'Enable global maintenance mode for all tenants', dataType: 'boolean', category: 'System' },
     { id: 'set_002', key: 'MAX_GLOBAL_TENANTS', value: '1000', description: 'Hard limit on total active tenants', dataType: 'number', category: 'Limits' },

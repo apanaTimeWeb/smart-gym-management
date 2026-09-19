@@ -3,7 +3,7 @@
 // RESPONSIBILITY: Owns TanStack Query state and notification mutations for the Admin notification page.
 // DATA FLOW: AdminNotificationsApi → TanStack Query → AdminNotificationsClient → AdminNotificationsList
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { adminToast } from '@/app/admin/admin_components/AdminFeedback/AdminToastService';
+import { adminToast } from '@/app/admin/admin_layout/AdminFeedback/AdminToastService';
 import { AdminNotificationsApi } from '@/app/admin/notifications/notifications_api/AdminNotificationsApi';
 import type { NotificationItem } from '@/app/admin/notifications/notifications_types/AdminNotificationsTypes';
 
