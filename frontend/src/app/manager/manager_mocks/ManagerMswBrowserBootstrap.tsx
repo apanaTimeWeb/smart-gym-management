@@ -8,16 +8,19 @@ import { useEffect, useState } from 'react';
 import { managerMswWorker } from '@/app/manager/manager_mocks/ManagerMswBrowser';
 import { logger } from '@/lib/logger';
 
-
+// In production there is no MSW — children render immediately.
+// In development we gate rendering behind MSW startup so the first queries
+// always fire AFTER the mock service worker is listening (no race condition).
+const IS_PROD = process.env.NODE_ENV === 'production';
 
 export function ManagerMswBrowserBootstrap({ children }: ManagerMswBrowserBootstrapProps) {
-  const [ready, setReady] = useState(typeof window === 'undefined');
+  const [ready, setReady] = useState(IS_PROD);
 
   useEffect(() => {
     let active = true;
 
     const startWorker = async () => {
-      if (process.env.NODE_ENV === 'production') {
+      if (IS_PROD) {
         if (active) setReady(true);
         return;
       }
@@ -50,3 +53,4 @@ export function ManagerMswBrowserBootstrap({ children }: ManagerMswBrowserBootst
 
   return children;
 }
+
