@@ -9,7 +9,7 @@ import type { SuperadminProfileData, UpdateSuperadminProfilePayload } from '@/ap
 import { TIMEZONE_OPTIONS, LANGUAGE_OPTIONS } from '@/app/superadmin/profile/profile_utils/SuperadminProfileConstants';
 import { personalSchema } from '@/app/superadmin/profile/profile_utils/SuperadminProfilePersonalFormSchema';
 import type { SuperadminProfilePersonalFormValues } from '@/app/superadmin/profile/profile_types/SuperadminProfilePersonalFormTypes';
-import { useSuperadminUnsavedChangesGuard } from '@/app/superadmin/superadmin_infrastructure/useSuperadminUnsavedChangesGuard';
+import { useUnsavedChangesGuard } from '@/hooks/useUnsavedChangesGuard';
 import type { SuperadminProfilePersonalFormProps } from '@/app/superadmin/profile/profile_types/SuperadminProfilePersonalFormTypes';
 
 export default function SuperadminProfilePersonalForm({ profile, isSaving, onSave, }: SuperadminProfilePersonalFormProps) {
@@ -22,7 +22,7 @@ export default function SuperadminProfilePersonalForm({ profile, isSaving, onSav
             language: profile.language ?? 'en',
         },
     });
-    useSuperadminUnsavedChangesGuard(isDirty, "You have unsaved changes in your profile. Are you sure you want to leave?");
+    useUnsavedChangesGuard(isDirty, "You have unsaved changes in your profile. Are you sure you want to leave?");
     // Rule 53: reset when profile prop changes (e.g. after successful save)
     // EXPLANATION: Synchronize component state with external dependencies.
     // EFFECT DEPENDENCIES: Documented intentionally.

@@ -3,7 +3,7 @@
 import React, { useMemo, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import type { SuperadminConversionFunnelProps } from '@/app/superadmin/onboarding/onboarding_types/SuperadminConversionFunnelTypes';
-import { CHART_COLORS } from '@/app/superadmin/superadmin_infrastructure/SuperadminChartConstants';
+import { CHART_COLORS } from '@/app/superadmin/superadmin_layout/SuperadminChartConstants';
 const ReactApexChart = dynamic(() => import('react-apexcharts'), { ssr: false });
 export default function SuperadminConversionFunnel({ tenants }: SuperadminConversionFunnelProps) {
     const [mounted, setMounted] = useState(false);

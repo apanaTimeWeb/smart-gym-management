@@ -5,8 +5,8 @@
 import { useMemo } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { superadminMessagingApi } from '@/app/superadmin/messaging/messaging_api/SuperadminMessagingApi';
-import { useSuperadminDebouncedValue } from '@/app/superadmin/superadmin_infrastructure/useSuperadminDebouncedValue';
-import { useSuperadminUrlState } from '@/app/superadmin/superadmin_infrastructure/useSuperadminUrlState';
+import { useDebouncedValue } from '@/hooks/useDebouncedValue';
+import { useUrlState } from '@/hooks/useUrlState';
 import { useSuperadminMessagingNotificationMutations } from '@/app/superadmin/messaging/messaging_utils/useSuperadminMessagingNotificationMutations';
 import type { MessageChannel, MessagingTab } from '@/app/superadmin/messaging/messaging_types/SuperadminMessagingTypes';
 import { ITEMS_PER_PAGE } from '@/app/superadmin/messaging/messaging_types/SuperadminMessagingConstants';
@@ -24,14 +24,14 @@ const TENANT_QUERY_KEY = ['superadmin', 'messaging', 'tenants'] as const;
  */
 export function useSuperadminMessaging() {
   const queryClient = useQueryClient();
-  const { getParam, setParams } = useSuperadminUrlState();
+  const { getParam, setParams } = useUrlState();
   const tab = getParam('tab', 'messages') as MessagingTab;
   const search = getParam('search', '');
   const channel = getParam('channel', 'ALL') as MessageChannel | 'ALL';
   const startDate = getParam('startDate', '');
   const endDate = getParam('endDate', '');
   const currentPage = Math.max(Number(getParam('page', '1')) || 1, 1);
-  const debouncedSearch = useSuperadminDebouncedValue(search, 300);
+  const debouncedSearch = useDebouncedValue(search, 300);
 
   const queryParams = useMemo(() => {
     const params: Record<string, string> = {

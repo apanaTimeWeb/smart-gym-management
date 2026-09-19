@@ -9,12 +9,12 @@ import { SUPERADMIN_COUPON_DISCOUNT_TYPE_OPTIONS } from '@/app/superadmin/coupon
 import { CouponSchema } from '@/app/superadmin/coupons/coupons_types/SuperadminCouponsTypes';
 import type { CouponFormData, Coupon } from '@/app/superadmin/coupons/coupons_types/SuperadminCouponsTypes';
 import type { SuperadminCouponEditModalProps } from '@/app/superadmin/coupons/coupons_types/SuperadminCouponEditModalTypes';
-import { useSuperadminUnsavedChangesGuard } from '@/app/superadmin/superadmin_infrastructure/useSuperadminUnsavedChangesGuard';
+import { useUnsavedChangesGuard } from '@/hooks/useUnsavedChangesGuard';
 export const SuperadminCouponEditModal: React.FC<SuperadminCouponEditModalProps> = ({ isOpen, onClose, onSubmit, coupon, }) => {
     const { register, handleSubmit, watch, control, formState: { errors, isDirty }, reset } = useForm<CouponFormData>({
         resolver: zodResolver(CouponSchema),
     });
-    useSuperadminUnsavedChangesGuard(isOpen && isDirty);
+    useUnsavedChangesGuard(isOpen && isDirty);
     // RESPONSIBILITY: Handle side-effects for SuperadminCouponEditModal
     // EXPLANATION: Synchronize component state with external dependencies.
     // EFFECT DEPENDENCIES: Documented intentionally.

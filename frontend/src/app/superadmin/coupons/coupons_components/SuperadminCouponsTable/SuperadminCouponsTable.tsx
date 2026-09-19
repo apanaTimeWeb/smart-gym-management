@@ -4,7 +4,7 @@ import { useState } from 'react';
 import SuperadminCouponsTableRow from '@/app/superadmin/coupons/coupons_components/SuperadminCouponsTable/SuperadminCouponsTableRow';
 import SuperadminCouponsEmptyState from '@/app/superadmin/coupons/coupons_components/SuperadminCouponsEmptyState/SuperadminCouponsEmptyState';
 import type { Coupon, CouponStatus } from '@/app/superadmin/coupons/coupons_types/SuperadminCouponsTypes';
-import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
+import Pagination from '@/components/ui/Pagination';
 import type { SuperadminCouponsTableProps } from '@/app/superadmin/coupons/coupons_types/SuperadminCouponsTableTypes';
 
 const ITEMS_PER_PAGE = 10;
@@ -32,6 +32,6 @@ export default function SuperadminCouponsTable({ coupons, onToggleStatus, onEdit
           </tbody>
         </table>
       </div>
-      <SuperadminPagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage}/>
+      <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage}/>
     </div>);
 }

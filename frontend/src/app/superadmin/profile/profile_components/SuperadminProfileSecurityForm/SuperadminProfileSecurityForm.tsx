@@ -8,7 +8,7 @@ import { Eye, EyeOff, Loader2, ShieldCheck, ShieldOff } from 'lucide-react';
 import type { SuperadminProfileData, UpdateSuperadminPasswordPayload, Toggle2FAPayload, } from '@/app/superadmin/profile/profile_types/SuperadminProfileTypes';
 import { passwordSchema } from '@/app/superadmin/profile/profile_utils/SuperadminProfileSecurityFormSchema';
 import type { SuperadminProfileSecurityFormValues } from '@/app/superadmin/profile/profile_types/SuperadminProfileSecurityFormTypes';
-import { useSuperadminUnsavedChangesGuard } from '@/app/superadmin/superadmin_infrastructure/useSuperadminUnsavedChangesGuard';
+import { useUnsavedChangesGuard } from '@/hooks/useUnsavedChangesGuard';
 import type { SuperadminProfileSecurityFormProps } from '@/app/superadmin/profile/profile_types/SuperadminProfileSecurityFormTypes';
 
 export default function SuperadminProfileSecurityForm({ profile, isSavingPassword, isTogglingTwoFA, onSavePassword, onToggle2FA, }: SuperadminProfileSecurityFormProps) {
@@ -18,7 +18,7 @@ export default function SuperadminProfileSecurityForm({ profile, isSavingPasswor
     const [twoFAPassword, setTwoFAPassword] = useState('');
     const [showTwoFAPassword, setShowTwoFAPassword] = useState(false);
     const { register, handleSubmit, reset, formState: { errors, isDirty }, } = useForm<SuperadminProfileSecurityFormValues>({ resolver: zodResolver(passwordSchema) });
-    useSuperadminUnsavedChangesGuard(isDirty, "You have unsaved changes in your password form. Are you sure you want to leave?");
+    useUnsavedChangesGuard(isDirty, "You have unsaved changes in your password form. Are you sure you want to leave?");
     function handlePasswordSubmit(values: SuperadminProfileSecurityFormValues) {
         onSavePassword(values);
         reset();

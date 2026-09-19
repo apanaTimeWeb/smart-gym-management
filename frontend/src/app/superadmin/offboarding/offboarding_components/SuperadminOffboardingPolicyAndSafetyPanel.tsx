@@ -2,12 +2,12 @@
 'use client';
 import { ArchiveX, ShieldAlert } from 'lucide-react';
 import { formatNumber } from '@/lib/formatters';
-import SuperadminPanel from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPanel';
+import Panel from '@/components/ui/Panel';
 import { SUPERADMIN_OFFBOARDING_POLICY_LABELS } from '@/app/superadmin/offboarding/offboarding_utils/SuperadminOffboardingConstants';
 import type { SuperadminOffboardingSectionProps } from '@/app/superadmin/offboarding/offboarding_types/SuperadminOffboardingTypes';
 export default function SuperadminOffboardingPolicyAndSafetyPanel({ data }: SuperadminOffboardingSectionProps) {
     return (<div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
-  <SuperadminPanel title="Offboarding Policy" description="Platform defaults for export and purge timing.">
+  <Panel title="Offboarding Policy" description="Platform defaults for export and purge timing.">
     <div className="space-y-3">
       {Object.entries(data.policy).map(([key, value]) => (<div key={key} className="flex items-center justify-between rounded-lg border border-border p-3">
           <span className="text-secondary capitalize">
@@ -18,8 +18,8 @@ export default function SuperadminOffboardingPolicyAndSafetyPanel({ data }: Supe
           </span>
         </div>))}
     </div>
-  </SuperadminPanel>
-  <SuperadminPanel title="Safety Checks" description="Irreversible deletion requires documented guardrails.">
+  </Panel>
+  <Panel title="Safety Checks" description="Irreversible deletion requires documented guardrails.">
     <div className="space-y-3">
       <div className="flex gap-3 rounded-lg border border-border p-3">
         <ShieldAlert size={18} className="text-warning"/>
@@ -44,6 +44,6 @@ export default function SuperadminOffboardingPolicyAndSafetyPanel({ data }: Supe
         </div>
       </div>
     </div>
-  </SuperadminPanel>
+  </Panel>
     </div>);
 }

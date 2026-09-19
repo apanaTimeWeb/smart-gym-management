@@ -6,8 +6,8 @@ import { useMemo } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { fetchGymsBusinessControls, updateGymsBulkAction } from '@/app/superadmin/gyms/gyms_api/SuperadminGymsBusinessControlsApi';
-import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
-import { useSuperadminUrlState } from '@/app/superadmin/superadmin_infrastructure/useSuperadminUrlState';
+import { useSuperadminConfirm } from '@/app/superadmin/superadmin_layout/SuperadminFeedback/SuperadminConfirmProvider';
+import { useUrlState } from '@/hooks/useUrlState';
 import type { SuperadminGymsV1BulkAction, SuperadminGymsV1BulkMutationRequest } from '@/app/superadmin/gyms/gyms_types/SuperadminGymsV1Types';
 
 /**
@@ -20,7 +20,7 @@ import type { SuperadminGymsV1BulkAction, SuperadminGymsV1BulkMutationRequest } 
 export function useSuperadminGymsV1() {
   const queryClient = useQueryClient();
   const { confirm } = useSuperadminConfirm();
-  const { getParam, setParam } = useSuperadminUrlState();
+  const { getParam, setParam } = useUrlState();
   const filterKey = getParam('v1Filter', 'all');
   const queryParams = useMemo(() => ({ filter: filterKey }), [filterKey]);
 

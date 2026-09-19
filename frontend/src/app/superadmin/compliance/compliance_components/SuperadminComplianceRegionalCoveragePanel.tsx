@@ -3,12 +3,12 @@
 import { Landmark } from 'lucide-react';
 import { formatNumber } from '@/lib/formatters';
 import SuperadminComplianceRegionalCoverageEmptyState from '@/app/superadmin/compliance/compliance_components/SuperadminComplianceRegionalCoverageEmptyState';
-import SuperadminPanel from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPanel';
-import SuperadminProgressBar from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminProgressBar';
+import Panel from '@/components/ui/Panel';
+import ProgressBar from '@/components/ui/ProgressBar';
 import { getSuperadminComplianceStatusBadgeClasses } from '@/app/superadmin/compliance/compliance_utils/SuperadminComplianceStatusBadgeConfig';
 import type { SuperadminComplianceSectionProps } from '@/app/superadmin/compliance/compliance_types/SuperadminComplianceTypes';
 export default function SuperadminComplianceRegionalCoveragePanel({ data }: SuperadminComplianceSectionProps) {
-    return (<SuperadminPanel title="Regional Coverage" description="Compare tax registration completeness by region.">
+    return (<Panel title="Regional Coverage" description="Compare tax registration completeness by region.">
   <div className="space-y-4">
     {data.regions.length === 0 ? <SuperadminComplianceRegionalCoverageEmptyState /> : data.regions.map(r => (<div key={r.region} className="rounded-lg border border-border p-4">
         <div className="flex items-center justify-between gap-3">
@@ -23,7 +23,7 @@ export default function SuperadminComplianceRegionalCoveragePanel({ data }: Supe
           </span>
         </div>
         <div className="mt-3">
-          <SuperadminProgressBar value={r.registered + r.missing > 0 ? Math.round((r.registered / (r.registered + r.missing)) * 100) : 0} label={`${formatNumber(r.registered)} registered / ${formatNumber(r.missing)} missing`}/>
+          <ProgressBar value={r.registered + r.missing > 0 ? Math.round((r.registered / (r.registered + r.missing)) * 100) : 0} label={`${formatNumber(r.registered)} registered / ${formatNumber(r.missing)} missing`}/>
         </div>
         <p className="mt-2 text-xs text-secondary">
           Configured tax rate
@@ -32,5 +32,5 @@ export default function SuperadminComplianceRegionalCoveragePanel({ data }: Supe
         </p>
       </div>))}
   </div>
-    </SuperadminPanel>);
+    </Panel>);
 }

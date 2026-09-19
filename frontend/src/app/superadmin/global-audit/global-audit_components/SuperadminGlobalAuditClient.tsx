@@ -6,14 +6,14 @@ import type { AuditLog } from '@/app/superadmin/global-audit/global-audit_types/
 import { ShieldAlert, Search, Filter, AlertTriangle, Info, Download } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
-import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
-import { useSuperadminUrlState } from '@/app/superadmin/superadmin_infrastructure/useSuperadminUrlState';
+import Pagination from '@/components/ui/Pagination';
+import { useUrlState } from '@/hooks/useUrlState';
 import type { AuditActorFilter, AuditSeverityFilter } from '@/app/superadmin/global-audit/global-audit_types/SuperadminGlobalAuditFilterTypes';
 import { SUPERADMIN_GLOBAL_AUDIT_ACTOR_FILTERS, SUPERADMIN_GLOBAL_AUDIT_SEVERITY_FILTERS } from '@/app/superadmin/global-audit/global-audit_types/SuperadminGlobalAuditFilterTypes';
 import { useSuperadminGlobalAuditData } from '@/app/superadmin/global-audit/global-audit_utils/useSuperadminGlobalAuditData';
 const TABLE_COLUMN_COUNT = 4;
 export default function SuperadminGlobalAuditClient() {
-    const { getParam, setParam } = useSuperadminUrlState();
+    const { getParam, setParam } = useUrlState();
     const search = getParam('search', '');
     const severityFilter = getParam('severityFilter', 'ALL') as AuditSeverityFilter;
     const actorTypeFilter = getParam('actorTypeFilter', 'ALL') as AuditActorFilter;
@@ -175,7 +175,7 @@ export default function SuperadminGlobalAuditClient() {
           </table>
         </div>
         <div className="p-4 border-t border-border">
-          <SuperadminPagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage}/>
+          <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage}/>
         </div>
       </div>
     </div>);

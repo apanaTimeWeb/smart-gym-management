@@ -6,7 +6,7 @@ import { useState, useMemo, useCallback } from 'react';
 import { useQueryClient, useQuery } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useSuperadminUrlState } from '@/app/superadmin/superadmin_infrastructure/useSuperadminUrlState';
+import { useUrlState } from '@/hooks/useUrlState';
 import { couponsApi } from '@/app/superadmin/coupons/coupons_api/SuperadminCouponsApi';
 import { CouponSchema, type CouponFormData } from '@/app/superadmin/coupons/coupons_types/SuperadminCouponsTypes';
 import type { Coupon, CouponKpiFilter } from '@/app/superadmin/coupons/coupons_types/SuperadminCouponsTypes';
@@ -20,7 +20,7 @@ import { useSuperadminCouponsMutations } from '@/app/superadmin/coupons/coupons_
  */
 export const useSuperadminCoupons = () => {
     const queryClient = useQueryClient();
-    const { getParam, setParam } = useSuperadminUrlState();
+    const { getParam, setParam } = useUrlState();
     const searchQuery = getParam('search', '');
     const activeKpi = getParam('kpi', 'ALL') as CouponKpiFilter;
     const statusFilter = getParam('status', 'ALL');

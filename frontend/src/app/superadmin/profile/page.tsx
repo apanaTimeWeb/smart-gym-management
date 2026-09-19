@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import SuperadminPageSuspenseSkeleton from '@/app/superadmin/superadmin_components/SuperadminPageSuspenseSkeleton';
+import SuperadminPageSuspenseSkeleton from '@/app/superadmin/superadmin_layout/SuperadminPageSuspenseSkeleton';
 // RESPONSIBILITY: Pure Server Component entry point for /superadmin/profile.
 import type { Metadata } from 'next';
 import SuperadminProfileMain from '@/app/superadmin/profile/profile_components/SuperadminProfileMain/SuperadminProfileMain';

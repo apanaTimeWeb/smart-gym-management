@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Renders or orchestrates the Superadmin MessagingV1WhatsAppPreviewPanel responsibility defined by this module feature.
 'use client';
 import { Eye, ExternalLink } from 'lucide-react';
-import SuperadminPanel from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPanel';
-import SuperadminTooltip from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminTooltip';
+import Panel from '@/components/ui/Panel';
+import Tooltip from '@/components/ui/Tooltip';
 import { displayValue } from '@/lib/formatters';
 import type { SuperadminWhatsAppRecipient } from '@/app/superadmin/messaging/messaging_whatsapp_types/SuperadminMessagingV1WhatsAppTypes';
 import { replaceWhatsAppVariables } from '@/app/superadmin/messaging/messaging_whatsapp_utils/SuperadminMessagingV1WhatsAppUtils';
@@ -10,7 +10,7 @@ import type { SuperadminMessagingV1WhatsAppPreviewPanelProps } from '@/app/super
 
 export default function SuperadminMessagingV1WhatsAppPreviewPanel({ recipient, title, body }: SuperadminMessagingV1WhatsAppPreviewPanelProps) {
     const preview = recipient ? replaceWhatsAppVariables(body, recipient) : body;
-    return (<SuperadminPanel title="Live preview" description="See the final personalized message before starting the queue.">
+    return (<Panel title="Live preview" description="See the final personalized message before starting the queue.">
       {!recipient ? (<div className="flex min-h-48 items-center justify-center rounded-xl border border-dashed border-border p-6 text-center text-sm text-secondary">
           Choose an audience with at least one WhatsApp-ready recipient to preview the message.
         </div>) : (<div className="grid gap-4 lg:grid-cols-2">
@@ -19,9 +19,9 @@ export default function SuperadminMessagingV1WhatsAppPreviewPanel({ recipient, t
               <Eye size={15} aria-hidden="true"/> Example recipient
             </div>
             <div className="mt-3 flex items-center justify-between gap-3">
-              <SuperadminTooltip content={recipient.contactName}>
+              <Tooltip content={recipient.contactName}>
                 <p className="truncate text-sm font-semibold text-primary">{recipient.contactName}</p>
-              </SuperadminTooltip>
+              </Tooltip>
               <span className="shrink-0 text-xs text-secondary">{recipient.tenantName}</span>
             </div>
             <div className="mt-4 rounded-2xl border border-border bg-card p-4">
@@ -37,5 +37,5 @@ export default function SuperadminMessagingV1WhatsAppPreviewPanel({ recipient, t
             </div>
           </div>
         </div>)}
-    </SuperadminPanel>);
+    </Panel>);
 }

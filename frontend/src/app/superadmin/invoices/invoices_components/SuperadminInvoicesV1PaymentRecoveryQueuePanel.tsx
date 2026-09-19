@@ -1,10 +1,10 @@
 // RESPONSIBILITY: Renders the Superadmin invoices V1 Payment recovery queue view.
 'use client';
 import { formatCurrency, formatNumber, formatDateTime } from '@/lib/formatters';
-import SuperadminPanel from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPanel';
+import Panel from '@/components/ui/Panel';
 import type { SuperadminInvoicesV1SectionProps } from '@/app/superadmin/invoices/invoices_types/SuperadminInvoicesV1Types.ts';
 export default function SuperadminInvoicesV1PaymentRecoveryQueuePanel({ data }: SuperadminInvoicesV1SectionProps) {
-    return <SuperadminPanel title="Payment recovery queue" description="Every failed payment has a reason, retry count, next step, and age.">
+    return <Panel title="Payment recovery queue" description="Every failed payment has a reason, retry count, next step, and age.">
   <div className="overflow-x-auto">
     <table className="w-full text-sm">
       <thead>
@@ -53,5 +53,5 @@ export default function SuperadminInvoicesV1PaymentRecoveryQueuePanel({ data }: 
       </tbody>
     </table>
   </div>
-    </SuperadminPanel>;
+    </Panel>;
 }

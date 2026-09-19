@@ -8,7 +8,7 @@ import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import type { CancellationsRecord, TenantHealthScore, SuperadminReportsDateField } from '@/app/superadmin/reports/reports_types/SuperadminReportsTypes';
 import { SUPERADMIN_REPORT_PLAN_OPTIONS } from '@/app/superadmin/reports/reports_utils/SuperadminReportsConstants';
 import { useSuperadminReportsPage } from '@/app/superadmin/reports/reports_utils/useSuperadminReportsPage';
-import { useSuperadminUrlState } from '@/app/superadmin/superadmin_infrastructure/useSuperadminUrlState';
+import { useUrlState } from '@/hooks/useUrlState';
 import { SuperadminReportsDatePresetDropdown } from '@/app/superadmin/reports/reports_components/SuperadminReportsDatePresetDropdown';
 import { SuperadminReportsExportButton } from '@/app/superadmin/reports/reports_components/SuperadminReportsExportButton';
 import { SuperadminReportsSummaryCards } from '@/app/superadmin/reports/reports_components/SuperadminReportsSummaryCards';
@@ -17,7 +17,7 @@ import { SuperadminReportsCancellationsTab } from '@/app/superadmin/reports/repo
 import { SuperadminReportsHealthTab } from '@/app/superadmin/reports/reports_components/SuperadminReportsHealthTab';
 
 export default function SuperadminReportsClient() {
-  const { getParam, setParam } = useSuperadminUrlState();
+  const { getParam, setParam } = useUrlState();
   const tab = (getParam('tab', 'revenue') === 'cancellations' || getParam('tab', 'revenue') === 'health' ? getParam('tab', 'revenue') : 'revenue') as SuperadminReportsTab;
   const datePreset = getParam('preset', 'THIS_MONTH');
   const dateFrom = getParam('startDate', '');

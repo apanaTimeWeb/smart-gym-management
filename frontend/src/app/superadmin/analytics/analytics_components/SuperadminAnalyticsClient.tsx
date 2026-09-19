@@ -6,15 +6,15 @@
 import dynamic from 'next/dynamic';
 import { TrendingUp, Users, IndianRupee, Activity, ArrowDownRight, DollarSign } from 'lucide-react';
 import { useSuperadminAnalyticsPage } from '@/app/superadmin/analytics/analytics_utils/useSuperadminAnalyticsPage';
-import { CHART_COLORS } from '@/app/superadmin/superadmin_infrastructure/SuperadminChartConstants';
-import { SuperadminDateFilterDropdown } from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminDateFilterDropdown';
-import { useSuperadminDateRangeSuffix } from '@/app/superadmin/superadmin_components/SuperadminShared/useSuperadminDateRangeSuffix';
+import { CHART_COLORS } from '@/app/superadmin/superadmin_layout/SuperadminChartConstants';
+import { DateFilterDropdown } from '@/components/ui/DateFilterDropdown';
+import { useDateRangeSuffix } from '@/components/ui/useDateRangeSuffix';
 // Heavy chart component â€” code-split via dynamic import (Rule 15, Design Â§10)
 import { formatCurrency, formatKPI, formatDecimal } from '@/lib/formatters';
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 export default function SuperadminAnalyticsClient() {
     const { metrics, monthlyData, isPending, isError: error } = useSuperadminAnalyticsPage();
-    const dateSuffix = useSuperadminDateRangeSuffix();
+    const dateSuffix = useDateRangeSuffix();
     if (isPending) {
         return (<div className="space-y-6">
         <div>
@@ -157,7 +157,7 @@ export default function SuperadminAnalyticsClient() {
           <p className="text-secondary mt-1 text-sm">Global SaaS metrics and financial intelligence.</p>
         </div>
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
-          <SuperadminDateFilterDropdown />
+          <DateFilterDropdown />
         </div>
       </div>
 

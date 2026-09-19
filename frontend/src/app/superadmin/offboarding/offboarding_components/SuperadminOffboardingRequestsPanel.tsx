@@ -2,12 +2,12 @@
 'use client';
 import { formatDate, displayValue } from '@/lib/formatters';
 import SuperadminOffboardingRequestsEmptyState from '@/app/superadmin/offboarding/offboarding_components/SuperadminOffboardingRequestsEmptyState';
-import SuperadminTooltip from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminTooltip';
-import SuperadminPanel from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPanel';
+import Tooltip from '@/components/ui/Tooltip';
+import Panel from '@/components/ui/Panel';
 import { getSuperadminOffboardingStatusBadgeClasses } from '@/app/superadmin/offboarding/offboarding_utils/SuperadminOffboardingStatusBadgeConfig';
 import type { SuperadminOffboardingSectionProps } from '@/app/superadmin/offboarding/offboarding_types/SuperadminOffboardingTypes';
 export default function SuperadminOffboardingRequestsPanel({ data }: SuperadminOffboardingSectionProps) {
-    return (<SuperadminPanel title="Export Requests" description="Review tenant requests for a complete data export before final purge handling.">
+    return (<Panel title="Export Requests" description="Review tenant requests for a complete data export before final purge handling.">
       {data.requests.length === 0 ? <SuperadminOffboardingRequestsEmptyState /> : (<div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead><tr className="border-b border-border text-left text-xs uppercase text-secondary">
@@ -15,7 +15,7 @@ export default function SuperadminOffboardingRequestsPanel({ data }: SuperadminO
             </tr></thead>
             <tbody>
               {data.requests.map((request) => (<tr key={`${request.tenant}-${request.requestedAt}-${request.requestType}`} className="border-b border-border">
-                  <td className="px-3 py-3"><SuperadminTooltip content={request.tenant}><span className="block max-w-56 truncate font-medium text-primary">{request.tenant}</span></SuperadminTooltip></td>
+                  <td className="px-3 py-3"><Tooltip content={request.tenant}><span className="block max-w-56 truncate font-medium text-primary">{request.tenant}</span></Tooltip></td>
                   <td className="px-3 py-3 text-secondary">{request.requestedBy}</td>
                   <td className="px-3 py-3 text-secondary">{request.requestType}</td>
                   <td className="px-3 py-3"><span className={`rounded-full px-2 py-1 text-xs font-semibold ${getSuperadminOffboardingStatusBadgeClasses(request.status)}`}>{request.status}</span></td>
@@ -24,5 +24,5 @@ export default function SuperadminOffboardingRequestsPanel({ data }: SuperadminO
             </tbody>
           </table>
         </div>)}
-    </SuperadminPanel>);
+    </Panel>);
 }

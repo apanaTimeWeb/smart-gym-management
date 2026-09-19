@@ -2,7 +2,7 @@
 'use client';
 import { Activity, Clock, Database, Download, Loader2, RefreshCcw, Search, ShieldAlert } from 'lucide-react';
 import { formatDateTime } from '@/lib/formatters';
-import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
+import Pagination from '@/components/ui/Pagination';
 import SuperadminSystemEmptyState from '@/app/superadmin/system/system_components/SuperadminSystemEmptyState/SuperadminSystemEmptyState';
 import SuperadminSystemSlaTab from '@/app/superadmin/system/system_components/SuperadminSystemSlaTab';
 import { SuperadminSystemRuntimeConfig } from '@/app/superadmin/system/system_utils/SuperadminSystemRuntimeConfig';
@@ -100,7 +100,7 @@ export default function SuperadminSystemClient() {
                   </tbody>
                 </table>
               </div>
-              <SuperadminPagination currentPage={model.currentPage} totalPages={model.totalPages} onPageChange={model.setCurrentPage}/>
+              <Pagination currentPage={model.currentPage} totalPages={model.totalPages} onPageChange={model.setCurrentPage}/>
             </div>
           </section>
         </div>) : <SuperadminSystemSlaTab />}

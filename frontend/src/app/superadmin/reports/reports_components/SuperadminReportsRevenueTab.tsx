@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Renders the Reports Revenue Tab component and its associated UI logic.
 import dynamic from 'next/dynamic';
-import { CHART_COLORS } from '@/app/superadmin/superadmin_infrastructure/SuperadminChartConstants';
+import { CHART_COLORS } from '@/app/superadmin/superadmin_layout/SuperadminChartConstants';
 import type { SuperadminReportsRevenueTabProps } from '@/app/superadmin/reports/reports_types/SuperadminReportsTabTypes';
 import { formatCurrency, formatKPI } from '@/lib/formatters';
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });

@@ -7,7 +7,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { superadminBranchesApi } from '@/app/superadmin/branches/branches_api/SuperadminBranchesApi';
 import type { BranchStatus, SuperadminBranchStatusFilter, SuperadminBranch } from '@/app/superadmin/branches/branches_types/SuperadminBranchesTypes';
 import type { SuperadminBranchMutationTarget, SuperadminBranchStatusSelection } from '@/app/superadmin/branches/branches_types/SuperadminBranchesMutationTypes';
-import { useSuperadminUrlState } from '@/app/superadmin/superadmin_infrastructure/useSuperadminUrlState';
+import { useUrlState } from '@/hooks/useUrlState';
 const BRANCH_PAGE_SIZE = 10;
 /**
  * Purpose: Owns URL-backed search/filter/pagination and server-state for the Superadmin Branches list.
@@ -18,7 +18,7 @@ const BRANCH_PAGE_SIZE = 10;
  */
 export function useSuperadminBranchesPage() {
     const queryClient = useQueryClient();
-    const { getParam, setParam } = useSuperadminUrlState();
+    const { getParam, setParam } = useUrlState();
     const search = getParam('search', '');
     const statusFilter = getParam('statusFilter', 'ALL') as SuperadminBranchStatusFilter;
     const currentPage = Math.max(1, Number(getParam('page', '1')) || 1);

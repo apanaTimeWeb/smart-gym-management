@@ -5,7 +5,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { migrationsApi } from '@/app/superadmin/migrations/migrations_api/SuperadminMigrationsApi';
-import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
+import { useSuperadminConfirm } from '@/app/superadmin/superadmin_layout/SuperadminFeedback/SuperadminConfirmProvider';
 const MIGRATIONS_QUERY_KEY = ['superadmin', 'migrations', 'list'] as const;
 /**
  * Purpose: Owns Superadmin migration query state, deployment mutation state, confirmation, and query reconciliation.

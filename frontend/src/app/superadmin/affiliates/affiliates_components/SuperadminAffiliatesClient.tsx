@@ -8,7 +8,7 @@ import SuperadminAffiliatesTable from '@/app/superadmin/affiliates/affiliates_co
 import SuperadminAffiliatesEmptyState from '@/app/superadmin/affiliates/affiliates_components/SuperadminAffiliatesEmptyState/SuperadminAffiliatesEmptyState';
 import { SuperadminAffiliateModal } from '@/app/superadmin/affiliates/affiliates_components/SuperadminAffiliateModal';
 import SuperadminAffiliatesPayoutHistory from '@/app/superadmin/affiliates/affiliates_components/SuperadminAffiliatesPayoutHistory/SuperadminAffiliatesPayoutHistory';
-import { SuperadminErrorBoundary } from '@/app/superadmin/superadmin_components/SuperadminLayout/SuperadminErrorBoundary';
+import { SuperadminErrorBoundary } from '@/app/superadmin/superadmin_layout/SuperadminLayout/SuperadminErrorBoundary';
 import type { AffiliatesTab } from '@/app/superadmin/affiliates/affiliates_types/SuperadminAffiliatesClientTypes';
 
 export default function SuperadminAffiliatesClient() {

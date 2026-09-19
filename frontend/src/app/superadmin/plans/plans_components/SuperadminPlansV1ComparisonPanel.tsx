@@ -1,10 +1,10 @@
 // RESPONSIBILITY: Renders the Superadmin plans V1 Plan comparison view.
 'use client';
 import { displayValue, formatCurrency, formatNumber } from '@/lib/formatters';
-import SuperadminPanel from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPanel';
+import Panel from '@/components/ui/Panel';
 import type { SuperadminPlansV1SectionProps } from '@/app/superadmin/plans/plans_types/SuperadminPlansV1Types.ts';
 export default function SuperadminPlansV1ComparisonPanel({ data }: SuperadminPlansV1SectionProps) {
-    return <SuperadminPanel title="Plan comparison" description="Simple plan comparison for pricing and limit decisions.">
+    return <Panel title="Plan comparison" description="Simple plan comparison for pricing and limit decisions.">
   <div className="overflow-x-auto">
     <table className="w-full text-sm">
       <thead>
@@ -48,5 +48,5 @@ export default function SuperadminPlansV1ComparisonPanel({ data }: SuperadminPla
       </tbody>
     </table>
   </div>
-    </SuperadminPanel>;
+    </Panel>;
 }

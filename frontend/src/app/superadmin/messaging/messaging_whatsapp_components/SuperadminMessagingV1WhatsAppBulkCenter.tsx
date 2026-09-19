@@ -4,7 +4,7 @@ import type { SuperadminMessagingWhatsAppQueueActionStatus } from '@/app/superad
 import { useEffect, useMemo, useState } from 'react';
 import { Building2, Rocket, ShieldCheck } from 'lucide-react';
 import toast from 'react-hot-toast';
-import SuperadminPanel from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPanel';
+import Panel from '@/components/ui/Panel';
 import SuperadminMessagingV1WhatsAppAudiencePanel from '@/app/superadmin/messaging/messaging_whatsapp_components/SuperadminMessagingV1WhatsAppAudiencePanel';
 import SuperadminMessagingV1WhatsAppCampaignHistoryPanel from '@/app/superadmin/messaging/messaging_whatsapp_components/SuperadminMessagingV1WhatsAppCampaignHistoryPanel';
 import SuperadminMessagingV1WhatsAppCampaignSummaryCards from '@/app/superadmin/messaging/messaging_whatsapp_components/SuperadminMessagingV1WhatsAppCampaignSummaryCards';
@@ -91,7 +91,7 @@ export default function SuperadminMessagingV1WhatsAppBulkCenter({ data }: Supera
     const skipped = queue.filter((item) => item.status === 'SKIPPED').length;
     const pending = queue.length - sent - skipped;
     return (<section className="mt-8 space-y-6">
-      <SuperadminPanel title="Smart Bulk WhatsApp" description="Free guided tenant communication for Superadmin. Use personalized click-to-chat links for owners, admins, and managers without a paid messaging API.">
+      <Panel title="Smart Bulk WhatsApp" description="Free guided tenant communication for Superadmin. Use personalized click-to-chat links for owners, admins, and managers without a paid messaging API.">
         <div className="grid gap-4 lg:grid-cols-2">
           <div className="rounded-2xl border border-primary/20 bg-primary/5 p-5">
             <div className="flex items-start gap-3"><span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary text-on-primary"><Rocket size={19} aria-hidden="true"/></span><div><p className="text-sm font-semibold text-primary">Tenant-first bulk communication</p><p className="mt-1 text-sm leading-6 text-secondary">Target gyms by subscription, onboarding, risk, maintenance impact, or contact role. Gym member messaging stays in Admin / Manager.</p></div></div>
@@ -101,7 +101,7 @@ export default function SuperadminMessagingV1WhatsAppBulkCenter({ data }: Supera
           </div>
         </div>
         <div className="mt-4 flex flex-wrap items-center gap-2 rounded-xl border border-border bg-input/30 px-4 py-3 text-xs text-secondary"><Building2 size={14} aria-hidden="true"/><span className="font-semibold text-primary">Scope locked to tenants:</span> owners · admins · managers only</div>
-      </SuperadminPanel>
+      </Panel>
 
       <SuperadminMessagingV1WhatsAppTemplatePicker templates={data.templates} selectedId={templateId} onSelect={handleTemplateSelect}/>
       <SuperadminMessagingV1WhatsAppAudiencePanel audiences={data.audiences} recipients={data.recipients} audienceId={audienceId} tenantId={tenantId} onAudienceChange={setAudienceId} onTenantChange={setTenantId}/>

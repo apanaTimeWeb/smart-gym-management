@@ -7,7 +7,7 @@ import SuperadminCancellationsTable from '@/app/superadmin/cancellations/cancell
 import SuperadminCancellationsEmptyState from '@/app/superadmin/cancellations/cancellations_components/SuperadminCancellationsEmptyState/SuperadminCancellationsEmptyState';
 import SuperadminCancellationsActionModal from '@/app/superadmin/cancellations/cancellations_components/SuperadminCancellationsActionModal/SuperadminCancellationsActionModal';
 import { Mail } from 'lucide-react';
-import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
+import Pagination from '@/components/ui/Pagination';
 import type { CancellationsFilterStatus } from '@/app/superadmin/cancellations/cancellations_types/SuperadminCancellationsTypes';
 import { useSuperadminCancellationsAlertsPage } from '@/app/superadmin/cancellations/cancellations_utils/useSuperadminCancellationsAlertsPage';
 export default function SuperadminCancellationsClient() {
@@ -44,7 +44,7 @@ export default function SuperadminCancellationsClient() {
         <SuperadminCancellationsFilters search={search} onSearchChange={setSearch} activeFilter={activeFilter} onFilterChange={setActiveFilter}/>
         {filtered.length === 0 ? (<SuperadminCancellationsEmptyState isFiltered={isFiltered} onClearFilter={() => { setSearch(''); setActiveFilter('ALL'); }}/>) : (<>
             <SuperadminCancellationsTable alerts={paginatedAlerts} onActionClick={setActionAlert}/>
-            <SuperadminPagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage}/>
+            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage}/>
           </>)}
       </div>
 

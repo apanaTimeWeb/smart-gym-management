@@ -5,10 +5,10 @@ import { X } from 'lucide-react';
 import type { UseFormReturn } from 'react-hook-form';
 import type { AffiliateFormData } from '@/app/superadmin/affiliates/affiliates_types/SuperadminAffiliatesTypes';
 import type { SuperadminAffiliateModalProps } from '@/app/superadmin/affiliates/affiliates_types/SuperadminAffiliateModalTypes';
-import { useSuperadminUnsavedChangesGuard } from '@/app/superadmin/superadmin_infrastructure/useSuperadminUnsavedChangesGuard';
+import { useUnsavedChangesGuard } from '@/hooks/useUnsavedChangesGuard';
 export const SuperadminAffiliateModal: React.FC<SuperadminAffiliateModalProps> = ({ isOpen, onClose, form, onSubmit, isEdit = false, isMutating = false, }) => {
     const { register, handleSubmit, formState: { errors, isDirty } } = form;
-    useSuperadminUnsavedChangesGuard(isOpen && isDirty);
+    useUnsavedChangesGuard(isOpen && isDirty);
     if (!isOpen)
         return null;
     return (<div className="fixed inset-0 bg-overlay/80 z-40 flex items-center justify-center p-4 backdrop-blur-sm" role="dialog" aria-modal="true">

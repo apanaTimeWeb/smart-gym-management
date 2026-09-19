@@ -1,11 +1,11 @@
 // RESPONSIBILITY: Renders the Superadmin backups V1 Backup health by gym view.
 'use client';
 import { formatNumber, formatDateTime } from '@/lib/formatters';
-import SuperadminPanel from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPanel';
+import Panel from '@/components/ui/Panel';
 import type { SuperadminBackupsV1SectionProps } from '@/app/superadmin/backups/backups_types/SuperadminBackupsV1Types.ts';
 import { getSuperadminBackupsStatusBadgeClasses } from '@/app/superadmin/backups/backups_utils/SuperadminBackupsStatusBadgeConfig';
 export default function SuperadminBackupsV1GymHealthTable({ data }: SuperadminBackupsV1SectionProps) {
-    return <SuperadminPanel title="Backup health by gym" description="Every sample includes age, size, and status so gaps are visible.">
+    return <Panel title="Backup health by gym" description="Every sample includes age, size, and status so gaps are visible.">
   <div className="overflow-x-auto">
     <table className="w-full text-sm">
       <thead>
@@ -49,5 +49,5 @@ export default function SuperadminBackupsV1GymHealthTable({ data }: SuperadminBa
       </tbody>
     </table>
   </div>
-    </SuperadminPanel>;
+    </Panel>;
 }

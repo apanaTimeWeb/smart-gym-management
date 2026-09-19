@@ -3,7 +3,7 @@
 'use client';
 // DATA FLOW: feature API/schema → hook/context → useSuperadminAffiliatesMutations consumers.
 import { useCallback } from 'react';
-import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
+import { useSuperadminConfirm } from '@/app/superadmin/superadmin_layout/SuperadminFeedback/SuperadminConfirmProvider';
 import { affiliatesApi } from '@/app/superadmin/affiliates/affiliates_api/SuperadminAffiliatesApi';
 import { useSuperadminAffiliatesMutation } from '@/app/superadmin/affiliates/affiliates_utils/useSuperadminAffiliatesMutation';
 import type { Affiliate, AffiliateStatus, AffiliateFormData } from '@/app/superadmin/affiliates/affiliates_types/SuperadminAffiliatesTypes';

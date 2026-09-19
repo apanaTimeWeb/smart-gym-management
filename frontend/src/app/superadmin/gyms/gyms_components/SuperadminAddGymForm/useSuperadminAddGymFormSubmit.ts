@@ -3,7 +3,7 @@
 // DATA FLOW: Form → provisioning API → Query invalidation → visible success/error → gyms list.
 // RESPONSIBILITY: Owns the Superadmin tenant-provisioning submission workflow. It never simulates backend infrastructure steps or sends credentials before confirmed success.
 import { useState } from 'react';
-import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
+import { useSuperadminConfirm } from '@/app/superadmin/superadmin_layout/SuperadminFeedback/SuperadminConfirmProvider';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { useQueryClient } from '@tanstack/react-query';

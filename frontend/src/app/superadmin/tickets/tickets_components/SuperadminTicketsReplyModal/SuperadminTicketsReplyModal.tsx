@@ -7,7 +7,7 @@ import toast from 'react-hot-toast';
 import { replySchema } from '@/app/superadmin/tickets/tickets_types/SuperadminTicketsTypes';
 import type { SuperadminTicketsReplyFormValues } from '@/app/superadmin/tickets/tickets_types/SuperadminTicketsReplyFormTypes';
 import { useSuperadminTicketReply } from '@/app/superadmin/tickets/tickets_utils/useSuperadminTicketReply';
-import { useSuperadminUnsavedChangesGuard } from '@/app/superadmin/superadmin_infrastructure/useSuperadminUnsavedChangesGuard';
+import { useUnsavedChangesGuard } from '@/hooks/useUnsavedChangesGuard';
 import type { SuperadminTicketsReplyModalProps } from '@/app/superadmin/tickets/tickets_types/SuperadminTicketsReplyModalTypes';
 
 
@@ -15,7 +15,7 @@ import type { SuperadminTicketsReplyModalProps } from '@/app/superadmin/tickets/
 export default function SuperadminTicketsReplyModal({ isOpen, onClose, ticketId }: SuperadminTicketsReplyModalProps) {
   const { sendReply, isSending } = useSuperadminTicketReply();
   const { register, handleSubmit, reset, formState: { errors, isDirty } } = useForm<SuperadminTicketsReplyFormValues>({ resolver: zodResolver(replySchema), defaultValues: { replyText: '' } });
-  useSuperadminUnsavedChangesGuard(Boolean(isOpen && isDirty && !isSending), 'You have an unsent ticket reply. Are you sure you want to leave?');
+  useUnsavedChangesGuard(Boolean(isOpen && isDirty && !isSending), 'You have an unsent ticket reply. Are you sure you want to leave?');
 
   if (!isOpen || !ticketId) return null;
 

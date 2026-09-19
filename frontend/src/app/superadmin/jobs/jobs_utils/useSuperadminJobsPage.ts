@@ -11,13 +11,13 @@ import type { BackgroundJob } from '@/app/superadmin/jobs/jobs_types/SuperadminJ
 import type { SuperadminJobsPageReturn } from '@/app/superadmin/jobs/jobs_types/SuperadminJobsPageTypes';
 import { useSuperadminJobsSelection } from '@/app/superadmin/jobs/jobs_utils/useSuperadminJobsSelection';
 import { useSuperadminJobsMutations } from '@/app/superadmin/jobs/jobs_utils/useSuperadminJobsMutations';
-import { useSuperadminUrlState } from '@/app/superadmin/superadmin_infrastructure/useSuperadminUrlState';
+import { useUrlState } from '@/hooks/useUrlState';
 /**
  * Logic hook for the Background Jobs page.
  * Returns job data, filter state, pagination, selection state, and all action handlers.
  */
 export function useSuperadminJobsPage(): SuperadminJobsPageReturn {
-    const { getParam, setParam } = useSuperadminUrlState();
+    const { getParam, setParam } = useUrlState();
     const statusFilter = getParam('statusFilter', 'ALL');
     const queueFilter = getParam('queueFilter', 'ALL');
     const currentPage = Number(getParam('page', '1'));

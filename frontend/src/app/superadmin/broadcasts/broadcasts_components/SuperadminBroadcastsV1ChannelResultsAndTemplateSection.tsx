@@ -2,17 +2,17 @@
 'use client';
 import { CheckCircle2 } from 'lucide-react';
 import { formatNumber } from '@/lib/formatters';
-import SuperadminApexBarChart from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminApexBarChart';
-import SuperadminPanel from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPanel';
+import ApexBarChart from '@/components/ui/ApexBarChart';
+import Panel from '@/components/ui/Panel';
 import type { SuperadminBroadcastsV1SectionProps } from '@/app/superadmin/broadcasts/broadcasts_types/SuperadminBroadcastsV1Types.ts';
 export default function SuperadminBroadcastsV1ChannelResultsAndTemplateSection({ data }: SuperadminBroadcastsV1SectionProps) {
     return <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
-  <SuperadminPanel title="Channel results" description="Delivery plus engagement for recent Superadmin campaigns.">
+  <Panel title="Channel results" description="Delivery plus engagement for recent Superadmin campaigns.">
     <div className="h-72">
-      <SuperadminApexBarChart categories={data.channels.map((x) => x.name)} series={[{ name: 'Delivered', data: data.channels.map((x) => x.delivered) }, { name: 'Opened', data: data.channels.map((x) => x.opened) }]} valueFormatter={(v) => formatNumber(v)}/>
+      <ApexBarChart categories={data.channels.map((x) => x.name)} series={[{ name: 'Delivered', data: data.channels.map((x) => x.delivered) }, { name: 'Opened', data: data.channels.map((x) => x.opened) }]} valueFormatter={(v) => formatNumber(v)}/>
     </div>
-  </SuperadminPanel>
-  <SuperadminPanel title="Reusable templates" description="Use approved templates instead of rewriting sensitive communication every time.">
+  </Panel>
+  <Panel title="Reusable templates" description="Use approved templates instead of rewriting sensitive communication every time.">
     <div className="space-y-2">
       {data.templates.map((t) => <div key={t} className="flex items-center justify-between rounded-lg border border-border px-3 py-2">
         <span className="truncate text-sm text-primary">
@@ -21,6 +21,6 @@ export default function SuperadminBroadcastsV1ChannelResultsAndTemplateSection({
         <CheckCircle2 size={18} className="text-success"/>
       </div>)}
     </div>
-  </SuperadminPanel>
+  </Panel>
     </div>;
 }

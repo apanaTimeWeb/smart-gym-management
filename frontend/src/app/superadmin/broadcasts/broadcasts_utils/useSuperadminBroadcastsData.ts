@@ -6,7 +6,7 @@ import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { broadcastsApi } from '@/app/superadmin/broadcasts/broadcasts_api/SuperadminBroadcastsApi';
 import type { Broadcast, SuperadminBroadcastsTenant, BroadcastStatusFilter } from '@/app/superadmin/broadcasts/broadcasts_types/SuperadminBroadcastsTypes';
-import { useSuperadminUrlState } from '@/app/superadmin/superadmin_infrastructure/useSuperadminUrlState';
+import { useUrlState } from '@/hooks/useUrlState';
 /**
  * Purpose: Encapsulates functionality for useSuperadminBroadcastsData.ts.
  * Inputs: values defined by the exported hook signature.
@@ -15,7 +15,7 @@ import { useSuperadminUrlState } from '@/app/superadmin/superadmin_infrastructur
  * Invariant: does not move feature business state into unrelated modules.
  */
 export const useSuperadminBroadcastsData = () => {
-    const { getParam, setParam } = useSuperadminUrlState();
+    const { getParam, setParam } = useUrlState();
     const searchQuery = getParam('search', '');
     const statusFilter = getParam('status', 'ALL') as BroadcastStatusFilter;
     const currentPage = Number(getParam('page', '1'));

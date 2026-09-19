@@ -2,11 +2,11 @@
 'use client';
 import { AlertCircle, DollarSign } from 'lucide-react';
 import { formatCurrency, formatNumber } from '@/lib/formatters';
-import { useSuperadminDateRangeSuffix } from '@/app/superadmin/superadmin_components/SuperadminShared/useSuperadminDateRangeSuffix';
+import { useDateRangeSuffix } from '@/components/ui/useDateRangeSuffix';
 import type { SuperadminInvoicesStatsBarProps } from '@/app/superadmin/invoices/invoices_types/SuperadminInvoicesStatsBarTypes';
 
 export default function SuperadminInvoicesStatsBar({ totalRevenue, failedRevenue, pendingRevenue, overdueCount, }: SuperadminInvoicesStatsBarProps) {
-    const dateSuffix = useSuperadminDateRangeSuffix(false);
+    const dateSuffix = useDateRangeSuffix(false);
     const cards = [
         { label: `Total Collected${dateSuffix}`, value: formatCurrency(totalRevenue), tone: 'success', Icon: DollarSign },
         { label: `Failed Payments${dateSuffix}`, value: formatCurrency(failedRevenue), tone: 'danger', Icon: AlertCircle },

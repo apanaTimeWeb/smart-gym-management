@@ -5,7 +5,7 @@ import { SuperadminDashboardKpiGrid } from '@/app/superadmin/dashboard/dashboard
 import { SuperadminDashboardCharts } from '@/app/superadmin/dashboard/dashboard_components/SuperadminDashboardView/SuperadminDashboardCharts';
 import { SuperadminDashboardRecentOnboards } from '@/app/superadmin/dashboard/dashboard_components/SuperadminDashboardView/SuperadminDashboardRecentOnboards';
 import { useSuperadminDashboardView } from '@/app/superadmin/dashboard/dashboard_components/SuperadminDashboardView/useSuperadminDashboardView';
-import { SuperadminErrorBoundary } from '@/app/superadmin/superadmin_components/SuperadminLayout/SuperadminErrorBoundary';
+import { SuperadminErrorBoundary } from '@/app/superadmin/superadmin_layout/SuperadminLayout/SuperadminErrorBoundary';
 export default function SuperadminDashboardView() {
     const { isPending, isError: error, apiData, timeRange } = useSuperadminDashboardView();
     if (isPending) {

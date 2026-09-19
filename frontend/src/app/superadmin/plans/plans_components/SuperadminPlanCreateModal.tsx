@@ -7,7 +7,7 @@ import { X, Plus, Trash2, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useSuperadminPlansStore } from '@/app/superadmin/plans/plans_store/useSuperadminPlansStore';
 import { useSuperadminPlanMutations } from '@/app/superadmin/plans/plans_utils/useSuperadminPlanMutations';
-import { useSuperadminUnsavedChangesGuard } from '@/app/superadmin/superadmin_infrastructure/useSuperadminUnsavedChangesGuard';
+import { useUnsavedChangesGuard } from '@/hooks/useUnsavedChangesGuard';
 import { planFormSchema } from '@/app/superadmin/plans/plans_types/SuperadminPlansSchema';
 import type { SuperadminPlansFormValues } from '@/app/superadmin/plans/plans_types/SuperadminPlansFormTypes';
 export default function SuperadminPlanCreateModal() {
@@ -21,7 +21,7 @@ export default function SuperadminPlanCreateModal() {
             features: [{ value: 'Core Gym Management' }],
         },
     });
-    useSuperadminUnsavedChangesGuard(isDirty);
+    useUnsavedChangesGuard(isDirty);
     const { fields, append, remove } = useFieldArray({ control, name: 'features' });
 
     if (!isOpen)

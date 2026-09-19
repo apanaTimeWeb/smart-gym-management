@@ -3,7 +3,7 @@
 import SuperadminAffiliatesTableRow from '@/app/superadmin/affiliates/affiliates_components/SuperadminAffiliatesTable/SuperadminAffiliatesTableRow';
 import SuperadminAffiliatesEmptyState from '@/app/superadmin/affiliates/affiliates_components/SuperadminAffiliatesEmptyState/SuperadminAffiliatesEmptyState';
 import type { Affiliate, AffiliateStatus } from '@/app/superadmin/affiliates/affiliates_types/SuperadminAffiliatesTypes';
-import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
+import Pagination from '@/components/ui/Pagination';
 import type { SuperadminAffiliatesTableProps } from '@/app/superadmin/affiliates/affiliates_types/SuperadminAffiliatesTableTypes';
 
 export default function SuperadminAffiliatesTable({ affiliates, onToggleStatus, onEdit, onDelete, onAddClick, onPayCommission, currentPage, totalPages, setPage }: SuperadminAffiliatesTableProps) {
@@ -28,6 +28,6 @@ export default function SuperadminAffiliatesTable({ affiliates, onToggleStatus, 
           </tbody>
         </table>
       </div>
-      <SuperadminPagination currentPage={currentPage} totalPages={totalPages} onPageChange={setPage}/>
+      <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setPage}/>
     </div>);
 }

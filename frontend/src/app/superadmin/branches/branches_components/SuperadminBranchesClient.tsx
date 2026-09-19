@@ -7,9 +7,9 @@ import { Building2, Users, TrendingUp, Ban, Search, CheckCircle2, AlertTriangle 
 import { useSuperadminBranchesPage } from '@/app/superadmin/branches/branches_utils/useSuperadminBranchesPage';
 import { BRANCH_STATUS_STYLES } from '@/app/superadmin/branches/branches_utils/SuperadminBranchesConstants';
 import type { SuperadminBranch } from '@/app/superadmin/branches/branches_types/SuperadminBranchesTypes';
-import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
+import { useSuperadminConfirm } from '@/app/superadmin/superadmin_layout/SuperadminFeedback/SuperadminConfirmProvider';
 import { formatCurrency, formatNumber, maskSensitiveData } from '@/lib/formatters';
-import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
+import Pagination from '@/components/ui/Pagination';
 export default function SuperadminBranchesClient() {
     const { branches, isPending, isError: error, search, setSearch, statusFilter, setStatusFilter, currentPage, setCurrentPage, total, totalPages, handleSuspend, handleActivate } = useSuperadminBranchesPage();
     const { confirm } = useSuperadminConfirm();
@@ -116,6 +116,6 @@ export default function SuperadminBranchesClient() {
           </div>)}
 
       </div>
-      {totalPages > 1 && <SuperadminPagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage}/>}
+      {totalPages > 1 && <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage}/>}
     </div>);
 }

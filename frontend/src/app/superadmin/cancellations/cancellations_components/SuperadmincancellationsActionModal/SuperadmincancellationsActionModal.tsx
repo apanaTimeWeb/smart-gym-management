@@ -10,7 +10,7 @@ import type { CancellationsAlert, CancellationsActionPayload } from '@/app/super
 import type { SuperadminCancellationsActionModalProps } from '@/app/superadmin/cancellations/cancellations_types/SuperadminCancellationsActionModalTypes';
 import { cancellationsActionSchema } from '@/app/superadmin/cancellations/cancellations_utils/SuperadminCancellationsActionModalSchema';
 import type { SuperadminCancellationsActionFormValues } from '@/app/superadmin/cancellations/cancellations_types/SuperadminCancellationsActionFormTypes';
-import { useSuperadminUnsavedChangesGuard } from '@/app/superadmin/superadmin_infrastructure/useSuperadminUnsavedChangesGuard';
+import { useUnsavedChangesGuard } from '@/hooks/useUnsavedChangesGuard';
 export default function SuperadminCancellationsActionModal({ alert, onConfirm, onClose }: SuperadminCancellationsActionModalProps) {
     const { control, handleSubmit, formState: { errors, isDirty } } = useForm<SuperadminCancellationsActionFormValues>({
         resolver: zodResolver(cancellationsActionSchema),
@@ -19,7 +19,7 @@ export default function SuperadminCancellationsActionModal({ alert, onConfirm, o
             notes: alert.notes,
         },
     });
-    useSuperadminUnsavedChangesGuard(isDirty);
+    useUnsavedChangesGuard(isDirty);
     function onSubmit(data: SuperadminCancellationsActionFormValues) {
         onConfirm({ alertId: alert.id, status: data.status, notes: data.notes });
     }

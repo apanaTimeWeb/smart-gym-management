@@ -6,7 +6,7 @@ import type { SuperadminJobsMutationOptions } from '@/app/superadmin/jobs/jobs_t
 import { useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { jobsApi } from '@/app/superadmin/jobs/jobs_api/SuperadminJobsApi';
-import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
+import { useSuperadminConfirm } from '@/app/superadmin/superadmin_layout/SuperadminFeedback/SuperadminConfirmProvider';
 
 /** Executes job mutations and reconciles the owning Jobs query after each successful operation. */
 export function useSuperadminJobsMutations({ setSelectedJobIds, selectedJobIds }: SuperadminJobsMutationOptions) {

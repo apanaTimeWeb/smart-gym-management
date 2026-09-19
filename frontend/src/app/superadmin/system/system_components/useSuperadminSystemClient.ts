@@ -3,10 +3,10 @@
 // DATA FLOW: feature API/schema → hook/context → useSuperadminSystemClient consumers.
 // RESPONSIBILITY: Owns System page client-state, TanStack Query calls, mutation handling, URL-backed audit-log filters, and CSV export. The view consumes this hook and only renders the resulting state.
 import { useMemo, useState } from 'react';
-import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
+import { useSuperadminConfirm } from '@/app/superadmin/superadmin_layout/SuperadminFeedback/SuperadminConfirmProvider';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
-import { useSuperadminUrlState } from '@/app/superadmin/superadmin_infrastructure/useSuperadminUrlState';
+import { useUrlState } from '@/hooks/useUrlState';
 import { systemApi } from '@/app/superadmin/system/system_api/SuperadminSystemApi';
 import type { ApiResponse } from '@/lib/api';
 import { SuperadminSystemRuntimeConfig } from '@/app/superadmin/system/system_utils/SuperadminSystemRuntimeConfig';
@@ -23,7 +23,7 @@ const ITEMS_PER_PAGE = SuperadminSystemRuntimeConfig.auditLogPageSize;
 export function useSuperadminSystemClient() {
     const [tab, setTab] = useState<'migrations' | 'sla'>('migrations');
     const [migratingTenants, setMigratingTenants] = useState<Record<string, boolean>>({});
-    const { getParam, setParam } = useSuperadminUrlState();
+    const { getParam, setParam } = useUrlState();
     const logSearch = getParam('logSearch', '');
     const currentPage = Number(getParam('page', '1'));
     const queryParams = useMemo(() => {

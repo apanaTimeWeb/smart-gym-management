@@ -1,11 +1,11 @@
 // RESPONSIBILITY: Renders the Superadmin plans V1 Price history, Add-ons, Plan move preview view.
 'use client';
 import { formatCurrency, formatNumber } from '@/lib/formatters';
-import SuperadminPanel from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPanel';
+import Panel from '@/components/ui/Panel';
 import type { SuperadminPlansV1SectionProps } from '@/app/superadmin/plans/plans_types/SuperadminPlansV1Types.ts';
 export default function SuperadminPlansV1HistoryAddonsAndMigrationSection({ data }: SuperadminPlansV1SectionProps) {
     return <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
-  <SuperadminPanel title="Price history" description="Versioned pricing protects existing tenants from accidental surprise changes.">
+  <Panel title="Price history" description="Versioned pricing protects existing tenants from accidental surprise changes.">
     <div className="space-y-3">
       {data.versions.map((v) => <div key={`${v.plan}-${v.version}`} className="rounded-lg border border-border p-3">
         <div className="flex justify-between gap-2">
@@ -26,8 +26,8 @@ export default function SuperadminPlansV1HistoryAddonsAndMigrationSection({ data
         </p>
       </div>)}
     </div>
-  </SuperadminPanel>
-  <SuperadminPanel title="Add-ons" description="Optional paid capacity without forcing a full plan change.">
+  </Panel>
+  <Panel title="Add-ons" description="Optional paid capacity without forcing a full plan change.">
     <div className="space-y-3">
       {data.addons.map((a) => <div key={a.name} className="flex items-center justify-between rounded-lg border border-border p-3">
         <span className="truncate text-sm text-primary">
@@ -38,8 +38,8 @@ export default function SuperadminPlansV1HistoryAddonsAndMigrationSection({ data
         </span>
       </div>)}
     </div>
-  </SuperadminPanel>
-  <SuperadminPanel title="Plan move preview" description="Review impact before moving many tenants at once.">
+  </Panel>
+  <Panel title="Plan move preview" description="Review impact before moving many tenants at once.">
     <div className="space-y-3">
       <div className="rounded-lg bg-input p-3">
         <p className="text-xs text-secondary">
@@ -75,6 +75,6 @@ export default function SuperadminPlansV1HistoryAddonsAndMigrationSection({ data
         gyms exceed one or more target limits and need review first.
       </div>
     </div>
-  </SuperadminPanel>
+  </Panel>
     </div>;
 }

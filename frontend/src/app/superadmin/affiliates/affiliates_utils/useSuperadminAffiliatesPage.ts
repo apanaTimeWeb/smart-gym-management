@@ -9,7 +9,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { affiliatesApi } from '@/app/superadmin/affiliates/affiliates_api/SuperadminAffiliatesApi';
 import { AffiliateSchema } from '@/app/superadmin/affiliates/affiliates_types/SuperadminAffiliatesTypes';
 import type { Affiliate, AffiliateStatusFilter, AffiliateFormData } from '@/app/superadmin/affiliates/affiliates_types/SuperadminAffiliatesTypes';
-import { useSuperadminUrlState } from '@/app/superadmin/superadmin_infrastructure/useSuperadminUrlState';
+import { useUrlState } from '@/hooks/useUrlState';
 import { useSuperadminAffiliatesMutations } from '@/app/superadmin/affiliates/affiliates_utils/useSuperadminAffiliatesMutations';
 import { buildSuperadminAffiliatesQueryParams } from '@/app/superadmin/affiliates/affiliates_utils/SuperadminAffiliatesQueryUtils';
 /**
@@ -21,7 +21,7 @@ import { buildSuperadminAffiliatesQueryParams } from '@/app/superadmin/affiliate
  */
 export const useSuperadminAffiliatesPage = () => {
     const queryClient = useQueryClient();
-    const { getParam, setParam } = useSuperadminUrlState();
+    const { getParam, setParam } = useUrlState();
     const searchQuery = getParam('search', '');
     const statusFilter = getParam('status', 'ALL') as AffiliateStatusFilter;
     const startDate = getParam('startDate', '');

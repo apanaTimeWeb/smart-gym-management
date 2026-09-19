@@ -4,7 +4,7 @@
 import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { fetchBranchesComparison } from '@/app/superadmin/branches/branches_api/SuperadminBranchesComparisonApi';
-import { useSuperadminUrlState } from '@/app/superadmin/superadmin_infrastructure/useSuperadminUrlState';
+import { useUrlState } from '@/hooks/useUrlState';
 
 /**
  * Purpose: Keeps branch-comparison period/filter controls in the URL and propagates them to the API.
@@ -14,7 +14,7 @@ import { useSuperadminUrlState } from '@/app/superadmin/superadmin_infrastructur
  * Invariant: toolbar state must always be represented in the API query key/request.
  */
 export function useSuperadminBranchesV1() {
-  const { getParam, setParam } = useSuperadminUrlState();
+  const { getParam, setParam } = useUrlState();
   const period = getParam('period', '30d');
   const comparisonFilter = getParam('comparisonFilter', 'all');
   const params = useMemo(() => ({ period, filter: comparisonFilter }), [period, comparisonFilter]);

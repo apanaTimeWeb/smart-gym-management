@@ -5,15 +5,15 @@ import { useMemo, useState } from 'react';
 import { AlertCircle, CheckCircle, Clock, Loader2, Search, ServerCog, Ticket } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { formatNumber } from '@/lib/formatters';
-import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
+import { useSuperadminConfirm } from '@/app/superadmin/superadmin_layout/SuperadminFeedback/SuperadminConfirmProvider';
 import { useSuperadminSystemSla } from '@/app/superadmin/system/system_utils/useSuperadminSystemSla';
-import { useSuperadminUrlState } from '@/app/superadmin/superadmin_infrastructure/useSuperadminUrlState';
+import { useUrlState } from '@/hooks/useUrlState';
 import type { SuperadminSystemSlaRecord } from '@/app/superadmin/system/system_types/SuperadminSystemSlaTypes';
 
 const TABLE_COLUMN_COUNT = 6;
 
 export default function SuperadminSystemSlaTab() {
-  const { getParam, setParam } = useSuperadminUrlState();
+  const { getParam, setParam } = useUrlState();
   const { confirm } = useSuperadminConfirm();
   const [pendingCreditId, setPendingCreditId] = useState<string | null>(null);
   const slaSearch = getParam('search', '');

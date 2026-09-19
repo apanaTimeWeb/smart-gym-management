@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { Save, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useSuperadminSegmentMutations } from '@/app/superadmin/segments/segments_utils/useSuperadminSegmentMutations';
-import { useSuperadminUnsavedChangesGuard } from '@/app/superadmin/superadmin_infrastructure/useSuperadminUnsavedChangesGuard';
+import { useUnsavedChangesGuard } from '@/hooks/useUnsavedChangesGuard';
 import type { SuperadminSegmentEditorModalProps } from '@/app/superadmin/segments/segments_types/SuperadminSegmentsTypes';
 import { SuperadminSegmentCreatePayloadSchema } from '@/app/superadmin/segments/segments_types/SuperadminSegmentsValidationSchema';
 
@@ -17,7 +17,7 @@ export default function SuperadminSegmentEditorModal({ segment, onClose, onSaved
   const [usedIn, setUsedIn] = useState(segment?.usedIn ?? 'Gyms');
   const { createSegment, updateSegment, isSaving } = useSuperadminSegmentMutations();
   const dirty = name !== (segment?.name ?? '') || description !== (segment?.description ?? '') || rules !== String(segment?.rules ?? 1) || usedIn !== (segment?.usedIn ?? 'Gyms');
-  useSuperadminUnsavedChangesGuard(dirty && !isSaving, 'You have unsaved changes. Are you sure you want to leave? Your changes will be lost.');
+  useUnsavedChangesGuard(dirty && !isSaving, 'You have unsaved changes. Are you sure you want to leave? Your changes will be lost.');
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();

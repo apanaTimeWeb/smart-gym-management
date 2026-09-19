@@ -8,7 +8,7 @@ import { X, Plus, Trash2, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useSuperadminPlansStore } from '@/app/superadmin/plans/plans_store/useSuperadminPlansStore';
 import { useSuperadminPlanMutations } from '@/app/superadmin/plans/plans_utils/useSuperadminPlanMutations';
-import { useSuperadminUnsavedChangesGuard } from '@/app/superadmin/superadmin_infrastructure/useSuperadminUnsavedChangesGuard';
+import { useUnsavedChangesGuard } from '@/hooks/useUnsavedChangesGuard';
 import { planFormSchema } from '@/app/superadmin/plans/plans_types/SuperadminPlansSchema';
 import type { SuperadminPlansFormValues } from '@/app/superadmin/plans/plans_types/SuperadminPlansFormTypes';
 export default function SuperadminPlanEditModal() {
@@ -41,7 +41,7 @@ export default function SuperadminPlanEditModal() {
         }
     }, [selectedPlan, isOpen, reset]);
 
-    useSuperadminUnsavedChangesGuard(isDirty);
+    useUnsavedChangesGuard(isDirty);
     if (!isOpen || !selectedPlan)
         return null;
     const isSubmitting = isUpdating;

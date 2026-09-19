@@ -1,13 +1,13 @@
 // RESPONSIBILITY: Renders or orchestrates the Superadmin MessagingV1WhatsAppTemplatePicker responsibility defined by this module feature.
 'use client';
 import { MessageSquareText } from 'lucide-react';
-import SuperadminPanel from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPanel';
+import Panel from '@/components/ui/Panel';
 import { getSuperadminMessagingStatusBadgeClasses } from '@/app/superadmin/messaging/messaging_utils/SuperadminMessagingStatusBadgeConfig';
 import type { SuperadminWhatsAppTemplate } from '@/app/superadmin/messaging/messaging_whatsapp_types/SuperadminMessagingV1WhatsAppTypes';
 import type { SuperadminMessagingV1WhatsAppTemplatePickerProps } from '@/app/superadmin/messaging/messaging_types/SuperadminMessagingV1WhatsAppTemplatePickerTypes';
 
 export default function SuperadminMessagingV1WhatsAppTemplatePicker({ templates, selectedId, onSelect, }: SuperadminMessagingV1WhatsAppTemplatePickerProps) {
-    return (<SuperadminPanel title="WhatsApp templates" description="Ready-to-use messages for fees, renewals, maintenance, updates, and custom outreach.">
+    return (<Panel title="WhatsApp templates" description="Ready-to-use messages for fees, renewals, maintenance, updates, and custom outreach.">
       {templates.length === 0 ? (<div className="rounded-lg border border-dashed border-border p-5 text-sm text-secondary">
           No WhatsApp templates are available.
         </div>) : (<div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
@@ -28,5 +28,5 @@ export default function SuperadminMessagingV1WhatsAppTemplatePicker({ templates,
               </button>);
             })}
         </div>)}
-    </SuperadminPanel>);
+    </Panel>);
 }

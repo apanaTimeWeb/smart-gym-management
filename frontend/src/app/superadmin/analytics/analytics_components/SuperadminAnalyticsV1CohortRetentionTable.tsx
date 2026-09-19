@@ -1,9 +1,9 @@
 // RESPONSIBILITY: Renders the Superadmin analytics V1 Cohort retention view.
 'use client';
-import SuperadminPanel from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPanel';
+import Panel from '@/components/ui/Panel';
 import type { SuperadminAnalyticsV1SectionProps } from '@/app/superadmin/analytics/analytics_types/SuperadminAnalyticsV1Types.ts';
 export default function SuperadminAnalyticsV1CohortRetentionTable({ data }: SuperadminAnalyticsV1SectionProps) {
-    return <SuperadminPanel title="Cohort retention" description="Each row follows gyms that started in the same month. Higher percentages mean more gyms remained active.">
+    return <Panel title="Cohort retention" description="Each row follows gyms that started in the same month. Higher percentages mean more gyms remained active.">
   <div className="overflow-x-auto">
     <table className="w-full text-sm">
       <thead>
@@ -41,5 +41,5 @@ export default function SuperadminAnalyticsV1CohortRetentionTable({ data }: Supe
       </tbody>
     </table>
   </div>
-    </SuperadminPanel>;
+    </Panel>;
 }

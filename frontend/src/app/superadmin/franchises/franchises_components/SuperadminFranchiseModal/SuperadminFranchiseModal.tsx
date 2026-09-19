@@ -8,12 +8,12 @@ import type { SuperadminFranchise } from '@/app/superadmin/franchises/franchises
 import { franchiseSchema } from '@/app/superadmin/franchises/franchises_utils/SuperadminFranchisesSchemas';
 import type { FranchiseFormData, SuperadminFranchiseModalProps } from '@/app/superadmin/franchises/franchises_types/SuperadminFranchiseModalTypes';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
-import { useSuperadminUnsavedChangesGuard } from '@/app/superadmin/superadmin_infrastructure/useSuperadminUnsavedChangesGuard';
+import { useUnsavedChangesGuard } from '@/hooks/useUnsavedChangesGuard';
 export function SuperadminFranchiseModal({ isOpen, onClose, franchise, onSubmit, isMutating, }: SuperadminFranchiseModalProps) {
     const { register, control, handleSubmit, reset, formState: { errors, isDirty } } = useForm<FranchiseFormData>({
         resolver: zodResolver(franchiseSchema)
     });
-    useSuperadminUnsavedChangesGuard(isOpen && isDirty);
+    useUnsavedChangesGuard(isOpen && isDirty);
     // RESPONSIBILITY: Handle side-effects for SuperadminFranchiseModal
     // EXPLANATION: Synchronize component state with external dependencies.
     // EFFECT DEPENDENCIES: Documented intentionally.

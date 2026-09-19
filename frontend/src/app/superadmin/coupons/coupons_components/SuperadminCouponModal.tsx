@@ -6,11 +6,11 @@ import { Controller } from 'react-hook-form';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import { SUPERADMIN_COUPON_DISCOUNT_TYPE_OPTIONS } from '@/app/superadmin/coupons/coupons_utils/SuperadminCouponsConstants';
 import type { SuperadminCouponModalProps } from '@/app/superadmin/coupons/coupons_types/SuperadminCouponModalTypes';
-import { useSuperadminUnsavedChangesGuard } from '@/app/superadmin/superadmin_infrastructure/useSuperadminUnsavedChangesGuard';
+import { useUnsavedChangesGuard } from '@/hooks/useUnsavedChangesGuard';
 import { getSuperadminCouponsTodayISODate } from '@/app/superadmin/coupons/coupons_utils/SuperadminCouponsDateUtils';
 export const SuperadminCouponModal: React.FC<SuperadminCouponModalProps> = ({ isOpen, onClose, form, onSubmit, }) => {
     const todayIsoDate = getSuperadminCouponsTodayISODate();
-    useSuperadminUnsavedChangesGuard(isOpen && form.formState.isDirty);
+    useUnsavedChangesGuard(isOpen && form.formState.isDirty);
     if (!isOpen)
         return null;
     return (<div className="fixed inset-0 bg-overlay/80 z-40 flex items-center justify-center p-4 backdrop-blur-sm" role="dialog" aria-modal="true">

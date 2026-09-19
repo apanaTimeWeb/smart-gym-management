@@ -2,7 +2,7 @@
 'use client';
 import { Pencil, Trash2, Power, Check, Banknote } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
+import { useSuperadminConfirm } from '@/app/superadmin/superadmin_layout/SuperadminFeedback/SuperadminConfirmProvider';
 import SuperadminAffiliateStatusBadge from '@/app/superadmin/affiliates/affiliates_components/SuperadminAffiliateStatusBadge/SuperadminAffiliateStatusBadge';
 import type { Affiliate, AffiliateStatus } from '@/app/superadmin/affiliates/affiliates_types/SuperadminAffiliatesTypes';
 import { maskSensitiveData, formatCurrency, formatNumber } from '@/lib/formatters';

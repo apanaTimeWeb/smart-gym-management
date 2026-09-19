@@ -1,10 +1,10 @@
 // RESPONSIBILITY: Renders the Superadmin franchises V1 Franchise comparison view.
 'use client';
 import { formatCurrency, formatNumber, formatPercent1dp } from '@/lib/formatters';
-import SuperadminPanel from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPanel';
+import Panel from '@/components/ui/Panel';
 import type { SuperadminFranchisesV1SectionProps } from '@/app/superadmin/franchises/franchises_types/SuperadminFranchisesV1Types.ts';
 export default function SuperadminFranchisesV1ComparisonPanel({ data }: SuperadminFranchisesV1SectionProps) {
-    return <SuperadminPanel title="Franchise comparison" description="Income, growth, branch count, and health by franchise group.">
+    return <Panel title="Franchise comparison" description="Income, growth, branch count, and health by franchise group.">
   <div className="overflow-x-auto">
     <table className="w-full text-sm">
       <thead>
@@ -48,5 +48,5 @@ export default function SuperadminFranchisesV1ComparisonPanel({ data }: Superadm
       </tbody>
     </table>
   </div>
-    </SuperadminPanel>;
+    </Panel>;
 }

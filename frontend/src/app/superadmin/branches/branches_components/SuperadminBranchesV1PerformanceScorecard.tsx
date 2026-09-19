@@ -1,10 +1,10 @@
 // RESPONSIBILITY: Renders the Superadmin branches V1 Branch scorecard view.
 'use client';
 import { formatCurrency, formatNumber, formatPercent1dp } from '@/lib/formatters';
-import SuperadminPanel from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPanel';
+import Panel from '@/components/ui/Panel';
 import type { SuperadminBranchesV1SectionProps } from '@/app/superadmin/branches/branches_types/SuperadminBranchesV1Types.ts';
 export default function SuperadminBranchesV1PerformanceScorecard({ data }: SuperadminBranchesV1SectionProps) {
-    return <SuperadminPanel title="Branch scorecard" description="Income, members, growth, and health on one table.">
+    return <Panel title="Branch scorecard" description="Income, members, growth, and health on one table.">
   <div className="overflow-x-auto">
     <table className="w-full text-sm">
       <thead>
@@ -57,5 +57,5 @@ export default function SuperadminBranchesV1PerformanceScorecard({ data }: Super
       </tbody>
     </table>
   </div>
-    </SuperadminPanel>;
+    </Panel>;
 }

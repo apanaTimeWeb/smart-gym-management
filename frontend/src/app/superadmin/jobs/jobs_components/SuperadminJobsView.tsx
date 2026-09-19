@@ -11,7 +11,7 @@ import SuperadminJobsHeader from '@/app/superadmin/jobs/jobs_components/Superadm
 import SuperadminJobsStatsBar from '@/app/superadmin/jobs/jobs_components/SuperadminJobsStatsBar/SuperadminJobsStatsBar';
 import SuperadminJobsTable from '@/app/superadmin/jobs/jobs_components/SuperadminJobsTable/SuperadminJobsTable';
 import SuperadminJobInspectModal from '@/app/superadmin/jobs/jobs_components/SuperadminJobInspectModal/SuperadminJobInspectModal';
-import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
+import Pagination from '@/components/ui/Pagination';
 export default function SuperadminJobsView() {
     const { isPending, isError: error, filteredJobs, paginatedJobs, currentPage, totalPages, setCurrentPage, statusFilter, setStatusFilter, queueFilter, setQueueFilter, selectedJobIds, toggleSelection, toggleAll, inspectJob, setInspectJob, isRetrying, handleRetryAll, handleRetryJob, handleCancelJob, handleDeleteJob, handleClearCompleted, handleBulkRetry, handleBulkDelete, metrics, } = useSuperadminJobsPage();
     if (isPending) {
@@ -36,7 +36,7 @@ export default function SuperadminJobsView() {
 
       <div className="bg-card border border-border rounded-xl shadow-card overflow-hidden flex flex-col min-h-96">
         <SuperadminJobsTable jobs={paginatedJobs} allJobsFiltered={statusFilter !== 'ALL' || queueFilter !== 'ALL'} selectedJobIds={selectedJobIds} toggleSelection={toggleSelection} toggleAll={toggleAll} onInspect={setInspectJob} onRetry={handleRetryJob} onCancel={handleCancelJob} onDelete={handleDeleteJob}/>
-        <SuperadminPagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage}/>
+        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage}/>
       </div>
 
       {inspectJob && (<SuperadminJobInspectModal job={inspectJob} onClose={() => setInspectJob(null)}/>)}

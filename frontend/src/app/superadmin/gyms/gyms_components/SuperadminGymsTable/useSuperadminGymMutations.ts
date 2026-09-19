@@ -9,7 +9,7 @@ import { gymsApi } from '@/app/superadmin/gyms/gyms_api/SuperadminGymsApi';
 import type { Tenant } from '@/app/superadmin/gyms/gyms_types/SuperadminGymsTypes';
 import { GymsUrlConfig } from '@/app/superadmin/gyms/superadmin_gyms_url_config';
 import { useSuperadminGymGhostLoginStore } from '@/app/superadmin/gyms/gyms_store/useSuperadminGymGhostLoginStore';
-import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
+import { useSuperadminConfirm } from '@/app/superadmin/superadmin_layout/SuperadminFeedback/SuperadminConfirmProvider';
 /**
  * Purpose: Manage Superadmin gym tenant impersonation and suspension mutations, confirmations, cache invalidation, and feedback.
  * Inputs: values defined by the exported hook signature.

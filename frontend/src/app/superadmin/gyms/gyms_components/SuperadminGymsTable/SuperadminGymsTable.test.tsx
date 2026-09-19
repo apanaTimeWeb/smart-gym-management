@@ -7,8 +7,8 @@ import { useSuperadminGymsTable } from '@/app/superadmin/gyms/gyms_components/Su
 vi.mock('@/app/superadmin/gyms/gyms_components/SuperadminGymsTable/useSuperadminGymsTable');
 vi.mock('@/app/superadmin/gyms/gyms_components/SuperadminGymsTable/SuperadminGymsTableSortIcon', () => ({ default: () => null }));
 vi.mock('@/app/superadmin/gyms/gyms_components/SuperadminGymsEmptyState/SuperadminGymsEmptyState', () => ({ default: () => <div>No gyms</div> }));
-vi.mock('@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination', () => ({ default: () => null }));
-vi.mock('@/app/superadmin/superadmin_components/SuperadminShared/SuperadminCopyButton', () => ({ default: () => null }));
+vi.mock('@/components/ui/Pagination', () => ({ default: () => null }));
+vi.mock('@/components/ui/CopyButton', () => ({ default: () => null }));
 vi.mock('@/app/superadmin/gyms/gyms_components/SuperadminGymEditModal/SuperadminGymEditModal', () => ({ default: () => null }));
 vi.mock('@/app/superadmin/gyms/gyms_components/SuperadminGymWhatsappModal/SuperadminGymWhatsappModal', () => ({ default: () => null }));
 vi.mock('@/app/superadmin/gyms/gyms_components/SuperadminGymDeleteModal/SuperadminGymDeleteModal', () => ({ default: () => null }));

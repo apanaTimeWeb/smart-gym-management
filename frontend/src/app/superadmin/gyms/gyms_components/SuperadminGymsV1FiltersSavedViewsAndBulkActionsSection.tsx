@@ -3,7 +3,7 @@
 
 import { useState } from 'react';
 import { Filter, UsersRound, Download } from 'lucide-react';
-import SuperadminPanel from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPanel';
+import Panel from '@/components/ui/Panel';
 import { SUPERADMIN_GYMS_V1_PLAN_OPTIONS } from '@/app/superadmin/gyms/gyms_utils/SuperadminGymsV1Constants';
 import type { SuperadminGymsV1FiltersSavedViewsAndBulkActionsSectionProps, SuperadminGymsV1BulkAction } from '@/app/superadmin/gyms/gyms_types/SuperadminGymsV1Types';
 
@@ -48,7 +48,7 @@ export default function SuperadminGymsV1FiltersSavedViewsAndBulkActionsSection({
 
   return (
     <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
-      <SuperadminPanel title="Advanced tenant filters" description="Apply a real filter to the tenant dataset returned by the module API.">
+      <Panel title="Advanced tenant filters" description="Apply a real filter to the tenant dataset returned by the module API.">
         <div className="grid grid-cols-2 gap-2">
           {data.filters.map((filter) => (
             <button key={filter.key} type="button" aria-pressed={selectedFilterKey === filter.key} onClick={() => onFilterChange(filter.key)} className={`min-h-11 rounded-md border px-3 py-2 text-left text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-safe:transition-all ${selectedFilterKey === filter.key ? 'border-primary bg-primary-subtle text-primary' : 'border-border bg-input text-primary'}`}>
@@ -57,9 +57,9 @@ export default function SuperadminGymsV1FiltersSavedViewsAndBulkActionsSection({
           ))}
         </div>
         <p className="mt-3 text-xs text-secondary" role="status">Showing {data.rows.length} tenant records for this filter.</p>
-      </SuperadminPanel>
+      </Panel>
 
-      <SuperadminPanel title="Saved views" description="Saved views apply the same server-backed filter definitions as the filter controls.">
+      <Panel title="Saved views" description="Saved views apply the same server-backed filter definitions as the filter controls.">
         <div className="space-y-2">
           {data.saved.map((view) => (
             <button key={view.key} type="button" onClick={() => onSavedViewChange(view.key)} className={`flex min-h-11 w-full items-center justify-between rounded-md border px-3 py-2 text-left text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${selectedFilterKey === view.key ? 'border-primary bg-primary-subtle text-primary' : 'border-border text-primary'}`}>
@@ -67,9 +67,9 @@ export default function SuperadminGymsV1FiltersSavedViewsAndBulkActionsSection({
             </button>
           ))}
         </div>
-      </SuperadminPanel>
+      </Panel>
 
-      <SuperadminPanel title="Bulk actions" description="Select visible tenants, choose an action, and apply it through the module-owned mutation.">
+      <Panel title="Bulk actions" description="Select visible tenants, choose an action, and apply it through the module-owned mutation.">
         <div className="space-y-3">
           <div className="flex items-center justify-between gap-2">
             <span className="text-xs text-secondary">{selectedGymIds.length} selected</span>
@@ -94,7 +94,7 @@ export default function SuperadminGymsV1FiltersSavedViewsAndBulkActionsSection({
             {isBulkPending ? 'Applying…' : 'Apply action'}
           </button>
         </div>
-      </SuperadminPanel>
+      </Panel>
     </div>
   );
 }

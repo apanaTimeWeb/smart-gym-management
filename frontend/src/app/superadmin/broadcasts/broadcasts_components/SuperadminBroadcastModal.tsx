@@ -8,10 +8,10 @@ import { useSuperadminBroadcastModalData } from '@/app/superadmin/broadcasts/bro
 import { SUPERADMIN_BROADCAST_STATUS_OPTIONS } from '@/app/superadmin/broadcasts/broadcasts_utils/SuperadminBroadcastConstants';
 import { combineSuperadminBroadcastScheduleDateTime, splitSuperadminBroadcastScheduleDateTime } from '@/app/superadmin/broadcasts/broadcasts_utils/SuperadminBroadcastScheduleUtils';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
-import { useSuperadminUnsavedChangesGuard } from '@/app/superadmin/superadmin_infrastructure/useSuperadminUnsavedChangesGuard';
+import { useUnsavedChangesGuard } from '@/hooks/useUnsavedChangesGuard';
 export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> = ({ isOpen, onClose, form, onSubmit, isEditMode = false, isMutating = false, }) => {
     const { register, handleSubmit, watch, setValue, formState: { errors, isDirty } } = form;
-    useSuperadminUnsavedChangesGuard(isOpen && isDirty);
+    useUnsavedChangesGuard(isOpen && isDirty);
     const status = watch('status');
     const targetGymIds = watch('targetGymIds') || [];
     const scheduledDateValue = watch('scheduledDate');

@@ -5,11 +5,11 @@ import { Controller } from 'react-hook-form';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import { X, Eye, EyeOff } from 'lucide-react';
 import { useSuperadminGymEditModal } from '@/app/superadmin/gyms/gyms_components/SuperadminGymEditModal/useSuperadminGymEditModal';
-import { useSuperadminUnsavedChangesGuard } from '@/app/superadmin/superadmin_infrastructure/useSuperadminUnsavedChangesGuard';
+import { useUnsavedChangesGuard } from '@/hooks/useUnsavedChangesGuard';
 import { formatCurrency } from '@/lib/formatters';
 export default function SuperadminGymEditModal() {
     const { isEditModalOpen, closeEditModal, selectedGym, plans, loadingPlans, register, handleSubmit, onSubmit, control, errors, isDirty, isSubmitting, } = useSuperadminGymEditModal();
-    useSuperadminUnsavedChangesGuard(isDirty);
+    useUnsavedChangesGuard(isDirty);
     const [showPassword, setShowPassword] = React.useState(false);
     if (!isEditModalOpen || !selectedGym)
         return null;

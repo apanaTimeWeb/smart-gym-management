@@ -10,10 +10,10 @@ import { ToggleLeft, Send, Search, Users, Clock } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useSuperadminUnsavedChangesGuard } from '@/app/superadmin/superadmin_infrastructure/useSuperadminUnsavedChangesGuard';
+import { useUnsavedChangesGuard } from '@/hooks/useUnsavedChangesGuard';
 import type { FeatureFlag, ReleaseNote } from '@/app/superadmin/features/features_types/SuperadminFeaturesTypes';
 import toast from 'react-hot-toast';
-import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
+import { useSuperadminConfirm } from '@/app/superadmin/superadmin_layout/SuperadminFeedback/SuperadminConfirmProvider';
 import { releaseNoteSchema } from '@/app/superadmin/features/features_types/SuperadminFeaturesUiTypes';
 import type { FeaturesTab, ReleaseNoteFormValues } from '@/app/superadmin/features/features_types/SuperadminFeaturesUiTypes';
 import SuperadminFeatureRolloutModal from '@/app/superadmin/features/features_components/SuperadminFeatureRolloutModal';
@@ -27,7 +27,7 @@ export default function SuperadminFeaturesClient() {
         resolver: zodResolver(releaseNoteSchema),
         defaultValues: { version: '', title: '', content: '' }
     });
-    useSuperadminUnsavedChangesGuard(isDirty && activeTab === 'NOTES', 'You have an unsaved release note. Discard?');
+    useUnsavedChangesGuard(isDirty && activeTab === 'NOTES', 'You have an unsaved release note. Discard?');
     const { confirm } = useSuperadminConfirm();
     const { data, isPending, error, updateFeatureFlagStatus, updateFlag, publishNote, isPublishing } = useSuperadminFeaturesData();
     const onPublishNote = async (formData: ReleaseNoteFormValues) => {

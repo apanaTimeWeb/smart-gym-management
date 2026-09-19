@@ -4,10 +4,10 @@ import React from 'react';
 import { X } from 'lucide-react';
 import { maskSensitiveData } from '@/lib/formatters';
 import { useSuperadminGymWhatsappModal } from '@/app/superadmin/gyms/gyms_components/SuperadminGymWhatsappModal/useSuperadminGymWhatsappModal';
-import { useSuperadminUnsavedChangesGuard } from '@/app/superadmin/superadmin_infrastructure/useSuperadminUnsavedChangesGuard';
+import { useUnsavedChangesGuard } from '@/hooks/useUnsavedChangesGuard';
 export default function SuperadminGymWhatsappModal() {
     const { isWhatsappModalOpen, closeWhatsappModal, selectedGym, register, handleSubmit, onSubmit, errors, isSubmitting, isDirty, } = useSuperadminGymWhatsappModal();
-    useSuperadminUnsavedChangesGuard(isWhatsappModalOpen && isDirty);
+    useUnsavedChangesGuard(isWhatsappModalOpen && isDirty);
     if (!isWhatsappModalOpen || !selectedGym)
         return null;
     return (<div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 p-4" role="dialog" aria-modal="true">

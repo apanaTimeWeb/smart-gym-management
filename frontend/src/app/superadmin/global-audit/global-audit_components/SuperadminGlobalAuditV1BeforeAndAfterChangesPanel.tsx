@@ -1,10 +1,10 @@
 // RESPONSIBILITY: Renders the Superadmin global-audit V1 Before & after changes view.
 'use client';
 import { formatDateTime } from '@/lib/formatters';
-import SuperadminPanel from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPanel';
+import Panel from '@/components/ui/Panel';
 import type { SuperadminGlobalAuditV1SectionProps } from '@/app/superadmin/global-audit/global-audit_types/SuperadminGlobalAuditV1Types.ts';
 export default function SuperadminGlobalAuditV1BeforeAndAfterChangesPanel({ data }: SuperadminGlobalAuditV1SectionProps) {
-    return <SuperadminPanel title="Before & after changes" description="Inspect exactly what changed instead of reading only the event name.">
+    return <Panel title="Before & after changes" description="Inspect exactly what changed instead of reading only the event name.">
   <div className="space-y-3">
     {data.changes.map((c) => <div key={`${c.time}-${c.resource}`} className="rounded-lg border border-border p-4">
       <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
@@ -44,5 +44,5 @@ export default function SuperadminGlobalAuditV1BeforeAndAfterChangesPanel({ data
       </div>
     </div>)}
   </div>
-    </SuperadminPanel>;
+    </Panel>;
 }

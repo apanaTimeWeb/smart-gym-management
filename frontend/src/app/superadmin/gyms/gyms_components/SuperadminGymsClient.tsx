@@ -8,7 +8,7 @@ import SuperadminGymsToolbar from '@/app/superadmin/gyms/gyms_components/Superad
 import SuperadminGymsTable from '@/app/superadmin/gyms/gyms_components/SuperadminGymsTable/SuperadminGymsTable';
 import SuperadminGymsCalendar from '@/app/superadmin/gyms/gyms_components/SuperadminGymsCalendar/SuperadminGymsCalendar';
 import { useSuperadminGymsStore } from '@/app/superadmin/gyms/gyms_store/useSuperadminGymsStore';
-import { SuperadminErrorBoundary } from '@/app/superadmin/superadmin_components/SuperadminLayout/SuperadminErrorBoundary';
+import { SuperadminErrorBoundary } from '@/app/superadmin/superadmin_layout/SuperadminLayout/SuperadminErrorBoundary';
 export default function SuperadminGymsClient() {
     const viewMode = useSuperadminGymsStore(state => state.viewMode);
     return (<div className="space-y-6">

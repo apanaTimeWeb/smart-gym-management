@@ -7,8 +7,8 @@ import SuperadminGymEditModal from '@/app/superadmin/gyms/gyms_components/Supera
 import SuperadminGymWhatsappModal from '@/app/superadmin/gyms/gyms_components/SuperadminGymWhatsappModal/SuperadminGymWhatsappModal';
 import SuperadminGymDeleteModal from '@/app/superadmin/gyms/gyms_components/SuperadminGymDeleteModal/SuperadminGymDeleteModal';
 import SuperadminGymsEmptyState from '@/app/superadmin/gyms/gyms_components/SuperadminGymsEmptyState/SuperadminGymsEmptyState';
-import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
-import SuperadminCopyButton from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminCopyButton';
+import Pagination from '@/components/ui/Pagination';
+import CopyButton from '@/components/ui/CopyButton';
 import type { KeyboardEvent } from 'react';
 import { GYMS_PLAN_COLORS } from '@/app/superadmin/gyms/gyms_utils/SuperadminGymsConstants';
 import { formatCurrency, formatDate } from '@/lib/formatters';
@@ -106,7 +106,7 @@ export default function SuperadminGymsTable() {
                   <p className="font-semibold text-primary truncate" title={gym.name}>{gym.name}</p>
                   <span className="flex items-center gap-1 text-xs text-disabled mt-1">
                     <span className="truncate font-mono" title={gym.id}>{gym.id}</span>
-                    <SuperadminCopyButton value={gym.id} label={`Copy gym ID ${gym.id}`}/>
+                    <CopyButton value={gym.id} label={`Copy gym ID ${gym.id}`}/>
                   </span>
                 </td>
                 <td className="p-4 max-w-40">
@@ -173,7 +173,7 @@ export default function SuperadminGymsTable() {
         </tbody>
       </table>
 
-      <SuperadminPagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage}/>
+      <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage}/>
 
       <SuperadminGymEditModal />
       <SuperadminGymWhatsappModal />

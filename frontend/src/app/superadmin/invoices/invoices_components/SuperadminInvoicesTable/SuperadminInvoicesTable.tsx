@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import type { SaaSInvoice } from '@/app/superadmin/invoices/invoices_types/SuperadminInvoicesTypes';
 import SuperadminInvoicesTableRow from '@/app/superadmin/invoices/invoices_components/SuperadminInvoicesTable/SuperadminInvoicesTableRow';
 import SuperadminInvoicesEmptyState from '@/app/superadmin/invoices/invoices_components/SuperadminInvoicesEmptyState/SuperadminInvoicesEmptyState';
-import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
+import Pagination from '@/components/ui/Pagination';
 import type { SuperadminInvoicesTableProps } from '@/app/superadmin/invoices/invoices_types/SuperadminInvoicesTableTypes';
 
 const ITEMS_PER_PAGE = 10;
@@ -38,7 +38,7 @@ export default function SuperadminInvoicesTable({ invoices, onLogPaymentClick, c
         </table>
       </div>
       {totalPages > 1 && (<div className="p-4 border-t border-border">
-          <SuperadminPagination currentPage={currentPage} totalPages={totalPages} onPageChange={onPageChange}/>
+          <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={onPageChange}/>
         </div>)}
     </div>);
 }

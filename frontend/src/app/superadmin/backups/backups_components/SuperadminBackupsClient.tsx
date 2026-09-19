@@ -6,16 +6,16 @@ import { DatabaseBackup, Search, Clock } from 'lucide-react';
 import type { BackupRecord } from '@/app/superadmin/backups/backups_types/SuperadminBackupsTypes';
 import { useState } from 'react';
 import { useSuperadminBackupsActions } from '@/app/superadmin/backups/backups_utils/useSuperadminBackupsActions';
-import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
-import { useSuperadminUrlState } from '@/app/superadmin/superadmin_infrastructure/useSuperadminUrlState';
+import Pagination from '@/components/ui/Pagination';
+import { useUrlState } from '@/hooks/useUrlState';
 // Rule 10: Absolute imports only — no relative paths allowed
 import SuperadminBackupsTable from '@/app/superadmin/backups/backups_components/SuperadminBackupsTable';
 import SuperadminBackupsRestoreModal from '@/app/superadmin/backups/backups_components/SuperadminBackupsRestoreModal';
 import SuperadminBackupsTriggerModal from '@/app/superadmin/backups/backups_components/SuperadminBackupsTriggerModal';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
-import { SuperadminErrorBoundary } from '@/app/superadmin/superadmin_components/SuperadminLayout/SuperadminErrorBoundary';
+import { SuperadminErrorBoundary } from '@/app/superadmin/superadmin_layout/SuperadminLayout/SuperadminErrorBoundary';
 export default function SuperadminBackupsClient() {
-    const { getParam, setParam } = useSuperadminUrlState();
+    const { getParam, setParam } = useUrlState();
     const search = getParam('search', '');
     const statusFilter = getParam('statusFilter', 'ALL');
     const typeFilter = getParam('typeFilter', 'ALL');
@@ -90,7 +90,7 @@ export default function SuperadminBackupsClient() {
         </div>
 
         <SuperadminBackupsTable paginatedBackups={paginatedBackups} filteredLength={filtered.length} handleDownload={(id: string) => { void downloadBackup(id); }} handleRestoreClick={handleRestoreClick}/>
-        <SuperadminPagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage}/>
+        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage}/>
         </div>
       </SuperadminErrorBoundary>
 

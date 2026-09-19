@@ -1,10 +1,10 @@
 // RESPONSIBILITY: Renders the Superadmin messaging V1 Campaign engagement view.
 'use client';
 import { formatNumber } from '@/lib/formatters';
-import SuperadminPanel from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPanel';
+import Panel from '@/components/ui/Panel';
 import type { SuperadminMessagingV1SectionProps } from '@/app/superadmin/messaging/messaging_types/SuperadminMessagingV1Types.ts';
 export default function SuperadminMessagingV1CampaignEngagementPanel({ data }: SuperadminMessagingV1SectionProps) {
-    return <SuperadminPanel title="Campaign engagement" description="Messages sent, delivered, opened, and answered.">
+    return <Panel title="Campaign engagement" description="Messages sent, delivered, opened, and answered.">
   <div className="overflow-x-auto">
     <table className="w-full text-sm">
       <thead>
@@ -47,5 +47,5 @@ export default function SuperadminMessagingV1CampaignEngagementPanel({ data }: S
       </tbody>
     </table>
   </div>
-    </SuperadminPanel>;
+    </Panel>;
 }

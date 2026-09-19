@@ -12,11 +12,11 @@ const mockedUseUrlState = vi.hoisted(() => ({
   setParams: vi.fn(),
 }));
 
-vi.mock('@/app/superadmin/superadmin_infrastructure/useSuperadminUrlState', () => ({
-  useSuperadminUrlState: () => mockedUseUrlState,
+vi.mock('@/hooks/useUrlState', () => ({
+  useUrlState: () => mockedUseUrlState,
 }));
-vi.mock('@/app/superadmin/superadmin_infrastructure/useSuperadminDebouncedValue', () => ({
-  useSuperadminDebouncedValue: (value: string) => value,
+vi.mock('@/hooks/useDebouncedValue', () => ({
+  useDebouncedValue: (value: string) => value,
 }));
 vi.mock('@/app/superadmin/messaging/messaging_api/SuperadminMessagingApi', () => ({
   superadminMessagingApi: {

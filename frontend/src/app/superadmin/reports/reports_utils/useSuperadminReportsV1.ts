@@ -4,7 +4,7 @@
 import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { fetchReportsComparison } from '@/app/superadmin/reports/reports_api/SuperadminReportsComparisonApi';
-import { useSuperadminUrlState } from '@/app/superadmin/superadmin_infrastructure/useSuperadminUrlState';
+import { useUrlState } from '@/hooks/useUrlState';
 
 /**
  * Purpose: Keeps report period and segment selections in the URL and propagates them to the module API.
@@ -14,7 +14,7 @@ import { useSuperadminUrlState } from '@/app/superadmin/superadmin_infrastructur
  * Invariant: selected period/segment always belong to the query key and request parameters.
  */
 export function useSuperadminReportsV1() {
-  const { getParam, setParam } = useSuperadminUrlState();
+  const { getParam, setParam } = useUrlState();
   const period = getParam('reportPeriod', 'month');
   const segment = getParam('reportSegment', 'all');
   const params = useMemo(() => ({ period, segment }), [period, segment]);

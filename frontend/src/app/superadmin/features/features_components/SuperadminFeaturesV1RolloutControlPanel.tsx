@@ -1,10 +1,10 @@
 // RESPONSIBILITY: Renders the Superadmin features V1 Rollout control view.
 'use client';
 import { formatNumber } from '@/lib/formatters';
-import SuperadminPanel from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPanel';
+import Panel from '@/components/ui/Panel';
 import type { SuperadminFeaturesV1SectionProps } from '@/app/superadmin/features/features_types/SuperadminFeaturesV1Types.ts';
 export default function SuperadminFeaturesV1RolloutControlPanel({ data }: SuperadminFeaturesV1SectionProps) {
-    return <SuperadminPanel title="Rollout control" description="Use percentage rollout, tenant targeting, scheduled changes, and visible health checks.">
+    return <Panel title="Rollout control" description="Use percentage rollout, tenant targeting, scheduled changes, and visible health checks.">
   <div className="overflow-x-auto">
     <table className="w-full text-sm">
       <thead>
@@ -49,5 +49,5 @@ export default function SuperadminFeaturesV1RolloutControlPanel({ data }: Supera
       </tbody>
     </table>
   </div>
-    </SuperadminPanel>;
+    </Panel>;
 }

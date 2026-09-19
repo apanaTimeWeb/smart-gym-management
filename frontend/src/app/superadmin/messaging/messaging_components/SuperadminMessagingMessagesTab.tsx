@@ -3,8 +3,8 @@
 
 import { Bell, Mail, MessageSquare, Search } from 'lucide-react';
 import { formatDateTime } from '@/lib/formatters';
-import SuperadminDateRangePicker from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminDateRangePicker';
-import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
+import DateRangePicker from '@/components/ui/DateRangePicker';
+import Pagination from '@/components/ui/Pagination';
 import type { SuperadminMessagingMessagesTabProps } from '@/app/superadmin/messaging/messaging_types/SuperadminMessagingMessagesTabTypes';
 import { CHANNEL_STYLES, MESSAGE_STATUS_STYLES } from '@/app/superadmin/messaging/messaging_types/SuperadminMessagingConstants';
 
@@ -25,7 +25,7 @@ export function SuperadminMessagingMessagesTab({ search, setSearch, channelFilte
               </button>
             ))}
           </div>
-          <SuperadminDateRangePicker onRangeChange={setRange} />
+          <DateRangePicker onRangeChange={setRange} />
         </div>
       </div>
 
@@ -67,7 +67,7 @@ export function SuperadminMessagingMessagesTab({ search, setSearch, channelFilte
           <div className="px-6 py-16 text-center text-secondary">No messages match the current search and filters.</div>
         )}
         {isFetching && <div className="border-t border-border px-5 py-2 text-xs text-secondary">Refreshing message results...</div>}
-        <SuperadminPagination currentPage={currentPage} totalPages={totalPages} onPageChange={onPageChange} totalItems={totalItems} itemsPerPage={10} />
+        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={onPageChange} totalItems={totalItems} itemsPerPage={10} />
       </div>
     </div>
   );

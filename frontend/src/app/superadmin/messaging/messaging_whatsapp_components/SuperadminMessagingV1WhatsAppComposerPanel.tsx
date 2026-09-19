@@ -1,12 +1,12 @@
 // RESPONSIBILITY: Renders or orchestrates the Superadmin MessagingV1WhatsAppComposerPanel responsibility defined by this module feature.
 'use client';
 import { ClipboardPlus } from 'lucide-react';
-import SuperadminPanel from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPanel';
+import Panel from '@/components/ui/Panel';
 import type { SuperadminWhatsAppTemplate } from '@/app/superadmin/messaging/messaging_whatsapp_types/SuperadminMessagingV1WhatsAppTypes';
 import type { SuperadminMessagingV1WhatsAppComposerPanelProps } from '@/app/superadmin/messaging/messaging_types/SuperadminMessagingV1WhatsAppComposerPanelTypes';
 
 export default function SuperadminMessagingV1WhatsAppComposerPanel({ template, title, body, variables, onTitleChange, onBodyChange, onInsertVariable, }: SuperadminMessagingV1WhatsAppComposerPanelProps) {
-    return (<SuperadminPanel title="Message composer" description="Pick a template, edit the wording, and use variables for personalized messages." action={(<span className="rounded-full border border-primary/30 bg-primary/10 px-2.5 py-1 text-xs font-semibold uppercase tracking-wider text-primary">
+    return (<Panel title="Message composer" description="Pick a template, edit the wording, and use variables for personalized messages." action={(<span className="rounded-full border border-primary/30 bg-primary/10 px-2.5 py-1 text-xs font-semibold uppercase tracking-wider text-primary">
           Free click-to-chat mode
         </span>)}>
       <div className="space-y-4">
@@ -35,5 +35,5 @@ export default function SuperadminMessagingV1WhatsAppComposerPanel({ template, t
           <p className="mt-3 text-xs text-secondary">Example: <span className="text-primary">Hi {'{contact_name}'}</span> becomes the selected tenant contact name before the WhatsApp chat opens.</p>
         </div>
       </div>
-    </SuperadminPanel>);
+    </Panel>);
 }

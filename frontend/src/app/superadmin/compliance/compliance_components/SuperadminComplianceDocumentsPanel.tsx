@@ -2,12 +2,12 @@
 'use client';
 import { displayValue } from '@/lib/formatters';
 import SuperadminComplianceDocumentsEmptyState from '@/app/superadmin/compliance/compliance_components/SuperadminComplianceDocumentsEmptyState';
-import SuperadminTooltip from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminTooltip';
-import SuperadminPanel from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPanel';
+import Tooltip from '@/components/ui/Tooltip';
+import Panel from '@/components/ui/Panel';
 import { getSuperadminComplianceStatusBadgeClasses } from '@/app/superadmin/compliance/compliance_utils/SuperadminComplianceStatusBadgeConfig';
 import type { SuperadminComplianceSectionProps } from '@/app/superadmin/compliance/compliance_types/SuperadminComplianceTypes';
 export default function SuperadminComplianceDocumentsPanel({ data }: SuperadminComplianceSectionProps) {
-    return (<SuperadminPanel title="Compliance Documents" description="Tenant-level registrations and expiry dates.">
+    return (<Panel title="Compliance Documents" description="Tenant-level registrations and expiry dates.">
   <div className="overflow-x-auto">
     <table className="w-full text-sm">
       <thead>
@@ -29,11 +29,11 @@ export default function SuperadminComplianceDocumentsPanel({ data }: SuperadminC
       <tbody>
         {data.documents.length === 0 ? <tr><td colSpan={4}><SuperadminComplianceDocumentsEmptyState /></td></tr> : data.documents.map(d => (<tr key={`${d.tenant}-${d.document}`} className="border-b border-border">
             <td className="px-3 py-3 text-primary">
-              <SuperadminTooltip content={d.tenant}>
+              <Tooltip content={d.tenant}>
                 <span className="max-w-56 truncate">
                   {d.tenant}
                 </span>
-              </SuperadminTooltip>
+              </Tooltip>
             </td>
             <td className="px-3 py-3 text-secondary">
               {d.document}
@@ -50,5 +50,5 @@ export default function SuperadminComplianceDocumentsPanel({ data }: SuperadminC
       </tbody>
     </table>
   </div>
-    </SuperadminPanel>);
+    </Panel>);
 }

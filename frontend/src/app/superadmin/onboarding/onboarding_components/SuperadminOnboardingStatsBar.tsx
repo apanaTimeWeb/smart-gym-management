@@ -1,9 +1,9 @@
 // RESPONSIBILITY: Renders the Onboarding Stats Bar component and its associated UI logic.
 'use client';
-import { useSuperadminDateRangeSuffix } from '@/app/superadmin/superadmin_components/SuperadminShared/useSuperadminDateRangeSuffix';
+import { useDateRangeSuffix } from '@/components/ui/useDateRangeSuffix';
 import type { SuperadminOnboardingStatsBarProps } from '@/app/superadmin/onboarding/onboarding_types/SuperadminOnboardingStatsBarTypes';
 export function SuperadminOnboardingStatsBar({ stats }: SuperadminOnboardingStatsBarProps) {
-    const dateSuffix = useSuperadminDateRangeSuffix();
+    const dateSuffix = useDateRangeSuffix();
     const statCards = [
         { label: 'Total Signups', value: stats.total, color: 'text-primary' },
         { label: 'Completed', value: stats.completed, color: 'text-success' },

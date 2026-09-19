@@ -3,12 +3,12 @@
 import { displayValue, formatDateTime } from '@/lib/formatters';
 import { maskSensitiveData } from '@/lib/formatters';
 import SuperadminTeamMembersEmptyState from '@/app/superadmin/team/team_components/SuperadminTeamMembersEmptyState';
-import SuperadminTooltip from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminTooltip';
-import SuperadminPanel from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPanel';
+import Tooltip from '@/components/ui/Tooltip';
+import Panel from '@/components/ui/Panel';
 import { getSuperadminTeamStatusBadgeClasses } from '@/app/superadmin/team/team_utils/SuperadminTeamStatusBadgeConfig';
 import type { SuperadminTeamSectionProps } from '@/app/superadmin/team/team_types/SuperadminTeamTypes';
 export default function SuperadminTeamMembersPanel({ data }: SuperadminTeamSectionProps) {
-    return (<SuperadminPanel title="Team Members" description="Named access is auditable and safer than shared full-access accounts.">
+    return (<Panel title="Team Members" description="Named access is auditable and safer than shared full-access accounts.">
   {data.users.length === 0 ? <SuperadminTeamMembersEmptyState /> : <div className="overflow-x-auto">
     <table className="w-full text-sm">
       <thead>
@@ -33,16 +33,16 @@ export default function SuperadminTeamMembersPanel({ data }: SuperadminTeamSecti
       <tbody>
         {data.users.map(user => (<tr key={user.id} className="border-b border-border">
             <td className="px-3 py-3">
-              <SuperadminTooltip content={user.name}>
+              <Tooltip content={user.name}>
                 <div className="max-w-56 truncate font-medium text-primary">
                   {user.name}
                 </div>
-              </SuperadminTooltip>
-              <SuperadminTooltip content={maskSensitiveData(user.email, 'email')}>
+              </Tooltip>
+              <Tooltip content={maskSensitiveData(user.email, 'email')}>
                 <div className="max-w-56 truncate text-xs text-secondary">
                   {maskSensitiveData(user.email, 'email')}
                 </div>
-              </SuperadminTooltip>
+              </Tooltip>
             </td>
             <td className="px-3 py-3 text-primary">
               {user.role}
@@ -62,5 +62,5 @@ export default function SuperadminTeamMembersPanel({ data }: SuperadminTeamSecti
       </tbody>
     </table>
   </div>}
-    </SuperadminPanel>);
+    </Panel>);
 }

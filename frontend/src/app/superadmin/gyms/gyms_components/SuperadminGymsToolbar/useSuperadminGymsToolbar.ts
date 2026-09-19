@@ -9,10 +9,10 @@ import debounce from 'lodash.debounce';
 import toast from 'react-hot-toast';
 import { useSuperadminGymsStore } from '@/app/superadmin/gyms/gyms_store/useSuperadminGymsStore';
 import { gymsApi } from '@/app/superadmin/gyms/gyms_api/SuperadminGymsApi';
-import { useSuperadminUrlState } from '@/app/superadmin/superadmin_infrastructure/useSuperadminUrlState';
+import { useUrlState } from '@/hooks/useUrlState';
 /** Owns URL-synchronized toolbar state and delegates export execution to the Gyms API client. */
 export function useSuperadminGymsToolbar() {
-    const { getParam, setParam } = useSuperadminUrlState();
+    const { getParam, setParam } = useUrlState();
     const search = getParam('search', '');
     const statusFilter = getParam('statusFilter', 'All');
     const planFilter = getParam('planFilter', 'All');

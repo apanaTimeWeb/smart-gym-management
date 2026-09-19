@@ -3,12 +3,12 @@
 import { PlugZap } from 'lucide-react';
 import { displayValue, formatDateTime, formatNumber } from '@/lib/formatters';
 import SuperadminIntegrationsConnectionsEmptyState from '@/app/superadmin/integrations/integrations_components/SuperadminIntegrationsConnectionsEmptyState';
-import SuperadminTooltip from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminTooltip';
-import SuperadminPanel from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPanel';
+import Tooltip from '@/components/ui/Tooltip';
+import Panel from '@/components/ui/Panel';
 import { getSuperadminIntegrationsStatusBadgeClasses } from '@/app/superadmin/integrations/integrations_utils/SuperadminIntegrationsStatusBadgeConfig';
 import type { SuperadminIntegrationsSectionProps } from '@/app/superadmin/integrations/integrations_types/SuperadminIntegrationsTypes';
 export default function SuperadminIntegrationsConnectionHealthPanel({ data }: SuperadminIntegrationsSectionProps) {
-    return (<SuperadminPanel title="Connection Health" description="Payment, messaging, email, and storage connections.">
+    return (<Panel title="Connection Health" description="Payment, messaging, email, and storage connections.">
   <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
     {data.integrations.length === 0 ? <SuperadminIntegrationsConnectionsEmptyState /> : data.integrations.map(item => (<div key={item.name} className="rounded-lg border border-border bg-input p-4">
         <div className="flex items-start justify-between gap-3">
@@ -31,11 +31,11 @@ export default function SuperadminIntegrationsConnectionHealthPanel({ data }: Su
           <span className="text-secondary">
             Last event
           </span>
-          <SuperadminTooltip content={displayValue(item.lastEvent, '—')}>
+          <Tooltip content={displayValue(item.lastEvent, '—')}>
             <span className="max-w-52 truncate text-primary">
               {displayValue(item.lastEvent ? formatDateTime(item.lastEvent) : null, '—')}
             </span>
-          </SuperadminTooltip>
+          </Tooltip>
         </div>
         <div className="mt-2 flex items-center justify-between text-xs">
           <span className="text-secondary">
@@ -56,5 +56,5 @@ export default function SuperadminIntegrationsConnectionHealthPanel({ data }: Su
         </div>
       </div>))}
   </div>
-    </SuperadminPanel>);
+    </Panel>);
 }

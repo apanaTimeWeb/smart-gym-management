@@ -3,11 +3,11 @@
 // RESPONSIBILITY: Encapsulates local UI state for the Invoices page (filtering, modal state, derived stats).
 // DATA FLOW: useSuperadminInvoicesStore -> useSuperadminInvoicesPage -> SuperadminInvoicesClient
 import { useState, useMemo } from 'react';
-import { useSuperadminUrlState } from '@/app/superadmin/superadmin_infrastructure/useSuperadminUrlState';
+import { useUrlState } from '@/hooks/useUrlState';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { invoicesApi } from '@/app/superadmin/invoices/invoices_api/SuperadminInvoicesApi';
 import toast from 'react-hot-toast';
-import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
+import { useSuperadminConfirm } from '@/app/superadmin/superadmin_layout/SuperadminFeedback/SuperadminConfirmProvider';
 import { calculateSuperadminInvoiceMetrics } from '@/app/superadmin/invoices/invoices_utils/SuperadminInvoicesMetrics';
 /**
  * Purpose: Encapsulates local UI state for the Invoices page (filtering, modal state, derived stats).
@@ -18,7 +18,7 @@ import { calculateSuperadminInvoiceMetrics } from '@/app/superadmin/invoices/inv
  */
 export function useSuperadminInvoicesPage() {
     const queryClient = useQueryClient();
-    const { getParam, setParam } = useSuperadminUrlState();
+    const { getParam, setParam } = useUrlState();
     const { confirm } = useSuperadminConfirm();
     const startDate = getParam('startDate', '');
     const endDate = getParam('endDate', '');

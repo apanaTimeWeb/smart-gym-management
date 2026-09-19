@@ -1,10 +1,10 @@
 // RESPONSIBILITY: Renders the Superadmin infrastructure V1 Service endpoint health view.
 'use client';
 import { formatNumber, formatPercent1dp, formatDateTime } from '@/lib/formatters';
-import SuperadminPanel from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPanel';
+import Panel from '@/components/ui/Panel';
 import type { SuperadminInfrastructureV1SectionProps } from '@/app/superadmin/infrastructure/infrastructure_types/SuperadminInfrastructureV1Types.ts';
 export default function SuperadminInfrastructureV1EndpointHealthTable({ data }: SuperadminInfrastructureV1SectionProps) {
-    return <SuperadminPanel title="Service endpoint health" description="Response speed and error rate by major endpoint family.">
+    return <Panel title="Service endpoint health" description="Response speed and error rate by major endpoint family.">
   <div className="overflow-x-auto">
     <table className="w-full text-sm">
       <thead>
@@ -50,5 +50,5 @@ export default function SuperadminInfrastructureV1EndpointHealthTable({ data }: 
       </tbody>
     </table>
   </div>
-    </SuperadminPanel>;
+    </Panel>;
 }

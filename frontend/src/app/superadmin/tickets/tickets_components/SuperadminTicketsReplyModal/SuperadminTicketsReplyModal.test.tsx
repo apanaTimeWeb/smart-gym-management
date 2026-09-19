@@ -6,7 +6,7 @@ import { useSuperadminTicketReply } from '@/app/superadmin/tickets/tickets_utils
 import toast from 'react-hot-toast';
 
 vi.mock('@/app/superadmin/tickets/tickets_utils/useSuperadminTicketReply', () => ({ useSuperadminTicketReply: vi.fn() }));
-vi.mock('@/app/superadmin/superadmin_infrastructure/useSuperadminUnsavedChangesGuard', () => ({ useSuperadminUnsavedChangesGuard: vi.fn() }));
+vi.mock('@/hooks/useUnsavedChangesGuard', () => ({ useUnsavedChangesGuard: vi.fn() }));
 vi.mock('react-hot-toast', () => ({ default: { success: vi.fn(), error: vi.fn() } }));
 
 const mockedUseReply = vi.mocked(useSuperadminTicketReply);

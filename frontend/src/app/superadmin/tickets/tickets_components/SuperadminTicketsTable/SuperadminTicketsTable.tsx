@@ -6,7 +6,7 @@ import type { SupportTicket } from '@/app/superadmin/tickets/tickets_types/Super
 import { TicketsUrlConfig } from '@/app/superadmin/tickets/superadmin_tickets_url_config';
 import { PriorityColors, StatusColors } from '@/app/superadmin/tickets/tickets_utils/SuperadminTicketsConstants';
 import SuperadminTicketsEmptyState from '@/app/superadmin/tickets/tickets_components/SuperadminTicketsEmptyState/SuperadminTicketsEmptyState';
-import SuperadminCopyButton from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminCopyButton';
+import CopyButton from '@/components/ui/CopyButton';
 import { formatDateTime } from '@/lib/formatters';
 import type { SuperadminTicketsTableProps } from '@/app/superadmin/tickets/tickets_types/SuperadminTicketsTableTypes';
 
@@ -45,7 +45,7 @@ export default function SuperadminTicketsTable({ tickets, onReply, onClose, onAs
                 <td className="p-4">
                   <span className="flex items-center gap-1 text-sm font-mono font-medium text-primary">
                     <span>{ticket.id}</span>
-                    <SuperadminCopyButton value={ticket.id} label={`Copy ticket ID ${ticket.id}`}/>
+                    <CopyButton value={ticket.id} label={`Copy ticket ID ${ticket.id}`}/>
                   </span>
                 </td>
                 <td className="p-4 text-sm text-secondary">

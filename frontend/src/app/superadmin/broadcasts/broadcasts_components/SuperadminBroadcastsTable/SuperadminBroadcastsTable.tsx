@@ -3,7 +3,7 @@
 import { formatDate, formatDateTime } from '@/lib/formatters';
 import SuperadminBroadcastStatusBadge from '@/app/superadmin/broadcasts/broadcasts_components/SuperadminBroadcastStatusBadge/SuperadminBroadcastStatusBadge';
 import { Send, Edit2, Trash2 } from 'lucide-react';
-import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
+import { useSuperadminConfirm } from '@/app/superadmin/superadmin_layout/SuperadminFeedback/SuperadminConfirmProvider';
 import SuperadminBroadcastsEmptyState from '@/app/superadmin/broadcasts/broadcasts_components/SuperadminBroadcastsEmptyState/SuperadminBroadcastsEmptyState';
 import type { SuperadminBroadcastsTableProps } from '@/app/superadmin/broadcasts/broadcasts_types/SuperadminBroadcastsTypes';
 export default function SuperadminBroadcastsTable({ broadcasts, onSend, onEdit, onDelete, onCreateClick }: SuperadminBroadcastsTableProps) {

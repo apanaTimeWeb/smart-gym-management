@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Renders the current filtered tenant dataset and exposes row selection for bulk operations.
 'use client';
 import { formatCurrency, formatNumber } from '@/lib/formatters';
-import SuperadminPanel from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPanel';
+import Panel from '@/components/ui/Panel';
 import type { SuperadminGymsV1TenantComparisonPanelProps } from '@/app/superadmin/gyms/gyms_types/SuperadminGymsV1Types';
 
 export default function SuperadminGymsV1TenantComparisonPanel({ data, selectedGymIds, onSelectionChange }: SuperadminGymsV1TenantComparisonPanelProps) {
@@ -9,7 +9,7 @@ export default function SuperadminGymsV1TenantComparisonPanel({ data, selectedGy
   const allVisibleSelected = data.rows.length > 0 && data.rows.every((row) => selected.has(row.id));
   const toggleAll = () => onSelectionChange(allVisibleSelected ? [] : data.rows.map((row) => row.id));
 
-  return <SuperadminPanel title="Tenant comparison sample" description="The table is backed by the same filtered V1 response used by bulk actions.">
+  return <Panel title="Tenant comparison sample" description="The table is backed by the same filtered V1 response used by bulk actions.">
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
         <caption className="sr-only">Tenant comparison</caption>
@@ -24,5 +24,5 @@ export default function SuperadminGymsV1TenantComparisonPanel({ data, selectedGy
         </tr>)}</tbody>
       </table>
     </div>
-  </SuperadminPanel>;
+  </Panel>;
 }

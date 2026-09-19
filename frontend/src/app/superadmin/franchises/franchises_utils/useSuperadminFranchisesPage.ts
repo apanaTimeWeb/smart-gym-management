@@ -9,7 +9,7 @@ import { superadminFranchisesApi } from '@/app/superadmin/franchises/franchises_
 import type { SuperadminFranchise } from '@/app/superadmin/franchises/franchises_types/SuperadminFranchisesTypes';
 import type { FranchiseFormValues } from '@/app/superadmin/franchises/franchises_utils/SuperadminFranchisesSchemas';
 import type { SuperadminFranchiseMutationTarget, SuperadminFranchiseUpdateInput } from '@/app/superadmin/franchises/franchises_types/SuperadminFranchisesMutationTypes';
-import { useSuperadminUrlState } from '@/app/superadmin/superadmin_infrastructure/useSuperadminUrlState';
+import { useUrlState } from '@/hooks/useUrlState';
 /**
  * Purpose: Logic hook for the Superadmin Franchises page.
  * Inputs: values defined by the exported hook signature.
@@ -18,7 +18,7 @@ import { useSuperadminUrlState } from '@/app/superadmin/superadmin_infrastructur
  * Invariant: does not move feature business state into unrelated modules.
  */
 export function useSuperadminFranchisesPage() {
-    const { getParam, setParam } = useSuperadminUrlState();
+    const { getParam, setParam } = useUrlState();
     const search = getParam('search', '');
     const currentPage = Number(getParam('page', '1'));
     const pageLimit = Number(getParam('limit', '20'));

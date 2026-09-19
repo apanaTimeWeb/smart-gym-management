@@ -1,11 +1,11 @@
 // RESPONSIBILITY: Renders the Superadmin analytics V1 Feature adoption, Acquisition source comparison view.
 'use client';
 import { formatCurrency, formatNumber, formatPercent1dp } from '@/lib/formatters';
-import SuperadminPanel from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPanel';
+import Panel from '@/components/ui/Panel';
 import type { SuperadminAnalyticsV1SectionProps } from '@/app/superadmin/analytics/analytics_types/SuperadminAnalyticsV1Types.ts';
 export default function SuperadminAnalyticsV1AdoptionAndAcquisitionSection({ data }: SuperadminAnalyticsV1SectionProps) {
     return <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
-  <SuperadminPanel title="Feature adoption" description="Available vs enabled vs actually used by tenants.">
+  <Panel title="Feature adoption" description="Available vs enabled vs actually used by tenants.">
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
         <thead>
@@ -42,8 +42,8 @@ export default function SuperadminAnalyticsV1AdoptionAndAcquisitionSection({ dat
         </tbody>
       </table>
     </div>
-  </SuperadminPanel>
-  <SuperadminPanel title="Acquisition source comparison" description="Compare source quality by volume, income, and churn.">
+  </Panel>
+  <Panel title="Acquisition source comparison" description="Compare source quality by volume, income, and churn.">
     <div className="space-y-3">
       {data.sources.map((s) => <div key={s.source} className="rounded-lg border border-border p-3">
         <div className="flex items-center justify-between">
@@ -66,6 +66,6 @@ export default function SuperadminAnalyticsV1AdoptionAndAcquisitionSection({ dat
         </div>
       </div>)}
     </div>
-  </SuperadminPanel>
+  </Panel>
     </div>;
 }

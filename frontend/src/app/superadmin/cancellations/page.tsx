@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import SuperadminPageSuspenseSkeleton from '@/app/superadmin/superadmin_components/SuperadminPageSuspenseSkeleton';
+import SuperadminPageSuspenseSkeleton from '@/app/superadmin/superadmin_layout/SuperadminPageSuspenseSkeleton';
 // RESPONSIBILITY: Pure Server Component entry point for /superadmin/cancellations.
 import type { Metadata } from 'next';
 import SuperadminCancellationsClient from '@/app/superadmin/cancellations/cancellations_components/SuperadminCancellationsClient/SuperadminCancellationsClient';

@@ -6,10 +6,10 @@ import { useSuperadminTickets } from '@/app/superadmin/tickets/tickets_utils/use
 import { useSuperadminTicketMutations } from '@/app/superadmin/tickets/tickets_utils/useSuperadminTicketMutations';
 import SuperadminTicketsHeader from '@/app/superadmin/tickets/tickets_components/SuperadminTicketsHeader/SuperadminTicketsHeader';
 import SuperadminTicketsTable from '@/app/superadmin/tickets/tickets_components/SuperadminTicketsTable/SuperadminTicketsTable';
-import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
+import Pagination from '@/components/ui/Pagination';
 import SuperadminTicketsReplyModal from '@/app/superadmin/tickets/tickets_components/SuperadminTicketsReplyModal/SuperadminTicketsReplyModal';
 import { useSuperadminTicketsStore } from '@/app/superadmin/tickets/tickets_store/useSuperadminTicketsStore';
-import { SuperadminErrorBoundary } from '@/app/superadmin/superadmin_components/SuperadminLayout/SuperadminErrorBoundary';
+import { SuperadminErrorBoundary } from '@/app/superadmin/superadmin_layout/SuperadminLayout/SuperadminErrorBoundary';
 
 export default function SuperadminTicketsClient() {
   const [assigneeInput, setAssigneeInput] = useState('');
@@ -49,7 +49,7 @@ export default function SuperadminTicketsClient() {
       <SuperadminErrorBoundary variant="inline">
         <SuperadminTicketsTable tickets={paginatedTickets} onReply={setReplyModalTicketId} onClose={handleCloseTicket} onAssign={handleOpenAssign} />
       </SuperadminErrorBoundary>
-      <SuperadminPagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+      <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
     </div>
     <SuperadminTicketsReplyModal isOpen={!!replyModalTicketId} onClose={() => setReplyModalTicketId(null)} ticketId={replyModalTicketId} />
     {assignModalTicketId ? (<div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="superadmin-ticket-assign-title">
