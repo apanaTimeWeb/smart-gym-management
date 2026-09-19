@@ -4,8 +4,8 @@
 
 import type { AttendanceRecord, AttendanceStats, AttendanceMemberBasic } from '@/app/trainer/attendance/attendance_types/TrainerAttendance_types';
 
-const today = new Date().toISOString().split('T')[0];
-const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+const today = new Date().toISOString().split('T')[0] || '';
+const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0] || '';
 
 export const MOCK_ATTENDANCE_STATS: AttendanceStats = {
   totalCheckIns: 24,
