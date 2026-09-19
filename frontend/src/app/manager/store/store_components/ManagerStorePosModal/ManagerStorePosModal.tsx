@@ -1,33 +1,36 @@
 'use client';
+import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 // RESPONSIBILITY: Point-of-sale modal for processing a new product sale/order in the Store module.
 import { X, Printer, Plus, Minus, Send } from 'lucide-react';
-import { useStoreContext } from '@/app/manager/store/store_context/ManagerStoreContext';
+import { useManagerStoreLogic } from '@/app/manager/store/store_hooks/ManagerUseManagerStoreLogic';
 import { PAYMENT_METHODS } from '@/app/manager/store/store_utils/ManagerStoreSharedConstants';
-import { formatCurrency } from '@/lib/formatters';
-import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
+import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
+import ManagerSearchableDropdown from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
 
 export default function ManagerStorePosModal() {
  const { 
- showOrderModal, setShowOrderModal, 
+ showOrderModal, closeOrderModal, 
  products, 
  orderItems, addToOrder, removeFromOrder, updateOrderQty, orderTotal, 
  orderMethod, setOrderMethod, 
  customerPhone, setCustomerPhone, sendViaWhatsapp, setSendViaWhatsapp,
  saving, placeOrder 
- } = useStoreContext();
+ } = useManagerStoreLogic();
 
   if (!showOrderModal) return null;
 
  return (
- <div className="fixed inset-0 bg-foreground/60 z-40 flex items-center justify-center p-4">
- <div className="bg-card rounded-2xl shadow-xl w-full max-w-2xl max-h-full overflow-y-auto border-2 border-warning">
- <div className="sticky top-0 bg-card px-6 py-4 border-b border-border flex items-center justify-between">
- <h3 className="text-lg font-bold text-foreground">New Sale — POS</h3>
+ <div className="fixed inset-0 bg-overlay-backdrop z-40 flex items-center justify-center p-4">
+ <div className="bg-overlay rounded-2xl shadow-dialog w-full max-w-2xl max-h-full overflow-y-auto border-2 border-warning">
+ <div className="sticky top-0 bg-overlay px-6 py-4 border-b border-border flex items-center justify-between">
+ <h3 className="text-lg font-bold text-primary">New Sale — POS</h3>
  <button 
- onClick={() => setShowOrderModal(false)} 
- className="p-2 rounded-lg hover:bg-primary-subtle text-secondary motion-safe:transition-colors"
+ type="button"
+ aria-label="Close point of sale"
+ onClick={closeOrderModal} 
+ className="min-h-11 min-w-11 flex items-center justify-center p-2 rounded-lg hover:bg-primary-subtle text-secondary motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
  >
- <X size={18} />
+ <X size={18} aria-hidden="true" />
  </button>
  </div>
           <div className="p-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -36,14 +39,14 @@ export default function ManagerStorePosModal() {
   <div>
   <div className="flex flex-col mb-3">
     <p className="text-sm font-medium text-secondary mb-2">Select Products to Add</p>
-    <SearchableDropdown
+    <ManagerSearchableDropdown
       value={''}
       onChange={(val) => {
         const p = products.find(prod => String(prod.id) === String(val));
         if (p) addToOrder(p);
       }}
       options={products.filter(p => p.stock > 0).map(p => ({ 
-        label: `${p.name} ${p.unit ? `(${p.unit})` : ''} - ${formatCurrency(p.price)} (Stock: ${p.stock})`, 
+        label: `${p.name} ${p.unit ? `(${p.unit})` : ''} - ${formatCurrencyFromMinorUnits(p.price, ManagerEnvConfig.currencyCode)} (Stock: ${p.stock})`, 
         value: String(p.id) 
       }))}
       placeholder="Search and select products..."
@@ -61,19 +64,19 @@ export default function ManagerStorePosModal() {
  {orderItems.map(i => (
  <div key={i.productId} className="flex items-center justify-between p-2 bg-input rounded-lg border border-border">
  <div className="flex-1">
- <p className="text-xs font-medium text-foreground">{i.name} {i.unit && <span className="text-secondary font-normal">({i.unit})</span>}</p>
- <p className="text-xs text-secondary">{formatCurrency(i.price)} each</p>
+ <p className="text-xs font-medium text-primary">{i.name} {i.unit && <span className="text-secondary font-normal">({i.unit})</span>}</p>
+ <p className="text-xs text-secondary">{formatCurrencyFromMinorUnits(i.price, ManagerEnvConfig.currencyCode)} each</p>
  </div>
  <div className="flex flex-wrap items-center gap-2">
-   <div className="flex items-center bg-card rounded border border-border">
-     <button 
+   <div className="flex items-center bg-overlay rounded border border-border">
+     <button type="button" aria-label={`Decrease quantity for ${i.name}`}
        onClick={() => updateOrderQty(i.productId, i.qty - 1)}
-       className="p-1 text-secondary hover:text-foreground motion-safe:transition-colors"
+       className="p-1 text-secondary hover:text-primary motion-safe:transition-colors"
      >
-       <Minus size={12} />
+       <Minus size={18} aria-hidden="true" />
      </button>
      <span className="text-xs font-medium w-6 text-center">{i.qty}</span>
-     <button 
+     <button type="button" aria-label={`Increase quantity for ${i.name}`}
        onClick={() => {
          const product = products.find(p => p.id === i.productId);
          if (product && i.qty < product.stock) {
@@ -81,17 +84,17 @@ export default function ManagerStorePosModal() {
          }
        }}
        disabled={!products.find(p => p.id === i.productId) || i.qty >= (products.find(p => p.id === i.productId)?.stock || 0)}
-       className="p-1 text-secondary hover:text-foreground disabled:opacity-50 motion-safe:transition-colors"
+       className="p-1 text-secondary hover:text-primary disabled:opacity-50 motion-safe:transition-colors"
      >
-       <Plus size={12} />
+       <Plus size={18} aria-hidden="true" />
      </button>
    </div>
-   <p className="text-xs font-bold text-foreground w-16 text-right">{formatCurrency(i.price * i.qty)}</p>
-   <button 
+   <p className="text-xs font-bold text-primary w-16 text-right">{formatCurrencyFromMinorUnits(i.price * i.qty, ManagerEnvConfig.currencyCode)}</p>
+   <button type="button" aria-label={`Remove ${i.name} from order`}
      onClick={() => removeFromOrder(i.productId)} 
      className="p-1 text-danger hover:text-danger dark:hover:text-danger motion-safe:transition-colors ml-1"
    >
-     <X size={14} />
+     <X size={18} aria-hidden="true" />
    </button>
  </div>
  </div>
@@ -100,18 +103,18 @@ export default function ManagerStorePosModal() {
  
  <div className="mt-4 pt-4 border-t border-border">
  <div className="flex justify-between mb-3">
- <span className="font-semibold text-foreground">Total</span>
- <span className="font-bold text-lg text-success dark:text-success">{formatCurrency(orderTotal)}</span>
+ <span className="font-semibold text-primary">Total</span>
+ <span className="font-bold text-lg text-success dark:text-success">{formatCurrencyFromMinorUnits(orderTotal, ManagerEnvConfig.currencyCode)}</span>
  </div>
  
- <SearchableDropdown
+ <ManagerSearchableDropdown
  value={orderMethod}
  onChange={(val) => setOrderMethod(String(val))}
  className="mb-3"
  options={PAYMENT_METHODS.map(m => ({ label: m, value: m }))}
  />
 
- <label className="flex items-center gap-2 mb-3 cursor-pointer text-sm text-foreground font-medium">
+ <label className="flex items-center gap-2 mb-3 cursor-pointer text-sm text-primary font-medium">
    <input 
      type="checkbox" 
      checked={sendViaWhatsapp}
@@ -127,16 +130,16 @@ export default function ManagerStorePosModal() {
      placeholder="10-digit WhatsApp Number"
      value={customerPhone}
      onChange={e => setCustomerPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
-     className="w-full border border-border rounded-xl px-4 py-2.5 text-sm mb-3 focus:outline-none focus:ring-2 focus:ring-warning bg-input text-foreground"
+     className="w-full border border-border rounded-xl px-4 py-2.5 text-sm mb-3 focus:outline-none focus:ring-2 focus:ring-warning bg-input text-primary"
    />
  )}
 
  <button 
  onClick={placeOrder} 
  disabled={saving || orderItems.length === 0 || (sendViaWhatsapp && customerPhone.length !== 10)} 
- className="w-full py-3 rounded-xl text-sm font-bold text-primary-foreground flex items-center justify-center gap-2 disabled:opacity-70 motion-safe:transition-colors bg-primary hover:bg-primary-hover" 
+ className="min-w-32 w-full py-3 rounded-xl text-sm font-bold text-on-primary flex items-center justify-center gap-2 disabled:opacity-70 motion-safe:transition-colors bg-primary hover:bg-primary-hover" 
  >
- {saving ? <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full motion-safe:animate-spin" /> : (sendViaWhatsapp ? <><Send size={15} /> Send WhatsApp</> : <><Printer size={15} /> Print Bill</>)}
+ {saving ? <div className="w-4 h-4 border-2 border-border/30 border-t-on-primary rounded-full motion-safe:animate-spin" /> : (sendViaWhatsapp ? <><Send size={18} aria-hidden="true" /> Send WhatsApp</> : <><Printer size={18} aria-hidden="true" /> Print Bill</>)}
  </button>
  </div>
  </div>

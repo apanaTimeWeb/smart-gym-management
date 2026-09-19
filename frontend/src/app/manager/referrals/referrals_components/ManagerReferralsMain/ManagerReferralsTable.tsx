@@ -1,23 +1,21 @@
 'use client';
+import { MANAGER_GENERIC_ERROR_MESSAGE } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
+import { MANAGER_REFERRAL_STATUS_OPTIONS } from '@/app/manager/referrals/referrals_constants/ManagerReferralsFilterConstants';
+import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 // RESPONSIBILITY: Display referrals table with claim reward action.
 // Rule 20 FIX: Replaced native <select> with SearchableDropdown.
 import { Loader2, Search, Gift, Check, IndianRupee } from 'lucide-react';
-import { useManagerReferralsLogic } from '@/app/manager/referrals/referrals_context/ManagerUseManagerReferralsLogic';
+import { useManagerReferralsLogic } from '@/app/manager/referrals/referrals_hooks/ManagerUseManagerReferralsLogic';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
-import { SearchableDropdown } from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
+import ManagerSearchableDropdown from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
 import ManagerEmptyState from '@/app/manager/manager_components/ManagerFeedback/ManagerEmptyState';
-import { formatCurrency, maskSensitiveData, formatDate, displayValue} from '@/lib/formatters';
+import { formatCurrencyFromMinorUnits, maskSensitiveData, formatDate, displayValue} from '@/lib/formatters';
 
-const REFERRAL_STATUS_OPTIONS = [
-  { value: 'ALL', label: 'All Statuses' },
-  { value: 'PENDING', label: 'Pending Join' },
-  { value: 'JOINED', label: 'Joined' },
-  { value: 'REJECTED', label: 'Rejected' },
-];
+
 
 export default function ManagerReferralsTable() {
   const { 
-    referrals, isReferralsLoading, isReferralsError, reloadReferrals, 
+    referrals, isReferralsLoading, isReferralsError, reloadReferrals, errorMessage, 
     searchQuery, setSearchQuery, 
     statusFilter, setStatusFilter,
     currentPage, setCurrentPage, totalPages,
@@ -25,26 +23,26 @@ export default function ManagerReferralsTable() {
   } = useManagerReferralsLogic();
 
   return (
-    <div className="bg-card border border-border rounded-xl flex flex-col min-h-96 shadow-sm">
+    <div className="bg-card border border-border rounded-xl flex flex-col min-h-96 shadow-card">
       
       {/* Header & Filters */}
       <div className="p-4 border-b border-border flex flex-col sm:flex-row justify-between gap-4 shrink-0 bg-input/10">
         <div className="relative w-full sm:w-72">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary" size={16} />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary" size={18} />
           <input
             type="text"
             placeholder="Search Referrer or Referee..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary motion-safe:transition-all"
+            className="w-full pl-9 pr-4 py-2 bg-input border border-border rounded-lg text-sm text-primary focus:outline-none focus:ring-1 focus:ring-primary motion-safe:transition-all"
           />
         </div>
         
         <div className="w-full sm:w-48">
-          <SearchableDropdown
+          <ManagerSearchableDropdown
             value={statusFilter}
             onChange={(val) => setStatusFilter(String(val))}
-            options={REFERRAL_STATUS_OPTIONS}
+            options={[...MANAGER_REFERRAL_STATUS_OPTIONS]}
             placeholder="Filter by status"
           />
         </div>
@@ -54,17 +52,17 @@ export default function ManagerReferralsTable() {
       <div className="flex-1 overflow-auto">
         {isReferralsLoading ? (
           <div className="h-full flex flex-col items-center justify-center text-secondary">
-            <Loader2 size={32} className="motion-safe:animate-spin mb-4 text-primary" />
+            <Loader2 size={18} className="motion-safe:animate-spin mb-4 text-primary" />
             <p className="text-sm font-medium">Loading Referrals...</p>
           </div>
         ) : isReferralsError ? (
           <div role="alert" className="h-full flex flex-col items-center justify-center gap-3 text-center p-10">
-            <p className="text-sm font-semibold text-danger">Unable to load referrals.</p>
-            <button type="button" onClick={() => void reloadReferrals()} className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-semibold motion-safe:transition-colors hover:bg-primary-hover">Try Again</button>
+            <p className="text-sm font-semibold text-danger">{errorMessage || MANAGER_GENERIC_ERROR_MESSAGE}</p>
+            <button type="button" onClick={() => void reloadReferrals()} className="px-4 py-2 rounded-lg bg-primary text-on-primary text-sm font-semibold motion-safe:transition-colors hover:bg-primary-hover">Try Again</button>
           </div>
         ) : referrals.length === 0 ? (
           <ManagerEmptyState
-            icon={<Gift size={32} />}
+            icon={<Gift size={18} />}
             title="No referrals found"
             subtitle="No referrals match the current filter. Try changing the status filter."
           />
@@ -87,18 +85,18 @@ export default function ManagerReferralsTable() {
                 return (
                   <tr key={ref.id} className="hover:bg-input/50 motion-safe:transition-colors">
                     <td className="px-6 py-4">
-                      <p className="font-bold text-foreground">{ref.referrerName}</p>
+                      <p className="font-bold text-primary">{ref.referrerName}</p>
                       <p className="text-xs text-secondary">{ref.referrerId}</p>
                     </td>
                     <td className="px-6 py-4">
-                      <p className="font-medium text-foreground">{ref.refereeName}</p>
+                      <p className="font-medium text-primary">{ref.refereeName}</p>
                       <p className="text-xs text-secondary">{maskSensitiveData(ref.refereePhone, 'phone')}</p>
                     </td>
                     <td className="px-6 py-4 text-secondary">{formatDate(ref.dateReferred)}</td>
                     <td className="px-6 py-4">
                       <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${
                         ref.status === 'JOINED' ? 'bg-success/10 text-success' :
-                        ref.status === 'REJECTED' ? 'bg-destructive/10 text-destructive' :
+                        ref.status === 'REJECTED' ? 'bg-danger text-danger' :
                         'bg-warning/10 text-warning'
                       }`}>
                         {ref.status}
@@ -118,15 +116,15 @@ export default function ManagerReferralsTable() {
                     <td className="px-6 py-4 text-right">
                       {ref.rewardStatus === 'CLAIMED' ? (
                         <span className="inline-flex items-center gap-1 text-success text-xs font-bold">
-                          <Check size={14} /> Claimed
+                          <Check size={18} /> Claimed
                         </span>
                       ) : canClaim ? (
                         <button
                           onClick={() => claimReward(ref.id)}
                           disabled={isClaiming}
-                          className="inline-flex items-center gap-1 px-3 py-1.5 bg-primary text-primary-foreground rounded text-xs font-bold hover:bg-primary-hover motion-safe:transition-colors disabled:opacity-50"
+                          className="inline-flex items-center gap-1 px-3 py-1.5 bg-primary text-on-primary rounded text-xs font-bold hover:bg-primary-hover motion-safe:transition-colors disabled:opacity-50"
                         >
-                          <IndianRupee size={14} /> Claim {formatCurrency(ref.rewardAmount ?? 0)}
+                          <IndianRupee size={18} /> Claim {formatCurrencyFromMinorUnits(ref.rewardAmount ?? 0, ManagerEnvConfig.currencyCode)}
                         </button>
                       ) : (
                         <span className="text-secondary text-xs italic">Awaiting Join</span>

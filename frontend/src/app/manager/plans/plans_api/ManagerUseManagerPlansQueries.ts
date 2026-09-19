@@ -1,3 +1,4 @@
+'use client';
 // RESPONSIBILITY: Provides TanStack Query hooks for the Manager Plans module.
 // DATA FLOW: components → hooks → API layer → backend
 /** Manages UsePlansQueries for the Manager module. */
@@ -13,8 +14,7 @@ export function useFetchPlans(params?: Record<string, string>) {
       const res = await plansApi.fetchPlans(params);
       return res.data ?? { plans: [], total: 0 };
     },
-    staleTime: 5 * 60 * 1000,
-  });
+    staleTime: 5 * 60 * 1000 });
 }
 
 export function useRequestPlanChange() {
@@ -23,6 +23,5 @@ export function useRequestPlanChange() {
     mutationFn: (payload: ManagerPlansChangeRequestPayload) => managerPlansChangeRequestApi.createChangeRequest(payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['manager', 'plans', 'list'] });
-    },
-  });
+    } });
 }

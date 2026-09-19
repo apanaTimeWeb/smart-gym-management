@@ -1,33 +1,32 @@
 'use client';
+import { MANAGER_GENERIC_ERROR_MESSAGE } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
+import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 // RESPONSIBILITY: Provides the implementation for ManagerSalesMembershipReport.tsx functionality within its module.
-import { useSalesContext } from '@/app/manager/sales/sales_context/ManagerSalesContext';
+import { useManagerSalesLogic } from '@/app/manager/sales/sales_hooks/ManagerUseManagerSalesLogic';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
-import { formatCurrency } from '@/lib/formatters';
-import { Loader2 } from 'lucide-react';
-import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
-import type { MembershipReportItem } from '@/app/manager/sales/sales_types/ManagerSalesTypes';
+import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
+import ManagerSalesMembershipReportEmptyState from '@/app/manager/sales/sales_components/ManagerSalesMembershipReport/ManagerSalesMembershipReportEmptyState';
+import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_infrastructure/ManagerPaginationDefaults';
 
 const SALES_MEMBERSHIP_REPORT_COLUMN_COUNT = 5;
 
 export default function ManagerSalesMembershipReport() {
-  const { currentPage, setCurrentPage, membershipReport, membershipReportTotal, membershipTotals, isLoading, isError } = useSalesContext();
+  const { currentPage, setCurrentPage, membershipReport, membershipReportTotal, membershipTotals, isLoading, isError, errorMessage } = useManagerSalesLogic();
   
   const totalPages = Math.max(1, Math.ceil(membershipReportTotal / MANAGER_ITEMS_PER_PAGE));
   const paginated = membershipReport;
 
   if (isLoading) {
     return (
-      <div className="flex justify-center py-10">
-        <Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" />
-      </div>
+      <div className="space-y-2 p-4" aria-label="Loading membership report"><div className="h-10 rounded-lg bg-input motion-safe:animate-pulse" /><div className="h-10 rounded-lg bg-input motion-safe:animate-pulse" /><div className="h-10 rounded-lg bg-input motion-safe:animate-pulse" /></div>
     );
   }
 
   if (isError) {
     return (
       <div className="text-center py-16 bg-card rounded-2xl border border-danger/30">
-        <p className="text-danger font-medium">Failed to load membership report.</p>
-        <p className="text-sm mt-1 text-secondary">Please check your connection and try again.</p>
+        <p className="text-danger font-medium">{errorMessage || MANAGER_GENERIC_ERROR_MESSAGE}</p>
+        <span className="text-sm text-secondary">Retry the request.</span>
       </div>
     );
   }
@@ -49,26 +48,26 @@ export default function ManagerSalesMembershipReport() {
   {paginated.length > 0 ? (
     paginated.map((r) => (
       <tr key={r.plan} className="hover:bg-primary-subtle motion-safe:transition-colors">
-      <td className="px-4 py-3 text-sm font-medium text-foreground">{r.plan || ''}</td>
-      <td className="px-4 py-3 text-sm text-secondary">{formatCurrency(r.receivable || 0)}</td>
-      <td className="px-4 py-3 text-sm font-medium text-success dark:text-success">{formatCurrency(r.received || 0)}</td>
-      <td className="px-4 py-3 text-sm font-medium text-warning dark:text-warning">{formatCurrency(r.remaining || 0)}</td>
-      <td className="px-4 py-3 text-sm text-danger">{formatCurrency(r.refund || 0)}</td>
+      <td className="px-4 py-3 text-sm font-medium text-primary">{r.plan || ''}</td>
+      <td className="px-4 py-3 text-sm text-secondary">{formatCurrencyFromMinorUnits(r.receivable || 0, ManagerEnvConfig.currencyCode)}</td>
+      <td className="px-4 py-3 text-sm font-medium text-success dark:text-success">{formatCurrencyFromMinorUnits(r.received || 0, ManagerEnvConfig.currencyCode)}</td>
+      <td className="px-4 py-3 text-sm font-medium text-warning dark:text-warning">{formatCurrencyFromMinorUnits(r.remaining || 0, ManagerEnvConfig.currencyCode)}</td>
+      <td className="px-4 py-3 text-sm text-danger">{formatCurrencyFromMinorUnits(r.refund || 0, ManagerEnvConfig.currencyCode)}</td>
       </tr>
     ))
   ) : (
     <tr>
       <td colSpan={SALES_MEMBERSHIP_REPORT_COLUMN_COUNT} className="px-4 py-8 text-center text-sm text-secondary">
-        No membership report data available.
+        <ManagerSalesMembershipReportEmptyState />
       </td>
     </tr>
   )}
  <tr className="bg-input font-semibold border-t-2 border-border">
- <td className="px-4 py-3 text-sm text-foreground">Total</td>
-          <td className="px-4 py-3 text-sm text-foreground">{formatCurrency(membershipTotals.totalReceivable || 0)}</td>
-          <td className="px-4 py-3 text-sm text-success dark:text-success">{formatCurrency(membershipTotals.totalReceived || 0)}</td>
-          <td className="px-4 py-3 text-sm text-warning dark:text-warning">{formatCurrency(membershipTotals.remaining || 0)}</td>
-          <td className="px-4 py-3 text-sm text-danger dark:text-danger">{formatCurrency(membershipTotals.refunds || 0)}</td>
+ <td className="px-4 py-3 text-sm text-primary">Total</td>
+          <td className="px-4 py-3 text-sm text-primary">{formatCurrencyFromMinorUnits(membershipTotals.totalReceivable || 0, ManagerEnvConfig.currencyCode)}</td>
+          <td className="px-4 py-3 text-sm text-success dark:text-success">{formatCurrencyFromMinorUnits(membershipTotals.totalReceived || 0, ManagerEnvConfig.currencyCode)}</td>
+          <td className="px-4 py-3 text-sm text-warning dark:text-warning">{formatCurrencyFromMinorUnits(membershipTotals.remaining || 0, ManagerEnvConfig.currencyCode)}</td>
+          <td className="px-4 py-3 text-sm text-danger dark:text-danger">{formatCurrencyFromMinorUnits(membershipTotals.refunds || 0, ManagerEnvConfig.currencyCode)}</td>
  </tr>
   </tbody>
   </table>

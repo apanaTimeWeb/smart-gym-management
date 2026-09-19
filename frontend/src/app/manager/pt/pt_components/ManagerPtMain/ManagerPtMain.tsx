@@ -1,11 +1,13 @@
 'use client';
+import { MANAGER_GENERIC_ERROR_MESSAGE } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
+import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 // RESPONSIBILITY: Root client component for Manager PT page.
 // THEME PORTABILITY CONTRACT: Depends on variables --bg-page, --bg-card, --bg-input, --border, --primary, --success, --info, --warning, --danger, --text-primary, --text-secondary, --disabled.
 import { useState } from 'react';
 import { Loader2, Dumbbell, UserPlus } from 'lucide-react';
-import { useManagerPtLogic } from '@/app/manager/pt/pt_context/ManagerUseManagerPtLogic';
+import { useManagerPtLogic } from '@/app/manager/pt/pt_hooks/ManagerUseManagerPtLogic';
 import { PT_TAB_OPTIONS } from '@/app/manager/pt/pt_types/ManagerPtTypes';
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
 
 // Child Components
 import ManagerPtKPIs from '@/app/manager/pt/pt_components/ManagerPtMain/ManagerPtKPIs';
@@ -13,7 +15,7 @@ import ManagerPtTrainerWorkload from '@/app/manager/pt/pt_components/ManagerPtMa
 import ManagerPtExpiringSoon from '@/app/manager/pt/pt_components/ManagerPtMain/ManagerPtExpiringSoon';
 import ManagerPtAssignmentsTable from '@/app/manager/pt/pt_components/ManagerPtMain/ManagerPtAssignmentsTable';
 import ManagerPtAssignmentForm from '@/app/manager/pt/pt_components/ManagerPtMain/ManagerPtAssignmentForm';
-import type { ManagerPtAssignmentFormValues } from '@/app/manager/pt/pt_types/ManagerPtAssignmentSchema';
+import type { ManagerPtAssignmentFormValues } from '@/app/manager/pt/pt_schemas/ManagerPtAssignmentSchema';
 
 // Assign Trainer form is isolated in ManagerPtAssignmentForm.tsx so the page remains a view/orchestrator.
 export default function ManagerPtMain() {
@@ -24,9 +26,8 @@ export default function ManagerPtMain() {
     packages, assignments,
     kpis, workload, expiringPackages,
     totalAssignments, currentPage, limit, setPage,
-    isPending, isError, markingId,
-    handleMarkSession, createAssignment, assignmentSaving,
-  } = useManagerPtLogic();
+    isPending, isError, errorMessage, markingId,
+    handleMarkSession, createAssignment, assignmentSaving } = useManagerPtLogic();
 
   const handleCreateAssignment = async (values: ManagerPtAssignmentFormValues) => {
     await createAssignment(values);
@@ -46,14 +47,14 @@ export default function ManagerPtMain() {
 
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Personal Training</h1>
+          <h1 className="text-2xl font-bold text-primary">Personal Training</h1>
           <p className="text-secondary mt-1 text-sm">Manage PT packages, monitor trainer workload, and track sessions.</p>
         </div>
         
-        {/* Quick Assign Action — opens a proper slide-over modal, no alert() */}
+        {/* Quick Assign Action — opens a proper slide-over modal, no browser alert */}
         <button
           onClick={() => setIsAssignModalOpen(true)}
-          className="flex items-center gap-2 bg-primary text-primary-foreground px-5 py-2.5 rounded-xl font-bold hover:bg-primary-hover motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary shadow-sm"
+          className="flex items-center gap-2 bg-primary text-on-primary px-5 py-2.5 rounded-xl font-bold hover:bg-primary-hover motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary shadow-card"
         >
           <UserPlus size={18} />
           Assign Trainer
@@ -69,8 +70,8 @@ export default function ManagerPtMain() {
             onClick={() => setActiveTab(id)}
             className={`px-4 py-2 text-sm font-semibold rounded-lg motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
               activeTab === id
-                ? 'bg-card text-foreground shadow-sm'
-                : 'text-secondary hover:text-foreground hover:bg-card/50'
+                ? 'bg-card text-primary shadow-card'
+                : 'text-secondary hover:text-primary hover:bg-card/50'
             }`}
           >
             {label}
@@ -81,17 +82,17 @@ export default function ManagerPtMain() {
       {/* Loading state from TanStack Query */}
       {isPending && (
         <div className="flex flex-col items-center justify-center py-24 space-y-4">
-          <Loader2 size={32} className="text-primary motion-safe:animate-spin" />
+          <Loader2 size={18} className="text-primary motion-safe:animate-spin" />
           <p className="text-sm font-medium text-secondary">Loading PT Data...</p>
         </div>
       )}
 
       {isError && (
-        <div role="alert" className="rounded-xl border border-danger bg-danger-bg p-5 text-sm text-danger">Unable to load PT data. Retry by refreshing this route.</div>
+        <div role="alert" className="rounded-xl border border-danger bg-danger p-5 text-sm text-danger">{errorMessage || MANAGER_GENERIC_ERROR_MESSAGE}</div>
       )}
 
       {!isPending && !isError && (
-        <div className="space-y-6 motion-safe:animate-in motion-safe:fade-in duration-500">
+        <div className="space-y-6 motion-safe:animate-in motion-safe:fade-in motion-safe:duration-500">
           
           {/* Dashboard Tab */}
           {activeTab === 'dashboard' && (
@@ -144,11 +145,11 @@ export default function ManagerPtMain() {
                       <span className="bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-bold border border-primary/20">
                         {pkg.sessionCount} Sessions
                       </span>
-                      <span className="text-foreground font-bold text-xl">
-                        {formatCurrency(pkg.price)}
+                      <span className="text-primary font-bold text-xl">
+                        {formatCurrencyFromMinorUnits(pkg.price, ManagerEnvConfig.currencyCode)}
                       </span>
                     </div>
-                    <h3 className="text-lg font-bold text-foreground mb-2">{pkg.name}</h3>
+                    <h3 className="text-lg font-bold text-primary mb-2">{pkg.name}</h3>
                     <p className="text-sm text-secondary mb-6 h-10">{pkg.description}</p>
                     <div className="pt-4 border-t border-border flex justify-between items-center text-xs text-secondary font-medium">
                       <span>Duration: {pkg.durationDays} Days</span>

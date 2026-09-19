@@ -8,6 +8,5 @@ export function useManagerMembersDietPlansQuery(enabled: boolean) {
   return useQuery({
     queryKey: ['manager', 'members', 'diet-plans'],
     queryFn: () => membersApi.fetchMemberDietPlans(),
-    enabled,
-  });
+    enabled });
 }

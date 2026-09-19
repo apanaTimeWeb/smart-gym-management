@@ -1,9 +1,6 @@
 // RESPONSIBILITY: Owns every route path used by the Manager store module.
 export const ManagerStoreUrlConfig = {
-  PAGES: {
-    PRODUCTS: '/manager/store',
-    ORDERS: '/manager/store',
-  },
+  PAGES: { PRODUCTS: '/manager/store', ORDERS: '/manager/store' },
   BACKEND_API: {
     BASE: '/manager/store',
     PRODUCTS_BASE: '/manager/store/products',
@@ -11,5 +8,6 @@ export const ManagerStoreUrlConfig = {
     PRODUCT_DELETE: (id: string) => `/manager/store/products/${id}`,
     ORDERS_BASE: '/manager/store/orders',
     SUMMARY: '/manager/store/summary',
-  }
-};
+  },
+  INTEGRATIONS: { WHATSAPP_WEB_BASE: 'https://wa.me' },
+} as const;

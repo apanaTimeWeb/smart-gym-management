@@ -8,7 +8,7 @@ Manager Library is the branch content library for reusable diet plans and exerci
 |---|---|---|
 | `library_api/` | Feature-owned responsibility for the library module. | `ManagerLibraryApi.ts; ManagerLibraryServerApi.ts` |
 | `library_components/` | Feature-owned responsibility for the library module. | `—` |
-| `library_context/` | Feature-owned responsibility for the library module. | `ManagerLibraryContext.tsx; ManagerUseManagerLibraryLogic.ts` |
+| `library_hooks/` | Feature-owned responsibility for the library module. | `ManagerUseManagerLibraryLogic.ts; ManagerUseManagerLibraryLogic.ts` |
 | `library_fixtures/` | Feature-owned responsibility for the library module. | `ManagerLibraryDietMockData.ts; ManagerLibraryMockData.ts` |
 | `library_mocks/` | Feature-owned responsibility for the library module. | `—` |
 | `library_types/` | Feature-owned responsibility for the library module. | `ManagerLibrarySchema.ts; ManagerLibraryTypes.ts` |
@@ -39,7 +39,7 @@ Manager Library is the branch content library for reusable diet plans and exerci
 4. The response becomes the new Query cache source of truth.
 
 ## Data and State Architecture
-TanStack Query owns library server/API data. UI-only filters, tabs, selections, and draft state remain local state or module-scoped Zustand where shared. React Context is limited to stable cross-tree concerns and does not become the source of truth for API data. Query keys are module-prefixed.
+TanStack Query owns library server/API data. UI-only filters, tabs, selections, and draft state remain local state or module-scoped Zustand where shared. module-local state/query layer is limited to stable cross-tree concerns and does not become the source of truth for API data. Query keys are module-prefixed.
 
 ## API Contract
 | Function | Method | Endpoint | Request | Response `data` type |
@@ -96,9 +96,9 @@ TanStack Query owns library server/API data. UI-only filters, tabs, selections, 
 |---|---|
 | `library/library_components/ManagerLibraryDietGrid/ManagerLibraryDietGrid.tsx` | Renders the diet plan cards grid with macronutrient info and action buttons. |
 | `library/library_components/ManagerLibraryDietModal/ManagerLibraryDietModal.tsx` | Form modal for creating or editing a diet plan in the Diet Library module. |
-| `library/library_components/ManagerLibraryMain/ManagerLibraryMain.tsx` | Entry component for the Diet Library module. Wraps the UI in the context provider and handles page layout. |
+| `library/library_components/ManagerLibraryMain/ManagerLibraryMain.tsx` | Framework entry component for the Diet Library module; delegates feature behavior and UI composition to `ManagerLibraryContent`. |
 | `library/library_components/ManagerLibraryTabs/ManagerLibraryTabs.tsx` | Renders the tabbed view switching between Diet Plans and Exercises in the Diet Library. |
-| `library/library_context/ManagerLibraryContext.tsx` | Provides UI orchestration state to the Diet Library module hierarchy. Async data is managed in useManagerLibraryLogic. |
+| `library/library_hooks/ManagerUseManagerLibraryLogic.ts` | Provides UI orchestration state to the Diet Library module hierarchy. Async data is managed in useManagerLibraryLogic. |
 
 ## Rule Compliance Checklist
 - [x] Module-owned API, types/schemas, fixtures, handlers, tests, and feature documentation are scoped to this module.

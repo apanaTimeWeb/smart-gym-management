@@ -1,3 +1,5 @@
+'use client';
+/** Coordinates the Manager / feature. */
 import { useQuery } from '@tanstack/react-query';
 import { managerProfileApi } from '@/app/manager/profile/profile_api/ManagerProfileApi';
 

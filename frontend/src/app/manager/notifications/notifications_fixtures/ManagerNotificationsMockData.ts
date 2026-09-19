@@ -7,14 +7,12 @@ export const NOTIFICATION_TYPE_STYLES: Record<string, { bg: string; text: string
   EXPIRY:       { bg: 'bg-danger/10',    text: 'text-danger',    label: 'Expiry'       },
   ATTENDANCE:   { bg: 'bg-info/10',      text: 'text-info',      label: 'Attendance'   },
   INQUIRY:      { bg: 'bg-warning/10',   text: 'text-warning',   label: 'Inquiry'      },
-  ANNOUNCEMENT: { bg: 'bg-primary/10',   text: 'text-primary',   label: 'Announcement' },
-};
+  ANNOUNCEMENT: { bg: 'bg-primary/10',   text: 'text-primary',   label: 'Announcement' } };
 
 export const NOTIFICATION_PRIORITY_STYLES: Record<string, { bg: string; text: string }> = {
   HIGH:   { bg: 'bg-danger/10',  text: 'text-danger'  },
   MEDIUM: { bg: 'bg-warning/10', text: 'text-warning' },
-  LOW:    { bg: 'bg-info/10',    text: 'text-info'    },
-};
+  LOW:    { bg: 'bg-info/10',    text: 'text-info'    } };
 
 const now = new Date();
 const daysAgo = (d: number) => new Date(now.getTime() - d * 86400000).toISOString();
@@ -36,8 +34,7 @@ export const MOCK_NOTIFICATION_KPIS: NotificationKPIData = {
   total: MOCK_NOTIFICATIONS.length,
   unread: MOCK_NOTIFICATIONS.filter(n => n.status === 'UNREAD').length,
   highPriority: MOCK_NOTIFICATIONS.filter(n => n.priority === 'HIGH').length,
-  todayCount: MOCK_NOTIFICATIONS.filter(n => n.createdAt >= daysAgo(1)).length,
-};
+  todayCount: MOCK_NOTIFICATIONS.filter(n => n.createdAt >= daysAgo(1)).length };
 
 export const NOTIFICATION_TYPE_OPTIONS = ['ALL', 'PAYMENT', 'EXPIRY', 'ATTENDANCE', 'INQUIRY', 'ANNOUNCEMENT', 'SYSTEM'];
 export const NOTIFICATION_PRIORITY_OPTIONS = ['ALL', 'HIGH', 'MEDIUM', 'LOW'];

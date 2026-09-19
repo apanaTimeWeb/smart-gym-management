@@ -1,16 +1,18 @@
 'use client';
 // RESPONSIBILITY: Renders the grid of workout plan cards with exercises count and action buttons.
-import { Dumbbell, Edit2, Trash2, Loader2 } from 'lucide-react';
-import { useWorkoutContext } from '@/app/manager/workout/workout_context/ManagerWorkoutContext';
+import ManagerWorkoutPlansEmptyState from '@/app/manager/workout/workout_components/ManagerWorkoutPlansGrid/ManagerWorkoutPlansEmptyState';
+import { Dumbbell, Edit2, Trash2 } from 'lucide-react';
+import ManagerTableSkeleton from '@/app/manager/manager_components/ManagerShared/ManagerTableSkeleton';
+import { useManagerWorkoutLogic } from '@/app/manager/workout/workout_hooks/ManagerUseManagerWorkoutLogic';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
 import { useWorkoutPlansQuery } from '@/app/manager/workout/workout_api/ManagerUseManagerWorkoutQueries';
 import { useDeleteWorkoutMutation } from '@/app/manager/workout/workout_api/ManagerUseManagerWorkoutMutations';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
-import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
-import { showManagerErrorToast, showManagerSuccessToast } from '@/app/manager/manager_utils/ManagerToastService';
+import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_infrastructure/ManagerPaginationDefaults';
+import { showManagerErrorToast, showManagerSuccessToast } from '@/app/manager/manager_infrastructure/ManagerToastService';
 
 export default function ManagerWorkoutPlansGrid() {
-  const { search, levelFilter, currentPage, setCurrentPage, openEditWk } = useWorkoutContext();
+  const { search, levelFilter, currentPage, setCurrentPage, openEditWk } = useManagerWorkoutLogic();
   const { confirm } = useConfirm();
   
   const { data, isLoading } = useWorkoutPlansQuery({
@@ -27,11 +29,7 @@ export default function ManagerWorkoutPlansGrid() {
   const totalPages = Math.ceil(totalWorkouts / MANAGER_ITEMS_PER_PAGE) || 1;
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center py-16 flex-1 h-full min-h-96">
-        <Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" />
-      </div>
-    );
+    return <ManagerTableSkeleton rows={6} />;
   }
 
   return (
@@ -40,27 +38,27 @@ export default function ManagerWorkoutPlansGrid() {
         {workouts.map(w => (
           <div 
             key={w.id} 
-            className="border border-border rounded-xl p-4 hover:border-info dark:hover:border-info hover:shadow-sm motion-safe:transition-all bg-card"
+            className="border border-border rounded-xl p-4 hover:border-info dark:hover:border-info hover:shadow-card motion-safe:transition-all bg-card"
           >
             <div className="flex items-start justify-between mb-3">
-              <div className="w-10 h-10 bg-info-bg dark:bg-info-bg rounded-xl flex items-center justify-center">
-                <Dumbbell size={17} className="text-info dark:text-info" />
+              <div className="w-10 h-10 bg-info dark:bg-info rounded-xl flex items-center justify-center">
+                <Dumbbell size={18} className="text-info dark:text-info" />
               </div>
               <div className="flex items-center gap-1">
                 <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
                   w.level === 'Beginner' 
-                    ? 'bg-success-bg text-success dark:bg-success-bg dark:text-success' 
+                    ? 'bg-success text-success dark:bg-success dark:text-success' 
                     : w.level === 'Intermediate' 
-                    ? 'bg-warning-bg text-warning dark:bg-warning-bg dark:text-warning' 
-                    : 'bg-danger-bg text-danger dark:bg-danger-bg dark:text-danger'
+                    ? 'bg-warning text-warning dark:bg-warning dark:text-warning' 
+                    : 'bg-danger text-danger dark:bg-danger dark:text-danger'
                 }`}>
                   {w.level}
                 </span>
                 <button 
                   onClick={() => openEditWk(w)} 
-                  className="p-1.5 text-info hover:text-info hover:bg-info-bg dark:hover:bg-info-bg rounded-lg motion-safe:transition-colors"
+                  className="p-1.5 text-info hover:text-info hover:bg-info dark:hover:bg-info rounded-lg motion-safe:transition-colors"
                 >
-                  <Edit2 size={13} />
+                  <Edit2 size={18} />
                 </button>
                 <button 
                   onClick={async () => {
@@ -72,21 +70,21 @@ export default function ManagerWorkoutPlansGrid() {
                     });
                     if (ok) {
                       try {
-                        const response = await deleteMutation.mutateAsync(w.id);
+                        const response = await deleteMutation.mutateAsync({ id: w.id, idempotencyKey: crypto.randomUUID() });
                         showManagerSuccessToast(response.message, 'manager-workout-plan-success');
                       } catch (e: unknown) {
                         showManagerErrorToast(e, 'manager-workout-plan-error');
                       }
                     }
                   }}
-                  className="p-1.5 text-danger hover:text-danger hover:bg-danger-bg dark:hover:bg-danger-bg rounded-lg motion-safe:transition-colors"
+                  className="p-1.5 text-danger hover:text-danger hover:bg-danger dark:hover:bg-danger rounded-lg motion-safe:transition-colors"
                 >
-                  <Trash2 size={13} />
+                  <Trash2 size={18} />
                 </button>
               </div>
             </div>
             
-            <h3 className="font-semibold text-foreground mb-3">{w.name}</h3>
+            <h3 className="font-semibold text-primary mb-3">{w.name}</h3>
             
             <div className="grid grid-cols-3 gap-2 mb-3">
               {[
@@ -95,7 +93,7 @@ export default function ManagerWorkoutPlansGrid() {
                 { l: 'Duration', v: w.duration }
               ].map(s => (
                 <div key={s.l} className="bg-input rounded-lg p-2 text-center border border-border">
-                  <p className="text-sm font-bold text-foreground">{Array.isArray(s.v) ? s.v.length : s.v}</p>
+                  <p className="text-sm font-bold text-primary">{Array.isArray(s.v) ? s.v.length : s.v}</p>
                   <p className="text-xs text-secondary">{s.l}</p>
                 </div>
               ))}
@@ -110,15 +108,11 @@ export default function ManagerWorkoutPlansGrid() {
             </div>
             
             <p className="text-xs text-secondary">
-              Focus: <span className="font-medium text-foreground">{w.focus}</span>
+              Focus: <span className="font-medium text-primary">{w.focus}</span>
             </p>
           </div>
         ))}
-        {workouts.length === 0 && (
-          <div className="col-span-full text-center py-10 text-secondary">
-            No workout plans found matching &quot;{search}&quot;.
-          </div>
-        )}
+        {workouts.length === 0 && <ManagerWorkoutPlansEmptyState />}
       </div>
       <div className="mt-6">
         <ManagerPagination 

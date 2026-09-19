@@ -1,8 +1,6 @@
-// RESPONSIBILITY: Owns every route path used by the Manager library module.
+// RESPONSIBILITY: Owns every route and API path used by the Manager Library module.
 export const ManagerLibraryUrlConfig = {
-  PAGES: {
-    LIBRARY: '/manager/library',
-  },
+  PAGES: { LIBRARY: '/manager/library' },
   BACKEND_API: {
     BASE: '/manager/library',
     EXERCISES_BASE: '/manager/library/exercises',
@@ -11,5 +9,5 @@ export const ManagerLibraryUrlConfig = {
     DIET_PLANS_BASE: '/manager/library/diet-plans',
     DIET_PLAN_UPDATE: (id: string) => `/manager/library/diet-plans/${id}`,
     DIET_PLAN_DELETE: (id: string) => `/manager/library/diet-plans/${id}`,
-  }
-};
+  },
+} as const;

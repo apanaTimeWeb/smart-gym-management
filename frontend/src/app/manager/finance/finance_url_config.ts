@@ -4,9 +4,9 @@ export const ManagerFinanceUrlConfig = {
   BACKEND_API: {
     BASE: '/manager/finance',
     PAYMENTS_BASE: '/manager/finance/payments',
+    PAYMENTS_BY_MEMBER: (memberId: string) => `/manager/finance/payments/member/${memberId}`,
     SUMMARY: '/manager/finance/summary',
-    PAYMENTS_BY_MEMBER: (memberId: string) => `/manager/finance/payments-by-member/${memberId}`,
-    EXPORT: '/manager/finance/transactions/export',
+    EXPORT: '/manager/finance/export',
     CHART: '/manager/finance/chart'
   }
 };

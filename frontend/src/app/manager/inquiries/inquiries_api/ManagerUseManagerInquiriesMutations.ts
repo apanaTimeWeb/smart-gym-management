@@ -1,12 +1,14 @@
+'use client';
 // DATA FLOW: Manager module state/API data → useManagerInquiriesMutations → owning Manager UI components.
 /** Manages UseInquiriesMutations for the Manager module. */
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { inquiriesApi } from '@/app/manager/inquiries/inquiries_api/ManagerInquiriesApi';
-import type { InquiryFormValues } from '@/app/manager/inquiries/inquiries_utils/ManagerInquiriesSharedConstants';
-import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
+import type { InquiryFormValues } from '@/app/manager/inquiries/inquiries_types/ManagerInquiriesFormTypes';
+import type { ManagerToastType } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerToastTypes';
+import { showManagerErrorToast } from '@/app/manager/manager_infrastructure/ManagerToastService';
 
 interface UseInquiriesMutationsProps {
-  showToast: (msg: string, type: ToastType) => void;
+  showToast: (msg: string, type: ManagerToastType) => void;
   onSuccessCallback?: () => void;
 }
 
@@ -25,7 +27,7 @@ export function useManagerInquiriesMutations({ showToast, onSuccessCallback }: U
       onSuccessCallback?.();
     },
     onError: (err) => {
-      showToast(err instanceof Error ? err.message : 'Request failed', 'error');
+      showManagerErrorToast(err, 'manager-inquiries-error');
     }
   });
 
@@ -37,19 +39,19 @@ export function useManagerInquiriesMutations({ showToast, onSuccessCallback }: U
       onSuccessCallback?.();
     },
     onError: (err) => {
-      showToast(err instanceof Error ? err.message : 'Request failed', 'error');
+      showManagerErrorToast(err, 'manager-inquiries-error');
     }
   });
 
   const deleteInquiryMutation = useMutation({
-    mutationFn: (id: string) => inquiriesApi.deleteInquiry(id),
+    mutationFn: ({ id, idempotencyKey }: { id: string; idempotencyKey: string }) => inquiriesApi.deleteInquiry(id, idempotencyKey),
     onSuccess: (res) => {
       showToast(res.message, 'success');
       invalidateQueries();
       onSuccessCallback?.();
     },
     onError: (err) => {
-      showToast(err instanceof Error ? err.message : 'Request failed', 'error');
+      showManagerErrorToast(err, 'manager-inquiries-error');
     }
   });
 
@@ -59,22 +61,19 @@ export function useManagerInquiriesMutations({ showToast, onSuccessCallback }: U
     onSuccess: (response) => {
       showToast(response.message, 'success');
       invalidateQueries();
-      queryClient.invalidateQueries({ queryKey: ['manager', 'members'] });
       onSuccessCallback?.();
     },
     onError: (err) => {
-      showToast(err instanceof Error ? err.message : 'Request failed', 'error');
-    },
-  });
+      showManagerErrorToast(err, 'manager-inquiries-error');
+    } });
 
   return {
-    createInquiry: createInquiryMutation.mutate,
+    createInquiry: createInquiryMutation.mutateAsync,
     isCreating: createInquiryMutation.isPending,
-    updateInquiry: updateInquiryMutation.mutate,
+    updateInquiry: updateInquiryMutation.mutateAsync,
     isUpdating: updateInquiryMutation.isPending,
-    deleteInquiry: deleteInquiryMutation.mutate,
+    deleteInquiry: deleteInquiryMutation.mutateAsync,
     isDeleting: deleteInquiryMutation.isPending,
     convertLead: convertLeadMutation.mutateAsync,
-    isConverting: convertLeadMutation.isPending,
-  };
+    isConverting: convertLeadMutation.isPending };
 }

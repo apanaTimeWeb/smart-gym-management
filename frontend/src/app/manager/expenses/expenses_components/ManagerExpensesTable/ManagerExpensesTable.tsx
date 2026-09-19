@@ -1,24 +1,25 @@
 'use client';
+import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 // RESPONSIBILITY: Renders the primary tabular list of expenses with actions and pagination.
-import { Edit, Trash2, Loader2, ExternalLink, CheckCircle2, Banknote } from 'lucide-react';
+import { Edit, Trash2, ExternalLink, CheckCircle2, Banknote, Loader2 } from 'lucide-react';
+import ManagerTableSkeleton from '@/app/manager/manager_components/ManagerShared/ManagerTableSkeleton';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
-import { useExpensesContext } from '@/app/manager/expenses/expenses_context/ManagerExpensesContext';
+import { useManagerExpensesLogic } from '@/app/manager/expenses/expenses_hooks/ManagerUseManagerExpensesLogic';
 import { useExpensesListQuery } from '@/app/manager/expenses/expenses_api/ManagerUseManagerExpensesQueries';
 import { EXPENSES_TABLE_HEADERS, EXPENSE_STATUS_STYLES } from '@/app/manager/expenses/expenses_utils/ManagerExpensesSharedConstants';
-import { formatCurrency , formatDate} from '@/lib/formatters';
+import { formatCurrencyFromMinorUnits , formatDate} from '@/lib/formatters';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
-import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
+import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_infrastructure/ManagerPaginationDefaults';
 import ManagerEmptyState from '@/app/manager/manager_components/ManagerFeedback/ManagerEmptyState';
 
 export default function ManagerExpensesTable() {
   const { confirm } = useConfirm();
-  const { search, statusFilter, currentPage, setCurrentPage, openEdit, deleteExpense, markAsPaid } = useExpensesContext();
+  const { search, statusFilter, currentPage, setCurrentPage, openEdit, deleteExpense, markAsPaid } = useManagerExpensesLogic();
   
   const { data, isLoading } = useExpensesListQuery({
     search,
     status: statusFilter !== 'All' ? statusFilter : '',
-    page: currentPage.toString(),
-  });
+    page: currentPage.toString() });
 
   const expenses = data?.expenses || [];
   const totalExpenses = data?.total || 0;
@@ -26,7 +27,7 @@ export default function ManagerExpensesTable() {
   const totalPages = Math.ceil(totalExpenses / MANAGER_ITEMS_PER_PAGE);
 
   return (
-    <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden flex flex-col h-full min-h-96">
+    <div className="bg-card rounded-xl shadow-card border border-border overflow-hidden flex flex-col h-full min-h-96">
       {isLoading ? (
         <div className="flex items-center justify-center py-16 flex-1">
           <Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" />
@@ -50,12 +51,12 @@ export default function ManagerExpensesTable() {
                   return (
                     <tr key={e.id} className="hover:bg-primary/5 motion-safe:transition-colors">
                       <td className="px-5 py-3.5 text-sm font-bold text-primary whitespace-nowrap">{e.id}</td>
-                      <td className="px-5 py-3.5 text-sm font-semibold text-foreground whitespace-nowrap">
+                      <td className="px-5 py-3.5 text-sm font-semibold text-primary whitespace-nowrap">
                         {e.title}
                         {e.referenceNo && <span className="block text-xs font-normal text-secondary mt-0.5">Ref: {e.referenceNo}</span>}
                       </td>
                       <td className="px-5 py-3.5 text-sm text-secondary whitespace-nowrap">{e.category}</td>
-                      <td className="px-5 py-3.5 text-sm font-bold text-foreground whitespace-nowrap">{formatCurrency(e.amount)}</td>
+                      <td className="px-5 py-3.5 text-sm font-bold text-primary whitespace-nowrap">{formatCurrencyFromMinorUnits(e.amount, ManagerEnvConfig.currencyCode)}</td>
                       <td className="px-5 py-3.5 text-sm text-secondary whitespace-nowrap">
                         {formatDate(e.date)}
                       </td>
@@ -72,22 +73,21 @@ export default function ManagerExpensesTable() {
                                 const ok = await confirm({
                                   title: 'Mark as Paid',
                                   message: `Mark expense "${e.title}" as paid?`,
-                                  confirmText: 'Mark Paid',
-                                });
+                                  confirmText: 'Mark Paid' });
                                 if (ok && markAsPaid) markAsPaid(e.id);
                               }}
-                              className="p-1.5 rounded-lg bg-success/10 text-success hover:bg-success/20 motion-safe:transition-all duration-200"
+                              className="p-1.5 rounded-lg bg-success/10 text-success hover:bg-success/20 motion-safe:transition-all motion-safe:duration-200"
                               title="Mark as Paid"
                             >
-                              <CheckCircle2 size={14} />
+                              <CheckCircle2 size={18} />
                             </button>
                           )}
                           {e.receiptUrl && (
-                            <a href={e.receiptUrl} target="_blank" rel="noopener noreferrer" className="p-1.5 rounded-lg bg-input text-secondary hover:bg-primary-subtle motion-safe:transition-all duration-200" title="View Receipt">
-                              <ExternalLink size={14} />
+                            <a href={e.receiptUrl} target="_blank" rel="noopener noreferrer" className="p-1.5 rounded-lg bg-input text-secondary hover:bg-primary-subtle motion-safe:transition-all motion-safe:duration-200" title="View Receipt">
+                              <ExternalLink size={18} />
                             </a>
                           )}
-                          <button onClick={() => openEdit(e)} className="p-1.5 rounded-lg bg-input text-secondary hover:bg-primary-subtle motion-safe:transition-all duration-200" title="Edit"><Edit size={14} /></button>
+                          <button onClick={() => openEdit(e)} className="p-1.5 rounded-lg bg-input text-secondary hover:bg-primary-subtle motion-safe:transition-all motion-safe:duration-200" title="Edit"><Edit size={18} /></button>
                           <button onClick={async () => { 
                             const ok = await confirm({
                               title: 'Delete Expense',
@@ -96,7 +96,7 @@ export default function ManagerExpensesTable() {
                               confirmText: 'Delete'
                             });
                             if (ok) deleteExpense(e.id); 
-                          }} className="p-1.5 rounded-lg bg-danger-bg text-danger hover:opacity-80 motion-safe:transition-all duration-200" title="Delete"><Trash2 size={14} /></button>
+                          }} className="p-1.5 rounded-lg bg-danger text-danger hover:opacity-80 motion-safe:transition-all motion-safe:duration-200" title="Delete"><Trash2 size={18} /></button>
                         </div>
                       </td>
                     </tr>
@@ -106,7 +106,7 @@ export default function ManagerExpensesTable() {
                   <tr>
                     <td colSpan={EXPENSES_TABLE_HEADERS.length} className="p-0 border-b-0">
                       <ManagerEmptyState 
-                        icon={<Banknote size={32} />}
+                        icon={<Banknote size={18} />}
                         title="No expenses found"
                         subtitle="There are no expenses matching the current criteria."
                       />

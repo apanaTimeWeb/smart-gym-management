@@ -1,5 +1,4 @@
 // RESPONSIBILITY: Skeleton loader for the Schedule module
-import React from 'react';
 
 export default function ManagerScheduleSkeleton() {
   return (

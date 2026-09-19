@@ -6,5 +6,4 @@ import type { DietPlan } from '@/app/manager/library/library_types/ManagerLibrar
 
 export const ssrLibraryApi = {
 
-  fetchDietPlans: () => ssrApiFetch<ApiResponse<{ dietPlans: DietPlan[]; total: number }>>(ManagerLibraryUrlConfig.BACKEND_API.DIET_PLANS_BASE),
-};
+  fetchDietPlans: () => ssrApiFetch<ApiResponse<{ dietPlans: DietPlan[]; total: number }>>(ManagerLibraryUrlConfig.BACKEND_API.DIET_PLANS_BASE) };

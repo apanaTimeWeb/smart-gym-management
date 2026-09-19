@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Loader2, Zap, Settings, MessageSquare, Clock } from 'lucide-react';
 import type { CommAutomation } from '@/app/manager/communications/communications_types/ManagerCommunications_types';
-import { useManagerCommunicationsLogic } from '@/app/manager/communications/communications_context/ManagerUseManagerCommunicationsLogic';
+import { useManagerCommunicationsLogic } from '@/app/manager/communications/communications_hooks/ManagerUseManagerCommunicationsLogic';
 
 export default function ManagerCommunicationsAutomations() {
   const { automations, automationsLoading, updateAutomation, isUpdatingAutomation } = useManagerCommunicationsLogic();
@@ -14,7 +14,7 @@ export default function ManagerCommunicationsAutomations() {
   if (automationsLoading) {
     return (
       <div className="flex flex-col items-center justify-center py-20 text-secondary">
-        <Loader2 size={32} className="motion-safe:animate-spin mb-4 text-primary" />
+        <Loader2 size={18} className="motion-safe:animate-spin mb-4 text-primary" />
         <p className="text-sm font-medium">Loading Automations...</p>
       </div>
     );
@@ -36,13 +36,13 @@ export default function ManagerCommunicationsAutomations() {
   };
 
   return (
-    <div className="space-y-6 motion-safe:animate-in motion-safe:fade-in duration-500">
+    <div className="space-y-6 motion-safe:animate-in motion-safe:fade-in motion-safe:duration-500">
       
       {/* Header Panel */}
       <div className="bg-card border border-border rounded-xl p-5 md:p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
-            <Zap size={20} className="text-warning fill-warning/20" />
+          <h2 className="text-lg font-bold text-primary flex items-center gap-2">
+            <Zap size={18} className="text-warning fill-warning/20" />
             Automated Triggers
           </h2>
           <p className="text-sm text-secondary mt-1">
@@ -66,7 +66,7 @@ export default function ManagerCommunicationsAutomations() {
                     <Zap size={18} />
                   </div>
                   <div>
-                    <h3 className="text-sm font-bold text-foreground">{auto.title}</h3>
+                    <h3 className="text-sm font-bold text-primary">{auto.title}</h3>
                     <p className="text-xs text-secondary mt-0.5">{auto.description}</p>
                   </div>
                 </div>
@@ -80,7 +80,7 @@ export default function ManagerCommunicationsAutomations() {
                   }`}
                 >
                   <span
-                    className={`inline-block h-4 w-4 transform rounded-full bg-background motion-safe:transition-transform ${
+                    className={`inline-block h-4 w-4 transform rounded-full bg-page motion-safe:transition-transform ${
                       auto.enabled ? 'translate-x-6' : 'translate-x-1 bg-disabled'
                     }`}
                   />
@@ -94,40 +94,40 @@ export default function ManagerCommunicationsAutomations() {
                   <div className="space-y-4">
                     <div>
                       <label className="flex items-center gap-2 text-xs font-semibold text-secondary uppercase tracking-wider mb-2">
-                        <Clock size={14} /> Send Time
+                        <Clock size={18} /> Send Time
                       </label>
                       <input
                         type="time"
                         value={draftTime}
                         onChange={(e) => setDraftTime(e.target.value)}
-                        className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                        className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-primary focus:outline-none focus:ring-1 focus:ring-primary"
                       />
                     </div>
                     <div>
                       <label className="flex items-center gap-2 text-xs font-semibold text-secondary uppercase tracking-wider mb-2">
-                        <MessageSquare size={14} /> WhatsApp Template
+                        <MessageSquare size={18} /> WhatsApp Template
                       </label>
                       <textarea
                         value={draftMessage}
                         onChange={(e) => setDraftMessage(e.target.value)}
                         rows={4}
-                        className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary resize-none"
+                        className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-primary focus:outline-none focus:ring-1 focus:ring-primary resize-none"
                       />
                       <p className="text-xs text-secondary mt-1">Use <code className="text-primary font-mono">{'{name}'}</code> to personalize.</p>
                     </div>
                     <div className="flex justify-end gap-2 pt-2">
                       <button
                         onClick={() => setEditingId(null)}
-                        className="px-4 py-2 text-sm font-semibold text-secondary hover:text-foreground motion-safe:transition-colors"
+                        className="px-4 py-2 text-sm font-semibold text-secondary hover:text-primary motion-safe:transition-colors"
                       >
                         Cancel
                       </button>
                       <button
                         onClick={() => saveEditing(auto.id)}
                         disabled={isUpdatingAutomation}
-                        className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-bold hover:bg-primary-hover motion-safe:transition-colors disabled:opacity-50"
+                        className="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary rounded-lg text-sm font-bold hover:bg-primary-hover motion-safe:transition-colors disabled:opacity-50"
                       >
-                        {isUpdatingAutomation ? <Loader2 size={16} className="motion-safe:animate-spin" /> : 'Save Changes'}
+                        {isUpdatingAutomation ? <Loader2 size={18} className="motion-safe:animate-spin" /> : 'Save Changes'}
                       </button>
                     </div>
                   </div>
@@ -135,13 +135,13 @@ export default function ManagerCommunicationsAutomations() {
                   <div className="space-y-4 opacity-80 hover:opacity-100 motion-safe:transition-opacity">
                     <div>
                       <label className="flex items-center gap-2 text-xs font-semibold text-secondary uppercase tracking-wider mb-1">
-                        <Clock size={14} /> Send Time
+                        <Clock size={18} /> Send Time
                       </label>
-                      <p className="text-sm font-medium text-foreground">{auto.sendTime}</p>
+                      <p className="text-sm font-medium text-primary">{auto.sendTime}</p>
                     </div>
                     <div>
                       <label className="flex items-center gap-2 text-xs font-semibold text-secondary uppercase tracking-wider mb-1">
-                        <MessageSquare size={14} /> WhatsApp Template
+                        <MessageSquare size={18} /> WhatsApp Template
                       </label>
                       <div className="bg-input/50 border border-border rounded-lg p-3 text-sm text-secondary italic">
                         "{auto.messageTemplate}"
@@ -152,7 +152,7 @@ export default function ManagerCommunicationsAutomations() {
                         onClick={() => startEditing(auto)}
                         className="flex items-center gap-2 text-xs font-semibold text-primary hover:text-primary-hover motion-safe:transition-colors focus-visible:outline-none"
                       >
-                        <Settings size={14} /> Edit Configuration
+                        <Settings size={18} /> Edit Configuration
                       </button>
                     </div>
                   </div>

@@ -1,12 +1,12 @@
 import { z } from 'zod';
 import { ManagerReferralsUrlConfig } from '@/app/manager/referrals/referrals_url_config';
 import { apiFetch, type ApiResponse } from '@/lib/api';
-import { managerReferralSchema, managerReferralsKpiSchema } from '@/app/manager/referrals/referrals_types/ManagerReferralsSchema';
+import { managerReferralSchema, managerReferralsKpiSchema } from '@/app/manager/referrals/referrals_schemas/ManagerReferralsSchema';
 import type { ManagerReferral, ManagerReferralsKPIs, CreateReferralDto } from '@/app/manager/referrals/referrals_types/ManagerReferralsTypes';
 
 export const ManagerReferralsApi = {
   fetchReferralKPIs: async (): Promise<ApiResponse<ManagerReferralsKPIs>> => {
-    return apiFetch(`${ManagerReferralsUrlConfig.BACKEND_API.BASE}/kpis`, { dataSchema: managerReferralsKpiSchema });
+    return apiFetch(ManagerReferralsUrlConfig.BACKEND_API.KPIS, { dataSchema: managerReferralsKpiSchema });
   },
 
   fetchReferrals: async (params: { page: number; limit: number; search?: string; status?: string }): Promise<ApiResponse<ManagerReferral[]>> => {
@@ -25,9 +25,8 @@ export const ManagerReferralsApi = {
   },
 
   claimReward: async (referralId: string): Promise<ApiResponse<ManagerReferral>> => {
-    return apiFetch(`${ManagerReferralsUrlConfig.BACKEND_API.BASE}/${referralId}/claim`, {
+    return apiFetch(ManagerReferralsUrlConfig.BACKEND_API.CLAIM(referralId), {
       method: 'POST',
       dataSchema: managerReferralSchema
     });
-  },
-};
+  } };

@@ -1,29 +1,21 @@
 'use client';
 // RESPONSIBILITY: Renders the four KPI stat cards (Total, New, Follow Up, Converted) for the Inquiries module.
-import { useInquiriesContext } from '@/app/manager/inquiries/inquiries_context/ManagerInquiriesContext';
-import { MessageSquare, Plus, Clock, CheckCircle } from 'lucide-react';
-
+import { MANAGER_INQUIRIES_KPI_CONFIG } from '@/app/manager/inquiries/inquiries_constants/ManagerInquiriesKpiConstants';
+import { useManagerInquiriesLogic } from '@/app/manager/inquiries/inquiries_hooks/ManagerUseManagerInquiriesLogic';
 import { formatNumber } from '@/lib/formatters';
 
-const KPI_CONFIG = [
-  { key: 'total',     label: 'Total Inquiries', icon: MessageSquare, color: 'text-info',    bg: 'bg-info-bg'     },
-  { key: 'new',       label: 'New',             icon: Plus,          color: 'text-warning', bg: 'bg-warning-bg'  },
-  { key: 'followUp',  label: 'Follow Up',       icon: Clock,         color: 'text-warning', bg: 'bg-warning-bg'  },
-  { key: 'converted', label: 'Converted',       icon: CheckCircle,   color: 'text-success', bg: 'bg-success-bg'  },
-] as const;
-
 export default function ManagerInquiriesKPIs() {
-  const { stats, isLoading } = useInquiriesContext();
+  const { stats, isLoading } = useManagerInquiriesLogic();
 
   if (isLoading && !stats) {
     return (
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        {[1, 2, 3, 4].map(i => (
-          <div key={`skeleton-${i}`} className="bg-card rounded-xl p-4 shadow-sm border border-border flex items-center gap-3 motion-safe:animate-pulse">
-            <div className="w-10 h-10 rounded-xl bg-muted"></div>
+        {[1, 2, 3, 4].map((index) => (
+          <div key={`skeleton-${index}`} className="bg-card rounded-xl p-4 shadow-card border border-border flex items-center gap-3 motion-safe:animate-pulse">
+            <div className="w-10 h-10 rounded-xl bg-input" />
             <div className="space-y-2">
-              <div className="h-3 w-20 bg-muted rounded"></div>
-              <div className="h-5 w-10 bg-muted rounded"></div>
+              <div className="h-3 w-20 bg-input rounded" />
+              <div className="h-5 w-10 bg-input rounded" />
             </div>
           </div>
         ))}
@@ -35,14 +27,14 @@ export default function ManagerInquiriesKPIs() {
 
   return (
     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-      {KPI_CONFIG.map(s => (
-        <div key={s.key} className="bg-card rounded-xl p-4 shadow-sm border border-border flex items-center gap-3">
-          <div className={`w-10 h-10 rounded-xl ${s.bg} flex items-center justify-center`}>
-            <s.icon size={19} className={s.color} />
+      {MANAGER_INQUIRIES_KPI_CONFIG.map((item) => (
+        <div key={item.key} className="bg-card rounded-xl p-4 shadow-card border border-border flex items-center gap-3">
+          <div className={`w-10 h-10 rounded-xl ${item.bg} flex items-center justify-center`}>
+            <item.icon size={18} className={item.color} />
           </div>
           <div>
-            <p className="text-xs text-secondary font-medium">{s.label}</p>
-            <p className="text-xl font-bold text-primary">{formatNumber(stats[s.key])}</p>
+            <p className="text-xs text-secondary font-medium">{item.label}</p>
+            <p className="text-kpi font-bold text-primary">{formatNumber(stats[item.key])}</p>
           </div>
         </div>
       ))}

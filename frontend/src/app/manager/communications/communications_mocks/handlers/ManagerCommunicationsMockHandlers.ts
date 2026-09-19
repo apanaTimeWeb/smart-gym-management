@@ -1,12 +1,13 @@
 import { http, HttpResponse } from 'msw';
-import { MANAGER_HTTP_STATUS } from '@/app/manager/manager_utils/ManagerHttpStatus';
+import { managerMockApiUrl } from '@/app/manager/manager_infrastructure/ManagerMockApiUrl';
+import { ManagerCommunicationsUrlConfig } from '@/app/manager/communications/communications_url_config';
+import { MANAGER_HTTP_STATUS } from '@/app/manager/manager_infrastructure/ManagerHttpStatus';
 import {
   MOCK_CAMPAIGNS,
   MOCK_COMM_KPI,
   MOCK_AUTOMATIONS,
   MOCK_CANCELLED_MEMBERS,
-  MOCK_CANCELLATIONS_KPI,
-} from '@/app/manager/communications/communications_fixtures/ManagerCommunicationsMockData';
+  MOCK_CANCELLATIONS_KPI } from '@/app/manager/communications/communications_fixtures/ManagerCommunicationsMockData';
 import type {
   CommCampaign,
   CommRecipient,
@@ -14,8 +15,7 @@ import type {
   CommSegment,
   CommAutomation,
   CommChannel,
-  WinBackTemplateTier,
-} from '@/app/manager/communications/communications_types/ManagerCommunications_types';
+  WinBackTemplateTier } from '@/app/manager/communications/communications_types/ManagerCommunications_types';
 
 let mockCampaigns = [...MOCK_CAMPAIGNS];
 let mockAutomations = [...MOCK_AUTOMATIONS];
@@ -46,15 +46,16 @@ const MOCK_SEGMENT_MEMBERS: Record<CommSegment, CommRecipient[]> = {
     { memberId: 'M015', name: 'Sanjay Patel',   phone: '9876543224', email: 'sanjay@email.com',  status: 'EXPIRED', expiryDate: '2025-06-01', pendingAmount: 0 },
   ],
   pending_payment: [
-    { memberId: 'M016', name: 'Kavita Jain',    phone: '9876543225', email: 'kavita@email.com',  status: 'PENDING', expiryDate: '2025-07-01', pendingAmount: 1500 },
-    { memberId: 'M017', name: 'Deepak Mishra',  phone: '9876543226', email: 'deepak@email.com',  status: 'PENDING', expiryDate: '2025-06-25', pendingAmount: 2000 },
-    { memberId: 'M018', name: 'Sunita Yadav',   phone: '9876543227', email: 'sunita@email.com',  status: 'PENDING', expiryDate: '2025-07-15', pendingAmount: 800 },
+    { memberId: 'M016', name: 'Kavita Jain',    phone: '9876543225', email: 'kavita@email.com',  status: 'PENDING', expiryDate: '2025-07-01', pendingAmount: 150000 },
+    { memberId: 'M017', name: 'Deepak Mishra',  phone: '9876543226', email: 'deepak@email.com',  status: 'PENDING', expiryDate: '2025-06-25', pendingAmount: 200000 },
+    { memberId: 'M018', name: 'Sunita Yadav',   phone: '9876543227', email: 'sunita@email.com',  status: 'PENDING', expiryDate: '2025-07-15', pendingAmount: 80000 },
   ],
-  custom: [],
-};
+  custom: [] };
 
+export let mockCommunicationIdCounter = 1000;
+let mockBroadcastIdCounter = 1000;
 export const managerCommunicationsHandlers = [
-  http.get(`/api/v1/manager/communications/campaigns`, ({ request }) => {
+  http.get(managerMockApiUrl(ManagerCommunicationsUrlConfig.BACKEND_API.CAMPAIGNS), ({ request }) => {
     const url = new URL(request.url);
     const search = (url.searchParams.get('search') || '').trim().toLowerCase();
     const channel = (url.searchParams.get('channel') || '').trim().toLowerCase();
@@ -65,19 +66,19 @@ export const managerCommunicationsHandlers = [
     return HttpResponse.json({ success: true, message: 'Campaigns fetched', data: { campaigns: filtered.slice(start, start + limit), total: filtered.length } });
   }),
 
-  http.get(`/api/v1/manager/communications/kpis`, () => {
+  http.get(managerMockApiUrl(ManagerCommunicationsUrlConfig.BACKEND_API.KPIS), () => {
     return HttpResponse.json({ success: true, message: 'KPIs fetched', data: MOCK_COMM_KPI });
   }),
 
-  http.get(`/api/v1/manager/communications/segments/:segment`, ({ params }) => {
+  http.get(managerMockApiUrl(ManagerCommunicationsUrlConfig.BACKEND_API.SEGMENT(':segment')), ({ params }) => {
     const { segment } = params;
     return HttpResponse.json({ success: true, message: 'Segment fetched', data: MOCK_SEGMENT_MEMBERS[segment as CommSegment] ?? [] });
   }),
 
-  http.post(`/api/v1/manager/communications/campaigns`, async ({ request }) => {
+  http.post(managerMockApiUrl(ManagerCommunicationsUrlConfig.BACKEND_API.CAMPAIGNS), async ({ request }) => {
     const payload = await request.json() as CommFormValues & { recipientCount: number; segmentLabel: string };
     const campaign: CommCampaign = {
-      id: `c${Date.now()}`,
+      id: `c${mockCommunicationIdCounter++}`,
       title: payload.title,
       channel: payload.channel,
       segment: payload.segment,
@@ -90,17 +91,16 @@ export const managerCommunicationsHandlers = [
       deliveredCount: payload.recipientCount,
       status: 'sent',
       sentAt: new Date().toISOString(),
-      sentBy: 'Manager',
-    };
+      sentBy: 'Manager' };
     mockCampaigns = [campaign, ...mockCampaigns];
     return HttpResponse.json({ success: true, message: 'Campaign created', data: campaign });
   }),
 
-  http.get(`/api/v1/manager/communications/automations`, () => {
+  http.get(managerMockApiUrl(ManagerCommunicationsUrlConfig.BACKEND_API.AUTOMATIONS), () => {
     return HttpResponse.json({ success: true, message: 'Automations fetched', data: mockAutomations });
   }),
 
-  http.patch(`/api/v1/manager/communications/automations/:id`, async ({ request, params }) => {
+  http.patch(managerMockApiUrl(ManagerCommunicationsUrlConfig.BACKEND_API.AUTOMATION(':id')), async ({ request, params }) => {
     const payload = await request.json() as Partial<CommAutomation>;
     const idx = mockAutomations.findIndex(a => a.id === params.id);
     if (idx === -1) return HttpResponse.json({ success: false, message: 'Not found' }, { status: MANAGER_HTTP_STATUS.NOT_FOUND });
@@ -108,15 +108,15 @@ export const managerCommunicationsHandlers = [
     return HttpResponse.json({ success: true, message: 'Automation updated', data: mockAutomations[idx] });
   }),
 
-  http.get(`/api/v1/manager/communications/cancelled-members`, () => {
+  http.get(managerMockApiUrl(ManagerCommunicationsUrlConfig.BACKEND_API.CHURNED_MEMBERS), () => {
     return HttpResponse.json({ success: true, message: 'Cancelled members fetched', data: mockCancelledMembers });
   }),
 
-  http.get(`/api/v1/manager/communications/cancellations-kpis`, () => {
+  http.get(managerMockApiUrl(ManagerCommunicationsUrlConfig.BACKEND_API.CHURN_KPIS), () => {
     return HttpResponse.json({ success: true, message: 'Cancellations KPIs fetched', data: MOCK_CANCELLATIONS_KPI });
   }),
 
-  http.post(`/api/v1/manager/communications/win-back`, async ({ request }) => {
+  http.post(managerMockApiUrl(ManagerCommunicationsUrlConfig.BACKEND_API.WIN_BACK), async ({ request }) => {
     const payload = await request.json() as {
       memberId: string;
       memberName: string;
@@ -128,7 +128,7 @@ export const managerCommunicationsHandlers = [
       subject: string;
     };
     const campaign: CommCampaign = {
-      id: `wb${Date.now()}`,
+      id: `wb${mockBroadcastIdCounter++}`,
       title: `Win-Back: ${payload.memberName}`,
       channel: payload.channel,
       segment: 'expired',
@@ -141,8 +141,7 @@ export const managerCommunicationsHandlers = [
       deliveredCount: 1,
       status: 'sent',
       sentAt: new Date().toISOString(),
-      sentBy: 'Manager',
-    };
+      sentBy: 'Manager' };
     mockCampaigns = [campaign, ...mockCampaigns];
     mockCancelledMembers = mockCancelledMembers.map(m =>
       m.memberId === payload.memberId

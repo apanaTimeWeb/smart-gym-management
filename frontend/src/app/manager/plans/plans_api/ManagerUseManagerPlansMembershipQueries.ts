@@ -1,3 +1,5 @@
+'use client';
+/** Coordinates the Manager / feature. */
 import { useQuery } from '@tanstack/react-query';
 import { managerPlansMembershipApi } from '@/app/manager/plans/plans_api/ManagerPlansMembershipApi';
 
@@ -8,6 +10,5 @@ export function useManagerPlansMembershipOverviewQuery() {
       const response = await managerPlansMembershipApi.fetchMembershipOverview();
       if (!response.data) throw new Error(response.message);
       return response.data;
-    },
-  });
+    } });
 }

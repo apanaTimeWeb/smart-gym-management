@@ -8,12 +8,12 @@ Manager Referrals is the branch referral tracking workspace. Managers can inspec
 |---|---|---|
 | `referrals_api/` | Feature-owned responsibility for the referrals module. | `ManagerReferralsApi.ts` |
 | `referrals_components/` | Feature-owned responsibility for the referrals module. | `—` |
-| `referrals_context/` | Feature-owned responsibility for the referrals module. | `ManagerUseManagerReferralsLogic.ts` |
+| `referrals_hooks/` | Feature-owned responsibility for the referrals module. | `ManagerUseManagerReferralsLogic.ts` |
 | `referrals_fixtures/` | Feature-owned responsibility for the referrals module. | `ManagerReferralsMockData.ts` |
 | `referrals_mocks/` | Feature-owned responsibility for the referrals module. | `—` |
 | `referrals_store/` | Feature-owned responsibility for the referrals module. | `ManagerUseManagerReferralsStore.ts` |
 | `referrals_types/` | Feature-owned responsibility for the referrals module. | `ManagerReferralsSchema.ts; ManagerReferralsTypes.ts` |
-| `referrals_utils/` | Feature-owned responsibility for the referrals module. | `ManagerReferralsConstants.ts; ManagerReferralsFormSchema.ts` |
+| `referrals_utils/` | Feature-owned responsibility for the referrals module. | `ManagerReferralsFormSchema.ts` |
 
 ## Feature Inventory
 | Feature | Route | What the User Can Do | Main API Calls | Status |
@@ -36,7 +36,7 @@ Manager Referrals is the branch referral tracking workspace. Managers can inspec
 4. The authoritative referral response updates reward status and the KPI cache.
 
 ## Data and State Architecture
-TanStack Query owns referrals server/API data. UI-only filters, tabs, selections, and draft state remain local state or module-scoped Zustand where shared. React Context is limited to stable cross-tree concerns and does not become the source of truth for API data. Query keys are module-prefixed.
+TanStack Query owns referrals server/API data. URL query parameters are the source of truth for searchable/filterable/paginated state. Zustand is limited to transient UI state such as modal visibility and selections; it never owns API data or URL-backed filters. Query keys are module-prefixed.
 
 ## API Contract
 | Function | Method | Endpoint | Request | Response `data` type |

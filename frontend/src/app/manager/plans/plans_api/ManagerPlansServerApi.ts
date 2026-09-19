@@ -5,5 +5,4 @@ import type { Plan } from '@/app/manager/plans/plans_types/ManagerPlansTypes';
 import type { ApiResponse } from '@/lib/api';
 
 export const ssrPlansApi = {
-  fetchPlans: () => ssrApiFetch<ApiResponse<Plan[]>>(ManagerPlansUrlConfig.BACKEND_API.BASE),
-};
+  fetchPlans: () => ssrApiFetch<ApiResponse<Plan[]>>(ManagerPlansUrlConfig.BACKEND_API.BASE) };

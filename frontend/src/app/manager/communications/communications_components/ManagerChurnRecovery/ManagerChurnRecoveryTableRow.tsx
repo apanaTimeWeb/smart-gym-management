@@ -1,27 +1,22 @@
 'use client';
+import type { ManagerChurnRecoveryTableRowProps } from '@/app/manager/communications/communications_types/ManagerChurnRecoveryTableRowTypes';
 import { formatDate } from '@/lib/formatters';
 // RESPONSIBILITY: Single churned member row in the churn recovery table. Receives member data and callbacks via props. No API calls.
 import { Send, CheckCircle } from 'lucide-react';
-import type { ChurnedMember } from '@/app/manager/communications/communications_types/ManagerCommunications_types';
 import { CANCELLATIONS_REASON_LABEL } from '@/app/manager/communications/communications_utils/ManagerCommunicationsSharedConstants';
 
-interface ManagerChurnRecoveryTableRowProps {
-  member: ChurnedMember;
-  onOpenComposer: (memberId: string) => void;
-  maskPhone: (phone: string) => string;
-}
+
 
 function getDaysBadge(days: number): { label: string; bg: string; text: string } {
-  if (days <= 7)  return { label: `${days}d ago`, bg: 'bg-danger-bg',  text: 'text-danger' };
-  if (days <= 30) return { label: `${days}d ago`, bg: 'bg-warning-bg', text: 'text-warning' };
-  return              { label: `${days}d ago`, bg: 'bg-info-bg',    text: 'text-info' };
+  if (days <= 7)  return { label: `${days}d ago`, bg: 'bg-danger',  text: 'text-danger' };
+  if (days <= 30) return { label: `${days}d ago`, bg: 'bg-warning', text: 'text-warning' };
+  return              { label: `${days}d ago`, bg: 'bg-info',    text: 'text-info' };
 }
 
 export default function ManagerChurnRecoveryTableRow({
   member,
   onOpenComposer,
-  maskPhone,
-}: ManagerChurnRecoveryTableRowProps) {
+  maskPhone }: ManagerChurnRecoveryTableRowProps) {
   const badge = getDaysBadge(member.daysSinceExit);
 
   return (
@@ -41,13 +36,13 @@ export default function ManagerChurnRecoveryTableRow({
       {/* Name + Plan */}
       <td className="px-4 py-3">
         <div className="flex flex-col">
-          <span className="text-sm font-medium text-foreground truncate max-w-40">{member.name}</span>
+          <span className="text-sm font-medium text-primary truncate max-w-40">{member.name}</span>
           <span className="text-xs text-secondary truncate max-w-40">{member.plan}</span>
         </div>
       </td>
 
       {/* Phone */}
-      <td className="px-4 py-3 text-sm text-foreground font-mono">
+      <td className="px-4 py-3 text-sm text-primary font-mono">
         {maskPhone(member.phone)}
       </td>
 
@@ -71,8 +66,8 @@ export default function ManagerChurnRecoveryTableRow({
       {/* Recovery status */}
       <td className="px-4 py-3">
         {member.recovered ? (
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-success-bg text-success">
-            <CheckCircle size={11} /> Recovered
+          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-success text-success">
+            <CheckCircle size={18} /> Recovered
           </span>
         ) : member.lastContactedAt ? (
           <span className="text-xs text-secondary">
@@ -90,9 +85,9 @@ export default function ManagerChurnRecoveryTableRow({
             type="button"
             aria-label={`Send win-back message to ${member.name}`}
             onClick={(e) => { e.stopPropagation(); onOpenComposer(member.memberId); }}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-primary text-primary-foreground motion-safe:transition-all motion-safe:hover:bg-primary-hover motion-safe:active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-primary text-on-primary motion-safe:transition-all motion-safe:hover:bg-primary-hover motion-safe:active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
-            <Send size={12} />
+            <Send size={18} />
             Win-Back
           </button>
         )}

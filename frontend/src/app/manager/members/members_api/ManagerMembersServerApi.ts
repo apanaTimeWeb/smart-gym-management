@@ -9,5 +9,4 @@ export const ssrMembersApi = {
     return ssrApiFetch<ApiResponse<Record<string, unknown>>>(`${ManagerMembersUrlConfig.BACKEND_API.BASE}${q}`);
   },
   fetchMemberStats: () => ssrApiFetch<ApiResponse<Record<string, unknown>>>(ManagerMembersUrlConfig.BACKEND_API.STATS),
-  fetchMemberPlans: () => ssrApiFetch<ApiResponse<Record<string, unknown>>>(ManagerMembersUrlConfig.BACKEND_API.PLANS_SNAPSHOT),
-};
+  fetchMemberPlans: () => ssrApiFetch<ApiResponse<Record<string, unknown>>>(ManagerMembersUrlConfig.BACKEND_API.PLANS_SNAPSHOT) };

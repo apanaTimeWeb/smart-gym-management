@@ -1,3 +1,5 @@
+'use client';
+/** Coordinates the Manager / feature. */
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { managerProfileApi } from '@/app/manager/profile/profile_api/ManagerProfileApi';
 import type { UpdateManagerPasswordPayload, UpdateManagerProfilePayload } from '@/app/manager/profile/profile_types/ManagerProfileTypes';

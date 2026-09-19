@@ -1,3 +1,8 @@
+export type ManagerMembersPaymentStatus = 'PAID' | 'PENDING' | 'FAILED' | 'REFUNDED';
+export type ManagerMembersDietPlanType = 'WEIGHT_LOSS' | 'MUSCLE_GAIN' | 'MAINTENANCE' | 'KETO' | 'VEGAN' | 'OTHER';
+export type ManagerMembersWorkoutLevel = 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED';
+export type ManagerMembersAttendancePersonType = 'MEMBER' | 'STAFF';
+
 export interface PlanSnapshot {
   id: string;
   name: string;
@@ -13,7 +18,7 @@ export interface PaymentSnapshot {
   amount: number;
   paidAt: string;
   method: string;
-  status: 'PAID' | 'PENDING' | 'FAILED' | 'REFUNDED';
+  status: ManagerMembersPaymentStatus;
   invoiceNumber: string;
 }
 
@@ -21,7 +26,7 @@ export interface DietPlanSnapshot {
   id: string;
   name: string;
   description: string;
-  type: 'WEIGHT_LOSS' | 'MUSCLE_GAIN' | 'MAINTENANCE' | 'KETO' | 'VEGAN' | 'OTHER';
+  type: ManagerMembersDietPlanType;
   calories: number;
   protein: number;
   carbs: number;
@@ -38,7 +43,7 @@ export interface WorkoutSnapshot {
   id: string;
   name: string;
   description: string;
-  level: 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED';
+  level: ManagerMembersWorkoutLevel;
   daysPerWeek: number;
   goal: string;
   days: {
@@ -57,5 +62,5 @@ export interface AttendanceSnapshot {
   id: string;
   date: string;
   checkIn: string;
-  type: 'MEMBER' | 'STAFF';
+  type: ManagerMembersAttendancePersonType;
 }

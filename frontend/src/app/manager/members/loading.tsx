@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Renders the loading fallback for the members module.
-import { TableSkeleton } from '@/app/manager/manager_components/ManagerShared/ManagerTableSkeleton';
+import ManagerTableSkeleton from '@/app/manager/manager_components/ManagerShared/ManagerTableSkeleton';
 export default function Loading() {
  return (
  <div className="min-h-screen flex flex-col p-6 space-y-5 bg-page">
@@ -12,7 +12,7 @@ export default function Loading() {
  </div>
  
  <div className="h-16 bg-card rounded-xl motion-safe:animate-pulse"></div>
- <TableSkeleton rows={8} />
+ <ManagerTableSkeleton rows={8} />
  </div>
  );
 }

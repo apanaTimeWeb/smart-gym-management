@@ -1,17 +1,18 @@
 'use client';
+import type { ReactNode } from 'react';
 // RESPONSIBILITY: Root shell layout for all MANAGER pages. Composes ManagerSidebar with the main content area. Manages sidebar collapsed state only.
 import { useState } from 'react';
 import ManagerSidebar from '@/app/manager/manager_components/ManagerLayout/ManagerSidebar';
-import ManagerPermissionGate from '@/app/manager/manager_utils/ManagerPermissionGate';
+import ManagerPermissionGate from '@/app/manager/manager_infrastructure/ManagerPermissionGate';
 
-export default function ManagerLayout({ children }: { children: React.ReactNode }) {
+export default function ManagerLayout({ children }: { children: ReactNode }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
  return (
  <ManagerPermissionGate capability="manager.access">
- <div className="flex h-screen overflow-hidden bg-background text-foreground">
+ <div className="min-h-screen bg-page text-primary">
  <ManagerSidebar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
- <main className={`flex-1 flex flex-col h-screen overflow-y-auto motion-safe:transition-all duration-300 ${isCollapsed ? 'lg:ml-20' : 'lg:ml-64'}`}>
+ <main className={`min-h-screen overflow-y-auto pt-16 motion-safe:transition-[margin-left] motion-safe:duration-300 ${isCollapsed ? 'lg:ml-15' : 'lg:ml-60'}`}>
  {children}
  </main>
  </div>

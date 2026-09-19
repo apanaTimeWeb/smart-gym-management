@@ -1,19 +1,18 @@
 'use client';
 // RESPONSIBILITY: Renders the trainer workload to help managers balance assignment distribution.
+import type { ManagerPtTrainerWorkloadProps } from '@/app/manager/pt/pt_types/ManagerPtTrainerWorkloadTypes';
 import { Users, Star, User } from 'lucide-react';
-import type { PtTrainerWorkload } from '@/app/manager/pt/pt_types/ManagerPtTypes';
+import ManagerPtTrainerWorkloadEmptyState from '@/app/manager/pt/pt_components/ManagerPtMain/ManagerPtTrainerWorkloadEmptyState';
 
 const PT_TRAINER_WORKLOAD_COLUMN_COUNT = 4;
 
-interface ManagerPtTrainerWorkloadProps {
-  workload: PtTrainerWorkload[];
-}
+
 
 export default function ManagerPtTrainerWorkload({ workload }: ManagerPtTrainerWorkloadProps) {
   return (
     <div className="bg-card border border-border rounded-xl flex flex-col h-full overflow-hidden">
       <div className="px-5 py-4 border-b border-border">
-        <h2 className="text-base font-semibold text-foreground">Trainer Workload</h2>
+        <h2 className="text-base font-semibold text-primary">Trainer Workload</h2>
       </div>
       
       <div className="overflow-x-auto">
@@ -29,8 +28,8 @@ export default function ManagerPtTrainerWorkload({ workload }: ManagerPtTrainerW
           <tbody className="divide-y divide-border">
             {workload.length === 0 ? (
               <tr>
-                <td colSpan={PT_TRAINER_WORKLOAD_COLUMN_COUNT} className="py-10 text-center text-secondary text-sm">
-                  No trainer data available.
+                <td colSpan={PT_TRAINER_WORKLOAD_COLUMN_COUNT}>
+                  <ManagerPtTrainerWorkloadEmptyState />
                 </td>
               </tr>
             ) : (
@@ -39,20 +38,20 @@ export default function ManagerPtTrainerWorkload({ workload }: ManagerPtTrainerW
                   <td className="py-3 px-4">
                     <div className="flex items-center gap-2">
                       <div className="w-8 h-8 rounded-full bg-input flex items-center justify-center">
-                        <User size={14} className="text-secondary" />
+                        <User size={18} className="text-secondary" />
                       </div>
-                      <span className="text-sm font-medium text-foreground">{trainer.trainerName}</span>
+                      <span className="text-sm font-medium text-primary">{trainer.trainerName}</span>
                     </div>
                   </td>
                   <td className="py-3 px-4">
-                    <div className="flex items-center gap-1.5 text-sm text-foreground font-semibold">
-                      <Users size={14} className="text-secondary" />
+                    <div className="flex items-center gap-1.5 text-sm text-primary font-semibold">
+                      <Users size={18} className="text-secondary" />
                       {trainer.activeClients}
                     </div>
                   </td>
                   <td className="py-3 px-4">
-                    <div className="flex items-center gap-1 text-sm text-foreground">
-                      <Star size={14} className="text-warning fill-warning" />
+                    <div className="flex items-center gap-1 text-sm text-primary">
+                      <Star size={18} className="text-warning fill-warning" />
                       {trainer.rating}
                     </div>
                   </td>

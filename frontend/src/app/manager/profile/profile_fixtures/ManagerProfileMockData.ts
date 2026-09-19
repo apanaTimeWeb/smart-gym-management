@@ -8,5 +8,4 @@ export const MOCK_PROFILE: ManagerProfileData = {
   role: 'Branch Manager',
   branchName: 'Koregaon Park Branch',
   joinedAt: '2023-01-15T10:00:00Z',
-  avatarInitial: 'V',
-};
+  avatarInitial: 'V' };

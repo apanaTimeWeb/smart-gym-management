@@ -10,5 +10,4 @@ export const ssrStoreApi = {
     const q = params ? '?' + new URLSearchParams(params).toString() : '';
     return ssrApiFetch<ApiResponse<{ orders: Order[]; total: number }>>(`${ManagerStoreUrlConfig.BACKEND_API.ORDERS_BASE}${q}`);
   },
-  fetchStoreSummary: () => ssrApiFetch<ApiResponse<StoreSummary>>(ManagerStoreUrlConfig.BACKEND_API.SUMMARY),
-};
+  fetchStoreSummary: () => ssrApiFetch<ApiResponse<StoreSummary>>(ManagerStoreUrlConfig.BACKEND_API.SUMMARY) };

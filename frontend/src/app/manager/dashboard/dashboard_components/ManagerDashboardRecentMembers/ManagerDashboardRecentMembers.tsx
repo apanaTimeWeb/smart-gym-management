@@ -1,18 +1,20 @@
 'use client';
+import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 // RESPONSIBILITY: Renders the recent members table on the dashboard with a local search filter.
 import { useMemo, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useManagerDebounce } from '@/app/manager/manager_utils/ManagerDebounce';
+import { useManagerDebounce } from '@/app/manager/manager_infrastructure/ManagerDebounce';
 import Link from 'next/link';
 import { Search, ArrowRight, UserPlus } from 'lucide-react';
 import { DASHBOARD_RECENT_MEMBERS_PAGE_SIZE, RECENT_MEMBERS_HEADERS, DASHBOARD_STATUS_STYLES } from '@/app/manager/dashboard/dashboard_utils/ManagerDashboardSharedConstants';
-import { formatCurrency, formatDate, displayValue } from '@/lib/formatters';
+import { formatCurrencyFromMinorUnits, formatDate, displayValue } from '@/lib/formatters';
+import { ManagerDashboardUrlConfig } from '@/app/manager/dashboard/dashboard_url_config';
 import { useDashboardStatsQuery } from '@/app/manager/dashboard/dashboard_api/ManagerUseManagerDashboardQueries';
-import { useManagerDashboardStore } from '@/app/manager/dashboard/dashboard_store/ManagerUseManagerDashboardStore';
+import { useManagerDashboardUrlState } from '@/app/manager/dashboard/dashboard_hooks/ManagerUseManagerDashboardUrlState';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 
 export default function ManagerDashboardRecentMembers() {
-  const { timeRange } = useManagerDashboardStore();
+  const { range } = useManagerDashboardUrlState();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -20,7 +22,7 @@ export default function ManagerDashboardRecentMembers() {
   const currentPage = Number(searchParams.get('recentMembersPage') || '1');
   const [localSearch, setLocalSearch] = useState(search);
   const debouncedSearch = useManagerDebounce(localSearch, 300);
-  const queryParams = useMemo(() => ({ range: timeRange, recentMembersSearch: debouncedSearch, recentMembersPage: String(currentPage), recentMembersLimit: String(DASHBOARD_RECENT_MEMBERS_PAGE_SIZE) }), [timeRange, debouncedSearch, currentPage]);
+  const queryParams = useMemo(() => ({ range, recentMembersSearch: debouncedSearch, recentMembersPage: String(currentPage), recentMembersLimit: String(DASHBOARD_RECENT_MEMBERS_PAGE_SIZE) }), [range, debouncedSearch, currentPage]);
   const { data: stats } = useDashboardStatsQuery(queryParams);
 
   if (!stats) return null;
@@ -43,20 +45,20 @@ export default function ManagerDashboardRecentMembers() {
   };
 
   return (
-    <div className="xl:col-span-2 rounded-xl shadow-sm border overflow-hidden bg-card border-border">
+    <div className="xl:col-span-2 rounded-xl shadow-card border overflow-hidden bg-card border-border">
       <div className="px-6 py-4 flex flex-wrap items-center justify-between gap-3 border-b border-border">
         <h2 className="font-semibold text-primary">Recent Members</h2>
         <div className="flex items-center gap-3">
           <div className="relative">
-            <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-secondary" />
+            <Search size={18} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-secondary" />
             <input
               value={localSearch}
               onChange={e => handleSearchChange(e.target.value)}
               placeholder="Search members..."
-              className="pl-8 pr-3 py-1.5 text-sm border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page w-40 sm:w-52 bg-input text-primary"
+              className="pl-8 pr-3 py-1.5 text-sm border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page w-40 sm:w-52 bg-input text-primary"
             />
           </div>
-          <Link href="/manager/members" className="text-sm font-medium hover:underline whitespace-nowrap text-primary">View all</Link>
+          <Link href={ManagerDashboardUrlConfig.NAV.MEMBERS} className="text-sm font-medium hover:underline whitespace-nowrap text-primary">View all</Link>
         </div>
       </div>
 
@@ -93,7 +95,7 @@ export default function ManagerDashboardRecentMembers() {
                   <td className="px-6 py-4 text-sm text-secondary">
                     {formatDate(m.joinDate)}
                   </td>
-                  <td className="px-6 py-4 text-sm font-medium text-primary">{formatCurrency(m.paidAmount)}</td>
+                  <td className="px-6 py-4 text-sm font-medium text-primary">{formatCurrencyFromMinorUnits(m.paidAmount, ManagerEnvConfig.currencyCode)}</td>
                 </tr>
               );
             })}

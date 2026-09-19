@@ -3,35 +3,39 @@
 // RESPONSIBILITY: Starts the Manager browser MSW worker before rendering Manager client data consumers.
 // DATA FLOW: Manager layout → ManagerMswBrowserBootstrap → MSW worker → module API clients → TanStack Query → Manager UI
 
-import type { ReactNode } from 'react';
+import type { ManagerMswBrowserBootstrapProps } from '@/app/manager/manager_mocks/manager_mocks_types/ManagerMswBrowserBootstrapTypes';
 import { useEffect, useState } from 'react';
 import { managerMswWorker } from '@/app/manager/manager_mocks/ManagerMswBrowser';
 import { logger } from '@/lib/logger';
 
-interface ManagerMswBrowserBootstrapProps {
-  children: ReactNode;
-}
+// In production there is no MSW — children render immediately.
+// In development we gate rendering behind MSW startup so the first queries
+// always fire AFTER the mock service worker is listening (no race condition).
+const IS_PROD = process.env.NODE_ENV === 'production';
 
 export function ManagerMswBrowserBootstrap({ children }: ManagerMswBrowserBootstrapProps) {
-  const [ready, setReady] = useState(typeof window === 'undefined');
+  const [ready, setReady] = useState(IS_PROD);
 
   useEffect(() => {
     let active = true;
 
     const startWorker = async () => {
-      if (process.env.NODE_ENV === 'production') {
+      if (IS_PROD) {
         if (active) setReady(true);
         return;
       }
 
-      await managerMswWorker.start({
-        onUnhandledRequest(request) {
-          const pathname = new URL(request.url).pathname;
-          if (pathname.startsWith('/api/v1/manager/')) {
-            logger.error('Unhandled Manager MSW request', { method: request.method, pathname, module: 'manager', route: pathname });
-          }
-        },
-      });
+      try {
+        await managerMswWorker.start({
+          onUnhandledRequest(request) {
+            const pathname = new URL(request.url).pathname;
+            if (pathname.startsWith('/api/v1/manager/')) {
+              logger.error('Unhandled Manager MSW request', { method: request.method, pathname, module: 'manager', route: pathname });
+            }
+          } });
+      } catch {
+        // Worker already started (e.g. hot-reload) — safe to ignore
+      }
 
       if (active) setReady(true);
     };
@@ -44,8 +48,9 @@ export function ManagerMswBrowserBootstrap({ children }: ManagerMswBrowserBootst
   }, []);
 
   if (!ready) {
-    return <div className="min-h-screen bg-background" aria-hidden="true" />;
+    return <div className="min-h-screen bg-page" aria-hidden="true" />;
   }
 
   return children;
 }
+

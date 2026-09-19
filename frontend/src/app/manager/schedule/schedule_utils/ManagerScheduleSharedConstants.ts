@@ -1,5 +1,4 @@
 // RESPONSIBILITY: Centralized constants, Zod schema, and mock data for the Schedule module.
-import { z } from 'zod';
 import type { ShiftDay, ShiftStatus } from '@/app/manager/schedule/schedule_types/ManagerScheduleTypes';
 
 export const SHIFT_DAYS: ShiftDay[] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
@@ -9,8 +8,7 @@ export const SHIFT_STATUS_OPTIONS: ShiftStatus[] = ['Active', 'Off', 'Leave'];
 export const SHIFT_STATUS_STYLES: Record<ShiftStatus, { text: string; bg: string }> = {
   Active: { text: 'text-success', bg: 'bg-success/10' },
   Off:    { text: 'text-secondary', bg: 'bg-border/40' },
-  Leave:  { text: 'text-warning', bg: 'bg-warning/10' },
-};
+  Leave:  { text: 'text-warning', bg: 'bg-warning/10' } };
 
 export const TIME_OPTIONS: string[] = [
   '05:00', '05:30', '06:00', '06:30', '07:00', '07:30',
@@ -21,16 +19,3 @@ export const TIME_OPTIONS: string[] = [
   '20:00', '20:30', '21:00', '21:30', '22:00',
 ];
 
-export const ShiftSchema = z.object({
-  trainerId: z.string().min(1, 'Please select a trainer'),
-  day: z.enum(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']),
-  startTime: z.string().min(1, 'Start time is required'),
-  endTime: z.string().min(1, 'End time is required'),
-  status: z.enum(['Active', 'Off', 'Leave']),
-  notes: z.string().optional(),
-}).refine(data => data.startTime < data.endTime, {
-  message: 'End time must be after start time',
-  path: ['endTime'],
-});
-
-export type ShiftFormValues = z.infer<typeof ShiftSchema>;

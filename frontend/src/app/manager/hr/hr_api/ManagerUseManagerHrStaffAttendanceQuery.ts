@@ -8,6 +8,5 @@ export function useManagerHrStaffAttendanceQuery(staffId: string, month: string)
   return useQuery({
     queryKey: ['manager', 'hr', 'staff-attendance', staffId, month],
     queryFn: () => hrApi.fetchStaffAttendance(staffId, month),
-    enabled: Boolean(staffId && month),
-  });
+    enabled: Boolean(staffId && month) });
 }

@@ -681,6 +681,89 @@ export function getMockResponse(path: string): unknown {
   if (p.includes('/admin/attendance'))   return ok(ATTENDANCE, 'Admin attendance fetched');
   if (p.includes('/admin/hr'))           return ok({ staff: STAFF, total: STAFF.length }, 'Admin hr fetched');
 
+  // ── Manager Module Specific ──────────────────────────────────────────────────
+  // These entries match the apiFetch path patterns used by manager modules.
+  // They serve as fallback when MSW hasn't started yet or hasn't intercepted.
+
+  if (p.includes('/manager/dashboard')) return ok({
+    totalMembers: 1245, activeMembers: 1100, newMembersThisMonth: 45,
+    totalRevenue: 45000000, monthlyRevenue: 8500000, pendingPayments: 12000,
+    totalStaff: 25, activeStaff: 22, totalProducts: 450, lowStockCount: 12,
+    totalInquiries: 156, newInquiries: 34, todayAttendance: 245,
+    trainerAttendance: { present: 18, total: 20 },
+    memberGrowth: [{ month: 'Jan', count: 1100 }, { month: 'Feb', count: 1150 }, { month: 'Mar', count: 1200 }, { month: 'Apr', count: 1220 }, { month: 'May', count: 1245 }],
+    revenueChart: [{ month: 'Jan', revenue: 7500000 }, { month: 'Feb', revenue: 8000000 }, { month: 'Mar', revenue: 7800000 }, { month: 'Apr', revenue: 8200000 }, { month: 'May', revenue: 8500000 }],
+    membersByPlan: [{ plan: 'Annual', count: 450 }, { plan: 'Half-Yearly', count: 300 }, { plan: 'Quarterly', count: 250 }, { plan: 'Monthly', count: 245 }],
+    membersByStatus: { active: 1100, pending: 45, expired: 100 },
+    recentMembers: [
+      { id: '1', name: 'John Doe', plan: 'Annual', status: 'Active', joinDate: '2024-05-01', paidAmount: 1500000 },
+      { id: '2', name: 'Jane Smith', plan: 'Quarterly', status: 'Pending', joinDate: '2024-05-05', paidAmount: 0 },
+      { id: '3', name: 'Bob Johnson', plan: 'Monthly', status: 'Active', joinDate: '2024-05-10', paidAmount: 150000 },
+    ],
+    recentPayments: [
+      { id: '1', invoiceNumber: 'INV-001', amount: 1500000, method: 'UPI', paidAt: '2024-05-01T10:00:00Z', member: { name: 'John Doe' } },
+      { id: '2', invoiceNumber: 'INV-002', amount: 150000, method: 'Card', paidAt: '2024-05-10T14:30:00Z', member: { name: 'Bob Johnson' } },
+    ],
+    pendingPaymentsList: [
+      { id: '2', name: 'Jane Smith', pendingAmount: 400000, expiryDate: '2024-06-05' },
+      { id: '4', name: 'Alice Brown', pendingAmount: 1500000, expiryDate: '2024-06-15' },
+    ],
+    expiringMemberships: [
+      { id: '5', name: 'Charlie Davis', pendingAmount: 0, expiryDate: '2024-05-20' },
+      { id: '6', name: 'Eve Wilson', pendingAmount: 0, expiryDate: '2024-05-25' },
+    ],
+    churnRate: 4.2, revenueGrowthPercent: 12.5, todayCollection: 4500, frozenMembershipsCount: 15, totalPTRevenue: 25000,
+  }, 'Dashboard stats fetched');
+
+  if (p.includes('/manager/inquiries/stats')) return ok({ total: 45, new: 12, followUp: 18, converted: 10, lost: 5 }, 'Stats fetched');
+  if (p.includes('/manager/inquiries/plans-snapshot')) return ok([
+    { id: '1', name: 'Standard Plan', price1Month: 100000, price3Month: 250000, price6Month: 450000, price12Month: 800000 },
+    { id: '2', name: 'Premium Plan', price1Month: 200000, price3Month: 500000, price6Month: 900000, price12Month: 1500000 },
+  ], 'Plans fetched');
+  if (p.includes('/manager/inquiries/plans')) return ok([{ name: 'Personal Training' }, { name: 'Yoga Class' }, { name: 'CrossFit' }], 'Plans fetched');
+  if (p.includes('/manager/inquiries')) return ok({ inquiries: [
+    { id: 'inq-001', name: 'Rahul Sharma', phone: '+91 9876543210', email: 'rahul.s@example.com', interest: 'Personal Training', status: 'NEW', source: 'Website', notes: 'Looking for weight loss.', createdAt: new Date(Date.now() - 86400000 * 2).toISOString(), followUpLogs: [] },
+    { id: 'inq-002', name: 'Priya Patel', phone: '+91 9876543211', interest: 'Yoga Class', status: 'FOLLOW_UP', source: 'Walk-in', followUpDate: new Date(Date.now() + 86400000 * 3).toISOString(), createdAt: new Date(Date.now() - 86400000 * 5).toISOString(), followUpLogs: [{ date: new Date(Date.now() - 86400000 * 2).toISOString(), note: 'Called, asked to call back.' }] },
+    { id: 'inq-003', name: 'Amit Kumar', phone: '+91 9876543212', email: 'amit.k@example.com', interest: 'Yearly Membership', status: 'CONVERTED', source: 'Referral', createdAt: new Date(Date.now() - 86400000 * 10).toISOString(), followUpLogs: [] },
+    { id: 'inq-004', name: 'Sneha Gupta', phone: '+91 9876543213', interest: 'Weight Training', status: 'LOST', source: 'Instagram', createdAt: new Date(Date.now() - 86400000 * 15).toISOString(), followUpLogs: [] },
+    { id: 'inq-005', name: 'Vikram Singh', phone: '+91 9876543214', email: 'vikram.s@example.com', interest: 'CrossFit', status: 'NEW', source: 'Facebook', createdAt: new Date(Date.now() - 3600000 * 5).toISOString(), followUpLogs: [] },
+  ], total: 5, page: 1, limit: 10 }, 'Inquiries fetched');
+
+  if (p.includes('/manager/members/summary')) return ok({ totalMembers: 1245, activeMembers: 1100, pendingMembers: 45, expiredMembers: 100 }, 'Summary fetched');
+  if (p.includes('/manager/members')) return ok({ members: MEMBERS.map(m => ({ ...m, id: m.id, memberId: m.id, membershipStatus: m.status, membershipPlan: m.plan, phone: m.phone, gender: m.gender, age: m.age })), total: MEMBERS.length }, 'Members fetched');
+
+  if (p.includes('/manager/attendance/summary')) return ok({ totalToday: 245, members: 227, trainers: 18 }, 'Summary fetched');
+  if (p.includes('/manager/attendance')) return ok({ records: Array.from({ length: 10 }, (_, i) => ({ id: `att-${i+1}`, memberId: `m${i+1}`, memberName: MEMBERS[i]?.name || `Member ${i+1}`, date: new Date(Date.now() - 86400000 * i).toISOString().split('T')[0], checkInTime: '07:00', checkOutTime: '08:30', status: 'present' })), total: 245 }, 'Attendance fetched');
+
+  if (p.includes('/manager/hr/staff') && p.includes('/attendance')) return ok({ records: [], total: 0 }, 'Staff attendance fetched');
+  if (p.includes('/manager/hr/staff')) return ok({ staff: STAFF.map((s, i) => ({ ...s, staffId: s.id, designation: s.role, department: 'General', phone: `98${i}0000000`, email: `${(s.name || '').replace(' ', '').toLowerCase()}@gym.com`, salary: s.salary || 0, dateOfJoining: s.joinDate || new Date().toISOString(), employmentType: 'full-time', attendance: { present: 22, absent: 2, total: 24 } })), total: STAFF.length }, 'Staff fetched');
+  if (p.includes('/manager/hr/shifts')) return ok({ shifts: [{ id: 'sh1', name: 'Morning', startTime: '06:00', endTime: '14:00' }, { id: 'sh2', name: 'Evening', startTime: '14:00', endTime: '22:00' }], total: 2 }, 'Shifts fetched');
+  if (p.includes('/manager/hr')) return ok({ staff: STAFF, total: STAFF.length }, 'HR data fetched');
+
+  if (p.includes('/manager/finance/summary')) return ok({ totalRevenue: 8500000, totalExpenses: 2100000, netProfit: 6400000, pendingPayments: 450000 }, 'Finance summary fetched');
+  if (p.includes('/manager/finance/pnl')) return ok({ months: REVENUE_TREND.map(r => ({ month: r.month, revenue: r.revenue, expenses: r.expenses, profit: r.profit })) }, 'PnL fetched');
+  if (p.includes('/manager/finance')) return ok({ payments: Array.from({ length: 5 }, (_, i) => ({ id: `pay-${i+1}`, memberId: `m${i+1}`, memberName: MEMBERS[i]?.name || `Member ${i+1}`, amount: 150000 + i * 50000, method: ['UPI', 'Card', 'Cash'][i % 3], date: new Date(Date.now() - 86400000 * i).toISOString(), status: 'completed' })), total: 5 }, 'Finance fetched');
+
+  if (p.includes('/manager/plans')) return ok({ plans: PLANS, total: PLANS.length }, 'Plans fetched');
+
+  if (p.includes('/manager/sales/pending')) return ok({ members: MEMBERS.slice(0, 5).map(m => ({ ...m, pendingAmount: 150000, dueDate: new Date(Date.now() + 86400000 * 7).toISOString().split('T')[0] })), total: 5 }, 'Pending fetched');
+  if (p.includes('/manager/sales')) return ok({ sales: Array.from({ length: 8 }, (_, i) => ({ id: `s-${i+1}`, memberId: `m${i+1}`, memberName: MEMBERS[i]?.name || `Member ${i+1}`, plan: PLANS[i % 4]?.name || 'Basic Plan', amount: 150000 + i * 30000, date: new Date(Date.now() - 86400000 * i).toISOString(), paymentMethod: ['UPI', 'Card', 'Cash'][i % 3] })), total: 8 }, 'Sales fetched');
+
+  if (p.includes('/manager/store/products')) return ok({ products: Array.from({ length: 8 }, (_, i) => ({ id: `prod-${i+1}`, name: ['Whey Protein', 'Creatine', 'BCAA', 'Pre-workout', 'Gym Gloves', 'Shaker', 'Resistance Band', 'Yoga Mat'][i], category: ['Supplements', 'Supplements', 'Supplements', 'Supplements', 'Accessories', 'Accessories', 'Equipment', 'Equipment'][i], price: (500 + i * 200) * 100, stock: [50, 30, 25, 20, 15, 40, 10, 35][i], sku: `SKU-${1000 + i}`, status: i === 6 ? 'low_stock' : 'in_stock' })), total: 8 }, 'Products fetched');
+  if (p.includes('/manager/store')) return ok({ products: [], total: 0 }, 'Store fetched');
+
+  if (p.includes('/manager/communications')) return ok({ messages: [], total: 0 }, 'Messages fetched');
+  if (p.includes('/manager/notifications')) return ok({ notifications: [], total: 0 }, 'Notifications fetched');
+  if (p.includes('/manager/reports')) return ok({ data: [], summary: {} }, 'Reports fetched');
+  if (p.includes('/manager/referrals')) return ok({ referrals: [], total: 0 }, 'Referrals fetched');
+  if (p.includes('/manager/expenses')) return ok({ expenses: [], total: 0 }, 'Expenses fetched');
+  if (p.includes('/manager/library')) return ok({ items: [], total: 0 }, 'Library fetched');
+  if (p.includes('/manager/schedule')) return ok({ sessions: [], total: 0 }, 'Schedule fetched');
+  if (p.includes('/manager/workout')) return ok({ plans: [], total: 0 }, 'Workout fetched');
+  if (p.includes('/manager/profile')) return ok({ id: 'u1', name: 'Demo Manager', email: 'manager@gymsmart.com', role: 'manager', phone: '9800000001', avatar: null }, 'Profile fetched');
+  if (p.includes('/manager/settings')) return ok({ gymName: 'GymSmart Demo', currency: 'INR', timezone: 'Asia/Kolkata' }, 'Settings fetched');
+  if (p.includes('/manager/pt')) return ok({ trainers: [], sessions: [], total: 0 }, 'PT fetched');
+
   // Admin / Manager Dashboard
   if (p.includes('/dashboard'))    return ok(DASHBOARD_STATS);
 

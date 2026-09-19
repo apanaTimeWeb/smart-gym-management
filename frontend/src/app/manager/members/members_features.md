@@ -8,7 +8,7 @@ Manager Members is the central branch member lifecycle workspace. Managers can s
 |---|---|---|
 | `members_api/` | Feature-owned responsibility for the members module. | `ManagerMembersApi.ts; ManagerMembersServerApi.ts; ManagerUseManagerMembersDietPlansQuery.ts; ManagerUseManagerMembersQueries.ts; ManagerUseManagerMembersWorkoutPlansQuery.ts` |
 | `members_components/` | Feature-owned responsibility for the members module. | `ManagerAddPaymentModal.tsx` |
-| `members_context/` | Feature-owned responsibility for the members module. | `ManagerMembersContext.tsx; ManagerUseManagerMembersCoreMutations.ts; ManagerUseManagerMembersLogic.test.ts; ManagerUseManagerMembersLogic.ts; ManagerUseManagerMembersMutations.test.ts; ManagerUseManagerMembersMutations.ts; ManagerUseManagerMembersPrintLogic.ts; ManagerUseManagerMembersStatusMutations.ts` |
+| `members_hooks/` | Feature-owned responsibility for the members module. | `ManagerUseManagerMembersLogic.ts; ManagerUseManagerMembersCoreMutations.ts; ManagerUseManagerMembersLogic.test.ts; ManagerUseManagerMembersLogic.ts; ManagerUseManagerMembersMutations.test.ts; ManagerUseManagerMembersMutations.ts; ManagerUseManagerMembersPrintLogic.ts; ManagerUseManagerMembersStatusMutations.ts` |
 | `members_fixtures/` | Feature-owned responsibility for the members module. | `ManagerMembersMockData.ts` |
 | `members_mocks/` | Feature-owned responsibility for the members module. | `—` |
 | `members_store/` | Feature-owned responsibility for the members module. | `ManagerUseManagerMembersStore.ts` |
@@ -49,7 +49,7 @@ Manager Members is the central branch member lifecycle workspace. Managers can s
 4. Renewal/payment/assignment actions use their dedicated API operations and confirmation rules.
 
 ## Data and State Architecture
-TanStack Query owns members server/API data. UI-only filters, tabs, selections, and draft state remain local state or module-scoped Zustand where shared. React Context is limited to stable cross-tree concerns and does not become the source of truth for API data. Query keys are module-prefixed.
+TanStack Query owns members server/API data. UI-only filters, tabs, selections, and draft state remain local state or module-scoped Zustand where shared. module-local state/query layer is limited to stable cross-tree concerns and does not become the source of truth for API data. Query keys are module-prefixed.
 
 ## API Contract
 | Function | Method | Endpoint | Request | Response `data` type |
@@ -117,7 +117,7 @@ TanStack Query owns members server/API data. UI-only filters, tabs, selections, 
 | Component File | Responsibility |
 |---|---|
 | `members/members_components/ManagerAddPaymentModal.tsx` | Renders a modal to record a new payment for a member. |
-| `members/members_components/ManagerMembersMain/ManagerMembersMain.tsx` | Entry point component for the members module that sets up context providers and layout. |
+| `members/members_components/ManagerMembersMain/ManagerMembersMain.tsx` | Framework entry component for the Members module; delegates feature UI and state orchestration to `ManagerMembersContent`. |
 | `members/members_components/ManagerMembersModal/ManagerMemberProfilePictureUpload.tsx` | Renders the profile picture upload placeholder in the Add Member form. |
 | `members/members_components/ManagerMembersModal/ManagerMembersModal.tsx` | Renders a modal for creating or editing a member. |
 | `members/members_components/ManagerMembersTable/ManagerMembersTable.tsx` | Renders the primary tabular list of members with actions, filtering state, and pagination. |
@@ -130,7 +130,7 @@ TanStack Query owns members server/API data. UI-only filters, tabs, selections, 
 | `members/members_components/MemberProfile/ManagerProfileWorkout.tsx` | Renders the member's assigned workout plan and handles the assignment flow. |
 | `members/members_components/MembersKPIs/ManagerMembersKPIs.tsx` | Renders the four KPI stat cards (Total, Active, Pending, Expired) for the Members module. |
 | `members/members_components/MembersToolbar/ManagerMembersToolbar.tsx` | Renders the toolbar for searching, filtering, and initiating the "Add Member" action. |
-| `members/members_context/ManagerMembersContext.tsx` | Provides the Context wrapper for the Members module. |
+| `members/members_hooks/ManagerUseManagerMembersLogic.ts` | Provides the Context wrapper for the Members module. |
 
 ## Rule Compliance Checklist
 - [x] Module-owned API, types/schemas, fixtures, handlers, tests, and feature documentation are scoped to this module.

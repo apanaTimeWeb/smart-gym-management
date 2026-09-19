@@ -1,5 +1,4 @@
 // RESPONSIBILITY: Mock data, styles, and shared constants for the Manager Reports module.
-import type { ReportSummary } from '@/app/manager/reports/reports_types/ManagerReportsTypes';
 
 export const REPORT_TABS = ['Revenue', 'Attendance', 'Members', 'Expenses'] as const;
 
@@ -17,8 +16,7 @@ export const EXPENSE_CATEGORY_STYLES: Record<string, { bg: string; text: string 
   Equipment:   { bg: 'bg-info/10',     text: 'text-info'     },
   Utilities:   { bg: 'bg-primary/10',  text: 'text-primary'  },
   Marketing:   { bg: 'bg-success/10',  text: 'text-success'  },
-  Maintenance: { bg: 'bg-purple/10',   text: 'text-purple'   },
-  Other:       { bg: 'bg-secondary/10',text: 'text-secondary'},
-};
+  Maintenance: { bg: 'bg-purple-bg',  text: 'text-purple'   },
+  Other:       { bg: 'bg-secondary/10',text: 'text-secondary'} };
 
 

@@ -7,8 +7,7 @@ import type { CreateShiftDto } from '@/app/manager/schedule/schedule_types/Manag
 
 export const managerScheduleQueryKeys = {
   all: ['manager', 'schedule'] as const,
-  list: (filters: Record<string, string>) => [...managerScheduleQueryKeys.all, 'list', filters] as const,
-};
+  list: (filters: Record<string, string>) => [...managerScheduleQueryKeys.all, 'list', filters] as const };
 
 export function useManagerScheduleQuery(filters: Record<string, string>) {
   return useQuery({ queryKey: managerScheduleQueryKeys.list(filters), queryFn: () => managerScheduleApi.fetchSchedule(filters).then(res => res.data) });
@@ -19,6 +18,6 @@ export function useManagerScheduleMutations() {
   const invalidate = () => queryClient.invalidateQueries({ queryKey: managerScheduleQueryKeys.all });
   const create = useMutation({ mutationFn: (body: CreateShiftDto) => managerScheduleApi.createShift(body), onSuccess: invalidate });
   const update = useMutation({ mutationFn: ({ id, body }: { id: string; body: CreateShiftDto }) => managerScheduleApi.updateShift(id, body), onSuccess: invalidate });
-  const remove = useMutation({ mutationFn: (id: string) => managerScheduleApi.deleteShift(id), onSuccess: invalidate });
+  const remove = useMutation({ mutationFn: ({ id, idempotencyKey }: { id: string; idempotencyKey: string }) => managerScheduleApi.deleteShift(id, idempotencyKey), onSuccess: invalidate });
   return { create, update, remove };
 }

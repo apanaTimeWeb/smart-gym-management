@@ -1,179 +1,136 @@
 'use client';
-// RESPONSIBILITY: Renders the tabbed view switching between the Staff and Payroll tables in the HR module.
+// RESPONSIBILITY: Orchestrates the documented HR staff, attendance, payroll, ledger, advance, and due views without embedding business API logic.
 import { useState } from 'react';
-import { useHrContext } from '@/app/manager/hr/hr_context/ManagerHrContext';
-import { HR_TABS, STAFF_TABLE_HEADERS } from '@/app/manager/hr/hr_utils/ManagerHrSharedConstants';
-import { RefreshCw, Plus, Search } from 'lucide-react';
-import { SearchableDropdown } from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
+import { Plus, RefreshCw, Search } from 'lucide-react';
+import { useManagerHrLogic } from '@/app/manager/hr/hr_hooks/ManagerUseManagerHrLogic';
+import { HR_TABS } from '@/app/manager/hr/hr_utils/ManagerHrSharedConstants';
+import ManagerSearchableDropdown from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
 import ManagerHrStaffTable from '@/app/manager/hr/hr_components/ManagerHrStaffTable/ManagerHrStaffTable';
 import ManagerHrPayrollTable from '@/app/manager/hr/hr_components/ManagerHrPayrollTable/ManagerHrPayrollTable';
 import ManagerHrAdvanceTable from '@/app/manager/hr/hr_components/ManagerHrAdvanceTable/ManagerHrAdvanceTable';
 import ManagerHrDueTable from '@/app/manager/hr/hr_components/ManagerHrDueTable/ManagerHrDueTable';
 import ManagerHrLedgerTable from '@/app/manager/hr/hr_components/ManagerHrLedgerTable/ManagerHrLedgerTable';
+import ManagerHrAttendanceHistory from '@/app/manager/hr/hr_components/ManagerHrAttendanceHistory/ManagerHrAttendanceHistory';
 
 export default function ManagerHrTabs() {
-  const [activeTab, setActiveTab] = useState(HR_TABS[0]);
-  const { loadAll, openAdd, openAddPayroll, isLoading, search, setSearch, roleFilter, setRoleFilter, setCurrentPage, payrollMonth, setPayrollMonth, staff } = useHrContext();
+  const [activeTab, setActiveTab] = useState<typeof HR_TABS[number]>(HR_TABS[0]);
+  const {
+    loadAll,
+    openAdd,
+    openAddPayroll,
+    search,
+    setSearch,
+    roleFilter,
+    setRoleFilter,
+    payrollMonth,
+    setPayrollMonth,
+  } = useManagerHrLogic();
+
+  const isStaffTab = activeTab === 'Trainer List';
+  const isPayrollTab = activeTab === 'Salary & Payments';
 
   return (
-    <div className="rounded-xl shadow-sm border overflow-hidden bg-card border-border">
-      <div className="border-b border-border flex flex-wrap gap-4 justify-between items-center p-2 sm:p-0">
-        <div className="flex overflow-x-auto">
-          {HR_TABS.map(t => (
-            <button 
-              key={t} 
-              onClick={() => { setActiveTab(t);  setSearch(''); }}
-              className={`px-5 py-3.5 text-sm font-medium motion-safe:transition-colors border-b-2 whitespace-nowrap ${activeTab === t ? 'text-primary border-primary bg-primary/5' : 'text-secondary border-transparent hover:opacity-80 bg-transparent'}`}
+    <section className="overflow-hidden rounded-xl border border-border bg-card shadow-card" aria-label="HR workspace">
+      <div className="flex flex-col gap-4 border-b border-border p-3 lg:flex-row lg:items-center lg:justify-between">
+        <div role="tablist" aria-label="HR sections" className="flex max-w-full overflow-x-auto">
+          {HR_TABS.map((tab) => (
+            <button
+              key={tab}
+              type="button"
+              role="tab"
+              aria-selected={activeTab === tab}
+              onClick={() => {
+                setActiveTab(tab);
+                setSearch('');
+              }}
+              className={`whitespace-nowrap border-b-2 px-4 py-3 text-sm font-medium motion-safe:transition-colors ${
+                activeTab === tab
+                  ? 'border-primary bg-primary/5 text-primary'
+                  : 'border-transparent text-secondary hover:text-primary'
+              }`}
             >
-              {t}
+              {tab}
             </button>
           ))}
         </div>
-        <div className="px-4 flex flex-wrap gap-3 items-center">
-          <div className="relative">
-            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary" />
-            <input 
-              value={search} 
-              onChange={e => { setSearch(e.target.value);  }} 
-              placeholder={`Search ${(activeTab || '').toLowerCase()}...`} 
-              className="pl-9 pr-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 w-40 sm: w-full sm:w-64  bg-card text-foreground"
-            />
-          </div>
-          {activeTab === 'Trainer List' && (
-            <div className="w-32">
-              <SearchableDropdown
-                value={roleFilter}
-                onChange={(val) => setRoleFilter(val.toString())}
-                options={[
-                  { value: 'All', label: 'All Roles' },
-                  { value: 'Manager', label: 'Manager' },
-                  { value: 'Trainer', label: 'Trainer' },
-                ]}
-                className="bg-card"
-              />
-            </div>
-          )}
-          {activeTab === 'Salary & Payments' && (
-            <input 
-              type="month"
-              value={payrollMonth}
-              onChange={e => { setPayrollMonth(e.target.value);  }}
-              className="px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 bg-card text-foreground"
-            />
-          )}
-  <div className="px-4 flex flex-wrap gap-2">
-    <button 
-      onClick={loadAll} 
-      className="flex items-center gap-2 px-3 py-2 text-sm border border-border text-secondary rounded-lg hover:opacity-80 motion-safe:transition-opacity"
-    >
-      <RefreshCw size={14} />
-    </button>
-    {activeTab === 'Trainer List' && (
-      <button 
-        onClick={openAdd} 
-        className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-lg hover:opacity-90 motion-safe:transition-opacity" 
-      >
-        <Plus size={14} /> Add Trainer
-      </button>
-    )}
-    {activeTab === 'Salary & Payments' && (
-      <button 
-        onClick={openAddPayroll} 
-        className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-lg hover:opacity-90 motion-safe:transition-opacity" 
-      >
-        <Plus size={14} /> Add Payroll
-      </button>
-    )}
-  </div>
-</div>
-</div>
 
-  <div className="p-5">
-  {isLoading ? (
-    <div className="flex justify-center py-10">
-      <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full motion-safe:animate-spin" />
-    </div>
-  ) : activeTab === 'Trainer List' ? (
-    <ManagerHrStaffTable />
-  ) : activeTab === 'Trainer Attendance' ? (
-    <div className="bg-card p-6 border border-border rounded-xl">
-      <h3 className="text-lg font-bold text-foreground mb-4">Mark Trainer Attendance (Today)</h3>
-      <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse">
-          <thead>
-            <tr className="border-b border-border">
-              <th className="py-3 px-4 text-sm font-medium text-secondary">Trainer Name</th>
-              <th className="py-3 px-4 text-sm font-medium text-secondary">Shift</th>
-              <th className="py-3 px-4 text-sm font-medium text-secondary">Status</th>
-              <th className="py-3 px-4 text-sm font-medium text-secondary text-right">Action</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-border">
-            {(!staff || staff.length === 0) ? (
-              <tr><td colSpan={STAFF_TABLE_HEADERS.length + 1} className="py-8 text-center text-secondary text-sm">No staff found</td></tr>
-            ) : (
-              staff.map(s => (
-                <tr key={s.id}>
-                  <td className="py-3 px-4 text-sm text-foreground">{s.name}</td>
-                  <td className="py-3 px-4 text-sm text-secondary">Morning (6 AM - 2 PM)</td>
-                  <td className="py-3 px-4 text-sm font-bold text-warning">Pending</td>
-                  <td className="py-3 px-4 text-right flex justify-end gap-2">
-                    <button className="px-3 py-1.5 text-xs font-semibold bg-success text-success-foreground rounded-lg hover:opacity-90 motion-safe:transition-opacity">Mark Present</button>
-                    <button className="px-3 py-1.5 text-xs font-semibold bg-danger text-danger-foreground rounded-lg hover:opacity-90 motion-safe:transition-opacity">Mark Absent</button>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  ) : activeTab === 'Trainer-Member Assignment' ? (
-    <div className="bg-card p-6 border border-border rounded-xl">
-      <h3 className="text-lg font-bold text-foreground mb-2">Assign Members to Trainers</h3>
-      <p className="text-sm text-secondary">Member-to-trainer assignment is not exposed by the current Manager HR API contract.</p>
-    </div>
-  ) : activeTab === 'Trainer Schedule' ? (
-    <div className="bg-card p-6 border border-border rounded-xl">
-      <h3 className="text-lg font-bold text-foreground mb-4">Today's Schedule</h3>
-      <div className="space-y-3">
-        {(!staff || staff.length === 0) ? (
-          <div className="text-secondary text-sm text-center py-4">No trainers scheduled</div>
-        ) : (
-          staff.map(s => (
-            <div key={s.id} className="p-4 bg-input rounded-lg flex justify-between items-center">
-              <div>
-                <p className="font-bold text-foreground">{s.name}</p>
-                <p className="text-sm text-secondary">Scheduled Shift</p>
+        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+          {isStaffTab && (
+            <>
+              <div className="relative w-full sm:w-64">
+                <Search size={18} aria-hidden="true" className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary" />
+                <label htmlFor="manager-hr-staff-search" className="sr-only">Search staff</label>
+                <input
+                  id="manager-hr-staff-search"
+                  value={search}
+                  onChange={(event) => setSearch(event.target.value)}
+                  placeholder="Search staff..."
+                  className="w-full rounded-lg border border-border bg-card py-2 pl-9 pr-3 text-sm text-primary focus:outline-none focus:ring-2"
+                />
               </div>
-              <span className="text-sm font-semibold text-primary">10:00 AM - 6:00 PM</span>
-            </div>
-          ))
-        )}
-      </div>
-    </div>
-  ) : activeTab === 'Trainer Performance' ? (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      {(!staff || staff.length === 0) ? (
-        <div className="col-span-full text-center text-secondary py-8">No trainer data available</div>
-      ) : (
-        staff.map(s => (
-          <div key={s.id} className="bg-card p-6 border border-border rounded-xl">
-            <h3 className="text-lg font-bold text-foreground mb-1">{s.name}</h3>
-            <p className="text-sm text-secondary mb-4">N/A Average Rating</p>
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm"><span>Sessions Completed</span><span className="font-bold">0</span></div>
-              <div className="flex justify-between text-sm"><span>Member Renewals</span><span className="font-bold text-success">0%</span></div>
-            </div>
-          </div>
-        ))
-      )}
-    </div>
-  ) : (
-    <div className="text-center text-secondary py-10">No data available for this section.</div>
-  )}
-  </div>
- </div>
- );
-}
+              <div className="w-full sm:w-40">
+                <ManagerSearchableDropdown
+                  value={roleFilter}
+                  onChange={(value) => setRoleFilter(String(value))}
+                  options={[
+                    { value: 'All', label: 'All Roles' },
+                    { value: 'Manager', label: 'Manager' },
+                    { value: 'Trainer', label: 'Trainer' },
+                  ]}
+                  placeholder="Filter role"
+                />
+              </div>
+              <button
+                type="button"
+                onClick={openAdd}
+                className="flex min-w-32 items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-on-primary motion-safe:transition-opacity hover:opacity-90"
+              >
+                <Plus size={18} aria-hidden="true" />
+                Add Trainer
+              </button>
+            </>
+          )}
 
+          {isPayrollTab && (
+            <>
+              <label htmlFor="manager-hr-payroll-month" className="sr-only">Payroll month</label>
+              <input
+                id="manager-hr-payroll-month"
+                type="month"
+                value={payrollMonth}
+                onChange={(event) => setPayrollMonth(event.target.value)}
+                className="w-full rounded-lg border border-border bg-card px-3 py-2 text-sm text-primary sm:w-auto"
+              />
+              <button
+                type="button"
+                onClick={openAddPayroll}
+                className="flex min-w-32 items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-on-primary motion-safe:transition-opacity hover:opacity-90"
+              >
+                <Plus size={18} aria-hidden="true" />
+                Add Payroll
+              </button>
+            </>
+          )}
+
+          <button
+            type="button"
+            onClick={() => { void loadAll(); }}
+            aria-label="Refresh HR data"
+            className="flex min-w-10 items-center justify-center rounded-lg border border-border px-3 py-2 text-sm text-secondary motion-safe:transition-opacity hover:opacity-80"
+          >
+            <RefreshCw size={18} aria-hidden="true" />
+          </button>
+        </div>
+      </div>
+
+      <div className="p-5">
+        {activeTab === 'Trainer List' && <ManagerHrStaffTable />}
+        {activeTab === 'Trainer Attendance' && <ManagerHrAttendanceHistory />}
+        {activeTab === 'Salary & Payments' && <ManagerHrPayrollTable />}
+        {activeTab === 'Staff Ledger' && <ManagerHrLedgerTable />}
+        {activeTab === 'Give Advance' && <ManagerHrAdvanceTable />}
+        {activeTab === 'Pay Due' && <ManagerHrDueTable />}
+      </div>
+    </section>
+  );
+}

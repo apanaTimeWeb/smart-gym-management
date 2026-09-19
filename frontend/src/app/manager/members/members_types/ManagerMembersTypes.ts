@@ -3,15 +3,17 @@
 // CRITICAL additions: freezeUntil, emergencyContact, referralCode, bloodGroup, membershipNumber,
 // genderFilter, planFilter, expiryRange — all required for filter/export API params and DB schema.
 
-import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
-import type { MessageType, ManagerMessageRecipient } from '@/app/manager/manager_components/ManagerFeedback/ManagerMessageModal';
-import type { ManagerReceiptData } from '@/app/manager/manager_components/ManagerFeedback/ManagerThermalReceipt';
-import type { MemberFormValues } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
+import type { ManagerToastType } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerToastTypes';
+import type { ManagerMembersMessageType, ManagerMembersMessageRecipient } from '@/app/manager/members/members_types/ManagerMembersMessageTypes';
+import type { ManagerMembersReceiptData } from '@/app/manager/members/members_types/ManagerMembersThermalReceiptTypes';
+import type { MemberFormValues } from '@/app/manager/members/members_schemas/ManagerMembersFormSchema';
 import type { MemberType, MemberStatsType } from '@/app/manager/members/members_types/ManagerMembers.schema';
 import type { PlanSnapshot, PaymentSnapshot, DietPlanSnapshot, WorkoutSnapshot } from '@/app/manager/members/members_types/ManagerMembersSnapshotTypes';
 
 export type MemberSortColumn = 'name' | 'joinDate' | 'expiryDate' | 'paidAmount' | 'status';
 export type SortDirection = 'asc' | 'desc';
+export type ManagerMembersPaymentMethod = 'UPI' | 'Cash' | 'Card' | 'NetBanking';
+export type ManagerMembersKpiKey = 'total' | 'active' | 'pending' | 'expired';
 export type ExportFormat = 'csv' | 'pdf';
 export type MemberProfileTab = 'overview' | 'attendance' | 'payments' | 'workout' | 'diet';
 
@@ -48,7 +50,7 @@ export type MemberStats = MemberStatsType;
 export type PlanWithCustom = PlanSnapshot;
 
 // ─── Context ──────────────────────────────────────────────────────────────────
-export interface MembersContextType {
+export interface ManagerMembersViewModel {
   search: string;
   debouncedSearch: string;
   setSearch: (s: string) => void;
@@ -70,8 +72,8 @@ export interface MembersContextType {
   currentPage: number;
   setCurrentPage: (p: number) => void;
 
-  toast: { message: string; type: ToastType } | null;
-  showToast: (msg: string, t: ToastType) => void;
+  toast: { message: string; type: ManagerToastType } | null;
+  showToast: (msg: string, t: ManagerToastType) => void;
   hideToast: () => void;
 
   // Member Profile
@@ -97,7 +99,7 @@ export interface MembersContextType {
   // Actions
   openAdd: () => void;
   openEdit: (m: Member) => void;
-  saveMember: (data: MemberFormValues) => Promise<{ id?: string; message?: string }>;
+  saveMember: (data: MemberFormValues, idempotencyKey?: string) => Promise<unknown>;
   deleteMember: (id: string) => Promise<void>;
   assignDiet: (memberId: string, diet: DietPlan | null) => Promise<unknown> ;
   assignWorkout: (memberId: string, workout: Workout | null) => Promise<unknown>;
@@ -108,21 +110,21 @@ export interface MembersContextType {
     paymentMethod: string;
     billingCycle: string;
     customDays?: number;
-  }) => Promise<unknown>;
-  recordPayment: (data: { amount: number; method: string }) => Promise<unknown>;
+  }, idempotencyKey: string) => Promise<unknown>;
+  recordPayment: (data: { amount: number; method: string }, idempotencyKey: string) => Promise<unknown>;
   freezeMember: (isFrozen: boolean, freezeUntil?: string) => Promise<unknown>;
   toggleSuspend: (isSuspended: boolean) => Promise<unknown>;
   assignTrainer: (memberId: string, trainerId: string, trainerName: string, isPT: boolean) => Promise<unknown>;
 
   // Message Modal
-  msgModal: { open: boolean; recipient: ManagerMessageRecipient; type: MessageType; message: string; subject?: string } | null;
-  openMsg: (m: Member, type: MessageType) => void;
+  msgModal: { open: boolean; recipient: ManagerMembersMessageRecipient; type: ManagerMembersMessageType; message: string; subject?: string } | null;
+  openMsg: (m: Member, type: ManagerMembersMessageType) => void;
   closeMsg: () => void;
 
   // Receipt Printing
-  printData: ManagerReceiptData | null;
+  printData: ManagerMembersReceiptData | null;
   handlePrint: (p: Payment) => void;
   handleSharePaymentWhatsApp: (p: Payment) => void;
-  setPrintData: (data: ManagerReceiptData | null) => void;
+  setPrintData: (data: ManagerMembersReceiptData | null) => void;
   exportMembers: (format: ExportFormat) => Promise<void>;
 }

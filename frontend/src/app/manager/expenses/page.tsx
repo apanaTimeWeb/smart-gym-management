@@ -1,16 +1,16 @@
 import { Suspense } from 'react';
-// RESPONSIBILITY: Server Component — entry point for the Expenses module. Fetches no initial data (expenses use client-side fetching via Zustand store). Delegates rendering to ManagerExpensesMain which owns its own Provider.
+// RESPONSIBILITY: Server Component — entry point for the Expenses module. Fetches no initial data (expenses use client-side fetching via TanStack Query). Delegates rendering to ManagerExpensesMain which owns its own Provider.
 import type { Metadata } from 'next';
+import ManagerExpensesLoading from '@/app/manager/expenses/loading';
 import ManagerExpensesMain from '@/app/manager/expenses/expenses_components/ManagerExpensesMain/ManagerExpensesMain';
 
 export const metadata: Metadata = {
   title: 'Expenses | GymSmart Manager',
-  description: 'Manage gym operational expenses and inventory.',
-};
+  description: 'Manage gym operational expenses and inventory.' };
 
 export default function ExpensesPage() {
   return (
-    <Suspense fallback={<div className="p-6 flex justify-center text-secondary">Loading...</div>}>
+    <Suspense fallback={<ManagerExpensesLoading />}>
       <ManagerExpensesMain />
     </Suspense>
   );

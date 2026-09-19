@@ -1,3 +1,4 @@
+'use client';
 // DATA FLOW: Manager module state/API data → useManagerFinanceQueries → owning Manager UI components.
 /** Manages UseFinanceQueries for the Manager module. */
 import { useQuery } from '@tanstack/react-query';

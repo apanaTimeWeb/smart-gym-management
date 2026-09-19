@@ -4,8 +4,8 @@ export const MOCK_DASHBOARD_STATS: DashboardStats = {
   totalMembers: 1245,
   activeMembers: 1100,
   newMembersThisMonth: 45,
-  totalRevenue: 450000,
-  monthlyRevenue: 85000,
+  totalRevenue: 45000000,
+  monthlyRevenue: 8500000,
   pendingPayments: 12000,
   totalStaff: 25,
   activeStaff: 22,
@@ -23,11 +23,11 @@ export const MOCK_DASHBOARD_STATS: DashboardStats = {
     { month: 'May', count: 1245 },
   ],
   revenueChart: [
-    { month: 'Jan', revenue: 75000 },
-    { month: 'Feb', revenue: 80000 },
-    { month: 'Mar', revenue: 78000 },
-    { month: 'Apr', revenue: 82000 },
-    { month: 'May', revenue: 85000 },
+    { month: 'Jan', revenue: 7500000 },
+    { month: 'Feb', revenue: 8000000 },
+    { month: 'Mar', revenue: 7800000 },
+    { month: 'Apr', revenue: 8200000 },
+    { month: 'May', revenue: 8500000 },
   ],
   membersByPlan: [
     { plan: 'Annual', count: 450 },
@@ -37,17 +37,17 @@ export const MOCK_DASHBOARD_STATS: DashboardStats = {
   ],
   membersByStatus: { active: 1100, pending: 45, expired: 100 },
   recentMembers: [
-    { id: '1', name: 'John Doe', plan: 'Annual', status: 'Active', joinDate: '2024-05-01', paidAmount: 15000 },
+    { id: '1', name: 'John Doe', plan: 'Annual', status: 'Active', joinDate: '2024-05-01', paidAmount: 1500000 },
     { id: '2', name: 'Jane Smith', plan: 'Quarterly', status: 'Pending', joinDate: '2024-05-05', paidAmount: 0 },
-    { id: '3', name: 'Bob Johnson', plan: 'Monthly', status: 'Active', joinDate: '2024-05-10', paidAmount: 1500 },
+    { id: '3', name: 'Bob Johnson', plan: 'Monthly', status: 'Active', joinDate: '2024-05-10', paidAmount: 150000 },
   ],
   recentPayments: [
-    { id: '1', invoiceNumber: 'INV-001', amount: 15000, method: 'UPI', paidAt: '2024-05-01T10:00:00Z', member: { name: 'John Doe' } },
-    { id: '2', invoiceNumber: 'INV-002', amount: 1500, method: 'Card', paidAt: '2024-05-10T14:30:00Z', member: { name: 'Bob Johnson' } },
+    { id: '1', invoiceNumber: 'INV-001', amount: 1500000, method: 'UPI', paidAt: '2024-05-01T10:00:00Z', member: { name: 'John Doe' } },
+    { id: '2', invoiceNumber: 'INV-002', amount: 150000, method: 'Card', paidAt: '2024-05-10T14:30:00Z', member: { name: 'Bob Johnson' } },
   ],
   pendingPaymentsList: [
-    { id: '2', name: 'Jane Smith', pendingAmount: 4000, expiryDate: '2024-06-05' },
-    { id: '4', name: 'Alice Brown', pendingAmount: 15000, expiryDate: '2024-06-15' },
+    { id: '2', name: 'Jane Smith', pendingAmount: 400000, expiryDate: '2024-06-05' },
+    { id: '4', name: 'Alice Brown', pendingAmount: 1500000, expiryDate: '2024-06-15' },
   ],
   expiringMemberships: [
     { id: '5', name: 'Charlie Davis', pendingAmount: 0, expiryDate: '2024-05-20' },
@@ -57,5 +57,4 @@ export const MOCK_DASHBOARD_STATS: DashboardStats = {
   revenueGrowthPercent: 12.5,
   todayCollection: 4500,
   frozenMembershipsCount: 15,
-  totalPTRevenue: 25000,
-};
+  totalPTRevenue: 25000 };

@@ -1,19 +1,14 @@
+'use client';
+import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 // RESPONSIBILITY: Renders the form fields for converting a lead.
+import type { ManagerConvertLeadFormProps } from '@/app/manager/inquiries/inquiries_types/ManagerConvertLeadFormTypes';
 import { Controller } from 'react-hook-form';
-import type { UseFormReturn } from 'react-hook-form';
-import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
+import ManagerSearchableDropdown from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
 import { INQUIRIES_CYCLE_LABELS, getPriceForCycleSnapshot, INQUIRIES_GENDER_OPTIONS } from '@/app/manager/inquiries/inquiries_utils/ManagerInquiriesConvertConstants';
-import type { ConvertLeadFormValues } from '@/app/manager/inquiries/inquiries_types/ManagerConvertLeadSchema';
-import type { PlanSnapshot } from '@/app/manager/inquiries/inquiries_utils/ManagerInquiriesConvertConstants';
-import { formatCurrency } from '@/lib/formatters';
+import type { ConvertLeadFormValues } from '@/app/manager/inquiries/inquiries_types/ManagerInquiriesFormTypes';
+import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
 
-interface ManagerConvertLeadFormProps {
-  useFormReturn: UseFormReturn<ConvertLeadFormValues>;
-  plans: PlanSnapshot[];
-  watchPlanId?: string;
-  watchBillingCycle?: string;
-  watchCustomDays?: number;
-}
+
 
 export default function ManagerConvertLeadForm({
   useFormReturn,
@@ -47,7 +42,7 @@ export default function ManagerConvertLeadForm({
               }
             }}
             {...register(f.key as keyof ConvertLeadFormValues)}
-            className={`w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary motion-safe:transition-all duration-200 ${
+            className={`w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary motion-safe:transition-all motion-safe:duration-200 ${
               errors[f.key as keyof ConvertLeadFormValues] ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
             }`}
           />
@@ -63,7 +58,7 @@ export default function ManagerConvertLeadForm({
           name="gender"
           control={control}
           render={({ field }) => (
-            <SearchableDropdown value={field.value || ''} onChange={field.onChange} options={INQUIRIES_GENDER_OPTIONS} />
+            <ManagerSearchableDropdown value={field.value || ''} onChange={field.onChange} options={INQUIRIES_GENDER_OPTIONS} />
           )}
         />
       </div>
@@ -73,7 +68,7 @@ export default function ManagerConvertLeadForm({
           name="planId"
           control={control}
           render={({ field }) => (
-            <SearchableDropdown
+            <ManagerSearchableDropdown
               options={plans.map(p => ({ value: p.id, label: p.name }))}
               value={field.value}
               onChange={field.onChange}
@@ -90,7 +85,7 @@ export default function ManagerConvertLeadForm({
           name="billingCycle"
           control={control}
           render={({ field }) => (
-            <SearchableDropdown
+            <ManagerSearchableDropdown
               value={field.value || ''}
               onChange={field.onChange}
               options={Object.entries(INQUIRIES_CYCLE_LABELS).map(([val, label]) => ({ label, value: val }))}
@@ -107,7 +102,7 @@ export default function ManagerConvertLeadForm({
             onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+') e.preventDefault(); }}
             {...register('customDays')}
             placeholder="e.g. 15"
-            className={`w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary motion-safe:transition-all duration-200 ${
+            className={`w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary motion-safe:transition-all motion-safe:duration-200 ${
               errors.customDays ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
             }`}
           />
@@ -116,16 +111,16 @@ export default function ManagerConvertLeadForm({
       )}
 
       {watchPlanId && (
-        <div className="sm:col-span-2 bg-warning-bg rounded-xl p-3 text-sm border border-warning/30 flex justify-between items-center">
+        <div className="sm:col-span-2 bg-warning rounded-xl p-3 text-sm border border-warning/30 flex justify-between items-center">
           <div>
             <span className="font-semibold text-warning">Calculated Price:</span>
             <span className="text-warning ml-1 font-bold">
-              {formatCurrency(getPriceForCycleSnapshot(selectedPlan, watchBillingCycle || '', Number(watchCustomDays) || 0))}
+              {formatCurrencyFromMinorUnits(getPriceForCycleSnapshot(selectedPlan, watchBillingCycle || '', Number(watchCustomDays) || 0), ManagerEnvConfig.currencyCode)}
             </span>
           </div>
           {watchBillingCycle === 'CUSTOM' && (
             <div className="text-warning text-xs opacity-80">
-              (Per Day: {formatCurrency(selectedPlan?.priceCustom || 0)} × {watchCustomDays || 0} days)
+              (Per Day: {formatCurrencyFromMinorUnits(selectedPlan?.priceCustom || 0, ManagerEnvConfig.currencyCode)} × {watchCustomDays || 0} days)
             </div>
           )}
         </div>
@@ -133,11 +128,11 @@ export default function ManagerConvertLeadForm({
 
       <div>
         <label className="block text-sm font-medium text-secondary mb-0.5">Join Date</label>
-        <input type="date" min={new Date().toISOString().split('T')[0]} {...register('joinDate')} className="w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary motion-safe:transition-all duration-200" />
+        <input type="date" min={new Date().toISOString().split('T')[0]} {...register('joinDate')} className="w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary motion-safe:transition-all motion-safe:duration-200" />
       </div>
       <div>
         <label className="block text-sm font-medium text-secondary mb-0.5">Expiry Date <span className="text-danger">*</span></label>
-        <input type="date" disabled min={new Date().toISOString().split('T')[0]} {...register('expiryDate')} className="w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none bg-input text-primary opacity-80 cursor-not-allowed motion-safe:transition-all duration-200" />
+        <input type="date" disabled min={new Date().toISOString().split('T')[0]} {...register('expiryDate')} className="w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none bg-input text-primary opacity-80 cursor-not-allowed motion-safe:transition-all motion-safe:duration-200" />
       </div>
 
       <div>
@@ -146,7 +141,7 @@ export default function ManagerConvertLeadForm({
       </div>
       <div>
         <label className="block text-sm font-medium text-secondary mb-0.5">Amount Paid (₹)</label>
-        <input type="number" min="0" onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+') e.preventDefault(); }} {...register('paidAmount', { valueAsNumber: true })} className="w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary motion-safe:transition-all duration-200" />
+        <input type="number" min="0" onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+') e.preventDefault(); }} {...register('paidAmount', { valueAsNumber: true })} className="w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary motion-safe:transition-all motion-safe:duration-200" />
       </div>
     </div>
   );

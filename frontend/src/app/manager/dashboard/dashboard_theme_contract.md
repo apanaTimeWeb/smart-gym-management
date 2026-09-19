@@ -29,6 +29,6 @@ This document enforces the styling boundaries for the Manager Dashboard feature 
 
 - **ManagerStatCard:** Use the shared `ManagerStatCard` component for all KPIs to guarantee visual consistency.
 - **Charts (react-apexcharts):** 
-  - Tooltips must use `theme: 'dark'` and handle numeric formatting via `formatCurrency` or `formatKPI`.
+  - Tooltips must use `theme: 'dark'` and handle numeric formatting via `formatCurrencyFromMinorUnits` or `formatKPI`.
   - Chart lines/areas must map strictly to hex colors (e.g. `#0ea5e9` for primary/info, `#22c55e` for success/revenue) inside the ApexCharts config object, since canvas elements do not resolve Tailwind classes reliably.
 - **Empty States:** Use `bg-card` and `border-border` for empty dashboard sections.

@@ -1,76 +1,70 @@
 'use client';
+import { MANAGER_GENERIC_ERROR_MESSAGE } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
+import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 // RESPONSIBILITY: Renders the Manager SalesOverview presentation layer for the Manager module.
-import React from 'react';
 import dynamic from 'next/dynamic';
-import { useSalesContext } from '@/app/manager/sales/sales_context/ManagerSalesContext';
-import { formatCurrency, formatKPI } from '@/lib/formatters';
-import { Loader2 } from 'lucide-react';
+import { useManagerSalesLogic } from '@/app/manager/sales/sales_hooks/ManagerUseManagerSalesLogic';
+import { formatCurrencyFromMinorUnits, formatKPI } from '@/lib/formatters';
 import type { OverviewDataPoint } from '@/app/manager/sales/sales_types/ManagerSalesTypes';
 
 const Chart = dynamic(() => import('react-apexcharts'), {
   ssr: false,
-  loading: () => <div className="flex items-center justify-center h-64"><Loader2 className="w-6 h-6 motion-safe:animate-spin text-primary" /></div>,
-});
+  loading: () => <div className="h-64 rounded-xl bg-card motion-safe:animate-pulse" aria-hidden="true" /> });
 
 export default function ManagerSalesOverview() {
-  const { overviewData, isLoading, isError } = useSalesContext();
+  const { overviewData, isLoading, isError, errorMessage } = useManagerSalesLogic();
 
   if (isLoading) {
-    return (
-      <div className="flex justify-center py-10">
-        <Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" />
-      </div>
-    );
+    return <div className="space-y-5" aria-label="Loading sales overview">
+      <div className="h-72 rounded-xl border border-border bg-skeleton-base motion-safe:animate-pulse" />
+      <div className="h-72 rounded-xl border border-border bg-skeleton-base motion-safe:animate-pulse" />
+    </div>;
   }
 
   if (isError) {
     return (
       <div className="text-center py-16 bg-card rounded-2xl border border-danger/30">
-        <p className="text-danger font-medium">Failed to load sales overview.</p>
-        <p className="text-sm mt-1 text-secondary">Please check your connection and try again.</p>
+        <p className="text-danger font-medium">{errorMessage || MANAGER_GENERIC_ERROR_MESSAGE}</p>
+        <span className="text-sm text-secondary">Retry the request.</span>
       </div>
     );
   }
 
   const revenueOptions = {
     chart: { background: 'transparent', toolbar: { show: false }, fontFamily: 'Inter, sans-serif', stacked: true },
-    colors: ['var(--primary)', 'var(--success)'],
-    grid: { borderColor: 'rgba(255,255,255,0.05)', strokeDashArray: 4 },
-    tooltip: { theme: 'dark' as const, y: { formatter: (v: number) => formatCurrency(v) } },
+    colors: ['var(--chart-primary)', 'var(--chart-success)'],
+    grid: { borderColor: 'var(--chart-grid)', strokeDashArray: 4 },
+    tooltip: { theme: 'dark' as const, y: { formatter: (v: number) => formatCurrencyFromMinorUnits(v, ManagerEnvConfig.currencyCode) } },
     xaxis: {
       categories: overviewData.map((d: OverviewDataPoint) => d.month),
       labels: { style: { colors: 'var(--text-secondary)', fontSize: '11px' } },
-      axisBorder: { show: false }, axisTicks: { show: false },
-    },
+      axisBorder: { show: false }, axisTicks: { show: false } },
     yaxis: { labels: { style: { colors: 'var(--text-secondary)', fontSize: '11px' }, formatter: (v: number) => formatKPI(v) } },
     legend: { labels: { colors: 'var(--text-secondary)' }, position: 'top' as const },
     dataLabels: { enabled: false },
-    plotOptions: { bar: { borderRadius: 4, columnWidth: '55%' } },
-  };
+    plotOptions: { bar: { borderRadius: 4, columnWidth: '55%' } } };
 
   const membersOptions = {
     chart: { background: 'transparent', toolbar: { show: false }, fontFamily: 'Inter, sans-serif' },
-    colors: ['var(--danger)'],
+    colors: ['var(--chart-danger)'],
     stroke: { curve: 'smooth' as const, width: 3 },
     fill: {
-      type: 'gradient',
-      gradient: { shadeIntensity: 1, opacityFrom: 0.4, opacityTo: 0, stops: [0, 90, 100] }
+      type: 'solid',
+      opacity: 0.22
     },
-    grid: { borderColor: 'rgba(255,255,255,0.05)', strokeDashArray: 4 },
+    grid: { borderColor: 'var(--chart-grid)', strokeDashArray: 4 },
     tooltip: { theme: 'dark' as const },
     xaxis: {
       categories: overviewData.map((d: OverviewDataPoint) => d.month),
       labels: { style: { colors: 'var(--text-secondary)', fontSize: '11px' } },
-      axisBorder: { show: false }, axisTicks: { show: false },
-    },
+      axisBorder: { show: false }, axisTicks: { show: false } },
     yaxis: { labels: { style: { colors: 'var(--text-secondary)', fontSize: '11px' } } },
-    dataLabels: { enabled: false },
-  };
+    dataLabels: { enabled: false } };
 
   return (
     <div className="space-y-6">
-      <div className="bg-card p-5 rounded-xl border border-border shadow-lg dark:shadow-none">
-        <h3 className="font-bold text-foreground mb-4">Monthly Revenue</h3>
+      <div className="bg-card p-5 rounded-xl border border-border shadow-card dark:shadow-none">
+        <h3 className="font-bold text-primary mb-4">Monthly Revenue</h3>
         <Chart
           type="bar"
           height={280}
@@ -82,8 +76,8 @@ export default function ManagerSalesOverview() {
         />
       </div>
 
-      <div className="bg-card p-5 rounded-xl border border-border shadow-lg dark:shadow-none col-span-1 md:col-span-2 lg:col-span-3">
-        <h3 className="font-bold text-foreground mb-4">New Members Trend</h3>
+      <div className="bg-card p-5 rounded-xl border border-border shadow-card dark:shadow-none col-span-1 md:col-span-2 lg:col-span-3">
+        <h3 className="font-bold text-primary mb-4">New Members Trend</h3>
         <Chart
           type="area"
           height={250}

@@ -1,3 +1,4 @@
+'use client';
 // DATA FLOW: Manager module state/API data → useManagerInquiriesQueries → owning Manager UI components.
 /** Manages UseInquiriesQueries for the Manager module. */
 import { useQuery } from '@tanstack/react-query';
@@ -11,8 +12,7 @@ export function useInquiriesQuery(params: Record<string, string>) {
       const res = await inquiriesApi.fetchInquiries(params);
       return { inquiries: res.data!.inquiries as Inquiry[], total: res.data!.total };
     },
-    staleTime: 5 * 60 * 1000,
-  });
+    staleTime: 5 * 60 * 1000 });
 }
 
 export function useInquiryStatsQuery() {
@@ -22,8 +22,7 @@ export function useInquiryStatsQuery() {
       const res = await inquiriesApi.fetchInquiryStats();
       return res.data! as InquiryStats;
     },
-    staleTime: 5 * 60 * 1000,
-  });
+    staleTime: 5 * 60 * 1000 });
 }
 
 export function useInquiryPlansQuery() {
@@ -33,8 +32,7 @@ export function useInquiryPlansQuery() {
       const res = await inquiriesApi.fetchInquiryPlans();
       return res.data! as { name: string }[];
     },
-    staleTime: 5 * 60 * 1000,
-  });
+    staleTime: 5 * 60 * 1000 });
 }
 
 export function useInquiryPlansSnapshotQuery() {
@@ -44,6 +42,5 @@ export function useInquiryPlansSnapshotQuery() {
       const res = await inquiriesApi.fetchInquiryPlansSnapshot();
       return res.data! as unknown[];
     },
-    staleTime: 5 * 60 * 1000,
-  });
+    staleTime: 5 * 60 * 1000 });
 }

@@ -8,7 +8,7 @@ Manager Inquiries is the lead and conversion workspace. Managers can browse/sear
 |---|---|---|
 | `inquiries_api/` | Feature-owned responsibility for the inquiries module. | `ManagerInquiriesApi.ts; ManagerUseManagerInquiriesMutations.ts; ManagerUseManagerInquiriesQueries.ts` |
 | `inquiries_components/` | Feature-owned responsibility for the inquiries module. | `—` |
-| `inquiries_context/` | Feature-owned responsibility for the inquiries module. | `ManagerBuildInquiriesQueryParams.ts; ManagerInquiriesContext.tsx; ManagerUseManagerInquiriesLogic.ts` |
+| `inquiries_hooks/` | Feature-owned responsibility for the inquiries module. | `ManagerBuildInquiriesQueryParams.ts; ManagerUseManagerInquiriesLogic.ts; ManagerUseManagerInquiriesLogic.ts` |
 | `inquiries_fixtures/` | Feature-owned responsibility for the inquiries module. | `ManagerInquiriesMockData.ts` |
 | `inquiries_mocks/` | Feature-owned responsibility for the inquiries module. | `—` |
 | `inquiries_types/` | Feature-owned responsibility for the inquiries module. | `ManagerConvertLeadSchema.ts; ManagerInquiriesSchema.ts; ManagerInquiriesTypes.ts` |
@@ -40,7 +40,7 @@ Manager Inquiries is the lead and conversion workspace. Managers can browse/sear
 4. The authoritative member ID/message is consumed and the inquiry cache is reconciled.
 
 ## Data and State Architecture
-TanStack Query owns inquiries server/API data. UI-only filters, tabs, selections, and draft state remain local state or module-scoped Zustand where shared. React Context is limited to stable cross-tree concerns and does not become the source of truth for API data. Query keys are module-prefixed.
+TanStack Query owns inquiries server/API data. UI-only filters, tabs, selections, and draft state remain local state or module-scoped Zustand where shared. module-local state/query layer is limited to stable cross-tree concerns and does not become the source of truth for API data. Query keys are module-prefixed.
 
 ## API Contract
 | Function | Method | Endpoint | Request | Response `data` type |
@@ -102,10 +102,10 @@ TanStack Query owns inquiries server/API data. UI-only filters, tabs, selections
 | `inquiries/inquiries_components/ConvertLeadModal/ManagerConvertLeadSuccess.tsx` | Renders the success state after converting a lead. |
 | `inquiries/inquiries_components/InquiriesTable/ManagerInquiriesTable.tsx` | Renders the paginated, filterable table of inquiries with row actions, status updates, and bulk selection. |
 | `inquiries/inquiries_components/ManagerInquiriesKPIs/ManagerInquiriesKPIs.tsx` | Renders the four KPI stat cards (Total, New, Follow Up, Converted) for the Inquiries module. |
-| `inquiries/inquiries_components/ManagerInquiriesMain/ManagerInquiriesMain.tsx` | Entry point for the Inquiries module. Sets up the Context provider and composes all sub-components. |
+| `inquiries/inquiries_components/ManagerInquiriesMain/ManagerInquiriesMain.tsx` | Framework entry component for the Inquiries module; delegates feature behavior and UI composition to `ManagerInquiriesContent`. |
 | `inquiries/inquiries_components/ManagerInquiriesModal/ManagerInquiriesModal.tsx` | Renders the modal form for creating or editing an inquiry lead. Uses React Hook Form + Zod validation. |
 | `inquiries/inquiries_components/ManagerInquiriesToolbar/ManagerInquiriesToolbar.tsx` | Renders the search/filter toolbar and bulk-action bar for the Inquiries module. |
-| `inquiries/inquiries_context/ManagerInquiriesContext.tsx` | Provides inquiries state and actions to the entire inquiries module hierarchy via React Context. |
+| `inquiries/inquiries_hooks/ManagerUseManagerInquiriesLogic.ts` | Provides inquiries state and actions to the entire inquiries module hierarchy via module-local state/query layer. |
 
 ## Rule Compliance Checklist
 - [x] Module-owned API, types/schemas, fixtures, handlers, tests, and feature documentation are scoped to this module.

@@ -6,9 +6,9 @@ Manager Reports is the branch reporting workspace for financial, attendance, mem
 ## Directory Structure
 | Folder | Responsibility | Key Files |
 |---|---|---|
-| `reports_api/` | Feature-owned responsibility for the reports module. | `ManagerReportsApi.ts` |
+| `reports_api/` | Reports API contract plus feature-local binary export transport. | `ManagerReportsApi.ts; ManagerReportsBinaryDownload.ts` |
 | `reports_components/` | Feature-owned responsibility for the reports module. | `—` |
-| `reports_context/` | Feature-owned responsibility for the reports module. | `ManagerReportsContext.tsx` |
+| `reports_hooks/` | Feature-owned responsibility for the reports module. | `ManagerUseManagerReportsLogic.ts` |
 | `reports_fixtures/` | Feature-owned responsibility for the reports module. | `ManagerReportsMockData.ts` |
 | `reports_mocks/` | Feature-owned responsibility for the reports module. | `—` |
 | `reports_types/` | Feature-owned responsibility for the reports module. | `ManagerReportsSchema.ts; ManagerReportsTypes.ts` |
@@ -32,7 +32,7 @@ Manager Reports is the branch reporting workspace for financial, attendance, mem
 3. The response is treated as an export/download response rather than current-page table data.
 
 ## Data and State Architecture
-TanStack Query owns reports server/API data. UI-only filters, tabs, selections, and draft state remain local state or module-scoped Zustand where shared. React Context is limited to stable cross-tree concerns and does not become the source of truth for API data. Query keys are module-prefixed.
+TanStack Query owns reports server/API data. UI-only filters, tabs, selections, and draft state remain local state or module-scoped Zustand where shared. module-local state/query layer is limited to stable cross-tree concerns and does not become the source of truth for API data. Query keys are module-prefixed.
 
 ## API Contract
 | Function | Method | Endpoint | Request | Response `data` type |
@@ -82,9 +82,9 @@ TanStack Query owns reports server/API data. UI-only filters, tabs, selections, 
 |---|---|
 | `reports/reports_components/ManagerReportsCharts/ManagerReportsCharts.tsx` | ApexCharts-based charts for each report tab — Revenue, Attendance, Members, Expenses. |
 | `reports/reports_components/ManagerReportsKPIs/ManagerReportsKPIs.tsx` | KPI stat cards row for the Manager Reports module. |
-| `reports/reports_components/ManagerReportsMain/ManagerReportsMain.tsx` | Orchestrator for the Reports module — KPIs, tab switcher, charts, table, and CSV export. |
+| `reports/reports_components/ManagerReportsMain/ManagerReportsMain.tsx` | Framework entry component for the Reports module; delegates report UI and state orchestration to `ManagerReportsContent`. |
 | `reports/reports_components/ManagerReportsTable/ManagerReportsTable.tsx` | Renders the data table for the active report tab — Revenue, Attendance, Members, or Expenses. |
-| `reports/reports_context/ManagerReportsContext.tsx` | Bridges URL-owned report controls with module server state. |
+| `reports/reports_hooks/ManagerUseManagerReportsLogic.ts` | Bridges URL-owned report controls with module server state. |
 
 ## Rule Compliance Checklist
 - [x] Module-owned API, types/schemas, fixtures, handlers, tests, and feature documentation are scoped to this module.

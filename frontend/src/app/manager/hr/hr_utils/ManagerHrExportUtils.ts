@@ -1,3 +1,4 @@
+'use client';
 // RESPONSIBILITY: Generates user-triggered HR exports from query-owned staff data.
 function escapeManagerCsv(value: unknown): string {
   const text = String(value ?? '');

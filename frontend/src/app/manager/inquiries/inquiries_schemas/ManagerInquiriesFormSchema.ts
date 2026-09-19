@@ -1,0 +1,3 @@
+// RESPONSIBILITY: Defines validation rules for creating and editing inquiry leads.
+import { z } from 'zod';
+export const managerInquiriesFormSchema = z.object({ name: z.string().min(2, 'Name is required'), phone: z.string().regex(/^\d{10}$/, 'Phone number must be exactly 10 digits'), email: z.string().email('Invalid email address').optional().or(z.literal('')), interest: z.string().min(2, 'Interest is required'), status: z.enum(['NEW', 'FOLLOW_UP', 'CONVERTED', 'LOST']), source: z.string(), notes: z.string().optional(), followUpLogs: z.array(z.object({ date: z.string(), note: z.string() })).optional() });
