@@ -39,6 +39,10 @@ Every visual value must resolve through a documented global token, unless the ex
 - Feature UI never hardcodes global values.
 - Feature UI never guesses token names.
 
+> **CRITICAL WARNING TO AI AGENTS (COMPONENT ISOLATION):**
+> Do NOT attempt to "DRY up" business-aware components (e.g., Date Filters with presets, Status Badges with hardcoded text) by moving them to global folders like `widgets/common/` or `ui/`. 
+> Global UI folders are STRICTLY for zero-business, dumb primitives. Business components MUST be duplicated per feature.
+
 ## 1. Color Tokens
 
 | Token | Light | Dark | Usage |

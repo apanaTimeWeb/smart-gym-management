@@ -55,6 +55,10 @@ Document the mapping clearly so an AI cannot confuse `--primary` with `--text-pr
 - Member/plan/payment/etc. business data
 - Feature API behavior, specific constants, or business feature logic
 
+> **CRITICAL WARNING TO AI AGENTS (COMPONENT ISOLATION):**
+> Do NOT create or move "business-aware" components (e.g., Date Filters with "Last 3 Months" presets, Status Badges with hardcoded "Active" text) into global folders like `src/components/ui/` just to avoid code duplication. 
+> Global design/UI folders are STRICTLY for zero-business, dumb primitives. Business components MUST be duplicated per feature.
+
 ---
 
 ## 1. COLOR PALETTE
