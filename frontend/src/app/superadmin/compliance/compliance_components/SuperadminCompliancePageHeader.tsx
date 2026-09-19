@@ -3,7 +3,7 @@
 import type { SuperadminComplianceSectionProps } from '@/app/superadmin/compliance/compliance_types/SuperadminComplianceTypes';
 export default function SuperadminCompliancePageHeader({ data }: SuperadminComplianceSectionProps) {
     return (<div>
-  <h1 className="text-2xl font-bold text-foreground">
+  <h1 className="text-2xl font-bold text-primary">
     Tax & Compliance
   </h1>
   <p className="mt-1 text-sm text-secondary">

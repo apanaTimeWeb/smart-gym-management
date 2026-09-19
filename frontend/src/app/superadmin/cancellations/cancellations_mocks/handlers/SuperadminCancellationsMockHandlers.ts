@@ -1,9 +1,14 @@
+import { StatusCodes } from 'http-status-codes';
 import { http, HttpResponse, delay } from 'msw';
-import type { CancellationsAlert, CancellationsKpiData, CancellationsActionPayload } from '@/app/superadmin/cancellations/cancellations_types/superadmin_cancellations_types';
+import type { CancellationsAlert, CancellationsKpiData, CancellationsActionPayload } from '@/app/superadmin/cancellations/cancellations_types/SuperadminCancellationsTypes';
 import type { ApiResponse } from '@/lib/api';
 import { MOCK_SUPERADMIN_CANCELLATIONS } from '@/app/superadmin/cancellations/cancellations_mocks/fixtures/SuperadminCancellationsMockFixtures';
 const BASE_URL = '*/api/v1/superadmin/cancellations';
 let mockAlerts: CancellationsAlert[] = [...MOCK_SUPERADMIN_CANCELLATIONS];
+
+export function resetSuperadminCancellationsMockState(): void {
+  mockAlerts = [...MOCK_SUPERADMIN_CANCELLATIONS];
+}
 const kpis = (): CancellationsKpiData => ({
     totalAtRisk: mockAlerts.filter((a) => a.actionStatus !== 'CANCELLED').length,
     criticalCount: mockAlerts.filter((a) => a.riskLevel === 'CRITICAL' && a.actionStatus !== 'CANCELLED').length,
@@ -39,7 +44,7 @@ export const superadminCancellationsHandlers = [
         mockAlerts = mockAlerts.map((a) => { if (a.id !== alertId)
             return a; updated = { ...a, actionStatus: payload.status, notes: payload.notes || a.notes }; return updated; });
         if (!updated)
-            return HttpResponse.json<ApiResponse<CancellationsAlert>>({ success: false, message: 'Not found', data: null }, { status: 404 });
+            return HttpResponse.json<ApiResponse<CancellationsAlert>>({ success: false, message: 'Not found', data: null }, { status: StatusCodes.NOT_FOUND });
         return HttpResponse.json<ApiResponse<CancellationsAlert>>({ success: true, message: 'Updated', data: updated });
     }),
     http.delete(`${BASE_URL}/:alertId`, async ({ params }) => { const id = String(params.alertId); mockAlerts = mockAlerts.filter((a) => a.id !== id); return HttpResponse.json<ApiResponse<null>>({ success: true, message: 'Dismissed', data: null }); }),

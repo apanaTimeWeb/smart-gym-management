@@ -1,11 +1,11 @@
 // RESPONSIBILITY: Renders the Superadmin backups V1 Backup health by gym view.
 'use client';
 import { formatNumber, formatDateTime } from '@/lib/formatters';
-import SuperadminV1Panel from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminV1Panel';
+import SuperadminPanel from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPanel';
 import type { SuperadminBackupsV1SectionProps } from '@/app/superadmin/backups/backups_types/SuperadminBackupsV1Types.ts';
-import { getSuperadminStatusBadgeClasses } from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminStatusBadgeConfig';
+import { getSuperadminBackupsStatusBadgeClasses } from '@/app/superadmin/backups/backups_utils/SuperadminBackupsStatusBadgeConfig';
 export default function SuperadminBackupsV1GymHealthTable({ data }: SuperadminBackupsV1SectionProps) {
-    return <SuperadminV1Panel title="Backup health by gym" description="Every sample includes age, size, and status so gaps are visible.">
+    return <SuperadminPanel title="Backup health by gym" description="Every sample includes age, size, and status so gaps are visible.">
   <div className="overflow-x-auto">
     <table className="w-full text-sm">
       <thead>
@@ -29,7 +29,7 @@ export default function SuperadminBackupsV1GymHealthTable({ data }: SuperadminBa
       </thead>
       <tbody>
         {data.tenants.map((t) => <tr key={t.gym} className="border-b border-border">
-          <td className="px-3 py-3 font-medium text-foreground">
+          <td className="px-3 py-3 font-medium text-primary">
             {t.gym}
           </td>
           <td className="px-3 py-3 text-secondary">
@@ -42,12 +42,12 @@ export default function SuperadminBackupsV1GymHealthTable({ data }: SuperadminBa
           <td className="px-3 py-3 text-secondary">
             {t.size}
           </td>
-          <td className={`px-3 py-3 ${getSuperadminStatusBadgeClasses(t.status)}`}>
+          <td className={`px-3 py-3 ${getSuperadminBackupsStatusBadgeClasses(t.status)}`}>
             {t.status}
           </td>
         </tr>)}
       </tbody>
     </table>
   </div>
-    </SuperadminV1Panel>;
+    </SuperadminPanel>;
 }

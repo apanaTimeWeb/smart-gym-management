@@ -1,22 +1,8 @@
 // RESPONSIBILITY: Renders the pagination bar (Previous/Next + page info + rows-per-page) shared across all SUPERADMIN table views.
 'use client';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-interface SuperadminPaginationProps {
-    currentPage: number;
-    totalPages: number;
-    onPageChange: (page: number) => void;
-    // Optional detailed info props
-    totalItems?: number;
-    itemsPerPage?: number;
-    // Optional color overrides (uses CSS vars by default)
-    colors?: {
-        text?: string;
-        textActive?: string;
-        bgActive?: string;
-        border?: string;
-        hoverBg?: string;
-    };
-}
+import type { SuperadminPaginationProps } from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPaginationTypes';
+
 export default function SuperadminPagination({ currentPage, totalPages, onPageChange, totalItems, itemsPerPage, colors, }: SuperadminPaginationProps) {
     const startItem = totalItems && itemsPerPage ? (currentPage - 1) * itemsPerPage + 1 : null;
     const endItem = totalItems && itemsPerPage ? Math.min(currentPage * itemsPerPage, totalItems) : null;

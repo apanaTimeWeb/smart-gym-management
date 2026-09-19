@@ -14,7 +14,7 @@ export default function CancellationsAlertsLoading() {
       </div>
 
       {/* Table skeleton */}
-      <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
+      <div className="bg-card border border-border rounded-xl shadow-card overflow-hidden">
         <div className="h-14 border-b border-border bg-skeleton-base/50 motion-safe:animate-pulse"/>
         <div className="divide-y divide-border">
           {[1, 2, 3, 4, 5, 6].map((i) => (<div key={`table-skel-${i}`} className="h-16 bg-skeleton-highlight motion-safe:animate-pulse opacity-50"/>))}

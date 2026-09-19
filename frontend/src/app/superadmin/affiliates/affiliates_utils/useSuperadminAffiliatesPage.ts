@@ -6,11 +6,19 @@ import { useState, useMemo, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { affiliatesApi } from '@/app/superadmin/affiliates/superadmin_affiliates_api/superadmin_affiliates_api';
-import { AffiliateSchema } from '@/app/superadmin/affiliates/superadmin_affiliates_types/superadmin_affiliates_types';
-import type { Affiliate, AffiliateStatusFilter, AffiliateFormData } from '@/app/superadmin/affiliates/superadmin_affiliates_types/superadmin_affiliates_types';
-import { useSuperadminUrlState } from '@/app/superadmin/superadmin_utils/useSuperadminUrlState';
+import { affiliatesApi } from '@/app/superadmin/affiliates/affiliates_api/SuperadminAffiliatesApi';
+import { AffiliateSchema } from '@/app/superadmin/affiliates/affiliates_types/SuperadminAffiliatesTypes';
+import type { Affiliate, AffiliateStatusFilter, AffiliateFormData } from '@/app/superadmin/affiliates/affiliates_types/SuperadminAffiliatesTypes';
+import { useSuperadminUrlState } from '@/app/superadmin/superadmin_infrastructure/useSuperadminUrlState';
 import { useSuperadminAffiliatesMutations } from '@/app/superadmin/affiliates/affiliates_utils/useSuperadminAffiliatesMutations';
+import { buildSuperadminAffiliatesQueryParams } from '@/app/superadmin/affiliates/affiliates_utils/SuperadminAffiliatesQueryUtils';
+/**
+ * Purpose: useSuperadminAffiliatesPage.ts encapsulates all state and async logic for the Affiliates page.
+ * Inputs: values defined by the exported hook signature.
+ * Output: the hook's typed state/actions/query contract.
+ * Side effects: remain scoped to the owning feature or approved application infrastructure.
+ * Invariant: does not move feature business state into unrelated modules.
+ */
 export const useSuperadminAffiliatesPage = () => {
     const queryClient = useQueryClient();
     const { getParam, setParam } = useSuperadminUrlState();
@@ -25,25 +33,15 @@ export const useSuperadminAffiliatesPage = () => {
     const setStartDate = (val: string) => { setParam('startDate', val); setParam('page', '1'); };
     const setEndDate = (val: string) => { setParam('endDate', val); setParam('page', '1'); };
     const setPage = (page: number) => setParam('page', String(page));
-    const queryParams = useMemo(() => {
-        const params: Record<string, string> = {
-            page: String(currentPage),
-            limit: String(pageLimit),
-        };
-        if (searchQuery)
-            params.search = searchQuery;
-        if (statusFilter !== 'ALL')
-            params.status = statusFilter;
-        if (startDate)
-            params.startDate = startDate;
-        if (endDate)
-            params.endDate = endDate;
-        return params;
-    }, [searchQuery, statusFilter, startDate, endDate, currentPage, pageLimit]);
+    const queryParams = useMemo(() => buildSuperadminAffiliatesQueryParams({ searchQuery, statusFilter, startDate, endDate, currentPage, pageLimit }), [searchQuery, statusFilter, startDate, endDate, currentPage, pageLimit]);
     const queryKey = useMemo(() => ['superadmin', 'affiliates', queryParams], [queryParams]);
     const { data: affiliatesResponse, status: fetchState, error: queryError } = useQuery({
         queryKey,
         queryFn: () => affiliatesApi.fetchAffiliates(queryParams),
+    });
+    const payoutHistoryQuery = useQuery({
+        queryKey: ['superadmin', 'affiliates', 'payout-history'],
+        queryFn: () => affiliatesApi.fetchPayoutHistory(),
     });
     const affiliates = affiliatesResponse?.data ?? [];
     const total = affiliatesResponse?.meta?.total ?? affiliates.length;
@@ -97,6 +95,10 @@ export const useSuperadminAffiliatesPage = () => {
         isMutating,
         totalAffiliates,
         totalCommission,
+        payoutHistory: payoutHistoryQuery.data?.data ?? [],
+        payoutHistoryLoading: payoutHistoryQuery.isPending,
+        payoutHistoryError: payoutHistoryQuery.isError,
+        retryPayoutHistory: () => void payoutHistoryQuery.refetch(),
         startDate,
         setStartDate,
         endDate,

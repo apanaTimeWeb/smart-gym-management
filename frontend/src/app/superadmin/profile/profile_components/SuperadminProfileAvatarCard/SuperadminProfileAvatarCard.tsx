@@ -4,9 +4,8 @@ import { formatDate, formatDateTime } from '@/lib/formatters';
 // Display-only — no mutations.
 import { ShieldCheck } from 'lucide-react';
 import type { SuperadminProfileData } from '@/app/superadmin/profile/profile_types/SuperadminProfileTypes';
-interface SuperadminProfileAvatarCardProps {
-    profile: SuperadminProfileData;
-}
+import type { SuperadminProfileAvatarCardProps } from '@/app/superadmin/profile/profile_types/SuperadminProfileAvatarCardTypes';
+
 export default function SuperadminProfileAvatarCard({ profile }: SuperadminProfileAvatarCardProps) {
     if (!profile)
         return null;
@@ -19,12 +18,12 @@ export default function SuperadminProfileAvatarCard({ profile }: SuperadminProfi
     const lastLogin = profile.lastLoginAt
         ? formatDateTime(profile.lastLoginAt)
         : 'Unknown';
-    return (<div className="bg-card border border-border rounded-xl p-6 flex flex-col items-center text-center gap-4 shadow-sm">
+    return (<div className="bg-card border border-border rounded-xl p-6 flex flex-col items-center text-center gap-4 shadow-card">
       <div className="w-20 h-20 rounded-full bg-primary-subtle border-2 border-primary flex items-center justify-center">
         <span className="text-2xl font-bold text-primary">{initials}</span>
       </div>
       <div>
-        <h2 className="text-lg font-bold text-foreground">{profile.name}</h2>
+        <h2 className="text-lg font-bold text-primary">{profile.name}</h2>
         <p className="text-sm text-secondary">{profile.email}</p>
       </div>
       <div className="flex items-center gap-2 px-3 py-1.5 bg-primary-subtle rounded-full">
@@ -34,7 +33,7 @@ export default function SuperadminProfileAvatarCard({ profile }: SuperadminProfi
       <div className="w-full border-t border-border pt-4 space-y-2 text-sm">
         <div className="flex justify-between">
           <span className="text-secondary">Last Login</span>
-          <span className="text-foreground">{lastLogin}</span>
+          <span className="text-primary">{lastLogin}</span>
         </div>
         <div className="flex justify-between">
           <span className="text-secondary">2FA</span>
@@ -44,7 +43,7 @@ export default function SuperadminProfileAvatarCard({ profile }: SuperadminProfi
         </div>
         <div className="flex justify-between">
           <span className="text-secondary">Member Since</span>
-          <span className="text-foreground">
+          <span className="text-primary">
             {formatDate(profile.createdAt)}
           </span>
         </div>

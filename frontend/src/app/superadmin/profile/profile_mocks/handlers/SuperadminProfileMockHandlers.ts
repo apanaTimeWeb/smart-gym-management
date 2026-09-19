@@ -4,6 +4,10 @@ import { MOCK_SUPERADMIN_PROFILE } from '@/app/superadmin/profile/profile_mocks/
 import type { ApiResponse } from '@/lib/api';
 const BASE_URL = '*/superadmin/profile';
 let mockProfile: SuperadminProfileData = { ...MOCK_SUPERADMIN_PROFILE };
+
+export function resetSuperadminProfileMockState(): void {
+  mockProfile = { ...MOCK_SUPERADMIN_PROFILE };
+}
 export const superadminProfileHandlers = [
     http.get(BASE_URL, async () => {
         await delay(400);

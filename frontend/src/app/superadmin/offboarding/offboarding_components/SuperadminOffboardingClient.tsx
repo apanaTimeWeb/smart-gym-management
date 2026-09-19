@@ -8,8 +8,8 @@ import SuperadminOffboardingSummaryCards from '@/app/superadmin/offboarding/offb
 import { useSuperadminOffboardingPage } from '@/app/superadmin/offboarding/offboarding_utils/useSuperadminOffboardingPage';
 export default function SuperadminOffboardingClient() {
     // DATA FLOW: API → useSuperadminOffboardingPage → focused child views.
-    const { data, isLoading, isError, refetch } = useSuperadminOffboardingPage();
-    if (isLoading) {
+    const { data, isPending, isError, refetch } = useSuperadminOffboardingPage();
+    if (isPending) {
         return (<div className="space-y-4" aria-busy="true">
         <div className="h-32 rounded-xl bg-skeleton-base motion-safe:animate-pulse"/>
         <div className="h-96 rounded-xl bg-skeleton-base motion-safe:animate-pulse"/>
@@ -20,7 +20,7 @@ export default function SuperadminOffboardingClient() {
   <p className="font-semibold text-danger">
     Offboarding data could not be loaded.
   </p>
-  <button type="button" onClick={() => refetch()} className="mt-3 rounded-md border border-border px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95">
+  <button type="button" onClick={() => refetch()} className="mt-3 rounded-md border border-border px-3 py-2 text-sm text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95">
     Retry
   </button>
         </div>);

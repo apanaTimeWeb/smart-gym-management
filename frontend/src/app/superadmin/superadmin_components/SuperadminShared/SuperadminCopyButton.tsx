@@ -1,17 +1,15 @@
 // RESPONSIBILITY: SuperadminCopyButton.tsx renders an icon-only button that copies a value to the clipboard.
 'use client';
+import type { MouseEvent } from 'react';
 // Uses the Clipboard API exclusively — no prompt() calls allowed (Design Rule 31).
 // Shows a temporary success checkmark for 1.5s after copying.
 import { useState } from 'react';
 import { Copy, Check } from 'lucide-react';
-interface SuperadminCopyButtonProps {
-    value: string;
-    label?: string;
-    className?: string;
-}
+import type { SuperadminCopyButtonProps } from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminCopyButtonTypes';
+
 export default function SuperadminCopyButton({ value, label, className = '', }: SuperadminCopyButtonProps) {
     const [copied, setCopied] = useState(false);
-    const handleCopy = (e: React.MouseEvent) => {
+    const handleCopy = (e: MouseEvent) => {
         // Prevent row-click propagation (Rule 19)
         e.stopPropagation();
         navigator.clipboard.writeText(value).then(() => {

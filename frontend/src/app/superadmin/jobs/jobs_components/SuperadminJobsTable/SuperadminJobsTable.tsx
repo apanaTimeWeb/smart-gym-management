@@ -2,28 +2,19 @@
 'use client';
 // Pure view component — consumes data + callbacks via props (Rule 34). No fetching, no state.
 import { RefreshCw, XCircle, Trash2 } from 'lucide-react';
-import type { BackgroundJob } from '@/app/superadmin/jobs/jobs_types/superadmin_jobs_types';
+import type { BackgroundJob } from '@/app/superadmin/jobs/jobs_types/SuperadminJobsTypes';
 import SuperadminJobsEmptyState from '@/app/superadmin/jobs/jobs_components/SuperadminJobsEmptyState/SuperadminJobsEmptyState';
 import { formatDuration, formatDateTime } from '@/lib/formatters';
+import type { SuperadminJobsTableProps } from '@/app/superadmin/jobs/jobs_types/SuperadminJobsTableTypes';
 /** Maps BackgroundJob status → TailwindCSS color classes */
 const STATUS_STYLES: Record<BackgroundJob['status'], string> = {
     ACTIVE: 'text-primary bg-primary/10',
     COMPLETED: 'text-success bg-success/10',
     FAILED: 'text-danger bg-danger-bg/10',
     DELAYED: 'text-warning bg-warning/10',
-    CANCELLED: 'text-secondary bg-secondary/10',
+    CANCELLED: 'text-secondary bg-surface-highlight',
 };
-interface SuperadminJobsTableProps {
-    jobs: BackgroundJob[];
-    allJobsFiltered: boolean;
-    selectedJobIds: Set<string>;
-    toggleSelection: (id: string) => void;
-    toggleAll: (ids: string[]) => void;
-    onInspect: (job: BackgroundJob) => void;
-    onRetry: (id: string) => void;
-    onCancel: (id: string) => void;
-    onDelete: (id: string) => void;
-}
+
 /**
  * Jobs data table with 7 columns: checkbox, ID, queue, task/error, status, timing, actions.
  * Row click opens the inspect modal via onInspect callback.
@@ -60,7 +51,7 @@ export default function SuperadminJobsTable({ jobs, allJobsFiltered, selectedJob
                 <td className="p-4 text-xs font-mono text-secondary max-w-32 truncate">{job.id}</td>
                 <td className="p-4 text-sm font-medium text-primary">{job.queueName}</td>
                 <td className="p-4 text-sm max-w-sm">
-                  <div className="font-medium text-foreground truncate">{job.jobName}</div>
+                  <div className="font-medium text-primary truncate">{job.jobName}</div>
                   {job.error && (<div className="text-xs text-danger truncate mt-1" title={job.error}>{job.error}</div>)}
                 </td>
                 <td className="p-4">
@@ -74,7 +65,7 @@ export default function SuperadminJobsTable({ jobs, allJobsFiltered, selectedJob
                 <td className="p-4 text-xs text-secondary whitespace-nowrap">
                   <div>Created: {formatDateTime(job.createdAt)}</div>
                   {jobExt.finishedAt && <div>Finished: {formatDateTime(jobExt.finishedAt)}</div>}
-                  <div className="font-mono mt-1 text-foreground">Duration: {formatDuration(jobExt.durationMs)}</div>
+                  <div className="font-mono mt-1 text-primary">Duration: {formatDuration(jobExt.durationMs)}</div>
                 </td>
                 <td className="p-4 text-right" onClick={(e) => e.stopPropagation()}>
                   <div className="flex items-center justify-end gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 motion-safe:transition-opacity">

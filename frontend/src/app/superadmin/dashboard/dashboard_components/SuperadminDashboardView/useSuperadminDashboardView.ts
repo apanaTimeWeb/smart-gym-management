@@ -4,14 +4,21 @@
 // RESPONSIBILITY: Custom hook managing the data fetching for the Dashboard view using TanStack Query.
 import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'next/navigation';
-import { superadminDashboardApi } from '@/app/superadmin/dashboard/dashboard_api/superadmin_dashboard_api';
-import type { TimeRange, SuperadminDashboardApiData } from '@/app/superadmin/dashboard/superadmin_dashboard_types/superadmin_dashboard_types';
+import { superadminDashboardApi } from '@/app/superadmin/dashboard/dashboard_api/SuperadminDashboardApi';
+import type { TimeRange, SuperadminDashboardApiData } from '@/app/superadmin/dashboard/dashboard_types/SuperadminDashboardTypes';
+/**
+ * Purpose: Custom hook managing the data fetching for the Dashboard view using TanStack Query.
+ * Inputs: values defined by the exported hook signature.
+ * Output: the hook's typed state/actions/query contract.
+ * Side effects: remain scoped to the owning feature or approved application infrastructure.
+ * Invariant: does not move feature business state into unrelated modules.
+ */
 export function useSuperadminDashboardView() {
     const searchParams = useSearchParams();
     const timeRange = (searchParams.get('range') as TimeRange) ?? 'this_month';
     const startDate = searchParams.get('startDate') || '';
     const endDate = searchParams.get('endDate') || '';
-    const { data: fetchRes, isLoading, isError } = useQuery({
+    const { data: fetchRes, isPending, isError } = useQuery({
         queryKey: ['superadmin', 'dashboard', timeRange, startDate, endDate],
         queryFn: () => {
             const params: Record<string, string> = { range: timeRange };
@@ -21,12 +28,12 @@ export function useSuperadminDashboardView() {
                 if (endDate)
                     params.endDate = endDate;
             }
-            return superadminDashboardApi.fetchDashboardData(params);
+            return superadminDashboardApi.fetchDashboard(params);
         },
     });
     const apiData = fetchRes?.data;
     return {
-        isLoading,
+        isPending,
         isError,
         apiData,
         timeRange

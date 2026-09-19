@@ -1,16 +1,16 @@
 // RESPONSIBILITY: Renders the Superadmin global-audit V1 Suspicious activity view.
 'use client';
 import { CircleAlert } from 'lucide-react';
-import { getSuperadminStatusBadgeClasses } from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminStatusBadgeConfig';
-import SuperadminV1Panel from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminV1Panel';
+import { getSuperadminGlobalAuditStatusBadgeClasses } from '@/app/superadmin/global-audit/global_audit_utils/SuperadminGlobalAuditStatusBadgeConfig';
+import SuperadminPanel from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPanel';
 import type { SuperadminGlobalAuditV1SectionProps } from '@/app/superadmin/global-audit/global-audit_types/SuperadminGlobalAuditV1Types.ts';
 export default function SuperadminGlobalAuditV1SuspiciousActivityPanel({ data }: SuperadminGlobalAuditV1SectionProps) {
-    return <SuperadminV1Panel title="Suspicious activity" description="Operational patterns worth human review.">
+    return <SuperadminPanel title="Suspicious activity" description="Operational patterns worth human review.">
   <div className="space-y-3">
     {data.anomalies.map((a) => <div key={a.title} className="flex gap-3 rounded-lg border border-border p-3">
-      <CircleAlert size={18} className={getSuperadminStatusBadgeClasses(a.severity)}/>
+      <CircleAlert size={18} className={getSuperadminGlobalAuditStatusBadgeClasses(a.severity)}/>
       <div>
-        <p className="font-medium text-foreground">
+        <p className="font-medium text-primary">
           {a.title}
         </p>
         <p className="mt-1 text-xs text-secondary">
@@ -19,5 +19,5 @@ export default function SuperadminGlobalAuditV1SuspiciousActivityPanel({ data }:
       </div>
     </div>)}
   </div>
-    </SuperadminV1Panel>;
+    </SuperadminPanel>;
 }

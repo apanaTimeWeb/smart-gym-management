@@ -1,3 +1,4 @@
+import { resetSuperadminFranchisesMockState } from '@/app/superadmin/franchises/franchises_mocks/handlers/SuperadminFranchisesMockHandlers';
 // Test: useSuperadminFranchisesPage — covers success, loading, error, empty, and query-key (P1-29)
 import { renderHook } from '@testing-library/react';
 import { useSuperadminFranchisesPage } from '@/app/superadmin/franchises/franchises_utils/useSuperadminFranchisesPage';
@@ -14,7 +15,7 @@ vi.mock('next/navigation', () => ({
     usePathname: vi.fn(() => ''),
     useSearchParams: vi.fn(() => ({ get: vi.fn(), set: vi.fn() })),
 }));
-vi.mock('@/app/superadmin/franchises/superadmin_franchises_api/superadmin_franchises_api', () => ({
+vi.mock('@/app/superadmin/franchises/franchises_api/SuperadminFranchisesApi', () => ({
     franchisesApi: {
         fetchFranchises: vi.fn(),
         createFranchise: vi.fn(),
@@ -24,6 +25,10 @@ vi.mock('react-hot-toast', () => ({
     default: { success: vi.fn(), error: vi.fn() },
 }));
 const mockQueryClient = { invalidateQueries: vi.fn() };
+beforeEach(() => {
+  resetSuperadminFranchisesMockState();
+});
+
 describe('useSuperadminFranchisesPage', () => {
     beforeEach(() => {
         vi.clearAllMocks();
@@ -42,26 +47,26 @@ describe('useSuperadminFranchisesPage', () => {
         ];
         (useQuery as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
             data: { data: mockFranchises },
-            isLoading: false,
+            isPending: false,
             isError: false,
         });
         const { result } = renderHook(() => useSuperadminFranchisesPage());
-        expect(result.current.isLoading).toBe(false);
+        expect(result.current.isPending).toBe(false);
         expect(result.current.franchises).toEqual(mockFranchises);
     });
     it('returns loading state while franchise query is pending', () => {
         (useQuery as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
             data: undefined,
-            isLoading: true,
+            isPending: true,
             isError: false,
         });
         const { result } = renderHook(() => useSuperadminFranchisesPage());
-        expect(result.current.isLoading).toBe(true);
+        expect(result.current.isPending).toBe(true);
     });
     it('returns error state when franchise query fails', () => {
         (useQuery as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
             data: undefined,
-            isLoading: false,
+            isPending: false,
             isError: true,
         });
         const { result } = renderHook(() => useSuperadminFranchisesPage());
@@ -70,16 +75,16 @@ describe('useSuperadminFranchisesPage', () => {
     it('handles empty franchise list gracefully', () => {
         (useQuery as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
             data: { data: [] },
-            isLoading: false,
+            isPending: false,
             isError: false,
         });
         const { result } = renderHook(() => useSuperadminFranchisesPage());
         expect(result.current.franchises).toEqual([]);
-        expect(result.current.isLoading).toBe(false);
+        expect(result.current.isPending).toBe(false);
     });
     it('uses the correct query key for franchise cache isolation', () => {
         (useQuery as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
-            data: null, isLoading: false, isError: false,
+            data: null, isPending: false, isError: false,
         });
         renderHook(() => useSuperadminFranchisesPage());
         expect(useQuery).toHaveBeenCalledWith(expect.objectContaining({

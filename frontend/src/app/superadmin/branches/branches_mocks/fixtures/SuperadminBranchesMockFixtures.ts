@@ -1,4 +1,4 @@
-import type { SuperadminBranch } from '@/app/superadmin/branches/branches_types/superadmin_branches_types';
+import type { SuperadminBranch } from '@/app/superadmin/branches/branches_types/SuperadminBranchesTypes';
 export const MOCK_SUPERADMIN_BRANCHES: SuperadminBranch[] = [
     { id: 'b1', tenantId: 't1', tenantName: 'Iron Paradise', branchName: 'Downtown Main', location: 'Downtown', city: 'Mumbai', state: 'MH', managerName: 'Alice', managerEmail: 'alice@iron.com', phone: '9876543210', status: 'ACTIVE', memberCount: 150, staffCount: 10, monthlyRevenue: 4000, createdAt: '2026-08-01' },
     { id: 'b2', tenantId: 't1', tenantName: 'Iron Paradise', branchName: 'Andheri East', location: 'Andheri East', city: 'Mumbai', state: 'MH', managerName: 'Bob', managerEmail: 'bob@iron.com', phone: '9876543211', status: 'ACTIVE', memberCount: 50, staffCount: 5, monthlyRevenue: 1000, createdAt: '2026-08-10' },

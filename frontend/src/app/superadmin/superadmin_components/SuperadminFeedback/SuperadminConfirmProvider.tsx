@@ -1,18 +1,15 @@
 // DATA FLOW: Superadmin feature action → confirmation context → modal decision → mutation continuation/cancellation.
 // RESPONSIBILITY: Provides a programmatic confirm() API to all SUPERADMIN components via React Context. Renders a single shared SuperadminConfirmModal at the root level. No async data — sync UI state only.
 'use client';
-import React, { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
-import type { SuperadminConfirmContextValue, SuperadminConfirmOptions } from '@/app/superadmin/superadmin_types/SuperadminConfirmTypes';
+import React, { createContext, useContext, useState, useCallback } from 'react';
+import type { SuperadminConfirmContextValue, SuperadminConfirmOptions } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmTypes';
+import type { SuperadminConfirmProviderProps, SuperadminConfirmResolverState } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProviderTypes';
 import SuperadminConfirmModal from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmModal';
 const ConfirmContext = createContext<SuperadminConfirmContextValue | undefined>(undefined);
-export function SuperadminConfirmProvider({ children }: {
-    children: ReactNode;
-}) {
+export function SuperadminConfirmProvider({ children }: SuperadminConfirmProviderProps) {
     const [isOpen, setIsOpen] = useState(false);
     const [options, setOptions] = useState<SuperadminConfirmOptions | null>(null);
-    const [resolver, setResolver] = useState<{
-        resolve: (value: boolean) => void;
-    } | null>(null);
+    const [resolver, setResolver] = useState<SuperadminConfirmResolverState | null>(null);
     const confirm = useCallback((options: SuperadminConfirmOptions) => {
         setOptions(options);
         setIsOpen(true);

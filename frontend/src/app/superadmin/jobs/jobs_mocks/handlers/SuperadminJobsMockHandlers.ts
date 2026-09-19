@@ -1,10 +1,15 @@
 // RESPONSIBILITY: Owns module-specific MSW handlers for Superadmin background-job list and mutation scenarios.
+import { StatusCodes } from 'http-status-codes';
 import { delay, http, HttpResponse } from 'msw';
 import { JobsUrlConfig } from '@/app/superadmin/jobs/superadmin_jobs_url_config';
 import { MOCK_BACKGROUND_JOBS } from '@/app/superadmin/jobs/jobs_mocks/fixtures/SuperadminJobsMockData';
 
 const BASE_URL = `*${JobsUrlConfig.BACKEND_API.BASE}`;
 let mockJobs = [...MOCK_BACKGROUND_JOBS];
+
+export function resetSuperadminJobsMockState(): void {
+  mockJobs = [...MOCK_BACKGROUND_JOBS];
+}
 
 const getPagedResponse = (jobs: typeof mockJobs, request: Request) => {
     const url = new URL(request.url);
@@ -38,7 +43,7 @@ export const superadminJobsHandlers = [
         await delay(250);
         const id = String(params.id);
         const index = mockJobs.findIndex((job) => job.id === id);
-        if (index < 0) return HttpResponse.json({ success: false, message: 'Job not found.', data: null }, { status: 404 });
+        if (index < 0) return HttpResponse.json({ success: false, message: 'Job not found.', data: null }, { status: StatusCodes.NOT_FOUND });
         const job = mockJobs[index]!;
         mockJobs[index] = { ...job, status: 'ACTIVE', attempts: job.attempts + 1 };
         return jsonSuccess('Job queued for retry.', mockJobs[index]);
@@ -47,7 +52,7 @@ export const superadminJobsHandlers = [
         await delay(250);
         const id = String(params.id);
         const index = mockJobs.findIndex((job) => job.id === id);
-        if (index < 0) return HttpResponse.json({ success: false, message: 'Job not found.', data: null }, { status: 404 });
+        if (index < 0) return HttpResponse.json({ success: false, message: 'Job not found.', data: null }, { status: StatusCodes.NOT_FOUND });
         const job = mockJobs[index]!;
         mockJobs[index] = { ...job, status: 'CANCELLED' };
         return jsonSuccess('Job cancelled.', mockJobs[index]);
@@ -56,7 +61,7 @@ export const superadminJobsHandlers = [
         await delay(250);
         const id = String(params.id);
         const exists = mockJobs.some((job) => job.id === id);
-        if (!exists) return HttpResponse.json({ success: false, message: 'Job not found.', data: null }, { status: 404 });
+        if (!exists) return HttpResponse.json({ success: false, message: 'Job not found.', data: null }, { status: StatusCodes.NOT_FOUND });
         mockJobs = mockJobs.filter((job) => job.id !== id);
         return jsonSuccess('Job deleted.', null);
     }),

@@ -1,91 +1,53 @@
-# Background Job Queue Health — Feature Map
+# Superadmin Jobs Queue Health — Feature Map
 
 ## Module Purpose
-This Superadmin-only feature gives platform operators a focused workspace for background job queue health. It exists at `/superadmin/jobs` and is intentionally limited to platform-level tenant/SaaS operations; gym-staff daily operations are outside this boundary. The V1 layer keeps the UI backend-ready by flowing server data through its module API, Zod contract, module-owned MSW fixture/handler, and TanStack Query hook.
+This feature owns the Superadmin business workflow implemented under `jobs/`. The active route is `/superadmin/jobs`. Business behavior, API contracts, validation, server-state hooks, fixtures, MSW handlers, and tests are kept within this feature boundary. Cross-feature business logic is outside this module.
 
 ## Directory Structure
+
 | Folder | Responsibility | Key Files |
 |---|---|---|
-| `jobs/` | Owns this Superadmin route and all feature-specific artifacts. | `page.tsx`, `loading.tsx`, `error.tsx`, `SuperadminJobsV1Client.tsx` |
-| `jobs_api/` | Calls the feature endpoint and validates the response data. | API service for `GET /api/superadmin/jobs/queue-health` |
-| `jobs_types/` | Owns the response data contract and runtime validation. | V1 type/schema file |
-| `jobs_mocks/handlers/` | Intercepts the V1 endpoint in frontend-first development. | V1 MSW handler |
-| `jobs_mocks/fixtures/` | Owns realistic V1 server-like data. | V1 mock fixture |
-| `jobs_utils/` | Orchestrates TanStack Query for this feature. | `useSuperadminJobsV1.ts` |
+| `jobs_api/` | Feature-owned responsibility for jobs api. | `SuperadminJobsApi.ts`, `SuperadminJobsQueueHealthApi.ts` |
+| `jobs_mocks/` | Feature-owned responsibility for jobs mocks. | `(directory present; no direct files)` |
+| `jobs_tests/` | Feature-owned responsibility for jobs tests. | `SuperadminJobsBasic.test.tsx`, `SuperadminJobsQueueHealth.test.ts` |
+| `jobs_types/` | Feature-owned responsibility for jobs types. | `SuperadminJobInspectModalTypes.ts`, `SuperadminJobsEmptyStateTypes.ts`, `SuperadminJobsHeaderTypes.ts`, `SuperadminJobsMutationTypes.ts`, `SuperadminJobsPageTypes.ts`, `SuperadminJobsStatsBarTypes.ts`, `SuperadminJobsTableTypes.ts`, `SuperadminJobsTypes.ts`, `SuperadminJobsV1Types.ts` |
+| `jobs_utils/` | Feature-owned responsibility for jobs utils. | `useSuperadminJobsMutations.ts`, `useSuperadminJobsPage.test.ts`, `useSuperadminJobsPage.ts`, `useSuperadminJobsSelection.ts`, `useSuperadminJobsV1.ts` |
+
+## Approved External Dependencies
+
+### Application Infrastructure
+- `@/app/superadmin/superadmin_components` — role-shell/generic interaction infrastructure only.
+- `@/lib/*` and `@/components/*` — only approved application infrastructure imported by this feature.
+
+### Business Feature Dependencies
+- None
+
+### Role-Level Business Dependencies
+- None
 
 ## Feature Inventory
-| Feature | Route | What the User Can Do | Main API Calls | Status |
+
+| Surface | Route | Implemented User Actions | API Boundary | Status |
 |---|---|---|---|---|
-| Background Job Queue Health | `/superadmin/jobs` | queue health, stuck jobs, recent job failures. | `GET /api/superadmin/jobs/queue-health` | ✅ V1 mocked and rendered |
+| Superadmin Jobs Queue Health | `/superadmin/jobs` | bulk delete; bulk retry; cancel job; clear completed; delete job; retry all; retry job | `SuperadminJobsApi.ts`, `SuperadminJobsQueueHealthApi.ts` | Source-verified; host runtime pending |
 
 ## User Flows & Interactions
-1. Superadmin opens `/superadmin/jobs` and the client view requests the feature payload through `useSuperadminJobsV1.ts`.
-2. TanStack Query receives the module API response and renders the documented panels, metrics, comparisons, charts, tables, and/or alerts.
-3. The module fixture supplies realistic values for the visible UI while the backend is unavailable.
-4. A request failure stays inside the module and exposes a user-safe Retry action rather than a raw backend error.
 
-## Data and State Architecture
-- **Server state:** TanStack Query; no API response data is stored in Zustand or React Context.
-- **UI state:** local component state only where the feature has private display state; shared UI state stays module-scoped if added later.
-- **Query key:** feature hook owns a Superadmin-namespaced query key.
-- **Mock ownership:** fixture and MSW handler both remain inside `jobs/`.
+1. Open the active route and load the feature-owned query/API boundary.
+2. Apply the available search, filter, sort, pagination, form, or row actions exposed by the current client surface.
+3. Mutations go through feature-owned API contracts and, in MSW mode, feature-owned handlers/fixtures.
+4. Success/error state is reconciled back into the same feature surface.
 
-## API Contract
-All calls use the global transport `@/lib/api` and the feature URL config.
+## Verification Notes
+- Active route pages mount one primary client tree; no `V1Client` import is mounted from route `page.tsx`.
+- Mutable mock-state handlers have reset functions covered by tests where present.
+- Deprecated marker-only and JSON-stringify tautology tests were removed from the module test tree.
+- Dependency-backed `tsc`, lint, Vitest runtime, Playwright, and real browser responsive execution require the host application environment and remain unverified here.
 
-| Function | Method | Endpoint | Request | Response `data` type |
-|---|---|---|---|---|
-| `fetchJobsQueueHealth` | GET | `GET /api/superadmin/jobs/queue-health` | None in V1 | Module V1 data schema |
-
-The V1 handler returns the canonical flat `ApiResponse<T>` payload. Response data is validated at the API boundary using the module-owned Zod schema.
-
-## UI Data Requirements
-| UI Data | Source | Validation/Mock Ownership |
-|---|---|---|
-| `data.summary` | GET /api/superadmin/jobs/queue-health | Module-owned Zod contract + MSW fixture |
-| `data.waiting` | GET /api/superadmin/jobs/queue-health | Module-owned Zod contract + MSW fixture |
-| `data.running` | GET /api/superadmin/jobs/queue-health | Module-owned Zod contract + MSW fixture |
-| `data.failed24h` | GET /api/superadmin/jobs/queue-health | Module-owned Zod contract + MSW fixture |
-| `data.deadLetter` | GET /api/superadmin/jobs/queue-health | Module-owned Zod contract + MSW fixture |
-| `data.oldestWaitingMinutes` | GET /api/superadmin/jobs/queue-health | Module-owned Zod contract + MSW fixture |
-| `data.queues` | GET /api/superadmin/jobs/queue-health | Module-owned Zod contract + MSW fixture |
-| `data.name` | GET /api/superadmin/jobs/queue-health | Module-owned Zod contract + MSW fixture |
-| `data.recentFailures` | GET /api/superadmin/jobs/queue-health | Module-owned Zod contract + MSW fixture |
-| `data.job` | GET /api/superadmin/jobs/queue-health | Module-owned Zod contract + MSW fixture |
-| `data.tenant` | GET /api/superadmin/jobs/queue-health | Module-owned Zod contract + MSW fixture |
-| `data.time` | GET /api/superadmin/jobs/queue-health | Module-owned Zod contract + MSW fixture |
-| `data.reason` | GET /api/superadmin/jobs/queue-health | Module-owned Zod contract + MSW fixture |
-| `data.message` | GET /api/superadmin/jobs/queue-health | Module-owned Zod contract + MSW fixture |
-| `data.success` | GET /api/superadmin/jobs/queue-health | Module-owned Zod contract + MSW fixture |
-
-The consuming component is the source for the exact rendered sub-fields. V1 business values are not embedded in JSX.
-
-## Permissions and Security
-- **Required role:** `SUPERADMIN`, with backend authorization remaining authoritative.
-- **Cross-role isolation:** no Admin, Manager, Trainer, or other business-role implementation is imported.
-- **Financial/destructive controls:** any future mutation must use the existing Superadmin confirmation contract and authoritative backend response.
-- **Sensitive data:** user-facing identifiers and long dynamic text must follow the existing Superadmin masking/truncation rules.
-
-## Loading, Empty, and Error States
-- **Loading:** route `loading.tsx` or V1 client structural skeleton mirrors the major content blocks rather than using a full-page spinner.
-- **Error:** route `error.tsx` and/or V1 client retry state shows a concise user-safe explanation and Retry action.
-- **Empty:** entity/list sections use the module's existing empty-state pattern where applicable.
-
-## Edge Cases and AI Warnings
-- **Do not hardcode server records in JSX:** all business data belongs to the API contract and module-owned fixture.
-- **Do not import sibling business logic:** duplicate small domain contracts locally rather than creating cross-module coupling.
-- **Do not bypass the module API:** UI must not read fixtures directly.
-- **Keep response shape flat:** V1 handlers return `ApiResponse<T>` with the V1 data object directly under `data`.
-- **Keep user-facing terms simple:** technical SaaS abbreviations should remain internal; display plain labels such as `Monthly income`, `Gym retention`, and `Income lost`.
-- **Keep documentation fresh:** update this feature map when the route, endpoint, UI fields, or flow changes.
-
-## Component Responsibility Map
-| Component | Responsibility |
-|---|---|
-| `SuperadminJobsV1Client.tsx` | Renders the Superadmin-only feature view and consumes the query state. |
-| `useSuperadminJobsV1.ts` | Owns TanStack Query orchestration and exposes server state without JSX. |
-
-## External Infrastructure Dependencies
-- `@/lib/api` — global API transport.
-- `@/lib/formatters` — centralized numeric/date/currency formatting where needed.
-- Existing Superadmin shared presentation primitives and authentication infrastructure.
+## Rule Compliance Checklist
+- [x] Canonical feature-owned API/type directories are used.
+- [x] No active route page mounts a parallel `V1Client` tree.
+- [x] Module-owned mock reset coverage is present where mutable handlers exist.
+- [x] Feature docs contain a concrete directory map and compliance checklist.
+- [x] No marker-only or JSON-stringify tautology test remains.
+- [ ] Host dependency-backed build/lint/runtime verification — unavailable in source-only package.

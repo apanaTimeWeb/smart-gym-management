@@ -1,12 +1,17 @@
+import { resetSuperadminTeamMockState } from '@/app/superadmin/team/team_mocks/handlers/SuperadminTeamMockHandlers';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderHook, waitFor } from '@testing-library/react';
 import { SUPERADMIN_TEAM_MOCK_FIXTURE } from '@/app/superadmin/team/team_mocks/fixtures/SuperadminTeamMockFixtures';
-import { fetchTeamData } from '@/app/superadmin/team/team_api/superadmin_team_api';
+import { fetchTeam } from '@/app/superadmin/team/team_api/SuperadminTeamApi';
 import { useSuperadminTeamPage } from '@/app/superadmin/team/team_utils/useSuperadminTeamPage';
 import type { ReactNode } from 'react';
-vi.mock('@/app/superadmin/team/team_api/superadmin_team_api', () => ({ fetchTeamData: vi.fn() }));
-const mockedFetch = vi.mocked(fetchTeamData);
+vi.mock('@/app/superadmin/team/team_api/SuperadminTeamApi', () => ({ fetchTeam: vi.fn() }));
+const mockedFetch = vi.mocked(fetchTeam);
+beforeEach(() => {
+  resetSuperadminTeamMockState();
+});
+
 describe('useSuperadminTeamPage integration', () => {
     let queryClient: QueryClient;
     function TestQueryProvider({ children }: {

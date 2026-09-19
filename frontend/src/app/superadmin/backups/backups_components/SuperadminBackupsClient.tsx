@@ -1,13 +1,13 @@
 // RESPONSIBILITY: SuperadminBackupsClient.tsx renders the Database Backups page. Purely a view layer — backup data is fetched via useSuperadminBackupsData and rendered from query state.
 'use client';
-import * as backupsApi from '@/app/superadmin/backups/superadmin_backups_api/superadmin_backups_api';
 import { useSuperadminBackupsData } from '@/app/superadmin/backups/backups_utils/useSuperadminBackupsData';
 import SuperadminBackupsScheduleModal from '@/app/superadmin/backups/backups_components/SuperadminBackupsScheduleModal';
 import { DatabaseBackup, Search, Clock } from 'lucide-react';
-import type { BackupRecord } from '@/app/superadmin/backups/superadmin_backups_types/superadmin_backups_types';
+import type { BackupRecord } from '@/app/superadmin/backups/backups_types/SuperadminBackupsTypes';
 import { useState } from 'react';
+import { useSuperadminBackupsActions } from '@/app/superadmin/backups/backups_utils/useSuperadminBackupsActions';
 import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
-import { useSuperadminUrlState } from '@/app/superadmin/superadmin_utils/useSuperadminUrlState';
+import { useSuperadminUrlState } from '@/app/superadmin/superadmin_infrastructure/useSuperadminUrlState';
 // Rule 10: Absolute imports only — no relative paths allowed
 import SuperadminBackupsTable from '@/app/superadmin/backups/backups_components/SuperadminBackupsTable';
 import SuperadminBackupsRestoreModal from '@/app/superadmin/backups/backups_components/SuperadminBackupsRestoreModal';
@@ -33,7 +33,7 @@ export default function SuperadminBackupsClient() {
         ...(typeFilter !== 'ALL' && { type: typeFilter }),
     };
     const { data: backups, total, totalPages } = useSuperadminBackupsData(queryParams);
-    const [isTriggering, setIsTriggering] = useState(false);
+    const { downloadBackup, isTriggering } = useSuperadminBackupsActions();
     const [triggerModalOpen, setTriggerModalOpen] = useState(false);
     const [scheduleModalOpen, setScheduleModalOpen] = useState(false);
     const [restoreModalOpen, setRestoreModalOpen] = useState(false);
@@ -48,25 +48,25 @@ export default function SuperadminBackupsClient() {
     return (<div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Tenant Database Backups</h1>
+          <h1 className="text-2xl font-bold text-primary">Tenant Database Backups</h1>
           <p className="text-secondary mt-1 text-sm">Manage automated pg_dump snapshots for all isolated gym databases.</p>
         </div>
         <div className="flex items-center gap-2">
-          <button onClick={() => setScheduleModalOpen(true)} className="bg-input text-foreground px-4 py-2 rounded-lg font-medium hover:bg-border motion-safe:transition-colors border border-border flex items-center gap-2">
+          <button onClick={() => setScheduleModalOpen(true)} className="bg-input text-primary px-4 py-2 rounded-lg font-medium hover:bg-border motion-safe:transition-colors border border-border flex items-center gap-2">
             <Clock className="w-4 h-4"/> Configure Schedule
           </button>
-          <button onClick={() => setTriggerModalOpen(true)} disabled={isTriggering} className="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-hover motion-safe:transition-colors flex items-center gap-2 disabled:opacity-50">
+          <button onClick={() => setTriggerModalOpen(true)} disabled={isTriggering} className="bg-primary text-on-primary px-4 py-2 rounded-lg font-medium hover:bg-primary-hover motion-safe:transition-colors flex items-center gap-2 disabled:opacity-50">
             <DatabaseBackup className="w-4 h-4"/> {isTriggering ? 'Creating Snapshot...' : 'Global Snapshot'}
           </button>
         </div>
       </div>
 
       <SuperadminErrorBoundary variant="inline">
-        <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden flex flex-col min-h-96">
+        <div className="bg-card border border-border rounded-xl shadow-card overflow-hidden flex flex-col min-h-96">
         <div className="p-4 border-b border-border flex flex-col sm:flex-row gap-4 justify-between items-center">
           <div className="relative w-full max-w-md">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary"/>
-            <input type="text" placeholder="Search by gym name or database..." className="w-full pl-9 pr-4 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary" value={search} onChange={(e) => {
+            <input type="text" placeholder="Search by gym name or database..." className="w-full pl-9 pr-4 py-2 bg-input border border-border rounded-lg text-sm text-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary" value={search} onChange={(e) => {
             setSearch(e.target.value);
         }}/>
           </div>
@@ -89,17 +89,14 @@ export default function SuperadminBackupsClient() {
           </div>
         </div>
 
-        <SuperadminBackupsTable paginatedBackups={paginatedBackups} filteredLength={filtered.length} handleDownload={async (id: string) => { const response = await backupsApi.fetchBackupDownloadUrl(id); if (response.data?.downloadUrl) window.location.assign(response.data.downloadUrl); }} handleRestoreClick={handleRestoreClick}/>
+        <SuperadminBackupsTable paginatedBackups={paginatedBackups} filteredLength={filtered.length} handleDownload={(id: string) => { void downloadBackup(id); }} handleRestoreClick={handleRestoreClick}/>
         <SuperadminPagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage}/>
         </div>
       </SuperadminErrorBoundary>
 
-      <SuperadminBackupsRestoreModal isOpen={restoreModalOpen} onClose={() => setRestoreModalOpen(false)} selectedBackup={selectedBackup} restoreConfirmText={restoreConfirmText} setRestoreConfirmText={setRestoreConfirmText} onSuccess={() => {
-            setSelectedBackup(null);
-            setRestoreConfirmText('');
-        }}/>
+      <SuperadminBackupsRestoreModal isOpen={restoreModalOpen} onClose={() => { setRestoreModalOpen(false); setSelectedBackup(null); }} selectedBackup={selectedBackup} restoreConfirmText={restoreConfirmText} setRestoreConfirmText={setRestoreConfirmText}/>
 
-      <SuperadminBackupsTriggerModal isOpen={triggerModalOpen} onClose={() => setTriggerModalOpen(false)} isTriggering={isTriggering} setIsTriggering={setIsTriggering}/>
+      <SuperadminBackupsTriggerModal isOpen={triggerModalOpen} onClose={() => setTriggerModalOpen(false)}/>
 
       <SuperadminBackupsScheduleModal isOpen={scheduleModalOpen} onClose={() => setScheduleModalOpen(false)}/>
     </div>);

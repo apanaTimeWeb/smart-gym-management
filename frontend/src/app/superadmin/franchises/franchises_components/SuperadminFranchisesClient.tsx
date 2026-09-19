@@ -5,13 +5,13 @@ import { useState } from 'react';
 import { Network, Users, TrendingUp, Search, CheckCircle2, AlertTriangle, Building2, Edit2 } from 'lucide-react';
 import { useSuperadminFranchisesPage } from '@/app/superadmin/franchises/franchises_utils/useSuperadminFranchisesPage';
 import { SuperadminFranchiseModal } from '@/app/superadmin/franchises/franchises_components/SuperadminFranchiseModal/SuperadminFranchiseModal';
-import type { FranchiseFormData } from '@/app/superadmin/franchises/franchises_components/SuperadminFranchiseModal/SuperadminFranchiseModal';
+import type { FranchiseFormData } from '@/app/superadmin/franchises/franchises_types/SuperadminFranchiseModalTypes';
 import { FRANCHISE_STATUS_STYLES, FRANCHISES_PAGE_SIZE } from '@/app/superadmin/franchises/franchises_utils/SuperadminFranchisesConstants';
-import type { SuperadminFranchise } from '@/app/superadmin/franchises/franchises_types/superadmin_franchises_types';
+import type { SuperadminFranchise } from '@/app/superadmin/franchises/franchises_types/SuperadminFranchisesTypes';
 import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
-import { formatCurrency, formatNumber } from '@/lib/formatters';
+import { maskSensitiveData, formatCurrency, formatNumber } from '@/lib/formatters';
 export default function SuperadminFranchisesClient() {
-    const { franchises, isLoading, isError: error, search, setSearch, currentPage, pageLimit, setPage, total, handleSuspend, handleActivate, handleEdit, isEditing } = useSuperadminFranchisesPage();
+    const { franchises, isPending, isError: error, search, setSearch, currentPage, pageLimit, setPage, total, handleSuspend, handleActivate, handleEdit, isEditing } = useSuperadminFranchisesPage();
     const [editingFranchise, setEditingFranchise] = useState<SuperadminFranchise | null>(null);
     const { confirm } = useSuperadminConfirm();
     const onSuspendClick = async (id: string) => {
@@ -33,7 +33,7 @@ export default function SuperadminFranchisesClient() {
         { label: 'Total Members', value: formatNumber(franchises.reduce((s, f) => s + f.totalMembers, 0)), icon: Users, color: 'text-warning', bg: 'bg-warning/10' },
         { label: 'Combined Monthly Income', value: formatCurrency(franchises.reduce((s, f) => s + f.totalMonthlyRevenue, 0)), icon: TrendingUp, color: 'text-success', bg: 'bg-success/10' },
     ];
-    if (isLoading) {
+    if (isPending) {
         return (<div className="space-y-6">
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
           {[...Array(5)].map((_, i) => (<div key={`sk-${i}`} className="h-24 bg-skeleton-base motion-safe:animate-pulse rounded-xl border border-border"/>))}
@@ -43,7 +43,7 @@ export default function SuperadminFranchisesClient() {
     }
     return (<div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-foreground">Franchises</h1>
+        <h1 className="text-2xl font-bold text-primary">Franchises</h1>
         <p className="text-secondary mt-1 text-sm">Multi-branch franchise networks across the platform.</p>
       </div>
 
@@ -51,12 +51,12 @@ export default function SuperadminFranchisesClient() {
       <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
         {kpis.map((k) => {
             const Icon = k.icon;
-            return (<div key={k.label} className="bg-card border border-border rounded-xl p-4 shadow-sm motion-safe:hover:-translate-y-1 motion-safe:transition-all motion-safe:duration-base bg-gradient-to-b from-warning-bg to-transparent">
+            return (<div key={k.label} className="bg-card border border-border rounded-xl p-4 shadow-card motion-safe:hover:-translate-y-1 motion-safe:transition-all motion-safe:duration-base">
               <div className={`w-8 h-8 rounded-lg ${k.bg} flex items-center justify-center mb-3`}>
                 <Icon className={`w-5 h-5 ${k.color}`} strokeWidth={2}/>
               </div>
               <p className="text-xs text-secondary uppercase tracking-wider mb-1">{k.label}</p>
-              <p className="text-xl font-bold text-foreground">{k.value}</p>
+              <p className="text-xl font-bold text-primary">{k.value}</p>
             </div>);
         })}
       </div>
@@ -64,11 +64,11 @@ export default function SuperadminFranchisesClient() {
       {/* Search */}
       <div className="relative max-w-sm">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary"/>
-        <input type="text" placeholder="Search franchise, owner, city..." value={search} onChange={(e) => { setSearch(e.target.value); }} className="w-full pl-9 pr-4 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary"/>
+        <input type="text" placeholder="Search franchise, owner, city..." value={search} onChange={(e) => { setSearch(e.target.value); }} className="w-full pl-9 pr-4 py-2 bg-input border border-border rounded-lg text-sm text-primary focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary"/>
       </div>
 
       {/* Table */}
-      <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
+      <div className="bg-card border border-border rounded-xl shadow-card overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
@@ -79,20 +79,20 @@ export default function SuperadminFranchisesClient() {
             <tbody className="divide-y divide-border">
               {paginated.map((f: SuperadminFranchise) => (<tr key={f.id} className="hover:bg-input/30 motion-safe:transition-colors">
                   <td className="px-4 py-3">
-                    <p className="font-medium text-foreground">{f.franchiseName}</p>
+                    <p className="font-medium text-primary">{f.franchiseName}</p>
                     <p className="text-xs text-secondary">{f.city}, {f.state}</p>
                   </td>
                   <td className="px-4 py-3">
-                    <p className="text-foreground text-xs">{f.ownerName}</p>
-                    <p className="text-secondary text-xs">{f.ownerEmail}</p>
+                    <p className="text-primary text-xs">{f.ownerName}</p>
+                    <p className="text-secondary text-xs">{maskSensitiveData(f.ownerEmail, 'email')}</p>
                   </td>
                   <td className="px-4 py-3">
                     <span className="inline-flex px-2 py-0.5 rounded-full text-xs font-semibold bg-primary-subtle text-primary border border-primary/20">
                       {f.plan}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-foreground font-medium">{f.branchCount}</td>
-                  <td className="px-4 py-3 text-foreground font-medium">{formatNumber(f.totalMembers)}</td>
+                  <td className="px-4 py-3 text-primary font-medium">{f.branchCount}</td>
+                  <td className="px-4 py-3 text-primary font-medium">{formatNumber(f.totalMembers)}</td>
                   <td className="px-4 py-3 text-success font-medium">{formatCurrency(f.totalMonthlyRevenue)}</td>
                   <td className="px-4 py-3">
                     <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-semibold ${FRANCHISE_STATUS_STYLES[f.status] ?? ''}`}>
@@ -126,8 +126,8 @@ export default function SuperadminFranchisesClient() {
               Showing {(currentPage - 1) * pageLimit + 1}–{Math.min(currentPage * pageLimit, total)} of {total}
             </p>
             <div className="flex gap-2">
-              <button onClick={() => setPage(Math.max(1, currentPage - 1))} disabled={currentPage === 1} className="px-3 py-1.5 rounded-lg bg-input border border-border text-xs text-secondary disabled:opacity-40 hover:text-foreground motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">Previous</button>
-              <button onClick={() => setPage(Math.min(totalPages, currentPage + 1))} disabled={currentPage === totalPages} className="px-3 py-1.5 rounded-lg bg-input border border-border text-xs text-secondary disabled:opacity-40 hover:text-foreground motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">Next</button>
+              <button onClick={() => setPage(Math.max(1, currentPage - 1))} disabled={currentPage === 1} className="px-3 py-1.5 rounded-lg bg-input border border-border text-xs text-secondary disabled:opacity-40 hover:text-primary motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">Previous</button>
+              <button onClick={() => setPage(Math.min(totalPages, currentPage + 1))} disabled={currentPage === totalPages} className="px-3 py-1.5 rounded-lg bg-input border border-border text-xs text-secondary disabled:opacity-40 hover:text-primary motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">Next</button>
             </div>
           </div>)}
       </div>

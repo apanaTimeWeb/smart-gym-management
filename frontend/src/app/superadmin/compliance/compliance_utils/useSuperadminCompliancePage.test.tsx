@@ -2,11 +2,11 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderHook, waitFor } from '@testing-library/react';
 import { SUPERADMIN_COMPLIANCE_MOCK_FIXTURE } from '@/app/superadmin/compliance/compliance_mocks/fixtures/SuperadminComplianceMockFixtures';
-import { fetchComplianceData } from '@/app/superadmin/compliance/compliance_api/superadmin_compliance_api';
+import { fetchComplianceOverview } from '@/app/superadmin/compliance/compliance_api/SuperadminComplianceApi';
 import { useSuperadminCompliancePage } from '@/app/superadmin/compliance/compliance_utils/useSuperadminCompliancePage';
 import type { ReactNode } from 'react';
-vi.mock('@/app/superadmin/compliance/compliance_api/superadmin_compliance_api', () => ({ fetchComplianceData: vi.fn() }));
-const mockedFetch = vi.mocked(fetchComplianceData);
+vi.mock('@/app/superadmin/compliance/compliance_api/SuperadminComplianceApi', () => ({ fetchComplianceOverview: vi.fn() }));
+const mockedFetch = vi.mocked(fetchComplianceOverview);
 describe('useSuperadminCompliancePage integration', () => {
     let queryClient: QueryClient;
     function TestQueryProvider({ children }: {

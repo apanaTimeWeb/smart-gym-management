@@ -1,11 +1,9 @@
 // RESPONSIBILITY: Renders the Reports Date Preset Dropdown component and its associated UI logic.
 'use client';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
-export type DatePreset = 'THIS_MONTH' | 'LAST_MONTH' | 'LAST_3_MONTHS' | 'LAST_6_MONTHS' | 'THIS_YEAR' | 'CUSTOM';
-interface SuperadminReportsDatePresetDropdownProps {
-    value: DatePreset;
-    onChange: (preset: DatePreset, dateFrom: string, dateTo: string) => void;
-}
+import type { DatePreset, SuperadminReportsDatePresetDropdownProps } from '@/app/superadmin/reports/reports_types/SuperadminReportsDatePresetDropdownTypes';
+
+
 export function SuperadminReportsDatePresetDropdown({ value, onChange }: SuperadminReportsDatePresetDropdownProps) {
     const handlePresetChange = (preset: string) => {
         const today = new Date();
@@ -46,7 +44,9 @@ export function SuperadminReportsDatePresetDropdown({ value, onChange }: Superad
         { value: 'THIS_YEAR', label: 'This Year' },
         { value: 'CUSTOM', label: 'Custom Range' },
     ];
-    return (<div className="w-48 bg-input border border-border rounded-lg shadow-sm">
+    return (<div className="w-48 bg-input border border-border rounded-lg shadow-card">
       <SearchableDropdown options={OPTIONS} value={value} onChange={(val) => handlePresetChange(String(val))} className="bg-transparent border-transparent"/>
     </div>);
 }
+
+export type { DatePreset } from '@/app/superadmin/reports/reports_types/SuperadminReportsDatePresetDropdownTypes';

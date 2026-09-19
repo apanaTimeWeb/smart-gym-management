@@ -6,7 +6,7 @@ export default function SuperadminBackupsEmptyState() {
       <div className="w-16 h-16 rounded-full bg-card border border-border flex items-center justify-center mb-4">
         <DatabaseBackup className="w-8 h-8 text-secondary opacity-50"/>
       </div>
-      <h3 className="text-base font-semibold text-foreground">No Backups Found</h3>
+      <h3 className="text-base font-semibold text-primary">No Backups Found</h3>
       <p className="text-sm text-secondary mt-1 max-w-xs">There are no backups available for this instance yet.</p>
     </div>);
 }

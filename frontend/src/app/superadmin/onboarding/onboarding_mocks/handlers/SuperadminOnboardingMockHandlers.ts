@@ -1,9 +1,14 @@
+import { StatusCodes } from 'http-status-codes';
 import { http, HttpResponse, delay } from 'msw';
-import type { TenantOnboarding } from '@/app/superadmin/onboarding/onboarding_types/superadmin_onboarding_types';
+import type { TenantOnboarding } from '@/app/superadmin/onboarding/onboarding_types/SuperadminOnboardingTypes';
 import type { ApiResponse } from '@/lib/api';
 import { MOCK_SUPERADMIN_ONBOARDINGS } from '@/app/superadmin/onboarding/onboarding_mocks/fixtures/SuperadminOnboardingMockFixtures';
 const BASE_URL = '*/api/v1/superadmin/onboarding';
 let mockOnboardings = [...MOCK_SUPERADMIN_ONBOARDINGS];
+
+export function resetSuperadminOnboardingMockState(): void {
+  mockOnboardings = [...MOCK_SUPERADMIN_ONBOARDINGS];
+}
 export const superadminOnboardingHandlers = [
     http.get(BASE_URL, async ({ request }) => {
         await delay(400);
@@ -46,7 +51,7 @@ export const superadminOnboardingHandlers = [
             return t;
         });
         if (!updated) {
-            return HttpResponse.json<ApiResponse<TenantOnboarding>>({ success: false, message: 'Not found', data: null }, { status: 404 });
+            return HttpResponse.json<ApiResponse<TenantOnboarding>>({ success: false, message: 'Not found', data: null }, { status: StatusCodes.NOT_FOUND });
         }
         return HttpResponse.json<ApiResponse<TenantOnboarding>>({
             success: true,
@@ -66,7 +71,7 @@ export const superadminOnboardingHandlers = [
             return t;
         });
         if (!updated) {
-            return HttpResponse.json<ApiResponse<TenantOnboarding>>({ success: false, message: 'Not found', data: null }, { status: 404 });
+            return HttpResponse.json<ApiResponse<TenantOnboarding>>({ success: false, message: 'Not found', data: null }, { status: StatusCodes.NOT_FOUND });
         }
         return HttpResponse.json<ApiResponse<TenantOnboarding>>({
             success: true,
@@ -89,7 +94,7 @@ export const superadminOnboardingHandlers = [
             return t;
         });
         if (!updated) {
-            return HttpResponse.json<ApiResponse<TenantOnboarding>>({ success: false, message: 'Not found', data: null }, { status: 404 });
+            return HttpResponse.json<ApiResponse<TenantOnboarding>>({ success: false, message: 'Not found', data: null }, { status: StatusCodes.NOT_FOUND });
         }
         return HttpResponse.json<ApiResponse<TenantOnboarding>>({
             success: true,
@@ -109,7 +114,7 @@ export const superadminOnboardingHandlers = [
             return t;
         });
         if (!updated) {
-            return HttpResponse.json<ApiResponse<TenantOnboarding>>({ success: false, message: 'Not found', data: null }, { status: 404 });
+            return HttpResponse.json<ApiResponse<TenantOnboarding>>({ success: false, message: 'Not found', data: null }, { status: StatusCodes.NOT_FOUND });
         }
         return HttpResponse.json<ApiResponse<TenantOnboarding>>({
             success: true,

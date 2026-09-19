@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Static filter options and pagination configuration for Global Audit.
-import type { AuditActorFilter, AuditSeverityFilter } from '@/app/superadmin/global-audit/superadmin_global-audit_types/superadmin_global-audit_types';
+import type { AuditActorFilter, AuditSeverityFilter } from '@/app/superadmin/global-audit/global-audit_types/SuperadminGlobalAuditTypes';
 export const SUPERADMIN_AUDIT_PAGE_SIZE = 20;
 export const SUPERADMIN_AUDIT_SEVERITY_OPTIONS: Array<{
     value: AuditSeverityFilter;

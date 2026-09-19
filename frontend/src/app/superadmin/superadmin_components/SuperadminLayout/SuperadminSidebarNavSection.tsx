@@ -3,19 +3,10 @@
 import type { LucideIcon } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import SuperadminSidebarNavItem from '@/app/superadmin/superadmin_components/SuperadminLayout/SuperadminSidebarNavItem';
-interface NavItem {
-    name: string;
-    href: string;
-    icon: LucideIcon;
-}
-interface NavGroup {
-    group: string;
-    items: NavItem[];
-}
-interface SuperadminSidebarNavSectionProps {
-    navGroups: NavGroup[];
-    isCollapsed: boolean;
-}
+import type { NavItem, NavGroup, SuperadminSidebarNavSectionProps } from '@/app/superadmin/superadmin_components/SuperadminLayout/SuperadminSidebarNavSectionTypes';
+
+
+
 export default function SuperadminSidebarNavSection({ navGroups, isCollapsed }: SuperadminSidebarNavSectionProps) {
     const pathname = usePathname();
     if (navGroups.length === 0) {

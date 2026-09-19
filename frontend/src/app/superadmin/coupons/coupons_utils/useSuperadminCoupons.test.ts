@@ -1,3 +1,4 @@
+import { resetSuperadminCouponsMockState } from '@/app/superadmin/coupons/coupons_mocks/handlers/SuperadminCouponsMockHandlers';
 // Test: useSuperadminCoupons — covers success, loading, error, empty, mutation cache-update (P1-29)
 import { renderHook } from '@testing-library/react';
 import { useSuperadminCoupons } from '@/app/superadmin/coupons/coupons_utils/useSuperadminCoupons';
@@ -13,7 +14,7 @@ vi.mock('next/navigation', () => ({
     usePathname: vi.fn(() => ''),
     useSearchParams: vi.fn(() => ({ get: vi.fn(), set: vi.fn() })),
 }));
-vi.mock('@/app/superadmin/coupons/superadmin_coupons_api/superadmin_coupons_api', () => ({
+vi.mock('@/app/superadmin/coupons/coupons_api/SuperadminCouponsApi', () => ({
     couponsApi: {
         fetchCoupons: vi.fn(),
         createCoupon: vi.fn(),
@@ -25,6 +26,10 @@ const mockQueryClient = {
     invalidateQueries: vi.fn(),
     setQueryData: vi.fn(),
 };
+beforeEach(() => {
+  resetSuperadminCouponsMockState();
+});
+
 describe('useSuperadminCoupons', () => {
     beforeEach(() => {
         vi.clearAllMocks();
@@ -73,7 +78,7 @@ describe('useSuperadminCoupons', () => {
     });
     it('uses the correct query key for cache isolation', () => {
         (useQuery as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
-            data: null, isLoading: false, isError: false,
+            data: null, isPending: false, isError: false,
         });
         renderHook(() => useSuperadminCoupons());
         expect(useQuery).toHaveBeenCalledWith(expect.objectContaining({

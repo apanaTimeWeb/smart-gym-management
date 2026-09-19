@@ -1,8 +1,8 @@
-import type { Coupon } from '@/app/superadmin/coupons/superadmin_coupons_types/superadmin_coupons_types';
+import type { Coupon } from '@/app/superadmin/coupons/coupons_types/SuperadminCouponsTypes';
 
 export const MOCK_SUPERADMIN_COUPONS: Coupon[] = [
-    { id: 'c1', code: 'WELCOME50', discountType: 'PERCENTAGE', discountValue: 50, maxUses: 100, currentUses: 45, status: 'ACTIVE', expiryDate: '2026-10-31', isDeleted: false },
-    { id: 'c2', code: 'PRO500', discountType: 'EXACT', discountValue: 500, maxUses: 50, currentUses: 20, status: 'ACTIVE', expiryDate: '2026-09-30', isDeleted: false },
+    { id: 'c1', code: 'WELCOME50', discountType: 'PERCENTAGE', discountValue: 50, maxUses: 100, currentUses: 2, status: 'ACTIVE', expiryDate: '2026-10-31', isDeleted: false, redemptions: [{ id: 'r1', tenantName: 'Iron Paradise', redeemedAt: '2026-09-16T10:00:00.000Z', planName: 'PRO', discountApplied: 7500 }, { id: 'r2', tenantName: 'Fit Life Studio', redeemedAt: '2026-09-15T12:30:00.000Z', planName: 'BASIC', discountApplied: 5000 }] },
+    { id: 'c2', code: 'PRO500', discountType: 'EXACT', discountValue: 500, maxUses: 50, currentUses: 1, status: 'ACTIVE', expiryDate: '2026-09-30', isDeleted: false, redemptions: [{ id: 'r3', tenantName: 'CrossFit Box', redeemedAt: '2026-09-14T09:00:00.000Z', planName: 'PRO', discountApplied: 500 }] },
     { id: 'c3', code: 'SUMMER20', discountType: 'PERCENTAGE', discountValue: 20, maxUses: 200, currentUses: 10, status: 'EXPIRED', expiryDate: '2026-08-15', isDeleted: false },
     { id: 'c4', code: 'FULLYEAR10', discountType: 'PERCENTAGE', discountValue: 10, maxUses: 75, currentUses: 0, status: 'INACTIVE', expiryDate: '2026-12-31', isDeleted: false },
     { id: 'c5', code: 'ENTERPRISE25', discountType: 'PERCENTAGE', discountValue: 25, maxUses: 25, currentUses: 25, status: 'DEPLETED', expiryDate: '2026-10-15', isDeleted: false },

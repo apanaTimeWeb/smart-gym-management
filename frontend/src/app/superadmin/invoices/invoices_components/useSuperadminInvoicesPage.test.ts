@@ -1,3 +1,4 @@
+import { resetSuperadminInvoicesMockState } from '@/app/superadmin/invoices/invoices_mocks/handlers/SuperadminInvoicesMockHandlers';
 // Test: useSuperadminInvoicesPage — covers success, loading, error, empty, query-key, and mutation (P1-29)
 import { renderHook } from '@testing-library/react';
 import { useSuperadminInvoicesPage } from '@/app/superadmin/invoices/invoices_components/useSuperadminInvoicesPage';
@@ -14,7 +15,7 @@ vi.mock('next/navigation', () => ({
     usePathname: vi.fn(() => ''),
     useSearchParams: vi.fn(() => ({ get: vi.fn(), set: vi.fn() })),
 }));
-vi.mock('@/app/superadmin/invoices/superadmin_invoices_api/superadmin_invoices_api', () => ({
+vi.mock('@/app/superadmin/invoices/invoices_api/SuperadminInvoicesApi', () => ({
     invoicesApi: {
         fetchInvoices: vi.fn(),
         fetchTenants: vi.fn(),
@@ -22,6 +23,10 @@ vi.mock('@/app/superadmin/invoices/superadmin_invoices_api/superadmin_invoices_a
     },
 }));
 const mockQueryClient = { setQueryData: vi.fn(), invalidateQueries: vi.fn() };
+beforeEach(() => {
+  resetSuperadminInvoicesMockState();
+});
+
 describe('useSuperadminInvoicesPage', () => {
     beforeEach(() => {
         vi.clearAllMocks();
@@ -39,38 +44,38 @@ describe('useSuperadminInvoicesPage', () => {
             { id: 'INV-001', gymName: 'Gold Gym', amount: 5000, status: 'PAID', createdAt: '2024-01-01T10:00:00Z' },
         ];
         (useQuery as unknown as ReturnType<typeof vi.fn>)
-            .mockReturnValueOnce({ data: { data: mockInvoices }, isLoading: false, isError: false })
-            .mockReturnValueOnce({ data: { data: [] }, isLoading: false, isError: false });
+            .mockReturnValueOnce({ data: { data: mockInvoices }, isPending: false, isError: false })
+            .mockReturnValueOnce({ data: { data: [] }, isPending: false, isError: false });
         const { result } = renderHook(() => useSuperadminInvoicesPage());
-        expect(result.current.isLoading).toBe(false);
+        expect(result.current.isPending).toBe(false);
         expect(result.current.invoices).toEqual(mockInvoices);
     });
     it('returns loading state while invoice query is pending', () => {
         (useQuery as unknown as ReturnType<typeof vi.fn>)
-            .mockReturnValueOnce({ data: undefined, isLoading: true, isError: false })
-            .mockReturnValueOnce({ data: undefined, isLoading: false, isError: false });
+            .mockReturnValueOnce({ data: undefined, isPending: true, isError: false })
+            .mockReturnValueOnce({ data: undefined, isPending: false, isError: false });
         const { result } = renderHook(() => useSuperadminInvoicesPage());
-        expect(result.current.isLoading).toBe(true);
+        expect(result.current.isPending).toBe(true);
     });
     it('returns error state when invoice query fails', () => {
         (useQuery as unknown as ReturnType<typeof vi.fn>)
-            .mockReturnValueOnce({ data: undefined, isLoading: false, isError: true })
-            .mockReturnValueOnce({ data: undefined, isLoading: false, isError: false });
+            .mockReturnValueOnce({ data: undefined, isPending: false, isError: true })
+            .mockReturnValueOnce({ data: undefined, isPending: false, isError: false });
         const { result } = renderHook(() => useSuperadminInvoicesPage());
         expect(result.current.isError).toBe(true);
         expect(result.current.error).not.toBeNull();
     });
     it('returns empty array without crashing when invoice list is empty', () => {
         (useQuery as unknown as ReturnType<typeof vi.fn>)
-            .mockReturnValueOnce({ data: { data: [] }, isLoading: false, isError: false })
-            .mockReturnValueOnce({ data: { data: [] }, isLoading: false, isError: false });
+            .mockReturnValueOnce({ data: { data: [] }, isPending: false, isError: false })
+            .mockReturnValueOnce({ data: { data: [] }, isPending: false, isError: false });
         const { result } = renderHook(() => useSuperadminInvoicesPage());
         expect(result.current.invoices).toEqual([]);
         expect(result.current.filteredInvoices).toEqual([]);
     });
     it('uses the correct query key so different pages are cached separately', () => {
         (useQuery as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
-            data: null, isLoading: false, isError: false,
+            data: null, isPending: false, isError: false,
         });
         renderHook(() => useSuperadminInvoicesPage());
         expect(useQuery).toHaveBeenCalledWith(expect.objectContaining({
@@ -84,8 +89,8 @@ describe('useSuperadminInvoicesPage', () => {
             { id: 'INV-003', amount: 2000, status: 'PAID' },
         ];
         (useQuery as unknown as ReturnType<typeof vi.fn>)
-            .mockReturnValueOnce({ data: { data: mockInvoices }, isLoading: false, isError: false })
-            .mockReturnValueOnce({ data: { data: [] }, isLoading: false, isError: false });
+            .mockReturnValueOnce({ data: { data: mockInvoices }, isPending: false, isError: false })
+            .mockReturnValueOnce({ data: { data: [] }, isPending: false, isError: false });
         const { result } = renderHook(() => useSuperadminInvoicesPage());
         expect(result.current.totalRevenue).toBe(7000);
     });

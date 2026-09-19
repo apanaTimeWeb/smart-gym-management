@@ -4,7 +4,9 @@
 import { useCallback } from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
-export type TimeRange = 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'yearly' | 'custom' | 'this_month' | 'last_month' | 'last_3_months' | 'last_6_months' | 'this_year';
+import type { TimeRange } from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminDateFilterDropdownTypes';
+import type { SuperadminDateFilterBoundary } from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminDateFilterTypes';
+
 const OPTIONS = [
     { value: 'this_month', label: 'This Month' },
     { value: 'last_month', label: 'Last Month' },
@@ -22,7 +24,7 @@ export function SuperadminDateFilterDropdown() {
     const value = (searchParams.get('range') as TimeRange) ?? 'this_month';
     const currentStartDate = searchParams.get('startDate') || '';
     const currentEndDate = searchParams.get('endDate') || '';
-    const handleCustomDateChange = useCallback((type: 'start' | 'end', val: string) => {
+    const handleCustomDateChange = useCallback((type: SuperadminDateFilterBoundary, val: string) => {
         const params = new URLSearchParams(searchParams.toString());
         params.set('range', 'custom');
         if (type === 'start') {
@@ -80,14 +82,16 @@ export function SuperadminDateFilterDropdown() {
         router.replace(`${pathname}?${params.toString()}`, { scroll: false });
     }, [router, searchParams, pathname]);
     return (<div className="flex items-center gap-2 flex-wrap">
-      <div className="w-48 bg-input border border-border rounded-lg shadow-sm shrink-0">
+      <div className="w-48 bg-input border border-border rounded-lg shadow-card shrink-0">
         <SearchableDropdown options={OPTIONS} value={value} onChange={(val) => handlePresetChange(String(val))} className="bg-transparent border-transparent"/>
       </div>
 
-      {value === 'custom' && (<div className="flex items-center gap-2 bg-input border border-border rounded-lg shadow-sm px-3 py-2 shrink-0">
-          <input type="date" value={currentStartDate} onChange={(e) => handleCustomDateChange('start', e.target.value)} className="bg-transparent text-sm text-foreground focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page custom-date-input"/>
+      {value === 'custom' && (<div className="flex items-center gap-2 bg-input border border-border rounded-lg shadow-card px-3 py-2 shrink-0">
+          <input type="date" value={currentStartDate} onChange={(e) => handleCustomDateChange('start', e.target.value)} className="bg-transparent text-sm text-primary focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page custom-date-input"/>
           <span className="text-secondary text-sm font-medium">to</span>
-          <input type="date" value={currentEndDate} onChange={(e) => handleCustomDateChange('end', e.target.value)} className="bg-transparent text-sm text-foreground focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page custom-date-input"/>
+          <input type="date" value={currentEndDate} onChange={(e) => handleCustomDateChange('end', e.target.value)} className="bg-transparent text-sm text-primary focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page custom-date-input"/>
         </div>)}
     </div>);
 }
+
+export type { TimeRange } from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminDateFilterDropdownTypes';

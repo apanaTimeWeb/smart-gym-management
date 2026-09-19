@@ -1,93 +1,54 @@
-# Support Service Insights — Feature Map
+# Superadmin Tickets Service Insights — Feature Map
 
 ## Module Purpose
-This Superadmin-only feature gives platform operators a focused workspace for support service insights. It exists at `/superadmin/tickets` and is intentionally limited to platform-level tenant/SaaS operations; gym-staff daily operations are outside this boundary. The V1 layer keeps the UI backend-ready by flowing server data through its module API, Zod contract, module-owned MSW fixture/handler, and TanStack Query hook.
+This feature owns the Superadmin business workflow implemented under `tickets/`. The active route is `/superadmin/tickets`. Business behavior, API contracts, validation, server-state hooks, fixtures, MSW handlers, and tests are kept within this feature boundary. Cross-feature business logic is outside this module.
 
 ## Directory Structure
+
 | Folder | Responsibility | Key Files |
 |---|---|---|
-| `tickets/` | Owns this Superadmin route and all feature-specific artifacts. | `page.tsx`, `loading.tsx`, `error.tsx`, `SuperadminTicketsV1Client.tsx` |
-| `tickets_api/` | Calls the feature endpoint and validates the response data. | API service for `GET /api/superadmin/tickets/service-insights` |
-| `tickets_types/` | Owns the response data contract and runtime validation. | V1 type/schema file |
-| `tickets_mocks/handlers/` | Intercepts the V1 endpoint in frontend-first development. | V1 MSW handler |
-| `tickets_mocks/fixtures/` | Owns realistic V1 server-like data. | V1 mock fixture |
-| `tickets_utils/` | Orchestrates TanStack Query for this feature. | `useSuperadminTicketsV1.ts` |
+| `tickets_api/` | Feature-owned responsibility for tickets api. | `SuperadminTicketsApi.ts`, `SuperadminTicketsServiceInsightsApi.ts` |
+| `tickets_mocks/` | Feature-owned responsibility for tickets mocks. | `(directory present; no direct files)` |
+| `tickets_store/` | Feature-owned responsibility for tickets store. | `useSuperadminTicketsStore.ts` |
+| `tickets_tests/` | Feature-owned responsibility for tickets tests. | `SuperadminTicketsBasic.test.tsx`, `SuperadminTicketsServiceInsights.test.ts` |
+| `tickets_types/` | Feature-owned responsibility for tickets types. | `SuperadminTicketsHeaderTypes.ts`, `SuperadminTicketsReplyFormTypes.ts`, `SuperadminTicketsReplyModalTypes.ts`, `SuperadminTicketsTableTypes.ts`, `SuperadminTicketsTypes.ts`, `SuperadminTicketsV1Types.ts` |
+| `tickets_utils/` | Feature-owned responsibility for tickets utils. | `SuperadminTicketsConstants.ts`, `useSuperadminTicketMutations.ts`, `useSuperadminTicketReply.ts`, `useSuperadminTickets.ts`, `useSuperadminTicketsV1.ts` |
+
+## Approved External Dependencies
+
+### Application Infrastructure
+- `@/app/superadmin/superadmin_components` — role-shell/generic interaction infrastructure only.
+- `@/lib/*` and `@/components/*` — only approved application infrastructure imported by this feature.
+
+### Business Feature Dependencies
+- None
+
+### Role-Level Business Dependencies
+- None
 
 ## Feature Inventory
-| Feature | Route | What the User Can Do | Main API Calls | Status |
+
+| Surface | Route | Implemented User Actions | API Boundary | Status |
 |---|---|---|---|---|
-| Support Service Insights | `/superadmin/tickets` | operator workload, backlog age, support categories. | `GET /api/superadmin/tickets/service-insights` | ✅ V1 mocked and rendered |
+| Superadmin Tickets Service Insights | `/superadmin/tickets` | close; close ticket; confirm assign; open assign; submit | `SuperadminTicketsApi.ts`, `SuperadminTicketsServiceInsightsApi.ts` | Source-verified; host runtime pending |
 
 ## User Flows & Interactions
-1. Superadmin opens `/superadmin/tickets` and the client view requests the feature payload through `useSuperadminTicketsV1.ts`.
-2. TanStack Query receives the module API response and renders the documented panels, metrics, comparisons, charts, tables, and/or alerts.
-3. The module fixture supplies realistic values for the visible UI while the backend is unavailable.
-4. A request failure stays inside the module and exposes a user-safe Retry action rather than a raw backend error.
 
-## Data and State Architecture
-- **Server state:** TanStack Query; no API response data is stored in Zustand or React Context.
-- **UI state:** local component state only where the feature has private display state; shared UI state stays module-scoped if added later.
-- **Query key:** feature hook owns a Superadmin-namespaced query key.
-- **Mock ownership:** fixture and MSW handler both remain inside `tickets/`.
+1. Open the active route and load the feature-owned query/API boundary.
+2. Apply the available search, filter, sort, pagination, form, or row actions exposed by the current client surface.
+3. Mutations go through feature-owned API contracts and, in MSW mode, feature-owned handlers/fixtures.
+4. Success/error state is reconciled back into the same feature surface.
 
-## API Contract
-All calls use the global transport `@/lib/api` and the feature URL config.
+## Verification Notes
+- Active route pages mount one primary client tree; no `V1Client` import is mounted from route `page.tsx`.
+- Mutable mock-state handlers have reset functions covered by tests where present.
+- Deprecated marker-only and JSON-stringify tautology tests were removed from the module test tree.
+- Dependency-backed `tsc`, lint, Vitest runtime, Playwright, and real browser responsive execution require the host application environment and remain unverified here.
 
-| Function | Method | Endpoint | Request | Response `data` type |
-|---|---|---|---|---|
-| `fetchTicketServiceInsights` | GET | `GET /api/superadmin/tickets/service-insights` | None in V1 | Module V1 data schema |
-
-The V1 handler returns the canonical flat `ApiResponse<T>` payload. Response data is validated at the API boundary using the module-owned Zod schema.
-
-## UI Data Requirements
-| UI Data | Source | Validation/Mock Ownership |
-|---|---|---|
-| `data.summary` | GET /api/superadmin/tickets/service-insights | Module-owned Zod contract + MSW fixture |
-| `data.open` | GET /api/superadmin/tickets/service-insights | Module-owned Zod contract + MSW fixture |
-| `data.urgent` | GET /api/superadmin/tickets/service-insights | Module-owned Zod contract + MSW fixture |
-| `data.nearTarget` | GET /api/superadmin/tickets/service-insights | Module-owned Zod contract + MSW fixture |
-| `data.overTarget` | GET /api/superadmin/tickets/service-insights | Module-owned Zod contract + MSW fixture |
-| `data.averageFirstResponseMinutes` | GET /api/superadmin/tickets/service-insights | Module-owned Zod contract + MSW fixture |
-| `data.averageResolutionHours` | GET /api/superadmin/tickets/service-insights | Module-owned Zod contract + MSW fixture |
-| `data.satisfaction` | GET /api/superadmin/tickets/service-insights | Module-owned Zod contract + MSW fixture |
-| `data.agents` | GET /api/superadmin/tickets/service-insights | Module-owned Zod contract + MSW fixture |
-| `data.name` | GET /api/superadmin/tickets/service-insights | Module-owned Zod contract + MSW fixture |
-| `data.averageHours` | GET /api/superadmin/tickets/service-insights | Module-owned Zod contract + MSW fixture |
-| `data.aging` | GET /api/superadmin/tickets/service-insights | Module-owned Zod contract + MSW fixture |
-| `data.bucket` | GET /api/superadmin/tickets/service-insights | Module-owned Zod contract + MSW fixture |
-| `data.count` | GET /api/superadmin/tickets/service-insights | Module-owned Zod contract + MSW fixture |
-| `data.categories` | GET /api/superadmin/tickets/service-insights | Module-owned Zod contract + MSW fixture |
-| `data.message` | GET /api/superadmin/tickets/service-insights | Module-owned Zod contract + MSW fixture |
-| `data.success` | GET /api/superadmin/tickets/service-insights | Module-owned Zod contract + MSW fixture |
-
-The consuming component is the source for the exact rendered sub-fields. V1 business values are not embedded in JSX.
-
-## Permissions and Security
-- **Required role:** `SUPERADMIN`, with backend authorization remaining authoritative.
-- **Cross-role isolation:** no Admin, Manager, Trainer, or other business-role implementation is imported.
-- **Financial/destructive controls:** any future mutation must use the existing Superadmin confirmation contract and authoritative backend response.
-- **Sensitive data:** user-facing identifiers and long dynamic text must follow the existing Superadmin masking/truncation rules.
-
-## Loading, Empty, and Error States
-- **Loading:** route `loading.tsx` or V1 client structural skeleton mirrors the major content blocks rather than using a full-page spinner.
-- **Error:** route `error.tsx` and/or V1 client retry state shows a concise user-safe explanation and Retry action.
-- **Empty:** entity/list sections use the module's existing empty-state pattern where applicable.
-
-## Edge Cases and AI Warnings
-- **Do not hardcode server records in JSX:** all business data belongs to the API contract and module-owned fixture.
-- **Do not import sibling business logic:** duplicate small domain contracts locally rather than creating cross-module coupling.
-- **Do not bypass the module API:** UI must not read fixtures directly.
-- **Keep response shape flat:** V1 handlers return `ApiResponse<T>` with the V1 data object directly under `data`.
-- **Keep user-facing terms simple:** technical SaaS abbreviations should remain internal; display plain labels such as `Monthly income`, `Gym retention`, and `Income lost`.
-- **Keep documentation fresh:** update this feature map when the route, endpoint, UI fields, or flow changes.
-
-## Component Responsibility Map
-| Component | Responsibility |
-|---|---|
-| `SuperadminTicketsV1Client.tsx` | Renders the Superadmin-only feature view and consumes the query state. |
-| `useSuperadminTicketsV1.ts` | Owns TanStack Query orchestration and exposes server state without JSX. |
-
-## External Infrastructure Dependencies
-- `@/lib/api` — global API transport.
-- `@/lib/formatters` — centralized numeric/date/currency formatting where needed.
-- Existing Superadmin shared presentation primitives and authentication infrastructure.
+## Rule Compliance Checklist
+- [x] Canonical feature-owned API/type directories are used.
+- [x] No active route page mounts a parallel `V1Client` tree.
+- [x] Module-owned mock reset coverage is present where mutable handlers exist.
+- [x] Feature docs contain a concrete directory map and compliance checklist.
+- [x] No marker-only or JSON-stringify tautology test remains.
+- [ ] Host dependency-backed build/lint/runtime verification — unavailable in source-only package.

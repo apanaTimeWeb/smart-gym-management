@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Module-owned mock fixture data for Superadmin.
-import type { TicketPriority, TicketStatus, SupportTicket } from '@/app/superadmin/tickets/superadmin_tickets_types/superadmin_tickets_types';
+import type { TicketPriority, TicketStatus, SupportTicket } from '@/app/superadmin/tickets/tickets_types/SuperadminTicketsTypes';
 export const MOCK_TICKETS: SupportTicket[] = [
     {
         id: 'TKT-001',

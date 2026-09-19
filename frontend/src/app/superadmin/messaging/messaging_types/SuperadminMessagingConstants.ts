@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Shared display constants for the Superadmin tenant messaging module.
-import type { MessageChannel, MessageStatus } from '@/app/superadmin/messaging/messaging_types/superadmin_messaging_types';
+import type { MessageChannel, MessageStatus } from '@/app/superadmin/messaging/messaging_types/SuperadminMessagingTypes';
 
 export const ITEMS_PER_PAGE = 10;
 

@@ -3,6 +3,13 @@
 'use client';
 // DATA FLOW: feature API/schema → hook/context → useSuperadminDateRangeSuffix consumers.
 import { useSearchParams } from 'next/navigation';
+/**
+ * Purpose: Derive the human-readable date-range suffix shown by shared Superadmin surfaces from URL state.
+ * Inputs: values defined by the exported hook signature.
+ * Output: the hook's typed state/actions/query contract.
+ * Side effects: remain scoped to the owning feature or approved application infrastructure.
+ * Invariant: does not move feature business state into unrelated modules.
+ */
 export function useSuperadminDateRangeSuffix(upperCase: boolean = true): string {
     const searchParams = useSearchParams();
     const range = searchParams.get('range') || 'this_month';

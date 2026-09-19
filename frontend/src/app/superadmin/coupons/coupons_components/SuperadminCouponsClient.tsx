@@ -9,13 +9,14 @@ import { SuperadminCouponModal } from '@/app/superadmin/coupons/coupons_componen
 import { SuperadminCouponEditModal } from '@/app/superadmin/coupons/coupons_components/SuperadminCouponEditModal';
 import SuperadminCouponsRedemptionDrawer from '@/app/superadmin/coupons/coupons_components/SuperadminCouponsRedemptionDrawer';
 import { useState, useEffect } from 'react';
-import type { Coupon } from '@/app/superadmin/coupons/superadmin_coupons_types/superadmin_coupons_types';
+import type { Coupon } from '@/app/superadmin/coupons/coupons_types/SuperadminCouponsTypes';
 export default function SuperadminCouponsClient() {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [drawerCoupon, setDrawerCoupon] = useState<Coupon | null>(null);
     // RESPONSIBILITY: Handle side-effects for SuperadminCouponsClient
     // EXPLANATION: Synchronize component state with external dependencies.
     // EFFECT DEPENDENCIES: Documented intentionally.
+    // EFFECT INTENT: Synchronize local UI state with the listed inputs and clean up any browser/resource subscription created by this effect.
     useEffect(() => {
         const handleOpenHistory = (e: Event) => {
             const customEvent = e as CustomEvent<Coupon>;

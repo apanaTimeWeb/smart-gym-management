@@ -1,14 +1,14 @@
 // RESPONSIBILITY: Renders the Superadmin onboarding V1 Where gyms stall, Weekly activation and conversion view.
 'use client';
 import { formatNumber, formatPercent1dp } from '@/lib/formatters';
-import SuperadminV1Panel from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminV1Panel';
+import SuperadminPanel from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPanel';
 import type { SuperadminOnboardingV1SectionProps } from '@/app/superadmin/onboarding/onboarding_types/SuperadminOnboardingV1Types.ts';
 export default function SuperadminOnboardingV1StallAndConversionSection({ data }: SuperadminOnboardingV1SectionProps) {
     return <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
-  <SuperadminV1Panel title="Where gyms stall" description="Prioritize the setup steps with the most drop-off.">
+  <SuperadminPanel title="Where gyms stall" description="Prioritize the setup steps with the most drop-off.">
     <div className="space-y-3">
       {data.stalls.map((s) => <div key={s.step} className="flex items-center justify-between rounded-lg border border-border p-3">
-        <span className="truncate text-sm text-foreground">
+        <span className="truncate text-sm text-primary">
           {s.step}
         </span>
         <span className="text-sm font-semibold text-warning">
@@ -17,12 +17,12 @@ export default function SuperadminOnboardingV1StallAndConversionSection({ data }
         </span>
       </div>)}
     </div>
-  </SuperadminV1Panel>
-  <SuperadminV1Panel title="Weekly activation and conversion" description="Compare recent cohorts by successful setup and paid conversion.">
+  </SuperadminPanel>
+  <SuperadminPanel title="Weekly activation and conversion" description="Compare recent cohorts by successful setup and paid conversion.">
     <div className="space-y-3">
       {data.cohort.map((c) => <div key={c.cohort} className="rounded-lg border border-border p-3">
         <div className="flex justify-between">
-          <span className="font-medium text-foreground">
+          <span className="font-medium text-primary">
             {c.cohort}
           </span>
           <span className="text-xs text-secondary">
@@ -39,6 +39,6 @@ export default function SuperadminOnboardingV1StallAndConversionSection({ data }
         </p>
       </div>)}
     </div>
-  </SuperadminV1Panel>
+  </SuperadminPanel>
     </div>;
 }

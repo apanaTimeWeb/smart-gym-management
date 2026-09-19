@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Module-owned mock fixture data for Superadmin.
-import type { RevenueRow, CancellationsRecord, TenantHealthScore } from '@/app/superadmin/reports/reports_types/superadmin_reports_types';
+import type { RevenueRow, CancellationsRecord, TenantHealthScore } from '@/app/superadmin/reports/reports_types/SuperadminReportsTypes';
 export const MOCK_SUPERADMIN_REPORTS_REVENUE: RevenueRow[] = [
     { month: 'Jul', mrr: 216000, newRevenue: 31000, cancelledRevenue: 7000, netRevenue: 24000, tenantCount: 101 },
     { month: 'Aug', mrr: 232000, newRevenue: 36000, cancelledRevenue: 9000, netRevenue: 27000, tenantCount: 109 },

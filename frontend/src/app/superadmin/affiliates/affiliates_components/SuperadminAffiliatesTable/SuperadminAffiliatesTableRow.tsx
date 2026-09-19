@@ -4,31 +4,26 @@ import { Pencil, Trash2, Power, Check, Banknote } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
 import SuperadminAffiliateStatusBadge from '@/app/superadmin/affiliates/affiliates_components/SuperadminAffiliateStatusBadge/SuperadminAffiliateStatusBadge';
-import type { Affiliate, AffiliateStatus } from '@/app/superadmin/affiliates/superadmin_affiliates_types/superadmin_affiliates_types';
-import { formatCurrency, formatNumber } from '@/lib/formatters';
-interface AffiliatesTableRowProps {
-    affiliate: Affiliate;
-    onToggleStatus: (id: string, currentStatus: AffiliateStatus) => void;
-    onEdit: (affiliate: Affiliate) => void;
-    onDelete: (id: string) => void;
-    onPayCommission?: (affiliate: Affiliate) => void;
-}
-export default function SuperadminAffiliatesTableRow({ affiliate: aff, onToggleStatus, onEdit, onDelete, onPayCommission }: AffiliatesTableRowProps) {
+import type { Affiliate, AffiliateStatus } from '@/app/superadmin/affiliates/affiliates_types/SuperadminAffiliatesTypes';
+import { maskSensitiveData, formatCurrency, formatNumber } from '@/lib/formatters';
+import type { SuperadminAffiliatesTableRowProps } from '@/app/superadmin/affiliates/affiliates_types/SuperadminAffiliatesTableRowTypes';
+
+export default function SuperadminAffiliatesTableRow({ affiliate: aff, onToggleStatus, onEdit, onDelete, onPayCommission }: SuperadminAffiliatesTableRowProps) {
     const { confirm } = useSuperadminConfirm();
-    return (<tr className="hover:bg-primary/5 motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out group cursor-pointer" onClick={() => onEdit(aff)}>
+    return (<tr tabIndex={0} aria-label={`Edit affiliate ${aff.name}`} className="hover:bg-primary/5 motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset" onClick={() => onEdit(aff)} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); onEdit(aff); } }}>
       <td className="px-6 py-4">
         <div className="flex flex-col">
-          <span className="text-sm font-medium text-foreground truncate" title={aff.name}>{aff.name}</span>
-          <span className="text-xs text-secondary truncate" title={aff.email}>{aff.email}</span>
+          <span className="text-sm font-medium text-primary truncate" title={aff.name}>{aff.name}</span>
+          <span className="text-xs text-secondary truncate" title={maskSensitiveData(aff.email, 'email')}>{maskSensitiveData(aff.email, 'email')}</span>
         </div>
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm">
         <span className="px-2 py-1 bg-input rounded text-secondary font-mono">{aff.referralCode}</span>
       </td>
-      <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-foreground">
+      <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-primary">
         {aff.referralCount ?? aff.totalReferred} Gyms
       </td>
-      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-foreground">
+      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-primary">
         {aff.conversionRate !== undefined ? `${aff.conversionRate}%` : 'â€”'}
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-success font-medium">

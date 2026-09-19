@@ -1,7 +1,8 @@
 // RESPONSIBILITY: Module-owned mutable MSW state for Superadmin tenant messaging.
+import { StatusCodes } from 'http-status-codes';
 import { delay, http, HttpResponse } from 'msw';
 import type { ApiResponse } from '@/lib/api';
-import type { TenantMessage, SuperadminNotification } from '@/app/superadmin/messaging/messaging_types/superadmin_messaging_types';
+import type { TenantMessage, SuperadminNotification } from '@/app/superadmin/messaging/messaging_types/SuperadminMessagingTypes';
 import {
   MOCK_SUPERADMIN_MESSAGING_MESSAGES,
   MOCK_SUPERADMIN_NOTIFICATIONS,
@@ -13,6 +14,11 @@ const DEFAULT_LIMIT = 10;
 
 let mockMessages = [...MOCK_SUPERADMIN_MESSAGING_MESSAGES];
 let mockNotifications = [...MOCK_SUPERADMIN_NOTIFICATIONS];
+
+export function resetSuperadminMessagingMockState(): void {
+  mockMessages = [...MOCK_SUPERADMIN_MESSAGING_MESSAGES];
+  mockNotifications = [...MOCK_SUPERADMIN_NOTIFICATIONS];
+}
 
 function parseDateBoundary(value: string | null, endOfDay = false): number | null {
   if (!value) return null;
@@ -67,7 +73,7 @@ export const superadminMessagingHandlers = [
     const id = String(params.id ?? '');
     const index = mockNotifications.findIndex((notification) => notification.id === id);
     if (index < 0) {
-      return HttpResponse.json<ApiResponse<SuperadminNotification>>({ success: false, message: 'Notification not found.', data: null }, { status: 404 });
+      return HttpResponse.json<ApiResponse<SuperadminNotification>>({ success: false, message: 'Notification not found.', data: null }, { status: StatusCodes.NOT_FOUND });
     }
     const notification = mockNotifications[index]!;
     mockNotifications[index] = { ...notification, read: true };
@@ -101,7 +107,7 @@ export const superadminMessagingHandlers = [
     await delay(150);
     const payload = await request.json() as Partial<TenantMessage>;
     if (!payload.tenantId || !payload.tenantName || !payload.channel || !payload.subject?.trim() || !payload.body?.trim()) {
-      return HttpResponse.json<ApiResponse<TenantMessage>>({ success: false, message: 'Invalid message payload.', data: null }, { status: 400 });
+      return HttpResponse.json<ApiResponse<TenantMessage>>({ success: false, message: 'Invalid message payload.', data: null }, { status: StatusCodes.BAD_REQUEST });
     }
     const newMessage: TenantMessage = {
       id: `m${Date.now()}`,

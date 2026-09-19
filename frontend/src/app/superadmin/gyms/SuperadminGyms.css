@@ -18,7 +18,7 @@
 }
 
 .gyms-table-row:hover {
-  background-color: rgba(99, 102, 241, 0.06);
+  background-color: var(--surface-hover);
 }
 
 /* ─── Ghost Login Overlay ─────────────────────────────────────────────────── */
@@ -49,10 +49,10 @@
   white-space: nowrap;
 }
 
-.gym-status-badge--active    { color: var(--success); background-color: var(--success-bg); }
-.gym-status-badge--suspended { color: var(--danger);  background-color: var(--danger-bg);  }
-.gym-status-badge--trial     { color: var(--warning); background-color: var(--warning-bg); }
-.gym-status-badge--cancelled { color: var(--text-secondary); background-color: #1E1E2E; }
+.gym-status-badge--active    { color: var(--success-text); background-color: var(--success-bg); }
+.gym-status-badge--suspended { color: var(--danger-text);  background-color: var(--danger-bg);  }
+.gym-status-badge--trial     { color: var(--warning-text); background-color: var(--warning-bg); }
+.gym-status-badge--cancelled { color: var(--text-secondary); background-color: var(--bg-input); }
 
 /* ─── Gym Onboarding Form Steps ──────────────────────────────────────────── */
 /* Used in AddGymForm.tsx multi-step wizard                                    */
@@ -76,8 +76,8 @@
 /* Red glow ring on the type-to-confirm input when the value is wrong         */
 
 .gym-delete-confirm-input:not(:placeholder-shown):invalid {
-  border-color: var(--danger);
-  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+  border-color: var(--danger-text);
+  box-shadow: 0 0 0 3px var(--danger-bg);
 }
 
 /* ─── Gym Stats Toolbar ───────────────────────────────────────────────────── */
@@ -104,6 +104,6 @@
 
 .gyms-stat-pill--active {
   border-color: var(--primary);
-  background-color: rgba(99, 102, 241, 0.1);
+  background-color: var(--surface-hover);
   color: var(--primary);
 }

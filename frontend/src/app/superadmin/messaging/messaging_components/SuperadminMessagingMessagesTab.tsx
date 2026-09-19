@@ -5,36 +5,22 @@ import { Bell, Mail, MessageSquare, Search } from 'lucide-react';
 import { formatDateTime } from '@/lib/formatters';
 import SuperadminDateRangePicker from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminDateRangePicker';
 import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
-import type { MessageChannel, TenantMessage } from '@/app/superadmin/messaging/messaging_types/superadmin_messaging_types';
+import type { SuperadminMessagingMessagesTabProps } from '@/app/superadmin/messaging/messaging_types/SuperadminMessagingMessagesTabTypes';
 import { CHANNEL_STYLES, MESSAGE_STATUS_STYLES } from '@/app/superadmin/messaging/messaging_types/SuperadminMessagingConstants';
 
-type Props = {
-  search: string;
-  setSearch: (value: string) => void;
-  channelFilter: MessageChannel | 'ALL';
-  setChannelFilter: (value: MessageChannel | 'ALL') => void;
-  setRange: (start: string, end: string) => void;
-  messages: TenantMessage[];
-  currentPage: number;
-  totalPages: number;
-  totalItems: number;
-  onPageChange: (page: number) => void;
-  isFetching: boolean;
-};
-
-export function SuperadminMessagingMessagesTab({ search, setSearch, channelFilter, setChannelFilter, setRange, messages, currentPage, totalPages, totalItems, onPageChange, isFetching }: Props) {
+export function SuperadminMessagingMessagesTab({ search, setSearch, channelFilter, setChannelFilter, setRange, messages, currentPage, totalPages, totalItems, onPageChange, isFetching }: SuperadminMessagingMessagesTabProps) {
   return (
     <div className="space-y-4">
       <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
         <label className="relative block w-full max-w-md">
           <span className="sr-only">Search tenant messages</span>
           <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-secondary" size={18} strokeWidth={2} />
-          <input type="search" value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search tenant, subject, or message..." className="w-full rounded-lg border border-border bg-input py-2 pl-10 pr-3 text-sm text-foreground focus:border-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary" />
+          <input type="search" value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search tenant, subject, or message..." className="w-full rounded-lg border border-border bg-input py-2 pl-10 pr-3 text-sm text-primary focus:border-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary" />
         </label>
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <div className="flex flex-wrap gap-2">
             {(['ALL', 'EMAIL', 'SMS', 'IN_APP'] as const).map((channel) => (
-              <button key={channel} type="button" onClick={() => setChannelFilter(channel)} className={`rounded-lg border px-3 py-2 text-xs font-medium motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${channelFilter === channel ? 'border-primary/30 bg-primary/10 text-primary' : 'border-border bg-input text-secondary hover:text-foreground'}`}>
+              <button key={channel} type="button" onClick={() => setChannelFilter(channel)} className={`rounded-lg border px-3 py-2 text-xs font-medium motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${channelFilter === channel ? 'border-primary/30 bg-primary/10 text-primary' : 'border-border bg-input text-secondary hover:text-primary'}`}>
                 {channel}
               </button>
             ))}
@@ -43,7 +29,7 @@ export function SuperadminMessagingMessagesTab({ search, setSearch, channelFilte
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
+      <div className="overflow-hidden rounded-xl border border-border bg-card shadow-card">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <caption className="sr-only">Superadmin tenant messages</caption>
@@ -59,7 +45,7 @@ export function SuperadminMessagingMessagesTab({ search, setSearch, channelFilte
             <tbody className="divide-y divide-border">
               {messages.map((message) => (
                 <tr key={message.id} className="motion-safe:transition-colors hover:bg-input/30">
-                  <td className="px-4 py-3 font-medium text-foreground">{message.tenantName}</td>
+                  <td className="px-4 py-3 font-medium text-primary">{message.tenantName}</td>
                   <td className="px-4 py-3">
                     <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold ${CHANNEL_STYLES[message.channel]}`}>
                       {message.channel === 'EMAIL' && <Mail size={11} aria-hidden="true" />}

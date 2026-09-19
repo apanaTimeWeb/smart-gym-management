@@ -1,9 +1,14 @@
+import { StatusCodes } from 'http-status-codes';
 import { http, HttpResponse, delay } from 'msw';
-import type { SuperadminFranchise } from '@/app/superadmin/franchises/franchises_types/superadmin_franchises_types';
+import type { SuperadminFranchise } from '@/app/superadmin/franchises/franchises_types/SuperadminFranchisesTypes';
 import type { ApiResponse } from '@/lib/api';
 import { MOCK_SUPERADMIN_FRANCHISES } from '@/app/superadmin/franchises/franchises_mocks/fixtures/SuperadminFranchisesMockFixtures';
 const BASE_URL = '*/api/v1/superadmin/franchises';
 let mockFranchises: SuperadminFranchise[] = [...MOCK_SUPERADMIN_FRANCHISES];
+
+export function resetSuperadminFranchisesMockState(): void {
+  mockFranchises = [...MOCK_SUPERADMIN_FRANCHISES];
+}
 export const superadminFranchisesHandlers = [
     http.get(BASE_URL, async ({ request }) => {
         await delay(400);
@@ -31,7 +36,7 @@ export const superadminFranchisesHandlers = [
         const id = params.id as string;
         const franchise = mockFranchises.find(f => f.id === id);
         if (!franchise) {
-            return HttpResponse.json<ApiResponse<SuperadminFranchise>>({ success: false, message: 'Not found', data: null }, { status: 404 });
+            return HttpResponse.json<ApiResponse<SuperadminFranchise>>({ success: false, message: 'Not found', data: null }, { status: StatusCodes.NOT_FOUND });
         }
         return HttpResponse.json<ApiResponse<SuperadminFranchise>>({
             success: true,
@@ -72,7 +77,7 @@ export const superadminFranchisesHandlers = [
             return f;
         });
         if (!updated) {
-            return HttpResponse.json<ApiResponse<SuperadminFranchise>>({ success: false, message: 'Not found', data: null }, { status: 404 });
+            return HttpResponse.json<ApiResponse<SuperadminFranchise>>({ success: false, message: 'Not found', data: null }, { status: StatusCodes.NOT_FOUND });
         }
         return HttpResponse.json<ApiResponse<SuperadminFranchise>>({
             success: true,

@@ -3,7 +3,7 @@
 import type { SuperadminOffboardingSectionProps } from '@/app/superadmin/offboarding/offboarding_types/SuperadminOffboardingTypes';
 export default function SuperadminOffboardingPageHeader({ data }: SuperadminOffboardingSectionProps) {
     return (<div>
-  <h1 className="text-2xl font-bold text-foreground">
+  <h1 className="text-2xl font-bold text-primary">
     Tenant Offboarding
   </h1>
   <p className="mt-1 text-sm text-secondary">

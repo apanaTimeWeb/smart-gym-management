@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Module-owned mock fixture data for Superadmin.
-import type { SaaSInvoice } from '@/app/superadmin/invoices/superadmin_invoices_types/superadmin_invoices_types';
+import type { SaaSInvoice } from '@/app/superadmin/invoices/invoices_types/SuperadminInvoicesTypes';
 export const MOCK_INVOICE_TENANTS = [
     { id: 't1', name: 'Iron Paradise', plan: 'Pro' },
     { id: 't2', name: 'Fit Life Studio', plan: 'Basic' },

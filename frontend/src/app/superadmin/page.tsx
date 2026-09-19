@@ -7,11 +7,9 @@ export const metadata: Metadata = {
     title: 'Gyms | Superadmin',
     description: 'Manage gyms.',
 };
-import SuperadminGymsV1Client from '@/app/superadmin/gyms/gyms_components/SuperadminGymsV1Client';
 export default function GymsPage() {
     // In the future, server-side fetching can happen here before passing data to SuperadminGymsClient
     return (<SuperadminErrorBoundary>
       <SuperadminGymsClient />
-      <SuperadminGymsV1Client />
     </SuperadminErrorBoundary>);
 }

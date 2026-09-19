@@ -1,10 +1,12 @@
 // RESPONSIBILITY: Renders the Onboarding Table component and its associated UI logic.
 'use client';
+import { maskSensitiveData } from '@/lib/formatters';
 import { useState } from 'react';
 import { Building2, MapPin, Phone, Calendar, MoreVertical, CheckCircle2, XCircle, Clock, Mail, RefreshCw, ArrowUpCircle, ChevronDown, ChevronUp, UserCheck, AlertTriangle } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { ONBOARDING_STATUS_STYLES, TRIAL_STATUS_STYLES, } from '@/app/superadmin/onboarding/onboarding_types/SuperadminOnboardingConstants';
-import type { TenantOnboarding } from '@/app/superadmin/onboarding/onboarding_types/superadmin_onboarding_types';
+import type { SuperadminOnboardingTableProps } from '@/app/superadmin/onboarding/onboarding_types/SuperadminOnboardingTableTypes';
+import type { TenantOnboarding } from '@/app/superadmin/onboarding/onboarding_types/SuperadminOnboardingTypes';
 const TABLE_COLUMN_COUNT = 7;
 export function SuperadminOnboardingTable({ filtered, expandedId, setExpandedId, handleMarkVerified, handleResendVerification, setExtendModalId, setConvertConfirmId, }: {
     filtered: TenantOnboarding[];
@@ -16,7 +18,7 @@ export function SuperadminOnboardingTable({ filtered, expandedId, setExpandedId,
     setConvertConfirmId: (id: string) => void;
 }) {
     const completedCount = (checklist: TenantOnboarding['checklist']) => checklist.filter((c) => c.done).length;
-    return (<div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
+    return (<div className="bg-card border border-border rounded-xl shadow-card overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
@@ -35,15 +37,15 @@ export function SuperadminOnboardingTable({ filtered, expandedId, setExpandedId,
                 <td colSpan={TABLE_COLUMN_COUNT} className="p-0 border-none">
                   <table className="w-full">
                     <tbody>
-                      <tr className="hover:bg-input/30 motion-safe:transition-colors cursor-pointer" onClick={() => setExpandedId(expandedId === tenant.id ? null : tenant.id)}>
+                      <tr tabIndex={0} aria-label={`${expandedId === tenant.id ? 'Collapse' : 'Expand'} onboarding ${tenant.gymName}`} className="hover:bg-input/30 motion-safe:transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset" onClick={() => setExpandedId(expandedId === tenant.id ? null : tenant.id)} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setExpandedId(expandedId === tenant.id ? null : tenant.id); } }}>
                         <td className="px-4 py-3 w-2/12">
-                          <p className="font-medium text-foreground">{tenant.gymName}</p>
+                          <p className="font-medium text-primary">{tenant.gymName}</p>
                           <p className="text-xs text-secondary">{tenant.ownerName}</p>
                         </td>
                         <td className="px-4 py-3 w-1/5">
                           <div className="flex items-center gap-1.5">
                             {tenant.emailVerified ? (<CheckCircle2 className="w-5 h-5 text-success shrink-0" strokeWidth={2}/>) : (<XCircle className="w-5 h-5 text-danger shrink-0" strokeWidth={2}/>)}
-                            <span className="text-secondary text-xs truncate max-w-xs">{tenant.adminEmail}</span>
+                            <span className="text-secondary text-xs truncate max-w-xs">{maskSensitiveData(tenant.adminEmail, 'email')}</span>
                           </div>
                         </td>
                         <td className="px-4 py-3 w-2/12">
@@ -72,7 +74,7 @@ export function SuperadminOnboardingTable({ filtered, expandedId, setExpandedId,
                             {!tenant.emailVerified && (<button onClick={() => handleMarkVerified(tenant.id)} aria-label="Mark email verified" title="Mark email verified" className="p-1.5 rounded-lg bg-success/10 text-success hover:bg-success/20 motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-success">
                                 <UserCheck size={18} strokeWidth={2}/>
                               </button>)}
-                            <button onClick={() => handleResendVerification(tenant.id)} aria-label="Resend welcome email" title="Resend welcome email" className="p-1.5 rounded-lg bg-input text-secondary hover:text-foreground hover:bg-card motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                            <button onClick={() => handleResendVerification(tenant.id)} aria-label="Resend welcome email" title="Resend welcome email" className="p-1.5 rounded-lg bg-input text-secondary hover:text-primary hover:bg-card motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
                               <Mail size={18} strokeWidth={2}/>
                             </button>
                             {(tenant.trialStatus === 'TRIAL' || tenant.trialStatus === 'EXPIRED') && (<button onClick={() => setExtendModalId(tenant.id)} aria-label="Extend trial" title="Extend trial" className="p-1.5 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
@@ -96,7 +98,7 @@ export function SuperadminOnboardingTable({ filtered, expandedId, setExpandedId,
                                 <div className="space-y-2">
                                   {tenant.checklist.map((item) => (<div key={item.key} className="flex items-center gap-2">
                                       {item.done ? (<CheckCircle2 className="w-5 h-5 text-success shrink-0" strokeWidth={2}/>) : (<Clock className="w-5 h-5 text-secondary shrink-0" strokeWidth={2}/>)}
-                                      <span className={`text-sm ${item.done ? 'text-foreground' : 'text-secondary'}`}>
+                                      <span className={`text-sm ${item.done ? 'text-primary' : 'text-secondary'}`}>
                                         {item.label}
                                       </span>
                                     </div>))}
@@ -107,25 +109,25 @@ export function SuperadminOnboardingTable({ filtered, expandedId, setExpandedId,
                                 <div className="space-y-1.5 text-sm">
                                   <div className="flex justify-between">
                                     <span className="text-secondary">Signup Date</span>
-                                    <span className="text-foreground">{tenant.signupDate}</span>
+                                    <span className="text-primary">{tenant.signupDate}</span>
                                   </div>
                                   <div className="flex justify-between">
                                     <span className="text-secondary">Trial Ends</span>
-                                    <span className="text-foreground">{tenant.trialEndsAt ?? '—'}</span>
+                                    <span className="text-primary">{tenant.trialEndsAt ?? '—'}</span>
                                   </div>
                                   <div className="flex justify-between">
                                     <span className="text-secondary">Days in Trial</span>
-                                    <span className="text-foreground">{tenant.daysInTrial}</span>
+                                    <span className="text-primary">{tenant.daysInTrial}</span>
                                   </div>
                                   <div className="flex justify-between">
                                     <span className="text-secondary">Days Remaining</span>
-                                    <span className={tenant.trialDaysLeft <= 3 ? 'text-danger font-medium' : 'text-foreground'}>
+                                    <span className={tenant.trialDaysLeft <= 3 ? 'text-danger font-medium' : 'text-primary'}>
                                       {tenant.trialDaysLeft}
                                     </span>
                                   </div>
                                   <div className="flex justify-between">
                                     <span className="text-secondary">Plan</span>
-                                    <span className="text-foreground font-medium">{tenant.plan}</span>
+                                    <span className="text-primary font-medium">{tenant.plan}</span>
                                   </div>
                                 </div>
                                 {tenant.trialDaysLeft <= 3 && tenant.trialStatus === 'TRIAL' && (<div className="mt-3 flex items-center gap-2 text-xs text-warning bg-warning/10 border border-warning/20 rounded-lg px-3 py-2">

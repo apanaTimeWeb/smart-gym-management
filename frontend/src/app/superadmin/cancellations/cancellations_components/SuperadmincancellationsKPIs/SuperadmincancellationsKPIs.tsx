@@ -2,14 +2,10 @@
 'use client';
 // Display-only — no data fetching, no mutations.
 import { AlertTriangle, TrendingDown, DollarSign, Activity } from 'lucide-react';
-import { KPI_CARD_GRADIENT } from '@/app/superadmin/cancellations/cancellations_utils/SuperadminCancellationsConstants';
-import type { CancellationsKpiData } from '@/app/superadmin/cancellations/cancellations_types/superadmin_cancellations_types';
+import type { CancellationsKpiData } from '@/app/superadmin/cancellations/cancellations_types/SuperadminCancellationsTypes';
 import { formatKPI } from '@/lib/formatters';
-interface SuperadminCancellationsKPIsProps {
-    kpis: CancellationsKpiData;
-    activeFilter?: string;
-    onFilterClick?: (filter: string) => void;
-}
+import type { SuperadminCancellationsKPIsProps } from '@/app/superadmin/cancellations/cancellations_types/SuperadminCancellationsKPIsTypes';
+
 export default function SuperadminCancellationsKPIs({ kpis, activeFilter, onFilterClick }: SuperadminCancellationsKPIsProps) {
     const cards = [
         {
@@ -50,7 +46,7 @@ export default function SuperadminCancellationsKPIs({ kpis, activeFilter, onFilt
             const Icon = card.icon;
             const isActive = activeFilter === card.filter;
             const isClickable = !!card.filter && !!onFilterClick;
-            return (<div key={card.label} onClick={() => isClickable && onFilterClick!(card.filter!)} className={`bg-card border rounded-xl p-4 shadow-sm motion-safe:hover:-translate-y-1 motion-safe:hover:shadow-lg motion-safe:transition-all motion-safe:duration-base ${isClickable ? 'cursor-pointer' : 'cursor-default'} ${isActive ? 'border-primary ring-1 ring-primary/40' : 'border-border'}`} style={{ background: KPI_CARD_GRADIENT }}>
+            return (<div key={card.label} onClick={() => isClickable && onFilterClick!(card.filter!)} className={`bg-card border rounded-xl p-4 shadow-card motion-safe:hover:-translate-y-1 motion-safe:hover:shadow-card motion-safe:transition-all motion-safe:duration-base ${isClickable ? 'cursor-pointer' : 'cursor-default'} ${isActive ? 'border-primary ring-1 ring-primary/40' : 'border-border'}`}>
             <div className="flex items-start justify-between mb-3">
               <div className={`w-8 h-8 rounded-lg ${card.iconBg} flex items-center justify-center`}>
                 <Icon className={`w-5 h-5 ${card.color}`} strokeWidth={2}/>

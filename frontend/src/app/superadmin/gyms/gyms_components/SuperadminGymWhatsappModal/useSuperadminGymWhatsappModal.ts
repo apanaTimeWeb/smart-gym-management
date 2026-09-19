@@ -9,9 +9,16 @@ import { z } from 'zod';
 import toast from 'react-hot-toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSuperadminGymsStore } from '@/app/superadmin/gyms/gyms_store/useSuperadminGymsStore';
-import { gymsApi } from '@/app/superadmin/gyms/superadmin_gyms_api/superadmin_gyms_api';
+import { gymsApi } from '@/app/superadmin/gyms/gyms_api/SuperadminGymsApi';
 import { WhatsAppFormatter } from '@/lib/whatsapp_formatter';
-import { gymWhatsappSchema, type GymWhatsappFormValues } from '@/app/superadmin/gyms/superadmin_gyms_types/superadmin_gyms_schema';
+import { gymWhatsappSchema, type GymWhatsappFormValues } from '@/app/superadmin/gyms/gyms_types/SuperadminGymsSchema';
+/**
+ * Purpose: Handles form validation, modal state, and API submission for sending a WhatsApp message to a Gym owner.
+ * Inputs: values defined by the exported hook signature.
+ * Output: the hook's typed state/actions/query contract.
+ * Side effects: remain scoped to the owning feature or approved application infrastructure.
+ * Invariant: does not move feature business state into unrelated modules.
+ */
 export function useSuperadminGymWhatsappModal() {
     const isWhatsappModalOpen = useSuperadminGymsStore(state => state.isWhatsappModalOpen);
     const closeWhatsappModal = useSuperadminGymsStore(state => state.closeWhatsappModal);
@@ -23,6 +30,7 @@ export function useSuperadminGymWhatsappModal() {
     // RESPONSIBILITY: Handle side-effects for useSuperadminGymWhatsappModal
     // EXPLANATION: Synchronize component state with external dependencies.
     // EFFECT DEPENDENCIES: Documented intentionally.
+    // EFFECT INTENT: Synchronize local/UI state with the listed external dependencies.
     useEffect(() => {
         if (isWhatsappModalOpen) {
             reset({ subject: '', message: '' });

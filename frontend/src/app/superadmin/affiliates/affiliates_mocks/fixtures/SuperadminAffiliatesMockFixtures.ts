@@ -1,4 +1,4 @@
-import type { Affiliate } from '@/app/superadmin/affiliates/superadmin_affiliates_types/superadmin_affiliates_types';
+import type { Affiliate } from '@/app/superadmin/affiliates/affiliates_types/SuperadminAffiliatesTypes';
 
 export const MOCK_SUPERADMIN_AFFILIATES: Affiliate[] = [
     { id: 'a1', name: 'John Doe', email: 'john@influencer.com', phone: '9876543210', referralCode: 'JOHN50', totalReferred: 25, commissionEarned: 15000, commissionRate: 15, pendingPayout: 5000, bankDetails: 'HDFC Bank - 1234', status: 'ACTIVE', joinedAt: '2026-01-15', referralCount: 120, conversionRate: 20.8 },

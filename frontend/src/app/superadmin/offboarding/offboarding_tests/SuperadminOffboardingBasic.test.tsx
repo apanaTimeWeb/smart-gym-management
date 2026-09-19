@@ -12,7 +12,7 @@ describe('Superadmin Tenant Offboarding', () => {
     it('renders loading and real fixture-backed success states', () => {
         mockedUsePage.mockReturnValue({
             data: null,
-            isLoading: true,
+            isPending: true,
             isError: false,
             refetch: vi.fn(),
         });
@@ -21,7 +21,7 @@ describe('Superadmin Tenant Offboarding', () => {
         unmount();
         mockedUsePage.mockReturnValue({
             data: SUPERADMIN_OFFBOARDING_MOCK_FIXTURE,
-            isLoading: false,
+            isPending: false,
             isError: false,
             refetch: vi.fn(),
         });
@@ -34,7 +34,7 @@ describe('Superadmin Tenant Offboarding', () => {
         const refetch = vi.fn();
         mockedUsePage.mockReturnValue({
             data: null,
-            isLoading: false,
+            isPending: false,
             isError: true,
             refetch,
         });
@@ -46,7 +46,7 @@ describe('Superadmin Tenant Offboarding', () => {
     it('renders dedicated empty states when queue and export requests are empty', () => {
         mockedUsePage.mockReturnValue({
             data: { ...SUPERADMIN_OFFBOARDING_MOCK_FIXTURE, queue: [], requests: [] },
-            isLoading: false,
+            isPending: false,
             isError: false,
             refetch: vi.fn(),
         });

@@ -1,12 +1,22 @@
+import { resetSuperadminMessagingMockState } from '@/app/superadmin/messaging/messaging_mocks/handlers/SuperadminMessagingMockHandlers';
+import { resetSuperadminMessagingV1WhatsAppMockState } from '@/app/superadmin/messaging/messaging_whatsapp_mocks/handlers/SuperadminMessagingV1WhatsAppMockHandlers';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderHook, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
-import { fetchSuperadminWhatsAppBulkCenter } from '@/app/superadmin/messaging/messaging_whatsapp_api/superadmin_messaging_whatsapp_api';
+import { fetchWhatsAppBulkCenter } from '@/app/superadmin/messaging/messaging_whatsapp_api/SuperadminMessagingWhatsappApi';
 import { SUPERADMIN_WHATSAPP_BULK_CENTER_MOCK_FIXTURE } from '@/app/superadmin/messaging/messaging_whatsapp_mocks/fixtures/SuperadminMessagingV1WhatsAppMockFixtures';
 import { useSuperadminMessagingV1WhatsApp } from '@/app/superadmin/messaging/messaging_whatsapp_utils/useSuperadminMessagingV1WhatsApp';
-vi.mock('@/app/superadmin/messaging/messaging_whatsapp_api/superadmin_messaging_whatsapp_api', () => ({ fetchSuperadminWhatsAppBulkCenter: vi.fn() }));
-const mockedFetch = vi.mocked(fetchSuperadminWhatsAppBulkCenter);
+vi.mock('@/app/superadmin/messaging/messaging_whatsapp_api/SuperadminMessagingWhatsappApi', () => ({ fetchWhatsAppBulkCenter: vi.fn() }));
+const mockedFetch = vi.mocked(fetchWhatsAppBulkCenter);
+beforeEach(() => {
+  resetSuperadminMessagingV1WhatsAppMockState();
+});
+
+beforeEach(() => {
+  resetSuperadminMessagingMockState();
+});
+
 describe('useSuperadminMessagingV1WhatsApp', () => {
     let queryClient: QueryClient;
     function TestQueryProvider({ children }: {

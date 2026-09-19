@@ -1,4 +1,4 @@
-import type { TenantOnboarding } from '@/app/superadmin/onboarding/onboarding_types/superadmin_onboarding_types';
+import type { TenantOnboarding } from '@/app/superadmin/onboarding/onboarding_types/SuperadminOnboardingTypes';
 export const MOCK_SUPERADMIN_ONBOARDINGS: TenantOnboarding[] = [
     { id: 'gym-1001', gymName: 'Flex Fitness Central', ownerName: 'Sarah Connor', adminEmail: 'sarah@flexfitness.com', phone: '+91 98765 43210', plan: 'ENTERPRISE', signupDate: '2026-09-02', trialEndsAt: '2026-10-02', trialStatus: 'TRIAL', onboardingStatus: 'IN_PROGRESS', emailVerified: true, welcomeEmailSent: true, daysInTrial: 14, trialDaysLeft: 16, checklist: [{ key: 'email_verified', label: 'Email Verified', done: true }] },
     { id: 'gym-1002', gymName: 'Iron Temple Barbell Club', ownerName: 'Arnold Strong', adminEmail: 'arnold@irontemple.com', phone: '+91 91234 56789', plan: 'PRO', signupDate: '2026-09-05', trialEndsAt: null, trialStatus: 'CONVERTED', onboardingStatus: 'COMPLETED', emailVerified: true, welcomeEmailSent: true, daysInTrial: 14, trialDaysLeft: 0, checklist: [{ key: 'email_verified', label: 'Email Verified', done: true }] },

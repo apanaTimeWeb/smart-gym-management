@@ -2,16 +2,11 @@
 // RESPONSIBILITY: Coordinates Superadmin background-job mutations, confirmation-safe destructive actions, cache invalidation, and user feedback.
 'use client';
 import { useState } from 'react';
-import type { Dispatch, SetStateAction } from 'react';
+import type { SuperadminJobsMutationOptions } from '@/app/superadmin/jobs/jobs_types/SuperadminJobsMutationTypes';
 import { useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
-import { jobsApi } from '@/app/superadmin/jobs/superadmin_jobs_api/superadmin_jobs_api';
+import { jobsApi } from '@/app/superadmin/jobs/jobs_api/SuperadminJobsApi';
 import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
-
-interface SuperadminJobsMutationOptions {
-    setSelectedJobIds: Dispatch<SetStateAction<Set<string>>>;
-    selectedJobIds: Set<string>;
-}
 
 /** Executes job mutations and reconciles the owning Jobs query after each successful operation. */
 export function useSuperadminJobsMutations({ setSelectedJobIds, selectedJobIds }: SuperadminJobsMutationOptions) {
@@ -28,7 +23,7 @@ export function useSuperadminJobsMutations({ setSelectedJobIds, selectedJobIds }
             toast.success(response.message, { id: 'superadmin-jobs-retry-all' });
             await invalidateJobs();
         } catch (error: unknown) {
-            toast.error(error instanceof Error ? error.message : 'Unable to retry jobs.', { id: 'superadmin-jobs-retry-all-error' });
+            toast.error(error instanceof Error ? error.message : '', { id: 'superadmin-jobs-retry-all-error' });
         } finally {
             setIsRetrying(false);
         }
@@ -41,7 +36,7 @@ export function useSuperadminJobsMutations({ setSelectedJobIds, selectedJobIds }
             toast.success(response.message, { id: `superadmin-jobs-retry-${id}` });
             await invalidateJobs();
         } catch (error: unknown) {
-            toast.error(error instanceof Error ? error.message : 'Unable to retry this job.', { id: `superadmin-jobs-retry-error-${id}` });
+            toast.error(error instanceof Error ? error.message : '', { id: `superadmin-jobs-retry-error-${id}` });
         }
     }
 
@@ -49,12 +44,12 @@ export function useSuperadminJobsMutations({ setSelectedJobIds, selectedJobIds }
         const confirmed = await confirm({ title: 'Cancel Job', message: 'Are you sure you want to cancel this running job?', type: 'warning', confirmText: 'Cancel Job' });
         if (!confirmed) return;
         try {
-            const response = await jobsApi.cancelJob(id);
+            const response = await jobsApi.cancelJob(id, crypto.randomUUID());
             if (!response.success) throw new Error(response.message);
             toast.success(response.message, { id: `superadmin-jobs-cancel-${id}` });
             await invalidateJobs();
         } catch (error: unknown) {
-            toast.error(error instanceof Error ? error.message : 'Unable to cancel this job.', { id: `superadmin-jobs-cancel-error-${id}` });
+            toast.error(error instanceof Error ? error.message : '', { id: `superadmin-jobs-cancel-error-${id}` });
         }
     }
 
@@ -62,7 +57,7 @@ export function useSuperadminJobsMutations({ setSelectedJobIds, selectedJobIds }
         const confirmed = await confirm({ title: 'Delete Job', message: 'Are you sure you want to permanently delete this job?', type: 'danger', confirmText: 'Delete Job' });
         if (!confirmed) return;
         try {
-            const response = await jobsApi.deleteJob(id);
+            const response = await jobsApi.deleteJob(id, crypto.randomUUID());
             if (!response.success) throw new Error(response.message);
             toast.success(response.message, { id: `superadmin-jobs-delete-${id}` });
             setSelectedJobIds((previous) => {
@@ -72,7 +67,7 @@ export function useSuperadminJobsMutations({ setSelectedJobIds, selectedJobIds }
             });
             await invalidateJobs();
         } catch (error: unknown) {
-            toast.error(error instanceof Error ? error.message : 'Unable to delete this job.', { id: `superadmin-jobs-delete-error-${id}` });
+            toast.error(error instanceof Error ? error.message : '', { id: `superadmin-jobs-delete-error-${id}` });
         }
     }
 
@@ -80,13 +75,13 @@ export function useSuperadminJobsMutations({ setSelectedJobIds, selectedJobIds }
         const confirmed = await confirm({ title: 'Clear Completed Jobs', message: 'This removes all completed jobs from the Superadmin job history.', type: 'danger', confirmText: 'Clear Completed' });
         if (!confirmed) return;
         try {
-            const response = await jobsApi.clearCompletedJobs();
+            const response = await jobsApi.clearCompletedJobs(crypto.randomUUID());
             if (!response.success) throw new Error(response.message);
             toast.success(response.message, { id: 'superadmin-jobs-clear-completed' });
             setSelectedJobIds(new Set());
             await invalidateJobs();
         } catch (error: unknown) {
-            toast.error(error instanceof Error ? error.message : 'Unable to clear completed jobs.', { id: 'superadmin-jobs-clear-completed-error' });
+            toast.error(error instanceof Error ? error.message : '', { id: 'superadmin-jobs-clear-completed-error' });
         }
     }
 
@@ -100,7 +95,7 @@ export function useSuperadminJobsMutations({ setSelectedJobIds, selectedJobIds }
             setSelectedJobIds(new Set());
             await invalidateJobs();
         } catch (error: unknown) {
-            toast.error(error instanceof Error ? error.message : 'Unable to retry selected jobs.', { id: 'superadmin-jobs-bulk-retry-error' });
+            toast.error(error instanceof Error ? error.message : '', { id: 'superadmin-jobs-bulk-retry-error' });
         }
     }
 
@@ -110,13 +105,13 @@ export function useSuperadminJobsMutations({ setSelectedJobIds, selectedJobIds }
         if (!confirmed) return;
         if (!ids.length) return;
         try {
-            const response = await jobsApi.bulkDeleteJobs(ids);
+            const response = await jobsApi.bulkDeleteJobs(ids, crypto.randomUUID());
             if (!response.success) throw new Error(response.message);
             toast.success(response.message, { id: 'superadmin-jobs-bulk-delete' });
             setSelectedJobIds(new Set());
             await invalidateJobs();
         } catch (error: unknown) {
-            toast.error(error instanceof Error ? error.message : 'Unable to delete selected jobs.', { id: 'superadmin-jobs-bulk-delete-error' });
+            toast.error(error instanceof Error ? error.message : '', { id: 'superadmin-jobs-bulk-delete-error' });
         }
     }
 

@@ -1,3 +1,4 @@
+import { resetSuperadminSegmentsMockState } from '@/app/superadmin/segments/segments_mocks/handlers/SuperadminSegmentsMockHandlers';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
 import SuperadminSegmentsClient from '@/app/superadmin/segments/segments_components/SuperadminSegmentsClient';
@@ -5,6 +6,10 @@ import { SUPERADMIN_SEGMENTS_MOCK_FIXTURE } from '@/app/superadmin/segments/segm
 import { useSuperadminSegmentsPage } from '@/app/superadmin/segments/segments_utils/useSuperadminSegmentsPage';
 vi.mock('@/app/superadmin/segments/segments_utils/useSuperadminSegmentsPage', () => ({ useSuperadminSegmentsPage: vi.fn() }));
 const mockedUsePage = vi.mocked(useSuperadminSegmentsPage);
+beforeEach(() => {
+  resetSuperadminSegmentsMockState();
+});
+
 describe('Superadmin Saved Tenant Segments', () => {
     beforeEach(() => {
         mockedUsePage.mockReset();
@@ -12,7 +17,7 @@ describe('Superadmin Saved Tenant Segments', () => {
     it('renders loading and real fixture-backed success states', () => {
         mockedUsePage.mockReturnValue({
             data: null,
-            isLoading: true,
+            isPending: true,
             isError: false,
             refetch: vi.fn(),
         });
@@ -21,7 +26,7 @@ describe('Superadmin Saved Tenant Segments', () => {
         unmount();
         mockedUsePage.mockReturnValue({
             data: SUPERADMIN_SEGMENTS_MOCK_FIXTURE,
-            isLoading: false,
+            isPending: false,
             isError: false,
             refetch: vi.fn(),
         });
@@ -34,7 +39,7 @@ describe('Superadmin Saved Tenant Segments', () => {
         const refetch = vi.fn();
         mockedUsePage.mockReturnValue({
             data: null,
-            isLoading: false,
+            isPending: false,
             isError: true,
             refetch,
         });
@@ -46,7 +51,7 @@ describe('Superadmin Saved Tenant Segments', () => {
     it('renders dedicated empty states when no saved groups or presets exist', () => {
         mockedUsePage.mockReturnValue({
             data: { ...SUPERADMIN_SEGMENTS_MOCK_FIXTURE, segments: [], presets: [] },
-            isLoading: false,
+            isPending: false,
             isError: false,
             refetch: vi.fn(),
         });

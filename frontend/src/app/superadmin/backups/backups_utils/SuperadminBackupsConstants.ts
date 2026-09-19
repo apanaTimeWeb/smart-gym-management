@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Encapsulates functionality for SuperadminBackupsConstants.ts
-import type { BackupRecord } from '@/app/superadmin/backups/superadmin_backups_types/superadmin_backups_types';
+import type { BackupRecord } from '@/app/superadmin/backups/backups_types/SuperadminBackupsTypes';
 export const StatusColors: Record<BackupRecord['status'], string> = {
     SUCCESS: 'text-success bg-success/10',
     IN_PROGRESS: 'text-primary bg-primary/10',

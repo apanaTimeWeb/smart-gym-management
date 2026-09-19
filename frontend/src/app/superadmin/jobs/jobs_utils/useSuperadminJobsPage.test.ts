@@ -1,3 +1,4 @@
+import { resetSuperadminJobsMockState } from '@/app/superadmin/jobs/jobs_mocks/handlers/SuperadminJobsMockHandlers';
 // Test: useSuperadminJobsPage — covers success, loading, error, empty, filter params, and pagination (P1-29)
 import { renderHook, act } from '@testing-library/react';
 import { useSuperadminJobsPage } from '@/app/superadmin/jobs/jobs_utils/useSuperadminJobsPage';
@@ -15,7 +16,7 @@ vi.mock('next/navigation', () => ({
     usePathname: vi.fn(() => ''),
     useSearchParams: vi.fn(() => ({ get: vi.fn(), set: vi.fn() })),
 }));
-vi.mock('@/app/superadmin/jobs/superadmin_jobs_api/superadmin_jobs_api', () => ({
+vi.mock('@/app/superadmin/jobs/jobs_api/SuperadminJobsApi', () => ({
     jobsApi: {
         fetchJobs: vi.fn(),
         retryJob: vi.fn(),
@@ -24,6 +25,10 @@ vi.mock('@/app/superadmin/jobs/superadmin_jobs_api/superadmin_jobs_api', () => (
     },
 }));
 const mockQueryClient = { invalidateQueries: vi.fn() };
+beforeEach(() => {
+  resetSuperadminJobsMockState();
+});
+
 describe('useSuperadminJobsPage', () => {
     beforeEach(() => {
         vi.clearAllMocks();
@@ -35,26 +40,26 @@ describe('useSuperadminJobsPage', () => {
         ];
         (useQuery as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
             data: { data: mockJobs },
-            isLoading: false,
+            isPending: false,
             isError: false,
         });
         const { result } = renderHook(() => useSuperadminJobsPage());
-        expect(result.current.isLoading).toBe(false);
+        expect(result.current.isPending).toBe(false);
         expect(result.current.filteredJobs.length).toBeGreaterThanOrEqual(0);
     });
     it('returns loading state while job query is pending', () => {
         (useQuery as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
             data: undefined,
-            isLoading: true,
+            isPending: true,
             isError: false,
         });
         const { result } = renderHook(() => useSuperadminJobsPage());
-        expect(result.current.isLoading).toBe(true);
+        expect(result.current.isPending).toBe(true);
     });
     it('returns error state when job query fails', () => {
         (useQuery as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
             data: undefined,
-            isLoading: false,
+            isPending: false,
             isError: true,
         });
         const { result } = renderHook(() => useSuperadminJobsPage());
@@ -63,7 +68,7 @@ describe('useSuperadminJobsPage', () => {
     it('handles empty jobs list without crashing', () => {
         (useQuery as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
             data: { data: [] },
-            isLoading: false,
+            isPending: false,
             isError: false,
         });
         const { result } = renderHook(() => useSuperadminJobsPage());
@@ -76,7 +81,7 @@ describe('useSuperadminJobsPage', () => {
         }));
         (useQuery as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
             data: { data: manyJobs },
-            isLoading: false,
+            isPending: false,
             isError: false,
         });
         const { result } = renderHook(() => useSuperadminJobsPage());
@@ -90,7 +95,7 @@ describe('useSuperadminJobsPage', () => {
         ];
         (useQuery as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
             data: { data: mixedJobs },
-            isLoading: false,
+            isPending: false,
             isError: false,
         });
         const { result } = renderHook(() => useSuperadminJobsPage());

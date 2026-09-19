@@ -4,6 +4,7 @@
 // No business logic or rendering of UI primitives here (Rule 6, Rule 34).
 //
 // DATA FLOW: useSuperadminJobsPage → SuperadminJobsView → SuperadminJobsHeader + StatsBar + Table + InspectModal
+import type { SuperadminJobsStatusFilter } from '@/app/superadmin/jobs/jobs_types/SuperadminJobsTypes';
 import { Loader2 } from 'lucide-react';
 import { useSuperadminJobsPage } from '@/app/superadmin/jobs/jobs_utils/useSuperadminJobsPage';
 import SuperadminJobsHeader from '@/app/superadmin/jobs/jobs_components/SuperadminJobsHeader/SuperadminJobsHeader';
@@ -12,8 +13,8 @@ import SuperadminJobsTable from '@/app/superadmin/jobs/jobs_components/Superadmi
 import SuperadminJobInspectModal from '@/app/superadmin/jobs/jobs_components/SuperadminJobInspectModal/SuperadminJobInspectModal';
 import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
 export default function SuperadminJobsView() {
-    const { isLoading, isError: error, filteredJobs, paginatedJobs, currentPage, totalPages, setCurrentPage, statusFilter, setStatusFilter, queueFilter, setQueueFilter, selectedJobIds, toggleSelection, toggleAll, inspectJob, setInspectJob, isRetrying, handleRetryAll, handleRetryJob, handleCancelJob, handleDeleteJob, handleClearCompleted, handleBulkRetry, handleBulkDelete, metrics, } = useSuperadminJobsPage();
-    if (isLoading) {
+    const { isPending, isError: error, filteredJobs, paginatedJobs, currentPage, totalPages, setCurrentPage, statusFilter, setStatusFilter, queueFilter, setQueueFilter, selectedJobIds, toggleSelection, toggleAll, inspectJob, setInspectJob, isRetrying, handleRetryAll, handleRetryJob, handleCancelJob, handleDeleteJob, handleClearCompleted, handleBulkRetry, handleBulkDelete, metrics, } = useSuperadminJobsPage();
+    if (isPending) {
         return (<div className="space-y-6">
         <div className="flex justify-between items-center">
           <div className="h-8 w-48 bg-skeleton-base motion-safe:animate-pulse rounded"/>
@@ -31,9 +32,9 @@ export default function SuperadminJobsView() {
     return (<div className="space-y-6">
       <SuperadminJobsHeader selectedCount={selectedJobIds.size} isRetrying={isRetrying} statusFilter={statusFilter} setStatusFilter={setStatusFilter} queueFilter={queueFilter} setQueueFilter={setQueueFilter} onClearCompleted={handleClearCompleted} onRetryAll={handleRetryAll} onBulkRetry={handleBulkRetry} onBulkDelete={handleBulkDelete} onFilterChange={() => setCurrentPage(1)}/>
 
-      <SuperadminJobsStatsBar metrics={metrics} onFilterSelect={(status) => { setStatusFilter(status as 'ALL' | 'COMPLETED' | 'FAILED' | 'IN_PROGRESS'); setCurrentPage(1); }}/>
+      <SuperadminJobsStatsBar metrics={metrics} onFilterSelect={(status) => { setStatusFilter(status as SuperadminJobsStatusFilter); setCurrentPage(1); }}/>
 
-      <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden flex flex-col min-h-96">
+      <div className="bg-card border border-border rounded-xl shadow-card overflow-hidden flex flex-col min-h-96">
         <SuperadminJobsTable jobs={paginatedJobs} allJobsFiltered={statusFilter !== 'ALL' || queueFilter !== 'ALL'} selectedJobIds={selectedJobIds} toggleSelection={toggleSelection} toggleAll={toggleAll} onInspect={setInspectJob} onRetry={handleRetryJob} onCancel={handleCancelJob} onDelete={handleDeleteJob}/>
         <SuperadminPagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage}/>
       </div>

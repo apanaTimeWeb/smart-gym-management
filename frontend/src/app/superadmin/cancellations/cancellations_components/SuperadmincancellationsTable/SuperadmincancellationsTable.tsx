@@ -4,11 +4,9 @@
 import { AlertTriangle, Phone, Mail, Edit2 } from 'lucide-react';
 import { maskSensitiveData, formatCurrency, displayValue, formatDate } from '@/lib/formatters';
 import { CANCELLATIONS_RISK_STYLES, CANCELLATIONS_ACTION_STATUS_STYLES, } from '@/app/superadmin/cancellations/cancellations_utils/SuperadminCancellationsConstants';
-import type { CancellationsAlert } from '@/app/superadmin/cancellations/cancellations_types/superadmin_cancellations_types';
-interface SuperadminCancellationsTableProps {
-    alerts: CancellationsAlert[];
-    onActionClick: (alert: CancellationsAlert) => void;
-}
+import type { CancellationsAlert } from '@/app/superadmin/cancellations/cancellations_types/SuperadminCancellationsTypes';
+import type { SuperadminCancellationsTableProps } from '@/app/superadmin/cancellations/cancellations_types/SuperadminCancellationsTableTypes';
+
 export default function SuperadminCancellationsTable({ alerts, onActionClick }: SuperadminCancellationsTableProps) {
     return (<div className="overflow-x-auto">
       <table className="w-full text-sm">
@@ -22,7 +20,7 @@ export default function SuperadminCancellationsTable({ alerts, onActionClick }: 
         <tbody className="divide-y divide-border">
           {alerts.map((alert) => (<tr key={alert.id} className="hover:bg-input/30 motion-safe:transition-colors group">
               <td className="px-4 py-3">
-                <p className="font-medium text-foreground truncate max-w-xs">{alert.gymName}</p>
+                <p className="font-medium text-primary truncate max-w-xs">{alert.gymName}</p>
                 <p className="text-xs text-secondary truncate max-w-xs">{alert.ownerName}</p>
               </td>
               <td className="px-4 py-3">
@@ -53,7 +51,7 @@ export default function SuperadminCancellationsTable({ alerts, onActionClick }: 
                 </span>
               </td>
               <td className="px-4 py-3 text-right">
-                <span className="text-xs font-medium text-foreground">
+                <span className="text-xs font-medium text-primary">
                   {formatCurrency(alert.mrrAtRisk)}
                 </span>
               </td>
@@ -74,10 +72,10 @@ export default function SuperadminCancellationsTable({ alerts, onActionClick }: 
               </td>
               <td className="px-4 py-3">
                 <div className="flex items-center gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 motion-safe:transition-opacity">
-                  <a href={`mailto:${alert.adminEmail}`} aria-label={`Email ${alert.gymName}`} onClick={(e) => e.stopPropagation()} className="p-1.5 rounded-lg text-secondary hover:text-foreground hover:bg-input motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                  <a href={`mailto:${maskSensitiveData(alert.adminEmail, 'email')}`} aria-label={`Email ${alert.gymName}`} onClick={(e) => e.stopPropagation()} className="p-1.5 rounded-lg text-secondary hover:text-primary hover:bg-input motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
                     <Mail size={18} strokeWidth={2}/>
                   </a>
-                  <a href={`tel:${alert.phone}`} aria-label={`Call ${alert.gymName}`} onClick={(e) => e.stopPropagation()} className="p-1.5 rounded-lg text-secondary hover:text-foreground hover:bg-input motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                  <a href={`tel:${alert.phone}`} aria-label={`Call ${alert.gymName}`} onClick={(e) => e.stopPropagation()} className="p-1.5 rounded-lg text-secondary hover:text-primary hover:bg-input motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
                     <Phone size={18} strokeWidth={2}/>
                   </a>
                   <button onClick={(e) => { e.stopPropagation(); onActionClick(alert); }} aria-label={`Update action for ${alert.gymName}`} className="p-1.5 rounded-lg text-secondary hover:text-primary hover:bg-primary-subtle motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">

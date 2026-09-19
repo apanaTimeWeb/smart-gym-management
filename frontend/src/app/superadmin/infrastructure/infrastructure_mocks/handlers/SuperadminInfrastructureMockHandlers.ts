@@ -2,6 +2,7 @@ import { http, HttpResponse, delay } from 'msw';
 import { InfrastructureUrlConfig } from '@/app/superadmin/infrastructure/superadmin_infrastructure_url_config';
 import { MOCK_INFRASTRUCTURE_NODES, MOCK_REDIS_TELEMETRY } from '@/app/superadmin/infrastructure/infrastructure_mocks/fixtures/SuperadminInfrastructureMockData';
 import { MOCK_SUPERADMIN_INFRASTRUCTURE_TENANTS } from '@/app/superadmin/infrastructure/infrastructure_mocks/fixtures/SuperadminInfrastructureMockFixtures';
+import { MOCK_SUPERADMIN_INFRASTRUCTURE_UPTIME } from '@/app/superadmin/infrastructure/infrastructure_mocks/fixtures/SuperadminInfrastructureUptimeMockFixtures';
 export const superadminInfrastructureHandlers = [
     http.get('*/api/v1/api/gyms', async () => HttpResponse.json({ success: true, message: 'Success', data: MOCK_SUPERADMIN_INFRASTRUCTURE_TENANTS })),
     http.get(InfrastructureUrlConfig.BACKEND_API.BASE, async ({ request }) => {
@@ -13,6 +14,10 @@ export const superadminInfrastructureHandlers = [
             filtered = filtered.filter(n => n.status === statusFilter);
         }
         return HttpResponse.json({ success: true, message: 'Success', data: filtered });
+    }),
+    http.get(`${InfrastructureUrlConfig.BACKEND_API.BASE}/uptime-history`, async () => {
+        await delay(250);
+        return HttpResponse.json({ success: true, message: 'Historical uptime loaded', data: MOCK_SUPERADMIN_INFRASTRUCTURE_UPTIME });
     }),
     http.get(InfrastructureUrlConfig.BACKEND_API.REDIS_TELEMETRY, async () => {
         await delay(300);

@@ -7,10 +7,8 @@ export const metadata: Metadata = {
     title: 'Cancellations Alerts | Superadmin | GymSmart',
     description: 'Monitor at-risk gyms and take proactive retention actions.',
 };
-import SuperadminCancellationsV1Client from '@/app/superadmin/cancellations/cancellations_components/SuperadminCancellationsV1Client';
 export default function SuperadminCancellationsAlertsPage() {
     return (<Suspense fallback={<SuperadminPageSuspenseSkeleton />}>
       <SuperadminCancellationsClient />
-      <SuperadminCancellationsV1Client />
     </Suspense>);
 }

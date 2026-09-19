@@ -4,20 +4,11 @@ import React, { useEffect } from 'react';
 import { X, Loader2, Network } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import type { SuperadminFranchise } from '@/app/superadmin/franchises/franchises_types/superadmin_franchises_types';
+import type { SuperadminFranchise } from '@/app/superadmin/franchises/franchises_types/SuperadminFranchisesTypes';
 import { franchiseSchema } from '@/app/superadmin/franchises/franchises_utils/SuperadminFranchisesSchemas';
-import { type FranchiseFormValues } from '@/app/superadmin/franchises/franchises_utils/SuperadminFranchisesSchemas';
+import type { FranchiseFormData, SuperadminFranchiseModalProps } from '@/app/superadmin/franchises/franchises_types/SuperadminFranchiseModalTypes';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
-export interface FranchiseFormData extends FranchiseFormValues {
-}
-interface SuperadminFranchiseModalProps {
-    isOpen: boolean;
-    onClose: () => void;
-    franchise: SuperadminFranchise;
-    onSubmit: (data: FranchiseFormData) => void;
-    isMutating: boolean;
-}
-import { useSuperadminUnsavedChangesGuard } from '@/app/superadmin/superadmin_utils/useSuperadminUnsavedChangesGuard';
+import { useSuperadminUnsavedChangesGuard } from '@/app/superadmin/superadmin_infrastructure/useSuperadminUnsavedChangesGuard';
 export function SuperadminFranchiseModal({ isOpen, onClose, franchise, onSubmit, isMutating, }: SuperadminFranchiseModalProps) {
     const { register, control, handleSubmit, reset, formState: { errors, isDirty } } = useForm<FranchiseFormData>({
         resolver: zodResolver(franchiseSchema)
@@ -26,6 +17,7 @@ export function SuperadminFranchiseModal({ isOpen, onClose, franchise, onSubmit,
     // RESPONSIBILITY: Handle side-effects for SuperadminFranchiseModal
     // EXPLANATION: Synchronize component state with external dependencies.
     // EFFECT DEPENDENCIES: Documented intentionally.
+    // EFFECT INTENT: Synchronize the editable form with the selected record when the modal opens, then let cleanup be handled by React Hook Form.
     useEffect(() => {
         if (isOpen) {
             reset({
@@ -41,7 +33,7 @@ export function SuperadminFranchiseModal({ isOpen, onClose, franchise, onSubmit,
     if (!isOpen)
         return null;
     return (<div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 backdrop-blur-sm p-4" role="dialog" aria-modal="true">
-      <div className="bg-card w-full max-w-lg rounded-2xl shadow-xl overflow-hidden border border-border motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95 flex flex-col h-auto">
+      <div className="bg-card w-full max-w-lg rounded-2xl shadow-dialog overflow-hidden border border-border motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95 flex flex-col h-auto">
         
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-border bg-card">
@@ -50,11 +42,11 @@ export function SuperadminFranchiseModal({ isOpen, onClose, franchise, onSubmit,
               <Network size={18} strokeWidth={2.5}/>
             </div>
             <div>
-              <h2 className="text-xl font-bold text-foreground">Edit Franchise</h2>
+              <h2 className="text-xl font-bold text-primary">Edit Franchise</h2>
               <p className="text-xs text-secondary mt-0.5">Update details for {franchise.franchiseName}</p>
             </div>
           </div>
-          <button onClick={onClose} className="p-2 text-secondary hover:text-foreground hover:bg-input rounded-xl motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" aria-label="Close">
+          <button onClick={onClose} className="p-2 text-secondary hover:text-primary hover:bg-input rounded-xl motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" aria-label="Close">
             <X size={18}/>
           </button>
         </div>
@@ -64,41 +56,41 @@ export function SuperadminFranchiseModal({ isOpen, onClose, franchise, onSubmit,
           <div className="p-6 space-y-4">
             
             <div className="space-y-1.5">
-              <label className="text-sm font-medium text-foreground">Franchise Name</label>
-              <input {...register('franchiseName', { required: 'Required' })} className="w-full px-4 py-2.5 bg-input border border-border rounded-xl text-sm text-foreground focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary/20 motion-safe:transition-all" placeholder="e.g. FitLife Group"/>
+              <label className="text-sm font-medium text-primary">Franchise Name</label>
+              <input {...register('franchiseName', { required: 'Required' })} className="w-full px-4 py-2.5 bg-input border border-border rounded-xl text-sm text-primary focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary/20 motion-safe:transition-all" placeholder="e.g. FitLife Group"/>
               {errors.franchiseName && <p className="text-xs text-danger">{errors.franchiseName.message}</p>}
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <label className="text-sm font-medium text-foreground">Owner Name</label>
-                <input {...register('ownerName', { required: 'Required' })} className="w-full px-4 py-2.5 bg-input border border-border rounded-xl text-sm text-foreground focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary/20 motion-safe:transition-all" placeholder="e.g. John Doe"/>
+                <label className="text-sm font-medium text-primary">Owner Name</label>
+                <input {...register('ownerName', { required: 'Required' })} className="w-full px-4 py-2.5 bg-input border border-border rounded-xl text-sm text-primary focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary/20 motion-safe:transition-all" placeholder="e.g. John Doe"/>
                 {errors.ownerName && <p className="text-xs text-danger">{errors.ownerName.message}</p>}
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-sm font-medium text-foreground">Owner Email</label>
-                <input type="email" {...register('ownerEmail', { required: 'Required' })} className="w-full px-4 py-2.5 bg-input border border-border rounded-xl text-sm text-foreground focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary/20 motion-safe:transition-all" placeholder="e.g. john@fitlife.com"/>
+                <label className="text-sm font-medium text-primary">Owner Email</label>
+                <input type="email" {...register('ownerEmail', { required: 'Required' })} className="w-full px-4 py-2.5 bg-input border border-border rounded-xl text-sm text-primary focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary/20 motion-safe:transition-all" placeholder="e.g. john@fitlife.com"/>
                 {errors.ownerEmail && <p className="text-xs text-danger">{errors.ownerEmail.message}</p>}
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <label className="text-sm font-medium text-foreground">City</label>
-                <input {...register('city', { required: 'Required' })} className="w-full px-4 py-2.5 bg-input border border-border rounded-xl text-sm text-foreground focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary/20 motion-safe:transition-all" placeholder="e.g. Mumbai"/>
+                <label className="text-sm font-medium text-primary">City</label>
+                <input {...register('city', { required: 'Required' })} className="w-full px-4 py-2.5 bg-input border border-border rounded-xl text-sm text-primary focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary/20 motion-safe:transition-all" placeholder="e.g. Mumbai"/>
                 {errors.city && <p className="text-xs text-danger">{errors.city.message}</p>}
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-sm font-medium text-foreground">State</label>
-                <input {...register('state', { required: 'Required' })} className="w-full px-4 py-2.5 bg-input border border-border rounded-xl text-sm text-foreground focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary/20 motion-safe:transition-all" placeholder="e.g. Maharashtra"/>
+                <label className="text-sm font-medium text-primary">State</label>
+                <input {...register('state', { required: 'Required' })} className="w-full px-4 py-2.5 bg-input border border-border rounded-xl text-sm text-primary focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary/20 motion-safe:transition-all" placeholder="e.g. Maharashtra"/>
                 {errors.state && <p className="text-xs text-danger">{errors.state.message}</p>}
               </div>
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-sm font-medium text-foreground">Plan Tier</label>
+              <label className="text-sm font-medium text-primary">Plan Tier</label>
               <Controller name="plan" control={control} rules={{ required: 'Required' }} render={({ field }) => (<SearchableDropdown options={[
                 { value: 'Enterprise', label: 'Enterprise' },
                 { value: 'Pro', label: 'Pro' },
@@ -110,10 +102,10 @@ export function SuperadminFranchiseModal({ isOpen, onClose, franchise, onSubmit,
 
           {/* Footer */}
           <div className="p-6 pt-4 border-t border-border flex justify-end gap-3 bg-card mt-auto">
-            <button type="button" onClick={onClose} disabled={isMutating} className="px-6 py-2.5 rounded-xl font-medium border border-border text-foreground hover:bg-input motion-safe:transition-colors disabled:opacity-50">
+            <button type="button" onClick={onClose} disabled={isMutating} className="px-6 py-2.5 rounded-xl font-medium border border-border text-primary hover:bg-input motion-safe:transition-colors disabled:opacity-50">
               Cancel
             </button>
-            <button type="submit" disabled={isMutating} className="px-6 py-2.5 rounded-xl font-medium bg-primary text-white hover:bg-primary-hover shadow-lg shadow-primary/20 motion-safe:transition-colors disabled:opacity-50 flex items-center justify-center min-w-32">
+            <button type="submit" disabled={isMutating} className="px-6 py-2.5 rounded-xl font-medium bg-primary text-on-primary hover:bg-primary-hover shadow-card shadow-primary/20 motion-safe:transition-colors disabled:opacity-50 flex items-center justify-center min-w-32">
               {isMutating ? <Loader2 className="w-5 h-5 motion-safe:animate-spin"/> : 'Save Changes'}
             </button>
           </div>

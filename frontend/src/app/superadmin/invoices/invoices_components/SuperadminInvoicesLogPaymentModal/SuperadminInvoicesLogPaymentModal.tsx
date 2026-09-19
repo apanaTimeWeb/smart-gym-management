@@ -3,28 +3,17 @@
 import React, { useState } from 'react';
 import { X, Search, DollarSign } from 'lucide-react';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
-import type { SuperadminInvoicesTenant } from '@/app/superadmin/invoices/superadmin_invoices_types/superadmin_invoices_types';
-interface InvoicesLogPaymentModalProps {
-    onClose: () => void;
-    selectedGym: SuperadminInvoicesTenant | undefined;
-    isGymDropdownOpen: boolean;
-    setIsGymDropdownOpen: (open: boolean) => void;
-    gymSearchTerm: string;
-    setGymSearchTerm: (term: string) => void;
-    filteredTenantsForDropdown: SuperadminInvoicesTenant[];
-    handleSelectGym: (id: string) => void;
-    paymentMethod: string;
-    setPaymentMethod: (method: string) => void;
-    onSave: (amount: number) => void;
-}
-export default function SuperadminInvoicesLogPaymentModal({ onClose, selectedGym, isGymDropdownOpen, setIsGymDropdownOpen, gymSearchTerm, setGymSearchTerm, filteredTenantsForDropdown, handleSelectGym, paymentMethod, setPaymentMethod, onSave }: InvoicesLogPaymentModalProps) {
+import type { SuperadminInvoicesTenant } from '@/app/superadmin/invoices/invoices_types/SuperadminInvoicesTypes';
+import type { SuperadminInvoicesLogPaymentModalProps } from '@/app/superadmin/invoices/invoices_types/SuperadminInvoicesLogPaymentModalTypes';
+
+export default function SuperadminInvoicesLogPaymentModal({ onClose, selectedGym, isGymDropdownOpen, setIsGymDropdownOpen, gymSearchTerm, setGymSearchTerm, filteredTenantsForDropdown, handleSelectGym, paymentMethod, setPaymentMethod, onSave }: SuperadminInvoicesLogPaymentModalProps) {
     const [amount, setAmount] = useState('');
     return (<div className="fixed inset-0 z-40 flex items-center justify-center p-4" role="dialog" aria-modal="true">
       <div className="absolute inset-0 bg-overlay/80 backdrop-blur-sm" onClick={onClose}/>
-      <div className="relative bg-overlay border border-border rounded-2xl shadow-2xl w-full max-w-md overflow-hidden motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95 motion-safe:duration-base">
+      <div className="relative bg-overlay border border-border rounded-2xl shadow-popover w-full max-w-md overflow-hidden motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95 motion-safe:duration-base">
         <div className="flex items-center justify-between p-5 border-b border-border">
-          <h2 className="text-xl font-bold text-foreground">Log Manual Payment</h2>
-          <button onClick={onClose} className="text-secondary hover:text-foreground motion-safe:transition-colors" aria-label="Close modal">
+          <h2 className="text-xl font-bold text-primary">Log Manual Payment</h2>
+          <button onClick={onClose} className="text-secondary hover:text-primary motion-safe:transition-colors" aria-label="Close modal">
             <X size={18}/>
           </button>
         </div>
@@ -33,21 +22,21 @@ export default function SuperadminInvoicesLogPaymentModal({ onClose, selectedGym
           {/* Searchable Gym Dropdown */}
           <div className="relative">
             <label className="block text-sm font-medium text-secondary mb-1.5">Select Gym</label>
-            <div className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm text-foreground cursor-pointer flex justify-between items-center hover:border-primary motion-safe:transition-colors" onClick={() => setIsGymDropdownOpen(!isGymDropdownOpen)}>
-              <span className={selectedGym ? 'text-foreground' : 'text-secondary'}>
+            <div className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm text-primary cursor-pointer flex justify-between items-center hover:border-primary motion-safe:transition-colors" onClick={() => setIsGymDropdownOpen(!isGymDropdownOpen)}>
+              <span className={selectedGym ? 'text-primary' : 'text-secondary'}>
                 {selectedGym ? `${selectedGym.name} (${selectedGym.plan})` : '-- Choose Gym --'}
               </span>
               <span className="text-secondary text-xs">▼</span>
             </div>
-            {isGymDropdownOpen && (<div className="absolute z-30 top-full mt-1 left-0 right-0 bg-overlay border border-border rounded-lg shadow-2xl overflow-hidden max-h-64 flex flex-col motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95 motion-safe:duration-100">
+            {isGymDropdownOpen && (<div className="absolute z-30 top-full mt-1 left-0 right-0 bg-overlay border border-border rounded-lg shadow-popover overflow-hidden max-h-64 flex flex-col motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95 motion-safe:duration-100">
                 <div className="p-2 border-b border-border bg-header">
                   <div className="relative">
                     <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-secondary"/>
-                    <input type="text" placeholder="Search gym by name..." className="w-full pl-8 pr-3 py-1.5 bg-input border border-border rounded text-sm text-foreground focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page focus:border-primary" value={gymSearchTerm} onChange={(e) => setGymSearchTerm(e.target.value)} onClick={(e) => e.stopPropagation()} autoFocus/>
+                    <input type="text" placeholder="Search gym by name..." className="w-full pl-8 pr-3 py-1.5 bg-input border border-border rounded text-sm text-primary focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page focus:border-primary" value={gymSearchTerm} onChange={(e) => setGymSearchTerm(e.target.value)} onClick={(e) => e.stopPropagation()} autoFocus/>
                   </div>
                 </div>
                 <div className="overflow-y-auto p-1">
-                  {filteredTenantsForDropdown.map((t) => (<div key={t.id} className="px-3 py-2.5 text-sm text-foreground hover:bg-input hover:text-primary cursor-pointer rounded-md motion-safe:transition-colors" onClick={() => handleSelectGym(t.id)}>
+                  {filteredTenantsForDropdown.map((t) => (<div key={t.id} className="px-3 py-2.5 text-sm text-primary hover:bg-input hover:text-primary cursor-pointer rounded-md motion-safe:transition-colors" onClick={() => handleSelectGym(t.id)}>
                       <span className="font-bold">{t.name}</span>
                       <span className="text-secondary text-xs ml-1">({t.plan})</span>
                     </div>))}
@@ -61,7 +50,7 @@ export default function SuperadminInvoicesLogPaymentModal({ onClose, selectedGym
             <div className="relative">
               <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary"/>
               <input type="number" min="0" onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+')
-        e.preventDefault(); }} value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="e.g. 4999" className="w-full pl-9 pr-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page focus:border-primary"/>
+        e.preventDefault(); }} value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="e.g. 4999" className="w-full pl-9 pr-4 py-2.5 bg-input border border-border rounded-lg text-sm text-primary focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page focus:border-primary"/>
             </div>
           </div>
 
@@ -77,21 +66,21 @@ export default function SuperadminInvoicesLogPaymentModal({ onClose, selectedGym
             </div>
             <div>
               <label className="block text-sm font-medium text-secondary mb-1.5">Reference ID</label>
-              <input type="text" placeholder="e.g. TXN123456" className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm text-foreground focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page focus:border-primary"/>
+              <input type="text" placeholder="e.g. TXN123456" className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm text-primary focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page focus:border-primary"/>
             </div>
           </div>
 
           <div>
             <label className="block text-sm font-medium text-secondary mb-1.5">Date & Time Received</label>
-            <input type="datetime-local" className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm text-foreground focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page focus:border-primary"/>
+            <input type="datetime-local" className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm text-primary focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page focus:border-primary"/>
           </div>
         </div>
 
         <div className="p-5 border-t border-border bg-header flex justify-end gap-3">
-          <button onClick={onClose} className="px-4 py-2 bg-input border border-border text-foreground rounded-lg text-sm font-medium hover:bg-border motion-safe:transition-colors">
+          <button onClick={onClose} className="px-4 py-2 bg-input border border-border text-primary rounded-lg text-sm font-medium hover:bg-border motion-safe:transition-colors">
             Cancel
           </button>
-          <button onClick={() => onSave(Number(amount))} className="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-hover motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out motion-safe:active:scale-95">
+          <button onClick={() => onSave(Number(amount))} className="px-4 py-2 bg-primary text-on-primary rounded-lg text-sm font-medium hover:bg-primary-hover motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out motion-safe:active:scale-95">
             Save Payment
           </button>
         </div>

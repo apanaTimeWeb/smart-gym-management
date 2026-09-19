@@ -1,22 +1,18 @@
 // RESPONSIBILITY: Renders a single row in the Coupons data table. Handles row-level action buttons with stopPropagation. Purely presentational.
 'use client';
+import type { MouseEvent } from 'react';
 import { Edit2, Trash2, RefreshCw, ToggleLeft, ToggleRight, MessageCircle, History } from 'lucide-react';
 import { formatINR, formatDate } from '@/lib/formatters';
 import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
 import SuperadminCouponsStatusBadge from '@/app/superadmin/coupons/coupons_components/SuperadminCouponsStatusBadge/SuperadminCouponsStatusBadge';
 import { WhatsAppFormatter } from '@/lib/whatsapp_formatter';
-import type { Coupon, CouponStatus } from '@/app/superadmin/coupons/superadmin_coupons_types/superadmin_coupons_types';
-interface CouponsTableRowProps {
-    coupon: Coupon;
-    onToggleStatus: (id: string, currentStatus: CouponStatus) => void;
-    onEdit: (coupon: Coupon) => void;
-    onDelete: (id: string) => void;
-    onRestore: (id: string) => void;
-}
-export default function SuperadminCouponsTableRow({ coupon, onToggleStatus, onEdit, onDelete, onRestore }: CouponsTableRowProps) {
+import type { Coupon, CouponStatus } from '@/app/superadmin/coupons/coupons_types/SuperadminCouponsTypes';
+import type { SuperadminCouponsTableRowProps } from '@/app/superadmin/coupons/coupons_types/SuperadminCouponsTableRowTypes';
+
+export default function SuperadminCouponsTableRow({ coupon, onToggleStatus, onEdit, onDelete, onRestore }: SuperadminCouponsTableRowProps) {
     const cpn = coupon;
     const { confirm } = useSuperadminConfirm();
-    const handleShareWhatsApp = (e: React.MouseEvent, cpn: Coupon) => {
+    const handleShareWhatsApp = (e: MouseEvent, cpn: Coupon) => {
         e.stopPropagation();
         const dateStr = new Date(cpn.expiryDate).toLocaleDateString('en-IN', {
             day: '2-digit', month: 'short', year: 'numeric'
@@ -46,9 +42,9 @@ export default function SuperadminCouponsTableRow({ coupon, onToggleStatus, onEd
         });
         window.open(`https://wa.me/?text=${encodeURIComponent(waText)}`, '_blank');
     };
-    return (<tr className={`hover:bg-primary/5 motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out group cursor-pointer ${cpn.isDeleted ? 'opacity-50 grayscale' : ''}`} onClick={() => { if (!cpn.isDeleted)
-        onEdit(cpn); }}>
-      <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-foreground tracking-wide">
+    return (<tr tabIndex={0} aria-label={`Edit coupon ${cpn.code}`} className={`hover:bg-primary/5 motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset ${cpn.isDeleted ? 'opacity-50 grayscale' : ''}`} onClick={() => { if (!cpn.isDeleted)
+        onEdit(cpn); }} onKeyDown={(event) => { if (!cpn.isDeleted && (event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); onEdit(cpn); } }}>
+      <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-primary tracking-wide">
         {cpn.code}
         {cpn.isDeleted && <span className="ml-2 text-xs bg-danger-bg/20 text-danger px-2 py-0.5 rounded-full">DELETED</span>}
       </td>
@@ -70,8 +66,8 @@ export default function SuperadminCouponsTableRow({ coupon, onToggleStatus, onEd
             <button title={cpn.status === 'ACTIVE' ? 'Deactivate Coupon' : 'Activate Coupon'} aria-label={cpn.status === 'ACTIVE' ? 'Deactivate Coupon' : 'Activate Coupon'} onClick={(e) => { e.stopPropagation(); onToggleStatus(cpn.id, cpn.status); }} disabled={cpn.status === 'EXPIRED' || cpn.status === 'DEPLETED'} className={`p-1.5 rounded-md border border-border motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out ${cpn.status === 'EXPIRED' || cpn.status === 'DEPLETED'
                 ? 'opacity-30 cursor-not-allowed bg-input'
                 : cpn.status === 'ACTIVE'
-                    ? 'text-success hover:text-white bg-success/10 hover:bg-success'
-                    : 'text-secondary hover:text-white bg-input hover:bg-secondary'}`}>
+                    ? 'text-success hover:text-on-primary bg-success/10 hover:bg-success'
+                    : 'text-secondary hover:text-on-primary bg-input hover:bg-surface-hover'}`}>
               {cpn.status === 'ACTIVE' ? <ToggleRight className="w-4 h-4"/> : <ToggleLeft className="w-4 h-4"/>}
             </button>
             <button title="Edit Coupon" aria-label="Edit Coupon" onClick={(e) => { e.stopPropagation(); onEdit(cpn); }} className="text-secondary hover:text-primary motion-safe:transition-colors p-1.5 bg-input hover:bg-primary/10 rounded-md border border-border">

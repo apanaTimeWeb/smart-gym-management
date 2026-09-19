@@ -8,7 +8,7 @@ export default function SuperadminProfileLoading() {
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Avatar card skeleton */}
-        <div className="lg:col-span-1 bg-card border border-border rounded-xl p-6 flex flex-col items-center gap-4 shadow-sm">
+        <div className="lg:col-span-1 bg-card border border-border rounded-xl p-6 flex flex-col items-center gap-4 shadow-card">
           <div className="w-20 h-20 rounded-full bg-skeleton-base motion-safe:animate-pulse"/>
           <div className="space-y-2 w-full text-center">
             <div className="h-5 w-32 bg-skeleton-base motion-safe:animate-pulse rounded mx-auto"/>
@@ -24,7 +24,7 @@ export default function SuperadminProfileLoading() {
         </div>
 
         {/* Form card skeleton */}
-        <div className="lg:col-span-3 bg-card border border-border rounded-xl shadow-sm overflow-hidden">
+        <div className="lg:col-span-3 bg-card border border-border rounded-xl shadow-card overflow-hidden">
           <div className="flex border-b border-border">
             <div className="h-12 w-28 bg-skeleton-base motion-safe:animate-pulse m-1 rounded"/>
             <div className="h-12 w-24 bg-skeleton-base motion-safe:animate-pulse m-1 rounded"/>

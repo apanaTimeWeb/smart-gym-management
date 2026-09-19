@@ -1,4 +1,4 @@
-import type { TenantMessage, SuperadminNotification, MessagingTenant } from '@/app/superadmin/messaging/messaging_types/superadmin_messaging_types';
+import type { TenantMessage, SuperadminNotification, MessagingTenant } from '@/app/superadmin/messaging/messaging_types/SuperadminMessagingTypes';
 export const MOCK_SUPERADMIN_MESSAGING_MESSAGES: TenantMessage[] = [
     { id: 'm1', tenantId: 't1', tenantName: 'Iron Paradise', channel: 'EMAIL', subject: 'Invoice Overdue', body: 'Please pay invoice #1234', status: 'SENT', sentAt: '2026-09-01T10:00:00Z', scheduledAt: null, createdAt: '2026-09-01T09:00:00Z' },
     { id: 'm2', tenantId: 't2', tenantName: 'Fit Life Studio', channel: 'IN_APP', subject: 'Welcome to Smart Gym', body: 'Thanks for joining.', status: 'SENT', sentAt: '2026-09-15T14:30:00Z', scheduledAt: null, createdAt: '2026-09-15T14:30:00Z' },

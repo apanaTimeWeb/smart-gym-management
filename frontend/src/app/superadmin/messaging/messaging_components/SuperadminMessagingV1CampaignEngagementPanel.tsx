@@ -1,10 +1,10 @@
 // RESPONSIBILITY: Renders the Superadmin messaging V1 Campaign engagement view.
 'use client';
 import { formatNumber } from '@/lib/formatters';
-import SuperadminV1Panel from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminV1Panel';
+import SuperadminPanel from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPanel';
 import type { SuperadminMessagingV1SectionProps } from '@/app/superadmin/messaging/messaging_types/SuperadminMessagingV1Types.ts';
 export default function SuperadminMessagingV1CampaignEngagementPanel({ data }: SuperadminMessagingV1SectionProps) {
-    return <SuperadminV1Panel title="Campaign engagement" description="Messages sent, delivered, opened, and answered.">
+    return <SuperadminPanel title="Campaign engagement" description="Messages sent, delivered, opened, and answered.">
   <div className="overflow-x-auto">
     <table className="w-full text-sm">
       <thead>
@@ -28,7 +28,7 @@ export default function SuperadminMessagingV1CampaignEngagementPanel({ data }: S
       </thead>
       <tbody>
         {data.campaigns.map((c) => <tr key={c.name} className="border-b border-border">
-          <td className="px-3 py-3 max-w-56 truncate font-medium text-foreground">
+          <td className="px-3 py-3 max-w-56 truncate font-medium text-primary">
             {c.name}
           </td>
           <td className="px-3 py-3 text-secondary">
@@ -40,12 +40,12 @@ export default function SuperadminMessagingV1CampaignEngagementPanel({ data }: S
           <td className="px-3 py-3 text-secondary">
             {formatNumber(c.opened)}
           </td>
-          <td className="px-3 py-3 text-foreground">
+          <td className="px-3 py-3 text-primary">
             {formatNumber(c.responded)}
           </td>
         </tr>)}
       </tbody>
     </table>
   </div>
-    </SuperadminV1Panel>;
+    </SuperadminPanel>;
 }

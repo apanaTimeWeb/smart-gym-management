@@ -1,11 +1,11 @@
 // RESPONSIBILITY: Renders the Superadmin analytics V1 Feature adoption, Acquisition source comparison view.
 'use client';
 import { formatCurrency, formatNumber, formatPercent1dp } from '@/lib/formatters';
-import SuperadminV1Panel from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminV1Panel';
+import SuperadminPanel from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPanel';
 import type { SuperadminAnalyticsV1SectionProps } from '@/app/superadmin/analytics/analytics_types/SuperadminAnalyticsV1Types.ts';
 export default function SuperadminAnalyticsV1AdoptionAndAcquisitionSection({ data }: SuperadminAnalyticsV1SectionProps) {
     return <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
-  <SuperadminV1Panel title="Feature adoption" description="Available vs enabled vs actually used by tenants.">
+  <SuperadminPanel title="Feature adoption" description="Available vs enabled vs actually used by tenants.">
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
         <thead>
@@ -26,7 +26,7 @@ export default function SuperadminAnalyticsV1AdoptionAndAcquisitionSection({ dat
         </thead>
         <tbody>
           {data.adoption.map((a) => <tr key={a.feature} className="border-b border-border">
-            <td className="px-3 py-3 font-medium text-foreground">
+            <td className="px-3 py-3 font-medium text-primary">
               {a.feature}
             </td>
             <td className="px-3 py-3 text-secondary">
@@ -35,19 +35,19 @@ export default function SuperadminAnalyticsV1AdoptionAndAcquisitionSection({ dat
             <td className="px-3 py-3 text-secondary">
               {formatNumber(a.active)}
             </td>
-            <td className="px-3 py-3 text-foreground">
+            <td className="px-3 py-3 text-primary">
               {formatNumber(a.used)}
             </td>
           </tr>)}
         </tbody>
       </table>
     </div>
-  </SuperadminV1Panel>
-  <SuperadminV1Panel title="Acquisition source comparison" description="Compare source quality by volume, income, and churn.">
+  </SuperadminPanel>
+  <SuperadminPanel title="Acquisition source comparison" description="Compare source quality by volume, income, and churn.">
     <div className="space-y-3">
       {data.sources.map((s) => <div key={s.source} className="rounded-lg border border-border p-3">
         <div className="flex items-center justify-between">
-          <span className="font-medium text-foreground">
+          <span className="font-medium text-primary">
             {s.source}
           </span>
           <span className="text-sm text-primary">
@@ -66,6 +66,6 @@ export default function SuperadminAnalyticsV1AdoptionAndAcquisitionSection({ dat
         </div>
       </div>)}
     </div>
-  </SuperadminV1Panel>
+  </SuperadminPanel>
     </div>;
 }

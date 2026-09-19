@@ -3,14 +3,23 @@
 // RESPONSIBILITY: Encapsulates local UI state for the Invoices page (filtering, modal state, derived stats).
 // DATA FLOW: useSuperadminInvoicesStore -> useSuperadminInvoicesPage -> SuperadminInvoicesClient
 import { useState, useMemo } from 'react';
-import { useSuperadminUrlState } from '@/app/superadmin/superadmin_utils/useSuperadminUrlState';
+import { useSuperadminUrlState } from '@/app/superadmin/superadmin_infrastructure/useSuperadminUrlState';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { invoicesApi } from '@/app/superadmin/invoices/superadmin_invoices_api/superadmin_invoices_api';
+import { invoicesApi } from '@/app/superadmin/invoices/invoices_api/SuperadminInvoicesApi';
 import toast from 'react-hot-toast';
+import { useSuperadminConfirm } from '@/app/superadmin/superadmin_components/SuperadminFeedback/SuperadminConfirmProvider';
 import { calculateSuperadminInvoiceMetrics } from '@/app/superadmin/invoices/invoices_utils/SuperadminInvoicesMetrics';
+/**
+ * Purpose: Encapsulates local UI state for the Invoices page (filtering, modal state, derived stats).
+ * Inputs: values defined by the exported hook signature.
+ * Output: the hook's typed state/actions/query contract.
+ * Side effects: remain scoped to the owning feature or approved application infrastructure.
+ * Invariant: does not move feature business state into unrelated modules.
+ */
 export function useSuperadminInvoicesPage() {
     const queryClient = useQueryClient();
     const { getParam, setParam } = useSuperadminUrlState();
+    const { confirm } = useSuperadminConfirm();
     const startDate = getParam('startDate', '');
     const endDate = getParam('endDate', '');
     const search = getParam('search', '');
@@ -45,7 +54,7 @@ export function useSuperadminInvoicesPage() {
         p.limit = String(pageLimit);
         return p;
     }, [search, statusFilter, startDate, endDate, currentPage, pageLimit]);
-    const { data: invoicesRes, isLoading, isError, error: queryError } = useQuery({
+    const { data: invoicesRes, isPending, isError, error: queryError } = useQuery({
         queryKey: ['superadmin', 'invoices', queryParams],
         queryFn: () => invoicesApi.fetchInvoices(queryParams),
     });
@@ -63,12 +72,13 @@ export function useSuperadminInvoicesPage() {
             gymId: string;
             amount: number;
             planName: string;
+            idempotencyKey: string;
         }) => invoicesApi.createManualPayment({
             gymId: data.gymId,
             amount: data.amount,
             planName: data.planName,
             currency: 'INR',
-        }),
+        }, data.idempotencyKey),
         onSuccess: (res) => {
             if (res.success && res.data) {
                 queryClient.invalidateQueries({ queryKey: ['superadmin', 'invoices'] });
@@ -82,8 +92,11 @@ export function useSuperadminInvoicesPage() {
             toast.error(err.message, { id: 'superadmin-toast-a2194697fd' });
         }
     });
-    const handleLogManualPayment = (gymId: string, amount: number, planName: string) => {
-        return logManualPaymentMutation.mutateAsync({ gymId, amount, planName });
+    const handleLogManualPayment = async (gymId: string, amount: number, planName: string) => {
+        const confirmed = await confirm({ title: 'Record Manual Payment', message: `Record INR ${amount} payment for ${planName} as a tenant invoice payment?`, type: 'warning', confirmText: 'Record Payment', cancelText: 'Cancel' });
+        if (!confirmed) return false;
+        await logManualPaymentMutation.mutateAsync({ gymId, amount, planName, idempotencyKey: crypto.randomUUID() });
+        return true;
     };
     // filtering moved to server
     const filteredTenantsForDropdown = useMemo(() => tenants.filter((t) => (t.name || '').toLowerCase().includes(gymSearchTerm.toLowerCase())), [tenants, gymSearchTerm]);
@@ -95,7 +108,7 @@ export function useSuperadminInvoicesPage() {
         setGymSearchTerm('');
     };
     return {
-        isLoading,
+        isPending,
         isError,
         error,
         invoices,

@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Module-owned mock fixture data for Superadmin.
-import type { SubscriptionPlan } from '@/app/superadmin/plans/superadmin_plans_types/superadmin_plans_types';
+import type { SubscriptionPlan } from '@/app/superadmin/plans/plans_types/SuperadminPlansTypes';
 export const INITIAL_PLANS: SubscriptionPlan[] = [
     { id: 'plan-starter', name: 'Starter Plan', priceMonthly: 4999, priceAnnual: 49990, maxMembers: 100, maxStaff: 5, dbLimitGb: 5, binaryLimitGb: 10, features: ['Core App', 'Basic Reports'], activeTenants: 28, isPublic: true, trialDays: 14, setupFee: 0, currency: 'INR', isArchived: false },
     { id: 'plan-basic', name: 'Basic Plan', priceMonthly: 9999, priceAnnual: 99990, maxMembers: 300, maxStaff: 12, dbLimitGb: 10, binaryLimitGb: 25, features: ['Core App', 'Reports', 'Messaging'], activeTenants: 41, isPublic: true, trialDays: 14, setupFee: 1999, currency: 'INR', isArchived: false },

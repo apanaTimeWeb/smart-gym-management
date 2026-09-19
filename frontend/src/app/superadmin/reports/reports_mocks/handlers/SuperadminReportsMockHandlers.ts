@@ -1,5 +1,5 @@
 import { http, HttpResponse, delay } from 'msw';
-import type { RevenueRow, CancellationsRecord, TenantHealthScore } from '@/app/superadmin/reports/reports_types/superadmin_reports_types';
+import type { RevenueRow, CancellationsRecord, TenantHealthScore } from '@/app/superadmin/reports/reports_types/SuperadminReportsTypes';
 import type { ApiResponse } from '@/lib/api';
 import { MOCK_SUPERADMIN_REPORTS_REVENUE, MOCK_SUPERADMIN_REPORTS_CANCELLATIONS, MOCK_SUPERADMIN_REPORTS_HEALTH } from '@/app/superadmin/reports/reports_mocks/fixtures/SuperadminReportsMockFixtures';
 const BASE_URL = '*/api/v1/superadmin/reports';

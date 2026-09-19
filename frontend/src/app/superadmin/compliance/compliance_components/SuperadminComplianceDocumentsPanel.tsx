@@ -3,11 +3,11 @@
 import { displayValue } from '@/lib/formatters';
 import SuperadminComplianceDocumentsEmptyState from '@/app/superadmin/compliance/compliance_components/SuperadminComplianceDocumentsEmptyState';
 import SuperadminTooltip from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminTooltip';
-import SuperadminV1Panel from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminV1Panel';
-import { getSuperadminStatusBadgeClasses } from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminStatusBadgeConfig';
+import SuperadminPanel from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPanel';
+import { getSuperadminComplianceStatusBadgeClasses } from '@/app/superadmin/compliance/compliance_utils/SuperadminComplianceStatusBadgeConfig';
 import type { SuperadminComplianceSectionProps } from '@/app/superadmin/compliance/compliance_types/SuperadminComplianceTypes';
 export default function SuperadminComplianceDocumentsPanel({ data }: SuperadminComplianceSectionProps) {
-    return (<SuperadminV1Panel title="Compliance Documents" description="Tenant-level registrations and expiry dates.">
+    return (<SuperadminPanel title="Compliance Documents" description="Tenant-level registrations and expiry dates.">
   <div className="overflow-x-auto">
     <table className="w-full text-sm">
       <thead>
@@ -28,7 +28,7 @@ export default function SuperadminComplianceDocumentsPanel({ data }: SuperadminC
       </thead>
       <tbody>
         {data.documents.length === 0 ? <tr><td colSpan={4}><SuperadminComplianceDocumentsEmptyState /></td></tr> : data.documents.map(d => (<tr key={`${d.tenant}-${d.document}`} className="border-b border-border">
-            <td className="px-3 py-3 text-foreground">
+            <td className="px-3 py-3 text-primary">
               <SuperadminTooltip content={d.tenant}>
                 <span className="max-w-56 truncate">
                   {d.tenant}
@@ -39,7 +39,7 @@ export default function SuperadminComplianceDocumentsPanel({ data }: SuperadminC
               {d.document}
             </td>
             <td className="px-3 py-3">
-              <span className={`rounded-full px-2 py-1 text-xs font-semibold ${getSuperadminStatusBadgeClasses(d.status)}`}>
+              <span className={`rounded-full px-2 py-1 text-xs font-semibold ${getSuperadminComplianceStatusBadgeClasses(d.status)}`}>
                 {d.status}
               </span>
             </td>
@@ -50,5 +50,5 @@ export default function SuperadminComplianceDocumentsPanel({ data }: SuperadminC
       </tbody>
     </table>
   </div>
-    </SuperadminV1Panel>);
+    </SuperadminPanel>);
 }

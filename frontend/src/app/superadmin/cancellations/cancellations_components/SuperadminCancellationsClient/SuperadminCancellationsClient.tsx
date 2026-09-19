@@ -6,12 +6,13 @@ import SuperadminCancellationsFilters from '@/app/superadmin/cancellations/cance
 import SuperadminCancellationsTable from '@/app/superadmin/cancellations/cancellations_components/SuperadminCancellationsTable/SuperadminCancellationsTable';
 import SuperadminCancellationsEmptyState from '@/app/superadmin/cancellations/cancellations_components/SuperadminCancellationsEmptyState/SuperadminCancellationsEmptyState';
 import SuperadminCancellationsActionModal from '@/app/superadmin/cancellations/cancellations_components/SuperadminCancellationsActionModal/SuperadminCancellationsActionModal';
+import { Mail } from 'lucide-react';
 import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
-import type { CancellationsFilterStatus } from '@/app/superadmin/cancellations/cancellations_types/superadmin_cancellations_types';
+import type { CancellationsFilterStatus } from '@/app/superadmin/cancellations/cancellations_types/SuperadminCancellationsTypes';
 import { useSuperadminCancellationsAlertsPage } from '@/app/superadmin/cancellations/cancellations_utils/useSuperadminCancellationsAlertsPage';
 export default function SuperadminCancellationsClient() {
-    const { search, setSearch, activeFilter, setActiveFilter, actionAlert, setActionAlert, currentPage, setCurrentPage, isLoading, isError: error, kpis, filtered, paginatedAlerts, totalPages, isFiltered, handleActionConfirm, handleBulkOutreach } = useSuperadminCancellationsAlertsPage();
-    if (isLoading) {
+    const { search, setSearch, activeFilter, setActiveFilter, actionAlert, setActionAlert, currentPage, setCurrentPage, isPending, isError: error, kpis, filtered, paginatedAlerts, totalPages, isFiltered, handleActionConfirm, handleBulkOutreach } = useSuperadminCancellationsAlertsPage();
+    if (isPending) {
         return (<div className="space-y-6">
         <div className="h-8 bg-card rounded w-48 motion-safe:animate-pulse"/>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -26,22 +27,20 @@ export default function SuperadminCancellationsClient() {
     return (<div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Members About to Leave</h1>
+          <h1 className="text-2xl font-bold text-primary">Tenants at Risk of Cancellation</h1>
           <p className="text-secondary mt-1 text-sm">
-            Monitor at-risk tenants and take proactive action before they cancellations.
+            Monitor at-risk tenants and take proactive action before they cancel.
           </p>
         </div>
-        <button onClick={handleBulkOutreach} className="flex items-center gap-2 bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-lg font-medium motion-safe:transition-colors shadow-lg shadow-primary/20">
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-          </svg>
+        <button type="button" onClick={handleBulkOutreach} className="flex min-h-11 items-center gap-2 rounded-lg bg-primary px-4 py-2 font-medium text-on-primary shadow-card shadow-primary/20 motion-safe:transition-colors hover:bg-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+          <Mail size={18} aria-hidden="true" />
           Bulk Outreach
         </button>
       </div>
 
       <SuperadminCancellationsKPIs kpis={kpis} activeFilter={activeFilter} onFilterClick={(f) => { setActiveFilter(f as CancellationsFilterStatus); setCurrentPage(1); }}/>
 
-      <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
+      <div className="bg-card border border-border rounded-xl shadow-card overflow-hidden">
         <SuperadminCancellationsFilters search={search} onSearchChange={setSearch} activeFilter={activeFilter} onFilterChange={setActiveFilter}/>
         {filtered.length === 0 ? (<SuperadminCancellationsEmptyState isFiltered={isFiltered} onClearFilter={() => { setSearch(''); setActiveFilter('ALL'); }}/>) : (<>
             <SuperadminCancellationsTable alerts={paginatedAlerts} onActionClick={setActionAlert}/>

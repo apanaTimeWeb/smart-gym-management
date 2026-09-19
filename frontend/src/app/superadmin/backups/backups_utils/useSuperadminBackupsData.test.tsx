@@ -1,12 +1,17 @@
+import { resetSuperadminBackupsMockState } from '@/app/superadmin/backups/backups_mocks/handlers/SuperadminBackupsMockHandlers';
 // RESPONSIBILITY: Renders the use Superadmin Backups Data.test component and its associated UI logic.
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { useSuperadminBackupsData } from '@/app/superadmin/backups/backups_utils/useSuperadminBackupsData';
-import { backupsApi } from '@/app/superadmin/backups/superadmin_backups_api/superadmin_backups_api';
+import { backupsApi } from '@/app/superadmin/backups/backups_api/SuperadminBackupsApi';
 import toast from 'react-hot-toast';
-vi.mock('@/app/superadmin/backups/superadmin_backups_api/superadmin_backups_api');
+vi.mock('@/app/superadmin/backups/backups_api/SuperadminBackupsApi');
 vi.mock('react-hot-toast');
+beforeEach(() => {
+  resetSuperadminBackupsMockState();
+});
+
 describe('useSuperadminBackupsData', () => {
     beforeEach(() => {
         vi.clearAllMocks();
@@ -15,7 +20,7 @@ describe('useSuperadminBackupsData', () => {
         vi.mocked(backupsApi.fetchBackups).mockImplementation(() => new Promise(() => { })); // pending
         const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
         const { result } = renderHook(() => useSuperadminBackupsData(), { wrapper: ({ children }) => <QueryClientProvider client={queryClient}>{children}</QueryClientProvider> });
-        expect(result.current.isLoading).toBe(true);
+        expect(result.current.isPending).toBe(true);
         expect(result.current.data).toBeUndefined();
     });
     it('fetches backups and sets state to success', async () => {
@@ -24,7 +29,7 @@ describe('useSuperadminBackupsData', () => {
         const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
         const { result } = renderHook(() => useSuperadminBackupsData(), { wrapper: ({ children }) => <QueryClientProvider client={queryClient}>{children}</QueryClientProvider> });
         await waitFor(() => {
-            expect(result.current.isLoading).toBe(false);
+            expect(result.current.isPending).toBe(false);
         });
         expect(result.current.data).toEqual(mockBackups.data);
     });
@@ -33,7 +38,7 @@ describe('useSuperadminBackupsData', () => {
         const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
         const { result } = renderHook(() => useSuperadminBackupsData(), { wrapper: ({ children }) => <QueryClientProvider client={queryClient}>{children}</QueryClientProvider> });
         await waitFor(() => {
-            expect(result.current.isLoading).toBe(true);
+            expect(result.current.isPending).toBe(true);
         });
         expect(result.current.error).toBeDefined();
     });

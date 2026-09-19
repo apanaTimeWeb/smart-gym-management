@@ -6,10 +6,8 @@ import SuperadminBranchesClient from '@/app/superadmin/branches/branches_compone
 export const metadata: Metadata = {
     title: 'Branches | Superadmin | GymSmart',
 };
-import SuperadminBranchesV1Client from '@/app/superadmin/branches/branches_components/SuperadminBranchesV1Client';
 export default function SuperadminBranchesPage() {
     return (<Suspense fallback={<SuperadminPageSuspenseSkeleton />}>
       <SuperadminBranchesClient />
-      <SuperadminBranchesV1Client />
     </Suspense>);
 }

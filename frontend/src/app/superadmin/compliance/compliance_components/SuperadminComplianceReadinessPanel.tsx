@@ -7,7 +7,7 @@ export default function SuperadminComplianceReadinessPanel({ data }: SuperadminC
   <div className="flex gap-3">
     <FileCheck2 size={18} className="mt-0.5 text-info"/>
     <div>
-      <p className="font-medium text-foreground">
+      <p className="font-medium text-primary">
         Keep compliance records auditable.
       </p>
       <p className="mt-1 text-xs text-secondary">

@@ -9,7 +9,7 @@ export default function MigrationsLoading() {
         <div className="h-10 w-36 bg-skeleton-base motion-safe:animate-pulse rounded-lg"/>
       </div>
 
-      <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
+      <div className="bg-card border border-border rounded-xl shadow-card overflow-hidden">
         {/* Table header skeleton */}
         <div className="h-12 border-b border-border bg-skeleton-base/40 motion-safe:animate-pulse"/>
         {/* Table rows skeleton — 5 rows matching migrations table layout */}

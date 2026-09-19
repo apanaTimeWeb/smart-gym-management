@@ -5,6 +5,7 @@
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 interface MutationOptions {
+    toastId?: string;
     onSuccess?: (data: unknown) => void;
     onError?: (error: Error) => void;
 }
@@ -23,7 +24,7 @@ export function useSuperadminCouponsMutation() {
             const response = await mutationFn();
             const responseData = response.data !== undefined ? response.data : response;
             if (response.message) {
-                toast.success(response.message, { id: response.message });
+                toast.success(response.message, { id: options?.toastId ?? `superadmin-coupons-${crypto.randomUUID()}` });
             }
             if (options?.onSuccess) {
                 options.onSuccess(responseData);
@@ -32,7 +33,7 @@ export function useSuperadminCouponsMutation() {
         }
         catch (error: unknown) {
             const errorObj = error instanceof Error ? error : new Error(String(error));
-            toast.error(errorObj.message, { id: errorObj.message });
+            toast.error(errorObj.message, { id: options?.toastId ?? `superadmin-coupons-error-${crypto.randomUUID()}` });
             if (options?.onError) {
                 options.onError(errorObj);
             }

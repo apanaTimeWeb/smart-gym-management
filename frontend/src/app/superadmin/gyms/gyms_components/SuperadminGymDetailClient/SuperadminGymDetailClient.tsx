@@ -1,125 +1,100 @@
-// RESPONSIBILITY: Client component for /superadmin/gyms/[id] — full gym detail view.
+// RESPONSIBILITY: Renders the legacy Superadmin gym profile/detail surface from the feature-owned query hook. No API calls.
 'use client';
-// Shows subscription info, usage stats, location, GSTIN, trial expiry, and payment history.
-// DATA FLOW: useQuery(['superadmin','gyms',gymId]) → SuperadminGymDetailClient → Tabs
-import { useQuery } from '@tanstack/react-query';
+import { ArrowLeft, Activity, Clock, CreditCard, MapPin, User } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Building2, User, CreditCard, Activity, MapPin, Shield, Clock } from 'lucide-react';
-import { gymsApi } from '@/app/superadmin/gyms/superadmin_gyms_api/superadmin_gyms_api';
-import type { Tenant } from '@/app/superadmin/gyms/superadmin_gyms_types/superadmin_gyms_types';
-import { formatCurrency, formatDate } from '@/lib/formatters';
+import { formatCurrency, formatDate, displayValue } from '@/lib/formatters';
 import { GymsUrlConfig } from '@/app/superadmin/gyms/superadmin_gyms_url_config';
-interface SuperadminGymDetailClientProps {
-    gymId: string;
-}
+import { useSuperadminGymDetail } from '@/app/superadmin/gyms/gyms_utils/useSuperadminGymDetail';
+import type { SuperadminGymDetailClientProps } from '@/app/superadmin/gyms/gyms_types/SuperadminGymDetailClientTypes';
+import SuperadminGymDetailRow from '@/app/superadmin/gyms/gyms_components/SuperadminGymDetailClient/SuperadminGymDetailRow';
+import { getSuperadminGymStatusBadgeClasses } from '@/app/superadmin/gyms/gyms_utils/SuperadminGymsConstants';
+
 export default function SuperadminGymDetailClient({ gymId }: SuperadminGymDetailClientProps) {
-    const router = useRouter();
-    const { data: res, isLoading, isError } = useQuery({
-        queryKey: ['superadmin', 'gyms', gymId],
-        queryFn: () => gymsApi.fetchGymById(gymId),
-    });
-    const gym = res?.data as Tenant;
-    if (isLoading) {
-        return (<div className="space-y-6 motion-safe:animate-pulse">
-        <div className="h-8 w-48 bg-skeleton-base rounded"/>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {[1, 2, 3].map((i) => <div key={`skeleton-${i}`} className="h-32 bg-skeleton-base rounded-xl border border-border"/>)}
+  const router = useRouter();
+  const query = useSuperadminGymDetail(gymId);
+  const gym = query.data?.data;
+
+  if (query.isPending) {
+    return (
+      <div className="space-y-6" aria-busy="true">
+        <div className="h-8 w-48 rounded bg-skeleton-base motion-safe:animate-pulse" />
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+          {[1, 2, 3].map((item) => <div key={item} className="h-32 rounded-xl border border-border bg-skeleton-base motion-safe:animate-pulse" />)}
         </div>
-        <div className="h-64 bg-skeleton-base rounded-xl border border-border"/>
-      </div>);
-    }
-    if (isError || !gym) {
-        return (<div className="p-8 text-center">
-        <p className="text-danger font-medium mb-4">Failed to load gym details.</p>
-        <button onClick={() => router.back()} className="text-primary hover:underline">Go Back</button>
-      </div>);
-    }
-    return (<div className="space-y-6">
-      {/* Back Navigation */}
-      <button onClick={() => router.push(GymsUrlConfig.PAGES.MAIN)} className="flex items-center gap-2 text-secondary hover:text-foreground motion-safe:transition-colors text-sm">
-        <ArrowLeft className="w-4 h-4"/> Back to Gyms
+        <div className="h-64 rounded-xl border border-border bg-skeleton-base motion-safe:animate-pulse" />
+      </div>
+    );
+  }
+
+  if (query.isError || !gym) {
+    return (
+      <div className="rounded-xl border border-danger/30 bg-danger-bg p-8 text-center" role="alert">
+        <p className="mb-4 font-medium text-danger">Failed to load gym details.</p>
+        <button type="button" onClick={() => void query.refetch()} className="rounded-md border border-border px-4 py-2 text-sm text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95">
+          Retry
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <section className="space-y-6" aria-labelledby="superadmin-gym-detail-title">
+      <button type="button" onClick={() => router.push(GymsUrlConfig.PAGES.MAIN)} className="flex items-center gap-2 text-sm text-secondary hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-safe:transition-colors">
+        <ArrowLeft size={18} strokeWidth={2} aria-hidden="true" /> Back to Gyms
       </button>
 
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">{gym.name}</h1>
-          <p className="text-secondary text-sm mt-1">Gym ID: {gym.id}</p>
+      <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
+        <div className="min-w-0">
+          <h1 id="superadmin-gym-detail-title" className="truncate text-2xl font-bold text-primary">{displayValue(gym.name)}</h1>
+          <p className="mt-1 text-sm text-secondary">Gym ID: {displayValue(gym.gymId)}</p>
         </div>
-        <span className={`px-3 py-1 rounded-full text-sm font-semibold ${gym.status === 'ACTIVE' ? 'bg-success/10 text-success border border-success/20' :
-            gym.status === 'SUSPENDED' ? 'bg-danger-bg text-danger border border-destructive/20' :
-                gym.status === 'TRIAL' ? 'bg-warning/10 text-warning border border-warning/20' :
-                    'bg-input text-secondary border border-border'}`}>{gym.status}</span>
+        <span className={`inline-flex w-fit items-center rounded-full border px-3 py-1 text-sm font-semibold ${getSuperadminGymStatusBadgeClasses(gym.status as any)}`}>
+          {displayValue(gym.status)}
+        </span>
       </div>
 
-      {/* KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-card border border-border rounded-xl p-5 flex items-center gap-4">
-          <div className="p-3 bg-primary/10 rounded-lg"><User className="w-5 h-5 text-primary"/></div>
-          <div>
-            <p className="text-xs text-secondary uppercase tracking-wider">Members</p>
-            <p className="text-2xl font-bold text-foreground">{gym.memberCount}</p>
-          </div>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="flex items-center gap-4 rounded-xl border border-border bg-card p-5">
+          <div className="rounded-lg bg-primary-subtle p-3 text-primary"><User size={18} strokeWidth={2} aria-hidden="true" /></div>
+          <div className="min-w-0"><p className="text-xs uppercase tracking-wider text-secondary">Members</p><p className="text-2xl font-bold text-primary">{gym.memberCount}</p></div>
         </div>
-        <div className="bg-card border border-border rounded-xl p-5 flex items-center gap-4">
-          <div className="p-3 bg-success/10 rounded-lg"><CreditCard className="w-5 h-5 text-success"/></div>
-          <div>
-            <p className="text-xs text-secondary uppercase tracking-wider">Monthly Revenue</p>
-            <p className="text-2xl font-bold text-foreground">{formatCurrency(gym.monthlyRevenue)}</p>
-          </div>
+        <div className="flex items-center gap-4 rounded-xl border border-border bg-card p-5">
+          <div className="rounded-lg bg-success-bg p-3 text-success"><CreditCard size={18} strokeWidth={2} aria-hidden="true" /></div>
+          <div className="min-w-0"><p className="text-xs uppercase tracking-wider text-secondary">Monthly Revenue</p><p className="truncate text-2xl font-bold text-primary">{formatCurrency(gym.monthlyRevenue ?? 0)}</p></div>
         </div>
-        <div className="bg-card border border-border rounded-xl p-5 flex items-center gap-4">
-          <div className="p-3 bg-purple/10 rounded-lg"><Activity className="w-5 h-5 text-purple"/></div>
-          <div>
-            <p className="text-xs text-secondary uppercase tracking-wider">Plan</p>
-            <p className="text-2xl font-bold text-foreground">{gym.plan?.toUpperCase() || '—'}</p>
-          </div>
+        <div className="flex items-center gap-4 rounded-xl border border-border bg-card p-5">
+          <div className="rounded-lg bg-purple-bg p-3 text-purple-text"><Activity size={18} strokeWidth={2} aria-hidden="true" /></div>
+          <div className="min-w-0"><p className="text-xs uppercase tracking-wider text-secondary">Plan</p><p className="truncate text-2xl font-bold text-primary">{displayValue(gym.plan)?.toUpperCase()}</p></div>
         </div>
-        <div className="bg-card border border-border rounded-xl p-5 flex items-center gap-4">
-          <div className="p-3 bg-warning/10 rounded-lg"><Clock className="w-5 h-5 text-warning"/></div>
-          <div>
-            <p className="text-xs text-secondary uppercase tracking-wider">DB Version</p>
-            <p className="text-lg font-bold text-foreground">{gym.databaseVersion || '—'}</p>
-          </div>
+        <div className="flex items-center gap-4 rounded-xl border border-border bg-card p-5">
+          <div className="rounded-lg bg-warning-bg p-3 text-warning"><Clock size={18} strokeWidth={2} aria-hidden="true" /></div>
+          <div className="min-w-0"><p className="text-xs uppercase tracking-wider text-secondary">DB Version</p><p className="truncate text-lg font-bold text-primary">{displayValue(gym.databaseVersion)}</p></div>
         </div>
       </div>
 
-      {/* Detail Sections */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Contact Info */}
-        <div className="bg-card border border-border rounded-xl p-6 space-y-4">
-          <h2 className="text-base font-semibold text-foreground flex items-center gap-2">
-            <User className="w-4 h-4 text-primary"/> Owner & Contact
-          </h2>
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+        <div className="space-y-4 rounded-xl border border-border bg-card p-6">
+          <h2 className="flex items-center gap-2 text-base font-semibold text-primary"><User size={18} strokeWidth={2} aria-hidden="true" /> Owner &amp; Contact</h2>
           <div className="space-y-3 text-sm">
-            <div className="flex justify-between"><span className="text-secondary">Owner</span><span className="text-foreground font-medium">{gym.ownerName}</span></div>
-            <div className="flex justify-between"><span className="text-secondary">Email</span><span className="text-foreground font-medium">{gym.adminEmail}</span></div>
-            <div className="flex justify-between"><span className="text-secondary">Phone</span><span className="text-foreground font-medium">{gym.phone}</span></div>
-            <div className="flex justify-between"><span className="text-secondary">Onboarded</span><span className="text-foreground font-medium">{formatDate(gym.createdAt)}</span></div>
-            <div className="flex justify-between"><span className="text-secondary">Last Login</span><span className="text-foreground font-medium">{gym.lastLoginAt ? formatDate(gym.lastLoginAt) : '—'}</span></div>
+            <SuperadminGymDetailRow label="Owner" value={gym.ownerName} />
+            <SuperadminGymDetailRow label="Email" value={gym.adminEmail} />
+            <SuperadminGymDetailRow label="Phone" value={gym.phone} />
+            <SuperadminGymDetailRow label="Onboarded" value={gym.createdAt ? formatDate(gym.createdAt) : null} />
+            <SuperadminGymDetailRow label="Last Login" value={gym.lastLoginAt ? formatDate(gym.lastLoginAt) : null} />
           </div>
         </div>
-
-        {/* Location & Legal */}
-        <div className="bg-card border border-border rounded-xl p-6 space-y-4">
-          <h2 className="text-base font-semibold text-foreground flex items-center gap-2">
-            <MapPin className="w-4 h-4 text-primary"/> Location & Legal
-          </h2>
+        <div className="space-y-4 rounded-xl border border-border bg-card p-6">
+          <h2 className="flex items-center gap-2 text-base font-semibold text-primary"><MapPin size={18} strokeWidth={2} aria-hidden="true" /> Location &amp; Legal</h2>
           <div className="space-y-3 text-sm">
-            <div className="flex justify-between"><span className="text-secondary">City</span><span className="text-foreground font-medium">{gym.city || '—'}</span></div>
-            <div className="flex justify-between"><span className="text-secondary">State</span><span className="text-foreground font-medium">{gym.state || '—'}</span></div>
-            <div className="flex justify-between"><span className="text-secondary">Country</span><span className="text-foreground font-medium">{gym.country || '—'}</span></div>
-            <div className="flex justify-between"><span className="text-secondary">GSTIN</span>
-              <span className={`font-mono font-medium ${gym.gstin ? 'text-foreground' : 'text-danger'}`}>
-                {gym.gstin || '⚠ Not set'}
-              </span>
-            </div>
-            {gym.status === 'TRIAL' && gym.trialEndsAt && (<div className="flex justify-between">
-                <span className="text-secondary">Trial Ends</span>
-                <span className="text-warning font-medium">{formatDate(gym.trialEndsAt)}</span>
-              </div>)}
+            <SuperadminGymDetailRow label="City" value={gym.city} />
+            <SuperadminGymDetailRow label="State" value={gym.state} />
+            <SuperadminGymDetailRow label="Country" value={gym.country} />
+            <SuperadminGymDetailRow label="GSTIN" value={gym.gstin} emphasis={!gym.gstin} />
+            {gym.status === 'TRIAL' && gym.trialEndsAt ? <SuperadminGymDetailRow label="Trial Ends" value={formatDate(gym.trialEndsAt)} emphasisWarning /> : null}
           </div>
         </div>
       </div>
-    </div>);
+    </section>
+  );
 }
+

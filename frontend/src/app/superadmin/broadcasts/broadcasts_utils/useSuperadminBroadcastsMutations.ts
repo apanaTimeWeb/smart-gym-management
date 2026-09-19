@@ -1,20 +1,25 @@
 // DATA FLOW: Superadmin UI → useSuperadminBroadcastsMutations → Superadmin module API/state → consuming component
-'use client';
 // DATA FLOW: feature API/schema → hook/context → useSuperadminBroadcastsMutations consumers.
-'use client';
 // RESPONSIBILITY: Encapsulates functionality for useSuperadminBroadcastsMutations.ts
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
-import { broadcastsApi } from '@/app/superadmin/broadcasts/superadmin_broadcasts_api/superadmin_broadcasts_api';
-import type { BroadcastFormData, Broadcast, SuperadminBroadcastsTenant } from '@/app/superadmin/broadcasts/superadmin_broadcasts_types/superadmin_broadcasts_types';
+import { broadcastsApi } from '@/app/superadmin/broadcasts/broadcasts_api/SuperadminBroadcastsApi';
+import type { BroadcastFormData, Broadcast, SuperadminBroadcastsTenant } from '@/app/superadmin/broadcasts/broadcasts_types/SuperadminBroadcastsTypes';
 import type { UseFormReturn } from 'react-hook-form';
 import type { ApiResponse } from '@/lib/api';
-export const useSuperadminBroadcastsMutations = ({ updateBroadcasts, setIsModalOpen, setEditingId, form, gyms, setQueueRecipients, setQueueTitle, setQueueModalOpen, }: {
-    updateBroadcasts: (updater: (prev: Broadcast[]) => Broadcast[]) => void;
+/**
+ * Purpose: Encapsulates functionality for useSuperadminBroadcastsMutations.ts.
+ * Inputs: values defined by the exported hook signature.
+ * Output: the hook's typed state/actions/query contract.
+ * Side effects: remain scoped to the owning feature or approved application infrastructure.
+ * Invariant: does not move feature business state into unrelated modules.
+ */
+export const useSuperadminBroadcastsMutations = ({ setIsModalOpen, setEditingId, form, gyms, setQueueRecipients, setQueueBroadcastId, setQueueTitle, setQueueModalOpen, createIdempotencyKey }: {
     setIsModalOpen: (val: boolean) => void;
     setEditingId: (val: string | null) => void;
     form: UseFormReturn<BroadcastFormData>;
     gyms: SuperadminBroadcastsTenant[];
+    setQueueBroadcastId: (val: string | null) => void;
     setQueueRecipients: (val: {
         id: string;
         name: string;
@@ -22,12 +27,15 @@ export const useSuperadminBroadcastsMutations = ({ updateBroadcasts, setIsModalO
     }[]) => void;
     setQueueTitle: (val: string) => void;
     setQueueModalOpen: (val: boolean) => void;
+    createIdempotencyKey: string;
 }) => {
+    const queryClient = useQueryClient();
+    const invalidateBroadcasts = () => queryClient.invalidateQueries({ queryKey: ['superadmin', 'broadcasts'] });
     const createMutation = useMutation({
-        mutationFn: (data: BroadcastFormData) => broadcastsApi.createBroadcast(data),
-        onSuccess: (res: ApiResponse<Broadcast>, variables: BroadcastFormData) => {
+        mutationFn: (data: BroadcastFormData) => broadcastsApi.createBroadcast(data, createIdempotencyKey),
+        onSuccess: async (res: ApiResponse<Broadcast>, variables: BroadcastFormData) => {
             if (res.success && res.data) {
-                updateBroadcasts(prev => [res.data!, ...prev]);
+                await invalidateBroadcasts();
                 setIsModalOpen(false);
                 form.reset();
                 const isSendingNow = variables.status === 'SENT';
@@ -39,6 +47,7 @@ export const useSuperadminBroadcastsMutations = ({ updateBroadcasts, setIsModalO
                     const selectedGyms = gyms?.filter(g => targetGymIds.includes(g.id)) || [];
                     const recipients = selectedGyms.map(g => ({ id: g.id, name: g.name, phone: g.phone || 'N/A' }));
                     setQueueRecipients(recipients);
+                    setQueueBroadcastId(res.data.id);
                     setQueueTitle(res.data.title);
                     setQueueModalOpen(true);
                 }
@@ -52,16 +61,18 @@ export const useSuperadminBroadcastsMutations = ({ updateBroadcasts, setIsModalO
         }
     });
     const updateMutation = useMutation({
-        mutationFn: ({ id, data }: {
+        mutationFn: ({ id, data, idempotencyKey }: {
             id: string;
             data: Partial<BroadcastFormData>;
-        }) => broadcastsApi.updateBroadcast(id, data),
-        onSuccess: (res: ApiResponse<Broadcast>, variables: {
+            idempotencyKey: string;
+        }) => broadcastsApi.updateBroadcast(id, data, idempotencyKey),
+        onSuccess: async (res: ApiResponse<Broadcast>, variables: {
             id: string;
             data: Partial<BroadcastFormData>;
+            idempotencyKey: string;
         }) => {
             if (res.success && res.data) {
-                updateBroadcasts(prev => prev.map(b => b.id === variables.id ? res.data! : b));
+                await invalidateBroadcasts();
                 setIsModalOpen(false);
                 setEditingId(null);
                 form.reset();
@@ -74,6 +85,7 @@ export const useSuperadminBroadcastsMutations = ({ updateBroadcasts, setIsModalO
                     const selectedGyms = gyms?.filter(g => targetGymIds.includes(g.id)) || [];
                     const recipients = selectedGyms.map(g => ({ id: g.id, name: g.name, phone: g.phone || 'N/A' }));
                     setQueueRecipients(recipients);
+                    setQueueBroadcastId(res.data.id);
                     setQueueTitle(res.data.title);
                     setQueueModalOpen(true);
                 }
@@ -87,10 +99,10 @@ export const useSuperadminBroadcastsMutations = ({ updateBroadcasts, setIsModalO
         }
     });
     const deleteMutation = useMutation({
-        mutationFn: (id: string) => broadcastsApi.deleteBroadcast(id),
-        onSuccess: (res: ApiResponse<void>, id: string) => {
+        mutationFn: ({ id, idempotencyKey }: { id: string; idempotencyKey: string }) => broadcastsApi.deleteBroadcast(id, idempotencyKey),
+        onSuccess: async (res: ApiResponse<void>) => {
             if (res.success) {
-                updateBroadcasts(prev => prev.filter(b => b.id !== id));
+                await invalidateBroadcasts();
                 toast.success(res.message, { id: 'superadmin-toast-1ab4bc4752' });
             }
             else {

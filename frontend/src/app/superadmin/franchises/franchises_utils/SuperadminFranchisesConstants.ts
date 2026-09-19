@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Constants and mock data for the Superadmin Franchises module.
-import type { SuperadminFranchise } from '@/app/superadmin/franchises/franchises_types/superadmin_franchises_types';
+import type { SuperadminFranchise } from '@/app/superadmin/franchises/franchises_types/SuperadminFranchisesTypes';
 export const FRANCHISES_PAGE_SIZE = 10;
 export const FRANCHISE_STATUS_STYLES: Record<string, string> = {
     ACTIVE: 'bg-success-bg text-success border border-success/20',
