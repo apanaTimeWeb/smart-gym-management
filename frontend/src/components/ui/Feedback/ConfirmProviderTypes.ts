@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-export interface SuperadminConfirmProviderProps {
+export interface ConfirmProviderProps {
   children: ReactNode;
 }
 

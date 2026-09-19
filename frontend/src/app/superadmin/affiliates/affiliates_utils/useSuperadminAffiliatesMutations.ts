@@ -3,7 +3,7 @@
 'use client';
 // DATA FLOW: feature API/schema → hook/context → useSuperadminAffiliatesMutations consumers.
 import { useCallback } from 'react';
-import { useSuperadminConfirm } from '@/app/superadmin/superadmin_layout/SuperadminFeedback/SuperadminConfirmProvider';
+import { useConfirm } from '@/components/ui/Feedback/ConfirmProvider';
 import { affiliatesApi } from '@/app/superadmin/affiliates/affiliates_api/SuperadminAffiliatesApi';
 import { useSuperadminAffiliatesMutation } from '@/app/superadmin/affiliates/affiliates_utils/useSuperadminAffiliatesMutation';
 import type { Affiliate, AffiliateStatus, AffiliateFormData } from '@/app/superadmin/affiliates/affiliates_types/SuperadminAffiliatesTypes';
@@ -17,7 +17,7 @@ import type { UseFormReturn } from 'react-hook-form';
  */
 export function useSuperadminAffiliatesMutations(updateCachedAffiliates: (updater: (previous: Affiliate[]) => Affiliate[]) => void, setIsModalOpen: (open: boolean) => void, setEditingAffiliate: (affiliate: Affiliate | null) => void, form: UseFormReturn<AffiliateFormData>, editingAffiliate: Affiliate | null) {
     const { mutate, isMutating } = useSuperadminAffiliatesMutation();
-    const { confirm } = useSuperadminConfirm();
+    const { confirm } = useConfirm();
     const handleAddAffiliate = useCallback(async (data: AffiliateFormData) => {
         const createKey = crypto.randomUUID();
         return mutate<Affiliate>(() => affiliatesApi.createAffiliate(data, createKey), {

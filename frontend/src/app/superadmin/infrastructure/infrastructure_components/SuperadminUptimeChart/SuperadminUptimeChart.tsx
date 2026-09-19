@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import { formatDecimal } from '@/lib/formatters';
 import { useSuperadminInfrastructureUptime } from '@/app/superadmin/infrastructure/infrastructure_utils/useSuperadminInfrastructureUptime';
-import { CHART_COLORS } from '@/app/superadmin/superadmin_layout/SuperadminChartConstants';
+import { CHART_COLORS } from '@/components/ui/ChartConstants';
 const ReactApexChart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 export default function SuperadminUptimeChart() {

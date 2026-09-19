@@ -13,7 +13,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useUnsavedChangesGuard } from '@/hooks/useUnsavedChangesGuard';
 import type { FeatureFlag, ReleaseNote } from '@/app/superadmin/features/features_types/SuperadminFeaturesTypes';
 import toast from 'react-hot-toast';
-import { useSuperadminConfirm } from '@/app/superadmin/superadmin_layout/SuperadminFeedback/SuperadminConfirmProvider';
+import { useConfirm } from '@/components/ui/Feedback/ConfirmProvider';
 import { releaseNoteSchema } from '@/app/superadmin/features/features_types/SuperadminFeaturesUiTypes';
 import type { FeaturesTab, ReleaseNoteFormValues } from '@/app/superadmin/features/features_types/SuperadminFeaturesUiTypes';
 import SuperadminFeatureRolloutModal from '@/app/superadmin/features/features_components/SuperadminFeatureRolloutModal';
@@ -28,7 +28,7 @@ export default function SuperadminFeaturesClient() {
         defaultValues: { version: '', title: '', content: '' }
     });
     useUnsavedChangesGuard(isDirty && activeTab === 'NOTES', 'You have an unsaved release note. Discard?');
-    const { confirm } = useSuperadminConfirm();
+    const { confirm } = useConfirm();
     const { data, isPending, error, updateFeatureFlagStatus, updateFlag, publishNote, isPublishing } = useSuperadminFeaturesData();
     const onPublishNote = async (formData: ReleaseNoteFormValues) => {
         const confirmed = await confirm({ title: 'Publish Release Note', message: 'Publish this release note to all tenant owners and admins?', type: 'warning', confirmText: 'Publish', cancelText: 'Cancel' });

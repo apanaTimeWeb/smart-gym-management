@@ -4,8 +4,7 @@
 import { useCallback } from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
-import type { TimeRange } from '@/components/ui/DateFilterDropdownTypes';
-import type { DateFilterBoundary } from '@/components/ui/DateFilterTypes';
+
 
 const OPTIONS = [
     { value: 'this_month', label: 'This Month' },
@@ -17,7 +16,7 @@ const OPTIONS = [
     { value: 'yearly', label: 'Yearly (All Time)' }, // Keep compatibility with dashboard
     { value: 'custom', label: 'Custom Range' },
 ];
-export function DateFilterDropdown() {
+export function SuperadminAnalyticsDateFilterDropdown() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const pathname = usePathname();
@@ -94,4 +93,11 @@ export function DateFilterDropdown() {
     </div>);
 }
 
-export type { TimeRange } from '@/components/ui/DateFilterDropdownTypes';
+
+
+
+
+export type TimeRange = 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'yearly' | 'custom' | 'this_month' | 'last_month' | 'last_3_months' | 'last_6_months' | 'this_year';
+
+export type DateFilterBoundary = 'start' | 'end';
+

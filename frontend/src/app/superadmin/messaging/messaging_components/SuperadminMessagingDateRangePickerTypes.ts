@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Type contract extracted from DateRangePicker.tsx; no business behavior.
 
 
-export interface DateRangePickerProps {
+export interface SuperadminMessagingDateRangePickerProps {
   onRangeChange: (start: string, end: string) => void;
 }

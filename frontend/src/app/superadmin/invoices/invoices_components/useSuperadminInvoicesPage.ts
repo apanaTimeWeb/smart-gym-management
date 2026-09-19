@@ -7,7 +7,7 @@ import { useUrlState } from '@/hooks/useUrlState';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { invoicesApi } from '@/app/superadmin/invoices/invoices_api/SuperadminInvoicesApi';
 import toast from 'react-hot-toast';
-import { useSuperadminConfirm } from '@/app/superadmin/superadmin_layout/SuperadminFeedback/SuperadminConfirmProvider';
+import { useConfirm } from '@/components/ui/Feedback/ConfirmProvider';
 import { calculateSuperadminInvoiceMetrics } from '@/app/superadmin/invoices/invoices_utils/SuperadminInvoicesMetrics';
 /**
  * Purpose: Encapsulates local UI state for the Invoices page (filtering, modal state, derived stats).
@@ -19,7 +19,7 @@ import { calculateSuperadminInvoiceMetrics } from '@/app/superadmin/invoices/inv
 export function useSuperadminInvoicesPage() {
     const queryClient = useQueryClient();
     const { getParam, setParam } = useUrlState();
-    const { confirm } = useSuperadminConfirm();
+    const { confirm } = useConfirm();
     const startDate = getParam('startDate', '');
     const endDate = getParam('endDate', '');
     const search = getParam('search', '');

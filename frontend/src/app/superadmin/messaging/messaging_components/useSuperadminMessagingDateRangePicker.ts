@@ -6,11 +6,11 @@
  */
 'use client';
 import { useState } from 'react';
-import { getDateRange, serializeSuperadminCustomDateRange } from '@/components/ui/DateRangeUtils';
-import type { DateRangeOption } from '@/components/ui/DateRangeConstants';
+import { getDateRange, serializeSuperadminCustomDateRange } from './SuperadminMessagingDateRangeUtils';
+import type { DateRangeOption } from './SuperadminMessagingDateRangeConstants';
 
 /** Owns date-range picker interaction state and emits normalized ranges to the parent feature view. */
-export function useDateRangePicker(onRangeChange: (start: string, end: string) => void) {
+export function useSuperadminMessagingDateRangePicker(onRangeChange: (start: string, end: string) => void) {
   const [range, setRange] = useState<DateRangeOption>('this_month');
   const [customStart, setCustomStart] = useState('');
   const [customEnd, setCustomEnd] = useState('');

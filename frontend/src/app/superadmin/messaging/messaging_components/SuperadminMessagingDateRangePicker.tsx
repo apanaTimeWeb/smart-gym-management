@@ -1,20 +1,20 @@
-// RESPONSIBILITY: Renders the DateRangePicker control; date calculation and state are isolated in the adjacent hook/utility.
+// RESPONSIBILITY: Renders the SuperadminMessagingDateRangePicker control; date calculation and state are isolated in the adjacent hook/utility.
 'use client';
 import { Calendar } from 'lucide-react';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
-import { SUPERADMIN_DATE_RANGE_OPTIONS } from '@/components/ui/DateRangeConstants';
-import { useDateRangePicker } from '@/components/ui/useDateRangePicker';
-import type { DateRangePickerProps } from '@/components/ui/DateRangePickerTypes';
+import { SUPERADMIN_MESSAGING_DATE_RANGE_OPTIONS } from './SuperadminMessagingDateRangeConstants';
+import { useSuperadminMessagingDateRangePicker } from '@/app/superadmin/messaging/messaging_components/useSuperadminMessagingDateRangePicker';
+import type { SuperadminMessagingDateRangePickerProps } from '@/app/superadmin/messaging/messaging_components/SuperadminMessagingDateRangePickerTypes';
 
 
 
-export default function DateRangePicker({ onRangeChange }: DateRangePickerProps) {
-  const { range, customStart, customEnd, handleRangeChange, handleCustomStartChange, handleCustomEndChange } = useDateRangePicker(onRangeChange);
+export default function SuperadminMessagingDateRangePicker({ onRangeChange }: SuperadminMessagingDateRangePickerProps) {
+  const { range, customStart, customEnd, handleRangeChange, handleCustomStartChange, handleCustomEndChange } = useSuperadminMessagingDateRangePicker(onRangeChange);
   return (
     <div className="flex items-center gap-3 bg-page border border-border rounded-lg p-1.5 shadow-card">
       <div className="pl-2" aria-hidden="true"><Calendar size={18} strokeWidth={2} className="text-secondary" /></div>
       <div className="w-40 border-none">
-        <SearchableDropdown options={SUPERADMIN_DATE_RANGE_OPTIONS.map((option) => ({ value: option.value, label: option.label }))} value={range} onChange={handleRangeChange} className="border-none bg-transparent !p-0" />
+        <SearchableDropdown options={SUPERADMIN_MESSAGING_DATE_RANGE_OPTIONS.map((option) => ({ value: option.value, label: option.label }))} value={range} onChange={handleRangeChange} className="border-none bg-transparent !p-0" />
       </div>
       {range === 'custom' ? (
         <div className="flex items-center gap-2 pl-2 border-l border-border">
@@ -29,4 +29,4 @@ export default function DateRangePicker({ onRangeChange }: DateRangePickerProps)
   );
 }
 
-export type { DateRangePickerProps } from '@/components/ui/DateRangePickerTypes';
+export type { SuperadminMessagingDateRangePickerProps } from '@/app/superadmin/messaging/messaging_components/SuperadminMessagingDateRangePickerTypes';

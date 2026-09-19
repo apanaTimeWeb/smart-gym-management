@@ -8,12 +8,12 @@ import { SuperadminFranchiseModal } from '@/app/superadmin/franchises/franchises
 import type { FranchiseFormData } from '@/app/superadmin/franchises/franchises_types/SuperadminFranchiseModalTypes';
 import { FRANCHISE_STATUS_STYLES, FRANCHISES_PAGE_SIZE } from '@/app/superadmin/franchises/franchises_utils/SuperadminFranchisesConstants';
 import type { SuperadminFranchise } from '@/app/superadmin/franchises/franchises_types/SuperadminFranchisesTypes';
-import { useSuperadminConfirm } from '@/app/superadmin/superadmin_layout/SuperadminFeedback/SuperadminConfirmProvider';
+import { useConfirm } from '@/components/ui/Feedback/ConfirmProvider';
 import { maskSensitiveData, formatCurrency, formatNumber } from '@/lib/formatters';
 export default function SuperadminFranchisesClient() {
     const { franchises, isPending, isError: error, search, setSearch, currentPage, pageLimit, setPage, total, handleSuspend, handleActivate, handleEdit, isEditing } = useSuperadminFranchisesPage();
     const [editingFranchise, setEditingFranchise] = useState<SuperadminFranchise | null>(null);
-    const { confirm } = useSuperadminConfirm();
+    const { confirm } = useConfirm();
     const onSuspendClick = async (id: string) => {
         if (await confirm({ title: 'Suspend Franchise', message: 'Are you sure you want to suspend this franchise? It will immediately revoke access for all branch staff under this franchise.', type: 'danger', confirmText: 'Suspend' })) {
             handleSuspend(id);

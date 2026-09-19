@@ -2,7 +2,7 @@
 'use client';
 import { AlertCircle, DollarSign } from 'lucide-react';
 import { formatCurrency, formatNumber } from '@/lib/formatters';
-import { useDateRangeSuffix } from '@/components/ui/useDateRangeSuffix';
+import { useDateRangeSuffix } from '@/hooks/useDateRangeSuffix';
 import type { SuperadminInvoicesStatsBarProps } from '@/app/superadmin/invoices/invoices_types/SuperadminInvoicesStatsBarTypes';
 
 export default function SuperadminInvoicesStatsBar({ totalRevenue, failedRevenue, pendingRevenue, overdueCount, }: SuperadminInvoicesStatsBarProps) {

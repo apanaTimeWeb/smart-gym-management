@@ -6,9 +6,9 @@
 import dynamic from 'next/dynamic';
 import { TrendingUp, Users, IndianRupee, Activity, ArrowDownRight, DollarSign } from 'lucide-react';
 import { useSuperadminAnalyticsPage } from '@/app/superadmin/analytics/analytics_utils/useSuperadminAnalyticsPage';
-import { CHART_COLORS } from '@/app/superadmin/superadmin_layout/SuperadminChartConstants';
-import { DateFilterDropdown } from '@/components/ui/DateFilterDropdown';
-import { useDateRangeSuffix } from '@/components/ui/useDateRangeSuffix';
+import { CHART_COLORS } from '@/components/ui/ChartConstants';
+import { SuperadminAnalyticsDateFilterDropdown } from '@/app/superadmin/analytics/analytics_components/SuperadminAnalyticsDateFilterDropdown';
+import { useDateRangeSuffix } from '@/hooks/useDateRangeSuffix';
 // Heavy chart component â€” code-split via dynamic import (Rule 15, Design Â§10)
 import { formatCurrency, formatKPI, formatDecimal } from '@/lib/formatters';
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
@@ -157,7 +157,7 @@ export default function SuperadminAnalyticsClient() {
           <p className="text-secondary mt-1 text-sm">Global SaaS metrics and financial intelligence.</p>
         </div>
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
-          <DateFilterDropdown />
+          <SuperadminAnalyticsDateFilterDropdown />
         </div>
       </div>
 

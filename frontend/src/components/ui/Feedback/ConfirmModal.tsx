@@ -1,9 +1,9 @@
 // RESPONSIBILITY: Renders the reusable confirmation/destructive action modal used across all SUPERADMIN modules. Receives config via SuperadminConfirmProvider. No API calls.
 'use client';
 import { useEffect, useRef } from 'react';
-import type { SuperadminConfirmModalProps } from '@/app/superadmin/superadmin_layout/SuperadminFeedback/SuperadminConfirmTypes';
+import type { ConfirmModalProps } from './ConfirmTypes';
 import { AlertTriangle } from 'lucide-react';
-export default function SuperadminConfirmModal({ isOpen, title, message, onConfirm, onCancel, confirmText = 'Confirm', cancelText = 'Cancel', type = 'danger' }: SuperadminConfirmModalProps) {
+export default function ConfirmModal({ isOpen, title, message, onConfirm, onCancel, confirmText = 'Confirm', cancelText = 'Cancel', type = 'danger' }: ConfirmModalProps) {
     const dialogRef = useRef<HTMLDivElement>(null);
     const cancelButtonRef = useRef<HTMLButtonElement>(null);
     const previousFocusRef = useRef<HTMLElement | null>(null);

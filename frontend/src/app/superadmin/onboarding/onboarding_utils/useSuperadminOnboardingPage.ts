@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Owns Onboarding list query and lifecycle mutations for the Superadmin onboarding page.
 'use client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useSuperadminConfirm } from '@/app/superadmin/superadmin_layout/SuperadminFeedback/SuperadminConfirmProvider';
+import { useConfirm } from '@/components/ui/Feedback/ConfirmProvider';
 import type { SuperadminOnboardingExtendTrialVariables } from '@/app/superadmin/onboarding/onboarding_types/SuperadminOnboardingMutationTypes';
 import { onboardingApi } from '@/app/superadmin/onboarding/onboarding_api/SuperadminOnboardingApi';
 /**
@@ -13,7 +13,7 @@ import { onboardingApi } from '@/app/superadmin/onboarding/onboarding_api/Supera
  */
 export function useSuperadminOnboardingPage(queryParams: Record<string, string>) {
   const queryClient = useQueryClient();
-  const { confirm } = useSuperadminConfirm();
+  const { confirm } = useConfirm();
   const invalidate = () => queryClient.invalidateQueries({ queryKey: ['superadmin', 'onboarding'] });
   const listQuery = useQuery({ queryKey: ['superadmin', 'onboarding', queryParams], queryFn: () => onboardingApi.fetchOnboardings(queryParams) });
   const resend = useMutation({ mutationFn: onboardingApi.resendVerification, onSuccess: invalidate });

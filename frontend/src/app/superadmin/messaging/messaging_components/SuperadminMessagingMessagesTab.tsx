@@ -3,7 +3,7 @@
 
 import { Bell, Mail, MessageSquare, Search } from 'lucide-react';
 import { formatDateTime } from '@/lib/formatters';
-import DateRangePicker from '@/components/ui/DateRangePicker';
+import SuperadminMessagingDateRangePicker from '@/app/superadmin/messaging/messaging_components/SuperadminMessagingDateRangePicker';
 import Pagination from '@/components/ui/Pagination';
 import type { SuperadminMessagingMessagesTabProps } from '@/app/superadmin/messaging/messaging_types/SuperadminMessagingMessagesTabTypes';
 import { CHANNEL_STYLES, MESSAGE_STATUS_STYLES } from '@/app/superadmin/messaging/messaging_types/SuperadminMessagingConstants';
@@ -25,7 +25,7 @@ export function SuperadminMessagingMessagesTab({ search, setSearch, channelFilte
               </button>
             ))}
           </div>
-          <DateRangePicker onRangeChange={setRange} />
+          <SuperadminMessagingDateRangePicker onRangeChange={setRange} />
         </div>
       </div>
 

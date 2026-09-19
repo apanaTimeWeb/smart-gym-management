@@ -3,7 +3,7 @@
 // DATA FLOW: feature API/schema → hook/context → useSuperadminSystemClient consumers.
 // RESPONSIBILITY: Owns System page client-state, TanStack Query calls, mutation handling, URL-backed audit-log filters, and CSV export. The view consumes this hook and only renders the resulting state.
 import { useMemo, useState } from 'react';
-import { useSuperadminConfirm } from '@/app/superadmin/superadmin_layout/SuperadminFeedback/SuperadminConfirmProvider';
+import { useConfirm } from '@/components/ui/Feedback/ConfirmProvider';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { useUrlState } from '@/hooks/useUrlState';
@@ -33,7 +33,7 @@ export function useSuperadminSystemClient() {
         return params;
     }, [currentPage, logSearch]);
     const queryClient = useQueryClient();
-    const { confirm } = useSuperadminConfirm();
+    const { confirm } = useConfirm();
     const migrationsQuery = useQuery({ queryKey: ['superadmin', 'system-migrations'], queryFn: () => systemApi.fetchMigrations() });
     const auditQuery = useQuery({ queryKey: ['superadmin', 'auditLogs', queryParams], queryFn: () => systemApi.fetchAuditLogs(queryParams) });
     const migrationsData = migrationsQuery.data?.data;

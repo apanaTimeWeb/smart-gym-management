@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Renders the Onboarding Stats Bar component and its associated UI logic.
 'use client';
-import { useDateRangeSuffix } from '@/components/ui/useDateRangeSuffix';
+import { useDateRangeSuffix } from '@/hooks/useDateRangeSuffix';
 import type { SuperadminOnboardingStatsBarProps } from '@/app/superadmin/onboarding/onboarding_types/SuperadminOnboardingStatsBarTypes';
 export function SuperadminOnboardingStatsBar({ stats }: SuperadminOnboardingStatsBarProps) {
     const dateSuffix = useDateRangeSuffix();

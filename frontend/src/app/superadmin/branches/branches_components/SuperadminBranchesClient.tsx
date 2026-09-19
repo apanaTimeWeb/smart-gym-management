@@ -7,12 +7,12 @@ import { Building2, Users, TrendingUp, Ban, Search, CheckCircle2, AlertTriangle 
 import { useSuperadminBranchesPage } from '@/app/superadmin/branches/branches_utils/useSuperadminBranchesPage';
 import { BRANCH_STATUS_STYLES } from '@/app/superadmin/branches/branches_utils/SuperadminBranchesConstants';
 import type { SuperadminBranch } from '@/app/superadmin/branches/branches_types/SuperadminBranchesTypes';
-import { useSuperadminConfirm } from '@/app/superadmin/superadmin_layout/SuperadminFeedback/SuperadminConfirmProvider';
+import { useConfirm } from '@/components/ui/Feedback/ConfirmProvider';
 import { formatCurrency, formatNumber, maskSensitiveData } from '@/lib/formatters';
 import Pagination from '@/components/ui/Pagination';
 export default function SuperadminBranchesClient() {
     const { branches, isPending, isError: error, search, setSearch, statusFilter, setStatusFilter, currentPage, setCurrentPage, total, totalPages, handleSuspend, handleActivate } = useSuperadminBranchesPage();
-    const { confirm } = useSuperadminConfirm();
+    const { confirm } = useConfirm();
     const onSuspendClick = async (id: string) => {
         if (await confirm({ title: 'Suspend Branch', message: 'Are you sure you want to suspend this branch? It will immediately revoke access for all branch staff.', type: 'danger', confirmText: 'Suspend' })) {
             handleSuspend(id);

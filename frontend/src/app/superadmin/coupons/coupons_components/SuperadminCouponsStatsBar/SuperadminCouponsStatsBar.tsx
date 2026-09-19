@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Renders the KPI stat cards (Active Coupons, Total Redeemed) for the Coupons page. Purely presentational â€” receives data via props.
 'use client';
 import { Tag, CheckCircle2, Ticket } from 'lucide-react';
-import { useDateRangeSuffix } from '@/components/ui/useDateRangeSuffix';
+import { useDateRangeSuffix } from '@/hooks/useDateRangeSuffix';
 import { formatNumber } from '@/lib/formatters';
 import type { SuperadminCouponsStatsBarProps } from '@/app/superadmin/coupons/coupons_types/SuperadminCouponsStatsBarTypes';
 

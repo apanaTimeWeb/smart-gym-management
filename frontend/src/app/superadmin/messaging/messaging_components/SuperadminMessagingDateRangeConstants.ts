@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Owns the static date-range choices exposed by Superadmin reporting/filter surfaces.
-export const SUPERADMIN_DATE_RANGE_OPTIONS = [
+export const SUPERADMIN_MESSAGING_DATE_RANGE_OPTIONS = [
   { value: 'today', label: 'Today' },
   { value: 'this_week', label: 'This Week' },
   { value: 'this_month', label: 'This Month' },
@@ -7,4 +7,4 @@ export const SUPERADMIN_DATE_RANGE_OPTIONS = [
   { value: 'custom', label: 'Custom' },
 ] as const;
 
-export type DateRangeOption = typeof SUPERADMIN_DATE_RANGE_OPTIONS[number]['value'];
+export type DateRangeOption = typeof SUPERADMIN_MESSAGING_DATE_RANGE_OPTIONS[number]['value'];

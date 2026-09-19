@@ -6,13 +6,13 @@ import type { SuperadminJobsMutationOptions } from '@/app/superadmin/jobs/jobs_t
 import { useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { jobsApi } from '@/app/superadmin/jobs/jobs_api/SuperadminJobsApi';
-import { useSuperadminConfirm } from '@/app/superadmin/superadmin_layout/SuperadminFeedback/SuperadminConfirmProvider';
+import { useConfirm } from '@/components/ui/Feedback/ConfirmProvider';
 
 /** Executes job mutations and reconciles the owning Jobs query after each successful operation. */
 export function useSuperadminJobsMutations({ setSelectedJobIds, selectedJobIds }: SuperadminJobsMutationOptions) {
     const queryClient = useQueryClient();
     const [isRetrying, setIsRetrying] = useState(false);
-    const { confirm } = useSuperadminConfirm();
+    const { confirm } = useConfirm();
     const invalidateJobs = () => queryClient.invalidateQueries({ queryKey: ['superadmin', 'jobs'] });
 
     async function handleRetryAll() {

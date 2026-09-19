@@ -11,7 +11,7 @@ export interface SuperadminConfirmContextValue {
     confirm: (options: SuperadminConfirmOptions) => Promise<boolean>;
 }
 
-export interface SuperadminConfirmModalProps {
+export interface ConfirmModalProps {
     isOpen: boolean;
     title: string;
     message: string;

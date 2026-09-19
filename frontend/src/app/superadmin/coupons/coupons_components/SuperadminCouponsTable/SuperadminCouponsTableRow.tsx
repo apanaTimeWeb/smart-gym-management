@@ -3,7 +3,7 @@
 import type { MouseEvent } from 'react';
 import { Edit2, Trash2, RefreshCw, ToggleLeft, ToggleRight, MessageCircle, History } from 'lucide-react';
 import { formatINR, formatDate } from '@/lib/formatters';
-import { useSuperadminConfirm } from '@/app/superadmin/superadmin_layout/SuperadminFeedback/SuperadminConfirmProvider';
+import { useConfirm } from '@/components/ui/Feedback/ConfirmProvider';
 import SuperadminCouponsStatusBadge from '@/app/superadmin/coupons/coupons_components/SuperadminCouponsStatusBadge/SuperadminCouponsStatusBadge';
 import { WhatsAppFormatter } from '@/lib/whatsapp_formatter';
 import type { Coupon, CouponStatus } from '@/app/superadmin/coupons/coupons_types/SuperadminCouponsTypes';
@@ -11,7 +11,7 @@ import type { SuperadminCouponsTableRowProps } from '@/app/superadmin/coupons/co
 
 export default function SuperadminCouponsTableRow({ coupon, onToggleStatus, onEdit, onDelete, onRestore }: SuperadminCouponsTableRowProps) {
     const cpn = coupon;
-    const { confirm } = useSuperadminConfirm();
+    const { confirm } = useConfirm();
     const handleShareWhatsApp = (e: MouseEvent, cpn: Coupon) => {
         e.stopPropagation();
         const dateStr = new Date(cpn.expiryDate).toLocaleDateString('en-IN', {

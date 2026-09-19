@@ -6,7 +6,7 @@ import toast from 'react-hot-toast';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { plansApi } from '@/app/superadmin/plans/plans_api/SuperadminPlansApi';
 import { useSuperadminPlansStore } from '@/app/superadmin/plans/plans_store/useSuperadminPlansStore';
-import { useSuperadminConfirm } from '@/app/superadmin/superadmin_layout/SuperadminFeedback/SuperadminConfirmProvider';
+import { useConfirm } from '@/components/ui/Feedback/ConfirmProvider';
 import type { SuperadminPlanListMutationInput } from '@/app/superadmin/plans/plans_types/SuperadminPlansListMutationTypes';
 import type { SuperadminPlansListDestructiveActionTarget } from '@/app/superadmin/plans/plans_types/SuperadminPlansUiTypes';
 
@@ -20,7 +20,7 @@ import type { SuperadminPlansListDestructiveActionTarget } from '@/app/superadmi
 export function useSuperadminPlansList() {
   const openEditModal = useSuperadminPlansStore((state) => state.openEditModal);
   const queryClient = useQueryClient();
-  const { confirm } = useSuperadminConfirm();
+  const { confirm } = useConfirm();
 
   const plansQuery = useQuery({
     queryKey: ['superadmin', 'plans'],

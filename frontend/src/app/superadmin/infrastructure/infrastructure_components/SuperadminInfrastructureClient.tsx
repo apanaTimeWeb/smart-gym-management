@@ -5,7 +5,7 @@ import { Cpu, HardDrive, Server, Zap, RefreshCcw, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import type { InfrastructureNode } from '@/app/superadmin/infrastructure/infrastructure_types/SuperadminInfrastructureTypes';
 import SuperadminFlushTenantModal from '@/app/superadmin/infrastructure/infrastructure_components/SuperadminFlushTenantModal';
-import { useSuperadminConfirm } from '@/app/superadmin/superadmin_layout/SuperadminFeedback/SuperadminConfirmProvider';
+import { useConfirm } from '@/components/ui/Feedback/ConfirmProvider';
 import SuperadminUptimeChart from '@/app/superadmin/infrastructure/infrastructure_components/SuperadminUptimeChart/SuperadminUptimeChart';
 import { formatNumber } from '@/lib/formatters';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
@@ -19,7 +19,7 @@ export default function SuperadminInfrastructureClient() {
     const { getParam, setParam } = useUrlState();
     const statusFilter = getParam('statusFilter', 'ALL');
     const setStatusFilter = (val: string) => setParam('statusFilter', val);
-    const { confirm } = useSuperadminConfirm();
+    const { confirm } = useConfirm();
     const queryParams = useMemo(() => {
         const p: Record<string, string> = {};
         if (statusFilter && statusFilter !== 'ALL')

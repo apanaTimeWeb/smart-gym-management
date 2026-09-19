@@ -3,11 +3,11 @@
 import { formatDate, formatDateTime } from '@/lib/formatters';
 import SuperadminBroadcastStatusBadge from '@/app/superadmin/broadcasts/broadcasts_components/SuperadminBroadcastStatusBadge/SuperadminBroadcastStatusBadge';
 import { Send, Edit2, Trash2 } from 'lucide-react';
-import { useSuperadminConfirm } from '@/app/superadmin/superadmin_layout/SuperadminFeedback/SuperadminConfirmProvider';
+import { useConfirm } from '@/components/ui/Feedback/ConfirmProvider';
 import SuperadminBroadcastsEmptyState from '@/app/superadmin/broadcasts/broadcasts_components/SuperadminBroadcastsEmptyState/SuperadminBroadcastsEmptyState';
 import type { SuperadminBroadcastsTableProps } from '@/app/superadmin/broadcasts/broadcasts_types/SuperadminBroadcastsTypes';
 export default function SuperadminBroadcastsTable({ broadcasts, onSend, onEdit, onDelete, onCreateClick }: SuperadminBroadcastsTableProps) {
-    const { confirm } = useSuperadminConfirm();
+    const { confirm } = useConfirm();
     return (<div className="bg-card border border-border rounded-xl overflow-hidden shadow-card flex flex-col min-h-96">
       <div className="overflow-x-auto flex-1">
         <table className="w-full text-left border-collapse">

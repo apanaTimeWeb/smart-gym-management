@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Renders the Reports Cancellations Tab component and its associated UI logic.
 import dynamic from 'next/dynamic';
-import { CHART_COLORS } from '@/app/superadmin/superadmin_layout/SuperadminChartConstants';
+import { CHART_COLORS } from '@/components/ui/ChartConstants';
 import type { CancellationsRecord } from '@/app/superadmin/reports/reports_types/SuperadminReportsTypes';
 import type { SuperadminReportsCancellationsTabProps } from '@/app/superadmin/reports/reports_types/SuperadminReportsTabTypes';
 import { formatCurrency } from '@/lib/formatters';

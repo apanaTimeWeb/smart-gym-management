@@ -4,7 +4,7 @@
 // DATA FLOW: form dirty state → browser/in-app navigation interception → module confirmation → allow/block navigation.
 // RESPONSIBILITY: Protects dirty Superadmin forms from browser exits and Next.js in-app navigation without owning business state.
 import { useCallback, useEffect, useRef } from 'react';
-import { useSuperadminConfirm } from '@/app/superadmin/superadmin_layout/SuperadminFeedback/SuperadminConfirmProvider';
+import { useConfirm } from '@/components/ui/Feedback/ConfirmProvider';
 /**
  * Purpose: Protects dirty Superadmin forms from browser exits and Next.js in-app navigation without owning business state.
  * Inputs: values defined by the exported hook signature.
@@ -13,7 +13,7 @@ import { useSuperadminConfirm } from '@/app/superadmin/superadmin_layout/Superad
  * Invariant: does not move feature business state into unrelated modules.
  */
 export function useUnsavedChangesGuard(isDirty: boolean, warningMessage = 'You have unsaved changes. Are you sure you want to leave? Your changes will be lost.') {
-    const { confirm } = useSuperadminConfirm(); const dirtyRef=useRef(isDirty); const bypassRef=useRef(false); dirtyRef.current=isDirty;
+    const { confirm } = useConfirm(); const dirtyRef=useRef(isDirty); const bypassRef=useRef(false); dirtyRef.current=isDirty;
     const ask=useCallback(()=>confirm({title:'Unsaved Changes',message:warningMessage,type:'warning',confirmText:'Leave Page',cancelText:'Stay'}),[confirm,warningMessage]);
 // EFFECT INTENT: registers/removes a browser event listener and keeps the listener aligned with its captured values.
     useEffect(()=>{const beforeUnload=(event:BeforeUnloadEvent)=>{if(!dirtyRef.current||bypassRef.current)return;event.preventDefault();event.returnValue='';};

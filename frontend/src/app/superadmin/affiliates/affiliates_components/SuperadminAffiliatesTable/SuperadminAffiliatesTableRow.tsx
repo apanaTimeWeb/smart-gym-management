@@ -2,14 +2,14 @@
 'use client';
 import { Pencil, Trash2, Power, Check, Banknote } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { useSuperadminConfirm } from '@/app/superadmin/superadmin_layout/SuperadminFeedback/SuperadminConfirmProvider';
+import { useConfirm } from '@/components/ui/Feedback/ConfirmProvider';
 import SuperadminAffiliateStatusBadge from '@/app/superadmin/affiliates/affiliates_components/SuperadminAffiliateStatusBadge/SuperadminAffiliateStatusBadge';
 import type { Affiliate, AffiliateStatus } from '@/app/superadmin/affiliates/affiliates_types/SuperadminAffiliatesTypes';
 import { maskSensitiveData, formatCurrency, formatNumber } from '@/lib/formatters';
 import type { SuperadminAffiliatesTableRowProps } from '@/app/superadmin/affiliates/affiliates_types/SuperadminAffiliatesTableRowTypes';
 
 export default function SuperadminAffiliatesTableRow({ affiliate: aff, onToggleStatus, onEdit, onDelete, onPayCommission }: SuperadminAffiliatesTableRowProps) {
-    const { confirm } = useSuperadminConfirm();
+    const { confirm } = useConfirm();
     return (<tr tabIndex={0} aria-label={`Edit affiliate ${aff.name}`} className="hover:bg-primary/5 motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset" onClick={() => onEdit(aff)} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); onEdit(aff); } }}>
       <td className="px-6 py-4">
         <div className="flex flex-col">

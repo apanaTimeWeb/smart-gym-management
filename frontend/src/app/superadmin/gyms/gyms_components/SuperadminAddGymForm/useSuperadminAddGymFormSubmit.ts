@@ -3,7 +3,7 @@
 // DATA FLOW: Form → provisioning API → Query invalidation → visible success/error → gyms list.
 // RESPONSIBILITY: Owns the Superadmin tenant-provisioning submission workflow. It never simulates backend infrastructure steps or sends credentials before confirmed success.
 import { useState } from 'react';
-import { useSuperadminConfirm } from '@/app/superadmin/superadmin_layout/SuperadminFeedback/SuperadminConfirmProvider';
+import { useConfirm } from '@/components/ui/Feedback/ConfirmProvider';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { useQueryClient } from '@tanstack/react-query';
@@ -18,7 +18,7 @@ import type { OnboardGymFormValues } from '@/app/superadmin/gyms/gyms_utils/Supe
  * Invariant: does not move feature business state into unrelated modules.
  */
 export function useSuperadminAddGymFormSubmit() {
-    const router=useRouter(); const queryClient=useQueryClient(); const { confirm } = useSuperadminConfirm(); const [isProvisioning,setIsProvisioning]=useState(false); const [provisioningLogs,setProvisioningLogs]=useState<string[]>([]);
+    const router=useRouter(); const queryClient=useQueryClient(); const { confirm } = useConfirm(); const [isProvisioning,setIsProvisioning]=useState(false); const [provisioningLogs,setProvisioningLogs]=useState<string[]>([]);
     const onSubmit=async(data:OnboardGymFormValues)=>{
         const confirmed=await confirm({title:'Provision Tenant',message:'This will provision a new tenant database and create the tenant in Superadmin. Continue?',type:'warning',confirmText:'Provision Tenant',cancelText:'Cancel'});
         if(!confirmed) return;
