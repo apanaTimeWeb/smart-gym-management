@@ -118,7 +118,8 @@ export const managerHrHandlers = [
     return HttpResponse.json({ success: true, message: 'Success', data: { paidAmount: data.amount } });
   }),
   
-  http.get(managerMockApiUrl(ManagerHrUrlConfig.BACKEND_API.STAFF_ATTENDANCE(':staffId', ':month')), () => {
+  http.get(managerMockApiUrl(`/manager/hr/staff/:staffId/attendance`), ({ request }) => {
+    const _month = new URL(request.url).searchParams.get('month');
     return HttpResponse.json({ success: true, message: 'Success', data: { history: [] } });
   }),
 ];

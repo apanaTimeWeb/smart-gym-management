@@ -22,13 +22,17 @@ export function ManagerMswBrowserBootstrap({ children }: ManagerMswBrowserBootst
         return;
       }
 
-      await managerMswWorker.start({
-        onUnhandledRequest(request) {
-          const pathname = new URL(request.url).pathname;
-          if (pathname.startsWith('/api/v1/manager/')) {
-            logger.error('Unhandled Manager MSW request', { method: request.method, pathname, module: 'manager', route: pathname });
-          }
-        } });
+      try {
+        await managerMswWorker.start({
+          onUnhandledRequest(request) {
+            const pathname = new URL(request.url).pathname;
+            if (pathname.startsWith('/api/v1/manager/')) {
+              logger.error('Unhandled Manager MSW request', { method: request.method, pathname, module: 'manager', route: pathname });
+            }
+          } });
+      } catch {
+        // Worker already started (e.g. hot-reload) — safe to ignore
+      }
 
       if (active) setReady(true);
     };
