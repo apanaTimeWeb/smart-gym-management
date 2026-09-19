@@ -2,6 +2,7 @@
 // HIGHLY RECOMMENDED additions: failedCount, deliveredCount, openRate, scheduledAt on CommCampaign;
 // MessageTemplate interface; lifetimeValue on ChurnedMember.
 
+export type CommActiveTab = 'compose' | 'history' | 'automations' | 'churn_recovery';
 export type CommChannel = 'whatsapp' | 'email';
 export type CommSegment =
   | 'all_active'

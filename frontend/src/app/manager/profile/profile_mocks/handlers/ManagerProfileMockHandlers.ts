@@ -1,11 +1,13 @@
 import { http, HttpResponse } from 'msw';
+import { managerMockApiUrl } from '@/app/manager/manager_infrastructure/ManagerMockApiUrl';
+import { ManagerProfileUrlConfig } from '@/app/manager/profile/profile_url_config';
 import { MOCK_PROFILE } from '@/app/manager/profile/profile_fixtures/ManagerProfileMockData';
 import type { UpdateManagerProfilePayload } from '@/app/manager/profile/profile_types/ManagerProfileTypes';
 
 let profileDb = { ...MOCK_PROFILE };
 
 export const managerProfileHandlers = [
-  http.get(`/api/v1/manager/profile`, () => {
+  http.get(managerMockApiUrl(ManagerProfileUrlConfig.BACKEND_API.BASE), () => {
     return HttpResponse.json({
       success: true,
       message: 'Profile fetched',
@@ -13,7 +15,7 @@ export const managerProfileHandlers = [
     });
   }),
 
-  http.patch(`/api/v1/manager/profile`, async ({ request }) => {
+  http.patch(managerMockApiUrl(ManagerProfileUrlConfig.BACKEND_API.BASE), async ({ request }) => {
     const body = await request.json() as UpdateManagerProfilePayload;
     profileDb = { ...profileDb, ...body };
     return HttpResponse.json({
@@ -23,7 +25,7 @@ export const managerProfileHandlers = [
     });
   }),
 
-  http.patch(`/api/v1/manager/profile/password`, () => {
+  http.patch(managerMockApiUrl(ManagerProfileUrlConfig.BACKEND_API.PASSWORD), () => {
     return HttpResponse.json({
       success: true,
       message: 'Password updated successfully'

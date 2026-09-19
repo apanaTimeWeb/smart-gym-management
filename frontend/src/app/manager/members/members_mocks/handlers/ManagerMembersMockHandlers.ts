@@ -1,8 +1,14 @@
 import { http, HttpResponse } from 'msw';
-import { MANAGER_HTTP_STATUS } from '@/app/manager/manager_utils/ManagerHttpStatus';
+import { managerMockApiUrl } from '@/app/manager/manager_infrastructure/ManagerMockApiUrl';
+import { ManagerMembersUrlConfig } from '@/app/manager/members/members_url_config';
+import { MANAGER_HTTP_STATUS } from '@/app/manager/manager_infrastructure/ManagerHttpStatus';
 import { MOCK_MEMBERS, MOCK_MEMBER_STATS } from '@/app/manager/members/members_fixtures/ManagerMembersMockData';
 import type { Member } from '@/app/manager/members/members_types/ManagerMembersTypes';
 
+let mockMemberIdCounter = 1000;
+let mockPaymentIdCounter = 1000;
+let mockDietPlanIdCounter = 1000;
+let mockWorkoutPlanIdCounter = 1000;
 let mockMembers = [...MOCK_MEMBERS];
 
 const MEMBER_DEFAULT_LIMIT = 10;
@@ -21,7 +27,7 @@ function sortMembers(items: Member[], column: string, direction: string): Member
 }
 
 export const managerMembersHandlers = [
-  http.get(`/api/v1/manager/members/export`, ({ request }) => {
+  http.get(managerMockApiUrl(ManagerMembersUrlConfig.BACKEND_API.EXPORT), ({ request }) => {
     const url = new URL(request.url);
     const search = (url.searchParams.get('search') || '').trim().toLowerCase();
     const status = (url.searchParams.get('status') || '').trim().toUpperCase();
@@ -38,7 +44,7 @@ export const managerMembersHandlers = [
     return HttpResponse.json({ success: true, message: 'Members export prepared', data: { members: filtered, total: filtered.length } });
   }),
 
-  http.get(`/api/v1/manager/members`, ({ request }) => {
+  http.get(managerMockApiUrl(ManagerMembersUrlConfig.BACKEND_API.BASE), ({ request }) => {
     const url = new URL(request.url);
     const search = (url.searchParams.get('search') || '').trim().toLowerCase();
     const status = (url.searchParams.get('status') || '').trim().toLowerCase();
@@ -70,11 +76,11 @@ export const managerMembersHandlers = [
     return HttpResponse.json({ success: true, message: 'Success', data: { members, total: filtered.length, page, limit } });
   }),
 
-  http.get(`/api/v1/manager/members/stats`, () => {
+  http.get(managerMockApiUrl(ManagerMembersUrlConfig.BACKEND_API.STATS), () => {
     return HttpResponse.json({ success: true, message: 'Success', data: MOCK_MEMBER_STATS });
   }),
 
-  http.get(`/api/v1/manager/members/trainers`, () => {
+  http.get(managerMockApiUrl(ManagerMembersUrlConfig.BACKEND_API.TRAINERS), () => {
     return HttpResponse.json({ success: true, message: 'Success', data: { staff: [
       { id: 's1', name: 'Rahul Verma', role: 'Senior Trainer' },
       { id: 's3', name: 'Karan Mehta', role: 'Trainer' },
@@ -82,69 +88,69 @@ export const managerMembersHandlers = [
     ] } });
   }),
 
-  http.get(`/api/v1/manager/members/plans`, () => {
+  http.get(managerMockApiUrl(ManagerMembersUrlConfig.BACKEND_API.PLANS_SNAPSHOT), () => {
     return HttpResponse.json({ success: true, message: 'Success', data: [
-      { id: 'p1', name: 'Annual Pro', durationMonths: 12, price: 15000 },
-      { id: 'p2', name: 'Quarterly Starter', durationMonths: 3, price: 5000 },
-      { id: 'p3', name: 'Monthly Basic', durationMonths: 1, price: 2000 }
+      { id: 'p1', name: 'Annual Pro', durationMonths: 12, price: 1500000 },
+      { id: 'p2', name: 'Quarterly Starter', durationMonths: 3, price: 500000 },
+      { id: 'p3', name: 'Monthly Basic', durationMonths: 1, price: 200000 }
     ] });
   }),
 
-  http.get(`/api/v1/manager/members/:id/payments`, () => {
+  http.get(managerMockApiUrl(ManagerMembersUrlConfig.BACKEND_API.PAYMENTS(':id')), () => {
     return HttpResponse.json({ success: true, message: 'Success', data: [
-      { id: 'pay1', amount: 15000, method: 'UPI', paidAt: new Date().toISOString(), status: 'PAID', invoiceNumber: 'INV-001' },
-      { id: 'pay2', amount: 5000, method: 'CARD', paidAt: '2024-04-18T10:30:00Z', status: 'PAID', invoiceNumber: 'INV-002' }
+      { id: 'pay1', amount: 1500000, method: 'UPI', paidAt: new Date().toISOString(), status: 'PAID', invoiceNumber: 'INV-001' },
+      { id: 'pay2', amount: 500000, method: 'CARD', paidAt: '2024-04-18T10:30:00Z', status: 'PAID', invoiceNumber: 'INV-002' }
     ] });
   }),
 
-  http.post(`/api/v1/manager/members/:id/payments`, async () => {
-    return HttpResponse.json({ success: true, message: 'Payment recorded', data: { id: `pay-${Date.now()}` } });
+  http.post(managerMockApiUrl(ManagerMembersUrlConfig.BACKEND_API.PAYMENTS(':id')), async () => {
+    return HttpResponse.json({ success: true, message: 'Payment recorded', data: { id: `pay-${mockPaymentIdCounter++}` } });
   }),
 
-  http.get(`/api/v1/manager/members/:id/attendance`, () => {
+  http.get(managerMockApiUrl(ManagerMembersUrlConfig.BACKEND_API.ATTENDANCE(':id')), () => {
     return HttpResponse.json({ success: true, message: 'Success', data: [
       { id: 'att1', date: new Date().toISOString(), checkIn: '08:00 AM', type: 'MEMBER' },
       { id: 'att2', date: '2024-05-10T08:30:00Z', checkIn: '08:30 AM', checkOut: '09:45 AM', type: 'MEMBER' }
     ] });
   }),
 
-  http.get(`/api/v1/manager/members/diet-plans`, () => {
+  http.get(managerMockApiUrl(ManagerMembersUrlConfig.BACKEND_API.DIET_PLANS), () => {
     return HttpResponse.json({ success: true, message: 'Success', data: [
       { id: 'dp1', name: 'Weight Loss Plan', type: 'WEIGHT_LOSS', calories: 1500, protein: 120, carbs: 100, fats: 50, meals: [] },
       { id: 'dp2', name: 'Muscle Gain Plan', type: 'MUSCLE_GAIN', calories: 2400, protein: 180, carbs: 260, fats: 70, meals: [] }
     ] });
   }),
 
-  http.post(`/api/v1/manager/members/:id/diet-plans`, async () => {
-    return HttpResponse.json({ success: true, message: 'Diet plan assigned', data: { id: `dp-${Date.now()}` } });
+  http.post(managerMockApiUrl(ManagerMembersUrlConfig.BACKEND_API.DIET_ASSIGN(':id')), async () => {
+    return HttpResponse.json({ success: true, message: 'Diet plan assigned', data: { id: `dp-${mockDietPlanIdCounter++}` } });
   }),
 
-  http.get(`/api/v1/manager/members/workouts`, () => {
+  http.get(managerMockApiUrl(ManagerMembersUrlConfig.BACKEND_API.WORKOUTS), () => {
     return HttpResponse.json({ success: true, message: 'Success', data: [
       { id: 'wp1', name: 'Beginner Routine', level: 'BEGINNER', daysPerWeek: 3, goal: 'General Fitness', days: 3 },
       { id: 'wp2', name: 'Strength Builder', level: 'INTERMEDIATE', daysPerWeek: 5, goal: 'Muscle Gain', days: 5 }
     ] });
   }),
 
-  http.post(`/api/v1/manager/members/:id/workouts`, async () => {
-    return HttpResponse.json({ success: true, message: 'Workout assigned', data: { id: `wp-${Date.now()}` } });
+  http.post(managerMockApiUrl(ManagerMembersUrlConfig.BACKEND_API.WORKOUT_ASSIGN(':id')), async () => {
+    return HttpResponse.json({ success: true, message: 'Workout assigned', data: { id: `wp-${mockWorkoutPlanIdCounter++}` } });
   }),
 
-  http.get(`/api/v1/manager/members/:id`, ({ params }) => {
+  http.get(managerMockApiUrl(ManagerMembersUrlConfig.BACKEND_API.GET_ONE(':id')), ({ params }) => {
     const member = mockMembers.find(m => m.id === params.id);
     if (!member) return HttpResponse.json({ success: false, message: 'Member not found', data: null }, { status: MANAGER_HTTP_STATUS.NOT_FOUND });
     return HttpResponse.json({ success: true, message: 'Success', data: member });
   }),
 
-  http.post(`/api/v1/manager/members`, async ({ request }) => {
+  http.post(managerMockApiUrl(ManagerMembersUrlConfig.BACKEND_API.BASE), async ({ request }) => {
     const body = await request.json() as Partial<Member>;
     const template = mockMembers[0];
-    const newMember = { ...template, ...body, id: `mem-${Date.now()}` } as Member;
+    const newMember = { ...template, ...body, id: `mem-${mockMemberIdCounter++}` } as Member;
     mockMembers = [newMember, ...mockMembers];
     return HttpResponse.json({ success: true, message: 'Created', data: newMember });
   }),
 
-  http.patch(`/api/v1/manager/members/:id`, async ({ request, params }) => {
+  http.patch(managerMockApiUrl(ManagerMembersUrlConfig.BACKEND_API.GET_ONE(':id')), async ({ request, params }) => {
     const body = await request.json() as Partial<Member>;
     const idx = mockMembers.findIndex(m => m.id === params.id);
     if (idx === -1) return HttpResponse.json({ success: false, message: 'Not found', data: null }, { status: MANAGER_HTTP_STATUS.NOT_FOUND });
@@ -152,12 +158,12 @@ export const managerMembersHandlers = [
     return HttpResponse.json({ success: true, message: 'Updated', data: mockMembers[idx] });
   }),
 
-  http.delete(`/api/v1/manager/members/:id`, ({ params }) => {
+  http.delete(managerMockApiUrl(ManagerMembersUrlConfig.BACKEND_API.GET_ONE(':id')), ({ params }) => {
     mockMembers = mockMembers.filter(m => m.id !== params.id);
     return HttpResponse.json({ success: true, message: 'Removed', data: { id: params.id } });
   }),
 
-  http.post(`/api/v1/manager/members/:id/renew`, async ({ request, params }) => {
+  http.post(managerMockApiUrl(ManagerMembersUrlConfig.BACKEND_API.RENEW(':id')), async ({ request, params }) => {
     const body = await request.json() as Record<string, unknown>;
     const memberIndex = mockMembers.findIndex(m => m.id === params.id);
     if (memberIndex === -1) return HttpResponse.json({ success: false, message: 'Member not found', data: null }, { status: MANAGER_HTTP_STATUS.NOT_FOUND });

@@ -1,12 +1,15 @@
 import { http, HttpResponse } from 'msw';
-import { MANAGER_HTTP_STATUS } from '@/app/manager/manager_utils/ManagerHttpStatus';
+import { managerMockApiUrl } from '@/app/manager/manager_infrastructure/ManagerMockApiUrl';
+import { ManagerExpensesUrlConfig } from '@/app/manager/expenses/expenses_url_config';
+import { MANAGER_HTTP_STATUS } from '@/app/manager/manager_infrastructure/ManagerHttpStatus';
 import { MOCK_EXPENSES_LIST, MOCK_EXPENSES_STATS } from '@/app/manager/expenses/expenses_fixtures/ManagerExpensesMockData';
 import type { Expense } from '@/app/manager/expenses/expenses_types/ManagerExpensesTypes';
 
 let mockExpenses = [...MOCK_EXPENSES_LIST];
 
+let mockExpenseIdCounter = 1000;
 export const managerExpensesHandlers = [
-  http.get(`/api/v1/manager/expenses`, ({ request }) => {
+  http.get(managerMockApiUrl(ManagerExpensesUrlConfig.BACKEND_API.BASE), ({ request }) => {
     const url = new URL(request.url);
     const status = url.searchParams.get('status');
     const search = url.searchParams.get('search')?.toLowerCase();
@@ -34,7 +37,7 @@ export const managerExpensesHandlers = [
     });
   }),
 
-  http.get(`/api/v1/manager/expenses/stats`, () => {
+  http.get(managerMockApiUrl(ManagerExpensesUrlConfig.BACKEND_API.STATS), () => {
     return HttpResponse.json({
       success: true,
       message: 'Fetched stats',
@@ -42,20 +45,20 @@ export const managerExpensesHandlers = [
     });
   }),
 
-  http.get(`/api/v1/manager/expenses/:id`, ({ params }) => {
+  http.get(managerMockApiUrl(ManagerExpensesUrlConfig.BACKEND_API.GET_ONE(':id')), ({ params }) => {
     const expense = mockExpenses.find(e => e.id === params.id);
     if (!expense) return HttpResponse.json({ success: false, message: 'Not found' }, { status: MANAGER_HTTP_STATUS.NOT_FOUND });
     return HttpResponse.json({ success: true, message: 'Fetched expense', data: expense });
   }),
 
-  http.post(`/api/v1/manager/expenses`, async ({ request }) => {
+  http.post(managerMockApiUrl(ManagerExpensesUrlConfig.BACKEND_API.BASE), async ({ request }) => {
     const body = await request.json() as Partial<Expense>;
-    const newExpense = { ...body, id: Math.random().toString(), createdAt: new Date().toISOString() } as Expense;
+    const newExpense = { ...body, id: `expense-mock-${mockExpenseIdCounter++}`, createdAt: new Date().toISOString() } as Expense;
     mockExpenses = [newExpense, ...mockExpenses];
     return HttpResponse.json({ success: true, message: 'Created expense', data: newExpense });
   }),
 
-  http.patch(`/api/v1/manager/expenses/:id`, async ({ request, params }) => {
+  http.patch(managerMockApiUrl(ManagerExpensesUrlConfig.BACKEND_API.GET_ONE(':id')), async ({ request, params }) => {
     const body = await request.json() as Partial<Expense>;
     const idx = mockExpenses.findIndex(e => e.id === params.id);
     if (idx === -1) return HttpResponse.json({ success: false, message: 'Not found' }, { status: MANAGER_HTTP_STATUS.NOT_FOUND });
@@ -63,7 +66,7 @@ export const managerExpensesHandlers = [
     return HttpResponse.json({ success: true, message: 'Updated expense', data: mockExpenses[idx] });
   }),
 
-  http.delete(`/api/v1/manager/expenses/:id`, ({ params }) => {
+  http.delete(managerMockApiUrl(ManagerExpensesUrlConfig.BACKEND_API.GET_ONE(':id')), ({ params }) => {
     mockExpenses = mockExpenses.filter(e => e.id !== params.id);
     return HttpResponse.json({ success: true, message: 'Deleted expense', data: { id: params.id } });
   }),

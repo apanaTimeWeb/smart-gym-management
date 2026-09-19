@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Provides the implementation for ManagerSalesTypes.ts functionality within its module.
-import { type SalesTab, type DateFilter } from '@/app/manager/sales/sales_utils/ManagerSalesSharedConstants';
-import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
+import { type SalesTab } from '@/app/manager/sales/sales_utils/ManagerSalesSharedConstants';
+import type { ManagerToastType } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerToastTypes';
 import type { SalesMemberSnapshot } from '@/app/manager/sales/sales_types/ManagerSalesMemberSnapshot';
 
 
@@ -49,11 +49,9 @@ export interface SalesInitialData {
   allMembershipsTotal?: number;
 }
 
-export interface SalesContextType {
+export interface ManagerSalesViewModel {
   tab: SalesTab;
   setTab: (tab: SalesTab) => void;
-  dateFilter: DateFilter;
-  setDateFilter: (filter: DateFilter) => void;
   search: string;
   setSearch: (search: string) => void;
   customStartDate: string;
@@ -74,8 +72,9 @@ export interface SalesContextType {
   
   isLoading: boolean;
   isError: boolean;
+  errorMessage: string;
   loadAll: () => Promise<void>;
   
-  toast: { message: string; type: ToastType } | null;
-  showToast: (message: string, type: ToastType) => void;
+  toast: { message: string; type: ManagerToastType } | null;
+  showToast: (message: string, type: ManagerToastType) => void;
 }

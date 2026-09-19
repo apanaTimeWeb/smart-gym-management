@@ -8,7 +8,7 @@ Manager Notifications is the branch notification inbox. Managers can review unre
 |---|---|---|
 | `notifications_api/` | Feature-owned responsibility for the notifications module. | `ManagerNotificationsApi.ts` |
 | `notifications_components/` | Feature-owned responsibility for the notifications module. | `—` |
-| `notifications_context/` | Feature-owned responsibility for the notifications module. | `ManagerNotificationsContext.tsx` |
+| `notifications_hooks/` | Feature-owned responsibility for the notifications module. | `ManagerUseManagerNotificationsLogic.ts` |
 | `notifications_fixtures/` | Feature-owned responsibility for the notifications module. | `ManagerNotificationsMockData.ts` |
 | `notifications_mocks/` | Feature-owned responsibility for the notifications module. | `ManagerNotificationsMockHandlers.ts` |
 | `notifications_types/` | Feature-owned responsibility for the notifications module. | `ManagerNotificationsSchema.ts; ManagerNotificationsTypes.ts` |
@@ -31,7 +31,7 @@ Manager Notifications is the branch notification inbox. Managers can review unre
 4. The response message is surfaced and the relevant notification/KPI queries are reconciled.
 
 ## Data and State Architecture
-TanStack Query owns notifications server/API data. UI-only filters, tabs, selections, and draft state remain local state or module-scoped Zustand where shared. React Context is limited to stable cross-tree concerns and does not become the source of truth for API data. Query keys are module-prefixed.
+TanStack Query owns notifications server/API data. UI-only filters, tabs, selections, and draft state remain local state or module-scoped Zustand where shared. module-local state/query layer is limited to stable cross-tree concerns and does not become the source of truth for API data. Query keys are module-prefixed.
 
 ## API Contract
 | Function | Method | Endpoint | Request | Response `data` type |
@@ -82,9 +82,9 @@ TanStack Query owns notifications server/API data. UI-only filters, tabs, select
 | Component File | Responsibility |
 |---|---|
 | `notifications/notifications_components/ManagerNotificationsKPIs/ManagerNotificationsKPIs.tsx` | KPI stat cards for the Notifications module. |
-| `notifications/notifications_components/ManagerNotificationsMain/ManagerNotificationsMain.tsx` | Orchestrator for the Notifications module. |
+| `notifications/notifications_components/ManagerNotificationsMain/ManagerNotificationsMain.tsx` | Framework entry component for the Notifications module; delegates feature behavior and UI composition to `ManagerNotificationsContent`. |
 | `notifications/notifications_components/ManagerNotificationsTable/ManagerNotificationsTable.tsx` | Notifications list with toolbar (search + filters) and row actions (mark read, delete). |
-| `notifications/notifications_context/ManagerNotificationsContext.tsx` | Bridges URL-owned filter state with module server state and mutations. |
+| `notifications/notifications_hooks/ManagerUseManagerNotificationsLogic.ts` | Bridges URL-owned filter state with module server state and mutations. |
 
 ## Rule Compliance Checklist
 - [x] Module-owned API, types/schemas, fixtures, handlers, tests, and feature documentation are scoped to this module.

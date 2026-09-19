@@ -1,8 +1,10 @@
 import { http, HttpResponse } from 'msw';
+import { managerMockApiUrl } from '@/app/manager/manager_infrastructure/ManagerMockApiUrl';
+import { ManagerDashboardUrlConfig } from '@/app/manager/dashboard/dashboard_url_config';
 import { MOCK_DASHBOARD_STATS } from '@/app/manager/dashboard/dashboard_fixtures/ManagerDashboardMockData';
 
 export const managerDashboardHandlers = [
-  http.get(`/api/v1/manager/dashboard/stats`, ({ request }) => {
+  http.get(managerMockApiUrl(ManagerDashboardUrlConfig.BACKEND_API.STATS), ({ request }) => {
     const url = new URL(request.url);
     const search = (url.searchParams.get('recentMembersSearch') || '').trim().toLowerCase();
     const page = Math.max(Number(url.searchParams.get('recentMembersPage') || '1'), 1);

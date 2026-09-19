@@ -1,21 +1,21 @@
 'use client';
 // RESPONSIBILITY: Renders the paginated, filterable table of inquiries with row actions, status updates, and bulk selection.
-import { useInquiriesContext } from '@/app/manager/inquiries/inquiries_context/ManagerInquiriesContext';
+import { MANAGER_GENERIC_ERROR_MESSAGE } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
+import { useManagerInquiriesLogic } from '@/app/manager/inquiries/inquiries_hooks/ManagerUseManagerInquiriesLogic';
 import { INQUIRIES_TABLE_HEADERS, INQUIRIES_STATUS_LABELS } from '@/app/manager/inquiries/inquiries_utils/ManagerInquiriesSharedConstants';
 import { displayValue, formatDate } from '@/lib/formatters';
 import { MessageCircle, Mail, Edit2, Trash2 } from 'lucide-react';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
-import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
+import ManagerSearchableDropdown from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
-import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
+import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_infrastructure/ManagerPaginationDefaults';
 
 export default function ManagerInquiriesTable() {
   const { confirm } = useConfirm();
   const {
-    inquiries, isLoading, isError, search, statusFilter, currentPage, setCurrentPage,
+    inquiries, isLoading, isError, errorMessage, search, statusFilter, currentPage, setCurrentPage,
     openEdit, openMsg, deleteInquiry, updateStatus, totalInquiries,
-    selectedIds, toggleSelectAll, toggleSelectOne,
-  } = useInquiriesContext();
+    selectedIds, toggleSelectAll, toggleSelectOne } = useManagerInquiriesLogic();
 
   const allSelected = inquiries.length > 0 && selectedIds.length === inquiries.length;
   const isSelected = (id: string) => selectedIds?.includes(id);
@@ -26,7 +26,7 @@ export default function ManagerInquiriesTable() {
 
   if (isLoading) {
     return (
-      <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden flex flex-col h-full min-h-96">
+      <div className="bg-card rounded-xl shadow-card border border-border overflow-hidden flex flex-col h-full min-h-96">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-primary/5">
@@ -42,16 +42,16 @@ export default function ManagerInquiriesTable() {
             <tbody className="divide-y divide-border">
               {MANAGER_SKELETON_ROWS.map((key) => (
                 <tr key={key} className="motion-safe:animate-pulse">
-                  <td className="px-5 py-4"><div className="h-4 bg-muted rounded w-4"></div></td>
+                  <td className="px-5 py-4"><div className="h-4 bg-input rounded w-4"></div></td>
                   <td className="px-5 py-4 flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-full bg-muted"></div>
-                    <div className="h-4 bg-muted rounded w-24"></div>
+                    <div className="w-9 h-9 rounded-full bg-input"></div>
+                    <div className="h-4 bg-input rounded w-24"></div>
                   </td>
-                  <td className="px-5 py-4"><div className="h-4 bg-muted rounded w-32"></div></td>
-                  <td className="px-5 py-4"><div className="h-4 bg-muted rounded w-16"></div></td>
-                  <td className="px-5 py-4"><div className="h-8 bg-muted rounded-lg w-28"></div></td>
-                  <td className="px-5 py-4"><div className="h-4 bg-muted rounded w-20"></div></td>
-                  <td className="px-5 py-4"><div className="h-8 bg-muted rounded-lg w-32"></div></td>
+                  <td className="px-5 py-4"><div className="h-4 bg-input rounded w-32"></div></td>
+                  <td className="px-5 py-4"><div className="h-4 bg-input rounded w-16"></div></td>
+                  <td className="px-5 py-4"><div className="h-8 bg-input rounded-lg w-28"></div></td>
+                  <td className="px-5 py-4"><div className="h-4 bg-input rounded w-20"></div></td>
+                  <td className="px-5 py-4"><div className="h-8 bg-input rounded-lg w-32"></div></td>
                 </tr>
               ))}
             </tbody>
@@ -63,15 +63,15 @@ export default function ManagerInquiriesTable() {
 
   if (isError) {
     return (
-      <div className="bg-card rounded-xl shadow-sm border border-danger/30 overflow-hidden flex flex-col h-full min-h-96 justify-center items-center py-16 text-center">
-        <p className="text-danger font-medium">Failed to load inquiries.</p>
+      <div className="bg-card rounded-xl shadow-card border border-danger/30 overflow-hidden flex flex-col h-full min-h-96 justify-center items-center py-16 text-center">
+        <p className="text-danger font-medium">{errorMessage || MANAGER_GENERIC_ERROR_MESSAGE}</p>
         <p className="text-sm mt-1 text-secondary">Please check your connection and try again.</p>
       </div>
     );
   }
 
   return (
-    <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden flex flex-col h-full min-h-96">
+    <div className="bg-card rounded-xl shadow-card border border-border overflow-hidden flex flex-col h-full min-h-96">
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead className="bg-primary/5">
@@ -121,7 +121,7 @@ export default function ManagerInquiriesTable() {
                   </td>
                   <td className="px-5 py-3.5">
                     <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm bg-warning-bg text-warning">
+                      <div className="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm bg-warning text-warning">
                         {displayValue(inq.name).charAt(0)}
                       </div>
                       <p className="text-sm font-semibold text-primary">{displayValue(inq.name)}</p>
@@ -134,7 +134,7 @@ export default function ManagerInquiriesTable() {
                   <td className="px-5 py-3.5 text-sm text-secondary">{displayValue(inq.source)}</td>
                   <td className="px-5 py-3.5" onClick={e => e.stopPropagation()}>
                     <div className="w-32">
-                      <SearchableDropdown
+                      <ManagerSearchableDropdown
                         value={inq.status}
                         onChange={(val) => updateStatus(inq.id, String(val))}
                         options={Object.entries(INQUIRIES_STATUS_LABELS).map(([val, label]) => ({ label, value: val }))}
@@ -148,23 +148,23 @@ export default function ManagerInquiriesTable() {
                     <div className="flex items-center gap-2">
                       <button
                         onClick={(e) => { e.stopPropagation(); openMsg(inq, 'whatsapp'); }}
-                        className="p-1.5 rounded-lg bg-success text-primary-foreground hover:opacity-80 motion-safe:transition-all duration-200"
+                        className="p-1.5 rounded-lg bg-success text-on-success hover:opacity-80 motion-safe:transition-all motion-safe:duration-200"
                         title="WhatsApp"
                         aria-label={`Message ${inq.name} on WhatsApp`}
                       >
-                        <MessageCircle size={13} />
+                        <MessageCircle size={18} />
                       </button>
                       <button
                         onClick={(e) => { e.stopPropagation(); openMsg(inq, 'email'); }}
-                        className="p-1.5 rounded-lg bg-info text-primary-foreground hover:opacity-80 motion-safe:transition-all duration-200"
+                        className="p-1.5 rounded-lg bg-info text-on-primary hover:opacity-80 motion-safe:transition-all motion-safe:duration-200"
                         title="Email"
                         aria-label={`Email ${inq.name}`}
                       >
-                        <Mail size={13} />
+                        <Mail size={18} />
                       </button>
                       <button
                         onClick={(e) => { e.stopPropagation(); updateStatus(inq.id, 'CONVERTED'); }}
-                        className="p-1.5 rounded-lg bg-primary-subtle text-primary hover:opacity-80 motion-safe:transition-all duration-200"
+                        className="p-1.5 rounded-lg bg-primary-subtle text-primary hover:opacity-80 motion-safe:transition-all motion-safe:duration-200"
                         title="Convert to Member"
                         aria-label={`Convert ${inq.name} to Member`}
                       >
@@ -172,11 +172,11 @@ export default function ManagerInquiriesTable() {
                       </button>
                       <button
                         onClick={(e) => { e.stopPropagation(); openEdit(inq); }}
-                        className="p-1.5 rounded-lg bg-input text-secondary hover:bg-primary-subtle motion-safe:transition-all duration-200"
+                        className="p-1.5 rounded-lg bg-input text-secondary hover:bg-primary-subtle motion-safe:transition-all motion-safe:duration-200"
                         title="Edit"
                         aria-label={`Edit ${inq.name}`}
                       >
-                        <Edit2 size={13} />
+                        <Edit2 size={18} />
                       </button>
                       <button
                         onClick={async (e) => {
@@ -191,11 +191,11 @@ export default function ManagerInquiriesTable() {
                             deleteInquiry(inq.id);
                           }
                         }}
-                        className="p-1.5 rounded-lg bg-danger-bg text-danger hover:opacity-80 motion-safe:transition-all duration-200"
+                        className="p-1.5 rounded-lg bg-danger text-danger hover:opacity-80 motion-safe:transition-all motion-safe:duration-200"
                         title="Delete"
                         aria-label={`Delete ${inq.name}`}
                       >
-                        <Trash2 size={13} />
+                        <Trash2 size={18} />
                       </button>
                     </div>
                   </td>

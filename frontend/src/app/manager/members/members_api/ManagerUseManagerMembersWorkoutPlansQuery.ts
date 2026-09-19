@@ -8,6 +8,5 @@ export function useManagerMembersWorkoutPlansQuery(enabled: boolean) {
   return useQuery({
     queryKey: ['manager', 'members', 'workout-plans'],
     queryFn: () => membersApi.fetchMemberWorkouts(),
-    enabled,
-  });
+    enabled });
 }

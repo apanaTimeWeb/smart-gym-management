@@ -41,3 +41,17 @@ export interface ExpenseCategoryBreakdown {
   percentage: number;
   count: number;
 }
+
+export interface ManagerExpensesViewModel {
+  search: string; setSearch: (value: string) => void;
+  statusFilter: string; setStatusFilter: (value: string) => void;
+  currentPage: number; setCurrentPage: (value: number) => void;
+  showModal: boolean; setShowModal: (value: boolean) => void;
+  editId: string | null; editData: Partial<Expense> | null;
+  openAdd: () => void; openEdit: (expense: Expense) => void;
+  saveExpense: (data: Partial<Expense>) => Promise<void>;
+  deleteExpense: (id: string) => Promise<void>;
+  markAsPaid: (id: string) => Promise<void>;
+  exportExpenses: () => void;
+  saving: boolean;
+}

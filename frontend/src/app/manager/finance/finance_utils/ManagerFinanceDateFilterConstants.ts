@@ -1,0 +1,12 @@
+// RESPONSIBILITY: Owns finance date-range presets used by the finance toolbar.
+export const MANAGER_FINANCE_DATE_RANGE_OPTIONS = [
+  { value: 'this_month', label: 'This Month' },
+  { value: 'last_month', label: 'Last Month' },
+  { value: 'last_3_months', label: 'Last 3 Months' },
+  { value: 'last_6_months', label: 'Last 6 Months' },
+  { value: 'this_year', label: 'This Year' },
+  { value: 'monthly', label: 'Monthly (All Time)' },
+  { value: 'yearly', label: 'Yearly (All Time)' },
+  { value: 'custom', label: 'Custom Range' },
+] as const;
+export type ManagerFinanceDateRange = typeof MANAGER_FINANCE_DATE_RANGE_OPTIONS[number]['value'];

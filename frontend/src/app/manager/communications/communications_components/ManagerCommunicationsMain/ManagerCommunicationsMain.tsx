@@ -1,15 +1,16 @@
 'use client';
 // RESPONSIBILITY: Root client orchestrator for the Communications module — renders KPIs, tab switcher, and conditionally Composer, History, Automations, or Churn Recovery.
 import { MessageCircle, History, Zap, UserX } from 'lucide-react';
+import type { ElementType } from 'react';
 import ManagerCommunicationsKPIs from '@/app/manager/communications/communications_components/ManagerCommunicationsKPIs/ManagerCommunicationsKPIs';
 import ManagerCommunicationsComposer from '@/app/manager/communications/communications_components/ManagerCommunicationsComposer/ManagerCommunicationsComposer';
 import ManagerCommunicationsHistory from '@/app/manager/communications/communications_components/ManagerCommunicationsHistory/ManagerCommunicationsHistory';
 import ManagerCommunicationsAutomations from '@/app/manager/communications/communications_components/ManagerCommunicationsAutomations/ManagerCommunicationsAutomations';
 import ManagerChurnRecoveryTab from '@/app/manager/communications/communications_components/ManagerChurnRecovery/ManagerChurnRecoveryTab';
-import { useManagerCommunicationsLogic } from '@/app/manager/communications/communications_context/ManagerUseManagerCommunicationsLogic';
-import type { CommActiveTab } from '@/app/manager/communications/communications_store/ManagerUseManagerCommunicationsStore';
+import { useManagerCommunicationsLogic } from '@/app/manager/communications/communications_hooks/ManagerUseManagerCommunicationsLogic';
+import type { CommActiveTab } from '@/app/manager/communications/communications_types/ManagerCommunications_types';
 
-const TABS: { value: CommActiveTab; label: string; Icon: React.ElementType }[] = [
+const TABS: { value: CommActiveTab; label: string; Icon: ElementType }[] = [
   { value: 'compose',        label: 'Compose',       Icon: MessageCircle },
   { value: 'history',        label: 'Send History',  Icon: History },
   { value: 'automations',    label: 'Automations',   Icon: Zap },
@@ -23,7 +24,7 @@ export default function ManagerCommunicationsMain() {
     <div className="min-h-full pb-10">
       {/* Header */}
       <div className="px-6 pt-6 pb-0">
-        <h1 className="text-2xl font-bold text-foreground">Communications</h1>
+        <h1 className="text-2xl font-bold text-primary">Communications</h1>
         <p className="text-sm text-secondary mt-0.5">Send bulk WhatsApp or Email messages to targeted member segments</p>
       </div>
 
@@ -42,17 +43,17 @@ export default function ManagerCommunicationsMain() {
                 onClick={() => setActiveTab(tab.value)}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium motion-safe:transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
                   isActive
-                    ? 'bg-card text-foreground shadow-sm border border-border'
-                    : 'text-secondary hover:text-foreground'
+                    ? 'bg-card text-primary shadow-card border border-border'
+                    : 'text-secondary hover:text-primary'
                 } ${tab.value === 'churn_recovery' && isActive ? 'text-danger' : ''}`}
               >
                 <Icon
-                  size={15}
+                  size={18}
                   className={tab.value === 'churn_recovery' && isActive ? 'text-danger' : ''}
                 />
                 {tab.label}
                 {tab.value === 'churn_recovery' && (
-                  <span className="ml-1 px-1.5 py-0.5 rounded-full text-xs font-semibold bg-danger-bg text-danger">
+                  <span className="ml-1 px-1.5 py-0.5 rounded-full text-xs font-semibold bg-danger text-danger">
                     NEW
                   </span>
                 )}

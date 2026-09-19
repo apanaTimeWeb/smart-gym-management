@@ -1,13 +1,20 @@
+// RESPONSIBILITY: Provides the feature-owned mutable MSW transport for Manager Settings.
 import { http, HttpResponse } from 'msw';
 import { MOCK_MANAGER_SETTINGS } from '@/app/manager/settings/settings_fixtures/ManagerSettingsMockData';
-import { managerAllSettingsSchema } from '@/app/manager/settings/settings_types/ManagerSettingsSchema';
+import { managerAllSettingsSchema } from '@/app/manager/settings/settings_schemas/ManagerSettingsSchema';
 import type { ManagerAllSettings } from '@/app/manager/settings/settings_types/ManagerSettingsTypes';
+import { ManagerSettingsUrlConfig } from '@/app/manager/settings/settings_url_config';
 
 let settingsDb: ManagerAllSettings = structuredClone(MOCK_MANAGER_SETTINGS);
+
+export function resetManagerSettingsMockState(): void {
+  settingsDb = structuredClone(MOCK_MANAGER_SETTINGS);
+}
+
 export const managerSettingsHandlers = [
-  http.get(`/api/v1/manager/settings`, () => HttpResponse.json({ success: true, message: 'Settings fetched', data: settingsDb })),
-  http.patch(`/api/v1/manager/settings`, async ({ request }) => {
-    const raw = await request.json();
+  http.get(ManagerSettingsUrlConfig.BACKEND_API.BASE, () => HttpResponse.json({ success: true, message: 'Settings fetched', data: settingsDb })),
+  http.patch(ManagerSettingsUrlConfig.BACKEND_API.BASE, async ({ request }) => {
+    const raw: unknown = await request.json();
     const parsed = managerAllSettingsSchema.partial().parse(raw);
     settingsDb = managerAllSettingsSchema.parse({ ...settingsDb, ...parsed });
     return HttpResponse.json({ success: true, message: 'Settings updated successfully', data: settingsDb });

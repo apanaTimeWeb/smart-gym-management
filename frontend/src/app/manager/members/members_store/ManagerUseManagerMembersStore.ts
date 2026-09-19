@@ -25,5 +25,4 @@ export const useManagerMembersStore = create<MembersUIState>((set, get) => ({
       const updatedAtt = currentAtt.map(a => a.day === day ? { ...a, status: a.status === 'NONE' ? 'P' : a.status === 'P' ? 'A' : 'NONE' } : a);
       return { attMap: { ...state.attMap, [memberId]: updatedAtt } };
     });
-  },
-}));
+  } }));

@@ -1,29 +1,21 @@
 // RESPONSIBILITY: Centralized constants, Zod schema, and shared utilities for the Members module. Single source of truth for form defaults, status colors, billing labels, and message templates.
 import type { PlanWithCustom } from '@/app/manager/members/members_types/ManagerMembersTypes';
-import { z } from 'zod';
-import { formatCurrency } from '@/lib/formatters';
-
-export { formatCurrency };
-
-import { MemberFormSchema as MemberSchema, type MemberFormType as MemberFormValues } from '@/app/manager/members/members_types/ManagerMembers.schema';
-export { MemberSchema, type MemberFormValues };
+import type { MemberFormValues } from '@/app/manager/members/members_schemas/ManagerMembersFormSchema';
 
 export const MEMBERS_STATUS_COLORS: Record<string, { bg: string; text: string }> = {
   ACTIVE: { bg: 'bg-success-bg', text: 'text-success' },
   PENDING: { bg: 'bg-warning-bg', text: 'text-warning' },
   EXPIRED: { bg: 'bg-danger-bg', text: 'text-danger' },
   FROZEN: { bg: 'bg-info-bg', text: 'text-info' },
-  SUSPENDED: { bg: 'bg-danger', text: 'text-white' },
-  BANNED: { bg: 'bg-secondary/80', text: 'text-white' },
-};
+  SUSPENDED: { bg: 'bg-danger-bg', text: 'text-danger' },
+  BANNED: { bg: 'bg-danger-bg', text: 'text-danger' } };
 
 export const MEMBERS_CYCLE_LABELS: Record<string, string> = {
  ONE_MONTH: '1 Month',
  THREE_MONTHS: '3 Months',
  SIX_MONTHS: '6 Months',
  TWELVE_MONTHS: '12 Months',
- CUSTOM: 'Custom (Days)',
-};
+ CUSTOM: 'Custom (Days)' };
 
 export const MEMBER_STATUS_OPTIONS = [
   { label: 'All Status', value: 'All' },
@@ -80,8 +72,7 @@ export const EMPTY_MEMBER_FORM: MemberFormValues = {
   planId: '',
   joinDate: today.toISOString().split('T')[0] || '',
   expiryDate: nextMonth.toISOString().split('T')[0] || '',
-  medicalHistory: '',
-};
+  medicalHistory: '' };
 
 
 
@@ -95,8 +86,7 @@ export function getPriceForCycle(plan: PlanWithCustom | undefined, cycle: string
     THREE_MONTHS: plan.price3Month,
     SIX_MONTHS: plan.price6Month,
     TWELVE_MONTHS: plan.price12Month,
-    CUSTOM: (plan.priceCustom || 0) * (customDays || 0),
-  };
+    CUSTOM: (plan.priceCustom || 0) * (customDays || 0) };
   return map[cycle] || 0;
 }
 
@@ -126,3 +116,4 @@ export const PROFILE_TABS = [
   { id: 'workout', label: 'Workout Plan' },
   { id: 'diet', label: 'Diet Plan' }
 ];
+

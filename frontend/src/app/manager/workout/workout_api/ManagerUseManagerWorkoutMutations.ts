@@ -1,5 +1,7 @@
-// DATA FLOW: Manager module state/API data → useManagerWorkoutMutations → owning Manager UI components.
-/** Manages UseWorkoutMutations for the Manager module. */
+'use client';
+// RESPONSIBILITY: Owns Workout create/update/delete mutations and their cache invalidation/confirmation boundaries.
+// DATA FLOW: Workout UI → TanStack mutation → Workout API → query cache invalidation → Workout UI.
+/** Coordinates the Manager / feature. */
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { workoutApi } from '@/app/manager/workout/workout_api/ManagerWorkoutApi';
 import type { Workout } from '@/app/manager/workout/workout_types/ManagerWorkoutTypes';
@@ -8,14 +10,11 @@ import type { ExerciseSnapshot } from '@/app/manager/workout/workout_types/Manag
 export function useSaveWorkoutMutation() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (data: Partial<Workout>) => {
-      if (data.id) {
-        return await workoutApi.updateWorkout(data.id, data);
-      }
-      return await workoutApi.createWorkout(data);
-    },
+    mutationFn: async (data: Partial<Workout>) => data.id
+      ? workoutApi.updateWorkout(data.id, data)
+      : workoutApi.createWorkout(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['manager', 'workout', 'plans'] });
+      void queryClient.invalidateQueries({ queryKey: ['manager', 'workout', 'plans'] });
     },
   });
 }
@@ -23,11 +22,9 @@ export function useSaveWorkoutMutation() {
 export function useDeleteWorkoutMutation() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (id: string) => {
-      return await workoutApi.deleteWorkout(id);
-    },
+    mutationFn: ({ id, idempotencyKey }: { id: string; idempotencyKey: string }) => workoutApi.deleteWorkout(id, idempotencyKey),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['manager', 'workout', 'plans'] });
+      void queryClient.invalidateQueries({ queryKey: ['manager', 'workout', 'plans'] });
     },
   });
 }
@@ -35,14 +32,11 @@ export function useDeleteWorkoutMutation() {
 export function useSaveExerciseMutation() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (data: Partial<ExerciseSnapshot>) => {
-      if (data.id) {
-        return await workoutApi.updateExercise(data.id, data);
-      }
-      return await workoutApi.createExercise(data);
-    },
+    mutationFn: async (data: Partial<ExerciseSnapshot>) => data.id
+      ? workoutApi.updateExercise(data.id, data)
+      : workoutApi.createExercise(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['manager', 'workout', 'exercises'] });
+      void queryClient.invalidateQueries({ queryKey: ['manager', 'workout', 'exercises'] });
     },
   });
 }
@@ -50,11 +44,9 @@ export function useSaveExerciseMutation() {
 export function useDeleteExerciseMutation() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (id: string) => {
-      return await workoutApi.deleteExercise(id);
-    },
+    mutationFn: ({ id, idempotencyKey }: { id: string; idempotencyKey: string }) => workoutApi.deleteExercise(id, idempotencyKey),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['manager', 'workout', 'exercises'] });
+      void queryClient.invalidateQueries({ queryKey: ['manager', 'workout', 'exercises'] });
     },
   });
 }

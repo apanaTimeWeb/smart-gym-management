@@ -1,14 +1,17 @@
 import { http, HttpResponse } from 'msw';
-import { MANAGER_HTTP_STATUS } from '@/app/manager/manager_utils/ManagerHttpStatus';
+import { managerMockApiUrl } from '@/app/manager/manager_infrastructure/ManagerMockApiUrl';
+import { ManagerWorkoutUrlConfig } from '@/app/manager/workout/workout_url_config';
+import { MANAGER_HTTP_STATUS } from '@/app/manager/manager_infrastructure/ManagerHttpStatus';
 import { MOCK_MANAGER_WORKOUTS } from '@/app/manager/workout/workout_fixtures/ManagerWorkoutMockData';
 import type { Workout } from '@/app/manager/workout/workout_types/ManagerWorkoutTypes';
 import { MOCK_WORKOUT_ASSIGNMENTS } from '@/app/manager/workout/workout_fixtures/ManagerWorkoutAssignmentMockData';
 
 let MOCK_DB = [...MOCK_MANAGER_WORKOUTS];
 
+export let mockWorkoutIdCounter = 1000;
 export const managerWorkoutHandlers = [
-  http.get(`/api/v1/manager/workout/assignments`, () => HttpResponse.json({ success: true, message: 'Assignments fetched', data: MOCK_WORKOUT_ASSIGNMENTS })),
-  http.get(`/api/v1/manager/workouts`, ({ request }) => {
+  http.get(managerMockApiUrl(ManagerWorkoutUrlConfig.BACKEND_API.ASSIGNMENTS), () => HttpResponse.json({ success: true, message: 'Assignments fetched', data: MOCK_WORKOUT_ASSIGNMENTS })),
+  http.get(managerMockApiUrl(ManagerWorkoutUrlConfig.BACKEND_API.WORKOUTS_BASE), ({ request }) => {
     const url = new URL(request.url);
     const search = url.searchParams.get('search')?.toLowerCase();
     const level = url.searchParams.get('level');
@@ -37,19 +40,18 @@ export const managerWorkoutHandlers = [
     });
   }),
 
-  http.post(`/api/v1/manager/workouts`, async ({ request }) => {
+  http.post(managerMockApiUrl(ManagerWorkoutUrlConfig.BACKEND_API.WORKOUTS_BASE), async ({ request }) => {
     const body = await request.json() as Partial<Workout>;
     const newWorkout: Workout = {
       ...body,
-      id: `wk-${Date.now()}`,
+      id: `wk-${mockWorkoutIdCounter++}`,
       name: body.name || 'New Workout',
       level: body.level || 'ALL',
       days: body.days || 1,
       exercises: body.exercises || 1,
       focus: body.focus || 'General',
       duration: body.duration || '30 min',
-      tags: body.tags || [],
-    } as Workout;
+      tags: body.tags || [] } as Workout;
     
     MOCK_DB = [newWorkout, ...MOCK_DB];
     return HttpResponse.json({
@@ -59,7 +61,7 @@ export const managerWorkoutHandlers = [
     });
   }),
 
-  http.patch(`/api/v1/manager/workouts/:id`, async ({ request, params }) => {
+  http.patch(managerMockApiUrl(ManagerWorkoutUrlConfig.BACKEND_API.WORKOUT(':id')), async ({ request, params }) => {
     const { id } = params;
     const body = await request.json() as Partial<Workout>;
     const index = MOCK_DB.findIndex(w => w.id === id);
@@ -74,7 +76,7 @@ export const managerWorkoutHandlers = [
     });
   }),
 
-  http.delete(`/api/v1/manager/workouts/:id`, ({ params }) => {
+  http.delete(managerMockApiUrl(ManagerWorkoutUrlConfig.BACKEND_API.WORKOUT(':id')), ({ params }) => {
     const { id } = params;
     MOCK_DB = MOCK_DB.filter(w => w.id !== id);
     return HttpResponse.json({

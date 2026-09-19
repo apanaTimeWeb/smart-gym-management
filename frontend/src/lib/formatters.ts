@@ -12,6 +12,15 @@ export function formatINR(amount: number): string {
   return '₹' + amount.toLocaleString('en-IN');
 }
 
+export function formatCurrencyFromMinorUnits(amountMinor: number, currencyCode: string = 'INR'): string {
+  if (isNaN(amountMinor)) return '₹0.00';
+  const amountMajor = amountMinor / 100;
+  return new Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: currencyCode,
+  }).format(amountMajor);
+}
+
 /**
  * Formats a regular number using the Indian Numbering System.
  */

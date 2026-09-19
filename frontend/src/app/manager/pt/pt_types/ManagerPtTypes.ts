@@ -4,6 +4,7 @@
 
 export type PtSessionStatus = 'SCHEDULED' | 'COMPLETED' | 'CANCELLED' | 'MISSED';
 export type PtPaymentStatus = 'PAID' | 'PARTIAL' | 'PENDING';
+export type ManagerPtTrainerAvailabilityStatus = 'Available' | 'Fully Booked';
 export type PtActiveTab = 'dashboard' | 'assignments' | 'packages' | 'workload';
 
 export interface PtPackage {
@@ -61,7 +62,7 @@ export interface PtTrainerWorkload {
   activeClients: number;
   totalSessionsConducted: number;
   rating: number;
-  status: 'Available' | 'Fully Booked';
+  status: ManagerPtTrainerAvailabilityStatus;
 }
 
 export interface PtDashboardKpis {

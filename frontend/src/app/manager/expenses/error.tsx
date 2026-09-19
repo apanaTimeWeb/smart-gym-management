@@ -1,38 +1,36 @@
 'use client';
 
 // RESPONSIBILITY: Renders the module-specific route error fallback and records safe diagnostic metadata.
+import { ManagerExpensesUrlConfig } from '@/app/manager/expenses/expenses_url_config';
 import { useEffect } from 'react';
 import { AlertTriangle } from 'lucide-react';
 import { logger } from '@/lib/logger';
 
 export default function ManagerExpensesError({
   error,
-  reset,
-}: {
+  reset }: {
   error: Error & { digest?: string };
   reset: () => void;
 }) {
   useEffect(() => {
     logger.error('Manager module route error', {
-      route: '/manager/expenses',
+      route: ManagerExpensesUrlConfig.UI.HOME,
       module: 'manager/expenses',
       errorDigest: error.digest,
-      timestamp: new Date().toISOString(),
-    });
+      timestamp: new Date().toISOString() });
   }, [error]);
 
   return (
     <div className="min-h-full flex items-center justify-center p-6 bg-page">
-      <div className="bg-card border border-danger/20 p-8 rounded-2xl shadow-xl max-w-md w-full text-center space-y-4">
+      <div className="bg-overlay border border-danger/20 p-8 rounded-2xl shadow-dialog max-w-md w-full text-center space-y-4">
         <div className="w-14 h-14 bg-danger/10 rounded-full flex items-center justify-center mx-auto text-danger">
-          <AlertTriangle size={28} />
+          <AlertTriangle size={18} />
         </div>
-        <h2 className="text-xl font-bold text-foreground">Expenses Unavailable</h2>
+        <h2 className="text-xl font-bold text-primary">Expenses Unavailable</h2>
         <p className="text-sm text-secondary">We couldn't load the expenses module. Please try again.</p>
-        {error.digest && <p className="text-xs text-secondary/60">Ref: {error.digest}</p>}
-        <button
+                <button
           onClick={reset}
-          className="px-6 py-2.5 bg-primary text-primary-foreground font-medium rounded-xl hover:opacity-90 motion-safe:transition-opacity"
+          className="min-h-11 min-w-32 px-6 py-2.5 bg-primary text-on-primary font-medium rounded-xl hover:opacity-90 motion-safe:transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
         >
           Try Again
         </button>

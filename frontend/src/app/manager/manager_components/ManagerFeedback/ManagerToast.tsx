@@ -1,53 +1,42 @@
 'use client';
-// RESPONSIBILITY: Renders the fixed bottom-right toast notification. Auto-dismisses after 4 seconds. Shared across all MANAGER modules.
+// RESPONSIBILITY: Renders a fixed, accessible Manager toast notification. Contains no business logic.
 import { useEffect } from 'react';
+import type { ManagerToastAriaLive, ManagerToastProps } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerToastTypes';
 
-export type ToastType = 'whatsapp' | 'email' | 'error' | 'success';
-
-interface ManagerToastProps {
- message: string;
- type: ToastType;
- onClose: () => void;
-}
-
+/** Renders an auto-dismissing toast with semantic styling and a stable close action. */
 export default function ManagerToast({ message, type, onClose }: ManagerToastProps) {
- useEffect(() => {
- const timer = setTimeout(onClose, 4000);
- return () => clearTimeout(timer);
- }, [onClose]);
+  useEffect(() => {
+    const timer = window.setTimeout(onClose, 4000);
+    return () => window.clearTimeout(timer);
+  }, [onClose]);
 
- const config = {
- success: { prefix: '✅', border: 'var(--success)' },
- error: { prefix: '❌', border: 'var(--danger)' },
- whatsapp: { prefix: '💬', border: 'var(--success)' },
- email: { prefix: '📧', border: 'var(--info)' },
- };
+  const config: Record<ManagerToastProps['type'], { prefix: string; border: string; live: ManagerToastAriaLive }> = {
+    success: { prefix: '✅', border: 'border-success', live: 'polite' },
+    error: { prefix: '❌', border: 'border-danger', live: 'assertive' },
+    warning: { prefix: '⚠️', border: 'border-warning', live: 'polite' },
+    info: { prefix: 'ℹ️', border: 'border-info', live: 'polite' },
+  };
+  const tone = config[type];
 
- const { prefix, border } = config[type] || config.success;
-
- return (
- <div
- className="fixed top-6 right-6 sm:top-8 sm:right-8 z-50 flex items-center gap-3 w-full sm:w-80 max-w-sm p-4 rounded-xl shadow-2xl bg-card text-foreground border border-border"
- style={{ 
- borderLeft: `4px solid ${border}`,
- animation: 'toastIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards'
- }}
- >
- <div className="flex-1 text-sm font-semibold">
- {prefix} {message}
- </div>
- <button
- onClick={onClose}
- className="text-secondary hover:text-foreground flex-shrink-0 motion-safe:transition-colors"
- >
- ✕
- </button>
- <style>{`
- @keyframes toastIn {
- from { opacity: 0; transform: translateX(50px); }
- to { opacity: 1; transform: translateX(0); }
- }
- `}</style>
- </div>
- );
+  return (
+    <div
+      className={`fixed bottom-3 right-3 sm:bottom-6 sm:right-6 z-50 flex items-center gap-3 w-full max-w-sm px-4 sm:w-80 sm:max-w-xs rounded-xl shadow-toast bg-card text-primary border-l-4 ${tone.border} motion-safe:transition-all motion-safe:duration-base`}
+      role={tone.live === 'assertive' ? 'alert' : 'status'}
+      aria-live={tone.live}
+    >
+      <div className="flex-1 text-sm font-semibold">
+        {tone.prefix} {message}
+      </div>
+      <button
+        type="button"
+        onClick={onClose}
+        aria-label="Close notification"
+        className="min-h-11 min-w-11 flex items-center justify-center text-secondary hover:text-primary flex-shrink-0 motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded"
+      >
+        <span aria-hidden="true">✕</span>
+      </button>
+    </div>
+  );
 }
+
+export { ManagerToast };

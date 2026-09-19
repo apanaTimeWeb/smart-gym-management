@@ -1,3 +1,4 @@
+'use client';
 // DATA FLOW: Manager module state/API data → useManagerWorkoutQueries → owning Manager UI components.
 /** Manages UseWorkoutQueries for the Manager module. */
 import { useQuery } from '@tanstack/react-query';
@@ -9,8 +10,7 @@ export function useWorkoutPlansQuery(params: Record<string, string>) {
     queryFn: async () => {
       const res = await workoutApi.fetchWorkouts(params);
       return res.data;
-    },
-  });
+    } });
 }
 
 export function useExercisesQuery(params: Record<string, string>) {
@@ -19,8 +19,7 @@ export function useExercisesQuery(params: Record<string, string>) {
     queryFn: async () => {
       const res = await workoutApi.fetchExercises(params);
       return res.data;
-    },
-  });
+    } });
 }
 
 export function useWorkoutAssignmentsQuery() {

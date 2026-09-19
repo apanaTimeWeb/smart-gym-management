@@ -1,16 +1,18 @@
 'use client';
+import { MANAGER_GENERIC_ERROR_MESSAGE } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
+import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 // RESPONSIBILITY: Renders the product cards grid with stock status, price, and quick-action buttons.
 import { Edit2, Trash2 } from 'lucide-react';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
-import { useStoreContext } from '@/app/manager/store/store_context/ManagerStoreContext';
-import { formatCurrency, formatNumber } from '@/lib/formatters';
+import { useManagerStoreLogic } from '@/app/manager/store/store_hooks/ManagerUseManagerStoreLogic';
+import { formatCurrencyFromMinorUnits, formatNumber } from '@/lib/formatters';
 
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
-import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
+import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_infrastructure/ManagerPaginationDefaults';
 
 export default function ManagerStoreProductGrid() {
   const { confirm } = useConfirm();
-  const { products, summary, isLoading, isError, debouncedSearch, currentPage, setCurrentPage, openEditProduct, deleteProduct } = useStoreContext();
+  const { products, summary, isLoading, isError, errorMessage, debouncedSearch, currentPage, setCurrentPage, openEditProduct, deleteProduct } = useManagerStoreLogic();
 
   
   const totalProducts = summary?.totalProducts || products.length;
@@ -21,12 +23,12 @@ export default function ManagerStoreProductGrid() {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {[...Array(8)].map((_, i) => (
           <div key={`skeleton-${i}`} className="motion-safe:animate-pulse bg-card rounded-xl border border-border p-4 h-64">
-            <div className="h-32 bg-muted rounded-lg mb-4"></div>
-            <div className="h-4 bg-muted rounded w-3/4 mb-2"></div>
-            <div className="h-4 bg-muted rounded w-1/2 mb-4"></div>
+            <div className="h-32 bg-input rounded-lg mb-4"></div>
+            <div className="h-4 bg-input rounded w-3/4 mb-2"></div>
+            <div className="h-4 bg-input rounded w-1/2 mb-4"></div>
             <div className="flex justify-between items-center mt-auto">
-              <div className="h-6 bg-muted rounded w-1/3"></div>
-              <div className="h-8 bg-muted rounded w-1/4"></div>
+              <div className="h-6 bg-input rounded w-1/3"></div>
+              <div className="h-8 bg-input rounded w-1/4"></div>
             </div>
           </div>
         ))}
@@ -37,8 +39,8 @@ export default function ManagerStoreProductGrid() {
   if (isError) {
     return (
       <div className="text-center py-16 bg-card rounded-2xl border border-danger/30 mt-4">
-        <p className="text-danger font-medium">Failed to load products.</p>
-        <p className="text-sm mt-1 text-secondary">Please check your connection and try again.</p>
+        <p className="text-danger font-medium">{errorMessage || MANAGER_GENERIC_ERROR_MESSAGE}</p>
+        <span className="text-sm text-secondary">Retry the request.</span>
       </div>
     );
   }
@@ -57,14 +59,14 @@ export default function ManagerStoreProductGrid() {
         {products.map(p => (
           <div 
             key={p.id} 
-            className="border border-border rounded-xl p-4 hover:shadow-md motion-safe:transition-shadow bg-card"
+            className="border border-border rounded-xl p-4 hover:shadow-card motion-safe:transition-shadow bg-card"
           >
             <div className="flex justify-between items-start mb-3">
               <div>
-                <p className="font-semibold text-foreground">
+                <p className="font-semibold text-primary">
                   {p.name} {p.unit && <span className="text-sm font-normal text-secondary ml-1">({p.unit})</span>}
                 </p>
-                <span className="text-xs bg-info-bg text-info dark:bg-info-bg dark:text-info px-2 py-0.5 rounded-full">
+                <span className="text-xs bg-info text-info dark:bg-info dark:text-info px-2 py-0.5 rounded-full">
                   {p.category}
                 </span>
               </div>
@@ -74,7 +76,7 @@ export default function ManagerStoreProductGrid() {
                   className="p-1.5 rounded-lg bg-input text-secondary hover:bg-primary-subtle motion-safe:transition-colors"
                   aria-label={`Edit ${p.name}`}
                 >
-                  <Edit2 size={13} />
+                  <Edit2 size={18} />
                 </button>
                 <button 
                   onClick={async () => {
@@ -86,23 +88,23 @@ export default function ManagerStoreProductGrid() {
                     });
                     if (ok) deleteProduct(p.id);
                   }}
-                  className="p-1.5 rounded-lg bg-danger-bg dark:bg-danger-bg text-danger hover:bg-danger-bg dark:hover:bg-danger-bg motion-safe:transition-colors"
+                  className="p-1.5 rounded-lg bg-danger dark:bg-danger text-danger hover:bg-danger dark:hover:bg-danger motion-safe:transition-colors"
                   aria-label={`Delete ${p.name}`}
                 >
-                  <Trash2 size={13} />
+                  <Trash2 size={18} />
                 </button>
               </div>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-lg font-bold text-foreground">
-                {formatCurrency(p.price)}
+              <span className="text-lg font-bold text-primary">
+                {formatCurrencyFromMinorUnits(p.price, ManagerEnvConfig.currencyCode)}
               </span>
               <span className={`text-xs font-semibold px-2.5 py-0.5 rounded-full ${
                 p.stock <= 10 
-                  ? 'bg-danger-bg text-danger dark:bg-danger-bg dark:text-danger' 
+                  ? 'bg-danger text-danger dark:bg-danger dark:text-danger' 
                   : p.stock <= 25 
-                  ? 'bg-warning-bg text-warning dark:bg-warning-bg dark:text-warning' 
-                  : 'bg-success-bg text-success dark:bg-success-bg dark:text-success'
+                  ? 'bg-warning text-warning dark:bg-warning dark:text-warning' 
+                  : 'bg-success text-success dark:bg-success dark:text-success'
               }`}>
                 {p.stock} in stock
               </span>

@@ -8,7 +8,7 @@ Manager Profile is the authenticated manager’s own profile and credentials wor
 |---|---|---|
 | `profile_api/` | Feature-owned responsibility for the profile module. | `ManagerProfileApi.ts; ManagerUseManagerProfileMutations.ts; ManagerUseManagerProfileQueries.ts` |
 | `profile_components/` | Feature-owned responsibility for the profile module. | `—` |
-| `profile_context/` | Feature-owned responsibility for the profile module. | `ManagerUseManagerProfileLogic.ts` |
+| `profile_hooks/` | Feature-owned responsibility for the profile module. | `ManagerUseManagerProfileLogic.ts` |
 | `profile_fixtures/` | Feature-owned responsibility for the profile module. | `ManagerProfileMockData.ts` |
 | `profile_mocks/` | Feature-owned responsibility for the profile module. | `—` |
 | `profile_types/` | Feature-owned responsibility for the profile module. | `ManagerProfileSchema.ts; ManagerProfileTypes.ts` |
@@ -32,7 +32,7 @@ Manager Profile is the authenticated manager’s own profile and credentials wor
 3. updatePassword() submits through the secure API boundary; raw errors/secrets are never rendered.
 
 ## Data and State Architecture
-TanStack Query owns profile server/API data. UI-only filters, tabs, selections, and draft state remain local state or module-scoped Zustand where shared. React Context is limited to stable cross-tree concerns and does not become the source of truth for API data. Query keys are module-prefixed.
+TanStack Query owns profile server/API data. UI-only filters, tabs, selections, and draft state remain local state or module-scoped Zustand where shared. module-local state/query layer is limited to stable cross-tree concerns and does not become the source of truth for API data. Query keys are module-prefixed.
 
 ## API Contract
 | Function | Method | Endpoint | Request | Response `data` type |

@@ -1,13 +1,17 @@
 import { http, HttpResponse } from 'msw';
+import { managerMockApiUrl } from '@/app/manager/manager_infrastructure/ManagerMockApiUrl';
+import { ManagerAttendanceUrlConfig } from '@/app/manager/attendance/attendance_url_config';
 import { MOCK_ATTENDANCE_RECORDS, MOCK_ATTENDANCE_STATS } from '@/app/manager/attendance/attendance_fixtures/ManagerAttendanceMockData';
+import { MANAGER_ATTENDANCE_MEMBER_SNAPSHOTS, MANAGER_ATTENDANCE_STAFF_SNAPSHOTS } from '@/app/manager/attendance/attendance_fixtures/ManagerAttendanceQrMockData';
 import type { Attendance } from '@/app/manager/attendance/attendance_types/ManagerAttendanceTypes';
 
 let mockRecords = [...MOCK_ATTENDANCE_RECORDS];
+let mockAttendanceIdCounter = 100;
 
 const ATTENDANCE_LIMIT = 10;
 
 export const managerAttendanceHandlers = [
-  http.get(`/api/v1/manager/attendance`, ({ request }) => {
+  http.get(managerMockApiUrl(ManagerAttendanceUrlConfig.BACKEND_API.BASE), ({ request }) => {
     const url = new URL(request.url);
     const search = (url.searchParams.get('search') || '').trim().toLowerCase();
     const date = url.searchParams.get('date') || '';
@@ -31,15 +35,14 @@ export const managerAttendanceHandlers = [
     return HttpResponse.json({
       success: true,
       message: 'Fetched attendance records',
-      data: { attendances: paginated, total: filtered.length, page, limit },
-    });
+      data: { attendances: paginated, total: filtered.length, page, limit } });
   }),
 
-  http.get(`/api/v1/manager/attendance/stats`, () => {
+  http.get(managerMockApiUrl(ManagerAttendanceUrlConfig.BACKEND_API.STATS), () => {
     return HttpResponse.json({ success: true, message: 'Fetched stats', data: MOCK_ATTENDANCE_STATS });
   }),
 
-  http.get(`/api/v1/manager/attendance/history`, ({ request }) => {
+  http.get(managerMockApiUrl(ManagerAttendanceUrlConfig.BACKEND_API.HISTORY), ({ request }) => {
     const url = new URL(request.url);
     const userId = url.searchParams.get('userId');
     const type = url.searchParams.get('type');
@@ -47,31 +50,43 @@ export const managerAttendanceHandlers = [
     return HttpResponse.json({ success: true, message: 'Fetched history', data: filtered });
   }),
 
-  http.get(`/api/v1/manager/attendance/members`, ({ request }) => {
+  http.get(managerMockApiUrl(ManagerAttendanceUrlConfig.BACKEND_API.MEMBERS), ({ request }) => {
     const url = new URL(request.url);
-    const status = url.searchParams.get('status') || 'active';
-    const members = Array.from(new Map(mockRecords.filter(r => r.member).map(r => [String(r.memberId), r.member?.name || ''])).entries())
-      .map(([id, name]) => ({ id, name, status }));
-    return HttpResponse.json({ success: true, message: 'Fetched active members', data: { members } });
+    const search = (url.searchParams.get('search') || '').trim().toLowerCase();
+    const statusFilter = (url.searchParams.get('status') || '').trim().toUpperCase();
+    const demoMember = search === 'demo-active'
+      ? MANAGER_ATTENDANCE_MEMBER_SNAPSHOTS.find((member) => member.status === 'ACTIVE')
+      : search === 'demo-expired'
+        ? MANAGER_ATTENDANCE_MEMBER_SNAPSHOTS.find((member) => member.status === 'EXPIRED')
+        : undefined;
+    if (demoMember) return HttpResponse.json({ success: true, message: 'Fetched attendance members', data: { members: [demoMember] } });
+    const members = MANAGER_ATTENDANCE_MEMBER_SNAPSHOTS.filter((member) => {
+      const matchesSearch = !search || member.id.toLowerCase().includes(search) || member.name.toLowerCase().includes(search) || member.phone.includes(search);
+      const matchesStatus = !statusFilter || member.status === statusFilter;
+      return matchesSearch && matchesStatus;
+    });
+    return HttpResponse.json({ success: true, message: 'Fetched attendance members', data: { members } });
   }),
 
-  http.get(`/api/v1/manager/attendance/staff`, () => {
-    const names = Array.from(new Map(mockRecords.filter(r => r.staff).map(r => [String(r.staffId), r.staff?.name || ''])).entries());
-    const staff = names.map(([id, name]) => ({ id, name }));
-    return HttpResponse.json({ success: true, message: 'Fetched staff', data: { staff } });
+  http.get(managerMockApiUrl(ManagerAttendanceUrlConfig.BACKEND_API.STAFF), ({ request }) => {
+    const url = new URL(request.url);
+    const search = (url.searchParams.get('search') || '').trim().toLowerCase();
+    const staff = MANAGER_ATTENDANCE_STAFF_SNAPSHOTS.filter((member) =>
+      !search || member.id.toLowerCase().includes(search) || member.name.toLowerCase().includes(search) || member.role.toLowerCase().includes(search),
+    );
+    return HttpResponse.json({ success: true, message: 'Fetched attendance staff', data: { staff } });
   }),
 
-  http.post(`/api/v1/manager/attendance`, async ({ request }) => {
+  http.post(managerMockApiUrl(ManagerAttendanceUrlConfig.BACKEND_API.BASE), async ({ request }) => {
     const body = await request.json() as { memberId?: string; staffId?: string; date: string; checkIn?: string; type: string };
     const newRecord: Attendance = {
-      id: `att-${Date.now()}`,
+      id: `att-${mockAttendanceIdCounter++}`,
       memberId: body.memberId ? parseInt(body.memberId, 10) : undefined,
       staffId: body.staffId ? parseInt(body.staffId, 10) : undefined,
       date: body.date,
       checkIn: body.checkIn || '09:00 AM',
       type: body.type as 'MEMBER' | 'STAFF',
-      status: 'Present',
-    };
+      status: 'Present' };
     mockRecords = [newRecord, ...mockRecords];
     return HttpResponse.json({ success: true, message: 'Attendance marked', data: newRecord });
   }),

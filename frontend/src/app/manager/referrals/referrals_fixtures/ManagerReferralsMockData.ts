@@ -10,9 +10,8 @@ export const MOCK_REFERRALS: ManagerReferral[] = [
     dateReferred: '2025-06-01',
     status: 'JOINED',
     rewardStatus: 'PENDING',
-    rewardAmount: 500,
-    rewardType: 'CASH',
-  },
+    rewardAmount: 50000,
+    rewardType: 'CASH' },
   {
     id: 'ref-102',
     referrerName: 'Priya Mehta',
@@ -22,9 +21,8 @@ export const MOCK_REFERRALS: ManagerReferral[] = [
     dateReferred: '2025-06-03',
     status: 'JOINED',
     rewardStatus: 'CLAIMED',
-    rewardAmount: 500,
-    rewardType: 'CASH',
-  },
+    rewardAmount: 50000,
+    rewardType: 'CASH' },
   {
     id: 'ref-103',
     referrerName: 'Rahul Verma',
@@ -34,9 +32,8 @@ export const MOCK_REFERRALS: ManagerReferral[] = [
     dateReferred: '2025-06-05',
     status: 'PENDING',
     rewardStatus: 'N/A',
-    rewardAmount: 500,
-    rewardType: 'CASH',
-  },
+    rewardAmount: 50000,
+    rewardType: 'CASH' },
   {
     id: 'ref-104',
     referrerName: 'Sneha Patil',
@@ -46,9 +43,8 @@ export const MOCK_REFERRALS: ManagerReferral[] = [
     dateReferred: '2025-06-07',
     status: 'REJECTED',
     rewardStatus: 'N/A',
-    rewardAmount: 500,
-    rewardType: 'CASH',
-  },
+    rewardAmount: 50000,
+    rewardType: 'CASH' },
   {
     id: 'ref-105',
     referrerName: 'Neha Singh',
@@ -58,9 +54,8 @@ export const MOCK_REFERRALS: ManagerReferral[] = [
     dateReferred: '2025-06-10',
     status: 'JOINED',
     rewardStatus: 'PENDING',
-    rewardAmount: 1000, // Special promo
-    rewardType: 'DISCOUNT',
-  }
+    rewardAmount: 100000, // Special promo
+    rewardType: 'DISCOUNT' }
 ];
 
 export const MOCK_REFERRALS_KPIS: ManagerReferralsKPIs = {
@@ -69,5 +64,4 @@ export const MOCK_REFERRALS_KPIS: ManagerReferralsKPIs = {
   pendingRewards: MOCK_REFERRALS.filter((ref) => ref.rewardStatus === 'PENDING').length,
   claimedRewards: MOCK_REFERRALS.filter((ref) => ref.rewardStatus === 'CLAIMED').length,
   conversionRate: MOCK_REFERRALS.length ? (MOCK_REFERRALS.filter((ref) => ref.status === 'JOINED').length / MOCK_REFERRALS.length) * 100 : 0,
-  totalRewardsPaidOut: MOCK_REFERRALS.filter((ref) => ref.rewardStatus === 'CLAIMED').reduce((sum, ref) => sum + ref.rewardAmount, 0),
-};
+  totalRewardsPaidOut: MOCK_REFERRALS.filter((ref) => ref.rewardStatus === 'CLAIMED').reduce((sum, ref) => sum + ref.rewardAmount, 0) };

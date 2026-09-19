@@ -41,5 +41,5 @@ export function useManagerHrQueries(params: { search: string; role: string; mont
     setStaff, setPayrolls, setSummary, loadAll,
     isPending: staffQuery.isPending || payrollQuery.isPending || summaryQuery.isPending,
     isError: staffQuery.isError || payrollQuery.isError || summaryQuery.isError,
-  };
+    error: staffQuery.error || payrollQuery.error || summaryQuery.error };
 }

@@ -1,14 +1,14 @@
 // RESPONSIBILITY: Defines all TypeScript types, interfaces, for the Workout Library module.
-import { EMPTY_WORKOUT_FORM, EMPTY_EXERCISE_FORM } from '@/app/manager/workout/workout_utils/ManagerWorkoutSharedConstants';
-import React from 'react';
+import { EMPTY_WORKOUT_FORM, EMPTY_EXERCISE_FORM } from '@/app/manager/workout/workout_types/ManagerWorkoutFormTypes';
+import type { Dispatch, SetStateAction } from 'react';
 
 import type { ExerciseSnapshot } from '@/app/manager/workout/workout_types/ManagerWorkoutSnapshotTypes';
-import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
+import type { ManagerToastType } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerToastTypes';
 
 
 export type Exercise = ExerciseSnapshot;
 
-export interface WorkoutContextType {
+export interface ManagerWorkoutViewModel {
  tab: string;
  setTab: (tab: string) => void;
  search: string;
@@ -25,8 +25,8 @@ export interface WorkoutContextType {
  
 
  saving: boolean;
- toast: { message: string; type: ToastType } | null;
- showToast: (msg: string, type: ToastType) => void;
+ toast: { message: string; type: ManagerToastType } | null;
+ showToast: (msg: string, type: ManagerToastType) => void;
  hideToast: () => void;
  loadAll: () => Promise<void>;
 
@@ -34,13 +34,13 @@ export interface WorkoutContextType {
  setShowWkModal: (show: boolean) => void;
  editWkId: string | null;
  wkForm: typeof EMPTY_WORKOUT_FORM;
- setWkForm: React.Dispatch<React.SetStateAction<typeof EMPTY_WORKOUT_FORM>>;
+ setWkForm: Dispatch<SetStateAction<typeof EMPTY_WORKOUT_FORM>>;
  
  showExModal: boolean;
  setShowExModal: (show: boolean) => void;
  editExId: string | null;
  exForm: typeof EMPTY_EXERCISE_FORM;
- setExForm: React.Dispatch<React.SetStateAction<typeof EMPTY_EXERCISE_FORM>>;
+ setExForm: Dispatch<SetStateAction<typeof EMPTY_EXERCISE_FORM>>;
  
  openAddWk: () => void;
  openEditWk: (w: Workout) => void;

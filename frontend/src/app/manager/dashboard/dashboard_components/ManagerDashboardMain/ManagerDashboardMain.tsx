@@ -1,8 +1,8 @@
 'use client';
-// RESPONSIBILITY: Main entry point for the dashboard module. Renders layout, handles high-level loading/error states, and sets up Context.
+// RESPONSIBILITY: Main entry point for the dashboard module. Renders the dashboard layout, owns the dashboard query lifecycle, and coordinates URL-backed reporting state.
 import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/ManagerHeader';
 import { useDashboardStatsQuery } from '@/app/manager/dashboard/dashboard_api/ManagerUseManagerDashboardQueries';
-import { useManagerDashboardStore } from '@/app/manager/dashboard/dashboard_store/ManagerUseManagerDashboardStore';
+import { useManagerDashboardUrlState } from '@/app/manager/dashboard/dashboard_hooks/ManagerUseManagerDashboardUrlState';
 import type { DashboardStats } from '@/app/manager/dashboard/dashboard_types/ManagerDashboardTypes';
 import ManagerDashboardKPIs from '@/app/manager/dashboard/dashboard_components/ManagerDashboardKPIs/ManagerDashboardKPIs';
 import ManagerDashboardRecentMembers from '@/app/manager/dashboard/dashboard_components/ManagerDashboardRecentMembers/ManagerDashboardRecentMembers';
@@ -10,44 +10,31 @@ import ManagerDashboardPendingPayments from '@/app/manager/dashboard/dashboard_c
 import ManagerDashboardExpiringMemberships from '@/app/manager/dashboard/dashboard_components/ManagerDashboardExpiringMemberships/ManagerDashboardExpiringMemberships';
 import ManagerDashboardPromoCard from '@/app/manager/dashboard/dashboard_components/ManagerDashboardPromoCard/ManagerDashboardPromoCard';
 import ManagerDashboardMembershipDistribution from '@/app/manager/dashboard/dashboard_components/ManagerDashboardMembershipDistribution/ManagerDashboardMembershipDistribution';
-import { ManagerDateFilterDropdown } from '@/app/manager/manager_components/ManagerShared/ManagerDateFilterDropdown';
-import { displayValue } from '@/lib/formatters';
+import ManagerDashboardDateFilterDropdown from '@/app/manager/dashboard/dashboard_components/ManagerDashboardDateFilterDropdown/ManagerDashboardDateFilterDropdown';
+import { getManagerErrorMessage } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
 import ManagerDashboardRevenueChart from '@/app/manager/dashboard/dashboard_components/ManagerDashboardRevenueChart/ManagerDashboardRevenueChart';
 import ManagerDashboardMemberGrowthChart from '@/app/manager/dashboard/dashboard_components/ManagerDashboardMemberGrowthChart/ManagerDashboardMemberGrowthChart';
+import { ManagerDashboardSkeleton } from '@/app/manager/dashboard/dashboard_components/ManagerDashboardMain/ManagerDashboardSkeleton/ManagerDashboardSkeleton';
 
-// Skeleton for the dashboard content area while client-side data loads
-function DashboardSkeleton() {
-  return (
-    <div className="p-6 space-y-6">
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-        {[1, 2, 3, 4].map(i => <div key={`skeleton-${i}`} className="h-28 bg-card rounded-xl motion-safe:animate-pulse border border-border" />)}
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-        {[1, 2, 3, 4].map(i => <div key={`skeleton-${i}`} className="h-28 bg-card rounded-xl motion-safe:animate-pulse border border-border" />)}
-      </div>
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-        <div className="xl:col-span-2 h-80 bg-card rounded-xl motion-safe:animate-pulse border border-border" />
-        <div className="space-y-4">
-          <div className="h-48 bg-card rounded-xl motion-safe:animate-pulse border border-border" />
-          <div className="h-28 bg-card rounded-xl motion-safe:animate-pulse border border-border" />
-        </div>
-      </div>
-      <div className="h-40 bg-card rounded-xl motion-safe:animate-pulse border border-border" />
-    </div>
-  );
-}
 
 export default function ManagerDashboardMain({ initialData }: { initialData?: DashboardStats | null }) {
-  const { timeRange } = useManagerDashboardStore();
-  const { data: stats, isLoading, isError } = useDashboardStatsQuery({ range: timeRange });
+  const { range, startDate, endDate } = useManagerDashboardUrlState();
+  const dashboardParams = { range, ...(range === 'custom' && startDate ? { startDate } : {}), ...(range === 'custom' && endDate ? { endDate } : {}) };
+  const { data: stats, isLoading, isError, error, refetch } = useDashboardStatsQuery(dashboardParams);
 
-  if (isLoading && !stats && !initialData) return <DashboardSkeleton />;
+  if (isLoading && !stats && !initialData) return <ManagerDashboardSkeleton />;
 
   if (isError) return (
     <div className="min-h-full flex items-center justify-center">
       <div className="text-center">
-        <p className="font-medium text-danger">Failed to load dashboard</p>
-        <p className="text-sm mt-1 text-secondary">Dashboard data could not be loaded. Please retry.</p>
+        <p role="alert" className="font-medium text-danger">{getManagerErrorMessage(error)}</p>
+        <button
+          type="button"
+          onClick={() => refetch()}
+          className="mt-3 px-4 py-2 rounded-md bg-primary text-on-primary font-medium motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95"
+        >
+          Retry
+        </button>
       </div>
     </div>
   );
@@ -57,7 +44,7 @@ export default function ManagerDashboardMain({ initialData }: { initialData?: Da
       <ManagerHeader title="Dashboard" subtitle="Welcome back, Manager! Here's your gym overview." />
       <div className="p-6 space-y-6">
         <div className="flex flex-col sm:flex-row justify-end mb-2 gap-3 items-center w-full">
-          <ManagerDateFilterDropdown />
+          <ManagerDashboardDateFilterDropdown />
         </div>
         <ManagerDashboardKPIs />
         

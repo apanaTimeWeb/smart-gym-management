@@ -2,17 +2,14 @@
 // RESPONSIBILITY: Renders the toolbar for searching, filtering, and initiating the "Add Member" action.
 // CRITICAL FIX: Added gender filter, plan filter, expiry date range, and Export CSV/PDF buttons.
 import { useState, useEffect } from 'react';
-import { Search, RefreshCw, Plus, MessageCircle, Download, Calendar } from 'lucide-react';
-import { useMembersContext } from '@/app/manager/members/members_context/ManagerMembersContext';
-import { useFetchMembers, useFetchPlans } from '@/app/manager/members/members_api/ManagerUseManagerMembersQueries';
-import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
+import { Search, RefreshCw, Plus, Download, Calendar } from 'lucide-react';
+import { useManagerMembersLogic } from '@/app/manager/members/members_hooks/ManagerUseManagerMembersLogic';
+import { useFetchPlans } from '@/app/manager/members/members_api/ManagerUseManagerMembersQueries';
+import ManagerSearchableDropdown from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
 import {
   MEMBER_STATUS_OPTIONS,
   MEMBER_GENDER_OPTIONS,
-  MEMBER_EXPORT_FORMATS,
-} from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
-import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
-import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
+  MEMBER_EXPORT_FORMATS } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
 
 export default function ManagerMembersToolbar() {
   const {
@@ -22,24 +19,10 @@ export default function ManagerMembersToolbar() {
     planFilter, setPlanFilter,
     expiryFrom, expiryTo, setExpiryRange,
     sortColumn, sortDirection,
-    openAdd, currentPage, showToast, exportMembers
-  } = useMembersContext();
-  const { data: membersRes, refetch } = useFetchMembers({ 
-    search: debouncedSearch,
-    status: statusFilter, 
-    gender: genderFilter, 
-    plan: planFilter, 
-    expiryFrom, 
-    expiryTo, 
-    sort: sortColumn, 
-    dir: sortDirection, 
-    page: currentPage.toString(),
-    limit: MANAGER_ITEMS_PER_PAGE.toString(),
-  });
-  const members = membersRes?.members || [];
+    openAdd, currentPage, exportMembers
+  } = useManagerMembersLogic();
   const { data: plansData } = useFetchPlans();
   const plans = plansData || [];
-  const { confirm } = useConfirm();
   const [localSearch, setLocalSearch] = useState(search);
   const [prevSearch, setPrevSearch] = useState(search);
 
@@ -58,30 +41,8 @@ export default function ManagerMembersToolbar() {
   }, [localSearch, search, setSearch]);
 
   const handleRefresh = () => {
-    refetch();
-  };
-
-  const handleBulkReminder = async () => {
-    const today = new Date();
-    const in30Days = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000);
-    const expiringMembers = members.filter(m => {
-      if (m.status !== 'ACTIVE') return false;
-      const expiry = new Date(m.expiryDate);
-      return expiry >= today && expiry <= in30Days;
-    });
-    const count = expiringMembers.length;
-    if (count === 0) {
-      showToast('No active members are expiring in the next 30 days. 🎉', 'success');
-      return;
-    }
-    const confirmed = await confirm({
-      title: 'Bulk WhatsApp Reminder',
-      message: `Send automated WhatsApp renewal reminders to ${count} member${count !== 1 ? 's' : ''} expiring in the next 30 days?`,
-      confirmText: 'Send Blast',
-    });
-    if (confirmed) {
-      showToast(`Successfully sent WhatsApp blast to ${count} member${count !== 1 ? 's' : ''}.`, 'success');
-    }
+    // Refresh is handled by re-querying; search reset triggers requery
+    setSearch('');
   };
 
   // Build plan options dynamically from live plan list (Rule 3B — no hardcoded plans)
@@ -91,47 +52,41 @@ export default function ManagerMembersToolbar() {
   ];
 
   return (
-    <div className="bg-card rounded-xl shadow-sm border border-border p-4 flex flex-col gap-3">
+    <div className="bg-card rounded-xl shadow-card border border-border p-4 flex flex-col gap-3">
       {/* Row 1: Search + Primary Actions */}
       <div className="flex flex-col lg:flex-row gap-3 items-start lg:items-center justify-between">
         <div className="relative w-full lg:w-72">
-          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary" />
+          <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary" />
           <input
             value={localSearch}
             onChange={e => setLocalSearch(e.target.value)}
             placeholder="Search by name or phone..."
-            className="pl-9 pr-3 py-2.5 border border-border rounded-xl text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page w-full bg-input text-primary"
+            className="pl-9 pr-3 py-2.5 border border-border rounded-xl text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page w-full bg-input text-primary"
           />
         </div>
         <div className="flex flex-wrap gap-2 w-full lg:w-auto">
           <button
             onClick={handleRefresh}
-            className="flex justify-center items-center gap-2 px-3 py-2.5 text-sm border border-border rounded-xl hover:opacity-80 text-primary w-full sm:w-auto"
+            className="flex justify-center items-center gap-2 px-3 py-2.5 text-sm border border-border rounded-xl hover:opacity-80 text-primary w-full sm:w-auto motion-safe:transition-colors"
           >
-            <RefreshCw size={14} /> Refresh
-          </button>
-          <button
-            onClick={handleBulkReminder}
-            className="flex justify-center items-center gap-2 px-3 py-2.5 text-sm border border-success text-success rounded-xl hover:bg-success/10 motion-safe:transition-colors w-full sm:w-auto"
-          >
-            <MessageCircle size={14} /> Bulk Reminder
+            <RefreshCw size={18} /> Refresh
           </button>
           {/* Export buttons — CRITICAL FIX */}
           {MEMBER_EXPORT_FORMATS.map(fmt => (
             <button
               key={fmt.value}
               onClick={() => void exportMembers(fmt.value)}
-              className="flex justify-center items-center gap-2 px-3 py-2.5 text-sm border border-border rounded-xl hover:bg-primary-subtle text-secondary hover:text-foreground motion-safe:transition-colors w-full sm:w-auto"
+              className="flex justify-center items-center gap-2 px-3 py-2.5 text-sm border border-border rounded-xl hover:bg-primary-subtle text-secondary hover:text-primary motion-safe:transition-colors w-full sm:w-auto"
               aria-label={fmt.label}
             >
-              <Download size={14} /> {fmt.label}
+              <Download size={18} /> {fmt.label}
             </button>
           ))}
           <button
             onClick={openAdd}
-            className="flex justify-center items-center gap-2 px-4 py-2.5 text-sm font-semibold text-primary-foreground bg-primary rounded-xl hover:opacity-90 motion-safe:transition-opacity w-full sm:w-auto"
+            className="flex justify-center items-center gap-2 px-4 py-2.5 text-sm font-semibold text-on-primary bg-primary rounded-xl hover:opacity-90 motion-safe:transition-opacity w-full sm:w-auto"
           >
-            <Plus size={16} /> Add Member
+            <Plus size={18} /> Add Member
           </button>
         </div>
       </div>
@@ -139,7 +94,7 @@ export default function ManagerMembersToolbar() {
       {/* Row 2: Filters — CRITICAL FIX */}
       <div className="flex flex-wrap gap-2 items-center">
         {/* Status filter */}
-        <SearchableDropdown
+        <ManagerSearchableDropdown
           value={statusFilter}
           onChange={(val) => setStatusFilter(String(val))}
           className="w-full sm:w-44"
@@ -147,7 +102,7 @@ export default function ManagerMembersToolbar() {
           placeholder="Filter by status"
         />
         {/* Gender filter — CRITICAL FIX */}
-        <SearchableDropdown
+        <ManagerSearchableDropdown
           value={genderFilter}
           onChange={(val) => setGenderFilter(String(val))}
           className="w-full sm:w-40"
@@ -155,7 +110,7 @@ export default function ManagerMembersToolbar() {
           placeholder="Filter by gender"
         />
         {/* Plan filter — CRITICAL FIX */}
-        <SearchableDropdown
+        <ManagerSearchableDropdown
           value={planFilter}
           onChange={(val) => setPlanFilter(String(val))}
           className="w-full sm:w-44"
@@ -164,7 +119,7 @@ export default function ManagerMembersToolbar() {
         />
         {/* Expiry Date Range — CRITICAL FIX */}
         <div className="flex items-center gap-1.5 border border-border rounded-xl px-3 py-1.5 bg-input text-sm w-full sm:w-auto">
-          <Calendar size={13} className="text-secondary shrink-0" />
+          <Calendar size={18} className="text-secondary shrink-0" />
           <input
             type="date"
             value={expiryFrom}

@@ -1,31 +1,31 @@
-# Manager Module — Theme Portability Contract
+# Manager Role — Theme Portability Contract
 
-To ensure this module can be safely ported or re-themed without breaking, it strictly relies on the following CSS variables defined in the global design system (`globals.css` -> `tailwind.config.ts`).
+The Manager role consumes the global Smart Gym 360 design system through semantic tokens. Feature modules retain their own theme contracts for feature-specific token usage.
 
-**DO NOT hardcode Tailwind colors (e.g., `bg-blue-500`, `text-[#1A1A2E]`) anywhere in this module.**
+## Core semantic tokens used by Manager surfaces
 
-## Core Backgrounds
-- `--bg-page`: Main page background.
-- `--bg-card`: Background for cards, panels, and tables.
-- `--bg-sidebar`: Manager sidebar background.
-- `--bg-header`: Top navbar background.
-- `--bg-input`: Form input background.
+- `--primary`, `--primary-hover`, `--primary-subtle`
+- `--bg-page`, `--bg-card`, `--bg-sidebar`, `--bg-header`, `--bg-input`, `--bg-floating`, `--bg-overlay`, `--bg-popover`
+- `--surface-hover`, `--surface-highlight`, `--surface-zebra`
+- `--border`, `--border-focus`, `--focus-ring`
+- `--text-primary`, `--text-secondary`, `--text-disabled`, `--text-on-primary`, `--text-on-danger`, `--text-on-success`, `--text-on-info`
+- `--success-text`, `--success-bg`, `--warning-text`, `--warning-bg`, `--danger-text`, `--danger-bg`, `--info-text`, `--info-bg`, `--purple-text`, `--purple-bg`
+- `--skeleton-base`, `--skeleton-highlight`
+- `--chart-primary`, `--chart-success`, `--chart-danger`, `--chart-warning`, `--chart-info`, `--chart-secondary`, `--chart-grid`, `--chart-tooltip-bg`
+- `--shadow-card`, `--shadow-popover`, `--shadow-dialog`, `--shadow-toast`
+- `--radius-sm`, `--radius-md`, `--radius-lg`, `--radius-xl`, `--radius-full`
+- `--layout-header-height`, `--layout-sidebar-width`, `--layout-sidebar-width-collapsed`, `--layout-content-padding`, `--control-height`, `--touch-target-min`, `--table-row-height`, `--table-row-height-compact`, `--modal-width`, `--drawer-width`
 
-## Borders
-- `--border`: Standard card, table, and input borders.
-- `--border-focus`: Active input focus ring.
+## JSX rule
 
-## Typography
-- `--text-primary`: Primary headings, table values.
-- `--text-secondary`: Labels, captions, placeholders.
-- `--text-disabled`: Disabled state text.
+Use semantic Tailwind classes such as `bg-card`, `text-primary`, `bg-success`, `text-danger`, `border-border`, `ring-primary`, `bg-surface-hover`, `shadow-card`.
 
-## Status Colors (Background & Text)
-- `--success`: Active, Working, Paid.
-- `--warning`: Pending, Expiring.
-- `--danger`: Overdue, Suspended.
-- `--info`: New, Neutral.
+Do not use raw theme hex values or arbitrary Tailwind theme expressions such as `bg-[#...]` or `bg-[var(--...)]` in JSX.
 
-## Skeletons
-- `--skeleton-base`: Loading skeleton base.
-- `--skeleton-highlight`: Loading skeleton shimmer.
+## Non-Tailwind component configuration
+
+Chart libraries may require direct color strings. When that happens, use documented semantic CSS variables such as `var(--chart-primary)` rather than raw colors.
+
+## External integration exception
+
+Native external brand colors explicitly required by the global design system may remain as feature integration colors. In Manager messaging, WhatsApp uses native `#25D366`; this is not part of the ERP theme and must not be generalized into the ERP palette.

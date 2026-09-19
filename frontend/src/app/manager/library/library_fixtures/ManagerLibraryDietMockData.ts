@@ -11,8 +11,7 @@ export const MOCK_MANAGER_DIET_PLANS: DietPlan[] = [
     fats: 45,
     description: 'Balanced calorie-controlled plan for gradual fat loss.',
     meals: ['Breakfast', 'Lunch', 'Snack', 'Dinner'],
-    isActive: true,
-  },
+    isActive: true },
   {
     id: 'dp-102',
     name: 'Muscle Gain Pro',
@@ -23,8 +22,7 @@ export const MOCK_MANAGER_DIET_PLANS: DietPlan[] = [
     fats: 75,
     description: 'High-protein plan for strength and lean mass development.',
     meals: ['Breakfast', 'Pre-workout', 'Lunch', 'Snack', 'Dinner'],
-    isActive: true,
-  },
+    isActive: true },
   {
     id: 'dp-103',
     name: 'Everyday Maintenance',
@@ -35,8 +33,7 @@ export const MOCK_MANAGER_DIET_PLANS: DietPlan[] = [
     fats: 65,
     description: 'Balanced maintenance plan for active gym members.',
     meals: ['Breakfast', 'Lunch', 'Snack', 'Dinner'],
-    isActive: true,
-  },
+    isActive: true },
   {
     id: 'dp-104',
     name: 'Endurance Fuel',
@@ -47,8 +44,7 @@ export const MOCK_MANAGER_DIET_PLANS: DietPlan[] = [
     fats: 55,
     description: 'Higher carbohydrate plan for endurance-focused training.',
     meals: ['Breakfast', 'Snack', 'Lunch', 'Pre-workout', 'Dinner'],
-    isActive: true,
-  },
+    isActive: true },
   {
     id: 'dp-105',
     name: 'Flexibility & Recovery',
@@ -59,8 +55,7 @@ export const MOCK_MANAGER_DIET_PLANS: DietPlan[] = [
     fats: 55,
     description: 'Recovery-focused nutrition supporting mobility and lower training load.',
     meals: ['Breakfast', 'Lunch', 'Dinner'],
-    isActive: true,
-  },
+    isActive: true },
   {
     id: 'dp-106',
     name: 'Vegetarian Strength',
@@ -71,8 +66,7 @@ export const MOCK_MANAGER_DIET_PLANS: DietPlan[] = [
     fats: 68,
     description: 'Vegetarian high-protein plan with varied plant-based meals.',
     meals: ['Breakfast', 'Lunch', 'Snack', 'Dinner'],
-    isActive: true,
-  },
+    isActive: true },
   {
     id: 'dp-107',
     name: 'Light Office Routine',
@@ -83,8 +77,7 @@ export const MOCK_MANAGER_DIET_PLANS: DietPlan[] = [
     fats: 50,
     description: 'Moderate-calorie plan for members with lighter daily activity.',
     meals: ['Breakfast', 'Lunch', 'Snack', 'Dinner'],
-    isActive: false,
-  },
+    isActive: false },
   {
     id: 'dp-108',
     name: 'Performance Cut',
@@ -95,8 +88,7 @@ export const MOCK_MANAGER_DIET_PLANS: DietPlan[] = [
     fats: 48,
     description: 'Higher-protein cut for members maintaining performance during fat loss.',
     meals: ['Breakfast', 'Lunch', 'Pre-workout', 'Dinner'],
-    isActive: true,
-  },
+    isActive: true },
   {
     id: 'dp-109',
     name: 'Marathon Build',
@@ -107,8 +99,7 @@ export const MOCK_MANAGER_DIET_PLANS: DietPlan[] = [
     fats: 60,
     description: 'High-fuel plan for long training sessions and recovery days.',
     meals: ['Breakfast', 'Mid-morning', 'Lunch', 'Pre-run', 'Dinner'],
-    isActive: true,
-  },
+    isActive: true },
   {
     id: 'dp-110',
     name: 'Balanced Starter',
@@ -119,8 +110,7 @@ export const MOCK_MANAGER_DIET_PLANS: DietPlan[] = [
     fats: 60,
     description: 'Simple balanced plan for new members learning consistent meal routines.',
     meals: ['Breakfast', 'Lunch', 'Dinner'],
-    isActive: true,
-  },
+    isActive: true },
   {
     id: 'dp-111',
     name: 'Plant Protein Cut',
@@ -131,8 +121,7 @@ export const MOCK_MANAGER_DIET_PLANS: DietPlan[] = [
     fats: 42,
     description: 'Plant-forward calorie-controlled nutrition plan.',
     meals: ['Breakfast', 'Lunch', 'Snack', 'Dinner'],
-    isActive: true,
-  },
+    isActive: true },
   {
     id: 'dp-112',
     name: 'Strength Starter',
@@ -143,6 +132,5 @@ export const MOCK_MANAGER_DIET_PLANS: DietPlan[] = [
     fats: 64,
     description: 'Moderate surplus plan for members starting resistance training.',
     meals: ['Breakfast', 'Lunch', 'Snack', 'Dinner'],
-    isActive: true,
-  },
+    isActive: true },
 ];

@@ -28,8 +28,7 @@ it('renders dashboard empty collection states from an MSW empty response', async
       http.get('/api/v1/manager/dashboard/stats', () => HttpResponse.json({
         success: true,
         message: 'Empty dashboard collections',
-        data: { ...MOCK_DASHBOARD_STATS, recentMembers: [], recentPayments: [], pendingPaymentsList: [], expiringMemberships: [], memberGrowth: [], revenueChart: [], membersByPlan: [] },
-      }))
+        data: { ...MOCK_DASHBOARD_STATS, recentMembers: [], recentPayments: [], pendingPaymentsList: [], expiringMemberships: [], memberGrowth: [], revenueChart: [], membersByPlan: [] } }))
     );
     render(<ManagerTestProviders><ManagerDashboardMain initialData={null} /></ManagerTestProviders>);
     expect(await screen.findByText('No members yet. Add your first member!')).toBeInTheDocument();

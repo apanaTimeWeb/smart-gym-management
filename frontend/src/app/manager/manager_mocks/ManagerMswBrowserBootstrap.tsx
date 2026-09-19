@@ -3,14 +3,12 @@
 // RESPONSIBILITY: Starts the Manager browser MSW worker before rendering Manager client data consumers.
 // DATA FLOW: Manager layout → ManagerMswBrowserBootstrap → MSW worker → module API clients → TanStack Query → Manager UI
 
-import type { ReactNode } from 'react';
+import type { ManagerMswBrowserBootstrapProps } from '@/app/manager/manager_mocks/manager_mocks_types/ManagerMswBrowserBootstrapTypes';
 import { useEffect, useState } from 'react';
 import { managerMswWorker } from '@/app/manager/manager_mocks/ManagerMswBrowser';
 import { logger } from '@/lib/logger';
 
-interface ManagerMswBrowserBootstrapProps {
-  children: ReactNode;
-}
+
 
 export function ManagerMswBrowserBootstrap({ children }: ManagerMswBrowserBootstrapProps) {
   const [ready, setReady] = useState(typeof window === 'undefined');
@@ -30,8 +28,7 @@ export function ManagerMswBrowserBootstrap({ children }: ManagerMswBrowserBootst
           if (pathname.startsWith('/api/v1/manager/')) {
             logger.error('Unhandled Manager MSW request', { method: request.method, pathname, module: 'manager', route: pathname });
           }
-        },
-      });
+        } });
 
       if (active) setReady(true);
     };
@@ -44,7 +41,7 @@ export function ManagerMswBrowserBootstrap({ children }: ManagerMswBrowserBootst
   }, []);
 
   if (!ready) {
-    return <div className="min-h-screen bg-background" aria-hidden="true" />;
+    return <div className="min-h-screen bg-page" aria-hidden="true" />;
   }
 
   return children;

@@ -1,268 +1,39 @@
 'use client';
-// RESPONSIBILITY: Renders the Manager RenewModal presentation layer for the Manager module.
-import { useEffect } from 'react';
+// RESPONSIBILITY: Renders the membership renewal/upgrade form; all lifecycle and mutation logic live in the form hook.
 import { X, Save } from 'lucide-react';
-import { useForm, Controller, useWatch } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
-import { useMembersContext } from '@/app/manager/members/members_context/ManagerMembersContext';
-import { useFetchPlans } from '@/app/manager/members/members_api/ManagerUseManagerMembersQueries';
-import { useIsMutating } from '@tanstack/react-query';
-import { MEMBERS_CYCLE_LABELS, getPriceForCycle, formatCurrency } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
-import type { PlanWithCustom } from '@/app/manager/members/members_types/ManagerMembersTypes';
-
-const RenewSchema = z.object({
-  actionType: z.enum(['renew', 'upgrade']).default('renew'),
-  planId: z.string().min(1, "Please select a plan"),
-  billingCycle: z.string(),
-  customDays: z.number().min(1, "Please enter valid days").optional(),
-  totalAmount: z.number().min(0).optional(),
-  paidAmount: z.number().min(0, "Amount must be valid"),
-  paymentMethod: z.string().min(1, "Payment method is required"),
-  newExpiryDate: z.string()
-});
-
-type RenewFormValues = z.infer<typeof RenewSchema>;
-
-const PAYMENT_METHODS = [
-  { label: 'UPI', value: 'UPI' },
-  { label: 'Cash', value: 'Cash' },
-  { label: 'Card', value: 'Card' },
-  { label: 'Net Banking', value: 'NetBanking' }
-];
-
-import { useManagerUnsavedChangesGuard } from '@/app/manager/manager_utils/ManagerUnsavedChangesGuard';
+import { Controller } from 'react-hook-form';
+import ManagerSearchableDropdown from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
+import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
+import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
+import { useManagerMembersRenewForm } from '@/app/manager/members/members_hooks/ManagerUseManagerMembersRenewForm';
 
 export default function ManagerRenewModal() {
-  const {
-    showRenewModal, setShowRenewModal, selectedMember, renewMember
-  } = useMembersContext();
-
-  const { data: plansData } = useFetchPlans();
-  const plans = plansData || [];
-  const saving = useIsMutating() > 0;
-
-  const useFormReturn = useForm<RenewFormValues>({
-    resolver: zodResolver(RenewSchema) as unknown as import("react-hook-form").Resolver<RenewFormValues>,
-    defaultValues: {
-      actionType: 'renew',
-      planId: '',
-      billingCycle: 'ONE_MONTH',
-      paidAmount: 0,
-      paymentMethod: 'UPI',
-      newExpiryDate: ''
-    }
-  });
-
-  const { register, handleSubmit, reset, formState: { errors, isDirty } } = useFormReturn;
-
-  useManagerUnsavedChangesGuard(isDirty && !saving);
-
-  useEffect(() => {
-    if (showRenewModal && selectedMember) {
-      reset({
-        actionType: 'renew',
-        planId: String(selectedMember.planId || ''),
-        billingCycle: selectedMember.billingCycle || 'ONE_MONTH',
-        paidAmount: 0,
-        paymentMethod: 'UPI',
-        newExpiryDate: ''
-      });
-    }
-  }, [showRenewModal, selectedMember, reset]);
-
-  const watchActionType = useWatch({ control: useFormReturn.control, name: 'actionType' }) as 'renew' | 'upgrade';
-  const watchPlanId = useWatch({ control: useFormReturn.control, name: 'planId' }) as string;
-  const watchBillingCycle = useWatch({ control: useFormReturn.control, name: 'billingCycle' }) as string;
-  const watchCustomDays = useWatch({ control: useFormReturn.control, name: 'customDays' }) as number;
-
-  useEffect(() => {
-    if (watchPlanId && watchBillingCycle && selectedMember) {
-      const selectedPlan = plans.find(p => String(p.id) === String(watchPlanId)) as PlanWithCustom | undefined;
-      const price = getPriceForCycle(selectedPlan, watchBillingCycle, Number(watchCustomDays) || 0);
-      useFormReturn.setValue('totalAmount', price, { shouldValidate: true });
-      useFormReturn.setValue('paidAmount', price, { shouldValidate: true });
-
-      // Calculate new expiry date based on actionType
-      const now = new Date();
-      let baseDate = now;
-      
-      if (watchActionType === 'renew') {
-        const currentExpiry = new Date(selectedMember.expiryDate);
-        baseDate = currentExpiry > now ? currentExpiry : now;
-      }
-      
-      const ed = new Date(baseDate);
-      if (watchBillingCycle === 'ONE_MONTH') ed.setMonth(ed.getMonth() + 1);
-      else if (watchBillingCycle === 'THREE_MONTHS') ed.setMonth(ed.getMonth() + 3);
-      else if (watchBillingCycle === 'SIX_MONTHS') ed.setMonth(ed.getMonth() + 6);
-      else if (watchBillingCycle === 'TWELVE_MONTHS') ed.setMonth(ed.getMonth() + 12);
-      else if (watchBillingCycle === 'CUSTOM' && watchCustomDays) ed.setDate(ed.getDate() + Number(watchCustomDays));
-      
-      useFormReturn.setValue('newExpiryDate', ed.toISOString().split('T')[0] || '', { shouldValidate: true });
-    }
-  }, [watchActionType, watchPlanId, watchBillingCycle, watchCustomDays, plans, selectedMember, useFormReturn]);
-
-  const onSubmit = (data: RenewFormValues) => {
-    renewMember({
-      planId: data.planId,
-      newExpiryDate: data.newExpiryDate,
-      amountPaid: data.paidAmount,
-      paymentMethod: data.paymentMethod,
-      billingCycle: data.billingCycle,
-      customDays: data.customDays
-    });
-  };
-
+  const { showRenewModal, setShowRenewModal, selectedMember, plans, form, actionType, planId, billingCycle, customDays, selectedPlan, calculatedPrice, paymentMethods, cycleLabels, submit, handleClose } = useManagerMembersRenewForm();
+  const { register, control, formState: { errors, isSubmitting } } = form;
   if (!showRenewModal || !selectedMember) return null;
-
-  const selectedPlan = plans.find(p => String(p.id) === String(watchPlanId)) as PlanWithCustom | undefined;
-
-  return (
-    <div className="fixed inset-0 bg-foreground/60 z-40 flex items-center justify-center p-4">
-      <div className="bg-card rounded-2xl shadow-2xl shadow-2xl w-full max-w-xl max-h-full overflow-y-auto border-2 border-primary">
-        <div className="sticky top-0 px-8 py-5 border-b border-border bg-card flex items-center justify-between z-10">
-          <div>
-            <h3 className="text-xl font-bold text-foreground">Renew / Upgrade Plan</h3>
-            <p className="text-sm text-secondary mt-1">For {selectedMember.name}</p>
-          </div>
-          <button
-            type="button"
-            onClick={() => setShowRenewModal(false)}
-            className="p-2 rounded-full hover:bg-primary/10 motion-safe:transition-colors text-secondary hover:text-primary"
-          >
-            <X size={20} />
-          </button>
-        </div>
-        <form onSubmit={handleSubmit(onSubmit)} className="p-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <div className="sm:col-span-2 flex gap-4 p-1.5 bg-input rounded-xl border border-border w-fit">
-              <label className={`flex-1 flex text-center cursor-pointer px-4 py-1.5 rounded-lg text-sm font-semibold motion-safe:transition-all ${watchActionType === 'renew' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-secondary hover:text-foreground'}`}>
-                <input type="radio" value="renew" {...register('actionType')} className="hidden" />
-                Renew Plan
-              </label>
-              <label className={`flex-1 flex text-center cursor-pointer px-4 py-1.5 rounded-lg text-sm font-semibold motion-safe:transition-all ${watchActionType === 'upgrade' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-secondary hover:text-foreground'}`}>
-                <input type="radio" value="upgrade" {...register('actionType')} className="hidden" />
-                Upgrade Plan
-              </label>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-secondary mb-1.5">Plan</label>
-              <Controller
-                name="planId"
-                control={useFormReturn.control}
-                render={({ field }) => (
-                  <SearchableDropdown
-                    options={plans.map(p => ({ value: String(p.id), label: p.name }))}
-                    value={field.value}
-                    onChange={field.onChange}
-                    placeholder="Select plan..."
-                  />
-                )}
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-secondary mb-1.5">Billing Cycle</label>
-              <Controller
-                name="billingCycle"
-                control={useFormReturn.control}
-                render={({ field }) => (
-                  <SearchableDropdown
-                    value={field.value || ''}
-                    onChange={field.onChange}
-                    options={Object.entries(MEMBERS_CYCLE_LABELS).map(([val, label]) => ({ label, value: val }))}
-                  />
-                )}
-              />
-            </div>
-
-            {watchBillingCycle === 'CUSTOM' && (
-              <div className="sm:col-span-2">
-                <label className="block text-sm font-medium text-secondary mb-1.5">Custom Days</label>
-                <input
-                  type="number"
-                  min="0"
-                  {...register('customDays', { valueAsNumber: true })}
-                  className={`w-full border rounded-xl px-4 py-3 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary ${
-                    errors.customDays ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
-                  }`}
-                />
-              </div>
-            )}
-
-            {watchPlanId && (
-              <div className="sm:col-span-2 bg-primary/10 rounded-xl p-4 text-sm border border-primary/30 flex justify-between items-center">
-                <div>
-                  <span className="font-semibold text-primary">{watchActionType === 'renew' ? 'Renewal' : 'Upgrade'} Price:</span>
-                  <span className="text-primary ml-1 font-bold">
-                    {formatCurrency(getPriceForCycle(selectedPlan, watchBillingCycle, Number(watchCustomDays) || 0))}
-                  </span>
-                </div>
-              </div>
-            )}
-
-            <div>
-              <label className="block text-sm font-medium text-secondary mb-1.5">Amount Paid (₹)</label>
-              <input
-                type="number"
-                min="0"
-                {...register('paidAmount', { valueAsNumber: true })}
-                className="w-full border rounded-xl px-4 py-3 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary border-border"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-secondary mb-1.5">Payment Method</label>
-              <Controller
-                name="paymentMethod"
-                control={useFormReturn.control}
-                render={({ field }) => (
-                  <SearchableDropdown
-                    value={field.value || ''}
-                    onChange={field.onChange}
-                    options={PAYMENT_METHODS}
-                  />
-                )}
-              />
-            </div>
-
-            <div className="sm:col-span-2 pt-4 border-t border-border">
-              <label className="block text-sm font-medium text-secondary mb-1.5">New Expiry Date</label>
-              <input
-                type="date"
-                {...register('newExpiryDate')}
-                disabled
-                className="w-full border rounded-xl px-4 py-3 text-sm font-bold bg-success-bg/20 text-success border-success/30 cursor-not-allowed"
-              />
-              <p className="text-xs text-secondary mt-1">Calculated automatically from {watchActionType === 'renew' ? (new Date(selectedMember.expiryDate) > new Date() ? 'current expiry date' : 'today') : 'today'}</p>
-            </div>
-          </div>
-          
-          <div className="flex justify-end gap-3 mt-8 pt-6 border-t border-border">
-            <button
-              type="button"
-              onClick={() => setShowRenewModal(false)}
-              className="px-6 py-2.5 text-sm font-semibold rounded-xl border border-border text-secondary hover:bg-primary/5 hover:text-primary motion-safe:transition-colors"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              disabled={saving}
-              className="px-8 py-2.5 rounded-xl text-sm font-bold text-primary-foreground flex items-center justify-center gap-2 disabled:opacity-70 motion-safe:transition-all hover:shadow-lg hover:shadow-primary/30 active:scale-95 bg-primary"
-            >
-              {saving ? (
-                <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full motion-safe:animate-spin" />
-              ) : (
-                <><Save size={16} /> Confirm {watchActionType === 'renew' ? 'Renewal' : 'Upgrade'}</>
-              )}
-            </button>
-          </div>
-        </form>
+  return <div className="fixed inset-0 bg-overlay-backdrop z-40 flex items-center justify-center p-4">
+    <div className="bg-overlay rounded-2xl shadow-dialog w-full max-w-xl max-h-full overflow-y-auto border-2 border-primary">
+      <div className="sticky top-0 px-8 py-5 border-b border-border bg-overlay flex items-center justify-between z-10">
+        <div><h3 className="text-xl font-bold text-primary">Renew / Upgrade Plan</h3><p className="text-sm text-secondary mt-1">For {selectedMember.name}</p></div>
+        <button type="button" onClick={handleClose} aria-label="Close renewal form" className="p-2 rounded-full hover:bg-primary/10 motion-safe:transition-colors text-secondary hover:text-primary"><X size={18} /></button>
       </div>
+      <form onSubmit={submit} className="p-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <fieldset className="sm:col-span-2 flex gap-4 p-1.5 bg-input rounded-xl border border-border w-fit">
+            <legend className="sr-only">Membership action</legend>
+            <label className={`flex-1 flex text-center cursor-pointer px-4 py-1.5 rounded-lg text-sm font-semibold motion-safe:transition-all ${actionType === 'renew' ? 'bg-primary text-on-primary shadow-card' : 'text-secondary hover:text-primary'}`}><input type="radio" value="renew" {...register('actionType')} className="sr-only" />Renew Plan</label>
+            <label className={`flex-1 flex text-center cursor-pointer px-4 py-1.5 rounded-lg text-sm font-semibold motion-safe:transition-all ${actionType === 'upgrade' ? 'bg-primary text-on-primary shadow-card' : 'text-secondary hover:text-primary'}`}><input type="radio" value="upgrade" {...register('actionType')} className="sr-only" />Upgrade Plan</label>
+          </fieldset>
+          <div><label className="block text-sm font-medium text-secondary mb-1.5">Plan</label><Controller name="planId" control={control} render={({ field }) => <ManagerSearchableDropdown options={plans.map((plan) => ({ value: String(plan.id), label: plan.name }))} value={field.value} onChange={field.onChange} placeholder="Select plan..." />} />{errors.planId && <p className="text-danger text-xs mt-1">{errors.planId.message}</p>}</div>
+          <div><label className="block text-sm font-medium text-secondary mb-1.5">Billing Cycle</label><Controller name="billingCycle" control={control} render={({ field }) => <ManagerSearchableDropdown value={field.value} onChange={field.onChange} options={Object.entries(cycleLabels).map(([value, label]) => ({ value, label }))} />} />{errors.billingCycle && <p className="text-danger text-xs mt-1">{errors.billingCycle.message}</p>}</div>
+          {billingCycle === 'CUSTOM' && <div className="sm:col-span-2"><label htmlFor="manager-renew-custom-days" className="block text-sm font-medium text-secondary mb-1.5">Custom Days</label><input id="manager-renew-custom-days" type="number" min="1" step="1" {...register('customDays', { valueAsNumber: true })} className="w-full border rounded-xl px-4 py-3 text-sm bg-input text-primary border-border" />{errors.customDays && <p className="text-danger text-xs mt-1">{errors.customDays.message}</p>}</div>}
+          {planId && <div className="sm:col-span-2 bg-primary/10 rounded-xl p-4 text-sm border border-primary/30 flex justify-between items-center"><span className="font-semibold text-primary">{actionType === 'renew' ? 'Renewal' : 'Upgrade'} Price</span><span className="text-primary font-bold">{formatCurrencyFromMinorUnits(calculatedPrice, ManagerEnvConfig.currencyCode)}</span>{!selectedPlan && <span className="sr-only">Selected plan details unavailable</span>}</div>}
+          <div><label htmlFor="manager-renew-paid" className="block text-sm font-medium text-secondary mb-1.5">Amount Paid (₹)</label><input id="manager-renew-paid" type="number" min="0" step="0.01" {...register('paidAmount', { valueAsNumber: true })} className="w-full border rounded-xl px-4 py-3 text-sm bg-input text-primary border-border" />{errors.paidAmount && <p className="text-danger text-xs mt-1">{errors.paidAmount.message}</p>}</div>
+          <div><label className="block text-sm font-medium text-secondary mb-1.5">Payment Method</label><Controller name="paymentMethod" control={control} render={({ field }) => <ManagerSearchableDropdown value={field.value} onChange={field.onChange} options={[...paymentMethods]} />} />{errors.paymentMethod && <p className="text-danger text-xs mt-1">{errors.paymentMethod.message}</p>}</div>
+          <div className="sm:col-span-2 pt-4 border-t border-border"><label htmlFor="manager-renew-expiry" className="block text-sm font-medium text-secondary mb-1.5">New Expiry Date</label><input id="manager-renew-expiry" type="date" {...register('newExpiryDate')} disabled className="w-full border rounded-xl px-4 py-3 text-sm font-bold bg-success/20 text-success border-success/30 cursor-not-allowed" /><p className="text-xs text-secondary mt-1">Calculated from the selected plan and billing cycle.</p></div>
+        </div>
+        <div className="flex flex-col sm:flex-row justify-end gap-3 mt-8 pt-6 border-t border-border"><button type="button" onClick={handleClose} className="px-6 py-2.5 text-sm font-semibold rounded-xl border border-border text-secondary hover:bg-primary/5 hover:text-primary motion-safe:transition-colors">Cancel</button><button type="submit" disabled={isSubmitting} className="min-w-40 px-8 py-2.5 rounded-xl text-sm font-bold text-on-primary flex items-center justify-center gap-2 disabled:opacity-70 bg-primary motion-safe:transition-colors">{isSubmitting ? <span className="w-4 h-4 border-2 border-border/30 border-t-on-primary rounded-full motion-safe:animate-spin" /> : <Save size={18} />} {isSubmitting ? 'Processing…' : `Confirm ${actionType === 'renew' ? 'Renewal' : 'Upgrade'}`}</button></div>
+      </form>
     </div>
-  );
+  </div>;
 }

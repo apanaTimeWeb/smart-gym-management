@@ -1,29 +1,26 @@
 'use client';
 // RESPONSIBILITY: Renders the distribution of members by plan on the dashboard.
 import { useDashboardStatsQuery } from '@/app/manager/dashboard/dashboard_api/ManagerUseManagerDashboardQueries';
-import { useManagerDashboardStore } from '@/app/manager/dashboard/dashboard_store/ManagerUseManagerDashboardStore';
+import { useManagerDashboardUrlState } from '@/app/manager/dashboard/dashboard_hooks/ManagerUseManagerDashboardUrlState';
 import { DASHBOARD_PLAN_BG_COLORS } from '@/app/manager/dashboard/dashboard_utils/ManagerDashboardSharedConstants';
-import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
 
 export default function ManagerDashboardMembershipDistribution() {
-  const { timeRange } = useManagerDashboardStore();
-  const { data: stats } = useDashboardStatsQuery({ range: timeRange });
+  const { range } = useManagerDashboardUrlState();
+  const { data: stats } = useDashboardStatsQuery({ range });
   if (!stats) return null;
   const data = stats?.membersByPlan || [];
  const s = stats;
 
- const timeMultiplier = timeRange === 'weekly' ? 0.25 : timeRange === 'yearly' ? 12 : timeRange === 'custom' ? 1.5 : 1;
-
- const total = (s.membersByPlan || []).reduce((a, b) => a + Math.round(b.count * timeMultiplier), 0);
+ const total = (s.membersByPlan || []).reduce((a, b) => a + b.count, 0);
 
  return (
- <div className="rounded-xl shadow-sm border p-5 bg-card border-border">
+ <div className="rounded-xl shadow-card border p-5 bg-card border-border">
  <h2 className="font-semibold mb-4 text-primary">Membership Distribution</h2>
  <div className="flex flex-wrap gap-3">
  {(s.membersByPlan || []).map((p) => {
- const scaledCount = Math.round(p.count * timeMultiplier);
+ const scaledCount = p.count;
  const pct = total > 0 ? Math.round((scaledCount / total) * 100) : 0;
- const bgStyle = DASHBOARD_PLAN_BG_COLORS[p.plan] || 'bg-secondary';
+ const bgStyle = DASHBOARD_PLAN_BG_COLORS[p.plan] || 'bg-input';
  return (
  <div key={p.plan} className="flex-1 min-w-40 rounded-lg p-4 bg-input">
  <div className="flex items-center gap-2 mb-2">

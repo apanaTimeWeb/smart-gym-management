@@ -2,10 +2,12 @@
 // HIGHLY RECOMMENDED additions: sku, barcode, costPrice, reorderThreshold on Product;
 // customerId, gstAmount, returnStatus on Order.
 
-import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
-import type { ManagerReceiptData } from '@/app/manager/manager_components/ManagerFeedback/ManagerThermalReceipt';
-import type { ProductFormValues } from '@/app/manager/store/store_utils/ManagerStoreSharedConstants';
+import type { ManagerToastType } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerToastTypes';
+import type { ManagerStoreReceiptData } from '@/app/manager/store/store_types/ManagerStoreThermalReceiptTypes';
+import type { ProductFormValues } from '@/app/manager/store/store_types/ManagerStoreProductFormTypes';
 
+export type ManagerStoreSortOrder = 'ASC' | 'DESC';
+export type ManagerStoreProductFieldType = 'text' | 'number';
 export type ReturnStatus = 'NONE' | 'PARTIAL' | 'FULL';
 
 export interface StoreInitialData {
@@ -23,7 +25,7 @@ export interface OrderItem {
   unit?: string;
 }
 
-export interface StoreContextType {
+export interface ManagerStoreViewModel {
   tab: string;
   setTab: (tab: string) => void;
 
@@ -33,10 +35,11 @@ export interface StoreContextType {
   summary: StoreSummary | null;
   isLoading: boolean;
   isError: boolean;
+  errorMessage: string;
   saving: boolean;
 
-  toast: { message: string; type: ToastType } | null;
-  printData: ManagerReceiptData | null;
+  toast: { message: string; type: ManagerToastType } | null;
+  printData: ManagerStoreReceiptData | null;
 
   search: string;
   debouncedSearch: string;
@@ -52,8 +55,8 @@ export interface StoreContextType {
   setStartDate: (d: string) => void;
   endDate: string;
   setEndDate: (d: string) => void;
-  sortOrder: 'ASC' | 'DESC';
-  setSortOrder: (o: 'ASC' | 'DESC') => void;
+  sortOrder: ManagerStoreSortOrder;
+  setSortOrder: (o: ManagerStoreSortOrder) => void;
 
   showProductModal: boolean;
   setShowProductModal: (show: boolean) => void;
@@ -62,6 +65,7 @@ export interface StoreContextType {
 
   showOrderModal: boolean;
   setShowOrderModal: (show: boolean) => void;
+  closeOrderModal: () => Promise<void>;
   orderItems: OrderItem[];
   orderMethod: string;
   setOrderMethod: (method: string) => void;
@@ -71,7 +75,7 @@ export interface StoreContextType {
   setSendViaWhatsapp: (s: boolean) => void;
 
   hideToast: () => void;
-  setPrintData: (data: ManagerReceiptData | null) => void;
+  setPrintData: (data: ManagerStoreReceiptData | null) => void;
 
   loadAll: () => Promise<void>;
   openAddProduct: () => void;

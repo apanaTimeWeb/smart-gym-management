@@ -1,7 +1,7 @@
 'use client';
 // RESPONSIBILITY: Segment picker — shows all audience segments as selectable cards with description and live recipient count.
 import { Users, Loader2 } from 'lucide-react';
-import { useManagerCommunicationsLogic } from '@/app/manager/communications/communications_context/ManagerUseManagerCommunicationsLogic';
+import { useManagerCommunicationsLogic } from '@/app/manager/communications/communications_hooks/ManagerUseManagerCommunicationsLogic';
 import { COMM_SEGMENT_OPTIONS } from '@/app/manager/communications/communications_utils/ManagerCommunicationsSharedConstants';
 
 export default function ManagerCommunicationsSegmentPicker() {
@@ -22,8 +22,8 @@ export default function ManagerCommunicationsSegmentPicker() {
               onClick={() => handleSegmentChange(opt.value)}
               className={`text-left p-4 rounded-xl border motion-safe:transition-all ${
                 isActive
-                  ? 'bg-primary-subtle border-primary text-foreground'
-                  : 'bg-card border-border text-secondary hover:border-primary/50 hover:text-foreground'
+                  ? 'bg-primary-subtle border-primary text-primary'
+                  : 'bg-card border-border text-secondary hover:border-primary/50 hover:text-primary'
               }`}
             >
               <p className={`text-sm font-semibold ${isActive ? 'text-primary' : ''}`}>{opt.label}</p>
@@ -31,9 +31,9 @@ export default function ManagerCommunicationsSegmentPicker() {
               {isActive && opt.value !== 'custom' && (
                 <div className="flex items-center gap-1.5 mt-2">
                   {loadingRecipients ? (
-                    <Loader2 size={12} className="motion-safe:animate-spin text-primary" />
+                    <Loader2 size={18} className="motion-safe:animate-spin text-primary" />
                   ) : (
-                    <Users size={12} className="text-primary" />
+                    <Users size={18} className="text-primary" />
                   )}
                   <span className="text-xs font-semibold text-primary">
                     {loadingRecipients ? 'Loading...' : `${segmentRecipients.length} recipients`}

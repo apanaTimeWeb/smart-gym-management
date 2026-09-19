@@ -8,7 +8,7 @@ Manager PT is the personal-training operations workspace. Managers can review PT
 |---|---|---|
 | `pt_api/` | Feature-owned responsibility for the pt module. | `ManagerPtApi.ts` |
 | `pt_components/` | Feature-owned responsibility for the pt module. | `—` |
-| `pt_context/` | Feature-owned responsibility for the pt module. | `ManagerUseManagerPtLogic.ts` |
+| `pt_hooks/` | Feature-owned responsibility for the pt module. | `ManagerUseManagerPtLogic.ts` |
 | `pt_fixtures/` | Feature-owned responsibility for the pt module. | `ManagerPtMockData.ts` |
 | `pt_mocks/` | Feature-owned responsibility for the pt module. | `—` |
 | `pt_types/` | Feature-owned responsibility for the pt module. | `ManagerPtAssignmentSchema.ts; ManagerPtSchema.ts; ManagerPtTypes.ts` |
@@ -35,7 +35,7 @@ Manager PT is the personal-training operations workspace. Managers can review PT
 3. The server response updates the assignment counts and revenue-related display.
 
 ## Data and State Architecture
-TanStack Query owns pt server/API data. UI-only filters, tabs, selections, and draft state remain local state or module-scoped Zustand where shared. React Context is limited to stable cross-tree concerns and does not become the source of truth for API data. Query keys are module-prefixed.
+TanStack Query owns pt server/API data. UI-only filters, tabs, selections, and draft state remain local state or module-scoped Zustand where shared. module-local state/query layer is limited to stable cross-tree concerns and does not become the source of truth for API data. Query keys are module-prefixed.
 
 ## API Contract
 | Function | Method | Endpoint | Request | Response `data` type |
@@ -77,7 +77,7 @@ TanStack Query owns pt server/API data. UI-only filters, tabs, selections, and d
 - Module `error.tsx` provides a safe retry fallback and does not expose raw backend/stack-trace text.
 
 ## Edge Cases and AI Warnings
-- **PT revenue values must use formatCurrency:** PT revenue values must use formatCurrency.
+- **PT revenue values must use formatCurrencyFromMinorUnits:** PT revenue values must use formatCurrencyFromMinorUnits.
 - **Assignment completion changes a server-side session count; reconcile with the response:** Assignment completion changes a server-side session count; reconcile with the response.
 - **Do not store assignment arrays in Zustand:** Do not store assignment arrays in Zustand.
 - **Optional nextSessionDate must render via centralized date formatting/empty fallback:** Optional nextSessionDate must render via centralized date formatting/empty fallback.

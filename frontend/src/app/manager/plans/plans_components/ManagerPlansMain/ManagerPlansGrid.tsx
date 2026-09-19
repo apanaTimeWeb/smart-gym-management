@@ -1,10 +1,11 @@
 // RESPONSIBILITY: Renders the grid of plans or loading/empty states.
-import { IndianRupee } from 'lucide-react';
+import { MANAGER_GENERIC_ERROR_MESSAGE } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
+import ManagerPlansEmptyState from '@/app/manager/plans/plans_components/ManagerPlansMain/ManagerPlansEmptyState';
 import ManagerPlanCard from '@/app/manager/plans/plans_components/ManagerPlansMain/ManagerPlanCard';
-import { usePlansContext } from '@/app/manager/plans/plans_context/ManagerPlansContext';
+import { useManagerPlansLogic } from '@/app/manager/plans/plans_hooks/ManagerUseManagerPlansLogic';
 
 export default function ManagerPlansGrid() {
-  const { filteredPlans, isPending, isError, search } = usePlansContext();
+  const { filteredPlans, isPending, isError, errorMessage, search } = useManagerPlansLogic();
 
   if (isPending) {
     return (
@@ -19,21 +20,12 @@ export default function ManagerPlansGrid() {
   if (isError) {
     return (
       <div className="py-16 text-center space-y-3">
-        <p className="text-sm text-danger font-medium">Failed to load plans</p>
+        <p className="text-sm text-danger font-medium">{errorMessage || MANAGER_GENERIC_ERROR_MESSAGE}</p>
       </div>
     );
   }
 
-  if (filteredPlans.length === 0) {
-    return (
-      <div className="py-16 text-center space-y-2">
-        <IndianRupee size={36} className="mx-auto text-secondary opacity-40" />
-        <p className="text-sm text-secondary font-medium">
-          {search ? `No plans found for "${search}"` : 'No plans available'}
-        </p>
-      </div>
-    );
-  }
+  if (filteredPlans.length === 0) { return <ManagerPlansEmptyState />; }
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">

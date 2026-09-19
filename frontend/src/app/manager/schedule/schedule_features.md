@@ -8,7 +8,7 @@ Manager Schedule is the trainer scheduling workspace. Managers can review traine
 |---|---|---|
 | `schedule_api/` | Feature-owned responsibility for the schedule module. | `ManagerScheduleApi.ts; ManagerUseManagerScheduleQueries.ts` |
 | `schedule_components/` | Feature-owned responsibility for the schedule module. | `—` |
-| `schedule_context/` | Feature-owned responsibility for the schedule module. | `ManagerScheduleContext.tsx; ManagerUseManagerScheduleLogic.ts` |
+| `schedule_hooks/` | Feature-owned responsibility for the schedule module. | `ManagerUseManagerScheduleLogic.ts; ManagerUseManagerScheduleLogic.ts` |
 | `schedule_fixtures/` | Feature-owned responsibility for the schedule module. | `ManagerScheduleMockData.ts` |
 | `schedule_mocks/` | Feature-owned responsibility for the schedule module. | `—` |
 | `schedule_types/` | Feature-owned responsibility for the schedule module. | `ManagerScheduleSchema.ts; ManagerScheduleTypes.ts` |
@@ -30,7 +30,7 @@ Manager Schedule is the trainer scheduling workspace. Managers can review traine
 4. Create/update/delete actions use the schedule API and reconcile Query state.
 
 ## Data and State Architecture
-TanStack Query owns schedule server/API data. UI-only filters, tabs, selections, and draft state remain local state or module-scoped Zustand where shared. React Context is limited to stable cross-tree concerns and does not become the source of truth for API data. Query keys are module-prefixed.
+TanStack Query owns schedule server/API data. UI-only filters, tabs, selections, and draft state remain local state or module-scoped Zustand where shared. module-local state/query layer is limited to stable cross-tree concerns and does not become the source of truth for API data. Query keys are module-prefixed.
 
 ## API Contract
 | Function | Method | Endpoint | Request | Response `data` type |
@@ -82,12 +82,12 @@ TanStack Query owns schedule server/API data. UI-only filters, tabs, selections,
 | Component File | Responsibility |
 |---|---|
 | `schedule/schedule_components/ManagerScheduleKPIs/ManagerScheduleKPIs.tsx` | Renders the 4 KPI stat cards for the Schedule module (total trainers, on duty today, on leave, shifts this week). |
-| `schedule/schedule_components/ManagerScheduleMain/ManagerScheduleMain.tsx` | Root client orchestrator for the Schedule module. Owns layout, toolbar, view toggle, and renders sub-components. |
+| `schedule/schedule_components/ManagerScheduleMain/ManagerScheduleMain.tsx` | Framework entry component for the Schedule module; delegates feature behavior and UI composition to `ManagerScheduleContent`. |
 | `schedule/schedule_components/ManagerScheduleShiftModal/ManagerScheduleShiftModal.tsx` | Add/Edit shift modal with React Hook Form + Zod validation. |
 | `schedule/schedule_components/ManagerScheduleSkeleton/ManagerScheduleSkeleton.tsx` | Skeleton loader for the Schedule module |
 | `schedule/schedule_components/ManagerScheduleTrainerCard/ManagerScheduleTrainerCard.tsx` | Renders a single trainer's availability summary card — total shifts, hours, and per-day status dots. |
 | `schedule/schedule_components/ManagerScheduleWeeklyGrid/ManagerScheduleWeeklyGrid.tsx` | Renders the 7-day weekly schedule grid showing all trainer shifts per day column. |
-| `schedule/schedule_context/ManagerScheduleContext.tsx` | Provides Schedule module state to the component tree via React Context. |
+| `schedule/schedule_hooks/ManagerUseManagerScheduleLogic.ts` | Provides Schedule module state to the component tree via module-local state/query layer. |
 
 ## Rule Compliance Checklist
 - [x] Module-owned API, types/schemas, fixtures, handlers, tests, and feature documentation are scoped to this module.

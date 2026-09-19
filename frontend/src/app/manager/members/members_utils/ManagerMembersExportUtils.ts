@@ -1,3 +1,4 @@
+'use client';
 import type { Member } from '@/app/manager/members/members_types/ManagerMembersTypes';
 
 const escapeCsv = (value: string | number) => {

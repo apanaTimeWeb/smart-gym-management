@@ -8,5 +8,4 @@ export const MOCK_MANAGER_SETTINGS: ManagerAllSettings = {
   notificationTemplates: [
     { id: 'template-renewal', type: 'renewal_reminder', channel: 'whatsapp', body: 'Hi {{member_name}}, your gym membership expires on {{expiry_date}}. Renew now to continue!', variables: ['{{member_name}}','{{expiry_date}}'], isActive: true, updatedAt: '2026-09-01T09:00:00Z' },
     { id: 'template-payment', type: 'payment_receipt', channel: 'whatsapp', body: 'Hi {{member_name}}, we received your payment of {{amount}}. Thank you!', variables: ['{{member_name}}','{{amount}}'], isActive: true, updatedAt: '2026-09-02T09:00:00Z' },
-  ],
-};
+  ] };

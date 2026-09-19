@@ -4,6 +4,7 @@
 
 // ─── Enums & Literal Types ────────────────────────────────────────────────────
 export type SettingsTab = 'region' | 'gym_profile' | 'operating_hours' | 'membership' | 'notification_templates';
+export type ManagerSettingsNotificationChannel = 'whatsapp' | 'email' | 'both';
 export type NotificationTemplateType = 'renewal_reminder' | 'payment_receipt' | 'welcome_message' | 'expiry_alert' | 'payment_due';
 export type RecurringFrequency = 'Daily' | 'Weekly' | 'Monthly';
 
@@ -66,7 +67,7 @@ export interface UpdateMembershipSettingsPayload extends Partial<MembershipSetti
 export interface NotificationTemplate {
   id: string;
   type: NotificationTemplateType;
-  channel: 'whatsapp' | 'email' | 'both';
+  channel: ManagerSettingsNotificationChannel;
   subject?: string;
   body: string;
   variables: string[];   // e.g. ['{{member_name}}', '{{expiry_date}}']
@@ -119,5 +120,4 @@ export const NOTIFICATION_TEMPLATE_LABELS: Record<NotificationTemplateType, stri
   payment_receipt: 'Payment Receipt',
   welcome_message: 'Welcome Message',
   expiry_alert: 'Expiry Alert',
-  payment_due: 'Payment Due Reminder',
-};
+  payment_due: 'Payment Due Reminder' };

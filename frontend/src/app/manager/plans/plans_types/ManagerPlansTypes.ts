@@ -1,40 +1,26 @@
 // RESPONSIBILITY: Defines all TypeScript types and interfaces for the Plans module. Single source of truth for plan data shapes.
 
-import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
-import type { PlanFormValues } from '@/app/manager/plans/plans_utils/ManagerPlansSharedConstants';
-import React from 'react';
-
 
 export interface PlansInitialData {
   plans: Plan[];
 }
 
-export interface PlansContextType {
+export interface ManagerPlansViewModel {
   plans: Plan[];
   isPending: boolean;
   isError: boolean;
+  errorMessage: string;
   saving: boolean;
-  toast: { message: string; type: ToastType } | null;
-
-  search: string;
-  setSearch: (s: string) => void;
-  currentPage: number;
-  setCurrentPage: (p: number) => void;
-
-  showModal: boolean;
-  setShowModal: (show: boolean) => void;
-  editId: string | null;
-  form: PlanFormValues;
-  setForm: React.Dispatch<React.SetStateAction<PlanFormValues>>;
-
-  showToast: (msg: string, t: ToastType) => void;
-  hideToast: () => void;
-
-  loadPlans: () => Promise<void>;
-  openAdd: () => void;
-  openEdit: (p: Plan) => void;
-  savePlan: (data: PlanFormValues) => Promise<void>;
-  deletePlan: (id: string) => Promise<void>;
+  search: string; setSearch: (value: string) => void;
+  currentPage: number; setCurrentPage: (value: number) => void;
+  tierFilter: string; setTierFilter: (value: string) => void;
+  statusFilter: string; setStatusFilter: (value: string) => void;
+  filteredPlans: Plan[];
+  requestModalPlan: Plan | null;
+  openRequestModal: (plan: Plan) => void;
+  closeRequestModal: () => void;
+  submitChangeRequest: (note: string) => Promise<void>;
+  activeTab: string; setActiveTab: (value: string) => void;
 }
 
 export interface Plan {

@@ -1,10 +1,7 @@
-// RESPONSIBILITY: Owns every route path used by the Manager settings module.
+// RESPONSIBILITY: Owns every Manager Settings route and API path used by this feature.
 export const ManagerSettingsUrlConfig = {
-  UI: {
-    HOME: '/manager/settings',
-  },
+  PAGES: { SETTINGS: '/manager/settings' },
   BACKEND_API: {
-    BASE: '/manager/settings',
-    STATS: '/manager/settings/stats'
-  }
-};
+    BASE: '/api/v1/manager/settings',
+  },
+} as const;
