@@ -2,7 +2,6 @@ import { http, HttpResponse } from "msw";
 import { superadminGymsHandlers } from '@/app/superadmin/gyms/gyms_mocks/handlers/SuperadminGymsMockHandlers';
 import { superadminDashboardHandlers } from '@/app/superadmin/dashboard/dashboard_mocks/handlers/SuperadminDashboardMockHandlers';
 import { superadminPlansHandlers } from '@/app/superadmin/saas-billing/plans/plans_mocks/handlers/SuperadminPlansMockHandlers';
-import { superadminSystemHandlers } from '@/app/superadmin/system/system_mocks/handlers/SuperadminSystemMockHandlers';
 import { superadminSettingsHandlers } from '@/app/superadmin/settings/settings_mocks/handlers/SuperadminSettingsMockHandlers';
 import { superadminMigrationsHandlers } from '@/app/superadmin/system-ops/migrations/migrations_mocks/handlers/SuperadminMigrationsMockHandlers';
 import { superadminInfrastructureHandlers } from '@/app/superadmin/system-ops/infrastructure/infrastructure_mocks/handlers/SuperadminInfrastructureMockHandlers';
@@ -13,14 +12,10 @@ import { superadminUsageMetersHandlers } from '@/app/superadmin/usage-meters/usa
 import { superadminProfileHandlers } from '@/app/superadmin/profile/profile_mocks/handlers/SuperadminProfileMockHandlers';
 import { superadminTicketsHandlers } from '@/app/superadmin/tickets/tickets_mocks/handlers/SuperadminTicketsMockHandlers';
 import { superadminReportsHandlers } from '@/app/superadmin/reports/reports_mocks/handlers/SuperadminReportsMockHandlers';
-import { superadminOnboardingHandlers } from '@/app/superadmin/onboarding/onboarding_mocks/handlers/SuperadminOnboardingMockHandlers';
 import { superadminMessagingHandlers } from '@/app/superadmin/messaging/messaging_mocks/handlers/SuperadminMessagingMockHandlers';
 import { superadminInvoicesHandlers } from '@/app/superadmin/saas-billing/invoices/invoices_mocks/handlers/SuperadminInvoicesMockHandlers';
-import { superadminFranchisesHandlers } from '@/app/superadmin/franchises/franchises_mocks/handlers/SuperadminFranchisesMockHandlers';
 import { superadminFeaturesHandlers } from '@/app/superadmin/features/features_mocks/handlers/SuperadminFeaturesMockHandlers';
-import { superadminCancellationsHandlers } from '@/app/superadmin/cancellations/cancellations_mocks/handlers/SuperadminCancellationsMockHandlers';
 import { superadminCouponsHandlers } from '@/app/superadmin/saas-billing/coupons/coupons_mocks/handlers/SuperadminCouponsMockHandlers';
-import { superadminBranchesHandlers } from '@/app/superadmin/branches/branches_mocks/handlers/SuperadminBranchesMockHandlers';
 import { superadminAnalyticsHandlers } from '@/app/superadmin/analytics/analytics_mocks/handlers/SuperadminAnalyticsMockHandlers';
 import { superadminAffiliatesHandlers } from '@/app/superadmin/affiliates/affiliates_mocks/handlers/SuperadminAffiliatesMockHandlers';
 
@@ -52,7 +47,6 @@ export const handlers = [
   ...superadminGymsHandlers,
   ...superadminDashboardHandlers,
   ...superadminPlansHandlers,
-  ...superadminSystemHandlers,
   ...superadminSettingsHandlers,
   ...superadminMigrationsHandlers,
   ...superadminInfrastructureHandlers,
@@ -63,14 +57,10 @@ export const handlers = [
   ...superadminProfileHandlers,
   ...superadminTicketsHandlers,
   ...superadminReportsHandlers,
-  ...superadminOnboardingHandlers,
   ...superadminMessagingHandlers,
   ...superadminInvoicesHandlers,
-  ...superadminFranchisesHandlers,
   ...superadminFeaturesHandlers,
-  ...superadminCancellationsHandlers,
   ...superadminCouponsHandlers,
-  ...superadminBranchesHandlers,
   ...superadminAnalyticsHandlers,
   ...superadminAffiliatesHandlers,
   ...trainerAttendanceHandlers,

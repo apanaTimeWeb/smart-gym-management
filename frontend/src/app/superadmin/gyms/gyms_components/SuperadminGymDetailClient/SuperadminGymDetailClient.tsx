@@ -129,13 +129,30 @@ export default function SuperadminGymDetailClient({ gymId }: SuperadminGymDetail
       )}
 
       {activeTab === 'branches' && (
-        <div className="rounded-xl border border-border bg-card p-12 text-center animate-in fade-in slide-in-from-bottom-2 duration-300">
-          <Building2 size={48} className="mx-auto mb-4 text-secondary/30" />
-          <h2 className="text-xl font-bold text-primary mb-2">Branch & Franchise Management</h2>
-          <p className="text-secondary max-w-md mx-auto mb-8">View all physical branches and franchise relationships associated with this tenant. Branch creation is strictly managed by the gym admin.</p>
-          <div className="flex justify-center gap-4">
-             <Link href="/superadmin/branches" className="px-5 py-2.5 rounded-lg bg-primary text-on-primary font-medium hover:bg-primary-hover transition-colors shadow-sm">View All Branches</Link>
-             <Link href="/superadmin/franchises" className="px-5 py-2.5 rounded-lg border border-border bg-surface text-primary font-medium hover:bg-surface-hover transition-colors">View Franchises</Link>
+        <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
+          <div className="rounded-xl border border-border bg-card p-8 text-center">
+            <Building2 size={48} className="mx-auto mb-4 text-secondary/30" />
+            <h2 className="text-xl font-bold text-primary mb-2">Branch & Franchise Overview</h2>
+            <p className="text-secondary max-w-md mx-auto">
+              Branch and franchise management is handled exclusively by the Gym Admin portal. 
+              As Superadmin, you have read-only visibility into this tenant&apos;s physical locations.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {[
+              { label: 'Total Branches', value: '—', icon: <Building2 size={20} />, note: 'Synced from Admin portal' },
+              { label: 'Franchise Partners', value: '—', icon: <Ticket size={20} />, note: 'Read-only for Superadmin' },
+              { label: 'Active Locations', value: '—', icon: <MapPin size={20} />, note: 'Contact gym admin to modify' },
+            ].map((stat) => (
+              <div key={stat.label} className="rounded-xl border border-border bg-card p-5 flex items-center gap-4">
+                <div className="rounded-lg bg-primary-subtle p-3 text-primary">{stat.icon}</div>
+                <div>
+                  <p className="text-xs uppercase tracking-wider text-secondary">{stat.label}</p>
+                  <p className="text-2xl font-bold text-primary">{stat.value}</p>
+                  <p className="text-xs text-disabled mt-0.5">{stat.note}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       )}

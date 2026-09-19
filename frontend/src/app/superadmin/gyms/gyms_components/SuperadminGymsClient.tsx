@@ -1,6 +1,5 @@
 // RESPONSIBILITY: Root orchestrator for the Gyms page. Renders the layout, toolbar, and table.
 'use client';
-import { useState } from 'react';
 import '@/app/superadmin/gyms/SuperadminGyms.css';
 import Link from 'next/link';
 import { Plus } from 'lucide-react';
@@ -10,9 +9,12 @@ import SuperadminGymsTable from '@/app/superadmin/gyms/gyms_components/Superadmi
 import SuperadminGymsCalendar from '@/app/superadmin/gyms/gyms_components/SuperadminGymsCalendar/SuperadminGymsCalendar';
 import { useSuperadminGymsStore } from '@/app/superadmin/gyms/gyms_store/useSuperadminGymsStore';
 import { SuperadminErrorBoundary } from '@/app/superadmin/superadmin_layout/SuperadminLayout/SuperadminErrorBoundary';
+import { useUrlState } from '@/hooks/useUrlState';
+
 export default function SuperadminGymsClient() {
     const viewMode = useSuperadminGymsStore(state => state.viewMode);
-    const [statusFilter, setStatusFilter] = useState('All');
+    const { getParam, setParam } = useUrlState();
+    const statusFilter = getParam('statusFilter', 'All');
     
     return (<div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -30,7 +32,7 @@ export default function SuperadminGymsClient() {
         {['All', 'Onboarding', 'Active', 'Churn Risk', 'Cancelled'].map((status) => (
           <button
             key={status}
-            onClick={() => setStatusFilter(status)}
+            onClick={() => setParam('statusFilter', status)}
             className={`whitespace-nowrap px-4 py-3 text-sm font-medium border-b-2 motion-safe:transition-colors focus-visible:outline-none focus-visible:bg-surface-hover ${
               statusFilter === status
                 ? 'border-primary text-primary'
