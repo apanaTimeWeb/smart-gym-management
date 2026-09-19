@@ -20,7 +20,7 @@ The Manager role consumes the global Smart Gym 360 design system through semanti
 
 Use semantic Tailwind classes such as `bg-card`, `text-primary`, `bg-success`, `text-danger`, `border-border`, `ring-primary`, `bg-surface-hover`, `shadow-card`.
 
-Do not use raw theme hex values or arbitrary Tailwind theme expressions such as `bg-[#...]` or `bg-[var(--...)]` in JSX.
+Do not use raw theme hex values or arbitrary Tailwind theme expressions such as `bg-[#...]` or `bg-[var(--VARNAME)]` in JSX.
 
 ## Non-Tailwind component configuration
 
