@@ -18,6 +18,7 @@ import { superadminFeaturesHandlers } from '@/app/superadmin/features/features_m
 import { superadminCouponsHandlers } from '@/app/superadmin/saas-billing/coupons/coupons_mocks/handlers/SuperadminCouponsMockHandlers';
 import { superadminAnalyticsHandlers } from '@/app/superadmin/analytics/analytics_mocks/handlers/SuperadminAnalyticsMockHandlers';
 import { superadminAffiliatesHandlers } from '@/app/superadmin/affiliates/affiliates_mocks/handlers/SuperadminAffiliatesMockHandlers';
+import { superadminWhiteLabelingHandlers } from '@/app/superadmin/white-labeling/white-labeling_mocks/handlers/SuperadminWhiteLabelingMockHandlers';
 
 import { adminHandlers } from '@/app/admin/admin_layout/admin_mocks/handlers/AdminMockHandlers';
 import { authHandlers } from '@/app/auth/auth_mocks/AuthMockHandlers';
@@ -63,6 +64,7 @@ export const handlers = [
   ...superadminCouponsHandlers,
   ...superadminAnalyticsHandlers,
   ...superadminAffiliatesHandlers,
+  ...superadminWhiteLabelingHandlers,
   ...trainerAttendanceHandlers,
   ...trainerDashboardHandlers,
   ...trainerEarningsHandlers,

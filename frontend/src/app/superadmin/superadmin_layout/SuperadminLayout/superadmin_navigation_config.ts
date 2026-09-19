@@ -1,6 +1,7 @@
 // RESPONSIBILITY: Owns Superadmin role-level navigation grouping, labels, icons, and route destinations.
 // DATA FLOW: role navigation config → SuperadminSidebar → SuperadminSidebarNavSection → route navigation.
-import { LayoutDashboard, Building2, ServerCog, CreditCard, Ticket, Activity, DatabaseBackup, Receipt, ToggleLeft, DatabaseZap, Tag, Users, BarChart2, BarChart3, Gauge, Settings, History, UserPlus, MessageSquare, FileBarChart, TrendingDown, UserCircle, Send, Server, UsersRound, PlugZap, ArchiveX, Landmark, ListFilter } from 'lucide-react';
+import { LayoutDashboard, Building2, ServerCog, CreditCard, Ticket, Activity, DatabaseBackup, Receipt, ToggleLeft, DatabaseZap, Tag, Users, BarChart2, BarChart3, Gauge, Settings, History, UserPlus, MessageSquare, FileBarChart, TrendingDown, UserCircle, Send, Server, UsersRound, PlugZap, ArchiveX, Landmark, ListFilter, Globe } from 'lucide-react';
+import { SuperadminWhiteLabelingUrlConfig } from '@/app/superadmin/white-labeling/white-labeling_api/superadmin_white_labeling_url_config';
 import { AffiliatesUrlConfig } from '@/app/superadmin/affiliates/superadmin_affiliates_url_config';
 import { AnalyticsUrlConfig } from '@/app/superadmin/analytics/superadmin_analytics_url_config';
 import { CouponsUrlConfig } from '@/app/superadmin/saas-billing/coupons/superadmin_coupons_url_config';
@@ -43,6 +44,7 @@ export const SuperadminNavigationConfig = [
     { name: 'Reports & Exports', href: ReportsUrlConfig.PAGES.MAIN, icon: FileBarChart },
   ] },
   { group: 'Platform Management', items: [
+    { name: 'White-Labeling', href: SuperadminWhiteLabelingUrlConfig.PAGES.MAIN, icon: Globe },
     { name: 'Feature Flags', href: FeaturesUrlConfig.PAGES.MAIN, icon: ToggleLeft },
     { name: 'Affiliate Partners', href: AffiliatesUrlConfig.PAGES.MAIN, icon: Users },
     { name: 'Platform Team', href: SuperadminTeamUrlConfig.PAGES.MAIN, icon: UsersRound },
