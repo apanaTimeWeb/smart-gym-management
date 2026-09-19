@@ -10,7 +10,7 @@ const managerPublicEnvSchema = z.object({
   NEXT_PUBLIC_MANAGER_DEMO_MODE: z.enum(['true', 'false']).optional().default('false'),
 });
 
-const parsedManagerPublicEnv = managerPublicEnvSchema.parse({
+const parsedManagerPublicEnvResult = managerPublicEnvSchema.safeParse({
   NEXT_PUBLIC_GYM_NAME: process.env.NEXT_PUBLIC_GYM_NAME,
   NEXT_PUBLIC_GYM_PHONE: process.env.NEXT_PUBLIC_GYM_PHONE,
   NEXT_PUBLIC_GYM_GST: process.env.NEXT_PUBLIC_GYM_GST,
@@ -18,6 +18,21 @@ const parsedManagerPublicEnv = managerPublicEnvSchema.parse({
   NEXT_PUBLIC_CURRENCY_CODE: process.env.NEXT_PUBLIC_CURRENCY_CODE,
   NEXT_PUBLIC_MANAGER_DEMO_MODE: process.env.NEXT_PUBLIC_MANAGER_DEMO_MODE,
 });
+
+if (!parsedManagerPublicEnvResult.success && process.env.NODE_ENV === 'production') {
+  throw new Error(`[ManagerEnvConfig] Missing required env vars: ${parsedManagerPublicEnvResult.error.message}`);
+}
+
+const parsedManagerPublicEnv = parsedManagerPublicEnvResult.success
+  ? parsedManagerPublicEnvResult.data
+  : {
+      NEXT_PUBLIC_GYM_NAME: 'GymSmart',
+      NEXT_PUBLIC_GYM_PHONE: '+91 98000 00000',
+      NEXT_PUBLIC_GYM_GST: '22AAAAA0000A1Z5',
+      NEXT_PUBLIC_GYM_ADDRESS: 'Demo Address',
+      NEXT_PUBLIC_CURRENCY_CODE: 'INR',
+      NEXT_PUBLIC_MANAGER_DEMO_MODE: 'true' as const,
+    };
 
 export const ManagerEnvConfig = {
   gymName: parsedManagerPublicEnv.NEXT_PUBLIC_GYM_NAME,
