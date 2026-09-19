@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Owns UI-only types and schema contracts for Feature Flags and Release Notes.
 import { z } from 'zod';
 import type { FeatureFlag } from '@/app/superadmin/features/features_types/SuperadminFeaturesTypes';
-export const RELEASE_NOTE_TABS = ['FLAGS', 'NOTES'] as const;
+export const RELEASE_NOTE_TABS = ['FLAGS', 'NOTES', 'TIERS'] as const;
 export type FeaturesTab = (typeof RELEASE_NOTE_TABS)[number];
 export const releaseNoteSchema = z.object({
   version: z.string().trim().min(1, 'Version is required'),

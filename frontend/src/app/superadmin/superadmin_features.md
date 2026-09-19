@@ -8,26 +8,26 @@ The Superadmin role owns global SaaS tenant operations, financial controls, syst
 | Feature | Route | Primary Surface |
 |---|---|---|
 | Analytics | `/superadmin/analytics` | Analytics client |
-| Backups | `/superadmin/backups` | Backup schedule, restore, health |
+| Backups | `/superadmin/system-ops/backups` | Backup schedule, restore, health |
 | Branches | `/superadmin/branches` | Branch management |
 | Broadcasts | `/superadmin/broadcasts` | Broadcast composition and delivery |
 | Cancellations | `/superadmin/cancellations` | Cancellation alerts and retention |
 | Compliance | `/superadmin/compliance` | Compliance monitoring |
-| Coupons | `/superadmin/coupons` | Coupon management and redemptions |
+| Coupons | `/superadmin/saas-billing/coupons` | Coupon management and redemptions |
 | Dashboard | `/superadmin/dashboard` | SaaS operating dashboard |
 | Features | `/superadmin/features` | Feature flag/rollout management |
 | Franchises | `/superadmin/franchises` | Franchise operations |
 | Global Audit | `/superadmin/global-audit` | Audit ledger |
 | Gyms | `/superadmin/gyms` | Tenant management and gym detail |
-| Infrastructure | `/superadmin/infrastructure` | Tenant/system infrastructure |
+| Infrastructure | `/superadmin/system-ops/infrastructure` | Tenant/system infrastructure |
 | Integrations | `/superadmin/integrations` | Integration status |
-| Invoices | `/superadmin/invoices` | Billing/invoice operations |
-| Jobs | `/superadmin/jobs` | Background job operations |
+| Invoices | `/superadmin/saas-billing/invoices` | Billing/invoice operations |
+| Jobs | `/superadmin/system-ops/jobs` | Background job operations |
 | Messaging | `/superadmin/messaging` | Messaging operations |
-| Migrations | `/superadmin/migrations` | Migration operations |
+| Migrations | `/superadmin/system-ops/migrations` | Migration operations |
 | Offboarding | `/superadmin/offboarding` | Offboarding queue |
 | Onboarding | `/superadmin/onboarding` | Tenant onboarding |
-| Plans | `/superadmin/plans` | Plan management |
+| Plans | `/superadmin/saas-billing/plans` | Plan management |
 | Profile | `/superadmin/profile` | Superadmin profile |
 | Reports | `/superadmin/reports` | Reporting |
 | Segments | `/superadmin/segments` | Tenant segments |

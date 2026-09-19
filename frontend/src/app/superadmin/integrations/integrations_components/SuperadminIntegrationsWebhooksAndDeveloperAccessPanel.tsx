@@ -8,7 +8,12 @@ import Tooltip from '@/components/ui/Tooltip';
 import Panel from '@/components/ui/Panel';
 import { getSuperadminIntegrationsStatusBadgeClasses } from '@/app/superadmin/integrations/integrations_utils/SuperadminIntegrationsStatusBadgeConfig';
 import type { SuperadminIntegrationsSectionProps } from '@/app/superadmin/integrations/integrations_types/SuperadminIntegrationsTypes';
+import SuperadminGenerateApiKeyModal from '@/app/superadmin/integrations/integrations_components/SuperadminGenerateApiKeyModal';
+import { useState } from 'react';
+
 export default function SuperadminIntegrationsWebhooksAndDeveloperAccessPanel({ data }: SuperadminIntegrationsSectionProps) {
+    const [isApiKeyModalOpen, setIsApiKeyModalOpen] = useState(false);
+    
     return (<div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
   <Panel title="Webhook Delivery" description="Delivery status, attempts, and latency.">
     <div className="space-y-3">
@@ -42,7 +47,18 @@ export default function SuperadminIntegrationsWebhooksAndDeveloperAccessPanel({ 
         </div>))}
     </div>
   </Panel>
-  <Panel title="Tenant developer access" description="Issue or revoke access without showing secret values.">
+  <Panel 
+    title="Tenant developer access" 
+    description="Issue or revoke access without showing secret values."
+    action={
+      <button 
+        onClick={() => setIsApiKeyModalOpen(true)}
+        className="flex items-center gap-1.5 px-3 py-1.5 bg-primary text-on-primary text-xs font-semibold rounded-md hover:bg-primary-hover motion-safe:transition-colors"
+      >
+        + Generate New Key
+      </button>
+    }
+  >
     <div className="space-y-3">
       {data.keys.length === 0 ? <SuperadminIntegrationsDeveloperAccessEmptyState /> : data.keys.map(item => (<div key={item.id} className="rounded-lg border border-border p-3">
           <div className="flex items-center justify-between gap-3">
@@ -76,5 +92,10 @@ export default function SuperadminIntegrationsWebhooksAndDeveloperAccessPanel({ 
         </div>))}
     </div>
   </Panel>
+  
+  <SuperadminGenerateApiKeyModal 
+    isOpen={isApiKeyModalOpen} 
+    onClose={() => setIsApiKeyModalOpen(false)} 
+  />
     </div>);
 }

@@ -556,9 +556,9 @@ export function getMockResponse(path: string): unknown {
   // Superadmin Specific
   if (p.includes('/superadmin/dashboard')) return ok(SUPERADMIN_DASHBOARD, 'Superadmin stats fetched');
   if (p.includes('/superadmin/branches') || p.includes('/branch')) return ok(SUPERADMIN_BRANCHES, 'Branches fetched');
-  if (p.includes('/superadmin/plans')) return ok(SUPERADMIN_PLANS, 'Plans fetched');
-  if (p.includes('/superadmin/invoices') || p.includes('/invoice')) return ok(SUPERADMIN_INVOICES, 'Invoices fetched');
-  if (p.includes('/superadmin/coupons') || p.includes('/coupon')) return ok(SUPERADMIN_COUPONS, 'Coupons fetched');
+  if (p.includes('/superadmin/saas-billing/plans')) return ok(SUPERADMIN_PLANS, 'Plans fetched');
+  if (p.includes('/superadmin/saas-billing/invoices') || p.includes('/invoice')) return ok(SUPERADMIN_INVOICES, 'Invoices fetched');
+  if (p.includes('/superadmin/saas-billing/coupons') || p.includes('/coupon')) return ok(SUPERADMIN_COUPONS, 'Coupons fetched');
   if (p.includes('/superadmin/messaging/messages')) return ok(MESSAGING_MESSAGES, 'Messages fetched');
   if (p.includes('/superadmin/messaging/notifications')) return ok(MESSAGING_NOTIFICATIONS, 'Notifications fetched');
   if (p.includes('/superadmin/messaging/tenants')) return ok(MESSAGING_TENANTS, 'Tenants fetched');
@@ -573,10 +573,10 @@ export function getMockResponse(path: string): unknown {
   if (p.includes('/affiliate')) return ok(AFFILIATES, 'Affiliates fetched');
   if (p.includes('/backup')) return ok(BACKUPS, 'Backups fetched');
   if (p.includes('/ticket')) return ok(TICKETS, 'Tickets fetched');
-  if (p.includes('/superadmin/jobs')) return ok(JOBS.jobs, 'Jobs fetched');
+  if (p.includes('/superadmin/system-ops/jobs')) return ok(JOBS.jobs, 'Jobs fetched');
   if (p.includes('/job')) return ok(JOBS, 'Jobs fetched');
   if (p.includes('/superadmin/system/migrations')) return ok({ tenants: GYMS.map((g, i) => ({ id: g.id, name: g.name, plan: g.plan, databaseVersion: i === 1 ? 'v2.4.0' : 'v2.4.1' })) }, 'Migrations fetched');
-  if (p.includes('/migration') || p.includes('/superadmin/migrations')) return ok(MIGRATIONS, 'Migrations fetched');
+  if (p.includes('/migration') || p.includes('/superadmin/system-ops/migrations')) return ok(MIGRATIONS, 'Migrations fetched');
   if (p.includes('/usage-meter')) return ok(USAGE_METERS, 'Usage meters fetched');
   if (p.includes('/superadmin/features')) return ok({ flags: mockFlags, notes: mockNotes }, 'Features fetched');
   if (p.includes('/feature') || p.includes('/setting')) return ok(FEATURES, 'Features fetched');

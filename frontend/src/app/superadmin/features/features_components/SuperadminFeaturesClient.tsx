@@ -18,6 +18,8 @@ import { releaseNoteSchema } from '@/app/superadmin/features/features_types/Supe
 import type { FeaturesTab, ReleaseNoteFormValues } from '@/app/superadmin/features/features_types/SuperadminFeaturesUiTypes';
 import SuperadminFeatureRolloutModal from '@/app/superadmin/features/features_components/SuperadminFeatureRolloutModal';
 import SuperadminFeatureHistoryModal from '@/app/superadmin/features/features_components/SuperadminFeatureHistoryModal';
+import SuperadminFeaturesTierMatrix from '@/app/superadmin/features/features_components/SuperadminFeaturesTierMatrix';
+
 export default function SuperadminFeaturesClient() {
     const [activeTab, setActiveTab] = useState<FeaturesTab>('FLAGS');
     const [rolloutFlag, setRolloutFlag] = useState<FeatureFlag | null>(null);
@@ -74,6 +76,8 @@ export default function SuperadminFeaturesClient() {
     /** Named handlers for tab switching — Rule 52: no inline arrow functions on event handlers */
     function handleShowFlagsTab() { setActiveTab('FLAGS'); }
     function handleShowNotesTab() { setActiveTab('NOTES'); }
+    function handleShowTiersTab() { setActiveTab('TIERS'); }
+    
     return (<div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
@@ -86,6 +90,9 @@ export default function SuperadminFeaturesClient() {
           </button>
           <button onClick={handleShowNotesTab} className={`px-4 py-2 rounded-md text-sm font-medium motion-safe:transition-colors ${activeTab === 'NOTES' ? 'bg-card text-primary shadow-card' : 'text-secondary hover:text-primary'}`}>
             Release Notes
+          </button>
+          <button onClick={handleShowTiersTab} className={`px-4 py-2 rounded-md text-sm font-medium motion-safe:transition-colors ${activeTab === 'TIERS' ? 'bg-card text-primary shadow-card' : 'text-secondary hover:text-primary'}`}>
+            SaaS Tiers
           </button>
         </div>
       </div>
@@ -185,6 +192,8 @@ export default function SuperadminFeaturesClient() {
             </form>
           </div>
         </div>)}
+
+      {activeTab === 'TIERS' && <SuperadminFeaturesTierMatrix />}
 
       <SuperadminFeatureRolloutModal isOpen={!!rolloutFlag} onClose={() => setRolloutFlag(null)} flag={rolloutFlag} onSaveRollout={handleSaveRollout}/>
 
