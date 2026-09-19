@@ -20,6 +20,7 @@ Future AI agents must read this file before modifying the module.
 16. **No mobile-only hover actions.** Touch devices must retain visible row actions; hover can progressively enhance desktop presentation only.
 17. **No stale feature documentation.** Any route, API, state, mock, field, or user-flow change must update the relevant Admin feature map in the same change.
 18. **No micro-management of daily attendance and single inquiries.** The Admin role is strictly for View/Report of aggregated trends. Do not build UI for day-to-day data entry (e.g., QR scanners, single attendance approvals, single inquiries management). Leave those workflows to the Manager role.
+19. **No deep Trainer workflow controls.** Do not build UI in Admin to manually intervene in Trainer schedules or workout plans. Admin should only see aggregated Trainer Performance (in HR/Sales). Trainer scheduling is strictly confined to the Manager and Trainer modules.
 
 - Admin shell aggregation is allowed only in `admin_components/AdminLayout/` as documented in `admin_features.md`; it must remain read-only and must not import feature mocks or own feature business logic.
 - **Shell Aggregation Exception:** `admin_components/AdminLayout/` may import minimal read-only selectors/query hooks from Admin feature modules for persistent header/search/notification/profile/usage affordances. This is the only cross-feature shell exception; it must not perform feature mutations, import feature mocks/fixtures, or become a replacement for module-local business/query logic.
