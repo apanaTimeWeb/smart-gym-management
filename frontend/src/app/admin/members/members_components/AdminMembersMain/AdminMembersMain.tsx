@@ -9,7 +9,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { AdminMembersUrlConfig } from '@/app/admin/members/admin_members_url_config';
 
 export default function AdminMembersMain() {
-  const { selectedMember, setSelectedMember } = useAdminMembersLogic();
+  const { selectedMember, setSelectedMember, exportMembers } = useAdminMembersLogic();
   const router = useRouter();
   const searchParams = useSearchParams();
   const closeMember = () => {
@@ -20,11 +20,11 @@ export default function AdminMembersMain() {
   };
 
   return (
-    <div className="min-h-full pb-10 bg-background text-foreground">
+    <div className="min-h-full pb-10 bg-page text-primary">
       <div className="p-6 space-y-5">
         <AdminMembersKPIs />
         <div className="bg-card rounded-xl border border-border p-4 space-y-4">
-          <AdminMembersToolbar />
+          <AdminMembersToolbar onExportMembers={exportMembers} />
           <AdminMembersTable />
         </div>
       </div>

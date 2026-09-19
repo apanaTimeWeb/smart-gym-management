@@ -13,9 +13,9 @@ export default function AdminFinanceRevenueByMethod() {
  return (
  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
  {Object.entries(summary.revenueByMethod).map(([method, amount]) => (
- <div key={method} className="rounded-xl p-4 shadow-sm border border-border bg-card">
+ <div key={method} className="rounded-xl p-4 shadow-card border border-border bg-card">
  <p className="text-xs mb-1 text-secondary">{method}</p>
- <p className="text-lg font-bold text-foreground">{fmt(amount as number)}</p>
+ <p className="text-lg font-bold text-primary">{fmt(amount as number)}</p>
  </div>
  ))}
  </div>

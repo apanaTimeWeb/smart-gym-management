@@ -2,7 +2,7 @@
 // RESPONSIBILITY: Renders the two rows of KPI metric stat cards on the dashboard using live data from AdminDashboardContext.
 
 import { useAdminDashboardLogic } from '@/app/admin/dashboard/dashboard_context/useAdminDashboardLogic';
-import AdminStatCard from '@/app/admin/admin_components/AdminShared/AdminStatCard';
+import AdminStatCard from '@/app/admin/admin_layout/AdminShared/AdminStatCard';
 import { formatCurrency } from '@/lib/formatters';
 import { Users, DollarSign, TrendingUp, AlertCircle, Clock, UserCheck } from 'lucide-react';
 import { useDateRangeSuffix } from '@/lib/useDateRangeSuffix';
@@ -24,7 +24,7 @@ export default function AdminDashboardKPIs() {
         change="This month"
         changeType="up"
         icon={Users}
-        iconBg="bg-primary/20"
+        iconBg="bg-primary-subtle"
         iconColor="text-primary"
       />
       <AdminStatCard
@@ -33,7 +33,7 @@ export default function AdminDashboardKPIs() {
         change="Next 7 days"
         changeType="down"
         icon={Clock}
-        iconBg="bg-warning/20"
+        iconBg="bg-warning"
         iconColor="text-warning"
       />
     </div>
@@ -44,7 +44,7 @@ export default function AdminDashboardKPIs() {
         change="All Time"
         changeType="neutral"
         icon={DollarSign}
-        iconBg="bg-primary/20"
+        iconBg="bg-primary-subtle"
         iconColor="text-primary"
       />
       <AdminStatCard
@@ -53,7 +53,7 @@ export default function AdminDashboardKPIs() {
         change="All Time"
         changeType="up"
         icon={TrendingUp}
-        iconBg="bg-success/20"
+        iconBg="bg-success"
         iconColor="text-success"
       />
       <AdminStatCard
@@ -62,7 +62,7 @@ export default function AdminDashboardKPIs() {
         change={`${s.totalMembers ? Math.round((s.activeMembers / s.totalMembers) * 100) : 0}% capacity`}
         changeType="neutral"
         icon={UserCheck}
-        iconBg="bg-info/20"
+        iconBg="bg-info"
         iconColor="text-info"
       />
       <AdminStatCard
@@ -71,7 +71,7 @@ export default function AdminDashboardKPIs() {
         change={`${s.membersByStatus?.pending || 0} members due`}
         changeType="down"
         icon={AlertCircle}
-        iconBg="bg-danger/20"
+        iconBg="bg-danger"
         iconColor="text-danger"
       />
     </div>

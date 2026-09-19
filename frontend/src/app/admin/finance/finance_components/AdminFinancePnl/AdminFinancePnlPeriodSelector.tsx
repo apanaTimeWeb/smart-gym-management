@@ -4,10 +4,8 @@
 import { PNL_PERIOD_OPTIONS } from '@/app/admin/finance/finance_utils/AdminFinancePnlConstants';
 import type { PnlPeriod } from '@/app/admin/finance/finance_types/AdminFinanceTypes';
 
-interface AdminFinancePnlPeriodSelectorProps {
-  period: PnlPeriod;
-  onPeriodChange: (p: PnlPeriod) => void;
-}
+import type { AdminFinancePnlPeriodSelectorProps } from '@/app/admin/finance/finance_types/AdminFinancePnlPeriodSelectorPropsTypes';
+
 
 export default function AdminFinancePnlPeriodSelector({
   period,
@@ -24,8 +22,8 @@ export default function AdminFinancePnlPeriodSelector({
             onClick={() => onPeriodChange(opt.value)}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
               period === opt.value
-                ? 'bg-primary text-primary-foreground shadow-sm'
-                : 'text-secondary hover:text-foreground hover:bg-card'
+                ? 'bg-primary text-on-primary shadow-card'
+                : 'text-secondary hover:text-primary hover:bg-card'
             }`}
           >
             {opt.label}

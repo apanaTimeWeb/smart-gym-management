@@ -6,7 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { payoutsApi } from '@/app/admin/payouts/payouts_api/AdminPayoutsApi';
 import { useAdminPayoutsStore } from '@/app/admin/payouts/payouts_store/useAdminPayoutsStore';
-import { useAdminUrlQuerySync } from '@/app/admin/admin_utils/useAdminUrlQuerySync';
+import { useAdminUrlQuerySync } from '@/app/admin/admin_layout/admin_utils/useAdminUrlQuerySync';
 import { PAYOUTS_ITEMS_PER_PAGE } from '@/app/admin/payouts/payouts_utils/AdminPayoutsSharedConstants';
 import type { PayoutSortDirection, PayoutSortKey, PnlSortDirection, PnlSortKey } from '@/app/admin/payouts/payouts_types/AdminPayoutsTypes';
 

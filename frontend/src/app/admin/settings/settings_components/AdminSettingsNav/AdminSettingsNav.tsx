@@ -27,14 +27,14 @@ export default function AdminSettingsNav() {
             onClick={() => handleTabChange(s.id)}
             className={`bg-card border rounded-xl p-5 text-left motion-safe:transition-all group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
               isActive 
-                ? 'border-warning shadow-md ring-1 ring-warning' 
-                : 'border-border hover:border-warning dark:hover:border-warning hover:shadow-sm'
+                ? 'border-warning shadow-card ring-1 ring-warning' 
+                : 'border-border hover:border-warning dark:hover:border-warning hover:shadow-card'
             }`}
           >
             <div className={`w-10 h-10 rounded-xl ${s.bg} flex items-center justify-center mb-3 motion-safe:group-hover:scale-110 motion-safe:transition-transform`}>
               <s.icon size={19} className={s.color} />
             </div>
-            <h3 className="font-semibold text-foreground mb-1">{s.title}</h3>
+            <h3 className="font-semibold text-primary mb-1">{s.title}</h3>
             <p className="text-sm text-secondary">{s.desc}</p>
           </button>
         );

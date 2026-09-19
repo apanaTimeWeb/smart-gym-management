@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { adminToast } from '@/app/admin/admin_components/AdminFeedback/AdminToastService';
+import { adminToast } from '@/app/admin/admin_layout/AdminFeedback/AdminToastService';
 import { adminProfileApi } from '@/app/admin/profile/profile_api/AdminProfileApi';
 import {
   updateAdminProfilePayloadSchema,
@@ -18,7 +18,7 @@ import type {
   UpdateAdminPasswordPayload,
   ProfileTab,
 } from '@/app/admin/profile/profile_types/AdminProfileTypes';
-import { useUnsavedChangesGuard } from '@/app/admin/admin_utils/useAdminUnsavedChangesGuard';
+import { useUnsavedChangesGuard } from '@/app/admin/admin_layout/admin_utils/useAdminUnsavedChangesGuard';
 
 const EMPTY_PROFILE_FORM: UpdateAdminProfilePayload = { name: '', phone: '' };
 const EMPTY_PASSWORD_FORM: UpdateAdminPasswordPayload = { currentPassword: '', newPassword: '', confirmPassword: '' };

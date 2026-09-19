@@ -17,7 +17,7 @@ export default function AdminPayoutsTabs() {
         <button
           key={tab.id}
           onClick={() => setActiveTab(tab.id)}
-          className={`px-4 py-2 rounded-lg text-sm font-medium motion-safe:transition-all ${activeTab === tab.id ? 'bg-card text-foreground shadow-sm' : 'text-secondary hover:text-foreground'}`}
+          className={`px-4 py-2 rounded-lg text-sm font-medium motion-safe:transition-all ${activeTab === tab.id ? 'bg-card text-primary shadow-card' : 'text-secondary hover:text-primary'}`}
         >
           {tab.label}
         </button>

@@ -73,7 +73,7 @@ All calls go through `reportsApi` in `reports_api/AdminReportsApi.ts`.
 
 ## Permissions and Security
 
-- **Required role:** `ADMIN` — enforced by `middleware.ts`
+- **Required role:** `ADMIN` — enforced by `@/middleware.ts`
 - **Read-only:** Zero write operations. Never add edit/delete/create to this module.
 - **Cross-role isolation:** Zero imports from `/manager`, `/trainer`, `/superadmin`
 
@@ -116,7 +116,7 @@ All calls go through `reportsApi` in `reports_api/AdminReportsApi.ts`.
 - [x] Rule 7: Type Isolation — all types in `reports_types/`
 - [x] Rule 8: Server/Client Boundary — `page.tsx` = Server Component
 - [x] Rule 9: `loading.tsx` + `error.tsx` + `not-found.tsx` present
-- [x] Rule 11: `reports_url_config.ts` present
+- [x] Rule 11: `admin_reports_url_config.ts` present
 - [x] Rule 13: Feature Map — this document
 - [x] Rule 40: `reports_forbidden.md` present
 - [ ] Rule 15A: Co-located tests are present; full behavioral coverage and runtime execution are NOT VERIFIED

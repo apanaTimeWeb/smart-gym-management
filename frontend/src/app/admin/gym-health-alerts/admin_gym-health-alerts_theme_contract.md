@@ -1,27 +1,33 @@
-# Theme Portability Contract
+# Admin gym-health-alerts — Theme Contract
 
-This module relies on the following global CSS variables being defined in the host application's `globals.css` or theme provider:
+## Ownership
+This feature consumes global semantic design tokens only; feature-specific business status mappings remain owned by the `gym-health-alerts` module.
 
-## Core Colors
-- `--bg-page`: Main page background
-- `--bg-card`: Container and widget background
-- `--bg-sidebar`: Navigation sidebar background
-- `--bg-input`: Form input and dropdown backgrounds
+## Exact Global Tokens Used by This Module
+- `--bg-card`
+- `--bg-input`
+- `--border`
+- `--danger-bg`
+- `--danger-text`
+- `--info-bg`
+- `--info-text`
+- `--primary`
+- `--success-bg`
+- `--success-text`
+- `--text-on-primary`
+- `--text-primary`
+- `--text-secondary`
+- `--warning-bg`
+- `--warning-text`
 
-## Text Colors
-- `--text-primary`: Primary headings and body text
-- `--text-secondary`: Muted text, labels, and descriptions
-- `--text-inverse`: Text color on primary buttons (typically white/black depending on theme)
+## Required Rules
+- Feature JSX MUST use the canonical Tailwind semantic token classes mapped by `web_global_design.md`.
+- No raw hex/RGB/RGBA colors, arbitrary CSS-variable Tailwind values, or undefined business color variables are permitted in this module.
+- Business statuses and payment modes are mapped locally to the global semantic/status/payment tokens; the global design system does not own the feature status registry.
+- Any new global token dependency MUST be added to this file in the same change.
+- Responsive, focus-visible, reduced-motion, modal/popover surface, and accessibility behavior must follow the global design system.
 
-## Brand & Status Colors
-- `--primary`: Primary brand color (buttons, active states, focus rings)
-- `--primary-hover`: Hover state for primary actions
-- `--primary-subtle`: Low opacity background for primary elements (e.g. active nav items)
-- `--success`: Success states, positive trends (e.g., green)
-- `--warning`: Warnings, pending states (e.g., yellow/amber)
-- `--danger`: Destructive actions, errors, negative trends (e.g., red)
-
-## Structural
-- `--border`: Standard border color for cards, dividers, and inputs
-
-> **Note**: To ensure dark mode compatibility, do not hardcode Tailwind hex colors (e.g., `bg-blue-500`) in this module. Always use the semantic aliases mapped in `tailwind.config.ts`.
+## Verified Architecture Boundary
+- Business Feature Dependencies: None unless explicitly documented in `gym-health-alerts_features.md`.
+- Role-Level Business Dependencies: Only documented Admin shell context where the feature legitimately consumes it.
+- Global Design Dependency: `web_global_design.md` semantic tokens and zero-business UI primitives.

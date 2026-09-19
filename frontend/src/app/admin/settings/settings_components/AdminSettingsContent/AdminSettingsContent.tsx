@@ -19,7 +19,7 @@ export default function AdminSettingsContent() {
 
   if (isLoading) {
     return (
-      <div className="max-w-7xl mx-auto space-y-6 motion-safe:animate-pulse">
+      <div className="max-w-7xl mx-auto space-y-6 motion-safe:animate-pulse motion-safe:duration-base">
         <div className="h-40 bg-card rounded-xl border border-border"></div>
         <div className="h-96 bg-card rounded-xl border border-border"></div>
       </div>

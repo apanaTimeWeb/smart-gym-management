@@ -1,25 +1,19 @@
 "use client";
 // RESPONSIBILITY: Renders the search, status filter, branch filter, and expiry filter toolbar for Admin Members.
 
-import type { AdminMembersExportFormat } from '@/app/admin/members/members_types/AdminMembersUiTypes';
-
-import { Search, Download, FileText } from 'lucide-react';
+import { Search, Download } from 'lucide-react';
 import { useAdminMembersStore } from '@/app/admin/members/members_store/useAdminMembersStore';
 import { useAdminMembersBranchReference } from '@/app/admin/members/members_context/useAdminMembersBranchReference';
-import { AdminSearchableDropdown } from '@/app/admin/admin_components/AdminShared/AdminSearchableDropdown';
+import { AdminSearchableDropdown } from '@/app/admin/admin_layout/AdminShared/AdminSearchableDropdown/AdminSearchableDropdown';
 import { MEMBER_STATUS_OPTIONS, EXPIRY_FILTER_OPTIONS } from '@/app/admin/members/members_utils/AdminMembersSharedConstants';
 import type { MemberStatus } from '@/app/admin/members/members_types/AdminMembersTypes';
 import type { AdminMembersBranchReference } from '@/app/admin/members/members_types/AdminMembersBranchReferenceTypes';
 
-export default function AdminMembersToolbar() {
-  const downloadMembers = (format: AdminMembersExportFormat) => {
-    if (format === 'pdf') { window.print(); return; }
-    const csv = 'name,exportedAt\n' + [`Current filtered members,${new Date().toISOString()}`].join('\n');
-    const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' }));
-    const anchor = document.createElement('a');
-    anchor.href = url; anchor.download = 'admin-members.csv'; anchor.click();
-    URL.revokeObjectURL(url);
-  };
+import type { AdminMembersToolbarProps } from '@/app/admin/members/members_types/AdminMembersToolbarPropsTypes';
+
+
+export default function AdminMembersToolbar({ onExportMembers }: AdminMembersToolbarProps) {
+
   const { search, setSearch, statusFilter, setStatusFilter, branchFilter, setBranchFilter, expiryFilter, setExpiryFilter, genderFilter, setGenderFilter, planFilter, setPlanFilter } = useAdminMembersStore();
   const { data: branches = [] } = useAdminMembersBranchReference();
 
@@ -37,7 +31,7 @@ export default function AdminMembersToolbar() {
           placeholder="Search by name, email, phone..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full pl-9 pr-4 py-2.5 bg-input border border-border rounded-xl text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary placeholder:text-secondary"
+          className="w-full pl-9 pr-4 py-2.5 bg-input border border-border rounded-xl text-sm text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary placeholder:text-secondary"
           aria-label="Search members"
         />
       </div>
@@ -92,11 +86,8 @@ export default function AdminMembersToolbar() {
         />
       </div>
       <div className="flex gap-2 ml-auto">
-        <button onClick={() => downloadMembers('csv')} className="flex items-center gap-2 px-4 py-2 bg-input border border-border rounded-xl text-sm font-semibold hover:bg-border motion-safe:transition-colors">
+        <button onClick={() => void onExportMembers()} className="flex items-center gap-2 px-4 py-2 bg-input border border-border rounded-xl text-sm font-semibold hover:bg-surface-hover motion-safe:transition-colors motion-safe:duration-base">
           <Download size={16} /> CSV
-        </button>
-        <button onClick={() => downloadMembers('pdf')} className="flex items-center gap-2 px-4 py-2 bg-input border border-border rounded-xl text-sm font-semibold hover:bg-border motion-safe:transition-colors">
-          <FileText size={16} /> PDF
         </button>
       </div>
     </div>

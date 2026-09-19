@@ -11,7 +11,7 @@ The Admin module is the platform-level operational workspace for the gym-managem
 | `admin_components/AdminFeedback/` | Confirmation, toast, message, and bulk-message primitives | `AdminConfirmProvider.tsx`, `AdminConfirmModal.tsx`, `AdminToast.tsx`, `AdminMessageModal.tsx` |
 | `admin_components/AdminShared/` | Zero-business-logic Admin UI primitives | `AdminPagination.tsx`, `AdminSearchableDropdown.tsx`, `AdminTableSkeleton.tsx`, `AdminStatCard.tsx` |
 | `admin_components/AdminQrScanner/` | Admin QR scan workflow UI and client-private scan state | `AdminQrScannerModal.tsx`, `useAdminQrScannerLogic.ts` |
-| `admin_utils/` | Admin-owned utility contracts and infrastructure adapters | `useAdminDebounce.ts`, `useAdminUrlQuerySync.ts`, `useAdminUnsavedChangesGuard.ts`, `AdminMonitoring.ts` |
+| `admin_utils/` | Admin-owned utility contracts and infrastructure adapters | `useAdminDebounce.ts`, `useAdminUrlQuerySync.ts`, `useAdminUnsavedChangesGuard.ts`, `AdminMonitoring.ts`, `AdminCreateIdempotencyKey.ts`, `AdminIdempotencyIntentStore.ts` |
 | `admin_store/` | Admin-wide UI/session-shell state only | `useAdminGlobalStore.ts`, `useAdminImpersonationStore.ts`, `useAdminToastStore.ts` |
 | `admin_types/` | Admin-wide type contracts | Admin prop/state/shared type definitions |
 | `<module>/<module>_mocks/fixtures/` | Module-owned feature datasets | One fixture file per Admin feature/module |
@@ -138,6 +138,10 @@ Approved external dependencies are limited to framework/application infrastructu
 - [ ] SCA/secret/security CI gates: NOT VERIFIED; must be executed in the consuming repository CI.
 
 The unchecked items are external execution gates, not unverified claims of code correctness. They must remain unchecked until the consuming project actually runs them successfully.
+
+## Critical Action Infrastructure
+
+`AdminCreateIdempotencyKey.ts` and `AdminIdempotencyIntentStore.ts` are zero-business-logic Admin infrastructure utilities. Feature mutation hooks own the intent identifiers and pass the resulting key into their feature-owned API client; these utilities do not contain feature business rules or fixtures.
 
 ## Shell Aggregation Exception
 

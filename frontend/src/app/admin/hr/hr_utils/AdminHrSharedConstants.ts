@@ -100,3 +100,5 @@ export const STAFF_MODAL_FIELDS = [
  { label: 'Monthly Salary (₹)', key: 'salary', type: 'number', placeholder: '' },
  { label: 'Advance Paid (₹)', key: 'advanceSalary', type: 'number', placeholder: '0' },
 ];
+
+export const HR_ITEMS_PER_PAGE = 10;

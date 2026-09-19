@@ -9,8 +9,6 @@ import AdminPlansModal from '@/app/admin/plans/plans_components/AdminPlansModal/
 import type { PlansInitialData } from '@/app/admin/plans/plans_types/AdminPlansTypes';
 
 export default function AdminPlansMain({ initialData }: { initialData?: PlansInitialData | null }) {
-  const { status } = useAdminPlansLogic(initialData);
-
   return (
     <div className="min-h-full pb-10">
       <div className="p-6 space-y-5">

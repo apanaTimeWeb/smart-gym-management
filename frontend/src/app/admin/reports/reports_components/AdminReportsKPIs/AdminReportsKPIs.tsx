@@ -3,7 +3,7 @@ import { formatPercent1dp, formatCurrency } from '@/lib/formatters';
 // RESPONSIBILITY: Renders the KPI summary row for the Reports module — total revenue, expenses, profit, members, attendance rate.
 
 import { TrendingUp, TrendingDown, Users, IndianRupee, Activity, Wallet } from 'lucide-react';
-import AdminStatCard from '@/app/admin/admin_components/AdminShared/AdminStatCard';
+import AdminStatCard from '@/app/admin/admin_layout/AdminShared/AdminStatCard';
 import { useAdminReportsLogic } from '@/app/admin/reports/reports_context/useAdminReportsLogic';
 import { useDateRangeSuffix } from '@/lib/useDateRangeSuffix';
 
@@ -20,7 +20,7 @@ export default function AdminReportsKPIs() {
         change="vs last period"
         changeType="up"
         icon={IndianRupee}
-        iconBg="bg-primary/10"
+        iconBg="bg-primary-subtle"
         iconColor="text-primary"
       />
       <AdminStatCard
@@ -29,7 +29,7 @@ export default function AdminReportsKPIs() {
         change={kpis ? `${formatPercent1dp((kpis.netProfit / kpis.totalRevenue) * 100)} margin` : '—'}
         changeType="up"
         icon={TrendingUp}
-        iconBg="bg-success/10"
+        iconBg="bg-success"
         iconColor="text-success"
       />
       <AdminStatCard
@@ -38,7 +38,7 @@ export default function AdminReportsKPIs() {
         change="across all gyms"
         changeType="neutral"
         icon={TrendingDown}
-        iconBg="bg-danger/10"
+        iconBg="bg-danger"
         iconColor="text-danger"
       />
       <AdminStatCard
@@ -47,7 +47,7 @@ export default function AdminReportsKPIs() {
         change={kpis ? `+${kpis.newMembers} new` : '—'}
         changeType="up"
         icon={Users}
-        iconBg="bg-info/10"
+        iconBg="bg-info"
         iconColor="text-info"
       />
       <AdminStatCard
@@ -56,7 +56,7 @@ export default function AdminReportsKPIs() {
         change="this period"
         changeType="neutral"
         icon={Wallet}
-        iconBg="bg-purple/10"
+        iconBg="bg-purple"
         iconColor="text-purple"
       />
       <AdminStatCard
@@ -65,7 +65,7 @@ export default function AdminReportsKPIs() {
         change="across all gyms"
         changeType="up"
         icon={Activity}
-        iconBg="bg-success/10"
+        iconBg="bg-success"
         iconColor="text-success"
       />
     </div>

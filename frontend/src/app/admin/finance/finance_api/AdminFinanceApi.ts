@@ -13,13 +13,15 @@ export const financeApi = {
   fetchSummary: async (branchId?: string, range?: string) => {
           return apiFetch<ApiResponse<FinanceSummary>>(`${FinanceUrlConfig.BACKEND_API.SUMMARY}${branchId || range ? `?${new URLSearchParams({ ...(branchId ? { branchId } : {}), ...(range ? { range } : {}) }).toString()}` : ''}`, { method: 'GET', dataSchema: financeSummarySchema });
       },
-  fetchBranchPnl: async (period: string) => {
-          return apiFetch<ApiResponse<BranchPnlRecord[]>>(`${FinanceUrlConfig.BACKEND_API.PNL_COMPARISON}`, { method: 'GET', dataSchema: z.array(branchPnlRecordSchema) });
-      },
+  fetchBranchPnl: async (period: string, params?: { status?: string; sortKey?: string; sortDir?: string }) => {
+    const query = new URLSearchParams({ period });
+    Object.entries(params ?? {}).forEach(([key, value]) => { if (value && value !== 'ALL') query.set(key, value); });
+    return apiFetch<ApiResponse<BranchPnlRecord[]>>(`${FinanceUrlConfig.BACKEND_API.PNL_COMPARISON}?${query.toString()}`, { method: 'GET', dataSchema: z.array(branchPnlRecordSchema) });
+  },
   fetchExpenses: async (params?: Record<string, string>) => {
           const query = new URLSearchParams();
     Object.entries(params ?? {}).forEach(([key, value]) => query.set(key, value));
     const suffix = query.toString() ? `?${query.toString()}` : '';
-    return apiFetch<ApiResponse<Expense[]>>(`${FinanceUrlConfig.BACKEND_API.PAYMENTS_BASE}/fetchExpenses${suffix}`, { method: 'GET', dataSchema: z.array(expenseSchema) });
+    return apiFetch<ApiResponse<{ expenses: Expense[]; total: number; totalAmount: number }>>(`${FinanceUrlConfig.BACKEND_API.PAYMENTS_BASE}/fetchExpenses${suffix}`, { method: 'GET', dataSchema: z.object({ expenses: z.array(expenseSchema), total: z.number(), totalAmount: z.number() }) });
       },
 };

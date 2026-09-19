@@ -1,3 +1,4 @@
+import { StatusCodes } from 'http-status-codes';
 // RESPONSIBILITY: Owns MSW handlers for the Admin plans feature.
 // DATA FLOW: plans API client → module-owned MSW handler → module-owned fixture → TanStack Query/UI.
 import { http, HttpResponse } from 'msw';
@@ -13,25 +14,29 @@ function asRecord(value: unknown): JsonObject {
 }
 
 const ok = <T>(data: T, message = 'Success') =>
-  HttpResponse.json({ success: true, message, data, meta: { total: Array.isArray(data) ? data.length : 1, page: 1, limit: 50, totalPages: 1 } });
+  HttpResponse.json({ success: true, message, data });
 
 const paged = <T>(data: T[], page: number, limit: number, message = 'Success') => {
   const safeLimit = Math.max(1, limit);
   const safePage = Math.max(1, page);
   const start = (safePage - 1) * safeLimit;
   const pageData = data.slice(start, start + safeLimit);
-  return HttpResponse.json({ success: true, message, data: pageData, meta: { total: data.length, page: safePage, limit: safeLimit, totalPages: Math.max(1, Math.ceil(data.length / safeLimit)) } });
+  return HttpResponse.json({ success: true, message, data: pageData, meta: { total: data.length, page: safePage, limit: safeLimit, totalPages: Math.max(1, Math.ceil(data.length / safeLimit)), hasNextPage: safePage < Math.max(1, Math.ceil(data.length / safeLimit)), hasPrevPage: safePage > 1 } });
 };
 
 import { MOCK_ADMIN_PLANS, MOCK_ADMIN_PLAN_REVENUE } from '@/app/admin/plans/plans_mocks/fixtures/AdminPlansMockFixtures';
 
 type PlanRecord = typeof MOCK_ADMIN_PLANS[number];
 
+let plansState: PlanRecord[] = structuredClone(MOCK_ADMIN_PLANS);
+let planSequence = 0;
+export const resetAdminPlansMockState = () => { plansState = structuredClone(MOCK_ADMIN_PLANS); planSequence = 0; };
+
 function toNumber(value: unknown, fallback = 0): number { const n = Number(value); return Number.isFinite(n) ? n : fallback; }
 
 function buildPlanRecord(input: JsonObject): PlanRecord {
   return {
-    id: `p${Date.now()}`,
+    id: `p-demo-${++planSequence}`,
     name: String(input.name ?? 'New Plan'),
     tier: String(input.tier ?? 'Bronze'),
     price1Month: toNumber(input.price1Month),
@@ -66,31 +71,44 @@ function applyPlanUpdate(record: PlanRecord, input: JsonObject): PlanRecord {
 }
 
 export const adminPlansMockHandlers = [
-  http.get('*/admin/plans/fetchAllPlans', ({ request }) => { const url = new URL(request.url); const status = url.searchParams.get('status'); const search = (url.searchParams.get('search') ?? '').toLowerCase(); const data = MOCK_ADMIN_PLANS.filter(p => (!search || p.name.toLowerCase().includes(search)) && (!status || status === 'all' || (status === 'active' ? p.isActive : !p.isActive))); return ok(data); }),
+  http.get('*/admin/plans/fetchAllPlans', ({ request }) => {
+    const url = new URL(request.url);
+    const search = (url.searchParams.get('search') ?? '').trim().toLowerCase();
+    const tier = url.searchParams.get('tier');
+    const page = Math.max(1, Number(url.searchParams.get('page')) || 1);
+    const limit = Math.max(1, Number(url.searchParams.get('limit')) || 10);
+    const filtered = plansState.filter((plan) =>
+      (!search || plan.name.toLowerCase().includes(search)) &&
+      (!tier || tier === 'All' || plan.tier === tier),
+    );
+    return paged(filtered, page, limit);
+  }),
   http.get('*/admin/plans/fetchPlanById', async ({ request }) => {
     const body = asRecord(await parseRequestBody(request));
-    const record = MOCK_ADMIN_PLANS.find((p) => p.id === String(body.id)) ?? MOCK_ADMIN_PLANS[0];
-    return ok(record!);
+    const record = plansState.find((p) => p.id === String(body.id));
+    if (!record) return HttpResponse.json({ success: false, message: 'Plan not found', data: null }, { status: StatusCodes.NOT_FOUND });
+    return ok(record);
   }),
   http.post('*/admin/plans/createPlan', async ({ request }) => {
     const record = buildPlanRecord(asRecord(await parseRequestBody(request)));
-    MOCK_ADMIN_PLANS.push(record);
+    plansState.push(record);
     return ok(record, 'Plan created');
   }),
   http.post('*/admin/plans/updatePlan', async ({ request }) => {
     const body = asRecord(await parseRequestBody(request));
-    const index = MOCK_ADMIN_PLANS.findIndex((p) => p.id === String(body.id));
-    if (index === -1) return HttpResponse.json({ success: false, message: 'Plan not found' }, { status: 404 });
-    const updated = applyPlanUpdate(MOCK_ADMIN_PLANS[index]!, body);
-    MOCK_ADMIN_PLANS[index] = updated;
+    const index = plansState.findIndex((p) => p.id === String(body.id));
+    if (index === -1) return HttpResponse.json({ success: false, message: 'Plan not found' }, { status: StatusCodes.NOT_FOUND });
+    const updated = applyPlanUpdate(plansState[index]!, body);
+    plansState[index] = updated;
     return ok(updated, 'Plan updated');
   }),
   http.delete('*/admin/plans/deletePlan', async ({ request }) => {
     const body = asRecord(await parseRequestBody(request));
-    const index = MOCK_ADMIN_PLANS.findIndex((p) => p.id === String(body.id));
-    if (index === -1) return HttpResponse.json({ success: false, message: 'Plan not found' }, { status: 404 });
-    MOCK_ADMIN_PLANS.splice(index, 1);
+    const index = plansState.findIndex((p) => p.id === String(body.id));
+    if (index === -1) return HttpResponse.json({ success: false, message: 'Plan not found' }, { status: StatusCodes.NOT_FOUND });
+    plansState.splice(index, 1);
     return ok(null, 'Plan deleted');
   }),
+  http.head('*/admin/plans/__mock-reset', () => { resetAdminPlansMockState(); return new HttpResponse(null, { status: StatusCodes.NO_CONTENT }); }),
   http.get('*/admin/plans/fetchPlanRevenue', ({ request }) => { const url=new URL(request.url); const search=(url.searchParams.get('search')||'').toLowerCase(); const sortKey=url.searchParams.get('sortKey')||'totalRevenue'; const sortDir=url.searchParams.get('sortDir')||'desc'; const page=Math.max(1,Number(url.searchParams.get('page'))||1); const limit=Math.max(1,Number(url.searchParams.get('limit'))||10); const filtered=MOCK_ADMIN_PLAN_REVENUE.filter(r=>!search||`${r.planName} ${r.tier}`.toLowerCase().includes(search)); const sorted=[...filtered].sort((a,b)=>{const av=a[sortKey as keyof typeof a]; const bv=b[sortKey as keyof typeof b]; if(typeof av==='number'&&typeof bv==='number') return sortDir==='asc'?av-bv:bv-av; return String(av??'').localeCompare(String(bv??''),undefined,{numeric:true})*(sortDir==='asc'?1:-1);}); return paged(sorted,page,limit); })
 ];

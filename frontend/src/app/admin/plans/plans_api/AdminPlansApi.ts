@@ -8,11 +8,16 @@ import { planSchema } from '@/app/admin/plans/plans_types/AdminPlansSchemas';
 import { planRevenueRecordSchema } from '@/app/admin/plans/plans_types/AdminPlansRevenueSchemas';
 
 export const plansApi = {
-  fetchAllPlans: async () => apiFetch<ApiResponse<Plan[]>>(`${PlansUrlConfig.BACKEND_API.BASE}/fetchAllPlans`, { method: 'GET', dataSchema: z.array(planSchema) }),
+  fetchAllPlans: async (params?: { search?: string; tier?: string; page?: number; limit?: number }) => {
+    const query = new URLSearchParams();
+    Object.entries(params ?? {}).forEach(([key, value]) => { if (value !== undefined && value !== '') query.set(key, String(value)); });
+    const suffix = query.toString() ? `?${query.toString()}` : '';
+    return apiFetch<ApiResponse<Plan[]>>(`${PlansUrlConfig.BACKEND_API.BASE}/fetchAllPlans${suffix}`, { method: 'GET', dataSchema: z.array(planSchema) });
+  },
   fetchPlanById: async (id: string) => apiFetch<ApiResponse<Plan>>(`${PlansUrlConfig.BACKEND_API.BASE}/fetchPlanById`, { method: 'GET', body: JSON.stringify({ id }), dataSchema: planSchema }),
   createPlan: async (body: Partial<Plan>) => apiFetch<ApiResponse<Plan>>(`${PlansUrlConfig.BACKEND_API.BASE}/createPlan`, { method: 'POST', body: JSON.stringify(body), dataSchema: planSchema }),
   updatePlan: async (id: string, body: Partial<Plan>) => apiFetch<ApiResponse<Plan>>(`${PlansUrlConfig.BACKEND_API.BASE}/updatePlan`, { method: 'POST', body: JSON.stringify({ id, ...body }), dataSchema: planSchema }),
-  deletePlan: async (id: string) => apiFetch<ApiResponse<null>>(`${PlansUrlConfig.BACKEND_API.BASE}/deletePlan`, { method: 'DELETE', body: JSON.stringify({ id }), dataSchema: z.null() }),
+  deletePlan: async (id: string, idempotencyKey: string) => apiFetch<ApiResponse<null>>(`${PlansUrlConfig.BACKEND_API.BASE}/deletePlan`, { method: 'DELETE', body: JSON.stringify({ id }), headers: { 'Idempotency-Key': idempotencyKey }, dataSchema: z.null() }),
   fetchPlanRevenue: async (period: RevenuePeriod, params?: { search?: string; sortKey?: RevenueSortKey; sortDir?: RevenueSortDirection; page?: number; limit?: number }) => {
     const query = new URLSearchParams({ period });
     Object.entries(params ?? {}).forEach(([key, value]) => { if (value !== undefined && value !== '') query.set(key, String(value)); });

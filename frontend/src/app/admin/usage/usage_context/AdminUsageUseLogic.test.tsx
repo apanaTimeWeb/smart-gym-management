@@ -4,8 +4,8 @@ import { renderHook, act, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useAdminUsageLogic } from '@/app/admin/usage/usage_context/useAdminUsageLogic';
 import { adminUsageApi } from '@/app/admin/usage/usage_api/AdminUsageApi';
-import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/useAdminConfirm';
-import { useAdminToastStore } from '@/app/admin/admin_store/useAdminToastStore';
+import { useAdminConfirm } from '@/app/admin/admin_layout/AdminFeedback/useAdminConfirm';
+import { useAdminToastStore } from '@/app/admin/admin_layout/admin_store/useAdminToastStore';
 import type { AdminUsageData } from '@/app/admin/usage/usage_types/AdminUsageTypes';
 
 vi.mock('@/app/admin/usage/usage_api/AdminUsageApi', () => ({
@@ -15,11 +15,11 @@ vi.mock('@/app/admin/usage/usage_api/AdminUsageApi', () => ({
   },
 }));
 
-vi.mock('@/app/admin/admin_components/AdminFeedback/useAdminConfirm', () => ({
+vi.mock('@/app/admin/admin_layout/AdminFeedback/useAdminConfirm', () => ({
   useAdminConfirm: vi.fn(),
 }));
 
-vi.mock('@/app/admin/admin_store/useAdminToastStore', () => ({
+vi.mock('@/app/admin/admin_layout/admin_store/useAdminToastStore', () => ({
   useAdminToastStore: vi.fn(),
 }));
 

@@ -18,7 +18,7 @@ export const PERFORMANCE_TABLE_HEADERS = [
 ];
 
 export const PERFORMANCE_STATUS_CONFIG: Record<string, { label: string; bgClass: string; textClass: string }> = {
-  EXCELLENT: { label: 'Excellent', bgClass: 'bg-success/20', textClass: 'text-success' },
-  AVERAGE:   { label: 'Average',   bgClass: 'bg-warning/20', textClass: 'text-warning' },
-  POOR:      { label: 'Poor',      bgClass: 'bg-danger/20',  textClass: 'text-danger' },
+  EXCELLENT: { label: 'Excellent', bgClass: 'bg-success', textClass: 'text-success' },
+  AVERAGE:   { label: 'Average',   bgClass: 'bg-warning', textClass: 'text-warning' },
+  POOR:      { label: 'Poor',      bgClass: 'bg-danger',  textClass: 'text-danger' },
 };

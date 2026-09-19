@@ -8,8 +8,8 @@ const ReactApexChart = dynamic(() => import('react-apexcharts'), { ssr: false })
 
 export default function AdminSalesOverview() {
   const { overviewData, referralData, status } = useAdminSalesLogic();
-  if (status === 'pending') return <div className="space-y-6 motion-safe:animate-pulse"><div className="bg-card p-5 rounded-xl border border-border shadow-lg h-80" /><div className="bg-card p-5 rounded-xl border border-border shadow-lg h-80" /><div className="bg-card p-5 rounded-xl border border-border shadow-lg h-80" /></div>;
-  if (status === 'error') return <div className="text-center py-16 bg-card rounded-2xl border border-danger/30"><p className="text-danger font-medium">Sales overview could not be loaded.</p></div>;
+  if (status === 'pending') return <div className="space-y-6 motion-safe:animate-pulse motion-safe:duration-base"><div className="bg-card p-5 rounded-xl border border-border shadow-card h-80" /><div className="bg-card p-5 rounded-xl border border-border shadow-card h-80" /><div className="bg-card p-5 rounded-xl border border-border shadow-card h-80" /></div>;
+  if (status === 'error') return <div className="text-center py-16 bg-card rounded-2xl border border-danger"><p className="text-danger font-medium">Sales overview could not be loaded.</p></div>;
 
   const months = overviewData.map((item) => item.date);
   const revenue = overviewData.map((item) => item.revenue);
@@ -18,16 +18,16 @@ export default function AdminSalesOverview() {
   const pieSeries = referralData.map((item) => item.revenue);
 
   return <div className="space-y-6">
-    <div className="bg-card p-5 rounded-xl border border-border shadow-lg dark:shadow-none">
-      <h3 className="font-bold text-foreground mb-4">Monthly Revenue (₹)</h3>
+    <div className="bg-card p-5 rounded-xl border border-border shadow-card dark:shadow-none">
+      <h3 className="font-bold text-primary mb-4">Monthly Revenue (₹)</h3>
       <ReactApexChart type="bar" height={288} options={{ chart: { toolbar: { show: false } }, xaxis: { categories: months, labels: { style: { colors: 'var(--text-secondary)' } } }, yaxis: { labels: { formatter: (value: number) => `${formatKPI(value)}K` } }, dataLabels: { enabled: false }, grid: { borderColor: 'var(--border)' }, tooltip: { y: { formatter: (value: number) => formatCurrency(value) } } }} series={[{ name: 'Revenue', data: revenue }]} />
     </div>
-    <div className="bg-card p-5 rounded-xl border border-border shadow-lg dark:shadow-none">
-      <h3 className="font-bold text-foreground mb-4">New Members Trend</h3>
+    <div className="bg-card p-5 rounded-xl border border-border shadow-card dark:shadow-none">
+      <h3 className="font-bold text-primary mb-4">New Members Trend</h3>
       <ReactApexChart type="area" height={256} options={{ chart: { toolbar: { show: false } }, xaxis: { categories: months }, dataLabels: { enabled: false }, stroke: { curve: 'smooth', width: 3 }, fill: { opacity: 0.25 }, grid: { borderColor: 'var(--border)' }, tooltip: { y: { formatter: (value: number) => formatKPI(value) } } }} series={[{ name: 'New Members', data: members }]} />
     </div>
-    <div className="bg-card p-5 rounded-xl border border-border shadow-lg dark:shadow-none">
-      <h3 className="font-bold text-foreground mb-4">Marketing ROI: Revenue by Referral Source</h3>
+    <div className="bg-card p-5 rounded-xl border border-border shadow-card dark:shadow-none">
+      <h3 className="font-bold text-primary mb-4">Marketing ROI: Revenue by Referral Source</h3>
       <ReactApexChart type="donut" height={256} options={{ labels: pieLabels, chart: { toolbar: { show: false } }, legend: { position: 'bottom' }, dataLabels: { enabled: false }, tooltip: { y: { formatter: (value: number) => formatCurrency(value) } } }} series={pieSeries} />
     </div>
   </div>;

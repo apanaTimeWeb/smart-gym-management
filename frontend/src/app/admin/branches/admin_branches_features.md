@@ -22,7 +22,7 @@ cross-branch visibility and performance comparison.
 | `branches_components/AdminBranchDetailDrawer/` | Slide-in drawer showing full branch profile (staff, revenue, members) | `AdminBranchDetailDrawer.tsx` |
 | `branches_api/` | API client for fetching branch data | `AdminBranchesApi.ts` |
 | `branches_types/` | TypeScript types: `AdminBranch`, `BranchStatus`, `BranchesFetchState` | `AdminBranchesTypes.ts` |
-| `branches_utils/` | Constants: `ADMIN_BRANCH_STATUS_STYLES`, `ADMIN_BRANCHES_PAGE_SIZE` | `AdminBranchesSharedConstants.ts` |
+| `branches_utils/` | Constants: `ADMIN_BRANCH_STATUS_STYLES`, `ADMIN_BRANCHES_PAGE_SIZE` | `AdminBranchesTypes.ts` |
 | `branches_context/` | React Context bridging store state to deeply nested components | — |
 | `branches_store/` | Zustand store for selected branch, drawer state, filter values | — |
 
@@ -50,7 +50,7 @@ cross-branch visibility and performance comparison.
 ## Edge Cases and AI Warnings
 
 - **Admins are read-only.** Never add create/edit/delete buttons or API calls to this module. Those belong in the Manager role.
-- **`AdminBranch` type differs from `Branch` in `useAdminGlobalStore.ts`** — the store uses a simplified `Branch` interface for cross-module branch switching. `AdminBranchesTypes.ts` defines the full `AdminBranch` for this module's API responses. Do not mix them.
+- **`AdminBranch` type differs from `Branch` in `@/app/admin/admin_store/useAdminGlobalStore.ts`** — the store uses a simplified `Branch` interface for cross-module branch switching. `AdminBranchesTypes.ts` defines the full `AdminBranch` for this module's API responses. Do not mix them.
 - **`ADMIN_BRANCH_STATUS_STYLES`** is the single source of truth for status badge colors. Never inline status badge classes.
 - **`branches_api/AdminBranchesApi.ts` uses `unknown[]` as data type** — wire to `AdminBranch[]` from `AdminBranchesTypes.ts` when the backend contract is finalized.
 
@@ -64,7 +64,7 @@ cross-branch visibility and performance comparison.
 - [x] Rule 7: Type Isolation — `AdminBranchesTypes.ts` in `branches_types/`
 - [x] Rule 8: Server/Client Boundary — `page.tsx` is Server Component
 - [x] Rule 9: `loading.tsx` + `error.tsx` present
-- [x] Rule 11: Centralized URL Config — `AdminBranchesUrlConfig` in `branches_url_config.ts`
+- [x] Rule 11: Centralized URL Config — `AdminBranchesUrlConfig` in `admin_branches_url_config.ts`
 - [x] Rule 13: Feature Map — this document
 - [x] Rule 40: `branches_forbidden.md` present
 - [ ] Rule 15B: Forms — no forms present (read-only module); N/A

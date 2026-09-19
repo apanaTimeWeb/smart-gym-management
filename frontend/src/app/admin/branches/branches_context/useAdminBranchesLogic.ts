@@ -1,5 +1,5 @@
 "use client";
-import type { TimeRange } from '@/app/admin/admin_types/AdminSharedTypes';
+import type { AdminBranchesTimeRange } from '@/app/admin/branches/branches_types/AdminBranchesTypes';
 // RESPONSIBILITY: Core data logic hook for the admin module.
 // DATA FLOW: Centralized store/hook logic mapping API mutations and query state to UI props.
 import { useAdminBranchesStore } from "@/app/admin/branches/branches_store/useAdminBranchesStore";
@@ -17,7 +17,7 @@ export function useAdminBranchesLogic() {
     detailView, setDetailView
   } = useAdminBranchesStore();
 
-  const getMultiplier = (tr: TimeRange) => {
+  const getMultiplier = (tr: AdminBranchesTimeRange) => {
     if ((tr as string) === "weekly") return 0.25;
     if (tr === "yearly") return 12;
     if (tr === "custom") return 0.5;

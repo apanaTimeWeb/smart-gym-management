@@ -44,7 +44,7 @@ export default function AdminAuditLogsToolbar() {
             placeholder="Search by action, user, details, IP..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 bg-input border border-border rounded-xl text-sm text-foreground focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary"
+            className="w-full pl-9 pr-4 py-2 bg-input border border-border rounded-xl text-sm text-primary focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary"
             aria-label="Search audit logs"
           />
         </div>
@@ -54,7 +54,7 @@ export default function AdminAuditLogsToolbar() {
           {hasActiveFilters && (
             <button
               onClick={resetFilters}
-              className="flex items-center gap-1.5 px-3 py-2 bg-input border border-border rounded-xl text-sm text-secondary hover:text-foreground motion-safe:transition-colors"
+              className="flex items-center gap-1.5 px-3 py-2 bg-input border border-border rounded-xl text-sm text-secondary hover:text-primary motion-safe:transition-colors motion-safe:duration-base"
               aria-label="Reset filters"
             >
               <RotateCcw size={13} /> Reset
@@ -62,7 +62,7 @@ export default function AdminAuditLogsToolbar() {
           )}
           <button
             onClick={() => exportCSV(filtered)}
-            className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-xl text-sm font-semibold hover:bg-primary-hover motion-safe:transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary rounded-xl text-sm font-semibold hover:bg-primary-hover motion-safe:transition-colors motion-safe:duration-base"
             aria-label="Export logs as CSV"
           >
             <Download size={14} /> Export CSV
@@ -75,7 +75,7 @@ export default function AdminAuditLogsToolbar() {
         <select
           value={severityFilter}
           onChange={e => setSeverityFilter(e.target.value)}
-          className="bg-input border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary"
+          className="bg-input border border-border rounded-xl px-3 py-2 text-sm text-primary focus:outline-none focus:border-primary"
           aria-label="Filter by severity"
         >
           {AUDIT_SEVERITY_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
@@ -83,7 +83,7 @@ export default function AdminAuditLogsToolbar() {
         <select
           value={moduleFilter}
           onChange={e => setModuleFilter(e.target.value)}
-          className="bg-input border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary"
+          className="bg-input border border-border rounded-xl px-3 py-2 text-sm text-primary focus:outline-none focus:border-primary"
           aria-label="Filter by module"
         >
           {AUDIT_MODULE_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
@@ -91,7 +91,7 @@ export default function AdminAuditLogsToolbar() {
         <select
           value={branchFilter}
           onChange={e => setBranchFilter(e.target.value)}
-          className="bg-input border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary"
+          className="bg-input border border-border rounded-xl px-3 py-2 text-sm text-primary focus:outline-none focus:border-primary"
           aria-label="Filter by branch"
         >
           {AUDIT_GYM_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
@@ -101,7 +101,7 @@ export default function AdminAuditLogsToolbar() {
             type="date"
             value={dateFrom}
             onChange={e => setDateFrom(e.target.value)}
-            className="bg-input border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary"
+            className="bg-input border border-border rounded-xl px-3 py-2 text-sm text-primary focus:outline-none focus:border-primary"
             aria-label="Date from"
           />
           <span className="text-secondary text-xs">to</span>
@@ -109,7 +109,7 @@ export default function AdminAuditLogsToolbar() {
             type="date"
             value={dateTo}
             onChange={e => setDateTo(e.target.value)}
-            className="bg-input border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary"
+            className="bg-input border border-border rounded-xl px-3 py-2 text-sm text-primary focus:outline-none focus:border-primary"
             aria-label="Date to"
           />
         </div>

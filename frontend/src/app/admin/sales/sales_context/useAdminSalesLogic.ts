@@ -5,10 +5,7 @@
 import { useCallback } from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useAdminSalesStore } from '@/app/admin/sales/sales_store/useAdminSalesStore';
-import { useAdminToastStore } from '@/app/admin/admin_store/useAdminToastStore';
-import { useAdminGlobalStore } from '@/app/admin/admin_store/useAdminGlobalStore';
-import { useDebounce } from '@/app/admin/admin_utils/useAdminDebounce';
+import { useDebounce } from '@/app/admin/admin_layout/admin_utils/useAdminDebounce';
 import { salesApi } from '@/app/admin/sales/sales_api/AdminSalesApi';
 import type { SalesContextType, SalesInitialData, PendingPaymentMember, StoreOrder } from '@/app/admin/sales/sales_types/AdminSalesTypes';
 import type { SalesTab } from '@/app/admin/sales/sales_utils/AdminSalesSharedConstants';
@@ -16,11 +13,9 @@ import type { SalesTab } from '@/app/admin/sales/sales_utils/AdminSalesSharedCon
 export function useAdminSalesLogic(initialData?: SalesInitialData | null): SalesContextType {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const selectedBranchId = searchParams.get('branchId') || 'all';
   const pathname = usePathname();
   const queryClient = useQueryClient();
-  const { selectedBranchId } = useAdminGlobalStore();
-  const { showToast } = useAdminToastStore();
-  useAdminSalesStore();
   const tab = (searchParams.get('tab') || 'Overview') as SalesTab;
   const range = searchParams.get('range') || 'this_month';
   const search = searchParams.get('search') || '';
@@ -53,8 +48,8 @@ export function useAdminSalesLogic(initialData?: SalesInitialData | null): Sales
   });
 
   const reportQuery = useQuery({
-    queryKey: ['admin', 'sales', 'membership-report', range, selectedBranchId],
-    queryFn: () => salesApi.fetchMembershipReport(selectedBranchId, range),
+    queryKey: ['admin', 'sales', 'membership-report', { search: debouncedSearch }, range, selectedBranchId],
+    queryFn: () => salesApi.fetchMembershipReport(selectedBranchId, range, debouncedSearch || undefined),
     initialData: initialData?.membershipReport ? { success: true, message: 'SSR', data: { report: initialData.membershipReport, totals: initialData.membershipTotals || {} } } : undefined,
   });
   const pendingQuery = useQuery({
@@ -68,7 +63,25 @@ export function useAdminSalesLogic(initialData?: SalesInitialData | null): Sales
     initialData: initialData?.allMemberships ? { success: true, message: 'SSR', data: { members: initialData.allMemberships, total: initialData.allMembershipsTotal || 0 } } : undefined,
   });
 
-  const storeOrders: StoreOrder[] = [];
+  const storeQueryParams = {
+    limit: '10',
+    page: currentPage.toString(),
+    range,
+    branchId: selectedBranchId,
+    ...(debouncedSearch ? { search: debouncedSearch } : {}),
+  };
+  const storeOrdersQuery = useQuery({
+    queryKey: ['admin', 'sales', 'store-orders', storeQueryParams],
+    queryFn: () => salesApi.fetchStoreOrders(storeQueryParams),
+    initialData: initialData?.storeOrders ? {
+      success: true, message: 'SSR', data: { orders: initialData.storeOrders, total: initialData.storeOrdersTotal || initialData.storeOrders.length },
+    } : undefined,
+  });
+  const storeSummaryQuery = useQuery({
+    queryKey: ['admin', 'sales', 'store-summary', range, selectedBranchId],
+    queryFn: () => salesApi.fetchStoreSummary({ range, branchId: selectedBranchId }),
+    initialData: initialData?.storeSummary ? { success: true, message: 'SSR', data: { summary: initialData.storeSummary } } : undefined,
+  });
   return {
     tab,
     setTab,
@@ -84,11 +97,12 @@ export function useAdminSalesLogic(initialData?: SalesInitialData | null): Sales
     pendingTotal: pendingQuery.data?.data?.total || 0,
     allMemberships: allMembershipsQuery.data?.data?.members || [],
     allMembershipsTotal: allMembershipsQuery.data?.data?.total || 0,
-    storeOrders,
-    storeOrdersTotal: 0,
-    storeSummary: null,
+    storeOrders: storeOrdersQuery.data?.data?.orders || [],
+    storeOrdersTotal: storeOrdersQuery.data?.data?.total || 0,
+    storeSummary: storeSummaryQuery.data?.data?.summary || null,
     status: overviewQuery.status,
+    storeStatus: storeOrdersQuery.status,
+    storeError: storeOrdersQuery.error instanceof Error ? storeOrdersQuery.error.message : '',
     loadAll: refreshData,
-    showToast,
   };
 }

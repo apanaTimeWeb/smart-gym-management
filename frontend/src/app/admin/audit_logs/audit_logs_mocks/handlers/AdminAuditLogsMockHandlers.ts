@@ -13,19 +13,18 @@ function asRecord(value: unknown): JsonObject {
 }
 
 const ok = <T>(data: T, message = 'Success') =>
-  HttpResponse.json({ success: true, message, data, meta: { total: Array.isArray(data) ? data.length : 1, page: 1, limit: 50, totalPages: 1 } });
+  HttpResponse.json({ success: true, message, data });
 
 const paged = <T>(data: T[], page: number, limit: number, message = 'Success') => {
   const safeLimit = Math.max(1, limit);
   const safePage = Math.max(1, page);
   const start = (safePage - 1) * safeLimit;
   const pageData = data.slice(start, start + safeLimit);
-  return HttpResponse.json({ success: true, message, data: pageData, meta: { total: data.length, page: safePage, limit: safeLimit, totalPages: Math.max(1, Math.ceil(data.length / safeLimit)) } });
+  return HttpResponse.json({ success: true, message, data: pageData, meta: { total: data.length, page: safePage, limit: safeLimit, totalPages: Math.max(1, Math.ceil(data.length / safeLimit)), hasNextPage: safePage < Math.max(1, Math.ceil(data.length / safeLimit)), hasPrevPage: safePage > 1 } });
 };
 
-import { MOCK_AUDIT_KPI, MOCK_AUDIT_LOGS } from '@/app/admin/audit_logs/audit_logs_mocks/fixtures/AdminAuditLogsMockFixtures';
 
 export const adminAuditLogsMockHandlers = [
-  http.get('*/admin/audit_logs/fetchLogs', () => ok(MOCK_AUDIT_LOGS)),
-  http.get('*/admin/audit_logs/fetchKPIs', () => ok(MOCK_AUDIT_KPI))
+  http.get('*/admin/audit_logs/fetchLogs', ({ request }) => { const url = new URL(request.url); const search=(url.searchParams.get('search')??'').toLowerCase(); const severity=url.searchParams.get('severity'); const module=url.searchParams.get('module'); const branch=url.searchParams.get('branchId'); const dateFrom=url.searchParams.get('dateFrom'); const dateTo=url.searchParams.get('dateTo'); const page=Math.max(1,Number(url.searchParams.get('page'))||1); const limit=Math.max(1,Number(url.searchParams.get('limit'))||10); const filtered=[].filter((log: any)=>{const text=`${log.details} ${log.user} ${log.action} ${log.ip}`.toLowerCase(); const ts=new Date(log.timestamp); return (!search||text.includes(search))&&(!severity||log.severity===severity)&&(!module||log.module===module)&&(!branch||branch==='all'||log.branchId===branch||log.branchId==='all')&&(!dateFrom||ts>=new Date(dateFrom))&&(!dateTo||ts<=new Date(`${dateTo}T23:59:59Z`));}); return paged(filtered,page,limit); }),
+  http.get('*/admin/audit_logs/fetchKPIs', () => ok({}))
 ];

@@ -6,9 +6,8 @@ import { useAdminPermissionsLogic } from '@/app/admin/permissions/permissions_co
 import { PERMISSION_FEATURES } from '@/app/admin/permissions/permissions_utils/AdminPermissionsSharedConstants';
 import type { RoleType } from '@/app/admin/permissions/permissions_types/AdminPermissionsTypes';
 
-interface AdminPermissionsRoleCardProps {
-  role: RoleType;
-}
+import type { AdminPermissionsRoleCardProps } from '@/app/admin/permissions/permissions_types/AdminPermissionsRoleCardPropsTypes';
+
 
 export default function AdminPermissionsRoleCard({ role }: AdminPermissionsRoleCardProps) {
   const { getEffectivePermissions, selectedGymId } = useAdminPermissionsLogic();
@@ -22,11 +21,11 @@ export default function AdminPermissionsRoleCard({ role }: AdminPermissionsRoleC
         <ShieldCheck size={22} className="text-primary" />
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-bold text-foreground capitalize">{role}</p>
+        <p className="text-sm font-bold text-primary capitalize">{role}</p>
         <p className="text-xs text-secondary mt-0.5">{enabled} of {total} permissions enabled</p>
         <div className="mt-2 h-1.5 bg-input rounded-full">
           <div
-            className="h-1.5 bg-primary rounded-full motion-safe:transition-all"
+            className="h-1.5 bg-primary rounded-full motion-safe:transition-all motion-safe:duration-base"
             style={{ width: `${(enabled / total) * 100}%` }}
           />
         </div>

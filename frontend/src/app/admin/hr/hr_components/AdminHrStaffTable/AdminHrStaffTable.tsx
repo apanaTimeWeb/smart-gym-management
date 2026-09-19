@@ -1,63 +1,70 @@
 "use client";
-// RESPONSIBILITY: Renders the paginated staff members table with sortable columns and inline row actions.
+// RESPONSIBILITY: Renders the Admin HR staff list from the server-backed query, including URL-persisted sorting, pagination, row actions, and accessible row navigation.
 
 import { useHrContext } from '@/app/admin/hr/hr_context/AdminHrContext';
 import type { AdminHrStaffSortKey } from '@/app/admin/hr/hr_types/AdminHrUiTypes';
-import type { AdminSortDirection } from '@/app/admin/admin_types/AdminSortTypes';
-import { useMemo, useState } from 'react';
-import { ChevronDown, ChevronUp, ChevronsUpDown } from 'lucide-react';
-import { STAFF_TABLE_HEADERS } from '@/app/admin/hr/hr_utils/AdminHrSharedConstants';
-import { Edit2, Trash2, CheckCircle2, Ban, PlayCircle } from 'lucide-react';
-import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/useAdminConfirm';
-import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
-import { ADMIN_ITEMS_PER_PAGE } from '@/app/admin/admin_url_config';
-import { displayValue } from '@/app/admin/admin_utils/AdminDisplayValue';
-import { maskSensitiveData } from '@/app/admin/admin_utils/AdminMaskSensitiveData';
-import { formatCurrency } from '@/app/admin/admin_utils/AdminFormatCurrency';
+import type { AdminHrSortDirection } from '@/app/admin/hr/hr_types/AdminHrSortTypes';
+import { ChevronDown, ChevronUp, ChevronsUpDown, Edit2, Trash2, CheckCircle2, Ban, PlayCircle } from 'lucide-react';
+import { STAFF_TABLE_HEADERS, HR_ITEMS_PER_PAGE } from '@/app/admin/hr/hr_utils/AdminHrSharedConstants';
+import AdminPagination from '@/app/admin/admin_layout/AdminShared/AdminPagination';
+import { displayValue } from '@/app/admin/admin_layout/admin_utils/AdminDisplayValue';
+import { maskSensitiveData } from '@/app/admin/admin_layout/admin_utils/AdminMaskSensitiveData';
+import { formatCurrency } from '@/app/admin/admin_layout/admin_utils/AdminFormatCurrency';
+import AdminHrEmptyState from '@/app/admin/hr/hr_components/AdminHrEmptyState/AdminHrEmptyState';
+
+const STAFF_SORT_KEYS: Partial<Record<string, AdminHrStaffSortKey>> = {
+  Name: 'name',
+  Branch: 'branch',
+  Role: 'role',
+  Phone: 'phone',
+  Salary: 'salary',
+  Advance: 'advanceSalary',
+  Joined: 'joinDate',
+};
+
+function SortIndicator({ active, direction }: { active: boolean; direction: AdminHrSortDirection }) {
+  if (!active) return <ChevronsUpDown aria-hidden="true" className="h-3.5 w-3.5 opacity-60" />;
+  return direction === 'asc' ? <ChevronUp aria-hidden="true" className="h-3.5 w-3.5" /> : <ChevronDown aria-hidden="true" className="h-3.5 w-3.5" />;
+}
 
 export default function AdminHrStaffTable() {
-  const { staff, summary, status, debouncedSearch, branchFilter, roleFilter, currentPage, setCurrentPage, openEdit, openProfile, deleteStaff, toggleStaffStatus } = useHrContext();
-  const { confirm } = useAdminConfirm();
-  const [sortKey, setSortKey] = useState<AdminHrStaffSortKey>('name');
-  const [sortDir, setSortDir] = useState<AdminSortDirection>('asc');
+  const {
+    staff, status, debouncedSearch, currentPage, setCurrentPage, totalStaff,
+    staffSortKey, staffSortDir, setStaffSort, openEdit, openProfile, deleteStaff, toggleStaffStatus,
+  } = useHrContext();
 
-  const filteredStaff = staff.filter(s => 
-    (roleFilter === 'All' || (s.role || '').toLowerCase().includes(roleFilter.toLowerCase())) &&
-    (branchFilter === 'All' || s.branch === branchFilter)
-  );
+  const handleSort = (key: AdminHrStaffSortKey) => {
+    const nextDirection: AdminHrSortDirection = staffSortKey === key && staffSortDir === 'asc' ? 'desc' : 'asc';
+    setStaffSort(key, nextDirection);
+  };
 
-  const sortedStaff = useMemo(() => [...filteredStaff].sort((a,b) => { const av = sortKey === 'branch' ? a.branch : sortKey === 'joinDate' ? a.joinDate : a[sortKey]; const bv = sortKey === 'branch' ? b.branch : sortKey === 'joinDate' ? b.joinDate : b[sortKey]; const result = typeof av === 'number' && typeof bv === 'number' ? av - bv : String(av ?? '').localeCompare(String(bv ?? ''), undefined, { numeric: true }); return sortDir === 'asc' ? result : -result; }), [filteredStaff, sortKey, sortDir]);
-  const handleSort = (key: AdminHrStaffSortKey) => { if (sortKey === key) setSortDir((d) => d === 'asc' ? 'desc' : 'asc'); else { setSortKey(key); setSortDir('asc'); } };
-  const totalStaff = summary?.totalStaff || sortedStaff.length;
-  const totalPages = Math.ceil(totalStaff / ADMIN_ITEMS_PER_PAGE) || 1;
+  const renderHeader = (header: string) => {
+    const key = STAFF_SORT_KEYS[header];
+    if (!key) return header;
+    return (
+      <button
+        type="button"
+        onClick={() => handleSort(key)}
+        className="inline-flex min-h-[44px] items-center gap-1.5 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded"
+        aria-label={`Sort by ${header}`}
+        >
+        {header}
+        <SortIndicator active={staffSortKey === key} direction={staffSortDir} />
+      </button>
+    );
+  };
 
   if (status === 'pending') {
     return (
       <div className="flex flex-col h-full">
         <div className="overflow-x-auto flex-1">
           <table data-admin-responsive-table className="w-full">
-            <thead className="bg-input text-secondary">
-              <tr>
-                {STAFF_TABLE_HEADERS.map(h => (
-                  <th key={h} className="text-left text-xs font-semibold uppercase tracking-wider px-4 py-3">{h}</th>
-                ))}
-                <th className="text-right text-xs font-semibold uppercase tracking-wider px-4 py-3">Actions</th>
-              </tr>
-            </thead>
+            <thead className="bg-input text-secondary"><tr>{STAFF_TABLE_HEADERS.map((header) => <th key={header} aria-sort={STAFF_SORT_KEYS[header] && staffSortKey === STAFF_SORT_KEYS[header] ? (staffSortDir === 'asc' ? 'ascending' : 'descending') : 'none'} className="text-left text-xs font-semibold uppercase tracking-wider px-4 py-3">{renderHeader(header)}</th>)}<th className="text-right text-xs font-semibold uppercase tracking-wider px-4 py-3">Actions</th></tr></thead>
             <tbody className="divide-y divide-border">
-              {[...Array(5)].map((_, i) => (
-                <tr key={`skeleton-${i}`} className="motion-safe:animate-pulse">
-                  <td className="px-4 py-4 flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-muted"></div>
-                    <div><div className="h-4 bg-muted rounded w-24 mb-1"></div><div className="h-3 bg-muted rounded w-32"></div></div>
-                  </td>
-                  <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-20"></div></td>
-                  <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-24"></div></td>
-                  <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-16"></div></td>
-                  <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-24"></div></td>
-                  <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-20"></div></td>
-                  <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-24"></div></td>
-                  <td className="px-4 py-4"><div className="h-6 bg-muted rounded w-16 ml-auto"></div></td>
+              {['staff-skeleton-1','staff-skeleton-2','staff-skeleton-3','staff-skeleton-4','staff-skeleton-5'].map((key) => (
+                <tr key={key} className="motion-safe:animate-pulse motion-safe:duration-base">
+                  <td className="px-4 py-4"><div className="h-4 bg-skeleton-base rounded w-24 mb-1" /><div className="h-3 bg-skeleton-base rounded w-32" /></td>
+                  <td className="px-4 py-4"><div className="h-4 bg-skeleton-base rounded w-20" /></td><td className="px-4 py-4"><div className="h-4 bg-skeleton-base rounded w-24" /></td><td className="px-4 py-4"><div className="h-4 bg-skeleton-base rounded w-16" /></td><td className="px-4 py-4"><div className="h-4 bg-skeleton-base rounded w-24" /></td><td className="px-4 py-4"><div className="h-4 bg-skeleton-base rounded w-20" /></td><td className="px-4 py-4"><div className="h-4 bg-skeleton-base rounded w-24" /></td><td className="px-4 py-4"><div className="h-6 bg-skeleton-base rounded w-16 ml-auto" /></td>
                 </tr>
               ))}
             </tbody>
@@ -71,128 +78,23 @@ export default function AdminHrStaffTable() {
     <div className="flex flex-col h-full">
       <div className="overflow-x-auto flex-1">
         <table data-admin-responsive-table className="w-full">
-          <thead className="bg-input text-secondary">
-            <tr>
-              {STAFF_TABLE_HEADERS.map(h => (
-                <th key={h} className="text-left text-xs font-semibold uppercase tracking-wider px-4 py-3">
-                  {h}
-                </th>
-              ))}
-              <th className="text-right text-xs font-semibold uppercase tracking-wider px-4 py-3">Actions</th>
-            </tr>
-          </thead>
+          <thead className="bg-input text-secondary"><tr>{STAFF_TABLE_HEADERS.map((header) => <th key={header} aria-sort={STAFF_SORT_KEYS[header] && staffSortKey === STAFF_SORT_KEYS[header] ? (staffSortDir === 'asc' ? 'ascending' : 'descending') : 'none'} className="text-left text-xs font-semibold uppercase tracking-wider px-4 py-3">{renderHeader(header)}</th>)}<th className="text-right text-xs font-semibold uppercase tracking-wider px-4 py-3">Actions</th></tr></thead>
           <tbody className="divide-y divide-border">
-            {sortedStaff.map(s => (
-              <tr 
-                key={s.id} 
-                className="motion-safe:transition-colors hover:bg-primary/5 cursor-pointer"
-                role="button"
-                tabIndex={0}
-                aria-label={`Open profile for ${s.name || 'staff member'}`}
-                onClick={() => openProfile(s)}
-                onKeyDown={(event) => {
-                  if (event.key === 'Enter' || event.key === ' ') {
-                    event.preventDefault();
-                    openProfile(s);
-                  }
-                }}
-              >
-                <td className="px-4 py-3">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm bg-primary/10 text-primary">
-                      {(s.name || '?').charAt(0).toUpperCase()}
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-primary">{displayValue(s.name)}</p>
-                      <p className="text-xs text-secondary">{displayValue(s.email)}</p>
-                    </div>
-                  </div>
-                </td>
-                <td className="px-4 py-3 text-sm text-secondary">
-                  {s.role === 'Manager' && s.assignedBranches && s.assignedBranches.length > 0 ? (
-                    <div className="flex flex-col">
-                      <span className="font-medium text-primary">{displayValue(s.primaryBranchId || s.assignedBranches[0])}</span>
-                      {s.assignedBranches.length > 1 && (
-                        <span className="text-xs bg-primary/10 text-primary px-1.5 py-0.5 rounded-full mt-1 w-max">
-                          +{s.assignedBranches.length - 1} More
-                        </span>
-                      )}
-                    </div>
-                  ) : (
-                    displayValue(s.branch)
-                  )}
-                </td>
-                <td className="px-4 py-3 text-sm text-primary">{displayValue(s.role)}</td>
-                <td className="px-4 py-3">
-                  {s.isActive === false ? (
-                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-danger/10 text-danger border border-danger/20">
-                      <Ban className="w-3 h-3" /> Suspended
-                    </span>
-                  ) : (
-                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-success/10 text-success border border-success/20">
-                      <CheckCircle2 className="w-3 h-3" /> Active
-                    </span>
-                  )}
-                </td>
-                <td className="px-4 py-3 text-sm text-secondary">{maskSensitiveData(s.phone)}</td>
-                <td className="px-4 py-3 text-sm font-medium text-success">{formatCurrency(s.salary)}</td>
-                <td className="px-4 py-3 text-sm font-medium text-primary text-right">{s.advanceSalary && s.advanceSalary > 0 ? formatCurrency(s.advanceSalary) : '—'}</td>
-                <td className="px-4 py-3 text-sm text-secondary">
-                  {s.joinDate ? new Date(s.joinDate).toLocaleDateString('en-IN') : displayValue(null)}
-                </td>
-                <td className="px-4 py-3 text-right">
-                  <div className="flex items-center justify-end gap-2">
-                    <>
-                      <button 
-                        onClick={(e) => { e.stopPropagation(); toggleStaffStatus(s); }}
-                        className={`p-1.5 rounded-lg motion-safe:transition-all motion-safe:duration-200 ease-in-out ${
-                          s.isActive === false 
-                            ? 'text-success hover:bg-success/10' 
-                            : 'text-danger hover:bg-danger/10'
-                        }`}
-                        title={s.isActive === false ? 'Activate Staff' : 'Suspend Staff'}
-                      >
-                        {s.isActive === false ? <PlayCircle size={16} /> : <Ban size={16} />}
-                      </button>
-                      <button 
-                        onClick={(e) => { e.stopPropagation(); openEdit(s); }} 
-                        className="p-1.5 rounded hover:bg-primary/10 motion-safe:transition-colors text-secondary hover:text-primary"
-                        title="Edit"
-                      >
-                        <Edit2 size={16} />
-                      </button>
-                      <button 
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          deleteStaff(s.id);
-                        }}
-                        className="p-1.5 rounded motion-safe:transition-colors text-danger hover:bg-danger/10"
-                        title="Delete"
-                      >
-                        <Trash2 size={16} />
-                      </button>
-                    </>
-                  </div>
-                </td>
+            {staff.map((member) => (
+              <tr key={member.id} className="motion-safe:transition-colors hover:bg-surface-hover cursor-pointer motion-safe:duration-base" role="button" tabIndex={0} aria-label={`Open profile for ${member.name || 'staff member'}`} onClick={() => openProfile(member)} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); openProfile(member); } }}>
+                <td className="px-4 py-3"><div className="flex items-center gap-3"><div className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm bg-primary-subtle text-primary">{(member.name || '?').charAt(0).toUpperCase()}</div><div><p className="text-sm font-medium text-primary">{displayValue(member.name)}</p><p className="text-xs text-secondary">{displayValue(member.email)}</p></div></div></td>
+                <td className="px-4 py-3 text-sm text-secondary">{member.role === 'Manager' && member.assignedBranches && member.assignedBranches.length > 0 ? <div className="flex flex-col"><span className="font-medium text-primary">{displayValue(member.primaryBranchId || member.assignedBranches[0])}</span>{member.assignedBranches.length > 1 && <span className="text-xs bg-primary-subtle text-primary px-1.5 py-0.5 rounded-full mt-1 w-max">+{member.assignedBranches.length - 1} More</span>}</div> : displayValue(member.branch)}</td>
+                <td className="px-4 py-3 text-sm text-primary">{displayValue(member.role)}</td>
+                <td className="px-4 py-3">{member.isActive === false ? <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-danger text-danger border border-border"><Ban className="w-3 h-3" /> Suspended</span> : <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-success text-success border border-border"><CheckCircle2 className="w-3 h-3" /> Active</span>}</td>
+                <td className="px-4 py-3 text-sm text-secondary">{maskSensitiveData(member.phone)}</td><td className="px-4 py-3 text-sm font-medium text-success">{formatCurrency(member.salary)}</td><td className="px-4 py-3 text-sm font-medium text-primary text-right">{member.advanceSalary && member.advanceSalary > 0 ? formatCurrency(member.advanceSalary) : '—'}</td><td className="px-4 py-3 text-sm text-secondary">{member.joinDate ? new Date(member.joinDate).toLocaleDateString('en-IN') : displayValue(null)}</td>
+                <td className="px-4 py-3 text-right"><div className="flex items-center justify-end gap-2"><button type="button" onClick={(event) => { event.stopPropagation(); toggleStaffStatus(member); }} className={`min-h-[44px] min-w-[44px] p-1.5 rounded-lg motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${member.isActive === false ? 'text-success hover:bg-success' : 'text-danger hover:bg-surface-hover'}`} title={member.isActive === false ? 'Activate Staff' : 'Suspend Staff'} aria-label={member.isActive === false ? `Activate ${member.name}` : `Suspend ${member.name}`}>{member.isActive === false ? <PlayCircle size={16} /> : <Ban size={16} />}</button><button type="button" onClick={(event) => { event.stopPropagation(); openEdit(member); }} className="min-h-[44px] min-w-[44px] p-1.5 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-safe:transition-colors text-secondary hover:text-primary hover:bg-primary-subtle motion-safe:duration-base" title="Edit" aria-label={`Edit ${member.name}`}><Edit2 size={16} /></button><button type="button" onClick={(event) => { event.stopPropagation(); deleteStaff(member.id); }} className="min-h-[44px] min-w-[44px] p-1.5 rounded motion-safe:transition-colors text-danger hover:bg-surface-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger motion-safe:duration-base" title="Delete" aria-label={`Delete ${member.name}`}><Trash2 size={16} /></button></div></td>
               </tr>
             ))}
-            {filteredStaff.length === 0 && (
-              <tr>
-                <td colSpan={9} className="text-center py-12 text-secondary">
-                  {debouncedSearch ? 'No staff match the filter.' : 'No staff members yet. Add your first staff!'}
-                </td>
-              </tr>
-            )}
+            {staff.length === 0 && <tr><td colSpan={9}><AdminHrEmptyState title={debouncedSearch ? 'No staff match the filter' : 'No staff members yet'} description={debouncedSearch ? 'Try changing the search value or clearing filters.' : 'Add your first staff member to begin managing the team.'} /></td></tr>}
           </tbody>
         </table>
       </div>
-      <AdminPagination 
-        currentPage={currentPage} 
-        totalPages={totalPages} 
-        totalItems={totalStaff} 
-        itemsPerPage={ADMIN_ITEMS_PER_PAGE} 
-        onPageChange={setCurrentPage} 
-      />
+      <AdminPagination currentPage={currentPage} totalPages={Math.max(1, Math.ceil(totalStaff / HR_ITEMS_PER_PAGE))} totalItems={totalStaff} itemsPerPage={HR_ITEMS_PER_PAGE} onPageChange={setCurrentPage} />
     </div>
   );
 }

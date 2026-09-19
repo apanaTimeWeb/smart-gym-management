@@ -79,7 +79,7 @@ All calls go through the module's `announcementsApi` client in `announcements_ap
 
 ## Permissions and Security
 
-- **Required role:** `ADMIN` — enforced by `middleware.ts`
+- **Required role:** `ADMIN` — enforced by `@/middleware.ts`
 - **Branch scoping:** Admin can only target their own branches. `ANNOUNCEMENT_COMPOSE_GYM_OPTIONS` never includes "All Gyms" (superadmin-only). This is enforced at the constants level — the compose modal imports `ANNOUNCEMENT_COMPOSE_GYM_OPTIONS`, not `ANNOUNCEMENT_GYM_OPTIONS`.
 - **Audience scoping:** "Managers" audience option is excluded — cross-gym manager targeting is superadmin-only.
 - **Destructive actions:** Delete uses `useAdminConfirm()` with explicit warning message.
@@ -112,7 +112,7 @@ All calls go through the module's `announcementsApi` client in `announcements_ap
 - [x] Rule 7: Type Isolation — all types in `announcements_types/`
 - [x] Rule 8: Server/Client Boundary — `page.tsx` = Server Component, `*Main.tsx` = Client
 - [x] Rule 9: `loading.tsx` + `error.tsx` present
-- [x] Rule 11: `announcements_url_config.ts` present
+- [x] Rule 11: `admin_announcements_url_config.ts` present
 - [x] Rule 13: This document
 - [x] Rule 15B: Modal form uses React Hook Form + Zod
 - [x] Rule 26: `Loader2` spinner on submit button while saving

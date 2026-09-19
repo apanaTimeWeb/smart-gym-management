@@ -3,10 +3,8 @@
 
 import { IndianRupee } from 'lucide-react';
 
-export interface SalesEmptyStateProps {
-  message: string;
-  subtext?: string;
-}
+import type { SalesEmptyStateProps } from '@/app/admin/sales/sales_types/SalesEmptyStatePropsTypes';
+
 
 export default function AdminSalesEmptyState({ message, subtext }: SalesEmptyStateProps) {
   return (

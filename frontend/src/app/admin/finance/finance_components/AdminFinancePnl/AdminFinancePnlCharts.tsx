@@ -4,15 +4,14 @@ import { formatKPI, formatCurrency } from '@/lib/formatters';
 // and donut (profit share by branch). Code-split via next/dynamic to avoid SSR issues.
 
 import dynamic from 'next/dynamic';
-import { ADMIN_CHART_THEME } from '@/app/admin/admin_utils/AdminChartThemeTokens';
+import { ADMIN_CHART_THEME } from '@/app/admin/admin_layout/admin_utils/AdminChartThemeTokens';
 import type { BranchPnlRecord } from '@/app/admin/finance/finance_types/AdminFinanceTypes';
 
 // Lazy-load ApexCharts to prevent SSR window-is-not-defined error (Rule 15 — Lazy Loading)
 const ReactApexChart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
-interface AdminFinancePnlChartsProps {
-  data: BranchPnlRecord[];
-}
+import type { AdminFinancePnlChartsProps } from '@/app/admin/finance/finance_types/AdminFinancePnlChartsPropsTypes';
+
 
 const CHART_FONT = 'Inter, system-ui, sans-serif';
 
@@ -128,7 +127,7 @@ export default function AdminFinancePnlCharts({ data }: AdminFinancePnlChartsPro
     <div className="grid grid-cols-1 xl:grid-cols-5 gap-6">
       {/* Grouped Bar Chart — Revenue vs Expenses */}
       <div className="xl:col-span-3 bg-card border border-border rounded-xl p-5">
-        <p className="text-sm font-semibold text-foreground mb-4">Revenue vs Expenses by Branch</p>
+        <p className="text-sm font-semibold text-primary mb-4">Revenue vs Expenses by Branch</p>
         <ReactApexChart
           type="bar"
           series={barSeries}
@@ -139,7 +138,7 @@ export default function AdminFinancePnlCharts({ data }: AdminFinancePnlChartsPro
 
       {/* Donut — Profit Share */}
       <div className="xl:col-span-2 bg-card border border-border rounded-xl p-5">
-        <p className="text-sm font-semibold text-foreground mb-4">Profit Share by Branch</p>
+        <p className="text-sm font-semibold text-primary mb-4">Profit Share by Branch</p>
         {profits.length === 0 ? (
           <div className="h-64 flex items-center justify-center text-sm text-secondary">
             No profitable branches in this period.

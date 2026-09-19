@@ -1,3 +1,4 @@
+// DATA FLOW: HR API ledger response → useAdminHrLedgerLogic → AdminHrLedgerTable.
 "use client";
 // RESPONSIBILITY: Owns HR staff-ledger selection, server query state, and ledger sorting for the Admin HR ledger view.
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -24,12 +25,12 @@ export function useAdminHrLedgerLogic() {
 
   const ledgerQuery = useQuery({
     queryKey: ['admin', 'hr', 'ledger', selectedStaffId],
-    queryFn: () => hrApi.getLedger(selectedStaffId),
+    queryFn: () => hrApi.fetchLedger(selectedStaffId),
     enabled: Boolean(selectedStaffId),
   });
 
   useEffect(() => {
-    if (ledgerQuery.error instanceof Error) showToast(ledgerQuery.error.message, 'error');
+    if (ledgerQuery.error instanceof Error) showToast(ledgerQuery.error.message, 'error', 'hr-ledger-error');
   }, [ledgerQuery.error, showToast]);
 
   const selectedStaff = staff.find((member) => member.id === selectedStaffId) ?? null;

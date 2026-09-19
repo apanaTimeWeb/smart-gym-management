@@ -70,7 +70,7 @@ Backend path uses hyphens: `/admin/audit-logs` (not underscores). Always use `Ad
 
 ## Permissions and Security
 
-- **Required role:** `ADMIN` — enforced by `middleware.ts`
+- **Required role:** `ADMIN` — enforced by `@/middleware.ts`
 - **Immutability:** Zero write operations. No edit, delete, or archive buttons exist anywhere in this module.
 - **Sensitive data:** IP addresses and user agents are shown only in the detail drawer, not in the list table.
 - **Cross-role isolation:** Zero imports from `/manager`, `/trainer`, `/superadmin`.
@@ -112,7 +112,7 @@ Backend path uses hyphens: `/admin/audit-logs` (not underscores). Always use `Ad
 - [x] Rule 7: Type Isolation — all types in `audit_types/`
 - [x] Rule 8: Server/Client Boundary — `page.tsx` = Server Component
 - [x] Rule 9: Loading/error/not-found — all three present
-- [x] Rule 11: Centralized URL Config — `audit_logs_url_config.ts` present
+- [x] Rule 11: Centralized URL Config — `admin_audit_logs_url_config.ts` present
 - [x] Rule 13: Feature Map — this document
 - [x] Rule 40: `audit_logs_forbidden.md` present and specific
 - [ ] Rule 15A: Co-located tests are present; full behavioral coverage and runtime execution are NOT VERIFIED

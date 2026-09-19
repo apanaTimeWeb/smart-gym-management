@@ -4,10 +4,8 @@
 import { REVENUE_PERIOD_OPTIONS } from '@/app/admin/plans/plans_utils/AdminPlansRevenueConstants';
 import type { RevenuePeriod } from '@/app/admin/plans/plans_types/AdminPlansRevenueTypes';
 
-interface AdminPlansRevenuePeriodSelectorProps {
-  period: RevenuePeriod;
-  onPeriodChange: (p: RevenuePeriod) => void;
-}
+import type { AdminPlansRevenuePeriodSelectorProps } from '@/app/admin/plans/plans_types/AdminPlansRevenuePeriodSelectorPropsTypes';
+
 
 export default function AdminPlansRevenuePeriodSelector({ period, onPeriodChange }: AdminPlansRevenuePeriodSelectorProps) {
 
@@ -20,8 +18,8 @@ export default function AdminPlansRevenuePeriodSelector({ period, onPeriodChange
             onClick={() => onPeriodChange(opt.value)}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
               period === opt.value
-                ? 'bg-primary text-primary-foreground shadow-sm'
-                : 'text-secondary hover:text-foreground hover:bg-card'
+                ? 'bg-primary text-on-primary shadow-card'
+                : 'text-secondary hover:text-primary hover:bg-card'
             }`}
           >
             {opt.label}

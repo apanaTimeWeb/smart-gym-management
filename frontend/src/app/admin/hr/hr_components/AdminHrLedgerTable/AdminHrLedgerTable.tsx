@@ -1,10 +1,11 @@
 "use client";
 // RESPONSIBILITY: Renders the Admin HR staff ledger using typed query state and accessible table sorting from the ledger hook.
-import { displayValue } from '@/app/admin/admin_utils/AdminDisplayValue';
-import { AdminSearchableDropdown } from '@/app/admin/admin_components/AdminShared/AdminSearchableDropdown';
+import { displayValue } from '@/app/admin/admin_layout/admin_utils/AdminDisplayValue';
+import { AdminSearchableDropdown } from '@/app/admin/admin_layout/AdminShared/AdminSearchableDropdown/AdminSearchableDropdown';
 import { useAdminHrLedgerLogic } from '@/app/admin/hr/hr_context/useAdminHrLedgerLogic';
 import { ChevronDown, ChevronUp, ChevronsUpDown, FileText } from 'lucide-react';
 import type { AdminHrLedgerSortKey } from '@/app/admin/hr/hr_types/AdminHrTypes';
+import AdminHrEmptyState from '@/app/admin/hr/hr_components/AdminHrEmptyState/AdminHrEmptyState';
 
 const LEDGER_COLUMNS: ReadonlyArray<{ key: AdminHrLedgerSortKey | null; label: string }> = [
   { key: 'date', label: 'Date' },
@@ -34,7 +35,7 @@ export default function AdminHrLedgerTable() {
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row justify-between gap-4 items-end">
         <div>
-          <h2 className="text-lg font-bold text-foreground">Staff Ledger</h2>
+          <h2 className="text-lg font-bold text-primary">Staff Ledger</h2>
           <p className="text-sm text-secondary">View detailed transaction history for staff members.</p>
         </div>
         <div className="w-full sm:w-64">
@@ -53,7 +54,7 @@ export default function AdminHrLedgerTable() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
           <div className="bg-card p-4 rounded-xl border border-border">
             <p className="text-xs text-secondary uppercase">Base Salary</p>
-            <p className="text-xl font-bold text-foreground">{formatMoney(selectedStaff.salary ?? 0)}/mo</p>
+            <p className="text-xl font-bold text-primary">{formatMoney(selectedStaff.salary ?? 0)}/mo</p>
           </div>
           <div className="bg-card p-4 rounded-xl border border-border">
             <p className="text-xs text-secondary uppercase">Advance Balance</p>
@@ -70,11 +71,11 @@ export default function AdminHrLedgerTable() {
         <div className="overflow-x-auto">
           <table data-admin-responsive-table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-primary/5 border-b border-border text-sm">
+              <tr className="bg-surface-highlight border-b border-border text-sm">
                 {LEDGER_COLUMNS.map((column) => {
                   const active = column.key !== null && sortKey === column.key;
                   return (
-                    <th key={column.label} className={`p-4 font-medium text-secondary whitespace-nowrap ${column.key ? 'select-none' : ''} ${column.key === 'balance' ? 'bg-primary/5 text-right' : ''}`} aria-sort={active ? (sortDir === 'asc' ? 'ascending' : 'descending') : 'none'}>
+                    <th key={column.label} className={`p-4 font-medium text-secondary whitespace-nowrap ${column.key ? 'select-none' : ''} ${column.key === 'balance' ? 'bg-surface-highlight text-right' : ''}`} aria-sort={active ? (sortDir === 'asc' ? 'ascending' : 'descending') : 'none'}>
                       {column.key ? (
                         <button type="button" onClick={() => handleSort(column.key as AdminHrLedgerSortKey)} className="inline-flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded">
                           {column.label}
@@ -90,16 +91,16 @@ export default function AdminHrLedgerTable() {
               {loading ? (
                 <tr><td colSpan={6} className="text-center p-8 text-secondary">Loading ledger...</td></tr>
               ) : sortedLedger.length === 0 ? (
-                <tr><td colSpan={6} className="p-12 text-center text-secondary"><div className="flex flex-col items-center gap-2"><FileText size={32} className="opacity-20" aria-hidden="true" /><p>No transactions found for this staff member.</p></div></td></tr>
+                <tr><td colSpan={6}><AdminHrEmptyState title="No transactions found" description="This staff member has no ledger transactions for the current view." /></td></tr>
               ) : (
                 sortedLedger.map((entry) => (
-                  <tr key={entry.id} className="hover:bg-secondary/5 motion-safe:transition-colors">
-                    <td className="p-4 text-foreground whitespace-nowrap">{new Date(entry.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
-                    <td className="p-4"><span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${entry.type.includes('Advance') ? 'bg-danger/10 text-danger' : entry.type.includes('Salary Generated') ? 'bg-info-bg text-info' : entry.type.includes('Due') ? 'bg-warning/10 text-warning' : 'bg-success/10 text-success'}`}>{entry.type}</span></td>
+                  <tr key={entry.id} className="hover:bg-surface-hover motion-safe:transition-colors motion-safe:duration-base">
+                    <td className="p-4 text-primary whitespace-nowrap">{new Date(entry.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
+                    <td className="p-4"><span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${entry.type.includes('Advance') ? 'bg-danger text-danger' : entry.type.includes('Salary Generated') ? 'bg-info text-info' : entry.type.includes('Due') ? 'bg-warning text-warning' : 'bg-success text-success'}`}>{entry.type}</span></td>
                     <td className="p-4 text-secondary max-w-48 truncate" title={entry.notes}>{displayValue(entry.notes)}</td>
                     <td className="p-4 text-success text-right">{entry.credit ? formatMoney(entry.credit) : '—'}</td>
                     <td className="p-4 text-danger text-right">{entry.debit ? formatMoney(entry.debit) : '—'}</td>
-                    <td className="p-4 text-foreground font-semibold text-right">{formatMoney(entry.balance)}</td>
+                    <td className="p-4 text-primary font-semibold text-right">{formatMoney(entry.balance)}</td>
                   </tr>
                 ))
               )}

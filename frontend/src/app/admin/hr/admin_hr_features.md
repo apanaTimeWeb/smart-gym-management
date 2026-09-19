@@ -13,13 +13,13 @@ actions (deactivate staff, revoke role) require `useConfirm()` double-verificati
 | `loading.tsx` | Skeleton for staff table |
 | `error.tsx` | Error boundary |
 | `hr_components/AdminHrMain.tsx` | Root Client Component, wraps `AdminHrProvider` |
-| `hr_components/AdminHrTable.tsx` | Paginated staff directory table, clickable rows |
-| `hr_components/AdminHrAddModal.tsx` | Add new staff member form modal |
-| `hr_components/AdminHrEditModal.tsx` | Edit staff details form modal |
-| `hr_components/AdminHrFilters.tsx` | Filter by role, branch, status |
+| `hr_components/AdminHrStaffTable.tsx` | Paginated staff directory table, clickable rows |
+| `hr_components/AdminHrStaffModal.tsx` | Add new staff member form modal |
+| `hr_components/AdminHrStaffModal.tsx` | Edit staff details form modal |
+| `hr_components/AdminHrTabs.tsx` | Filter by role, branch, status |
 | `hr_types/AdminHrTypes.ts` | `StaffMember`, `CreateStaffDto`, `UpdateStaffDto` types |
 | `hr_api/AdminHrApi.ts` | API wrappers |
-| `hr_utils/AdminHrUrlConfig.ts` | Centralized URL constants |
+| `hr_url_config.ts` | Centralized URL constants |
 
 ## Feature Inventory
 | Feature | Path | Purpose | Main API Calls | Status |
@@ -33,7 +33,7 @@ actions (deactivate staff, revoke role) require `useConfirm()` double-verificati
 ## Data and State Architecture
 - Server-state: TanStack Query in `useAdminHrLogic`; UI-only state remains in the module store
 - Zustand stores: `useAdminHrStore` — modal open/close state
-- Context providers: `AdminHrContext.tsx` is retained only where the UI tree requires cross-tree wiring; it does not own server state
+- Context providers: `hr_context/AdminHrContext.tsx` is retained only where the UI tree requires cross-tree wiring; it does not own server state
 - Local-storage keys: None
 - MSW handler: `admin/hr/hr_mocks/handlers/AdminHrMockHandlers.ts` (module-owned MSW transport)
 
@@ -62,7 +62,8 @@ actions (deactivate staff, revoke role) require `useConfirm()` double-verificati
 - **Error:** `error.tsx` with retry
 
 ## Edge Cases / AI Warnings
-- **Deactivation is soft-delete** — never call a hard DELETE. The API sets `is_active: false`. Staff remains in DB for audit trail.
+- **Deactivation is represented by the module's existing delete/deactivate contract. Do not reinterpret the action as a hard-database-delete requirement in frontend code.
+- **Critical payroll mutations require an idempotency key:** create payroll, update payroll, payment/status changes, salary advance and due-payment actions must reuse the same key on retry for the same confirmed intent.
 - **Role values** — must come from the centralized `UserRole` enum in `AdminHrTypes.ts`, never raw strings like `'manager'`.
 - **Phone masking** — staff phone numbers in the table must use `maskSensitiveData()` from `@/lib/formatters`.
 
@@ -87,7 +88,7 @@ actions (deactivate staff, revoke role) require `useConfirm()` double-verificati
 ## API Contract
 | API file | Endpoint literal observed |
 |---|---|
-| API client | `AdminHrApi.ts` | Module-owned typed API boundary; exact endpoint constants are defined in the feature URL configuration and consumed by the API client. |
+| API client | `hr_api/AdminHrApi.ts` | Module-owned typed API boundary; exact endpoint constants are defined in the feature URL configuration and consumed by the API client. |
 
 ## UI Data Requirements
 - Every data-driven table, KPI, chart, filter, dropdown and detail field must map to a typed API response field and be represented in module-owned fixtures where mocked.
@@ -109,3 +110,9 @@ actions (deactivate staff, revoke role) require `useConfirm()` double-verificati
 ## Module-Owned MSW Fixtures
 
 All Admin frontend-first API fixtures and MSW transport handlers are owned by `admin/hr_mocks/fixtures/AdminHrMockFixtures.ts` and `admin/hr/hr_mocks/handlers/AdminHrMockHandlers.ts`. These files provide populated success responses and are the only module-owned mock transport source for Admin. Global MSW bootstrap may register these handlers, but must not contain Admin business data.
+
+
+## Critical Mutation Contract
+- `createPayroll`, `updatePayroll`, `updatePayrollStatus`, `giveAdvance`, and `payDue` receive an intent-scoped `Idempotency-Key`.
+- Keys are created only after the confirmation step, reused for retries, and cleared after confirmed success or abandonment.
+- Frontend permission checks do not replace backend authorization.

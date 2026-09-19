@@ -68,7 +68,7 @@ All calls go through `permissionsApi` in `permissions_api/AdminPermissionsApi.ts
 
 ## Permissions and Security
 
-- **Required role:** `ADMIN` — enforced by `middleware.ts`
+- **Required role:** `ADMIN` — enforced by `@/middleware.ts`
 - **Privilege escalation prevention:** Admins cannot grant permissions above their own level. The backend enforces this — the UI must also disable any toggle that would exceed the admin's own access.
 - **All changes are audit-logged:** The backend handles this automatically. Never suppress or bypass the audit trail.
 - **Destructive actions:** Both toggle and reset use `useAdminConfirm()` — never `window.confirm()`
@@ -112,7 +112,7 @@ All calls go through `permissionsApi` in `permissions_api/AdminPermissionsApi.ts
 - [x] Rule 7: Type Isolation — all types in `permissions_types/`
 - [x] Rule 8: Server/Client Boundary — `page.tsx` = Server Component
 - [x] Rule 9: `loading.tsx` + `error.tsx` + `not-found.tsx` present
-- [x] Rule 11: `permissions_url_config.ts` present
+- [x] Rule 11: `admin_permissions_url_config.ts` present
 - [x] Rule 13: Feature Map — this document
 - [x] Rule 40: `permissions_forbidden.md` present
 - [x] Rule 71: Toggle and reset both use `useAdminConfirm()`

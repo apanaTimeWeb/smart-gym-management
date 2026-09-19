@@ -4,10 +4,10 @@
 import { useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { plansApi } from '@/app/admin/plans/plans_api/AdminPlansApi';
-import { useDebounce } from '@/app/admin/admin_utils/useAdminDebounce';
-import { useAdminUrlQuerySync } from '@/app/admin/admin_utils/useAdminUrlQuerySync';
+import { useDebounce } from '@/app/admin/admin_layout/admin_utils/useAdminDebounce';
+import { useAdminUrlQuerySync } from '@/app/admin/admin_layout/admin_utils/useAdminUrlQuerySync';
 import type { PlanRevenueRecord, RevenueAggregates, RevenuePeriod, RevenueSortDirection, RevenueSortKey } from '@/app/admin/plans/plans_types/AdminPlansRevenueTypes';
-import { ADMIN_ITEMS_PER_PAGE } from '@/app/admin/admin_url_config';
+const PLANS_ITEMS_PER_PAGE = 10;
 
 export function useAdminPlansRevenueLogic() {
   const [period, setPeriod] = useState<RevenuePeriod>('THIS_MONTH');
@@ -24,8 +24,8 @@ export function useAdminPlansRevenueLogic() {
   ]);
 
   const query = useQuery({
-    queryKey: ['admin', 'plans', 'revenue', { period, search: debouncedSearch, sortKey, sortDir, page: currentPage, limit: ADMIN_ITEMS_PER_PAGE }],
-    queryFn: () => plansApi.fetchPlanRevenue(period, { search: debouncedSearch, sortKey, sortDir, page: currentPage, limit: ADMIN_ITEMS_PER_PAGE }),
+    queryKey: ['admin', 'plans', 'revenue', { period, search: debouncedSearch, sortKey, sortDir, page: currentPage, limit: PLANS_ITEMS_PER_PAGE }],
+    queryFn: () => plansApi.fetchPlanRevenue(period, { search: debouncedSearch, sortKey, sortDir, page: currentPage, limit: PLANS_ITEMS_PER_PAGE }),
   });
   const revenueData = query.data?.data ?? [];
   const handleSort = (key: RevenueSortKey) => { if (sortKey === key) setSortDir((prev) => prev === 'asc' ? 'desc' : 'asc'); else { setSortKey(key); setSortDir('desc'); } setCurrentPage(1); };

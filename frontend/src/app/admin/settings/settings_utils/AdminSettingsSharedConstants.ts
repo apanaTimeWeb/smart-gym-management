@@ -2,12 +2,12 @@
 import { Building, Bell, Shield, Smartphone, Settings as SettingsIcon, Receipt, CreditCard } from 'lucide-react';
 
 export const SETTINGS_TABS = [
-  { id: 'profile', icon: Building, title: 'Gym Profile', desc: 'Update gym name, logo, address, and contact details', color: 'text-info', bg: 'bg-info-bg' },
-  { id: 'notifications', icon: Bell, title: 'Notifications', desc: 'Configure SMS, email and WhatsApp alerts', color: 'text-warning', bg: 'bg-warning-bg' },
+  { id: 'profile', icon: Building, title: 'Gym Profile', desc: 'Update gym name, logo, address, and contact details', color: 'text-info', bg: 'bg-info' },
+  { id: 'notifications', icon: Bell, title: 'Notifications', desc: 'Configure SMS, email and WhatsApp alerts', color: 'text-warning', bg: 'bg-warning' },
   { id: 'roles', icon: Shield, title: 'Roles & Permissions', desc: 'Manage admin roles and access control', color: 'text-purple', bg: 'bg-purple-bg' },
-  { id: 'integration', icon: Smartphone, title: 'App Integration', desc: 'Member app settings and configurations', color: 'text-success', bg: 'bg-success-bg' },
-  { id: 'gst', icon: Receipt, title: 'GST & Tax', desc: 'Configure GST number, tax rates, and invoice settings', color: 'text-warning', bg: 'bg-warning-bg' },
-  { id: 'payment', icon: CreditCard, title: 'Payment Gateway', desc: 'Manage Razorpay, Stripe, and UPI payment configurations', color: 'text-success', bg: 'bg-success-bg' },
+  { id: 'integration', icon: Smartphone, title: 'App Integration', desc: 'Member app settings and configurations', color: 'text-success', bg: 'bg-success' },
+  { id: 'gst', icon: Receipt, title: 'GST & Tax', desc: 'Configure GST number, tax rates, and invoice settings', color: 'text-warning', bg: 'bg-warning' },
+  { id: 'payment', icon: CreditCard, title: 'Payment Gateway', desc: 'Manage Razorpay, Stripe, and UPI payment configurations', color: 'text-success', bg: 'bg-success' },
   { id: 'general', icon: SettingsIcon, title: 'General Settings', desc: 'System preferences, timezone, language', color: 'text-secondary', bg: 'bg-card' },
 ];
 

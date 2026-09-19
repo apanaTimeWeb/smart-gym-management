@@ -6,6 +6,6 @@ export const adminBranchesMockHandlers = [
   http.get('*/admin/branches/fetchBranches', ({ request }) => {
     const url = new URL(request.url);
     if (url.searchParams.has('consumer')) return;
-    return HttpResponse.json({ success: true, message: 'Success', data: MOCK_BRANCHES, meta: { total: MOCK_BRANCHES.length, page: 1, limit: 50, totalPages: 1 } });
+    return HttpResponse.json({ success: true, message: 'Success', data: MOCK_BRANCHES });
   }),
 ];

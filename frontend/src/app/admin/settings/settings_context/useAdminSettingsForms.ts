@@ -5,7 +5,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, useWatch, type FieldValues, type DefaultValues } from 'react-hook-form';
-import { adminToast } from '@/app/admin/admin_components/AdminFeedback/AdminToastService';
+import { adminToast } from '@/app/admin/admin_layout/AdminFeedback/AdminToastService';
 import { settingsApi } from '@/app/admin/settings/settings_api/AdminSettingsApi';
 import {
   AppIntegrationSettingsSchema,
@@ -23,19 +23,19 @@ import type {
   NotificationsSettingsType,
   PaymentGatewaySettingsType,
 } from '@/app/admin/settings/settings_types/AdminSettingsTypes';
-import { useUnsavedChangesGuard } from '@/app/admin/admin_utils/useAdminUnsavedChangesGuard';
-import type { z } from 'zod';
+import { useUnsavedChangesGuard } from '@/app/admin/admin_layout/admin_utils/useAdminUnsavedChangesGuard';
+import type { ZodType } from 'zod';
 
 function useAdminSettingsSectionForm<TFormValues extends FieldValues>(
   initialData: TFormValues,
-  schema: any,
+  schema: ZodType<TFormValues>,
   submit: (data: TFormValues) => ReturnType<typeof settingsApi.updateSettings>,
   toastId: string,
 ) {
   const queryClient = useQueryClient();
-  const form = useForm<TFormValues>({
-    resolver: zodResolver(schema),
-    defaultValues: initialData as DefaultValues<TFormValues>,
+  const form = useForm<any>({
+    resolver: zodResolver(schema as any) as any,
+    defaultValues: initialData as any,
   });
   const formValues = useWatch({ control: form.control });
 

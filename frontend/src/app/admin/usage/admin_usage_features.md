@@ -24,7 +24,7 @@ surfacing near-limit warnings with color-coded progress bars.
 | `usage_context/useAdminUsageLogic.ts` | Custom hook — fetches usage data, derives metric cards | `useAdminUsageLogic.ts` |
 | `usage_types/` | Types: `AdminUsageData`, `AdminUsageMetric`, `UsageFetchState` | — |
 | `usage_utils/` | Constants: `USAGE_WARNING_THRESHOLD`, metric label map | — |
-| `usage_url_config.ts` | Centralized URL config | `usage_url_config.ts` |
+| `admin_usage_url_config.ts` | Centralized URL config | `admin_usage_url_config.ts` |
 
 ---
 
@@ -51,7 +51,7 @@ surfacing near-limit warnings with color-coded progress bars.
 
 - [x] Rule 8: Server/Client Boundary — `page.tsx` is Server Component
 - [x] Rule 9: `loading.tsx` + `error.tsx` present
-- [x] Rule 11: Centralized URL Config — `AdminUsageUrlConfig` in `usage_url_config.ts`
+- [x] Rule 11: Centralized URL Config — `AdminUsageUrlConfig` in `admin_usage_url_config.ts`
 - [x] Rule 13: Feature Map — this document
 - [x] Rule 40: `usage_forbidden.md` present
 - [x] Rule 14: Usage client uses the module `apiFetch` implementation; legacy mock-stub path is removed

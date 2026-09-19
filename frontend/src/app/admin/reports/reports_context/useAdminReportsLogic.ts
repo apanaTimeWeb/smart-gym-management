@@ -4,7 +4,7 @@
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useSearchParams } from 'next/navigation';
-import { adminToast } from '@/app/admin/admin_components/AdminFeedback/AdminToastService';
+import { adminToast } from '@/app/admin/admin_layout/AdminFeedback/AdminToastService';
 import { reportsApi } from '@/app/admin/reports/reports_api/AdminReportsApi';
 import { useAdminReportsStore } from '@/app/admin/reports/reports_store/useAdminReportsStore';
 import type { AdminReportsExportFormat, AdminReportsExportResponse, ReportDateRange } from '@/app/admin/reports/reports_types/AdminReportsTypes';
@@ -41,7 +41,7 @@ export function useAdminReportsLogic() {
       document.body.appendChild(link);
       link.click();
       link.remove();
-      adminToast.success('Report exported successfully.', 'admin-reports-export');
+      adminToast.success('Export completed successfully', 'admin-reports-export');
       void queryClient.invalidateQueries({ queryKey: ['admin', 'reports'] });
     },
     onError: (error) => {

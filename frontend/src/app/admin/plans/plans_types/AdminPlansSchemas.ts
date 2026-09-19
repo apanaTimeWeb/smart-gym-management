@@ -29,6 +29,8 @@ export const plansInitialDataSchema = z.object({
 
 export const plansContextTypeSchema = z.object({
     plans: z.array(planSchema),
+    totalItems: z.number(),
+    totalPages: z.number(),
     status: statusSchema,
     saving: z.boolean(),
     toast: z.object({

@@ -85,7 +85,7 @@ All calls go through `blacklistApi` in `AdminBlacklistApi.ts`.
 
 ## Permissions and Security
 
-- **Required role:** `ADMIN` — enforced by `middleware.ts`
+- **Required role:** `ADMIN` — enforced by `@/middleware.ts`
 - **Destructive actions and their guards:**
   - Add to blacklist → `useConfirm()` not required (form modal is the confirmation)
   - Remove from blacklist → `useConfirm()` with message "Remove [Name] from the blacklist? They will regain access to assigned gyms."
@@ -133,7 +133,7 @@ All calls go through `blacklistApi` in `AdminBlacklistApi.ts`.
 - [x] Rule 7: Type Isolation — all types in `blacklist_types/`
 - [x] Rule 8: Server/Client Boundary — `page.tsx` = Server Component
 - [x] Rule 9: `loading.tsx` + `error.tsx` present
-- [x] Rule 11: `blacklist_url_config.ts` present with propagate endpoint
+- [x] Rule 11: `admin_blacklist_url_config.ts` present with propagate endpoint
 - [x] Rule 13: This document
 - [x] Rule 40: `blacklist_forbidden.md` present
 - [x] Rule 71: Remove and Propagate both use `useConfirm()`

@@ -1,28 +1,52 @@
-# Admin Fix V2 — Verification Record
+# Admin Fix V2 — Verification Record (Final)
 
-Scope: `src/app/admin` only.
+Scope: `admin/` role container and its 22 feature modules.
 
 ## Static verification completed
 
-- Admin production TypeScript/TSX source was syntax-transpiled with TypeScript: 0 syntax diagnostics in the checked source set before packaging.
-- No explicit `any` pattern remains in Admin production `.ts`/`.tsx` files.
-- No relative imports remain in Admin source.
-- No Admin cross-role imports to Manager, Trainer, or Superadmin remain.
-- No `BRANCH_RATIOS` references remain.
-- Admin tables are annotated for the module mobile card-stack behavior.
-- Interactive Admin tables use keyboard activation where row click is intentionally supported.
-- Admin shell header is mounted once at Admin layout level.
-- Admin modal/dialog layers use the documented z-index boundary.
-- Admin toast surface uses the documented bottom-right toast layer; the React hot-toast bridge redirects success/error calls while Admin is mounted.
-- Remaining test files no longer use `expect(true)`, `expect(false)`, or boolean-only placeholder assertions.
-- Admin production files remain within the documented component/hook/API size ceilings checked during this repair.
+- 654 Admin TypeScript/TSX files parsed with TypeScript: **0 syntax diagnostics**.
+- No relative source imports.
+- No sibling business-feature imports.
+- No `@ts-ignore` / `@ts-nocheck`.
+- No `console.*` calls in Admin source.
+- No legacy semantic token patterns in production Admin TS/TSX.
+- No arbitrary Tailwind theme value patterns in production Admin TS/TSX.
+- No `key={index}` dynamic-entity pattern detected.
+- No applicable data table lacks a dedicated module-owned EmptyState.
+- Component/hook/store/API/type/schema ceilings pass the category-aware static scan.
+- 22 feature modules remain self-contained with feature map / forbidden doc / theme contract artifacts.
+- Critical irreversible/financial mutation APIs expose the required `Idempotency-Key` header.
 
 ## Runtime verification
 
-`npm run build`, Vitest execution, and Playwright execution were not completed in the isolated repair environment because the available dependency installation was incomplete. Those checks are therefore intentionally recorded as NOT VERIFIED rather than treated as PASS.
+The following are **NOT VERIFIED** because the consuming application's dependency/configuration surface is not present in the repair archive:
+- TypeScript typecheck
+- ESLint
+- Vitest/React Testing Library execution
+- Playwright execution
+- Next.js production build
+- Browser accessibility and responsive verification
+- SCA/vulnerability scan
+- Secret scan / CI enforcement
 
-## Replacement scope
+Do not convert these states into PASS without executing the real checks in the consuming repository.
 
-This delivery contains only the `admin/` folder. Replace the existing project's `src/app/admin` folder with this folder.
+## Required downstream verification
 
-Changes that live outside `src/app/admin` are intentionally not included in this archive.
+1. Replace the consuming project's `src/app/admin` with this repaired `admin/` folder.
+2. Install/use the existing locked dependencies without upgrading them merely for verification.
+3. Run static search/architecture checks.
+4. Run TypeScript.
+5. Run ESLint.
+6. Run unit/component tests.
+7. Run targeted interaction tests.
+8. Run Playwright critical Admin journeys.
+9. Verify loading/empty/error/retry flows.
+10. Verify accessibility at keyboard and mobile sizes.
+11. Run production build.
+12. Run security/CI gates.
+13. Reconcile documentation against final code.
+
+## Scope integrity
+
+This delivery contains only the repaired `admin/` role container. No unrelated business module outside this scope was intentionally modified. The exact changed-file manifest is available separately as `ADMIN_REPAIR_CHANGED_FILES.txt`.

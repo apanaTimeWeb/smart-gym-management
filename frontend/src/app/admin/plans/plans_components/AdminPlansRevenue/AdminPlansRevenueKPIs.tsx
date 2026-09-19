@@ -14,28 +14,28 @@ export default function AdminPlansRevenueKPIs({ aggregates }: { aggregates: Reve
       value: formatKPI(aggregates.totalRevenue),
       icon: IndianRupee,
       iconColor: 'text-primary',
-      iconBg: 'bg-primary/10',
+      iconBg: 'bg-primary-subtle',
     },
     {
       label: 'Total Subscriptions' + dateSuffix,
       value: aggregates.totalSubscriptions.toLocaleString('en-IN'),
       icon: Users,
       iconColor: 'text-success',
-      iconBg: 'bg-success/10',
+      iconBg: 'bg-success',
     },
     {
       label: 'Avg Renewal Rate' + dateSuffix,
       value: `${formatPercent1dp(aggregates.avgRenewalRate)}%`,
       icon: TrendingUp,
       iconColor: 'text-info',
-      iconBg: 'bg-info/10',
+      iconBg: 'bg-info',
     },
     {
       label: 'Top Performing Plan' + dateSuffix,
       value: aggregates.topPerformingPlanName,
       icon: Award,
       iconColor: 'text-warning',
-      iconBg: 'bg-warning/10',
+      iconBg: 'bg-warning',
     },
   ];
 
@@ -50,7 +50,7 @@ export default function AdminPlansRevenueKPIs({ aggregates }: { aggregates: Reve
             </div>
             <div className="overflow-hidden">
               <p className="text-xs font-bold text-secondary uppercase tracking-wider mb-1 truncate">{kpi.label}</p>
-              <p className="text-2xl font-black text-foreground truncate" title={kpi.value.toString()}>{kpi.value}</p>
+              <p className="text-2xl font-black text-primary truncate" title={kpi.value.toString()}>{kpi.value}</p>
             </div>
           </div>
         );

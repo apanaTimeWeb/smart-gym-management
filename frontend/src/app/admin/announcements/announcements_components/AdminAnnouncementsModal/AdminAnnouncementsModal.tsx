@@ -38,20 +38,20 @@ export default function AdminAnnouncementsModal() {
     <>
       <div data-admin-dialog="true" role="dialog" aria-modal="true" tabIndex={-1} className="fixed inset-0 bg-overlay backdrop-blur-sm z-40" onClick={() => setShowModal(false)} />
       <div className="fixed inset-0 z-40 flex items-center justify-center p-4">
-        <div className="bg-overlay border border-border rounded-2xl shadow-2xl w-full max-w-2xl max-h-screen flex flex-col">
+        <div className="bg-overlay border border-border rounded-2xl shadow-dialog w-full max-w-2xl max-h-screen flex flex-col">
 
           {/* Header */}
           <div className="flex items-center justify-between p-5 border-b border-border shrink-0">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
+              <div className="w-9 h-9 rounded-xl bg-primary-subtle flex items-center justify-center">
                 <Megaphone size={18} className="text-primary" />
               </div>
               <div>
-                <h3 className="font-bold text-foreground">{isEdit ? 'Edit Announcement' : 'New Announcement'}</h3>
+                <h3 className="font-bold text-primary">{isEdit ? 'Edit Announcement' : 'New Announcement'}</h3>
                 <p className="text-xs text-secondary">{isEdit ? 'Update announcement details' : 'Broadcast to your branch members, trainers, or staff'}</p>
               </div>
             </div>
-            <button onClick={() => setShowModal(false)} className="w-8 h-8 rounded-lg bg-input hover:bg-border flex items-center justify-center motion-safe:transition-colors" aria-label="Close">
+            <button onClick={() => setShowModal(false)} className="w-8 h-8 rounded-lg bg-input hover:bg-surface-hover flex items-center justify-center motion-safe:transition-colors motion-safe:duration-base" aria-label="Close">
               <X size={16} className="text-secondary" />
             </button>
           </div>
@@ -65,7 +65,7 @@ export default function AdminAnnouncementsModal() {
               <input
                 {...register('title')}
                 placeholder="e.g. Grand Opening — New Branch!"
-                className="w-full px-4 py-2.5 bg-input border border-border rounded-xl text-sm text-foreground focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary"
+                className="w-full px-4 py-2.5 bg-input border border-border rounded-xl text-sm text-primary focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary"
               />
               {errors.title && <p className="text-xs text-danger mt-1">{errors.title.message}</p>}
             </div>
@@ -77,7 +77,7 @@ export default function AdminAnnouncementsModal() {
                 {...register('body')}
                 rows={4}
                 placeholder="Write the full announcement message here..."
-                className="w-full px-4 py-2.5 bg-input border border-border rounded-xl text-sm text-foreground focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary resize-none"
+                className="w-full px-4 py-2.5 bg-input border border-border rounded-xl text-sm text-primary focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary resize-none"
               />
               {errors.body && <p className="text-xs text-danger mt-1">{errors.body.message}</p>}
             </div>
@@ -88,7 +88,7 @@ export default function AdminAnnouncementsModal() {
                 <label className="block text-xs font-semibold text-secondary uppercase tracking-wider mb-1.5">Priority *</label>
                 <select
                   {...register('priority')}
-                  className="w-full px-4 py-2.5 bg-input border border-border rounded-xl text-sm text-foreground focus:outline-none focus:border-primary"
+                  className="w-full px-4 py-2.5 bg-input border border-border rounded-xl text-sm text-primary focus:outline-none focus:border-primary"
                 >
                   {ANNOUNCEMENT_PRIORITY_OPTIONS.map(o => (
                     <option key={o.value} value={o.value}>{o.label}</option>
@@ -96,10 +96,10 @@ export default function AdminAnnouncementsModal() {
                 </select>
               </div>
               <div className="flex flex-col justify-end">
-                <label className="flex items-center gap-3 cursor-pointer p-3 bg-input border border-border rounded-xl hover:border-primary motion-safe:transition-colors">
+                <label className="flex items-center gap-3 cursor-pointer p-3 bg-input border border-border rounded-xl hover:border-primary motion-safe:transition-colors motion-safe:duration-base">
                   <input type="checkbox" {...register('isPinned')} className="w-4 h-4 accent-primary" />
                   <div>
-                    <p className="text-sm font-semibold text-foreground">Pin Announcement</p>
+                    <p className="text-sm font-semibold text-primary">Pin Announcement</p>
                     <p className="text-xs text-secondary">Always show at top</p>
                   </div>
                 </label>
@@ -123,8 +123,8 @@ export default function AdminAnnouncementsModal() {
                           onClick={() => field.onChange(toggleArrayValue(field.value, o.value))}
                           className={`px-3 py-1.5 rounded-lg text-xs font-semibold border motion-safe:transition-colors ${
                             selected
-                              ? 'bg-primary text-primary-foreground border-primary'
-                              : 'bg-input text-secondary border-border hover:border-primary hover:text-foreground'
+                              ? 'bg-primary text-on-primary border-primary'
+                              : 'bg-input text-secondary border-border hover:border-primary hover:text-primary'
                           }`}
                         >
                           {o.label}
@@ -154,8 +154,8 @@ export default function AdminAnnouncementsModal() {
                           onClick={() => field.onChange(toggleArrayValue(field.value, o.value))}
                           className={`px-3 py-1.5 rounded-lg text-xs font-semibold border motion-safe:transition-colors ${
                             selected
-                              ? 'bg-primary text-primary-foreground border-primary'
-                              : 'bg-input text-secondary border-border hover:border-primary hover:text-foreground'
+                              ? 'bg-primary text-on-primary border-primary'
+                              : 'bg-input text-secondary border-border hover:border-primary hover:text-primary'
                           }`}
                         >
                           {o.label}
@@ -175,7 +175,7 @@ export default function AdminAnnouncementsModal() {
                 <input
                   type="datetime-local"
                   {...register('publishedAt')}
-                  className="w-full px-4 py-2.5 bg-input border border-border rounded-xl text-sm text-foreground focus:outline-none focus:border-primary"
+                  className="w-full px-4 py-2.5 bg-input border border-border rounded-xl text-sm text-primary focus:outline-none focus:border-primary"
                 />
                 {errors.publishedAt && <p className="text-xs text-danger mt-1">{errors.publishedAt.message}</p>}
               </div>
@@ -184,7 +184,7 @@ export default function AdminAnnouncementsModal() {
                 <input
                   type="datetime-local"
                   {...register('expiresAt')}
-                  className="w-full px-4 py-2.5 bg-input border border-border rounded-xl text-sm text-foreground focus:outline-none focus:border-primary"
+                  className="w-full px-4 py-2.5 bg-input border border-border rounded-xl text-sm text-primary focus:outline-none focus:border-primary"
                 />
                 {errors.expiresAt && <p className="text-xs text-danger mt-1">{errors.expiresAt.message}</p>}
               </div>
@@ -195,16 +195,16 @@ export default function AdminAnnouncementsModal() {
               <button
                 type="button"
                 onClick={() => setShowModal(false)}
-                className="flex-1 py-2.5 border border-border rounded-xl text-sm font-medium text-secondary hover:text-foreground hover:bg-input motion-safe:transition-colors"
+                className="flex-1 py-2.5 border border-border rounded-xl text-sm font-medium text-secondary hover:text-primary hover:bg-input motion-safe:transition-colors motion-safe:duration-base"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={saving}
-                className="flex-1 py-2.5 bg-primary hover:bg-primary-hover text-primary-foreground rounded-xl text-sm font-semibold motion-safe:transition-colors flex items-center justify-center gap-2 disabled:opacity-60"
+                className="flex-1 py-2.5 bg-primary hover:bg-primary-hover text-on-primary rounded-xl text-sm font-semibold motion-safe:transition-colors flex items-center justify-center gap-2 disabled:opacity-60 motion-safe:duration-base"
               >
-                {saving ? <Loader2 size={15} className="motion-safe:animate-spin" /> : null}
+                {saving ? <Loader2 size={15} className="motion-safe:animate-spin motion-safe:duration-base" /> : null}
                 {isEdit ? 'Save Changes' : 'Publish Announcement'}
               </button>
             </div>

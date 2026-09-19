@@ -12,7 +12,6 @@ export const adminUsageMockHandlers = [
     success: true,
     message: 'Usage data loaded',
     data: MOCK_ADMIN_USAGE_DATA,
-    meta: { total: 1, page: 1, limit: 1, totalPages: 1 },
   })),
   http.post('*/admin/usage/upgrade-request', async ({ request }) => {
     const body = await request.json().catch(() => null) as unknown;

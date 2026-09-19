@@ -2,16 +2,16 @@
 import { z } from 'zod';
 
 export const FINANCE_METHOD_STYLES: Record<string, { bg: string; text: string }> = {
- UPI: { bg: 'bg-primary/10', text: 'text-primary' },
- Cash: { bg: 'bg-success/10', text: 'text-success' },
- Card: { bg: 'bg-warning/10', text: 'text-warning' },
- NetBanking: { bg: 'bg-secondary/10', text: 'text-secondary' },
+ UPI: { bg: 'bg-primary-subtle', text: 'text-primary' },
+ Cash: { bg: 'bg-success', text: 'text-success' },
+ Card: { bg: 'bg-warning', text: 'text-warning' },
+ NetBanking: { bg: 'bg-input', text: 'text-secondary' },
 };
 
 export const FINANCE_STATUS_STYLES: Record<string, { bg: string; text: string }> = {
- PAID: { bg: 'bg-success/10', text: 'text-success' },
- DUE: { bg: 'bg-danger/10', text: 'text-danger' },
- REFUNDED: { bg: 'bg-warning/10', text: 'text-warning' },
+ PAID: { bg: 'bg-success', text: 'text-success' },
+ DUE: { bg: 'bg-danger', text: 'text-danger' },
+ REFUNDED: { bg: 'bg-warning', text: 'text-warning' },
 };
 
 export const FINANCE_PAYMENT_METHODS = ['UPI', 'Cash', 'Card', 'NetBanking'] as const;
@@ -24,3 +24,5 @@ export const PAYMENTS_TABLE_HEADERS = ['Invoice No', 'Member', 'Amount', 'Method
 export const FINANCE_TABS = ['Payments', 'Expenses', 'Summary'] as const;
 
 export const EXPENSE_CATEGORIES = ['Rent', 'Salaries', 'Utilities', 'Equipment', 'Marketing', 'Maintenance', 'Supplies', 'Other'] as const;
+
+export const FINANCE_ITEMS_PER_PAGE = 10;
