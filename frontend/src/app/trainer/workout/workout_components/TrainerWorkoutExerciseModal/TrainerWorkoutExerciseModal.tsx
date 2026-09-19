@@ -63,15 +63,15 @@ export default function TrainerWorkoutExerciseModal() {
 
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 p-4">
-      <div className="bg-card rounded-2xl shadow-xl w-full max-w-md overflow-hidden">
+      <div className="bg-card rounded-2xl shadow-card w-full max-w-md overflow-hidden">
         <div className="flex justify-between items-center p-5 border-b border-border">
-          <h3 className="font-bold text-lg text-foreground">
+          <h3 className="font-bold text-lg text-primary">
             {editEx ? 'Edit Exercise' : 'Add Exercise'}
           </h3>
           <button 
             type="button"
             onClick={() => setShowExModal(false)} 
-            className="text-secondary hover:text-foreground hover:bg-primary-subtle p-1 rounded-md motion-safe:transition-colors"
+            className="text-secondary hover:text-primary hover:bg-primary-subtle p-1 rounded-md motion-safe:transition-colors motion-safe:duration-base"
           >
             <X size={20} />
           </button>
@@ -82,9 +82,9 @@ export default function TrainerWorkoutExerciseModal() {
             <input 
               type="text" 
               {...register('name')}
-              className={`w-full px-3 py-2 border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page ${
-                errors.name ? 'border-destructive focus-visible:ring-destructive' : 'border-border focus-visible:ring-warning'
-              } bg-input text-foreground`} 
+              className={`w-full px-3 py-2 border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:  ${
+                errors.name ? 'border-danger focus-visible:ring-primary' : 'border-border focus-visible:ring-primary'
+              } bg-input text-primary`} 
             />
             {errors.name && <p className="text-danger text-xs mt-1">{errors.name.message}</p>}
           </div>
@@ -94,9 +94,9 @@ export default function TrainerWorkoutExerciseModal() {
               type="text" 
               placeholder="e.g. Chest, Quadriceps" 
               {...register('muscle')}
-              className={`w-full px-3 py-2 border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page ${
-                errors.muscle ? 'border-destructive focus-visible:ring-destructive' : 'border-border focus-visible:ring-warning'
-              } bg-input text-foreground`} 
+              className={`w-full px-3 py-2 border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:  ${
+                errors.muscle ? 'border-danger focus-visible:ring-primary' : 'border-border focus-visible:ring-primary'
+              } bg-input text-primary`} 
             />
             {errors.muscle && <p className="text-danger text-xs mt-1">{errors.muscle.message}</p>}
           </div>
@@ -136,7 +136,7 @@ export default function TrainerWorkoutExerciseModal() {
               type="text" 
               placeholder="e.g. https://youtube.com/..." 
               {...register('videoUrl')}
-              className="w-full px-3 py-2 border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page focus-visible:ring-warning bg-input text-foreground" 
+              className="w-full px-3 py-2 border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-primary" 
             />
           </div>
           <div>
@@ -145,7 +145,7 @@ export default function TrainerWorkoutExerciseModal() {
               rows={2}
               placeholder="e.g. 3 sets of 10-12 reps. Keep back straight." 
               {...register('instructions')}
-              className="w-full px-3 py-2 border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page focus-visible:ring-warning bg-input text-foreground custom-scrollbar" 
+              className="w-full px-3 py-2 border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-primary custom-scrollbar" 
             />
           </div>
           
@@ -153,16 +153,16 @@ export default function TrainerWorkoutExerciseModal() {
             <button 
               type="button" 
               onClick={() => setShowExModal(false)} 
-              className="px-4 py-2 border border-border rounded-lg font-medium text-secondary hover:text-foreground hover:bg-primary-subtle motion-safe:transition-colors"
+              className="px-4 py-2 border border-border rounded-lg font-medium text-secondary hover:text-primary hover:bg-primary-subtle motion-safe:transition-colors motion-safe:duration-base"
             >
               Cancel
             </button>
             <button 
               type="submit" 
               disabled={isSaving}
-              className="px-4 py-2 rounded-lg font-medium text-primary-foreground bg-primary flex items-center gap-2 hover:bg-primary-hover motion-safe:transition-colors disabled:opacity-70"
+              className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page px-4 py-2 rounded-lg font-medium text-on-primary bg-primary flex items-center gap-2 hover:bg-primary-hover motion-safe:transition-colors disabled:opacity-70"
             >
-              {isSaving ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full motion-safe:animate-spin" /> : <><Save size={15} /> Save</>}
+              {isSaving ? <div className="w-4 h-4 border-2 border-primary border-t-primary rounded-full motion-safe:animate-spin" /> : <><Save size={15} /> Save</>}
             </button>
           </div>
         </form>

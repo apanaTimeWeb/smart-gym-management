@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Mock data for Trainer Dashboard to prevent 'undefined' crashes.
+// RESPONSIBILITY: Feature-owned demo server data for the Trainer Dashboard. No financial/business-payment fields.
 import type { DashboardStats } from '@/app/trainer/dashboard/dashboard_types/TrainerDashboard_types';
 
 export const MOCK_DASHBOARD_STATS: DashboardStats = {
@@ -8,7 +8,6 @@ export const MOCK_DASHBOARD_STATS: DashboardStats = {
   myMembersCount: 42,
   todaysAttendance: 35,
   pendingWorkoutPlans: 4,
-  monthlyEarnings: 15400,
   memberGoalCompletionRate: 78,
   goalCompletionTrend: [
     { month: 'Jan', rate: 65 },
@@ -29,20 +28,13 @@ export const MOCK_DASHBOARD_STATS: DashboardStats = {
     { plan: 'Basic', count: 7 },
   ],
   recentMembers: [
-    { id: '1', name: 'Alex Johnson', plan: 'Premium', status: 'ACTIVE', joinDate: '2023-10-12', paidAmount: 5000 },
-    { id: '2', name: 'Maria Garcia', plan: 'Gold', status: 'ACTIVE', joinDate: '2023-10-10', paidAmount: 3500 },
-    { id: '3', name: 'James Wilson', plan: 'Basic', status: 'PENDING', joinDate: '2023-10-09', paidAmount: 1500 },
+    { id: '1', name: 'Alex Johnson', plan: 'Premium', status: 'ACTIVE', joinDate: '2023-10-12' },
+    { id: '2', name: 'Maria Garcia', plan: 'Gold', status: 'ACTIVE', joinDate: '2023-10-10' },
+    { id: '3', name: 'James Wilson', plan: 'Basic', status: 'PENDING', joinDate: '2023-10-09' },
   ],
   trainerProfile: {
     name: 'Michael Trainer',
     shiftStart: '06:00',
     shiftEnd: '14:00',
-    rating: 4.8,
   },
-  totalPTRevenue: 12000,
-  weeklySessionsCompleted: 24,
-  avgSessionRating: 4.9,
-  activeClientsCount: 38,
-  attendanceRate: 92,
-  nextSessionTime: '14:00',
 };

@@ -1,51 +1,19 @@
 import { http, HttpResponse, delay } from 'msw';
+import { StatusCodes } from 'http-status-codes';
 import { env } from '@/config/env';
 import { MOCK_WORKOUTS, MOCK_EXERCISES } from '@/app/trainer/workout/workout_fixtures/TrainerWorkoutMockData';
-
+import { CreateExerciseSchema, CreateWorkoutPlanSchema, WorkoutSchema, ExerciseSchema } from '@/app/trainer/workout/workout_types/TrainerWorkout.schema';
+import { WorkoutUrlConfig } from '@/app/trainer/workout/workout_url_config';
 const BASE = env.NEXT_PUBLIC_API_URL;
-const MOCK_DELAY_MS = 500;
-const MOCK_SHORT_DELAY_MS = 200;
-const MOCK_FAST_DELAY_MS = 300;
-
-let workoutsDB = [...MOCK_WORKOUTS];
-let exercisesDB = [...MOCK_EXERCISES];
-
+let workoutsDB = MOCK_WORKOUTS.map(w => ({ ...w })); let exercisesDB = MOCK_EXERCISES.map(e => ({ ...e }));
+const pageResult = <T,>(items: T[], page: number, limit: number) => items.slice((page-1)*limit, page*limit);
 export const trainerWorkoutHandlers = [
-  http.get(`${BASE}/trainer/workout/workouts`, async ({ request }) => {
-    await delay(MOCK_DELAY_MS);
-    const url = new URL(request.url);
-    const search = url.searchParams.get('search')?.toLowerCase() || '';
-
-    let filtered = [...workoutsDB];
-    if (search) {
-      filtered = filtered.filter(w => w.name.toLowerCase().includes(search));
-    }
-
-    return HttpResponse.json({
-      success: true,
-      message: 'Workouts fetched successfully',
-      data: {
-        workouts: filtered,
-      }
-    });
-  }),
-
-  http.get(`${BASE}/trainer/workout/exercises`, async ({ request }) => {
-    await delay(MOCK_DELAY_MS);
-    const url = new URL(request.url);
-    const search = url.searchParams.get('search')?.toLowerCase() || '';
-
-    let filtered = [...exercisesDB];
-    if (search) {
-      filtered = filtered.filter(e => e.name.toLowerCase().includes(search));
-    }
-
-    return HttpResponse.json({
-      success: true,
-      message: 'Exercises fetched successfully',
-      data: {
-        exercises: filtered,
-      }
-    });
-  }),
+  http.get(`${BASE}${WorkoutUrlConfig.BACKEND_API.WORKOUTS}`, async ({ request }) => { await delay(350); const url = new URL(request.url); const search = url.searchParams.get('search')?.toLowerCase() || ''; const category = url.searchParams.get('category') || 'All'; const page = Number(url.searchParams.get('page') || '1'); const limit = Number(url.searchParams.get('limit') || '12'); const filtered = workoutsDB.filter(w => (!search || w.name.toLowerCase().includes(search) || w.focus.toLowerCase().includes(search)) && (category === 'All' || w.focus === category || w.tags.includes(category))); return HttpResponse.json({ success:true, message:'Workouts fetched successfully', data:{ workouts: pageResult(filtered,page,limit), total: filtered.length, page, limit } }); }),
+  http.post(`${BASE}${WorkoutUrlConfig.BACKEND_API.WORKOUTS}`, async ({ request }) => { await delay(350); const parsed = CreateWorkoutPlanSchema.safeParse(await request.json()); if (!parsed.success) return HttpResponse.json({ success:false,message:'Invalid workout payload.',data:null },{status:StatusCodes.UNPROCESSABLE_ENTITY}); const dto=parsed.data; const workout=WorkoutSchema.parse({ ...dto, id:`workout-${Date.now()}`, tags: typeof dto.tags==='string' ? dto.tags.split(',').map(v=>v.trim()).filter(Boolean) : [], isActive:true }); workoutsDB=[workout,...workoutsDB]; return HttpResponse.json({success:true,message:'Workout plan created.',data:workout}); }),
+  http.patch(`${BASE}${WorkoutUrlConfig.BACKEND_API.WORKOUTS}/:id`, async ({ params, request }) => { await delay(350); const index=workoutsDB.findIndex(w=>w.id===params.id); if(index===-1) return HttpResponse.json({success:false,message:'Workout plan not found.',data:null},{status:StatusCodes.NOT_FOUND}); const raw=await request.json(); const current=workoutsDB[index]!; const parsed=CreateWorkoutPlanSchema.partial().safeParse(raw); if(!parsed.success) return HttpResponse.json({success:false,message:'Invalid workout payload.',data:null},{status:StatusCodes.UNPROCESSABLE_ENTITY}); const patch=parsed.data; const next=WorkoutSchema.parse({ ...current, ...patch, tags: typeof patch.tags==='string' ? patch.tags.split(',').map(v=>v.trim()).filter(Boolean) : current.tags }); workoutsDB[index]=next; return HttpResponse.json({success:true,message:'Workout plan updated.',data:next}); }),
+  http.delete(`${BASE}${WorkoutUrlConfig.BACKEND_API.WORKOUTS}/:id`, async ({ params }) => { await delay(300); const exists=workoutsDB.some(w=>w.id===params.id); if(!exists) return HttpResponse.json({success:false,message:'Workout plan not found.',data:null},{status:StatusCodes.NOT_FOUND}); workoutsDB=workoutsDB.filter(w=>w.id!==params.id); return HttpResponse.json({success:true,message:'Workout plan deleted.',data:null}); }),
+  http.get(`${BASE}${WorkoutUrlConfig.BACKEND_API.EXERCISES}`, async ({ request }) => { await delay(350); const url=new URL(request.url); const search=url.searchParams.get('search')?.toLowerCase()||''; const category=url.searchParams.get('category')||'All'; const page=Number(url.searchParams.get('page')||'1'); const limit=Number(url.searchParams.get('limit')||'12'); const filtered=exercisesDB.filter(e=>(!search||e.name.toLowerCase().includes(search)||(e.category??'').toLowerCase().includes(search))&&(category==='All'||e.category===category||e.difficulty===category)); return HttpResponse.json({success:true,message:'Exercises fetched successfully',data:{exercises:pageResult(filtered,page,limit),total:filtered.length,page,limit}}); }),
+  http.post(`${BASE}${WorkoutUrlConfig.BACKEND_API.EXERCISES}`, async ({ request }) => { await delay(350); const parsed=CreateExerciseSchema.safeParse(await request.json()); if(!parsed.success) return HttpResponse.json({success:false,message:'Invalid exercise payload.',data:null},{status:StatusCodes.UNPROCESSABLE_ENTITY}); const dto=parsed.data; const ex=ExerciseSchema.parse({ ...dto, id:`exercise-${Date.now()}`, category:dto.muscle, muscleGroup:[dto.muscle], isActive:true }); exercisesDB=[ex,...exercisesDB]; return HttpResponse.json({success:true,message:'Exercise created.',data:ex}); }),
+  http.patch(`${BASE}${WorkoutUrlConfig.BACKEND_API.EXERCISES}/:id`, async ({ params, request }) => { await delay(350); const index=exercisesDB.findIndex(e=>e.id===params.id); if(index===-1) return HttpResponse.json({success:false,message:'Exercise not found.',data:null},{status:StatusCodes.NOT_FOUND}); const parsed=CreateExerciseSchema.partial().safeParse(await request.json()); if(!parsed.success) return HttpResponse.json({success:false,message:'Invalid exercise payload.',data:null},{status:StatusCodes.UNPROCESSABLE_ENTITY}); const dto=parsed.data; const current=exercisesDB[index]!; const next=ExerciseSchema.parse({ ...current, ...dto, category:dto.muscle ?? current.category, muscleGroup:dto.muscle ? [dto.muscle] : current.muscleGroup }); exercisesDB[index]=next; return HttpResponse.json({success:true,message:'Exercise updated.',data:next}); }),
+  http.delete(`${BASE}${WorkoutUrlConfig.BACKEND_API.EXERCISES}/:id`, async ({ params }) => { await delay(300); const exists=exercisesDB.some(e=>e.id===params.id); if(!exists) return HttpResponse.json({success:false,message:'Exercise not found.',data:null},{status:StatusCodes.NOT_FOUND}); exercisesDB=exercisesDB.filter(e=>e.id!==params.id); return HttpResponse.json({success:true,message:'Exercise deleted.',data:null}); }),
 ];

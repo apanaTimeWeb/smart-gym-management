@@ -4,10 +4,9 @@
 import { CalendarCheck, CalendarX, TrendingUp, Users } from 'lucide-react';
 import type { TrainerSession } from '@/app/trainer/sessions/sessions_types/TrainerSessionsTypes';
 import { useDateRangeSuffix } from '@/lib/useDateRangeSuffix';
+import type { TrainerSessionsKPIsProps } from '@/app/trainer/sessions/sessions_types/TrainerSessionsKPIsProps';
 
-interface TrainerSessionsKPIsProps {
-  sessions: TrainerSession[];
-}
+
 
 export default function TrainerSessionsKPIs({ sessions }: TrainerSessionsKPIsProps) {
   const dateSuffix = useDateRangeSuffix();
@@ -27,7 +26,7 @@ export default function TrainerSessionsKPIs({ sessions }: TrainerSessionsKPIsPro
         </div>
         <div>
           <p className="text-sm font-medium text-secondary mb-1">{`Today's Sessions${dateSuffix}`}</p>
-          <h3 className="text-2xl font-bold text-foreground">{todayCount}</h3>
+          <h3 className="text-2xl font-bold text-primary">{todayCount}</h3>
         </div>
       </div>
       <div className="bg-card rounded-xl p-5 border border-border flex items-start gap-4">
@@ -36,7 +35,7 @@ export default function TrainerSessionsKPIs({ sessions }: TrainerSessionsKPIsPro
         </div>
         <div>
           <p className="text-sm font-medium text-secondary mb-1">{`Completed (Week)${dateSuffix}`}</p>
-          <h3 className="text-2xl font-bold text-foreground">{completedThisWeek}</h3>
+          <h3 className="text-2xl font-bold text-primary">{completedThisWeek}</h3>
         </div>
       </div>
       <div className="bg-card rounded-xl p-5 border border-border flex items-start gap-4">
@@ -45,7 +44,7 @@ export default function TrainerSessionsKPIs({ sessions }: TrainerSessionsKPIsPro
         </div>
         <div>
           <p className="text-sm font-medium text-secondary mb-1">{`Cancelled (Month)${dateSuffix}`}</p>
-          <h3 className="text-2xl font-bold text-foreground">{cancelledThisMonth}</h3>
+          <h3 className="text-2xl font-bold text-primary">{cancelledThisMonth}</h3>
         </div>
       </div>
       <div className="bg-card rounded-xl p-5 border border-border flex items-start gap-4">
@@ -54,7 +53,7 @@ export default function TrainerSessionsKPIs({ sessions }: TrainerSessionsKPIsPro
         </div>
         <div>
           <p className="text-sm font-medium text-secondary mb-1">{`Avg Attendance${dateSuffix}`}</p>
-          <h3 className="text-2xl font-bold text-foreground">{avgAttendanceRate}%</h3>
+          <h3 className="text-2xl font-bold text-primary">{avgAttendanceRate}%</h3>
         </div>
       </div>
     </div>

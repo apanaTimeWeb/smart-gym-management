@@ -4,30 +4,18 @@
 // Read-only — no edit/delete actions. Trend badge derived from snapshot.trend.
 
 import { TrendingUp, TrendingDown, Minus, AlertCircle } from 'lucide-react';
+import TrainerProgressComparisonDelta from '@/app/trainer/progress-tracking/progress_components/TrainerProgressComparisonDelta/TrainerProgressComparisonDelta';
 import type { ComparisonMemberSnapshot } from '@/app/trainer/progress-tracking/progress_types/TrainerProgressTypes';
+import type { TrainerProgressComparisonTableProps } from '@/app/trainer/progress-tracking/progress-tracking_types/TrainerProgressComparisonTableProps';
 
-interface TrainerProgressComparisonTableProps {
-  snapshots: ComparisonMemberSnapshot[];
-}
+
 
 const TREND_CONFIG = {
-  improving:   { label: 'Improving',   icon: TrendingUp,   cls: 'bg-success-bg text-success border-success/20' },
-  plateau:     { label: 'Plateau',      icon: Minus,        cls: 'bg-warning-bg text-warning border-warning/20' },
-  declining:   { label: 'Declining',    icon: TrendingDown, cls: 'bg-danger-bg text-danger border-danger/20'   },
+  improving:   { label: 'Improving',   icon: TrendingUp,   cls: 'bg-success-bg text-success border-success' },
+  plateau:     { label: 'Plateau',      icon: Minus,        cls: 'bg-warning-bg text-warning border-warning' },
+  declining:   { label: 'Declining',    icon: TrendingDown, cls: 'bg-danger-bg text-danger border-danger'   },
   insufficient:{ label: 'Insufficient', icon: AlertCircle,  cls: 'bg-input text-secondary border-border'       },
 } as const;
-
-function Delta({ value, lowerIsBetter }: { value: number | null; lowerIsBetter: boolean }) {
-  if (value === null) return <span className="text-secondary">—</span>;
-  const positive = lowerIsBetter ? value < 0 : value > 0;
-  const neutral = value === 0;
-  const sign = value > 0 ? '+' : '';
-  return (
-    <span className={neutral ? 'text-secondary' : positive ? 'text-success font-semibold' : 'text-danger font-semibold'}>
-      {sign}{value}
-    </span>
-  );
-}
 
 export default function TrainerProgressComparisonTable({ snapshots }: TrainerProgressComparisonTableProps) {
   if (snapshots.length === 0) {
@@ -41,7 +29,7 @@ export default function TrainerProgressComparisonTable({ snapshots }: TrainerPro
   return (
     <div className="bg-card rounded-xl border border-border overflow-hidden">
       <div className="px-5 py-3.5 border-b border-border">
-        <h3 className="text-sm font-semibold text-foreground">Member Comparison — Latest Snapshot</h3>
+        <h3 className="text-sm font-semibold text-primary">Member Comparison — Latest Snapshot</h3>
         <p className="text-xs text-secondary mt-0.5">Δ = change from first to latest entry</p>
       </div>
       <div className="overflow-x-auto">
@@ -60,10 +48,10 @@ export default function TrainerProgressComparisonTable({ snapshots }: TrainerPro
               const trend = TREND_CONFIG[s.trend];
               const TrendIcon = trend.icon;
               return (
-                <tr key={s.memberId} className="hover:bg-input/50 motion-safe:transition-colors">
-                  <td className="px-4 py-3 font-medium text-foreground whitespace-nowrap">
+                <tr key={s.memberId} className="hover:bg-surface-hover motion-safe:transition-colors motion-safe:duration-base">
+                  <td className="px-4 py-3 font-medium text-primary whitespace-nowrap">
                     <div className="flex items-center gap-2">
-                      <div className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xs font-bold shrink-0">
+                      <div className="w-7 h-7 rounded-full bg-primary-subtle flex items-center justify-center text-primary text-xs font-bold shrink-0">
                         {s.memberName.charAt(0)}
                       </div>
                       {s.memberName}
@@ -75,12 +63,12 @@ export default function TrainerProgressComparisonTable({ snapshots }: TrainerPro
                       {trend.label}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-foreground">{s.latestWeightKg ?? '—'}</td>
-                  <td className="px-4 py-3 text-foreground">{s.latestBmi ?? '—'}</td>
-                  <td className="px-4 py-3 text-foreground">{s.latestBodyFatPercent != null ? `${s.latestBodyFatPercent}%` : '—'}</td>
-                  <td className="px-4 py-3 text-foreground">{s.latestMuscleMassKg ?? '—'}</td>
-                  <td className="px-4 py-3"><Delta value={s.weightChangeKg} lowerIsBetter={true} /></td>
-                  <td className="px-4 py-3"><Delta value={s.muscleMassChange} lowerIsBetter={false} /></td>
+                  <td className="px-4 py-3 text-primary">{s.latestWeightKg ?? '—'}</td>
+                  <td className="px-4 py-3 text-primary">{s.latestBmi ?? '—'}</td>
+                  <td className="px-4 py-3 text-primary">{s.latestBodyFatPercent != null ? `${s.latestBodyFatPercent}%` : '—'}</td>
+                  <td className="px-4 py-3 text-primary">{s.latestMuscleMassKg ?? '—'}</td>
+                  <td className="px-4 py-3"><TrainerProgressComparisonDelta value={s.weightChangeKg} lowerIsBetter={true} /></td>
+                  <td className="px-4 py-3"><TrainerProgressComparisonDelta value={s.muscleMassChange} lowerIsBetter={false} /></td>
                   <td className="px-4 py-3 text-secondary">{s.totalEntries}</td>
                 </tr>
               );

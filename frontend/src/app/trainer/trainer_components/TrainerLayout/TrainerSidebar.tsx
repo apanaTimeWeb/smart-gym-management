@@ -1,6 +1,6 @@
 'use client';
 // RESPONSIBILITY: Renders the collapsible left navigation sidebar for the Trainer portal. No API calls.
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -21,6 +21,7 @@ export default function TrainerSidebar({ isCollapsed, setIsCollapsed }: TrainerS
   const [mounted, setMounted] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const user = getUser();
+  const sidebarRef = useRef<HTMLElement>(null);
 
   // Sets mounted=true once on client-side hydration to safely read user data (avoids SSR mismatch).
   /* eslint-disable react-hooks/set-state-in-effect */
@@ -41,6 +42,47 @@ export default function TrainerSidebar({ isCollapsed, setIsCollapsed }: TrainerS
     window.addEventListener('toggle-sidebar', handleToggle);
     return () => window.removeEventListener('toggle-sidebar', handleToggle);
   }, [isCollapsed, setIsCollapsed]);
+
+  useEffect(() => {
+    if (!isMobileOpen) return;
+    const previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const firstFocusable = sidebarRef.current?.querySelector<HTMLElement>(
+      'a[href], button:not([disabled]), input:not([disabled])',
+    );
+    firstFocusable?.focus();
+    const bodyOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        setIsMobileOpen(false);
+        document.querySelector<HTMLElement>('[data-trainer-sidebar-toggle]')?.focus();
+        return;
+      }
+      if (event.key !== 'Tab') return;
+      const focusable = sidebarRef.current?.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled])',
+      );
+      if (!focusable || focusable.length === 0) return;
+      const first = focusable[0]!;
+      const last = focusable[focusable.length - 1]!;
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      document.body.style.overflow = bodyOverflow;
+      previousFocus?.focus();
+    };
+  }, [isMobileOpen]);
 
   // Closes the mobile drawer whenever the route changes (user navigated to a new page).
   /* eslint-disable react-hooks/set-state-in-effect */
@@ -66,13 +108,15 @@ export default function TrainerSidebar({ isCollapsed, setIsCollapsed }: TrainerS
     <>
       {/* Mobile Backdrop */}
       {isMobileOpen && (
-        <div
-          className="fixed inset-0 bg-overlay/80 backdrop-blur-sm z-40 lg:hidden motion-safe:transition-opacity"
+        <button
+          type="button"
+          aria-label="Close navigation sidebar"
+          className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page fixed inset-0 bg-overlay/80 backdrop-blur-sm z-40 lg:hidden motion-safe:transition-opacity cursor-default"
           onClick={() => setIsMobileOpen(false)}
         />
       )}
 
-      <aside className={`fixed left-0 top-0 h-full bg-sidebar border-r border-border z-20 flex flex-col motion-safe:transition-all motion-safe:duration-slow ${
+      <aside ref={sidebarRef} id="trainer-sidebar" aria-label="Trainer navigation" aria-modal={isMobileOpen ? 'true' : undefined} className={`fixed left-0 top-0 h-full bg-sidebar border-r border-border z-20 flex flex-col motion-safe:transition-all motion-safe:duration-slow ${
         isCollapsed ? 'lg:w-15' : 'lg:w-60'
       } ${
         isMobileOpen ? 'w-60 translate-x-0' : 'w-60 -translate-x-full lg:translate-x-0'
@@ -84,7 +128,7 @@ export default function TrainerSidebar({ isCollapsed, setIsCollapsed }: TrainerS
             <Image src="/logo.png" alt="GymSmart TRAINER" width={44} height={44} className="object-contain min-w-11 rounded-lg" />
             {(!isCollapsed || isMobileOpen) && (
               <div className="whitespace-nowrap motion-safe:transition-opacity motion-safe:duration-base flex flex-col">
-                <span className="text-foreground font-bold text-lg leading-tight tracking-tight">GymSmart</span>
+                <span className="text-primary font-bold text-lg leading-tight tracking-tight">GymSmart</span>
                 <span className="text-xs text-warning font-bold uppercase tracking-wider -mt-0.5">TRAINER App</span>
               </div>
             )}
@@ -103,7 +147,7 @@ export default function TrainerSidebar({ isCollapsed, setIsCollapsed }: TrainerS
                 placeholder="Search menu..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="block w-full pl-9 pr-3 py-2 border border-border rounded-lg leading-5 bg-input text-foreground placeholder-secondary focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm motion-safe:transition-colors"
+                className="block w-full pl-9 pr-3 py-2 border border-border rounded-lg leading-5 bg-input text-primary placeholder-secondary focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm motion-safe:transition-colors motion-safe:duration-base"
               />
             </div>
           </div>
@@ -111,10 +155,10 @@ export default function TrainerSidebar({ isCollapsed, setIsCollapsed }: TrainerS
         
         {isCollapsed && !isMobileOpen && (
           <div className="flex items-center justify-center px-4 py-3 border-b border-border shrink-0">
-            <button
+            <button type="button"
               onClick={() => setIsCollapsed(false)}
               aria-label="Search menu"
-              className="p-2 rounded-lg text-secondary hover:text-foreground hover:bg-input motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              className="p-2 rounded-lg text-secondary hover:text-primary hover:bg-input motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
               <Search size={18} />
             </button>
@@ -181,12 +225,12 @@ export default function TrainerSidebar({ isCollapsed, setIsCollapsed }: TrainerS
 
         {/* User */}
         <div className={`px-4 py-4 border-t border-border bg-header shrink-0 flex items-center ${(!isCollapsed || isMobileOpen) ? 'gap-3' : 'justify-center'}`}>
-          <div className="w-10 h-10 min-w-10 rounded-full flex items-center justify-center text-white text-sm font-bold border border-white/10 bg-primary">
+          <div className="w-10 h-10 min-w-10 rounded-full flex items-center justify-center text-on-primary text-sm font-bold border border-border bg-primary">
             {mounted ? (user?.name?.charAt(0)?.toUpperCase() || 'T') : 'T'}
           </div>
           {(!isCollapsed || isMobileOpen) && (
             <div className="whitespace-nowrap overflow-hidden flex-1">
-              <div className="text-foreground text-sm font-bold truncate">{mounted ? (user?.name || 'Trainer User') : 'Trainer User'}</div>
+              <div className="text-primary text-sm font-bold truncate">{mounted ? (user?.name || 'Trainer User') : 'Trainer User'}</div>
               <div className="text-secondary text-xs truncate">{mounted ? (user?.role || 'Personal Trainer') : 'Personal Trainer'}</div>
             </div>
           )}

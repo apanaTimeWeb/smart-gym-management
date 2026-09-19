@@ -1,14 +1,6 @@
 // RESPONSIBILITY: Zustand store that manages UI-only state for the Trainer Schedule module.
 import { create } from 'zustand';
-
-interface TrainerScheduleStore {
-  activeTab: 'availability' | 'leaves';
-  setActiveTab: (tab: 'availability' | 'leaves') => void;
-  showLeaveModal: boolean;
-  setShowLeaveModal: (show: boolean) => void;
-  openLeaveModal: () => void;
-  closeLeaveModal: () => void;
-}
+import type { TrainerScheduleStore } from '@/app/trainer/schedule/schedule_types/TrainerScheduleStoreTypes';
 
 export const useTrainerScheduleStore = create<TrainerScheduleStore>((set) => ({
   activeTab: 'availability',

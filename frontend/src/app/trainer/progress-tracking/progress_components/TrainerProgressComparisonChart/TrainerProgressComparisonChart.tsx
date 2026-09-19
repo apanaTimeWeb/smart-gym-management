@@ -8,16 +8,13 @@ import { useEffect, useState } from 'react';
 import type { ComparisonMemberSnapshot, ComparisonMetric } from '@/app/trainer/progress-tracking/progress_types/TrainerProgressTypes';
 import { COMPARISON_METRICS } from '@/app/trainer/progress-tracking/progress_utils/TrainerProgressSharedConstants';
 import type { ApexOptions } from 'apexcharts';
+import type { TrainerProgressComparisonChartProps } from '@/app/trainer/progress-tracking/progress-tracking_types/TrainerProgressComparisonChartProps';
 
 const ApexChart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 const THEME_MEMBER_TOKENS = ['--primary', '--success', '--info', '--danger'] as const;
 
-interface TrainerProgressComparisonChartProps {
-  snapshots: ComparisonMemberSnapshot[];
-  activeMetric: ComparisonMetric;
-  onMetricChange: (m: ComparisonMetric) => void;
-}
+
 
 export default function TrainerProgressComparisonChart({ snapshots, activeMetric, onMetricChange }: TrainerProgressComparisonChartProps) {
   const metricConfig = COMPARISON_METRICS.find(m => m.value === activeMetric)!;
@@ -95,13 +92,13 @@ export default function TrainerProgressComparisonChart({ snapshots, activeMetric
     <div className="bg-card rounded-xl border border-border p-5 space-y-4">
       <div className="flex flex-wrap gap-2">
         {COMPARISON_METRICS.map(m => (
-          <button
+          <button type="button"
             key={m.value}
             onClick={() => onMetricChange(m.value)}
             className={`px-3 py-1 text-xs font-semibold rounded-full motion-safe:transition-colors ${
               activeMetric === m.value
-                ? 'bg-primary text-white'
-                : 'bg-input text-secondary hover:text-foreground'
+                ? 'bg-primary text-on-primary'
+                : 'bg-input text-secondary hover:text-primary'
             }`}
           >
             {m.label}

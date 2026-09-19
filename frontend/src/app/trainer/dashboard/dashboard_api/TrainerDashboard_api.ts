@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { apiFetch } from '@/lib/api';
-import { DashboardUrlConfig } from '@/app/trainer/Trainer_url_config';
+import { DashboardUrlConfig } from '@/app/trainer/dashboard/dashboard_url_config';
 import { DashboardStatsSchema, type DashboardStats } from '@/app/trainer/dashboard/dashboard_types/TrainerDashboard_types';
 import { createTrainerApiResponseSchema } from '@/app/trainer/trainer_utils/TrainerApiResponseSchema';
 

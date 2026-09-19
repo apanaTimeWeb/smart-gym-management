@@ -6,7 +6,6 @@ import {
   createAttendanceRecord,
   checkoutAttendance,
   selfCheckInAttendance,
-  type AttendanceFetchParams,
 } from '@/app/trainer/attendance/attendance_api/TrainerAttendance_api';
 import type { CreateAttendanceDto } from '@/app/trainer/attendance/attendance_types/TrainerAttendance_types';
 

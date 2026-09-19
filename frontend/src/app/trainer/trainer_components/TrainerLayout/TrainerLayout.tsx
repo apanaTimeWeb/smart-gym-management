@@ -29,7 +29,7 @@ export default function TrainerLayout({ children }: { children: ReactNode }) {
   const headerProps = routeTitleMap[baseRoute] || { title: 'GymSmart TRAINER', subtitle: 'Manage your gym efficiently' };
 
  return (
- <div className="flex h-screen overflow-hidden bg-background text-foreground">
+ <div className="flex h-screen overflow-hidden bg-page text-primary">
  <TrainerSidebar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
  <main className={`flex-1 flex flex-col h-screen overflow-y-auto motion-safe:transition-all motion-safe:duration-slow ${isCollapsed ? 'lg:ml-15' : 'lg:ml-60'}`}>
  <TrainerHeader title={headerProps.title} subtitle={headerProps.subtitle} />

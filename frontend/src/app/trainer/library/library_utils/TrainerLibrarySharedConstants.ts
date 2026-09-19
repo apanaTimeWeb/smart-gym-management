@@ -19,6 +19,8 @@ export const DietSchema = z.object({
 export type DietFormValues = z.infer<typeof DietSchema>;
 
 export const GOALS = ['Weight Loss', 'Muscle Gain', 'Maintenance', 'Endurance', 'Flexibility'] as const;
+export const TRAINER_LIBRARY_FILTER_GOALS = ['All', ...GOALS] as const;
+export type TrainerLibraryFilterGoal = (typeof TRAINER_LIBRARY_FILTER_GOALS)[number];
 
 export const EMPTY_DIET_FORM = { 
  name: '', 

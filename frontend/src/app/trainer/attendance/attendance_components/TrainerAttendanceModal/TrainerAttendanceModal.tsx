@@ -13,14 +13,9 @@ import {
 } from '@/app/trainer/attendance/attendance_utils/TrainerAttendanceSharedConstants';
 import TrainerSearchableDropdown from '@/app/trainer/trainer_components/TrainerShared/TrainerSearchableDropdown/TrainerSearchableDropdown';
 import type { AttendanceMemberBasic, CreateAttendanceDto } from '@/app/trainer/attendance/attendance_types/TrainerAttendance_types';
+import type { TrainerAttendanceModalProps } from '@/app/trainer/attendance/attendance_types/TrainerAttendanceModalProps';
 
-interface TrainerAttendanceModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  members: AttendanceMemberBasic[];
-  saving: boolean;
-  onSubmit: (data: CreateAttendanceDto) => Promise<void>;
-}
+
 
 export default function TrainerAttendanceModal({ isOpen, onClose, members, saving, onSubmit }: TrainerAttendanceModalProps) {
   const {
@@ -59,13 +54,13 @@ export default function TrainerAttendanceModal({ isOpen, onClose, members, savin
 
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 backdrop-blur-sm p-4">
-      <div className="bg-card rounded-2xl shadow-xl w-full max-w-md overflow-hidden border border-border motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95 motion-safe:duration-200">
+      <div className="bg-card rounded-2xl shadow-card w-full max-w-md overflow-hidden border border-border motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95 motion-safe:duration-base">
         <div className="flex justify-between items-center p-5 border-b border-border">
-          <h3 className="font-bold text-lg text-foreground">Record Attendance</h3>
+          <h3 className="font-bold text-lg text-primary">Record Attendance</h3>
           <button
             type="button"
             onClick={onClose}
-            className="text-secondary hover:text-foreground hover:bg-primary/10 p-1 rounded-md motion-safe:transition-colors"
+            className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page text-secondary hover:text-primary hover:bg-primary-subtle p-1 rounded-md motion-safe:transition-colors motion-safe:duration-base"
             aria-label="Close modal"
           >
             <X size={20} />
@@ -76,7 +71,7 @@ export default function TrainerAttendanceModal({ isOpen, onClose, members, savin
           {/* Type selector */}
           <div className="flex gap-4">
             {(['MEMBER', 'STAFF'] as const).map(t => (
-              <label key={t} className="flex items-center gap-2 text-sm text-foreground cursor-pointer">
+              <label key={t} className="flex items-center gap-2 text-sm text-primary cursor-pointer">
                 <input
                   type="radio"
                   value={t}
@@ -118,8 +113,8 @@ export default function TrainerAttendanceModal({ isOpen, onClose, members, savin
                 type="date"
                 {...register('date')}
                 className={`w-full px-3 py-2 border rounded-lg focus-visible:outline-none focus-visible:ring-2 ${
-                  errors.date ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
-                } bg-input text-foreground`}
+                  errors.date ? 'border-danger focus-visible:ring-primary' : 'border-border focus-visible:ring-primary'
+                } bg-input text-primary`}
               />
               {errors.date && <p className="text-danger text-xs mt-1">{errors.date.message}</p>}
             </div>
@@ -129,8 +124,8 @@ export default function TrainerAttendanceModal({ isOpen, onClose, members, savin
                 type="time"
                 {...register('checkIn')}
                 className={`w-full px-3 py-2 border rounded-lg focus-visible:outline-none focus-visible:ring-2 ${
-                  errors.checkIn ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
-                } bg-input text-foreground`}
+                  errors.checkIn ? 'border-danger focus-visible:ring-primary' : 'border-border focus-visible:ring-primary'
+                } bg-input text-primary`}
               />
               {errors.checkIn && <p className="text-danger text-xs mt-1">{errors.checkIn.message}</p>}
             </div>
@@ -139,7 +134,7 @@ export default function TrainerAttendanceModal({ isOpen, onClose, members, savin
               <input
                 type="time"
                 {...register('checkOut')}
-                className="w-full px-3 py-2 border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-foreground"
+                className="w-full px-3 py-2 border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-primary"
               />
             </div>
             <div>
@@ -148,7 +143,7 @@ export default function TrainerAttendanceModal({ isOpen, onClose, members, savin
                 type="text"
                 {...register('notes')}
                 placeholder="Optional notes..."
-                className="w-full px-3 py-2 border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-foreground"
+                className="w-full px-3 py-2 border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-primary"
               />
             </div>
           </div>
@@ -157,14 +152,14 @@ export default function TrainerAttendanceModal({ isOpen, onClose, members, savin
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 border border-border rounded-lg font-medium text-secondary hover:text-foreground hover:bg-primary/10 motion-safe:transition-colors"
+              className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page px-4 py-2 border border-border rounded-lg font-medium text-secondary hover:text-primary hover:bg-primary-subtle motion-safe:transition-colors motion-safe:duration-base"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={saving}
-              className="min-w-32 px-4 py-2 rounded-lg font-medium text-white bg-primary flex items-center justify-center gap-2 hover:opacity-90 motion-safe:transition-opacity disabled:opacity-70"
+              className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page min-w-32 px-4 py-2 rounded-lg font-medium text-on-primary bg-primary flex items-center justify-center gap-2 hover:opacity-90 motion-safe:transition-opacity disabled:opacity-70"
             >
               {saving ? <Loader2 className="w-4 h-4 motion-safe:animate-spin" /> : <><CheckCircle size={15} /> Save Record</>}
             </button>

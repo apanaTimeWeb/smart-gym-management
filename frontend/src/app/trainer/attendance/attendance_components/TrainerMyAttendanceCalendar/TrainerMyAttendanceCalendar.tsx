@@ -6,11 +6,8 @@
 import { useState, useMemo } from 'react';
 import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, CheckCircle2, XCircle, Clock, ShieldCheck, UserCheck } from 'lucide-react';
 import { getUser } from '@/lib/api';
-import type { AttendanceRecord } from '@/app/trainer/attendance/attendance_types/TrainerAttendance_types';
-
-interface TrainerMyAttendanceCalendarProps {
-  records: AttendanceRecord[];
-}
+import type { TrainerAttendanceCalendarCell, AttendanceCalendarStatus } from '@/app/trainer/attendance/attendance_types/TrainerAttendanceInteractionTypes';
+import type { TrainerMyAttendanceCalendarProps } from '@/app/trainer/attendance/attendance_components/TrainerMyAttendanceCalendar/TrainerMyAttendanceCalendarTypes';
 
 export default function TrainerMyAttendanceCalendar({ records }: TrainerMyAttendanceCalendarProps) {
   const user = getUser();
@@ -31,7 +28,7 @@ export default function TrainerMyAttendanceCalendar({ records }: TrainerMyAttend
 
   // Map API records for staff check-ins
   const recordMap = useMemo(() => {
-    const map: Record<number, { in?: string; out?: string; status: 'P' | 'A' | 'L' }> = {};
+    const map: Record<number, TrainerAttendanceCalendarCell> = {};
     records.forEach(r => {
       if (!r.date) return;
       const d = new Date(r.date);
@@ -54,7 +51,7 @@ export default function TrainerMyAttendanceCalendar({ records }: TrainerMyAttend
       const isPastOrToday = isCurrentMonth ? day <= todayDate : currentDate < today;
       const existing = recordMap[day];
 
-      let status: 'P' | 'A' | 'L' | 'UPCOMING' = 'UPCOMING';
+      let status: AttendanceCalendarStatus = 'UPCOMING';
       let checkIn = existing?.in;
       let checkOut = existing?.out;
 
@@ -106,10 +103,10 @@ export default function TrainerMyAttendanceCalendar({ records }: TrainerMyAttend
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <h3 className="text-xl font-bold text-foreground flex items-center gap-2">
+            <h3 className="text-xl font-bold text-primary flex items-center gap-2">
               <CalendarIcon size={20} className="text-primary" /> {monthName} {year} History
             </h3>
-            <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-success-bg text-success border border-success/20 flex items-center gap-1">
+            <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-success-bg text-success border border-success flex items-center gap-1">
               <UserCheck size={12} /> {user?.name || 'My Record'}
             </span>
             <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-input text-secondary border border-border flex items-center gap-1">
@@ -122,27 +119,27 @@ export default function TrainerMyAttendanceCalendar({ records }: TrainerMyAttend
         </div>
 
         <div className="flex items-center gap-2">
-          <button
+          <button type="button"
             onClick={handleJumpToday}
-            className="px-3 py-1.5 text-xs font-semibold bg-input text-foreground border border-border rounded-lg hover:bg-primary-subtle motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95"
+            className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page px-3 py-1.5 text-xs font-semibold bg-input text-primary border border-border rounded-lg hover:bg-primary-subtle motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95"
           >
             Current Month
           </button>
           <div className="flex items-center bg-input border border-border rounded-lg overflow-hidden">
-            <button
+            <button type="button"
               onClick={handlePrevMonth}
               aria-label="Previous Month"
-              className="p-2 hover:bg-card text-secondary hover:text-foreground motion-safe:transition-colors"
+              className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page p-2 hover:bg-card text-secondary hover:text-primary motion-safe:transition-colors motion-safe:duration-base"
             >
               <ChevronLeft size={16} />
             </button>
-            <span className="px-3 text-xs font-bold text-foreground select-none">
+            <span className="px-3 text-xs font-bold text-primary select-none">
               {monthName.slice(0, 3)} {year}
             </span>
-            <button
+            <button type="button"
               onClick={handleNextMonth}
               aria-label="Next Month"
-              className="p-2 hover:bg-card text-secondary hover:text-foreground motion-safe:transition-colors"
+              className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page p-2 hover:bg-card text-secondary hover:text-primary motion-safe:transition-colors motion-safe:duration-base"
             >
               <ChevronRight size={16} />
             </button>
@@ -152,25 +149,25 @@ export default function TrainerMyAttendanceCalendar({ records }: TrainerMyAttend
 
       {/* Monthly Summary Statistics */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <div className="bg-card border border-border rounded-xl p-4 shadow-sm">
+        <div className="bg-card border border-border rounded-xl p-4 shadow-card">
           <p className="text-xs font-medium text-secondary">Present on Duty</p>
           <p className="text-2xl font-bold text-success mt-1 flex items-center gap-2">
             {presentDays} <span className="text-xs text-secondary font-normal">days</span>
           </p>
         </div>
-        <div className="bg-card border border-border rounded-xl p-4 shadow-sm">
+        <div className="bg-card border border-border rounded-xl p-4 shadow-card">
           <p className="text-xs font-medium text-secondary">Absent</p>
           <p className="text-2xl font-bold text-danger mt-1 flex items-center gap-2">
             {absentDays} <span className="text-xs text-secondary font-normal">days</span>
           </p>
         </div>
-        <div className="bg-card border border-border rounded-xl p-4 shadow-sm">
+        <div className="bg-card border border-border rounded-xl p-4 shadow-card">
           <p className="text-xs font-medium text-secondary">Weekly Off / Rest</p>
           <p className="text-2xl font-bold text-warning mt-1 flex items-center gap-2">
             {weeklyOffDays} <span className="text-xs text-secondary font-normal">days</span>
           </p>
         </div>
-        <div className="bg-card border border-border rounded-xl p-4 shadow-sm">
+        <div className="bg-card border border-border rounded-xl p-4 shadow-card">
           <p className="text-xs font-medium text-secondary">Attendance Rate</p>
           <p className={`text-2xl font-bold mt-1 ${attPct >= 85 ? 'text-success' : 'text-danger'}`}>
             {attPct}%
@@ -179,7 +176,7 @@ export default function TrainerMyAttendanceCalendar({ records }: TrainerMyAttend
       </div>
 
       {/* Monthly Calendar View */}
-      <div className="bg-card border border-border rounded-2xl p-5 shadow-sm space-y-4">
+      <div className="bg-card border border-border rounded-2xl p-5 shadow-card space-y-4">
         <div className="grid grid-cols-7 gap-2 text-center pb-2 border-b border-border">
           {weekDays.map(wd => (
             <div key={wd} className="text-xs font-bold text-secondary uppercase tracking-wider py-1">
@@ -191,27 +188,27 @@ export default function TrainerMyAttendanceCalendar({ records }: TrainerMyAttend
         <div className="grid grid-cols-7 gap-2">
           {/* Empty offset padding for days before 1st of the month */}
           {Array.from({ length: firstDayIndex }).map((_, i) => (
-            <div key={`offset-${i}`} className="h-24 rounded-xl bg-input/20 border border-transparent" />
+            <div key={`offset-${i}`} className="h-24 rounded-xl bg-input border border-transparent" />
           ))}
 
           {/* Calendar Day Cells */}
           {daysArray.map(({ day, status, checkIn, checkOut, isToday, isPastOrToday }) => {
-            let statusStyle = 'bg-input/30 text-secondary border-border';
+            let statusStyle = 'bg-input text-secondary border-border';
             let badgeStyle = 'text-secondary';
             let label = 'Upcoming';
 
             if (isPastOrToday) {
               if (status === 'P') {
-                statusStyle = 'bg-success-bg/80 text-success border-success/30 hover:border-success/60';
-                badgeStyle = 'bg-success text-white';
+                statusStyle = 'bg-success-bg text-success border-success hover:border-success/60';
+                badgeStyle = 'bg-success text-on-primary';
                 label = 'Present';
               } else if (status === 'A') {
-                statusStyle = 'bg-danger-bg/80 text-danger border-danger/30 hover:border-danger/60';
-                badgeStyle = 'bg-danger text-white';
+                statusStyle = 'bg-danger-bg text-danger border-danger hover:border-danger/60';
+                badgeStyle = 'bg-danger text-on-primary';
                 label = 'Absent';
               } else if (status === 'L') {
-                statusStyle = 'bg-warning-bg/80 text-warning border-warning/30 hover:border-warning/60';
-                badgeStyle = 'bg-warning text-white';
+                statusStyle = 'bg-warning-bg text-warning border-warning/30 hover:border-warning/60';
+                badgeStyle = 'bg-warning text-on-primary';
                 label = 'Weekly Off';
               }
             }
@@ -220,15 +217,15 @@ export default function TrainerMyAttendanceCalendar({ records }: TrainerMyAttend
               <div
                 key={day}
                 className={`h-24 rounded-xl p-2.5 border flex flex-col justify-between motion-safe:transition-all relative ${statusStyle} ${
-                  isToday ? 'ring-2 ring-primary ring-offset-2 ring-offset-bg-page' : ''
+                  isToday ? 'ring-2 ring-primary  ' : ''
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <span className={`text-sm font-bold ${isToday ? 'text-primary' : 'text-foreground'}`}>
+                  <span className={`text-sm font-bold ${isToday ? 'text-primary' : 'text-primary'}`}>
                     {day}
                   </span>
                   {isToday && (
-                    <span className="text-xs font-extrabold uppercase px-1.5 py-0.5 rounded bg-primary text-white tracking-wide">
+                    <span className="text-xs font-extrabold uppercase px-1.5 py-0.5 rounded bg-primary text-on-primary tracking-wide">
                       Today
                     </span>
                   )}
@@ -251,7 +248,7 @@ export default function TrainerMyAttendanceCalendar({ records }: TrainerMyAttend
                       )}
                     </>
                   ) : (
-                    <span className="text-xs text-secondary/50">—</span>
+                    <span className="text-xs text-disabled">—</span>
                   )}
                 </div>
               </div>
@@ -261,9 +258,9 @@ export default function TrainerMyAttendanceCalendar({ records }: TrainerMyAttend
       </div>
 
       {/* Legend Footer */}
-      <div className="flex flex-wrap items-center justify-between gap-4 p-4 bg-input/40 border border-border rounded-xl text-xs text-secondary">
+      <div className="flex flex-wrap items-center justify-between gap-4 p-4 bg-floating border border-border rounded-xl text-xs text-secondary">
         <div className="flex items-center gap-4 flex-wrap">
-          <span className="font-semibold text-foreground">Calendar Status:</span>
+          <span className="font-semibold text-primary">Calendar Status:</span>
           <span className="flex items-center gap-1.5">
             <span className="w-3 h-3 rounded-full bg-success"></span> Present (P)
           </span>
@@ -277,7 +274,7 @@ export default function TrainerMyAttendanceCalendar({ records }: TrainerMyAttend
             <span className="w-3 h-3 rounded-full bg-border"></span> Future Day
           </span>
         </div>
-        <p className="text-secondary/70">
+        <p className="text-disabled">
           Attendance is automatically marked upon biometric gate authentication.
         </p>
       </div>

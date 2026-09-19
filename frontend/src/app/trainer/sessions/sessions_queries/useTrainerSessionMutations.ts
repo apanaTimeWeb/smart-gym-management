@@ -13,28 +13,28 @@ export function useTrainerSessionMutations() {
   const queryClient = useQueryClient();
 
   const createSession = useMutation({
-    mutationFn: (dto: CreateSessionDto) => createTrainerSession(dto),
+    mutationFn: ({ dto, idempotencyKey }: { dto: CreateSessionDto; idempotencyKey: string }) => createTrainerSession(dto, idempotencyKey),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['trainer', 'sessions'] });
     },
   });
 
   const updateSession = useMutation({
-    mutationFn: ({ id, dto }: { id: string; dto: Partial<CreateSessionDto> }) => updateTrainerSession(id, dto),
+    mutationFn: ({ id, dto, idempotencyKey }: { id: string; dto: Partial<CreateSessionDto>; idempotencyKey: string }) => updateTrainerSession(id, dto, idempotencyKey),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['trainer', 'sessions'] });
     },
   });
 
   const cancelSession = useMutation({
-    mutationFn: (id: string) => cancelTrainerSession(id),
+    mutationFn: ({ id, idempotencyKey }: { id: string; idempotencyKey: string }) => cancelTrainerSession(id, idempotencyKey),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['trainer', 'sessions'] });
     },
   });
 
   const markAttendance = useMutation({
-    mutationFn: ({ id, memberIds }: { id: string; memberIds: string[] }) => markTrainerSessionAttendance(id, memberIds),
+    mutationFn: ({ id, memberIds, idempotencyKey }: { id: string; memberIds: string[]; idempotencyKey: string }) => markTrainerSessionAttendance(id, memberIds, idempotencyKey),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['trainer', 'sessions'] });
     },

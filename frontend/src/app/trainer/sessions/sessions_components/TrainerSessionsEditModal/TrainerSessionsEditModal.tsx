@@ -1,158 +1,31 @@
 'use client';
-// RESPONSIBILITY: Modal for editing an existing trainer session (title, time, duration, location, room).
-// DATA FLOW: TrainerSessionsMain → TrainerSessionsEditModal → updateTrainerSession API
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
+// RESPONSIBILITY: View-only shell for editing a session. Form state/submission lives in useTrainerSessionsEditForm.
 import { X, Loader2, Save } from 'lucide-react';
 import type { TrainerSession } from '@/app/trainer/sessions/sessions_types/TrainerSessionsTypes';
-import { updateTrainerSession } from '@/app/trainer/sessions/sessions_api/TrainerSessionsApi';
 import { DURATION_OPTIONS } from '@/app/trainer/sessions/sessions_utils/TrainerSessionsSharedConstants';
 import TrainerSearchableDropdown from '@/app/trainer/trainer_components/TrainerShared/TrainerSearchableDropdown/TrainerSearchableDropdown';
+import { useTrainerSessionsEditForm } from '@/app/trainer/sessions/sessions_hooks/useTrainerSessionsEditForm';
 import { useTrainerUnsavedChangesGuard } from '@/app/trainer/trainer_utils/TrainerUseWarnIfUnsavedChanges';
+import type { TrainerSessionsEditModalProps } from '@/app/trainer/sessions/sessions_types/TrainerSessionsEditModalProps';
 
-const editSessionSchema = z.object({
-  time: z.string().min(1, 'Time is required'),
-  duration: z.string().min(1, 'Duration is required'),
-  location: z.string().optional(),
-  room: z.string().optional(),
-});
-type EditSessionValues = z.infer<typeof editSessionSchema>;
 
-interface TrainerSessionsEditModalProps {
-  session: TrainerSession;
-  onClose: () => void;
-  onSuccess: (updatedSession: TrainerSession, message: string) => void;
-}
-
-export default function TrainerSessionsEditModal({
-  session,
-  onClose,
-  onSuccess,
-}: TrainerSessionsEditModalProps) {
-  const { register, handleSubmit, watch, setValue, formState: { errors, isDirty, isSubmitting } } = useForm<EditSessionValues>({
-    resolver: zodResolver(editSessionSchema),
-    defaultValues: {
-      time: session.time ?? '',
-      duration: session.duration ?? '60m',
-      location: session.location ?? '',
-      room: session.room ?? '',
-    },
-  });
-
-  const [error, setError] = useState('');
-  useTrainerUnsavedChangesGuard(isDirty && !isSubmitting);
-
-  const durationOptions = DURATION_OPTIONS.map((d) => ({ value: d.value, label: d.label }));
-  const selectedDuration = watch('duration');
-
-  const onSubmitForm = async (data: EditSessionValues) => {
-    setError('');
-    try {
-      const response = await updateTrainerSession(session.id, {
-        time: data.time,
-        duration: data.duration,
-        location: data.location || undefined,
-        room: data.room || undefined,
-      });
-      onSuccess(response.data, response.message);
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Failed to update session.');
-    }
-  };
-
+export default function TrainerSessionsEditModal({ session, onClose, onSuccess }: TrainerSessionsEditModalProps) {
+  const form = useTrainerSessionsEditForm(session, onSuccess);
+  useTrainerUnsavedChangesGuard(form.formState.isDirty && !form.formState.isSubmitting && !form.mutation.isPending);
+  const durationOptions = DURATION_OPTIONS.map(item => ({ value: item.value, label: item.label }));
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 backdrop-blur-sm p-4">
-      <div className="bg-overlay w-full max-w-md rounded-2xl shadow-2xl border border-border overflow-hidden motion-safe:transition-all motion-safe:duration-slow">
-        <div className="flex items-center justify-between p-5 border-b border-border">
-          <div>
-            <h3 className="text-lg font-bold text-foreground">Edit Session</h3>
-            <p className="text-xs text-secondary mt-0.5 truncate max-w-xs">{session.title}</p>
-          </div>
-          <button
-            onClick={onClose}
-            className="text-secondary hover:text-foreground hover:bg-input p-1 rounded-lg motion-safe:transition-colors"
-            aria-label="Close edit session modal"
-          >
-            <X size={20} />
-          </button>
-        </div>
-
-        <form onSubmit={handleSubmit(onSubmitForm)} className="p-5 space-y-4">
-          {error && (
-            <p className="text-sm text-danger bg-danger-bg rounded-lg px-3 py-2">{error}</p>
-          )}
-
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 p-4" role="presentation">
+      <div className="bg-overlay w-full max-w-md rounded-xl shadow-dialog border border-border overflow-hidden" role="dialog" aria-modal="true" aria-labelledby="trainer-session-edit-title">
+        <div className="flex items-center justify-between p-5 border-b border-border"><div><h3 id="trainer-session-edit-title" className="text-lg font-bold text-primary">Edit Session</h3><p className="text-xs text-secondary mt-0.5 truncate max-w-xs">{session.title}</p></div><button type="button" onClick={onClose} className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page text-secondary hover:text-primary hover:bg-input p-2 rounded-lg" aria-label="Close edit session modal"><X size={20} /></button></div>
+        <form onSubmit={form.submit} className="p-5 space-y-4">
+          {form.formState.errors.root?.message && <p role="alert" className="text-sm text-danger bg-danger-bg rounded-lg px-3 py-2">{form.formState.errors.root.message}</p>}
           <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label htmlFor="edit-session-time" className="block text-sm font-semibold text-secondary mb-1">
-                Session Time
-              </label>
-              <input
-                id="edit-session-time"
-                type="time"
-                required
-                {...register('time')}
-                className="w-full px-3 py-2 border border-border rounded-lg bg-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-              {errors.time && <p className="text-xs text-danger mt-1">{errors.time.message}</p>}
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-secondary mb-1">Duration</label>
-              <TrainerSearchableDropdown
-                options={durationOptions}
-                value={selectedDuration}
-                onChange={(val: string | number) => setValue('duration', String(val), { shouldValidate: true })}
-                placeholder="Select duration"
-              />
-              {errors.duration && <p className="text-xs text-danger mt-1">{errors.duration.message}</p>}
-            </div>
+            <div><label htmlFor="trainer-session-edit-time" className="block text-sm font-semibold text-secondary mb-1">Session Time</label><input id="trainer-session-edit-time" type="time" {...form.register('time')} aria-invalid={Boolean(form.formState.errors.time)} className="w-full px-3 py-2 border border-border rounded-lg bg-input text-primary focus:outline-none focus:ring-2 focus:ring-primary" />{form.formState.errors.time && <p className="text-xs text-danger mt-1">{form.formState.errors.time.message}</p>}</div>
+            <div><label htmlFor="trainer-session-edit-duration" className="block text-sm font-semibold text-secondary mb-1">Duration</label><TrainerSearchableDropdown options={durationOptions} value={form.watch('duration')} onChange={value => form.setValue('duration', String(value), { shouldValidate: true, shouldDirty: true })} placeholder="Select duration" />{form.formState.errors.duration && <p className="text-xs text-danger mt-1">{form.formState.errors.duration.message}</p>}</div>
           </div>
-
-          <div>
-            <label htmlFor="edit-session-location" className="block text-sm font-semibold text-secondary mb-1">
-              Location / Studio <span className="text-secondary font-normal">(optional)</span>
-            </label>
-            <input
-              id="edit-session-location"
-              type="text"
-              {...register('location')}
-              placeholder="e.g. Main Floor, Yoga Studio"
-              className="w-full px-3 py-2 border border-border rounded-lg bg-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="edit-session-room" className="block text-sm font-semibold text-secondary mb-1">
-              Room <span className="text-secondary font-normal">(optional)</span>
-            </label>
-            <input
-              id="edit-session-room"
-              type="text"
-              {...register('room')}
-              placeholder="e.g. Room A, Studio 2"
-              className="w-full px-3 py-2 border border-border rounded-lg bg-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-            />
-          </div>
-
-          <div className="pt-4 flex justify-end gap-2 border-t border-border mt-4">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 text-sm font-semibold text-secondary hover:text-foreground hover:bg-input rounded-lg motion-safe:transition-colors"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-primary rounded-lg hover:bg-primary/90 motion-safe:transition-colors disabled:opacity-70"
-            >
-              {isSubmitting ? <Loader2 size={16} className="motion-safe:animate-spin" /> : <Save size={16} />}
-              Save Changes
-            </button>
-          </div>
+          <div><label htmlFor="trainer-session-edit-location" className="block text-sm font-semibold text-secondary mb-1">Location / Studio <span className="font-normal">(optional)</span></label><input id="trainer-session-edit-location" {...form.register('location')} className="w-full px-3 py-2 border border-border rounded-lg bg-input text-primary focus:outline-none focus:ring-2 focus:ring-primary" /></div>
+          <div><label htmlFor="trainer-session-edit-room" className="block text-sm font-semibold text-secondary mb-1">Room <span className="font-normal">(optional)</span></label><input id="trainer-session-edit-room" {...form.register('room')} className="w-full px-3 py-2 border border-border rounded-lg bg-input text-primary focus:outline-none focus:ring-2 focus:ring-primary" /></div>
+          <div className="pt-4 flex justify-end gap-2 border-t border-border"><button type="button" onClick={onClose} className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page px-4 py-2 text-sm font-semibold text-secondary hover:text-primary hover:bg-input rounded-lg">Cancel</button><button type="submit" disabled={form.formState.isSubmitting || form.mutation.isPending} className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page flex items-center gap-2 px-4 py-2 text-sm font-semibold text-on-primary bg-primary rounded-lg hover:bg-primary-hover disabled:opacity-70">{form.mutation.isPending && <Loader2 size={16} className="motion-safe:animate-spin" />}<Save size={16} />Save Changes</button></div>
         </form>
       </div>
     </div>

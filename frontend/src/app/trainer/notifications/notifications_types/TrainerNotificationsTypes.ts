@@ -1,6 +1,7 @@
 // RESPONSIBILITY: TypeScript types for the Trainer Notifications module.
 
-export type NotificationType = 'MEMBER' | 'WORKOUT' | 'SYSTEM' | 'ATTENDANCE';
+export const NOTIFICATION_TYPE_IDS = ['MEMBER', 'WORKOUT', 'SYSTEM', 'ATTENDANCE'] as const;
+export type NotificationType = (typeof NOTIFICATION_TYPE_IDS)[number];
 
 export interface TrainerNotificationItem {
   id: string;

@@ -2,21 +2,11 @@
 // RESPONSIBILITY: Renders a custom searchable popover dropdown for large datasets (Rule 20). Replaces native <select> for all gyms/plans/user selectors.
 import { useState, useRef, useEffect } from 'react';
 import { Search, ChevronDown, Check } from 'lucide-react';
+import type { TrainerSearchableDropdownOption } from '@/app/trainer/trainer_components/trainer_components_types/TrainerSearchableDropdownOption';
+import type { TrainerSearchableDropdownProps } from '@/app/trainer/trainer_components/trainer_components_types/TrainerSearchableDropdownProps';
 
-export interface TrainerSearchableDropdownOption {
-  value: string | number;
-  label: string;
-}
 
-export interface TrainerSearchableDropdownProps {
-  options: TrainerSearchableDropdownOption[];
-  value: string | number;
-  onChange: (value: string | number) => void;
-  placeholder?: string;
-  className?: string;
-  disabled?: boolean;
-  
-}
+
 
 export default function TrainerSearchableDropdown({
   options,
@@ -70,19 +60,19 @@ export default function TrainerSearchableDropdown({
           }
         }}
       >
-        <span className={`text-sm ${!selectedOption ? 'text-muted-foreground' : 'text-foreground'} truncate`}>
+        <span className={`text-sm ${!selectedOption ? 'text-secondary' : 'text-primary'} truncate`}>
           {selectedOption ? selectedOption.label : placeholder}
         </span>
-        <ChevronDown size={18} className="text-muted-foreground" />
+        <ChevronDown size={18} className="text-secondary" />
       </button>
 
       {isOpen && !disabled && (
-        <div role="listbox" className="absolute z-30 w-full mt-1 bg-popover border border-border rounded-lg shadow-lg overflow-hidden motion-safe:animate-in fade-in zoom-in-95 motion-safe:duration-fast">
+        <div role="listbox" className="absolute z-30 w-full mt-1 bg-popover border border-border rounded-lg shadow-card overflow-hidden motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95 motion-safe:duration-fast">
           <div className="p-2 border-b border-border relative">
-            <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
+            <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-secondary" />
             <input
               type="text"
-              className="w-full pl-8 pr-4 py-1.5 text-sm bg-input border border-border rounded-md focus-visible:outline-none focus-visible:border-primary text-foreground placeholder-muted-foreground"
+              className="w-full pl-8 pr-4 py-1.5 text-sm bg-input border border-border rounded-md focus-visible:outline-none focus-visible:border-primary text-primary placeholder-muted-foreground"
               placeholder="Search..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -99,7 +89,7 @@ export default function TrainerSearchableDropdown({
                   aria-selected={option.value === value}
                   key={option.value}
                   className={`flex items-center justify-between px-3 py-2 text-sm rounded-md cursor-pointer hover:bg-input ${
-                    option.value === value ? 'text-primary font-medium' : 'text-foreground'
+                    option.value === value ? 'text-primary font-medium' : 'text-primary'
                   }`}
                   onClick={() => handleSelect(option.value)}
                 >
@@ -108,7 +98,7 @@ export default function TrainerSearchableDropdown({
                 </button>
               ))
             ) : (
-              <div className="px-3 py-4 text-sm text-center text-muted-foreground">
+              <div className="px-3 py-4 text-sm text-center text-secondary">
                 No results found
               </div>
             )}

@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { env } from '@/config/env';
 import { MOCK_AVAILABILITY, MOCK_LEAVES } from '@/app/trainer/schedule/schedule_fixtures/TrainerScheduleMockData';
 import { WeeklyAvailabilitySchema, CreateLeaveDtoSchema } from '@/app/trainer/schedule/schedule_types/TrainerScheduleTypes';
+import { ScheduleUrlConfig } from '@/app/trainer/schedule/schedule_url_config';
 
 const BASE = env.NEXT_PUBLIC_API_URL;
 const MOCK_DELAY_MS = 500;
@@ -13,12 +14,12 @@ let currentAvailability = [...MOCK_AVAILABILITY];
 let currentLeaves = [...MOCK_LEAVES];
 
 export const trainerScheduleHandlers = [
-  http.get(`${BASE}/trainer/schedule`, async () => {
+  http.get(`${BASE}${ScheduleUrlConfig.BACKEND_API.SCHEDULE}`, async () => {
     await delay(MOCK_DELAY_MS);
     return HttpResponse.json({ success: true, message: 'Schedule fetched successfully', data: { availability: currentAvailability, leaves: currentLeaves } });
   }),
 
-  http.put(`${BASE}/trainer/schedule/availability`, async ({ request }) => {
+  http.put(`${BASE}${ScheduleUrlConfig.BACKEND_API.AVAILABILITY}`, async ({ request }) => {
     await delay(MOCK_DELAY_MS);
     const parsedData = z.array(WeeklyAvailabilitySchema).safeParse(await request.json());
     if (!parsedData.success) return HttpResponse.json({ success: false, message: 'Invalid availability payload.', data: null });
@@ -27,7 +28,7 @@ export const trainerScheduleHandlers = [
     return HttpResponse.json({ success: true, message: 'Availability updated successfully', data: null });
   }),
 
-  http.post(`${BASE}/trainer/schedule/leaves`, async ({ request }) => {
+  http.post(`${BASE}${ScheduleUrlConfig.BACKEND_API.LEAVES}`, async ({ request }) => {
     await delay(MOCK_DELAY_MS);
     const parsedData = CreateLeaveDtoSchema.safeParse(await request.json());
     if (!parsedData.success) return HttpResponse.json({ success: false, message: 'Invalid leave payload.', data: null });

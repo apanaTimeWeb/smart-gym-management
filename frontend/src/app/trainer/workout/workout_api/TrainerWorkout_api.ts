@@ -2,7 +2,7 @@ import { z } from 'zod';
 import type { Workout, Exercise } from '@/app/trainer/workout/workout_types/TrainerWorkout.schema';
 import { WorkoutSchema, ExerciseSchema } from '@/app/trainer/workout/workout_types/TrainerWorkout.schema';
 import { apiFetch, type ApiResponse } from '@/lib/api';
-import { WorkoutUrlConfig } from '@/app/trainer/Trainer_url_config';
+import { WorkoutUrlConfig } from '@/app/trainer/workout/workout_url_config';
 import { createTrainerApiResponseSchema } from '@/app/trainer/trainer_utils/TrainerApiResponseSchema';
 
 export const workoutApi = {

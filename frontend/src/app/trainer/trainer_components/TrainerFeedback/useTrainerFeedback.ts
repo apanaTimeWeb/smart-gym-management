@@ -3,6 +3,7 @@
 // DATA FLOW: Feature mutation result/error → useTrainerFeedback → react-hot-toast → Trainer-wide Toaster host.
 import { useCallback } from 'react';
 import toast from 'react-hot-toast';
+import { getTrainerUserSafeErrorMessage } from '@/app/trainer/trainer_utils/TrainerUserSafeError';
 
 /**
  * Sends user-safe Trainer feedback using backend-provided messages and stable IDs for deduplication.
@@ -13,7 +14,7 @@ export function useTrainerFeedback() {
   }, []);
 
   const showError = useCallback((error: unknown, id: string) => {
-    const message = error instanceof Error ? error.message : 'Request failed. Please retry.';
+    const message = getTrainerUserSafeErrorMessage(error);
     toast.error(message, { id });
   }, []);
 

@@ -1,6 +1,6 @@
 'use client';
 // RESPONSIBILITY: Renders the member's assigned diet plan and handles diet plan assignment for trainers.
-// DATA FLOW: useMembersContext -> TrainerMembersProfileDiet -> libraryApi
+// DATA FLOW: Members selected-member state -> profile view -> feature-local member API contract
 
 import { useState } from 'react';
 import { Apple, Plus, Check, MessageCircle, RefreshCw, Flame, PieChart, Utensils } from 'lucide-react';
@@ -58,32 +58,32 @@ export default function TrainerMembersProfileDiet() {
     <div className="space-y-6 motion-safe:animate-in fade-in motion-safe:duration-slow">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h3 className="text-lg font-bold text-foreground">Diet & Nutrition Plan</h3>
+          <h3 className="text-lg font-bold text-primary">Diet & Nutrition Plan</h3>
           <p className="text-sm text-secondary">Manage and customize daily meal requirements for {selectedMember.name}.</p>
         </div>
         <div className="flex items-center gap-2">
           {hasDietPlan ? (
             <>
-              <button 
+              <button type="button" 
                 onClick={handleShareWhatsApp}
-                className="flex items-center gap-2 px-4 py-2 bg-success text-white rounded-xl text-sm font-semibold hover:opacity-90 shadow-sm motion-safe:transition-all motion-safe:active:scale-95"
+                className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page flex items-center gap-2 px-4 py-2 bg-success text-on-primary rounded-xl text-sm font-semibold hover:opacity-90 shadow-card motion-safe:transition-all motion-safe:active:scale-95"
               >
                 <MessageCircle size={16} /> Share via WhatsApp
               </button>
-              <button 
+              <button type="button" 
                 onClick={() => {
                   setSelectedDietId(diet.id || '');
                   setIsAssigning(true);
                 }}
-                className="flex items-center gap-2 px-4 py-2 bg-input text-foreground border border-border rounded-xl text-sm font-semibold hover:bg-primary-subtle motion-safe:transition-all motion-safe:active:scale-95"
+                className="flex items-center gap-2 px-4 py-2 bg-input text-primary border border-border rounded-xl text-sm font-semibold hover:bg-primary-subtle motion-safe:transition-all motion-safe:active:scale-95"
               >
                 <RefreshCw size={15} /> Change Diet
               </button>
             </>
           ) : !isAssigning ? (
-            <button 
+            <button type="button" 
               onClick={() => setIsAssigning(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-primary/30 motion-safe:transition-all motion-safe:active:scale-95"
+              className="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary rounded-xl text-sm font-semibold hover:shadow-card hover:shadow-primary/30 motion-safe:transition-all motion-safe:active:scale-95"
             >
               <Plus size={16} /> Assign Diet Plan
             </button>
@@ -93,14 +93,14 @@ export default function TrainerMembersProfileDiet() {
 
       {/* Plan Assignment Box */}
       {isAssigning && (
-        <div className="bg-card border border-primary/30 p-5 rounded-2xl space-y-4 shadow-sm">
+        <div className="bg-card border border-primary p-5 rounded-2xl space-y-4 shadow-card">
           <div className="flex items-center justify-between">
             <h4 className="font-semibold text-primary flex items-center gap-2">
               <Apple size={18} /> Select Diet Plan from Library
             </h4>
-            <button 
+            <button type="button" 
               onClick={() => setIsAssigning(false)}
-              className="text-xs text-secondary hover:text-foreground font-medium"
+              className="text-xs text-secondary hover:text-primary font-medium"
             >
               Cancel
             </button>
@@ -118,10 +118,10 @@ export default function TrainerMembersProfileDiet() {
                 className="w-full"
               />
               <div className="flex gap-2">
-                <button 
+                <button type="button" 
                   onClick={handleAssign}
                   disabled={!selectedDietId || saving}
-                  className="px-5 py-2.5 bg-primary text-white rounded-xl text-sm font-semibold hover:shadow-md motion-safe:transition-all disabled:opacity-50 flex items-center gap-2"
+                  className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page px-5 py-2.5 bg-primary text-on-primary rounded-xl text-sm font-semibold hover:shadow-card motion-safe:transition-all disabled:opacity-50 flex items-center gap-2"
                 >
                   <Check size={16} /> {saving ? 'Assigning...' : 'Confirm Assignment'}
                 </button>
@@ -144,10 +144,10 @@ export default function TrainerMembersProfileDiet() {
                   {displayValue(diet.goal)}
                 </span>
               </div>
-              <h3 className="text-2xl font-bold text-foreground">{diet.name}</h3>
+              <h3 className="text-2xl font-bold text-primary">{diet.name}</h3>
               <p className="text-sm text-secondary mt-1">{displayValue(diet.description)}</p>
             </div>
-            <div className="bg-input/60 border border-border rounded-xl px-4 py-3 text-right">
+            <div className="bg-floating border border-border rounded-xl px-4 py-3 text-right">
               <p className="text-xs text-secondary">Target Daily Calories</p>
               <p className="text-2xl font-black text-primary flex items-center gap-1 justify-end">
                 <Flame size={20} className="text-danger" /> {displayValue(diet.calories)} <span className="text-xs text-secondary font-normal">kcal</span>
@@ -157,15 +157,15 @@ export default function TrainerMembersProfileDiet() {
 
           {/* Macro Breakdown */}
           <div className="grid grid-cols-3 gap-4">
-            <div className="bg-input/50 border border-border rounded-xl p-4 text-center">
+            <div className="bg-floating border border-border rounded-xl p-4 text-center">
               <p className="text-xs text-secondary font-medium">Protein</p>
               <p className="text-xl font-bold text-info mt-0.5">{displayValue(diet.protein)}g</p>
             </div>
-            <div className="bg-input/50 border border-border rounded-xl p-4 text-center">
+            <div className="bg-floating border border-border rounded-xl p-4 text-center">
               <p className="text-xs text-secondary font-medium">Carbohydrates</p>
               <p className="text-xl font-bold text-warning mt-0.5">{displayValue(diet.carbs)}g</p>
             </div>
-            <div className="bg-input/50 border border-border rounded-xl p-4 text-center">
+            <div className="bg-floating border border-border rounded-xl p-4 text-center">
               <p className="text-xs text-secondary font-medium">Healthy Fats</p>
               <p className="text-xl font-bold text-purple mt-0.5">{displayValue(diet.fats)}g</p>
             </div>
@@ -179,13 +179,13 @@ export default function TrainerMembersProfileDiet() {
             {diet.meals && diet.meals.length > 0 ? (
               <div className="space-y-2.5">
                 {diet.meals.map((meal: string | { name?: string; time?: string; items?: string; description?: string }, idx: number) => (
-                  <div key={typeof meal === 'string' ? `${meal}-${idx}` : `${meal.name}-${idx}`} className="bg-input/40 border border-border rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <div key={typeof meal === 'string' ? `${meal}-${idx}` : `${meal.name}-${idx}`} className="bg-floating border border-border rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <div className="flex items-center gap-3">
                       <span className="w-7 h-7 rounded-lg bg-primary-subtle text-primary text-xs font-bold flex items-center justify-center shrink-0">
                         {idx + 1}
                       </span>
                       <div>
-                        <p className="text-sm font-bold text-foreground">
+                        <p className="text-sm font-bold text-primary">
                           {typeof meal === 'string' ? `Meal ${idx + 1}` : meal.name || `Meal ${idx + 1}`}
                         </p>
                         <p className="text-xs text-secondary mt-0.5">
@@ -194,7 +194,7 @@ export default function TrainerMembersProfileDiet() {
                       </div>
                     </div>
                     {typeof meal !== 'string' && meal.time && (
-                      <span className="text-xs font-medium text-secondary bg-background px-2.5 py-1 rounded-md border border-border w-fit">
+                      <span className="text-xs font-medium text-secondary bg-page px-2.5 py-1 rounded-md border border-border w-fit">
                         {meal.time}
                       </span>
                     )}
@@ -202,7 +202,7 @@ export default function TrainerMembersProfileDiet() {
                 ))}
               </div>
             ) : (
-              <div className="bg-input/40 border border-dashed border-border rounded-xl p-6 text-center text-secondary text-sm">
+              <div className="bg-floating border border-dashed border-border rounded-xl p-6 text-center text-secondary text-sm">
                 No individual meal entries listed. Follow standard portion guidelines.
               </div>
             )}
@@ -213,13 +213,13 @@ export default function TrainerMembersProfileDiet() {
           <div className="w-14 h-14 rounded-full bg-success-bg text-success flex items-center justify-center mx-auto">
             <Apple size={26} />
           </div>
-          <h4 className="text-lg font-bold text-foreground">No Diet Plan Assigned</h4>
+          <h4 className="text-lg font-bold text-primary">No Diet Plan Assigned</h4>
           <p className="text-sm text-secondary max-w-md mx-auto">
             {selectedMember.name} does not have an active nutrition plan. Assign a diet plan from the library to help them meet calorie and macro goals.
           </p>
-          <button
+          <button type="button"
             onClick={() => setIsAssigning(true)}
-            className="mt-2 inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-white rounded-xl text-sm font-semibold hover:shadow-md motion-safe:transition-all"
+            className="mt-2 inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-on-primary rounded-xl text-sm font-semibold hover:shadow-card motion-safe:transition-all motion-safe:duration-base"
           >
             <Plus size={16} /> Assign Diet Plan
           </button>

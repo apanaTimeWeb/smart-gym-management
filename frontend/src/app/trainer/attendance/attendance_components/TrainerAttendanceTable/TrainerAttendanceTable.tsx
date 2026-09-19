@@ -7,18 +7,11 @@ import TrainerPagination from '@/app/trainer/trainer_components/TrainerShared/Tr
 import { TRAINER_ITEMS_PER_PAGE } from '@/app/trainer/trainer_utils/TrainerSharedConstants';
 import TrainerAttendanceEmptyState from '@/app/trainer/attendance/attendance_components/TrainerAttendanceEmptyState/TrainerAttendanceEmptyState';
 import type { AttendanceRecord } from '@/app/trainer/attendance/attendance_types/TrainerAttendance_types';
+import type { TrainerAttendanceTableProps } from '@/app/trainer/attendance/attendance_types/TrainerAttendanceTableProps';
 
 const SKELETON_ROW_IDS = ['sk-att-1', 'sk-att-2', 'sk-att-3', 'sk-att-4', 'sk-att-5'];
 
-interface TrainerAttendanceTableProps {
-  records: AttendanceRecord[];
-  totalRecords: number;
-  isLoading: boolean;
-  search: string;
-  filterDate: string;
-  currentPage: number;
-  onPageChange: (page: number) => void;
-}
+
 
 export default function TrainerAttendanceTable({
   records, totalRecords, isLoading, search, filterDate, currentPage, onPageChange,
@@ -31,11 +24,11 @@ export default function TrainerAttendanceTable({
         <div className="motion-safe:animate-pulse bg-card rounded-xl border border-border mt-4">
           {SKELETON_ROW_IDS.map(id => (
             <div key={id} className="h-16 border-b border-border flex items-center px-4 gap-4">
-              <div className="h-8 w-8 bg-muted rounded-full" />
-              <div className="h-4 bg-muted rounded w-32" />
-              <div className="h-4 bg-muted rounded-full w-16" />
-              <div className="h-4 bg-muted rounded w-20" />
-              <div className="h-4 bg-muted rounded w-20" />
+              <div className="h-8 w-8 bg-surface-highlight rounded-full" />
+              <div className="h-4 bg-surface-highlight rounded w-32" />
+              <div className="h-4 bg-surface-highlight rounded-full w-16" />
+              <div className="h-4 bg-surface-highlight rounded w-20" />
+              <div className="h-4 bg-surface-highlight rounded w-20" />
             </div>
           ))}
         </div>
@@ -53,14 +46,14 @@ export default function TrainerAttendanceTable({
             </thead>
             <tbody className="divide-y divide-border">
               {records.map(r => (
-                <tr key={r.id} className="hover:bg-primary-subtle motion-safe:transition-colors">
+                <tr key={r.id} className="hover:bg-primary-subtle motion-safe:transition-colors motion-safe:duration-base">
                   <td className="px-4 py-3 whitespace-nowrap">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-sm">
+                      <div className="w-8 h-8 rounded-full bg-primary-subtle flex items-center justify-center text-primary font-bold text-sm">
                         {(r.type === 'MEMBER' ? (r.member?.name ?? '?') : (r.staff?.name ?? '?')).charAt(0)}
                       </div>
                       <div>
-                        <div className="text-sm font-medium text-foreground">
+                        <div className="text-sm font-medium text-primary">
                           {r.type === 'MEMBER' ? (r.member?.name ?? '—') : (r.staff?.name ?? '—')}
                         </div>
                         <div className="text-xs text-secondary">{r.type}</div>
@@ -70,8 +63,8 @@ export default function TrainerAttendanceTable({
                   <td className="px-4 py-3">
                     <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${
                       r.type === 'MEMBER'
-                        ? 'bg-info/10 text-info'
-                        : 'bg-success/10 text-success'
+                        ? 'bg-info-bg text-info'
+                        : 'bg-success-bg text-success'
                     }`}>
                       {r.type}
                     </span>
@@ -86,7 +79,7 @@ export default function TrainerAttendanceTable({
                   <td className="px-4 py-3 text-sm text-secondary">{formatTime(r.checkOut)}</td>
                   <td className="px-4 py-3 text-sm text-secondary">{r.durationMinutes ? `${r.durationMinutes}m` : '—'}</td>
                   <td className="px-4 py-3">
-                    <span className="inline-flex px-2 py-0.5 rounded-md text-xs font-medium bg-secondary/10 text-secondary border border-border">
+                    <span className="inline-flex px-2 py-0.5 rounded-md text-xs font-medium bg-input text-secondary border border-border">
                       {r.checkInMethod ?? 'Manual'}
                     </span>
                   </td>

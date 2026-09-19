@@ -33,7 +33,7 @@ export default function TrainerWorkoutPlansGrid() {
 
   if (status === 'error') {
     return (
-      <div className="text-center py-16 bg-card rounded-2xl border border-danger/30">
+      <div className="text-center py-16 bg-card rounded-2xl border border-danger">
         <p className="text-danger font-medium">Unable to load workout plans right now. Please retry.</p>
         <p className="text-sm mt-1 text-secondary">Please check your connection and try again.</p>
       </div>
@@ -46,7 +46,7 @@ export default function TrainerWorkoutPlansGrid() {
         {workouts.map(w => (
           <div 
             key={w.id} 
-            className="border border-border rounded-xl p-4 hover:border-info dark:hover:border-info hover:shadow-sm motion-safe:transition-all bg-card"
+            className="border border-border rounded-xl p-4 hover:border-info hover:border-info hover:shadow-card motion-safe:transition-all bg-card"
           >
             <div className="flex items-start justify-between mb-3">
               <div className="w-10 h-10 bg-info-bg dark:bg-info-bg rounded-xl flex items-center justify-center">
@@ -60,15 +60,15 @@ export default function TrainerWorkoutPlansGrid() {
             </div>
             
             <div className="flex items-center justify-between mb-3">
-              <h3 className="font-semibold text-foreground truncate mr-2">{w.name}</h3>
+              <h3 className="font-semibold text-primary truncate mr-2">{w.name}</h3>
               <div className="flex gap-1 shrink-0">
-                <button onClick={() => { setEditWk(w); setShowWkModal(true); }} className="p-1.5 text-secondary hover:text-foreground hover:bg-input rounded-md motion-safe:transition-colors">
+                <button type="button" onClick={() => { setEditWk(w); setShowWkModal(true); }} className="p-1.5 text-secondary hover:text-primary hover:bg-input rounded-md motion-safe:transition-colors motion-safe:duration-base">
                   <Edit2 size={14} />
                 </button>
-                <button onClick={async () => {
+                <button type="button" onClick={async () => {
                   const ok = await confirm({ title: 'Delete Plan', message: 'Delete this plan?', type: 'danger', confirmText: 'Delete' });
                   if (ok) deleteWorkout.mutate(w.id);
-                }} className="p-1.5 text-secondary hover:text-danger hover:bg-danger-bg rounded-md motion-safe:transition-colors">
+                }} className="p-1.5 text-secondary hover:text-danger hover:bg-danger-bg rounded-md motion-safe:transition-colors motion-safe:duration-base">
                   <Trash2 size={14} />
                 </button>
               </div>
@@ -81,7 +81,7 @@ export default function TrainerWorkoutPlansGrid() {
                 { l: 'Duration', v: w.duration }
               ].map(s => (
                 <div key={s.l} className="bg-input rounded-lg p-2 text-center border border-border">
-                  <p className="text-sm font-bold text-foreground">{s.v}</p>
+                  <p className="text-sm font-bold text-primary">{s.v}</p>
                   <p className="text-xs text-secondary">{s.l}</p>
                 </div>
               ))}
@@ -96,7 +96,7 @@ export default function TrainerWorkoutPlansGrid() {
             </div>
             
             <p className="text-xs text-secondary">
-              Focus: <span className="font-medium text-foreground">{w.focus}</span>
+              Focus: <span className="font-medium text-primary">{w.focus}</span>
             </p>
           </div>
         ))}

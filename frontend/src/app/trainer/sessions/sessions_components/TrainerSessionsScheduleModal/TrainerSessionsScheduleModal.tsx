@@ -6,14 +6,8 @@ import { useTrainerScheduleForm } from '@/app/trainer/sessions/sessions_componen
 import TrainerSearchableDropdown from '@/app/trainer/trainer_components/TrainerShared/TrainerSearchableDropdown/TrainerSearchableDropdown';
 import { useTrainerUnsavedChangesGuard } from '@/app/trainer/trainer_utils/TrainerUseWarnIfUnsavedChanges';
 import { DURATION_OPTIONS } from '@/app/trainer/sessions/sessions_utils/TrainerSessionsSharedConstants';
-import type { CreateSessionDto } from '@/app/trainer/sessions/sessions_types/TrainerSessionsTypes';
-
-interface TrainerSessionsScheduleModalProps {
-  onClose: () => void;
-  onSubmit: (dto: CreateSessionDto) => Promise<void>;
-  memberOptions: { value: string; label: string }[];
-  isSubmitting: boolean;
-}
+import type { SessionType } from '@/app/trainer/sessions/sessions_types/TrainerSessionsTypes';
+import type { TrainerSessionsScheduleModalProps } from '@/app/trainer/sessions/sessions_components/TrainerSessionsScheduleModal/TrainerSessionsScheduleModalTypes';
 
 export default function TrainerSessionsScheduleModal({
   onClose,
@@ -33,12 +27,12 @@ export default function TrainerSessionsScheduleModal({
 
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 backdrop-blur-sm p-4">
-      <div className="bg-overlay w-full max-w-md rounded-2xl shadow-2xl border border-border overflow-hidden motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95 motion-safe:duration-200">
+      <div className="bg-overlay w-full max-w-md rounded-2xl shadow-dialog border border-border overflow-hidden motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95 motion-safe:duration-base">
         <div className="flex items-center justify-between p-5 border-b border-border">
-          <h3 className="text-lg font-bold text-foreground">Schedule PT Session</h3>
-          <button
+          <h3 className="text-lg font-bold text-primary">Schedule PT Session</h3>
+          <button type="button"
             onClick={onClose}
-            className="text-secondary hover:text-foreground hover:bg-input p-1 rounded-lg motion-safe:transition-colors"
+            className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page text-secondary hover:text-primary hover:bg-input p-1 rounded-lg motion-safe:transition-colors motion-safe:duration-base"
             aria-label="Close modal"
           >
             <X size={20} />
@@ -50,7 +44,7 @@ export default function TrainerSessionsScheduleModal({
             <TrainerSearchableDropdown
               options={[{value: 'PT', label: 'Personal Training'}, {value: 'Group', label: 'Group Class'}]}
               value={selectedType}
-              onChange={(val: string | number) => setValue('type', val as 'PT' | 'Group', { shouldValidate: true })}
+              onChange={(val: string | number) => setValue('type', val as SessionType, { shouldValidate: true })}
               placeholder="-- Choose Type --"
             />
             {errors.type && <p className="text-xs text-danger mt-1">{errors.type.message}</p>}
@@ -71,7 +65,7 @@ export default function TrainerSessionsScheduleModal({
               <input
                 type="date"
                 {...register('date')}
-                className="w-full px-3 py-2 border border-border rounded-lg bg-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full px-3 py-2 border border-border rounded-lg bg-input text-primary focus:outline-none focus:ring-2 focus:ring-primary"
               />
               {errors.date && <p className="text-xs text-danger mt-1">{errors.date.message}</p>}
             </div>
@@ -80,7 +74,7 @@ export default function TrainerSessionsScheduleModal({
               <input
                 type="time"
                 {...register('time')}
-                className="w-full px-3 py-2 border border-border rounded-lg bg-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full px-3 py-2 border border-border rounded-lg bg-input text-primary focus:outline-none focus:ring-2 focus:ring-primary"
               />
               {errors.time && <p className="text-xs text-danger mt-1">{errors.time.message}</p>}
             </div>
@@ -99,14 +93,14 @@ export default function TrainerSessionsScheduleModal({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-sm font-semibold text-secondary hover:text-foreground hover:bg-input rounded-lg motion-safe:transition-colors"
+              className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page px-4 py-2 text-sm font-semibold text-secondary hover:text-primary hover:bg-input rounded-lg motion-safe:transition-colors motion-safe:duration-base"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-primary rounded-lg hover:bg-primary/90 motion-safe:transition-colors disabled:opacity-70"
+              className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page flex items-center gap-2 px-4 py-2 text-sm font-semibold text-on-primary bg-primary rounded-lg hover:bg-primary-hover motion-safe:transition-colors disabled:opacity-70"
             >
               {isSubmitting && <Loader2 size={16} className="motion-safe:animate-spin" />}
               Confirm Assignment

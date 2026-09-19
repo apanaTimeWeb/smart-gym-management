@@ -1,49 +1,48 @@
 # Trainer Repair Status
 
-## Updated State
+## Final Status
+**ARCHIVE-LEVEL REPAIR COMPLETE — RUNTIME NOT VERIFIED**
 
-The Trainer role was repaired against the supplied frontend architecture and Smart Gym 360 global design requirements, plus the latest Trainer audit report.
+## Target
+`trainer/` role package with 11 feature modules: dashboard, attendance, earnings, library, members, notifications, profile, progress-tracking, schedule, sessions, workout.
 
-## Confirmed Fixes
+## Governing Documentation
+- `web_frontend_development_instruction.md` — architecture/engineering contract
+- `web_global_design.md` — global design system
+- `Pasted markdown.md` — deep audit/repair specification
 
-- One Trainer-wide toast feedback mechanism using `useTrainerFeedback()` with stable IDs and a single `TrainerToastHost`.
-- Removed feature-local toast state, inline toast JSX, and direct toast-library usage from feature logic.
-- Removed the feature-local earnings currency formatter; earnings now use `@/lib/formatters`.
-- Added one API behavior test file for each of the 11 Trainer features.
-- Expanded `TrainerCriticalFlows.spec.ts` to cover role access, destructive confirmation, schedule validation, URL state, read-only earnings, profile controls, and responsive shell checks.
-- Preserved zero cross-feature business imports, module isolation, file-size ceilings, unsaved-change guard, and existing MSW ownership.
-- Updated affected feature/forbidden documentation.
+## Completed
+- Feature/module URL isolation and role-shell URL separation.
+- Cross-feature business import firewall; zero direct sibling business imports detected.
+- Module-prefixed feature docs/tests/types and feature-owned support boundaries.
+- Removal of `any`, TS suppression comments, native browser dialogs, raw color literals, arbitrary CSS-variable Tailwind colors, and index-key usage.
+- Inline component props contracts extracted from TSX into module-owned type files.
+- TanStack Query remains the server-state source of truth; UI state remains local/module-scoped.
+- RHF + Zod boundaries for non-trivial forms.
+- Mutable feature-owned MSW/mock flows for major Trainer mutations.
+- Stable idempotency-key support for non-duplicable Trainer mutations.
+- Feature loading/error/not-found states and safe error presentation.
+- Search/filter/pagination/mock contracts repaired where documented.
+- Accessibility/focus-visible and motion-token source-level hardening.
+- Feature maps, forbidden docs, theme contracts, and root integration checklist synchronized.
 
-## Static Verification
+## Static Evidence
+- 353 Trainer `.ts/.tsx` files; 0 syntax-error files.
+- 630 `@/app/trainer/...` imports checked; 0 unresolved by canonical path resolution.
+- 0 relative imports.
+- 0 explicit `any` casts.
+- 0 `@ts-ignore` / `@ts-nocheck`.
+- 0 console calls.
+- 0 native `alert()` / `window.confirm()`.
+- 0 raw hex/RGB literals in Trainer source.
+- 0 arbitrary CSS-variable Tailwind color classes.
+- 0 index keys.
+- 0 inline interfaces inside `.tsx`.
+- 0 documented motion-duration literals.
+- 0 component/hook/store/schema/API size-ceiling violations.
 
-{
-  "cross_feature_business_imports": 0,
-  "legacy_toast_calls": 0,
-  "local_format_currency_defs": 0,
-  "any_ts_ignore_console_alert": 0,
-  "api_behavior_test_files": 11,
-  "component_behavior_test_files": 10,
-  "shared_feedback_behavior_test_files": 1,
-  "e2e_tests": 9,
-  "pages": 11,
-  "loading": 11,
-  "error": 11,
-  "not_found": 11
-}
+## Runtime Boundary
+The archive does not contain the parent app dependency/configuration surface. Therefore Next build, strict project typecheck, ESLint, Vitest, Playwright, browser click-through, hydration, global top-loader registration, global MSW bootstrap registration, CI/SCA/secrets, and responsive browser verification remain **NOT VERIFIED** and are listed explicitly in `TRAINER_FINAL_REPAIR_REPORT.md`.
 
-## NOT VERIFIED
 
-The archive still contains only the Trainer role tree. Project-root verification remains required for `package.json`, `tsconfig.json`, ESLint/Tailwind rules, Husky/lint-staged, CI, CODEOWNERS, dependency vulnerability scans, Gitleaks, and the real Vitest/Playwright/production build execution.
-
-## Acceptance
-
-The module is ready to be integrated into the real repository and then run through the project-level typecheck, lint, test, build, and security gates. Source-level repaired issues are complete; repository/runtime verification remains explicitly NOT VERIFIED until those project-root checks are executed.
-
-## Latest Re-audit Fixes
-
-- Removed the dangling `toast` reference from `library/library_context/TrainerUseLibraryLogic.ts`; the returned logic object no longer references deleted local toast state.
-- Added component-level behavior tests for Dashboard, Earnings, Library, Members, Notifications, Profile, Progress Tracking, Schedule, Sessions, and Workout, plus the existing Attendance calendar behavior test and the shared Trainer feedback behavior test.
-- Added explicit shared feedback tests proving stable success/error deduplication IDs and backend-message propagation.
-- Added a session component test proving cancellation requires confirmation before the mutation executes and that the backend success message reaches the shared feedback API.
-- Added a progress component test proving deletion is blocked when confirmation is declined.
-- Updated this status document to avoid claiming the new tests replace repository-level typecheck/build verification.
+Independent verification artifacts: `TRAINER_FINAL_REPAIR_REPORT.md`, `TRAINER_STATIC_VERIFICATION.json`, `TRAINER_CHANGE_MANIFEST.json`, `TRAINER_CHANGED_FILES.txt`.

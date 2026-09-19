@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Zod contracts and domain types for Trainer earnings server data and ledger pagination.
 import { z } from 'zod';
 
 export const TrainerEarningsKPIsDataSchema = z.object({
@@ -41,5 +42,8 @@ export const TrainerEarningsDataSchema = z.object({
   kpis: TrainerEarningsKPIsDataSchema,
   pendingPayouts: z.array(TrainerPendingPayoutSchema),
   history: z.array(TrainerEarningsHistoryRowSchema),
+  historyTotal: z.number().int().nonnegative().optional(),
+  historyPage: z.number().int().positive().optional(),
+  historyLimit: z.number().int().positive().optional(),
 });
 export type TrainerEarningsData = z.infer<typeof TrainerEarningsDataSchema>;

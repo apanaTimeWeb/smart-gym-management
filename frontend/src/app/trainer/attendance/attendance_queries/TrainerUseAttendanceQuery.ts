@@ -6,21 +6,13 @@ import {
   fetchAttendanceRecords,
   fetchAttendanceStats,
   fetchAttendanceMembersBasic,
-  type AttendanceFetchParams,
 } from '@/app/trainer/attendance/attendance_api/TrainerAttendance_api';
-import type { AttendanceTab } from '@/app/trainer/attendance/attendance_utils/TrainerAttendanceSharedConstants';
-
-interface UseAttendanceRecordsParams {
-  tab: AttendanceTab;
-  search: string;
-  filterDate: string;
-  currentPage: number;
-}
+import type { TrainerAttendanceFetchParams, TrainerAttendanceRecordsQueryParams } from '@/app/trainer/attendance/attendance_types/TrainerAttendanceInteractionTypes';
 
 /** Fetches paginated attendance records, scoped by tab and filters. */
-export function useAttendanceRecordsQuery({ tab, search, filterDate, currentPage }: UseAttendanceRecordsParams) {
+export function useAttendanceRecordsQuery({ tab, search, filterDate, currentPage }: TrainerAttendanceRecordsQueryParams) {
   const user = getUser();
-  const params: AttendanceFetchParams = {
+  const params: TrainerAttendanceFetchParams = {
     page: currentPage,
     limit: 10,
     type: tab === 'Members' ? 'MEMBER' : 'STAFF',

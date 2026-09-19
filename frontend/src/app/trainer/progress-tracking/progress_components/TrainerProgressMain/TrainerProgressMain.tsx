@@ -9,7 +9,7 @@ import { useTrainerProgressFilters } from '@/app/trainer/progress-tracking/progr
 import { useTrainerProgressMembersQuery, useTrainerProgressEntriesQuery } from '@/app/trainer/progress-tracking/progress_queries/useTrainerProgressQuery';
 import { useTrainerProgressMutations } from '@/app/trainer/progress-tracking/progress_queries/useTrainerProgressMutations';
 import { buildComparisonSnapshot } from '@/app/trainer/progress-tracking/progress_utils/useTrainerProgressComparison';
-import { fetchProgressEntries } from '@/app/trainer/progress-tracking/progress_api/TrainerProgressApi';
+import { useTrainerProgressComparisonQueries } from '@/app/trainer/progress-tracking/progress_queries/useTrainerProgressComparisonQuery';
 import type { ProgressEntry, CreateProgressEntryDto } from '@/app/trainer/progress-tracking/progress_types/TrainerProgressTypes';
 import { useConfirm } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerConfirmProvider';
 import TrainerProgressChart from '@/app/trainer/progress-tracking/progress_components/TrainerProgressChart/TrainerProgressChart';
@@ -51,44 +51,27 @@ export default function TrainerProgressMain() {
       confirmText: 'Delete',
     });
     if (!ok) return;
-    deleteEntry.mutate({ memberId: selectedMemberId, entryId });
+    deleteEntry.mutate({ memberId: selectedMemberId, entryId, idempotencyKey: crypto.randomUUID() });
   };
 
   const handleSave = (data: CreateProgressEntryDto) => {
     if (editingEntry) {
-      updateEntry.mutate({ memberId: selectedMemberId, entryId: editingEntry.id, dto: data });
+      updateEntry.mutate({ memberId: selectedMemberId, entryId: editingEntry.id, dto: data, idempotencyKey: crypto.randomUUID() });
     } else {
-      createEntry.mutate({ memberId: selectedMemberId, dto: data });
+      createEntry.mutate({ memberId: selectedMemberId, dto: data, idempotencyKey: crypto.randomUUID() });
     }
     closeModal();
   };
 
-  // Pre-fetch comparison entries
-  const [comparisonEntriesMap, setComparisonEntriesMap] = useState<Map<string, ProgressEntry[]>>(new Map());
-
-  useEffect(() => {
-    const fetchMissing = async () => {
-      for (const memberId of selectedComparisonIds) {
-        if (!comparisonEntriesMap.has(memberId)) {
-          try {
-            const data = await fetchProgressEntries(memberId);
-            setComparisonEntriesMap(prev => new Map(prev).set(memberId, data));
-          } catch {
-            setComparisonEntriesMap(prev => new Map(prev).set(memberId, []));
-          }
-        }
-      }
-    };
-    void fetchMissing();
-  }, [selectedComparisonIds, comparisonEntriesMap]);
+  const comparisonQueries = useTrainerProgressComparisonQueries(selectedComparisonIds);
 
   const comparisonSnapshots = useMemo(() => {
-    return selectedComparisonIds.map(id => {
+    return selectedComparisonIds.map((id, index) => {
       const name = allComparisonMembers.find(m => m.id === id)?.name ?? id;
-      const mEntries = comparisonEntriesMap.get(id) ?? [];
+      const mEntries = comparisonQueries[index]?.data ?? [];
       return buildComparisonSnapshot(id, name, mEntries);
     });
-  }, [selectedComparisonIds, allComparisonMembers, comparisonEntriesMap]);
+  }, [selectedComparisonIds, allComparisonMembers, comparisonQueries]);
 
   return (
     <div className="min-h-full pb-10">
@@ -97,13 +80,13 @@ export default function TrainerProgressMain() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-bold text-foreground">Progress Tracking</h2>
+            <h2 className="text-lg font-bold text-primary">Progress Tracking</h2>
             <p className="text-sm text-secondary mt-0.5">Body measurements &amp; fitness metrics over time</p>
           </div>
           {activeTab === 'individual' && (
-            <button
+            <button type="button"
               onClick={openAddModal}
-              className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg text-sm font-semibold hover:opacity-90 motion-safe:transition-opacity"
+              className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page flex items-center gap-2 px-4 py-2 bg-primary text-on-primary rounded-lg text-sm font-semibold hover:opacity-90 motion-safe:transition-opacity"
             >
               <Plus size={16} /> Add Entry
             </button>
@@ -112,22 +95,22 @@ export default function TrainerProgressMain() {
 
         {/* Tab switcher */}
         <div className="flex border-b border-border">
-          <button
+          <button type="button"
             onClick={() => setActiveTab('individual')}
             className={`flex items-center gap-2 px-5 py-3 text-sm font-medium border-b-2 motion-safe:transition-colors ${
               activeTab === 'individual'
                 ? 'text-primary border-primary bg-primary-subtle'
-                : 'border-transparent text-secondary hover:text-foreground'
+                : 'border-transparent text-secondary hover:text-primary'
             }`}
           >
             <User size={15} /> Individual
           </button>
-          <button
+          <button type="button"
             onClick={() => setActiveTab('compare')}
             className={`flex items-center gap-2 px-5 py-3 text-sm font-medium border-b-2 motion-safe:transition-colors ${
               activeTab === 'compare'
                 ? 'text-primary border-primary bg-primary-subtle'
-                : 'border-transparent text-secondary hover:text-foreground'
+                : 'border-transparent text-secondary hover:text-primary'
             }`}
           >
             <BarChart2 size={15} /> Compare Members
@@ -138,7 +121,7 @@ export default function TrainerProgressMain() {
         {activeTab === 'individual' && (
           <>
             <div className="flex items-center justify-between bg-card p-4 rounded-xl border border-border">
-              <span className="text-sm font-semibold text-foreground">Select Member:</span>
+              <span className="text-sm font-semibold text-primary">Select Member:</span>
               <TrainerSearchableDropdown
                 value={selectedMemberId}
                 onChange={(val: string | number) => setSelectedMemberId(String(val))}

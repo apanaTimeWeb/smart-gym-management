@@ -1,32 +1,27 @@
 'use client';
-import { TrainerPageUrlConfig } from '@/app/trainer/Trainer_url_config';
-// RESPONSIBILITY: Renders the fixed top navigation bar — page title, global search, theme toggle, notifications dropdown, and user profile dropdown. No API calls.
-import { useState, useRef, useEffect } from 'react';
-import { Bell, Search, LogOut, Settings, User, X, Menu } from 'lucide-react';
+// RESPONSIBILITY: Renders the fixed Trainer shell header: sidebar toggle, page title, theme toggle, notification navigation, and accessible profile menu. It owns no feature/business data.
+import { useEffect, useRef, useState } from 'react';
+import { Bell, LogOut, Menu, User } from 'lucide-react';
 import Link from 'next/link';
 import { getUser, logout } from '@/lib/api';
 import { ThemeToggle } from '@/components/ThemeToggle';
+import { TrainerPageUrlConfig } from '@/app/trainer/Trainer_url_config';
 import type { TrainerHeaderProps } from '@/app/trainer/trainer_components/TrainerLayout/TrainerLayoutTypes';
 
 export default function TrainerHeader({ title, subtitle }: TrainerHeaderProps) {
-  const [showNotifications, setShowNotifications] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
-  const notifRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
+  const profileTriggerRef = useRef<HTMLButtonElement>(null);
   const [mounted, setMounted] = useState(false);
   const user = getUser();
 
-  // Sets mounted=true once on client-side hydration to safely read user data (avoids SSR mismatch).
   useEffect(() => {
-    setTimeout(() => setMounted(true), 0);
+    const timer = window.setTimeout(() => setMounted(true), 0);
+    return () => window.clearTimeout(timer);
   }, []);
 
-  // Attaches click-outside listener once on mount to close notification/profile dropdowns on outside click.
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (notifRef.current && !notifRef.current.contains(event.target as Node)) {
-        setShowNotifications(false);
-      }
       if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
         setShowProfile(false);
       }
@@ -35,90 +30,90 @@ export default function TrainerHeader({ title, subtitle }: TrainerHeaderProps) {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  useEffect(() => {
+    if (!showProfile) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        setShowProfile(false);
+        profileTriggerRef.current?.focus();
+      }
+    };
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [showProfile]);
+
   return (
-    <header className="bg-card border-b border-border px-6 py-4 flex items-center justify-between sticky top-0 z-20">
-      <div className="flex flex-wrap items-center gap-4">
+    <header className="bg-header border-b border-border px-6 py-4 flex items-center justify-between sticky top-0 z-20">
+      <div className="flex flex-wrap items-center gap-4 min-w-0">
         <button
-          className="p-2 -ml-3 text-secondary hover:text-foreground motion-safe:transition-colors bg-input hover:bg-background rounded-lg border border-border"
+          type="button"
+          data-trainer-sidebar-toggle
+          aria-label="Toggle navigation sidebar"
+          title="Toggle navigation sidebar"
+          className="min-w-11 min-h-11 inline-flex items-center justify-center -ml-3 text-secondary hover:text-primary motion-safe:transition-colors bg-input hover:bg-page rounded-md border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           onClick={() => window.dispatchEvent(new Event('toggle-sidebar'))}
-          title="Toggle Sidebar"
         >
-          <Menu size={18} strokeWidth={2} />
+          <Menu size={18} strokeWidth={2} aria-hidden="true" />
         </button>
-        <div>
-          <h1 className="text-xl font-bold text-foreground">{title}</h1>
-          {subtitle && <p className="text-sm text-secondary mt-0.5">{subtitle}</p>}
+        <div className="min-w-0">
+          <h1 className="text-xl font-bold text-primary truncate">{title}</h1>
+          {subtitle && <p className="text-sm text-secondary mt-0.5 truncate">{subtitle}</p>}
         </div>
       </div>
-      <div className="flex flex-wrap items-center gap-4">
 
-
-        {/* Theme Toggle */}
+      <div className="flex items-center gap-3 shrink-0">
         <ThemeToggle />
+        <Link
+          href={TrainerPageUrlConfig.NOTIFICATIONS}
+          aria-label="Open notifications"
+          className="min-w-11 min-h-11 inline-flex items-center justify-center rounded-md border border-transparent text-secondary hover:text-primary hover:bg-input hover:border-border motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+        >
+          <Bell size={18} strokeWidth={2} aria-hidden="true" />
+        </Link>
 
-        {/* Notifications */}
-        <div className="relative" ref={notifRef}>
-          <button
-            type="button"
-            aria-label="Open notifications"
-            aria-expanded={showNotifications}
-            onClick={() => setShowNotifications(!showNotifications)}
-            className="relative p-2 text-secondary hover:text-foreground hover:bg-input rounded-lg motion-safe:transition-colors border border-transparent hover:border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-          >
-            <Bell size={18} strokeWidth={2} />
-          </button>
-
-          {showNotifications && (
-            <div className="absolute right-0 mt-2 w-80 bg-popover rounded-xl shadow-2xl border border-border overflow-hidden z-30">
-              <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-header">
-                <h3 className="font-semibold text-foreground">Notifications</h3>
-                <button onClick={() => setShowNotifications(false)} className="text-secondary hover:text-foreground"><X size={18} strokeWidth={2} /></button>
-              </div>
-              <div className="max-h-75 overflow-y-auto">
-                <div className="px-4 py-6 text-center text-sm text-secondary">
-                  No new notifications
-                </div>
-              </div>
-              <div className="p-3 text-center border-t border-border bg-header">
-                <Link 
-                  href={TrainerPageUrlConfig.NOTIFICATIONS}
-                  onClick={() => setShowNotifications(false)} 
-                  className="text-sm font-medium text-primary hover:underline"
-                >
-                  View All Notifications
-                </Link>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Profile */}
         <div className="relative" ref={profileRef}>
-          <div
-            onClick={() => setShowProfile(!showProfile)}
-            className="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold cursor-pointer motion-safe:transition-transform motion-safe:hover:scale-105 border border-white/10 bg-primary"
+          <button
+            ref={profileTriggerRef}
+            type="button"
+            aria-label="Open profile menu"
+            aria-expanded={showProfile}
+            aria-haspopup="menu"
+            onClick={() => setShowProfile((value) => !value)}
+            className="w-11 h-11 rounded-full flex items-center justify-center text-on-primary text-sm font-bold motion-safe:transition-transform motion-safe:hover:scale-105 border border-border bg-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
             {mounted ? (user?.name?.charAt(0)?.toUpperCase() || 'A') : 'A'}
-          </div>
+          </button>
 
           {showProfile && (
-            <div className="absolute right-0 mt-2 w-56 bg-popover rounded-xl shadow-2xl border border-border overflow-hidden z-30">
+            <div
+              role="menu"
+              aria-label="Profile menu"
+              className="absolute right-0 mt-2 w-56 bg-popover rounded-xl shadow-popover border border-border overflow-hidden z-30"
+            >
               <div className="px-4 py-3 border-b border-border bg-header">
-                <p className="text-sm font-semibold text-foreground">{mounted ? (user?.name || 'Trainer') : 'Trainer'}</p>
-                <p className="text-xs text-secondary">{mounted ? (user?.email || '') : ''}</p>
-                {(mounted && user?.role) && <p className="text-xs text-warning font-medium mt-0.5">{user.role}</p>}
+                <p className="text-sm font-semibold text-primary truncate">{mounted ? (user?.name || 'Trainer') : 'Trainer'}</p>
+                <p className="text-xs text-secondary truncate">{mounted ? (user?.email || '') : ''}</p>
+                {mounted && user?.role && <p className="text-xs text-warning font-medium mt-0.5">{user.role}</p>}
               </div>
               <div className="py-1">
-                <Link href={TrainerPageUrlConfig.PROFILE} className="flex items-center gap-2 px-4 py-2 text-sm text-secondary hover:text-foreground hover:bg-input motion-safe:transition-colors" onClick={() => setShowProfile(false)}>
-                  <User size={18} strokeWidth={2} /> My Profile
+                <Link
+                  role="menuitem"
+                  href={TrainerPageUrlConfig.PROFILE}
+                  className="flex items-center gap-2 min-h-11 px-4 py-2 text-sm text-secondary hover:text-primary hover:bg-input motion-safe:transition-colors focus-visible:outline-none focus-visible:bg-input"
+                  onClick={() => setShowProfile(false)}
+                >
+                  <User size={18} strokeWidth={2} aria-hidden="true" /> My Profile
                 </Link>
               </div>
               <div className="border-t border-border py-1 bg-header">
                 <button
-                  className="w-full flex items-center gap-2 px-4 py-2 text-sm text-danger hover:bg-danger-bg font-medium motion-safe:transition-colors"
+                  type="button"
+                  role="menuitem"
+                  className="w-full flex items-center gap-2 min-h-11 px-4 py-2 text-sm text-danger hover:bg-danger-bg font-medium motion-safe:transition-colors focus-visible:outline-none focus-visible:bg-danger-bg"
                   onClick={() => { setShowProfile(false); logout(); }}
                 >
-                  <LogOut size={18} strokeWidth={2} /> Log out
+                  <LogOut size={18} strokeWidth={2} aria-hidden="true" /> Log out
                 </button>
               </div>
             </div>
@@ -128,4 +123,3 @@ export default function TrainerHeader({ title, subtitle }: TrainerHeaderProps) {
     </header>
   );
 }
-

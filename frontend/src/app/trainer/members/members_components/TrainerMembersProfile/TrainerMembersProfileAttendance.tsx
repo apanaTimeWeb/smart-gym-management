@@ -55,10 +55,10 @@ export default function TrainerMembersProfileAttendance() {
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <h3 className="text-lg font-bold text-foreground flex items-center gap-2">
+            <h3 className="text-lg font-bold text-primary flex items-center gap-2">
               <CalendarIcon size={18} className="text-primary" /> {monthName} {currentYear} Attendance
             </h3>
-            <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary-subtle text-primary border border-primary/20 flex items-center gap-1">
+            <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary-subtle text-primary border border-primary flex items-center gap-1">
               <ShieldCheck size={12} /> View Only
             </span>
           </div>
@@ -97,7 +97,7 @@ export default function TrainerMembersProfileAttendance() {
       </div>
 
       {/* Monthly Calendar View */}
-      <div className="bg-card border border-border rounded-2xl p-5 shadow-sm space-y-4">
+      <div className="bg-card border border-border rounded-2xl p-5 shadow-card space-y-4">
         <div className="grid grid-cols-7 gap-2 text-center pb-2 border-b border-border">
           {weekDays.map(wd => (
             <div key={wd} className="text-xs font-bold text-secondary uppercase tracking-wider py-1">
@@ -109,27 +109,27 @@ export default function TrainerMembersProfileAttendance() {
         <div className="grid grid-cols-7 gap-2">
           {/* Empty offset padding for days before the 1st */}
           {Array.from({ length: firstDayIndex }).map((_, i) => (
-            <div key={`empty-${i}`} className="h-20 rounded-xl bg-input/20 border border-transparent" />
+            <div key={`empty-${i}`} className="h-20 rounded-xl bg-input border border-transparent" />
           ))}
 
           {/* Calendar day cells */}
           {daysArray.map(({ day, status, isToday, isPastOrToday }) => {
-            let statusStyle = 'bg-input/40 text-secondary border-border';
+            let statusStyle = 'bg-floating text-secondary border-border';
             let badgeStyle = 'text-secondary';
             let label = 'Upcoming';
 
             if (isPastOrToday) {
               if (status === 'P') {
-                statusStyle = 'bg-success-bg/80 text-success border-success/30 hover:border-success/60';
-                badgeStyle = 'bg-success text-white';
+                statusStyle = 'bg-success-bg text-success border-success hover:border-success/60';
+                badgeStyle = 'bg-success text-on-primary';
                 label = 'Present';
               } else if (status === 'A') {
-                statusStyle = 'bg-danger-bg/80 text-danger border-danger/30 hover:border-danger/60';
-                badgeStyle = 'bg-danger text-white';
+                statusStyle = 'bg-danger-bg text-danger border-danger hover:border-danger/60';
+                badgeStyle = 'bg-danger text-on-primary';
                 label = 'Absent';
               } else if (status === 'L') {
-                statusStyle = 'bg-warning-bg/80 text-warning border-warning/30 hover:border-warning/60';
-                badgeStyle = 'bg-warning text-white';
+                statusStyle = 'bg-warning-bg text-warning border-warning/30 hover:border-warning/60';
+                badgeStyle = 'bg-warning text-on-primary';
                 label = 'Rest';
               }
             }
@@ -138,15 +138,15 @@ export default function TrainerMembersProfileAttendance() {
               <div
                 key={day}
                 className={`h-20 rounded-xl p-2.5 border flex flex-col justify-between motion-safe:transition-all relative ${statusStyle} ${
-                  isToday ? 'ring-2 ring-primary ring-offset-2 ring-offset-bg-page' : ''
+                  isToday ? 'ring-2 ring-primary  ' : ''
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <span className={`text-sm font-bold ${isToday ? 'text-primary' : 'text-foreground'}`}>
+                  <span className={`text-sm font-bold ${isToday ? 'text-primary' : 'text-primary'}`}>
                     {day}
                   </span>
                   {isToday && (
-                    <span className="text-xs font-extrabold uppercase px-1.5 py-0.5 rounded bg-primary text-white tracking-wide">
+                    <span className="text-xs font-extrabold uppercase px-1.5 py-0.5 rounded bg-primary text-on-primary tracking-wide">
                       Today
                     </span>
                   )}
@@ -161,7 +161,7 @@ export default function TrainerMembersProfileAttendance() {
                       {label}
                     </span>
                   ) : (
-                    <span className="text-xs text-secondary/60">
+                    <span className="text-xs text-disabled">
                       —
                     </span>
                   )}
@@ -173,9 +173,9 @@ export default function TrainerMembersProfileAttendance() {
       </div>
 
       {/* Legend Footer */}
-      <div className="flex flex-wrap items-center justify-between gap-4 p-4 bg-input/40 border border-border rounded-xl text-xs text-secondary">
+      <div className="flex flex-wrap items-center justify-between gap-4 p-4 bg-floating border border-border rounded-xl text-xs text-secondary">
         <div className="flex items-center gap-4 flex-wrap">
-          <span className="font-semibold text-foreground">Legend:</span>
+          <span className="font-semibold text-primary">Legend:</span>
           <span className="flex items-center gap-1.5">
             <span className="w-3 h-3 rounded-full bg-success"></span> Present (P)
           </span>
@@ -189,7 +189,7 @@ export default function TrainerMembersProfileAttendance() {
             <span className="w-3 h-3 rounded-full bg-border"></span> Future / Pending
           </span>
         </div>
-        <p className="text-secondary/70">
+        <p className="text-disabled">
           Syncs with main branch biometrics in real-time.
         </p>
       </div>

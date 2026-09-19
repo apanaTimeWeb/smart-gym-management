@@ -12,12 +12,12 @@ export function useTrainerScheduleMutations() {
   };
 
   const updateAvailability = useMutation({
-    mutationFn: (data: WeeklyAvailability[]) => trainerScheduleApi.updateAvailability(data),
+    mutationFn: ({ data, idempotencyKey }: { data: WeeklyAvailability[]; idempotencyKey: string }) => trainerScheduleApi.updateAvailability(data, idempotencyKey),
     onSuccess: invalidateSchedule,
   });
 
   const requestLeave = useMutation({
-    mutationFn: (data: CreateLeaveDto) => trainerScheduleApi.requestLeave(data),
+    mutationFn: ({ data, idempotencyKey }: { data: CreateLeaveDto; idempotencyKey: string }) => trainerScheduleApi.requestLeave(data, idempotencyKey),
     onSuccess: invalidateSchedule,
   });
 

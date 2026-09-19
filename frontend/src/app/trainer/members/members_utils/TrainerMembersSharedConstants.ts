@@ -64,3 +64,6 @@ export const PROFILE_TABS = [
   { id: 'notes', label: 'Trainer Notes' }
 ];
 
+
+export const PROFILE_TAB_IDS = ['overview', 'fitness', 'assessment', 'progress', 'workout', 'diet', 'attendance', 'notes'] as const;
+export type TrainerProfileTab = (typeof PROFILE_TAB_IDS)[number];
