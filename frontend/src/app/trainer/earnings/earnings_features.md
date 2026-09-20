@@ -1,7 +1,7 @@
 # Trainer Earnings — Feature Map
 
 ## Module Purpose
-Trainer ke own earnings, pending payouts, TDS, ledger history, date/search filters, aur CSV export ko read-only presentation ke roop me expose karta hai. Trainer payment release/request controls intentionally module scope me nahi hain.
+The Earnings module lets a trainer review their own earnings and pending payout information for the periods supported by the product. It provides KPI summaries, filterable history, status information, and pagination/sorting where the dataset is browsable. The module reads backend/API data through the feature-owned client and keeps financial formatting centralized. Trainer earnings administration or other users' payouts are outside this module's scope.
 
 ## Directory Structure
 - `page.tsx` — Server Component route entry.
@@ -12,7 +12,7 @@ Trainer ke own earnings, pending payouts, TDS, ledger history, date/search filte
 - `earnings_api/TrainerEarnings_api.ts` — API boundary and response validation.
 - `earnings_types/TrainerEarningsTypes.ts` — domain/schema contracts.
 - `earnings_utils/` — date-range configuration and financial display constants.
-- `earnings_fixtures/` / `earnings_mocks/` — feature-owned demo server data/handlers.
+- `earnings_mocks/fixtures/` / `earnings_mocks/` — feature-owned demo server data/handlers.
 - `earnings_url_config.ts` — page/API URL contract.
 - `earnings_tests/` — API, main UI, and route-state tests.
 
@@ -25,6 +25,11 @@ Trainer ke own earnings, pending payouts, TDS, ledger history, date/search filte
 | Date filter | URL-backed date range changes server query. |
 | CSV export | Uses feature URL contract and current query parameters. |
 
+## Approved External Dependencies
+- Application infrastructure: `@/lib/api`, `@/lib/formatters`, and approved zero-business Trainer UI/feedback infrastructure used directly by this module.
+- Business Feature Dependencies: None.
+- Role-Level Business Dependencies: None.
+
 ## Data and State Architecture
 - TanStack Query owns earnings server response.
 - URL owns shareable date range.
@@ -32,7 +37,7 @@ Trainer ke own earnings, pending payouts, TDS, ledger history, date/search filte
 - No React Context owns earnings data.
 - Mock handler applies search/page/date inputs to feature-owned demo state.
 
-## User Flows
+## User Flows & Interactions
 1. Open Earnings → skeleton → KPI/history/pending data.
 2. Change date → URL/query changes → visible records update.
 3. Search ledger → query result changes.

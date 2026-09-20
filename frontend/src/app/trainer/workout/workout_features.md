@@ -1,7 +1,7 @@
 # Trainer Workout — Feature Map
 
 ## Module Purpose
-Trainer ka workout-plan/exercise library. Trainer own scoped plans ko browse, search/filter, create, edit, delete, detail-view aur assigned-member workflow ke through manage karta hai.
+The Workout module gives trainers a focused workspace for managing their workout plans and exercises. Users can search, filter, sort, paginate, create, edit, inspect, and delete the records exposed by the Trainer API contract. Server data stays in TanStack Query while UI-only selection/modal state remains module-scoped. Cross-role workout administration or unrelated business abstractions are outside the feature boundary.
 
 ## Directory Structure
 - `page.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx` — route states.
@@ -11,7 +11,7 @@ Trainer ka workout-plan/exercise library. Trainer own scoped plans ko browse, se
 - `workout_api/TrainerWorkout_api.ts` — API boundary.
 - `workout_types/TrainerWorkout.schema.ts` — Zod/domain contracts.
 - `workout_utils/` — static form/filter configuration.
-- `workout_fixtures/` / `workout_mocks/` — feature-owned mutable demo server state and handlers.
+- `workout_mocks/fixtures/` / `workout_mocks/` — feature-owned mutable demo server state and handlers.
 - `workout_url_config.ts` — Workout page/API contract.
 - `workout_tests/` — API/main/route behavior tests.
 
@@ -25,13 +25,18 @@ Trainer ka workout-plan/exercise library. Trainer own scoped plans ko browse, se
 | Exercise management | Search/list/create/edit/delete using feature API/mocks. |
 | Detail | Drawer/detail state for selected plan. |
 
+## Approved External Dependencies
+- Application infrastructure: `@/lib/api`, `@/lib/formatters`, and approved zero-business Trainer UI/feedback infrastructure used directly by this module.
+- Business Feature Dependencies: None.
+- Role-Level Business Dependencies: None.
+
 ## Data and State Architecture
 - TanStack Query owns plans/exercises server state.
 - Zustand owns only modal/drawer/selection UI state.
 - No Workout React Context owns API data.
 - Mock handlers honor search/category/page and mutations update mutable in-memory state.
 
-## User Flows
+## User Flows & Interactions
 List → search/filter/page → create/edit/delete → server/mock mutation → visible list update. Destructive delete uses `useConfirm()`.
 
 ## Architecture Notes

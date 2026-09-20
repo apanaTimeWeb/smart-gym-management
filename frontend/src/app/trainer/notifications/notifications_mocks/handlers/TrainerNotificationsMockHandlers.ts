@@ -1,7 +1,7 @@
 import { http, HttpResponse, delay } from 'msw';
 import { StatusCodes } from 'http-status-codes';
 import { env } from '@/config/env';
-import { MOCK_TRAINER_NOTIFICATIONS } from '@/app/trainer/notifications/notifications_fixtures/TrainerNotificationsMockData';
+import { MOCK_TRAINER_NOTIFICATIONS } from '@/app/trainer/notifications/notifications_mocks/fixtures/TrainerNotificationsMockData';
 import { TrainerNotificationsUrlConfig } from '@/app/trainer/notifications/notifications_url_config';
 const BASE = env.NEXT_PUBLIC_API_URL;
 let notificationsDB = MOCK_TRAINER_NOTIFICATIONS.map(n => ({ ...n }));

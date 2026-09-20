@@ -1,7 +1,7 @@
 # Trainer Dashboard — Feature Map
 
 ## Module Purpose
-Trainer ka operational landing surface: trainer-scoped KPIs, goal trend, membership distribution, upcoming sessions, recent progress, quick actions, aur URL-backed date-range filtering. Financial/revenue information intentionally excluded hai.
+The Dashboard module is the trainer's operational landing page for daily coaching activity. It surfaces trainer-scoped KPIs, goal trends, membership distribution, upcoming sessions, and recent progress, with a URL-backed date-range selector. The module is intentionally non-financial and does not own payout, revenue, salary, commission, or TDS data. Dashboard server data is Query-owned and mockable inside the feature.
 
 ## Directory Structure
 - `page.tsx` — Server Component route entry.
@@ -11,7 +11,7 @@ Trainer ka operational landing surface: trainer-scoped KPIs, goal trend, members
 - `dashboard_queries/` — TanStack Query server state.
 - `dashboard_api/` — API boundary.
 - `dashboard_types/` — response schema/domain types.
-- `dashboard_fixtures/` / `dashboard_mocks/` — feature-owned demo response and date-range behavior.
+- `dashboard_mocks/fixtures/` / `dashboard_mocks/` — feature-owned demo response and date-range behavior.
 - `dashboard_utils/` — date-range configuration/helpers and shared UI constants.
 - `dashboard_url_config.ts` — Dashboard page/backend URL contract plus documented navigation targets used by dashboard actions.
 - `dashboard_tests/` — API, main UI, and route-state behavior.
@@ -27,6 +27,11 @@ Trainer ka operational landing surface: trainer-scoped KPIs, goal trend, members
 | Quick actions | Links to documented trainer workflows. |
 | Date filter | Presets/custom range encoded in URL and sent to the query/mocks. |
 
+## Approved External Dependencies
+- Application infrastructure: `@/lib/api`, `@/lib/formatters`, and approved zero-business Trainer UI/feedback infrastructure used directly by this module.
+- Business Feature Dependencies: None.
+- Role-Level Business Dependencies: None.
+
 ## Data and State Architecture
 - TanStack Query is the only server-state owner.
 - Date range is URL state (`range`, optional `startDate`, `endDate`).
@@ -34,7 +39,7 @@ Trainer ka operational landing surface: trainer-scoped KPIs, goal trend, members
 - No Dashboard Zustand store is used for server/date state.
 - Feature fixtures are demo server data; dashboard mock responses vary deterministically by requested range.
 
-## User Flows
+## User Flows & Interactions
 1. Open `/trainer/dashboard` → loading skeleton → dashboard response.
 2. Select date range → URL updates → query key changes → mock/API receives the range → visible dashboard metrics update.
 3. Use quick action → documented destination route opens.
@@ -44,7 +49,7 @@ Dashboard does not own revenue, payout, salary, commission, TDS, or other financ
 
 ## Architecture Notes
 - `dashboard_url_config.ts` owns the Dashboard module's route/API contract.
-- Feature-specific UI data stays in `dashboard_utils/` and fixture data stays in `dashboard_fixtures/`.
+- Feature-specific UI data stays in `dashboard_utils/` and fixture data stays in `dashboard_mocks/fixtures/`.
 - Root tooling is outside the archive, so runtime build/lint/typecheck/E2E remain `NOT VERIFIED` until the application root is available.
 
 ## Approved External Dependencies

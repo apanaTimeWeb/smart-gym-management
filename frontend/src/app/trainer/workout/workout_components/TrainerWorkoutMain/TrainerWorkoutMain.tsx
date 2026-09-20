@@ -1,5 +1,5 @@
-'use client';
 // RESPONSIBILITY: Entry component for the Workout Library module. Wraps the UI in the context provider and handles page layout.
+'use client';
 import TrainerWorkoutBanner from '@/app/trainer/workout/workout_components/TrainerWorkoutBanner/TrainerWorkoutBanner';
 import TrainerWorkoutToolbar from '@/app/trainer/workout/workout_components/TrainerWorkoutToolbar/TrainerWorkoutToolbar';
 import TrainerWorkoutPlansGrid from '@/app/trainer/workout/workout_components/TrainerWorkoutPlansGrid/TrainerWorkoutPlansGrid';

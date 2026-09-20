@@ -1,7 +1,7 @@
 import { http, HttpResponse, delay } from 'msw';
 import { StatusCodes } from 'http-status-codes';
 import { env } from '@/config/env';
-import { MOCK_ATTENDANCE_RECORDS, MOCK_ATTENDANCE_STATS, MOCK_ATTENDANCE_MEMBERS } from '@/app/trainer/attendance/attendance_fixtures/TrainerAttendanceMockData';
+import { MOCK_ATTENDANCE_RECORDS, MOCK_ATTENDANCE_STATS, MOCK_ATTENDANCE_MEMBERS } from '@/app/trainer/attendance/attendance_mocks/fixtures/TrainerAttendanceMockData';
 import { CreateAttendanceDtoSchema } from '@/app/trainer/attendance/attendance_types/TrainerAttendance_types';
 import { AttendanceUrlConfig } from '@/app/trainer/attendance/attendance_url_config';
 const BASE = env.NEXT_PUBLIC_API_URL;
@@ -16,7 +16,15 @@ export const trainerAttendanceHandlers = [
     if (staffId) filtered = filtered.filter(r => r.staffId === staffId || r.staff?.id === staffId);
     if (search) filtered = filtered.filter(r => r.member?.name?.toLowerCase().includes(search) || r.staff?.name?.toLowerCase().includes(search));
     if (date && date !== 'All Time') { const today = new Date(); filtered = filtered.filter(r => { const d = new Date(r.date); if (date === 'Today') return d.toDateString() === today.toDateString(); if (date === 'Yesterday') { const y = new Date(today); y.setDate(y.getDate()-1); return d.toDateString() === y.toDateString(); } if (date === 'Last 7 Days') { const cutoff = new Date(today); cutoff.setDate(cutoff.getDate()-7); return d >= cutoff; } if (date === 'This Month') return d.getMonth() === today.getMonth() && d.getFullYear() === today.getFullYear(); return true; }); }
-    const start = (page-1)*limit; return HttpResponse.json({ success: true, message: 'Attendance records fetched successfully', data: { attendance: filtered.slice(start,start+limit), total: filtered.length, page, limit } });
+    const sortBy = url.searchParams.get('sortBy') || 'date'; const sortDirection = url.searchParams.get('sortDirection') === 'asc' ? 1 : -1;
+    filtered.sort((a, b) => {
+      const getValue = (record: typeof filtered[number]) => sortBy === 'name' ? (record.member?.name ?? record.staff?.name ?? '') : sortBy === 'durationMinutes' ? (record.durationMinutes ?? -1) : (record[sortBy as keyof typeof record] ?? '');
+      const left = getValue(a); const right = getValue(b);
+      if (typeof left === 'number' && typeof right === 'number') return (left - right) * sortDirection;
+      return String(left).localeCompare(String(right)) * sortDirection;
+    });
+    const start = (page-1)*limit; const totalPages = Math.ceil(filtered.length / limit) || 1;
+    return HttpResponse.json({ success: true, message: 'Attendance records fetched successfully', data: { attendance: filtered.slice(start,start+limit), total: filtered.length, page, limit }, meta: { total: filtered.length, page, limit, totalPages, hasNextPage: page < totalPages, hasPrevPage: page > 1 } });
   }),
   http.get(`${BASE}${AttendanceUrlConfig.BACKEND_API.STATS}`, async () => { await delay(MOCK_SHORT_DELAY_MS); return HttpResponse.json({ success: true, message: 'Attendance stats fetched successfully', data: MOCK_ATTENDANCE_STATS }); }),
   http.get(`${BASE}${AttendanceUrlConfig.BACKEND_API.MEMBERS_BASIC}`, async () => { await delay(MOCK_SHORT_DELAY_MS); return HttpResponse.json({ success: true, message: 'Attendance members fetched successfully', data: MOCK_ATTENDANCE_MEMBERS }); }),

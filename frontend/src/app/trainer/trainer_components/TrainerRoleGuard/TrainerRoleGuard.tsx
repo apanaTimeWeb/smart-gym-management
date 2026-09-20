@@ -1,5 +1,5 @@
-'use client';
 // RESPONSIBILITY: Hides the entire Trainer business module from users without the Trainer capability.
+'use client';
 // DATA FLOW: global session → usePermissions() → role gate → Trainer children.
 import type { TrainerRoleGuardProps } from '@/app/trainer/trainer_types/TrainerRoleGuardTypes';
 import { usePermissions } from '@/lib/usePermissions';

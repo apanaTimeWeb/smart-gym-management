@@ -1,7 +1,7 @@
 # Trainer Sessions — Feature Map
 
 ## Module Purpose
-The Sessions module is the Trainer's daily session workspace. Trainers can view their own PT and Group sessions, schedule new sessions, mark attendance and cancel upcoming sessions. Member choices for scheduling are loaded through a session-owned API endpoint and fixture rather than hardcoded in the API client. The module does not expose other trainers' calendars or Manager scheduling controls.
+The Sessions module lets trainers browse their scheduled sessions, create or edit sessions, manage enrolled-member attendance, and perform the documented no-show/cancellation actions. Session data is server state owned by TanStack Query and mutable demo behavior is represented by module-owned MSW fixtures. Forms use RHF/Zod and destructive or irreversible actions use the confirmation contract. Trainer users do not receive unrelated scheduling administration features outside this module.
 
 ## Directory Structure
 | Folder | Responsibility | Key Files |
@@ -11,7 +11,7 @@ The Sessions module is the Trainer's daily session workspace. Trainers can view 
 | `sessions_queries/` | Query/mutation hooks | `useTrainerSessionsQuery.ts`, `useTrainerSessionMutations.ts` |
 | `sessions_types/` | Session and DTO schemas/types | `TrainerSessionsTypes.ts` |
 | `sessions_utils/` | Static filter/duration constants | `TrainerSessionsSharedConstants.ts` |
-| `sessions_fixtures/` | Module-owned session/member fixtures | `TrainerSessionsMockData.ts` |
+| `sessions_mocks/fixtures/` | Module-owned session/member fixtures | `TrainerSessionsMockData.ts` |
 | `sessions_mocks/handlers/` | Module-owned MSW handlers | `TrainerSessionsMockHandlers.ts` |
 
 ## Feature Inventory
@@ -23,6 +23,11 @@ The Sessions module is the Trainer's daily session workspace. Trainers can view 
 | Edit session | `/trainer/sessions` | `PATCH /trainer/sessions/:id` | Live via MSW |
 | Cancel session | `/trainer/sessions` | `DELETE /trainer/sessions/:id` | Live via MSW |
 | Mark attendance | `/trainer/sessions` | `POST /trainer/sessions/:id/attendance` | Live via MSW |
+
+## Approved External Dependencies
+- Application infrastructure: `@/lib/api`, `@/lib/formatters`, and approved zero-business Trainer UI/feedback infrastructure used directly by this module.
+- Business Feature Dependencies: None.
+- Role-Level Business Dependencies: None.
 
 ## Data and State Architecture
 TanStack Query owns sessions and member-option responses. Local component state is limited to private modal/input UI. The scheduling form uses RHF/Zod and the dirty-state guard. Member options are API data and are never stored as component constants.
@@ -47,7 +52,7 @@ TanStack Query owns sessions and member-option responses. Local component state 
 | Member picker | `id`, `name` | sessions/members |
 | Location | `location`, `room`, `isOnline` | sessions |
 
-## User Flows
+## User Flows & Interactions
 ### Flow 1: Schedule a Session
 1. Trainer opens `/trainer/sessions` and chooses the schedule action.
 2. `TrainerSessionsScheduleModal` opens with module-owned member options loaded from the API.

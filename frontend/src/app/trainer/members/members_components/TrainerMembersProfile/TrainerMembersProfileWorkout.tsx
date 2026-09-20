@@ -1,5 +1,5 @@
-﻿'use client';
 // RESPONSIBILITY: Renders the member's assigned workout plan and provides plan assignment capabilities for trainers.
+'use client';
 // DATA FLOW: useTrainerSelectedMember/useTrainerMembersQuery â†’ Members API â†’ TrainerMembersProfileWorkout
 
 import { useState } from 'react';
@@ -10,11 +10,14 @@ import { useTrainerMembersMutations } from '@/app/trainer/members/members_querie
 import { useTrainerMemberWorkoutPlansQuery } from '@/app/trainer/members/members_queries/useTrainerMembersQuery';
 import TrainerSearchableDropdown from '@/app/trainer/trainer_components/TrainerShared/TrainerSearchableDropdown/TrainerSearchableDropdown';
 import { displayValue } from '@/lib/formatters';
+import { MembersUrlConfig } from '@/app/trainer/members/members_url_config';
+import { useTrainerIdempotencyKey } from '@/app/trainer/trainer_utils/useTrainerIdempotencyKey';
 import type { TrainerMemberWorkoutSnapshot } from '@/app/trainer/members/members_types/TrainerMemberWorkoutSnapshot';
 
 export default function TrainerMembersProfileWorkout() {
   const { member: selectedMember } = useTrainerSelectedMember();
   const { assignWorkout } = useTrainerMembersMutations();
+  const actionKeys = useTrainerIdempotencyKey();
   const [isAssigning, setIsAssigning] = useState(false);
   const [selectedWorkoutId, setSelectedWorkoutId] = useState('');
   const [saving, setSaving] = useState(false);
@@ -30,10 +33,12 @@ export default function TrainerMembersProfileWorkout() {
     if (!selectedWorkoutId) return;
     const selected = availableWorkouts.find(w => String(w.id) === selectedWorkoutId) || null;
     setSaving(true);
+    const actionId = `assign-workout-${selectedMember.id}`;
     try {
-      await assignWorkout.mutateAsync({ id: selectedMember.id, workout: selected });
+      await assignWorkout.mutateAsync({ id: selectedMember.id, workout: selected, idempotencyKey: actionKeys.begin(actionId) });
       setIsAssigning(false);
       setSelectedWorkoutId('');
+      actionKeys.clear(actionId);
     } finally {
       setSaving(false);
     }
@@ -48,7 +53,7 @@ export default function TrainerMembersProfileWorkout() {
       (workout.workoutExercises && workout.workoutExercises.length > 0
         ? `*Exercises:*\n` + workout.workoutExercises.map((e, idx) => `${idx + 1}. ${e.name} - ${e.sets} sets x ${e.reps} (Rest: ${e.restTime || '60s'})`).join('\n')
         : 'Custom routine assigned. Review standard exercise instructions in the Workout Library.');
-    window.open(`https://wa.me/${selectedMember.phone?.replace(/[^0-9]/g, '') || ''}?text=${encodeURIComponent(text)}`, '_blank');
+    window.open(MembersUrlConfig.BACKEND_API.WHATSAPP(selectedMember.phone ?? '', text), '_blank', 'noopener,noreferrer');
   };
 
   return (
@@ -63,26 +68,26 @@ export default function TrainerMembersProfileWorkout() {
             <>
               <button type="button" 
                 onClick={handleShareWhatsApp}
-                className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page flex items-center gap-2 px-4 py-2 bg-success text-on-success rounded-xl text-sm font-semibold hover:opacity-90 shadow-card motion-safe:transition-all motion-safe:active:scale-95"
+                className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page flex items-center gap-2 px-4 py-2 bg-success text-on-success rounded-xl text-sm font-semibold hover:bg-primary-hover shadow-card motion-safe:transition-all motion-safe:active:scale-95"
               >
-                <MessageCircle size={16} /> Share via WhatsApp
+                <MessageCircle size={18} /> Share via WhatsApp
               </button>
               <button type="button" 
                 onClick={() => {
                   setSelectedWorkoutId(workout.id || '');
                   setIsAssigning(true);
                 }}
-                className="flex items-center gap-2 px-4 py-2 bg-input text-primary border border-border rounded-xl text-sm font-semibold hover:bg-primary-subtle motion-safe:transition-all motion-safe:active:scale-95"
+                className="flex items-center gap-2 px-4 py-2 bg-input text-primary border border-border rounded-xl text-sm font-semibold hover:bg-primary-subtle motion-safe:transition-all motion-safe:active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
               >
-                <RefreshCw size={15} /> Change Plan
+                <RefreshCw size={18} /> Change Plan
               </button>
             </>
           ) : !isAssigning ? (
             <button type="button" 
               onClick={() => setIsAssigning(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary rounded-xl text-sm font-semibold hover:shadow-card hover:shadow-primary/30 motion-safe:transition-all motion-safe:active:scale-95"
+              className="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary rounded-xl text-sm font-semibold hover:shadow-card hover:border-primary motion-safe:transition-all motion-safe:active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
             >
-              <Plus size={16} /> Assign Workout Plan
+              <Plus size={18} /> Assign Workout Plan
             </button>
           ) : null}
         </div>
@@ -97,7 +102,7 @@ export default function TrainerMembersProfileWorkout() {
             </h4>
             <button type="button" 
               onClick={() => setIsAssigning(false)}
-              className="text-xs text-secondary hover:text-primary font-medium"
+              className="text-xs text-secondary hover:text-primary font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
             >
               Cancel
             </button>
@@ -120,7 +125,7 @@ export default function TrainerMembersProfileWorkout() {
                   disabled={!selectedWorkoutId || saving}
                   className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page px-5 py-2.5 bg-primary text-on-primary rounded-xl text-sm font-semibold hover:shadow-card motion-safe:transition-all disabled:opacity-50 flex items-center gap-2"
                 >
-                  <Check size={16} /> {saving ? 'Assigning...' : 'Confirm Assignment'}
+                  <Check size={18} /> {saving ? 'Assigning...' : 'Confirm Assignment'}
                 </button>
               </div>
             </div>
@@ -148,13 +153,13 @@ export default function TrainerMembersProfileWorkout() {
               <div className="text-right">
                 <p className="text-xs text-secondary">Session Duration</p>
                 <p className="text-base font-bold text-primary flex items-center gap-1">
-                  <Calendar size={14} className="text-primary" /> {displayValue(workout.duration)}
+                  <Calendar size={18} className="text-primary" /> {displayValue(workout.duration)}
                 </p>
               </div>
               <div className="text-right">
                 <p className="text-xs text-secondary">Frequency</p>
                 <p className="text-base font-bold text-primary flex items-center gap-1">
-                  <Flame size={14} className="text-warning" /> {displayValue(workout.days)} days/week
+                  <Flame size={18} className="text-warning" /> {displayValue(workout.days)} days/week
                 </p>
               </div>
             </div>
@@ -193,7 +198,7 @@ export default function TrainerMembersProfileWorkout() {
       ) : !isAssigning ? (
         <div className="bg-card border border-dashed border-border rounded-2xl p-12 text-center space-y-3">
           <div className="w-14 h-14 rounded-full bg-primary-subtle text-primary flex items-center justify-center mx-auto">
-            <Dumbbell size={26} />
+            <Dumbbell size={18} />
           </div>
           <h4 className="text-lg font-bold text-primary">No Workout Plan Assigned</h4>
           <p className="text-sm text-secondary max-w-md mx-auto">
@@ -201,9 +206,9 @@ export default function TrainerMembersProfileWorkout() {
           </p>
           <button type="button"
             onClick={() => setIsAssigning(true)}
-            className="mt-2 inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-on-primary rounded-xl text-sm font-semibold hover:shadow-card motion-safe:transition-all motion-safe:duration-base"
+            className="mt-2 inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-on-primary rounded-xl text-sm font-semibold hover:shadow-card motion-safe:transition-all motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
           >
-            <Plus size={16} /> Assign Workout Plan
+            <Plus size={18} /> Assign Workout Plan
           </button>
         </div>
       ) : null}
@@ -219,7 +224,7 @@ export default function TrainerMembersProfileWorkout() {
                 <p className="text-xs text-secondary">{historyItem.date} Â· {historyItem.level}</p>
               </div>
               <span className="px-3 py-1 rounded-full text-xs font-semibold bg-success-bg text-success flex items-center gap-1">
-                <Check size={12} /> {historyItem.status}
+                <Check size={18} /> {historyItem.status}
               </span>
             </div>
           ))}

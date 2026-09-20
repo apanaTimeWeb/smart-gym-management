@@ -1,14 +1,12 @@
 import { http, HttpResponse, delay } from 'msw';
 import { z } from 'zod';
 import { env } from '@/config/env';
-import { MOCK_AVAILABILITY, MOCK_LEAVES } from '@/app/trainer/schedule/schedule_fixtures/TrainerScheduleMockData';
+import { MOCK_AVAILABILITY, MOCK_LEAVES } from '@/app/trainer/schedule/schedule_mocks/fixtures/TrainerScheduleMockData';
 import { WeeklyAvailabilitySchema, CreateLeaveDtoSchema } from '@/app/trainer/schedule/schedule_types/TrainerScheduleTypes';
 import { ScheduleUrlConfig } from '@/app/trainer/schedule/schedule_url_config';
 
 const BASE = env.NEXT_PUBLIC_API_URL;
 const MOCK_DELAY_MS = 500;
-const MOCK_SHORT_DELAY_MS = 200;
-const MOCK_FAST_DELAY_MS = 300;
 
 let currentAvailability = [...MOCK_AVAILABILITY];
 let currentLeaves = [...MOCK_LEAVES];
@@ -25,7 +23,7 @@ export const trainerScheduleHandlers = [
     if (!parsedData.success) return HttpResponse.json({ success: false, message: 'Invalid availability payload.', data: null });
     const data = parsedData.data;
     currentAvailability = [...data];
-    return HttpResponse.json({ success: true, message: 'Availability updated successfully', data: null });
+    return HttpResponse.json({ success: true, message: 'Availability updated successfully', data: currentAvailability });
   }),
 
   http.post(`${BASE}${ScheduleUrlConfig.BACKEND_API.LEAVES}`, async ({ request }) => {

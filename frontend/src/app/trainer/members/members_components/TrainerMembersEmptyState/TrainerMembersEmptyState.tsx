@@ -6,7 +6,7 @@ export default function TrainerMembersEmptyState({ isFiltered }: { isFiltered: b
   return (
     <div className="flex flex-col items-center justify-center py-16 bg-card rounded-2xl border border-border">
       <div className="w-16 h-16 bg-primary-subtle rounded-full flex items-center justify-center mb-4 text-primary">
-        <Users size={32} />
+        <Users size={18} />
       </div>
       <h3 className="text-xl font-bold text-primary mb-2">
         {isFiltered ? 'No members found' : 'No members yet'}

@@ -1,5 +1,5 @@
-'use client';
 // RESPONSIBILITY: Renders the TrainerDashboardUpcomingSessions route/UI for the owning Trainer feature.
+'use client';
 import { DashboardUrlConfig } from '@/app/trainer/dashboard/dashboard_url_config';
 import { useTrainerDashboardQuery } from '@/app/trainer/dashboard/dashboard_queries/useTrainerDashboardQuery';
 import { Clock, Calendar } from 'lucide-react';
@@ -14,7 +14,7 @@ export default function TrainerDashboardUpcomingSessions() {
     <div className="bg-card border border-border rounded-2xl p-5 shadow-card xl:col-span-2">
       <div className="flex items-center justify-between mb-5">
         <h3 className="font-bold text-primary text-lg flex items-center gap-2">
-          <Calendar className="text-primary" size={20} />
+          <Calendar className="text-primary" size={18} />
           Upcoming Sessions
         </h3>
         <Link href={DashboardUrlConfig.PAGES.SCHEDULE} className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page text-sm text-primary font-medium hover:underline">View Schedule</Link>
@@ -36,7 +36,7 @@ export default function TrainerDashboardUpcomingSessions() {
                 </div>
               </div>
               <div className="flex items-center gap-1.5 text-sm font-medium text-primary bg-input px-3 py-1.5 rounded-lg">
-                <Clock size={14} className="text-secondary" />
+                <Clock size={18} className="text-secondary" />
                 {session.time}
               </div>
             </div>

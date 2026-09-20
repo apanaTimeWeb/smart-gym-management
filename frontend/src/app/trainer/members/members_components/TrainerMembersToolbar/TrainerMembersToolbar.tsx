@@ -1,5 +1,5 @@
-﻿'use client';
 // RESPONSIBILITY: Renders the toolbar for searching and filtering members.
+'use client';
 import { Search, RefreshCw } from 'lucide-react';
 import { useTrainerMembersToolbar } from '@/app/trainer/members/members_components/TrainerMembersToolbar/useTrainerMembersToolbar';
 import TrainerSearchableDropdown from '@/app/trainer/trainer_components/TrainerShared/TrainerSearchableDropdown/TrainerSearchableDropdown';
@@ -19,7 +19,7 @@ export default function TrainerMembersToolbar() {
   return (
     <div className="bg-card rounded-xl shadow-card border border-border p-4 flex flex-wrap gap-3 items-center justify-between">
       <div className="relative">
-        <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary" />
+        <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary" />
         <input 
           value={localSearch} 
           onChange={e => setLocalSearch(e.target.value)} 
@@ -42,9 +42,9 @@ export default function TrainerMembersToolbar() {
         />
         <button type="button" 
           onClick={handleRefresh} 
-          className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page flex items-center gap-2 px-3 py-2.5 text-sm border border-border rounded-xl hover:opacity-80 text-primary"
+          className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page flex items-center gap-2 px-3 py-2.5 text-sm border border-border rounded-xl motion-safe:hover:brightness-110 text-primary"
         >
-          <RefreshCw size={14} /> Refresh
+          <RefreshCw size={18} /> Refresh
         </button>
       </div>
     </div>

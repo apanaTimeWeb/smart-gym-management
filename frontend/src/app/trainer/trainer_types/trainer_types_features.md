@@ -1,18 +1,16 @@
-# trainer/trainer_types — Feature Map
+# trainer_types — Feature Map
 
 ## Module Purpose
-[REQUIRED: 3–6 sentences. Must answer: (1) What business problem does this module solve? (2) Who uses it? (3) What are the 3–5 most important things a user can DO? (4) What is strictly OFF-LIMITS? Fill this out accurately.]
+`trainer_types/` contains Trainer role-level type contracts that are consumed by the Trainer shell and approved infrastructure. It does not own a user-facing business route, server state, mock data, or business workflow. The folder is limited to stable type declarations such as role-guard props and related infrastructure contracts. Business-domain types must remain inside their owning feature module.
 
 ## Directory Structure
-| Folder | Responsibility | Key Files |
+| Folder/File | Responsibility | Key Files |
 |---|---|---|
-| `trainer_types_components/` | Renders UI components | TBD |
-| `trainer_types_api/` | API endpoints | `trainer_types_url_config.ts` |
+| `trainer_types/` | Stable role/infrastructure TypeScript contracts | `TrainerRoleGuardTypes.ts`, `trainer_types_url_config.ts`, documentation files |
 
-### Approved External Dependencies
+## Approved External Dependencies
 ### Application Infrastructure
-- `@/lib/api`
-- `@/lib/logger`
+- `@/lib/*` only where needed by an infrastructure contract.
 
 ### Business Feature Dependencies
 - None
@@ -23,48 +21,44 @@
 ## Feature Inventory
 | Feature | Route | What the User Can Do | Key Components | Main API Calls | Status |
 |---|---|---|---|---|---|
-| Example | /trainer/trainer_types | Manage entity | Main.tsx | GET /... | 🚧 TBD |
+| Role guard type contracts | N/A | Not user-facing; provides compile-time contracts for Trainer infrastructure | `TrainerRoleGuardTypes.ts` | None | ✅ Maintained |
 
 ## User Flows & Interactions
-### Flow 1: [Name]
-1. TBD
+- No user-facing flow is owned by this folder. Runtime behavior remains owned by the Trainer shell or the target feature.
 
 ## Data and State Architecture
-- **State pattern:** TanStack Query for server state + Zustand for UI state.
-- **Zustand stores:** [List actual store files]
-- **Context providers:** [List actual provider files]
-- **MSW handler location:** [module-owned handler]
+- **State pattern:** None; this folder contains static type contracts.
+- **Zustand stores:** None
+- **Context providers:** None
+- **Local-storage keys:** None
+- **MSW handler location:** None
+- **MSW fixture location:** None
+- **MSW scenarios:** Not applicable because no server-data feature is owned here.
 
 ## API Contract
-| Function | Method | Endpoint | Request | Response `data` type |
-|---|---|---|---|---|
-| TBD | GET | /... | — | `any` |
+- No API functions are owned by this folder. API contracts remain inside feature-owned API directories.
 
 ## UI Data Requirements
-| UI Element | Required Field(s) | API Endpoint | Response Path | Nullable? | Mocked? |
-|---|---|---|---|---|---|
-| TBD | TBD | GET /... | data... | No | Yes |
+- No user-facing UI is owned here.
 
 ## Permissions and Security
-- **Required role:** `TRAINER`
-- **Destructive actions:** TBD
-- **Cross-role isolation:** Zero imports from other roles.
+- **Role:** `TRAINER` contracts only; authorization is enforced by approved global/session infrastructure, not by this type-only folder.
+- **Destructive actions:** None
+- **Cross-role isolation:** No business-role imports.
 
 ## Loading, Empty, and Error States
-| Section | Loading State | Empty State | Error State |
-|---|---|---|---|
-| Full page | `loading.tsx` | `trainer_typesEmptyState.tsx` | `error.tsx` |
+- Not applicable; this folder does not render UI.
 
 ## Edge Cases and AI Warnings
-- **[Specific Warning]:** [Explanation]
+- **Do not add business models here:** Domain types belong to the owning feature module.
+- **Do not add API clients here:** API ownership belongs to the feature that consumes the endpoint.
+- **Do not turn this folder into a role-wide business bucket:** Similar-looking business types must remain feature-local.
 
 ## Component Responsibility Map
-| Component File | Responsibility |
-|---|---|
-| TBD | TBD |
+- No React components are owned here.
 
 ## Rule Compliance Checklist
-- [ ] Rule 1: Micro-modularization
-- [ ] Rule 2: Total Role Isolation
-- [ ] Module Self-Containment
-- [ ] Feature Dependency Firewall
+- [x] No feature mock data outside its owning module.
+- [x] No business API client in this folder.
+- [x] No sibling business-feature imports.
+- [x] Type-only responsibility remains isolated.

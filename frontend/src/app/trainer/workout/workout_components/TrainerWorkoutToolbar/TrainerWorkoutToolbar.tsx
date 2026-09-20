@@ -1,5 +1,5 @@
-'use client';
 // RESPONSIBILITY: Renders the tab switcher, search input, and category filter for the Workout Library (view-only; no Add button for trainers).
+'use client';
 // DATA FLOW: TrainerWorkoutToolbar controls -> URL-backed filter state -> TrainerUseWorkoutQuery
 import { useState, useEffect } from 'react';
 import { Search } from 'lucide-react';
@@ -55,7 +55,7 @@ export default function TrainerWorkoutToolbar() {
               tab === t
                 ? 'text-on-primary bg-primary-subtle'
                 : 'border-transparent text-secondary hover:text-primary'
-            }`}
+            } focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page`}
             
           >
             {t}
@@ -65,12 +65,12 @@ export default function TrainerWorkoutToolbar() {
       <div className="px-4 flex gap-3 items-center">
         <button type="button" 
           onClick={() => tab === 'Workout Plans' ? (setEditWk(null), setShowWkModal(true)) : (setEditEx(null), setShowExModal(true))}
-          className="bg-primary hover:bg-primary-hover text-on-primary px-4 py-2 rounded-lg text-sm font-semibold motion-safe:transition-colors flex items-center gap-2"
+          className="bg-primary hover:bg-primary-hover text-on-primary px-4 py-2 rounded-lg text-sm font-semibold motion-safe:transition-colors flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
         >
           Add {tab === 'Workout Plans' ? 'Plan' : 'Exercise'}
         </button>
         <div className="relative hidden sm:block">
-          <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary" />
+          <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary" />
           <input
             value={localSearch}
             onChange={e => setLocalSearch(e.target.value)}

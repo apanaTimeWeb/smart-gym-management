@@ -1,5 +1,5 @@
-'use client';
 // RESPONSIBILITY: Renders Diet Library search, goal filtering, and refresh controls; does not own server data.
+'use client';
 import { RefreshCw, Search } from 'lucide-react';
 import { GOALS } from '@/app/trainer/library/library_utils/TrainerLibrarySharedConstants';
 import type { TrainerLibraryFilterGoal } from '@/app/trainer/library/library_types/TrainerLibrary_types';

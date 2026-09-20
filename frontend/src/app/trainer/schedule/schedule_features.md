@@ -1,7 +1,7 @@
 # Trainer Schedule — Feature Map
 
 ## Module Purpose
-Trainer weekly availability aur leave-request workflows ko manage karta hai.
+The Schedule module lets trainers view and update their weekly availability and request time off through the documented Trainer workflow. It also shows the resulting leave-request history. Form inputs are validated and protected by the dirty-navigation guard, while writes use stable idempotency keys. Manager approval policy is represented only through the frontend response contract; the module does not implement backend authorization.
 
 ## Directory Structure
 - `page.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx` — route states.
@@ -10,7 +10,7 @@ Trainer weekly availability aur leave-request workflows ko manage karta hai.
 - `schedule_store/` — UI-only active-tab/modal state; its contract is in `schedule_types/TrainerScheduleStoreTypes.ts`.
 - `schedule_types/` — state/domain contracts.
 - `schedule_utils/` — static tabs/status/time configuration.
-- `schedule_fixtures/` / `schedule_mocks/` — feature-owned demo data/handlers.
+- `schedule_mocks/fixtures/` / `schedule_mocks/` — feature-owned demo data/handlers.
 - `schedule_api/TrainerScheduleApi.ts` — API boundary.
 - `schedule_url_config.ts` — URL contract.
 - `schedule_tests/` — API/main/route tests.
@@ -23,13 +23,18 @@ Trainer weekly availability aur leave-request workflows ko manage karta hai.
 | Tab switch | UI-only active tab state. |
 | Leave modal | RHF/Zod-backed request flow with feedback and loading state. |
 
+## Approved External Dependencies
+- Application infrastructure: `@/lib/api`, `@/lib/formatters`, and approved zero-business Trainer UI/feedback infrastructure used directly by this module.
+- Business Feature Dependencies: None.
+- Role-Level Business Dependencies: None.
+
 ## Data and State Architecture
 - TanStack Query owns availability/leaves server state.
 - Zustand owns only tab/modal UI state.
 - No React Context owns API data.
 - Static status labels/options live in feature utilities.
 
-## User Flows
+## User Flows & Interactions
 Open Schedule → Availability/Leaves tab → edit or request leave → validation → mutation → success/error feedback → refreshed visible state.
 
 ## Architecture Notes

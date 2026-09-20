@@ -15,3 +15,8 @@ export interface MembersInitialData {
   stats: MemberStats;
   totalMembers: number;
 }
+
+export const TRAINER_MEMBERS_SORT_FIELDS = ['id', 'name', 'status', 'expiryDate', 'progressStatus'] as const;
+export type TrainerMembersSortField = (typeof TRAINER_MEMBERS_SORT_FIELDS)[number];
+export const TRAINER_MEMBERS_SORT_DIRECTIONS = ['asc', 'desc'] as const;
+export type TrainerMembersSortDirection = (typeof TRAINER_MEMBERS_SORT_DIRECTIONS)[number];

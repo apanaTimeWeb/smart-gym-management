@@ -1,7 +1,7 @@
 import { http, HttpResponse, delay } from 'msw';
 import { StatusCodes } from 'http-status-codes';
 import { env } from '@/config/env';
-import { MOCK_TRAINER_PROFILE } from '@/app/trainer/profile/profile_fixtures/TrainerProfileMockData';
+import { MOCK_TRAINER_PROFILE } from '@/app/trainer/profile/profile_mocks/fixtures/TrainerProfileMockData';
 import { ProfileUrlConfig } from '@/app/trainer/profile/profile_url_config';
 const BASE = env.NEXT_PUBLIC_API_URL;
 let profileDB = { ...MOCK_TRAINER_PROFILE };

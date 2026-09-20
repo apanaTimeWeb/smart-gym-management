@@ -1,3 +1,4 @@
+'use client';
 // RESPONSIBILITY: Custom hook for fetching Trainer members list using TanStack Query.
 import { useQuery } from '@tanstack/react-query';
 import { TrainerMembersApi } from '@/app/trainer/members/members_api/TrainerMembersApi';
@@ -8,8 +9,11 @@ export interface TrainerMembersQueryParams {
   search?: string;
   status?: string;
   progressStatus?: string;
+  sortBy?: string;
+  sortDirection?: string;
 }
 
+/** Owns useTrainerMembersQuery behavior for this Trainer module. */
 export function useTrainerMembersQuery(params: TrainerMembersQueryParams) {
   return useQuery({
     queryKey: ['trainer', 'members', 'list', params],
@@ -22,6 +26,7 @@ export function useTrainerMembersQuery(params: TrainerMembersQueryParams) {
   });
 }
 
+/** Owns useTrainerMemberStatsQuery behavior for this Trainer module. */
 export function useTrainerMemberStatsQuery() {
   return useQuery({
     queryKey: ['trainer', 'members', 'stats'],
@@ -34,6 +39,7 @@ export function useTrainerMemberStatsQuery() {
   });
 }
 
+/** Owns useTrainerMemberAttendanceQuery behavior for this Trainer module. */
 export function useTrainerMemberAttendanceQuery(memberId: string) {
   return useQuery({
     queryKey: ['trainer', 'members', 'attendance', memberId],
@@ -47,6 +53,7 @@ export function useTrainerMemberAttendanceQuery(memberId: string) {
   });
 }
 
+/** Owns useTrainerMemberDietPlansQuery behavior for this Trainer module. */
 export function useTrainerMemberDietPlansQuery(enabled: boolean) {
   return useQuery({
     queryKey: ['trainer', 'members', 'diet-plans'],
@@ -59,6 +66,7 @@ export function useTrainerMemberDietPlansQuery(enabled: boolean) {
   });
 }
 
+/** Owns useTrainerMemberWorkoutPlansQuery behavior for this Trainer module. */
 export function useTrainerMemberWorkoutPlansQuery(enabled: boolean) {
   return useQuery({
     queryKey: ['trainer', 'members', 'workout-plans'],
@@ -71,6 +79,7 @@ export function useTrainerMemberWorkoutPlansQuery(enabled: boolean) {
   });
 }
 
+/** Owns useTrainerMemberProgressEntriesQuery behavior for this Trainer module. */
 export function useTrainerMemberProgressEntriesQuery(memberId: string) {
   return useQuery({
     queryKey: ['trainer', 'members', 'progress', memberId],

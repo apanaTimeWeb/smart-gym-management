@@ -48,29 +48,32 @@ export async function fetchAttendanceMembersBasic(): Promise<AttendanceMemberBas
   return response.data;
 }
 
-export async function createAttendanceRecord(dto: CreateAttendanceDto): Promise<{ data: AttendanceRecord; message: string }> {
+export async function createAttendanceRecord(dto: CreateAttendanceDto, idempotencyKey: string): Promise<{ data: AttendanceRecord; message: string }> {
   const raw = await apiFetch<ApiResponse<unknown>>(`${AttendanceUrlConfig.BACKEND_API.BASE}`, {
     method: 'POST',
     body: JSON.stringify(dto),
+    headers: { 'Idempotency-Key': idempotencyKey },
   });
   const response = createTrainerApiResponseSchema(AttendanceRecordSchema).parse(raw);
   if (!response.data) throw new Error(response.message);
   return { data: response.data, message: response.message };
 }
 
-export async function checkoutAttendance(staffId: string, checkOutTime: string): Promise<{ message: string }> {
+export async function checkOutAttendance(staffId: string, checkOutTime: string, idempotencyKey: string): Promise<{ message: string }> {
   const raw = await apiFetch<ApiResponse<unknown>>(`${AttendanceUrlConfig.BACKEND_API.CHECKOUT(staffId)}`, {
     method: 'PATCH',
     body: JSON.stringify({ checkOutTime }),
+    headers: { 'Idempotency-Key': idempotencyKey },
   });
   const response = createTrainerApiResponseSchema(z.null()).parse(raw);
   return { message: response.message };
 }
 
-export async function selfCheckInAttendance(staffId: string): Promise<{ message: string }> {
+export async function selfCheckInAttendance(staffId: string, idempotencyKey: string): Promise<{ message: string }> {
   const raw = await apiFetch<ApiResponse<unknown>>(`${AttendanceUrlConfig.BACKEND_API.BASE}`, {
     method: 'POST',
     body: JSON.stringify({ staffId, isSelfCheckIn: true }),
+    headers: { 'Idempotency-Key': idempotencyKey },
   });
   const response = createTrainerApiResponseSchema(z.null()).parse(raw);
   return { message: response.message };

@@ -1,10 +1,10 @@
-'use client';
 // RESPONSIBILITY: Provides the programmatic confirm() API to Trainer features and owns only transient dialog state; no server/API data is stored here.
-import React, { createContext, useContext, useState, useCallback, useRef, useMemo, type ReactNode } from 'react';
+'use client';
+import { createContext, useCallback, useMemo, useRef, useState, type ReactNode } from 'react';
 import TrainerConfirmModal from '@/app/trainer/trainer_components/TrainerFeedback/TrainerConfirmModal';
 import type { TrainerConfirmContextValue, TrainerConfirmOptions } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerConfirmTypes';
 
-const ConfirmContext = createContext<TrainerConfirmContextValue | undefined>(undefined);
+export const ConfirmContext = createContext<TrainerConfirmContextValue | undefined>(undefined);
 
 export function TrainerConfirmProvider({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -32,20 +32,20 @@ export function TrainerConfirmProvider({ children }: { children: ReactNode }) {
   return (
     <ConfirmContext.Provider value={value}>
       {children}
-      {options && (
+      {options ? (
         <TrainerConfirmModal
           isOpen={isOpen}
-          {...options}
+          title={options.title}
+          message={options.message}
+          confirmText={options.confirmText}
+          cancelText={options.cancelText}
+          type={options.type}
+          requireTypedConfirmation={options.requireTypedConfirmation}
+          confirmationPhrase={options.confirmationPhrase}
           onConfirm={() => settle(true)}
           onCancel={() => settle(false)}
         />
-      )}
+      ) : null}
     </ConfirmContext.Provider>
   );
-}
-
-export function useConfirm() {
-  const context = useContext(ConfirmContext);
-  if (!context) throw new Error('useConfirm must be used within TrainerConfirmProvider');
-  return context;
 }

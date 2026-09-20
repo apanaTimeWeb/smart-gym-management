@@ -3,7 +3,7 @@
 1. Do not place Notifications business behavior in role-wide shared business folders.
 2. TanStack Query owns notification server state. Context/Zustand must not become the server-data owner.
 3. Keep notification API routes in `notifications_url_config.ts`.
-4. Keep notification demo data and mutable mock behavior in `notifications_fixtures/` and `notifications_mocks/`.
+4. Keep notification demo data and mutable mock behavior in `notifications_mocks/fixtures/` and `notifications_mocks/`.
 5. Trainer UI must not expose Manager-only delete/clear controls.
 6. Mark-read and mark-all-read interactions must update visible mock state.
 7. Use semantic theme tokens and accessible action controls.

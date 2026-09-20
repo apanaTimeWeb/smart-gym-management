@@ -1,16 +1,13 @@
-﻿'use client';
 // RESPONSIBILITY: Renders the empty state for the workout library.
+'use client';
 import { Dumbbell, Plus } from 'lucide-react';
-
-interface TrainerWorkoutEmptyStateProps {
-  onAdd: () => void;
-}
+import type { TrainerWorkoutEmptyStateProps } from '@/app/trainer/workout/workout_types/TrainerWorkoutEmptyStateProps';
 
 export default function TrainerWorkoutEmptyState({ onAdd }: TrainerWorkoutEmptyStateProps) {
   return (
     <div className="bg-card rounded-xl border border-dashed border-border p-12 flex flex-col items-center justify-center text-center space-y-4">
       <div className="w-16 h-16 rounded-full bg-primary-subtle flex items-center justify-center">
-        <Dumbbell size={30} className="text-primary" />
+        <Dumbbell size={18} className="text-primary" />
       </div>
       <div>
         <h3 className="text-lg font-bold text-primary">No Workout Plans</h3>
@@ -21,9 +18,9 @@ export default function TrainerWorkoutEmptyState({ onAdd }: TrainerWorkoutEmptyS
       <button
         type="button"
         onClick={onAdd}
-        className="mt-2 flex items-center gap-2 px-5 py-2.5 bg-primary text-on-primary rounded-xl text-sm font-semibold hover:opacity-90 motion-safe:transition-all motion-safe:duration-base"
+        className="mt-2 flex items-center gap-2 px-5 py-2.5 bg-primary text-on-primary rounded-xl text-sm font-semibold hover:bg-primary-hover motion-safe:transition-all motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
       >
-        <Plus size={16} /> Create Plan
+        <Plus size={18} /> Create Plan
       </button>
     </div>
   );

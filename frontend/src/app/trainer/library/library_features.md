@@ -1,7 +1,7 @@
 # Trainer Library — Feature Map
 
 ## Module Purpose
-Trainer ko available diet plans browse/search/filter karne aur assigned members ko a diet plan assign karne deta hai. Diet-plan create/update/delete Manager-owned functionality hai aur Trainer module me intentionally absent hai.
+The Diet Library module gives trainers access to gym-managed diet plans and the ability to assign an existing plan to a trainer-visible member. Users can search/filter the library, open plan details, review nutrition information, and complete the assignment flow. Diet-plan creation and modification remain outside the Trainer role when the API contract says those actions are Manager-owned. Backend-driven plan data stays in the feature API and MSW fixture boundary rather than component constants.
 
 ## Directory Structure
 - `page.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx` — route states.
@@ -10,7 +10,7 @@ Trainer ko available diet plans browse/search/filter karne aur assigned members 
 - `library_api/` — feature API boundary.
 - `library_types/` — Zod schemas and domain contracts.
 - `library_utils/TrainerLibrarySharedConstants.ts` — static goals/filter options/form defaults.
-- `library_fixtures/` / `library_mocks/handlers/` — feature-owned demo data and mutable assignment state.
+- `library_mocks/fixtures/` / `library_mocks/handlers/` — feature-owned demo data and mutable assignment state.
 - `library_url_config.ts` — page/API URL contract.
 - `library_tests/` — API/main/route behavior.
 
@@ -23,6 +23,11 @@ Trainer ko available diet plans browse/search/filter karne aur assigned members 
 | Diet details | Opens feature-owned modal/detailed presentation. |
 | Assign to Member | Opens member selector and PATCHes the assignment relationship. |
 
+## Approved External Dependencies
+- Application infrastructure: `@/lib/api`, `@/lib/formatters`, and approved zero-business Trainer UI/feedback infrastructure used directly by this module.
+- Business Feature Dependencies: None.
+- Role-Level Business Dependencies: None.
+
 ## Data and State Architecture
 - TanStack Query owns diet plans and assigned-member data.
 - URL owns search/goal/page filters.
@@ -30,7 +35,7 @@ Trainer ko available diet plans browse/search/filter karne aur assigned members 
 - No React Context owns library server data.
 - Assignment mock state is mutable so successful assignment appears in subsequent reads.
 
-## User Flows
+## User Flows & Interactions
 List → search/filter → page → open plan → Assign → select member → submit → success → assigned-member query refresh.
 
 ## Architecture Notes

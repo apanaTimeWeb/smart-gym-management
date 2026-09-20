@@ -1,11 +1,11 @@
-﻿'use client';
 // RESPONSIBILITY: Renders the primary tabular list of members with actions, filtering state, and pagination.
-import { MessageCircle, Mail, Loader2 } from 'lucide-react';
+'use client';
+import { MessageCircle, Mail, Loader2, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
 import { useTrainerMembersStore } from '@/app/trainer/members/members_store/useTrainerMembersStore';
 import { useTrainerMembersFilters } from '@/app/trainer/members/members_utils/useTrainerMembersFilters';
 import { useTrainerMembersQuery } from '@/app/trainer/members/members_queries/useTrainerMembersQuery';
 import { MEMBERS_STATUS_COLORS, MEMBERS_TABLE_HEADERS } from '@/app/trainer/members/members_utils/TrainerMembersSharedConstants';
-import { formatCurrency } from '@/lib/formatters';
+import type { TrainerMembersSortField } from '@/app/trainer/members/members_types/TrainerMembers_types';
 import { maskSensitiveData, formatDate, displayValue } from '@/lib/formatters';
 import TrainerMembersEmptyState from '@/app/trainer/members/members_components/TrainerMembersEmptyState/TrainerMembersEmptyState';
 
@@ -13,7 +13,7 @@ import TrainerPagination from '@/app/trainer/trainer_components/TrainerShared/Tr
 import { TRAINER_ITEMS_PER_PAGE } from '@/app/trainer/trainer_utils/TrainerSharedConstants';
 
 export default function TrainerMembersTable() {
-  const { search, statusFilter, progressStatusFilter, currentPage, setCurrentPage } = useTrainerMembersFilters();
+  const { search, debouncedSearch, statusFilter, progressStatusFilter, currentPage, setCurrentPage, sortBy, sortDirection, setSort } = useTrainerMembersFilters();
   const setSelectedMember = useTrainerMembersStore(s => s.setSelectedMember);
   const openMsg = useTrainerMembersStore(s => s.openMsg);
   const setProfileTab = useTrainerMembersStore(s => s.setProfileTab);
@@ -21,9 +21,11 @@ export default function TrainerMembersTable() {
   const { data, isLoading } = useTrainerMembersQuery({ 
     page: String(currentPage), 
     limit: String(TRAINER_ITEMS_PER_PAGE), 
-    search, 
+    search: debouncedSearch, 
     status: statusFilter, 
-    progressStatus: progressStatusFilter 
+    progressStatus: progressStatusFilter,
+    sortBy,
+    sortDirection
   });
 
   const members = data?.members || [];
@@ -42,11 +44,15 @@ export default function TrainerMembersTable() {
             <table className="w-full">
               <thead className="bg-surface-highlight">
                 <tr>
-                  {MEMBERS_TABLE_HEADERS.map(h => (
-                    <th key={h} className="text-left text-xs font-semibold text-secondary uppercase tracking-wider px-5 py-3">
-                      {h}
-                    </th>
-                  ))}
+                  {MEMBERS_TABLE_HEADERS.map((header) => {
+                    const fieldByHeader: Record<string, TrainerMembersSortField | null> = { ID: 'id', MEMBER: 'name', STATUS: 'status', EXPIRY: 'expiryDate', PROGRESS: 'progressStatus' };
+                    const field = fieldByHeader[header] ?? null;
+                    const active = field ? sortBy === field : false;
+                    const SortIcon = active ? (sortDirection === 'asc' ? ArrowUp : ArrowDown) : ArrowUpDown;
+                    return <th key={header} className="text-left text-xs font-semibold text-secondary uppercase tracking-wider px-5 py-3">
+                      {field ? <button type="button" onClick={() => setSort(field)} className="inline-flex items-center gap-1 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" aria-label={`Sort by ${header.toLowerCase()}`}>{header}<SortIcon size={18} className={active ? 'text-primary' : 'text-secondary'} aria-hidden="true" /></button> : header}
+                    </th>;
+                  })}
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
@@ -106,8 +112,8 @@ export default function TrainerMembersTable() {
                     </td>
                     <td className="px-5 py-3.5">
                       <div className="flex items-center gap-2">
-                        <button type="button" onClick={(e) => { e.stopPropagation(); openMsg({ name: m.name, phone: m.phone, email: m.email }, 'whatsapp', ''); }} className="p-1.5 rounded-lg bg-success text-on-success hover:opacity-80 motion-safe:transition-all motion-safe:duration-base" title="WhatsApp" aria-label={`Message ${m.name} on WhatsApp`}><MessageCircle size={14} /></button>
-                        <button type="button" onClick={(e) => { e.stopPropagation(); openMsg({ name: m.name, phone: m.phone, email: m.email }, 'email', ''); }} className="p-1.5 rounded-lg bg-info text-on-info hover:opacity-80 motion-safe:transition-all motion-safe:duration-base" title="Email" aria-label={`Email ${m.name}`}><Mail size={14} /></button>
+                        <button type="button" onClick={(e) => { e.stopPropagation(); openMsg({ name: m.name, phone: m.phone, email: m.email }, 'whatsapp', ''); }} className="p-1.5 rounded-lg bg-success text-on-success motion-safe:hover:brightness-110 motion-safe:transition-all motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page" title="WhatsApp" aria-label={`Message ${m.name} on WhatsApp`}><MessageCircle size={18} /></button>
+                        <button type="button" onClick={(e) => { e.stopPropagation(); openMsg({ name: m.name, phone: m.phone, email: m.email }, 'email', ''); }} className="p-1.5 rounded-lg bg-info text-on-info motion-safe:hover:brightness-110 motion-safe:transition-all motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page" title="Email" aria-label={`Email ${m.name}`}><Mail size={18} /></button>
                       </div>
                     </td>
                   </tr>
@@ -115,7 +121,7 @@ export default function TrainerMembersTable() {
                 {members.length === 0 && !isLoading && (
                   <tr>
                     <td colSpan={11} className="p-0 border-b-0">
-                      <TrainerMembersEmptyState isFiltered={Boolean(search || statusFilter !== 'All')} />
+                      <TrainerMembersEmptyState isFiltered={Boolean(search || statusFilter !== 'All' || progressStatusFilter !== 'All')} />
                     </td>
                   </tr>
                 )}

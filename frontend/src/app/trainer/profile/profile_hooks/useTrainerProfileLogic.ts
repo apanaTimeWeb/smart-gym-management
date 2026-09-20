@@ -2,6 +2,7 @@
 // RESPONSIBILITY: Owns Trainer Profile query, React Hook Form state, validation, mutations, and dirty state.
 // DATA FLOW: trainerProfileApi → TanStack Query/useForm → TrainerProfileMain.
 import { useEffect, useState } from 'react';
+import { useTrainerIdempotencyKey } from '@/app/trainer/trainer_utils/useTrainerIdempotencyKey';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -13,9 +14,11 @@ import type { TrainerPasswordFormValues, TrainerProfileFormValues } from '@/app/
 
 const PROFILE_QUERY_KEY = ['trainer', 'profile'] as const;
 
+/** Owns useTrainerProfileLogic behavior for this Trainer module. */
 export function useTrainerProfileLogic() {
   const queryClient = useQueryClient();
   const { showSuccess, showError } = useTrainerFeedback();
+  const actionKeys = useTrainerIdempotencyKey();
   const [activeTab, setActiveTab] = useState<TrainerProfileTab>('personal');
   const [showCurrent, setShowCurrent] = useState(false);
   const [showNew, setShowNew] = useState(false);
@@ -47,22 +50,23 @@ export function useTrainerProfileLogic() {
     });
   }, [profileQuery.data, profileForm]);
   const profileMutation = useMutation({
-    mutationFn: (values: TrainerProfileFormValues) => trainerProfileApi.updateProfile(values),
+    mutationFn: (values: TrainerProfileFormValues) => trainerProfileApi.updateProfile(values, actionKeys.begin('profile-update')),
     onSuccess: (response) => {
       if (!response.success || !response.data) return;
       queryClient.setQueryData<TrainerProfileData>(PROFILE_QUERY_KEY, response.data);
       profileForm.reset({ name: response.data.name, phone: response.data.phone, specialization: response.data.specialization });
       showSuccess(response.message, 'trainer-profile-update');
+      actionKeys.clear('profile-update');
     },
     onError: (error) => showError(error, 'trainer-profile-update-error'),
   });
   const passwordMutation = useMutation({
-    mutationFn: (values: TrainerPasswordFormValues) => trainerProfileApi.updatePassword(values),
+    mutationFn: (values: TrainerPasswordFormValues) => trainerProfileApi.updatePassword(values, actionKeys.begin('password-update')),
     onSuccess: (response) => {
       if (!response.success) return;
       passwordForm.reset();
       showSuccess(response.message, 'trainer-profile-password-update');
-      passwordForm.reset();
+      actionKeys.clear('password-update');
     },
     onError: (error) => showError(error, 'trainer-profile-password-update-error'),
   });

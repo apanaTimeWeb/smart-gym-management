@@ -1,5 +1,5 @@
-'use client';
 // RESPONSIBILITY: Renders the accessible Trainer-wide confirmation dialog. It owns only presentation and keyboard/focus behavior; mutation ownership remains in the caller.
+'use client';
 import { useEffect, useId, useRef, useState } from 'react';
 import { AlertTriangle, X } from 'lucide-react';
 import type { TrainerConfirmModalProps } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerConfirmTypes';
@@ -65,10 +65,10 @@ export default function TrainerConfirmModal({
 
   const confirmClass =
     type === 'danger'
-      ? 'bg-danger-bg'
+      ? 'bg-danger text-on-danger'
       : type === 'warning'
-        ? 'bg-warning-bg'
-        : 'bg-info-bg';
+        ? 'bg-warning-bg text-warning border border-warning'
+        : 'bg-info text-on-info';
   const iconClass =
     type === 'danger'
       ? 'bg-danger-bg text-danger'
@@ -77,7 +77,7 @@ export default function TrainerConfirmModal({
         : 'bg-info-bg text-info';
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 p-4" onMouseDown={(event) => { if (event.target === event.currentTarget) onCancel(); }}>
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay p-4" onMouseDown={(event) => { if (event.target === event.currentTarget) onCancel(); }}>
       <div
         ref={dialogRef}
         role="dialog"
@@ -89,7 +89,7 @@ export default function TrainerConfirmModal({
         <div className="flex items-center justify-between gap-4 px-6 py-4 border-b border-border">
           <div className="flex items-center gap-3 min-w-0">
             <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${iconClass}`} aria-hidden="true">
-              <AlertTriangle size={20} />
+              <AlertTriangle size={18} />
             </div>
             <h2 id={titleId} className="text-lg font-bold text-primary truncate">{title}</h2>
           </div>
@@ -97,7 +97,7 @@ export default function TrainerConfirmModal({
             type="button"
             aria-label="Close confirmation dialog"
             onClick={onCancel}
-            className="min-w-11 min-h-11 inline-flex items-center justify-center rounded-lg text-secondary hover:text-primary hover:bg-input focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            className="min-w-11 min-h-11 inline-flex items-center justify-center rounded-lg text-secondary hover:text-primary hover:bg-input motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
             <X size={18} aria-hidden="true" />
           </button>
@@ -123,7 +123,7 @@ export default function TrainerConfirmModal({
               ref={cancelButtonRef}
               type="button"
               onClick={onCancel}
-              className="min-h-11 px-4 border border-border rounded-md text-sm font-semibold text-primary hover:bg-input motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              className="min-h-11 px-4 border border-border rounded-md text-sm font-semibold text-primary hover:bg-input motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
               {cancelText}
             </button>
@@ -131,7 +131,7 @@ export default function TrainerConfirmModal({
               type="button"
               onClick={onConfirm}
               disabled={requireTypedConfirmation && typedConfirmation !== confirmationPhrase}
-              className={`min-h-11 px-4 rounded-md text-sm font-semibold text-on-primary motion-safe:transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${confirmClass}`}
+              className={`min-h-11 px-4 rounded-md text-sm font-semibold motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${confirmClass}`}
             >
               {confirmText}
             </button>

@@ -1,22 +1,17 @@
-'use client';
 // RESPONSIBILITY: Renders the collapsible left navigation sidebar for the Trainer portal. No API calls.
+'use client';
 import { useState, useEffect, useMemo, useRef } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Search } from 'lucide-react';
 import { getUser } from '@/lib/api';
 import { TRAINER_NAV_GROUPS } from '@/app/trainer/trainer_utils/TrainerSharedConstants';
-import { useConfirm } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerConfirmProvider';
-import { useTrainerNavigationGuardStore } from '@/app/trainer/trainer_utils/TrainerNavigationGuardStore';
 
 import type { TrainerSidebarProps } from '@/app/trainer/trainer_components/TrainerLayout/TrainerLayoutTypes';
 
 export default function TrainerSidebar({ isCollapsed, setIsCollapsed }: TrainerSidebarProps) {
   const pathname = usePathname();
-  const router = useRouter();
-  const { confirm } = useConfirm();
-  const hasDirtySources = useTrainerNavigationGuardStore((state) => state.hasDirtySources());
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -111,12 +106,12 @@ export default function TrainerSidebar({ isCollapsed, setIsCollapsed }: TrainerS
         <button
           type="button"
           aria-label="Close navigation sidebar"
-          className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page fixed inset-0 bg-overlay/80 backdrop-blur-sm z-40 lg:hidden motion-safe:transition-opacity cursor-default"
+          className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page fixed inset-0 bg-overlay backdrop-blur-sm z-30 lg:hidden motion-safe:transition-opacity cursor-default"
           onClick={() => setIsMobileOpen(false)}
         />
       )}
 
-      <aside ref={sidebarRef} id="trainer-sidebar" aria-label="Trainer navigation" aria-modal={isMobileOpen ? 'true' : undefined} className={`fixed left-0 top-0 h-full bg-sidebar border-r border-border z-20 flex flex-col motion-safe:transition-all motion-safe:duration-slow ${
+      <aside ref={sidebarRef} id="trainer-sidebar" aria-label="Trainer navigation" aria-modal={isMobileOpen ? 'true' : undefined} className={`fixed left-0 top-0 h-full bg-sidebar border-r border-border z-40 lg:z-20 flex flex-col motion-safe:transition-all motion-safe:duration-slow ${
         isCollapsed ? 'lg:w-15' : 'lg:w-60'
       } ${
         isMobileOpen ? 'w-60 translate-x-0' : 'w-60 -translate-x-full lg:translate-x-0'
@@ -140,14 +135,14 @@ export default function TrainerSidebar({ isCollapsed, setIsCollapsed }: TrainerS
           <div className="px-4 py-3 border-b border-border shrink-0">
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Search size={16} className="text-secondary" />
+                <Search size={18} className="text-secondary" />
               </div>
               <input
                 type="text"
                 placeholder="Search menu..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="block w-full pl-9 pr-3 py-2 border border-border rounded-lg leading-5 bg-input text-primary placeholder-secondary focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm motion-safe:transition-colors motion-safe:duration-base"
+                className="block w-full pl-9 pr-3 py-2 border border-border rounded-lg leading-5 bg-input text-primary placeholder-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary sm:text-sm motion-safe:transition-colors motion-safe:duration-base"
               />
             </div>
           </div>
@@ -190,19 +185,7 @@ export default function TrainerSidebar({ isCollapsed, setIsCollapsed }: TrainerS
                         key={item.href}
                         href={item.href}
                         title={!showLabel ? item.label : ''}
-                        onClick={(event) => {
-                          if (!hasDirtySources || pathname === item.href) return;
-                          event.preventDefault();
-                          void confirm({
-                            title: 'Unsaved changes',
-                            message: 'You have unsaved changes. Are you sure you want to leave? Your changes will be lost.',
-                            confirmText: 'Leave',
-                            cancelText: 'Stay',
-                            type: 'warning',
-                          }).then((approved) => {
-                            if (approved) router.push(item.href);
-                          });
-                        }}
+                        onClick={() => { if (window.innerWidth < 768) setIsMobileOpen(false); }}
                         className={`flex items-center gap-3 py-2.5 rounded-xl font-medium motion-safe:transition-all motion-safe:duration-base group cursor-pointer ${
                           !showLabel ? 'justify-center px-0' : 'px-3.5'
                         } ${

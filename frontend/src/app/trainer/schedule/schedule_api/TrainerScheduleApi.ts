@@ -2,6 +2,7 @@ import { z } from 'zod';
 import {
   ScheduleResponseSchema,
   LeaveRequestSchema,
+  WeeklyAvailabilitySchema,
   type WeeklyAvailability,
   type LeaveRequest,
   type CreateLeaveDto,
@@ -19,19 +20,22 @@ export const trainerScheduleApi = {
     return response.data;
   },
 
-  updateAvailability: async (data: WeeklyAvailability[], idempotencyKey?: string): Promise<{ success: boolean; message: string }> => {
+  updateAvailability: async (data: WeeklyAvailability[], idempotencyKey?: string): Promise<{ success: boolean; message: string; data: WeeklyAvailability[] }> => {
     const raw = await apiFetch<ApiResponse<unknown>>(ScheduleUrlConfig.BACKEND_API.AVAILABILITY, {
       method: 'PUT',
       body: JSON.stringify(data),
+      ...(idempotencyKey ? { headers: { 'Idempotency-Key': idempotencyKey } } : {}),
     });
-    const response = createTrainerApiResponseSchema(z.null()).parse(raw);
-    return { success: response.success, message: response.message };
+    const response = createTrainerApiResponseSchema(z.array(WeeklyAvailabilitySchema)).parse(raw);
+    if (!response.data) throw new Error(response.message);
+    return { success: response.success, message: response.message, data: response.data };
   },
 
   requestLeave: async (data: CreateLeaveDto, idempotencyKey?: string): Promise<{ success: boolean; message: string; data: LeaveRequest }> => {
     const raw = await apiFetch<ApiResponse<unknown>>(ScheduleUrlConfig.BACKEND_API.LEAVES, {
       method: 'POST',
       body: JSON.stringify(data),
+      ...(idempotencyKey ? { headers: { 'Idempotency-Key': idempotencyKey } } : {}),
     });
     const response = createTrainerApiResponseSchema(LeaveRequestSchema).parse(raw);
     if (!response.data) throw new Error(response.message);

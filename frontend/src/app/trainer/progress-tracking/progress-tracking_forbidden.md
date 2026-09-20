@@ -10,7 +10,7 @@
 
 4. **No animations without motion-safe:** — all Tailwind animation/transition classes must be prefixed with `motion-safe:` (Rule 29).
 
-5. **No direct API calls in components** — all API calls go through `progress_api/TrainerProgressApi.ts` via the logic hook.
+5. **No direct API calls in components** — all API calls go through `progress-tracking_api/TrainerProgressApi.ts` via the logic hook.
 
 6. **No 'use client' on page.tsx** — page.tsx must remain a Server Component. Only `*Main.tsx` and sub-components are Client Components.
 

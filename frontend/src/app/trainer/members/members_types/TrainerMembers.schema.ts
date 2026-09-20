@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { TrainerMemberWorkoutSnapshotSchema } from '@/app/trainer/members/members_types/TrainerMemberWorkoutSnapshot';
 import { TrainerMemberDietSnapshotSchema } from '@/app/trainer/members/members_types/TrainerMemberDietSnapshot';
+import { createTrainerApiResponseSchema } from '@/app/trainer/trainer_utils/TrainerApiResponseSchema';
 
 
 
@@ -82,25 +83,13 @@ export const MemberStatsSchema = z.object({
   expired: z.number(),
 });
 
-export const MemberListResponseSchema = z.object({
-  success: z.boolean(),
-  message: z.string().optional(),
-  data: z.object({
-    members: z.array(MemberSchema),
-    total: z.number(),
-    page: z.number(),
-    limit: z.number(),
-  }).optional(),
-});
+export const MemberListResponseSchema = createTrainerApiResponseSchema(z.object({
+  members: z.array(MemberSchema),
+  total: z.number().int().nonnegative(),
+  page: z.number().int().positive(),
+  limit: z.number().int().positive(),
+}));
 
-export const MemberDetailResponseSchema = z.object({
-  success: z.boolean(),
-  message: z.string().optional(),
-  data: MemberSchema.optional(),
-});
+export const MemberDetailResponseSchema = createTrainerApiResponseSchema(MemberSchema);
 
-export const MemberStatsResponseSchema = z.object({
-  success: z.boolean(),
-  message: z.string().optional(),
-  data: MemberStatsSchema.optional(),
-});
+export const MemberStatsResponseSchema = createTrainerApiResponseSchema(MemberStatsSchema);

@@ -1,3 +1,4 @@
+'use client';
 // RESPONSIBILITY: Logic hook for the Trainer Notifications module.
 // Fetches notifications from the API with server-side pagination and supports "Load More".
 // DATA FLOW: fetchTrainerNotifications API → useTrainerNotificationsLogic → TrainerNotificationsMain

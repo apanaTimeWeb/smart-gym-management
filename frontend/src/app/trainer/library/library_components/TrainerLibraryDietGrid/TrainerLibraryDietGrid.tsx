@@ -1,5 +1,5 @@
-'use client';
 // RESPONSIBILITY: Renders server-filtered and server-paginated Diet Plan records with read-only actions.
+'use client';
 import { Apple, Eye, Flame } from 'lucide-react';
 import TrainerPagination from '@/app/trainer/trainer_components/TrainerShared/TrainerPagination';
 import { TRAINER_ITEMS_PER_PAGE } from '@/app/trainer/trainer_utils/TrainerSharedConstants';

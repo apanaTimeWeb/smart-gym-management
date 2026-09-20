@@ -22,7 +22,7 @@ export default function TrainerSessionsKPIs({ sessions }: TrainerSessionsKPIsPro
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
       <div className="bg-card rounded-xl p-5 border border-border flex items-start gap-4">
         <div className="p-3 rounded-xl bg-primary-bg text-primary">
-          <CalendarCheck size={24} />
+          <CalendarCheck size={18} />
         </div>
         <div>
           <p className="text-sm font-medium text-secondary mb-1">{`Today's Sessions${dateSuffix}`}</p>
@@ -31,7 +31,7 @@ export default function TrainerSessionsKPIs({ sessions }: TrainerSessionsKPIsPro
       </div>
       <div className="bg-card rounded-xl p-5 border border-border flex items-start gap-4">
         <div className="p-3 rounded-xl bg-success-bg text-success">
-          <TrendingUp size={24} />
+          <TrendingUp size={18} />
         </div>
         <div>
           <p className="text-sm font-medium text-secondary mb-1">{`Completed (Week)${dateSuffix}`}</p>
@@ -40,7 +40,7 @@ export default function TrainerSessionsKPIs({ sessions }: TrainerSessionsKPIsPro
       </div>
       <div className="bg-card rounded-xl p-5 border border-border flex items-start gap-4">
         <div className="p-3 rounded-xl bg-danger-bg text-danger">
-          <CalendarX size={24} />
+          <CalendarX size={18} />
         </div>
         <div>
           <p className="text-sm font-medium text-secondary mb-1">{`No Shows (Month)${dateSuffix}`}</p>
@@ -49,7 +49,7 @@ export default function TrainerSessionsKPIs({ sessions }: TrainerSessionsKPIsPro
       </div>
       <div className="bg-card rounded-xl p-5 border border-border flex items-start gap-4">
         <div className="p-3 rounded-xl bg-info-bg text-info">
-          <Users size={24} />
+          <Users size={18} />
         </div>
         <div>
           <p className="text-sm font-medium text-secondary mb-1">{`Avg Attendance${dateSuffix}`}</p>

@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Renders the owning Trainer route error state using the module design-system patterns.
 'use client';
 import TrainerRouteErrorFallback from '@/app/trainer/trainer_components/TrainerFeedback/TrainerRouteErrorFallback';
 import { AttendanceUrlConfig } from '@/app/trainer/attendance/attendance_url_config';

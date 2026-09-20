@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Type contracts for Attendance URL/query interactions, UI view mode, and calendar rendering.
+// RESPONSIBILITY: Defines Attendance URL/query interaction contracts, sortable fields, and calendar types.
 export const ATTENDANCE_RECORD_TYPES = ['MEMBER', 'STAFF'] as const;
 export type AttendanceRecordType = (typeof ATTENDANCE_RECORD_TYPES)[number];
 
@@ -7,6 +7,12 @@ export type AttendanceViewMode = (typeof ATTENDANCE_VIEW_MODES)[number];
 
 export const ATTENDANCE_CALENDAR_STATUSES = ['P', 'A', 'L', 'UPCOMING'] as const;
 export type AttendanceCalendarStatus = (typeof ATTENDANCE_CALENDAR_STATUSES)[number];
+
+export const ATTENDANCE_SORT_FIELDS = ['name', 'type', 'date', 'checkIn', 'checkOut', 'durationMinutes', 'checkInMethod'] as const;
+export type AttendanceSortField = (typeof ATTENDANCE_SORT_FIELDS)[number];
+
+export const ATTENDANCE_SORT_DIRECTIONS = ['asc', 'desc'] as const;
+export type AttendanceSortDirection = (typeof ATTENDANCE_SORT_DIRECTIONS)[number];
 
 export interface TrainerAttendanceCalendarCell {
   in?: string;
@@ -21,6 +27,8 @@ export interface TrainerAttendanceFetchParams {
   date?: string;
   type?: AttendanceRecordType;
   staffId?: string;
+  sortBy?: AttendanceSortField;
+  sortDirection?: AttendanceSortDirection;
 }
 
 export interface TrainerAttendanceRecordsQueryParams {
@@ -28,4 +36,6 @@ export interface TrainerAttendanceRecordsQueryParams {
   search: string;
   filterDate: string;
   currentPage: number;
+  sortBy: AttendanceSortField;
+  sortDirection: AttendanceSortDirection;
 }

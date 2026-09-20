@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { DashboardUrlConfig } from '@/app/trainer/dashboard/dashboard_url_config';
 import { dashboardApi } from '@/app/trainer/dashboard/dashboard_api/TrainerDashboard_api';
 
+/** Owns useTrainerDashboardQuery behavior for this Trainer module. */
 export function useTrainerDashboardQuery() {
   const searchParams = useSearchParams();
   const range = searchParams.get('range') ?? 'this_month';

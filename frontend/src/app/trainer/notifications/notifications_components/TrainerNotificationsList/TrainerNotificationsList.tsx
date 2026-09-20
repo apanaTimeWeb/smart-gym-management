@@ -1,5 +1,5 @@
-'use client';
 // RESPONSIBILITY: Renders the notification list with keyboard/touch-accessible per-item mark-as-read actions.
+'use client';
 // DATA FLOW: TrainerNotificationsMain → TrainerNotificationsList → TrainerNotificationsEmptyState
 // ROLE BOUNDARY: Deleting notifications is FORBIDDEN for trainer role. See notifications_forbidden.md.
 import { Check } from 'lucide-react';
@@ -23,7 +23,7 @@ export default function TrainerNotificationsList({
         <div
           key={n.id}
           className={`p-4 md:px-6 flex items-start justify-between group motion-safe:transition-colors ${
-            n.unread ? 'bg-primary-subtle hover:bg-primary-subtle/80' : 'bg-card hover:bg-input'
+            n.unread ? 'bg-primary-subtle hover:bg-surface-hover' : 'bg-card hover:bg-input'
           }`}
         >
           <div className="flex min-w-0 flex-1 items-start gap-4">

@@ -1,18 +1,17 @@
-# trainer/trainer_utils — Feature Map
+# trainer_utils — Feature Map
 
 ## Module Purpose
-[REQUIRED: 3–6 sentences. Must answer: (1) What business problem does this module solve? (2) Who uses it? (3) What are the 3–5 most important things a user can DO? (4) What is strictly OFF-LIMITS? Fill this out accurately.]
+`trainer_utils/` contains stable Trainer infrastructure helpers that are shared across Trainer features without owning any business domain behavior. Its responsibilities include canonical API-envelope validation, debounce support, navigation dirty-state coordination, safe error reporting, and stable Trainer-wide constants. It does not own feature records, business workflows, feature-specific API handlers, or business fixtures.
 
 ## Directory Structure
-| Folder | Responsibility | Key Files |
+| Folder/File | Responsibility | Key Files |
 |---|---|---|
-| `trainer_utils_components/` | Renders UI components | TBD |
-| `trainer_utils_api/` | API endpoints | `trainer_utils_url_config.ts` |
+| `trainer_utils/` | Stable Trainer infrastructure helpers | `TrainerApiResponseSchema.ts`, `TrainerErrorReporter.ts`, `TrainerNavigationGuardStore.ts`, `TrainerSharedConstants.ts`, `TrainerUseDebounce.ts`, `TrainerUseWarnIfUnsavedChanges.ts`, `TrainerUserSafeError.ts` |
 
-### Approved External Dependencies
+## Approved External Dependencies
 ### Application Infrastructure
-- `@/lib/api`
-- `@/lib/logger`
+- `@/lib/api` — canonical HTTP transport only.
+- `@/lib/logger` — centralized diagnostics.
 
 ### Business Feature Dependencies
 - None
@@ -23,48 +22,45 @@
 ## Feature Inventory
 | Feature | Route | What the User Can Do | Key Components | Main API Calls | Status |
 |---|---|---|---|---|---|
-| Example | /trainer/trainer_utils | Manage entity | Main.tsx | GET /... | 🚧 TBD |
+| API response contract | N/A | Not directly user-facing; validates Trainer API response envelopes | `TrainerApiResponseSchema.ts` | None | ✅ Maintained |
+| Dirty navigation guard | `/trainer/*` | Receive safe warning before leaving dirty forms | `TrainerNavigationGuardStore.ts`, `TrainerUseWarnIfUnsavedChanges.ts` | None | ✅ Maintained |
+| Error reporting/safe errors | `/trainer/*` | Send safe diagnostics without exposing internal details | `TrainerErrorReporter.ts`, `TrainerUserSafeError.ts` | Monitoring only | ✅ Maintained |
+| Debounce/shared constants | `/trainer/*` | Provide stable timing/configuration helpers | `TrainerUseDebounce.ts`, `TrainerSharedConstants.ts` | None | ✅ Maintained |
 
 ## User Flows & Interactions
-### Flow 1: [Name]
-1. TBD
+1. A feature API response arrives → `TrainerApiResponseSchema` validates the canonical envelope → feature schema validates its payload.
+2. A complex form becomes dirty → `TrainerUseWarnIfUnsavedChanges` registers the source → browser/in-app navigation is guarded until the user confirms.
+3. A runtime error occurs → `TrainerErrorReporter` emits safe diagnostics → UI receives a non-technical fallback.
 
 ## Data and State Architecture
-- **State pattern:** TanStack Query for server state + Zustand for UI state.
-- **Zustand stores:** [List actual store files]
-- **Context providers:** [List actual provider files]
-- **MSW handler location:** [module-owned handler]
+- **State pattern:** infrastructure only; no server-state ownership.
+- **Zustand stores:** `TrainerNavigationGuardStore.ts` stores only dirty-navigation coordination state.
+- **Context providers:** None.
+- **Local-storage keys:** None.
+- **MSW handler/fixture:** None.
 
 ## API Contract
-| Function | Method | Endpoint | Request | Response `data` type |
-|---|---|---|---|---|
-| TBD | GET | /... | — | `any` |
+- No feature API clients are owned here. `TrainerApiResponseSchema.ts` validates response envelopes consumed by feature API clients.
 
 ## UI Data Requirements
-| UI Element | Required Field(s) | API Endpoint | Response Path | Nullable? | Mocked? |
-|---|---|---|---|---|---|
-| TBD | TBD | GET /... | data... | No | Yes |
+- No business UI is owned here.
 
 ## Permissions and Security
-- **Required role:** `TRAINER`
-- **Destructive actions:** TBD
-- **Cross-role isolation:** Zero imports from other roles.
+- No business permission policy is defined here. Global/session security infrastructure remains authoritative.
 
 ## Loading, Empty, and Error States
-| Section | Loading State | Empty State | Error State |
-|---|---|---|---|
-| Full page | `loading.tsx` | `trainer_utilsEmptyState.tsx` | `error.tsx` |
+- Not applicable as a standalone feature surface. Error helpers support feature-owned fallbacks.
 
 ## Edge Cases and AI Warnings
-- **[Specific Warning]:** [Explanation]
+- **Do not place business logic here:** similar behavior needed by a feature should be duplicated locally if it reduces business coupling.
+- **Do not store API response data in the navigation guard store.**
+- **Do not weaken safe-error behavior:** raw backend/internal details must not leak to users.
 
 ## Component Responsibility Map
-| Component File | Responsibility |
-|---|---|
-| TBD | TBD |
+- No React components are owned here.
 
 ## Rule Compliance Checklist
-- [ ] Rule 1: Micro-modularization
-- [ ] Rule 2: Total Role Isolation
-- [ ] Module Self-Containment
-- [ ] Feature Dependency Firewall
+- [x] Infrastructure-only responsibility documented.
+- [x] No business mock data.
+- [x] Canonical API envelope validator centralized here.
+- [x] No sibling feature imports.
