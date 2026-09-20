@@ -2,7 +2,7 @@
 'use client';
 import { Calendar } from 'lucide-react';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
-import { SUPERADMIN_MESSAGING_DATE_RANGE_OPTIONS } from './SuperadminMessagingDateRangeConstants';
+import { SUPERADMIN_MESSAGING_DATE_RANGE_OPTIONS } from '@/app/superadmin/messaging/messaging_components/SuperadminMessagingDateRangeConstants';
 import { useSuperadminMessagingDateRangePicker } from '@/app/superadmin/messaging/messaging_components/useSuperadminMessagingDateRangePicker';
 import type { SuperadminMessagingDateRangePickerProps } from '@/app/superadmin/messaging/messaging_components/SuperadminMessagingDateRangePickerTypes';
 

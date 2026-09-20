@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
 // RESPONSIBILITY: Renders a detailed view of a selected member's profile.
@@ -30,24 +30,24 @@ export default function ManagerMemberProfile() {
           onClick={() => setSelectedMember(null)}
           className="text-sm text-secondary hover:text-primary flex items-center gap-1.5 motion-safe:transition-all motion-safe:duration-200"
         >
-          ← Back to Members
+          â† Back to Members
         </button>
 
         {/* Profile Card */}
         <div className="bg-card rounded-xl shadow-card border border-border p-6">
           <div className="flex flex-wrap items-center justify-between gap-5 mb-6">
             <div className="flex items-center gap-5">
-              <div className="w-20 h-20 rounded-full flex items-center justify-center text-3xl font-bold text-primary bg-primary-subtle shrink-0">
+              <div className="w-20 h-20 rounded-full flex items-center justify-center text-3xl font-bold text-on-primary bg-primary-subtle shrink-0">
                 {(selectedMember.name || '?').charAt(0).toUpperCase()}
               </div>
               <div>
                 <h2 className="text-xl font-bold text-primary">{displayValue(selectedMember.name)}</h2>
-                <p className="text-secondary text-sm">{selectedMember.email} · {selectedMember.phone}</p>
+                <p className="text-secondary text-sm">{selectedMember.email} Â· {selectedMember.phone}</p>
                 <div className="flex gap-2 mt-2 flex-wrap">
                   <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${statusStyle.bg} ${statusStyle.text}`}>
                     {selectedMember.status}
                   </span>
-                  <span className="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold bg-info text-info">
+                  <span className="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold bg-info text-on-info">
                     {selectedMember.plan?.name || ''}
                   </span>
                   <span className="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-bg text-purple">
@@ -65,7 +65,7 @@ export default function ManagerMemberProfile() {
               </button>
               <button
                 onClick={() => setShowRenewModal(true)}
-                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold border border-border rounded-xl hover:bg-primary/10 text-primary motion-safe:transition-all motion-safe:duration-200 motion-safe:active:scale-95 bg-primary/5"
+                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold border border-border rounded-xl hover:bg-primary-subtle text-primary motion-safe:transition-all motion-safe:duration-200 motion-safe:active:scale-95 bg-primary-subtle"
               >
                 Renew Plan
               </button>
@@ -77,7 +77,7 @@ export default function ManagerMemberProfile() {
               </button>
               <button
                 onClick={() => openMsg(selectedMember, 'email')}
-                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold bg-info text-on-primary rounded-xl hover:opacity-90 motion-safe:transition-all motion-safe:duration-200 motion-safe:active:scale-95"
+                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold bg-info text-on-info rounded-xl hover:opacity-90 motion-safe:transition-all motion-safe:duration-200 motion-safe:active:scale-95"
               >
                 <Mail size={18} /> Email
               </button>
@@ -112,7 +112,7 @@ export default function ManagerMemberProfile() {
                 key={t}
                 onClick={() => { setProfileTab(t as any); }}
                 className={`px-5 py-3.5 text-sm font-medium motion-safe:transition-all motion-safe:duration-200 border-b-2 ${profileTab === t
-                    ? 'text-primary bg-primary-subtle border-primary'
+                    ? 'text-on-primary bg-primary-subtle border-primary'
                     : 'border-transparent text-secondary hover:text-primary'
                   }`}
               >
@@ -133,3 +133,4 @@ export default function ManagerMemberProfile() {
     </div>
   );
 }
+

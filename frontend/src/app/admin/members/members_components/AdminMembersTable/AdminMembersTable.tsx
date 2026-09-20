@@ -12,10 +12,10 @@ import { maskSensitiveData } from '@/app/admin/admin_layout/admin_utils/AdminMas
 import { ADMIN_MEMBERS_ITEMS_PER_PAGE } from '@/app/admin/members/members_utils/AdminMembersSharedConstants';
 
 const STATUS_STYLES: Record<string, string> = {
-  active: 'bg-success text-success',
-  expired: 'bg-danger text-danger',
-  pending: 'bg-warning text-warning',
-  frozen: 'bg-info text-info',
+  active: 'bg-success text-on-success',
+  expired: 'bg-danger text-on-danger',
+  pending: 'bg-warning text-on-primary',
+  frozen: 'bg-info text-on-info',
 };
 
 const TABLE_HEADERS = ['Member', 'Branch', 'Plan', 'Join Date', 'Status', 'Expiry', 'Outstanding'];

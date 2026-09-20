@@ -97,7 +97,7 @@ export default function ManagerHrPayrollTable() {
           </thead>
           <tbody className="divide-y divide-border">
             {currentData.map(p => (
-              <tr key={p.id} className="motion-safe:transition-colors hover:bg-primary/5 bg-card">
+              <tr key={p.id} className="motion-safe:transition-colors hover:bg-primary-subtle bg-card">
                 <td className="px-4 py-3">
                   <p className="text-sm font-medium text-primary">
                     {p.staff?.name || `Staff #${p.staffId}`}
@@ -116,7 +116,7 @@ export default function ManagerHrPayrollTable() {
                 <td className="px-4 py-3">
                   <span 
                     className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${
-                      p.status === 'Paid' ? 'bg-success/10 text-success' : 'bg-warning/10 text-warning'
+                      p.status === 'Paid' ? 'bg-success-bg text-success' : 'bg-warning-bg text-warning'
                     }`}
                   >
                     {p.status}
@@ -139,7 +139,7 @@ export default function ManagerHrPayrollTable() {
                     {p.status !== 'Paid' && (
                       <button
                         onClick={() => setPaymentModal({ payrollId: p.id, staffName: p.staff?.name || `Staff #${p.staffId}`, pendingAmount: p.pendingAmount || p.amount })}
-                        className="flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold text-on-primary bg-primary rounded-lg hover:bg-primary/90 motion-safe:transition-colors"
+                        className="flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold text-on-success bg-primary-subtle rounded-lg hover:bg-primary/90 motion-safe:transition-colors"
                       >
                         <Banknote size={18} /> Pay Salary
                       </button>

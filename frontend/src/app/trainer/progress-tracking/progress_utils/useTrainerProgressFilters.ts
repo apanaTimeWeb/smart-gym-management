@@ -1,5 +1,6 @@
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { useCallback } from 'react';
+import { PROGRESS_TAB_IDS, type ProgressTab } from '@/app/trainer/progress-tracking/progress_types/TrainerProgressTabTypes';
 
 export function useTrainerProgressFilters() {
   const searchParams = useSearchParams();
@@ -7,7 +8,8 @@ export function useTrainerProgressFilters() {
   const pathname = usePathname();
 
   const selectedMemberId = searchParams.get('memberId') ?? '';
-  const activeTab = (searchParams.get('tab') ?? 'individual') as 'individual' | 'compare';
+  const requestedTab = searchParams.get('tab');
+  const activeTab: ProgressTab = requestedTab && PROGRESS_TAB_IDS.includes(requestedTab as ProgressTab) ? requestedTab as ProgressTab : 'individual';
 
   const setSelectedMemberId = useCallback((id: string) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -16,7 +18,7 @@ export function useTrainerProgressFilters() {
     router.push(`${pathname}?${params.toString()}`);
   }, [searchParams, pathname, router]);
 
-  const setActiveTab = useCallback((tab: 'individual' | 'compare') => {
+  const setActiveTab = useCallback((tab: ProgressTab) => {
     const params = new URLSearchParams(searchParams.toString());
     params.set('tab', tab);
     router.push(`${pathname}?${params.toString()}`);

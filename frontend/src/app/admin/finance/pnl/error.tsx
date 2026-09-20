@@ -10,7 +10,7 @@ export default function AdminFinancePnlError({ error, reset }: AdminFinancePnlEr
   return (
     <div className="min-h-screen bg-page flex items-center justify-center p-6">
       <div className="bg-card border border-border rounded-2xl p-10 max-w-md w-full text-center space-y-5 shadow-dialog">
-        <div className="w-14 h-14 rounded-2xl bg-danger border border-border flex items-center justify-center mx-auto">
+        <div className="w-14 h-14 rounded-2xl bg-danger-bg border border-border flex items-center justify-center mx-auto">
           <AlertTriangle size={24} strokeWidth={2} className="text-danger" />
         </div>
         <div>

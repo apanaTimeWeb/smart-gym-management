@@ -11,9 +11,9 @@ export default function AdminDataExportKPIs() {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
       <AdminStatCard title="Total Exports" value={kpis.totalExports} icon={Download} iconBg="bg-primary-subtle" iconColor="text-primary" />
-      <AdminStatCard title="Total Rows Exported" value={kpis.totalRowsExported.toLocaleString('en-IN')} change="all time" changeType="neutral" icon={Rows3} iconBg="bg-info" iconColor="text-info" />
-      <AdminStatCard title="Last Export" value={kpis.lastExportDate} icon={CalendarCheck} iconBg="bg-success" iconColor="text-success" />
-      <AdminStatCard title="Processing Jobs" value={kpis.pendingJobs} change="in queue" changeType="neutral" icon={Loader2} iconBg="bg-warning" iconColor="text-warning" />
+      <AdminStatCard title="Total Rows Exported" value={kpis.totalRowsExported.toLocaleString('en-IN')} change="all time" changeType="neutral" icon={Rows3} iconBg="bg-info-bg" iconColor="text-info" />
+      <AdminStatCard title="Last Export" value={kpis.lastExportDate} icon={CalendarCheck} iconBg="bg-success-bg" iconColor="text-success" />
+      <AdminStatCard title="Processing Jobs" value={kpis.pendingJobs} change="in queue" changeType="neutral" icon={Loader2} iconBg="bg-warning-bg" iconColor="text-warning" />
     </div>
   );
 }

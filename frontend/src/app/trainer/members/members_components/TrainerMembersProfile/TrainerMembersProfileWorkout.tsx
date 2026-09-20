@@ -1,6 +1,6 @@
-'use client';
+﻿'use client';
 // RESPONSIBILITY: Renders the member's assigned workout plan and provides plan assignment capabilities for trainers.
-// DATA FLOW: useTrainerSelectedMember/useTrainerMembersQuery → Members API → TrainerMembersProfileWorkout
+// DATA FLOW: useTrainerSelectedMember/useTrainerMembersQuery â†’ Members API â†’ TrainerMembersProfileWorkout
 
 import { useState } from 'react';
 import { Dumbbell, Plus, Check, MessageCircle, RefreshCw, Calendar, Flame, Target } from 'lucide-react';
@@ -47,7 +47,7 @@ export default function TrainerMembersProfileWorkout() {
       `Focus: ${displayValue(workout.focus)}\n\n` +
       (workout.workoutExercises && workout.workoutExercises.length > 0
         ? `*Exercises:*\n` + workout.workoutExercises.map((e, idx) => `${idx + 1}. ${e.name} - ${e.sets} sets x ${e.reps} (Rest: ${e.restTime || '60s'})`).join('\n')
-        : displayValue((workout as any).instructions));
+        : 'Custom routine assigned. Review standard exercise instructions in the Workout Library.');
     window.open(`https://wa.me/${selectedMember.phone?.replace(/[^0-9]/g, '') || ''}?text=${encodeURIComponent(text)}`, '_blank');
   };
 
@@ -55,32 +55,32 @@ export default function TrainerMembersProfileWorkout() {
     <div className="space-y-6 motion-safe:animate-in fade-in motion-safe:duration-slow">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h3 className="text-lg font-bold text-foreground">Workout Plan</h3>
+          <h3 className="text-lg font-bold text-primary">Workout Plan</h3>
           <p className="text-sm text-secondary">Assign or update daily workout routines for {selectedMember.name}.</p>
         </div>
         <div className="flex items-center gap-2">
           {hasWorkoutPlan ? (
             <>
-              <button 
+              <button type="button" 
                 onClick={handleShareWhatsApp}
-                className="flex items-center gap-2 px-4 py-2 bg-success text-white rounded-xl text-sm font-semibold hover:opacity-90 shadow-sm motion-safe:transition-all motion-safe:active:scale-95"
+                className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page flex items-center gap-2 px-4 py-2 bg-success text-on-success rounded-xl text-sm font-semibold hover:opacity-90 shadow-card motion-safe:transition-all motion-safe:active:scale-95"
               >
                 <MessageCircle size={16} /> Share via WhatsApp
               </button>
-              <button 
+              <button type="button" 
                 onClick={() => {
                   setSelectedWorkoutId(workout.id || '');
                   setIsAssigning(true);
                 }}
-                className="flex items-center gap-2 px-4 py-2 bg-input text-foreground border border-border rounded-xl text-sm font-semibold hover:bg-primary-subtle motion-safe:transition-all motion-safe:active:scale-95"
+                className="flex items-center gap-2 px-4 py-2 bg-input text-primary border border-border rounded-xl text-sm font-semibold hover:bg-primary-subtle motion-safe:transition-all motion-safe:active:scale-95"
               >
                 <RefreshCw size={15} /> Change Plan
               </button>
             </>
           ) : !isAssigning ? (
-            <button 
+            <button type="button" 
               onClick={() => setIsAssigning(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-primary/30 motion-safe:transition-all motion-safe:active:scale-95"
+              className="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary rounded-xl text-sm font-semibold hover:shadow-card hover:shadow-primary/30 motion-safe:transition-all motion-safe:active:scale-95"
             >
               <Plus size={16} /> Assign Workout Plan
             </button>
@@ -90,14 +90,14 @@ export default function TrainerMembersProfileWorkout() {
 
       {/* Plan Assignment Box */}
       {isAssigning && (
-        <div className="bg-card border border-primary/30 p-5 rounded-2xl space-y-4 shadow-sm">
+        <div className="bg-card border border-primary p-5 rounded-2xl space-y-4 shadow-card">
           <div className="flex items-center justify-between">
             <h4 className="font-semibold text-primary flex items-center gap-2">
               <Dumbbell size={18} /> Select Workout Plan from Library
             </h4>
-            <button 
+            <button type="button" 
               onClick={() => setIsAssigning(false)}
-              className="text-xs text-secondary hover:text-foreground font-medium"
+              className="text-xs text-secondary hover:text-primary font-medium"
             >
               Cancel
             </button>
@@ -108,17 +108,17 @@ export default function TrainerMembersProfileWorkout() {
           ) : (
             <div className="flex flex-col sm:flex-row gap-3">
               <TrainerSearchableDropdown
-                options={availableWorkouts.map(w => ({ value: w.id, label: `${w.name} · ${displayValue(w.level)} (${displayValue(w.duration)})` }))}
+                options={availableWorkouts.map(w => ({ value: w.id, label: `${w.name} Â· ${displayValue(w.level)} (${displayValue(w.duration)})` }))}
                 value={selectedWorkoutId}
                 onChange={(value: string | number) => setSelectedWorkoutId(String(value))}
                 placeholder="Choose a Workout Plan"
                 className="flex-1"
               />
               <div className="flex gap-2">
-                <button 
+                <button type="button" 
                   onClick={handleAssign}
                   disabled={!selectedWorkoutId || saving}
-                  className="px-5 py-2.5 bg-primary text-white rounded-xl text-sm font-semibold hover:shadow-md motion-safe:transition-all disabled:opacity-50 flex items-center gap-2"
+                  className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page px-5 py-2.5 bg-primary text-on-primary rounded-xl text-sm font-semibold hover:shadow-card motion-safe:transition-all disabled:opacity-50 flex items-center gap-2"
                 >
                   <Check size={16} /> {saving ? 'Assigning...' : 'Confirm Assignment'}
                 </button>
@@ -134,26 +134,26 @@ export default function TrainerMembersProfileWorkout() {
           <div className="flex flex-wrap items-start justify-between gap-4 border-b border-border pb-5">
             <div>
               <div className="flex items-center gap-2 mb-1">
-                <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary/10 text-primary">
+                <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary-subtle text-primary">
                   Active Plan
                 </span>
                 <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-info-bg text-info">
                   {displayValue(workout.level)}
                 </span>
               </div>
-              <h3 className="text-2xl font-bold text-foreground">{workout.name}</h3>
+              <h3 className="text-2xl font-bold text-primary">{workout.name}</h3>
               <p className="text-sm text-secondary mt-1">{displayValue(workout.focus)}</p>
             </div>
             <div className="flex items-center gap-6">
               <div className="text-right">
                 <p className="text-xs text-secondary">Session Duration</p>
-                <p className="text-base font-bold text-foreground flex items-center gap-1">
+                <p className="text-base font-bold text-primary flex items-center gap-1">
                   <Calendar size={14} className="text-primary" /> {displayValue(workout.duration)}
                 </p>
               </div>
               <div className="text-right">
                 <p className="text-xs text-secondary">Frequency</p>
-                <p className="text-base font-bold text-foreground flex items-center gap-1">
+                <p className="text-base font-bold text-primary flex items-center gap-1">
                   <Flame size={14} className="text-warning" /> {displayValue(workout.days)} days/week
                 </p>
               </div>
@@ -166,25 +166,25 @@ export default function TrainerMembersProfileWorkout() {
             {workout.workoutExercises && workout.workoutExercises.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {workout.workoutExercises.map((ex, idx) => (
-                  <div key={`${ex.name}-${ex.sets}-${ex.reps}-${ex.restTime ?? 'none'}-${ex.weight ?? 'none'}`} className="bg-input/60 border border-border rounded-xl p-3.5 flex items-center justify-between">
+                  <div key={`${ex.name}-${ex.sets}-${ex.reps}-${ex.restTime ?? 'none'}-${ex.weight ?? 'none'}`} className="bg-floating border border-border rounded-xl p-3.5 flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <span className="w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center">
+                      <span className="w-6 h-6 rounded-full bg-primary-subtle text-primary text-xs font-bold flex items-center justify-center">
                         {idx + 1}
                       </span>
                       <div>
-                        <p className="text-sm font-bold text-foreground">{ex.name}</p>
+                        <p className="text-sm font-bold text-primary">{ex.name}</p>
                         <p className="text-xs text-secondary">Rest: {displayValue(ex.restTime)}</p>
                       </div>
                     </div>
                     <div className="text-right">
-                      <span className="text-sm font-bold text-primary">{ex.sets} sets × {ex.reps}</span>
+                      <span className="text-sm font-bold text-primary">{ex.sets} sets Ã— {ex.reps}</span>
                       {ex.weight && <p className="text-xs text-secondary">{ex.weight}</p>}
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="bg-input/40 border border-dashed border-border rounded-xl p-6 text-center text-secondary text-sm">
+              <div className="bg-floating border border-dashed border-border rounded-xl p-6 text-center text-secondary text-sm">
                 Custom routine assigned. Review standard exercise instructions in the Workout Library.
               </div>
             )}
@@ -192,16 +192,16 @@ export default function TrainerMembersProfileWorkout() {
         </div>
       ) : !isAssigning ? (
         <div className="bg-card border border-dashed border-border rounded-2xl p-12 text-center space-y-3">
-          <div className="w-14 h-14 rounded-full bg-primary/10 text-primary flex items-center justify-center mx-auto">
+          <div className="w-14 h-14 rounded-full bg-primary-subtle text-primary flex items-center justify-center mx-auto">
             <Dumbbell size={26} />
           </div>
-          <h4 className="text-lg font-bold text-foreground">No Workout Plan Assigned</h4>
+          <h4 className="text-lg font-bold text-primary">No Workout Plan Assigned</h4>
           <p className="text-sm text-secondary max-w-md mx-auto">
             {selectedMember.name} has not been assigned a workout plan yet. Choose an appropriate plan from the library based on their fitness level.
           </p>
-          <button
+          <button type="button"
             onClick={() => setIsAssigning(true)}
-            className="mt-2 inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-white rounded-xl text-sm font-semibold hover:shadow-md motion-safe:transition-all"
+            className="mt-2 inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-on-primary rounded-xl text-sm font-semibold hover:shadow-card motion-safe:transition-all motion-safe:duration-base"
           >
             <Plus size={16} /> Assign Workout Plan
           </button>
@@ -210,13 +210,13 @@ export default function TrainerMembersProfileWorkout() {
 
       {/* Workout History Section */}
       <div className="bg-card border border-border rounded-2xl p-6 mt-6">
-        <h4 className="text-lg font-bold text-foreground mb-4">Workout History</h4>
+        <h4 className="text-lg font-bold text-primary mb-4">Workout History</h4>
         <div className="space-y-3">
           {(selectedMember.workoutHistory ?? []).map((historyItem) => (
             <div key={historyItem.id} className="bg-input rounded-xl p-4 flex items-center justify-between">
               <div>
-                <h5 className="font-bold text-sm text-foreground">{historyItem.name}</h5>
-                <p className="text-xs text-secondary">{historyItem.date} · {historyItem.level}</p>
+                <h5 className="font-bold text-sm text-primary">{historyItem.name}</h5>
+                <p className="text-xs text-secondary">{historyItem.date} Â· {historyItem.level}</p>
               </div>
               <span className="px-3 py-1 rounded-full text-xs font-semibold bg-success-bg text-success flex items-center gap-1">
                 <Check size={12} /> {historyItem.status}
@@ -228,3 +228,4 @@ export default function TrainerMembersProfileWorkout() {
     </div>
   );
 }
+

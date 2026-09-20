@@ -6,8 +6,8 @@ export function useTrainerProgressMutations() {
   const queryClient = useQueryClient();
 
   const createEntry = useMutation({
-    mutationFn: ({ memberId, dto }: { memberId: string; dto: CreateProgressEntryDto }) =>
-      createProgressEntry(memberId, dto),
+    mutationFn: ({ memberId, dto, idempotencyKey }: { memberId: string; dto: CreateProgressEntryDto; idempotencyKey: string }) =>
+      createProgressEntry(memberId, dto, idempotencyKey),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['trainer', 'progress', 'entries', variables.memberId] });
       queryClient.invalidateQueries({ queryKey: ['trainer', 'progress', 'summary', variables.memberId] });
@@ -15,8 +15,8 @@ export function useTrainerProgressMutations() {
   });
 
   const updateEntry = useMutation({
-    mutationFn: ({ memberId, entryId, dto }: { memberId: string; entryId: string; dto: Partial<CreateProgressEntryDto> }) =>
-      updateProgressEntry(memberId, entryId, dto),
+    mutationFn: ({ memberId, entryId, dto, idempotencyKey }: { memberId: string; entryId: string; dto: Partial<CreateProgressEntryDto>; idempotencyKey: string }) =>
+      updateProgressEntry(memberId, entryId, dto, idempotencyKey),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['trainer', 'progress', 'entries', variables.memberId] });
       queryClient.invalidateQueries({ queryKey: ['trainer', 'progress', 'summary', variables.memberId] });
@@ -24,8 +24,8 @@ export function useTrainerProgressMutations() {
   });
 
   const deleteEntry = useMutation({
-    mutationFn: ({ memberId, entryId }: { memberId: string; entryId: string }) =>
-      deleteProgressEntry(memberId, entryId),
+    mutationFn: ({ memberId, entryId, idempotencyKey }: { memberId: string; entryId: string; idempotencyKey: string }) =>
+      deleteProgressEntry(memberId, entryId, idempotencyKey),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['trainer', 'progress', 'entries', variables.memberId] });
       queryClient.invalidateQueries({ queryKey: ['trainer', 'progress', 'summary', variables.memberId] });

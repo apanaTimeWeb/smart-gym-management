@@ -75,7 +75,7 @@ export default function ManagerCommunicationsHistory() {
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="bg-primary/5">
+                <tr className="bg-primary-subtle">
                   {MANAGER_COMMUNICATION_HISTORY_HEADERS.map(h => (
                     <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-secondary uppercase tracking-wider whitespace-nowrap">
                       {h}
@@ -88,13 +88,13 @@ export default function ManagerCommunicationsHistory() {
                   const statusStyle = COMM_STATUS_STYLES[c.status] ?? COMM_STATUS_STYLES.sent;
                   const isWA = c.channel === 'whatsapp';
                   return (
-                    <tr key={c.id} className="hover:bg-primary/5 motion-safe:transition-colors">
+                    <tr key={c.id} className="hover:bg-primary-subtle motion-safe:transition-colors">
                       <td className="px-4 py-3">
                         <p className="text-sm font-medium text-primary">{c.title}</p>
                       </td>
                       <td className="px-4 py-3">
                         <span
-                          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold text-on-primary ${isWA ? 'bg-success' : 'bg-info text-info'}`}
+                          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold text-on-success ${isWA ? 'bg-success' : 'bg-info text-on-info'}`}
                         >
                           {isWA ? <MessageCircle size={18} /> : <Mail size={18} />}
                           {isWA ? 'WhatsApp' : 'Email'}

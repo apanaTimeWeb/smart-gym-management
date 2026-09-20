@@ -10,15 +10,15 @@ export default function TrainerWorkoutBanner() {
   const { data: eData } = useTrainerExercisesQuery(search, category, page);
 
  return (
- <div className="rounded-xl p-5 text-primary-foreground bg-card border border-primary shadow-lg">
+ <div className="rounded-xl p-5 text-on-primary bg-card border border-primary shadow-card">
  <div className="flex items-center justify-between">
  <div>
  <h2 className="text-xl font-bold">Complete Workout Database</h2>
- <p className="text-white/80 mt-1 text-sm font-medium">
+ <p className="text-on-primary mt-1 text-sm font-medium">
  {wData?.total ?? 0} workout programs · {eData?.total ?? 0} exercises
  </p>
  </div>
- <Dumbbell size={56} className="text-info/40 transform -rotate-12" />
+ <Dumbbell size={56} className="text-info transform -rotate-12" />
  </div>
  </div>
  );

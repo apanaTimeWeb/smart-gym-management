@@ -4,24 +4,25 @@ import { env } from '@/config/env';
 import { MOCK_PROGRESS_ENTRIES, MOCK_PROGRESS_MEMBERS } from '@/app/trainer/progress-tracking/progress_fixtures/TrainerProgressMockData';
 import { CreateProgressEntrySchema } from '@/app/trainer/progress-tracking/progress_types/TrainerProgress.schema';
 import type { ProgressEntry } from '@/app/trainer/progress-tracking/progress_types/TrainerProgressTypes';
+import { ProgressUrlConfig } from '@/app/trainer/progress-tracking/progress-tracking_url_config';
 
 const BASE = env.NEXT_PUBLIC_API_URL;
 
 let progressDB = [...MOCK_PROGRESS_ENTRIES];
 
 export const trainerProgressHandlers = [
-  http.get(`${BASE}/trainer/progress-tracking/members`, async () => {
+  http.get(`${BASE}${ProgressUrlConfig.BACKEND_API.MEMBERS}`, async () => {
     await delay(300);
     return HttpResponse.json({ data: MOCK_PROGRESS_MEMBERS });
   }),
 
-  http.get(`${BASE}/trainer/progress-tracking/:memberId/entries`, async ({ params }) => {
+  http.get(`${BASE}${ProgressUrlConfig.BACKEND_API.ENTRIES(':memberId')}`, async ({ params }) => {
     await delay(300);
     const entries = progressDB.filter(e => e.memberId === params.memberId);
     return HttpResponse.json({ data: entries });
   }),
 
-  http.get(`${BASE}/trainer/progress-tracking/:memberId/summary`, async ({ params }) => {
+  http.get(`${BASE}${ProgressUrlConfig.BACKEND_API.SUMMARY(':memberId')}`, async ({ params }) => {
     await delay(300);
     const entries = progressDB.filter(e => e.memberId === params.memberId).sort((a, b) => a.date.localeCompare(b.date));
     
@@ -45,7 +46,7 @@ export const trainerProgressHandlers = [
     return HttpResponse.json({ data: summary });
   }),
 
-  http.post(`${BASE}/trainer/progress-tracking/:memberId/entries`, async ({ params, request }) => {
+  http.post(`${BASE}${ProgressUrlConfig.BACKEND_API.ENTRIES(':memberId')}`, async ({ params, request }) => {
     await delay(300);
     const parsedBody = CreateProgressEntrySchema.safeParse(await request.json());
     if (!parsedBody.success) return HttpResponse.json({ success: false, message: 'Invalid progress payload.', data: null });
@@ -61,7 +62,7 @@ export const trainerProgressHandlers = [
     return HttpResponse.json({ data: newEntry });
   }),
 
-  http.patch(`${BASE}/trainer/progress-tracking/:memberId/entries/:entryId`, async ({ params, request }) => {
+  http.patch(`${BASE}${ProgressUrlConfig.BACKEND_API.ENTRY_DETAIL(':memberId', ':entryId')}`, async ({ params, request }) => {
     await delay(300);
     const parsedBody = CreateProgressEntrySchema.partial().safeParse(await request.json());
     if (!parsedBody.success) return HttpResponse.json({ success: false, message: 'Invalid progress update payload.', data: null });
@@ -86,7 +87,7 @@ export const trainerProgressHandlers = [
     return HttpResponse.json({ data: updatedEntry });
   }),
 
-  http.delete(`${BASE}/trainer/progress-tracking/:memberId/entries/:entryId`, async ({ params }) => {
+  http.delete(`${BASE}${ProgressUrlConfig.BACKEND_API.ENTRY_DETAIL(':memberId', ':entryId')}`, async ({ params }) => {
     await delay(300);
     progressDB = progressDB.filter(e => !(e.id === params.entryId && e.memberId === params.memberId));
     return HttpResponse.json({ success: true });

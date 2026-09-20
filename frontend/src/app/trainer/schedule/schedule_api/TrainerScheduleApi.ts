@@ -8,7 +8,7 @@ import {
   type ScheduleResponse
 } from '@/app/trainer/schedule/schedule_types/TrainerScheduleTypes';
 import { apiFetch, type ApiResponse } from '@/lib/api';
-import { ScheduleUrlConfig } from '@/app/trainer/Trainer_url_config';
+import { ScheduleUrlConfig } from '@/app/trainer/schedule/schedule_url_config';
 import { createTrainerApiResponseSchema } from '@/app/trainer/trainer_utils/TrainerApiResponseSchema';
 
 export const trainerScheduleApi = {
@@ -19,7 +19,7 @@ export const trainerScheduleApi = {
     return response.data;
   },
 
-  updateAvailability: async (data: WeeklyAvailability[]): Promise<{ success: boolean; message: string }> => {
+  updateAvailability: async (data: WeeklyAvailability[], idempotencyKey?: string): Promise<{ success: boolean; message: string }> => {
     const raw = await apiFetch<ApiResponse<unknown>>(ScheduleUrlConfig.BACKEND_API.AVAILABILITY, {
       method: 'PUT',
       body: JSON.stringify(data),
@@ -28,7 +28,7 @@ export const trainerScheduleApi = {
     return { success: response.success, message: response.message };
   },
 
-  requestLeave: async (data: CreateLeaveDto): Promise<{ success: boolean; message: string; data: LeaveRequest }> => {
+  requestLeave: async (data: CreateLeaveDto, idempotencyKey?: string): Promise<{ success: boolean; message: string; data: LeaveRequest }> => {
     const raw = await apiFetch<ApiResponse<unknown>>(ScheduleUrlConfig.BACKEND_API.LEAVES, {
       method: 'POST',
       body: JSON.stringify(data),

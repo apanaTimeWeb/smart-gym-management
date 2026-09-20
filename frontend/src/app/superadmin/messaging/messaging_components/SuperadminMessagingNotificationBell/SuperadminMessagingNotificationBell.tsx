@@ -51,7 +51,7 @@ export default function SuperadminMessagingNotificationBell() {
               </div>
             )}
           </div>
-          <div className="p-2 border-t border-border bg-header"><Link href={`${MessagingUrlConfig.PAGES.MAIN}?tab=notifications`} onClick={() => setOpen(false)} className="block w-full text-center py-2 text-sm font-semibold text-primary hover:text-primary-hover motion-safe:transition-all motion-safe:duration-base rounded-md hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">View in Notification Center</Link></div>
+          <div className="p-2 border-t border-border bg-header"><Link href={`${MessagingUrlConfig.PAGES.MAIN}?tab=notifications`} onClick={() => setOpen(false)} className="block w-full text-center py-2 text-sm font-semibold text-primary hover:text-primary-hover motion-safe:transition-all motion-safe:duration-base rounded-md hover:bg-primary-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">View in Notification Center</Link></div>
         </div>
       )}
     </div>

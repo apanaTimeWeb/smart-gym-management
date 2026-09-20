@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import { formatMemberMonthYear } from '@/app/manager/members/members_utils/ManagerMembersDateFormatters';
 // RESPONSIBILITY: Contains logic, types, or component definition for this module.
 import { useManagerMembersLogic } from '@/app/manager/members/members_hooks/ManagerUseManagerMembersLogic';
@@ -19,8 +19,8 @@ export default function ManagerProfileAttendance() {
     <div>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
         {[
-          { label: 'Present', value: presentDays, color: 'text-success dark:text-success', bg: 'bg-success ' },
-          { label: 'Absent', value: absentDays, color: 'text-danger dark:text-danger', bg: 'bg-danger dark:bg-danger' },
+          { label: 'Present', value: presentDays, color: 'text-success dark:text-success', bg: 'bg-success-bg ' },
+          { label: 'Absent', value: absentDays, color: 'text-danger dark:text-danger', bg: 'bg-danger-bg dark:bg-danger-bg' },
           { label: 'Attendance %', value: `${attPct}%`, color: attPct >= 75 ? 'text-success dark:text-success' : 'text-danger dark:text-danger', bg: 'bg-input' },
         ].map((s) => (
           <div key={s.label} className={`${s.bg} rounded-xl p-4 border border-border`}>
@@ -34,7 +34,7 @@ export default function ManagerProfileAttendance() {
         <p className="text-sm font-medium text-secondary">
           Current Month Attendance
         </p>
-        <span className="text-sm font-bold text-primary bg-primary-subtle px-3 py-1 rounded-full">
+        <span className="text-sm font-bold text-on-primary bg-primary-subtle px-3 py-1 rounded-full">
           {formatMemberMonthYear(new Date())}
         </span>
       </div>
@@ -45,7 +45,7 @@ export default function ManagerProfileAttendance() {
             key={day} 
             className={`h-10 w-full rounded-lg flex items-center justify-center text-xs font-bold border-none ${
               status === 'P' ? 'bg-success text-on-success' 
-              : status === 'A' ? 'bg-danger text-on-primary' 
+              : status === 'A' ? 'bg-danger text-on-danger' 
               : 'bg-input text-secondary border border-border'
             }`}
           >
@@ -56,3 +56,4 @@ export default function ManagerProfileAttendance() {
     </div>
   );
 }
+

@@ -128,7 +128,7 @@ export default function AdminHrPayrollModal() {
             type="submit" 
             form="payroll-form"
             disabled={saving}
-            className="flex items-center gap-2 px-8 py-2.5 rounded-xl text-sm font-bold text-primary motion-safe:transition-all hover:shadow-dialog motion-safe:active:scale-95 disabled:opacity-70 bg-primary motion-safe:duration-base"
+            className="flex items-center gap-2 px-8 py-2.5 rounded-xl text-sm font-bold text-on-primary motion-safe:transition-all hover:shadow-dialog motion-safe:active:scale-95 disabled:opacity-70 bg-primary motion-safe:duration-base"
           >
             {saving ? <div className="w-4 h-4 border-2 border-border border-t-white rounded-full motion-safe:animate-spin motion-safe:duration-base" /> : <Check size={16} />}
             {saving ? 'Saving...' : 'Disburse Payroll'}

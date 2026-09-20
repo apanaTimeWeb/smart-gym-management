@@ -10,7 +10,7 @@ import type { SuperadminAffiliatesTableRowProps } from '@/app/superadmin/affilia
 
 export default function SuperadminAffiliatesTableRow({ affiliate: aff, onToggleStatus, onEdit, onDelete, onPayCommission }: SuperadminAffiliatesTableRowProps) {
     const { confirm } = useConfirm();
-    return (<tr tabIndex={0} aria-label={`Edit affiliate ${aff.name}`} className="hover:bg-primary/5 motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset" onClick={() => onEdit(aff)} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); onEdit(aff); } }}>
+    return (<tr tabIndex={0} aria-label={`Edit affiliate ${aff.name}`} className="hover:bg-primary-subtle motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset" onClick={() => onEdit(aff)} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); onEdit(aff); } }}>
       <td className="px-6 py-4">
         <div className="flex flex-col">
           <span className="text-sm font-medium text-primary truncate" title={aff.name}>{aff.name}</span>

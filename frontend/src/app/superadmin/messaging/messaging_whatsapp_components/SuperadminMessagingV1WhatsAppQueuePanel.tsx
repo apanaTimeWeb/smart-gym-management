@@ -27,7 +27,7 @@ export default function SuperadminMessagingV1WhatsAppQueuePanel({ queue, activeI
       <div className="space-y-5">
         <ProgressBar label={`${formatNumber(sent + skipped)} of ${formatNumber(queue.length)} completed`} value={progress}/>
 
-        {active ? (<div className="rounded-2xl border border-primary/30 bg-primary/5 p-5">
+        {active ? (<div className="rounded-2xl border border-primary/30 bg-primary-subtle p-5">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
               <div className="min-w-0">
                 <p className="text-xs font-semibold uppercase tracking-wider text-primary">Current recipient · {formatNumber(activeIndex + 1)} / {formatNumber(queue.length)}</p>
@@ -38,7 +38,7 @@ export default function SuperadminMessagingV1WhatsAppQueuePanel({ queue, activeI
                 <p className="mt-3 line-clamp-2 text-sm text-secondary">{active.message}</p>
               </div>
               <div className="flex flex-wrap gap-2 lg:max-w-sm lg:justify-end">
-                <button type="button" onClick={() => onOpen(activeIndex)} className="inline-flex items-center gap-2 rounded-lg border border-primary/40 bg-primary/10 px-3 py-2 text-sm font-semibold text-primary hover:bg-primary/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                <button type="button" onClick={() => onOpen(activeIndex)} className="inline-flex items-center gap-2 rounded-lg border border-primary/40 bg-primary-subtle px-3 py-2 text-sm font-semibold text-primary hover:bg-primary-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
                   <MessageCircle size={17} aria-hidden="true"/> Open WhatsApp
                 </button>
                 <button type="button" onClick={() => onMarkSent(activeIndex)} className="inline-flex items-center gap-2 rounded-lg bg-primary px-3 py-2 text-sm font-semibold text-on-primary hover:bg-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
@@ -64,7 +64,7 @@ export default function SuperadminMessagingV1WhatsAppQueuePanel({ queue, activeI
               </tr>
             </thead>
             <tbody>
-              {queue.map((item, index) => (<tr key={item.recipient.id} className={index === activeIndex ? 'border-b border-border bg-primary/5' : 'border-b border-border'}>
+              {queue.map((item, index) => (<tr key={item.recipient.id} className={index === activeIndex ? 'border-b border-border bg-primary-subtle' : 'border-b border-border'}>
                   <td className="px-3 py-3">
                     <Tooltip content={item.recipient.contactName}>
                       <span className="block max-w-44 truncate font-medium text-primary">{item.recipient.contactName}</span>

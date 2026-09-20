@@ -12,10 +12,10 @@ export default function TrainerWorkoutMain() {
   const { tab } = useTrainerWorkoutFilters();
 
   return (
-    <div className="min-h-full pb-10 workout-module bg-background text-foreground">
+    <div className="min-h-full pb-10 workout-module bg-page text-primary">
       <div className="p-6 space-y-5">
         <TrainerWorkoutBanner />
-        <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
+        <div className="bg-card rounded-xl shadow-card border border-border overflow-hidden">
           <TrainerWorkoutToolbar />
           <div className="p-5">
             {tab === 'Workout Plans' ? <TrainerWorkoutPlansGrid /> : <TrainerWorkoutExerciseTable />}

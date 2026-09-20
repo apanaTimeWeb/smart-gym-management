@@ -1,20 +1,5 @@
 import { create } from 'zustand';
-import type { ProgressEntry, ProgressChartMetric, ComparisonMetric } from '@/app/trainer/progress-tracking/progress_types/TrainerProgressTypes';
-
-type ProgressTab = 'individual' | 'compare';
-
-interface TrainerProgressStore {
-  activeMetric: ProgressChartMetric;
-  setActiveMetric: (metric: ProgressChartMetric) => void;
-  showModal: boolean;
-  setShowModal: (show: boolean) => void;
-  editingEntry: ProgressEntry | null;
-  setEditingEntry: (entry: ProgressEntry | null) => void;
-  activeComparisonMetric: ComparisonMetric;
-  setActiveComparisonMetric: (metric: ComparisonMetric) => void;
-  selectedComparisonIds: string[];
-  toggleComparisonMember: (memberId: string) => void;
-}
+import type { TrainerProgressStore } from '@/app/trainer/progress-tracking/progress_store/TrainerProgressStoreTypes';
 
 export const useTrainerProgressStore = create<TrainerProgressStore>((set) => ({
   activeMetric: 'weight',

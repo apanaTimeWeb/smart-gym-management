@@ -15,7 +15,7 @@ export default function AdminAttendanceMain() {
     <div className="min-h-full pb-10 bg-page text-primary">
 
       {/* Read-only notice banner */}
-      <div className="mx-6 mt-4 flex items-center gap-2.5 px-4 py-2.5 bg-info border border-border rounded-xl">
+      <div className="mx-6 mt-4 flex items-center gap-2.5 px-4 py-2.5 bg-info-bg border border-border rounded-xl">
         <ShieldAlert size={15} strokeWidth={2} className="text-info flex-shrink-0" />
         <p className="text-xs text-info font-medium">
           View-only mode — Manual check-in is managed by Branch Managers.
@@ -24,7 +24,7 @@ export default function AdminAttendanceMain() {
 
       <div className="p-6 space-y-5">
         {status === 'error' && (
-          <div className="flex items-center justify-between bg-danger border border-border rounded-xl px-4 py-3">
+          <div className="flex items-center justify-between bg-danger-bg border border-border rounded-xl px-4 py-3">
             <p className="text-sm text-danger">{error}</p>
             <button
               onClick={() => void loadAll()}

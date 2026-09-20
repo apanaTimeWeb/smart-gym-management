@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getDateRange, serializeSuperadminCustomDateRange } from './SuperadminMessagingDateRangeUtils';
+import { getDateRange, serializeSuperadminCustomDateRange } from '@/app/superadmin/messaging/messaging_components/SuperadminMessagingDateRangeUtils';
 
 describe('getDateRange', () => {
   const now = new Date(2026, 8, 18, 23, 30, 0);

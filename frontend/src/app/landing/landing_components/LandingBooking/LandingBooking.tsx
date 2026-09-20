@@ -15,7 +15,7 @@ export default function LandingBooking() {
     <section id="booking" className="py-24 px-4 landing-booking-section">
       <div className="max-w-4xl mx-auto relative">
         <div className="text-center mb-16">
-          <div className="inline-block text-xs font-bold tracking-widest uppercase text-warning bg-warning/10 border border-warning/20 rounded-full px-4 py-2 mb-5">
+          <div className="inline-block text-xs font-bold tracking-widest uppercase text-warning bg-warning-bg border border-warning/20 rounded-full px-4 py-2 mb-5">
             Quick Action
           </div>
           <h2 className="text-4xl sm:text-5xl font-black text-white mb-4">
@@ -32,7 +32,7 @@ export default function LandingBooking() {
         <div className="bg-black border border-border rounded-3xl p-8 md:p-12 shadow-2xl relative overflow-hidden">
           {bookingSuccess ? (
             <div className="flex flex-col items-center justify-center py-12 text-center motion-safe:animate-in fade-in zoom-in duration-500">
-              <div className="w-20 h-20 bg-success/20 rounded-full flex items-center justify-center mb-6">
+              <div className="w-20 h-20 bg-success-bg rounded-full flex items-center justify-center mb-6">
                 <CheckCircle className="text-success" size={40} />
               </div>
               <h3 className="text-3xl font-bold text-white mb-2">Booking Confirmed!</h3>
@@ -51,7 +51,7 @@ export default function LandingBooking() {
                 ] as const).map(({ value, icon: Icon, label }) => (
                   <label key={value} className="cursor-pointer">
                     <input type="radio" name="booking_type" value={value} checked={bookingData.type === value} onChange={e => setBookingData({ ...bookingData, type: e.target.value })} className="peer sr-only" />
-                    <div className="bg-card border border-border rounded-xl p-4 text-center peer-checked:border-warning peer-checked:bg-warning/10 transition-all">
+                    <div className="bg-card border border-border rounded-xl p-4 text-center peer-checked:border-warning peer-checked:bg-warning-bg transition-all">
                       <Icon className="mx-auto mb-2 text-warning" size={24} />
                       <span className="font-semibold text-white">{label}</span>
                     </div>
@@ -103,7 +103,7 @@ export default function LandingBooking() {
                 </div>
               </div>
 
-              <button type="submit" disabled={isBooking} className="w-full py-4 rounded-xl font-bold text-white text-lg transition-all hover:scale-105 hover:shadow-2xl mt-4 flex items-center justify-center gap-2 disabled:opacity-70 disabled:hover:scale-100 bg-primary hover:bg-primary-hover" style={{ boxShadow: isBooking ? 'none' : '0 0 30px rgba(99,102,241,0.3)' }}>
+              <button type="submit" disabled={isBooking} className="w-full py-4 rounded-xl font-bold text-white text-lg transition-all hover:scale-105 hover:shadow-2xl mt-4 flex items-center justify-center gap-2 disabled:opacity-70 disabled:hover:scale-100 bg-primary-subtle hover:bg-primary-hover" style={{ boxShadow: isBooking ? 'none' : '0 0 30px rgba(99,102,241,0.3)' }}>
                 {isBooking ? 'Processing...' : <><span>Proceed to Book</span> <ArrowRight size={18} /></>}
               </button>
             </form>

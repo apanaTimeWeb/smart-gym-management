@@ -1,14 +1,20 @@
-// RESPONSIBILITY: TanStack Query hook for fetching Trainer Dashboard data.
+'use client';
+// RESPONSIBILITY: Owns Dashboard server state. URL parameters are the canonical owner of shareable date-range state.
+import { useSearchParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
+import { DashboardUrlConfig } from '@/app/trainer/dashboard/dashboard_url_config';
 import { dashboardApi } from '@/app/trainer/dashboard/dashboard_api/TrainerDashboard_api';
-import { useTrainerDashboardStore } from '@/app/trainer/dashboard/dashboard_store/useTrainerDashboardStore';
 
 export function useTrainerDashboardQuery() {
-  const { timeRange, startDate, endDate } = useTrainerDashboardStore();
+  const searchParams = useSearchParams();
+  const range = searchParams.get('range') ?? 'this_month';
+  const startDate = searchParams.get('startDate') ?? '';
+  const endDate = searchParams.get('endDate') ?? '';
 
   return useQuery({
-    queryKey: ['trainer', 'dashboard', timeRange, startDate, endDate],
-    queryFn: () => dashboardApi.fetchDashboardStats(timeRange, startDate, endDate),
+    queryKey: ['trainer', 'dashboard', { range, startDate, endDate }],
+    queryFn: () => dashboardApi.fetchDashboardStats(range, startDate, endDate),
+    meta: { endpoint: DashboardUrlConfig.BACKEND_API.STATS },
     staleTime: 5 * 60 * 1000,
   });
 }

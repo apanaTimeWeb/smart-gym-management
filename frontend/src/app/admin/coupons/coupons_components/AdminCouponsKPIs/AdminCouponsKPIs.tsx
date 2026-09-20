@@ -20,9 +20,9 @@ export default function AdminCouponsKPIs() {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
       <AdminStatCard title="Total Coupons" value={totalCoupons} icon={Tag} iconBg="bg-primary-subtle" iconColor="text-primary" />
-      <AdminStatCard title="Active Coupons" value={activeCoupons} change="currently live" changeType="up" icon={CheckCircle} iconBg="bg-success" iconColor="text-success" />
-      <AdminStatCard title="Total Redeemed" value={totalRedeemed.toLocaleString('en-IN')} change="all time" changeType="neutral" icon={BarChart2} iconBg="bg-info" iconColor="text-info" />
-      <AdminStatCard title="Revenue Lost" value={formatCurrency(revenueLost)} change="to discounts" changeType="down" icon={TrendingDown} iconBg="bg-danger" iconColor="text-danger" />
+      <AdminStatCard title="Active Coupons" value={activeCoupons} change="currently live" changeType="up" icon={CheckCircle} iconBg="bg-success-bg" iconColor="text-success" />
+      <AdminStatCard title="Total Redeemed" value={totalRedeemed.toLocaleString('en-IN')} change="all time" changeType="neutral" icon={BarChart2} iconBg="bg-info-bg" iconColor="text-info" />
+      <AdminStatCard title="Revenue Lost" value={formatCurrency(revenueLost)} change="to discounts" changeType="down" icon={TrendingDown} iconBg="bg-danger-bg" iconColor="text-danger" />
     </div>
   );
 }

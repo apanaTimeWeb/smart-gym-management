@@ -75,16 +75,16 @@ export default function ManagerCommunicationsBulkMessageModal({
     <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-overlay-backdrop backdrop-blur-sm">
       <div className="bg-overlay rounded-2xl shadow-dialog w-full max-w-2xl relative overflow-hidden border border-border max-h-full flex flex-col motion-safe:animate-in motion-safe:zoom-in-95 motion-safe:duration-200">
         <div
-          className={`px-6 py-4 flex items-center justify-between shrink-0 ${type === 'whatsapp' ? 'bg-social-whatsapp' : 'bg-info'}`}
+          className={`px-6 py-4 flex items-center justify-between shrink-0 ${type === 'whatsapp' ? 'bg-social-whatsapp' : 'bg-info-bg'}`}
           
         >
           <div className="flex flex-wrap items-center gap-3">
-            <div className="w-9 h-9 rounded-full bg-primary/20 flex items-center justify-center">
-              <Icon size={18} className="text-on-primary" />
+            <div className="w-9 h-9 rounded-full bg-primary-subtle flex items-center justify-center">
+              <Icon size={18} className="text-white" />
             </div>
             <div>
-              <p className="text-on-primary font-bold text-base leading-tight">Bulk {label} Message</p>
-              <p className="text-on-primary/90 text-xs flex items-center gap-1">
+              <p className="text-white font-bold text-base leading-tight">Bulk {label} Message</p>
+              <p className="text-white/90 text-xs flex items-center gap-1">
                 <Users size={18} /> Sending to {recipients.length} recipients
               </p>
             </div>
@@ -92,9 +92,9 @@ export default function ManagerCommunicationsBulkMessageModal({
           <button
             aria-label="Close bulk message dialog"
             onClick={() => { void confirmAndClose(onClose); }}
-            className="w-8 h-8 rounded-full bg-primary/20 hover:bg-primary/30 flex items-center justify-center motion-safe:transition-colors"
+            className="w-8 h-8 rounded-full bg-primary-subtle hover:bg-primary/30 flex items-center justify-center motion-safe:transition-colors"
           >
-            <X size={18} className="text-on-primary" />
+            <X size={18} className="text-white" />
           </button>
         </div>
 
@@ -150,7 +150,7 @@ export default function ManagerCommunicationsBulkMessageModal({
                 return (
                   <div key={stableKey} className="flex items-center justify-between p-2.5 bg-overlay rounded-lg border border-border">
                     <div className="flex items-center gap-3 min-w-0">
-                      <div className="w-8 h-8 rounded-full flex items-center justify-center text-on-primary font-bold text-xs shrink-0 bg-primary">
+                      <div className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-xs shrink-0 bg-primary-subtle">
                         {rec.name.charAt(0)}
                       </div>
                       <div className="min-w-0">
@@ -168,8 +168,8 @@ export default function ManagerCommunicationsBulkMessageModal({
                         disabled={!hasContactInfo || !message.trim()}
                         className={`shrink-0 px-3 py-1.5 text-xs font-semibold rounded-lg flex items-center gap-1.5 motion-safe:transition-all ${
                           isSent
-                            ? 'bg-success/10 text-success border border-success/20'
-                            : 'bg-social-whatsapp text-on-primary hover:opacity-90 disabled:opacity-50'
+                            ? 'bg-success-bg text-success border border-success/20'
+                            : 'bg-social-whatsapp text-white hover:opacity-90 disabled:opacity-50'
                         }`}
                         
                       >
@@ -197,7 +197,7 @@ export default function ManagerCommunicationsBulkMessageModal({
             Cancel
           </button>
           {type === 'email' ? (
-            <button onClick={handleSendEmail} disabled={!message.trim()} className="flex-1 px-4 py-2.5 text-sm font-semibold text-on-primary rounded-xl flex items-center justify-center gap-2 motion-safe:transition-all hover:opacity-90 disabled:opacity-50 bg-info">
+            <button onClick={handleSendEmail} disabled={!message.trim()} className="flex-1 px-4 py-2.5 text-sm font-semibold text-on-info rounded-xl flex items-center justify-center gap-2 motion-safe:transition-all hover:opacity-90 disabled:opacity-50 bg-info">
               <Send size={18} />
               Open Email Client (BCC All)
             </button>

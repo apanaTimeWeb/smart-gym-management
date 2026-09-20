@@ -1,36 +1,51 @@
 'use client';
-// RESPONSIBILITY: Renders the trainer notes tab for a member profile.
-// DATA FLOW: TrainerMembersProfile → TrainerMembersProfileNotes
-
-import { useTrainerMembersStore } from '@/app/trainer/members/members_store/useTrainerMembersStore';
+// RESPONSIBILITY: Displays trainer notes and owns the note-entry UI; mutation behavior is delegated to the Members mutation hook.
+import { useState } from 'react';
+import { Plus, X } from 'lucide-react';
+import { useTrainerMembersMutations } from '@/app/trainer/members/members_queries/useTrainerMembersMutations';
 import { useTrainerSelectedMember } from '@/app/trainer/members/members_queries/useTrainerSelectedMember';
 import { formatDate } from '@/lib/formatters';
 
 export default function TrainerMembersProfileNotes() {
   const { member: selectedMember } = useTrainerSelectedMember();
-
+  const { addNote } = useTrainerMembersMutations();
+  const [noteText, setNoteText] = useState('');
+  const [open, setOpen] = useState(false);
   if (!selectedMember) return null;
-
   const notes = selectedMember.trainerNotes || [];
-
+  const submit = async () => {
+    const text = noteText.trim();
+    if (!text) return;
+    await addNote.mutateAsync({ memberId: selectedMember.id, text, idempotencyKey: crypto.randomUUID() });
+    setNoteText('');
+    setOpen(false);
+  };
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-bold text-foreground mb-4">Trainer Notes</h3>
+      <div className="flex items-center justify-between gap-3">
+        <h3 className="text-lg font-bold text-primary">Trainer Notes</h3>
+        <button type="button" onClick={() => setOpen(true)} className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-on-primary text-sm font-semibold rounded-lg hover:bg-primary-hover motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"><Plus size={16} />Add Note</button>
+      </div>
       {notes.length === 0 ? (
-        <div className="text-secondary p-4 bg-input rounded-xl border border-border">
-          No notes have been added for this member yet.
+        <div className="text-secondary p-4 bg-input rounded-xl border border-border">No notes have been added for this member yet.</div>
+      ) : notes.map(note => (
+        <div key={note.id} className="p-4 bg-card border border-border rounded-xl">
+          <div className="text-xs text-secondary mb-1">{formatDate(note.date)}</div>
+          <p className="text-sm text-primary">{note.text}</p>
         </div>
-      ) : (
-        notes.map(note => (
-          <div key={note.id} className="p-4 bg-card border border-border rounded-xl">
-            <div className="text-xs text-secondary mb-1">{formatDate(note.date)}</div>
-            <p className="text-sm text-foreground">{note.text}</p>
+      ))}
+      {open && (
+        <div className="fixed inset-0 z-40 bg-overlay/80 flex items-center justify-center p-4" role="presentation">
+          <div className="w-full max-w-md bg-overlay border border-border rounded-xl shadow-dialog p-5" role="dialog" aria-modal="true" aria-labelledby="trainer-member-note-title">
+            <div className="flex items-center justify-between mb-4"><h4 id="trainer-member-note-title" className="font-semibold text-primary">Add Trainer Note</h4><button type="button" aria-label="Close add note dialog" onClick={() => setOpen(false)} className="p-2 rounded-lg text-secondary hover:text-primary hover:bg-primary-subtle"><X size={18} /></button></div>
+            <label htmlFor="trainer-member-note" className="block text-sm font-medium text-secondary mb-1">Note</label>
+            <textarea id="trainer-member-note" value={noteText} onChange={e => setNoteText(e.target.value)} rows={5} aria-describedby="trainer-member-note-help" className="w-full bg-input border border-border rounded-lg p-3 text-sm text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" />
+            <p id="trainer-member-note-help" className="text-xs text-secondary mt-1">Add a private coaching note for this member.</p>
+            {addNote.isError && <p role="alert" className="text-xs text-danger mt-2">Unable to save the note. Please retry.</p>}
+            <div className="flex justify-end gap-2 mt-5"><button type="button" onClick={() => setOpen(false)} className="px-4 py-2 border border-border rounded-lg text-secondary hover:bg-primary-subtle">Cancel</button><button type="button" onClick={() => void submit()} disabled={!noteText.trim() || addNote.isPending} className="px-4 py-2 rounded-lg bg-primary text-on-primary font-semibold disabled:opacity-60">{addNote.isPending ? 'Saving…' : 'Save Note'}</button></div>
           </div>
-        ))
+        </div>
       )}
-      <button className="px-4 py-2 bg-primary text-white text-sm font-semibold rounded-lg hover:bg-primary/90">
-        Add Note
-      </button>
     </div>
   );
 }

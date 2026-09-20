@@ -29,6 +29,13 @@ export const MEMBER_STATUS_OPTIONS = [
   { label: 'New Members', value: 'NEW' }
 ];
 
+export const TRAINER_MEMBER_PROGRESS_OPTIONS = [
+  { label: 'All Progress', value: 'All' },
+  { label: 'Good', value: 'Good' },
+  { label: 'Average', value: 'Average' },
+  { label: 'Needs Attention', value: 'Needs Attention' }
+];
+
 export const GENDER_OPTIONS = [
   { label: 'Male', value: 'MALE' },
   { label: 'Female', value: 'FEMALE' },
@@ -64,3 +71,6 @@ export const PROFILE_TABS = [
   { id: 'notes', label: 'Trainer Notes' }
 ];
 
+
+export const PROFILE_TAB_IDS = ['overview', 'fitness', 'assessment', 'progress', 'workout', 'diet', 'attendance', 'notes'] as const;
+export type TrainerProfileTab = (typeof PROFILE_TAB_IDS)[number];

@@ -58,7 +58,7 @@ export default function TrainerAttendanceMain() {
   };
 
   return (
-    <div className="min-h-full pb-10 attendance-module bg-background text-foreground">
+    <div className="min-h-full pb-10 attendance-module bg-page text-primary">
       <div className="p-6 space-y-5">
         <TrainerAttendanceKPIs
           stats={stats ?? { totalCheckIns: 0, memberCheckIns: 0, staffCheckIns: 0 }}
@@ -68,7 +68,7 @@ export default function TrainerAttendanceMain() {
           <TrainerAttendanceSummaryCard records={records} />
         )}
 
-        <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
+        <div className="bg-card rounded-xl shadow-card border border-border overflow-hidden">
           <TrainerAttendanceToolbar
             tab={filters.tab}
             setTab={filters.setTab}

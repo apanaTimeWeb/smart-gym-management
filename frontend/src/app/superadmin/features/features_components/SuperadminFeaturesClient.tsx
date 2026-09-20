@@ -18,6 +18,8 @@ import { releaseNoteSchema } from '@/app/superadmin/features/features_types/Supe
 import type { FeaturesTab, ReleaseNoteFormValues } from '@/app/superadmin/features/features_types/SuperadminFeaturesUiTypes';
 import SuperadminFeatureRolloutModal from '@/app/superadmin/features/features_components/SuperadminFeatureRolloutModal';
 import SuperadminFeatureHistoryModal from '@/app/superadmin/features/features_components/SuperadminFeatureHistoryModal';
+import SuperadminFeaturesTierMatrix from '@/app/superadmin/features/features_components/SuperadminFeaturesTierMatrix';
+
 export default function SuperadminFeaturesClient() {
     const [activeTab, setActiveTab] = useState<FeaturesTab>('FLAGS');
     const [rolloutFlag, setRolloutFlag] = useState<FeatureFlag | null>(null);
@@ -74,6 +76,8 @@ export default function SuperadminFeaturesClient() {
     /** Named handlers for tab switching — Rule 52: no inline arrow functions on event handlers */
     function handleShowFlagsTab() { setActiveTab('FLAGS'); }
     function handleShowNotesTab() { setActiveTab('NOTES'); }
+    function handleShowTiersTab() { setActiveTab('TIERS'); }
+    
     return (<div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
@@ -86,6 +90,9 @@ export default function SuperadminFeaturesClient() {
           </button>
           <button onClick={handleShowNotesTab} className={`px-4 py-2 rounded-md text-sm font-medium motion-safe:transition-colors ${activeTab === 'NOTES' ? 'bg-card text-primary shadow-card' : 'text-secondary hover:text-primary'}`}>
             Release Notes
+          </button>
+          <button onClick={handleShowTiersTab} className={`px-4 py-2 rounded-md text-sm font-medium motion-safe:transition-colors ${activeTab === 'TIERS' ? 'bg-card text-primary shadow-card' : 'text-secondary hover:text-primary'}`}>
+            SaaS Tiers
           </button>
         </div>
       </div>
@@ -108,7 +115,7 @@ export default function SuperadminFeaturesClient() {
                   
                   {!flag.isGlobalEnabled && (<div className="mt-3 flex items-center gap-4">
                       {flag.enabledTenantIds.length > 0 && (<div className="flex items-center gap-2">
-                          <span className="text-xs font-bold text-warning bg-warning/10 px-2 py-0.5 rounded">BETA OVERRIDE</span>
+                          <span className="text-xs font-bold text-warning bg-warning-bg px-2 py-0.5 rounded">BETA OVERRIDE</span>
                           <span className="text-xs text-secondary">Enabled for {flag.enabledTenantIds.length} specific gyms</span>
                         </div>)}
                       <button onClick={() => setRolloutFlag(flag)} className="text-xs flex items-center gap-1.5 text-primary hover:text-primary-hover font-semibold motion-safe:transition-colors">
@@ -125,7 +132,7 @@ export default function SuperadminFeaturesClient() {
                   </button>
                 </div>
                 <div className="flex flex-col items-end">
-                  <button type="button" aria-label={`Toggle ${flag.name}`} onClick={() => void handleToggle(flag)} className={`w-12 h-6 rounded-full relative cursor-pointer motion-safe:transition-colors ${flag.isGlobalEnabled ? 'bg-success' : 'bg-border'}`}>
+                  <button type="button" aria-label={`Toggle ${flag.name}`} onClick={() => void handleToggle(flag)} className={`w-12 h-6 rounded-full relative cursor-pointer motion-safe:transition-colors ${flag.isGlobalEnabled ? 'bg-success-bg' : 'bg-border'}`}>
                     <div className={`absolute top-1 w-4 h-4 bg-card rounded-full motion-safe:transition-all ${flag.isGlobalEnabled ? 'right-1' : 'left-1'}`}></div>
                   </button>
                   <span className="text-xs font-medium mt-2 text-secondary">
@@ -141,12 +148,12 @@ export default function SuperadminFeaturesClient() {
             {notes.map((note: ReleaseNote) => (<div key={note.id} className="bg-card border border-border rounded-xl p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex flex-wrap items-center gap-3">
-                    <span className="bg-primary/10 text-primary px-2.5 py-1 rounded-md text-xs font-bold border border-primary/20">
+                    <span className="bg-primary-subtle text-primary px-2.5 py-1 rounded-md text-xs font-bold border border-primary/20">
                       {note.version}
                     </span>
                     <h3 className="text-lg font-bold text-primary">{note.title}</h3>
                   </div>
-                  <span className={`text-xs font-bold px-2.5 py-1 rounded-md ${note.isPublished ? 'bg-success/10 text-success' : 'bg-warning/10 text-warning'}`}>
+                  <span className={`text-xs font-bold px-2.5 py-1 rounded-md ${note.isPublished ? 'bg-success-bg text-success' : 'bg-warning-bg text-warning'}`}>
                     {note.isPublished ? 'PUBLISHED' : 'DRAFT'}
                   </span>
                 </div>
@@ -178,13 +185,15 @@ export default function SuperadminFeaturesClient() {
                   <textarea rows={5} {...register('content')} className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-primary resize-none" placeholder="We just shipped..."></textarea>
                   {errors.content && <p className="text-xs text-danger mt-1">{errors.content.message}</p>}
                 </div>
-                <button type="submit" disabled={isPublishing} className="w-full bg-primary text-on-primary py-2.5 rounded-lg font-medium hover:bg-primary-hover motion-safe:transition-colors disabled:opacity-70">
+                <button type="submit" disabled={isPublishing} className="w-full bg-primary-subtle text-on-success py-2.5 rounded-lg font-medium hover:bg-primary-hover motion-safe:transition-colors disabled:opacity-70">
                   {isPublishing ? 'Publishing...' : 'Publish to All Gyms'}
                 </button>
               </div>
             </form>
           </div>
         </div>)}
+
+      {activeTab === 'TIERS' && <SuperadminFeaturesTierMatrix />}
 
       <SuperadminFeatureRolloutModal isOpen={!!rolloutFlag} onClose={() => setRolloutFlag(null)} flag={rolloutFlag} onSaveRollout={handleSaveRollout}/>
 

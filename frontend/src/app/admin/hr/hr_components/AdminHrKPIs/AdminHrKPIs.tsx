@@ -11,9 +11,9 @@ export default function AdminHrKPIs() {
 
   const kpis = [
     { label: 'Total Salary Generated', value: formatCurrency(summary?.totalSalaryThisMonth || 0), icon: DollarSign, colorClass: 'text-primary', bgClass: 'bg-primary-subtle' },
-    { label: 'Total Paid', value: formatCurrency(summary?.totalSalaryPaid || 0), icon: UserCheck, colorClass: 'text-success', bgClass: 'bg-success' },
-    { label: 'Outstanding Due', value: formatCurrency(summary?.totalSalaryDue || 0), icon: FileText, colorClass: 'text-warning', bgClass: 'bg-warning' },
-    { label: 'Advance Given', value: formatCurrency(summary?.totalAdvanceGiven || 0), icon: DollarSign, colorClass: 'text-danger', bgClass: 'bg-danger' },
+    { label: 'Total Paid', value: formatCurrency(summary?.totalSalaryPaid || 0), icon: UserCheck, colorClass: 'text-success', bgClass: 'bg-success-bg' },
+    { label: 'Outstanding Due', value: formatCurrency(summary?.totalSalaryDue || 0), icon: FileText, colorClass: 'text-warning', bgClass: 'bg-warning-bg' },
+    { label: 'Advance Given', value: formatCurrency(summary?.totalAdvanceGiven || 0), icon: DollarSign, colorClass: 'text-danger', bgClass: 'bg-danger-bg' },
   ];
 
   return (

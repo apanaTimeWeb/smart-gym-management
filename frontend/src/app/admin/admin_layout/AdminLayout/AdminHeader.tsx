@@ -8,7 +8,7 @@ import { AdminMembersHeaderSearch } from '@/app/admin/members/members_components
 import { AdminNotificationsHeader } from '@/app/admin/notifications/notifications_components/AdminNotificationsHeader/AdminNotificationsHeader';
 import { AdminHeaderProfile } from '@/app/admin/admin_layout/AdminLayout/AdminHeaderProfile';
 import AdminBranchesHeaderSelector from '@/app/admin/branches/branches_components/AdminBranchesHeaderSelector/AdminBranchesHeaderSelector';
-import AdminAttendanceQrScannerTrigger from '@/app/admin/attendance/attendance_components/AdminAttendanceQrScannerTrigger/AdminAttendanceQrScannerTrigger';
+
 import { getAdminRouteHeaderConfig } from '@/app/admin/admin_layout/AdminLayout/AdminRouteHeaderConfig';
 
 export default function AdminHeader() {
@@ -35,7 +35,7 @@ export default function AdminHeader() {
       <div className="flex shrink-0 items-center gap-2 lg:gap-3">
         <AdminMembersHeaderSearch />
         <AdminBranchesHeaderSelector />
-        <AdminAttendanceQrScannerTrigger />
+
         <AdminNotificationsHeader />
         <AdminHeaderProfile />
       </div>

@@ -108,14 +108,14 @@ export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> =
 
           {status === 'SENT' && (<div className="space-y-3">
               {/* Bug #21 fix: Recipient count preview */}
-              <div className="bg-primary/5 border border-primary/20 rounded-lg p-4 flex items-center gap-3">
+              <div className="bg-primary-subtle border border-primary/20 rounded-lg p-4 flex items-center gap-3">
                 <Users className="w-5 h-5 text-primary shrink-0"/>
                 <p className="text-sm text-primary">
                   This broadcast will reach{' '}
                   <strong className="text-primary">{previewRecipientCount} active gym{previewRecipientCount !== 1 ? 's' : ''}</strong>.
                 </p>
               </div>
-              <div className="bg-warning/10 border border-warning/20 rounded-lg p-4">
+              <div className="bg-warning-bg border border-warning/20 rounded-lg p-4">
                 <p className="text-sm text-warning font-medium">
                   ⚠️ You are about to send this broadcast immediately to <strong>{targetGymIds.length}</strong> {targetGymIds.length === 1 ? 'gym' : 'gyms'}. This action cannot be undone.
                 </p>

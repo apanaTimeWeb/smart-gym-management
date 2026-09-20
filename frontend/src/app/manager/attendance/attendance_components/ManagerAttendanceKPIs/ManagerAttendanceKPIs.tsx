@@ -7,9 +7,9 @@ export default function ManagerAttendanceKPIs() {
  const { todayStats } = useManagerAttendanceLogic();
 
  const kpis = [
- { label: "Today's Check-ins", value: todayStats.totalCheckIns, icon: CalendarCheck, color: 'text-warning', bg: 'bg-warning/10' },
- { label: 'Member Check-ins', value: todayStats.memberCheckIns, icon: Users, color: 'text-info', bg: 'bg-info/10' },
- { label: 'Staff Check-ins', value: todayStats.staffCheckIns, icon: UserCog, color: 'text-success', bg: 'bg-success/10' },
+ { label: "Today's Check-ins", value: todayStats.totalCheckIns, icon: CalendarCheck, color: 'text-warning', bg: "bg-warning-bg" },
+ { label: 'Member Check-ins', value: todayStats.memberCheckIns, icon: Users, color: 'text-info', bg: "bg-info-bg" },
+ { label: 'Staff Check-ins', value: todayStats.staffCheckIns, icon: UserCog, color: 'text-success', bg: "bg-success-bg" },
  ];
 
  return (

@@ -55,7 +55,7 @@ export default function SuperadminProfileSecurityForm({ profile, isSavingPasswor
             </div>))}
 
           <div className="flex justify-end pt-1">
-            <button type="submit" disabled={isSavingPassword || !isDirty} className="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-hover text-on-primary font-semibold text-sm rounded-lg motion-safe:transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+            <button type="submit" disabled={isSavingPassword || !isDirty} className="flex items-center gap-2 px-5 py-2.5 bg-primary-subtle hover:bg-primary-hover text-white font-semibold text-sm rounded-lg motion-safe:transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
               {isSavingPassword && <Loader2 className="w-4 h-4 motion-safe:animate-spin" strokeWidth={2}/>}
               {isSavingPassword ? 'Updating...' : 'Update Password'}
             </button>
@@ -95,8 +95,8 @@ export default function SuperadminProfileSecurityForm({ profile, isSavingPasswor
           </div>
 
           <button type="button" onClick={handleToggle2FA} disabled={isTogglingTwoFA || !twoFAPassword.trim()} className={`flex items-center gap-2 px-5 py-2.5 font-semibold text-sm rounded-lg motion-safe:transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 ${profile.twoFactorEnabled
-            ? 'bg-danger-bg text-danger hover:bg-danger hover:text-on-danger focus-visible:ring-danger'
-            : 'bg-success-bg text-success hover:bg-success hover:text-on-primary focus-visible:ring-success'}`}>
+            ? 'bg-danger-bg-danger-bg focus-visible:ring-danger'
+            : 'bg-success-bg-success-bg focus-visible:ring-success'}`}>
             {isTogglingTwoFA && <Loader2 className="w-4 h-4 motion-safe:animate-spin" strokeWidth={2}/>}
             {profile.twoFactorEnabled ? 'Disable 2FA' : 'Enable 2FA'}
           </button>

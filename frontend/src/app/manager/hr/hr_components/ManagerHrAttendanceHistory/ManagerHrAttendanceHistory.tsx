@@ -16,9 +16,9 @@ function getCurrentMonth(): string {
 }
 
 function getStatusClass(status: string) {
-  if (status === 'PRESENT') return 'bg-success/10 text-success border-success/20';
-  if (status === 'ABSENT') return 'bg-danger/10 text-danger border-danger/20';
-  return 'bg-warning/10 text-warning border-warning/20';
+  if (status === 'PRESENT') return 'bg-success-bg text-success border-success/20';
+  if (status === 'ABSENT') return 'bg-danger-bg text-danger border-danger/20';
+  return 'bg-warning-bg text-warning border-warning/20';
 }
 
 export default function ManagerHrAttendanceHistory() {

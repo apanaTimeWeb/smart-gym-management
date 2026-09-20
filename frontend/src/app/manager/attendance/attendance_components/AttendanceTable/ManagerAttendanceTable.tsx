@@ -75,8 +75,8 @@ export default function ManagerAttendanceTable() {
                   {/* Name */}
                   <td className="px-4 py-3 whitespace-nowrap">
                     <div className="flex items-center gap-2">
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-on-primary text-xs font-bold ${
-                        r.type === 'MEMBER' ? 'bg-info' : 'bg-success'
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold ${
+                        r.type === 'MEMBER' ? 'bg-info-bg' : 'bg-success-bg'
                       }`}>
                         {(r.member?.name || r.staff?.name || '?').charAt(0)}
                       </div>
@@ -89,8 +89,8 @@ export default function ManagerAttendanceTable() {
                   <td className="px-4 py-3 whitespace-nowrap">
                     <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${
                       r.type === 'MEMBER'
-                        ? 'bg-info text-info'
-                        : 'bg-success text-success'
+                        ? 'bg-info text-on-info'
+                        : 'bg-success text-on-success'
                     }`}>
                       {r.type}
                     </span>
@@ -98,7 +98,7 @@ export default function ManagerAttendanceTable() {
                   {/* Status */}
                   <td className="px-4 py-3 whitespace-nowrap">
                     <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${
-                      (r.checkIn || r.status === 'PRESENT' || r.type === 'MEMBER') ? 'bg-success text-success' : 'bg-danger text-danger'
+                      (r.checkIn || r.status === 'PRESENT' || r.type === 'MEMBER') ? 'bg-success text-on-success' : 'bg-danger text-on-danger'
                     }`}>
                       {(r.checkIn || r.status === 'PRESENT' || r.type === 'MEMBER') ? 'Present' : 'Absent'}
                     </span>

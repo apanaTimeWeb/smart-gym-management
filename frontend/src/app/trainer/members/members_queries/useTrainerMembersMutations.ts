@@ -6,9 +6,19 @@ import type { Member, DietPlan, Workout } from '@/app/trainer/members/members_ty
 export function useTrainerMembersMutations() {
   const queryClient = useQueryClient();
 
+  const addNote = useMutation({
+    mutationFn: async ({ memberId, text, idempotencyKey }: { memberId: string; text: string; idempotencyKey: string }) => {
+      return TrainerMembersApi.addMemberNote(memberId, { text }, idempotencyKey);
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['trainer', 'members', 'detail', variables.memberId] });
+      queryClient.invalidateQueries({ queryKey: ['trainer', 'members'] });
+    },
+  });
+
   const updateMember = useMutation({
-    mutationFn: async ({ id, data }: { id: string; data: Partial<Member> }) => {
-      const res = await TrainerMembersApi.updateMember(id, data);
+    mutationFn: async ({ id, data, idempotencyKey }: { id: string; data: Partial<Member>; idempotencyKey: string }) => {
+      const res = await TrainerMembersApi.updateMember(id, data, idempotencyKey);
       if (!res.success) throw new Error(res.message);
       return res.data;
     },
@@ -39,9 +49,22 @@ export function useTrainerMembersMutations() {
     },
   });
 
+  const updateAssessment = useMutation({
+    mutationFn: async ({ id, assessment, idempotencyKey }: { id: string; assessment: any; idempotencyKey?: string }) => {
+      const res = await TrainerMembersApi.updateMemberAssessment(id, assessment, idempotencyKey);
+      if (!res.success) throw new Error(res.message);
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['trainer', 'members'] });
+    },
+  });
+
   return {
     updateMember,
+    addNote,
     assignDiet,
-    assignWorkout
+    assignWorkout,
+    updateAssessment
   };
 }

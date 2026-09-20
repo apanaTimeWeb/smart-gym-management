@@ -1,34 +1,33 @@
 import { z } from 'zod';
 import { apiFetch } from '@/lib/api';
 import type { ApiResponse } from '@/lib/api';
-import { AttendanceUrlConfig } from '@/app/trainer/Trainer_url_config';
+import { AttendanceUrlConfig } from '@/app/trainer/attendance/attendance_url_config';
 import { createTrainerApiResponseSchema } from '@/app/trainer/trainer_utils/TrainerApiResponseSchema';
 import {
   AttendanceRecordSchema,
   AttendanceStatsSchema,
   AttendanceMemberBasicSchema,
-  type AttendanceRecord,
-  type AttendanceStats,
-  type AttendanceMemberBasic,
-  type CreateAttendanceDto,
 } from '@/app/trainer/attendance/attendance_types/TrainerAttendance_types';
+import type {
+  AttendanceRecord,
+  AttendanceStats,
+  AttendanceMemberBasic,
+  CreateAttendanceDto,
+} from '@/app/trainer/attendance/attendance_types/TrainerAttendance_types';
+import type { TrainerAttendanceFetchParams } from '@/app/trainer/attendance/attendance_types/TrainerAttendanceInteractionTypes';
 
-export interface AttendanceFetchParams {
-  page?: number;
-  limit?: number;
-  search?: string;
-  date?: string;
-  type?: 'MEMBER' | 'STAFF';
-  staffId?: string;
-}
 
 export interface AttendanceListResult {
   records: AttendanceRecord[];
   total: number;
 }
 
-export async function fetchAttendanceRecords(params: AttendanceFetchParams): Promise<AttendanceListResult> {
-  const q = new URLSearchParams({ ...params as Record<string, string> }).toString();
+export async function fetchAttendanceRecords(params: TrainerAttendanceFetchParams): Promise<AttendanceListResult> {
+  const queryParams = new URLSearchParams();
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined) queryParams.set(key, String(value));
+  });
+  const q = queryParams.toString();
   const raw = await apiFetch<ApiResponse<unknown>>(`${AttendanceUrlConfig.BACKEND_API.BASE}?${q}`);
   const response = createTrainerApiResponseSchema(z.object({ attendance: z.array(AttendanceRecordSchema), total: z.number(), page: z.number(), limit: z.number() })).parse(raw);
   if (!response.data) throw new Error(response.message);
@@ -43,7 +42,7 @@ export async function fetchAttendanceStats(): Promise<AttendanceStats> {
 }
 
 export async function fetchAttendanceMembersBasic(): Promise<AttendanceMemberBasic[]> {
-  const raw = await apiFetch<ApiResponse<unknown>>(`${AttendanceUrlConfig.BACKEND_API.BASE}/members-basic`);
+  const raw = await apiFetch<ApiResponse<unknown>>(AttendanceUrlConfig.BACKEND_API.MEMBERS_BASIC);
   const response = createTrainerApiResponseSchema(z.array(AttendanceMemberBasicSchema)).parse(raw);
   if (!response.data) throw new Error(response.message);
   return response.data;
@@ -76,3 +75,4 @@ export async function selfCheckInAttendance(staffId: string): Promise<{ message:
   const response = createTrainerApiResponseSchema(z.null()).parse(raw);
   return { message: response.message };
 }
+

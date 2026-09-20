@@ -71,7 +71,7 @@ export default function ManagerHrLedgerTable() {
                 <th className="p-4 font-medium text-secondary">Notes</th>
                 <th className="p-4 font-medium text-secondary text-right">Credit (₹)</th>
                 <th className="p-4 font-medium text-secondary text-right">Debit (₹)</th>
-                <th className="p-4 font-medium text-secondary text-right bg-primary/5">Balance (₹)</th>
+                <th className="p-4 font-medium text-secondary text-right bg-primary-subtle">Balance (₹)</th>
               </tr>
             </thead>
             <tbody className="text-sm divide-y divide-border">
@@ -93,17 +93,17 @@ export default function ManagerHrLedgerTable() {
                     <td className="p-4 text-primary whitespace-nowrap">{formatDate(l.date)}</td>
                     <td className="p-4">
                       <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium 
-                        ${l.type.includes('Advance') ? 'bg-danger text-danger' : 
-                          l.type.includes('Salary Generated') ? 'bg-info text-info' : 
-                          l.type.includes('Due') ? 'bg-warning text-warning' :
-                          'bg-success text-success'}`}>
+                        ${l.type.includes('Advance') ? 'bg-danger text-on-primary' : 
+                          l.type.includes('Salary Generated') ? 'bg-info text-on-info' : 
+                          l.type.includes('Due') ? 'bg-warning text-on-primary' :
+                          'bg-success text-on-primary'}`}>
                         {l.type}
                       </span>
                     </td>
                     <td className="p-4 text-secondary max-w-50 truncate" title={displayValue(l.notes)}>{displayValue(l.notes)}</td>
                     <td className="p-4 text-right text-success font-medium">{l.credit > 0 ? `+${formatCurrencyFromMinorUnits(l.credit, ManagerEnvConfig.currencyCode)}` : '—'}</td>
                     <td className="p-4 text-right text-danger font-medium">{l.debit > 0 ? `-${formatCurrencyFromMinorUnits(l.debit, ManagerEnvConfig.currencyCode)}` : '—'}</td>
-                    <td className="p-4 text-right font-bold text-primary bg-primary/5">{formatCurrencyFromMinorUnits(l.balance, ManagerEnvConfig.currencyCode)}</td>
+                    <td className="p-4 text-right font-bold text-on-primary bg-primary-subtle">{formatCurrencyFromMinorUnits(l.balance, ManagerEnvConfig.currencyCode)}</td>
                   </tr>
                 ))
               )}

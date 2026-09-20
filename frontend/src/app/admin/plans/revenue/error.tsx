@@ -12,7 +12,7 @@ export default function Error({
 }) {
   return (
     <div className="p-4 sm:p-6 max-w-7xl mx-auto flex flex-col items-center justify-center min-h-screen">
-      <div className="bg-danger p-4 rounded-full mb-4">
+      <div className="bg-danger-bg p-4 rounded-full mb-4">
         <AlertTriangle size={48} className="text-danger" />
       </div>
       <h2 className="text-2xl font-bold text-primary mb-2">Something went wrong!</h2>

@@ -58,7 +58,7 @@ export default function AdminDashboardAttendanceTrend() {
     <div className="bg-card backdrop-blur-xl border border-border rounded-2xl shadow-card p-6">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 bg-info rounded-xl">
+          <div className="p-2.5 bg-info-bg rounded-xl">
             <CalendarCheck size={18} strokeWidth={2} className="text-info" />
           </div>
           <div>

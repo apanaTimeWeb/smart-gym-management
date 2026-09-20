@@ -47,7 +47,7 @@ export default function LandingNavbar() {
           <Link href={LandingUrlConfig.PAGES.ERP_LOGIN} className="text-sm font-medium text-secondary hover:text-white transition-colors px-3 py-1.5">
             ERP Login
           </Link>
-          <Link href={LandingUrlConfig.ANCHORS.BOOKING} className="text-sm font-bold px-5 py-2.5 rounded-xl text-white transition-all hover:scale-105 bg-primary hover:bg-primary-hover">
+          <Link href={LandingUrlConfig.ANCHORS.BOOKING} className="text-sm font-bold px-5 py-2.5 rounded-xl text-white transition-all hover:scale-105 bg-primary-subtle hover:bg-primary-hover">
             Join Now
           </Link>
         </div>

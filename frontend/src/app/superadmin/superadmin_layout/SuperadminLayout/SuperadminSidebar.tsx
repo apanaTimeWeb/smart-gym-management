@@ -55,16 +55,16 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Super
         {/* Logo / Branding Header */}
         <div className="flex h-20 items-center justify-between px-4 border-b border-border shrink-0">
           {!isCollapsed && (<div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center shrink-0">
-                <Gauge className="w-5 h-5 text-on-primary"/>
+              <div className="w-8 h-8 rounded-lg bg-primary-subtle flex items-center justify-center shrink-0">
+                <Gauge className="w-5 h-5 text-on-danger"/>
               </div>
               <div>
                 <span className="text-base font-bold text-primary leading-tight block">GymSmart 360</span>
                 <span className="text-xs text-secondary leading-none">SuperAdmin</span>
               </div>
             </div>)}
-          {isCollapsed && (<div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center mx-auto">
-              <Gauge className="w-5 h-5 text-on-primary"/>
+          {isCollapsed && (<div className="w-8 h-8 rounded-lg bg-primary-subtle flex items-center justify-center mx-auto">
+              <Gauge className="w-5 h-5 text-on-danger"/>
             </div>)}
         </div>
 

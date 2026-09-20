@@ -1,7 +1,7 @@
 // RESPONSIBILITY: API client for the Trainer Profile module with canonical response validation.
 // DATA FLOW: HTTP response → Zod envelope/schema → TrainerProfileLogic → form/UI.
 import { apiFetch } from '@/lib/api';
-import { ProfileUrlConfig } from '@/app/trainer/Trainer_url_config';
+import { ProfileUrlConfig } from '@/app/trainer/profile/profile_url_config';
 import type { ApiResponse } from '@/lib/api';
 import type { TrainerProfileData, UpdateTrainerProfilePayload, UpdateTrainerPasswordPayload } from '@/app/trainer/profile/profile_types/TrainerProfileTypes';
 import { TrainerProfileDataSchema, TrainerPasswordResponseSchema } from '@/app/trainer/profile/profile_types/TrainerProfileApiSchema';

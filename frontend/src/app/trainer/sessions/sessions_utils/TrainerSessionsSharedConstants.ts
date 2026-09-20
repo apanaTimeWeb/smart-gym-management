@@ -24,7 +24,7 @@ export const SESSION_FILTER_OPTIONS: SessionFilter[] = ['All', 'PT', 'Group'];
 
 export const SESSION_STATUS_STYLES: Record<SessionStatus, string> = {
   Completed: 'bg-success-bg text-success',
-  Cancelled: 'bg-danger-bg text-danger',
+  'No Show': 'bg-danger-bg text-danger',
   Upcoming: 'bg-warning-bg text-warning',
 };
 

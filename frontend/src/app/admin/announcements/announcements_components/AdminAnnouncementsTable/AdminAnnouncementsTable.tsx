@@ -15,16 +15,16 @@ import type { AnnouncementStatus, AnnouncementPriority } from '@/app/admin/annou
 import AdminAnnouncementsEmptyState from '@/app/admin/announcements/announcements_components/AdminAnnouncementsEmptyState/AdminAnnouncementsEmptyState';
 
 const STATUS_STYLES: Record<AnnouncementStatus, string> = {
-  active:    'bg-success text-success border-success',
-  scheduled: 'bg-info text-info border-info',
-  expired:   'bg-danger text-danger border-danger',
+  active:    'bg-success text-on-success border-success',
+  scheduled: 'bg-info text-on-info border-info',
+  expired:   'bg-danger text-on-danger border-danger',
   draft:     'bg-input text-secondary border-border',
 };
 
 const PRIORITY_STYLES: Record<AnnouncementPriority, string> = {
-  high:   'bg-danger text-danger',
-  medium: 'bg-warning text-warning',
-  low:    'bg-success text-success',
+  high:   'bg-danger text-on-danger',
+  medium: 'bg-warning text-on-primary',
+  low:    'bg-success text-on-success',
 };
 
 export default function AdminAnnouncementsTable() {
@@ -187,7 +187,7 @@ export default function AdminAnnouncementsTable() {
                     <div className="flex items-center gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 motion-safe:transition-opacity motion-safe:duration-base">
                       <button
                         onClick={() => togglePin(a.id)}
-                        className={`p-1.5 rounded-lg motion-safe:transition-colors ${a.isPinned ? 'text-warning hover:bg-warning' : 'text-secondary hover:text-warning hover:bg-warning'}`}
+                        className={`p-1.5 rounded-lg motion-safe:transition-colors ${a.isPinned ? 'text-warning hover:bg-warning-bg' : 'text-secondary hover:text-warning hover:bg-warning-bg'}`}
                         aria-label={a.isPinned ? 'Unpin announcement' : 'Pin announcement'}
                       >
                         {a.isPinned ? <PinOff size={14} /> : <Pin size={14} />}
@@ -201,7 +201,7 @@ export default function AdminAnnouncementsTable() {
                       </button>
                       <button
                         onClick={() => deleteAnnouncement(a.id, a.title)}
-                        className="p-1.5 rounded-lg text-secondary hover:text-danger hover:bg-danger motion-safe:transition-colors motion-safe:duration-base"
+                        className="p-1.5 rounded-lg text-secondary hover:text-danger hover:bg-danger-bg motion-safe:transition-colors motion-safe:duration-base"
                         aria-label="Delete announcement"
                       >
                         <Trash2 size={14} />

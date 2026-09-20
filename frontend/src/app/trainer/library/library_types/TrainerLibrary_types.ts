@@ -1,10 +1,9 @@
 // RESPONSIBILITY: Defines all TypeScript types, interfaces, for the Diet Library module.
 import { z } from 'zod';
 import { DietPlanSchema } from '@/app/trainer/library/library_types/TrainerLibrary.schema';
-
 export type DietPlan = z.infer<typeof DietPlanSchema>;
 
-export type TrainerLibraryFilterGoal = (typeof import('@/app/trainer/library/library_utils/TrainerLibrarySharedConstants').GOALS)[number] | 'All';
+export type TrainerLibraryFilterGoal = import('@/app/trainer/library/library_utils/TrainerLibrarySharedConstants').TrainerLibraryFilterGoal;
 
 export interface TrainerLibraryLogicReturn {
   dietPlans: DietPlan[];
@@ -16,8 +15,8 @@ export interface TrainerLibraryLogicReturn {
   search: string;
   debouncedSearch: string;
   setSearch: (value: string) => void;
-  filterGoal: TrainerLibraryFilterGoal | string;
-  setFilterGoal: (value: string) => void;
+  filterGoal: TrainerLibraryFilterGoal;
+  setFilterGoal: (value: TrainerLibraryFilterGoal) => void;
   currentPage: number;
   setCurrentPage: (page: number) => void;
   loadAll: () => Promise<void>;
@@ -27,3 +26,5 @@ export interface TrainerLibraryLogicReturn {
   openEditDiet: (diet: DietPlan) => void;
   closeDietModal: () => void;
 }
+
+export interface TrainerLibraryAssignedMember { id: string; name: string; assignedDietPlanId: string | null; }

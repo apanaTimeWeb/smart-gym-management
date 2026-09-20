@@ -7,12 +7,9 @@ import { Pencil, Trash2 } from 'lucide-react';
 import type { ProgressEntry } from '@/app/trainer/progress-tracking/progress_types/TrainerProgressTypes';
 import { PROGRESS_TABLE_HEADERS } from '@/app/trainer/progress-tracking/progress_utils/TrainerProgressSharedConstants';
 import { useConfirm } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerConfirmProvider';
+import type { TrainerProgressTableProps } from '@/app/trainer/progress-tracking/progress-tracking_types/TrainerProgressTableProps';
 
-interface TrainerProgressTableProps {
-  entries: ProgressEntry[];
-  onEdit: (entry: ProgressEntry) => void;
-  onDelete: (entryId: string) => void;
-}
+
 
 export default function TrainerProgressTable({ entries, onEdit, onDelete }: TrainerProgressTableProps) {
   const { confirm } = useConfirm();
@@ -42,27 +39,27 @@ export default function TrainerProgressTable({ entries, onEdit, onDelete }: Trai
           </thead>
           <tbody className="divide-y divide-border">
             {entries.map((entry) => (
-              <tr key={entry.id} className="hover:bg-input/50 motion-safe:transition-colors">
-                <td className="px-4 py-3 text-foreground whitespace-nowrap">{entry.date}</td>
-                <td className="px-4 py-3 text-foreground">{entry.weightKg}</td>
-                <td className="px-4 py-3 text-foreground">{entry.heightCm}</td>
-                <td className="px-4 py-3 text-foreground">{formatNumber(entry.bmi)}</td>
-                <td className="px-4 py-3 text-foreground">{entry.bodyFatPercent ?? '—'}</td>
-                <td className="px-4 py-3 text-foreground">{entry.muscleMassKg ?? '—'}</td>
-                <td className="px-4 py-3 text-foreground">{entry.waistCm ?? '—'}</td>
+              <tr key={entry.id} className="hover:bg-surface-hover motion-safe:transition-colors motion-safe:duration-base">
+                <td className="px-4 py-3 text-primary whitespace-nowrap">{entry.date}</td>
+                <td className="px-4 py-3 text-primary">{entry.weightKg}</td>
+                <td className="px-4 py-3 text-primary">{entry.heightCm}</td>
+                <td className="px-4 py-3 text-primary">{formatNumber(entry.bmi)}</td>
+                <td className="px-4 py-3 text-primary">{entry.bodyFatPercent ?? '—'}</td>
+                <td className="px-4 py-3 text-primary">{entry.muscleMassKg ?? '—'}</td>
+                <td className="px-4 py-3 text-primary">{entry.waistCm ?? '—'}</td>
                 <td className="px-4 py-3 text-secondary max-w-40 truncate">{entry.notes ?? '—'}</td>
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-2">
-                    <button
+                    <button type="button"
                       onClick={() => onEdit(entry)}
-                      className="p-1.5 rounded-lg text-secondary hover:text-foreground hover:bg-input motion-safe:transition-colors"
+                      className="p-1.5 rounded-lg text-secondary hover:text-primary hover:bg-input motion-safe:transition-colors motion-safe:duration-base"
                       aria-label="Edit entry"
                     >
                       <Pencil size={14} />
                     </button>
-                    <button
+                    <button type="button"
                       onClick={() => handleDelete(entry)}
-                      className="p-1.5 rounded-lg text-secondary hover:text-danger hover:bg-danger-bg motion-safe:transition-colors"
+                      className="p-1.5 rounded-lg text-secondary hover:text-danger hover:bg-danger-bg motion-safe:transition-colors motion-safe:duration-base"
                       aria-label="Delete entry"
                     >
                       <Trash2 size={14} />

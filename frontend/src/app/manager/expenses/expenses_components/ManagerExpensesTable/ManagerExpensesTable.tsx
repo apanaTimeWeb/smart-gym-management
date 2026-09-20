@@ -36,7 +36,7 @@ export default function ManagerExpensesTable() {
         <>
           <div className="overflow-x-auto flex-1">
             <table className="w-full">
-              <thead className="bg-primary/5 border-b border-border">
+              <thead className="bg-primary-subtle border-b border-border">
                 <tr>
                   {EXPENSES_TABLE_HEADERS.map(h => (
                     <th key={h} className="text-left text-xs font-semibold text-secondary uppercase tracking-wider px-5 py-3 whitespace-nowrap">
@@ -49,7 +49,7 @@ export default function ManagerExpensesTable() {
                 {expenses.map(e => {
                   const statusStyle = EXPENSE_STATUS_STYLES[e.status] || { bg: 'bg-input', text: 'text-secondary' };
                   return (
-                    <tr key={e.id} className="hover:bg-primary/5 motion-safe:transition-colors">
+                    <tr key={e.id} className="hover:bg-primary-subtle motion-safe:transition-colors">
                       <td className="px-5 py-3.5 text-sm font-bold text-primary whitespace-nowrap">{e.id}</td>
                       <td className="px-5 py-3.5 text-sm font-semibold text-primary whitespace-nowrap">
                         {e.title}
@@ -76,7 +76,7 @@ export default function ManagerExpensesTable() {
                                   confirmText: 'Mark Paid' });
                                 if (ok && markAsPaid) markAsPaid(e.id);
                               }}
-                              className="p-1.5 rounded-lg bg-success/10 text-success hover:bg-success/20 motion-safe:transition-all motion-safe:duration-200"
+                              className="p-1.5 rounded-lg bg-success-bg text-success hover:bg-success-bg motion-safe:transition-all motion-safe:duration-200"
                               title="Mark as Paid"
                             >
                               <CheckCircle2 size={18} />
@@ -96,7 +96,7 @@ export default function ManagerExpensesTable() {
                               confirmText: 'Delete'
                             });
                             if (ok) deleteExpense(e.id); 
-                          }} className="p-1.5 rounded-lg bg-danger text-danger hover:opacity-80 motion-safe:transition-all motion-safe:duration-200" title="Delete"><Trash2 size={18} /></button>
+                          }} className="p-1.5 rounded-lg bg-danger text-on-danger hover:opacity-80 motion-safe:transition-all motion-safe:duration-200" title="Delete"><Trash2 size={18} /></button>
                         </div>
                       </td>
                     </tr>

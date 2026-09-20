@@ -44,7 +44,7 @@ export function SuperadminMessagingComposeModal({ tenants, isSubmitting, onClose
               render={({ field }) => (
                 <div className="flex gap-2">
                   {(['EMAIL', 'SMS', 'IN_APP'] as const).map((channel) => (
-                    <button key={channel} type="button" onClick={() => field.onChange(channel)} className={`flex-1 rounded-lg border py-2 text-xs font-medium motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${field.value === channel ? 'border-primary/30 bg-primary/10 text-primary' : 'border-border bg-input text-secondary hover:text-primary'}`}>
+                    <button key={channel} type="button" onClick={() => field.onChange(channel)} className={`flex-1 rounded-lg border py-2 text-xs font-medium motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${field.value === channel ? 'border-primary/30 bg-primary-subtle text-primary' : 'border-border bg-input text-secondary hover:text-primary'}`}>
                       {channel}
                     </button>
                   ))}

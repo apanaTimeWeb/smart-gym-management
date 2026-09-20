@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 // RESPONSIBILITY: Renders a detailed view of a selected member's profile.
 import { MessageCircle, Mail } from 'lucide-react';
 import { useTrainerMembersStore } from '@/app/trainer/members/members_store/useTrainerMembersStore';
@@ -13,7 +13,7 @@ import TrainerMembersProfileDiet from '@/app/trainer/members/members_components/
 import TrainerMembersProfileAssessment from '@/app/trainer/members/members_components/TrainerMembersProfile/TrainerMembersProfileAssessment';
 import TrainerMembersProfileNotes from '@/app/trainer/members/members_components/TrainerMembersProfile/TrainerMembersProfileNotes';
 import { maskSensitiveData, displayValue } from '@/lib/formatters';
-import type { TrainerProfileTab } from '@/app/trainer/members/members_types/TrainerMembers_types';
+import type { TrainerProfileTab } from '@/app/trainer/members/members_utils/TrainerMembersSharedConstants';
 
 export default function TrainerMembersProfile() {
   const { member: selectedMember } = useTrainerSelectedMember();
@@ -29,23 +29,23 @@ export default function TrainerMembersProfile() {
   return (
     <div className="min-h-full">
             <div className="p-6 space-y-5">
-        <button
+        <button type="button"
           onClick={() => setSelectedMember(null)}
-          className="text-sm text-secondary hover:text-primary flex items-center gap-1.5 motion-safe:transition-all motion-safe:duration-200"
+          className="text-sm text-secondary hover:text-primary flex items-center gap-1.5 motion-safe:transition-all motion-safe:duration-base"
         >
-          ← Back to Members
+          â† Back to Members
         </button>
 
         {/* Profile Card */}
-        <div className="bg-card rounded-xl shadow-sm border border-border p-6">
+        <div className="bg-card rounded-xl shadow-card border border-border p-6">
           <div className="flex flex-wrap items-center justify-between gap-5 mb-6">
             <div className="flex items-center gap-5">
-              <div className="w-20 h-20 rounded-full flex items-center justify-center text-3xl font-bold text-primary bg-primary-subtle">
+              <div className="w-20 h-20 rounded-full flex items-center justify-center text-3xl font-bold text-on-primary bg-primary-subtle">
                 {selectedMember.name.charAt(0)}
               </div>
               <div>
                 <h2 className="text-xl font-bold text-primary">{selectedMember.name}</h2>
-                <p className="text-secondary text-sm">{selectedMember.email} · {maskSensitiveData(selectedMember.phone, 'phone')}</p>
+                <p className="text-secondary text-sm">{selectedMember.email} Â· {maskSensitiveData(selectedMember.phone, 'phone')}</p>
                 <div className="flex gap-2 mt-2 flex-wrap">
                   <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${statusStyle.bg} ${statusStyle.text}`}>
                     {selectedMember.status}
@@ -60,15 +60,15 @@ export default function TrainerMembersProfile() {
               </div>
             </div>
             <div className="flex gap-2 flex-wrap">
-              <button
+              <button type="button"
                 onClick={() => openMsg({ name: selectedMember.name, email: selectedMember.email, phone: selectedMember.phone }, 'whatsapp', '')}
-                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold bg-success text-white rounded-xl hover:opacity-90 motion-safe:transition-all motion-safe:duration-200 motion-safe:active:scale-95"
+                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold bg-success text-on-success rounded-xl hover:opacity-90 motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95"
               >
                 <MessageCircle size={14} /> WhatsApp
               </button>
-              <button
+              <button type="button"
                 onClick={() => openMsg({ name: selectedMember.name, email: selectedMember.email, phone: selectedMember.phone }, 'email', '')}
-                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold bg-info text-white rounded-xl hover:opacity-90 motion-safe:transition-all motion-safe:duration-200 motion-safe:active:scale-95"
+                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold bg-info text-on-info rounded-xl hover:opacity-90 motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95"
               >
                 <Mail size={14} /> Email
               </button>
@@ -80,8 +80,8 @@ export default function TrainerMembersProfile() {
               { label: 'Member ID', value: selectedMember.membershipNumber ?? selectedMember.id },
               { label: 'Age', value: displayValue(selectedMember.age, '0') + ' yrs' },
               { label: 'Gender', value: displayValue(selectedMember.gender) },
-              { label: 'Height', value: selectedMember.heightCm == null ? '—' : `${displayValue(selectedMember.heightCm)} cm` },
-              { label: 'Weight', value: selectedMember.weightKg == null ? '—' : `${displayValue(selectedMember.weightKg)} kg` },
+              { label: 'Height', value: selectedMember.heightCm == null ? 'â€”' : `${displayValue(selectedMember.heightCm)} cm` },
+              { label: 'Weight', value: selectedMember.weightKg == null ? 'â€”' : `${displayValue(selectedMember.weightKg)} kg` },
               { label: 'Join Date', value: displayValue(selectedMember.joinDate) },
               { label: 'Expiry Date', value: displayValue(selectedMember.expiryDate) },
               { label: 'Fitness Goal', value: displayValue(selectedMember.fitnessGoal) },
@@ -96,15 +96,15 @@ export default function TrainerMembersProfile() {
         </div>
 
         {/* Sub Tabs */}
-        <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
+        <div className="bg-card rounded-xl shadow-card border border-border overflow-hidden">
           <div className="flex border-b border-border overflow-x-auto custom-scrollbar">
             {PROFILE_TABS.map(({ id: t, label }) => (
-              <button
+              <button type="button"
                 key={t}
                 onClick={() => { setProfileTab(t as TrainerProfileTab); }}
-                className={`whitespace-nowrap px-5 py-3.5 text-sm font-medium motion-safe:transition-all motion-safe:duration-200 border-b-2 ${
+                className={`whitespace-nowrap px-5 py-3.5 text-sm font-medium motion-safe:transition-all motion-safe:duration-base border-b-2 ${
                   profileTab === t
-                    ? 'text-primary bg-primary-subtle border-primary'
+                    ? 'text-on-primary bg-primary-subtle border-primary'
                     : 'border-transparent text-secondary hover:text-primary'
                 }`}
               >
@@ -128,4 +128,5 @@ export default function TrainerMembersProfile() {
     </div>
   );
 }
+
 

@@ -4,12 +4,9 @@
 
 import type { ProgressEntry, ProgressChartMetric } from '@/app/trainer/progress-tracking/progress_types/TrainerProgressTypes';
 import { PROGRESS_CHART_METRICS } from '@/app/trainer/progress-tracking/progress_utils/TrainerProgressSharedConstants';
+import type { TrainerProgressChartProps } from '@/app/trainer/progress-tracking/progress-tracking_types/TrainerProgressChartProps';
 
-interface TrainerProgressChartProps {
-  entries: ProgressEntry[];
-  activeMetric: ProgressChartMetric;
-  onMetricChange: (m: ProgressChartMetric) => void;
-}
+
 
 const METRIC_KEY: Record<ProgressChartMetric, keyof ProgressEntry> = {
   weight: 'weightKg',
@@ -41,13 +38,13 @@ export default function TrainerProgressChart({ entries, activeMetric, onMetricCh
       {/* Metric tabs */}
       <div className="flex flex-wrap gap-2">
         {PROGRESS_CHART_METRICS.map((m) => (
-          <button
+          <button type="button"
             key={m.value}
             onClick={() => onMetricChange(m.value)}
             className={`px-3 py-1 text-xs font-semibold rounded-full motion-safe:transition-colors ${
               activeMetric === m.value
-                ? 'bg-primary text-white'
-                : 'bg-input text-secondary hover:text-foreground'
+                ? 'bg-primary text-on-primary'
+                : 'bg-input text-secondary hover:text-primary'
             }`}
           >
             {m.label}
@@ -65,7 +62,7 @@ export default function TrainerProgressChart({ entries, activeMetric, onMetricCh
               stroke="var(--color-primary)"
               strokeWidth="2"
               points={points}
-              className="motion-safe:transition-all"
+              className="motion-safe:transition-all motion-safe:duration-base"
             />
             {values.map((v, i) => (
               <g key={entries[i]!.id}>

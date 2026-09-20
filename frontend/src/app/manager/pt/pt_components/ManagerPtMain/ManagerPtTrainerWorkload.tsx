@@ -18,7 +18,7 @@ export default function ManagerPtTrainerWorkload({ workload }: ManagerPtTrainerW
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="bg-primary/5 border-b border-border">
+            <tr className="bg-primary-subtle border-b border-border">
               <th className="py-3 px-4 text-xs font-semibold text-secondary uppercase tracking-wider">Trainer</th>
               <th className="py-3 px-4 text-xs font-semibold text-secondary uppercase tracking-wider">Clients</th>
               <th className="py-3 px-4 text-xs font-semibold text-secondary uppercase tracking-wider">Rating</th>
@@ -58,8 +58,8 @@ export default function ManagerPtTrainerWorkload({ workload }: ManagerPtTrainerW
                   <td className="py-3 px-4 text-right">
                     <span className={`text-xs font-bold px-2 py-1 rounded-full uppercase tracking-wider ${
                       trainer.status === 'Fully Booked' 
-                        ? 'bg-danger/10 text-danger' 
-                        : 'bg-success/10 text-success'
+                        ? 'bg-danger-bg text-danger' 
+                        : 'bg-success-bg text-success'
                     }`}>
                       {trainer.status}
                     </span>

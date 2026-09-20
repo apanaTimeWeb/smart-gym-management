@@ -111,7 +111,7 @@ export default function ManagerConvertLeadForm({
       )}
 
       {watchPlanId && (
-        <div className="sm:col-span-2 bg-warning rounded-xl p-3 text-sm border border-warning/30 flex justify-between items-center">
+        <div className="sm:col-span-2 bg-warning-bg rounded-xl p-3 text-sm border border-warning/30 flex justify-between items-center">
           <div>
             <span className="font-semibold text-warning">Calculated Price:</span>
             <span className="text-warning ml-1 font-bold">

@@ -80,7 +80,7 @@ export default function SuperadminBroadcastQueueModal({ isOpen, onClose, recipie
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-overlay/80 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="superadmin-broadcast-queue-title">
       <div className="bg-overlay rounded-xl shadow-dialog w-full max-w-lg border border-border flex flex-col overflow-hidden">
-        <div className="px-6 py-4 bg-primary flex items-center justify-between">
+        <div className="px-6 py-4 bg-primary-subtle flex items-center justify-between">
           <div className="min-w-0">
             <h2 id="superadmin-broadcast-queue-title" className="truncate text-on-primary font-bold text-lg">Automated Broadcast</h2>
             <p className="text-on-primary/80 text-xs">Processing delivery for {recipients.length} selected tenants.</p>

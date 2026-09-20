@@ -18,7 +18,7 @@ export default function ManagerScheduleTrainerCard({ trainer }: ManagerScheduleT
           <p className="text-sm font-semibold text-primary">{trainer.trainerName}</p>
           <p className="text-xs text-secondary">{trainer.trainerRole}</p>
         </div>
-        <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${trainer.isActive ? 'bg-success/10 text-success' : 'bg-border/40 text-secondary'}`}>
+        <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${trainer.isActive ? 'bg-success-bg text-success' : 'bg-border/40 text-secondary'}`}>
           {trainer.isActive ? 'Active' : 'Inactive'}
         </span>
       </div>

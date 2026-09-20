@@ -5,17 +5,9 @@ import TrainerPagination from '@/app/trainer/trainer_components/TrainerShared/Tr
 import { TRAINER_ITEMS_PER_PAGE } from '@/app/trainer/trainer_utils/TrainerSharedConstants';
 import type { DietPlan } from '@/app/trainer/library/library_types/TrainerLibrary_types';
 import TrainerLibraryEmptyState from '@/app/trainer/library/library_components/TrainerLibraryEmptyState/TrainerLibraryEmptyState';
+import type { TrainerLibraryDietGridProps } from '@/app/trainer/library/library_types/TrainerLibraryDietGridProps';
 
-export interface TrainerLibraryDietGridProps {
-  dietPlans: DietPlan[];
-  totalDietPlans: number;
-  currentPage: number;
-  isPending: boolean;
-  isError: boolean;
-  search: string;
-  onPageChange: (page: number) => void;
-  onViewDiet: (plan: DietPlan) => void;
-}
+
 
 export default function TrainerLibraryDietGrid({
   dietPlans,
@@ -55,15 +47,15 @@ export default function TrainerLibraryDietGrid({
             key={plan.id}
             onClick={() => onViewDiet(plan)}
             title={plan.name}
-            className="text-left rounded-xl border border-border bg-card p-5 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-safe:transition-shadow flex flex-col"
+            className="text-left rounded-xl border border-border bg-card p-5 hover:shadow-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-safe:transition-shadow flex flex-col"
           >
             <div className="flex justify-between items-start mb-3">
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-success/10 text-success shrink-0">
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-success-bg text-success shrink-0">
                 <Apple size={18} />
               </div>
               <span className="p-1.5 rounded text-secondary" title="View diet plan" aria-hidden="true"><Eye size={18} /></span>
             </div>
-            <h4 className="font-bold text-foreground truncate mb-1">{plan.name}</h4>
+            <h4 className="font-bold text-primary truncate mb-1">{plan.name}</h4>
             <p className="text-xs text-secondary mb-3 truncate">{plan.goal}</p>
             <div className="mt-auto pt-3 border-t border-border space-y-1">
               {plan.calories ? <div className="flex items-center gap-2 text-xs text-secondary"><Flame size={18} className="text-warning" /><span>{plan.calories} kcal/day</span></div> : null}

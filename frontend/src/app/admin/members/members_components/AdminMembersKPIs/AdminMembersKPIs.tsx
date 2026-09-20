@@ -18,7 +18,7 @@ export default function AdminMembersKPIs() {
       sub: `+${summary.newThisMonth} this month`,
       subColor: 'text-success',
       icon: Users,
-      iconBg: 'bg-info',
+      iconBg: 'bg-info-bg',
       iconColor: 'text-info',
     },
     {
@@ -27,7 +27,7 @@ export default function AdminMembersKPIs() {
       sub: `${Math.round((summary.activeMembers / summary.totalMembers) * 100)}% of total`,
       subColor: 'text-secondary',
       icon: UserCheck,
-      iconBg: 'bg-success',
+      iconBg: 'bg-success-bg',
       iconColor: 'text-success',
     },
     {
@@ -36,7 +36,7 @@ export default function AdminMembersKPIs() {
       sub: `${summary.expiringThisWeek} expiring this week`,
       subColor: 'text-warning',
       icon: Clock,
-      iconBg: 'bg-warning',
+      iconBg: 'bg-warning-bg',
       iconColor: 'text-warning',
     },
     {
@@ -45,7 +45,7 @@ export default function AdminMembersKPIs() {
       sub: `${summary.pendingMembers} members with dues`,
       subColor: 'text-danger',
       icon: IndianRupee,
-      iconBg: 'bg-danger',
+      iconBg: 'bg-danger-bg',
       iconColor: 'text-danger',
     },
   ];

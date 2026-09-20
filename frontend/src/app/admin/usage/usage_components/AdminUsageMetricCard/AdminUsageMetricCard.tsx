@@ -14,7 +14,7 @@ export default function AdminUsageMetricCard({ metric, onUpgrade }: AdminUsageMe
   const isWarning = usageRatio >= metric.warningThreshold && !isCritical;
   const showUpgradeCta = usageRatio >= metric.warningThreshold;
 
-  const barColor = isCritical ? 'bg-danger' : isWarning ? 'bg-warning' : 'bg-success';
+  const barColor = isCritical ? 'bg-danger-bg' : isWarning ? 'bg-warning-bg' : 'bg-success-bg';
   const textColor = isCritical ? 'text-danger' : isWarning ? 'text-warning' : 'text-success';
   const borderColor = isCritical ? 'border-border' : isWarning ? 'border-warning' : 'border-border';
 
@@ -35,10 +35,10 @@ export default function AdminUsageMetricCard({ metric, onUpgrade }: AdminUsageMe
           {metric.used.toLocaleString('en-IN')} / {metric.limit.toLocaleString('en-IN')} {metric.unit}
         </span>
         {isCritical && (
-          <span className="text-xs font-bold text-danger bg-danger px-2 py-0.5 rounded-full">At Limit</span>
+          <span className="text-xs font-bold text-on-danger bg-danger px-2 py-0.5 rounded-full">At Limit</span>
         )}
         {isWarning && !isCritical && (
-          <span className="text-xs font-bold text-warning bg-warning px-2 py-0.5 rounded-full">Near Limit</span>
+          <span className="text-xs font-bold text-on-primary bg-warning px-2 py-0.5 rounded-full">Near Limit</span>
         )}
       </div>
       {showUpgradeCta && (

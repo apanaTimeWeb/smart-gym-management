@@ -52,7 +52,7 @@ export default function ManagerAddPaymentModal() {
         
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {(selectedMember.pendingAmount > 0 || (selectedMember.advanceAmount && selectedMember.advanceAmount > 0)) && (
-            <div className={`p-3 rounded-lg border mb-4 ${selectedMember.pendingAmount > 0 ? 'bg-danger border-border/20' : 'bg-success border-success/20'}`}>
+            <div className={`p-3 rounded-lg border mb-4 ${selectedMember.pendingAmount > 0 ? 'bg-danger-bg border-border/20' : 'bg-success-bg border-success/20'}`}>
               <p className={`text-sm font-semibold ${selectedMember.pendingAmount > 0 ? 'text-danger' : 'text-success'}`}>
                 {selectedMember.pendingAmount > 0 
                   ? `Current Dues: ${formatCurrencyFromMinorUnits(selectedMember.pendingAmount, ManagerEnvConfig.currencyCode)}` 
@@ -99,7 +99,7 @@ export default function ManagerAddPaymentModal() {
             <button
               type="submit"
               disabled={isSubmitting || !amount}
-              className="min-w-32 flex-1 px-4 py-2.5 text-sm font-semibold text-on-primary bg-primary hover:bg-primary/90 rounded-xl motion-safe:transition-colors disabled:opacity-50"
+              className="min-w-32 flex-1 px-4 py-2.5 text-sm font-semibold text-white bg-primary-subtle hover:bg-primary/90 rounded-xl motion-safe:transition-colors disabled:opacity-50"
             >
               {isSubmitting ? 'Recording...' : 'Confirm Payment'}
             </button>

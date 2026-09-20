@@ -21,21 +21,21 @@ export default function AdminPlansRevenueKPIs({ aggregates }: { aggregates: Reve
       value: aggregates.totalSubscriptions.toLocaleString('en-IN'),
       icon: Users,
       iconColor: 'text-success',
-      iconBg: 'bg-success',
+      iconBg: 'bg-success-bg',
     },
     {
       label: 'Avg Renewal Rate' + dateSuffix,
       value: `${formatPercent1dp(aggregates.avgRenewalRate)}%`,
       icon: TrendingUp,
       iconColor: 'text-info',
-      iconBg: 'bg-info',
+      iconBg: 'bg-info-bg',
     },
     {
       label: 'Top Performing Plan' + dateSuffix,
       value: aggregates.topPerformingPlanName,
       icon: Award,
       iconColor: 'text-warning',
-      iconBg: 'bg-warning',
+      iconBg: 'bg-warning-bg',
     },
   ];
 

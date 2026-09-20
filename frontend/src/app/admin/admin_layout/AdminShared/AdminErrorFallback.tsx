@@ -22,7 +22,7 @@ export default function AdminErrorFallback({ error, reset, moduleName }: AdminEr
   if (is403(error)) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen gap-5 p-6 text-center">
-        <div className="w-16 h-16 rounded-full bg-warning flex items-center justify-center">
+        <div className="w-16 h-16 rounded-full bg-warning-bg flex items-center justify-center">
           <ShieldOff size={32} className="text-warning" />
         </div>
         <div className="space-y-1">

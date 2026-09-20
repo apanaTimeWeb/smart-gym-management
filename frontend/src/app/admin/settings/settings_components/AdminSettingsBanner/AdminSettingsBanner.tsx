@@ -6,7 +6,7 @@ import { GYM_DETAILS } from '@/app/admin/admin_url_config';
 
 export default function AdminSettingsBanner() {
   return (
-    <div className="rounded-xl p-6 text-primary mt-6 shadow-card bg-primary">
+    <div className="rounded-xl p-6 text-on-primary mt-6 shadow-card bg-primary">
       <h3 className="text-xl font-bold mb-2">Ready to take your Gym to the next level?</h3>
       <p className="text-primary mb-4">Get a FREE demo and see how GymSmart can transform your business</p>
       

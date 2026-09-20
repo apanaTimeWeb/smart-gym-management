@@ -28,7 +28,7 @@ export default function AdminHrDueTable() {
     <div className="max-w-4xl mx-auto space-y-6">
       
       {staffWithDues.length > 0 && (
-        <div className="bg-warning border border-warning rounded-xl p-4 flex gap-3 items-start">
+        <div className="bg-warning-bg border border-warning rounded-xl p-4 flex gap-3 items-start">
           <AlertCircle className="text-warning mt-0.5" size={20} />
           <div>
             <h4 className="font-semibold text-warning text-sm">Outstanding Dues</h4>

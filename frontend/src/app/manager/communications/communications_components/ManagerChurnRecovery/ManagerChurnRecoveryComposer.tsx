@@ -119,7 +119,7 @@ export default function ManagerChurnRecoveryComposer({
                   onClick={() => handleTierChange(opt.value)}
                   className={`px-3 py-1.5 rounded-lg text-xs font-medium border motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
                     tier === opt.value
-                      ? 'bg-primary text-on-primary border-primary'
+                      ? 'bg-primary-subtle text-white border-primary'
                       : 'bg-input border-border text-secondary hover:text-primary'
                   }`}
                 >
@@ -138,7 +138,7 @@ export default function ManagerChurnRecoveryComposer({
                 onClick={() => setChannel('whatsapp')}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium border motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
                   channel === 'whatsapp'
-                    ? 'bg-success border-success text-success'
+                    ? 'bg-success border-success text-on-success'
                     : 'bg-input border-border text-secondary hover:text-primary'
                 }`}
               >
@@ -150,7 +150,7 @@ export default function ManagerChurnRecoveryComposer({
                 onClick={() => setChannel('email')}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium border motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
                   channel === 'email'
-                    ? 'bg-info border-info text-info'
+                    ? 'bg-info border-info text-on-info'
                     : 'bg-input border-border text-secondary hover:text-primary'
                 }`}
               >
@@ -200,7 +200,7 @@ export default function ManagerChurnRecoveryComposer({
 
           {/* WhatsApp notice */}
           {channel === 'whatsapp' && (
-            <div className="rounded-lg bg-warning border border-warning/30 px-4 py-3 text-xs text-warning leading-relaxed">
+            <div className="rounded-lg bg-warning border border-warning/30 px-4 py-3 text-xs text-on-primary leading-relaxed">
               ⚠️ <strong>WhatsApp cannot be sent in bulk.</strong> Clicking &quot;Send&quot; below will open WhatsApp with the pre-filled message. Send it manually to this recipient.
             </div>
           )}
@@ -219,7 +219,7 @@ export default function ManagerChurnRecoveryComposer({
             type="button"
             onClick={handleSend}
             disabled={!canSend || isSending || !member}
-            className="flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-medium bg-primary text-on-primary disabled:opacity-50 disabled:cursor-not-allowed motion-safe:transition-all motion-safe:hover:bg-primary-hover motion-safe:active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            className="flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-medium bg-primary-subtle text-white disabled:opacity-50 disabled:cursor-not-allowed motion-safe:transition-all motion-safe:hover:bg-primary-hover motion-safe:active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
             {isSending ? (
               <Loader2 size={18} className="motion-safe:animate-spin" />

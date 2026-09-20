@@ -93,7 +93,7 @@ export default function SuperadminMessagingV1WhatsAppBulkCenter({ data }: Supera
     return (<section className="mt-8 space-y-6">
       <Panel title="Smart Bulk WhatsApp" description="Free guided tenant communication for Superadmin. Use personalized click-to-chat links for owners, admins, and managers without a paid messaging API.">
         <div className="grid gap-4 lg:grid-cols-2">
-          <div className="rounded-2xl border border-primary/20 bg-primary/5 p-5">
+          <div className="rounded-2xl border border-primary/20 bg-primary-subtle p-5">
             <div className="flex items-start gap-3"><span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary text-on-primary"><Rocket size={19} aria-hidden="true"/></span><div><p className="text-sm font-semibold text-primary">Tenant-first bulk communication</p><p className="mt-1 text-sm leading-6 text-secondary">Target gyms by subscription, onboarding, risk, maintenance impact, or contact role. Gym member messaging stays in Admin / Manager.</p></div></div>
           </div>
           <div className="rounded-2xl border border-border bg-input/30 p-5">

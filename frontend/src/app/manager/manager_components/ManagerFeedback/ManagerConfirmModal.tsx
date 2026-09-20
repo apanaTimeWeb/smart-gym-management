@@ -47,10 +47,10 @@ export default function ManagerConfirmModal({
   if (!isOpen) return null;
 
   const tone = type === 'danger'
-    ? { icon: 'bg-danger/10 text-danger', button: 'bg-danger' }
+    ? { icon: 'bg-danger-bg text-danger', button: 'bg-danger-bg' }
     : type === 'warning'
-      ? { icon: 'bg-warning/10 text-warning', button: 'bg-warning' }
-      : { icon: 'bg-info/10 text-info', button: 'bg-info' };
+      ? { icon: 'bg-warning-bg text-warning', button: 'bg-warning-bg' }
+      : { icon: 'bg-info-bg text-info', button: 'bg-info-bg' };
 
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay-backdrop p-4" role="presentation">

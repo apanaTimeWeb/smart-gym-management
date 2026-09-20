@@ -5,10 +5,9 @@ import { useMemo } from 'react';
 import { CheckCircle2, XCircle, Coffee, TrendingUp } from 'lucide-react';
 import { getUser } from '@/lib/api';
 import type { AttendanceRecord } from '@/app/trainer/attendance/attendance_types/TrainerAttendance_types';
+import type { TrainerAttendanceSummaryCardProps } from '@/app/trainer/attendance/attendance_types/TrainerAttendanceSummaryCardProps';
 
-interface TrainerAttendanceSummaryCardProps {
-  records: AttendanceRecord[];
-}
+
 
 export default function TrainerAttendanceSummaryCard({ records }: TrainerAttendanceSummaryCardProps) {
   const user = getUser();
@@ -53,23 +52,23 @@ export default function TrainerAttendanceSummaryCard({ records }: TrainerAttenda
   }, [records, user]);
 
   const stats = [
-    { label: 'Present This Month', value: String(summary.presentDays), unit: 'days', icon: CheckCircle2, color: 'text-success', bg: 'bg-success/10' },
-    { label: 'Absent This Month', value: String(summary.absentDays), unit: 'days', icon: XCircle, color: 'text-danger', bg: 'bg-danger/10' },
-    { label: 'Weekly Off / Rest', value: String(summary.weeklyOffDays), unit: 'days', icon: Coffee, color: 'text-warning', bg: 'bg-warning/10' },
+    { label: 'Present This Month', value: String(summary.presentDays), unit: 'days', icon: CheckCircle2, color: 'text-success', bg: 'bg-success-bg' },
+    { label: 'Absent This Month', value: String(summary.absentDays), unit: 'days', icon: XCircle, color: 'text-danger', bg: 'bg-danger-bg' },
+    { label: 'Weekly Off / Rest', value: String(summary.weeklyOffDays), unit: 'days', icon: Coffee, color: 'text-warning', bg: 'bg-warning-bg' },
     {
       label: 'Attendance Rate',
       value: `${summary.attendancePct}%`,
       unit: '',
       icon: TrendingUp,
       color: summary.attendancePct >= 85 ? 'text-success' : 'text-danger',
-      bg: summary.attendancePct >= 85 ? 'bg-success/10' : 'bg-danger/10',
+      bg: summary.attendancePct >= 85 ? 'bg-success-bg' : 'bg-danger-bg',
     },
   ];
 
   return (
     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
       {stats.map(s => (
-        <div key={s.label} className="bg-card rounded-xl p-4 shadow-sm border border-border flex items-center gap-3">
+        <div key={s.label} className="bg-card rounded-xl p-4 shadow-card border border-border flex items-center gap-3">
           <div className={`w-10 h-10 rounded-xl ${s.bg} flex items-center justify-center shrink-0`}>
             <s.icon size={19} className={s.color} />
           </div>

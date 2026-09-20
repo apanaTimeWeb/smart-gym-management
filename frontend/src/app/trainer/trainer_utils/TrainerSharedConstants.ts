@@ -1,7 +1,7 @@
-// RESPONSIBILITY: Centralized constants shared across all TRAINER modules — nav items, gym identity (name/phone), and pagination page size.
+﻿// RESPONSIBILITY: Centralized constants shared across all TRAINER modules â€” nav items, gym identity (name/phone), and pagination page size.
 // DATA FLOW: Imported directly by TrainerSidebar, TrainerHeader, and module-level utils.
 import { env } from '@/config/env';
-import { TrainerPageUrlConfig } from '@/app/trainer/Trainer_url_config';
+import { TrainerPageUrlConfig } from '@/app/trainer/trainer_url_config';
 import {
   LayoutDashboard, Users, Utensils, Dumbbell, CalendarCheck, Clock, Bell, User, IndianRupee, Calendar
 } from 'lucide-react';
@@ -52,13 +52,3 @@ export const GYM_DETAILS = {
 
 
 export const TRAINER_ITEMS_PER_PAGE = 10;
-
-
-export const TRAINER_DATE_RANGE_OPTIONS = [
-  { label: 'This Month', value: 'this_month' },
-  { label: 'Last Month', value: 'last_month' },
-  { label: 'Last 3 Months', value: 'last_3_months' },
-  { label: 'Last 6 Months', value: 'last_6_months' },
-  { label: 'This Year', value: 'this_year' },
-  { label: 'Custom', value: 'custom' },
-] as const;

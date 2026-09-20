@@ -26,7 +26,7 @@ export default function AdminAttendanceKPIs() {
       sub: `${Math.round((summary.todayPresent / summary.todayTotal) * 100)}% attendance rate`,
       subColor: 'text-success',
       icon: UserCheck,
-      iconBg: 'bg-success',
+      iconBg: 'bg-success-bg',
       iconColor: 'text-success',
     },
     {
@@ -35,7 +35,7 @@ export default function AdminAttendanceKPIs() {
       sub: `${Math.round((summary.todayLate / summary.todayTotal) * 100)}% of today's check-ins`,
       subColor: 'text-warning',
       icon: Clock,
-      iconBg: 'bg-warning',
+      iconBg: 'bg-warning-bg',
       iconColor: 'text-warning',
     },
     {
@@ -44,7 +44,7 @@ export default function AdminAttendanceKPIs() {
       sub: `${trendPositive ? '↑' : '↓'} ${Math.abs(summary.trendVsLastWeek)}% vs last week`,
       subColor: trendPositive ? 'text-success' : 'text-danger',
       icon: TrendingUp,
-      iconBg: 'bg-info',
+      iconBg: 'bg-info-bg',
       iconColor: 'text-info',
     },
   ];

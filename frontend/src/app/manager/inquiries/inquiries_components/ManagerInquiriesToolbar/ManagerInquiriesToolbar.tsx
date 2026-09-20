@@ -30,7 +30,7 @@ export default function ManagerInquiriesToolbar() {
 
   if (selectedIds.length > 0) {
     return (
-      <div className="bg-primary/10 border border-primary/30 rounded-xl p-4 flex flex-wrap gap-3 items-center justify-between motion-safe:transition-all">
+      <div className="bg-primary-subtle border border-primary/30 rounded-xl p-4 flex flex-wrap gap-3 items-center justify-between motion-safe:transition-all">
         <div className="flex flex-wrap items-center gap-4">
           <span className="font-semibold text-primary">
             {selectedIds.length} {selectedIds.length === 1 ? 'inquiry' : 'inquiries'} selected
@@ -42,13 +42,13 @@ export default function ManagerInquiriesToolbar() {
         <div className="flex flex-col sm:flex-row gap-2">
           <button
             onClick={() => openBulkMsg('whatsapp')}
-            className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-on-primary rounded-xl bg-success hover:opacity-90 motion-safe:transition-opacity"
+            className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-on-success rounded-xl bg-success hover:opacity-90 motion-safe:transition-opacity"
           >
             <MessageCircle size={18} /> Bulk WhatsApp
           </button>
           <button
             onClick={() => openBulkMsg('email')}
-            className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-on-primary rounded-xl bg-info hover:opacity-90 motion-safe:transition-opacity"
+            className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-on-info rounded-xl bg-info hover:opacity-90 motion-safe:transition-opacity"
           >
             <Mail size={18} /> Bulk Email
           </button>

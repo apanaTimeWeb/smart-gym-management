@@ -10,9 +10,9 @@ export default function AdminBlacklistKPIs() {
   if (!kpis) return null;
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-      <AdminStatCard title="Total Blacklisted" value={kpis.totalBlacklisted} icon={Ban} iconBg="bg-danger" iconColor="text-danger" />
-      <AdminStatCard title="Global Bans" value={kpis.globalBans} change="across all gyms" changeType="neutral" icon={Globe} iconBg="bg-danger" iconColor="text-danger" />
-      <AdminStatCard title="Gym-Specific Bans" value={kpis.gymSpecificBans} change="targeted branches" changeType="neutral" icon={Building2} iconBg="bg-warning" iconColor="text-warning" />
+      <AdminStatCard title="Total Blacklisted" value={kpis.totalBlacklisted} icon={Ban} iconBg="bg-danger-bg" iconColor="text-danger" />
+      <AdminStatCard title="Global Bans" value={kpis.globalBans} change="across all gyms" changeType="neutral" icon={Globe} iconBg="bg-danger-bg" iconColor="text-danger" />
+      <AdminStatCard title="Gym-Specific Bans" value={kpis.gymSpecificBans} change="targeted branches" changeType="neutral" icon={Building2} iconBg="bg-warning-bg" iconColor="text-warning" />
       <AdminStatCard title="Added This Month" value={kpis.addedThisMonth} icon={CalendarPlus} iconBg="bg-primary-subtle" iconColor="text-primary" />
     </div>
   );

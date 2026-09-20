@@ -28,7 +28,7 @@ export default function AdminPermissionsGymOverride() {
       <div className="px-5 py-4 border-b border-border flex items-center gap-2">
         <Building2 size={16} className="text-primary" />
         <h3 className="text-sm font-semibold text-primary">Gym-Specific Overrides</h3>
-        <span className="ml-auto text-xs bg-warning text-warning px-2 py-0.5 rounded-full border border-border">{overrides.length} active</span>
+        <span className="ml-auto text-xs bg-warning text-on-primary px-2 py-0.5 rounded-full border border-border">{overrides.length} active</span>
       </div>
       <div className="divide-y divide-border">
         {overrides.map((override, i: number) => {

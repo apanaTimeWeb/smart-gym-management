@@ -12,7 +12,7 @@ export default function SuperadminBroadcastsTable({ broadcasts, onSend, onEdit, 
       <div className="overflow-x-auto flex-1">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="bg-primary/5 border-b border-border">
+            <tr className="bg-primary-subtle border-b border-border">
               <th className="px-6 py-4 text-xs font-semibold text-secondary uppercase tracking-wider">Title</th>
               <th className="px-6 py-4 text-xs font-semibold text-secondary uppercase tracking-wider">Audience</th>
               <th className="px-6 py-4 text-xs font-semibold text-secondary uppercase tracking-wider">Status</th>
@@ -24,7 +24,7 @@ export default function SuperadminBroadcastsTable({ broadcasts, onSend, onEdit, 
           <tbody className="divide-y divide-border">
             {broadcasts.length === 0 ? (<tr>
                 <td colSpan={6}><SuperadminBroadcastsEmptyState onCreateClick={onCreateClick}/></td>
-              </tr>) : (broadcasts.map((bc) => (<tr key={bc.id} tabIndex={0} aria-label={`Open broadcast ${bc.title}`} className="hover:bg-primary/5 focus-visible:bg-surface-hover focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out group cursor-pointer" onClick={() => onEdit(bc)} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); onEdit(bc); } }}>
+              </tr>) : (broadcasts.map((bc) => (<tr key={bc.id} tabIndex={0} aria-label={`Open broadcast ${bc.title}`} className="hover:bg-primary-subtle focus-visible:bg-surface-hover focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out group cursor-pointer" onClick={() => onEdit(bc)} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); onEdit(bc); } }}>
                   <td className="px-6 py-4">
                     <div className="flex flex-col">
                       <span className="text-sm font-medium text-primary">{bc.title}</span>
@@ -73,7 +73,7 @@ export default function SuperadminBroadcastsTable({ broadcasts, onSend, onEdit, 
                 if (ok) {
                     onDelete(bc.id);
                 }
-            }} className="p-1.5 text-secondary hover:text-danger hover:bg-danger-bg/10 rounded-lg motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out" title="Delete Broadcast" aria-label={`Delete broadcast: ${bc.title}`}>
+            }} className="p-1.5 text-secondary hover:text-danger hover:bg-danger-bg rounded-lg motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out" title="Delete Broadcast" aria-label={`Delete broadcast: ${bc.title}`}>
                       <Trash2 size={18} strokeWidth={2}/>
                     </button>
                   </div>

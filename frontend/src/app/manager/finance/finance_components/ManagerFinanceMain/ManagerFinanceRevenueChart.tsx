@@ -13,9 +13,9 @@ import { ManagerFinanceMethodBreakdown } from '@/app/manager/finance/finance_com
 
 
 const METHOD_STYLES: Record<string, { bg: string; text: string }> = {
-  UPI:        { bg: 'bg-primary/10',   text: 'text-primary'   },
-  Cash:       { bg: 'bg-success/10',   text: 'text-success'   },
-  Card:       { bg: 'bg-warning/10',   text: 'text-warning'   },
+  UPI:        { bg: "bg-primary-subtle",   text: 'text-primary'   },
+  Cash:       { bg: "bg-success-bg",   text: 'text-success'   },
+  Card:       { bg: "bg-warning-bg",   text: 'text-warning'   },
   NetBanking: { bg: 'bg-secondary/10', text: 'text-secondary' } };
 
 export default function ManagerFinanceRevenueChart() {

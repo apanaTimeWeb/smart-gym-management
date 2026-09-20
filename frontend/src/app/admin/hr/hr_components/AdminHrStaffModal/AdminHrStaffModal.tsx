@@ -224,7 +224,7 @@ export default function AdminHrStaffModal() {
     </div>
     <label className="relative inline-flex items-center cursor-pointer">
       <input type="checkbox" {...register('isActive')} className="sr-only peer" />
-      <div className="w-11 h-6 bg-input peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-border after:content-none after:absolute after:top-0 after:left-0 after:bg-card after:border-border after:border after:rounded-full after:h-5 after:w-5 motion-safe:after:transition-all peer-checked:bg-success"></div>
+      <div className="w-11 h-6 bg-input peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-border after:content-none after:absolute after:top-0 after:left-0 after:bg-card after:border-border after:border after:rounded-full after:h-5 after:w-5 motion-safe:after:transition-all peer-checked:bg-success-bg"></div>
     </label>
   </div>
 
@@ -240,7 +240,7 @@ export default function AdminHrStaffModal() {
   <button 
   type="submit" 
   disabled={saving} 
-  className="px-8 py-2.5 rounded-xl text-sm font-bold text-primary flex items-center justify-center gap-2 disabled:opacity-70 motion-safe:transition-all hover:shadow-dialog motion-safe:active:scale-95 bg-primary motion-safe:duration-base" 
+  className="px-8 py-2.5 rounded-xl text-sm font-bold text-on-primary flex items-center justify-center gap-2 disabled:opacity-70 motion-safe:transition-all hover:shadow-dialog motion-safe:active:scale-95 bg-primary motion-safe:duration-base" 
   >
   {saving ? <div className="w-4 h-4 border-2 border-border border-t-white rounded-full motion-safe:animate-spin motion-safe:duration-base" /> : <><Save size={16} />{editId ? 'Update' : 'Add Staff'}</>}
   </button>

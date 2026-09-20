@@ -3,19 +3,14 @@
 import { RefreshCw, Search } from 'lucide-react';
 import { GOALS } from '@/app/trainer/library/library_utils/TrainerLibrarySharedConstants';
 import type { TrainerLibraryFilterGoal } from '@/app/trainer/library/library_types/TrainerLibrary_types';
+import type { TrainerLibraryTabsProps } from '@/app/trainer/library/library_types/TrainerLibraryTabsProps';
 
-export interface TrainerLibraryTabsProps {
-  search: string;
-  setSearch: (value: string) => void;
-  filterGoal: string | TrainerLibraryFilterGoal;
-  setFilterGoal: (value: string) => void;
-  onRefresh: () => Promise<void>;
-}
+
 
 export default function TrainerLibraryTabs({ search, setSearch, filterGoal, setFilterGoal, onRefresh }: TrainerLibraryTabsProps) {
   return (
     <div className="border-b border-border flex flex-wrap gap-4 justify-between items-center bg-card p-2 sm:p-0">
-      <h2 className="px-5 py-3.5 text-lg font-bold text-foreground whitespace-nowrap">Diet Plans</h2>
+      <h2 className="px-5 py-3.5 text-lg font-bold text-primary whitespace-nowrap">Diet Plans</h2>
       <div className="px-4 flex flex-wrap gap-3 items-center">
         <div className="relative">
           <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary" />
@@ -24,14 +19,14 @@ export default function TrainerLibraryTabs({ search, setSearch, filterGoal, setF
             onChange={(event) => setSearch(event.target.value)}
             placeholder="Search diet plans..."
             aria-label="Search diet plans"
-            className="pl-9 pr-3 py-2 border border-border rounded-lg text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary w-40 sm:w-64 bg-input text-foreground"
+            className="pl-9 pr-3 py-2 border border-border rounded-lg text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary w-40 sm:w-64 bg-input text-primary"
           />
         </div>
         <select
           value={filterGoal}
-          onChange={(event) => setFilterGoal(event.target.value)}
+          onChange={(event) => setFilterGoal(event.target.value as TrainerLibraryFilterGoal)}
           aria-label="Filter diet plans by goal"
-          className="px-3 py-2 border border-border rounded-lg text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-foreground"
+          className="px-3 py-2 border border-border rounded-lg text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-primary"
         >
           <option value="All">All Goals</option>
           {GOALS.map((goal) => <option key={goal} value={goal}>{goal}</option>)}

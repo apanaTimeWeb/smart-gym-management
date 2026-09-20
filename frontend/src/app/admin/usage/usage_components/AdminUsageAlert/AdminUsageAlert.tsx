@@ -7,7 +7,7 @@ export default function AdminUsageAlert() {
   const { shouldShow, isLimitReached, setIsVisible } = useAdminUsageAlert();
   if (!shouldShow) return null;
 
-  const bgColor = isLimitReached ? 'bg-danger' : 'bg-warning';
+  const bgColor = isLimitReached ? 'bg-danger-bg' : 'bg-warning-bg';
   const textColor = isLimitReached ? 'text-danger' : 'text-warning';
   const borderColor = isLimitReached ? 'border-danger' : 'border-warning';
 

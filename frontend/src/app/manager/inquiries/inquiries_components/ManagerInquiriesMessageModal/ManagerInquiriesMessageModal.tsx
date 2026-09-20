@@ -71,32 +71,32 @@ export default function ManagerInquiriesMessageModal({
 
  >
  <div
- className={`px-6 py-4 flex items-center justify-between ${type === 'whatsapp' ? 'bg-social-whatsapp' : 'bg-info'}`}
+ className={`px-6 py-4 flex items-center justify-between ${type === 'whatsapp' ? 'bg-social-whatsapp' : 'bg-info-bg'}`}
  
  >
  <div className="flex flex-wrap items-center gap-3">
- <div className="w-9 h-9 rounded-full bg-primary/20 flex items-center justify-center">
- <Icon size={18} className="text-on-primary" />
+ <div className="w-9 h-9 rounded-full bg-primary-subtle flex items-center justify-center">
+ <Icon size={18} className="text-white" />
  </div>
  <div>
- <p className="text-on-primary font-bold text-base leading-tight">{label} Message</p>
- <p className="text-on-primary/80 text-xs">Sending to {recipient.name}</p>
+ <p className="text-white font-bold text-base leading-tight">{label} Message</p>
+ <p className="text-white/80 text-xs">Sending to {recipient.name}</p>
  </div>
  </div>
  <button
  aria-label="Close message dialog"
  onClick={handleClose}
  disabled={sending}
- className="min-w-32 w-8 h-8 rounded-full bg-primary/20 hover:bg-primary/30 flex items-center justify-center motion-safe:transition-colors disabled:opacity-50"
+ className="min-w-32 w-8 h-8 rounded-full bg-primary-subtle hover:bg-primary/30 flex items-center justify-center motion-safe:transition-colors disabled:opacity-50"
  >
- <X size={18} className="text-on-primary" />
+ <X size={18} className="text-white" />
  </button>
  </div>
 
  <div className="px-6 pt-4 pb-2">
  <div className="flex items-center gap-3 p-3 bg-input rounded-xl border border-border">
  <div
- className="w-10 h-10 rounded-full flex items-center justify-center text-on-primary font-bold text-sm flex-shrink-0 bg-primary"
+ className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0 bg-primary-subtle"
  >
  {recipient.name.charAt(0)}
  </div>
@@ -157,7 +157,7 @@ export default function ManagerInquiriesMessageModal({
  <button
  onClick={handleSend}
  disabled={sending || sent || !message.trim()}
- className={`min-w-32 flex-1 px-4 py-2.5 text-sm font-semibold text-on-primary rounded-xl flex items-center justify-center gap-2 motion-safe:transition-all disabled:opacity-50 ${sent ? 'bg-success' : type === 'whatsapp' ? 'bg-social-whatsapp' : 'bg-info'}`}
+ className={`min-w-32 flex-1 px-4 py-2.5 text-sm font-semibold text-on-success rounded-xl flex items-center justify-center gap-2 motion-safe:transition-all disabled:opacity-50 ${sent ? 'bg-success' : type === 'whatsapp' ? 'bg-social-whatsapp' : 'bg-info-bg'}`}
  
  >
  {sent ? (

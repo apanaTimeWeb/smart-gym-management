@@ -30,16 +30,16 @@ export default function AdminReportsMembership() {
                   <td className="px-5 py-4 text-sm font-semibold text-primary">{row.gymName}</td>
                   <td className="px-5 py-4 text-sm text-primary">{row.activeMembers.toLocaleString('en-IN')}</td>
                   <td className="px-5 py-4">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-success text-success">+{row.newMembers}</span>
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-success text-on-success">+{row.newMembers}</span>
                   </td>
                   <td className="px-5 py-4">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-info text-info">{row.renewals}</span>
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-info text-on-info">{row.renewals}</span>
                   </td>
                   <td className="px-5 py-4">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-danger text-danger">-{row.exits}</span>
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-danger text-on-danger">-{row.exits}</span>
                   </td>
                   <td className="px-5 py-4">
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold ${row.netGrowth >= 0 ? 'bg-success text-success' : 'bg-danger text-danger'}`}>
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold ${row.netGrowth >= 0 ? 'bg-success text-on-success' : 'bg-danger text-on-danger'}`}>
                       {row.netGrowth >= 0 ? '+' : ''}{row.netGrowth}
                     </span>
                   </td>

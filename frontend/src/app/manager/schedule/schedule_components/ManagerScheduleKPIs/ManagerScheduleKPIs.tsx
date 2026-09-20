@@ -32,21 +32,21 @@ export default function ManagerScheduleKPIs() {
         title={`On Duty Today${dateSuffix}`}
         value={kpis.trainersOnDutyToday}
         icon={UserCheck}
-        iconBg="bg-success/10"
+        iconBg="bg-success-bg"
         iconColor="text-success"
       />
       <ManagerStatCard
         title={`On Leave Today${dateSuffix}`}
         value={kpis.trainersOnLeaveToday}
         icon={UserX}
-        iconBg="bg-warning/10"
+        iconBg="bg-warning-bg"
         iconColor="text-warning"
       />
       <ManagerStatCard
         title={`Shifts This Week${dateSuffix}`}
         value={kpis.totalShiftsThisWeek}
         icon={CalendarDays}
-        iconBg="bg-info/10"
+        iconBg="bg-info-bg"
         iconColor="text-info"
       />
     </div>

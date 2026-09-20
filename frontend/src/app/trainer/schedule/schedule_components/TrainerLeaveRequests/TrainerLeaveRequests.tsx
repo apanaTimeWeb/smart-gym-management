@@ -24,13 +24,13 @@ export default function TrainerLeaveRequests() {
 
   return (
     <div className="flex flex-col h-full min-h-96">
-      <div className="p-4 border-b border-border flex justify-between items-center bg-input/50">
+      <div className="p-4 border-b border-border flex justify-between items-center bg-floating">
         <div className="flex items-center gap-4">
-          <h2 className="text-lg font-bold text-foreground">Time Off Requests</h2>
+          <h2 className="text-lg font-bold text-primary">Time Off Requests</h2>
         </div>
-        <button 
+        <button type="button" 
           onClick={openLeaveModal}
-          className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground text-sm font-bold rounded-lg hover:opacity-90 motion-safe:transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          className="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary text-sm font-bold rounded-lg hover:opacity-90 motion-safe:transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
         >
           <Plus size={16} /> Request Leave
         </button>
@@ -38,7 +38,7 @@ export default function TrainerLeaveRequests() {
 
       <div className="overflow-x-auto">
         <table className="w-full">
-          <thead className="bg-primary/5">
+          <thead className="bg-surface-highlight">
             <tr>
               <th className="text-left text-xs font-bold text-secondary uppercase tracking-wider px-4 py-3 whitespace-nowrap">ID</th>
               <th className="text-left text-xs font-bold text-secondary uppercase tracking-wider px-4 py-3 whitespace-nowrap">Date Range</th>
@@ -51,9 +51,9 @@ export default function TrainerLeaveRequests() {
             {leaveRequests.map(leave => {
               const statusStyle = TRAINER_SCHEDULE_STATUS_STYLES[leave.status] ?? TRAINER_SCHEDULE_DEFAULT_STATUS_STYLE;
               return (
-                <tr key={leave.id} className="hover:bg-primary/5 motion-safe:transition-colors cursor-pointer">
+                <tr key={leave.id} className="hover:bg-surface-highlight motion-safe:transition-colors cursor-pointer">
                   <td className="px-4 py-4 text-xs font-bold text-primary whitespace-nowrap">{leave.id}</td>
-                  <td className="px-4 py-4 text-sm font-semibold text-foreground whitespace-nowrap">
+                  <td className="px-4 py-4 text-sm font-semibold text-primary whitespace-nowrap">
                     {formatDate(leave.startDate)} <span className="text-secondary font-normal mx-1">to</span> {formatDate(leave.endDate)}
                   </td>
                   <td className="px-4 py-4 text-sm text-secondary truncate max-w-xs">{leave.reason}</td>

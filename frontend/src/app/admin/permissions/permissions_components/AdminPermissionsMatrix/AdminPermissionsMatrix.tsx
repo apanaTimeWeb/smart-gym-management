@@ -26,7 +26,7 @@ export default function AdminPermissionsMatrix() {
         <div>
           <h2 className="text-base font-semibold text-primary capitalize">
             {activeRole} Permissions
-            {selectedGymId !== 'default' && <span className="ml-2 text-xs text-warning bg-warning px-2 py-0.5 rounded-full border border-border">Gym Override</span>}
+            {selectedGymId !== 'default' && <span className="ml-2 text-xs text-on-primary bg-warning px-2 py-0.5 rounded-full border border-border">Gym Override</span>}
           </h2>
           <p className="text-xs text-secondary mt-0.5">
             {selectedGymId === 'default' ? 'Changes apply to all gyms by default' : 'Changes override defaults for this gym only'}
@@ -65,7 +65,7 @@ export default function AdminPermissionsMatrix() {
                       disabled={saving}
                       aria-label={`${isEnabled ? 'Disable' : 'Enable'} ${feature.label}`}
                       className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:opacity-50 disabled:cursor-not-allowed ${
-                        isEnabled ? 'bg-primary' : 'bg-input border border-border'
+                        isEnabled ? 'bg-primary-subtle' : 'bg-input border border-border'
                       }`}
                     >
                       <span

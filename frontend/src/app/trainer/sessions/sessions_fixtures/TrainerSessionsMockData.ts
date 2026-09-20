@@ -1,12 +1,14 @@
 import type { TrainerSession } from '@/app/trainer/sessions/sessions_types/TrainerSessionsTypes';
 
+const today = new Date().toISOString().split('T')[0] || '';
+
 export const MOCK_TRAINER_SESSIONS: TrainerSession[] = [
   {
     id: 's1',
     title: 'Morning HIIT',
     type: 'Group',
     time: '07:00 AM',
-    sessionDate: '2026-09-14',
+    sessionDate: today,
     duration: '60 min',
     status: 'Upcoming',
     attendees: 12,
@@ -19,7 +21,7 @@ export const MOCK_TRAINER_SESSIONS: TrainerSession[] = [
     title: 'PT - Rahul Sharma',
     type: 'PT',
     time: '09:00 AM',
-    sessionDate: '2026-09-14',
+    sessionDate: today,
     duration: '60 min',
     status: 'Completed',
     attendees: 1,
@@ -32,7 +34,7 @@ export const MOCK_TRAINER_SESSIONS: TrainerSession[] = [
     title: 'Yoga Flow',
     type: 'Group',
     time: '06:00 PM',
-    sessionDate: '2026-09-14',
+    sessionDate: today,
     duration: '60 min',
     status: 'Upcoming',
     attendees: 8,

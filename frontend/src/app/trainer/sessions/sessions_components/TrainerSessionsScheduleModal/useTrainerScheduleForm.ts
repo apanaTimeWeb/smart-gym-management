@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import type { CreateSessionDto } from '@/app/trainer/sessions/sessions_types/TrainerSessionsTypes';
+import type { CreateSessionDto, SessionType } from '@/app/trainer/sessions/sessions_types/TrainerSessionsTypes';
 
 const sessionSchema = z.object({
   type: z.enum(['PT', 'Group']),
@@ -30,7 +30,7 @@ export const useTrainerScheduleForm = (onSubmit: (dto: CreateSessionDto) => Prom
 
   const handleSubmit = form.handleSubmit(async (data) => {
     await onSubmit({
-      type: data.type as 'PT' | 'Group',
+      type: data.type as SessionType,
       memberId: data.memberId || '',
       date: data.date,
       time: data.time,

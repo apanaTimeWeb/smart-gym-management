@@ -180,6 +180,19 @@ Module JSX uses semantic Tailwind classes
 - `bg-[#1A1A1A]` or `text-[#050505]`
 - Raw RGBA values when a semantic token can represent them.
 
+**CRITICAL RULE: No Opacity Modifiers on Semantic Backgrounds**
+- **NEVER use opacity modifiers on semantic backgrounds.** 
+  - ❌ `bg-success/10`, `bg-primary/20`, `hover:bg-warning/10`
+  - ✅ `bg-success-bg`, `bg-primary-subtle`, `hover:bg-warning-bg`
+Opacity variants like `/10` destroy dark mode compatibility and fail WCAG contrast requirements. Always use the explicit `-bg` or `-subtle` tailwind classes.
+
+**CRITICAL RULE: Solid Background Contrast**
+- If you use a **Solid Background** class (e.g. `bg-primary`, `bg-danger`, `bg-success`, `bg-warning`), you **MUST** pair it with the appropriate contrasting text color.
+  - ✅ `<button className="bg-danger text-on-danger">`
+  - ✅ `<span className="bg-success text-on-success">`
+  - ❌ `<div className="bg-warning">...text inside...</div>` (Implicit fallback text color will fail contrast against solid amber/red/green).
+- If you are building a wrapper, table row, or card, you likely want the **Subtle** variant instead (`bg-danger-bg`, `bg-warning-bg`), where default text colors are safe to use.
+
 Use CSS variable references directly only where they belong in the canonical global CSS/theme implementation itself.
 
 ### Exact Semantic Token Mapping
@@ -189,6 +202,7 @@ To remove ambiguity for AI generation, Tailwind classes MUST map to these underl
 |---|---|
 | `bg-primary` | `--primary` |
 | `bg-primary-hover` | `--primary-hover` |
+| `bg-primary-subtle` | `--primary-subtle` |
 | `text-primary` | `--text-primary` |
 | `text-secondary` | `--text-secondary` |
 | `text-disabled` | `--text-disabled` |
@@ -196,13 +210,17 @@ To remove ambiguity for AI generation, Tailwind classes MUST map to these underl
 | `text-on-danger` | `--text-on-danger` |
 | `text-on-success` | `--text-on-success` |
 | `text-on-info` | `--text-on-info` |
-| `bg-success` | `--success-bg` |
+| `bg-success` | `--success` (Solid) |
+| `bg-success-bg` | `--success-bg` (Subtle) |
 | `text-success` | `--success-text` |
-| `bg-danger` | `--danger-bg` |
+| `bg-danger` | `--danger` (Solid) |
+| `bg-danger-bg` | `--danger-bg` (Subtle) |
 | `text-danger` | `--danger-text` |
-| `bg-warning` | `--warning-bg` |
+| `bg-warning` | `--warning` (Solid) |
+| `bg-warning-bg` | `--warning-bg` (Subtle) |
 | `text-warning` | `--warning-text` |
-| `bg-info` | `--info-bg` |
+| `bg-info` | `--info` (Solid) |
+| `bg-info-bg` | `--info-bg` (Subtle) |
 | `text-info` | `--info-text` |
 | `bg-page` | `--bg-page` |
 | `bg-card` | `--bg-card` |

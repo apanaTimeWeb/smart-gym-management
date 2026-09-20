@@ -9,12 +9,9 @@ import { useEffect } from 'react';
 import type { ProgressEntry, CreateProgressEntryDto } from '@/app/trainer/progress-tracking/progress_types/TrainerProgressTypes';
 import { CreateProgressEntrySchema, type CreateProgressEntryFormValues } from '@/app/trainer/progress-tracking/progress_types/TrainerProgress.schema';
 import { useTrainerUnsavedChangesGuard } from '@/app/trainer/trainer_utils/TrainerUseWarnIfUnsavedChanges';
+import type { TrainerProgressModalProps } from '@/app/trainer/progress-tracking/progress-tracking_types/TrainerProgressModalProps';
 
-interface TrainerProgressModalProps {
-  editingEntry: ProgressEntry | null;
-  onSave: (data: CreateProgressEntryDto) => void;
-  onClose: () => void;
-}
+
 
 const EMPTY: CreateProgressEntryFormValues = {
   date: new Date().toISOString().split('T')[0] ?? '',
@@ -61,14 +58,14 @@ export default function TrainerProgressModal({ editingEntry, onSave, onClose }: 
 
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 backdrop-blur-sm p-4">
-      <div className="bg-overlay w-full max-w-lg rounded-2xl shadow-2xl border border-border overflow-hidden motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95 motion-safe:duration-200">
+      <div className="bg-overlay w-full max-w-lg rounded-2xl shadow-dialog border border-border overflow-hidden motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95 motion-safe:duration-base">
         <div className="flex items-center justify-between p-5 border-b border-border">
-          <h3 className="text-lg font-bold text-foreground">
+          <h3 className="text-lg font-bold text-primary">
             {editingEntry ? 'Edit Entry' : 'Add Progress Entry'}
           </h3>
-          <button
+          <button type="button"
             onClick={onClose}
-            className="text-secondary hover:text-foreground hover:bg-input p-1 rounded-lg motion-safe:transition-colors"
+            className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page text-secondary hover:text-primary hover:bg-input p-1 rounded-lg motion-safe:transition-colors motion-safe:duration-base"
             aria-label="Close modal"
           >
             <X size={20} />
@@ -82,7 +79,7 @@ export default function TrainerProgressModal({ editingEntry, onSave, onClose }: 
               <input
                 type="date"
                 {...register('date')}
-                className="w-full px-3 py-2 border border-border rounded-lg bg-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full px-3 py-2 border border-border rounded-lg bg-input text-primary focus:outline-none focus:ring-2 focus:ring-primary"
               />
               {errors.date && <span className="text-xs text-danger mt-1">{errors.date.message}</span>}
             </div>
@@ -92,7 +89,7 @@ export default function TrainerProgressModal({ editingEntry, onSave, onClose }: 
                 type="number"
                 step="0.1"
                 {...register('weightKg', { valueAsNumber: true })}
-                className="w-full px-3 py-2 border border-border rounded-lg bg-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full px-3 py-2 border border-border rounded-lg bg-input text-primary focus:outline-none focus:ring-2 focus:ring-primary"
               />
               {errors.weightKg && <span className="text-xs text-danger mt-1">{errors.weightKg.message}</span>}
             </div>
@@ -102,7 +99,7 @@ export default function TrainerProgressModal({ editingEntry, onSave, onClose }: 
                 type="number"
                 step="0.1"
                 {...register('heightCm', { valueAsNumber: true })}
-                className="w-full px-3 py-2 border border-border rounded-lg bg-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full px-3 py-2 border border-border rounded-lg bg-input text-primary focus:outline-none focus:ring-2 focus:ring-primary"
               />
               {errors.heightCm && <span className="text-xs text-danger mt-1">{errors.heightCm.message}</span>}
             </div>
@@ -112,7 +109,7 @@ export default function TrainerProgressModal({ editingEntry, onSave, onClose }: 
                 type="number"
                 step="0.1"
                 {...register('bodyFatPercent', { valueAsNumber: true })}
-                className="w-full px-3 py-2 border border-border rounded-lg bg-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full px-3 py-2 border border-border rounded-lg bg-input text-primary focus:outline-none focus:ring-2 focus:ring-primary"
               />
               {errors.bodyFatPercent && <span className="text-xs text-danger mt-1">{errors.bodyFatPercent.message}</span>}
             </div>
@@ -122,7 +119,7 @@ export default function TrainerProgressModal({ editingEntry, onSave, onClose }: 
                 type="number"
                 step="0.1"
                 {...register('muscleMassKg', { valueAsNumber: true })}
-                className="w-full px-3 py-2 border border-border rounded-lg bg-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full px-3 py-2 border border-border rounded-lg bg-input text-primary focus:outline-none focus:ring-2 focus:ring-primary"
               />
               {errors.muscleMassKg && <span className="text-xs text-danger mt-1">{errors.muscleMassKg.message}</span>}
             </div>
@@ -132,7 +129,7 @@ export default function TrainerProgressModal({ editingEntry, onSave, onClose }: 
                 type="number"
                 step="0.1"
                 {...register('waistCm', { valueAsNumber: true })}
-                className="w-full px-3 py-2 border border-border rounded-lg bg-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full px-3 py-2 border border-border rounded-lg bg-input text-primary focus:outline-none focus:ring-2 focus:ring-primary"
               />
               {errors.waistCm && <span className="text-xs text-danger mt-1">{errors.waistCm.message}</span>}
             </div>
@@ -142,7 +139,7 @@ export default function TrainerProgressModal({ editingEntry, onSave, onClose }: 
                 type="number"
                 step="0.1"
                 {...register('chestCm', { valueAsNumber: true })}
-                className="w-full px-3 py-2 border border-border rounded-lg bg-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full px-3 py-2 border border-border rounded-lg bg-input text-primary focus:outline-none focus:ring-2 focus:ring-primary"
               />
               {errors.chestCm && <span className="text-xs text-danger mt-1">{errors.chestCm.message}</span>}
             </div>
@@ -152,7 +149,7 @@ export default function TrainerProgressModal({ editingEntry, onSave, onClose }: 
                 type="number"
                 step="0.1"
                 {...register('hipCm', { valueAsNumber: true })}
-                className="w-full px-3 py-2 border border-border rounded-lg bg-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full px-3 py-2 border border-border rounded-lg bg-input text-primary focus:outline-none focus:ring-2 focus:ring-primary"
               />
               {errors.hipCm && <span className="text-xs text-danger mt-1">{errors.hipCm.message}</span>}
             </div>
@@ -163,7 +160,7 @@ export default function TrainerProgressModal({ editingEntry, onSave, onClose }: 
             <textarea
               rows={2}
               {...register('notes')}
-              className="w-full px-3 py-2 border border-border rounded-lg bg-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary resize-none"
+              className="w-full px-3 py-2 border border-border rounded-lg bg-input text-primary focus:outline-none focus:ring-2 focus:ring-primary resize-none"
             />
           </div>
 
@@ -171,14 +168,14 @@ export default function TrainerProgressModal({ editingEntry, onSave, onClose }: 
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-sm font-semibold text-secondary hover:text-foreground hover:bg-input rounded-lg motion-safe:transition-colors"
+              className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page px-4 py-2 text-sm font-semibold text-secondary hover:text-primary hover:bg-input rounded-lg motion-safe:transition-colors motion-safe:duration-base"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-primary rounded-lg hover:bg-primary/90 motion-safe:transition-colors disabled:opacity-70"
+              className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page flex items-center gap-2 px-4 py-2 text-sm font-semibold text-on-primary bg-primary rounded-lg hover:bg-primary-hover motion-safe:transition-colors disabled:opacity-70"
             >
               {isSubmitting && <Loader2 size={16} className="motion-safe:animate-spin" />}
               {editingEntry ? 'Save Changes' : 'Add Entry'}

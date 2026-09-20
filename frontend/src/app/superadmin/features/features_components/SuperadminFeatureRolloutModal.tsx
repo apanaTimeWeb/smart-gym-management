@@ -78,7 +78,7 @@ export default function SuperadminFeatureRolloutModal({ isOpen, onClose, flag, o
                 const isSelected = selectedTenantIds.includes(gym.id);
                 return (<button key={gym.id} onClick={() => {
                         setSelectedTenantIds(prev => prev.includes(gym.id) ? prev.filter(id => id !== gym.id) : [...prev, gym.id]);
-                    }} className={`w-full text-left px-4 py-3 rounded-md text-sm motion-safe:transition-colors flex items-center justify-between ${isSelected ? 'bg-primary/10 border-primary text-primary font-semibold' : 'hover:bg-input text-primary border-transparent'} border`}>
+                    }} className={`w-full text-left px-4 py-3 rounded-md text-sm motion-safe:transition-colors flex items-center justify-between ${isSelected ? 'bg-primary-subtle border-primary text-primary font-semibold' : 'hover:bg-input text-primary border-transparent'} border`}>
                       <div className="flex items-center gap-3">
                         <div className={`w-4 h-4 rounded border flex items-center justify-center ${isSelected ? 'bg-primary border-primary text-on-primary' : 'border-border bg-input'}`}>
                           {isSelected && <X className="w-3 h-3"/>}

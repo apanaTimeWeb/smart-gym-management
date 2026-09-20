@@ -36,7 +36,7 @@ export default function ManagerReferralsKPIs() {
         icon={UserCheck} 
         change="+5"
         changeType="up"
-        iconBg="bg-success/10"
+        iconBg="bg-success-bg"
         iconColor="text-success"
       />
       <ManagerStatCard 
@@ -45,7 +45,7 @@ export default function ManagerReferralsKPIs() {
         icon={Gift} 
         change={kpis.pendingRewards > 5 ? 'Action Needed' : ''}
         changeType={kpis.pendingRewards > 5 ? 'down' : 'neutral'}
-        iconBg="bg-warning/10"
+        iconBg="bg-warning-bg"
         iconColor="text-warning"
       />
       <ManagerStatCard 

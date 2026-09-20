@@ -21,7 +21,7 @@ export default function LandingTestimonials() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
           {/* Aggregate rating card */}
-          <div className="lg:col-span-1 border border-primary/30 rounded-3xl p-8 flex flex-col justify-center items-center text-center relative overflow-hidden bg-primary/10">
+          <div className="lg:col-span-1 border border-primary/30 rounded-3xl p-8 flex flex-col justify-center items-center text-center relative overflow-hidden bg-primary-subtle">
             <div className="text-6xl font-black text-white mb-2">4.9</div>
             <div className="flex gap-1 justify-center mb-3 text-warning">
               {[1, 2, 3, 4, 5].map(s => <Star key={s} size={20} fill="currentColor" />)}
@@ -40,7 +40,7 @@ export default function LandingTestimonials() {
                   <p className="text-secondary italic mb-6 leading-relaxed">&quot;{t.text}&quot;</p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold text-sm">
+                  <div className="w-10 h-10 rounded-full bg-primary-subtle flex items-center justify-center text-white font-bold text-sm">
                     {t.initials}
                   </div>
                   <div>

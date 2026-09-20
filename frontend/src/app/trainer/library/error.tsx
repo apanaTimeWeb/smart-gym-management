@@ -1,42 +1,7 @@
 'use client';
-// RESPONSIBILITY: Next.js error.tsx � renders the typed error boundary fallback for the Diet Library module with a Retry button.
-import { useEffect } from 'react';
-import { AlertTriangle } from 'lucide-react';
+import TrainerRouteErrorFallback from '@/app/trainer/trainer_components/TrainerFeedback/TrainerRouteErrorFallback';
+import { LibraryUrlConfig } from '@/app/trainer/library/library_url_config';
 
-export default function Error({
- error,
- reset,
-}: {
- error: Error & { digest?: string };
- reset: () => void;
-}) {
- useEffect(() => {
- // Error logged to monitoring provider
- }, [error]);
-
- return (
- <div className="min-h-screen flex items-center justify-center p-6 bg-background">
- <div className="bg-card border border-destructive/20 p-8 rounded-2xl shadow-xl max-w-md w-full text-center space-y-4">
- <div className="w-16 h-16 bg-danger-bg/10 rounded-full flex items-center justify-center mx-auto text-danger mb-2">
- <AlertTriangle size={32} />
- </div>
- 
- <h2 className="text-xl font-bold text-foreground">Something went wrong!</h2>
- 
- <p className="text-sm text-secondary">
- We encountered an issue loading the library dashboard.
- </p>
-
- <div className="pt-4">
- <button
- onClick={() => reset()}
- className="px-6 py-2.5 bg-danger hover:bg-danger/90 text-white font-medium rounded-xl motion-safe:transition-colors shadow-sm shadow-destructive/20"
- >
- Try again
- </button>
- </div>
- </div>
- </div>
- );
+export default function LibraryRouteError({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
+  return <TrainerRouteErrorFallback moduleName="library" route={LibraryUrlConfig.PAGES.LIST} errorDigest={error.digest} reset={reset} />;
 }
-

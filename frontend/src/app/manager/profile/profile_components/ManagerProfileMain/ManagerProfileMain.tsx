@@ -17,10 +17,10 @@ export default function ManagerProfileMain() {
 
   return <div className="max-w-3xl mx-auto space-y-6 p-6">
     <div><h1 className="text-2xl font-bold text-primary">My Profile</h1><p className="text-secondary mt-1 text-sm">Manage your account details and password.</p></div>
-    {profileQuery.isLoading ? <div className="h-28 bg-card rounded-xl motion-safe:animate-pulse border border-border" aria-label="Loading profile" /> : profileQuery.isError ? <div role="alert" className="bg-danger text-danger border border-border rounded-xl p-4">{getManagerErrorMessage(profileQuery.error)}</div> : <>
+    {profileQuery.isLoading ? <div className="h-28 bg-card rounded-xl motion-safe:animate-pulse border border-border" aria-label="Loading profile" /> : profileQuery.isError ? <div role="alert" className="bg-danger text-on-danger border border-border rounded-xl p-4">{getManagerErrorMessage(profileQuery.error)}</div> : <>
       <div className="bg-card border border-border rounded-xl p-6 flex items-center gap-5 shadow-card">
         <div className="w-16 h-16 rounded-full bg-primary flex items-center justify-center text-2xl font-bold text-on-primary shrink-0">{displayInitial}</div>
-        <div><p className="text-lg font-bold text-primary">{user?.name}</p><p className="text-sm text-secondary">{user?.email}</p><span className="mt-1.5 inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-success text-success text-xs font-semibold">Active</span></div>
+        <div><p className="text-lg font-bold text-primary">{user?.name}</p><p className="text-sm text-secondary">{user?.email}</p><span className="mt-1.5 inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-success text-on-success text-xs font-semibold">Active</span></div>
       </div>
       <div className="flex gap-1 bg-input border border-border rounded-xl p-1 w-fit">{MANAGER_PROFILE_TABS.map(({ id, label, icon: Icon }) => <button key={id} type="button" onClick={() => handleTabChange(id)} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium ${activeTab === id ? 'bg-card text-primary shadow-card' : 'text-secondary hover:text-primary'}`}><Icon size={18} />{label}</button>)}</div>
       {activeTab === 'personal' && <form onSubmit={submitProfile} className="bg-card border border-border rounded-xl p-6 shadow-card space-y-5">

@@ -17,9 +17,10 @@ export const TrainerMemberDietSnapshotSchema = z.object({
         time: z.string().optional(),
         items: z.string().optional(),
         description: z.string().optional(),
-      }),
+      })
     ])
   ).optional(),
+  complianceScore: z.number().optional(),
 });
 
 export type TrainerMemberDietSnapshot = z.infer<typeof TrainerMemberDietSnapshotSchema>;

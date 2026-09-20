@@ -20,7 +20,7 @@ export default function ManagerAttendanceModal() {
             type="button"
             aria-label="Close attendance form"
             onClick={handleClose} 
-            className="min-h-11 min-w-11 flex items-center justify-center text-secondary hover:text-primary hover:bg-primary/10 p-1 rounded-md motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            className="min-h-11 min-w-11 flex items-center justify-center text-secondary hover:text-primary hover:bg-primary-subtle p-1 rounded-md motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
             <X size={18} />
           </button>
@@ -144,7 +144,7 @@ export default function ManagerAttendanceModal() {
             <button 
               type="button" 
               onClick={handleClose} 
-              className="px-4 py-2 border border-border rounded-lg font-medium text-secondary hover:text-primary hover:bg-primary/10 motion-safe:transition-colors"
+              className="px-4 py-2 border border-border rounded-lg font-medium text-secondary hover:text-primary hover:bg-primary-subtle motion-safe:transition-colors"
             >
               Cancel
             </button>

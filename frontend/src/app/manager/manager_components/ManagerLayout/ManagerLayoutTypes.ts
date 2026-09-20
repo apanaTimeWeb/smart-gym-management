@@ -8,4 +8,9 @@ export interface ManagerSidebarProps {
 export interface ManagerHeaderProps {
   title: string;
   subtitle?: string;
+  action?: {
+    label: string;
+    icon?: React.ReactNode;
+    onClick: () => void;
+  };
 }

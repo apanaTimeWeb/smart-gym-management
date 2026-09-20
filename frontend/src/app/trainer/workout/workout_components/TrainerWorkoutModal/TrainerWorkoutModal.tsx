@@ -72,15 +72,15 @@ export default function TrainerWorkoutModal() {
 
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 p-4">
-      <div className="bg-card rounded-2xl shadow-xl w-full max-w-md overflow-hidden">
+      <div className="bg-card rounded-2xl shadow-card w-full max-w-md overflow-hidden">
         <div className="flex justify-between items-center p-5 border-b border-border">
-          <h3 className="font-bold text-lg text-foreground">
+          <h3 className="font-bold text-lg text-primary">
             {editWk ? 'Edit Workout Plan' : 'Add Workout Plan'}
           </h3>
           <button 
             type="button"
             onClick={() => setShowWkModal(false)} 
-            className="text-secondary hover:text-foreground hover:bg-primary-subtle p-1 rounded-md motion-safe:transition-colors"
+            className="text-secondary hover:text-primary hover:bg-primary-subtle p-1 rounded-md motion-safe:transition-colors motion-safe:duration-base"
           >
             <X size={20} />
           </button>
@@ -91,9 +91,9 @@ export default function TrainerWorkoutModal() {
             <input 
               type="text" 
               {...register('name')}
-              className={`w-full px-3 py-2 border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page ${
-                errors.name ? 'border-destructive focus-visible:ring-destructive' : 'border-border focus-visible:ring-warning'
-              } bg-input text-foreground`} 
+              className={`w-full px-3 py-2 border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:  ${
+                errors.name ? 'border-danger focus-visible:ring-primary' : 'border-border focus-visible:ring-primary'
+              } bg-input text-primary`} 
             />
             {errors.name && <p className="text-danger text-xs mt-1">{errors.name.message}</p>}
           </div>
@@ -121,9 +121,9 @@ export default function TrainerWorkoutModal() {
                 min="1" 
                 max="7" 
                 {...register('days', { valueAsNumber: true })}
-                className={`w-full px-3 py-2 border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page ${
-                  errors.days ? 'border-destructive focus-visible:ring-destructive' : 'border-border focus-visible:ring-warning'
-                } bg-input text-foreground`} 
+                className={`w-full px-3 py-2 border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:  ${
+                  errors.days ? 'border-danger focus-visible:ring-primary' : 'border-border focus-visible:ring-primary'
+                } bg-input text-primary`} 
               />
               {errors.days && <p className="text-danger text-xs mt-1">{errors.days.message}</p>}
             </div>
@@ -136,9 +136,9 @@ export default function TrainerWorkoutModal() {
                 type="text" 
                 placeholder="e.g. Hypertrophy" 
                 {...register('focus')}
-                className={`w-full px-3 py-2 border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page ${
-                  errors.focus ? 'border-destructive focus-visible:ring-destructive' : 'border-border focus-visible:ring-warning'
-                } bg-input text-foreground`} 
+                className={`w-full px-3 py-2 border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:  ${
+                  errors.focus ? 'border-danger focus-visible:ring-primary' : 'border-border focus-visible:ring-primary'
+                } bg-input text-primary`} 
               />
               {errors.focus && <p className="text-danger text-xs mt-1">{errors.focus.message}</p>}
             </div>
@@ -148,9 +148,9 @@ export default function TrainerWorkoutModal() {
                 type="text" 
                 placeholder="e.g. 60 min" 
                 {...register('duration')}
-                className={`w-full px-3 py-2 border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page ${
-                  errors.duration ? 'border-destructive focus-visible:ring-destructive' : 'border-border focus-visible:ring-warning'
-                } bg-input text-foreground`} 
+                className={`w-full px-3 py-2 border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:  ${
+                  errors.duration ? 'border-danger focus-visible:ring-primary' : 'border-border focus-visible:ring-primary'
+                } bg-input text-primary`} 
               />
               {errors.duration && <p className="text-danger text-xs mt-1">{errors.duration.message}</p>}
             </div>
@@ -163,7 +163,7 @@ export default function TrainerWorkoutModal() {
                 type="text" 
                 placeholder="e.g. Weight Loss" 
                 {...register('goal')}
-                className="w-full px-3 py-2 border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page focus-visible:ring-warning bg-input text-foreground" 
+                className="w-full px-3 py-2 border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-primary" 
               />
             </div>
             <div>
@@ -172,7 +172,7 @@ export default function TrainerWorkoutModal() {
                 type="text" 
                 placeholder="Leave blank for global plan" 
                 {...register('assignedMemberId')}
-                className="w-full px-3 py-2 border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page focus-visible:ring-warning bg-input text-foreground" 
+                className="w-full px-3 py-2 border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-primary" 
               />
             </div>
           </div>
@@ -183,7 +183,7 @@ export default function TrainerWorkoutModal() {
               <input 
                 type="date" 
                 {...register('startDate')}
-                className="w-full px-3 py-2 border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page focus-visible:ring-warning bg-input text-foreground" 
+                className="w-full px-3 py-2 border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-primary" 
               />
             </div>
             <div>
@@ -191,7 +191,7 @@ export default function TrainerWorkoutModal() {
               <input 
                 type="date" 
                 {...register('endDate')}
-                className="w-full px-3 py-2 border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page focus-visible:ring-warning bg-input text-foreground" 
+                className="w-full px-3 py-2 border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-primary" 
               />
             </div>
           </div>
@@ -202,7 +202,7 @@ export default function TrainerWorkoutModal() {
               rows={2}
               placeholder="e.g. Warm up properly before starting..." 
               {...register('instructions')}
-              className="w-full px-3 py-2 border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page focus-visible:ring-warning bg-input text-foreground custom-scrollbar" 
+              className="w-full px-3 py-2 border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-primary custom-scrollbar" 
             />
           </div>
 
@@ -212,16 +212,16 @@ export default function TrainerWorkoutModal() {
             <button 
               type="button" 
               onClick={() => setShowWkModal(false)} 
-              className="px-4 py-2 border border-border rounded-lg font-medium text-secondary hover:text-foreground hover:bg-primary-subtle motion-safe:transition-colors"
+              className="px-4 py-2 border border-border rounded-lg font-medium text-secondary hover:text-primary hover:bg-primary-subtle motion-safe:transition-colors motion-safe:duration-base"
             >
               Cancel
             </button>
             <button 
               type="submit" 
               disabled={isSaving}
-              className="px-4 py-2 rounded-lg font-medium text-primary-foreground bg-primary flex items-center gap-2 hover:bg-primary-hover motion-safe:transition-colors disabled:opacity-70"
+              className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page px-4 py-2 rounded-lg font-medium text-on-primary bg-primary flex items-center gap-2 hover:bg-primary-hover motion-safe:transition-colors disabled:opacity-70"
             >
-              {isSaving ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full motion-safe:animate-spin" /> : <><Save size={15} /> Save</>}
+              {isSaving ? <div className="w-4 h-4 border-2 border-primary border-t-primary rounded-full motion-safe:animate-spin" /> : <><Save size={15} /> Save</>}
             </button>
           </div>
         </form>

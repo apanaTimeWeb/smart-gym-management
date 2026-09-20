@@ -3,7 +3,7 @@ import {
   LayoutDashboard, ClipboardList, FileBarChart,
   IndianRupee, Settings, Building2, Users, ShieldAlert, Gauge, Bell,
   BarChart3, Tag, ShieldCheck, Wallet, Ban, BellRing, Download, Activity,
-  CreditCard, TrendingUp, Target, CalendarCheck
+  CreditCard, TrendingUp, Target, CalendarCheck, MessageSquare
 } from 'lucide-react';
 import { env } from '@/config/env';
 
@@ -45,6 +45,7 @@ export const ADMIN_NAV_GROUPS = [
     group: 'Communication',
     items: [
       { href: '/admin/announcements',       label: 'Announcements',    icon: BellRing },
+      { href: '/admin/campaigns',           label: 'Campaigns',        icon: MessageSquare },
     ]
   },
   {

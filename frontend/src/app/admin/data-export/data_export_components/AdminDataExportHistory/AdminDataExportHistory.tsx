@@ -11,7 +11,7 @@ import { EXPORT_STATUS_OPTIONS } from '@/app/admin/data-export/data_export_utils
 import type { DataExportSortDirection, DataExportSortKey, ExportJob, ExportStatus } from '@/app/admin/data-export/data_export_types/AdminDataExportTypes';
 import AdminDataExportEmptyState from '@/app/admin/data-export/data_export_components/AdminDataExportEmptyState/AdminDataExportEmptyState';
 
-const STATUS_STYLES: Record<string, string> = { completed: 'bg-success text-success', processing: 'bg-warning text-warning', failed: 'bg-danger text-danger' };
+const STATUS_STYLES: Record<string, string> = { completed: 'bg-success text-on-success', processing: 'bg-warning text-on-primary', failed: 'bg-danger text-on-danger' };
 const STATUS_ICONS: Record<string, React.ReactNode> = { completed: <CheckCircle size={11} />, processing: <Loader2 size={11} className="motion-safe:animate-spin motion-safe:duration-base" />, failed: <XCircle size={11} /> };
 const DATA_TYPE_LABELS: Record<string, string> = { members: 'Members', payments: 'Payments', attendance: 'Attendance', staff: 'Staff', full_report: 'Full Report' };
 const HEADERS: ReadonlyArray<{ key: DataExportSortKey | 'actions'; label: string; sortable: boolean }> = [
@@ -65,7 +65,7 @@ export default function AdminDataExportHistory() {
                     <td className="px-4 py-3 text-xs text-secondary whitespace-nowrap">{new Date(job.createdAt).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })}</td>
                     <td className="px-4 py-3"><div className="flex items-center gap-1">
                       {job.status === 'completed' && <button onClick={(event) => { event.stopPropagation(); downloadExport(job); }} className="p-1.5 rounded-lg hover:bg-input text-secondary hover:text-primary motion-safe:transition-colors motion-safe:duration-base" aria-label="Download export" title="Download export"><Download size={15} /></button>}
-                      <button onClick={(event) => { event.stopPropagation(); logic.deleteJob(job.id); }} className="p-1.5 rounded-lg hover:bg-danger text-secondary hover:text-danger motion-safe:transition-colors motion-safe:duration-base" aria-label="Delete export job" title="Delete export"><Trash2 size={15} /></button>
+                      <button onClick={(event) => { event.stopPropagation(); logic.deleteJob(job.id); }} className="p-1.5 rounded-lg hover:bg-danger-bg text-secondary hover:text-danger motion-safe:transition-colors motion-safe:duration-base" aria-label="Delete export job" title="Delete export"><Trash2 size={15} /></button>
                     </div></td>
                   </tr>
                 ))}

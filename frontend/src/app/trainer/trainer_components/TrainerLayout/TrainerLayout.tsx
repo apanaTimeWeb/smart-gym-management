@@ -1,10 +1,10 @@
-'use client';
+﻿'use client';
 // RESPONSIBILITY: Root shell layout for all TRAINER pages. Composes TrainerSidebar with the main content area. Manages sidebar collapsed state only.
 import { useState, type ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
 import TrainerSidebar from '@/app/trainer/trainer_components/TrainerLayout/TrainerSidebar';
 import TrainerHeader from '@/app/trainer/trainer_components/TrainerLayout/TrainerHeader';
-import { TrainerPageUrlConfig } from '@/app/trainer/Trainer_url_config';
+import { TrainerPageUrlConfig } from '@/app/trainer/trainer_url_config';
 
 const routeTitleMap: Record<string, { title: string; subtitle: string }> = {
   [TrainerPageUrlConfig.DASHBOARD]: { title: 'Dashboard', subtitle: "Welcome back, Trainer! Here's your gym overview." },
@@ -29,7 +29,7 @@ export default function TrainerLayout({ children }: { children: ReactNode }) {
   const headerProps = routeTitleMap[baseRoute] || { title: 'GymSmart TRAINER', subtitle: 'Manage your gym efficiently' };
 
  return (
- <div className="flex h-screen overflow-hidden bg-background text-foreground">
+ <div className="flex h-screen overflow-hidden bg-page text-primary">
  <TrainerSidebar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
  <main className={`flex-1 flex flex-col h-screen overflow-y-auto motion-safe:transition-all motion-safe:duration-slow ${isCollapsed ? 'lg:ml-15' : 'lg:ml-60'}`}>
  <TrainerHeader title={headerProps.title} subtitle={headerProps.subtitle} />

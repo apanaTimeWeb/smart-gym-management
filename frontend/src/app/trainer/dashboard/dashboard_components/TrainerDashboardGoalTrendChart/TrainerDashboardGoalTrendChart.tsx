@@ -20,7 +20,7 @@ export default function TrainerDashboardGoalTrendChart() {
   }).join(' ');
   return (
     <div className="bg-card rounded-xl border border-border p-5 min-h-72">
-      <div className="flex items-center gap-2 mb-4"><Target size={18} className="text-primary" /><h3 className="text-base font-bold text-foreground">Goal Completion Trend</h3></div>
+      <div className="flex items-center gap-2 mb-4"><Target size={18} className="text-primary" /><h3 className="text-base font-bold text-primary">Goal Completion Trend</h3></div>
       <div className="w-full overflow-x-auto" role="img" aria-label="Goal completion trend chart">
         <svg viewBox={`0 0 ${width} ${height + 40}`} className="w-full min-w-full h-56" preserveAspectRatio="none">
           <polyline points={points} fill="none" stroke="currentColor" className="text-primary" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />

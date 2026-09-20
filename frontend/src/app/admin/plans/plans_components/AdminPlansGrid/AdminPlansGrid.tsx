@@ -55,7 +55,7 @@ export default function AdminPlansGrid() {
             }`}
           >
             {i === 1 && (
-              <div className="bg-warning text-warning text-xs font-bold uppercase tracking-wider text-center py-1 absolute top-0 w-full left-0 rounded-t-2xl">
+              <div className="bg-warning text-on-primary text-xs font-bold uppercase tracking-wider text-center py-1 absolute top-0 w-full left-0 rounded-t-2xl">
                 Most Popular
               </div>
             )}
@@ -81,7 +81,7 @@ export default function AdminPlansGrid() {
                     e.stopPropagation();
                     deletePlan(p.id);
                   }}
-                    className="p-1.5 rounded-lg text-danger hover:bg-danger motion-safe:transition-all motion-safe:duration-base"
+                    className="p-1.5 rounded-lg text-danger hover:bg-danger-bg motion-safe:transition-all motion-safe:duration-base"
                     title="Delete Plan"
                     aria-label={`Delete ${p.name}`}
                   >

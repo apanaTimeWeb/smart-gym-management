@@ -45,7 +45,7 @@ export default function ManagerHrTabs() {
               }}
               className={`whitespace-nowrap border-b-2 px-4 py-3 text-sm font-medium motion-safe:transition-colors ${
                 activeTab === tab
-                  ? 'border-primary bg-primary/5 text-primary'
+                  ? 'border-primary bg-primary-subtle text-primary'
                   : 'border-transparent text-secondary hover:text-primary'
               }`}
             >

@@ -10,11 +10,11 @@ export default function AdminFinanceKPIs() {
   if (!summary) return null;
 
   const kpis = [
-    { label: 'Total Revenue', value: formatCurrency(summary.totalRevenue), icon: TrendingUp, colorClass: 'text-success', bgClass: 'bg-success', activeBorder: 'border-success' },
+    { label: 'Total Revenue', value: formatCurrency(summary.totalRevenue), icon: TrendingUp, colorClass: 'text-success', bgClass: 'bg-success-bg', activeBorder: 'border-success' },
     { label: 'Monthly Revenue', value: formatCurrency(summary.monthlyRevenue), icon: IndianRupee, colorClass: 'text-primary', bgClass: 'bg-primary-subtle', activeBorder: 'border-primary' },
-    { label: 'Pending Amount', value: formatCurrency(summary.pendingAmount), icon: FileText, colorClass: 'text-warning', bgClass: 'bg-warning', activeBorder: 'border-warning', filter: 'DUE' },
-    { label: 'Total Expenses', value: formatCurrency(summary.totalExpenses), icon: CreditCard, colorClass: 'text-danger', bgClass: 'bg-danger', activeBorder: 'border-danger' },
-    { label: 'Net Profit', value: formatCurrency(summary.netProfit), icon: TrendingUp, colorClass: 'text-success', bgClass: 'bg-success', activeBorder: 'border-success' },
+    { label: 'Pending Amount', value: formatCurrency(summary.pendingAmount), icon: FileText, colorClass: 'text-warning', bgClass: 'bg-warning-bg', activeBorder: 'border-warning', filter: 'DUE' },
+    { label: 'Total Expenses', value: formatCurrency(summary.totalExpenses), icon: CreditCard, colorClass: 'text-danger', bgClass: 'bg-danger-bg', activeBorder: 'border-danger' },
+    { label: 'Net Profit', value: formatCurrency(summary.netProfit), icon: TrendingUp, colorClass: 'text-success', bgClass: 'bg-success-bg', activeBorder: 'border-success' },
   ] as const;
 
   return (

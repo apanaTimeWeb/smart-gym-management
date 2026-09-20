@@ -10,9 +10,9 @@ import AdminPagination from '@/app/admin/admin_layout/AdminShared/AdminPaginatio
 import { ATTENDANCE_TABLE_HEADERS, ATTENDANCE_ITEMS_PER_PAGE, computeDuration } from '@/app/admin/attendance/attendance_utils/AdminAttendanceSharedConstants';
 
 const STATUS_STYLES: Record<string, string> = {
-  present: 'bg-success text-success',
-  late:    'bg-warning text-warning',
-  absent:  'bg-danger  text-danger',
+  present: 'bg-success text-on-success',
+  late:    'bg-warning text-on-primary',
+  absent:  'bg-danger  text-on-danger',
 };
 
 export default function AdminAttendanceTable() {

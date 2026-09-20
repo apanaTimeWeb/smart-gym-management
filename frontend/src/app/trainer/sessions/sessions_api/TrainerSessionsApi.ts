@@ -1,47 +1,49 @@
 import { apiFetch } from '@/lib/api';
 import { z } from 'zod';
 import { TrainerSessionSchema, type TrainerSession, type CreateSessionDto } from '@/app/trainer/sessions/sessions_types/TrainerSessionsTypes';
-import { TRAINER_SESSIONS_API_ROUTES } from '@/app/trainer/Trainer_url_config';
+import { TrainerSessionsUrlConfig } from '@/app/trainer/sessions/sessions_url_config';
 import { createTrainerApiResponseSchema } from '@/app/trainer/trainer_utils/TrainerApiResponseSchema';
 
 export async function fetchTrainerSessionMembers(): Promise<{ id: string; name: string }[]> {
-  const raw = await apiFetch<import('@/lib/api').ApiResponse<unknown>>(TRAINER_SESSIONS_API_ROUTES.members);
+  const raw = await apiFetch<import('@/lib/api').ApiResponse<unknown>>(TrainerSessionsUrlConfig.BACKEND_API.MEMBERS);
   return z.array(z.object({ id: z.string(), name: z.string() })).parse(createTrainerApiResponseSchema(z.array(z.object({ id: z.string(), name: z.string() }))).parse(raw).data);
 }
 
 export async function fetchTrainerSessions(date: string): Promise<TrainerSession[]> {
-  const raw = await apiFetch<import('@/lib/api').ApiResponse<unknown>>(`${TRAINER_SESSIONS_API_ROUTES.list}?date=${date}`);
+  const raw = await apiFetch<import('@/lib/api').ApiResponse<unknown>>(`${TrainerSessionsUrlConfig.BACKEND_API.LIST}?date=${date}`);
   return z.array(TrainerSessionSchema).parse(createTrainerApiResponseSchema(z.array(TrainerSessionSchema)).parse(raw).data);
 }
 
-export async function createTrainerSession(dto: CreateSessionDto): Promise<{ data: TrainerSession; message: string }> {
-  const raw = await apiFetch<import('@/lib/api').ApiResponse<unknown>>(TRAINER_SESSIONS_API_ROUTES.create, {
+export async function createTrainerSession(dto: CreateSessionDto, idempotencyKey?: string): Promise<{ data: TrainerSession; message: string }> {
+  const raw = await apiFetch<import('@/lib/api').ApiResponse<unknown>>(TrainerSessionsUrlConfig.BACKEND_API.CREATE, {
     method: 'POST',
     body: JSON.stringify(dto),
+    ...(idempotencyKey ? { headers: { 'Idempotency-Key': idempotencyKey } } : {}),
   });
   const response = createTrainerApiResponseSchema(TrainerSessionSchema).parse(raw);
   if (!response.data) throw new Error(response.message);
   return { data: response.data, message: response.message };
 }
 
-export async function updateTrainerSession(id: string, dto: Partial<CreateSessionDto>): Promise<{ data: TrainerSession; message: string }> {
-  const raw = await apiFetch<import('@/lib/api').ApiResponse<unknown>>(TRAINER_SESSIONS_API_ROUTES.update(id), {
+export async function updateTrainerSession(id: string, dto: Partial<CreateSessionDto>, idempotencyKey?: string): Promise<{ data: TrainerSession; message: string }> {
+  const raw = await apiFetch<import('@/lib/api').ApiResponse<unknown>>(TrainerSessionsUrlConfig.BACKEND_API.UPDATE(id), {
     method: 'PATCH',
     body: JSON.stringify(dto),
+    ...(idempotencyKey ? { headers: { 'Idempotency-Key': idempotencyKey } } : {}),
   });
   const response = createTrainerApiResponseSchema(TrainerSessionSchema).parse(raw);
   if (!response.data) throw new Error(response.message);
   return { data: response.data, message: response.message };
 }
 
-export async function cancelTrainerSession(id: string): Promise<{ message: string }> {
-  const raw = await apiFetch<import('@/lib/api').ApiResponse<unknown>>(TRAINER_SESSIONS_API_ROUTES.cancel(id), { method: 'DELETE' });
+export async function markTrainerSessionNoShow(id: string, idempotencyKey?: string): Promise<{ message: string }> {
+  const raw = await apiFetch<import('@/lib/api').ApiResponse<unknown>>(TrainerSessionsUrlConfig.BACKEND_API.CANCEL(id), { method: 'POST', ...(idempotencyKey ? { headers: { 'Idempotency-Key': idempotencyKey } } : {}) });
   const response = createTrainerApiResponseSchema(z.null()).parse(raw);
   return { message: response.message };
 }
 
-export async function markTrainerSessionAttendance(id: string, memberIds: string[]): Promise<{ message: string }> {
-  const raw = await apiFetch<import('@/lib/api').ApiResponse<unknown>>(TRAINER_SESSIONS_API_ROUTES.markAttendance(id), { method: 'POST', body: JSON.stringify({ memberIds }) });
+export async function markTrainerSessionAttendance(id: string, memberIds: string[], idempotencyKey?: string): Promise<{ message: string }> {
+  const raw = await apiFetch<import('@/lib/api').ApiResponse<unknown>>(TrainerSessionsUrlConfig.BACKEND_API.MARK_ATTENDANCE(id), { method: 'POST', body: JSON.stringify({ memberIds }), ...(idempotencyKey ? { headers: { 'Idempotency-Key': idempotencyKey } } : {}) });
   const response = createTrainerApiResponseSchema(z.null()).parse(raw);
   return { message: response.message };
 }

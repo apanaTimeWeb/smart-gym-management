@@ -54,7 +54,7 @@ export default function SuperadminAnalyticsClient() {
             delta: mrrDelta,
             deltaUp: (metrics.mrrDeltaPercent ?? 0) >= 0,
             icon: IndianRupee,
-            iconBg: 'bg-success/10',
+            iconBg: "bg-success-bg",
             iconColor: 'text-success',
         },
         {
@@ -63,7 +63,7 @@ export default function SuperadminAnalyticsClient() {
             delta: arrDelta,
             deltaUp: (metrics.arrDeltaPercent ?? 0) >= 0,
             icon: TrendingUp,
-            iconBg: 'bg-primary/10',
+            iconBg: "bg-primary-subtle",
             iconColor: 'text-primary',
         },
         {
@@ -81,7 +81,7 @@ export default function SuperadminAnalyticsClient() {
             delta: undefined,
             deltaUp: true,
             icon: Users,
-            iconBg: 'bg-warning/10',
+            iconBg: "bg-warning-bg",
             iconColor: 'text-warning',
         },
         {
@@ -91,7 +91,7 @@ export default function SuperadminAnalyticsClient() {
             delta: 'Avg revenue per gym',
             deltaUp: true,
             icon: DollarSign,
-            iconBg: 'bg-primary/10',
+            iconBg: "bg-primary-subtle",
             iconColor: 'text-primary',
         },
     ];
@@ -201,7 +201,7 @@ export default function SuperadminAnalyticsClient() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="bg-card border border-border rounded-xl p-6 shadow-card">
           <div className="flex items-center gap-3 mb-2">
-            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-primary-subtle flex items-center justify-center">
               <Activity className="w-5 h-5 text-primary"/>
             </div>
             <span className="text-secondary text-xs font-medium uppercase tracking-wider">LTV (Lifetime Value)</span>
@@ -212,7 +212,7 @@ export default function SuperadminAnalyticsClient() {
 
         <div className="bg-card border border-border rounded-xl p-6 shadow-card">
           <div className="flex items-center gap-3 mb-2">
-            <div className="w-8 h-8 rounded-lg bg-warning/10 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-warning-bg flex items-center justify-center">
               <IndianRupee className="w-5 h-5 text-warning"/>
             </div>
             <span className="text-secondary text-xs font-medium uppercase tracking-wider">CAC (Customer Acquisition Cost)</span>

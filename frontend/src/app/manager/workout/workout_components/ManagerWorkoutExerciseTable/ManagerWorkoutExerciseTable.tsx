@@ -75,10 +75,10 @@ export default function ManagerWorkoutExerciseTable() {
                 <td className="px-4 py-3">
                   <span className={`text-xs px-2.5 py-0.5 rounded-full font-semibold ${
                     ex.difficulty === 'Beginner' 
-                    ? 'bg-success text-success dark:bg-success dark:text-success' 
+                    ? 'bg-success text-on-primary dark:bg-success-bg dark:text-success' 
                     : ex.difficulty === 'Intermediate' 
-                    ? 'bg-warning text-warning dark:bg-warning dark:text-warning' 
-                    : 'bg-danger text-danger dark:bg-danger dark:text-danger'
+                    ? 'bg-warning text-on-primary dark:bg-warning-bg dark:text-warning' 
+                    : 'bg-danger text-on-primary dark:bg-danger-bg dark:text-danger'
                   }`}>
                     {ex.difficulty}
                   </span>
@@ -87,7 +87,7 @@ export default function ManagerWorkoutExerciseTable() {
                   <div className="flex items-center gap-2">
                     <button 
                       onClick={(e) => { e.stopPropagation(); openEditEx(ex); }} 
-                      className="text-info hover:text-info dark:hover:text-info p-1 rounded-md hover:bg-info dark:hover:bg-info motion-safe:transition-colors"
+                      className="text-info hover:text-info dark:hover:text-info p-1 rounded-md hover:bg-info-bg dark:hover:bg-info-bg motion-safe:transition-colors"
                     >
                       <Edit2 size={18} />
                     </button>
@@ -109,7 +109,7 @@ export default function ManagerWorkoutExerciseTable() {
                           }
                         }
                       }}
-                      className="text-danger hover:text-danger dark:hover:text-danger p-1 rounded-md hover:bg-danger dark:hover:bg-danger motion-safe:transition-colors"
+                      className="text-danger hover:text-danger dark:hover:text-danger p-1 rounded-md hover:bg-danger-bg dark:hover:bg-danger-bg motion-safe:transition-colors"
                     >
                       <Trash2 size={18} />
                     </button>
@@ -136,8 +136,8 @@ export default function ManagerWorkoutExerciseTable() {
             </div>
             <div className="flex items-center justify-between gap-3"><span className="text-xs text-secondary">Difficulty</span><span className="text-xs px-2.5 py-0.5 rounded-full font-semibold bg-input text-primary">{ex.difficulty}</span></div>
             <div className="flex justify-end gap-2">
-              <button type="button" onClick={() => openEditEx(ex)} className="min-h-11 min-w-11 p-2 rounded-md text-info hover:bg-info motion-safe:transition-colors" aria-label={`Edit exercise ${ex.name}`}><Edit2 size={18} /></button>
-              <button type="button" onClick={async () => { const ok = await confirm({ title: 'Delete Exercise', message: `Are you sure you want to delete exercise "${ex.name}"?`, type: 'danger', confirmText: 'Delete' }); if (!ok) return; try { const response = await deleteMutation.mutateAsync({ id: ex.id, idempotencyKey: crypto.randomUUID() }); showManagerSuccessToast(response.message, 'manager-workout-exercise-table-success'); } catch (err: unknown) { showManagerErrorToast(err, 'manager-workout-exercise-table-error'); } }} className="min-h-11 min-w-11 p-2 rounded-md text-danger hover:bg-danger motion-safe:transition-colors" aria-label={`Delete exercise ${ex.name}`}><Trash2 size={18} /></button>
+              <button type="button" onClick={() => openEditEx(ex)} className="min-h-11 min-w-11 p-2 rounded-md text-info hover:bg-info-bg motion-safe:transition-colors" aria-label={`Edit exercise ${ex.name}`}><Edit2 size={18} /></button>
+              <button type="button" onClick={async () => { const ok = await confirm({ title: 'Delete Exercise', message: `Are you sure you want to delete exercise "${ex.name}"?`, type: 'danger', confirmText: 'Delete' }); if (!ok) return; try { const response = await deleteMutation.mutateAsync({ id: ex.id, idempotencyKey: crypto.randomUUID() }); showManagerSuccessToast(response.message, 'manager-workout-exercise-table-success'); } catch (err: unknown) { showManagerErrorToast(err, 'manager-workout-exercise-table-error'); } }} className="min-h-11 min-w-11 p-2 rounded-md text-danger hover:bg-danger-bg motion-safe:transition-colors" aria-label={`Delete exercise ${ex.name}`}><Trash2 size={18} /></button>
             </div>
           </article>
         ))}

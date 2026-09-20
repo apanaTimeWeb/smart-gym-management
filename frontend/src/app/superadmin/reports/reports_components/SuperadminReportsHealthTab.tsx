@@ -28,7 +28,7 @@ export function SuperadminReportsHealthTab({ sortedHealthData }: SuperadminRepor
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-2">
                     <div className="w-16 h-1.5 bg-input rounded-full overflow-hidden">
-                      <div className={`h-full rounded-full ${row.score >= 80 ? 'bg-success' : row.score >= 60 ? 'bg-primary' : row.score >= 40 ? 'bg-warning' : 'bg-danger'}`} style={{ width: `${row.score}%` }}/>
+                      <div className={`h-full rounded-full ${row.score >= 80 ? 'bg-success-bg' : row.score >= 60 ? 'bg-primary-subtle' : row.score >= 40 ? 'bg-warning-bg' : 'bg-danger-bg'}`} style={{ width: `${row.score}%` }}/>
                     </div>
                     <span className="text-primary font-medium text-xs">{formatNumber(row.score)}</span>
                   </div>

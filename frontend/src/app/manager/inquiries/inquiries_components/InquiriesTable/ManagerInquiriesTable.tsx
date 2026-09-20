@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 // RESPONSIBILITY: Renders the paginated, filterable table of inquiries with row actions, status updates, and bulk selection.
 import { MANAGER_GENERIC_ERROR_MESSAGE } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
 import { useManagerInquiriesLogic } from '@/app/manager/inquiries/inquiries_hooks/ManagerUseManagerInquiriesLogic';
@@ -29,7 +29,7 @@ export default function ManagerInquiriesTable() {
       <div className="bg-card rounded-xl shadow-card border border-border overflow-hidden flex flex-col h-full min-h-96">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-primary/5">
+            <thead className="bg-primary-subtle">
               <tr>
                 <th className="px-5 py-3 w-12" />
                 {INQUIRIES_TABLE_HEADERS.map(h => (
@@ -74,7 +74,7 @@ export default function ManagerInquiriesTable() {
     <div className="bg-card rounded-xl shadow-card border border-border overflow-hidden flex flex-col h-full min-h-96">
       <div className="overflow-x-auto">
         <table className="w-full">
-          <thead className="bg-primary/5">
+          <thead className="bg-primary-subtle">
             <tr>
               <th className="px-5 py-3 w-12 text-left">
                 <input
@@ -99,7 +99,7 @@ export default function ManagerInquiriesTable() {
               return (
                 <tr
                   key={inq.id}
-                  className={`motion-safe:transition-colors cursor-pointer ${selected ? 'bg-primary/10' : 'hover:bg-primary/5'}`}
+                  className={`motion-safe:transition-colors cursor-pointer ${selected ? "bg-primary-subtle" : 'hover:bg-primary-subtle'}`}
                   tabIndex={0}
                   role="button"
                   aria-label={`Edit inquiry ${inq.name}`}
@@ -121,7 +121,7 @@ export default function ManagerInquiriesTable() {
                   </td>
                   <td className="px-5 py-3.5">
                     <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm bg-warning text-warning">
+                      <div className="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm bg-warning text-on-primary">
                         {displayValue(inq.name).charAt(0)}
                       </div>
                       <p className="text-sm font-semibold text-primary">{displayValue(inq.name)}</p>
@@ -156,7 +156,7 @@ export default function ManagerInquiriesTable() {
                       </button>
                       <button
                         onClick={(e) => { e.stopPropagation(); openMsg(inq, 'email'); }}
-                        className="p-1.5 rounded-lg bg-info text-on-primary hover:opacity-80 motion-safe:transition-all motion-safe:duration-200"
+                        className="p-1.5 rounded-lg bg-info text-on-info hover:opacity-80 motion-safe:transition-all motion-safe:duration-200"
                         title="Email"
                         aria-label={`Email ${inq.name}`}
                       >
@@ -191,7 +191,7 @@ export default function ManagerInquiriesTable() {
                             deleteInquiry(inq.id);
                           }
                         }}
-                        className="p-1.5 rounded-lg bg-danger text-danger hover:opacity-80 motion-safe:transition-all motion-safe:duration-200"
+                        className="p-1.5 rounded-lg bg-danger text-on-danger hover:opacity-80 motion-safe:transition-all motion-safe:duration-200"
                         title="Delete"
                         aria-label={`Delete ${inq.name}`}
                       >
@@ -222,3 +222,4 @@ export default function ManagerInquiriesTable() {
     </div>
   );
 }
+

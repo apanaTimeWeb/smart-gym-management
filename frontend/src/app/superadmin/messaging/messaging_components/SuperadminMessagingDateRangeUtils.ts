@@ -4,7 +4,7 @@
  * Input: a supported range key and optional Date clock value. Output: `YYYY-MM-DD` start/end strings.
  * Invariant: date-only filters are serialized without UTC conversion so midnight cannot cross a calendar boundary.
  */
-import type { DateRangeOption } from './SuperadminMessagingDateRangeConstants';
+import type { DateRangeOption } from '@/app/superadmin/messaging/messaging_components/SuperadminMessagingDateRangeConstants';
 
 function formatDateOnly(date: Date): string {
   const year = date.getFullYear();

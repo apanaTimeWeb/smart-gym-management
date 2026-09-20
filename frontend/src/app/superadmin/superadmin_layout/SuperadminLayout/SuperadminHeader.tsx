@@ -74,7 +74,7 @@ export default function SuperadminHeader() {
               <div className="px-4 py-3 border-b border-border bg-header">
                 <p className="text-sm font-semibold text-primary">Superadmin</p>
                 <p className="text-xs text-secondary">admin@gymsmart.com</p>
-                <p className="text-xs text-warning font-medium mt-0.5">GOD MODE</p>
+                <p className="text-xs text-warning bg-warning-bg inline-block px-1.5 rounded-md font-medium mt-0.5">GOD MODE</p>
               </div>
               <div className="py-1">
                 <Link href={SettingsUrlConfig.PAGES.MAIN} role="menuitem" className="flex items-center gap-2 px-4 py-2 text-sm text-secondary hover:text-primary hover:bg-input motion-safe:transition-colors focus-visible:outline-none focus-visible:bg-input" onClick={handleCloseProfile}>

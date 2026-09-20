@@ -22,21 +22,21 @@ export default function AdminHrPerformanceKPIs({ aggregates }: AdminHrPerformanc
       value: aggregates.totalMembersAdded.toLocaleString('en-IN'),
       icon: UserPlus,
       iconColor: 'text-success',
-      iconBg: 'bg-success',
+      iconBg: 'bg-success-bg',
     },
     {
       label: 'Avg Attendance',
       value: `${formatPercent1dp(aggregates.avgAttendance)}%`,
       icon: Users,
       iconColor: 'text-info',
-      iconBg: 'bg-info',
+      iconBg: 'bg-info-bg',
     },
     {
       label: 'Avg Rating',
       value: formatDecimal(aggregates.avgRating),
       icon: Star,
       iconColor: 'text-warning',
-      iconBg: 'bg-warning',
+      iconBg: 'bg-warning-bg',
     },
   ];
 

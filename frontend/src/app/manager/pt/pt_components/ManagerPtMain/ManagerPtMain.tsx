@@ -88,7 +88,7 @@ export default function ManagerPtMain() {
       )}
 
       {isError && (
-        <div role="alert" className="rounded-xl border border-danger bg-danger p-5 text-sm text-danger">{errorMessage || MANAGER_GENERIC_ERROR_MESSAGE}</div>
+        <div role="alert" className="rounded-xl border border-danger bg-danger p-5 text-sm text-on-danger">{errorMessage || MANAGER_GENERIC_ERROR_MESSAGE}</div>
       )}
 
       {!isPending && !isError && (
@@ -142,7 +142,7 @@ export default function ManagerPtMain() {
                     className="bg-card border border-border rounded-xl p-6 motion-safe:hover:-translate-y-1 motion-safe:transition-transform"
                   >
                     <div className="flex items-center justify-between mb-4">
-                      <span className="bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-bold border border-primary/20">
+                      <span className="bg-primary-subtle text-primary px-3 py-1 rounded-full text-xs font-bold border border-primary/20">
                         {pkg.sessionCount} Sessions
                       </span>
                       <span className="text-primary font-bold text-xl">

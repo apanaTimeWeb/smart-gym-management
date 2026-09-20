@@ -43,7 +43,7 @@ export default function ManagerMembersModal() {
           <button
             type="button"
             onClick={handleClose}
-            className="p-2 rounded-full hover:bg-primary/10 motion-safe:transition-colors text-secondary hover:text-primary"
+            className="p-2 rounded-full hover:bg-primary-subtle motion-safe:transition-colors text-secondary hover:text-primary"
             aria-label="Close modal"
           >
             <X size={18} />
@@ -168,7 +168,7 @@ export default function ManagerMembersModal() {
             )}
 
             {watchPlanId && (
-              <div className="sm:col-span-2 bg-warning rounded-xl p-4 text-sm border border-warning/30 flex justify-between items-center">
+              <div className="sm:col-span-2 bg-warning-bg rounded-xl p-4 text-sm border border-warning/30 flex justify-between items-center">
                 <div>
                   <span className="font-semibold text-warning">Calculated Price:</span>
                   <span className="text-warning ml-1 font-bold">
@@ -238,7 +238,7 @@ export default function ManagerMembersModal() {
             <button
               type="button"
               onClick={handleClose}
-              className="px-6 py-2.5 text-sm font-semibold rounded-xl border border-border text-secondary hover:bg-primary/5 hover:text-primary motion-safe:transition-colors"
+              className="px-6 py-2.5 text-sm font-semibold rounded-xl border border-border text-secondary hover:bg-primary-subtle hover:text-primary motion-safe:transition-colors"
             >
               Cancel
             </button>

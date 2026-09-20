@@ -155,8 +155,8 @@ export default function LoginForm() {
               'flex items-center justify-center gap-2',
               'disabled:opacity-70 disabled:cursor-not-allowed',
               isLoading
-                ? 'bg-primary'
-                : 'bg-primary hover:opacity-90 active:scale-[0.98] shadow-lg',
+                ? 'bg-primary-subtle'
+                : 'bg-primary-subtle hover:opacity-90 active:scale-[0.98] shadow-lg',
             ].join(' ')}
             style={
               !isLoading
@@ -189,7 +189,7 @@ export default function LoginForm() {
               className={[
                 'w-full py-2.5 rounded-xl font-bold text-xs transition-all duration-200',
                 'flex items-center justify-center gap-2 border border-warning/30',
-                'text-warning hover:bg-warning/5 active:scale-[0.98]',
+                'text-warning hover:bg-warning-bg active:scale-[0.98]',
                 'disabled:opacity-70 disabled:cursor-not-allowed',
               ].join(' ')}
             >
@@ -202,7 +202,7 @@ export default function LoginForm() {
               className={[
                 'w-full py-2.5 rounded-xl font-bold text-xs transition-all duration-200',
                 'flex items-center justify-center gap-2 border border-primary/30',
-                'text-primary hover:bg-primary/5 active:scale-[0.98]',
+                'text-primary hover:bg-primary-subtle active:scale-[0.98]',
                 'disabled:opacity-70 disabled:cursor-not-allowed',
               ].join(' ')}
             >
@@ -215,7 +215,7 @@ export default function LoginForm() {
               className={[
                 'w-full py-2.5 rounded-xl font-bold text-xs transition-all duration-200',
                 'flex items-center justify-center gap-2 border border-success/30',
-                'text-success hover:bg-success/5 active:scale-[0.98]',
+                'text-success hover:bg-success-bg active:scale-[0.98]',
                 'disabled:opacity-70 disabled:cursor-not-allowed',
               ].join(' ')}
             >
@@ -228,7 +228,7 @@ export default function LoginForm() {
               className={[
                 'w-full py-2.5 rounded-xl font-bold text-xs transition-all duration-200',
                 'flex items-center justify-center gap-2 border border-info/30',
-                'text-info hover:bg-info/5 active:scale-[0.98]',
+                'text-info hover:bg-info-bg active:scale-[0.98]',
                 'disabled:opacity-70 disabled:cursor-not-allowed',
               ].join(' ')}
             >

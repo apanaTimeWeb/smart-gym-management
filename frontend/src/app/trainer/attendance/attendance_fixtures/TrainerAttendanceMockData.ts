@@ -4,6 +4,9 @@
 
 import type { AttendanceRecord, AttendanceStats, AttendanceMemberBasic } from '@/app/trainer/attendance/attendance_types/TrainerAttendance_types';
 
+const today = new Date().toISOString().split('T')[0] || '';
+const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0] || '';
+
 export const MOCK_ATTENDANCE_STATS: AttendanceStats = {
   totalCheckIns: 24,
   memberCheckIns: 18,
@@ -21,9 +24,9 @@ export const MOCK_ATTENDANCE_RECORDS: AttendanceRecord[] = [
   {
     id: 'att-001',
     type: 'MEMBER',
-    date: '2026-09-14',
-    checkIn: '2026-09-14T06:30:00Z',
-    checkOut: '2026-09-14T08:00:00Z',
+    date: today,
+    checkIn: `${today}T06:30:00Z`,
+    checkOut: `${today}T08:00:00Z`,
     durationMinutes: 90,
     checkInMethod: 'Manual',
     memberId: 'm1',
@@ -32,9 +35,9 @@ export const MOCK_ATTENDANCE_RECORDS: AttendanceRecord[] = [
   {
     id: 'att-002',
     type: 'MEMBER',
-    date: '2026-09-14',
-    checkIn: '2026-09-14T07:00:00Z',
-    checkOut: '2026-09-14T08:30:00Z',
+    date: today,
+    checkIn: `${today}T07:00:00Z`,
+    checkOut: `${today}T08:30:00Z`,
     durationMinutes: 90,
     checkInMethod: 'QR Code',
     memberId: 'm2',
@@ -43,9 +46,9 @@ export const MOCK_ATTENDANCE_RECORDS: AttendanceRecord[] = [
   {
     id: 'att-003',
     type: 'STAFF',
-    date: '2026-09-14',
-    checkIn: '2026-09-14T08:00:00Z',
-    checkOut: '2026-09-14T17:00:00Z',
+    date: today,
+    checkIn: `${today}T08:00:00Z`,
+    checkOut: `${today}T17:00:00Z`,
     durationMinutes: 540,
     checkInMethod: 'Biometric',
     staffId: 's1',
@@ -54,9 +57,9 @@ export const MOCK_ATTENDANCE_RECORDS: AttendanceRecord[] = [
   {
     id: 'att-004',
     type: 'MEMBER',
-    date: '2026-09-13',
-    checkIn: '2026-09-13T06:45:00Z',
-    checkOut: '2026-09-13T08:15:00Z',
+    date: yesterday,
+    checkIn: `${yesterday}T06:45:00Z`,
+    checkOut: `${yesterday}T08:15:00Z`,
     durationMinutes: 90,
     checkInMethod: 'Manual',
     memberId: 'm3',
@@ -65,8 +68,8 @@ export const MOCK_ATTENDANCE_RECORDS: AttendanceRecord[] = [
   {
     id: 'att-005',
     type: 'MEMBER',
-    date: '2026-09-13',
-    checkIn: '2026-09-13T09:00:00Z',
+    date: yesterday,
+    checkIn: `${yesterday}T09:00:00Z`,
     checkOut: undefined,
     durationMinutes: undefined,
     checkInMethod: 'Manual',

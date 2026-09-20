@@ -32,7 +32,7 @@ export default function TrainerWorkoutExerciseTable() {
 
   if (status === 'error') {
     return (
-      <div className="text-center py-16 bg-card rounded-2xl border border-danger/30">
+      <div className="text-center py-16 bg-card rounded-2xl border border-danger">
         <p className="text-danger font-medium">Unable to load exercises right now. Please retry.</p>
         <p className="text-sm mt-1 text-secondary">Please check your connection and try again.</p>
       </div>
@@ -43,7 +43,7 @@ export default function TrainerWorkoutExerciseTable() {
     <div className="flex flex-col h-full min-h-96">
       <div className="overflow-x-auto flex-1">
         <table className="w-full">
-          <thead className="bg-muted">
+          <thead className="bg-surface-highlight">
             <tr>
               {EXERCISE_TABLE_HEADERS.map(h => (
                 <th key={h} className="text-left text-xs font-semibold text-secondary uppercase tracking-wider px-4 py-3">
@@ -54,8 +54,8 @@ export default function TrainerWorkoutExerciseTable() {
           </thead>
           <tbody className="divide-y divide-border">
             {exercises.map(ex => (
-              <tr key={ex.id} className="hover:bg-accent motion-safe:transition-colors">
-                <td className="px-4 py-3 text-sm font-medium text-foreground">{ex.name}</td>
+              <tr key={ex.id} className="hover:bg-surface-highlight motion-safe:transition-colors motion-safe:duration-base">
+                <td className="px-4 py-3 text-sm font-medium text-primary">{ex.name}</td>
                 <td className="px-4 py-3 text-sm text-secondary">
                   {Array.isArray(ex.muscleGroup) ? ex.muscleGroup.join(', ') : (ex.muscleGroup || 'N/A')}
                 </td>
@@ -70,13 +70,13 @@ export default function TrainerWorkoutExerciseTable() {
                   </span>
                 </td>
                 <td className="px-4 py-3 flex gap-1">
-                  <button onClick={() => { setEditEx(ex); setShowExModal(true); }} className="p-1.5 text-secondary hover:text-foreground hover:bg-input rounded-md motion-safe:transition-colors">
+                  <button type="button" onClick={() => { setEditEx(ex); setShowExModal(true); }} className="p-1.5 text-secondary hover:text-primary hover:bg-input rounded-md motion-safe:transition-colors motion-safe:duration-base">
                     <Edit2 size={18} aria-hidden="true" />
                   </button>
-                  <button onClick={async () => {
+                  <button type="button" onClick={async () => {
                     const ok = await confirm({ title: 'Delete Exercise', message: 'Delete this exercise?', type: 'danger', confirmText: 'Delete' });
                     if (ok) deleteExercise.mutate(ex.id);
-                  }} className="p-1.5 text-secondary hover:text-danger hover:bg-danger-bg rounded-md motion-safe:transition-colors">
+                  }} className="p-1.5 text-secondary hover:text-danger hover:bg-danger-bg rounded-md motion-safe:transition-colors motion-safe:duration-base">
                     <Trash2 size={18} aria-hidden="true" />
                   </button>
                 </td>

@@ -41,7 +41,7 @@ export default function ManagerDashboardExpiringMemberships() {
         {filtered.slice(0, 5).map(m => (
           <div key={m.id} className="flex items-center justify-between py-2 border-b last:border-0 border-border group">
             <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold bg-warning text-warning">
+              <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold bg-warning text-on-primary">
                 {m.name.charAt(0)}
               </div>
               <div>
@@ -56,8 +56,8 @@ export default function ManagerDashboardExpiringMemberships() {
                 onClick={() => setRemindedId(m.id)}
                 className={`p-1.5 rounded-lg motion-safe:transition-colors ${
                   remindedId === m.id 
-                    ? 'text-success bg-success' 
-                    : 'text-secondary hover:text-warning hover:bg-warning opacity-100 lg:opacity-0 lg:group-hover:opacity-100 focus:opacity-100 motion-safe:transition-opacity'
+                    ? 'text-on-success bg-success' 
+                    : 'text-secondary hover:text-warning hover:bg-warning-bg opacity-100 lg:opacity-0 lg:group-hover:opacity-100 focus:opacity-100 motion-safe:transition-opacity'
                 }`}
                 title="Send Reminder"
               >
