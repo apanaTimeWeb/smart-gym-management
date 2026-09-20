@@ -1,7 +1,7 @@
 'use client';
-// RESPONSIBILITY: Renders the toolbar for searching, filtering, and initiating the "Add Member" action.
+// RESPONSIBILITY: Renders the toolbar for searching and filtering members.
 import { useState, useEffect } from 'react';
-import { Search, RefreshCw, Plus } from 'lucide-react';
+import { Search, RefreshCw } from 'lucide-react';
 import { useTrainerMembersStore } from '@/app/trainer/members/members_store/useTrainerMembersStore';
 import { useTrainerMembersFilters } from '@/app/trainer/members/members_utils/useTrainerMembersFilters';
 import { useQueryClient } from '@tanstack/react-query';
@@ -10,7 +10,6 @@ import { MEMBER_STATUS_OPTIONS } from '@/app/trainer/members/members_utils/Train
 
 export default function TrainerMembersToolbar() {
   const { search, setSearch, statusFilter, setStatusFilter, progressStatusFilter, setProgressStatusFilter } = useTrainerMembersFilters();
-  const openAdd = useTrainerMembersStore(s => s.setShowAddModal);
   const queryClient = useQueryClient();
   const [localSearch, setLocalSearch] = useState(search);
 
@@ -62,12 +61,6 @@ export default function TrainerMembersToolbar() {
   className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page flex items-center gap-2 px-3 py-2.5 text-sm border border-border rounded-xl hover:opacity-80 text-primary"
   >
   <RefreshCw size={14} /> Refresh
-  </button>
-  <button type="button"
-    onClick={() => openAdd(true)}
-    className="flex items-center gap-2 px-4 py-2.5 bg-primary text-on-primary rounded-xl text-sm font-semibold hover:opacity-90"
-  >
-    <Plus size={16} /> Add Member
   </button>
   </div>
  </div>

@@ -94,7 +94,19 @@ export const trainerMembersHandlers = [
       return HttpResponse.json({ success: false, message: 'Member not found' }, { status: StatusCodes.NOT_FOUND });
     }
     
-    membersDB[idx] = { ...membersDB[idx], ...body } as typeof membersDB[0];
+    // specifically handle assessment merge if it exists
+    const existingMember = membersDB[idx];
+    if (!existingMember) return HttpResponse.json({ success: false, message: 'Member not found' }, { status: StatusCodes.NOT_FOUND });
+    
+    const existingAssessment = existingMember.assessment || {};
+    const newAssessment = body.assessment || {};
+    
+    membersDB[idx] = { 
+      ...existingMember, 
+      ...body,
+      ...(body.assessment ? { assessment: { ...existingAssessment, ...newAssessment } } : {})
+    } as typeof membersDB[0];
+    
     return HttpResponse.json({
       success: true,
       message: 'Member updated successfully',

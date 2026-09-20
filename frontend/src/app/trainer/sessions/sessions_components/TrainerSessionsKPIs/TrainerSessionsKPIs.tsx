@@ -12,10 +12,10 @@ export default function TrainerSessionsKPIs({ sessions }: TrainerSessionsKPIsPro
   const dateSuffix = useDateRangeSuffix();
   const todayCount = sessions.filter(s => {
     // Basic approximation assuming sessions are loaded for today
-    return s.status !== 'Cancelled';
+    return s.status !== 'No Show';
   }).length;
   const completedThisWeek = 14; // Mock for now until backend supports it
-  const cancelledThisMonth = 2; // Mock for now
+  const noShowsThisMonth = 2; // Mock for now
   const avgAttendanceRate = 85; // Mock for now
 
   return (
@@ -43,8 +43,8 @@ export default function TrainerSessionsKPIs({ sessions }: TrainerSessionsKPIsPro
           <CalendarX size={24} />
         </div>
         <div>
-          <p className="text-sm font-medium text-secondary mb-1">{`Cancelled (Month)${dateSuffix}`}</p>
-          <h3 className="text-2xl font-bold text-primary">{cancelledThisMonth}</h3>
+          <p className="text-sm font-medium text-secondary mb-1">{`No Shows (Month)${dateSuffix}`}</p>
+          <h3 className="text-2xl font-bold text-primary">{noShowsThisMonth}</h3>
         </div>
       </div>
       <div className="bg-card rounded-xl p-5 border border-border flex items-start gap-4">

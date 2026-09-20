@@ -10,8 +10,6 @@ export const useTrainerMembersStore = create<TrainerMembersState>((set) => ({
   profileTab: 'overview',
   setProfileTab: (tab) => set({ profileTab: tab }),
 
-  showAddModal: false,
-  setShowAddModal: (show) => set({ showAddModal: show }),
 
   editId: null,
   editData: null,

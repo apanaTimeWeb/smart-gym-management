@@ -147,11 +147,22 @@ export default function TrainerMembersProfileDiet() {
               <h3 className="text-2xl font-bold text-primary">{diet.name}</h3>
               <p className="text-sm text-secondary mt-1">{displayValue(diet.description)}</p>
             </div>
-            <div className="bg-floating border border-border rounded-xl px-4 py-3 text-right">
-              <p className="text-xs text-secondary">Target Daily Calories</p>
-              <p className="text-2xl font-black text-primary flex items-center gap-1 justify-end">
-                <Flame size={20} className="text-danger" /> {displayValue(diet.calories)} <span className="text-xs text-secondary font-normal">kcal</span>
-              </p>
+            <div className="flex gap-4">
+              <div className="bg-floating border border-border rounded-xl px-4 py-3 text-right">
+                <p className="text-xs text-secondary">Diet Compliance</p>
+                <div className="flex items-center justify-end gap-2 mt-1">
+                  <div className="h-2 w-16 bg-input rounded-full overflow-hidden">
+                    <div className="h-full bg-success" style={{ width: `${diet.complianceScore ?? 0}%` }}></div>
+                  </div>
+                  <p className="text-xl font-black text-primary">{diet.complianceScore ?? 0}%</p>
+                </div>
+              </div>
+              <div className="bg-floating border border-border rounded-xl px-4 py-3 text-right">
+                <p className="text-xs text-secondary">Target Daily Calories</p>
+                <p className="text-2xl font-black text-primary flex items-center gap-1 justify-end">
+                  <Flame size={20} className="text-danger" /> {displayValue(diet.calories)} <span className="text-xs text-secondary font-normal">kcal</span>
+                </p>
+              </div>
             </div>
           </div>
 

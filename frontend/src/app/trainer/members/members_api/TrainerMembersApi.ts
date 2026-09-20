@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Provides all network access required by the Members module, including member-profile supporting data.
 import { apiFetch, type ApiResponse } from '@/lib/api';
 import type { Member } from '@/app/trainer/members/members_types/TrainerMembers_types';
-import { MemberListResponseSchema, MemberStatsResponseSchema, MemberDetailResponseSchema } from '@/app/trainer/members/members_types/TrainerMembers.schema';
+import { MemberListResponseSchema, MemberStatsResponseSchema, MemberDetailResponseSchema, type TrainerMemberAssessment } from '@/app/trainer/members/members_types/TrainerMembers.schema';
 import { MembersUrlConfig } from '@/app/trainer/members/members_url_config';
 import { TrainerMemberAttendanceResponseSchema, TrainerMemberDietPlansResponseSchema, TrainerMemberProgressEntriesResponseSchema, TrainerMemberWorkoutPlansResponseSchema } from '@/app/trainer/members/members_types/TrainerMembersProfileData.schema';
 import type { TrainerMemberDietSnapshot } from '@/app/trainer/members/members_types/TrainerMemberDietSnapshot';
@@ -25,6 +25,9 @@ export const TrainerMembersApi = {
   updateMember: async (id: string, body: Partial<Member>, idempotencyKey?: string) => {
     const response = await apiFetch<ApiResponse<unknown>>(MembersUrlConfig.BACKEND_API.UPDATE(id), { method: 'PATCH', body: JSON.stringify(body), ...(idempotencyKey ? { headers: { 'Idempotency-Key': idempotencyKey } } : {}) });
     return MemberDetailResponseSchema.parse(response);
+  },
+  updateMemberAssessment: async (id: string, assessment: TrainerMemberAssessment, idempotencyKey?: string) => {
+    return TrainerMembersApi.updateMember(id, { assessment }, idempotencyKey);
   },
   assignDiet: async (memberId: string, diet: TrainerMemberDietSnapshot | null) => TrainerMembersApi.updateMember(memberId, { assignedDietId: diet?.id, assignedDiet: diet ?? undefined }),
   assignWorkout: async (memberId: string, workout: TrainerMemberWorkoutSnapshot | null) => TrainerMembersApi.updateMember(memberId, { assignedWorkoutId: workout?.id, assignedWorkout: workout ?? undefined }),

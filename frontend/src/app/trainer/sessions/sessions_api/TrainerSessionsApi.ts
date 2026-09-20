@@ -36,8 +36,8 @@ export async function updateTrainerSession(id: string, dto: Partial<CreateSessio
   return { data: response.data, message: response.message };
 }
 
-export async function cancelTrainerSession(id: string, idempotencyKey?: string): Promise<{ message: string }> {
-  const raw = await apiFetch<import('@/lib/api').ApiResponse<unknown>>(TrainerSessionsUrlConfig.BACKEND_API.CANCEL(id), { method: 'DELETE', ...(idempotencyKey ? { headers: { 'Idempotency-Key': idempotencyKey } } : {}) });
+export async function markTrainerSessionNoShow(id: string, idempotencyKey?: string): Promise<{ message: string }> {
+  const raw = await apiFetch<import('@/lib/api').ApiResponse<unknown>>(TrainerSessionsUrlConfig.BACKEND_API.CANCEL(id), { method: 'POST', ...(idempotencyKey ? { headers: { 'Idempotency-Key': idempotencyKey } } : {}) });
   const response = createTrainerApiResponseSchema(z.null()).parse(raw);
   return { message: response.message };
 }

@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   createTrainerSession,
   updateTrainerSession,
-  cancelTrainerSession,
+  markTrainerSessionNoShow,
   markTrainerSessionAttendance,
 } from '@/app/trainer/sessions/sessions_api/TrainerSessionsApi';
 import type { CreateSessionDto } from '@/app/trainer/sessions/sessions_types/TrainerSessionsTypes';
@@ -26,8 +26,8 @@ export function useTrainerSessionMutations() {
     },
   });
 
-  const cancelSession = useMutation({
-    mutationFn: ({ id, idempotencyKey }: { id: string; idempotencyKey: string }) => cancelTrainerSession(id, idempotencyKey),
+  const markNoShowSession = useMutation({
+    mutationFn: ({ id, idempotencyKey }: { id: string; idempotencyKey: string }) => markTrainerSessionNoShow(id, idempotencyKey),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['trainer', 'sessions'] });
     },
@@ -43,7 +43,7 @@ export function useTrainerSessionMutations() {
   return {
     createSession,
     updateSession,
-    cancelSession,
+    markNoShowSession,
     markAttendance,
   };
 }

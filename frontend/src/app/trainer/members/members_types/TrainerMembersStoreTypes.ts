@@ -16,8 +16,6 @@ export interface TrainerMembersState {
   setSelectedMember: (memberId: string | null) => void;
   profileTab: TrainerProfileTab;
   setProfileTab: (tab: TrainerProfileTab) => void;
-  showAddModal: boolean;
-  setShowAddModal: (show: boolean) => void;
   editId: string | null;
   editData: MemberFormValues | null;
   setEditState: (id: string | null, data: MemberFormValues | null) => void;

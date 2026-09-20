@@ -10,7 +10,7 @@ import { z } from 'zod';
 export const SessionTypeSchema = z.enum(['PT', 'Group']);
 export type SessionType = z.infer<typeof SessionTypeSchema>;
 
-export const SessionStatusSchema = z.enum(['Upcoming', 'Completed', 'Cancelled']);
+export const SessionStatusSchema = z.enum(['Upcoming', 'Completed', 'No Show']);
 export type SessionStatus = z.infer<typeof SessionStatusSchema>;
 
 export const SessionFilterSchema = z.union([z.literal('All'), SessionTypeSchema]);

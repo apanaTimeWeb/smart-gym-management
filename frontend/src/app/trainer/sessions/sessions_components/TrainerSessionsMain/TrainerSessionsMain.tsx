@@ -26,7 +26,7 @@ export default function TrainerSessionsMain() {
   const { data: sessions = [], isLoading, isError, refetch } = useTrainerSessionsQuery(date);
   const { data: memberOptionsRaw = [] } = useMembersBasicQuery();
   const memberOptions = memberOptionsRaw.map(m => ({ value: m.id, label: m.name }));
-  const { createSession, cancelSession, markAttendance } = useTrainerSessionMutations();
+  const { createSession, markNoShowSession, markAttendance } = useTrainerSessionMutations();
   const { confirm } = useConfirm();
   const { showSuccess, showError } = useTrainerFeedback();
 
@@ -48,19 +48,19 @@ export default function TrainerSessionsMain() {
     }
   };
 
-  const handleCancelSession = async (sessionId: string) => {
+  const handleNoShowSession = async (sessionId: string) => {
     const ok = await confirm({
-      title: 'Cancel Session',
-      message: 'Are you sure you want to cancel this session? This action cannot be undone.',
+      title: 'Mark No Show',
+      message: 'Are you sure you want to mark this session as No Show? This action cannot be undone.',
       type: 'danger',
-      confirmText: 'Cancel Session',
+      confirmText: 'Mark No Show',
     });
     if (!ok) return;
     try {
-      const response = await cancelSession.mutateAsync({ id: sessionId, idempotencyKey: crypto.randomUUID() });
-      showSuccess(response.message, 'trainer-sessions-cancel-success');
+      const response = await markNoShowSession.mutateAsync({ id: sessionId, idempotencyKey: crypto.randomUUID() });
+      showSuccess(response.message, 'trainer-sessions-noshow-success');
     } catch (err) {
-      showError(err, 'trainer-sessions-cancel-error');
+      showError(err, 'trainer-sessions-noshow-error');
     }
   };
 
@@ -161,10 +161,10 @@ export default function TrainerSessionsMain() {
                         <Pencil size={13} /> Edit
                       </button>
                       <button type="button"
-                        onClick={() => handleCancelSession(session.id)}
+                        onClick={() => handleNoShowSession(session.id)}
                         className="text-sm font-semibold text-danger hover:text-danger hover:underline motion-safe:transition-colors motion-safe:duration-base"
                       >
-                        Cancel
+                        No Show
                       </button>
                       <button type="button"
                         onClick={() => setAttendanceSession(session)}
@@ -176,7 +176,7 @@ export default function TrainerSessionsMain() {
                   )}
                   <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${SESSION_STATUS_STYLES[session.status]}`}>
                     {session.status === 'Completed' && <CheckCircle size={12} />}
-                    {session.status === 'Cancelled' && <XCircle size={12} />}
+                    {session.status === 'No Show' && <XCircle size={12} />}
                     {session.status}
                   </span>
                 </div>

@@ -49,10 +49,22 @@ export function useTrainerMembersMutations() {
     },
   });
 
+  const updateAssessment = useMutation({
+    mutationFn: async ({ id, assessment, idempotencyKey }: { id: string; assessment: any; idempotencyKey?: string }) => {
+      const res = await TrainerMembersApi.updateMemberAssessment(id, assessment, idempotencyKey);
+      if (!res.success) throw new Error(res.message);
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['trainer', 'members'] });
+    },
+  });
+
   return {
     updateMember,
     addNote,
     assignDiet,
-    assignWorkout
+    assignWorkout,
+    updateAssessment
   };
 }
