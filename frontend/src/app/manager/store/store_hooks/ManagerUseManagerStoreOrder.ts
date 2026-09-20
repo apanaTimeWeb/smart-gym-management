@@ -1,22 +1,23 @@
-'use client';
-// RESPONSIBILITY: Owns Store order creation orchestration, confirmation, idempotency, receipt generation, and dirty-draft protection.
 // DATA FLOW: Store order UI → confirmation/dirty guard → TanStack mutation/API → query refresh → receipt/WhatsApp output.
-import type { ManagerConfirmType } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerConfirmModalTypes';
+// RESPONSIBILITY: Owns Store order creation orchestration, confirmation, idempotency, receipt generation, and dirty-draft protection.
+'use client';
 import { useRef } from 'react';
 import { useMutation } from '@tanstack/react-query';
-import type { Product, OrderItem } from '@/app/manager/store/store_types/ManagerStoreTypes';
-import { storeApi } from '@/app/manager/store/store_api/ManagerStoreApi';
-import type { ManagerToastType } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerToastTypes';
 import { formatCurrencyFromMinorUnits, formatDate } from '@/lib/formatters';
-import { ManagerStoreUrlConfig } from '@/app/manager/store/store_url_config';
 import { WhatsAppFormatter } from '@/lib/whatsapp_formatter';
-import { GYM_DETAILS } from '@/app/manager/manager_infrastructure/ManagerGymIdentity';
 import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
+import { GYM_DETAILS } from '@/app/manager/manager_infrastructure/ManagerGymIdentity';
 import { createManagerIdempotencyKey } from '@/app/manager/manager_infrastructure/ManagerIdempotency';
 import { showManagerErrorToast } from '@/app/manager/manager_infrastructure/ManagerToastService';
 import { useManagerUnsavedChangesGuard } from '@/app/manager/manager_infrastructure/ManagerUnsavedChangesGuard';
-import type { ManagerStoreReceiptData } from '@/app/manager/store/store_types/ManagerStoreThermalReceiptTypes';
+import { storeApi } from '@/app/manager/store/store_api/ManagerStoreApi';
 import { useManagerStoreUiStore } from '@/app/manager/store/store_store/ManagerUseManagerStoreUiStore';
+import { ManagerStoreUrlConfig } from '@/app/manager/store/store_url_config';
+import type { ManagerConfirmType } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerConfirmModalTypes';
+import type { ManagerToastType } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerToastTypes';
+import type { ManagerStoreReceiptData } from '@/app/manager/store/store_types/ManagerStoreThermalReceiptTypes';
+import type { Product, OrderItem } from '@/app/manager/store/store_types/ManagerStoreTypes';
+
 
 /** Owns one Store POS draft from confirmation through authoritative mutation completion. */
 export function useManagerStoreOrder(

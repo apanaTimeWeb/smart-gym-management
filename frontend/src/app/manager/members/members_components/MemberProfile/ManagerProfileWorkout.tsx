@@ -1,12 +1,13 @@
-'use client';
 // RESPONSIBILITY: Renders the member's assigned workout plan and handles the assignment flow.
+'use client';
 // DATA FLOW: useManagerMembersLogic -> ManagerProfileWorkout -> workoutApi
-import { ManagerMembersUrlConfig } from '@/app/manager/members/members_url_config';
 import{ useState } from 'react';
 import { Dumbbell, Plus, Check, MessageCircle, Edit2 } from 'lucide-react';
-import { useManagerMembersLogic } from '@/app/manager/members/members_hooks/ManagerUseManagerMembersLogic';
-import { useManagerMembersWorkoutPlansQuery } from '@/app/manager/members/members_api/ManagerUseManagerMembersWorkoutPlansQuery';
 import ManagerSearchableDropdown from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
+import { useManagerMembersLogic } from '@/app/manager/members/members_hooks/ManagerUseManagerMembersLogic';
+import { useManagerMembersWorkoutPlansQuery } from '@/app/manager/members/members_hooks/ManagerUseManagerMembersWorkoutPlansQuery';
+import { ManagerMembersUrlConfig } from '@/app/manager/members/members_url_config';
+
 
 export default function ManagerProfileWorkout() {
   const { selectedMember, assignWorkout } = useManagerMembersLogic();
@@ -30,7 +31,7 @@ export default function ManagerProfileWorkout() {
   };
 
   return (
-    <div className="space-y-6 motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95 motion-safe:duration-300">
+    <div className="space-y-6 motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95 motion-safe:duration-slow">
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-lg font-bold text-primary">Workout Plan</h3>
@@ -88,7 +89,7 @@ export default function ManagerProfileWorkout() {
                 <button 
                   onClick={handleAssign}
                   disabled={!selectedWorkoutId}
-                  className="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary rounded-xl text-sm font-semibold hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed motion-safe:transition-colors"
+                  className="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary rounded-xl text-sm font-semibold hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed motion-safe:transition-colors"
                 >
                   <Check size={18} /> Confirm Assign
                 </button>
@@ -109,7 +110,7 @@ export default function ManagerProfileWorkout() {
           </p>
           <button 
             onClick={() => setIsAssigning(true)}
-            className="px-6 py-2.5 bg-primary-subtle text-primary border border-primary/20 rounded-xl font-semibold hover:bg-primary-subtle motion-safe:transition-colors"
+            className="px-6 py-2.5 bg-primary-subtle text-primary border border-border rounded-xl font-semibold hover:bg-primary-subtle motion-safe:transition-colors"
           >
             Browse Workout Library
           </button>
@@ -151,7 +152,7 @@ export default function ManagerProfileWorkout() {
               ))
             ) : (
               <div className="col-span-full bg-input border border-border rounded-xl p-6 text-center">
-                <Dumbbell className="mx-auto text-primary/40 mb-3" size={18} />
+                <Dumbbell className="mx-auto text-secondary mb-3" size={18} />
                 <p className="text-lg text-primary font-bold">{workout.name}</p>
                 <p className="text-secondary text-sm mt-2 max-w-md mx-auto">
                   This plan is a {workout.level} level routine focused on {workout.goal}, spanning {workout.days?.length || 0} days per cycle.

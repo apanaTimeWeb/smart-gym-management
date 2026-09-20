@@ -1,5 +1,13 @@
+import { z } from 'zod';
+import { apiFetch } from '@/lib/api';
+import {
+  commCampaignSchema,
+  commKPIDataSchema,
+  commRecipientSchema,
+  commAutomationSchema,
+  churnedMemberSchema,
+  churnKPIDataSchema } from '@/app/manager/communications/communications_schemas/ManagerCommunicationsSchema';
 import { ManagerCommunicationsUrlConfig } from '@/app/manager/communications/communications_url_config';
-import { apiFetch, type ApiResponse } from '@/lib/api';
 import type {
   CommCampaign,
   CommKPIData,
@@ -11,14 +19,8 @@ import type {
   ChurnKPIData,
   CommChannel,
   WinBackTemplateTier } from '@/app/manager/communications/communications_types/ManagerCommunications_types';
-import {
-  commCampaignSchema,
-  commKPIDataSchema,
-  commRecipientSchema,
-  commAutomationSchema,
-  churnedMemberSchema,
-  churnKPIDataSchema } from '@/app/manager/communications/communications_schemas/ManagerCommunicationsSchema';
-import { z } from 'zod';
+import type { ApiResponse } from '@/lib/api';
+
 
 export const ManagerCommunicationsApi = {
   fetchCampaigns: async (params?: Record<string, string>): Promise<ApiResponse<{ campaigns: CommCampaign[]; total: number }>> => {

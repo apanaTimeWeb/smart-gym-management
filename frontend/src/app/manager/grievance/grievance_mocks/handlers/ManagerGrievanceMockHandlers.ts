@@ -1,21 +1,36 @@
 import { http, HttpResponse, delay } from 'msw';
-import { GrievanceUrlConfig } from '@/app/manager/grievance/grievance_url_config';
+import { z } from 'zod';
 import { MOCK_GRIEVANCE_TICKETS } from '@/app/manager/grievance/grievance_mocks/fixtures/ManagerGrievanceMockFixtures';
-import { type CreateGrievanceTicketPayload, type GrievanceTicket } from '@/app/manager/grievance/grievance_types/ManagerGrievanceTypes';
+import { CreateGrievanceTicketSchema } from '@/app/manager/grievance/grievance_schemas/ManagerGrievanceSchemas';
+import { ManagerGrievanceUrlConfig } from '@/app/manager/grievance/grievance_url_config';
+import { MANAGER_HTTP_STATUS } from '@/app/manager/manager_infrastructure/ManagerHttpStatus';
+import type { GrievanceTicket } from '@/app/manager/grievance/grievance_types/ManagerGrievanceTypes';
+
 
 let tickets = [...MOCK_GRIEVANCE_TICKETS];
+let ticketIdCounter = 1000;
+
+export function resetManagerGrievanceMockState(): void {
+  tickets = [...MOCK_GRIEVANCE_TICKETS];
+  ticketIdCounter = 1000;
+}
 
 export const managerGrievanceMockHandlers = [
-  http.get(GrievanceUrlConfig.BACKEND_API.BASE, async () => {
-    await delay(500);
-    return HttpResponse.json({ success: true, message: 'Success', data: tickets, meta: { total: tickets.length, page: 1, limit: 50, totalPages: 1 } });
+  http.get(ManagerGrievanceUrlConfig.BACKEND_API.BASE, async () => {
+    await delay(100);
+    return HttpResponse.json({
+      success: true,
+      message: 'Success',
+      data: tickets,
+      meta: { total: tickets.length, page: 1, limit: 50, totalPages: 1, hasNextPage: false, hasPrevPage: false },
+    });
   }),
-  
-  http.post(GrievanceUrlConfig.BACKEND_API.BASE, async ({ request }) => {
-    await delay(500);
-    const body = await request.json() as CreateGrievanceTicketPayload;
+
+  http.post(ManagerGrievanceUrlConfig.BACKEND_API.BASE, async ({ request }) => {
+    await delay(100);
+    const body = CreateGrievanceTicketSchema.parse(await request.json());
     const newTicket: GrievanceTicket = {
-      id: `gt${Date.now()}`,
+      id: `gt${ticketIdCounter++}`,
       memberName: body.memberName,
       category: body.category,
       issue: body.issue,
@@ -26,20 +41,25 @@ export const managerGrievanceMockHandlers = [
     return HttpResponse.json({ success: true, message: 'Grievance created', data: newTicket });
   }),
 
-  http.post(`${GrievanceUrlConfig.BACKEND_API.BASE}/:id/resolve`, async ({ params, request }) => {
-    await delay(500);
-    const { id } = params;
-    const { resolutionNote } = await request.json() as { resolutionNote: string };
-    
-    const ticketIndex = tickets.findIndex(t => t.id === id);
-    if (ticketIndex === -1) return HttpResponse.json({ success: false, message: 'Not found' }, { status: 404 });
-    
-    tickets[ticketIndex] = {
-      ...tickets[ticketIndex]!,
+  http.post(ManagerGrievanceUrlConfig.BACKEND_API.RESOLVE(':id'), async ({ params, request }) => {
+    await delay(100);
+    const id = String(params.id);
+    const body = z.object({ resolutionNote: z.string().min(1) }).parse(await request.json());
+    const ticketIndex = tickets.findIndex((ticket) => ticket.id === id);
+    if (ticketIndex === -1) {
+      return HttpResponse.json({ success: false, message: 'Not found', data: null }, { status: MANAGER_HTTP_STATUS.NOT_FOUND });
+    }
+    const current = tickets[ticketIndex];
+    if (!current) {
+      return HttpResponse.json({ success: false, message: 'Not found', data: null }, { status: MANAGER_HTTP_STATUS.NOT_FOUND });
+    }
+    const updatedTicket: GrievanceTicket = {
+      ...current,
       status: 'CLOSED',
       resolvedAt: new Date().toISOString(),
-      resolutionNote,
+      resolutionNote: body.resolutionNote,
     };
-    return HttpResponse.json({ success: true, message: 'Grievance resolved', data: tickets[ticketIndex] });
-  })
+    tickets[ticketIndex] = updatedTicket;
+    return HttpResponse.json({ success: true, message: 'Grievance resolved', data: updatedTicket });
+  }),
 ];

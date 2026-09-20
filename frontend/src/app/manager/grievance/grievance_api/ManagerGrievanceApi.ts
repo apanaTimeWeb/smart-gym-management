@@ -1,26 +1,23 @@
-import { apiFetch, type ApiResponse } from '@/lib/api';
 import { z } from 'zod';
-import { GrievanceTicketSchema, type GrievanceTicket, type CreateGrievanceTicketPayload } from '@/app/manager/grievance/grievance_types/ManagerGrievanceTypes';
-import { GrievanceUrlConfig } from '@/app/manager/grievance/grievance_url_config';
+import { apiFetch } from '@/lib/api';
+import { GrievanceTicketSchema } from '@/app/manager/grievance/grievance_schemas/ManagerGrievanceSchemas';
+import { ManagerGrievanceUrlConfig } from '@/app/manager/grievance/grievance_url_config';
+import type { GrievanceTicket, CreateGrievanceTicketPayload } from '@/app/manager/grievance/grievance_types/ManagerGrievanceTypes';
+import type { ApiResponse } from '@/lib/api';
+
 
 export const ManagerGrievanceApi = {
-  getTickets: async (): Promise<GrievanceTicket[]> => {
-    return apiFetch<ApiResponse<GrievanceTicket[]>>(GrievanceUrlConfig.BACKEND_API.BASE, {
-      dataSchema: z.array(GrievanceTicketSchema),
-    }).then(res => res.data || []);
-  },
-  createTicket: async (payload: CreateGrievanceTicketPayload): Promise<GrievanceTicket> => {
-    return apiFetch<ApiResponse<GrievanceTicket>>(GrievanceUrlConfig.BACKEND_API.BASE, {
-      method: 'POST',
-      body: JSON.stringify(payload),
-      dataSchema: GrievanceTicketSchema,
-    }).then(res => res.data!);
-  },
-  resolveTicket: async (id: string, resolutionNote: string): Promise<GrievanceTicket> => {
-    return apiFetch<ApiResponse<GrievanceTicket>>(`${GrievanceUrlConfig.BACKEND_API.BASE}/${id}/resolve`, {
-      method: 'POST',
-      body: JSON.stringify({ resolutionNote }),
-      dataSchema: GrievanceTicketSchema,
-    }).then(res => res.data!);
-  }
+  fetchGrievanceTickets: async (): Promise<ApiResponse<GrievanceTicket[]>> => apiFetch<ApiResponse<GrievanceTicket[]>>(ManagerGrievanceUrlConfig.BACKEND_API.BASE, {
+    dataSchema: z.array(GrievanceTicketSchema),
+  }),
+  createGrievanceTicket: async (payload: CreateGrievanceTicketPayload): Promise<ApiResponse<GrievanceTicket>> => apiFetch<ApiResponse<GrievanceTicket>>(ManagerGrievanceUrlConfig.BACKEND_API.BASE, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+    dataSchema: GrievanceTicketSchema,
+  }),
+  resolveGrievanceTicket: async (id: string, resolutionNote: string): Promise<ApiResponse<GrievanceTicket>> => apiFetch<ApiResponse<GrievanceTicket>>(ManagerGrievanceUrlConfig.BACKEND_API.RESOLVE(id), {
+    method: 'POST',
+    body: JSON.stringify({ resolutionNote }),
+    dataSchema: GrievanceTicketSchema,
+  }),
 };

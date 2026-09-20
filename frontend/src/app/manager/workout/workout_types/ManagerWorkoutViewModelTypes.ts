@@ -1,7 +1,8 @@
 // RESPONSIBILITY: Return type contract for the Manager Workout UI facade.
 import type { WorkoutFormValues, ExerciseFormValues } from '@/app/manager/workout/workout_types/ManagerWorkoutFormTypes';
-import type { Workout } from '@/app/manager/workout/workout_types/ManagerWorkoutTypes';
 import type { ExerciseSnapshot } from '@/app/manager/workout/workout_types/ManagerWorkoutSnapshotTypes';
+import type { Workout } from '@/app/manager/workout/workout_types/ManagerWorkoutTypes';
+
 
 export interface ManagerWorkoutViewModel {
   tab: string;

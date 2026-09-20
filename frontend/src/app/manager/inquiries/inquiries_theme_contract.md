@@ -1,37 +1,51 @@
-# Manager Inquiries Theme Contract
+# Manager Inquiries Module Theme Contract
 
-This contract defines the semantic CSS tokens required for the **Manager Inquiries** module. All components within this module must adhere exclusively to these tokens. Arbitrary values (`bg-blue-500`, `text-[#ff0000]`, `bg-[var(--danger)]`) are strictly prohibited.
+This contract belongs only to `src/app/manager/inquiries`. It records the exact global semantic theme variables consumed by the current implementation. The global design system remains the visual source of truth.
 
-## Core Backgrounds
-* `--bg-page` - Primary application background.
-* `--bg-card` - Background for modules, modals, and tables (e.g. `ManagerInquiriesTable`, `ManagerInquiriesModal`).
-* `--bg-input` - Background for input fields, textareas, and dropdowns.
+## Consumed Global Semantic Tokens
 
-## Borders
-* `--border` - Default border for cards, table rows, and modals.
-* `--border-danger` - Validation error state border (e.g. required field in `ManagerInquiriesModal`).
+| CSS Variable | Current Usage |
+| --- | --- |
+| `--bg-card` | card/panel surface |
+| `--bg-input` | input surface |
+| `--bg-overlay` | dialog/drawer surface |
+| `--bg-page` | page surface |
+| `--border` | standard borders/dividers |
+| `--border-focus` | focused border |
+| `--danger` | solid danger surface |
+| `--danger-bg` | subtle danger surface |
+| `--danger-text` | danger text |
+| `--focus-ring` | keyboard focus ring |
+| `--info` | solid info surface |
+| `--info-bg` | subtle info surface |
+| `--primary` | primary brand/active controls |
+| `--primary-hover` | primary hover state |
+| `--primary-subtle` | subtle primary surfaces |
+| `--shadow-card` | card elevation |
+| `--shadow-dialog` | dialog elevation |
+| `--skeleton-base` | skeleton base |
+| `--skeleton-highlight` | skeleton highlight |
+| `--success` | solid success surface |
+| `--success-bg` | subtle success surface |
+| `--success-text` | success text |
+| `--text-on-danger` | text on solid danger |
+| `--text-on-info` | text on solid info |
+| `--text-on-primary` | text on solid primary |
+| `--text-on-success` | text on solid success |
+| `--text-primary` | primary text |
+| `--text-secondary` | secondary text/labels |
+| `--warning` | solid warning surface |
+| `--warning-bg` | subtle warning surface |
+| `--warning-text` | warning text |
 
-## Text Colors
-* `--text-primary` - Default high-contrast text (e.g. inquiry name, title).
-* `--text-secondary` - Subdued text (e.g. inquiry phone, email, date).
+## Binding Rules
 
-## Semantic Status / KPIs
-The inquiries module requires specific semantic colors for representing leads state and KPI indicators:
+- No raw hex colors, arbitrary Tailwind color values, or raw RGBA colors may be introduced into module JSX.
+- Semantic background opacity modifiers such as `bg-success/10` and `bg-primary/20` are forbidden.
+- Solid semantic backgrounds require the appropriate documented on-color; otherwise use the subtle `*-bg` variant.
+- Feature-specific business status mappings remain local to this feature.
+- No feature-local CSS variable is defined by this module unless explicitly documented here.
 
-### Backgrounds
-* `--info-bg` - Background for "Total Inquiries" KPI card icon.
-* `--warning-bg` - Background for "New" and "Follow Up" KPI card icons, and initial avatars.
-* `--success-bg` - Background for "Converted" KPI card icon and WhatsApp action button.
-* `--primary-subtle` - Background for hover states on rows and buttons.
-* `--danger-bg` - Background for delete actions.
+## Portability
 
-### Text
-* `--text-info` - Text for "Total Inquiries" KPI card icon.
-* `--text-warning` - Text for "New" and "Follow Up" KPI card icons, and initial avatars.
-* `--text-success` - Text for "Converted" KPI card icon.
-* `--text-danger` - Text for destructive actions (Delete button, error messages).
-* `--text-primary` (brand) - Brand color for action buttons (Add Inquiry) and checkbox highlights.
-
-## Motion & Skeleton
-* `motion-safe:animate-pulse` - Wrapper for loading skeletons.
-* `--skeleton-base` / `--skeleton-highlight` - Default loading skeleton colors mapped to `bg-muted`.
+When this feature is copied to another compatible application, define the listed semantic variables through that application's canonical global theme stylesheet and preserve the same semantic meanings.

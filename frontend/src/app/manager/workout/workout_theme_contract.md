@@ -1,38 +1,47 @@
-# Manager Workout Theme Contract
+# Manager Workout Module Theme Contract
 
-This module strictly adheres to the global design system defined in `web_global_design.md`.
+This contract belongs only to `src/app/manager/workout`. It records the exact global semantic theme variables consumed by the current implementation. The global design system remains the visual source of truth.
 
-## Allowed Variables
-The Workout module is allowed to use the following semantic tokens:
+## Consumed Global Semantic Tokens
 
-- `--bg-page`: The main background color for the page layout.
-- `--bg-card`: The background for cards, tables, and modal containers.
-- `--bg-input`: The background for input fields and search bars.
-- `--border`: Used for table row dividers, card borders, and input borders.
-- `--primary`: The brand primary color, used for active tab underlines, primary buttons, and banner gradients.
-- `--primary-subtle`: Used for row hover states and subtle button backgrounds.
-- `--text-primary`: Primary headings and important data fields.
-- `--text-secondary`: Used for table headers, descriptions, and placeholder texts.
-- `--success`: Used for success badges (e.g., Beginner level).
-- `--success-bg`: Subtle background for success badges.
-- `--warning`: Used for warning badges (e.g., Intermediate level).
-- `--warning-bg`: Subtle background for warning badges.
-- `--danger`: Used for destructive actions (e.g., Delete workout) and Advanced level badges.
-- `--danger-bg`: Subtle background for destructive actions and badges.
-- `--info`: Used for informative sections and banner gradients.
-- `--info-bg`: Subtle background for informative actions.
-- `--skeleton-base`: Base color for loading skeletons.
-- `--skeleton-highlight`: Highlight color for loading skeletons.
+| CSS Variable | Current Usage |
+| --- | --- |
+| `--bg-card` | card/panel surface |
+| `--bg-input` | input surface |
+| `--bg-overlay` | dialog/drawer surface |
+| `--bg-page` | page surface |
+| `--border` | standard borders/dividers |
+| `--danger` | solid danger surface |
+| `--danger-bg` | subtle danger surface |
+| `--danger-text` | danger text |
+| `--focus-ring` | keyboard focus ring |
+| `--info-bg` | subtle info surface |
+| `--info-text` | info text |
+| `--primary` | primary brand/active controls |
+| `--primary-hover` | primary hover state |
+| `--primary-subtle` | subtle primary surfaces |
+| `--shadow-card` | card elevation |
+| `--shadow-dialog` | dialog elevation |
+| `--skeleton-base` | skeleton base |
+| `--skeleton-highlight` | skeleton highlight |
+| `--success` | solid success surface |
+| `--success-bg` | subtle success surface |
+| `--success-text` | success text |
+| `--text-on-primary` | text on solid primary |
+| `--text-primary` | primary text |
+| `--text-secondary` | secondary text/labels |
+| `--warning` | solid warning surface |
+| `--warning-bg` | subtle warning surface |
+| `--warning-text` | warning text |
 
-## Component Specific Patterns
-- **Workout/Exercise Badges**:
-  - Beginner: `bg-success-bg text-success`
-  - Intermediate: `bg-warning-bg text-warning`
-  - Advanced: `bg-danger-bg text-danger`
-- **Banner**: Uses `bg-gradient-to-br from-primary to-info`.
-- **Modals**: Fixed at `z-40`, background `bg-black/60`. Dialog container `bg-card rounded-2xl border-2 border-warning`.
+## Binding Rules
 
-## Forbidden Practices
-- Do not use arbitrary color classes like `bg-[#123456]` or `text-green-500`.
-- Do not use inline styles with `var(--workout-highlight)` or any custom non-global tokens. Always use global semantic tokens.
-- Do not define arbitrary shadows or borders. Use standard Tailwind utilities.
+- No raw hex colors, arbitrary Tailwind color values, or raw RGBA colors may be introduced into module JSX.
+- Semantic background opacity modifiers such as `bg-success/10` and `bg-primary/20` are forbidden.
+- Solid semantic backgrounds require the appropriate documented on-color; otherwise use the subtle `*-bg` variant.
+- Feature-specific business status mappings remain local to this feature.
+- No feature-local CSS variable is defined by this module unless explicitly documented here.
+
+## Portability
+
+When this feature is copied to another compatible application, define the listed semantic variables through that application's canonical global theme stylesheet and preserve the same semantic meanings.

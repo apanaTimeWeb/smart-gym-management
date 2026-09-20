@@ -1,6 +1,7 @@
-import { describe, it, expect, vi } from 'vitest';
 import { renderHook } from '@testing-library/react';
+import { describe, it, expect, vi } from 'vitest';
 import * as moduleUnderTest from '@/app/manager/store/store_hooks/ManagerUseManagerStoreLogic';
+
 const { queryConfigs, mutationConfigs } = vi.hoisted(() => ({ queryConfigs: [] as unknown[], mutationConfigs: [] as unknown[] }));
 
 vi.mock('next/navigation', () => ({

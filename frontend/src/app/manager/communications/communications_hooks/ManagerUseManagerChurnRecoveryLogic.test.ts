@@ -1,6 +1,7 @@
-import { describe, it, expect, vi } from 'vitest';
 import { renderHook } from '@testing-library/react';
+import { describe, it, expect, vi } from 'vitest';
 import * as moduleUnderTest from '@/app/manager/communications/communications_hooks/ManagerUseManagerChurnRecoveryLogic';
+
 const { queryConfigs, mutationConfigs } = vi.hoisted(() => ({ queryConfigs: [] as unknown[], mutationConfigs: [] as unknown[] }));
 
 vi.mock('next/navigation', () => ({

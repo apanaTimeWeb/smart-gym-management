@@ -14,6 +14,12 @@ Manager Attendance is the branch attendance workspace for recording and reviewin
 | `attendance_types/` | Feature-owned responsibility for the attendance module. | `ManagerAttendanceSchema.ts; ManagerAttendanceSnapshotTypes.ts; ManagerAttendanceTypes.ts` |
 | `attendance_utils/` | Feature-owned responsibility for the attendance module. | `ManagerAttendanceSharedConstants.ts` |
 
+## Approved External Dependencies
+
+- Global framework/application infrastructure documented by the architecture standard may be used when required.
+- Approved zero-business UI primitives may be imported from Manager application infrastructure.
+- Sibling feature business logic, state, API services, fixtures, and tests are not dependencies.
+
 ## Feature Inventory
 | Feature | Route | What the User Can Do | Main API Calls | Status |
 |---|---|---|---|---|

@@ -1,6 +1,5 @@
-'use client';
 // RESPONSIBILITY: Renders the ManagerDashboardSkeleton sub-view extracted from ManagerDashboardMain; owns only this presentation responsibility.
-// RESPONSIBILITY: Skeleton view for the dashboard route; mirrors the dashboard layout while data is loading.
+'use client';
 
 export function ManagerDashboardSkeleton() {
   return (

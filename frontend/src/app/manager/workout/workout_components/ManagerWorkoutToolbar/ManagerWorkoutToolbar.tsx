@@ -1,9 +1,10 @@
-'use client';
 // RESPONSIBILITY: Renders the search input, muscle group filter, and Add Plan CTA for the Workout Library.
+'use client';
 import { useState, useEffect } from 'react';
 import { Search, Plus } from 'lucide-react';
 import { useManagerWorkoutLogic } from '@/app/manager/workout/workout_hooks/ManagerUseManagerWorkoutLogic';
 import { WORKOUT_TAB_OPTIONS } from '@/app/manager/workout/workout_utils/ManagerWorkoutSharedConstants';
+
 
 export default function ManagerWorkoutToolbar() {
   const { tab, setTab, search, setSearch, levelFilter, setLevelFilter, setCurrentPage, openAddWk, openAddEx } = useManagerWorkoutLogic();
@@ -16,6 +17,7 @@ export default function ManagerWorkoutToolbar() {
     setLocalSearch(search);
   }
 
+// EFFECT: Effect lifecycle and dependency list are intentionally scoped to values that control this side effect.
   useEffect(() => {
     const timer = setTimeout(() => {
       if (localSearch !== search) {
@@ -46,14 +48,14 @@ export default function ManagerWorkoutToolbar() {
             value={localSearch} 
             onChange={e => setLocalSearch(e.target.value)}  
             placeholder="Search..." 
-            className="pl-8 pr-3 py-2 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-warning w-36 lg:w-48 bg-input text-primary motion-safe:transition-all" 
+            className="pl-8 pr-3 py-2 text-sm border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-warning w-36 lg:w-48 bg-input text-primary motion-safe:transition-all" 
           />
         </div>
         {tab === 'Workout Plans' && (
           <select
             value={levelFilter}
             onChange={(e) => setLevelFilter(e.target.value)}
-            className="hidden sm:block px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-warning bg-input text-primary"
+            className="hidden sm:block px-3 py-2 border border-border rounded-lg text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-warning bg-input text-primary"
           >
             <option value="ALL">All Levels</option>
             <option value="Beginner">Beginner</option>

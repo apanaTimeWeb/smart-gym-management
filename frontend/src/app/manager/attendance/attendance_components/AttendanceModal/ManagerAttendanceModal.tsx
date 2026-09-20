@@ -1,9 +1,10 @@
-'use client';
 // RESPONSIBILITY: Renders the modal for marking new attendance records for members or staff.
-import { useManagerAttendanceForm } from '@/app/manager/attendance/attendance_hooks/ManagerUseManagerAttendanceForm';
+'use client';
 import { X, CheckCircle, Loader2 } from 'lucide-react';
 import { Controller } from 'react-hook-form';
+import { useManagerAttendanceForm } from '@/app/manager/attendance/attendance_hooks/ManagerUseManagerAttendanceForm';
 import ManagerSearchableDropdown from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
+
 
 export default function ManagerAttendanceModal() {
   const { showModal, setShowModal, members, staff, saving, tab, form, handleClose, submit, watchType, watchStatus, todayDate } = useManagerAttendanceForm();
@@ -32,11 +33,11 @@ export default function ManagerAttendanceModal() {
               <label className="block text-sm font-medium text-secondary mb-2">User Type</label>
               <div className="flex gap-4">
                 <label className="flex items-center gap-2 cursor-pointer">
-                  <input type="radio" value="MEMBER" {...register('type')} className="text-primary focus:ring-primary h-4 w-4" />
+                  <input type="radio" value="MEMBER" {...register('type')} className="text-primary focus-visible:ring-primary h-4 w-4" />
                   <span className="text-sm font-medium text-primary">Member</span>
                 </label>
                 <label className="flex items-center gap-2 cursor-pointer">
-                  <input type="radio" value="STAFF" {...register('type')} className="text-primary focus:ring-primary h-4 w-4" />
+                  <input type="radio" value="STAFF" {...register('type')} className="text-primary focus-visible:ring-primary h-4 w-4" />
                   <span className="text-sm font-medium text-primary">Staff</span>
                 </label>
               </div>
@@ -85,10 +86,10 @@ export default function ManagerAttendanceModal() {
               <label className="block text-sm font-medium text-secondary mb-2">Status</label>
               <div className="flex gap-4">
                 <label className="flex items-center gap-2 text-sm text-primary cursor-pointer">
-                  <input type="radio" value="PRESENT" {...register('status')} className="text-primary focus:ring-primary" /> Present
+                  <input type="radio" value="PRESENT" {...register('status')} className="text-primary focus-visible:ring-primary" /> Present
                 </label>
                 <label className="flex items-center gap-2 text-sm text-primary cursor-pointer">
-                  <input type="radio" value="LEAVE" {...register('status')} className="text-primary focus:ring-primary" /> Leave
+                  <input type="radio" value="LEAVE" {...register('status')} className="text-primary focus-visible:ring-primary" /> Leave
                 </label>
               </div>
               {errors.status && <p className="text-danger text-xs mt-1">{errors.status.message}</p>}
@@ -106,7 +107,7 @@ export default function ManagerAttendanceModal() {
                 max={watchStatus !== 'LEAVE' ? todayDate : undefined}
                 readOnly={watchStatus !== 'LEAVE'}
                 {...register('date')}
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus-visible:ring-2 ${
+                className={`w-full px-3 py-2 border rounded-lg focus-visible:outline-none focus-visible:ring-2 ${
                   errors.date ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
                 } bg-input text-primary ${watchStatus !== 'LEAVE' ? 'opacity-80 cursor-not-allowed' : ''}`} 
               />
@@ -118,7 +119,7 @@ export default function ManagerAttendanceModal() {
                 <input 
                   type="date" 
                   {...register('endDate')}
-                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus-visible:ring-2 ${
+                  className={`w-full px-3 py-2 border rounded-lg focus-visible:outline-none focus-visible:ring-2 ${
                     errors.endDate ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
                   } bg-input text-primary`} 
                 />
@@ -131,7 +132,7 @@ export default function ManagerAttendanceModal() {
                 <input 
                   type="time" 
                   {...register('checkIn')}
-                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus-visible:ring-2 ${
+                  className={`w-full px-3 py-2 border rounded-lg focus-visible:outline-none focus-visible:ring-2 ${
                     errors.checkIn ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
                   } bg-input text-primary`} 
                 />

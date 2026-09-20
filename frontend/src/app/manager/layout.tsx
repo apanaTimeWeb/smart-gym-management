@@ -1,9 +1,10 @@
 // RESPONSIBILITY: Root layout for the MANAGER module. Wraps all MANAGER pages with QueryProvider, layout shell, and feedback providers.
-import type { ReactNode } from 'react';
-import ManagerLayout from '@/app/manager/manager_components/ManagerLayout/ManagerLayout';
 import { ManagerConfirmProvider } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
+import ManagerLayout from '@/app/manager/manager_components/ManagerLayout/ManagerLayout';
 import { ManagerQueryProvider } from '@/app/manager/manager_components/ManagerQueryProvider';
 import { ManagerMswBrowserBootstrap } from '@/app/manager/manager_mocks/ManagerMswBrowserBootstrap';
+import type { ReactNode } from 'react';
+
 
 export const metadata = {
   title: 'GymSmart MANAGER | Gym Management System',

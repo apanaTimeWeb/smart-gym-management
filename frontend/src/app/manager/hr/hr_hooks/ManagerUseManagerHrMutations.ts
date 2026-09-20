@@ -1,14 +1,16 @@
 // DATA FLOW: HR UI → feature mutation hooks → ManagerHrApi → TanStack Query cache → HR UI.
 /** Manages UseHrMutations for the Manager module. */
+import { useManagerHrPayrollMutations } from '@/app/manager/hr/hr_hooks/ManagerUseManagerHrPayrollMutations';
+import { useManagerHrStaffMutations } from '@/app/manager/hr/hr_hooks/ManagerUseManagerHrStaffMutations';
 import type { Staff, Payroll, HrSummary } from '@/app/manager/hr/hr_types/ManagerHrTypes';
 import type { ManagerToastType } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerToastTypes';
-import { useManagerHrStaffMutations } from '@/app/manager/hr/hr_hooks/ManagerUseManagerHrStaffMutations';
-import { useManagerHrPayrollMutations } from '@/app/manager/hr/hr_hooks/ManagerUseManagerHrPayrollMutations';
+
 
 type ManagerStaffUpdater = (updater: Staff[] | ((previous: Staff[]) => Staff[])) => void;
 type ManagerPayrollUpdater = (updater: Payroll[] | ((previous: Payroll[]) => Payroll[])) => void;
 type ManagerSummaryUpdater = (updater: HrSummary | null | ((previous: HrSummary | null) => HrSummary | null)) => void;
 
+/** Orchestrates the owning Manager feature behavior while preserving its documented state boundary. */
 export function useManagerHrMutations(
   staff: Staff[],
   payrolls: Payroll[],

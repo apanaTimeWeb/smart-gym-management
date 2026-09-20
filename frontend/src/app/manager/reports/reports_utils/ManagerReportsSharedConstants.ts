@@ -11,12 +11,12 @@ export const REPORT_DATE_RANGE_OPTIONS = [
 ];
 
 export const EXPENSE_CATEGORY_STYLES: Record<string, { bg: string; text: string }> = {
-  Rent:        { bg: 'bg-danger/10',   text: 'text-danger'   },
-  Salaries:    { bg: 'bg-warning/10',  text: 'text-warning'  },
-  Equipment:   { bg: 'bg-info/10',     text: 'text-info'     },
-  Utilities:   { bg: 'bg-primary/10',  text: 'text-primary'  },
-  Marketing:   { bg: 'bg-success/10',  text: 'text-success'  },
-  Maintenance: { bg: 'bg-purple-bg',  text: 'text-purple'   },
-  Other:       { bg: 'bg-secondary/10',text: 'text-secondary'} };
+  Rent:        { bg: 'bg-danger-bg',   text: 'text-danger'   },
+  Salaries:    { bg: 'bg-warning-bg',  text: 'text-warning'  },
+  Equipment:   { bg: 'bg-info-bg',     text: 'text-info'     },
+  Utilities:   { bg: 'bg-primary-subtle',  text: 'text-primary'  },
+  Marketing:   { bg: 'bg-success-bg',  text: 'text-success'  },
+  Maintenance: { bg: 'bg-purple-bg',  text: 'text-purple-text'   },
+  Other:       { bg: 'bg-input',text: 'text-secondary'} };
 
 

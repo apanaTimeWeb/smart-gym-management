@@ -1,14 +1,17 @@
-import { useManagerMaintenanceTickets } from '@/app/manager/maintenance/maintenance_api/ManagerUseManagerMaintenanceQueries';
+// DATA FLOW: Manager feature UI/state → owning custom hook → approved API/query/mutation layer → observable UI state.
 import { useManagerMaintenanceMutations } from '@/app/manager/maintenance/maintenance_hooks/ManagerUseManagerMaintenanceMutations';
-import { type CreateMaintenanceTicketPayload } from '@/app/manager/maintenance/maintenance_types/ManagerMaintenanceTypes';
+import { useManagerMaintenanceTickets } from '@/app/manager/maintenance/maintenance_hooks/ManagerUseManagerMaintenanceQueries';
+import type { CreateMaintenanceTicketPayload } from '@/app/manager/maintenance/maintenance_types/ManagerMaintenanceTypes';
 
+
+/** Orchestrates the owning Manager feature behavior while preserving its documented state boundary. */
 export function useManagerMaintenanceLogic() {
-  const { data: tickets = [], isLoading, isError, refetch } = useManagerMaintenanceTickets();
-  const { createTicket, resolveTicket } = useManagerMaintenanceMutations();
+  const { data: tickets = [], isPending, isError, error, refetch } = useManagerMaintenanceTickets();
+  const { createMaintenanceTicket, resolveMaintenanceTicket } = useManagerMaintenanceMutations();
 
   const handleCreateTicket = async (payload: CreateMaintenanceTicketPayload) => {
     try {
-      await createTicket.mutateAsync(payload);
+      await createMaintenanceTicket.mutateAsync(payload);
       return true;
     } catch {
       return false;
@@ -17,19 +20,22 @@ export function useManagerMaintenanceLogic() {
 
   const handleResolveTicket = async (id: string) => {
     try {
-      await resolveTicket.mutateAsync(id);
+      await resolveMaintenanceTicket.mutateAsync(id);
       return true;
     } catch {
       return false;
     }
   };
 
-  return { 
-    tickets, 
-    isLoading, 
-    isError, 
-    reload: refetch, 
-    createTicket: handleCreateTicket, 
-    resolveTicket: handleResolveTicket 
+  return {
+    tickets,
+    isPending,
+    isError,
+    error,
+    reload: refetch,
+    createTicket: handleCreateTicket,
+    resolveTicket: handleResolveTicket,
+    isCreating: createMaintenanceTicket.isPending,
+    isResolving: resolveMaintenanceTicket.isPending,
   };
 }

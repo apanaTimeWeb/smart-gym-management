@@ -1,8 +1,8 @@
-'use client';
 // RESPONSIBILITY: Renders the ManagerReportsRevenueChart sub-view extracted from ManagerReportsCharts; owns only this presentation responsibility.
-// RESPONSIBILITY: ApexCharts-based charts for each report tab — Revenue, Attendance, Members, Expenses.
+'use client';
 import dynamic from 'next/dynamic';
 import { useManagerReportsLogic } from '@/app/manager/reports/reports_hooks/ManagerUseManagerReportsLogic';
+
 const CHART_BASE = {
   chart: { background: 'transparent', toolbar: { show: false }, fontFamily: 'Inter, sans-serif' },
   grid: { borderColor: 'var(--chart-grid)', strokeDashArray: 4 },

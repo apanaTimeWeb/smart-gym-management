@@ -1,9 +1,12 @@
-'use client';
+// DATA FLOW: Manager feature UI/state → owning custom hook → approved API/query/mutation layer → observable UI state.
 // RESPONSIBILITY: Owns dashboard URL state for range and custom date parameters; no server data is stored here.
+'use client';
 import { useCallback } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import type { ManagerDashboardDateRange } from '@/app/manager/dashboard/dashboard_utils/ManagerDashboardDateFilterConstants';
 
+
+/** Orchestrates the owning Manager feature behavior while preserving its documented state boundary. */
 export function useManagerDashboardUrlState() {
   const router = useRouter();
   const pathname = usePathname();

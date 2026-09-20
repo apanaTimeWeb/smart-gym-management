@@ -1,16 +1,18 @@
-'use client';
-// RESPONSIBILITY: Owns URL tab state, TanStack Query server state, and PT mutations.
 // DATA FLOW: ManagerPtApi → TanStack Query → useManagerPtLogic → ManagerPtMain.
+// RESPONSIBILITY: Owns URL tab state, TanStack Query server state, and PT mutations.
+'use client';
 /** Manages UsePtLogic for the Manager module. */
 import { useCallback, useMemo, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+import { useManagerDebounce } from '@/app/manager/manager_infrastructure/ManagerDebounce';
 import { showManagerErrorToast, showManagerSuccessToast } from '@/app/manager/manager_infrastructure/ManagerToastService';
 import { managerPtApi } from '@/app/manager/pt/pt_api/ManagerPtApi';
-import type { PtActiveTab } from '@/app/manager/pt/pt_types/ManagerPtTypes';
-import { useManagerDebounce } from '@/app/manager/manager_infrastructure/ManagerDebounce';
 import { PT_TAB_OPTIONS } from '@/app/manager/pt/pt_types/ManagerPtTypes';
+import type { PtActiveTab } from '@/app/manager/pt/pt_types/ManagerPtTypes';
 
+
+/** Orchestrates the owning Manager feature behavior while preserving its documented state boundary. */
 export function useManagerPtLogic() {
   const router = useRouter();
   const pathname = usePathname();
@@ -34,7 +36,7 @@ export function useManagerPtLogic() {
     router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   }, [pathname, router, searchParams]);
 
-  const kpisQuery = useQuery({ queryKey: ['manager', 'pt', 'kpis'], queryFn: async () => (await managerPtApi.fetchDashboardKpis()).data ?? null });
+  const kpisQuery = useQuery({ queryKey: ['manager', 'pt', 'kpis'], queryFn: async () => (await managerPtApi.fetchPtDashboardKpis()).data ?? null });
   const workloadQuery = useQuery({ queryKey: ['manager', 'pt', 'workload'], queryFn: async () => (await managerPtApi.fetchWorkload()).data ?? [] });
   const packagesQuery = useQuery({ queryKey: ['manager', 'pt', 'packages'], queryFn: async () => (await managerPtApi.fetchPackages()).data ?? [] });
   const assignmentParams = useMemo(() => ({ page: String(currentPage), limit: String(limit), search: debouncedSearch }), [currentPage, limit, debouncedSearch]);

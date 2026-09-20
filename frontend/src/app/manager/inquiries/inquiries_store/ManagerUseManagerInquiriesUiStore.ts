@@ -1,10 +1,12 @@
+// DATA FLOW: Manager feature UI/state → owning custom hook → approved API/query/mutation layer → observable UI state.
 "use client";
 /** Coordinates the Manager / feature. */
 import { create } from "zustand";
-import type { Inquiry } from "@/app/manager/inquiries/inquiries_types/ManagerInquiriesTypes";
 import type { InquiryFormValues } from "@/app/manager/inquiries/inquiries_types/ManagerInquiriesFormTypes";
 import type { ManagerInquiriesMessageType, ManagerInquiriesMessageRecipient } from "@/app/manager/inquiries/inquiries_types/ManagerInquiriesMessageTypes";
+import type { Inquiry } from "@/app/manager/inquiries/inquiries_types/ManagerInquiriesTypes";
 import type { ManagerToastType } from "@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerToastTypes";
+
 
 type ManagerInquiriesMessageModal = { open: boolean; recipient: ManagerInquiriesMessageRecipient; type: ManagerInquiriesMessageType; message: string; subject?: string };
 type ManagerInquiriesBulkMessageModal = { open: boolean; type: ManagerInquiriesMessageType; recipients: ManagerInquiriesMessageRecipient[] };

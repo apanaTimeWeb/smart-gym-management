@@ -1,15 +1,17 @@
-'use client';
 // DATA FLOW: Manager Store API → TanStack Query cache → useManagerStoreQueries → Manager Store UI.
+'use client';
 /** Manages UseStoreQueries for the Manager module. */
 import { useCallback, useMemo } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { storeApi } from '@/app/manager/store/store_api/ManagerStoreApi';
 import type { Product, Order, StoreSummary, StoreInitialData, ManagerStoreSortOrder } from '@/app/manager/store/store_types/ManagerStoreTypes';
 
+
 /**
  * Owns server-state reads for the Store module. Query cache is the authoritative
  * source of truth; filters are sent to the API/MSW boundary rather than stored locally.
  */
+/** Orchestrates the owning Manager feature behavior while preserving its documented state boundary. */
 export function useManagerStoreQueries(
   currentPage: number,
   sortOrder: ManagerStoreSortOrder,
@@ -85,7 +87,7 @@ export function useManagerStoreQueries(
     totalOrders: ordersQuery.data?.total ?? 0,
     summary: summaryQuery.data ?? null,
     setSummary,
-    isLoading: productsQuery.isPending || ordersQuery.isPending || summaryQuery.isPending,
+    isPending: productsQuery.isPending || ordersQuery.isPending || summaryQuery.isPending,
     isError: productsQuery.isError || ordersQuery.isError || summaryQuery.isError,
     error: productsQuery.error ?? ordersQuery.error ?? summaryQuery.error,
     loadAll };

@@ -1,16 +1,19 @@
+// DATA FLOW: Manager feature UI/state → owning custom hook → approved API/query/mutation layer → observable UI state.
 'use client';
 /** Coordinates the Manager / feature. */
 import React, { useCallback, useMemo } from 'react';
-import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
-import { useManagerFinancePayments, useManagerFinanceSummary } from '@/app/manager/finance/finance_api/ManagerUseManagerFinanceQueries';
+import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { formatDate } from '@/lib/formatters';
 import { financeApi } from '@/app/manager/finance/finance_api/ManagerFinanceApi';
-import { useManagerFinanceUiStore, type FinanceTab } from '@/app/manager/finance/finance_store/ManagerUseManagerFinanceUiStore';
-
+import { useManagerFinancePayments, useManagerFinanceSummary } from '@/app/manager/finance/finance_hooks/ManagerUseManagerFinanceQueries';
+import { useManagerFinanceUiStore } from '@/app/manager/finance/finance_store/ManagerUseManagerFinanceUiStore';
+import type { FinanceTab } from '@/app/manager/finance/finance_store/ManagerUseManagerFinanceUiStore';
 import type { ManagerFinanceViewModel } from '@/app/manager/finance/finance_types/ManagerFinanceViewModelTypes';
 
 
+
+/** Orchestrates the owning Manager feature behavior while preserving its documented state boundary. */
 export function useManagerFinanceLogic(): ManagerFinanceViewModel {
   const searchParams = useSearchParams(); const router = useRouter(); const pathname = usePathname(); const queryClient = useQueryClient(); const ui = useManagerFinanceUiStore();
   const range = searchParams.get('range') || 'this_month'; const search = searchParams.get('search') || ''; const statusFilter = searchParams.get('status') || 'ALL'; const methodFilter = searchParams.get('method') || 'ALL'; const currentPage = parseInt(searchParams.get('page') || '1', 10); const startDate = searchParams.get('startDate') || ''; const endDate = searchParams.get('endDate') || '';
@@ -23,5 +26,5 @@ export function useManagerFinanceLogic(): ManagerFinanceViewModel {
   const exportCSV = useCallback(() => { const payments = paymentsQuery.data?.payments ?? []; const rows = [['Invoice No','Member','Plan','Amount','Method','Status','Date'], ...payments.map((payment) => [payment.invoiceNumber, payment.member?.name ?? '—', payment.member?.plan?.name ?? '—', payment.amount, payment.method, payment.status, formatDate(payment.paidAt)])]; const csv = rows.map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(',')).join('\n'); const blob = new Blob([csv], { type: 'text/csv' }); const url = URL.createObjectURL(blob); const anchor = document.createElement('a'); anchor.href = url; anchor.download = `finance_${new Date().toISOString().split('T')[0]}.csv`; anchor.click(); URL.revokeObjectURL(url); }, [paymentsQuery.data?.payments]);
   const exportPDF = useCallback(async () => { const response = await financeApi.exportPaymentsReport('pdf'); if (response.data?.url) window.open(response.data.url, '_blank', 'noopener,noreferrer'); }, []);
   const printReceipt = useCallback((_id: string) => { window.print(); }, []);
-  return { tab: ui.tab, setTab: ui.setTab, search, setSearch, statusFilter, setStatusFilter, methodFilter, setMethodFilter, currentPage, setCurrentPage, startDate, setStartDate, endDate, setEndDate, payments: paymentsQuery.data?.payments ?? [], summary: summaryQuery.data ?? null, totalPayments: paymentsQuery.data?.total ?? 0, isLoading: paymentsQuery.isPending || summaryQuery.isPending, isError: paymentsQuery.isError || summaryQuery.isError, errorMessage, reload, exportCSV, exportPDF, printReceipt, toast: ui.toast, showToast: ui.showToast, hideToast: ui.hideToast };
+  return { tab: ui.tab, setTab: ui.setTab, search, setSearch, statusFilter, setStatusFilter, methodFilter, setMethodFilter, currentPage, setCurrentPage, startDate, setStartDate, endDate, setEndDate, payments: paymentsQuery.data?.payments ?? [], summary: summaryQuery.data ?? null, totalPayments: paymentsQuery.data?.total ?? 0, isPending: paymentsQuery.isPending || summaryQuery.isPending, isError: paymentsQuery.isError || summaryQuery.isError, errorMessage, reload, exportCSV, exportPDF, printReceipt, toast: ui.toast, showToast: ui.showToast, hideToast: ui.hideToast };
 }

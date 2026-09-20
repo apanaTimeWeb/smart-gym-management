@@ -1,7 +1,8 @@
-'use client';
 // RESPONSIBILITY: Hides the Manager module UI when the authenticated user lacks the required capability.
-import type { ManagerPermissionGateProps } from '@/app/manager/manager_infrastructure/manager_infrastructure_types/ManagerPermissionGateTypes';
+'use client';
 import { usePermissions } from '@/lib/usePermissions';
+import type { ManagerPermissionGateProps } from '@/app/manager/manager_infrastructure/manager_infrastructure_types/ManagerPermissionGateTypes';
+
 
 
 

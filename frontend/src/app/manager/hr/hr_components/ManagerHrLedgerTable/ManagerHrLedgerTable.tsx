@@ -1,13 +1,14 @@
+// RESPONSIBILITY: Renders the HR ledger table and exposes feature-owned ledger actions.
 'use client';
-import { MANAGER_GENERIC_ERROR_MESSAGE } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
-import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
-// RESPONSIBILITY: Renders the Manager HrLedgerTable presentation layer for the Manager module.
 import { useState, useEffect } from 'react';
-import { useManagerHrLogic } from '@/app/manager/hr/hr_hooks/ManagerUseManagerHrLogic';
-import { useManagerHrLedgerQuery } from '@/app/manager/hr/hr_api/ManagerUseManagerHrLedgerQuery';
-import ManagerSearchableDropdown from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
-import ManagerHrLedgerEmptyState from '@/app/manager/hr/hr_components/ManagerHrLedgerEmptyState/ManagerHrLedgerEmptyState';
 import { displayValue, formatCurrencyFromMinorUnits, formatDate } from '@/lib/formatters';
+import ManagerHrLedgerEmptyState from '@/app/manager/hr/hr_components/ManagerHrLedgerEmptyState/ManagerHrLedgerEmptyState';
+import { useManagerHrLedgerQuery } from '@/app/manager/hr/hr_hooks/ManagerUseManagerHrLedgerQuery';
+import { useManagerHrLogic } from '@/app/manager/hr/hr_hooks/ManagerUseManagerHrLogic';
+import ManagerSearchableDropdown from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
+import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
+import { MANAGER_GENERIC_ERROR_MESSAGE } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
+
 
 const HR_LEDGER_COLUMN_COUNT = 6;
 
@@ -17,6 +18,7 @@ export default function ManagerHrLedgerTable() {
   const { data: ledgerResponse, isPending: loading, isError, error } = useManagerHrLedgerQuery(selectedStaffId);
   const ledger = ledgerResponse?.data?.ledger ?? [];
 
+// EFFECT: Effect lifecycle and dependency list are intentionally scoped to values that control this side effect.
   useEffect(() => {
     if (staff.length > 0 && !selectedStaffId) {
       if (staff[0]?.id) setSelectedStaffId(staff[0].id);
@@ -65,7 +67,7 @@ export default function ManagerHrLedgerTable() {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-secondary/10 border-b border-border text-sm">
+              <tr className="bg-input border-b border-border text-sm">
                 <th className="p-4 font-medium text-secondary whitespace-nowrap">Date</th>
                 <th className="p-4 font-medium text-secondary whitespace-nowrap">Transaction Type</th>
                 <th className="p-4 font-medium text-secondary">Notes</th>
@@ -89,7 +91,7 @@ export default function ManagerHrLedgerTable() {
                 <tr><td colSpan={HR_LEDGER_COLUMN_COUNT} className="p-0"><ManagerHrLedgerEmptyState /></td></tr>
               ) : (
                 ledger.map(l => (
-                  <tr key={l.id} className="hover:bg-secondary/5 motion-safe:transition-colors">
+                  <tr key={l.id} className="hover:bg-surface-highlight motion-safe:transition-colors">
                     <td className="p-4 text-primary whitespace-nowrap">{formatDate(l.date)}</td>
                     <td className="p-4">
                       <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium 

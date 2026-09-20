@@ -1,9 +1,10 @@
-'use client';
-import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 // RESPONSIBILITY: Renders the top KPI stat cards (total staff, active staff, payroll metrics) for the HR module.
-import { useManagerHrLogic } from '@/app/manager/hr/hr_hooks/ManagerUseManagerHrLogic';
+'use client';
 import { Users, DollarSign, UserCheck, FileText } from 'lucide-react';
 import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
+import { useManagerHrLogic } from '@/app/manager/hr/hr_hooks/ManagerUseManagerHrLogic';
+import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
+
 
 export default function ManagerHrKPIs() {
   const { summary } = useManagerHrLogic();

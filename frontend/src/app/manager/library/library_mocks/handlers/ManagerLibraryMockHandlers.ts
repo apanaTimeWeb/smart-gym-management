@@ -1,10 +1,11 @@
 import { http, HttpResponse } from 'msw';
-import { MANAGER_HTTP_STATUS } from '@/app/manager/manager_infrastructure/ManagerHttpStatus';
-import { MOCK_MANAGER_EXERCISES } from '@/app/manager/library/library_fixtures/ManagerLibraryMockData';
 import { MOCK_MANAGER_DIET_PLANS } from '@/app/manager/library/library_fixtures/ManagerLibraryDietMockData';
+import { MOCK_MANAGER_EXERCISES } from '@/app/manager/library/library_fixtures/ManagerLibraryMockData';
 import { ManagerLibraryUrlConfig } from '@/app/manager/library/library_url_config';
+import { MANAGER_HTTP_STATUS } from '@/app/manager/manager_infrastructure/ManagerHttpStatus';
 import { managerMockApiUrl } from '@/app/manager/manager_infrastructure/ManagerMockApiUrl';
 import type { Exercise, DietPlan } from '@/app/manager/library/library_types/ManagerLibraryTypes';
+
 
 let mockExercises = [...MOCK_MANAGER_EXERCISES];
 let mockDietPlans = [...MOCK_MANAGER_DIET_PLANS];

@@ -1,5 +1,7 @@
 import { act, renderHook } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useManagerUnsavedChangesGuard } from '@/app/manager/manager_infrastructure/ManagerUnsavedChangesGuard';
+
 
 const push = vi.fn();
 const confirm = vi.fn();
@@ -26,7 +28,7 @@ describe('useManagerUnsavedChangesGuard', () => {
     await act(async () => {
       await result.current.confirmAndNavigate('/manager/dashboard');
     });
-    expect(confirm).toHaveBeenCalledWith(expect.objectContaining({ title: 'Unsaved Changes', confirmText: 'Leave', cancelText: 'Stay' }));
+    expect(confirm).toHaveBeenCalledWith(expect.objectContaining({ title: 'Unsaved Changes', confirmText: 'Discard', cancelText: 'Keep Editing' }));
     expect(push).toHaveBeenCalledWith('/manager/dashboard');
   });
 

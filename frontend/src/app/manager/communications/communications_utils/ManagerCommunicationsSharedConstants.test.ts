@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { CANCELLATIONS_REASON_OPTIONS, COMM_CHANNEL_OPTIONS, COMM_ITEMS_PER_PAGE, COMM_MESSAGE_TEMPLATES, COMM_SEGMENT_OPTIONS } from '@/app/manager/communications/communications_utils/ManagerCommunicationsSharedConstants';
 
+
 describe('ManagerCommunicationsSharedConstants', () => {
   it('keeps channel and segment choices aligned with the communication contract', () => {
     expect(COMM_CHANNEL_OPTIONS.map((item) => item.value)).toEqual(['whatsapp', 'email']);

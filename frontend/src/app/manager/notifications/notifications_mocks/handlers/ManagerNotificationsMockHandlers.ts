@@ -2,7 +2,12 @@ import { http, HttpResponse } from 'msw';
 import { MOCK_NOTIFICATIONS, MOCK_NOTIFICATION_KPIS } from '@/app/manager/notifications/notifications_fixtures/ManagerNotificationsMockData';
 import { ManagerNotificationsUrlConfig } from '@/app/manager/notifications/notifications_url_config';
 
+
 let notifications = structuredClone(MOCK_NOTIFICATIONS);
+
+export function resetManagerNotificationsMockState(): void {
+  notifications = structuredClone(MOCK_NOTIFICATIONS);
+}
 
 export const managerNotificationsHandlers = [
   http.get(`${ManagerNotificationsUrlConfig.BACKEND_API.BASE}`, ({ request }) => {

@@ -13,10 +13,16 @@ Manager PT is the personal-training operations workspace. Managers can review PT
 | `pt_mocks/` | Feature-owned responsibility for the pt module. | `—` |
 | `pt_types/` | Feature-owned responsibility for the pt module. | `ManagerPtAssignmentSchema.ts; ManagerPtSchema.ts; ManagerPtTypes.ts` |
 
+## Approved External Dependencies
+
+- Global framework/application infrastructure documented by the architecture standard may be used when required.
+- Approved zero-business UI primitives may be imported from Manager application infrastructure.
+- Sibling feature business logic, state, API services, fixtures, and tests are not dependencies.
+
 ## Feature Inventory
 | Feature | Route | What the User Can Do | Main API Calls | Status |
 |---|---|---|---|---|
-| fetchDashboardKpis | `/manager/pt` | Uses the fetchDashboardKpis workflow with typed request/response handling. | `GET /manager/pt/kpis` | ✅ Implemented |
+| fetchPtDashboardKpis | `/manager/pt` | Uses the fetchPtDashboardKpis workflow with typed request/response handling. | `GET /manager/pt/kpis` | ✅ Implemented |
 | fetchWorkload | `/manager/pt` | Uses the fetchWorkload workflow with typed request/response handling. | `GET /manager/pt/workload` | ✅ Implemented |
 | fetchPackages | `/manager/pt` | Uses the fetchPackages workflow with typed request/response handling. | `GET /manager/pt/packages` | ✅ Implemented |
 | fetchAssignments | `/manager/pt` | Uses the fetchAssignments workflow with typed request/response handling. | `GET /manager/pt/assignments` | ✅ Implemented |
@@ -40,7 +46,7 @@ TanStack Query owns pt server/API data. UI-only filters, tabs, selections, and d
 ## API Contract
 | Function | Method | Endpoint | Request | Response `data` type |
 |---|---|---|---|---|
-| `fetchDashboardKpis` | `GET` | `/api/v1/manager/pt/kpis` | `—` | `PtDashboardKpis` |
+| `fetchPtDashboardKpis` | `GET` | `/api/v1/manager/pt/kpis` | `—` | `PtDashboardKpis` |
 | `fetchWorkload` | `GET` | `/api/v1/manager/pt/workload` | `—` | `PtTrainerWorkload[]` |
 | `fetchPackages` | `GET` | `/api/v1/manager/pt/packages` | `—` | `PtPackage[]` |
 | `fetchAssignments` | `GET` | `/api/v1/manager/pt/assignments` | `{ page?, limit?, search?, trainerId?, status? }` | `PtAssignmentsResponse` |

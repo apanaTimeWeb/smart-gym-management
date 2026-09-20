@@ -1,19 +1,19 @@
-'use client';
 // RESPONSIBILITY: Renders the ManagerScheduleContent sub-view extracted from ManagerScheduleMain; owns only this presentation responsibility.
-// RESPONSIBILITY: Root client orchestrator for the Schedule module. Owns layout, toolbar, view toggle, and renders sub-components.
+'use client';
 import { useState } from 'react';
 import { Search, LayoutGrid, Table2, AlertCircle } from 'lucide-react';
-import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/ManagerHeader';
 import ManagerToast from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
-import { useManagerScheduleLogic  } from '@/app/manager/schedule/schedule_hooks/ManagerUseManagerScheduleLogic';
+import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/ManagerHeader';
+import { MANAGER_GENERIC_ERROR_MESSAGE } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
 import ManagerScheduleKPIs from '@/app/manager/schedule/schedule_components/ManagerScheduleKPIs/ManagerScheduleKPIs';
-import ManagerScheduleWeeklyGrid from '@/app/manager/schedule/schedule_components/ManagerScheduleWeeklyGrid/ManagerScheduleWeeklyGrid';
-import ManagerScheduleTrainerCard from '@/app/manager/schedule/schedule_components/ManagerScheduleTrainerCard/ManagerScheduleTrainerCard';
 import ManagerScheduleShiftModal from '@/app/manager/schedule/schedule_components/ManagerScheduleShiftModal/ManagerScheduleShiftModal';
 import ManagerScheduleSkeleton from '@/app/manager/schedule/schedule_components/ManagerScheduleSkeleton/ManagerScheduleSkeleton';
+import ManagerScheduleTrainerCard from '@/app/manager/schedule/schedule_components/ManagerScheduleTrainerCard/ManagerScheduleTrainerCard';
+import ManagerScheduleWeeklyGrid from '@/app/manager/schedule/schedule_components/ManagerScheduleWeeklyGrid/ManagerScheduleWeeklyGrid';
+import { useManagerScheduleLogic  } from '@/app/manager/schedule/schedule_hooks/ManagerUseManagerScheduleLogic';
 import { SHIFT_DAYS } from '@/app/manager/schedule/schedule_utils/ManagerScheduleSharedConstants';
 import type { ShiftDay } from '@/app/manager/schedule/schedule_types/ManagerScheduleTypes';
-import { MANAGER_GENERIC_ERROR_MESSAGE } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
+
 
 export function ManagerScheduleContent() {
   const { trainers, toast, hideToast, selectedDay, setSelectedDay, search, setSearch, status, error } = useManagerScheduleLogic();
@@ -28,7 +28,7 @@ export function ManagerScheduleContent() {
       <div className="min-h-full pb-10">
         <ManagerHeader title="Trainer Schedule" subtitle="View trainer availability, shift timings, and weekly schedule" />
         <div className="p-6 mt-10">
-          <div className="max-w-md w-full bg-card border border-danger/20 rounded-xl p-8 text-center space-y-4 mx-auto">
+          <div className="max-w-md w-full bg-card border border-danger rounded-xl p-8 text-center space-y-4 mx-auto">
             <div className="w-12 h-12 bg-danger-bg text-danger rounded-full flex items-center justify-center mx-auto">
               <AlertCircle size={18} />
             </div>
@@ -61,7 +61,7 @@ export function ManagerScheduleContent() {
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="Search trainer..."
-              className="w-full pl-9 pr-3 py-2 text-sm bg-input border border-border rounded-lg text-primary placeholder:text-secondary focus:outline-none focus:border-primary"
+              className="w-full pl-9 pr-3 py-2 text-sm bg-input border border-border rounded-lg text-primary placeholder:text-secondary focus-visible:outline-none focus-visible:border-primary"
             />
           </div>
 

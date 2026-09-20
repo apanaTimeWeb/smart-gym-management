@@ -7,7 +7,7 @@ To maintain extreme isolation and enterprise-grade architecture in the Manager F
 - **No Mutations:** The Finance module is strictly an analytics read-only view. Do not implement payment collection or refund creation logic here. Those belong in Members or HR modules.
 
 ## 2. Theming & Formatting
-- **No Arbitrary Classes:** Raw Tailwind values (e.g., `text-[#EF4444]`, `bg-green-500`) are strictly prohibited in React components. You MUST use semantic tokens defined in `finance_theme_contract.md` (e.g., `text-danger`, `bg-success/10`).
+- **No Arbitrary Classes:** Raw Tailwind values (e.g., `text-[#EF4444]`, `bg-green-500`) are strictly prohibited in React components. You MUST use semantic tokens defined in `finance_theme_contract.md` (e.g., `text-danger`, `bg-success-bg`).
 - **Chart Exceptions:** Passing exact hex values (like `#EF4444`) directly to the ApexCharts configuration object is permitted since Canvas/SVG libraries do not reliably resolve all Tailwind variable classes.
 - **No Inline Currency Formatting:** Never use `.toLocaleString()` or string concatenations for currency (`₹${value}`). All monetary values MUST pass through `formatCurrencyFromMinorUnits()` or `formatKPI()` from `@/lib/formatters`.
 

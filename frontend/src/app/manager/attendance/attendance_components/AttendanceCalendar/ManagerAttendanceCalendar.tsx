@@ -1,10 +1,11 @@
-﻿'use client';
-// RESPONSIBILITY: Renders a month-wise calendar view of attendance for a specific user.
+// RESPONSIBILITY: Renders the attendance calendar and its feature-owned day interactions.
+'use client';
 import React, { useState } from 'react';
-import { formatAttendanceMonthYear } from '@/app/manager/attendance/attendance_utils/ManagerAttendanceSharedConstants';
-import { useManagerAttendanceLogic } from '@/app/manager/attendance/attendance_hooks/ManagerUseManagerAttendanceLogic';
-import { useAttendanceHistoryQuery } from '@/app/manager/attendance/attendance_api/ManagerUseManagerAttendanceQueries';
 import { X, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
+import { useManagerAttendanceLogic } from '@/app/manager/attendance/attendance_hooks/ManagerUseManagerAttendanceLogic';
+import { useAttendanceHistoryQuery } from '@/app/manager/attendance/attendance_hooks/ManagerUseManagerAttendanceQueries';
+import { formatAttendanceMonthYear } from '@/app/manager/attendance/attendance_utils/ManagerAttendanceSharedConstants';
+
 
 export default function ManagerAttendanceCalendar() {
   const { calendarUser, setCalendarUser, showToast } = useManagerAttendanceLogic();
@@ -12,7 +13,7 @@ export default function ManagerAttendanceCalendar() {
 
   const monthStr = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`;
   
-  const { data: historyData, isLoading: loading, isError, error } = useAttendanceHistoryQuery(
+  const { data: historyData, isPending: loading, isError, error } = useAttendanceHistoryQuery(
     calendarUser?.id || '',
     calendarUser?.type || 'MEMBER',
     monthStr
@@ -59,7 +60,7 @@ export default function ManagerAttendanceCalendar() {
   });
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay-backdrop p-4 motion-safe:animate-in motion-safe:fade-in motion-safe:duration-200">
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay-backdrop p-4 motion-safe:animate-in motion-safe:fade-in motion-safe:duration-base">
       <div className="w-full max-w-md bg-card shadow-card flex flex-col max-h-full rounded-2xl border-2 border-primary overflow-hidden">
         
         {/* Header */}
@@ -124,7 +125,7 @@ export default function ManagerAttendanceCalendar() {
               </div>
               <div className="grid grid-cols-7 gap-1.5">
                 {blanks.map(b => (
-                  <div key={`blank-${b}`} className="aspect-square rounded-md bg-page/30" />
+                  <div key={`blank-${b}`} className="aspect-square rounded-md bg-page" />
                 ))}
                 {days.map(day => {
                   const status = getStatusForDay(day);
@@ -138,7 +139,7 @@ export default function ManagerAttendanceCalendar() {
                         aspect-square flex items-center justify-center rounded-md border-none text-xs font-bold motion-safe:transition-all
                         ${isPresent ? 'bg-success text-on-success motion-safe:hover:scale-110' : ''}
                         ${isAbsent ? 'bg-danger text-on-danger motion-safe:hover:scale-110' : ''}
-                        ${isLeave ? 'bg-primary text-white motion-safe:hover:scale-110' : ''}
+                        ${isLeave ? 'bg-primary text-on-primary motion-safe:hover:scale-110' : ''}
                         ${status === 'NONE' ? 'bg-page border border-border text-secondary' : ''}
                       `}
                     >

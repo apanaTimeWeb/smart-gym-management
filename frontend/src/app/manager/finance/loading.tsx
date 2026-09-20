@@ -4,7 +4,7 @@ import ManagerTableSkeleton from '@/app/manager/manager_components/ManagerShared
 export default function Loading() {
   return (
     <div className="min-h-screen flex flex-col p-6 space-y-5 bg-page">
-      <div className="h-20 bg-card rounded-xl motion-safe:animate-pulse"></div>
+      <div className="h-20 bg-skeleton-base bg-skeleton-highlight rounded-xl motion-safe:animate-pulse"></div>
       
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {[1, 2, 3, 4].map(i => (

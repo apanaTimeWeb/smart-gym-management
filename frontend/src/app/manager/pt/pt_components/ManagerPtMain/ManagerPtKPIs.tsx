@@ -1,9 +1,10 @@
-'use client';
 // RESPONSIBILITY: Renders the top-level KPI stat cards for the PT Dashboard.
-import type { ManagerPtKPIsProps } from '@/app/manager/pt/pt_types/ManagerPtKpisTypes';
+'use client';
 import { Users, CalendarCheck, TrendingUp, AlertCircle } from 'lucide-react';
 import { formatKPI } from '@/lib/formatters';
 import { useDateRangeSuffix } from '@/lib/useDateRangeSuffix';
+import type { ManagerPtKPIsProps } from '@/app/manager/pt/pt_types/ManagerPtKpisTypes';
+
 
 
 

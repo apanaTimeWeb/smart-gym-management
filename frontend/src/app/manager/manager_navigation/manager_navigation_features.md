@@ -1,70 +1,34 @@
-# manager/manager_navigation — Feature Map
+# Manager Navigation — Feature Map
 
 ## Module Purpose
-[REQUIRED: 3–6 sentences. Must answer: (1) What business problem does this module solve? (2) Who uses it? (3) What are the 3–5 most important things a user can DO? (4) What is strictly OFF-LIMITS? Fill this out accurately.]
+`manager_navigation/` defines Manager role navigation structure and header navigation behavior. It owns which Manager routes are surfaced, their labels, ordering, icon selection, and navigation-only configuration. It must reference feature-owned page URL constants rather than embedding duplicate business route strings.
 
 ## Directory Structure
-| Folder | Responsibility | Key Files |
-|---|---|---|
-| `manager_navigation_components/` | Renders UI components | TBD |
-| `manager_navigation_api/` | API endpoints | `manager_navigation_url_config.ts` |
+```text
+manager_navigation/
+├── ManagerNavigationConfig.ts
+├── ManagerHeaderNavigationConfig.ts
+├── manager_navigation_url_config.ts
+├── manager_navigation_features.md
+├── manager_navigation_forbidden.md
+└── manager_navigation_theme_contract.md
+```
 
-### Approved External Dependencies
-### Application Infrastructure
-- `@/lib/api`
-- `@/lib/logger`
+## Data / State Flow
+Navigation configuration is static role configuration. Active-route state is derived from the application router and shell. Navigation does not own feature server state.
 
-### Business Feature Dependencies
-- None
+## Business Boundary
+Navigation may reference feature URL configuration for route destinations but must not import feature business components, hooks, stores, API services, schemas, fixtures, or tests.
 
-### Role-Level Business Dependencies
-- None
+## Verification Checklist
+- [x] Feature URL config is the route source for business navigation targets.
+- [x] No sibling business module is imported for navigation behavior.
+- [x] Navigation remains a role-container concern, not a feature-business container.
+- [ ] Browser deep-link/back/forward verification: NOT VERIFIED without host runtime.
 
-## Feature Inventory
-| Feature | Route | What the User Can Do | Key Components | Main API Calls | Status |
-|---|---|---|---|---|---|
-| Example | /manager/manager_navigation | Manage entity | Main.tsx | GET /... | 🚧 TBD |
+## Approved External Dependencies
 
-## User Flows & Interactions
-### Flow 1: [Name]
-1. TBD
+- Global framework/application infrastructure documented by the architecture standard may be used when required.
+- Approved zero-business UI primitives may be imported from Manager application infrastructure.
+- Sibling feature business logic, state, API services, fixtures, and tests are not dependencies.
 
-## Data and State Architecture
-- **State pattern:** TanStack Query for server state + Zustand for UI state.
-- **Zustand stores:** [List actual store files]
-- **Context providers:** [List actual provider files]
-- **MSW handler location:** [module-owned handler]
-
-## API Contract
-| Function | Method | Endpoint | Request | Response `data` type |
-|---|---|---|---|---|
-| TBD | GET | /... | — | `any` |
-
-## UI Data Requirements
-| UI Element | Required Field(s) | API Endpoint | Response Path | Nullable? | Mocked? |
-|---|---|---|---|---|---|
-| TBD | TBD | GET /... | data... | No | Yes |
-
-## Permissions and Security
-- **Required role:** `MANAGER`
-- **Destructive actions:** TBD
-- **Cross-role isolation:** Zero imports from other roles.
-
-## Loading, Empty, and Error States
-| Section | Loading State | Empty State | Error State |
-|---|---|---|---|
-| Full page | `loading.tsx` | `manager_navigationEmptyState.tsx` | `error.tsx` |
-
-## Edge Cases and AI Warnings
-- **[Specific Warning]:** [Explanation]
-
-## Component Responsibility Map
-| Component File | Responsibility |
-|---|---|
-| TBD | TBD |
-
-## Rule Compliance Checklist
-- [ ] Rule 1: Micro-modularization
-- [ ] Rule 2: Total Role Isolation
-- [ ] Module Self-Containment
-- [ ] Feature Dependency Firewall

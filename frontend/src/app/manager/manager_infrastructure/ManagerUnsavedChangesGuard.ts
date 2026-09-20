@@ -1,13 +1,13 @@
+// DATA FLOW: Form dirty state → guard → ManagerConfirmProvider → confirmed navigation/closure or cancelled action.
 'use client';
 
 import { useCallback, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
 
+
 const DEFAULT_WARNING = 'You have unsaved changes. Are you sure you want to leave? Your changes will be lost.';
 
-// RESPONSIBILITY: Protects dirty Manager forms against browser exits, same-origin link navigation, and destructive modal closure.
-// DATA FLOW: RHF dirty state → guard → ManagerConfirmProvider → confirmed navigation/closure or cancelled action.
 /** Guards a dirty form against browser exit, in-app navigation, and accidental discard. */
 export function useManagerUnsavedChangesGuard(isDirty: boolean, warningText = DEFAULT_WARNING) {
   const router = useRouter();
@@ -36,6 +36,7 @@ export function useManagerUnsavedChangesGuard(isDirty: boolean, warningText = DE
     return shouldLeave;
   }, [askBeforeDiscard, router]);
 
+  // EFFECT: Registers and cleans up browser-exit and same-origin navigation protection only while the form is dirty.
   useEffect(() => {
     if (!isDirty) return undefined;
 

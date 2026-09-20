@@ -1,14 +1,20 @@
 // RESPONSIBILITY: Provides static UI option and table-label constants for the HR module; no server data or form schemas.
+export const MANAGER_HR_MAX_AMOUNT_MAJOR_UNITS = Number.MAX_SAFE_INTEGER / 100;
+
 export const HR_TABS = ['Trainer List', 'Trainer Attendance', 'Salary & Payments', 'Staff Ledger', 'Give Advance', 'Pay Due'] as const;
 
+
 export const STAFF_TABLE_HEADERS = ['Name', 'Role', 'Status', 'Phone', 'Salary', 'Advance', 'Joined'];
+
 export const PAYROLL_TABLE_HEADERS = ['Staff', 'Month', 'Base Salary', 'Net Payable', 'Paid Amount', 'Pending', 'Status', 'Paid On'];
+
 
 export const GENDER_OPTIONS = [
   { label: 'Male', value: 'MALE' },
   { label: 'Female', value: 'FEMALE' },
   { label: 'Other', value: 'OTHER' },
 ] as const;
+
 
 export const STAFF_ROLE_OPTIONS = [
   { label: 'General Trainer', value: 'General Trainer' },
@@ -23,6 +29,7 @@ export const STAFF_ROLE_OPTIONS = [
   { label: 'Cafeteria Staff', value: 'Cafeteria Staff' },
   { label: 'Other', value: 'Other' },
 ] as const;
+
 
 export const STAFF_MODAL_FIELDS = [
   { label: 'Full Name', key: 'name', type: 'text', placeholder: '' },

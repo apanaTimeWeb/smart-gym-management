@@ -1,22 +1,24 @@
-'use client';
-// RESPONSIBILITY: Owns member renewal/upgrade form setup, derived values, confirmation and submission.
 // DATA FLOW: Members UI → RHF/Zod → confirm → renewal mutation → Query cache → Members UI.
+// RESPONSIBILITY: Owns member renewal/upgrade form setup, derived values, confirmation and submission.
+'use client';
 /** Coordinates the Manager / feature. */
 import { useEffect, useMemo, useRef } from 'react';
-import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useManagerMembersLogic } from '@/app/manager/members/members_hooks/ManagerUseManagerMembersLogic';
-import { useFetchPlans } from '@/app/manager/members/members_api/ManagerUseManagerMembersQueries';
-import { useManagerUnsavedChangesGuard } from '@/app/manager/manager_infrastructure/ManagerUnsavedChangesGuard';
-import { createManagerIdempotencyKey } from '@/app/manager/manager_infrastructure/ManagerIdempotency';
-import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
-import { fromManagerMinorUnits, toManagerMinorUnits } from '@/app/manager/manager_infrastructure/ManagerMoney';
+import { useForm, useWatch } from 'react-hook-form';
 import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
+import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
 import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
-import { MEMBERS_CYCLE_LABELS, getPriceForCycle } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
+import { createManagerIdempotencyKey } from '@/app/manager/manager_infrastructure/ManagerIdempotency';
+import { fromManagerMinorUnits, toManagerMinorUnits } from '@/app/manager/manager_infrastructure/ManagerMoney';
+import { useManagerUnsavedChangesGuard } from '@/app/manager/manager_infrastructure/ManagerUnsavedChangesGuard';
+import { useManagerMembersLogic } from '@/app/manager/members/members_hooks/ManagerUseManagerMembersLogic';
+import { useFetchPlans } from '@/app/manager/members/members_hooks/ManagerUseManagerMembersQueries';
 import { managerMembersRenewFormSchema } from '@/app/manager/members/members_schemas/ManagerMembersRenewFormSchema';
+import { getPriceForCycle } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
+import { MEMBERS_CYCLE_LABELS } from '@/app/manager/members/members_utils/ManagerMembersUiConstants';
 import type { ManagerMembersRenewFormValues } from '@/app/manager/members/members_types/ManagerMembersRenewFormTypes';
 import type { PlanWithCustom } from '@/app/manager/members/members_types/ManagerMembersTypes';
+
 
 const PAYMENT_METHODS = [
   { label: 'UPI', value: 'UPI' },
@@ -38,6 +40,7 @@ function getExpiryDate(actionType: ManagerMembersRenewFormValues['actionType'], 
   return next.toISOString().split('T')[0] ?? '';
 }
 
+/** Orchestrates the owning Manager feature behavior while preserving its documented state boundary. */
 export function useManagerMembersRenewForm() {
   const { showRenewModal, setShowRenewModal, selectedMember, renewMember } = useManagerMembersLogic();
   const { data: plansData } = useFetchPlans();
@@ -61,6 +64,7 @@ export function useManagerMembersRenewForm() {
   const selectedPlan = useMemo(() => plans.find((plan) => String(plan.id) === planId) as PlanWithCustom | undefined, [plans, planId]);
   const calculatedPrice = useMemo(() => getPriceForCycle(selectedPlan, billingCycle, customDays), [selectedPlan, billingCycle, customDays]);
 
+// EFFECT: Effect lifecycle and dependency list are intentionally scoped to values that control this side effect.
   useEffect(() => {
     if (!showRenewModal || !selectedMember) return;
     reset({
@@ -69,6 +73,7 @@ export function useManagerMembersRenewForm() {
     });
   }, [reset, selectedMember, showRenewModal]);
 
+// EFFECT: Effect lifecycle and dependency list are intentionally scoped to values that control this side effect.
   useEffect(() => {
     if (!selectedMember || !planId || !billingCycle) return;
     const calculatedPriceInMajorUnits = fromManagerMinorUnits(calculatedPrice);

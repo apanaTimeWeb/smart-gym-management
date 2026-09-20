@@ -1,16 +1,16 @@
-'use client';
 // RESPONSIBILITY: Renders the ManagerStoreContent sub-view extracted from ManagerStoreMain; owns only this presentation responsibility.
-// RESPONSIBILITY: Entry component for the Store module. Wraps the UI in the hook-based state facade and handles page layout.
-import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/ManagerHeader';
-import ManagerToast from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
-import ManagerStoreThermalReceipt from '@/app/manager/store/store_components/ManagerStoreThermalReceipt/ManagerStoreThermalReceipt';
-import { useManagerStoreLogic  } from '@/app/manager/store/store_hooks/ManagerUseManagerStoreLogic';
-import ManagerStoreKPIs from '@/app/manager/store/store_components/ManagerStoreKPIs/ManagerStoreKPIs';
-import ManagerStoreToolbar from '@/app/manager/store/store_components/ManagerStoreToolbar/ManagerStoreToolbar';
-import ManagerStoreFilters from '@/app/manager/store/store_components/ManagerStoreFilters/ManagerStoreFilters';
-import ManagerStoreProductGrid from '@/app/manager/store/store_components/ManagerStoreProductGrid/ManagerStoreProductGrid';
-import ManagerStoreOrderTable from '@/app/manager/store/store_components/ManagerStoreOrderTable/ManagerStoreOrderTable';
+'use client';
 import dynamic from 'next/dynamic';
+import ManagerToast from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
+import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/ManagerHeader';
+import ManagerStoreFilters from '@/app/manager/store/store_components/ManagerStoreFilters/ManagerStoreFilters';
+import ManagerStoreKPIs from '@/app/manager/store/store_components/ManagerStoreKPIs/ManagerStoreKPIs';
+import ManagerStoreOrderTable from '@/app/manager/store/store_components/ManagerStoreOrderTable/ManagerStoreOrderTable';
+import ManagerStoreProductGrid from '@/app/manager/store/store_components/ManagerStoreProductGrid/ManagerStoreProductGrid';
+import ManagerStoreThermalReceipt from '@/app/manager/store/store_components/ManagerStoreThermalReceipt/ManagerStoreThermalReceipt';
+import ManagerStoreToolbar from '@/app/manager/store/store_components/ManagerStoreToolbar/ManagerStoreToolbar';
+import { useManagerStoreLogic  } from '@/app/manager/store/store_hooks/ManagerUseManagerStoreLogic';
+
 const ManagerStoreProductModal = dynamic(() => import('@/app/manager/store/store_components/ManagerStoreProductModal/ManagerStoreProductModal'), { ssr: false });
 
 const ManagerStorePosModal = dynamic(() => import('@/app/manager/store/store_components/ManagerStorePosModal/ManagerStorePosModal'), { ssr: false });

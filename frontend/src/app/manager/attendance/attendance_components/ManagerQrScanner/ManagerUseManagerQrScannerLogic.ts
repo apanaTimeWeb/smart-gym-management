@@ -1,15 +1,16 @@
-'use client';
-// RESPONSIBILITY: Owns Attendance QR scanning, member resolution, check-in mutation, and demo-mode simulation.
 // DATA FLOW: QR input → Attendance member lookup → scanner state → check-in API/MSW → query refresh → visible history.
+// RESPONSIBILITY: Owns Attendance QR scanning, member resolution, check-in mutation, and demo-mode simulation.
+'use client';
 import { useCallback, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { showManagerErrorToast } from '@/app/manager/manager_infrastructure/ManagerToastService';
 import { attendanceApi } from '@/app/manager/attendance/attendance_api/ManagerAttendanceApi';
+import { MANAGER_QR_DEMO_ACTIVE_TOKEN, MANAGER_QR_DEMO_EXPIRED_TOKEN, MANAGER_QR_INITIAL_HISTORY, MANAGER_QR_SCAN_DELAY_MS, MANAGER_QR_MOCK_ID_PREFIX } from '@/app/manager/attendance/attendance_components/ManagerQrScanner/ManagerQrScannerConstants';
+import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
+import { showManagerErrorToast } from '@/app/manager/manager_infrastructure/ManagerToastService';
 import type { MemberSnapshot } from '@/app/manager/attendance/attendance_types/ManagerAttendanceSnapshotTypes';
 import type { Attendance } from '@/app/manager/attendance/attendance_types/ManagerAttendanceTypes';
 import type { ManagerQrScanStatus, ManagerQrScanHistoryRecord } from '@/app/manager/attendance/attendance_types/ManagerQrScannerTypes';
-import { MANAGER_QR_DEMO_ACTIVE_TOKEN, MANAGER_QR_DEMO_EXPIRED_TOKEN, MANAGER_QR_INITIAL_HISTORY, MANAGER_QR_SCAN_DELAY_MS, MANAGER_QR_MOCK_ID_PREFIX } from '@/app/manager/attendance/attendance_components/ManagerQrScanner/ManagerQrScannerConstants';
-import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
+
 
 /** Runs the QR scanner state machine, resolves scanned members through Attendance APIs, and records check-ins through the same API path as the production Attendance module. */
 export function useManagerQrScannerLogic() {

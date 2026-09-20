@@ -1,15 +1,16 @@
 // RESPONSIBILITY: Defines all TypeScript types and interfaces for the Inquiries module.
 
-import type { ManagerToastType } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerToastTypes';
-import type { ManagerInquiriesMessageType, ManagerInquiriesMessageRecipient } from '@/app/manager/inquiries/inquiries_types/ManagerInquiriesMessageTypes';
 import type { InquiryFormValues } from '@/app/manager/inquiries/inquiries_types/ManagerInquiriesFormTypes';
+import type { ManagerInquiriesMessageType, ManagerInquiriesMessageRecipient } from '@/app/manager/inquiries/inquiries_types/ManagerInquiriesMessageTypes';
+import type { ManagerToastType } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerToastTypes';
 import type { ApiResponse } from '@/lib/api';
+
 
 export interface ManagerInquiriesViewModel {
   // Query Data
   inquiries: Inquiry[];
   stats: InquiryStats | null;
-  isLoading: boolean;
+  isPending: boolean;
   isError: boolean;
   errorMessage: string;
   totalInquiries: number;

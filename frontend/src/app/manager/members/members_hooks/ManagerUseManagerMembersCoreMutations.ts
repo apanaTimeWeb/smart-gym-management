@@ -1,13 +1,15 @@
-'use client';
 // DATA FLOW: Manager module state/API data → useManagerMembersCoreMutations → owning Manager UI components.
+'use client';
 /** Manages UseMembersCoreMutations for the Manager module. */
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import type { Member, ManagerMembersPaymentMethod } from '@/app/manager/members/members_types/ManagerMembersTypes';
-import type { MemberFormValues } from '@/app/manager/members/members_schemas/ManagerMembersFormSchema';
-import type { ManagerToastType } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerToastTypes';
-import { membersApi } from '@/app/manager/members/members_api/ManagerMembersApi';
 import { toManagerMinorUnits } from '@/app/manager/manager_infrastructure/ManagerMoney';
+import { membersApi } from '@/app/manager/members/members_api/ManagerMembersApi';
+import type { ManagerToastType } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerToastTypes';
+import type { MemberFormValues } from '@/app/manager/members/members_schemas/ManagerMembersFormSchema';
+import type { Member, ManagerMembersPaymentMethod } from '@/app/manager/members/members_types/ManagerMembersTypes';
 
+
+/** Orchestrates the owning Manager feature behavior while preserving its documented state boundary. */
 export function useManagerMembersCoreMutations(
   showToast: (msg: string, t: ManagerToastType) => void,
   selectedMember: Member | null,

@@ -1,13 +1,15 @@
-'use client';
 // DATA FLOW: Payroll UI action → useMutation → ManagerHrApi → TanStack Query cache → HR UI.
+'use client';
 /** Manages UseHrPayrollMutations for the Manager module. */
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import type { Staff, Payroll, HrSummary } from '@/app/manager/hr/hr_types/ManagerHrTypes';
-import type { ManagerToastType } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerToastTypes';
 import { hrApi } from '@/app/manager/hr/hr_api/ManagerHrApi';
 import { downloadManagerHrStaffCsv, printManagerHrPayslip } from '@/app/manager/hr/hr_utils/ManagerHrExportUtils';
 import { toManagerMinorUnits } from '@/app/manager/manager_infrastructure/ManagerMoney';
+import type { Staff, Payroll, HrSummary } from '@/app/manager/hr/hr_types/ManagerHrTypes';
+import type { ManagerToastType } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerToastTypes';
 
+
+/** Orchestrates the owning Manager feature behavior while preserving its documented state boundary. */
 export function useManagerHrPayrollMutations(
   staff: Staff[],
   payrolls: Payroll[],
@@ -104,9 +106,9 @@ export function useManagerHrPayrollMutations(
   const exportStaff = () => downloadManagerHrStaffCsv(staff);
 
   return {
-    savePayroll: (data: Partial<Payroll> & { amount?: string | number; idempotencyKey: string }) => savePayrollMutation.mutateAsync(data),
-    markPayrollPaid: (id: string, amount: number, idempotencyKey: string) => markPayrollPaidMutation.mutateAsync({ id, amount, idempotencyKey }),
+    savePayroll: async (data: Partial<Payroll> & { amount?: string | number; idempotencyKey: string }) => { await savePayrollMutation.mutateAsync(data); },
+    markPayrollPaid: async (id: string, amount: number, idempotencyKey: string) => { await markPayrollPaidMutation.mutateAsync({ id, amount, idempotencyKey }); },
     bulkGeneratePayroll, downloadPayslip, exportStaff,
-    giveAdvance: (data: { staffId: string; amount: number; notes?: string; date?: string; paymentMode?: string }, idempotencyKey: string) => giveAdvanceMutation.mutateAsync({ data, idempotencyKey }),
-    payDue: (data: { staffId: string; amount: number; notes?: string; date?: string; paymentMode?: string }, idempotencyKey: string) => payDueMutation.mutateAsync({ data, idempotencyKey }) };
+    giveAdvance: async (data: { staffId: string; amount: number; notes?: string; date?: string; paymentMode?: string }, idempotencyKey: string) => { await giveAdvanceMutation.mutateAsync({ data, idempotencyKey }); },
+    payDue: async (data: { staffId: string; amount: number; notes?: string; date?: string; paymentMode?: string }, idempotencyKey: string) => { await payDueMutation.mutateAsync({ data, idempotencyKey }); } };
 }

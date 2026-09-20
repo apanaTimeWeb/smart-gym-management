@@ -1,32 +1,32 @@
+// DATA FLOW: Manager feature UI/state → owning custom hook → approved API/query/mutation layer → observable UI state.
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ManagerMaintenanceApi } from '@/app/manager/maintenance/maintenance_api/ManagerMaintenanceApi';
-import { managerMaintenanceKeys } from '@/app/manager/maintenance/maintenance_api/ManagerUseManagerMaintenanceQueries';
-import toast from 'react-hot-toast';
+import { managerMaintenanceKeys } from '@/app/manager/maintenance/maintenance_hooks/ManagerUseManagerMaintenanceQueries';
+import { showManagerErrorToast, showManagerSuccessToast } from '@/app/manager/manager_infrastructure/ManagerToastService';
 
+
+/** Orchestrates the owning Manager feature behavior while preserving its documented state boundary. */
 export function useManagerMaintenanceMutations() {
   const queryClient = useQueryClient();
-
-  const createTicket = useMutation({
-    mutationFn: ManagerMaintenanceApi.createTicket,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: managerMaintenanceKeys.lists() });
-      toast.success('Maintenance issue logged successfully');
+  const createMaintenanceTicket = useMutation({
+    mutationFn: ManagerMaintenanceApi.createMaintenanceTicket,
+    onSuccess: async (response) => {
+      await queryClient.invalidateQueries({ queryKey: managerMaintenanceKeys.lists() });
+      showManagerSuccessToast(response.message, 'manager-maintenance-create-success');
     },
-    onError: () => {
-      toast.error('Failed to log maintenance issue');
-    }
-  });
-
-  const resolveTicket = useMutation({
-    mutationFn: (id: string) => ManagerMaintenanceApi.resolveTicket(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: managerMaintenanceKeys.lists() });
-      toast.success('Issue marked as resolved');
+    onError: (error: unknown) => {
+      showManagerErrorToast(error, 'manager-maintenance-create-error');
     },
-    onError: () => {
-      toast.error('Failed to resolve issue');
-    }
   });
-
-  return { createTicket, resolveTicket };
+  const resolveMaintenanceTicket = useMutation({
+    mutationFn: (id: string) => ManagerMaintenanceApi.resolveMaintenanceTicket(id),
+    onSuccess: async (response, id) => {
+      await queryClient.invalidateQueries({ queryKey: managerMaintenanceKeys.lists() });
+      showManagerSuccessToast(response.message, `manager-maintenance-resolve-${id}`);
+    },
+    onError: (error: unknown) => {
+      showManagerErrorToast(error, 'manager-maintenance-resolve-error');
+    },
+  });
+  return { createMaintenanceTicket, resolveMaintenanceTicket };
 }

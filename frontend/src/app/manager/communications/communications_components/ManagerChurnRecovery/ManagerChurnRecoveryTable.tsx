@@ -1,12 +1,13 @@
-'use client';
 // RESPONSIBILITY: Paginated, searchable, filterable table of churned/exited members in the Churn Recovery tab.
+'use client';
+import { Search, ChevronLeft, ChevronRight } from 'lucide-react';
+import ManagerChurnRecoveryEmptyState from '@/app/manager/communications/communications_components/ManagerChurnRecovery/ManagerChurnRecoveryEmptyState';
+import ManagerChurnRecoveryTableRow from '@/app/manager/communications/communications_components/ManagerChurnRecovery/ManagerChurnRecoveryTableRow';
 import { MANAGER_CHURN_RECOVERY_TABLE_HEADERS } from '@/app/manager/communications/communications_constants/ManagerCommunicationsTableConstants';
+import { CANCELLATIONS_REASON_OPTIONS, CANCELLATIONS_ITEMS_PER_PAGE } from '@/app/manager/communications/communications_utils/ManagerCommunicationsSharedConstants';
 import { MANAGER_GENERIC_ERROR_MESSAGE } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
 import type { ManagerChurnRecoveryTableProps } from '@/app/manager/communications/communications_types/ManagerChurnRecoveryTableTypes';
-import { Search, ChevronLeft, ChevronRight } from 'lucide-react';
-import ManagerChurnRecoveryTableRow from '@/app/manager/communications/communications_components/ManagerChurnRecovery/ManagerChurnRecoveryTableRow';
-import ManagerChurnRecoveryEmptyState from '@/app/manager/communications/communications_components/ManagerChurnRecovery/ManagerChurnRecoveryEmptyState';
-import { CANCELLATIONS_REASON_OPTIONS, CANCELLATIONS_ITEMS_PER_PAGE } from '@/app/manager/communications/communications_utils/ManagerCommunicationsSharedConstants';
+
 
 
 
@@ -23,7 +24,7 @@ const SKELETON_ROW_COUNT = 5;
 export default function ManagerChurnRecoveryTable({
   members,
   allFilteredCount,
-  isLoading, isError, errorMessage,
+  isPending, isError, errorMessage,
   churnSearch,
   onSearchChange,
   churnReasonFilter,
@@ -47,7 +48,7 @@ export default function ManagerChurnRecoveryTable({
             placeholder="Search by name..."
             value={churnSearch}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 text-sm bg-input border border-border rounded-lg text-primary placeholder:text-secondary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary motion-safe:transition-colors"
+            className="w-full pl-9 pr-3 py-2 text-sm bg-input border border-border rounded-lg text-primary placeholder:text-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary motion-safe:transition-colors"
             aria-label="Search churned members"
           />
         </div>
@@ -75,7 +76,7 @@ export default function ManagerChurnRecoveryTable({
       <div className="overflow-x-auto">
         <table className="w-full text-left" role="grid" aria-label="Churned members table">
           <thead>
-            <tr className="bg-primary-subtle/30 border-b border-border">
+            <tr className="bg-primary-subtle border-b border-border">
               {MANAGER_CHURN_RECOVERY_TABLE_HEADERS.map((h) => (
                 <th
                   key={h}
@@ -88,7 +89,7 @@ export default function ManagerChurnRecoveryTable({
             </tr>
           </thead>
           <tbody>
-            {isLoading ? (
+            {isPending ? (
               Array.from({ length: SKELETON_ROW_COUNT }).map((_, i) => (
                 <tr key={`churn-skeleton-${i}`} className="border-b border-border">
                   {MANAGER_CHURN_RECOVERY_TABLE_HEADERS.map((h) => (

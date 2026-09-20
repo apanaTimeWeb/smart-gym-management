@@ -1,9 +1,10 @@
-﻿'use client';
 // RESPONSIBILITY: Renders the Manager FinanceFilters presentation layer for the Manager module.
+﻿'use client';
 import { Search, Download, FileText, RefreshCw } from 'lucide-react';
-import ManagerSearchableDropdown from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
 import ManagerFinanceDateFilterDropdown from '@/app/manager/finance/finance_components/ManagerFinanceDateFilterDropdown/ManagerFinanceDateFilterDropdown';
 import { useManagerFinanceLogic } from '@/app/manager/finance/finance_hooks/ManagerUseManagerFinanceLogic';
+import ManagerSearchableDropdown from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
+
 
 export default function ManagerFinanceFilters() {
   const {
@@ -23,7 +24,7 @@ export default function ManagerFinanceFilters() {
             placeholder="Search payments..."
             value={search}
             onChange={e => { setSearch(e.target.value); setCurrentPage(1); }}
-            className="w-full pl-9 pr-4 py-2 text-sm bg-input border border-border rounded-lg text-primary focus:outline-none focus:border-primary"
+            className="w-full pl-9 pr-4 py-2 text-sm bg-input border border-border rounded-lg text-primary focus-visible:outline-none focus-visible:border-primary"
           />
         </div>
         <div className="flex items-center gap-2 w-full sm:w-auto">

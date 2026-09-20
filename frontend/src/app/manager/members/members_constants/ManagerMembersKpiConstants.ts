@@ -1,6 +1,7 @@
 import { User, CheckCircle, Clock, XCircle } from 'lucide-react';
 import type { ManagerMembersKpiKey } from '@/app/manager/members/members_types/ManagerMembersTypes';
 
+
 export const MANAGER_MEMBERS_KPI_CONFIG: ReadonlyArray<{
   label: string; key: ManagerMembersKpiKey; color: string; bg: string; icon: typeof User;
 }> = [

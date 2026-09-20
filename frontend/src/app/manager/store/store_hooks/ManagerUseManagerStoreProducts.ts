@@ -1,19 +1,22 @@
-'use client';
 // DATA FLOW: Store UI -> TanStack mutation/API -> Store Query cache -> Store UI.
+'use client';
 /** Coordinates the Manager / feature. */
-import type { ManagerConfirmType } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerConfirmModalTypes';
 import { useMutation } from '@tanstack/react-query';
-import type { Product, StoreSummary } from '@/app/manager/store/store_types/ManagerStoreTypes';
-import type { ProductFormValues } from '@/app/manager/store/store_types/ManagerStoreProductFormTypes';
-import { storeApi } from '@/app/manager/store/store_api/ManagerStoreApi';
-import type { ManagerToastType } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerToastTypes';
-import { useManagerStoreUiStore } from '@/app/manager/store/store_store/ManagerUseManagerStoreUiStore';
+import { createManagerIdempotencyKey } from '@/app/manager/manager_infrastructure/ManagerIdempotency';
 import { toManagerMinorUnits } from '@/app/manager/manager_infrastructure/ManagerMoney';
 import { showManagerErrorToast } from '@/app/manager/manager_infrastructure/ManagerToastService';
+import { storeApi } from '@/app/manager/store/store_api/ManagerStoreApi';
+import { useManagerStoreUiStore } from '@/app/manager/store/store_store/ManagerUseManagerStoreUiStore';
+import type { ManagerConfirmType } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerConfirmModalTypes';
+import type { ManagerToastType } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerToastTypes';
+import type { ProductFormValues } from '@/app/manager/store/store_types/ManagerStoreProductFormTypes';
+import type { Product, StoreSummary } from '@/app/manager/store/store_types/ManagerStoreTypes';
+
 
 type ProductUpdater = (updater: Product[] | ((previous: Product[]) => Product[])) => void;
 type SummaryUpdater = (updater: StoreSummary | null | ((previous: StoreSummary | null) => StoreSummary | null)) => void;
 
+/** Orchestrates the owning Manager feature behavior while preserving its documented state boundary. */
 export function useManagerStoreProducts(
   setProducts: ProductUpdater,
   setSummary: SummaryUpdater,
@@ -61,5 +64,5 @@ export function useManagerStoreProducts(
     openAddProduct: ui.openAddProduct,
     openEditProduct: ui.openEditProduct,
     saveProduct: async (data: Partial<ProductFormValues>) => { await saveMutation.mutateAsync(data); },
-    deleteProduct: async (id: string) => { await deleteMutation.mutateAsync({ id, idempotencyKey: crypto.randomUUID() }); } };
+    deleteProduct: async (id: string) => { await deleteMutation.mutateAsync({ id, idempotencyKey: createManagerIdempotencyKey() }); } };
 }

@@ -1,30 +1,47 @@
-# Manager PT Theme Contract
+# Manager Pt Module Theme Contract
 
-This module strictly adheres to the global design system defined in `web_global_design.md`.
+This contract belongs only to `src/app/manager/pt`. It records the exact global semantic theme variables consumed by the current implementation. The global design system remains the visual source of truth.
 
-## Allowed Variables
-The Personal Training module is allowed to use the following semantic tokens:
+## Consumed Global Semantic Tokens
 
-- `--bg-page`: The main background color for the page layout.
-- `--bg-card`: The background for cards, tables, and modals.
-- `--bg-input`: The background for input fields and search bars.
-- `--border`: Used for table row dividers, card borders, and input borders.
-- `--primary`: The brand primary color, used for active tab underlines, primary buttons.
-- `--primary-subtle`: Used for row hover states and subtle backgrounds.
-- `--text-primary`: Primary headings and important data fields.
-- `--text-secondary`: Used for table headers, descriptions, and placeholder texts.
-- `--success`: Used for active package badges and success indicators.
-- `--success-bg`: Subtle background for success badges.
-- `--warning`: Used for expiring package badges.
-- `--warning-bg`: Subtle background for warning badges.
-- `--danger`: Used for expired packages and destructive actions.
-- `--danger-bg`: Subtle background for destructive actions and badges.
-- `--info`: Used for informative sections.
-- `--info-bg`: Subtle background for informative actions.
-- `--skeleton-base`: Base color for loading skeletons.
-- `--skeleton-highlight`: Highlight color for loading skeletons.
+| CSS Variable | Current Usage |
+| --- | --- |
+| `--bg-card` | card/panel surface |
+| `--bg-header` | header surface |
+| `--bg-input` | input surface |
+| `--bg-overlay` | dialog/drawer surface |
+| `--bg-page` | page surface |
+| `--border` | standard borders/dividers |
+| `--danger` | solid danger surface |
+| `--danger-bg` | subtle danger surface |
+| `--danger-text` | danger text |
+| `--focus-ring` | keyboard focus ring |
+| `--info-bg` | subtle info surface |
+| `--info-text` | info text |
+| `--primary` | primary brand/active controls |
+| `--primary-hover` | primary hover state |
+| `--primary-subtle` | subtle primary surfaces |
+| `--shadow-card` | card elevation |
+| `--shadow-dialog` | dialog elevation |
+| `--skeleton-base` | skeleton base |
+| `--skeleton-highlight` | skeleton highlight |
+| `--success-bg` | subtle success surface |
+| `--success-text` | success text |
+| `--text-on-danger` | text on solid danger |
+| `--text-on-primary` | text on solid primary |
+| `--text-primary` | primary text |
+| `--text-secondary` | secondary text/labels |
+| `--warning-bg` | subtle warning surface |
+| `--warning-text` | warning text |
 
-## Forbidden Practices
-- Do not use arbitrary color classes like `bg-[#123456]` or `text-green-500`.
-- Do not use inline styles with `var(--)` variables in JSX. Always use global semantic tokens.
-- Do not define arbitrary shadows or borders. Use standard Tailwind utilities.
+## Binding Rules
+
+- No raw hex colors, arbitrary Tailwind color values, or raw RGBA colors may be introduced into module JSX.
+- Semantic background opacity modifiers such as `bg-success/10` and `bg-primary/20` are forbidden.
+- Solid semantic backgrounds require the appropriate documented on-color; otherwise use the subtle `*-bg` variant.
+- Feature-specific business status mappings remain local to this feature.
+- No feature-local CSS variable is defined by this module unless explicitly documented here.
+
+## Portability
+
+When this feature is copied to another compatible application, define the listed semantic variables through that application's canonical global theme stylesheet and preserve the same semantic meanings.

@@ -1,7 +1,8 @@
 // RESPONSIBILITY: Provides the implementation for ManagerSalesTypes.ts functionality within its module.
-import { type SalesTab } from '@/app/manager/sales/sales_utils/ManagerSalesSharedConstants';
 import type { ManagerToastType } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerToastTypes';
 import type { SalesMemberSnapshot } from '@/app/manager/sales/sales_types/ManagerSalesMemberSnapshot';
+import type { SalesTab } from '@/app/manager/sales/sales_utils/ManagerSalesSharedConstants';
+
 
 
 export type PendingPaymentMember = Omit<SalesMemberSnapshot, 'plan'> & {
@@ -70,7 +71,7 @@ export interface ManagerSalesViewModel {
   allMemberships: SalesMemberSnapshot[];
   allMembershipsTotal: number;
   
-  isLoading: boolean;
+  isPending: boolean;
   isError: boolean;
   errorMessage: string;
   loadAll: () => Promise<void>;

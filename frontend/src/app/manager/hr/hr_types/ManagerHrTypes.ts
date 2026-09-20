@@ -20,7 +20,7 @@ export interface ManagerHrViewModel {
   payrolls: Payroll[];
   totalPayrolls: number;
   summary: HrSummary | null;
-  isLoading: boolean;
+  isPending: boolean;
   isError: boolean;
   error: string;
   toast: { message: string; type: ManagerToastType } | null;
@@ -55,12 +55,12 @@ export interface ManagerHrViewModel {
   openEdit: (s: Staff) => void;
   openAddPayroll: () => void;
   saveStaff: (data: Partial<Staff> & { joinDate?: string | Date; salary?: string | number }) => void;
-  savePayroll: (data: Partial<Payroll> & { amount?: string | number; idempotencyKey: string }) => Promise<unknown>;
+  savePayroll: (data: Partial<Payroll> & { amount?: string | number; idempotencyKey: string }) => Promise<void>;
   deleteStaff: (id: string) => Promise<void>;
   toggleStaffStatus: (staff: Staff) => Promise<void>;
-  markPayrollPaid: (id: string, amount: number, idempotencyKey: string) => Promise<unknown>;
-  giveAdvance: (data: { staffId: string; amount: number; notes?: string; date?: string; paymentMode?: string }, idempotencyKey: string) => Promise<unknown>;
-  payDue: (data: { staffId: string; amount: number; notes?: string; date?: string; paymentMode?: string }, idempotencyKey: string) => Promise<unknown>;
+  markPayrollPaid: (id: string, amount: number, idempotencyKey: string) => Promise<void>;
+  giveAdvance: (data: { staffId: string; amount: number; notes?: string; date?: string; paymentMode?: string }, idempotencyKey: string) => Promise<void>;
+  payDue: (data: { staffId: string; amount: number; notes?: string; date?: string; paymentMode?: string }, idempotencyKey: string) => Promise<void>;
   // Indian payroll compliance actions (CRITICAL)
   bulkGeneratePayroll: (month: string, idempotencyKey: string) => Promise<void>;
   downloadPayslip: (payrollId: string) => Promise<void>;

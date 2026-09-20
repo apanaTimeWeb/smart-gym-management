@@ -3,7 +3,7 @@ export default function DashboardLoading() {
   return (
     <div className="min-h-full p-6 space-y-6 bg-page">
       {/* Header skeleton */}
-      <div className="h-16 bg-card rounded-xl motion-safe:animate-pulse" />
+      <div className="h-16 bg-skeleton-base bg-skeleton-highlight rounded-xl motion-safe:animate-pulse" />
 
       {/* KPI row 1 */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">

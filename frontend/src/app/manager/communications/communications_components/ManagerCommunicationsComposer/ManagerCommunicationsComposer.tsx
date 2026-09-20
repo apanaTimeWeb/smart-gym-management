@@ -1,14 +1,15 @@
-'use client';
 // RESPONSIBILITY: Full campaign composer. RHF owns draft state; the communications logic hook owns server data and mutation orchestration.
-import { ManagerCommunicationsUrlConfig } from '@/app/manager/communications/communications_url_config';
-import { MessageCircle, Mail, Send, Loader2, Users, Eye, Zap } from 'lucide-react';
+'use client';
 import { useState } from 'react';
-import ManagerCommunicationsSegmentPicker from '@/app/manager/communications/communications_components/ManagerCommunicationsSegmentPicker/ManagerCommunicationsSegmentPicker';
+import { MessageCircle, Mail, Send, Loader2, Users, Eye, Zap } from 'lucide-react';
 import ManagerCommunicationsBulkMessageModal from '@/app/manager/communications/communications_components/ManagerCommunicationsBulkMessageModal/ManagerCommunicationsBulkMessageModal';
+import ManagerCommunicationsSegmentPicker from '@/app/manager/communications/communications_components/ManagerCommunicationsSegmentPicker/ManagerCommunicationsSegmentPicker';
+import { useManagerCommunicationsForm } from '@/app/manager/communications/communications_hooks/ManagerUseManagerCommunicationsForm';
+import { ManagerCommunicationsUrlConfig } from '@/app/manager/communications/communications_url_config';
+import { COMM_MESSAGE_TEMPLATES } from '@/app/manager/communications/communications_utils/ManagerCommunicationsSharedConstants';
 import type { CommChannel } from '@/app/manager/communications/communications_types/ManagerCommunications_types';
 import type { CommSegment } from '@/app/manager/communications/communications_types/ManagerCommunications_types';
-import { COMM_MESSAGE_TEMPLATES } from '@/app/manager/communications/communications_utils/ManagerCommunicationsSharedConstants';
-import { useManagerCommunicationsForm } from '@/app/manager/communications/communications_hooks/ManagerUseManagerCommunicationsForm';
+
 
 
 export default function ManagerCommunicationsComposer() {

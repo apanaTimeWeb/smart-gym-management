@@ -1,22 +1,22 @@
+// RESPONSIBILITY: Renders the store order table and its feature-owned actions.
 'use client';
-import { MANAGER_GENERIC_ERROR_MESSAGE } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
-import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
-// RESPONSIBILITY: Renders the paginated order history table with status badges and customer info.
-import { ManagerStoreUrlConfig } from '@/app/manager/store/store_url_config';
 import{ Printer, MessageCircle } from 'lucide-react';
-import type { Order } from '@/app/manager/store/store_types/ManagerStoreTypes';
-import { useManagerStoreLogic } from '@/app/manager/store/store_hooks/ManagerUseManagerStoreLogic';
 import { formatCurrencyFromMinorUnits, displayValue , formatDate} from '@/lib/formatters';
-import { GYM_DETAILS } from '@/app/manager/manager_infrastructure/ManagerGymIdentity';
-
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
+import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
+import { MANAGER_GENERIC_ERROR_MESSAGE } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
+import { GYM_DETAILS } from '@/app/manager/manager_infrastructure/ManagerGymIdentity';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_infrastructure/ManagerPaginationDefaults';
+import { useManagerStoreLogic } from '@/app/manager/store/store_hooks/ManagerUseManagerStoreLogic';
+import { ManagerStoreUrlConfig } from '@/app/manager/store/store_url_config';
+import type { Order } from '@/app/manager/store/store_types/ManagerStoreTypes';
+
 
 const STORE_ORDER_COLUMN_COUNT = 6;
 
 export default function ManagerStoreOrderTable() {
   const { 
-    orders, totalOrders, isLoading, isError, errorMessage, currentPage, setCurrentPage, setPrintData
+    orders, totalOrders, isPending, isError, errorMessage, currentPage, setCurrentPage, setPrintData
   } = useManagerStoreLogic();
 
   const handlePrint = (o: Order) => {
@@ -51,7 +51,7 @@ export default function ManagerStoreOrderTable() {
   
   const totalPages = Math.ceil(totalOrders / MANAGER_ITEMS_PER_PAGE);
 
-  if (isLoading) {
+  if (isPending) {
     return (
       <div className="motion-safe:animate-pulse bg-card rounded-xl border border-border mt-4">
         {[...Array(5)].map((_, i) => (
@@ -69,7 +69,7 @@ export default function ManagerStoreOrderTable() {
 
   if (isError) {
     return (
-      <div className="text-center py-16 bg-card rounded-2xl border border-danger/30 mt-4">
+      <div className="text-center py-16 bg-card rounded-2xl border border-danger mt-4">
         <p className="text-danger font-medium">{errorMessage || MANAGER_GENERIC_ERROR_MESSAGE}</p>
         <span className="text-sm text-secondary">Retry the request.</span>
       </div>
@@ -129,7 +129,7 @@ export default function ManagerStoreOrderTable() {
                       e.stopPropagation();
                       handleWhatsApp(o);
                     }}
-                    className="p-1.5 rounded-lg bg-success text-on-success hover:bg-success/80 motion-safe:transition-colors"
+                    className="p-1.5 rounded-lg bg-success text-on-success hover:bg-success motion-safe:transition-colors"
                     aria-label={`WhatsApp Receipt ORD-${o.id}`}
                     title="Send via WhatsApp"
                   >

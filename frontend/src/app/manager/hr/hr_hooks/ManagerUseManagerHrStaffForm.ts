@@ -1,20 +1,22 @@
-'use client';
-// RESPONSIBILITY: Owns staff create/edit form setup, synchronization, validation, submission, and dirty-state protection.
 // DATA FLOW: HR UI state → RHF/Zod → staff mutation → backend message/cache → staff UI.
+// RESPONSIBILITY: Owns staff create/edit form setup, synchronization, validation, submission, and dirty-state protection.
+'use client';
 import { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
 import { useManagerHrLogic } from '@/app/manager/hr/hr_hooks/ManagerUseManagerHrLogic';
 import { managerHrStaffFormSchema } from '@/app/manager/hr/hr_schemas/ManagerHrStaffFormSchema';
-import type { StaffFormValues } from '@/app/manager/hr/hr_types/ManagerHrFormTypes';
 import { EMPTY_STAFF } from '@/app/manager/hr/hr_types/ManagerHrFormTypes';
-import { useManagerUnsavedChangesGuard } from '@/app/manager/manager_infrastructure/ManagerUnsavedChangesGuard';
 import { fromManagerMinorUnits } from '@/app/manager/manager_infrastructure/ManagerMoney';
+import { useManagerUnsavedChangesGuard } from '@/app/manager/manager_infrastructure/ManagerUnsavedChangesGuard';
+import type { StaffFormValues } from '@/app/manager/hr/hr_types/ManagerHrFormTypes';
+
 
 /** Coordinates staff editor lifecycle independently of the modal rendering tree. */
 export function useManagerHrStaffForm() {
   const { showModal, setShowModal, editId, editData, saveStaff, saving } = useManagerHrLogic();
-  const form = useForm<StaffFormValues>({ resolver: zodResolver(managerHrStaffFormSchema as any), defaultValues: EMPTY_STAFF });
+  const form = useForm<StaffFormValues>({ resolver: zodResolver(managerHrStaffFormSchema) as any, defaultValues: EMPTY_STAFF });
+// EFFECT: Effect lifecycle and dependency list are intentionally scoped to values that control this side effect.
   useEffect(() => {
     if (!showModal) return;
     const source = (editData as Partial<StaffFormValues> | null) ?? {};

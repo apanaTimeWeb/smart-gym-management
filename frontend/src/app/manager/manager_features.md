@@ -6,7 +6,7 @@
 
 Primary feature modules:
 
-`dashboard/`, `members/`, `attendance/`, `sales/`, `hr/`, `schedule/`, `expenses/`, `store/`, `library/`, `workout/`, `plans/`, `finance/`, `inquiries/`, `referrals/`, `reports/`, `notifications/`, `communications/`, `profile/`, `settings/`, `pt/`.
+`dashboard/`, `members/`, `attendance/`, `sales/`, `hr/`, `schedule/`, `expenses/`, `store/`, `library/`, `workout/`, `plans/`, `finance/`, `inquiries/`, `referrals/`, `reports/`, `notifications/`, `communications/`, `profile/`, `settings/`, `pt/`, `grievance/`, `maintenance/`.
 
 ## 2. Role-Container Responsibilities
 
@@ -45,6 +45,8 @@ Business behavior MUST remain inside the owning feature module.
 | Profile | `/manager/profile` | Manager profile and account information. |
 | Settings | `/manager/settings` | Manager-facing operational/settings controls. |
 | PT | `/manager/pt` | Personal-training assignment/workflow surface. |
+| Grievance | `/manager/grievance` | Member complaint queue, search, create and resolve workflows. |
+| Maintenance | `/manager/maintenance` | Equipment/facility issue queue, create and resolve workflows. |
 | QR scanner | `/manager/attendance?qrScanner=open` | Attendance-owned QR scanner modal; scanner business logic is owned by `attendance/`. |
 
 ## 4. Data and State Architecture
@@ -104,18 +106,21 @@ Only files actually required by that feature need corresponding subfolders, but 
 
 ## 11. Current Repair Verification Snapshot
 
-- Route/page inventory: 20 Manager route pages discovered.
-- Framework-reserved route files contain no client marker.
-- React `createContext` is not used by Manager business modules; `ManagerConfirmProvider` was the only stable feedback context and is intentionally treated as UI infrastructure.
-- Component/hook/utility/store/type/schema/API line-count ceilings: statically checked with no reported violations in the repaired source snapshot.
-- No raw ERP hex colors remain outside the explicitly allowed native WhatsApp brand color.
-- No authenticated ERP gradients remain in Manager TSX/TS configuration.
-- No direct `https://wa.me` business URLs remain outside feature URL configuration.
-- No feature-to-sibling business imports were detected in the repaired Manager feature tree.
-- No `console.log`, `@ts-ignore`, or `@ts-nocheck` production matches remain in the repaired snapshot.
+- Route/page inventory: 22 Manager route pages discovered.
+- `grievance/` and `maintenance/` now have feature maps, forbidden docs, theme contracts and framework route-state files.
+- Feature URL ownership is used by the Manager navigation composition.
+- Mutable grievance/maintenance mocks expose reset functions; HR, Members payments and Plans membership mocks now maintain later-readable state.
+- Static rule verification is recorded in `manager_fix_v1.md`; host runtime checks remain separate and are not claimed here.
 
 ## 12. Host-Application Verification Boundary
 
 The supplied package is a role/module snapshot, not the complete Next.js application root. The snapshot does not contain the consuming application's `package.json`, lockfile, root `tsconfig`, Next.js configuration, Tailwind configuration, installed runtime dependencies, CI environment, or browser runtime.
 
 Therefore full host-level `build`, real `tsc`, ESLint, Vitest execution, Playwright browser execution, dependency/security scans, and production bundle verification must be run in the consuming application repository. These checks must not be represented as verified from this package alone.
+
+## Approved External Dependencies
+
+- Global framework/application infrastructure documented by the architecture standard may be used when required.
+- Approved zero-business UI primitives may be imported from Manager application infrastructure.
+- Sibling feature business logic, state, API services, fixtures, and tests are not dependencies.
+

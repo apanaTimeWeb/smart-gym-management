@@ -4,7 +4,7 @@ import type { ChurnedMember } from '@/app/manager/communications/communications_
 export interface ManagerChurnRecoveryTableProps {
   members: ChurnedMember[];
   allFilteredCount: number;
-  isLoading: boolean;
+  isPending: boolean;
   isError: boolean;
   errorMessage?: string | null;
   churnSearch: string;

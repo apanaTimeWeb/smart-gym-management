@@ -1,16 +1,18 @@
-'use client';
-// RESPONSIBILITY: Coordinates Sales URL state, TanStack Query server state, module UI state, and refresh/export interactions.
 // DATA FLOW: URL filters → debounce → Sales Query hooks → API/MSW → rendered Sales sections; UI-only toast → Zustand.
+// RESPONSIBILITY: Coordinates Sales URL state, TanStack Query server state, module UI state, and refresh/export interactions.
+'use client';
 /** Coordinates the Manager / feature. */
 import { useCallback, useMemo } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { useManagerDebounce } from '@/app/manager/manager_infrastructure/ManagerDebounce';
-import { type SalesTab } from '@/app/manager/sales/sales_utils/ManagerSalesSharedConstants';
-import type { ManagerSalesViewModel, SalesInitialData } from '@/app/manager/sales/sales_types/ManagerSalesTypes';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
-import { useSalesOverviewQuery, useMembershipReportQuery, usePendingPaymentsQuery, useAllMembershipsQuery, managerSalesQueryKeys } from '@/app/manager/sales/sales_api/ManagerUseManagerSalesQueries';
+import { useManagerDebounce } from '@/app/manager/manager_infrastructure/ManagerDebounce';
+import { useSalesOverviewQuery, useMembershipReportQuery, usePendingPaymentsQuery, useAllMembershipsQuery, managerSalesQueryKeys } from '@/app/manager/sales/sales_hooks/ManagerUseManagerSalesQueries';
 import { useManagerSalesUiStore } from '@/app/manager/sales/sales_store/ManagerUseManagerSalesUiStore';
+import type { ManagerSalesViewModel, SalesInitialData } from '@/app/manager/sales/sales_types/ManagerSalesTypes';
+import type { SalesTab } from '@/app/manager/sales/sales_utils/ManagerSalesSharedConstants';
 
+
+/** Orchestrates the owning Manager feature behavior while preserving its documented state boundary. */
 export function useManagerSalesLogic(initialData?: SalesInitialData | null): ManagerSalesViewModel {
   const router = useRouter(); const searchParams = useSearchParams(); const pathname = usePathname(); const queryClient = useQueryClient(); const ui = useManagerSalesUiStore();
   const tab = (searchParams.get('tab') || 'Revenue Overview') as SalesTab;
@@ -44,7 +46,7 @@ export function useManagerSalesLogic(initialData?: SalesInitialData | null): Man
     membershipReportTotal: report.data?.report?.length ?? initialData?.membershipReport?.length ?? 0, membershipTotals: report.data?.totals ?? initialData?.membershipTotals ?? { activeCount: 0, revenue: 0, totalReceivable: 0, totalReceived: 0, remaining: 0, refunds: 0 },
     pendingPayments: pending.data?.members ?? initialData?.pendingPayments ?? [], pendingTotal: pending.data?.total ?? initialData?.pendingTotal ?? 0,
     allMemberships: all.data?.members ?? initialData?.allMemberships ?? [], allMembershipsTotal: all.data?.total ?? initialData?.allMembershipsTotal ?? 0,
-    isLoading: overview.isPending || report.isPending || pending.isPending || all.isPending, isError: overview.isError || report.isError || pending.isError || all.isError, errorMessage,
+    isPending: overview.isPending || report.isPending || pending.isPending || all.isPending, isError: overview.isError || report.isError || pending.isError || all.isError, errorMessage,
     loadAll, toast: ui.toast, showToast: ui.showToast,
   };
 }

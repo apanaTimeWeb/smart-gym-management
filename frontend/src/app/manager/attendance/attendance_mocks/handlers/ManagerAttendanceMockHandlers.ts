@@ -1,14 +1,20 @@
 import { http, HttpResponse } from 'msw';
-import { managerMockApiUrl } from '@/app/manager/manager_infrastructure/ManagerMockApiUrl';
-import { ManagerAttendanceUrlConfig } from '@/app/manager/attendance/attendance_url_config';
 import { MOCK_ATTENDANCE_RECORDS, MOCK_ATTENDANCE_STATS } from '@/app/manager/attendance/attendance_fixtures/ManagerAttendanceMockData';
 import { MANAGER_ATTENDANCE_MEMBER_SNAPSHOTS, MANAGER_ATTENDANCE_STAFF_SNAPSHOTS } from '@/app/manager/attendance/attendance_fixtures/ManagerAttendanceQrMockData';
+import { ManagerAttendanceUrlConfig } from '@/app/manager/attendance/attendance_url_config';
+import { managerMockApiUrl } from '@/app/manager/manager_infrastructure/ManagerMockApiUrl';
 import type { Attendance } from '@/app/manager/attendance/attendance_types/ManagerAttendanceTypes';
+
 
 let mockRecords = [...MOCK_ATTENDANCE_RECORDS];
 let mockAttendanceIdCounter = 100;
 
 const ATTENDANCE_LIMIT = 10;
+
+export function resetManagerAttendanceMockState(): void {
+  mockRecords = [...MOCK_ATTENDANCE_RECORDS];
+  mockAttendanceIdCounter = 100;
+}
 
 export const managerAttendanceHandlers = [
   http.get(managerMockApiUrl(ManagerAttendanceUrlConfig.BACKEND_API.BASE), ({ request }) => {

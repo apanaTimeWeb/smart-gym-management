@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { EXPENSE_CATEGORIES, EXPENSES_TABLE_HEADERS, EXPENSE_STATUS_LABELS, EXPENSE_STATUS_STYLES } from '@/app/manager/expenses/expenses_utils/ManagerExpensesSharedConstants';
 
+
 describe('ManagerExpensesSharedConstants', () => {
   it('exposes the documented expense categories', () => {
     expect(EXPENSE_CATEGORIES).toContain('Rent');

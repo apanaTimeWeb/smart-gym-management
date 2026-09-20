@@ -1,8 +1,9 @@
-'use client';
 // RESPONSIBILITY: Renders the Manager StoreFilters presentation layer for the Manager module.
-import type { ManagerStoreSortOrder } from '@/app/manager/store/store_types/ManagerStoreTypes';
-import { useManagerStoreLogic } from '@/app/manager/store/store_hooks/ManagerUseManagerStoreLogic';
+'use client';
 import ManagerSearchableDropdown from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
+import { useManagerStoreLogic } from '@/app/manager/store/store_hooks/ManagerUseManagerStoreLogic';
+import type { ManagerStoreSortOrder } from '@/app/manager/store/store_types/ManagerStoreTypes';
+
 
 export default function ManagerStoreFilters() {
   const { startDate, setStartDate, endDate, setEndDate, sortOrder, setSortOrder } = useManagerStoreLogic();
@@ -16,7 +17,7 @@ export default function ManagerStoreFilters() {
             type="date" 
             value={startDate} 
             onChange={e => setStartDate(e.target.value)} 
-            className="text-sm px-3 py-2 rounded-lg border border-border bg-input text-primary focus:outline-none focus:ring-1 focus:ring-primary"
+            className="text-sm px-3 py-2 rounded-lg border border-border bg-input text-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
           />
         </div>
         <div className="flex flex-col">
@@ -25,7 +26,7 @@ export default function ManagerStoreFilters() {
             type="date" 
             value={endDate} 
             onChange={e => setEndDate(e.target.value)} 
-            className="text-sm px-3 py-2 rounded-lg border border-border bg-input text-primary focus:outline-none focus:ring-1 focus:ring-primary"
+            className="text-sm px-3 py-2 rounded-lg border border-border bg-input text-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
           />
         </div>
       </div>

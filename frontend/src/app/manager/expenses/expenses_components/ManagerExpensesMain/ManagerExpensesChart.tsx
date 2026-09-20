@@ -1,11 +1,12 @@
+// RESPONSIBILITY: Renders the expenses trend visualization from feature-owned analytics data.
 'use client';
-import { MANAGER_EXPENSE_CHART_COLORS } from '@/app/manager/expenses/expenses_constants/ManagerExpensesChartConstants';
-import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
-// RESPONSIBILITY: Renders the Manager ManagerReportsExpensesChart presentation layer for the Manager module.
 import React, { useMemo } from 'react';
 import dynamic from 'next/dynamic';
-import { useExpensesListQuery } from '@/app/manager/expenses/expenses_api/ManagerUseManagerExpensesQueries';
 import { formatCurrencyFromMinorUnits, formatKPI } from '@/lib/formatters';
+import { MANAGER_EXPENSE_CHART_COLORS } from '@/app/manager/expenses/expenses_constants/ManagerExpensesChartConstants';
+import { useExpensesListQuery } from '@/app/manager/expenses/expenses_hooks/ManagerUseManagerExpensesQueries';
+import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
+
 
 const Chart = dynamic(() => import('react-apexcharts'), {
   ssr: false,
@@ -14,7 +15,7 @@ const Chart = dynamic(() => import('react-apexcharts'), {
 
 
 export default function ManagerExpensesChart() {
-  const { data, isLoading, isError } = useExpensesListQuery({ limit: '1000' });
+  const { data, isPending, isError } = useExpensesListQuery({ limit: '1000' });
   const expenses = data?.expenses || [];
 
   const chartData = useMemo(() => {
@@ -39,7 +40,7 @@ export default function ManagerExpensesChart() {
     return chartDataArray.sort((a, b) => (b.value || 0) - (a.value || 0));
   }, [expenses]);
 
-  if (isLoading) {
+  if (isPending) {
     return <div className="min-h-72 space-y-4 p-4" aria-label="Loading expense chart">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         {['expense-kpi-a','expense-kpi-b','expense-kpi-c'].map((key) => <div key={key} className="h-20 rounded-lg bg-skeleton-base motion-safe:animate-pulse" />)}

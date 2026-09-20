@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { ATTENDANCE_TABLE_HEADERS, ATTENDANCE_TABS, formatAttendanceMonthYear, formatTime } from '@/app/manager/attendance/attendance_utils/ManagerAttendanceSharedConstants';
 
+
 describe('ManagerAttendanceSharedConstants', () => {
   it('keeps the documented attendance table contract aligned with nine columns', () => {
     expect(ATTENDANCE_TABLE_HEADERS).toHaveLength(9);

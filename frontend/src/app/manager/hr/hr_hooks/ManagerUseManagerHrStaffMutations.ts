@@ -1,12 +1,15 @@
-'use client';
 // DATA FLOW: Manager HR UI action → useMutation → ManagerHrApi → TanStack Query cache → HR UI.
+'use client';
 /** Manages UseHrStaffMutations for the Manager module. */
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { hrApi } from '@/app/manager/hr/hr_api/ManagerHrApi';
+import { createManagerIdempotencyKey } from '@/app/manager/manager_infrastructure/ManagerIdempotency';
+import { toManagerMinorUnits } from '@/app/manager/manager_infrastructure/ManagerMoney';
 import type { Staff, HrSummary } from '@/app/manager/hr/hr_types/ManagerHrTypes';
 import type { ManagerToastType } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerToastTypes';
-import { hrApi } from '@/app/manager/hr/hr_api/ManagerHrApi';
-import { toManagerMinorUnits } from '@/app/manager/manager_infrastructure/ManagerMoney';
 
+
+/** Orchestrates the owning Manager feature behavior while preserving its documented state boundary. */
 export function useManagerHrStaffMutations(
   staff: Staff[],
   setStaff: (updater: Staff[] | ((previous: Staff[]) => Staff[])) => void,
@@ -63,7 +66,7 @@ export function useManagerHrStaffMutations(
     onSettled: () => setSaving(false) });
 
   const saveStaff = (data: Partial<Staff> & { joinDate?: string | Date; salary?: string | number }) => saveStaffMutation.mutate(data);
-  const deleteStaff = async (id: string) => { deleteStaffMutation.mutate({ id, idempotencyKey: crypto.randomUUID() }); };
+  const deleteStaff = async (id: string) => { deleteStaffMutation.mutate({ id, idempotencyKey: createManagerIdempotencyKey() }); };
   const toggleStaffStatus = async (item: Staff) => {
     const nextStatus = !item.isActive;
     toggleStaffStatusMutation.mutate({ id: item.id, isActive: nextStatus });

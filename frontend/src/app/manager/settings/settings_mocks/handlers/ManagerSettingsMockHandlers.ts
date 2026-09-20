@@ -1,11 +1,11 @@
 // RESPONSIBILITY: Provides the feature-owned mutable MSW transport for Manager Settings.
 import { http, HttpResponse } from 'msw';
+import { managerMockApiUrl } from '@/app/manager/manager_infrastructure/ManagerMockApiUrl';
 import { MOCK_MANAGER_SETTINGS } from '@/app/manager/settings/settings_fixtures/ManagerSettingsMockData';
 import { managerAllSettingsSchema } from '@/app/manager/settings/settings_schemas/ManagerSettingsSchema';
-import type { ManagerAllSettings } from '@/app/manager/settings/settings_types/ManagerSettingsTypes';
 import { ManagerSettingsUrlConfig } from '@/app/manager/settings/settings_url_config';
+import type { ManagerAllSettings } from '@/app/manager/settings/settings_types/ManagerSettingsTypes';
 
-import { managerMockApiUrl } from '@/app/manager/manager_infrastructure/ManagerMockApiUrl';
 
 let settingsDb: ManagerAllSettings = structuredClone(MOCK_MANAGER_SETTINGS);
 

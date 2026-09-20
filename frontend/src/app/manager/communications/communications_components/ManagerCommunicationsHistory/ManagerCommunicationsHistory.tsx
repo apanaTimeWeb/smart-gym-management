@@ -1,26 +1,27 @@
+// RESPONSIBILITY: Renders the communications history list and its feature-owned interaction controls.
 'use client';
-import { MANAGER_COMMUNICATION_HISTORY_HEADERS } from '@/app/manager/communications/communications_constants/ManagerCommunicationsTableConstants';
-import { MANAGER_GENERIC_ERROR_MESSAGE } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
-import { formatDate } from '@/lib/formatters';
-// RESPONSIBILITY: Paginated history table of past communication campaigns with search and channel filter.
 import { Search, MessageCircle, Mail, Users } from 'lucide-react';
+import { formatDate } from '@/lib/formatters';
+import { MANAGER_COMMUNICATION_HISTORY_HEADERS } from '@/app/manager/communications/communications_constants/ManagerCommunicationsTableConstants';
 import { useManagerCommunicationsLogic } from '@/app/manager/communications/communications_hooks/ManagerUseManagerCommunicationsLogic';
-import ManagerTableSkeleton from '@/app/manager/manager_components/ManagerShared/ManagerTableSkeleton';
-import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import { COMM_STATUS_STYLES } from '@/app/manager/communications/communications_utils/ManagerCommunicationsSharedConstants';
+import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
+import ManagerTableSkeleton from '@/app/manager/manager_components/ManagerShared/ManagerTableSkeleton';
+import { MANAGER_GENERIC_ERROR_MESSAGE } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
+
 
 
 
 
 export default function ManagerCommunicationsHistory() {
   const {
-    paginatedCampaigns, isLoading, isError, errorMessage,
+    paginatedCampaigns, isPending, isError, errorMessage,
     historySearch, setHistorySearch,
     historyChannelFilter, setHistoryChannelFilter,
     currentPage, setCurrentPage, totalPages,
     filteredCampaigns } = useManagerCommunicationsLogic();
 
-  if (isLoading) return <ManagerTableSkeleton rows={5} />;
+  if (isPending) return <ManagerTableSkeleton rows={5} />;
 
   if (isError) {
     return (

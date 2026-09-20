@@ -1,11 +1,13 @@
-'use client';
 // DATA FLOW: Manager module state/API data → useManagerMembersUrlState → owning Manager UI components.
+'use client';
 /** Manages UseMembersUrlState for the Manager module. */
 import { useCallback } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
-import type { MemberSortColumn, SortDirection } from '@/app/manager/members/members_types/ManagerMembersTypes';
 import { useManagerDebounce } from '@/app/manager/manager_infrastructure/ManagerDebounce';
+import type { MemberSortColumn, SortDirection } from '@/app/manager/members/members_types/ManagerMembersTypes';
 
+
+/** Orchestrates the owning Manager feature behavior while preserving its documented state boundary. */
 export function useManagerMembersUrlState() {
   const router = useRouter();
   const pathname = usePathname();

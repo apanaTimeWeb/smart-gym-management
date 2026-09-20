@@ -1,6 +1,7 @@
 // RESPONSIBILITY: Provides hardcoded fixture data for the Manager Sales module to simulate backend responses.
-import type { OverviewDataPoint, MembershipReportItem, PendingPaymentMember } from '@/app/manager/sales/sales_types/ManagerSalesTypes';
 import type { SalesMemberSnapshot } from '@/app/manager/sales/sales_types/ManagerSalesMemberSnapshot';
+import type { OverviewDataPoint, MembershipReportItem, PendingPaymentMember } from '@/app/manager/sales/sales_types/ManagerSalesTypes';
+
 
 export const MOCK_SALES_OVERVIEW: OverviewDataPoint[] = [
   { month: 'Jan', revenue: 4500000, storeRevenue: 500000, newMembers: 12 },

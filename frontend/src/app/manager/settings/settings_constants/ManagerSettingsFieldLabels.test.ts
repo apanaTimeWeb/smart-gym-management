@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { MANAGER_SETTINGS_GYM_FIELD_LABELS, MANAGER_SETTINGS_MEMBERSHIP_FIELD_LABELS } from '@/app/manager/settings/settings_constants/ManagerSettingsFieldLabels';
 
+
 describe('ManagerSettingsFieldLabels', () => {
   it('defines a human-readable label for every editable gym field', () => {
     expect(MANAGER_SETTINGS_GYM_FIELD_LABELS.gymName).toBe('Gym Name');

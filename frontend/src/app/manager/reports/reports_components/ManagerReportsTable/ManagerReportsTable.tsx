@@ -1,10 +1,11 @@
-'use client';
 // RESPONSIBILITY: Renders the data table for the active report tab — Revenue, Attendance, Members, or Expenses.
-import { useManagerReportsLogic } from '@/app/manager/reports/reports_hooks/ManagerUseManagerReportsLogic';
-import { ManagerReportsRevenueTable } from '@/app/manager/reports/reports_components/ManagerReportsTable/ManagerReportsRevenueTable/ManagerReportsRevenueTable';
+'use client';
 import { ManagerReportsAttendanceTable } from '@/app/manager/reports/reports_components/ManagerReportsTable/ManagerReportsAttendanceTable/ManagerReportsAttendanceTable';
-import { ManagerReportsMembersTable } from '@/app/manager/reports/reports_components/ManagerReportsTable/ManagerReportsMembersTable/ManagerReportsMembersTable';
 import { ManagerReportsExpensesTable } from '@/app/manager/reports/reports_components/ManagerReportsTable/ManagerReportsExpensesTable/ManagerReportsExpensesTable';
+import { ManagerReportsMembersTable } from '@/app/manager/reports/reports_components/ManagerReportsTable/ManagerReportsMembersTable/ManagerReportsMembersTable';
+import { ManagerReportsRevenueTable } from '@/app/manager/reports/reports_components/ManagerReportsTable/ManagerReportsRevenueTable/ManagerReportsRevenueTable';
+import { useManagerReportsLogic } from '@/app/manager/reports/reports_hooks/ManagerUseManagerReportsLogic';
+
 
 
 export default function ManagerReportsTable() {

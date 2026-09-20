@@ -1,7 +1,8 @@
-import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 import { describe, it, expect } from 'vitest';
-import { EMPTY_MEMBER_FORM } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
 import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
+import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
+import { EMPTY_MEMBER_FORM } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
+
 
 describe('ManagerMembersSharedConstants', () => {
   it('should format currency correctly', () => {

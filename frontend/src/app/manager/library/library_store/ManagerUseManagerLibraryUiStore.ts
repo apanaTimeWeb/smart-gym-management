@@ -1,8 +1,10 @@
-'use client';
+// DATA FLOW: Manager feature UI/state → owning custom hook → approved API/query/mutation layer → observable UI state.
 // RESPONSIBILITY: Owns Library-only UI state for modals and toast presentation; never stores server records.
+'use client';
 import { create } from 'zustand';
 import type { DietPlan, Exercise } from '@/app/manager/library/library_types/ManagerLibraryTypes';
 import type { ManagerToastType } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerToastTypes';
+
 
 interface ManagerLibraryUiState {
   toast: { message: string; type: ManagerToastType } | null;

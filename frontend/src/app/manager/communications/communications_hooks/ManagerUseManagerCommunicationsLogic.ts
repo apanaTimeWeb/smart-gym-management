@@ -1,17 +1,19 @@
-'use client';
-// RESPONSIBILITY: Business logic hook for the Manager Communications module.
 // DATA FLOW: ManagerCommunicationsApi -> useManagerCommunicationsLogic -> ManagerCommunicationsMain -> child components
+// RESPONSIBILITY: Business logic hook for the Manager Communications module.
+'use client';
 /** Manages UseCommunicationsLogic for the Manager module. */
 import { useCallback } from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
-import { useManagerCommunicationsStore } from '@/app/manager/communications/communications_store/ManagerUseManagerCommunicationsStore';
-import type { CommActiveTab } from '@/app/manager/communications/communications_types/ManagerCommunications_types';
-import { COMM_ITEMS_PER_PAGE, COMM_SEGMENT_OPTIONS, COMM_MESSAGE_TEMPLATES } from '@/app/manager/communications/communications_utils/ManagerCommunicationsSharedConstants';
-import type { CommFormValues, CommSegment, CommAutomation } from '@/app/manager/communications/communications_types/ManagerCommunications_types';
-import { useManagerCommunicationsQueries } from '@/app/manager/communications/communications_hooks/ManagerUseManagerCommunicationsQueries';
 import { useManagerCommunicationsMutations } from '@/app/manager/communications/communications_hooks/ManagerUseManagerCommunicationsMutations';
+import { useManagerCommunicationsQueries } from '@/app/manager/communications/communications_hooks/ManagerUseManagerCommunicationsQueries';
+import { useManagerCommunicationsStore } from '@/app/manager/communications/communications_store/ManagerUseManagerCommunicationsStore';
+import { COMM_ITEMS_PER_PAGE, COMM_SEGMENT_OPTIONS, COMM_MESSAGE_TEMPLATES } from '@/app/manager/communications/communications_utils/ManagerCommunicationsSharedConstants';
 import { useManagerDebounce } from '@/app/manager/manager_infrastructure/ManagerDebounce';
+import type { CommActiveTab } from '@/app/manager/communications/communications_types/ManagerCommunications_types';
+import type { CommFormValues, CommSegment, CommAutomation } from '@/app/manager/communications/communications_types/ManagerCommunications_types';
 
+
+/** Orchestrates the owning Manager feature behavior while preserving its documented state boundary. */
 export function useManagerCommunicationsLogic() {
   const store = useManagerCommunicationsStore();
   const router = useRouter();
@@ -62,7 +64,7 @@ export function useManagerCommunicationsLogic() {
     automations,
     automationsLoading } = useManagerCommunicationsQueries(store.selectedSegment, debouncedHistorySearch, historyChannelFilter, currentPage);
 
-  const isLoading = campaignsLoading;
+  const isPending = campaignsLoading;
   const isError = campaignsError;
   const errorMessage = campaignsErrorValue instanceof Error ? campaignsErrorValue.message : '';
 
@@ -105,7 +107,7 @@ export function useManagerCommunicationsLogic() {
     sending: sendMutation.isPending,
     paginatedCampaigns,
     filteredCampaigns,
-    isLoading, isError, errorMessage,
+    isPending, isError, errorMessage,
     historySearch,
     setHistorySearch,
     historyChannelFilter,

@@ -1,16 +1,17 @@
-'use client';
 // RESPONSIBILITY: Root client orchestrator for Referrals.
+'use client';
 import { Plus } from 'lucide-react';
+import ManagerReferralsAddModal from '@/app/manager/referrals/referrals_components/ManagerReferralsMain/ManagerReferralsAddModal';
 import ManagerReferralsKPIs from '@/app/manager/referrals/referrals_components/ManagerReferralsMain/ManagerReferralsKPIs';
 import ManagerReferralsTable from '@/app/manager/referrals/referrals_components/ManagerReferralsMain/ManagerReferralsTable';
-import ManagerReferralsAddModal from '@/app/manager/referrals/referrals_components/ManagerReferralsMain/ManagerReferralsAddModal';
 import { useManagerReferralsStore } from '@/app/manager/referrals/referrals_store/ManagerUseManagerReferralsStore';
+
 
 export default function ManagerReferralsMain() {
   const setIsAddModalOpen = useManagerReferralsStore((s) => s.setIsAddModalOpen);
 
   return (
-    <div className="min-h-full pb-10 motion-safe:animate-in motion-safe:fade-in motion-safe:duration-500">
+    <div className="min-h-full pb-10 motion-safe:animate-in motion-safe:fade-in motion-safe:duration-xslow">
       {/* Header */}
       <div className="px-6 pt-6 pb-0 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>

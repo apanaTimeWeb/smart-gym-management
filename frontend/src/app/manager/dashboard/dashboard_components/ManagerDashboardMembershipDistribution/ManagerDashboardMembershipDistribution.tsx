@@ -1,8 +1,9 @@
-'use client';
 // RESPONSIBILITY: Renders the distribution of members by plan on the dashboard.
-import { useDashboardStatsQuery } from '@/app/manager/dashboard/dashboard_api/ManagerUseManagerDashboardQueries';
+'use client';
+import { useDashboardStatsQuery } from '@/app/manager/dashboard/dashboard_hooks/ManagerUseManagerDashboardQueries';
 import { useManagerDashboardUrlState } from '@/app/manager/dashboard/dashboard_hooks/ManagerUseManagerDashboardUrlState';
 import { DASHBOARD_PLAN_BG_COLORS } from '@/app/manager/dashboard/dashboard_utils/ManagerDashboardSharedConstants';
+
 
 export default function ManagerDashboardMembershipDistribution() {
   const { range } = useManagerDashboardUrlState();

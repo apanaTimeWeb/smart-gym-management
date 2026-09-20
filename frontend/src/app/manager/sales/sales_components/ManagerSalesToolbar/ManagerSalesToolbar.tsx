@@ -1,9 +1,10 @@
-'use client';
 // RESPONSIBILITY: Provides the implementation for ManagerSalesToolbar.tsx functionality within its module.
+'use client';
 import { useState, useEffect } from 'react';
 import { Download, Search } from 'lucide-react';
-import { useManagerSalesLogic } from '@/app/manager/sales/sales_hooks/ManagerUseManagerSalesLogic';
 import ManagerSalesDateFilterDropdown from '@/app/manager/sales/sales_components/ManagerSalesDateFilterDropdown/ManagerSalesDateFilterDropdown';
+import { useManagerSalesLogic } from '@/app/manager/sales/sales_hooks/ManagerUseManagerSalesLogic';
+
 
 export default function ManagerSalesToolbar() {
   const { 
@@ -18,6 +19,7 @@ export default function ManagerSalesToolbar() {
     setLocalSearch(search);
   }
 
+// EFFECT: Effect lifecycle and dependency list are intentionally scoped to values that control this side effect.
   useEffect(() => {
     const timer = setTimeout(() => {
       if (localSearch !== search) {
@@ -40,7 +42,7 @@ export default function ManagerSalesToolbar() {
       value={localSearch} 
       onChange={e => setLocalSearch(e.target.value)} 
       placeholder="Search..." 
-      className="pl-9 pr-3 py-1.5 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary w-40 sm:w-full sm:w-64  bg-input text-primary"
+      className="pl-9 pr-3 py-1.5 border border-border rounded-lg text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary w-40 sm:w-full sm:w-64  bg-input text-primary"
     />
   </div>
   <button 

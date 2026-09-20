@@ -1,11 +1,12 @@
-'use client';
 // RESPONSIBILITY: Renders the Kiosk-mode QR Scanner for the front desk. Handles face verification and check-in.
+'use client';
 // DATA FLOW: Attendance route → ManagerQrScannerModal → useManagerQrScannerLogic → attendance log
 import { X, ScanLine, UserCheck, AlertCircle, Loader2 } from 'lucide-react';
-import { useManagerQrScannerLogic } from '@/app/manager/attendance/attendance_components/ManagerQrScanner/ManagerUseManagerQrScannerLogic';
 import {
   MANAGER_QR_STATUS_LABELS } from '@/app/manager/attendance/attendance_components/ManagerQrScanner/ManagerQrScannerConstants';
+import { useManagerQrScannerLogic } from '@/app/manager/attendance/attendance_components/ManagerQrScanner/ManagerUseManagerQrScannerLogic';
 import type { ManagerQrScannerModalProps } from '@/app/manager/attendance/attendance_types/ManagerQrScannerTypes';
+
 
 export default function ManagerQrScannerModal({ open, onClose }: ManagerQrScannerModalProps) {
   const { status, history, currentMember, scanValue, setScanValue, resolveMember, handleSimulateScan, handleCheckIn, resetStatus, demoMode } = useManagerQrScannerLogic();
@@ -22,7 +23,7 @@ export default function ManagerQrScannerModal({ open, onClose }: ManagerQrScanne
           <button
             onClick={onClose}
             aria-label="Close scanner"
-            className="absolute top-6 left-6 p-3 bg-page/10 hover:bg-page/20 text-on-primary rounded-full motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            className="absolute top-6 left-6 p-3 bg-page hover:bg-page text-on-primary rounded-full motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
             <X size={18} />
           </button>
@@ -48,7 +49,7 @@ export default function ManagerQrScannerModal({ open, onClose }: ManagerQrScanne
             </div>
           </div>
 
-          <p className="text-on-primary/60 mb-6 font-medium text-center max-w-xs">
+          <p className="text-on-primary mb-6 font-medium text-center max-w-xs">
             Align the member&apos;s QR Code within the frame to scan.
           </p>
 
@@ -64,7 +65,7 @@ export default function ManagerQrScannerModal({ open, onClose }: ManagerQrScanne
                 id="manager-qr-value"
                 value={scanValue}
                 onChange={(event) => setScanValue(event.target.value)}
-                className="min-w-0 flex-1 rounded-xl border border-border bg-page/10 px-4 py-3 text-sm text-on-primary placeholder:text-on-primary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                className="min-w-0 flex-1 rounded-xl border border-border bg-page px-4 py-3 text-sm text-on-primary placeholder:text-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                 placeholder="Member ID or scanner payload"
                 autoComplete="off"
               />
@@ -79,7 +80,7 @@ export default function ManagerQrScannerModal({ open, onClose }: ManagerQrScanne
               onClick={() => handleSimulateScan(true)}
               disabled={status === 'SCANNING'}
               aria-label="Simulate an active member scan"
-              className="px-6 py-3 bg-page/10 hover:bg-page/20 text-on-primary text-sm font-bold rounded-xl motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:opacity-50"
+              className="px-6 py-3 bg-page hover:bg-page text-on-primary text-sm font-bold rounded-xl motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:opacity-50"
             >
               Simulate Active
             </button>
@@ -87,7 +88,7 @@ export default function ManagerQrScannerModal({ open, onClose }: ManagerQrScanne
               onClick={() => handleSimulateScan(false)}
               disabled={status === 'SCANNING'}
               aria-label="Simulate an expired member scan"
-              className="px-6 py-3 bg-page/10 hover:bg-page/20 text-on-primary text-sm font-bold rounded-xl motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:opacity-50"
+              className="px-6 py-3 bg-page hover:bg-page text-on-primary text-sm font-bold rounded-xl motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:opacity-50"
             >
               Simulate Expired
             </button>
@@ -144,14 +145,14 @@ export default function ManagerQrScannerModal({ open, onClose }: ManagerQrScanne
                   {status === 'ACTIVE' ? (
                     <button
                       onClick={handleCheckIn}
-                      className="w-full py-4 bg-success hover:bg-success/90 text-on-success text-lg font-black rounded-2xl motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-success flex items-center justify-center gap-2"
+                      className="w-full py-4 bg-success hover:bg-success text-on-success text-lg font-black rounded-2xl motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-success flex items-center justify-center gap-2"
                     >
                       <UserCheck size={18} /> Verify Face &amp; Check-in
                     </button>
                   ) : (
                     <button
                       onClick={resetStatus}
-                      className="w-full py-4 bg-danger hover:bg-danger/90 text-on-danger text-lg font-black rounded-2xl motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-danger flex items-center justify-center gap-2"
+                      className="w-full py-4 bg-danger hover:bg-danger text-on-danger text-lg font-black rounded-2xl motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-danger flex items-center justify-center gap-2"
                     >
                       <AlertCircle size={18} /> Block &amp; Collect Payment
                     </button>
@@ -162,7 +163,7 @@ export default function ManagerQrScannerModal({ open, onClose }: ManagerQrScanne
           </div>
 
           {/* Recent Check-ins History Panel */}
-          <div className="flex-1 bg-input/30 p-6 overflow-y-auto">
+          <div className="flex-1 bg-input p-6 overflow-y-auto">
             <h4 className="text-sm font-bold text-primary mb-4 uppercase tracking-wider">Recent Check-ins</h4>
             <div className="space-y-3">
               {/* Rule 55: key={h.id} — stable unique ID, NOT array index */}

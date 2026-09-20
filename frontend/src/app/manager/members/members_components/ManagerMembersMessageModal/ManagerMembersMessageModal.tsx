@@ -1,9 +1,10 @@
+// RESPONSIBILITY: Renders the Members-owned send-message modal (WhatsApp/Email) and delegates external messaging destinations through feature-owned configuration.
 'use client';
-import type { ManagerMembersMessageModalProps } from '@/app/manager/members/members_types/ManagerMembersMessageTypes';
-// RESPONSIBILITY: Renders the send-message modal (WhatsApp/Email) for communicating with a member. Owned exclusively by the Members module.
 import { useMemo, useState } from 'react';
 import { X, Send, MessageCircle, Mail, Phone, AtSign } from 'lucide-react';
 import { useManagerUnsavedChangesGuard } from '@/app/manager/manager_infrastructure/ManagerUnsavedChangesGuard';
+import type { ManagerMembersMessageModalProps } from '@/app/manager/members/members_types/ManagerMembersMessageTypes';
+
 
 
 
@@ -77,27 +78,27 @@ export default function ManagerMembersMessageModal({
  >
  <div className="flex flex-wrap items-center gap-3">
  <div className="w-9 h-9 rounded-full bg-primary-subtle flex items-center justify-center">
- <Icon size={18} className="text-white" />
+ <Icon size={18} className="text-primary" />
  </div>
  <div>
- <p className="text-white font-bold text-base leading-tight">{label} Message</p>
- <p className="text-white/80 text-xs">Sending to {recipient.name}</p>
+ <p className="text-primary font-bold text-base leading-tight">{label} Message</p>
+ <p className="text-primary text-xs">Sending to {recipient.name}</p>
  </div>
  </div>
  <button
  aria-label="Close message dialog"
  onClick={handleClose}
  disabled={sending}
- className="min-w-32 w-8 h-8 rounded-full bg-primary-subtle hover:bg-primary/30 flex items-center justify-center motion-safe:transition-colors disabled:opacity-50"
+ className="min-w-11 min-h-11 rounded-full bg-primary-subtle hover:bg-primary-subtle flex items-center justify-center motion-safe:transition-colors disabled:opacity-50"
  >
- <X size={18} className="text-white" />
+ <X size={18} className="text-primary" />
  </button>
  </div>
 
  <div className="px-6 pt-4 pb-2">
  <div className="flex items-center gap-3 p-3 bg-input rounded-xl border border-border">
  <div
- className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0 bg-primary-subtle"
+ className="w-10 h-10 rounded-full flex items-center justify-center text-primary font-bold text-sm flex-shrink-0 bg-primary-subtle"
  >
  {recipient.name.charAt(0)}
  </div>
@@ -125,7 +126,7 @@ export default function ManagerMembersMessageModal({
  value={subject}
  onChange={(e) => setSubject(e.target.value)}
  disabled={sending || sent}
- className="w-full px-3 py-2.5 text-sm bg-input border border-border rounded-lg focus:outline-none focus:border-primary text-primary disabled:opacity-60"
+ className="w-full px-3 py-2.5 text-sm bg-input border border-border rounded-lg focus-visible:outline-none focus-visible:border-primary text-primary disabled:opacity-60"
  placeholder="Email subject..."
  />
  </div>
@@ -140,7 +141,7 @@ export default function ManagerMembersMessageModal({
  value={message}
  onChange={(e) => setMessage(e.target.value)}
  disabled={sending || sent}
- className="w-full px-3 py-2.5 text-sm bg-input border border-border rounded-xl focus:outline-none focus:border-primary text-primary resize-none disabled:opacity-60"
+ className="w-full px-3 py-2.5 text-sm bg-input border border-border rounded-xl focus-visible:outline-none focus-visible:border-primary text-primary resize-none disabled:opacity-60"
  placeholder="Type your message..."
  />
  <p className="text-right text-xs text-secondary mt-1">{message.length} chars</p>
@@ -158,7 +159,7 @@ export default function ManagerMembersMessageModal({
  <button
  onClick={handleSend}
  disabled={sending || sent || !message.trim()}
- className={`min-w-32 flex-1 px-4 py-2.5 text-sm font-semibold text-on-success rounded-xl flex items-center justify-center gap-2 motion-safe:transition-all disabled:opacity-50 ${sent ? 'bg-success' : type === 'whatsapp' ? 'bg-social-whatsapp' : 'bg-info-bg'}`}
+ className={`min-w-32 flex-1 px-4 py-2.5 text-sm font-semibold rounded-xl flex items-center justify-center gap-2 motion-safe:transition-all disabled:opacity-50 ${sent ? 'bg-success text-on-success' : type === 'whatsapp' ? 'bg-social-whatsapp text-primary' : 'bg-info text-on-info'}`}
  
  >
  {sent ? (
@@ -167,7 +168,7 @@ export default function ManagerMembersMessageModal({
  </>
  ) : sending ? (
  <>
- <span className="w-4 h-4 border-2 border-border/40 border-t-on-primary rounded-full motion-safe:animate-spin" />
+ <span className="w-4 h-4 border-2 border-border border-t-on-primary rounded-full motion-safe:animate-spin" />
  Sending...
  </>
  ) : (

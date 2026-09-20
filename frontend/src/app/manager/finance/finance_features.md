@@ -14,6 +14,12 @@ Manager Finance is the branch payment and revenue workspace. Managers can review
 | `finance_types/` | Feature-owned responsibility for the finance module. | `ManagerFinanceSchema.ts; ManagerFinanceTypes.ts` |
 | `finance_utils/` | Feature-owned responsibility for the finance module. | `ManagerFinanceSharedConstants.ts` |
 
+## Approved External Dependencies
+
+- Global framework/application infrastructure documented by the architecture standard may be used when required.
+- Approved zero-business UI primitives may be imported from Manager application infrastructure.
+- Sibling feature business logic, state, API services, fixtures, and tests are not dependencies.
+
 ## Feature Inventory
 | Feature | Route | What the User Can Do | Main API Calls | Status |
 |---|---|---|---|---|

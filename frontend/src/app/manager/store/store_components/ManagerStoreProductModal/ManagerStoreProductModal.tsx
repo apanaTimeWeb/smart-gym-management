@@ -1,12 +1,13 @@
-'use client';
 // RESPONSIBILITY: Renders the Store product add/edit modal; all form state, validation, submission, and dirty guards are delegated to the form hook.
-import { Controller } from 'react-hook-form';
+'use client';
 import { X, Save, Loader2 } from 'lucide-react';
+import { Controller } from 'react-hook-form';
 import ManagerSearchableDropdown from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
-import { CATEGORIES } from '@/app/manager/store/store_utils/ManagerStoreSharedConstants';
 import { useManagerStoreProductForm } from '@/app/manager/store/store_hooks/ManagerUseManagerStoreProductForm';
-import type { ManagerStoreProductFieldType } from '@/app/manager/store/store_types/ManagerStoreTypes';
+import { CATEGORIES } from '@/app/manager/store/store_utils/ManagerStoreSharedConstants';
 import type { ProductFormValues } from '@/app/manager/store/store_types/ManagerStoreProductFormTypes';
+import type { ManagerStoreProductFieldType } from '@/app/manager/store/store_types/ManagerStoreTypes';
+
 
 const PRODUCT_FIELDS: ReadonlyArray<{ label: string; key: keyof ProductFormValues; type: ManagerStoreProductFieldType }> = [
   { label: 'Product Name', key: 'name', type: 'text' },
@@ -40,7 +41,7 @@ export default function ManagerStoreProductModal() {
                   min={field.type === 'number' ? '0' : undefined}
                   step={field.key === 'price' ? '0.01' : field.type === 'number' ? '1' : undefined}
                   {...register(field.key, field.type === 'number' ? { valueAsNumber: true } : {})}
-                  className={`w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 ${error ? 'border-danger focus:ring-danger' : 'border-border focus:ring-warning'} bg-input text-primary`}
+                  className={`w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 ${error ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-warning'} bg-input text-primary`}
                 />
                 {error && <p role="alert" className="text-danger text-xs mt-1">{String(error.message ?? '')}</p>}
               </div>

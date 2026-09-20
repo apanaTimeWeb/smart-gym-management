@@ -1,11 +1,12 @@
-import { describe, it, expect, beforeAll, afterAll, afterEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
-import ManagerFinanceMain from '@/app/manager/finance/finance_components/ManagerFinanceMain/ManagerFinanceMain';
+import { describe, it, expect, beforeAll, afterAll, afterEach } from 'vitest';
 import { financeApi } from '@/app/manager/finance/finance_api/ManagerFinanceApi';
+import ManagerFinanceMain from '@/app/manager/finance/finance_components/ManagerFinanceMain/ManagerFinanceMain';
 import { managerMswServer } from '@/app/manager/manager_mocks/ManagerMswTestServer';
 import { ManagerTestProviders } from '@/app/manager/manager_mocks/ManagerTestProviders';
+
 
 beforeAll(() => managerMswServer.listen({ onUnhandledRequest: 'error' }));
 afterEach(() => managerMswServer.resetHandlers());

@@ -1,12 +1,14 @@
 import { http, HttpResponse } from 'msw';
-import { managerMockApiUrl } from '@/app/manager/manager_infrastructure/ManagerMockApiUrl';
-import { ManagerMembersUrlConfig } from '@/app/manager/members/members_url_config';
 import { MANAGER_HTTP_STATUS } from '@/app/manager/manager_infrastructure/ManagerHttpStatus';
+import { managerMockApiUrl } from '@/app/manager/manager_infrastructure/ManagerMockApiUrl';
 import { MOCK_MEMBERS, MOCK_MEMBER_STATS } from '@/app/manager/members/members_fixtures/ManagerMembersMockData';
+import { ManagerMembersUrlConfig } from '@/app/manager/members/members_url_config';
 import type { Member } from '@/app/manager/members/members_types/ManagerMembersTypes';
+
 
 let mockMemberIdCounter = 1000;
 let mockPaymentIdCounter = 1000;
+let mockMemberPayments: Record<string, Array<{ id: string; amount: number; method: string; paidAt: string; status: "PAID" | "PENDING" | "FAILED" | "REFUNDED"; invoiceNumber: string }>> = {};
 let mockDietPlanIdCounter = 1000;
 let mockWorkoutPlanIdCounter = 1000;
 let mockMembers = [...MOCK_MEMBERS];
@@ -24,6 +26,15 @@ function sortMembers(items: Member[], column: string, direction: string): Member
     const secondValue = second[column as SortableMemberField];
     return String(firstValue ?? '').localeCompare(String(secondValue ?? ''), undefined, { numeric: true }) * multiplier;
   });
+}
+
+export function resetManagerMembersMockState(): void {
+  mockMemberIdCounter = 1000;
+  mockPaymentIdCounter = 1000;
+  mockMemberPayments = {};
+  mockDietPlanIdCounter = 1000;
+  mockWorkoutPlanIdCounter = 1000;
+  mockMembers = [...MOCK_MEMBERS];
 }
 
 export const managerMembersHandlers = [
@@ -96,15 +107,30 @@ export const managerMembersHandlers = [
     ] });
   }),
 
-  http.get(managerMockApiUrl(ManagerMembersUrlConfig.BACKEND_API.PAYMENTS(':id')), () => {
-    return HttpResponse.json({ success: true, message: 'Success', data: [
-      { id: 'pay1', amount: 1500000, method: 'UPI', paidAt: new Date().toISOString(), status: 'PAID', invoiceNumber: 'INV-001' },
-      { id: 'pay2', amount: 500000, method: 'CARD', paidAt: '2024-04-18T10:30:00Z', status: 'PAID', invoiceNumber: 'INV-002' }
-    ] });
+  http.get(managerMockApiUrl(ManagerMembersUrlConfig.BACKEND_API.PAYMENTS(':id')), ({ params }) => {
+    const memberId = String(params.id);
+    const seed = mockMemberPayments[memberId] ?? [
+      { id: 'pay1', amount: 1500000, method: 'UPI', paidAt: new Date().toISOString(), status: 'PAID' as const, invoiceNumber: 'INV-001' },
+      { id: 'pay2', amount: 500000, method: 'CARD', paidAt: '2024-04-18T10:30:00Z', status: 'PAID' as const, invoiceNumber: 'INV-002' },
+    ];
+    mockMemberPayments[memberId] = [...seed];
+    return HttpResponse.json({ success: true, message: 'Success', data: mockMemberPayments[memberId] });
   }),
 
-  http.post(managerMockApiUrl(ManagerMembersUrlConfig.BACKEND_API.PAYMENTS(':id')), async () => {
-    return HttpResponse.json({ success: true, message: 'Payment recorded', data: { id: `pay-${mockPaymentIdCounter++}` } });
+  http.post(managerMockApiUrl(ManagerMembersUrlConfig.BACKEND_API.PAYMENTS(':id')), async ({ params, request }) => {
+    const memberId = String(params.id);
+    const body = await request.json() as Record<string, unknown>;
+    const existing = mockMemberPayments[memberId] ?? [];
+    const payment = {
+      id: `pay-${mockPaymentIdCounter++}`,
+      amount: Number(body.amount ?? 0),
+      method: String(body.method ?? 'UPI'),
+      paidAt: new Date().toISOString(),
+      status: 'PAID' as const,
+      invoiceNumber: `INV-${mockPaymentIdCounter}`,
+    };
+    mockMemberPayments[memberId] = [payment, ...existing];
+    return HttpResponse.json({ success: true, message: 'Payment recorded', data: payment });
   }),
 
   http.get(managerMockApiUrl(ManagerMembersUrlConfig.BACKEND_API.ATTENDANCE(':id')), () => {

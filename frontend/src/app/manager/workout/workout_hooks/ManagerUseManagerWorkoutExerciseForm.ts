@@ -1,23 +1,25 @@
+// DATA FLOW: Workout UI store → RHF/Zod → save mutation → backend message/cache → UI.
+// RESPONSIBILITY: Owns Exercise form setup, validation, save mutation, edit synchronization, and dirty-state protection.
 'use client';
 
 import { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useManagerWorkoutLogic } from '@/app/manager/workout/workout_hooks/ManagerUseManagerWorkoutLogic';
-import { useSaveExerciseMutation } from '@/app/manager/workout/workout_api/ManagerUseManagerWorkoutMutations';
-import { useManagerUnsavedChangesGuard } from '@/app/manager/manager_infrastructure/ManagerUnsavedChangesGuard';
-import { managerExerciseFormSchema } from '@/app/manager/workout/workout_schemas/ManagerWorkoutFormSchemas';
-import type { ExerciseFormValues } from '@/app/manager/workout/workout_types/ManagerWorkoutFormTypes';
-import { EMPTY_EXERCISE_FORM } from '@/app/manager/workout/workout_types/ManagerWorkoutFormTypes';
+import { useForm } from 'react-hook-form';
 import { showManagerErrorToast, showManagerSuccessToast } from '@/app/manager/manager_infrastructure/ManagerToastService';
+import { useManagerUnsavedChangesGuard } from '@/app/manager/manager_infrastructure/ManagerUnsavedChangesGuard';
+import { useManagerWorkoutLogic } from '@/app/manager/workout/workout_hooks/ManagerUseManagerWorkoutLogic';
+import { useSaveExerciseMutation } from '@/app/manager/workout/workout_hooks/ManagerUseManagerWorkoutMutations';
+import { managerExerciseFormSchema } from '@/app/manager/workout/workout_schemas/ManagerWorkoutFormSchemas';
+import { EMPTY_EXERCISE_FORM } from '@/app/manager/workout/workout_types/ManagerWorkoutFormTypes';
+import type { ExerciseFormValues } from '@/app/manager/workout/workout_types/ManagerWorkoutFormTypes';
 
-// RESPONSIBILITY: Owns Exercise form setup, validation, save mutation, edit synchronization, and dirty-state protection.
-// DATA FLOW: Workout UI store → RHF/Zod → save mutation → backend message/cache → UI.
+
 /** Coordinates the Exercise editor and transforms the muscle text into the API muscle-group array. */
 export function useManagerWorkoutExerciseForm() {
   const { showExModal, setShowExModal, editExId, exForm } = useManagerWorkoutLogic();
   const saveMutation = useSaveExerciseMutation();
   const form = useForm<ExerciseFormValues>({ resolver: zodResolver(managerExerciseFormSchema), defaultValues: exForm ?? EMPTY_EXERCISE_FORM });
+// EFFECT: Effect lifecycle and dependency list are intentionally scoped to values that control this side effect.
   useEffect(() => { if (showExModal) form.reset(exForm ?? EMPTY_EXERCISE_FORM); }, [exForm, form, showExModal]);
   const { confirmAndClose } = useManagerUnsavedChangesGuard(showExModal && form.formState.isDirty);
   const handleClose = () => { void confirmAndClose(() => setShowExModal(false)); };

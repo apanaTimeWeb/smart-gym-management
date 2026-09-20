@@ -1,8 +1,9 @@
-'use client';
 // RESPONSIBILITY: KPI stat cards for the Notifications module.
-import { useManagerNotificationsLogic } from '@/app/manager/notifications/notifications_hooks/ManagerUseManagerNotificationsLogic';
-import ManagerStatCard from '@/app/manager/manager_components/ManagerShared/ManagerStatCard';
+'use client';
 import { Bell, BellRing, AlertTriangle, CalendarClock } from 'lucide-react';
+import ManagerStatCard from '@/app/manager/manager_components/ManagerShared/ManagerStatCard';
+import { useManagerNotificationsLogic } from '@/app/manager/notifications/notifications_hooks/ManagerUseManagerNotificationsLogic';
+
 
 export default function ManagerNotificationsKPIs() {
   const { kpis } = useManagerNotificationsLogic();

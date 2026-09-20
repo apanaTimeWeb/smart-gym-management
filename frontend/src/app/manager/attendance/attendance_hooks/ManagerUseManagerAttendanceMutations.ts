@@ -1,15 +1,17 @@
-'use client';
 // DATA FLOW: Manager module state/API data → useManagerAttendanceMutations → owning Manager UI components.
+'use client';
 /** Manages UseAttendanceMutations for the Manager module. */
 import { useCallback } from 'react';
 import { attendanceApi } from '@/app/manager/attendance/attendance_api/ManagerAttendanceApi';
-import type { ManagerToastType } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerToastTypes';
-import type { AttendanceFormValues } from '@/app/manager/attendance/attendance_types/ManagerAttendanceFormTypes';
 import { EMPTY_ATTENDANCE_FORM } from '@/app/manager/attendance/attendance_types/ManagerAttendanceFormTypes';
-import type { Attendance } from '@/app/manager/attendance/attendance_types/ManagerAttendanceTypes';
+import type { AttendanceFormValues } from '@/app/manager/attendance/attendance_types/ManagerAttendanceFormTypes';
 import type { MemberSnapshot, StaffSnapshot } from '@/app/manager/attendance/attendance_types/ManagerAttendanceSnapshotTypes';
+import type { Attendance } from '@/app/manager/attendance/attendance_types/ManagerAttendanceTypes';
 import type { ManagerAttendancePersonType } from '@/app/manager/attendance/attendance_types/ManagerAttendanceTypes';
+import type { ManagerToastType } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerToastTypes';
 
+
+/** Orchestrates the owning Manager feature behavior while preserving its documented state boundary. */
 export function useManagerAttendanceMutations(
   members: MemberSnapshot[],
   staff: StaffSnapshot[],

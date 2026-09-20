@@ -16,8 +16,8 @@ export interface ManagerNotificationsViewModel {
   setPriorityFilter: (value: string) => void;
   statusFilter: string;
   setStatusFilter: (value: string) => void;
-  handleMarkRead: (id: string) => Promise<unknown>;
-  handleMarkAllRead: () => Promise<unknown>;
-  handleDelete: (id: string) => Promise<unknown>;
+  handleMarkRead: (id: string) => Promise<void>;
+  handleMarkAllRead: () => Promise<void>;
+  handleDelete: (id: string) => Promise<void>;
   reload: () => Promise<void>;
 }

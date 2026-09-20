@@ -7,7 +7,7 @@ export interface ManagerSearchableDropdownOption {
 }
 
 export interface ManagerSearchableDropdownProps {
-  options: ManagerSearchableDropdownOption[];
+  options: readonly ManagerSearchableDropdownOption[];
   value: string | number;
   onChange: (value: string | number) => void;
   placeholder?: string;

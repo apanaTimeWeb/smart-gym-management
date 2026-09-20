@@ -1,12 +1,14 @@
-'use client';
 // DATA FLOW: Manager module state/API data → useManagerCommunicationsQueries → owning Manager UI components.
+'use client';
 /** Manages UseCommunicationsQueries for the Manager module. */
 import { useQuery } from '@tanstack/react-query';
 import { ManagerCommunicationsApi } from '@/app/manager/communications/communications_api/ManagerCommunicationsApi';
 import type { CommSegment } from '@/app/manager/communications/communications_types/ManagerCommunications_types';
 
+
+/** Orchestrates the owning Manager feature behavior while preserving its documented state boundary. */
 export function useManagerCommunicationsQueries(selectedSegment: CommSegment, search: string, channel: string, page: number) {
-  const { data: campaignsResponse, isLoading: campaignsLoading, isError: campaignsError, error: campaignsErrorValue } = useQuery({
+  const { data: campaignsResponse, isPending: campaignsLoading, isError: campaignsError, error: campaignsErrorValue } = useQuery({
     queryKey: ['manager', 'communications', 'campaigns', { search, channel, page, limit: 10 }],
     queryFn: () => ManagerCommunicationsApi.fetchCampaigns({ search, channel, page: String(page), limit: '10' }),
     staleTime: 1000 * 60 * 2 });
@@ -26,7 +28,7 @@ export function useManagerCommunicationsQueries(selectedSegment: CommSegment, se
     staleTime: 1000 * 60 });
   const segmentRecipients = segmentRecipientsResponse?.data || [];
 
-  const { data: automationsResponse, isLoading: automationsLoading } = useQuery({
+  const { data: automationsResponse, isPending: automationsLoading } = useQuery({
     queryKey: ['manager', 'communications', 'automations'],
     queryFn: ManagerCommunicationsApi.fetchAutomations,
     staleTime: 1000 * 60 * 5 });

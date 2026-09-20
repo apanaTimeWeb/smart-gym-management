@@ -1,9 +1,11 @@
-'use client';
 // RESPONSIBILITY: Renders dashboard-owned date-range controls and synchronizes the selected range to URL state.
+'use client';
 import { useCallback } from 'react';
-import ManagerSearchableDropdown from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
-import { MANAGER_DASHBOARD_DATE_RANGE_OPTIONS, type ManagerDashboardDateRange, type ManagerDashboardDateField } from '@/app/manager/dashboard/dashboard_utils/ManagerDashboardDateFilterConstants';
 import { useManagerDashboardUrlState } from '@/app/manager/dashboard/dashboard_hooks/ManagerUseManagerDashboardUrlState';
+import { MANAGER_DASHBOARD_DATE_RANGE_OPTIONS } from '@/app/manager/dashboard/dashboard_utils/ManagerDashboardDateFilterConstants';
+import ManagerSearchableDropdown from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
+import type { ManagerDashboardDateRange, ManagerDashboardDateField } from '@/app/manager/dashboard/dashboard_utils/ManagerDashboardDateFilterConstants';
+
 
 function toDateInputValue(date: Date): string {
   const year = date.getFullYear();

@@ -1,0 +1,51 @@
+// DATA FLOW: Manager module state/API data → useManagerInquiriesQueries → owning Manager UI components.
+'use client';
+/** Manages UseInquiriesQueries for the Manager module. */
+import { useQuery } from '@tanstack/react-query';
+import { inquiriesApi } from '@/app/manager/inquiries/inquiries_api/ManagerInquiriesApi';
+import type { Inquiry, InquiryStats } from '@/app/manager/inquiries/inquiries_types/ManagerInquiriesTypes';
+
+
+/** Orchestrates the owning Manager feature behavior while preserving its documented state boundary. */
+export function useInquiriesQuery(params: Record<string, string>) {
+  return useQuery({
+    queryKey: ['manager', 'inquiries', 'list', params],
+    queryFn: async () => {
+      const res = await inquiriesApi.fetchInquiries(params);
+      return { inquiries: res.data!.inquiries as Inquiry[], total: res.data!.total };
+    },
+    staleTime: 5 * 60 * 1000 });
+}
+
+/** Orchestrates the owning Manager feature behavior while preserving its documented state boundary. */
+export function useInquiryStatsQuery() {
+  return useQuery({
+    queryKey: ['manager', 'inquiries', 'stats'],
+    queryFn: async () => {
+      const res = await inquiriesApi.fetchInquiryStats();
+      return res.data! as InquiryStats;
+    },
+    staleTime: 5 * 60 * 1000 });
+}
+
+/** Orchestrates the owning Manager feature behavior while preserving its documented state boundary. */
+export function useInquiryPlansQuery() {
+  return useQuery({
+    queryKey: ['manager', 'inquiries', 'plans'],
+    queryFn: async () => {
+      const res = await inquiriesApi.fetchInquiryPlans();
+      return res.data! as { name: string }[];
+    },
+    staleTime: 5 * 60 * 1000 });
+}
+
+/** Orchestrates the owning Manager feature behavior while preserving its documented state boundary. */
+export function useInquiryPlansSnapshotQuery() {
+  return useQuery({
+    queryKey: ['manager', 'inquiries', 'plans-snapshot'],
+    queryFn: async () => {
+      const res = await inquiriesApi.fetchInquiryPlansSnapshot();
+      return res.data! as unknown[];
+    },
+    staleTime: 5 * 60 * 1000 });
+}

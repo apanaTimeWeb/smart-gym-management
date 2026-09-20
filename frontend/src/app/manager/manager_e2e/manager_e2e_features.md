@@ -1,70 +1,33 @@
-# manager/manager_e2e — Feature Map
+# Manager E2E — Feature Map
 
 ## Module Purpose
-[REQUIRED: 3–6 sentences. Must answer: (1) What business problem does this module solve? (2) Who uses it? (3) What are the 3–5 most important things a user can DO? (4) What is strictly OFF-LIMITS? Fill this out accurately.]
+`manager_e2e/` contains Manager role end-to-end specifications that verify complete user-visible flows rather than only rendering. The suite is intended to prove route reachability, interaction chains, success/error recovery, and regression-sensitive workflows using the assembled Manager frontend.
 
 ## Directory Structure
-| Folder | Responsibility | Key Files |
-|---|---|---|
-| `manager_e2e_components/` | Renders UI components | TBD |
-| `manager_e2e_api/` | API endpoints | `manager_e2e_url_config.ts` |
+```text
+manager_e2e/
+├── ManagerCriticalFlows.spec.ts
+├── manager_e2e_features.md
+├── manager_e2e_forbidden.md
+├── manager_e2e_theme_contract.md
+└── manager_e2e_url_config.ts
+```
 
-### Approved External Dependencies
-### Application Infrastructure
-- `@/lib/api`
-- `@/lib/logger`
+## Test Scope
+Tests may navigate across Manager features as an end-to-end consumer, but they must not import sibling business implementation solely to make assertions easier. Assertions should be based on observable UI, navigation, and documented outcomes.
 
-### Business Feature Dependencies
-- None
+## Current Reachability Contract
+The Manager role currently has 22 reachable route surfaces: the 20 established role features plus `grievance` and `maintenance`. The E2E suite must keep this inventory synchronized with `manager_features.md`.
 
-### Role-Level Business Dependencies
-- None
+## Verification Checklist
+- [x] Critical-flow E2E spec exists.
+- [x] E2E is kept separate from feature unit/component tests.
+- [x] New reachable features are included in the route inventory.
+- [ ] Actual Playwright execution: NOT VERIFIED without the host project configuration/runtime.
 
-## Feature Inventory
-| Feature | Route | What the User Can Do | Key Components | Main API Calls | Status |
-|---|---|---|---|---|---|
-| Example | /manager/manager_e2e | Manage entity | Main.tsx | GET /... | 🚧 TBD |
+## Approved External Dependencies
 
-## User Flows & Interactions
-### Flow 1: [Name]
-1. TBD
+- Global framework/application infrastructure documented by the architecture standard may be used when required.
+- Approved zero-business UI primitives may be imported from Manager application infrastructure.
+- Sibling feature business logic, state, API services, fixtures, and tests are not dependencies.
 
-## Data and State Architecture
-- **State pattern:** TanStack Query for server state + Zustand for UI state.
-- **Zustand stores:** [List actual store files]
-- **Context providers:** [List actual provider files]
-- **MSW handler location:** [module-owned handler]
-
-## API Contract
-| Function | Method | Endpoint | Request | Response `data` type |
-|---|---|---|---|---|
-| TBD | GET | /... | — | `any` |
-
-## UI Data Requirements
-| UI Element | Required Field(s) | API Endpoint | Response Path | Nullable? | Mocked? |
-|---|---|---|---|---|---|
-| TBD | TBD | GET /... | data... | No | Yes |
-
-## Permissions and Security
-- **Required role:** `MANAGER`
-- **Destructive actions:** TBD
-- **Cross-role isolation:** Zero imports from other roles.
-
-## Loading, Empty, and Error States
-| Section | Loading State | Empty State | Error State |
-|---|---|---|---|
-| Full page | `loading.tsx` | `manager_e2eEmptyState.tsx` | `error.tsx` |
-
-## Edge Cases and AI Warnings
-- **[Specific Warning]:** [Explanation]
-
-## Component Responsibility Map
-| Component File | Responsibility |
-|---|---|
-| TBD | TBD |
-
-## Rule Compliance Checklist
-- [ ] Rule 1: Micro-modularization
-- [ ] Rule 2: Total Role Isolation
-- [ ] Module Self-Containment
-- [ ] Feature Dependency Firewall

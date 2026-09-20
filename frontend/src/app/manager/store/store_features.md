@@ -14,6 +14,12 @@ Manager Store is the branch inventory and POS workspace. Managers can browse/sea
 | `store_types/` | Feature-owned responsibility for the store module. | `ManagerStoreSchema.ts; ManagerStoreTypes.ts` |
 | `store_utils/` | Feature-owned responsibility for the store module. | `ManagerStoreSharedConstants.ts` |
 
+## Approved External Dependencies
+
+- Global framework/application infrastructure documented by the architecture standard may be used when required.
+- Approved zero-business UI primitives may be imported from Manager application infrastructure.
+- Sibling feature business logic, state, API services, fixtures, and tests are not dependencies.
+
 ## Feature Inventory
 | Feature | Route | What the User Can Do | Main API Calls | Status |
 |---|---|---|---|---|

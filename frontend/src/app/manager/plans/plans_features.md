@@ -14,6 +14,12 @@ Manager Plans is the membership plan administration workspace. Managers can brow
 | `plans_types/` | Feature-owned responsibility for the plans module. | `ManagerPlansChangeRequestSchema.ts; ManagerPlansChangeRequestTypes.ts; ManagerPlansMembershipSchema.ts; ManagerPlansMembershipTypes.ts; ManagerPlansSchema.ts; ManagerPlansTypes.ts` |
 | `plans_utils/` | Feature-owned responsibility for the plans module. | `ManagerPlansMembershipSchemas.ts; ManagerPlansSharedConstants.ts` |
 
+## Approved External Dependencies
+
+- Global framework/application infrastructure documented by the architecture standard may be used when required.
+- Approved zero-business UI primitives may be imported from Manager application infrastructure.
+- Sibling feature business logic, state, API services, fixtures, and tests are not dependencies.
+
 ## Feature Inventory
 | Feature | Route | What the User Can Do | Main API Calls | Status |
 |---|---|---|---|---|

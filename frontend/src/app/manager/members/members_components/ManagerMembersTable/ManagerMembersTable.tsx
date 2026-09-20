@@ -1,22 +1,24 @@
+// RESPONSIBILITY: Renders the members data table and its row-level actions using feature-owned member data.
 ﻿'use client';
-import { getManagerErrorMessage } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
-import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
-import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
-// RESPONSIBILITY: Renders the primary tabular list of members with actions, filtering state, and pagination.
+import { useState } from 'react';
 import { Edit, MessageCircle, Mail, Trash2, Users, Banknote, Ban, Loader2 } from 'lucide-react';
-import ManagerTableSkeleton from '@/app/manager/manager_components/ManagerShared/ManagerTableSkeleton';
-import { useManagerMembersLogic } from '@/app/manager/members/members_hooks/ManagerUseManagerMembersLogic';
-import { useFetchMembers } from '@/app/manager/members/members_api/ManagerUseManagerMembersQueries';
-import { MEMBERS_STATUS_COLORS, MEMBERS_TABLE_HEADERS } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
+import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
 import { maskSensitiveData, formatDate, displayValue } from '@/lib/formatters';
+import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
 import ManagerEmptyState from '@/app/manager/manager_components/ManagerFeedback/ManagerEmptyState';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
+import ManagerTableSkeleton from '@/app/manager/manager_components/ManagerShared/ManagerTableSkeleton';
+import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
+import { getManagerErrorMessage } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_infrastructure/ManagerPaginationDefaults';
-import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
-import { useState } from 'react';
-import type { MemberSortColumn } from '@/app/manager/members/members_types/ManagerMembersTypes';
 import ManagerMembersSortIcon from '@/app/manager/members/members_components/ManagerMembersSortIcon/ManagerMembersSortIcon';
+import { useManagerMembersLogic } from '@/app/manager/members/members_hooks/ManagerUseManagerMembersLogic';
+import { useFetchMembers } from '@/app/manager/members/members_hooks/ManagerUseManagerMembersQueries';
+import { MEMBERS_TABLE_HEADERS } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
+import { MEMBERS_STATUS_COLORS } from '@/app/manager/members/members_utils/ManagerMembersUiConstants';
+import type { MemberSortColumn } from '@/app/manager/members/members_types/ManagerMembersTypes';
 import type { ChangeEvent } from 'react';
+
 
 export default function ManagerMembersTable() {
   // useConfirm provides the design-system confirm modal (Rule 71 â€” no window.confirm)
@@ -29,7 +31,7 @@ export default function ManagerMembersTable() {
 
   const [selectedRows, setSelectedRows] = useState<Set<string>>(new Set());
 
-  const { data: membersRes, isLoading, isError, error, refetch } = useFetchMembers({ 
+  const { data: membersRes, isPending, isError, error, refetch } = useFetchMembers({ 
     search: debouncedSearch,
     status: statusFilter, 
     gender: genderFilter, 
@@ -70,7 +72,7 @@ export default function ManagerMembersTable() {
 
   return (
     <div className="bg-card rounded-xl shadow-card border border-border overflow-hidden flex flex-col h-full min-h-96">
-      {isLoading ? (
+      {isPending ? (
         <div className="flex items-center justify-center py-16 flex-1">
           <Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" />
         </div>
@@ -85,7 +87,7 @@ export default function ManagerMembersTable() {
                   <th className="px-2 py-3 w-10 text-center">
                     <input 
                       type="checkbox" 
-                      className="rounded border-border text-primary focus:ring-primary w-3.5 h-3.5"
+                      className="rounded border-border text-primary focus-visible:ring-primary w-3.5 h-3.5"
                       checked={members.length > 0 && selectedRows.size === members.length}
                       onChange={toggleAll}
                     />
@@ -138,7 +140,7 @@ export default function ManagerMembersTable() {
                     <td className="px-2 py-3 text-center" onClick={(e) => e.stopPropagation()}>
                       <input 
                         type="checkbox" 
-                        className="rounded border-border text-primary focus:ring-primary w-3.5 h-3.5"
+                        className="rounded border-border text-primary focus-visible:ring-primary w-3.5 h-3.5"
                         checked={selectedRows.has(m.id)}
                         onChange={(e) => toggleRow(m.id, e)}
                       />
@@ -174,15 +176,15 @@ export default function ManagerMembersTable() {
 
                       <div className="flex items-center gap-1.5">
                         {m.pendingAmount > 0 && (
-                          <button onClick={(e) => { e.stopPropagation(); setSelectedMember(m); setShowPaymentModal(true); }} className="p-1.5 rounded-lg bg-warning-bg text-warning hover:bg-warning-bg motion-safe:transition-all motion-safe:duration-200" title="Collect Dues" aria-label={`Collect Dues for ${m.name}`}><Banknote size={18} /></button>
+                          <button onClick={(e) => { e.stopPropagation(); setSelectedMember(m); setShowPaymentModal(true); }} className="p-1.5 rounded-lg bg-warning-bg text-warning hover:bg-warning-bg motion-safe:transition-all motion-safe:duration-base" title="Collect Dues" aria-label={`Collect Dues for ${m.name}`}><Banknote size={18} /></button>
                         )}
-                        <button onClick={(e) => { e.stopPropagation(); openEdit(m); }} className="p-1.5 rounded-lg bg-input text-secondary hover:bg-primary-subtle motion-safe:transition-all motion-safe:duration-200" title="Edit" aria-label={`Edit ${m.name}`}><Edit size={18} /></button>
-                        <button onClick={(e) => { e.stopPropagation(); openMsg(m, 'whatsapp'); }} className="p-1.5 rounded-lg bg-success text-on-success hover:opacity-80 motion-safe:transition-all motion-safe:duration-200" title="WhatsApp" aria-label={`Message ${m.name} on WhatsApp`}><MessageCircle size={18} /></button>
-                        <button onClick={(e) => { e.stopPropagation(); openMsg(m, 'email'); }} className="p-1.5 rounded-lg bg-info text-on-info hover:opacity-80 motion-safe:transition-all motion-safe:duration-200" title="Email" aria-label={`Email ${m.name}`}><Mail size={18} /></button>
+                        <button onClick={(e) => { e.stopPropagation(); openEdit(m); }} className="p-1.5 rounded-lg bg-input text-secondary hover:bg-primary-subtle motion-safe:transition-all motion-safe:duration-base" title="Edit" aria-label={`Edit ${m.name}`}><Edit size={18} /></button>
+                        <button onClick={(e) => { e.stopPropagation(); openMsg(m, 'whatsapp'); }} className="p-1.5 rounded-lg bg-success text-on-success hover:opacity-80 motion-safe:transition-all motion-safe:duration-base" title="WhatsApp" aria-label={`Message ${m.name} on WhatsApp`}><MessageCircle size={18} /></button>
+                        <button onClick={(e) => { e.stopPropagation(); openMsg(m, 'email'); }} className="p-1.5 rounded-lg bg-info text-on-info hover:opacity-80 motion-safe:transition-all motion-safe:duration-base" title="Email" aria-label={`Email ${m.name}`}><Mail size={18} /></button>
                         {m.status !== 'SUSPENDED' && m.pendingAmount > 0 ? (
-                          <button onClick={(e) => { e.stopPropagation(); setSelectedMember(m); toggleSuspend(true); }} className="p-1.5 rounded-lg bg-danger text-on-danger hover:bg-danger-bg motion-safe:transition-all motion-safe:duration-200" title="Suspend Member" aria-label={`Suspend ${m.name}`}><Ban size={18} /></button>
+                          <button onClick={(e) => { e.stopPropagation(); setSelectedMember(m); toggleSuspend(true); }} className="p-1.5 rounded-lg bg-danger text-on-danger hover:bg-danger-bg motion-safe:transition-all motion-safe:duration-base" title="Suspend Member" aria-label={`Suspend ${m.name}`}><Ban size={18} /></button>
                         ) : m.status === 'SUSPENDED' ? (
-                          <button onClick={(e) => { e.stopPropagation(); setSelectedMember(m); toggleSuspend(false); }} className="p-1.5 rounded-lg bg-success text-on-success hover:bg-success-bg motion-safe:transition-all motion-safe:duration-200" title="Unsuspend Member" aria-label={`Unsuspend ${m.name}`}><Ban size={18} /></button>
+                          <button onClick={(e) => { e.stopPropagation(); setSelectedMember(m); toggleSuspend(false); }} className="p-1.5 rounded-lg bg-success text-on-success hover:bg-success-bg motion-safe:transition-all motion-safe:duration-base" title="Unsuspend Member" aria-label={`Unsuspend ${m.name}`}><Ban size={18} /></button>
                         ) : null}
                         <button
                           onClick={async (e) => { 
@@ -194,7 +196,7 @@ export default function ManagerMembersTable() {
                               type: 'danger' });
                             if (confirmed) deleteMember(m.id);
                           }}
-                          className="p-1.5 rounded-lg bg-danger text-on-danger hover:opacity-80 motion-safe:transition-all motion-safe:duration-200"
+                          className="p-1.5 rounded-lg bg-danger text-on-danger hover:opacity-80 motion-safe:transition-all motion-safe:duration-base"
                           title="Delete"
                           aria-label={`Delete ${m.name}`}
                         >
@@ -204,7 +206,7 @@ export default function ManagerMembersTable() {
                     </td>
                   </tr>
                 )})}
-                {members.length === 0 && !isLoading && !isError && (
+                {members.length === 0 && !isPending && !isError && (
                   <tr>
                     <td colSpan={MEMBERS_TABLE_HEADERS.length} className="p-0 border-b-0">
                       <ManagerEmptyState 

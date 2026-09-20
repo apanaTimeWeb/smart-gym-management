@@ -1,7 +1,8 @@
-'use client';
 // RESPONSIBILITY: Provides the implementation for ManagerSalesTabs.tsx functionality within its module.
+'use client';
 import { useManagerSalesLogic } from '@/app/manager/sales/sales_hooks/ManagerUseManagerSalesLogic';
 import { SALES_TABS } from '@/app/manager/sales/sales_utils/ManagerSalesSharedConstants';
+
 
 export default function ManagerSalesTabs() {
  const { tab, setTab } = useManagerSalesLogic();

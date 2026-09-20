@@ -1,16 +1,18 @@
-'use client';
 // RESPONSIBILITY: Renders the Library exercise create/edit dialog; form state and mutation orchestration are delegated to the feature hook.
+'use client';
 import { useEffect, useRef } from 'react';
-import { Controller } from 'react-hook-form';
 import { Dumbbell, Loader2, Save, X } from 'lucide-react';
-import ManagerSearchableDropdown from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
-import { MANAGER_LIBRARY_EXERCISE_CATEGORIES, MANAGER_LIBRARY_EXERCISE_DIFFICULTIES } from '@/app/manager/library/library_utils/ManagerLibraryExerciseConstants';
+import { Controller } from 'react-hook-form';
 import { useManagerLibraryExerciseForm } from '@/app/manager/library/library_hooks/ManagerUseManagerLibraryExerciseForm';
+import { MANAGER_LIBRARY_EXERCISE_CATEGORIES, MANAGER_LIBRARY_EXERCISE_DIFFICULTIES } from '@/app/manager/library/library_utils/ManagerLibraryExerciseConstants';
+import ManagerSearchableDropdown from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
+
 
 export default function ManagerLibraryExerciseModal() {
   const { form, showExerciseModal, editExerciseId, saving, handleClose, submit } = useManagerLibraryExerciseForm();
   const { register, control, formState: { errors } } = form;
   const dialogRef = useRef<HTMLDivElement>(null);
+// EFFECT: Effect lifecycle and dependency list are intentionally scoped to values that control this side effect.
   useEffect(() => {
     if (!showExerciseModal || !dialogRef.current) return;
     const dialog = dialogRef.current;
@@ -49,7 +51,7 @@ export default function ManagerLibraryExerciseModal() {
             <div><label htmlFor="manager-library-exercise-video" className="mb-1 block text-sm font-medium text-secondary">Video URL</label><input id="manager-library-exercise-video" type="url" {...register('videoUrl')} className="w-full rounded-xl border border-border bg-input px-4 py-2.5 text-sm text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" />{errors.videoUrl && <p role="alert" className="mt-1 text-xs text-danger">{errors.videoUrl.message}</p>}</div>
           </div>
           <div><label htmlFor="manager-library-exercise-description" className="mb-1 block text-sm font-medium text-secondary">Description</label><textarea id="manager-library-exercise-description" rows={4} {...register('description')} className="w-full resize-none rounded-xl border border-border bg-input px-4 py-2.5 text-sm text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" /></div>
-          <Controller name="isActive" control={control} render={({ field }) => <label className="flex min-h-11 items-center gap-3 rounded-xl border border-border bg-input p-3 text-sm text-primary"><input type="checkbox" checked={field.value} onChange={field.onChange} className="h-4 w-4 rounded border-border text-primary focus:ring-primary" /> Exercise is active</label>} />
+          <Controller name="isActive" control={control} render={({ field }) => <label className="flex min-h-11 items-center gap-3 rounded-xl border border-border bg-input p-3 text-sm text-primary"><input type="checkbox" checked={field.value} onChange={field.onChange} className="h-4 w-4 rounded border-border text-primary focus-visible:ring-primary" /> Exercise is active</label>} />
           <div className="flex flex-col-reverse gap-3 border-t border-border pt-4 sm:flex-row sm:justify-end"><button type="button" onClick={handleClose} className="min-h-11 rounded-xl border border-border px-5 text-sm font-medium text-primary hover:bg-surface-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-safe:transition-all">Cancel</button><button type="submit" disabled={saving} className="flex min-h-11 min-w-32 items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-bold text-on-primary shadow-card motion-safe:transition-all disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page">{saving ? <Loader2 size={18} className="motion-safe:animate-spin" aria-hidden="true" /> : <Save size={18} aria-hidden="true" />}{saving ? 'Saving…' : editExerciseId ? 'Update Exercise' : 'Add Exercise'}</button></div>
         </form>
       </div>

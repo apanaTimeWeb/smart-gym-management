@@ -1,9 +1,10 @@
-'use client';
-import type { ManagerCommunicationsBulkMessageModalProps } from '@/app/manager/communications/communications_types/ManagerCommunicationsBulkMessageModalTypes';
 // RESPONSIBILITY: Renders a bulk messaging modal for sending WhatsApp or Email messages to multiple recipients. Manages per-recipient send tracking for WhatsApp queue mode.
+'use client';
 import { useEffect, useMemo, useState } from 'react';
 import { X, Send, MessageCircle, Mail, CheckCircle, Phone, AtSign, Users } from 'lucide-react';
 import { useManagerUnsavedChangesGuard } from '@/app/manager/manager_infrastructure/ManagerUnsavedChangesGuard';
+import type { ManagerCommunicationsBulkMessageModalProps } from '@/app/manager/communications/communications_types/ManagerCommunicationsBulkMessageModalTypes';
+
 
 
 
@@ -22,6 +23,7 @@ export default function ManagerCommunicationsBulkMessageModal({
   const [openedRecipientKeys, setOpenedRecipientKeys] = useState<Set<string>>(new Set());
 
   // Reset send state and message whenever the modal opens with new data.
+// EFFECT: Effect lifecycle and dependency list are intentionally scoped to values that control this side effect.
   useEffect(() => {
     if (open) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -73,18 +75,18 @@ export default function ManagerCommunicationsBulkMessageModal({
 
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-overlay-backdrop backdrop-blur-sm">
-      <div className="bg-overlay rounded-2xl shadow-dialog w-full max-w-2xl relative overflow-hidden border border-border max-h-full flex flex-col motion-safe:animate-in motion-safe:zoom-in-95 motion-safe:duration-200">
+      <div className="bg-overlay rounded-2xl shadow-dialog w-full max-w-2xl relative overflow-hidden border border-border max-h-full flex flex-col motion-safe:animate-in motion-safe:zoom-in-95 motion-safe:duration-base">
         <div
           className={`px-6 py-4 flex items-center justify-between shrink-0 ${type === 'whatsapp' ? 'bg-social-whatsapp' : 'bg-info-bg'}`}
           
         >
           <div className="flex flex-wrap items-center gap-3">
             <div className="w-9 h-9 rounded-full bg-primary-subtle flex items-center justify-center">
-              <Icon size={18} className="text-white" />
+              <Icon size={18} className="text-primary" />
             </div>
             <div>
-              <p className="text-white font-bold text-base leading-tight">Bulk {label} Message</p>
-              <p className="text-white/90 text-xs flex items-center gap-1">
+              <p className="text-primary font-bold text-base leading-tight">Bulk {label} Message</p>
+              <p className="text-primary text-xs flex items-center gap-1">
                 <Users size={18} /> Sending to {recipients.length} recipients
               </p>
             </div>
@@ -92,9 +94,9 @@ export default function ManagerCommunicationsBulkMessageModal({
           <button
             aria-label="Close bulk message dialog"
             onClick={() => { void confirmAndClose(onClose); }}
-            className="w-8 h-8 rounded-full bg-primary-subtle hover:bg-primary/30 flex items-center justify-center motion-safe:transition-colors"
+            className="w-8 h-8 rounded-full bg-primary-subtle hover:bg-primary-subtle flex items-center justify-center motion-safe:transition-colors"
           >
-            <X size={18} className="text-white" />
+            <X size={18} className="text-primary" />
           </button>
         </div>
 
@@ -108,7 +110,7 @@ export default function ManagerCommunicationsBulkMessageModal({
                 type="text"
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}
-                className="w-full px-3 py-2.5 text-sm bg-input border border-border rounded-lg focus:outline-none focus:border-primary text-primary"
+                className="w-full px-3 py-2.5 text-sm bg-input border border-border rounded-lg focus-visible:outline-none focus-visible:border-primary text-primary"
                 placeholder="Email subject..."
               />
             </div>
@@ -122,7 +124,7 @@ export default function ManagerCommunicationsBulkMessageModal({
               rows={4}
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              className="w-full px-3 py-2.5 text-sm bg-input border border-border rounded-xl focus:outline-none focus:border-primary text-primary resize-none"
+              className="w-full px-3 py-2.5 text-sm bg-input border border-border rounded-xl focus-visible:outline-none focus-visible:border-primary text-primary resize-none"
               placeholder={`Type your ${label} message...`}
             />
           </div>
@@ -150,7 +152,7 @@ export default function ManagerCommunicationsBulkMessageModal({
                 return (
                   <div key={stableKey} className="flex items-center justify-between p-2.5 bg-overlay rounded-lg border border-border">
                     <div className="flex items-center gap-3 min-w-0">
-                      <div className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-xs shrink-0 bg-primary-subtle">
+                      <div className="w-8 h-8 rounded-full flex items-center justify-center text-primary font-bold text-xs shrink-0 bg-primary-subtle">
                         {rec.name.charAt(0)}
                       </div>
                       <div className="min-w-0">
@@ -168,8 +170,8 @@ export default function ManagerCommunicationsBulkMessageModal({
                         disabled={!hasContactInfo || !message.trim()}
                         className={`shrink-0 px-3 py-1.5 text-xs font-semibold rounded-lg flex items-center gap-1.5 motion-safe:transition-all ${
                           isSent
-                            ? 'bg-success-bg text-success border border-success/20'
-                            : 'bg-social-whatsapp text-white hover:opacity-90 disabled:opacity-50'
+                            ? 'bg-success-bg text-success border border-success'
+                            : 'bg-social-whatsapp text-primary hover:opacity-90 disabled:opacity-50'
                         }`}
                         
                       >

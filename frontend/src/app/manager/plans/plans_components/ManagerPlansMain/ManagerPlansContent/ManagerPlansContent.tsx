@@ -1,10 +1,10 @@
-'use client';
 // RESPONSIBILITY: Renders the ManagerPlansContent sub-view extracted from ManagerPlansMain; owns only this presentation responsibility.
-// RESPONSIBILITY: Orchestrator for the Plans module.
+'use client';
 // DATA FLOW:  → useManagerPlansLogic → Tabs, Toolbar, Grid, Modal
 import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/ManagerHeader';
-import ManagerPlansTabs from '@/app/manager/plans/plans_components/ManagerPlansMain/ManagerPlansTabs';
 import ManagerPlansRequestChangeModal from '@/app/manager/plans/plans_components/ManagerPlansMain/ManagerPlansRequestChangeModal';
+import ManagerPlansTabs from '@/app/manager/plans/plans_components/ManagerPlansMain/ManagerPlansTabs';
+
 
 export function ManagerPlansContent() {
   return (

@@ -1,11 +1,11 @@
-import { describe, it, expect, beforeAll, afterAll, afterEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import ManagerScheduleMain from '@/app/manager/schedule/schedule_components/ManagerScheduleMain/ManagerScheduleMain';
-import { managerMswServer } from '@/app/manager/manager_mocks/ManagerMswTestServer';
-import { managerScheduleApi } from '@/app/manager/schedule/schedule_api/ManagerScheduleApi';
-import { ManagerTestProviders } from '@/app/manager/manager_mocks/ManagerTestProviders';
-
 import { http, HttpResponse } from 'msw';
+import { describe, it, expect, beforeAll, afterAll, afterEach } from 'vitest';
+import { managerMswServer } from '@/app/manager/manager_mocks/ManagerMswTestServer';
+import { ManagerTestProviders } from '@/app/manager/manager_mocks/ManagerTestProviders';
+import { managerScheduleApi } from '@/app/manager/schedule/schedule_api/ManagerScheduleApi';
+import ManagerScheduleMain from '@/app/manager/schedule/schedule_components/ManagerScheduleMain/ManagerScheduleMain';
+
 beforeAll(() => managerMswServer.listen({ onUnhandledRequest: 'error' }));
 afterEach(() => managerMswServer.resetHandlers());
 afterAll(() => managerMswServer.close());

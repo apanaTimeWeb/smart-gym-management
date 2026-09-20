@@ -1,11 +1,13 @@
-'use client';
 // DATA FLOW: Manager module state/API data → useManagerHrUIState → owning Manager UI components.
+'use client';
 /** Manages UseHrUIState for the Manager module. */
 import { useState, useCallback } from 'react';
+import { EMPTY_STAFF } from '@/app/manager/hr/hr_types/ManagerHrFormTypes';
 import type { Staff } from '@/app/manager/hr/hr_types/ManagerHrTypes';
 import type { ManagerToastType } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerToastTypes';
-import { EMPTY_STAFF } from '@/app/manager/hr/hr_types/ManagerHrFormTypes';
 
+
+/** Orchestrates the owning Manager feature behavior while preserving its documented state boundary. */
 export function useManagerHrUIState() {
   const [showModal, setShowModal] = useState(false);
   const [showPayrollModal, setShowPayrollModal] = useState(false);

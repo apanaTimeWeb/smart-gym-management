@@ -1,19 +1,19 @@
-'use client';
 // RESPONSIBILITY: Renders the ManagerFinanceContent sub-view extracted from ManagerFinanceMain; owns only this presentation responsibility.
-// RESPONSIBILITY: Orchestrator for the Finance module — KPIs, tabbed Payments table + Summary chart.
+'use client';
 // DATA FLOW:  → useManagerFinanceLogic → sub-sections
+import { Wallet } from 'lucide-react';
+import ManagerFinanceFilters from '@/app/manager/finance/finance_components/ManagerFinanceMain/ManagerFinanceFilters';
+import ManagerFinanceKpiCards from '@/app/manager/finance/finance_components/ManagerFinanceMain/ManagerFinanceKpiCards';
+import ManagerFinanceRevenueChart from '@/app/manager/finance/finance_components/ManagerFinanceMain/ManagerFinanceRevenueChart';
+import ManagerFinanceTable from '@/app/manager/finance/finance_components/ManagerFinanceMain/ManagerFinanceTable';
 import { useManagerFinanceLogic  } from '@/app/manager/finance/finance_hooks/ManagerUseManagerFinanceLogic';
 import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/ManagerHeader';
-import { Wallet } from 'lucide-react';
 import ManagerTableSkeleton from '@/app/manager/manager_components/ManagerShared/ManagerTableSkeleton';
-import ManagerFinanceKpiCards from '@/app/manager/finance/finance_components/ManagerFinanceMain/ManagerFinanceKpiCards';
-import ManagerFinanceFilters from '@/app/manager/finance/finance_components/ManagerFinanceMain/ManagerFinanceFilters';
-import ManagerFinanceTable from '@/app/manager/finance/finance_components/ManagerFinanceMain/ManagerFinanceTable';
-import ManagerFinanceRevenueChart from '@/app/manager/finance/finance_components/ManagerFinanceMain/ManagerFinanceRevenueChart';
 import { MANAGER_GENERIC_ERROR_MESSAGE } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
 
+
 export function ManagerFinanceContent() {
-  const { tab, setTab, payments, isLoading, isError, reload } = useManagerFinanceLogic();
+  const { tab, setTab, payments, isPending, isError, reload } = useManagerFinanceLogic();
 
   return (
     <div className="min-h-full pb-10">
@@ -44,7 +44,7 @@ export function ManagerFinanceContent() {
             {/* Toolbar */}
             <ManagerFinanceFilters />
 
-            {isLoading ? (
+            {isPending ? (
               <ManagerTableSkeleton rows={6} />
             ) : isError ? (
               <div className="py-16 text-center space-y-3">

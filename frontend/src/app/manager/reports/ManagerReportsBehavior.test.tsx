@@ -1,11 +1,11 @@
-import { describe, it, expect, beforeAll, afterAll, afterEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import ManagerReportsMain from '@/app/manager/reports/reports_components/ManagerReportsMain/ManagerReportsMain';
-import { managerMswServer } from '@/app/manager/manager_mocks/ManagerMswTestServer';
-import { reportsApi } from '@/app/manager/reports/reports_api/ManagerReportsApi';
-import { ManagerTestProviders } from '@/app/manager/manager_mocks/ManagerTestProviders';
-
 import { http, HttpResponse } from 'msw';
+import { describe, it, expect, beforeAll, afterAll, afterEach } from 'vitest';
+import { managerMswServer } from '@/app/manager/manager_mocks/ManagerMswTestServer';
+import { ManagerTestProviders } from '@/app/manager/manager_mocks/ManagerTestProviders';
+import { reportsApi } from '@/app/manager/reports/reports_api/ManagerReportsApi';
+import ManagerReportsMain from '@/app/manager/reports/reports_components/ManagerReportsMain/ManagerReportsMain';
+
 beforeAll(() => managerMswServer.listen({ onUnhandledRequest: 'error' }));
 afterEach(() => managerMswServer.resetHandlers());
 afterAll(() => managerMswServer.close());
@@ -17,7 +17,7 @@ describe('Manager Reports user-visible behavior', () => {
   });
 
   it('proves module MSW supplies non-placeholder API data', async () => {
-    const response = await reportsApi.fetchSummary({ range: 'this_month' });
+    const response = await reportsApi.fetchReportsSummary({ range: 'this_month' });
     expect(response.success).toBe(true);
     expect(response.data?.kpis?.totalRevenue).toBeGreaterThan(0);
   });

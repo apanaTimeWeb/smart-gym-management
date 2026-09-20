@@ -1,23 +1,25 @@
-'use client';
-import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
-// RESPONSIBILITY: Custom hook encapsulating UI state and orchestrating actions for the members module.
 // DATA FLOW: UI/URL → hook → TanStack Query/Zustand → components
-/** Manages UseMembersLogic for the Manager module. */
+// RESPONSIBILITY: Custom hook encapsulating UI state and orchestrating actions for the members module.
+'use client';
 import { useCallback, useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import type { Member, ManagerMembersViewModel, MembersInitialData, ExportFormat } from '@/app/manager/members/members_types/ManagerMembersTypes';
-import type { ManagerMembersMessageType, ManagerMembersMessageRecipient } from '@/app/manager/members/members_types/ManagerMembersMessageTypes';
-import { EMPTY_MEMBER_FORM, MSG_TEMPLATES } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
 import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
+import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
+import { membersApi } from '@/app/manager/members/members_api/ManagerMembersApi';
 import { useManagerMembersMutations } from '@/app/manager/members/members_hooks/ManagerUseManagerMembersMutations';
 import { useManagerMembersPrintLogic } from '@/app/manager/members/members_hooks/ManagerUseManagerMembersPrintLogic';
+import { useFetchMember } from '@/app/manager/members/members_hooks/ManagerUseManagerMembersQueries';
 import { useManagerMembersUrlState } from '@/app/manager/members/members_hooks/ManagerUseManagerMembersUrlState';
-
-import { useFetchMember } from '@/app/manager/members/members_api/ManagerUseManagerMembersQueries';
-import { membersApi } from '@/app/manager/members/members_api/ManagerMembersApi';
-import { downloadManagerMembersCsv, printManagerMembersPdf } from '@/app/manager/members/members_utils/ManagerMembersExportUtils';
 import { useManagerMembersUiStore } from '@/app/manager/members/members_store/ManagerUseManagerMembersUiStore';
+import { downloadManagerMembersCsv, printManagerMembersPdf } from '@/app/manager/members/members_utils/ManagerMembersExportUtils';
+import { EMPTY_MEMBER_FORM, MSG_TEMPLATES } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
+import type { ManagerMembersMessageType, ManagerMembersMessageRecipient } from '@/app/manager/members/members_types/ManagerMembersMessageTypes';
+import type { Member, ManagerMembersViewModel, MembersInitialData, ExportFormat } from '@/app/manager/members/members_types/ManagerMembersTypes';
 
+/** Manages UseMembersLogic for the Manager module. */
+
+
+/** Orchestrates the owning Manager feature behavior while preserving its documented state boundary. */
 export function useManagerMembersLogic(initialData?: MembersInitialData | null): ManagerMembersViewModel {
   const urlState = useManagerMembersUrlState();
 
@@ -34,6 +36,7 @@ export function useManagerMembersLogic(initialData?: MembersInitialData | null):
   const hideToast = ui.hideToast;
   const closeMsg = ui.closeMsg;
 
+// EFFECT: Effect lifecycle and dependency list are intentionally scoped to values that control this side effect.
   useEffect(() => {
     if (urlState.searchParams.get('action') !== 'add_member') return;
 

@@ -1,8 +1,9 @@
-﻿'use client';
-import { formatMemberMonthYear } from '@/app/manager/members/members_utils/ManagerMembersDateFormatters';
 // RESPONSIBILITY: Contains logic, types, or component definition for this module.
+﻿'use client';
 import { useManagerMembersLogic } from '@/app/manager/members/members_hooks/ManagerUseManagerMembersLogic';
-import { useFetchAttendance } from '@/app/manager/members/members_api/ManagerUseManagerMembersQueries';
+import { useFetchAttendance } from '@/app/manager/members/members_hooks/ManagerUseManagerMembersQueries';
+import { formatMemberMonthYear } from '@/app/manager/members/members_utils/ManagerMembersDateFormatters';
+
 
 export default function ManagerProfileAttendance() {
   const { selectedMember } = useManagerMembersLogic();

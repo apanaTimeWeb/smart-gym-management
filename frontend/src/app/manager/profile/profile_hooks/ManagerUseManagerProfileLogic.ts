@@ -1,12 +1,14 @@
-'use client';
-// RESPONSIBILITY: Orchestrates profile query state and profile/password mutations. Form drafts remain local to the RHF-owned view layer.
 // DATA FLOW: managerProfileApi → TanStack Query → ManagerProfileMain; form submit → mutation → cache invalidation
+// RESPONSIBILITY: Orchestrates profile query state and profile/password mutations. Form drafts remain local to the RHF-owned view layer.
+'use client';
 /** Coordinates the Manager / feature. */
 import { useState } from 'react';
-import { useManagerProfileQuery } from '@/app/manager/profile/profile_api/ManagerUseManagerProfileQueries';
-import { useManagerProfileMutations } from '@/app/manager/profile/profile_api/ManagerUseManagerProfileMutations';
+import { useManagerProfileMutations } from '@/app/manager/profile/profile_hooks/ManagerUseManagerProfileMutations';
+import { useManagerProfileQuery } from '@/app/manager/profile/profile_hooks/ManagerUseManagerProfileQueries';
 import type { ManagerProfileTab } from '@/app/manager/profile/profile_types/ManagerProfileTypes';
 
+
+/** Orchestrates the owning Manager feature behavior while preserving its documented state boundary. */
 export function useManagerProfileLogic() {
   const [activeTab, setActiveTab] = useState<ManagerProfileTab>('personal');
   const profileQuery = useManagerProfileQuery();

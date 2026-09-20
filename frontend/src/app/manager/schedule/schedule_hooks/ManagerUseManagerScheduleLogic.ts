@@ -1,15 +1,19 @@
-'use client';
 // DATA FLOW: Manager module state/API data → useManagerScheduleLogic → owning Manager UI components.
 // RESPONSIBILITY: All data-fetching, mutation, and UI state logic for the Schedule module. Keeps components pure.
-import { MANAGER_GENERIC_ERROR_MESSAGE } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
-/** Manages UseScheduleLogic for the Manager module. */
+'use client';
 import { useCallback, useMemo } from 'react';
-import { useManagerScheduleQuery, useManagerScheduleMutations } from '@/app/manager/schedule/schedule_api/ManagerUseManagerScheduleQueries';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
-import type { ManagerScheduleViewModel, TrainerShift, ShiftDay, CreateShiftDto } from '@/app/manager/schedule/schedule_types/ManagerScheduleTypes';
-import { useManagerScheduleUiStore } from '@/app/manager/schedule/schedule_store/ManagerUseManagerScheduleUiStore';
 import { useManagerDebounce } from '@/app/manager/manager_infrastructure/ManagerDebounce';
+import { MANAGER_GENERIC_ERROR_MESSAGE } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
+import { createManagerIdempotencyKey } from '@/app/manager/manager_infrastructure/ManagerIdempotency';
+import { useManagerScheduleQuery, useManagerScheduleMutations } from '@/app/manager/schedule/schedule_hooks/ManagerUseManagerScheduleQueries';
+import { useManagerScheduleUiStore } from '@/app/manager/schedule/schedule_store/ManagerUseManagerScheduleUiStore';
+import type { ManagerScheduleViewModel, TrainerShift, ShiftDay, CreateShiftDto } from '@/app/manager/schedule/schedule_types/ManagerScheduleTypes';
 
+/** Manages UseScheduleLogic for the Manager module. */
+
+
+/** Orchestrates the owning Manager feature behavior while preserving its documented state boundary. */
 export function useManagerScheduleLogic(): ManagerScheduleViewModel {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -67,7 +71,7 @@ export function useManagerScheduleLogic(): ManagerScheduleViewModel {
     closeShiftModal();
   }, [closeShiftModal, scheduleMutations.create, scheduleMutations.update, ui.shiftModal.editShift]);
 
-  const deleteShift = useCallback(async (id: string) => { await scheduleMutations.remove.mutateAsync({ id, idempotencyKey: crypto.randomUUID() }); }, [scheduleMutations.remove]);
+  const deleteShift = useCallback(async (id: string) => { await scheduleMutations.remove.mutateAsync({ id, idempotencyKey: createManagerIdempotencyKey() }); }, [scheduleMutations.remove]);
 
 
   return {

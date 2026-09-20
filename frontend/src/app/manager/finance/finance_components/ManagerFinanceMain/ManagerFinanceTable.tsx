@@ -1,19 +1,20 @@
-'use client';
-import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 // RESPONSIBILITY: Renders the Manager FinanceTable presentation layer for the Manager module.
-import { displayValue, formatCurrencyFromMinorUnits, formatDate } from '@/lib/formatters';
+'use client';
 import { Printer } from 'lucide-react';
+import { displayValue, formatCurrencyFromMinorUnits, formatDate } from '@/lib/formatters';
 import ManagerFinanceEmptyState from '@/app/manager/finance/finance_components/ManagerFinanceMain/ManagerFinanceEmptyState';
-import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import { useManagerFinanceLogic } from '@/app/manager/finance/finance_hooks/ManagerUseManagerFinanceLogic';
-import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_infrastructure/ManagerPaginationDefaults';
 import { PAYMENTS_TABLE_HEADERS } from '@/app/manager/finance/finance_utils/ManagerFinanceSharedConstants';
+import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
+import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
+import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_infrastructure/ManagerPaginationDefaults';
+
 
 const METHOD_STYLES: Record<string, { bg: string; text: string }> = {
   UPI:        { bg: "bg-primary-subtle",   text: 'text-primary'   },
   Cash:       { bg: "bg-success-bg",   text: 'text-success'   },
   Card:       { bg: "bg-warning-bg",   text: 'text-warning'   },
-  NetBanking: { bg: 'bg-secondary/10', text: 'text-secondary' } };
+  NetBanking: { bg: 'bg-input', text: 'text-secondary' } };
 
 export default function ManagerFinanceTable() {
   const { payments, totalPayments, currentPage, setCurrentPage, printReceipt } = useManagerFinanceLogic();
@@ -59,7 +60,7 @@ export default function ManagerFinanceTable() {
                   <td className="px-5 py-3.5 whitespace-nowrap">
                     <button 
                       onClick={(event) => { event.stopPropagation(); printReceipt(p.id); }}
-                      className="p-1.5 rounded-lg bg-input text-secondary hover:bg-primary-subtle motion-safe:transition-all motion-safe:duration-200" 
+                      className="p-1.5 rounded-lg bg-input text-secondary hover:bg-primary-subtle motion-safe:transition-all motion-safe:duration-base" 
                       title="Print Receipt" aria-label={`Print receipt ${p.invoiceNumber}`}
                     >
                       <Printer size={18} />

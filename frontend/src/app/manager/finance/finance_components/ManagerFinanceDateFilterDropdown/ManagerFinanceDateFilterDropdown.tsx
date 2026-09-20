@@ -1,9 +1,11 @@
-'use client';
 // RESPONSIBILITY: Renders finance-owned date-range controls and keeps them in finance URL state.
+'use client';
 import { useCallback } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { MANAGER_FINANCE_DATE_RANGE_OPTIONS } from '@/app/manager/finance/finance_utils/ManagerFinanceDateFilterConstants';
 import ManagerSearchableDropdown from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
-import { MANAGER_FINANCE_DATE_RANGE_OPTIONS, type ManagerFinanceDateRange } from '@/app/manager/finance/finance_utils/ManagerFinanceDateFilterConstants';
+import type { ManagerFinanceDateRange } from '@/app/manager/finance/finance_utils/ManagerFinanceDateFilterConstants';
+
 
 function value(date: Date) { return date.toISOString().slice(0, 10); }
 function dates(range: ManagerFinanceDateRange) {

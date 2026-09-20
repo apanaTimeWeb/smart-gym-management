@@ -1,13 +1,14 @@
-'use client';
 // RESPONSIBILITY: Renders the fixed top navigation bar — page title, global search, theme toggle, notifications dropdown, and user profile dropdown. No API calls.
+'use client';
 import { useState, useRef, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { Bell, LogOut, Settings, User, Menu, QrCode } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { getUser, logout } from '@/lib/api';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { MANAGER_HEADER_NAVIGATION } from '@/app/manager/manager_navigation/ManagerHeaderNavigationConfig';
 import type { ManagerHeaderProps } from '@/app/manager/manager_components/ManagerLayout/ManagerLayoutTypes';
+
 
 export default function ManagerHeader({ title, subtitle, action }: ManagerHeaderProps) {
   const [showProfile, setShowProfile] = useState(false);
@@ -17,12 +18,14 @@ export default function ManagerHeader({ title, subtitle, action }: ManagerHeader
   const user = getUser();
 
   // Sets mounted=true once on client-side hydration to safely read user data (avoids SSR mismatch).
+// EFFECT: Effect lifecycle and dependency list are intentionally scoped to values that control this side effect.
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 
   // Attaches click-outside listener once on mount to close notification/profile dropdowns on outside click.
+// EFFECT: Effect lifecycle and dependency list are intentionally scoped to values that control this side effect.
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (profileRef.current && !profileRef.current.contains(event.target as Node)) setShowProfile(false);
@@ -32,11 +35,11 @@ export default function ManagerHeader({ title, subtitle, action }: ManagerHeader
   }, []);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 h-16 bg-header/95 backdrop-blur-md border-b border-border px-4 lg:px-6 flex items-center justify-between">
+    <header className="fixed inset-x-0 top-0 z-20 h-16 bg-header backdrop-blur-md border-b border-border px-4 lg:px-6 flex items-center justify-between">
       <div className="flex flex-wrap items-center gap-4 flex-1">
         <button
           aria-label="Toggle Sidebar"
-          className="min-h-11 min-w-11 p-2 -ml-3 text-secondary hover:text-primary motion-safe:transition-colors bg-input hover:bg-page rounded-lg border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          className="min-h-11 min-w-11 p-2 -ml-3 text-secondary hover:text-primary motion-safe:transition-colors bg-input hover:bg-page rounded-lg border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
           onClick={() => window.dispatchEvent(new Event('toggle-sidebar'))}
         >
           <Menu size={18} />
@@ -65,7 +68,7 @@ export default function ManagerHeader({ title, subtitle, action }: ManagerHeader
         <button
           onClick={() => router.push(MANAGER_HEADER_NAVIGATION.scanner)}
           aria-label="Open QR Scanner kiosk mode"
-          className="min-h-11 min-w-11 p-2 text-secondary hover:text-primary hover:bg-input rounded-lg motion-safe:transition-colors border border-transparent hover:border-border flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          className="min-h-11 min-w-11 p-2 text-secondary hover:text-primary hover:bg-input rounded-lg motion-safe:transition-colors border border-transparent hover:border-border flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
         >
           <QrCode size={18} />
           <span className="hidden sm:inline text-sm font-medium">Scanner</span>
@@ -78,7 +81,7 @@ export default function ManagerHeader({ title, subtitle, action }: ManagerHeader
         <Link
           href={MANAGER_HEADER_NAVIGATION.notifications}
           aria-label="Open notifications"
-          className="relative min-h-11 min-w-11 p-2 text-secondary hover:text-primary hover:bg-input rounded-lg motion-safe:transition-colors border border-transparent hover:border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          className="relative min-h-11 min-w-11 p-2 text-secondary hover:text-primary hover:bg-input rounded-lg motion-safe:transition-colors border border-transparent hover:border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
         >
           <Bell size={18} aria-hidden="true" />
         </Link>

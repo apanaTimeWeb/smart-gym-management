@@ -1,18 +1,20 @@
-'use client';
 // DATA FLOW: Manager module state/API data → useManagerStoreLogic → owning Manager UI components.
 // RESPONSIBILITY: Custom hook encapsulating all UI state and API orchestration for the gym product Store module.
+'use client';
 /** Manages UseStoreLogic for the Manager module. */
-import type { ManagerStoreSortOrder } from '@/app/manager/store/store_types/ManagerStoreTypes';
 import { useCallback } from 'react';
-import { useManagerDebounce } from '@/app/manager/manager_infrastructure/ManagerDebounce';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
-import type { ManagerStoreViewModel, StoreInitialData } from '@/app/manager/store/store_types/ManagerStoreTypes';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
-import { useManagerStoreUiStore } from '@/app/manager/store/store_store/ManagerUseManagerStoreUiStore';
+import { useManagerDebounce } from '@/app/manager/manager_infrastructure/ManagerDebounce';
 import { useManagerStoreOrder } from '@/app/manager/store/store_hooks/ManagerUseManagerStoreOrder';
 import { useManagerStoreProducts } from '@/app/manager/store/store_hooks/ManagerUseManagerStoreProducts';
 import { useManagerStoreQueries } from '@/app/manager/store/store_hooks/ManagerUseManagerStoreQueries';
+import { useManagerStoreUiStore } from '@/app/manager/store/store_store/ManagerUseManagerStoreUiStore';
+import type { ManagerStoreSortOrder } from '@/app/manager/store/store_types/ManagerStoreTypes';
+import type { ManagerStoreViewModel, StoreInitialData } from '@/app/manager/store/store_types/ManagerStoreTypes';
 
+
+/** Orchestrates the owning Manager feature behavior while preserving its documented state boundary. */
 export function useManagerStoreLogic(initialData?: StoreInitialData | null): ManagerStoreViewModel {
   const { confirm } = useConfirm();
   const router = useRouter();
@@ -58,7 +60,7 @@ export function useManagerStoreLogic(initialData?: StoreInitialData | null): Man
     orders,
     totalOrders,
     summary, setSummary,
-    isLoading, isError, error, loadAll
+    isPending, isError, error, loadAll
   } = useManagerStoreQueries(
     currentPage, sortOrder, debouncedSearch, startDate, endDate, categoryFilter, stockFilter, showToast, initialData
   );
@@ -82,7 +84,7 @@ export function useManagerStoreLogic(initialData?: StoreInitialData | null): Man
 
   return {
     tab, setTab,
-    products, orders, totalOrders, summary, isLoading, isError, errorMessage: error instanceof Error ? error.message : '', saving: ui.saving,
+    products, orders, totalOrders, summary, isPending, isError, errorMessage: error instanceof Error ? error.message : '', saving: ui.saving,
     toast: ui.toast, printData: ui.printData, setPrintData: ui.setPrintData, search, debouncedSearch, setSearch,
     categoryFilter, setCategoryFilter, stockFilter, setStockFilter,
     currentPage, setCurrentPage,

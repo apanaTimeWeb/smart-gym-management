@@ -1,13 +1,14 @@
-'use client';
 // RESPONSIBILITY: Renders the four KPI stat cards (Total, New, Follow Up, Converted) for the Inquiries module.
+'use client';
+import { formatNumber } from '@/lib/formatters';
 import { MANAGER_INQUIRIES_KPI_CONFIG } from '@/app/manager/inquiries/inquiries_constants/ManagerInquiriesKpiConstants';
 import { useManagerInquiriesLogic } from '@/app/manager/inquiries/inquiries_hooks/ManagerUseManagerInquiriesLogic';
-import { formatNumber } from '@/lib/formatters';
+
 
 export default function ManagerInquiriesKPIs() {
-  const { stats, isLoading } = useManagerInquiriesLogic();
+  const { stats, isPending } = useManagerInquiriesLogic();
 
-  if (isLoading && !stats) {
+  if (isPending && !stats) {
     return (
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {[1, 2, 3, 4].map((index) => (

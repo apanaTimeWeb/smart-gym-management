@@ -1,70 +1,50 @@
-# manager/manager_components — Feature Map
+# Manager Components — Feature Map
 
 ## Module Purpose
-[REQUIRED: 3–6 sentences. Must answer: (1) What business problem does this module solve? (2) Who uses it? (3) What are the 3–5 most important things a user can DO? (4) What is strictly OFF-LIMITS? Fill this out accurately.]
+`manager_components/` is the Manager role container's zero-business UI and integration surface. It provides the authenticated Manager shell, generic feedback primitives, query provider wiring, pagination, searchable dropdown, stat-card and table-skeleton primitives. These files may coordinate framework/application infrastructure, but they MUST NOT own Manager business rules, feature data, business status registries, or feature APIs.
 
 ## Directory Structure
-| Folder | Responsibility | Key Files |
-|---|---|---|
-| `manager_components_components/` | Renders UI components | TBD |
-| `manager_components_api/` | API endpoints | `manager_components_url_config.ts` |
+```text
+manager_components/
+├── ManagerFeedback/
+│   ├── ManagerConfirmModal.tsx
+│   ├── ManagerConfirmProvider.tsx
+│   ├── ManagerEmptyState.tsx
+│   ├── ManagerToast.tsx
+│   └── ManagerTooltip.tsx
+├── ManagerLayout/
+│   ├── ManagerHeader.tsx
+│   ├── ManagerLayout.tsx
+│   ├── ManagerLayoutTypes.ts
+│   └── ManagerSidebar.tsx
+├── ManagerQueryProvider.tsx
+└── ManagerShared/
+    ├── ManagerPagination.tsx
+    ├── ManagerSearchableDropdown.tsx
+    ├── ManagerStatCard.tsx
+    └── ManagerTableSkeleton.tsx
+```
 
-### Approved External Dependencies
-### Application Infrastructure
-- `@/lib/api`
-- `@/lib/logger`
+## Ownership Contract
+- Owns: zero-business UI primitives and Manager shell presentation/integration.
+- Must not own: member, plan, billing, HR, attendance, store, communications, or other business behavior.
+- Feature-specific business components stay inside their owning feature even when visually similar.
 
-### Business Feature Dependencies
-- None
+## State / Data Flow
+UI primitives receive data/callbacks from feature modules. The shell may consume global session/layout state. API/server data remains owned by feature query/API layers.
 
-### Role-Level Business Dependencies
-- None
+## API / Permissions
+No feature API contract is owned here. Permission-aware business decisions remain in feature modules or approved application infrastructure.
 
-## Feature Inventory
-| Feature | Route | What the User Can Do | Key Components | Main API Calls | Status |
-|---|---|---|---|---|---|
-| Example | /manager/manager_components | Manage entity | Main.tsx | GET /... | 🚧 TBD |
+## Verification Checklist
+- [x] No generic business bucket is used for feature behavior.
+- [x] Component files use descriptive Manager-prefixed names.
+- [x] Shared primitives contain zero business logic.
+- [ ] Browser-level responsive/focus verification: NOT VERIFIED without host runtime.
 
-## User Flows & Interactions
-### Flow 1: [Name]
-1. TBD
+## Approved External Dependencies
 
-## Data and State Architecture
-- **State pattern:** TanStack Query for server state + Zustand for UI state.
-- **Zustand stores:** [List actual store files]
-- **Context providers:** [List actual provider files]
-- **MSW handler location:** [module-owned handler]
+- Global framework/application infrastructure documented by the architecture standard may be used when required.
+- Approved zero-business UI primitives may be imported from Manager application infrastructure.
+- Sibling feature business logic, state, API services, fixtures, and tests are not dependencies.
 
-## API Contract
-| Function | Method | Endpoint | Request | Response `data` type |
-|---|---|---|---|---|
-| TBD | GET | /... | — | `any` |
-
-## UI Data Requirements
-| UI Element | Required Field(s) | API Endpoint | Response Path | Nullable? | Mocked? |
-|---|---|---|---|---|---|
-| TBD | TBD | GET /... | data... | No | Yes |
-
-## Permissions and Security
-- **Required role:** `MANAGER`
-- **Destructive actions:** TBD
-- **Cross-role isolation:** Zero imports from other roles.
-
-## Loading, Empty, and Error States
-| Section | Loading State | Empty State | Error State |
-|---|---|---|---|
-| Full page | `loading.tsx` | `manager_componentsEmptyState.tsx` | `error.tsx` |
-
-## Edge Cases and AI Warnings
-- **[Specific Warning]:** [Explanation]
-
-## Component Responsibility Map
-| Component File | Responsibility |
-|---|---|
-| TBD | TBD |
-
-## Rule Compliance Checklist
-- [ ] Rule 1: Micro-modularization
-- [ ] Rule 2: Total Role Isolation
-- [ ] Module Self-Containment
-- [ ] Feature Dependency Firewall

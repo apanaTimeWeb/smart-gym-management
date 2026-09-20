@@ -1,18 +1,21 @@
-'use client';
-// RESPONSIBILITY: Coordinates URL filters, TanStack Query attendance server state, shared module UI state, mutations, and export behavior.
 // DATA FLOW: URL → debounce → attendance query → API/MSW → UI; UI-only modal/toast/form state → module Zustand.
+// RESPONSIBILITY: Coordinates URL filters, TanStack Query attendance server state, shared module UI state, mutations, and export behavior.
+'use client';
 /** Coordinates the Manager / feature. */
 import { useCallback, useEffect, useMemo } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
-import type { ManagerAttendanceViewModel } from '@/app/manager/attendance/attendance_types/ManagerAttendanceTypes';
-import { ATTENDANCE_TABS, type AttendanceTab } from '@/app/manager/attendance/attendance_utils/ManagerAttendanceSharedConstants';
-import { useManagerDebounce } from '@/app/manager/manager_infrastructure/ManagerDebounce';
-import { useManagerAttendanceMutations } from '@/app/manager/attendance/attendance_hooks/ManagerUseManagerAttendanceMutations';
-import { useAttendanceListQuery, useTodayStatsQuery, useActiveMembersQuery, useStaffQuery } from '@/app/manager/attendance/attendance_api/ManagerUseManagerAttendanceQueries';
-import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_infrastructure/ManagerPaginationDefaults';
 import { displayValue } from '@/lib/formatters';
+import { useManagerAttendanceMutations } from '@/app/manager/attendance/attendance_hooks/ManagerUseManagerAttendanceMutations';
+import { useAttendanceListQuery, useTodayStatsQuery, useActiveMembersQuery, useStaffQuery } from '@/app/manager/attendance/attendance_hooks/ManagerUseManagerAttendanceQueries';
 import { useManagerAttendanceUiStore } from '@/app/manager/attendance/attendance_store/ManagerUseManagerAttendanceUiStore';
+import { ATTENDANCE_TABS } from '@/app/manager/attendance/attendance_utils/ManagerAttendanceSharedConstants';
+import { useManagerDebounce } from '@/app/manager/manager_infrastructure/ManagerDebounce';
+import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_infrastructure/ManagerPaginationDefaults';
+import type { ManagerAttendanceViewModel } from '@/app/manager/attendance/attendance_types/ManagerAttendanceTypes';
+import type { AttendanceTab } from '@/app/manager/attendance/attendance_utils/ManagerAttendanceSharedConstants';
 
+
+/** Orchestrates the owning Manager feature behavior while preserving its documented state boundary. */
 export function useManagerAttendanceLogic(): ManagerAttendanceViewModel {
   const router = useRouter();
   const pathname = usePathname();
@@ -33,6 +36,7 @@ export function useManagerAttendanceLogic(): ManagerAttendanceViewModel {
     router.replace(params.size ? `${pathname}?${params.toString()}` : pathname, { scroll: false });
   }, [pathname, router, searchParams]);
 
+// EFFECT: Effect lifecycle and dependency list are intentionally scoped to values that control this side effect.
   useEffect(() => {
     const current = searchParams.get('search') || '';
     if (debouncedSearch !== current) setUrlParam('search', debouncedSearch || null);
@@ -58,8 +62,8 @@ export function useManagerAttendanceLogic(): ManagerAttendanceViewModel {
     return next;
   }, [currentPage, dateFilter, debouncedSearch, statusFilter, tab]);
 
-  const { data: listData, isLoading: listLoading, isError: listError, error: listErrorValue, refetch } = useAttendanceListQuery(params);
-  const { data: statsData, isLoading: statsLoading, isError: statsError, error: statsErrorValue } = useTodayStatsQuery();
+  const { data: listData, isPending: listLoading, isError: listError, error: listErrorValue, refetch } = useAttendanceListQuery(params);
+  const { data: statsData, isPending: statsLoading, isError: statsError, error: statsErrorValue } = useTodayStatsQuery();
   const { data: membersData } = useActiveMembersQuery();
   const { data: staffData } = useStaffQuery();
   const members = useMemo(() => membersData?.members || [], [membersData]);
@@ -67,7 +71,7 @@ export function useManagerAttendanceLogic(): ManagerAttendanceViewModel {
   const records = listData?.attendances || [];
   const totalRecords = listData?.total || 0;
   const todayStats = statsData || { totalCheckIns: 0, memberCheckIns: 0, staffCheckIns: 0 };
-  const isLoading = listLoading || statsLoading;
+  const isPending = listLoading || statsLoading;
   const isError = listError || statsError;
   const errorMessage = [listErrorValue, statsErrorValue].map((error) => error instanceof Error ? error.message : '').find(Boolean) ?? '';
   const { markAttendance } = useManagerAttendanceMutations(members, staff, ui.setSaving, ui.setShowModal, ui.setForm, ui.showToast, async () => { await refetch(); });
@@ -88,7 +92,7 @@ export function useManagerAttendanceLogic(): ManagerAttendanceViewModel {
   }, [records]);
 
   return {
-    records, totalRecords, todayStats, members, staff, isLoading, isError, errorMessage, saving: ui.saving, toast: ui.toast,
+    records, totalRecords, todayStats, members, staff, isPending, isError, errorMessage, saving: ui.saving, toast: ui.toast,
     tab, setTab, search, setSearch, dateFilter, setDateFilter, statusFilter, setStatusFilter, currentPage, setCurrentPage,
     showModal: ui.showModal, setShowModal: ui.setShowModal, calendarUser: ui.calendarUser, setCalendarUser: ui.setCalendarUser,
     form: ui.form, setForm: ui.setForm, showToast: ui.showToast, hideToast: ui.hideToast,

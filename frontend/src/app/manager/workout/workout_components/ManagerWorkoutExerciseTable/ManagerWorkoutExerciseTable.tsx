@@ -1,22 +1,23 @@
-'use client';
 // RESPONSIBILITY: Renders the exercises data table with muscle group, category, and inline edit/delete actions.
+'use client';
 import { Edit2, Trash2, Loader2 } from 'lucide-react';
-import ManagerTableSkeleton from '@/app/manager/manager_components/ManagerShared/ManagerTableSkeleton';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
-import { useManagerWorkoutLogic } from '@/app/manager/workout/workout_hooks/ManagerUseManagerWorkoutLogic';
-import { EXERCISE_TABLE_HEADERS } from '@/app/manager/workout/workout_utils/ManagerWorkoutSharedConstants';
-import { useExercisesQuery } from '@/app/manager/workout/workout_api/ManagerUseManagerWorkoutQueries';
-import { useDeleteExerciseMutation } from '@/app/manager/workout/workout_api/ManagerUseManagerWorkoutMutations';
-import { showManagerErrorToast, showManagerSuccessToast } from '@/app/manager/manager_infrastructure/ManagerToastService';
-
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
+import ManagerTableSkeleton from '@/app/manager/manager_components/ManagerShared/ManagerTableSkeleton';
+import { createManagerIdempotencyKey } from '@/app/manager/manager_infrastructure/ManagerIdempotency';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_infrastructure/ManagerPaginationDefaults';
+import { showManagerErrorToast, showManagerSuccessToast } from '@/app/manager/manager_infrastructure/ManagerToastService';
+import { useManagerWorkoutLogic } from '@/app/manager/workout/workout_hooks/ManagerUseManagerWorkoutLogic';
+import { useDeleteExerciseMutation } from '@/app/manager/workout/workout_hooks/ManagerUseManagerWorkoutMutations';
+import { useExercisesQuery } from '@/app/manager/workout/workout_hooks/ManagerUseManagerWorkoutQueries';
+import { EXERCISE_TABLE_HEADERS } from '@/app/manager/workout/workout_utils/ManagerWorkoutSharedConstants';
+
 
 export default function ManagerWorkoutExerciseTable() {
   const { search, currentPage, setCurrentPage, openEditEx } = useManagerWorkoutLogic();
   const { confirm } = useConfirm();
 
-  const { data, isLoading } = useExercisesQuery({
+  const { data, isPending } = useExercisesQuery({
     search,
     page: currentPage.toString()
   });
@@ -28,7 +29,7 @@ export default function ManagerWorkoutExerciseTable() {
 
   const totalPages = Math.ceil(totalExercises / MANAGER_ITEMS_PER_PAGE) || 1;
 
-  if (isLoading) {
+  if (isPending) {
     return (
       <div className="flex items-center justify-center py-16 flex-1 h-full min-h-96">
         <Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" />
@@ -102,7 +103,7 @@ export default function ManagerWorkoutExerciseTable() {
                         });
                         if (ok) {
                           try {
-                            const response = await deleteMutation.mutateAsync({ id: ex.id, idempotencyKey: crypto.randomUUID() });
+                            const response = await deleteMutation.mutateAsync({ id: ex.id, idempotencyKey: createManagerIdempotencyKey() });
                             showManagerSuccessToast(response.message, 'manager-workout-exercise-table-success');
                           } catch (err: unknown) {
                             showManagerErrorToast(err, 'manager-workout-exercise-table-error');
@@ -137,7 +138,7 @@ export default function ManagerWorkoutExerciseTable() {
             <div className="flex items-center justify-between gap-3"><span className="text-xs text-secondary">Difficulty</span><span className="text-xs px-2.5 py-0.5 rounded-full font-semibold bg-input text-primary">{ex.difficulty}</span></div>
             <div className="flex justify-end gap-2">
               <button type="button" onClick={() => openEditEx(ex)} className="min-h-11 min-w-11 p-2 rounded-md text-info hover:bg-info-bg motion-safe:transition-colors" aria-label={`Edit exercise ${ex.name}`}><Edit2 size={18} /></button>
-              <button type="button" onClick={async () => { const ok = await confirm({ title: 'Delete Exercise', message: `Are you sure you want to delete exercise "${ex.name}"?`, type: 'danger', confirmText: 'Delete' }); if (!ok) return; try { const response = await deleteMutation.mutateAsync({ id: ex.id, idempotencyKey: crypto.randomUUID() }); showManagerSuccessToast(response.message, 'manager-workout-exercise-table-success'); } catch (err: unknown) { showManagerErrorToast(err, 'manager-workout-exercise-table-error'); } }} className="min-h-11 min-w-11 p-2 rounded-md text-danger hover:bg-danger-bg motion-safe:transition-colors" aria-label={`Delete exercise ${ex.name}`}><Trash2 size={18} /></button>
+              <button type="button" onClick={async () => { const ok = await confirm({ title: 'Delete Exercise', message: `Are you sure you want to delete exercise "${ex.name}"?`, type: 'danger', confirmText: 'Delete' }); if (!ok) return; try { const response = await deleteMutation.mutateAsync({ id: ex.id, idempotencyKey: createManagerIdempotencyKey() }); showManagerSuccessToast(response.message, 'manager-workout-exercise-table-success'); } catch (err: unknown) { showManagerErrorToast(err, 'manager-workout-exercise-table-error'); } }} className="min-h-11 min-w-11 p-2 rounded-md text-danger hover:bg-danger-bg motion-safe:transition-colors" aria-label={`Delete exercise ${ex.name}`}><Trash2 size={18} /></button>
             </div>
           </article>
         ))}

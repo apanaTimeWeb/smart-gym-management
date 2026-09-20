@@ -1,9 +1,10 @@
-'use client';
 // RESPONSIBILITY: Provides a programmatic confirm() API to all MANAGER components via React Context. Renders a single shared ManagerConfirmModal at the root level. No async data — sync UI state only.
+'use client';
 import { createContext, useContext, useRef, useState, useCallback, useMemo } from 'react';
-import type { ReactNode } from 'react';
 import ManagerConfirmModal from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmModal';
 import type { ManagerConfirmOptions, ManagerConfirmContextType } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerConfirmProviderTypes';
+import type { ReactNode } from 'react';
+
 
 const ConfirmContext = createContext<ManagerConfirmContextType | undefined>(undefined);
 

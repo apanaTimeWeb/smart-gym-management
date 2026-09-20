@@ -1,10 +1,10 @@
-'use client';
 // RESPONSIBILITY: Renders the ManagerReportsRevenueTable sub-view extracted from ManagerReportsTable; owns only this presentation responsibility.
-import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
-// RESPONSIBILITY: Renders the data table for the active report tab — Revenue, Attendance, Members, or Expenses.
-import { useManagerReportsLogic } from '@/app/manager/reports/reports_hooks/ManagerUseManagerReportsLogic';
+'use client';
 import { formatCurrencyFromMinorUnits, formatNumber } from '@/lib/formatters';
+import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 import ManagerReportsEmptyState from '@/app/manager/reports/reports_components/ManagerReportsTable/ManagerReportsEmptyState';
+import { useManagerReportsLogic } from '@/app/manager/reports/reports_hooks/ManagerUseManagerReportsLogic';
+
 const formatReportCurrency = (value: number) => formatCurrencyFromMinorUnits(value, ManagerEnvConfig.currencyCode);
 
 export function ManagerReportsRevenueTable() {

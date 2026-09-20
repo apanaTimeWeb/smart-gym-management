@@ -3,6 +3,7 @@
 import { create } from 'zustand';
 import type { CommSegment, CommChannel } from '@/app/manager/communications/communications_types/ManagerCommunications_types';
 
+
 interface ManagerCommunicationsStore {
   selectedSegment: CommSegment;
   setSelectedSegment: (segment: CommSegment) => void;

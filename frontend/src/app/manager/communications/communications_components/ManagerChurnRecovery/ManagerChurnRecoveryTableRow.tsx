@@ -1,9 +1,10 @@
-'use client';
-import type { ManagerChurnRecoveryTableRowProps } from '@/app/manager/communications/communications_types/ManagerChurnRecoveryTableRowTypes';
-import { formatDate } from '@/lib/formatters';
 // RESPONSIBILITY: Single churned member row in the churn recovery table. Receives member data and callbacks via props. No API calls.
+'use client';
 import { Send, CheckCircle } from 'lucide-react';
+import { formatDate } from '@/lib/formatters';
 import { CANCELLATIONS_REASON_LABEL } from '@/app/manager/communications/communications_utils/ManagerCommunicationsSharedConstants';
+import type { ManagerChurnRecoveryTableRowProps } from '@/app/manager/communications/communications_types/ManagerChurnRecoveryTableRowTypes';
+
 
 
 
@@ -85,7 +86,7 @@ export default function ManagerChurnRecoveryTableRow({
             type="button"
             aria-label={`Send win-back message to ${member.name}`}
             onClick={(e) => { e.stopPropagation(); onOpenComposer(member.memberId); }}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-primary-subtle text-on-success motion-safe:transition-all motion-safe:hover:bg-primary-hover motion-safe:active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-primary-subtle text-primary motion-safe:transition-all motion-safe:hover:bg-primary-hover motion-safe:active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
             <Send size={18} />
             Win-Back

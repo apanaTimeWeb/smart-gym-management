@@ -1,9 +1,10 @@
-'use client';
 // RESPONSIBILITY: Renders the 4 KPI stat cards for the Schedule module (total trainers, on duty today, on leave, shifts this week).
+'use client';
 import { Users, UserCheck, UserX, CalendarDays } from 'lucide-react';
+import { useDateRangeSuffix } from '@/lib/useDateRangeSuffix';
 import ManagerStatCard from '@/app/manager/manager_components/ManagerShared/ManagerStatCard';
 import { useManagerScheduleLogic } from '@/app/manager/schedule/schedule_hooks/ManagerUseManagerScheduleLogic';
-import { useDateRangeSuffix } from '@/lib/useDateRangeSuffix';
+
 
 export default function ManagerScheduleKPIs() {
   const { kpis, status } = useManagerScheduleLogic();

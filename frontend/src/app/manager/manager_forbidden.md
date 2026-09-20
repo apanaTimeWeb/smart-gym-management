@@ -18,3 +18,14 @@ This file is the quick safety contract for future AI repairs. Read the owning fe
 14. **No permanent button collapse during loading.** Preserve the documented button width/label stability while showing a loading indicator.
 15. **No blank optional data rendering.** Use the canonical nullable-display behavior (`—`) where the application contract requires it, while preserving meaningful `0`/`false` values.
 16. **No untracked feature repair.** End every repair with a changed-file list. Unexpected sibling or unrelated business changes are an architecture failure.
+
+## Required Mock/AI-Isolation Prohibitions
+
+For future feature repairs, these patterns are explicitly forbidden:
+
+- Do not place feature mock data outside the owning feature module.
+- Do not create duplicate global mock handlers for a Manager feature.
+- Do not import another feature module's business fixtures.
+- Do not add component-level fake business fallbacks to hide incomplete API/MSW responses.
+- Do not bypass the owning module API client by reading fixtures directly from production UI/hooks.
+- Do not modify the global MSW bootstrap for a module-local change unless registration is actually required.

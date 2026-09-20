@@ -1,8 +1,9 @@
 // RESPONSIBILITY: Renders the grid of plans or loading/empty states.
 import { MANAGER_GENERIC_ERROR_MESSAGE } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
-import ManagerPlansEmptyState from '@/app/manager/plans/plans_components/ManagerPlansMain/ManagerPlansEmptyState';
 import ManagerPlanCard from '@/app/manager/plans/plans_components/ManagerPlansMain/ManagerPlanCard';
+import ManagerPlansEmptyState from '@/app/manager/plans/plans_components/ManagerPlansMain/ManagerPlansEmptyState';
 import { useManagerPlansLogic } from '@/app/manager/plans/plans_hooks/ManagerUseManagerPlansLogic';
+
 
 export default function ManagerPlansGrid() {
   const { filteredPlans, isPending, isError, errorMessage, search } = useManagerPlansLogic();

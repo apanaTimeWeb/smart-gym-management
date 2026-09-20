@@ -1,15 +1,17 @@
+// RESPONSIBILITY: Renders the referrals data table and its row-level actions using feature-owned referral data.
 'use client';
-import { MANAGER_GENERIC_ERROR_MESSAGE } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
-import { MANAGER_REFERRAL_STATUS_OPTIONS } from '@/app/manager/referrals/referrals_constants/ManagerReferralsFilterConstants';
-import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
-// RESPONSIBILITY: Display referrals table with claim reward action.
-// Rule 20 FIX: Replaced native <select> with SearchableDropdown.
 import { Loader2, Search, Gift, Check, IndianRupee } from 'lucide-react';
-import { useManagerReferralsLogic } from '@/app/manager/referrals/referrals_hooks/ManagerUseManagerReferralsLogic';
+import { formatCurrencyFromMinorUnits, maskSensitiveData, formatDate, displayValue} from '@/lib/formatters';
+import ManagerEmptyState from '@/app/manager/manager_components/ManagerFeedback/ManagerEmptyState';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import ManagerSearchableDropdown from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
-import ManagerEmptyState from '@/app/manager/manager_components/ManagerFeedback/ManagerEmptyState';
-import { formatCurrencyFromMinorUnits, maskSensitiveData, formatDate, displayValue} from '@/lib/formatters';
+import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
+import { MANAGER_GENERIC_ERROR_MESSAGE } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
+import { MANAGER_REFERRAL_STATUS_OPTIONS } from '@/app/manager/referrals/referrals_constants/ManagerReferralsFilterConstants';
+import { useManagerReferralsLogic } from '@/app/manager/referrals/referrals_hooks/ManagerUseManagerReferralsLogic';
+
+// Rule 20 FIX: Replaced native <select> with SearchableDropdown.
+
 
 
 
@@ -26,7 +28,7 @@ export default function ManagerReferralsTable() {
     <div className="bg-card border border-border rounded-xl flex flex-col min-h-96 shadow-card">
       
       {/* Header & Filters */}
-      <div className="p-4 border-b border-border flex flex-col sm:flex-row justify-between gap-4 shrink-0 bg-input/10">
+      <div className="p-4 border-b border-border flex flex-col sm:flex-row justify-between gap-4 shrink-0 bg-input">
         <div className="relative w-full sm:w-72">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary" size={18} />
           <input
@@ -34,7 +36,7 @@ export default function ManagerReferralsTable() {
             placeholder="Search Referrer or Referee..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 bg-input border border-border rounded-lg text-sm text-primary focus:outline-none focus:ring-1 focus:ring-primary motion-safe:transition-all"
+            className="w-full pl-9 pr-4 py-2 bg-input border border-border rounded-lg text-sm text-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary motion-safe:transition-all"
           />
         </div>
         
@@ -83,7 +85,7 @@ export default function ManagerReferralsTable() {
                 const canClaim = ref.status === 'JOINED' && ref.rewardStatus === 'PENDING';
                 
                 return (
-                  <tr key={ref.id} className="hover:bg-input/50 motion-safe:transition-colors">
+                  <tr key={ref.id} className="hover:bg-input motion-safe:transition-colors">
                     <td className="px-6 py-4">
                       <p className="font-bold text-primary">{ref.referrerName}</p>
                       <p className="text-xs text-secondary">{ref.referrerId}</p>
@@ -122,7 +124,7 @@ export default function ManagerReferralsTable() {
                         <button
                           onClick={() => claimReward(ref.id)}
                           disabled={isClaiming}
-                          className="inline-flex items-center gap-1 px-3 py-1.5 bg-primary-subtle text-white rounded text-xs font-bold hover:bg-primary-hover motion-safe:transition-colors disabled:opacity-50"
+                          className="inline-flex items-center gap-1 px-3 py-1.5 bg-primary-subtle text-primary rounded text-xs font-bold hover:bg-primary-hover motion-safe:transition-colors disabled:opacity-50"
                         >
                           <IndianRupee size={18} /> Claim {formatCurrencyFromMinorUnits(ref.rewardAmount ?? 0, ManagerEnvConfig.currencyCode)}
                         </button>
@@ -140,7 +142,7 @@ export default function ManagerReferralsTable() {
 
       {/* Footer Pagination */}
       {referrals.length > 0 && (
-        <div className="shrink-0 p-3 border-t border-border bg-input/10">
+        <div className="shrink-0 p-3 border-t border-border bg-input">
           <ManagerPagination 
             currentPage={currentPage}
             totalPages={totalPages}

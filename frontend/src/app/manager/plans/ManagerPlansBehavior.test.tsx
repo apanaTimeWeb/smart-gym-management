@@ -1,11 +1,11 @@
-import { describe, it, expect, beforeAll, afterAll, afterEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import ManagerPlansMain from '@/app/manager/plans/plans_components/ManagerPlansMain/ManagerPlansMain';
-import { managerMswServer } from '@/app/manager/manager_mocks/ManagerMswTestServer';
-import { plansApi } from '@/app/manager/plans/plans_api/ManagerPlansApi';
-import { ManagerTestProviders } from '@/app/manager/manager_mocks/ManagerTestProviders';
-
 import { http, HttpResponse } from 'msw';
+import { describe, it, expect, beforeAll, afterAll, afterEach } from 'vitest';
+import { managerMswServer } from '@/app/manager/manager_mocks/ManagerMswTestServer';
+import { ManagerTestProviders } from '@/app/manager/manager_mocks/ManagerTestProviders';
+import { plansApi } from '@/app/manager/plans/plans_api/ManagerPlansApi';
+import ManagerPlansMain from '@/app/manager/plans/plans_components/ManagerPlansMain/ManagerPlansMain';
+
 beforeAll(() => managerMswServer.listen({ onUnhandledRequest: 'error' }));
 afterEach(() => managerMswServer.resetHandlers());
 afterAll(() => managerMswServer.close());

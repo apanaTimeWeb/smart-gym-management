@@ -1,11 +1,13 @@
+// DATA FLOW: Manager feature UI/state → owning custom hook → approved API/query/mutation layer → observable UI state.
 'use client';
 /** Coordinates the Manager / feature. */
 import { create } from 'zustand';
-import type { ManagerToastType } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerToastTypes';
-import { EMPTY_ATTENDANCE_FORM, type AttendanceFormValues } from '@/app/manager/attendance/attendance_types/ManagerAttendanceFormTypes';
-import type { AttendanceTab } from '@/app/manager/attendance/attendance_utils/ManagerAttendanceSharedConstants';
-
+import { EMPTY_ATTENDANCE_FORM } from '@/app/manager/attendance/attendance_types/ManagerAttendanceFormTypes';
+import type { AttendanceFormValues } from '@/app/manager/attendance/attendance_types/ManagerAttendanceFormTypes';
 import type { ManagerAttendancePersonType } from '@/app/manager/attendance/attendance_types/ManagerAttendanceTypes';
+import type { AttendanceTab } from '@/app/manager/attendance/attendance_utils/ManagerAttendanceSharedConstants';
+import type { ManagerToastType } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerToastTypes';
+
 
 type CalendarUser = { id: string; name: string; type: ManagerAttendancePersonType } | null;
 

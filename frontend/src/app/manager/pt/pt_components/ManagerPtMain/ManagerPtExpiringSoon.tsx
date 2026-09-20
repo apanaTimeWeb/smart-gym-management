@@ -1,7 +1,8 @@
-'use client';
 // RESPONSIBILITY: Shows a list of members whose PT packages are nearing completion (< 3 sessions left).
-import type { ManagerPtExpiringSoonProps } from '@/app/manager/pt/pt_types/ManagerPtExpiringSoonTypes';
+'use client';
 import { AlertTriangle, Dumbbell } from 'lucide-react';
+import type { ManagerPtExpiringSoonProps } from '@/app/manager/pt/pt_types/ManagerPtExpiringSoonTypes';
+
 
 
 
@@ -28,7 +29,7 @@ export default function ManagerPtExpiringSoon({ expiringPackages }: ManagerPtExp
           {expiringPackages.map((pkg) => {
             const left = pkg.totalSessions - pkg.completedSessions;
             return (
-              <div key={pkg.id} className="p-4 hover:bg-input/50 motion-safe:transition-colors">
+              <div key={pkg.id} className="p-4 hover:bg-input motion-safe:transition-colors">
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-sm font-semibold text-primary">{pkg.memberName}</span>
                   <span className="text-xs font-bold text-danger bg-danger-bg px-2 py-0.5 rounded text-nowrap">

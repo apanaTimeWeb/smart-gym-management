@@ -1,16 +1,18 @@
-'use client';
-// RESPONSIBILITY: Business logic hook for the Churn Recovery / Win-Back tab.
 // DATA FLOW: ManagerCommunicationsApi -> useManagerChurnRecoveryLogic -> ManagerChurnRecoveryTab -> child components
+// RESPONSIBILITY: Business logic hook for the Churn Recovery / Win-Back tab.
+'use client';
 /** Manages UseChurnRecoveryLogic for the Manager module. */
 import { useCallback, useMemo } from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
+import { useManagerChurnRecoveryMutations } from '@/app/manager/communications/communications_hooks/ManagerUseManagerChurnRecoveryMutations';
+import { useManagerChurnRecoveryQueries } from '@/app/manager/communications/communications_hooks/ManagerUseManagerChurnRecoveryQueries';
 import { useManagerCommunicationsStore } from '@/app/manager/communications/communications_store/ManagerUseManagerCommunicationsStore';
 import { CANCELLATIONS_ITEMS_PER_PAGE } from '@/app/manager/communications/communications_utils/ManagerCommunicationsSharedConstants';
 import { CANCELLATIONS_WIN_BACK_TEMPLATES } from '@/app/manager/communications/communications_utils/ManagerCommunicationsSharedConstants';
 import type { ChurnedMember, CommChannel, WinBackTemplateTier } from '@/app/manager/communications/communications_types/ManagerCommunications_types';
-import { useManagerChurnRecoveryQueries } from '@/app/manager/communications/communications_hooks/ManagerUseManagerChurnRecoveryQueries';
-import { useManagerChurnRecoveryMutations } from '@/app/manager/communications/communications_hooks/ManagerUseManagerChurnRecoveryMutations';
 
+
+/** Orchestrates the owning Manager feature behavior while preserving its documented state boundary. */
 export function useManagerChurnRecoveryLogic() {
   const store = useManagerCommunicationsStore();
   const router = useRouter();
@@ -46,7 +48,7 @@ export function useManagerChurnRecoveryLogic() {
   const { churnedMembers, churnLoading, churnError, churnErrorValue, churnKPIs } = useManagerChurnRecoveryQueries();
   const { winBackMutation } = useManagerChurnRecoveryMutations(store.closeChurnComposer);
 
-  const isLoading = churnLoading;
+  const isPending = churnLoading;
   const isError = churnError;
   const errorMessage = churnErrorValue instanceof Error ? churnErrorValue.message : '';
 
@@ -90,7 +92,7 @@ export function useManagerChurnRecoveryLogic() {
     churnKPIs,
     paginatedMembers,
     filteredMembers,
-    isLoading, isError, errorMessage,
+    isPending, isError, errorMessage,
     totalPages,
     churnSearch,
     setChurnSearch,

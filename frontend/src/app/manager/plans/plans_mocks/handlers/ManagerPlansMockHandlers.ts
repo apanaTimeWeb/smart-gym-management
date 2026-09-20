@@ -1,29 +1,42 @@
 import { http, HttpResponse } from 'msw';
-import { managerMockApiUrl } from '@/app/manager/manager_infrastructure/ManagerMockApiUrl';
-import { ManagerPlansUrlConfig } from '@/app/manager/plans/plans_url_config';
 import { MANAGER_HTTP_STATUS } from '@/app/manager/manager_infrastructure/ManagerHttpStatus';
-import { MOCK_PLANS } from '@/app/manager/plans/plans_fixtures/ManagerPlansMockData';
-import type { Plan } from '@/app/manager/plans/plans_types/ManagerPlansTypes';
+import { managerMockApiUrl } from '@/app/manager/manager_infrastructure/ManagerMockApiUrl';
 import { MOCK_PLANS_MEMBERSHIP_OVERVIEW } from '@/app/manager/plans/plans_fixtures/ManagerPlansMembershipMockData';
+import { MOCK_PLANS } from '@/app/manager/plans/plans_fixtures/ManagerPlansMockData';
+import { ManagerPlansUrlConfig } from '@/app/manager/plans/plans_url_config';
+import type { Plan } from '@/app/manager/plans/plans_types/ManagerPlansTypes';
+
 
 let mockPlans = [...MOCK_PLANS];
+let mockMembershipOverview = structuredClone(MOCK_PLANS_MEMBERSHIP_OVERVIEW);
 
 let mockChangeRequestIdCounter = 1000;
 let mockPlanIdCounter = 1000;
+export function resetManagerPlansMockState(): void {
+  mockPlans = [...MOCK_PLANS];
+  mockMembershipOverview = structuredClone(MOCK_PLANS_MEMBERSHIP_OVERVIEW);
+  mockChangeRequestIdCounter = 1000;
+  mockPlanIdCounter = 1000;
+}
+
 export const managerPlansHandlers = [
   http.get(managerMockApiUrl(ManagerPlansUrlConfig.BACKEND_API.MEMBERSHIP_OVERVIEW), () =>
-    HttpResponse.json({ success: true, message: 'Membership overview fetched', data: MOCK_PLANS_MEMBERSHIP_OVERVIEW })
+    HttpResponse.json({ success: true, message: 'Membership overview fetched', data: mockMembershipOverview })
   ),
   http.post(managerMockApiUrl(ManagerPlansUrlConfig.BACKEND_API.MEMBERSHIP_ACTIVATE), async ({ request }) => {
-    await request.json();
+    const body = await request.json() as { memberId: string; planId: string; startDate: string };
+    mockMembershipOverview = { ...mockMembershipOverview, memberOptions: mockMembershipOverview.memberOptions.map((member) => member.id === body.memberId ? { ...member, planId: body.planId, status: 'ACTIVE', expiryDate: body.startDate } : member) };
     return HttpResponse.json({ success: true, message: 'Membership activated successfully', data: {} });
   }),
   http.post(managerMockApiUrl(ManagerPlansUrlConfig.BACKEND_API.MEMBERSHIP_RENEW), async ({ request }) => {
-    await request.json();
+    const body = await request.json() as { memberId: string; planId: string; newExpiryDate: string };
+    const update = (member: typeof mockMembershipOverview.memberOptions[number]) => member.id === body.memberId ? { ...member, planId: body.planId, expiryDate: body.newExpiryDate, status: 'ACTIVE' } : member;
+    mockMembershipOverview = { memberOptions: mockMembershipOverview.memberOptions.map(update), renewalCandidates: mockMembershipOverview.renewalCandidates.map(update) };
     return HttpResponse.json({ success: true, message: 'Membership renewed successfully', data: {} });
   }),
   http.post(managerMockApiUrl(ManagerPlansUrlConfig.BACKEND_API.MEMBERSHIP_FREEZE), async ({ request }) => {
-    await request.json();
+    const body = await request.json() as { memberId: string; freezeFrom: string; freezeUntil: string };
+    mockMembershipOverview = { ...mockMembershipOverview, memberOptions: mockMembershipOverview.memberOptions.map((member) => member.id === body.memberId ? { ...member, status: 'FROZEN', expiryDate: body.freezeUntil } : member) };
     return HttpResponse.json({ success: true, message: 'Membership freeze applied successfully', data: {} });
   }),
   http.post(managerMockApiUrl(ManagerPlansUrlConfig.BACKEND_API.CHANGE_REQUESTS), async ({ request }) => {

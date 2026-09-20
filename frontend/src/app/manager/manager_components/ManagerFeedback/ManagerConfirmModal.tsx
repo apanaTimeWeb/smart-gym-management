@@ -1,8 +1,9 @@
-'use client';
 // RESPONSIBILITY: Renders the reusable accessible confirmation dialog used by all Manager modules; performs no business/API work.
+'use client';
 import { useEffect, useRef } from 'react';
 import { AlertTriangle } from 'lucide-react';
 import type { ManagerConfirmModalProps } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerConfirmModalTypes';
+
 
 /** Traps focus, closes on Escape, and returns focus to the trigger for the shared confirmation dialog. */
 export default function ManagerConfirmModal({
@@ -18,6 +19,7 @@ export default function ManagerConfirmModal({
   const cancelRef = useRef<HTMLButtonElement>(null);
   const confirmRef = useRef<HTMLButtonElement>(null);
 
+  // EFFECT: Focuses the dialog, traps Tab navigation, and handles Escape while the confirmation surface is open.
   useEffect(() => {
     if (!isOpen) return undefined;
     cancelRef.current?.focus();
@@ -47,10 +49,10 @@ export default function ManagerConfirmModal({
   if (!isOpen) return null;
 
   const tone = type === 'danger'
-    ? { icon: 'bg-danger-bg text-danger', button: 'bg-danger-bg' }
+    ? { icon: 'bg-danger-bg text-danger', button: 'bg-danger text-on-danger' }
     : type === 'warning'
-      ? { icon: 'bg-warning-bg text-warning', button: 'bg-warning-bg' }
-      : { icon: 'bg-info-bg text-info', button: 'bg-info-bg' };
+      ? { icon: 'bg-warning-bg text-warning', button: 'bg-warning text-on-primary' }
+      : { icon: 'bg-info-bg text-info', button: 'bg-info text-on-info' };
 
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay-backdrop p-4" role="presentation">

@@ -1,18 +1,20 @@
-﻿'use client';
-import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
-import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
-// RESPONSIBILITY: Renders a detailed view of a selected member's profile.
+// RESPONSIBILITY: Renders the selected member profile view and composes its feature-owned profile sections.
+'use client';
 import { Edit, MessageCircle, Mail } from 'lucide-react';
-import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/ManagerHeader';
+import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
 import { displayValue, formatDate } from '@/lib/formatters';
-import { useManagerMembersLogic } from '@/app/manager/members/members_hooks/ManagerUseManagerMembersLogic';
-
-import { MEMBERS_STATUS_COLORS, MEMBERS_CYCLE_LABELS, PROFILE_TABS } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
-import ManagerProfileOverview from '@/app/manager/members/members_components/MemberProfile/ManagerProfileOverview';
+import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/ManagerHeader';
+import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 import ManagerProfileAttendance from '@/app/manager/members/members_components/MemberProfile/ManagerProfileAttendance';
+import ManagerProfileDiet from '@/app/manager/members/members_components/MemberProfile/ManagerProfileDiet';
+import ManagerProfileOverview from '@/app/manager/members/members_components/MemberProfile/ManagerProfileOverview';
 import ManagerProfilePayments from '@/app/manager/members/members_components/MemberProfile/ManagerProfilePayments';
 import ManagerProfileWorkout from '@/app/manager/members/members_components/MemberProfile/ManagerProfileWorkout';
-import ManagerProfileDiet from '@/app/manager/members/members_components/MemberProfile/ManagerProfileDiet';
+import { useManagerMembersLogic } from '@/app/manager/members/members_hooks/ManagerUseManagerMembersLogic';
+import { PROFILE_TABS } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
+import { MEMBERS_STATUS_COLORS, MEMBERS_CYCLE_LABELS } from '@/app/manager/members/members_utils/ManagerMembersUiConstants';
+import type { MemberProfileTab } from '@/app/manager/members/members_types/ManagerMembersTypes';
+
 
 export default function ManagerMemberProfile() {
   const { selectedMember, setSelectedMember, profileTab, setProfileTab, openEdit, openMsg, setShowRenewModal } = useManagerMembersLogic();
@@ -28,7 +30,7 @@ export default function ManagerMemberProfile() {
       <div className="p-6 space-y-5">
         <button
           onClick={() => setSelectedMember(null)}
-          className="text-sm text-secondary hover:text-primary flex items-center gap-1.5 motion-safe:transition-all motion-safe:duration-200"
+          className="text-sm text-secondary hover:text-primary flex items-center gap-1.5 motion-safe:transition-all motion-safe:duration-base"
         >
           â† Back to Members
         </button>
@@ -50,7 +52,7 @@ export default function ManagerMemberProfile() {
                   <span className="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold bg-info text-on-info">
                     {selectedMember.plan?.name || ''}
                   </span>
-                  <span className="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-bg text-purple">
+                  <span className="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-bg text-purple-text">
                     {MEMBERS_CYCLE_LABELS[selectedMember.billingCycle] || selectedMember.billingCycle}
                   </span>
                 </div>
@@ -59,25 +61,25 @@ export default function ManagerMemberProfile() {
             <div className="flex gap-2 flex-wrap">
               <button
                 onClick={() => openEdit(selectedMember)}
-                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold border border-border rounded-xl hover:bg-primary-subtle text-primary motion-safe:transition-all motion-safe:duration-200 motion-safe:active:scale-95"
+                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold border border-border rounded-xl hover:bg-primary-subtle text-primary motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95"
               >
                 <Edit size={18} /> Edit
               </button>
               <button
                 onClick={() => setShowRenewModal(true)}
-                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold border border-border rounded-xl hover:bg-primary-subtle text-primary motion-safe:transition-all motion-safe:duration-200 motion-safe:active:scale-95 bg-primary-subtle"
+                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold border border-border rounded-xl hover:bg-primary-subtle text-primary motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95 bg-primary-subtle"
               >
                 Renew Plan
               </button>
               <button
                 onClick={() => openMsg(selectedMember, 'whatsapp')}
-                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold bg-success text-on-success rounded-xl hover:opacity-90 motion-safe:transition-all motion-safe:duration-200 motion-safe:active:scale-95"
+                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold bg-success text-on-success rounded-xl hover:opacity-90 motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95"
               >
                 <MessageCircle size={18} /> WhatsApp
               </button>
               <button
                 onClick={() => openMsg(selectedMember, 'email')}
-                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold bg-info text-on-info rounded-xl hover:opacity-90 motion-safe:transition-all motion-safe:duration-200 motion-safe:active:scale-95"
+                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold bg-info text-on-info rounded-xl hover:opacity-90 motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95"
               >
                 <Mail size={18} /> Email
               </button>
@@ -110,8 +112,8 @@ export default function ManagerMemberProfile() {
             {PROFILE_TABS.map(({ id: t, label }) => (
               <button
                 key={t}
-                onClick={() => { setProfileTab(t as any); }}
-                className={`px-5 py-3.5 text-sm font-medium motion-safe:transition-all motion-safe:duration-200 border-b-2 ${profileTab === t
+                onClick={() => { setProfileTab(t as MemberProfileTab); }}
+                className={`px-5 py-3.5 text-sm font-medium motion-safe:transition-all motion-safe:duration-base border-b-2 ${profileTab === t
                     ? 'text-on-primary bg-primary-subtle border-primary'
                     : 'border-transparent text-secondary hover:text-primary'
                   }`}

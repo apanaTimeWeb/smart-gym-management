@@ -1,12 +1,14 @@
+// DATA FLOW: Manager feature UI/state → owning custom hook → approved API/query/mutation layer → observable UI state.
 'use client';
 /** Coordinates the Manager / feature. */
 import { create } from 'zustand';
-import type { Member, MemberProfileTab } from '@/app/manager/members/members_types/ManagerMembersTypes';
-import type { MemberFormValues } from '@/app/manager/members/members_schemas/ManagerMembersFormSchema';
+import { EMPTY_MEMBER_FORM } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
 import type { ManagerToastType } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerToastTypes';
+import type { MemberFormValues } from '@/app/manager/members/members_schemas/ManagerMembersFormSchema';
 import type { ManagerMembersMessageType, ManagerMembersMessageRecipient } from '@/app/manager/members/members_types/ManagerMembersMessageTypes';
 import type { ManagerMembersReceiptData } from '@/app/manager/members/members_types/ManagerMembersThermalReceiptTypes';
-import { EMPTY_MEMBER_FORM } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
+import type { Member, MemberProfileTab } from '@/app/manager/members/members_types/ManagerMembersTypes';
+
 
 interface ManagerMembersUiState {
   showAddModal: boolean; showRenewModal: boolean; showPaymentModal: boolean;

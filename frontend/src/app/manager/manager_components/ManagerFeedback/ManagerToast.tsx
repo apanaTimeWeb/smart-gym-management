@@ -1,10 +1,12 @@
-'use client';
 // RESPONSIBILITY: Renders a fixed, accessible Manager toast notification. Contains no business logic.
+'use client';
 import { useEffect } from 'react';
 import type { ManagerToastAriaLive, ManagerToastProps } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerToastTypes';
 
+
 /** Renders an auto-dismissing toast with semantic styling and a stable close action. */
 export default function ManagerToast({ message, type, onClose }: ManagerToastProps) {
+// EFFECT: Effect lifecycle and dependency list are intentionally scoped to values that control this side effect.
   useEffect(() => {
     const timer = window.setTimeout(onClose, 4000);
     return () => window.clearTimeout(timer);

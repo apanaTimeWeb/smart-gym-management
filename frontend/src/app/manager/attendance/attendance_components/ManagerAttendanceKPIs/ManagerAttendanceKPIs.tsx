@@ -1,7 +1,8 @@
-'use client';
 // RESPONSIBILITY: Renders the top KPI stat cards (total check-ins, member check-ins, staff check-ins) for the Attendance module.
+'use client';
 import { CalendarCheck, Users, UserCog } from 'lucide-react';
 import { useManagerAttendanceLogic } from '@/app/manager/attendance/attendance_hooks/ManagerUseManagerAttendanceLogic';
+
 
 export default function ManagerAttendanceKPIs() {
  const { todayStats } = useManagerAttendanceLogic();

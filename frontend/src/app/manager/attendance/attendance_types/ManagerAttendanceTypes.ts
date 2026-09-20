@@ -1,11 +1,12 @@
 // RESPONSIBILITY: Defines strict types and API response interfaces for the Attendance module.
 // Includes durationMinutes, lateMinutes, checkInMethod for time-tracking analytics.
 
-import type { MemberSnapshot, StaffSnapshot } from '@/app/manager/attendance/attendance_types/ManagerAttendanceSnapshotTypes';
-import type { ManagerToastType } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerToastTypes';
 import type { AttendanceFormValues } from '@/app/manager/attendance/attendance_types/ManagerAttendanceFormTypes';
+import type { MemberSnapshot, StaffSnapshot } from '@/app/manager/attendance/attendance_types/ManagerAttendanceSnapshotTypes';
 import type { AttendanceTab } from '@/app/manager/attendance/attendance_utils/ManagerAttendanceSharedConstants';
+import type { ManagerToastType } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerToastTypes';
 import type { Dispatch, SetStateAction } from 'react';
+
 
 
 export type ManagerAttendancePersonType = 'MEMBER' | 'STAFF';
@@ -51,7 +52,7 @@ export interface ManagerAttendanceViewModel {
   members: MemberSnapshot[];
   staff: StaffSnapshot[];
   totalRecords: number;
-  isLoading: boolean;
+  isPending: boolean;
   isError: boolean;
   errorMessage: string;
   saving: boolean;

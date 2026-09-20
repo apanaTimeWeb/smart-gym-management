@@ -1,14 +1,15 @@
-'use client';
 // RESPONSIBILITY: Data table to track active PT assignments and mark sessions.
-import type { ManagerPtAssignmentsTableProps } from '@/app/manager/pt/pt_types/ManagerPtAssignmentsTableTypes';
+'use client';
 import { Loader2, Dumbbell, ChevronLeft, ChevronRight } from 'lucide-react';
 import ManagerPtAssignmentsEmptyState from '@/app/manager/pt/pt_components/ManagerPtMain/ManagerPtAssignmentsEmptyState';
+import type { ManagerPtAssignmentsTableProps } from '@/app/manager/pt/pt_types/ManagerPtAssignmentsTableTypes';
+
 
 const PT_ASSIGNMENTS_COLUMN_COUNT = 5;
 
 
 
-export default function ManagerPtAssignmentsTable({ assignments, totalAssignments = assignments.length, currentPage = 1, totalPages = 1, onPageChange = () => undefined, markingId, onMarkSession, isLoading }: ManagerPtAssignmentsTableProps) {
+export default function ManagerPtAssignmentsTable({ assignments, totalAssignments = assignments.length, currentPage = 1, totalPages = 1, onPageChange = () => undefined, markingId, onMarkSession, isPending }: ManagerPtAssignmentsTableProps) {
   return (
     <div className="bg-card border border-border rounded-xl flex flex-col overflow-hidden">
       <div className="px-5 py-4 border-b border-border flex items-center justify-between">
@@ -28,7 +29,7 @@ export default function ManagerPtAssignmentsTable({ assignments, totalAssignment
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
-            {isLoading ? (
+            {isPending ? (
               <tr>
                 <td colSpan={PT_ASSIGNMENTS_COLUMN_COUNT} className="py-16 text-center">
                   <Loader2 size={18} className="mx-auto text-primary motion-safe:animate-spin" />
@@ -47,7 +48,7 @@ export default function ManagerPtAssignmentsTable({ assignments, totalAssignment
                 const isDone = a.completedSessions >= a.totalSessions;
                 
                 return (
-                  <tr key={a.id} className="hover:bg-input/50 motion-safe:transition-colors">
+                  <tr key={a.id} className="hover:bg-input motion-safe:transition-colors">
                     <td className="py-3 px-4 text-sm font-medium text-primary">{a.memberName}</td>
                     <td className="py-3 px-4 text-sm text-secondary">{a.trainerName}</td>
                     <td className="py-3 px-4 text-sm text-secondary">{a.packageName} ({a.totalSessions}s)</td>
@@ -55,7 +56,7 @@ export default function ManagerPtAssignmentsTable({ assignments, totalAssignment
                       <div className="flex items-center gap-2">
                         <div className="flex-1 h-2 bg-input rounded-full overflow-hidden">
                           <div
-                            className={`h-full rounded-full motion-safe:transition-all motion-safe:duration-500 ${isDone ? 'bg-success-bg' : 'bg-primary-subtle'}`}
+                            className={`h-full rounded-full motion-safe:transition-all motion-safe:duration-xslow ${isDone ? 'bg-success-bg' : 'bg-primary-subtle'}`}
                             style={{ width: `${pct}%` }}
                           />
                         </div>
@@ -90,11 +91,11 @@ export default function ManagerPtAssignmentsTable({ assignments, totalAssignment
         <div className="flex items-center gap-2">
           <span className="text-xs text-secondary">10 / page</span>
           <div className="flex items-center gap-1">
-            <button onClick={() => onPageChange(Math.max(1, currentPage - 1))} disabled={currentPage <= 1} aria-label="Previous page" className="p-1 rounded-md border border-border text-secondary bg-input/50 disabled:opacity-50 disabled:cursor-not-allowed">
+            <button onClick={() => onPageChange(Math.max(1, currentPage - 1))} disabled={currentPage <= 1} aria-label="Previous page" className="p-1 rounded-md border border-border text-secondary bg-input disabled:opacity-50 disabled:cursor-not-allowed">
               <ChevronLeft size={18} />
             </button>
             <span className="text-xs text-secondary">{currentPage} / {totalPages}</span>
-            <button onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))} disabled={currentPage >= totalPages} aria-label="Next page" className="p-1 rounded-md border border-border text-secondary bg-input/50 disabled:opacity-50 disabled:cursor-not-allowed">
+            <button onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))} disabled={currentPage >= totalPages} aria-label="Next page" className="p-1 rounded-md border border-border text-secondary bg-input disabled:opacity-50 disabled:cursor-not-allowed">
               <ChevronRight size={18} />
             </button>
           </div>

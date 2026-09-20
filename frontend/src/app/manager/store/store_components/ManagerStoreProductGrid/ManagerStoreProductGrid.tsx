@@ -1,24 +1,24 @@
+// RESPONSIBILITY: Renders the store product grid from feature-owned product data.
 'use client';
-import { MANAGER_GENERIC_ERROR_MESSAGE } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
-import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
-// RESPONSIBILITY: Renders the product cards grid with stock status, price, and quick-action buttons.
 import { Edit2, Trash2 } from 'lucide-react';
-import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
-import { useManagerStoreLogic } from '@/app/manager/store/store_hooks/ManagerUseManagerStoreLogic';
 import { formatCurrencyFromMinorUnits, formatNumber } from '@/lib/formatters';
-
+import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
+import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
+import { MANAGER_GENERIC_ERROR_MESSAGE } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_infrastructure/ManagerPaginationDefaults';
+import { useManagerStoreLogic } from '@/app/manager/store/store_hooks/ManagerUseManagerStoreLogic';
+
 
 export default function ManagerStoreProductGrid() {
   const { confirm } = useConfirm();
-  const { products, summary, isLoading, isError, errorMessage, debouncedSearch, currentPage, setCurrentPage, openEditProduct, deleteProduct } = useManagerStoreLogic();
+  const { products, summary, isPending, isError, errorMessage, debouncedSearch, currentPage, setCurrentPage, openEditProduct, deleteProduct } = useManagerStoreLogic();
 
   
   const totalProducts = summary?.totalProducts || products.length;
   const totalPages = Math.ceil(totalProducts / MANAGER_ITEMS_PER_PAGE) || 1;
 
-  if (isLoading) {
+  if (isPending) {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {[...Array(8)].map((_, i) => (
@@ -38,7 +38,7 @@ export default function ManagerStoreProductGrid() {
 
   if (isError) {
     return (
-      <div className="text-center py-16 bg-card rounded-2xl border border-danger/30 mt-4">
+      <div className="text-center py-16 bg-card rounded-2xl border border-danger mt-4">
         <p className="text-danger font-medium">{errorMessage || MANAGER_GENERIC_ERROR_MESSAGE}</p>
         <span className="text-sm text-secondary">Retry the request.</span>
       </div>

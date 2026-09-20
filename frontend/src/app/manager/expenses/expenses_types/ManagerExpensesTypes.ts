@@ -49,7 +49,7 @@ export interface ManagerExpensesViewModel {
   showModal: boolean; setShowModal: (value: boolean) => void;
   editId: string | null; editData: Partial<Expense> | null;
   openAdd: () => void; openEdit: (expense: Expense) => void;
-  saveExpense: (data: Partial<Expense>) => Promise<void>;
+  saveExpense: (data: Partial<Expense>, idempotencyKey?: string) => Promise<void>;
   deleteExpense: (id: string) => Promise<void>;
   markAsPaid: (id: string) => Promise<void>;
   exportExpenses: () => void;

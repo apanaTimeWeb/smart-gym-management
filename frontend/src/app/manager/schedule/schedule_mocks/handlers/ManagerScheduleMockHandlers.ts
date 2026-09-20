@@ -1,13 +1,19 @@
 let mockShiftIdCounter = 1000;
 
 import { http, HttpResponse } from 'msw';
-import { managerMockApiUrl } from '@/app/manager/manager_infrastructure/ManagerMockApiUrl';
-import { ManagerScheduleUrlConfig } from '@/app/manager/schedule/schedule_url_config';
 import { MANAGER_HTTP_STATUS } from '@/app/manager/manager_infrastructure/ManagerHttpStatus';
+import { managerMockApiUrl } from '@/app/manager/manager_infrastructure/ManagerMockApiUrl';
 import { MOCK_SCHEDULE_KPIS, MOCK_TRAINERS } from '@/app/manager/schedule/schedule_fixtures/ManagerScheduleMockData';
+import { ManagerScheduleUrlConfig } from '@/app/manager/schedule/schedule_url_config';
 import type { TrainerShift } from '@/app/manager/schedule/schedule_types/ManagerScheduleTypes';
 
+
 let mockTrainers = structuredClone(MOCK_TRAINERS);
+
+export function resetManagerScheduleMockState(): void {
+  mockShiftIdCounter = 1000;
+  mockTrainers = structuredClone(MOCK_TRAINERS);
+}
 
 export const managerScheduleHandlers = [
   http.get(managerMockApiUrl(ManagerScheduleUrlConfig.BACKEND_API.BASE), ({ request }) => {

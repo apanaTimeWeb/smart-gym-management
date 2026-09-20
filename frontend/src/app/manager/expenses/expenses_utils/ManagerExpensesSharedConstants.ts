@@ -1,4 +1,6 @@
-// RESPONSIBILITY: Shared constants and form schemas for the Expenses module.
+// RESPONSIBILITY: Centralized static configuration for the Expenses feature; API/server data is intentionally excluded.
+
+export const MANAGER_EXPENSE_MAX_AMOUNT_MAJOR_UNITS = Number.MAX_SAFE_INTEGER / 100;
 
 export const EXPENSE_CATEGORIES = [
   'Electricity',

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { MANAGER_PLANS_MESSAGES, TIERS } from '@/app/manager/plans/plans_utils/ManagerPlansSharedConstants';
 
+
 describe('ManagerPlansSharedConstants', () => {
   it('keeps plan tiers and documented request messages stable', () => {
     expect(TIERS).toEqual(['BASIC', 'GOLD', 'PREMIUM']);

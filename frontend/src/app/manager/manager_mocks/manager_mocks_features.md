@@ -1,70 +1,36 @@
-# manager/manager_mocks — Feature Map
+# Manager Mocks — Feature Map
 
 ## Module Purpose
-[REQUIRED: 3–6 sentences. Must answer: (1) What business problem does this module solve? (2) Who uses it? (3) What are the 3–5 most important things a user can DO? (4) What is strictly OFF-LIMITS? Fill this out accurately.]
+`manager_mocks/` owns the Manager MSW bootstrap and handler aggregation required to demonstrate frontend behavior without a live backend. It registers feature-owned handlers but does not own feature business data or business rules itself.
 
 ## Directory Structure
-| Folder | Responsibility | Key Files |
-|---|---|---|
-| `manager_mocks_components/` | Renders UI components | TBD |
-| `manager_mocks_api/` | API endpoints | `manager_mocks_url_config.ts` |
+```text
+manager_mocks/
+├── ManagerMockHandlers.ts
+├── ManagerMswBrowser.ts
+├── ManagerMswBrowserBootstrap.tsx
+├── ManagerMswTestServer.ts
+├── ManagerTestProviders.tsx
+├── manager_mocks_url_config.ts
+└── manager_mocks_types/
+    └── ManagerMswBrowserBootstrapTypes.ts
+```
 
-### Approved External Dependencies
-### Application Infrastructure
-- `@/lib/api`
-- `@/lib/logger`
+## Data / State Flow
+Feature modules own their fixtures and mutable MSW state. This folder composes those handlers and provides browser/test bootstrap wiring. Reset behavior is delegated to each feature's reset function through the test server.
 
-### Business Feature Dependencies
-- None
+## Business Boundary
+Do not place business fixtures, business schemas, or feature-specific response logic here. Only application-wide MSW composition/bootstrap belongs in this role-level folder.
 
-### Role-Level Business Dependencies
-- None
+## Verification Checklist
+- [x] Feature handlers are composed through `ManagerMockHandlers.ts`.
+- [x] Browser and test MSW entry points are separated.
+- [x] Feature mutation state can be reset through the test-support reset contract.
+- [ ] Real MSW execution in the host application: NOT VERIFIED from this snapshot.
 
-## Feature Inventory
-| Feature | Route | What the User Can Do | Key Components | Main API Calls | Status |
-|---|---|---|---|---|---|
-| Example | /manager/manager_mocks | Manage entity | Main.tsx | GET /... | 🚧 TBD |
+## Approved External Dependencies
 
-## User Flows & Interactions
-### Flow 1: [Name]
-1. TBD
+- Global framework/application infrastructure documented by the architecture standard may be used when required.
+- Approved zero-business UI primitives may be imported from Manager application infrastructure.
+- Sibling feature business logic, state, API services, fixtures, and tests are not dependencies.
 
-## Data and State Architecture
-- **State pattern:** TanStack Query for server state + Zustand for UI state.
-- **Zustand stores:** [List actual store files]
-- **Context providers:** [List actual provider files]
-- **MSW handler location:** [module-owned handler]
-
-## API Contract
-| Function | Method | Endpoint | Request | Response `data` type |
-|---|---|---|---|---|
-| TBD | GET | /... | — | `any` |
-
-## UI Data Requirements
-| UI Element | Required Field(s) | API Endpoint | Response Path | Nullable? | Mocked? |
-|---|---|---|---|---|---|
-| TBD | TBD | GET /... | data... | No | Yes |
-
-## Permissions and Security
-- **Required role:** `MANAGER`
-- **Destructive actions:** TBD
-- **Cross-role isolation:** Zero imports from other roles.
-
-## Loading, Empty, and Error States
-| Section | Loading State | Empty State | Error State |
-|---|---|---|---|
-| Full page | `loading.tsx` | `manager_mocksEmptyState.tsx` | `error.tsx` |
-
-## Edge Cases and AI Warnings
-- **[Specific Warning]:** [Explanation]
-
-## Component Responsibility Map
-| Component File | Responsibility |
-|---|---|
-| TBD | TBD |
-
-## Rule Compliance Checklist
-- [ ] Rule 1: Micro-modularization
-- [ ] Rule 2: Total Role Isolation
-- [ ] Module Self-Containment
-- [ ] Feature Dependency Firewall

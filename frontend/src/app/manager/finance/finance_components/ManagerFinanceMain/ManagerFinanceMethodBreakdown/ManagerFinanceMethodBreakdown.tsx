@@ -1,8 +1,9 @@
-'use client';
 // RESPONSIBILITY: Renders the ManagerFinanceMethodBreakdown sub-view extracted from ManagerFinanceRevenueChart; owns only this presentation responsibility.
-import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
-import { FINANCE_METHOD_STYLES } from '@/app/manager/finance/finance_utils/ManagerFinanceSharedConstants';
+'use client';
 import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
+import { FINANCE_METHOD_STYLES } from '@/app/manager/finance/finance_utils/ManagerFinanceSharedConstants';
+import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
+
 
 export function ManagerFinanceMethodBreakdown({ data }: { data: Record<string, number> }) {
   const total = Object.values(data).reduce((a, b) => a + b, 0) || 1;
@@ -19,7 +20,7 @@ export function ManagerFinanceMethodBreakdown({ data }: { data: Record<string, n
               <span className="text-secondary">{formatCurrencyFromMinorUnits(amount, ManagerEnvConfig.currencyCode)} ({pct}%)</span>
             </div>
             <div className="h-2 bg-input rounded-full overflow-hidden">
-              <div className={`h-full rounded-full ${s.bg.replace('/10', '')} motion-safe:transition-all motion-safe:duration-500`} style={{ width: `${pct}%` }} />
+              <div className={`h-full rounded-full ${s.bg.replace('/10', '')} motion-safe:transition-all motion-safe:duration-xslow`} style={{ width: `${pct}%` }} />
             </div>
           </div>
         );

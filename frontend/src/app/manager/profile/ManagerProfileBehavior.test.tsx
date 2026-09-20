@@ -1,9 +1,10 @@
-import { describe, it, expect, beforeAll, afterAll, afterEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import ManagerProfileMain from '@/app/manager/profile/profile_components/ManagerProfileMain/ManagerProfileMain';
+import { describe, it, expect, beforeAll, afterAll, afterEach } from 'vitest';
 import { managerMswServer } from '@/app/manager/manager_mocks/ManagerMswTestServer';
-import { managerProfileApi } from '@/app/manager/profile/profile_api/ManagerProfileApi';
 import { ManagerTestProviders } from '@/app/manager/manager_mocks/ManagerTestProviders';
+import { managerProfileApi } from '@/app/manager/profile/profile_api/ManagerProfileApi';
+import ManagerProfileMain from '@/app/manager/profile/profile_components/ManagerProfileMain/ManagerProfileMain';
+
 
 beforeAll(() => managerMswServer.listen({ onUnhandledRequest: 'error' }));
 afterEach(() => managerMswServer.resetHandlers());

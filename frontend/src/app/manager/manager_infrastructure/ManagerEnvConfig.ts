@@ -1,4 +1,5 @@
 // RESPONSIBILITY: Validates public Manager runtime configuration once at the application boundary.
+
 import { z } from 'zod';
 
 const managerPublicEnvSchema = z.object({
@@ -8,6 +9,7 @@ const managerPublicEnvSchema = z.object({
   NEXT_PUBLIC_GYM_ADDRESS: z.string().trim().min(1, 'NEXT_PUBLIC_GYM_ADDRESS is required'),
   NEXT_PUBLIC_CURRENCY_CODE: z.string().trim().length(3, 'NEXT_PUBLIC_CURRENCY_CODE must be an ISO 4217 code'),
   NEXT_PUBLIC_MANAGER_DEMO_MODE: z.enum(['true', 'false']).optional().default('false'),
+  NEXT_PUBLIC_API_URL: z.string().url().optional(),
 });
 
 const parsedManagerPublicEnvResult = managerPublicEnvSchema.safeParse({
@@ -17,10 +19,13 @@ const parsedManagerPublicEnvResult = managerPublicEnvSchema.safeParse({
   NEXT_PUBLIC_GYM_ADDRESS: process.env.NEXT_PUBLIC_GYM_ADDRESS,
   NEXT_PUBLIC_CURRENCY_CODE: process.env.NEXT_PUBLIC_CURRENCY_CODE,
   NEXT_PUBLIC_MANAGER_DEMO_MODE: process.env.NEXT_PUBLIC_MANAGER_DEMO_MODE,
+  NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
 });
 
-if (!parsedManagerPublicEnvResult.success && process.env.NODE_ENV === 'production') {
-  throw new Error(`[ManagerEnvConfig] Missing required env vars: ${parsedManagerPublicEnvResult.error.message}`);
+const managerRuntimeProduction = process.env.NODE_ENV === 'production';
+
+if (!parsedManagerPublicEnvResult.success && managerRuntimeProduction) {
+  throw new Error(`[ManagerEnvConfig] Invalid public environment configuration: ${parsedManagerPublicEnvResult.error.message}`);
 }
 
 const parsedManagerPublicEnv = parsedManagerPublicEnvResult.success
@@ -32,6 +37,7 @@ const parsedManagerPublicEnv = parsedManagerPublicEnvResult.success
       NEXT_PUBLIC_GYM_ADDRESS: 'Demo Address',
       NEXT_PUBLIC_CURRENCY_CODE: 'INR',
       NEXT_PUBLIC_MANAGER_DEMO_MODE: 'true' as const,
+      NEXT_PUBLIC_API_URL: undefined,
     };
 
 export const ManagerEnvConfig = {
@@ -41,4 +47,6 @@ export const ManagerEnvConfig = {
   gymAddress: parsedManagerPublicEnv.NEXT_PUBLIC_GYM_ADDRESS,
   currencyCode: parsedManagerPublicEnv.NEXT_PUBLIC_CURRENCY_CODE,
   demoMode: parsedManagerPublicEnv.NEXT_PUBLIC_MANAGER_DEMO_MODE === 'true',
+  apiBaseUrl: parsedManagerPublicEnv.NEXT_PUBLIC_API_URL ?? '/api/v1',
+  isProduction: managerRuntimeProduction,
 } as const;

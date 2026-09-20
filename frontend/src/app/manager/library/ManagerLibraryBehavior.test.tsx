@@ -1,11 +1,12 @@
-import { beforeAll, afterAll, afterEach, describe, expect, it } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
-import { ManagerTestProviders } from '@/app/manager/manager_mocks/ManagerTestProviders';
-import { managerMswServer } from '@/app/manager/manager_mocks/ManagerMswTestServer';
+import { beforeAll, afterAll, afterEach, describe, expect, it } from 'vitest';
 import ManagerLibraryMain from '@/app/manager/library/library_components/ManagerLibraryMain/ManagerLibraryMain';
 import { resetManagerLibraryMockState } from '@/app/manager/library/library_mocks/handlers/ManagerLibraryMockHandlers';
+import { managerMswServer } from '@/app/manager/manager_mocks/ManagerMswTestServer';
+import { ManagerTestProviders } from '@/app/manager/manager_mocks/ManagerTestProviders';
+
 
 beforeAll(() => managerMswServer.listen({ onUnhandledRequest: 'error' }));
 afterEach(() => { managerMswServer.resetHandlers(); resetManagerLibraryMockState(); });

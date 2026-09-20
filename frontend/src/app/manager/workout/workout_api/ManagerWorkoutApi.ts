@@ -1,10 +1,12 @@
-import { ManagerWorkoutUrlConfig } from '@/app/manager/workout/workout_url_config';
-import { apiFetch, type ApiResponse } from '@/lib/api';
-import type { Workout } from '@/app/manager/workout/workout_types/ManagerWorkoutTypes';
-import type { ExerciseSnapshot } from '@/app/manager/workout/workout_types/ManagerWorkoutSnapshotTypes';
-import { workoutSchema, exerciseSnapshotSchema } from '@/app/manager/workout/workout_schemas/ManagerWorkoutSchema';
 import { z } from 'zod';
+import { apiFetch } from '@/lib/api';
+import { workoutSchema, exerciseSnapshotSchema } from '@/app/manager/workout/workout_schemas/ManagerWorkoutSchema';
+import { ManagerWorkoutUrlConfig } from '@/app/manager/workout/workout_url_config';
 import type { ManagerWorkoutAssignment } from '@/app/manager/workout/workout_types/ManagerWorkoutAssignmentTypes';
+import type { ExerciseSnapshot } from '@/app/manager/workout/workout_types/ManagerWorkoutSnapshotTypes';
+import type { Workout } from '@/app/manager/workout/workout_types/ManagerWorkoutTypes';
+import type { ApiResponse } from '@/lib/api';
+
 
 export const workoutApi = {
   fetchWorkouts: async (params?: Record<string, string>): Promise<ApiResponse<{ workouts: Workout[], total: number }>> => {

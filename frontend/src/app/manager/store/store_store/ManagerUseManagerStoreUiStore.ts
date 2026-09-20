@@ -1,11 +1,13 @@
+// DATA FLOW: Manager feature UI/state → owning custom hook → approved API/query/mutation layer → observable UI state.
 'use client';
 /** Coordinates the Manager / feature. */
 import { create } from 'zustand';
+import { EMPTY_PRODUCT_FORM } from '@/app/manager/store/store_types/ManagerStoreProductFormTypes';
 import type { ManagerToastType } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerToastTypes';
-import type { Product, OrderItem } from '@/app/manager/store/store_types/ManagerStoreTypes';
 import type { ProductFormValues } from '@/app/manager/store/store_types/ManagerStoreProductFormTypes';
 import type { ManagerStoreReceiptData } from '@/app/manager/store/store_types/ManagerStoreThermalReceiptTypes';
-import { EMPTY_PRODUCT_FORM } from '@/app/manager/store/store_types/ManagerStoreProductFormTypes';
+import type { Product, OrderItem } from '@/app/manager/store/store_types/ManagerStoreTypes';
+
 
 interface ManagerStoreUiState {
   toast: { message: string; type: ManagerToastType } | null;

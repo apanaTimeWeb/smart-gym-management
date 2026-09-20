@@ -1,14 +1,20 @@
 import { http, HttpResponse } from 'msw';
-import { managerMockApiUrl } from '@/app/manager/manager_infrastructure/ManagerMockApiUrl';
-import { ManagerWorkoutUrlConfig } from '@/app/manager/workout/workout_url_config';
 import { MANAGER_HTTP_STATUS } from '@/app/manager/manager_infrastructure/ManagerHttpStatus';
-import { MOCK_MANAGER_WORKOUTS } from '@/app/manager/workout/workout_fixtures/ManagerWorkoutMockData';
-import type { Workout } from '@/app/manager/workout/workout_types/ManagerWorkoutTypes';
+import { managerMockApiUrl } from '@/app/manager/manager_infrastructure/ManagerMockApiUrl';
 import { MOCK_WORKOUT_ASSIGNMENTS } from '@/app/manager/workout/workout_fixtures/ManagerWorkoutAssignmentMockData';
+import { MOCK_MANAGER_WORKOUTS } from '@/app/manager/workout/workout_fixtures/ManagerWorkoutMockData';
+import { ManagerWorkoutUrlConfig } from '@/app/manager/workout/workout_url_config';
+import type { Workout } from '@/app/manager/workout/workout_types/ManagerWorkoutTypes';
+
 
 let MOCK_DB = [...MOCK_MANAGER_WORKOUTS];
 
 export let mockWorkoutIdCounter = 1000;
+export function resetManagerWorkoutMockState(): void {
+  MOCK_DB = [...MOCK_MANAGER_WORKOUTS];
+  mockWorkoutIdCounter = 1000;
+}
+
 export const managerWorkoutHandlers = [
   http.get(managerMockApiUrl(ManagerWorkoutUrlConfig.BACKEND_API.ASSIGNMENTS), () => HttpResponse.json({ success: true, message: 'Assignments fetched', data: MOCK_WORKOUT_ASSIGNMENTS })),
   http.get(managerMockApiUrl(ManagerWorkoutUrlConfig.BACKEND_API.WORKOUTS_BASE), ({ request }) => {

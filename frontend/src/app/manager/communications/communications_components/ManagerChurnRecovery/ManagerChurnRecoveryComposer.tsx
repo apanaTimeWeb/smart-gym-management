@@ -1,15 +1,16 @@
-'use client';
 // RESPONSIBILITY: Slide-in drawer composer for sending win-back messages to a single churned member.
+'use client';
 // Renders template tier selector, channel toggle, editable message body, and send button.
-import type { ManagerChurnRecoveryComposerProps } from '@/app/manager/communications/communications_types/ManagerChurnRecoveryComposerTypes';
-import { X, MessageCircle, Mail, Send, Loader2 } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { X, MessageCircle, Mail, Send, Loader2 } from 'lucide-react';
+import { CANCELLATIONS_WIN_BACK_TEMPLATES } from '@/app/manager/communications/communications_utils/ManagerCommunicationsSharedConstants';
+import { useManagerUnsavedChangesGuard } from '@/app/manager/manager_infrastructure/ManagerUnsavedChangesGuard';
+import type { ManagerChurnRecoveryComposerProps } from '@/app/manager/communications/communications_types/ManagerChurnRecoveryComposerTypes';
 import type {
   ChurnedMember,
   CommChannel,
   WinBackTemplateTier } from '@/app/manager/communications/communications_types/ManagerCommunications_types';
-import { CANCELLATIONS_WIN_BACK_TEMPLATES } from '@/app/manager/communications/communications_utils/ManagerCommunicationsSharedConstants';
-import { useManagerUnsavedChangesGuard } from '@/app/manager/manager_infrastructure/ManagerUnsavedChangesGuard';
+
 
 
 
@@ -37,6 +38,7 @@ export default function ManagerChurnRecoveryComposer({
   const { confirmAndClose } = useManagerUnsavedChangesGuard(isDirty);
 
   // Sync state when member or default tier changes
+// EFFECT: Effect lifecycle and dependency list are intentionally scoped to values that control this side effect.
   useEffect(() => {
     setTier(defaultTier);
     const tpl = CANCELLATIONS_WIN_BACK_TEMPLATES[defaultTier];
@@ -79,8 +81,8 @@ export default function ManagerChurnRecoveryComposer({
         aria-label="Win-Back Message Composer"
         aria-modal="true"
         role="dialog"
-        className={`fixed top-0 right-0 h-full w-full sm:w-120 bg-overlay border-l border-border z-40 flex flex-col shadow-card shadow-card motion-safe:transition-transform motion-safe:duration-300 ${
-          isOpen ? 'translate-x-0' : 'translate-x-full'
+        className={`fixed top-0 right-0 h-full w-full sm:w-120 bg-overlay border-l border-border z-40 flex flex-col shadow-card shadow-card motion-safe:transition-transform motion-safe:duration-slow ${
+          isOpen ? 'motion-safe:translate-x-0 motion-reduce:translate-x-0' : 'motion-safe:translate-x-full motion-reduce:translate-x-full'
         }`}
       >
         {/* Header */}
@@ -119,7 +121,7 @@ export default function ManagerChurnRecoveryComposer({
                   onClick={() => handleTierChange(opt.value)}
                   className={`px-3 py-1.5 rounded-lg text-xs font-medium border motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
                     tier === opt.value
-                      ? 'bg-primary-subtle text-white border-primary'
+                      ? 'bg-primary-subtle text-primary border-primary'
                       : 'bg-input border-border text-secondary hover:text-primary'
                   }`}
                 >
@@ -172,7 +174,7 @@ export default function ManagerChurnRecoveryComposer({
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}
                 placeholder="Enter email subject..."
-                className="w-full px-3 py-2 text-sm bg-input border border-border rounded-lg text-primary placeholder:text-secondary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary motion-safe:transition-colors"
+                className="w-full px-3 py-2 text-sm bg-input border border-border rounded-lg text-primary placeholder:text-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary motion-safe:transition-colors"
                 aria-required="true"
               />
             </div>
@@ -189,7 +191,7 @@ export default function ManagerChurnRecoveryComposer({
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               placeholder="Write your win-back message..."
-              className="w-full px-3 py-2 text-sm bg-input border border-border rounded-lg text-primary placeholder:text-secondary resize-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary motion-safe:transition-colors custom-scrollbar"
+              className="w-full px-3 py-2 text-sm bg-input border border-border rounded-lg text-primary placeholder:text-secondary resize-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary motion-safe:transition-colors custom-scrollbar"
               aria-required="true"
               aria-describedby="churn-message-hint"
             />
@@ -200,7 +202,7 @@ export default function ManagerChurnRecoveryComposer({
 
           {/* WhatsApp notice */}
           {channel === 'whatsapp' && (
-            <div className="rounded-lg bg-warning border border-warning/30 px-4 py-3 text-xs text-on-primary leading-relaxed">
+            <div className="rounded-lg bg-warning border border-warning px-4 py-3 text-xs text-on-primary leading-relaxed">
               ⚠️ <strong>WhatsApp cannot be sent in bulk.</strong> Clicking &quot;Send&quot; below will open WhatsApp with the pre-filled message. Send it manually to this recipient.
             </div>
           )}
@@ -219,7 +221,7 @@ export default function ManagerChurnRecoveryComposer({
             type="button"
             onClick={handleSend}
             disabled={!canSend || isSending || !member}
-            className="flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-medium bg-primary-subtle text-white disabled:opacity-50 disabled:cursor-not-allowed motion-safe:transition-all motion-safe:hover:bg-primary-hover motion-safe:active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            className="flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-medium bg-primary-subtle text-primary disabled:opacity-50 disabled:cursor-not-allowed motion-safe:transition-all motion-safe:hover:bg-primary-hover motion-safe:active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
             {isSending ? (
               <Loader2 size={18} className="motion-safe:animate-spin" />

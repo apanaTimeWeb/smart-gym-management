@@ -1,24 +1,26 @@
-'use client';
 // DATA FLOW: Manager module state/API data → useManagerMembersModalForm → owning Manager UI components.
+'use client';
 /** Manages UseMembersModalForm for the Manager module. */
 import { useEffect, useRef } from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, useWatch } from 'react-hook-form';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
 import { createManagerIdempotencyKey } from '@/app/manager/manager_infrastructure/ManagerIdempotency';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useManagerUnsavedChangesGuard } from '@/app/manager/manager_infrastructure/ManagerUnsavedChangesGuard';
 import { fromManagerMinorUnits } from '@/app/manager/manager_infrastructure/ManagerMoney';
-import { EMPTY_MEMBER_FORM, getPriceForCycle } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
-import type { PlanWithCustom } from '@/app/manager/members/members_types/ManagerMembersTypes';
+import { useManagerUnsavedChangesGuard } from '@/app/manager/manager_infrastructure/ManagerUnsavedChangesGuard';
 import { managerMembersFormSchema } from '@/app/manager/members/members_schemas/ManagerMembersFormSchema';
+import { EMPTY_MEMBER_FORM, getPriceForCycle } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
 import type { MemberFormValues } from '@/app/manager/members/members_schemas/ManagerMembersFormSchema';
+import type { PlanWithCustom } from '@/app/manager/members/members_types/ManagerMembersTypes';
 
+
+/** Orchestrates the owning Manager feature behavior while preserving its documented state boundary. */
 export function useManagerMembersModalForm(
   editData: MemberFormValues | null,
   showAddModal: boolean,
   plans: PlanWithCustom[],
   setShowAddModal: (show: boolean) => void,
-  saveMember: (d: MemberFormValues, idempotencyKey?: string) => Promise<unknown>,
+  saveMember: (d: MemberFormValues, idempotencyKey?: string) => Promise<void>,
   editId: string | null
 ) {
   const { confirm } = useConfirm();
@@ -43,6 +45,7 @@ export function useManagerMembersModalForm(
 
   // Refetch editData into form whenever modal opens for edit
   // RATIONALE: Syncs state or fetches data when dependencies change.
+// EFFECT: Effect lifecycle and dependency list are intentionally scoped to values that control this side effect.
   useEffect(() => {
     if (showAddModal) {
       reset({ ...EMPTY_MEMBER_FORM, ...(editData || {}), totalAmount: editData?.totalAmount ? fromManagerMinorUnits(editData.totalAmount) : 0, paidAmount: editData?.paidAmount ? fromManagerMinorUnits(editData.paidAmount) : 0, pendingAmount: editData?.pendingAmount ? fromManagerMinorUnits(editData.pendingAmount) : 0, advanceAmount: editData?.advanceAmount ? fromManagerMinorUnits(editData.advanceAmount) : 0 });
@@ -55,6 +58,7 @@ export function useManagerMembersModalForm(
   const watchJoinDate = useWatch({ control, name: 'joinDate' }) as string;
 
   // RATIONALE: Syncs state or fetches data when dependencies change.
+// EFFECT: Effect lifecycle and dependency list are intentionally scoped to values that control this side effect.
   useEffect(() => {
     if (watchPlanId && watchBillingCycle) {
       const selectedPlan = plans.find(p => p.id.toString() === watchPlanId.toString()) as PlanWithCustom | undefined;
@@ -66,6 +70,7 @@ export function useManagerMembersModalForm(
   }, [watchPlanId, watchBillingCycle, watchCustomDays, plans, setValue]);
 
   // RATIONALE: Syncs state or fetches data when dependencies change.
+// EFFECT: Effect lifecycle and dependency list are intentionally scoped to values that control this side effect.
   useEffect(() => {
     if (watchJoinDate && watchBillingCycle) {
       const jd = new Date(watchJoinDate);

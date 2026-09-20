@@ -1,34 +1,52 @@
 # Manager Dashboard Module Theme Contract
 
-This document enforces the styling boundaries for the Manager Dashboard feature module (`src/app/manager/dashboard`). All components within this module MUST use the global design tokens specified in `web_global_design.md`. Ad-hoc hex codes and raw CSS classes are strictly forbidden.
+This contract belongs only to `src/app/manager/dashboard`. It records the exact global semantic theme variables consumed by the current implementation. The global design system remains the visual source of truth.
 
-## Semantic Colors (Tailwind Tokens)
+## Consumed Global Semantic Tokens
 
-| Element Category | Tailwind Utility | Purpose in Dashboard |
-| :--- | :--- | :--- |
-| **Backgrounds** | `bg-background` | Main page background. |
-| | `bg-card` | Container backgrounds for KPI cards, charts, and lists. |
-| | `bg-input` | Search bars and empty states. |
-| **Typography** | `text-foreground` | Primary text (headers, member names, total values). |
-| | `text-secondary` | Subtitles, chart axis labels, plan names. |
-| | `text-primary` | Emphasized statistics (e.g. active members count). |
-| **Status / Indicators** | `text-success` | Positive growth rates, active status, today's collection. |
-| | `text-warning` | Pending status, low stock alerts, pending payments. |
-| | `text-danger` | Expired status, churn rate, high drop-off metrics. |
-| | `text-info` | Neutral metrics (e.g. total members, total products). |
-| **Borders & Dividers**| `border-border` | Standard card and list item borders. |
-| | `divide-border` | Separators within recent members and payment lists. |
+| CSS Variable | Current Usage |
+| --- | --- |
+| `--bg-card` | card/panel surface |
+| `--bg-input` | input surface |
+| `--bg-overlay` | dialog/drawer surface |
+| `--bg-page` | page surface |
+| `--border` | standard borders/dividers |
+| `--chart-grid` | semantic token consumed by the feature |
+| `--chart-info` | semantic token consumed by the feature |
+| `--chart-success` | semantic token consumed by the feature |
+| `--danger` | solid danger surface |
+| `--danger-bg` | subtle danger surface |
+| `--danger-text` | danger text |
+| `--focus-ring` | keyboard focus ring |
+| `--info-bg` | subtle info surface |
+| `--info-text` | info text |
+| `--primary` | primary brand/active controls |
+| `--primary-hover` | primary hover state |
+| `--primary-subtle` | subtle primary surfaces |
+| `--shadow-card` | card elevation |
+| `--shadow-dialog` | dialog elevation |
+| `--skeleton-base` | skeleton base |
+| `--skeleton-highlight` | skeleton highlight |
+| `--success` | solid success surface |
+| `--success-bg` | subtle success surface |
+| `--success-text` | success text |
+| `--text-on-danger` | text on solid danger |
+| `--text-on-primary` | text on solid primary |
+| `--text-on-success` | text on solid success |
+| `--text-primary` | primary text |
+| `--text-secondary` | secondary text/labels |
+| `--warning` | solid warning surface |
+| `--warning-bg` | subtle warning surface |
+| `--warning-text` | warning text |
 
-## Layout & Spacing Rules
+## Binding Rules
 
-- **Containers:** Dashboard layout components should use a maximum width constraint (e.g. `max-w-7xl mx-auto`) with standard padding (`p-4 md:p-6 lg:p-8`).
-- **Grids:** Use responsive CSS Grid for KPIs (`grid-cols-1 sm:grid-cols-2 lg:grid-cols-4`) and chart layouts.
-- **Spacing:** Enforce consistent gaps using standard Tailwind spacing scale (`gap-4`, `gap-6`, `space-y-4`).
+- No raw hex colors, arbitrary Tailwind color values, or raw RGBA colors may be introduced into module JSX.
+- Semantic background opacity modifiers such as `bg-success/10` and `bg-primary/20` are forbidden.
+- Solid semantic backgrounds require the appropriate documented on-color; otherwise use the subtle `*-bg` variant.
+- Feature-specific business status mappings remain local to this feature.
+- No feature-local CSS variable is defined by this module unless explicitly documented here.
 
-## Component Rules
+## Portability
 
-- **ManagerStatCard:** Use the shared `ManagerStatCard` component for all KPIs to guarantee visual consistency.
-- **Charts (react-apexcharts):** 
-  - Tooltips must use `theme: 'dark'` and handle numeric formatting via `formatCurrencyFromMinorUnits` or `formatKPI`.
-  - Chart lines/areas must map strictly to hex colors (e.g. `#0ea5e9` for primary/info, `#22c55e` for success/revenue) inside the ApexCharts config object, since canvas elements do not resolve Tailwind classes reliably.
-- **Empty States:** Use `bg-card` and `border-border` for empty dashboard sections.
+When this feature is copied to another compatible application, define the listed semantic variables through that application's canonical global theme stylesheet and preserve the same semantic meanings.

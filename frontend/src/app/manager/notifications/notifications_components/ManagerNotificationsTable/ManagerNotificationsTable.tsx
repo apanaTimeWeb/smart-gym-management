@@ -1,6 +1,7 @@
-'use client';
-import { formatDate } from '@/lib/formatters';
 // RESPONSIBILITY: Notifications list with toolbar (search + filters) and row actions (mark read, delete).
+'use client';
+import { Search, Bell, CheckCheck, Trash2, CheckCircle } from 'lucide-react';
+import { formatDate } from '@/lib/formatters';
 import { useManagerNotificationsLogic } from '@/app/manager/notifications/notifications_hooks/ManagerUseManagerNotificationsLogic';
 import {
   NOTIFICATION_TYPE_STYLES,
@@ -8,7 +9,7 @@ import {
   NOTIFICATION_TYPE_OPTIONS,
   NOTIFICATION_PRIORITY_OPTIONS,
   NOTIFICATION_STATUS_OPTIONS } from '@/app/manager/notifications/notifications_utils/ManagerNotificationsSharedConstants';
-import { Search, Bell, CheckCheck, Trash2, CheckCircle } from 'lucide-react';
+
 
 export default function ManagerNotificationsTable() {
   const {
@@ -30,20 +31,20 @@ export default function ManagerNotificationsTable() {
             placeholder="Search notifications..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 text-sm bg-input border border-border rounded-lg text-primary focus:outline-none focus:border-primary"
+            className="w-full pl-9 pr-4 py-2 text-sm bg-input border border-border rounded-lg text-primary focus-visible:outline-none focus-visible:border-primary"
           />
         </div>
         <div className="flex flex-wrap gap-2">
           <select value={typeFilter} onChange={e => setTypeFilter(e.target.value)}
-            className="px-3 py-2 bg-input border border-border rounded-lg text-sm text-primary focus:outline-none focus:border-primary">
+            className="px-3 py-2 bg-input border border-border rounded-lg text-sm text-primary focus-visible:outline-none focus-visible:border-primary">
             {NOTIFICATION_TYPE_OPTIONS.map(o => <option key={o} value={o}>{o === 'ALL' ? 'All Types' : o}</option>)}
           </select>
           <select value={priorityFilter} onChange={e => setPriorityFilter(e.target.value)}
-            className="px-3 py-2 bg-input border border-border rounded-lg text-sm text-primary focus:outline-none focus:border-primary">
+            className="px-3 py-2 bg-input border border-border rounded-lg text-sm text-primary focus-visible:outline-none focus-visible:border-primary">
             {NOTIFICATION_PRIORITY_OPTIONS.map(o => <option key={o} value={o}>{o === 'ALL' ? 'All Priority' : o}</option>)}
           </select>
           <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)}
-            className="px-3 py-2 bg-input border border-border rounded-lg text-sm text-primary focus:outline-none focus:border-primary">
+            className="px-3 py-2 bg-input border border-border rounded-lg text-sm text-primary focus-visible:outline-none focus-visible:border-primary">
             {NOTIFICATION_STATUS_OPTIONS.map(o => <option key={o} value={o}>{o === 'ALL' ? 'All Status' : o}</option>)}
           </select>
           <button
@@ -83,8 +84,8 @@ export default function ManagerNotificationsTable() {
       ) : (
         <ul className="divide-y divide-border">
           {notifications.map(n => {
-            const typeStyle = NOTIFICATION_TYPE_STYLES[n.type] ?? NOTIFICATION_TYPE_STYLES['SYSTEM'] ?? { bg: 'bg-secondary/10', text: 'text-secondary', label: n.type };
-            const priorityStyle = NOTIFICATION_PRIORITY_STYLES[n.priority] ?? { bg: 'bg-secondary/10', text: 'text-secondary' };
+            const typeStyle = NOTIFICATION_TYPE_STYLES[n.type] ?? NOTIFICATION_TYPE_STYLES['SYSTEM'] ?? { bg: 'bg-input', text: 'text-secondary', label: n.type };
+            const priorityStyle = NOTIFICATION_PRIORITY_STYLES[n.priority] ?? { bg: 'bg-input', text: 'text-secondary' };
             const isUnread = n.status === 'UNREAD';
 
             return (
@@ -106,7 +107,7 @@ export default function ManagerNotificationsTable() {
                   </div>
                   <p className={`text-sm font-semibold ${isUnread ? 'text-primary' : 'text-secondary'}`}>{n.title}</p>
                   <p className="text-xs text-secondary mt-0.5 line-clamp-2">{n.message}</p>
-                  <p className="text-xs text-secondary/60 mt-1">
+                  <p className="text-xs text-secondary mt-1">
                     {formatDate(n.createdAt)}
                   </p>
                 </div>

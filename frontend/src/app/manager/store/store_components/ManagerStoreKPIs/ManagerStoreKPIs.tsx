@@ -1,10 +1,11 @@
-'use client';
-import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 // RESPONSIBILITY: Renders the top KPI stat cards (total products, orders, revenue) for the Store module.
+'use client';
 import { Package, ShoppingCart, TrendingUp, AlertTriangle } from 'lucide-react';
-import { useManagerStoreLogic } from '@/app/manager/store/store_hooks/ManagerUseManagerStoreLogic';
 import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
 import { useDateRangeSuffix } from '@/lib/useDateRangeSuffix';
+import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
+import { useManagerStoreLogic } from '@/app/manager/store/store_hooks/ManagerUseManagerStoreLogic';
+
 
 export default function ManagerStoreKPIs() {
  const { summary } = useManagerStoreLogic();

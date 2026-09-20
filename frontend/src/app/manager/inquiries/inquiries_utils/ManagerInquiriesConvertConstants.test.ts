@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { getPriceForCycleSnapshot, INQUIRIES_CYCLE_LABELS, INQUIRIES_GENDER_OPTIONS } from '@/app/manager/inquiries/inquiries_utils/ManagerInquiriesConvertConstants';
 
+
 describe('ManagerInquiriesConvertConstants', () => {
   const plan = { price1Month: 1000, price3Month: 2500, price6Month: 4500, price12Month: 8000, priceCustom: 120 };
 

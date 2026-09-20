@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { generateDefaultMessage, INQUIRIES_STATUS_LABELS, INQUIRIES_TABLE_HEADERS, formatInquiryTime } from '@/app/manager/inquiries/inquiries_utils/ManagerInquiriesSharedConstants';
 
+
 describe('ManagerInquiriesSharedConstants', () => {
   it('generates the documented default inquiry follow-up text', () => {
     expect(generateDefaultMessage('Asha', 'weight loss')).toContain('Asha');

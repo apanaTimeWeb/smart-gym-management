@@ -1,16 +1,16 @@
-'use client';
 // RESPONSIBILITY: Renders the ManagerReportsContent sub-view extracted from ManagerReportsMain; owns only this presentation responsibility.
-// RESPONSIBILITY: Orchestrator for the Reports module — KPIs, tab switcher, charts, table, and CSV export.
+'use client';
 // DATA FLOW:  → useManagerReportsLogic → KPIs + Charts + Table
-import { useManagerReportsLogic  } from '@/app/manager/reports/reports_hooks/ManagerUseManagerReportsLogic';
-import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/ManagerHeader';
-import ManagerReportsKPIs from '@/app/manager/reports/reports_components/ManagerReportsKPIs/ManagerReportsKPIs';
-import ManagerReportsCharts from '@/app/manager/reports/reports_components/ManagerReportsCharts/ManagerReportsCharts';
-import ManagerReportsTable from '@/app/manager/reports/reports_components/ManagerReportsTable/ManagerReportsTable';
-import { REPORT_TABS } from '@/app/manager/reports/reports_utils/ManagerReportsSharedConstants';
-import ManagerReportsDateFilterDropdown from '@/app/manager/reports/reports_components/ManagerReportsDateFilterDropdown/ManagerReportsDateFilterDropdown';
 import { Download, RefreshCw, Loader2 } from 'lucide-react';
+import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/ManagerHeader';
 import { MANAGER_GENERIC_ERROR_MESSAGE } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
+import ManagerReportsCharts from '@/app/manager/reports/reports_components/ManagerReportsCharts/ManagerReportsCharts';
+import ManagerReportsDateFilterDropdown from '@/app/manager/reports/reports_components/ManagerReportsDateFilterDropdown/ManagerReportsDateFilterDropdown';
+import ManagerReportsKPIs from '@/app/manager/reports/reports_components/ManagerReportsKPIs/ManagerReportsKPIs';
+import ManagerReportsTable from '@/app/manager/reports/reports_components/ManagerReportsTable/ManagerReportsTable';
+import { useManagerReportsLogic  } from '@/app/manager/reports/reports_hooks/ManagerUseManagerReportsLogic';
+import { REPORT_TABS } from '@/app/manager/reports/reports_utils/ManagerReportsSharedConstants';
+
 
 export function ManagerReportsContent() {
   const { tab, setTab, dateRange, setDateRange, isPending, isError, exporting, handleExportCSV, reload } = useManagerReportsLogic();

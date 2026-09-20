@@ -13,6 +13,12 @@ Manager Settings is the branch configuration workspace. Managers can update lang
 | `settings_mocks/` | Feature-owned responsibility for the settings module. | `—` |
 | `settings_types/` | Feature-owned responsibility for the settings module. | `ManagerSettingsSchema.ts; ManagerSettingsTypes.ts` |
 
+## Approved External Dependencies
+
+- Global framework/application infrastructure documented by the architecture standard may be used when required.
+- Approved zero-business UI primitives may be imported from Manager application infrastructure.
+- Sibling feature business logic, state, API services, fixtures, and tests are not dependencies.
+
 ## Feature Inventory
 | Feature | Route | What the User Can Do | Main API Calls | Status |
 |---|---|---|---|---|

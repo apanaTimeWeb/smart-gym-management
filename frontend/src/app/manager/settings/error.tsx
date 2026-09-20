@@ -1,11 +1,13 @@
-'use client';
 // RESPONSIBILITY: Route-segment error boundary for Manager Settings; logs safe diagnostics and exposes the framework reset action.
-import { AlertTriangle } from 'lucide-react';
+'use client';
 import { useEffect } from 'react';
+import { AlertTriangle } from 'lucide-react';
 import { logger } from '@/lib/logger';
 import { ManagerSettingsUrlConfig } from '@/app/manager/settings/settings_url_config';
 
+
 export default function ManagerSettingsError({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
+// EFFECT: Effect lifecycle and dependency list are intentionally scoped to values that control this side effect.
   useEffect(() => {
     logger.error('Manager settings route error', { route: ManagerSettingsUrlConfig.PAGES.SETTINGS, module: 'manager/settings', errorDigest: error.digest, timestamp: new Date().toISOString() });
   }, [error]);

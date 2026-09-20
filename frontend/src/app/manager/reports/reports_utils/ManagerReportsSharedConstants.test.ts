@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { EXPENSE_CATEGORY_STYLES, REPORT_DATE_RANGE_OPTIONS, REPORT_TABS } from '@/app/manager/reports/reports_utils/ManagerReportsSharedConstants';
 
+
 describe('ManagerReportsSharedConstants', () => {
   it('keeps report tabs and date-range options stable', () => {
     expect(REPORT_TABS).toEqual(['Revenue', 'Attendance', 'Members', 'Expenses']);

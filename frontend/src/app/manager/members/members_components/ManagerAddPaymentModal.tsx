@@ -1,16 +1,17 @@
-'use client';
-import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 // RESPONSIBILITY: Renders a modal to record a new payment for a member.
+'use client';
 import { useRef, useState } from 'react';
-import type { FormEvent } from 'react';
 import { X } from 'lucide-react';
 import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
-import { useManagerMembersLogic } from '@/app/manager/members/members_hooks/ManagerUseManagerMembersLogic';
-import { useManagerUnsavedChangesGuard } from '@/app/manager/manager_infrastructure/ManagerUnsavedChangesGuard';
-
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
+import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 import { createManagerIdempotencyKey } from '@/app/manager/manager_infrastructure/ManagerIdempotency';
 import { toManagerMinorUnits } from '@/app/manager/manager_infrastructure/ManagerMoney';
+import { useManagerUnsavedChangesGuard } from '@/app/manager/manager_infrastructure/ManagerUnsavedChangesGuard';
+import { useManagerMembersLogic } from '@/app/manager/members/members_hooks/ManagerUseManagerMembersLogic';
+import { MANAGER_MEMBER_MAX_AMOUNT_MAJOR_UNITS } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
+import type { FormEvent } from 'react';
+
 
 export default function ManagerAddPaymentModal() {
   const { showPaymentModal, setShowPaymentModal, recordPayment, selectedMember } = useManagerMembersLogic();
@@ -52,7 +53,7 @@ export default function ManagerAddPaymentModal() {
         
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {(selectedMember.pendingAmount > 0 || (selectedMember.advanceAmount && selectedMember.advanceAmount > 0)) && (
-            <div className={`p-3 rounded-lg border mb-4 ${selectedMember.pendingAmount > 0 ? 'bg-danger-bg border-border/20' : 'bg-success-bg border-success/20'}`}>
+            <div className={`p-3 rounded-lg border mb-4 ${selectedMember.pendingAmount > 0 ? 'bg-danger-bg border-border' : 'bg-success-bg border-success'}`}>
               <p className={`text-sm font-semibold ${selectedMember.pendingAmount > 0 ? 'text-danger' : 'text-success'}`}>
                 {selectedMember.pendingAmount > 0 
                   ? `Current Dues: ${formatCurrencyFromMinorUnits(selectedMember.pendingAmount, ManagerEnvConfig.currencyCode)}` 
@@ -69,7 +70,7 @@ export default function ManagerAddPaymentModal() {
               min="1"
               value={amount}
               onChange={e => setAmount(e.target.value ? Number(e.target.value) : '')}
-              className="w-full bg-input border border-border rounded-xl px-4 py-2.5 text-primary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary motion-safe:transition-all"
+              className="w-full bg-input border border-border rounded-xl px-4 py-2.5 text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary motion-safe:transition-all"
               placeholder="e.g. 1500"
             />
           </div>
@@ -79,7 +80,7 @@ export default function ManagerAddPaymentModal() {
             <select
               value={method}
               onChange={(e) => setMethod(e.target.value)}
-              className="w-full bg-input border border-border rounded-xl px-4 py-2.5 text-primary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary motion-safe:transition-all"
+              className="w-full bg-input border border-border rounded-xl px-4 py-2.5 text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary motion-safe:transition-all"
             >
               <option value="UPI">UPI</option>
               <option value="CARD">Card</option>
@@ -92,14 +93,14 @@ export default function ManagerAddPaymentModal() {
             <button
               type="button"
               onClick={handleClose}
-              className="flex-1 px-4 py-2.5 text-sm font-semibold text-secondary hover:text-primary bg-input hover:bg-input/80 rounded-xl motion-safe:transition-colors"
+              className="flex-1 px-4 py-2.5 text-sm font-semibold text-secondary hover:text-primary bg-input hover:bg-input rounded-xl motion-safe:transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSubmitting || !amount}
-              className="min-w-32 flex-1 px-4 py-2.5 text-sm font-semibold text-white bg-primary-subtle hover:bg-primary/90 rounded-xl motion-safe:transition-colors disabled:opacity-50"
+              className="min-w-32 flex-1 px-4 py-2.5 text-sm font-semibold text-primary bg-primary-subtle hover:bg-primary-hover rounded-xl motion-safe:transition-colors disabled:opacity-50"
             >
               {isSubmitting ? 'Recording...' : 'Confirm Payment'}
             </button>
