@@ -1,22 +1,23 @@
-'use client';
-import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 // RESPONSIBILITY: Renders the primary tabular list of expenses with actions and pagination.
+'use client';
 import { Edit, Trash2, ExternalLink, CheckCircle2, Banknote, Loader2 } from 'lucide-react';
-import ManagerTableSkeleton from '@/app/manager/manager_components/ManagerShared/ManagerTableSkeleton';
-import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
-import { useManagerExpensesLogic } from '@/app/manager/expenses/expenses_hooks/ManagerUseManagerExpensesLogic';
-import { useExpensesListQuery } from '@/app/manager/expenses/expenses_api/ManagerUseManagerExpensesQueries';
-import { EXPENSES_TABLE_HEADERS, EXPENSE_STATUS_STYLES } from '@/app/manager/expenses/expenses_utils/ManagerExpensesSharedConstants';
 import { formatCurrencyFromMinorUnits , formatDate} from '@/lib/formatters';
-import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
-import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_infrastructure/ManagerPaginationDefaults';
+import { useManagerExpensesLogic } from '@/app/manager/expenses/expenses_hooks/ManagerUseManagerExpensesLogic';
+import { useExpensesListQuery } from '@/app/manager/expenses/expenses_hooks/ManagerUseManagerExpensesQueries';
+import { EXPENSES_TABLE_HEADERS, EXPENSE_STATUS_STYLES } from '@/app/manager/expenses/expenses_utils/ManagerExpensesSharedConstants';
+import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
 import ManagerEmptyState from '@/app/manager/manager_components/ManagerFeedback/ManagerEmptyState';
+import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
+import ManagerTableSkeleton from '@/app/manager/manager_components/ManagerShared/ManagerTableSkeleton';
+import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
+import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_infrastructure/ManagerPaginationDefaults';
+
 
 export default function ManagerExpensesTable() {
   const { confirm } = useConfirm();
   const { search, statusFilter, currentPage, setCurrentPage, openEdit, deleteExpense, markAsPaid } = useManagerExpensesLogic();
   
-  const { data, isLoading } = useExpensesListQuery({
+  const { data, isPending } = useExpensesListQuery({
     search,
     status: statusFilter !== 'All' ? statusFilter : '',
     page: currentPage.toString() });
@@ -28,7 +29,7 @@ export default function ManagerExpensesTable() {
 
   return (
     <div className="bg-card rounded-xl shadow-card border border-border overflow-hidden flex flex-col h-full min-h-96">
-      {isLoading ? (
+      {isPending ? (
         <div className="flex items-center justify-center py-16 flex-1">
           <Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" />
         </div>
@@ -76,18 +77,18 @@ export default function ManagerExpensesTable() {
                                   confirmText: 'Mark Paid' });
                                 if (ok && markAsPaid) markAsPaid(e.id);
                               }}
-                              className="p-1.5 rounded-lg bg-success-bg text-success hover:bg-success-bg motion-safe:transition-all motion-safe:duration-200"
+                              className="p-1.5 rounded-lg bg-success-bg text-success hover:bg-success-bg motion-safe:transition-all motion-safe:duration-base"
                               title="Mark as Paid"
                             >
                               <CheckCircle2 size={18} />
                             </button>
                           )}
                           {e.receiptUrl && (
-                            <a href={e.receiptUrl} target="_blank" rel="noopener noreferrer" className="p-1.5 rounded-lg bg-input text-secondary hover:bg-primary-subtle motion-safe:transition-all motion-safe:duration-200" title="View Receipt">
+                            <a href={e.receiptUrl} target="_blank" rel="noopener noreferrer" className="p-1.5 rounded-lg bg-input text-secondary hover:bg-primary-subtle motion-safe:transition-all motion-safe:duration-base" title="View Receipt">
                               <ExternalLink size={18} />
                             </a>
                           )}
-                          <button onClick={() => openEdit(e)} className="p-1.5 rounded-lg bg-input text-secondary hover:bg-primary-subtle motion-safe:transition-all motion-safe:duration-200" title="Edit"><Edit size={18} /></button>
+                          <button onClick={() => openEdit(e)} className="p-1.5 rounded-lg bg-input text-secondary hover:bg-primary-subtle motion-safe:transition-all motion-safe:duration-base" title="Edit"><Edit size={18} /></button>
                           <button onClick={async () => { 
                             const ok = await confirm({
                               title: 'Delete Expense',
@@ -96,13 +97,13 @@ export default function ManagerExpensesTable() {
                               confirmText: 'Delete'
                             });
                             if (ok) deleteExpense(e.id); 
-                          }} className="p-1.5 rounded-lg bg-danger text-on-danger hover:opacity-80 motion-safe:transition-all motion-safe:duration-200" title="Delete"><Trash2 size={18} /></button>
+                          }} className="p-1.5 rounded-lg bg-danger text-on-danger hover:opacity-80 motion-safe:transition-all motion-safe:duration-base" title="Delete"><Trash2 size={18} /></button>
                         </div>
                       </td>
                     </tr>
                   );
                 })}
-                {expenses.length === 0 && !isLoading && (
+                {expenses.length === 0 && !isPending && (
                   <tr>
                     <td colSpan={EXPENSES_TABLE_HEADERS.length} className="p-0 border-b-0">
                       <ManagerEmptyState 

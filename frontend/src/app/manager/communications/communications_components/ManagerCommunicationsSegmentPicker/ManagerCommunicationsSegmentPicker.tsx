@@ -1,8 +1,9 @@
-'use client';
 // RESPONSIBILITY: Segment picker — shows all audience segments as selectable cards with description and live recipient count.
+'use client';
 import { Users, Loader2 } from 'lucide-react';
 import { useManagerCommunicationsLogic } from '@/app/manager/communications/communications_hooks/ManagerUseManagerCommunicationsLogic';
 import { COMM_SEGMENT_OPTIONS } from '@/app/manager/communications/communications_utils/ManagerCommunicationsSharedConstants';
+
 
 export default function ManagerCommunicationsSegmentPicker() {
   const { selectedSegment, handleSegmentChange, segmentRecipients, loadingRecipients } = useManagerCommunicationsLogic();
@@ -23,7 +24,7 @@ export default function ManagerCommunicationsSegmentPicker() {
               className={`text-left p-4 rounded-xl border motion-safe:transition-all ${
                 isActive
                   ? 'bg-primary-subtle border-primary text-primary'
-                  : 'bg-card border-border text-secondary hover:border-primary/50 hover:text-primary'
+                  : 'bg-card border-border text-secondary hover:border-focus hover:text-primary'
               }`}
             >
               <p className={`text-sm font-semibold ${isActive ? 'text-primary' : ''}`}>{opt.label}</p>

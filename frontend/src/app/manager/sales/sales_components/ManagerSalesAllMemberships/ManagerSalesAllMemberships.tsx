@@ -1,16 +1,17 @@
+// RESPONSIBILITY: Renders the all-memberships sales table and its feature-owned actions.
 'use client';
+import { useState } from 'react';
+import { formatCurrencyFromMinorUnits , formatDate} from '@/lib/formatters';
+import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
+import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
+import { MANAGER_GENERIC_ERROR_MESSAGE } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
+import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_infrastructure/ManagerPaginationDefaults';
+import ManagerSalesEmptyState from '@/app/manager/sales/sales_components/ManagerSalesEmptyState/ManagerSalesEmptyState';
 import { MANAGER_MEMBERSHIP_FILTERS } from '@/app/manager/sales/sales_constants/ManagerSalesFilterConstants';
 import { MANAGER_SALES_MEMBERSHIP_TABLE_HEADERS } from '@/app/manager/sales/sales_constants/ManagerSalesTableConstants';
-import { MANAGER_GENERIC_ERROR_MESSAGE } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
-import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
-// RESPONSIBILITY: Renders the paginated table of all gym memberships with status filter tabs. Receives data via ManagerUseManagerSalesLogic. No API calls.
-import { useState } from 'react';
 import { useManagerSalesLogic } from '@/app/manager/sales/sales_hooks/ManagerUseManagerSalesLogic';
-import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
-import { formatCurrencyFromMinorUnits , formatDate} from '@/lib/formatters';
-import ManagerSalesEmptyState from '@/app/manager/sales/sales_components/ManagerSalesEmptyState/ManagerSalesEmptyState';
 import type { SalesMemberSnapshot } from '@/app/manager/sales/sales_types/ManagerSalesMemberSnapshot';
-import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_infrastructure/ManagerPaginationDefaults';
+
 
 
 /** Returns the Tailwind text color class for the days-left column based on urgency. */
@@ -23,7 +24,7 @@ function getDaysLeftColorClass(daysLeft: number): string {
 
 export default function ManagerSalesAllMemberships() {
   const [filter, setFilter] = useState('All');
-  const { currentPage, setCurrentPage, allMemberships, allMembershipsTotal, isLoading, isError, errorMessage } = useManagerSalesLogic();
+  const { currentPage, setCurrentPage, allMemberships, allMembershipsTotal, isPending, isError, errorMessage } = useManagerSalesLogic();
   const [now] = useState(() => Date.now());
 
   const totalPages = Math.ceil(allMembershipsTotal / MANAGER_ITEMS_PER_PAGE) || 1;
@@ -39,7 +40,7 @@ export default function ManagerSalesAllMemberships() {
     return true;
   });
 
-  if (isLoading) {
+  if (isPending) {
     return (
       <div className="space-y-2">
         {[...Array(6)].map((_, i) => (
@@ -51,7 +52,7 @@ export default function ManagerSalesAllMemberships() {
 
   if (isError) {
     return (
-      <div className="text-center py-16 bg-card rounded-2xl border border-danger/30">
+      <div className="text-center py-16 bg-card rounded-2xl border border-danger">
         <p className="text-danger font-medium">{errorMessage || MANAGER_GENERIC_ERROR_MESSAGE}</p>
         <span className="text-sm text-secondary">Retry the request.</span>
       </div>
@@ -67,7 +68,7 @@ export default function ManagerSalesAllMemberships() {
             onClick={() => setFilter(f)}
             className={`px-3 py-1.5 text-xs rounded-full font-medium border motion-safe:transition-colors ${
               f === filter
-                ? 'bg-primary-subtle text-white border-transparent'
+                ? 'bg-primary-subtle text-primary border-transparent'
                 : 'border-border text-secondary hover:text-primary'
             }`}
           >

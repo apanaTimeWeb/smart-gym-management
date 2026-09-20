@@ -1,7 +1,8 @@
 import { http, HttpResponse } from 'msw';
-import { managerMockApiUrl } from '@/app/manager/manager_infrastructure/ManagerMockApiUrl';
-import { ManagerDashboardUrlConfig } from '@/app/manager/dashboard/dashboard_url_config';
 import { MOCK_DASHBOARD_STATS } from '@/app/manager/dashboard/dashboard_fixtures/ManagerDashboardMockData';
+import { ManagerDashboardUrlConfig } from '@/app/manager/dashboard/dashboard_url_config';
+import { managerMockApiUrl } from '@/app/manager/manager_infrastructure/ManagerMockApiUrl';
+
 
 export const managerDashboardHandlers = [
   http.get(managerMockApiUrl(ManagerDashboardUrlConfig.BACKEND_API.STATS), ({ request }) => {

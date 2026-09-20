@@ -5,7 +5,7 @@ export default function HrLoading() {
       {/* Header Skeleton */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
         <div>
-          <div className="h-8 w-48 bg-card border border-border rounded-lg motion-safe:animate-pulse mb-2"></div>
+          <div className="h-8 w-48 bg-skeleton-base border border-border rounded-lg motion-safe:animate-pulse mb-2"></div>
           <div className="h-4 w-64 bg-card border border-border rounded-md motion-safe:animate-pulse"></div>
         </div>
         <div className="h-10 w-32 bg-card border border-border rounded-lg motion-safe:animate-pulse"></div>
@@ -21,7 +21,7 @@ export default function HrLoading() {
       {/* Table Skeleton */}
       <div className="bg-card rounded-xl border border-border overflow-hidden">
         <div className="p-4 border-b border-border flex justify-between">
-          <div className="h-9 w-64 bg-input rounded-lg motion-safe:animate-pulse"></div>
+          <div className="h-9 w-64 bg-skeleton-highlight rounded-lg motion-safe:animate-pulse"></div>
           <div className="h-9 w-32 bg-input rounded-lg motion-safe:animate-pulse"></div>
         </div>
         <div className="p-4">

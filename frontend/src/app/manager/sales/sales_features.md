@@ -14,6 +14,12 @@ Manager Sales is the membership-sales and collections reporting workspace. Manag
 | `sales_types/` | Feature-owned responsibility for the sales module. | `ManagerSalesMemberSnapshot.ts; ManagerSalesSchema.ts; ManagerSalesTypes.ts` |
 | `sales_utils/` | Feature-owned responsibility for the sales module. | `ManagerSalesSharedConstants.ts` |
 
+## Approved External Dependencies
+
+- Global framework/application infrastructure documented by the architecture standard may be used when required.
+- Approved zero-business UI primitives may be imported from Manager application infrastructure.
+- Sibling feature business logic, state, API services, fixtures, and tests are not dependencies.
+
 ## Feature Inventory
 | Feature | Route | What the User Can Do | Main API Calls | Status |
 |---|---|---|---|---|

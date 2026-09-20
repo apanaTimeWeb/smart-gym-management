@@ -1,4 +1,4 @@
-import { type GrievanceTicket } from '@/app/manager/grievance/grievance_types/ManagerGrievanceTypes';
+import type { GrievanceTicket } from '@/app/manager/grievance/grievance_types/ManagerGrievanceTypes';
 
 export const MOCK_GRIEVANCE_TICKETS: GrievanceTicket[] = [
   {

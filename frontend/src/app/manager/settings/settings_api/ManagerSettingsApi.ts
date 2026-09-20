@@ -1,7 +1,9 @@
-import { ManagerSettingsUrlConfig } from '@/app/manager/settings/settings_url_config';
-import { apiFetch, type ApiResponse } from '@/lib/api';
-import type { ManagerAllSettings } from '@/app/manager/settings/settings_types/ManagerSettingsTypes';
+import { apiFetch } from '@/lib/api';
 import { managerAllSettingsSchema } from '@/app/manager/settings/settings_schemas/ManagerSettingsSchema';
+import { ManagerSettingsUrlConfig } from '@/app/manager/settings/settings_url_config';
+import type { ManagerAllSettings } from '@/app/manager/settings/settings_types/ManagerSettingsTypes';
+import type { ApiResponse } from '@/lib/api';
+
 
 export const managerSettingsApi = {
   fetchSettings: async (): Promise<ApiResponse<ManagerAllSettings>> => apiFetch(ManagerSettingsUrlConfig.BACKEND_API.BASE, { dataSchema: managerAllSettingsSchema }),

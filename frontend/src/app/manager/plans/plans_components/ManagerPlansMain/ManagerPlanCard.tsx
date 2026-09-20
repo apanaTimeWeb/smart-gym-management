@@ -1,10 +1,11 @@
+// RESPONSIBILITY: Renders one membership-plan card and exposes the plan actions supplied by the feature state layer.
 'use client';
-import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
-import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
-// RESPONSIBILITY: Pure display component rendering a single membership plan.
 import { CheckCircle, XCircle, IndianRupee, Send } from 'lucide-react';
-import type { Plan } from '@/app/manager/plans/plans_types/ManagerPlansTypes';
+import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
+import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 import { useManagerPlansLogic } from '@/app/manager/plans/plans_hooks/ManagerUseManagerPlansLogic';
+import type { Plan } from '@/app/manager/plans/plans_types/ManagerPlansTypes';
+
 
 const TIER_STYLES: Record<string, { bg: string; text: string; label: string }> = {
   BASIC:   { bg: "bg-info-bg",    text: 'text-info',    label: 'Basic'   },
@@ -13,13 +14,13 @@ const TIER_STYLES: Record<string, { bg: string; text: string; label: string }> =
 
 export default function ManagerPlanCard({ plan }: { plan: Plan }) {
   const { openRequestModal } = useManagerPlansLogic();
-  const tier = TIER_STYLES[plan.tier] ?? TIER_STYLES['BASIC'] ?? { bg: 'bg-secondary/10', text: 'text-secondary', label: plan.tier ?? 'BASIC' };
+  const tier = TIER_STYLES[plan.tier] ?? TIER_STYLES['BASIC'] ?? { bg: 'bg-input', text: 'text-secondary', label: plan.tier ?? 'BASIC' };
   const features = Array.isArray(plan.features)
     ? plan.features
     : (plan.features as string ?? '').split(',').map((f: string) => f.trim()).filter(Boolean);
 
   return (
-    <div className={`bg-card border rounded-xl p-5 flex flex-col gap-4 motion-safe:transition-all motion-safe:duration-200 motion-safe:hover:-translate-y-1 hover:shadow-card ${plan.isActive ? 'border-border' : 'border-border opacity-60'}`}>
+    <div className={`bg-card border rounded-xl p-5 flex flex-col gap-4 motion-safe:transition-all motion-safe:duration-base motion-safe:hover:-translate-y-1 hover:shadow-card ${plan.isActive ? 'border-border' : 'border-border opacity-60'}`}>
       {/* Header */}
       <div className="flex items-start justify-between gap-3">
         <div>
@@ -67,7 +68,7 @@ export default function ManagerPlanCard({ plan }: { plan: Plan }) {
       {/* Request change CTA */}
       <button
         onClick={() => openRequestModal(plan)}
-        className="mt-auto flex items-center justify-center gap-2 w-full py-2 text-xs font-semibold rounded-lg border border-primary/40 text-primary hover:bg-primary-subtle motion-safe:transition-colors"
+        className="mt-auto flex items-center justify-center gap-2 w-full py-2 text-xs font-semibold rounded-lg border border-focus text-primary hover:bg-primary-subtle motion-safe:transition-colors"
       >
         <Send size={18} /> Request Change
       </button>

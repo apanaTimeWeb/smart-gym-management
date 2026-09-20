@@ -1,23 +1,24 @@
+// RESPONSIBILITY: Renders the pending-payments sales table and its feature-owned actions.
 'use client';
-import { MANAGER_GENERIC_ERROR_MESSAGE } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
-import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
-// RESPONSIBILITY: Renders the list of members with pending payments, including skeleton loader, pagination, and overdue details. Receives data via ManagerUseManagerSalesLogic.
-import { ManagerSalesUrlConfig } from '@/app/manager/sales/sales_url_config';
-import{ useManagerSalesLogic } from '@/app/manager/sales/sales_hooks/ManagerUseManagerSalesLogic';
 import { formatCurrencyFromMinorUnits , formatDate} from '@/lib/formatters';
-import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
-import ManagerSalesEmptyState from '@/app/manager/sales/sales_components/ManagerSalesEmptyState/ManagerSalesEmptyState';
-import type { PendingPaymentMember } from '@/app/manager/sales/sales_types/ManagerSalesTypes';
-import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_infrastructure/ManagerPaginationDefaults';
-import { GYM_DETAILS } from '@/app/manager/manager_infrastructure/ManagerGymIdentity';
 import { WhatsAppFormatter } from '@/lib/whatsapp_formatter';
+import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
+import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
+import { MANAGER_GENERIC_ERROR_MESSAGE } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
+import { GYM_DETAILS } from '@/app/manager/manager_infrastructure/ManagerGymIdentity';
+import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_infrastructure/ManagerPaginationDefaults';
+import ManagerSalesEmptyState from '@/app/manager/sales/sales_components/ManagerSalesEmptyState/ManagerSalesEmptyState';
+import{ useManagerSalesLogic } from '@/app/manager/sales/sales_hooks/ManagerUseManagerSalesLogic';
+import { ManagerSalesUrlConfig } from '@/app/manager/sales/sales_url_config';
+import type { PendingPaymentMember } from '@/app/manager/sales/sales_types/ManagerSalesTypes';
+
 
 export default function ManagerSalesPendingPayments() {
-  const { currentPage, setCurrentPage, pendingPayments, pendingTotal, isLoading, isError, errorMessage } = useManagerSalesLogic();
+  const { currentPage, setCurrentPage, pendingPayments, pendingTotal, isPending, isError, errorMessage } = useManagerSalesLogic();
 
   const totalPages = Math.ceil(pendingTotal / MANAGER_ITEMS_PER_PAGE) || 1;
 
-  if (isLoading) {
+  if (isPending) {
     return (
       <div className="space-y-3">
         {[...Array(5)].map((_, i) => (
@@ -44,7 +45,7 @@ export default function ManagerSalesPendingPayments() {
 
   if (isError) {
     return (
-      <div className="text-center py-16 bg-card rounded-2xl border border-danger/30">
+      <div className="text-center py-16 bg-card rounded-2xl border border-danger">
         <p className="text-danger font-medium">{errorMessage || MANAGER_GENERIC_ERROR_MESSAGE}</p>
         <span className="text-sm text-secondary">Retry the request.</span>
       </div>
@@ -58,7 +59,7 @@ export default function ManagerSalesPendingPayments() {
       </p>
       <div className="space-y-3">
         {pendingPayments.map((p: PendingPaymentMember) => (
-          <div key={p.id} className="flex items-center justify-between p-4 border border-border rounded-xl hover:border-warning motion-safe:transition-all motion-safe:duration-200 ease-in-out motion-safe:hover:-translate-y-1 hover:shadow-card bg-card">
+          <div key={p.id} className="flex items-center justify-between p-4 border border-border rounded-xl hover:border-warning motion-safe:transition-all motion-safe:duration-base ease-in-out motion-safe:hover:-translate-y-1 hover:shadow-card bg-card">
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 bg-danger rounded-full flex items-center justify-center text-on-danger font-semibold text-sm">
                 {p.name.charAt(0)}
@@ -94,7 +95,7 @@ export default function ManagerSalesPendingPayments() {
                   });
                   window.open(`${ManagerSalesUrlConfig.INTEGRATIONS.WHATSAPP_WEB_BASE}/91${p.phone?.replace(/\D/g, '') || ''}?text=${encodeURIComponent(waText)}`, '_blank');
                 }}
-                className="px-3 py-1.5 text-xs text-on-primary bg-primary rounded-lg font-medium motion-safe:transition-all motion-safe:duration-200 ease-in-out hover:bg-primary-hover motion-safe:active:scale-95"
+                className="px-3 py-1.5 text-xs text-on-primary bg-primary rounded-lg font-medium motion-safe:transition-all motion-safe:duration-base ease-in-out hover:bg-primary-hover motion-safe:active:scale-95"
               >
                 Send Reminder
               </button>

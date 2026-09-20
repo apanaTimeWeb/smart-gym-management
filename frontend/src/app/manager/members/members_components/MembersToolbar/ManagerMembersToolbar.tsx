@@ -1,15 +1,14 @@
-'use client';
 // RESPONSIBILITY: Renders the toolbar for searching, filtering, and initiating the "Add Member" action.
+'use client';
 // CRITICAL FIX: Added gender filter, plan filter, expiry date range, and Export CSV/PDF buttons.
 import { useState, useEffect } from 'react';
 import { Search, RefreshCw, Plus, Download, Calendar } from 'lucide-react';
-import { useManagerMembersLogic } from '@/app/manager/members/members_hooks/ManagerUseManagerMembersLogic';
-import { useFetchPlans } from '@/app/manager/members/members_api/ManagerUseManagerMembersQueries';
 import ManagerSearchableDropdown from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
-import {
-  MEMBER_STATUS_OPTIONS,
-  MEMBER_GENDER_OPTIONS,
-  MEMBER_EXPORT_FORMATS } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
+import { useManagerMembersLogic } from '@/app/manager/members/members_hooks/ManagerUseManagerMembersLogic';
+import { useFetchPlans } from '@/app/manager/members/members_hooks/ManagerUseManagerMembersQueries';
+import { MEMBER_EXPORT_FORMATS } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
+import { MEMBER_STATUS_OPTIONS, MEMBER_GENDER_OPTIONS } from '@/app/manager/members/members_utils/ManagerMembersUiConstants';
+
 
 export default function ManagerMembersToolbar() {
   const {
@@ -31,6 +30,7 @@ export default function ManagerMembersToolbar() {
     setLocalSearch(search);
   }
 
+// EFFECT: Effect lifecycle and dependency list are intentionally scoped to values that control this side effect.
   useEffect(() => {
     const timer = setTimeout(() => {
       if (localSearch !== search) {
@@ -124,7 +124,7 @@ export default function ManagerMembersToolbar() {
             type="date"
             value={expiryFrom}
             onChange={e => setExpiryRange(e.target.value, expiryTo)}
-            className="bg-transparent text-secondary focus:outline-none text-xs"
+            className="bg-transparent text-secondary focus-visible:outline-none text-xs"
             title="Expiry from"
             aria-label="Expiry date from"
           />
@@ -133,7 +133,7 @@ export default function ManagerMembersToolbar() {
             type="date"
             value={expiryTo}
             onChange={e => setExpiryRange(expiryFrom, e.target.value)}
-            className="bg-transparent text-secondary focus:outline-none text-xs"
+            className="bg-transparent text-secondary focus-visible:outline-none text-xs"
             title="Expiry to"
             aria-label="Expiry date to"
           />

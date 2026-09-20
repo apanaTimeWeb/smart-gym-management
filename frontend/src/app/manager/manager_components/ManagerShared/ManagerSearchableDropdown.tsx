@@ -1,13 +1,14 @@
-"use client";
 // RESPONSIBILITY: Renders an accessible searchable listbox trigger and option list for large datasets.
+"use client";
 
 import { useEffect, useId, useRef, useState } from 'react';
-import type { KeyboardEvent as ReactKeyboardEvent } from 'react';
 import { Search, ChevronDown, Check } from 'lucide-react';
 import type {
   ManagerSearchableDropdownOption,
   ManagerSearchableDropdownProps,
 } from '@/app/manager/manager_components/ManagerShared/manager_shared_types/ManagerSearchableDropdownTypes';
+import type { KeyboardEvent as ReactKeyboardEvent } from 'react';
+
 
 /** Provides a searchable single-selection listbox with keyboard and screen-reader support. */
 export default function ManagerSearchableDropdown({
@@ -25,16 +26,18 @@ export default function ManagerSearchableDropdown({
   const searchInputRef = useRef<HTMLInputElement>(null);
   const listboxId = useId();
   const selectedOption = options.find((option) => option.value === value);
-  const filteredOptions: ManagerSearchableDropdownOption[] = options.filter((option) =>
+  const filteredOptions = options.filter((option) =>
     option.label.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
+// EFFECT: Effect lifecycle and dependency list are intentionally scoped to values that control this side effect.
   useEffect(() => {
     if (!isOpen) return undefined;
     searchInputRef.current?.focus();
     return undefined;
   }, [isOpen]);
 
+// EFFECT: Effect lifecycle and dependency list are intentionally scoped to values that control this side effect.
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -46,6 +49,7 @@ export default function ManagerSearchableDropdown({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+// EFFECT: Effect lifecycle and dependency list are intentionally scoped to values that control this side effect.
   useEffect(() => {
     const selectedIndex = filteredOptions.findIndex((option) => option.value === value);
     setActiveIndex(selectedIndex >= 0 ? selectedIndex : 0);

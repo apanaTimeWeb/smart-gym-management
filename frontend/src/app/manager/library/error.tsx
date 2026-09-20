@@ -1,10 +1,11 @@
+// RESPONSIBILITY: Renders the module-specific route error fallback and records safe diagnostic metadata.
 'use client';
 
-// RESPONSIBILITY: Renders the module-specific route error fallback and records safe diagnostic metadata.
-import { ManagerLibraryUrlConfig } from '@/app/manager/library/library_url_config';
 import { useEffect } from 'react';
 import { AlertTriangle } from 'lucide-react';
 import { logger } from '@/lib/logger';
+import { ManagerLibraryUrlConfig } from '@/app/manager/library/library_url_config';
+
 
 export default function ManagerLibraryError({
   error,
@@ -12,6 +13,7 @@ export default function ManagerLibraryError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+// EFFECT: Effect lifecycle and dependency list are intentionally scoped to values that control this side effect.
   useEffect(() => {
     logger.error('Manager module route error', {
       route: ManagerLibraryUrlConfig.PAGES.LIBRARY,

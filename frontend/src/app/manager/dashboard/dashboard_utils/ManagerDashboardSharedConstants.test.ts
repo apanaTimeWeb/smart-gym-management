@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { DASHBOARD_PLAN_BG_COLORS, DASHBOARD_RECENT_MEMBERS_PAGE_SIZE, DASHBOARD_STATUS_STYLES, RECENT_MEMBERS_HEADERS } from '@/app/manager/dashboard/dashboard_utils/ManagerDashboardSharedConstants';
 
+
 describe('ManagerDashboardSharedConstants', () => {
   it('provides semantic dashboard status styles', () => {
     expect(DASHBOARD_STATUS_STYLES.ACTIVE?.text).toBe('text-success');

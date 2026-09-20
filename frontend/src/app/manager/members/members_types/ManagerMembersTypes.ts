@@ -4,11 +4,12 @@
 // genderFilter, planFilter, expiryRange — all required for filter/export API params and DB schema.
 
 import type { ManagerToastType } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerToastTypes';
-import type { ManagerMembersMessageType, ManagerMembersMessageRecipient } from '@/app/manager/members/members_types/ManagerMembersMessageTypes';
-import type { ManagerMembersReceiptData } from '@/app/manager/members/members_types/ManagerMembersThermalReceiptTypes';
 import type { MemberFormValues } from '@/app/manager/members/members_schemas/ManagerMembersFormSchema';
 import type { MemberType, MemberStatsType } from '@/app/manager/members/members_types/ManagerMembers.schema';
+import type { ManagerMembersMessageType, ManagerMembersMessageRecipient } from '@/app/manager/members/members_types/ManagerMembersMessageTypes';
 import type { PlanSnapshot, PaymentSnapshot, DietPlanSnapshot, WorkoutSnapshot } from '@/app/manager/members/members_types/ManagerMembersSnapshotTypes';
+import type { ManagerMembersReceiptData } from '@/app/manager/members/members_types/ManagerMembersThermalReceiptTypes';
+
 
 export type MemberSortColumn = 'name' | 'joinDate' | 'expiryDate' | 'paidAmount' | 'status';
 export type SortDirection = 'asc' | 'desc';
@@ -99,10 +100,10 @@ export interface ManagerMembersViewModel {
   // Actions
   openAdd: () => void;
   openEdit: (m: Member) => void;
-  saveMember: (data: MemberFormValues, idempotencyKey?: string) => Promise<unknown>;
+  saveMember: (data: MemberFormValues, idempotencyKey?: string) => Promise<void>;
   deleteMember: (id: string) => Promise<void>;
-  assignDiet: (memberId: string, diet: DietPlan | null) => Promise<unknown> ;
-  assignWorkout: (memberId: string, workout: Workout | null) => Promise<unknown>;
+  assignDiet: (memberId: string, diet: DietPlan | null) => Promise<void> ;
+  assignWorkout: (memberId: string, workout: Workout | null) => Promise<void>;
   renewMember: (data: {
     planId: string;
     newExpiryDate: string;
@@ -110,11 +111,11 @@ export interface ManagerMembersViewModel {
     paymentMethod: string;
     billingCycle: string;
     customDays?: number;
-  }, idempotencyKey: string) => Promise<unknown>;
-  recordPayment: (data: { amount: number; method: string }, idempotencyKey: string) => Promise<unknown>;
-  freezeMember: (isFrozen: boolean, freezeUntil?: string) => Promise<unknown>;
-  toggleSuspend: (isSuspended: boolean) => Promise<unknown>;
-  assignTrainer: (memberId: string, trainerId: string, trainerName: string, isPT: boolean) => Promise<unknown>;
+  }, idempotencyKey: string) => Promise<void>;
+  recordPayment: (data: { amount: number; method: string }, idempotencyKey: string) => Promise<void>;
+  freezeMember: (isFrozen: boolean, freezeUntil?: string) => Promise<void>;
+  toggleSuspend: (isSuspended: boolean) => Promise<void>;
+  assignTrainer: (memberId: string, trainerId: string, trainerName: string, isPT: boolean) => Promise<void>;
 
   // Message Modal
   msgModal: { open: boolean; recipient: ManagerMembersMessageRecipient; type: ManagerMembersMessageType; message: string; subject?: string } | null;

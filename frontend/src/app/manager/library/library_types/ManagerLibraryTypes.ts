@@ -12,7 +12,7 @@ export interface ManagerLibraryViewModel {
   totalDietPlans: number;
   exercises: Exercise[];
   totalExercises: number;
-  isLoading: boolean;
+  isPending: boolean;
   isError: boolean;
   errorMessage: string;
   saving: boolean;

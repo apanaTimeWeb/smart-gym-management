@@ -14,6 +14,12 @@ Manager Schedule is the trainer scheduling workspace. Managers can review traine
 | `schedule_types/` | Feature-owned responsibility for the schedule module. | `ManagerScheduleSchema.ts; ManagerScheduleTypes.ts` |
 | `schedule_utils/` | Feature-owned responsibility for the schedule module. | `ManagerScheduleSharedConstants.ts` |
 
+## Approved External Dependencies
+
+- Global framework/application infrastructure documented by the architecture standard may be used when required.
+- Approved zero-business UI primitives may be imported from Manager application infrastructure.
+- Sibling feature business logic, state, API services, fixtures, and tests are not dependencies.
+
 ## Feature Inventory
 | Feature | Route | What the User Can Do | Main API Calls | Status |
 |---|---|---|---|---|

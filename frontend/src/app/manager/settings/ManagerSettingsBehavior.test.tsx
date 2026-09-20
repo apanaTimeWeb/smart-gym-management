@@ -1,13 +1,14 @@
-import { describe, it, expect, beforeAll, afterAll, afterEach, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
-import ManagerSettingsMain from '@/app/manager/settings/settings_components/ManagerSettingsMain/ManagerSettingsMain';
+import { describe, it, expect, beforeAll, afterAll, afterEach, beforeEach } from 'vitest';
 import { managerMswServer } from '@/app/manager/manager_mocks/ManagerMswTestServer';
-import { managerSettingsApi } from '@/app/manager/settings/settings_api/ManagerSettingsApi';
 import { ManagerTestProviders } from '@/app/manager/manager_mocks/ManagerTestProviders';
+import { managerSettingsApi } from '@/app/manager/settings/settings_api/ManagerSettingsApi';
+import ManagerSettingsMain from '@/app/manager/settings/settings_components/ManagerSettingsMain/ManagerSettingsMain';
 import { resetManagerSettingsMockState } from '@/app/manager/settings/settings_mocks/handlers/ManagerSettingsMockHandlers';
 import { ManagerSettingsUrlConfig } from '@/app/manager/settings/settings_url_config';
+
 
 beforeAll(() => managerMswServer.listen({ onUnhandledRequest: 'error' }));
 beforeEach(() => resetManagerSettingsMockState());

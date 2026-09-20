@@ -1,7 +1,8 @@
-'use client';
 // RESPONSIBILITY: Renders the four KPI stat cards (Total, Active, Pending, Expired) for the Members module.
+'use client';
 import { MANAGER_MEMBERS_KPI_CONFIG } from '@/app/manager/members/members_constants/ManagerMembersKpiConstants';
-import { useFetchMemberStats } from '@/app/manager/members/members_api/ManagerUseManagerMembersQueries';
+import { useFetchMemberStats } from '@/app/manager/members/members_hooks/ManagerUseManagerMembersQueries';
+
 
 
 

@@ -1,12 +1,18 @@
 import { http, HttpResponse } from 'msw';
-import { managerMockApiUrl } from '@/app/manager/manager_infrastructure/ManagerMockApiUrl';
-import { ManagerReferralsUrlConfig } from '@/app/manager/referrals/referrals_url_config';
 import { MANAGER_HTTP_STATUS } from '@/app/manager/manager_infrastructure/ManagerHttpStatus';
+import { managerMockApiUrl } from '@/app/manager/manager_infrastructure/ManagerMockApiUrl';
 import { MOCK_REFERRALS, MOCK_REFERRALS_KPIS } from '@/app/manager/referrals/referrals_fixtures/ManagerReferralsMockData';
+import { ManagerReferralsUrlConfig } from '@/app/manager/referrals/referrals_url_config';
 import type { ManagerReferral, CreateReferralDto } from '@/app/manager/referrals/referrals_types/ManagerReferralsTypes';
+
 
 let mockReferralIdCounter = 1000;
 let mockReferrals = [...MOCK_REFERRALS];
+
+export function resetManagerReferralsMockState(): void {
+  mockReferralIdCounter = 1000;
+  mockReferrals = [...MOCK_REFERRALS];
+}
 
 export const managerReferralsHandlers = [
   http.get(managerMockApiUrl(ManagerReferralsUrlConfig.BACKEND_API.KPIS), () => {

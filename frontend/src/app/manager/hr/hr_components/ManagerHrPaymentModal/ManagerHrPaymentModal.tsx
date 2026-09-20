@@ -1,15 +1,16 @@
-'use client';
-import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 // RESPONSIBILITY: Renders a modal to record a partial or full salary payment for staff.
+'use client';
 import { useState, useEffect, useRef } from 'react';
-import type { FormEvent } from 'react';
 import { IndianRupee, X } from 'lucide-react';
 import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
 import { useManagerHrLogic } from '@/app/manager/hr/hr_hooks/ManagerUseManagerHrLogic';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
+import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 import { createManagerIdempotencyKey } from '@/app/manager/manager_infrastructure/ManagerIdempotency';
 import { fromManagerMinorUnits, toManagerMinorUnits } from '@/app/manager/manager_infrastructure/ManagerMoney';
 import { useManagerUnsavedChangesGuard } from '@/app/manager/manager_infrastructure/ManagerUnsavedChangesGuard';
+import type { FormEvent } from 'react';
+
 
 export default function ManagerHrPaymentModal() {
   const { paymentModal, setPaymentModal, markPayrollPaid } = useManagerHrLogic();
@@ -22,6 +23,7 @@ export default function ManagerHrPaymentModal() {
   const handleClose = () => { void confirmAndClose(() => setPaymentModal(null)); };
 
   // Sync state when modal opens
+// EFFECT: Effect lifecycle and dependency list are intentionally scoped to values that control this side effect.
   useEffect(() => {
     if (paymentModal) {
       setAmount(fromManagerMinorUnits(paymentModal.pendingAmount));
@@ -45,8 +47,8 @@ export default function ManagerHrPaymentModal() {
   };
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay-backdrop backdrop-blur-sm p-4 motion-safe:animate-in motion-safe:fade-in motion-safe:duration-200">
-      <div className="bg-overlay/95 backdrop-blur-xl rounded-2xl shadow-dialog w-full max-w-sm overflow-hidden motion-safe:animate-in motion-safe:zoom-in-95 motion-safe:duration-200 border border-border">
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay-backdrop backdrop-blur-sm p-4 motion-safe:animate-in motion-safe:fade-in motion-safe:duration-base">
+      <div className="bg-overlay backdrop-blur-xl rounded-2xl shadow-dialog w-full max-w-sm overflow-hidden motion-safe:animate-in motion-safe:zoom-in-95 motion-safe:duration-base border border-border">
         <div className="p-5 flex justify-between items-center border-b border-border">
           <h3 className="font-bold text-primary">Pay Salary</h3>
           <button aria-label="Close salary payment modal" type="button" onClick={handleClose} className="p-1.5 text-secondary hover:text-primary hover:bg-primary-subtle rounded-md motion-safe:transition-colors"><X size={18} /></button>
@@ -68,7 +70,7 @@ export default function ManagerHrPaymentModal() {
               <button 
                 type="button" 
                 onClick={() => setAmount(fromManagerMinorUnits(paymentModal.pendingAmount))}
-                className="text-xs font-bold text-primary hover:text-primary/80 motion-safe:transition-colors"
+                className="text-xs font-bold text-primary hover:text-primary motion-safe:transition-colors"
               >
                 Pay Full
               </button>
@@ -82,12 +84,13 @@ export default function ManagerHrPaymentModal() {
                 required
                 min="1"
                 max={fromManagerMinorUnits(paymentModal.pendingAmount)}
+                step="0.01"
                 value={amount}
                 onChange={(e) => {
                   const val = e.target.value;
                   setAmount(val === '' ? '' : Number(val));
                 }}
-                className="w-full pl-9 pr-4 py-2.5 bg-input/50 border border-border rounded-xl text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-primary motion-safe:transition-all"
+                className="w-full pl-9 pr-4 py-2.5 bg-input border border-border rounded-xl text-sm focus-visible:outline-none focus-visible:border-primary focus-visible:ring-1 focus-visible:ring-primary text-primary motion-safe:transition-all"
               />
             </div>
           </div>
@@ -96,7 +99,7 @@ export default function ManagerHrPaymentModal() {
             <button
               type="submit"
               disabled={isSubmitting || Number(amount) <= 0 || Number(amount) > fromManagerMinorUnits(paymentModal.pendingAmount)}
-              className="w-full py-2.5 bg-primary text-on-primary text-sm font-bold rounded-xl hover:bg-primary/90 motion-safe:transition-all shadow-card disabled:opacity-50 disabled:shadow-none"
+              className="w-full py-2.5 bg-primary text-on-primary text-sm font-bold rounded-xl hover:bg-primary-hover motion-safe:transition-all shadow-card disabled:opacity-50 disabled:shadow-none"
             >
               {isSubmitting ? 'Recording...' : 'Confirm Payment'}
             </button>

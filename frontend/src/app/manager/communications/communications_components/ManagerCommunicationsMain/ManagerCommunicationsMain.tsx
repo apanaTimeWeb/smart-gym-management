@@ -1,14 +1,15 @@
-'use client';
 // RESPONSIBILITY: Root client orchestrator for the Communications module — renders KPIs, tab switcher, and conditionally Composer, History, Automations, or Churn Recovery.
+'use client';
 import { MessageCircle, History, Zap, UserX } from 'lucide-react';
-import type { ElementType } from 'react';
-import ManagerCommunicationsKPIs from '@/app/manager/communications/communications_components/ManagerCommunicationsKPIs/ManagerCommunicationsKPIs';
+import ManagerChurnRecoveryTab from '@/app/manager/communications/communications_components/ManagerChurnRecovery/ManagerChurnRecoveryTab';
+import ManagerCommunicationsAutomations from '@/app/manager/communications/communications_components/ManagerCommunicationsAutomations/ManagerCommunicationsAutomations';
 import ManagerCommunicationsComposer from '@/app/manager/communications/communications_components/ManagerCommunicationsComposer/ManagerCommunicationsComposer';
 import ManagerCommunicationsHistory from '@/app/manager/communications/communications_components/ManagerCommunicationsHistory/ManagerCommunicationsHistory';
-import ManagerCommunicationsAutomations from '@/app/manager/communications/communications_components/ManagerCommunicationsAutomations/ManagerCommunicationsAutomations';
-import ManagerChurnRecoveryTab from '@/app/manager/communications/communications_components/ManagerChurnRecovery/ManagerChurnRecoveryTab';
+import ManagerCommunicationsKPIs from '@/app/manager/communications/communications_components/ManagerCommunicationsKPIs/ManagerCommunicationsKPIs';
 import { useManagerCommunicationsLogic } from '@/app/manager/communications/communications_hooks/ManagerUseManagerCommunicationsLogic';
 import type { CommActiveTab } from '@/app/manager/communications/communications_types/ManagerCommunications_types';
+import type { ElementType } from 'react';
+
 
 const TABS: { value: CommActiveTab; label: string; Icon: ElementType }[] = [
   { value: 'compose',        label: 'Compose',       Icon: MessageCircle },

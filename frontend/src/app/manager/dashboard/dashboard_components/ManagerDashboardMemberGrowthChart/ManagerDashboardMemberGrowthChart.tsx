@@ -1,10 +1,11 @@
-'use client';
 // RESPONSIBILITY: Renders the Manager DashboardMemberGrowthChart presentation layer for the Manager module.
+'use client';
 import dynamic from 'next/dynamic';
-import { useDashboardStatsQuery } from '@/app/manager/dashboard/dashboard_api/ManagerUseManagerDashboardQueries';
-import { useManagerDashboardUrlState } from '@/app/manager/dashboard/dashboard_hooks/ManagerUseManagerDashboardUrlState';
 import { formatKPI } from '@/lib/formatters';
+import { useDashboardStatsQuery } from '@/app/manager/dashboard/dashboard_hooks/ManagerUseManagerDashboardQueries';
+import { useManagerDashboardUrlState } from '@/app/manager/dashboard/dashboard_hooks/ManagerUseManagerDashboardUrlState';
 import type { DashboardGrowthChartData } from '@/app/manager/dashboard/dashboard_types/ManagerDashboardTypes';
+
 
 const Chart = dynamic(() => import('react-apexcharts'), {
   ssr: false,

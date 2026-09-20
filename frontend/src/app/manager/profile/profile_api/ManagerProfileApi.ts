@@ -1,7 +1,9 @@
-import { ManagerProfileUrlConfig } from '@/app/manager/profile/profile_url_config';
-import { apiFetch, type ApiResponse } from '@/lib/api';
-import type { ManagerProfileData, UpdateManagerProfilePayload, UpdateManagerPasswordPayload } from '@/app/manager/profile/profile_types/ManagerProfileTypes';
+import { apiFetch } from '@/lib/api';
 import { managerProfileDataSchema, managerPasswordUpdateResponseSchema } from '@/app/manager/profile/profile_schemas/ManagerProfileSchema';
+import { ManagerProfileUrlConfig } from '@/app/manager/profile/profile_url_config';
+import type { ManagerProfileData, UpdateManagerProfilePayload, UpdateManagerPasswordPayload } from '@/app/manager/profile/profile_types/ManagerProfileTypes';
+import type { ApiResponse } from '@/lib/api';
+
 
 export const managerProfileApi = {
   fetchProfile: async (): Promise<ApiResponse<ManagerProfileData>> => apiFetch(ManagerProfileUrlConfig.BACKEND_API.BASE, { dataSchema: managerProfileDataSchema }),

@@ -1,21 +1,28 @@
+// RESPONSIBILITY: Renders the Manager personal-trainer dashboard surface and composes its feature-owned sections.
 'use client';
-import { MANAGER_GENERIC_ERROR_MESSAGE } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
-import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
-// RESPONSIBILITY: Root client component for Manager PT page.
-// THEME PORTABILITY CONTRACT: Depends on variables --bg-page, --bg-card, --bg-input, --border, --primary, --success, --info, --warning, --danger, --text-primary, --text-secondary, --disabled.
 import { useState } from 'react';
 import { Loader2, Dumbbell, UserPlus } from 'lucide-react';
-import { useManagerPtLogic } from '@/app/manager/pt/pt_hooks/ManagerUseManagerPtLogic';
-import { PT_TAB_OPTIONS } from '@/app/manager/pt/pt_types/ManagerPtTypes';
 import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
-
-// Child Components
+import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
+import { MANAGER_GENERIC_ERROR_MESSAGE } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
+import ManagerPtAssignmentForm from '@/app/manager/pt/pt_components/ManagerPtMain/ManagerPtAssignmentForm';
+import ManagerPtAssignmentsTable from '@/app/manager/pt/pt_components/ManagerPtMain/ManagerPtAssignmentsTable';
+import ManagerPtExpiringSoon from '@/app/manager/pt/pt_components/ManagerPtMain/ManagerPtExpiringSoon';
 import ManagerPtKPIs from '@/app/manager/pt/pt_components/ManagerPtMain/ManagerPtKPIs';
 import ManagerPtTrainerWorkload from '@/app/manager/pt/pt_components/ManagerPtMain/ManagerPtTrainerWorkload';
-import ManagerPtExpiringSoon from '@/app/manager/pt/pt_components/ManagerPtMain/ManagerPtExpiringSoon';
-import ManagerPtAssignmentsTable from '@/app/manager/pt/pt_components/ManagerPtMain/ManagerPtAssignmentsTable';
-import ManagerPtAssignmentForm from '@/app/manager/pt/pt_components/ManagerPtMain/ManagerPtAssignmentForm';
+import { useManagerPtLogic } from '@/app/manager/pt/pt_hooks/ManagerUseManagerPtLogic';
+import { PT_TAB_OPTIONS } from '@/app/manager/pt/pt_types/ManagerPtTypes';
 import type { ManagerPtAssignmentFormValues } from '@/app/manager/pt/pt_schemas/ManagerPtAssignmentSchema';
+
+// THEME PORTABILITY CONTRACT: Depends on variables --bg-page, --bg-card, --bg-input, --border, --primary, --success, --info, --warning, --danger, --text-primary, --text-secondary, --disabled.
+
+
+
+
+
+
+// Child Components
+
 
 // Assign Trainer form is isolated in ManagerPtAssignmentForm.tsx so the page remains a view/orchestrator.
 export default function ManagerPtMain() {
@@ -71,7 +78,7 @@ export default function ManagerPtMain() {
             className={`px-4 py-2 text-sm font-semibold rounded-lg motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
               activeTab === id
                 ? 'bg-card text-primary shadow-card'
-                : 'text-secondary hover:text-primary hover:bg-card/50'
+                : 'text-secondary hover:text-primary hover:bg-card0'
             }`}
           >
             {label}
@@ -92,7 +99,7 @@ export default function ManagerPtMain() {
       )}
 
       {!isPending && !isError && (
-        <div className="space-y-6 motion-safe:animate-in motion-safe:fade-in motion-safe:duration-500">
+        <div className="space-y-6 motion-safe:animate-in motion-safe:fade-in motion-safe:duration-xslow">
           
           {/* Dashboard Tab */}
           {activeTab === 'dashboard' && (
@@ -142,7 +149,7 @@ export default function ManagerPtMain() {
                     className="bg-card border border-border rounded-xl p-6 motion-safe:hover:-translate-y-1 motion-safe:transition-transform"
                   >
                     <div className="flex items-center justify-between mb-4">
-                      <span className="bg-primary-subtle text-primary px-3 py-1 rounded-full text-xs font-bold border border-primary/20">
+                      <span className="bg-primary-subtle text-primary px-3 py-1 rounded-full text-xs font-bold border border-border">
                         {pkg.sessionCount} Sessions
                       </span>
                       <span className="text-primary font-bold text-xl">

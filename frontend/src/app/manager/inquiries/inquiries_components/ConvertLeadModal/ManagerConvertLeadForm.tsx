@@ -1,12 +1,13 @@
-'use client';
-import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 // RESPONSIBILITY: Renders the form fields for converting a lead.
-import type { ManagerConvertLeadFormProps } from '@/app/manager/inquiries/inquiries_types/ManagerConvertLeadFormTypes';
+'use client';
 import { Controller } from 'react-hook-form';
-import ManagerSearchableDropdown from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
-import { INQUIRIES_CYCLE_LABELS, getPriceForCycleSnapshot, INQUIRIES_GENDER_OPTIONS } from '@/app/manager/inquiries/inquiries_utils/ManagerInquiriesConvertConstants';
-import type { ConvertLeadFormValues } from '@/app/manager/inquiries/inquiries_types/ManagerInquiriesFormTypes';
 import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
+import { INQUIRIES_CYCLE_LABELS, getPriceForCycleSnapshot, INQUIRIES_GENDER_OPTIONS, MANAGER_INQUIRY_MAX_AMOUNT_MAJOR_UNITS, MANAGER_INQUIRY_MAX_CUSTOM_DAYS } from '@/app/manager/inquiries/inquiries_utils/ManagerInquiriesConvertConstants';
+import ManagerSearchableDropdown from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
+import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
+import type { ManagerConvertLeadFormProps } from '@/app/manager/inquiries/inquiries_types/ManagerConvertLeadFormTypes';
+import type { ConvertLeadFormValues } from '@/app/manager/inquiries/inquiries_types/ManagerInquiriesFormTypes';
+
 
 
 
@@ -42,7 +43,7 @@ export default function ManagerConvertLeadForm({
               }
             }}
             {...register(f.key as keyof ConvertLeadFormValues)}
-            className={`w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary motion-safe:transition-all motion-safe:duration-200 ${
+            className={`w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary motion-safe:transition-all motion-safe:duration-base ${
               errors[f.key as keyof ConvertLeadFormValues] ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
             }`}
           />
@@ -98,11 +99,13 @@ export default function ManagerConvertLeadForm({
           <label className="block text-sm font-medium text-secondary mb-0.5">Custom Days</label>
           <input
             type="number"
-            min="0"
+            min="1"
+            max={MANAGER_INQUIRY_MAX_CUSTOM_DAYS}
+            step="1"
             onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+') e.preventDefault(); }}
             {...register('customDays')}
             placeholder="e.g. 15"
-            className={`w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary motion-safe:transition-all motion-safe:duration-200 ${
+            className={`w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary motion-safe:transition-all motion-safe:duration-base ${
               errors.customDays ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
             }`}
           />
@@ -111,7 +114,7 @@ export default function ManagerConvertLeadForm({
       )}
 
       {watchPlanId && (
-        <div className="sm:col-span-2 bg-warning-bg rounded-xl p-3 text-sm border border-warning/30 flex justify-between items-center">
+        <div className="sm:col-span-2 bg-warning-bg rounded-xl p-3 text-sm border border-warning flex justify-between items-center">
           <div>
             <span className="font-semibold text-warning">Calculated Price:</span>
             <span className="text-warning ml-1 font-bold">
@@ -128,20 +131,20 @@ export default function ManagerConvertLeadForm({
 
       <div>
         <label className="block text-sm font-medium text-secondary mb-0.5">Join Date</label>
-        <input type="date" min={new Date().toISOString().split('T')[0]} {...register('joinDate')} className="w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary motion-safe:transition-all motion-safe:duration-200" />
+        <input type="date" min={new Date().toISOString().split('T')[0]} {...register('joinDate')} className="w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary motion-safe:transition-all motion-safe:duration-base" />
       </div>
       <div>
         <label className="block text-sm font-medium text-secondary mb-0.5">Expiry Date <span className="text-danger">*</span></label>
-        <input type="date" disabled min={new Date().toISOString().split('T')[0]} {...register('expiryDate')} className="w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none bg-input text-primary opacity-80 cursor-not-allowed motion-safe:transition-all motion-safe:duration-200" />
+        <input type="date" disabled min={new Date().toISOString().split('T')[0]} {...register('expiryDate')} className="w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none bg-input text-primary opacity-80 cursor-not-allowed motion-safe:transition-all motion-safe:duration-base" />
       </div>
 
       <div>
         <label className="block text-sm font-medium text-secondary mb-0.5">Total Plan Amount (₹)</label>
-        <input type="number" disabled {...register('totalAmount', { valueAsNumber: true })} className="w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none bg-input opacity-80 cursor-not-allowed text-primary" />
+        <input type="number" min="0" max={MANAGER_INQUIRY_MAX_AMOUNT_MAJOR_UNITS} step="0.01" disabled {...register('totalAmount', { valueAsNumber: true })} className="w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none bg-input opacity-80 cursor-not-allowed text-primary" />
       </div>
       <div>
         <label className="block text-sm font-medium text-secondary mb-0.5">Amount Paid (₹)</label>
-        <input type="number" min="0" onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+') e.preventDefault(); }} {...register('paidAmount', { valueAsNumber: true })} className="w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary motion-safe:transition-all motion-safe:duration-200" />
+        <input type="number" min="0" max={MANAGER_INQUIRY_MAX_AMOUNT_MAJOR_UNITS} step="0.01" onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+') e.preventDefault(); }} {...register('paidAmount', { valueAsNumber: true })} className="w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary motion-safe:transition-all motion-safe:duration-base" />
       </div>
     </div>
   );

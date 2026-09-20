@@ -1,12 +1,12 @@
-'use client';
 // RESPONSIBILITY: Renders the search/filter toolbar and bulk-action bar for the Inquiries module.
+'use client';
 import { useState, useEffect } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { RefreshCw, Plus, MessageCircle, Mail } from 'lucide-react';
 import { useManagerInquiriesLogic } from '@/app/manager/inquiries/inquiries_hooks/ManagerUseManagerInquiriesLogic';
 import { INQUIRIES_STATUS_LABELS } from '@/app/manager/inquiries/inquiries_utils/ManagerInquiriesSharedConstants';
-import { RefreshCw, Plus, MessageCircle, Mail } from 'lucide-react';
 import ManagerSearchableDropdown from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
 
-import { useQueryClient } from '@tanstack/react-query';
 
 export default function ManagerInquiriesToolbar() {
   const { search, setSearch, statusFilter, setStatusFilter, openAdd, selectedIds, clearSelection, openBulkMsg, setCurrentPage } = useManagerInquiriesLogic();
@@ -19,6 +19,7 @@ export default function ManagerInquiriesToolbar() {
     setLocalSearch(search);
   }
 
+// EFFECT: Effect lifecycle and dependency list are intentionally scoped to values that control this side effect.
   useEffect(() => {
     const timer = setTimeout(() => {
       if (localSearch !== search) {
@@ -30,7 +31,7 @@ export default function ManagerInquiriesToolbar() {
 
   if (selectedIds.length > 0) {
     return (
-      <div className="bg-primary-subtle border border-primary/30 rounded-xl p-4 flex flex-wrap gap-3 items-center justify-between motion-safe:transition-all">
+      <div className="bg-primary-subtle border border-focus rounded-xl p-4 flex flex-wrap gap-3 items-center justify-between motion-safe:transition-all">
         <div className="flex flex-wrap items-center gap-4">
           <span className="font-semibold text-primary">
             {selectedIds.length} {selectedIds.length === 1 ? 'inquiry' : 'inquiries'} selected
@@ -87,7 +88,7 @@ export default function ManagerInquiriesToolbar() {
         </button>
         <button
           onClick={openAdd}
-          className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-on-primary bg-primary rounded-xl hover:bg-primary-hover motion-safe:transition-all motion-safe:duration-200 motion-safe:active:scale-95"
+          className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-on-primary bg-primary rounded-xl hover:bg-primary-hover motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95"
         >
           <Plus size={18} /> Add Inquiry
         </button>

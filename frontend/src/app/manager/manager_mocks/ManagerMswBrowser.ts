@@ -1,6 +1,7 @@
 import { setupWorker } from 'msw/browser';
 import { managerHandlers } from '@/app/manager/manager_mocks/ManagerMockHandlers';
 
+
 /**
  * Creates the Manager browser MSW worker from the feature-owned handlers.
  * The worker is intentionally owned by the Manager role root so every Manager

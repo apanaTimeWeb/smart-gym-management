@@ -2,7 +2,7 @@
 export default function ManagerPtLoading() {
   return (
     <div className="max-w-5xl mx-auto space-y-6 p-6">
-      <div className="h-8 w-48 bg-skeleton-base motion-safe:animate-pulse rounded" />
+      <div className="h-8 w-48 bg-skeleton-base bg-skeleton-highlight motion-safe:animate-pulse rounded" />
       <div className="h-12 w-96 bg-skeleton-base motion-safe:animate-pulse rounded-xl" />
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {[...Array(3)].map((_, i) => (

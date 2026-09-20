@@ -1,10 +1,11 @@
-'use client';
 // RESPONSIBILITY: Renders the ManagerAttendanceCheckInMethodBadge sub-view extracted from ManagerAttendanceTable; owns only this presentation responsibility.
-import type { ReactNode } from 'react';
-// RESPONSIBILITY: Renders the attendance data table and pagination controls.
-// CRITICAL FIX: Added Check-Out, Duration, and Method columns for time-tracking analytics.
+'use client';
 import { Clock, Calendar, CalendarCheck, Fingerprint, QrCode, Edit } from 'lucide-react';
 import type { CheckInMethod } from '@/app/manager/attendance/attendance_types/ManagerAttendanceTypes';
+import type { ReactNode } from 'react';
+
+// CRITICAL FIX: Added Check-Out, Duration, and Method columns for time-tracking analytics.
+
 
 export function ManagerAttendanceCheckInMethodBadge({ method }: { method?: CheckInMethod }) {
   if (!method) return <span className="text-secondary text-xs">—</span>;

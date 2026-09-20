@@ -1,7 +1,8 @@
 import { http, HttpResponse } from 'msw';
 import { managerMockApiUrl } from '@/app/manager/manager_infrastructure/ManagerMockApiUrl';
-import { ManagerReportsUrlConfig } from '@/app/manager/reports/reports_url_config';
 import { MOCK_REPORT_SUMMARY } from '@/app/manager/reports/reports_fixtures/ManagerReportsMockData';
+import { ManagerReportsUrlConfig } from '@/app/manager/reports/reports_url_config';
+
 
 export const managerReportsHandlers = [
   http.get(managerMockApiUrl(ManagerReportsUrlConfig.BACKEND_API.SUMMARY), () => {

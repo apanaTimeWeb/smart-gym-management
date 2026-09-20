@@ -1,5 +1,5 @@
-'use client';
 // RESPONSIBILITY: Renders a table-shaped loading skeleton using the global semantic skeleton tokens and documented 48px row geometry.
+'use client';
 import type { ManagerTableSkeletonProps } from '@/app/manager/manager_components/ManagerShared/manager_shared_types/ManagerTableSkeletonTypes';
 
 const SKELETON_ROW_KEYS = ['row-a', 'row-b', 'row-c', 'row-d', 'row-e', 'row-f', 'row-g', 'row-h'] as const;

@@ -1,16 +1,16 @@
-'use client';
 // RESPONSIBILITY: Renders the ManagerInquiriesContent sub-view extracted from ManagerInquiriesMain; owns only this presentation responsibility.
-// RESPONSIBILITY: Entry point for the Inquiries module. Sets up the module hook orchestration and composes all sub-components.
-import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/ManagerHeader';
-import ManagerToast from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
-import ManagerInquiriesMessageModal from '@/app/manager/inquiries/inquiries_components/ManagerInquiriesMessageModal/ManagerInquiriesMessageModal';
-import ManagerInquiriesBulkMessageModal from '@/app/manager/inquiries/inquiries_components/ManagerInquiriesBulkMessageModal/ManagerInquiriesBulkMessageModal';
-import { useManagerInquiriesLogic  } from '@/app/manager/inquiries/inquiries_hooks/ManagerUseManagerInquiriesLogic';
-import ManagerInquiriesKPIs from '@/app/manager/inquiries/inquiries_components/ManagerInquiriesKPIs/ManagerInquiriesKPIs';
-import ManagerInquiriesToolbar from '@/app/manager/inquiries/inquiries_components/ManagerInquiriesToolbar/ManagerInquiriesToolbar';
-import ManagerInquiriesTable from '@/app/manager/inquiries/inquiries_components/InquiriesTable/ManagerInquiriesTable';
-import ManagerInquiriesModal from '@/app/manager/inquiries/inquiries_components/ManagerInquiriesModal/ManagerInquiriesModal';
+'use client';
 import ManagerConvertLeadModal from '@/app/manager/inquiries/inquiries_components/ConvertLeadModal/ManagerConvertLeadModal';
+import ManagerInquiriesTable from '@/app/manager/inquiries/inquiries_components/InquiriesTable/ManagerInquiriesTable';
+import ManagerInquiriesBulkMessageModal from '@/app/manager/inquiries/inquiries_components/ManagerInquiriesBulkMessageModal/ManagerInquiriesBulkMessageModal';
+import ManagerInquiriesKPIs from '@/app/manager/inquiries/inquiries_components/ManagerInquiriesKPIs/ManagerInquiriesKPIs';
+import ManagerInquiriesMessageModal from '@/app/manager/inquiries/inquiries_components/ManagerInquiriesMessageModal/ManagerInquiriesMessageModal';
+import ManagerInquiriesModal from '@/app/manager/inquiries/inquiries_components/ManagerInquiriesModal/ManagerInquiriesModal';
+import ManagerInquiriesToolbar from '@/app/manager/inquiries/inquiries_components/ManagerInquiriesToolbar/ManagerInquiriesToolbar';
+import { useManagerInquiriesLogic  } from '@/app/manager/inquiries/inquiries_hooks/ManagerUseManagerInquiriesLogic';
+import ManagerToast from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
+import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/ManagerHeader';
+
 
 export function ManagerInquiriesContent() {
   const { toast, hideToast, msgModal, closeMsg, showToast, bulkMsgModal, closeBulkMsg, clearSelection } = useManagerInquiriesLogic();

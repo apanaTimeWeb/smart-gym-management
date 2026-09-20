@@ -1,7 +1,9 @@
+// DATA FLOW: Manager feature UI/state → owning custom hook → approved API/query/mutation layer → observable UI state.
 "use client";
 /** Coordinates the Manager / feature. */
 import { create } from "zustand";
 import type { Expense } from "@/app/manager/expenses/expenses_types/ManagerExpensesTypes";
+
 interface ManagerExpensesUiState { showModal: boolean; editId: string | null; editData: Partial<Expense> | null; openAdd: () => void; openEdit: (expense: Expense) => void; closeModal: () => void; }
 export const useManagerExpensesUiStore = create<ManagerExpensesUiState>((set) => ({
   showModal: false, editId: null, editData: null,

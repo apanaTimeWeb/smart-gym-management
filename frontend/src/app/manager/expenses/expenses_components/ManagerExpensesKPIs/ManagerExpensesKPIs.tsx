@@ -1,14 +1,15 @@
-'use client';
-import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 // RESPONSIBILITY: Renders high-level KPIs for the Expenses module.
+'use client';
 import { IndianRupee, TrendingDown, Clock, CheckCircle } from 'lucide-react';
 import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
-import { useExpensesStatsQuery } from '@/app/manager/expenses/expenses_api/ManagerUseManagerExpensesQueries';
+import { useExpensesStatsQuery } from '@/app/manager/expenses/expenses_hooks/ManagerUseManagerExpensesQueries';
+import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
+
 
 export default function ManagerExpensesKPIs() {
-  const { data: stats, isLoading, isError } = useExpensesStatsQuery();
+  const { data: stats, isPending, isError } = useExpensesStatsQuery();
 
-  if (isLoading || isError || !stats) return null; // Let Suspense/Main handle it
+  if (isPending || isError || !stats) return null; // Let Suspense/Main handle it
 
   const KPI_CARDS = [
     { label: 'Total Expenses (All Time)', value: formatCurrencyFromMinorUnits(stats.totalAmount, ManagerEnvConfig.currencyCode), icon: IndianRupee, color: 'text-primary', bg: "bg-primary-subtle" },
@@ -21,7 +22,7 @@ export default function ManagerExpensesKPIs() {
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       {KPI_CARDS.map(kpi => (
         <div key={kpi.label} className="bg-card border border-border p-5 rounded-xl shadow-card hover:shadow-card motion-safe:transition-shadow flex items-center gap-4 group">
-          <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${kpi.bg} ${kpi.color} group-hover:scale-110 motion-safe:transition-transform`}>
+          <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${kpi.bg} ${kpi.color} group-motion-safe:hover:scale-110 motion-safe:transition-transform`}>
             <kpi.icon size={18} />
           </div>
           <div>

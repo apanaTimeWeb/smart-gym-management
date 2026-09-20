@@ -1,34 +1,48 @@
-# Manager Sales Theme Contract
+# Manager Sales Module Theme Contract
 
-This document lists the semantic Tailwind CSS tokens required by the `manager/sales` feature module. It adheres strictly to the `web_global_design.md` architecture.
+This contract belongs only to `src/app/manager/sales`. It records the exact global semantic theme variables consumed by the current implementation. The global design system remains the visual source of truth.
 
-## Background Colors
-- `bg-card`: Card backgrounds for tables, KPI boxes, and charts.
-- `bg-input`: Search bar and dropdown filter backgrounds.
-- `bg-primary/10`: Subtle background for active states or primary KPI highlights.
-- `bg-success/10`: Subtle background for successful metrics.
-- `bg-warning/10`: Subtle background for pending/warning metrics.
-- `bg-danger/10`: Subtle background for overdue/failed metrics.
+## Consumed Global Semantic Tokens
 
-## Text Colors
-- `text-foreground`: Primary text color.
-- `text-secondary`: Secondary/muted text for labels and sub-values.
-- `text-primary`: Primary highlights.
-- `text-success`: Positive metrics or completed statuses.
-- `text-warning`: Pending metrics.
-- `text-danger`: Negative metrics or overdue statuses.
+| CSS Variable | Current Usage |
+| --- | --- |
+| `--bg-card` | card/panel surface |
+| `--bg-input` | input surface |
+| `--bg-overlay` | dialog/drawer surface |
+| `--bg-page` | page surface |
+| `--border` | standard borders/dividers |
+| `--chart-danger` | semantic token consumed by the feature |
+| `--chart-grid` | semantic token consumed by the feature |
+| `--chart-primary` | semantic token consumed by the feature |
+| `--chart-success` | semantic token consumed by the feature |
+| `--danger` | solid danger surface |
+| `--danger-bg` | subtle danger surface |
+| `--danger-text` | danger text |
+| `--focus-ring` | keyboard focus ring |
+| `--primary` | primary brand/active controls |
+| `--primary-hover` | primary hover state |
+| `--primary-subtle` | subtle primary surfaces |
+| `--shadow-card` | card elevation |
+| `--shadow-dialog` | dialog elevation |
+| `--skeleton-base` | skeleton base |
+| `--skeleton-highlight` | skeleton highlight |
+| `--success` | solid success surface |
+| `--success-text` | success text |
+| `--text-on-danger` | text on solid danger |
+| `--text-on-primary` | text on solid primary |
+| `--text-on-success` | text on solid success |
+| `--text-primary` | primary text |
+| `--text-secondary` | secondary text/labels |
+| `--warning-text` | warning text |
 
-## Border Colors
-- `border-border`: General structural borders.
+## Binding Rules
 
-## ApexCharts Configuration
-For charts, the module uses `react-apexcharts`. Since Canvas/SVG libraries do not reliably resolve all Tailwind variable classes, hex colors are permitted strictly within the ApexCharts configuration object:
-- `#4F46E5`: Primary Sales (revenue)
-- `#10B981`: Store POS (storeRevenue)
-- `#F43F5E`: New Members Trend (newMembers)
-- `#A1A1AA`: Axis labels (zinc-400 / secondary text)
+- No raw hex colors, arbitrary Tailwind color values, or raw RGBA colors may be introduced into module JSX.
+- Semantic background opacity modifiers such as `bg-success/10` and `bg-primary/20` are forbidden.
+- Solid semantic backgrounds require the appropriate documented on-color; otherwise use the subtle `*-bg` variant.
+- Feature-specific business status mappings remain local to this feature.
+- No feature-local CSS variable is defined by this module unless explicitly documented here.
 
-## Semantic Status Mapping
-- `Success / Completed`: `text-success`, `bg-success/10`
-- `Pending / Warning`: `text-warning`, `bg-warning/10`
-- `Overdue / Danger`: `text-danger`, `bg-danger/10`
+## Portability
+
+When this feature is copied to another compatible application, define the listed semantic variables through that application's canonical global theme stylesheet and preserve the same semantic meanings.

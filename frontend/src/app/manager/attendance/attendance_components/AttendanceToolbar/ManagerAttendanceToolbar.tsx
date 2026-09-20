@@ -1,10 +1,11 @@
-'use client';
 // RESPONSIBILITY: Provides the search, filter tabs, and action buttons for the Attendance module.
+'use client';
 import { useState, useEffect } from 'react';
 import { RefreshCw, Plus, Search, Download } from 'lucide-react';
 import { useManagerAttendanceLogic } from '@/app/manager/attendance/attendance_hooks/ManagerUseManagerAttendanceLogic';
 import { ATTENDANCE_TABS } from '@/app/manager/attendance/attendance_utils/ManagerAttendanceSharedConstants';
 import ManagerSearchableDropdown from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
+
 
 export default function ManagerAttendanceToolbar() {
   const { tab, setTab, loadAll, setShowModal, search, setSearch, dateFilter, setDateFilter, statusFilter, setStatusFilter, setCurrentPage, exportAttendance } = useManagerAttendanceLogic();
@@ -16,6 +17,7 @@ export default function ManagerAttendanceToolbar() {
     setLocalSearch(search);
   }
 
+// EFFECT: Effect lifecycle and dependency list are intentionally scoped to values that control this side effect.
   useEffect(() => {
     const timer = setTimeout(() => {
       if (localSearch !== search) {
@@ -50,7 +52,7 @@ export default function ManagerAttendanceToolbar() {
         value={localSearch} 
         onChange={e => setLocalSearch(e.target.value)} 
         placeholder={`Search ${tab.toLowerCase()}...`} 
-        className="pl-9 pr-3 py-2 border border-border bg-input text-primary rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary w-full sm:w-64"
+        className="pl-9 pr-3 py-2 border border-border bg-input text-primary rounded-lg text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary w-full sm:w-64"
       />
     </div>
     
@@ -59,7 +61,7 @@ export default function ManagerAttendanceToolbar() {
         type="date"
         value={dateFilter}
         onChange={(e) => setDateFilter(e.target.value)}
-        className="px-3 py-2 border border-border bg-input text-primary rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary w-full"
+        className="px-3 py-2 border border-border bg-input text-primary rounded-lg text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary w-full"
       />
     </div>
     

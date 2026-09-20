@@ -1,13 +1,14 @@
-'use client';
-import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 // RESPONSIBILITY: Renders the pending payments list on the dashboard with a local search filter.
+'use client';
 import { useState } from 'react';
-import Link from 'next/link';
 import { Search, BellRing } from 'lucide-react';
-import { ManagerDashboardUrlConfig } from '@/app/manager/dashboard/dashboard_url_config';
-import { useDashboardStatsQuery } from '@/app/manager/dashboard/dashboard_api/ManagerUseManagerDashboardQueries';
-import { useManagerDashboardUrlState } from '@/app/manager/dashboard/dashboard_hooks/ManagerUseManagerDashboardUrlState';
+import Link from 'next/link';
 import { formatCurrencyFromMinorUnits , formatDate} from '@/lib/formatters';
+import { useDashboardStatsQuery } from '@/app/manager/dashboard/dashboard_hooks/ManagerUseManagerDashboardQueries';
+import { useManagerDashboardUrlState } from '@/app/manager/dashboard/dashboard_hooks/ManagerUseManagerDashboardUrlState';
+import { ManagerDashboardUrlConfig } from '@/app/manager/dashboard/dashboard_url_config';
+import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
+
 
 export default function ManagerDashboardPendingPayments() {
   const { range } = useManagerDashboardUrlState();

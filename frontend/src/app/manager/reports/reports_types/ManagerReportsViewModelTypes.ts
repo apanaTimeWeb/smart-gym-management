@@ -10,6 +10,6 @@ export interface ManagerReportsViewModel {
   isPending: boolean;
   isError: boolean;
   exporting: boolean;
-  handleExportCSV: () => Promise<unknown>;
+  handleExportCSV: () => Promise<void>;
   reload: () => Promise<void>;
 }

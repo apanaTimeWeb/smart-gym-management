@@ -18,7 +18,7 @@ export interface ManagerFinanceViewModel {
   payments: Payment[];
   totalPayments: number;
   summary: FinanceSummary | null;
-  isLoading: boolean;
+  isPending: boolean;
   isError: boolean;
   errorMessage: string;
   saving: boolean;

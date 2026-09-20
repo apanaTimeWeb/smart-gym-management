@@ -1,9 +1,9 @@
-'use client';
 // RESPONSIBILITY: Renders the ManagerReportsAttendanceTable sub-view extracted from ManagerReportsTable; owns only this presentation responsibility.
-// RESPONSIBILITY: Renders the data table for the active report tab — Revenue, Attendance, Members, or Expenses.
-import { useManagerReportsLogic } from '@/app/manager/reports/reports_hooks/ManagerUseManagerReportsLogic';
+'use client';
 import { formatCurrencyFromMinorUnits, formatNumber } from '@/lib/formatters';
 import ManagerReportsEmptyState from '@/app/manager/reports/reports_components/ManagerReportsTable/ManagerReportsEmptyState';
+import { useManagerReportsLogic } from '@/app/manager/reports/reports_hooks/ManagerUseManagerReportsLogic';
+
 
 export function ManagerReportsAttendanceTable() {
   const { summary } = useManagerReportsLogic();

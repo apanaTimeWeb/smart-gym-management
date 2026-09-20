@@ -1,13 +1,14 @@
-'use client';
 // RESPONSIBILITY: Renders the Expenses page composition and owns only transient tab selection; query/mutation state stays in the feature hook/API layer.
+'use client';
 import { Suspense, useState } from 'react';
+import ManagerExpensesKPIs from '@/app/manager/expenses/expenses_components/ManagerExpensesKPIs/ManagerExpensesKPIs';
+import ManagerExpensesChart from '@/app/manager/expenses/expenses_components/ManagerExpensesMain/ManagerExpensesChart';
+import ManagerExpensesModal from '@/app/manager/expenses/expenses_components/ManagerExpensesModal/ManagerExpensesModal';
+import ManagerExpensesTable from '@/app/manager/expenses/expenses_components/ManagerExpensesTable/ManagerExpensesTable';
+import ManagerExpensesToolbar from '@/app/manager/expenses/expenses_components/ManagerExpensesToolbar/ManagerExpensesToolbar';
 import { useManagerExpensesLogic  } from '@/app/manager/expenses/expenses_hooks/ManagerUseManagerExpensesLogic';
 import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/ManagerHeader';
-import ManagerExpensesToolbar from '@/app/manager/expenses/expenses_components/ManagerExpensesToolbar/ManagerExpensesToolbar';
-import ManagerExpensesKPIs from '@/app/manager/expenses/expenses_components/ManagerExpensesKPIs/ManagerExpensesKPIs';
-import ManagerExpensesTable from '@/app/manager/expenses/expenses_components/ManagerExpensesTable/ManagerExpensesTable';
-import ManagerExpensesModal from '@/app/manager/expenses/expenses_components/ManagerExpensesModal/ManagerExpensesModal';
-import ManagerExpensesChart from '@/app/manager/expenses/expenses_components/ManagerExpensesMain/ManagerExpensesChart';
+
 
 export function ManagerExpensesContent() {
   const { setShowModal } = useManagerExpensesLogic();

@@ -1,19 +1,22 @@
-'use client';
-// RESPONSIBILITY: Owns Settings form setup, synchronization, validation, submission and dirty-state protection.
 // DATA FLOW: Settings query → RHF/Zod draft → save mutation → backend message → Query cache/UI.
+// RESPONSIBILITY: Owns Settings form setup, synchronization, validation, submission and dirty-state protection.
+'use client';
 /** Coordinates the Manager / feature. */
 import { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
 import { showManagerErrorToast, showManagerSuccessToast } from '@/app/manager/manager_infrastructure/ManagerToastService';
+import { useManagerUnsavedChangesGuard } from '@/app/manager/manager_infrastructure/ManagerUnsavedChangesGuard';
 import { useManagerSettingsLogic } from '@/app/manager/settings/settings_hooks/ManagerUseManagerSettingsLogic';
 import { managerAllSettingsSchema } from '@/app/manager/settings/settings_schemas/ManagerSettingsSchema';
-import type { ManagerAllSettings } from '@/app/manager/settings/settings_types/ManagerSettingsTypes';
 import { EMPTY_MANAGER_SETTINGS } from '@/app/manager/settings/settings_types/ManagerSettingsFormTypes';
-import { useManagerUnsavedChangesGuard } from '@/app/manager/manager_infrastructure/ManagerUnsavedChangesGuard';
+import type { ManagerAllSettings } from '@/app/manager/settings/settings_types/ManagerSettingsTypes';
+
+/** Orchestrates the owning Manager feature behavior while preserving its documented state boundary. */
 export function useManagerSettingsForm() {
   const logic = useManagerSettingsLogic();
   const form = useForm<ManagerAllSettings>({ resolver: zodResolver(managerAllSettingsSchema), defaultValues: EMPTY_MANAGER_SETTINGS });
+// EFFECT: Effect lifecycle and dependency list are intentionally scoped to values that control this side effect.
   useEffect(() => { if (logic.settings) form.reset(logic.settings); }, [form, logic.settings]);
   useManagerUnsavedChangesGuard(form.formState.isDirty);
   const submit = form.handleSubmit(async (draft) => { try { const response = await logic.saveSettings(draft); form.reset(response.data ?? draft); showManagerSuccessToast(response.message, 'manager-settings-save-success'); } catch (error: unknown) { showManagerErrorToast(error, 'manager-settings-save-error'); } });

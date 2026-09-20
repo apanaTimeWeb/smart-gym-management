@@ -1,18 +1,19 @@
-'use client';
 // RESPONSIBILITY: Renders the Exercise collection cards and delegates edit/delete behavior to the Library hook.
+'use client';
 import { Dumbbell, Edit2, Trash2 } from 'lucide-react';
+import ManagerLibraryEmptyState from '@/app/manager/library/library_components/ManagerLibraryEmptyState/ManagerLibraryEmptyState';
 import { useManagerLibraryLogic } from '@/app/manager/library/library_hooks/ManagerUseManagerLibraryLogic';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
-import ManagerLibraryEmptyState from '@/app/manager/library/library_components/ManagerLibraryEmptyState/ManagerLibraryEmptyState';
-import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_infrastructure/ManagerPaginationDefaults';
 import { MANAGER_GENERIC_ERROR_MESSAGE } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
+import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_infrastructure/ManagerPaginationDefaults';
+
 
 const EXERCISE_SKELETON_IDS = ['exercise-a', 'exercise-b', 'exercise-c', 'exercise-d', 'exercise-e', 'exercise-f'] as const;
 
 export default function ManagerLibraryExerciseGrid() {
-  const { exercises, totalExercises, isLoading, isError, errorMessage, currentPage, setCurrentPage, openAddExercise, openEditExercise, deleteExercise, loadAll } = useManagerLibraryLogic();
+  const { exercises, totalExercises, isPending, isError, errorMessage, currentPage, setCurrentPage, openAddExercise, openEditExercise, deleteExercise, loadAll } = useManagerLibraryLogic();
   const totalPages = Math.max(1, Math.ceil(totalExercises / MANAGER_ITEMS_PER_PAGE));
-  if (isLoading) return <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3" aria-label="Loading exercises">{EXERCISE_SKELETON_IDS.map((id) => <div key={id} className="h-48 rounded-xl border border-border bg-skeleton-base p-5 motion-safe:animate-pulse"><div className="h-10 w-10 rounded-xl bg-skeleton-highlight" /><div className="mt-4 h-4 w-3/4 rounded bg-skeleton-highlight" /><div className="mt-2 h-3 w-1/2 rounded bg-skeleton-highlight" /><div className="mt-8 h-3 w-full rounded bg-skeleton-highlight" /></div>)}</div>;
+  if (isPending) return <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3" aria-label="Loading exercises">{EXERCISE_SKELETON_IDS.map((id) => <div key={id} className="h-48 rounded-xl border border-border bg-skeleton-base p-5 motion-safe:animate-pulse"><div className="h-10 w-10 rounded-xl bg-skeleton-highlight" /><div className="mt-4 h-4 w-3/4 rounded bg-skeleton-highlight" /><div className="mt-2 h-3 w-1/2 rounded bg-skeleton-highlight" /><div className="mt-8 h-3 w-full rounded bg-skeleton-highlight" /></div>)}</div>;
   if (isError) return <div role="alert" className="flex min-h-64 flex-col items-center justify-center gap-3 rounded-xl border border-danger bg-danger-bg p-6 text-center"><p className="text-sm font-semibold text-danger">{errorMessage || MANAGER_GENERIC_ERROR_MESSAGE}</p><button type="button" onClick={() => void loadAll()} className="min-h-11 rounded-lg bg-primary text-on-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">Retry</button></div>;
   if (exercises.length === 0) return <div className="space-y-5"><ManagerLibraryEmptyState view="exercises" onAdd={openAddExercise} /><ManagerPagination currentPage={currentPage} totalPages={totalPages} totalItems={totalExercises} itemsPerPage={MANAGER_ITEMS_PER_PAGE} onPageChange={setCurrentPage} /></div>;
   return (

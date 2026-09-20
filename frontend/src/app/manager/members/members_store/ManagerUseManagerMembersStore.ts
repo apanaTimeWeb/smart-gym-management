@@ -1,3 +1,4 @@
+// DATA FLOW: Manager feature UI/state → owning custom hook → approved API/query/mutation layer → observable UI state.
 /**
  * RESPONSIBILITY: Zustand store that manages UI state for the Members module.
  * DATA FLOW: UI Components -> useManagerMembersStore

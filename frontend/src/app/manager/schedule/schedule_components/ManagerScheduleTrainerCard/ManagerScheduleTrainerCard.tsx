@@ -1,9 +1,10 @@
-'use client';
 // RESPONSIBILITY: Renders a single trainer's availability summary card — total shifts, hours, and per-day status dots.
-import type { ManagerScheduleTrainerCardProps } from '@/app/manager/schedule/schedule_types/ManagerScheduleTrainerCardTypes';
+'use client';
 import { Clock, CalendarDays, Plus } from 'lucide-react';
-import { SHIFT_DAYS, SHIFT_STATUS_STYLES } from '@/app/manager/schedule/schedule_utils/ManagerScheduleSharedConstants';
 import { useManagerScheduleLogic } from '@/app/manager/schedule/schedule_hooks/ManagerUseManagerScheduleLogic';
+import { SHIFT_DAYS, SHIFT_STATUS_STYLES } from '@/app/manager/schedule/schedule_utils/ManagerScheduleSharedConstants';
+import type { ManagerScheduleTrainerCardProps } from '@/app/manager/schedule/schedule_types/ManagerScheduleTrainerCardTypes';
+
 
 
 
@@ -18,7 +19,7 @@ export default function ManagerScheduleTrainerCard({ trainer }: ManagerScheduleT
           <p className="text-sm font-semibold text-primary">{trainer.trainerName}</p>
           <p className="text-xs text-secondary">{trainer.trainerRole}</p>
         </div>
-        <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${trainer.isActive ? 'bg-success-bg text-success' : 'bg-border/40 text-secondary'}`}>
+        <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${trainer.isActive ? 'bg-success-bg text-success' : 'bg-input text-secondary'}`}>
           {trainer.isActive ? 'Active' : 'Inactive'}
         </span>
       </div>
@@ -39,7 +40,7 @@ export default function ManagerScheduleTrainerCard({ trainer }: ManagerScheduleT
               key={day}
               title={shift ? `${day}: ${shift.startTime}–${shift.endTime} (${shift.status})` : `${day}: No shift`}
               className={`w-7 h-7 rounded-md flex items-center justify-center text-xs font-bold cursor-default ${
-                styles ? `${styles.bg} ${styles.text}` : 'bg-border/30 text-secondary'
+                styles ? `${styles.bg} ${styles.text}` : 'bg-input text-secondary'
               }`}
             >
               {day[0]}

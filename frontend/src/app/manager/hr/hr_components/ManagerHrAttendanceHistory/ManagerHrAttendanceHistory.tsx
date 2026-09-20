@@ -1,13 +1,14 @@
-'use client';
 // RESPONSIBILITY: Renders read-only staff attendance history from the documented Manager HR attendance API; no attendance mutation UI is fabricated here.
-import { MANAGER_GENERIC_ERROR_MESSAGE } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
+'use client';
 import { useEffect, useState } from 'react';
 import { CalendarDays } from 'lucide-react';
-import { useManagerHrLogic } from '@/app/manager/hr/hr_hooks/ManagerUseManagerHrLogic';
-import { useManagerHrStaffAttendanceQuery } from '@/app/manager/hr/hr_api/ManagerUseManagerHrStaffAttendanceQuery';
 import { formatDate, displayValue } from '@/lib/formatters';
+import { useManagerHrLogic } from '@/app/manager/hr/hr_hooks/ManagerUseManagerHrLogic';
+import { useManagerHrStaffAttendanceQuery } from '@/app/manager/hr/hr_hooks/ManagerUseManagerHrStaffAttendanceQuery';
 import ManagerSearchableDropdown from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
+import { MANAGER_GENERIC_ERROR_MESSAGE } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
 import type { ManagerHrStaffAttendanceRecord } from '@/app/manager/hr/hr_types/ManagerHrStaffAttendanceTypes';
+
 
 const ATTENDANCE_COLUMN_COUNT = 4;
 
@@ -16,9 +17,9 @@ function getCurrentMonth(): string {
 }
 
 function getStatusClass(status: string) {
-  if (status === 'PRESENT') return 'bg-success-bg text-success border-success/20';
-  if (status === 'ABSENT') return 'bg-danger-bg text-danger border-danger/20';
-  return 'bg-warning-bg text-warning border-warning/20';
+  if (status === 'PRESENT') return 'bg-success-bg text-success border-success';
+  if (status === 'ABSENT') return 'bg-danger-bg text-danger border-danger';
+  return 'bg-warning-bg text-warning border-warning';
 }
 
 export default function ManagerHrAttendanceHistory() {
@@ -26,6 +27,7 @@ export default function ManagerHrAttendanceHistory() {
   const [selectedStaffId, setSelectedStaffId] = useState('');
   const [month, setMonth] = useState(getCurrentMonth);
 
+// EFFECT: Effect lifecycle and dependency list are intentionally scoped to values that control this side effect.
   useEffect(() => {
     if (!selectedStaffId && staff[0]?.id) setSelectedStaffId(staff[0].id);
   }, [selectedStaffId, staff]);
@@ -60,7 +62,7 @@ export default function ManagerHrAttendanceHistory() {
       <div className="overflow-x-auto rounded-xl border border-border bg-card">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="border-b border-border bg-secondary/5">
+            <tr className="border-b border-border bg-surface-highlight">
               <th className="p-4 text-xs font-semibold uppercase tracking-wide text-secondary">Date</th>
               <th className="p-4 text-xs font-semibold uppercase tracking-wide text-secondary">Status</th>
               <th className="p-4 text-xs font-semibold uppercase tracking-wide text-secondary">Check-in</th>

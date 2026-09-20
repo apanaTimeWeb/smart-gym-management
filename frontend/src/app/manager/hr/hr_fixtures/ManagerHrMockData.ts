@@ -53,13 +53,13 @@ export const MOCK_PAYROLLS: Payroll[] = [
   {
     id: 'pr1',
     staffId: 's1',
-    month: '2024-05',
+    month: new Date().toISOString().slice(0, 7),
     amount: 4500000,
     netPayable: 4200000,
     paidAmount: 4200000,
     pendingAmount: 0,
     status: 'PAID',
-    paidAt: '2024-05-31T10:00:00Z',
+    paidAt: new Date().toISOString(),
     deductions: { tds: 100000, pf: 180000, esi: 20000, other: 0 },
     staff: { name: 'Rahul Verma', role: 'Senior Trainer' }
   }
@@ -69,7 +69,7 @@ export const MOCK_LEDGER: LedgerEntry[] = [
   {
     id: 'l1',
     staffId: 's1',
-    date: '2024-05-31T10:00:00Z',
+    date: new Date().toISOString(),
     type: 'Salary Paid',
     credit: 0,
     debit: 4200000,

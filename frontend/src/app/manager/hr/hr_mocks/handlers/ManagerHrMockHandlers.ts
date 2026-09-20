@@ -1,9 +1,10 @@
 import { http, HttpResponse } from 'msw';
-import { managerMockApiUrl } from '@/app/manager/manager_infrastructure/ManagerMockApiUrl';
+import { MOCK_STAFF, MOCK_PAYROLLS, MOCK_HR_SUMMARY, MOCK_LEDGER } from '@/app/manager/hr/hr_fixtures/ManagerHrMockData';
 import { ManagerHrUrlConfig } from '@/app/manager/hr/hr_url_config';
 import { MANAGER_HTTP_STATUS } from '@/app/manager/manager_infrastructure/ManagerHttpStatus';
-import { MOCK_STAFF, MOCK_PAYROLLS, MOCK_HR_SUMMARY, MOCK_LEDGER } from '@/app/manager/hr/hr_fixtures/ManagerHrMockData';
+import { managerMockApiUrl } from '@/app/manager/manager_infrastructure/ManagerMockApiUrl';
 import type { Staff, Payroll } from '@/app/manager/hr/hr_types/ManagerHrTypes';
+
 
 let mockStaff = [...MOCK_STAFF];
 let mockPayrolls = [...MOCK_PAYROLLS];
@@ -11,6 +12,15 @@ let mockLedger = [...MOCK_LEDGER];
 
 let mockStaffIdCounter = 1000;
 let mockPayrollIdCounter = 1000;
+
+export function resetManagerHrMockState(): void {
+  mockStaff = [...MOCK_STAFF];
+  mockPayrolls = [...MOCK_PAYROLLS];
+  mockLedger = [...MOCK_LEDGER];
+  mockStaffIdCounter = 1000;
+  mockPayrollIdCounter = 1000;
+}
+
 export const managerHrHandlers = [
   http.get(managerMockApiUrl(ManagerHrUrlConfig.BACKEND_API.STAFF_BASE), ({ request }) => {
     const url = new URL(request.url);
@@ -110,16 +120,35 @@ export const managerHrHandlers = [
 
   http.post(managerMockApiUrl(ManagerHrUrlConfig.BACKEND_API.LEDGER_ADVANCE), async ({ request }) => {
     const data = await request.json() as Record<string, unknown>;
-    return HttpResponse.json({ success: true, message: 'Success', data: { advanceAmount: data.amount } });
+    const amount = Number(data.amount ?? 0);
+    const staffId = String(data.staffId ?? '');
+    const currentBalance = mockLedger.filter((entry) => entry.staffId === staffId).reduce((balance, entry) => balance + entry.credit - entry.debit, 0);
+    mockLedger = [{ id: `ledger-advance-${Date.now()}`, staffId, date: new Date().toISOString(), type: 'Advance Given', credit: 0, debit: amount, balance: currentBalance - amount, notes: String(data.notes ?? ''), paymentMode: String(data.paymentMode ?? '') }, ...mockLedger];
+    return HttpResponse.json({ success: true, message: 'Advance recorded', data: { advanceAmount: amount } });
   }),
 
   http.post(managerMockApiUrl(ManagerHrUrlConfig.BACKEND_API.LEDGER_PAY_DUE), async ({ request }) => {
     const data = await request.json() as Record<string, unknown>;
-    return HttpResponse.json({ success: true, message: 'Success', data: { paidAmount: data.amount } });
+    const amount = Number(data.amount ?? 0);
+    const staffId = String(data.staffId ?? '');
+    const currentBalance = mockLedger.filter((entry) => entry.staffId === staffId).reduce((balance, entry) => balance + entry.credit - entry.debit, 0);
+    mockLedger = [{ id: `ledger-due-${Date.now()}`, staffId, date: new Date().toISOString(), type: 'Due Paid', credit: 0, debit: amount, balance: currentBalance - amount, notes: String(data.notes ?? ''), paymentMode: String(data.paymentMode ?? '') }, ...mockLedger];
+    return HttpResponse.json({ success: true, message: 'Due payment recorded', data: { paidAmount: amount } });
   }),
   
-  http.get(managerMockApiUrl(`/manager/hr/staff/:staffId/attendance`), ({ request }) => {
+  http.get(managerMockApiUrl(ManagerHrUrlConfig.BACKEND_API.STAFF_ATTENDANCE_BASE(':staffId')), ({ request }) => {
     const _month = new URL(request.url).searchParams.get('month');
-    return HttpResponse.json({ success: true, message: 'Success', data: { history: [] } });
+    return HttpResponse.json({ 
+      success: true, 
+      message: 'Success', 
+      data: { 
+        history: [
+          { date: '2024-05-01', status: 'Present', checkIn: '08:00 AM', checkOut: '05:00 PM' },
+          { date: '2024-05-02', status: 'Present', checkIn: '08:15 AM', checkOut: '05:05 PM' },
+          { date: '2024-05-03', status: 'Absent' },
+          { date: '2024-05-04', status: 'Leave' }
+        ] 
+      } 
+    });
   }),
 ];

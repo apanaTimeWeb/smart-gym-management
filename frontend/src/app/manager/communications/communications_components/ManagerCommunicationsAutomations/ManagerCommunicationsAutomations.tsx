@@ -1,9 +1,10 @@
-'use client';
 // RESPONSIBILITY: Renders the Automations tab in Communications, allowing managers to enable/disable and configure automated background triggers like Birthday and Anniversary messages.
+'use client';
 import { useState } from 'react';
 import { Loader2, Zap, Settings, MessageSquare, Clock } from 'lucide-react';
-import type { CommAutomation } from '@/app/manager/communications/communications_types/ManagerCommunications_types';
 import { useManagerCommunicationsLogic } from '@/app/manager/communications/communications_hooks/ManagerUseManagerCommunicationsLogic';
+import type { CommAutomation } from '@/app/manager/communications/communications_types/ManagerCommunications_types';
+
 
 export default function ManagerCommunicationsAutomations() {
   const { automations, automationsLoading, updateAutomation, isUpdatingAutomation } = useManagerCommunicationsLogic();
@@ -36,7 +37,7 @@ export default function ManagerCommunicationsAutomations() {
   };
 
   return (
-    <div className="space-y-6 motion-safe:animate-in motion-safe:fade-in motion-safe:duration-500">
+    <div className="space-y-6 motion-safe:animate-in motion-safe:fade-in motion-safe:duration-xslow">
       
       {/* Header Panel */}
       <div className="bg-card border border-border rounded-xl p-5 md:p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
@@ -57,10 +58,10 @@ export default function ManagerCommunicationsAutomations() {
           const isEditing = editingId === auto.id;
 
           return (
-            <div key={auto.id} className={`bg-card border rounded-xl overflow-hidden motion-safe:transition-colors ${auto.enabled ? 'border-primary/30' : 'border-border'}`}>
+            <div key={auto.id} className={`bg-card border rounded-xl overflow-hidden motion-safe:transition-colors ${auto.enabled ? 'border-focus' : 'border-border'}`}>
               
               {/* Card Header */}
-              <div className="px-5 py-4 border-b border-border flex items-center justify-between bg-input/20">
+              <div className="px-5 py-4 border-b border-border flex items-center justify-between bg-input">
                 <div className="flex items-center gap-3">
                   <div className={`p-2 rounded-lg ${auto.enabled ? 'bg-primary-subtle text-primary' : 'bg-input text-secondary'}`}>
                     <Zap size={18} />
@@ -81,7 +82,7 @@ export default function ManagerCommunicationsAutomations() {
                 >
                   <span
                     className={`inline-block h-4 w-4 transform rounded-full bg-page motion-safe:transition-transform ${
-                      auto.enabled ? 'translate-x-6' : 'translate-x-1 bg-disabled'
+                      auto.enabled ? 'motion-safe:translate-x-6 motion-reduce:translate-x-6' : 'motion-safe:translate-x-1 motion-reduce:translate-x-1 bg-input'
                     }`}
                   />
                 </button>
@@ -100,7 +101,7 @@ export default function ManagerCommunicationsAutomations() {
                         type="time"
                         value={draftTime}
                         onChange={(e) => setDraftTime(e.target.value)}
-                        className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                        className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
                       />
                     </div>
                     <div>
@@ -111,7 +112,7 @@ export default function ManagerCommunicationsAutomations() {
                         value={draftMessage}
                         onChange={(e) => setDraftMessage(e.target.value)}
                         rows={4}
-                        className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-primary focus:outline-none focus:ring-1 focus:ring-primary resize-none"
+                        className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary resize-none"
                       />
                       <p className="text-xs text-secondary mt-1">Use <code className="text-primary font-mono">{'{name}'}</code> to personalize.</p>
                     </div>
@@ -143,7 +144,7 @@ export default function ManagerCommunicationsAutomations() {
                       <label className="flex items-center gap-2 text-xs font-semibold text-secondary uppercase tracking-wider mb-1">
                         <MessageSquare size={18} /> WhatsApp Template
                       </label>
-                      <div className="bg-input/50 border border-border rounded-lg p-3 text-sm text-secondary italic">
+                      <div className="bg-input border border-border rounded-lg p-3 text-sm text-secondary italic">
                         "{auto.messageTemplate}"
                       </div>
                     </div>

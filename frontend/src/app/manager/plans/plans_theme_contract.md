@@ -1,35 +1,47 @@
-# Manager Plans Theme Contract
+# Manager Plans Module Theme Contract
 
-This module exclusively uses the following semantic Tailwind design tokens. Do not use arbitrary colors or shadows.
+This contract belongs only to `src/app/manager/plans`. It records the exact global semantic theme variables consumed by the current implementation. The global design system remains the visual source of truth.
 
-## Backgrounds
-- `bg-page` (main background)
-- `bg-card` (cards, modals)
-- `bg-input` (inputs, empty state areas, badge backgrounds)
-- `bg-accent` (hover states)
-- `bg-info/10` (Basic tier badge background)
-- `bg-warning/10` (Gold tier badge background)
-- `bg-primary/10` (Premium tier badge background)
-- `bg-success/10` (Active plan background)
-- `bg-danger/10` (Inactive plan background)
+## Consumed Global Semantic Tokens
 
-## Text
-- `text-foreground` (primary text)
-- `text-secondary` (subtext, labels, empty state icons)
-- `text-primary` (call to actions, Premium tier text)
-- `text-primary-foreground` (text on primary buttons)
-- `text-info` (Basic tier text)
-- `text-warning` (Gold tier text)
-- `text-success` (Active plan text, features checkmark)
-- `text-danger` (Inactive plan text)
+| CSS Variable | Current Usage |
+| --- | --- |
+| `--bg-card` | card/panel surface |
+| `--bg-input` | input surface |
+| `--bg-overlay` | dialog/drawer surface |
+| `--bg-page` | page surface |
+| `--border` | standard borders/dividers |
+| `--border-focus` | focused border |
+| `--danger-bg` | subtle danger surface |
+| `--danger-text` | danger text |
+| `--focus-ring` | keyboard focus ring |
+| `--info` | solid info surface |
+| `--info-bg` | subtle info surface |
+| `--info-text` | info text |
+| `--primary` | primary brand/active controls |
+| `--primary-hover` | primary hover state |
+| `--primary-subtle` | subtle primary surfaces |
+| `--shadow-card` | card elevation |
+| `--shadow-dialog` | dialog elevation |
+| `--skeleton-base` | skeleton base |
+| `--skeleton-highlight` | skeleton highlight |
+| `--success-bg` | subtle success surface |
+| `--success-text` | success text |
+| `--text-on-info` | text on solid info |
+| `--text-on-primary` | text on solid primary |
+| `--text-primary` | primary text |
+| `--text-secondary` | secondary text/labels |
+| `--warning-bg` | subtle warning surface |
+| `--warning-text` | warning text |
 
-## Borders
-- `border-border` (cards, inputs, dividers)
-- `border-primary` (active input borders, focus states)
+## Binding Rules
 
-## Interactive
-- `motion-safe:transition-all`
-- `motion-safe:transition-colors`
-- `motion-safe:transition-opacity`
-- `motion-safe:hover:-translate-y-1`
-- `hover:shadow-lg`
+- No raw hex colors, arbitrary Tailwind color values, or raw RGBA colors may be introduced into module JSX.
+- Semantic background opacity modifiers such as `bg-success/10` and `bg-primary/20` are forbidden.
+- Solid semantic backgrounds require the appropriate documented on-color; otherwise use the subtle `*-bg` variant.
+- Feature-specific business status mappings remain local to this feature.
+- No feature-local CSS variable is defined by this module unless explicitly documented here.
+
+## Portability
+
+When this feature is copied to another compatible application, define the listed semantic variables through that application's canonical global theme stylesheet and preserve the same semantic meanings.

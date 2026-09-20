@@ -1,9 +1,10 @@
-'use client';
 // RESPONSIBILITY: Renders the search input, category filter, and Add Product CTA for the Store module.
+'use client';
 import { useState, useEffect } from 'react';
 import { Plus, ShoppingCart, RefreshCw, Search } from 'lucide-react';
-import { useManagerStoreLogic } from '@/app/manager/store/store_hooks/ManagerUseManagerStoreLogic';
 import ManagerSearchableDropdown from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
+import { useManagerStoreLogic } from '@/app/manager/store/store_hooks/ManagerUseManagerStoreLogic';
+
 
 export default function ManagerStoreToolbar() {
   const { tab, setTab, loadAll, openAddProduct, setShowOrderModal, search, setSearch, setCurrentPage, categoryFilter, setCategoryFilter, stockFilter, setStockFilter } = useManagerStoreLogic();
@@ -15,6 +16,7 @@ export default function ManagerStoreToolbar() {
     setLocalSearch(search);
   }
 
+// EFFECT: Effect lifecycle and dependency list are intentionally scoped to values that control this side effect.
   useEffect(() => {
     const timer = setTimeout(() => {
       if (localSearch !== search) {
@@ -45,7 +47,7 @@ export default function ManagerStoreToolbar() {
             value={localSearch} 
             onChange={e => setLocalSearch(e.target.value)} 
             placeholder="Search..." 
-            className="pl-9 pr-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary w-40 sm: w-full sm:w-64  bg-input text-primary" 
+            className="pl-9 pr-3 py-2 border border-border rounded-lg text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary w-40 sm: w-full sm:w-64  bg-input text-primary" 
           />
         </div>
         {tab === 'Products' && (

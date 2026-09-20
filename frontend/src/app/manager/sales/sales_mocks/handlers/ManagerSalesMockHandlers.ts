@@ -1,13 +1,14 @@
 import { http, HttpResponse } from 'msw';
 import { managerMockApiUrl } from '@/app/manager/manager_infrastructure/ManagerMockApiUrl';
-import { ManagerSalesUrlConfig } from '@/app/manager/sales/sales_url_config';
 import { 
   MOCK_SALES_OVERVIEW, 
   MOCK_MEMBERSHIP_REPORT, 
   MOCK_PENDING_PAYMENTS, 
   MOCK_ALL_MEMBERSHIPS 
 } from '@/app/manager/sales/sales_fixtures/ManagerSalesMockData';
+import { ManagerSalesUrlConfig } from '@/app/manager/sales/sales_url_config';
 import type { MembershipTotals } from '@/app/manager/sales/sales_types/ManagerSalesTypes';
+
 
 export const managerSalesHandlers = [
   http.get(managerMockApiUrl(ManagerSalesUrlConfig.BACKEND_API.OVERVIEW), () => {

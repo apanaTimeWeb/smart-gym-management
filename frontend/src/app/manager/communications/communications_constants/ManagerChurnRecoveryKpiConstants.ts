@@ -1,6 +1,7 @@
 import { UserX, TrendingDown, RotateCcw, Clock } from 'lucide-react';
-import type { ChurnKPIData } from '@/app/manager/communications/communications_types/ManagerCommunications_types';
 import { formatNumber, formatPercent } from '@/lib/formatters';
+import type { ChurnKPIData } from '@/app/manager/communications/communications_types/ManagerCommunications_types';
+
 
 export const MANAGER_CHURN_RECOVERY_KPI_CARDS = [
   { key: 'totalChurned' as keyof ChurnKPIData, label: 'TOTAL LOST', icon: UserX, iconBg: 'bg-danger', iconColor: 'text-danger', format: (v: number) => formatNumber(v) },

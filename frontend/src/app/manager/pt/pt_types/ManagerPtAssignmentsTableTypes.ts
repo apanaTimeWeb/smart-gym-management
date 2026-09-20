@@ -9,5 +9,5 @@ export interface ManagerPtAssignmentsTableProps {
   onPageChange?: (page: number) => void;
   markingId: string | null;
   onMarkSession: (id: string) => void;
-  isLoading?: boolean;
+  isPending?: boolean;
 }

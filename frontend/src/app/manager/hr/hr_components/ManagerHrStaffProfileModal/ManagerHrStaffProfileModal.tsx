@@ -1,10 +1,11 @@
+// RESPONSIBILITY: Renders the HR staff profile dialog from feature-owned staff data.
 'use client';
-import ManagerTooltip from '@/app/manager/manager_components/ManagerFeedback/ManagerTooltip';
-import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
-// RESPONSIBILITY: Renders a read-only profile modal for a staff member.
-import { useManagerHrLogic } from '@/app/manager/hr/hr_hooks/ManagerUseManagerHrLogic';
 import { X, Edit2, Phone, Mail, Calendar, MapPin, IndianRupee, Hash } from 'lucide-react';
 import { formatCurrencyFromMinorUnits , formatDate} from '@/lib/formatters';
+import { useManagerHrLogic } from '@/app/manager/hr/hr_hooks/ManagerUseManagerHrLogic';
+import ManagerTooltip from '@/app/manager/manager_components/ManagerFeedback/ManagerTooltip';
+import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
+
 
 export default function ManagerHrStaffProfileModal() {
   const { viewProfileData, setViewProfileData, openEdit } = useManagerHrLogic();
@@ -14,8 +15,8 @@ export default function ManagerHrStaffProfileModal() {
 
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-overlay-backdrop backdrop-blur-sm">
-      <div className="rounded-2xl shadow-dialog w-full max-w-lg overflow-hidden bg-overlay border-2 border-primary/20">
-        <div className="relative h-24 bg-primary">
+      <div className="rounded-2xl shadow-dialog w-full max-w-lg overflow-hidden bg-overlay border-2 border-border">
+        <div className="relative h-24 bg-primary text-on-primary">
           <button 
             type="button" 
             onClick={() => setViewProfileData(null)} 

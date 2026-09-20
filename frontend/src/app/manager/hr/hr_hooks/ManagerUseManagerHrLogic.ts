@@ -1,15 +1,17 @@
-'use client';
 // DATA FLOW: URL filters → TanStack Query HR server state → useManagerHrMutations → Manager HR UI.
 // RESPONSIBILITY: Coordinates URL state, HR queries, UI state, and mutation callbacks.
+'use client';
 /** Manages UseHrLogic for the Manager module. */
 import { useCallback, useMemo } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
-import type { ManagerHrViewModel, HrInitialData } from '@/app/manager/hr/hr_types/ManagerHrTypes';
+import { useManagerHrMutations } from '@/app/manager/hr/hr_hooks/ManagerUseManagerHrMutations';
+import { useManagerHrQueries } from '@/app/manager/hr/hr_hooks/ManagerUseManagerHrQueries';
 import { useManagerHrUIState } from '@/app/manager/hr/hr_hooks/ManagerUseManagerHrUIState';
 import { useManagerDebounce } from '@/app/manager/manager_infrastructure/ManagerDebounce';
-import { useManagerHrMutations } from '@/app/manager/hr/hr_hooks/ManagerUseManagerHrMutations';
-import { useManagerHrQueries } from '@/app/manager/hr/hr_api/ManagerUseManagerHrQueries';
+import type { ManagerHrViewModel, HrInitialData } from '@/app/manager/hr/hr_types/ManagerHrTypes';
 
+
+/** Orchestrates the owning Manager feature behavior while preserving its documented state boundary. */
 export function useManagerHrLogic(initialData?: HrInitialData | null): ManagerHrViewModel {
   const router = useRouter();
   const pathname = usePathname();
@@ -41,7 +43,7 @@ export function useManagerHrLogic(initialData?: HrInitialData | null): ManagerHr
   const error = useMemo(() => queries.error instanceof Error ? queries.error.message : '', [queries.error]);
 
   return {
-    staff: queries.staff, totalStaff: queries.totalStaff, payrolls: queries.payrolls, totalPayrolls: queries.totalPayrolls, summary: queries.summary, isLoading: queries.isPending, isError: queries.isError, error,
+    staff: queries.staff, totalStaff: queries.totalStaff, payrolls: queries.payrolls, totalPayrolls: queries.totalPayrolls, summary: queries.summary, isPending: queries.isPending, isError: queries.isError, error,
     toast: ui.toast, showToast: ui.showToast, hideToast: ui.hideToast, loadAll: queries.loadAll,
     search, debouncedSearch, setSearch, roleFilter, setRoleFilter, currentPage, setCurrentPage,
     showModal: ui.showModal, setShowModal: ui.setShowModal, showPayrollModal: ui.showPayrollModal, setShowPayrollModal: ui.setShowPayrollModal,

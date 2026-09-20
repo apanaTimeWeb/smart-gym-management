@@ -1,11 +1,12 @@
-'use client';
-import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 // RESPONSIBILITY: Point-of-sale modal for processing a new product sale/order in the Store module.
+'use client';
 import { X, Printer, Plus, Minus, Send } from 'lucide-react';
-import { useManagerStoreLogic } from '@/app/manager/store/store_hooks/ManagerUseManagerStoreLogic';
-import { PAYMENT_METHODS } from '@/app/manager/store/store_utils/ManagerStoreSharedConstants';
 import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
 import ManagerSearchableDropdown from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
+import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
+import { useManagerStoreLogic } from '@/app/manager/store/store_hooks/ManagerUseManagerStoreLogic';
+import { PAYMENT_METHODS } from '@/app/manager/store/store_utils/ManagerStoreSharedConstants';
+
 
 export default function ManagerStorePosModal() {
  const { 
@@ -130,7 +131,7 @@ export default function ManagerStorePosModal() {
      placeholder="10-digit WhatsApp Number"
      value={customerPhone}
      onChange={e => setCustomerPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
-     className="w-full border border-border rounded-xl px-4 py-2.5 text-sm mb-3 focus:outline-none focus:ring-2 focus:ring-warning bg-input text-primary"
+     className="w-full border border-border rounded-xl px-4 py-2.5 text-sm mb-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-warning bg-input text-primary"
    />
  )}
 
@@ -139,7 +140,7 @@ export default function ManagerStorePosModal() {
  disabled={saving || orderItems.length === 0 || (sendViaWhatsapp && customerPhone.length !== 10)} 
  className="min-w-32 w-full py-3 rounded-xl text-sm font-bold text-on-primary flex items-center justify-center gap-2 disabled:opacity-70 motion-safe:transition-colors bg-primary hover:bg-primary-hover" 
  >
- {saving ? <div className="w-4 h-4 border-2 border-border/30 border-t-on-primary rounded-full motion-safe:animate-spin" /> : (sendViaWhatsapp ? <><Send size={18} aria-hidden="true" /> Send WhatsApp</> : <><Printer size={18} aria-hidden="true" /> Print Bill</>)}
+ {saving ? <div className="w-4 h-4 border-2 border-border border-t-on-primary rounded-full motion-safe:animate-spin" /> : (sendViaWhatsapp ? <><Send size={18} aria-hidden="true" /> Send WhatsApp</> : <><Printer size={18} aria-hidden="true" /> Print Bill</>)}
  </button>
  </div>
  </div>

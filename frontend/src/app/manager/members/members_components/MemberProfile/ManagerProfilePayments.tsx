@@ -1,10 +1,11 @@
+// RESPONSIBILITY: Renders the payment history section for the selected member profile.
 'use client';
-import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
-import { formatDate , formatCurrencyFromMinorUnits} from '@/lib/formatters';
-// RESPONSIBILITY: Renders the payment history and transaction records for a specific member profile.
 import { Printer, MessageCircle } from 'lucide-react';
+import { formatDate , formatCurrencyFromMinorUnits} from '@/lib/formatters';
+import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 import { useManagerMembersLogic } from '@/app/manager/members/members_hooks/ManagerUseManagerMembersLogic';
-import { useFetchPayments } from '@/app/manager/members/members_api/ManagerUseManagerMembersQueries';
+import { useFetchPayments } from '@/app/manager/members/members_hooks/ManagerUseManagerMembersQueries';
+
 
 export default function ManagerProfilePayments() {
   const { handlePrint, handleSharePaymentWhatsApp, setShowRenewModal, setShowPaymentModal, selectedMember } = useManagerMembersLogic();
@@ -20,19 +21,19 @@ export default function ManagerProfilePayments() {
   return (
   <div>
   <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-5">
-  <div className="bg-success-bg rounded-xl p-4 border border-success/20">
+  <div className="bg-success-bg rounded-xl p-4 border border-success">
   <p className="text-xs text-success">Total Paid</p>
   <p className="text-xl font-bold text-success">{formatCurrencyFromMinorUnits(totalPaid, ManagerEnvConfig.currencyCode)}</p>
   </div>
-  <div className="bg-danger-bg rounded-xl p-4 border border-border/20">
+  <div className="bg-danger-bg rounded-xl p-4 border border-border">
   <p className="text-xs text-danger">Total Due</p>
   <p className="text-xl font-bold text-danger">{formatCurrencyFromMinorUnits(totalDue, ManagerEnvConfig.currencyCode)}</p>
   </div>
-  <div className="bg-primary-subtle rounded-xl p-4 border border-primary/20">
+  <div className="bg-primary-subtle rounded-xl p-4 border border-border">
   <p className="text-xs text-primary">Advance</p>
   <p className="text-xl font-bold text-primary">{formatCurrencyFromMinorUnits(selectedMember?.advanceAmount || 0, ManagerEnvConfig.currencyCode)}</p>
   </div>
-  <div className="bg-info-bg rounded-xl p-4 border border-info/20">
+  <div className="bg-info-bg rounded-xl p-4 border border-info">
   <p className="text-xs text-info">Transactions</p>
   <p className="text-xl font-bold text-info">{safePayments.length}</p>
   </div>
@@ -41,7 +42,7 @@ export default function ManagerProfilePayments() {
     <button onClick={() => setShowPaymentModal(true)} className="px-4 py-2 border border-primary text-primary rounded-lg text-sm font-semibold hover:bg-primary-subtle motion-safe:transition-colors shadow-card">
       Record Payment
     </button>
-    <button onClick={() => setShowRenewModal(true)} className="px-4 py-2 bg-primary text-on-primary rounded-lg text-sm font-semibold hover:bg-primary/90 motion-safe:transition-colors shadow-card">
+    <button onClick={() => setShowRenewModal(true)} className="px-4 py-2 bg-primary text-on-primary rounded-lg text-sm font-semibold hover:bg-primary-hover motion-safe:transition-colors shadow-card">
       Renew Membership
     </button>
   </div>

@@ -1,21 +1,23 @@
-'use client';
 // RESPONSIBILITY: Renders the grid of workout plan cards with exercises count and action buttons.
-import ManagerWorkoutPlansEmptyState from '@/app/manager/workout/workout_components/ManagerWorkoutPlansGrid/ManagerWorkoutPlansEmptyState';
+'use client';
 import { Dumbbell, Edit2, Trash2 } from 'lucide-react';
-import ManagerTableSkeleton from '@/app/manager/manager_components/ManagerShared/ManagerTableSkeleton';
-import { useManagerWorkoutLogic } from '@/app/manager/workout/workout_hooks/ManagerUseManagerWorkoutLogic';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
-import { useWorkoutPlansQuery } from '@/app/manager/workout/workout_api/ManagerUseManagerWorkoutQueries';
-import { useDeleteWorkoutMutation } from '@/app/manager/workout/workout_api/ManagerUseManagerWorkoutMutations';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
+import ManagerTableSkeleton from '@/app/manager/manager_components/ManagerShared/ManagerTableSkeleton';
+import { createManagerIdempotencyKey } from '@/app/manager/manager_infrastructure/ManagerIdempotency';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_infrastructure/ManagerPaginationDefaults';
 import { showManagerErrorToast, showManagerSuccessToast } from '@/app/manager/manager_infrastructure/ManagerToastService';
+import ManagerWorkoutPlansEmptyState from '@/app/manager/workout/workout_components/ManagerWorkoutPlansGrid/ManagerWorkoutPlansEmptyState';
+import { useManagerWorkoutLogic } from '@/app/manager/workout/workout_hooks/ManagerUseManagerWorkoutLogic';
+import { useDeleteWorkoutMutation } from '@/app/manager/workout/workout_hooks/ManagerUseManagerWorkoutMutations';
+import { useWorkoutPlansQuery } from '@/app/manager/workout/workout_hooks/ManagerUseManagerWorkoutQueries';
+
 
 export default function ManagerWorkoutPlansGrid() {
   const { search, levelFilter, currentPage, setCurrentPage, openEditWk } = useManagerWorkoutLogic();
   const { confirm } = useConfirm();
   
-  const { data, isLoading } = useWorkoutPlansQuery({
+  const { data, isPending } = useWorkoutPlansQuery({
     search,
     level: levelFilter !== 'ALL' ? levelFilter : '',
     page: currentPage.toString()
@@ -28,7 +30,7 @@ export default function ManagerWorkoutPlansGrid() {
 
   const totalPages = Math.ceil(totalWorkouts / MANAGER_ITEMS_PER_PAGE) || 1;
 
-  if (isLoading) {
+  if (isPending) {
     return <ManagerTableSkeleton rows={6} />;
   }
 
@@ -70,7 +72,7 @@ export default function ManagerWorkoutPlansGrid() {
                     });
                     if (ok) {
                       try {
-                        const response = await deleteMutation.mutateAsync({ id: w.id, idempotencyKey: crypto.randomUUID() });
+                        const response = await deleteMutation.mutateAsync({ id: w.id, idempotencyKey: createManagerIdempotencyKey() });
                         showManagerSuccessToast(response.message, 'manager-workout-plan-success');
                       } catch (e: unknown) {
                         showManagerErrorToast(e, 'manager-workout-plan-error');

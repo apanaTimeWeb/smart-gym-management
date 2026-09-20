@@ -1,18 +1,19 @@
-'use client';
-// RESPONSIBILITY: Owns membership lifecycle form setup, submission, reset, and dirty-state handling.
 // DATA FLOW: Plans UI → RHF/Zod forms → membership mutations → authoritative query cache → rendered overview.
+// RESPONSIBILITY: Owns membership lifecycle form setup, submission, reset, and dirty-state handling.
+'use client';
 import { useMemo, useRef } from 'react';
-import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
+import { createManagerIdempotencyKey } from '@/app/manager/manager_infrastructure/ManagerIdempotency';
 import { showManagerErrorToast, showManagerSuccessToast } from '@/app/manager/manager_infrastructure/ManagerToastService';
+import { useManagerUnsavedChangesGuard } from '@/app/manager/manager_infrastructure/ManagerUnsavedChangesGuard';
 import { useManagerPlansLogic } from '@/app/manager/plans/plans_hooks/ManagerUseManagerPlansLogic';
-import { useManagerPlansMembershipOverviewQuery } from '@/app/manager/plans/plans_api/ManagerUseManagerPlansMembershipQueries';
-import { useManagerPlansMembershipMutations } from '@/app/manager/plans/plans_api/ManagerUseManagerPlansMembershipMutations';
+import { useManagerPlansMembershipMutations } from '@/app/manager/plans/plans_hooks/ManagerUseManagerPlansMembershipMutations';
+import { useManagerPlansMembershipOverviewQuery } from '@/app/manager/plans/plans_hooks/ManagerUseManagerPlansMembershipQueries';
 import { managerPlansActivateSchema, managerPlansFreezeSchema, managerPlansRenewSchema } from '@/app/manager/plans/plans_schemas/ManagerPlansMembershipSchemas';
 import type { ManagerPlansActivateForm, ManagerPlansFreezeForm, ManagerPlansRenewForm } from '@/app/manager/plans/plans_types/ManagerPlansMembershipFormTypes';
-import { useManagerUnsavedChangesGuard } from '@/app/manager/manager_infrastructure/ManagerUnsavedChangesGuard';
-import { createManagerIdempotencyKey } from '@/app/manager/manager_infrastructure/ManagerIdempotency';
-import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
+
 
 /** Coordinates the three independent membership forms and their mutation lifecycles. */
 export function useManagerPlansMembershipForms() {
@@ -54,5 +55,5 @@ export function useManagerPlansMembershipForms() {
   });
   const handleTabChange = (nextTab: typeof activeTab) => { if (nextTab === activeTab) return; void confirmAndClose(() => setActiveTab(nextTab)); };
 
-  return { plans, activeTab, handleTabChange, overview: overviewQuery.data, isLoading: overviewQuery.isLoading, isError: overviewQuery.isError, error: overviewQuery.error, activateForm, renewForm, freezeForm, memberOptions, planOptions, freezeMemberOptions, formatExpiry, submitActivate, submitRenew, submitFreeze, activateMutation, renewMutation, freezeMutation };
+  return { plans, activeTab, handleTabChange, overview: overviewQuery.data, isPending: overviewQuery.isPending, isError: overviewQuery.isError, error: overviewQuery.error, activateForm, renewForm, freezeForm, memberOptions, planOptions, freezeMemberOptions, formatExpiry, submitActivate, submitRenew, submitFreeze, activateMutation, renewMutation, freezeMutation };
 }

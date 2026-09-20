@@ -1,15 +1,19 @@
-'use client';
+// DATA FLOW: Manager feature UI/state → owning custom hook → approved API/query/mutation layer → observable UI state.
 // RESPONSIBILITY: Coordinates Library URL state, TanStack Query server data, module UI state, confirmation, and CRUD mutations.
+'use client';
 import { useCallback, useMemo, useRef } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useManagerLibraryMutations } from '@/app/manager/library/library_hooks/ManagerUseManagerLibraryMutations';
+import { useManagerLibraryDietPlansQuery, useManagerLibraryExercisesQuery } from '@/app/manager/library/library_hooks/ManagerUseManagerLibraryQueries';
+import { useManagerLibraryUiStore } from '@/app/manager/library/library_store/ManagerUseManagerLibraryUiStore';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
 import { useManagerDebounce } from '@/app/manager/manager_infrastructure/ManagerDebounce';
+import { createManagerIdempotencyKey } from '@/app/manager/manager_infrastructure/ManagerIdempotency';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_infrastructure/ManagerPaginationDefaults';
-import { useManagerLibraryDietPlansQuery, useManagerLibraryExercisesQuery } from '@/app/manager/library/library_api/ManagerUseManagerLibraryQueries';
-import { useManagerLibraryMutations } from '@/app/manager/library/library_api/ManagerUseManagerLibraryMutations';
-import { useManagerLibraryUiStore } from '@/app/manager/library/library_store/ManagerUseManagerLibraryUiStore';
 import type { DietPlan, Exercise, LibraryView, ManagerLibraryViewModel } from '@/app/manager/library/library_types/ManagerLibraryTypes';
 
+
+/** Orchestrates the owning Manager feature behavior while preserving its documented state boundary. */
 export function useManagerLibraryLogic(): ManagerLibraryViewModel {
   const { confirm } = useConfirm();
   const router = useRouter();
@@ -46,7 +50,7 @@ export function useManagerLibraryLogic(): ManagerLibraryViewModel {
     const ok = await confirm({ title: 'Delete Diet Plan', message: 'This action permanently removes the diet plan from the Manager Library.', confirmText: 'Delete', type: 'danger' });
     if (!ok) return;
     let idempotencyKey = deletionIdempotencyKeys.current.get(`diet:${id}`);
-    if (!idempotencyKey) { idempotencyKey = crypto.randomUUID(); deletionIdempotencyKeys.current.set(`diet:${id}`, idempotencyKey); }
+    if (!idempotencyKey) { idempotencyKey = createManagerIdempotencyKey(); deletionIdempotencyKeys.current.set(`diet:${id}`, idempotencyKey); }
     const response = await mutations.removeDiet.mutateAsync({ id, idempotencyKey });
     deletionIdempotencyKeys.current.delete(`diet:${id}`);
     ui.showToast(response.message, 'success');
@@ -60,7 +64,7 @@ export function useManagerLibraryLogic(): ManagerLibraryViewModel {
     const ok = await confirm({ title: 'Delete Exercise', message: 'This action permanently removes the exercise from the Manager Library.', confirmText: 'Delete', type: 'danger' });
     if (!ok) return;
     let idempotencyKey = deletionIdempotencyKeys.current.get(`exercise:${id}`);
-    if (!idempotencyKey) { idempotencyKey = crypto.randomUUID(); deletionIdempotencyKeys.current.set(`exercise:${id}`, idempotencyKey); }
+    if (!idempotencyKey) { idempotencyKey = createManagerIdempotencyKey(); deletionIdempotencyKeys.current.set(`exercise:${id}`, idempotencyKey); }
     const response = await mutations.removeExercise.mutateAsync({ id, idempotencyKey });
     deletionIdempotencyKeys.current.delete(`exercise:${id}`);
     ui.showToast(response.message, 'success');
@@ -71,7 +75,7 @@ export function useManagerLibraryLogic(): ManagerLibraryViewModel {
     view, setView,
     dietPlans: dietQuery.data?.data?.dietPlans ?? [], totalDietPlans: dietQuery.data?.data?.total ?? 0,
     exercises: exerciseQuery.data?.data?.exercises ?? [], totalExercises: exerciseQuery.data?.data?.total ?? 0,
-    isLoading: activeQuery.isPending, isError: activeQuery.isError,
+    isPending: activeQuery.isPending, isError: activeQuery.isError,
     errorMessage: activeQuery.error instanceof Error ? activeQuery.error.message : '',
     saving: mutations.saveDiet.isPending || mutations.removeDiet.isPending || mutations.saveExercise.isPending || mutations.removeExercise.isPending,
     toast: ui.toast,

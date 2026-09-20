@@ -1,12 +1,13 @@
-'use client';
 // RESPONSIBILITY: Renders the Diet Library add/edit modal; form setup and submission are delegated to the feature form hook.
+'use client';
 import { useEffect, useRef } from 'react';
-import { Controller } from 'react-hook-form';
 import { X, Save, Loader2 } from 'lucide-react';
-import ManagerSearchableDropdown from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
-import { GOALS } from '@/app/manager/library/library_utils/ManagerLibrarySharedConstants';
-import type { ManagerLibraryNutrientKey } from '@/app/manager/library/library_types/ManagerLibraryTypes';
+import { Controller } from 'react-hook-form';
 import { useManagerLibraryDietForm } from '@/app/manager/library/library_hooks/ManagerUseManagerLibraryDietForm';
+import { GOALS, MANAGER_LIBRARY_MAX_NUTRIENT_VALUE } from '@/app/manager/library/library_utils/ManagerLibrarySharedConstants';
+import ManagerSearchableDropdown from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
+import type { ManagerLibraryNutrientKey } from '@/app/manager/library/library_types/ManagerLibraryTypes';
+
 
 const NUTRIENT_FIELDS: ReadonlyArray<{ label: string; key: ManagerLibraryNutrientKey; placeholder: string }> = [
   { label: 'Calories', key: 'calories', placeholder: '2500' },
@@ -19,6 +20,7 @@ export default function ManagerLibraryDietModal() {
   const { form, showDietModal, editDietId, saving, handleClose, submit } = useManagerLibraryDietForm();
   const { register, control, formState: { errors } } = form;
   const dialogRef = useRef<HTMLDivElement>(null);
+// EFFECT: Effect lifecycle and dependency list are intentionally scoped to values that control this side effect.
   useEffect(() => {
     if (!showDietModal || !dialogRef.current) return;
     const dialog = dialogRef.current;
@@ -51,14 +53,14 @@ export default function ManagerLibraryDietModal() {
         </div>
         <form onSubmit={submit} className="p-6 space-y-4 overflow-y-auto flex-1">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div><label htmlFor="manager-library-diet-name" className="block text-sm font-medium text-secondary mb-1">Plan Name</label><input id="manager-library-diet-name" type="text" {...register('name')} className={`w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 ${errors.name ? 'border-danger focus:ring-danger' : 'border-border focus:ring-warning'} bg-input text-primary`} />{errors.name && <p role="alert" className="text-danger text-xs mt-1">{String(errors.name.message ?? '')}</p>}</div>
+            <div><label htmlFor="manager-library-diet-name" className="block text-sm font-medium text-secondary mb-1">Plan Name</label><input id="manager-library-diet-name" type="text" {...register('name')} className={`w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 ${errors.name ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-warning'} bg-input text-primary`} />{errors.name && <p role="alert" className="text-danger text-xs mt-1">{String(errors.name.message ?? '')}</p>}</div>
             <div><label className="block text-sm font-medium text-secondary mb-1">Goal</label><Controller name="goal" control={control} render={({ field }) => <ManagerSearchableDropdown value={field.value} onChange={field.onChange} options={GOALS.map((goal) => ({ label: goal, value: goal }))} />} />{errors.goal && <p role="alert" className="text-danger text-xs mt-1">{String(errors.goal.message ?? '')}</p>}</div>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {NUTRIENT_FIELDS.map((field) => { const error = errors[field.key]; return <div key={field.key}><label htmlFor={`manager-library-diet-${field.key}`} className="block text-sm font-medium text-secondary mb-1">{field.label}</label><input id={`manager-library-diet-${field.key}`} type="number" min="0" step="1" placeholder={field.placeholder} {...register(field.key, { valueAsNumber: true })} className={`w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 ${error ? 'border-danger focus:ring-danger' : 'border-border focus:ring-warning'} bg-input text-primary`} />{error && <p role="alert" className="text-danger text-xs mt-1">{String(error.message ?? '')}</p>}</div>; })}
+            {NUTRIENT_FIELDS.map((field) => { const error = errors[field.key]; return <div key={field.key}><label htmlFor={`manager-library-diet-${field.key}`} className="block text-sm font-medium text-secondary mb-1">{field.label}</label><input id={`manager-library-diet-${field.key}`} type="number" min="0" max={MANAGER_LIBRARY_MAX_NUTRIENT_VALUE} step="1" placeholder={field.placeholder} {...register(field.key, { valueAsNumber: true })} className={`w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 ${error ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-warning'} bg-input text-primary`} />{error && <p role="alert" className="text-danger text-xs mt-1">{String(error.message ?? '')}</p>}</div>; })}
           </div>
-          <div><label htmlFor="manager-library-diet-description" className="block text-sm font-medium text-secondary mb-1">Description</label><input id="manager-library-diet-description" type="text" {...register('description')} className={`w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 ${errors.description ? 'border-danger focus:ring-danger' : 'border-border focus:ring-warning'} bg-input text-primary`} /></div>
-          <div><label htmlFor="manager-library-diet-meals" className="block text-sm font-medium text-secondary mb-1">Meals (one per line)</label><textarea id="manager-library-diet-meals" {...register('meals')} className="w-full border border-border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 focus:ring-warning bg-input text-primary h-32 resize-none" placeholder="Meal 1: Oats and eggs
+          <div><label htmlFor="manager-library-diet-description" className="block text-sm font-medium text-secondary mb-1">Description</label><input id="manager-library-diet-description" type="text" {...register('description')} className={`w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 ${errors.description ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-warning'} bg-input text-primary`} /></div>
+          <div><label htmlFor="manager-library-diet-meals" className="block text-sm font-medium text-secondary mb-1">Meals (one per line)</label><textarea id="manager-library-diet-meals" {...register('meals')} className="w-full border border-border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-warning bg-input text-primary h-32 resize-none" placeholder="Meal 1: Oats and eggs
 Meal 2: Chicken and rice" /></div>
           <div className="flex flex-col-reverse sm:flex-row gap-3 pt-2">
             <button type="button" onClick={handleClose} className="flex-1 min-h-11 py-2.5 border border-border rounded-xl text-sm font-medium text-primary hover:bg-primary-subtle motion-safe:transition-colors">Cancel</button>

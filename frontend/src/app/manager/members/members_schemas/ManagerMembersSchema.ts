@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { memberSchema, memberStatsSchema } from '@/app/manager/members/members_schemas/ManagerMembersEntitySchema';
 
 
+
 export const planSnapshotSchema = z.object({
   id: z.string(),
   name: z.string(),

@@ -1,11 +1,12 @@
-'use client';
 // RESPONSIBILITY: Renders the modal to request a change to a plan.
+'use client';
 import { useState } from 'react';
-import type { FormEvent } from 'react';
 import { Send, X, Loader2 } from 'lucide-react';
-import { useManagerPlansLogic } from '@/app/manager/plans/plans_hooks/ManagerUseManagerPlansLogic';
-import { useManagerUnsavedChangesGuard } from '@/app/manager/manager_infrastructure/ManagerUnsavedChangesGuard';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
+import { useManagerUnsavedChangesGuard } from '@/app/manager/manager_infrastructure/ManagerUnsavedChangesGuard';
+import { useManagerPlansLogic } from '@/app/manager/plans/plans_hooks/ManagerUseManagerPlansLogic';
+import type { FormEvent } from 'react';
+
 
 export default function ManagerPlansRequestChangeModal() {
   const { requestModalPlan, closeRequestModal, submitChangeRequest, saving } = useManagerPlansLogic();
@@ -60,7 +61,7 @@ export default function ManagerPlansRequestChangeModal() {
               onChange={e => setNote(e.target.value)}
               rows={4}
               placeholder="e.g. Increase 1-month price to ₹1500, add sauna access feature..."
-              className="w-full px-3 py-2.5 text-sm bg-input border border-border rounded-lg text-primary focus:outline-none focus:border-primary resize-none"
+              className="w-full px-3 py-2.5 text-sm bg-input border border-border rounded-lg text-primary focus-visible:outline-none focus-visible:border-primary resize-none"
             />
           </div>
           <div className="flex gap-3 pt-1">

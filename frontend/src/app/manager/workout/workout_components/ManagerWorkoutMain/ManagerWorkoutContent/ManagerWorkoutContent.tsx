@@ -1,22 +1,22 @@
-'use client';
 // RESPONSIBILITY: Renders the ManagerWorkoutContent sub-view extracted from ManagerWorkoutMain; owns only this presentation responsibility.
-// RESPONSIBILITY: Entry component for the Workout Library module. Wraps the UI in the hook-based state facade and handles page layout.
-import { getManagerErrorMessage } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
-import { formatDate } from '@/lib/formatters';
+'use client';
 import { useState } from 'react';
+import { formatDate } from '@/lib/formatters';
 import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/ManagerHeader';
-import { useManagerWorkoutLogic  } from '@/app/manager/workout/workout_hooks/ManagerUseManagerWorkoutLogic';
+import { getManagerErrorMessage } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
 import ManagerWorkoutBanner from '@/app/manager/workout/workout_components/ManagerWorkoutBanner/ManagerWorkoutBanner';
-import ManagerWorkoutToolbar from '@/app/manager/workout/workout_components/ManagerWorkoutToolbar/ManagerWorkoutToolbar';
-import ManagerWorkoutPlansGrid from '@/app/manager/workout/workout_components/ManagerWorkoutPlansGrid/ManagerWorkoutPlansGrid';
+import ManagerWorkoutExerciseModal from '@/app/manager/workout/workout_components/ManagerWorkoutExerciseModal/ManagerWorkoutExerciseModal';
 import ManagerWorkoutExerciseTable from '@/app/manager/workout/workout_components/ManagerWorkoutExerciseTable/ManagerWorkoutExerciseTable';
 import ManagerWorkoutModal from '@/app/manager/workout/workout_components/ManagerWorkoutModal/ManagerWorkoutModal';
-import ManagerWorkoutExerciseModal from '@/app/manager/workout/workout_components/ManagerWorkoutExerciseModal/ManagerWorkoutExerciseModal';
-import { useWorkoutAssignmentsQuery } from '@/app/manager/workout/workout_api/ManagerUseManagerWorkoutQueries';
+import ManagerWorkoutPlansGrid from '@/app/manager/workout/workout_components/ManagerWorkoutPlansGrid/ManagerWorkoutPlansGrid';
+import ManagerWorkoutToolbar from '@/app/manager/workout/workout_components/ManagerWorkoutToolbar/ManagerWorkoutToolbar';
+import { useManagerWorkoutLogic  } from '@/app/manager/workout/workout_hooks/ManagerUseManagerWorkoutLogic';
+import { useWorkoutAssignmentsQuery } from '@/app/manager/workout/workout_hooks/ManagerUseManagerWorkoutQueries';
+
 
 export function ManagerWorkoutContent() {
   const { tab } = useManagerWorkoutLogic();
-  const { data: assignments = [], isLoading: assignmentsLoading, isError: assignmentsError, error: assignmentsErrorValue } = useWorkoutAssignmentsQuery();
+  const { data: assignments = [], isPending: assignmentsLoading, isError: assignmentsError, error: assignmentsErrorValue } = useWorkoutAssignmentsQuery();
   const [activeTab, setActiveTab] = useState('View Workout Plans');
 
   return (
@@ -51,7 +51,7 @@ export function ManagerWorkoutContent() {
      {activeTab === 'View Assigned Plans' && (
        <div className="p-5">
          <h3 className="text-lg font-bold text-primary mb-4">Assigned Workout Plans</h3>
-         {assignmentsLoading ? <div className="h-32 bg-input rounded-xl motion-safe:animate-pulse" aria-label="Loading assigned plans" /> : assignmentsError ? <p role="alert" className="text-sm text-danger">{getManagerErrorMessage(assignmentsErrorValue)}</p> : <div className="overflow-x-auto"><table className="w-full text-left border-collapse"><thead><tr className="border-b border-border"><th className="py-3 px-4 text-sm font-medium text-secondary">Member Name</th><th className="py-3 px-4 text-sm font-medium text-secondary">Assigned Plan</th><th className="py-3 px-4 text-sm font-medium text-secondary">Assigned By</th><th className="py-3 px-4 text-sm font-medium text-secondary">Start Date</th><th className="py-3 px-4 text-sm font-medium text-secondary text-right">Action</th></tr></thead><tbody className="divide-y divide-border">{assignments.map((assignment) => <tr key={assignment.id}><td className="py-3 px-4 text-sm text-primary">{assignment.memberName}</td><td className="py-3 px-4 text-sm text-secondary">{assignment.planName}</td><td className="py-3 px-4 text-sm text-secondary">{assignment.assignedBy}</td><td className="py-3 px-4 text-sm text-secondary">{formatDate(assignment.startDate)}</td><td className="py-3 px-4 text-right"><button type="button" className="px-3 py-1.5 text-xs font-semibold bg-input text-primary rounded-lg motion-safe:transition-colors">View Progress</button></td></tr>)}</tbody></table></div>}
+         {assignmentsLoading ? <div className="h-32 bg-input rounded-xl motion-safe:animate-pulse" aria-label="Loading assigned plans" /> : assignmentsError ? <p role="alert" className="text-sm text-danger">{getManagerErrorMessage(assignmentsErrorValue)}</p> : <div className="overflow-x-auto"><table className="w-full text-left border-collapse"><thead><tr className="border-b border-border"><th className="py-3 px-4 text-sm font-medium text-secondary">Member Name</th><th className="py-3 px-4 text-sm font-medium text-secondary">Assigned Plan</th><th className="py-3 px-4 text-sm font-medium text-secondary">Assigned By</th><th className="py-3 px-4 text-sm font-medium text-secondary">Start Date</th></tr></thead><tbody className="divide-y divide-border">{assignments.map((assignment) => <tr key={assignment.id}><td className="py-3 px-4 text-sm text-primary">{assignment.memberName}</td><td className="py-3 px-4 text-sm text-secondary">{assignment.planName}</td><td className="py-3 px-4 text-sm text-secondary">{assignment.assignedBy}</td><td className="py-3 px-4 text-sm text-secondary">{formatDate(assignment.startDate)}</td></tr>)}</tbody></table></div>}
        </div>
      )}
 

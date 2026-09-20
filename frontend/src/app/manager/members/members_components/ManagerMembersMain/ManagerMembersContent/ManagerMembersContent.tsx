@@ -1,17 +1,17 @@
-'use client';
 // RESPONSIBILITY: Renders the ManagerMembersContent sub-view extracted from ManagerMembersMain; owns only this presentation responsibility.
-// RESPONSIBILITY: Entry point component for the members module that sets up hook-based state facades and layout.
-import { ManagerMembersUrlConfig } from '@/app/manager/members/members_url_config';
-import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/ManagerHeader';
+'use client';
+import dynamic from 'next/dynamic';
 import ManagerToast from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
+import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/ManagerHeader';
 import ManagerMembersMessageModal from '@/app/manager/members/members_components/ManagerMembersMessageModal/ManagerMembersMessageModal';
+import ManagerMembersTable from '@/app/manager/members/members_components/ManagerMembersTable/ManagerMembersTable';
 import ManagerMembersThermalReceipt from '@/app/manager/members/members_components/ManagerMembersThermalReceipt/ManagerMembersThermalReceipt';
-import { useManagerMembersLogic  } from '@/app/manager/members/members_hooks/ManagerUseManagerMembersLogic';
+import ManagerMemberProfile from '@/app/manager/members/members_components/MemberProfile/ManagerMemberProfile';
 import ManagerMembersKPIs from '@/app/manager/members/members_components/MembersKPIs/ManagerMembersKPIs';
 import ManagerMembersToolbar from '@/app/manager/members/members_components/MembersToolbar/ManagerMembersToolbar';
-import ManagerMembersTable from '@/app/manager/members/members_components/ManagerMembersTable/ManagerMembersTable';
-import ManagerMemberProfile from '@/app/manager/members/members_components/MemberProfile/ManagerMemberProfile';
-import dynamic from 'next/dynamic';
+import { useManagerMembersLogic  } from '@/app/manager/members/members_hooks/ManagerUseManagerMembersLogic';
+import { ManagerMembersUrlConfig } from '@/app/manager/members/members_url_config';
+
 const ManagerMembersModal = dynamic(() => import('@/app/manager/members/members_components/ManagerMembersModal/ManagerMembersModal'), { ssr: false });
 
 const ManagerRenewModal = dynamic(() => import('@/app/manager/members/members_components/ManagerRenewModal/ManagerRenewModal'), { ssr: false });

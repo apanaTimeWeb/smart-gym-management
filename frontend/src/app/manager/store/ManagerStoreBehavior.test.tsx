@@ -1,11 +1,12 @@
-import { describe, it, expect, beforeAll, afterAll, afterEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
-import ManagerStoreMain from '@/app/manager/store/store_components/ManagerStoreMain/ManagerStoreMain';
-import { storeApi } from '@/app/manager/store/store_api/ManagerStoreApi';
+import { describe, it, expect, beforeAll, afterAll, afterEach } from 'vitest';
 import { managerMswServer } from '@/app/manager/manager_mocks/ManagerMswTestServer';
 import { ManagerTestProviders } from '@/app/manager/manager_mocks/ManagerTestProviders';
+import { storeApi } from '@/app/manager/store/store_api/ManagerStoreApi';
+import ManagerStoreMain from '@/app/manager/store/store_components/ManagerStoreMain/ManagerStoreMain';
+
 
 beforeAll(() => managerMswServer.listen({ onUnhandledRequest: 'error' }));
 afterEach(() => managerMswServer.resetHandlers());

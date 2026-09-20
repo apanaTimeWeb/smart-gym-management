@@ -2,7 +2,7 @@
 export default function ManagerProfileLoading() {
   return (
     <div className="max-w-3xl mx-auto space-y-6 p-6">
-      <div className="h-8 w-40 bg-skeleton-base motion-safe:animate-pulse rounded" />
+      <div className="h-8 w-40 bg-skeleton-base bg-skeleton-highlight motion-safe:animate-pulse rounded" />
       <div className="bg-card border border-border rounded-xl p-6 flex items-center gap-5">
         <div className="w-16 h-16 rounded-full bg-skeleton-base motion-safe:animate-pulse shrink-0" />
         <div className="space-y-2 flex-1">

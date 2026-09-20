@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { ManagerPtUrlConfig } from '@/app/manager/pt/pt_url_config';
-import { apiFetch, type ApiResponse } from '@/lib/api';
+import { apiFetch } from '@/lib/api';
 import { ptDashboardKpisSchema, ptTrainerWorkloadSchema, ptPackageSchema, ptAssignmentSchema } from '@/app/manager/pt/pt_schemas/ManagerPtSchema';
+import { ManagerPtUrlConfig } from '@/app/manager/pt/pt_url_config';
 import type { 
   PtPackage, 
   PtAssignment, 
@@ -9,9 +9,11 @@ import type {
   PtDashboardKpis,
   CreatePtAssignmentPayload 
 } from '@/app/manager/pt/pt_types/ManagerPtTypes';
+import type { ApiResponse } from '@/lib/api';
+
 
 export const managerPtApi = {
-  fetchDashboardKpis: async (): Promise<ApiResponse<PtDashboardKpis>> => {
+  fetchPtDashboardKpis: async (): Promise<ApiResponse<PtDashboardKpis>> => {
     return apiFetch(ManagerPtUrlConfig.BACKEND_API.KPIS, { dataSchema: ptDashboardKpisSchema });
   },
 

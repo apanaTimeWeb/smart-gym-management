@@ -1,20 +1,21 @@
+// RESPONSIBILITY: Renders the sales overview cards and charts from feature-owned data.
 'use client';
-import { MANAGER_GENERIC_ERROR_MESSAGE } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
-import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
-// RESPONSIBILITY: Renders the Manager SalesOverview presentation layer for the Manager module.
 import dynamic from 'next/dynamic';
-import { useManagerSalesLogic } from '@/app/manager/sales/sales_hooks/ManagerUseManagerSalesLogic';
 import { formatCurrencyFromMinorUnits, formatKPI } from '@/lib/formatters';
+import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
+import { MANAGER_GENERIC_ERROR_MESSAGE } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
+import { useManagerSalesLogic } from '@/app/manager/sales/sales_hooks/ManagerUseManagerSalesLogic';
 import type { OverviewDataPoint } from '@/app/manager/sales/sales_types/ManagerSalesTypes';
+
 
 const Chart = dynamic(() => import('react-apexcharts'), {
   ssr: false,
   loading: () => <div className="h-64 rounded-xl bg-card motion-safe:animate-pulse" aria-hidden="true" /> });
 
 export default function ManagerSalesOverview() {
-  const { overviewData, isLoading, isError, errorMessage } = useManagerSalesLogic();
+  const { overviewData, isPending, isError, errorMessage } = useManagerSalesLogic();
 
-  if (isLoading) {
+  if (isPending) {
     return <div className="space-y-5" aria-label="Loading sales overview">
       <div className="h-72 rounded-xl border border-border bg-skeleton-base motion-safe:animate-pulse" />
       <div className="h-72 rounded-xl border border-border bg-skeleton-base motion-safe:animate-pulse" />
@@ -23,7 +24,7 @@ export default function ManagerSalesOverview() {
 
   if (isError) {
     return (
-      <div className="text-center py-16 bg-card rounded-2xl border border-danger/30">
+      <div className="text-center py-16 bg-card rounded-2xl border border-danger">
         <p className="text-danger font-medium">{errorMessage || MANAGER_GENERIC_ERROR_MESSAGE}</p>
         <span className="text-sm text-secondary">Retry the request.</span>
       </div>

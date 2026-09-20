@@ -1,12 +1,11 @@
-'use client';
 // RESPONSIBILITY: Renders sales-owned date-range controls and synchronizes the selected range to sales URL state.
+'use client';
 import { useCallback } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import ManagerSearchableDropdown from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
-import {
-  MANAGER_SALES_DATE_RANGE_OPTIONS,
-  type ManagerSalesDateRange,
-} from '@/app/manager/sales/sales_utils/ManagerSalesDateFilterConstants';
+import { MANAGER_SALES_DATE_RANGE_OPTIONS } from '@/app/manager/sales/sales_utils/ManagerSalesDateFilterConstants';
+import type { ManagerSalesDateRange } from '@/app/manager/sales/sales_utils/ManagerSalesDateFilterConstants';
+
 
 function toDateInputValue(date: Date): string {
   const year = date.getFullYear();

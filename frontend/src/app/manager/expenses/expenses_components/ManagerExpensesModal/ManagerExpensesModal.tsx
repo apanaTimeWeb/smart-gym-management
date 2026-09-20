@@ -1,10 +1,11 @@
-'use client';
 // RESPONSIBILITY: Renders the modal form for creating or editing an expense.
-import { useManagerExpensesForm } from '@/app/manager/expenses/expenses_hooks/ManagerUseManagerExpensesForm';
-import { EXPENSE_CATEGORIES, EXPENSE_STATUS_LABELS } from '@/app/manager/expenses/expenses_utils/ManagerExpensesSharedConstants';
+'use client';
 import { X, Save } from 'lucide-react';
 import { Controller } from 'react-hook-form';
+import { useManagerExpensesForm } from '@/app/manager/expenses/expenses_hooks/ManagerUseManagerExpensesForm';
+import { EXPENSE_CATEGORIES, EXPENSE_STATUS_LABELS, MANAGER_EXPENSE_MAX_AMOUNT_MAJOR_UNITS } from '@/app/manager/expenses/expenses_utils/ManagerExpensesSharedConstants';
 import ManagerSearchableDropdown from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
+
 
 export default function ManagerExpensesModal() {
   const { showModal, editId, saving, form, handleClose, submit } = useManagerExpensesForm();
@@ -63,6 +64,8 @@ export default function ManagerExpensesModal() {
                 <label className="block text-sm font-medium text-secondary mb-1">Amount (₹)</label>
                 <input
                   type="number"
+                  min="0"
+                  max={MANAGER_EXPENSE_MAX_AMOUNT_MAJOR_UNITS}
                   step="0.01"
                   placeholder="0.00"
                   {...register('amount', { valueAsNumber: true })}
@@ -136,17 +139,17 @@ export default function ManagerExpensesModal() {
               <button
                 type="button"
                 onClick={handleClose}
-                className="flex-1 py-2.5 border border-border rounded-xl text-sm font-medium text-primary hover:bg-primary-subtle motion-safe:transition-all motion-safe:duration-200 motion-safe:active:scale-95"
+                className="flex-1 py-2.5 border border-border rounded-xl text-sm font-medium text-primary hover:bg-primary-subtle motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={saving}
-                className="min-w-32 flex-1 py-2.5 rounded-xl text-sm font-bold bg-primary text-on-primary flex items-center justify-center gap-2 disabled:opacity-70 hover:bg-primary-hover motion-safe:transition-all motion-safe:duration-200 motion-safe:active:scale-95"
+                className="min-w-32 flex-1 py-2.5 rounded-xl text-sm font-bold bg-primary text-on-primary flex items-center justify-center gap-2 disabled:opacity-70 hover:bg-primary-hover motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95"
               >
                 {saving
-                  ? <div className="w-4 h-4 border-2 border-border/30 border-t-on-primary rounded-full motion-safe:animate-spin" />
+                  ? <div className="w-4 h-4 border-2 border-border border-t-on-primary rounded-full motion-safe:animate-spin" />
                   : <><Save size={18} />{editId ? 'Update' : 'Save Expense'}</>
                 }
               </button>

@@ -1,18 +1,20 @@
+// DATA FLOW: UI Component -> useManagerMembersMutations -> API -> Invalidate Queries
+// RESPONSIBILITY: Encapsulates all TanStack Query mutations for members.
 'use client';
 /** Manages UseMembersMutations for the Manager module. */
 import { useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import type { Member } from '@/app/manager/members/members_types/ManagerMembersTypes';
-import type { MemberFormValues } from '@/app/manager/members/members_schemas/ManagerMembersFormSchema';
-import type { DietPlanSnapshot, WorkoutSnapshot } from '@/app/manager/members/members_types/ManagerMembersSnapshotTypes';
-import type { ManagerToastType } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerToastTypes';
-
+import { createManagerIdempotencyKey } from '@/app/manager/manager_infrastructure/ManagerIdempotency';
 import { useManagerMembersCoreMutations } from '@/app/manager/members/members_hooks/ManagerUseManagerMembersCoreMutations';
 import { useManagerMembersStatusMutations } from '@/app/manager/members/members_hooks/ManagerUseManagerMembersStatusMutations';
+import type { ManagerToastType } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerToastTypes';
+import type { MemberFormValues } from '@/app/manager/members/members_schemas/ManagerMembersFormSchema';
+import type { DietPlanSnapshot, WorkoutSnapshot } from '@/app/manager/members/members_types/ManagerMembersSnapshotTypes';
+import type { Member } from '@/app/manager/members/members_types/ManagerMembersTypes';
 
-// RESPONSIBILITY: Encapsulates all TanStack Query mutations for members.
-// DATA FLOW: UI Component -> useManagerMembersMutations -> API -> Invalidate Queries
 
+
+/** Orchestrates the owning Manager feature behavior while preserving its documented state boundary. */
 export function useManagerMembersMutations(
   showToast: (msg: string, t: ManagerToastType) => void,
   selectedMember: Member | null,
@@ -38,14 +40,14 @@ export function useManagerMembersMutations(
   );
 
   return {
-    saveMember: (data: MemberFormValues, idempotencyKey?: string) => saveMutation.mutateAsync({ data, idempotencyKey }),
-    deleteMember: useCallback(async (id: string) => { deleteMutation.mutate({ id, idempotencyKey: crypto.randomUUID() }); }, [deleteMutation]),
-    assignDiet: (memberId: string, diet: DietPlanSnapshot | null) => assignDietMutation.mutateAsync({ memberId, diet }),
-    assignWorkout: (memberId: string, workout: WorkoutSnapshot | null) => assignWorkoutMutation.mutateAsync({ memberId, workout }),
-    renewMember: (data: { planId: string; newExpiryDate: string; amountPaid: number; paymentMethod: string; billingCycle: string; customDays?: number; }, idempotencyKey: string) => renewMutation.mutateAsync({ ...data, memberId: selectedMember?.id!, idempotencyKey }),
-    recordPayment: (data: { amount: number; method: string }, idempotencyKey: string) => recordPaymentMutation.mutateAsync({ ...data, memberId: selectedMember?.id!, idempotencyKey }),
-    freezeMember: (isFrozen: boolean) => freezeMutation.mutateAsync({ memberId: selectedMember?.id!, isFrozen }),
-    toggleSuspend: (isSuspended: boolean) => toggleSuspendMutation.mutateAsync({ memberId: selectedMember?.id!, isSuspended }),
-    assignTrainer: (memberId: string, trainerId: string, trainerName: string, isPT: boolean) => assignTrainerMutation.mutateAsync({ memberId, trainerId, trainerName, isPT })
+    saveMember: async (data: MemberFormValues, idempotencyKey?: string) => { await saveMutation.mutateAsync({ data, idempotencyKey }); },
+    deleteMember: useCallback(async (id: string) => { await deleteMutation.mutateAsync({ id, idempotencyKey: createManagerIdempotencyKey() }); }, [deleteMutation]),
+    assignDiet: async (memberId: string, diet: DietPlanSnapshot | null) => { await assignDietMutation.mutateAsync({ memberId, diet }); },
+    assignWorkout: async (memberId: string, workout: WorkoutSnapshot | null) => { await assignWorkoutMutation.mutateAsync({ memberId, workout }); },
+    renewMember: async (data: { planId: string; newExpiryDate: string; amountPaid: number; paymentMethod: string; billingCycle: string; customDays?: number; }, idempotencyKey: string) => { await renewMutation.mutateAsync({ ...data, memberId: selectedMember?.id!, idempotencyKey }); },
+    recordPayment: async (data: { amount: number; method: string }, idempotencyKey: string) => { await recordPaymentMutation.mutateAsync({ ...data, memberId: selectedMember?.id!, idempotencyKey }); },
+    freezeMember: async (isFrozen: boolean) => { await freezeMutation.mutateAsync({ memberId: selectedMember?.id!, isFrozen }); },
+    toggleSuspend: async (isSuspended: boolean) => { await toggleSuspendMutation.mutateAsync({ memberId: selectedMember?.id!, isSuspended }); },
+    assignTrainer: async (memberId: string, trainerId: string, trainerName: string, isPT: boolean) => { await assignTrainerMutation.mutateAsync({ memberId, trainerId, trainerName, isPT }); }
   };
 }

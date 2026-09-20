@@ -1,8 +1,10 @@
 import { z } from 'zod';
-import { ManagerReferralsUrlConfig } from '@/app/manager/referrals/referrals_url_config';
-import { apiFetch, type ApiResponse } from '@/lib/api';
+import { apiFetch } from '@/lib/api';
 import { managerReferralSchema, managerReferralsKpiSchema } from '@/app/manager/referrals/referrals_schemas/ManagerReferralsSchema';
+import { ManagerReferralsUrlConfig } from '@/app/manager/referrals/referrals_url_config';
 import type { ManagerReferral, ManagerReferralsKPIs, CreateReferralDto } from '@/app/manager/referrals/referrals_types/ManagerReferralsTypes';
+import type { ApiResponse } from '@/lib/api';
+
 
 export const ManagerReferralsApi = {
   fetchReferralKPIs: async (): Promise<ApiResponse<ManagerReferralsKPIs>> => {
@@ -24,9 +26,10 @@ export const ManagerReferralsApi = {
     });
   },
 
-  claimReward: async (referralId: string): Promise<ApiResponse<ManagerReferral>> => {
+  claimReward: async (referralId: string, idempotencyKey: string): Promise<ApiResponse<ManagerReferral>> => {
     return apiFetch(ManagerReferralsUrlConfig.BACKEND_API.CLAIM(referralId), {
       method: 'POST',
+      headers: { 'Idempotency-Key': idempotencyKey },
       dataSchema: managerReferralSchema
     });
   } };

@@ -1,12 +1,13 @@
-'use client';
-import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 // RESPONSIBILITY: Contains logic, types, or component definition for this module.
+'use client';
 import React, { useState } from 'react';
 import { MessageCircle, Mail, Snowflake, Stethoscope, Ban, UserCheck } from 'lucide-react';
-import { useManagerMembersLogic } from '@/app/manager/members/members_hooks/ManagerUseManagerMembersLogic';
 import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
 import ManagerSearchableDropdown from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
-import { useFetchTrainers } from '@/app/manager/members/members_api/ManagerUseManagerMembersQueries';
+import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
+import { useManagerMembersLogic } from '@/app/manager/members/members_hooks/ManagerUseManagerMembersLogic';
+import { useFetchTrainers } from '@/app/manager/members/members_hooks/ManagerUseManagerMembersQueries';
+
 
 export default function ManagerProfileOverview() {
   const { selectedMember, openMsg, freezeMember, toggleSuspend, assignTrainer } = useManagerMembersLogic();
@@ -32,18 +33,18 @@ export default function ManagerProfileOverview() {
               <span className="text-xs text-secondary font-medium mb-1">Total Plan Amount</span>
               <span className="text-lg font-bold text-primary">{formatCurrencyFromMinorUnits(totalAmount, ManagerEnvConfig.currencyCode)}</span>
             </div>
-            <div className="flex flex-col p-4 bg-success-bg rounded-xl border border-success/20 shadow-card">
+            <div className="flex flex-col p-4 bg-success-bg rounded-xl border border-success shadow-card">
               <span className="text-xs text-success font-medium mb-1">Total Paid</span>
               <span className="text-lg font-bold text-success">{formatCurrencyFromMinorUnits(selectedMember.paidAmount || 0, ManagerEnvConfig.currencyCode)}</span>
             </div>
             {dues > 0 && (
-              <div className="flex flex-col p-4 bg-danger-bg rounded-xl border border-border/20 shadow-card">
+              <div className="flex flex-col p-4 bg-danger-bg rounded-xl border border-border shadow-card">
                 <span className="text-xs text-danger font-medium mb-1">Pending Dues</span>
                 <span className="text-lg font-bold text-danger">{formatCurrencyFromMinorUnits(dues, ManagerEnvConfig.currencyCode)}</span>
               </div>
             )}
             {advance > 0 && (
-              <div className="flex flex-col p-4 bg-primary-subtle rounded-xl border border-primary/20 shadow-card">
+              <div className="flex flex-col p-4 bg-primary-subtle rounded-xl border border-border shadow-card">
                 <span className="text-xs text-primary font-medium mb-1">Advance Payment</span>
                 <span className="text-lg font-bold text-primary">{formatCurrencyFromMinorUnits(advance, ManagerEnvConfig.currencyCode)}</span>
               </div>
@@ -57,7 +58,7 @@ export default function ManagerProfileOverview() {
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-bold text-primary truncate">{selectedMember.assignedTrainerName}</span>
                   {selectedMember.isPT && (
-                    <span className="text-xs font-semibold px-1.5 py-0.5 bg-primary-subtle text-primary rounded-full border border-primary/20 shrink-0">
+                    <span className="text-xs font-semibold px-1.5 py-0.5 bg-primary-subtle text-primary rounded-full border border-border shrink-0">
                       PT
                     </span>
                   )}
@@ -67,12 +68,12 @@ export default function ManagerProfileOverview() {
           </div>
           
           {selectedMember.medicalHistory && (
-            <div className="flex flex-col gap-2 p-4 bg-warning-bg rounded-xl border border-warning/20 shadow-card">
+            <div className="flex flex-col gap-2 p-4 bg-warning-bg rounded-xl border border-warning shadow-card">
               <div className="flex items-center gap-2 text-warning">
                 <Stethoscope size={18} />
                 <span className="text-xs font-semibold uppercase tracking-wider">Medical History / Notes</span>
               </div>
-              <p className="text-sm text-primary/90 leading-relaxed">
+              <p className="text-sm text-primary leading-relaxed">
                 {selectedMember.medicalHistory}
               </p>
             </div>
@@ -86,27 +87,27 @@ export default function ManagerProfileOverview() {
           <div className="grid grid-cols-2 gap-3 mb-5">
             <button 
               onClick={() => openMsg(selectedMember, 'whatsapp')} 
-              className="flex items-center justify-center gap-2 p-3 text-sm font-semibold text-on-success rounded-xl motion-safe:transition-all hover:-translate-y-0.5 hover:shadow-card bg-success" 
+              className="flex items-center justify-center gap-2 p-3 text-sm font-semibold text-on-success rounded-xl motion-safe:transition-all motion-safe:hover:-translate-y-0.5 hover:shadow-card bg-success" 
             >
               <MessageCircle size={18} /> WhatsApp
             </button>
             <button 
               onClick={() => openMsg(selectedMember, 'email')} 
-              className="flex items-center justify-center gap-2 p-3 text-sm font-semibold text-on-info rounded-xl motion-safe:transition-all hover:-translate-y-0.5 hover:shadow-card bg-info" 
+              className="flex items-center justify-center gap-2 p-3 text-sm font-semibold text-on-info rounded-xl motion-safe:transition-all motion-safe:hover:-translate-y-0.5 hover:shadow-card bg-info" 
             >
               <Mail size={18} /> Email
             </button>
             {selectedMember.status !== 'FROZEN' ? (
               <button 
                 onClick={() => freezeMember(true)} 
-                className="flex items-center justify-center gap-2 p-3 text-sm font-semibold text-on-info bg-info border border-info/30 rounded-xl motion-safe:transition-all hover:-translate-y-0.5 hover:shadow-card" 
+                className="flex items-center justify-center gap-2 p-3 text-sm font-semibold text-on-info bg-info border border-info rounded-xl motion-safe:transition-all motion-safe:hover:-translate-y-0.5 hover:shadow-card" 
               >
                 <Snowflake size={18} /> Freeze
               </button>
             ) : (
               <button 
                 onClick={() => freezeMember(false)} 
-                className="flex items-center justify-center gap-2 p-3 text-sm font-semibold text-on-success bg-success border border-success/30 rounded-xl motion-safe:transition-all hover:-translate-y-0.5 hover:shadow-card" 
+                className="flex items-center justify-center gap-2 p-3 text-sm font-semibold text-on-success bg-success border border-success rounded-xl motion-safe:transition-all motion-safe:hover:-translate-y-0.5 hover:shadow-card" 
               >
                 Unfreeze
               </button>
@@ -114,14 +115,14 @@ export default function ManagerProfileOverview() {
             {selectedMember.status !== 'SUSPENDED' && selectedMember.pendingAmount > 0 ? (
               <button 
                 onClick={() => toggleSuspend(true)} 
-                className="flex items-center justify-center gap-2 p-3 text-sm font-semibold text-on-danger bg-danger border border-danger/30 rounded-xl motion-safe:transition-all hover:-translate-y-0.5 hover:shadow-card" 
+                className="flex items-center justify-center gap-2 p-3 text-sm font-semibold text-on-danger bg-danger border border-danger rounded-xl motion-safe:transition-all motion-safe:hover:-translate-y-0.5 hover:shadow-card" 
               >
                 <Ban size={18} /> Suspend
               </button>
             ) : selectedMember.status === 'SUSPENDED' ? (
               <button 
                 onClick={() => toggleSuspend(false)} 
-                className="flex items-center justify-center gap-2 p-3 text-sm font-semibold text-on-success bg-success border border-success/30 rounded-xl motion-safe:transition-all hover:-translate-y-0.5 hover:shadow-card" 
+                className="flex items-center justify-center gap-2 p-3 text-sm font-semibold text-on-success bg-success border border-success rounded-xl motion-safe:transition-all motion-safe:hover:-translate-y-0.5 hover:shadow-card" 
               >
                 Unsuspend
               </button>
@@ -131,7 +132,7 @@ export default function ManagerProfileOverview() {
               !isAssigningTrainer ? (
                 <button 
                   onClick={() => setIsAssigningTrainer(true)}
-                  className="flex items-center justify-center gap-2 p-3 text-sm font-semibold text-primary bg-primary-subtle border border-primary/20 rounded-xl motion-safe:transition-all hover:-translate-y-0.5 hover:shadow-card"
+                  className="flex items-center justify-center gap-2 p-3 text-sm font-semibold text-primary bg-primary-subtle border border-border rounded-xl motion-safe:transition-all motion-safe:hover:-translate-y-0.5 hover:shadow-card"
                 >
                   <UserCheck size={18} /> Assign Trainer
                 </button>
@@ -144,7 +145,7 @@ export default function ManagerProfileOverview() {
                     placeholder="Select trainer"
                   />
                   <label className="flex items-center gap-2 text-sm text-primary cursor-pointer">
-                    <input type="checkbox" checked={isPT} onChange={e => setIsPT(e.target.checked)} className="rounded border-border text-primary focus:ring-primary w-4 h-4" />
+                    <input type="checkbox" checked={isPT} onChange={e => setIsPT(e.target.checked)} className="rounded border-border text-primary focus-visible:ring-primary w-4 h-4" />
                     Personal Training (PT)
                   </label>
                   <div className="flex gap-3 mt-1">
@@ -162,7 +163,7 @@ export default function ManagerProfileOverview() {
                     </button>
                     <button 
                       onClick={() => setIsAssigningTrainer(false)}
-                      className="flex-1 p-2.5 bg-secondary/10 text-secondary text-sm font-semibold rounded-xl hover:bg-secondary/20 motion-safe:transition-colors"
+                      className="flex-1 p-2.5 bg-input text-secondary text-sm font-semibold rounded-xl hover:bg-input motion-safe:transition-colors"
                     >
                       Cancel
                     </button>
@@ -170,7 +171,7 @@ export default function ManagerProfileOverview() {
                 </div>
               )
             ) : (
-              <button disabled className="flex items-center justify-center gap-2 p-3 text-sm font-semibold text-secondary bg-secondary/5 border border-border rounded-xl motion-safe:transition-colors">
+              <button disabled className="flex items-center justify-center gap-2 p-3 text-sm font-semibold text-secondary bg-surface-highlight border border-border rounded-xl motion-safe:transition-colors">
                 No trainers found
               </button>
             )}

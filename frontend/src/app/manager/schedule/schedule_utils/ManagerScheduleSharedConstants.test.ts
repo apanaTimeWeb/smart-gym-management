@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { SHIFT_DAYS, SHIFT_STATUS_OPTIONS, SHIFT_STATUS_STYLES, TIME_OPTIONS } from '@/app/manager/schedule/schedule_utils/ManagerScheduleSharedConstants';
 
+
 describe('ManagerScheduleSharedConstants', () => {
   it('keeps the weekly day/status contract stable', () => {
     expect(SHIFT_DAYS).toHaveLength(7);

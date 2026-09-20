@@ -1,8 +1,10 @@
-import { ManagerNotificationsUrlConfig } from '@/app/manager/notifications/notifications_url_config';
-import { apiFetch, type ApiResponse } from '@/lib/api';
-import type { Notification, NotificationKPIData } from '@/app/manager/notifications/notifications_types/ManagerNotificationsTypes';
-import { notificationSchema, notificationKpiSchema } from '@/app/manager/notifications/notifications_schemas/ManagerNotificationsSchema';
 import { z } from 'zod';
+import { apiFetch } from '@/lib/api';
+import { notificationSchema, notificationKpiSchema } from '@/app/manager/notifications/notifications_schemas/ManagerNotificationsSchema';
+import { ManagerNotificationsUrlConfig } from '@/app/manager/notifications/notifications_url_config';
+import type { Notification, NotificationKPIData } from '@/app/manager/notifications/notifications_types/ManagerNotificationsTypes';
+import type { ApiResponse } from '@/lib/api';
+
 
 const nullResponseSchema = z.null();
 

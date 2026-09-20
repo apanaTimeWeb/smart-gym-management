@@ -1,7 +1,8 @@
-'use client';
 // RESPONSIBILITY: Renders the pagination bar (Previous/Next + page info + rows-per-page) shared across all MANAGER table views.
-import type { ManagerPaginationProps } from '@/app/manager/manager_components/ManagerShared/manager_shared_types/ManagerPaginationTypes';
+'use client';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import type { ManagerPaginationProps } from '@/app/manager/manager_components/ManagerShared/manager_shared_types/ManagerPaginationTypes';
+
 
 
 

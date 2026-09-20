@@ -1,7 +1,8 @@
-'use client';
 // RESPONSIBILITY: Renders Library collection tabs plus search/refresh/create controls; all data actions are delegated to the feature hook.
+'use client';
 import { Plus, RefreshCw, Search } from 'lucide-react';
 import { useManagerLibraryLogic } from '@/app/manager/library/library_hooks/ManagerUseManagerLibraryLogic';
+
 
 export default function ManagerLibraryTabs() {
   const { view, setView, loadAll, openAddDiet, openAddExercise, search, setSearch } = useManagerLibraryLogic();

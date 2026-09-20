@@ -1,17 +1,20 @@
-'use client';
-import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 // DATA FLOW: Manager module state/API data → useManagerMembersPrintLogic → owning Manager UI components.
-/** Manages UseMembersPrintLogic for the Manager module. */
-import { formatDate , formatCurrencyFromMinorUnits} from '@/lib/formatters';
+'use client';
 import { useCallback } from 'react';
-import type { Member } from '@/app/manager/members/members_types/ManagerMembersTypes';
-import type { PaymentSnapshot } from '@/app/manager/members/members_types/ManagerMembersSnapshotTypes';
-import type { ManagerToastType } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerToastTypes';
-import { GYM_DETAILS } from '@/app/manager/manager_infrastructure/ManagerGymIdentity';
+import { formatDate , formatCurrencyFromMinorUnits} from '@/lib/formatters';
 import { WhatsAppFormatter } from '@/lib/whatsapp_formatter';
-import { ManagerMembersUrlConfig } from '@/app/manager/members/members_url_config';
+import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
+import { GYM_DETAILS } from '@/app/manager/manager_infrastructure/ManagerGymIdentity';
 import { useManagerMembersUiStore } from '@/app/manager/members/members_store/ManagerUseManagerMembersUiStore';
+import { ManagerMembersUrlConfig } from '@/app/manager/members/members_url_config';
+import type { ManagerToastType } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerToastTypes';
+import type { PaymentSnapshot } from '@/app/manager/members/members_types/ManagerMembersSnapshotTypes';
+import type { Member } from '@/app/manager/members/members_types/ManagerMembersTypes';
 
+/** Manages UseMembersPrintLogic for the Manager module. */
+
+
+/** Orchestrates the owning Manager feature behavior while preserving its documented state boundary. */
 export function useManagerMembersPrintLogic(
   selectedMember: Member | null,
   showToast: (msg: string, t: ManagerToastType) => void

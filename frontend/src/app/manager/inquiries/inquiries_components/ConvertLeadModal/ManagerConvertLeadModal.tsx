@@ -1,9 +1,10 @@
-'use client';
 // RESPONSIBILITY: Renders the lead-conversion modal; lifecycle and calculations live in the dedicated form hook.
+'use client';
 import { X, Save } from 'lucide-react';
-import ManagerConvertLeadSuccess from '@/app/manager/inquiries/inquiries_components/ConvertLeadModal/ManagerConvertLeadSuccess';
 import ManagerConvertLeadForm from '@/app/manager/inquiries/inquiries_components/ConvertLeadModal/ManagerConvertLeadForm';
+import ManagerConvertLeadSuccess from '@/app/manager/inquiries/inquiries_components/ConvertLeadModal/ManagerConvertLeadSuccess';
 import { useManagerConvertLeadForm } from '@/app/manager/inquiries/inquiries_hooks/ManagerUseManagerConvertLeadForm';
+
 export default function ManagerConvertLeadModal() {
   const { activeLead, plans, plansLoading, form, planId, billingCycle, customDays, saving, successData, submit, handleClose, closeConvert } = useManagerConvertLeadForm();
   if (!activeLead) return null;

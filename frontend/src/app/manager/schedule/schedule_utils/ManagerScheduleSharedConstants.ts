@@ -6,9 +6,9 @@ export const SHIFT_DAYS: ShiftDay[] = ['Monday', 'Tuesday', 'Wednesday', 'Thursd
 export const SHIFT_STATUS_OPTIONS: ShiftStatus[] = ['Active', 'Off', 'Leave'];
 
 export const SHIFT_STATUS_STYLES: Record<ShiftStatus, { text: string; bg: string }> = {
-  Active: { text: 'text-success', bg: 'bg-success/10' },
-  Off:    { text: 'text-secondary', bg: 'bg-border/40' },
-  Leave:  { text: 'text-warning', bg: 'bg-warning/10' } };
+  Active: { text: 'text-success', bg: 'bg-success-bg' },
+  Off:    { text: 'text-secondary', bg: 'bg-input' },
+  Leave:  { text: 'text-warning', bg: 'bg-warning-bg' } };
 
 export const TIME_OPTIONS: string[] = [
   '05:00', '05:30', '06:00', '06:30', '07:00', '07:30',

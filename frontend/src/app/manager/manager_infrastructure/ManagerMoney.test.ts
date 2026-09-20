@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { fromManagerMinorUnits, toManagerMinorUnits } from '@/app/manager/manager_infrastructure/ManagerMoney';
 
+
 describe('ManagerMoney', () => {
   it('converts major units to integer minor units', () => {
     expect(toManagerMinorUnits(1500.25)).toBe(150025);

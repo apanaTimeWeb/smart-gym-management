@@ -1,15 +1,16 @@
-'use client';
-// RESPONSIBILITY: Compatibility facade for Workout feature state. URL state is kept in Next.js search params; UI editing state is module-scoped Zustand.
 // DATA FLOW: URL state → Workout query consumers; modal/form UI state → Zustand.
+// RESPONSIBILITY: Compatibility facade for Workout feature state. URL state is kept in Next.js search params; UI editing state is module-scoped Zustand.
+'use client';
 /** Coordinates the Manager / feature. */
 import { useCallback } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import type { Workout } from '@/app/manager/workout/workout_types/ManagerWorkoutTypes';
 import { useManagerWorkoutUiStore } from '@/app/manager/workout/workout_store/ManagerUseManagerWorkoutUiStore';
-
+import type { Workout } from '@/app/manager/workout/workout_types/ManagerWorkoutTypes';
 import type { ManagerWorkoutViewModel } from '@/app/manager/workout/workout_types/ManagerWorkoutViewModelTypes';
 
 
+
+/** Orchestrates the owning Manager feature behavior while preserving its documented state boundary. */
 export function useManagerWorkoutLogic(): ManagerWorkoutViewModel {
   const router = useRouter(); const pathname = usePathname(); const searchParams = useSearchParams(); const ui = useManagerWorkoutUiStore();
   const updateUrl = useCallback((key: string, value: string) => {

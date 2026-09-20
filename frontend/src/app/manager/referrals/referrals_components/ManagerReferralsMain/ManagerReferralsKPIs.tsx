@@ -1,9 +1,10 @@
-'use client';
 // RESPONSIBILITY: Display 4 key referral stats using ManagerStatCard.
+'use client';
 import { Users, UserCheck, Gift, CheckCircle } from 'lucide-react';
+import { useDateRangeSuffix } from '@/lib/useDateRangeSuffix';
 import ManagerStatCard from '@/app/manager/manager_components/ManagerShared/ManagerStatCard';
 import { useManagerReferralsLogic } from '@/app/manager/referrals/referrals_hooks/ManagerUseManagerReferralsLogic';
-import { useDateRangeSuffix } from '@/lib/useDateRangeSuffix';
+
 
 export default function ManagerReferralsKPIs() {
   const { kpis, isKpisLoading } = useManagerReferralsLogic();

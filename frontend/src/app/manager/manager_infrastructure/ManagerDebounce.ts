@@ -1,4 +1,5 @@
 'use client';
+// DATA FLOW: Manager feature UI/state → owning custom hook → approved API/query/mutation layer → observable UI state.
 // RESPONSIBILITY: Generic debounce hook shared across all MANAGER modules.
 // Prevents excessive API calls by delaying a value update until the user stops typing.
 // Use this for all search inputs and filter inputs that trigger backend calls (Rule 15).
@@ -15,6 +16,7 @@ import { useState, useEffect } from 'react';
 export function useManagerDebounce<T>(value: T, delay: number = 300): T {
   const [debouncedValue, setDebouncedValue] = useState<T>(value);
 
+// EFFECT: Effect lifecycle and dependency list are intentionally scoped to values that control this side effect.
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedValue(value);

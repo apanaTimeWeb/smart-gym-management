@@ -1,10 +1,12 @@
+// DATA FLOW: Manager feature UI/state → owning custom hook → approved API/query/mutation layer → observable UI state.
 'use client';
 /** Coordinates the Manager / feature. */
 import { create } from 'zustand';
-import type { WorkoutFormValues, ExerciseFormValues } from '@/app/manager/workout/workout_types/ManagerWorkoutFormTypes';
-import type { Workout } from '@/app/manager/workout/workout_types/ManagerWorkoutTypes';
-import type { ExerciseSnapshot } from '@/app/manager/workout/workout_types/ManagerWorkoutSnapshotTypes';
 import { EMPTY_WORKOUT_FORM, EMPTY_EXERCISE_FORM } from '@/app/manager/workout/workout_types/ManagerWorkoutFormTypes';
+import type { WorkoutFormValues, ExerciseFormValues } from '@/app/manager/workout/workout_types/ManagerWorkoutFormTypes';
+import type { ExerciseSnapshot } from '@/app/manager/workout/workout_types/ManagerWorkoutSnapshotTypes';
+import type { Workout } from '@/app/manager/workout/workout_types/ManagerWorkoutTypes';
+
 
 interface ManagerWorkoutUiState {
   showWkModal: boolean;

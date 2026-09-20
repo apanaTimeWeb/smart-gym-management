@@ -1,8 +1,10 @@
-import { apiFetch, type ApiResponse } from '@/lib/api';
+import { z } from 'zod';
+import { apiFetch } from '@/lib/api';
+import { managerScheduleShiftSchema, managerScheduleTrainerSchema, managerScheduleKpiSchema } from '@/app/manager/schedule/schedule_schemas/ManagerScheduleSchema';
 import { ManagerScheduleUrlConfig } from '@/app/manager/schedule/schedule_url_config';
 import type { CreateShiftDto, ScheduleKPIData, TrainerScheduleSummary, TrainerShift } from '@/app/manager/schedule/schedule_types/ManagerScheduleTypes';
-import { managerScheduleShiftSchema, managerScheduleTrainerSchema, managerScheduleKpiSchema } from '@/app/manager/schedule/schedule_schemas/ManagerScheduleSchema';
-import { z } from 'zod';
+import type { ApiResponse } from '@/lib/api';
+
 
 export const managerScheduleApi = {
   fetchSchedule: async (params?: Record<string, string>): Promise<ApiResponse<{ trainers: TrainerScheduleSummary[]; kpis: ScheduleKPIData }>> => {

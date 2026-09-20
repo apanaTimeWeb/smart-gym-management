@@ -14,16 +14,22 @@ Manager Reports is the branch reporting workspace for financial, attendance, mem
 | `reports_types/` | Feature-owned responsibility for the reports module. | `ManagerReportsSchema.ts; ManagerReportsTypes.ts` |
 | `reports_utils/` | Feature-owned responsibility for the reports module. | `ManagerReportsSharedConstants.ts` |
 
+## Approved External Dependencies
+
+- Global framework/application infrastructure documented by the architecture standard may be used when required.
+- Approved zero-business UI primitives may be imported from Manager application infrastructure.
+- Sibling feature business logic, state, API services, fixtures, and tests are not dependencies.
+
 ## Feature Inventory
 | Feature | Route | What the User Can Do | Main API Calls | Status |
 |---|---|---|---|---|
-| fetchSummary | `/manager/reports` | Uses the fetchSummary workflow with typed request/response handling. | `GET /manager/reports/summary` | ✅ Implemented |
+| fetchReportsSummary | `/manager/reports` | Uses the fetchReportsSummary workflow with typed request/response handling. | `GET /manager/reports/summary` | ✅ Implemented |
 | exportReportsReport | `/manager/reports` | Uses the exportReportsReport workflow with typed request/response handling. | `GET /manager/reports/export` | ✅ Implemented |
 
 ## User Flows & Interactions
 ### Flow 1: Review report
 1. Manager chooses the report range/tab.
-2. fetchSummary(params) loads the report summary.
+2. fetchReportsSummary(params) loads the report summary.
 3. The KPI and chart/table sections render from the returned report contract.
 4. MSW fixtures include complete series data and deterministic empty/error variants.
 ### Flow 2: Export report
@@ -37,7 +43,7 @@ TanStack Query owns reports server/API data. UI-only filters, tabs, selections, 
 ## API Contract
 | Function | Method | Endpoint | Request | Response `data` type |
 |---|---|---|---|---|
-| `fetchSummary` | `GET` | `/api/v1/manager/reports/summary` | `{ startDate?, endDate?, range? }` | `ReportSummary` |
+| `fetchReportsSummary` | `GET` | `/api/v1/manager/reports/summary` | `{ startDate?, endDate?, range? }` | `ReportSummary` |
 | `exportReportsReport` | `GET` | `/api/v1/manager/reports/export` | `{ tab: string; params?: Record<string,string> }` | `Blob` |
 
 ## UI Data Requirements
@@ -73,7 +79,7 @@ TanStack Query owns reports server/API data. UI-only filters, tabs, selections, 
 ## Edge Cases and AI Warnings
 - **Report chart values must come from the report response; never embed static series in chart config:** Report chart values must come from the report response; never embed static series in chart config.
 - **Exports must not export only the currently rendered table rows unless explicitly defined by the backend contract:** Exports must not export only the currently rendered table rows unless explicitly defined by the backend contract.
-- **Date-range selection must affect fetchSummary parameters:** Date-range selection must affect fetchSummary parameters.
+- **Date-range selection must affect fetchReportsSummary parameters:** Date-range selection must affect fetchReportsSummary parameters.
 - **Financial report values use centralized currency/number formatting:** Financial report values use centralized currency/number formatting.
 - **Export failures should remain visible to the reports module and provide retry guidance:** Export failures should remain visible to the reports module and provide retry guidance.
 

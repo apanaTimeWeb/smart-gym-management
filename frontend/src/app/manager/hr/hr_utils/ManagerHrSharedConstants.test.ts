@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { GENDER_OPTIONS, HR_TABS, PAYROLL_TABLE_HEADERS, STAFF_ROLE_OPTIONS, STAFF_TABLE_HEADERS } from '@/app/manager/hr/hr_utils/ManagerHrSharedConstants';
 
+
 describe('ManagerHrSharedConstants', () => {
   it('keeps HR tabs and table columns aligned with the Manager UI', () => {
     expect(HR_TABS).toHaveLength(6);

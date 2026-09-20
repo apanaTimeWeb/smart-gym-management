@@ -1,10 +1,11 @@
-'use client';
 // RESPONSIBILITY: ApexCharts-based charts for each report tab — Revenue, Attendance, Members, Expenses.
-import { useManagerReportsLogic } from '@/app/manager/reports/reports_hooks/ManagerUseManagerReportsLogic';
-import { ManagerReportsRevenueChart } from '@/app/manager/reports/reports_components/ManagerReportsCharts/ManagerReportsRevenueChart/ManagerReportsRevenueChart';
+'use client';
 import { ManagerReportsAttendanceChart } from '@/app/manager/reports/reports_components/ManagerReportsCharts/ManagerReportsAttendanceChart/ManagerReportsAttendanceChart';
-import { ManagerReportsMembersChart } from '@/app/manager/reports/reports_components/ManagerReportsCharts/ManagerReportsMembersChart/ManagerReportsMembersChart';
 import { ManagerReportsExpensesChart } from '@/app/manager/reports/reports_components/ManagerReportsCharts/ManagerReportsExpensesChart/ManagerReportsExpensesChart';
+import { ManagerReportsMembersChart } from '@/app/manager/reports/reports_components/ManagerReportsCharts/ManagerReportsMembersChart/ManagerReportsMembersChart';
+import { ManagerReportsRevenueChart } from '@/app/manager/reports/reports_components/ManagerReportsCharts/ManagerReportsRevenueChart/ManagerReportsRevenueChart';
+import { useManagerReportsLogic } from '@/app/manager/reports/reports_hooks/ManagerUseManagerReportsLogic';
+
 
 
 export default function ManagerReportsCharts() {

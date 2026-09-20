@@ -4,7 +4,7 @@ export default function Loading() {
     <div className="min-h-full pb-10">
       <div className="px-6 pt-6 pb-0 flex items-center justify-between">
         <div className="space-y-2">
-          <div className="h-8 w-48 bg-card rounded-md motion-safe:animate-pulse border border-border"></div>
+          <div className="h-8 w-48 bg-skeleton-base bg-skeleton-highlight rounded-md motion-safe:animate-pulse border border-border"></div>
           <div className="h-4 w-64 bg-card rounded-md motion-safe:animate-pulse border border-border"></div>
         </div>
         <div className="h-10 w-32 bg-card rounded-lg motion-safe:animate-pulse border border-border"></div>

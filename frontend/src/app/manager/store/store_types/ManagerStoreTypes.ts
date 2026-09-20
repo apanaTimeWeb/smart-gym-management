@@ -3,8 +3,9 @@
 // customerId, gstAmount, returnStatus on Order.
 
 import type { ManagerToastType } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerToastTypes';
-import type { ManagerStoreReceiptData } from '@/app/manager/store/store_types/ManagerStoreThermalReceiptTypes';
 import type { ProductFormValues } from '@/app/manager/store/store_types/ManagerStoreProductFormTypes';
+import type { ManagerStoreReceiptData } from '@/app/manager/store/store_types/ManagerStoreThermalReceiptTypes';
+
 
 export type ManagerStoreSortOrder = 'ASC' | 'DESC';
 export type ManagerStoreProductFieldType = 'text' | 'number';
@@ -33,7 +34,7 @@ export interface ManagerStoreViewModel {
   orders: Order[];
   totalOrders: number;
   summary: StoreSummary | null;
-  isLoading: boolean;
+  isPending: boolean;
   isError: boolean;
   errorMessage: string;
   saving: boolean;

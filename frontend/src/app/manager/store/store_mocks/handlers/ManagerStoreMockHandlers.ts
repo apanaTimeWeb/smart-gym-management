@@ -1,16 +1,24 @@
+import { StatusCodes } from 'http-status-codes';
 import { http, HttpResponse } from 'msw';
-import { managerMockApiUrl } from '@/app/manager/manager_infrastructure/ManagerMockApiUrl';
-import { ManagerStoreUrlConfig } from '@/app/manager/store/store_url_config';
 import { MANAGER_HTTP_STATUS } from '@/app/manager/manager_infrastructure/ManagerHttpStatus';
+import { managerMockApiUrl } from '@/app/manager/manager_infrastructure/ManagerMockApiUrl';
 import { MOCK_PRODUCTS, MOCK_ORDERS, MOCK_STORE_SUMMARY } from '@/app/manager/store/store_fixtures/ManagerStoreMockData';
 import { productSchema, orderSchema } from '@/app/manager/store/store_schemas/ManagerStoreSchema';
-import { StatusCodes } from 'http-status-codes';
+import { ManagerStoreUrlConfig } from '@/app/manager/store/store_url_config';
+
 
 let productsDb = [...MOCK_PRODUCTS];
 let ordersDb = [...MOCK_ORDERS];
 
 export let mockProductIdCounter = 1000;
 let mockOrderIdCounter = 1000;
+export function resetManagerStoreMockState(): void {
+  productsDb = [...MOCK_PRODUCTS];
+  ordersDb = [...MOCK_ORDERS];
+  mockProductIdCounter = 1000;
+  mockOrderIdCounter = 1000;
+}
+
 export const managerStoreHandlers = [
   http.get(managerMockApiUrl(ManagerStoreUrlConfig.BACKEND_API.PRODUCTS_BASE), ({ request }) => {
     const url = new URL(request.url);

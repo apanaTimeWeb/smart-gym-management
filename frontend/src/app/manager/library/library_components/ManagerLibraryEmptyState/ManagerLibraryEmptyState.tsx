@@ -1,8 +1,9 @@
-'use client';
 // RESPONSIBILITY: Renders a reusable, module-specific empty state for each Library collection.
+'use client';
 import { Dumbbell, Plus } from 'lucide-react';
 import { Apple } from 'lucide-react';
 import type { ManagerLibraryEmptyStateProps } from '@/app/manager/library/library_types/ManagerLibraryEmptyStateTypes';
+
 
 export default function ManagerLibraryEmptyState({ view, onAdd }: ManagerLibraryEmptyStateProps) {
   const isDiet = view === 'diet';

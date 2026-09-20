@@ -1,9 +1,10 @@
-import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 // RESPONSIBILITY: Renders the Manager FinanceKpiCards presentation layer for the Manager module.
 import { IndianRupee, Wallet, Clock, TrendingUp, Percent, ArrowLeftRight } from 'lucide-react';
-import { useManagerFinanceLogic } from '@/app/manager/finance/finance_hooks/ManagerUseManagerFinanceLogic';
 import { formatCurrencyFromMinorUnits, formatNumber } from '@/lib/formatters';
 import { ManagerFinanceKpiCard } from '@/app/manager/finance/finance_components/ManagerFinanceMain/ManagerFinanceKpiCard/ManagerFinanceKpiCard';
+import { useManagerFinanceLogic } from '@/app/manager/finance/finance_hooks/ManagerUseManagerFinanceLogic';
+import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
+
 
 
 export default function ManagerFinanceKpiCards() {

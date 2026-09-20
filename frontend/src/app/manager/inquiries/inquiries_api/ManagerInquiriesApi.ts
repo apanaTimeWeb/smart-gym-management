@@ -1,8 +1,10 @@
-import { ManagerInquiriesUrlConfig } from '@/app/manager/inquiries/inquiries_url_config';
-import { apiFetch, type ApiResponse } from '@/lib/api';
-import type { Inquiry, InquiryStats } from '@/app/manager/inquiries/inquiries_types/ManagerInquiriesTypes';
-import { inquirySchema, inquiryStatsSchema } from '@/app/manager/inquiries/inquiries_schemas/ManagerInquiriesSchema';
 import { z } from 'zod';
+import { apiFetch } from '@/lib/api';
+import { inquirySchema, inquiryStatsSchema } from '@/app/manager/inquiries/inquiries_schemas/ManagerInquiriesSchema';
+import { ManagerInquiriesUrlConfig } from '@/app/manager/inquiries/inquiries_url_config';
+import type { Inquiry, InquiryStats } from '@/app/manager/inquiries/inquiries_types/ManagerInquiriesTypes';
+import type { ApiResponse } from '@/lib/api';
+
 
 export const inquiriesApi = {
   fetchInquiries: async (params?: Record<string, string>): Promise<ApiResponse<{ inquiries: Inquiry[]; total: number }>> => {

@@ -1,7 +1,8 @@
 // RESPONSIBILITY: Owns TypeScript values and defaults for Inquiry and lead-conversion forms.
-import type { z } from 'zod';
 import { managerConvertLeadFormSchema } from '@/app/manager/inquiries/inquiries_schemas/ManagerConvertLeadFormSchema';
 import { managerInquiriesFormSchema } from '@/app/manager/inquiries/inquiries_schemas/ManagerInquiriesFormSchema';
+import type { z } from 'zod';
+
 export type InquiryFormValues = z.infer<typeof managerInquiriesFormSchema>;
 export type ConvertLeadFormValues = z.infer<typeof managerConvertLeadFormSchema>;
 export const EMPTY_INQUIRY_FORM: InquiryFormValues = { name: '', phone: '', email: '', interest: '', status: 'NEW', source: 'Walk-in', notes: '' };

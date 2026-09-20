@@ -1,7 +1,8 @@
+// RESPONSIBILITY: Renders the accessible sort-direction icon for a members-table column.
 "use client";
 import { ArrowUp, ArrowDown, ArrowUpDown } from 'lucide-react';
-
 import type { ManagerMembersSortIconProps } from '@/app/manager/members/members_types/ManagerMembersSortIconTypes';
+
 
 export default function ManagerMembersSortIcon({ column, activeColumn, direction }: ManagerMembersSortIconProps) {
   if (activeColumn !== column) return <ArrowUpDown size={18} strokeWidth={2} className="ml-1 opacity-50 inline" />;

@@ -1,7 +1,8 @@
-'use client';
 // RESPONSIBILITY: Renders the top banner/hero section with module title and CTA for the Workout Library.
+'use client';
 import { Dumbbell } from 'lucide-react';
-import { useWorkoutPlansQuery, useExercisesQuery } from '@/app/manager/workout/workout_api/ManagerUseManagerWorkoutQueries';
+import { useWorkoutPlansQuery, useExercisesQuery } from '@/app/manager/workout/workout_hooks/ManagerUseManagerWorkoutQueries';
+
 
 export default function ManagerWorkoutBanner() {
  const { data: workoutData } = useWorkoutPlansQuery({ page: '1' });
@@ -15,11 +16,11 @@ export default function ManagerWorkoutBanner() {
  <div className="flex items-center justify-between">
  <div>
  <h2 className="text-xl font-bold">Complete Workout Database</h2>
- <p className="text-on-primary/80 mt-1 text-sm font-medium">
+ <p className="text-on-primary mt-1 text-sm font-medium">
  {totalWorkouts} workout programs · {totalExercises} exercises
  </p>
  </div>
- <Dumbbell size={56} className="text-info/40 transform -rotate-12" />
+ <Dumbbell size={56} className="text-info motion-safe:-rotate-12" />
  </div>
  </div>
  );

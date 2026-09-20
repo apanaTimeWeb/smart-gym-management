@@ -1,11 +1,13 @@
-'use client';
 // DATA FLOW: Manager module state/API data → useManagerMembersStatusMutations → owning Manager UI components.
+'use client';
 /** Manages UseMembersStatusMutations for the Manager module. */
 import { useMutation } from '@tanstack/react-query';
-import type { DietPlanSnapshot, WorkoutSnapshot } from '@/app/manager/members/members_types/ManagerMembersSnapshotTypes';
-import type { ManagerToastType } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerToastTypes';
 import { membersApi } from '@/app/manager/members/members_api/ManagerMembersApi';
+import type { ManagerToastType } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerToastTypes';
+import type { DietPlanSnapshot, WorkoutSnapshot } from '@/app/manager/members/members_types/ManagerMembersSnapshotTypes';
 
+
+/** Orchestrates the owning Manager feature behavior while preserving its documented state boundary. */
 export function useManagerMembersStatusMutations(
   showToast: (msg: string, t: ManagerToastType) => void,
   invalidateMemberQueries: () => void

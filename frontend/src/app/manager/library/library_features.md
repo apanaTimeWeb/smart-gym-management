@@ -14,6 +14,12 @@ Manager Library is the branch content library for reusable diet plans and exerci
 | `library_types/` | Feature-owned responsibility for the library module. | `ManagerLibrarySchema.ts; ManagerLibraryTypes.ts` |
 | `library_utils/` | Feature-owned responsibility for the library module. | `ManagerLibrarySharedConstants.ts` |
 
+## Approved External Dependencies
+
+- Global framework/application infrastructure documented by the architecture standard may be used when required.
+- Approved zero-business UI primitives may be imported from Manager application infrastructure.
+- Sibling feature business logic, state, API services, fixtures, and tests are not dependencies.
+
 ## Feature Inventory
 | Feature | Route | What the User Can Do | Main API Calls | Status |
 |---|---|---|---|---|

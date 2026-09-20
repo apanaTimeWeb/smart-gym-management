@@ -1,16 +1,18 @@
-"use client";
-// RESPONSIBILITY: Plans feature facade. Server data is owned by TanStack Query; request-modal UI state is owned by module-scoped Zustand.
 // DATA FLOW: URL → Plans Query → API; UI modal state → Zustand → request mutation.
+// RESPONSIBILITY: Plans feature facade. Server data is owned by TanStack Query; request-modal UI state is owned by module-scoped Zustand.
+"use client";
 /** Coordinates the Manager / feature. */
 import { useCallback, useMemo } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useManagerDebounce } from "@/app/manager/manager_infrastructure/ManagerDebounce";
-import { useFetchPlans, useRequestPlanChange } from "@/app/manager/plans/plans_api/ManagerUseManagerPlansQueries";
 import { showManagerErrorToast, showManagerSuccessToast } from "@/app/manager/manager_infrastructure/ManagerToastService";
+import { useFetchPlans, useRequestPlanChange } from "@/app/manager/plans/plans_hooks/ManagerUseManagerPlansQueries";
 import { useManagerPlansUiStore } from "@/app/manager/plans/plans_store/ManagerUseManagerPlansUiStore";
 import type { Plan, ManagerPlansViewModel } from "@/app/manager/plans/plans_types/ManagerPlansTypes";
 
 
+
+/** Orchestrates the owning Manager feature behavior while preserving its documented state boundary. */
 export function useManagerPlansLogic(): ManagerPlansViewModel {
   const router = useRouter(); const pathname = usePathname(); const searchParams = useSearchParams(); const ui = useManagerPlansUiStore();
   const search = searchParams.get("search") || ""; const tierFilter = searchParams.get("tier") || "ALL"; const statusFilter = searchParams.get("status") || "ALL"; const activeTab = searchParams.get("tab") || "View Plans"; const currentPage = Number(searchParams.get("page") || "1"); const debouncedSearch = useManagerDebounce(search, 300);

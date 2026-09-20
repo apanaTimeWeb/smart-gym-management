@@ -1,19 +1,20 @@
-'use client';
-// RESPONSIBILITY: Owns outstanding-due payment form setup, validation, submission and dirty-state confirmation.
 // DATA FLOW: HR staff query → RHF/Zod draft → confirmation → due-payment mutation → query invalidation → UI.
+// RESPONSIBILITY: Owns outstanding-due payment form setup, validation, submission and dirty-state confirmation.
+'use client';
 import { useMemo, useRef } from 'react';
-import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
 import { useManagerHrLogic } from '@/app/manager/hr/hr_hooks/ManagerUseManagerHrLogic';
 import { managerHrDueFormSchema } from '@/app/manager/hr/hr_schemas/ManagerHrDueFormSchema';
-import type { ManagerHrDueFormValues } from '@/app/manager/hr/hr_types/ManagerHrFormTypes';
 import { EMPTY_HR_DUE_FORM } from '@/app/manager/hr/hr_types/ManagerHrFormTypes';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
-import { useManagerUnsavedChangesGuard } from '@/app/manager/manager_infrastructure/ManagerUnsavedChangesGuard';
+import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 import { createManagerIdempotencyKey } from '@/app/manager/manager_infrastructure/ManagerIdempotency';
 import { toManagerMinorUnits } from '@/app/manager/manager_infrastructure/ManagerMoney';
-import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
-import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
+import { useManagerUnsavedChangesGuard } from '@/app/manager/manager_infrastructure/ManagerUnsavedChangesGuard';
+import type { ManagerHrDueFormValues } from '@/app/manager/hr/hr_types/ManagerHrFormTypes';
+
 
 /** Coordinates salary-due settlement and requires explicit confirmation before the mutation. */
 export function useManagerHrDueForm() {

@@ -5,6 +5,7 @@ import { ManagerNotificationsUrlConfig } from '@/app/manager/notifications/notif
 import { ManagerProfileUrlConfig } from '@/app/manager/profile/profile_url_config';
 import { ManagerSettingsUrlConfig } from '@/app/manager/settings/settings_url_config';
 
+
 export const MANAGER_HEADER_NAVIGATION = {
   scanner: `${ManagerAttendanceUrlConfig.UI.HOME}?qrScanner=open`,
   notifications: ManagerNotificationsUrlConfig.UI.HOME,

@@ -1,19 +1,21 @@
-'use client';
 // RESPONSIBILITY: Renders the Manager Settings editable experience; field state, validation, submit orchestration, and server data belong to the adjacent hook.
+'use client';
+import { useState } from 'react';
 import { Building, Clock, Globe, Loader2, Mail, Save, Settings } from 'lucide-react';
 import { Controller } from 'react-hook-form';
-import { useState } from 'react';
-import { useManagerSettingsForm } from '@/app/manager/settings/settings_hooks/ManagerUseManagerSettingsForm';
 import ManagerSearchableDropdown from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
-import { LANGUAGE_OPTIONS, TIMEZONE_OPTIONS, SETTINGS_TABS, NOTIFICATION_TEMPLATE_LABELS, type SettingsTab } from '@/app/manager/settings/settings_types/ManagerSettingsTypes';
-import { MANAGER_SETTINGS_GYM_FIELD_LABELS, MANAGER_SETTINGS_MEMBERSHIP_FIELD_LABELS } from '@/app/manager/settings/settings_constants/ManagerSettingsFieldLabels';
 import { MANAGER_GENERIC_ERROR_MESSAGE, getManagerErrorMessage } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
+import { MANAGER_SETTINGS_GYM_FIELD_LABELS, MANAGER_SETTINGS_MEMBERSHIP_FIELD_LABELS } from '@/app/manager/settings/settings_constants/ManagerSettingsFieldLabels';
+import { useManagerSettingsForm } from '@/app/manager/settings/settings_hooks/ManagerUseManagerSettingsForm';
+import { LANGUAGE_OPTIONS, TIMEZONE_OPTIONS, SETTINGS_TABS, NOTIFICATION_TEMPLATE_LABELS } from '@/app/manager/settings/settings_types/ManagerSettingsTypes';
+import type { SettingsTab } from '@/app/manager/settings/settings_types/ManagerSettingsTypes';
+
 
 export default function ManagerSettingsMain() {
-  const { settings, isLoading, isError, error, retry, saving, form, submit } = useManagerSettingsForm();
+  const { settings, isPending, isError, error, retry, saving, form, submit } = useManagerSettingsForm();
   const [activeTab, setActiveTab] = useState<SettingsTab>('region');
   const { control, register, formState: { errors } } = form;
-  if (isLoading && !settings) return <div className="space-y-5 p-6 motion-safe:animate-pulse"><div className="h-8 w-48 rounded bg-skeleton-base" /><div className="h-12 w-96 max-w-full rounded bg-skeleton-base" /><div className="h-96 rounded-xl bg-skeleton-base" /></div>;
+  if (isPending && !settings) return <div className="space-y-5 p-6 motion-safe:animate-pulse"><div className="h-8 w-48 rounded bg-skeleton-base" /><div className="h-12 w-96 max-w-full rounded bg-skeleton-base" /><div className="h-96 rounded-xl bg-skeleton-base" /></div>;
   if (isError && !settings) return <div role="alert" className="m-6 flex flex-col gap-3 rounded-xl border border-danger bg-danger-bg p-5 text-sm"><p className="font-semibold text-danger">{getManagerErrorMessage(error) || MANAGER_GENERIC_ERROR_MESSAGE}</p><button type="button" onClick={() => void retry()} className="min-h-11 w-fit rounded-lg bg-primary text-on-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">Retry</button></div>;
 
   return (

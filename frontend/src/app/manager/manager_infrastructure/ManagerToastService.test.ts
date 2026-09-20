@@ -1,6 +1,7 @@
+import toast from 'react-hot-toast';
 import { describe, expect, it, vi } from 'vitest';
 import { showManagerErrorToast, showManagerSuccessToast } from '@/app/manager/manager_infrastructure/ManagerToastService';
-import toast from 'react-hot-toast';
+
 
 vi.mock('react-hot-toast', () => ({ default: { success: vi.fn(), error: vi.fn() } }));
 

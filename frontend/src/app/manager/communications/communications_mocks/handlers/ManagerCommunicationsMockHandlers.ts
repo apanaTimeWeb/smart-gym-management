@@ -1,13 +1,13 @@
 import { http, HttpResponse } from 'msw';
-import { managerMockApiUrl } from '@/app/manager/manager_infrastructure/ManagerMockApiUrl';
-import { ManagerCommunicationsUrlConfig } from '@/app/manager/communications/communications_url_config';
-import { MANAGER_HTTP_STATUS } from '@/app/manager/manager_infrastructure/ManagerHttpStatus';
 import {
   MOCK_CAMPAIGNS,
   MOCK_COMM_KPI,
   MOCK_AUTOMATIONS,
   MOCK_CANCELLED_MEMBERS,
   MOCK_CANCELLATIONS_KPI } from '@/app/manager/communications/communications_fixtures/ManagerCommunicationsMockData';
+import { ManagerCommunicationsUrlConfig } from '@/app/manager/communications/communications_url_config';
+import { MANAGER_HTTP_STATUS } from '@/app/manager/manager_infrastructure/ManagerHttpStatus';
+import { managerMockApiUrl } from '@/app/manager/manager_infrastructure/ManagerMockApiUrl';
 import type {
   CommCampaign,
   CommRecipient,
@@ -16,6 +16,7 @@ import type {
   CommAutomation,
   CommChannel,
   WinBackTemplateTier } from '@/app/manager/communications/communications_types/ManagerCommunications_types';
+
 
 let mockCampaigns = [...MOCK_CAMPAIGNS];
 let mockAutomations = [...MOCK_AUTOMATIONS];
@@ -54,6 +55,14 @@ const MOCK_SEGMENT_MEMBERS: Record<CommSegment, CommRecipient[]> = {
 
 export let mockCommunicationIdCounter = 1000;
 let mockBroadcastIdCounter = 1000;
+export function resetManagerCommunicationsMockState(): void {
+  mockCampaigns = [...MOCK_CAMPAIGNS];
+  mockAutomations = [...MOCK_AUTOMATIONS];
+  mockCancelledMembers = [...MOCK_CANCELLED_MEMBERS];
+  mockCommunicationIdCounter = 1000;
+  mockBroadcastIdCounter = 1000;
+}
+
 export const managerCommunicationsHandlers = [
   http.get(managerMockApiUrl(ManagerCommunicationsUrlConfig.BACKEND_API.CAMPAIGNS), ({ request }) => {
     const url = new URL(request.url);

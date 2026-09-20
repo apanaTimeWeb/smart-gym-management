@@ -1,14 +1,14 @@
-'use client';
 // RESPONSIBILITY: Renders the collapsible left navigation sidebar for the Manager portal. No API calls.
+'use client';
 import { useState, useEffect, useMemo, useRef } from 'react';
-import { usePathname } from 'next/navigation';
-import Link from 'next/link';
-import Image from 'next/image';
 import { Search } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { getUser } from '@/lib/api';
 import { MANAGER_NAV_GROUPS } from '@/app/manager/manager_navigation/ManagerNavigationConfig';
-
 import type { ManagerSidebarProps } from '@/app/manager/manager_components/ManagerLayout/ManagerLayoutTypes';
+
 
 export default function ManagerSidebar({ isCollapsed, setIsCollapsed }: ManagerSidebarProps) {
   const pathname = usePathname();
@@ -21,12 +21,14 @@ export default function ManagerSidebar({ isCollapsed, setIsCollapsed }: ManagerS
 
   // Sets mounted=true once on client-side hydration to safely read user data (avoids SSR mismatch).
   /* eslint-disable react-hooks/set-state-in-effect */
+// EFFECT: Effect lifecycle and dependency list are intentionally scoped to values that control this side effect.
   useEffect(() => {
     setMounted(true);
   }, []);
   /* eslint-enable react-hooks/set-state-in-effect */
 
   // Listens for the global 'toggle-sidebar' event dispatched by ManagerHeader's hamburger button.
+// EFFECT: Effect lifecycle and dependency list are intentionally scoped to values that control this side effect.
   useEffect(() => {
     const handleToggle = () => {
       if (window.innerWidth < 1024) {
@@ -43,6 +45,7 @@ export default function ManagerSidebar({ isCollapsed, setIsCollapsed }: ManagerS
   }, [isCollapsed, setIsCollapsed]);
 
   // Mobile drawer: trap focus, close on Escape, lock page scrolling, and restore focus to the trigger.
+// EFFECT: Effect lifecycle and dependency list are intentionally scoped to values that control this side effect.
   useEffect(() => {
     if (!isMobileOpen) return undefined;
     const originalOverflow = document.body.style.overflow;
@@ -75,6 +78,7 @@ export default function ManagerSidebar({ isCollapsed, setIsCollapsed }: ManagerS
 
   // Closes the mobile drawer whenever the route changes (user navigated to a new page).
   /* eslint-disable react-hooks/set-state-in-effect */
+// EFFECT: Effect lifecycle and dependency list are intentionally scoped to values that control this side effect.
   useEffect(() => {
     setIsMobileOpen(false);
   }, [pathname]);
@@ -103,10 +107,10 @@ export default function ManagerSidebar({ isCollapsed, setIsCollapsed }: ManagerS
         />
       )}
 
-      <aside ref={asideRef} aria-label="Manager navigation" className={`fixed left-0 top-16 bottom-0 bg-sidebar border-r border-border z-40 lg:z-10 flex flex-col motion-safe:transition-all motion-safe:duration-300 ${
+      <aside ref={asideRef} aria-label="Manager navigation" className={`fixed left-0 top-16 bottom-0 bg-sidebar border-r border-border z-40 lg:z-10 flex flex-col motion-safe:transition-all motion-safe:duration-slow ${
         isCollapsed ? 'lg:w-15' : 'lg:w-60'
       } ${
-        isMobileOpen ? 'w-64 translate-x-0' : 'w-64 -translate-x-full lg:translate-x-0'
+        isMobileOpen ? 'w-64 motion-safe:translate-x-0 motion-reduce:translate-x-0' : 'w-64 motion-safe:-translate-x-full motion-reduce:-translate-x-full lg:motion-safe:translate-x-0 lg:motion-reduce:translate-x-0'
       }`}>
 
         {/* Logo & Toggle */}
@@ -114,7 +118,7 @@ export default function ManagerSidebar({ isCollapsed, setIsCollapsed }: ManagerS
           <div className="flex items-center gap-3 overflow-hidden">
             <Image src="/logo.png" alt="GymSmart MANAGER" width={44} height={44} className="object-contain min-w-11 rounded-lg" />
             {(!isCollapsed || isMobileOpen) && (
-              <div className="whitespace-nowrap motion-safe:transition-opacity motion-safe:duration-300 flex flex-col">
+              <div className="whitespace-nowrap motion-safe:transition-opacity motion-safe:duration-slow flex flex-col">
                 <span className="text-primary font-bold text-lg leading-tight tracking-tight">GymSmart</span>
                 <span className="text-xs text-warning font-bold uppercase tracking-wider -mt-0.5">MANAGER Portal</span>
               </div>
@@ -135,7 +139,7 @@ export default function ManagerSidebar({ isCollapsed, setIsCollapsed }: ManagerS
                 placeholder="Search menu..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="block w-full pl-9 pr-3 py-2 border border-border rounded-lg leading-5 bg-input text-primary placeholder-secondary focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm motion-safe:transition-colors"
+                className="block w-full pl-9 pr-3 py-2 border border-border rounded-lg leading-5 bg-input text-primary placeholder-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page sm:text-sm motion-safe:transition-colors"
               />
             </div>
           </div>
@@ -178,7 +182,7 @@ export default function ManagerSidebar({ isCollapsed, setIsCollapsed }: ManagerS
                         key={item.href}
                         href={item.href}
                         title={!showLabel ? item.label : ''}
-                        className={`flex items-center gap-3 py-2.5 rounded-xl font-medium motion-safe:transition-all motion-safe:duration-200 group cursor-pointer ${
+                        className={`flex items-center gap-3 py-2.5 rounded-xl font-medium motion-safe:transition-all motion-safe:duration-base group cursor-pointer ${
                           !showLabel ? 'justify-center px-0' : 'px-3.5'
                         } ${
                           active

@@ -3,6 +3,7 @@ import { Suspense } from 'react';
 import ManagerReferralsLoading from '@/app/manager/referrals/loading';
 import ManagerReferralsMain from '@/app/manager/referrals/referrals_components/ManagerReferralsMain/ManagerReferralsMain';
 
+
 export const metadata = {
   title: 'Referrals & Rewards | GymSmart Manager' };
 

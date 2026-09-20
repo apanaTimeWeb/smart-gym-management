@@ -1,7 +1,9 @@
+// DATA FLOW: Manager feature UI/state → owning custom hook → approved API/query/mutation layer → observable UI state.
 'use client';
 /** Coordinates the Manager / feature. */
 import { create } from 'zustand';
 import type { ManagerToastType } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerToastTypes';
+
 
 type FinanceTab = 'Payments' | 'Summary';
 interface ManagerFinanceUiState {

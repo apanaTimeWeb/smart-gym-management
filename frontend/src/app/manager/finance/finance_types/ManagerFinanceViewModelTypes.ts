@@ -1,7 +1,8 @@
 // RESPONSIBILITY: Return type contract for the Manager Finance feature facade.
-import type { ManagerToastType } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerToastTypes';
-import type { Payment, FinanceSummary } from '@/app/manager/finance/finance_types/ManagerFinanceTypes';
 import type { FinanceTab } from '@/app/manager/finance/finance_store/ManagerUseManagerFinanceUiStore';
+import type { Payment, FinanceSummary } from '@/app/manager/finance/finance_types/ManagerFinanceTypes';
+import type { ManagerToastType } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerToastTypes';
+
 
 export interface ManagerFinanceViewModel {
   tab: FinanceTab;
@@ -21,7 +22,7 @@ export interface ManagerFinanceViewModel {
   payments: Payment[];
   summary: FinanceSummary | null;
   totalPayments: number;
-  isLoading: boolean;
+  isPending: boolean;
   isError: boolean;
   errorMessage: string;
   reload: () => void;

@@ -1,18 +1,19 @@
-'use client';
-// RESPONSIBILITY: Owns payroll form setup, salary calculation, submission confirmation, and dirty-state protection.
 // DATA FLOW: HR staff + attendance queries → RHF/Zod draft → confirmation → payroll mutation → Query cache/UI.
+// RESPONSIBILITY: Owns payroll form setup, salary calculation, submission confirmation, and dirty-state protection.
+'use client';
 import { useEffect, useRef, useState } from 'react';
-import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
 import { useManagerHrLogic } from '@/app/manager/hr/hr_hooks/ManagerUseManagerHrLogic';
-import { useManagerHrStaffAttendanceQuery } from '@/app/manager/hr/hr_api/ManagerUseManagerHrStaffAttendanceQuery';
+import { useManagerHrStaffAttendanceQuery } from '@/app/manager/hr/hr_hooks/ManagerUseManagerHrStaffAttendanceQuery';
 import { managerHrPayrollFormSchema } from '@/app/manager/hr/hr_schemas/ManagerHrPayrollFormSchema';
-import type { PayrollFormValues } from '@/app/manager/hr/hr_types/ManagerHrFormTypes';
 import { EMPTY_PAYROLL_FORM } from '@/app/manager/hr/hr_types/ManagerHrFormTypes';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
-import { useManagerUnsavedChangesGuard } from '@/app/manager/manager_infrastructure/ManagerUnsavedChangesGuard';
 import { createManagerIdempotencyKey } from '@/app/manager/manager_infrastructure/ManagerIdempotency';
 import { fromManagerMinorUnits } from '@/app/manager/manager_infrastructure/ManagerMoney';
+import { useManagerUnsavedChangesGuard } from '@/app/manager/manager_infrastructure/ManagerUnsavedChangesGuard';
+import type { PayrollFormValues } from '@/app/manager/hr/hr_types/ManagerHrFormTypes';
+
 
 /** Coordinates payroll calculation and disbursement without business/form logic in the modal component. */
 export function useManagerHrPayrollForm() {
@@ -25,6 +26,7 @@ export function useManagerHrPayrollForm() {
   const selectedMonth = form.watch('month');
   const { data: attendanceResponse } = useManagerHrStaffAttendanceQuery(selectedStaffId || '', selectedMonth || '');
 
+// EFFECT: Effect lifecycle and dependency list are intentionally scoped to values that control this side effect.
   useEffect(() => { if (showPayrollModal) { form.reset(EMPTY_PAYROLL_FORM); setCalcData(null); } }, [form, showPayrollModal]);
   useEffect(() => {
     const selectedStaff = staff.find((item) => String(item.id) === String(selectedStaffId));

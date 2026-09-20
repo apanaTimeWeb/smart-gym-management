@@ -17,6 +17,7 @@ export const ManagerHrUrlConfig = {
     LEDGER: (staffId: string) => `/manager/hr/ledger/${staffId}`,
     LEDGER_ADVANCE: '/manager/hr/ledger/advance',
     LEDGER_PAY_DUE: '/manager/hr/ledger/paydue',
+    STAFF_ATTENDANCE_BASE: (staffId: string) => `/manager/hr/staff/${staffId}/attendance`,
     STAFF_ATTENDANCE: (staffId: string, month: string) => `/manager/hr/staff/${staffId}/attendance?month=${encodeURIComponent(month)}`
   }
 };

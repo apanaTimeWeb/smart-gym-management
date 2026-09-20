@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { downloadManagerReportsBinary } from '@/app/manager/reports/reports_api/ManagerReportsBinaryDownload';
+import { downloadManagerReportsBinary } from '@/app/manager/reports/reports_api/ManagerReportsApi';
+
 
 afterEach(() => {
   vi.restoreAllMocks();

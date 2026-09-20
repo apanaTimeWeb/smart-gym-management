@@ -1,12 +1,13 @@
-'use client';
 // RESPONSIBILITY: Renders the 7-day weekly schedule grid showing all trainer shifts per day column.
+'use client';
 import { Plus, Pencil, Trash2, CalendarX } from 'lucide-react';
-import { useManagerScheduleLogic } from '@/app/manager/schedule/schedule_hooks/ManagerUseManagerScheduleLogic';
-import { SHIFT_DAYS, SHIFT_STATUS_STYLES } from '@/app/manager/schedule/schedule_utils/ManagerScheduleSharedConstants';
-import type { ShiftDay, TrainerShift } from '@/app/manager/schedule/schedule_types/ManagerScheduleTypes';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
 import ManagerEmptyState from '@/app/manager/manager_components/ManagerFeedback/ManagerEmptyState';
 import ManagerTooltip from '@/app/manager/manager_components/ManagerFeedback/ManagerTooltip';
+import { useManagerScheduleLogic } from '@/app/manager/schedule/schedule_hooks/ManagerUseManagerScheduleLogic';
+import { SHIFT_DAYS, SHIFT_STATUS_STYLES } from '@/app/manager/schedule/schedule_utils/ManagerScheduleSharedConstants';
+import type { ShiftDay, TrainerShift } from '@/app/manager/schedule/schedule_types/ManagerScheduleTypes';
+
 
 export default function ManagerScheduleWeeklyGrid() {
   const { trainers, selectedDay, openAddShift, openEditShift, deleteShift } = useManagerScheduleLogic();
@@ -80,14 +81,14 @@ export default function ManagerScheduleWeeklyGrid() {
                         <div className="absolute top-1 right-1 hidden group-hover:flex gap-1">
                           <button
                             onClick={e => { e.stopPropagation(); openEditShift(shift); }}
-                            className="p-0.5 rounded bg-card/80 hover:bg-card text-secondary hover:text-primary motion-safe:transition-colors"
+                            className="p-0.5 rounded bg-card hover:bg-card text-secondary hover:text-primary motion-safe:transition-colors"
                             aria-label="Edit shift"
                           >
                             <Pencil size={18} />
                           </button>
                           <button
                             onClick={e => { e.stopPropagation(); void handleDelete(shift); }}
-                            className="p-0.5 rounded bg-card/80 hover:bg-card text-secondary hover:text-danger motion-safe:transition-colors"
+                            className="p-0.5 rounded bg-card hover:bg-card text-secondary hover:text-danger motion-safe:transition-colors"
                             aria-label="Delete shift"
                           >
                             <Trash2 size={18} />

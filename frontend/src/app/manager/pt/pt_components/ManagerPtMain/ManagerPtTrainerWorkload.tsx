@@ -1,8 +1,9 @@
-'use client';
 // RESPONSIBILITY: Renders the trainer workload to help managers balance assignment distribution.
-import type { ManagerPtTrainerWorkloadProps } from '@/app/manager/pt/pt_types/ManagerPtTrainerWorkloadTypes';
+'use client';
 import { Users, Star, User } from 'lucide-react';
 import ManagerPtTrainerWorkloadEmptyState from '@/app/manager/pt/pt_components/ManagerPtMain/ManagerPtTrainerWorkloadEmptyState';
+import type { ManagerPtTrainerWorkloadProps } from '@/app/manager/pt/pt_types/ManagerPtTrainerWorkloadTypes';
+
 
 const PT_TRAINER_WORKLOAD_COLUMN_COUNT = 4;
 
@@ -34,7 +35,7 @@ export default function ManagerPtTrainerWorkload({ workload }: ManagerPtTrainerW
               </tr>
             ) : (
               workload.map((trainer) => (
-                <tr key={trainer.trainerId} className="hover:bg-input/50 motion-safe:transition-colors">
+                <tr key={trainer.trainerId} className="hover:bg-input motion-safe:transition-colors">
                   <td className="py-3 px-4">
                     <div className="flex items-center gap-2">
                       <div className="w-8 h-8 rounded-full bg-input flex items-center justify-center">

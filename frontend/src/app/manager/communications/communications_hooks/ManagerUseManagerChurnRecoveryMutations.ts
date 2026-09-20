@@ -1,11 +1,13 @@
-'use client';
 // DATA FLOW: Manager module state/API data → useManagerChurnRecoveryMutations → owning Manager UI components.
+'use client';
 /** Manages UseChurnRecoveryMutations for the Manager module. */
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { showManagerErrorToast, showManagerSuccessToast } from '@/app/manager/manager_infrastructure/ManagerToastService';
 import { ManagerCommunicationsApi } from '@/app/manager/communications/communications_api/ManagerCommunicationsApi';
+import { showManagerErrorToast, showManagerSuccessToast } from '@/app/manager/manager_infrastructure/ManagerToastService';
 import type { CommChannel, WinBackTemplateTier } from '@/app/manager/communications/communications_types/ManagerCommunications_types';
 
+
+/** Orchestrates the owning Manager feature behavior while preserving its documented state boundary. */
 export function useManagerChurnRecoveryMutations(closeComposer: () => void) {
   const qc = useQueryClient();
 

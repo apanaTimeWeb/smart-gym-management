@@ -1,17 +1,18 @@
-'use client';
-import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 // RESPONSIBILITY: Renders the recent members table on the dashboard with a local search filter.
+'use client';
 import { useMemo, useState } from 'react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useManagerDebounce } from '@/app/manager/manager_infrastructure/ManagerDebounce';
-import Link from 'next/link';
 import { Search, ArrowRight, UserPlus } from 'lucide-react';
-import { DASHBOARD_RECENT_MEMBERS_PAGE_SIZE, RECENT_MEMBERS_HEADERS, DASHBOARD_STATUS_STYLES } from '@/app/manager/dashboard/dashboard_utils/ManagerDashboardSharedConstants';
+import Link from 'next/link';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { formatCurrencyFromMinorUnits, formatDate, displayValue } from '@/lib/formatters';
-import { ManagerDashboardUrlConfig } from '@/app/manager/dashboard/dashboard_url_config';
-import { useDashboardStatsQuery } from '@/app/manager/dashboard/dashboard_api/ManagerUseManagerDashboardQueries';
+import { useDashboardStatsQuery } from '@/app/manager/dashboard/dashboard_hooks/ManagerUseManagerDashboardQueries';
 import { useManagerDashboardUrlState } from '@/app/manager/dashboard/dashboard_hooks/ManagerUseManagerDashboardUrlState';
+import { ManagerDashboardUrlConfig } from '@/app/manager/dashboard/dashboard_url_config';
+import { DASHBOARD_RECENT_MEMBERS_PAGE_SIZE, RECENT_MEMBERS_HEADERS, DASHBOARD_STATUS_STYLES } from '@/app/manager/dashboard/dashboard_utils/ManagerDashboardSharedConstants';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
+import { useManagerDebounce } from '@/app/manager/manager_infrastructure/ManagerDebounce';
+import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
+
 
 export default function ManagerDashboardRecentMembers() {
   const { range } = useManagerDashboardUrlState();

@@ -14,6 +14,12 @@ Manager Workout is the branch workout-plan and exercise-library workspace. Manag
 | `workout_types/` | Feature-owned responsibility for the workout module. | `ManagerWorkoutAssignmentTypes.ts; ManagerWorkoutSchema.ts; ManagerWorkoutSnapshotTypes.ts; ManagerWorkoutTypes.ts` |
 | `workout_utils/` | Feature-owned responsibility for the workout module. | `ManagerWorkoutSharedConstants.ts` |
 
+## Approved External Dependencies
+
+- Global framework/application infrastructure documented by the architecture standard may be used when required.
+- Approved zero-business UI primitives may be imported from Manager application infrastructure.
+- Sibling feature business logic, state, API services, fixtures, and tests are not dependencies.
+
 ## Feature Inventory
 | Feature | Route | What the User Can Do | Main API Calls | Status |
 |---|---|---|---|---|
@@ -87,11 +93,11 @@ TanStack Query owns workout server/API data. UI-only filters, tabs, selections, 
 - Module `error.tsx` provides a safe retry fallback and does not expose raw backend/stack-trace text.
 
 ## Edge Cases and AI Warnings
-- **Do not confuse `/manager/workouts` with `/manager/workout/assignments`; they are distinct contracts:** Do not confuse `/manager/workouts` with `/manager/workout/assignments`; they are distinct contracts.
-- **Workout/exercise deletes are destructive and require confirmation:** Workout/exercise deletes are destructive and require confirmation.
-- **Exercise category is optional and must use displayValue() when blank:** Exercise category is optional and must use displayValue() when blank.
-- **Assignment records must come from their dedicated endpoint and fixture, not workout-plan constants:** Assignment records must come from their dedicated endpoint and fixture, not workout-plan constants.
-- **Workout tags/exercise groups must be rendered from response arrays rather than hardcoded UI samples:** Workout tags/exercise groups must be rendered from response arrays rather than hardcoded UI samples.
+- **Do not confuse `/manager/workouts` with `/manager/workout/assignments`; they are distinct contracts.**
+- **Workout/exercise deletes are destructive and require confirmation.**
+- **Exercise category is optional and must use `displayValue()` when blank.**
+- **Assignment records must come from their dedicated endpoint and fixture, not workout-plan constants.**
+- **Workout tags/exercise groups must be rendered from response arrays rather than hardcoded UI samples.**
 
 ## Component Responsibility Map
 | Component File | Responsibility |

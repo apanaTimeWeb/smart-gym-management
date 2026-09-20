@@ -1,11 +1,11 @@
-'use client';
 // RESPONSIBILITY: Renders the ManagerReportsExpensesTable sub-view extracted from ManagerReportsTable; owns only this presentation responsibility.
+'use client';
+import { formatCurrencyFromMinorUnits, formatNumber } from '@/lib/formatters';
 import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
-// RESPONSIBILITY: Renders the data table for the active report tab — Revenue, Attendance, Members, or Expenses.
+import ManagerReportsEmptyState from '@/app/manager/reports/reports_components/ManagerReportsTable/ManagerReportsEmptyState';
 import { useManagerReportsLogic } from '@/app/manager/reports/reports_hooks/ManagerUseManagerReportsLogic';
 import { EXPENSE_CATEGORY_STYLES } from '@/app/manager/reports/reports_utils/ManagerReportsSharedConstants';
-import { formatCurrencyFromMinorUnits, formatNumber } from '@/lib/formatters';
-import ManagerReportsEmptyState from '@/app/manager/reports/reports_components/ManagerReportsTable/ManagerReportsEmptyState';
+
 const formatReportCurrency = (value: number) => formatCurrencyFromMinorUnits(value, ManagerEnvConfig.currencyCode);
 
 export function ManagerReportsExpensesTable() {
@@ -22,7 +22,7 @@ export function ManagerReportsExpensesTable() {
       </thead>
       <tbody className="divide-y divide-border">
         {data.length === 0 ? <tr><td colSpan={3}><ManagerReportsEmptyState /></td></tr> : data.map(d => {
-          const style = EXPENSE_CATEGORY_STYLES[d.category] ?? { bg: 'bg-secondary/10', text: 'text-secondary' };
+          const style = EXPENSE_CATEGORY_STYLES[d.category] ?? { bg: 'bg-input', text: 'text-secondary' };
           return (
             <tr key={d.category} className="hover:bg-primary-subtle motion-safe:transition-colors">
               <td className="px-5 py-3.5">

@@ -1,16 +1,17 @@
-'use client';
 // RESPONSIBILITY: Orchestrates the documented HR staff, attendance, payroll, ledger, advance, and due views without embedding business API logic.
+'use client';
 import { useState } from 'react';
 import { Plus, RefreshCw, Search } from 'lucide-react';
+import ManagerHrAdvanceTable from '@/app/manager/hr/hr_components/ManagerHrAdvanceTable/ManagerHrAdvanceTable';
+import ManagerHrAttendanceHistory from '@/app/manager/hr/hr_components/ManagerHrAttendanceHistory/ManagerHrAttendanceHistory';
+import ManagerHrDueTable from '@/app/manager/hr/hr_components/ManagerHrDueTable/ManagerHrDueTable';
+import ManagerHrLedgerTable from '@/app/manager/hr/hr_components/ManagerHrLedgerTable/ManagerHrLedgerTable';
+import ManagerHrPayrollTable from '@/app/manager/hr/hr_components/ManagerHrPayrollTable/ManagerHrPayrollTable';
+import ManagerHrStaffTable from '@/app/manager/hr/hr_components/ManagerHrStaffTable/ManagerHrStaffTable';
 import { useManagerHrLogic } from '@/app/manager/hr/hr_hooks/ManagerUseManagerHrLogic';
 import { HR_TABS } from '@/app/manager/hr/hr_utils/ManagerHrSharedConstants';
 import ManagerSearchableDropdown from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
-import ManagerHrStaffTable from '@/app/manager/hr/hr_components/ManagerHrStaffTable/ManagerHrStaffTable';
-import ManagerHrPayrollTable from '@/app/manager/hr/hr_components/ManagerHrPayrollTable/ManagerHrPayrollTable';
-import ManagerHrAdvanceTable from '@/app/manager/hr/hr_components/ManagerHrAdvanceTable/ManagerHrAdvanceTable';
-import ManagerHrDueTable from '@/app/manager/hr/hr_components/ManagerHrDueTable/ManagerHrDueTable';
-import ManagerHrLedgerTable from '@/app/manager/hr/hr_components/ManagerHrLedgerTable/ManagerHrLedgerTable';
-import ManagerHrAttendanceHistory from '@/app/manager/hr/hr_components/ManagerHrAttendanceHistory/ManagerHrAttendanceHistory';
+
 
 export default function ManagerHrTabs() {
   const [activeTab, setActiveTab] = useState<typeof HR_TABS[number]>(HR_TABS[0]);
@@ -65,7 +66,7 @@ export default function ManagerHrTabs() {
                   value={search}
                   onChange={(event) => setSearch(event.target.value)}
                   placeholder="Search staff..."
-                  className="w-full rounded-lg border border-border bg-card py-2 pl-9 pr-3 text-sm text-primary focus:outline-none focus:ring-2"
+                  className="w-full rounded-lg border border-border bg-card py-2 pl-9 pr-3 text-sm text-primary focus-visible:outline-none focus-visible:ring-2"
                 />
               </div>
               <div className="w-full sm:w-40">

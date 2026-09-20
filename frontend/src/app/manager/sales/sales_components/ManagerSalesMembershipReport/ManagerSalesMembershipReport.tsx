@@ -1,22 +1,23 @@
+// RESPONSIBILITY: Renders the membership sales report table and its feature-owned controls.
 'use client';
-import { MANAGER_GENERIC_ERROR_MESSAGE } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
-import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
-// RESPONSIBILITY: Provides the implementation for ManagerSalesMembershipReport.tsx functionality within its module.
-import { useManagerSalesLogic } from '@/app/manager/sales/sales_hooks/ManagerUseManagerSalesLogic';
-import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
 import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
-import ManagerSalesMembershipReportEmptyState from '@/app/manager/sales/sales_components/ManagerSalesMembershipReport/ManagerSalesMembershipReportEmptyState';
+import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
+import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
+import { MANAGER_GENERIC_ERROR_MESSAGE } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
 import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_infrastructure/ManagerPaginationDefaults';
+import ManagerSalesMembershipReportEmptyState from '@/app/manager/sales/sales_components/ManagerSalesMembershipReport/ManagerSalesMembershipReportEmptyState';
+import { useManagerSalesLogic } from '@/app/manager/sales/sales_hooks/ManagerUseManagerSalesLogic';
+
 
 const SALES_MEMBERSHIP_REPORT_COLUMN_COUNT = 5;
 
 export default function ManagerSalesMembershipReport() {
-  const { currentPage, setCurrentPage, membershipReport, membershipReportTotal, membershipTotals, isLoading, isError, errorMessage } = useManagerSalesLogic();
+  const { currentPage, setCurrentPage, membershipReport, membershipReportTotal, membershipTotals, isPending, isError, errorMessage } = useManagerSalesLogic();
   
   const totalPages = Math.max(1, Math.ceil(membershipReportTotal / MANAGER_ITEMS_PER_PAGE));
   const paginated = membershipReport;
 
-  if (isLoading) {
+  if (isPending) {
     return (
       <div className="space-y-2 p-4" aria-label="Loading membership report"><div className="h-10 rounded-lg bg-input motion-safe:animate-pulse" /><div className="h-10 rounded-lg bg-input motion-safe:animate-pulse" /><div className="h-10 rounded-lg bg-input motion-safe:animate-pulse" /></div>
     );
@@ -24,7 +25,7 @@ export default function ManagerSalesMembershipReport() {
 
   if (isError) {
     return (
-      <div className="text-center py-16 bg-card rounded-2xl border border-danger/30">
+      <div className="text-center py-16 bg-card rounded-2xl border border-danger">
         <p className="text-danger font-medium">{errorMessage || MANAGER_GENERIC_ERROR_MESSAGE}</p>
         <span className="text-sm text-secondary">Retry the request.</span>
       </div>

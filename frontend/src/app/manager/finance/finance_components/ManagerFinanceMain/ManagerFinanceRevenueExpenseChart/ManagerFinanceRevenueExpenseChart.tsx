@@ -1,8 +1,8 @@
-'use client';
 // RESPONSIBILITY: Renders the ManagerFinanceRevenueExpenseChart sub-view extracted from ManagerFinanceRevenueChart; owns only this presentation responsibility.
-// RESPONSIBILITY: Renders the Manager FinanceRevenueChart presentation layer for the Manager module.
+'use client';
 import dynamic from 'next/dynamic';
 import { formatCurrencyFromMinorUnits, formatKPI } from '@/lib/formatters';
+
 const Chart = dynamic(() => import('react-apexcharts'), {
   ssr: false,
   loading: () => <div className="h-64 rounded-xl bg-card motion-safe:animate-pulse" aria-hidden="true" /> });

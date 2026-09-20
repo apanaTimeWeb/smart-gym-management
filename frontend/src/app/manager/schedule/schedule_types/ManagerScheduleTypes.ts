@@ -3,8 +3,8 @@
 // on TrainerShift, class occupancy KPIs.
 
 import type { ManagerToastType } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerToastTypes';
-
 import type { QueryStatus } from '@tanstack/react-query';
+
 export type ShiftDay = 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday';
 export type ShiftStatus = 'Active' | 'Off' | 'Leave';
 
@@ -86,7 +86,7 @@ export interface ManagerScheduleViewModel {
   toast: { message: string; type: ManagerToastType } | null;
   showToast: (msg: string, t: ManagerToastType) => void;
   hideToast: () => void;
-  loadAll: () => Promise<unknown>;
+  loadAll: () => Promise<void>;
   selectedDay: ShiftDay | 'All';
   setSelectedDay: (day: ShiftDay | 'All') => void;
   search: string;

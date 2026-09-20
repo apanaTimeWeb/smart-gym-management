@@ -1,16 +1,18 @@
+// RESPONSIBILITY: Renders the attendance table and its accessible row and action interactions.
 'use client';
-import { MANAGER_GENERIC_ERROR_MESSAGE } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
-import { displayValue, formatDate } from '@/lib/formatters';
-// RESPONSIBILITY: Renders the attendance data table and pagination controls.
-// CRITICAL FIX: Added Check-Out, Duration, and Method columns for time-tracking analytics.
 import { Clock, Calendar, CalendarCheck, Fingerprint, QrCode, Edit } from 'lucide-react';
-import { useManagerAttendanceLogic } from '@/app/manager/attendance/attendance_hooks/ManagerUseManagerAttendanceLogic';
-import type { ManagerAttendancePersonType } from '@/app/manager/attendance/attendance_types/ManagerAttendanceTypes';
-import { ATTENDANCE_TABLE_HEADERS, formatTime } from '@/app/manager/attendance/attendance_utils/ManagerAttendanceSharedConstants';
-import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
-import ManagerEmptyState from '@/app/manager/manager_components/ManagerFeedback/ManagerEmptyState';
-import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_infrastructure/ManagerPaginationDefaults';
+import { displayValue, formatDate } from '@/lib/formatters';
 import { ManagerAttendanceCheckInMethodBadge } from '@/app/manager/attendance/attendance_components/AttendanceTable/ManagerAttendanceCheckInMethodBadge/ManagerAttendanceCheckInMethodBadge';
+import { useManagerAttendanceLogic } from '@/app/manager/attendance/attendance_hooks/ManagerUseManagerAttendanceLogic';
+import { ATTENDANCE_TABLE_HEADERS, formatTime } from '@/app/manager/attendance/attendance_utils/ManagerAttendanceSharedConstants';
+import ManagerEmptyState from '@/app/manager/manager_components/ManagerFeedback/ManagerEmptyState';
+import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
+import { MANAGER_GENERIC_ERROR_MESSAGE } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
+import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_infrastructure/ManagerPaginationDefaults';
+import type { ManagerAttendancePersonType } from '@/app/manager/attendance/attendance_types/ManagerAttendanceTypes';
+
+// CRITICAL FIX: Added Check-Out, Duration, and Method columns for time-tracking analytics.
+
 
 
 /** Formats durationMinutes into a readable "Xh Ym" string. */
@@ -24,14 +26,14 @@ function formatDuration(minutes?: number): string {
 }
 
 export default function ManagerAttendanceTable() {
-  const { records, totalRecords, isLoading, isError, errorMessage, currentPage, setCurrentPage, setCalendarUser } = useManagerAttendanceLogic();
+  const { records, totalRecords, isPending, isError, errorMessage, currentPage, setCurrentPage, setCalendarUser } = useManagerAttendanceLogic();
 
   const totalPages = Math.max(1, Math.ceil(totalRecords / MANAGER_ITEMS_PER_PAGE));
   const paginatedRecords = records;
 
   return (
     <div className="p-5">
-      {isLoading ? (
+      {isPending ? (
         <div className="motion-safe:animate-pulse bg-card rounded-xl border border-border mt-4">
           {[...Array(5)].map((_, i) => (
             <div key={`skeleton-${i}`} className="h-16 border-b border-border flex items-center px-4 gap-4">
@@ -46,7 +48,7 @@ export default function ManagerAttendanceTable() {
           ))}
         </div>
       ) : isError ? (
-        <div className="text-center py-16 bg-card rounded-2xl border border-danger/30 mt-4">
+        <div className="text-center py-16 bg-card rounded-2xl border border-danger mt-4">
           <p className="text-danger font-medium">{errorMessage || MANAGER_GENERIC_ERROR_MESSAGE}</p>
           <span className="text-sm text-secondary">Retry the request.</span>
         </div>
@@ -75,7 +77,7 @@ export default function ManagerAttendanceTable() {
                   {/* Name */}
                   <td className="px-4 py-3 whitespace-nowrap">
                     <div className="flex items-center gap-2">
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold ${
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-primary text-xs font-bold ${
                         r.type === 'MEMBER' ? 'bg-info-bg' : 'bg-success-bg'
                       }`}>
                         {(r.member?.name || r.staff?.name || '?').charAt(0)}

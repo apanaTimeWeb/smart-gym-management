@@ -1,9 +1,10 @@
-'use client';
 // RESPONSIBILITY: Renders the PT assignment drawer using the dedicated assignment form hook.
+'use client';
 import { Loader2, UserPlus, X } from 'lucide-react';
-import type { ManagerPtAssignmentFormProps } from '@/app/manager/pt/pt_types/ManagerPtAssignmentFormTypes';
-import { useManagerPtAssignmentForm } from '@/app/manager/pt/pt_hooks/ManagerUseManagerPtAssignmentForm';
 import ManagerSearchableDropdown from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
+import { useManagerPtAssignmentForm } from '@/app/manager/pt/pt_hooks/ManagerUseManagerPtAssignmentForm';
+import type { ManagerPtAssignmentFormProps } from '@/app/manager/pt/pt_types/ManagerPtAssignmentFormTypes';
+
 
 export default function ManagerPtAssignmentForm(props: ManagerPtAssignmentFormProps) {
   const { open, packages, trainers, saving } = props;

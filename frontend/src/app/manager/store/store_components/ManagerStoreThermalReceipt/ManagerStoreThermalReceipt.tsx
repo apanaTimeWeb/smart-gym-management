@@ -1,11 +1,13 @@
-'use client';
-import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 // RESPONSIBILITY: Renders the printable 80mm thermal receipt owned by the Store payment/order workflow. Rendering is print-only and performs no API work.
-// DATA FLOW: feature print state → receipt component props → print portal → browser print stylesheet.
-import type { ManagerStoreThermalReceiptProps } from '@/app/manager/store/store_types/ManagerStoreThermalReceiptTypes';
+'use client';
 import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
+import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
+import type { ManagerStoreThermalReceiptProps } from '@/app/manager/store/store_types/ManagerStoreThermalReceiptTypes';
+
+// DATA FLOW: feature print state → receipt component props → print portal → browser print stylesheet.
+
 
 
 
@@ -13,6 +15,7 @@ export default function ManagerStoreThermalReceipt(props: ManagerStoreThermalRec
  const { data } = props;
  const [mounted, setMounted] = useState(false);
 
+// EFFECT: Effect lifecycle and dependency list are intentionally scoped to values that control this side effect.
  useEffect(() => {
    setMounted(true);
  }, []);

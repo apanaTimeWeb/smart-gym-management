@@ -1,37 +1,54 @@
-# Manager Members Theme Contract
+# Manager Members Module Theme Contract
 
-The `members` module relies on the following semantic theme tokens.
-No arbitrary colors (e.g., `bg-green-500`) or hardcoded hex values should be used in this module.
+This contract belongs only to `src/app/manager/members`. It records the exact global semantic theme variables consumed by the current implementation. The global design system remains the visual source of truth.
 
-## Backgrounds
-- `--bg-page`: Primary page background
-- `--bg-card`: Card and modal backgrounds
-- `--bg-input`: Input field backgrounds
-- `--bg-popover`: Dropdown and popover backgrounds
-- `--bg-overlay`: Modal backdrop overlay
+## Consumed Global Semantic Tokens
 
-## Borders
-- `--border`: Standard border color
-- `--border-focus`: Focused input border color
+| CSS Variable | Current Usage |
+| --- | --- |
+| `--bg-card` | card/panel surface |
+| `--bg-input` | input surface |
+| `--bg-overlay` | dialog/drawer surface |
+| `--bg-page` | page surface |
+| `--border` | standard borders/dividers |
+| `--border-focus` | focused border |
+| `--danger` | solid danger surface |
+| `--danger-bg` | subtle danger surface |
+| `--danger-text` | danger text |
+| `--focus-ring` | keyboard focus ring |
+| `--info` | solid info surface |
+| `--info-bg` | subtle info surface |
+| `--info-text` | info text |
+| `--primary` | primary brand/active controls |
+| `--primary-hover` | primary hover state |
+| `--primary-subtle` | subtle primary surfaces |
+| `--purple-bg` | purple semantic tag background |
+| `--purple-text` | purple semantic tag text |
+| `--shadow-card` | card elevation |
+| `--shadow-dialog` | dialog elevation |
+| `--skeleton-base` | skeleton base |
+| `--skeleton-highlight` | skeleton highlight |
+| `--success` | solid success surface |
+| `--success-bg` | subtle success surface |
+| `--success-text` | success text |
+| `--surface-highlight` | table/header highlight surface |
+| `--text-on-danger` | text on solid danger |
+| `--text-on-info` | text on solid info |
+| `--text-on-primary` | text on solid primary |
+| `--text-on-success` | text on solid success |
+| `--text-primary` | primary text |
+| `--text-secondary` | secondary text/labels |
+| `--warning-bg` | subtle warning surface |
+| `--warning-text` | warning text |
 
-## Text
-- `--foreground`: Primary text color
-- `--secondary`: Secondary/muted text color
+## Binding Rules
 
-## Interactive / Brand
-- `--primary`: Primary brand color for buttons, active states, and highlights
-- `--primary-foreground`: Text color on primary backgrounds
+- No raw hex colors, arbitrary Tailwind color values, or raw RGBA colors may be introduced into module JSX.
+- Semantic background opacity modifiers such as `bg-success/10` and `bg-primary/20` are forbidden.
+- Solid semantic backgrounds require the appropriate documented on-color; otherwise use the subtle `*-bg` variant.
+- Feature-specific business status mappings remain local to this feature.
+- No feature-local CSS variable is defined by this module unless explicitly documented here.
 
-## Status Colors
-- `--success`: Active/Paid status
-- `--success-bg`: Light background for success badges
-- `--warning`: Pending/Expiring status
-- `--warning-bg`: Light background for warning badges
-- `--danger`: Suspended/Overdue status
-- `--danger-bg`: Light background for danger badges
-- `--info`: Frozen/Paused status
-- `--info-bg`: Light background for info badges
+## Portability
 
-## Loading States
-- `--skeleton-base`: Base color for loading skeletons
-- `--skeleton-highlight`: Highlight color for loading skeletons
+When this feature is copied to another compatible application, define the listed semantic variables through that application's canonical global theme stylesheet and preserve the same semantic meanings.

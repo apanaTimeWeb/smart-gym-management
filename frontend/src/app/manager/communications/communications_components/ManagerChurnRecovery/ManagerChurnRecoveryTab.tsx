@@ -1,16 +1,17 @@
-'use client';
 // RESPONSIBILITY: Root orchestrator for the Churn Recovery / Win-Back tab. Renders KPIs, table, and composer drawer. No direct API calls.
-import { useManagerChurnRecoveryLogic } from '@/app/manager/communications/communications_hooks/ManagerUseManagerChurnRecoveryLogic';
+'use client';
+import ManagerChurnRecoveryComposer from '@/app/manager/communications/communications_components/ManagerChurnRecovery/ManagerChurnRecoveryComposer';
 import ManagerChurnRecoveryKPIs from '@/app/manager/communications/communications_components/ManagerChurnRecovery/ManagerChurnRecoveryKPIs';
 import ManagerChurnRecoveryTable from '@/app/manager/communications/communications_components/ManagerChurnRecovery/ManagerChurnRecoveryTable';
-import ManagerChurnRecoveryComposer from '@/app/manager/communications/communications_components/ManagerChurnRecovery/ManagerChurnRecoveryComposer';
+import { useManagerChurnRecoveryLogic } from '@/app/manager/communications/communications_hooks/ManagerUseManagerChurnRecoveryLogic';
+
 
 export default function ManagerChurnRecoveryTab() {
   const {
     churnKPIs,
     paginatedMembers,
     filteredMembers,
-    isLoading, isError,
+    isPending, isError,
     totalPages,
     churnSearch,
     setChurnSearch,
@@ -38,7 +39,7 @@ export default function ManagerChurnRecoveryTab() {
             Target exited members with personalised win-back campaigns to re-engage them.
           </p>
         </div>
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-danger border border-danger/30 text-on-danger text-xs font-medium">
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-danger border border-danger text-on-danger text-xs font-medium">
           {filteredMembers.length} churned member{filteredMembers.length !== 1 ? 's' : ''} found
         </div>
       </div>
@@ -50,7 +51,7 @@ export default function ManagerChurnRecoveryTab() {
       <ManagerChurnRecoveryTable
         members={paginatedMembers}
         allFilteredCount={filteredMembers.length}
-        isLoading={isLoading} isError={isError}
+        isPending={isPending} isError={isError}
         churnSearch={churnSearch}
         onSearchChange={setChurnSearch}
         churnReasonFilter={churnReasonFilter}

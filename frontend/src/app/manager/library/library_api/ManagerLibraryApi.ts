@@ -1,9 +1,11 @@
 // RESPONSIBILITY: Defines the Manager Library HTTP contract; request/response validation stays at this boundary.
 import { z } from 'zod';
-import { apiFetch, type ApiResponse } from '@/lib/api';
+import { apiFetch } from '@/lib/api';
+import { dietPlanSchema, exerciseSchema } from '@/app/manager/library/library_schemas/ManagerLibrarySchema';
 import { ManagerLibraryUrlConfig } from '@/app/manager/library/library_url_config';
 import type { DietPlan, Exercise } from '@/app/manager/library/library_types/ManagerLibraryTypes';
-import { dietPlanSchema, exerciseSchema } from '@/app/manager/library/library_schemas/ManagerLibrarySchema';
+import type { ApiResponse } from '@/lib/api';
+
 
 export type ManagerLibraryListParams = Record<string, string>;
 

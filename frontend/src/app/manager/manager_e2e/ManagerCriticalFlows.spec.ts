@@ -1,12 +1,14 @@
-import { test, expect, type Page } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 import { StatusCodes } from 'http-status-codes';
+import type { Page } from '@playwright/test';
+
 
 const MANAGER_ROUTES = [
   '/manager/dashboard', '/manager/inquiries', '/manager/members', '/manager/attendance',
   '/manager/plans', '/manager/finance', '/manager/sales', '/manager/expenses', '/manager/reports',
   '/manager/hr', '/manager/schedule', '/manager/pt', '/manager/workout', '/manager/library',
   '/manager/communications', '/manager/referrals', '/manager/notifications', '/manager/store',
-  '/manager/profile', '/manager/settings',
+  '/manager/profile', '/manager/settings', '/manager/grievance', '/manager/maintenance',
 ] as const;
 
 async function signInAsManager(page: Page) {
@@ -151,6 +153,31 @@ test.describe('Manager critical journeys', () => {
     await expect(page.getByText('Temporary member service failure.')).toBeVisible();
     await page.getByRole('button', { name: 'Retry' }).click();
     await expect(page.getByText('Aarav Patel')).toBeVisible();
+  });
+
+
+  test('grievance create and resolve flows produce visible state changes', async ({ page }) => {
+    await page.goto('/manager/grievance');
+    await page.getByRole('button', { name: 'Log Complaint' }).click();
+    await page.getByLabel('Member Name').fill('E2E Grievance Member');
+    await page.getByLabel('Issue Description').fill('E2E complaint for regression coverage');
+    await page.getByRole('button', { name: 'Log Complaint' }).last().click();
+    await expect(page.getByText('E2E Grievance Member')).toBeVisible();
+    await page.getByRole('button', { name: 'Resolve' }).first().click();
+    await page.getByLabel('Resolution Note').fill('Issue resolved during E2E verification');
+    await page.getByRole('button', { name: 'Submit Resolution' }).click();
+    await expect(page.getByText('CLOSED')).toBeVisible();
+  });
+
+  test('maintenance create and resolve flows produce visible state changes', async ({ page }) => {
+    await page.goto('/manager/maintenance');
+    await page.getByRole('button', { name: 'Log Issue' }).click();
+    await page.getByLabel('Issue Title').fill('E2E maintenance regression');
+    await page.getByLabel('Equipment / Area').fill('Cardio Zone');
+    await page.getByRole('button', { name: 'Log Issue' }).last().click();
+    await expect(page.getByText('E2E maintenance regression')).toBeVisible();
+    await page.getByRole('button', { name: 'Mark as Resolved' }).first().click();
+    await expect(page.getByText('RESOLVED')).toBeVisible();
   });
 
   for (const viewport of [

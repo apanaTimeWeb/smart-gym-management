@@ -1,11 +1,11 @@
-import { describe, it, expect, beforeAll, afterAll, afterEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
+import { http, HttpResponse } from 'msw';
+import { describe, it, expect, beforeAll, afterAll, afterEach } from 'vitest';
+import { expensesApi } from '@/app/manager/expenses/expenses_api/ManagerExpensesApi';
 import ManagerExpensesMain from '@/app/manager/expenses/expenses_components/ManagerExpensesMain/ManagerExpensesMain';
 import { managerMswServer } from '@/app/manager/manager_mocks/ManagerMswTestServer';
-import { expensesApi } from '@/app/manager/expenses/expenses_api/ManagerExpensesApi';
 import { ManagerTestProviders } from '@/app/manager/manager_mocks/ManagerTestProviders';
 
-import { http, HttpResponse } from 'msw';
 beforeAll(() => managerMswServer.listen({ onUnhandledRequest: 'error' }));
 afterEach(() => managerMswServer.resetHandlers());
 afterAll(() => managerMswServer.close());

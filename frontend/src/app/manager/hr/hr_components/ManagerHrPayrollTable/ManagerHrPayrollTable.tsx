@@ -1,22 +1,24 @@
-'use client';
-import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 // RESPONSIBILITY: Renders the payroll records table with pay status badges and mark-as-paid inline action.
-// CRITICAL FIX: Added Download Payslip per row, Generate Payroll button, and netPayable/deductions display.
+'use client';
+import { useRef } from 'react';
+import { CheckCircle2, Search, Banknote, Download, RefreshCw } from 'lucide-react';
+import { formatCurrencyFromMinorUnits , formatDate} from '@/lib/formatters';
 import { useManagerHrLogic } from '@/app/manager/hr/hr_hooks/ManagerUseManagerHrLogic';
 import { PAYROLL_TABLE_HEADERS } from '@/app/manager/hr/hr_utils/ManagerHrSharedConstants';
-import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
-import { CheckCircle2, Search, Banknote, Download, RefreshCw } from 'lucide-react';
-import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_infrastructure/ManagerPaginationDefaults';
-import ManagerEmptyState from '@/app/manager/manager_components/ManagerFeedback/ManagerEmptyState';
-import { formatCurrencyFromMinorUnits , formatDate} from '@/lib/formatters';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
+import ManagerEmptyState from '@/app/manager/manager_components/ManagerFeedback/ManagerEmptyState';
+import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
+import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 import { createManagerIdempotencyKey } from '@/app/manager/manager_infrastructure/ManagerIdempotency';
-import { useRef } from 'react';
+import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_infrastructure/ManagerPaginationDefaults';
+
+// CRITICAL FIX: Added Download Payslip per row, Generate Payroll button, and netPayable/deductions display.
+
 
 export default function ManagerHrPayrollTable() {
   const { confirm } = useConfirm();
   const generatePayrollKeyRef = useRef<string | null>(null);
-  const { search, setSearch, payrollMonth, setPayrollMonth, payrolls, totalPayrolls, markPayrollPaid, setPaymentModal, currentPage, setCurrentPage, isLoading, staff, bulkGeneratePayroll, downloadPayslip } = useManagerHrLogic();
+  const { search, setSearch, payrollMonth, setPayrollMonth, payrolls, totalPayrolls, markPayrollPaid, setPaymentModal, currentPage, setCurrentPage, isPending, staff, bulkGeneratePayroll, downloadPayslip } = useManagerHrLogic();
 
   const totalPages = Math.max(1, Math.ceil(totalPayrolls / MANAGER_ITEMS_PER_PAGE));
   const currentData = payrolls;
@@ -34,7 +36,7 @@ export default function ManagerHrPayrollTable() {
 
   const payrollColumnCount = PAYROLL_TABLE_HEADERS.length + 1;
 
-  if (isLoading) {
+  if (isPending) {
     return (
       <div className="flex flex-col h-full">
         <div className="overflow-x-auto flex-1">
@@ -139,7 +141,7 @@ export default function ManagerHrPayrollTable() {
                     {p.status !== 'Paid' && (
                       <button
                         onClick={() => setPaymentModal({ payrollId: p.id, staffName: p.staff?.name || `Staff #${p.staffId}`, pendingAmount: p.pendingAmount || p.amount })}
-                        className="flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold text-on-success bg-primary-subtle rounded-lg hover:bg-primary/90 motion-safe:transition-colors"
+                        className="flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold text-on-success bg-primary-subtle rounded-lg hover:bg-primary-hover motion-safe:transition-colors"
                       >
                         <Banknote size={18} /> Pay Salary
                       </button>

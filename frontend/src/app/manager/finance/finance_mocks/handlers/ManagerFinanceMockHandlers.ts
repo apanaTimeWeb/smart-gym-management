@@ -1,12 +1,18 @@
 import { http, HttpResponse } from 'msw';
-import { managerMockApiUrl } from '@/app/manager/manager_infrastructure/ManagerMockApiUrl';
-import { ManagerFinanceUrlConfig } from '@/app/manager/finance/finance_url_config';
 import { MOCK_PAYMENTS, MOCK_FINANCE_SUMMARY } from '@/app/manager/finance/finance_fixtures/ManagerFinanceMockData';
+import { ManagerFinanceUrlConfig } from '@/app/manager/finance/finance_url_config';
+import { managerMockApiUrl } from '@/app/manager/manager_infrastructure/ManagerMockApiUrl';
 import type { Payment } from '@/app/manager/finance/finance_types/ManagerFinanceTypes';
+
 
 let mockPayments = [...MOCK_PAYMENTS];
 
 export let mockPaymentIdCounter = 1000;
+export function resetManagerFinanceMockState(): void {
+  mockPayments = [...MOCK_PAYMENTS];
+  mockPaymentIdCounter = 1000;
+}
+
 export const managerFinanceHandlers = [
   http.get(managerMockApiUrl(ManagerFinanceUrlConfig.BACKEND_API.EXPORT), ({ request }) => {
     const format = new URL(request.url).searchParams.get('format') || 'csv';

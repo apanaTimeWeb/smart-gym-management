@@ -1,18 +1,24 @@
 import { http, HttpResponse } from 'msw';
-import { managerMockApiUrl } from '@/app/manager/manager_infrastructure/ManagerMockApiUrl';
-import { ManagerPtUrlConfig } from '@/app/manager/pt/pt_url_config';
 import { MANAGER_HTTP_STATUS } from '@/app/manager/manager_infrastructure/ManagerHttpStatus';
+import { managerMockApiUrl } from '@/app/manager/manager_infrastructure/ManagerMockApiUrl';
 import { 
   MOCK_PT_PACKAGES, 
   MOCK_PT_ASSIGNMENTS, 
   MOCK_PT_WORKLOAD, 
   MOCK_PT_KPIS 
 } from '@/app/manager/pt/pt_fixtures/ManagerPtMockData';
+import { ManagerPtUrlConfig } from '@/app/manager/pt/pt_url_config';
 import type { CreatePtAssignmentPayload, PtAssignment } from '@/app/manager/pt/pt_types/ManagerPtTypes';
+
 
 let mockAssignments = [...MOCK_PT_ASSIGNMENTS];
 
 export let mockAssignmentIdCounter = 1000;
+export function resetManagerPtMockState(): void {
+  mockAssignments = [...MOCK_PT_ASSIGNMENTS];
+  mockAssignmentIdCounter = 1000;
+}
+
 export const managerPtHandlers = [
   http.get(managerMockApiUrl(ManagerPtUrlConfig.BACKEND_API.KPIS), () => {
     return HttpResponse.json({ success: true, message: 'KPIs fetched', data: MOCK_PT_KPIS });

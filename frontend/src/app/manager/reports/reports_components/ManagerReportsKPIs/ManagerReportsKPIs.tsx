@@ -1,11 +1,12 @@
-'use client';
-import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 // RESPONSIBILITY: KPI stat cards row for the Manager Reports module.
-import { useManagerReportsLogic } from '@/app/manager/reports/reports_hooks/ManagerUseManagerReportsLogic';
+'use client';
 import { TrendingUp, Users, CalendarCheck, TrendingDown, IndianRupee, UserPlus, UserMinus, Activity } from 'lucide-react';
-import { useDateRangeSuffix } from '@/lib/useDateRangeSuffix';
 import { formatCurrencyFromMinorUnits, formatNumber } from '@/lib/formatters';
+import { useDateRangeSuffix } from '@/lib/useDateRangeSuffix';
+import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 import { ManagerReportsKpiCard } from '@/app/manager/reports/reports_components/ManagerReportsKPIs/ManagerReportsKpiCard/ManagerReportsKpiCard';
+import { useManagerReportsLogic } from '@/app/manager/reports/reports_hooks/ManagerUseManagerReportsLogic';
+
 
 
 const formatReportCurrency = (value: number) => formatCurrencyFromMinorUnits(value, ManagerEnvConfig.currencyCode);
@@ -23,7 +24,7 @@ export default function ManagerReportsKPIs() {
       <ManagerReportsKpiCard label={`Avg Attendance${dateSuffix}`}   value={k ? `${k.avgAttendanceRate}%` : '—'} icon={CalendarCheck} iconBg="bg-primary-subtle" iconColor="text-primary" />
       <ManagerReportsKpiCard label={`New Members${dateSuffix}`}      value={k ? formatNumber(k.newMembersThisMonth) : '—'} icon={UserPlus}  iconBg="bg-success-bg"  iconColor="text-success"  />
       <ManagerReportsKpiCard label={`Members Lost %${dateSuffix}`}       value={k ? `${k.churnRate}%`      : '—'} icon={UserMinus}    iconBg="bg-warning-bg"   iconColor="text-warning"   />
-      <ManagerReportsKpiCard label={`Total Members${dateSuffix}`}    value={k ? formatNumber(k.totalMembers) : '—'} icon={Activity}     iconBg="bg-purple-bg"    iconColor="text-purple"    />
+      <ManagerReportsKpiCard label={`Total Members${dateSuffix}`}    value={k ? formatNumber(k.totalMembers) : '—'} icon={Activity}     iconBg="bg-purple-bg"    iconColor="text-purple-text"    />
       <ManagerReportsKpiCard label={`Net Profit${dateSuffix}`}       value={k ? formatReportCurrency(k.netProfit)       : '—'} icon={IndianRupee}  iconBg="bg-success-bg"   iconColor="text-success"   />
     </div>
   );

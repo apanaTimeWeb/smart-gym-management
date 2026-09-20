@@ -1,12 +1,13 @@
-'use client';
-import { formatDate } from '@/lib/formatters';
 // RESPONSIBILITY: Renders the expiring memberships list on the dashboard.
+'use client';
 import { useState } from 'react';
-import Link from 'next/link';
 import { Search, BellRing } from 'lucide-react';
-import { ManagerDashboardUrlConfig } from '@/app/manager/dashboard/dashboard_url_config';
-import { useDashboardStatsQuery } from '@/app/manager/dashboard/dashboard_api/ManagerUseManagerDashboardQueries';
+import Link from 'next/link';
+import { formatDate } from '@/lib/formatters';
+import { useDashboardStatsQuery } from '@/app/manager/dashboard/dashboard_hooks/ManagerUseManagerDashboardQueries';
 import { useManagerDashboardUrlState } from '@/app/manager/dashboard/dashboard_hooks/ManagerUseManagerDashboardUrlState';
+import { ManagerDashboardUrlConfig } from '@/app/manager/dashboard/dashboard_url_config';
+
 
 export default function ManagerDashboardExpiringMemberships() {
   const { range } = useManagerDashboardUrlState();

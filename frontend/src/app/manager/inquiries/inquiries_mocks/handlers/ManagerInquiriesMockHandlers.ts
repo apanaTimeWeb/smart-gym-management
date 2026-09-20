@@ -1,15 +1,22 @@
 import { http, HttpResponse } from 'msw';
-import { managerMockApiUrl } from '@/app/manager/manager_infrastructure/ManagerMockApiUrl';
+import { MOCK_INQUIRIES, MOCK_INQUIRY_STATS } from '@/app/manager/inquiries/inquiries_fixtures/ManagerInquiriesMockData';
 import { ManagerInquiriesUrlConfig } from '@/app/manager/inquiries/inquiries_url_config';
 import { MANAGER_HTTP_STATUS } from '@/app/manager/manager_infrastructure/ManagerHttpStatus';
-import { MOCK_INQUIRIES, MOCK_INQUIRY_STATS } from '@/app/manager/inquiries/inquiries_fixtures/ManagerInquiriesMockData';
-import type { Inquiry } from '@/app/manager/inquiries/inquiries_types/ManagerInquiriesTypes';
+import { managerMockApiUrl } from '@/app/manager/manager_infrastructure/ManagerMockApiUrl';
 import type { InquiryFormValues } from '@/app/manager/inquiries/inquiries_types/ManagerInquiriesFormTypes';
+import type { Inquiry } from '@/app/manager/inquiries/inquiries_types/ManagerInquiriesTypes';
+
 
 let mockInquiries = [...MOCK_INQUIRIES];
 
 export let mockConvertedMemberIdCounter = 1000;
 let mockInquiryIdCounter = 1000;
+export function resetManagerInquiriesMockState(): void {
+  mockInquiries = [...MOCK_INQUIRIES];
+  mockConvertedMemberIdCounter = 1000;
+  mockInquiryIdCounter = 1000;
+}
+
 export const managerInquiriesHandlers = [
   http.get(managerMockApiUrl(ManagerInquiriesUrlConfig.BACKEND_API.BASE), ({ request }) => {
     const url = new URL(request.url);

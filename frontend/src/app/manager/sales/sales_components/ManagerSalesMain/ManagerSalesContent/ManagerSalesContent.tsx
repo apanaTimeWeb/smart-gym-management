@@ -1,15 +1,15 @@
-'use client';
 // RESPONSIBILITY: Renders the ManagerSalesContent sub-view extracted from ManagerSalesMain; owns only this presentation responsibility.
-// RESPONSIBILITY: Provides the implementation for ManagerSalesMain.tsx functionality within its module.
-import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/ManagerHeader';
-import { useManagerSalesLogic  } from '@/app/manager/sales/sales_hooks/ManagerUseManagerSalesLogic';
-import ManagerSalesToolbar from '@/app/manager/sales/sales_components/ManagerSalesToolbar/ManagerSalesToolbar';
-import ManagerSalesTabs from '@/app/manager/sales/sales_components/ManagerSalesTabs/ManagerSalesTabs';
-import ManagerSalesOverview from '@/app/manager/sales/sales_components/ManagerSalesOverview/ManagerSalesOverview';
-import ManagerSalesMembershipReport from '@/app/manager/sales/sales_components/ManagerSalesMembershipReport/ManagerSalesMembershipReport';
-import ManagerSalesPendingPayments from '@/app/manager/sales/sales_components/ManagerSalesPendingPayments/ManagerSalesPendingPayments';
-import ManagerSalesAllMemberships from '@/app/manager/sales/sales_components/ManagerSalesAllMemberships/ManagerSalesAllMemberships';
+'use client';
 import ManagerToast from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
+import ManagerHeader from '@/app/manager/manager_components/ManagerLayout/ManagerHeader';
+import ManagerSalesAllMemberships from '@/app/manager/sales/sales_components/ManagerSalesAllMemberships/ManagerSalesAllMemberships';
+import ManagerSalesMembershipReport from '@/app/manager/sales/sales_components/ManagerSalesMembershipReport/ManagerSalesMembershipReport';
+import ManagerSalesOverview from '@/app/manager/sales/sales_components/ManagerSalesOverview/ManagerSalesOverview';
+import ManagerSalesPendingPayments from '@/app/manager/sales/sales_components/ManagerSalesPendingPayments/ManagerSalesPendingPayments';
+import ManagerSalesTabs from '@/app/manager/sales/sales_components/ManagerSalesTabs/ManagerSalesTabs';
+import ManagerSalesToolbar from '@/app/manager/sales/sales_components/ManagerSalesToolbar/ManagerSalesToolbar';
+import { useManagerSalesLogic  } from '@/app/manager/sales/sales_hooks/ManagerUseManagerSalesLogic';
+
 
 export function ManagerSalesContent() {
   const { tab, toast, showToast } = useManagerSalesLogic();

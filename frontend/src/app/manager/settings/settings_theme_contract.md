@@ -1,29 +1,38 @@
-# Manager Settings — Theme Contract
+# Manager Settings Module Theme Contract
 
-Source of truth: `web_global_design.md`.
+This contract belongs only to `src/app/manager/settings`. It records the exact global semantic theme variables consumed by the current implementation. The global design system remains the visual source of truth.
 
-## Semantic tokens consumed by this module
+## Consumed Global Semantic Tokens
 
-- `--bg-page` → `bg-page`
-- `--bg-card` → `bg-card`
-- `--bg-input` → `bg-input`
-- `--bg-overlay` → `bg-overlay`
-- `--border` → `border-border`
-- `--border-focus` → `border-focus` / `focus-visible:ring-primary`
-- `--primary` → `bg-primary`, `text-primary` where semantically appropriate
-- `--primary-subtle` → `bg-primary-subtle`
-- `--text-primary` → `text-primary`
-- `--text-secondary` → `text-secondary`
-- `--danger-text` → `text-danger`
-- `--danger-bg` → `bg-danger-bg`
-- `--success-text` / `--success-bg` where future setting feedback requires semantic success state
-- `--skeleton-base` / `--skeleton-highlight` for route loading UI
-- `--shadow-card` for elevated sections
-- `--shadow-dialog` for error/dialog surfaces
+| CSS Variable | Current Usage |
+| --- | --- |
+| `--bg-card` | card/panel surface |
+| `--bg-input` | input surface |
+| `--bg-overlay` | dialog/drawer surface |
+| `--bg-page` | page surface |
+| `--border` | standard borders/dividers |
+| `--danger-bg` | subtle danger surface |
+| `--danger-text` | danger text |
+| `--focus-ring` | keyboard focus ring |
+| `--primary` | primary brand/active controls |
+| `--primary-hover` | primary hover state |
+| `--shadow-card` | card elevation |
+| `--shadow-dialog` | dialog elevation |
+| `--skeleton-base` | skeleton base |
+| `--skeleton-highlight` | skeleton highlight |
+| `--surface-hover` | interactive hover surface |
+| `--text-on-primary` | text on solid primary |
+| `--text-primary` | primary text |
+| `--text-secondary` | secondary text/labels |
 
-## Forbidden
+## Binding Rules
 
-- Raw hex/RGB colors in JSX.
-- Undefined aliases such as `--background`, `--success`, or `--danger` where the global design defines separated semantic text/background tokens.
-- Arbitrary theme values in JSX.
-- Feature-specific global CSS variables not documented here.
+- No raw hex colors, arbitrary Tailwind color values, or raw RGBA colors may be introduced into module JSX.
+- Semantic background opacity modifiers such as `bg-success/10` and `bg-primary/20` are forbidden.
+- Solid semantic backgrounds require the appropriate documented on-color; otherwise use the subtle `*-bg` variant.
+- Feature-specific business status mappings remain local to this feature.
+- No feature-local CSS variable is defined by this module unless explicitly documented here.
+
+## Portability
+
+When this feature is copied to another compatible application, define the listed semantic variables through that application's canonical global theme stylesheet and preserve the same semantic meanings.

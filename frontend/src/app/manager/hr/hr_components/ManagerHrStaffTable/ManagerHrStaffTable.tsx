@@ -1,24 +1,26 @@
-'use client';
-import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 // RESPONSIBILITY: Renders the paginated staff members table with inline row actions.
-// Rule 71 FIX: toggleStaffStatus now uses useConfirm() modal before firing.
-// Rule 48 FIX: Uses ManagerEmptyState component for empty state.
+'use client';
+import { Edit2, Trash2, CheckCircle2, Ban, PlayCircle, Users, Download } from 'lucide-react';
+import { displayValue, formatCurrencyFromMinorUnits, formatDate, maskSensitiveData } from '@/lib/formatters';
 import { useManagerHrLogic } from '@/app/manager/hr/hr_hooks/ManagerUseManagerHrLogic';
 import { STAFF_TABLE_HEADERS } from '@/app/manager/hr/hr_utils/ManagerHrSharedConstants';
-import { Edit2, Trash2, CheckCircle2, Ban, PlayCircle, Users, Download } from 'lucide-react';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
-import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
-import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_infrastructure/ManagerPaginationDefaults';
 import ManagerEmptyState from '@/app/manager/manager_components/ManagerFeedback/ManagerEmptyState';
-import { displayValue, formatCurrencyFromMinorUnits, formatDate, maskSensitiveData } from '@/lib/formatters';
+import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
+import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
+import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_infrastructure/ManagerPaginationDefaults';
+
+// Rule 71 FIX: toggleStaffStatus now uses useConfirm() modal before firing.
+// Rule 48 FIX: Uses ManagerEmptyState component for empty state.
+
 
 export default function ManagerHrStaffTable() {
-  const { staff, totalStaff, isLoading, debouncedSearch, currentPage, setCurrentPage, openEdit, deleteStaff, toggleStaffStatus, setViewProfileData, exportStaff } = useManagerHrLogic();
+  const { staff, totalStaff, isPending, debouncedSearch, currentPage, setCurrentPage, openEdit, deleteStaff, toggleStaffStatus, setViewProfileData, exportStaff } = useManagerHrLogic();
   const { confirm } = useConfirm();
 
   const totalPages = Math.max(1, Math.ceil(totalStaff / MANAGER_ITEMS_PER_PAGE));
 
-  if (isLoading) {
+  if (isPending) {
     return (
       <div className="flex flex-col h-full">
         <div className="hidden lg:block overflow-x-auto flex-1">
@@ -139,7 +141,7 @@ export default function ManagerHrStaffTable() {
                           confirmText: isSuspending ? 'Suspend' : 'Activate' });
                         if (ok) toggleStaffStatus(s);
                       }}
-                      className={`p-1.5 rounded-lg motion-safe:transition-all motion-safe:duration-200 ease-in-out ${
+                      className={`p-1.5 rounded-lg motion-safe:transition-all motion-safe:duration-base ease-in-out ${
                         s.isActive === false
                           ? 'text-success hover:bg-success-bg'
                           : 'text-danger hover:bg-danger-bg'

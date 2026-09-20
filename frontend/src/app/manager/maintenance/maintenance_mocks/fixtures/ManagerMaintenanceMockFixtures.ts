@@ -1,4 +1,4 @@
-import { type MaintenanceTicket } from '@/app/manager/maintenance/maintenance_types/ManagerMaintenanceTypes';
+import type { MaintenanceTicket } from '@/app/manager/maintenance/maintenance_types/ManagerMaintenanceTypes';
 
 export const MOCK_MAINTENANCE_TICKETS: MaintenanceTicket[] = [
   {

@@ -1,8 +1,10 @@
+// DATA FLOW: Manager feature UI/state → owning custom hook → approved API/query/mutation layer → observable UI state.
 'use client';
 /** Coordinates the Manager / feature. */
 import { create } from 'zustand';
 import type { ManagerToastType } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerToastTypes';
 import type { TrainerShift } from '@/app/manager/schedule/schedule_types/ManagerScheduleTypes';
+
 
 interface ManagerScheduleUiState {
   toast: { message: string; type: ManagerToastType } | null;

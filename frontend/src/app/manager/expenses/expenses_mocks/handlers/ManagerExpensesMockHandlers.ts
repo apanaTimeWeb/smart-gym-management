@@ -1,13 +1,19 @@
 import { http, HttpResponse } from 'msw';
-import { managerMockApiUrl } from '@/app/manager/manager_infrastructure/ManagerMockApiUrl';
+import { MOCK_EXPENSES_LIST, MOCK_EXPENSES_STATS } from '@/app/manager/expenses/expenses_fixtures/ManagerExpensesMockData';
 import { ManagerExpensesUrlConfig } from '@/app/manager/expenses/expenses_url_config';
 import { MANAGER_HTTP_STATUS } from '@/app/manager/manager_infrastructure/ManagerHttpStatus';
-import { MOCK_EXPENSES_LIST, MOCK_EXPENSES_STATS } from '@/app/manager/expenses/expenses_fixtures/ManagerExpensesMockData';
+import { managerMockApiUrl } from '@/app/manager/manager_infrastructure/ManagerMockApiUrl';
 import type { Expense } from '@/app/manager/expenses/expenses_types/ManagerExpensesTypes';
+
 
 let mockExpenses = [...MOCK_EXPENSES_LIST];
 
 let mockExpenseIdCounter = 1000;
+export function resetManagerExpensesMockState(): void {
+  mockExpenses = [...MOCK_EXPENSES_LIST];
+  mockExpenseIdCounter = 1000;
+}
+
 export const managerExpensesHandlers = [
   http.get(managerMockApiUrl(ManagerExpensesUrlConfig.BACKEND_API.BASE), ({ request }) => {
     const url = new URL(request.url);
