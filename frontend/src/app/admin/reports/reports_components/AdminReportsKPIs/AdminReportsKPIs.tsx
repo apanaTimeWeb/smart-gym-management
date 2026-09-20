@@ -29,7 +29,7 @@ export default function AdminReportsKPIs() {
         change={kpis ? `${formatPercent1dp((kpis.netProfit / kpis.totalRevenue) * 100)} margin` : '—'}
         changeType="up"
         icon={TrendingUp}
-        iconBg="bg-success"
+        iconBg="bg-success-bg"
         iconColor="text-success"
       />
       <AdminStatCard
@@ -38,7 +38,7 @@ export default function AdminReportsKPIs() {
         change="across all gyms"
         changeType="neutral"
         icon={TrendingDown}
-        iconBg="bg-danger"
+        iconBg="bg-danger-bg"
         iconColor="text-danger"
       />
       <AdminStatCard
@@ -47,7 +47,7 @@ export default function AdminReportsKPIs() {
         change={kpis ? `+${kpis.newMembers} new` : '—'}
         changeType="up"
         icon={Users}
-        iconBg="bg-info"
+        iconBg="bg-info-bg"
         iconColor="text-info"
       />
       <AdminStatCard
@@ -65,7 +65,7 @@ export default function AdminReportsKPIs() {
         change="across all gyms"
         changeType="up"
         icon={Activity}
-        iconBg="bg-success"
+        iconBg="bg-success-bg"
         iconColor="text-success"
       />
     </div>

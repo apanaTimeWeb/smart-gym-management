@@ -8,7 +8,7 @@ export default function AdminBlacklistEmptyState() {
   const { openAdd } = useAdminBlacklistLogic();
   return (
     <div className="flex flex-col items-center justify-center py-20 gap-4">
-      <div className="w-16 h-16 rounded-2xl bg-danger flex items-center justify-center">
+      <div className="w-16 h-16 rounded-2xl bg-danger-bg flex items-center justify-center">
         <Ban size={28} className="text-danger" />
       </div>
       <div className="text-center">

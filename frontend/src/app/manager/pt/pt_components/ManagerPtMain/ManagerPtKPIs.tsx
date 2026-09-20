@@ -16,7 +16,7 @@ export default function ManagerPtKPIs({ kpis }: ManagerPtKPIsProps) {
       {/* KPI 1 */}
       <div className="bg-card border border-border rounded-xl p-5 motion-safe:hover:-translate-y-1 motion-safe:transition-transform">
         <div className="flex items-center gap-3 mb-3">
-          <div className="p-2 bg-primary/10 rounded-lg">
+          <div className="p-2 bg-primary-subtle rounded-lg">
             <Users size={18} className="text-primary" />
           </div>
           <span className="text-xs font-medium text-secondary uppercase tracking-wider">
@@ -31,7 +31,7 @@ export default function ManagerPtKPIs({ kpis }: ManagerPtKPIsProps) {
       {/* KPI 2 */}
       <div className="bg-card border border-border rounded-xl p-5 motion-safe:hover:-translate-y-1 motion-safe:transition-transform">
         <div className="flex items-center gap-3 mb-3">
-          <div className="p-2 bg-success/10 rounded-lg">
+          <div className="p-2 bg-success-bg rounded-lg">
             <CalendarCheck size={18} className="text-success" />
           </div>
           <span className="text-xs font-medium text-secondary uppercase tracking-wider">
@@ -46,7 +46,7 @@ export default function ManagerPtKPIs({ kpis }: ManagerPtKPIsProps) {
       {/* KPI 3 */}
       <div className="bg-card border border-border rounded-xl p-5 motion-safe:hover:-translate-y-1 motion-safe:transition-transform">
         <div className="flex items-center gap-3 mb-3">
-          <div className="p-2 bg-warning/10 rounded-lg">
+          <div className="p-2 bg-warning-bg rounded-lg">
             <AlertCircle size={18} className="text-warning" />
           </div>
           <span className="text-xs font-medium text-secondary uppercase tracking-wider">
@@ -61,7 +61,7 @@ export default function ManagerPtKPIs({ kpis }: ManagerPtKPIsProps) {
       {/* KPI 4 */}
       <div className="bg-card border border-border rounded-xl p-5 motion-safe:hover:-translate-y-1 motion-safe:transition-transform">
         <div className="flex items-center gap-3 mb-3">
-          <div className="p-2 bg-info/10 rounded-lg">
+          <div className="p-2 bg-info-bg rounded-lg">
             <TrendingUp size={18} className="text-info" />
           </div>
           <span className="text-xs font-medium text-secondary uppercase tracking-wider">

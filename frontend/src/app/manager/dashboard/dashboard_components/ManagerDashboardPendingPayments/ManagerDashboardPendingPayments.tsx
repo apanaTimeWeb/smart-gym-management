@@ -26,7 +26,7 @@ export default function ManagerDashboardPendingPayments() {
     <div className="rounded-xl shadow-card border p-5 bg-card border-border">
       <div className="flex items-center justify-between gap-3 mb-3">
         <h2 className="font-semibold text-primary">Pending Dues</h2>
-        <span className="bg-danger/10 text-danger px-2.5 py-1 rounded-full text-xs font-bold whitespace-nowrap">
+        <span className="bg-danger-bg text-danger px-2.5 py-1 rounded-full text-xs font-bold whitespace-nowrap">
           {filtered.length}
         </span>
       </div>
@@ -62,7 +62,7 @@ export default function ManagerDashboardPendingPayments() {
                 className={`p-1.5 rounded-lg motion-safe:transition-colors ${
                   remindedId === p.id 
                     ? 'text-on-success bg-success' 
-                    : 'text-secondary hover:text-warning hover:bg-warning opacity-100 lg:opacity-0 lg:group-hover:opacity-100 focus:opacity-100 motion-safe:transition-opacity'
+                    : 'text-secondary hover:text-warning hover:bg-warning-bg opacity-100 lg:opacity-0 lg:group-hover:opacity-100 focus:opacity-100 motion-safe:transition-opacity'
                 }`}
                 title="Send Reminder"
               >

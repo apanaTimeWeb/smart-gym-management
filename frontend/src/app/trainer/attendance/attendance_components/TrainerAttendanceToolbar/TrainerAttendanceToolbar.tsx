@@ -123,7 +123,7 @@ export default function TrainerAttendanceToolbar({
         {tab === 'Members' && (
           <button type="button"
             onClick={onAddRecord}
-            className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page flex items-center gap-2 px-3 py-2 text-sm bg-primary text-on-success rounded-lg hover:opacity-90 motion-safe:transition-opacity"
+            className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page flex items-center gap-2 px-3 py-2 text-sm bg-primary-subtle text-on-success rounded-lg hover:opacity-90 motion-safe:transition-opacity"
           >
             <Plus size={14} /> Add Record
           </button>

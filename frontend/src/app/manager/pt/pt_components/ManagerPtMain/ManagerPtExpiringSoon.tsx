@@ -13,7 +13,7 @@ export default function ManagerPtExpiringSoon({ expiringPackages }: ManagerPtExp
           <AlertTriangle size={18} className="text-warning" />
           Expiring PT Packages
         </h2>
-        <span className="text-xs font-bold text-on-primary bg-warning/10 px-2 py-1 rounded-full">
+        <span className="text-xs font-bold text-warning bg-warning-bg px-2 py-1 rounded-full">
           {expiringPackages.length} Pending
         </span>
       </div>
@@ -31,7 +31,7 @@ export default function ManagerPtExpiringSoon({ expiringPackages }: ManagerPtExp
               <div key={pkg.id} className="p-4 hover:bg-input/50 motion-safe:transition-colors">
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-sm font-semibold text-primary">{pkg.memberName}</span>
-                  <span className="text-xs font-bold text-on-danger bg-danger/10 px-2 py-0.5 rounded text-nowrap">
+                  <span className="text-xs font-bold text-danger bg-danger-bg px-2 py-0.5 rounded text-nowrap">
                     {left} left
                   </span>
                 </div>

@@ -35,7 +35,7 @@ export default function AdminGymHealthAlertsTable() {
       <div className="overflow-x-auto">
         <table data-admin-responsive-table className="w-full">
           <thead>
-            <tr className="bg-warning">
+            <tr className="bg-warning-bg">
               {HEADERS.map(h => <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-secondary uppercase tracking-wider whitespace-nowrap">{h}</th>)}
             </tr>
           </thead>
@@ -43,7 +43,7 @@ export default function AdminGymHealthAlertsTable() {
             {alerts.length === 0 ? (
               <tr><td colSpan={HEADERS.length}><AdminGymHealthAlertsEmptyState /></td></tr>
             ) : alerts.map((alert) => (
-              <tr key={alert.id} className={`motion-safe:transition-colors group ${alert.severity === 'critical' ? 'hover:bg-danger' : alert.severity === 'warning' ? 'hover:bg-warning' : 'hover:bg-info'}`}>
+              <tr key={alert.id} className={`motion-safe:transition-colors group ${alert.severity === 'critical' ? 'hover:bg-danger-bg' : alert.severity === 'warning' ? 'hover:bg-warning-bg' : 'hover:bg-info-bg'}`}>
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-2">
                     <Building2 size={14} className="text-secondary shrink-0" />
@@ -84,7 +84,7 @@ export default function AdminGymHealthAlertsTable() {
                       <>
                         <button
                           onClick={() => resolveAlert(alert.id)}
-                          className="p-1.5 rounded-lg hover:bg-success text-secondary hover:text-success motion-safe:transition-colors motion-safe:duration-base"
+                          className="p-1.5 rounded-lg hover:bg-success-bg text-secondary hover:text-success motion-safe:transition-colors motion-safe:duration-base"
                           aria-label="Mark as resolved"
                         >
                           <CheckCircle size={15} />
@@ -93,7 +93,7 @@ export default function AdminGymHealthAlertsTable() {
                     )}
                     <button
                       onClick={() => dismissAlert(alert.id, alert.title)}
-                      className="p-1.5 rounded-lg hover:bg-danger text-secondary hover:text-danger motion-safe:transition-colors motion-safe:duration-base"
+                      className="p-1.5 rounded-lg hover:bg-danger-bg text-secondary hover:text-danger motion-safe:transition-colors motion-safe:duration-base"
                       aria-label="Dismiss alert"
                     >
                       <X size={15} />

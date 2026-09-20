@@ -65,10 +65,10 @@ export default function TrainerConfirmModal({
 
   const confirmClass =
     type === 'danger'
-      ? 'bg-danger'
+      ? 'bg-danger-bg'
       : type === 'warning'
-        ? 'bg-warning'
-        : 'bg-info';
+        ? 'bg-warning-bg'
+        : 'bg-info-bg';
   const iconClass =
     type === 'danger'
       ? 'bg-danger-bg text-danger'

@@ -45,7 +45,7 @@ export function SuperadminMessagingTenantDropdown({ value, onChange, tenants }: 
           <div role="listbox" aria-label="Tenant recipients" className="max-h-48 overflow-y-auto">
             {filtered.length === 0 && (<div className="px-3 py-2 text-sm text-secondary">No tenants found.</div>)}
             {filtered.map((t) => (<button key={t.id} type="button" role="option" aria-selected={t.id === value} onClick={() => handleSelect(t.id)} className={`block w-full px-3 py-2 text-left text-sm motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary ${t.id === value
-                    ? 'bg-primary/10 text-primary'
+                    ? 'bg-primary-subtle text-primary'
                     : 'text-primary hover:bg-input'}`}>
                 {t.name} — {t.plan}
               </button>))}

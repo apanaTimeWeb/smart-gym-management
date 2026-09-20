@@ -7,9 +7,9 @@ import type { Plan } from '@/app/manager/plans/plans_types/ManagerPlansTypes';
 import { useManagerPlansLogic } from '@/app/manager/plans/plans_hooks/ManagerUseManagerPlansLogic';
 
 const TIER_STYLES: Record<string, { bg: string; text: string; label: string }> = {
-  BASIC:   { bg: 'bg-info/10',    text: 'text-info',    label: 'Basic'   },
-  GOLD:    { bg: 'bg-warning/10', text: 'text-warning', label: 'Gold'    },
-  PREMIUM: { bg: 'bg-primary/10', text: 'text-primary', label: 'Premium' } };
+  BASIC:   { bg: "bg-info-bg",    text: 'text-info',    label: 'Basic'   },
+  GOLD:    { bg: "bg-warning-bg", text: 'text-warning', label: 'Gold'    },
+  PREMIUM: { bg: "bg-primary-subtle", text: 'text-primary', label: 'Premium' } };
 
 export default function ManagerPlanCard({ plan }: { plan: Plan }) {
   const { openRequestModal } = useManagerPlansLogic();
@@ -26,13 +26,13 @@ export default function ManagerPlanCard({ plan }: { plan: Plan }) {
           <div className="flex items-center gap-2 mb-1">
             <span className={`text-xs font-semibold px-2.5 py-0.5 rounded-full ${tier.bg} ${tier.text}`}>{tier.label}</span>
             {plan.isActive
-              ? <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-success/10 text-success flex items-center gap-1"><CheckCircle size={18} />Active</span>
-              : <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-danger/10 text-danger flex items-center gap-1"><XCircle size={18} />Inactive</span>
+              ? <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-success-bg text-success flex items-center gap-1"><CheckCircle size={18} />Active</span>
+              : <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-danger-bg text-danger flex items-center gap-1"><XCircle size={18} />Inactive</span>
             }
           </div>
           <h3 className="text-base font-bold text-primary">{plan.name}</h3>
         </div>
-        <div className="shrink-0 w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+        <div className="shrink-0 w-10 h-10 rounded-xl bg-primary-subtle flex items-center justify-center">
           <IndianRupee size={18} className="text-primary" />
         </div>
       </div>
@@ -67,7 +67,7 @@ export default function ManagerPlanCard({ plan }: { plan: Plan }) {
       {/* Request change CTA */}
       <button
         onClick={() => openRequestModal(plan)}
-        className="mt-auto flex items-center justify-center gap-2 w-full py-2 text-xs font-semibold rounded-lg border border-primary/40 text-primary hover:bg-primary/10 motion-safe:transition-colors"
+        className="mt-auto flex items-center justify-center gap-2 w-full py-2 text-xs font-semibold rounded-lg border border-primary/40 text-primary hover:bg-primary-subtle motion-safe:transition-colors"
       >
         <Send size={18} /> Request Change
       </button>

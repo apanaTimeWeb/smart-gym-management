@@ -14,9 +14,9 @@ export default function ManagerMaintenanceMain() {
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case 'HIGH': return 'text-on-danger bg-danger/10 border-danger/20';
-      case 'MEDIUM': return 'text-on-primary bg-warning/10 border-warning/20';
-      default: return 'text-on-success bg-success/10 border-success/20';
+      case 'HIGH': return 'text-danger bg-danger-bg border-danger/20';
+      case 'MEDIUM': return 'text-warning bg-warning-bg border-warning/20';
+      default: return 'text-success bg-success-bg border-success/20';
     }
   };
 
@@ -86,7 +86,7 @@ export default function ManagerMaintenanceMain() {
                 </div>
 
                 {ticket.status !== 'RESOLVED' && (
-                  <button onClick={() => resolveTicket(ticket.id)} className="w-full mt-5 py-2 rounded-lg bg-success/10 text-success font-semibold text-sm hover:bg-success hover:text-white transition-colors">
+                  <button onClick={() => resolveTicket(ticket.id)} className="w-full mt-5 py-2 rounded-lg bg-success-bg text-success font-semibold text-sm hover:bg-success-bg hover:text-white transition-colors">
                     Mark as Resolved
                   </button>
                 )}

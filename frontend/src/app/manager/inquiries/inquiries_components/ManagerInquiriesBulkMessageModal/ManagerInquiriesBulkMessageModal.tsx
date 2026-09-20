@@ -75,11 +75,11 @@ export default function ManagerInquiriesBulkMessageModal({
     <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-overlay-backdrop backdrop-blur-sm">
       <div className="bg-overlay rounded-2xl shadow-dialog w-full max-w-2xl relative overflow-hidden border border-border max-h-full flex flex-col motion-safe:animate-in motion-safe:zoom-in-95 motion-safe:duration-200">
         <div
-          className={`px-6 py-4 flex items-center justify-between shrink-0 ${type === 'whatsapp' ? 'bg-social-whatsapp' : 'bg-info'}`}
+          className={`px-6 py-4 flex items-center justify-between shrink-0 ${type === 'whatsapp' ? 'bg-social-whatsapp' : 'bg-info-bg'}`}
           
         >
           <div className="flex flex-wrap items-center gap-3">
-            <div className="w-9 h-9 rounded-full bg-primary/20 flex items-center justify-center">
+            <div className="w-9 h-9 rounded-full bg-primary-subtle flex items-center justify-center">
               <Icon size={18} className="text-white" />
             </div>
             <div>
@@ -92,7 +92,7 @@ export default function ManagerInquiriesBulkMessageModal({
           <button
             aria-label="Close bulk message dialog"
             onClick={() => { void confirmAndClose(onClose); }}
-            className="w-8 h-8 rounded-full bg-primary/20 hover:bg-primary/30 flex items-center justify-center motion-safe:transition-colors"
+            className="w-8 h-8 rounded-full bg-primary-subtle hover:bg-primary/30 flex items-center justify-center motion-safe:transition-colors"
           >
             <X size={18} className="text-white" />
           </button>
@@ -150,7 +150,7 @@ export default function ManagerInquiriesBulkMessageModal({
                 return (
                   <div key={stableKey} className="flex items-center justify-between p-2.5 bg-overlay rounded-lg border border-border">
                     <div className="flex items-center gap-3 min-w-0">
-                      <div className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-xs shrink-0 bg-primary">
+                      <div className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-xs shrink-0 bg-primary-subtle">
                         {rec.name.charAt(0)}
                       </div>
                       <div className="min-w-0">
@@ -168,7 +168,7 @@ export default function ManagerInquiriesBulkMessageModal({
                         disabled={!hasContactInfo || !message.trim()}
                         className={`shrink-0 px-3 py-1.5 text-xs font-semibold rounded-lg flex items-center gap-1.5 motion-safe:transition-all ${
                           isSent
-                            ? 'bg-success/10 text-success border border-success/20'
+                            ? 'bg-success-bg text-success border border-success/20'
                             : 'bg-social-whatsapp text-white hover:opacity-90 disabled:opacity-50'
                         }`}
                         

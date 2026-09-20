@@ -29,7 +29,7 @@ export default function SuperadminMessagingV1WhatsAppPreviewPanel({ recipient, t
               <p className="mt-3 whitespace-pre-wrap text-sm leading-6 text-secondary">{displayValue(preview, '—')}</p>
             </div>
           </div>
-          <div className="rounded-2xl border border-primary/20 bg-primary/5 p-5">
+          <div className="rounded-2xl border border-primary/20 bg-primary-subtle p-5">
             <p className="text-xs font-semibold uppercase tracking-wider text-primary">How free mode works</p>
             <p className="mt-2 text-sm leading-6 text-secondary">Each queue step opens a WhatsApp chat with the message already filled in. You press WhatsApp's Send button, then mark the item sent in Superadmin.</p>
             <div className="mt-4 flex items-center gap-2 text-xs text-secondary">

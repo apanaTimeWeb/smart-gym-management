@@ -14,7 +14,7 @@ export default function ManagerSettingsMain() {
   const [activeTab, setActiveTab] = useState<SettingsTab>('region');
   const { control, register, formState: { errors } } = form;
   if (isLoading && !settings) return <div className="space-y-5 p-6 motion-safe:animate-pulse"><div className="h-8 w-48 rounded bg-skeleton-base" /><div className="h-12 w-96 max-w-full rounded bg-skeleton-base" /><div className="h-96 rounded-xl bg-skeleton-base" /></div>;
-  if (isError && !settings) return <div role="alert" className="m-6 flex flex-col gap-3 rounded-xl border border-danger bg-danger-bg p-5 text-sm"><p className="font-semibold text-danger">{getManagerErrorMessage(error) || MANAGER_GENERIC_ERROR_MESSAGE}</p><button type="button" onClick={() => void retry()} className="min-h-11 w-fit rounded-lg bg-primary px-4 font-semibold text-on-danger focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">Retry</button></div>;
+  if (isError && !settings) return <div role="alert" className="m-6 flex flex-col gap-3 rounded-xl border border-danger bg-danger-bg p-5 text-sm"><p className="font-semibold text-danger">{getManagerErrorMessage(error) || MANAGER_GENERIC_ERROR_MESSAGE}</p><button type="button" onClick={() => void retry()} className="min-h-11 w-fit rounded-lg bg-primary text-on-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">Retry</button></div>;
 
   return (
     <div className="mx-auto max-w-4xl space-y-6 bg-page p-4 text-primary sm:p-6">

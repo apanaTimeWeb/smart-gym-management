@@ -62,7 +62,7 @@ export default function ManagerCommunicationsAutomations() {
               {/* Card Header */}
               <div className="px-5 py-4 border-b border-border flex items-center justify-between bg-input/20">
                 <div className="flex items-center gap-3">
-                  <div className={`p-2 rounded-lg ${auto.enabled ? 'bg-primary/10 text-primary' : 'bg-input text-secondary'}`}>
+                  <div className={`p-2 rounded-lg ${auto.enabled ? 'bg-primary-subtle text-primary' : 'bg-input text-secondary'}`}>
                     <Zap size={18} />
                   </div>
                   <div>
@@ -76,7 +76,7 @@ export default function ManagerCommunicationsAutomations() {
                   onClick={() => handleToggle(auto)}
                   disabled={isUpdatingAutomation}
                   className={`relative inline-flex h-6 w-11 items-center rounded-full motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
-                    auto.enabled ? 'bg-primary' : 'bg-input border border-border'
+                    auto.enabled ? 'bg-primary-subtle' : 'bg-input border border-border'
                   }`}
                 >
                   <span

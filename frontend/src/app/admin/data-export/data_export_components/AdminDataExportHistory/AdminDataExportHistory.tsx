@@ -65,7 +65,7 @@ export default function AdminDataExportHistory() {
                     <td className="px-4 py-3 text-xs text-secondary whitespace-nowrap">{new Date(job.createdAt).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })}</td>
                     <td className="px-4 py-3"><div className="flex items-center gap-1">
                       {job.status === 'completed' && <button onClick={(event) => { event.stopPropagation(); downloadExport(job); }} className="p-1.5 rounded-lg hover:bg-input text-secondary hover:text-primary motion-safe:transition-colors motion-safe:duration-base" aria-label="Download export" title="Download export"><Download size={15} /></button>}
-                      <button onClick={(event) => { event.stopPropagation(); logic.deleteJob(job.id); }} className="p-1.5 rounded-lg hover:bg-danger text-secondary hover:text-danger motion-safe:transition-colors motion-safe:duration-base" aria-label="Delete export job" title="Delete export"><Trash2 size={15} /></button>
+                      <button onClick={(event) => { event.stopPropagation(); logic.deleteJob(job.id); }} className="p-1.5 rounded-lg hover:bg-danger-bg text-secondary hover:text-danger motion-safe:transition-colors motion-safe:duration-base" aria-label="Delete export job" title="Delete export"><Trash2 size={15} /></button>
                     </div></td>
                   </tr>
                 ))}

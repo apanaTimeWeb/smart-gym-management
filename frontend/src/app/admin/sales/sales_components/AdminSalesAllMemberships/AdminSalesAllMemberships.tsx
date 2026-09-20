@@ -56,9 +56,9 @@ export default function AdminSalesAllMemberships() {
 
   const kpiCards = [
     { filter: 'All' as MembershipFilter, label: 'Total Members', count: counts.All, icon: Users, color: 'text-primary', bg: 'bg-primary-subtle', activeBorder: 'border-primary' },
-    { filter: 'Active' as MembershipFilter, label: 'Active', count: counts.Active, icon: CheckCircle, color: 'text-success', bg: 'bg-success', activeBorder: 'border-success' },
-    { filter: 'Expiring Soon' as MembershipFilter, label: 'Expiring Soon', count: counts['Expiring Soon'], icon: AlertTriangle, color: 'text-warning', bg: 'bg-warning', activeBorder: 'border-warning' },
-    { filter: 'Expired' as MembershipFilter, label: 'Expired', count: counts.Expired, icon: XCircle, color: 'text-danger', bg: 'bg-danger', activeBorder: 'border-danger' },
+    { filter: 'Active' as MembershipFilter, label: 'Active', count: counts.Active, icon: CheckCircle, color: 'text-success', bg: 'bg-success-bg', activeBorder: 'border-success' },
+    { filter: 'Expiring Soon' as MembershipFilter, label: 'Expiring Soon', count: counts['Expiring Soon'], icon: AlertTriangle, color: 'text-warning', bg: 'bg-warning-bg', activeBorder: 'border-warning' },
+    { filter: 'Expired' as MembershipFilter, label: 'Expired', count: counts.Expired, icon: XCircle, color: 'text-danger', bg: 'bg-danger-bg', activeBorder: 'border-danger' },
   ];
 
   if (status === 'pending') {

@@ -21,7 +21,7 @@ export default function SuperadminCouponsStatsBar({ activeCoupons, totalRedeemed
 
       <div onClick={() => onKpiClick(activeKpi === 'ACTIVE' ? 'ALL' : 'ACTIVE')} className={`bg-card border rounded-xl p-5 flex flex-col justify-center cursor-pointer motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out motion-safe:hover:-translate-y-1 hover:shadow-card ${activeKpi === 'ACTIVE' ? 'border-primary ring-2 ring-primary/20' : 'border-border'}`}>
         <div className="flex items-center gap-3 mb-2">
-          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-lg bg-primary-subtle flex items-center justify-center">
             <CheckCircle2 className="w-5 h-5 text-primary"/>
           </div>
           <span className="text-xs font-medium text-secondary uppercase tracking-wider">Active Coupons{dateSuffix}</span>

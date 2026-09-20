@@ -26,7 +26,7 @@ export default function SuperadminGymDeleteModal() {
           You are about to permanently delete <strong>{gymToDelete.name}</strong> and all associated data. This action cannot be undone.
         </p>
 
-        <div className="bg-danger-bg/20 border border-danger/30 rounded-lg p-4 mb-6">
+        <div className="bg-danger-bg border border-danger/30 rounded-lg p-4 mb-6">
           <label className="block text-sm font-bold text-secondary mb-2">
             Please type <span className="text-primary font-mono select-none">DELETE</span> to confirm.
           </label>
@@ -37,7 +37,7 @@ export default function SuperadminGymDeleteModal() {
           <button type="button" onClick={closeDeleteModal} className="px-5 py-2.5 rounded-lg text-sm font-medium text-primary border border-border hover:bg-page motion-safe:transition-colors" disabled={isDeleting}>
             Cancel
           </button>
-          <button type="button" onClick={handleConfirmDelete} className="px-5 py-2.5 rounded-lg text-sm font-medium text-on-danger bg-danger-bg hover:bg-danger-bg/90 motion-safe:transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled={!isDeleteEnabled}>
+          <button type="button" onClick={handleConfirmDelete} className="px-5 py-2.5 rounded-lg text-sm font-medium text-on-danger bg-danger hover:bg-danger/90 motion-safe:transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled={!isDeleteEnabled}>
             {isDeleting ? 'Deleting...' : 'Confirm Delete'}
           </button>
         </div>

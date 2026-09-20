@@ -10,9 +10,9 @@ import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_infrastructure/Man
 import { PAYMENTS_TABLE_HEADERS } from '@/app/manager/finance/finance_utils/ManagerFinanceSharedConstants';
 
 const METHOD_STYLES: Record<string, { bg: string; text: string }> = {
-  UPI:        { bg: 'bg-primary/10',   text: 'text-primary'   },
-  Cash:       { bg: 'bg-success/10',   text: 'text-success'   },
-  Card:       { bg: 'bg-warning/10',   text: 'text-warning'   },
+  UPI:        { bg: "bg-primary-subtle",   text: 'text-primary'   },
+  Cash:       { bg: "bg-success-bg",   text: 'text-success'   },
+  Card:       { bg: "bg-warning-bg",   text: 'text-warning'   },
   NetBanking: { bg: 'bg-secondary/10', text: 'text-secondary' } };
 
 export default function ManagerFinanceTable() {
@@ -23,7 +23,7 @@ export default function ManagerFinanceTable() {
     <>
       <div className="overflow-x-auto">
         <table className="w-full">
-          <thead className="bg-primary/5">
+          <thead className="bg-primary-subtle">
             <tr>
               {PAYMENTS_TABLE_HEADERS.map(h => (
                 <th key={`th-${h}`} className="text-left text-xs font-semibold text-secondary uppercase tracking-wider px-5 py-3 whitespace-nowrap">{h}</th>
@@ -36,7 +36,7 @@ export default function ManagerFinanceTable() {
             ) : payments.map(p => {
               const ms = METHOD_STYLES[p.method] ?? { bg: 'bg-input', text: 'text-secondary' };
               return (
-                <tr key={p.id} className="hover:bg-primary/5 motion-safe:transition-colors">
+                <tr key={p.id} className="hover:bg-primary-subtle motion-safe:transition-colors">
                   <td className="px-5 py-3.5 text-sm font-bold text-primary whitespace-nowrap">{p.invoiceNumber}</td>
                   <td className="px-5 py-3.5 whitespace-nowrap">
                     <p className="text-sm font-semibold text-primary">{displayValue(p.member?.name)}</p>
@@ -49,8 +49,8 @@ export default function ManagerFinanceTable() {
                   </td>
                   <td className="px-5 py-3.5 whitespace-nowrap">
                     <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${
-                      p.status === 'PAID' ? 'bg-success/10 text-success' :
-                      p.status === 'REFUNDED' ? 'bg-warning/10 text-warning' : 'bg-danger/10 text-danger'
+                      p.status === 'PAID' ? 'bg-success-bg text-success' :
+                      p.status === 'REFUNDED' ? 'bg-warning-bg text-warning' : 'bg-danger-bg text-danger'
                     }`}>{p.status}</span>
                   </td>
                   <td className="px-5 py-3.5 text-sm text-secondary whitespace-nowrap">

@@ -30,7 +30,7 @@ export function LogComplaintModal({ onClose, onSubmit }: Props) {
       <div className="bg-card w-full max-w-md rounded-2xl shadow-xl overflow-hidden animate-in zoom-in-95 duration-200">
         <div className="flex items-center justify-between p-5 border-b border-border">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-primary/10 rounded-lg text-primary"><MessageSquare size={20} /></div>
+            <div className="p-2 bg-primary-subtle rounded-lg text-primary"><MessageSquare size={20} /></div>
             <h2 className="text-lg font-bold text-primary">Log Member Complaint</h2>
           </div>
           <button onClick={onClose} className="p-2 text-secondary hover:text-primary rounded-full hover:bg-input transition-colors">

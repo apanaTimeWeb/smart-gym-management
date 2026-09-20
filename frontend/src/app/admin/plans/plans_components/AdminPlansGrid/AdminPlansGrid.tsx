@@ -81,7 +81,7 @@ export default function AdminPlansGrid() {
                     e.stopPropagation();
                     deletePlan(p.id);
                   }}
-                    className="p-1.5 rounded-lg text-danger hover:bg-danger motion-safe:transition-all motion-safe:duration-base"
+                    className="p-1.5 rounded-lg text-danger hover:bg-danger-bg motion-safe:transition-all motion-safe:duration-base"
                     title="Delete Plan"
                     aria-label={`Delete ${p.name}`}
                   >

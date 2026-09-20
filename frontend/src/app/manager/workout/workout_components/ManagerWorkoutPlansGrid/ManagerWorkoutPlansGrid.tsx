@@ -41,22 +41,22 @@ export default function ManagerWorkoutPlansGrid() {
             className="border border-border rounded-xl p-4 hover:border-info dark:hover:border-info hover:shadow-card motion-safe:transition-all bg-card"
           >
             <div className="flex items-start justify-between mb-3">
-              <div className="w-10 h-10 bg-info dark:bg-info rounded-xl flex items-center justify-center">
+              <div className="w-10 h-10 bg-info-bg dark:bg-info-bg rounded-xl flex items-center justify-center">
                 <Dumbbell size={18} className="text-info dark:text-info" />
               </div>
               <div className="flex items-center gap-1">
                 <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
                   w.level === 'Beginner' 
-                    ? 'bg-success text-on-success dark:bg-success dark:text-success' 
+                    ? 'bg-success text-on-primary dark:bg-success-bg dark:text-success' 
                     : w.level === 'Intermediate' 
-                    ? 'bg-warning text-on-primary dark:bg-warning dark:text-warning' 
-                    : 'bg-danger text-on-danger dark:bg-danger dark:text-danger'
+                    ? 'bg-warning text-on-primary dark:bg-warning-bg dark:text-warning' 
+                    : 'bg-danger text-on-primary dark:bg-danger-bg dark:text-danger'
                 }`}>
                   {w.level}
                 </span>
                 <button 
                   onClick={() => openEditWk(w)} 
-                  className="p-1.5 text-info hover:text-info hover:bg-info dark:hover:bg-info rounded-lg motion-safe:transition-colors"
+                  className="p-1.5 text-info hover:text-info hover:bg-info-bg dark:hover:bg-info-bg rounded-lg motion-safe:transition-colors"
                 >
                   <Edit2 size={18} />
                 </button>
@@ -77,7 +77,7 @@ export default function ManagerWorkoutPlansGrid() {
                       }
                     }
                   }}
-                  className="p-1.5 text-danger hover:text-danger hover:bg-danger dark:hover:bg-danger rounded-lg motion-safe:transition-colors"
+                  className="p-1.5 text-danger hover:text-danger hover:bg-danger-bg dark:hover:bg-danger-bg rounded-lg motion-safe:transition-colors"
                 >
                   <Trash2 size={18} />
                 </button>

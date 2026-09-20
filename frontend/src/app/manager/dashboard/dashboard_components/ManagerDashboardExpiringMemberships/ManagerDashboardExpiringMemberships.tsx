@@ -57,7 +57,7 @@ export default function ManagerDashboardExpiringMemberships() {
                 className={`p-1.5 rounded-lg motion-safe:transition-colors ${
                   remindedId === m.id 
                     ? 'text-on-success bg-success' 
-                    : 'text-secondary hover:text-warning hover:bg-warning opacity-100 lg:opacity-0 lg:group-hover:opacity-100 focus:opacity-100 motion-safe:transition-opacity'
+                    : 'text-secondary hover:text-warning hover:bg-warning-bg opacity-100 lg:opacity-0 lg:group-hover:opacity-100 focus:opacity-100 motion-safe:transition-opacity'
                 }`}
                 title="Send Reminder"
               >

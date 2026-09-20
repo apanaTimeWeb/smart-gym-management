@@ -11,10 +11,10 @@ import type { JobsMetrics, SuperadminJobsStatsBarProps } from '@/app/superadmin/
  */
 export default function SuperadminJobsStatsBar({ metrics, onFilterSelect }: SuperadminJobsStatsBarProps) {
     const stats = [
-        { label: 'Active Jobs', value: metrics.activeJobs, icon: Play, color: 'text-primary', iconBg: 'bg-primary/10', filter: 'ACTIVE' },
-        { label: 'Completed (24h)', value: metrics.completed24h, icon: Activity, color: 'text-success', iconBg: 'bg-success/10', filter: 'COMPLETED' },
+        { label: 'Active Jobs', value: metrics.activeJobs, icon: Play, color: 'text-primary', iconBg: "bg-primary-subtle", filter: 'ACTIVE' },
+        { label: 'Completed (24h)', value: metrics.completed24h, icon: Activity, color: 'text-success', iconBg: "bg-success-bg", filter: 'COMPLETED' },
         { label: 'Failed (24h)', value: metrics.failed24h, icon: XCircle, color: 'text-danger', iconBg: 'bg-danger-bg', filter: 'FAILED' },
-        { label: 'Delayed', value: metrics.delayed, icon: AlertTriangle, color: 'text-warning', iconBg: 'bg-warning/10', filter: 'DELAYED' },
+        { label: 'Delayed', value: metrics.delayed, icon: AlertTriangle, color: 'text-warning', iconBg: "bg-warning-bg", filter: 'DELAYED' },
     ];
     return (<div className="grid grid-cols-1 md:grid-cols-4 gap-4">
       {stats.map((stat) => {

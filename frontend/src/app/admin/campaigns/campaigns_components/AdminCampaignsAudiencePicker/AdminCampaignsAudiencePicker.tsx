@@ -22,7 +22,7 @@ export default function AdminCampaignsAudiencePicker({ audiences, selectedAudien
               onClick={() => onSelect(aud.id)}
               className={`flex flex-col items-start p-4 rounded-xl border text-left transition-colors ${
                 isSelected 
-                  ? 'border-primary bg-primary/5 ring-1 ring-primary' 
+                  ? 'border-primary bg-primary-subtle ring-1 ring-primary' 
                   : 'border-border bg-input hover:border-primary hover:bg-input/80'
               }`}
             >

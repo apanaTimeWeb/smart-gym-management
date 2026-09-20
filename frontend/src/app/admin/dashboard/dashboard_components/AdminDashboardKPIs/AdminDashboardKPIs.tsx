@@ -33,7 +33,7 @@ export default function AdminDashboardKPIs() {
         change="Next 7 days"
         changeType="down"
         icon={Clock}
-        iconBg="bg-warning"
+        iconBg="bg-warning-bg"
         iconColor="text-warning"
       />
     </div>
@@ -53,7 +53,7 @@ export default function AdminDashboardKPIs() {
         change="All Time"
         changeType="up"
         icon={TrendingUp}
-        iconBg="bg-success"
+        iconBg="bg-success-bg"
         iconColor="text-success"
       />
       <AdminStatCard
@@ -62,7 +62,7 @@ export default function AdminDashboardKPIs() {
         change={`${s.totalMembers ? Math.round((s.activeMembers / s.totalMembers) * 100) : 0}% capacity`}
         changeType="neutral"
         icon={UserCheck}
-        iconBg="bg-info"
+        iconBg="bg-info-bg"
         iconColor="text-info"
       />
       <AdminStatCard
@@ -71,7 +71,7 @@ export default function AdminDashboardKPIs() {
         change={`${s.membersByStatus?.pending || 0} members due`}
         changeType="down"
         icon={AlertCircle}
-        iconBg="bg-danger"
+        iconBg="bg-danger-bg"
         iconColor="text-danger"
       />
     </div>

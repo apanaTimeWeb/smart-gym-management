@@ -132,7 +132,7 @@ export default function TrainerMembersMessageModal({
 
         <div className="px-6 pt-4 pb-2">
           <div className="flex items-center gap-3 p-3 bg-input rounded-lg border border-border">
-            <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-on-success font-bold text-sm shrink-0">{recipient.name.charAt(0)}</div>
+            <div className="w-10 h-10 rounded-full bg-primary-subtle flex items-center justify-center text-on-success font-bold text-sm shrink-0">{recipient.name.charAt(0)}</div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-semibold text-primary truncate">{recipient.name}</p>
               <div className="flex items-center gap-1 mt-0.5">

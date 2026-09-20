@@ -73,7 +73,7 @@ export default function ManagerNotificationsTable() {
       ) : isError ? (
         <div className="py-16 text-center space-y-3">
           <p className="text-sm font-medium text-danger">{errorMessage}</p>
-          <button type="button" onClick={reload} className="inline-flex items-center rounded-lg border border-border px-3 py-2 text-sm font-medium text-primary hover:bg-primary/5 motion-safe:transition-colors">Try Again</button>
+          <button type="button" onClick={reload} className="inline-flex items-center rounded-lg border border-border px-3 py-2 text-sm font-medium text-primary hover:bg-primary-subtle motion-safe:transition-colors">Try Again</button>
         </div>
       ) : notifications.length === 0 ? (
         <div className="py-16 text-center space-y-2">
@@ -88,7 +88,7 @@ export default function ManagerNotificationsTable() {
             const isUnread = n.status === 'UNREAD';
 
             return (
-              <li key={n.id} className={`group flex items-start gap-4 px-5 py-4 motion-safe:transition-colors hover:bg-primary/5 ${isUnread ? 'bg-primary/5' : ''}`}>
+              <li key={n.id} className={`group flex items-start gap-4 px-5 py-4 motion-safe:transition-colors hover:bg-primary-subtle ${isUnread ? 'bg-primary-subtle' : ''}`}>
                 {/* Unread dot */}
                 <div className="mt-1.5 shrink-0">
                   {isUnread
@@ -118,7 +118,7 @@ export default function ManagerNotificationsTable() {
                       onClick={() => handleMarkRead(n.id)}
                       title="Mark as read"
                       aria-label={`Mark notification "${n.title}" as read`}
-                      className="p-2 rounded-lg hover:bg-success/10 text-secondary hover:text-success motion-safe:transition-colors"
+                      className="p-2 rounded-lg hover:bg-success-bg text-secondary hover:text-success motion-safe:transition-colors"
                     >
                       <CheckCircle size={18} />
                     </button>
@@ -127,7 +127,7 @@ export default function ManagerNotificationsTable() {
                     onClick={() => handleDelete(n.id)}
                     title="Dismiss"
                     aria-label={`Dismiss notification "${n.title}"`}
-                    className="p-2 rounded-lg hover:bg-danger/10 text-secondary hover:text-danger motion-safe:transition-colors"
+                    className="p-2 rounded-lg hover:bg-danger-bg text-secondary hover:text-danger motion-safe:transition-colors"
                   >
                     <Trash2 size={18} />
                   </button>

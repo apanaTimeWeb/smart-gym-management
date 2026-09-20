@@ -65,7 +65,7 @@ export default function ManagerMemberProfile() {
               </button>
               <button
                 onClick={() => setShowRenewModal(true)}
-                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold border border-border rounded-xl hover:bg-primary/10 text-primary motion-safe:transition-all motion-safe:duration-200 motion-safe:active:scale-95 bg-primary/5"
+                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold border border-border rounded-xl hover:bg-primary-subtle text-primary motion-safe:transition-all motion-safe:duration-200 motion-safe:active:scale-95 bg-primary-subtle"
               >
                 Renew Plan
               </button>

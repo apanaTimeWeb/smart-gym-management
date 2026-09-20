@@ -19,7 +19,7 @@ export default function ManagerPtAssignmentsTable({ assignments, totalAssignment
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse min-w-176">
           <thead>
-            <tr className="bg-primary/5 border-b border-border">
+            <tr className="bg-primary-subtle border-b border-border">
               <th className="py-3 px-4 text-xs font-semibold text-secondary uppercase tracking-wider">Member</th>
               <th className="py-3 px-4 text-xs font-semibold text-secondary uppercase tracking-wider">Trainer</th>
               <th className="py-3 px-4 text-xs font-semibold text-secondary uppercase tracking-wider">Package</th>
@@ -55,7 +55,7 @@ export default function ManagerPtAssignmentsTable({ assignments, totalAssignment
                       <div className="flex items-center gap-2">
                         <div className="flex-1 h-2 bg-input rounded-full overflow-hidden">
                           <div
-                            className={`h-full rounded-full motion-safe:transition-all motion-safe:duration-500 ${isDone ? 'bg-success' : 'bg-primary'}`}
+                            className={`h-full rounded-full motion-safe:transition-all motion-safe:duration-500 ${isDone ? 'bg-success-bg' : 'bg-primary-subtle'}`}
                             style={{ width: `${pct}%` }}
                           />
                         </div>
@@ -68,7 +68,7 @@ export default function ManagerPtAssignmentsTable({ assignments, totalAssignment
                       <button
                         onClick={() => onMarkSession(a.id)}
                         disabled={isMarking || isDone}
-                        className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-input hover:bg-primary/10 hover:text-primary hover:border-primary border border-transparent text-primary rounded-lg motion-safe:transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                        className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-input hover:bg-primary-subtle hover:text-primary hover:border-primary border border-transparent text-primary rounded-lg motion-safe:transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                       >
                         {isMarking && <Loader2 size={18} className="motion-safe:animate-spin" />}
                         {isDone ? 'Completed' : 'Mark Session'}

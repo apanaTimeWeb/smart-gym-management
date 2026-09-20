@@ -12,8 +12,8 @@ export default function ManagerCommunicationsKPIs() {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
       <ManagerStatCard title="Total Messages Sent"    value={formatNumber(kpis.totalSent)}           icon={Send}          iconBg="bg-primary-bg"  iconColor="text-primary" />
-      <ManagerStatCard title="WhatsApp Sent"          value={formatNumber(kpis.whatsappSent)}        icon={MessageCircle} iconBg="bg-success"   iconColor="text-success" />
-      <ManagerStatCard title="Emails Sent"            value={formatNumber(kpis.emailSent)}           icon={Mail}          iconBg="bg-info"     iconColor="text-info" />
+      <ManagerStatCard title="WhatsApp Sent"          value={formatNumber(kpis.whatsappSent)}        icon={MessageCircle} iconBg="bg-success-bg"   iconColor="text-success" />
+      <ManagerStatCard title="Emails Sent"            value={formatNumber(kpis.emailSent)}           icon={Mail}          iconBg="bg-info-bg"     iconColor="text-info" />
       <ManagerStatCard title="Campaigns This Month"   value={formatNumber(kpis.campaignsThisMonth)}  icon={BarChart3}     iconBg="bg-primary-bg"  iconColor="text-primary" />
     </div>
   );

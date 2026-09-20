@@ -9,10 +9,10 @@ export default function ManagerHrKPIs() {
   const { summary } = useManagerHrLogic();
 
   const kpis = [
-    { label: 'Total Salary Generated', value: formatCurrencyFromMinorUnits(summary?.totalSalaryThisMonth || 0, ManagerEnvConfig.currencyCode), icon: DollarSign, colorClass: 'text-primary', bgClass: 'bg-primary/10' },
-    { label: 'Total Paid', value: formatCurrencyFromMinorUnits(summary?.totalSalaryPaid || 0, ManagerEnvConfig.currencyCode), icon: UserCheck, colorClass: 'text-success', bgClass: 'bg-success/10' },
-    { label: 'Outstanding Due', value: formatCurrencyFromMinorUnits(summary?.totalSalaryDue || 0, ManagerEnvConfig.currencyCode), icon: FileText, colorClass: 'text-warning', bgClass: 'bg-warning/10' },
-    { label: 'Advance Given', value: formatCurrencyFromMinorUnits(summary?.totalAdvanceGiven || 0, ManagerEnvConfig.currencyCode), icon: DollarSign, colorClass: 'text-danger', bgClass: 'bg-danger/10' },
+    { label: 'Total Salary Generated', value: formatCurrencyFromMinorUnits(summary?.totalSalaryThisMonth || 0, ManagerEnvConfig.currencyCode), icon: DollarSign, colorClass: 'text-primary', bgClass: "bg-primary-subtle" },
+    { label: 'Total Paid', value: formatCurrencyFromMinorUnits(summary?.totalSalaryPaid || 0, ManagerEnvConfig.currencyCode), icon: UserCheck, colorClass: 'text-success', bgClass: "bg-success-bg" },
+    { label: 'Outstanding Due', value: formatCurrencyFromMinorUnits(summary?.totalSalaryDue || 0, ManagerEnvConfig.currencyCode), icon: FileText, colorClass: 'text-warning', bgClass: "bg-warning-bg" },
+    { label: 'Advance Given', value: formatCurrencyFromMinorUnits(summary?.totalAdvanceGiven || 0, ManagerEnvConfig.currencyCode), icon: DollarSign, colorClass: 'text-danger', bgClass: "bg-danger-bg" },
   ];
 
   return (

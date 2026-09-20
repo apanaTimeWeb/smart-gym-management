@@ -120,7 +120,7 @@ export default function SuperadminWhiteLabelingDrawer({ domains }: SuperadminWhi
             <button
               onClick={() => updateStatus({ id: domain.id, dto: { status: 'active' } })}
               disabled={isPending}
-              className="w-full flex items-center justify-center gap-2 bg-success-bg text-success border border-success/20 py-2.5 rounded-lg font-medium hover:bg-success hover:text-white motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-success disabled:opacity-50"
+              className="w-full flex items-center justify-center gap-2 bg-success-bg text-success border border-success/20 py-2.5 rounded-lg font-medium hover:bg-success-bg hover:text-white motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-success disabled:opacity-50"
             >
               <CheckCircle className="w-4 h-4" />
               Mark as Verified
@@ -131,7 +131,7 @@ export default function SuperadminWhiteLabelingDrawer({ domains }: SuperadminWhi
             <button
               onClick={() => updateStatus({ id: domain.id, dto: { status: 'failed' } })}
               disabled={isPending}
-              className="w-full flex items-center justify-center gap-2 bg-danger-bg text-danger border border-danger/20 py-2.5 rounded-lg font-medium hover:bg-danger hover:text-white motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger disabled:opacity-50"
+              className="w-full flex items-center justify-center gap-2 bg-danger-bg text-danger border border-danger/20 py-2.5 rounded-lg font-medium hover:bg-danger-bg hover:text-white motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger disabled:opacity-50"
             >
               <AlertTriangle className="w-4 h-4" />
               Mark as Failed

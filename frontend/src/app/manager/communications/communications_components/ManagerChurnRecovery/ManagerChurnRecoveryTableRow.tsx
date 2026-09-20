@@ -8,9 +8,9 @@ import { CANCELLATIONS_REASON_LABEL } from '@/app/manager/communications/communi
 
 
 function getDaysBadge(days: number): { label: string; bg: string; text: string } {
-  if (days <= 7)  return { label: `${days}d ago`, bg: 'bg-danger',  text: 'text-danger' };
-  if (days <= 30) return { label: `${days}d ago`, bg: 'bg-warning', text: 'text-warning' };
-  return              { label: `${days}d ago`, bg: 'bg-info',    text: 'text-info' };
+  if (days <= 7)  return { label: `${days}d ago`, bg: 'bg-danger-bg',  text: 'text-danger' };
+  if (days <= 30) return { label: `${days}d ago`, bg: 'bg-warning-bg', text: 'text-warning' };
+  return              { label: `${days}d ago`, bg: 'bg-info-bg',    text: 'text-info' };
 }
 
 export default function ManagerChurnRecoveryTableRow({
@@ -85,7 +85,7 @@ export default function ManagerChurnRecoveryTableRow({
             type="button"
             aria-label={`Send win-back message to ${member.name}`}
             onClick={(e) => { e.stopPropagation(); onOpenComposer(member.memberId); }}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-primary text-on-success motion-safe:transition-all motion-safe:hover:bg-primary-hover motion-safe:active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-primary-subtle text-on-success motion-safe:transition-all motion-safe:hover:bg-primary-hover motion-safe:active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
             <Send size={18} />
             Win-Back

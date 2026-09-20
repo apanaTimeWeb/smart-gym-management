@@ -20,8 +20,8 @@ export default function AdminDashboardAlerts() {
 
   const getSeverityStyle = (severity: string) => {
     switch (severity) {
-      case 'high': return 'bg-danger border-border';
-      case 'medium': return 'bg-warning border-border';
+      case 'high': return 'bg-danger-bg border-border';
+      case 'medium': return 'bg-warning-bg border-border';
       default: return 'bg-primary-subtle border-border';
     }
   };

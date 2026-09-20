@@ -11,10 +11,10 @@ export default function ManagerStoreKPIs() {
  const dateSuffix = useDateRangeSuffix();
 
  const kpis = [
- { label: 'Total Products' + dateSuffix, value: summary?.totalProducts || 0, icon: Package, color: 'text-info', bg: 'bg-info dark:bg-info' },
- { label: 'Total Orders' + dateSuffix, value: summary?.totalOrders || 0, icon: ShoppingCart, color: 'text-success', bg: 'bg-success dark:bg-success' },
- { label: 'Store Revenue' + dateSuffix, value: formatCurrencyFromMinorUnits(summary?.totalRevenue || 0, ManagerEnvConfig.currencyCode), icon: TrendingUp, color: 'text-warning', bg: 'bg-warning dark:bg-warning' },
- { label: 'Low Stock' + dateSuffix, value: summary?.lowStockProducts?.length || 0, icon: AlertTriangle, color: 'text-danger', bg: 'bg-danger dark:bg-danger' },
+ { label: 'Total Products' + dateSuffix, value: summary?.totalProducts || 0, icon: Package, color: 'text-info', bg: 'bg-info-bg dark:bg-info-bg' },
+ { label: 'Total Orders' + dateSuffix, value: summary?.totalOrders || 0, icon: ShoppingCart, color: 'text-success', bg: 'bg-success-bg dark:bg-success-bg' },
+ { label: 'Store Revenue' + dateSuffix, value: formatCurrencyFromMinorUnits(summary?.totalRevenue || 0, ManagerEnvConfig.currencyCode), icon: TrendingUp, color: 'text-warning', bg: 'bg-warning-bg dark:bg-warning-bg' },
+ { label: 'Low Stock' + dateSuffix, value: summary?.lowStockProducts?.length || 0, icon: AlertTriangle, color: 'text-danger', bg: 'bg-danger-bg dark:bg-danger-bg' },
  ];
 
  return (
@@ -34,7 +34,7 @@ export default function ManagerStoreKPIs() {
  </div>
 
  {(summary?.lowStockProducts?.length ?? 0) > 0 && (
- <div className="bg-danger dark:bg-danger border border-border rounded-xl p-4 flex items-center gap-3">
+ <div className="bg-danger-bg dark:bg-danger-bg border border-border rounded-xl p-4 flex items-center gap-3">
  <AlertTriangle size={18} className="text-danger flex-shrink-0" />
  <p className="text-sm text-danger dark:text-danger font-medium">
  Low stock alert: {summary!.lowStockProducts.map(p => p.name).join(', ')}

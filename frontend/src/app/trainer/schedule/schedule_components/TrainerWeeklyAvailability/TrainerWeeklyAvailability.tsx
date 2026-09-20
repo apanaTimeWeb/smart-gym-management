@@ -92,7 +92,7 @@ export default function TrainerWeeklyAvailability() {
                   checked={day.isAvailable}
                   onChange={() => handleToggle(idx)}
                 />
-                <span className="w-11 h-6 bg-border peer-focus:outline-none rounded-full peer-checked:bg-primary motion-safe:transition-colors motion-safe:duration-base" aria-hidden="true" />
+                <span className="w-11 h-6 bg-border peer-focus:outline-none rounded-full peer-checked:bg-primary-subtle motion-safe:transition-colors motion-safe:duration-base" aria-hidden="true" />
                 <span className="absolute left-0.5 top-0.5 h-5 w-5 rounded-full border border-border bg-card motion-safe:transition-transform peer-checked:translate-x-5" aria-hidden="true" />
               </label>
               <span className={`font-semibold w-24 ${day.isAvailable ? 'text-primary' : 'text-secondary line-through'}`}>{day.day}</span>

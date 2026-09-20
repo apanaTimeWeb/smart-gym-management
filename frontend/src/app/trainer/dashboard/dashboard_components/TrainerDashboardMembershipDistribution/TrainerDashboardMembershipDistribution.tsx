@@ -20,7 +20,7 @@ export default function TrainerDashboardMembershipDistribution() {
             return (
               <div key={item.plan}>
                 <div className="flex justify-between text-sm mb-1"><span className="text-primary">{item.plan}</span><span className="text-secondary">{percentage}%</span></div>
-                <div className="h-3 rounded-full bg-input overflow-hidden"><div className="h-full rounded-full bg-primary" style={{ width: `${percentage}%`, opacity: 1 - index * 0.12 }} /></div>
+                <div className="h-3 rounded-full bg-input overflow-hidden"><div className="h-full rounded-full bg-primary-subtle" style={{ width: `${percentage}%`, opacity: 1 - index * 0.12 }} /></div>
               </div>
             );
           })}

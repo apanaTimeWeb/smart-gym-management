@@ -49,11 +49,11 @@ export default function ManagerHrPaymentModal() {
       <div className="bg-overlay/95 backdrop-blur-xl rounded-2xl shadow-dialog w-full max-w-sm overflow-hidden motion-safe:animate-in motion-safe:zoom-in-95 motion-safe:duration-200 border border-border">
         <div className="p-5 flex justify-between items-center border-b border-border">
           <h3 className="font-bold text-primary">Pay Salary</h3>
-          <button aria-label="Close salary payment modal" type="button" onClick={handleClose} className="p-1.5 text-secondary hover:text-primary hover:bg-primary/10 rounded-md motion-safe:transition-colors"><X size={18} /></button>
+          <button aria-label="Close salary payment modal" type="button" onClick={handleClose} className="p-1.5 text-secondary hover:text-primary hover:bg-primary-subtle rounded-md motion-safe:transition-colors"><X size={18} /></button>
         </div>
         
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          <div className="p-4 rounded-xl bg-primary/5 border border-border mb-2">
+          <div className="p-4 rounded-xl bg-primary-subtle border border-border mb-2">
             <p className="text-sm text-secondary mb-1">
               Staff: <strong className="text-primary">{paymentModal.staffName}</strong>
             </p>

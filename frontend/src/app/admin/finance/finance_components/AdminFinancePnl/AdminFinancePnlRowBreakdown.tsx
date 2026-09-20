@@ -46,7 +46,7 @@ export default function AdminFinancePnlRowBreakdown({ branch, colSpan }: AdminFi
                     <span className="text-secondary">{item.label}</span>
                     <span className="text-primary font-medium">{formatCurrency(item.value)}</span>
                   </div>
-                  <AdminFinancePnlBreakdownBar value={item.value} max={revenue} colorClass="bg-success" />
+                  <AdminFinancePnlBreakdownBar value={item.value} max={revenue} colorClass="bg-success-bg" />
                 </div>
               ))}
             </div>
@@ -62,7 +62,7 @@ export default function AdminFinancePnlRowBreakdown({ branch, colSpan }: AdminFi
                     <span className="text-secondary">{item.label}</span>
                     <span className="text-primary font-medium">{formatCurrency(item.value)}</span>
                   </div>
-                  <AdminFinancePnlBreakdownBar value={item.value} max={expenses} colorClass="bg-danger" />
+                  <AdminFinancePnlBreakdownBar value={item.value} max={expenses} colorClass="bg-danger-bg" />
                 </div>
               ))}
             </div>

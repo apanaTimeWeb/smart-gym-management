@@ -39,7 +39,7 @@ export default function ManagerQrScannerModal({ open, onClose }: ManagerQrScanne
 
             {/* Scanning Line — motion-safe guarded per Design §29 */}
             {(status === 'IDLE' || status === 'SCANNING') && (
-              <div className="absolute top-0 left-0 w-full h-1 bg-primary motion-safe:animate-qr-scan" />
+              <div className="absolute top-0 left-0 w-full h-1 bg-primary-subtle motion-safe:animate-qr-scan" />
             )}
 
             {/* Center Icon Watermark */}
@@ -135,7 +135,7 @@ export default function ManagerQrScannerModal({ open, onClose }: ManagerQrScanne
 
                 {/* Yellow upsell banner — only shown for active members with PT info */}
                 {status === 'ACTIVE' && demoMode && (
-                  <p className="text-xs text-warning font-medium mt-3 bg-warning px-3 py-1 rounded-lg">
+                  <p className="text-xs text-on-primary font-medium mt-3 bg-warning px-3 py-1 rounded-lg">
                     {currentMember?.planName ? `Plan: ${currentMember.planName}` : 'Membership details available'}
                   </p>
                 )}

@@ -11,10 +11,10 @@ export default function ManagerExpensesKPIs() {
   if (isLoading || isError || !stats) return null; // Let Suspense/Main handle it
 
   const KPI_CARDS = [
-    { label: 'Total Expenses (All Time)', value: formatCurrencyFromMinorUnits(stats.totalAmount, ManagerEnvConfig.currencyCode), icon: IndianRupee, color: 'text-primary', bg: 'bg-primary/10' },
-    { label: 'Expenses This Month', value: formatCurrencyFromMinorUnits(stats.thisMonthAmount, ManagerEnvConfig.currencyCode), icon: TrendingDown, color: 'text-info', bg: 'bg-info' },
-    { label: 'Pending Dues', value: formatCurrencyFromMinorUnits(stats.pendingAmount, ManagerEnvConfig.currencyCode), icon: Clock, color: 'text-danger', bg: 'bg-danger' },
-    { label: 'Total Paid', value: formatCurrencyFromMinorUnits(stats.paidAmount, ManagerEnvConfig.currencyCode), icon: CheckCircle, color: 'text-success', bg: 'bg-success' }
+    { label: 'Total Expenses (All Time)', value: formatCurrencyFromMinorUnits(stats.totalAmount, ManagerEnvConfig.currencyCode), icon: IndianRupee, color: 'text-primary', bg: "bg-primary-subtle" },
+    { label: 'Expenses This Month', value: formatCurrencyFromMinorUnits(stats.thisMonthAmount, ManagerEnvConfig.currencyCode), icon: TrendingDown, color: 'text-info', bg: 'bg-info-bg' },
+    { label: 'Pending Dues', value: formatCurrencyFromMinorUnits(stats.pendingAmount, ManagerEnvConfig.currencyCode), icon: Clock, color: 'text-danger', bg: 'bg-danger-bg' },
+    { label: 'Total Paid', value: formatCurrencyFromMinorUnits(stats.paidAmount, ManagerEnvConfig.currencyCode), icon: CheckCircle, color: 'text-success', bg: 'bg-success-bg' }
   ];
 
   return (

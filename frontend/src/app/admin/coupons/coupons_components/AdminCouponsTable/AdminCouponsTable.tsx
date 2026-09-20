@@ -79,7 +79,7 @@ export default function AdminCouponsTable() {
                       <div className="text-sm text-primary">{coupon.usedCount} / {coupon.usageLimit} Used</div>
                       <div className="mt-1 h-1.5 bg-input rounded-full w-20">
                         <div
-                          className="h-1.5 bg-primary rounded-full"
+                          className="h-1.5 bg-primary-subtle rounded-full"
                           style={{ width: `${Math.min(100, (coupon.usedCount / coupon.usageLimit) * 100)}%` }}
                         />
                       </div>
@@ -112,7 +112,7 @@ export default function AdminCouponsTable() {
                     </button>
                     <button
                       onClick={(e) => { e.stopPropagation(); deleteCoupon(coupon.id); }}
-                      className="p-1.5 rounded-lg hover:bg-danger text-secondary hover:text-danger motion-safe:transition-colors motion-safe:duration-base"
+                      className="p-1.5 rounded-lg hover:bg-danger-bg text-secondary hover:text-danger motion-safe:transition-colors motion-safe:duration-base"
                       aria-label="Delete coupon"
                     >
                       <Trash2 size={15} />

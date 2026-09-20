@@ -14,7 +14,7 @@ export default function AdminUsageMetricCard({ metric, onUpgrade }: AdminUsageMe
   const isWarning = usageRatio >= metric.warningThreshold && !isCritical;
   const showUpgradeCta = usageRatio >= metric.warningThreshold;
 
-  const barColor = isCritical ? 'bg-danger' : isWarning ? 'bg-warning' : 'bg-success';
+  const barColor = isCritical ? 'bg-danger-bg' : isWarning ? 'bg-warning-bg' : 'bg-success-bg';
   const textColor = isCritical ? 'text-danger' : isWarning ? 'text-warning' : 'text-success';
   const borderColor = isCritical ? 'border-border' : isWarning ? 'border-warning' : 'border-border';
 

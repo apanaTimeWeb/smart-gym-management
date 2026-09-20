@@ -16,7 +16,7 @@ export default function SuperadminMessagingV1WhatsAppAudiencePanel({ audiences, 
           {audiences.map((audience) => {
             const count = getWhatsAppAudienceCount(recipients, audience.id, tenantId);
             const selected = audience.id === audienceId;
-            return (<button key={audience.id} type="button" onClick={() => onAudienceChange(audience.id)} className={`rounded-xl border p-4 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${selected ? 'border-primary/50 bg-primary/10' : 'border-border bg-input/30 hover:border-primary/30'}`} aria-pressed={selected}>
+            return (<button key={audience.id} type="button" onClick={() => onAudienceChange(audience.id)} className={`rounded-xl border p-4 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${selected ? 'border-primary/50 bg-primary-subtle' : 'border-border bg-input/30 hover:border-primary/30'}`} aria-pressed={selected}>
                 <div className="flex items-start justify-between gap-3">
                   <span className="flex size-9 items-center justify-center rounded-lg bg-card text-primary"><UsersRound size={18} aria-hidden="true"/></span>
                   <span className="text-lg font-bold text-primary">{formatNumber(count)}</span>

@@ -65,7 +65,7 @@ export default function AdminPermissionsMatrix() {
                       disabled={saving}
                       aria-label={`${isEnabled ? 'Disable' : 'Enable'} ${feature.label}`}
                       className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:opacity-50 disabled:cursor-not-allowed ${
-                        isEnabled ? 'bg-primary' : 'bg-input border border-border'
+                        isEnabled ? 'bg-primary-subtle' : 'bg-input border border-border'
                       }`}
                     >
                       <span

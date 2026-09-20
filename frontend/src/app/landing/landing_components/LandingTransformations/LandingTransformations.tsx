@@ -11,7 +11,7 @@ export default function LandingTransformations() {
     <section id="transformations" className="py-24 px-4 bg-background">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <div className="inline-block text-xs font-bold tracking-widest uppercase text-on-primary bg-warning/10 border border-warning/20 rounded-full px-4 py-2 mb-5">
+          <div className="inline-block text-xs font-bold tracking-widest uppercase text-warning bg-warning-bg border border-warning/20 rounded-full px-4 py-2 mb-5">
             Real Results
           </div>
           <h2 className="text-4xl sm:text-5xl font-black text-white mb-4">
@@ -31,18 +31,18 @@ export default function LandingTransformations() {
                   </div>
                   <div>
                     <h3 className="font-bold text-white">{t.name}</h3>
-                    <span className="text-xs text-warning font-semibold bg-warning/10 px-2 py-0.5 rounded-full">{t.type}</span>
+                    <span className="text-xs text-warning font-semibold bg-warning-bg px-2 py-0.5 rounded-full">{t.type}</span>
                   </div>
                 </div>
                 <div className="grid grid-cols-3 gap-3 mb-4">
-                  <div className="text-center bg-danger/10 border border-danger/20 rounded-xl p-3">
+                  <div className="text-center bg-danger-bg border border-danger/20 rounded-xl p-3">
                     <p className="text-xs text-danger font-semibold uppercase mb-1">Before</p>
                     <p className="text-lg font-black text-danger">{t.before}</p>
                   </div>
                   <div className="text-center bg-white/5 rounded-xl p-3 flex items-center justify-center">
                     <ArrowRight size={18} className="text-warning" />
                   </div>
-                  <div className="text-center bg-success/10 border border-success/20 rounded-xl p-3">
+                  <div className="text-center bg-success-bg border border-success/20 rounded-xl p-3">
                     <p className="text-xs text-success font-semibold uppercase mb-1">After</p>
                     <p className="text-lg font-black text-success">{t.after}</p>
                   </div>

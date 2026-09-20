@@ -8,10 +8,10 @@ import { formatDuration, formatDateTime } from '@/lib/formatters';
 import type { SuperadminJobsTableProps } from '@/app/superadmin/system-ops/jobs/jobs_types/SuperadminJobsTableTypes';
 /** Maps BackgroundJob status → TailwindCSS color classes */
 const STATUS_STYLES: Record<BackgroundJob['status'], string> = {
-    ACTIVE: 'text-on-primary bg-primary/10',
-    COMPLETED: 'text-on-success bg-success/10',
-    FAILED: 'text-on-danger bg-danger-bg/10',
-    DELAYED: 'text-on-primary bg-warning/10',
+    ACTIVE: 'text-primary bg-primary-subtle',
+    COMPLETED: 'text-success bg-success-bg',
+    FAILED: 'text-danger-danger-bg/10',
+    DELAYED: 'text-warning bg-warning-bg',
     CANCELLED: 'text-secondary bg-surface-highlight',
 };
 
@@ -26,7 +26,7 @@ export default function SuperadminJobsTable({ jobs, allJobsFiltered, selectedJob
     return (<div className="overflow-x-auto">
       <table className="w-full text-left border-collapse min-w-full">
         <thead>
-          <tr className="bg-primary/10 border-b border-border text-sm">
+          <tr className="bg-primary-subtle border-b border-border text-sm">
             <th className="p-4 w-12 text-center">
               <input type="checkbox" aria-label="Select all visible jobs" className="rounded border-border text-primary cursor-pointer w-4 h-4" checked={selectedJobIds.size === jobs.length && jobs.length > 0} onChange={() => toggleAll(jobs.map(j => j.id))}/>
             </th>
@@ -69,13 +69,13 @@ export default function SuperadminJobsTable({ jobs, allJobsFiltered, selectedJob
                 </td>
                 <td className="p-4 text-right" onClick={(e) => e.stopPropagation()}>
                   <div className="flex items-center justify-end gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 motion-safe:transition-opacity">
-                    {job.status === 'FAILED' && (<button onClick={() => onRetry(job.id)} className="p-1.5 text-secondary hover:text-success hover:bg-success/10 rounded-lg motion-safe:transition-colors" title="Retry Job" aria-label={`Retry job ${job.id}`}>
+                    {job.status === 'FAILED' && (<button onClick={() => onRetry(job.id)} className="p-1.5 text-secondary hover:text-success hover:bg-success-bg rounded-lg motion-safe:transition-colors" title="Retry Job" aria-label={`Retry job ${job.id}`}>
                         <RefreshCw size={18} strokeWidth={2}/>
                       </button>)}
-                    {(job.status === 'ACTIVE' || job.status === 'DELAYED') && (<button onClick={() => onCancel(job.id)} className="p-1.5 text-secondary hover:text-warning hover:bg-warning/10 rounded-lg motion-safe:transition-colors" title="Cancel Job" aria-label={`Cancel job ${job.id}`}>
+                    {(job.status === 'ACTIVE' || job.status === 'DELAYED') && (<button onClick={() => onCancel(job.id)} className="p-1.5 text-secondary hover:text-warning hover:bg-warning-bg rounded-lg motion-safe:transition-colors" title="Cancel Job" aria-label={`Cancel job ${job.id}`}>
                         <XCircle size={18} strokeWidth={2}/>
                       </button>)}
-                    <button onClick={() => onDelete(job.id)} className="p-1.5 text-secondary hover:text-danger hover:bg-danger-bg/10 rounded-lg motion-safe:transition-colors" title="Delete Job" aria-label={`Delete job ${job.id}`}>
+                    <button onClick={() => onDelete(job.id)} className="p-1.5 text-secondary hover:text-danger hover:bg-danger-bg rounded-lg motion-safe:transition-colors" title="Delete Job" aria-label={`Delete job ${job.id}`}>
                       <Trash2 size={18} strokeWidth={2}/>
                     </button>
                   </div>

@@ -11,7 +11,7 @@ export default function SuperadminAffiliatesTable({ affiliates, onToggleStatus, 
       <div className="overflow-x-auto flex-1">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="bg-primary/5 border-b border-border">
+            <tr className="bg-primary-subtle border-b border-border">
               <th className="px-6 py-4 text-xs font-semibold text-secondary uppercase tracking-wider">Partner Name</th>
               <th className="px-6 py-4 text-xs font-semibold text-secondary uppercase tracking-wider">Referral Code</th>
               <th className="px-6 py-4 text-xs font-semibold text-secondary uppercase tracking-wider">Referral Count</th>

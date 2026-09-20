@@ -15,7 +15,7 @@ export default function AdminDashboardExpiringWidget() {
     <div className="bg-card backdrop-blur-xl border border-border rounded-2xl shadow-card p-6 flex flex-col h-full">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 bg-warning rounded-xl">
+          <div className="p-2.5 bg-warning-bg rounded-xl">
             <Clock size={18} strokeWidth={2} className="text-warning" />
           </div>
           <div>
@@ -38,7 +38,7 @@ export default function AdminDashboardExpiringWidget() {
         )}
         {expiring.map((m) => (
           <div key={m.id} className={`p-3 rounded-xl border flex items-center justify-between gap-3 motion-safe:transition-colors ${
-            m.daysLeft <= 7 ? 'bg-danger border-border' : 'bg-warning border-warning'
+            m.daysLeft <= 7 ? 'bg-danger-bg border-border' : 'bg-warning-bg border-warning'
           }`}>
             <div className="flex items-center gap-2.5 min-w-0">
               <div className="w-7 h-7 rounded-full bg-primary-subtle flex items-center justify-center text-primary text-xs font-bold flex-shrink-0">

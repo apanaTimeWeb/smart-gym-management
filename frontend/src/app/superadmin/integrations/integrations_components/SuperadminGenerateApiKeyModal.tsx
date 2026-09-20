@@ -37,7 +37,7 @@ export default function SuperadminGenerateApiKeyModal({ isOpen, onClose }: Super
       <div className="bg-overlay border border-border rounded-2xl w-full max-w-md shadow-dialog overflow-hidden flex flex-col motion-safe:animate-in motion-safe:zoom-in-95">
         <div className="flex items-center justify-between px-6 py-5 border-b border-border">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-primary/10 rounded-lg text-primary">
+            <div className="p-2 bg-primary-subtle rounded-lg text-primary">
               <KeyRound size={20} />
             </div>
             <div>

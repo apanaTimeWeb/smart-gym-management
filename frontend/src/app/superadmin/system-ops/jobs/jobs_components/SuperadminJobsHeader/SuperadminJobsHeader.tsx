@@ -21,7 +21,7 @@ export default function SuperadminJobsHeader({ selectedCount, isRetrying, status
           <button onClick={onClearCompleted} className="bg-input text-primary px-4 py-2 rounded-lg font-medium hover:bg-border motion-safe:transition-colors border border-border text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
             Clear Completed
           </button>
-          <button onClick={onRetryAll} disabled={isRetrying} className="flex items-center gap-2 bg-danger-bg/10 text-danger px-4 py-2 rounded-lg font-medium hover:bg-danger-bg hover:text-on-danger motion-safe:transition-colors border border-danger/20 hover:border-transparent disabled:opacity-50 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger">
+          <button onClick={onRetryAll} disabled={isRetrying} className="flex items-center gap-2 bg-danger-bg text-danger px-4 py-2 rounded-lg font-medium hover:bg-danger-bg-danger-bg motion-safe:transition-colors border border-danger/20 hover:border-transparent disabled:opacity-50 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger">
             <RefreshCw size={18} strokeWidth={2} className={isRetrying ? 'motion-safe:animate-spin' : ''}/>
             Retry All Failed
           </button>
@@ -57,7 +57,7 @@ export default function SuperadminJobsHeader({ selectedCount, isRetrying, status
 
         {selectedCount > 0 && (<div className="flex items-center gap-3 motion-safe:animate-in motion-safe:slide-in-from-right-4">
             <span className="text-sm font-medium text-primary">{selectedCount} selected</span>
-            <button onClick={onBulkRetry} className="flex items-center gap-1.5 bg-primary text-on-danger px-3 py-1.5 rounded-md text-sm hover:bg-primary-hover motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+            <button onClick={onBulkRetry} className="flex items-center gap-1.5 bg-primary text-on-primary px-3 py-1.5 rounded-md text-sm hover:bg-primary-hover motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
               <RefreshCw size={18} strokeWidth={2}/> Retry
             </button>
             <button onClick={onBulkDelete} className="flex items-center gap-1.5 bg-danger text-on-danger px-3 py-1.5 rounded-md text-sm hover:opacity-90 motion-safe:transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger">

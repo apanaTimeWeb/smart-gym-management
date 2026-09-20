@@ -14,7 +14,7 @@ export function AdminSettingsToggleSwitch({ checked, onChange, label }: AdminSet
         aria-checked={checked}
         aria-label={label || 'Toggle setting'}
         onClick={() => onChange(!checked)}
-        className={`relative w-11 h-6 rounded-full motion-safe:transition-colors flex-shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${checked ? 'bg-primary' : 'bg-input border border-border'}`}
+        className={`relative w-11 h-6 rounded-full motion-safe:transition-colors flex-shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${checked ? 'bg-primary-subtle' : 'bg-input border border-border'}`}
       >
         <span
           aria-hidden="true"

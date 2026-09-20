@@ -103,7 +103,7 @@ export default function ManagerProfileDiet() {
 
       {!hasDietPlan && !isAssigning ? (
         <div className="bg-input border border-border rounded-xl p-10 flex flex-col items-center justify-center text-center">
-          <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-4">
+          <div className="w-16 h-16 rounded-full bg-primary-subtle flex items-center justify-center text-primary mb-4">
             <Utensils size={18} />
           </div>
           <h4 className="text-lg font-semibold text-primary mb-2">No Diet Plan Assigned</h4>
@@ -112,7 +112,7 @@ export default function ManagerProfileDiet() {
           </p>
           <button 
             onClick={() => setIsAssigning(true)}
-            className="px-6 py-2.5 bg-primary/10 text-primary border border-primary/20 rounded-xl font-semibold hover:bg-primary/20 motion-safe:transition-colors"
+            className="px-6 py-2.5 bg-primary-subtle text-primary border border-primary/20 rounded-xl font-semibold hover:bg-primary-subtle motion-safe:transition-colors"
           >
             Browse Diet Library
           </button>

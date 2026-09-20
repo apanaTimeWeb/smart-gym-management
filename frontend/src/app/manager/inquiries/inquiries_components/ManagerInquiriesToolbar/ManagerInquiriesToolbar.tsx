@@ -30,7 +30,7 @@ export default function ManagerInquiriesToolbar() {
 
   if (selectedIds.length > 0) {
     return (
-      <div className="bg-primary/10 border border-primary/30 rounded-xl p-4 flex flex-wrap gap-3 items-center justify-between motion-safe:transition-all">
+      <div className="bg-primary-subtle border border-primary/30 rounded-xl p-4 flex flex-wrap gap-3 items-center justify-between motion-safe:transition-all">
         <div className="flex flex-wrap items-center gap-4">
           <span className="font-semibold text-primary">
             {selectedIds.length} {selectedIds.length === 1 ? 'inquiry' : 'inquiries'} selected

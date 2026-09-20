@@ -95,9 +95,9 @@ export default function ManagerReferralsTable() {
                     <td className="px-6 py-4 text-secondary">{formatDate(ref.dateReferred)}</td>
                     <td className="px-6 py-4">
                       <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${
-                        ref.status === 'JOINED' ? 'bg-success/10 text-success' :
+                        ref.status === 'JOINED' ? 'bg-success-bg text-success' :
                         ref.status === 'REJECTED' ? 'bg-danger text-on-danger' :
-                        'bg-warning/10 text-warning'
+                        'bg-warning-bg text-warning'
                       }`}>
                         {ref.status}
                       </span>
@@ -107,7 +107,7 @@ export default function ManagerReferralsTable() {
                         <span className="text-secondary">{displayValue(ref.rewardStatus)}</span>
                       ) : (
                         <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${
-                          ref.rewardStatus === 'CLAIMED' ? 'bg-success/10 text-success' : 'bg-warning/10 text-warning'
+                          ref.rewardStatus === 'CLAIMED' ? 'bg-success-bg text-success' : 'bg-warning-bg text-warning'
                         }`}>
                           {ref.rewardStatus}
                         </span>
@@ -122,7 +122,7 @@ export default function ManagerReferralsTable() {
                         <button
                           onClick={() => claimReward(ref.id)}
                           disabled={isClaiming}
-                          className="inline-flex items-center gap-1 px-3 py-1.5 bg-primary text-white rounded text-xs font-bold hover:bg-primary-hover motion-safe:transition-colors disabled:opacity-50"
+                          className="inline-flex items-center gap-1 px-3 py-1.5 bg-primary-subtle text-white rounded text-xs font-bold hover:bg-primary-hover motion-safe:transition-colors disabled:opacity-50"
                         >
                           <IndianRupee size={18} /> Claim {formatCurrencyFromMinorUnits(ref.rewardAmount ?? 0, ManagerEnvConfig.currencyCode)}
                         </button>

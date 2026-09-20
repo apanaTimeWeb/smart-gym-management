@@ -16,7 +16,7 @@ export default function LandingBmiCalc() {
         <div className="bg-card border border-border rounded-3xl p-8 md:p-12 shadow-2xl grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           {/* Left: form */}
           <div>
-            <div className="inline-block text-xs font-bold tracking-widest uppercase text-on-primary bg-warning/10 border border-warning/20 rounded-full px-4 py-2 mb-5">
+            <div className="inline-block text-xs font-bold tracking-widest uppercase text-warning bg-warning-bg border border-warning/20 rounded-full px-4 py-2 mb-5">
               Fitness Tools
             </div>
             <h2 className="text-3xl sm:text-4xl font-black text-white mb-4">
@@ -56,7 +56,7 @@ export default function LandingBmiCalc() {
               </div>
               <button
                 type="submit"
-                className="w-full py-3 rounded-xl font-bold text-white transition-all hover:scale-105 bg-primary hover:bg-primary-hover"
+                className="w-full py-3 rounded-xl font-bold text-white transition-all hover:scale-105 bg-primary-subtle hover:bg-primary-hover"
               >
                 Calculate BMI
               </button>

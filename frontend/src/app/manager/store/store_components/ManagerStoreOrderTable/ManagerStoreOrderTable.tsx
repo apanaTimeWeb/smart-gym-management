@@ -116,7 +116,7 @@ export default function ManagerStoreOrderTable() {
                   {o.method}
                 </td>
                 <td className="px-4 py-3">
-                  <span className="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold bg-success text-on-success dark:bg-success dark:text-success">
+                  <span className="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold bg-success text-on-success dark:bg-success-bg dark:text-success">
                     {o.status}
                   </span>
                 </td>

@@ -29,7 +29,7 @@ export default function ManagerInquiriesTable() {
       <div className="bg-card rounded-xl shadow-card border border-border overflow-hidden flex flex-col h-full min-h-96">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-primary/5">
+            <thead className="bg-primary-subtle">
               <tr>
                 <th className="px-5 py-3 w-12" />
                 {INQUIRIES_TABLE_HEADERS.map(h => (
@@ -74,7 +74,7 @@ export default function ManagerInquiriesTable() {
     <div className="bg-card rounded-xl shadow-card border border-border overflow-hidden flex flex-col h-full min-h-96">
       <div className="overflow-x-auto">
         <table className="w-full">
-          <thead className="bg-primary/5">
+          <thead className="bg-primary-subtle">
             <tr>
               <th className="px-5 py-3 w-12 text-left">
                 <input
@@ -99,7 +99,7 @@ export default function ManagerInquiriesTable() {
               return (
                 <tr
                   key={inq.id}
-                  className={`motion-safe:transition-colors cursor-pointer ${selected ? 'bg-primary/10' : 'hover:bg-primary/5'}`}
+                  className={`motion-safe:transition-colors cursor-pointer ${selected ? "bg-primary-subtle" : 'hover:bg-primary-subtle'}`}
                   tabIndex={0}
                   role="button"
                   aria-label={`Edit inquiry ${inq.name}`}

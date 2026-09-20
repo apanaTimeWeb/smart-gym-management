@@ -13,7 +13,7 @@ export function ManagerReportsExpensesTable() {
   const data = summary?.expenseBreakdown ?? [];
   return (
     <table className="w-full">
-      <thead className="bg-primary/5">
+      <thead className="bg-primary-subtle">
         <tr>
           {['Category', 'Amount', 'Share'].map(h => (
             <th key={h} className="text-left text-xs font-semibold text-secondary uppercase tracking-wider px-5 py-3">{h}</th>
@@ -24,7 +24,7 @@ export function ManagerReportsExpensesTable() {
         {data.length === 0 ? <tr><td colSpan={3}><ManagerReportsEmptyState /></td></tr> : data.map(d => {
           const style = EXPENSE_CATEGORY_STYLES[d.category] ?? { bg: 'bg-secondary/10', text: 'text-secondary' };
           return (
-            <tr key={d.category} className="hover:bg-primary/5 motion-safe:transition-colors">
+            <tr key={d.category} className="hover:bg-primary-subtle motion-safe:transition-colors">
               <td className="px-5 py-3.5">
                 <span className={`text-xs font-semibold px-2.5 py-0.5 rounded-full ${style.bg} ${style.text}`}>{d.category}</span>
               </td>
@@ -32,7 +32,7 @@ export function ManagerReportsExpensesTable() {
               <td className="px-5 py-3.5">
                 <div className="flex items-center gap-2">
                   <div className="flex-1 h-2 bg-input rounded-full overflow-hidden max-w-32">
-                    <div className="h-full bg-primary rounded-full" style={{ width: `${d.percentage}%` }} />
+                    <div className="h-full bg-primary-subtle rounded-full" style={{ width: `${d.percentage}%` }} />
                   </div>
                   <span className="text-xs text-secondary">{d.percentage}%</span>
                 </div>

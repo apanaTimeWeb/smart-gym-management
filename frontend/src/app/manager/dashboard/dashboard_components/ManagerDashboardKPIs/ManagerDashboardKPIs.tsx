@@ -26,7 +26,7 @@ export default function ManagerDashboardKPIs() {
           change={`${s.totalMembers ? Math.round((s.activeMembers / s.totalMembers) * 100) : 0}% of total`}
           changeType="neutral"
           icon={Users}
-          iconBg="bg-info"
+          iconBg="bg-info-bg"
           iconColor="text-info"
         />
         <ManagerStatCard
@@ -35,7 +35,7 @@ export default function ManagerDashboardKPIs() {
           change="Daily revenue"
           changeType="up"
           icon={DollarSign}
-          iconBg="bg-success"
+          iconBg="bg-success-bg"
           iconColor="text-success"
         />
         <ManagerStatCard
@@ -44,7 +44,7 @@ export default function ManagerDashboardKPIs() {
           change="Present today"
           changeType="neutral"
           icon={UserCheck}
-          iconBg="bg-warning"
+          iconBg="bg-warning-bg"
           iconColor="text-warning"
         />
         <ManagerStatCard
@@ -53,7 +53,7 @@ export default function ManagerDashboardKPIs() {
           change={`${s.membersByStatus?.pending || 0} members`}
           changeType="down"
           icon={AlertCircle}
-          iconBg="bg-danger"
+          iconBg="bg-danger-bg"
           iconColor="text-danger"
         />
       </div>
@@ -65,7 +65,7 @@ export default function ManagerDashboardKPIs() {
           change={timeLabel}
           changeType="up"
           icon={TrendingUp}
-          iconBg="bg-primary/10"
+          iconBg="bg-primary-subtle"
           iconColor="text-primary"
         />
         <ManagerStatCard
@@ -74,7 +74,7 @@ export default function ManagerDashboardKPIs() {
           change="Checked-in"
           changeType="neutral"
           icon={Clock}
-          iconBg="bg-warning"
+          iconBg="bg-warning-bg"
           iconColor="text-warning"
         />
         <ManagerStatCard
@@ -83,7 +83,7 @@ export default function ManagerDashboardKPIs() {
           change={s.lowStockCount > 0 ? `${s.lowStockCount} low stock` : 'All stocked'}
           changeType={s.lowStockCount > 0 ? 'down' : 'up'}
           icon={ShoppingCart}
-          iconBg="bg-info"
+          iconBg="bg-info-bg"
           iconColor="text-info"
         />
         <ManagerStatCard
@@ -92,7 +92,7 @@ export default function ManagerDashboardKPIs() {
           change={`${s.totalInquiries} total`}
           changeType="up"
           icon={CheckCircle}
-          iconBg="bg-success"
+          iconBg="bg-success-bg"
           iconColor="text-success"
         />
       </div>
@@ -105,7 +105,7 @@ export default function ManagerDashboardKPIs() {
           change="Daily revenue"
           changeType="up"
           icon={DollarSign}
-          iconBg="bg-success"
+          iconBg="bg-success-bg"
           iconColor="text-success"
         />
         <ManagerStatCard
@@ -114,7 +114,7 @@ export default function ManagerDashboardKPIs() {
           change="MoM Change"
           changeType={(s.revenueGrowthPercent || 0) >= 0 ? "up" : "down"}
           icon={(s.revenueGrowthPercent || 0) >= 0 ? TrendingUp : TrendingDown}
-          iconBg={(s.revenueGrowthPercent || 0) >= 0 ? "bg-success" : "bg-danger"}
+          iconBg={(s.revenueGrowthPercent || 0) >= 0 ? "bg-success-bg" : "bg-danger-bg"}
           iconColor={(s.revenueGrowthPercent || 0) >= 0 ? "text-success" : "text-danger"}
         />
         <ManagerStatCard
@@ -123,7 +123,7 @@ export default function ManagerDashboardKPIs() {
           change="This Month"
           changeType="neutral"
           icon={Target}
-          iconBg="bg-info"
+          iconBg="bg-info-bg"
           iconColor="text-info"
         />
         <ManagerStatCard
@@ -132,7 +132,7 @@ export default function ManagerDashboardKPIs() {
           change="Currently on hold"
           changeType="neutral"
           icon={Snowflake}
-          iconBg="bg-primary/10"
+          iconBg="bg-primary-subtle"
           iconColor="text-primary"
         />
         <ManagerStatCard
@@ -141,7 +141,7 @@ export default function ManagerDashboardKPIs() {
           change="This Month"
           changeType={(s.churnRate || 0) > 5 ? "down" : "neutral"}
           icon={AlertCircle}
-          iconBg={(s.churnRate || 0) > 5 ? "bg-danger" : "bg-warning"}
+          iconBg={(s.churnRate || 0) > 5 ? "bg-danger-bg" : "bg-warning-bg"}
           iconColor={(s.churnRate || 0) > 5 ? "text-danger" : "text-warning"}
         />
       </div>

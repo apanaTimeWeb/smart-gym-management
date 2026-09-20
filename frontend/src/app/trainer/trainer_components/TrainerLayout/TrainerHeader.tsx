@@ -94,7 +94,7 @@ export default function TrainerHeader({ title, subtitle }: TrainerHeaderProps) {
               <div className="px-4 py-3 border-b border-border bg-header">
                 <p className="text-sm font-semibold text-primary truncate">{mounted ? (user?.name || 'Trainer') : 'Trainer'}</p>
                 <p className="text-xs text-secondary truncate">{mounted ? (user?.email || '') : ''}</p>
-                {mounted && user?.role && <p className="text-xs text-warning font-medium mt-0.5">{user.role}</p>}
+                {mounted && user?.role && <p className="text-xs text-warning bg-warning-bg inline-block px-1.5 rounded-md font-medium mt-0.5">{user.role}</p>}
               </div>
               <div className="py-1">
                 <Link

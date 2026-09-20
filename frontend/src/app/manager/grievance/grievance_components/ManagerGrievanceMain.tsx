@@ -22,9 +22,9 @@ export default function ManagerGrievanceMain() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'CLOSED': return 'bg-success/10 text-success';
-      case 'RESOLVING': return 'bg-warning/10 text-warning';
-      default: return 'bg-danger/10 text-danger';
+      case 'CLOSED': return 'bg-success-bg text-success';
+      case 'RESOLVING': return 'bg-warning-bg text-warning';
+      default: return 'bg-danger-bg text-danger';
     }
   };
 
@@ -90,7 +90,7 @@ export default function ManagerGrievanceMain() {
                       Reported: {formatDateTime(ticket.loggedAt)}
                     </div>
                     {ticket.resolutionNote && (
-                      <div className="mt-3 p-3 bg-success/5 rounded-lg border border-success/20 text-sm">
+                      <div className="mt-3 p-3 bg-success-bg rounded-lg border border-success/20 text-sm">
                         <span className="font-semibold text-success">Resolution:</span> <span className="text-secondary">{ticket.resolutionNote}</span>
                       </div>
                     )}
@@ -102,7 +102,7 @@ export default function ManagerGrievanceMain() {
                     </div>
                     
                     {ticket.status !== 'CLOSED' && resolvingTicketId !== ticket.id && (
-                      <button onClick={() => setResolvingTicketId(ticket.id)} className="mt-4 px-4 py-2 text-sm font-semibold rounded-lg bg-primary/10 text-primary hover:bg-primary hover:text-white transition-colors w-full text-center">
+                      <button onClick={() => setResolvingTicketId(ticket.id)} className="mt-4 px-4 py-2 text-sm font-semibold rounded-lg bg-primary-subtle text-primary hover:bg-primary-subtle hover:text-white transition-colors w-full text-center">
                         Resolve
                       </button>
                     )}
@@ -124,7 +124,7 @@ export default function ManagerGrievanceMain() {
                     />
                     <div className="flex justify-end gap-2">
                       <button onClick={() => { setResolvingTicketId(null); setResolutionNote(''); }} className="px-4 py-2 text-sm font-semibold rounded-lg border border-border text-secondary hover:bg-card">Cancel</button>
-                      <button onClick={handleResolveSubmit} className="px-4 py-2 text-sm font-semibold rounded-lg bg-success text-white hover:opacity-90">Submit Resolution</button>
+                      <button onClick={handleResolveSubmit} className="px-4 py-2 text-sm font-semibold rounded-lg bg-success-bg text-white hover:opacity-90">Submit Resolution</button>
                     </div>
                   </div>
                 )}

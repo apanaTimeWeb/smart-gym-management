@@ -35,7 +35,7 @@ export default function AdminSalesStoreSales() {
 
   if (storeStatus === 'error') {
     return (
-      <div role="alert" className="rounded-xl border border-danger bg-danger p-5 flex items-center justify-between gap-4">
+      <div role="alert" className="rounded-xl border border-danger bg-danger-bg p-5 flex items-center justify-between gap-4">
         <p className="text-sm text-danger">{storeError || 'Store sales could not be loaded.'}</p>
         <button type="button" onClick={() => void loadAll()} className="min-h-11 inline-flex items-center gap-2 px-4 rounded-md border border-danger text-danger focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger">
           <RefreshCw size={16} aria-hidden="true" /> Retry

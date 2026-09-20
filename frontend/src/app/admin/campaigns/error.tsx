@@ -7,8 +7,8 @@ export default function AdminCampaignsError({ error, reset }: { error: Error & {
   }, [error]);
 
   return (
-    <div className="flex min-h-[400px] flex-col items-center justify-center rounded-2xl border border-danger/20 bg-danger/5 px-6 py-12 text-center">
-      <div className="rounded-full bg-danger/10 p-3 mb-4">
+    <div className="flex min-h-[400px] flex-col items-center justify-center rounded-2xl border border-danger/20 bg-danger-bg px-6 py-12 text-center">
+      <div className="rounded-full bg-danger-bg p-3 mb-4">
         <span className="text-danger">⚠️</span>
       </div>
       <h2 className="mb-2 text-lg font-semibold text-primary">Failed to load Campaigns</h2>

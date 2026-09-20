@@ -37,8 +37,8 @@ export default function ManagerScheduleWeeklyGrid() {
     <div className="overflow-x-auto rounded-xl border border-border bg-card">
       <table className="w-full text-left border-collapse min-w-224">
         <thead>
-          <tr className="border-b border-border bg-primary/5">
-            <th className="py-3 px-4 text-xs font-semibold text-secondary uppercase tracking-wider w-44 sticky left-0 bg-primary/5 z-10">
+          <tr className="border-b border-border bg-primary-subtle">
+            <th className="py-3 px-4 text-xs font-semibold text-secondary uppercase tracking-wider w-44 sticky left-0 bg-primary-subtle z-10">
               Trainer
             </th>
             {days.map(day => (
@@ -50,7 +50,7 @@ export default function ManagerScheduleWeeklyGrid() {
         </thead>
         <tbody className="divide-y divide-border">
           {trainers.map(trainer => (
-            <tr key={trainer.trainerId} className="hover:bg-primary/5 motion-safe:transition-colors">
+            <tr key={trainer.trainerId} className="hover:bg-primary-subtle motion-safe:transition-colors">
               <td className="py-3 px-4 sticky left-0 bg-card z-10 flex flex-col items-start justify-center gap-0.5">
                 <ManagerTooltip content={trainer.trainerName}>
                   <p className="text-sm font-semibold text-primary truncate max-w-40">{trainer.trainerName}</p>
@@ -97,7 +97,7 @@ export default function ManagerScheduleWeeklyGrid() {
                     ) : (
                       <button
                         onClick={() => openAddShift(trainer.trainerId)}
-                        className="w-full h-10 rounded-lg border border-dashed border-border hover:border-primary hover:bg-primary/5 flex items-center justify-center text-secondary hover:text-primary motion-safe:transition-colors"
+                        className="w-full h-10 rounded-lg border border-dashed border-border hover:border-primary hover:bg-primary-subtle flex items-center justify-center text-secondary hover:text-primary motion-safe:transition-colors"
                         aria-label={`Add shift for ${trainer.trainerName} on ${day}`}
                       >
                         <Plus size={18} />

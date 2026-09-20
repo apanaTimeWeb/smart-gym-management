@@ -96,7 +96,7 @@ export default function ManagerHrStaffTable() {
               >
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm bg-primary/10 text-primary">
+                    <div className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm bg-primary-subtle text-primary">
                       {(s.name || '?').charAt(0).toUpperCase()}
                     </div>
                     <div>
@@ -141,8 +141,8 @@ export default function ManagerHrStaffTable() {
                       }}
                       className={`p-1.5 rounded-lg motion-safe:transition-all motion-safe:duration-200 ease-in-out ${
                         s.isActive === false
-                          ? 'text-success hover:bg-success'
-                          : 'text-danger hover:bg-danger'
+                          ? 'text-success hover:bg-success-bg'
+                          : 'text-danger hover:bg-danger-bg'
                       }`}
                       title={s.isActive === false ? 'Activate Staff' : 'Suspend Staff'}
                       aria-label={s.isActive === false ? `Activate ${s.name}` : `Suspend ${s.name}`}
@@ -151,7 +151,7 @@ export default function ManagerHrStaffTable() {
                     </button>
                     <button 
                       onClick={(e) => { e.stopPropagation(); openEdit(s); }} 
-                      className="p-1.5 rounded hover:bg-primary/10 motion-safe:transition-colors text-secondary hover:text-primary"
+                      className="p-1.5 rounded hover:bg-primary-subtle motion-safe:transition-colors text-secondary hover:text-primary"
                       title="Edit"
                     >
                       <Edit2 size={18} />
@@ -169,7 +169,7 @@ export default function ManagerHrStaffTable() {
                           deleteStaff(s.id); 
                         }
                       }}
-                      className="p-1.5 rounded motion-safe:transition-colors text-danger hover:bg-danger"
+                      className="p-1.5 rounded motion-safe:transition-colors text-danger hover:bg-danger-bg"
                       title="Delete"
                     >
                       <Trash2 size={18} />
@@ -217,11 +217,11 @@ export default function ManagerHrStaffTable() {
                 const isSuspending = s.isActive !== false;
                 const ok = await confirm({ title: isSuspending ? 'Suspend Staff Member' : 'Activate Staff Member', message: isSuspending ? `Suspend "${s.name}"? They will no longer be able to check in until reactivated.` : `Activate "${s.name}"? They will regain normal access.`, type: isSuspending ? 'danger' : 'info', confirmText: isSuspending ? 'Suspend' : 'Activate' });
                 if (ok) toggleStaffStatus(s);
-              }} className={`min-h-11 min-w-11 p-2 rounded-md motion-safe:transition-colors ${s.isActive === false ? 'text-success hover:bg-success' : 'text-danger hover:bg-danger'}`} aria-label={s.isActive === false ? `Activate ${s.name}` : `Suspend ${s.name}`}><Ban size={18} /></button>
+              }} className={`min-h-11 min-w-11 p-2 rounded-md motion-safe:transition-colors ${s.isActive === false ? 'text-success hover:bg-success-bg' : 'text-danger hover:bg-danger-bg'}`} aria-label={s.isActive === false ? `Activate ${s.name}` : `Suspend ${s.name}`}><Ban size={18} /></button>
               <button type="button" onClick={async () => {
                 const ok = await confirm({ title: 'Delete Staff', message: `Are you sure you want to delete staff member "${s.name}"? This action cannot be undone.`, type: 'danger', confirmText: 'Delete' });
                 if (ok) deleteStaff(s.id);
-              }} className="min-h-11 min-w-11 p-2 rounded-md text-danger hover:bg-danger motion-safe:transition-colors" aria-label={`Delete ${s.name}`}><Trash2 size={18} /></button>
+              }} className="min-h-11 min-w-11 p-2 rounded-md text-danger hover:bg-danger-bg motion-safe:transition-colors" aria-label={`Delete ${s.name}`}><Trash2 size={18} /></button>
             </div>
           </article>
         ))}

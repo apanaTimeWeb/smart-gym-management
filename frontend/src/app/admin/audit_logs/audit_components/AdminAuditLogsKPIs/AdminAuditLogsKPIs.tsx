@@ -11,10 +11,10 @@ export default function AdminAuditLogsKPIs() {
   return (
     <div className="grid grid-cols-2 xl:grid-cols-3 gap-4">
       <AdminStatCard title="Total Events" value={kpis.totalEvents} change="all time" changeType="neutral" icon={Activity} iconBg="bg-primary-subtle" iconColor="text-primary" />
-      <AdminStatCard title="High Severity" value={kpis.highSeverity} change="requires attention" changeType="down" icon={ShieldAlert} iconBg="bg-danger" iconColor="text-danger" />
-      <AdminStatCard title="Medium Severity" value={kpis.mediumSeverity} change="monitor closely" changeType="neutral" icon={AlertTriangle} iconBg="bg-warning" iconColor="text-warning" />
-      <AdminStatCard title="Low Severity" value={kpis.lowSeverity} change="informational" changeType="up" icon={Info} iconBg="bg-success" iconColor="text-success" />
-      <AdminStatCard title="Events Today" value={kpis.eventsToday} icon={CalendarClock} iconBg="bg-info" iconColor="text-info" />
+      <AdminStatCard title="High Severity" value={kpis.highSeverity} change="requires attention" changeType="down" icon={ShieldAlert} iconBg="bg-danger-bg" iconColor="text-danger" />
+      <AdminStatCard title="Medium Severity" value={kpis.mediumSeverity} change="monitor closely" changeType="neutral" icon={AlertTriangle} iconBg="bg-warning-bg" iconColor="text-warning" />
+      <AdminStatCard title="Low Severity" value={kpis.lowSeverity} change="informational" changeType="up" icon={Info} iconBg="bg-success-bg" iconColor="text-success" />
+      <AdminStatCard title="Events Today" value={kpis.eventsToday} icon={CalendarClock} iconBg="bg-info-bg" iconColor="text-info" />
       <AdminStatCard title="Unique Users" value={kpis.uniqueUsers} change="active actors" changeType="neutral" icon={Users} iconBg="bg-primary-subtle" iconColor="text-primary" />
     </div>
   );

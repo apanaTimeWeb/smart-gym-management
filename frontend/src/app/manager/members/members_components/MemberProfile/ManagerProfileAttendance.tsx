@@ -19,8 +19,8 @@ export default function ManagerProfileAttendance() {
     <div>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
         {[
-          { label: 'Present', value: presentDays, color: 'text-success dark:text-success', bg: 'bg-success ' },
-          { label: 'Absent', value: absentDays, color: 'text-danger dark:text-danger', bg: 'bg-danger dark:bg-danger' },
+          { label: 'Present', value: presentDays, color: 'text-success dark:text-success', bg: 'bg-success-bg ' },
+          { label: 'Absent', value: absentDays, color: 'text-danger dark:text-danger', bg: 'bg-danger-bg dark:bg-danger-bg' },
           { label: 'Attendance %', value: `${attPct}%`, color: attPct >= 75 ? 'text-success dark:text-success' : 'text-danger dark:text-danger', bg: 'bg-input' },
         ].map((s) => (
           <div key={s.label} className={`${s.bg} rounded-xl p-4 border border-border`}>

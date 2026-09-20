@@ -11,11 +11,11 @@ export default function AdminAnnouncementsKPIs() {
   return (
     <div className="grid grid-cols-2 xl:grid-cols-3 gap-4">
       <AdminStatCard title="Total Announcements" value={kpis.total} icon={Megaphone} iconBg="bg-primary-subtle" iconColor="text-primary" />
-      <AdminStatCard title="Active Now" value={kpis.active} change="live & visible" changeType="up" icon={CheckCircle} iconBg="bg-success" iconColor="text-success" />
-      <AdminStatCard title="Scheduled" value={kpis.scheduled} change="upcoming" changeType="neutral" icon={Clock} iconBg="bg-info" iconColor="text-info" />
-      <AdminStatCard title="Expired" value={kpis.expired} icon={XCircle} iconBg="bg-danger" iconColor="text-danger" />
+      <AdminStatCard title="Active Now" value={kpis.active} change="live & visible" changeType="up" icon={CheckCircle} iconBg="bg-success-bg" iconColor="text-success" />
+      <AdminStatCard title="Scheduled" value={kpis.scheduled} change="upcoming" changeType="neutral" icon={Clock} iconBg="bg-info-bg" iconColor="text-info" />
+      <AdminStatCard title="Expired" value={kpis.expired} icon={XCircle} iconBg="bg-danger-bg" iconColor="text-danger" />
       <AdminStatCard title="Total Views" value={kpis.totalViews.toLocaleString('en-IN')} change="across all" changeType="up" icon={Eye} iconBg="bg-primary-subtle" iconColor="text-primary" />
-      <AdminStatCard title="Pinned" value={kpis.pinned} change="always on top" changeType="neutral" icon={Pin} iconBg="bg-warning" iconColor="text-warning" />
+      <AdminStatCard title="Pinned" value={kpis.pinned} change="always on top" changeType="neutral" icon={Pin} iconBg="bg-warning-bg" iconColor="text-warning" />
     </div>
   );
 }

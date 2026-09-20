@@ -26,7 +26,7 @@ export default function SystemOpsDashboardClient() {
             </div>
             <p className="text-sm text-secondary flex-1">Monitor CPU, Memory, and Node health across all active clusters.</p>
             <div className="flex items-center justify-between border-t border-border pt-4">
-              <span className="text-xs font-semibold text-on-success bg-success-bg px-2 py-1 rounded">All Nodes Healthy</span>
+              <span className="text-xs font-semibold text-success-success-bg px-2 py-1 rounded">All Nodes Healthy</span>
               <span className="text-primary text-sm font-medium group-hover:underline">View &rarr;</span>
             </div>
           </div>
@@ -60,7 +60,7 @@ export default function SystemOpsDashboardClient() {
             </div>
             <p className="text-sm text-secondary flex-1">Schedule and restore automated PostgreSQL backups.</p>
             <div className="flex items-center justify-between border-t border-border pt-4">
-              <span className="text-xs font-semibold text-on-success bg-success-bg px-2 py-1 rounded">Last run 2h ago</span>
+              <span className="text-xs font-semibold text-success-success-bg px-2 py-1 rounded">Last run 2h ago</span>
               <span className="text-primary text-sm font-medium group-hover:underline">View &rarr;</span>
             </div>
           </div>

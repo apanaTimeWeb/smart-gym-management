@@ -77,7 +77,7 @@ export function AdminSettingsPaymentGateway({ initialData }: { initialData: Paym
         <div className="bg-input rounded-xl border border-border p-4 space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-success flex items-center justify-center">
+              <div className="w-8 h-8 rounded-lg bg-success-bg flex items-center justify-center">
                 <Receipt size={16} className="text-success" />
               </div>
               <p className="text-sm font-semibold text-primary">UPI / QR Code</p>

@@ -10,10 +10,10 @@ import type { SaaSInvoice } from '@/app/superadmin/saas-billing/invoices/invoice
 import { formatCurrency, formatDate } from '@/lib/formatters';
 import type { SuperadminInvoicesTableRowProps } from '@/app/superadmin/saas-billing/invoices/invoices_types/SuperadminInvoicesTableRowTypes';
 const STATUS_COLORS: Record<SaaSInvoice['status'], string> = {
-    PAID: 'text-on-success bg-success/10',
-    PENDING: 'text-on-primary bg-warning/10',
-    FAILED: 'text-on-danger bg-danger-bg/10',
-    OVERDUE: 'text-on-danger bg-danger-bg/10',
+    PAID: 'text-success bg-success-bg',
+    PENDING: 'text-warning bg-warning-bg',
+    FAILED: 'text-danger-danger-bg/10',
+    OVERDUE: 'text-danger-danger-bg/10',
 };
 
 export default function SuperadminInvoicesTableRow({ invoice: inv }: SuperadminInvoicesTableRowProps) {
@@ -84,10 +84,10 @@ export default function SuperadminInvoicesTableRow({ invoice: inv }: SuperadminI
       </td>
       <td className="p-4 text-sm text-secondary">{inv.issuedAt ? formatDate(inv.issuedAt) : '—'}</td>
       <td className="p-4 text-right flex items-center justify-end gap-2">
-        <button title="Resend to Email" onClick={handleResendEmail} disabled={isResending} className="text-secondary hover:text-primary motion-safe:transition-colors p-1.5 bg-input hover:bg-primary/10 rounded-md border border-border" aria-label={`Resend invoice ${inv.id} to email`}>
+        <button title="Resend to Email" onClick={handleResendEmail} disabled={isResending} className="text-secondary hover:text-primary motion-safe:transition-colors p-1.5 bg-input hover:bg-primary-subtle rounded-md border border-border" aria-label={`Resend invoice ${inv.id} to email`}>
           <Mail className="w-4 h-4"/>
         </button>
-        <button title="Share via WhatsApp" onClick={handleShareWhatsApp} className="text-secondary hover:text-success motion-safe:transition-colors p-1.5 bg-input hover:bg-success/10 rounded-md border border-border" aria-label={`Share invoice ${inv.id} via WhatsApp`}>
+        <button title="Share via WhatsApp" onClick={handleShareWhatsApp} className="text-secondary hover:text-success motion-safe:transition-colors p-1.5 bg-input hover:bg-success-bg rounded-md border border-border" aria-label={`Share invoice ${inv.id} via WhatsApp`}>
           <MessageCircle className="w-4 h-4"/>
         </button>
         <button onClick={handleDownload} disabled={isDownloading} className="text-sm font-medium text-primary hover:underline flex items-center gap-1" aria-label={`Download invoice PDF ${inv.id}`}>

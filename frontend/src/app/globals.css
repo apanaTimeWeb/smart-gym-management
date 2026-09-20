@@ -137,15 +137,15 @@
   --text-on-success: #FFFFFF;
   --text-on-info: #FFFFFF;
   
-  --success: #10B981;
+  --success: #047857; /* Emerald 700 */
   --success-bg: #D1FAE5;
-  --warning: #F59E0B;
+  --warning: #B45309; /* Amber 700 */
   --warning-bg: #FEF3C7;
-  --danger: #EF4444;
+  --danger: #B91C1C; /* Red 700 */
   --danger-bg: #FEE2E2;
-  --info: #3B82F6;
+  --info: #1D4ED8; /* Blue 700 */
   --info-bg: #DBEAFE;
-  --purple: #8B5CF6;
+  --purple: #6D28D9; /* Violet 700 */
   --purple-bg: #EDE9FE;
 
   --pay-cash: #0F766E;

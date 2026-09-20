@@ -29,7 +29,7 @@ export function ManagerScheduleContent() {
         <ManagerHeader title="Trainer Schedule" subtitle="View trainer availability, shift timings, and weekly schedule" />
         <div className="p-6 mt-10">
           <div className="max-w-md w-full bg-card border border-danger/20 rounded-xl p-8 text-center space-y-4 mx-auto">
-            <div className="w-12 h-12 bg-danger/10 text-danger rounded-full flex items-center justify-center mx-auto">
+            <div className="w-12 h-12 bg-danger-bg text-danger rounded-full flex items-center justify-center mx-auto">
               <AlertCircle size={18} />
             </div>
             <div>
