@@ -1,18 +1,21 @@
-# trainer/trainer_components — Feature Map
+# trainer_components — Feature Map
 
 ## Module Purpose
-[REQUIRED: 3–6 sentences. Must answer: (1) What business problem does this module solve? (2) Who uses it? (3) What are the 3–5 most important things a user can DO? (4) What is strictly OFF-LIMITS? Fill this out accurately.]
+`trainer_components/` is the Trainer role's zero-business UI/infrastructure layer. It provides shell presentation, generic feedback/confirmation infrastructure, pagination, search dropdown primitives, and generic stat/table UI primitives. It must not own Trainer business data, domain rules, API calls, or feature-specific mock handlers. Business-aware UI remains inside the owning feature module.
 
 ## Directory Structure
 | Folder | Responsibility | Key Files |
 |---|---|---|
-| `trainer_components_components/` | Renders UI components | TBD |
-| `trainer_components_api/` | API endpoints | `trainer_components_url_config.ts` |
+| `TrainerFeedback/` | Generic Trainer feedback/confirmation/error presentation | `TrainerConfirmModal.tsx`, `TrainerConfirmProvider.tsx`, `TrainerToastHost.tsx`, `TrainerRouteErrorFallback.tsx`, `useTrainerFeedback.ts` |
+| `TrainerLayout/` | Trainer shell header/layout/sidebar presentation | `TrainerLayout.tsx`, `TrainerHeader.tsx`, `TrainerSidebar.tsx` |
+| `TrainerRoleGuard/` | Role-access presentation/guard wrapper | `TrainerRoleGuard.tsx` |
+| `TrainerShared/` | Zero-business UI primitives used by multiple Trainer features | `TrainerPagination.tsx`, `TrainerSearchableDropdown.tsx`, `TrainerStatCard.tsx`, `TrainerTableSkeleton.tsx` |
+| `trainer_components_types/` | Component prop/type contracts for this infrastructure | `TrainerPaginationProps.ts`, `TrainerRouteErrorFallbackProps.ts`, `TrainerSearchableDropdownProps.ts`, `TrainerSearchableDropdownOption.ts`, `TrainerStatCardProps.ts`, `TrainerStatCardTypes.ts` |
 
-### Approved External Dependencies
+## Approved External Dependencies
 ### Application Infrastructure
-- `@/lib/api`
-- `@/lib/logger`
+- `@/lib/*` approved infrastructure.
+- Framework and third-party UI packages.
 
 ### Business Feature Dependencies
 - None
@@ -23,48 +26,58 @@
 ## Feature Inventory
 | Feature | Route | What the User Can Do | Key Components | Main API Calls | Status |
 |---|---|---|---|---|---|
-| Example | /trainer/trainer_components | Manage entity | Main.tsx | GET /... | 🚧 TBD |
+| Trainer shell | `/trainer/*` | Navigate Trainer routes and access shell-level UI | `TrainerLayout`, `TrainerHeader`, `TrainerSidebar` | None owned here | ✅ Maintained |
+| Confirmation/feedback infrastructure | `/trainer/*` | Confirm critical actions and receive feedback | `TrainerConfirmProvider`, `TrainerConfirmModal`, `TrainerToastHost` | None owned here | ✅ Maintained |
+| Shared data-display primitives | `/trainer/*` | Use pagination, search dropdowns, stat cards, table skeletons | `TrainerPagination`, `TrainerSearchableDropdown`, `TrainerStatCard`, `TrainerTableSkeleton` | None owned here | ✅ Maintained |
 
 ## User Flows & Interactions
-### Flow 1: [Name]
-1. TBD
+1. Trainer opens a protected route → `TrainerLayout` renders the shell → `TrainerSidebar` provides navigation.
+2. A feature requests confirmation → `TrainerConfirmProvider` presents the standard dialog → the feature decides whether to mutate.
+3. A shared primitive receives feature-owned props → it renders only presentation/interaction semantics and does not fetch business data.
 
 ## Data and State Architecture
-- **State pattern:** TanStack Query for server state + Zustand for UI state.
-- **Zustand stores:** [List actual store files]
-- **Context providers:** [List actual provider files]
-- **MSW handler location:** [module-owned handler]
+- **State pattern:** No server-state ownership; this folder provides presentation/infrastructure only.
+- **Zustand stores:** None
+- **Context providers:** `TrainerConfirmProvider.tsx` owns confirmation-dialog UI state only.
+- **Local-storage keys:** None
+- **MSW handler/fixture:** None
 
 ## API Contract
-| Function | Method | Endpoint | Request | Response `data` type |
-|---|---|---|---|---|
-| TBD | GET | /... | — | `any` |
+- No feature API functions are owned here.
 
 ## UI Data Requirements
-| UI Element | Required Field(s) | API Endpoint | Response Path | Nullable? | Mocked? |
-|---|---|---|---|---|---|
-| TBD | TBD | GET /... | data... | No | Yes |
+- Props received by these components must remain generic and business-agnostic.
 
 ## Permissions and Security
-- **Required role:** `TRAINER`
-- **Destructive actions:** TBD
-- **Cross-role isolation:** Zero imports from other roles.
+- `TrainerRoleGuard` is a presentation/infrastructure wrapper; actual capability definitions come from approved auth/session infrastructure.
+- Critical actions use `TrainerConfirmProvider`; security-sensitive module rules remain owned by the calling feature.
 
 ## Loading, Empty, and Error States
-| Section | Loading State | Empty State | Error State |
-|---|---|---|---|
-| Full page | `loading.tsx` | `trainer_componentsEmptyState.tsx` | `error.tsx` |
+- `TrainerTableSkeleton.tsx` provides table-shaped loading presentation.
+- `TrainerRouteErrorFallback.tsx` provides role-shell-compatible safe error presentation.
+- Entity-specific empty states remain feature-owned.
 
 ## Edge Cases and AI Warnings
-- **[Specific Warning]:** [Explanation]
+- **Never add business API calls here:** this folder is zero-business UI/infrastructure.
+- **Never add member/plan/payment-specific labels or status registries here.**
+- **Preserve focus management:** confirmation and dropdown infrastructure must remain keyboard-accessible.
 
 ## Component Responsibility Map
-| Component File | Responsibility |
+| Component | Responsibility |
 |---|---|
-| TBD | TBD |
+| `TrainerLayout.tsx` | Renders the Trainer application shell. |
+| `TrainerHeader.tsx` | Renders global Trainer header controls. |
+| `TrainerSidebar.tsx` | Renders role-owned navigation presentation. |
+| `TrainerConfirmProvider.tsx` | Owns generic confirmation dialog state and API. |
+| `TrainerConfirmModal.tsx` | Renders the generic confirmation dialog. |
+| `TrainerToastHost.tsx` | Renders global Trainer toast notifications. |
+| `TrainerPagination.tsx` | Renders generic pagination controls from explicit props. |
+| `TrainerSearchableDropdown.tsx` | Renders generic searchable option selection. |
+| `TrainerStatCard.tsx` | Renders generic metric presentation. |
+| `TrainerTableSkeleton.tsx` | Renders generic table loading skeletons. |
 
 ## Rule Compliance Checklist
-- [ ] Rule 1: Micro-modularization
-- [ ] Rule 2: Total Role Isolation
-- [ ] Module Self-Containment
-- [ ] Feature Dependency Firewall
+- [x] Zero business feature data in shared UI.
+- [x] No sibling feature imports.
+- [x] Generic infrastructure ownership documented.
+- [x] Component responsibility map reflects actual files.

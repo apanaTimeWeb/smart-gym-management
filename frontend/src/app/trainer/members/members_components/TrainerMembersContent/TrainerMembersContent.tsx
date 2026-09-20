@@ -1,5 +1,5 @@
-'use client';
 // RESPONSIBILITY: Owns the Members list/profile switch and the member-directed messaging modal; data/state remains in module queries and Zustand.
+'use client';
 import TrainerMembersMessageModal from '@/app/trainer/members/members_components/TrainerMembersMessageModal/TrainerMembersMessageModal';
 import { useTrainerMembersStore } from '@/app/trainer/members/members_store/useTrainerMembersStore';
 import { useTrainerSelectedMember } from '@/app/trainer/members/members_queries/useTrainerSelectedMember';

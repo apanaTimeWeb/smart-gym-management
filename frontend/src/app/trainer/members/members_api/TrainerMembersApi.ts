@@ -30,8 +30,8 @@ export const TrainerMembersApi = {
   updateMemberAssessment: async (id: string, assessment: TrainerMemberAssessment, idempotencyKey?: string) => {
     return TrainerMembersApi.updateMember(id, { assessment }, idempotencyKey);
   },
-  assignDiet: async (memberId: string, diet: TrainerMemberDietSnapshot | null) => TrainerMembersApi.updateMember(memberId, { assignedDietId: diet?.id, assignedDiet: diet ?? undefined }),
-  assignWorkout: async (memberId: string, workout: TrainerMemberWorkoutSnapshot | null) => TrainerMembersApi.updateMember(memberId, { assignedWorkoutId: workout?.id, assignedWorkout: workout ?? undefined }),
+  assignDiet: async (memberId: string, diet: TrainerMemberDietSnapshot | null, idempotencyKey: string) => TrainerMembersApi.updateMember(memberId, { assignedDietId: diet?.id, assignedDiet: diet ?? undefined }, idempotencyKey),
+  assignWorkout: async (memberId: string, workout: TrainerMemberWorkoutSnapshot | null, idempotencyKey: string) => TrainerMembersApi.updateMember(memberId, { assignedWorkoutId: workout?.id, assignedWorkout: workout ?? undefined }, idempotencyKey),
   fetchMemberAttendance: async (memberId: string) => {
     const response = await apiFetch<ApiResponse<unknown>>(MembersUrlConfig.BACKEND_API.ATTENDANCE(memberId));
     return TrainerMemberAttendanceResponseSchema.parse(response);

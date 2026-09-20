@@ -1,6 +1,6 @@
 import { http, HttpResponse, delay } from 'msw';
 import { env } from '@/config/env';
-import { MOCK_DASHBOARD_STATS } from '@/app/trainer/dashboard/dashboard_fixtures/TrainerDashboardMockData';
+import { MOCK_DASHBOARD_STATS } from '@/app/trainer/dashboard/dashboard_mocks/fixtures/TrainerDashboardMockData';
 import { DashboardUrlConfig } from '@/app/trainer/dashboard/dashboard_url_config';
 
 const BASE = env.NEXT_PUBLIC_API_URL;

@@ -1,7 +1,7 @@
 # Trainer Notifications — Feature Map
 
 ## Module Purpose
-The Trainer Notifications feature displays notifications belonging to the authenticated Trainer and supports read-state mutations. It is a server-state feature: TanStack Query owns the notification list and mutation invalidation, while React component state is limited to presentation. Trainers can mark one notification or all notifications as read, but cannot delete or send notifications.
+The Notifications module lets a trainer review their own application notifications and mark notifications as read. It supports paginated browsing and the documented read-state mutations while keeping server data in TanStack Query. Trainer users cannot delete or administratively manage notifications beyond the permitted read actions. Notification records and mutation responses are owned by the module's API and MSW layer.
 
 ## Directory Structure
 | Folder | Responsibility | Key Files |
@@ -20,6 +20,11 @@ The Trainer Notifications feature displays notifications belonging to the authen
 | Mark All Read | `/trainer/notifications` | `PATCH /trainer/notifications/read-all` | TanStack Query mutation + invalidation | Live |
 | Empty State | `/trainer/notifications` | Derived from query result | Component presentation | Live |
 
+## Approved External Dependencies
+- Application infrastructure: `@/lib/api`, `@/lib/formatters`, and approved zero-business Trainer UI/feedback infrastructure used directly by this module.
+- Business Feature Dependencies: None.
+- Role-Level Business Dependencies: None.
+
 ## Data and State Architecture
 - Server state is owned by `useTrainerNotificationsLogic` through `useInfiniteQuery` and mutations.
 - No React Context is used to own notification API data.
@@ -33,7 +38,7 @@ The Trainer Notifications feature displays notifications belonging to the authen
 | `markTrainerNotificationRead(id)` | PATCH | `/trainer/notifications/:id/read` | notification ID | validated mutation envelope |
 | `markAllTrainerNotificationsRead()` | PATCH | `/trainer/notifications/read-all` | none | validated mutation envelope |
 
-## User Flows
+## User Flows & Interactions
 ### Flow 1: Mark one notification read
 1. Trainer sees an unread notification.
 2. Trainer activates the accessible `Mark notification as read` button.

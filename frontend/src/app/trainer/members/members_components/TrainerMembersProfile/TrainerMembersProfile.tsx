@@ -1,5 +1,5 @@
-﻿'use client';
 // RESPONSIBILITY: Renders a detailed view of a selected member's profile.
+'use client';
 import { MessageCircle, Mail } from 'lucide-react';
 import { useTrainerMembersStore } from '@/app/trainer/members/members_store/useTrainerMembersStore';
 import { useTrainerSelectedMember } from '@/app/trainer/members/members_queries/useTrainerSelectedMember';
@@ -31,7 +31,7 @@ export default function TrainerMembersProfile() {
             <div className="p-6 space-y-5">
         <button type="button"
           onClick={() => setSelectedMember(null)}
-          className="text-sm text-secondary hover:text-primary flex items-center gap-1.5 motion-safe:transition-all motion-safe:duration-base"
+          className="text-sm text-secondary hover:text-primary flex items-center gap-1.5 motion-safe:transition-all motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
         >
           â† Back to Members
         </button>
@@ -62,15 +62,15 @@ export default function TrainerMembersProfile() {
             <div className="flex gap-2 flex-wrap">
               <button type="button"
                 onClick={() => openMsg({ name: selectedMember.name, email: selectedMember.email, phone: selectedMember.phone }, 'whatsapp', '')}
-                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold bg-success text-on-success rounded-xl hover:opacity-90 motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95"
+                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold bg-success text-on-success rounded-xl hover:bg-primary-hover motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
               >
-                <MessageCircle size={14} /> WhatsApp
+                <MessageCircle size={18} /> WhatsApp
               </button>
               <button type="button"
                 onClick={() => openMsg({ name: selectedMember.name, email: selectedMember.email, phone: selectedMember.phone }, 'email', '')}
-                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold bg-info text-on-info rounded-xl hover:opacity-90 motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95"
+                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold bg-info text-on-info rounded-xl hover:bg-primary-hover motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
               >
-                <Mail size={14} /> Email
+                <Mail size={18} /> Email
               </button>
             </div>
           </div>
@@ -106,7 +106,7 @@ export default function TrainerMembersProfile() {
                   profileTab === t
                     ? 'text-on-primary bg-primary-subtle border-primary'
                     : 'border-transparent text-secondary hover:text-primary'
-                }`}
+                } focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page`}
               >
                 {label}
               </button>

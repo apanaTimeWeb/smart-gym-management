@@ -1,8 +1,9 @@
-'use client';
 // RESPONSIBILITY: Renders member-directed WhatsApp or Email delivery for the Members feature.
+'use client';
 // DATA FLOW: Members store → message modal → external delivery URL → member.
 import { useEffect, useId, useRef, useState } from 'react';
 import { X, Send, MessageCircle, Mail, CheckCircle, Phone, AtSign } from 'lucide-react';
+import { displayValue } from '@/lib/formatters';
 import type { MemberMessageType } from '@/app/trainer/members/members_types/TrainerMembersMessagingTypes';
 import type { TrainerMembersMessageModalProps } from '@/app/trainer/members/members_types/TrainerMembersMessageModalTypes';
 import { MembersUrlConfig } from '@/app/trainer/members/members_url_config';
@@ -106,7 +107,7 @@ export default function TrainerMembersMessageModal({
   };
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-overlay/80 backdrop-blur-sm" role="presentation">
+    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-overlay backdrop-blur-sm" role="presentation">
       <div
         ref={dialogRef}
         tabIndex={-1}
@@ -126,7 +127,7 @@ export default function TrainerMembersMessageModal({
             </div>
           </div>
           <button type="button" aria-label="Close member message dialog" onClick={handleClose} disabled={sending} className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page w-10 h-10 rounded-full bg-primary-subtle flex items-center justify-center motion-safe:transition-colors disabled:opacity-50">
-            <X size={16} className="text-on-success" />
+            <X size={18} className="text-on-success" />
           </button>
         </div>
 
@@ -136,8 +137,8 @@ export default function TrainerMembersMessageModal({
             <div className="flex-1 min-w-0">
               <p className="text-sm font-semibold text-primary truncate">{recipient.name}</p>
               <div className="flex items-center gap-1 mt-0.5">
-                {type === 'whatsapp' ? <Phone size={11} className="text-secondary" aria-hidden="true" /> : <AtSign size={11} className="text-secondary" aria-hidden="true" />}
-                <p className="text-xs text-secondary truncate">{contactInfo || 'N/A'}</p>
+                {type === 'whatsapp' ? <Phone size={18} className="text-secondary" aria-hidden="true" /> : <AtSign size={18} className="text-secondary" aria-hidden="true" />}
+                <p className="text-xs text-secondary truncate">{displayValue(contactInfo)}</p>
               </div>
             </div>
           </div>
@@ -158,8 +159,8 @@ export default function TrainerMembersMessageModal({
 
         <div className="px-6 pb-5 flex gap-3">
           <button type="button" onClick={handleClose} disabled={sending} className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page min-h-11 flex-1 px-4 py-2.5 text-sm border border-border rounded-lg hover:bg-input text-primary font-medium motion-safe:transition-colors disabled:opacity-50">Cancel</button>
-          <button type="button" onClick={handleSend} disabled={sending || sent || !message.trim() || !contactInfo} className={`min-h-11 flex-1 px-4 py-2.5 text-sm font-semibold text-on-success rounded-lg flex items-center justify-center gap-2 motion-safe:transition-all disabled:opacity-50 ${sent ? 'bg-success' : type === 'whatsapp' ? 'bg-social-whatsapp' : 'bg-social-email'}`}>
-            {sent ? <><CheckCircle size={16} /> Sent!</> : sending ? 'Sending…' : <><Send size={15} /> Send via {label}</>}
+          <button type="button" onClick={handleSend} disabled={sending || sent || !message.trim() || !contactInfo} className={`min-h-11 flex-1 px-4 py-2.5 text-sm font-semibold text-on-success rounded-lg flex items-center justify-center gap-2 motion-safe:transition-all disabled:opacity-50 ${sent ? 'bg-success' : type === 'whatsapp' ? 'bg-social-whatsapp' : 'bg-social-email'} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page`}>
+            {sent ? <><CheckCircle size={18} /> Sent!</> : sending ? 'Sending…' : <><Send size={18} /> Send via {label}</>}
           </button>
         </div>
       </div>

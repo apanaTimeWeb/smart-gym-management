@@ -1,5 +1,5 @@
-﻿'use client';
 // RESPONSIBILITY: Renders the member's current month attendance history in a full monthly calendar format.
+'use client';
 // Strictly view-only: trainers can monitor member consistency but cannot alter attendance logs.
 
 import { useMemo } from 'react';
@@ -7,6 +7,8 @@ import { Calendar as CalendarIcon, CheckCircle2, XCircle, AlertCircle, ShieldChe
 import { useTrainerMembersStore } from '@/app/trainer/members/members_store/useTrainerMembersStore';
 import { useTrainerSelectedMember } from '@/app/trainer/members/members_queries/useTrainerSelectedMember';
 import { useTrainerMemberAttendanceQuery } from '@/app/trainer/members/members_queries/useTrainerMembersQuery';
+import { format } from 'date-fns';
+import { formatNumber } from '@/lib/formatters';
 
 export default function TrainerMembersProfileAttendance() {
   const { member: selectedMember } = useTrainerSelectedMember();
@@ -17,7 +19,7 @@ export default function TrainerMembersProfileAttendance() {
   const currentMonth = now.getMonth();
   const todayDate = now.getDate();
 
-  const monthName = now.toLocaleString('en-US', { month: 'long' });
+  const monthName = format(now, 'MMMM');
 
   // Calculate calendar dimensions
   const daysInMonth = useMemo(() => new Date(currentYear, currentMonth + 1, 0).getDate(), [currentYear, currentMonth]);
@@ -59,7 +61,7 @@ export default function TrainerMembersProfileAttendance() {
               <CalendarIcon size={18} className="text-primary" /> {monthName} {currentYear} Attendance
             </h3>
             <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary-subtle text-primary border border-primary flex items-center gap-1">
-              <ShieldCheck size={12} /> View Only
+              <ShieldCheck size={18} /> View Only
             </span>
           </div>
           <p className="text-sm text-secondary mt-0.5">
@@ -73,25 +75,25 @@ export default function TrainerMembersProfileAttendance() {
         <div className="bg-card border border-border rounded-xl p-4">
           <p className="text-xs font-medium text-secondary">Present Days</p>
           <p className="text-2xl font-bold text-success mt-1 flex items-center gap-2">
-            {presentCount} <span className="text-xs text-secondary font-normal">days</span>
+            {formatNumber(presentCount)} <span className="text-xs text-secondary font-normal">days</span>
           </p>
         </div>
         <div className="bg-card border border-border rounded-xl p-4">
           <p className="text-xs font-medium text-secondary">Absent Days</p>
           <p className="text-2xl font-bold text-danger mt-1 flex items-center gap-2">
-            {absentCount} <span className="text-xs text-secondary font-normal">days</span>
+            {formatNumber(absentCount)} <span className="text-xs text-secondary font-normal">days</span>
           </p>
         </div>
         <div className="bg-card border border-border rounded-xl p-4">
           <p className="text-xs font-medium text-secondary">Rest / Off Days</p>
           <p className="text-2xl font-bold text-warning mt-1 flex items-center gap-2">
-            {leaveCount} <span className="text-xs text-secondary font-normal">days</span>
+            {formatNumber(leaveCount)} <span className="text-xs text-secondary font-normal">days</span>
           </p>
         </div>
         <div className="bg-card border border-border rounded-xl p-4">
           <p className="text-xs font-medium text-secondary">Attendance Rate</p>
           <p className={`text-2xl font-bold mt-1 ${attendancePct >= 75 ? 'text-success' : 'text-danger'}`}>
-            {attendancePct}%
+            {formatNumber(attendancePct)}%
           </p>
         </div>
       </div>
@@ -146,7 +148,7 @@ export default function TrainerMembersProfileAttendance() {
                     {day}
                   </span>
                   {isToday && (
-                    <span className="text-xs font-extrabold uppercase px-1.5 py-0.5 rounded bg-primary text-white tracking-wide">
+                    <span className="text-xs font-extrabold uppercase px-1.5 py-0.5 rounded bg-primary text-on-primary tracking-wide">
                       Today
                     </span>
                   )}
@@ -155,9 +157,9 @@ export default function TrainerMembersProfileAttendance() {
                 <div className="mt-auto">
                   {isPastOrToday ? (
                     <span className={`inline-flex items-center gap-1 text-xs font-bold px-2 py-0.5 rounded-md ${badgeStyle}`}>
-                      {status === 'P' && <CheckCircle2 size={11} />}
-                      {status === 'A' && <XCircle size={11} />}
-                      {status === 'L' && <AlertCircle size={11} />}
+                      {status === 'P' && <CheckCircle2 size={18} />}
+                      {status === 'A' && <XCircle size={18} />}
+                      {status === 'L' && <AlertCircle size={18} />}
                       {label}
                     </span>
                   ) : (

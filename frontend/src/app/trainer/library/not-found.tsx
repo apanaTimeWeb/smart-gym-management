@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Renders the not-found route/UI for the owning Trainer feature; data access remains in the feature API/query layer.
+// RESPONSIBILITY: Renders the not-found route/UI for the owning Trainer feature; data access remains in the feature API/query layer.
 import { LibraryUrlConfig } from '@/app/trainer/library/library_url_config';
 import Link from 'next/link';
 import { SearchX } from 'lucide-react';
@@ -8,7 +8,7 @@ export default function NotFound() {
   return (
     <div className="flex flex-col items-center justify-center min-h-96 p-8 text-center">
       <div className="bg-primary-subtle p-4 rounded-full mb-4">
-        <SearchX size={48} className="text-primary" />
+        <SearchX size={18} className="text-primary" />
       </div>
       <h2 className="text-2xl font-bold text-primary mb-2">Page Not Found</h2>
       <p className="text-secondary max-w-md mb-6">

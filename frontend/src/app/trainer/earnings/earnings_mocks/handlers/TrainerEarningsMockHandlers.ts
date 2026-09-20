@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Provides feature-owned mutable/read mock behavior for earnings queries and server-side ledger filters.
 import { http, HttpResponse, delay } from 'msw';
 import { env } from '@/config/env';
-import { MOCK_EARNINGS_DATA } from '@/app/trainer/earnings/earnings_fixtures/TrainerEarningsMockData';
+import { MOCK_EARNINGS_DATA } from '@/app/trainer/earnings/earnings_mocks/fixtures/TrainerEarningsMockData';
 import { EarningsUrlConfig } from '@/app/trainer/earnings/earnings_url_config';
 
 const BASE = env.NEXT_PUBLIC_API_URL;
@@ -15,6 +15,8 @@ export const trainerEarningsHandlers = [
     const endDate = url.searchParams.get('endDate') ?? '';
     const page = Math.max(1, Number(url.searchParams.get('page') ?? '1'));
     const limit = Math.max(1, Number(url.searchParams.get('limit') ?? '10'));
+    const sortBy = url.searchParams.get('sortBy') ?? 'date';
+    const sortDirection = url.searchParams.get('sortDirection') === 'asc' ? 'asc' : 'desc';
 
     const filteredHistory = MOCK_EARNINGS_DATA.history.filter((row) => {
       const matchesSearch = !search || row.description.toLowerCase().includes(search);
@@ -23,8 +25,17 @@ export const trainerEarningsHandlers = [
       return matchesSearch && matchesStart && matchesEnd;
     });
 
+    const sortedHistory = [...filteredHistory].sort((left, right) => {
+      const leftValue = left[sortBy as keyof typeof left];
+      const rightValue = right[sortBy as keyof typeof right];
+      const leftKey = typeof leftValue === 'string' ? leftValue.toLowerCase() : Number(leftValue ?? 0);
+      const rightKey = typeof rightValue === 'string' ? rightValue.toLowerCase() : Number(rightValue ?? 0);
+      const comparison = leftKey < rightKey ? -1 : leftKey > rightKey ? 1 : 0;
+      return sortDirection === 'asc' ? comparison : -comparison;
+    });
+
     const offset = (page - 1) * limit;
-    const history = filteredHistory.slice(offset, offset + limit);
+    const history = sortedHistory.slice(offset, offset + limit);
     return HttpResponse.json({
       success: true,
       message: 'Earnings data fetched successfully',

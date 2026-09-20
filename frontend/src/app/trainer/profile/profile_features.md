@@ -1,7 +1,7 @@
 # Trainer Profile — Feature Map
 
 ## Module Purpose
-The Profile module lets each Trainer view and update their own profile information and change their password. Personal data is loaded from the Trainer profile API and edited through separate RHF/Zod forms. Password inputs always provide visibility toggles and submissions are disabled while pending. Trainers cannot edit other users or access Manager-only payroll/HR information.
+The Profile module lets a trainer view and update their own profile details and change their password. The feature uses React Hook Form and Zod for non-trivial form validation and protects unsaved changes during navigation. Successful writes reconcile the Query cache from the authoritative backend response and show the backend message. Editing another user's profile or role-level authentication administration is outside this module.
 
 ## Directory Structure
 | Folder | Responsibility | Key Files |
@@ -18,6 +18,11 @@ The Profile module lets each Trainer view and update their own profile informati
 | View profile | `/trainer/profile` | `GET /trainer/profile` | Live via API/MSW |
 | Edit personal info | `/trainer/profile` | `PATCH /trainer/profile` | Live via API/MSW |
 | Change password | `/trainer/profile` | `PATCH /trainer/profile/password` | Live via API/MSW |
+
+## Approved External Dependencies
+- Application infrastructure: `@/lib/api`, `@/lib/formatters`, and approved zero-business Trainer UI/feedback infrastructure used directly by this module.
+- Business Feature Dependencies: None.
+- Role-Level Business Dependencies: None.
 
 ## Data and State Architecture
 TanStack Query owns the fetched profile. React Hook Form owns each form's draft state and dirty state. Password visibility is private component UI state. No backend profile response is stored in Zustand or Context.
@@ -38,7 +43,7 @@ TanStack Query owns the fetched profile. React Hook Form owns each form's draft 
 | Specializations | `specialization[]` | profile response/form constants |
 | Password status | backend `message` | password mutation response |
 
-## User Flows
+## User Flows & Interactions
 ### Flow 1: Update Personal Profile
 1. Trainer opens `/trainer/profile` and the profile query loads the current server-backed profile.
 2. Trainer edits permitted personal fields in the RHF form.

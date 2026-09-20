@@ -1,5 +1,5 @@
-'use client';
 // RESPONSIBILITY: Renders permission-aware Trainer dashboard shortcuts and navigates only to supported Trainer routes.
+'use client';
 import { Dumbbell, Utensils, Users, CalendarCheck } from 'lucide-react';
 import Link from 'next/link';
 import { DashboardUrlConfig } from '@/app/trainer/dashboard/dashboard_url_config';

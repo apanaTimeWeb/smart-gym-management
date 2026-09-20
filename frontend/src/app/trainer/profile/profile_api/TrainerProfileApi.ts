@@ -14,12 +14,12 @@ export const trainerProfileApi = {
     const raw = await apiFetch<ApiResponse<unknown>>(BASE);
     return createTrainerApiResponseSchema(TrainerProfileDataSchema).parse(raw);
   },
-  updateProfile: async (body: UpdateTrainerProfilePayload) => {
-    const raw = await apiFetch<ApiResponse<unknown>>(BASE, { method: 'PATCH', body: JSON.stringify(body) });
+  updateProfile: async (body: UpdateTrainerProfilePayload, idempotencyKey: string) => {
+    const raw = await apiFetch<ApiResponse<unknown>>(BASE, { method: 'PATCH', body: JSON.stringify(body), headers: { 'Idempotency-Key': idempotencyKey } });
     return createTrainerApiResponseSchema(TrainerProfileDataSchema).parse(raw);
   },
-  updatePassword: async (body: UpdateTrainerPasswordPayload) => {
-    const raw = await apiFetch<ApiResponse<unknown>>(ProfileUrlConfig.BACKEND_API.PASSWORD, { method: 'PATCH', body: JSON.stringify(body) });
+  updatePassword: async (body: UpdateTrainerPasswordPayload, idempotencyKey: string) => {
+    const raw = await apiFetch<ApiResponse<unknown>>(ProfileUrlConfig.BACKEND_API.PASSWORD, { method: 'PATCH', body: JSON.stringify(body), headers: { 'Idempotency-Key': idempotencyKey } });
     return TrainerPasswordResponseSchema.parse(raw);
   },
 };

@@ -617,39 +617,59 @@ export function getMockResponse(path: string): unknown {
   // Trainer Specific
   if (p.includes('/trainer/dashboard')) return ok(TRAINER_DASHBOARD, 'Trainer stats fetched');
 
+  if (p.includes('/trainer/library/diet-plans')) {
+    const { MOCK_LIBRARY_DIET_PLANS } = require('@/app/trainer/library/library_mocks/fixtures/TrainerLibraryMockData');
+    return ok({ dietPlans: MOCK_LIBRARY_DIET_PLANS, total: MOCK_LIBRARY_DIET_PLANS.length }, 'Trainer diet plans fetched');
+  }
+
+  if (p.includes('/trainer/library/assigned-members')) {
+    const { MOCK_LIBRARY_ASSIGNED_MEMBERS } = require('@/app/trainer/library/library_mocks/fixtures/TrainerLibraryMockData');
+    return ok(MOCK_LIBRARY_ASSIGNED_MEMBERS, 'Trainer assigned members fetched');
+  }
+
   if (p.includes('/trainer/earnings')) {
-    const { MOCK_EARNINGS_DATA } = require('@/app/trainer/earnings/earnings_fixtures/TrainerEarningsMockData');
+    const { MOCK_EARNINGS_DATA } = require('@/app/trainer/earnings/earnings_mocks/fixtures/TrainerEarningsMockData');
     return ok(MOCK_EARNINGS_DATA, 'Trainer earnings fetched');
   }
 
   if (p.includes('/trainer/attendance')) {
-    const { MOCK_ATTENDANCE_RECORDS } = require('@/app/trainer/attendance/attendance_fixtures/TrainerAttendanceMockData');
-    return ok({ data: MOCK_ATTENDANCE_RECORDS, total: MOCK_ATTENDANCE_RECORDS.length }, 'Trainer attendance fetched');
+    const { MOCK_ATTENDANCE_RECORDS } = require('@/app/trainer/attendance/attendance_mocks/fixtures/TrainerAttendanceMockData');
+    return ok({ attendance: MOCK_ATTENDANCE_RECORDS, total: MOCK_ATTENDANCE_RECORDS.length }, 'Trainer attendance fetched');
   }
 
   if (p.includes('/trainer/members')) {
-    const { MOCK_TRAINER_MEMBERS } = require('@/app/trainer/members/members_fixtures/TrainerMembersMockData');
-    return ok({ data: MOCK_TRAINER_MEMBERS, total: MOCK_TRAINER_MEMBERS.length }, 'Trainer members fetched');
+    const { MOCK_MEMBERS } = require('@/app/trainer/members/members_mocks/fixtures/TrainerMembersMockData');
+    return ok({ members: MOCK_MEMBERS, total: MOCK_MEMBERS.length, page: 1, limit: 50 }, 'Trainer members fetched');
   }
 
   if (p.includes('/trainer/schedule')) {
-    const { MOCK_TRAINER_SCHEDULE_DATA } = require('@/app/trainer/schedule/schedule_fixtures/TrainerScheduleMockData');
-    return ok(MOCK_TRAINER_SCHEDULE_DATA, 'Trainer schedule fetched');
+    const { MOCK_AVAILABILITY, MOCK_LEAVES } = require('@/app/trainer/schedule/schedule_mocks/fixtures/TrainerScheduleMockData');
+    return ok({ availability: MOCK_AVAILABILITY, leaves: MOCK_LEAVES }, 'Trainer schedule fetched');
   }
 
-  if (p.includes('/trainer/progress')) {
-    const { MOCK_TRAINER_PROGRESS_RECORDS } = require('@/app/trainer/progress-tracking/progress_fixtures/TrainerProgressMockData');
-    return ok({ data: MOCK_TRAINER_PROGRESS_RECORDS, total: MOCK_TRAINER_PROGRESS_RECORDS.length }, 'Trainer progress fetched');
+  if (p.includes('/trainer/progress-tracking/members')) {
+    const { MOCK_PROGRESS_MEMBERS } = require('@/app/trainer/progress-tracking/progress-tracking_mocks/fixtures/TrainerProgressMockData');
+    return ok(MOCK_PROGRESS_MEMBERS, 'Trainer progress members fetched');
+  }
+
+  if (p.includes('/trainer/progress-tracking/') && p.includes('/entries')) {
+    const { MOCK_PROGRESS_ENTRIES } = require('@/app/trainer/progress-tracking/progress-tracking_mocks/fixtures/TrainerProgressMockData');
+    return ok({ entries: MOCK_PROGRESS_ENTRIES, total: MOCK_PROGRESS_ENTRIES.length, page: 1, limit: 50 }, 'Trainer progress fetched');
   }
   
+  if (p.includes('/trainer/workout/exercises')) {
+    const { MOCK_EXERCISES } = require('@/app/trainer/workout/workout_mocks/fixtures/TrainerWorkoutMockData');
+    return ok({ exercises: MOCK_EXERCISES, total: MOCK_EXERCISES.length, page: 1, limit: 50 }, 'Trainer exercises fetched');
+  }
+
   if (p.includes('/trainer/workout')) {
-    const { MOCK_TRAINER_WORKOUT_PLANS } = require('@/app/trainer/workout/workout_fixtures/TrainerWorkoutMockData');
-    return ok({ data: MOCK_TRAINER_WORKOUT_PLANS, total: MOCK_TRAINER_WORKOUT_PLANS.length }, 'Trainer workouts fetched');
+    const { MOCK_WORKOUTS } = require('@/app/trainer/workout/workout_mocks/fixtures/TrainerWorkoutMockData');
+    return ok({ workouts: MOCK_WORKOUTS, total: MOCK_WORKOUTS.length, page: 1, limit: 50 }, 'Trainer workouts fetched');
   }
 
   if (p.includes('/trainer/sessions')) {
-    const { MOCK_TRAINER_SESSIONS } = require('@/app/trainer/sessions/sessions_fixtures/TrainerSessionsMockData');
-    return ok({ data: MOCK_TRAINER_SESSIONS, total: MOCK_TRAINER_SESSIONS.length }, 'Trainer sessions fetched');
+    const { MOCK_TRAINER_SESSIONS } = require('@/app/trainer/sessions/sessions_mocks/fixtures/TrainerSessionsMockData');
+    return ok(MOCK_TRAINER_SESSIONS, 'Trainer sessions fetched');
   }
   // Admin Module Specific
   if (p.includes('/admin/dashboard'))    return ok(DASHBOARD_STATS, 'Admin dashboard stats fetched');

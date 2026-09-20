@@ -1,5 +1,5 @@
-'use client';
 // RESPONSIBILITY: Owns the notifications page interaction surface: mark-read, mark-all-read, pagination, and error presentation.
+'use client';
 import { Loader2 } from 'lucide-react';
 import TrainerNotificationsList from '@/app/trainer/notifications/notifications_components/TrainerNotificationsList/TrainerNotificationsList';
 import { useTrainerNotificationsLogic } from '@/app/trainer/notifications/notifications_hooks/useTrainerNotificationsLogic';
@@ -61,7 +61,7 @@ export default function TrainerNotificationsContent() {
               className="min-h-11 flex items-center gap-2 px-6 py-2.5 text-sm font-semibold text-primary bg-card border border-border rounded-xl hover:bg-input motion-safe:transition-colors disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
               {loadingMore ? (
-                <><Loader2 size={16} className="motion-safe:animate-spin" aria-hidden="true" /> Loading...</>
+                <><Loader2 size={18} className="motion-safe:animate-spin" aria-hidden="true" /> Loading...</>
               ) : (
                 'Load More'
               )}

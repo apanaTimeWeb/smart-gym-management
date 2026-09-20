@@ -1,5 +1,5 @@
-﻿'use client';
 // RESPONSIBILITY: Renders the member's assigned diet plan and handles diet plan assignment for trainers.
+'use client';
 // DATA FLOW: Members selected-member state -> profile view -> feature-local member API contract
 
 import { useState } from 'react';
@@ -8,12 +8,15 @@ import { useTrainerMembersStore } from '@/app/trainer/members/members_store/useT
 import { useTrainerSelectedMember } from '@/app/trainer/members/members_queries/useTrainerSelectedMember';
 import TrainerSearchableDropdown from '@/app/trainer/trainer_components/TrainerShared/TrainerSearchableDropdown/TrainerSearchableDropdown';
 import { displayValue } from '@/lib/formatters';
+import { MembersUrlConfig } from '@/app/trainer/members/members_url_config';
 import { useTrainerMembersMutations } from '@/app/trainer/members/members_queries/useTrainerMembersMutations';
 import { useTrainerMemberDietPlansQuery } from '@/app/trainer/members/members_queries/useTrainerMembersQuery';
+import { useTrainerIdempotencyKey } from '@/app/trainer/trainer_utils/useTrainerIdempotencyKey';
 
 export default function TrainerMembersProfileDiet() {
   const { member: selectedMember } = useTrainerSelectedMember();
   const { assignDiet } = useTrainerMembersMutations();
+  const actionKeys = useTrainerIdempotencyKey();
   const [isAssigning, setIsAssigning] = useState(false);
   const [selectedDietId, setSelectedDietId] = useState('');
   const [saving, setSaving] = useState(false);
@@ -29,10 +32,12 @@ export default function TrainerMembersProfileDiet() {
     if (!selectedDietId) return;
     const selected = availableDiets.find((d) => String(d.id) === selectedDietId) || null;
     setSaving(true);
+    const actionId = `assign-diet-${selectedMember.id}`;
     try {
-      await assignDiet.mutateAsync({ id: selectedMember.id, diet: selected });
+      await assignDiet.mutateAsync({ id: selectedMember.id, diet: selected, idempotencyKey: actionKeys.begin(actionId) });
       setIsAssigning(false);
       setSelectedDietId('');
+      actionKeys.clear(actionId);
     } finally {
       setSaving(false);
     }
@@ -51,7 +56,7 @@ export default function TrainerMembersProfileDiet() {
       `Macros: Protein ${displayValue(diet.protein)}g Â· Carbs ${displayValue(diet.carbs)}g Â· Fats ${displayValue(diet.fats)}g\n\n` +
       `*Meal Schedule:*\n${mealsText}\n\n` +
       '';
-    window.open(`https://wa.me/${selectedMember.phone?.replace(/[^0-9]/g, '') || ''}?text=${encodeURIComponent(text)}`, '_blank');
+    window.open(MembersUrlConfig.BACKEND_API.WHATSAPP(selectedMember.phone ?? '', text), '_blank', 'noopener,noreferrer');
   };
 
   return (
@@ -66,26 +71,26 @@ export default function TrainerMembersProfileDiet() {
             <>
               <button type="button" 
                 onClick={handleShareWhatsApp}
-                className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page flex items-center gap-2 px-4 py-2 bg-success text-on-success rounded-xl text-sm font-semibold hover:opacity-90 shadow-card motion-safe:transition-all motion-safe:active:scale-95"
+                className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page flex items-center gap-2 px-4 py-2 bg-success text-on-success rounded-xl text-sm font-semibold hover:bg-primary-hover shadow-card motion-safe:transition-all motion-safe:active:scale-95"
               >
-                <MessageCircle size={16} /> Share via WhatsApp
+                <MessageCircle size={18} /> Share via WhatsApp
               </button>
               <button type="button" 
                 onClick={() => {
                   setSelectedDietId(diet.id || '');
                   setIsAssigning(true);
                 }}
-                className="flex items-center gap-2 px-4 py-2 bg-input text-primary border border-border rounded-xl text-sm font-semibold hover:bg-primary-subtle motion-safe:transition-all motion-safe:active:scale-95"
+                className="flex items-center gap-2 px-4 py-2 bg-input text-primary border border-border rounded-xl text-sm font-semibold hover:bg-primary-subtle motion-safe:transition-all motion-safe:active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
               >
-                <RefreshCw size={15} /> Change Diet
+                <RefreshCw size={18} /> Change Diet
               </button>
             </>
           ) : !isAssigning ? (
             <button type="button" 
               onClick={() => setIsAssigning(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary rounded-xl text-sm font-semibold hover:shadow-card hover:shadow-primary/30 motion-safe:transition-all motion-safe:active:scale-95"
+              className="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary rounded-xl text-sm font-semibold hover:shadow-card hover:border-primary motion-safe:transition-all motion-safe:active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
             >
-              <Plus size={16} /> Assign Diet Plan
+              <Plus size={18} /> Assign Diet Plan
             </button>
           ) : null}
         </div>
@@ -100,7 +105,7 @@ export default function TrainerMembersProfileDiet() {
             </h4>
             <button type="button" 
               onClick={() => setIsAssigning(false)}
-              className="text-xs text-secondary hover:text-primary font-medium"
+              className="text-xs text-secondary hover:text-primary font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
             >
               Cancel
             </button>
@@ -123,7 +128,7 @@ export default function TrainerMembersProfileDiet() {
                   disabled={!selectedDietId || saving}
                   className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page px-5 py-2.5 bg-primary text-on-primary rounded-xl text-sm font-semibold hover:shadow-card motion-safe:transition-all disabled:opacity-50 flex items-center gap-2"
                 >
-                  <Check size={16} /> {saving ? 'Assigning...' : 'Confirm Assignment'}
+                  <Check size={18} /> {saving ? 'Assigning...' : 'Confirm Assignment'}
                 </button>
               </div>
             </div>
@@ -160,7 +165,7 @@ export default function TrainerMembersProfileDiet() {
               <div className="bg-floating border border-border rounded-xl px-4 py-3 text-right">
                 <p className="text-xs text-secondary">Target Daily Calories</p>
                 <p className="text-2xl font-black text-primary flex items-center gap-1 justify-end">
-                  <Flame size={20} className="text-danger" /> {displayValue(diet.calories)} <span className="text-xs text-secondary font-normal">kcal</span>
+                  <Flame size={18} className="text-danger" /> {displayValue(diet.calories)} <span className="text-xs text-secondary font-normal">kcal</span>
                 </p>
               </div>
             </div>
@@ -185,7 +190,7 @@ export default function TrainerMembersProfileDiet() {
           {/* Meals Schedule */}
           <div>
             <h4 className="text-sm font-semibold text-secondary uppercase tracking-wider mb-3 flex items-center gap-2">
-              <Utensils size={15} /> Daily Meal Schedule
+              <Utensils size={18} /> Daily Meal Schedule
             </h4>
             {diet.meals && diet.meals.length > 0 ? (
               <div className="space-y-2.5">
@@ -222,7 +227,7 @@ export default function TrainerMembersProfileDiet() {
       ) : !isAssigning ? (
         <div className="bg-card border border-dashed border-border rounded-2xl p-12 text-center space-y-3">
           <div className="w-14 h-14 rounded-full bg-success-bg text-success flex items-center justify-center mx-auto">
-            <Apple size={26} />
+            <Apple size={18} />
           </div>
           <h4 className="text-lg font-bold text-primary">No Diet Plan Assigned</h4>
           <p className="text-sm text-secondary max-w-md mx-auto">
@@ -230,9 +235,9 @@ export default function TrainerMembersProfileDiet() {
           </p>
           <button type="button"
             onClick={() => setIsAssigning(true)}
-            className="mt-2 inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-on-primary rounded-xl text-sm font-semibold hover:shadow-card motion-safe:transition-all motion-safe:duration-base"
+            className="mt-2 inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-on-primary rounded-xl text-sm font-semibold hover:shadow-card motion-safe:transition-all motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
           >
-            <Plus size={16} /> Assign Diet Plan
+            <Plus size={18} /> Assign Diet Plan
           </button>
         </div>
       ) : null}

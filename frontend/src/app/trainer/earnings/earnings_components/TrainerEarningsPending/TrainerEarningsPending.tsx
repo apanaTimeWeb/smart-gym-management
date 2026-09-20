@@ -1,9 +1,9 @@
-'use client';
 // RESPONSIBILITY: Renders the TrainerEarningsPending UI for the owning Trainer feature; data access remains in the feature API/query layer.
+'use client';
 import { CalendarClock } from 'lucide-react';
 import { useTrainerEarningsQuery } from '@/app/trainer/earnings/earnings_queries/useTrainerEarningsQuery';
 import { PAYOUT_STATUS_STYLES } from '@/app/trainer/earnings/earnings_utils/TrainerEarningsSharedConstants';
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrencyFromMinorUnits, formatNumber } from '@/lib/formatters';
 import { formatDate } from '@/lib/formatters';
 
 export default function TrainerEarningsPending() {
@@ -22,7 +22,7 @@ export default function TrainerEarningsPending() {
       <div className="p-5 flex-1 overflow-y-auto custom-scrollbar space-y-4">
         {pendingPayouts.length === 0 ? (
           <div className="h-full flex flex-col items-center justify-center text-center">
-            <CalendarClock size={32} className="text-disabled mb-3" />
+            <CalendarClock size={18} className="text-disabled mb-3" />
             <p className="text-sm font-semibold text-primary">No pending payouts</p>
             <p className="text-xs text-secondary mt-1">You are all caught up!</p>
           </div>
@@ -33,7 +33,7 @@ export default function TrainerEarningsPending() {
               <div key={p.id} className="p-4 rounded-xl border border-border bg-page flex flex-col gap-3">
                 <div className="flex justify-between items-start">
                   <div>
-                    <p className="text-sm font-semibold text-primary">{formatCurrency(p.amount)}</p>
+                    <p className="text-sm font-semibold text-primary">{formatCurrencyFromMinorUnits(p.amount, 'INR')}</p>
                     <p className="text-xs text-secondary mt-0.5">{p.period}</p>
                   </div>
                   <span className={`px-2 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wider ${style?.bg || 'bg-input'} ${style?.text || 'text-secondary'}`}>
@@ -41,7 +41,7 @@ export default function TrainerEarningsPending() {
                   </span>
                 </div>
                 <div className="flex items-center gap-1.5 text-xs text-secondary pt-3 border-t border-border">
-                  <CalendarClock size={13} />
+                  <CalendarClock size={18} />
                   <span>Due by: {formatDate(p.dueDate)}</span>
                 </div>
               </div>

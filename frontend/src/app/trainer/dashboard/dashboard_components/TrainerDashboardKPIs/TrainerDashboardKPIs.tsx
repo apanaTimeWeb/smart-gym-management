@@ -1,9 +1,10 @@
-'use client';
 // RESPONSIBILITY: Renders the two rows of KPI metric stat cards on the dashboard using live data from the Dashboard TanStack Query response.
+'use client';
 import { useTrainerDashboardQuery } from '@/app/trainer/dashboard/dashboard_queries/useTrainerDashboardQuery';
 import TrainerStatCard from '@/app/trainer/trainer_components/TrainerShared/TrainerStatCard';
 import { Users, CalendarCheck, Clock, Dumbbell } from 'lucide-react';
 import { useDateRangeSuffix } from '@/lib/useDateRangeSuffix';
+import { formatNumber } from '@/lib/formatters';
 
 export default function TrainerDashboardKPIs() {
   const { data: stats } = useTrainerDashboardQuery();
@@ -17,7 +18,7 @@ export default function TrainerDashboardKPIs() {
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-4">
         <TrainerStatCard
           title={`Today's Sessions${dateSuffix}`}
-          value={s.todaysSessions.toLocaleString()}
+          value={formatNumber(s.todaysSessions)}
           change={`${s.completedSessions}/${s.todaysSessions} Completed`}
           changeType="neutral"
           icon={Clock}
@@ -26,7 +27,7 @@ export default function TrainerDashboardKPIs() {
         />
         <TrainerStatCard
           title={`My Members${dateSuffix}`}
-          value={s.myMembersCount.toLocaleString()}
+          value={formatNumber(s.myMembersCount)}
           change="Assigned to you"
           changeType="neutral"
           icon={Users}
@@ -35,7 +36,7 @@ export default function TrainerDashboardKPIs() {
         />
         <TrainerStatCard
           title={`Today's Attendance${dateSuffix}`}
-          value={s.todaysAttendance.toLocaleString()}
+          value={formatNumber(s.todaysAttendance)}
           change="Members present today"
           changeType="neutral"
           icon={CalendarCheck}
@@ -44,7 +45,7 @@ export default function TrainerDashboardKPIs() {
         />
         <TrainerStatCard
           title={`Pending Plans${dateSuffix}`}
-          value={s.pendingWorkoutPlans.toLocaleString()}
+          value={formatNumber(s.pendingWorkoutPlans)}
           change="Workout plans to create"
           changeType="down"
           icon={Dumbbell}

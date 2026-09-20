@@ -1,7 +1,7 @@
 import { http, HttpResponse, delay } from 'msw';
 import { StatusCodes } from 'http-status-codes';
 import { env } from '@/config/env';
-import { MOCK_MEMBERS, MOCK_MEMBER_STATS } from '@/app/trainer/members/members_fixtures/TrainerMembersMockData';
+import { MOCK_MEMBERS, MOCK_MEMBER_STATS } from '@/app/trainer/members/members_mocks/fixtures/TrainerMembersMockData';
 import { MemberSchema } from '@/app/trainer/members/members_types/TrainerMembers.schema';
 import { MembersUrlConfig } from '@/app/trainer/members/members_url_config';
 
@@ -21,6 +21,8 @@ export const trainerMembersHandlers = [
     const progressStatus = url.searchParams.get('progressStatus') || 'All';
     const page = parseInt(url.searchParams.get('page') || '1', 10);
     const limit = parseInt(url.searchParams.get('limit') || '50', 10);
+    const sortBy = url.searchParams.get('sortBy') || 'name';
+    const sortDirection = url.searchParams.get('sortDirection') === 'asc' ? 'asc' : 'desc';
 
     let filtered = [...membersDB];
     if (search) {
@@ -33,6 +35,14 @@ export const trainerMembersHandlers = [
       filtered = filtered.filter(m => m.progressStatus === progressStatus);
     }
 
+    filtered.sort((left, right) => {
+      const leftValue = left[sortBy as keyof typeof left];
+      const rightValue = right[sortBy as keyof typeof right];
+      const leftKey = String(leftValue ?? '').toLowerCase();
+      const rightKey = String(rightValue ?? '').toLowerCase();
+      const result = leftKey.localeCompare(rightKey);
+      return sortDirection === 'asc' ? result : -result;
+    });
     const paginated = filtered.slice((page - 1) * limit, page * limit);
 
     return HttpResponse.json({

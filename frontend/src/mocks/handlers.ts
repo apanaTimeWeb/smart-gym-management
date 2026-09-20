@@ -29,10 +29,10 @@ import { trainerAttendanceHandlers } from '@/app/trainer/attendance/attendance_m
 import { trainerDashboardHandlers } from '@/app/trainer/dashboard/dashboard_mocks/handlers/TrainerDashboardMockHandlers';
 import { trainerEarningsHandlers } from '@/app/trainer/earnings/earnings_mocks/handlers/TrainerEarningsMockHandlers';
 import { trainerMembersHandlers } from '@/app/trainer/members/members_mocks/handlers/TrainerMembersMockHandlers';
-import { trainerProgressHandlers } from '@/app/trainer/progress-tracking/progress_mocks/handlers/TrainerProgressMockHandlers';
+import { trainerProgressHandlers } from '@/app/trainer/progress-tracking/progress-tracking_mocks/handlers/TrainerProgressMockHandlers';
 import { trainerScheduleHandlers } from '@/app/trainer/schedule/schedule_mocks/handlers/TrainerScheduleMockHandlers';
 import { trainerSessionsHandlers } from '@/app/trainer/sessions/sessions_mocks/handlers/TrainerSessionsMockHandlers';
-import { trainerWorkoutHandlers } from '@/app/trainer/workout/workout_mocks/handlers/TrainerWorkoutMockHandlers';
+import { trainerWorkoutMockHandlers } from '@/app/trainer/workout/workout_mocks/handlers/TrainerWorkoutMockHandlers';
 import { trainerLibraryHandlers } from '@/app/trainer/library/library_mocks/handlers/TrainerLibraryMockHandlers';
 import { trainerProfileHandlers } from '@/app/trainer/profile/profile_mocks/handlers/TrainerProfileMockHandlers';
 import { trainerNotificationsHandlers } from '@/app/trainer/notifications/notifications_mocks/handlers/TrainerNotificationsMockHandlers';
@@ -72,7 +72,7 @@ export const handlers = [
   ...trainerProgressHandlers,
   ...trainerScheduleHandlers,
   ...trainerSessionsHandlers,
-  ...trainerWorkoutHandlers,
+  ...trainerWorkoutMockHandlers,
   ...trainerLibraryHandlers,
   ...trainerProfileHandlers,
   ...trainerNotificationsHandlers,

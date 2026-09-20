@@ -1,15 +1,12 @@
 import { z } from 'zod';
+import { createTrainerApiResponseSchema } from '@/app/trainer/trainer_utils/TrainerApiResponseSchema';
 
 export const TrainerMemberAttendanceDaySchema = z.object({
   day: z.number().int().nonnegative(),
   status: z.string(),
 });
 
-export const TrainerMemberAttendanceResponseSchema = z.object({
-  success: z.boolean(),
-  message: z.string(),
-  data: z.array(TrainerMemberAttendanceDaySchema).nullable().optional(),
-});
+export const TrainerMemberAttendanceResponseSchema = createTrainerApiResponseSchema(z.array(TrainerMemberAttendanceDaySchema));
 
 export const TrainerMemberDietPlanListItemSchema = z.object({
   id: z.string(), name: z.string(), goal: z.string().optional(), calories: z.number().optional(),
@@ -17,9 +14,7 @@ export const TrainerMemberDietPlanListItemSchema = z.object({
   description: z.string().optional(), meals: z.array(z.union([z.string(), z.object({ name: z.string().optional(), time: z.string().optional(), items: z.string().optional(), description: z.string().optional() })])).optional(),
 });
 
-export const TrainerMemberDietPlansResponseSchema = z.object({
-  success: z.boolean(), message: z.string(), data: z.object({ dietPlans: z.array(TrainerMemberDietPlanListItemSchema), total: z.number().int().nonnegative() }).nullable().optional(),
-});
+export const TrainerMemberDietPlansResponseSchema = createTrainerApiResponseSchema(z.object({ dietPlans: z.array(TrainerMemberDietPlanListItemSchema), total: z.number().int().nonnegative() }));
 
 export const TrainerMemberWorkoutExerciseSchema = z.object({
   id: z.string().optional(), name: z.string(), sets: z.number(), reps: z.union([z.string(), z.number()]), restTime: z.string().optional(), weight: z.string().optional(),
@@ -31,9 +26,7 @@ export const TrainerMemberWorkoutPlanSchema = z.object({
   workoutExercises: z.array(TrainerMemberWorkoutExerciseSchema).optional(),
 });
 
-export const TrainerMemberWorkoutPlansResponseSchema = z.object({
-  success: z.boolean(), message: z.string(), data: z.object({ workouts: z.array(TrainerMemberWorkoutPlanSchema), total: z.number().int().nonnegative() }).nullable().optional(),
-});
+export const TrainerMemberWorkoutPlansResponseSchema = createTrainerApiResponseSchema(z.object({ workouts: z.array(TrainerMemberWorkoutPlanSchema), total: z.number().int().nonnegative() }));
 
 export const TrainerMemberProgressEntrySchema = z.object({
   id: z.string(), memberId: z.string(), date: z.string(), weightKg: z.number(), heightCm: z.number().nullable().optional(), bmi: z.number().nullable().optional(),
@@ -41,9 +34,7 @@ export const TrainerMemberProgressEntrySchema = z.object({
   recordedBy: z.string().optional(), progressPhotos: z.array(z.string()).optional(),
 });
 
-export const TrainerMemberProgressEntriesResponseSchema = z.object({
-  success: z.boolean(), message: z.string(), data: z.array(TrainerMemberProgressEntrySchema).nullable().optional(),
-});
+export const TrainerMemberProgressEntriesResponseSchema = createTrainerApiResponseSchema(z.array(TrainerMemberProgressEntrySchema));
 
 export type TrainerMemberAttendanceDay = z.infer<typeof TrainerMemberAttendanceDaySchema>;
 export type TrainerMemberDietPlanListItem = z.infer<typeof TrainerMemberDietPlanListItemSchema>;

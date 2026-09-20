@@ -1,7 +1,7 @@
 import { http, HttpResponse, delay } from 'msw';
 import { StatusCodes } from 'http-status-codes';
 import { env } from '@/config/env';
-import { MOCK_LIBRARY_DIET_PLANS, MOCK_LIBRARY_ASSIGNED_MEMBERS } from '@/app/trainer/library/library_fixtures/TrainerLibraryMockData';
+import { MOCK_LIBRARY_DIET_PLANS, MOCK_LIBRARY_ASSIGNED_MEMBERS } from '@/app/trainer/library/library_mocks/fixtures/TrainerLibraryMockData';
 import { LibraryUrlConfig } from '@/app/trainer/library/library_url_config';
 
 const BASE = env.NEXT_PUBLIC_API_URL;

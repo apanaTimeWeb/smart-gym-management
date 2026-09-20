@@ -4,6 +4,7 @@
 import { useCallback, useState } from 'react';
 import type { DietPlan } from '@/app/trainer/library/library_types/TrainerLibrary_types';
 
+/** Owns useTrainerLibraryDiet behavior for this Trainer module. */
 export function useTrainerLibraryDiet() {
   const [showDietModal, setShowDietModal] = useState(false);
   const [selectedDiet, setSelectedDiet] = useState<DietPlan | null>(null);

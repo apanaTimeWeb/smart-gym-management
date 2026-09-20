@@ -1,5 +1,5 @@
-'use client';
 // RESPONSIBILITY: Renders the Earnings-owned URL date-range control; API/query behavior remains in the Earnings query/API layers.
+'use client';
 import type { ChangeEvent } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { Calendar } from 'lucide-react';
@@ -44,19 +44,19 @@ export default function TrainerEarningsDateFilterDropdown() {
   return (
     <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
       <div className="relative min-w-40">
-        <Calendar size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary pointer-events-none" aria-hidden="true" />
+        <Calendar size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary pointer-events-none" aria-hidden="true" />
         <label className="sr-only" htmlFor="trainer-earnings-range">Earnings date range</label>
-        <select id="trainer-earnings-range" value={currentRange} onChange={handleRangeChange} className="w-full pl-9 pr-8 py-2 text-sm bg-input border border-border rounded-lg text-primary focus:outline-none focus:ring-2 focus:ring-primary appearance-none cursor-pointer">
+        <select id="trainer-earnings-range" value={currentRange} onChange={handleRangeChange} className="w-full pl-9 pr-8 py-2 text-sm bg-input border border-border rounded-lg text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary appearance-none cursor-pointer">
           {TRAINER_EARNINGS_DATE_RANGE_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
         </select>
       </div>
       {currentRange === 'custom' && (
         <div className="flex items-center gap-2">
           <label className="sr-only" htmlFor="trainer-earnings-start-date">Earnings start date</label>
-          <input id="trainer-earnings-start-date" type="date" value={customStartDate} onChange={(event) => handleDateChange('startDate', event.target.value)} className="px-3 py-2 text-sm bg-input border border-border rounded-lg text-primary focus:outline-none focus:ring-2 focus:ring-primary" />
+          <input id="trainer-earnings-start-date" type="date" value={customStartDate} onChange={(event) => handleDateChange('startDate', event.target.value)} className="px-3 py-2 text-sm bg-input border border-border rounded-lg text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" />
           <span className="text-secondary text-sm font-medium" aria-hidden="true">to</span>
           <label className="sr-only" htmlFor="trainer-earnings-end-date">Earnings end date</label>
-          <input id="trainer-earnings-end-date" type="date" value={customEndDate} onChange={(event) => handleDateChange('endDate', event.target.value)} className="px-3 py-2 text-sm bg-input border border-border rounded-lg text-primary focus:outline-none focus:ring-2 focus:ring-primary" />
+          <input id="trainer-earnings-end-date" type="date" value={customEndDate} onChange={(event) => handleDateChange('endDate', event.target.value)} className="px-3 py-2 text-sm bg-input border border-border rounded-lg text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" />
         </div>
       )}
     </div>

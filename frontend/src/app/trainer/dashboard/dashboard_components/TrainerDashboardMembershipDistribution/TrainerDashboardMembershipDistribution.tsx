@@ -1,5 +1,5 @@
-'use client';
 // RESPONSIBILITY: Renders membership distribution returned by the Dashboard server contract.
+'use client';
 // DATA FLOW: Dashboard API → useTrainerDashboardQuery → member-plan distribution → responsive visualization.
 import { Users } from 'lucide-react';
 import { useTrainerDashboardQuery } from '@/app/trainer/dashboard/dashboard_queries/useTrainerDashboardQuery';

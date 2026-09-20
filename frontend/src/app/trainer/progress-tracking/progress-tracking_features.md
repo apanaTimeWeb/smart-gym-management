@@ -1,19 +1,19 @@
 # Trainer Progress Tracking — Feature Map
 
 ## Module Purpose
-This feature lets Trainers record and review member progress measurements and compare multiple assigned members. It supports weight, height, BMI, body-fat, muscle-mass and circumference tracking with historical trend visualizations. Trainers can add, edit and delete progress entries using validated forms and confirmation for deletion. The module is read-only for unassigned members and does not expose Manager payroll or HR capabilities.
+The Progress Tracking module lets trainers review and record member progress measurements, compare selected members, and inspect goal/progress visualizations. It keeps the selected member identity in UI state while server measurements remain Query-owned. Create, update, and delete actions use the module API/mock boundary and require confirmation for destructive actions. This module does not own unrelated member, billing, or tenant data.
 
 ## Directory Structure
 | Folder | Responsibility | Key Files |
 |---|---|---|
-| `progress_components/` | Member selector, charts, table, empty state and validated entry modal | `TrainerProgressMain.tsx`, `TrainerProgressChart.tsx`, `TrainerProgressTable.tsx`, `TrainerProgressModal.tsx`, `TrainerProgressComparisonChart.tsx`, `TrainerProgressComparisonTable.tsx` |
-| `progress_queries/` | TanStack Query list/detail reads and mutations | `useTrainerProgressQuery.ts`, `useTrainerProgressMutations.ts` |
-| `progress_store/` | UI-only selected member/tab state | `useTrainerProgressStore.ts` |
-| `progress_utils/` | URL filters and comparison calculations | `useTrainerProgressFilters.ts`, `useTrainerProgressComparison.ts`, `TrainerProgressSharedConstants.ts` |
-| `progress_types/` | Zod schemas and derived domain types | `TrainerProgress.schema.ts`, `TrainerProgressTypes.ts` |
-| `progress_api/` | API boundary methods | `TrainerProgressApi.ts` |
-| `progress_fixtures/` | MSW server data | `TrainerProgressMockData.ts` |
-| `progress_mocks/handlers/` | Feature-owned MSW handlers | `TrainerProgressMockHandlers.ts` |
+| `progress-tracking_components/` | Member selector, charts, table, empty state and validated entry modal | `TrainerProgressMain.tsx`, `TrainerProgressChart.tsx`, `TrainerProgressTable.tsx`, `TrainerProgressModal.tsx`, `TrainerProgressComparisonChart.tsx`, `TrainerProgressComparisonTable.tsx` |
+| `progress-tracking_queries/` | TanStack Query list/detail reads and mutations | `useTrainerProgressQuery.ts`, `useTrainerProgressMutations.ts` |
+| `progress-tracking_store/` | UI-only selected member/tab state | `useTrainerProgressStore.ts` |
+| `progress-tracking_utils/` | URL filters and comparison calculations | `useTrainerProgressFilters.ts`, `useTrainerProgressComparison.ts`, `TrainerProgressSharedConstants.ts` |
+| `progress-tracking_types/` | Zod schemas and derived domain types | `TrainerProgress.schema.ts`, `TrainerProgressTypes.ts` |
+| `progress-tracking_api/` | API boundary methods | `TrainerProgressApi.ts` |
+| `progress-tracking_mocks/fixtures/` | MSW server data | `TrainerProgressMockData.ts` |
+| `progress-tracking_mocks/handlers/` | Feature-owned MSW handlers | `TrainerProgressMockHandlers.ts` |
 
 ## Feature Inventory
 | Feature | Route | Main API | Status |
@@ -23,6 +23,11 @@ This feature lets Trainers record and review member progress measurements and co
 | Edit progress entry | `/trainer/progress-tracking` | `PATCH /trainer/progress-tracking/:memberId/entries/:entryId` | Live via MSW |
 | Delete progress entry | `/trainer/progress-tracking` | `DELETE /trainer/progress-tracking/:memberId/entries/:entryId` | Live via MSW |
 | Comparison view | `/trainer/progress-tracking` | `GET /trainer/progress-tracking/members` plus member entry reads | Live via MSW |
+
+## Approved External Dependencies
+- Application infrastructure: `@/lib/api`, `@/lib/formatters`, and approved zero-business Trainer UI/feedback infrastructure used directly by this module.
+- Business Feature Dependencies: None.
+- Role-Level Business Dependencies: None.
 
 ## Data and State Architecture
 TanStack Query owns progress responses and mutation state. `useTrainerProgressStore.ts` owns only selected member/tab UI state. Search/filter state is URL-backed through `useTrainerProgressFilters.ts`. No progress API response is stored as primary server state in Zustand.
@@ -47,7 +52,7 @@ TanStack Query owns progress responses and mutation state. `useTrainerProgressSt
 | Comparison member name | `name` | members | Yes |
 | Summary weight delta | `weightChangeKg` | summary | Yes |
 
-## User Flows
+## User Flows & Interactions
 ### Flow 1: Review Member Progress
 1. Trainer opens `/trainer/progress-tracking`.
 2. The module-owned member/progress query loads the selected member's progress records.

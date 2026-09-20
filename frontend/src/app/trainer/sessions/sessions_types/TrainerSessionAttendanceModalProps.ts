@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Owns the typed props contract for this component.
+// RESPONSIBILITY: Owns the typed contract between the Sessions attendance modal and its mutation boundary.
 import type { TrainerSession } from '@/app/trainer/sessions/sessions_types/TrainerSessionsTypes';
 
 export interface TrainerSessionAttendanceModalProps {

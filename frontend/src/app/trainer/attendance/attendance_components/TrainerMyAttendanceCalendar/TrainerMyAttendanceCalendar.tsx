@@ -1,9 +1,10 @@
-'use client';
 // RESPONSIBILITY: Renders the trainer's own monthly attendance calendar history.
+'use client';
 // DATA FLOW: props (records from TrainerAttendanceMain) → display only
 // Strictly view-only: trainers can browse past and present month logs.
 
 import { useState, useMemo } from 'react';
+import { format } from 'date-fns';
 import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, CheckCircle2, XCircle, Clock, ShieldCheck, UserCheck } from 'lucide-react';
 import { getUser } from '@/lib/api';
 import type { TrainerAttendanceCalendarCell, AttendanceCalendarStatus } from '@/app/trainer/attendance/attendance_types/TrainerAttendanceInteractionTypes';
@@ -20,7 +21,7 @@ export default function TrainerMyAttendanceCalendar({ records }: TrainerMyAttend
   const isCurrentMonth = today.getFullYear() === year && today.getMonth() === month;
   const todayDate = today.getDate();
 
-  const monthName = currentDate.toLocaleString('en-US', { month: 'long' });
+  const monthName = format(currentDate, 'MMMM');
 
   // Calculate calendar grid layout
   const daysInMonth = useMemo(() => new Date(year, month + 1, 0).getDate(), [year, month]);
@@ -104,13 +105,13 @@ export default function TrainerMyAttendanceCalendar({ records }: TrainerMyAttend
         <div>
           <div className="flex items-center gap-2">
             <h3 className="text-xl font-bold text-primary flex items-center gap-2">
-              <CalendarIcon size={20} className="text-primary" /> {monthName} {year} History
+              <CalendarIcon size={18} className="text-primary" /> {monthName} {year} History
             </h3>
             <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-success-bg text-success border border-success flex items-center gap-1">
-              <UserCheck size={12} /> {user?.name || 'My Record'}
+              <UserCheck size={18} /> {user?.name || 'My Record'}
             </span>
             <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-input text-secondary border border-border flex items-center gap-1">
-              <ShieldCheck size={12} /> View Only
+              <ShieldCheck size={18} /> View Only
             </span>
           </div>
           <p className="text-sm text-secondary mt-0.5">
@@ -131,7 +132,7 @@ export default function TrainerMyAttendanceCalendar({ records }: TrainerMyAttend
               aria-label="Previous Month"
               className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page p-2 hover:bg-card text-secondary hover:text-primary motion-safe:transition-colors motion-safe:duration-base"
             >
-              <ChevronLeft size={16} />
+              <ChevronLeft size={18} />
             </button>
             <span className="px-3 text-xs font-bold text-primary select-none">
               {monthName.slice(0, 3)} {year}
@@ -141,7 +142,7 @@ export default function TrainerMyAttendanceCalendar({ records }: TrainerMyAttend
               aria-label="Next Month"
               className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page p-2 hover:bg-card text-secondary hover:text-primary motion-safe:transition-colors motion-safe:duration-base"
             >
-              <ChevronRight size={16} />
+              <ChevronRight size={18} />
             </button>
           </div>
         </div>
@@ -207,8 +208,8 @@ export default function TrainerMyAttendanceCalendar({ records }: TrainerMyAttend
                 badgeStyle = 'bg-danger text-on-danger';
                 label = 'Absent';
               } else if (status === 'L') {
-                statusStyle = 'bg-warning-bg text-warning border-warning/30 hover:border-warning/60';
-                badgeStyle = 'bg-warning text-on-primary';
+                statusStyle = 'bg-warning-bg text-warning border-warning-bg hover:border-warning';
+                badgeStyle = 'bg-warning-bg text-warning';
                 label = 'Weekly Off';
               }
             }
@@ -225,7 +226,7 @@ export default function TrainerMyAttendanceCalendar({ records }: TrainerMyAttend
                     {day}
                   </span>
                   {isToday && (
-                    <span className="text-xs font-extrabold uppercase px-1.5 py-0.5 rounded bg-primary text-white tracking-wide">
+                    <span className="text-xs font-extrabold uppercase px-1.5 py-0.5 rounded bg-primary text-on-primary tracking-wide">
                       Today
                     </span>
                   )}
@@ -236,14 +237,14 @@ export default function TrainerMyAttendanceCalendar({ records }: TrainerMyAttend
                     <>
                       <div className="flex items-center justify-between">
                         <span className={`inline-flex items-center gap-1 text-xs font-bold px-1.5 py-0.5 rounded ${badgeStyle}`}>
-                          {status === 'P' && <CheckCircle2 size={10} />}
-                          {status === 'A' && <XCircle size={10} />}
+                          {status === 'P' && <CheckCircle2 size={18} />}
+                          {status === 'A' && <XCircle size={18} />}
                           {label}
                         </span>
                       </div>
                       {status === 'P' && checkIn && (
                         <p className="text-xs text-secondary truncate flex items-center gap-1">
-                          <Clock size={10} /> {checkIn}
+                          <Clock size={18} /> {checkIn}
                         </p>
                       )}
                     </>

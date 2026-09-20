@@ -1,5 +1,5 @@
-﻿'use client';
 // RESPONSIBILITY: Renders the fixed Trainer shell header: sidebar toggle, page title, theme toggle, notification navigation, and accessible profile menu. It owns no feature/business data.
+'use client';
 import { useEffect, useRef, useState } from 'react';
 import { Bell, LogOut, Menu, User } from 'lucide-react';
 import Link from 'next/link';

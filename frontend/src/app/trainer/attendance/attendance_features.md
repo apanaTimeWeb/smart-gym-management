@@ -1,7 +1,7 @@
 # Trainer Attendance — Feature Map
 
 ## Module Purpose
-Trainer ka apna attendance record aur member attendance recording ko independently manage karta hai. Server/API data TanStack Query se aata hai; filters URL-backed hain aur UI-only view mode module state me rehta hai.
+The Attendance module gives trainers one place to review their own attendance and the attendance records they are allowed to see for members. The trainer can switch between member records and personal attendance, search/date-filter the dataset, record member attendance, and use self check-in/out. Attendance reads and mutations stay in TanStack Query and the feature-owned API/mock boundary. The module does not expose manager/superadmin attendance administration or unrelated staff records.
 
 ## Directory Structure
 - `page.tsx` — framework Server Component route entry.
@@ -13,7 +13,7 @@ Trainer ka apna attendance record aur member attendance recording ko independent
 - `attendance_api/` — API transport boundary and response parsing.
 - `attendance_types/` — schemas, query/filter contracts, and calendar types.
 - `attendance_utils/` — static UI constants and formatting utilities.
-- `attendance_fixtures/` / `attendance_mocks/` — feature-owned demo server state and MSW handlers.
+- `attendance_mocks/fixtures/` / `attendance_mocks/` — feature-owned demo server state and MSW handlers.
 - `attendance_url_config.ts` — complete Attendance page/API route contract.
 - `attendance_tests/` — API, route-state, and calendar behavior tests.
 
@@ -28,6 +28,11 @@ Trainer ka apna attendance record aur member attendance recording ko independent
 | Self Check Out | `/trainer/attendance` | Closes the trainer's current open attendance record. |
 | Search/date/page | `/trainer/attendance` | URL/query state changes the server/mock result set. |
 
+## Approved External Dependencies
+- Application infrastructure: `@/lib/api`, `@/lib/formatters`, and approved zero-business Trainer UI/feedback infrastructure used directly by this module.
+- Business Feature Dependencies: None.
+- Role-Level Business Dependencies: None.
+
 ## Data and State Architecture
 - Server/API state: TanStack Query via `TrainerUseAttendanceQuery.ts` and mutation hooks.
 - URL state: attendance tab/filter/search/page where exposed by the feature filter hook.
@@ -35,7 +40,7 @@ Trainer ka apna attendance record aur member attendance recording ko independent
 - React Context: not used for Attendance server state.
 - Demo state: feature-owned MSW `attendanceDB`; mutations visibly update subsequent list/query reads.
 
-## User Flows
+## User Flows & Interactions
 1. Open Attendance → route skeleton → KPI + member list.
 2. Switch to My Attendance → trainer-scoped records → calendar/list toggle.
 3. Search/filter/paginate → URL/query key changes → mock/API result set changes.
@@ -62,7 +67,7 @@ Trainer ka apna attendance record aur member attendance recording ko independent
 
 ## Approved External Dependencies
 - Application infrastructure: `@/lib/api`, `@/lib/formatters`, `@/lib/useDateRangeSuffix` where imported.
-- Role infrastructure: `@/app/trainer/trainer_components/TrainerShared/*`, `TrainerFeedback/*`, and `Trainer_url_config.ts` only for approved shell navigation.
+- Role infrastructure: `@/app/trainer/trainer_components/TrainerShared/*`, `TrainerFeedback/*`, and `trainer_url_config.ts` only for approved shell navigation.
 - Business Feature Dependencies: None.
 - Role-Level Business Dependencies: None.
 

@@ -8,5 +8,5 @@ export interface TrainerLibraryAssignModalProps {
   isSaving: boolean;
   errorMessage?: string;
   onClose: () => void;
-  onSubmit: (memberId: string) => Promise<void>;
+  onSubmit: (memberId: string, idempotencyKey: string) => Promise<void>;
 }

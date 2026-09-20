@@ -1,5 +1,5 @@
-'use client';
 // RESPONSIBILITY: Orchestrates the Trainer Diet Library query state and feature-local presentation components.
+'use client';
 // DATA FLOW: URL filter state → useTrainerLibraryLogic → TanStack Query/API → TrainerLibraryDietGrid/TrainerLibraryTabs.
 import { useTrainerLibraryLogic } from '@/app/trainer/library/library_hooks/TrainerUseLibraryLogic';
 import TrainerLibraryTabs from '@/app/trainer/library/library_components/TrainerLibraryTabs/TrainerLibraryTabs';
@@ -7,6 +7,7 @@ import TrainerLibraryDietModal from '@/app/trainer/library/library_components/Tr
 import TrainerLibraryAssignModal from '@/app/trainer/library/library_components/TrainerLibraryAssignModal/TrainerLibraryAssignModal';
 import { useTrainerLibraryAssignment } from '@/app/trainer/library/library_hooks/useTrainerLibraryAssignment';
 import { useState } from 'react';
+import { getTrainerUserSafeErrorMessage } from '@/app/trainer/trainer_utils/TrainerUserSafeError';
 import TrainerLibraryDietGrid from '@/app/trainer/library/library_components/TrainerLibraryDietGrid/TrainerLibraryDietGrid';
 
 export default function TrainerLibraryMain() {
@@ -65,11 +66,11 @@ export default function TrainerLibraryMain() {
         plan={editDietData}
         members={assignment.membersQuery.data ?? []}
         isSaving={assignment.assignDietPlan.isPending}
-        errorMessage={assignment.assignDietPlan.isError ? 'Unable to assign the diet plan. Please retry.' : undefined}
+        errorMessage={assignment.assignDietPlan.isError ? getTrainerUserSafeErrorMessage(assignment.assignDietPlan.error) : undefined}
         onClose={() => setShowAssignModal(false)}
-        onSubmit={async (memberId) => {
+        onSubmit={async (memberId, idempotencyKey) => {
           if (!editDietData) return;
-          await assignment.assignDietPlan.mutateAsync({ memberId, dietPlanId: editDietData.id });
+          await assignment.assignDietPlan.mutateAsync({ memberId, dietPlanId: editDietData.id, idempotencyKey });
           setShowAssignModal(false);
         }}
       />

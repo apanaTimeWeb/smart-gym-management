@@ -1,5 +1,5 @@
-'use client';
 // RESPONSIBILITY: Root client component for Trainer Sessions. Renders session list, filter toolbar, schedule modal, and edit/attendance modals.
+'use client';
 // DATA FLOW: page.tsx (Server) → TrainerSessionsMain (Client) → useTrainerSessionsLogic → TrainerSessionsApi
 import { useState } from 'react';
 import { Calendar as CalendarIcon, Clock, Users, User, CheckCircle, XCircle, Plus, Pencil } from 'lucide-react';
@@ -13,8 +13,9 @@ import { useTrainerSessionsFilters } from '@/app/trainer/sessions/sessions_utils
 import { useTrainerSessionsQuery } from '@/app/trainer/sessions/sessions_queries/useTrainerSessionsQuery';
 import { useTrainerSessionMutations } from '@/app/trainer/sessions/sessions_queries/useTrainerSessionMutations';
 import { useMembersBasicQuery } from '@/app/trainer/sessions/sessions_queries/useTrainerSessionsQuery';
-import { useConfirm } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerConfirmProvider';
+import { useTrainerConfirm } from '@/app/trainer/trainer_components/TrainerFeedback/useTrainerConfirm';
 import { useTrainerFeedback } from '@/app/trainer/trainer_components/TrainerFeedback/useTrainerFeedback';
+import { useTrainerIdempotencyKey } from '@/app/trainer/trainer_utils/useTrainerIdempotencyKey';
 import TrainerSessionAttendanceModal from '@/app/trainer/sessions/sessions_components/TrainerSessionAttendanceModal/TrainerSessionAttendanceModal';
 import TrainerSessionsEditModal from '@/app/trainer/sessions/sessions_components/TrainerSessionsEditModal/TrainerSessionsEditModal';
 import TrainerSessionsKPIs from '@/app/trainer/sessions/sessions_components/TrainerSessionsKPIs/TrainerSessionsKPIs';
@@ -28,8 +29,9 @@ export default function TrainerSessionsMain() {
   const { data: memberOptionsRaw = [] } = useMembersBasicQuery();
   const memberOptions = memberOptionsRaw.map(m => ({ value: m.id, label: m.name }));
   const { createSession, markNoShowSession, markAttendance } = useTrainerSessionMutations();
-  const { confirm } = useConfirm();
+  const { confirm } = useTrainerConfirm();
   const { showSuccess, showError } = useTrainerFeedback();
+  const actionKeys = useTrainerIdempotencyKey();
 
   const [showScheduleModal, setShowScheduleModal] = useState(false);
   const [attendanceSession, setAttendanceSession] = useState<TrainerSession | null>(null);
@@ -41,9 +43,11 @@ export default function TrainerSessionsMain() {
 
   const handleAttendanceSubmit = async (sessionId: string, attendedMemberIds: string[]) => {
     try {
-      const response = await markAttendance.mutateAsync({ id: sessionId, memberIds: attendedMemberIds, idempotencyKey: crypto.randomUUID() });
+      const actionId = `session-attendance-${sessionId}`;
+      const response = await markAttendance.mutateAsync({ id: sessionId, memberIds: attendedMemberIds, idempotencyKey: actionKeys.begin(actionId) });
+      actionKeys.clear(actionId);
       setAttendanceSession(null);
-      showSuccess(response.message, 'trainer-sessions-attendance-success');
+      showSuccess(response.message, actionId);
     } catch (err) {
       showError(err, 'trainer-sessions-attendance-error');
     }
@@ -55,11 +59,15 @@ export default function TrainerSessionsMain() {
       message: 'Are you sure you want to mark this session as No Show? This action cannot be undone.',
       type: 'danger',
       confirmText: 'Mark No Show',
+      requireTypedConfirmation: true,
+      confirmationPhrase: 'NO SHOW',
     });
     if (!ok) return;
     try {
-      const response = await markNoShowSession.mutateAsync({ id: sessionId, idempotencyKey: crypto.randomUUID() });
-      showSuccess(response.message, 'trainer-sessions-noshow-success');
+      const actionId = `session-no-show-${sessionId}`;
+      const response = await markNoShowSession.mutateAsync({ id: sessionId, idempotencyKey: actionKeys.begin(actionId) });
+      actionKeys.clear(actionId);
+      showSuccess(response.message, actionId);
     } catch (err) {
       showError(err, 'trainer-sessions-noshow-error');
     }
@@ -67,9 +75,11 @@ export default function TrainerSessionsMain() {
 
   const handleScheduleSubmit = async (dto: CreateSessionDto) => {
     try {
-      const response = await createSession.mutateAsync({ dto, idempotencyKey: crypto.randomUUID() });
+      const actionId = 'session-schedule-create';
+      const response = await createSession.mutateAsync({ dto, idempotencyKey: actionKeys.begin(actionId) });
+      actionKeys.clear(actionId);
       setShowScheduleModal(false);
-      showSuccess(response.message, 'trainer-sessions-schedule-success');
+      showSuccess(response.message, actionId);
     } catch (err) {
       showError(err, 'trainer-sessions-schedule-error');
     }
@@ -88,7 +98,7 @@ export default function TrainerSessionsMain() {
                 onClick={() => setFilter(f)}
                 className={`px-4 py-1.5 text-sm font-medium rounded-md motion-safe:transition-colors ${
                   filter === f ? 'bg-card text-primary shadow-card' : 'text-secondary hover:text-primary'
-                }`}
+                } focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page`}
               >
                 {f}
               </button>
@@ -96,19 +106,19 @@ export default function TrainerSessionsMain() {
           </div>
           <div className="flex flex-wrap items-center gap-4 w-full sm:w-auto">
             <div className="flex items-center gap-2">
-              <CalendarIcon size={16} className="text-secondary" />
+              <CalendarIcon size={18} className="text-secondary" />
               <input
                 type="date"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
-                className="bg-input border border-border text-primary text-sm rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary"
+                className="bg-input border border-border text-primary text-sm rounded-lg px-3 py-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               />
             </div>
             <button type="button"
               onClick={() => setShowScheduleModal(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary rounded-lg text-sm font-semibold hover:opacity-90 motion-safe:transition-opacity ml-auto"
+              className="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary rounded-lg text-sm font-semibold hover:bg-primary-hover motion-safe:transition-opacity ml-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
             >
-              <Plus size={16} /> Schedule PT
+              <Plus size={18} /> Schedule PT
             </button>
           </div>
         </div>
@@ -130,7 +140,7 @@ export default function TrainerSessionsMain() {
               >
                 <div className="flex items-start gap-4">
                   <div className={`p-3 rounded-xl mt-1 ${SESSION_TYPE_STYLES[session.type]}`}>
-                    {session.type === 'PT' ? <User size={24} /> : <Users size={24} />}
+                    {session.type === 'PT' ? <User size={18} /> : <Users size={18} />}
                   </div>
                   <div>
                     <div className="flex items-center gap-2 mb-1">
@@ -140,12 +150,12 @@ export default function TrainerSessionsMain() {
                       </span>
                     </div>
                     <div className="flex flex-wrap items-center gap-3 text-sm text-secondary">
-                      <span className="flex items-center gap-1.5"><Clock size={14} /> {session.time} ({session.duration})</span>
+                      <span className="flex items-center gap-1.5"><Clock size={18} /> {session.time} ({session.duration})</span>
                       <span>•</span>
                       {session.type === 'PT' ? (
-                        <span className="flex items-center gap-1.5"><User size={14} /> {session.member}</span>
+                        <span className="flex items-center gap-1.5"><User size={18} /> {session.member}</span>
                       ) : (
-                        <span className="flex items-center gap-1.5"><Users size={14} /> {session.attendees} / {session.maxAttendees} Enrolled</span>
+                        <span className="flex items-center gap-1.5"><Users size={18} /> {session.attendees} / {session.maxAttendees} Enrolled</span>
                       )}
                     </div>
                   </div>
@@ -156,28 +166,28 @@ export default function TrainerSessionsMain() {
                     <div className="flex items-center gap-3">
                       <button type="button"
                         onClick={() => setEditingSession(session)}
-                        className="flex items-center gap-1 text-sm font-semibold text-secondary hover:text-primary hover:underline motion-safe:transition-colors motion-safe:duration-base"
+                        className="flex items-center gap-1 text-sm font-semibold text-secondary hover:text-primary hover:underline motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
                         aria-label={`Edit session ${session.title}`}
                       >
-                        <Pencil size={13} /> Edit
+                        <Pencil size={18} /> Edit
                       </button>
                       <button type="button"
                         onClick={() => handleNoShowSession(session.id)}
-                        className="text-sm font-semibold text-danger hover:text-danger hover:underline motion-safe:transition-colors motion-safe:duration-base"
+                        className="text-sm font-semibold text-danger hover:text-danger hover:underline motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
                       >
                         No Show
                       </button>
                       <button type="button"
                         onClick={() => setAttendanceSession(session)}
-                        className="text-sm font-medium text-on-primary bg-primary px-4 py-2 rounded-xl hover:bg-primary-hover motion-safe:transition-colors motion-safe:duration-base"
+                        className="text-sm font-medium text-on-primary bg-primary px-4 py-2 rounded-xl hover:bg-primary-hover motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
                       >
                         Mark Attendance
                       </button>
                     </div>
                   )}
                   <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${SESSION_STATUS_STYLES[session.status]}`}>
-                    {session.status === 'Completed' && <CheckCircle size={12} />}
-                    {session.status === 'No Show' && <XCircle size={12} />}
+                    {session.status === 'Completed' && <CheckCircle size={18} />}
+                    {session.status === 'No Show' && <XCircle size={18} />}
                     {session.status}
                   </span>
                 </div>

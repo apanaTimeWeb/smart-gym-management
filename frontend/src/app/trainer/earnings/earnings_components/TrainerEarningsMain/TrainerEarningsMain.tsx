@@ -1,5 +1,5 @@
-'use client';
 // RESPONSIBILITY: Renders the TrainerEarningsMain UI for the owning Trainer feature; data access remains in the feature API/query layer.
+'use client';
 import { AlertCircle } from 'lucide-react';
 import { useTrainerEarningsQuery } from '@/app/trainer/earnings/earnings_queries/useTrainerEarningsQuery';
 import TrainerEarningsKPIs from '@/app/trainer/earnings/earnings_components/TrainerEarningsKPIs/TrainerEarningsKPIs';
@@ -22,7 +22,7 @@ export default function TrainerEarningsMain() {
     return (
       <div className="p-6">
         <div className="bg-danger-bg border border-danger rounded-xl p-4 flex items-center gap-3 text-danger max-w-md">
-          <AlertCircle size={24} />
+          <AlertCircle size={18} />
           <div>
             <p className="font-bold">Failed to load earnings data</p>
             <p className="text-sm mt-1">Unable to load earnings right now. Please retry.</p>

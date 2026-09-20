@@ -56,7 +56,7 @@ export function useTrainerLibraryLogic(): TrainerLibraryLogicReturn {
   const loadAll = useCallback(async () => { await query.refetch(); }, [query]);
   const dietLogic = useTrainerLibraryDiet();
   return {
-    dietPlans: query.data?.dietPlans ?? [], totalDietPlans: query.data?.total ?? 0, isPending: query.isPending, isError: query.isError, isSuccess: query.isSuccess, saving,
+    dietPlans: query.data?.data?.dietPlans ?? [], totalDietPlans: query.data?.data?.total ?? 0, isPending: query.isPending, isError: query.isError, isSuccess: query.isSuccess, saving,
     search, debouncedSearch, setSearch, filterGoal, setFilterGoal, currentPage, setCurrentPage,
     loadAll, ...dietLogic,
   };

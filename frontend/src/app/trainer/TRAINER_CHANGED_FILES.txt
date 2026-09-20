@@ -1,279 +1,104 @@
-TRAINER — COMPLETE CHANGE INVENTORY
+# Trainer v2 — Complete Changed Files
 
-Added: 97
-Removed: 67
-Modified: 103
-Touched paths: 267
+## ADDED
+- TRAINER_STATIC_VERIFICATION_V2.json
+- earnings/earnings_types/TrainerEarningsEmptyStateProps.ts
+- sessions/sessions_types/TrainerSessionsEmptyStateProps.ts
+- trainer_url_config.ts
+- workout/workout_types/TrainerWorkoutEmptyStateProps.ts
 
-=== ADDED ===
-TRAINER_FINAL_REPAIR_REPORT.md
-attendance/attendance_features.md
-attendance/attendance_forbidden.md
-attendance/attendance_tests/TrainerAttendanceApiBehavior.test.ts
-attendance/attendance_tests/TrainerAttendanceRouteStates.test.tsx
-attendance/attendance_tests/TrainerMyAttendanceCalendar.test.tsx
-attendance/attendance_theme_contract.md
-attendance/attendance_types/TrainerAttendanceKPIsProps.ts
-attendance/attendance_types/TrainerAttendanceModalProps.ts
-attendance/attendance_types/TrainerAttendanceSummaryCardProps.ts
-attendance/attendance_types/TrainerAttendanceTableProps.ts
-dashboard/dashboard_features.md
-dashboard/dashboard_forbidden.md
-dashboard/dashboard_tests/TrainerDashboardApiBehavior.test.ts
-dashboard/dashboard_tests/TrainerDashboardDateRangeUtils.test.ts
-dashboard/dashboard_tests/TrainerDashboardMainBehavior.test.tsx
-dashboard/dashboard_tests/TrainerDashboardRouteStates.test.tsx
-dashboard/dashboard_theme_contract.md
-earnings/earnings_features.md
-earnings/earnings_forbidden.md
-earnings/earnings_tests/TrainerEarningsApiBehavior.test.ts
-earnings/earnings_tests/TrainerEarningsMainBehavior.test.tsx
-earnings/earnings_tests/TrainerEarningsRouteStates.test.tsx
-earnings/earnings_theme_contract.md
-library/library_features.md
-library/library_forbidden.md
-library/library_tests/TrainerLibraryApiBehavior.test.ts
-library/library_tests/TrainerLibraryMainBehavior.test.tsx
-library/library_tests/TrainerLibraryRouteStates.test.tsx
-library/library_theme_contract.md
-library/library_types/TrainerLibraryAssignModalProps.ts
-library/library_types/TrainerLibraryDietGridProps.ts
-library/library_types/TrainerLibraryDietModalProps.ts
-library/library_types/TrainerLibraryEmptyStateProps.ts
-library/library_types/TrainerLibraryTabsProps.ts
-members/members_features.md
-members/members_forbidden.md
-members/members_tests/TrainerMembersApiBehavior.test.ts
-members/members_tests/TrainerMembersMainBehavior.test.tsx
-members/members_tests/TrainerMembersRouteStates.test.tsx
-members/members_theme_contract.md
-notifications/notifications_features.md
-notifications/notifications_forbidden.md
-notifications/notifications_tests/TrainerNotificationsApiBehavior.test.ts
-notifications/notifications_tests/TrainerNotificationsMainBehavior.test.tsx
-notifications/notifications_tests/TrainerNotificationsRouteStates.test.tsx
-notifications/notifications_theme_contract.md
-notifications/notifications_types/TrainerNotificationsListProps.ts
-profile/profile_features.md
-profile/profile_forbidden.md
-profile/profile_tests/TrainerProfileApiBehavior.test.ts
-profile/profile_tests/TrainerProfileMainBehavior.test.tsx
-profile/profile_tests/TrainerProfileRouteStates.test.tsx
-profile/profile_theme_contract.md
-progress-tracking/progress-tracking_features.md
-progress-tracking/progress-tracking_forbidden.md
-progress-tracking/progress-tracking_theme_contract.md
-progress-tracking/progress-tracking_types/TrainerProgressChartProps.ts
-progress-tracking/progress-tracking_types/TrainerProgressComparisonChartProps.ts
-progress-tracking/progress-tracking_types/TrainerProgressComparisonDeltaProps.ts
-progress-tracking/progress-tracking_types/TrainerProgressComparisonTableProps.ts
-progress-tracking/progress-tracking_types/TrainerProgressEmptyStateProps.ts
-progress-tracking/progress-tracking_types/TrainerProgressMemberSelectorProps.ts
-progress-tracking/progress-tracking_types/TrainerProgressMemberSummary.ts
-progress-tracking/progress-tracking_types/TrainerProgressModalProps.ts
-progress-tracking/progress-tracking_types/TrainerProgressTableProps.ts
-progress-tracking/progress_tracking_tests/TrainerProgressApiBehavior.test.ts
-progress-tracking/progress_tracking_tests/TrainerProgressMainBehavior.test.tsx
-progress-tracking/progress_tracking_tests/TrainerProgresstrackingRouteStates.test.tsx
-schedule/schedule_features.md
-schedule/schedule_forbidden.md
-schedule/schedule_tests/TrainerScheduleApiBehavior.test.ts
-schedule/schedule_tests/TrainerScheduleMainBehavior.test.tsx
-schedule/schedule_tests/TrainerScheduleRouteStates.test.tsx
-schedule/schedule_theme_contract.md
-sessions/sessions_features.md
-sessions/sessions_forbidden.md
-sessions/sessions_tests/TrainerSessionsApiBehavior.test.ts
-sessions/sessions_tests/TrainerSessionsMainBehavior.test.tsx
-sessions/sessions_tests/TrainerSessionsRouteStates.test.tsx
-sessions/sessions_theme_contract.md
-sessions/sessions_types/TrainerSessionAttendanceModalProps.ts
-sessions/sessions_types/TrainerSessionsEditModalProps.ts
-sessions/sessions_types/TrainerSessionsKPIsProps.ts
-trainer_components/trainer_components_types/TrainerPaginationProps.ts
-trainer_components/trainer_components_types/TrainerRouteErrorFallbackProps.ts
-trainer_components/trainer_components_types/TrainerSearchableDropdownOption.ts
-trainer_components/trainer_components_types/TrainerSearchableDropdownProps.ts
-trainer_components/trainer_components_types/TrainerStatCardProps.ts
-trainer_components/trainer_components_types/TrainerStatCardTypes.ts
-workout/workout_features.md
-workout/workout_forbidden.md
-workout/workout_tests/TrainerWorkoutApiBehavior.test.ts
-workout/workout_tests/TrainerWorkoutMainBehavior.test.tsx
-workout/workout_tests/TrainerWorkoutRouteStates.test.tsx
-workout/workout_theme_contract.md
-workout/workout_types/TrainerWorkoutExerciseFieldsProps.ts
+## REMOVED
+- Trainer_url_config.ts
 
-=== REMOVED ===
-attendance/TrainerAttendance_features.md
-attendance/TrainerAttendance_forbidden.md
-attendance/TrainerAttendance_theme_contract.md
-attendance/__tests__/TrainerAttendanceApiBehavior.test.ts
-attendance/__tests__/TrainerAttendanceRouteStates.test.tsx
-attendance/__tests__/TrainerMyAttendanceCalendar.test.tsx
-dashboard/TrainerDashboard_features.md
-dashboard/TrainerDashboard_forbidden.md
-dashboard/TrainerDashboard_theme_contract.md
-dashboard/__tests__/TrainerDashboardApiBehavior.test.ts
-dashboard/__tests__/TrainerDashboardDateRangeUtils.test.ts
-dashboard/__tests__/TrainerDashboardMainBehavior.test.tsx
-dashboard/__tests__/TrainerDashboardRouteStates.test.tsx
-earnings/TrainerEarnings_features.md
-earnings/TrainerEarnings_forbidden.md
-earnings/TrainerEarnings_theme_contract.md
-earnings/__tests__/TrainerEarningsApiBehavior.test.ts
-earnings/__tests__/TrainerEarningsMainBehavior.test.tsx
-earnings/__tests__/TrainerEarningsRouteStates.test.tsx
-library/TrainerLibrary_features.md
-library/TrainerLibrary_forbidden.md
-library/TrainerLibrary_theme_contract.md
-library/__tests__/TrainerLibraryApiBehavior.test.ts
-library/__tests__/TrainerLibraryMainBehavior.test.tsx
-library/__tests__/TrainerLibraryRouteStates.test.tsx
-members/TrainerMembers_features.md
-members/TrainerMembers_forbidden.md
-members/TrainerMembers_theme_contract.md
-members/__tests__/TrainerMembersApiBehavior.test.ts
-members/__tests__/TrainerMembersMainBehavior.test.tsx
-members/__tests__/TrainerMembersRouteStates.test.tsx
-notifications/TrainerNotifications_features.md
-notifications/TrainerNotifications_forbidden.md
-notifications/TrainerNotifications_theme_contract.md
-notifications/__tests__/TrainerNotificationsApiBehavior.test.ts
-notifications/__tests__/TrainerNotificationsMainBehavior.test.tsx
-notifications/__tests__/TrainerNotificationsRouteStates.test.tsx
-profile/TrainerProfile_features.md
-profile/TrainerProfile_forbidden.md
-profile/TrainerProfile_theme_contract.md
-profile/__tests__/TrainerProfileApiBehavior.test.ts
-profile/__tests__/TrainerProfileMainBehavior.test.tsx
-profile/__tests__/TrainerProfileRouteStates.test.tsx
-progress-tracking/TrainerProgress-tracking_theme_contract.md
-progress-tracking/TrainerProgress_features.md
-progress-tracking/TrainerProgress_forbidden.md
-progress-tracking/__tests__/TrainerProgressApiBehavior.test.ts
-progress-tracking/__tests__/TrainerProgressMainBehavior.test.tsx
-progress-tracking/__tests__/TrainerProgresstrackingRouteStates.test.tsx
-schedule/TrainerSchedule_features.md
-schedule/TrainerSchedule_forbidden.md
-schedule/TrainerSchedule_theme_contract.md
-schedule/__tests__/TrainerScheduleApiBehavior.test.ts
-schedule/__tests__/TrainerScheduleMainBehavior.test.tsx
-schedule/__tests__/TrainerScheduleRouteStates.test.tsx
-sessions/TrainerSessions_features.md
-sessions/TrainerSessions_forbidden.md
-sessions/TrainerSessions_theme_contract.md
-sessions/__tests__/TrainerSessionsApiBehavior.test.ts
-sessions/__tests__/TrainerSessionsMainBehavior.test.tsx
-sessions/__tests__/TrainerSessionsRouteStates.test.tsx
-workout/TrainerWorkout_features.md
-workout/TrainerWorkout_forbidden.md
-workout/TrainerWorkout_theme_contract.md
-workout/__tests__/TrainerWorkoutApiBehavior.test.ts
-workout/__tests__/TrainerWorkoutMainBehavior.test.tsx
-workout/__tests__/TrainerWorkoutRouteStates.test.tsx
+## RENAMED
+- `Trainer_url_config.ts` → `trainer_url_config.ts`
 
-=== MODIFIED ===
-TRAINER_REPAIR_STATUS.md
-attendance/attendance_components/TrainerAttendanceKPIs/TrainerAttendanceKPIs.tsx
-attendance/attendance_components/TrainerAttendanceLoadingSkeleton/TrainerAttendanceLoadingSkeleton.tsx
-attendance/attendance_components/TrainerAttendanceModal/TrainerAttendanceModal.tsx
-attendance/attendance_components/TrainerAttendanceSummaryCard/TrainerAttendanceSummaryCard.tsx
-attendance/attendance_components/TrainerAttendanceTable/TrainerAttendanceTable.tsx
-attendance/attendance_components/TrainerAttendanceToolbar/TrainerAttendanceToolbar.tsx
-attendance/attendance_components/TrainerMyAttendanceCalendar/TrainerMyAttendanceCalendar.tsx
-attendance/error.tsx
-attendance/not-found.tsx
-dashboard/dashboard_components/TrainerDashboardKPIs/TrainerDashboardKPIs.tsx
-dashboard/dashboard_components/TrainerDashboardLoadingSkeleton/TrainerDashboardLoadingSkeleton.tsx
-dashboard/dashboard_components/TrainerDashboardRecentProgress/TrainerDashboardRecentProgress.tsx
-dashboard/dashboard_components/TrainerDashboardUpcomingSessions/TrainerDashboardUpcomingSessions.tsx
-dashboard/error.tsx
-dashboard/not-found.tsx
-earnings/earnings_components/TrainerEarningsHistory/TrainerEarningsHistory.tsx
-earnings/earnings_components/TrainerEarningsKPIs/TrainerEarningsKPIs.tsx
-earnings/earnings_components/TrainerEarningsLoadingSkeleton/TrainerEarningsLoadingSkeleton.tsx
-earnings/earnings_components/TrainerEarningsMain/TrainerEarningsMain.tsx
-earnings/earnings_components/TrainerEarningsPending/TrainerEarningsPending.tsx
-earnings/earnings_utils/TrainerEarningsSharedConstants.ts
-earnings/error.tsx
-earnings/not-found.tsx
-library/error.tsx
-library/library_components/TrainerLibraryAssignModal/TrainerLibraryAssignModal.tsx
-library/library_components/TrainerLibraryDietGrid/TrainerLibraryDietGrid.tsx
-library/library_components/TrainerLibraryDietModal/TrainerLibraryDietModal.tsx
-library/library_components/TrainerLibraryEmptyState/TrainerLibraryEmptyState.tsx
-library/library_components/TrainerLibraryLoadingSkeleton/TrainerLibraryLoadingSkeleton.tsx
-library/library_components/TrainerLibraryTabs/TrainerLibraryTabs.tsx
-library/not-found.tsx
-members/error.tsx
-members/members_api/TrainerMembersApi.ts
-members/members_components/TrainerMembersEmptyState/TrainerMembersEmptyState.tsx
-members/members_components/TrainerMembersLoadingSkeleton/TrainerMembersLoadingSkeleton.tsx
-members/members_components/TrainerMembersMessageModal/TrainerMembersMessageModal.tsx
-members/members_components/TrainerMembersProfile/TrainerMembersProfile.tsx
-members/members_components/TrainerMembersProfile/TrainerMembersProfileAssessment.tsx
-members/members_components/TrainerMembersProfile/TrainerMembersProfileAttendance.tsx
-members/members_components/TrainerMembersProfile/TrainerMembersProfileDiet.tsx
-members/members_components/TrainerMembersProfile/TrainerMembersProfileFitness.tsx
-members/members_components/TrainerMembersProfile/TrainerMembersProfileOverview.tsx
-members/members_components/TrainerMembersProfile/TrainerMembersProfileWorkout.tsx
-members/members_components/TrainerMembersTable/TrainerMembersTable.tsx
-members/members_components/TrainerMembersToolbar/TrainerMembersToolbar.tsx
-members/members_queries/useTrainerMembersMutations.ts
-members/not-found.tsx
-notifications/error.tsx
-notifications/not-found.tsx
-notifications/notifications_components/TrainerNotificationsList/TrainerNotificationsList.tsx
-notifications/notifications_components/TrainerNotificationsLoadingSkeleton/TrainerNotificationsLoadingSkeleton.tsx
-profile/error.tsx
-profile/not-found.tsx
-profile/profile_components/TrainerProfileMain/TrainerProfileMain.tsx
-progress-tracking/error.tsx
-progress-tracking/not-found.tsx
-progress-tracking/progress_api/TrainerProgressApi.ts
-progress-tracking/progress_components/TrainerProgressChart/TrainerProgressChart.tsx
-progress-tracking/progress_components/TrainerProgressComparisonChart/TrainerProgressComparisonChart.tsx
-progress-tracking/progress_components/TrainerProgressComparisonDelta/TrainerProgressComparisonDelta.tsx
-progress-tracking/progress_components/TrainerProgressComparisonTable/TrainerProgressComparisonTable.tsx
-progress-tracking/progress_components/TrainerProgressEmptyState/TrainerProgressEmptyState.tsx
-progress-tracking/progress_components/TrainerProgressMain/TrainerProgressMain.tsx
-progress-tracking/progress_components/TrainerProgressMemberSelector/TrainerProgressMemberSelector.tsx
-progress-tracking/progress_components/TrainerProgressModal/TrainerProgressModal.tsx
-progress-tracking/progress_components/TrainerProgressTable/TrainerProgressTable.tsx
-progress-tracking/progress_queries/useTrainerProgressMutations.ts
-schedule/error.tsx
-schedule/not-found.tsx
-schedule/schedule_api/TrainerScheduleApi.ts
-schedule/schedule_components/TrainerLeaveRequests/TrainerLeaveRequests.tsx
-schedule/schedule_components/TrainerScheduleMain/TrainerScheduleMain.tsx
-schedule/schedule_components/TrainerWeeklyAvailability/TrainerWeeklyAvailability.tsx
-schedule/schedule_queries/useTrainerScheduleMutations.ts
-schedule/schedule_utils/TrainerScheduleSharedConstants.ts
-sessions/error.tsx
-sessions/not-found.tsx
-sessions/sessions_api/TrainerSessionsApi.ts
-sessions/sessions_components/TrainerSessionAttendanceModal/TrainerSessionAttendanceModal.tsx
-sessions/sessions_components/TrainerSessionsEditModal/TrainerSessionsEditModal.tsx
-sessions/sessions_components/TrainerSessionsKPIs/TrainerSessionsKPIs.tsx
-sessions/sessions_components/TrainerSessionsLoadingSkeleton/TrainerSessionsLoadingSkeleton.tsx
-sessions/sessions_components/TrainerSessionsMain/TrainerSessionsMain.tsx
-sessions/sessions_components/TrainerSessionsScheduleModal/TrainerSessionsScheduleModal.tsx
-sessions/sessions_queries/useTrainerSessionMutations.ts
-trainer_components/TrainerFeedback/TrainerConfirmModal.tsx
-trainer_components/TrainerFeedback/TrainerConfirmTypes.ts
-trainer_components/TrainerFeedback/TrainerRouteErrorFallback.tsx
-trainer_components/TrainerLayout/TrainerSidebar.tsx
-trainer_components/TrainerShared/TrainerPagination.tsx
-trainer_components/TrainerShared/TrainerSearchableDropdown/TrainerSearchableDropdown.tsx
-trainer_components/TrainerShared/TrainerStatCard.tsx
-trainer_components/TrainerShared/TrainerTableSkeleton.tsx
-workout/error.tsx
-workout/not-found.tsx
-workout/workout_components/TrainerWorkoutBanner/TrainerWorkoutBanner.tsx
-workout/workout_components/TrainerWorkoutExerciseModal/TrainerWorkoutExerciseModal.tsx
-workout/workout_components/TrainerWorkoutExerciseTable/TrainerWorkoutExerciseTable.tsx
-workout/workout_components/TrainerWorkoutModal/TrainerWorkoutExerciseFields.tsx
-workout/workout_components/TrainerWorkoutModal/TrainerWorkoutModal.tsx
-workout/workout_components/TrainerWorkoutPlansGrid/TrainerWorkoutPlansGrid.tsx
-workout/workout_components/TrainerWorkoutToolbar/TrainerWorkoutToolbar.tsx
+## MODIFIED
+- TRAINER_CHANGED_FILES.txt
+- TRAINER_CHANGE_MANIFEST.json
+- TRAINER_FINAL_REPAIR_REPORT.md
+- TRAINER_REPAIR_STATUS.md
+- attendance/attendance_api/TrainerAttendance_api.ts
+- attendance/attendance_components/TrainerAttendanceMain/TrainerAttendanceMain.tsx
+- attendance/attendance_components/TrainerAttendanceModal/TrainerAttendanceModal.tsx
+- attendance/attendance_components/TrainerAttendanceToolbar/TrainerAttendanceToolbar.tsx
+- attendance/attendance_components/TrainerMyAttendanceCalendar/TrainerMyAttendanceCalendar.tsx
+- attendance/attendance_features.md
+- attendance/attendance_queries/TrainerUseAttendanceMutations.ts
+- attendance/attendance_tests/TrainerAttendanceApiBehavior.test.ts
+- attendance/not-found.tsx
+- dashboard/dashboard_components/TrainerDashboardDateFilterDropdown/TrainerDashboardDateFilterDropdown.tsx
+- dashboard/dashboard_components/TrainerDashboardGoalTrendChart/TrainerDashboardGoalTrendChart.tsx
+- dashboard/not-found.tsx
+- earnings/earnings_components/TrainerEarningsDateFilterDropdown/TrainerEarningsDateFilterDropdown.tsx
+- earnings/earnings_components/TrainerEarningsEmptyState/TrainerEarningsEmptyState.tsx
+- earnings/earnings_components/TrainerEarningsHistory/TrainerEarningsHistory.tsx
+- earnings/not-found.tsx
+- library/library_components/TrainerLibraryAssignModal/TrainerLibraryAssignModal.tsx
+- library/library_components/TrainerLibraryDietModal/TrainerLibraryDietModal.tsx
+- library/library_hooks/useTrainerLibraryAssignment.ts
+- library/not-found.tsx
+- members/members_components/TrainerMembersMessageModal/TrainerMembersMessageModal.tsx
+- members/members_components/TrainerMembersProfile/TrainerMembersProfile.tsx
+- members/members_components/TrainerMembersProfile/TrainerMembersProfileAssessment.tsx
+- members/members_components/TrainerMembersProfile/TrainerMembersProfileAttendance.tsx
+- members/members_components/TrainerMembersProfile/TrainerMembersProfileDiet.tsx
+- members/members_components/TrainerMembersProfile/TrainerMembersProfileNotes.tsx
+- members/members_components/TrainerMembersProfile/TrainerMembersProfileOverview.tsx
+- members/members_components/TrainerMembersProfile/TrainerMembersProfileProgress.tsx
+- members/members_components/TrainerMembersProfile/TrainerMembersProfileWorkout.tsx
+- members/members_components/TrainerMembersTable/TrainerMembersTable.tsx
+- members/members_components/TrainerMembersToolbar/TrainerMembersToolbar.tsx
+- members/members_queries/useTrainerMembersMutations.ts
+- members/members_types/TrainerMembers.schema.ts
+- members/members_types/TrainerMembersProfileData.schema.ts
+- members/not-found.tsx
+- notifications/not-found.tsx
+- notifications/notifications_components/TrainerNotificationsList/TrainerNotificationsList.tsx
+- profile/not-found.tsx
+- profile/profile_components/TrainerProfileMain/TrainerProfileMain.tsx
+- profile/profile_types/TrainerProfileApiSchema.ts
+- progress-tracking/not-found.tsx
+- progress-tracking/progress-tracking_components/TrainerProgressChart/TrainerProgressChart.tsx
+- progress-tracking/progress-tracking_components/TrainerProgressComparisonChart/TrainerProgressComparisonChart.tsx
+- progress-tracking/progress-tracking_components/TrainerProgressMain/TrainerProgressMain.tsx
+- progress-tracking/progress-tracking_components/TrainerProgressMemberSelector/TrainerProgressMemberSelector.tsx
+- progress-tracking/progress-tracking_components/TrainerProgressModal/TrainerProgressModal.tsx
+- progress-tracking/progress-tracking_components/TrainerProgressTable/TrainerProgressTable.tsx
+- schedule/not-found.tsx
+- schedule/schedule_api/TrainerScheduleApi.ts
+- schedule/schedule_components/TrainerRequestLeaveModal/TrainerRequestLeaveModal.tsx
+- schedule/schedule_components/TrainerWeeklyAvailability/TrainerWeeklyAvailability.tsx
+- schedule/schedule_tests/TrainerScheduleApiBehavior.test.ts
+- sessions/not-found.tsx
+- sessions/sessions_components/TrainerSessionAttendanceModal/TrainerSessionAttendanceModal.tsx
+- sessions/sessions_components/TrainerSessionsEditModal/TrainerSessionsEditModal.tsx
+- sessions/sessions_components/TrainerSessionsEmptyState/TrainerSessionsEmptyState.tsx
+- sessions/sessions_components/TrainerSessionsMain/TrainerSessionsMain.tsx
+- sessions/sessions_components/TrainerSessionsScheduleModal/TrainerSessionsScheduleModal.tsx
+- sessions/sessions_types/TrainerSessionsTypes.ts
+- trainer_components/TrainerFeedback/TrainerConfirmModal.tsx
+- trainer_components/TrainerFeedback/TrainerRouteErrorFallback.tsx
+- trainer_components/TrainerLayout/TrainerHeader.tsx
+- trainer_components/TrainerLayout/TrainerLayout.tsx
+- trainer_components/TrainerLayout/TrainerSidebar.tsx
+- trainer_components/TrainerShared/TrainerSearchableDropdown/TrainerSearchableDropdown.tsx
+- trainer_components/trainer_components_features.md
+- trainer_e2e/TrainerCriticalFlows.spec.ts
+- trainer_e2e/trainer_e2e_features.md
+- trainer_features.md
+- trainer_forbidden.md
+- trainer_types/trainer_types_features.md
+- trainer_utils/TrainerApiResponseSchema.ts
+- trainer_utils/trainer_utils_features.md
+- workout/not-found.tsx
+- workout/workout_api/TrainerWorkout_api.ts
+- workout/workout_components/TrainerWorkoutEmptyState/TrainerWorkoutEmptyState.tsx
+- workout/workout_components/TrainerWorkoutExerciseModal/TrainerWorkoutExerciseModal.tsx
+- workout/workout_components/TrainerWorkoutExerciseTable/TrainerWorkoutExerciseTable.tsx
+- workout/workout_components/TrainerWorkoutModal/TrainerWorkoutExerciseFields.tsx
+- workout/workout_components/TrainerWorkoutModal/TrainerWorkoutModal.tsx
+- workout/workout_components/TrainerWorkoutPlansGrid/TrainerWorkoutPlansGrid.tsx
+- workout/workout_components/TrainerWorkoutToolbar/TrainerWorkoutToolbar.tsx
+- workout/workout_queries/TrainerUseWorkoutMutations.ts
+- workout/workout_tests/TrainerWorkoutApiBehavior.test.ts

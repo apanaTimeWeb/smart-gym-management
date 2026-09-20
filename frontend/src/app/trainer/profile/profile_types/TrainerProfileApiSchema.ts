@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { TrainerProfileFormSchema } from '@/app/trainer/profile/profile_types/TrainerProfileSchema';
+import { createTrainerApiResponseSchema } from '@/app/trainer/trainer_utils/TrainerApiResponseSchema';
 
 export const TrainerProfileDataSchema = z.object({
   id: z.string(), name: z.string(), email: z.string().email(), phone: z.string(), role: z.string(),
@@ -10,5 +11,5 @@ export const TrainerProfileDataSchema = z.object({
   languagesSpoken: z.array(z.string()).optional(),
 });
 
-export const TrainerPasswordResponseSchema = z.object({ success: z.boolean(), message: z.string(), data: z.nullable(z.unknown()) });
+export const TrainerPasswordResponseSchema = createTrainerApiResponseSchema(z.null());
 export { TrainerProfileFormSchema };

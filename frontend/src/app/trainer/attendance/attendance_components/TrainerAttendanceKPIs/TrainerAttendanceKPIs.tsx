@@ -1,5 +1,5 @@
-'use client';
 // RESPONSIBILITY: Renders the top KPI stat cards for the Attendance module (total, member, staff check-ins).
+'use client';
 // DATA FLOW: props (from useAttendanceStatsQuery via TrainerAttendanceMain) → display only
 import { CalendarCheck, Users, UserCheck } from 'lucide-react';
 import { useDateRangeSuffix } from '@/lib/useDateRangeSuffix';

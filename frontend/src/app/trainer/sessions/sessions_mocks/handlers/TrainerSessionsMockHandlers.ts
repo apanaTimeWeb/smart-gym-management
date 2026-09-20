@@ -1,7 +1,7 @@
 import { http, HttpResponse, delay } from 'msw';
 import { StatusCodes } from 'http-status-codes';
 import { env } from '@/config/env';
-import { MOCK_TRAINER_SESSIONS, MOCK_TRAINER_SESSION_MEMBERS } from '@/app/trainer/sessions/sessions_fixtures/TrainerSessionsMockData';
+import { MOCK_TRAINER_SESSIONS, MOCK_TRAINER_SESSION_MEMBERS } from '@/app/trainer/sessions/sessions_mocks/fixtures/TrainerSessionsMockData';
 import { CreateSessionDtoSchema } from '@/app/trainer/sessions/sessions_types/TrainerSessionsTypes';
 import { TrainerSessionsUrlConfig } from '@/app/trainer/sessions/sessions_url_config';
 const BASE = env.NEXT_PUBLIC_API_URL;

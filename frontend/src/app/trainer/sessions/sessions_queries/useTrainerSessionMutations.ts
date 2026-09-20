@@ -1,3 +1,4 @@
+'use client';
 // RESPONSIBILITY: Custom mutation hooks for Trainer Sessions.
 // DATA FLOW: Component -> useTrainerSessionMutations -> API
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -9,6 +10,7 @@ import {
 } from '@/app/trainer/sessions/sessions_api/TrainerSessionsApi';
 import type { CreateSessionDto } from '@/app/trainer/sessions/sessions_types/TrainerSessionsTypes';
 
+/** Owns useTrainerSessionMutations behavior for this Trainer module. */
 export function useTrainerSessionMutations() {
   const queryClient = useQueryClient();
 

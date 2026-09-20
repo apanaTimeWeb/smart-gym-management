@@ -16,6 +16,11 @@ export const WeeklyAvailabilitySchema = z.object({
 });
 export type WeeklyAvailability = z.infer<typeof WeeklyAvailabilitySchema>;
 
+export const TrainerWeeklyAvailabilityFormSchema = z.object({
+  days: z.array(WeeklyAvailabilitySchema).length(7),
+});
+export type TrainerWeeklyAvailabilityFormValues = z.infer<typeof TrainerWeeklyAvailabilityFormSchema>;
+
 export const LeaveStatusSchema = z.enum(['PENDING', 'APPROVED', 'REJECTED']);
 export type LeaveStatus = z.infer<typeof LeaveStatusSchema>;
 

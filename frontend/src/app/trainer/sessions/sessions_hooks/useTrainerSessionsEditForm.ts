@@ -5,10 +5,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { TrainerSessionsEditFormSchema, type TrainerSessionsEditFormValues } from '@/app/trainer/sessions/sessions_types/TrainerSessionsEditSchema';
 import type { TrainerSession } from '@/app/trainer/sessions/sessions_types/TrainerSessionsTypes';
 import { useTrainerSessionMutations } from '@/app/trainer/sessions/sessions_queries/useTrainerSessionMutations';
+import { useTrainerIdempotencyKey } from '@/app/trainer/trainer_utils/useTrainerIdempotencyKey';
 
+/** Owns useTrainerSessionsEditForm behavior for this Trainer module. */
 export function useTrainerSessionsEditForm(session: TrainerSession, onSuccess: (updated: TrainerSession, message: string) => void) {
   const { updateSession } = useTrainerSessionMutations();
+  const actionKeys = useTrainerIdempotencyKey();
   const form = useForm<TrainerSessionsEditFormValues>({ resolver: zodResolver(TrainerSessionsEditFormSchema), defaultValues: { time: session.time ?? '', duration: session.duration ?? '60m', location: session.location ?? '', room: session.room ?? '' } });
-  const submit = form.handleSubmit(async (values) => { const response = await updateSession.mutateAsync({ id: session.id, dto: values, idempotencyKey: crypto.randomUUID() }); onSuccess(response.data, response.message); });
+  const submit = form.handleSubmit(async (values) => { const response = await updateSession.mutateAsync({ id: session.id, dto: values, idempotencyKey: actionKeys.begin(`update-session-${session.id}`) }); onSuccess(response.data, response.message); });
   return { ...form, submit, mutation: updateSession };
 }
