@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
   }
 
   const { email, password } = parsedPayload.data;
-  const demoEnabled = process.env.NODE_ENV !== 'production' && process.env.AUTH_DEMO_MODE === 'true';
+  const demoEnabled = process.env.AUTH_DEMO_MODE === 'true' || process.env.NEXT_PUBLIC_DEMO_MODE === 'true';
 
   if (demoEnabled) {
     const demoUser = AuthMockFixturesApi.findByCredentials(email, password);

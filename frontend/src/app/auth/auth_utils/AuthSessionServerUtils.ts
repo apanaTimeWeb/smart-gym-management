@@ -23,7 +23,7 @@ export const AuthSessionServerUtils = {
   async resolveUser(accessToken: string | undefined, rawUserCookie: string | undefined): Promise<AuthUser | null> {
     if (!accessToken) return null;
 
-    const demoEnabled = process.env.NODE_ENV !== 'production' && process.env.AUTH_DEMO_MODE === 'true';
+    const demoEnabled = process.env.AUTH_DEMO_MODE === 'true' || process.env.NEXT_PUBLIC_DEMO_MODE === 'true';
     if (demoEnabled) {
       return AuthSessionServerUtils.parseUserCookie(rawUserCookie);
     }
