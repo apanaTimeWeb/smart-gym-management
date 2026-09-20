@@ -17,6 +17,17 @@ export function resetManagerWorkoutMockState(): void {
 
 export const managerWorkoutHandlers = [
   http.get(managerMockApiUrl(ManagerWorkoutUrlConfig.BACKEND_API.ASSIGNMENTS), () => HttpResponse.json({ success: true, message: 'Assignments fetched', data: MOCK_WORKOUT_ASSIGNMENTS })),
+  http.get(managerMockApiUrl(ManagerWorkoutUrlConfig.BACKEND_API.EXERCISES_BASE), ({ request }) => {
+    const url = new URL(request.url);
+    const search = (url.searchParams.get('search') ?? '').toLowerCase();
+    const mockExercises = [
+      { id: 'ex1', name: 'Bench Press', muscleGroup: ['Chest'], difficulty: 'INTERMEDIATE', equipment: 'Barbell' },
+      { id: 'ex2', name: 'Squat', muscleGroup: ['Legs'], difficulty: 'ADVANCED', equipment: 'Barbell' },
+      { id: 'ex3', name: 'Push Up', muscleGroup: ['Chest', 'Arms'], difficulty: 'BEGINNER', equipment: 'Bodyweight' }
+    ];
+    const filtered = search ? mockExercises.filter(e => e.name.toLowerCase().includes(search)) : mockExercises;
+    return HttpResponse.json({ success: true, message: 'Success', data: { exercises: filtered, total: filtered.length } });
+  }),
   http.get(managerMockApiUrl(ManagerWorkoutUrlConfig.BACKEND_API.WORKOUTS_BASE), ({ request }) => {
     const url = new URL(request.url);
     const search = url.searchParams.get('search')?.toLowerCase();

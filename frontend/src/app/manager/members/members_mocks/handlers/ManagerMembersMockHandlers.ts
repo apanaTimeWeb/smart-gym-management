@@ -101,9 +101,9 @@ export const managerMembersHandlers = [
 
   http.get(managerMockApiUrl(ManagerMembersUrlConfig.BACKEND_API.PLANS_SNAPSHOT), () => {
     return HttpResponse.json({ success: true, message: 'Success', data: [
-      { id: 'p1', name: 'Annual Pro', durationMonths: 12, price: 1500000 },
-      { id: 'p2', name: 'Quarterly Starter', durationMonths: 3, price: 500000 },
-      { id: 'p3', name: 'Monthly Basic', durationMonths: 1, price: 200000 }
+      { id: 'p1', name: 'Annual Pro', price1Month: 150000, price3Month: 400000, price6Month: 750000, price12Month: 1500000 },
+      { id: 'p2', name: 'Quarterly Starter', price1Month: 200000, price3Month: 500000, price6Month: 900000, price12Month: 1600000 },
+      { id: 'p3', name: 'Monthly Basic', price1Month: 200000, price3Month: 550000, price6Month: 1000000, price12Month: 1800000 }
     ] });
   }),
 

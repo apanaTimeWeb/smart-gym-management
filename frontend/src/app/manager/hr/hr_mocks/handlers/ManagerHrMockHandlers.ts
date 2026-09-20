@@ -138,6 +138,17 @@ export const managerHrHandlers = [
   
   http.get(managerMockApiUrl(ManagerHrUrlConfig.BACKEND_API.STAFF_ATTENDANCE_BASE(':staffId')), ({ request }) => {
     const _month = new URL(request.url).searchParams.get('month');
-    return HttpResponse.json({ success: true, message: 'Success', data: { history: [] } });
+    return HttpResponse.json({ 
+      success: true, 
+      message: 'Success', 
+      data: { 
+        history: [
+          { date: '2024-05-01', status: 'Present', checkIn: '08:00 AM', checkOut: '05:00 PM' },
+          { date: '2024-05-02', status: 'Present', checkIn: '08:15 AM', checkOut: '05:05 PM' },
+          { date: '2024-05-03', status: 'Absent' },
+          { date: '2024-05-04', status: 'Leave' }
+        ] 
+      } 
+    });
   }),
 ];

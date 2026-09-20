@@ -1,6 +1,7 @@
 import { http, HttpResponse } from 'msw';
 import { MOCK_NOTIFICATIONS, MOCK_NOTIFICATION_KPIS } from '@/app/manager/notifications/notifications_fixtures/ManagerNotificationsMockData';
 import { ManagerNotificationsUrlConfig } from '@/app/manager/notifications/notifications_url_config';
+import { managerMockApiUrl } from '@/app/manager/manager_infrastructure/ManagerMockApiUrl';
 
 
 let notifications = structuredClone(MOCK_NOTIFICATIONS);
@@ -10,7 +11,7 @@ export function resetManagerNotificationsMockState(): void {
 }
 
 export const managerNotificationsHandlers = [
-  http.get(`${ManagerNotificationsUrlConfig.BACKEND_API.BASE}`, ({ request }) => {
+  http.get(managerMockApiUrl(ManagerNotificationsUrlConfig.BACKEND_API.BASE), ({ request }) => {
     const url = new URL(request.url);
     const search = (url.searchParams.get('search') ?? '').toLowerCase();
     const type = url.searchParams.get('type') ?? 'ALL';
@@ -24,18 +25,18 @@ export const managerNotificationsHandlers = [
     );
     return HttpResponse.json({ success: true, message: 'Notifications fetched', data: { notifications: items, total: items.length } });
   }),
-  http.get(`${ManagerNotificationsUrlConfig.BACKEND_API.BASE}/kpis`, () =>
+  http.get(managerMockApiUrl(`${ManagerNotificationsUrlConfig.BACKEND_API.BASE}/kpis`), () =>
     HttpResponse.json({ success: true, message: 'Notification KPIs fetched', data: { ...MOCK_NOTIFICATION_KPIS, total: notifications.length, unread: notifications.filter((n) => n.status === 'UNREAD').length } }),
   ),
-  http.patch(`${ManagerNotificationsUrlConfig.BACKEND_API.BASE}/:id/read`, ({ params }) => {
+  http.patch(managerMockApiUrl(`${ManagerNotificationsUrlConfig.BACKEND_API.BASE}/:id/read`), ({ params }) => {
     notifications = notifications.map((n) => n.id === params.id ? { ...n, status: 'READ', readAt: new Date().toISOString() } : n);
     return HttpResponse.json({ success: true, message: 'Notification marked as read', data: null });
   }),
-  http.patch(`${ManagerNotificationsUrlConfig.BACKEND_API.BASE}/read-all`, () => {
+  http.patch(managerMockApiUrl(`${ManagerNotificationsUrlConfig.BACKEND_API.BASE}/read-all`), () => {
     notifications = notifications.map((n) => ({ ...n, status: 'READ', readAt: new Date().toISOString() }));
     return HttpResponse.json({ success: true, message: 'All notifications marked as read', data: null });
   }),
-  http.delete(`${ManagerNotificationsUrlConfig.BACKEND_API.BASE}/:id`, ({ params }) => {
+  http.delete(managerMockApiUrl(`${ManagerNotificationsUrlConfig.BACKEND_API.BASE}/:id`), ({ params }) => {
     notifications = notifications.filter((n) => n.id !== params.id);
     return HttpResponse.json({ success: true, message: 'Notification dismissed', data: null });
   }),

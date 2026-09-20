@@ -4,6 +4,7 @@ import { MOCK_GRIEVANCE_TICKETS } from '@/app/manager/grievance/grievance_mocks/
 import { CreateGrievanceTicketSchema } from '@/app/manager/grievance/grievance_schemas/ManagerGrievanceSchemas';
 import { ManagerGrievanceUrlConfig } from '@/app/manager/grievance/grievance_url_config';
 import { MANAGER_HTTP_STATUS } from '@/app/manager/manager_infrastructure/ManagerHttpStatus';
+import { managerMockApiUrl } from '@/app/manager/manager_infrastructure/ManagerMockApiUrl';
 import type { GrievanceTicket } from '@/app/manager/grievance/grievance_types/ManagerGrievanceTypes';
 
 
@@ -16,7 +17,7 @@ export function resetManagerGrievanceMockState(): void {
 }
 
 export const managerGrievanceMockHandlers = [
-  http.get(ManagerGrievanceUrlConfig.BACKEND_API.BASE, async () => {
+  http.get(managerMockApiUrl(ManagerGrievanceUrlConfig.BACKEND_API.BASE), async () => {
     await delay(100);
     return HttpResponse.json({
       success: true,
@@ -26,7 +27,7 @@ export const managerGrievanceMockHandlers = [
     });
   }),
 
-  http.post(ManagerGrievanceUrlConfig.BACKEND_API.BASE, async ({ request }) => {
+  http.post(managerMockApiUrl(ManagerGrievanceUrlConfig.BACKEND_API.BASE), async ({ request }) => {
     await delay(100);
     const body = CreateGrievanceTicketSchema.parse(await request.json());
     const newTicket: GrievanceTicket = {
@@ -41,7 +42,7 @@ export const managerGrievanceMockHandlers = [
     return HttpResponse.json({ success: true, message: 'Grievance created', data: newTicket });
   }),
 
-  http.post(ManagerGrievanceUrlConfig.BACKEND_API.RESOLVE(':id'), async ({ params, request }) => {
+  http.post(managerMockApiUrl(ManagerGrievanceUrlConfig.BACKEND_API.RESOLVE(':id')), async ({ params, request }) => {
     await delay(100);
     const id = String(params.id);
     const body = z.object({ resolutionNote: z.string().min(1) }).parse(await request.json());

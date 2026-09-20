@@ -3,6 +3,7 @@ import { MOCK_MAINTENANCE_TICKETS } from '@/app/manager/maintenance/maintenance_
 import { CreateMaintenanceTicketSchema } from '@/app/manager/maintenance/maintenance_schemas/ManagerMaintenanceSchemas';
 import { ManagerMaintenanceUrlConfig } from '@/app/manager/maintenance/maintenance_url_config';
 import { MANAGER_HTTP_STATUS } from '@/app/manager/manager_infrastructure/ManagerHttpStatus';
+import { managerMockApiUrl } from '@/app/manager/manager_infrastructure/ManagerMockApiUrl';
 import type { MaintenanceTicket } from '@/app/manager/maintenance/maintenance_types/ManagerMaintenanceTypes';
 
 
@@ -15,7 +16,7 @@ export function resetManagerMaintenanceMockState(): void {
 }
 
 export const managerMaintenanceMockHandlers = [
-  http.get(ManagerMaintenanceUrlConfig.BACKEND_API.BASE, async () => {
+  http.get(managerMockApiUrl(ManagerMaintenanceUrlConfig.BACKEND_API.BASE), async () => {
     await delay(100);
     return HttpResponse.json({
       success: true,
@@ -25,7 +26,7 @@ export const managerMaintenanceMockHandlers = [
     });
   }),
 
-  http.post(ManagerMaintenanceUrlConfig.BACKEND_API.BASE, async ({ request }) => {
+  http.post(managerMockApiUrl(ManagerMaintenanceUrlConfig.BACKEND_API.BASE), async ({ request }) => {
     await delay(100);
     const body = CreateMaintenanceTicketSchema.parse(await request.json());
     const newTicket: MaintenanceTicket = {
@@ -41,7 +42,7 @@ export const managerMaintenanceMockHandlers = [
     return HttpResponse.json({ success: true, message: 'Ticket created', data: newTicket });
   }),
 
-  http.post(ManagerMaintenanceUrlConfig.BACKEND_API.RESOLVE(':id'), async ({ params }) => {
+  http.post(managerMockApiUrl(ManagerMaintenanceUrlConfig.BACKEND_API.RESOLVE(':id')), async ({ params }) => {
     await delay(100);
     const id = String(params.id);
     const ticketIndex = tickets.findIndex((ticket) => ticket.id === id);
