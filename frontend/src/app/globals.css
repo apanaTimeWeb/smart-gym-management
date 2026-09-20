@@ -40,10 +40,10 @@
   --color-skeleton-base: var(--skeleton-base);
   --color-skeleton-highlight: var(--skeleton-highlight);
 
-  --color-text-on-primary: var(--text-on-primary);
-  --color-text-on-danger: var(--text-on-danger);
-  --color-text-on-success: var(--text-on-success);
-  --color-text-on-info: var(--text-on-info);
+  --color-on-primary: var(--text-on-primary);
+  --color-on-danger: var(--text-on-danger);
+  --color-on-success: var(--text-on-success);
+  --color-on-info: var(--text-on-info);
   
   --color-surface-hover: var(--surface-hover);
   --color-surface-highlight: var(--surface-highlight);
@@ -111,8 +111,8 @@
   --font-size-badge: 11px;
 
   /* LIGHT MODE VARIABLES (Championship Gold) */
-  --primary: #EAB308;
-  --primary-hover: #CA8A04;
+  --primary: #FACC15;
+  --primary-hover: #EAB308;
   --primary-subtle: #FEF9C3;
   
   --bg-page: #F4F4F5;
@@ -132,10 +132,10 @@
   --text-secondary: #52525B;
   --text-disabled: #A1A1AA;
   
-  --text-on-primary: #111111;
-  --text-on-danger: #7F1D1D;
-  --text-on-success: #064E3B;
-  --text-on-info: #1E3A8A;
+  --text-on-primary: #000000;
+  --text-on-danger: #FFFFFF;
+  --text-on-success: #FFFFFF;
+  --text-on-info: #FFFFFF;
   
   --success: #10B981;
   --success-bg: #D1FAE5;
@@ -213,7 +213,7 @@
   --text-secondary: #A1A1AA;
   --text-disabled: #52525B;
   
-  --text-on-primary: #111111;
+  --text-on-primary: #000000;
   --text-on-danger: #FFFFFF;
   --text-on-success: #FFFFFF;
   --text-on-info: #FFFFFF;

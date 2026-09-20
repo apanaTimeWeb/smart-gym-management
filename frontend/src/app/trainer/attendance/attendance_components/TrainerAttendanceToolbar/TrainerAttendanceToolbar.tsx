@@ -1,6 +1,6 @@
-'use client';
-// RESPONSIBILITY: Toolbar for Attendance — tabs, search, date filter, view-mode toggle, and action buttons.
-// DATA FLOW: props (from TrainerAttendanceMain) → URL state via useAttendanceFilters setters
+﻿'use client';
+// RESPONSIBILITY: Toolbar for Attendance â€” tabs, search, date filter, view-mode toggle, and action buttons.
+// DATA FLOW: props (from TrainerAttendanceMain) â†’ URL state via useAttendanceFilters setters
 import { useState, useEffect } from 'react';
 import { RefreshCw, Search, Calendar as CalendarIcon, List, Plus, LogIn, LogOut, Loader2 } from 'lucide-react';
 import { ATTENDANCE_TABS, ATTENDANCE_DATE_FILTER_OPTIONS } from '@/app/trainer/attendance/attendance_utils/TrainerAttendanceSharedConstants';
@@ -103,7 +103,7 @@ export default function TrainerAttendanceToolbar({
             <button type="button"
               onClick={onSelfCheckIn}
               disabled={selfCheckInPending}
-              className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page flex items-center gap-2 px-3 py-2 text-sm bg-success text-on-primary rounded-lg hover:opacity-90 disabled:opacity-70 motion-safe:transition-opacity"
+              className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page flex items-center gap-2 px-3 py-2 text-sm bg-success text-on-success rounded-lg hover:opacity-90 disabled:opacity-70 motion-safe:transition-opacity"
             >
               {selfCheckInPending ? <Loader2 size={14} className="motion-safe:animate-spin" /> : <LogIn size={14} />}
               Check In
@@ -132,3 +132,4 @@ export default function TrainerAttendanceToolbar({
     </div>
   );
 }
+

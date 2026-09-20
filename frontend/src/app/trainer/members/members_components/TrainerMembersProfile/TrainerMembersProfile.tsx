@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 // RESPONSIBILITY: Renders a detailed view of a selected member's profile.
 import { MessageCircle, Mail } from 'lucide-react';
 import { useTrainerMembersStore } from '@/app/trainer/members/members_store/useTrainerMembersStore';
@@ -33,7 +33,7 @@ export default function TrainerMembersProfile() {
           onClick={() => setSelectedMember(null)}
           className="text-sm text-secondary hover:text-primary flex items-center gap-1.5 motion-safe:transition-all motion-safe:duration-base"
         >
-          ← Back to Members
+          â† Back to Members
         </button>
 
         {/* Profile Card */}
@@ -45,7 +45,7 @@ export default function TrainerMembersProfile() {
               </div>
               <div>
                 <h2 className="text-xl font-bold text-primary">{selectedMember.name}</h2>
-                <p className="text-secondary text-sm">{selectedMember.email} · {maskSensitiveData(selectedMember.phone, 'phone')}</p>
+                <p className="text-secondary text-sm">{selectedMember.email} Â· {maskSensitiveData(selectedMember.phone, 'phone')}</p>
                 <div className="flex gap-2 mt-2 flex-wrap">
                   <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${statusStyle.bg} ${statusStyle.text}`}>
                     {selectedMember.status}
@@ -62,13 +62,13 @@ export default function TrainerMembersProfile() {
             <div className="flex gap-2 flex-wrap">
               <button type="button"
                 onClick={() => openMsg({ name: selectedMember.name, email: selectedMember.email, phone: selectedMember.phone }, 'whatsapp', '')}
-                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold bg-success text-on-primary rounded-xl hover:opacity-90 motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95"
+                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold bg-success text-on-success rounded-xl hover:opacity-90 motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95"
               >
                 <MessageCircle size={14} /> WhatsApp
               </button>
               <button type="button"
                 onClick={() => openMsg({ name: selectedMember.name, email: selectedMember.email, phone: selectedMember.phone }, 'email', '')}
-                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold bg-info text-on-primary rounded-xl hover:opacity-90 motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95"
+                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold bg-info text-on-info rounded-xl hover:opacity-90 motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95"
               >
                 <Mail size={14} /> Email
               </button>
@@ -80,8 +80,8 @@ export default function TrainerMembersProfile() {
               { label: 'Member ID', value: selectedMember.membershipNumber ?? selectedMember.id },
               { label: 'Age', value: displayValue(selectedMember.age, '0') + ' yrs' },
               { label: 'Gender', value: displayValue(selectedMember.gender) },
-              { label: 'Height', value: selectedMember.heightCm == null ? '—' : `${displayValue(selectedMember.heightCm)} cm` },
-              { label: 'Weight', value: selectedMember.weightKg == null ? '—' : `${displayValue(selectedMember.weightKg)} kg` },
+              { label: 'Height', value: selectedMember.heightCm == null ? 'â€”' : `${displayValue(selectedMember.heightCm)} cm` },
+              { label: 'Weight', value: selectedMember.weightKg == null ? 'â€”' : `${displayValue(selectedMember.weightKg)} kg` },
               { label: 'Join Date', value: displayValue(selectedMember.joinDate) },
               { label: 'Expiry Date', value: displayValue(selectedMember.expiryDate) },
               { label: 'Fitness Goal', value: displayValue(selectedMember.fitnessGoal) },
@@ -128,4 +128,5 @@ export default function TrainerMembersProfile() {
     </div>
   );
 }
+
 

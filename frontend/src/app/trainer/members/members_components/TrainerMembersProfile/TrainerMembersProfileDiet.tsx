@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 // RESPONSIBILITY: Renders the member's assigned diet plan and handles diet plan assignment for trainers.
 // DATA FLOW: Members selected-member state -> profile view -> feature-local member API contract
 
@@ -41,14 +41,14 @@ export default function TrainerMembersProfileDiet() {
   const handleShareWhatsApp = () => {
     if (!diet) return;
     const mealsText = Array.isArray(diet.meals) 
-      ? diet.meals.map((m: string | { name?: string; time?: string; items?: string; description?: string }, i: number) => typeof m === 'string' ? `• ${m}` : `• *${m.name || `Meal ${i+1}`}* (${m.time || ''}): ${m.items || m.description || ''}`).join('\n')
+      ? diet.meals.map((m: string | { name?: string; time?: string; items?: string; description?: string }, i: number) => typeof m === 'string' ? `â€¢ ${m}` : `â€¢ *${m.name || `Meal ${i+1}`}* (${m.time || ''}): ${m.items || m.description || ''}`).join('\n')
       : 'Follow balanced nutrition as advised.';
 
     const text = `*GYMSMART NUTRITION & DIET PLAN FOR ${selectedMember.name.toUpperCase()}*\n` +
       `Plan: *${diet.name}*\n` +
       `Goal: ${displayValue(diet.goal)}\n` +
       `Target Calories: *${displayValue(diet.calories)} kcal*\n` +
-      `Macros: Protein ${displayValue(diet.protein)}g · Carbs ${displayValue(diet.carbs)}g · Fats ${displayValue(diet.fats)}g\n\n` +
+      `Macros: Protein ${displayValue(diet.protein)}g Â· Carbs ${displayValue(diet.carbs)}g Â· Fats ${displayValue(diet.fats)}g\n\n` +
       `*Meal Schedule:*\n${mealsText}\n\n` +
       '';
     window.open(`https://wa.me/${selectedMember.phone?.replace(/[^0-9]/g, '') || ''}?text=${encodeURIComponent(text)}`, '_blank');
@@ -66,7 +66,7 @@ export default function TrainerMembersProfileDiet() {
             <>
               <button type="button" 
                 onClick={handleShareWhatsApp}
-                className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page flex items-center gap-2 px-4 py-2 bg-success text-on-primary rounded-xl text-sm font-semibold hover:opacity-90 shadow-card motion-safe:transition-all motion-safe:active:scale-95"
+                className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page flex items-center gap-2 px-4 py-2 bg-success text-on-success rounded-xl text-sm font-semibold hover:opacity-90 shadow-card motion-safe:transition-all motion-safe:active:scale-95"
               >
                 <MessageCircle size={16} /> Share via WhatsApp
               </button>
@@ -111,7 +111,7 @@ export default function TrainerMembersProfileDiet() {
           ) : (
             <div className="flex flex-col sm:flex-row gap-3">
               <TrainerSearchableDropdown
-                options={availableDiets.map((diet) => ({ value: diet.id, label: `${diet.name} · ${displayValue(diet.goal)}` }))}
+                options={availableDiets.map((diet) => ({ value: diet.id, label: `${diet.name} Â· ${displayValue(diet.goal)}` }))}
                 value={selectedDietId}
                 onChange={(value: string | number) => setSelectedDietId(String(value))}
                 placeholder="Choose a Diet Plan"
@@ -239,3 +239,4 @@ export default function TrainerMembersProfileDiet() {
     </div>
   );
 }
+

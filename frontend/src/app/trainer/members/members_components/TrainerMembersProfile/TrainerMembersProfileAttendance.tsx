@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 // RESPONSIBILITY: Renders the member's current month attendance history in a full monthly calendar format.
 // Strictly view-only: trainers can monitor member consistency but cannot alter attendance logs.
 
@@ -121,11 +121,11 @@ export default function TrainerMembersProfileAttendance() {
             if (isPastOrToday) {
               if (status === 'P') {
                 statusStyle = 'bg-success-bg text-success border-success hover:border-success/60';
-                badgeStyle = 'bg-success text-on-primary';
+                badgeStyle = 'bg-success text-on-success';
                 label = 'Present';
               } else if (status === 'A') {
                 statusStyle = 'bg-danger-bg text-danger border-danger hover:border-danger/60';
-                badgeStyle = 'bg-danger text-on-primary';
+                badgeStyle = 'bg-danger text-on-danger';
                 label = 'Absent';
               } else if (status === 'L') {
                 statusStyle = 'bg-warning-bg text-warning border-warning/30 hover:border-warning/60';
@@ -162,7 +162,7 @@ export default function TrainerMembersProfileAttendance() {
                     </span>
                   ) : (
                     <span className="text-xs text-disabled">
-                      —
+                      â€”
                     </span>
                   )}
                 </div>
@@ -196,3 +196,4 @@ export default function TrainerMembersProfileAttendance() {
     </div>
   );
 }
+

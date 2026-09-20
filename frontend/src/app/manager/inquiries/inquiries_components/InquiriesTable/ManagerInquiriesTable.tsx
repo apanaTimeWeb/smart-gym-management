@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 // RESPONSIBILITY: Renders the paginated, filterable table of inquiries with row actions, status updates, and bulk selection.
 import { MANAGER_GENERIC_ERROR_MESSAGE } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
 import { useManagerInquiriesLogic } from '@/app/manager/inquiries/inquiries_hooks/ManagerUseManagerInquiriesLogic';
@@ -156,7 +156,7 @@ export default function ManagerInquiriesTable() {
                       </button>
                       <button
                         onClick={(e) => { e.stopPropagation(); openMsg(inq, 'email'); }}
-                        className="p-1.5 rounded-lg bg-info text-on-primary hover:opacity-80 motion-safe:transition-all motion-safe:duration-200"
+                        className="p-1.5 rounded-lg bg-info text-on-info hover:opacity-80 motion-safe:transition-all motion-safe:duration-200"
                         title="Email"
                         aria-label={`Email ${inq.name}`}
                       >
@@ -222,3 +222,4 @@ export default function ManagerInquiriesTable() {
     </div>
   );
 }
+

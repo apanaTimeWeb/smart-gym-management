@@ -1,6 +1,6 @@
-'use client';
+﻿'use client';
 // RESPONSIBILITY: Renders the member's assigned workout plan and provides plan assignment capabilities for trainers.
-// DATA FLOW: useTrainerSelectedMember/useTrainerMembersQuery → Members API → TrainerMembersProfileWorkout
+// DATA FLOW: useTrainerSelectedMember/useTrainerMembersQuery â†’ Members API â†’ TrainerMembersProfileWorkout
 
 import { useState } from 'react';
 import { Dumbbell, Plus, Check, MessageCircle, RefreshCw, Calendar, Flame, Target } from 'lucide-react';
@@ -63,7 +63,7 @@ export default function TrainerMembersProfileWorkout() {
             <>
               <button type="button" 
                 onClick={handleShareWhatsApp}
-                className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page flex items-center gap-2 px-4 py-2 bg-success text-on-primary rounded-xl text-sm font-semibold hover:opacity-90 shadow-card motion-safe:transition-all motion-safe:active:scale-95"
+                className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page flex items-center gap-2 px-4 py-2 bg-success text-on-success rounded-xl text-sm font-semibold hover:opacity-90 shadow-card motion-safe:transition-all motion-safe:active:scale-95"
               >
                 <MessageCircle size={16} /> Share via WhatsApp
               </button>
@@ -108,7 +108,7 @@ export default function TrainerMembersProfileWorkout() {
           ) : (
             <div className="flex flex-col sm:flex-row gap-3">
               <TrainerSearchableDropdown
-                options={availableWorkouts.map(w => ({ value: w.id, label: `${w.name} · ${displayValue(w.level)} (${displayValue(w.duration)})` }))}
+                options={availableWorkouts.map(w => ({ value: w.id, label: `${w.name} Â· ${displayValue(w.level)} (${displayValue(w.duration)})` }))}
                 value={selectedWorkoutId}
                 onChange={(value: string | number) => setSelectedWorkoutId(String(value))}
                 placeholder="Choose a Workout Plan"
@@ -177,7 +177,7 @@ export default function TrainerMembersProfileWorkout() {
                       </div>
                     </div>
                     <div className="text-right">
-                      <span className="text-sm font-bold text-primary">{ex.sets} sets × {ex.reps}</span>
+                      <span className="text-sm font-bold text-primary">{ex.sets} sets Ã— {ex.reps}</span>
                       {ex.weight && <p className="text-xs text-secondary">{ex.weight}</p>}
                     </div>
                   </div>
@@ -216,7 +216,7 @@ export default function TrainerMembersProfileWorkout() {
             <div key={historyItem.id} className="bg-input rounded-xl p-4 flex items-center justify-between">
               <div>
                 <h5 className="font-bold text-sm text-primary">{historyItem.name}</h5>
-                <p className="text-xs text-secondary">{historyItem.date} · {historyItem.level}</p>
+                <p className="text-xs text-secondary">{historyItem.date} Â· {historyItem.level}</p>
               </div>
               <span className="px-3 py-1 rounded-full text-xs font-semibold bg-success-bg text-success flex items-center gap-1">
                 <Check size={12} /> {historyItem.status}
@@ -228,3 +228,4 @@ export default function TrainerMembersProfileWorkout() {
     </div>
   );
 }
+

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 // RESPONSIBILITY: Renders the Manager FinanceFilters presentation layer for the Manager module.
 import { Search, Download, FileText, RefreshCw } from 'lucide-react';
 import ManagerSearchableDropdown from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
@@ -63,7 +63,7 @@ export default function ManagerFinanceFilters() {
           <Download size={18} /> CSV
         </button>
         <button onClick={exportPDF}
-          className="flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg bg-info text-on-primary hover:opacity-90 motion-safe:transition-opacity">
+          className="flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg bg-info text-on-info hover:opacity-90 motion-safe:transition-opacity">
           <FileText size={18} /> PDF
         </button>
         <button onClick={reload}
@@ -74,3 +74,4 @@ export default function ManagerFinanceFilters() {
     </div>
   );
 }
+

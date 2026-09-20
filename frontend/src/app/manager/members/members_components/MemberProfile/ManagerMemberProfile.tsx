@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
 // RESPONSIBILITY: Renders a detailed view of a selected member's profile.
@@ -30,7 +30,7 @@ export default function ManagerMemberProfile() {
           onClick={() => setSelectedMember(null)}
           className="text-sm text-secondary hover:text-primary flex items-center gap-1.5 motion-safe:transition-all motion-safe:duration-200"
         >
-          ← Back to Members
+          â† Back to Members
         </button>
 
         {/* Profile Card */}
@@ -42,7 +42,7 @@ export default function ManagerMemberProfile() {
               </div>
               <div>
                 <h2 className="text-xl font-bold text-primary">{displayValue(selectedMember.name)}</h2>
-                <p className="text-secondary text-sm">{selectedMember.email} · {selectedMember.phone}</p>
+                <p className="text-secondary text-sm">{selectedMember.email} Â· {selectedMember.phone}</p>
                 <div className="flex gap-2 mt-2 flex-wrap">
                   <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${statusStyle.bg} ${statusStyle.text}`}>
                     {selectedMember.status}
@@ -77,7 +77,7 @@ export default function ManagerMemberProfile() {
               </button>
               <button
                 onClick={() => openMsg(selectedMember, 'email')}
-                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold bg-info text-on-primary rounded-xl hover:opacity-90 motion-safe:transition-all motion-safe:duration-200 motion-safe:active:scale-95"
+                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold bg-info text-on-info rounded-xl hover:opacity-90 motion-safe:transition-all motion-safe:duration-200 motion-safe:active:scale-95"
               >
                 <Mail size={18} /> Email
               </button>
@@ -133,3 +133,4 @@ export default function ManagerMemberProfile() {
     </div>
   );
 }
+

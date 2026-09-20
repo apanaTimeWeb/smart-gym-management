@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 // RESPONSIBILITY: Renders a month-wise calendar view of attendance for a specific user.
 import React, { useState } from 'react';
 import { formatAttendanceMonthYear } from '@/app/manager/attendance/attendance_utils/ManagerAttendanceSharedConstants';
@@ -137,7 +137,7 @@ export default function ManagerAttendanceCalendar() {
                       className={`
                         aspect-square flex items-center justify-center rounded-md border-none text-xs font-bold motion-safe:transition-all
                         ${isPresent ? 'bg-success text-on-success motion-safe:hover:scale-110' : ''}
-                        ${isAbsent ? 'bg-danger text-on-primary motion-safe:hover:scale-110' : ''}
+                        ${isAbsent ? 'bg-danger text-on-danger motion-safe:hover:scale-110' : ''}
                         ${isLeave ? 'bg-primary text-on-primary motion-safe:hover:scale-110' : ''}
                         ${status === 'NONE' ? 'bg-page border border-border text-secondary' : ''}
                       `}
@@ -155,3 +155,4 @@ export default function ManagerAttendanceCalendar() {
     </div>
   );
 }
+

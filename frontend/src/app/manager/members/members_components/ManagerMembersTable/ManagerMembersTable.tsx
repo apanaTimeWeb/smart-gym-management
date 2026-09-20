@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import { getManagerErrorMessage } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
 import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
@@ -19,7 +19,7 @@ import ManagerMembersSortIcon from '@/app/manager/members/members_components/Man
 import type { ChangeEvent } from 'react';
 
 export default function ManagerMembersTable() {
-  // useConfirm provides the design-system confirm modal (Rule 71 — no window.confirm)
+  // useConfirm provides the design-system confirm modal (Rule 71 â€” no window.confirm)
   const { confirm } = useConfirm();
   const { 
     debouncedSearch, search, statusFilter, genderFilter, planFilter, expiryFrom, expiryTo, currentPage, setCurrentPage,
@@ -169,7 +169,7 @@ export default function ManagerMembersTable() {
                     <td className="px-2 py-3 text-xs text-secondary whitespace-nowrap">{formatDate(m.joinDate)}</td>
                     <td className="px-2 py-3 text-xs text-secondary whitespace-nowrap">{formatDate(m.expiryDate)}</td>
                     <td className="px-2 py-3 text-xs font-semibold text-success whitespace-nowrap">{formatCurrencyFromMinorUnits(m.paidAmount, ManagerEnvConfig.currencyCode)}</td>
-                    <td className="px-2 py-3 text-xs font-semibold text-danger whitespace-nowrap">{m.pendingAmount > 0 ? formatCurrencyFromMinorUnits(m.pendingAmount, ManagerEnvConfig.currencyCode) : '—'}</td>
+                    <td className="px-2 py-3 text-xs font-semibold text-danger whitespace-nowrap">{m.pendingAmount > 0 ? formatCurrencyFromMinorUnits(m.pendingAmount, ManagerEnvConfig.currencyCode) : 'â€”'}</td>
                     <td className="px-2 py-3 text-xs whitespace-nowrap">
 
                       <div className="flex items-center gap-1.5">
@@ -178,7 +178,7 @@ export default function ManagerMembersTable() {
                         )}
                         <button onClick={(e) => { e.stopPropagation(); openEdit(m); }} className="p-1.5 rounded-lg bg-input text-secondary hover:bg-primary-subtle motion-safe:transition-all motion-safe:duration-200" title="Edit" aria-label={`Edit ${m.name}`}><Edit size={18} /></button>
                         <button onClick={(e) => { e.stopPropagation(); openMsg(m, 'whatsapp'); }} className="p-1.5 rounded-lg bg-success text-on-success hover:opacity-80 motion-safe:transition-all motion-safe:duration-200" title="WhatsApp" aria-label={`Message ${m.name} on WhatsApp`}><MessageCircle size={18} /></button>
-                        <button onClick={(e) => { e.stopPropagation(); openMsg(m, 'email'); }} className="p-1.5 rounded-lg bg-info text-on-primary hover:opacity-80 motion-safe:transition-all motion-safe:duration-200" title="Email" aria-label={`Email ${m.name}`}><Mail size={18} /></button>
+                        <button onClick={(e) => { e.stopPropagation(); openMsg(m, 'email'); }} className="p-1.5 rounded-lg bg-info text-on-info hover:opacity-80 motion-safe:transition-all motion-safe:duration-200" title="Email" aria-label={`Email ${m.name}`}><Mail size={18} /></button>
                         {m.status !== 'SUSPENDED' && m.pendingAmount > 0 ? (
                           <button onClick={(e) => { e.stopPropagation(); setSelectedMember(m); toggleSuspend(true); }} className="p-1.5 rounded-lg bg-danger text-danger hover:bg-danger/20 motion-safe:transition-all motion-safe:duration-200" title="Suspend Member" aria-label={`Suspend ${m.name}`}><Ban size={18} /></button>
                         ) : m.status === 'SUSPENDED' ? (
@@ -230,3 +230,4 @@ export default function ManagerMembersTable() {
     </div>
  );
 }
+

@@ -200,11 +200,11 @@ export default function TrainerMyAttendanceCalendar({ records }: TrainerMyAttend
             if (isPastOrToday) {
               if (status === 'P') {
                 statusStyle = 'bg-success-bg text-success border-success hover:border-success/60';
-                badgeStyle = 'bg-success text-on-primary';
+                badgeStyle = 'bg-success text-on-success';
                 label = 'Present';
               } else if (status === 'A') {
                 statusStyle = 'bg-danger-bg text-danger border-danger hover:border-danger/60';
-                badgeStyle = 'bg-danger text-on-primary';
+                badgeStyle = 'bg-danger text-on-danger';
                 label = 'Absent';
               } else if (status === 'L') {
                 statusStyle = 'bg-warning-bg text-warning border-warning/30 hover:border-warning/60';

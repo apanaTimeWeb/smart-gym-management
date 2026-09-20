@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 // RESPONSIBILITY: Renders the primary tabular list of members with actions, filtering state, and pagination.
 import { MessageCircle, Mail, Loader2 } from 'lucide-react';
 import { useTrainerMembersStore } from '@/app/trainer/members/members_store/useTrainerMembersStore';
@@ -106,8 +106,8 @@ export default function TrainerMembersTable() {
                     </td>
                     <td className="px-5 py-3.5">
                       <div className="flex items-center gap-2">
-                        <button type="button" onClick={(e) => { e.stopPropagation(); openMsg({ name: m.name, phone: m.phone, email: m.email }, 'whatsapp', ''); }} className="p-1.5 rounded-lg bg-success text-on-primary hover:opacity-80 motion-safe:transition-all motion-safe:duration-base" title="WhatsApp" aria-label={`Message ${m.name} on WhatsApp`}><MessageCircle size={14} /></button>
-                        <button type="button" onClick={(e) => { e.stopPropagation(); openMsg({ name: m.name, phone: m.phone, email: m.email }, 'email', ''); }} className="p-1.5 rounded-lg bg-info text-on-primary hover:opacity-80 motion-safe:transition-all motion-safe:duration-base" title="Email" aria-label={`Email ${m.name}`}><Mail size={14} /></button>
+                        <button type="button" onClick={(e) => { e.stopPropagation(); openMsg({ name: m.name, phone: m.phone, email: m.email }, 'whatsapp', ''); }} className="p-1.5 rounded-lg bg-success text-on-success hover:opacity-80 motion-safe:transition-all motion-safe:duration-base" title="WhatsApp" aria-label={`Message ${m.name} on WhatsApp`}><MessageCircle size={14} /></button>
+                        <button type="button" onClick={(e) => { e.stopPropagation(); openMsg({ name: m.name, phone: m.phone, email: m.email }, 'email', ''); }} className="p-1.5 rounded-lg bg-info text-on-info hover:opacity-80 motion-safe:transition-all motion-safe:duration-base" title="Email" aria-label={`Email ${m.name}`}><Mail size={14} /></button>
                       </div>
                     </td>
                   </tr>
@@ -134,4 +134,5 @@ export default function TrainerMembersTable() {
     </div>
  );
 }
+
 

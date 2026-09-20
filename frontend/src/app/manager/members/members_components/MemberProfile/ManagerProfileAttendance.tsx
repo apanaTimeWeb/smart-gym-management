@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import { formatMemberMonthYear } from '@/app/manager/members/members_utils/ManagerMembersDateFormatters';
 // RESPONSIBILITY: Contains logic, types, or component definition for this module.
 import { useManagerMembersLogic } from '@/app/manager/members/members_hooks/ManagerUseManagerMembersLogic';
@@ -45,7 +45,7 @@ export default function ManagerProfileAttendance() {
             key={day} 
             className={`h-10 w-full rounded-lg flex items-center justify-center text-xs font-bold border-none ${
               status === 'P' ? 'bg-success text-on-success' 
-              : status === 'A' ? 'bg-danger text-on-primary' 
+              : status === 'A' ? 'bg-danger text-on-danger' 
               : 'bg-input text-secondary border border-border'
             }`}
           >
@@ -56,3 +56,4 @@ export default function ManagerProfileAttendance() {
     </div>
   );
 }
+
