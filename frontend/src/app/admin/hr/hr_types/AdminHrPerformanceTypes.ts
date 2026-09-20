@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Types for Staff Performance Dashboard.
 export type PerformancePeriod = 'THIS_MONTH' | 'LAST_MONTH' | 'THIS_QUARTER';
-
 export type PerformanceSortKey = 'name' | 'role' | 'sessionsTaken' | 'membersAdded' | 'attendancePct' | 'rating';
 export type PerformanceSortDirection = 'asc' | 'desc';
+export type PerformanceStatus = 'EXCELLENT' | 'AVERAGE' | 'POOR';
 
 export interface StaffPerformanceRecord {
   id: string;
@@ -12,8 +12,8 @@ export interface StaffPerformanceRecord {
   sessionsTaken: number;
   membersAdded: number;
   attendancePct: number;
-  rating: number; // Out of 5.0
-  status: 'EXCELLENT' | 'AVERAGE' | 'POOR';
+  rating: number;
+  status: PerformanceStatus;
 }
 
 export interface PerformanceAggregates {

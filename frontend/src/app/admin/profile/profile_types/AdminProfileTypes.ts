@@ -27,7 +27,7 @@ export type ProfileTab = 'personal' | 'security';
 
 export type PasswordFieldName = 'currentPassword' | 'newPassword' | 'confirmPassword';
 
-export interface AdminPasswordFieldProps {
+export interface AdminProfilePasswordFieldProps {
   label: string;
   name: PasswordFieldName;
   form: UseFormReturn<UpdateAdminPasswordPayload>;

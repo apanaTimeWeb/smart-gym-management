@@ -51,7 +51,7 @@ export default function AdminReportsRevenue() {
                     <div>
                       <p className="text-sm font-semibold text-primary">{row.gymName}</p>
                       <div className="mt-1 h-1.5 bg-input rounded-full w-32">
-                        <div className="h-1.5 bg-primary rounded-full" style={{ width: `${(row.revenue / maxRevenue) * 100}%` }} />
+                        <div className="h-1.5 bg-primary text-on-primary rounded-full" style={{ width: `${(row.revenue / maxRevenue) * 100}%` }} />
                       </div>
                     </div>
                   </td>
@@ -93,7 +93,7 @@ export default function AdminReportsRevenue() {
                     <span className="text-secondary">{formatCurrency(row.amount)} <span className="text-xs">({pct}%)</span></span>
                   </div>
                   <div className="h-2 bg-input rounded-full">
-                    <div className="h-2 bg-primary rounded-full motion-safe:transition-all motion-safe:duration-base" style={{ width: `${pct}%` }} />
+                    <div className="h-2 bg-primary text-on-primary rounded-full motion-safe:transition-all motion-safe:duration-base" style={{ width: `${pct}%` }} />
                   </div>
                 </div>
               );
@@ -118,7 +118,7 @@ export default function AdminReportsRevenue() {
                     <span className="text-secondary">{formatCurrency(row.amount)} <span className="text-xs">({row.count} members)</span></span>
                   </div>
                   <div className="h-2 bg-input rounded-full">
-                    <div className="h-2 bg-info rounded-full motion-safe:transition-all motion-safe:duration-base" style={{ width: `${pct}%` }} />
+                    <div className="h-2 bg-info text-on-info rounded-full motion-safe:transition-all motion-safe:duration-base" style={{ width: `${pct}%` }} />
                   </div>
                 </div>
               );
@@ -136,7 +136,7 @@ export default function AdminReportsRevenue() {
           <table data-admin-responsive-table className="w-full">
             <thead>
               <tr className="bg-surface-highlight">
-                {['Month', 'Revenue', 'Expenses', 'Net Profit', 'Margin'].map((h,index) => { const keys: Array<AdminReportsRevenueSortKey|null>=['gymName','revenue','expenses','profit',null]; const key=keys[index]; return <th key={h} className="px-5 py-3 text-left text-xs font-semibold text-secondary uppercase tracking-wider">{h}{key&&<button type="button" onClick={()=>handleSort(key)} className="ml-1 inline-flex align-middle" aria-label={`Sort by ${h}`} title={`Sort by ${h}`}>{sortKey===key?(sortDir==='asc'?<ChevronUp size={13} className="text-primary"/>:<ChevronDown size={13} className="text-primary"/>):<ChevronsUpDown size={13} className="text-disabled"/>}</button>}</th>; })}
+                {['Month', 'Revenue', 'Expenses', 'Net Profit', 'Margin'].map((h,index) => { const keys: Array<AdminReportsRevenueSortKey|null>=['gymName','revenue','expenses','profit',null]; const key=keys[index]; return <th key={h} className="px-5 py-3 text-left text-xs font-semibold text-secondary uppercase tracking-wider">{h}{key&&<button type="button" onClick={()=>handleSort(key)} className="min-h-11 min-w-11 motion-safe:transition-all motion-safe:duration-base ease-in-out ml-1 inline-flex align-middle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page" aria-label={`Sort by ${h}`} title={`Sort by ${h}`}>{sortKey===key?(sortDir==='asc'?<ChevronUp size={13} className="text-primary"/>:<ChevronDown size={13} className="text-primary"/>):<ChevronsUpDown size={13} className="text-disabled"/>}</button>}</th>; })}
               </tr>
             </thead>
             <tbody className="divide-y divide-border">

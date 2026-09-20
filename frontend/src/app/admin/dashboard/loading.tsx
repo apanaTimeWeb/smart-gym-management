@@ -8,14 +8,14 @@ export default function DashboardLoading() {
       {/* KPI row 1 */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         {["row-1", "row-2", "row-3", "row-4"].map(i => (
-          <div key={i} className="h-28 bg-card rounded-xl motion-safe:animate-pulse border border-border motion-safe:duration-base" />
+          <div key={`dashboard-skeleton-${i}`} className="h-28 bg-card rounded-xl motion-safe:animate-pulse border border-border motion-safe:duration-base" />
         ))}
       </div>
 
       {/* KPI row 2 */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         {["row-1", "row-2", "row-3", "row-4"].map(i => (
-          <div key={i} className="h-28 bg-card rounded-xl motion-safe:animate-pulse border border-border motion-safe:duration-base" />
+          <div key={`dashboard-skeleton-${i}`} className="h-28 bg-card rounded-xl motion-safe:animate-pulse border border-border motion-safe:duration-base" />
         ))}
       </div>
 

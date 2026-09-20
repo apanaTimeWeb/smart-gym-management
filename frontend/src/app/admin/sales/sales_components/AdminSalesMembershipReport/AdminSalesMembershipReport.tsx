@@ -97,7 +97,7 @@ export default function AdminSalesMembershipReport() {
                 <button
                   type="button"
                   onClick={() => handleSort(key)}
-                  className="inline-flex items-center gap-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  className="min-h-11 min-w-11 motion-safe:transition-all motion-safe:duration-base ease-in-out inline-flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                   aria-label={`Sort membership report by ${label}`}
                   aria-sort={sortKey === key ? (sortDir === 'asc' ? 'ascending' : 'descending') : 'none'}
                   title={`Sort by ${label}`}

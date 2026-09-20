@@ -70,7 +70,7 @@ export default function AdminBlacklistCrossGymView() {
                   <td className="px-4 py-3">
                     <div className="flex flex-wrap gap-1">
                       {m.assignedGymNames.map((gym: string) => (
-                        <span key={gym} className="inline-flex items-center gap-1 px-2 py-0.5 bg-warning text-on-primary rounded-full text-xs font-medium">
+                        <span key={gym} className="inline-flex items-center gap-1 px-2 py-0.5 bg-warning-bg text-warning rounded-full text-xs font-medium">
                           <Building2 size={10} />
                           {gym}
                         </span>
@@ -84,7 +84,7 @@ export default function AdminBlacklistCrossGymView() {
                       <button
                         onClick={() => propagateToAllBranches(m.id, m.memberName)}
                         disabled={propagating}
-                        className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-danger text-on-danger text-xs font-semibold hover:opacity-80 motion-safe:transition-opacity disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap motion-safe:duration-base"
+                        className="min-h-11 min-w-11 flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-danger text-on-danger text-xs font-semibold hover:opacity-80 motion-safe:transition-opacity disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
                         aria-label="Propagate ban to all branches"
                       >
                         <ArrowUpRight size={13} />
@@ -92,7 +92,7 @@ export default function AdminBlacklistCrossGymView() {
                       </button>
                       <button
                         onClick={() => removeFromBlacklist(m.id, m.memberName)}
-                        className="p-1.5 rounded-lg hover:bg-danger-bg text-secondary hover:text-danger motion-safe:transition-colors motion-safe:duration-base"
+                        className="min-h-11 min-w-11 p-1.5 rounded-lg hover:bg-danger-bg text-secondary hover:text-danger motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
                         aria-label="Remove from blacklist"
                       >
                         <Trash2 size={15} />

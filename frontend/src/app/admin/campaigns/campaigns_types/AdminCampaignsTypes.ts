@@ -1,8 +1,12 @@
+// RESPONSIBILITY: Canonical UI and API contract types for the Admin Campaigns feature.
+export type AdminCampaignsTemplateType = 'FEE_REMINDER' | 'OVERDUE' | 'RENEWAL' | 'CUSTOM';
+export type AdminCampaignsQueueStatus = 'QUEUED' | 'OPENED' | 'SENT' | 'SKIPPED';
+
 export interface AdminCampaignsTemplate {
   id: string;
   title: string;
   body: string;
-  type: 'FEE_REMINDER' | 'OVERDUE' | 'RENEWAL' | 'CUSTOM';
+  type: AdminCampaignsTemplateType;
 }
 
 export interface AdminCampaignsAudience {
@@ -18,10 +22,36 @@ export interface AdminCampaignsRecipient {
   branchName: string;
 }
 
-export type AdminCampaignsQueueStatus = 'QUEUED' | 'OPENED' | 'SENT' | 'SKIPPED';
-
 export interface AdminCampaignsQueueItem {
   recipient: AdminCampaignsRecipient;
   message: string;
   status: AdminCampaignsQueueStatus;
+}
+
+export interface AdminCampaignsAudiencePickerProps {
+  audiences: AdminCampaignsAudience[];
+  selectedAudienceId: string;
+  onSelect: (id: string) => void;
+}
+
+export interface AdminCampaignsTemplatePickerProps {
+  templates: AdminCampaignsTemplate[];
+  selectedTemplateId: string;
+  onSelect: (id: string) => void;
+}
+
+export interface AdminCampaignsComposerProps {
+  body: string;
+  onChange: (value: string) => void;
+}
+
+export interface AdminCampaignsQueuePanelProps {
+  queue: AdminCampaignsQueueItem[];
+  onOpen: (index: number) => void;
+  onMarkSent: (index: number) => void;
+  onSkip: (index: number) => void;
+}
+
+export interface AdminCampaignsRecipientsResponse {
+  recipients: AdminCampaignsRecipient[];
 }

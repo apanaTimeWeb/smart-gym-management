@@ -1,6 +1,7 @@
 "use client";
+import { format } from 'date-fns';
 // RESPONSIBILITY: Renders the list of members with pending payments, including skeleton loader, pagination, and overdue details. Receives data via SalesContext.
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrency, formatNumber} from '@/lib/formatters';
 
 import { useAdminSalesLogic } from '@/app/admin/sales/sales_context/useAdminSalesLogic';
 import { SalesUrlConfig } from '@/app/admin/sales/admin_sales_url_config';
@@ -20,7 +21,7 @@ export default function AdminSalesPendingPayments() {
     return (
       <div className="space-y-3">
         {[...Array(5)].map((_, i) => (
-          <div key={i} className="motion-safe:animate-pulse flex items-center justify-between p-4 border border-border rounded-xl bg-card motion-safe:duration-base">
+          <div key={`sales-pending-skeleton-${i}`} className="motion-safe:animate-pulse flex items-center justify-between p-4 border border-border rounded-xl bg-card motion-safe:duration-base">
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 bg-input rounded-full"></div>
               <div>
@@ -68,7 +69,7 @@ export default function AdminSalesPendingPayments() {
                   const waText = WhatsAppFormatter.formatReceipt({
                     title: GYM_DETAILS.name,
                     subtitle: 'Payment Reminder',
-                    date: new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }),
+                    date: format(new Date(), 'dd MMM yyyy'),
                     customerInfo: {
                       'Member': p.name,
                       'Plan': p.plan || 'Standard',
@@ -77,7 +78,7 @@ export default function AdminSalesPendingPayments() {
                       {
                         title: 'Outstanding Dues',
                         items: {
-                          'Pending Amount': `Rs ${p.pendingAmount?.toLocaleString() || 0}`,
+                          'Pending Amount': formatCurrency(p.pendingAmount ?? 0),
                           'Overdue By': `${p.daysOverdue || 0} days`,
                         }
                       }
@@ -86,7 +87,7 @@ export default function AdminSalesPendingPayments() {
                   });
                   window.open(SalesUrlConfig.EXTERNAL.WHATSAPP_WEB(p.phone ?? '', waText), '_blank', 'noopener,noreferrer');
                 }}
-                className="px-3 py-1.5 text-xs text-on-primary bg-primary rounded-lg font-medium motion-safe:transition-all motion-safe:duration-base ease-in-out hover:bg-primary-hover motion-safe:active:scale-95 flex items-center gap-2"
+                className="px-3 py-1.5 text-xs text-on-primary bg-primary rounded-lg font-medium motion-safe:transition-all motion-safe:duration-base ease-in-out hover:bg-primary-hover motion-safe:active:scale-95 flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
               >
                 Open Reminder in WhatsApp
               </button>

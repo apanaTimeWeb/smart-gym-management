@@ -80,6 +80,7 @@ function annotateTables(root: ParentNode = document) {
 }
 
 export default function AdminResponsiveTableProvider() {
+// EFFECT: Synchronizes this component effect with its declared React dependencies in admin_layout/AdminLayout/AdminResponsiveTableProvider.tsx.
   useEffect(() => {
     if (!document.getElementById(STYLE_ID)) {
       const style = document.createElement('style');

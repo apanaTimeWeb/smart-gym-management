@@ -8,7 +8,7 @@ export default async function PlansPage() {
   let initialData: PlansInitialData | null = null;
   
   try {
-    const res = await ssrPlansApi.getAll();
+    const res = await ssrPlansApi.fetchAllPlans();
     initialData = {
       plans: Array.isArray(res.data) ? res.data : [],
     };

@@ -1,37 +1,30 @@
+// RESPONSIBILITY: Renders AdminCampaignsComposer for the admin frontend module; feature logic stays in dedicated hooks, stores, APIs, and schemas.
 'use client';
 import { Variable } from 'lucide-react';
+import type { AdminCampaignsComposerProps } from '@/app/admin/campaigns/campaigns_types/AdminCampaignsTypes';
 
-interface Props {
-  body: string;
-  onChange: (val: string) => void;
-}
-
-export default function AdminCampaignsComposer({ body, onChange }: Props) {
-  const insertVariable = () => {
-    onChange(`${body} {name}`);
-  };
-
+export default function AdminCampaignsComposer({ body, onChange }: AdminCampaignsComposerProps) {
   return (
-    <div className="rounded-xl border border-border bg-card p-5">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-sm font-semibold text-primary">3. Edit Message</h2>
-        <button 
-          onClick={insertVariable}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-input text-xs font-medium text-primary hover:bg-input/80 transition-colors"
+    <section className="rounded-xl border border-border bg-card p-5" aria-labelledby="campaign-message-heading">
+      <div className="mb-4 flex items-center justify-between gap-3">
+        <h2 id="campaign-message-heading" className="text-sm font-semibold text-primary">3. Edit Message</h2>
+        <button
+          type="button"
+          onClick={() => onChange(`${body}${body && !body.endsWith(' ') ? ' ' : ''}{name}`)}
+          className="flex items-center gap-1.5 rounded-lg bg-input px-3 py-1.5 text-xs font-medium text-primary motion-safe:transition-colors motion-safe:duration-base hover:bg-primary-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
         >
-          <Variable size={14} />
+          <Variable size={18} aria-hidden="true" />
           Insert {'{name}'}
         </button>
       </div>
       <textarea
         value={body}
-        onChange={(e) => onChange(e.target.value)}
-        className="w-full h-40 p-4 rounded-lg border border-border bg-input text-sm text-primary focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary resize-none"
+        onChange={(event) => onChange(event.target.value)}
+        aria-label="Campaign message"
+        className="h-40 w-full resize-none rounded-lg border border-border bg-input p-4 text-sm text-primary focus-visible:border-focus focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
         placeholder="Type your message here..."
       />
-      <p className="mt-3 text-xs text-secondary leading-relaxed">
-        The {'{name}'} variable will automatically be replaced with each member's actual name when generating the WhatsApp link.
-      </p>
-    </div>
+      <p className="mt-3 text-xs leading-relaxed text-secondary">The {'{name}'} variable will automatically be replaced with each member's actual name when generating the WhatsApp link.</p>
+    </section>
   );
 }

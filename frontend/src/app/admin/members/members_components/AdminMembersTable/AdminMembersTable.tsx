@@ -1,4 +1,5 @@
 "use client";
+import { format } from 'date-fns';
 // RESPONSIBILITY: Renders the paginated members table with clickable rows, status badges, and branch info.
 
 import { useAdminMembersLogic } from '@/app/admin/members/members_context/useAdminMembersLogic';
@@ -14,7 +15,7 @@ import { ADMIN_MEMBERS_ITEMS_PER_PAGE } from '@/app/admin/members/members_utils/
 const STATUS_STYLES: Record<string, string> = {
   active: 'bg-success text-on-success',
   expired: 'bg-danger text-on-danger',
-  pending: 'bg-warning text-on-primary',
+  pending: 'bg-warning-bg text-warning',
   frozen: 'bg-info text-on-info',
 };
 
@@ -86,7 +87,7 @@ export default function AdminMembersTable() {
                 </td>
                 <td className="px-4 py-3">
                   <span className="text-sm text-primary whitespace-nowrap">
-                    {new Date(m.joinDate).toLocaleDateString('en-IN')}
+                    {format(new Date(m.joinDate), 'dd MMM yyyy')}
                   </span>
                 </td>
                 <td className="px-4 py-3">
@@ -96,7 +97,7 @@ export default function AdminMembersTable() {
                 </td>
                 <td className="px-4 py-3">
                   <span className="text-sm text-primary whitespace-nowrap">
-                    {new Date(m.expiryDate).toLocaleDateString('en-IN')}
+                    {format(new Date(m.expiryDate), 'dd MMM yyyy')}
                   </span>
                 </td>
                 <td className="px-4 py-3">

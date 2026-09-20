@@ -50,7 +50,7 @@ export default function AdminErrorFallback({ error, reset, moduleName }: AdminEr
       </p>
       <button
         onClick={reset}
-        className="flex items-center gap-2 px-5 py-2.5 bg-primary text-on-primary font-semibold rounded-xl text-sm hover:bg-primary-hover motion-safe:transition-colors motion-safe:duration-base"
+        className="flex items-center gap-2 px-5 py-2.5 bg-primary text-on-primary font-semibold rounded-xl text-sm hover:bg-primary-hover motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
       >
         <RefreshCw size={15} /> Try Again
       </button>

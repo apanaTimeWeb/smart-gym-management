@@ -1,4 +1,5 @@
 "use client";
+import { format } from 'date-fns';
 
 // RESPONSIBILITY: Owns TanStack Query state and notification mutations for the Admin notification page.
 // DATA FLOW: AdminNotificationsApi → TanStack Query → AdminNotificationsClient → AdminNotificationsList
@@ -13,11 +14,12 @@ function mapNotificationToItem(notification: { id: string; title: string; body: 
   return {
     id: notification.id,
     text: `${notification.title}: ${notification.body}`,
-    time: new Date(notification.createdAt).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }),
+    time: format(new Date(notification.createdAt), 'dd MMM yyyy, hh:mm a'),
     unread: !notification.read,
   };
 }
 
+/** Coordinates NotificationsPage state, data flow, and feature behavior. */
 export const useAdminNotificationsPage = () => {
   const queryClient = useQueryClient();
   const notificationsQuery = useQuery({

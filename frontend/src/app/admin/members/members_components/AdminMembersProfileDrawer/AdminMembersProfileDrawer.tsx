@@ -1,4 +1,5 @@
 "use client";
+import { format } from 'date-fns';
 // RESPONSIBILITY: Renders the slide-in profile drawer for a selected member showing full details.
 
 import { X, Phone, Mail, Building2, Calendar, IndianRupee, User } from 'lucide-react';
@@ -10,7 +11,7 @@ import type { AdminMember } from '@/app/admin/members/members_types/AdminMembers
 const STATUS_STYLES: Record<string, string> = {
   active: 'bg-success text-on-success',
   expired: 'bg-danger text-on-danger',
-  pending: 'bg-warning text-on-primary',
+  pending: 'bg-warning-bg text-warning',
   frozen: 'bg-info text-on-info',
 };
 
@@ -25,7 +26,7 @@ export default function AdminMembersProfileDrawer({ member, onClose }: AdminMemb
           <h2 className="font-bold text-primary text-lg">Member Profile</h2>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-lg bg-input hover:bg-surface-hover flex items-center justify-center motion-safe:transition-colors motion-safe:duration-base"
+            className="min-h-11 min-w-11 w-8 h-8 rounded-lg bg-input hover:bg-surface-hover flex items-center justify-center motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
             aria-label="Close profile"
           >
             <X size={16} className="text-secondary" />
@@ -75,7 +76,7 @@ export default function AdminMembersProfileDrawer({ member, onClose }: AdminMemb
               <div>
                 <span className="text-sm text-primary">{member.planName}</span>
                 <p className="text-xs text-secondary mt-0.5">
-                  {new Date(member.joinDate).toLocaleDateString('en-IN')} → {new Date(member.expiryDate).toLocaleDateString('en-IN')}
+                  {format(new Date(member.joinDate), 'dd MMM yyyy')} → {format(new Date(member.expiryDate), 'dd MMM yyyy')}
                 </p>
               </div>
             </div>

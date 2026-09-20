@@ -7,7 +7,7 @@ import { useState } from 'react';
 import { User, Lock, Save, Loader2 } from 'lucide-react';
 import { useAdminProfileLogic } from '@/app/admin/profile/profile_context/useAdminProfileLogic';
 import type { ProfileTab } from '@/app/admin/profile/profile_types/AdminProfileTypes';
-import AdminPasswordField from '@/app/admin/profile/profile_components/AdminPasswordField/AdminPasswordField';
+import AdminProfilePasswordField from '@/app/admin/profile/profile_components/AdminProfilePasswordField/AdminProfilePasswordField';
 
 const PROFILE_TABS: Array<{ id: ProfileTab; label: string; icon: typeof User }> = [
   { id: 'personal', label: 'Personal Info', icon: User },
@@ -37,7 +37,7 @@ export default function AdminProfileMain() {
   }
 
   if (profileQuery.isError) {
-    return <div className="max-w-3xl mx-auto bg-card border border-border rounded-xl p-8 text-center"><p className="text-sm text-danger">{profileQuery.error instanceof Error ? profileQuery.error.message : 'Profile could not be loaded.'}</p><button type="button" onClick={() => profileQuery.refetch()} className="mt-4 px-4 py-2 bg-primary text-on-primary rounded-lg text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">Retry</button></div>;
+    return <div className="max-w-3xl mx-auto bg-card border border-border rounded-xl p-8 text-center"><p className="text-sm text-danger">{profileQuery.error instanceof Error ? profileQuery.error.message : 'Profile could not be loaded.'}</p><button type="button" onClick={() => profileQuery.refetch()} className="motion-safe:transition-all motion-safe:duration-base ease-in-out mt-4 px-4 py-2 bg-primary text-on-primary rounded-lg text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">Retry</button></div>;
   }
 
   return (
@@ -47,12 +47,12 @@ export default function AdminProfileMain() {
         <p className="text-secondary mt-1 text-sm">Manage your account details and password.</p>
       </div>
 
-      <div className="bg-primary-subtle/20 border border-border rounded-xl p-6 flex items-center gap-5 shadow-card">
+      <div className="bg-primary-subtle border border-border rounded-xl p-6 flex items-center gap-5 shadow-card">
         <div className="w-16 h-16 rounded-full bg-primary flex items-center justify-center text-2xl font-bold text-on-primary shrink-0">{displayInitial}</div>
         <div>
           <p className="text-lg font-bold text-primary">{profile?.name ?? 'Admin'}</p>
           <p className="text-sm text-secondary">{displayValue(profile?.email)}</p>
-          <span className="mt-1.5 inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-success text-on-success text-xs font-semibold"><span className="w-1.5 h-1.5 rounded-full bg-success motion-safe:animate-pulse motion-safe:duration-base" />Active</span>
+          <span className="mt-1.5 inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-success text-on-success text-xs font-semibold"><span className="w-1.5 h-1.5 rounded-full bg-success text-on-success motion-safe:animate-pulse motion-safe:duration-base" />Active</span>
         </div>
       </div>
 
@@ -100,9 +100,9 @@ export default function AdminProfileMain() {
         <form onSubmit={handleChangePassword} className="bg-card border border-border rounded-xl p-6 shadow-card space-y-5">
           <h2 className="text-base font-semibold text-primary">Change Password</h2>
           <div className="space-y-4 max-w-md">
-            <AdminPasswordField label="Current Password" name="currentPassword" form={passwordForm} visible={showCurrent} onToggle={() => setShowCurrent((value) => !value)} />
-            <AdminPasswordField label="New Password" name="newPassword" form={passwordForm} visible={showNew} onToggle={() => setShowNew((value) => !value)} />
-            <AdminPasswordField label="Confirm New Password" name="confirmPassword" form={passwordForm} visible={showConfirm} onToggle={() => setShowConfirm((value) => !value)} />
+            <AdminProfilePasswordField label="Current Password" name="currentPassword" form={passwordForm} visible={showCurrent} onToggle={() => setShowCurrent((value) => !value)} />
+            <AdminProfilePasswordField label="New Password" name="newPassword" form={passwordForm} visible={showNew} onToggle={() => setShowNew((value) => !value)} />
+            <AdminProfilePasswordField label="Confirm New Password" name="confirmPassword" form={passwordForm} visible={showConfirm} onToggle={() => setShowConfirm((value) => !value)} />
           </div>
           <div className="flex flex-col sm:flex-row justify-end pt-2">
             <button type="submit" disabled={savingPassword || !passwordForm.formState.isDirty} className="min-w-36 inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-hover text-on-primary font-semibold rounded-lg text-sm shadow-card motion-safe:transition-colors disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-safe:duration-base">

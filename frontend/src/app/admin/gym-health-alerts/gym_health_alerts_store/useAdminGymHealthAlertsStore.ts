@@ -15,6 +15,7 @@ interface AdminGymHealthAlertsStore {
   setCurrentPage: (p: number) => void;
 }
 
+/** Coordinates GymHealthAlertsStore state, data flow, and feature behavior. */
 export const useAdminGymHealthAlertsStore = create<AdminGymHealthAlertsStore>((set) => ({
   severityFilter: 'all',
   setSeverityFilter: (s) => set({ severityFilter: s, currentPage: 1 }),

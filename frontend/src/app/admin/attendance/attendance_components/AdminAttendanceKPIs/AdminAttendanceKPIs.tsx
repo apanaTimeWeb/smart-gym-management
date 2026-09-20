@@ -1,4 +1,5 @@
 "use client";
+import { formatNumber } from '@/lib/formatters';
 // RESPONSIBILITY: Renders 4 read-only KPI stat cards for Admin Attendance — today's count, present, late, weekly avg.
 
 import { CalendarCheck, UserCheck, Clock, TrendingUp } from 'lucide-react';
@@ -13,7 +14,7 @@ export default function AdminAttendanceKPIs() {
   const cards = [
     {
       title: "Today's Check-Ins",
-      value: summary.todayTotal.toLocaleString('en-IN'),
+      value: formatNumber(summary.todayTotal),
       sub: `Peak: ${summary.peakHour}`,
       subColor: 'text-secondary',
       icon: CalendarCheck,
@@ -22,7 +23,7 @@ export default function AdminAttendanceKPIs() {
     },
     {
       title: 'Present Today',
-      value: summary.todayPresent.toLocaleString('en-IN'),
+      value: formatNumber(summary.todayPresent),
       sub: `${Math.round((summary.todayPresent / summary.todayTotal) * 100)}% attendance rate`,
       subColor: 'text-success',
       icon: UserCheck,
@@ -31,7 +32,7 @@ export default function AdminAttendanceKPIs() {
     },
     {
       title: 'Late Arrivals',
-      value: summary.todayLate.toLocaleString('en-IN'),
+      value: formatNumber(summary.todayLate),
       sub: `${Math.round((summary.todayLate / summary.todayTotal) * 100)}% of today's check-ins`,
       subColor: 'text-warning',
       icon: Clock,
@@ -40,7 +41,7 @@ export default function AdminAttendanceKPIs() {
     },
     {
       title: 'Weekly Average',
-      value: summary.weeklyAverage.toLocaleString('en-IN'),
+      value: formatNumber(summary.weeklyAverage),
       sub: `${trendPositive ? '↑' : '↓'} ${Math.abs(summary.trendVsLastWeek)}% vs last week`,
       subColor: trendPositive ? 'text-success' : 'text-danger',
       icon: TrendingUp,

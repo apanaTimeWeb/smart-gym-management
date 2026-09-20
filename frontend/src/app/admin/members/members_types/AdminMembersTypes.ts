@@ -2,6 +2,8 @@ import type { QueryStatus } from '@tanstack/react-query';
 // RESPONSIBILITY: TypeScript types and interfaces for the Admin Members module.
 
 export type MemberStatus = 'active' | 'expired' | 'pending' | 'frozen';
+export type AdminMemberGender = 'Male' | 'Female' | 'Other';
+import type { AdminMembersExpiryFilter } from '@/app/admin/members/members_types/AdminMembersUiTypes';
 
 
 export interface AdminMember {
@@ -16,7 +18,7 @@ export interface AdminMember {
   joinDate: string;
   expiryDate: string;
   pendingAmount: number;
-  gender: 'Male' | 'Female' | 'Other';
+  gender: AdminMemberGender;
   referralSource?: string;
   photo?: string;
   lastCheckIn?: string;
@@ -47,8 +49,8 @@ export interface AdminMembersContextType {
   setStatusFilter: (s: MemberStatus | 'all') => void;
   branchFilter: string;
   setBranchFilter: (s: string) => void;
-  expiryFilter: 'all' | 'this_week' | 'this_month';
-  setExpiryFilter: (s: 'all' | 'this_week' | 'this_month') => void;
+  expiryFilter: AdminMembersExpiryFilter;
+  setExpiryFilter: (s: AdminMembersExpiryFilter) => void;
   currentPage: number;
   setCurrentPage: (p: number) => void;
   selectedMember: AdminMember | null;

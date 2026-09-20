@@ -25,10 +25,3 @@ export const PAYOUT_STATUS_OPTIONS = [
 ];
 
 export const PAYOUTS_ITEMS_PER_PAGE = 10;
-
-
-
-
-
-
-export { MOCK_PAYOUTS, MOCK_PNL, MOCK_PAYOUTS_KPI } from '@/app/admin/payouts/payouts_mocks/fixtures/AdminPayoutsMockFixtures';

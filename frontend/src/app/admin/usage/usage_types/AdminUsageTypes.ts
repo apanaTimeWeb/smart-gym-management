@@ -1,7 +1,8 @@
 // RESPONSIBILITY: TypeScript types for the Admin Usage & Subscription module.
+export type AdminUsagePlanTierName = 'Starter' | 'Growth' | 'Pro' | 'Enterprise';
 
 export interface AdminUsageHistoryPoint {
-  date: string;       // ISO date string e.g. '2025-01-15'
+  date: string;
   membersUsed: number;
   storageUsedGb: number;
   smsUsed: number;
@@ -10,7 +11,7 @@ export interface AdminUsageHistoryPoint {
 export interface AdminUsageData {
   tenantId: string;
   planName: string;
-  planTier: 'Starter' | 'Growth' | 'Pro' | 'Enterprise';
+  planTier: AdminUsagePlanTierName;
   billingCycleEnd: string;
   monthlyPrice: number;
   smsSent: number;
@@ -34,8 +35,8 @@ export interface AdminUsageMetric {
   used: number;
   limit: number;
   unit: string;
-  warningThreshold: number; // ratio at which amber warning state begins
-  criticalThreshold: number; // ratio at which red critical state begins
+  warningThreshold: number;
+  criticalThreshold: number;
 }
 
 export interface AdminUsagePlanTier {

@@ -54,7 +54,7 @@ export default function AdminHrDueTable() {
                 const s = staff.find(st => String(st.id) === e.target.value);
                 if (s && s.currentDue) setAmount(String(s.currentDue));
               }}
-              className="w-full px-3 py-2 border border-border rounded-lg text-sm bg-card text-primary focus:ring-2 focus:ring-primary"
+              className="w-full px-3 py-2 border border-border rounded-lg text-sm bg-card text-primary focus-visible:ring-2 focus-visible:ring-primary"
             >
               <option value="" disabled>Select Staff</option>
               {staff.map(s => (
@@ -64,7 +64,7 @@ export default function AdminHrDueTable() {
           </div>
 
           {selectedStaff && (
-            <div className="p-4 bg-hr-highlight/10 rounded-lg border border-hr-highlight/30 text-sm">
+            <div className="p-4 bg-warning-bg rounded-lg border border-warning text-sm">
               <p><strong>Current Due Amount:</strong> {formatCurrency(selectedStaff.currentDue || 0)}</p>
               <p className="text-secondary text-xs mt-1">This is the unpaid portion of past payrolls.</p>
             </div>
@@ -106,7 +106,7 @@ export default function AdminHrDueTable() {
             <button 
               type="submit" 
               disabled={saving || !selectedStaffId || !amount || Number(amount) <= 0 || (selectedStaff && Number(amount) > (selectedStaff.currentDue || 0))}
-              className="px-6 py-2 bg-primary text-on-primary rounded-lg font-medium disabled:opacity-50"
+              className="motion-safe:transition-all motion-safe:duration-base ease-in-out px-6 py-2 bg-primary text-on-primary rounded-lg font-medium disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
             >
               {saving ? 'Processing...' : 'Pay Due'}
             </button>

@@ -1,8 +1,12 @@
-# subscriptions — Forbidden Patterns
+# Forbidden Patterns — `admin/subscriptions`
 
-- Do not place feature mock data outside this module.
-- Do not create duplicate global mock handlers for this module.
-- Do not import another module's business fixtures.
-- Do not add component-level fake business fallbacks.
-- Do not bypass the module API client by reading fixtures directly.
-- Do not import from any sibling business features or other role folders (e.g., no cross-imports from `/admin`, `/superadmin`, `/manager`, `/trainer`).
+## 1. No Client-Side Full-Table Fetch
+**FORBIDDEN:** Fetching all subscriptions and paginating on the client.
+**ALLOWED:** Always pass `page` + `limit` params to the API.
+
+## 2. Critical Subscription Mutations Require Confirmation + Idempotency
+**FORBIDDEN:** Executing upgrade, auto-renew, or payment-method removal without the confirmation boundary and idempotency-key contract.
+**ALLOWED:** Confirm the exact user intent first, generate one idempotency key for that intent, and reuse it for retries.
+
+## 3. No Hardcoded Status Styles / No Cross-Role Imports / No Barrel Files
+Standard rules apply.

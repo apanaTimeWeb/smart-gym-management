@@ -1,4 +1,6 @@
 "use client";
+import { format } from 'date-fns';
+import { formatNumber } from '@/lib/formatters';
 // RESPONSIBILITY: Paginated table of audit log events with severity color coding and row-click detail drawer.
 
 import { useState } from 'react';
@@ -9,12 +11,12 @@ import AdminPagination from '@/app/admin/admin_layout/AdminShared/AdminPaginatio
 import AdminTableSkeleton from '@/app/admin/admin_layout/AdminShared/AdminTableSkeleton';
 import AdminAuditLogsDetailDrawer from '@/app/admin/audit_logs/audit_components/AdminAuditLogsDetailDrawer/AdminAuditLogsDetailDrawer';
 import { useAdminAuditLogsLogic } from '@/app/admin/audit_logs/audit_context/useAdminAuditLogsLogic';
-import type { AuditLog } from '@/app/admin/audit_logs/audit_types/AdminAuditTypes';
+import type { AuditLog } from '@/app/admin/audit_logs/audit_types/AdminAuditLogsTypes';
 import AdminAuditLogsEmptyState from '@/app/admin/audit_logs/audit_components/AdminAuditLogsEmptyState/AdminAuditLogsEmptyState';
 
 const SEVERITY_STYLES: Record<string, string> = {
   high:   'bg-danger text-on-danger border border-danger',
-  medium: 'bg-warning text-on-primary border border-warning',
+  medium: 'bg-warning-bg text-warning border border-warning',
   low:    'bg-success text-on-success border border-success',
 };
 
@@ -75,7 +77,7 @@ export default function AdminAuditLogsTable() {
                   }}
                 >
                   <td className="p-4 text-xs text-secondary whitespace-nowrap">
-                    {new Date(log.timestamp).toLocaleString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                    {format(new Date(log.timestamp), 'dd MMM, hh:mm a')}
                   </td>
                   <td className="p-4">
                     <div className="flex items-center gap-2.5">
@@ -117,7 +119,7 @@ export default function AdminAuditLogsTable() {
       </div>
 
       {selectedLog && (
-        <AdminAuditLogsDetailDrawer log={selectedLog} onClose={() => setSelectedLog(null)} />
+        <AdminAuditLogsDetailDrawer log={selectedLog} isOpen={true} onClose={() => setSelectedLog(null)} />
       )}
     </>
   );

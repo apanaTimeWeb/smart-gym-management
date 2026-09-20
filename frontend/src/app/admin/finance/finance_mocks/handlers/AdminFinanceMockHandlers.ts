@@ -5,7 +5,7 @@ import { http, HttpResponse } from 'msw';
 const ok = <T>(data: T, message = 'Success') => HttpResponse.json({ success: true, message, data });
 
 import { MOCK_ADMIN_EXPENSES, MOCK_ADMIN_FINANCE_SUMMARY, MOCK_ADMIN_PAYMENTS_EXPANDED } from '@/app/admin/finance/finance_mocks/fixtures/AdminFinanceMockFixtures';
-import { getAdminFinancePnlFixtureByPeriod } from '@/app/admin/finance/finance_utils/AdminFinancePnlFixtureByPeriod';
+import { getAdminFinancePnlFixtureByPeriod } from '@/app/admin/finance/finance_mocks/fixtures/AdminFinancePnlFixtureByPeriod';
 import type { Payment } from '@/app/admin/finance/finance_types/AdminFinanceTypes';
 
 

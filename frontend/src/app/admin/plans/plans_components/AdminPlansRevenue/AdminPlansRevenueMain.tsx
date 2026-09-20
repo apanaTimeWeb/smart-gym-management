@@ -21,7 +21,7 @@ export default function AdminPlansRevenueMain() {
     handleSort,
     sortedData,
     aggregates,
-    isLoading,
+    isPending,
     isError, currentPage, totalPages, totalItems, setCurrentPage,
   } = useAdminPlansRevenueLogic();
 
@@ -50,7 +50,7 @@ export default function AdminPlansRevenueMain() {
         <AdminPlansRevenuePeriodSelector period={period} onPeriodChange={setPeriod} />
       </div>
 
-      {isLoading ? (
+      {isPending ? (
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
             {['revenue-1', 'revenue-2', 'revenue-3', 'revenue-4'].map((id) => <div key={id} className="h-28 rounded-xl bg-skeleton-base motion-safe:animate-pulse motion-safe:duration-base" />)}
@@ -71,13 +71,13 @@ export default function AdminPlansRevenueMain() {
             <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
               <h2 className="text-lg font-bold text-primary w-full sm:w-auto">Plan Breakdown</h2>
               <div className="relative w-full sm:w-72">
-                <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-disabled" />
+                <span className="absolute inset-y-0 left-3 flex items-center"><Search size={18} className="text-disabled" /></span>
                 <input
                   type="text"
                   placeholder="Search plan..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 bg-input border border-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary motion-safe:transition-all motion-safe:duration-base"
+                  className="w-full pl-10 pr-4 py-2 bg-input border border-border rounded-xl text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-safe:transition-all motion-safe:duration-base"
                 />
               </div>
             </div>

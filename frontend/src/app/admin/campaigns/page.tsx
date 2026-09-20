@@ -1,5 +1,6 @@
-import AdminCampaignsMain from '@/app/admin/campaigns/campaigns_components/AdminCampaignsMain/AdminCampaignsMain';
+// RESPONSIBILITY: Renders metadata for the admin frontend module; feature logic stays in dedicated hooks, stores, APIs, and schemas.
 import type { Metadata } from 'next';
+import AdminCampaignsMain from '@/app/admin/campaigns/campaigns_components/AdminCampaignsMain/AdminCampaignsMain';
 
 export const metadata: Metadata = {
   title: 'Campaigns | Admin',

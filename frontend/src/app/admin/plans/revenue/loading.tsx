@@ -17,7 +17,7 @@ export default function Loading() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {[1, 2, 3, 4].map((i) => (
-          <div key={i} className="h-24 bg-card border border-border rounded-xl p-5" />
+          <div key={`plans-revenue-skeleton-${i}`} className="h-24 bg-card border border-border rounded-xl p-5" />
         ))}
       </div>
 

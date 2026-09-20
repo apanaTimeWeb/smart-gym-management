@@ -10,6 +10,7 @@ import { useAdminConfirm } from '@/app/admin/admin_layout/AdminFeedback/useAdmin
 import { useAdminPermissionsStore } from '@/app/admin/permissions/permissions_store/useAdminPermissionsStore';
 import type { RolePermissions, GymPermissionOverride, PermissionsData, RoleType } from '@/app/admin/permissions/permissions_types/AdminPermissionsTypes';
 
+/** Coordinates PermissionsLogic state, data flow, and feature behavior. */
 export function useAdminPermissionsLogic() {
   const qc = useQueryClient();
   const { confirm } = useAdminConfirm();

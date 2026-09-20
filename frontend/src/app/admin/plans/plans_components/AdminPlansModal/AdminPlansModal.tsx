@@ -1,30 +1,18 @@
 "use client";
 // RESPONSIBILITY: Renders the modal form for creating or editing a membership plan. Uses React Hook Form + Zod validation.
 
-import { useEffect } from 'react';
+import { Controller } from 'react-hook-form';
 import { X, Save, Loader2 } from 'lucide-react';
-import { useForm, Controller } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { AdminSearchableDropdown } from '@/app/admin/admin_layout/AdminShared/AdminSearchableDropdown/AdminSearchableDropdown';
-import { useAdminPlansLogic } from '@/app/admin/plans/plans_context/useAdminPlansLogic';
-import { useAdminPlansStore } from '@/app/admin/plans/plans_store/useAdminPlansStore';
-import { TIERS, PlanSchema, type PlanFormValues, EMPTY_PLAN_FORM } from '@/app/admin/plans/plans_utils/AdminPlansSharedConstants';
+import { useAdminPlansModalForm } from '@/app/admin/plans/plans_components/AdminPlansModal/useAdminPlansModalForm';
+import { TIERS } from '@/app/admin/plans/plans_utils/AdminPlansSharedConstants';
+import type { PlanFormValues } from '@/app/admin/plans/plans_types/AdminPlansTypes';
 
 export default function AdminPlansModal() {
-  const { plans, status, saving, search, setSearch, currentPage, setCurrentPage, loadPlans, openAdd, openEdit, savePlan, deletePlan } = useAdminPlansLogic();
-  const { showModal, setShowModal, editId, form, setForm } = useAdminPlansStore();
-
-  const { register, handleSubmit, reset, control, formState: { errors } } = useForm<PlanFormValues>({
-    resolver: zodResolver(PlanSchema),
-    defaultValues: form || EMPTY_PLAN_FORM,
-  });
-
-  // Sync form values when modal opens with new data
-  useEffect(() => {
-    if (showModal) reset(form);
-  }, [showModal, form, reset]);
+  const { showModal, editId, saving, register, handleSubmit, control, errors, handleClose, savePlan } = useAdminPlansModalForm();
 
   if (!showModal) return null;
+
 
   return (
     <div data-admin-dialog="true" role="dialog" aria-modal="true" tabIndex={-1} className="fixed inset-0 bg-overlay z-40 flex items-center justify-center p-4">
@@ -35,8 +23,8 @@ export default function AdminPlansModal() {
           </h3>
           <button
             type="button"
-            onClick={() => setShowModal(false)}
-            className="p-2 rounded-lg hover:bg-primary-subtle text-secondary motion-safe:transition-all motion-safe:duration-base"
+            onClick={() => void handleClose()}
+            className="min-h-11 min-w-11 p-2 rounded-lg hover:bg-primary-subtle text-secondary motion-safe:transition-all motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
             aria-label="Close modal"
           >
             <X size={18} />
@@ -115,15 +103,15 @@ export default function AdminPlansModal() {
           <div className="flex gap-3 pt-2">
             <button
               type="button"
-              onClick={() => setShowModal(false)}
-              className="flex-1 py-2.5 border border-border rounded-xl text-sm font-medium text-primary hover:bg-primary-subtle motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95"
+              onClick={() => void handleClose()}
+              className="flex-1 py-2.5 border border-border rounded-xl text-sm font-medium text-primary hover:bg-primary-subtle motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={saving}
-              className="flex-1 py-2.5 rounded-xl text-sm font-bold text-on-primary bg-primary hover:bg-primary-hover flex items-center justify-center gap-2 disabled:opacity-70 motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95"
+              className="flex-1 py-2.5 rounded-xl text-sm font-bold text-on-primary bg-primary hover:bg-primary-hover flex items-center justify-center gap-2 disabled:opacity-70 motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
             >
               {saving
                 ? <Loader2 className="w-4 h-4 motion-safe:animate-spin motion-safe:duration-base" />

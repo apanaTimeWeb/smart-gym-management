@@ -1,5 +1,4 @@
 // RESPONSIBILITY: Centralized constants, mock data, and shared config for the Admin Members module.
-import { z } from 'zod';
 
 export const ADMIN_MEMBERS_ITEMS_PER_PAGE = 10;
 
@@ -18,7 +17,3 @@ export const EXPIRY_FILTER_OPTIONS = [
 ] as const;
 
 
-
-export const MemberSearchSchema = z.object({
-  search: z.string().optional(),
-});

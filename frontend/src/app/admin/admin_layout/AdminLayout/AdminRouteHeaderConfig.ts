@@ -19,6 +19,7 @@ const ADMIN_ROUTE_HEADERS: ReadonlyArray<{
   { prefix: '/admin/attendance', config: { title: 'Attendance Overview', subtitle: 'Read-only daily attendance analytics across all branches' } },
   { prefix: '/admin/blacklist', config: { title: 'Blacklist', subtitle: 'Manage cross-gym member bans — global or branch-specific' } },
   { prefix: '/admin/branches', config: { title: 'Branches', subtitle: 'Manage branch profiles, staff, finance, and operational status' } },
+  { prefix: '/admin/campaigns', config: { title: 'Campaigns', subtitle: 'Run bulk WhatsApp campaigns across all your branches' } },
   { prefix: '/admin/coupons', config: { title: 'Coupons', subtitle: 'Create and manage discount coupons across all your gyms' } },
   { prefix: '/admin/dashboard', config: { title: 'Dashboard', subtitle: "Welcome back, Admin! Here's your business overview." } },
   { prefix: '/admin/finance', config: { title: 'Finance', subtitle: 'Track revenue, payments and financial overview' } },

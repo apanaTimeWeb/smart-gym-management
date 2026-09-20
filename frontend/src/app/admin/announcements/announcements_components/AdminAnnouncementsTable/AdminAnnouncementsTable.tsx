@@ -1,4 +1,6 @@
 "use client";
+import { format } from 'date-fns';
+import { formatNumber } from '@/lib/formatters';
 // RESPONSIBILITY: Announcements table with search/filter toolbar, status badges, pin/edit/delete row actions.
 
 import { Search, Plus, Pin, PinOff, Edit2, Trash2, Eye, Megaphone, RotateCcw } from 'lucide-react';
@@ -23,7 +25,7 @@ const STATUS_STYLES: Record<AnnouncementStatus, string> = {
 
 const PRIORITY_STYLES: Record<AnnouncementPriority, string> = {
   high:   'bg-danger text-on-danger',
-  medium: 'bg-warning text-on-primary',
+  medium: 'bg-warning-bg text-warning',
   low:    'bg-success text-on-success',
 };
 
@@ -58,19 +60,19 @@ export default function AdminAnnouncementsTable() {
       <div className="bg-card border border-border rounded-xl p-4 space-y-3">
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="relative flex-1">
-            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary" />
+            <span className="absolute inset-y-0 left-3 flex items-center"><Search size={14} className="text-secondary" /></span>
             <input
               type="text"
               placeholder="Search announcements..."
               value={search}
               onChange={e => setSearch(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 bg-input border border-border rounded-xl text-sm text-primary focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary"
+              className="w-full pl-9 pr-4 py-2 bg-input border border-border rounded-xl text-sm text-primary focus-visible:outline-none focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary"
               aria-label="Search announcements"
             />
           </div>
           <button
             onClick={openCreate}
-            className="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-primary-hover text-on-primary rounded-xl text-sm font-semibold motion-safe:transition-colors shrink-0 motion-safe:duration-base"
+            className="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-primary-hover text-on-primary rounded-xl text-sm font-semibold motion-safe:transition-colors shrink-0 motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
           >
             <Plus size={15} /> Send Announcement
           </button>
@@ -79,7 +81,7 @@ export default function AdminAnnouncementsTable() {
           <select
             value={statusFilter}
             onChange={e => setStatusFilter(e.target.value)}
-            className="bg-input border border-border rounded-xl px-3 py-2 text-sm text-primary focus:outline-none focus:border-primary"
+            className="bg-input border border-border rounded-xl px-3 py-2 text-sm text-primary focus-visible:outline-none focus-visible:border-primary"
             aria-label="Filter by status"
           >
             {ANNOUNCEMENT_STATUS_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
@@ -87,7 +89,7 @@ export default function AdminAnnouncementsTable() {
           <select
             value={priorityFilter}
             onChange={e => setPriorityFilter(e.target.value)}
-            className="bg-input border border-border rounded-xl px-3 py-2 text-sm text-primary focus:outline-none focus:border-primary"
+            className="bg-input border border-border rounded-xl px-3 py-2 text-sm text-primary focus-visible:outline-none focus-visible:border-primary"
             aria-label="Filter by priority"
           >
             <option value="all">All Priority</option>
@@ -96,7 +98,7 @@ export default function AdminAnnouncementsTable() {
           <select
             value={gymFilter}
             onChange={e => setGymFilter(e.target.value)}
-            className="bg-input border border-border rounded-xl px-3 py-2 text-sm text-primary focus:outline-none focus:border-primary"
+            className="bg-input border border-border rounded-xl px-3 py-2 text-sm text-primary focus-visible:outline-none focus-visible:border-primary"
             aria-label="Filter by branch"
           >
             {ANNOUNCEMENT_GYM_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
@@ -104,7 +106,7 @@ export default function AdminAnnouncementsTable() {
           {hasFilters && (
             <button
               onClick={() => { setSearch(''); setStatusFilter('all'); setPriorityFilter('all'); setGymFilter('all'); }}
-              className="flex items-center gap-1.5 px-3 py-2 bg-input border border-border rounded-xl text-xs text-secondary hover:text-primary motion-safe:transition-colors motion-safe:duration-base"
+              className="min-h-11 min-w-11 flex items-center gap-1.5 px-3 py-2 bg-input border border-border rounded-xl text-xs text-secondary hover:text-primary motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
               aria-label="Reset filters"
             >
               <RotateCcw size={12} /> Reset
@@ -121,7 +123,7 @@ export default function AdminAnnouncementsTable() {
             <thead>
               <tr className="bg-surface-highlight border-b border-border">
                 {['', 'Title & Preview', 'Audience', 'Branches', 'Schedule', 'Priority', 'Status', 'Views', 'Acknowledged', 'Delivery', 'Actions'].map((h, i) => (
-                  <th key={i} className="p-4 text-xs font-semibold text-secondary uppercase tracking-wider whitespace-nowrap">{h}</th>
+                  <th key={h} className="p-4 text-xs font-semibold text-secondary uppercase tracking-wider whitespace-nowrap">{h}</th>
                 ))}
               </tr>
             </thead>
@@ -153,8 +155,8 @@ export default function AdminAnnouncementsTable() {
                   <td className="p-4 text-xs text-secondary whitespace-nowrap">{a.gymNames.join(', ')}</td>
                   {/* Schedule */}
                   <td className="p-4 text-xs text-secondary whitespace-nowrap">
-                    <p>{new Date(a.publishedAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}</p>
-                    <p className="text-secondary/60">→ {new Date(a.expiresAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}</p>
+                    <p>{format(new Date(a.publishedAt), 'dd MMM')}</p>
+                    <p className="text-secondary/60">→ {format(new Date(a.expiresAt), 'dd MMM')}</p>
                   </td>
                   {/* Priority */}
                   <td className="p-4">
@@ -171,12 +173,12 @@ export default function AdminAnnouncementsTable() {
                   {/* Views */}
                   <td className="p-4">
                     <div className="flex items-center gap-1 text-xs text-secondary">
-                      <Eye size={12} /> {a.viewCount?.toLocaleString('en-IN') || 0}
+                      <Eye size={12} /> {(a.viewCount !== undefined ? formatNumber(a.viewCount) : '0') || 0}
                     </div>
                   </td>
                   {/* Acknowledged */}
                   <td className="p-4 text-xs text-secondary whitespace-nowrap">
-                    {a.acknowledgedCount?.toLocaleString('en-IN') || 0}
+                    {(a.acknowledgedCount !== undefined ? formatNumber(a.acknowledgedCount) : '0') || 0}
                   </td>
                   {/* Delivery */}
                   <td className="p-4 text-xs text-secondary whitespace-nowrap capitalize">
@@ -187,21 +189,21 @@ export default function AdminAnnouncementsTable() {
                     <div className="flex items-center gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 motion-safe:transition-opacity motion-safe:duration-base">
                       <button
                         onClick={() => togglePin(a.id)}
-                        className={`p-1.5 rounded-lg motion-safe:transition-colors ${a.isPinned ? 'text-warning hover:bg-warning-bg' : 'text-secondary hover:text-warning hover:bg-warning-bg'}`}
+                        className={`min-h-11 min-w-11 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page p-1.5 rounded-lg motion-safe:transition-colors ${a.isPinned ? 'text-warning hover:bg-warning-bg' : 'text-secondary hover:text-warning hover:bg-warning-bg'}`}
                         aria-label={a.isPinned ? 'Unpin announcement' : 'Pin announcement'}
                       >
                         {a.isPinned ? <PinOff size={14} /> : <Pin size={14} />}
                       </button>
                       <button
                         onClick={() => openEdit(a)}
-                        className="p-1.5 rounded-lg text-secondary hover:text-primary hover:bg-input motion-safe:transition-colors motion-safe:duration-base"
+                        className="min-h-11 min-w-11 p-1.5 rounded-lg text-secondary hover:text-primary hover:bg-input motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
                         aria-label="Edit announcement"
                       >
                         <Edit2 size={14} />
                       </button>
                       <button
                         onClick={() => deleteAnnouncement(a.id, a.title)}
-                        className="p-1.5 rounded-lg text-secondary hover:text-danger hover:bg-danger-bg motion-safe:transition-colors motion-safe:duration-base"
+                        className="min-h-11 min-w-11 p-1.5 rounded-lg text-secondary hover:text-danger hover:bg-danger-bg motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
                         aria-label="Delete announcement"
                       >
                         <Trash2 size={14} />

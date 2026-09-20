@@ -14,11 +14,11 @@ export function AdminSettingsToggleSwitch({ checked, onChange, label }: AdminSet
         aria-checked={checked}
         aria-label={label || 'Toggle setting'}
         onClick={() => onChange(!checked)}
-        className={`relative w-11 h-6 rounded-full motion-safe:transition-colors flex-shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${checked ? 'bg-primary-subtle' : 'bg-input border border-border'}`}
+        className={`min-h-11 min-w-11 relative w-11 h-6 rounded-full motion-safe:transition-colors flex-shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${checked ? 'bg-primary-subtle' : 'bg-input border border-border'}`}
       >
         <span
           aria-hidden="true"
-          className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-card shadow-card motion-safe:transition-transform motion-safe:duration-base ${checked ? 'translate-x-5' : 'translate-x-0'}`}
+          className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-card shadow-card motion-safe:transition-transform motion-safe:duration-base ${checked ? 'motion-safe:translate-x-5' : 'motion-safe:translate-x-0'}`}
         />
       </button>
     </div>

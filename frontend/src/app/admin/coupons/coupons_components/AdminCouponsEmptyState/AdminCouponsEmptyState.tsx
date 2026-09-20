@@ -17,7 +17,7 @@ export default function AdminCouponsEmptyState() {
       </div>
       <button
         onClick={openAdd}
-        className="px-4 py-2 bg-primary text-on-primary rounded-lg text-sm font-semibold hover:bg-primary-hover motion-safe:transition-colors motion-safe:duration-base"
+        className="px-4 py-2 bg-primary text-on-primary rounded-lg text-sm font-semibold hover:bg-primary-hover motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
       >
         Create Coupon
       </button>

@@ -10,6 +10,7 @@ import { clearAdminIdempotencyKey, getAdminIdempotencyKey } from '@/app/admin/ad
 import type { Staff } from '@/app/admin/hr/hr_types/AdminHrTypes';
 import type { AdminToastType } from '@/app/admin/admin_layout/AdminFeedback/AdminToastTypes';
 
+/** Coordinates HrStaffMutations state, data flow, and feature behavior. */
 export function useAdminHrStaffMutations(
   editId: string | null,
   setShowModal: (open: boolean) => void,

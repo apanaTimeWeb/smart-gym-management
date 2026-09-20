@@ -9,7 +9,7 @@ export default async function FinancePage() {
   
   try {
     const [paymentsRes, summaryRes] = await Promise.all([
-      ssrFinanceApi.getPayments({ limit: '10', page: '1' }),
+      ssrFinanceApi.fetchPayments({ limit: '10', page: '1' }),
       ssrFinanceApi.getSummary(),
     ]);
     initialData = {

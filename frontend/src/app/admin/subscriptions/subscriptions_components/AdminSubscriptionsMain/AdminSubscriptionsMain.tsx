@@ -1,4 +1,5 @@
 "use client";
+import { format } from 'date-fns';
 import { formatCurrency } from '@/lib/formatters';
 // RESPONSIBILITY: Main orchestrator for the Subscriptions / Billing module — tabs for overview, plans, invoices, payment.
 
@@ -42,7 +43,7 @@ export default function AdminSubscriptionsMain() {
                 <p className="text-sm text-secondary mt-0.5">
                   {formatCurrency(subscription.monthlyPrice)}/month · Renews{' '}
                   <span className="font-semibold text-primary">
-                    {new Date(subscription.nextBillingDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+                    {format(new Date(subscription.nextBillingDate), 'd MMM yyyy')}
                   </span>
                 </p>
               </div>
@@ -52,7 +53,7 @@ export default function AdminSubscriptionsMain() {
               <button
                 onClick={toggleAutoRenew}
                 disabled={togglingAutoRenew}
-                className="flex items-center gap-1.5 text-sm font-medium motion-safe:transition-colors disabled:opacity-50 motion-safe:duration-base"
+                className="min-h-11 min-w-11 flex items-center gap-1.5 text-sm font-medium motion-safe:transition-colors disabled:opacity-50 motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
                 aria-label="Toggle auto-renew"
               >
                 {togglingAutoRenew
@@ -86,7 +87,7 @@ export default function AdminSubscriptionsMain() {
                 <button
                   key={tab.key}
                   onClick={() => setActiveTab(tab.key)}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium motion-safe:transition-colors ${
+                  className={`focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page px-4 py-2 rounded-lg text-sm font-medium motion-safe:transition-colors ${
                     activeTab === tab.key
                       ? 'bg-card text-primary shadow-card border border-border'
                       : 'text-secondary hover:text-primary'

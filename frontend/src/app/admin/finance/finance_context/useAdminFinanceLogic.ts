@@ -8,7 +8,9 @@ import { useQuery } from '@tanstack/react-query';
 import { financeApi } from '@/app/admin/finance/finance_api/AdminFinanceApi';
 import type { FinanceInitialData } from '@/app/admin/finance/finance_types/AdminFinanceTypes';
 import { useDebounce } from '@/app/admin/admin_layout/admin_utils/useAdminDebounce';
+import type { AdminFinanceExpenseUrlParamKey } from '@/app/admin/finance/finance_types/AdminFinanceTypes';
 
+/** Coordinates FinanceLogic state, data flow, and feature behavior. */
 export function useAdminFinanceLogic(initialData?: FinanceInitialData | null) {
   const router = useRouter();
   const pathname = usePathname();
@@ -39,7 +41,7 @@ export function useAdminFinanceLogic(initialData?: FinanceInitialData | null) {
   const setMethodFilter = useCallback((value: string) => setUrlParam('method', value === 'All' ? null : value), [setUrlParam]);
   const setStatusFilter = useCallback((value: string) => setUrlParam('status', value === 'All' ? null : value), [setUrlParam]);
   const setRange = useCallback((value: string) => setUrlParam('range', value === 'this_month' ? null : value), [setUrlParam]);
-  const setExpenseUrlParam = useCallback((key: 'expenseCategory' | 'expensePage', value: string | null) => {
+  const setExpenseUrlParam = useCallback((key: AdminFinanceExpenseUrlParamKey, value: string | null) => {
     const next = new URLSearchParams(searchParams.toString());
     if (value) next.set(key, value); else next.delete(key);
     if (key === 'expenseCategory') next.set('expensePage', '1');

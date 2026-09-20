@@ -20,6 +20,7 @@ export const AdminSearchableDropdown: React.FC<AdminSearchableDropdownProps> = (
   const selectedOption = options.find((opt) => opt.value === value);
   const filteredOptions = options.filter((opt) => opt.label.toLowerCase().includes(searchTerm.toLowerCase()));
 
+// EFFECT: Synchronizes this component effect with its declared React dependencies in admin_layout/AdminShared/AdminSearchableDropdown/AdminSearchableDropdown.tsx.
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -31,6 +32,7 @@ export const AdminSearchableDropdown: React.FC<AdminSearchableDropdownProps> = (
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+// EFFECT: Synchronizes this component effect with its declared React dependencies in admin_layout/AdminShared/AdminSearchableDropdown/AdminSearchableDropdown.tsx.
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
@@ -52,7 +54,7 @@ export const AdminSearchableDropdown: React.FC<AdminSearchableDropdownProps> = (
     <div className={`relative w-full ${className}`} ref={dropdownRef}>
       <button
         type="button"
-        className={`w-full min-h-11 bg-input border border-border rounded-lg px-4 py-2.5 flex items-center justify-between text-left ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary`}
+        className={`motion-safe:transition-all motion-safe:duration-base ease-in-out w-full min-h-11 bg-input border border-border rounded-lg px-4 py-2.5 flex items-center justify-between text-left ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary`}
         onClick={() => !disabled && setIsOpen((open) => !open)}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
@@ -68,7 +70,7 @@ export const AdminSearchableDropdown: React.FC<AdminSearchableDropdownProps> = (
       {isOpen && !disabled && (
         <div className="absolute z-30 w-full mt-1 bg-popover border border-border rounded-lg shadow-popover overflow-hidden motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95 motion-safe:duration-base">
           <div className="p-2 border-b border-border relative">
-            <Search size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-secondary" aria-hidden="true" />
+            <span className="absolute inset-y-0 left-4 flex items-center"><Search size={14} className="text-secondary" aria-hidden="true" /></span>
             <label htmlFor={`${listboxId}-search`} className="sr-only">Search options</label>
             <input
               id={`${listboxId}-search`}
@@ -87,7 +89,7 @@ export const AdminSearchableDropdown: React.FC<AdminSearchableDropdownProps> = (
                 <button
                   key={option.value}
                   type="button"
-                  className={`w-full min-h-11 flex items-center justify-between px-3 py-2 text-sm rounded-md text-left cursor-pointer hover:bg-surface-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset ${option.value === value ? 'text-primary font-medium' : 'text-primary'}`}
+                  className={`motion-safe:transition-all motion-safe:duration-base ease-in-out w-full min-h-11 flex items-center justify-between px-3 py-2 text-sm rounded-md text-left cursor-pointer hover:bg-surface-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset ${option.value === value ? 'text-primary font-medium' : 'text-primary'}`}
                   onClick={() => handleSelect(option.value)}
                   role="option"
                   aria-selected={option.value === value}

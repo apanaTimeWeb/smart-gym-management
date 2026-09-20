@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Owns module-specific MSW fixture data for the Admin audit_logs feature.
 
 // RESPONSIBILITY: Owns module-specific MSW fixture data for the Admin audit_logs feature.
-import type { AuditLog, AuditKPIData } from '@/app/admin/audit_logs/audit_types/AdminAuditTypes';
+import type { AuditLog, AuditKPIData } from '@/app/admin/audit_logs/audit_types/AdminAuditLogsTypes';
 
 export const MOCK_AUDIT_LOGS: AuditLog[] = [
   { id: '1',  timestamp: '2026-06-20T10:30:00Z', action: 'DELETED_PAYMENT',   user: 'Rahul Verma (Manager)',  branchId: 'b1', details: 'Deleted payment INV-1042 (Amount: ₹5,000, Member: John Doe)',           severity: 'high',   ip: '192.168.1.10', module: 'Finance',    userAgent: 'Chrome/Windows', affectedRecordId: 'INV-1042' },

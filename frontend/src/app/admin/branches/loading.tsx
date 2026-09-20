@@ -7,7 +7,7 @@ export default function BranchesLoading() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {["row-1", "row-2", "row-3", "row-4"].map(i => (
-          <div key={i} className="h-64 bg-card rounded-xl motion-safe:animate-pulse border border-border motion-safe:duration-base" />
+          <div key={`branches-skeleton-${i}`} className="h-64 bg-card rounded-xl motion-safe:animate-pulse border border-border motion-safe:duration-base" />
         ))}
       </div>
     </div>

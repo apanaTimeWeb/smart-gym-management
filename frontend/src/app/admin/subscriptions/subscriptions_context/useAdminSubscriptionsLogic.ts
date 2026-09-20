@@ -11,6 +11,7 @@ import { useAdminConfirm } from '@/app/admin/admin_layout/AdminFeedback/useAdmin
 import { clearAdminIdempotencyKey, getAdminIdempotencyKey } from '@/app/admin/admin_layout/admin_utils/AdminIdempotencyIntentStore';
 import { ADMIN_SUBSCRIPTIONS_INVOICES_ITEMS_PER_PAGE } from '@/app/admin/subscriptions/subscriptions_utils/AdminSubscriptionsSharedConstants';
 
+/** Coordinates SubscriptionsLogic state, data flow, and feature behavior. */
 export function useAdminSubscriptionsLogic() {
   const { confirm } = useAdminConfirm();
   const qc = useQueryClient();
@@ -119,7 +120,7 @@ export function useAdminSubscriptionsLogic() {
     currentInvoicePage, setCurrentInvoicePage, invoiceTotal, invoiceTotalPages,
     invoiceItemsPerPage: ADMIN_SUBSCRIPTIONS_INVOICES_ITEMS_PER_PAGE,
     status,
-    isLoading: subscriptionQuery.isPending || plansQuery.isPending || invoicesQuery.isPending || paymentMethodsQuery.isPending,
+    isPending: subscriptionQuery.isPending || plansQuery.isPending || invoicesQuery.isPending || paymentMethodsQuery.isPending,
     handleUpgrade, upgrading: upgradeMutation.isPending,
     toggleAutoRenew: async () => {
       const intentId = 'toggle-auto-renew';

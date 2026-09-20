@@ -4,7 +4,7 @@ export default function AdminMembersLoading() {
     <div className="p-6 space-y-5">
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         {[1, 2, 3, 4].map((i) => (
-          <div key={i} className="h-24 bg-card rounded-xl motion-safe:animate-pulse border border-border motion-safe:duration-base" />
+          <div key={`members-skeleton-${i}`} className="h-24 bg-card rounded-xl motion-safe:animate-pulse border border-border motion-safe:duration-base" />
         ))}
       </div>
       <div className="bg-card rounded-xl border border-border p-4 space-y-4">
@@ -15,7 +15,7 @@ export default function AdminMembersLoading() {
         </div>
         <div className="space-y-2">
           {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-            <div key={i} className="h-12 bg-input rounded-lg motion-safe:animate-pulse motion-safe:duration-base" />
+            <div key={`members-skeleton-${i}`} className="h-12 bg-input rounded-lg motion-safe:animate-pulse motion-safe:duration-base" />
           ))}
         </div>
       </div>

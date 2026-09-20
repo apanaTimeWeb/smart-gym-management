@@ -24,9 +24,9 @@ const paged = <T>(data: T[], page: number, limit: number, message = 'Success') =
   return HttpResponse.json({ success: true, message, data: pageData, meta: { total: data.length, page: safePage, limit: safeLimit, totalPages: Math.max(1, Math.ceil(data.length / safeLimit)), hasNextPage: safePage < Math.max(1, Math.ceil(data.length / safeLimit)), hasPrevPage: safePage > 1 } });
 };
 
-import { MOCK_COUPONS_EXPANDED } from '@/app/admin/coupons/coupons_mocks/fixtures/AdminCouponsMockFixtures';
+import { getAdminCouponsMockState } from '@/app/admin/coupons/coupons_mocks/fixtures/AdminCouponsMockState';
 
-type CouponRecord = typeof MOCK_COUPONS_EXPANDED[number];
+type CouponRecord = ReturnType<typeof getAdminCouponsMockState>[number];
 const gymNameById: Record<string, string> = { g1: 'Andheri East', g2: 'Bandra West', g3: 'Powai', g4: 'Thane' };
 const b = { 1: 'Andheri East', 2: 'Bandra West', 3: 'Powai', 4: 'Thane' } as Record<string, string>;
 
@@ -79,30 +79,30 @@ function applyCouponUpdate(record: CouponRecord, input: JsonObject): CouponRecor
 }
 
 export const adminCouponsMockHandlers = [
-  http.get('*/admin/coupons/fetchCoupons', ({ request }) => { const url=new URL(request.url); const search=(url.searchParams.get('search')??'').toLowerCase(); const status=url.searchParams.get('status'); const dateRange=url.searchParams.get('dateRange'); const all=MOCK_COUPONS_EXPANDED.filter(c => (!search || `${c.code} ${c.description}`.toLowerCase().includes(search)) && (!status || status === 'all' || c.status===status) && (!dateRange || dateRange==='all_time' || (dateRange==='today' && c.validFrom <= '2026-09-16' && c.validUntil >= '2026-09-16') || (dateRange==='this_month' && c.validFrom.startsWith('2026-09')) || (dateRange==='this_week' && c.validFrom >= '2026-09-10'))); const page=Math.max(1,Number(url.searchParams.get('page'))||1), limit=Math.max(1,Number(url.searchParams.get('limit'))||10); return paged(all,page,limit); }),
+  http.get('*/admin/coupons/fetchCoupons', ({ request }) => { const url=new URL(request.url); const search=(url.searchParams.get('search')??'').toLowerCase(); const status=url.searchParams.get('status'); const dateRange=url.searchParams.get('dateRange'); const all=getAdminCouponsMockState().filter(c => (!search || `${c.code} ${c.description}`.toLowerCase().includes(search)) && (!status || status === 'all' || c.status===status) && (!dateRange || dateRange==='all_time' || (dateRange==='today' && c.validFrom <= '2026-09-16' && c.validUntil >= '2026-09-16') || (dateRange==='this_month' && c.validFrom.startsWith('2026-09')) || (dateRange==='this_week' && c.validFrom >= '2026-09-10'))); const page=Math.max(1,Number(url.searchParams.get('page'))||1), limit=Math.max(1,Number(url.searchParams.get('limit'))||10); return paged(all,page,limit); }),
   http.post('*/admin/coupons/createCoupon', async ({ request }) => {
     const record = buildCouponRecord(asRecord(await parseRequestBody(request)));
-    MOCK_COUPONS_EXPANDED.unshift(record);
+    getAdminCouponsMockState().unshift(record);
     return ok(record, 'Coupon created');
   }),
   http.post('*/admin/coupons/updateCoupon', async ({ request }) => {
     const body = asRecord(await parseRequestBody(request));
-    const index = MOCK_COUPONS_EXPANDED.findIndex((c) => c.id === String(body.id));
+    const index = getAdminCouponsMockState().findIndex((c) => c.id === String(body.id));
     if (index === -1) return HttpResponse.json({ success: false, message: 'Coupon not found' }, { status: StatusCodes.NOT_FOUND });
-    const updated = applyCouponUpdate(MOCK_COUPONS_EXPANDED[index]!, body);
-    MOCK_COUPONS_EXPANDED[index] = updated;
+    const updated = applyCouponUpdate(getAdminCouponsMockState()[index]!, body);
+    getAdminCouponsMockState()[index] = updated;
     return ok(updated, 'Coupon updated');
   }),
   http.delete('*/admin/coupons/deleteCoupon', async ({ request }) => {
     const body = asRecord(await parseRequestBody(request));
-    const index = MOCK_COUPONS_EXPANDED.findIndex((c) => c.id === String(body.id));
+    const index = getAdminCouponsMockState().findIndex((c) => c.id === String(body.id));
     if (index === -1) return HttpResponse.json({ success: false, message: 'Coupon not found' }, { status: StatusCodes.NOT_FOUND });
-    MOCK_COUPONS_EXPANDED.splice(index, 1);
+    getAdminCouponsMockState().splice(index, 1);
     return ok(null, 'Coupon deleted');
   }),
   http.post('*/admin/coupons/toggleCoupon', async ({ request }) => {
     const body = asRecord(await parseRequestBody(request));
-    const record = MOCK_COUPONS_EXPANDED.find((c) => c.id === String(body.id));
+    const record = getAdminCouponsMockState().find((c) => c.id === String(body.id));
     if (!record) return HttpResponse.json({ success: false, message: 'Coupon not found' }, { status: StatusCodes.NOT_FOUND });
     record.status = record.status === 'active' ? 'inactive' : 'active';
     return ok(record, 'Coupon status updated');

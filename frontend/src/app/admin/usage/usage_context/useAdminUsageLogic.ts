@@ -10,6 +10,7 @@ import { useAdminToastStore } from '@/app/admin/admin_layout/admin_store/useAdmi
 import { PLAN_TIERS, USAGE_WARNING_THRESHOLD, USAGE_CRITICAL_THRESHOLD } from '@/app/admin/usage/usage_utils/AdminUsageSharedConstants';
 import type { AdminUsageData, AdminUsageMetric } from '@/app/admin/usage/usage_types/AdminUsageTypes';
 
+/** Coordinates UsageLogic state, data flow, and feature behavior. */
 export function useAdminUsageLogic() {
   const query = useQuery({
     queryKey: ['admin', 'usage', 'current'],

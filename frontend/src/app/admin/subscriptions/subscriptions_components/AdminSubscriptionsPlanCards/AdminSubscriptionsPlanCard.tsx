@@ -11,8 +11,8 @@ export default function AdminSubscriptionsPlanCard({ plan, onUpgrade, upgrading 
   return (
     <div className={`relative bg-card border rounded-xl p-5 flex flex-col gap-4 motion-safe:transition-all motion-safe:duration-base motion-safe:hover:-translate-y-1 hover:shadow-card ${plan.isCurrent ? 'border-primary shadow-card' : 'border-border'}`}>
       {plan.isPopular && (
-        <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-          <span className="flex items-center gap-1 px-3 py-1 bg-primary-subtle text-on-success text-xs font-bold rounded-full shadow">
+        <div className="absolute -top-3 inset-x-0 flex justify-center">
+          <span className="flex items-center gap-1 px-3 py-1 bg-primary-subtle text-primary text-xs font-bold rounded-full shadow">
             <Star size={10} fill="currentColor" /> Most Popular
           </span>
         </div>
@@ -50,7 +50,7 @@ export default function AdminSubscriptionsPlanCard({ plan, onUpgrade, upgrading 
       ) : plan.tier === 'enterprise' ? (
         <a
           href="mailto:sales@gymsmart.in"
-          className="py-2.5 text-center text-sm font-semibold text-primary border border-border rounded-xl hover:bg-input motion-safe:transition-colors block motion-safe:duration-base"
+          className="py-2.5 text-center text-sm font-semibold text-primary border border-border rounded-xl hover:bg-input motion-safe:transition-colors block motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
         >
           Contact Sales
         </a>
@@ -58,7 +58,7 @@ export default function AdminSubscriptionsPlanCard({ plan, onUpgrade, upgrading 
         <button
           onClick={() => onUpgrade(plan.id, plan.name)}
           disabled={upgrading}
-          className="py-2.5 text-sm font-semibold bg-primary-subtle text-on-success rounded-xl hover:bg-primary-hover motion-safe:transition-colors flex items-center justify-center gap-2 disabled:opacity-60 motion-safe:duration-base"
+          className="py-2.5 text-sm font-semibold bg-primary-subtle text-primary rounded-xl hover:bg-primary-hover motion-safe:transition-colors flex items-center justify-center gap-2 disabled:opacity-60 motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
         >
           <Zap size={14} /> Upgrade to {plan.name}
         </button>

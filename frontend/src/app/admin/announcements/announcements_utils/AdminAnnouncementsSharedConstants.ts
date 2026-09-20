@@ -1,5 +1,4 @@
 // RESPONSIBILITY: Constants, mock data, Zod schema for the Admin Announcements module.
-import { z } from 'zod';
 import type { Announcement, AnnouncementKPIData } from '@/app/admin/announcements/announcements_types/AdminAnnouncementsTypes';
 
 export const ANNOUNCEMENTS_ITEMS_PER_PAGE = 10;
@@ -44,16 +43,7 @@ export const ANNOUNCEMENT_STATUS_OPTIONS = [
   { value: 'draft',     label: 'Draft' },
 ];
 
-export const AnnouncementSchema = z.object({
-  title:       z.string().min(5, 'Title must be at least 5 characters'),
-  body:        z.string().min(20, 'Body must be at least 20 characters'),
-  priority:    z.enum(['high', 'medium', 'low']),
-  audience:    z.array(z.enum(['all', 'members', 'managers', 'trainers', 'staff'])).min(1, 'Select at least one audience'),
-  gymIds:      z.array(z.string()).min(1, 'Select at least one branch'),
-  publishedAt: z.string().min(1, 'Publish date required'),
-  expiresAt:   z.string().min(1, 'Expiry date required'),
-  isPinned:    z.boolean(),
-});
+
 
 // Default form state — gymIds defaults to first branch (not 'all', which is superadmin-only).
 export const EMPTY_ANNOUNCEMENT_FORM = {

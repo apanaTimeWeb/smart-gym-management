@@ -1,8 +1,20 @@
-# members — Forbidden Patterns
+# Forbidden Patterns — `admin/members`
 
-- Do not place feature mock data outside this module.
-- Do not create duplicate global mock handlers for this module.
-- Do not import another module's business fixtures.
-- Do not add component-level fake business fallbacks.
-- Do not bypass the module API client by reading fixtures directly.
-- Do not import from any sibling business features or other role folders (e.g., no cross-imports from `/admin`, `/superadmin`, `/manager`, `/trainer`).
+## 1. No Write Operations
+**FORBIDDEN:** Add Member, Edit Member, Renew, Record Payment, or Delete Member in this module.
+**REASON:** Admin role is read-only for member operations. Those actions belong to the Manager.
+
+## 2. No Unmasked Phone Numbers in List View
+**FORBIDDEN:** Displaying full phone numbers in the member table.
+**ALLOWED:** Mask with `maskSensitiveData()` from `@/app/admin/admin_utils/AdminMaskSensitiveData`. Full number visible only in profile modal.
+
+## 3. No View/Eye Button
+**FORBIDDEN:** A dedicated "View" or eye-icon button on table rows.
+**ALLOWED:** The entire row is clickable (Rule 19) and opens the member profile.
+
+## 4. No Client-Side Pagination
+**FORBIDDEN:** Fetching all members and paginating in the browser.
+**ALLOWED:** Always pass `page` + `limit` to the API.
+
+## 5. No Cross-Role Imports / No Relative Imports / No Barrel Files
+Standard rules apply.

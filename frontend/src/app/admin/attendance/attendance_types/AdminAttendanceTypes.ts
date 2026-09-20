@@ -1,6 +1,7 @@
 // RESPONSIBILITY: TypeScript types and interfaces for the Admin Attendance module (read-only view).
 
 export type AttendanceStatus = 'present' | 'absent' | 'late';
+export type AdminAttendanceSessionType = 'General' | 'PT' | 'Class';
 export type DateRangeFilter = 'today' | 'yesterday' | 'this_week' | 'this_month' | 'last_month';
 
 export interface AdminAttendanceRecord {
@@ -17,7 +18,7 @@ export interface AdminAttendanceRecord {
   planName: string;
   trainerId?: string;
   trainerName?: string;
-  sessionType?: 'General' | 'PT' | 'Class';
+  sessionType?: AdminAttendanceSessionType;
 }
 
 export interface AdminAttendanceSummary {

@@ -11,7 +11,7 @@ import type { Coupon } from '@/app/admin/coupons/coupons_types/AdminCouponsTypes
 
 const STATUS_STYLES: Record<string, string> = {
   active: 'bg-success text-on-success',
-  inactive: 'bg-warning text-on-primary',
+  inactive: 'bg-warning-bg text-warning',
   expired: 'bg-danger text-on-danger',
 };
 
@@ -58,7 +58,7 @@ export default function AdminCouponsTable() {
                     <span className="font-mono text-sm font-bold text-on-primary bg-primary-subtle px-2 py-0.5 rounded">{coupon.code}</span>
                     <button
                       onClick={(e) => { e.stopPropagation(); handleCopy(coupon.code); }}
-                      className="opacity-100 lg:opacity-0 lg:group-hover:opacity-100 motion-safe:transition-opacity text-secondary hover:text-primary motion-safe:duration-base"
+                      className="min-h-11 min-w-11 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 motion-safe:transition-opacity text-secondary hover:text-primary motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
                       aria-label="Copy coupon code"
                     >
                       <Copy size={13} />
@@ -98,21 +98,21 @@ export default function AdminCouponsTable() {
                   <div className="flex items-center gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 motion-safe:transition-opacity motion-safe:duration-base">
                     <button
                       onClick={(e) => { e.stopPropagation(); toggleCoupon(coupon.id); }}
-                      className="p-1.5 rounded-lg hover:bg-input text-secondary hover:text-primary motion-safe:transition-colors motion-safe:duration-base"
+                      className="min-h-11 min-w-11 p-1.5 rounded-lg hover:bg-input text-secondary hover:text-primary motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
                       aria-label={coupon.status === 'active' ? 'Deactivate coupon' : 'Activate coupon'}
                     >
                       {coupon.status === 'active' ? <ToggleRight size={16} className="text-success" /> : <ToggleLeft size={16} />}
                     </button>
                     <button
                       onClick={(e) => { e.stopPropagation(); openEdit(coupon); }}
-                      className="p-1.5 rounded-lg hover:bg-input text-secondary hover:text-primary motion-safe:transition-colors motion-safe:duration-base"
+                      className="min-h-11 min-w-11 p-1.5 rounded-lg hover:bg-input text-secondary hover:text-primary motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
                       aria-label="Edit coupon"
                     >
                       <Edit2 size={15} />
                     </button>
                     <button
                       onClick={(e) => { e.stopPropagation(); deleteCoupon(coupon.id); }}
-                      className="p-1.5 rounded-lg hover:bg-danger-bg text-secondary hover:text-danger motion-safe:transition-colors motion-safe:duration-base"
+                      className="min-h-11 min-w-11 p-1.5 rounded-lg hover:bg-danger-bg text-secondary hover:text-danger motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
                       aria-label="Delete coupon"
                     >
                       <Trash2 size={15} />

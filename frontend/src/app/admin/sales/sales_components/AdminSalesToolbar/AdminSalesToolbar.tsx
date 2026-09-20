@@ -11,9 +11,11 @@ export default function AdminSalesToolbar() {
   const [localSearch, setLocalSearch] = useState(search);
 
   /* eslint-disable react-hooks/set-state-in-effect */
+// EFFECT: Synchronizes this component effect with its declared React dependencies in sales/sales_components/AdminSalesToolbar/AdminSalesToolbar.tsx.
   useEffect(() => { setLocalSearch(search); }, [search]);
   /* eslint-enable react-hooks/set-state-in-effect */
 
+// EFFECT: Synchronizes this component effect with its declared React dependencies in sales/sales_components/AdminSalesToolbar/AdminSalesToolbar.tsx.
   useEffect(() => {
     const handler = setTimeout(() => {
       if (localSearch !== search) {
@@ -37,12 +39,12 @@ export default function AdminSalesToolbar() {
         {/* Search + Export */}
         <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
           <div className="relative">
-            <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary" />
+            <span className="absolute inset-y-0 left-3 flex items-center"><Search size={15} className="text-secondary" /></span>
             <input
               value={localSearch}
               onChange={e => setLocalSearch(e.target.value)}
               placeholder="Search..."
-              className="pl-9 pr-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary w-40 sm:w-56 bg-input text-primary"
+              className="pl-9 pr-3 py-2 border border-border rounded-lg text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary w-40 sm:w-56 bg-input text-primary"
             />
           </div>
           <button
@@ -59,7 +61,7 @@ export default function AdminSalesToolbar() {
               anchor.click();
               URL.revokeObjectURL(url);
             }}
-            className="flex items-center gap-1.5 px-3 py-2 text-sm border border-border rounded-lg hover:bg-primary-subtle text-secondary motion-safe:transition-colors motion-safe:duration-base"
+            className="flex items-center gap-1.5 px-3 py-2 text-sm border border-border rounded-lg hover:bg-primary-subtle text-secondary motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
           >
             <Download size={13} /> Export
           </button>

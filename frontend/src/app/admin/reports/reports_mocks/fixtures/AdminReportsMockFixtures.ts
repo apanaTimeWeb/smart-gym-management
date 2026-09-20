@@ -127,7 +127,7 @@ export function getAdminReportsFixture({ gymId = 'all', dateRange = 'this_month'
       netProfit: selectedProfit,
       totalMembers: selectedMembers,
       newMembers: selectedNewMembers,
-      avgAttendanceRate: Number(attendanceRate.toFixed(1)),
+      avgAttendanceRate: Math.round(attendanceRate * 10) / 10,
       totalPayroll: selectedPayroll,
     },
   };

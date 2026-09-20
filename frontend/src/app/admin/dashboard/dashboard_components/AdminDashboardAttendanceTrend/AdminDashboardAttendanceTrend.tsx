@@ -1,4 +1,6 @@
 "use client";
+import { format } from 'date-fns';
+import { formatNumber } from '@/lib/formatters';
 // RESPONSIBILITY: Renders the cross-branch daily attendance trend chart using ApexCharts.
 
 import dynamic from 'next/dynamic';
@@ -11,7 +13,7 @@ const ReactApexChart = dynamic(() => import('react-apexcharts'), { ssr: false })
 export default function AdminDashboardAttendanceTrend() {
   const { stats } = useAdminDashboardLogic();
   const attendance = stats?.attendanceTrend ?? [];
-  const labels = attendance.map((item) => new Date(item.date).toLocaleDateString('en-IN', { weekday: 'short' }));
+  const labels = attendance.map((item) => format(new Date(item.date), 'EEE'));
   const values = attendance.map((item) => item.count);
   const options: ApexCharts.ApexOptions = {
     chart: {
@@ -67,7 +69,7 @@ export default function AdminDashboardAttendanceTrend() {
           </div>
         </div>
         <div className="text-right">
-          <p className="text-lg font-bold text-primary">{total.toLocaleString('en-IN')}</p>
+          <p className="text-lg font-bold text-primary">{formatNumber(total)}</p>
           <p className="text-xs text-secondary">Avg {avg}/day</p>
         </div>
       </div>

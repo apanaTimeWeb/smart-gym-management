@@ -56,7 +56,7 @@ export function useAdminFinancePnlLogic() {
     lossMakingBranches: rawData.filter((branch) => branch.status === 'LOSS').length,
   };
 
-  const isLoading = filteredQuery.isLoading || aggregateQuery.isLoading;
+  const isPending = filteredQuery.isPending || aggregateQuery.isPending;
   const isError = filteredQuery.isError || aggregateQuery.isError;
   /** Toggle sort: same key flips direction; new key defaults to desc */
   function handleSort(key: PnlSortKey) {
@@ -86,7 +86,7 @@ export function useAdminFinancePnlLogic() {
     sortedData,
     aggregates,
     isEmpty: sortedData.length === 0,
-    isLoading,
+    isPending,
     isError,
   };
 }

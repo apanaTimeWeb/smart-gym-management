@@ -11,6 +11,7 @@ interface AdminSalesStore {
   setFilterPlan: (plan: string) => void;
 }
 
+/** Coordinates SalesStore state, data flow, and feature behavior. */
 export const useAdminSalesStore = create<AdminSalesStore>((set) => ({
   activeTab: 'Overview',
   setActiveTab: (tab) => set({ activeTab: tab }),

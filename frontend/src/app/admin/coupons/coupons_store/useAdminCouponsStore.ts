@@ -21,6 +21,7 @@ interface AdminCouponsStore {
   setDateRange: (s: string) => void;
 }
 
+/** Coordinates CouponsStore state, data flow, and feature behavior. */
 export const useAdminCouponsStore = create<AdminCouponsStore>((set) => ({
   showModal: false,
   setShowModal: (v) => set({ showModal: v }),

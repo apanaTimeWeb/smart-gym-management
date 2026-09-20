@@ -1,5 +1,5 @@
 "use client";
-import { formatPercent1dp, formatDecimal } from '@/lib/formatters';
+import { formatPercent1dp, formatDecimal, formatNumber} from '@/lib/formatters';
 // RESPONSIBILITY: Renders the top-level KPI cards for the Performance Dashboard.
 
 import { UserPlus, Calendar, Star, Users } from 'lucide-react';
@@ -12,14 +12,14 @@ export default function AdminHrPerformanceKPIs({ aggregates }: AdminHrPerformanc
   const kpis = [
     {
       label: 'Total Sessions',
-      value: aggregates.totalSessions.toLocaleString('en-IN'),
+      value: formatNumber(aggregates.totalSessions),
       icon: Calendar,
       iconColor: 'text-primary',
       iconBg: 'bg-primary-subtle',
     },
     {
       label: 'Members Added',
-      value: aggregates.totalMembersAdded.toLocaleString('en-IN'),
+      value: formatNumber(aggregates.totalMembersAdded),
       icon: UserPlus,
       iconColor: 'text-success',
       iconBg: 'bg-success-bg',

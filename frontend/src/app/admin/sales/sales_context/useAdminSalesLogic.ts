@@ -8,8 +8,9 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useDebounce } from '@/app/admin/admin_layout/admin_utils/useAdminDebounce';
 import { salesApi } from '@/app/admin/sales/sales_api/AdminSalesApi';
 import type { SalesContextType, SalesInitialData, PendingPaymentMember, StoreOrder } from '@/app/admin/sales/sales_types/AdminSalesTypes';
-import type { SalesTab } from '@/app/admin/sales/sales_utils/AdminSalesSharedConstants';
+import type { SalesTab } from '@/app/admin/sales/sales_utils/AdminSalesUiConstants';
 
+/** Coordinates SalesLogic state, data flow, and feature behavior. */
 export function useAdminSalesLogic(initialData?: SalesInitialData | null): SalesContextType {
   const router = useRouter();
   const searchParams = useSearchParams();

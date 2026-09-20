@@ -8,6 +8,7 @@ import { StatusCodes } from 'http-status-codes';
 import { logErrorToMonitoring } from '@/app/admin/admin_layout/admin_utils/AdminMonitoring';
 
 export default function AdminBranchesError({ error, reset }: { error: Error & { digest?: string }, reset: () => void }) {
+// EFFECT: Synchronizes this component effect with its declared React dependencies in branches/error.tsx.
   useEffect(() => {
     // Log the route-level error once while keeping internal error details out of the UI.
     logErrorToMonitoring(error, { module: 'branches' });
@@ -32,7 +33,7 @@ export default function AdminBranchesError({ error, reset }: { error: Error & { 
       <p className="text-secondary">Please retry. If the issue continues, contact support.</p>
       <button
         onClick={() => reset()}
-        className="px-4 py-2 mt-4 bg-primary text-on-primary rounded-lg hover:bg-primary-hover motion-safe:transition-colors motion-safe:duration-base"
+        className="px-4 py-2 mt-4 bg-primary text-on-primary rounded-lg hover:bg-primary-hover motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
       >
         Try again
       </button>

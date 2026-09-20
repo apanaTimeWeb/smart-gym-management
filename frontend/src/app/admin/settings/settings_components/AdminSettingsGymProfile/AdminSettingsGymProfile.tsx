@@ -27,14 +27,14 @@ export function AdminSettingsGymProfile({ initialData }: { initialData: GymProfi
             type="button"
             onClick={() => form.reset(initialData)}
             disabled={!form.formState.isDirty || mutation.isPending}
-            className="px-4 py-2 text-sm border border-border rounded-lg hover:bg-input text-secondary flex items-center gap-2 motion-safe:transition-colors disabled:opacity-50 motion-safe:duration-base"
+            className="px-4 py-2 text-sm border border-border rounded-lg hover:bg-input text-secondary flex items-center gap-2 motion-safe:transition-colors disabled:opacity-50 motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
           >
             <RefreshCw size={14} /> Reset
           </button>
           <button
             type="submit"
             disabled={mutation.isPending}
-            className="px-4 py-2 text-sm bg-primary text-on-primary rounded-lg font-medium flex items-center gap-2 disabled:opacity-70 hover:bg-primary-hover motion-safe:transition-colors motion-safe:duration-base"
+            className="px-4 py-2 text-sm bg-primary text-on-primary rounded-lg font-medium flex items-center gap-2 disabled:opacity-70 hover:bg-primary-hover motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
           >
             <Save size={14} /> {mutation.isPending ? 'Saving...' : 'Save Changes'}
           </button>
@@ -47,7 +47,7 @@ export function AdminSettingsGymProfile({ initialData }: { initialData: GymProfi
             <input
               type={f.type}
               {...form.register(f.field)}
-              className="w-full px-3 py-2.5 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-input text-primary"
+              className="w-full px-3 py-2.5 text-sm border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-primary"
             />
             {form.formState.errors[f.field] && (
               <p className="text-xs text-danger mt-1">{form.formState.errors[f.field]?.message as string}</p>

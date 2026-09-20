@@ -11,6 +11,7 @@ import { fetchAttendanceRecords, fetchAttendanceSummary, fetchAttendanceTrend, t
 import { ATTENDANCE_ITEMS_PER_PAGE } from '@/app/admin/attendance/attendance_utils/AdminAttendanceSharedConstants';
 import type { AttendanceStatus, DateRangeFilter } from '@/app/admin/attendance/attendance_types/AdminAttendanceTypes';
 
+/** Coordinates AttendanceLogic state, data flow, and feature behavior. */
 export function useAdminAttendanceLogic() {
   const searchParams = useSearchParams();
   const selectedBranchId = searchParams.get('branchId') || 'all';

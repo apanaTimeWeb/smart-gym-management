@@ -1,3 +1,4 @@
+'use client';
 // DATA FLOW: HR API ledger response → useAdminHrLedgerLogic → AdminHrLedgerTable.
 "use client";
 // RESPONSIBILITY: Owns HR staff-ledger selection, server query state, and ledger sorting for the Admin HR ledger view.
@@ -7,6 +8,7 @@ import { hrApi } from '@/app/admin/hr/hr_api/AdminHrApi';
 import { useHrContext } from '@/app/admin/hr/hr_context/AdminHrContext';
 import type { AdminHrLedgerSortDirection, AdminHrLedgerSortKey, LedgerEntry, Staff } from '@/app/admin/hr/hr_types/AdminHrTypes';
 
+/** Coordinates HrLedgerLogic state, data flow, and feature behavior. */
 export function useAdminHrLedgerLogic() {
   const { staff, showToast } = useHrContext();
   const [selectedStaffId, setSelectedStaffId] = useState('');

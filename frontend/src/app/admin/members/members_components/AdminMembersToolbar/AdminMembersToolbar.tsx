@@ -1,6 +1,7 @@
 "use client";
 // RESPONSIBILITY: Renders the search, status filter, branch filter, and expiry filter toolbar for Admin Members.
 
+import type { AdminMembersExpiryFilter } from '@/app/admin/members/members_types/AdminMembersUiTypes';
 import { Search, Download } from 'lucide-react';
 import { useAdminMembersStore } from '@/app/admin/members/members_store/useAdminMembersStore';
 import { useAdminMembersBranchReference } from '@/app/admin/members/members_context/useAdminMembersBranchReference';
@@ -25,7 +26,7 @@ export default function AdminMembersToolbar({ onExportMembers }: AdminMembersToo
   return (
     <div className="flex flex-col sm:flex-row gap-3 flex-wrap">
       <div className="relative flex-1 min-w-48">
-        <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary pointer-events-none" />
+        <span className="absolute inset-y-0 left-3 flex items-center"><Search size={16} className="text-secondary pointer-events-none" /></span>
         <input
           type="text"
           placeholder="Search by name, email, phone..."
@@ -55,7 +56,7 @@ export default function AdminMembersToolbar({ onExportMembers }: AdminMembersToo
         <AdminSearchableDropdown
           options={EXPIRY_FILTER_OPTIONS.map((o) => ({ value: o.value, label: o.label }))}
           value={expiryFilter}
-          onChange={(v) => setExpiryFilter(v as 'all' | 'this_week' | 'this_month')}
+          onChange={(v) => setExpiryFilter(v as AdminMembersExpiryFilter)}
           placeholder="All Members"
         />
       </div>
@@ -86,7 +87,7 @@ export default function AdminMembersToolbar({ onExportMembers }: AdminMembersToo
         />
       </div>
       <div className="flex gap-2 ml-auto">
-        <button onClick={() => void onExportMembers()} className="flex items-center gap-2 px-4 py-2 bg-input border border-border rounded-xl text-sm font-semibold hover:bg-surface-hover motion-safe:transition-colors motion-safe:duration-base">
+        <button onClick={() => void onExportMembers()} className="flex items-center gap-2 px-4 py-2 bg-input border border-border rounded-xl text-sm font-semibold hover:bg-surface-hover motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page">
           <Download size={16} /> CSV
         </button>
       </div>

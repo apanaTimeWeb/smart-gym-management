@@ -24,23 +24,23 @@ const paged = <T>(data: T[], page: number, limit: number, message = 'Success') =
   return HttpResponse.json({ success: true, message, data: pageData, meta: { total: data.length, page: safePage, limit: safeLimit, totalPages: Math.max(1, Math.ceil(data.length / safeLimit)), hasNextPage: safePage < Math.max(1, Math.ceil(data.length / safeLimit)), hasPrevPage: safePage > 1 } });
 };
 
-import { MOCK_ADMIN_NOTIFICATIONS } from '@/app/admin/notifications/notifications_mocks/fixtures/AdminNotificationsMockFixtures';
+import { getAdminNotificationsMockState } from '@/app/admin/notifications/notifications_mocks/fixtures/AdminNotificationsMockState';
 
 export const adminNotificationsMockHandlers = [
   http.get('*/admin/notifications', ({ request }) => {
     const url = new URL(request.url);
     const unreadOnly = url.searchParams.get('read') === 'false';
-    const data = MOCK_ADMIN_NOTIFICATIONS.filter((notification) => unreadOnly ? !notification.read : true);
+    const data = getAdminNotificationsMockState().filter((notification) => unreadOnly ? !notification.read : true);
     return ok(data);
   }),
   http.patch('*/admin/notifications/:id/read', ({ params }) => {
-    const notification = MOCK_ADMIN_NOTIFICATIONS.find((item) => item.id === String(params.id));
+    const notification = getAdminNotificationsMockState().find((item) => item.id === String(params.id));
     if (!notification) return HttpResponse.json({ success: false, message: 'Notification not found' }, { status: StatusCodes.NOT_FOUND });
     notification.read = true;
     return ok(notification, 'Notification marked as read');
   }),
   http.patch('*/admin/notifications/read-all', () => {
-    for (const notification of MOCK_ADMIN_NOTIFICATIONS) notification.read = true;
+    for (const notification of getAdminNotificationsMockState()) notification.read = true;
     return ok(null, 'Notifications marked as read');
   })
 ];

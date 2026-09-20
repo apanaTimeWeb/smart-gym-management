@@ -1,8 +1,20 @@
-# reports — Forbidden Patterns
+# Forbidden Patterns — `admin/reports`
 
-- Do not place feature mock data outside this module.
-- Do not create duplicate global mock handlers for this module.
-- Do not import another module's business fixtures.
-- Do not add component-level fake business fallbacks.
-- Do not bypass the module API client by reading fixtures directly.
-- Do not import from any sibling business features or other role folders (e.g., no cross-imports from `/admin`, `/superadmin`, `/manager`, `/trainer`).
+## 1. No Recharts or Chart.js
+**FORBIDDEN:** `import { LineChart } from 'recharts'` or any Chart.js import.
+**ALLOWED:** `import Chart from 'react-apexcharts'` only.
+
+## 2. No Mutations
+**FORBIDDEN:** Any write operation (POST, PATCH, DELETE) from this module.
+**ALLOWED:** Read-only GET calls for report data.
+
+## 3. No Raw Date Display
+**FORBIDDEN:** Rendering ISO date strings directly.
+**ALLOWED:** Always format with `date-fns` or `dayjs`.
+
+## 4. No Native Range Date Picker
+**FORBIDDEN:** Two separate `<input type="date">` elements for a date range.
+**ALLOWED:** Use `AdminDateRangePicker` shared component or a proper date range picker component.
+
+## 5. No Cross-Role Imports / No Relative Imports / No Barrel Files
+Standard rules apply.

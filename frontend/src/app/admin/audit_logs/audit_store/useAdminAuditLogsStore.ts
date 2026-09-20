@@ -19,6 +19,7 @@ interface AdminAuditLogsStore {
   setCurrentPage: (v: number) => void;
 }
 
+/** Coordinates AuditLogsStore state, data flow, and feature behavior. */
 export const useAdminAuditLogsStore = create<AdminAuditLogsStore>((set) => ({
   search: '',
   setSearch: (v) => set({ search: v, currentPage: 1 }),

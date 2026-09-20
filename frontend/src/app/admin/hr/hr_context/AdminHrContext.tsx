@@ -10,6 +10,7 @@ import { useAdminHrModalState } from '@/app/admin/hr/hr_context/useAdminHrModalS
 import { useAdminHrLogic } from '@/app/admin/hr/hr_context/useAdminHrLogic';
 import { useAdminToastStore } from '@/app/admin/admin_layout/admin_store/useAdminToastStore';
 import type { Staff } from '@/app/admin/hr/hr_types/AdminHrTypes';
+import type { AdminHrSortDirection } from '@/app/admin/hr/hr_types/AdminHrSortTypes';
 
 const AdminHrContext = createContext<HrUiContextType | undefined>(undefined);
 
@@ -47,9 +48,9 @@ export function HrProvider({ children, initialData }: { children: React.ReactNod
     ...urlState,
     showToast,
     staffSortKey: urlState.staffSortKey,
-    staffSortDir: urlState.staffSortDir as 'asc' | 'desc',
+    staffSortDir: urlState.staffSortDir as AdminHrSortDirection,
     payrollSortKey: urlState.payrollSortKey,
-    payrollSortDir: urlState.payrollSortDir as 'asc' | 'desc',
+    payrollSortDir: urlState.payrollSortDir as AdminHrSortDirection,
     showModal: modalState.showModal,
     setShowModal: modalState.setShowModal,
     showPayrollModal: modalState.showPayrollModal,

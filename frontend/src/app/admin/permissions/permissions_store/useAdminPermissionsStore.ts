@@ -12,6 +12,7 @@ interface AdminPermissionsStore {
   setSaving: (v: boolean) => void;
 }
 
+/** Coordinates PermissionsStore state, data flow, and feature behavior. */
 export const useAdminPermissionsStore = create<AdminPermissionsStore>((set) => ({
   activeRole: 'manager',
   setActiveRole: (role) => set({ activeRole: role }),

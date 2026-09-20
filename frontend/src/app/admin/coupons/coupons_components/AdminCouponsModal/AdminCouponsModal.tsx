@@ -1,51 +1,24 @@
 "use client";
 // RESPONSIBILITY: Renders the create/edit coupon modal with full form validation via React Hook Form + Zod.
 
-import { useEffect } from 'react';
-import { useForm, useWatch } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { X } from 'lucide-react';
-import { useAdminCouponsLogic } from '@/app/admin/coupons/coupons_context/useAdminCouponsLogic';
-import { CouponSchema, COUPON_TYPE_OPTIONS, GYM_OPTIONS } from '@/app/admin/coupons/coupons_utils/AdminCouponsSharedConstants';
-import type { CouponFormValues } from '@/app/admin/coupons/coupons_types/AdminCouponsTypes';
+import { useAdminCouponsModalForm } from '@/app/admin/coupons/coupons_components/AdminCouponsModal/useAdminCouponsModalForm';
+import { COUPON_TYPE_OPTIONS, GYM_OPTIONS } from '@/app/admin/coupons/coupons_utils/AdminCouponsSharedConstants';
 
 export default function AdminCouponsModal() {
-  const { showModal, setShowModal, editId, form, saveCoupon, saving } = useAdminCouponsLogic();
-
-  const { register, handleSubmit, reset, watch, setValue, formState: { errors }, control } = useForm<CouponFormValues>({
-    resolver: zodResolver(CouponSchema),
-    defaultValues: form,
-  });
-
-  // Sync external form state into RHF when modal opens
-  useEffect(() => { if (showModal) reset(form); }, [showModal, form, reset]);
-
-  useEffect(() => { if (showModal) reset(form); }, [showModal, form, reset]);
-
-  const formValues = useWatch({ control });
-  const selectedGyms = formValues.assignedGyms ?? form.assignedGyms ?? [];
-
-  const toggleGym = (val: string) => {
-    if (val === 'all') { setValue('assignedGyms', ['all']); return; }
-    const current = selectedGyms.filter(g => g !== 'all');
-    if (current.includes(val)) {
-      const next = current.filter(g => g !== val);
-      setValue('assignedGyms', next.length ? next : ['all']);
-    } else {
-      setValue('assignedGyms', [...current, val]);
-    }
-  };
+  const { showModal, editId, saving, register, handleSubmit, errors, selectedGyms, toggleGym, handleClose, saveCoupon } = useAdminCouponsModalForm();
 
   if (!showModal) return null;
 
+
   return (
     <div data-admin-dialog="true" role="dialog" aria-modal="true" tabIndex={-1} className="fixed inset-0 z-40 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-overlay backdrop-blur-sm" onClick={() => setShowModal(false)} />
+      <div className="absolute inset-0 bg-overlay backdrop-blur-sm" onClick={() => void handleClose()} />
       <div className="relative bg-overlay border border-border rounded-2xl shadow-dialog w-full max-w-lg max-h-screen overflow-y-auto custom-scrollbar">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-border sticky top-0 bg-overlay z-10">
           <h2 className="text-lg font-bold text-primary">{editId ? 'Edit Coupon' : 'Create Coupon'}</h2>
-          <button onClick={() => setShowModal(false)} className="p-1.5 rounded-lg hover:bg-input text-secondary hover:text-primary motion-safe:transition-colors motion-safe:duration-base" aria-label="Close modal">
+          <button onClick={() => void handleClose()} className="min-h-11 min-w-11 p-1.5 rounded-lg hover:bg-input text-secondary hover:text-primary motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page" aria-label="Close modal">
             <X size={18} />
           </button>
         </div>
@@ -111,7 +84,7 @@ export default function AdminCouponsModal() {
                     key={opt.value}
                     type="button"
                     onClick={() => toggleGym(opt.value)}
-                    className={`px-3 py-1.5 rounded-lg text-sm font-medium border motion-safe:transition-all ${isSelected ? 'bg-primary-subtle text-primary border-primary' : 'bg-input text-secondary border-border hover:border-primary'}`}
+                    className={`focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page px-3 py-1.5 rounded-lg text-sm font-medium border motion-safe:transition-all ${isSelected ? 'bg-primary-subtle text-primary border-primary' : 'bg-input text-secondary border-border hover:border-primary'}`}
                   >
                     {opt.label}
                   </button>
@@ -137,10 +110,10 @@ export default function AdminCouponsModal() {
 
           {/* Footer */}
           <div className="flex justify-end gap-3 pt-2 border-t border-border">
-            <button type="button" onClick={() => setShowModal(false)} className="px-4 py-2 bg-input border border-border rounded-lg text-sm font-medium text-secondary hover:text-primary motion-safe:transition-colors motion-safe:duration-base">
+            <button type="button" onClick={() => void handleClose()} className="px-4 py-2 bg-input border border-border rounded-lg text-sm font-medium text-secondary hover:text-primary motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page">
               Cancel
             </button>
-            <button type="submit" disabled={saving} className="px-5 py-2 bg-primary text-on-primary rounded-lg text-sm font-semibold hover:bg-primary-hover motion-safe:transition-colors disabled:opacity-60 disabled:cursor-not-allowed motion-safe:active:scale-95 min-w-32 motion-safe:duration-base">
+            <button type="submit" disabled={saving} className="px-5 py-2 bg-primary text-on-primary rounded-lg text-sm font-semibold hover:bg-primary-hover motion-safe:transition-colors disabled:opacity-60 disabled:cursor-not-allowed motion-safe:active:scale-95 min-w-32 motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page">
               {saving ? 'Saving...' : editId ? 'Update Coupon' : 'Create Coupon'}
             </button>
           </div>

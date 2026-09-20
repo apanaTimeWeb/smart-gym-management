@@ -1,8 +1,9 @@
 // RESPONSIBILITY: TypeScript types for the Subscriptions / Billing module.
-
 export type PlanTier = 'starter' | 'growth' | 'pro' | 'enterprise';
 export type InvoiceStatus = 'paid' | 'pending' | 'failed' | 'refunded';
 export type PaymentMethodType = 'card' | 'upi' | 'netbanking';
+export type BillingCycle = 'monthly' | 'annual';
+export type SubscriptionStatus = 'active' | 'cancelled' | 'past_due';
 
 export interface CurrentSubscription {
   planId: string;
@@ -10,8 +11,8 @@ export interface CurrentSubscription {
   tier: PlanTier;
   monthlyPrice: number;
   annualPrice: number;
-  billingCycle: 'monthly' | 'annual';
-  status: 'active' | 'cancelled' | 'past_due';
+  billingCycle: BillingCycle;
+  status: SubscriptionStatus;
   currentPeriodStart: string;
   currentPeriodEnd: string;
   nextBillingDate: string;
@@ -45,7 +46,7 @@ export interface Invoice {
   amount: number;
   status: InvoiceStatus;
   planName: string;
-  billingCycle: 'monthly' | 'annual';
+  billingCycle: BillingCycle;
   pdfUrl: string;
   taxAmount?: number;
   gstNumber?: string;

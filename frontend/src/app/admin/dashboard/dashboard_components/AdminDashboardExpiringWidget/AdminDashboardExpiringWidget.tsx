@@ -3,7 +3,7 @@
 
 import { Clock, AlertTriangle, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
-const ADMIN_MEMBERS_ROUTE = '/admin/members';
+import { AdminDashboardUrlConfig } from '@/app/admin/dashboard/admin_dashboard_url_config';
 import { useAdminDashboardLogic } from '@/app/admin/dashboard/dashboard_context/useAdminDashboardLogic';
 
 export default function AdminDashboardExpiringWidget() {
@@ -57,7 +57,7 @@ export default function AdminDashboardExpiringWidget() {
       </div>
 
       <Link
-        href={`${ADMIN_MEMBERS_ROUTE}?expiryFilter=this_month`}
+        href={`${AdminDashboardUrlConfig.routes.members}?expiryFilter=this_month`}
         className="w-full mt-4 py-2 border border-border rounded-lg text-xs font-bold text-secondary hover:text-primary hover:bg-surface-highlight motion-safe:transition-colors flex items-center justify-center gap-1 motion-safe:duration-base"
       >
         View All Expiring <ChevronRight size={13} />

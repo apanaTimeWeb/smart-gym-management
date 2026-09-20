@@ -1,4 +1,5 @@
 "use client";
+import { formatNumber } from '@/lib/formatters';
 // RESPONSIBILITY: Renders a single usage metric bar card (label, used/limit, progress bar with color coding, and upgrade CTA at 80% threshold).
 
 import { ArrowUpCircle } from 'lucide-react';
@@ -32,19 +33,19 @@ export default function AdminUsageMetricCard({ metric, onUpgrade }: AdminUsageMe
       </div>
       <div className="flex items-center justify-between">
         <span className="text-xs text-secondary">
-          {metric.used.toLocaleString('en-IN')} / {metric.limit.toLocaleString('en-IN')} {metric.unit}
+          {formatNumber(metric.used)} / {formatNumber(metric.limit)} {metric.unit}
         </span>
         {isCritical && (
           <span className="text-xs font-bold text-on-danger bg-danger px-2 py-0.5 rounded-full">At Limit</span>
         )}
         {isWarning && !isCritical && (
-          <span className="text-xs font-bold text-on-primary bg-warning px-2 py-0.5 rounded-full">Near Limit</span>
+          <span className="text-xs font-bold text-warning bg-warning-bg px-2 py-0.5 rounded-full">Near Limit</span>
         )}
       </div>
       {showUpgradeCta && (
         <button
           onClick={onUpgrade}
-          className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-primary-subtle hover:bg-primary-subtle text-primary text-xs font-semibold motion-safe:transition-colors border border-border motion-safe:duration-base"
+          className="min-h-11 min-w-11 w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-primary-subtle hover:bg-primary-subtle text-primary text-xs font-semibold motion-safe:transition-colors border border-border motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
           aria-label={`Upgrade plan to increase ${metric.label} limit`}
         >
           <ArrowUpCircle size={13} />

@@ -13,6 +13,7 @@ export function AdminMembersHeaderSearch() {
   const searchRef = useRef<HTMLDivElement>(null);
 
   // RATIONALE: Required by architecture to sync state/lifecycle based on dependencies.
+// EFFECT: Synchronizes this component effect with its declared React dependencies in members/members_components/AdminMembersHeaderSearch/AdminMembersHeaderSearch.tsx.
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (searchRef.current && !searchRef.current.contains(event.target as Node)) setShowSearch(false);
@@ -43,7 +44,7 @@ export function AdminMembersHeaderSearch() {
             <p className="text-xs text-secondary uppercase font-bold tracking-wider">
               {searchResults.length > 0 ? `${searchResults.length} result${searchResults.length > 1 ? 's' : ''}` : 'No results'}
             </p>
-            <button onClick={() => { setSearchQuery(''); setShowSearch(false); }} className="text-secondary hover:text-primary" aria-label="Clear search">
+            <button onClick={() => { setSearchQuery(''); setShowSearch(false); }} className="min-h-11 min-w-11 motion-safe:transition-all motion-safe:duration-base ease-in-out text-secondary hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page" aria-label="Clear search">
               <X size={13} />
             </button>
           </div>

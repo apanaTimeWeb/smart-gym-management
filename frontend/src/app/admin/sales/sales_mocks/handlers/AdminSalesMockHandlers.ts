@@ -2,7 +2,7 @@
 // DATA FLOW: sales API client → module-owned MSW handler → module-owned fixture → TanStack Query/UI.
 import { http, HttpResponse } from 'msw';
 import { MOCK_ADMIN_SALES_REFERRALS, MOCK_ADMIN_SALES_OVERVIEW, MOCK_ADMIN_MEMBERSHIP_REPORT, MOCK_ADMIN_MEMBERSHIP_TOTALS, MOCK_ADMIN_ALL_MEMBERSHIPS, MOCK_ADMIN_PENDING_PAYMENTS, MOCK_ADMIN_STORE_ORDERS, MOCK_ADMIN_STORE_PRODUCTS } from '@/app/admin/sales/sales_mocks/fixtures/AdminSalesMockFixtures';
-import { SALES_MOCK_RANGE_MULTIPLIERS, SALES_MOCK_SINGLE_BRANCH_MULTIPLIER } from '@/app/admin/sales/sales_utils/AdminSalesSharedConstants';
+import { SALES_MOCK_RANGE_MULTIPLIERS, SALES_MOCK_SINGLE_BRANCH_MULTIPLIER } from '@/app/admin/sales/sales_mocks/fixtures/AdminSalesMockConstants';
 import { filterAdminSalesMembershipReportRows } from '@/app/admin/sales/sales_utils/AdminSalesFilterMembershipReportRows';
 
 const ok = <T>(data: T, message = 'Success') =>

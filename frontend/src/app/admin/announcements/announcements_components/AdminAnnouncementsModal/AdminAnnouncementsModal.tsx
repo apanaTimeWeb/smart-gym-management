@@ -1,42 +1,20 @@
 "use client";
 // RESPONSIBILITY: Create / Edit modal for Announcements — RHF + Zod validation.
 
-import { useEffect } from 'react';
-import { useForm, Controller } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { Controller } from 'react-hook-form';
 import { X, Loader2, Megaphone } from 'lucide-react';
-import { useAdminAnnouncementsLogic } from '@/app/admin/announcements/announcements_context/useAdminAnnouncementsLogic';
-import { useAdminAnnouncementsStore } from '@/app/admin/announcements/announcements_store/useAdminAnnouncementsStore';
-import {
-  AnnouncementSchema,
-  ANNOUNCEMENT_PRIORITY_OPTIONS,
-  ANNOUNCEMENT_AUDIENCE_OPTIONS,
-  ANNOUNCEMENT_COMPOSE_GYM_OPTIONS,
-} from '@/app/admin/announcements/announcements_utils/AdminAnnouncementsSharedConstants';
-import type { AnnouncementFormValues } from '@/app/admin/announcements/announcements_types/AdminAnnouncementsTypes';
+import { useAdminAnnouncementsModalForm } from '@/app/admin/announcements/announcements_components/AdminAnnouncementsModal/useAdminAnnouncementsModalForm';
+import { ANNOUNCEMENT_PRIORITY_OPTIONS, ANNOUNCEMENT_AUDIENCE_OPTIONS, ANNOUNCEMENT_COMPOSE_GYM_OPTIONS } from '@/app/admin/announcements/announcements_utils/AdminAnnouncementsSharedConstants';
 
 export default function AdminAnnouncementsModal() {
-  const { showModal, setShowModal, editingAnnouncement, saveAnnouncement, saving } = useAdminAnnouncementsLogic();
-  const { form: storeForm } = useAdminAnnouncementsStore();
-
-  const { register, handleSubmit, control, reset, watch, formState: { errors } } = useForm<AnnouncementFormValues>({
-    resolver: zodResolver(AnnouncementSchema),
-    defaultValues: storeForm,
-  });
-
-  useEffect(() => { if (showModal) reset(storeForm); }, [showModal, storeForm, reset]);
+  const { showModal, editingAnnouncement, saving, register, handleSubmit, control, errors, handleClose, saveAnnouncement, toggleArrayValue, isEdit } = useAdminAnnouncementsModalForm();
 
   if (!showModal) return null;
 
-  const isEdit = !!editingAnnouncement;
-
-  function toggleArrayValue<T extends string>(arr: T[], val: T): T[] {
-    return arr.includes(val) ? arr.filter(v => v !== val) : [...arr, val];
-  }
 
   return (
     <>
-      <div data-admin-dialog="true" role="dialog" aria-modal="true" tabIndex={-1} className="fixed inset-0 bg-overlay backdrop-blur-sm z-40" onClick={() => setShowModal(false)} />
+      <div data-admin-dialog="true" role="dialog" aria-modal="true" tabIndex={-1} className="fixed inset-0 bg-overlay backdrop-blur-sm z-40" onClick={() => void handleClose()} />
       <div className="fixed inset-0 z-40 flex items-center justify-center p-4">
         <div className="bg-overlay border border-border rounded-2xl shadow-dialog w-full max-w-2xl max-h-screen flex flex-col">
 
@@ -51,7 +29,7 @@ export default function AdminAnnouncementsModal() {
                 <p className="text-xs text-secondary">{isEdit ? 'Update announcement details' : 'Broadcast to your branch members, trainers, or staff'}</p>
               </div>
             </div>
-            <button onClick={() => setShowModal(false)} className="w-8 h-8 rounded-lg bg-input hover:bg-surface-hover flex items-center justify-center motion-safe:transition-colors motion-safe:duration-base" aria-label="Close">
+            <button onClick={() => void handleClose()} className="min-h-11 min-w-11 w-8 h-8 rounded-lg bg-input hover:bg-surface-hover flex items-center justify-center motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page" aria-label="Close">
               <X size={16} className="text-secondary" />
             </button>
           </div>
@@ -65,7 +43,7 @@ export default function AdminAnnouncementsModal() {
               <input
                 {...register('title')}
                 placeholder="e.g. Grand Opening — New Branch!"
-                className="w-full px-4 py-2.5 bg-input border border-border rounded-xl text-sm text-primary focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary"
+                className="w-full px-4 py-2.5 bg-input border border-border rounded-xl text-sm text-primary focus-visible:outline-none focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary"
               />
               {errors.title && <p className="text-xs text-danger mt-1">{errors.title.message}</p>}
             </div>
@@ -77,7 +55,7 @@ export default function AdminAnnouncementsModal() {
                 {...register('body')}
                 rows={4}
                 placeholder="Write the full announcement message here..."
-                className="w-full px-4 py-2.5 bg-input border border-border rounded-xl text-sm text-primary focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary resize-none"
+                className="w-full px-4 py-2.5 bg-input border border-border rounded-xl text-sm text-primary focus-visible:outline-none focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary resize-none"
               />
               {errors.body && <p className="text-xs text-danger mt-1">{errors.body.message}</p>}
             </div>
@@ -88,7 +66,7 @@ export default function AdminAnnouncementsModal() {
                 <label className="block text-xs font-semibold text-secondary uppercase tracking-wider mb-1.5">Priority *</label>
                 <select
                   {...register('priority')}
-                  className="w-full px-4 py-2.5 bg-input border border-border rounded-xl text-sm text-primary focus:outline-none focus:border-primary"
+                  className="w-full px-4 py-2.5 bg-input border border-border rounded-xl text-sm text-primary focus-visible:outline-none focus-visible:border-primary"
                 >
                   {ANNOUNCEMENT_PRIORITY_OPTIONS.map(o => (
                     <option key={o.value} value={o.value}>{o.label}</option>
@@ -121,7 +99,7 @@ export default function AdminAnnouncementsModal() {
                           key={o.value}
                           type="button"
                           onClick={() => field.onChange(toggleArrayValue(field.value, o.value))}
-                          className={`px-3 py-1.5 rounded-lg text-xs font-semibold border motion-safe:transition-colors ${
+                          className={`focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page px-3 py-1.5 rounded-lg text-xs font-semibold border motion-safe:transition-colors ${
                             selected
                               ? 'bg-primary text-on-primary border-primary'
                               : 'bg-input text-secondary border-border hover:border-primary hover:text-primary'
@@ -152,7 +130,7 @@ export default function AdminAnnouncementsModal() {
                           key={o.value}
                           type="button"
                           onClick={() => field.onChange(toggleArrayValue(field.value, o.value))}
-                          className={`px-3 py-1.5 rounded-lg text-xs font-semibold border motion-safe:transition-colors ${
+                          className={`focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page px-3 py-1.5 rounded-lg text-xs font-semibold border motion-safe:transition-colors ${
                             selected
                               ? 'bg-primary text-on-primary border-primary'
                               : 'bg-input text-secondary border-border hover:border-primary hover:text-primary'
@@ -175,7 +153,7 @@ export default function AdminAnnouncementsModal() {
                 <input
                   type="datetime-local"
                   {...register('publishedAt')}
-                  className="w-full px-4 py-2.5 bg-input border border-border rounded-xl text-sm text-primary focus:outline-none focus:border-primary"
+                  className="w-full px-4 py-2.5 bg-input border border-border rounded-xl text-sm text-primary focus-visible:outline-none focus-visible:border-primary"
                 />
                 {errors.publishedAt && <p className="text-xs text-danger mt-1">{errors.publishedAt.message}</p>}
               </div>
@@ -184,7 +162,7 @@ export default function AdminAnnouncementsModal() {
                 <input
                   type="datetime-local"
                   {...register('expiresAt')}
-                  className="w-full px-4 py-2.5 bg-input border border-border rounded-xl text-sm text-primary focus:outline-none focus:border-primary"
+                  className="w-full px-4 py-2.5 bg-input border border-border rounded-xl text-sm text-primary focus-visible:outline-none focus-visible:border-primary"
                 />
                 {errors.expiresAt && <p className="text-xs text-danger mt-1">{errors.expiresAt.message}</p>}
               </div>
@@ -194,15 +172,15 @@ export default function AdminAnnouncementsModal() {
             <div className="flex gap-3 pt-2">
               <button
                 type="button"
-                onClick={() => setShowModal(false)}
-                className="flex-1 py-2.5 border border-border rounded-xl text-sm font-medium text-secondary hover:text-primary hover:bg-input motion-safe:transition-colors motion-safe:duration-base"
+                onClick={() => void handleClose()}
+                className="flex-1 py-2.5 border border-border rounded-xl text-sm font-medium text-secondary hover:text-primary hover:bg-input motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={saving}
-                className="flex-1 py-2.5 bg-primary hover:bg-primary-hover text-on-primary rounded-xl text-sm font-semibold motion-safe:transition-colors flex items-center justify-center gap-2 disabled:opacity-60 motion-safe:duration-base"
+                className="flex-1 py-2.5 bg-primary hover:bg-primary-hover text-on-primary rounded-xl text-sm font-semibold motion-safe:transition-colors flex items-center justify-center gap-2 disabled:opacity-60 motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
               >
                 {saving ? <Loader2 size={15} className="motion-safe:animate-spin motion-safe:duration-base" /> : null}
                 {isEdit ? 'Save Changes' : 'Publish Announcement'}

@@ -1,8 +1,19 @@
-# coupons — Forbidden Patterns
+# Forbidden Patterns — `admin/coupons`
 
-- Do not place feature mock data outside this module.
-- Do not create duplicate global mock handlers for this module.
-- Do not import another module's business fixtures.
-- Do not add component-level fake business fallbacks.
-- Do not bypass the module API client by reading fixtures directly.
-- Do not import from any sibling business features or other role folders (e.g., no cross-imports from `/admin`, `/superadmin`, `/manager`, `/trainer`).
+## 1. No Editing Expired Coupons
+**FORBIDDEN:** Allowing edit on coupons with `status === 'EXPIRED'`.
+**ALLOWED:** Disable or hide the edit button when a coupon is expired.
+
+## 2. No Inline Status Styles
+**FORBIDDEN:** Ternary color logic in JSX for coupon status.
+**ALLOWED:** `COUPON_STATUS_STYLES[coupon.status]` from constants file.
+
+## 3. No Non-Interactive KPI Cards
+**FORBIDDEN:** Purely decorative KPI stat cards.
+**ALLOWED:** Each KPI card filters the table below (Rule 70).
+
+## 4. No Single-Click Delete
+**FORBIDDEN:** Calling DELETE on button click without `useConfirm()`.
+
+## 5. No Cross-Role Imports / No Relative Imports / No Barrel Files
+Standard rules apply.
