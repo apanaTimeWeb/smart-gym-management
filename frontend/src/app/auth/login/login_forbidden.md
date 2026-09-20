@@ -1,12 +1,14 @@
 # Forbidden Patterns for `auth/login`
 
-To maintain extreme isolation and enterprise-grade architecture in this module, the following are strictly forbidden:
-
-1. **No Mixed UI and Logic:** Do not mix `useEffect` or state hooks inside UI components. All heavy logic MUST reside in the adjacent custom hook.
-2. **No Relative Imports:** Never use `./` or `../../` in any file. Always use absolute paths starting with `@/app/auth/login/...`.
-3. **No Barrel Files:** Do not create `index.ts` files. Import files directly.
-4. **No Direct `window.confirm`:** Use a customized `ConfirmationDrawer` or `Modal`.
-5. **No Context for Async Data:** Do not use React Context for API data. Always use a Zustand store.
-6. **No Arbitrary Tailwind Values:** Do not use values like `bg-[#123456]` or `p-[15px]`. Use design system tokens (`bg-card`, `p-4`).
-7. **No Hardcoded Toasts from UI:** UI components should not intercept API errors to show toasts; let the API interceptor or Zustand store handle notifications and state updates.
-8. **No Localized API Calls:** UI components should never call `apiFetch` directly. They must trigger actions in custom hooks or stores.
+1. Do not store or return access/refresh tokens through browser JavaScript.
+2. Do not call the backend auth service directly from `LoginForm.tsx`; use `AuthApi`.
+3. Do not place mutation lifecycle state in Zustand or React Context.
+4. Do not duplicate role dashboard redirects inside `useLoginForm.ts`.
+5. Do not import `/admin`, `/manager`, `/trainer`, or `/superadmin` business modules.
+6. Do not use raw colors, arbitrary Tailwind values, or semantic background opacity modifiers.
+7. Do not remove `focus-visible` states or keyboard access from controls.
+8. Do not use `tabIndex={-1}` to hide actionable controls from keyboard users.
+9. Do not use hardcoded `/landing` or dashboard routes outside `auth_url_config.ts`.
+10. Do not add client-side demo token generation. Demo sessions may run only inside the explicitly enabled non-production mock boundary.
+11. Do not use toast-only error handling for Login form failures; keep the documented inline error flow.
+12. Do not replace behavioral tests with render-only placeholder assertions.

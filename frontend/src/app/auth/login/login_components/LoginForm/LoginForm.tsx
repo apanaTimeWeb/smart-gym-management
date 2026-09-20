@@ -1,248 +1,155 @@
 'use client';
-// RESPONSIBILITY: Encapsulates logic, UI, or types for this module.
-// DATA FLOW: Standard component data flow.
-// RESPONSIBILITY: Renders the premium login form card. Strictly a View layer — all state and logic lives in useLoginForm.ts.
-// All UI strings come from LoginSharedConstants — zero inline strings.
+/**
+ * RESPONSIBILITY: Renders the Login view only. Form state, validation, mutation lifecycle, and navigation are delegated to useLoginForm.
+ * DATA FLOW: UI events -> useLoginForm -> AuthApi -> Auth session route -> user-visible validation/error state or server-side redirect.
+ */
 import Image from 'next/image';
 import Link from 'next/link';
-import { Mail, Lock, Eye, EyeOff, Loader2, ArrowRight, ChevronLeft } from 'lucide-react';
+import { ArrowRight, ChevronLeft, Eye, EyeOff, Loader2, Lock, Mail } from 'lucide-react';
 import { useLoginForm } from '@/app/auth/login/login_components/LoginForm/useLoginForm';
 import { LoginSharedConstants } from '@/app/auth/login/login_constants/LoginSharedConstants';
+import { AuthUrlConfig } from '@/app/auth/auth_url_config';
+
+const isDemoLoginVisible = process.env.NODE_ENV !== 'production' && process.env.NEXT_PUBLIC_AUTH_DEMO_MODE === 'true';
 
 export default function LoginForm() {
-  const { form, status, showPassword, setShowPassword, onSubmit, handleDemoSuperadminLogin, handleDemoAdminLogin, handleDemoManagerLogin, handleDemoTrainerLogin } = useLoginForm();
+  const { form, isSubmitting, showPassword, setShowPassword, onSubmit, handleDemoLogin } = useLoginForm();
   const { register, handleSubmit, formState: { errors } } = form;
-  const isLoading = status === 'loading';
+  const formError = errors.root?.message;
 
   return (
     <div className="w-full max-w-md flex flex-col gap-8">
-
-      {/* ── Back to Home (TC-01 fix) ── */}
       <Link
-        href="/landing"
-        className="flex items-center gap-1.5 text-sm text-secondary hover:text-primary transition-colors self-start"
-        aria-label="Back to landing page"
+        href={AuthUrlConfig.PAGES.LANDING}
+        className="inline-flex min-h-11 items-center gap-1.5 self-start text-sm text-secondary motion-safe:transition-colors motion-safe:duration-base ease-in-out hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
+        aria-label={LoginSharedConstants.TEXT.BACK_TO_HOME_ARIA}
       >
-        <ChevronLeft size={16} />
-        Back to Home
+        <ChevronLeft size={18} aria-hidden="true" />
+        {LoginSharedConstants.TEXT.BACK_TO_HOME}
       </Link>
 
-      {/* ── Brand header (mobile shows this; desktop hero panel shows it there) ── */}
-      <div className="flex flex-col items-center text-center gap-2">
-        <div
-          className="w-16 h-16 rounded-2xl overflow-hidden shadow-xl ring-2 ring-primary/30 mb-1"
-          style={{ boxShadow: '0 0 32px rgba(99,102,241,0.25)' }}
-        >
+      <div className="flex flex-col items-center gap-2 text-center">
+        <div className="mb-1 h-16 w-16 overflow-hidden rounded-lg border border-border bg-card shadow-card">
           <Image
             src={LoginSharedConstants.ASSETS.LOGO}
             alt={LoginSharedConstants.TEXT.BRAND}
             width={64}
             height={64}
-            className="w-full h-full object-cover"
+            className="h-full w-full object-cover"
             priority
           />
         </div>
-        <h1 className="text-2xl font-black text-primary">{LoginSharedConstants.TEXT.FORM_TITLE}</h1>
+        <h1 className="text-2xl font-bold text-primary">{LoginSharedConstants.TEXT.FORM_TITLE}</h1>
         <p className="text-sm text-secondary">{LoginSharedConstants.TEXT.FORM_SUBTITLE}</p>
       </div>
 
-      {/* ── Form card ── */}
-      <div
-        className="rounded-2xl border border-border p-8 space-y-5"
-        style={{
-          background: 'var(--bg-card)',
-          boxShadow: '0 8px 40px rgba(0,0,0,0.35)',
-        }}
-      >
+      <div className="space-y-5 rounded-lg border border-border bg-card p-8 shadow-card">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
-
-          {/* Email */}
           <div className="space-y-1.5">
-            <label
-              htmlFor="login-email"
-              className="block text-xs font-semibold text-secondary uppercase tracking-wider"
-            >
+            <label htmlFor="login-email" className="block text-sm font-semibold text-secondary">
               {LoginSharedConstants.TEXT.FORM_EMAIL_LABEL}
             </label>
-            <div className="relative group">
-              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-                <Mail
-                  size={16}
-                  className="text-secondary transition-colors group-focus-within:text-primary"
-                />
-              </div>
+            <div className="relative">
+              <Mail size={18} aria-hidden="true" className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-secondary" />
               <input
                 id="login-email"
                 type="email"
-                {...register('email')}
-                disabled={isLoading}
-                className={[
-                  'w-full pl-10 pr-4 py-3 rounded-xl text-sm font-medium transition-all outline-none',
-                  'bg-input text-primary placeholder:text-disabled',
-                  'border',
-                  errors.email
-                    ? 'border-danger ring-1 ring-danger/40'
-                    : 'border-border focus:border-primary focus:ring-1 focus:ring-primary/30',
-                  'disabled:opacity-60 disabled:cursor-not-allowed',
-                ].join(' ')}
-                placeholder={LoginSharedConstants.TEXT.FORM_EMAIL_PLACEHOLDER}
                 autoComplete="email"
+                {...register('email')}
+                disabled={isSubmitting}
+                required
+                aria-invalid={Boolean(errors.email)}
+                aria-describedby={errors.email ? 'login-email-error' : undefined}
+                className="h-11 w-full rounded-md border border-border bg-input pl-11 pr-4 text-sm text-primary outline-none placeholder:text-disabled motion-safe:transition-all motion-safe:duration-base ease-in-out focus-visible:border-focus focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page disabled:cursor-not-allowed disabled:opacity-50"
+                placeholder={LoginSharedConstants.TEXT.FORM_EMAIL_PLACEHOLDER}
               />
             </div>
-            {errors.email && (
-              <p className="text-xs text-danger flex items-center gap-1 mt-1">
-                {errors.email.message}
-              </p>
-            )}
+            {errors.email && <p id="login-email-error" className="text-xs text-danger" role="alert">{errors.email.message}</p>}
           </div>
 
-          {/* Password */}
           <div className="space-y-1.5">
-            <label
-              htmlFor="login-password"
-              className="block text-xs font-semibold text-secondary uppercase tracking-wider"
-            >
+            <label htmlFor="login-password" className="block text-sm font-semibold text-secondary">
               {LoginSharedConstants.TEXT.FORM_PASSWORD_LABEL}
             </label>
-            <div className="relative group">
-              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-                <Lock
-                  size={16}
-                  className="text-secondary transition-colors group-focus-within:text-primary"
-                />
-              </div>
+            <div className="relative">
+              <Lock size={18} aria-hidden="true" className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-secondary" />
               <input
                 id="login-password"
                 type={showPassword ? 'text' : 'password'}
-                {...register('password')}
-                disabled={isLoading}
-                className={[
-                  'w-full pl-10 pr-11 py-3 rounded-xl text-sm font-medium transition-all outline-none',
-                  'bg-input text-primary placeholder:text-disabled',
-                  'border',
-                  errors.password
-                    ? 'border-danger ring-1 ring-danger/40'
-                    : 'border-border focus:border-primary focus:ring-1 focus:ring-primary/30',
-                  'disabled:opacity-60 disabled:cursor-not-allowed',
-                ].join(' ')}
-                placeholder="••••••••"
                 autoComplete="current-password"
+                {...register('password')}
+                disabled={isSubmitting}
+                required
+                aria-invalid={Boolean(errors.password)}
+                aria-describedby={errors.password ? 'login-password-error' : undefined}
+                className="h-11 w-full rounded-md border border-border bg-input pl-11 pr-12 text-sm text-primary outline-none placeholder:text-disabled motion-safe:transition-all motion-safe:duration-base ease-in-out focus-visible:border-focus focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page disabled:cursor-not-allowed disabled:opacity-50"
+                placeholder={LoginSharedConstants.TEXT.FORM_PASSWORD_PLACEHOLDER}
               />
               <button
                 type="button"
-                aria-label={showPassword ? 'Hide password' : 'Show password'}
+                aria-label={showPassword ? LoginSharedConstants.TEXT.HIDE_PASSWORD : LoginSharedConstants.TEXT.SHOW_PASSWORD}
+                aria-pressed={showPassword}
+                disabled={isSubmitting}
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-secondary hover:text-primary transition-colors"
-                tabIndex={-1}
+                className="absolute right-1 top-1/2 flex min-h-11 min-w-11 -translate-y-1/2 items-center justify-center rounded-md text-secondary motion-safe:transition-colors motion-safe:duration-base ease-in-out hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page disabled:cursor-not-allowed disabled:opacity-50"
               >
-                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                {showPassword ? <EyeOff size={18} aria-hidden="true" /> : <Eye size={18} aria-hidden="true" />}
               </button>
             </div>
-            {errors.password && (
-              <p className="text-xs text-danger flex items-center gap-1 mt-1">
-                {errors.password.message}
-              </p>
-            )}
+            {errors.password && <p id="login-password-error" className="text-xs text-danger" role="alert">{errors.password.message}</p>}
           </div>
 
-          {/* Submit button */}
+          {formError && (
+            <div className="rounded-md border border-danger bg-danger-bg p-3 text-sm text-primary" role="alert" aria-live="polite">
+              {formError}
+            </div>
+          )}
+
           <button
             id="login-submit-btn"
             type="submit"
-            disabled={isLoading}
-            className={[
-              'w-full py-3.5 rounded-xl font-bold text-sm text-white transition-all duration-200',
-              'flex items-center justify-center gap-2',
-              'disabled:opacity-70 disabled:cursor-not-allowed',
-              isLoading
-                ? 'bg-primary-subtle'
-                : 'bg-primary-subtle hover:opacity-90 active:scale-[0.98] shadow-lg',
-            ].join(' ')}
-            style={
-              !isLoading
-                ? { boxShadow: '0 4px 20px rgba(99,102,241,0.4)' }
-                : undefined
-            }
+            disabled={isSubmitting}
+            className="group flex min-h-11 w-full items-center justify-center gap-2 rounded-md bg-primary px-5 py-2.5 text-sm font-semibold text-on-primary shadow-card motion-safe:transition-all motion-safe:duration-base ease-in-out hover:bg-primary-hover motion-safe:active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {isLoading ? (
-              <Loader2 size={18} className="motion-safe:animate-spin" />
+            {isSubmitting ? (
+              <>
+                <Loader2 size={18} aria-hidden="true" className="motion-safe:animate-spin" />
+                <span>{LoginSharedConstants.TEXT.FORM_SUBMITTING}</span>
+              </>
             ) : (
               <>
-                {LoginSharedConstants.TEXT.FORM_SUBMIT}
-                <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" />
+                <span>{LoginSharedConstants.TEXT.FORM_SUBMIT}</span>
+                <ArrowRight size={18} aria-hidden="true" className="motion-safe:transition-transform motion-safe:duration-base ease-in-out group-hover:translate-x-0.5" />
               </>
             )}
           </button>
 
-          {/* Demo Login buttons */}
-          <div className="relative flex items-center py-2">
-            <div className="flex-grow border-t border-border"></div>
-            <span className="flex-shrink-0 mx-4 text-xs font-semibold text-secondary uppercase">Quick Login Demos</span>
-            <div className="flex-grow border-t border-border"></div>
-          </div>
-          
-          <div className="grid grid-cols-2 gap-3">
-            <button
-              type="button"
-              disabled={isLoading}
-              onClick={handleDemoSuperadminLogin}
-              className={[
-                'w-full py-2.5 rounded-xl font-bold text-xs transition-all duration-200',
-                'flex items-center justify-center gap-2 border border-warning/30',
-                'text-warning hover:bg-warning-bg active:scale-[0.98]',
-                'disabled:opacity-70 disabled:cursor-not-allowed',
-              ].join(' ')}
-            >
-              Superadmin
-            </button>
-            <button
-              type="button"
-              disabled={isLoading}
-              onClick={handleDemoAdminLogin}
-              className={[
-                'w-full py-2.5 rounded-xl font-bold text-xs transition-all duration-200',
-                'flex items-center justify-center gap-2 border border-primary/30',
-                'text-primary hover:bg-primary-subtle active:scale-[0.98]',
-                'disabled:opacity-70 disabled:cursor-not-allowed',
-              ].join(' ')}
-            >
-              Admin
-            </button>
-            <button
-              type="button"
-              disabled={isLoading}
-              onClick={handleDemoManagerLogin}
-              className={[
-                'w-full py-2.5 rounded-xl font-bold text-xs transition-all duration-200',
-                'flex items-center justify-center gap-2 border border-success/30',
-                'text-success hover:bg-success-bg active:scale-[0.98]',
-                'disabled:opacity-70 disabled:cursor-not-allowed',
-              ].join(' ')}
-            >
-              Manager
-            </button>
-            <button
-              type="button"
-              disabled={isLoading}
-              onClick={handleDemoTrainerLogin}
-              className={[
-                'w-full py-2.5 rounded-xl font-bold text-xs transition-all duration-200',
-                'flex items-center justify-center gap-2 border border-info/30',
-                'text-info hover:bg-info-bg active:scale-[0.98]',
-                'disabled:opacity-70 disabled:cursor-not-allowed',
-              ].join(' ')}
-            >
-              Trainer
-            </button>
-          </div>
+          {isDemoLoginVisible && (
+            <>
+              <div className="flex items-center gap-4 py-2">
+                <div className="h-0 flex-1 border-t border-border" />
+                <span className="text-xs font-semibold uppercase tracking-wide text-secondary">{LoginSharedConstants.TEXT.QUICK_DEMOS}</span>
+                <div className="h-0 flex-1 border-t border-border" />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                {LoginSharedConstants.DEMO_BUTTONS.map((demo) => (
+                  <button
+                    key={demo.role}
+                    type="button"
+                    disabled={isSubmitting}
+                    onClick={() => void handleDemoLogin(demo.role)}
+                    className="min-h-11 rounded-md border border-border bg-card px-3 py-2 text-xs font-semibold text-primary motion-safe:transition-all motion-safe:duration-base ease-in-out hover:bg-primary-subtle motion-safe:active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    {LoginSharedConstants.TEXT[demo.labelKey]}
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
         </form>
       </div>
 
-      {/* ── Footer ── */}
-      <p className="text-center text-xs text-disabled">
-        {LoginSharedConstants.TEXT.FOOTER}
-      </p>
+      <p className="text-center text-xs text-disabled">{LoginSharedConstants.TEXT.FOOTER}</p>
     </div>
   );
 }
-

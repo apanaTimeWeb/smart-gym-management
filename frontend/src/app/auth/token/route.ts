@@ -1,13 +1,21 @@
-// RESPONSIBILITY: Encapsulates logic, UI, or types for this module.
-// DATA FLOW: Standard component data flow.
-// RESPONSIBILITY: route.ts handles the logic and UI for its corresponding feature.
-import { NextRequest, NextResponse } from 'next/server';
-import { StatusCodes } from 'http-status-codes';
+/**
+ * RESPONSIBILITY: Reports safe session status without ever returning access or refresh token values.
+ * DATA FLOW: HTTP-only session cookie presence -> sanitized authentication status -> canonical response.
+ */
+import { NextRequest } from 'next/server';
+import { AuthSessionConstants } from '@/app/auth/auth_constants/AuthSessionConstants';
+import { AuthTokenStatusSchema } from '@/app/auth/auth_types/AuthContracts';
+import { AuthSessionServerUtils } from '@/app/auth/auth_utils/AuthSessionServerUtils';
+import { AuthApiResponseUtils } from '@/app/auth/auth_utils/AuthApiResponseUtils';
 
-export async function GET(req: NextRequest) {
-  const token = req.cookies.get('gymsmart_token')?.value;
-  const refreshToken = req.cookies.get('gymsmart_refresh_token')?.value;
-  if (!token) return NextResponse.json({ token: null, refreshToken: null }, { status: StatusCodes.UNAUTHORIZED });
-  return NextResponse.json({ token, refreshToken });
+export async function GET(request: NextRequest) {
+  const token = request.cookies.get(AuthSessionConstants.COOKIES.ACCESS_TOKEN)?.value;
+  const userCookie = request.cookies.get(AuthSessionConstants.COOKIES.USER)?.value;
+  const user = await AuthSessionServerUtils.resolveUser(token, userCookie);
+  const payload = AuthTokenStatusSchema.parse({
+    authenticated: Boolean(user),
+    user,
+  });
+
+  return AuthApiResponseUtils.success('Session status', payload);
 }
-

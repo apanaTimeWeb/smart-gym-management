@@ -1,25 +1,49 @@
 # Auth Module — Theme Portability Contract
 
-To ensure this module can be safely ported or re-themed without breaking, it strictly relies on the following CSS variables defined in the global design system (`globals.css` -> `tailwind.config.ts`).
+`auth` consumes the global Smart Gym 360 design system through semantic Tailwind tokens. No Auth component defines raw color values or inline theme-variable styles.
 
-**DO NOT hardcode Tailwind colors (e.g., `bg-blue-500`, `text-[#1A1A2E]`) anywhere in this module.**
+## Exact global tokens consumed
+### Surfaces
+- `--bg-page` → `bg-page`
+- `--bg-sidebar` → `bg-sidebar`
+- `--bg-card` → `bg-card`
+- `--bg-input` → `bg-input`
+- `--skeleton-base` → `bg-skeleton-base`
+- `--skeleton-highlight` → `bg-skeleton-highlight`
 
-## Core Backgrounds
-- `--bg-page`: Main background for the auth layout.
-- `--bg-card`: Background for the login/auth form cards.
-- `--bg-input`: Background for email/password input fields.
+### Borders and focus
+- `--border` → `border-border`
+- `--border-focus` → `border-focus`
+- `--focus-ring` → `ring-primary`
 
-## Borders
-- `--border`: Standard card and input borders.
-- `--border-focus`: Active input focus ring for auth forms.
+### Typography
+- `--text-primary` → `text-primary`
+- `--text-secondary` → `text-secondary`
+- `--text-disabled` → `text-disabled`
+- `--text-on-primary` → `text-on-primary`
 
-## Typography
-- `--text-primary`: Primary headings, form labels.
-- `--text-secondary`: Captions, placeholders, "Forgot Password" text.
+### Semantic status
+- `--danger` → `border-danger`
+- `--success` → `border-success`
+- `--danger-text` → `text-danger`
+- `--danger-bg` → `bg-danger-bg`
+- `--success-text` → `text-success`
+- `--success-bg` → `bg-success-bg`
+- `--warning-text` → `text-warning`
+- `--warning-bg` → `bg-warning-bg`
+- `--info-text` → `text-info`
+- `--info-bg` → `bg-info-bg`
 
-## Status Colors (Background & Text)
-- `--danger`: Error messages (e.g., "Invalid credentials").
-- `--success`: Success messages (if applicable).
+### Elevation and interaction
+- `--shadow-card` → `shadow-card`
+- `--primary` → `bg-primary`
+- `--primary-hover` → `bg-primary-hover`
 
-## Skeletons & Loaders
-- `--primary`: Primary brand color for the "Sign In" button and loading spinner.
+## Auth-specific visual contract
+- Primary Login CTA uses solid `bg-primary text-on-primary`.
+- Form controls use `bg-input`, `border-border`, and explicit `focus-visible:ring-primary`.
+- Validation errors use `bg-danger-bg` / `text-danger`; semantic background opacity modifiers are not used.
+- Loading skeletons use `bg-skeleton-base` / `bg-skeleton-highlight`.
+- Interactive transitions are `motion-safe:` gated.
+- Icon controls retain keyboard focus and a minimum touch target of 44px where applicable.
+- No raw hex, raw RGBA, `bg-[...]`, `text-[...]`, `ring-[...]`, `border-[...]`, or semantic `/opacity` background modifiers are permitted in Auth JSX.

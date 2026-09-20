@@ -1,55 +1,41 @@
 'use client';
-// RESPONSIBILITY: Encapsulates logic, UI, or types for this module.
-// DATA FLOW: Standard component data flow.
-// RESPONSIBILITY: Typed Error Boundary component that wraps the login client components and displays a module-specific fallback UI on crash.
-import React, { Component } from 'react';
-import type { ErrorInfo, ReactNode } from 'react';
-import { AuthUrlConfig } from '@/app/auth/auth_url_config';
+/**
+ * RESPONSIBILITY: Catches Login client-component render failures and exposes a user-safe retry action.
+ * DATA FLOW: Render failure -> boundary state -> module-specific fallback -> local re-render retry.
+ */
+import { Component } from 'react';
+import type { ErrorInfo } from 'react';
 import { logger } from '@/lib/logger';
+import { LoginSharedConstants } from '@/app/auth/login/login_constants/LoginSharedConstants';
+import type { LoginErrorBoundaryProps, LoginErrorBoundaryState } from '@/app/auth/login/login_types/LoginErrorTypes';
 
-interface Props {
-  children: ReactNode;
-}
+export default class LoginErrorBoundary extends Component<LoginErrorBoundaryProps, LoginErrorBoundaryState> {
+  public state: LoginErrorBoundaryState = { hasError: false };
 
-interface State {
-  hasError: boolean;
-  error?: Error;
-}
-
-export default class LoginErrorBoundary extends Component<Props, State> {
-  public state: State = {
-    hasError: false
-  };
-
-  public static getDerivedStateFromError(error: Error): State {
-    return { hasError: true, error };
+  public static getDerivedStateFromError(): LoginErrorBoundaryState {
+    return { hasError: true };
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    logger.error('Login module error:', error, errorInfo);
+    logger.error('Auth login component error', error, errorInfo);
   }
 
   public render() {
-    if (this.state.hasError) {
-      return (
-        <div className="w-full h-full min-h-96 flex flex-col items-center justify-center p-8 text-center bg-card rounded-2xl shadow-lg border border-border">
-          <div className="w-16 h-16 bg-danger-bg text-danger rounded-full flex items-center justify-center mb-4 text-3xl font-black">!</div>
-          <h2 className="text-xl font-bold text-primary mb-2">Login Component Failed</h2>
-          <p className="text-secondary mb-6 text-sm max-w-sm">We encountered an unexpected error while loading the login interface.</p>
-          <button
-            onClick={() => {
-              this.setState({ hasError: false });
-              window.location.href = AuthUrlConfig.PAGES.LOGIN;
-            }}
-            className="px-6 py-2 bg-primary-subtle text-white font-medium rounded-lg hover:bg-primary-hover transition-colors"
-          >
-            Reload Login
-          </button>
-        </div>
-      );
-    }
+    if (!this.state.hasError) return this.props.children;
 
-    return this.props.children;
+    return (
+      <div className="flex min-h-96 w-full flex-col items-center justify-center rounded-lg border border-border bg-card p-8 text-center shadow-card" role="alert">
+        <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-danger-bg text-danger text-3xl font-bold" aria-hidden="true">!</div>
+        <h2 className="mb-2 text-xl font-bold text-primary">{LoginSharedConstants.TEXT.ERROR_TITLE}</h2>
+        <p className="mb-6 max-w-sm text-sm text-secondary">{LoginSharedConstants.TEXT.ERROR_DESCRIPTION}</p>
+        <button
+          type="button"
+          onClick={() => this.setState({ hasError: false })}
+          className="min-h-11 rounded-md bg-primary px-5 py-2.5 text-sm font-semibold text-on-primary motion-safe:transition-all motion-safe:duration-base ease-in-out hover:bg-primary-hover motion-safe:active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
+        >
+          {LoginSharedConstants.TEXT.ERROR_RETRY}
+        </button>
+      </div>
+    );
   }
 }
-

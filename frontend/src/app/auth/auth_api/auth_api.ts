@@ -1,18 +1,27 @@
-// RESPONSIBILITY: Encapsulates logic, UI, or types for this module.
-// RESPONSIBILITY: Encapsulates logic, UI, or types for this module.
-// DATA FLOW: Standard component data flow.
-// RESPONSIBILITY: Centralized API client exclusively for the Auth module. Encapsulates network calls to backend authentication routes.
+/**
+ * RESPONSIBILITY: Encapsulates browser-facing Auth API calls. No Auth token is returned to browser JavaScript.
+ * DATA FLOW: LoginForm -> AuthApi -> internal Auth session route -> secure HTTP-only cookies.
+ */
 import { apiFetch } from '@/lib/api';
 import { AuthUrlConfig } from '@/app/auth/auth_url_config';
-import { AuthResponseSchema } from '@/app/auth/login/login_types/login_types';
-import type { AuthResponse } from '@/app/auth/login/login_types/login_types';
+import { AuthSessionResponseSchema } from '@/app/auth/auth_types/AuthContracts';
+import { AuthApiError } from '@/app/auth/auth_api/AuthApiError';
+import type { AuthLoginCredentials, AuthUser } from '@/app/auth/auth_types/AuthContracts';
+import type { ApiResponse } from '@/lib/api';
 
-export const authApi = {
-  login: async (email: string, password: string) => {
-    return apiFetch<import('@/lib/api').ApiResponse<AuthResponse>>(AuthUrlConfig.BACKEND_API.LOGIN, {
+export const AuthApi = {
+  async login(credentials: AuthLoginCredentials): Promise<AuthUser> {
+    const response = await apiFetch<ApiResponse<AuthUser>>(AuthUrlConfig.PROXY_API.SESSION, {
       method: 'POST',
-      body: JSON.stringify({ email, password }),
-      dataSchema: AuthResponseSchema,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(credentials),
+      dataSchema: AuthSessionResponseSchema.shape.data,
     });
+
+    if (!response.success || !response.data) {
+      throw new AuthApiError(response.message || 'Authentication failed', response.errorCode);
+    }
+
+    return response.data;
   },
 };

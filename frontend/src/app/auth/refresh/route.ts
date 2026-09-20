@@ -1,58 +1,62 @@
-// RESPONSIBILITY: Encapsulates logic, UI, or types for this module.
-// DATA FLOW: Standard component data flow.
-// RESPONSIBILITY: route.ts handles the logic and UI for its corresponding feature.
-import { NextRequest, NextResponse } from 'next/server';
+/**
+ * RESPONSIBILITY: Refreshes the secure Auth session without returning access or refresh tokens to browser JavaScript.
+ * DATA FLOW: HTTP-only refresh cookie -> backend refresh endpoint -> validated response -> refreshed HTTP-only cookies.
+ */
+import { NextRequest } from 'next/server';
 import { StatusCodes } from 'http-status-codes';
 import { AuthUrlConfig } from '@/app/auth/auth_url_config';
+import { AuthSessionConstants } from '@/app/auth/auth_constants/AuthSessionConstants';
+import { AuthErrorConstants } from '@/app/auth/auth_constants/AuthErrorConstants';
+import { AuthBackendRefreshResponseSchema } from '@/app/auth/auth_types/AuthContracts';
+import { AuthBackendTransport } from '@/app/auth/auth_api/AuthBackendTransport';
+import { AuthApiResponseUtils } from '@/app/auth/auth_utils/AuthApiResponseUtils';
+import { AuthCookieUtils } from '@/app/auth/auth_utils/AuthCookieUtils';
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
-
-export async function POST(req: NextRequest) {
-  const refreshToken = req.cookies.get('gymsmart_refresh_token')?.value;
-
+export async function POST(request: NextRequest) {
+  const refreshToken = request.cookies.get(AuthSessionConstants.COOKIES.REFRESH_TOKEN)?.value;
   if (!refreshToken) {
-    return NextResponse.json({ error: 'No refresh token' }, { status: StatusCodes.UNAUTHORIZED });
+    return AuthApiResponseUtils.failure(
+      AuthErrorConstants.MESSAGE.SESSION_EXPIRED,
+      StatusCodes.UNAUTHORIZED,
+      AuthErrorConstants.NAME.UNAUTHORIZED,
+      AuthErrorConstants.CODE.REFRESH_MISSING_TOKEN,
+    );
   }
 
   try {
-    const backendRes = await fetch(`${BASE_URL}${AuthUrlConfig.BACKEND_API.REFRESH}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${refreshToken}`,
-      },
-    });
+    const { response: backendResponse, payload } = await AuthBackendTransport.post(
+      AuthUrlConfig.BACKEND_API.REFRESH,
+      undefined,
+      { Authorization: `Bearer ${refreshToken}` },
+    );
 
-    if (!backendRes.ok) {
-      return NextResponse.json({ error: 'Refresh failed' }, { status: StatusCodes.UNAUTHORIZED });
+    const parsedBackend = AuthBackendRefreshResponseSchema.safeParse(payload);
+
+    if (!backendResponse.ok || !parsedBackend.success || !parsedBackend.data.success || !parsedBackend.data.data) {
+      const response = AuthApiResponseUtils.failure(
+        AuthErrorConstants.MESSAGE.SESSION_EXPIRED,
+        StatusCodes.UNAUTHORIZED,
+        AuthErrorConstants.NAME.UNAUTHORIZED,
+        AuthErrorConstants.CODE.REFRESH_REJECTED,
+      );
+      AuthCookieUtils.clearSession(response);
+      return response;
     }
 
-    const json = await backendRes.json();
-    const { accessToken, refreshToken: newRefreshToken } = json.data;
-
-    const res = NextResponse.json({ success: true, accessToken });
-
-    res.cookies.set('gymsmart_token', accessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 60 * 15, // 15 mins
-      path: '/',
-    });
-
-    if (newRefreshToken) {
-      res.cookies.set('gymsmart_refresh_token', newRefreshToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
-        maxAge: 60 * 60 * 24 * 7, // 7 days
-        path: '/',
-      });
-    }
-
-    return res;
+    const response = AuthApiResponseUtils.success('Session refreshed', null);
+    const newRefreshToken = parsedBackend.data.data.refreshToken ?? refreshToken;
+    AuthCookieUtils.refreshSession(
+      response,
+      parsedBackend.data.data.accessToken,
+      newRefreshToken,
+    );
+    return response;
   } catch {
-    return NextResponse.json({ success: false, message: 'Invalid refresh token' }, { status: 401 });
+    return AuthApiResponseUtils.failure(
+      AuthErrorConstants.MESSAGE.UPSTREAM_UNAVAILABLE,
+      StatusCodes.BAD_GATEWAY,
+      AuthErrorConstants.NAME.UPSTREAM_UNAVAILABLE,
+      AuthErrorConstants.CODE.REFRESH_UPSTREAM_UNAVAILABLE,
+    );
   }
 }
-
