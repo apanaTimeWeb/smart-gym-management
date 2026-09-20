@@ -14,6 +14,7 @@ export default function NotificationsError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+// EFFECT: Synchronizes this component effect with its declared React dependencies in notifications/error.tsx.
   useEffect(() => {
     // Log the route-level error once while keeping internal error details out of the UI.
     logErrorToMonitoring(error, { module: 'notifications' });
@@ -37,7 +38,7 @@ export default function NotificationsError({
         <p className="font-medium text-danger">Something went wrong!</p>        <p className="text-sm mt-1 text-secondary">Please retry. If the problem continues, contact support with the current request time.</p>
         <button
           onClick={() => reset()}
-          className="mt-4 px-4 py-2 rounded-md font-medium text-on-primary bg-primary hover:bg-primary-hover motion-safe:transition-colors motion-safe:duration-base"
+          className="mt-4 px-4 py-2 rounded-md font-medium text-on-primary bg-primary hover:bg-primary-hover motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
         >
           Try again
         </button>

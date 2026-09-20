@@ -41,14 +41,14 @@ export default function AdminSubscriptionsPaymentMethod() {
               {!pm.isDefault && (
                 <button
                   onClick={() => setDefaultPaymentMethod(pm.id)}
-                  className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-secondary border border-border rounded-lg hover:text-primary hover:bg-input motion-safe:transition-colors motion-safe:duration-base"
+                  className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-secondary border border-border rounded-lg hover:text-primary hover:bg-input motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
                 >
                   <Star size={11} /> Set Default
                 </button>
               )}
               <button
                 onClick={() => handleRemovePaymentMethod(pm.id)}
-                className="p-1.5 rounded-lg text-secondary hover:text-danger hover:bg-danger-bg motion-safe:transition-colors motion-safe:duration-base"
+                className="min-h-11 min-w-11 p-1.5 rounded-lg text-secondary hover:text-danger hover:bg-danger-bg motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
                 aria-label="Remove payment method"
               >
                 <Trash2 size={14} />

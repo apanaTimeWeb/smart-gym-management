@@ -7,9 +7,9 @@ The Admin module is the platform-level operational workspace for the gym-managem
 
 | Folder | Responsibility | Key Files / Contents |
 |---|---|---|
-| `admin_components/AdminLayout/` | Admin shell, navigation, header search, notifications, profile entry, usage alert | `AdminLayout.tsx`, `AdminHeader.tsx`, `AdminSidebar.tsx`, `AdminHeaderSearch.tsx`, `useAdminHeaderMemberSearch.ts` |
-| `admin_components/AdminFeedback/` | Confirmation, toast, message, and bulk-message primitives | `AdminConfirmProvider.tsx`, `AdminConfirmModal.tsx`, `AdminToast.tsx`, `AdminMessageModal.tsx` |
-| `admin_components/AdminShared/` | Zero-business-logic Admin UI primitives | `AdminPagination.tsx`, `AdminSearchableDropdown.tsx`, `AdminTableSkeleton.tsx`, `AdminStatCard.tsx` |
+| `admin_layout/AdminLayout/` | Admin shell, navigation, header search, notifications, profile entry, usage alert | `AdminLayout.tsx`, `AdminHeader.tsx`, `AdminSidebar.tsx`, `AdminHeaderSearch.tsx`, `useAdminHeaderMemberSearch.ts` |
+| `admin_layout/AdminFeedback/` | Confirmation, toast, message, and bulk-message primitives | `AdminConfirmProvider.tsx`, `AdminConfirmModal.tsx`, `AdminToast.tsx`, `AdminMessageModal.tsx` |
+| `admin_layout/AdminShared/` | Zero-business-logic Admin UI primitives | `AdminPagination.tsx`, `AdminSearchableDropdown.tsx`, `AdminTableSkeleton.tsx`, `AdminStatCard.tsx` |
 | `admin_utils/` | Admin-owned utility contracts and infrastructure adapters | `useAdminDebounce.ts`, `useAdminUrlQuerySync.ts`, `useAdminUnsavedChangesGuard.ts`, `AdminMonitoring.ts`, `AdminCreateIdempotencyKey.ts`, `AdminIdempotencyIntentStore.ts` |
 | `admin_store/` | Admin-wide UI/session-shell state only | `useAdminGlobalStore.ts`, `useAdminImpersonationStore.ts`, `useAdminToastStore.ts` |
 | `admin_types/` | Admin-wide type contracts | Admin prop/state/shared type definitions |
@@ -144,7 +144,7 @@ The unchecked items are external execution gates, not unverified claims of code 
 
 ## Shell Aggregation Exception
 
-`admin_components/AdminLayout/` is the approved Admin application-shell aggregation boundary. `AdminHeaderSearch`, `AdminHeaderNotifications`, `AdminHeaderProfile`, and `AdminUsageAlert` may consume minimal read-only data from Admin feature APIs because they render persistent shell affordances present across routes. This is an explicit Admin-only exception: shell components must not mutate feature state, own feature business rules, import feature fixtures/handlers, or become a substitute for feature-local query logic.
+`admin_layout/AdminLayout/` is the approved Admin application-shell aggregation boundary. `AdminHeaderSearch`, `AdminHeaderNotifications`, `AdminHeaderProfile`, and `AdminUsageAlert` may consume minimal read-only data from Admin feature APIs because they render persistent shell affordances present across routes. This is an explicit Admin-only exception: shell components must not mutate feature state, own feature business rules, import feature fixtures/handlers, or become a substitute for feature-local query logic.
 
 ## Branch Reference Isolation
 

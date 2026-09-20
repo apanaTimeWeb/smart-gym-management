@@ -14,6 +14,7 @@ export function AdminHeaderProfile() {
   const user = getUser();
 
   // eslint-disable-next-line react-hooks/set-state-in-effect
+// EFFECT: Synchronizes this component effect with its declared React dependencies in admin_layout/AdminLayout/AdminHeaderProfile.tsx.
   useEffect(() => { setMounted(true); }, []);
 
   useEffect(() => {
@@ -28,7 +29,7 @@ export function AdminHeaderProfile() {
     <div className="relative" ref={profileRef}>
       <button
         onClick={() => setShowProfile(!showProfile)}
-        className="w-9 h-9 rounded-full flex items-center justify-center text-on-primary text-sm font-bold cursor-pointer motion-safe:transition-transform motion-safe:hover:scale-105 border border-border bg-primary motion-safe:duration-base"
+        className="min-h-11 min-w-11 w-9 h-9 rounded-full flex items-center justify-center text-on-primary text-sm font-bold cursor-pointer motion-safe:transition-transform motion-safe:hover:scale-105 border border-border bg-primary motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
         aria-label="Profile menu"
       >
         {mounted ? (user?.name?.charAt(0)?.toUpperCase() ?? 'A') : 'A'}
@@ -49,7 +50,7 @@ export function AdminHeaderProfile() {
             </Link>
           </div>
           <div className="border-t border-border py-1">
-            <button className="w-full flex items-center gap-2 px-4 py-2 text-sm text-danger hover:bg-danger-bg font-medium motion-safe:transition-colors motion-safe:duration-base" onClick={() => { setShowProfile(false); logout(); }}>
+            <button className="w-full flex items-center gap-2 px-4 py-2 text-sm text-danger hover:bg-danger-bg font-medium motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page" onClick={() => { setShowProfile(false); logout(); }}>
               <LogOut size={15} /> Log out
             </button>
           </div>

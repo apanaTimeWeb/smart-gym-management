@@ -16,7 +16,7 @@ export default function AdminHeader() {
   const { title, subtitle } = getAdminRouteHeaderConfig(pathname);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-20 h-16 bg-header/95 backdrop-blur border-b border-border px-6 flex items-center justify-between gap-4">
+    <header className="fixed inset-x-0 top-0 z-20 h-16 bg-header backdrop-blur border-b border-border px-6 flex items-center justify-between gap-4">
       <div className="flex min-w-0 items-center gap-4">
         <button
           type="button"

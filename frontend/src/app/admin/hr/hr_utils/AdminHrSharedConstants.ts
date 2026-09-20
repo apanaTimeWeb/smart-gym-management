@@ -1,28 +1,5 @@
 // RESPONSIBILITY: Centralized constants, schema, and shared utilities for the HR module.
-import { z } from 'zod';
-
-export const StaffSchema = z.object({
-  name: z.string().min(2, "Name is required").regex(/^[A-Za-z\s]+$/, "Only alphabets allowed"),
-  email: z.string().email("Invalid email address"),
-  phone: z.string().regex(/^\d{10}$/, "Phone number must be exactly 10 digits"),
-  role: z.string().min(2, "Role is required"),
-  salary: z.number().min(0, "Salary must be positive"),
-  branch: z.string().min(1, "Branch is required"),
-  gender: z.enum(['MALE', 'FEMALE', 'OTHER']),
-  address: z.string().optional(),
-  joinDate: z.string(),
-  temporaryPassword: z.string().optional().refine(val => !val || val.length >= 8, {
-    message: "Password must be at least 8 characters",
-  }),
-  isActive: z.boolean().default(true),
-  aadhaar: z.string().regex(/^\d{12}$/, "Aadhaar must be exactly 12 digits").optional().or(z.literal('')),
-  upiId: z.string().regex(/^[a-zA-Z0-9.\-_]{2,256}@[a-zA-Z]{2,64}$/, "Invalid UPI ID format").optional().or(z.literal('')),
-  advanceSalary: z.number().min(0, "Advance cannot be negative").optional().default(0),
-  assignedBranches: z.array(z.string()).optional(),
-  primaryBranchId: z.string().optional()
-});
-
-export type StaffFormValues = z.infer<typeof StaffSchema>;
+import type { Staff, PayrollFormValues } from '@/app/admin/hr/hr_types/AdminHrTypes';
 
 export const HR_TABS = ['Staff', 'Payroll', 'Advance', 'Dues', 'Ledger'];
 
@@ -43,19 +20,6 @@ export const EMPTY_STAFF = {
  advanceSalary: 0
 };
 
-export const PayrollSchema = z.object({
-  staffId: z.string().min(1, "Please select staff"),
-  month: z.string().min(1, "Month is required"),
-  amount: z.number().min(0, "Amount must be positive"),
-  paidAmount: z.number().min(0, "Paid amount cannot be negative"),
-  notes: z.string().optional()
-}).refine(data => data.paidAmount <= data.amount, {
-  message: "Paid amount cannot exceed total amount",
-  path: ['paidAmount']
-});
-
-export type PayrollFormValues = z.infer<typeof PayrollSchema>;
-
 export const EMPTY_PAYROLL_FORM = {
   staffId: '',
   month: new Date().toISOString().slice(0, 7),
@@ -73,8 +37,6 @@ export const GENDER_OPTIONS = [
  { label: 'Female', value: 'FEMALE' },
  { label: 'Other', value: 'OTHER' }
 ];
-
-
 
 export const STAFF_ROLE_OPTIONS = [
   { label: 'Manager', value: 'Manager' },

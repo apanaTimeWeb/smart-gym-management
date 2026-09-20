@@ -1,7 +1,7 @@
 "use client";
 // RESPONSIBILITY: Main entry point for the Reports module. Composes toolbar, tabs, KPIs, and tab content panels.
 
-import type { AdminReportsExportFormat } from '@/app/admin/reports/reports_types/AdminReportsUiTypes';
+import type { AdminReportsExportFormat } from '@/app/admin/reports/reports_types/AdminReportsTypes';
 import { useState } from 'react';
 import { Download, Loader2 } from 'lucide-react';
 import { useAdminReportsStore } from '@/app/admin/reports/reports_store/useAdminReportsStore';
@@ -60,13 +60,13 @@ export default function AdminReportsMain() {
               <AdminSearchableDropdown
                 options={EXPORT_FORMAT_OPTIONS}
                 value={exportFormat}
-                onChange={(v) => setExportFormat(v as 'pdf' | 'excel')}
+                onChange={(v) => setExportFormat(v as AdminReportsExportFormat)}
               />
             </div>
             <button
               onClick={handleExport}
               disabled={isExporting}
-              className="flex items-center gap-2 px-4 py-2 bg-input border border-border rounded-lg text-sm font-medium text-secondary hover:text-primary hover:border-primary motion-safe:transition-colors disabled:opacity-60 disabled:cursor-not-allowed motion-safe:duration-base"
+              className="flex items-center gap-2 px-4 py-2 bg-input border border-border rounded-lg text-sm font-medium text-secondary hover:text-primary hover:border-primary motion-safe:transition-colors disabled:opacity-60 disabled:cursor-not-allowed motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
             >
               {isExporting
                 ? <><Loader2 size={15} className="motion-safe:animate-spin motion-safe:duration-base" /> Exporting...</>

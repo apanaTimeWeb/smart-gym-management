@@ -18,6 +18,7 @@ export interface AdminHrLogicUiInputs {
   setShowPayrollModal: (open: boolean) => void;
 }
 
+/** Coordinates HrLogic state, data flow, and feature behavior. */
 export function useAdminHrLogic(initialData: HrInitialData | null | undefined, uiInputs: AdminHrLogicUiInputs): HrServerState {
   const { showToast } = useAdminToastStore();
   const { search, roleFilter, branchFilter, currentPage, payrollMonth, debouncedSearch, staffSortKey, staffSortDir, payrollSortKey, payrollSortDir } = useAdminHrUrlState();

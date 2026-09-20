@@ -1,4 +1,5 @@
 "use client";
+import { format } from 'date-fns';
 // RESPONSIBILITY: Renders Finance expense records from the module-owned server query, exposing documented category filtering and pagination.
 
 import { displayValue } from '@/app/admin/admin_layout/admin_utils/AdminDisplayValue';
@@ -12,7 +13,7 @@ const ITEMS_PER_PAGE = 8;
 
 const CATEGORY_COLORS: Record<string, string> = {
   Rent: 'bg-info text-on-info',
-  Salaries: 'bg-warning text-on-primary',
+  Salaries: 'bg-warning-bg text-warning',
   Utilities: 'bg-primary-subtle text-primary',
   Equipment: 'bg-purple-bg text-purple',
   Marketing: 'bg-success-bg text-success',
@@ -40,7 +41,7 @@ export default function AdminFinanceExpensesTable() {
           <select
             value={expenseCategory}
             onChange={(e) => setExpenseCategory(e.target.value)}
-            className="px-3 py-2 border border-border rounded-xl text-sm bg-input text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary min-h-[44px]"
+            className="px-3 py-2 border border-border rounded-xl text-sm bg-input text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary min-h-11"
             aria-label="Expense category"
           >
             <option value="All">All Categories</option>
@@ -75,7 +76,7 @@ export default function AdminFinanceExpensesTable() {
               ) : (
                 expenses.map((expense) => (
                   <tr key={expense.id} className="hover:bg-surface-hover motion-safe:transition-colors motion-safe:duration-base">
-                    <td className="px-4 py-3 text-sm text-primary whitespace-nowrap">{new Date(expense.date).toLocaleDateString('en-IN')}</td>
+                    <td className="px-4 py-3 text-sm text-primary whitespace-nowrap">{format(new Date(expense.date), 'dd MMM yyyy')}</td>
                     <td className="px-4 py-3"><span className={`text-xs font-bold px-2.5 py-1 rounded-full ${CATEGORY_COLORS[expense.category] ?? 'bg-input text-secondary'}`}>{expense.category}</span></td>
                     <td className="px-4 py-3 text-sm text-primary">{expense.branchName ?? expense.branchId}</td>
                     <td className="px-4 py-3 text-sm font-bold text-danger">{formatCurrency(expense.amount)}</td>

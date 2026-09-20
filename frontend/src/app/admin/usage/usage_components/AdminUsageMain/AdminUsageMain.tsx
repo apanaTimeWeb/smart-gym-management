@@ -1,4 +1,5 @@
 "use client";
+import { format } from 'date-fns';
 // RESPONSIBILITY: Main entry point for Admin Usage & Subscription page. Composes metric cards and plan cards.
 
 import { useRef } from 'react';
@@ -40,12 +41,12 @@ export default function AdminUsageMain() {
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
             <div className="flex items-center gap-2 text-sm text-secondary">
               <Calendar size={15} className="text-warning" />
-              <span>Renews <span className="font-semibold text-primary">{data?.billingCycleEnd ? new Date(data.billingCycleEnd).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : 'N/A'}</span></span>
+              <span>Renews <span className="font-semibold text-primary">{data?.billingCycleEnd ? format(new Date(data.billingCycleEnd), 'd MMM yyyy') : 'N/A'}</span></span>
             </div>
             <button
               onClick={() => void refresh()}
               disabled={status === 'pending'}
-              className="flex items-center gap-2 px-4 py-2 border border-border rounded-xl text-sm font-medium text-secondary hover:text-primary hover:bg-input motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95 disabled:opacity-50"
+              className="flex items-center gap-2 px-4 py-2 border border-border rounded-xl text-sm font-medium text-secondary hover:text-primary hover:bg-input motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95 disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
             >
               <RefreshCw size={14} className={status === 'pending' ? 'motion-safe:animate-spin' : ''} />
               Refresh

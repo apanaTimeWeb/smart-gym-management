@@ -1,5 +1,5 @@
 "use client";
-import { formatKPI } from '@/lib/formatters';
+import { formatCurrency, formatKPI } from '@/lib/formatters';
 // RESPONSIBILITY: Renders the Revenue & Profit Trend area chart using ApexCharts (Recharts is forbidden per Rule 62).
 
 import dynamic from 'next/dynamic';
@@ -57,7 +57,7 @@ export default function AdminDashboardRevenueTrend() {
       theme: 'dark',
       y: {
         formatter: (v) =>
-          new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(v),
+          formatCurrency(v),
       },
     },
     legend: {

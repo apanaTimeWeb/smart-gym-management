@@ -25,7 +25,7 @@ export default function AdminPermissionsRoleCard({ role }: AdminPermissionsRoleC
         <p className="text-xs text-secondary mt-0.5">{enabled} of {total} permissions enabled</p>
         <div className="mt-2 h-1.5 bg-input rounded-full">
           <div
-            className="h-1.5 bg-primary rounded-full motion-safe:transition-all motion-safe:duration-base"
+            className="h-1.5 bg-primary text-on-primary rounded-full motion-safe:transition-all motion-safe:duration-base"
             style={{ width: `${(enabled / total) * 100}%` }}
           />
         </div>

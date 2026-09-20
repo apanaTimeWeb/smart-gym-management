@@ -17,7 +17,7 @@ export default function AdminBlacklistTabs() {
           <button
             key={tab.value}
             onClick={() => setActiveTab(tab.value)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium motion-safe:transition-all ${
+            className={`focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium motion-safe:transition-all ${
               isActive
                 ? 'bg-card text-primary shadow-card border border-border'
                 : 'text-secondary hover:text-primary'
@@ -26,7 +26,7 @@ export default function AdminBlacklistTabs() {
             {tab.value === 'cross-branch' && <Globe size={14} />}
             {tab.label}
             {badge !== null && badge > 0 && (
-              <span className={`px-1.5 py-0.5 rounded-full text-xs font-semibold ${isActive ? 'bg-warning text-on-primary' : 'bg-input text-secondary'}`}>
+              <span className={`px-1.5 py-0.5 rounded-full text-xs font-semibold ${isActive ? 'bg-warning-bg text-warning' : 'bg-input text-secondary'}`}>
                 {badge}
               </span>
             )}

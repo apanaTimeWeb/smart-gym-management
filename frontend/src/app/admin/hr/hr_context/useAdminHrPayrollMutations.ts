@@ -10,6 +10,7 @@ import { clearAdminIdempotencyKey, getAdminIdempotencyKey } from '@/app/admin/ad
 import type { Payroll, Staff } from '@/app/admin/hr/hr_types/AdminHrTypes';
 import type { AdminToastType } from '@/app/admin/admin_layout/AdminFeedback/AdminToastTypes';
 
+/** Coordinates HrPayrollMutations state, data flow, and feature behavior. */
 export function useAdminHrPayrollMutations(
   staff: Staff[],
   payrolls: Payroll[],

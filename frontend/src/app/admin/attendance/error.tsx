@@ -11,7 +11,7 @@ export default function AdminAttendanceError({ reset }: { reset: () => void }) {
       </p>
       <button
         onClick={reset}
-        className="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary rounded-xl text-sm font-medium motion-safe:active:scale-95 motion-safe:transition-all motion-safe:duration-base"
+        className="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary rounded-xl text-sm font-medium motion-safe:active:scale-95 motion-safe:transition-all motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
       >
         <RefreshCw size={15} /> Try Again
       </button>

@@ -14,6 +14,7 @@ import { adminToast } from '@/app/admin/admin_layout/AdminFeedback/AdminToastSer
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 
+/** Coordinates MembersLogic state, data flow, and feature behavior. */
 export function useAdminMembersLogic() {
   const searchParams = useSearchParams();
   const selectedBranchId = searchParams.get('branchId') || 'all';

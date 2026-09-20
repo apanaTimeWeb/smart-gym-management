@@ -13,6 +13,7 @@ import { clearAdminIdempotencyKey, getAdminIdempotencyKey } from '@/app/admin/ad
 import { BLACKLIST_ITEMS_PER_PAGE, EMPTY_BLACKLIST_FORM } from '@/app/admin/blacklist/blacklist_utils/AdminBlacklistSharedConstants';
 import type { BlacklistFormValues, BlacklistedMember, BlacklistScope } from '@/app/admin/blacklist/blacklist_types/AdminBlacklistTypes';
 
+/** Coordinates BlacklistLogic state, data flow, and feature behavior. */
 export function useAdminBlacklistLogic() {
   const { confirm } = useAdminConfirm();
   const qc = useQueryClient();

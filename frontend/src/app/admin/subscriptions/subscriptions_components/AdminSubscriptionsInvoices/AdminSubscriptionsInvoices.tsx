@@ -1,4 +1,5 @@
 "use client";
+import { format } from 'date-fns';
 // RESPONSIBILITY: Renders paginated invoice history with feature-owned status mapping and demonstrable PDF actions.
 import { formatCurrency } from '@/lib/formatters';
 import AdminPagination from '@/app/admin/admin_layout/AdminShared/AdminPagination';
@@ -60,7 +61,7 @@ export default function AdminSubscriptionsInvoices() {
                     <tr key={invoice.id} className="motion-safe:transition-colors hover:bg-input motion-safe:duration-base">
                       <td className="px-4 py-3 text-sm font-bold text-primary">{invoice.invoiceNo}</td>
                       <td className="whitespace-nowrap px-4 py-3 text-sm text-secondary">
-                        {new Date(invoice.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
+                        {format(new Date(invoice.date), 'dd MMM yyyy')}
                       </td>
                       <td className="px-4 py-3 text-sm text-primary">{invoice.planName}</td>
                       <td className="px-4 py-3 text-xs capitalize text-secondary">{invoice.billingCycle}</td>
@@ -75,7 +76,7 @@ export default function AdminSubscriptionsInvoices() {
                         <button
                           type="button"
                           onClick={() => window.open(invoice.pdfUrl, '_blank', 'noopener,noreferrer')}
-                          className="rounded-lg p-1.5 text-secondary motion-safe:transition-colors hover:bg-input hover:text-primary motion-safe:duration-base"
+                          className="min-h-11 min-w-11 rounded-lg p-1.5 text-secondary motion-safe:transition-colors hover:bg-input hover:text-primary motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
                           aria-label={`Download ${invoice.invoiceNo}`}
                           title={`Download ${invoice.invoiceNo}`}
                         >

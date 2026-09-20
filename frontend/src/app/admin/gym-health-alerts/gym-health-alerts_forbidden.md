@@ -1,8 +1,16 @@
-# gym-health-alerts — Forbidden Patterns
+# Forbidden Patterns — `admin/gym-health-alerts`
 
-- Do not place feature mock data outside this module.
-- Do not create duplicate global mock handlers for this module.
-- Do not import another module's business fixtures.
-- Do not add component-level fake business fallbacks.
-- Do not bypass the module API client by reading fixtures directly.
-- Do not import from any sibling business features or other role folders (e.g., no cross-imports from `/admin`, `/superadmin`, `/manager`, `/trainer`).
+## 1. No `setInterval` for Refresh
+**FORBIDDEN:** `setInterval(() => refetch(), 60000)` in components or hooks.
+**ALLOWED:** `useQuery({ refetchInterval: 60_000 })` in the TanStack Query hook.
+
+## 2. No Inline Alert Severity Colors
+**FORBIDDEN:** `className={alert.severity === 'CRITICAL' ? 'text-red-500' : ...}` in JSX.
+**ALLOWED:** `GYM_HEALTH_ALERT_SEVERITY_STYLES[alert.severity]` from `gym-health-alerts_utils/`.
+
+## 3. No Non-Interactive KPI Cards
+**FORBIDDEN:** KPI stat cards that are purely decorative.
+**ALLOWED:** Clicking a severity KPI card filters the alert list to that severity only (Rule 70).
+
+## 4. No Cross-Role Imports / No Relative Imports / No Barrel Files
+Standard rules apply.

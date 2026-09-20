@@ -1,5 +1,4 @@
 // RESPONSIBILITY: Centralized constants, mock data, Zod schema, and shared config for the Coupons module.
-import { z } from 'zod';
 import type { Coupon, CouponsKPIData } from '@/app/admin/coupons/coupons_types/AdminCouponsTypes';
 
 export const COUPON_TYPE_OPTIONS = [
@@ -25,18 +24,7 @@ export const GYM_OPTIONS = [
 export const COUPONS_ITEMS_PER_PAGE = 10;
 
 
-export const CouponSchema = z.object({
-  code: z.string().min(3, 'Code must be at least 3 characters').max(20, 'Code too long').toUpperCase(),
-  description: z.string().min(5, 'Description required'),
-  type: z.enum(['percentage', 'flat']),
-  value: z.string().refine(v => !isNaN(Number(v)) && Number(v) > 0, 'Must be a positive number'),
-  minOrderAmount: z.string().refine(v => !isNaN(Number(v)) && Number(v) >= 0, 'Must be 0 or more'),
-  maxDiscount: z.string().refine(v => !isNaN(Number(v)) && Number(v) >= 0, 'Must be 0 or more'),
-  usageLimit: z.string().refine(v => !isNaN(Number(v)) && Number(v) > 0, 'Must be at least 1'),
-  assignedGyms: z.array(z.string()).min(1, 'Assign to at least one gym'),
-  validFrom: z.string().min(1, 'Start date required'),
-  validUntil: z.string().min(1, 'End date required'),
-});
+
 
 export const EMPTY_COUPON_FORM = {
   code: '',
@@ -50,7 +38,3 @@ export const EMPTY_COUPON_FORM = {
   validFrom: '',
   validUntil: '',
 };
-
-
-
-export { MOCK_COUPONS, MOCK_COUPONS_KPI } from '@/app/admin/coupons/coupons_mocks/fixtures/AdminCouponsMockFixtures';

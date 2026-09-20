@@ -3,7 +3,7 @@
 
 import { Users, UserCheck, Clock, IndianRupee } from 'lucide-react';
 import { useAdminMembersLogic } from '@/app/admin/members/members_context/useAdminMembersLogic';
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrency, formatNumber} from '@/lib/formatters';
 import { useDateRangeSuffix } from '@/lib/useDateRangeSuffix';
 
 export default function AdminMembersKPIs() {
@@ -14,7 +14,7 @@ export default function AdminMembersKPIs() {
   const cards = [
     {
       title: 'Total Members' + dateSuffix,
-      value: summary.totalMembers.toLocaleString('en-IN'),
+      value: formatNumber(summary.totalMembers),
       sub: `+${summary.newThisMonth} this month`,
       subColor: 'text-success',
       icon: Users,
@@ -23,7 +23,7 @@ export default function AdminMembersKPIs() {
     },
     {
       title: 'Active Members' + dateSuffix,
-      value: summary.activeMembers.toLocaleString('en-IN'),
+      value: formatNumber(summary.activeMembers),
       sub: `${Math.round((summary.activeMembers / summary.totalMembers) * 100)}% of total`,
       subColor: 'text-secondary',
       icon: UserCheck,
@@ -32,7 +32,7 @@ export default function AdminMembersKPIs() {
     },
     {
       title: 'Expiring This Month' + dateSuffix,
-      value: summary.expiringThisMonth.toLocaleString('en-IN'),
+      value: formatNumber(summary.expiringThisMonth),
       sub: `${summary.expiringThisWeek} expiring this week`,
       subColor: 'text-warning',
       icon: Clock,

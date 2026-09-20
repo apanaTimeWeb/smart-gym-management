@@ -12,7 +12,7 @@ export default function AdminBranchesHeaderSelector() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const { data: branchesData = [] } = useAdminBranchesQueries();
+  const { data: branchesData = [] } = useAdminBranchesQueries({} as any);
   const branches = Array.isArray(branchesData) ? branchesData : [];
   const selectedBranchId = searchParams.get('branchId') || 'all';
 

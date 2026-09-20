@@ -16,6 +16,7 @@ interface AdminPayoutsStore {
   setCurrentPage: (p: number) => void;
 }
 
+/** Coordinates PayoutsStore state, data flow, and feature behavior. */
 export const useAdminPayoutsStore = create<AdminPayoutsStore>((set) => ({
   activeTab: 'summary',
   setActiveTab: (t) => set({ activeTab: t }),

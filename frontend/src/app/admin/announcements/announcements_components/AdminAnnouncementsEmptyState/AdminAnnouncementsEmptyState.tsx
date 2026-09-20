@@ -10,6 +10,6 @@ export default function AdminAnnouncementsEmptyState() {
     <Megaphone size={32} aria-hidden="true" className="text-secondary" />
     <h3 className="text-base font-semibold text-primary">No announcements found</h3>
     <p className="text-sm text-secondary">Create an announcement to start communicating with gym members.</p>
-    <button type="button" onClick={openCreate} className="mt-1 px-4 py-2 bg-primary hover:bg-primary-hover text-on-primary rounded-xl text-sm font-semibold">Send First Announcement</button>
+    <button type="button" onClick={openCreate} className="motion-safe:transition-all motion-safe:duration-base ease-in-out mt-1 px-4 py-2 bg-primary hover:bg-primary-hover text-on-primary rounded-xl text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page">Send First Announcement</button>
   </div>;
 }

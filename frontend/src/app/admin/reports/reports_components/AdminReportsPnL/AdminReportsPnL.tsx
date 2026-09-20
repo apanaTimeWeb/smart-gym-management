@@ -39,7 +39,7 @@ export default function AdminReportsPnL() {
                   <td className="px-4 py-4">
                     <div className="flex items-center gap-2">
                       <div className="w-16 h-2 bg-input rounded-full">
-                        <div className="h-2 bg-success rounded-full" style={{ width: `${row.profitMargin}%` }} />
+                        <div className="h-2 bg-success text-on-success rounded-full" style={{ width: `${row.profitMargin}%` }} />
                       </div>
                       <span className={`text-xs font-bold ${row.profitMargin >= 60 ? 'text-success' : row.profitMargin >= 40 ? 'text-warning' : 'text-danger'}`}>
                         {formatPercent1dp(row.profitMargin)}%

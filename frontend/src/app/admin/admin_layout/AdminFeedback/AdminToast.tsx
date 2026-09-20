@@ -9,6 +9,7 @@ import type { AdminToastProps, AdminToastType } from '@/app/admin/admin_layout/A
 export default function AdminToast({ id, message, type, onClose }: AdminToastProps) {
   const [visible, setVisible] = useState(true);
 
+// EFFECT: Synchronizes this component effect with its declared React dependencies in admin_layout/AdminFeedback/AdminToast.tsx.
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setVisible(true);

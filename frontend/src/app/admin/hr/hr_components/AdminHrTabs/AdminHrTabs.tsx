@@ -36,12 +36,12 @@ export default function AdminHrTabs() {
         </div>
         <div className="px-4 flex flex-wrap gap-3 items-center">
           <div className="relative">
-            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary" />
+            <span className="absolute inset-y-0 left-3 flex items-center"><Search size={16} className="text-secondary" /></span>
             <input 
               value={search} 
               onChange={e => { setSearch(e.target.value);  }} 
               placeholder={`Search ${activeTab?.toLowerCase() || 'staff'}...`} 
-              className="pl-9 pr-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus-visible:outline-none focus-visible:ring-2 w-40 sm:w-full sm:w-64  bg-card text-primary"
+              className="pl-9 pr-3 py-2 border border-border rounded-lg text-sm focus-visible:outline-none focus-visible:outline-none focus-visible:ring-2 w-40 sm:w-full sm:w-64  bg-card text-primary"
             />
           </div>
           {activeTab === 'Staff' && (
@@ -49,7 +49,7 @@ export default function AdminHrTabs() {
               <select
                 value={branchFilter}
                 onChange={e => { setBranchFilter(e.target.value);  }}
-                className="px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 bg-card text-primary"
+                className="px-3 py-2 border border-border rounded-lg text-sm focus-visible:outline-none focus-visible:ring-2 bg-card text-primary"
               >
                 <option value="All">All Branches</option>
                 {(branches as AdminHrBranchReference[]).map(b => (
@@ -59,7 +59,7 @@ export default function AdminHrTabs() {
               <select
                 value={roleFilter}
                 onChange={e => { setRoleFilter(e.target.value);  }}
-                className="px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 bg-card text-primary"
+                className="px-3 py-2 border border-border rounded-lg text-sm focus-visible:outline-none focus-visible:ring-2 bg-card text-primary"
               >
                 <option value="All">All Roles</option>
                 <option value="Admin">Admin</option>
@@ -72,20 +72,20 @@ export default function AdminHrTabs() {
               type="month"
               value={payrollMonth}
               onChange={e => { setPayrollMonth(e.target.value);  }}
-              className="px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 bg-card text-primary"
+              className="px-3 py-2 border border-border rounded-lg text-sm focus-visible:outline-none focus-visible:ring-2 bg-card text-primary"
             />
           )}
   <div className="px-4 flex flex-wrap gap-2">
     <button 
       onClick={loadAll} 
-      className="flex items-center gap-2 px-3 py-2 text-sm border border-border text-secondary rounded-lg hover:opacity-80 motion-safe:transition-opacity motion-safe:duration-base"
+      className="flex items-center gap-2 px-3 py-2 text-sm border border-border text-secondary rounded-lg hover:opacity-80 motion-safe:transition-opacity motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
     >
       <RefreshCw size={14} />
     </button>
     {activeTab === 'Staff' && (
       <button 
         onClick={openAdd} 
-        className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-on-primary bg-primary rounded-lg hover:opacity-90 motion-safe:transition-opacity motion-safe:duration-base" 
+        className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-on-primary bg-primary rounded-lg hover:opacity-90 motion-safe:transition-opacity motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page" 
       >
         <Plus size={14} /> Add Manager
       </button>
@@ -93,7 +93,7 @@ export default function AdminHrTabs() {
     {activeTab === 'Payroll' && (
       <button 
         onClick={openAddPayroll} 
-        className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-on-primary bg-primary rounded-lg hover:opacity-90 motion-safe:transition-opacity motion-safe:duration-base" 
+        className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-on-primary bg-primary rounded-lg hover:opacity-90 motion-safe:transition-opacity motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page" 
       >
         <Plus size={14} /> Add Payroll
       </button>

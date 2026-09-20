@@ -3,7 +3,7 @@
 
 import { IndianRupee, Users, TrendingUp, Award } from 'lucide-react';
 import type { RevenueAggregates } from '@/app/admin/plans/plans_types/AdminPlansRevenueTypes';
-import {formatKPI, formatPercent1dp} from '@/lib/formatters';
+import {formatKPI, formatPercent1dp, formatNumber} from '@/lib/formatters';
 import { useDateRangeSuffix } from '@/lib/useDateRangeSuffix';
 
 export default function AdminPlansRevenueKPIs({ aggregates }: { aggregates: RevenueAggregates }) {
@@ -18,7 +18,7 @@ export default function AdminPlansRevenueKPIs({ aggregates }: { aggregates: Reve
     },
     {
       label: 'Total Subscriptions' + dateSuffix,
-      value: aggregates.totalSubscriptions.toLocaleString('en-IN'),
+      value: formatNumber(aggregates.totalSubscriptions),
       icon: Users,
       iconColor: 'text-success',
       iconBg: 'bg-success-bg',

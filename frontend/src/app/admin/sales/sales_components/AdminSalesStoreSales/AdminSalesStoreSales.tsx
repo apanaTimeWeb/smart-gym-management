@@ -1,4 +1,5 @@
 "use client";
+import { format } from 'date-fns';
 // RESPONSIBILITY: Renders the Sales module's store-order summary and paginated order list; it owns only presentation and row expansion state.
 // DATA FLOW: Store Sales UI → useAdminSalesLogic → AdminSalesApi → module-owned MSW/backend → TanStack Query → visible list/summary.
 import { useState } from 'react';
@@ -8,14 +9,14 @@ import { useAdminSalesLogic } from '@/app/admin/sales/sales_context/useAdminSale
 import AdminSalesEmptyState from '@/app/admin/sales/sales_components/AdminSalesEmptyState/AdminSalesEmptyState';
 
 function formatDate(iso: string): string {
-  return new Date(iso).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+  return format(new Date(iso), 'dd MMM yyyy');
 }
 
 function getPaymentClasses(method: string): string {
   switch (method) {
     case 'Cash': return 'bg-success text-on-success';
     case 'UPI': return 'bg-info text-on-info';
-    case 'Card': return 'bg-warning text-on-primary';
+    case 'Card': return 'bg-warning-bg text-warning';
     default: return 'bg-input text-secondary';
   }
 }
@@ -37,7 +38,7 @@ export default function AdminSalesStoreSales() {
     return (
       <div role="alert" className="rounded-xl border border-danger bg-danger-bg p-5 flex items-center justify-between gap-4">
         <p className="text-sm text-danger">{storeError || 'Store sales could not be loaded.'}</p>
-        <button type="button" onClick={() => void loadAll()} className="min-h-11 inline-flex items-center gap-2 px-4 rounded-md border border-danger text-danger focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger">
+        <button type="button" onClick={() => void loadAll()} className="motion-safe:transition-all motion-safe:duration-base ease-in-out min-h-11 inline-flex items-center gap-2 px-4 rounded-md border border-danger text-danger focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger">
           <RefreshCw size={16} aria-hidden="true" /> Retry
         </button>
       </div>
@@ -98,8 +99,8 @@ export default function AdminSalesStoreSales() {
           <div className="flex flex-wrap items-center justify-between gap-3 pt-4">
             <span className="text-sm text-secondary">Showing {(currentPage - 1) * 10 + 1}–{Math.min(currentPage * 10, storeOrdersTotal)} of {storeOrdersTotal}</span>
             <div className="flex gap-2">
-              <button type="button" disabled={currentPage <= 1} onClick={() => setCurrentPage(currentPage - 1)} className="min-h-11 px-4 rounded-md border border-border text-primary disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">Previous</button>
-              <button type="button" disabled={currentPage >= totalPages} onClick={() => setCurrentPage(currentPage + 1)} className="min-h-11 px-4 rounded-md border border-border text-primary disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">Next</button>
+              <button type="button" disabled={currentPage <= 1} onClick={() => setCurrentPage(currentPage - 1)} className="motion-safe:transition-all motion-safe:duration-base ease-in-out min-h-11 px-4 rounded-md border border-border text-primary disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">Previous</button>
+              <button type="button" disabled={currentPage >= totalPages} onClick={() => setCurrentPage(currentPage + 1)} className="motion-safe:transition-all motion-safe:duration-base ease-in-out min-h-11 px-4 rounded-md border border-border text-primary disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">Next</button>
             </div>
           </div>
         )}

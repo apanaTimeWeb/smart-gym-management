@@ -23,7 +23,7 @@ export default function AdminFinancePnlMain() {
     toggleExpand,
     sortedData,
     aggregates,
-    isLoading,
+    isPending,
     isError,
   } = useAdminFinancePnlLogic();
 
@@ -40,7 +40,7 @@ export default function AdminFinancePnlMain() {
             period={period}
             onPeriodChange={setPeriod}
           />
-          {isLoading && <Loader2 size={18} className="motion-safe:animate-spin text-secondary motion-safe:duration-base" />}
+          {isPending && <Loader2 size={18} className="motion-safe:animate-spin text-secondary motion-safe:duration-base" />}
         </div>
 
         {/* KPI Cards */}
@@ -65,7 +65,7 @@ export default function AdminFinancePnlMain() {
             {statusFilter !== 'ALL' && (
               <button
                 onClick={() => setStatusFilter('ALL')}
-                className="text-xs font-semibold text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded"
+                className="motion-safe:transition-all motion-safe:duration-base ease-in-out text-xs font-semibold text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded"
               >
                 Clear filter ×
               </button>

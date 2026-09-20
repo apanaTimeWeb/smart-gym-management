@@ -9,6 +9,7 @@ import { reportsApi } from '@/app/admin/reports/reports_api/AdminReportsApi';
 import { useAdminReportsStore } from '@/app/admin/reports/reports_store/useAdminReportsStore';
 import type { AdminReportsExportFormat, AdminReportsExportResponse, ReportDateRange } from '@/app/admin/reports/reports_types/AdminReportsTypes';
 
+/** Coordinates ReportsLogic state, data flow, and feature behavior. */
 export function useAdminReportsLogic() {
   const searchParams = useSearchParams();
   const queryClient = useQueryClient();

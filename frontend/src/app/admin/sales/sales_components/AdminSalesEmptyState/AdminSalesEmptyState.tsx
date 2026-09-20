@@ -3,10 +3,10 @@
 
 import { IndianRupee } from 'lucide-react';
 
-import type { SalesEmptyStateProps } from '@/app/admin/sales/sales_types/SalesEmptyStatePropsTypes';
+import type { AdminSalesEmptyStateProps } from '@/app/admin/sales/sales_types/AdminSalesEmptyStatePropsTypes';
 
 
-export default function AdminSalesEmptyState({ message, subtext }: SalesEmptyStateProps) {
+export default function AdminSalesEmptyState({ message, subtext }: AdminSalesEmptyStateProps) {
   return (
     <div className="flex flex-col items-center justify-center py-12 text-center border border-border rounded-xl bg-card">
       <div className="w-12 h-12 rounded-full bg-primary-subtle flex items-center justify-center mb-3">

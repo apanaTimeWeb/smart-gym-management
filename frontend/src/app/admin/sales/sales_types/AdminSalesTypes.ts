@@ -1,6 +1,6 @@
 import type { QueryStatus } from '@tanstack/react-query';
 // RESPONSIBILITY: Defines all types for the Admin Sales & Reports module — membership, payments, store sales.
-import { type SalesTab, type DateFilter } from '@/app/admin/sales/sales_utils/AdminSalesSharedConstants';
+import { type SalesTab, type DateFilter } from '@/app/admin/sales/sales_utils/AdminSalesUiConstants';
 
 
 // ------- Membership Types -------

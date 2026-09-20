@@ -1,13 +1,15 @@
 "use client";
+import { format } from 'date-fns';
 // RESPONSIBILITY: Coordinates Audit Logs filter state with the module API; export logic consumes the currently query-scoped data.
 // DATA FLOW: URL/store filters → Audit API query params → Zod/MSW → TanStack Query → table/export.
 import { useQuery } from '@tanstack/react-query';
-import { auditLogsApi } from '@/app/admin/audit_logs/audit_api/AdminAuditApi';
+import { auditLogsApi } from '@/app/admin/audit_logs/audit_api/AdminAuditLogsApi';
 import { useAdminAuditLogsStore } from '@/app/admin/audit_logs/audit_store/useAdminAuditLogsStore';
 import { useAdminUrlQuerySync } from '@/app/admin/admin_layout/admin_utils/useAdminUrlQuerySync';
 import { AUDIT_ITEMS_PER_PAGE } from '@/app/admin/audit_logs/audit_utils/AdminAuditLogsSharedConstants';
-import type { AuditLog, AdminAuditLogsQueryParams, AuditSeverity, AuditModule } from '@/app/admin/audit_logs/audit_types/AdminAuditTypes';
+import type { AuditLog, AdminAuditLogsQueryParams, AuditSeverity, AuditModule } from '@/app/admin/audit_logs/audit_types/AdminAuditLogsTypes';
 
+/** Coordinates AuditLogsLogic state, data flow, and feature behavior. */
 export function useAdminAuditLogsLogic() {
   const { search, severityFilter, moduleFilter, branchFilter, dateFrom, dateTo, currentPage, setCurrentPage } = useAdminAuditLogsStore();
   useAdminUrlQuerySync([
@@ -36,7 +38,7 @@ export function useAdminAuditLogsLogic() {
 
   function exportCSV(rows: AuditLog[]) {
     const headers = ['Timestamp', 'Action', 'Module', 'User', 'Branch', 'Details', 'Severity', 'IP', 'User Agent'];
-    const csvRows = rows.map((log) => [new Date(log.timestamp).toLocaleString('en-IN'), log.action, log.module, log.user, log.branchId, `"${log.details.replace(/"/g, '""')}"`, log.severity, log.ip, log.userAgent ?? '']);
+    const csvRows = rows.map((log) => [format(new Date(log.timestamp), 'dd MMM yyyy, hh:mm a'), log.action, log.module, log.user, log.branchId, `"${log.details.replace(/"/g, '""')}"`, log.severity, log.ip, log.userAgent ?? '']);
     const csv = [headers, ...csvRows].map((row) => row.join(',')).join('\n');
     const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
     const anchor = document.createElement('a'); anchor.href = url; anchor.download = `audit_logs_${new Date().toISOString().split('T')[0]}.csv`; anchor.click(); URL.revokeObjectURL(url);

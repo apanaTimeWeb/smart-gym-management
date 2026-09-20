@@ -1,4 +1,6 @@
 "use client";
+import { format } from 'date-fns';
+import { formatNumber } from '@/lib/formatters';
 // RESPONSIBILITY: Table of gym health alerts with severity badges, metrics, and resolve/dismiss actions.
 
 import { CheckCircle, X, Building2, Clock } from 'lucide-react';
@@ -10,7 +12,7 @@ import AdminGymHealthAlertsEmptyState from '@/app/admin/gym-health-alerts/gym_he
 
 const SEVERITY_STYLES: Record<AlertSeverity, string> = {
   critical: 'bg-danger text-on-danger',
-  warning: 'bg-warning text-on-primary',
+  warning: 'bg-warning-bg text-warning',
   info: 'bg-info text-on-info',
 };
 
@@ -67,7 +69,7 @@ export default function AdminGymHealthAlertsTable() {
                 <td className="px-4 py-3 text-sm font-semibold text-primary whitespace-nowrap">{alert.metric}</td>
                 <td className="px-4 py-3 text-xs text-secondary whitespace-nowrap">{alert.threshold}</td>
                 <td className="px-4 py-3 text-xs text-secondary whitespace-nowrap">
-                  {new Date(alert.detectedAt).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })}
+                  {format(new Date(alert.detectedAt), 'dd MMM yyyy, hh:mm a')}
                 </td>
                 <td className="px-4 py-3">
                   {alert.isResolved ? (
@@ -84,7 +86,7 @@ export default function AdminGymHealthAlertsTable() {
                       <>
                         <button
                           onClick={() => resolveAlert(alert.id)}
-                          className="p-1.5 rounded-lg hover:bg-success-bg text-secondary hover:text-success motion-safe:transition-colors motion-safe:duration-base"
+                          className="min-h-11 min-w-11 p-1.5 rounded-lg hover:bg-success-bg text-secondary hover:text-success motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
                           aria-label="Mark as resolved"
                         >
                           <CheckCircle size={15} />
@@ -93,7 +95,7 @@ export default function AdminGymHealthAlertsTable() {
                     )}
                     <button
                       onClick={() => dismissAlert(alert.id, alert.title)}
-                      className="p-1.5 rounded-lg hover:bg-danger-bg text-secondary hover:text-danger motion-safe:transition-colors motion-safe:duration-base"
+                      className="min-h-11 min-w-11 p-1.5 rounded-lg hover:bg-danger-bg text-secondary hover:text-danger motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
                       aria-label="Dismiss alert"
                     >
                       <X size={15} />

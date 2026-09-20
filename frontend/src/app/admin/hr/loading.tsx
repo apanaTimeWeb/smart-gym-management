@@ -7,7 +7,7 @@ export default function HrLoading() {
     <div className="h-10 w-48 bg-card rounded-lg mb-6 motion-safe:animate-pulse motion-safe:duration-base"></div>
     <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4 mb-6">
       {[1, 2, 3, 4].map((i) => (
-        <div key={i} className="h-24 bg-card rounded-xl border border-border motion-safe:animate-pulse motion-safe:duration-base"></div>
+        <div key={`hr-skeleton-${i}`} className="h-24 bg-card rounded-xl border border-border motion-safe:animate-pulse motion-safe:duration-base"></div>
       ))}
     </div>
     <AdminTableSkeleton cols={9} rows={6} />

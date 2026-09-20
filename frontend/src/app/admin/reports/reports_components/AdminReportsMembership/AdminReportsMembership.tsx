@@ -1,4 +1,5 @@
 "use client";
+import { formatNumber } from '@/lib/formatters';
 // RESPONSIBILITY: Renders the Membership Growth report tab — new members, renewals, exits, net growth per gym.
 
 import { useAdminReportsLogic } from '@/app/admin/reports/reports_context/useAdminReportsLogic';
@@ -28,7 +29,7 @@ export default function AdminReportsMembership() {
               {reportData.membershipGrowth.map((row) => (
                 <tr key={row.gymId} className="hover:bg-surface-highlight motion-safe:transition-colors motion-safe:duration-base">
                   <td className="px-5 py-4 text-sm font-semibold text-primary">{row.gymName}</td>
-                  <td className="px-5 py-4 text-sm text-primary">{row.activeMembers.toLocaleString('en-IN')}</td>
+                  <td className="px-5 py-4 text-sm text-primary">{formatNumber(row.activeMembers)}</td>
                   <td className="px-5 py-4">
                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-success text-on-success">+{row.newMembers}</span>
                   </td>
@@ -50,7 +51,7 @@ export default function AdminReportsMembership() {
               <tr className="bg-surface-highlight border-t-2 border-border">
                 <td className="px-5 py-3 text-sm font-bold text-primary">Total</td>
                 <td className="px-5 py-3 text-sm font-bold text-primary">
-                  {reportData.membershipGrowth.reduce((s: number, r) => s + r.activeMembers, 0).toLocaleString('en-IN')}
+                  {formatNumber(reportData.membershipGrowth.reduce((s: number, r) => s + r.activeMembers, 0))}
                 </td>
                 <td className="px-5 py-3 text-sm font-bold text-success">
                   +{reportData.membershipGrowth.reduce((s: number, r) => s + r.newMembers, 0)}

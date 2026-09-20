@@ -22,6 +22,7 @@ interface AdminBlacklistStore {
   setCurrentPage: (p: number) => void;
 }
 
+/** Coordinates BlacklistStore state, data flow, and feature behavior. */
 export const useAdminBlacklistStore = create<AdminBlacklistStore>((set) => ({
   activeTab: 'all',
   setActiveTab: (t) => set({ activeTab: t }),

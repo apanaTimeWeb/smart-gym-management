@@ -21,6 +21,7 @@ interface AdminMembersStoreState {
   setCurrentPage: (p: number) => void;
 }
 
+/** Coordinates MembersStore state, data flow, and feature behavior. */
 export const useAdminMembersStore = create<AdminMembersStoreState>((set) => ({
   search: '',
   setSearch: (s) => set({ search: s, currentPage: 1 }),

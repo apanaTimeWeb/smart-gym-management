@@ -13,6 +13,7 @@ import { clearAdminIdempotencyKey, getAdminIdempotencyKey } from '@/app/admin/ad
 import { EMPTY_COUPON_FORM, COUPONS_ITEMS_PER_PAGE } from '@/app/admin/coupons/coupons_utils/AdminCouponsSharedConstants';
 import type { Coupon, CouponFormValues } from '@/app/admin/coupons/coupons_types/AdminCouponsTypes';
 
+/** Coordinates CouponsLogic state, data flow, and feature behavior. */
 export function useAdminCouponsLogic() {
   const { confirm } = useAdminConfirm();
   const qc = useQueryClient();

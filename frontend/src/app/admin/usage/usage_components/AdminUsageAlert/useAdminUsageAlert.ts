@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { adminUsageApi } from '@/app/admin/usage/usage_api/AdminUsageApi';
 import { USAGE_WARNING_THRESHOLD } from '@/app/admin/usage/usage_utils/AdminUsageSharedConstants';
 
+/** Coordinates UsageAlert state, data flow, and feature behavior. */
 export function useAdminUsageAlert() {
   const [isVisible, setIsVisible] = useState(true);
   const query = useQuery({

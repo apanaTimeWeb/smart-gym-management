@@ -22,7 +22,7 @@ export default function AdminAttendanceToolbar() {
   return (
     <div className="flex flex-col sm:flex-row gap-3 flex-wrap">
       <div className="relative flex-1 min-w-48">
-        <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary pointer-events-none" />
+        <span className="absolute inset-y-0 left-3 flex items-center"><Search size={16} className="text-secondary pointer-events-none" /></span>
         <input
           type="text"
           placeholder="Search by member name or phone..."

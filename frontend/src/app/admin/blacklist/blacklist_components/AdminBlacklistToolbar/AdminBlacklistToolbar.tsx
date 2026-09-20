@@ -17,7 +17,7 @@ export default function AdminBlacklistToolbar() {
     <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
       <div className="flex flex-wrap gap-3 items-center w-full sm:w-auto">
         <div className="relative">
-          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary" />
+          <span className="absolute inset-y-0 left-3 flex items-center"><Search size={15} className="text-secondary" /></span>
           <input
             type="text"
             placeholder="Search by name, ID, or phone..."
@@ -31,7 +31,7 @@ export default function AdminBlacklistToolbar() {
       </div>
       <button
         onClick={openAdd}
-        className="flex items-center gap-2 px-4 py-2 bg-danger text-on-danger rounded-lg text-sm font-semibold hover:opacity-90 motion-safe:transition-opacity motion-safe:active:scale-95 whitespace-nowrap motion-safe:duration-base"
+        className="flex items-center gap-2 px-4 py-2 bg-danger text-on-danger rounded-lg text-sm font-semibold hover:opacity-90 motion-safe:transition-opacity motion-safe:active:scale-95 whitespace-nowrap motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
       >
         <Plus size={16} />
         Blacklist Member

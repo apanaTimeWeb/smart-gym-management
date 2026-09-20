@@ -1,4 +1,5 @@
 "use client";
+import { format } from 'date-fns';
 import { formatCurrency } from '@/lib/formatters';
 import type { MembershipFilter } from '@/app/admin/sales/sales_types/AdminSalesAllMembershipsTypes';
 // RESPONSIBILITY: Renders the paginated, filterable table of all gym memberships. KPI cards (Rule 74) double as interactive filters. Receives data via SalesContext. No API calls.
@@ -65,11 +66,11 @@ export default function AdminSalesAllMemberships() {
     return (
       <div className="space-y-4">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          {["row-1", "row-2", "row-3", "row-4"].map(i => <div key={i} className="motion-safe:animate-pulse h-20 bg-input rounded-xl border border-border motion-safe:duration-base" />)}
+          {["row-1", "row-2", "row-3", "row-4"].map(i => <div key={`sales-membership-skeleton-${i}`} className="motion-safe:animate-pulse h-20 bg-input rounded-xl border border-border motion-safe:duration-base" />)}
         </div>
         <div className="space-y-2">
           {[...Array(6)].map((_, i) => (
-            <div key={i} className="motion-safe:animate-pulse h-12 bg-card rounded border border-border motion-safe:duration-base" />
+            <div key={`sales-membership-skeleton-${i}`} className="motion-safe:animate-pulse h-12 bg-card rounded border border-border motion-safe:duration-base" />
           ))}
         </div>
       </div>
@@ -84,7 +85,7 @@ export default function AdminSalesAllMemberships() {
           <button
             key={filter}
             onClick={() => { setActiveFilter(filter);  }}
-            className={`text-left p-4 rounded-xl border-2 motion-safe:transition-all motion-safe:duration-base bg-card hover:shadow-card ${
+            className={`focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page text-left p-4 rounded-xl border-2 motion-safe:transition-all motion-safe:duration-base bg-card hover:shadow-card ${
               activeFilter === filter
                 ? `${activeBorder} shadow-card`
                 : 'border-border hover:border-border'
@@ -122,8 +123,8 @@ export default function AdminSalesAllMemberships() {
                 <tr key={r.id} className="hover:bg-surface-highlight motion-safe:transition-colors bg-card motion-safe:duration-base">
                   <td className="px-4 py-3 text-sm font-medium text-primary">{r.name}</td>
                   <td className="px-4 py-3 text-sm text-secondary">{r.plan?.name ?? `Plan #${r.planId}`}</td>
-                  <td className="px-4 py-3 text-sm text-secondary">{new Date(r.joinDate).toLocaleDateString('en-IN')}</td>
-                  <td className="px-4 py-3 text-sm text-secondary">{new Date(r.expiryDate).toLocaleDateString('en-IN')}</td>
+                  <td className="px-4 py-3 text-sm text-secondary">{format(new Date(r.joinDate), 'dd MMM yyyy')}</td>
+                  <td className="px-4 py-3 text-sm text-secondary">{format(new Date(r.expiryDate), 'dd MMM yyyy')}</td>
                   <td className="px-4 py-3">
                     <span className={`text-xs px-2.5 py-0.5 rounded-full font-semibold ${
                       r.status?.toUpperCase() === 'ACTIVE'

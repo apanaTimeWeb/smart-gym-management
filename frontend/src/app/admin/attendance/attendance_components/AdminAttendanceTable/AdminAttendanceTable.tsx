@@ -11,7 +11,7 @@ import { ATTENDANCE_TABLE_HEADERS, ATTENDANCE_ITEMS_PER_PAGE, computeDuration } 
 
 const STATUS_STYLES: Record<string, string> = {
   present: 'bg-success text-on-success',
-  late:    'bg-warning text-on-primary',
+  late:    'bg-warning-bg text-warning',
   absent:  'bg-danger  text-on-danger',
 };
 

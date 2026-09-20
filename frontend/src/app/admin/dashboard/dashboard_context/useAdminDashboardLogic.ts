@@ -7,6 +7,7 @@ import { useSearchParams } from 'next/navigation';
 import { dashboardApi } from '@/app/admin/dashboard/dashboard_api/AdminDashboardApi';
 import type { DashboardStats } from '@/app/admin/dashboard/dashboard_types/AdminDashboardTypes';
 
+/** Coordinates DashboardLogic state, data flow, and feature behavior. */
 export function useAdminDashboardLogic(initialData?: DashboardStats | null) {
   const searchParams = useSearchParams();
   const selectedBranchId = searchParams.get('branchId') || 'all';

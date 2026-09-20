@@ -9,6 +9,7 @@ interface ToastState {
   hideToast: () => void;
 }
 
+/** Coordinates ToastStore state, data flow, and feature behavior. */
 export const useAdminToastStore = create<ToastState>((set) => ({
   toast: null,
   showToast: (message, type, id) => set((state) => {

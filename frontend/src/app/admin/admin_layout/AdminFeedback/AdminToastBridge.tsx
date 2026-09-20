@@ -8,6 +8,7 @@ import type { ToastBridgeApi } from '@/app/admin/admin_layout/AdminFeedback/Toas
 ;
 
 export default function AdminToastBridge() {
+// EFFECT: Synchronizes this component effect with its declared React dependencies in admin_layout/AdminFeedback/AdminToastBridge.tsx.
   useEffect(() => {
     const toastApi = toast as unknown as ToastBridgeApi;
     const originalSuccess = toastApi.success;

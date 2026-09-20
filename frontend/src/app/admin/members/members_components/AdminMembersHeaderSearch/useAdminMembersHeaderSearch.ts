@@ -7,6 +7,7 @@ import { useDebounce } from '@/app/admin/admin_layout/admin_utils/useAdminDeboun
 import { adminMembersApi } from '@/app/admin/members/members_api/AdminMembersApi';
 import type { AdminMember } from '@/app/admin/members/members_types/AdminMembersTypes';
 
+/** Coordinates MembersHeaderSearch state, data flow, and feature behavior. */
 export function useAdminMembersHeaderSearch(search: string) {
   const debouncedSearch = useDebounce(search, 300);
   return useQuery<AdminMember[]>({

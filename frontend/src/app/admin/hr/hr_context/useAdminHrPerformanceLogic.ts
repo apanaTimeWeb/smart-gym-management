@@ -8,6 +8,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useDebounce } from '@/app/admin/admin_layout/admin_utils/useAdminDebounce';
 import { useAdminUrlQuerySync } from '@/app/admin/admin_layout/admin_utils/useAdminUrlQuerySync';
 import { hrApi } from '@/app/admin/hr/hr_api/AdminHrApi';
+import { sortAdminHrPerformanceRecords } from '@/app/admin/hr/hr_utils/AdminHrPerformanceSortUtils';
 import type { 
   StaffPerformanceRecord, 
   PerformancePeriod, 
@@ -16,6 +17,7 @@ import type {
   PerformanceAggregates
 } from '@/app/admin/hr/hr_types/AdminHrPerformanceTypes';
 
+/** Coordinates HrPerformanceLogic state, data flow, and feature behavior. */
 export function useAdminHrPerformanceLogic() {
   const [period, setPeriod] = useState<PerformancePeriod>('THIS_MONTH');
   const [searchQuery, setSearchQuery] = useState('');
@@ -29,12 +31,13 @@ export function useAdminHrPerformanceLogic() {
     { key: 'search', value: searchQuery, defaultValue: '', setValue: setSearchQuery },
   ]);
 
-  const { data: rawResponse, isLoading, isError } = useQuery({
+  const { data: rawResponse, isPending, isError } = useQuery({
     queryKey: ['admin', 'hr', 'performance', { period, search: debouncedSearch, sortKey, sortDir }],
     queryFn: () => hrApi.fetchStaffPerformance(period, { search: debouncedSearch, sortKey, sortDir }),
   });
 
-  const sortedData = rawResponse?.data ?? [];
+  const sourceData = rawResponse?.data ?? [];
+  const sortedData = sortAdminHrPerformanceRecords(sourceData, sortKey, sortDir);
 
   const aggregates: PerformanceAggregates = (() => {
     if (sortedData.length === 0) return { totalSessions: 0, totalMembersAdded: 0, avgAttendance: 0, avgRating: 0, topPerformersCount: 0, lowPerformersCount: 0 };
@@ -59,10 +62,19 @@ export function useAdminHrPerformanceLogic() {
     setSearchQuery,
     sortKey,
     sortDir,
-    handleSort: (k: any) => {},
+    handleSort: (key: PerformanceSortKey) => {
+      setSortKey((currentKey) => {
+        if (currentKey !== key) {
+          setSortDir('desc');
+          return key;
+        }
+        setSortDir((currentDirection) => currentDirection === 'asc' ? 'desc' : 'asc');
+        return currentKey;
+      });
+    },
     sortedData,
     aggregates,
-    isLoading,
+    isPending,
     isError,
   };
 }

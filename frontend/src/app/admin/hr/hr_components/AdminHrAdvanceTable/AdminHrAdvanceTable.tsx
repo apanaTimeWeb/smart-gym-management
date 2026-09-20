@@ -32,7 +32,7 @@ export default function AdminHrAdvanceTable() {
             required
             value={selectedStaffId}
             onChange={(e) => setSelectedStaffId(e.target.value)}
-            className="w-full px-3 py-2 border border-border rounded-lg text-sm bg-card text-primary focus:ring-2 focus:ring-primary"
+            className="w-full px-3 py-2 border border-border rounded-lg text-sm bg-card text-primary focus-visible:ring-2 focus-visible:ring-primary"
           >
             <option value="" disabled>Select Staff</option>
             {staff.map(s => (
@@ -84,7 +84,7 @@ export default function AdminHrAdvanceTable() {
           <button 
             type="submit" 
             disabled={saving || !selectedStaffId || !amount}
-            className="px-6 py-2 bg-primary text-on-primary rounded-lg font-medium disabled:opacity-50"
+            className="motion-safe:transition-all motion-safe:duration-base ease-in-out px-6 py-2 bg-primary text-on-primary rounded-lg font-medium disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
           >
             {saving ? 'Processing...' : 'Give Advance'}
           </button>

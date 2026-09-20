@@ -90,7 +90,7 @@ export default function AdminFinancePnlKPIs({
               if (!isInteractive) return;
               onStatusFilterChange(isActive ? 'ALL' : k.filter);
             }}
-            className={`text-left rounded-xl p-4 border-2 bg-card motion-safe:transition-all motion-safe:duration-base ${
+            className={`min-h-11 min-w-11 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page text-left rounded-xl p-4 border-2 bg-card motion-safe:transition-all motion-safe:duration-base ${
               isInteractive ? 'cursor-pointer hover:shadow-card motion-safe:hover:-translate-y-0.5' : 'cursor-default'
             } ${isActive ? k.activeBorder : 'border-border'}`}
             aria-pressed={isInteractive ? isActive : undefined}

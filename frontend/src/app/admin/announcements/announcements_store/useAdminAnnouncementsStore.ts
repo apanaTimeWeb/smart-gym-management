@@ -23,6 +23,7 @@ interface AdminAnnouncementsStore {
   setForm: (f: AnnouncementFormValues) => void;
 }
 
+/** Coordinates AnnouncementsStore state, data flow, and feature behavior. */
 export const useAdminAnnouncementsStore = create<AdminAnnouncementsStore>((set) => ({
   search: '',
   setSearch: (v) => set({ search: v, currentPage: 1 }),

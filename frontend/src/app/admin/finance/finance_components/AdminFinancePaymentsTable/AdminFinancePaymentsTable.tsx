@@ -1,4 +1,5 @@
 "use client";
+import { format } from 'date-fns';
 
 // RESPONSIBILITY: Renders the read-only paginated Finance payment history returned by TanStack Query.
 import { formatCurrency } from '@/lib/formatters';
@@ -25,7 +26,7 @@ export default function AdminFinancePaymentsTable() {
       <div className="overflow-x-auto" aria-busy="true" aria-label="Loading payments">
         <table data-admin-responsive-table className="w-full">
           <thead className="bg-input text-secondary">
-            <tr>{PAYMENTS_TABLE_HEADERS.map((header,index) => { const keys: AdminFinancePaymentSortKey[]=['invoiceNo','member','amount','method','status','paidAt']; const key=keys[index]; return <th key={header} className="text-left text-xs font-semibold uppercase tracking-wider px-4 py-3">{header}{key && <button type="button" onClick={()=>handleSort(key)} className="ml-1 inline-flex align-middle" aria-label={`Sort by ${header}`} title={`Sort by ${header}`}>{sortKey===key?(sortDir==='asc'?<ChevronUp size={13} className="text-primary"/>:<ChevronDown size={13} className="text-primary"/>):<ChevronsUpDown size={13} className="text-disabled"/>}</button>}</th>; })}</tr>
+            <tr>{PAYMENTS_TABLE_HEADERS.map((header,index) => { const keys: AdminFinancePaymentSortKey[]=['invoiceNo','member','amount','method','status','paidAt']; const key=keys[index]; return <th key={header} className="text-left text-xs font-semibold uppercase tracking-wider px-4 py-3">{header}{key && <button type="button" onClick={()=>handleSort(key)} className="min-h-11 min-w-11 motion-safe:transition-all motion-safe:duration-base ease-in-out ml-1 inline-flex align-middle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page" aria-label={`Sort by ${header}`} title={`Sort by ${header}`}>{sortKey===key?(sortDir==='asc'?<ChevronUp size={13} className="text-primary"/>:<ChevronDown size={13} className="text-primary"/>):<ChevronsUpDown size={13} className="text-disabled"/>}</button>}</th>; })}</tr>
           </thead>
           <tbody className="divide-y divide-border">
             {Array.from({ length: 5 }, (_, index) => (
@@ -48,7 +49,7 @@ export default function AdminFinancePaymentsTable() {
       <div className="overflow-x-auto">
         <table data-admin-responsive-table className="w-full">
           <thead className="bg-input text-secondary">
-            <tr>{PAYMENTS_TABLE_HEADERS.map((header,index) => { const keys: AdminFinancePaymentSortKey[]=['invoiceNo','member','amount','method','status','paidAt']; const key=keys[index]; return <th key={header} scope="col" className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider">{header}{key && <button type="button" onClick={()=>handleSort(key)} className="ml-1 inline-flex align-middle" aria-label={`Sort by ${header}`} title={`Sort by ${header}`}>{sortKey===key?(sortDir==='asc'?<ChevronUp size={13} className="text-primary"/>:<ChevronDown size={13} className="text-primary"/>):<ChevronsUpDown size={13} className="text-disabled"/>}</button>}</th>; })}</tr>
+            <tr>{PAYMENTS_TABLE_HEADERS.map((header,index) => { const keys: AdminFinancePaymentSortKey[]=['invoiceNo','member','amount','method','status','paidAt']; const key=keys[index]; return <th key={header} scope="col" className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider">{header}{key && <button type="button" onClick={()=>handleSort(key)} className="min-h-11 min-w-11 motion-safe:transition-all motion-safe:duration-base ease-in-out ml-1 inline-flex align-middle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page" aria-label={`Sort by ${header}`} title={`Sort by ${header}`}>{sortKey===key?(sortDir==='asc'?<ChevronUp size={13} className="text-primary"/>:<ChevronDown size={13} className="text-primary"/>):<ChevronsUpDown size={13} className="text-disabled"/>}</button>}</th>; })}</tr>
           </thead>
           <tbody className="divide-y divide-border">
             {payments.length === 0 ? (
@@ -63,7 +64,7 @@ export default function AdminFinancePaymentsTable() {
                   <td className="px-4 py-3 text-sm font-bold text-success">{formatCurrency(payment.amount)}</td>
                   <td className="px-4 py-3"><span className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold ${methodStyle.bg} ${methodStyle.text}`}>{payment.method}</span></td>
                   <td className="px-4 py-3"><span className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold ${statusStyle.bg} ${statusStyle.text}`}>{payment.status}</span></td>
-                  <td className="px-4 py-3 text-sm text-secondary">{new Date(payment.paidAt).toLocaleDateString('en-IN')}</td>
+                  <td className="px-4 py-3 text-sm text-secondary">{format(new Date(payment.paidAt), 'dd MMM yyyy')}</td>
                 </tr>
               );
             })}

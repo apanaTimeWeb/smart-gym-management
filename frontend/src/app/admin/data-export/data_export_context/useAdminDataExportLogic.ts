@@ -13,6 +13,7 @@ import { clearAdminIdempotencyKey, getAdminIdempotencyKey } from '@/app/admin/ad
 import { DATA_EXPORT_ITEMS_PER_PAGE } from '@/app/admin/data-export/data_export_utils/AdminDataExportSharedConstants';
 import type { DataExportSortDirection, DataExportSortKey, ExportFormValues, ExportStatus } from '@/app/admin/data-export/data_export_types/AdminDataExportTypes';
 
+/** Coordinates DataExportLogic state, data flow, and feature behavior. */
 export function useAdminDataExportLogic() {
   const { confirm } = useAdminConfirm();
   const qc = useQueryClient();
@@ -69,7 +70,14 @@ export function useAdminDataExportLogic() {
     if (currentPage > maxPage) setCurrentPage(maxPage);
   }, [currentPage, jobsQuery.data?.meta?.totalPages, setCurrentPage]);
 
-  const createExport = useCallback((data: ExportFormValues) => { createMutation.mutate(data); }, [createMutation]);
+  const createExport = useCallback(async (data: ExportFormValues) => {
+    try {
+      await createMutation.mutateAsync(data);
+      return true;
+    } catch {
+      return false;
+    }
+  }, [createMutation]);
 
   const deleteJob = useCallback(async (id: string) => {
     const ok = await confirm({ title: 'Delete Export', message: 'Delete this export job? This cannot be undone.', confirmText: 'Delete', type: 'danger' });

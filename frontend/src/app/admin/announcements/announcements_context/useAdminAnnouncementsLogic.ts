@@ -13,6 +13,7 @@ import { useAdminUrlQuerySync } from '@/app/admin/admin_layout/admin_utils/useAd
 import { ANNOUNCEMENTS_ITEMS_PER_PAGE, EMPTY_ANNOUNCEMENT_FORM } from '@/app/admin/announcements/announcements_utils/AdminAnnouncementsSharedConstants';
 import type { Announcement, AnnouncementFormValues } from '@/app/admin/announcements/announcements_types/AdminAnnouncementsTypes';
 
+/** Coordinates AnnouncementsLogic state, data flow, and feature behavior. */
 export function useAdminAnnouncementsLogic() {
   const { confirm } = useAdminConfirm();
   const qc = useQueryClient();

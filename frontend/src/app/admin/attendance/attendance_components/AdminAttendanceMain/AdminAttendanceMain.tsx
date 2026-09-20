@@ -28,7 +28,7 @@ export default function AdminAttendanceMain() {
             <p className="text-sm text-danger">{error}</p>
             <button
               onClick={() => void loadAll()}
-              className="flex items-center gap-1.5 text-xs font-semibold text-danger hover:underline"
+              className="motion-safe:transition-all motion-safe:duration-base ease-in-out flex items-center gap-1.5 text-xs font-semibold text-danger hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
             >
               <RefreshCw size={13} /> Retry
             </button>

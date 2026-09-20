@@ -10,11 +10,13 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { plansApi } from '@/app/admin/plans/plans_api/AdminPlansApi';
 import type { Plan, PlansContextType, PlansInitialData } from '@/app/admin/plans/plans_types/AdminPlansTypes';
 import type { ApiResponse } from '@/lib/api';
-import { EMPTY_PLAN_FORM, type PlanFormValues } from '@/app/admin/plans/plans_utils/AdminPlansSharedConstants';
+import { EMPTY_PLAN_FORM } from '@/app/admin/plans/plans_utils/AdminPlansSharedConstants';
+import type { PlanFormValues } from '@/app/admin/plans/plans_types/AdminPlansTypes';
 import { useAdminConfirm } from '@/app/admin/admin_layout/AdminFeedback/useAdminConfirm';
 import { clearAdminIdempotencyKey, getAdminIdempotencyKey } from '@/app/admin/admin_layout/admin_utils/AdminIdempotencyIntentStore';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
+/** Coordinates PlansLogic state, data flow, and feature behavior. */
 export function useAdminPlansLogic(initialData?: PlansInitialData | null): PlansContextType {
   const { confirm } = useAdminConfirm();
   const router = useRouter();

@@ -10,8 +10,9 @@ import { useAdminGymHealthAlertsStore } from '@/app/admin/gym-health-alerts/gym_
 import { useAdminUrlQuerySync } from '@/app/admin/admin_layout/admin_utils/useAdminUrlQuerySync';
 import { useAdminConfirm } from '@/app/admin/admin_layout/AdminFeedback/useAdminConfirm';
 import { GYM_HEALTH_ITEMS_PER_PAGE } from '@/app/admin/gym-health-alerts/gym_health_alerts_utils/AdminGymHealthAlertsSharedConstants';
-import type { AlertSeverity, AlertType } from '@/app/admin/gym-health-alerts/gym_health_alerts_types/AdminGymHealthAlertsTypes';
+import type { AlertSeverity, AlertType, AdminGymHealthAlertResolution } from '@/app/admin/gym-health-alerts/gym_health_alerts_types/AdminGymHealthAlertsTypes';
 
+/** Coordinates GymHealthAlertsLogic state, data flow, and feature behavior. */
 export function useAdminGymHealthAlertsLogic() {
   const { confirm } = useAdminConfirm();
   const qc = useQueryClient();
@@ -30,7 +31,7 @@ export function useAdminGymHealthAlertsLogic() {
     { key: 'page', value: currentPage, defaultValue: 1, setValue: (value) => setCurrentPage(Math.max(1, Number(value) || 1)) },
   ]);
 
-  const alertParams = { page: currentPage, limit: GYM_HEALTH_ITEMS_PER_PAGE, severity: severityFilter === 'all' ? undefined : (severityFilter as AlertSeverity), alertType: typeFilter === 'all' ? undefined : (typeFilter as AlertType), gymId: gymFilter === 'all' ? undefined : gymFilter, resolved: resolvedFilter === 'all' ? undefined : (resolvedFilter as 'active' | 'resolved' | undefined) };
+  const alertParams = { page: currentPage, limit: GYM_HEALTH_ITEMS_PER_PAGE, severity: severityFilter === 'all' ? undefined : (severityFilter as AlertSeverity), alertType: typeFilter === 'all' ? undefined : (typeFilter as AlertType), gymId: gymFilter === 'all' ? undefined : gymFilter, resolved: resolvedFilter === 'all' ? undefined : (resolvedFilter as AdminGymHealthAlertResolution) };
   const alertsQuery = useQuery({
     queryKey: ['admin', 'gym-health-alerts', 'alerts', alertParams],
     queryFn: () => gymHealthAlertsApi.fetchAlerts(alertParams).then((r) => r),

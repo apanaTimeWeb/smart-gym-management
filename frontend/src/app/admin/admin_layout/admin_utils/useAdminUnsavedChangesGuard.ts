@@ -16,6 +16,17 @@ export function useUnsavedChangesGuard(isDirty: boolean) {
   const pathname = usePathname();
   const { confirm } = useAdminConfirm();
 
+  /** Prompts only when a dirty form is being explicitly discarded by the user. */
+  const confirmDiscardIfDirty = useCallback(async () => {
+    if (!isDirty) return true;
+    return confirm({
+      title: 'Unsaved Changes',
+      message: UNSAVED_CHANGES_MESSAGE,
+      confirmText: 'Discard Changes',
+      type: 'warning',
+    });
+  }, [confirm, isDirty]);
+
   const handleNavigationAttempt = useCallback(async (event: MouseEvent) => {
     if (!isDirty || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
 
@@ -51,4 +62,7 @@ export function useUnsavedChangesGuard(isDirty: boolean) {
       document.removeEventListener('click', handleNavigationAttempt, true);
     };
   }, [handleNavigationAttempt, isDirty]);
+
+  return { confirmDiscardIfDirty };
 }
+

@@ -1,4 +1,5 @@
 "use client";
+import { format } from 'date-fns';
 import { formatCurrency } from '@/lib/formatters';
 import { displayValue } from '@/app/admin/admin_layout/admin_utils/AdminDisplayValue';
 // RESPONSIBILITY: Read-only profile view for Staff/Managers, showing details and assigned branches.
@@ -44,7 +45,7 @@ export default function AdminHrStaffProfileModal() {
           </div>
           <button 
             onClick={() => setShowProfileModal(false)}
-            className="p-2 rounded-full hover:bg-input motion-safe:transition-colors text-secondary hover:text-primary motion-safe:duration-base"
+            className="p-2 rounded-full hover:bg-input motion-safe:transition-colors text-secondary hover:text-primary motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
           >
             <X size={20} />
           </button>
@@ -67,7 +68,7 @@ export default function AdminHrStaffProfileModal() {
                 {isManager && (
                   <button
                     onClick={() => openEdit(editData as Staff)}
-                    className="px-4 py-2 bg-primary-subtle hover:bg-primary-subtle text-primary font-semibold text-sm rounded-xl motion-safe:transition-colors flex items-center gap-2 motion-safe:duration-base"
+                    className="px-4 py-2 bg-primary-subtle hover:bg-primary-subtle text-primary font-semibold text-sm rounded-xl motion-safe:transition-colors flex items-center gap-2 motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
                   >
                     <Edit2 size={14} />
                     Edit Profile
@@ -87,7 +88,7 @@ export default function AdminHrStaffProfileModal() {
                 <div className="flex items-center gap-3 bg-input p-3 rounded-xl border border-border0">
                   <Calendar size={16} className="text-secondary" />
                   <span className="text-sm font-medium text-primary">
-                    Joined: {editData.joinDate ? new Date(editData.joinDate).toLocaleDateString() : 'N/A'}
+                    Joined: {editData.joinDate ? format(new Date(editData.joinDate), 'dd MMM yyyy') : 'N/A'}
                   </span>
                 </div>
                 <div className="flex items-center gap-3 bg-input p-3 rounded-xl border border-border0">
@@ -177,7 +178,7 @@ export default function AdminHrStaffProfileModal() {
                         {isManager && (
                           <td className="px-4 py-3 text-right">
                             {isPrimary ? (
-                              <span className="inline-block text-xs font-bold text-on-primary bg-warning border border-border px-2 py-1 rounded-md uppercase">
+                              <span className="inline-block text-xs font-bold text-warning bg-warning-bg border border-border px-2 py-1 rounded-md uppercase">
                                 Primary Branch
                               </span>
                             ) : (

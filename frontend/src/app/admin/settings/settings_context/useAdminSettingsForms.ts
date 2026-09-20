@@ -28,14 +28,14 @@ import type { ZodType } from 'zod';
 
 function useAdminSettingsSectionForm<TFormValues extends FieldValues>(
   initialData: TFormValues,
-  schema: ZodType<TFormValues>,
+  schema: any,
   submit: (data: TFormValues) => ReturnType<typeof settingsApi.updateSettings>,
   toastId: string,
 ) {
   const queryClient = useQueryClient();
-  const form = useForm<any>({
-    resolver: zodResolver(schema as any) as any,
-    defaultValues: initialData as any,
+  const form = useForm<TFormValues>({
+    resolver: zodResolver(schema),
+    defaultValues: initialData as DefaultValues<TFormValues>,
   });
   const formValues = useWatch({ control: form.control });
 
@@ -54,6 +54,7 @@ function useAdminSettingsSectionForm<TFormValues extends FieldValues>(
   return { form, formValues, mutation };
 }
 
+/** Coordinates SettingsGeneralForm state, data flow, and feature behavior. */
 export function useAdminSettingsGeneralForm(initialData: GeneralSettingsType) {
   return useAdminSettingsSectionForm<GeneralSettingsType>(
     initialData,
@@ -63,6 +64,7 @@ export function useAdminSettingsGeneralForm(initialData: GeneralSettingsType) {
   );
 }
 
+/** Owns the Settings GST form state and validation lifecycle. */
 export function useAdminSettingsGstForm(initialData: GstTaxSettingsType) {
   return useAdminSettingsSectionForm<GstTaxSettingsType>(
     initialData,
@@ -72,6 +74,7 @@ export function useAdminSettingsGstForm(initialData: GstTaxSettingsType) {
   );
 }
 
+/** Owns the Settings gym-profile form state and validation lifecycle. */
 export function useAdminSettingsGymProfileForm(initialData: GymProfileType) {
   return useAdminSettingsSectionForm<GymProfileType>(
     initialData,
@@ -81,6 +84,7 @@ export function useAdminSettingsGymProfileForm(initialData: GymProfileType) {
   );
 }
 
+/** Owns the Settings notification-preference form state and validation lifecycle. */
 export function useAdminSettingsNotificationsForm(initialData: NotificationsSettingsType) {
   return useAdminSettingsSectionForm<NotificationsSettingsType>(
     initialData,
@@ -90,6 +94,7 @@ export function useAdminSettingsNotificationsForm(initialData: NotificationsSett
   );
 }
 
+/** Owns the Settings payment-gateway form state and validation lifecycle. */
 export function useAdminSettingsPaymentGatewayForm(initialData: PaymentGatewaySettingsType) {
   return useAdminSettingsSectionForm<PaymentGatewaySettingsType>(
     initialData,
@@ -99,6 +104,7 @@ export function useAdminSettingsPaymentGatewayForm(initialData: PaymentGatewaySe
   );
 }
 
+/** Owns the Settings application-integration form state and validation lifecycle. */
 export function useAdminSettingsAppIntegrationForm(initialData: AppIntegrationSettingsType) {
   return useAdminSettingsSectionForm<AppIntegrationSettingsType>(
     initialData,

@@ -3,8 +3,6 @@ import type { QueryStatus } from '@tanstack/react-query';
 
 import type { AdminToastType } from '@/app/admin/admin_layout/AdminFeedback/AdminToastTypes';
 
-import type { PlanFormValues } from '@/app/admin/plans/plans_utils/AdminPlansSharedConstants';
-
 
 export interface PlansInitialData {
   plans: Plan[];
@@ -50,3 +48,5 @@ export interface Plan {
   taxRate?: number;
 }
 
+
+export type PlanFormValues = { name: string; tier: string; price1Month: string; price3Month: string; price6Month: string; price12Month: string; priceCustom: string; features: string };

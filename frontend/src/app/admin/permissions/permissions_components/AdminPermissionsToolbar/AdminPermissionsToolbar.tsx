@@ -28,7 +28,7 @@ export default function AdminPermissionsToolbar() {
           <button
             key={role.value}
             onClick={() => setActiveRole(role.value)}
-            className={`px-5 py-3 rounded-xl border text-left motion-safe:transition-all motion-safe:duration-base ${
+            className={`focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page px-5 py-3 rounded-xl border text-left motion-safe:transition-all motion-safe:duration-base ${
               activeRole === role.value
                 ? 'bg-primary-subtle border-primary text-primary'
                 : 'bg-card border-border text-secondary hover:border-primary hover:text-primary'
@@ -47,7 +47,7 @@ export default function AdminPermissionsToolbar() {
           <button
             key={opt.value}
             onClick={() => setSelectedGymId(opt.value)}
-            className={`px-3 py-1.5 rounded-lg text-sm font-medium border motion-safe:transition-all ${
+            className={`focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page px-3 py-1.5 rounded-lg text-sm font-medium border motion-safe:transition-all ${
               selectedGymId === opt.value
                 ? 'bg-primary-subtle text-primary border-primary'
                 : 'bg-input text-secondary border-border hover:border-primary hover:text-primary'
@@ -57,7 +57,7 @@ export default function AdminPermissionsToolbar() {
           </button>
         ))}
         {selectedGymId !== 'default' && (
-          <span className="text-xs text-on-primary bg-warning px-2 py-1 rounded-lg border border-border">
+          <span className="text-xs text-warning bg-warning-bg px-2 py-1 rounded-lg border border-border">
             Overrides defaults for this gym only
           </span>
         )}

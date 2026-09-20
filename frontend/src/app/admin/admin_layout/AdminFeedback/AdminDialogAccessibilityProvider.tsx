@@ -33,6 +33,7 @@ function closeDialog(dialog: HTMLElement): void {
 }
 
 export default function AdminDialogAccessibilityProvider() {
+// EFFECT: Synchronizes this component effect with its declared React dependencies in admin_layout/AdminFeedback/AdminDialogAccessibilityProvider.tsx.
   useEffect(() => {
     const previousFocusStack: HTMLElement[] = [];
     let activeDialog: HTMLElement | null = null;

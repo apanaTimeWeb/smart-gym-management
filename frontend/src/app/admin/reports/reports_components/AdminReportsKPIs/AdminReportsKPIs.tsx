@@ -1,5 +1,5 @@
 "use client";
-import { formatPercent1dp, formatCurrency } from '@/lib/formatters';
+import { formatPercent1dp, formatCurrency, formatNumber} from '@/lib/formatters';
 // RESPONSIBILITY: Renders the KPI summary row for the Reports module — total revenue, expenses, profit, members, attendance rate.
 
 import { TrendingUp, TrendingDown, Users, IndianRupee, Activity, Wallet } from 'lucide-react';
@@ -43,7 +43,7 @@ export default function AdminReportsKPIs() {
       />
       <AdminStatCard
         title={`Total Members${dateSuffix}`}
-        value={kpis ? kpis.totalMembers.toLocaleString('en-IN') : '—'}
+        value={kpis ? formatNumber(kpis.totalMembers) : '—'}
         change={kpis ? `+${kpis.newMembers} new` : '—'}
         changeType="up"
         icon={Users}

@@ -4,6 +4,7 @@ import type { QueryStatus } from '@tanstack/react-query';
 export type ReportTab = 'revenue' | 'membership' | 'attendance' | 'payroll' | 'pnl';
 export type ReportDateRange = 'this_month' | 'last_month' | 'last_3_months' | 'last_6_months' | 'this_year' | 'custom';
 export type AdminReportsExportFormat = 'pdf' | 'excel';
+export type AdminReportsTrendDirection = 'up' | 'down' | 'flat';
 
 export interface ReportsContextType {
   activeTab: ReportTab;
@@ -25,7 +26,7 @@ export interface RevenueByGym {
   revenue: number;
   expenses: number;
   profit: number;
-  trend: 'up' | 'down' | 'flat';
+  trend: AdminReportsTrendDirection;
   trendPercent: number;
 }
 

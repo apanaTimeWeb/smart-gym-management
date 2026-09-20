@@ -1,4 +1,6 @@
 "use client";
+import { format } from 'date-fns';
+import { formatNumber } from '@/lib/formatters';
 // RESPONSIBILITY: Table showing export job history with server-side pagination, filter, and sortable headers.
 
 import { displayValue } from '@/app/admin/admin_layout/admin_utils/AdminDisplayValue';
@@ -11,7 +13,7 @@ import { EXPORT_STATUS_OPTIONS } from '@/app/admin/data-export/data_export_utils
 import type { DataExportSortDirection, DataExportSortKey, ExportJob, ExportStatus } from '@/app/admin/data-export/data_export_types/AdminDataExportTypes';
 import AdminDataExportEmptyState from '@/app/admin/data-export/data_export_components/AdminDataExportEmptyState/AdminDataExportEmptyState';
 
-const STATUS_STYLES: Record<string, string> = { completed: 'bg-success text-on-success', processing: 'bg-warning text-on-primary', failed: 'bg-danger text-on-danger' };
+const STATUS_STYLES: Record<string, string> = { completed: 'bg-success text-on-success', processing: 'bg-warning-bg text-warning', failed: 'bg-danger text-on-danger' };
 const STATUS_ICONS: Record<string, React.ReactNode> = { completed: <CheckCircle size={11} />, processing: <Loader2 size={11} className="motion-safe:animate-spin motion-safe:duration-base" />, failed: <XCircle size={11} /> };
 const DATA_TYPE_LABELS: Record<string, string> = { members: 'Members', payments: 'Payments', attendance: 'Attendance', staff: 'Staff', full_report: 'Full Report' };
 const HEADERS: ReadonlyArray<{ key: DataExportSortKey | 'actions'; label: string; sortable: boolean }> = [
@@ -59,13 +61,13 @@ export default function AdminDataExportHistory() {
                     <td className="px-4 py-3 text-sm font-medium text-primary">{DATA_TYPE_LABELS[job.dataType] ?? job.dataType}</td>
                     <td className="px-4 py-3 text-sm text-secondary uppercase">{job.format}</td>
                     <td className="px-4 py-3 text-xs text-secondary whitespace-nowrap"><span className="block max-w-36 truncate">{job.gymNames.join(', ')}</span><span>{job.dateFrom} → {job.dateTo}</span></td>
-                    <td className="px-4 py-3 text-sm text-primary">{displayValue(job.rowCount?.toLocaleString('en-IN'))}</td>
+                    <td className="px-4 py-3 text-sm text-primary">{displayValue(job.rowCount !== undefined ? formatNumber(job.rowCount) : undefined)}</td>
                     <td className="px-4 py-3 text-sm text-secondary">{job.fileSizeKb !== undefined ? `${job.fileSizeKb} KB` : '—'}</td>
                     <td className="px-4 py-3"><span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold capitalize ${STATUS_STYLES[job.status] ?? 'bg-input text-secondary'}`}>{STATUS_ICONS[job.status]}{job.status}</span></td>
-                    <td className="px-4 py-3 text-xs text-secondary whitespace-nowrap">{new Date(job.createdAt).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })}</td>
+                    <td className="px-4 py-3 text-xs text-secondary whitespace-nowrap">{format(new Date(job.createdAt), 'dd MMM yyyy, hh:mm a')}</td>
                     <td className="px-4 py-3"><div className="flex items-center gap-1">
-                      {job.status === 'completed' && <button onClick={(event) => { event.stopPropagation(); downloadExport(job); }} className="p-1.5 rounded-lg hover:bg-input text-secondary hover:text-primary motion-safe:transition-colors motion-safe:duration-base" aria-label="Download export" title="Download export"><Download size={15} /></button>}
-                      <button onClick={(event) => { event.stopPropagation(); logic.deleteJob(job.id); }} className="p-1.5 rounded-lg hover:bg-danger-bg text-secondary hover:text-danger motion-safe:transition-colors motion-safe:duration-base" aria-label="Delete export job" title="Delete export"><Trash2 size={15} /></button>
+                      {job.status === 'completed' && <button onClick={(event) => { event.stopPropagation(); downloadExport(job); }} className="min-h-11 min-w-11 p-1.5 rounded-lg hover:bg-input text-secondary hover:text-primary motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page" aria-label="Download export" title="Download export"><Download size={15} /></button>}
+                      <button onClick={(event) => { event.stopPropagation(); logic.deleteJob(job.id); }} className="min-h-11 min-w-11 p-1.5 rounded-lg hover:bg-danger-bg text-secondary hover:text-danger motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page" aria-label="Delete export job" title="Delete export"><Trash2 size={15} /></button>
                     </div></td>
                   </tr>
                 ))}

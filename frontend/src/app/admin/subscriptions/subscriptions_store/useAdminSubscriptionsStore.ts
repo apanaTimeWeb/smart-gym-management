@@ -12,6 +12,7 @@ interface AdminSubscriptionsStore {
   setCurrentInvoicePage: (page: number) => void;
 }
 
+/** Coordinates SubscriptionsStore state, data flow, and feature behavior. */
 export const useAdminSubscriptionsStore = create<AdminSubscriptionsStore>((set) => ({
   activeTab: 'overview',
   setActiveTab: (t) => set({ activeTab: t }),

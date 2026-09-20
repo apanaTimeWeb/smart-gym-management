@@ -6,6 +6,7 @@ import { adminAuditLogsMockHandlers } from '@/app/admin/audit_logs/audit_logs_mo
 import { adminBlacklistMockHandlers } from '@/app/admin/blacklist/blacklist_mocks/handlers/AdminBlacklistMockHandlers';
 import { adminBranchesMockHandlers } from '@/app/admin/branches/branches_mocks/handlers/AdminBranchesMockHandlers';
 import { adminCouponsMockHandlers } from '@/app/admin/coupons/coupons_mocks/handlers/AdminCouponsMockHandlers';
+import { adminCampaignsMockHandlers } from '@/app/admin/campaigns/campaigns_mocks/handlers/AdminCampaignsMockHandlers';
 import { adminDashboardMockHandlers } from '@/app/admin/dashboard/dashboard_mocks/handlers/AdminDashboardMockHandlers';
 import { adminDataExportMockHandlers } from '@/app/admin/data-export/data-export_mocks/handlers/AdminDataExportMockHandlers';
 import { adminFinanceMockHandlers } from '@/app/admin/finance/finance_mocks/handlers/AdminFinanceMockHandlers';
@@ -38,6 +39,7 @@ export const adminHandlers = [
   ...adminBlacklistMockHandlers,
   ...adminBranchesMockHandlers,
   ...adminCouponsMockHandlers,
+  ...adminCampaignsMockHandlers,
   ...adminDashboardMockHandlers,
   ...adminDataExportMockHandlers,
   ...adminFinanceMockHandlers,

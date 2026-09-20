@@ -43,7 +43,7 @@ export default function AdminUsagePlanCard({ planTiers, onRequestUpgrade, pendin
                   disabled={pendingUpgradePlan !== null}
                   className="w-full min-h-11 py-2 rounded-lg text-xs font-bold border border-primary text-primary hover:bg-primary-subtle motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:opacity-60 disabled:cursor-not-allowed"
                 >
-                  {isPending ? <span className="inline-flex items-center justify-center gap-2"><Loader2 size={14} className="animate-spin" /> Sending…</span> : plan.price === 0 ? 'Request Contact' : 'Upgrade'}
+                  {isPending ? <span className="inline-flex items-center justify-center gap-2"><Loader2 size={14} className="motion-safe:animate-spin" /> Sending…</span> : plan.price === 0 ? 'Request Contact' : 'Upgrade'}
                 </button>
               )}
             </div>

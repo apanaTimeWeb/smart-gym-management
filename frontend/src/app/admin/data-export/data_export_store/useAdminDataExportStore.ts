@@ -10,6 +10,7 @@ interface AdminDataExportStore {
   setCurrentPage: (p: number) => void;
 }
 
+/** Coordinates DataExportStore state, data flow, and feature behavior. */
 export const useAdminDataExportStore = create<AdminDataExportStore>((set) => ({
   statusFilter: 'all',
   setStatusFilter: (s) => set({ statusFilter: s, currentPage: 1 }),
