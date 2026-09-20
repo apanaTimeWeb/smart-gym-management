@@ -28,7 +28,7 @@ export function AdminHeaderProfile() {
     <div className="relative" ref={profileRef}>
       <button
         onClick={() => setShowProfile(!showProfile)}
-        className="w-9 h-9 rounded-full flex items-center justify-center text-on-primary text-sm font-bold cursor-pointer motion-safe:transition-transform motion-safe:hover:scale-105 border border-border bg-primary motion-safe:duration-base"
+        className="w-9 h-9 rounded-full flex items-center justify-center text-primary text-sm font-bold cursor-pointer motion-safe:transition-transform motion-safe:hover:scale-105 border border-border bg-primary motion-safe:duration-base"
         aria-label="Profile menu"
       >
         {mounted ? (user?.name?.charAt(0)?.toUpperCase() ?? 'A') : 'A'}
@@ -49,7 +49,7 @@ export function AdminHeaderProfile() {
             </Link>
           </div>
           <div className="border-t border-border py-1">
-            <button className="w-full flex items-center gap-2 px-4 py-2 text-sm text-on-danger hover:bg-danger font-medium motion-safe:transition-colors motion-safe:duration-base" onClick={() => { setShowProfile(false); logout(); }}>
+            <button className="w-full flex items-center gap-2 px-4 py-2 text-sm text-danger hover:bg-danger font-medium motion-safe:transition-colors motion-safe:duration-base" onClick={() => { setShowProfile(false); logout(); }}>
               <LogOut size={15} /> Log out
             </button>
           </div>

@@ -42,7 +42,7 @@ export default function AdminBlacklistTable() {
                   <p className="text-sm text-primary line-clamp-2">{m.reason}</p>
                 </td>
                 <td className="px-4 py-3">
-                  <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${m.scope === 'global' ? 'bg-danger text-on-primary' : 'bg-warning text-on-primary'}`}>
+                  <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${m.scope === 'global' ? 'bg-danger text-danger' : 'bg-warning text-warning'}`}>
                     {m.scope === 'global' ? <Globe size={11} /> : <Building2 size={11} />}
                     {m.scope === 'global' ? 'Global' : m.assignedGymNames.join(', ')}
                   </span>
@@ -50,16 +50,16 @@ export default function AdminBlacklistTable() {
                 <td className="px-4 py-3 text-sm text-secondary">{m.blacklistedBy}</td>
                 <td className="px-4 py-3 text-sm text-secondary whitespace-nowrap">{m.blacklistedAt}</td>
                 <td className="px-4 py-3">
-                  <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${m.isActive ? 'bg-danger text-on-primary' : 'bg-input text-secondary'}`}>
+                  <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${m.isActive ? 'bg-danger text-danger' : 'bg-input text-secondary'}`}>
                     {m.isActive ? 'Active' : 'Inactive'}
                   </span>
                 </td>
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 motion-safe:transition-opacity motion-safe:duration-base">
                     <button onClick={() => toggleBlacklist(m.id)} className="p-1.5 rounded-lg hover:bg-input text-secondary hover:text-primary motion-safe:transition-colors motion-safe:duration-base" aria-label="Toggle blacklist">
-                      {m.isActive ? <ToggleRight size={16} className="text-on-primary" /> : <ToggleLeft size={16} />}
+                      {m.isActive ? <ToggleRight size={16} className="text-danger" /> : <ToggleLeft size={16} />}
                     </button>
-                    <button onClick={() => removeFromBlacklist(m.id, m.memberName)} className="p-1.5 rounded-lg hover:bg-success text-secondary hover:text-on-primary motion-safe:transition-colors motion-safe:duration-base" aria-label="Unblock member" title="Unblock">
+                    <button onClick={() => removeFromBlacklist(m.id, m.memberName)} className="p-1.5 rounded-lg hover:bg-success text-secondary hover:text-success motion-safe:transition-colors motion-safe:duration-base" aria-label="Unblock member" title="Unblock">
                       <Unlock size={15} />
                     </button>
                   </div>

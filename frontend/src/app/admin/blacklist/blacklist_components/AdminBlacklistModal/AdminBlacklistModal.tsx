@@ -81,7 +81,7 @@ export default function AdminBlacklistModal() {
             <div className="flex gap-3">
               {(['global', 'specific'] as const).map(s => (
                 <button key={s} type="button" onClick={() => setValue('scope', s)}
-                  className={`flex-1 py-2 rounded-lg text-sm font-medium border motion-safe:transition-all capitalize ${scope === s ? 'bg-danger text-on-danger border-danger' : 'bg-input text-secondary border-border hover:border-danger'}`}>
+                  className={`flex-1 py-2 rounded-lg text-sm font-medium border motion-safe:transition-all capitalize ${scope === s ? 'bg-danger text-danger border-danger' : 'bg-input text-secondary border-border hover:border-danger'}`}>
                   {s === 'global' ? 'Global (All Gyms)' : 'Specific Gyms'}
                 </button>
               ))}
@@ -89,19 +89,19 @@ export default function AdminBlacklistModal() {
           </div>
           {scope === 'specific' && (
             <div>
-              <label className="block text-sm font-medium text-secondary mb-2">Select Gyms <span className="text-on-danger">*</span></label>
+              <label className="block text-sm font-medium text-secondary mb-2">Select Gyms <span className="text-danger">*</span></label>
               <div className="flex flex-wrap gap-2">
                 {BLACKLIST_GYM_OPTIONS.filter(o => o.value !== 'all').map(opt => {
                   const isSelected = selectedGyms.includes(opt.value);
                   return (
                     <button key={opt.value} type="button" onClick={() => toggleGym(opt.value)}
-                      className={`px-3 py-1.5 rounded-lg text-sm font-medium border motion-safe:transition-all ${isSelected ? 'bg-danger text-on-danger border-danger' : 'bg-input text-secondary border-border hover:border-danger'}`}>
+                      className={`px-3 py-1.5 rounded-lg text-sm font-medium border motion-safe:transition-all ${isSelected ? 'bg-danger text-danger border-danger' : 'bg-input text-secondary border-border hover:border-danger'}`}>
                       {opt.label}
                     </button>
                   );
                 })}
               </div>
-              {errors.assignedGyms && <p className="text-xs text-on-danger mt-1">{errors.assignedGyms.message}</p>}
+              {errors.assignedGyms && <p className="text-xs text-danger mt-1">{errors.assignedGyms.message}</p>}
             </div>
           )}
           <div className="flex justify-end gap-3 pt-2 border-t border-border">

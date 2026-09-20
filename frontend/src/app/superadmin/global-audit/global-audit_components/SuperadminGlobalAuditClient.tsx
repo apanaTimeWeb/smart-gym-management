@@ -42,7 +42,7 @@ export default function SuperadminGlobalAuditClient() {
             case 'WARNING':
                 return <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-xs font-bold bg-warning text-on-primary tracking-wider"><AlertTriangle className="w-3 h-3"/> WARNING</span>;
             case 'INFO':
-                return <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-xs font-bold bg-primary/10 text-on-primary tracking-wider"><Info className="w-3 h-3"/> INFO</span>;
+                return <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-xs font-bold bg-primary/10 text-primary tracking-wider"><Info className="w-3 h-3"/> INFO</span>;
         }
     };
     const exportLogs = () => {

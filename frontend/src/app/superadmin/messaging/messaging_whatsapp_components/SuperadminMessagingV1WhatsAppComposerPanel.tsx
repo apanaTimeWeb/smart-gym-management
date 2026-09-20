@@ -6,7 +6,7 @@ import type { SuperadminWhatsAppTemplate } from '@/app/superadmin/messaging/mess
 import type { SuperadminMessagingV1WhatsAppComposerPanelProps } from '@/app/superadmin/messaging/messaging_types/SuperadminMessagingV1WhatsAppComposerPanelTypes';
 
 export default function SuperadminMessagingV1WhatsAppComposerPanel({ template, title, body, variables, onTitleChange, onBodyChange, onInsertVariable, }: SuperadminMessagingV1WhatsAppComposerPanelProps) {
-    return (<Panel title="Message composer" description="Pick a template, edit the wording, and use variables for personalized messages." action={(<span className="rounded-full border border-primary/30 bg-primary/10 px-2.5 py-1 text-xs font-semibold uppercase tracking-wider text-on-primary">
+    return (<Panel title="Message composer" description="Pick a template, edit the wording, and use variables for personalized messages." action={(<span className="rounded-full border border-primary/30 bg-primary/10 px-2.5 py-1 text-xs font-semibold uppercase tracking-wider text-primary">
           Free click-to-chat mode
         </span>)}>
       <div className="space-y-4">

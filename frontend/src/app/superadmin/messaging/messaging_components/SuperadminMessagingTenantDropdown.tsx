@@ -29,7 +29,7 @@ export function SuperadminMessagingTenantDropdown({ value, onChange, tenants }: 
     }
     return (<div ref={ref} className="relative">
       <button type="button" onClick={() => setOpen((v) => !v)} aria-haspopup="listbox" aria-expanded={open} className="w-full flex items-center justify-between px-3 py-2 bg-input border border-border rounded-lg text-sm text-primary focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary motion-safe:transition-colors">
-        <span className={selected ? 'text-on-primary' : 'text-secondary'}>
+        <span className={selected ? 'text-primary' : 'text-secondary'}>
           {selected ? `${selected.name} — ${selected.plan}` : 'Select tenant...'}
         </span>
         <ChevronDown className="w-5 h-5 text-secondary shrink-0" strokeWidth={2}/>
@@ -39,14 +39,14 @@ export function SuperadminMessagingTenantDropdown({ value, onChange, tenants }: 
           <div className="p-2 border-b border-border">
             <div className="relative">
               <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-secondary"/>
-              <input type="text" autoFocus placeholder="Search gyms..." value={query} onChange={(e) => setQuery(e.target.value)} className="w-full pl-8 pr-3 py-1.5 bg-input border border-border rounded-md text-sm text-on-primary focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary"/>
+              <input type="text" autoFocus placeholder="Search gyms..." value={query} onChange={(e) => setQuery(e.target.value)} className="w-full pl-8 pr-3 py-1.5 bg-input border border-border rounded-md text-sm text-primary focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary"/>
             </div>
           </div>
           <div role="listbox" aria-label="Tenant recipients" className="max-h-48 overflow-y-auto">
             {filtered.length === 0 && (<div className="px-3 py-2 text-sm text-secondary">No tenants found.</div>)}
             {filtered.map((t) => (<button key={t.id} type="button" role="option" aria-selected={t.id === value} onClick={() => handleSelect(t.id)} className={`block w-full px-3 py-2 text-left text-sm motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary ${t.id === value
-                    ? 'bg-primary/10 text-on-primary'
-                    : 'text-on-primary hover:bg-input'}`}>
+                    ? 'bg-primary/10 text-primary'
+                    : 'text-primary hover:bg-input'}`}>
                 {t.name} — {t.plan}
               </button>))}
           </div>

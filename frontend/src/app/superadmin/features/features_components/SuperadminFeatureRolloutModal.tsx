@@ -78,14 +78,14 @@ export default function SuperadminFeatureRolloutModal({ isOpen, onClose, flag, o
                 const isSelected = selectedTenantIds.includes(gym.id);
                 return (<button key={gym.id} onClick={() => {
                         setSelectedTenantIds(prev => prev.includes(gym.id) ? prev.filter(id => id !== gym.id) : [...prev, gym.id]);
-                    }} className={`w-full text-left px-4 py-3 rounded-md text-sm motion-safe:transition-colors flex items-center justify-between ${isSelected ? 'bg-primary/10 border-primary text-on-primary font-semibold' : 'hover:bg-input text-on-primary border-transparent'} border`}>
+                    }} className={`w-full text-left px-4 py-3 rounded-md text-sm motion-safe:transition-colors flex items-center justify-between ${isSelected ? 'bg-primary/10 border-primary text-primary font-semibold' : 'hover:bg-input text-primary border-transparent'} border`}>
                       <div className="flex items-center gap-3">
                         <div className={`w-4 h-4 rounded border flex items-center justify-center ${isSelected ? 'bg-primary border-primary text-on-primary' : 'border-border bg-input'}`}>
                           {isSelected && <X className="w-3 h-3"/>}
                         </div>
                         <span>{gym.name}</span>
                       </div>
-                      <span className={`text-xs ${isSelected ? 'text-on-primary' : 'text-secondary'}`}>ID: {gym.id}</span>
+                      <span className={`text-xs ${isSelected ? 'text-primary' : 'text-secondary'}`}>ID: {gym.id}</span>
                     </button>);
             })}
               </div>)}
@@ -93,7 +93,7 @@ export default function SuperadminFeatureRolloutModal({ isOpen, onClose, flag, o
         </div>
 
         <div className="px-6 py-5 border-t border-border flex justify-end gap-3 bg-sidebar/50">
-          <button onClick={onClose} className="px-5 py-2.5 bg-transparent border border-border hover:bg-input text-on-primary font-medium rounded-lg motion-safe:transition-colors text-sm">
+          <button onClick={onClose} className="px-5 py-2.5 bg-transparent border border-border hover:bg-input text-primary font-medium rounded-lg motion-safe:transition-colors text-sm">
             Cancel
           </button>
           <button onClick={handleSave} disabled={isSaving} className="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-hover disabled:bg-primary/50 text-on-primary font-medium rounded-lg motion-safe:transition-colors text-sm disabled:cursor-not-allowed">

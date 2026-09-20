@@ -30,16 +30,16 @@ export default function AdminReportsMembership() {
                   <td className="px-5 py-4 text-sm font-semibold text-primary">{row.gymName}</td>
                   <td className="px-5 py-4 text-sm text-primary">{row.activeMembers.toLocaleString('en-IN')}</td>
                   <td className="px-5 py-4">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-success text-on-success">+{row.newMembers}</span>
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-success text-success">+{row.newMembers}</span>
                   </td>
                   <td className="px-5 py-4">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-info text-on-info">{row.renewals}</span>
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-info text-info">{row.renewals}</span>
                   </td>
                   <td className="px-5 py-4">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-danger text-on-danger">-{row.exits}</span>
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-danger text-danger">-{row.exits}</span>
                   </td>
                   <td className="px-5 py-4">
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold ${row.netGrowth >= 0 ? 'bg-success text-on-success' : 'bg-danger text-on-danger'}`}>
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold ${row.netGrowth >= 0 ? 'bg-success text-success' : 'bg-danger text-danger'}`}>
                       {row.netGrowth >= 0 ? '+' : ''}{row.netGrowth}
                     </span>
                   </td>
@@ -52,16 +52,16 @@ export default function AdminReportsMembership() {
                 <td className="px-5 py-3 text-sm font-bold text-primary">
                   {reportData.membershipGrowth.reduce((s: number, r) => s + r.activeMembers, 0).toLocaleString('en-IN')}
                 </td>
-                <td className="px-5 py-3 text-sm font-bold text-on-success">
+                <td className="px-5 py-3 text-sm font-bold text-success">
                   +{reportData.membershipGrowth.reduce((s: number, r) => s + r.newMembers, 0)}
                 </td>
                 <td className="px-5 py-3 text-sm font-bold text-info">
                   {reportData.membershipGrowth.reduce((s: number, r) => s + r.renewals, 0)}
                 </td>
-                <td className="px-5 py-3 text-sm font-bold text-on-danger">
+                <td className="px-5 py-3 text-sm font-bold text-danger">
                   -{reportData.membershipGrowth.reduce((s: number, r) => s + r.exits, 0)}
                 </td>
-                <td className="px-5 py-3 text-sm font-bold text-on-success">
+                <td className="px-5 py-3 text-sm font-bold text-success">
                   +{reportData.membershipGrowth.reduce((s: number, r) => s + r.netGrowth, 0)}
                 </td>
               </tr>

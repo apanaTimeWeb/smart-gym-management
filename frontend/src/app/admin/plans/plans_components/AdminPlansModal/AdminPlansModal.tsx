@@ -50,7 +50,7 @@ export default function AdminPlansModal() {
                 type="text"
                 placeholder="e.g. Gold Plan"
                 {...register('name')}
-                className={`w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-on-primary motion-safe:transition-colors ${
+                className={`w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary motion-safe:transition-colors ${
                   errors.name ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
                 }`}
               />
@@ -90,7 +90,7 @@ export default function AdminPlansModal() {
                   min="0"
                   onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+') e.preventDefault(); }}
                   {...register(f.key as keyof PlanFormValues)}
-                  className={`w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-on-primary motion-safe:transition-colors ${
+                  className={`w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary motion-safe:transition-colors ${
                     errors[f.key as keyof PlanFormValues] ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
                   }`}
                 />
@@ -106,7 +106,7 @@ export default function AdminPlansModal() {
               rows={5}
               placeholder={"Gym Access (6am - 10pm)\nLocker Access\nFitness Assessment"}
               {...register('features')}
-              className={`w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 resize-none bg-input text-on-primary motion-safe:transition-colors ${
+              className={`w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 resize-none bg-input text-primary motion-safe:transition-colors ${
                 errors.features ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
               }`}
             />
@@ -116,7 +116,7 @@ export default function AdminPlansModal() {
             <button
               type="button"
               onClick={() => setShowModal(false)}
-              className="flex-1 py-2.5 border border-border rounded-xl text-sm font-medium text-on-primary hover:bg-primary-subtle motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95"
+              className="flex-1 py-2.5 border border-border rounded-xl text-sm font-medium text-primary hover:bg-primary-subtle motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95"
             >
               Cancel
             </button>

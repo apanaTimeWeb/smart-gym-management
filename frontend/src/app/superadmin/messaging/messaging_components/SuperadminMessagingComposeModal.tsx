@@ -44,7 +44,7 @@ export function SuperadminMessagingComposeModal({ tenants, isSubmitting, onClose
               render={({ field }) => (
                 <div className="flex gap-2">
                   {(['EMAIL', 'SMS', 'IN_APP'] as const).map((channel) => (
-                    <button key={channel} type="button" onClick={() => field.onChange(channel)} className={`flex-1 rounded-lg border py-2 text-xs font-medium motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${field.value === channel ? 'border-primary/30 bg-primary/10 text-on-primary' : 'border-border bg-input text-secondary hover:text-on-primary'}`}>
+                    <button key={channel} type="button" onClick={() => field.onChange(channel)} className={`flex-1 rounded-lg border py-2 text-xs font-medium motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${field.value === channel ? 'border-primary/30 bg-primary/10 text-primary' : 'border-border bg-input text-secondary hover:text-primary'}`}>
                       {channel}
                     </button>
                   ))}
@@ -56,20 +56,20 @@ export function SuperadminMessagingComposeModal({ tenants, isSubmitting, onClose
 
           <div>
             <label htmlFor="superadmin-message-subject" className="mb-1 block text-xs font-medium uppercase tracking-wider text-secondary">Subject</label>
-            <input id="superadmin-message-subject" type="text" autoComplete="off" maxLength={200} {...register('subject')} placeholder="Message subject..." className="w-full rounded-lg border border-border bg-input px-3 py-2 text-sm text-on-primary focus:border-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary" />
+            <input id="superadmin-message-subject" type="text" autoComplete="off" maxLength={200} {...register('subject')} placeholder="Message subject..." className="w-full rounded-lg border border-border bg-input px-3 py-2 text-sm text-primary focus:border-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary" />
             {errors.subject && <p role="alert" className="mt-1 text-xs text-danger">{errors.subject.message}</p>}
           </div>
 
           <div>
             <label htmlFor="superadmin-message-body" className="mb-1 block text-xs font-medium uppercase tracking-wider text-secondary">Body</label>
-            <textarea id="superadmin-message-body" rows={5} maxLength={5000} {...register('body')} placeholder="Write your tenant-level message..." className="w-full resize-none rounded-lg border border-border bg-input px-3 py-2 text-sm text-on-primary focus:border-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary" />
+            <textarea id="superadmin-message-body" rows={5} maxLength={5000} {...register('body')} placeholder="Write your tenant-level message..." className="w-full resize-none rounded-lg border border-border bg-input px-3 py-2 text-sm text-primary focus:border-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary" />
             {errors.body && <p role="alert" className="mt-1 text-xs text-danger">{errors.body.message}</p>}
           </div>
 
           <p className="text-xs text-secondary">Superadmin messaging is restricted to tenant owners, admins, and managers. Gym member communication remains in Admin / Manager.</p>
 
           <div className="flex justify-end gap-3 pt-2">
-            <button type="button" onClick={onClose} disabled={isSubmitting} className="rounded-lg bg-input px-4 py-2 text-sm text-secondary motion-safe:transition-colors hover:text-on-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:opacity-50">Cancel</button>
+            <button type="button" onClick={onClose} disabled={isSubmitting} className="rounded-lg bg-input px-4 py-2 text-sm text-secondary motion-safe:transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:opacity-50">Cancel</button>
             <button type="submit" disabled={isSubmitting} className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-on-primary motion-safe:transition-colors hover:bg-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-60">
               <Send size={18} strokeWidth={2} /> {isSubmitting ? 'Sending...' : 'Send'}
             </button>

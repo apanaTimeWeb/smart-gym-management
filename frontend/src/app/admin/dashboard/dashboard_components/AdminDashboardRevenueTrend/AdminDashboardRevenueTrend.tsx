@@ -75,7 +75,7 @@ export default function AdminDashboardRevenueTrend() {
   return (
     <div className="bg-card backdrop-blur-xl border border-border rounded-2xl shadow-card p-6">
       <div className="flex items-center gap-3 mb-4">
-        <div className="p-2.5 bg-success text-on-success rounded-xl">
+        <div className="p-2.5 bg-success text-success rounded-xl">
           <BarChart3 size={18} strokeWidth={2} />
         </div>
         <div>

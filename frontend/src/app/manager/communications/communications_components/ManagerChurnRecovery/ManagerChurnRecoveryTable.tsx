@@ -62,7 +62,7 @@ export default function ManagerChurnRecoveryTable({
               className={`px-3 py-1.5 rounded-lg text-xs font-medium motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
                 churnReasonFilter === opt.value
                   ? 'bg-primary text-on-primary'
-                  : 'bg-input border border-border text-secondary hover:text-on-primary'
+                  : 'bg-input border border-border text-secondary hover:text-primary'
               }`}
             >
               {opt.label}
@@ -132,11 +132,11 @@ export default function ManagerChurnRecoveryTable({
               onClick={() => onPageChange(currentPage - 1)}
               disabled={currentPage === 1}
               aria-label="Previous page"
-              className="p-1.5 rounded-lg border border-border text-secondary hover:text-on-primary disabled:opacity-40 disabled:cursor-not-allowed motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              className="p-1.5 rounded-lg border border-border text-secondary hover:text-primary disabled:opacity-40 disabled:cursor-not-allowed motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
               <ChevronLeft size={18} />
             </button>
-            <span className="text-xs text-on-primary font-medium px-2">
+            <span className="text-xs text-primary font-medium px-2">
               {currentPage} / {totalPages}
             </span>
             <button
@@ -144,7 +144,7 @@ export default function ManagerChurnRecoveryTable({
               onClick={() => onPageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
               aria-label="Next page"
-              className="p-1.5 rounded-lg border border-border text-secondary hover:text-on-primary disabled:opacity-40 disabled:cursor-not-allowed motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              className="p-1.5 rounded-lg border border-border text-secondary hover:text-primary disabled:opacity-40 disabled:cursor-not-allowed motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
               <ChevronRight size={18} />
             </button>

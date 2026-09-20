@@ -29,7 +29,7 @@ export default function TrainerNotificationsList({
           <div className="flex min-w-0 flex-1 items-start gap-4">
             <div className={`mt-1 w-2 h-2 rounded-full flex-shrink-0 ${n.unread ? 'bg-primary' : 'bg-transparent'}`} />
             <div>
-              <p className={`text-sm md:text-base ${n.unread ? 'text-on-primary font-medium' : 'text-secondary'}`}>
+              <p className={`text-sm md:text-base ${n.unread ? 'text-primary font-medium' : 'text-secondary'}`}>
                 {n.text}
               </p>
               <span className="text-xs text-secondary mt-1 block">{n.time}</span>
@@ -41,7 +41,7 @@ export default function TrainerNotificationsList({
               onClick={() => onMarkAsRead(n.id)}
               aria-label="Mark notification as read"
               title="Mark as read"
-              className="ml-4 shrink-0 rounded-lg p-2 text-secondary hover:bg-input hover:text-on-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-safe:transition-colors motion-safe:duration-base"
+              className="ml-4 shrink-0 rounded-lg p-2 text-secondary hover:bg-input hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-safe:transition-colors motion-safe:duration-base"
             >
               <Check size={18} strokeWidth={2} aria-hidden="true" />
             </button>

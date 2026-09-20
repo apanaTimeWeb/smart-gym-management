@@ -32,7 +32,7 @@ export default function SuperadminBroadcastsTable({ broadcasts, onSend, onEdit, 
                     </div>
                   </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-primary-subtle text-on-primary border border-primary/20">
+                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-primary-subtle text-primary border border-primary/20">
                     {bc.targetGymIds && bc.targetGymIds.length > 0 ? `${bc.targetGymIds.length} Gym(s)` : 'All Gyms'}
                   </span>
                 </td>
@@ -56,10 +56,10 @@ export default function SuperadminBroadcastsTable({ broadcasts, onSend, onEdit, 
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-right">
                   <div className="flex items-center justify-end gap-2">
-                    {bc.status === 'DRAFT' && (<button onClick={(e) => { e.stopPropagation(); onSend(bc.id); }} className="p-1.5 text-secondary hover:text-on-primary hover:bg-primary-subtle rounded-lg motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out" title="Send Now" aria-label={`Send broadcast: ${bc.title}`}>
+                    {bc.status === 'DRAFT' && (<button onClick={(e) => { e.stopPropagation(); onSend(bc.id); }} className="p-1.5 text-secondary hover:text-primary hover:bg-primary-subtle rounded-lg motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out" title="Send Now" aria-label={`Send broadcast: ${bc.title}`}>
                         <Send size={18} strokeWidth={2}/>
                       </button>)}
-                    <button onClick={(e) => { e.stopPropagation(); onEdit(bc); }} className="p-1.5 text-secondary hover:text-on-primary hover:bg-primary-subtle rounded-lg motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out" title="Edit Broadcast" aria-label={`Edit broadcast: ${bc.title}`}>
+                    <button onClick={(e) => { e.stopPropagation(); onEdit(bc); }} className="p-1.5 text-secondary hover:text-primary hover:bg-primary-subtle rounded-lg motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out" title="Edit Broadcast" aria-label={`Edit broadcast: ${bc.title}`}>
                       <Edit2 size={18} strokeWidth={2}/>
                     </button>
                     <button onClick={async (e) => {
@@ -73,7 +73,7 @@ export default function SuperadminBroadcastsTable({ broadcasts, onSend, onEdit, 
                 if (ok) {
                     onDelete(bc.id);
                 }
-            }} className="p-1.5 text-secondary hover:text-on-danger hover:bg-danger-bg/10 rounded-lg motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out" title="Delete Broadcast" aria-label={`Delete broadcast: ${bc.title}`}>
+            }} className="p-1.5 text-secondary hover:text-danger hover:bg-danger-bg/10 rounded-lg motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out" title="Delete Broadcast" aria-label={`Delete broadcast: ${bc.title}`}>
                       <Trash2 size={18} strokeWidth={2}/>
                     </button>
                   </div>

@@ -23,14 +23,14 @@ export function SuperadminReportsHealthTab({ sortedHealthData }: SuperadminRepor
           </thead>
           <tbody className="divide-y divide-border">
             {sortedHealthData.map((row) => (<tr key={row.id} className="hover:bg-input/30 motion-safe:transition-colors">
-                <td className="px-4 py-3 font-medium text-on-primary">{row.gymName}</td>
+                <td className="px-4 py-3 font-medium text-primary">{row.gymName}</td>
                 <td className="px-4 py-3 text-secondary text-xs">{row.plan}</td>
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-2">
                     <div className="w-16 h-1.5 bg-input rounded-full overflow-hidden">
                       <div className={`h-full rounded-full ${row.score >= 80 ? 'bg-success' : row.score >= 60 ? 'bg-primary' : row.score >= 40 ? 'bg-warning' : 'bg-danger'}`} style={{ width: `${row.score}%` }}/>
                     </div>
-                    <span className="text-on-primary font-medium text-xs">{formatNumber(row.score)}</span>
+                    <span className="text-primary font-medium text-xs">{formatNumber(row.score)}</span>
                   </div>
                 </td>
                 <td className="px-4 py-3">

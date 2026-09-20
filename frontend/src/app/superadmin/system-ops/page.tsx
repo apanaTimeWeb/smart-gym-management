@@ -19,14 +19,14 @@ export default function SystemOpsDashboardClient() {
         <Link href={InfrastructureUrlConfig.PAGES.MAIN} className="group block h-full">
           <div className="flex h-full flex-col space-y-4 rounded-xl border border-border bg-card p-6 motion-safe:transition-all hover:border-primary hover:shadow-md">
             <div className="flex items-center gap-3">
-              <div className="rounded-lg bg-primary-subtle p-3 text-on-primary group-hover:scale-110 motion-safe:transition-transform">
+              <div className="rounded-lg bg-primary-subtle p-3 text-primary group-hover:scale-110 motion-safe:transition-transform">
                 <Server size={24} />
               </div>
               <h2 className="text-lg font-bold text-primary">Infrastructure</h2>
             </div>
             <p className="text-sm text-secondary flex-1">Monitor CPU, Memory, and Node health across all active clusters.</p>
             <div className="flex items-center justify-between border-t border-border pt-4">
-              <span className="text-xs font-semibold text-on-success bg-success-bg px-2 py-1 rounded">All Nodes Healthy</span>
+              <span className="text-xs font-semibold text-success bg-success-bg px-2 py-1 rounded">All Nodes Healthy</span>
               <span className="text-primary text-sm font-medium group-hover:underline">View &rarr;</span>
             </div>
           </div>
@@ -36,14 +36,14 @@ export default function SystemOpsDashboardClient() {
         <Link href={JobsUrlConfig.PAGES.MAIN} className="group block h-full">
           <div className="flex h-full flex-col space-y-4 rounded-xl border border-border bg-card p-6 motion-safe:transition-all hover:border-primary hover:shadow-md">
             <div className="flex items-center gap-3">
-              <div className="rounded-lg bg-warning-bg p-3 text-on-primary group-hover:scale-110 motion-safe:transition-transform">
+              <div className="rounded-lg bg-warning-bg p-3 text-warning group-hover:scale-110 motion-safe:transition-transform">
                 <Activity size={24} />
               </div>
               <h2 className="text-lg font-bold text-primary">Background Jobs</h2>
             </div>
             <p className="text-sm text-secondary flex-1">Manage Redis queue, failed jobs, and scheduled tasks.</p>
             <div className="flex items-center justify-between border-t border-border pt-4">
-              <span className="text-xs font-semibold text-on-primary bg-warning-bg px-2 py-1 rounded">3 Jobs Pending</span>
+              <span className="text-xs font-semibold text-warning bg-warning-bg px-2 py-1 rounded">3 Jobs Pending</span>
               <span className="text-primary text-sm font-medium group-hover:underline">View &rarr;</span>
             </div>
           </div>
@@ -60,7 +60,7 @@ export default function SystemOpsDashboardClient() {
             </div>
             <p className="text-sm text-secondary flex-1">Schedule and restore automated PostgreSQL backups.</p>
             <div className="flex items-center justify-between border-t border-border pt-4">
-              <span className="text-xs font-semibold text-on-success bg-success-bg px-2 py-1 rounded">Last run 2h ago</span>
+              <span className="text-xs font-semibold text-success bg-success-bg px-2 py-1 rounded">Last run 2h ago</span>
               <span className="text-primary text-sm font-medium group-hover:underline">View &rarr;</span>
             </div>
           </div>
@@ -70,7 +70,7 @@ export default function SystemOpsDashboardClient() {
         <Link href={MigrationsUrlConfig.PAGES.MAIN} className="group block h-full">
           <div className="flex h-full flex-col space-y-4 rounded-xl border border-border bg-card p-6 motion-safe:transition-all hover:border-primary hover:shadow-md">
             <div className="flex items-center gap-3">
-              <div className="rounded-lg bg-danger-bg p-3 text-on-danger group-hover:scale-110 motion-safe:transition-transform">
+              <div className="rounded-lg bg-danger-bg p-3 text-danger group-hover:scale-110 motion-safe:transition-transform">
                 <DatabaseZap size={24} />
               </div>
               <h2 className="text-lg font-bold text-primary">Schema Rollouts</h2>

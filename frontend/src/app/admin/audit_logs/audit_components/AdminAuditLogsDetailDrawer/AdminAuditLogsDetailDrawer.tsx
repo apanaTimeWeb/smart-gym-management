@@ -49,7 +49,7 @@ export default function AdminAuditLogsDetailDrawer({ log, onClose }: AdminAuditL
             <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider border ${SEVERITY_STYLES[log.severity]}`}>
               {log.severity} severity
             </span>
-            <span className="px-3 py-1 rounded-full text-xs font-semibold bg-primary-subtle text-on-primary border border-border">
+            <span className="px-3 py-1 rounded-full text-xs font-semibold bg-primary-subtle text-primary border border-border">
               {log.module}
             </span>
           </div>
@@ -60,7 +60,7 @@ export default function AdminAuditLogsDetailDrawer({ log, onClose }: AdminAuditL
               <ShieldAlert size={14} className="text-secondary" />
               <p className="text-xs text-secondary uppercase tracking-wider font-semibold">Event Details</p>
             </div>
-            <p className="text-sm text-on-primary leading-relaxed">{log.details}</p>
+            <p className="text-sm text-primary leading-relaxed">{log.details}</p>
           </div>
 
           {/* Metadata grid */}
@@ -71,7 +71,7 @@ export default function AdminAuditLogsDetailDrawer({ log, onClose }: AdminAuditL
                   <f.icon size={12} className="text-secondary" />
                   <p className="text-xs text-secondary uppercase tracking-wider font-medium">{f.label}</p>
                 </div>
-                <p className="text-sm font-semibold text-on-primary break-all">{f.value}</p>
+                <p className="text-sm font-semibold text-primary break-all">{f.value}</p>
               </div>
             ))}
           </div>
@@ -81,7 +81,7 @@ export default function AdminAuditLogsDetailDrawer({ log, onClose }: AdminAuditL
         <div className="p-5 border-t border-border flex gap-3 shrink-0">
           <button
             onClick={onClose}
-            className="flex-1 py-2.5 border border-border rounded-xl text-sm font-medium text-secondary hover:text-on-primary hover:bg-input motion-safe:transition-colors motion-safe:duration-base"
+            className="flex-1 py-2.5 border border-border rounded-xl text-sm font-medium text-secondary hover:text-primary hover:bg-input motion-safe:transition-colors motion-safe:duration-base"
           >
             Close
           </button>

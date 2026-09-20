@@ -69,7 +69,7 @@ export default function TrainerRequestLeaveModal() {
               aria-invalid={Boolean(errors.leaveType)}
               aria-describedby={errors.leaveType ? "trainer-leave-type-error" : undefined}
               {...register('leaveType')}
-              className={`w-full bg-input border rounded-xl px-4 py-3 text-sm text-on-primary focus:outline-none focus:ring-1 motion-safe:transition-all ${errors.leaveType ? 'border-danger focus:border-danger focus:ring-primary' : 'border-border focus:border-primary focus:ring-primary'}`}
+              className={`w-full bg-input border rounded-xl px-4 py-3 text-sm text-primary focus:outline-none focus:ring-1 motion-safe:transition-all ${errors.leaveType ? 'border-danger focus:border-danger focus:ring-primary' : 'border-border focus:border-primary focus:ring-primary'}`}
             >
               {LEAVE_TYPE_OPTIONS.map(opt => (
                 <option key={opt} value={opt}>{opt}</option>
@@ -79,33 +79,33 @@ export default function TrainerRequestLeaveModal() {
           </div>
 
           <div>
-            <label htmlFor="trainer-leave-start-date" className="block text-sm font-bold text-on-primary mb-1.5">Start Date</label>
+            <label htmlFor="trainer-leave-start-date" className="block text-sm font-bold text-primary mb-1.5">Start Date</label>
             <input 
               id="trainer-leave-start-date"
               type="date"
               aria-invalid={Boolean(errors.startDate)}
               aria-describedby={errors.startDate ? "trainer-leave-start-date-error" : undefined}
               {...register('startDate')}
-              className={`w-full bg-input border rounded-xl px-4 py-3 text-sm text-on-primary focus:outline-none focus:ring-1 motion-safe:transition-all ${errors.startDate ? 'border-danger focus:border-danger focus:ring-primary' : 'border-border focus:border-primary focus:ring-primary'}`}
+              className={`w-full bg-input border rounded-xl px-4 py-3 text-sm text-primary focus:outline-none focus:ring-1 motion-safe:transition-all ${errors.startDate ? 'border-danger focus:border-danger focus:ring-primary' : 'border-border focus:border-primary focus:ring-primary'}`}
             />
             {errors.startDate && <p id="trainer-leave-start-date-error" className="text-danger text-xs mt-1">{errors.startDate.message}</p>}
           </div>
           
           <div>
-            <label htmlFor="trainer-leave-end-date" className="block text-sm font-bold text-on-primary mb-1.5">End Date</label>
+            <label htmlFor="trainer-leave-end-date" className="block text-sm font-bold text-primary mb-1.5">End Date</label>
             <input 
               id="trainer-leave-end-date"
               type="date"
               aria-invalid={Boolean(errors.endDate)}
               aria-describedby={errors.endDate ? "trainer-leave-end-date-error" : undefined}
               {...register('endDate')}
-              className={`w-full bg-input border rounded-xl px-4 py-3 text-sm text-on-primary focus:outline-none focus:ring-1 motion-safe:transition-all ${errors.endDate ? 'border-danger focus:border-danger focus:ring-primary' : 'border-border focus:border-primary focus:ring-primary'}`}
+              className={`w-full bg-input border rounded-xl px-4 py-3 text-sm text-primary focus:outline-none focus:ring-1 motion-safe:transition-all ${errors.endDate ? 'border-danger focus:border-danger focus:ring-primary' : 'border-border focus:border-primary focus:ring-primary'}`}
             />
             {errors.endDate && <p id="trainer-leave-end-date-error" className="text-danger text-xs mt-1">{errors.endDate.message}</p>}
           </div>
 
           <div>
-            <label htmlFor="trainer-leave-reason" className="block text-sm font-bold text-on-primary mb-1.5">Reason for Leave</label>
+            <label htmlFor="trainer-leave-reason" className="block text-sm font-bold text-primary mb-1.5">Reason for Leave</label>
             <textarea
               id="trainer-leave-reason"
               aria-invalid={Boolean(errors.reason)}
@@ -113,7 +113,7 @@ export default function TrainerRequestLeaveModal() {
               rows={4}
               {...register('reason')}
               placeholder="E.g., Medical reasons, family function..."
-              className={`w-full bg-input border rounded-xl px-4 py-3 text-sm text-on-primary focus:outline-none focus:ring-1 motion-safe:transition-all resize-none ${errors.reason ? 'border-danger focus:border-danger focus:ring-primary' : 'border-border focus:border-primary focus:ring-primary'}`}
+              className={`w-full bg-input border rounded-xl px-4 py-3 text-sm text-primary focus:outline-none focus:ring-1 motion-safe:transition-all resize-none ${errors.reason ? 'border-danger focus:border-danger focus:ring-primary' : 'border-border focus:border-primary focus:ring-primary'}`}
             />
             {errors.reason && <p id="trainer-leave-reason-error" className="text-danger text-xs mt-1">{errors.reason.message}</p>}
           </div>

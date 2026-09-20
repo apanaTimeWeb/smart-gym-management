@@ -99,24 +99,24 @@ export default function ManagerHrPayrollTable() {
             {currentData.map(p => (
               <tr key={p.id} className="motion-safe:transition-colors hover:bg-primary/5 bg-card">
                 <td className="px-4 py-3">
-                  <p className="text-sm font-medium text-on-primary">
+                  <p className="text-sm font-medium text-primary">
                     {p.staff?.name || `Staff #${p.staffId}`}
                   </p>
                   <div className="text-xs text-secondary">
                     {p.staff?.role}
                   </div>
                 </td>
-                <td className="px-4 py-3 text-sm text-on-primary">{p.month}</td>
+                <td className="px-4 py-3 text-sm text-primary">{p.month}</td>
                 <td className="px-4 py-3 text-sm font-medium text-secondary text-right">
                   {formatCurrencyFromMinorUnits(((staff.find(s => String(s.id) === String(p.staffId))?.salary) || 0), ManagerEnvConfig.currencyCode)}
                 </td>
-                <td className="px-4 py-3 text-sm font-bold text-on-primary text-right">{formatCurrencyFromMinorUnits(p.amount || 0, ManagerEnvConfig.currencyCode)}</td>
-                <td className="px-4 py-3 text-sm font-bold text-on-primary text-right">{formatCurrencyFromMinorUnits(p.paidAmount || 0, ManagerEnvConfig.currencyCode)}</td>
+                <td className="px-4 py-3 text-sm font-bold text-primary text-right">{formatCurrencyFromMinorUnits(p.amount || 0, ManagerEnvConfig.currencyCode)}</td>
+                <td className="px-4 py-3 text-sm font-bold text-success text-right">{formatCurrencyFromMinorUnits(p.paidAmount || 0, ManagerEnvConfig.currencyCode)}</td>
                 <td className="px-4 py-3 text-sm font-bold text-danger text-right">{formatCurrencyFromMinorUnits(p.pendingAmount || 0, ManagerEnvConfig.currencyCode)}</td>
                 <td className="px-4 py-3">
                   <span 
                     className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${
-                      p.status === 'Paid' ? 'bg-success/10 text-on-primary' : 'bg-warning/10 text-on-primary'
+                      p.status === 'Paid' ? 'bg-success/10 text-success' : 'bg-warning/10 text-warning'
                     }`}
                   >
                     {p.status}
@@ -130,7 +130,7 @@ export default function ManagerHrPayrollTable() {
                     {/* Download Payslip — CRITICAL FIX */}
                     <button
                       onClick={() => downloadPayslip(p.id)}
-                      className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium border border-border rounded-lg hover:bg-primary-subtle text-secondary hover:text-on-primary motion-safe:transition-colors"
+                      className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium border border-border rounded-lg hover:bg-primary-subtle text-secondary hover:text-primary motion-safe:transition-colors"
                       title="Download Payslip"
                       aria-label={`Download payslip for ${p.staff?.name ?? p.staffId}`}
                     >
@@ -139,7 +139,7 @@ export default function ManagerHrPayrollTable() {
                     {p.status !== 'Paid' && (
                       <button
                         onClick={() => setPaymentModal({ payrollId: p.id, staffName: p.staff?.name || `Staff #${p.staffId}`, pendingAmount: p.pendingAmount || p.amount })}
-                        className="flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold text-on-primary bg-primary rounded-lg hover:bg-primary/90 motion-safe:transition-colors"
+                        className="flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold text-on-success bg-primary rounded-lg hover:bg-primary/90 motion-safe:transition-colors"
                       >
                         <Banknote size={18} /> Pay Salary
                       </button>

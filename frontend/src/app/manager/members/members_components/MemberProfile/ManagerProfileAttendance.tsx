@@ -34,7 +34,7 @@ export default function ManagerProfileAttendance() {
         <p className="text-sm font-medium text-secondary">
           Current Month Attendance
         </p>
-        <span className="text-sm font-bold text-on-success bg-primary-subtle px-3 py-1 rounded-full">
+        <span className="text-sm font-bold text-primary bg-primary-subtle px-3 py-1 rounded-full">
           {formatMemberMonthYear(new Date())}
         </span>
       </div>

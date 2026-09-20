@@ -38,7 +38,7 @@ export default function ManagerChurnRecoveryTab() {
             Target exited members with personalised win-back campaigns to re-engage them.
           </p>
         </div>
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-danger border border-danger/30 text-on-danger text-xs font-medium">
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-danger border border-danger/30 text-danger text-xs font-medium">
           {filteredMembers.length} churned member{filteredMembers.length !== 1 ? 's' : ''} found
         </div>
       </div>

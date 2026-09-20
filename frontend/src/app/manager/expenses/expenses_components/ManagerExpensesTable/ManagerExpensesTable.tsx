@@ -76,7 +76,7 @@ export default function ManagerExpensesTable() {
                                   confirmText: 'Mark Paid' });
                                 if (ok && markAsPaid) markAsPaid(e.id);
                               }}
-                              className="p-1.5 rounded-lg bg-success/10 text-on-success hover:bg-success/20 motion-safe:transition-all motion-safe:duration-200"
+                              className="p-1.5 rounded-lg bg-success/10 text-success hover:bg-success/20 motion-safe:transition-all motion-safe:duration-200"
                               title="Mark as Paid"
                             >
                               <CheckCircle2 size={18} />
@@ -96,7 +96,7 @@ export default function ManagerExpensesTable() {
                               confirmText: 'Delete'
                             });
                             if (ok) deleteExpense(e.id); 
-                          }} className="p-1.5 rounded-lg bg-danger text-on-danger hover:opacity-80 motion-safe:transition-all motion-safe:duration-200" title="Delete"><Trash2 size={18} /></button>
+                          }} className="p-1.5 rounded-lg bg-danger text-danger hover:opacity-80 motion-safe:transition-all motion-safe:duration-200" title="Delete"><Trash2 size={18} /></button>
                         </div>
                       </td>
                     </tr>

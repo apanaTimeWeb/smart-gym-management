@@ -59,7 +59,7 @@ export default function ManagerPtAssignmentsTable({ assignments, totalAssignment
                             style={{ width: `${pct}%` }}
                           />
                         </div>
-                        <span className="text-xs font-bold text-on-success whitespace-nowrap w-10 text-right">
+                        <span className="text-xs font-bold text-primary whitespace-nowrap w-10 text-right">
                           {a.completedSessions}/{a.totalSessions}
                         </span>
                       </div>
@@ -68,7 +68,7 @@ export default function ManagerPtAssignmentsTable({ assignments, totalAssignment
                       <button
                         onClick={() => onMarkSession(a.id)}
                         disabled={isMarking || isDone}
-                        className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-input hover:bg-primary/10 hover:text-on-success hover:border-primary border border-transparent text-on-success rounded-lg motion-safe:transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                        className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-input hover:bg-primary/10 hover:text-primary hover:border-primary border border-transparent text-primary rounded-lg motion-safe:transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                       >
                         {isMarking && <Loader2 size={18} className="motion-safe:animate-spin" />}
                         {isDone ? 'Completed' : 'Mark Session'}

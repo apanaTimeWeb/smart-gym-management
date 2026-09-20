@@ -20,7 +20,7 @@ export default function ManagerAttendanceModal() {
             type="button"
             aria-label="Close attendance form"
             onClick={handleClose} 
-            className="min-h-11 min-w-11 flex items-center justify-center text-secondary hover:text-on-primary hover:bg-primary/10 p-1 rounded-md motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            className="min-h-11 min-w-11 flex items-center justify-center text-secondary hover:text-primary hover:bg-primary/10 p-1 rounded-md motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
             <X size={18} />
           </button>
@@ -108,7 +108,7 @@ export default function ManagerAttendanceModal() {
                 {...register('date')}
                 className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus-visible:ring-2 ${
                   errors.date ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
-                } bg-input text-on-primary ${watchStatus !== 'LEAVE' ? 'opacity-80 cursor-not-allowed' : ''}`} 
+                } bg-input text-primary ${watchStatus !== 'LEAVE' ? 'opacity-80 cursor-not-allowed' : ''}`} 
               />
               {errors.date && <p className="text-danger text-xs mt-1">{errors.date.message}</p>}
             </div>
@@ -120,7 +120,7 @@ export default function ManagerAttendanceModal() {
                   {...register('endDate')}
                   className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus-visible:ring-2 ${
                     errors.endDate ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
-                  } bg-input text-on-primary`} 
+                  } bg-input text-primary`} 
                 />
                 {errors.endDate && <p className="text-danger text-xs mt-1">{errors.endDate.message}</p>}
               </div>
@@ -133,7 +133,7 @@ export default function ManagerAttendanceModal() {
                   {...register('checkIn')}
                   className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus-visible:ring-2 ${
                     errors.checkIn ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
-                  } bg-input text-on-primary`} 
+                  } bg-input text-primary`} 
                 />
                 {errors.checkIn && <p className="text-danger text-xs mt-1">{errors.checkIn.message}</p>}
               </div>
@@ -144,7 +144,7 @@ export default function ManagerAttendanceModal() {
             <button 
               type="button" 
               onClick={handleClose} 
-              className="px-4 py-2 border border-border rounded-lg font-medium text-secondary hover:text-on-primary hover:bg-primary/10 motion-safe:transition-colors"
+              className="px-4 py-2 border border-border rounded-lg font-medium text-secondary hover:text-primary hover:bg-primary/10 motion-safe:transition-colors"
             >
               Cancel
             </button>

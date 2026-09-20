@@ -21,7 +21,7 @@ export default function AdminUsageMetricCard({ metric, onUpgrade }: AdminUsageMe
   return (
     <div className={`bg-card rounded-xl border p-5 space-y-3 hover:border-primary motion-safe:transition-all motion-safe:duration-base ${borderColor}`}>
       <div className="flex items-center justify-between">
-        <p className="text-sm font-semibold text-on-primary">{metric.label}</p>
+        <p className="text-sm font-semibold text-primary">{metric.label}</p>
         <span className={`text-xs font-bold ${textColor}`}>{pct}%</span>
       </div>
       <div className="w-full h-2 bg-input rounded-full overflow-hidden">
@@ -35,16 +35,16 @@ export default function AdminUsageMetricCard({ metric, onUpgrade }: AdminUsageMe
           {metric.used.toLocaleString('en-IN')} / {metric.limit.toLocaleString('en-IN')} {metric.unit}
         </span>
         {isCritical && (
-          <span className="text-xs font-bold text-on-primary bg-danger px-2 py-0.5 rounded-full">At Limit</span>
+          <span className="text-xs font-bold text-danger bg-danger px-2 py-0.5 rounded-full">At Limit</span>
         )}
         {isWarning && !isCritical && (
-          <span className="text-xs font-bold text-on-primary bg-warning px-2 py-0.5 rounded-full">Near Limit</span>
+          <span className="text-xs font-bold text-warning bg-warning px-2 py-0.5 rounded-full">Near Limit</span>
         )}
       </div>
       {showUpgradeCta && (
         <button
           onClick={onUpgrade}
-          className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-primary-subtle hover:bg-primary-subtle text-on-primary text-xs font-semibold motion-safe:transition-colors border border-border motion-safe:duration-base"
+          className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-primary-subtle hover:bg-primary-subtle text-primary text-xs font-semibold motion-safe:transition-colors border border-border motion-safe:duration-base"
           aria-label={`Upgrade plan to increase ${metric.label} limit`}
         >
           <ArrowUpCircle size={13} />

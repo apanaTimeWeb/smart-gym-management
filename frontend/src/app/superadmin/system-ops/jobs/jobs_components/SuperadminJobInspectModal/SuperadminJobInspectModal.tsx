@@ -67,10 +67,10 @@ export default function SuperadminJobInspectModal({ job, onClose }: SuperadminJo
 
           {/* Error Trace */}
           {job.error && (<div>
-              <h3 className="text-xs font-semibold text-on-danger mb-3 uppercase tracking-wider flex items-center gap-1">
+              <h3 className="text-xs font-semibold text-danger mb-3 uppercase tracking-wider flex items-center gap-1">
                 <AlertTriangle className="w-3.5 h-3.5"/> Error Trace
               </h3>
-              <div className="bg-danger-bg/10 border border-danger/20 text-on-danger p-4 rounded-lg text-sm font-mono overflow-x-auto whitespace-pre-wrap">
+              <div className="bg-danger-bg/10 border border-danger/20 text-danger p-4 rounded-lg text-sm font-mono overflow-x-auto whitespace-pre-wrap">
                 {job.error}
               </div>
             </div>)}

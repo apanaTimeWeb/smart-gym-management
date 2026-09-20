@@ -97,7 +97,7 @@ export function SuperadminDashboardCharts({ metrics, revenueChartData, growthCha
       <div className="lg:col-span-2 bg-card border border-border rounded-xl p-6 shadow-card">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-base font-semibold text-primary">{mrrLabel} Growth</h2>
-          {metrics.arrDeltaPercent !== undefined && (<span className={`text-xs font-medium px-2.5 py-1 rounded-full ${metrics.arrDeltaPercent >= 0 ? 'bg-success-bg text-on-success border border-success/20' : 'bg-danger-bg text-on-danger border border-danger/20'}`}>
+          {metrics.arrDeltaPercent !== undefined && (<span className={`text-xs font-medium px-2.5 py-1 rounded-full ${metrics.arrDeltaPercent >= 0 ? 'bg-success-bg text-success border border-success/20' : 'bg-danger-bg text-danger border border-danger/20'}`}>
               ARR Trend: {metrics.arrDeltaPercent > 0 ? '+' : ''}{metrics.arrDeltaPercent}%
             </span>)}
         </div>

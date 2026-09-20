@@ -36,7 +36,7 @@ export default function AdminNotificationsList({ notifications, onMarkAsRead }: 
           <div className="flex items-start gap-4 pr-4">
             <div className={`mt-1 w-2 h-2 rounded-full flex-shrink-0 ${n.unread ? 'bg-primary' : 'bg-transparent'}`} />
             <div>
-              <p className={`text-sm md:text-base ${n.unread ? 'text-on-primary font-medium' : 'text-secondary'}`}>
+              <p className={`text-sm md:text-base ${n.unread ? 'text-primary font-medium' : 'text-secondary'}`}>
                 {n.text}
               </p>
               <span className="text-xs text-secondary mt-1 block">{n.time}</span>

@@ -68,7 +68,7 @@ export default function ManagerSalesAllMemberships() {
             className={`px-3 py-1.5 text-xs rounded-full font-medium border motion-safe:transition-colors ${
               f === filter
                 ? 'bg-primary text-white border-transparent'
-                : 'border-border text-secondary hover:text-on-success'
+                : 'border-border text-secondary hover:text-primary'
             }`}
           >
             {f}
@@ -90,20 +90,20 @@ export default function ManagerSalesAllMemberships() {
           <tbody className="divide-y divide-border">
             {filteredMemberships.map((r: SalesMemberSnapshot) => (
               <tr key={r.id} className="hover:bg-primary-subtle motion-safe:transition-colors">
-                <td className="px-4 py-3 text-sm font-medium text-on-success">{r.name}</td>
+                <td className="px-4 py-3 text-sm font-medium text-primary">{r.name}</td>
                 <td className="px-4 py-3 text-sm text-secondary">{r.plan?.name ?? `Plan #${r.planId}`}</td>
                 <td className="px-4 py-3 text-sm text-secondary">{formatDate(r.joinDate)}</td>
                 <td className="px-4 py-3 text-sm text-secondary">{formatDate(r.expiryDate)}</td>
                 <td className="px-4 py-3">
                   <span className={`text-xs px-2.5 py-0.5 rounded-full font-semibold ${
                     r.status === 'ACTIVE'
-                      ? 'bg-success text-on-success'
-                      : 'bg-danger text-on-danger'
+                      ? 'bg-success text-success'
+                      : 'bg-danger text-danger'
                   }`}>
                     {r.status}
                   </span>
                 </td>
-                <td className="px-4 py-3 text-sm font-medium text-on-success">{formatCurrencyFromMinorUnits(r.paidAmount || 0, ManagerEnvConfig.currencyCode)}</td>
+                <td className="px-4 py-3 text-sm font-medium text-primary">{formatCurrencyFromMinorUnits(r.paidAmount || 0, ManagerEnvConfig.currencyCode)}</td>
                 <td className={`px-4 py-3 text-sm font-medium ${getDaysLeftColorClass(
                   Math.max(0, Math.floor((new Date(r.expiryDate).getTime() - now) / 86400000))
                 )}`}>

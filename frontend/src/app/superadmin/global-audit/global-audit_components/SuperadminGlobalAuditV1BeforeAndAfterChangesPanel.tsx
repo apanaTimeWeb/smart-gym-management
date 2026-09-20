@@ -20,7 +20,7 @@ export default function SuperadminGlobalAuditV1BeforeAndAfterChangesPanel({ data
             {formatDateTime(c.time)}
           </p>
         </div>
-        <span className={c.risk === 'HIGH' ? 'rounded-full bg-danger-bg px-2 py-1 text-xs font-semibold text-on-primary' : c.risk === 'MEDIUM' ? 'rounded-full bg-warning-bg px-2 py-1 text-xs font-semibold text-on-primary' : 'rounded-full bg-info-bg px-2 py-1 text-xs font-semibold text-on-info'}>
+        <span className={c.risk === 'HIGH' ? 'rounded-full bg-danger-bg px-2 py-1 text-xs font-semibold text-danger' : c.risk === 'MEDIUM' ? 'rounded-full bg-warning-bg px-2 py-1 text-xs font-semibold text-warning' : 'rounded-full bg-info-bg px-2 py-1 text-xs font-semibold text-info'}>
           {c.risk}
         </span>
       </div>
@@ -29,15 +29,15 @@ export default function SuperadminGlobalAuditV1BeforeAndAfterChangesPanel({ data
           <p className="text-xs uppercase text-secondary">
             Before
           </p>
-          <p className="mt-1 truncate text-sm text-on-primary">
+          <p className="mt-1 truncate text-sm text-primary">
             {c.before}
           </p>
         </div>
         <div className="rounded-lg bg-primary-subtle p-3">
-          <p className="text-xs uppercase text-on-primary">
+          <p className="text-xs uppercase text-primary">
             After
           </p>
-          <p className="mt-1 truncate text-sm text-on-primary">
+          <p className="mt-1 truncate text-sm text-primary">
             {c.after}
           </p>
         </div>

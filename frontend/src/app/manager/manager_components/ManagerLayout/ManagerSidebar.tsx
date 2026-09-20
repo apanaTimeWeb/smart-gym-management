@@ -115,7 +115,7 @@ export default function ManagerSidebar({ isCollapsed, setIsCollapsed }: ManagerS
             <Image src="/logo.png" alt="GymSmart MANAGER" width={44} height={44} className="object-contain min-w-11 rounded-lg" />
             {(!isCollapsed || isMobileOpen) && (
               <div className="whitespace-nowrap motion-safe:transition-opacity motion-safe:duration-300 flex flex-col">
-                <span className="text-on-primary font-bold text-lg leading-tight tracking-tight">GymSmart</span>
+                <span className="text-primary font-bold text-lg leading-tight tracking-tight">GymSmart</span>
                 <span className="text-xs text-warning font-bold uppercase tracking-wider -mt-0.5">MANAGER Portal</span>
               </div>
             )}
@@ -135,7 +135,7 @@ export default function ManagerSidebar({ isCollapsed, setIsCollapsed }: ManagerS
                 placeholder="Search menu..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="block w-full pl-9 pr-3 py-2 border border-border rounded-lg leading-5 bg-input text-on-primary placeholder-secondary focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm motion-safe:transition-colors"
+                className="block w-full pl-9 pr-3 py-2 border border-border rounded-lg leading-5 bg-input text-primary placeholder-secondary focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm motion-safe:transition-colors"
               />
             </div>
           </div>
@@ -146,7 +146,7 @@ export default function ManagerSidebar({ isCollapsed, setIsCollapsed }: ManagerS
             <button
               onClick={() => setIsCollapsed(false)}
               aria-label="Search menu"
-              className="p-2 rounded-lg text-secondary hover:text-on-primary hover:bg-input motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              className="p-2 rounded-lg text-secondary hover:text-primary hover:bg-input motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
               <Search size={18} />
             </button>
@@ -182,11 +182,11 @@ export default function ManagerSidebar({ isCollapsed, setIsCollapsed }: ManagerS
                           !showLabel ? 'justify-center px-0' : 'px-3.5'
                         } ${
                           active
-                            ? 'bg-primary-subtle text-on-primary border-l-2 border-primary shadow-card'
-                            : 'text-secondary hover:text-on-primary hover:bg-primary-subtle border-l-2 border-transparent'
+                            ? 'bg-primary-subtle text-primary border-l-2 border-primary shadow-card'
+                            : 'text-secondary hover:text-primary hover:bg-primary-subtle border-l-2 border-transparent'
                         }`}
                       >
-                        <Icon size={18} className={active ? 'text-on-primary' : 'text-secondary group-hover:text-on-primary motion-safe:transition-colors'} />
+                        <Icon size={18} className={active ? 'text-primary' : 'text-secondary group-hover:text-primary motion-safe:transition-colors'} />
                         {showLabel && <span className="text-sm whitespace-nowrap">{item.label}</span>}
                       </Link>
                     );
@@ -204,7 +204,7 @@ export default function ManagerSidebar({ isCollapsed, setIsCollapsed }: ManagerS
           </div>
           {(!isCollapsed || isMobileOpen) && (
             <div className="whitespace-nowrap overflow-hidden flex-1">
-              <div className="text-on-primary text-sm font-bold truncate">{mounted ? (user?.name || 'Manager User') : 'Manager User'}</div>
+              <div className="text-primary text-sm font-bold truncate">{mounted ? (user?.name || 'Manager User') : 'Manager User'}</div>
               <div className="text-secondary text-xs truncate">{mounted ? (user?.role || 'Gym Manager') : 'Gym Manager'}</div>
             </div>
           )}

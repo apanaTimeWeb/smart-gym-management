@@ -124,7 +124,7 @@ export default function AdminAnnouncementsModal() {
                           className={`px-3 py-1.5 rounded-lg text-xs font-semibold border motion-safe:transition-colors ${
                             selected
                               ? 'bg-primary text-on-primary border-primary'
-                              : 'bg-input text-secondary border-border hover:border-primary hover:text-on-primary'
+                              : 'bg-input text-secondary border-border hover:border-primary hover:text-primary'
                           }`}
                         >
                           {o.label}
@@ -155,7 +155,7 @@ export default function AdminAnnouncementsModal() {
                           className={`px-3 py-1.5 rounded-lg text-xs font-semibold border motion-safe:transition-colors ${
                             selected
                               ? 'bg-primary text-on-primary border-primary'
-                              : 'bg-input text-secondary border-border hover:border-primary hover:text-on-primary'
+                              : 'bg-input text-secondary border-border hover:border-primary hover:text-primary'
                           }`}
                         >
                           {o.label}
@@ -175,7 +175,7 @@ export default function AdminAnnouncementsModal() {
                 <input
                   type="datetime-local"
                   {...register('publishedAt')}
-                  className="w-full px-4 py-2.5 bg-input border border-border rounded-xl text-sm text-on-primary focus:outline-none focus:border-primary"
+                  className="w-full px-4 py-2.5 bg-input border border-border rounded-xl text-sm text-primary focus:outline-none focus:border-primary"
                 />
                 {errors.publishedAt && <p className="text-xs text-danger mt-1">{errors.publishedAt.message}</p>}
               </div>
@@ -184,7 +184,7 @@ export default function AdminAnnouncementsModal() {
                 <input
                   type="datetime-local"
                   {...register('expiresAt')}
-                  className="w-full px-4 py-2.5 bg-input border border-border rounded-xl text-sm text-on-primary focus:outline-none focus:border-primary"
+                  className="w-full px-4 py-2.5 bg-input border border-border rounded-xl text-sm text-primary focus:outline-none focus:border-primary"
                 />
                 {errors.expiresAt && <p className="text-xs text-danger mt-1">{errors.expiresAt.message}</p>}
               </div>
@@ -195,7 +195,7 @@ export default function AdminAnnouncementsModal() {
               <button
                 type="button"
                 onClick={() => setShowModal(false)}
-                className="flex-1 py-2.5 border border-border rounded-xl text-sm font-medium text-secondary hover:text-on-primary hover:bg-input motion-safe:transition-colors motion-safe:duration-base"
+                className="flex-1 py-2.5 border border-border rounded-xl text-sm font-medium text-secondary hover:text-primary hover:bg-input motion-safe:transition-colors motion-safe:duration-base"
               >
                 Cancel
               </button>

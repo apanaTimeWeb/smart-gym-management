@@ -14,11 +14,11 @@ export default function SuperadminWhiteLabelingTable({ domains }: SuperadminWhit
     switch (status) {
       case 'active':
       case 'issued':
-        return <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-success-bg text-on-success"><BadgeCheck className="w-3.5 h-3.5" /> {status.charAt(0).toUpperCase() + status.slice(1)}</span>;
+        return <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-success-bg text-success"><BadgeCheck className="w-3.5 h-3.5" /> {status.charAt(0).toUpperCase() + status.slice(1)}</span>;
       case 'pending':
-        return <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-warning-bg text-on-primary"><Clock className="w-3.5 h-3.5" /> Pending</span>;
+        return <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-warning-bg text-warning"><Clock className="w-3.5 h-3.5" /> Pending</span>;
       case 'failed':
-        return <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-danger-bg text-on-danger"><XCircle className="w-3.5 h-3.5" /> Failed</span>;
+        return <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-danger-bg text-danger"><XCircle className="w-3.5 h-3.5" /> Failed</span>;
     }
   };
 

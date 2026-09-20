@@ -26,7 +26,7 @@ export default function AdminBlacklistTabs() {
             {tab.value === 'cross-branch' && <Globe size={14} />}
             {tab.label}
             {badge !== null && badge > 0 && (
-              <span className={`px-1.5 py-0.5 rounded-full text-xs font-semibold ${isActive ? 'bg-warning text-on-primary' : 'bg-input text-secondary'}`}>
+              <span className={`px-1.5 py-0.5 rounded-full text-xs font-semibold ${isActive ? 'bg-warning text-warning' : 'bg-input text-secondary'}`}>
                 {badge}
               </span>
             )}

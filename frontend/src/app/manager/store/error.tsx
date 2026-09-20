@@ -23,7 +23,7 @@ export default function ManagerStoreError({
   return (
     <div className="min-h-full flex items-center justify-center p-6 bg-page">
       <div className="bg-overlay border border-danger/20 p-8 rounded-2xl shadow-dialog max-w-md w-full text-center space-y-4">
-        <div className="w-14 h-14 bg-danger/10 rounded-full flex items-center justify-center mx-auto text-on-danger">
+        <div className="w-14 h-14 bg-danger/10 rounded-full flex items-center justify-center mx-auto text-danger">
           <AlertTriangle size={18} />
         </div>
         <h2 className="text-xl font-bold text-primary">Store Unavailable</h2>

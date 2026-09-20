@@ -116,19 +116,19 @@ export default function ManagerInquiriesTable() {
                       type="checkbox"
                       checked={selected}
                       onChange={() => toggleSelectOne(inq.id)}
-                      className="w-4 h-4 rounded border-border text-on-primary focus-visible:ring-2 focus-visible:ring-primary cursor-pointer"
+                      className="w-4 h-4 rounded border-border text-primary focus-visible:ring-2 focus-visible:ring-primary cursor-pointer"
                     />
                   </td>
                   <td className="px-5 py-3.5">
                     <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm bg-warning text-on-primary">
+                      <div className="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm bg-warning text-warning">
                         {displayValue(inq.name).charAt(0)}
                       </div>
-                      <p className="text-sm font-semibold text-on-primary">{displayValue(inq.name)}</p>
+                      <p className="text-sm font-semibold text-primary">{displayValue(inq.name)}</p>
                     </div>
                   </td>
                   <td className="px-5 py-3.5">
-                    <p className="text-sm text-on-primary">{displayValue(inq.phone)}</p>
+                    <p className="text-sm text-primary">{displayValue(inq.phone)}</p>
                     <p className="text-xs text-secondary">{displayValue(inq.email)}</p>
                   </td>
                   <td className="px-5 py-3.5 text-sm text-secondary">{displayValue(inq.source)}</td>
@@ -148,7 +148,7 @@ export default function ManagerInquiriesTable() {
                     <div className="flex items-center gap-2">
                       <button
                         onClick={(e) => { e.stopPropagation(); openMsg(inq, 'whatsapp'); }}
-                        className="p-1.5 rounded-lg bg-success text-on-primary hover:opacity-80 motion-safe:transition-all motion-safe:duration-200"
+                        className="p-1.5 rounded-lg bg-success text-on-success hover:opacity-80 motion-safe:transition-all motion-safe:duration-200"
                         title="WhatsApp"
                         aria-label={`Message ${inq.name} on WhatsApp`}
                       >
@@ -164,7 +164,7 @@ export default function ManagerInquiriesTable() {
                       </button>
                       <button
                         onClick={(e) => { e.stopPropagation(); updateStatus(inq.id, 'CONVERTED'); }}
-                        className="p-1.5 rounded-lg bg-primary-subtle text-on-primary hover:opacity-80 motion-safe:transition-all motion-safe:duration-200"
+                        className="p-1.5 rounded-lg bg-primary-subtle text-primary hover:opacity-80 motion-safe:transition-all motion-safe:duration-200"
                         title="Convert to Member"
                         aria-label={`Convert ${inq.name} to Member`}
                       >
@@ -191,7 +191,7 @@ export default function ManagerInquiriesTable() {
                             deleteInquiry(inq.id);
                           }
                         }}
-                        className="p-1.5 rounded-lg bg-danger text-on-primary hover:opacity-80 motion-safe:transition-all motion-safe:duration-200"
+                        className="p-1.5 rounded-lg bg-danger text-danger hover:opacity-80 motion-safe:transition-all motion-safe:duration-200"
                         title="Delete"
                         aria-label={`Delete ${inq.name}`}
                       >

@@ -47,7 +47,7 @@ export const SuperadminCouponModal: React.FC<SuperadminCouponModalProps> = ({ is
               <div className="relative">
                 {form.watch('discountType') === 'EXACT' && (<span className="absolute left-4 top-1/2 -translate-y-1/2 text-secondary text-sm font-semibold">Rs</span>)}
                 <input type="number" onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+')
-        e.preventDefault(); }} min="1" {...form.register('discountValue', { valueAsNumber: true })} className={`w-full ${form.watch('discountType') === 'EXACT' ? 'pl-9 pr-4' : 'px-4'} py-2.5 bg-input border border-border rounded-lg text-sm text-on-primary focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page focus:border-primary motion-safe:transition-colors`} placeholder={form.watch('discountType') === 'PERCENTAGE' ? '25' : '500'}/>
+        e.preventDefault(); }} min="1" {...form.register('discountValue', { valueAsNumber: true })} className={`w-full ${form.watch('discountType') === 'EXACT' ? 'pl-9 pr-4' : 'px-4'} py-2.5 bg-input border border-border rounded-lg text-sm text-primary focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page focus:border-primary motion-safe:transition-colors`} placeholder={form.watch('discountType') === 'PERCENTAGE' ? '25' : '500'}/>
               </div>
               {form.formState.errors.discountValue && <span className="text-xs text-danger">{form.formState.errors.discountValue.message}</span>}
             </div>
@@ -57,19 +57,19 @@ export const SuperadminCouponModal: React.FC<SuperadminCouponModalProps> = ({ is
             <div className="flex flex-col gap-1.5">
               <label className="text-sm font-bold text-secondary">Max Uses <span className="text-danger">*</span></label>
               <input type="number" onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+')
-        e.preventDefault(); }} min="1" {...form.register('maxUses', { valueAsNumber: true })} className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-on-primary focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page focus:border-primary motion-safe:transition-colors" placeholder="100"/>
+        e.preventDefault(); }} min="1" {...form.register('maxUses', { valueAsNumber: true })} className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-primary focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page focus:border-primary motion-safe:transition-colors" placeholder="100"/>
               {form.formState.errors.maxUses && <span className="text-xs text-danger">{form.formState.errors.maxUses.message}</span>}
             </div>
             
             <div className="flex flex-col gap-1.5">
               <label className="text-sm font-bold text-secondary">Expiry Date <span className="text-danger">*</span></label>
-              <input type="date" min={todayIsoDate} {...form.register('expiryDate')} className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-on-primary focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page focus:border-primary motion-safe:transition-colors"/>
+              <input type="date" min={todayIsoDate} {...form.register('expiryDate')} className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-primary focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page focus:border-primary motion-safe:transition-colors"/>
               {form.formState.errors.expiryDate && <span className="text-xs text-danger">{form.formState.errors.expiryDate.message}</span>}
             </div>
           </div>
 
           <div className="flex justify-end gap-3 mt-2 pt-5 border-t border-border">
-            <button type="button" onClick={onClose} className="px-5 py-2.5 bg-transparent border border-border hover:bg-border text-on-primary font-medium rounded-lg motion-safe:transition-colors text-sm">
+            <button type="button" onClick={onClose} className="px-5 py-2.5 bg-transparent border border-border hover:bg-border text-primary font-medium rounded-lg motion-safe:transition-colors text-sm">
               Cancel
             </button>
             <button type="submit" className="px-5 py-2.5 bg-primary hover:bg-primary-hover text-on-primary font-medium rounded-lg motion-safe:transition-colors text-sm">

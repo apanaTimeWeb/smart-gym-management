@@ -81,7 +81,7 @@ export default function AdminSidebar({ isCollapsed, setIsCollapsed }: AdminSideb
             <Image src="/logo.png" alt="GymSmart ADMIN" width={44} height={44} className="object-contain min-w-11 rounded-lg" />
             {(!isCollapsed || isMobileOpen) && (
               <div className="whitespace-nowrap motion-safe:transition-opacity motion-safe:duration-slow flex flex-col">
-                <span className="text-on-primary font-bold text-lg leading-tight tracking-tight">GymSmart</span>
+                <span className="text-primary font-bold text-lg leading-tight tracking-tight">GymSmart</span>
                 <span className="text-xs text-warning font-bold uppercase tracking-wider -mt-0.5">ADMIN System</span>
               </div>
             )}
@@ -100,7 +100,7 @@ export default function AdminSidebar({ isCollapsed, setIsCollapsed }: AdminSideb
                 placeholder="Search menu..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="block w-full pl-9 pr-3 py-2 min-h-11 border border-border rounded-lg leading-5 bg-input text-on-primary placeholder-secondary focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm motion-safe:transition-colors motion-safe:duration-base"
+                className="block w-full pl-9 pr-3 py-2 min-h-11 border border-border rounded-lg leading-5 bg-input text-primary placeholder-secondary focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm motion-safe:transition-colors motion-safe:duration-base"
               />
             </div>
           </div>
@@ -111,7 +111,7 @@ export default function AdminSidebar({ isCollapsed, setIsCollapsed }: AdminSideb
             <button
               onClick={() => setIsCollapsed(false)}
               aria-label="Search menu"
-              className="p-2 rounded-lg text-secondary hover:text-on-primary hover:bg-input motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-safe:duration-base"
+              className="p-2 rounded-lg text-secondary hover:text-primary hover:bg-input motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-safe:duration-base"
             >
               <Search size={18} />
             </button>
@@ -147,12 +147,12 @@ export default function AdminSidebar({ isCollapsed, setIsCollapsed }: AdminSideb
                           !showLabel ? 'justify-center px-0' : 'px-3.5'
                         } ${
                           active
-                            ? 'bg-primary-subtle text-on-primary border-l-2 border-primary'
-                            : 'text-secondary hover:text-on-primary hover:bg-primary-subtle border-l-2 border-transparent'
+                            ? 'bg-primary-subtle text-primary border-l-2 border-primary'
+                            : 'text-secondary hover:text-primary hover:bg-primary-subtle border-l-2 border-transparent'
                         }`}
                         
                       >
-                        <Icon size={22} className={active ? 'text-on-primary' : 'text-secondary group-hover:text-on-primary motion-safe:transition-colors'} />
+                        <Icon size={22} className={active ? 'text-primary' : 'text-secondary group-hover:text-primary motion-safe:transition-colors'} />
                         {showLabel && <span className="text-sm whitespace-nowrap">{item.label}</span>}
                       </Link>
                     );
@@ -165,12 +165,12 @@ export default function AdminSidebar({ isCollapsed, setIsCollapsed }: AdminSideb
 
         {/* User */}
         <div className={`px-4 py-4 border-t border-border bg-header shrink-0 flex items-center ${(!isCollapsed || isMobileOpen) ? 'gap-3' : 'justify-center'}`}>
-          <div className="w-10 h-10 min-w-10 rounded-full flex items-center justify-center text-on-primary text-sm font-bold border border-border bg-primary">
+          <div className="w-10 h-10 min-w-10 rounded-full flex items-center justify-center text-primary text-sm font-bold border border-border bg-primary">
             {mounted ? (user?.name?.charAt(0)?.toUpperCase() || 'A') : 'A'}
           </div>
           {(!isCollapsed || isMobileOpen) && (
             <div className="whitespace-nowrap overflow-hidden flex-1">
-              <div className="text-on-primary text-sm font-bold truncate">{mounted ? (user?.name || 'Admin User') : 'Admin User'}</div>
+              <div className="text-primary text-sm font-bold truncate">{mounted ? (user?.name || 'Admin User') : 'Admin User'}</div>
               <div className="text-secondary text-xs truncate">{mounted ? (user?.role || 'Super Admin') : 'Super Admin'}</div>
             </div>
           )}

@@ -37,7 +37,7 @@ export default function ManagerExpensesToolbar() {
       <div className="flex w-full sm:w-auto items-center gap-2">
         <button
           onClick={() => exportExpenses && exportExpenses()}
-          className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-input border border-border text-secondary px-5 py-2.5 rounded-lg text-sm font-semibold hover:bg-primary-subtle hover:text-on-primary motion-safe:transition-all motion-safe:duration-200"
+          className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-input border border-border text-secondary px-5 py-2.5 rounded-lg text-sm font-semibold hover:bg-primary-subtle hover:text-primary motion-safe:transition-all motion-safe:duration-200"
         >
           <Download size={18} />
           Export

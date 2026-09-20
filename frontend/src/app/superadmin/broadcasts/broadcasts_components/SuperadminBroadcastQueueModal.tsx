@@ -100,24 +100,24 @@ export default function SuperadminBroadcastQueueModal({ isOpen, onClose, recipie
             return (
               <div key={recipient.id} className={`p-4 rounded-lg border flex items-center justify-between motion-safe:transition-all motion-safe:duration-base ${isProcessing ? 'border-primary bg-primary-subtle' : isDone ? 'border-success/30 bg-success-bg/30' : isFailed ? 'border-danger/30 bg-danger-bg/30' : 'border-border bg-input'}`}>
                 <div className="min-w-0">
-                  <p className="truncate font-bold text-on-success text-sm">{recipient.name}</p>
+                  <p className="truncate font-bold text-primary text-sm">{recipient.name}</p>
                   <p className="truncate text-xs text-secondary mt-0.5 font-mono">{maskSensitiveData(recipient.phone, 'phone')}</p>
-                  {isFailed ? <p className="mt-1 text-xs text-on-danger" role="alert">{lastError}</p> : null}
+                  {isFailed ? <p className="mt-1 text-xs text-danger" role="alert">{lastError}</p> : null}
                 </div>
                 <div className="flex items-center gap-3 shrink-0">
-                  <div className={`flex flex-col items-center gap-1 ${isDone || isProcessing ? 'text-on-success' : isFailed ? 'text-on-danger' : 'text-disabled'}`} aria-label="WhatsApp delivery channel">
+                  <div className={`flex flex-col items-center gap-1 ${isDone || isProcessing ? 'text-success' : isFailed ? 'text-danger' : 'text-disabled'}`} aria-label="WhatsApp delivery channel">
                     <Phone size={18} strokeWidth={2} />
                     <span className="text-xs font-bold">WA</span>
                   </div>
-                  <div className={`flex flex-col items-center gap-1 ${isDone || isProcessing ? 'text-on-success' : 'text-disabled'}`} aria-label="In-app notification channel">
+                  <div className={`flex flex-col items-center gap-1 ${isDone || isProcessing ? 'text-primary' : 'text-disabled'}`} aria-label="In-app notification channel">
                     <Bell size={18} strokeWidth={2} />
                     <span className="text-xs font-bold">APP</span>
                   </div>
                   <div className="ml-3 w-20 min-h-11 flex items-center justify-end gap-2">
-                    {isProcessing ? <Loader2 size={18} strokeWidth={2} className="text-on-success motion-safe:animate-spin" aria-label="Delivering" /> : null}
-                    {isDone ? <CheckCircle size={18} strokeWidth={2} className="text-on-success" aria-label="Delivered" /> : null}
+                    {isProcessing ? <Loader2 size={18} strokeWidth={2} className="text-primary motion-safe:animate-spin" aria-label="Delivering" /> : null}
+                    {isDone ? <CheckCircle size={18} strokeWidth={2} className="text-success" aria-label="Delivered" /> : null}
                     {isFailed ? (
-                      <button type="button" onClick={() => { setLastError(null); setStates((previous) => ({ ...previous, [recipient.id]: 'PENDING' })); const index = recipients.findIndex((item) => item.id === recipient.id); setCurrentIndex(index); }} className="inline-flex items-center justify-center gap-1 rounded-md border border-danger/30 px-2 py-1 text-xs font-medium text-on-danger hover:bg-danger-bg motion-safe:transition-all motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" aria-label={`Retry delivery to ${recipient.name}`}>
+                      <button type="button" onClick={() => { setLastError(null); setStates((previous) => ({ ...previous, [recipient.id]: 'PENDING' })); const index = recipients.findIndex((item) => item.id === recipient.id); setCurrentIndex(index); }} className="inline-flex items-center justify-center gap-1 rounded-md border border-danger/30 px-2 py-1 text-xs font-medium text-danger hover:bg-danger-bg motion-safe:transition-all motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" aria-label={`Retry delivery to ${recipient.name}`}>
                         <RotateCcw size={18} strokeWidth={2} />Retry
                       </button>
                     ) : null}

@@ -75,7 +75,7 @@ export default function TrainerMembersProfileDiet() {
                   setSelectedDietId(diet.id || '');
                   setIsAssigning(true);
                 }}
-                className="flex items-center gap-2 px-4 py-2 bg-input text-on-primary border border-border rounded-xl text-sm font-semibold hover:bg-primary-subtle motion-safe:transition-all motion-safe:active:scale-95"
+                className="flex items-center gap-2 px-4 py-2 bg-input text-primary border border-border rounded-xl text-sm font-semibold hover:bg-primary-subtle motion-safe:transition-all motion-safe:active:scale-95"
               >
                 <RefreshCw size={15} /> Change Diet
               </button>
@@ -137,10 +137,10 @@ export default function TrainerMembersProfileDiet() {
           <div className="flex flex-wrap items-start justify-between gap-4 border-b border-border pb-5">
             <div>
               <div className="flex items-center gap-2 mb-1">
-                <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-success-bg text-on-success">
+                <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-success-bg text-success">
                   Active Diet
                 </span>
-                <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-info-bg text-on-info">
+                <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-info-bg text-info">
                   {displayValue(diet.goal)}
                 </span>
               </div>
@@ -192,7 +192,7 @@ export default function TrainerMembersProfileDiet() {
                 {diet.meals.map((meal: string | { name?: string; time?: string; items?: string; description?: string }, idx: number) => (
                   <div key={typeof meal === 'string' ? `${meal}-${idx}` : `${meal.name}-${idx}`} className="bg-floating border border-border rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <div className="flex items-center gap-3">
-                      <span className="w-7 h-7 rounded-lg bg-primary-subtle text-on-primary text-xs font-bold flex items-center justify-center shrink-0">
+                      <span className="w-7 h-7 rounded-lg bg-primary-subtle text-primary text-xs font-bold flex items-center justify-center shrink-0">
                         {idx + 1}
                       </span>
                       <div>
@@ -221,7 +221,7 @@ export default function TrainerMembersProfileDiet() {
         </div>
       ) : !isAssigning ? (
         <div className="bg-card border border-dashed border-border rounded-2xl p-12 text-center space-y-3">
-          <div className="w-14 h-14 rounded-full bg-success-bg text-on-success flex items-center justify-center mx-auto">
+          <div className="w-14 h-14 rounded-full bg-success-bg text-success flex items-center justify-center mx-auto">
             <Apple size={26} />
           </div>
           <h4 className="text-lg font-bold text-primary">No Diet Plan Assigned</h4>

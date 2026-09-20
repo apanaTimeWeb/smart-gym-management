@@ -172,7 +172,7 @@ export default function SuperadminAnalyticsClient() {
                   <Icon className={`w-5 h-5 ${card.iconColor}`}/>
                 </div>
               </div>
-              <p className="text-3xl font-bold text-on-primary">{card.value}</p>
+              <p className="text-3xl font-bold text-primary">{card.value}</p>
               {card.delta && (<p className={`text-xs mt-2 font-medium ${card.deltaUp ? 'text-success' : 'text-secondary'}`}>
                   {card.deltaUp ? 'â†‘' : 'â†“'} {card.delta}
                 </p>)}
@@ -183,14 +183,14 @@ export default function SuperadminAnalyticsClient() {
       {/* Charts Row â€” Design Â§10: ApexCharts area + bar */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-card border border-border rounded-xl p-6 shadow-card">
-          <h2 className="text-base font-semibold text-on-primary mb-6">Monthly Income Growth Trend</h2>
+          <h2 className="text-base font-semibold text-primary mb-6">Monthly Income Growth Trend</h2>
           <div className="h-72">
             <Chart options={mrrAreaOptions} series={mrrAreaSeries} type="area" height="100%"/>
           </div>
         </div>
 
         <div className="bg-card border border-border rounded-xl p-6 shadow-card">
-          <h2 className="text-base font-semibold text-on-primary mb-6">Gym Growth vs Members Lost</h2>
+          <h2 className="text-base font-semibold text-primary mb-6">Gym Growth vs Members Lost</h2>
           <div className="h-72">
             <Chart options={tenantBarOptions} series={tenantBarSeries} type="bar" height="100%"/>
           </div>
@@ -202,22 +202,22 @@ export default function SuperadminAnalyticsClient() {
         <div className="bg-card border border-border rounded-xl p-6 shadow-card">
           <div className="flex items-center gap-3 mb-2">
             <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-              <Activity className="w-5 h-5 text-on-primary"/>
+              <Activity className="w-5 h-5 text-primary"/>
             </div>
             <span className="text-secondary text-xs font-medium uppercase tracking-wider">LTV (Lifetime Value)</span>
           </div>
-          <p className="text-3xl font-bold text-on-primary mt-3">{formatCurrency(metrics.ltv)}</p>
+          <p className="text-3xl font-bold text-primary mt-3">{formatCurrency(metrics.ltv)}</p>
           <p className="text-xs text-success mt-2 font-medium">â†‘ Per tenant average</p>
         </div>
 
         <div className="bg-card border border-border rounded-xl p-6 shadow-card">
           <div className="flex items-center gap-3 mb-2">
             <div className="w-8 h-8 rounded-lg bg-warning/10 flex items-center justify-center">
-              <IndianRupee className="w-5 h-5 text-on-primary"/>
+              <IndianRupee className="w-5 h-5 text-warning"/>
             </div>
             <span className="text-secondary text-xs font-medium uppercase tracking-wider">CAC (Customer Acquisition Cost)</span>
           </div>
-          <p className="text-3xl font-bold text-on-primary mt-3">{formatCurrency(metrics.cac)}</p>
+          <p className="text-3xl font-bold text-primary mt-3">{formatCurrency(metrics.cac)}</p>
           <p className="text-xs text-secondary mt-2">LTV:CAC = {metrics.cac > 0 ? formatDecimal(metrics.ltv / metrics.cac, 1) : 'â€”'}x</p>
         </div>
       </div>

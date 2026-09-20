@@ -59,7 +59,7 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Super
                 <Gauge className="w-5 h-5 text-on-danger"/>
               </div>
               <div>
-                <span className="text-base font-bold text-on-danger leading-tight block">GymSmart 360</span>
+                <span className="text-base font-bold text-primary leading-tight block">GymSmart 360</span>
                 <span className="text-xs text-secondary leading-none">SuperAdmin</span>
               </div>
             </div>)}
@@ -70,7 +70,7 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Super
 
         {/* Collapse Toggle Button */}
         <div className="hidden lg:flex items-center justify-end px-4 py-2 border-b border-border">
-          <button onClick={() => setIsCollapsed(!isCollapsed)} aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'} className="p-1.5 rounded-lg text-secondary hover:text-on-danger hover:bg-input motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+          <button onClick={() => setIsCollapsed(!isCollapsed)} aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'} className="p-1.5 rounded-lg text-secondary hover:text-primary hover:bg-input motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
             {isCollapsed ? <ChevronRight className="w-4 h-4"/> : <ChevronLeft className="w-4 h-4"/>}
           </button>
         </div>
@@ -81,10 +81,10 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Super
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <Search className="w-4 h-4 text-secondary"/>
               </div>
-              <input type="text" placeholder="Search menu..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="block w-full pl-9 pr-3 py-2 border border-border rounded-lg leading-5 bg-input text-on-danger placeholder-secondary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary sm:text-sm motion-safe:transition-colors"/>
+              <input type="text" placeholder="Search menu..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="block w-full pl-9 pr-3 py-2 border border-border rounded-lg leading-5 bg-input text-primary placeholder-secondary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary sm:text-sm motion-safe:transition-colors"/>
             </div>
           </div>) : (<div className="flex items-center justify-center px-4 py-3 border-b border-border shrink-0">
-            <button onClick={() => setIsCollapsed(false)} aria-label="Search menu" className="p-2 rounded-lg text-secondary hover:text-on-danger hover:bg-input motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+            <button onClick={() => setIsCollapsed(false)} aria-label="Search menu" className="p-2 rounded-lg text-secondary hover:text-primary hover:bg-input motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
               <Search size={18}/>
             </button>
           </div>)}
@@ -96,7 +96,7 @@ export default function SuperadminSidebar({ isCollapsed, setIsCollapsed }: Super
 
         {/* Sidebar Footer — Logout */}
         <div className="shrink-0 border-t border-border p-3">
-          <button onClick={handleLogout} aria-label="Logout from SaaS Panel" className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary hover:text-on-danger hover:bg-danger-bg motion-safe:transition-all motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger ${isCollapsed ? 'justify-center' : ''}`}>
+          <button onClick={handleLogout} aria-label="Logout from SaaS Panel" className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary hover:text-danger hover:bg-danger-bg motion-safe:transition-all motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger ${isCollapsed ? 'justify-center' : ''}`}>
             <LogOut className="w-5 h-5 shrink-0" strokeWidth={2}/>
             {!isCollapsed && <span className="font-medium text-sm">Logout</span>}
           </button>

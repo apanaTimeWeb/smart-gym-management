@@ -106,7 +106,7 @@ export default function TrainerMyAttendanceCalendar({ records }: TrainerMyAttend
             <h3 className="text-xl font-bold text-primary flex items-center gap-2">
               <CalendarIcon size={20} className="text-primary" /> {monthName} {year} History
             </h3>
-            <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-success-bg text-on-success border border-success flex items-center gap-1">
+            <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-success-bg text-success border border-success flex items-center gap-1">
               <UserCheck size={12} /> {user?.name || 'My Record'}
             </span>
             <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-input text-secondary border border-border flex items-center gap-1">
@@ -121,7 +121,7 @@ export default function TrainerMyAttendanceCalendar({ records }: TrainerMyAttend
         <div className="flex items-center gap-2">
           <button type="button"
             onClick={handleJumpToday}
-            className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page px-3 py-1.5 text-xs font-semibold bg-input text-on-primary border border-border rounded-lg hover:bg-primary-subtle motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95"
+            className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page px-3 py-1.5 text-xs font-semibold bg-input text-primary border border-border rounded-lg hover:bg-primary-subtle motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95"
           >
             Current Month
           </button>
@@ -169,7 +169,7 @@ export default function TrainerMyAttendanceCalendar({ records }: TrainerMyAttend
         </div>
         <div className="bg-card border border-border rounded-xl p-4 shadow-card">
           <p className="text-xs font-medium text-secondary">Attendance Rate</p>
-          <p className={`text-2xl font-bold mt-1 ${attPct >= 85 ? 'text-on-primary' : 'text-on-primary'}`}>
+          <p className={`text-2xl font-bold mt-1 ${attPct >= 85 ? 'text-success' : 'text-danger'}`}>
             {attPct}%
           </p>
         </div>
@@ -199,16 +199,16 @@ export default function TrainerMyAttendanceCalendar({ records }: TrainerMyAttend
 
             if (isPastOrToday) {
               if (status === 'P') {
-                statusStyle = 'bg-success-bg text-on-primary border-success hover:border-success/60';
-                badgeStyle = 'bg-success text-on-primary';
+                statusStyle = 'bg-success-bg text-success border-success hover:border-success/60';
+                badgeStyle = 'bg-success text-on-success';
                 label = 'Present';
               } else if (status === 'A') {
-                statusStyle = 'bg-danger-bg text-on-primary border-danger hover:border-danger/60';
-                badgeStyle = 'bg-danger text-on-primary';
+                statusStyle = 'bg-danger-bg text-danger border-danger hover:border-danger/60';
+                badgeStyle = 'bg-danger text-on-danger';
                 label = 'Absent';
               } else if (status === 'L') {
-                statusStyle = 'bg-warning-bg text-on-primary border-warning/30 hover:border-warning/60';
-                badgeStyle = 'bg-warning text-on-primary';
+                statusStyle = 'bg-warning-bg text-warning border-warning/30 hover:border-warning/60';
+                badgeStyle = 'bg-warning text-white';
                 label = 'Weekly Off';
               }
             }
@@ -221,11 +221,11 @@ export default function TrainerMyAttendanceCalendar({ records }: TrainerMyAttend
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <span className={`text-sm font-bold ${isToday ? 'text-on-primary' : 'text-on-primary'}`}>
+                  <span className={`text-sm font-bold ${isToday ? 'text-primary' : 'text-primary'}`}>
                     {day}
                   </span>
                   {isToday && (
-                    <span className="text-xs font-extrabold uppercase px-1.5 py-0.5 rounded bg-primary text-on-primary tracking-wide">
+                    <span className="text-xs font-extrabold uppercase px-1.5 py-0.5 rounded bg-primary text-white tracking-wide">
                       Today
                     </span>
                   )}
@@ -260,7 +260,7 @@ export default function TrainerMyAttendanceCalendar({ records }: TrainerMyAttend
       {/* Legend Footer */}
       <div className="flex flex-wrap items-center justify-between gap-4 p-4 bg-floating border border-border rounded-xl text-xs text-secondary">
         <div className="flex items-center gap-4 flex-wrap">
-          <span className="font-semibold text-on-primary">Calendar Status:</span>
+          <span className="font-semibold text-primary">Calendar Status:</span>
           <span className="flex items-center gap-1.5">
             <span className="w-3 h-3 rounded-full bg-success"></span> Present (P)
           </span>

@@ -80,7 +80,7 @@ export default function ManagerAttendanceTable() {
                       }`}>
                         {(r.member?.name || r.staff?.name || '?').charAt(0)}
                       </div>
-                      <span className="text-sm font-medium text-on-success">
+                      <span className="text-sm font-medium text-primary">
                         {displayValue(r.member?.name ?? r.staff?.name)}
                       </span>
                     </div>
@@ -89,8 +89,8 @@ export default function ManagerAttendanceTable() {
                   <td className="px-4 py-3 whitespace-nowrap">
                     <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${
                       r.type === 'MEMBER'
-                        ? 'bg-info text-on-info'
-                        : 'bg-success text-on-success'
+                        ? 'bg-info text-info'
+                        : 'bg-success text-success'
                     }`}>
                       {r.type}
                     </span>
@@ -98,7 +98,7 @@ export default function ManagerAttendanceTable() {
                   {/* Status */}
                   <td className="px-4 py-3 whitespace-nowrap">
                     <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${
-                      (r.checkIn || r.status === 'PRESENT' || r.type === 'MEMBER') ? 'bg-success text-on-success' : 'bg-danger text-on-danger'
+                      (r.checkIn || r.status === 'PRESENT' || r.type === 'MEMBER') ? 'bg-success text-success' : 'bg-danger text-danger'
                     }`}>
                       {(r.checkIn || r.status === 'PRESENT' || r.type === 'MEMBER') ? 'Present' : 'Absent'}
                     </span>
@@ -131,7 +131,7 @@ export default function ManagerAttendanceTable() {
                   <td className="px-4 py-3 text-sm whitespace-nowrap">
                     <button
                       onClick={(event) => { event.stopPropagation(); setCalendarUser({ id: String(r.memberId || r.staffId || r.id), name: String(r.member?.name || r.staff?.name || ''), type: r.type as ManagerAttendancePersonType }); }}
-                      className="p-1.5 rounded-md hover:bg-primary-subtle text-on-success motion-safe:transition-colors flex items-center gap-1 border border-transparent hover:border-border"
+                      className="p-1.5 rounded-md hover:bg-primary-subtle text-primary motion-safe:transition-colors flex items-center gap-1 border border-transparent hover:border-border"
                       title="View Monthly Calendar"
                       aria-label="View Monthly Attendance Calendar"
                     >

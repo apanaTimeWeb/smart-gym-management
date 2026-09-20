@@ -6,13 +6,13 @@ import type { SuperadminCouponsStatusBadgeProps } from '@/app/superadmin/saas-bi
 export default function SuperadminCouponsStatusBadge({ status }: SuperadminCouponsStatusBadgeProps) {
     switch (status) {
         case 'ACTIVE':
-            return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-success-bg text-on-success">ACTIVE</span>;
+            return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-success-bg text-success">ACTIVE</span>;
         case 'INACTIVE':
             return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-input text-secondary">INACTIVE</span>;
         case 'EXPIRED':
             return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-input text-secondary">EXPIRED</span>;
         case 'DEPLETED':
-            return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-warning-bg text-on-primary">DEPLETED</span>;
+            return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-warning-bg text-warning">DEPLETED</span>;
         default:
             return null;
     }

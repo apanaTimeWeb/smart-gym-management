@@ -19,38 +19,38 @@ export default function AdminSubscriptionsPlanCard({ plan, onUpgrade, upgrading 
       )}
       {plan.isCurrent && (
         <div className="absolute top-3 right-3">
-          <span className="px-2 py-0.5 bg-success text-on-success text-xs font-bold rounded-full border border-success">Current</span>
+          <span className="px-2 py-0.5 bg-success text-success text-xs font-bold rounded-full border border-success">Current</span>
         </div>
       )}
 
       <div>
         <span className={`text-xs font-semibold px-2.5 py-0.5 rounded-full ${style?.bg || ''} ${style?.text || ''}`}>{plan.name}</span>
         <div className="mt-3">
-          <span className="text-3xl font-bold text-on-success">{fmt(plan.monthlyPrice)}</span>
+          <span className="text-3xl font-bold text-primary">{fmt(plan.monthlyPrice)}</span>
           {plan.monthlyPrice > 0 && <span className="text-secondary text-sm">/month</span>}
         </div>
         {plan.monthlyPrice > 0 && (
-          <p className="text-xs text-on-success mt-1">or {fmt(plan.annualPrice)}/year (save 2 months)</p>
+          <p className="text-xs text-success mt-1">or {fmt(plan.annualPrice)}/year (save 2 months)</p>
         )}
       </div>
 
       <ul className="space-y-2 flex-1">
         {plan.features.map(f => (
           <li key={f} className="flex items-start gap-2 text-sm text-secondary">
-            <CheckCircle size={13} className="text-on-success shrink-0 mt-0.5" />
+            <CheckCircle size={13} className="text-success shrink-0 mt-0.5" />
             <span>{f}</span>
           </li>
         ))}
       </ul>
 
       {plan.isCurrent ? (
-        <div className="py-2.5 text-center text-sm font-semibold text-on-success border border-border rounded-xl bg-surface-highlight">
+        <div className="py-2.5 text-center text-sm font-semibold text-primary border border-border rounded-xl bg-surface-highlight">
           ✓ Your Current Plan
         </div>
       ) : plan.tier === 'enterprise' ? (
         <a
           href="mailto:sales@gymsmart.in"
-          className="py-2.5 text-center text-sm font-semibold text-on-success border border-border rounded-xl hover:bg-input motion-safe:transition-colors block motion-safe:duration-base"
+          className="py-2.5 text-center text-sm font-semibold text-primary border border-border rounded-xl hover:bg-input motion-safe:transition-colors block motion-safe:duration-base"
         >
           Contact Sales
         </a>

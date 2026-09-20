@@ -72,7 +72,7 @@ export default function ManagerPagination({
                 className={`min-h-11 min-w-11 flex items-center justify-center rounded-lg text-sm font-medium motion-safe:transition-all ${
                   currentPage === page
                     ? 'bg-primary text-on-primary'
-                    : 'text-secondary hover:bg-surface-hover hover:text-on-primary'
+                    : 'text-secondary hover:bg-surface-hover hover:text-primary'
                 }`}
               >
                 {page}
@@ -86,7 +86,7 @@ export default function ManagerPagination({
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages || totalPages === 0}
           aria-label="Go to next page"
-          className="min-h-11 min-w-11 p-1.5 rounded-lg text-secondary hover:bg-surface-hover hover:text-on-primary disabled:opacity-50 disabled:cursor-not-allowed motion-safe:transition-colors"
+          className="min-h-11 min-w-11 p-1.5 rounded-lg text-secondary hover:bg-surface-hover hover:text-primary disabled:opacity-50 disabled:cursor-not-allowed motion-safe:transition-colors"
         >
           <ChevronRight size={18} />
         </button>

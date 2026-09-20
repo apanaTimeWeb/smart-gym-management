@@ -44,40 +44,40 @@ export default function SuperadminCouponsTableRow({ coupon, onToggleStatus, onEd
     };
     return (<tr tabIndex={0} aria-label={`Edit coupon ${cpn.code}`} className={`hover:bg-primary/5 motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset ${cpn.isDeleted ? 'opacity-50 grayscale' : ''}`} onClick={() => { if (!cpn.isDeleted)
         onEdit(cpn); }} onKeyDown={(event) => { if (!cpn.isDeleted && (event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); onEdit(cpn); } }}>
-      <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-on-success tracking-wide">
+      <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-primary tracking-wide">
         {cpn.code}
-        {cpn.isDeleted && <span className="ml-2 text-xs bg-danger-bg/20 text-on-danger px-2 py-0.5 rounded-full">DELETED</span>}
+        {cpn.isDeleted && <span className="ml-2 text-xs bg-danger-bg/20 text-danger px-2 py-0.5 rounded-full">DELETED</span>}
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary">
         {cpn.discountType === 'PERCENTAGE'
-            ? <span className="font-semibold text-on-success">{cpn.discountValue}% OFF</span>
-            : <span className="font-semibold text-on-success">{formatINR(cpn.discountValue)} OFF</span>}
+            ? <span className="font-semibold text-success">{cpn.discountValue}% OFF</span>
+            : <span className="font-semibold text-success">{formatINR(cpn.discountValue)} OFF</span>}
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary">{cpn.currentUses} / {cpn.maxUses}</td>
       <td className="px-6 py-4 whitespace-nowrap"><SuperadminCouponsStatusBadge status={coupon.status}/></td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary">{formatDate(cpn.expiryDate)}</td>
       <td className="px-6 py-4 whitespace-nowrap text-right flex items-center justify-end gap-2">
-        {cpn.isDeleted ? (<button title="Restore Coupon" aria-label="Restore Coupon" onClick={(e) => { e.stopPropagation(); onRestore(cpn.id); }} className="text-secondary hover:text-on-success motion-safe:transition-colors p-1.5 bg-input hover:bg-success/10 rounded-md border border-border">
+        {cpn.isDeleted ? (<button title="Restore Coupon" aria-label="Restore Coupon" onClick={(e) => { e.stopPropagation(); onRestore(cpn.id); }} className="text-secondary hover:text-success motion-safe:transition-colors p-1.5 bg-input hover:bg-success/10 rounded-md border border-border">
             <RefreshCw className="w-4 h-4"/>
           </button>) : (<>
-            <button title="Share Coupon" aria-label="Share Coupon" onClick={(e) => handleShareWhatsApp(e, cpn)} className="text-secondary hover:text-on-success motion-safe:transition-colors p-1.5 bg-input hover:bg-success/10 rounded-md border border-border">
+            <button title="Share Coupon" aria-label="Share Coupon" onClick={(e) => handleShareWhatsApp(e, cpn)} className="text-secondary hover:text-success motion-safe:transition-colors p-1.5 bg-input hover:bg-success/10 rounded-md border border-border">
               <MessageCircle className="w-4 h-4"/>
             </button>
             <button title={cpn.status === 'ACTIVE' ? 'Deactivate Coupon' : 'Activate Coupon'} aria-label={cpn.status === 'ACTIVE' ? 'Deactivate Coupon' : 'Activate Coupon'} onClick={(e) => { e.stopPropagation(); onToggleStatus(cpn.id, cpn.status); }} disabled={cpn.status === 'EXPIRED' || cpn.status === 'DEPLETED'} className={`p-1.5 rounded-md border border-border motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out ${cpn.status === 'EXPIRED' || cpn.status === 'DEPLETED'
                 ? 'opacity-30 cursor-not-allowed bg-input'
                 : cpn.status === 'ACTIVE'
-                    ? 'text-on-success hover:text-on-success bg-success/10 hover:bg-success'
+                    ? 'text-success hover:text-on-success bg-success/10 hover:bg-success'
                     : 'text-secondary hover:text-white bg-input hover:bg-surface-hover'}`}>
               {cpn.status === 'ACTIVE' ? <ToggleRight className="w-4 h-4"/> : <ToggleLeft className="w-4 h-4"/>}
             </button>
-            <button title="Edit Coupon" aria-label="Edit Coupon" onClick={(e) => { e.stopPropagation(); onEdit(cpn); }} className="text-secondary hover:text-on-success motion-safe:transition-colors p-1.5 bg-input hover:bg-primary/10 rounded-md border border-border">
+            <button title="Edit Coupon" aria-label="Edit Coupon" onClick={(e) => { e.stopPropagation(); onEdit(cpn); }} className="text-secondary hover:text-primary motion-safe:transition-colors p-1.5 bg-input hover:bg-primary/10 rounded-md border border-border">
               <Edit2 className="w-4 h-4"/>
             </button>
             <button title="View History" aria-label="View History" onClick={(e) => {
                 e.stopPropagation();
                 // Custom event to trigger drawer in Client
                 document.dispatchEvent(new CustomEvent('open-coupon-history', { detail: cpn }));
-            }} className="text-secondary hover:text-on-info motion-safe:transition-colors p-1.5 bg-input hover:bg-info/10 rounded-md border border-border">
+            }} className="text-secondary hover:text-info motion-safe:transition-colors p-1.5 bg-input hover:bg-info/10 rounded-md border border-border">
               <History className="w-4 h-4"/>
             </button>
             <button title="Delete Coupon" aria-label="Delete Coupon" onClick={async (e) => {
@@ -91,7 +91,7 @@ export default function SuperadminCouponsTableRow({ coupon, onToggleStatus, onEd
                 if (ok) {
                     onDelete(cpn.id);
                 }
-            }} className="text-secondary hover:text-on-danger motion-safe:transition-colors p-1.5 bg-input hover:bg-danger-bg/10 rounded-md border border-border">
+            }} className="text-secondary hover:text-danger motion-safe:transition-colors p-1.5 bg-input hover:bg-danger-bg/10 rounded-md border border-border">
               <Trash2 className="w-4 h-4"/>
             </button>
           </>)}

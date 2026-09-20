@@ -86,11 +86,11 @@ export default function ManagerChurnRecoveryComposer({
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-border shrink-0">
           <div>
-            <h2 className="text-base font-bold text-on-primary">Win-Back Message</h2>
+            <h2 className="text-base font-bold text-primary">Win-Back Message</h2>
             {member && (
               <p className="text-xs text-secondary mt-0.5">
-                Sending to: <span className="text-on-primary font-medium">{member.name}</span>
-                <span className="ml-2 text-on-primary">({member.daysSinceExit} days since exit)</span>
+                Sending to: <span className="text-primary font-medium">{member.name}</span>
+                <span className="ml-2 text-warning">({member.daysSinceExit} days since exit)</span>
               </p>
             )}
           </div>
@@ -98,7 +98,7 @@ export default function ManagerChurnRecoveryComposer({
             type="button"
             onClick={handleClose}
             aria-label="Close composer"
-            className="p-2 rounded-lg text-secondary hover:text-on-primary hover:bg-input motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            className="p-2 rounded-lg text-secondary hover:text-primary hover:bg-input motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
             <X size={18} />
           </button>
@@ -119,8 +119,8 @@ export default function ManagerChurnRecoveryComposer({
                   onClick={() => handleTierChange(opt.value)}
                   className={`px-3 py-1.5 rounded-lg text-xs font-medium border motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
                     tier === opt.value
-                      ? 'bg-primary text-on-primary border-primary'
-                      : 'bg-input border-border text-secondary hover:text-on-primary'
+                      ? 'bg-primary text-white border-primary'
+                      : 'bg-input border-border text-secondary hover:text-primary'
                   }`}
                 >
                   {opt.label}
@@ -138,8 +138,8 @@ export default function ManagerChurnRecoveryComposer({
                 onClick={() => setChannel('whatsapp')}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium border motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
                   channel === 'whatsapp'
-                    ? 'bg-success border-success text-on-primary'
-                    : 'bg-input border-border text-secondary hover:text-on-primary'
+                    ? 'bg-success border-success text-success'
+                    : 'bg-input border-border text-secondary hover:text-primary'
                 }`}
               >
                 <MessageCircle size={18} />
@@ -150,8 +150,8 @@ export default function ManagerChurnRecoveryComposer({
                 onClick={() => setChannel('email')}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium border motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
                   channel === 'email'
-                    ? 'bg-info border-info text-on-info'
-                    : 'bg-input border-border text-secondary hover:text-on-primary'
+                    ? 'bg-info border-info text-info'
+                    : 'bg-input border-border text-secondary hover:text-primary'
                 }`}
               >
                 <Mail size={18} />
@@ -172,7 +172,7 @@ export default function ManagerChurnRecoveryComposer({
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}
                 placeholder="Enter email subject..."
-                className="w-full px-3 py-2 text-sm bg-input border border-border rounded-lg text-on-primary placeholder:text-secondary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary motion-safe:transition-colors"
+                className="w-full px-3 py-2 text-sm bg-input border border-border rounded-lg text-primary placeholder:text-secondary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary motion-safe:transition-colors"
                 aria-required="true"
               />
             </div>
@@ -189,18 +189,18 @@ export default function ManagerChurnRecoveryComposer({
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               placeholder="Write your win-back message..."
-              className="w-full px-3 py-2 text-sm bg-input border border-border rounded-lg text-on-primary placeholder:text-secondary resize-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary motion-safe:transition-colors custom-scrollbar"
+              className="w-full px-3 py-2 text-sm bg-input border border-border rounded-lg text-primary placeholder:text-secondary resize-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary motion-safe:transition-colors custom-scrollbar"
               aria-required="true"
               aria-describedby="churn-message-hint"
             />
             <p id="churn-message-hint" className="text-xs text-secondary mt-1">
-              Use <code className="bg-input px-1 py-0.5 rounded text-on-primary">{'{name}'}</code> as a placeholder — the backend will replace it with the member&apos;s real name.
+              Use <code className="bg-input px-1 py-0.5 rounded text-primary">{'{name}'}</code> as a placeholder — the backend will replace it with the member&apos;s real name.
             </p>
           </div>
 
           {/* WhatsApp notice */}
           {channel === 'whatsapp' && (
-            <div className="rounded-lg bg-warning border border-warning/30 px-4 py-3 text-xs text-on-primary leading-relaxed">
+            <div className="rounded-lg bg-warning border border-warning/30 px-4 py-3 text-xs text-warning leading-relaxed">
               ⚠️ <strong>WhatsApp cannot be sent in bulk.</strong> Clicking &quot;Send&quot; below will open WhatsApp with the pre-filled message. Send it manually to this recipient.
             </div>
           )}
@@ -211,7 +211,7 @@ export default function ManagerChurnRecoveryComposer({
           <button
             type="button"
             onClick={handleClose}
-            className="px-4 py-2 rounded-lg text-sm font-medium border border-border text-secondary hover:text-on-primary bg-transparent motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            className="px-4 py-2 rounded-lg text-sm font-medium border border-border text-secondary hover:text-primary bg-transparent motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
             Cancel
           </button>
@@ -219,7 +219,7 @@ export default function ManagerChurnRecoveryComposer({
             type="button"
             onClick={handleSend}
             disabled={!canSend || isSending || !member}
-            className="flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-medium bg-primary text-on-primary disabled:opacity-50 disabled:cursor-not-allowed motion-safe:transition-all motion-safe:hover:bg-primary-hover motion-safe:active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            className="flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-medium bg-primary text-white disabled:opacity-50 disabled:cursor-not-allowed motion-safe:transition-all motion-safe:hover:bg-primary-hover motion-safe:active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
             {isSending ? (
               <Loader2 size={18} className="motion-safe:animate-spin" />

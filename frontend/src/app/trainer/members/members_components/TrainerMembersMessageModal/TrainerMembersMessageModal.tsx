@@ -134,7 +134,7 @@ export default function TrainerMembersMessageModal({
           <div className="flex items-center gap-3 p-3 bg-input rounded-lg border border-border">
             <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-on-success font-bold text-sm shrink-0">{recipient.name.charAt(0)}</div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-on-success truncate">{recipient.name}</p>
+              <p className="text-sm font-semibold text-primary truncate">{recipient.name}</p>
               <div className="flex items-center gap-1 mt-0.5">
                 {type === 'whatsapp' ? <Phone size={11} className="text-secondary" aria-hidden="true" /> : <AtSign size={11} className="text-secondary" aria-hidden="true" />}
                 <p className="text-xs text-secondary truncate">{contactInfo || 'N/A'}</p>
@@ -146,18 +146,18 @@ export default function TrainerMembersMessageModal({
         {type === 'email' && (
           <div className="px-6 pt-2">
             <label htmlFor={subjectId} className="block text-xs font-semibold text-secondary uppercase tracking-wider mb-1.5">Subject</label>
-            <input id={subjectId} type="text" value={subject} onChange={(event) => setSubject(event.target.value)} disabled={sending || sent} className="w-full px-3 py-2.5 text-sm bg-input border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary text-on-success disabled:opacity-60" />
+            <input id={subjectId} type="text" value={subject} onChange={(event) => setSubject(event.target.value)} disabled={sending || sent} className="w-full px-3 py-2.5 text-sm bg-input border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary text-primary disabled:opacity-60" />
           </div>
         )}
 
         <div className="px-6 pt-3 pb-2">
           <label htmlFor={messageId} className="block text-xs font-semibold text-secondary uppercase tracking-wider mb-1.5">Message</label>
-          <textarea id={messageId} rows={5} value={message} onChange={(event) => setMessage(event.target.value)} disabled={sending || sent} className="w-full px-3 py-2.5 text-sm bg-input border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary text-on-success resize-none disabled:opacity-60" placeholder="Type your message..." />
+          <textarea id={messageId} rows={5} value={message} onChange={(event) => setMessage(event.target.value)} disabled={sending || sent} className="w-full px-3 py-2.5 text-sm bg-input border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary text-primary resize-none disabled:opacity-60" placeholder="Type your message..." />
           <p className="text-right text-xs text-secondary mt-1">{message.length} chars</p>
         </div>
 
         <div className="px-6 pb-5 flex gap-3">
-          <button type="button" onClick={handleClose} disabled={sending} className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page min-h-11 flex-1 px-4 py-2.5 text-sm border border-border rounded-lg hover:bg-input text-on-success font-medium motion-safe:transition-colors disabled:opacity-50">Cancel</button>
+          <button type="button" onClick={handleClose} disabled={sending} className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page min-h-11 flex-1 px-4 py-2.5 text-sm border border-border rounded-lg hover:bg-input text-primary font-medium motion-safe:transition-colors disabled:opacity-50">Cancel</button>
           <button type="button" onClick={handleSend} disabled={sending || sent || !message.trim() || !contactInfo} className={`min-h-11 flex-1 px-4 py-2.5 text-sm font-semibold text-on-success rounded-lg flex items-center justify-center gap-2 motion-safe:transition-all disabled:opacity-50 ${sent ? 'bg-success' : type === 'whatsapp' ? 'bg-social-whatsapp' : 'bg-social-email'}`}>
             {sent ? <><CheckCircle size={16} /> Sent!</> : sending ? 'Sending…' : <><Send size={15} /> Send via {label}</>}
           </button>

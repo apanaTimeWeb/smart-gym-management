@@ -108,7 +108,7 @@ export default function ManagerInquiriesBulkMessageModal({
                 type="text"
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}
-                className="w-full px-3 py-2.5 text-sm bg-input border border-border rounded-lg focus:outline-none focus:border-primary text-on-success"
+                className="w-full px-3 py-2.5 text-sm bg-input border border-border rounded-lg focus:outline-none focus:border-primary text-primary"
                 placeholder="Email subject..."
               />
             </div>
@@ -122,7 +122,7 @@ export default function ManagerInquiriesBulkMessageModal({
               rows={4}
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              className="w-full px-3 py-2.5 text-sm bg-input border border-border rounded-xl focus:outline-none focus:border-primary text-on-success resize-none"
+              className="w-full px-3 py-2.5 text-sm bg-input border border-border rounded-xl focus:outline-none focus:border-primary text-primary resize-none"
               placeholder={`Type your ${label} message...`}
             />
           </div>
@@ -154,7 +154,7 @@ export default function ManagerInquiriesBulkMessageModal({
                         {rec.name.charAt(0)}
                       </div>
                       <div className="min-w-0">
-                        <p className="text-sm font-semibold text-on-success truncate">{rec.name}</p>
+                        <p className="text-sm font-semibold text-primary truncate">{rec.name}</p>
                         <div className="flex items-center gap-1 mt-0.5 text-xs text-secondary">
                           {type === 'whatsapp' ? <Phone size={10} /> : <AtSign size={10} />}
                           <span className="truncate">{type === 'whatsapp' ? rec.phone : rec.email}</span>
@@ -168,7 +168,7 @@ export default function ManagerInquiriesBulkMessageModal({
                         disabled={!hasContactInfo || !message.trim()}
                         className={`shrink-0 px-3 py-1.5 text-xs font-semibold rounded-lg flex items-center gap-1.5 motion-safe:transition-all ${
                           isSent
-                            ? 'bg-success/10 text-on-success border border-success/20'
+                            ? 'bg-success/10 text-success border border-success/20'
                             : 'bg-social-whatsapp text-white hover:opacity-90 disabled:opacity-50'
                         }`}
                         
@@ -193,7 +193,7 @@ export default function ManagerInquiriesBulkMessageModal({
         </div>
 
         <div className="px-6 py-4 bg-input border-t border-border flex gap-3 shrink-0">
-          <button onClick={() => { void confirmAndClose(onClose); }} className="px-5 py-2.5 text-sm border border-border rounded-xl hover:bg-overlay text-on-success font-medium motion-safe:transition-colors">
+          <button onClick={() => { void confirmAndClose(onClose); }} className="px-5 py-2.5 text-sm border border-border rounded-xl hover:bg-overlay text-primary font-medium motion-safe:transition-colors">
             Cancel
           </button>
           {type === 'email' ? (
@@ -202,7 +202,7 @@ export default function ManagerInquiriesBulkMessageModal({
               Open Email Client (BCC All)
             </button>
           ) : (
-            <button onClick={allWhatsAppSent ? handleDone : onClose} className={`flex-1 px-4 py-2.5 text-sm font-semibold rounded-xl flex items-center justify-center gap-2 motion-safe:transition-all ${allWhatsAppSent ? 'bg-success text-on-success' : 'bg-overlay border border-border text-on-success'}`}>
+            <button onClick={allWhatsAppSent ? handleDone : onClose} className={`flex-1 px-4 py-2.5 text-sm font-semibold rounded-xl flex items-center justify-center gap-2 motion-safe:transition-all ${allWhatsAppSent ? 'bg-success text-on-success' : 'bg-overlay border border-border text-primary'}`}>
               {allWhatsAppSent ? <><CheckCircle size={18} /> All Done</> : 'Close Queue'}
             </button>
           )}

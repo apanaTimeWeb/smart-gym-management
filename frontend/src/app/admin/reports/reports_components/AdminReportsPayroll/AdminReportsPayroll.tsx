@@ -53,13 +53,13 @@ export default function AdminReportsPayroll() {
                   <td className="px-5 py-4 text-sm font-semibold text-primary">{row.gymName}</td>
                   <td className="px-5 py-4 text-sm text-primary">{row.totalStaff}</td>
                   <td className="px-5 py-4 text-sm font-semibold text-primary">{formatCurrency(row.totalPayroll)}</td>
-                  <td className="px-5 py-4 text-sm text-on-primary">{formatCurrency(row.paid)}</td>
+                  <td className="px-5 py-4 text-sm text-success">{formatCurrency(row.paid)}</td>
                   <td className="px-5 py-4 text-sm text-danger">{formatCurrency(row.pending)}</td>
-                  <td className="px-5 py-4 text-sm text-on-primary">{formatCurrency(row.advances)}</td>
+                  <td className="px-5 py-4 text-sm text-warning">{formatCurrency(row.advances)}</td>
                   <td className="px-5 py-4">
                     {row.pending === 0
-                      ? <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-success text-on-primary">Fully Paid</span>
-                      : <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-warning text-on-primary">Pending</span>
+                      ? <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-success text-success">Fully Paid</span>
+                      : <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-warning text-warning">Pending</span>
                     }
                   </td>
                 </tr>

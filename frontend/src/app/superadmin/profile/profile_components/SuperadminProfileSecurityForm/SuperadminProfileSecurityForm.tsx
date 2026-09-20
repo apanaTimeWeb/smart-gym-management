@@ -45,11 +45,11 @@ export default function SuperadminProfileSecurityForm({ profile, isSavingPasswor
               </label>
               <div className="relative">
                 <input {...register(id as keyof SuperadminProfileSecurityFormValues)} type={show ? 'text' : 'password'} className={`${inputClass} pr-10`}/>
-                <button type="button" onClick={toggle} aria-label={show ? 'Hide password' : 'Show password'} className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary hover:text-on-success focus-visible:outline-none">
+                <button type="button" onClick={toggle} aria-label={show ? 'Hide password' : 'Show password'} className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary hover:text-primary focus-visible:outline-none">
                   {show ? <EyeOff className="w-4 h-4" strokeWidth={2}/> : <Eye className="w-4 h-4" strokeWidth={2}/>}
                 </button>
               </div>
-              {errors[id as keyof SuperadminProfileSecurityFormValues] && (<p className="mt-1 text-xs text-on-danger" role="alert">
+              {errors[id as keyof SuperadminProfileSecurityFormValues] && (<p className="mt-1 text-xs text-danger" role="alert">
                   {errors[id as keyof SuperadminProfileSecurityFormValues]?.message}
                 </p>)}
             </div>))}
@@ -67,14 +67,14 @@ export default function SuperadminProfileSecurityForm({ profile, isSavingPasswor
       <div className="border-t border-border pt-6">
         <div className="flex items-start justify-between mb-4">
           <div>
-            <h3 className="text-base font-semibold text-on-success">Two-Factor Authentication</h3>
+            <h3 className="text-base font-semibold text-primary">Two-Factor Authentication</h3>
             <p className="text-sm text-secondary mt-0.5">
               {profile.twoFactorEnabled
             ? 'Your account is protected with 2FA.'
             : 'Add an extra layer of security to your account.'}
             </p>
           </div>
-          <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${profile.twoFactorEnabled ? 'bg-success-bg text-on-success' : 'bg-danger-bg text-on-danger'}`}>
+          <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${profile.twoFactorEnabled ? 'bg-success-bg text-success' : 'bg-danger-bg text-danger'}`}>
             {profile.twoFactorEnabled
             ? <><ShieldCheck className="w-3 h-3" strokeWidth={2}/> Enabled</>
             : <><ShieldOff className="w-3 h-3" strokeWidth={2}/> Disabled</>}
@@ -84,19 +84,19 @@ export default function SuperadminProfileSecurityForm({ profile, isSavingPasswor
         <div className="space-y-3">
           <div>
             <label className="block text-sm font-medium text-secondary mb-1.5">
-              Confirm with your password <span className="text-on-danger">*</span>
+              Confirm with your password <span className="text-danger">*</span>
             </label>
             <div className="relative max-w-sm">
               <input type={showTwoFAPassword ? 'text' : 'password'} value={twoFAPassword} onChange={(e) => setTwoFAPassword(e.target.value)} placeholder="Enter your current password" className={`${inputClass} pr-10`}/>
-              <button type="button" onClick={() => setShowTwoFAPassword((v) => !v)} aria-label={showTwoFAPassword ? 'Hide password' : 'Show password'} className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary hover:text-on-success focus-visible:outline-none">
+              <button type="button" onClick={() => setShowTwoFAPassword((v) => !v)} aria-label={showTwoFAPassword ? 'Hide password' : 'Show password'} className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary hover:text-primary focus-visible:outline-none">
                 {showTwoFAPassword ? <EyeOff className="w-4 h-4" strokeWidth={2}/> : <Eye className="w-4 h-4" strokeWidth={2}/>}
               </button>
             </div>
           </div>
 
           <button type="button" onClick={handleToggle2FA} disabled={isTogglingTwoFA || !twoFAPassword.trim()} className={`flex items-center gap-2 px-5 py-2.5 font-semibold text-sm rounded-lg motion-safe:transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 ${profile.twoFactorEnabled
-            ? 'bg-danger-bg text-on-danger hover:bg-danger hover:text-on-danger focus-visible:ring-danger'
-            : 'bg-success-bg text-on-success hover:bg-success hover:text-on-success focus-visible:ring-success'}`}>
+            ? 'bg-danger-bg text-danger hover:bg-danger hover:text-on-danger focus-visible:ring-danger'
+            : 'bg-success-bg text-success hover:bg-success hover:text-on-success focus-visible:ring-success'}`}>
             {isTogglingTwoFA && <Loader2 className="w-4 h-4 motion-safe:animate-spin" strokeWidth={2}/>}
             {profile.twoFactorEnabled ? 'Disable 2FA' : 'Enable 2FA'}
           </button>

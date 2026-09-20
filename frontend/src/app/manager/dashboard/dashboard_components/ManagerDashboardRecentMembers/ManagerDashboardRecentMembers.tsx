@@ -78,7 +78,7 @@ export default function ManagerDashboardRecentMembers() {
                 <tr key={m.id} className="motion-safe:transition-colors hover:bg-primary/5 bg-card">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full flex items-center justify-center font-semibold text-sm bg-primary/10 text-on-primary">
+                      <div className="w-8 h-8 rounded-full flex items-center justify-center font-semibold text-sm bg-primary/10 text-primary">
                         {m.name.charAt(0) || '?'}
                       </div>
                       <span className="text-sm font-medium text-primary">{m.name}</span>

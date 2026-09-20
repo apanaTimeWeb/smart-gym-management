@@ -99,8 +99,8 @@ export default function TrainerProgressMain() {
             onClick={() => setActiveTab('individual')}
             className={`flex items-center gap-2 px-5 py-3 text-sm font-medium border-b-2 motion-safe:transition-colors ${
               activeTab === 'individual'
-                ? 'text-on-primary border-primary bg-primary-subtle'
-                : 'border-transparent text-secondary hover:text-on-primary'
+                ? 'text-primary border-primary bg-primary-subtle'
+                : 'border-transparent text-secondary hover:text-primary'
             }`}
           >
             <User size={15} /> Individual
@@ -109,8 +109,8 @@ export default function TrainerProgressMain() {
             onClick={() => setActiveTab('compare')}
             className={`flex items-center gap-2 px-5 py-3 text-sm font-medium border-b-2 motion-safe:transition-colors ${
               activeTab === 'compare'
-                ? 'text-on-primary border-primary bg-primary-subtle'
-                : 'border-transparent text-secondary hover:text-on-primary'
+                ? 'text-primary border-primary bg-primary-subtle'
+                : 'border-transparent text-secondary hover:text-primary'
             }`}
           >
             <BarChart2 size={15} /> Compare Members
@@ -121,7 +121,7 @@ export default function TrainerProgressMain() {
         {activeTab === 'individual' && (
           <>
             <div className="flex items-center justify-between bg-card p-4 rounded-xl border border-border">
-              <span className="text-sm font-semibold text-on-primary">Select Member:</span>
+              <span className="text-sm font-semibold text-primary">Select Member:</span>
               <TrainerSearchableDropdown
                 value={selectedMemberId}
                 onChange={(val: string | number) => setSelectedMemberId(String(val))}

@@ -32,7 +32,7 @@ export default function SuperadminWhiteLabelingMain() {
 
   if (isError) {
     return (
-      <div className="bg-danger-bg border border-danger/20 rounded-xl p-6 text-center text-on-danger">
+      <div className="bg-danger-bg border border-danger/20 rounded-xl p-6 text-center text-danger">
         <p className="font-semibold text-lg">Failed to load custom domains</p>
         <p className="text-sm mt-1">{error?.message || 'Please try again later.'}</p>
       </div>

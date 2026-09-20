@@ -28,6 +28,6 @@ export default function SuperadminUptimeChart() {
     };
   }, [query.data?.data]);
   if (query.isPending) return <div className="h-64 rounded-xl border border-border bg-skeleton-base motion-safe:animate-pulse" aria-busy="true" />;
-  if (query.isError) return <div role="alert" className="rounded-xl border border-danger/30 bg-danger-bg p-6 text-on-danger">Unable to load historical uptime. <button type="button" onClick={() => void query.refetch()} className="ml-1 underline underline-offset-2">Retry</button></div>;
+  if (query.isError) return <div role="alert" className="rounded-xl border border-danger/30 bg-danger-bg p-6 text-danger">Unable to load historical uptime. <button type="button" onClick={() => void query.refetch()} className="ml-1 underline underline-offset-2">Retry</button></div>;
   return <div className="rounded-xl border border-border bg-card p-6"><div className="mb-4"><h2 className="text-xl font-bold text-primary">Historical Uptime (24h)</h2><p className="mt-1 text-sm text-secondary">Platform availability over the last 24 hours</p></div>{series[0]?.data.length ? <div className="h-64 w-full"><ReactApexChart options={options} series={series} type="area" height="100%" width="100%" /></div> : <div className="flex h-64 items-center justify-center rounded-lg border border-border bg-input text-sm text-secondary">No uptime history available.</div>}</div>;
 }

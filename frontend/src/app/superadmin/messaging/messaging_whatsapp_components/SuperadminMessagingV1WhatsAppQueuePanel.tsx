@@ -38,7 +38,7 @@ export default function SuperadminMessagingV1WhatsAppQueuePanel({ queue, activeI
                 <p className="mt-3 line-clamp-2 text-sm text-secondary">{active.message}</p>
               </div>
               <div className="flex flex-wrap gap-2 lg:max-w-sm lg:justify-end">
-                <button type="button" onClick={() => onOpen(activeIndex)} className="inline-flex items-center gap-2 rounded-lg border border-primary/40 bg-primary/10 px-3 py-2 text-sm font-semibold text-on-primary hover:bg-primary/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                <button type="button" onClick={() => onOpen(activeIndex)} className="inline-flex items-center gap-2 rounded-lg border border-primary/40 bg-primary/10 px-3 py-2 text-sm font-semibold text-primary hover:bg-primary/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
                   <MessageCircle size={17} aria-hidden="true"/> Open WhatsApp
                 </button>
                 <button type="button" onClick={() => onMarkSent(activeIndex)} className="inline-flex items-center gap-2 rounded-lg bg-primary px-3 py-2 text-sm font-semibold text-on-primary hover:bg-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
@@ -67,7 +67,7 @@ export default function SuperadminMessagingV1WhatsAppQueuePanel({ queue, activeI
               {queue.map((item, index) => (<tr key={item.recipient.id} className={index === activeIndex ? 'border-b border-border bg-primary/5' : 'border-b border-border'}>
                   <td className="px-3 py-3">
                     <Tooltip content={item.recipient.contactName}>
-                      <span className="block max-w-44 truncate font-medium text-on-primary">{item.recipient.contactName}</span>
+                      <span className="block max-w-44 truncate font-medium text-primary">{item.recipient.contactName}</span>
                     </Tooltip>
                   </td>
                   <td className="px-3 py-3 text-secondary">{item.recipient.tenantName}</td>

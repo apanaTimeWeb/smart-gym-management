@@ -28,7 +28,7 @@ export function ManagerReportsExpensesTable() {
               <td className="px-5 py-3.5">
                 <span className={`text-xs font-semibold px-2.5 py-0.5 rounded-full ${style.bg} ${style.text}`}>{d.category}</span>
               </td>
-              <td className="px-5 py-3.5 text-sm font-semibold text-on-primary">{formatReportCurrency(d.amount)}</td>
+              <td className="px-5 py-3.5 text-sm font-semibold text-primary">{formatReportCurrency(d.amount)}</td>
               <td className="px-5 py-3.5">
                 <div className="flex items-center gap-2">
                   <div className="flex-1 h-2 bg-input rounded-full overflow-hidden max-w-32">

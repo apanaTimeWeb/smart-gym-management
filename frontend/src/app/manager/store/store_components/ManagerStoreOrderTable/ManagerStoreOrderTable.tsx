@@ -116,7 +116,7 @@ export default function ManagerStoreOrderTable() {
                   {o.method}
                 </td>
                 <td className="px-4 py-3">
-                  <span className="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold bg-success text-on-success dark:bg-success dark:text-on-success">
+                  <span className="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold bg-success text-success dark:bg-success dark:text-success">
                     {o.status}
                   </span>
                 </td>
@@ -129,7 +129,7 @@ export default function ManagerStoreOrderTable() {
                       e.stopPropagation();
                       handleWhatsApp(o);
                     }}
-                    className="p-1.5 rounded-lg bg-success text-on-success hover:bg-success/80 motion-safe:transition-colors"
+                    className="p-1.5 rounded-lg bg-success text-success hover:bg-success/80 motion-safe:transition-colors"
                     aria-label={`WhatsApp Receipt ORD-${o.id}`}
                     title="Send via WhatsApp"
                   >

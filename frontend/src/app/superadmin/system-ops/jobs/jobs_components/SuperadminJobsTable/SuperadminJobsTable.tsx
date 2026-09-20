@@ -69,13 +69,13 @@ export default function SuperadminJobsTable({ jobs, allJobsFiltered, selectedJob
                 </td>
                 <td className="p-4 text-right" onClick={(e) => e.stopPropagation()}>
                   <div className="flex items-center justify-end gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 motion-safe:transition-opacity">
-                    {job.status === 'FAILED' && (<button onClick={() => onRetry(job.id)} className="p-1.5 text-secondary hover:text-on-primary hover:bg-success/10 rounded-lg motion-safe:transition-colors" title="Retry Job" aria-label={`Retry job ${job.id}`}>
+                    {job.status === 'FAILED' && (<button onClick={() => onRetry(job.id)} className="p-1.5 text-secondary hover:text-success hover:bg-success/10 rounded-lg motion-safe:transition-colors" title="Retry Job" aria-label={`Retry job ${job.id}`}>
                         <RefreshCw size={18} strokeWidth={2}/>
                       </button>)}
-                    {(job.status === 'ACTIVE' || job.status === 'DELAYED') && (<button onClick={() => onCancel(job.id)} className="p-1.5 text-secondary hover:text-on-primary hover:bg-warning/10 rounded-lg motion-safe:transition-colors" title="Cancel Job" aria-label={`Cancel job ${job.id}`}>
+                    {(job.status === 'ACTIVE' || job.status === 'DELAYED') && (<button onClick={() => onCancel(job.id)} className="p-1.5 text-secondary hover:text-warning hover:bg-warning/10 rounded-lg motion-safe:transition-colors" title="Cancel Job" aria-label={`Cancel job ${job.id}`}>
                         <XCircle size={18} strokeWidth={2}/>
                       </button>)}
-                    <button onClick={() => onDelete(job.id)} className="p-1.5 text-secondary hover:text-on-primary hover:bg-danger-bg/10 rounded-lg motion-safe:transition-colors" title="Delete Job" aria-label={`Delete job ${job.id}`}>
+                    <button onClick={() => onDelete(job.id)} className="p-1.5 text-secondary hover:text-danger hover:bg-danger-bg/10 rounded-lg motion-safe:transition-colors" title="Delete Job" aria-label={`Delete job ${job.id}`}>
                       <Trash2 size={18} strokeWidth={2}/>
                     </button>
                   </div>

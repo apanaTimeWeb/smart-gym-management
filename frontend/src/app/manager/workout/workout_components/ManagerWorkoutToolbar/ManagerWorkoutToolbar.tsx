@@ -33,7 +33,7 @@ export default function ManagerWorkoutToolbar() {
           <button 
             key={t} 
             onClick={() => { setTab(t);  setSearch(''); }}
-            className={`px-4 py-3 text-sm font-semibold border-b-2 motion-safe:transition-colors whitespace-nowrap ${tab === t ? 'text-on-primary border-primary' : 'text-secondary border-transparent hover:text-on-primary hover:border-border'}`}
+            className={`px-4 py-3 text-sm font-semibold border-b-2 motion-safe:transition-colors whitespace-nowrap ${tab === t ? 'text-primary border-primary' : 'text-secondary border-transparent hover:text-primary hover:border-border'}`}
           >
             {t}
           </button>
@@ -46,14 +46,14 @@ export default function ManagerWorkoutToolbar() {
             value={localSearch} 
             onChange={e => setLocalSearch(e.target.value)}  
             placeholder="Search..." 
-            className="pl-8 pr-3 py-2 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-warning w-36 lg:w-48 bg-input text-on-primary motion-safe:transition-all" 
+            className="pl-8 pr-3 py-2 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-warning w-36 lg:w-48 bg-input text-primary motion-safe:transition-all" 
           />
         </div>
         {tab === 'Workout Plans' && (
           <select
             value={levelFilter}
             onChange={(e) => setLevelFilter(e.target.value)}
-            className="hidden sm:block px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-warning bg-input text-on-primary"
+            className="hidden sm:block px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-warning bg-input text-primary"
           >
             <option value="ALL">All Levels</option>
             <option value="Beginner">Beginner</option>

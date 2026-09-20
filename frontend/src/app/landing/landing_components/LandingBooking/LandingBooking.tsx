@@ -15,7 +15,7 @@ export default function LandingBooking() {
     <section id="booking" className="py-24 px-4 landing-booking-section">
       <div className="max-w-4xl mx-auto relative">
         <div className="text-center mb-16">
-          <div className="inline-block text-xs font-bold tracking-widest uppercase text-on-primary bg-warning/10 border border-warning/20 rounded-full px-4 py-2 mb-5">
+          <div className="inline-block text-xs font-bold tracking-widest uppercase text-warning bg-warning/10 border border-warning/20 rounded-full px-4 py-2 mb-5">
             Quick Action
           </div>
           <h2 className="text-4xl sm:text-5xl font-black text-white mb-4">

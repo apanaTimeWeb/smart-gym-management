@@ -39,7 +39,7 @@ export default function AdminFinancePnlTable({
                 <th role="button" tabIndex={0} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); event.currentTarget.click(); } }} 
                   key={h.key}
                   className={`px-4 py-3 text-xs font-semibold text-secondary uppercase tracking-wider select-none whitespace-nowrap ${
-                    h.sortable ? 'cursor-pointer hover:text-on-primary motion-safe:transition-colors' : ''
+                    h.sortable ? 'cursor-pointer hover:text-primary motion-safe:transition-colors' : ''
                   }`}
                   onClick={() => {
                     if (h.sortable) onSort(h.key as PnlSortKey);
@@ -80,11 +80,11 @@ export default function AdminFinancePnlTable({
                       {/* Branch Name */}
                       <td className="px-4 py-3.5">
                         <div className="flex items-center gap-2.5">
-                          <div className={`w-8 h-8 rounded-lg bg-primary-subtle flex items-center justify-center text-on-primary text-xs font-bold flex-shrink-0`}>
+                          <div className={`w-8 h-8 rounded-lg bg-primary-subtle flex items-center justify-center text-primary text-xs font-bold flex-shrink-0`}>
                             {branch.branchName.charAt(0)}
                           </div>
                           <div className="min-w-0">
-                            <p className="text-sm font-semibold text-on-primary truncate">{branch.branchName}</p>
+                            <p className="text-sm font-semibold text-primary truncate">{branch.branchName}</p>
                             <p className="text-xs text-disabled truncate">{branch.location}</p>
                           </div>
                         </div>

@@ -28,7 +28,7 @@ export default function AdminHrTabs() {
               type="button"
               key={t} 
               onClick={() => { setActiveTab(t);  setSearch(''); }}
-              className={`px-5 py-3.5 text-sm font-medium motion-safe:transition-colors border-b-2 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${activeTab === t ? 'text-on-primary border-primary bg-surface-highlight' : 'text-secondary border-transparent hover:opacity-80 bg-transparent'}`}
+              className={`px-5 py-3.5 text-sm font-medium motion-safe:transition-colors border-b-2 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${activeTab === t ? 'text-primary border-primary bg-surface-highlight' : 'text-secondary border-transparent hover:opacity-80 bg-transparent'}`}
             >
               {t}
             </button>
@@ -41,7 +41,7 @@ export default function AdminHrTabs() {
               value={search} 
               onChange={e => { setSearch(e.target.value);  }} 
               placeholder={`Search ${activeTab?.toLowerCase() || 'staff'}...`} 
-              className="pl-9 pr-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus-visible:outline-none focus-visible:ring-2 w-40 sm:w-full sm:w-64  bg-card text-on-primary"
+              className="pl-9 pr-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus-visible:outline-none focus-visible:ring-2 w-40 sm:w-full sm:w-64  bg-card text-primary"
             />
           </div>
           {activeTab === 'Staff' && (
@@ -49,7 +49,7 @@ export default function AdminHrTabs() {
               <select
                 value={branchFilter}
                 onChange={e => { setBranchFilter(e.target.value);  }}
-                className="px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 bg-card text-on-primary"
+                className="px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 bg-card text-primary"
               >
                 <option value="All">All Branches</option>
                 {(branches as AdminHrBranchReference[]).map(b => (
@@ -59,7 +59,7 @@ export default function AdminHrTabs() {
               <select
                 value={roleFilter}
                 onChange={e => { setRoleFilter(e.target.value);  }}
-                className="px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 bg-card text-on-primary"
+                className="px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 bg-card text-primary"
               >
                 <option value="All">All Roles</option>
                 <option value="Admin">Admin</option>
@@ -72,7 +72,7 @@ export default function AdminHrTabs() {
               type="month"
               value={payrollMonth}
               onChange={e => { setPayrollMonth(e.target.value);  }}
-              className="px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 bg-card text-on-primary"
+              className="px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 bg-card text-primary"
             />
           )}
   <div className="px-4 flex flex-wrap gap-2">

@@ -111,7 +111,7 @@ export default function AdminCouponsModal() {
                     key={opt.value}
                     type="button"
                     onClick={() => toggleGym(opt.value)}
-                    className={`px-3 py-1.5 rounded-lg text-sm font-medium border motion-safe:transition-all ${isSelected ? 'bg-primary-subtle text-on-primary border-primary' : 'bg-input text-secondary border-border hover:border-primary'}`}
+                    className={`px-3 py-1.5 rounded-lg text-sm font-medium border motion-safe:transition-all ${isSelected ? 'bg-primary-subtle text-primary border-primary' : 'bg-input text-secondary border-border hover:border-primary'}`}
                   >
                     {opt.label}
                   </button>
@@ -125,19 +125,19 @@ export default function AdminCouponsModal() {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-secondary mb-1">Valid From <span className="text-danger">*</span></label>
-              <input {...register('validFrom')} type="date" className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-on-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" />
+              <input {...register('validFrom')} type="date" className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" />
               {errors.validFrom && <p className="text-xs text-danger mt-1">{errors.validFrom.message}</p>}
             </div>
             <div>
               <label className="block text-sm font-medium text-secondary mb-1">Valid Until <span className="text-danger">*</span></label>
-              <input {...register('validUntil')} type="date" className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-on-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" />
+              <input {...register('validUntil')} type="date" className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" />
               {errors.validUntil && <p className="text-xs text-danger mt-1">{errors.validUntil.message}</p>}
             </div>
           </div>
 
           {/* Footer */}
           <div className="flex justify-end gap-3 pt-2 border-t border-border">
-            <button type="button" onClick={() => setShowModal(false)} className="px-4 py-2 bg-input border border-border rounded-lg text-sm font-medium text-secondary hover:text-on-primary motion-safe:transition-colors motion-safe:duration-base">
+            <button type="button" onClick={() => setShowModal(false)} className="px-4 py-2 bg-input border border-border rounded-lg text-sm font-medium text-secondary hover:text-primary motion-safe:transition-colors motion-safe:duration-base">
               Cancel
             </button>
             <button type="submit" disabled={saving} className="px-5 py-2 bg-primary text-on-primary rounded-lg text-sm font-semibold hover:bg-primary-hover motion-safe:transition-colors disabled:opacity-60 disabled:cursor-not-allowed motion-safe:active:scale-95 min-w-32 motion-safe:duration-base">

@@ -40,7 +40,7 @@ export default function TrainerMembersProfile() {
         <div className="bg-card rounded-xl shadow-card border border-border p-6">
           <div className="flex flex-wrap items-center justify-between gap-5 mb-6">
             <div className="flex items-center gap-5">
-              <div className="w-20 h-20 rounded-full flex items-center justify-center text-3xl font-bold text-on-primary bg-primary-subtle">
+              <div className="w-20 h-20 rounded-full flex items-center justify-center text-3xl font-bold text-primary bg-primary-subtle">
                 {selectedMember.name.charAt(0)}
               </div>
               <div>
@@ -50,7 +50,7 @@ export default function TrainerMembersProfile() {
                   <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${statusStyle.bg} ${statusStyle.text}`}>
                     {selectedMember.status}
                   </span>
-                  <span className="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold bg-info-bg text-on-info">
+                  <span className="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold bg-info-bg text-info">
                     {displayValue(selectedMember.plan?.name)}
                   </span>
                   <span className="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-bg text-purple">
@@ -89,7 +89,7 @@ export default function TrainerMembersProfile() {
             ].map((f) => (
               <div key={f.label} className="bg-input rounded-lg p-3">
                 <p className="text-xs text-secondary mb-0.5">{f.label}</p>
-                <p className="text-sm font-semibold text-on-success">{f.value}</p>
+                <p className="text-sm font-semibold text-primary">{f.value}</p>
               </div>
             ))}
           </div>
@@ -104,8 +104,8 @@ export default function TrainerMembersProfile() {
                 onClick={() => { setProfileTab(t as TrainerProfileTab); }}
                 className={`whitespace-nowrap px-5 py-3.5 text-sm font-medium motion-safe:transition-all motion-safe:duration-base border-b-2 ${
                   profileTab === t
-                    ? 'text-on-success bg-primary-subtle border-primary'
-                    : 'border-transparent text-secondary hover:text-on-success'
+                    ? 'text-primary bg-primary-subtle border-primary'
+                    : 'border-transparent text-secondary hover:text-primary'
                 }`}
               >
                 {label}

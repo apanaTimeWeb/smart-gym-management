@@ -43,7 +43,7 @@ export default function TrainerNotificationsContent() {
         </div>
 
         {isError && (
-          <div role="alert" className="bg-danger-bg text-on-danger text-sm rounded-xl px-4 py-3 mb-4">
+          <div role="alert" className="bg-danger-bg text-danger text-sm rounded-xl px-4 py-3 mb-4">
             Failed to load notifications. Please refresh.
           </div>
         )}

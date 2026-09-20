@@ -4,9 +4,9 @@ import type { SuperadminBroadcastStatusBadgeProps } from '@/app/superadmin/broad
 export default function SuperadminBroadcastStatusBadge({ status }: SuperadminBroadcastStatusBadgeProps) {
     switch (status) {
         case 'SENT':
-            return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-success-bg text-on-success">SENT</span>;
+            return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-success-bg text-success">SENT</span>;
         case 'SCHEDULED':
-            return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-warning-bg text-on-primary">SCHEDULED</span>;
+            return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-warning-bg text-warning">SCHEDULED</span>;
         case 'DRAFT':
         default:
             return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-input text-secondary">DRAFT</span>;

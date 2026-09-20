@@ -58,8 +58,8 @@ export default function ManagerPtTrainerWorkload({ workload }: ManagerPtTrainerW
                   <td className="py-3 px-4 text-right">
                     <span className={`text-xs font-bold px-2 py-1 rounded-full uppercase tracking-wider ${
                       trainer.status === 'Fully Booked' 
-                        ? 'bg-danger/10 text-on-danger' 
-                        : 'bg-success/10 text-on-success'
+                        ? 'bg-danger/10 text-danger' 
+                        : 'bg-success/10 text-success'
                     }`}>
                       {trainer.status}
                     </span>

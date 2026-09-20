@@ -57,7 +57,7 @@ export default function ManagerProfileOverview() {
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-bold text-primary truncate">{selectedMember.assignedTrainerName}</span>
                   {selectedMember.isPT && (
-                    <span className="text-xs font-semibold px-1.5 py-0.5 bg-primary/10 text-on-primary rounded-full border border-primary/20 shrink-0">
+                    <span className="text-xs font-semibold px-1.5 py-0.5 bg-primary/10 text-primary rounded-full border border-primary/20 shrink-0">
                       PT
                     </span>
                   )}
@@ -99,14 +99,14 @@ export default function ManagerProfileOverview() {
             {selectedMember.status !== 'FROZEN' ? (
               <button 
                 onClick={() => freezeMember(true)} 
-                className="flex items-center justify-center gap-2 p-3 text-sm font-semibold text-on-info bg-info border border-info/30 rounded-xl motion-safe:transition-all hover:-translate-y-0.5 hover:shadow-card" 
+                className="flex items-center justify-center gap-2 p-3 text-sm font-semibold text-info bg-info border border-info/30 rounded-xl motion-safe:transition-all hover:-translate-y-0.5 hover:shadow-card" 
               >
                 <Snowflake size={18} /> Freeze
               </button>
             ) : (
               <button 
                 onClick={() => freezeMember(false)} 
-                className="flex items-center justify-center gap-2 p-3 text-sm font-semibold text-on-success bg-success border border-success/30 rounded-xl motion-safe:transition-all hover:-translate-y-0.5 hover:shadow-card" 
+                className="flex items-center justify-center gap-2 p-3 text-sm font-semibold text-success bg-success border border-success/30 rounded-xl motion-safe:transition-all hover:-translate-y-0.5 hover:shadow-card" 
               >
                 Unfreeze
               </button>
@@ -114,14 +114,14 @@ export default function ManagerProfileOverview() {
             {selectedMember.status !== 'SUSPENDED' && selectedMember.pendingAmount > 0 ? (
               <button 
                 onClick={() => toggleSuspend(true)} 
-                className="flex items-center justify-center gap-2 p-3 text-sm font-semibold text-on-danger bg-danger border border-danger/30 rounded-xl motion-safe:transition-all hover:-translate-y-0.5 hover:shadow-card" 
+                className="flex items-center justify-center gap-2 p-3 text-sm font-semibold text-danger bg-danger border border-danger/30 rounded-xl motion-safe:transition-all hover:-translate-y-0.5 hover:shadow-card" 
               >
                 <Ban size={18} /> Suspend
               </button>
             ) : selectedMember.status === 'SUSPENDED' ? (
               <button 
                 onClick={() => toggleSuspend(false)} 
-                className="flex items-center justify-center gap-2 p-3 text-sm font-semibold text-on-success bg-success border border-success/30 rounded-xl motion-safe:transition-all hover:-translate-y-0.5 hover:shadow-card" 
+                className="flex items-center justify-center gap-2 p-3 text-sm font-semibold text-success bg-success border border-success/30 rounded-xl motion-safe:transition-all hover:-translate-y-0.5 hover:shadow-card" 
               >
                 Unsuspend
               </button>
@@ -131,7 +131,7 @@ export default function ManagerProfileOverview() {
               !isAssigningTrainer ? (
                 <button 
                   onClick={() => setIsAssigningTrainer(true)}
-                  className="flex items-center justify-center gap-2 p-3 text-sm font-semibold text-on-primary bg-primary/10 border border-primary/20 rounded-xl motion-safe:transition-all hover:-translate-y-0.5 hover:shadow-card"
+                  className="flex items-center justify-center gap-2 p-3 text-sm font-semibold text-primary bg-primary/10 border border-primary/20 rounded-xl motion-safe:transition-all hover:-translate-y-0.5 hover:shadow-card"
                 >
                   <UserCheck size={18} /> Assign Trainer
                 </button>

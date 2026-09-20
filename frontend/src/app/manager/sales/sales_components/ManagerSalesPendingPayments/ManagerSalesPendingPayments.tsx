@@ -60,7 +60,7 @@ export default function ManagerSalesPendingPayments() {
         {pendingPayments.map((p: PendingPaymentMember) => (
           <div key={p.id} className="flex items-center justify-between p-4 border border-border rounded-xl hover:border-warning motion-safe:transition-all motion-safe:duration-200 ease-in-out motion-safe:hover:-translate-y-1 hover:shadow-card bg-card">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 bg-danger rounded-full flex items-center justify-center text-on-danger font-semibold text-sm">
+              <div className="w-9 h-9 bg-danger rounded-full flex items-center justify-center text-danger font-semibold text-sm">
                 {p.name.charAt(0)}
               </div>
               <div>

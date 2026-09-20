@@ -20,7 +20,7 @@ export function SuperadminMessagingMessagesTab({ search, setSearch, channelFilte
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <div className="flex flex-wrap gap-2">
             {(['ALL', 'EMAIL', 'SMS', 'IN_APP'] as const).map((channel) => (
-              <button key={channel} type="button" onClick={() => setChannelFilter(channel)} className={`rounded-lg border px-3 py-2 text-xs font-medium motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${channelFilter === channel ? 'border-primary/30 bg-primary/10 text-on-primary' : 'border-border bg-input text-secondary hover:text-on-primary'}`}>
+              <button key={channel} type="button" onClick={() => setChannelFilter(channel)} className={`rounded-lg border px-3 py-2 text-xs font-medium motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${channelFilter === channel ? 'border-primary/30 bg-primary/10 text-primary' : 'border-border bg-input text-secondary hover:text-primary'}`}>
                 {channel}
               </button>
             ))}
@@ -45,7 +45,7 @@ export function SuperadminMessagingMessagesTab({ search, setSearch, channelFilte
             <tbody className="divide-y divide-border">
               {messages.map((message) => (
                 <tr key={message.id} className="motion-safe:transition-colors hover:bg-input/30">
-                  <td className="px-4 py-3 font-medium text-on-primary">{message.tenantName}</td>
+                  <td className="px-4 py-3 font-medium text-primary">{message.tenantName}</td>
                   <td className="px-4 py-3">
                     <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold ${CHANNEL_STYLES[message.channel]}`}>
                       {message.channel === 'EMAIL' && <Mail size={11} aria-hidden="true" />}

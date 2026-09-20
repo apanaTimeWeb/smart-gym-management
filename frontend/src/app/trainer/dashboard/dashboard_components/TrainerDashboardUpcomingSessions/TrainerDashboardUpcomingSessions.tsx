@@ -27,7 +27,7 @@ export default function TrainerDashboardUpcomingSessions() {
           stats.upcomingSessions.map(session => (
             <div key={session.id} className="flex items-center justify-between p-3 rounded-xl border border-border/50 bg-page hover:bg-page motion-safe:transition-colors motion-safe:duration-base">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-primary-subtle text-on-primary flex items-center justify-center font-bold">
+                <div className="w-10 h-10 rounded-full bg-primary-subtle text-primary flex items-center justify-center font-bold">
                   {session.name.charAt(0)}
                 </div>
                 <div>

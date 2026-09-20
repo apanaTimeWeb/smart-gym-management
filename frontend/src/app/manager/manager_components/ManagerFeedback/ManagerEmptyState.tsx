@@ -7,7 +7,7 @@ import type { ManagerEmptyStateProps } from '@/app/manager/manager_components/Ma
 export default function ManagerEmptyState({ icon, title, subtitle }: ManagerEmptyStateProps) {
   return (
     <div className="flex flex-col items-center justify-center py-16 px-4 text-center motion-safe:animate-in motion-safe:fade-in motion-safe:duration-500">
-      <div className="w-20 h-20 bg-primary/5 rounded-full flex items-center justify-center mb-5 text-on-primary/40 shadow-card border border-primary/10">
+      <div className="w-20 h-20 bg-primary/5 rounded-full flex items-center justify-center mb-5 text-primary/40 shadow-card border border-primary/10">
         {icon}
       </div>
       <h3 className="text-xl font-bold text-primary tracking-tight mb-2">{title}</h3>

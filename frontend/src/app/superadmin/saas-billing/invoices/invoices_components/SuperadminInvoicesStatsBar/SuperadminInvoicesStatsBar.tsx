@@ -15,12 +15,12 @@ export default function SuperadminInvoicesStatsBar({ totalRevenue, failedRevenue
     ] as const;
     return (<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
       {cards.map(({ label, value, tone, Icon }) => (<div key={label} className="flex items-center gap-4 rounded-xl border border-border bg-card p-6 motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out motion-safe:hover:-translate-y-1 hover:shadow-card">
-          <div className={`rounded-xl p-4 ${tone === 'success' ? 'bg-success/10 text-on-primary' : tone === 'warning' ? 'bg-warning/10 text-on-primary' : 'bg-danger-bg/10 text-on-primary'}`}>
+          <div className={`rounded-xl p-4 ${tone === 'success' ? 'bg-success/10 text-success' : tone === 'warning' ? 'bg-warning/10 text-warning' : 'bg-danger-bg/10 text-danger'}`}>
             <Icon size={32} aria-hidden="true"/>
           </div>
           <div>
             <p className="text-sm font-medium text-secondary">{label}</p>
-            <p className={`text-3xl font-bold ${tone === 'danger' ? 'text-on-primary' : 'text-primary'}`}>{value}</p>
+            <p className={`text-3xl font-bold ${tone === 'danger' ? 'text-danger' : 'text-primary'}`}>{value}</p>
           </div>
         </div>))}
     </div>);

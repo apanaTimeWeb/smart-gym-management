@@ -14,7 +14,7 @@ export default function LandingPlans() {
     <section id="plans" className="py-24 px-4 bg-background">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <div className="inline-block text-xs font-bold tracking-widest uppercase text-on-primary bg-warning/10 border border-warning/20 rounded-full px-4 py-2 mb-5">
+          <div className="inline-block text-xs font-bold tracking-widest uppercase text-warning bg-warning/10 border border-warning/20 rounded-full px-4 py-2 mb-5">
             Membership Plans
           </div>
           <h2 className="text-4xl sm:text-5xl font-black text-white mb-4">
@@ -31,11 +31,11 @@ export default function LandingPlans() {
           {PLANS.map((p) => (
             <div key={p.name} className={`relative bg-card border-2 rounded-2xl p-6 hover:bg-white/10 transition-all flex flex-col ${p.color} ${p.badge ? 'transform lg:-translate-y-4 shadow-2xl' : ''}`}>
               {p.badge && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 text-xs font-bold px-4 py-1.5 rounded-full text-on-primary whitespace-nowrap bg-warning">
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 text-xs font-bold px-4 py-1.5 rounded-full text-white whitespace-nowrap bg-warning">
                   ⭐ {p.badge}
                 </div>
               )}
-              <h3 className="text-lg font-bold text-on-primary mb-2">{p.name}</h3>
+              <h3 className="text-lg font-bold text-white mb-2">{p.name}</h3>
               <div className="mb-4">
                 <div className="flex items-end gap-1 mb-1">
                   <span className="text-3xl font-black" style={{ background: 'var(--landing-text-gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
@@ -48,14 +48,14 @@ export default function LandingPlans() {
               <div className="space-y-3 mb-6 flex-1">
                 {p.features.map((f) => (
                   <div key={f} className="flex items-start gap-2.5 text-xs text-secondary">
-                    <CheckCircle size={14} className="text-on-primary flex-shrink-0 mt-0.5" />
+                    <CheckCircle size={14} className="text-warning flex-shrink-0 mt-0.5" />
                     {f}
                   </div>
                 ))}
               </div>
               <Link
                 href={LandingUrlConfig.ANCHORS.BOOKING}
-                className={`block text-center py-3 rounded-xl text-sm font-bold transition-all hover:scale-105 ${p.badge ? 'bg-primary text-on-primary hover:bg-primary-hover' : 'border border-border text-on-primary hover:border-warning/50'}`}
+                className={`block text-center py-3 rounded-xl text-sm font-bold transition-all hover:scale-105 ${p.badge ? 'bg-primary text-white hover:bg-primary-hover' : 'border border-border text-white hover:border-warning/50'}`}
               >
                 Buy Membership
               </Link>

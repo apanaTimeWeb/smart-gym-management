@@ -72,7 +72,7 @@ export default function TrainerMembersProfileWorkout() {
                   setSelectedWorkoutId(workout.id || '');
                   setIsAssigning(true);
                 }}
-                className="flex items-center gap-2 px-4 py-2 bg-input text-on-primary border border-border rounded-xl text-sm font-semibold hover:bg-primary-subtle motion-safe:transition-all motion-safe:active:scale-95"
+                className="flex items-center gap-2 px-4 py-2 bg-input text-primary border border-border rounded-xl text-sm font-semibold hover:bg-primary-subtle motion-safe:transition-all motion-safe:active:scale-95"
               >
                 <RefreshCw size={15} /> Change Plan
               </button>
@@ -134,10 +134,10 @@ export default function TrainerMembersProfileWorkout() {
           <div className="flex flex-wrap items-start justify-between gap-4 border-b border-border pb-5">
             <div>
               <div className="flex items-center gap-2 mb-1">
-                <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary-subtle text-on-primary">
+                <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary-subtle text-primary">
                   Active Plan
                 </span>
-                <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-info-bg text-on-info">
+                <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-info-bg text-info">
                   {displayValue(workout.level)}
                 </span>
               </div>
@@ -168,7 +168,7 @@ export default function TrainerMembersProfileWorkout() {
                 {workout.workoutExercises.map((ex, idx) => (
                   <div key={`${ex.name}-${ex.sets}-${ex.reps}-${ex.restTime ?? 'none'}-${ex.weight ?? 'none'}`} className="bg-floating border border-border rounded-xl p-3.5 flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <span className="w-6 h-6 rounded-full bg-primary-subtle text-on-primary text-xs font-bold flex items-center justify-center">
+                      <span className="w-6 h-6 rounded-full bg-primary-subtle text-primary text-xs font-bold flex items-center justify-center">
                         {idx + 1}
                       </span>
                       <div>
@@ -192,7 +192,7 @@ export default function TrainerMembersProfileWorkout() {
         </div>
       ) : !isAssigning ? (
         <div className="bg-card border border-dashed border-border rounded-2xl p-12 text-center space-y-3">
-          <div className="w-14 h-14 rounded-full bg-primary-subtle text-on-primary flex items-center justify-center mx-auto">
+          <div className="w-14 h-14 rounded-full bg-primary-subtle text-primary flex items-center justify-center mx-auto">
             <Dumbbell size={26} />
           </div>
           <h4 className="text-lg font-bold text-primary">No Workout Plan Assigned</h4>
@@ -218,7 +218,7 @@ export default function TrainerMembersProfileWorkout() {
                 <h5 className="font-bold text-sm text-primary">{historyItem.name}</h5>
                 <p className="text-xs text-secondary">{historyItem.date} Â· {historyItem.level}</p>
               </div>
-              <span className="px-3 py-1 rounded-full text-xs font-semibold bg-success-bg text-on-success flex items-center gap-1">
+              <span className="px-3 py-1 rounded-full text-xs font-semibold bg-success-bg text-success flex items-center gap-1">
                 <Check size={12} /> {historyItem.status}
               </span>
             </div>

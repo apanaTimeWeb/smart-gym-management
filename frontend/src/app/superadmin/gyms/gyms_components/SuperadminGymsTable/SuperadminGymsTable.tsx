@@ -121,15 +121,15 @@ export default function SuperadminGymsTable() {
                 <td className="p-4 text-secondary font-medium text-right">
                   {gym.memberCount}
                 </td>
-                <td className="p-4 text-on-success font-medium text-right">
+                <td className="p-4 text-success font-medium text-right">
                   {/* Design Â§21: Indian Numbering System â€” â‚¹1,23,456 */}
                   {formatCurrency(gym.monthlyRevenue)}
                 </td>
                 <td className="p-4">
                   <div className="flex justify-center">
-                    {gym.status === 'ACTIVE' ? (<span className="flex items-center gap-1 text-on-success text-xs font-semibold bg-success-bg px-2.5 py-1 rounded-full border border-success/20">
+                    {gym.status === 'ACTIVE' ? (<span className="flex items-center gap-1 text-success text-xs font-semibold bg-success-bg px-2.5 py-1 rounded-full border border-success/20">
                         <CheckCircle2 size={18}/> Active
-                      </span>) : gym.status === 'SUSPENDED' ? (<span className="flex items-center gap-1 text-on-danger text-xs font-semibold bg-danger-bg px-2.5 py-1 rounded-full border border-danger/20">
+                      </span>) : gym.status === 'SUSPENDED' ? (<span className="flex items-center gap-1 text-danger text-xs font-semibold bg-danger-bg px-2.5 py-1 rounded-full border border-danger/20">
                         <Ban size={18}/> Suspended
                       </span>) : (<span className="text-secondary text-xs font-semibold bg-input px-2.5 py-1 rounded-full border border-border">{gym.status}</span>)}
                   </div>
@@ -142,22 +142,22 @@ export default function SuperadminGymsTable() {
                 <td className="p-4 text-right">
                   {/* Rule 64: opacity-100 on mobile, hover-only on lg+ */}
                   <div className="flex items-center justify-end gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 motion-safe:transition-opacity">
-                    {isActionLoading ? (<div className="p-2 text-on-success">
+                    {isActionLoading ? (<div className="p-2 text-primary">
                         <Loader2 size={18} className="motion-safe:animate-spin"/>
                       </div>) : (<>
-                        <button onClick={(e) => onGhostLoginClick(e, gym.id, gym.name)} className="min-h-11 min-w-11 p-2 text-on-success hover:bg-primary-subtle rounded-lg motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page" title="Ghost Login (Login As Admin)" aria-label={`Ghost Login to ${gym.name}`}>
+                        <button onClick={(e) => onGhostLoginClick(e, gym.id, gym.name)} className="min-h-11 min-w-11 p-2 text-primary hover:bg-primary-subtle rounded-lg motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page" title="Ghost Login (Login As Admin)" aria-label={`Ghost Login to ${gym.name}`}>
                           <LogIn size={18}/>
                         </button>
                         <button onClick={(e) => onSuspendClick(e, gym.id, gym.name, gym.status)} className={`min-h-11 min-w-11 p-2 rounded-lg motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page ${gym.status === 'SUSPENDED'
-                        ? 'text-on-success hover:bg-success/10'
-                        : 'text-on-danger hover:bg-danger-bg/10'}`} title={gym.status === 'SUSPENDED' ? 'Activate Gym' : 'Suspend Gym'} aria-label={gym.status === 'SUSPENDED' ? `Activate ${gym.name}` : `Suspend ${gym.name}`}>
+                        ? 'text-success hover:bg-success/10'
+                        : 'text-danger hover:bg-danger-bg/10'}`} title={gym.status === 'SUSPENDED' ? 'Activate Gym' : 'Suspend Gym'} aria-label={gym.status === 'SUSPENDED' ? `Activate ${gym.name}` : `Suspend ${gym.name}`}>
                           {gym.status === 'SUSPENDED' ? <PlayCircle size={18}/> : <Ban size={18}/>}
                         </button>
-                        <button onClick={(e) => { e.stopPropagation(); openWhatsappModal(gym); }} className="min-h-11 min-w-11 p-2 text-secondary hover:bg-success/10 hover:text-on-success rounded-lg motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page" title="WhatsApp Owner" aria-label={`WhatsApp owner of ${gym.name}`}>
+                        <button onClick={(e) => { e.stopPropagation(); openWhatsappModal(gym); }} className="min-h-11 min-w-11 p-2 text-secondary hover:bg-success/10 hover:text-success rounded-lg motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page" title="WhatsApp Owner" aria-label={`WhatsApp owner of ${gym.name}`}>
                           <MessageCircle size={18}/>
                         </button>
 
-                        <button onClick={(e) => onDeleteClick(e, gym)} className="min-h-11 min-w-11 p-2 text-secondary hover:bg-danger-bg/10 hover:text-on-danger rounded-lg motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page" title="Delete Gym" aria-label={`Delete ${gym.name}`}>
+                        <button onClick={(e) => onDeleteClick(e, gym)} className="min-h-11 min-w-11 p-2 text-secondary hover:bg-danger-bg/10 hover:text-danger rounded-lg motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page" title="Delete Gym" aria-label={`Delete ${gym.name}`}>
                           <Trash2 size={18}/>
                         </button>
                       </>)}

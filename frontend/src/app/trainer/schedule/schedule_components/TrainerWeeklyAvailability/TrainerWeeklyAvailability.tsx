@@ -95,7 +95,7 @@ export default function TrainerWeeklyAvailability() {
                 <span className="w-11 h-6 bg-border peer-focus:outline-none rounded-full peer-checked:bg-primary motion-safe:transition-colors motion-safe:duration-base" aria-hidden="true" />
                 <span className="absolute left-0.5 top-0.5 h-5 w-5 rounded-full border border-border bg-card motion-safe:transition-transform peer-checked:translate-x-5" aria-hidden="true" />
               </label>
-              <span className={`font-semibold w-24 ${day.isAvailable ? 'text-on-primary' : 'text-secondary line-through'}`}>{day.day}</span>
+              <span className={`font-semibold w-24 ${day.isAvailable ? 'text-primary' : 'text-secondary line-through'}`}>{day.day}</span>
             </div>
 
             <div className="flex items-center gap-3">
@@ -104,7 +104,7 @@ export default function TrainerWeeklyAvailability() {
                 disabled={!day.isAvailable}
                 value={day.startTime}
                 onChange={(e) => handleChangeTime(idx, 'startTime', e.target.value)}
-                className="bg-card border border-border rounded-lg px-3 py-2 text-sm text-on-primary focus:outline-none focus:border-primary disabled:opacity-50"
+                className="bg-card border border-border rounded-lg px-3 py-2 text-sm text-primary focus:outline-none focus:border-primary disabled:opacity-50"
               />
               <span className="text-secondary font-medium">to</span>
               <input 
@@ -112,7 +112,7 @@ export default function TrainerWeeklyAvailability() {
                 disabled={!day.isAvailable}
                 value={day.endTime}
                 onChange={(e) => handleChangeTime(idx, 'endTime', e.target.value)}
-                className="bg-card border border-border rounded-lg px-3 py-2 text-sm text-on-primary focus:outline-none focus:border-primary disabled:opacity-50"
+                className="bg-card border border-border rounded-lg px-3 py-2 text-sm text-primary focus:outline-none focus:border-primary disabled:opacity-50"
               />
             </div>
           </div>

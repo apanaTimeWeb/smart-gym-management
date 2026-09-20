@@ -52,8 +52,8 @@ export default function ManagerCommunicationsHistory() {
               onClick={() => setHistoryChannelFilter(ch)}
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold border motion-safe:transition-all capitalize ${
                 historyChannelFilter === ch
-                  ? 'bg-primary-subtle border-primary text-on-success'
-                  : 'bg-input border-border text-secondary hover:text-on-success'
+                  ? 'bg-primary-subtle border-primary text-primary'
+                  : 'bg-input border-border text-secondary hover:text-primary'
               }`}
             >
               {ch === 'all' ? 'All Channels' : ch}
@@ -65,9 +65,9 @@ export default function ManagerCommunicationsHistory() {
       {paginatedCampaigns.length === 0 ? (
         <div className="bg-card border border-border rounded-xl p-12 flex flex-col items-center gap-3 text-center">
           <div className="w-12 h-12 rounded-full bg-primary-subtle flex items-center justify-center">
-            <MessageCircle size={18} className="text-on-success" />
+            <MessageCircle size={18} className="text-primary" />
           </div>
-          <p className="text-base font-semibold text-on-success">No campaigns yet</p>
+          <p className="text-base font-semibold text-primary">No campaigns yet</p>
           <p className="text-sm text-secondary">Send your first campaign using the Compose tab.</p>
         </div>
       ) : (
@@ -90,11 +90,11 @@ export default function ManagerCommunicationsHistory() {
                   return (
                     <tr key={c.id} className="hover:bg-primary/5 motion-safe:transition-colors">
                       <td className="px-4 py-3">
-                        <p className="text-sm font-medium text-on-success">{c.title}</p>
+                        <p className="text-sm font-medium text-primary">{c.title}</p>
                       </td>
                       <td className="px-4 py-3">
                         <span
-                          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold text-on-success ${isWA ? 'bg-success' : 'bg-info text-on-info'}`}
+                          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold text-on-success ${isWA ? 'bg-success' : 'bg-info text-info'}`}
                         >
                           {isWA ? <MessageCircle size={18} /> : <Mail size={18} />}
                           {isWA ? 'WhatsApp' : 'Email'}
@@ -107,7 +107,7 @@ export default function ManagerCommunicationsHistory() {
                           {c.recipientCount}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-sm text-on-success font-medium">{c.sentCount}</td>
+                      <td className="px-4 py-3 text-sm text-primary font-medium">{c.sentCount}</td>
                       <td className="px-4 py-3">
                         <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${statusStyle?.bg || ''} ${statusStyle?.text || ''}`}>
                           {statusStyle?.label || c.status}

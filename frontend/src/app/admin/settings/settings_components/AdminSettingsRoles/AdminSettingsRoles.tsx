@@ -29,7 +29,7 @@ export function AdminSettingsRoles() {
           return (
             <div key={role.role} className="border border-border rounded-xl p-5 bg-input">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-xl bg-primary-subtle flex items-center justify-center text-on-primary"><ShieldCheck size={18} /></div>
+                <div className="w-10 h-10 rounded-xl bg-primary-subtle flex items-center justify-center text-primary"><ShieldCheck size={18} /></div>
                 <div>
                   <h3 className="font-semibold text-primary text-base capitalize">{role.role}</h3>
                   <p className="text-xs text-secondary">{granted} of {total} permissions enabled</p>
@@ -37,7 +37,7 @@ export function AdminSettingsRoles() {
               </div>
               <div className="flex flex-wrap gap-2">
                 {Object.entries(role.permissions).map(([permission, enabled]) => (
-                  <span key={permission} className={`px-2 py-1 text-xs font-medium uppercase tracking-wider rounded-full border ${enabled ? 'bg-success text-on-success border-border' : 'bg-input text-secondary border-border'}`}>
+                  <span key={permission} className={`px-2 py-1 text-xs font-medium uppercase tracking-wider rounded-full border ${enabled ? 'bg-success text-success border-border' : 'bg-input text-secondary border-border'}`}>
                     {permission.replaceAll('_', ' ')}
                   </span>
                 ))}

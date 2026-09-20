@@ -32,7 +32,7 @@ export default function ManagerStoreToolbar() {
  <button 
  key={t} 
  onClick={() => setTab(t)}
- className={`px-4 py-3 text-sm font-semibold border-b-2 motion-safe:transition-colors whitespace-nowrap ${tab === t ? 'text-on-primary border-primary' : 'text-secondary border-transparent hover:text-on-primary hover:border-border'}`}
+ className={`px-4 py-3 text-sm font-semibold border-b-2 motion-safe:transition-colors whitespace-nowrap ${tab === t ? 'text-primary border-primary' : 'text-secondary border-transparent hover:text-primary hover:border-border'}`}
  >
  {t}
  </button>
@@ -45,7 +45,7 @@ export default function ManagerStoreToolbar() {
             value={localSearch} 
             onChange={e => setLocalSearch(e.target.value)} 
             placeholder="Search..." 
-            className="pl-9 pr-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary w-40 sm: w-full sm:w-64  bg-input text-on-primary" 
+            className="pl-9 pr-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary w-40 sm: w-full sm:w-64  bg-input text-primary" 
           />
         </div>
         {tab === 'Products' && (

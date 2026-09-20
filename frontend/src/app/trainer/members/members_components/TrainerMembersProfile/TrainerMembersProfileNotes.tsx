@@ -37,7 +37,7 @@ export default function TrainerMembersProfileNotes() {
       {open && (
         <div className="fixed inset-0 z-40 bg-overlay/80 flex items-center justify-center p-4" role="presentation">
           <div className="w-full max-w-md bg-overlay border border-border rounded-xl shadow-dialog p-5" role="dialog" aria-modal="true" aria-labelledby="trainer-member-note-title">
-            <div className="flex items-center justify-between mb-4"><h4 id="trainer-member-note-title" className="font-semibold text-primary">Add Trainer Note</h4><button type="button" aria-label="Close add note dialog" onClick={() => setOpen(false)} className="p-2 rounded-lg text-secondary hover:text-on-primary hover:bg-primary-subtle"><X size={18} /></button></div>
+            <div className="flex items-center justify-between mb-4"><h4 id="trainer-member-note-title" className="font-semibold text-primary">Add Trainer Note</h4><button type="button" aria-label="Close add note dialog" onClick={() => setOpen(false)} className="p-2 rounded-lg text-secondary hover:text-primary hover:bg-primary-subtle"><X size={18} /></button></div>
             <label htmlFor="trainer-member-note" className="block text-sm font-medium text-secondary mb-1">Note</label>
             <textarea id="trainer-member-note" value={noteText} onChange={e => setNoteText(e.target.value)} rows={5} aria-describedby="trainer-member-note-help" className="w-full bg-input border border-border rounded-lg p-3 text-sm text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" />
             <p id="trainer-member-note-help" className="text-xs text-secondary mt-1">Add a private coaching note for this member.</p>

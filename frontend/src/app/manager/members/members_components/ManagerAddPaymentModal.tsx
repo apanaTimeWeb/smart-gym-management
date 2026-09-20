@@ -53,7 +53,7 @@ export default function ManagerAddPaymentModal() {
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {(selectedMember.pendingAmount > 0 || (selectedMember.advanceAmount && selectedMember.advanceAmount > 0)) && (
             <div className={`p-3 rounded-lg border mb-4 ${selectedMember.pendingAmount > 0 ? 'bg-danger border-border/20' : 'bg-success border-success/20'}`}>
-              <p className={`text-sm font-semibold ${selectedMember.pendingAmount > 0 ? 'text-on-danger' : 'text-on-success'}`}>
+              <p className={`text-sm font-semibold ${selectedMember.pendingAmount > 0 ? 'text-danger' : 'text-success'}`}>
                 {selectedMember.pendingAmount > 0 
                   ? `Current Dues: ${formatCurrencyFromMinorUnits(selectedMember.pendingAmount, ManagerEnvConfig.currencyCode)}` 
                   : `Advance Balance: ${formatCurrencyFromMinorUnits(selectedMember.advanceAmount || 0, ManagerEnvConfig.currencyCode)}`}
@@ -62,24 +62,24 @@ export default function ManagerAddPaymentModal() {
           )}
 
           <div>
-            <label className="block text-sm font-medium text-on-success mb-1.5">Amount</label>
+            <label className="block text-sm font-medium text-primary mb-1.5">Amount</label>
             <input 
               type="number" 
               required 
               min="1"
               value={amount}
               onChange={e => setAmount(e.target.value ? Number(e.target.value) : '')}
-              className="w-full bg-input border border-border rounded-xl px-4 py-2.5 text-on-success focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary motion-safe:transition-all"
+              className="w-full bg-input border border-border rounded-xl px-4 py-2.5 text-primary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary motion-safe:transition-all"
               placeholder="e.g. 1500"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-on-success mb-1.5">Payment Method</label>
+            <label className="block text-sm font-medium text-primary mb-1.5">Payment Method</label>
             <select
               value={method}
               onChange={(e) => setMethod(e.target.value)}
-              className="w-full bg-input border border-border rounded-xl px-4 py-2.5 text-on-success focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary motion-safe:transition-all"
+              className="w-full bg-input border border-border rounded-xl px-4 py-2.5 text-primary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary motion-safe:transition-all"
             >
               <option value="UPI">UPI</option>
               <option value="CARD">Card</option>
@@ -92,7 +92,7 @@ export default function ManagerAddPaymentModal() {
             <button
               type="button"
               onClick={handleClose}
-              className="flex-1 px-4 py-2.5 text-sm font-semibold text-secondary hover:text-on-success bg-input hover:bg-input/80 rounded-xl motion-safe:transition-colors"
+              className="flex-1 px-4 py-2.5 text-sm font-semibold text-secondary hover:text-primary bg-input hover:bg-input/80 rounded-xl motion-safe:transition-colors"
             >
               Cancel
             </button>

@@ -60,7 +60,7 @@ export default function TrainerAttendanceModal({ isOpen, onClose, members, savin
           <button
             type="button"
             onClick={onClose}
-            className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page text-secondary hover:text-on-primary hover:bg-primary-subtle p-1 rounded-md motion-safe:transition-colors motion-safe:duration-base"
+            className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page text-secondary hover:text-primary hover:bg-primary-subtle p-1 rounded-md motion-safe:transition-colors motion-safe:duration-base"
             aria-label="Close modal"
           >
             <X size={20} />
@@ -114,7 +114,7 @@ export default function TrainerAttendanceModal({ isOpen, onClose, members, savin
                 {...register('date')}
                 className={`w-full px-3 py-2 border rounded-lg focus-visible:outline-none focus-visible:ring-2 ${
                   errors.date ? 'border-danger focus-visible:ring-primary' : 'border-border focus-visible:ring-primary'
-                } bg-input text-on-primary`}
+                } bg-input text-primary`}
               />
               {errors.date && <p className="text-danger text-xs mt-1">{errors.date.message}</p>}
             </div>
@@ -125,7 +125,7 @@ export default function TrainerAttendanceModal({ isOpen, onClose, members, savin
                 {...register('checkIn')}
                 className={`w-full px-3 py-2 border rounded-lg focus-visible:outline-none focus-visible:ring-2 ${
                   errors.checkIn ? 'border-danger focus-visible:ring-primary' : 'border-border focus-visible:ring-primary'
-                } bg-input text-on-primary`}
+                } bg-input text-primary`}
               />
               {errors.checkIn && <p className="text-danger text-xs mt-1">{errors.checkIn.message}</p>}
             </div>
@@ -134,7 +134,7 @@ export default function TrainerAttendanceModal({ isOpen, onClose, members, savin
               <input
                 type="time"
                 {...register('checkOut')}
-                className="w-full px-3 py-2 border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-on-primary"
+                className="w-full px-3 py-2 border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-primary"
               />
             </div>
             <div>
@@ -143,7 +143,7 @@ export default function TrainerAttendanceModal({ isOpen, onClose, members, savin
                 type="text"
                 {...register('notes')}
                 placeholder="Optional notes..."
-                className="w-full px-3 py-2 border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-on-primary"
+                className="w-full px-3 py-2 border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-primary"
               />
             </div>
           </div>
@@ -152,7 +152,7 @@ export default function TrainerAttendanceModal({ isOpen, onClose, members, savin
             <button
               type="button"
               onClick={onClose}
-              className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page px-4 py-2 border border-border rounded-lg font-medium text-secondary hover:text-on-primary hover:bg-primary-subtle motion-safe:transition-colors motion-safe:duration-base"
+              className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page px-4 py-2 border border-border rounded-lg font-medium text-secondary hover:text-primary hover:bg-primary-subtle motion-safe:transition-colors motion-safe:duration-base"
             >
               Cancel
             </button>

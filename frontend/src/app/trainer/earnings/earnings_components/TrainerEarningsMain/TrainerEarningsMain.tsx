@@ -21,7 +21,7 @@ export default function TrainerEarningsMain() {
   if (isError) {
     return (
       <div className="p-6">
-        <div className="bg-danger-bg border border-danger rounded-xl p-4 flex items-center gap-3 text-on-danger max-w-md">
+        <div className="bg-danger-bg border border-danger rounded-xl p-4 flex items-center gap-3 text-danger max-w-md">
           <AlertCircle size={24} />
           <div>
             <p className="font-bold">Failed to load earnings data</p>

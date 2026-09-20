@@ -148,7 +148,7 @@ export default function ManagerMembersTable() {
                     </td>
                     <td className="px-2 py-3 whitespace-nowrap">
                       <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs bg-primary/10 text-on-primary shrink-0">
+                        <div className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs bg-primary/10 text-primary shrink-0">
                           {m.name?.charAt(0) || '?'}
                         </div>
                         <div>
@@ -168,21 +168,21 @@ export default function ManagerMembersTable() {
                     </td>
                     <td className="px-2 py-3 text-xs text-secondary whitespace-nowrap">{formatDate(m.joinDate)}</td>
                     <td className="px-2 py-3 text-xs text-secondary whitespace-nowrap">{formatDate(m.expiryDate)}</td>
-                    <td className="px-2 py-3 text-xs font-semibold text-on-primary whitespace-nowrap">{formatCurrencyFromMinorUnits(m.paidAmount, ManagerEnvConfig.currencyCode)}</td>
-                    <td className="px-2 py-3 text-xs font-semibold text-on-primary whitespace-nowrap">{m.pendingAmount > 0 ? formatCurrencyFromMinorUnits(m.pendingAmount, ManagerEnvConfig.currencyCode) : 'â€”'}</td>
+                    <td className="px-2 py-3 text-xs font-semibold text-success whitespace-nowrap">{formatCurrencyFromMinorUnits(m.paidAmount, ManagerEnvConfig.currencyCode)}</td>
+                    <td className="px-2 py-3 text-xs font-semibold text-danger whitespace-nowrap">{m.pendingAmount > 0 ? formatCurrencyFromMinorUnits(m.pendingAmount, ManagerEnvConfig.currencyCode) : 'â€”'}</td>
                     <td className="px-2 py-3 text-xs whitespace-nowrap">
 
                       <div className="flex items-center gap-1.5">
                         {m.pendingAmount > 0 && (
-                          <button onClick={(e) => { e.stopPropagation(); setSelectedMember(m); setShowPaymentModal(true); }} className="p-1.5 rounded-lg bg-warning/10 text-on-primary hover:bg-warning/20 motion-safe:transition-all motion-safe:duration-200" title="Collect Dues" aria-label={`Collect Dues for ${m.name}`}><Banknote size={18} /></button>
+                          <button onClick={(e) => { e.stopPropagation(); setSelectedMember(m); setShowPaymentModal(true); }} className="p-1.5 rounded-lg bg-warning/10 text-warning hover:bg-warning/20 motion-safe:transition-all motion-safe:duration-200" title="Collect Dues" aria-label={`Collect Dues for ${m.name}`}><Banknote size={18} /></button>
                         )}
                         <button onClick={(e) => { e.stopPropagation(); openEdit(m); }} className="p-1.5 rounded-lg bg-input text-secondary hover:bg-primary-subtle motion-safe:transition-all motion-safe:duration-200" title="Edit" aria-label={`Edit ${m.name}`}><Edit size={18} /></button>
-                        <button onClick={(e) => { e.stopPropagation(); openMsg(m, 'whatsapp'); }} className="p-1.5 rounded-lg bg-success text-on-primary hover:opacity-80 motion-safe:transition-all motion-safe:duration-200" title="WhatsApp" aria-label={`Message ${m.name} on WhatsApp`}><MessageCircle size={18} /></button>
+                        <button onClick={(e) => { e.stopPropagation(); openMsg(m, 'whatsapp'); }} className="p-1.5 rounded-lg bg-success text-on-success hover:opacity-80 motion-safe:transition-all motion-safe:duration-200" title="WhatsApp" aria-label={`Message ${m.name} on WhatsApp`}><MessageCircle size={18} /></button>
                         <button onClick={(e) => { e.stopPropagation(); openMsg(m, 'email'); }} className="p-1.5 rounded-lg bg-info text-on-info hover:opacity-80 motion-safe:transition-all motion-safe:duration-200" title="Email" aria-label={`Email ${m.name}`}><Mail size={18} /></button>
                         {m.status !== 'SUSPENDED' && m.pendingAmount > 0 ? (
-                          <button onClick={(e) => { e.stopPropagation(); setSelectedMember(m); toggleSuspend(true); }} className="p-1.5 rounded-lg bg-danger text-on-primary hover:bg-danger/20 motion-safe:transition-all motion-safe:duration-200" title="Suspend Member" aria-label={`Suspend ${m.name}`}><Ban size={18} /></button>
+                          <button onClick={(e) => { e.stopPropagation(); setSelectedMember(m); toggleSuspend(true); }} className="p-1.5 rounded-lg bg-danger text-danger hover:bg-danger/20 motion-safe:transition-all motion-safe:duration-200" title="Suspend Member" aria-label={`Suspend ${m.name}`}><Ban size={18} /></button>
                         ) : m.status === 'SUSPENDED' ? (
-                          <button onClick={(e) => { e.stopPropagation(); setSelectedMember(m); toggleSuspend(false); }} className="p-1.5 rounded-lg bg-success text-on-primary hover:bg-success/20 motion-safe:transition-all motion-safe:duration-200" title="Unsuspend Member" aria-label={`Unsuspend ${m.name}`}><Ban size={18} /></button>
+                          <button onClick={(e) => { e.stopPropagation(); setSelectedMember(m); toggleSuspend(false); }} className="p-1.5 rounded-lg bg-success text-success hover:bg-success/20 motion-safe:transition-all motion-safe:duration-200" title="Unsuspend Member" aria-label={`Unsuspend ${m.name}`}><Ban size={18} /></button>
                         ) : null}
                         <button
                           onClick={async (e) => { 
@@ -194,7 +194,7 @@ export default function ManagerMembersTable() {
                               type: 'danger' });
                             if (confirmed) deleteMember(m.id);
                           }}
-                          className="p-1.5 rounded-lg bg-danger text-on-primary hover:opacity-80 motion-safe:transition-all motion-safe:duration-200"
+                          className="p-1.5 rounded-lg bg-danger text-danger hover:opacity-80 motion-safe:transition-all motion-safe:duration-200"
                           title="Delete"
                           aria-label={`Delete ${m.name}`}
                         >

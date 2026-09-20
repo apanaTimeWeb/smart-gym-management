@@ -29,7 +29,7 @@ export function ManagerReportsContent() {
                 key={t}
                 onClick={() => setTab(t)}
                 className={`px-4 py-2 text-sm font-medium rounded-lg motion-safe:transition-colors ${
-                  tab === t ? 'bg-card text-on-primary shadow-card' : 'text-secondary hover:text-on-primary'
+                  tab === t ? 'bg-card text-primary shadow-card' : 'text-secondary hover:text-primary'
                 }`}
               >
                 {t}
@@ -44,7 +44,7 @@ export function ManagerReportsContent() {
             </div>
             <button
               onClick={reload}
-              className="flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg bg-input border border-border text-secondary hover:text-on-primary motion-safe:transition-colors"
+              className="flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg bg-input border border-border text-secondary hover:text-primary motion-safe:transition-colors"
             >
               <RefreshCw size={18} /> Refresh
             </button>

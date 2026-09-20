@@ -60,7 +60,7 @@ export default function ManagerHrStaffTable() {
       <div className="flex justify-end px-4 pt-3">
         <button
           onClick={() => exportStaff()}
-          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium border border-border rounded-lg hover:bg-primary-subtle text-secondary hover:text-on-primary motion-safe:transition-colors"
+          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium border border-border rounded-lg hover:bg-primary-subtle text-secondary hover:text-primary motion-safe:transition-colors"
           aria-label="Export staff list as CSV"
         >
           <Download size={18} /> Export CSV
@@ -96,30 +96,30 @@ export default function ManagerHrStaffTable() {
               >
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm bg-primary/10 text-on-success">
+                    <div className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm bg-primary/10 text-primary">
                       {(s.name || '?').charAt(0).toUpperCase()}
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-on-success">{displayValue(s.name)}</p>
+                      <p className="text-sm font-medium text-primary">{displayValue(s.name)}</p>
                       <p className="text-xs text-secondary">{displayValue(s.email)}</p>
                     </div>
                   </div>
                 </td>
-                <td className="px-4 py-3 text-sm text-on-success">{s.role}</td>
+                <td className="px-4 py-3 text-sm text-primary">{s.role}</td>
                 <td className="px-4 py-3">
                   {s.isActive === false ? (
-                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-danger text-on-danger border border-border">
+                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-danger text-danger border border-border">
                       <Ban className="w-3 h-3" /> Suspended
                     </span>
                   ) : (
-                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-success text-on-success border border-border">
+                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-success text-success border border-border">
                       <CheckCircle2 className="w-3 h-3" /> Active
                     </span>
                   )}
                 </td>
                 <td className="px-4 py-3 text-sm text-secondary">{maskSensitiveData(s.phone)}</td>
-                <td className="px-4 py-3 text-sm font-medium text-on-success text-right">{formatCurrencyFromMinorUnits(s.salary || 0, ManagerEnvConfig.currencyCode)}</td>
-                <td className="px-4 py-3 text-sm font-medium text-on-success text-right">{s.advanceSalary && s.advanceSalary > 0 ? formatCurrencyFromMinorUnits(s.advanceSalary, ManagerEnvConfig.currencyCode) : displayValue(null)}</td>
+                <td className="px-4 py-3 text-sm font-medium text-success text-right">{formatCurrencyFromMinorUnits(s.salary || 0, ManagerEnvConfig.currencyCode)}</td>
+                <td className="px-4 py-3 text-sm font-medium text-primary text-right">{s.advanceSalary && s.advanceSalary > 0 ? formatCurrencyFromMinorUnits(s.advanceSalary, ManagerEnvConfig.currencyCode) : displayValue(null)}</td>
                 <td className="px-4 py-3 text-sm text-secondary">
                   {displayValue(s.joinDate ? formatDate(s.joinDate) : null)}
                 </td>
@@ -141,8 +141,8 @@ export default function ManagerHrStaffTable() {
                       }}
                       className={`p-1.5 rounded-lg motion-safe:transition-all motion-safe:duration-200 ease-in-out ${
                         s.isActive === false
-                          ? 'text-on-success hover:bg-success'
-                          : 'text-on-danger hover:bg-danger'
+                          ? 'text-success hover:bg-success'
+                          : 'text-danger hover:bg-danger'
                       }`}
                       title={s.isActive === false ? 'Activate Staff' : 'Suspend Staff'}
                       aria-label={s.isActive === false ? `Activate ${s.name}` : `Suspend ${s.name}`}
@@ -151,7 +151,7 @@ export default function ManagerHrStaffTable() {
                     </button>
                     <button 
                       onClick={(e) => { e.stopPropagation(); openEdit(s); }} 
-                      className="p-1.5 rounded hover:bg-primary/10 motion-safe:transition-colors text-secondary hover:text-on-success"
+                      className="p-1.5 rounded hover:bg-primary/10 motion-safe:transition-colors text-secondary hover:text-primary"
                       title="Edit"
                     >
                       <Edit2 size={18} />
@@ -169,7 +169,7 @@ export default function ManagerHrStaffTable() {
                           deleteStaff(s.id); 
                         }
                       }}
-                      className="p-1.5 rounded motion-safe:transition-colors text-on-danger hover:bg-danger"
+                      className="p-1.5 rounded motion-safe:transition-colors text-danger hover:bg-danger"
                       title="Delete"
                     >
                       <Trash2 size={18} />
@@ -197,31 +197,31 @@ export default function ManagerHrStaffTable() {
           <article key={`mobile-staff-${s.id}`} className="p-4 bg-card space-y-3">
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
-                <p className="font-semibold text-on-success truncate">{s.name}</p>
+                <p className="font-semibold text-primary truncate">{s.name}</p>
                 <p className="text-xs text-secondary truncate">{s.email || '—'}</p>
               </div>
-              <span className={`shrink-0 px-2 py-1 rounded-full text-badge font-semibold ${s.isActive === false ? 'bg-danger text-on-danger' : 'bg-success text-on-success'}`}>
+              <span className={`shrink-0 px-2 py-1 rounded-full text-badge font-semibold ${s.isActive === false ? 'bg-danger text-danger' : 'bg-success text-success'}`}>
                 {s.isActive === false ? 'Inactive' : 'Active'}
               </span>
             </div>
             <div className="grid grid-cols-2 gap-3 text-sm">
-              <div><p className="text-xs text-secondary">Role</p><p className="text-on-success truncate">{s.role || '—'}</p></div>
-              <div><p className="text-xs text-secondary">Phone</p><p className="text-on-success truncate">{s.phone || '—'}</p></div>
-              <div><p className="text-xs text-secondary">Salary</p><p className="text-on-success">{formatCurrencyFromMinorUnits(s.salary || 0)}</p></div>
-              <div><p className="text-xs text-secondary">Join Date</p><p className="text-on-success">{s.joinDate ? formatDate(s.joinDate) : '—'}</p></div>
+              <div><p className="text-xs text-secondary">Role</p><p className="text-primary truncate">{s.role || '—'}</p></div>
+              <div><p className="text-xs text-secondary">Phone</p><p className="text-primary truncate">{s.phone || '—'}</p></div>
+              <div><p className="text-xs text-secondary">Salary</p><p className="text-primary">{formatCurrencyFromMinorUnits(s.salary || 0)}</p></div>
+              <div><p className="text-xs text-secondary">Join Date</p><p className="text-primary">{s.joinDate ? formatDate(s.joinDate) : '—'}</p></div>
             </div>
             <div className="flex justify-end gap-2">
-              <button type="button" onClick={() => openEdit(s)} className="min-h-11 min-w-11 p-2 rounded-md text-secondary hover:text-on-success motion-safe:transition-colors" aria-label={`Edit ${s.name}`}><Edit2 size={18} /></button>
-              <button type="button" onClick={() => setViewProfileData(s)} className="min-h-11 min-w-11 p-2 rounded-md text-secondary hover:text-on-success motion-safe:transition-colors" aria-label={`View ${s.name}`}><Users size={18} /></button>
+              <button type="button" onClick={() => openEdit(s)} className="min-h-11 min-w-11 p-2 rounded-md text-secondary hover:text-primary motion-safe:transition-colors" aria-label={`Edit ${s.name}`}><Edit2 size={18} /></button>
+              <button type="button" onClick={() => setViewProfileData(s)} className="min-h-11 min-w-11 p-2 rounded-md text-secondary hover:text-primary motion-safe:transition-colors" aria-label={`View ${s.name}`}><Users size={18} /></button>
               <button type="button" onClick={async () => {
                 const isSuspending = s.isActive !== false;
                 const ok = await confirm({ title: isSuspending ? 'Suspend Staff Member' : 'Activate Staff Member', message: isSuspending ? `Suspend "${s.name}"? They will no longer be able to check in until reactivated.` : `Activate "${s.name}"? They will regain normal access.`, type: isSuspending ? 'danger' : 'info', confirmText: isSuspending ? 'Suspend' : 'Activate' });
                 if (ok) toggleStaffStatus(s);
-              }} className={`min-h-11 min-w-11 p-2 rounded-md motion-safe:transition-colors ${s.isActive === false ? 'text-on-success hover:bg-success' : 'text-on-danger hover:bg-danger'}`} aria-label={s.isActive === false ? `Activate ${s.name}` : `Suspend ${s.name}`}><Ban size={18} /></button>
+              }} className={`min-h-11 min-w-11 p-2 rounded-md motion-safe:transition-colors ${s.isActive === false ? 'text-success hover:bg-success' : 'text-danger hover:bg-danger'}`} aria-label={s.isActive === false ? `Activate ${s.name}` : `Suspend ${s.name}`}><Ban size={18} /></button>
               <button type="button" onClick={async () => {
                 const ok = await confirm({ title: 'Delete Staff', message: `Are you sure you want to delete staff member "${s.name}"? This action cannot be undone.`, type: 'danger', confirmText: 'Delete' });
                 if (ok) deleteStaff(s.id);
-              }} className="min-h-11 min-w-11 p-2 rounded-md text-on-danger hover:bg-danger motion-safe:transition-colors" aria-label={`Delete ${s.name}`}><Trash2 size={18} /></button>
+              }} className="min-h-11 min-w-11 p-2 rounded-md text-danger hover:bg-danger motion-safe:transition-colors" aria-label={`Delete ${s.name}`}><Trash2 size={18} /></button>
             </div>
           </article>
         ))}

@@ -16,7 +16,7 @@ export default function TrainerScheduleMain() {
           <button type="button"
             onClick={() => setActiveTab('availability')}
             className={`px-4 py-2 text-sm font-semibold rounded-lg motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
-              activeTab === 'availability' ? 'bg-primary text-on-primary shadow' : 'text-secondary hover:text-on-primary hover:bg-surface-highlight'
+              activeTab === 'availability' ? 'bg-primary text-on-primary shadow' : 'text-secondary hover:text-primary hover:bg-surface-highlight'
             }`}
           >
             Weekly Availability
@@ -24,7 +24,7 @@ export default function TrainerScheduleMain() {
           <button type="button"
             onClick={() => setActiveTab('leaves')}
             className={`px-4 py-2 text-sm font-semibold rounded-lg motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
-              activeTab === 'leaves' ? 'bg-primary text-on-primary shadow' : 'text-secondary hover:text-on-primary hover:bg-surface-highlight'
+              activeTab === 'leaves' ? 'bg-primary text-on-primary shadow' : 'text-secondary hover:text-primary hover:bg-surface-highlight'
             }`}
           >
             Leave Requests
