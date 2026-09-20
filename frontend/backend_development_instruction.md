@@ -1603,3 +1603,9 @@ Before marking a backend feature complete, the AI MUST review its tests and expl
 what real defect each important test would catch.
 
 The build passing is not equivalent to behavioral correctness.
+
+### Strict Case Sensitivity for File Names and Imports (Linux/CI Compatibility)
+
+All imports and file paths MUST exactly match the casing of the actual file on disk. While development often happens on Windows/macOS (which have case-insensitive file systems), production deployments and CI pipelines typically run on Linux (which has a strict case-sensitive file system).
+- **Rule:** A mismatch between import case (e.g., 	rainer_url_config) and file case (e.g., Trainer_url_config.ts) will cause the build to fail in CI/CD.
+- **Enforcement:** Always double-check that the casing of module prefixes and filenames in imports matches exactly. If you rename a file, ensure the git index catches the case change (e.g., using git mv).
