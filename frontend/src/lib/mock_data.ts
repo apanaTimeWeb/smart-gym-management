@@ -132,11 +132,11 @@ const PAYMENTS = Array.from({ length: 12 }, (_, i) => ({
 
 // ─── superadmin gyms ──────────────────────────────────────────────────────────
 const GYMS = [
-  { id: 'g1', name: 'FitLife Andheri', owner: 'Rajesh Patel', city: 'Mumbai', status: 'active', members: 420, plan: 'Enterprise', revenue: 185000, createdAt: '2023-03-01' },
-  { id: 'g2', name: 'PowerZone Bandra', owner: 'Sunita Reddy', city: 'Mumbai', status: 'active', members: 340, plan: 'Pro', revenue: 142000, createdAt: '2023-05-15' },
-  { id: 'g3', name: 'IronHouse Powai', owner: 'Vikram Singh', city: 'Mumbai', status: 'active', members: 220, plan: 'Standard', revenue: 98000, createdAt: '2023-07-20' },
-  { id: 'g4', name: 'FlexFit Thane', owner: 'Meena Joshi', city: 'Thane', status: 'trial', members: 180, plan: 'Trial', revenue: 60000, createdAt: '2024-01-10' },
-  { id: 'g5', name: 'ZenGym Pune', owner: 'Arun Kumar', city: 'Pune', status: 'inactive', members: 0, plan: 'Standard', revenue: 0, createdAt: '2022-12-01' },
+  { id: 'g1', name: 'FitLife Andheri', ownerName: 'Rajesh Patel', adminEmail: 'admin@fitlife.com', phone: '9876543210', city: 'Mumbai', status: 'ACTIVE', memberCount: 420, plan: 'Enterprise', monthlyRevenue: 185000, databaseVersion: 'v2.4.1', createdAt: '2023-03-01' },
+  { id: 'g2', name: 'PowerZone Bandra', ownerName: 'Sunita Reddy', adminEmail: 'admin@powerzone.com', phone: '9876543211', city: 'Mumbai', status: 'ACTIVE', memberCount: 340, plan: 'Pro', monthlyRevenue: 142000, databaseVersion: 'v2.4.1', createdAt: '2023-05-15' },
+  { id: 'g3', name: 'IronHouse Powai', ownerName: 'Vikram Singh', adminEmail: 'admin@ironhouse.com', phone: '9876543212', city: 'Mumbai', status: 'ACTIVE', memberCount: 220, plan: 'Standard', monthlyRevenue: 98000, databaseVersion: 'v2.4.1', createdAt: '2023-07-20' },
+  { id: 'g4', name: 'FlexFit Thane', ownerName: 'Meena Joshi', adminEmail: 'admin@flexfit.com', phone: '9876543213', city: 'Thane', status: 'TRIAL', memberCount: 180, plan: 'Trial', monthlyRevenue: 60000, databaseVersion: 'v2.4.1', createdAt: '2024-01-10' },
+  { id: 'g5', name: 'ZenGym Pune', ownerName: 'Arun Kumar', adminEmail: 'admin@zengym.com', phone: '9876543214', city: 'Pune', status: 'SUSPENDED', memberCount: 0, plan: 'Standard', monthlyRevenue: 0, databaseVersion: 'v2.4.1', createdAt: '2022-12-01' },
 ];
 
 // ─── franchises ───────────────────────────────────────────────────────────────
