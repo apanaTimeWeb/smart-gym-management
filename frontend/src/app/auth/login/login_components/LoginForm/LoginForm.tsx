@@ -10,7 +10,7 @@ import { useLoginForm } from '@/app/auth/login/login_components/LoginForm/useLog
 import { LoginSharedConstants } from '@/app/auth/login/login_constants/LoginSharedConstants';
 import { AuthUrlConfig } from '@/app/auth/auth_url_config';
 
-const isDemoLoginVisible = process.env.NODE_ENV !== 'production' && process.env.NEXT_PUBLIC_AUTH_DEMO_MODE === 'true';
+const isDemoLoginVisible = process.env.NODE_ENV !== 'production' && (process.env.NEXT_PUBLIC_AUTH_DEMO_MODE === 'true' || process.env.NEXT_PUBLIC_DEMO_MODE === 'true');
 
 export default function LoginForm() {
   const { form, isSubmitting, showPassword, setShowPassword, onSubmit, handleDemoLogin } = useLoginForm();

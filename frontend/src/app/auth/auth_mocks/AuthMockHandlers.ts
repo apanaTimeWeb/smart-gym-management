@@ -7,9 +7,12 @@ import { StatusCodes } from 'http-status-codes';
 import { AuthErrorConstants } from '@/app/auth/auth_constants/AuthErrorConstants';
 import { AuthLoginCredentialsSchema } from '@/app/auth/auth_types/AuthContracts';
 import { AuthMockFixturesApi } from '@/app/auth/auth_mocks/AuthMockFixtures';
+import { env } from '@/config/env';
+
+const BASE = env.NEXT_PUBLIC_API_URL;
 
 export const AuthMockHandlers = [
-  http.post('*/auth/login', async ({ request }) => {
+  http.post(`${BASE}/auth/login`, async ({ request }) => {
     const parsedPayload = AuthLoginCredentialsSchema.safeParse(await request.json());
     if (!parsedPayload.success) {
       return HttpResponse.json(
@@ -51,7 +54,7 @@ export const AuthMockHandlers = [
     });
   }),
 
-  http.post('*/auth/refresh', ({ request }) => {
+  http.post(`${BASE}/auth/refresh`, ({ request }) => {
     if (request.headers.get('x-auth-simulate-error') === 'true') {
       return HttpResponse.json({
         success: false,
@@ -65,7 +68,7 @@ export const AuthMockHandlers = [
     return HttpResponse.json({ success: true, message: 'Session refreshed', data: null });
   }),
 
-  http.post('*/auth/logout', () => HttpResponse.json({
+  http.post(`${BASE}/auth/logout`, () => HttpResponse.json({
     success: true,
     message: 'Logged out successfully',
     data: null,
