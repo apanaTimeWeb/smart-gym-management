@@ -21,7 +21,7 @@ import { superadminAffiliatesHandlers } from '@/app/superadmin/affiliates/affili
 import { superadminWhiteLabelingHandlers } from '@/app/superadmin/white-labeling/white-labeling_mocks/handlers/SuperadminWhiteLabelingMockHandlers';
 
 import { adminHandlers } from '@/app/admin/admin_layout/admin_mocks/handlers/AdminMockHandlers';
-import { authHandlers } from '@/app/auth/auth_mocks/AuthMockHandlers';
+import { AuthMockHandlers } from '@/app/auth/auth_mocks/AuthMockHandlers';
 import { landingHandlers } from '@/app/landing/landing_mocks/LandingMockHandlers';
 import { managerHandlers } from '@/app/manager/manager_mocks/ManagerMockHandlers';
 
@@ -42,7 +42,7 @@ export const handlers = [
     return HttpResponse.json({ status: "ok" });
   }),
   ...adminHandlers,
-  ...authHandlers,
+  ...AuthMockHandlers,
   ...landingHandlers,
   ...managerHandlers,
   ...superadminGymsHandlers,

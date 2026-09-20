@@ -58,8 +58,8 @@ export const AuthMockFixtures = {
         tenantId: 'tenant-demo',
       },
     },
-  },
-} as const satisfies Record<AuthRole, AuthDemoEntry>;
+  } satisfies Record<AuthRole, AuthDemoEntry>,
+} as const;
 
 const AUTH_DEMO_ENTRIES = [
   AuthMockFixtures.USERS[AuthRoleConstants.SUPERADMIN],
