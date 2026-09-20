@@ -55,7 +55,7 @@ export default function AdminCouponsTable() {
               >
                 <td className="px-5 py-4">
                   <div className="flex items-center gap-2">
-                    <span className="font-mono text-sm font-bold text-primary bg-primary-subtle px-2 py-0.5 rounded">{coupon.code}</span>
+                    <span className="font-mono text-sm font-bold text-on-primary bg-primary-subtle px-2 py-0.5 rounded">{coupon.code}</span>
                     <button
                       onClick={(e) => { e.stopPropagation(); handleCopy(coupon.code); }}
                       className="opacity-100 lg:opacity-0 lg:group-hover:opacity-100 motion-safe:transition-opacity text-secondary hover:text-primary motion-safe:duration-base"
@@ -112,7 +112,7 @@ export default function AdminCouponsTable() {
                     </button>
                     <button
                       onClick={(e) => { e.stopPropagation(); deleteCoupon(coupon.id); }}
-                      className="p-1.5 rounded-lg hover:bg-danger text-secondary hover:text-danger motion-safe:transition-colors motion-safe:duration-base"
+                      className="p-1.5 rounded-lg hover:bg-danger text-secondary hover:text-on-danger motion-safe:transition-colors motion-safe:duration-base"
                       aria-label="Delete coupon"
                     >
                       <Trash2 size={15} />

@@ -51,7 +51,7 @@ export default function TrainerProgressComparisonTable({ snapshots }: TrainerPro
                 <tr key={s.memberId} className="hover:bg-surface-hover motion-safe:transition-colors motion-safe:duration-base">
                   <td className="px-4 py-3 font-medium text-primary whitespace-nowrap">
                     <div className="flex items-center gap-2">
-                      <div className="w-7 h-7 rounded-full bg-primary-subtle flex items-center justify-center text-primary text-xs font-bold shrink-0">
+                      <div className="w-7 h-7 rounded-full bg-primary-subtle flex items-center justify-center text-on-primary text-xs font-bold shrink-0">
                         {s.memberName.charAt(0)}
                       </div>
                       {s.memberName}

@@ -23,7 +23,7 @@ export default function SuperadminBackupsTriggerModal({ isOpen, onClose }: Super
   return (<div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="superadmin-backups-trigger-title">
     <div className="w-full max-w-md overflow-hidden rounded-xl border border-border bg-overlay shadow-dialog motion-safe:animate-in motion-safe:fade-in">
       <div className="p-6">
-        <div className="mb-4 flex size-12 items-center justify-center rounded-full bg-primary-subtle text-primary" aria-hidden="true"><DatabaseBackup size={18} strokeWidth={2} /></div>
+        <div className="mb-4 flex size-12 items-center justify-center rounded-full bg-primary-subtle text-on-primary" aria-hidden="true"><DatabaseBackup size={18} strokeWidth={2} /></div>
         <h2 id="superadmin-backups-trigger-title" className="mb-2 text-lg font-bold text-primary">Trigger Global Backup</h2>
         <p className="mb-6 text-sm text-secondary">Are you sure you want to trigger a manual snapshot for all tenant databases? This process is resource-intensive and may take a few minutes.</p>
         <div className="flex justify-end gap-3">

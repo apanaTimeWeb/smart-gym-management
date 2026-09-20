@@ -37,7 +37,7 @@ export default function ManagerMemberProfile() {
         <div className="bg-card rounded-xl shadow-card border border-border p-6">
           <div className="flex flex-wrap items-center justify-between gap-5 mb-6">
             <div className="flex items-center gap-5">
-              <div className="w-20 h-20 rounded-full flex items-center justify-center text-3xl font-bold text-primary bg-primary-subtle shrink-0">
+              <div className="w-20 h-20 rounded-full flex items-center justify-center text-3xl font-bold text-on-primary bg-primary-subtle shrink-0">
                 {(selectedMember.name || '?').charAt(0).toUpperCase()}
               </div>
               <div>
@@ -47,7 +47,7 @@ export default function ManagerMemberProfile() {
                   <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${statusStyle.bg} ${statusStyle.text}`}>
                     {selectedMember.status}
                   </span>
-                  <span className="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold bg-info text-info">
+                  <span className="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold bg-info text-on-info">
                     {selectedMember.plan?.name || ''}
                   </span>
                   <span className="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-bg text-purple">
@@ -59,13 +59,13 @@ export default function ManagerMemberProfile() {
             <div className="flex gap-2 flex-wrap">
               <button
                 onClick={() => openEdit(selectedMember)}
-                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold border border-border rounded-xl hover:bg-primary-subtle text-primary motion-safe:transition-all motion-safe:duration-200 motion-safe:active:scale-95"
+                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold border border-border rounded-xl hover:bg-primary-subtle text-on-success motion-safe:transition-all motion-safe:duration-200 motion-safe:active:scale-95"
               >
                 <Edit size={18} /> Edit
               </button>
               <button
                 onClick={() => setShowRenewModal(true)}
-                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold border border-border rounded-xl hover:bg-primary/10 text-primary motion-safe:transition-all motion-safe:duration-200 motion-safe:active:scale-95 bg-primary/5"
+                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold border border-border rounded-xl hover:bg-primary/10 text-on-success motion-safe:transition-all motion-safe:duration-200 motion-safe:active:scale-95 bg-primary/5"
               >
                 Renew Plan
               </button>
@@ -98,7 +98,7 @@ export default function ManagerMemberProfile() {
             ].map((f, i) => (
               <div key={`member-summary-stat-${f.label.replace(/\s+/g, '-')}`} className="bg-input rounded-lg p-3">
                 <p className="text-xs text-secondary mb-0.5">{f.label}</p>
-                <p className="text-sm font-semibold text-primary">{f.value}</p>
+                <p className="text-sm font-semibold text-on-success">{f.value}</p>
               </div>
             ))}
           </div>
@@ -112,8 +112,8 @@ export default function ManagerMemberProfile() {
                 key={t}
                 onClick={() => { setProfileTab(t as any); }}
                 className={`px-5 py-3.5 text-sm font-medium motion-safe:transition-all motion-safe:duration-200 border-b-2 ${profileTab === t
-                    ? 'text-primary bg-primary-subtle border-primary'
-                    : 'border-transparent text-secondary hover:text-primary'
+                    ? 'text-on-success bg-primary-subtle border-primary'
+                    : 'border-transparent text-secondary hover:text-on-success'
                   }`}
               >
                 {label}

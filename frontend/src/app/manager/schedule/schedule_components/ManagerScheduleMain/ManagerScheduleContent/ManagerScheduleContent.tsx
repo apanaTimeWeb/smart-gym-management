@@ -29,7 +29,7 @@ export function ManagerScheduleContent() {
         <ManagerHeader title="Trainer Schedule" subtitle="View trainer availability, shift timings, and weekly schedule" />
         <div className="p-6 mt-10">
           <div className="max-w-md w-full bg-card border border-danger/20 rounded-xl p-8 text-center space-y-4 mx-auto">
-            <div className="w-12 h-12 bg-danger/10 text-danger rounded-full flex items-center justify-center mx-auto">
+            <div className="w-12 h-12 bg-danger/10 text-on-danger rounded-full flex items-center justify-center mx-auto">
               <AlertCircle size={18} />
             </div>
             <div>
@@ -70,7 +70,7 @@ export function ManagerScheduleContent() {
             <div className="flex items-center gap-1 bg-input border border-border rounded-lg p-1">
               <button
                 onClick={() => setSelectedDay('All')}
-                className={`px-3 py-1 text-xs font-semibold rounded-md motion-safe:transition-colors ${selectedDay === 'All' ? 'bg-primary text-on-primary' : 'text-secondary hover:text-primary'}`}
+                className={`px-3 py-1 text-xs font-semibold rounded-md motion-safe:transition-colors ${selectedDay === 'All' ? 'bg-primary text-on-primary' : 'text-secondary hover:text-on-primary'}`}
               >
                 All
               </button>
@@ -78,7 +78,7 @@ export function ManagerScheduleContent() {
                 <button
                   key={day}
                   onClick={() => setSelectedDay(day as ShiftDay)}
-                  className={`px-2 py-1 text-xs font-semibold rounded-md motion-safe:transition-colors ${selectedDay === day ? 'bg-primary text-on-primary' : 'text-secondary hover:text-primary'}`}
+                  className={`px-2 py-1 text-xs font-semibold rounded-md motion-safe:transition-colors ${selectedDay === day ? 'bg-primary text-on-primary' : 'text-secondary hover:text-on-primary'}`}
                 >
                   {day.slice(0, 3)}
                 </button>
@@ -89,14 +89,14 @@ export function ManagerScheduleContent() {
             <div className="flex items-center gap-1 bg-input border border-border rounded-lg p-1">
               <button
                 onClick={() => setView('grid')}
-                className={`p-1.5 rounded-md motion-safe:transition-colors ${view === 'grid' ? 'bg-primary text-on-primary' : 'text-secondary hover:text-primary'}`}
+                className={`p-1.5 rounded-md motion-safe:transition-colors ${view === 'grid' ? 'bg-primary text-on-primary' : 'text-secondary hover:text-on-primary'}`}
                 aria-label="Weekly grid view"
               >
                 <Table2 size={18} />
               </button>
               <button
                 onClick={() => setView('cards')}
-                className={`p-1.5 rounded-md motion-safe:transition-colors ${view === 'cards' ? 'bg-primary text-on-primary' : 'text-secondary hover:text-primary'}`}
+                className={`p-1.5 rounded-md motion-safe:transition-colors ${view === 'cards' ? 'bg-primary text-on-primary' : 'text-secondary hover:text-on-primary'}`}
                 aria-label="Trainer cards view"
               >
                 <LayoutGrid size={18} />

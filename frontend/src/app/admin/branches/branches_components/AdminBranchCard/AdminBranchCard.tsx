@@ -29,7 +29,7 @@ export default function AdminBranchCard() {
       {(branches as Branch[]).map((branch) => (
         <div key={branch.id} className="bg-card border border-border rounded-xl p-5 shadow-card hover:shadow-card motion-safe:transition-shadow motion-safe:duration-base">
           <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-xl bg-primary-subtle flex items-center justify-center flex-shrink-0 text-primary"><Building2 size={24} /></div>
+            <div className="w-12 h-12 rounded-xl bg-primary-subtle flex items-center justify-center flex-shrink-0 text-on-primary"><Building2 size={24} /></div>
             <div>
               <h3 className="font-bold text-primary text-lg leading-tight">{branch.name}</h3>
               <p className="text-sm text-secondary mt-1">{branch.location}</p>
@@ -59,12 +59,12 @@ export default function AdminBranchCard() {
           </div>
           <div className="mt-5 border-t border-border pt-4 space-y-3">
             <div className="flex items-center justify-between">
-              <span className={`text-xs font-bold px-2 py-1 rounded-md uppercase tracking-wider ${branch.status === "active" ? "bg-success text-success" : "bg-input text-secondary"}`}>{branch.status}</span>
+              <span className={`text-xs font-bold px-2 py-1 rounded-md uppercase tracking-wider ${branch.status === "active" ? "bg-success text-on-success" : "bg-input text-secondary"}`}>{branch.status}</span>
               <span className="text-xs text-secondary font-medium">ID: {branch.id.toUpperCase()}</span>
             </div>
             <button
               onClick={() => startImpersonation({ id: branch.id, name: branch.name, location: branch.location })}
-              className="w-full flex items-center justify-center gap-2 py-2 bg-primary-subtle hover:bg-primary-subtle border border-border hover:border-focus rounded-xl text-xs font-bold text-primary motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95"
+              className="w-full flex items-center justify-center gap-2 py-2 bg-primary-subtle hover:bg-primary-subtle border border-border hover:border-focus rounded-xl text-xs font-bold text-on-success motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95"
               aria-label={`Open ${branch.name} as manager`}
             >
               <LogIn size={14} />

@@ -24,7 +24,7 @@ export function ManagerExpensesContent() {
               key={t}
               onClick={() => setActiveTab(t)}
               className={`px-4 py-2 text-sm font-semibold rounded-lg motion-safe:transition-colors ${
-                activeTab === t ? 'bg-primary text-on-primary shadow' : 'text-secondary hover:text-primary hover:bg-primary-subtle'
+                activeTab === t ? 'bg-primary text-on-primary shadow' : 'text-secondary hover:text-on-primary hover:bg-primary-subtle'
               }`}
             >
               {t}
@@ -50,7 +50,7 @@ export function ManagerExpensesContent() {
 
         {activeTab === 'Add Expense' && (
           <div className="bg-card border border-border rounded-xl p-6 max-w-xl">
-            <h3 className="text-lg font-bold text-primary mb-2">Record New Expense</h3>
+            <h3 className="text-lg font-bold text-on-primary mb-2">Record New Expense</h3>
             <p className="text-sm text-secondary mb-5">Use the validated expense form to create a new operational cost.</p>
             <button
               type="button"

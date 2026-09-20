@@ -76,7 +76,7 @@ export default function ManagerMembersToolbar() {
             <button
               key={fmt.value}
               onClick={() => void exportMembers(fmt.value)}
-              className="flex justify-center items-center gap-2 px-3 py-2.5 text-sm border border-border rounded-xl hover:bg-primary-subtle text-secondary hover:text-primary motion-safe:transition-colors w-full sm:w-auto"
+              className="flex justify-center items-center gap-2 px-3 py-2.5 text-sm border border-border rounded-xl hover:bg-primary-subtle text-secondary hover:text-on-primary motion-safe:transition-colors w-full sm:w-auto"
               aria-label={fmt.label}
             >
               <Download size={18} /> {fmt.label}

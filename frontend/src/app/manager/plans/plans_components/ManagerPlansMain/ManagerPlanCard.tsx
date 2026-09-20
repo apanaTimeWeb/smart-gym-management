@@ -26,14 +26,14 @@ export default function ManagerPlanCard({ plan }: { plan: Plan }) {
           <div className="flex items-center gap-2 mb-1">
             <span className={`text-xs font-semibold px-2.5 py-0.5 rounded-full ${tier.bg} ${tier.text}`}>{tier.label}</span>
             {plan.isActive
-              ? <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-success/10 text-success flex items-center gap-1"><CheckCircle size={18} />Active</span>
-              : <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-danger/10 text-danger flex items-center gap-1"><XCircle size={18} />Inactive</span>
+              ? <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-success/10 text-on-success flex items-center gap-1"><CheckCircle size={18} />Active</span>
+              : <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-danger/10 text-on-danger flex items-center gap-1"><XCircle size={18} />Inactive</span>
             }
           </div>
-          <h3 className="text-base font-bold text-primary">{plan.name}</h3>
+          <h3 className="text-base font-bold text-on-success">{plan.name}</h3>
         </div>
         <div className="shrink-0 w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-          <IndianRupee size={18} className="text-primary" />
+          <IndianRupee size={18} className="text-on-success" />
         </div>
       </div>
 
@@ -47,7 +47,7 @@ export default function ManagerPlanCard({ plan }: { plan: Plan }) {
         ].map(row => (
           <div key={`plan-${plan.id}-price-${row.label}`} className="bg-input rounded-lg px-3 py-2">
             <p className="text-xs text-secondary">{row.label}</p>
-            <p className="text-sm font-bold text-primary">{formatCurrencyFromMinorUnits(row.price, ManagerEnvConfig.currencyCode)}</p>
+            <p className="text-sm font-bold text-on-success">{formatCurrencyFromMinorUnits(row.price, ManagerEnvConfig.currencyCode)}</p>
           </div>
         ))}
       </div>
@@ -57,7 +57,7 @@ export default function ManagerPlanCard({ plan }: { plan: Plan }) {
         <div className="space-y-1.5 pt-1 border-t border-border">
           {features.map((f: string, i: number) => (
             <div key={`plan-${plan.id}-feature-${i}`} className="flex items-center gap-2 text-sm text-secondary">
-              <CheckCircle size={18} className="text-success shrink-0" />
+              <CheckCircle size={18} className="text-on-success shrink-0" />
               <span className="truncate">{f}</span>
             </div>
           ))}
@@ -67,7 +67,7 @@ export default function ManagerPlanCard({ plan }: { plan: Plan }) {
       {/* Request change CTA */}
       <button
         onClick={() => openRequestModal(plan)}
-        className="mt-auto flex items-center justify-center gap-2 w-full py-2 text-xs font-semibold rounded-lg border border-primary/40 text-primary hover:bg-primary/10 motion-safe:transition-colors"
+        className="mt-auto flex items-center justify-center gap-2 w-full py-2 text-xs font-semibold rounded-lg border border-primary/40 text-on-success hover:bg-primary/10 motion-safe:transition-colors"
       >
         <Send size={18} /> Request Change
       </button>

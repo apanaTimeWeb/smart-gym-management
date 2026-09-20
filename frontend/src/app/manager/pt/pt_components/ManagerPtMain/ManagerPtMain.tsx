@@ -70,8 +70,8 @@ export default function ManagerPtMain() {
             onClick={() => setActiveTab(id)}
             className={`px-4 py-2 text-sm font-semibold rounded-lg motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
               activeTab === id
-                ? 'bg-card text-primary shadow-card'
-                : 'text-secondary hover:text-primary hover:bg-card/50'
+                ? 'bg-card text-on-danger shadow-card'
+                : 'text-secondary hover:text-on-danger hover:bg-card/50'
             }`}
           >
             {label}
@@ -82,13 +82,13 @@ export default function ManagerPtMain() {
       {/* Loading state from TanStack Query */}
       {isPending && (
         <div className="flex flex-col items-center justify-center py-24 space-y-4">
-          <Loader2 size={18} className="text-primary motion-safe:animate-spin" />
+          <Loader2 size={18} className="text-on-danger motion-safe:animate-spin" />
           <p className="text-sm font-medium text-secondary">Loading PT Data...</p>
         </div>
       )}
 
       {isError && (
-        <div role="alert" className="rounded-xl border border-danger bg-danger p-5 text-sm text-danger">{errorMessage || MANAGER_GENERIC_ERROR_MESSAGE}</div>
+        <div role="alert" className="rounded-xl border border-danger bg-danger p-5 text-sm text-on-danger">{errorMessage || MANAGER_GENERIC_ERROR_MESSAGE}</div>
       )}
 
       {!isPending && !isError && (
@@ -142,14 +142,14 @@ export default function ManagerPtMain() {
                     className="bg-card border border-border rounded-xl p-6 motion-safe:hover:-translate-y-1 motion-safe:transition-transform"
                   >
                     <div className="flex items-center justify-between mb-4">
-                      <span className="bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-bold border border-primary/20">
+                      <span className="bg-primary/10 text-on-danger px-3 py-1 rounded-full text-xs font-bold border border-primary/20">
                         {pkg.sessionCount} Sessions
                       </span>
-                      <span className="text-primary font-bold text-xl">
+                      <span className="text-on-danger font-bold text-xl">
                         {formatCurrencyFromMinorUnits(pkg.price, ManagerEnvConfig.currencyCode)}
                       </span>
                     </div>
-                    <h3 className="text-lg font-bold text-primary mb-2">{pkg.name}</h3>
+                    <h3 className="text-lg font-bold text-on-danger mb-2">{pkg.name}</h3>
                     <p className="text-sm text-secondary mb-6 h-10">{pkg.description}</p>
                     <div className="pt-4 border-t border-border flex justify-between items-center text-xs text-secondary font-medium">
                       <span>Duration: {pkg.durationDays} Days</span>

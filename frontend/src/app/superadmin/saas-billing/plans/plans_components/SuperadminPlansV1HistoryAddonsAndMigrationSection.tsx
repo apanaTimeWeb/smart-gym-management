@@ -70,7 +70,7 @@ export default function SuperadminPlansV1HistoryAddonsAndMigrationSection({ data
           </p>
         </div>
       </div>
-      <div className="rounded-lg border border-warning/30 bg-warning-bg p-3 text-xs text-warning">
+      <div className="rounded-lg border border-warning/30 bg-warning-bg p-3 text-xs text-on-primary">
         {data.migration.limitConflicts}
         gyms exceed one or more target limits and need review first.
       </div>

@@ -66,7 +66,7 @@ export default function ManagerStoreProductGrid() {
                 <p className="font-semibold text-primary">
                   {p.name} {p.unit && <span className="text-sm font-normal text-secondary ml-1">({p.unit})</span>}
                 </p>
-                <span className="text-xs bg-info text-info dark:bg-info dark:text-info px-2 py-0.5 rounded-full">
+                <span className="text-xs bg-info text-on-info dark:bg-info dark:text-on-info px-2 py-0.5 rounded-full">
                   {p.category}
                 </span>
               </div>
@@ -88,7 +88,7 @@ export default function ManagerStoreProductGrid() {
                     });
                     if (ok) deleteProduct(p.id);
                   }}
-                  className="p-1.5 rounded-lg bg-danger dark:bg-danger text-danger hover:bg-danger dark:hover:bg-danger motion-safe:transition-colors"
+                  className="p-1.5 rounded-lg bg-danger dark:bg-danger text-on-danger hover:bg-danger dark:hover:bg-danger motion-safe:transition-colors"
                   aria-label={`Delete ${p.name}`}
                 >
                   <Trash2 size={18} />
@@ -101,10 +101,10 @@ export default function ManagerStoreProductGrid() {
               </span>
               <span className={`text-xs font-semibold px-2.5 py-0.5 rounded-full ${
                 p.stock <= 10 
-                  ? 'bg-danger text-danger dark:bg-danger dark:text-danger' 
+                  ? 'bg-danger text-on-primary dark:bg-danger dark:text-on-primary' 
                   : p.stock <= 25 
-                  ? 'bg-warning text-warning dark:bg-warning dark:text-warning' 
-                  : 'bg-success text-success dark:bg-success dark:text-success'
+                  ? 'bg-warning text-on-primary dark:bg-warning dark:text-on-primary' 
+                  : 'bg-success text-on-primary dark:bg-success dark:text-on-primary'
               }`}>
                 {p.stock} in stock
               </span>

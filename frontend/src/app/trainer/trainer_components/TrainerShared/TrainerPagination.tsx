@@ -48,7 +48,7 @@ export default function TrainerPagination({ currentPage, totalPages, onPageChang
                 onClick={() => onPageChange(page)}
                 aria-current={currentPage === page ? 'page' : undefined}
                 aria-label={`Go to page ${page}`}
-                className={`w-8 h-8 flex items-center justify-center rounded-lg text-sm font-medium motion-safe:transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${currentPage === page ? 'bg-primary text-on-primary' : 'text-secondary hover:text-primary hover:bg-input'}`}
+                className={`w-8 h-8 flex items-center justify-center rounded-lg text-sm font-medium motion-safe:transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${currentPage === page ? 'bg-primary text-on-primary' : 'text-secondary hover:text-on-primary hover:bg-input'}`}
               >
                 {page}
               </button>
@@ -61,7 +61,7 @@ export default function TrainerPagination({ currentPage, totalPages, onPageChang
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
           aria-label="Next page"
-          className="p-2 rounded-lg text-secondary hover:text-primary hover:bg-input disabled:opacity-50 disabled:cursor-not-allowed motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          className="p-2 rounded-lg text-secondary hover:text-on-primary hover:bg-input disabled:opacity-50 disabled:cursor-not-allowed motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
         >
           <ChevronRight size={18} strokeWidth={2} />
         </button>

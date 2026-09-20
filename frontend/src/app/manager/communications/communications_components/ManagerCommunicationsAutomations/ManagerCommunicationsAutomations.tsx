@@ -62,11 +62,11 @@ export default function ManagerCommunicationsAutomations() {
               {/* Card Header */}
               <div className="px-5 py-4 border-b border-border flex items-center justify-between bg-input/20">
                 <div className="flex items-center gap-3">
-                  <div className={`p-2 rounded-lg ${auto.enabled ? 'bg-primary/10 text-primary' : 'bg-input text-secondary'}`}>
+                  <div className={`p-2 rounded-lg ${auto.enabled ? 'bg-primary/10 text-on-primary' : 'bg-input text-secondary'}`}>
                     <Zap size={18} />
                   </div>
                   <div>
-                    <h3 className="text-sm font-bold text-primary">{auto.title}</h3>
+                    <h3 className="text-sm font-bold text-on-primary">{auto.title}</h3>
                     <p className="text-xs text-secondary mt-0.5">{auto.description}</p>
                   </div>
                 </div>
@@ -100,7 +100,7 @@ export default function ManagerCommunicationsAutomations() {
                         type="time"
                         value={draftTime}
                         onChange={(e) => setDraftTime(e.target.value)}
-                        className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                        className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-on-primary focus:outline-none focus:ring-1 focus:ring-primary"
                       />
                     </div>
                     <div>
@@ -111,14 +111,14 @@ export default function ManagerCommunicationsAutomations() {
                         value={draftMessage}
                         onChange={(e) => setDraftMessage(e.target.value)}
                         rows={4}
-                        className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-primary focus:outline-none focus:ring-1 focus:ring-primary resize-none"
+                        className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-on-primary focus:outline-none focus:ring-1 focus:ring-primary resize-none"
                       />
-                      <p className="text-xs text-secondary mt-1">Use <code className="text-primary font-mono">{'{name}'}</code> to personalize.</p>
+                      <p className="text-xs text-secondary mt-1">Use <code className="text-on-primary font-mono">{'{name}'}</code> to personalize.</p>
                     </div>
                     <div className="flex justify-end gap-2 pt-2">
                       <button
                         onClick={() => setEditingId(null)}
-                        className="px-4 py-2 text-sm font-semibold text-secondary hover:text-primary motion-safe:transition-colors"
+                        className="px-4 py-2 text-sm font-semibold text-secondary hover:text-on-primary motion-safe:transition-colors"
                       >
                         Cancel
                       </button>
@@ -137,7 +137,7 @@ export default function ManagerCommunicationsAutomations() {
                       <label className="flex items-center gap-2 text-xs font-semibold text-secondary uppercase tracking-wider mb-1">
                         <Clock size={18} /> Send Time
                       </label>
-                      <p className="text-sm font-medium text-primary">{auto.sendTime}</p>
+                      <p className="text-sm font-medium text-on-primary">{auto.sendTime}</p>
                     </div>
                     <div>
                       <label className="flex items-center gap-2 text-xs font-semibold text-secondary uppercase tracking-wider mb-1">
@@ -150,7 +150,7 @@ export default function ManagerCommunicationsAutomations() {
                     <div className="pt-2">
                       <button
                         onClick={() => startEditing(auto)}
-                        className="flex items-center gap-2 text-xs font-semibold text-primary hover:text-primary-hover motion-safe:transition-colors focus-visible:outline-none"
+                        className="flex items-center gap-2 text-xs font-semibold text-on-primary hover:text-on-primary-hover motion-safe:transition-colors focus-visible:outline-none"
                       >
                         <Settings size={18} /> Edit Configuration
                       </button>

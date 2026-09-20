@@ -30,7 +30,7 @@ export default function AdminCampaignsTemplatePicker({ templates, selectedTempla
               className={`flex items-center gap-3 p-4 rounded-xl border text-left transition-colors ${
                 isSelected 
                   ? 'border-primary bg-primary text-on-primary' 
-                  : 'border-border bg-input text-primary hover:border-primary'
+                  : 'border-border bg-input text-on-primary hover:border-primary'
               }`}
             >
               <div className="shrink-0">

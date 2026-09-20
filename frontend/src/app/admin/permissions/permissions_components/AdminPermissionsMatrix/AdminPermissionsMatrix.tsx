@@ -26,7 +26,7 @@ export default function AdminPermissionsMatrix() {
         <div>
           <h2 className="text-base font-semibold text-primary capitalize">
             {activeRole} Permissions
-            {selectedGymId !== 'default' && <span className="ml-2 text-xs text-warning bg-warning px-2 py-0.5 rounded-full border border-border">Gym Override</span>}
+            {selectedGymId !== 'default' && <span className="ml-2 text-xs text-on-primary bg-warning px-2 py-0.5 rounded-full border border-border">Gym Override</span>}
           </h2>
           <p className="text-xs text-secondary mt-0.5">
             {selectedGymId === 'default' ? 'Changes apply to all gyms by default' : 'Changes override defaults for this gym only'}

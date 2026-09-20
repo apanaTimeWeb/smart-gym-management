@@ -30,7 +30,7 @@ export function ManagerFinanceContent() {
               key={t}
               onClick={() => setTab(t)}
               className={`px-5 py-2 text-sm font-medium rounded-lg motion-safe:transition-colors ${
-                tab === t ? 'bg-card text-primary shadow-card' : 'text-secondary hover:text-primary'
+                tab === t ? 'bg-card text-on-primary shadow-card' : 'text-secondary hover:text-on-primary'
               }`}
             >
               {t}

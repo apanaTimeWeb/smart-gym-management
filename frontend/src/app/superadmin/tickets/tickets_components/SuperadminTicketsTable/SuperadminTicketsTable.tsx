@@ -73,13 +73,13 @@ export default function SuperadminTicketsTable({ tickets, onReply, onClose, onAs
                 <td className="p-4 text-sm text-secondary">{formatDateTime(ticket.lastUpdated)}</td>
                 <td className="p-4 text-sm text-right">
                   <div className="flex items-center justify-end gap-1">
-                      <button onClick={(e) => { e.stopPropagation(); onReply(ticket.id); }} className="p-2 text-primary hover:bg-primary/10 rounded-lg motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" title="Reply to ticket" aria-label={`Reply to ticket ${ticket.id}`}>
+                      <button onClick={(e) => { e.stopPropagation(); onReply(ticket.id); }} className="p-2 text-on-success hover:bg-primary/10 rounded-lg motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" title="Reply to ticket" aria-label={`Reply to ticket ${ticket.id}`}>
                       <MessageSquare className="w-4 h-4"/>
                     </button>
-                    {onAssign && (<button onClick={(e) => { e.stopPropagation(); onAssign(ticket.id); }} className="p-2 text-secondary hover:bg-input hover:text-primary rounded-lg motion-safe:transition-colors" title="Assign To">
+                    {onAssign && (<button onClick={(e) => { e.stopPropagation(); onAssign(ticket.id); }} className="p-2 text-secondary hover:bg-input hover:text-on-success rounded-lg motion-safe:transition-colors" title="Assign To">
                         <UserCheck className="w-4 h-4"/>
                       </button>)}
-                    {onClose && ticket.status !== 'RESOLVED' && ticket.status !== 'CLOSED' && (<button onClick={(e) => { e.stopPropagation(); onClose(ticket.id); }} className="p-2 text-success hover:bg-success/10 rounded-lg motion-safe:transition-colors" title="Close Ticket">
+                    {onClose && ticket.status !== 'RESOLVED' && ticket.status !== 'CLOSED' && (<button onClick={(e) => { e.stopPropagation(); onClose(ticket.id); }} className="p-2 text-on-success hover:bg-success/10 rounded-lg motion-safe:transition-colors" title="Close Ticket">
                         <CheckCircle2 className="w-4 h-4"/>
                       </button>)}
                   </div>

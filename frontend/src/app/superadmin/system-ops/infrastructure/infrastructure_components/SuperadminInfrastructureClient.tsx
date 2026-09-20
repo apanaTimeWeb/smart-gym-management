@@ -102,11 +102,11 @@ export default function SuperadminInfrastructureClient() {
         <div className="bg-card border border-border rounded-xl p-6 relative overflow-hidden group">
           <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-bl-full -z-10 group-hover:bg-primary/10 motion-safe:transition-colors"/>
           <div className="flex items-center gap-3 mb-6">
-            <div className="p-2 bg-primary/10 rounded-lg text-primary"><Cpu className="w-6 h-6"/></div>
-            <h2 className="text-lg font-bold text-primary">CPU Usage</h2>
+            <div className="p-2 bg-primary/10 rounded-lg text-on-primary"><Cpu className="w-6 h-6"/></div>
+            <h2 className="text-lg font-bold text-on-primary">CPU Usage</h2>
           </div>
           <div className="flex items-end gap-2 mb-2">
-            <span className="text-4xl font-extrabold text-primary">{avgCpu}</span>
+            <span className="text-4xl font-extrabold text-on-primary">{avgCpu}</span>
             <span className="text-xl font-medium text-secondary">%</span>
           </div>
           <div className="w-full h-2 bg-input rounded-full overflow-hidden">
@@ -119,11 +119,11 @@ export default function SuperadminInfrastructureClient() {
         <div className="bg-card border border-border rounded-xl p-6 relative overflow-hidden group">
           <div className="absolute top-0 right-0 w-32 h-32 bg-warning/5 rounded-bl-full -z-10 group-hover:bg-warning/10 motion-safe:transition-colors"/>
           <div className="flex items-center gap-3 mb-6">
-            <div className="p-2 bg-warning/10 rounded-lg text-warning"><Server className="w-6 h-6"/></div>
-            <h2 className="text-lg font-bold text-primary">Memory (RAM)</h2>
+            <div className="p-2 bg-warning/10 rounded-lg text-on-primary"><Server className="w-6 h-6"/></div>
+            <h2 className="text-lg font-bold text-on-primary">Memory (RAM)</h2>
           </div>
           <div className="flex items-end gap-2 mb-2">
-            <span className={`text-4xl font-extrabold ${avgMem > 80 ? 'text-warning' : 'text-primary'}`}>{avgMem}</span>
+            <span className={`text-4xl font-extrabold ${avgMem > 80 ? 'text-on-primary' : 'text-on-primary'}`}>{avgMem}</span>
             <span className="text-xl font-medium text-secondary">%</span>
           </div>
           <div className="w-full h-2 bg-input rounded-full overflow-hidden">
@@ -136,11 +136,11 @@ export default function SuperadminInfrastructureClient() {
         <div className="bg-card border border-border rounded-xl p-6 relative overflow-hidden group">
           <div className="absolute top-0 right-0 w-32 h-32 bg-success/5 rounded-bl-full -z-10 group-hover:bg-success/10 motion-safe:transition-colors"/>
           <div className="flex items-center gap-3 mb-6">
-            <div className="p-2 bg-success/10 rounded-lg text-success"><HardDrive className="w-6 h-6"/></div>
-            <h2 className="text-lg font-bold text-primary">Storage (SSD)</h2>
+            <div className="p-2 bg-success/10 rounded-lg text-on-primary"><HardDrive className="w-6 h-6"/></div>
+            <h2 className="text-lg font-bold text-on-primary">Storage (SSD)</h2>
           </div>
           <div className="flex items-end gap-2 mb-2">
-            <span className="text-4xl font-extrabold text-primary">{avgDisk}</span>
+            <span className="text-4xl font-extrabold text-on-primary">{avgDisk}</span>
             <span className="text-xl font-medium text-secondary">%</span>
           </div>
           <div className="w-full h-2 bg-input rounded-full overflow-hidden">
@@ -159,11 +159,11 @@ export default function SuperadminInfrastructureClient() {
           {/* REDIS MEMORY */}
           <div className="bg-card border border-border rounded-xl p-6 relative overflow-hidden group">
             <div className="flex items-center gap-3 mb-6">
-              <div className="p-2 bg-primary/10 rounded-lg text-primary"><Zap className="w-6 h-6"/></div>
-              <h2 className="text-lg font-bold text-primary">Redis Memory</h2>
+              <div className="p-2 bg-primary/10 rounded-lg text-on-primary"><Zap className="w-6 h-6"/></div>
+              <h2 className="text-lg font-bold text-on-primary">Redis Memory</h2>
             </div>
             <div className="flex items-end gap-2 mb-2">
-              <span className="text-4xl font-extrabold text-primary">{redisTelemetry.memoryUsagePercent}</span>
+              <span className="text-4xl font-extrabold text-on-primary">{redisTelemetry.memoryUsagePercent}</span>
               <span className="text-xl font-medium text-secondary">%</span>
             </div>
             <div className="w-full h-2 bg-input rounded-full overflow-hidden">
@@ -175,11 +175,11 @@ export default function SuperadminInfrastructureClient() {
           {/* REDIS HIT RATIO */}
           <div className="bg-card border border-border rounded-xl p-6 relative overflow-hidden group">
             <div className="flex items-center gap-3 mb-6">
-              <div className="p-2 bg-success/10 rounded-lg text-success"><RefreshCcw className="w-6 h-6"/></div>
-              <h2 className="text-lg font-bold text-primary">Cache Hit Ratio</h2>
+              <div className="p-2 bg-success/10 rounded-lg text-on-primary"><RefreshCcw className="w-6 h-6"/></div>
+              <h2 className="text-lg font-bold text-on-primary">Cache Hit Ratio</h2>
             </div>
             <div className="flex items-end gap-2 mb-2">
-              <span className="text-4xl font-extrabold text-primary">{redisTelemetry.hitRatioPercent}</span>
+              <span className="text-4xl font-extrabold text-on-primary">{redisTelemetry.hitRatioPercent}</span>
               <span className="text-xl font-medium text-secondary">%</span>
             </div>
             <div className="w-full h-2 bg-input rounded-full overflow-hidden">
@@ -191,10 +191,10 @@ export default function SuperadminInfrastructureClient() {
           {/* REDIS TOTAL KEYS */}
           <div className="bg-card border border-border rounded-xl p-6 relative overflow-hidden group flex flex-col justify-center">
             <div className="flex items-center gap-3 mb-2">
-              <h2 className="text-lg font-bold text-primary">Cached Keys</h2>
+              <h2 className="text-lg font-bold text-on-primary">Cached Keys</h2>
             </div>
             <div className="flex items-end gap-2 mb-2">
-              <span className="text-4xl font-extrabold text-primary">{formatNumber(redisTelemetry.totalKeysCached)}</span>
+              <span className="text-4xl font-extrabold text-on-primary">{formatNumber(redisTelemetry.totalKeysCached)}</span>
             </div>
             <p className="text-xs text-secondary mt-3">Uptime: {redisTelemetry.uptimeHours} hours</p>
           </div>
@@ -203,18 +203,18 @@ export default function SuperadminInfrastructureClient() {
 
       <div className="bg-card border border-border rounded-xl p-6">
         <div className="flex items-center gap-2 mb-4">
-          <Zap className="w-5 h-5 text-primary"/>
-          <h2 className="text-xl font-bold text-primary">Redis Cache Global Control</h2>
+          <Zap className="w-5 h-5 text-on-primary"/>
+          <h2 className="text-xl font-bold text-on-primary">Redis Cache Global Control</h2>
         </div>
         <p className="text-sm text-secondary mb-6">
           The SaaS platform uses Redis to cache massive multi-tenant API responses. If gyms are reporting stale data, you can forcefully flush the global cache across all tenants here.
         </p>
         <div className="flex flex-col sm:flex-row gap-4">
-          <button onClick={handleFlushAll} disabled={isFlushingGlobal} className="flex items-center justify-center gap-2 bg-primary text-on-success px-5 py-2.5 rounded-lg font-medium hover:opacity-90 motion-safe:transition-opacity min-w-44 disabled:opacity-50">
+          <button onClick={handleFlushAll} disabled={isFlushingGlobal} className="flex items-center justify-center gap-2 bg-primary text-on-primary px-5 py-2.5 rounded-lg font-medium hover:opacity-90 motion-safe:transition-opacity min-w-44 disabled:opacity-50">
             {isFlushingGlobal ? <Loader2 className="w-5 h-5 motion-safe:animate-spin"/> : null}
             Flush All Tenants
           </button>
-          <button onClick={() => setIsFlushModalOpen(true)} className="flex items-center justify-center gap-2 bg-transparent text-primary px-5 py-2.5 rounded-lg font-medium hover:bg-border motion-safe:transition-colors border border-border min-w-44 disabled:opacity-50">
+          <button onClick={() => setIsFlushModalOpen(true)} className="flex items-center justify-center gap-2 bg-transparent text-on-primary px-5 py-2.5 rounded-lg font-medium hover:bg-border motion-safe:transition-colors border border-border min-w-44 disabled:opacity-50">
             Flush Specific Tenant
           </button>
         </div>

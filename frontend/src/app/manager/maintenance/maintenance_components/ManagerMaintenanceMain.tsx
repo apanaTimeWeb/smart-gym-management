@@ -86,7 +86,7 @@ export default function ManagerMaintenanceMain() {
                 </div>
 
                 {ticket.status !== 'RESOLVED' && (
-                  <button onClick={() => resolveTicket(ticket.id)} className="w-full mt-5 py-2 rounded-lg bg-success/10 text-success font-semibold text-sm hover:bg-success hover:text-white transition-colors">
+                  <button onClick={() => resolveTicket(ticket.id)} className="w-full mt-5 py-2 rounded-lg bg-success/10 text-on-success font-semibold text-sm hover:bg-success hover:text-white transition-colors">
                     Mark as Resolved
                   </button>
                 )}

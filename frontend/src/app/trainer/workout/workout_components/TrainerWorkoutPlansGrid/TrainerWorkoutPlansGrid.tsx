@@ -69,7 +69,7 @@ export default function TrainerWorkoutPlansGrid() {
                 <button type="button" onClick={async () => {
                   const ok = await confirm({ title: 'Delete Plan', message: 'Delete this plan?', type: 'danger', confirmText: 'Delete' });
                   if (ok) deleteWorkout.mutate(w.id);
-                }} className="p-1.5 text-secondary hover:text-danger hover:bg-danger-bg rounded-md motion-safe:transition-colors motion-safe:duration-base">
+                }} className="p-1.5 text-secondary hover:text-on-danger hover:bg-danger-bg rounded-md motion-safe:transition-colors motion-safe:duration-base">
                   <Trash2 size={14} />
                 </button>
               </div>

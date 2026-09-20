@@ -15,14 +15,14 @@ export default function SuperadminMessagingV1WhatsAppTemplatePicker({ templates,
                 const selected = template.id === selectedId;
                 return (<button key={template.id} type="button" onClick={() => onSelect(template)} className={`rounded-xl border p-4 text-left motion-safe:transition-all motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${selected ? 'border-primary/50 bg-primary/10 shadow-card shadow-primary/10' : 'border-border bg-input/30 hover:border-primary/30 hover:bg-input'}`} aria-pressed={selected}>
                 <div className="flex items-start justify-between gap-3">
-                  <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-card text-primary">
+                  <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-card text-on-primary">
                     <MessageSquareText size={18} aria-hidden="true"/>
                   </span>
                   <span className={`rounded-full px-2 py-1 text-xs font-semibold uppercase tracking-wider ${getSuperadminMessagingStatusBadgeClasses(template.status)}`}>
                     {template.status}
                   </span>
                 </div>
-                <p className="mt-3 text-sm font-semibold text-primary">{template.name}</p>
+                <p className="mt-3 text-sm font-semibold text-on-primary">{template.name}</p>
                 <p className="mt-1 text-xs text-secondary">{template.description}</p>
                 <p className="mt-3 text-xs font-medium uppercase tracking-wider text-secondary">{template.category}</p>
               </button>);

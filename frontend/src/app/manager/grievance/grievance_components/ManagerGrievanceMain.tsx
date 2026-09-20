@@ -102,7 +102,7 @@ export default function ManagerGrievanceMain() {
                     </div>
                     
                     {ticket.status !== 'CLOSED' && resolvingTicketId !== ticket.id && (
-                      <button onClick={() => setResolvingTicketId(ticket.id)} className="mt-4 px-4 py-2 text-sm font-semibold rounded-lg bg-primary/10 text-primary hover:bg-primary hover:text-white transition-colors w-full text-center">
+                      <button onClick={() => setResolvingTicketId(ticket.id)} className="mt-4 px-4 py-2 text-sm font-semibold rounded-lg bg-primary/10 text-on-success hover:bg-primary hover:text-white transition-colors w-full text-center">
                         Resolve
                       </button>
                     )}
@@ -112,8 +112,8 @@ export default function ManagerGrievanceMain() {
                 {resolvingTicketId === ticket.id && (
                   <div className="mt-4 p-4 bg-input rounded-xl animate-in slide-in-from-top-2 duration-200">
                     <div className="flex justify-between items-center mb-2">
-                      <label className="text-sm font-bold text-primary">Resolution Note</label>
-                      <button onClick={() => { setResolvingTicketId(null); setResolutionNote(''); }} className="text-secondary hover:text-primary"><X size={16} /></button>
+                      <label className="text-sm font-bold text-on-success">Resolution Note</label>
+                      <button onClick={() => { setResolvingTicketId(null); setResolutionNote(''); }} className="text-secondary hover:text-on-success"><X size={16} /></button>
                     </div>
                     <textarea 
                       value={resolutionNote} 

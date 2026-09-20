@@ -35,8 +35,8 @@ export default function TrainerAttendanceToolbar({
             onClick={() => setTab(t)}
             className={`px-5 py-3.5 text-sm font-medium motion-safe:transition-colors border-b-2 ${
               tab === t
-                ? 'text-primary bg-primary-subtle border-primary'
-                : 'border-transparent text-secondary hover:text-primary'
+                ? 'text-on-primary bg-primary-subtle border-primary'
+                : 'border-transparent text-secondary hover:text-on-primary'
             }`}
           >
             {t}
@@ -52,7 +52,7 @@ export default function TrainerAttendanceToolbar({
             <button type="button"
               onClick={() => setViewMode('calendar')}
               className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-md motion-safe:transition-all ${
-                viewMode === 'calendar' ? 'bg-card text-primary shadow-card' : 'text-secondary hover:text-primary'
+                viewMode === 'calendar' ? 'bg-card text-on-primary shadow-card' : 'text-secondary hover:text-on-primary'
               }`}
             >
               <CalendarIcon size={14} /> Calendar
@@ -60,7 +60,7 @@ export default function TrainerAttendanceToolbar({
             <button type="button"
               onClick={() => setViewMode('table')}
               className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-md motion-safe:transition-all ${
-                viewMode === 'table' ? 'bg-card text-primary shadow-card' : 'text-secondary hover:text-primary'
+                viewMode === 'table' ? 'bg-card text-on-primary shadow-card' : 'text-secondary hover:text-on-primary'
               }`}
             >
               <List size={14} /> List
@@ -75,7 +75,7 @@ export default function TrainerAttendanceToolbar({
             value={localSearch}
             onChange={e => setLocalSearch(e.target.value)}
             placeholder={`Search ${tab.toLowerCase()}...`}
-            className="pl-9 pr-3 py-2 border border-border bg-input text-primary rounded-lg text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary w-40 sm:w-56"
+            className="pl-9 pr-3 py-2 border border-border bg-input text-on-primary rounded-lg text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary w-40 sm:w-56"
           />
         </div>
 
@@ -103,7 +103,7 @@ export default function TrainerAttendanceToolbar({
             <button type="button"
               onClick={onSelfCheckIn}
               disabled={selfCheckInPending}
-              className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page flex items-center gap-2 px-3 py-2 text-sm bg-success text-on-success rounded-lg hover:opacity-90 disabled:opacity-70 motion-safe:transition-opacity"
+              className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page flex items-center gap-2 px-3 py-2 text-sm bg-success text-on-primary rounded-lg hover:opacity-90 disabled:opacity-70 motion-safe:transition-opacity"
             >
               {selfCheckInPending ? <Loader2 size={14} className="motion-safe:animate-spin" /> : <LogIn size={14} />}
               Check In
@@ -111,7 +111,7 @@ export default function TrainerAttendanceToolbar({
             <button type="button"
               onClick={onSelfCheckOut}
               disabled={selfCheckOutPending}
-              className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page flex items-center gap-2 px-3 py-2 text-sm bg-warning text-on-success rounded-lg hover:opacity-90 disabled:opacity-70 motion-safe:transition-opacity"
+              className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page flex items-center gap-2 px-3 py-2 text-sm bg-warning text-on-primary rounded-lg hover:opacity-90 disabled:opacity-70 motion-safe:transition-opacity"
             >
               {selfCheckOutPending ? <Loader2 size={14} className="motion-safe:animate-spin" /> : <LogOut size={14} />}
               Check Out
@@ -123,7 +123,7 @@ export default function TrainerAttendanceToolbar({
         {tab === 'Members' && (
           <button type="button"
             onClick={onAddRecord}
-            className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page flex items-center gap-2 px-3 py-2 text-sm bg-primary text-on-success rounded-lg hover:opacity-90 motion-safe:transition-opacity"
+            className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page flex items-center gap-2 px-3 py-2 text-sm bg-primary text-on-primary rounded-lg hover:opacity-90 motion-safe:transition-opacity"
           >
             <Plus size={14} /> Add Record
           </button>

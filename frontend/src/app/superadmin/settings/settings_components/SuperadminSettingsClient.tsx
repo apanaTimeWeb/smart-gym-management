@@ -90,7 +90,7 @@ export default function SuperadminSettingsClient() {
                         <input aria-label={setting.key} type={setting.dataType === 'number' ? 'number' : 'text'} value={currentValue} onChange={(event) => setEditedValues((previous) => ({ ...previous, [setting.id]: event.target.value }))} className="rounded-lg border border-border bg-input px-3 py-1.5 text-primary focus:border-focus focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page" />
                       )}
                       {hasChanges && (
-                        <button type="button" onClick={() => void handleSave(setting.id)} disabled={isSavingThis} aria-label={`Save ${setting.key}`} className="min-h-11 min-w-11 rounded-lg bg-primary-subtle p-2 text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-60 motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95">
+                        <button type="button" onClick={() => void handleSave(setting.id)} disabled={isSavingThis} aria-label={`Save ${setting.key}`} className="min-h-11 min-w-11 rounded-lg bg-primary-subtle p-2 text-on-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-60 motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95">
                           <Save size={18} strokeWidth={2} aria-hidden="true" />
                         </button>
                       )}

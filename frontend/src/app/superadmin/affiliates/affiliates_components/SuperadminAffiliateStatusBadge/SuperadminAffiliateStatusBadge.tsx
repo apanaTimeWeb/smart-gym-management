@@ -6,7 +6,7 @@ import type { SuperadminAffiliateStatusBadgeProps } from '@/app/superadmin/affil
 export default function SuperadminAffiliateStatusBadge({ status }: SuperadminAffiliateStatusBadgeProps) {
     switch (status) {
         case 'ACTIVE':
-            return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-success-bg text-success">ACTIVE</span>;
+            return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-success-bg text-on-success">ACTIVE</span>;
         case 'INACTIVE':
             return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-input text-secondary">INACTIVE</span>;
         default:

@@ -22,7 +22,7 @@ export default function SuperadminPlansList() {
             {plan.isArchived && (<div className="absolute top-0 left-0 bg-surface-hover text-secondary px-3 py-1 text-xs font-bold rounded-br-lg">
                 ARCHIVED
               </div>)}
-            <div className="absolute top-0 right-0 bg-primary/10 text-primary px-3 py-1 text-xs font-bold rounded-bl-lg">
+            <div className="absolute top-0 right-0 bg-primary/10 text-on-primary px-3 py-1 text-xs font-bold rounded-bl-lg">
               {plan.activeTenants ?? 0} Gyms Active
             </div>
 
@@ -56,7 +56,7 @@ export default function SuperadminPlansList() {
             </div>
 
             <div className="flex gap-2">
-              <button onClick={() => openEditModal(plan)} disabled={isDeleting || deleteMutation.isPending} aria-label={`Edit ${plan.name}`} className="flex-1 py-2.5 flex items-center justify-center bg-input hover:bg-primary hover:text-on-primary text-primary rounded-xl motion-safe:transition-colors border border-border disabled:opacity-50">
+              <button onClick={() => openEditModal(plan)} disabled={isDeleting || deleteMutation.isPending} aria-label={`Edit ${plan.name}`} className="flex-1 py-2.5 flex items-center justify-center bg-input hover:bg-primary hover:text-on-primary text-on-primary rounded-xl motion-safe:transition-colors border border-border disabled:opacity-50">
                 <Edit2 size={18}/>
               </button>
               <button onClick={() => confirmPlanDestructiveAction(plan)} disabled={isDeleting || deleteMutation.isPending || archiveMutation.isPending} aria-label={`Delete or archive ${plan.name}`} title={(plan.activeTenants ?? 0) > 0 ? 'Archive plan (has active gyms)' : 'Delete plan'} className="flex-1 py-2.5 flex items-center justify-center bg-input hover:bg-danger hover:text-on-danger text-secondary rounded-xl motion-safe:transition-colors border border-border disabled:opacity-50">

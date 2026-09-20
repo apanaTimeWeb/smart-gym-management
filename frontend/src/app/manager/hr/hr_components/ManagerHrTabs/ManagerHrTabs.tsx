@@ -45,8 +45,8 @@ export default function ManagerHrTabs() {
               }}
               className={`whitespace-nowrap border-b-2 px-4 py-3 text-sm font-medium motion-safe:transition-colors ${
                 activeTab === tab
-                  ? 'border-primary bg-primary/5 text-primary'
-                  : 'border-transparent text-secondary hover:text-primary'
+                  ? 'border-primary bg-primary/5 text-on-primary'
+                  : 'border-transparent text-secondary hover:text-on-primary'
               }`}
             >
               {tab}
@@ -65,7 +65,7 @@ export default function ManagerHrTabs() {
                   value={search}
                   onChange={(event) => setSearch(event.target.value)}
                   placeholder="Search staff..."
-                  className="w-full rounded-lg border border-border bg-card py-2 pl-9 pr-3 text-sm text-primary focus:outline-none focus:ring-2"
+                  className="w-full rounded-lg border border-border bg-card py-2 pl-9 pr-3 text-sm text-on-primary focus:outline-none focus:ring-2"
                 />
               </div>
               <div className="w-full sm:w-40">
@@ -99,7 +99,7 @@ export default function ManagerHrTabs() {
                 type="month"
                 value={payrollMonth}
                 onChange={(event) => setPayrollMonth(event.target.value)}
-                className="w-full rounded-lg border border-border bg-card px-3 py-2 text-sm text-primary sm:w-auto"
+                className="w-full rounded-lg border border-border bg-card px-3 py-2 text-sm text-on-primary sm:w-auto"
               />
               <button
                 type="button"

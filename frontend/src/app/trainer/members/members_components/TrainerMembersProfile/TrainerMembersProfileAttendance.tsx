@@ -58,7 +58,7 @@ export default function TrainerMembersProfileAttendance() {
             <h3 className="text-lg font-bold text-primary flex items-center gap-2">
               <CalendarIcon size={18} className="text-primary" /> {monthName} {currentYear} Attendance
             </h3>
-            <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary-subtle text-primary border border-primary flex items-center gap-1">
+            <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary-subtle text-on-primary border border-primary flex items-center gap-1">
               <ShieldCheck size={12} /> View Only
             </span>
           </div>
@@ -90,7 +90,7 @@ export default function TrainerMembersProfileAttendance() {
         </div>
         <div className="bg-card border border-border rounded-xl p-4">
           <p className="text-xs font-medium text-secondary">Attendance Rate</p>
-          <p className={`text-2xl font-bold mt-1 ${attendancePct >= 75 ? 'text-success' : 'text-danger'}`}>
+          <p className={`text-2xl font-bold mt-1 ${attendancePct >= 75 ? 'text-on-primary' : 'text-on-primary'}`}>
             {attendancePct}%
           </p>
         </div>
@@ -120,16 +120,16 @@ export default function TrainerMembersProfileAttendance() {
 
             if (isPastOrToday) {
               if (status === 'P') {
-                statusStyle = 'bg-success-bg text-success border-success hover:border-success/60';
-                badgeStyle = 'bg-success text-on-success';
+                statusStyle = 'bg-success-bg text-on-primary border-success hover:border-success/60';
+                badgeStyle = 'bg-success text-on-primary';
                 label = 'Present';
               } else if (status === 'A') {
-                statusStyle = 'bg-danger-bg text-danger border-danger hover:border-danger/60';
-                badgeStyle = 'bg-danger text-on-danger';
+                statusStyle = 'bg-danger-bg text-on-primary border-danger hover:border-danger/60';
+                badgeStyle = 'bg-danger text-on-primary';
                 label = 'Absent';
               } else if (status === 'L') {
-                statusStyle = 'bg-warning-bg text-warning border-warning/30 hover:border-warning/60';
-                badgeStyle = 'bg-warning text-white';
+                statusStyle = 'bg-warning-bg text-on-primary border-warning/30 hover:border-warning/60';
+                badgeStyle = 'bg-warning text-on-primary';
                 label = 'Rest';
               }
             }
@@ -142,11 +142,11 @@ export default function TrainerMembersProfileAttendance() {
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <span className={`text-sm font-bold ${isToday ? 'text-primary' : 'text-primary'}`}>
+                  <span className={`text-sm font-bold ${isToday ? 'text-on-primary' : 'text-on-primary'}`}>
                     {day}
                   </span>
                   {isToday && (
-                    <span className="text-xs font-extrabold uppercase px-1.5 py-0.5 rounded bg-primary text-white tracking-wide">
+                    <span className="text-xs font-extrabold uppercase px-1.5 py-0.5 rounded bg-primary text-on-primary tracking-wide">
                       Today
                     </span>
                   )}
@@ -175,7 +175,7 @@ export default function TrainerMembersProfileAttendance() {
       {/* Legend Footer */}
       <div className="flex flex-wrap items-center justify-between gap-4 p-4 bg-floating border border-border rounded-xl text-xs text-secondary">
         <div className="flex items-center gap-4 flex-wrap">
-          <span className="font-semibold text-primary">Legend:</span>
+          <span className="font-semibold text-on-primary">Legend:</span>
           <span className="flex items-center gap-1.5">
             <span className="w-3 h-3 rounded-full bg-success"></span> Present (P)
           </span>

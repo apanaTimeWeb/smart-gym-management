@@ -87,7 +87,7 @@ export default function TrainerSessionsMain() {
                 key={f}
                 onClick={() => setFilter(f)}
                 className={`px-4 py-1.5 text-sm font-medium rounded-md motion-safe:transition-colors ${
-                  filter === f ? 'bg-card text-primary shadow-card' : 'text-secondary hover:text-primary'
+                  filter === f ? 'bg-card text-on-primary shadow-card' : 'text-secondary hover:text-on-primary'
                 }`}
               >
                 {f}
@@ -101,7 +101,7 @@ export default function TrainerSessionsMain() {
                 type="date"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
-                className="bg-input border border-border text-primary text-sm rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary"
+                className="bg-input border border-border text-on-primary text-sm rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </div>
             <button type="button"
@@ -119,7 +119,7 @@ export default function TrainerSessionsMain() {
         ) : isError ? (
           <div className="flex flex-col items-center justify-center gap-3 py-20 bg-card rounded-xl border border-border">
             <p className="text-danger">Unable to load sessions right now. Please retry.</p>
-            <button type="button" onClick={() => void refetch()} className="px-4 py-2 rounded-lg border border-border text-primary hover:bg-primary-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">Retry</button>
+            <button type="button" onClick={() => void refetch()} className="px-4 py-2 rounded-lg border border-border text-on-primary hover:bg-primary-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">Retry</button>
           </div>
         ) : (
           <div className="grid gap-4">
@@ -134,7 +134,7 @@ export default function TrainerSessionsMain() {
                   </div>
                   <div>
                     <div className="flex items-center gap-2 mb-1">
-                      <h3 className="font-bold text-primary text-lg">{session.title}</h3>
+                      <h3 className="font-bold text-on-primary text-lg">{session.title}</h3>
                       <span className={`text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${SESSION_TYPE_STYLES[session.type]}`}>
                         {session.type}
                       </span>
@@ -156,7 +156,7 @@ export default function TrainerSessionsMain() {
                     <div className="flex items-center gap-3">
                       <button type="button"
                         onClick={() => setEditingSession(session)}
-                        className="flex items-center gap-1 text-sm font-semibold text-secondary hover:text-primary hover:underline motion-safe:transition-colors motion-safe:duration-base"
+                        className="flex items-center gap-1 text-sm font-semibold text-secondary hover:text-on-primary hover:underline motion-safe:transition-colors motion-safe:duration-base"
                         aria-label={`Edit session ${session.title}`}
                       >
                         <Pencil size={13} /> Edit

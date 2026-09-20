@@ -32,7 +32,7 @@ export default function ManagerHrStaffProfileModal() {
             </div>
             <button 
               onClick={() => { setViewProfileData(null); openEdit(s); }}
-              className="flex items-center gap-2 px-4 py-2 bg-primary/10 hover:bg-primary/20 text-primary font-semibold rounded-xl motion-safe:transition-colors mb-2"
+              className="flex items-center gap-2 px-4 py-2 bg-primary/10 hover:bg-primary/20 text-on-primary font-semibold rounded-xl motion-safe:transition-colors mb-2"
             >
               <Edit2 size={18} /> Edit Profile
             </button>
@@ -40,7 +40,7 @@ export default function ManagerHrStaffProfileModal() {
 
           <div className="mb-6">
             <h3 className="text-2xl font-bold text-primary">{s.name}</h3>
-            <p className="text-sm font-medium text-primary mt-1 px-3 py-1 bg-primary/10 inline-block rounded-md">{s.role}</p>
+            <p className="text-sm font-medium text-on-primary mt-1 px-3 py-1 bg-primary/10 inline-block rounded-md">{s.role}</p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-6">
@@ -122,7 +122,7 @@ export default function ManagerHrStaffProfileModal() {
                <p className="text-xs text-secondary mb-1">Status</p>
                <div className="flex items-center gap-2">
                  <div className={`w-2.5 h-2.5 rounded-full ${s.isActive ? 'bg-success' : 'bg-danger'}`}></div>
-                 <span className={`text-sm font-bold ${s.isActive ? 'text-success' : 'text-danger'}`}>{s.isActive ? 'Active Staff' : 'Suspended'}</span>
+                 <span className={`text-sm font-bold ${s.isActive ? 'text-on-success' : 'text-on-danger'}`}>{s.isActive ? 'Active Staff' : 'Suspended'}</span>
                </div>
              </div>
              <div>

@@ -80,7 +80,7 @@ export default function ManagerScheduleWeeklyGrid() {
                         <div className="absolute top-1 right-1 hidden group-hover:flex gap-1">
                           <button
                             onClick={e => { e.stopPropagation(); openEditShift(shift); }}
-                            className="p-0.5 rounded bg-card/80 hover:bg-card text-secondary hover:text-primary motion-safe:transition-colors"
+                            className="p-0.5 rounded bg-card/80 hover:bg-card text-secondary hover:text-on-primary motion-safe:transition-colors"
                             aria-label="Edit shift"
                           >
                             <Pencil size={18} />
@@ -97,7 +97,7 @@ export default function ManagerScheduleWeeklyGrid() {
                     ) : (
                       <button
                         onClick={() => openAddShift(trainer.trainerId)}
-                        className="w-full h-10 rounded-lg border border-dashed border-border hover:border-primary hover:bg-primary/5 flex items-center justify-center text-secondary hover:text-primary motion-safe:transition-colors"
+                        className="w-full h-10 rounded-lg border border-dashed border-border hover:border-primary hover:bg-primary/5 flex items-center justify-center text-secondary hover:text-on-primary motion-safe:transition-colors"
                         aria-label={`Add shift for ${trainer.trainerName} on ${day}`}
                       >
                         <Plus size={18} />

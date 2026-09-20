@@ -23,7 +23,7 @@ export default function SuperadminInvoicesLogPaymentModal({ onClose, selectedGym
           <div className="relative">
             <label className="block text-sm font-medium text-secondary mb-1.5">Select Gym</label>
             <div className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm text-primary cursor-pointer flex justify-between items-center hover:border-primary motion-safe:transition-colors" onClick={() => setIsGymDropdownOpen(!isGymDropdownOpen)}>
-              <span className={selectedGym ? 'text-primary' : 'text-secondary'}>
+              <span className={selectedGym ? 'text-on-primary' : 'text-secondary'}>
                 {selectedGym ? `${selectedGym.name} (${selectedGym.plan})` : '-- Choose Gym --'}
               </span>
               <span className="text-secondary text-xs">▼</span>
@@ -32,11 +32,11 @@ export default function SuperadminInvoicesLogPaymentModal({ onClose, selectedGym
                 <div className="p-2 border-b border-border bg-header">
                   <div className="relative">
                     <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-secondary"/>
-                    <input type="text" placeholder="Search gym by name..." className="w-full pl-8 pr-3 py-1.5 bg-input border border-border rounded text-sm text-primary focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page focus:border-primary" value={gymSearchTerm} onChange={(e) => setGymSearchTerm(e.target.value)} onClick={(e) => e.stopPropagation()} autoFocus/>
+                    <input type="text" placeholder="Search gym by name..." className="w-full pl-8 pr-3 py-1.5 bg-input border border-border rounded text-sm text-on-primary focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page focus:border-primary" value={gymSearchTerm} onChange={(e) => setGymSearchTerm(e.target.value)} onClick={(e) => e.stopPropagation()} autoFocus/>
                   </div>
                 </div>
                 <div className="overflow-y-auto p-1">
-                  {filteredTenantsForDropdown.map((t) => (<div key={t.id} className="px-3 py-2.5 text-sm text-primary hover:bg-input hover:text-primary cursor-pointer rounded-md motion-safe:transition-colors" onClick={() => handleSelectGym(t.id)}>
+                  {filteredTenantsForDropdown.map((t) => (<div key={t.id} className="px-3 py-2.5 text-sm text-on-primary hover:bg-input hover:text-on-primary cursor-pointer rounded-md motion-safe:transition-colors" onClick={() => handleSelectGym(t.id)}>
                       <span className="font-bold">{t.name}</span>
                       <span className="text-secondary text-xs ml-1">({t.plan})</span>
                     </div>))}
@@ -50,7 +50,7 @@ export default function SuperadminInvoicesLogPaymentModal({ onClose, selectedGym
             <div className="relative">
               <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary"/>
               <input type="number" min="0" onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+')
-        e.preventDefault(); }} value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="e.g. 4999" className="w-full pl-9 pr-4 py-2.5 bg-input border border-border rounded-lg text-sm text-primary focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page focus:border-primary"/>
+        e.preventDefault(); }} value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="e.g. 4999" className="w-full pl-9 pr-4 py-2.5 bg-input border border-border rounded-lg text-sm text-on-primary focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page focus:border-primary"/>
             </div>
           </div>
 
@@ -66,18 +66,18 @@ export default function SuperadminInvoicesLogPaymentModal({ onClose, selectedGym
             </div>
             <div>
               <label className="block text-sm font-medium text-secondary mb-1.5">Reference ID</label>
-              <input type="text" placeholder="e.g. TXN123456" className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm text-primary focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page focus:border-primary"/>
+              <input type="text" placeholder="e.g. TXN123456" className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm text-on-primary focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page focus:border-primary"/>
             </div>
           </div>
 
           <div>
             <label className="block text-sm font-medium text-secondary mb-1.5">Date & Time Received</label>
-            <input type="datetime-local" className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm text-primary focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page focus:border-primary"/>
+            <input type="datetime-local" className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm text-on-primary focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page focus:border-primary"/>
           </div>
         </div>
 
         <div className="p-5 border-t border-border bg-header flex justify-end gap-3">
-          <button onClick={onClose} className="px-4 py-2 bg-input border border-border text-primary rounded-lg text-sm font-medium hover:bg-border motion-safe:transition-colors">
+          <button onClick={onClose} className="px-4 py-2 bg-input border border-border text-on-primary rounded-lg text-sm font-medium hover:bg-border motion-safe:transition-colors">
             Cancel
           </button>
           <button onClick={() => onSave(Number(amount))} className="px-4 py-2 bg-primary text-on-primary rounded-lg text-sm font-medium hover:bg-primary-hover motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out motion-safe:active:scale-95">

@@ -41,15 +41,15 @@ export default function AdminDashboardExpiringWidget() {
             m.daysLeft <= 7 ? 'bg-danger border-border' : 'bg-warning border-warning'
           }`}>
             <div className="flex items-center gap-2.5 min-w-0">
-              <div className="w-7 h-7 rounded-full bg-primary-subtle flex items-center justify-center text-primary text-xs font-bold flex-shrink-0">
+              <div className="w-7 h-7 rounded-full bg-primary-subtle flex items-center justify-center text-on-primary text-xs font-bold flex-shrink-0">
                 {m.name.charAt(0)}
               </div>
               <div className="min-w-0">
-                <p className="text-sm font-semibold text-primary truncate">{m.name}</p>
+                <p className="text-sm font-semibold text-on-primary truncate">{m.name}</p>
                 <p className="text-xs text-secondary truncate">{m.branch} · {m.plan}</p>
               </div>
             </div>
-            <span className={`text-xs font-bold whitespace-nowrap flex-shrink-0 ${m.daysLeft <= 7 ? 'text-danger' : 'text-warning'}`}>
+            <span className={`text-xs font-bold whitespace-nowrap flex-shrink-0 ${m.daysLeft <= 7 ? 'text-on-primary' : 'text-on-primary'}`}>
               {m.daysLeft}d left
             </span>
           </div>
@@ -58,7 +58,7 @@ export default function AdminDashboardExpiringWidget() {
 
       <Link
         href={`${ADMIN_MEMBERS_ROUTE}?expiryFilter=this_month`}
-        className="w-full mt-4 py-2 border border-border rounded-lg text-xs font-bold text-secondary hover:text-primary hover:bg-surface-highlight motion-safe:transition-colors flex items-center justify-center gap-1 motion-safe:duration-base"
+        className="w-full mt-4 py-2 border border-border rounded-lg text-xs font-bold text-secondary hover:text-on-primary hover:bg-surface-highlight motion-safe:transition-colors flex items-center justify-center gap-1 motion-safe:duration-base"
       >
         View All Expiring <ChevronRight size={13} />
       </Link>

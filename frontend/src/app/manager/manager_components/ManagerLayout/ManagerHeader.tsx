@@ -110,7 +110,7 @@ export default function ManagerHeader({ title, subtitle, action }: ManagerHeader
               </div>
               <div className="border-t border-border py-1 bg-overlay">
                 <button
-                  className="w-full flex items-center gap-2 px-4 py-2 text-sm text-danger hover:bg-danger font-medium motion-safe:transition-colors"
+                  className="w-full flex items-center gap-2 px-4 py-2 text-sm text-on-danger hover:bg-danger font-medium motion-safe:transition-colors"
                   onClick={() => { setShowProfile(false); logout(); }}
                 >
                   <LogOut size={18} /> Log out

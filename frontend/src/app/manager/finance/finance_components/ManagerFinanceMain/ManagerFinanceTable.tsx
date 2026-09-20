@@ -49,8 +49,8 @@ export default function ManagerFinanceTable() {
                   </td>
                   <td className="px-5 py-3.5 whitespace-nowrap">
                     <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${
-                      p.status === 'PAID' ? 'bg-success/10 text-success' :
-                      p.status === 'REFUNDED' ? 'bg-warning/10 text-warning' : 'bg-danger/10 text-danger'
+                      p.status === 'PAID' ? 'bg-success/10 text-on-primary' :
+                      p.status === 'REFUNDED' ? 'bg-warning/10 text-on-primary' : 'bg-danger/10 text-on-primary'
                     }`}>{p.status}</span>
                   </td>
                   <td className="px-5 py-3.5 text-sm text-secondary whitespace-nowrap">

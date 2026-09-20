@@ -59,7 +59,7 @@ export function AdminMembersHeaderSearch() {
                   className="flex items-center justify-between px-3 py-2.5 hover:bg-input motion-safe:transition-colors border-b border-border last:border-0 motion-safe:duration-base"
                 >
                   <div className="flex items-center gap-2.5 min-w-0">
-                    <div className="w-7 h-7 rounded-full bg-primary-subtle flex items-center justify-center text-primary text-xs font-bold flex-shrink-0">
+                    <div className="w-7 h-7 rounded-full bg-primary-subtle flex items-center justify-center text-on-primary text-xs font-bold flex-shrink-0">
                       {m.name.charAt(0)}
                     </div>
                     <div className="min-w-0">

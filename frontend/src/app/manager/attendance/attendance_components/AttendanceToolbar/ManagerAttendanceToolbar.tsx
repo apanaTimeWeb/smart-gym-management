@@ -35,8 +35,8 @@ export default function ManagerAttendanceToolbar() {
  onClick={() => setTab(t)}
  className={`whitespace-nowrap px-5 py-3.5 text-sm font-medium motion-safe:transition-colors border-b-2 ${
  tab === t 
- ? 'text-primary bg-primary-subtle border-primary' 
- : 'border-transparent text-secondary hover:text-primary'
+ ? 'text-on-info bg-primary-subtle border-primary' 
+ : 'border-transparent text-secondary hover:text-on-info'
  }`}
  >
  {t}
@@ -50,7 +50,7 @@ export default function ManagerAttendanceToolbar() {
         value={localSearch} 
         onChange={e => setLocalSearch(e.target.value)} 
         placeholder={`Search ${tab.toLowerCase()}...`} 
-        className="pl-9 pr-3 py-2 border border-border bg-input text-primary rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary w-full sm:w-64"
+        className="pl-9 pr-3 py-2 border border-border bg-input text-on-info rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary w-full sm:w-64"
       />
     </div>
     
@@ -59,7 +59,7 @@ export default function ManagerAttendanceToolbar() {
         type="date"
         value={dateFilter}
         onChange={(e) => setDateFilter(e.target.value)}
-        className="px-3 py-2 border border-border bg-input text-primary rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary w-full"
+        className="px-3 py-2 border border-border bg-input text-on-info rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary w-full"
       />
     </div>
     
@@ -83,7 +83,7 @@ export default function ManagerAttendanceToolbar() {
  </button>
  <button 
  onClick={() => exportAttendance && exportAttendance()} 
- className="flex justify-center items-center gap-2 px-3 py-2 text-sm border border-border rounded-lg hover:bg-info/10 text-info motion-safe:transition-colors w-full sm:w-auto"
+ className="flex justify-center items-center gap-2 px-3 py-2 text-sm border border-border rounded-lg hover:bg-info/10 text-on-info motion-safe:transition-colors w-full sm:w-auto"
  >
  <Download size={18} /> Export
  </button>

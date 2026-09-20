@@ -21,7 +21,7 @@ export default function TrainerLibraryDietGrid({
 }: TrainerLibraryDietGridProps) {
   const totalPages = Math.max(1, Math.ceil(totalDietPlans / TRAINER_ITEMS_PER_PAGE));
 
-  if (isError) return <div className="rounded-xl border border-danger bg-danger-bg p-5 text-danger">Unable to load diet plans. Please retry.</div>;
+  if (isError) return <div className="rounded-xl border border-danger bg-danger-bg p-5 text-on-danger">Unable to load diet plans. Please retry.</div>;
   if (isPending) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -50,7 +50,7 @@ export default function TrainerLibraryDietGrid({
             className="text-left rounded-xl border border-border bg-card p-5 hover:shadow-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-safe:transition-shadow flex flex-col"
           >
             <div className="flex justify-between items-start mb-3">
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-success-bg text-success shrink-0">
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-success-bg text-on-success shrink-0">
                 <Apple size={18} />
               </div>
               <span className="p-1.5 rounded text-secondary" title="View diet plan" aria-hidden="true"><Eye size={18} /></span>

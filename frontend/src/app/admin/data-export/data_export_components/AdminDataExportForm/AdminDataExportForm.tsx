@@ -52,7 +52,7 @@ export default function AdminDataExportForm() {
           <div className="flex flex-wrap gap-2">
             {DATA_TYPE_OPTIONS.map(opt => (
               <button key={opt.value} type="button" onClick={() => setValue('dataType', opt.value as ExportFormValues['dataType'])}
-                className={`px-3 py-1.5 rounded-lg text-sm font-medium border motion-safe:transition-all ${selectedDataType === opt.value ? 'bg-primary-subtle text-primary border-primary' : 'bg-input text-secondary border-border hover:border-primary'}`}>
+                className={`px-3 py-1.5 rounded-lg text-sm font-medium border motion-safe:transition-all ${selectedDataType === opt.value ? 'bg-primary-subtle text-on-primary border-primary' : 'bg-input text-secondary border-border hover:border-primary'}`}>
                 {opt.label}
               </button>
             ))}
@@ -66,7 +66,7 @@ export default function AdminDataExportForm() {
           <div className="flex gap-3">
             {FORMAT_OPTIONS.map(opt => (
               <button key={opt.value} type="button" onClick={() => setValue('format', opt.value as ExportFormValues['format'])}
-                className={`flex-1 py-2.5 rounded-lg text-sm font-medium border motion-safe:transition-all ${selectedFormat === opt.value ? 'bg-primary-subtle text-primary border-primary' : 'bg-input text-secondary border-border hover:border-primary'}`}>
+                className={`flex-1 py-2.5 rounded-lg text-sm font-medium border motion-safe:transition-all ${selectedFormat === opt.value ? 'bg-primary-subtle text-on-primary border-primary' : 'bg-input text-secondary border-border hover:border-primary'}`}>
                 {opt.label}
               </button>
             ))}
@@ -81,7 +81,7 @@ export default function AdminDataExportForm() {
               const isSelected = selectedGyms.includes(opt.value);
               return (
                 <button key={opt.value} type="button" onClick={() => toggleGym(opt.value)}
-                  className={`px-3 py-1.5 rounded-lg text-sm font-medium border motion-safe:transition-all ${isSelected ? 'bg-primary-subtle text-primary border-primary' : 'bg-input text-secondary border-border hover:border-primary'}`}>
+                  className={`px-3 py-1.5 rounded-lg text-sm font-medium border motion-safe:transition-all ${isSelected ? 'bg-primary-subtle text-on-primary border-primary' : 'bg-input text-secondary border-border hover:border-primary'}`}>
                   {opt.label}
                 </button>
               );
@@ -94,18 +94,18 @@ export default function AdminDataExportForm() {
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-secondary mb-1">From Date <span className="text-danger">*</span></label>
-            <input {...register('dateFrom')} type="date" className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" />
+            <input {...register('dateFrom')} type="date" className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-on-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" />
             {errors.dateFrom && <p className="text-xs text-danger mt-1">{errors.dateFrom.message}</p>}
           </div>
           <div>
             <label className="block text-sm font-medium text-secondary mb-1">To Date <span className="text-danger">*</span></label>
-            <input {...register('dateTo')} type="date" className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" />
+            <input {...register('dateTo')} type="date" className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-on-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" />
             {errors.dateTo && <p className="text-xs text-danger mt-1">{errors.dateTo.message}</p>}
           </div>
         </div>
 
         <div className="flex justify-end gap-3 pt-2 border-t border-border">
-          <button type="button" onClick={() => reset(EMPTY_EXPORT_FORM)} className="px-4 py-2 bg-input border border-border rounded-lg text-sm font-medium text-secondary hover:text-primary motion-safe:transition-colors motion-safe:duration-base">
+          <button type="button" onClick={() => reset(EMPTY_EXPORT_FORM)} className="px-4 py-2 bg-input border border-border rounded-lg text-sm font-medium text-secondary hover:text-on-primary motion-safe:transition-colors motion-safe:duration-base">
             Clear
           </button>
           <button type="submit" disabled={creating} className="flex items-center gap-2 px-5 py-2 bg-primary text-on-primary rounded-lg text-sm font-semibold hover:bg-primary-hover motion-safe:transition-colors disabled:opacity-60 disabled:cursor-not-allowed motion-safe:active:scale-95 min-w-32 motion-safe:duration-base">

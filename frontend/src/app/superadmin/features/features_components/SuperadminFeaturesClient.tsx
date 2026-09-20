@@ -85,13 +85,13 @@ export default function SuperadminFeaturesClient() {
           <p className="text-secondary mt-1">Control feature rollout and publish release notes to gyms.</p>
         </div>
         <div className="flex bg-input p-1 rounded-lg border border-border">
-          <button onClick={handleShowFlagsTab} className={`px-4 py-2 rounded-md text-sm font-medium motion-safe:transition-colors ${activeTab === 'FLAGS' ? 'bg-card text-primary shadow-card' : 'text-secondary hover:text-primary'}`}>
+          <button onClick={handleShowFlagsTab} className={`px-4 py-2 rounded-md text-sm font-medium motion-safe:transition-colors ${activeTab === 'FLAGS' ? 'bg-card text-on-primary shadow-card' : 'text-secondary hover:text-on-primary'}`}>
             Feature Flags
           </button>
-          <button onClick={handleShowNotesTab} className={`px-4 py-2 rounded-md text-sm font-medium motion-safe:transition-colors ${activeTab === 'NOTES' ? 'bg-card text-primary shadow-card' : 'text-secondary hover:text-primary'}`}>
+          <button onClick={handleShowNotesTab} className={`px-4 py-2 rounded-md text-sm font-medium motion-safe:transition-colors ${activeTab === 'NOTES' ? 'bg-card text-on-primary shadow-card' : 'text-secondary hover:text-on-primary'}`}>
             Release Notes
           </button>
-          <button onClick={handleShowTiersTab} className={`px-4 py-2 rounded-md text-sm font-medium motion-safe:transition-colors ${activeTab === 'TIERS' ? 'bg-card text-primary shadow-card' : 'text-secondary hover:text-primary'}`}>
+          <button onClick={handleShowTiersTab} className={`px-4 py-2 rounded-md text-sm font-medium motion-safe:transition-colors ${activeTab === 'TIERS' ? 'bg-card text-on-primary shadow-card' : 'text-secondary hover:text-on-primary'}`}>
             SaaS Tiers
           </button>
         </div>
@@ -99,8 +99,8 @@ export default function SuperadminFeaturesClient() {
 
       {activeTab === 'FLAGS' && (<div className="bg-card border border-border rounded-xl shadow-card overflow-hidden">
           <div className="p-6 border-b border-border flex items-center justify-between">
-            <h2 className="text-lg font-bold text-primary flex items-center gap-2">
-              <ToggleLeft className="text-primary"/> Global Feature Flags
+            <h2 className="text-lg font-bold text-on-primary flex items-center gap-2">
+              <ToggleLeft className="text-on-primary"/> Global Feature Flags
             </h2>
             <div className="relative max-w-xs w-full">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary"/>
@@ -110,15 +110,15 @@ export default function SuperadminFeaturesClient() {
           <div className="divide-y divide-border">
             {filteredFlags.map((flag: FeatureFlag) => (<div key={flag.id} className="p-6 flex items-center justify-between hover:bg-input motion-safe:transition-colors">
                 <div>
-                  <h3 className="text-primary font-bold mb-1">{flag.name}</h3>
+                  <h3 className="text-on-primary font-bold mb-1">{flag.name}</h3>
                   <p className="text-sm text-secondary">{flag.description}</p>
                   
                   {!flag.isGlobalEnabled && (<div className="mt-3 flex items-center gap-4">
                       {flag.enabledTenantIds.length > 0 && (<div className="flex items-center gap-2">
-                          <span className="text-xs font-bold text-warning bg-warning/10 px-2 py-0.5 rounded">BETA OVERRIDE</span>
+                          <span className="text-xs font-bold text-on-primary bg-warning/10 px-2 py-0.5 rounded">BETA OVERRIDE</span>
                           <span className="text-xs text-secondary">Enabled for {flag.enabledTenantIds.length} specific gyms</span>
                         </div>)}
-                      <button onClick={() => setRolloutFlag(flag)} className="text-xs flex items-center gap-1.5 text-primary hover:text-primary-hover font-semibold motion-safe:transition-colors">
+                      <button onClick={() => setRolloutFlag(flag)} className="text-xs flex items-center gap-1.5 text-on-primary hover:text-on-primary-hover font-semibold motion-safe:transition-colors">
                         <Users className="w-3.5 h-3.5"/>
                         Manage Rollout
                       </button>
@@ -126,7 +126,7 @@ export default function SuperadminFeaturesClient() {
                   {flag.isGlobalEnabled && (<div className="mt-3 flex items-center gap-4">
                       <span className="text-xs text-secondary">Manage Rollout from the action above.</span>
                     </div>)}
-                  <button onClick={() => setHistoryFlag(flag)} className="mt-2 text-xs flex items-center gap-1.5 text-secondary hover:text-primary font-semibold motion-safe:transition-colors">
+                  <button onClick={() => setHistoryFlag(flag)} className="mt-2 text-xs flex items-center gap-1.5 text-secondary hover:text-on-primary font-semibold motion-safe:transition-colors">
                     <Clock className="w-3.5 h-3.5"/>
                     View History
                   </button>
@@ -148,12 +148,12 @@ export default function SuperadminFeaturesClient() {
             {notes.map((note: ReleaseNote) => (<div key={note.id} className="bg-card border border-border rounded-xl p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex flex-wrap items-center gap-3">
-                    <span className="bg-primary/10 text-primary px-2.5 py-1 rounded-md text-xs font-bold border border-primary/20">
+                    <span className="bg-primary/10 text-on-primary px-2.5 py-1 rounded-md text-xs font-bold border border-primary/20">
                       {note.version}
                     </span>
-                    <h3 className="text-lg font-bold text-primary">{note.title}</h3>
+                    <h3 className="text-lg font-bold text-on-primary">{note.title}</h3>
                   </div>
-                  <span className={`text-xs font-bold px-2.5 py-1 rounded-md ${note.isPublished ? 'bg-success/10 text-success' : 'bg-warning/10 text-warning'}`}>
+                  <span className={`text-xs font-bold px-2.5 py-1 rounded-md ${note.isPublished ? 'bg-success/10 text-on-primary' : 'bg-warning/10 text-on-primary'}`}>
                     {note.isPublished ? 'PUBLISHED' : 'DRAFT'}
                   </span>
                 </div>
@@ -166,26 +166,26 @@ export default function SuperadminFeaturesClient() {
           
           <div>
             <form onSubmit={handleSubmit(onPublishNote)} className="bg-card border border-border rounded-xl p-6 sticky top-24">
-              <h3 className="font-bold text-primary mb-4 flex items-center gap-2">
-                <Send className="w-5 h-5 text-primary"/> Compose Release Note
+              <h3 className="font-bold text-on-primary mb-4 flex items-center gap-2">
+                <Send className="w-5 h-5 text-on-primary"/> Compose Release Note
               </h3>
               <div className="space-y-4">
                 <div>
                   <label className="text-xs font-medium text-secondary mb-1 block">Version Tag</label>
-                  <input type="text" placeholder="e.g. v2.6.1" {...register('version')} className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-primary"/>
+                  <input type="text" placeholder="e.g. v2.6.1" {...register('version')} className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-on-primary"/>
                   {errors.version && <p className="text-xs text-danger mt-1">{errors.version.message}</p>}
                 </div>
                 <div>
                   <label className="text-xs font-medium text-secondary mb-1 block">Title</label>
-                  <input type="text" placeholder="Feature announcement..." {...register('title')} className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-primary"/>
+                  <input type="text" placeholder="Feature announcement..." {...register('title')} className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-on-primary"/>
                   {errors.title && <p className="text-xs text-danger mt-1">{errors.title.message}</p>}
                 </div>
                 <div>
                   <label className="text-xs font-medium text-secondary mb-1 block">Content (Markdown supported)</label>
-                  <textarea rows={5} {...register('content')} className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-primary resize-none" placeholder="We just shipped..."></textarea>
+                  <textarea rows={5} {...register('content')} className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-on-primary resize-none" placeholder="We just shipped..."></textarea>
                   {errors.content && <p className="text-xs text-danger mt-1">{errors.content.message}</p>}
                 </div>
-                <button type="submit" disabled={isPublishing} className="w-full bg-primary text-on-success py-2.5 rounded-lg font-medium hover:bg-primary-hover motion-safe:transition-colors disabled:opacity-70">
+                <button type="submit" disabled={isPublishing} className="w-full bg-primary text-on-primary py-2.5 rounded-lg font-medium hover:bg-primary-hover motion-safe:transition-colors disabled:opacity-70">
                   {isPublishing ? 'Publishing...' : 'Publish to All Gyms'}
                 </button>
               </div>

@@ -21,7 +21,7 @@ export default function TrainerSessionsKPIs({ sessions }: TrainerSessionsKPIsPro
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
       <div className="bg-card rounded-xl p-5 border border-border flex items-start gap-4">
-        <div className="p-3 rounded-xl bg-primary-bg text-primary">
+        <div className="p-3 rounded-xl bg-primary-bg text-on-primary">
           <CalendarCheck size={24} />
         </div>
         <div>
@@ -30,7 +30,7 @@ export default function TrainerSessionsKPIs({ sessions }: TrainerSessionsKPIsPro
         </div>
       </div>
       <div className="bg-card rounded-xl p-5 border border-border flex items-start gap-4">
-        <div className="p-3 rounded-xl bg-success-bg text-success">
+        <div className="p-3 rounded-xl bg-success-bg text-on-success">
           <TrendingUp size={24} />
         </div>
         <div>
@@ -39,7 +39,7 @@ export default function TrainerSessionsKPIs({ sessions }: TrainerSessionsKPIsPro
         </div>
       </div>
       <div className="bg-card rounded-xl p-5 border border-border flex items-start gap-4">
-        <div className="p-3 rounded-xl bg-danger-bg text-danger">
+        <div className="p-3 rounded-xl bg-danger-bg text-on-danger">
           <CalendarX size={24} />
         </div>
         <div>
@@ -48,7 +48,7 @@ export default function TrainerSessionsKPIs({ sessions }: TrainerSessionsKPIsPro
         </div>
       </div>
       <div className="bg-card rounded-xl p-5 border border-border flex items-start gap-4">
-        <div className="p-3 rounded-xl bg-info-bg text-info">
+        <div className="p-3 rounded-xl bg-info-bg text-on-info">
           <Users size={24} />
         </div>
         <div>

@@ -47,16 +47,16 @@ export default function ManagerWorkoutPlansGrid() {
               <div className="flex items-center gap-1">
                 <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
                   w.level === 'Beginner' 
-                    ? 'bg-success text-success dark:bg-success dark:text-success' 
+                    ? 'bg-success text-on-primary dark:bg-success dark:text-on-primary' 
                     : w.level === 'Intermediate' 
-                    ? 'bg-warning text-warning dark:bg-warning dark:text-warning' 
-                    : 'bg-danger text-danger dark:bg-danger dark:text-danger'
+                    ? 'bg-warning text-on-primary dark:bg-warning dark:text-on-primary' 
+                    : 'bg-danger text-on-primary dark:bg-danger dark:text-on-primary'
                 }`}>
                   {w.level}
                 </span>
                 <button 
                   onClick={() => openEditWk(w)} 
-                  className="p-1.5 text-info hover:text-info hover:bg-info dark:hover:bg-info rounded-lg motion-safe:transition-colors"
+                  className="p-1.5 text-on-info hover:text-on-info hover:bg-info dark:hover:bg-info rounded-lg motion-safe:transition-colors"
                 >
                   <Edit2 size={18} />
                 </button>
@@ -77,7 +77,7 @@ export default function ManagerWorkoutPlansGrid() {
                       }
                     }
                   }}
-                  className="p-1.5 text-danger hover:text-danger hover:bg-danger dark:hover:bg-danger rounded-lg motion-safe:transition-colors"
+                  className="p-1.5 text-on-primary hover:text-on-primary hover:bg-danger dark:hover:bg-danger rounded-lg motion-safe:transition-colors"
                 >
                   <Trash2 size={18} />
                 </button>

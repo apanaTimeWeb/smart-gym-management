@@ -58,7 +58,7 @@ export default function AdminHrStaffModal() {
   <button 
   type="button" 
   onClick={() => setShowModal(false)} 
-  className="p-2 rounded-full hover:bg-primary-subtle motion-safe:transition-colors text-secondary hover:text-primary motion-safe:duration-base"
+  className="p-2 rounded-full hover:bg-primary-subtle motion-safe:transition-colors text-secondary hover:text-on-primary motion-safe:duration-base"
   >
   <X size={20} />
   </button>
@@ -83,7 +83,7 @@ export default function AdminHrStaffModal() {
   {...register(f.key as keyof StaffFormValues, f.type === 'number' ? { valueAsNumber: true } : {})}
   className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus-visible:ring-2 motion-safe:transition-all motion-safe:duration-base ${
     errors[f.key as keyof StaffFormValues] ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
-  } bg-input text-primary`}
+  } bg-input text-on-success`}
   />
   {errors[f.key as keyof StaffFormValues] && (
     <p className="text-danger text-xs mt-1.5">{errors[f.key as keyof StaffFormValues]?.message as string}</p>
@@ -94,10 +94,10 @@ export default function AdminHrStaffModal() {
   {isManager ? (
     <div className="sm:col-span-2 space-y-4 p-5 border border-border rounded-xl bg-input">
       <div>
-        <label className="block text-sm font-medium mb-2 text-primary">Assigned Branches</label>
+        <label className="block text-sm font-medium mb-2 text-on-success">Assigned Branches</label>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           {(branches as AdminHrBranchReference[]).map(b => (
-            <label key={b.id} className={`flex items-center gap-2 p-3 border rounded-xl cursor-pointer motion-safe:transition-colors ${assignedBranches.includes(b.id) ? 'border-primary bg-surface-highlight text-primary' : 'border-border hover:bg-input text-secondary'}`}>
+            <label key={b.id} className={`flex items-center gap-2 p-3 border rounded-xl cursor-pointer motion-safe:transition-colors ${assignedBranches.includes(b.id) ? 'border-primary bg-surface-highlight text-on-success' : 'border-border hover:bg-input text-secondary'}`}>
               <input 
                 type="checkbox" 
                 value={b.id}
@@ -112,7 +112,7 @@ export default function AdminHrStaffModal() {
                     }
                   }
                 }}
-                className="w-4 h-4 text-primary bg-input border-border rounded focus:ring-primary"
+                className="w-4 h-4 text-on-success bg-input border-border rounded focus:ring-primary"
               />
               <span className="text-sm font-medium">{b.name}</span>
             </label>
@@ -192,7 +192,7 @@ export default function AdminHrStaffModal() {
   <input 
   type="date" 
   {...register('joinDate')}
-  className="w-full px-4 py-3 border border-border rounded-xl text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-primary motion-safe:transition-all motion-safe:duration-base"
+  className="w-full px-4 py-3 border border-border rounded-xl text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-on-success motion-safe:transition-all motion-safe:duration-base"
   />
   </div>
 
@@ -203,12 +203,12 @@ export default function AdminHrStaffModal() {
     type={showPassword ? "text" : "password"}
     placeholder="Min 8 characters"
     {...register('temporaryPassword')}
-    className="w-full px-4 py-3 border border-border rounded-xl text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-primary motion-safe:transition-all motion-safe:duration-base pr-10"
+    className="w-full px-4 py-3 border border-border rounded-xl text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-on-success motion-safe:transition-all motion-safe:duration-base pr-10"
     />
     <button
       type="button"
       onClick={() => setShowPassword(!showPassword)}
-      className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary hover:text-primary motion-safe:transition-colors motion-safe:duration-base"
+      className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary hover:text-on-success motion-safe:transition-colors motion-safe:duration-base"
       aria-label="Toggle password visibility"
     >
       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -219,7 +219,7 @@ export default function AdminHrStaffModal() {
 
   <div className="sm:col-span-2 flex items-center justify-between p-4 border border-border rounded-xl bg-input">
     <div>
-      <label className="block text-sm font-medium text-primary">Login Access</label>
+      <label className="block text-sm font-medium text-on-success">Login Access</label>
       <p className="text-xs text-secondary mt-0.5">Allow this staff member to log in to the portal.</p>
     </div>
     <label className="relative inline-flex items-center cursor-pointer">
@@ -233,14 +233,14 @@ export default function AdminHrStaffModal() {
   <button 
   type="button" 
   onClick={() => setShowModal(false)} 
-  className="px-6 py-2.5 text-sm font-semibold rounded-xl border border-border text-secondary hover:bg-surface-highlight hover:text-primary motion-safe:transition-colors motion-safe:duration-base"
+  className="px-6 py-2.5 text-sm font-semibold rounded-xl border border-border text-secondary hover:bg-surface-highlight hover:text-on-success motion-safe:transition-colors motion-safe:duration-base"
   >
   Cancel
   </button>
   <button 
   type="submit" 
   disabled={saving} 
-  className="px-8 py-2.5 rounded-xl text-sm font-bold text-primary flex items-center justify-center gap-2 disabled:opacity-70 motion-safe:transition-all hover:shadow-dialog motion-safe:active:scale-95 bg-primary motion-safe:duration-base" 
+  className="px-8 py-2.5 rounded-xl text-sm font-bold text-on-success flex items-center justify-center gap-2 disabled:opacity-70 motion-safe:transition-all hover:shadow-dialog motion-safe:active:scale-95 bg-primary motion-safe:duration-base" 
   >
   {saving ? <div className="w-4 h-4 border-2 border-border border-t-white rounded-full motion-safe:animate-spin motion-safe:duration-base" /> : <><Save size={16} />{editId ? 'Update' : 'Add Staff'}</>}
   </button>

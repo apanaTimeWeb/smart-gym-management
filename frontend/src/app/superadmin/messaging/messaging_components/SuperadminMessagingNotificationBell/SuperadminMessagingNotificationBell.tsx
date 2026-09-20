@@ -42,7 +42,7 @@ export default function SuperadminMessagingNotificationBell() {
                   <button type="button" key={notification.id} onClick={() => markRead(notification.id)} disabled={isMarkingRead} className={`w-full text-left flex items-start gap-3 p-4 hover:bg-input motion-safe:transition-all motion-safe:duration-base ${notification.read ? 'opacity-70' : ''} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset`}>
                     <SuperadminMessagingNotificationIcon type={notification.type} />
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between gap-2 mb-1"><p className={`text-sm font-semibold truncate ${notification.read ? 'text-secondary' : 'text-primary'}`}>{notification.title}</p><span className="text-xs text-secondary whitespace-nowrap shrink-0">{formatDateTime(notification.createdAt)}</span></div>
+                      <div className="flex items-center justify-between gap-2 mb-1"><p className={`text-sm font-semibold truncate ${notification.read ? 'text-secondary' : 'text-on-primary'}`}>{notification.title}</p><span className="text-xs text-secondary whitespace-nowrap shrink-0">{formatDateTime(notification.createdAt)}</span></div>
                       <p className="text-xs text-secondary line-clamp-2">{notification.body}</p>
                     </div>
                     {!notification.read && <div className="w-2 h-2 rounded-full bg-primary shrink-0 mt-1.5" aria-hidden="true" />}
@@ -51,7 +51,7 @@ export default function SuperadminMessagingNotificationBell() {
               </div>
             )}
           </div>
-          <div className="p-2 border-t border-border bg-header"><Link href={`${MessagingUrlConfig.PAGES.MAIN}?tab=notifications`} onClick={() => setOpen(false)} className="block w-full text-center py-2 text-sm font-semibold text-primary hover:text-primary-hover motion-safe:transition-all motion-safe:duration-base rounded-md hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">View in Notification Center</Link></div>
+          <div className="p-2 border-t border-border bg-header"><Link href={`${MessagingUrlConfig.PAGES.MAIN}?tab=notifications`} onClick={() => setOpen(false)} className="block w-full text-center py-2 text-sm font-semibold text-on-primary hover:text-on-primary-hover motion-safe:transition-all motion-safe:duration-base rounded-md hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">View in Notification Center</Link></div>
         </div>
       )}
     </div>

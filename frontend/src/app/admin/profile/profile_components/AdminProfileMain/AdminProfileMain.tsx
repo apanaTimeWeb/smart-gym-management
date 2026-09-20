@@ -52,13 +52,13 @@ export default function AdminProfileMain() {
         <div>
           <p className="text-lg font-bold text-primary">{profile?.name ?? 'Admin'}</p>
           <p className="text-sm text-secondary">{displayValue(profile?.email)}</p>
-          <span className="mt-1.5 inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-success text-success text-xs font-semibold"><span className="w-1.5 h-1.5 rounded-full bg-success motion-safe:animate-pulse motion-safe:duration-base" />Active</span>
+          <span className="mt-1.5 inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-success text-on-success text-xs font-semibold"><span className="w-1.5 h-1.5 rounded-full bg-success motion-safe:animate-pulse motion-safe:duration-base" />Active</span>
         </div>
       </div>
 
       <div className="flex gap-1 bg-input border border-border rounded-xl p-1 w-fit">
         {PROFILE_TABS.map(({ id, label, icon: Icon }) => (
-          <button type="button" key={id} onClick={() => setActiveTab(id)} aria-pressed={activeTab === id} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${activeTab === id ? 'bg-card text-primary shadow-card' : 'text-secondary hover:text-primary'}`}>
+          <button type="button" key={id} onClick={() => setActiveTab(id)} aria-pressed={activeTab === id} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${activeTab === id ? 'bg-card text-on-primary shadow-card' : 'text-secondary hover:text-on-primary'}`}>
             <Icon size={16} strokeWidth={2} /> {label}
           </button>
         ))}
@@ -66,11 +66,11 @@ export default function AdminProfileMain() {
 
       {activeTab === 'personal' && (
         <form onSubmit={handleSaveProfile} className="bg-card border border-border rounded-xl p-6 shadow-card space-y-5">
-          <h2 className="text-base font-semibold text-primary">Personal Information</h2>
+          <h2 className="text-base font-semibold text-on-primary">Personal Information</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div>
               <label htmlFor="admin-profile-name" className="block text-sm font-medium text-secondary mb-1.5">Full Name <span className="text-danger">*</span></label>
-              <input id="admin-profile-name" type="text" {...profileForm.register('name')} aria-invalid={profileForm.formState.errors.name ? 'true' : 'false'} aria-describedby={profileForm.formState.errors.name ? 'admin-profile-name-error' : undefined} className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-primary text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" />
+              <input id="admin-profile-name" type="text" {...profileForm.register('name')} aria-invalid={profileForm.formState.errors.name ? 'true' : 'false'} aria-describedby={profileForm.formState.errors.name ? 'admin-profile-name-error' : undefined} className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-on-primary text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" />
               {profileForm.formState.errors.name && <p id="admin-profile-name-error" className="mt-1 text-xs text-danger">{profileForm.formState.errors.name.message}</p>}
             </div>
             <div>
@@ -80,7 +80,7 @@ export default function AdminProfileMain() {
             </div>
             <div>
               <label htmlFor="admin-profile-phone" className="block text-sm font-medium text-secondary mb-1.5">Phone Number</label>
-              <input id="admin-profile-phone" type="tel" {...profileForm.register('phone')} placeholder="+91 XXXXX XXXXX" aria-invalid={profileForm.formState.errors.phone ? 'true' : 'false'} className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-primary text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" />
+              <input id="admin-profile-phone" type="tel" {...profileForm.register('phone')} placeholder="+91 XXXXX XXXXX" aria-invalid={profileForm.formState.errors.phone ? 'true' : 'false'} className="w-full px-4 py-2.5 bg-input border border-border rounded-lg text-on-primary text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" />
               {profileForm.formState.errors.phone && <p className="mt-1 text-xs text-danger">{profileForm.formState.errors.phone.message}</p>}
             </div>
             <div>
@@ -98,7 +98,7 @@ export default function AdminProfileMain() {
 
       {activeTab === 'security' && (
         <form onSubmit={handleChangePassword} className="bg-card border border-border rounded-xl p-6 shadow-card space-y-5">
-          <h2 className="text-base font-semibold text-primary">Change Password</h2>
+          <h2 className="text-base font-semibold text-on-primary">Change Password</h2>
           <div className="space-y-4 max-w-md">
             <AdminPasswordField label="Current Password" name="currentPassword" form={passwordForm} visible={showCurrent} onToggle={() => setShowCurrent((value) => !value)} />
             <AdminPasswordField label="New Password" name="newPassword" form={passwordForm} visible={showNew} onToggle={() => setShowNew((value) => !value)} />

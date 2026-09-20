@@ -27,7 +27,7 @@ export default function AdminImpersonationBanner() {
       </div>
       <button
         onClick={stopImpersonation}
-        className="flex items-center gap-1.5 px-3 py-1.5 bg-warning hover:bg-warning border border-warning rounded-lg text-xs font-bold text-warning motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+        className="flex items-center gap-1.5 px-3 py-1.5 bg-warning hover:bg-warning border border-warning rounded-lg text-xs font-bold text-on-primary motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
         aria-label="Exit manager view"
       >
         <LogOut size={13} />

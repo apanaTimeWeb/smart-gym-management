@@ -101,7 +101,7 @@ export default function ManagerInquiriesMessageModal({
  {recipient.name.charAt(0)}
  </div>
  <div className="flex-1 min-w-0">
- <p className="text-sm font-semibold text-primary truncate">{recipient.name}</p>
+ <p className="text-sm font-semibold text-on-success truncate">{recipient.name}</p>
  <div className="flex items-center gap-1 mt-0.5">
  {type === 'whatsapp' ? (
  <Phone size={18} className="text-secondary flex-shrink-0" />
@@ -124,7 +124,7 @@ export default function ManagerInquiriesMessageModal({
  value={subject}
  onChange={(e) => setSubject(e.target.value)}
  disabled={sending || sent}
- className="w-full px-3 py-2.5 text-sm bg-input border border-border rounded-lg focus:outline-none focus:border-primary text-primary disabled:opacity-60"
+ className="w-full px-3 py-2.5 text-sm bg-input border border-border rounded-lg focus:outline-none focus:border-primary text-on-success disabled:opacity-60"
  placeholder="Email subject..."
  />
  </div>
@@ -139,7 +139,7 @@ export default function ManagerInquiriesMessageModal({
  value={message}
  onChange={(e) => setMessage(e.target.value)}
  disabled={sending || sent}
- className="w-full px-3 py-2.5 text-sm bg-input border border-border rounded-xl focus:outline-none focus:border-primary text-primary resize-none disabled:opacity-60"
+ className="w-full px-3 py-2.5 text-sm bg-input border border-border rounded-xl focus:outline-none focus:border-primary text-on-success resize-none disabled:opacity-60"
  placeholder="Type your message..."
  />
  <p className="text-right text-xs text-secondary mt-1">{message.length} chars</p>
@@ -150,7 +150,7 @@ export default function ManagerInquiriesMessageModal({
  aria-label="Close message dialog"
  onClick={handleClose}
  disabled={sending}
- className="min-w-32 flex-1 px-4 py-2.5 text-sm border border-border rounded-xl hover:bg-input text-primary font-medium motion-safe:transition-colors disabled:opacity-50"
+ className="min-w-32 flex-1 px-4 py-2.5 text-sm border border-border rounded-xl hover:bg-input text-on-success font-medium motion-safe:transition-colors disabled:opacity-50"
  >
  Cancel
  </button>

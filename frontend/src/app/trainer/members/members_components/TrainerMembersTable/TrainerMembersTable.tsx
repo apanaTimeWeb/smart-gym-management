@@ -63,14 +63,14 @@ export default function TrainerMembersTable() {
                     </td>
                     <td className="px-5 py-3.5">
                       <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm bg-primary-subtle text-primary">
+                        <div className="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm bg-primary-subtle text-on-primary">
                           {m.name.charAt(0)}
                         </div>
                         <div>
                           <div className="flex items-center gap-1.5">
                             <p className="text-sm font-semibold text-primary">{m.name}</p>
                             {m.isPT && (
-                              <span className="text-xs font-bold uppercase tracking-wide px-1.5 py-0.5 rounded bg-info-bg text-info border border-info/20">PT</span>
+                              <span className="text-xs font-bold uppercase tracking-wide px-1.5 py-0.5 rounded bg-info-bg text-on-info border border-info/20">PT</span>
                             )}
                           </div>
                           <p className="text-xs text-secondary">{maskSensitiveData(m.phone, 'phone')}</p>
@@ -86,7 +86,7 @@ export default function TrainerMembersTable() {
                       </span>
                     </td>
                     <td className="px-5 py-3.5 text-sm text-secondary whitespace-nowrap">{formatDate(m.expiryDate)}</td>
-                    <td className="px-5 py-3.5 text-sm text-primary whitespace-nowrap">{displayValue(m.fitnessGoal)}</td>
+                    <td className="px-5 py-3.5 text-sm text-on-primary whitespace-nowrap">{displayValue(m.fitnessGoal)}</td>
                     <td className="px-5 py-3.5 text-sm text-secondary whitespace-nowrap">{displayValue(m.lastWorkout)}</td>
                     <td className="px-5 py-3.5 text-sm whitespace-nowrap">
                       <div className="flex gap-2">
@@ -97,16 +97,16 @@ export default function TrainerMembersTable() {
                     <td className="px-5 py-3.5 text-sm text-secondary whitespace-nowrap">{displayValue(m.daysSinceLastCheckIn)}</td>
                     <td className="px-5 py-3.5 text-sm whitespace-nowrap">
                       <span className={`inline-flex px-2 py-1 rounded-md text-xs font-medium ${
-                        m.progressStatus === 'Good' ? 'bg-success-bg text-success' : 
-                        m.progressStatus === 'Needs Attention' ? 'bg-danger-bg text-danger' : 
-                        'bg-warning-bg text-warning'
+                        m.progressStatus === 'Good' ? 'bg-success-bg text-on-primary' : 
+                        m.progressStatus === 'Needs Attention' ? 'bg-danger-bg text-on-primary' : 
+                        'bg-warning-bg text-on-primary'
                       }`}>
                         {displayValue(m.progressStatus)}
                       </span>
                     </td>
                     <td className="px-5 py-3.5">
                       <div className="flex items-center gap-2">
-                        <button type="button" onClick={(e) => { e.stopPropagation(); openMsg({ name: m.name, phone: m.phone, email: m.email }, 'whatsapp', ''); }} className="p-1.5 rounded-lg bg-success text-on-success hover:opacity-80 motion-safe:transition-all motion-safe:duration-base" title="WhatsApp" aria-label={`Message ${m.name} on WhatsApp`}><MessageCircle size={14} /></button>
+                        <button type="button" onClick={(e) => { e.stopPropagation(); openMsg({ name: m.name, phone: m.phone, email: m.email }, 'whatsapp', ''); }} className="p-1.5 rounded-lg bg-success text-on-primary hover:opacity-80 motion-safe:transition-all motion-safe:duration-base" title="WhatsApp" aria-label={`Message ${m.name} on WhatsApp`}><MessageCircle size={14} /></button>
                         <button type="button" onClick={(e) => { e.stopPropagation(); openMsg({ name: m.name, phone: m.phone, email: m.email }, 'email', ''); }} className="p-1.5 rounded-lg bg-info text-on-info hover:opacity-80 motion-safe:transition-all motion-safe:duration-base" title="Email" aria-label={`Email ${m.name}`}><Mail size={14} /></button>
                       </div>
                     </td>

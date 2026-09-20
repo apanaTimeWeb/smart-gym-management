@@ -25,7 +25,7 @@ export default function SuperadminFeatureHistoryModal({ isOpen, onClose, flag }:
           {query.isPending ? (
             <div className="flex min-h-48 items-center justify-center gap-2 text-secondary" aria-busy="true"><Loader2 size={18} className="motion-safe:animate-spin" /> Loading history…</div>
           ) : query.isError ? (
-            <div role="alert" className="rounded-lg border border-danger/30 bg-danger-bg p-4 text-sm text-danger">Unable to load feature history. <button type="button" onClick={() => void query.refetch()} className="ml-1 underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger">Retry</button></div>
+            <div role="alert" className="rounded-lg border border-danger/30 bg-danger-bg p-4 text-sm text-on-danger">Unable to load feature history. <button type="button" onClick={() => void query.refetch()} className="ml-1 underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger">Retry</button></div>
           ) : (query.data?.data?.length ?? 0) === 0 ? (
             <div className="rounded-lg border border-border bg-input p-6 text-center text-sm text-secondary">No change history is available for this feature yet.</div>
           ) : (

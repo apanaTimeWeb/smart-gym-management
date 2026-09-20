@@ -49,7 +49,7 @@ export default function TrainerAttendanceTable({
                 <tr key={r.id} className="hover:bg-primary-subtle motion-safe:transition-colors motion-safe:duration-base">
                   <td className="px-4 py-3 whitespace-nowrap">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-primary-subtle flex items-center justify-center text-primary font-bold text-sm">
+                      <div className="w-8 h-8 rounded-full bg-primary-subtle flex items-center justify-center text-on-primary font-bold text-sm">
                         {(r.type === 'MEMBER' ? (r.member?.name ?? '?') : (r.staff?.name ?? '?')).charAt(0)}
                       </div>
                       <div>
@@ -63,8 +63,8 @@ export default function TrainerAttendanceTable({
                   <td className="px-4 py-3">
                     <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${
                       r.type === 'MEMBER'
-                        ? 'bg-info-bg text-info'
-                        : 'bg-success-bg text-success'
+                        ? 'bg-info-bg text-on-info'
+                        : 'bg-success-bg text-on-success'
                     }`}>
                       {r.type}
                     </span>

@@ -56,7 +56,7 @@ export default function AdminPagination({ currentPage, totalPages, onPageChange,
                 className={`min-h-11 min-w-11 inline-flex items-center justify-center rounded-lg text-sm font-medium motion-safe:transition-all motion-safe:duration-fast motion-safe:active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
                   currentPage === page
                     ? 'bg-primary text-on-primary'
-                    : 'text-secondary hover:bg-surface-hover hover:text-primary'
+                    : 'text-secondary hover:bg-surface-hover hover:text-on-primary'
                 }`}
               >
                 {page}
@@ -70,7 +70,7 @@ export default function AdminPagination({ currentPage, totalPages, onPageChange,
           onClick={() => onPageChange(Math.min(safeTotalPages, currentPage + 1))}
           disabled={currentPage >= safeTotalPages}
           aria-label="Next page"
-          className="min-h-11 min-w-11 inline-flex items-center justify-center rounded-lg text-secondary hover:bg-surface-hover hover:text-primary motion-safe:transition-all motion-safe:duration-fast motion-safe:active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          className="min-h-11 min-w-11 inline-flex items-center justify-center rounded-lg text-secondary hover:bg-surface-hover hover:text-on-primary motion-safe:transition-all motion-safe:duration-fast motion-safe:active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
         >
           <ChevronRight size={18} aria-hidden="true" />
         </button>

@@ -76,7 +76,7 @@ export default function TrainerWorkoutExerciseTable() {
                   <button type="button" onClick={async () => {
                     const ok = await confirm({ title: 'Delete Exercise', message: 'Delete this exercise?', type: 'danger', confirmText: 'Delete' });
                     if (ok) deleteExercise.mutate(ex.id);
-                  }} className="p-1.5 text-secondary hover:text-danger hover:bg-danger-bg rounded-md motion-safe:transition-colors motion-safe:duration-base">
+                  }} className="p-1.5 text-secondary hover:text-on-danger hover:bg-danger-bg rounded-md motion-safe:transition-colors motion-safe:duration-base">
                     <Trash2 size={18} aria-hidden="true" />
                   </button>
                 </td>

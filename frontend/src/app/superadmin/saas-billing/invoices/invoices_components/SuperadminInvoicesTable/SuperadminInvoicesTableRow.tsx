@@ -84,13 +84,13 @@ export default function SuperadminInvoicesTableRow({ invoice: inv }: SuperadminI
       </td>
       <td className="p-4 text-sm text-secondary">{inv.issuedAt ? formatDate(inv.issuedAt) : '—'}</td>
       <td className="p-4 text-right flex items-center justify-end gap-2">
-        <button title="Resend to Email" onClick={handleResendEmail} disabled={isResending} className="text-secondary hover:text-primary motion-safe:transition-colors p-1.5 bg-input hover:bg-primary/10 rounded-md border border-border" aria-label={`Resend invoice ${inv.id} to email`}>
+        <button title="Resend to Email" onClick={handleResendEmail} disabled={isResending} className="text-secondary hover:text-on-success motion-safe:transition-colors p-1.5 bg-input hover:bg-primary/10 rounded-md border border-border" aria-label={`Resend invoice ${inv.id} to email`}>
           <Mail className="w-4 h-4"/>
         </button>
-        <button title="Share via WhatsApp" onClick={handleShareWhatsApp} className="text-secondary hover:text-success motion-safe:transition-colors p-1.5 bg-input hover:bg-success/10 rounded-md border border-border" aria-label={`Share invoice ${inv.id} via WhatsApp`}>
+        <button title="Share via WhatsApp" onClick={handleShareWhatsApp} className="text-secondary hover:text-on-success motion-safe:transition-colors p-1.5 bg-input hover:bg-success/10 rounded-md border border-border" aria-label={`Share invoice ${inv.id} via WhatsApp`}>
           <MessageCircle className="w-4 h-4"/>
         </button>
-        <button onClick={handleDownload} disabled={isDownloading} className="text-sm font-medium text-primary hover:underline flex items-center gap-1" aria-label={`Download invoice PDF ${inv.id}`}>
+        <button onClick={handleDownload} disabled={isDownloading} className="text-sm font-medium text-on-success hover:underline flex items-center gap-1" aria-label={`Download invoice PDF ${inv.id}`}>
           <Receipt size={18} strokeWidth={2}/> Download PDF
         </button>
       </td>

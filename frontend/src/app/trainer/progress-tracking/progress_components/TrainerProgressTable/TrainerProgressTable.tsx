@@ -59,7 +59,7 @@ export default function TrainerProgressTable({ entries, onEdit, onDelete }: Trai
                     </button>
                     <button type="button"
                       onClick={() => handleDelete(entry)}
-                      className="p-1.5 rounded-lg text-secondary hover:text-danger hover:bg-danger-bg motion-safe:transition-colors motion-safe:duration-base"
+                      className="p-1.5 rounded-lg text-secondary hover:text-on-danger hover:bg-danger-bg motion-safe:transition-colors motion-safe:duration-base"
                       aria-label="Delete entry"
                     >
                       <Trash2 size={14} />

@@ -26,7 +26,7 @@ export default function AdminCampaignsAudiencePicker({ audiences, selectedAudien
                   : 'border-border bg-input hover:border-primary hover:bg-input/80'
               }`}
             >
-              <span className={`text-sm font-semibold ${isSelected ? 'text-primary' : 'text-primary'}`}>
+              <span className={`text-sm font-semibold ${isSelected ? 'text-on-primary' : 'text-on-primary'}`}>
                 {aud.name}
               </span>
               <span className="mt-1 text-xs text-secondary leading-relaxed">

@@ -61,13 +61,13 @@ export default function SuperadminWhiteLabelingDrawer({ domains }: SuperadminWhi
               </div>
               <div className="flex justify-between items-center mb-2">
                 <span className="text-sm text-secondary">DNS Status</span>
-                <span className={`text-sm font-medium ${domain.status === 'active' ? 'text-success' : domain.status === 'failed' ? 'text-danger' : 'text-warning'}`}>
+                <span className={`text-sm font-medium ${domain.status === 'active' ? 'text-on-success' : domain.status === 'failed' ? 'text-on-danger' : 'text-warning'}`}>
                   {domain.status.charAt(0).toUpperCase() + domain.status.slice(1)}
                 </span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm text-secondary">SSL Certificate</span>
-                <span className={`text-sm font-medium ${domain.sslStatus === 'issued' ? 'text-success' : domain.sslStatus === 'failed' ? 'text-danger' : 'text-warning'}`}>
+                <span className={`text-sm font-medium ${domain.sslStatus === 'issued' ? 'text-on-success' : domain.sslStatus === 'failed' ? 'text-on-danger' : 'text-warning'}`}>
                   {domain.sslStatus.charAt(0).toUpperCase() + domain.sslStatus.slice(1)}
                 </span>
               </div>
@@ -120,7 +120,7 @@ export default function SuperadminWhiteLabelingDrawer({ domains }: SuperadminWhi
             <button
               onClick={() => updateStatus({ id: domain.id, dto: { status: 'active' } })}
               disabled={isPending}
-              className="w-full flex items-center justify-center gap-2 bg-success-bg text-success border border-success/20 py-2.5 rounded-lg font-medium hover:bg-success hover:text-white motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-success disabled:opacity-50"
+              className="w-full flex items-center justify-center gap-2 bg-success-bg text-on-success border border-success/20 py-2.5 rounded-lg font-medium hover:bg-success hover:text-white motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-success disabled:opacity-50"
             >
               <CheckCircle className="w-4 h-4" />
               Mark as Verified
@@ -131,7 +131,7 @@ export default function SuperadminWhiteLabelingDrawer({ domains }: SuperadminWhi
             <button
               onClick={() => updateStatus({ id: domain.id, dto: { status: 'failed' } })}
               disabled={isPending}
-              className="w-full flex items-center justify-center gap-2 bg-danger-bg text-danger border border-danger/20 py-2.5 rounded-lg font-medium hover:bg-danger hover:text-white motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger disabled:opacity-50"
+              className="w-full flex items-center justify-center gap-2 bg-danger-bg text-on-danger border border-danger/20 py-2.5 rounded-lg font-medium hover:bg-danger hover:text-white motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger disabled:opacity-50"
             >
               <AlertTriangle className="w-4 h-4" />
               Mark as Failed

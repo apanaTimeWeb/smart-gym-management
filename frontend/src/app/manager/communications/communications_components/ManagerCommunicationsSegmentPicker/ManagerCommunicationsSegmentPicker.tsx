@@ -22,20 +22,20 @@ export default function ManagerCommunicationsSegmentPicker() {
               onClick={() => handleSegmentChange(opt.value)}
               className={`text-left p-4 rounded-xl border motion-safe:transition-all ${
                 isActive
-                  ? 'bg-primary-subtle border-primary text-primary'
-                  : 'bg-card border-border text-secondary hover:border-primary/50 hover:text-primary'
+                  ? 'bg-primary-subtle border-primary text-on-primary'
+                  : 'bg-card border-border text-secondary hover:border-primary/50 hover:text-on-primary'
               }`}
             >
-              <p className={`text-sm font-semibold ${isActive ? 'text-primary' : ''}`}>{opt.label}</p>
+              <p className={`text-sm font-semibold ${isActive ? 'text-on-primary' : ''}`}>{opt.label}</p>
               <p className="text-xs mt-0.5 opacity-80">{opt.description}</p>
               {isActive && opt.value !== 'custom' && (
                 <div className="flex items-center gap-1.5 mt-2">
                   {loadingRecipients ? (
-                    <Loader2 size={18} className="motion-safe:animate-spin text-primary" />
+                    <Loader2 size={18} className="motion-safe:animate-spin text-on-primary" />
                   ) : (
-                    <Users size={18} className="text-primary" />
+                    <Users size={18} className="text-on-primary" />
                   )}
-                  <span className="text-xs font-semibold text-primary">
+                  <span className="text-xs font-semibold text-on-primary">
                     {loadingRecipients ? 'Loading...' : `${segmentRecipients.length} recipients`}
                   </span>
                 </div>

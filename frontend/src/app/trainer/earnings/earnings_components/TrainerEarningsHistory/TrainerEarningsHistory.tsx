@@ -149,14 +149,14 @@ export default function TrainerEarningsHistory() {
             <button type="button"
               onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
               disabled={currentPage === 1}
-              className="px-3 py-1.5 rounded-lg border border-border bg-card text-primary disabled:opacity-50 hover:bg-primary-subtle hover:border-primary motion-safe:transition-colors motion-safe:duration-base"
+              className="px-3 py-1.5 rounded-lg border border-border bg-card text-on-primary disabled:opacity-50 hover:bg-primary-subtle hover:border-primary motion-safe:transition-colors motion-safe:duration-base"
             >
               Previous
             </button>
             <button type="button"
               onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
               disabled={currentPage === totalPages}
-              className="px-3 py-1.5 rounded-lg border border-border bg-card text-primary disabled:opacity-50 hover:bg-primary-subtle hover:border-primary motion-safe:transition-colors motion-safe:duration-base"
+              className="px-3 py-1.5 rounded-lg border border-border bg-card text-on-primary disabled:opacity-50 hover:bg-primary-subtle hover:border-primary motion-safe:transition-colors motion-safe:duration-base"
             >
               Next
             </button>

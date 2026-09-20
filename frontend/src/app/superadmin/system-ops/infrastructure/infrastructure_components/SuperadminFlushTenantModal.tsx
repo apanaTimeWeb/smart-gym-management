@@ -84,7 +84,7 @@ export default function SuperadminFlushTenantModal({ isOpen, onClose, onFlush }:
                 {filteredTenants.map((tenant: SuperadminInfrastructureTenant) => {
                   const isSelected = selectedTenantIds.includes(tenant.id);
                   return (
-                    <button key={tenant.id} type="button" onClick={() => toggleTenant(tenant.id)} aria-pressed={isSelected} className={`flex min-h-11 w-full items-center justify-between gap-3 rounded-md border px-4 py-3 text-left text-sm motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${isSelected ? 'border-primary bg-primary-subtle text-primary' : 'border-transparent text-primary hover:bg-surface-hover'}`}>
+                    <button key={tenant.id} type="button" onClick={() => toggleTenant(tenant.id)} aria-pressed={isSelected} className={`flex min-h-11 w-full items-center justify-between gap-3 rounded-md border px-4 py-3 text-left text-sm motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${isSelected ? 'border-primary bg-primary-subtle text-on-primary' : 'border-transparent text-on-primary hover:bg-surface-hover'}`}>
                       <span className="truncate font-medium">{tenant.name}</span>
                       <span className="shrink-0 text-xs text-secondary">{tenant.id}</span>
                     </button>
@@ -96,7 +96,7 @@ export default function SuperadminFlushTenantModal({ isOpen, onClose, onFlush }:
         </div>
 
         <div className="flex justify-end gap-3 border-t border-border bg-sidebar/50 px-6 py-5">
-          <button type="button" onClick={onClose} disabled={isSubmitting} className="min-h-11 rounded-md border border-border px-5 py-2.5 text-sm font-medium text-primary hover:bg-surface-hover motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:opacity-50">Cancel</button>
+          <button type="button" onClick={onClose} disabled={isSubmitting} className="min-h-11 rounded-md border border-border px-5 py-2.5 text-sm font-medium text-on-primary hover:bg-surface-hover motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:opacity-50">Cancel</button>
           <button type="button" onClick={() => void handleFlush()} disabled={selectedTenantIds.length === 0 || isSubmitting} className="inline-flex min-h-11 min-w-40 items-center justify-center gap-2 rounded-md bg-primary px-5 py-2.5 text-sm font-medium text-on-primary hover:bg-primary-hover motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50">
             {isSubmitting ? <><Loader2 size={18} className="motion-safe:animate-spin" aria-hidden="true" />Loading...</> : `Flush ${selectedTenantIds.length || ''} ${selectedTenantIds.length === 1 ? 'Tenant' : 'Tenants'}`}
           </button>

@@ -35,7 +35,7 @@ export default function AdminMembersProfileDrawer({ member, onClose }: AdminMemb
         <div className="flex-1 overflow-y-auto p-5 space-y-5">
           {/* Avatar + Name */}
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-2xl bg-primary-subtle flex items-center justify-center text-primary text-2xl font-bold border border-border">
+            <div className="w-16 h-16 rounded-2xl bg-primary-subtle flex items-center justify-center text-on-primary text-2xl font-bold border border-border">
               {member.name.charAt(0).toUpperCase()}
             </div>
             <div>

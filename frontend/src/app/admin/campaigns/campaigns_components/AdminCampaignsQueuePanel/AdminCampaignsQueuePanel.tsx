@@ -84,7 +84,7 @@ export default function AdminCampaignsQueuePanel({ queue, onOpen, onMarkSent, on
                   <>
                     <button
                       onClick={() => onMarkSent(i)}
-                      className="px-3 py-1.5 rounded bg-success/10 text-success text-xs font-medium hover:bg-success/20 transition-colors"
+                      className="px-3 py-1.5 rounded bg-success/10 text-on-success text-xs font-medium hover:bg-success/20 transition-colors"
                     >
                       Mark Sent
                     </button>

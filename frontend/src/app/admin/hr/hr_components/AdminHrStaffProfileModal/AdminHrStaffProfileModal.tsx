@@ -37,7 +37,7 @@ export default function AdminHrStaffProfileModal() {
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-border bg-input">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-primary-subtle text-primary rounded-xl">
+            <div className="p-2 bg-primary-subtle text-on-primary rounded-xl">
               <User size={20} />
             </div>
             <h2 className="text-lg font-bold text-primary">Staff Profile</h2>
@@ -55,7 +55,7 @@ export default function AdminHrStaffProfileModal() {
           
           {/* Top Profile Section */}
           <div className="flex flex-col md:flex-row items-start gap-6">
-            <div className="w-24 h-24 rounded-2xl bg-primary-subtle border-2 border-border flex flex-col items-center justify-center flex-shrink-0 text-primary">
+            <div className="w-24 h-24 rounded-2xl bg-primary-subtle border-2 border-border flex flex-col items-center justify-center flex-shrink-0 text-on-primary">
               <span className="text-3xl font-bold uppercase">{(editData.name || '?').charAt(0)}</span>
             </div>
             <div className="flex-1 space-y-4 w-full">
@@ -67,7 +67,7 @@ export default function AdminHrStaffProfileModal() {
                 {isManager && (
                   <button
                     onClick={() => openEdit(editData as Staff)}
-                    className="px-4 py-2 bg-primary-subtle hover:bg-primary-subtle text-primary font-semibold text-sm rounded-xl motion-safe:transition-colors flex items-center gap-2 motion-safe:duration-base"
+                    className="px-4 py-2 bg-primary-subtle hover:bg-primary-subtle text-on-primary font-semibold text-sm rounded-xl motion-safe:transition-colors flex items-center gap-2 motion-safe:duration-base"
                   >
                     <Edit2 size={14} />
                     Edit Profile
@@ -95,11 +95,11 @@ export default function AdminHrStaffProfileModal() {
                   <div className="flex items-center gap-1.5">
                     <span className="text-sm text-secondary">Status:</span>
                     {editData.isActive !== false ? (
-                      <span className="flex items-center gap-1 text-xs font-bold text-success bg-success px-2 py-0.5 rounded-md uppercase tracking-wide">
+                      <span className="flex items-center gap-1 text-xs font-bold text-on-success bg-success px-2 py-0.5 rounded-md uppercase tracking-wide">
                         <CheckCircle2 size={12} /> Active
                       </span>
                     ) : (
-                      <span className="flex items-center gap-1 text-xs font-bold text-danger bg-danger px-2 py-0.5 rounded-md uppercase tracking-wide">
+                      <span className="flex items-center gap-1 text-xs font-bold text-on-danger bg-danger px-2 py-0.5 rounded-md uppercase tracking-wide">
                         <Ban size={12} /> Suspended
                       </span>
                     )}
@@ -177,7 +177,7 @@ export default function AdminHrStaffProfileModal() {
                         {isManager && (
                           <td className="px-4 py-3 text-right">
                             {isPrimary ? (
-                              <span className="inline-block text-xs font-bold text-warning bg-warning border border-border px-2 py-1 rounded-md uppercase">
+                              <span className="inline-block text-xs font-bold text-on-primary bg-warning border border-border px-2 py-1 rounded-md uppercase">
                                 Primary Branch
                               </span>
                             ) : (

@@ -35,10 +35,10 @@ export default function SuperadminBackupsTable({ paginatedBackups, filteredLengt
               </td>
               <td className="p-4 text-sm text-secondary">{formatDateTime(backup.timestamp)}</td>
               <td className="p-4 text-right flex items-center justify-end gap-2">
-                <button aria-label={`Download backup ${backup.id}`} onClick={() => void handleDownload(backup.id)} className="p-2 text-secondary hover:text-primary hover:bg-primary/10 rounded-lg motion-safe:transition-colors disabled:opacity-30" title="Download pg_dump" disabled={backup.status !== 'SUCCESS'}>
+                <button aria-label={`Download backup ${backup.id}`} onClick={() => void handleDownload(backup.id)} className="p-2 text-secondary hover:text-on-danger hover:bg-primary/10 rounded-lg motion-safe:transition-colors disabled:opacity-30" title="Download pg_dump" disabled={backup.status !== 'SUCCESS'}>
                   <Download className="w-4 h-4"/>
                 </button>
-                <button aria-label={`Restore backup ${backup.id}`} onClick={() => handleRestoreClick(backup)} className="p-2 text-secondary hover:text-danger hover:bg-danger-bg/10 rounded-lg motion-safe:transition-colors disabled:opacity-30" title="Restore Snapshot" disabled={backup.status !== 'SUCCESS'}>
+                <button aria-label={`Restore backup ${backup.id}`} onClick={() => handleRestoreClick(backup)} className="p-2 text-secondary hover:text-on-danger hover:bg-danger-bg/10 rounded-lg motion-safe:transition-colors disabled:opacity-30" title="Restore Snapshot" disabled={backup.status !== 'SUCCESS'}>
                   <RotateCcw className="w-4 h-4"/>
                 </button>
               </td>

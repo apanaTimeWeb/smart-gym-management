@@ -145,7 +145,7 @@ export default function AdminAnnouncementsTable() {
                   <td className="p-4">
                     <div className="flex flex-wrap gap-1">
                       {a.audience.map((aud: string) => (
-                        <span key={aud} className="px-2 py-0.5 bg-primary-subtle text-primary text-xs rounded-full font-medium capitalize">{aud}</span>
+                        <span key={aud} className="px-2 py-0.5 bg-primary-subtle text-on-primary text-xs rounded-full font-medium capitalize">{aud}</span>
                       ))}
                     </div>
                   </td>
@@ -187,7 +187,7 @@ export default function AdminAnnouncementsTable() {
                     <div className="flex items-center gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 motion-safe:transition-opacity motion-safe:duration-base">
                       <button
                         onClick={() => togglePin(a.id)}
-                        className={`p-1.5 rounded-lg motion-safe:transition-colors ${a.isPinned ? 'text-warning hover:bg-warning' : 'text-secondary hover:text-warning hover:bg-warning'}`}
+                        className={`p-1.5 rounded-lg motion-safe:transition-colors ${a.isPinned ? 'text-on-primary hover:bg-warning' : 'text-secondary hover:text-on-primary hover:bg-warning'}`}
                         aria-label={a.isPinned ? 'Unpin announcement' : 'Pin announcement'}
                       >
                         {a.isPinned ? <PinOff size={14} /> : <Pin size={14} />}
@@ -201,7 +201,7 @@ export default function AdminAnnouncementsTable() {
                       </button>
                       <button
                         onClick={() => deleteAnnouncement(a.id, a.title)}
-                        className="p-1.5 rounded-lg text-secondary hover:text-danger hover:bg-danger motion-safe:transition-colors motion-safe:duration-base"
+                        className="p-1.5 rounded-lg text-secondary hover:text-on-primary hover:bg-danger motion-safe:transition-colors motion-safe:duration-base"
                         aria-label="Delete announcement"
                       >
                         <Trash2 size={14} />

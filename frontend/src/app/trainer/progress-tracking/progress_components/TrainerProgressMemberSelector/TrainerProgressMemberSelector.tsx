@@ -44,7 +44,7 @@ export default function TrainerProgressMemberSelector({ allMembers, selectedIds,
                   ? 'bg-primary text-on-primary border-primary shadow-card'
                   : isDisabled
                   ? 'bg-input text-secondary/40 border-border cursor-not-allowed'
-                  : 'bg-input text-secondary border-border hover:border-primary hover:text-primary'
+                  : 'bg-input text-secondary border-border hover:border-primary hover:text-on-primary'
               }`}
             >
               {m.name}

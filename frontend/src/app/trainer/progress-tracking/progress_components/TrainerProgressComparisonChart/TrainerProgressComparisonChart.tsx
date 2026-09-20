@@ -98,7 +98,7 @@ export default function TrainerProgressComparisonChart({ snapshots, activeMetric
             className={`px-3 py-1 text-xs font-semibold rounded-full motion-safe:transition-colors ${
               activeMetric === m.value
                 ? 'bg-primary text-on-primary'
-                : 'bg-input text-secondary hover:text-primary'
+                : 'bg-input text-secondary hover:text-on-primary'
             }`}
           >
             {m.label}

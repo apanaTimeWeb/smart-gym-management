@@ -113,13 +113,13 @@ export default function ManagerConvertLeadForm({
       {watchPlanId && (
         <div className="sm:col-span-2 bg-warning rounded-xl p-3 text-sm border border-warning/30 flex justify-between items-center">
           <div>
-            <span className="font-semibold text-warning">Calculated Price:</span>
-            <span className="text-warning ml-1 font-bold">
+            <span className="font-semibold text-on-primary">Calculated Price:</span>
+            <span className="text-on-primary ml-1 font-bold">
               {formatCurrencyFromMinorUnits(getPriceForCycleSnapshot(selectedPlan, watchBillingCycle || '', Number(watchCustomDays) || 0), ManagerEnvConfig.currencyCode)}
             </span>
           </div>
           {watchBillingCycle === 'CUSTOM' && (
-            <div className="text-warning text-xs opacity-80">
+            <div className="text-on-primary text-xs opacity-80">
               (Per Day: {formatCurrencyFromMinorUnits(selectedPlan?.priceCustom || 0, ManagerEnvConfig.currencyCode)} × {watchCustomDays || 0} days)
             </div>
           )}

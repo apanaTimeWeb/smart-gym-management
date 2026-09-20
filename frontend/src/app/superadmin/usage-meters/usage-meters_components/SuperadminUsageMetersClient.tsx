@@ -80,7 +80,7 @@ export default function SuperadminUsageMetersClient() {
                   <span className="flex items-center gap-1.5 text-secondary font-medium">
                     <HardDrive size={18}/> Total Storage (GB)
                   </span>
-                  <span className="text-primary font-semibold">${totalStorage.toLocaleString('en-IN', { maximumFractionDigits: 2 })} GB
+                  <span className="text-on-primary font-semibold">${totalStorage.toLocaleString('en-IN', { maximumFractionDigits: 2 })} GB
                   </span>
                 </div>
                 <div className="h-2 w-full bg-input rounded-full overflow-hidden flex">
@@ -107,7 +107,7 @@ export default function SuperadminUsageMetersClient() {
                     <span className="flex items-center gap-1.5 text-secondary font-medium">
                       <Users size={18}/> Members
                     </span>
-                    <span className="text-primary font-semibold">
+                    <span className="text-on-primary font-semibold">
                       {formatNumber((meter.activeMembers ?? 0))} <span className="text-xs text-secondary font-normal">Active</span> / {formatNumber((meter.totalMembers ?? meter.activeMembers ?? 0))} <span className="text-xs text-secondary font-normal">Total</span>
                     </span>
                   </div>
@@ -123,7 +123,7 @@ export default function SuperadminUsageMetersClient() {
                     <span className="flex items-center gap-1.5 text-secondary font-medium">
                       <Users size={18}/> Staff
                     </span>
-                    <span className="text-primary font-semibold">{formatNumber((meter.staffCount ?? 0))}</span>
+                    <span className="text-on-primary font-semibold">{formatNumber((meter.staffCount ?? 0))}</span>
                   </div>
                   <div className="h-2 w-full bg-input rounded-full overflow-hidden">
                     <div className={`h-full rounded-full ${getProgressColor(meter.staffCount ?? 0, meter.staffLimit ?? 1)}`} style={{ width: `${getPercentage(meter.staffCount ?? 0, meter.staffLimit ?? 1)}%` }}/>
@@ -135,7 +135,7 @@ export default function SuperadminUsageMetersClient() {
 
             <div className="mt-5 pt-4 border-t border-border flex justify-between items-center text-xs text-secondary">
               <span>Billing Cycle Ends:</span>
-              <span className="font-semibold text-primary">{meter.billingCycleEnd}</span>
+              <span className="font-semibold text-on-primary">{meter.billingCycleEnd}</span>
             </div>
           </div>);
         })}

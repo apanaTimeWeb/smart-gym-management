@@ -22,7 +22,7 @@ export default function ManagerConvertLeadSuccess({ successData, closeConvert }:
     <div className="fixed inset-0 bg-overlay-backdrop z-40 flex items-center justify-center p-4">
       <div className="bg-card rounded-2xl shadow-card w-full max-w-md overflow-hidden border-2 border-success motion-safe:animate-in motion-safe:zoom-in-95">
         <div className="px-8 py-8 flex flex-col items-center text-center">
-          <div className="w-20 h-20 bg-success/10 text-success rounded-full flex items-center justify-center mb-5 border border-success/20">
+          <div className="w-20 h-20 bg-success/10 text-on-success rounded-full flex items-center justify-center mb-5 border border-success/20">
             <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
           </div>
           <h3 className="text-2xl font-black text-primary mb-2 tracking-tight">Admission Successful!</h3>
@@ -45,7 +45,7 @@ export default function ManagerConvertLeadSuccess({ successData, closeConvert }:
 
           <button
             onClick={closeConvert}
-            className="px-8 py-2.5 text-sm font-bold rounded-xl border border-border text-secondary hover:bg-primary/5 hover:text-primary motion-safe:transition-colors"
+            className="px-8 py-2.5 text-sm font-bold rounded-xl border border-border text-secondary hover:bg-primary/5 hover:text-on-primary motion-safe:transition-colors"
           >
             Done & Close
           </button>

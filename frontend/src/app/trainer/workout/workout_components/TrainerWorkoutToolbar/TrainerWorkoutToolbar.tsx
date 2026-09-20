@@ -53,8 +53,8 @@ export default function TrainerWorkoutToolbar() {
             onClick={() => setTab(t)}
             className={`px-5 py-3.5 text-sm font-medium motion-safe:transition-colors border-b-2 whitespace-nowrap ${
               tab === t
-                ? 'text-primary bg-primary-subtle'
-                : 'border-transparent text-secondary hover:text-primary'
+                ? 'text-on-primary bg-primary-subtle'
+                : 'border-transparent text-secondary hover:text-on-primary'
             }`}
             
           >
@@ -75,7 +75,7 @@ export default function TrainerWorkoutToolbar() {
             value={localSearch}
             onChange={e => setLocalSearch(e.target.value)}
             placeholder="Search..."
-            className="pl-8 pr-3 py-2 text-sm border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary w-36 lg:w-48 bg-input text-primary motion-safe:transition-all motion-safe:duration-base"
+            className="pl-8 pr-3 py-2 text-sm border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary w-36 lg:w-48 bg-input text-on-primary motion-safe:transition-all motion-safe:duration-base"
           />
         </div>
         <TrainerSearchableDropdown

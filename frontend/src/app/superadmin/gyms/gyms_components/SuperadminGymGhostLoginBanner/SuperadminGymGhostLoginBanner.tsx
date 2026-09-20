@@ -20,7 +20,7 @@ export default function SuperadminGymGhostLoginBanner() {
           </div>
         </div>
       </div>
-      <button type="button" onClick={() => void exitGhostLogin()} className="flex items-center gap-1.5 px-3 py-1.5 bg-warning/20 hover:bg-warning/30 border border-warning/40 rounded-md text-xs font-bold text-warning motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95 shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" aria-label="Exit ghost login session">
+      <button type="button" onClick={() => void exitGhostLogin()} className="flex items-center gap-1.5 px-3 py-1.5 bg-warning/20 hover:bg-warning/30 border border-warning/40 rounded-md text-xs font-bold text-on-primary motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95 shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" aria-label="Exit ghost login session">
         <LogOut size={18} strokeWidth={2} />
         Exit Ghost Login
       </button>

@@ -39,7 +39,7 @@ export default function SuperadminCouponsRedemptionDrawer({ coupon, isOpen, onCl
           {query.isPending ? (
             <div className="flex min-h-48 items-center justify-center gap-2 text-secondary" aria-busy="true"><Loader2 size={18} className="motion-safe:animate-spin" /> Loading redemptions…</div>
           ) : query.isError ? (
-            <div role="alert" className="rounded-lg border border-danger/30 bg-danger-bg p-4 text-sm text-danger">Unable to load redemption history. <button type="button" onClick={() => void query.refetch()} className="ml-1 underline underline-offset-2">Retry</button></div>
+            <div role="alert" className="rounded-lg border border-danger/30 bg-danger-bg p-4 text-sm text-on-danger">Unable to load redemption history. <button type="button" onClick={() => void query.refetch()} className="ml-1 underline underline-offset-2">Retry</button></div>
           ) : redemptions.length === 0 ? (
             <div className="rounded-lg border border-border bg-input p-8 text-center"><History size={28} className="mx-auto mb-3 text-secondary" /><p className="font-medium text-primary">No Redemptions Yet</p><p className="mt-1 text-sm text-secondary">This coupon has not been used by a gym.</p></div>
           ) : (

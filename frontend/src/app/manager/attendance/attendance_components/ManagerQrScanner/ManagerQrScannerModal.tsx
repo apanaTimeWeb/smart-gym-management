@@ -119,23 +119,23 @@ export default function ManagerQrScannerModal({ open, onClose }: ManagerQrScanne
                 {/* Traffic Light Avatar — green border = active, red border = expired */}
                 <div className={`w-32 h-32 rounded-full mb-4 border-4 overflow-hidden relative ${status === 'ACTIVE' ? 'border-success' : 'border-danger'}`}>
                   {/* next/image mandatory per Rule 33 */}
-                  <div className="absolute inset-0 flex items-center justify-center text-4xl font-black text-primary bg-primary-subtle" aria-hidden="true">
+                  <div className="absolute inset-0 flex items-center justify-center text-4xl font-black text-on-primary bg-primary-subtle" aria-hidden="true">
                     {(currentMember?.name?.charAt(0) ?? '?').toUpperCase()}
                   </div>
                 </div>
 
-                <h3 className="text-2xl font-black text-primary">{currentMember?.name ?? '—'}</h3>
+                <h3 className="text-2xl font-black text-on-primary">{currentMember?.name ?? '—'}</h3>
                 <p className="text-sm font-bold text-secondary mb-1">{currentMember?.id ?? '—'}</p>
 
                 {/* Status Badge — label from constants, not magic strings (Rule 35) */}
-                <div className={`mt-3 px-4 py-1.5 rounded-full text-sm font-bold flex items-center gap-2 ${status === 'ACTIVE' ? 'bg-success text-success' : 'bg-danger text-danger'}`}>
+                <div className={`mt-3 px-4 py-1.5 rounded-full text-sm font-bold flex items-center gap-2 ${status === 'ACTIVE' ? 'bg-success text-on-primary' : 'bg-danger text-on-primary'}`}>
                   {status === 'ACTIVE' ? <UserCheck size={18} /> : <AlertCircle size={18} />}
                   {MANAGER_QR_STATUS_LABELS[status]}
                 </div>
 
                 {/* Yellow upsell banner — only shown for active members with PT info */}
                 {status === 'ACTIVE' && demoMode && (
-                  <p className="text-xs text-warning font-medium mt-3 bg-warning px-3 py-1 rounded-lg">
+                  <p className="text-xs text-on-primary font-medium mt-3 bg-warning px-3 py-1 rounded-lg">
                     {currentMember?.planName ? `Plan: ${currentMember.planName}` : 'Membership details available'}
                   </p>
                 )}
@@ -144,14 +144,14 @@ export default function ManagerQrScannerModal({ open, onClose }: ManagerQrScanne
                   {status === 'ACTIVE' ? (
                     <button
                       onClick={handleCheckIn}
-                      className="w-full py-4 bg-success hover:bg-success/90 text-on-success text-lg font-black rounded-2xl motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-success flex items-center justify-center gap-2"
+                      className="w-full py-4 bg-success hover:bg-success/90 text-on-primary text-lg font-black rounded-2xl motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-success flex items-center justify-center gap-2"
                     >
                       <UserCheck size={18} /> Verify Face &amp; Check-in
                     </button>
                   ) : (
                     <button
                       onClick={resetStatus}
-                      className="w-full py-4 bg-danger hover:bg-danger/90 text-on-danger text-lg font-black rounded-2xl motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-danger flex items-center justify-center gap-2"
+                      className="w-full py-4 bg-danger hover:bg-danger/90 text-on-primary text-lg font-black rounded-2xl motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-danger flex items-center justify-center gap-2"
                     >
                       <AlertCircle size={18} /> Block &amp; Collect Payment
                     </button>
@@ -163,17 +163,17 @@ export default function ManagerQrScannerModal({ open, onClose }: ManagerQrScanne
 
           {/* Recent Check-ins History Panel */}
           <div className="flex-1 bg-input/30 p-6 overflow-y-auto">
-            <h4 className="text-sm font-bold text-primary mb-4 uppercase tracking-wider">Recent Check-ins</h4>
+            <h4 className="text-sm font-bold text-on-primary mb-4 uppercase tracking-wider">Recent Check-ins</h4>
             <div className="space-y-3">
               {/* Rule 55: key={h.id} — stable unique ID, NOT array index */}
               {history.map((h) => (
                 <div key={h.id} className="bg-overlay border border-border p-3 rounded-xl flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-primary-subtle flex items-center justify-center text-primary font-bold">
+                    <div className="w-10 h-10 rounded-full bg-primary-subtle flex items-center justify-center text-on-primary font-bold">
                       {h.name.charAt(0)}
                     </div>
                     <div>
-                      <p className="text-sm font-bold text-primary">{h.name}</p>
+                      <p className="text-sm font-bold text-on-primary">{h.name}</p>
                       <p className="text-xs text-secondary">{h.id}</p>
                     </div>
                   </div>

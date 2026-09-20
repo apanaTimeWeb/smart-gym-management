@@ -71,7 +71,7 @@ export default function TrainerWorkoutExerciseModal() {
           <button 
             type="button"
             onClick={() => setShowExModal(false)} 
-            className="text-secondary hover:text-primary hover:bg-primary-subtle p-1 rounded-md motion-safe:transition-colors motion-safe:duration-base"
+            className="text-secondary hover:text-on-primary hover:bg-primary-subtle p-1 rounded-md motion-safe:transition-colors motion-safe:duration-base"
           >
             <X size={20} />
           </button>
@@ -84,7 +84,7 @@ export default function TrainerWorkoutExerciseModal() {
               {...register('name')}
               className={`w-full px-3 py-2 border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:  ${
                 errors.name ? 'border-danger focus-visible:ring-primary' : 'border-border focus-visible:ring-primary'
-              } bg-input text-primary`} 
+              } bg-input text-on-primary`} 
             />
             {errors.name && <p className="text-danger text-xs mt-1">{errors.name.message}</p>}
           </div>
@@ -96,7 +96,7 @@ export default function TrainerWorkoutExerciseModal() {
               {...register('muscle')}
               className={`w-full px-3 py-2 border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:  ${
                 errors.muscle ? 'border-danger focus-visible:ring-primary' : 'border-border focus-visible:ring-primary'
-              } bg-input text-primary`} 
+              } bg-input text-on-primary`} 
             />
             {errors.muscle && <p className="text-danger text-xs mt-1">{errors.muscle.message}</p>}
           </div>
@@ -136,7 +136,7 @@ export default function TrainerWorkoutExerciseModal() {
               type="text" 
               placeholder="e.g. https://youtube.com/..." 
               {...register('videoUrl')}
-              className="w-full px-3 py-2 border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-primary" 
+              className="w-full px-3 py-2 border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-on-primary" 
             />
           </div>
           <div>
@@ -145,7 +145,7 @@ export default function TrainerWorkoutExerciseModal() {
               rows={2}
               placeholder="e.g. 3 sets of 10-12 reps. Keep back straight." 
               {...register('instructions')}
-              className="w-full px-3 py-2 border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-primary custom-scrollbar" 
+              className="w-full px-3 py-2 border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-on-primary custom-scrollbar" 
             />
           </div>
           
@@ -153,7 +153,7 @@ export default function TrainerWorkoutExerciseModal() {
             <button 
               type="button" 
               onClick={() => setShowExModal(false)} 
-              className="px-4 py-2 border border-border rounded-lg font-medium text-secondary hover:text-primary hover:bg-primary-subtle motion-safe:transition-colors motion-safe:duration-base"
+              className="px-4 py-2 border border-border rounded-lg font-medium text-secondary hover:text-on-primary hover:bg-primary-subtle motion-safe:transition-colors motion-safe:duration-base"
             >
               Cancel
             </button>

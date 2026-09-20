@@ -34,7 +34,7 @@ export default function ManagerExpensesModal() {
                 type="text"
                 placeholder="e.g. October Electricity Bill"
                 {...register('title')}
-                className={`w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary motion-safe:transition-colors ${
+                className={`w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-on-primary motion-safe:transition-colors ${
                   errors.title ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
                 }`}
               />
@@ -66,7 +66,7 @@ export default function ManagerExpensesModal() {
                   step="0.01"
                   placeholder="0.00"
                   {...register('amount', { valueAsNumber: true })}
-                  className={`w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary motion-safe:transition-colors ${
+                  className={`w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-on-primary motion-safe:transition-colors ${
                     errors.amount ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
                   }`}
                 />
@@ -77,7 +77,7 @@ export default function ManagerExpensesModal() {
                 <input
                   type="date"
                   {...register('date')}
-                  className={`w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary motion-safe:transition-colors ${
+                  className={`w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-on-primary motion-safe:transition-colors ${
                     errors.date ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
                   }`}
                 />
@@ -89,7 +89,7 @@ export default function ManagerExpensesModal() {
               <label className="block text-sm font-medium text-secondary mb-1">Status</label>
               <select
                 {...register('status')}
-                className="w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary motion-safe:transition-colors border-border focus-visible:ring-primary"
+                className="w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-on-primary motion-safe:transition-colors border-border focus-visible:ring-primary"
               >
                 {Object.entries(EXPENSE_STATUS_LABELS).map(([val, label]) => (
                   <option key={val} value={val}>{label}</option>
@@ -103,7 +103,7 @@ export default function ManagerExpensesModal() {
                 type="text"
                 placeholder="e.g. INV-2023-001"
                 {...register('referenceNo')}
-                className="w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary motion-safe:transition-colors border-border focus-visible:ring-primary"
+                className="w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-on-primary motion-safe:transition-colors border-border focus-visible:ring-primary"
               />
             </div>
             
@@ -113,7 +113,7 @@ export default function ManagerExpensesModal() {
                 type="url"
                 placeholder="https://example.com/receipt.jpg"
                 {...register('receiptUrl')}
-                className={`w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary motion-safe:transition-colors ${
+                className={`w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-on-primary motion-safe:transition-colors ${
                   errors.receiptUrl ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
                 }`}
               />
@@ -128,7 +128,7 @@ export default function ManagerExpensesModal() {
                 rows={3}
                 placeholder="Any additional details..."
                 {...register('notes')}
-                className="w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary motion-safe:transition-colors border-border focus-visible:ring-primary resize-none"
+                className="w-full border rounded-xl px-4 py-2.5 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-on-primary motion-safe:transition-colors border-border focus-visible:ring-primary resize-none"
               />
             </div>
 
@@ -136,7 +136,7 @@ export default function ManagerExpensesModal() {
               <button
                 type="button"
                 onClick={handleClose}
-                className="flex-1 py-2.5 border border-border rounded-xl text-sm font-medium text-primary hover:bg-primary-subtle motion-safe:transition-all motion-safe:duration-200 motion-safe:active:scale-95"
+                className="flex-1 py-2.5 border border-border rounded-xl text-sm font-medium text-on-primary hover:bg-primary-subtle motion-safe:transition-all motion-safe:duration-200 motion-safe:active:scale-95"
               >
                 Cancel
               </button>

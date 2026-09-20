@@ -104,7 +104,7 @@ export default function TrainerSessionAttendanceModal({
                           : 'border-border bg-input hover:border-primary'
                       }`}
                     >
-                      <span className="text-sm font-medium text-primary">{member.name}</span>
+                      <span className="text-sm font-medium text-on-primary">{member.name}</span>
                       <div className={`w-5 h-5 rounded-md flex items-center justify-center border ${
                         isPresent ? 'bg-primary border-primary text-on-primary' : 'border-border'
                       }`}>
@@ -122,7 +122,7 @@ export default function TrainerSessionAttendanceModal({
         <div className="p-5 border-t border-border bg-header flex justify-end gap-3">
           <button type="button"
             onClick={onClose}
-            className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page px-4 py-2 text-sm font-semibold text-secondary hover:text-primary hover:bg-input rounded-xl motion-safe:transition-colors motion-safe:duration-base"
+            className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page px-4 py-2 text-sm font-semibold text-secondary hover:text-on-primary hover:bg-input rounded-xl motion-safe:transition-colors motion-safe:duration-base"
           >
             Cancel
           </button>

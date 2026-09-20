@@ -69,7 +69,7 @@ export default function AdminMembersTable() {
               >
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-primary-subtle flex items-center justify-center text-primary text-xs font-bold flex-shrink-0">
+                    <div className="w-8 h-8 rounded-full bg-primary-subtle flex items-center justify-center text-on-primary text-xs font-bold flex-shrink-0">
                       {m.name.charAt(0).toUpperCase()}
                     </div>
                     <div>

@@ -71,11 +71,11 @@ export default function AdminGymHealthAlertsTable() {
                 </td>
                 <td className="px-4 py-3">
                   {alert.isResolved ? (
-                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-success text-success">
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-success text-on-primary">
                       <CheckCircle size={11} /> Resolved
                     </span>
                   ) : (
-                    <span className="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold bg-danger text-danger">Active</span>
+                    <span className="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold bg-danger text-on-primary">Active</span>
                   )}
                 </td>
                 <td className="px-4 py-3">
@@ -84,7 +84,7 @@ export default function AdminGymHealthAlertsTable() {
                       <>
                         <button
                           onClick={() => resolveAlert(alert.id)}
-                          className="p-1.5 rounded-lg hover:bg-success text-secondary hover:text-success motion-safe:transition-colors motion-safe:duration-base"
+                          className="p-1.5 rounded-lg hover:bg-success text-secondary hover:text-on-primary motion-safe:transition-colors motion-safe:duration-base"
                           aria-label="Mark as resolved"
                         >
                           <CheckCircle size={15} />
@@ -93,7 +93,7 @@ export default function AdminGymHealthAlertsTable() {
                     )}
                     <button
                       onClick={() => dismissAlert(alert.id, alert.title)}
-                      className="p-1.5 rounded-lg hover:bg-danger text-secondary hover:text-danger motion-safe:transition-colors motion-safe:duration-base"
+                      className="p-1.5 rounded-lg hover:bg-danger text-secondary hover:text-on-primary motion-safe:transition-colors motion-safe:duration-base"
                       aria-label="Dismiss alert"
                     >
                       <X size={15} />

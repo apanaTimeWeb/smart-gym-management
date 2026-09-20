@@ -63,10 +63,10 @@ export default function SuperadminIntegrationsWebhooksAndDeveloperAccessPanel({ 
       {data.keys.length === 0 ? <SuperadminIntegrationsDeveloperAccessEmptyState /> : data.keys.map(item => (<div key={item.id} className="rounded-lg border border-border p-3">
           <div className="flex items-center justify-between gap-3">
             <div className="flex min-w-0 items-center gap-2">
-              <KeyRound size={18} className="text-primary"/>
+              <KeyRound size={18} className="text-on-primary"/>
               <div className="min-w-0">
                 <Tooltip content={item.label}>
-                  <p className="max-w-40 truncate font-medium text-primary">
+                  <p className="max-w-40 truncate font-medium text-on-primary">
                     {item.label}
                   </p>
                 </Tooltip>

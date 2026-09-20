@@ -23,7 +23,7 @@ export default function AdminFinancePnlPeriodSelector({
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
               period === opt.value
                 ? 'bg-primary text-on-primary shadow-card'
-                : 'text-secondary hover:text-primary hover:bg-card'
+                : 'text-secondary hover:text-on-primary hover:bg-card'
             }`}
           >
             {opt.label}

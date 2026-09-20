@@ -110,7 +110,7 @@ export default function TrainerHeader({ title, subtitle }: TrainerHeaderProps) {
                 <button
                   type="button"
                   role="menuitem"
-                  className="w-full flex items-center gap-2 min-h-11 px-4 py-2 text-sm text-danger hover:bg-danger-bg font-medium motion-safe:transition-colors focus-visible:outline-none focus-visible:bg-danger-bg"
+                  className="w-full flex items-center gap-2 min-h-11 px-4 py-2 text-sm text-on-danger hover:bg-danger-bg font-medium motion-safe:transition-colors focus-visible:outline-none focus-visible:bg-danger-bg"
                   onClick={() => { setShowProfile(false); logout(); }}
                 >
                   <LogOut size={18} strokeWidth={2} aria-hidden="true" /> Log out

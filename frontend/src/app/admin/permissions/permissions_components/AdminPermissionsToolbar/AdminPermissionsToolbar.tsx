@@ -30,8 +30,8 @@ export default function AdminPermissionsToolbar() {
             onClick={() => setActiveRole(role.value)}
             className={`px-5 py-3 rounded-xl border text-left motion-safe:transition-all motion-safe:duration-base ${
               activeRole === role.value
-                ? 'bg-primary-subtle border-primary text-primary'
-                : 'bg-card border-border text-secondary hover:border-primary hover:text-primary'
+                ? 'bg-primary-subtle border-primary text-on-primary'
+                : 'bg-card border-border text-secondary hover:border-primary hover:text-on-primary'
             }`}
           >
             <p className="text-sm font-semibold capitalize">{role.label}</p>
@@ -49,15 +49,15 @@ export default function AdminPermissionsToolbar() {
             onClick={() => setSelectedGymId(opt.value)}
             className={`px-3 py-1.5 rounded-lg text-sm font-medium border motion-safe:transition-all ${
               selectedGymId === opt.value
-                ? 'bg-primary-subtle text-primary border-primary'
-                : 'bg-input text-secondary border-border hover:border-primary hover:text-primary'
+                ? 'bg-primary-subtle text-on-primary border-primary'
+                : 'bg-input text-secondary border-border hover:border-primary hover:text-on-primary'
             }`}
           >
             {opt.label}
           </button>
         ))}
         {selectedGymId !== 'default' && (
-          <span className="text-xs text-warning bg-warning px-2 py-1 rounded-lg border border-border">
+          <span className="text-xs text-on-primary bg-warning px-2 py-1 rounded-lg border border-border">
             Overrides defaults for this gym only
           </span>
         )}

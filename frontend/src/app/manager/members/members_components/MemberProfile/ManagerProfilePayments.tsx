@@ -38,7 +38,7 @@ export default function ManagerProfilePayments() {
   </div>
   </div>
   <div className="flex justify-end mb-4 gap-3">
-    <button onClick={() => setShowPaymentModal(true)} className="px-4 py-2 border border-primary text-primary rounded-lg text-sm font-semibold hover:bg-primary/5 motion-safe:transition-colors shadow-card">
+    <button onClick={() => setShowPaymentModal(true)} className="px-4 py-2 border border-primary text-on-primary rounded-lg text-sm font-semibold hover:bg-primary/5 motion-safe:transition-colors shadow-card">
       Record Payment
     </button>
     <button onClick={() => setShowRenewModal(true)} className="px-4 py-2 bg-primary text-on-primary rounded-lg text-sm font-semibold hover:bg-primary/90 motion-safe:transition-colors shadow-card">
@@ -59,8 +59,8 @@ export default function ManagerProfilePayments() {
  <div className="text-right">
  <p className="text-sm font-bold text-success">{formatCurrencyFromMinorUnits(p.amount, ManagerEnvConfig.currencyCode)}</p>
  <span className={`text-xs px-2 py-0.5 rounded-full ${
- p.status === 'PAID' ? 'bg-success text-success' 
- : 'bg-danger text-danger'
+ p.status === 'PAID' ? 'bg-success text-on-success' 
+ : 'bg-danger text-on-danger'
  }`}>
  {p.status}
  </span>
@@ -68,7 +68,7 @@ export default function ManagerProfilePayments() {
  <div className="flex items-center gap-2">
  <button 
  onClick={() => handleSharePaymentWhatsApp(p)} 
- className="p-2 rounded-lg bg-input hover:bg-success/10 text-secondary hover:text-success motion-safe:transition-colors"
+ className="p-2 rounded-lg bg-input hover:bg-success/10 text-secondary hover:text-on-success motion-safe:transition-colors"
  title="Share via WhatsApp"
  >
  <MessageCircle size={18} />

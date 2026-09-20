@@ -43,13 +43,13 @@ export function AdminNotificationsHeader() {
               <div className="p-4 text-center text-sm text-secondary">No new notifications</div>
             ) : notifications.map((n) => (
               <button type="button" key={n.id} onClick={() => n.unread && markAsRead(n.id)} className={`w-full text-left px-4 py-3 border-b border-border hover:bg-input motion-safe:transition-colors cursor-pointer relative group ${n.unread ? 'bg-primary-subtle' : ''}`}>
-                <p className={`text-sm pr-6 ${n.unread ? 'text-primary font-medium' : 'text-secondary'}`}>{n.text}</p>
+                <p className={`text-sm pr-6 ${n.unread ? 'text-on-primary font-medium' : 'text-secondary'}`}>{n.text}</p>
                 <span className="text-xs text-secondary mt-1 block">{n.time}</span>
               </button>
             ))}
           </div>
           <div className="p-3 text-center border-t border-border">
-            <Link href={AdminNotificationsUrlConfig.root} onClick={() => setShowNotifications(false)} className="text-sm font-medium text-primary hover:underline">
+            <Link href={AdminNotificationsUrlConfig.root} onClick={() => setShowNotifications(false)} className="text-sm font-medium text-on-primary hover:underline">
               View All Notifications
             </Link>
           </div>
