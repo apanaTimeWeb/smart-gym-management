@@ -1,11 +1,5 @@
-'use client';
-// RESPONSIBILITY: Encapsulates logic, UI, or types for this module.
-// DATA FLOW: Standard component data flow.
-// RESPONSIBILITY: Root orchestrator for the Landing page. Bootstraps the LandingProvider
-// context tree and renders all 15 section components in their natural scroll order.
-// This file owns the module wrapper div, CSS import, and font setting — nothing else.
-import '@/app/landing/landing.css';
-import { LandingProvider } from '@/app/landing/landing_context/LandingContext';
+// RESPONSIBILITY: Composes the Landing page sections in scroll order and owns the module query-provider boundary.
+import LandingQueryProvider from '@/app/landing/landing_components/LandingQueryProvider/LandingQueryProvider';
 import LandingNavbar from '@/app/landing/landing_components/LandingNavbar/LandingNavbar';
 import LandingHero from '@/app/landing/landing_components/LandingHero/LandingHero';
 import LandingAbout from '@/app/landing/landing_components/LandingAbout/LandingAbout';
@@ -21,32 +15,27 @@ import LandingTestimonials from '@/app/landing/landing_components/LandingTestimo
 import LandingContact from '@/app/landing/landing_components/LandingContact/LandingContact';
 import LandingFooter from '@/app/landing/landing_components/LandingFooter/LandingFooter';
 
-function LandingContent() {
-  return (
-    <div className="min-h-screen landing-module bg-background text-foreground font-sans" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
-      <LandingNavbar />
-      <LandingHero />
-      <LandingAbout />
-      <LandingBmiCalc />
-      <LandingPlans />
-      <LandingTrainers />
-      <LandingServices />
-      <LandingSchedule />
-      <LandingGallery />
-      <LandingBooking />
-      <LandingTransformations />
-      <LandingTestimonials />
-      <LandingContact />
-      <LandingFooter />
-    </div>
-  );
-}
-
 export default function LandingMain() {
   return (
-    <LandingProvider>
-      <LandingContent />
-    </LandingProvider>
+    <LandingQueryProvider>
+      <div className="min-h-screen landing-module bg-page text-primary font-sans">
+        <LandingNavbar />
+        <main>
+          <LandingHero />
+          <LandingAbout />
+          <LandingBmiCalc />
+          <LandingPlans />
+          <LandingTrainers />
+          <LandingServices />
+          <LandingSchedule />
+          <LandingGallery />
+          <LandingBooking />
+          <LandingTransformations />
+          <LandingTestimonials />
+          <LandingContact />
+        </main>
+        <LandingFooter />
+      </div>
+    </LandingQueryProvider>
   );
 }
-

@@ -1,53 +1,34 @@
-'use client';
-// RESPONSIBILITY: Encapsulates logic, UI, or types for this module.
-// DATA FLOW: Standard component data flow.
-// RESPONSIBILITY: Renders the Class Schedule section as a horizontally scrollable
-// timetable showing 4 time slots × 7 days from LandingSharedConstants.SCHEDULE.
-import { SCHEDULE } from '@/app/landing/landing_utils/LandingSharedConstants';
+// RESPONSIBILITY: Renders the published static timetable; pagination, sorting, and filtering are intentionally not applicable.
+import { LANDING_SCHEDULE, LANDING_SCHEDULE_DAYS } from '@/app/landing/landing_utils/LandingSharedConstants';
 
 export default function LandingSchedule() {
   return (
-    <section id="schedule" className="py-24 px-4 bg-background">
+    <section id="schedule" className="py-24 px-4 bg-page">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <div className="inline-block text-xs font-bold tracking-widest uppercase text-warning bg-warning-bg border border-warning/20 rounded-full px-4 py-2 mb-5">
-            Timetable
-          </div>
-          <h2 className="text-4xl sm:text-5xl font-black text-white mb-4">
-            Class{' '}
-            <span style={{ background: 'var(--landing-text-gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
-              Schedule
-            </span>
-          </h2>
-          <p className="text-secondary max-w-xl mx-auto">
-            Dynamic batches designed for morning and evening flexibility
-          </p>
+          <div className="inline-block text-xs font-bold tracking-widest uppercase text-warning bg-warning-bg border border-border rounded-full px-4 py-2 mb-5">Timetable</div>
+          <h2 className="text-4xl sm:text-5xl font-black text-primary mb-4">Class <span className="text-primary">Schedule</span></h2>
+          <p className="text-secondary max-w-xl mx-auto">Published class batches designed for morning and evening flexibility.</p>
         </div>
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-max border-collapse bg-card rounded-2xl overflow-hidden border border-border">
+
+        <div className="overflow-x-auto rounded-lg border border-border">
+          <table className="w-full min-w-max border-collapse bg-card">
+            <caption className="sr-only">Weekly GymSmart class schedule</caption>
             <thead>
-              <tr className="bg-white/10 text-white">
-                <th className="py-4 px-4 text-left font-semibold">Time</th>
-                <th className="py-4 px-4 text-left font-semibold">Monday</th>
-                <th className="py-4 px-4 text-left font-semibold">Tuesday</th>
-                <th className="py-4 px-4 text-left font-semibold">Wednesday</th>
-                <th className="py-4 px-4 text-left font-semibold">Thursday</th>
-                <th className="py-4 px-4 text-left font-semibold">Friday</th>
-                <th className="py-4 px-4 text-left font-semibold">Saturday</th>
-                <th className="py-4 px-4 text-left font-semibold text-warning">Sunday</th>
+              <tr className="bg-surface-highlight text-primary">
+                <th scope="col" className="sticky left-0 z-10 bg-surface-highlight py-4 px-4 text-left font-semibold">Time</th>
+                {LANDING_SCHEDULE_DAYS.map(({ key, label }) => (
+                  <th key={key} scope="col" className="py-4 px-4 text-left font-semibold">{label}</th>
+                ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-border">
-              {SCHEDULE.map((row) => (
-                <tr key={row.time} className="hover:bg-white/5 transition-colors text-sm text-secondary">
-                  <td className="py-4 px-4 font-semibold text-warning">{row.time}</td>
-                  <td className="py-4 px-4">{row.monday}</td>
-                  <td className="py-4 px-4">{row.tuesday}</td>
-                  <td className="py-4 px-4">{row.wednesday}</td>
-                  <td className="py-4 px-4">{row.thursday}</td>
-                  <td className="py-4 px-4">{row.friday}</td>
-                  <td className="py-4 px-4">{row.saturday}</td>
-                  <td className="py-4 px-4 text-secondary">{row.sunday}</td>
+            <tbody>
+              {LANDING_SCHEDULE.map((row) => (
+                <tr key={row.time} className="odd:bg-card even:bg-surface-zebra hover:bg-surface-hover motion-safe:transition-colors motion-safe:duration-base text-sm text-secondary">
+                  <th scope="row" className="sticky left-0 z-10 bg-card py-4 px-4 font-semibold text-warning">{row.time}</th>
+                  {LANDING_SCHEDULE_DAYS.map(({ key }) => (
+                    <td key={key} className="py-4 px-4">{row[key]}</td>
+                  ))}
                 </tr>
               ))}
             </tbody>
@@ -57,4 +38,3 @@ export default function LandingSchedule() {
     </section>
   );
 }
-

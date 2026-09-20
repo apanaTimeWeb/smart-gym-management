@@ -1,54 +1,41 @@
-'use client';
-// RESPONSIBILITY: Encapsulates logic, UI, or types for this module.
-// DATA FLOW: Standard component data flow.
-// RESPONSIBILITY: Renders the Member Testimonials section — an aggregate rating card
-// on the left and 4 individual review cards in a 2×2 grid on the right.
+// RESPONSIBILITY: Renders aggregate testimonial rating and individual review cards from static Landing content.
 import { Star } from 'lucide-react';
-import { TESTIMONIALS } from '@/app/landing/landing_utils/LandingSharedConstants';
+import { LANDING_MAX_RATING, LANDING_TESTIMONIALS } from '@/app/landing/landing_utils/LandingSharedConstants';
 
 export default function LandingTestimonials() {
   return (
-    <section id="testimonials" className="py-24 px-4 bg-background">
+    <section id="testimonials" className="py-24 px-4 bg-page">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-4xl sm:text-5xl font-black text-white mb-4">
-            What Members{' '}
-            <span style={{ background: 'var(--landing-text-gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
-              Say
-            </span>
-          </h2>
+          <h2 className="text-4xl sm:text-5xl font-black text-primary mb-4">What Members <span className="text-primary">Say</span></h2>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
-          {/* Aggregate rating card */}
-          <div className="lg:col-span-1 border border-primary/30 rounded-3xl p-8 flex flex-col justify-center items-center text-center relative overflow-hidden bg-primary-subtle">
-            <div className="text-6xl font-black text-white mb-2">4.9</div>
-            <div className="flex gap-1 justify-center mb-3 text-warning">
-              {[1, 2, 3, 4, 5].map(s => <Star key={s} size={20} fill="currentColor" />)}
+          <div className="lg:col-span-1 border border-border rounded-lg p-8 flex flex-col justify-center items-center text-center bg-primary-subtle shadow-card">
+            <div className="text-6xl font-black text-primary mb-2">4.9</div>
+            <div role="img" className="flex gap-1 justify-center mb-3 text-warning" aria-label={`${LANDING_MAX_RATING} out of ${LANDING_MAX_RATING} stars`}>
+              {Array.from({ length: LANDING_MAX_RATING }, (_, index) => <Star key={index} size={18} strokeWidth={2} fill="currentColor" />)}
             </div>
             <p className="text-secondary">Based on 1,500+ reviews on Google & JustDial</p>
           </div>
 
-          {/* Individual review cards */}
           <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {TESTIMONIALS.map((t) => (
-              <div key={t.name} className="bg-card border border-border rounded-3xl p-8 hover:border-warning/30 transition-all flex flex-col justify-between">
+            {LANDING_TESTIMONIALS.map((testimonial) => (
+              <article key={testimonial.name} className="bg-card border border-border rounded-lg p-8 hover:bg-surface-hover motion-safe:transition-colors motion-safe:duration-base flex flex-col justify-between">
                 <div>
-                  <div className="flex gap-1 text-warning mb-4">
-                    {[...Array(t.rating)].map((_, j) => <Star key={j} size={16} fill="currentColor" />)}
+                  <div role="img" className="flex gap-1 text-warning mb-4" aria-label={`${testimonial.rating} out of ${LANDING_MAX_RATING} stars`}>
+                    {Array.from({ length: testimonial.rating }, (_, index) => <Star key={index} size={18} strokeWidth={2} fill="currentColor" />)}
                   </div>
-                  <p className="text-secondary italic mb-6 leading-relaxed">&quot;{t.text}&quot;</p>
+                  <p className="text-secondary italic mb-6 leading-relaxed">&quot;{testimonial.text}&quot;</p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-primary-subtle flex items-center justify-center text-white font-bold text-sm">
-                    {t.initials}
-                  </div>
+                  <div className="w-10 h-10 rounded-full bg-primary-subtle flex items-center justify-center text-primary font-bold text-sm">{testimonial.initials}</div>
                   <div>
-                    <p className="font-bold text-white text-sm">{t.name}</p>
-                    <p className="text-xs text-secondary">{t.member}</p>
+                    <p className="font-bold text-primary text-sm">{testimonial.name}</p>
+                    <p className="text-xs text-secondary">{testimonial.member}</p>
                   </div>
                 </div>
-              </div>
+              </article>
             ))}
           </div>
         </div>
@@ -56,4 +43,3 @@ export default function LandingTestimonials() {
     </section>
   );
 }
-

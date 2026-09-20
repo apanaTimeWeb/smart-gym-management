@@ -1,8 +1,7 @@
 'use client';
-// RESPONSIBILITY: Next.js error boundary for the /landing route segment.
-// Displays a styled error card with a Retry button. Logs the error for observability.
-// Rule 9: error.tsx must be a Client Component () per Next.js spec.
+// RESPONSIBILITY: Renders the Landing route-segment error state and invokes the app-provided observability hook when available.
 import { useEffect } from 'react';
+import type { LandingErrorReporter } from '@/app/landing/landing_types/landing_types';
 
 export default function LandingError({
   error,
@@ -12,19 +11,24 @@ export default function LandingError({
   reset: () => void;
 }) {
   useEffect(() => {
-    // Error monitoring handled by provider
+    const reporter = (globalThis as typeof globalThis & { __landingErrorReporter?: LandingErrorReporter }).__landingErrorReporter;
+    reporter?.({
+      route: '/landing',
+      module: 'landing',
+      digest: error.digest,
+      timestamp: new Date().toISOString(),
+    });
   }, [error]);
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-6">
-      <div className="bg-card border border-danger/30 p-8 rounded-3xl max-w-md w-full text-center space-y-4 shadow-2xl">
-        <h2 className="text-2xl font-black text-foreground">Oops! Something went wrong.</h2>
-        <p className="text-secondary text-sm">
-          We couldn't load the landing page. Please try refreshing.
-        </p>
+    <div className="min-h-screen bg-page flex items-center justify-center p-6">
+      <div className="bg-card border border-border p-8 rounded-xl max-w-md w-full text-center space-y-4 shadow-dialog">
+        <h2 className="text-2xl font-black text-primary">We could not load this page.</h2>
+        <p className="text-secondary text-sm">Please try the page again. No internal error details are shown here.</p>
         <button
-          onClick={() => reset()}
-          className="mt-4 px-8 py-3 bg-danger-bg hover:opacity-90 text-white font-bold rounded-xl transition-all"
+          type="button"
+          onClick={reset}
+          className="mt-4 min-h-11 px-8 py-3 bg-primary text-on-primary font-bold rounded-xl hover:bg-primary-hover motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
         >
           Try Again
         </button>

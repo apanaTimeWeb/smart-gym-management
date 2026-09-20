@@ -1,45 +1,118 @@
-// RESPONSIBILITY: Encapsulates logic, UI, or types for this module.
-// DATA FLOW: Standard component data flow.
-// RESPONSIBILITY: Defines ALL TypeScript interfaces and types for the Landing module.
-// Every shape used by LandingContext, useLandingLogic, and form components is declared here.
-// Rule 7: Never define interfaces inside component files.
-import React from 'react';
-import { EMPTY_BOOKING_FORM, EMPTY_CONTACT_FORM } from '@/app/landing/landing_utils/LandingSharedConstants';
+// RESPONSIBILITY: Defines the strongly typed contracts owned by the Landing module.
+import type { ComponentType } from 'react';
+import type { KeyboardEvent as ReactKeyboardEvent, RefObject } from 'react';
+export const LANDING_BMI_STATUSES = {
+  UNDERWEIGHT: 'Underweight',
+  NORMAL_WEIGHT: 'Normal Weight',
+  OVERWEIGHT: 'Overweight',
+  OBESE: 'Obese',
+} as const;
 
-/** BMI calculation result shape. colorClass maps to a .bmi-result--* class in landing.css. */
-export interface BmiResult {
-  value:      string;
-  status:     string;
-  colorClass: string; // e.g. 'bmi-result--normal' — see landing.css
+export type LandingBmiStatus = typeof LANDING_BMI_STATUSES[keyof typeof LANDING_BMI_STATUSES];
+
+export type LandingBmiColorClass =
+  | 'bmi-result--underweight'
+  | 'bmi-result--normal'
+  | 'bmi-result--overweight'
+  | 'bmi-result--obese';
+
+export interface LandingBmiResult {
+  value: string;
+  status: LandingBmiStatus;
+  colorClass: LandingBmiColorClass;
 }
 
-/** Full shape of the LandingContext value. Consumed by all landing sub-components. */
-export interface LandingContextType {
-  // Navbar state
-  menuOpen:    boolean;
-  setMenuOpen: (open: boolean) => void;
-  scrolled:    boolean;
+export type LandingBookingType = 'trial' | 'membership' | 'class';
 
-  // BMI state
-  weight:       string;
-  setWeight:    (w: string) => void;
-  height:       string;
-  setHeight:    (h: string) => void;
-  bmiResult:    BmiResult | null;
-  calculateBMI: (e: React.FormEvent) => void;
+export interface LandingBookingFormValues {
+  name: string;
+  email: string;
+  phone: string;
+  date: string;
+  type: LandingBookingType;
+}
 
-  // Booking state
-  isBooking:       boolean;
-  bookingSuccess:  boolean;
-  bookingData:     typeof EMPTY_BOOKING_FORM;
-  setBookingData:  React.Dispatch<React.SetStateAction<typeof EMPTY_BOOKING_FORM>>;
-  handleBooking:   (e: React.FormEvent) => void;
+export interface LandingContactFormValues {
+  name: string;
+  email: string;
+  message: string;
+}
 
-  // Contact state
-  isSending:      boolean;
-  contactSuccess: boolean;
-  contactData:    typeof EMPTY_CONTACT_FORM;
-  setContactData: React.Dispatch<React.SetStateAction<typeof EMPTY_CONTACT_FORM>>;
-  handleContact:  (e: React.FormEvent) => void;
+export interface LandingBookingApiPayload extends Omit<LandingBookingFormValues, 'date'> {
+  date: string;
+}
+
+export interface LandingContactApiPayload extends LandingContactFormValues {}
+
+export interface LandingMockBookingRecord extends LandingBookingApiPayload {
+  id: string;
+}
+
+export interface LandingMockContactRecord extends LandingContactApiPayload {
+  id: string;
+}
+
+export interface LandingNavbarController {
+  menuOpen: boolean;
+  scrolled: boolean;
+  menuPanelRef: RefObject<HTMLDivElement | null>;
+  closeMenu: () => void;
+  toggleMenu: () => void;
+  handleMenuKeyDown: (event: ReactKeyboardEvent<HTMLDivElement>) => void;
+}
+
+export interface LandingServiceConfig {
+  id: string;
+  title: string;
+  description: string;
+  icon: ComponentType<{ size?: number; className?: string; strokeWidth?: number }>;
+  iconToneClass: string;
+}
+
+export type LandingQueryProviderProps = {
+  children: import('react').ReactNode;
+};
+
+export type LandingErrorReporter = (payload: {
+  route: string;
+  module: string;
+  digest?: string;
+  timestamp: string;
+}) => void;
+
+export interface LandingApiRequestErrorOptions {
+  errorCode?: string;
+  validationErrors?: LandingFieldValidationError[];
+}
+
+export interface LandingFieldValidationError {
+  field: string;
+  message: string;
+}
+
+export interface LandingApiResponse<T> {
+  success: boolean;
+  message: string;
+  data: T | null;
+  meta?: Record<string, unknown>;
+  error?: string;
+  errorCode?: string;
+  statusCode?: number;
+  validationErrors?: LandingFieldValidationError[];
+}
+
+export class LandingApiRequestError extends Error {
+  readonly errorCode?: string;
+  readonly validationErrors?: LandingFieldValidationError[];
+
+  constructor(
+    message: string,
+    options?: LandingApiRequestErrorOptions,
+  ) {
+    super(message);
+    this.name = 'LandingApiRequestError';
+    this.errorCode = options?.errorCode;
+    this.validationErrors = options?.validationErrors;
+  }
 }
 

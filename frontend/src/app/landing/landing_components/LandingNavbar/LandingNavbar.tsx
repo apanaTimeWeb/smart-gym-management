@@ -1,86 +1,106 @@
 'use client';
-// RESPONSIBILITY: Encapsulates logic, UI, or types for this module.
-// DATA FLOW: Standard component data flow.
-// RESPONSIBILITY: Renders the fixed top navigation bar for the landing page.
-// Shows logo, anchor links, theme toggle, and CTA buttons. Reads scroll state
-// from LandingContext to apply a blur/dark backdrop when user scrolls down.
-// On mobile, renders a full-screen slide-down menu triggered by the hamburger icon.
-import Link from 'next/link';
+// RESPONSIBILITY: Renders accessible desktop and mobile navigation for the Landing page; no business/API logic.
 import Image from 'next/image';
+import Link from 'next/link';
 import { Menu, X } from 'lucide-react';
-import { useLandingContext } from '@/app/landing/landing_context/LandingContext';
-import { LandingUrlConfig } from '@/app/landing/landing_url_config';
 import { ThemeToggle } from '@/components/ThemeToggle';
-
-const NAV_LINKS = ['About', 'Plans', 'Trainers', 'Services', 'Schedule', 'Booking', 'Gallery'];
+import { LandingUrlConfig } from '@/app/landing/landing_url_config';
+import { LANDING_MOBILE_NAVIGATION_LINKS, LANDING_NAVIGATION_LINKS } from '@/app/landing/landing_utils/LandingSharedConstants';
+import { useLandingNavbar } from '@/app/landing/landing_components/LandingNavbar/useLandingNavbar';
 
 export default function LandingNavbar() {
-  const { menuOpen, setMenuOpen, scrolled } = useLandingContext();
+  const { menuOpen, scrolled, menuPanelRef, closeMenu, toggleMenu, handleMenuKeyDown } = useLandingNavbar();
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-20 transition-all duration-300 ${scrolled ? 'landing-navbar--scrolled' : 'bg-transparent'}`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
-        {/* Logo */}
-        <div className="flex items-center gap-2.5">
-          <Image src="/logo.png" alt="GymSmart" width={40} height={40} className="rounded-lg object-cover" />
+    <nav className={`fixed top-0 left-0 right-0 z-20 motion-safe:transition-all motion-safe:duration-base ease-in-out ${scrolled ? 'landing-navbar--scrolled' : 'bg-header'}`}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between min-h-16">
+        <Link href={LandingUrlConfig.ANCHORS.HOME} className="flex items-center gap-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page rounded-lg">
+          <Image src="/logo.png" alt="GymSmart" width={40} height={40} priority className="rounded-lg object-cover" />
           <div>
-            <span className="font-bold text-lg text-white tracking-tight">GymSmart</span>
+            <span className="font-bold text-lg text-primary tracking-tight">GymSmart</span>
             <span className="text-xs text-warning block -mt-1 tracking-widest uppercase">Fitness ERP</span>
           </div>
-        </div>
+        </Link>
 
-        {/* Desktop nav links */}
         <div className="hidden md:flex items-center gap-6 text-sm font-medium text-secondary">
-          {NAV_LINKS.map(item => (
-            <Link key={item} href={`#${item.toLowerCase()}`} className="hover:text-warning transition-colors">
-              {item}
+          {LANDING_NAVIGATION_LINKS.map(({ label, href }) => (
+            <Link
+              key={label}
+              href={href}
+              className="text-secondary hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page rounded-md motion-safe:transition-colors motion-safe:duration-base"
+            >
+              {label}
             </Link>
           ))}
         </div>
 
-        {/* Desktop CTA buttons */}
         <div className="hidden md:flex items-center gap-3">
           <ThemeToggle />
-          <Link href={LandingUrlConfig.PAGES.SAAS_LOGIN} className="text-sm font-medium text-warning hover:text-white transition-colors px-3 py-1.5 border border-warning/30 rounded-lg">
+          <Link href={LandingUrlConfig.PAGES.SAAS_LOGIN} className="text-sm font-medium text-warning hover:text-primary px-3 py-1.5 border border-border rounded-lg motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page">
             Superadmin Login
           </Link>
-          <Link href={LandingUrlConfig.PAGES.ERP_LOGIN} className="text-sm font-medium text-secondary hover:text-white transition-colors px-3 py-1.5">
+          <Link href={LandingUrlConfig.PAGES.ERP_LOGIN} className="text-sm font-medium text-secondary hover:text-primary px-3 py-1.5 motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page rounded-lg">
             ERP Login
           </Link>
-          <Link href={LandingUrlConfig.ANCHORS.BOOKING} className="text-sm font-bold px-5 py-2.5 rounded-xl text-white transition-all hover:scale-105 bg-primary-subtle hover:bg-primary-hover">
+          <Link href={LandingUrlConfig.ANCHORS.BOOKING} className="text-sm font-bold px-5 py-2.5 rounded-xl bg-primary text-on-primary motion-safe:transition-all motion-safe:duration-base hover:bg-primary-hover motion-safe:active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page">
             Join Now
           </Link>
         </div>
 
-        {/* Mobile hamburger */}
         <button
-          onClick={() => setMenuOpen(!menuOpen)}
-          className="md:hidden p-2 text-secondary"
+          type="button"
+          onClick={toggleMenu}
+          className="md:hidden min-w-11 min-h-11 p-2 text-secondary hover:text-primary motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page rounded-lg"
           aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+          aria-expanded={menuOpen}
+          aria-controls="landing-mobile-navigation"
         >
-          {menuOpen ? <X size={22} /> : <Menu size={22} />}
+          {menuOpen ? <X size={18} strokeWidth={2} /> : <Menu size={18} strokeWidth={2} />}
         </button>
       </div>
 
-      {/* Mobile full-screen menu */}
       {menuOpen && (
-        <div className="md:hidden bg-black/98 border-t border-white/10 px-4 py-4 space-y-3 h-screen overflow-y-auto">
-          {[...NAV_LINKS, 'Contact'].map(item => (
-            <Link key={item} href={`#${item.toLowerCase()}`} onClick={() => setMenuOpen(false)} className="block text-secondary hover:text-warning py-2 text-sm font-medium">
-              {item}
-            </Link>
-          ))}
-          <div className="flex gap-3 pt-2 flex-col">
-            <Link href={LandingUrlConfig.PAGES.SAAS_LOGIN} className="w-full text-center border border-warning text-warning py-2.5 rounded-xl text-sm font-medium">
-              Superadmin Login
-            </Link>
-            <Link href={LandingUrlConfig.PAGES.ERP_LOGIN} className="w-full text-center border border-white/20 py-2.5 rounded-xl text-sm font-medium text-secondary">
-              ERP Login
-            </Link>
+        <div
+          ref={menuPanelRef}
+          id="landing-mobile-navigation"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Landing navigation"
+          onKeyDown={handleMenuKeyDown}
+          className="md:hidden fixed inset-x-0 top-16 bottom-0 z-30 bg-overlay border-t border-border px-4 py-4 overflow-y-auto"
+        >
+          <div className="max-w-7xl mx-auto flex flex-col gap-2">
+            {LANDING_MOBILE_NAVIGATION_LINKS.map(({ label, href }) => (
+              <Link
+                key={label}
+                href={href}
+                onClick={closeMenu}
+                className="block min-h-11 px-3 py-3 text-secondary hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page rounded-lg motion-safe:transition-colors motion-safe:duration-base"
+              >
+                {label}
+              </Link>
+            ))}
+            <div className="flex gap-3 pt-2 flex-col">
+              <Link href={LandingUrlConfig.PAGES.SAAS_LOGIN} onClick={closeMenu} className="w-full min-h-11 flex items-center justify-center border border-focus text-warning rounded-xl text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page">
+                Superadmin Login
+              </Link>
+              <Link href={LandingUrlConfig.PAGES.ERP_LOGIN} onClick={closeMenu} className="w-full min-h-11 flex items-center justify-center border border-border rounded-xl text-sm font-medium text-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page">
+                ERP Login
+              </Link>
+            </div>
           </div>
         </div>
+      )}
+
+      {menuOpen && (
+        <button
+          type="button"
+          aria-label="Close navigation menu"
+          onClick={closeMenu}
+          className="md:hidden fixed inset-0 z-20 bg-transparent cursor-default"
+          tabIndex={-1}
+        />
       )}
     </nav>
   );
 }
-

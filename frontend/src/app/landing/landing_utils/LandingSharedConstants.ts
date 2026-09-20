@@ -1,107 +1,181 @@
-// RESPONSIBILITY: Encapsulates logic, UI, or types for this module.
-// DATA FLOW: Standard component data flow.
-// RESPONSIBILITY: Single source of truth for ALL hardcoded UI data in the Landing module.
-// When backend APIs are ready, replace these arrays one-by-one with API calls — zero UI changes needed.
-// Rule 3: No hardcoded data is allowed in .tsx view files. Rule 35: No magic strings.
-import { Dumbbell, ArrowRight, Heart, Zap as Lightning, Users, Shield, Award, Clock } from 'lucide-react';
+// RESPONSIBILITY: Stores Landing-owned static UI configuration and marketing content; no server records belong here.
+import {
+  Award,
+  Calendar,
+  Camera,
+  CreditCard,
+  Globe,
+  Hash,
+  CheckCircle,
+  Clock,
+  Dumbbell,
+  Heart,
+  Mail,
+  MapPin,
+  Phone,
+  Play,
+  Shield,
+  Ticket,
+  Users,
+  Zap as Lightning,
+} from 'lucide-react';
+import type { ComponentType } from 'react';
+import type { LandingBookingType, LandingServiceConfig } from '@/app/landing/landing_types/landing_types';
+import { LandingUrlConfig } from '@/app/landing/landing_url_config';
 
-// ─── Hero Stats Strip ─────────────────────────────────────────────────────── //
-export const STATS = [
+export const LANDING_PHONE_COUNTRY_CODE = '+91';
+export const LANDING_CONTACT_EMAIL = 'hello@gymsmart.com';
+export const LANDING_CONTACT_PHONE = '+91 98765 43210';
+export const LANDING_CONTACT_ADDRESS = '123 Fitness Avenue, Bandra West, Mumbai 400050';
+
+export const LANDING_NAVIGATION_LINKS = [
+  { label: 'About', href: LandingUrlConfig.ANCHORS.ABOUT },
+  { label: 'Plans', href: LandingUrlConfig.ANCHORS.PLANS },
+  { label: 'Trainers', href: LandingUrlConfig.ANCHORS.TRAINERS },
+  { label: 'Services', href: LandingUrlConfig.ANCHORS.SERVICES },
+  { label: 'Schedule', href: LandingUrlConfig.ANCHORS.SCHEDULE },
+  { label: 'Booking', href: LandingUrlConfig.ANCHORS.BOOKING },
+  { label: 'Gallery', href: LandingUrlConfig.ANCHORS.GALLERY },
+] as const;
+
+export const LANDING_MOBILE_NAVIGATION_LINKS = [
+  ...LANDING_NAVIGATION_LINKS,
+  { label: 'Contact', href: LandingUrlConfig.ANCHORS.CONTACT },
+] as const;
+
+export const LANDING_MAX_RATING = 5;
+
+export const LANDING_STATS = [
   { value: '5000+', label: 'Happy Members' },
-  { value: '10+',   label: 'Expert Trainers' },
-  { value: '24/7',  label: 'Always Open' },
-  { value: '15+',   label: 'Years Experience' },
+  { value: '10+', label: 'Expert Trainers' },
+  { value: '24/7', label: 'Always Open' },
+  { value: '15+', label: 'Years Experience' },
+] as const;
+
+export const LANDING_SERVICES: readonly LandingServiceConfig[] = [
+  { id: 'bodybuilding', title: 'Bodybuilding', description: 'State-of-the-art equipment for strength & muscle building with expert guidance', icon: Dumbbell, iconToneClass: 'landing-service-icon--primary' },
+  { id: 'weight-loss', title: 'Weight Loss', description: 'Effective fat loss programs combining cardio, diet, and strength training', icon: Play, iconToneClass: 'landing-service-icon--danger' },
+  { id: 'weight-gain', title: 'Weight Gain', description: 'Specialized programs and nutrition for healthy weight and muscle mass gain', icon: Award, iconToneClass: 'landing-service-icon--purple' },
+  { id: 'cardio', title: 'Cardio', description: 'Modern treadmills, cycles and ellipticals for endurance training', icon: Heart, iconToneClass: 'landing-service-icon--success' },
+  { id: 'crossfit', title: 'Crossfit', description: 'High-intensity functional training for maximum calorie burn and performance', icon: Lightning, iconToneClass: 'landing-service-icon--warning' },
+  { id: 'yoga', title: 'Yoga', description: 'Improve flexibility, mental focus, and core strength in peaceful sessions', icon: Users, iconToneClass: 'landing-service-icon--info' },
+  { id: 'zumba', title: 'Zumba', description: 'Fun and energetic dance fitness classes to burn calories with joy', icon: Users, iconToneClass: 'landing-service-icon--danger' },
+  { id: 'personal-training', title: 'Personal Training', description: 'One-on-one certified trainer sessions with custom diet & workout plans', icon: Shield, iconToneClass: 'landing-service-icon--primary' },
+  { id: 'diet-plan', title: 'Diet Plan', description: '5M+ food database with custom meal plans designed for your fitness goals', icon: CheckCircle, iconToneClass: 'landing-service-icon--success' },
 ];
 
-// ─── Services / Programs ──────────────────────────────────────────────────── //
-// colorClass maps to a .landing-service-icon--* class defined in landing.css
-// (Rule 4/36: no dynamic Tailwind gradient strings in JSX)
-export const SERVICES = [
-  { icon: Dumbbell,  title: 'Bodybuilding',      desc: 'State-of-the-art equipment for strength & muscle building with expert guidance',              colorClass: 'landing-service-icon--bodybuilding' },
-  { icon: ArrowRight,title: 'Weight Loss',        desc: 'Effective fat loss programs combining cardio, diet, and strength training',                   colorClass: 'landing-service-icon--weightloss' },
-  { icon: ArrowRight,title: 'Weight Gain',        desc: 'Specialized programs and nutrition for healthy weight and muscle mass gain',                   colorClass: 'landing-service-icon--weightgain' },
-  { icon: Heart,     title: 'Cardio',             desc: 'Modern treadmills, cycles and ellipticals for endurance training',                            colorClass: 'landing-service-icon--cardio' },
-  { icon: Lightning, title: 'Crossfit',           desc: 'High-intensity functional training for maximum calorie burn and performance',                  colorClass: 'landing-service-icon--crossfit' },
-  { icon: Users,     title: 'Yoga',               desc: 'Improve flexibility, mental focus, and core strength in peaceful sessions',                    colorClass: 'landing-service-icon--yoga' },
-  { icon: Users,     title: 'Zumba',              desc: 'Fun and energetic dance fitness classes to burn calories with joy',                            colorClass: 'landing-service-icon--zumba' },
-  { icon: Shield,    title: 'Personal Training',  desc: 'One-on-one certified trainer sessions with custom diet & workout plans',                       colorClass: 'landing-service-icon--personaltraining' },
-  { icon: Award,     title: 'Diet Plan',          desc: '5M+ food database with custom meal plans designed for your fitness goals',                     colorClass: 'landing-service-icon--dietplan' },
-];
+export const LANDING_TRAINERS = [
+  { name: 'Rajesh Kumar', role: 'Head Trainer & Nutritionist', experience: '12 yrs', specialization: 'Bodybuilding, Strength', certification: 'ACE Certified', initials: 'RK', avatarClass: 'landing-trainer-avatar--primary' },
+  { name: 'Pooja Sharma', role: 'Yoga & Wellness Coach', experience: '8 yrs', specialization: 'Yoga, Mindfulness', certification: 'RYT 500', initials: 'PS', avatarClass: 'landing-trainer-avatar--danger' },
+  { name: 'Arjun Mehta', role: 'CrossFit Specialist', experience: '6 yrs', specialization: 'HIIT, CrossFit', certification: 'CrossFit L2', initials: 'AM', avatarClass: 'landing-trainer-avatar--info' },
+  { name: 'Sunita Rao', role: 'Cardio & Zumba Expert', experience: '9 yrs', specialization: 'Cardio, Dance Fitness', certification: 'Zumba Pro', initials: 'SR', avatarClass: 'landing-trainer-avatar--success' },
+] as const;
 
-// ─── Trainer Team ─────────────────────────────────────────────────────────── //
-// avatarClass maps to a .landing-trainer-avatar--* class defined in landing.css
-export const TRAINERS = [
-  { name: 'Rajesh Kumar', role: 'Head Trainer & Nutritionist', exp: '12 yrs', spec: 'Bodybuilding, Strength', cert: 'ACE Certified',  initials: 'RK', avatarClass: 'landing-trainer-avatar--rk' },
-  { name: 'Pooja Sharma', role: 'Yoga & Wellness Coach',       exp: '8 yrs',  spec: 'Yoga, Mindfulness',      cert: 'RYT 500',        initials: 'PS', avatarClass: 'landing-trainer-avatar--ps' },
-  { name: 'Arjun Mehta',  role: 'CrossFit Specialist',         exp: '6 yrs',  spec: 'HIIT, CrossFit',         cert: 'CrossFit L2',    initials: 'AM', avatarClass: 'landing-trainer-avatar--am' },
-  { name: 'Sunita Rao',   role: 'Cardio & Zumba Expert',       exp: '9 yrs',  spec: 'Cardio, Dance Fitness',  cert: 'Zumba Pro',      initials: 'SR', avatarClass: 'landing-trainer-avatar--sr' },
-];
+export const LANDING_ABOUT_STATS = [
+  { label: 'Happy Members', value: '5000+', icon: Users, iconToneClass: 'bg-primary-subtle text-primary' },
+  { label: 'Expert Trainers', value: '10+', icon: Award, iconToneClass: 'bg-info-bg text-info' },
+  { label: 'Hours Open', value: '24/7', icon: Clock, iconToneClass: 'bg-success-bg text-success' },
+  { label: 'Transformations', value: '2000+', icon: Heart, iconToneClass: 'bg-warning-bg text-warning' },
+] as const;
 
-// ─── About Section — Stats Cards ──────────────────────────────────────────── //
-// iconClass maps to .landing-stat-icon--* in landing.css
-// Extracted from LandingAbout.tsx inline definition (Violation 2 fix)
-export const ABOUT_STATS_CARDS = [
-  { label: 'Happy Members',    value: '5000+', icon: Users,  iconClass: 'landing-stat-icon--members' },
-  { label: 'Expert Trainers',  value: '10+',   icon: Award,  iconClass: 'landing-stat-icon--trainers' },
-  { label: 'Hours Open',       value: '24/7',  icon: Clock,  iconClass: 'landing-stat-icon--hours' },
-  { label: 'Transformations',  value: '2000+', icon: Heart,  iconClass: 'landing-stat-icon--transformations' },
-];
-
-// ─── About Section — Feature Checklist ───────────────────────────────────── //
-// Extracted from LandingAbout.tsx inline definition (Violation 2 fix)
-export const ABOUT_FEATURES = [
+export const LANDING_ABOUT_FEATURES = [
   '10+ Certified Trainers',
   '24/7 Open',
   '5M+ Food Database',
   'Ladies Only Sections',
   'Steam & Locker Rooms',
   'Free Diet Consultation',
-];
+] as const;
 
-// ─── Transformations / Success Stories ───────────────────────────────────── //
-export const TRANSFORMATIONS = [
-  { name: 'Rahul Sharma', type: 'Fat Loss',            before: '98 kg',  after: '72 kg', duration: '6 months', initials: 'RS', review: 'Lost 26kg! GymSmart trainers are the best. Life changing experience!' },
-  { name: 'Priya Patel',  type: 'Muscle Gain',         before: '48 kg',  after: '58 kg', duration: '4 months', initials: 'PP', review: 'Gained lean muscle, feel so confident now. Best gym in the city!' },
-  { name: 'Amit Verma',   type: 'Body Transformation', before: '110 kg', after: '78 kg', duration: '8 months', initials: 'AV', review: 'From XL to M size! The diet plans and training were perfectly tailored.' },
-];
+export const LANDING_TRANSFORMATIONS = [
+  { name: 'Rahul Sharma', type: 'Fat Loss', before: '98 kg', after: '72 kg', duration: '6 months', initials: 'RS', review: 'Lost 26kg! GymSmart trainers are the best. Life changing experience!' },
+  { name: 'Priya Patel', type: 'Muscle Gain', before: '48 kg', after: '58 kg', duration: '4 months', initials: 'PP', review: 'Gained lean muscle, feel so confident now. Best gym in the city!' },
+  { name: 'Amit Verma', type: 'Body Transformation', before: '110 kg', after: '78 kg', duration: '8 months', initials: 'AV', review: 'From XL to M size! The diet plans and training were perfectly tailored.' },
+] as const;
 
-// ─── Testimonials ─────────────────────────────────────────────────────────── //
-export const TESTIMONIALS = [
-  { name: 'Sneha Mehta', rating: 5, text: 'GymSmart has completely transformed my lifestyle. The trainers are professional and the facilities are world-class. 100% recommended!', member: 'Premium Member – 2 years',   initials: 'SM' },
-  { name: 'Vijay Singh', rating: 5, text: 'Best gym in Mumbai! The 24/7 access is super convenient for my work schedule. Diet plans actually work!',                               member: 'Gold Member – 1 year',      initials: 'VS' },
-  { name: 'Anita Gupta', rating: 5, text: 'Lost 15kg in 4 months with the personalized program. The team is super supportive and motivating!',                                     member: 'Annual Member – 3 years',   initials: 'AG' },
-  { name: 'Rohit Yadav', rating: 5, text: 'Amazing equipment, clean facilities, and expert trainers. The GymSmart app makes tracking progress so easy!',                           member: 'Premium Member – 18 months', initials: 'RY' },
-];
+export const LANDING_TESTIMONIALS = [
+  { name: 'Sneha Mehta', rating: 5, text: 'GymSmart has completely transformed my lifestyle. The trainers are professional and the facilities are world-class. 100% recommended!', member: 'Premium Member – 2 years', initials: 'SM' },
+  { name: 'Vijay Singh', rating: 5, text: 'Best gym in Mumbai! The 24/7 access is super convenient for my work schedule. Diet plans actually work!', member: 'Gold Member – 1 year', initials: 'VS' },
+  { name: 'Anita Gupta', rating: 5, text: 'Lost 15kg in 4 months with the personalized program. The team is super supportive and motivating!', member: 'Annual Member – 3 years', initials: 'AG' },
+  { name: 'Rohit Yadav', rating: 5, text: 'Amazing equipment, clean facilities, and expert trainers. The GymSmart app makes tracking progress so easy!', member: 'Premium Member – 18 months', initials: 'RY' },
+] as const;
 
-// ─── Membership Plans ─────────────────────────────────────────────────────── //
-export const PLANS = [
-  { name: '1 Month',          price: '₹1,500',  oldPrice: '₹2,000',  duration: '1 month',  features: ['General Gym Access', 'Locker facility', 'Cardio equipment'],                        color: 'border-border' },
-  { name: '3 Months',         price: '₹4,000',  oldPrice: '₹4,500',  duration: '3 months', features: ['Everything in 1 Month', 'Basic Diet Guidance', 'Group Classes'],                    color: 'border-info',    badge: 'Popular' },
-  { name: '6 Months',         price: '₹7,500',  oldPrice: '₹9,000',  duration: '6 months', features: ['Everything in 3 Months', '1 PT Session/month', 'Body comp analysis'],               color: 'border-warning' },
-  { name: '12 Months',        price: '₹12,000', oldPrice: '₹18,000', duration: 'Annual',   features: ['Everything in 6 Months', '2 months FREE', 'Advanced Meal Planning'],                color: 'border-warning', badge: 'Best Value' },
-  { name: 'Personal Training',price: '₹8,000',  oldPrice: '₹10,000', duration: '/month',   features: ['1-on-1 Dedicated Trainer', 'Custom Daily Diet', 'Priority Access'],                 color: 'border-primary' },
-];
+export const LANDING_PLANS = [
+  { name: '1 Month', priceInr: 1500, oldPriceInr: 2000, duration: '1 month', features: ['General Gym Access', 'Locker facility', 'Cardio equipment'], badge: null, featured: false, includeEmiNote: false },
+  { name: '3 Months', priceInr: 4000, oldPriceInr: 4500, duration: '3 months', features: ['Everything in 1 Month', 'Basic Diet Guidance', 'Group Classes'], badge: 'Popular', featured: true, includeEmiNote: false },
+  { name: '6 Months', priceInr: 7500, oldPriceInr: 9000, duration: '6 months', features: ['Everything in 3 Months', '1 PT Session/month', 'Body comp analysis'], badge: null, featured: false, includeEmiNote: false },
+  { name: '12 Months', priceInr: 12000, oldPriceInr: 18000, duration: 'Annual', features: ['Everything in 6 Months', '2 months FREE', 'Advanced Meal Planning'], badge: 'Best Value', featured: true, includeEmiNote: true },
+  { name: 'Personal Training', priceInr: 8000, oldPriceInr: 10000, duration: '/month', features: ['1-on-1 Dedicated Trainer', 'Custom Daily Diet', 'Priority Access'], badge: null, featured: false, includeEmiNote: false },
+] as const;
 
-// ─── Class Schedule Timetable ─────────────────────────────────────────────── //
-export const SCHEDULE = [
-  { time: '06:00 AM - 08:00 AM', monday: 'Cardio (Sunita)',   tuesday: 'CrossFit (Arjun)',  wednesday: 'Yoga (Pooja)',      thursday: 'Strength (Rajesh)', friday: 'Zumba (Sunita)',   saturday: 'CrossFit (Arjun)', sunday: 'Rest' },
-  { time: '08:00 AM - 10:00 AM', monday: 'Strength (Rajesh)', tuesday: 'Yoga (Pooja)',      wednesday: 'Cardio (Sunita)',   thursday: 'CrossFit (Arjun)', friday: 'Strength (Rajesh)',saturday: 'Yoga (Pooja)',     sunday: 'Open Gym' },
-  { time: '06:00 PM - 08:00 PM', monday: 'Zumba (Sunita)',    tuesday: 'Strength (Rajesh)', wednesday: 'CrossFit (Arjun)', thursday: 'Yoga (Pooja)',      friday: 'Cardio (Sunita)',  saturday: 'Zumba (Sunita)',   sunday: 'Open Gym' },
-  { time: '08:00 PM - 10:00 PM', monday: 'CrossFit (Arjun)',  tuesday: 'Cardio (Sunita)',   wednesday: 'Strength (Rajesh)',thursday: 'Zumba (Sunita)',    friday: 'Yoga (Pooja)',     saturday: 'Rest',             sunday: 'Closed' },
-];
+export const LANDING_SCHEDULE_DAYS = [
+  { key: 'monday', label: 'Monday' },
+  { key: 'tuesday', label: 'Tuesday' },
+  { key: 'wednesday', label: 'Wednesday' },
+  { key: 'thursday', label: 'Thursday' },
+  { key: 'friday', label: 'Friday' },
+  { key: 'saturday', label: 'Saturday' },
+  { key: 'sunday', label: 'Sunday' },
+] as const;
 
-// ─── Form Default States ──────────────────────────────────────────────────── //
-export const EMPTY_BOOKING_FORM = {
-  name:  '',
+export const LANDING_SCHEDULE = [
+  { time: '06:00 AM - 08:00 AM', monday: 'Cardio (Sunita)', tuesday: 'CrossFit (Arjun)', wednesday: 'Yoga (Pooja)', thursday: 'Strength (Rajesh)', friday: 'Zumba (Sunita)', saturday: 'CrossFit (Arjun)', sunday: 'Rest' },
+  { time: '08:00 AM - 10:00 AM', monday: 'Strength (Rajesh)', tuesday: 'Yoga (Pooja)', wednesday: 'Cardio (Sunita)', thursday: 'CrossFit (Arjun)', friday: 'Strength (Rajesh)', saturday: 'Yoga (Pooja)', sunday: 'Open Gym' },
+  { time: '06:00 PM - 08:00 PM', monday: 'Zumba (Sunita)', tuesday: 'Strength (Rajesh)', wednesday: 'CrossFit (Arjun)', thursday: 'Yoga (Pooja)', friday: 'Cardio (Sunita)', saturday: 'Zumba (Sunita)', sunday: 'Open Gym' },
+  { time: '08:00 PM - 10:00 PM', monday: 'CrossFit (Arjun)', tuesday: 'Cardio (Sunita)', wednesday: 'Strength (Rajesh)', thursday: 'Zumba (Sunita)', friday: 'Yoga (Pooja)', saturday: 'Rest', sunday: 'Closed' },
+] as const;
+
+export const LANDING_GALLERY_ITEMS = [
+  { src: '/gym_gallery_cardio.png', alt: 'Cardio Section', label: 'Advanced Cardio' },
+  { src: '/gym_gallery_weights.png', alt: 'Free Weights', label: 'Free Weights Area' },
+  { src: '/gym_gallery_studio.png', alt: 'Yoga & Group Studio', label: 'Yoga & Group Studio' },
+] as const;
+
+export const LANDING_BOOKING_OPTIONS = [
+  { value: 'trial', icon: Ticket, label: 'Book Trial' },
+  { value: 'membership', icon: CreditCard, label: 'Buy Membership' },
+  { value: 'class', icon: Calendar, label: 'Reserve Class Slot' },
+] as const satisfies readonly { value: LandingBookingType; label: string; icon: ComponentType<{ size?: number; className?: string; strokeWidth?: number }> }[];
+
+export const LANDING_CONTACT_DETAILS = [
+  { icon: MapPin, title: 'Location', text: LANDING_CONTACT_ADDRESS, href: undefined },
+  { icon: Phone, title: 'Phone', text: LANDING_CONTACT_PHONE, href: `tel:${LANDING_CONTACT_PHONE.replaceAll(' ', '')}` },
+  { icon: Mail, title: 'Email', text: LANDING_CONTACT_EMAIL, href: `mailto:${LANDING_CONTACT_EMAIL}` },
+] as const;
+
+export const LANDING_SOCIAL_LINKS = [
+  { label: 'Facebook', href: LandingUrlConfig.EXTERNAL.FACEBOOK, icon: Globe, className: 'landing-social-facebook' },
+  { label: 'Instagram', href: LandingUrlConfig.EXTERNAL.INSTAGRAM, icon: Camera, className: 'landing-social-instagram' },
+  { label: 'X', href: LandingUrlConfig.EXTERNAL.X, icon: Hash, className: 'landing-social-x' },
+  { label: 'YouTube', href: LandingUrlConfig.EXTERNAL.YOUTUBE, icon: Play, className: 'landing-social-youtube' },
+] as const;
+
+export const LANDING_FOOTER_QUICK_LINKS = [
+  { label: 'About Us', href: LandingUrlConfig.ANCHORS.ABOUT },
+  { label: 'Membership Plans', href: LandingUrlConfig.ANCHORS.PLANS },
+  { label: 'Trainers', href: LandingUrlConfig.ANCHORS.TRAINERS },
+  { label: 'Classes Schedule', href: LandingUrlConfig.ANCHORS.SCHEDULE },
+  { label: 'Gallery', href: LandingUrlConfig.ANCHORS.GALLERY },
+  { label: 'Contact Us', href: LandingUrlConfig.ANCHORS.CONTACT },
+] as const;
+
+export const LANDING_FOOTER_PROGRAM_LINKS = LANDING_SERVICES.map((service) => ({
+  label: service.title,
+  href: `#service-${service.id}`,
+}));
+
+export const LANDING_NEWSLETTER_SUBJECT = 'GymSmart Newsletter Subscription Request';
+
+export const EMPTY_LANDING_BOOKING_FORM = {
+  name: '',
   email: '',
   phone: '',
-  date:  '',
-  type:  'trial',
+  date: '',
+  type: 'trial' as LandingBookingType,
 };
 
-export const EMPTY_CONTACT_FORM = {
-  name:    '',
-  email:   '',
+export const EMPTY_LANDING_CONTACT_FORM = {
+  name: '',
+  email: '',
   message: '',
 };
-
