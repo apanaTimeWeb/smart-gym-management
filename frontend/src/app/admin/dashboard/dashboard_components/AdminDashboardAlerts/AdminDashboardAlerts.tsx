@@ -30,7 +30,7 @@ export default function AdminDashboardAlerts() {
     <div className="bg-card backdrop-blur-xl border border-border rounded-2xl shadow-card p-6 flex flex-col h-full">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 bg-danger text-danger rounded-xl">
+          <div className="p-2.5 bg-danger text-on-danger rounded-xl">
             <ShieldAlert size={20} />
           </div>
           <div>

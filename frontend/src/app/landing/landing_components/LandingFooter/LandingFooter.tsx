@@ -67,7 +67,7 @@ export default function LandingFooter() {
             <p className="text-secondary text-sm mb-4">Subscribe to get health tips and exclusive gym offers.</p>
             <div className="flex bg-input rounded-lg border border-border p-1">
               <input type="email" placeholder="Your email" aria-label="Newsletter email address" className="w-full bg-transparent px-3 text-sm text-white focus:outline-none placeholder-muted-foreground" />
-              <button className="px-4 py-2 bg-white/10 hover:bg-warning text-white text-sm font-medium rounded-md transition-colors">Subscribe</button>
+              <button className="px-4 py-2 bg-white/10 hover:bg-warning text-on-primary text-sm font-medium rounded-md transition-colors">Subscribe</button>
             </div>
           </div>
         </div>

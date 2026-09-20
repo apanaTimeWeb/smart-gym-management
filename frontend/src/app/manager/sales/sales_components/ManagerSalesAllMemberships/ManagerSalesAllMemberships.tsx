@@ -97,8 +97,8 @@ export default function ManagerSalesAllMemberships() {
                 <td className="px-4 py-3">
                   <span className={`text-xs px-2.5 py-0.5 rounded-full font-semibold ${
                     r.status === 'ACTIVE'
-                      ? 'bg-success text-success'
-                      : 'bg-danger text-danger'
+                      ? 'bg-success text-on-success'
+                      : 'bg-danger text-on-danger'
                   }`}>
                     {r.status}
                   </span>

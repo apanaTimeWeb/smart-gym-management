@@ -53,7 +53,7 @@ export default function ManagerCommunicationsMain() {
                 />
                 {tab.label}
                 {tab.value === 'churn_recovery' && (
-                  <span className="ml-1 px-1.5 py-0.5 rounded-full text-xs font-semibold bg-danger text-danger">
+                  <span className="ml-1 px-1.5 py-0.5 rounded-full text-xs font-semibold bg-danger text-on-danger">
                     NEW
                   </span>
                 )}

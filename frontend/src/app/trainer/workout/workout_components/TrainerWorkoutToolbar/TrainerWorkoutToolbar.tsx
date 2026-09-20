@@ -53,7 +53,7 @@ export default function TrainerWorkoutToolbar() {
             onClick={() => setTab(t)}
             className={`px-5 py-3.5 text-sm font-medium motion-safe:transition-colors border-b-2 whitespace-nowrap ${
               tab === t
-                ? 'text-primary bg-primary-subtle'
+                ? 'text-on-primary bg-primary-subtle'
                 : 'border-transparent text-secondary hover:text-primary'
             }`}
             

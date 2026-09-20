@@ -13,9 +13,9 @@ function formatDate(iso: string): string {
 
 function getPaymentClasses(method: string): string {
   switch (method) {
-    case 'Cash': return 'bg-success text-success';
-    case 'UPI': return 'bg-info text-info';
-    case 'Card': return 'bg-warning text-warning';
+    case 'Cash': return 'bg-success text-on-success';
+    case 'UPI': return 'bg-info text-on-info';
+    case 'Card': return 'bg-warning text-on-primary';
     default: return 'bg-input text-secondary';
   }
 }

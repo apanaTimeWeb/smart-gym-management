@@ -59,8 +59,8 @@ export default function ManagerProfilePayments() {
  <div className="text-right">
  <p className="text-sm font-bold text-success">{formatCurrencyFromMinorUnits(p.amount, ManagerEnvConfig.currencyCode)}</p>
  <span className={`text-xs px-2 py-0.5 rounded-full ${
- p.status === 'PAID' ? 'bg-success text-success' 
- : 'bg-danger text-danger'
+ p.status === 'PAID' ? 'bg-success text-on-success' 
+ : 'bg-danger text-on-danger'
  }`}>
  {p.status}
  </span>

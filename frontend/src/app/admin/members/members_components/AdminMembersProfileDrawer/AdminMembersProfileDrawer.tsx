@@ -8,10 +8,10 @@ import { displayValue } from '@/app/admin/admin_layout/admin_utils/AdminDisplayV
 import type { AdminMember } from '@/app/admin/members/members_types/AdminMembersTypes';
 
 const STATUS_STYLES: Record<string, string> = {
-  active: 'bg-success text-success',
-  expired: 'bg-danger text-danger',
-  pending: 'bg-warning text-warning',
-  frozen: 'bg-info text-info',
+  active: 'bg-success text-on-success',
+  expired: 'bg-danger text-on-danger',
+  pending: 'bg-warning text-on-primary',
+  frozen: 'bg-info text-on-info',
 };
 
 

@@ -52,7 +52,7 @@ export default function AdminProfileMain() {
         <div>
           <p className="text-lg font-bold text-primary">{profile?.name ?? 'Admin'}</p>
           <p className="text-sm text-secondary">{displayValue(profile?.email)}</p>
-          <span className="mt-1.5 inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-success text-success text-xs font-semibold"><span className="w-1.5 h-1.5 rounded-full bg-success motion-safe:animate-pulse motion-safe:duration-base" />Active</span>
+          <span className="mt-1.5 inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-success text-on-success text-xs font-semibold"><span className="w-1.5 h-1.5 rounded-full bg-success motion-safe:animate-pulse motion-safe:duration-base" />Active</span>
         </div>
       </div>
 

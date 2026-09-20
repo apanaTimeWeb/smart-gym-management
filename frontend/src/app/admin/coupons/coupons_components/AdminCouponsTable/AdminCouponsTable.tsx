@@ -10,9 +10,9 @@ import AdminTableSkeleton from '@/app/admin/admin_layout/AdminShared/AdminTableS
 import type { Coupon } from '@/app/admin/coupons/coupons_types/AdminCouponsTypes';
 
 const STATUS_STYLES: Record<string, string> = {
-  active: 'bg-success text-success',
-  inactive: 'bg-warning text-warning',
-  expired: 'bg-danger text-danger',
+  active: 'bg-success text-on-success',
+  inactive: 'bg-warning text-on-primary',
+  expired: 'bg-danger text-on-danger',
 };
 
 const TABLE_HEADERS = ['Code', 'Type / Value', 'Assigned Gyms', 'Usage', 'Valid Until', 'Status', 'Actions'];
@@ -55,7 +55,7 @@ export default function AdminCouponsTable() {
               >
                 <td className="px-5 py-4">
                   <div className="flex items-center gap-2">
-                    <span className="font-mono text-sm font-bold text-primary bg-primary-subtle px-2 py-0.5 rounded">{coupon.code}</span>
+                    <span className="font-mono text-sm font-bold text-on-primary bg-primary-subtle px-2 py-0.5 rounded">{coupon.code}</span>
                     <button
                       onClick={(e) => { e.stopPropagation(); handleCopy(coupon.code); }}
                       className="opacity-100 lg:opacity-0 lg:group-hover:opacity-100 motion-safe:transition-opacity text-secondary hover:text-primary motion-safe:duration-base"

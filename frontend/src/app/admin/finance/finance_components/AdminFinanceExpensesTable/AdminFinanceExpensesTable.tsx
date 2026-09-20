@@ -11,13 +11,13 @@ import AdminFinanceEmptyState from '@/app/admin/finance/finance_components/Admin
 const ITEMS_PER_PAGE = 8;
 
 const CATEGORY_COLORS: Record<string, string> = {
-  Rent: 'bg-info text-info',
-  Salaries: 'bg-warning text-warning',
+  Rent: 'bg-info text-on-info',
+  Salaries: 'bg-warning text-on-primary',
   Utilities: 'bg-primary-subtle text-primary',
   Equipment: 'bg-purple-bg text-purple',
   Marketing: 'bg-success-bg text-success',
   Maintenance: 'bg-danger-bg text-danger',
-  Supplies: 'bg-info text-info',
+  Supplies: 'bg-info text-on-info',
   Other: 'bg-input text-secondary',
 };
 

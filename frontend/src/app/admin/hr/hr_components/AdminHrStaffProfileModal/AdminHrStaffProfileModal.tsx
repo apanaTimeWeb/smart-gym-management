@@ -95,11 +95,11 @@ export default function AdminHrStaffProfileModal() {
                   <div className="flex items-center gap-1.5">
                     <span className="text-sm text-secondary">Status:</span>
                     {editData.isActive !== false ? (
-                      <span className="flex items-center gap-1 text-xs font-bold text-success bg-success px-2 py-0.5 rounded-md uppercase tracking-wide">
+                      <span className="flex items-center gap-1 text-xs font-bold text-on-success bg-success px-2 py-0.5 rounded-md uppercase tracking-wide">
                         <CheckCircle2 size={12} /> Active
                       </span>
                     ) : (
-                      <span className="flex items-center gap-1 text-xs font-bold text-danger bg-danger px-2 py-0.5 rounded-md uppercase tracking-wide">
+                      <span className="flex items-center gap-1 text-xs font-bold text-on-danger bg-danger px-2 py-0.5 rounded-md uppercase tracking-wide">
                         <Ban size={12} /> Suspended
                       </span>
                     )}
@@ -177,7 +177,7 @@ export default function AdminHrStaffProfileModal() {
                         {isManager && (
                           <td className="px-4 py-3 text-right">
                             {isPrimary ? (
-                              <span className="inline-block text-xs font-bold text-warning bg-warning border border-border px-2 py-1 rounded-md uppercase">
+                              <span className="inline-block text-xs font-bold text-on-primary bg-warning border border-border px-2 py-1 rounded-md uppercase">
                                 Primary Branch
                               </span>
                             ) : (

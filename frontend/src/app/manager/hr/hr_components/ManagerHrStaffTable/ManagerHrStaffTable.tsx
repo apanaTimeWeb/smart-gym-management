@@ -108,11 +108,11 @@ export default function ManagerHrStaffTable() {
                 <td className="px-4 py-3 text-sm text-primary">{s.role}</td>
                 <td className="px-4 py-3">
                   {s.isActive === false ? (
-                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-danger text-danger border border-border">
+                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-danger text-on-danger border border-border">
                       <Ban className="w-3 h-3" /> Suspended
                     </span>
                   ) : (
-                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-success text-success border border-border">
+                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-success text-on-success border border-border">
                       <CheckCircle2 className="w-3 h-3" /> Active
                     </span>
                   )}
@@ -200,7 +200,7 @@ export default function ManagerHrStaffTable() {
                 <p className="font-semibold text-primary truncate">{s.name}</p>
                 <p className="text-xs text-secondary truncate">{s.email || '—'}</p>
               </div>
-              <span className={`shrink-0 px-2 py-1 rounded-full text-badge font-semibold ${s.isActive === false ? 'bg-danger text-danger' : 'bg-success text-success'}`}>
+              <span className={`shrink-0 px-2 py-1 rounded-full text-badge font-semibold ${s.isActive === false ? 'bg-danger text-on-danger' : 'bg-success text-on-success'}`}>
                 {s.isActive === false ? 'Inactive' : 'Active'}
               </span>
             </div>

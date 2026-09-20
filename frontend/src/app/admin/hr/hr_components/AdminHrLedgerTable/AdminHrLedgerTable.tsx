@@ -96,7 +96,7 @@ export default function AdminHrLedgerTable() {
                 sortedLedger.map((entry) => (
                   <tr key={entry.id} className="hover:bg-surface-hover motion-safe:transition-colors motion-safe:duration-base">
                     <td className="p-4 text-primary whitespace-nowrap">{new Date(entry.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
-                    <td className="p-4"><span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${entry.type.includes('Advance') ? 'bg-danger text-danger' : entry.type.includes('Salary Generated') ? 'bg-info text-info' : entry.type.includes('Due') ? 'bg-warning text-warning' : 'bg-success text-success'}`}>{entry.type}</span></td>
+                    <td className="p-4"><span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${entry.type.includes('Advance') ? 'bg-danger text-on-danger' : entry.type.includes('Salary Generated') ? 'bg-info text-on-info' : entry.type.includes('Due') ? 'bg-warning text-on-primary' : 'bg-success text-on-success'}`}>{entry.type}</span></td>
                     <td className="p-4 text-secondary max-w-48 truncate" title={entry.notes}>{displayValue(entry.notes)}</td>
                     <td className="p-4 text-success text-right">{entry.credit ? formatMoney(entry.credit) : '—'}</td>
                     <td className="p-4 text-danger text-right">{entry.debit ? formatMoney(entry.debit) : '—'}</td>

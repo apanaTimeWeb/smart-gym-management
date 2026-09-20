@@ -35,7 +35,7 @@ export default function TrainerAttendanceToolbar({
             onClick={() => setTab(t)}
             className={`px-5 py-3.5 text-sm font-medium motion-safe:transition-colors border-b-2 ${
               tab === t
-                ? 'text-primary bg-primary-subtle border-primary'
+                ? 'text-on-primary bg-primary-subtle border-primary'
                 : 'border-transparent text-secondary hover:text-primary'
             }`}
           >
@@ -111,7 +111,7 @@ export default function TrainerAttendanceToolbar({
             <button type="button"
               onClick={onSelfCheckOut}
               disabled={selfCheckOutPending}
-              className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page flex items-center gap-2 px-3 py-2 text-sm bg-warning text-on-success rounded-lg hover:opacity-90 disabled:opacity-70 motion-safe:transition-opacity"
+              className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page flex items-center gap-2 px-3 py-2 text-sm bg-warning text-on-primary rounded-lg hover:opacity-90 disabled:opacity-70 motion-safe:transition-opacity"
             >
               {selfCheckOutPending ? <Loader2 size={14} className="motion-safe:animate-spin" /> : <LogOut size={14} />}
               Check Out

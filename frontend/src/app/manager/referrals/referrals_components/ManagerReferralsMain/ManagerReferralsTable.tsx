@@ -96,7 +96,7 @@ export default function ManagerReferralsTable() {
                     <td className="px-6 py-4">
                       <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${
                         ref.status === 'JOINED' ? 'bg-success/10 text-success' :
-                        ref.status === 'REJECTED' ? 'bg-danger text-danger' :
+                        ref.status === 'REJECTED' ? 'bg-danger text-on-danger' :
                         'bg-warning/10 text-warning'
                       }`}>
                         {ref.status}

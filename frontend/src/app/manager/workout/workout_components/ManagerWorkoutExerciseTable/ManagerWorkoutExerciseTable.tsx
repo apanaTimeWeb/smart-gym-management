@@ -75,10 +75,10 @@ export default function ManagerWorkoutExerciseTable() {
                 <td className="px-4 py-3">
                   <span className={`text-xs px-2.5 py-0.5 rounded-full font-semibold ${
                     ex.difficulty === 'Beginner' 
-                    ? 'bg-success text-success dark:bg-success dark:text-success' 
+                    ? 'bg-success text-on-success dark:bg-success dark:text-success' 
                     : ex.difficulty === 'Intermediate' 
-                    ? 'bg-warning text-warning dark:bg-warning dark:text-warning' 
-                    : 'bg-danger text-danger dark:bg-danger dark:text-danger'
+                    ? 'bg-warning text-on-primary dark:bg-warning dark:text-warning' 
+                    : 'bg-danger text-on-danger dark:bg-danger dark:text-danger'
                   }`}>
                     {ex.difficulty}
                   </span>

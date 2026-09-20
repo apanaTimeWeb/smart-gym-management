@@ -15,16 +15,16 @@ import type { AnnouncementStatus, AnnouncementPriority } from '@/app/admin/annou
 import AdminAnnouncementsEmptyState from '@/app/admin/announcements/announcements_components/AdminAnnouncementsEmptyState/AdminAnnouncementsEmptyState';
 
 const STATUS_STYLES: Record<AnnouncementStatus, string> = {
-  active:    'bg-success text-success border-success',
-  scheduled: 'bg-info text-info border-info',
-  expired:   'bg-danger text-danger border-danger',
+  active:    'bg-success text-on-success border-success',
+  scheduled: 'bg-info text-on-info border-info',
+  expired:   'bg-danger text-on-danger border-danger',
   draft:     'bg-input text-secondary border-border',
 };
 
 const PRIORITY_STYLES: Record<AnnouncementPriority, string> = {
-  high:   'bg-danger text-danger',
-  medium: 'bg-warning text-warning',
-  low:    'bg-success text-success',
+  high:   'bg-danger text-on-danger',
+  medium: 'bg-warning text-on-primary',
+  low:    'bg-success text-on-success',
 };
 
 export default function AdminAnnouncementsTable() {

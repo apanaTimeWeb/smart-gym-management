@@ -57,7 +57,7 @@ export default function AdminPermissionsToolbar() {
           </button>
         ))}
         {selectedGymId !== 'default' && (
-          <span className="text-xs text-warning bg-warning px-2 py-1 rounded-lg border border-border">
+          <span className="text-xs text-on-primary bg-warning px-2 py-1 rounded-lg border border-border">
             Overrides defaults for this gym only
           </span>
         )}

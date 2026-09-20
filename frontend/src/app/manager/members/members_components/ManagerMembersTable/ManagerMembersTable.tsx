@@ -180,9 +180,9 @@ export default function ManagerMembersTable() {
                         <button onClick={(e) => { e.stopPropagation(); openMsg(m, 'whatsapp'); }} className="p-1.5 rounded-lg bg-success text-on-success hover:opacity-80 motion-safe:transition-all motion-safe:duration-200" title="WhatsApp" aria-label={`Message ${m.name} on WhatsApp`}><MessageCircle size={18} /></button>
                         <button onClick={(e) => { e.stopPropagation(); openMsg(m, 'email'); }} className="p-1.5 rounded-lg bg-info text-on-info hover:opacity-80 motion-safe:transition-all motion-safe:duration-200" title="Email" aria-label={`Email ${m.name}`}><Mail size={18} /></button>
                         {m.status !== 'SUSPENDED' && m.pendingAmount > 0 ? (
-                          <button onClick={(e) => { e.stopPropagation(); setSelectedMember(m); toggleSuspend(true); }} className="p-1.5 rounded-lg bg-danger text-danger hover:bg-danger/20 motion-safe:transition-all motion-safe:duration-200" title="Suspend Member" aria-label={`Suspend ${m.name}`}><Ban size={18} /></button>
+                          <button onClick={(e) => { e.stopPropagation(); setSelectedMember(m); toggleSuspend(true); }} className="p-1.5 rounded-lg bg-danger text-on-danger hover:bg-danger/20 motion-safe:transition-all motion-safe:duration-200" title="Suspend Member" aria-label={`Suspend ${m.name}`}><Ban size={18} /></button>
                         ) : m.status === 'SUSPENDED' ? (
-                          <button onClick={(e) => { e.stopPropagation(); setSelectedMember(m); toggleSuspend(false); }} className="p-1.5 rounded-lg bg-success text-success hover:bg-success/20 motion-safe:transition-all motion-safe:duration-200" title="Unsuspend Member" aria-label={`Unsuspend ${m.name}`}><Ban size={18} /></button>
+                          <button onClick={(e) => { e.stopPropagation(); setSelectedMember(m); toggleSuspend(false); }} className="p-1.5 rounded-lg bg-success text-on-success hover:bg-success/20 motion-safe:transition-all motion-safe:duration-200" title="Unsuspend Member" aria-label={`Unsuspend ${m.name}`}><Ban size={18} /></button>
                         ) : null}
                         <button
                           onClick={async (e) => { 
@@ -194,7 +194,7 @@ export default function ManagerMembersTable() {
                               type: 'danger' });
                             if (confirmed) deleteMember(m.id);
                           }}
-                          className="p-1.5 rounded-lg bg-danger text-danger hover:opacity-80 motion-safe:transition-all motion-safe:duration-200"
+                          className="p-1.5 rounded-lg bg-danger text-on-danger hover:opacity-80 motion-safe:transition-all motion-safe:duration-200"
                           title="Delete"
                           aria-label={`Delete ${m.name}`}
                         >

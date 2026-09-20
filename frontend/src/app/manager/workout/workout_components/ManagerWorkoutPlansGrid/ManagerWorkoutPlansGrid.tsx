@@ -47,10 +47,10 @@ export default function ManagerWorkoutPlansGrid() {
               <div className="flex items-center gap-1">
                 <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
                   w.level === 'Beginner' 
-                    ? 'bg-success text-success dark:bg-success dark:text-success' 
+                    ? 'bg-success text-on-success dark:bg-success dark:text-success' 
                     : w.level === 'Intermediate' 
-                    ? 'bg-warning text-warning dark:bg-warning dark:text-warning' 
-                    : 'bg-danger text-danger dark:bg-danger dark:text-danger'
+                    ? 'bg-warning text-on-primary dark:bg-warning dark:text-warning' 
+                    : 'bg-danger text-on-danger dark:bg-danger dark:text-danger'
                 }`}>
                   {w.level}
                 </span>

@@ -14,7 +14,7 @@ export default function ManagerSalesTabs() {
  onClick={() => setTab(t)}
  className={`px-5 py-3.5 text-sm font-medium motion-safe:transition-colors border-b-2 whitespace-nowrap ${
  tab === t 
- ? 'text-primary bg-primary/5 border-primary' 
+ ? 'text-on-primary bg-primary/5 border-primary' 
  : 'border-transparent text-secondary hover:text-primary'
  }`}
  >

@@ -35,7 +35,7 @@ export default function ManagerAttendanceToolbar() {
  onClick={() => setTab(t)}
  className={`whitespace-nowrap px-5 py-3.5 text-sm font-medium motion-safe:transition-colors border-b-2 ${
  tab === t 
- ? 'text-primary bg-primary-subtle border-primary' 
+ ? 'text-on-primary bg-primary-subtle border-primary' 
  : 'border-transparent text-secondary hover:text-primary'
  }`}
  >

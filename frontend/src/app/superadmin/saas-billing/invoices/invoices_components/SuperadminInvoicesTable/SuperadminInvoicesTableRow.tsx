@@ -10,10 +10,10 @@ import type { SaaSInvoice } from '@/app/superadmin/saas-billing/invoices/invoice
 import { formatCurrency, formatDate } from '@/lib/formatters';
 import type { SuperadminInvoicesTableRowProps } from '@/app/superadmin/saas-billing/invoices/invoices_types/SuperadminInvoicesTableRowTypes';
 const STATUS_COLORS: Record<SaaSInvoice['status'], string> = {
-    PAID: 'text-success bg-success/10',
-    PENDING: 'text-warning bg-warning/10',
-    FAILED: 'text-danger bg-danger-bg/10',
-    OVERDUE: 'text-danger bg-danger-bg/10',
+    PAID: 'text-on-success bg-success/10',
+    PENDING: 'text-on-primary bg-warning/10',
+    FAILED: 'text-on-danger bg-danger-bg/10',
+    OVERDUE: 'text-on-danger bg-danger-bg/10',
 };
 
 export default function SuperadminInvoicesTableRow({ invoice: inv }: SuperadminInvoicesTableRowProps) {

@@ -7,9 +7,9 @@ import type { AuditLog } from '@/app/admin/audit_logs/audit_types/AdminAuditType
 import { useAdminAuditLogsLogic } from '@/app/admin/audit_logs/audit_context/useAdminAuditLogsLogic';
 
 const SEVERITY_STYLES: Record<string, string> = {
-  high:   'bg-danger text-danger border-danger',
-  medium: 'bg-warning text-warning border-warning',
-  low:    'bg-success text-success border-success',
+  high:   'bg-danger text-on-danger border-danger',
+  medium: 'bg-warning text-on-primary border-warning',
+  low:    'bg-success text-on-success border-success',
 };
 
 import type { AdminAuditLogsDetailDrawerProps } from '@/app/admin/audit_logs/audit_logs_types/AdminAuditLogsDetailDrawerPropsTypes';

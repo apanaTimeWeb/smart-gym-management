@@ -25,7 +25,7 @@ export default function AdminUsagePlanCard({ planTiers, onRequestUpgrade, pendin
             <div key={plan.name} className={`rounded-xl border p-4 space-y-3 motion-safe:transition-all motion-safe:duration-base ${plan.isCurrent ? 'border-primary bg-primary-subtle' : 'border-border bg-input hover:border-focus'}`}>
               <div className="flex items-center justify-between">
                 <p className="text-sm font-bold text-primary">{plan.name}</p>
-                {plan.isCurrent && <span className="text-xs font-bold text-primary bg-primary-subtle px-2 py-0.5 rounded-full">Current</span>}
+                {plan.isCurrent && <span className="text-xs font-bold text-on-primary bg-primary-subtle px-2 py-0.5 rounded-full">Current</span>}
               </div>
               <p className="text-xl font-bold text-primary">{plan.price === 0 ? 'Custom' : `${formatCurrency(plan.price)}/mo`}</p>
               <ul className="space-y-1.5">

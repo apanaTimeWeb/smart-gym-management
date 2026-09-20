@@ -115,7 +115,7 @@ export default function SuperadminFeaturesClient() {
                   
                   {!flag.isGlobalEnabled && (<div className="mt-3 flex items-center gap-4">
                       {flag.enabledTenantIds.length > 0 && (<div className="flex items-center gap-2">
-                          <span className="text-xs font-bold text-warning bg-warning/10 px-2 py-0.5 rounded">BETA OVERRIDE</span>
+                          <span className="text-xs font-bold text-on-primary bg-warning/10 px-2 py-0.5 rounded">BETA OVERRIDE</span>
                           <span className="text-xs text-secondary">Enabled for {flag.enabledTenantIds.length} specific gyms</span>
                         </div>)}
                       <button onClick={() => setRolloutFlag(flag)} className="text-xs flex items-center gap-1.5 text-primary hover:text-primary-hover font-semibold motion-safe:transition-colors">

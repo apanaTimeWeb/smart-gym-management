@@ -19,7 +19,7 @@ export default function AdminSubscriptionsPlanCard({ plan, onUpgrade, upgrading 
       )}
       {plan.isCurrent && (
         <div className="absolute top-3 right-3">
-          <span className="px-2 py-0.5 bg-success text-success text-xs font-bold rounded-full border border-success">Current</span>
+          <span className="px-2 py-0.5 bg-success text-on-success text-xs font-bold rounded-full border border-success">Current</span>
         </div>
       )}
 

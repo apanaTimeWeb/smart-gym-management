@@ -129,7 +129,7 @@ export default function TrainerMembersProfileAttendance() {
                 label = 'Absent';
               } else if (status === 'L') {
                 statusStyle = 'bg-warning-bg text-warning border-warning/30 hover:border-warning/60';
-                badgeStyle = 'bg-warning text-white';
+                badgeStyle = 'bg-warning text-on-primary';
                 label = 'Rest';
               }
             }

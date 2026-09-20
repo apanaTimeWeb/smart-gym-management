@@ -12,7 +12,7 @@ import type { PayoutSortKey } from '@/app/admin/payouts/payouts_types/AdminPayou
 import AdminPayoutsSummaryTableSortIcon from '@/app/admin/payouts/payouts_components/AdminPayoutsSummaryTable/AdminPayoutsSummaryTableSortIcon';
 import AdminPayoutsEmptyState from '@/app/admin/payouts/payouts_components/AdminPayoutsEmptyState/AdminPayoutsEmptyState';
 
-const STATUS_STYLES: Record<string, string> = { paid: 'bg-success text-success', pending: 'bg-warning text-warning', processing: 'bg-info text-info' };
+const STATUS_STYLES: Record<string, string> = { paid: 'bg-success text-on-success', pending: 'bg-warning text-on-primary', processing: 'bg-info text-on-info' };
 const HEADERS: ReadonlyArray<{ key: PayoutSortKey; label: string }> = [
   { key: 'gymName', label: 'Gym' }, { key: 'month', label: 'Month' }, { key: 'grossRevenue', label: 'Gross Revenue' }, { key: 'staffPayroll', label: 'Payroll' },
   { key: 'operationalExpenses', label: 'Expenses' }, { key: 'platformFee', label: 'Platform Fee' }, { key: 'netProfit', label: 'Net Profit' }, { key: 'payoutStatus', label: 'Status' },

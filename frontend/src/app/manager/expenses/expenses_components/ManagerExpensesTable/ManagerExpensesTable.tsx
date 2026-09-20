@@ -96,7 +96,7 @@ export default function ManagerExpensesTable() {
                               confirmText: 'Delete'
                             });
                             if (ok) deleteExpense(e.id); 
-                          }} className="p-1.5 rounded-lg bg-danger text-danger hover:opacity-80 motion-safe:transition-all motion-safe:duration-200" title="Delete"><Trash2 size={18} /></button>
+                          }} className="p-1.5 rounded-lg bg-danger text-on-danger hover:opacity-80 motion-safe:transition-all motion-safe:duration-200" title="Delete"><Trash2 size={18} /></button>
                         </div>
                       </td>
                     </tr>

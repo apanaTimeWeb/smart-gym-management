@@ -37,7 +37,7 @@ export function AdminSettingsRoles() {
               </div>
               <div className="flex flex-wrap gap-2">
                 {Object.entries(role.permissions).map(([permission, enabled]) => (
-                  <span key={permission} className={`px-2 py-1 text-xs font-medium uppercase tracking-wider rounded-full border ${enabled ? 'bg-success text-success border-border' : 'bg-input text-secondary border-border'}`}>
+                  <span key={permission} className={`px-2 py-1 text-xs font-medium uppercase tracking-wider rounded-full border ${enabled ? 'bg-success text-on-success border-border' : 'bg-input text-secondary border-border'}`}>
                     {permission.replaceAll('_', ' ')}
                   </span>
                 ))}

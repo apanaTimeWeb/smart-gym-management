@@ -42,7 +42,7 @@ export default function AdminBlacklistTable() {
                   <p className="text-sm text-primary line-clamp-2">{m.reason}</p>
                 </td>
                 <td className="px-4 py-3">
-                  <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${m.scope === 'global' ? 'bg-danger text-danger' : 'bg-warning text-warning'}`}>
+                  <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${m.scope === 'global' ? 'bg-danger text-on-danger' : 'bg-warning text-on-primary'}`}>
                     {m.scope === 'global' ? <Globe size={11} /> : <Building2 size={11} />}
                     {m.scope === 'global' ? 'Global' : m.assignedGymNames.join(', ')}
                   </span>
@@ -50,7 +50,7 @@ export default function AdminBlacklistTable() {
                 <td className="px-4 py-3 text-sm text-secondary">{m.blacklistedBy}</td>
                 <td className="px-4 py-3 text-sm text-secondary whitespace-nowrap">{m.blacklistedAt}</td>
                 <td className="px-4 py-3">
-                  <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${m.isActive ? 'bg-danger text-danger' : 'bg-input text-secondary'}`}>
+                  <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${m.isActive ? 'bg-danger text-on-danger' : 'bg-input text-secondary'}`}>
                     {m.isActive ? 'Active' : 'Inactive'}
                   </span>
                 </td>

@@ -14,9 +14,9 @@ export default function ManagerMaintenanceMain() {
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case 'HIGH': return 'text-danger bg-danger/10 border-danger/20';
-      case 'MEDIUM': return 'text-warning bg-warning/10 border-warning/20';
-      default: return 'text-success bg-success/10 border-success/20';
+      case 'HIGH': return 'text-on-danger bg-danger/10 border-danger/20';
+      case 'MEDIUM': return 'text-on-primary bg-warning/10 border-warning/20';
+      default: return 'text-on-success bg-success/10 border-success/20';
     }
   };
 

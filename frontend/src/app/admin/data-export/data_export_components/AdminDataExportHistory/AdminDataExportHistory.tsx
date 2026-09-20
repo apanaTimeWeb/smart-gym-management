@@ -11,7 +11,7 @@ import { EXPORT_STATUS_OPTIONS } from '@/app/admin/data-export/data_export_utils
 import type { DataExportSortDirection, DataExportSortKey, ExportJob, ExportStatus } from '@/app/admin/data-export/data_export_types/AdminDataExportTypes';
 import AdminDataExportEmptyState from '@/app/admin/data-export/data_export_components/AdminDataExportEmptyState/AdminDataExportEmptyState';
 
-const STATUS_STYLES: Record<string, string> = { completed: 'bg-success text-success', processing: 'bg-warning text-warning', failed: 'bg-danger text-danger' };
+const STATUS_STYLES: Record<string, string> = { completed: 'bg-success text-on-success', processing: 'bg-warning text-on-primary', failed: 'bg-danger text-on-danger' };
 const STATUS_ICONS: Record<string, React.ReactNode> = { completed: <CheckCircle size={11} />, processing: <Loader2 size={11} className="motion-safe:animate-spin motion-safe:duration-base" />, failed: <XCircle size={11} /> };
 const DATA_TYPE_LABELS: Record<string, string> = { members: 'Members', payments: 'Payments', attendance: 'Attendance', staff: 'Staff', full_report: 'Full Report' };
 const HEADERS: ReadonlyArray<{ key: DataExportSortKey | 'actions'; label: string; sortable: boolean }> = [

@@ -121,7 +121,7 @@ export default function ManagerInquiriesTable() {
                   </td>
                   <td className="px-5 py-3.5">
                     <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm bg-warning text-warning">
+                      <div className="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm bg-warning text-on-primary">
                         {displayValue(inq.name).charAt(0)}
                       </div>
                       <p className="text-sm font-semibold text-primary">{displayValue(inq.name)}</p>
@@ -191,7 +191,7 @@ export default function ManagerInquiriesTable() {
                             deleteInquiry(inq.id);
                           }
                         }}
-                        className="p-1.5 rounded-lg bg-danger text-danger hover:opacity-80 motion-safe:transition-all motion-safe:duration-200"
+                        className="p-1.5 rounded-lg bg-danger text-on-danger hover:opacity-80 motion-safe:transition-all motion-safe:duration-200"
                         title="Delete"
                         aria-label={`Delete ${inq.name}`}
                       >

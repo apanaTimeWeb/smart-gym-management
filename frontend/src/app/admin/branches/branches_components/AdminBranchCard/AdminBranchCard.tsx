@@ -59,7 +59,7 @@ export default function AdminBranchCard() {
           </div>
           <div className="mt-5 border-t border-border pt-4 space-y-3">
             <div className="flex items-center justify-between">
-              <span className={`text-xs font-bold px-2 py-1 rounded-md uppercase tracking-wider ${branch.status === "active" ? "bg-success text-success" : "bg-input text-secondary"}`}>{branch.status}</span>
+              <span className={`text-xs font-bold px-2 py-1 rounded-md uppercase tracking-wider ${branch.status === "active" ? "bg-success text-on-success" : "bg-input text-secondary"}`}>{branch.status}</span>
               <span className="text-xs text-secondary font-medium">ID: {branch.id.toUpperCase()}</span>
             </div>
             <button

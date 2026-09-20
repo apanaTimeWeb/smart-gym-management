@@ -81,7 +81,7 @@ export default function AdminBlacklistModal() {
             <div className="flex gap-3">
               {(['global', 'specific'] as const).map(s => (
                 <button key={s} type="button" onClick={() => setValue('scope', s)}
-                  className={`flex-1 py-2 rounded-lg text-sm font-medium border motion-safe:transition-all capitalize ${scope === s ? 'bg-danger text-danger border-danger' : 'bg-input text-secondary border-border hover:border-danger'}`}>
+                  className={`flex-1 py-2 rounded-lg text-sm font-medium border motion-safe:transition-all capitalize ${scope === s ? 'bg-danger text-on-danger border-danger' : 'bg-input text-secondary border-border hover:border-danger'}`}>
                   {s === 'global' ? 'Global (All Gyms)' : 'Specific Gyms'}
                 </button>
               ))}
@@ -95,7 +95,7 @@ export default function AdminBlacklistModal() {
                   const isSelected = selectedGyms.includes(opt.value);
                   return (
                     <button key={opt.value} type="button" onClick={() => toggleGym(opt.value)}
-                      className={`px-3 py-1.5 rounded-lg text-sm font-medium border motion-safe:transition-all ${isSelected ? 'bg-danger text-danger border-danger' : 'bg-input text-secondary border-border hover:border-danger'}`}>
+                      className={`px-3 py-1.5 rounded-lg text-sm font-medium border motion-safe:transition-all ${isSelected ? 'bg-danger text-on-danger border-danger' : 'bg-input text-secondary border-border hover:border-danger'}`}>
                       {opt.label}
                     </button>
                   );

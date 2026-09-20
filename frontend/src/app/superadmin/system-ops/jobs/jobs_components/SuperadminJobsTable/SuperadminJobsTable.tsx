@@ -8,10 +8,10 @@ import { formatDuration, formatDateTime } from '@/lib/formatters';
 import type { SuperadminJobsTableProps } from '@/app/superadmin/system-ops/jobs/jobs_types/SuperadminJobsTableTypes';
 /** Maps BackgroundJob status → TailwindCSS color classes */
 const STATUS_STYLES: Record<BackgroundJob['status'], string> = {
-    ACTIVE: 'text-primary bg-primary/10',
-    COMPLETED: 'text-success bg-success/10',
-    FAILED: 'text-danger bg-danger-bg/10',
-    DELAYED: 'text-warning bg-warning/10',
+    ACTIVE: 'text-on-primary bg-primary/10',
+    COMPLETED: 'text-on-success bg-success/10',
+    FAILED: 'text-on-danger bg-danger-bg/10',
+    DELAYED: 'text-on-primary bg-warning/10',
     CANCELLED: 'text-secondary bg-surface-highlight',
 };
 

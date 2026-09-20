@@ -9,9 +9,9 @@ import type { AlertSeverity, AlertType } from '@/app/admin/gym-health-alerts/gym
 import AdminGymHealthAlertsEmptyState from '@/app/admin/gym-health-alerts/gym_health_alerts_components/AdminGymHealthAlertsEmptyState/AdminGymHealthAlertsEmptyState';
 
 const SEVERITY_STYLES: Record<AlertSeverity, string> = {
-  critical: 'bg-danger text-danger',
-  warning: 'bg-warning text-warning',
-  info: 'bg-info text-info',
+  critical: 'bg-danger text-on-danger',
+  warning: 'bg-warning text-on-primary',
+  info: 'bg-info text-on-info',
 };
 
 const TYPE_LABELS: Record<AlertType, string> = {
@@ -71,11 +71,11 @@ export default function AdminGymHealthAlertsTable() {
                 </td>
                 <td className="px-4 py-3">
                   {alert.isResolved ? (
-                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-success text-success">
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-success text-on-success">
                       <CheckCircle size={11} /> Resolved
                     </span>
                   ) : (
-                    <span className="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold bg-danger text-danger">Active</span>
+                    <span className="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold bg-danger text-on-danger">Active</span>
                   )}
                 </td>
                 <td className="px-4 py-3">

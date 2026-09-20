@@ -13,9 +13,9 @@ import type { AuditLog } from '@/app/admin/audit_logs/audit_types/AdminAuditType
 import AdminAuditLogsEmptyState from '@/app/admin/audit_logs/audit_components/AdminAuditLogsEmptyState/AdminAuditLogsEmptyState';
 
 const SEVERITY_STYLES: Record<string, string> = {
-  high:   'bg-danger text-danger border border-danger',
-  medium: 'bg-warning text-warning border border-warning',
-  low:    'bg-success text-success border border-success',
+  high:   'bg-danger text-on-danger border border-danger',
+  medium: 'bg-warning text-on-primary border border-warning',
+  low:    'bg-success text-on-success border border-success',
 };
 
 function getActionIcon(action: string) {

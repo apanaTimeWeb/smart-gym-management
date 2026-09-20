@@ -37,7 +37,7 @@ export default function ManagerMemberProfile() {
         <div className="bg-card rounded-xl shadow-card border border-border p-6">
           <div className="flex flex-wrap items-center justify-between gap-5 mb-6">
             <div className="flex items-center gap-5">
-              <div className="w-20 h-20 rounded-full flex items-center justify-center text-3xl font-bold text-primary bg-primary-subtle shrink-0">
+              <div className="w-20 h-20 rounded-full flex items-center justify-center text-3xl font-bold text-on-primary bg-primary-subtle shrink-0">
                 {(selectedMember.name || '?').charAt(0).toUpperCase()}
               </div>
               <div>
@@ -47,7 +47,7 @@ export default function ManagerMemberProfile() {
                   <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${statusStyle.bg} ${statusStyle.text}`}>
                     {selectedMember.status}
                   </span>
-                  <span className="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold bg-info text-info">
+                  <span className="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold bg-info text-on-info">
                     {selectedMember.plan?.name || ''}
                   </span>
                   <span className="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-bg text-purple">
@@ -112,7 +112,7 @@ export default function ManagerMemberProfile() {
                 key={t}
                 onClick={() => { setProfileTab(t as any); }}
                 className={`px-5 py-3.5 text-sm font-medium motion-safe:transition-all motion-safe:duration-200 border-b-2 ${profileTab === t
-                    ? 'text-primary bg-primary-subtle border-primary'
+                    ? 'text-on-primary bg-primary-subtle border-primary'
                     : 'border-transparent text-secondary hover:text-primary'
                   }`}
               >

@@ -94,7 +94,7 @@ export default function ManagerCommunicationsHistory() {
                       </td>
                       <td className="px-4 py-3">
                         <span
-                          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold text-on-success ${isWA ? 'bg-success' : 'bg-info text-info'}`}
+                          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold text-on-success ${isWA ? 'bg-success' : 'bg-info text-on-info'}`}
                         >
                           {isWA ? <MessageCircle size={18} /> : <Mail size={18} />}
                           {isWA ? 'WhatsApp' : 'Email'}
