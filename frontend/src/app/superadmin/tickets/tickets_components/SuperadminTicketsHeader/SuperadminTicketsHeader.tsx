@@ -15,7 +15,7 @@ export default function SuperadminTicketsHeader({ search, setSearch, showFilter,
 
       <div className="p-4 border-b border-border flex gap-4">
         <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary"/>
+          <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary"/>
           <input type="text" placeholder="Search tickets or gyms..." className="w-full pl-9 pr-4 py-2 bg-input border border-border rounded-lg text-sm text-primary focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page focus:border-primary" value={search} onChange={(e) => {
             setSearch(e.target.value);
             onFilterChange();
@@ -23,7 +23,7 @@ export default function SuperadminTicketsHeader({ search, setSearch, showFilter,
         </div>
         <div className="relative">
           <button onClick={() => setShowFilter(!showFilter)} className="flex items-center gap-2 px-4 py-2 bg-input border border-border rounded-lg text-sm font-medium text-secondary hover:text-primary motion-safe:transition-colors">
-            <Filter className="w-4 h-4"/> Filter
+            <Filter size={18} className="w-4"/> Filter
           </button>
           {showFilter && (<div className="absolute right-0 top-full mt-2  w-full sm:w-64  bg-card border border-border rounded-xl shadow-card p-4 z-10 flex flex-col gap-4">
               <div className="flex flex-col gap-2">

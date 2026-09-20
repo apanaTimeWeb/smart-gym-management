@@ -1,6 +1,8 @@
+// DATA FLOW: Inputs enter useSuperadminMessagingV1WhatsAppCampaign, flow through its feature-owned state/API dependencies, and return typed UI state/actions to the owning Superadmin feature.
 // RESPONSIBILITY: Owns WhatsApp campaign creation mutation for the Superadmin tenant-contact center.
 'use client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useRef } from 'react';
 import { createWhatsAppCampaign } from '@/app/superadmin/messaging/messaging_whatsapp_api/SuperadminMessagingWhatsappApi';
 import { SuperadminWhatsAppCreateCampaignPayloadSchema } from '@/app/superadmin/messaging/messaging_whatsapp_types/SuperadminMessagingV1WhatsAppTypes';
 /**
@@ -12,6 +14,7 @@ import { SuperadminWhatsAppCreateCampaignPayloadSchema } from '@/app/superadmin/
  */
 export function useSuperadminMessagingV1WhatsAppCampaign() {
   const queryClient = useQueryClient();
+  const idempotencyKeyRef = useRef<string | null>(null);
   const mutation = useMutation({
     mutationFn: async ({ payload, idempotencyKey }: { payload: unknown; idempotencyKey: string }) => {
       const validated = SuperadminWhatsAppCreateCampaignPayloadSchema.parse(payload);
@@ -19,8 +22,13 @@ export function useSuperadminMessagingV1WhatsAppCampaign() {
     },
     onSuccess: async (response) => {
       if (!response.success || !response.data) throw new Error(response.message);
+      idempotencyKeyRef.current = null;
       await queryClient.invalidateQueries({ queryKey: ['superadmin', 'messaging', 'whatsapp-bulk-center'] });
     },
   });
-  return { createCampaign: (payload: unknown) => mutation.mutateAsync({ payload, idempotencyKey: crypto.randomUUID() }), isCreating: mutation.isPending, error: mutation.error };
+  const createCampaign = (payload: unknown) => {
+    idempotencyKeyRef.current ??= crypto.randomUUID();
+    return mutation.mutateAsync({ payload, idempotencyKey: idempotencyKeyRef.current });
+  };
+  return { createCampaign, isCreating: mutation.isPending, error: mutation.error };
 }

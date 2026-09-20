@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Manage Superadmin gym tenant impersonation and suspension mutations, confirmations, cache invalidation, and feedback.
 // DATA FLOW: Superadmin UI → useSuperadminGymMutations → Superadmin module API/state → consuming component
+// RESPONSIBILITY: Manage Superadmin gym tenant impersonation and suspension mutations, confirmations, cache invalidation, and feedback.
 'use client';
 import type { MouseEvent } from 'react';
 // DATA FLOW: feature API/schema → hook/context → useSuperadminGymMutations consumers.

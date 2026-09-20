@@ -37,7 +37,7 @@ export default function SuperadminTicketsReplyModal({ isOpen, onClose, ticketId 
   };
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 backdrop-blur-sm p-4" role="dialog" aria-modal="true" aria-labelledby="superadmin-ticket-reply-title">
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay backdrop-blur-sm p-4" role="dialog" aria-modal="true" aria-labelledby="superadmin-ticket-reply-title">
       <div className="bg-overlay border border-border w-full max-w-lg rounded-xl shadow-dialog p-6 relative">
         <h2 id="superadmin-ticket-reply-title" className="text-lg font-bold text-primary mb-1">Reply to Ticket #{ticketId}</h2>
         <p className="text-sm text-secondary mb-4">Send a tenant-facing response through the ticket conversation.</p>
@@ -50,7 +50,7 @@ export default function SuperadminTicketsReplyModal({ isOpen, onClose, ticketId 
           <div className="flex gap-3 justify-end pt-4 border-t border-border">
             <button type="button" onClick={handleClose} disabled={isSending} className="px-4 py-2 rounded-md font-medium border border-border text-primary hover:bg-surface-hover motion-safe:transition-all motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">Cancel</button>
             <button type="submit" disabled={isSending || !isDirty} className="px-4 py-2 rounded-md font-medium bg-primary text-on-primary hover:bg-primary-hover motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95 disabled:opacity-50 flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
-              {isSending ? <><Loader2 size={18} strokeWidth={2} className="motion-safe:animate-spin" />Sending...</> : <><Send size={18} strokeWidth={2} />Send Reply</>}
+              {isSending ? <><Loader2 size={18} strokeWidth={2} className="motion-safe:animate-spin"/>Sending...</> : <><Send size={18} strokeWidth={2}/>Send Reply</>}
             </button>
           </div>
         </form>

@@ -10,6 +10,7 @@ import { CouponSchema } from '@/app/superadmin/saas-billing/coupons/coupons_type
 import type { CouponFormData, Coupon } from '@/app/superadmin/saas-billing/coupons/coupons_types/SuperadminCouponsTypes';
 import type { SuperadminCouponEditModalProps } from '@/app/superadmin/saas-billing/coupons/coupons_types/SuperadminCouponEditModalTypes';
 import { useUnsavedChangesGuard } from '@/hooks/useUnsavedChangesGuard';
+import { formatSuperadminCouponDateForInput } from '@/app/superadmin/saas-billing/coupons/coupons_utils/SuperadminCouponsDateUtils';
 export const SuperadminCouponEditModal: React.FC<SuperadminCouponEditModalProps> = ({ isOpen, onClose, onSubmit, coupon, }) => {
     const { register, handleSubmit, watch, control, formState: { errors, isDirty }, reset } = useForm<CouponFormData>({
         resolver: zodResolver(CouponSchema),
@@ -26,7 +27,7 @@ export const SuperadminCouponEditModal: React.FC<SuperadminCouponEditModalProps>
                 discountType: coupon.discountType,
                 discountValue: coupon.discountValue,
                 maxUses: coupon.maxUses,
-                expiryDate: new Date(coupon.expiryDate).toISOString().split('T')[0],
+                expiryDate: formatSuperadminCouponDateForInput(coupon.expiryDate),
             });
         }
     }, [isOpen, coupon, reset]);
@@ -37,7 +38,7 @@ export const SuperadminCouponEditModal: React.FC<SuperadminCouponEditModalProps>
             onSubmit(coupon.id, data);
         }
     };
-    return (<div className="fixed inset-0 bg-overlay/80 z-40 flex items-center justify-center p-4 backdrop-blur-sm" role="dialog" aria-modal="true">
+    return (<div className="fixed inset-0 bg-overlay z-40 flex items-center justify-center p-4 backdrop-blur-sm" role="dialog" aria-modal="true">
       <div className="bg-overlay border border-border rounded-2xl w-full max-w-md shadow-dialog overflow-hidden flex flex-col">
         <div className="flex items-center justify-between px-7 py-5 border-b border-border">
           <h2 className="text-lg font-bold text-primary">Edit Coupon</h2>
@@ -56,7 +57,7 @@ export const SuperadminCouponEditModal: React.FC<SuperadminCouponEditModalProps>
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-1.5">
               <label className="text-sm font-bold text-secondary">Discount Type <span className="text-danger">*</span></label>
-              <Controller name="discountType" control={control} render={({ field }) => (<SearchableDropdown value={field.value || ''} onChange={field.onChange} options={SUPERADMIN_COUPON_DISCOUNT_TYPE_OPTIONS}/>)}/>
+              <Controller name="discountType" control={control} render={({ field }) => (<SearchableDropdown value={field.value || ''} onChange={field.onChange} options={SUPERADMIN_COUPON_DISCOUNT_TYPE_OPTIONS as any}/>)}/>
               {errors.discountType && <span className="text-xs text-danger">{errors.discountType.message}</span>}
             </div>
 

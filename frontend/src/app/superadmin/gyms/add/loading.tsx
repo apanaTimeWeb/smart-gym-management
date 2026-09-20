@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Framework route artifact for gyms/add.
 export default function SuperadminAddGymLoading() {
     return (
         <main className="space-y-5 p-6" aria-busy="true">

@@ -1,5 +1,6 @@
 // RESPONSIBILITY: Renders the Global Audit Logs dashboard for superadmins to monitor system-wide security events.
 'use client';
+import { getSuperadminGlobalAuditExportDate, serializeSuperadminGlobalAuditTimestamp } from '@/app/superadmin/global-audit/global-audit_utils/SuperadminGlobalAuditExportUtils';
 import { formatDate, formatDateTime } from '@/lib/formatters';
 import { useState } from 'react';
 import type { AuditLog } from '@/app/superadmin/global-audit/global-audit_types/SuperadminGlobalAuditTypes';
@@ -38,11 +39,11 @@ export default function SuperadminGlobalAuditClient() {
     const getSeverityBadge = (severity: AuditLog['severity']) => {
         switch (severity) {
             case 'CRITICAL':
-                return <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-xs font-bold bg-danger text-on-danger tracking-wider"><ShieldAlert className="w-3 h-3"/> CRITICAL</span>;
+                return <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-xs font-bold bg-danger text-on-danger tracking-wider"><ShieldAlert size={18} className="w-3"/> CRITICAL</span>;
             case 'WARNING':
-                return <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-xs font-bold bg-warning text-on-primary tracking-wider"><AlertTriangle className="w-3 h-3"/> WARNING</span>;
+                return <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-xs font-bold bg-warning text-on-primary tracking-wider"><AlertTriangle size={18} className="w-3"/> WARNING</span>;
             case 'INFO':
-                return <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-xs font-bold bg-primary-subtle text-primary tracking-wider"><Info className="w-3 h-3"/> INFO</span>;
+                return <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-xs font-bold bg-primary-subtle text-primary tracking-wider"><Info size={18} className="w-3"/> INFO</span>;
         }
     };
     const exportLogs = () => {
@@ -54,7 +55,7 @@ export default function SuperadminGlobalAuditClient() {
         const csvContent = [
             headers.join(','),
             ...filteredLogs.map((log: AuditLog) => [
-                new Date(log.timestamp).toISOString(),
+                serializeSuperadminGlobalAuditTimestamp(log.timestamp),
                 log.severity,
                 `"${(log.action || '').replace(/"/g, '""')}"`,
                 `"${(log.resource || '').replace(/"/g, '""')}"`,
@@ -67,7 +68,7 @@ export default function SuperadminGlobalAuditClient() {
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
-        link.download = `global_audit_logs_${new Date().toISOString().split('T')[0]}.csv`;
+        link.download = `global_audit_logs_${getSuperadminGlobalAuditExportDate()}.csv`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -88,7 +89,7 @@ export default function SuperadminGlobalAuditClient() {
           </div>
         </div>
         <div className="bg-card border border-border rounded-xl overflow-hidden shadow-card flex flex-col min-h-96">
-          <div className="p-4 border-b border-border bg-surface-hover/50">
+          <div className="p-4 border-b border-border bg-surface-hover">
             <div className="h-10 w-full max-w-md bg-skeleton-base motion-safe:animate-pulse rounded-lg"/>
           </div>
           <div className="p-6 space-y-4">
@@ -109,16 +110,16 @@ export default function SuperadminGlobalAuditClient() {
           <button onClick={() => refetch()} disabled={isFetching} className="flex items-center gap-2 px-4 py-2 bg-input border border-border text-primary font-medium rounded-lg hover:bg-surface-hover motion-safe:transition-colors disabled:opacity-50">
             {isFetching ? 'Refreshing...' : 'Refresh'}
           </button>
-          <button onClick={exportLogs} className="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary font-medium rounded-lg hover:bg-primary/90 motion-safe:transition-colors">
-            <Download className="w-4 h-4"/> Export CSV
+          <button onClick={exportLogs} className="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary font-medium rounded-lg hover:bg-primary-subtle motion-safe:transition-colors">
+            <Download size={18} className="w-4"/> Export CSV
           </button>
         </div>
       </div>
 
       <div className="bg-card border border-border rounded-xl overflow-hidden shadow-card flex flex-col min-h-96">
-        <div className="p-4 border-b border-border bg-surface-hover/50 flex flex-col sm:flex-row items-center gap-4 justify-between">
+        <div className="p-4 border-b border-border bg-surface-hover flex flex-col sm:flex-row items-center gap-4 justify-between">
           <div className="relative w-full max-w-md">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary"/>
+            <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary"/>
             <input type="text" placeholder="Search by action, actor, or resource..." className="w-full pl-9 pr-4 py-2 bg-input border border-border rounded-lg text-sm text-primary focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page focus:border-primary" value={search} onChange={(e) => setSearch(e.target.value)}/>
           </div>
           <div className="flex flex-wrap items-center gap-3">
@@ -167,7 +168,7 @@ export default function SuperadminGlobalAuditClient() {
               
               {filteredLogs.length === 0 && (<tr>
                   <td colSpan={TABLE_COLUMN_COUNT} className="px-6 py-12 text-center text-secondary">
-                    <ShieldAlert size={32} className="mx-auto mb-3 opacity-20"/>
+                    <ShieldAlert size={18} className="mx-auto mb-3 opacity-20"/>
                     <p>No audit logs match your search.</p>
                   </td>
                 </tr>)}

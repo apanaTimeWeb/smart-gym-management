@@ -22,7 +22,7 @@ export default function SuperadminGymsClient() {
           <h1 className="text-2xl font-bold text-primary">Gyms</h1>
           <p className="text-secondary mt-1">Manage your SaaS clients, subscriptions, and access.</p>
         </div>
-        <Link href={GymsUrlConfig.PAGES.ADD} className="flex items-center gap-2 bg-primary hover:bg-primary-hover text-on-primary px-4 py-2 rounded-lg font-medium motion-safe:transition-colors shadow-card shadow-primary/20">
+        <Link href={GymsUrlConfig.PAGES.ADD} className="flex items-center gap-2 bg-primary hover:bg-primary-hover text-on-primary px-4 py-2 rounded-lg font-medium motion-safe:transition-colors shadow-card shadow-card">
           <Plus size={18}/>
           Onboard New Gym
         </Link>

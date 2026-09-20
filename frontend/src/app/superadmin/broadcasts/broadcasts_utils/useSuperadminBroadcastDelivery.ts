@@ -12,6 +12,7 @@ import type { SuperadminBroadcastDeliveryResult } from '@/app/superadmin/broadca
 import type { ApiResponse } from '@/lib/api';
 
 /** Owns recipient delivery mutations for Broadcasts and reconciles the relevant query caches. */
+/** Purpose: Owns the useSuperadminBroadcastDelivery data/state orchestration for this Superadmin feature and exposes its typed UI-facing contract. */
 export function useSuperadminBroadcastDelivery() {
   const queryClient = useQueryClient();
   const mutation = useMutation({

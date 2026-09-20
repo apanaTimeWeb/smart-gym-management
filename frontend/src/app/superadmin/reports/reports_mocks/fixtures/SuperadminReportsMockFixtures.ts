@@ -1,17 +1,17 @@
 // RESPONSIBILITY: Module-owned mock fixture data for Superadmin.
 import type { RevenueRow, CancellationsRecord, TenantHealthScore } from '@/app/superadmin/reports/reports_types/SuperadminReportsTypes';
 export const MOCK_SUPERADMIN_REPORTS_REVENUE: RevenueRow[] = [
-    { month: 'Jul', mrr: 216000, newRevenue: 31000, cancelledRevenue: 7000, netRevenue: 24000, tenantCount: 101 },
-    { month: 'Aug', mrr: 232000, newRevenue: 36000, cancelledRevenue: 9000, netRevenue: 27000, tenantCount: 109 },
-    { month: 'Sep', mrr: 248000, newRevenue: 42000, cancelledRevenue: 8000, netRevenue: 34000, tenantCount: 118 },
+    { month: 'Jul', mrr: 21600000, newRevenue: 3100000, cancelledRevenue: 700000, netRevenue: 2400000, tenantCount: 101 },
+    { month: 'Aug', mrr: 23200000, newRevenue: 3600000, cancelledRevenue: 900000, netRevenue: 2700000, tenantCount: 109 },
+    { month: 'Sep', mrr: 24800000, newRevenue: 4200000, cancelledRevenue: 800000, netRevenue: 3400000, tenantCount: 118 },
 ];
 export const MOCK_SUPERADMIN_REPORTS_CANCELLATIONS: CancellationsRecord[] = [
-    { id: 'ch1', gymName: 'Power Gym', ownerName: 'Bob Builder', plan: 'Enterprise', cancelledAt: '2026-09-15', reason: 'Too expensive', mrr: 15000, daysActive: 650 },
-    { id: 'ch2', gymName: 'Yoga Center', ownerName: 'Alice Yoga', plan: 'Basic', cancelledAt: '2026-09-12', reason: 'Closing business', mrr: 2000, daysActive: 300 },
-    { id: 'ch3', gymName: 'Core Studio', ownerName: 'Cara Singh', plan: 'Pro', cancelledAt: '2026-09-08', reason: 'Low usage', mrr: 4500, daysActive: 410 },
-    { id: 'ch4', gymName: 'Urban Strength', ownerName: 'Dan Khan', plan: 'Enterprise', cancelledAt: '2026-09-05', reason: 'Budget change', mrr: 9800, daysActive: 820 },
-    { id: 'ch5', gymName: 'Pulse Fitness', ownerName: 'Eva Shah', plan: 'Basic', cancelledAt: '2026-08-28', reason: 'Business pause', mrr: 1800, daysActive: 220 },
-    { id: 'ch6', gymName: 'Peak Performance', ownerName: 'Farhan Ali', plan: 'Pro', cancelledAt: '2026-08-20', reason: 'Competitor', mrr: 5200, daysActive: 530 },
+    { id: 'ch1', gymName: 'Power Gym', ownerName: 'Bob Builder', plan: 'Enterprise', cancelledAt: '2026-09-15', reason: 'Too expensive', mrr: 1500000, daysActive: 650 },
+    { id: 'ch2', gymName: 'Yoga Center', ownerName: 'Alice Yoga', plan: 'Basic', cancelledAt: '2026-09-12', reason: 'Closing business', mrr: 200000, daysActive: 300 },
+    { id: 'ch3', gymName: 'Core Studio', ownerName: 'Cara Singh', plan: 'Pro', cancelledAt: '2026-09-08', reason: 'Low usage', mrr: 450000, daysActive: 410 },
+    { id: 'ch4', gymName: 'Urban Strength', ownerName: 'Dan Khan', plan: 'Enterprise', cancelledAt: '2026-09-05', reason: 'Budget change', mrr: 980000, daysActive: 820 },
+    { id: 'ch5', gymName: 'Pulse Fitness', ownerName: 'Eva Shah', plan: 'Basic', cancelledAt: '2026-08-28', reason: 'Business pause', mrr: 180000, daysActive: 220 },
+    { id: 'ch6', gymName: 'Peak Performance', ownerName: 'Farhan Ali', plan: 'Pro', cancelledAt: '2026-08-20', reason: 'Competitor', mrr: 520000, daysActive: 530 },
 ];
 export const MOCK_SUPERADMIN_REPORTS_HEALTH: TenantHealthScore[] = [
     { id: 'th1', gymName: 'Iron Paradise', plan: 'Pro', score: 95, grade: 'A', memberCount: 200, lastLogin: '2026-09-15', paymentHealth: 'GOOD', featureUsage: 85, supportTickets: 1 },

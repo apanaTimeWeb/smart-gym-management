@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Renders the Superadmin plans V1 Price history, Add-ons, Plan move preview view.
 'use client';
-import { formatCurrency, formatNumber } from '@/lib/formatters';
+import { formatCurrencyFromMinorUnits, formatNumber } from '@/lib/formatters';
 import Panel from '@/components/ui/Panel';
 import type { SuperadminPlansV1SectionProps } from '@/app/superadmin/saas-billing/plans/plans_types/SuperadminPlansV1Types.ts';
 export default function SuperadminPlansV1HistoryAddonsAndMigrationSection({ data }: SuperadminPlansV1SectionProps) {
@@ -21,7 +21,7 @@ export default function SuperadminPlansV1HistoryAddonsAndMigrationSection({ data
           {v.change}
         </p>
         <p className="mt-2 text-sm text-primary">
-          {formatCurrency(v.monthly)}
+          {formatCurrencyFromMinorUnits(v.monthly)}
           / month
         </p>
       </div>)}
@@ -34,7 +34,7 @@ export default function SuperadminPlansV1HistoryAddonsAndMigrationSection({ data
           {a.name}
         </span>
         <span className="text-sm font-medium text-primary">
-          {formatCurrency(a.price)}
+          {formatCurrencyFromMinorUnits(a.price)}
         </span>
       </div>)}
     </div>
@@ -66,11 +66,11 @@ export default function SuperadminPlansV1HistoryAddonsAndMigrationSection({ data
           </p>
           <p className="text-lg font-semibold text-success">
             +
-            {formatCurrency(data.migration.monthlyChange)}
+            {formatCurrencyFromMinorUnits(data.migration.monthlyChange)}
           </p>
         </div>
       </div>
-      <div className="rounded-lg border border-warning/30 bg-warning-bg p-3 text-xs text-warning">
+      <div className="rounded-lg border border-border bg-warning-bg p-3 text-xs text-warning">
         {data.migration.limitConflicts}
         gyms exceed one or more target limits and need review first.
       </div>

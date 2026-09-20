@@ -2,5 +2,5 @@
 export interface SuperadminFlushTenantModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onFlush: (tenantIds: string[]) => Promise<void>;
+  onFlush: (tenantIds: string[], idempotencyKey: string) => Promise<void>;
 }

@@ -1,3 +1,4 @@
+// DATA FLOW: Inputs enter useSuperadminInfrastructureActions, flow through its feature-owned state/API dependencies, and return typed UI state/actions to the owning Superadmin feature.
 // RESPONSIBILITY: Owns Infrastructure cache-flush mutations and Query reconciliation.
 'use client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';

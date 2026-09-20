@@ -10,6 +10,7 @@ import { affiliatesApi } from '@/app/superadmin/affiliates/affiliates_api/Supera
 import { AffiliateSchema } from '@/app/superadmin/affiliates/affiliates_types/SuperadminAffiliatesTypes';
 import type { Affiliate, AffiliateStatusFilter, AffiliateFormData } from '@/app/superadmin/affiliates/affiliates_types/SuperadminAffiliatesTypes';
 import { useUrlState } from '@/hooks/useUrlState';
+import { useUnsavedChangesGuard } from '@/hooks/useUnsavedChangesGuard';
 import { useSuperadminAffiliatesMutations } from '@/app/superadmin/affiliates/affiliates_utils/useSuperadminAffiliatesMutations';
 import { buildSuperadminAffiliatesQueryParams } from '@/app/superadmin/affiliates/affiliates_utils/SuperadminAffiliatesQueryUtils';
 /**
@@ -61,6 +62,7 @@ export const useSuperadminAffiliatesPage = () => {
         defaultValues: { name: '', email: '', referralCode: '' },
     });
     const { isMutating, handleAddAffiliate, handleEditAffiliate, handleToggleAffiliateStatus, handleDeleteAffiliate, handlePayCommission, } = useSuperadminAffiliatesMutations(updateCachedAffiliates, setIsModalOpen, setEditingAffiliate, form, editingAffiliate);
+    useUnsavedChangesGuard(form.formState.isDirty && isModalOpen && !editingAffiliate?.id, 'You have an unsaved affiliate form. Discard?');
     const openEditModal = useCallback((affiliate: Affiliate) => {
         setEditingAffiliate(affiliate);
         form.reset({

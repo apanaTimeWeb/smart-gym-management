@@ -44,7 +44,68 @@ The backups_health module is responsible for the Superadmin business workflow ma
 - Deprecated marker-only and JSON-stringify tautology tests were removed from the module test tree.
 - Dependency-backed `tsc`, lint, Vitest runtime, Playwright, and real browser responsive execution require the host application environment and remain unverified here.
 
-## Edge Cases / AI Warnings
+## Data and State Architecture
+
+- **Actual feature root:** `system-ops/backups`
+- **Server state:** TanStack Query `useQuery` detected.
+- **Zustand stores:** None detected.
+- **Context files:** None detected.
+- **Custom hooks:** `backups_utils/useSuperadminBackupsSchedule.ts`, `backups_utils/useSuperadminBackupsActions.ts`, `backups_utils/useSuperadminBackupsData.ts`, `backups_utils/useSuperadminBackupsV1.ts`
+- **URL state:** `useUrlState` detected.
+- **Observed query keys:** `['superadmin', 'backups']`, `['superadmin', 'backups', params]`, `['superadmin', 'backups_health']`
+
+## API Contract
+
+- **API files:** `backups_api/SuperadminBackupsHealthApi.ts`, `backups_api/SuperadminBackupsApi.ts`
+- **Detected API symbols:** `fetchBackupsHealth` — `backups_api/SuperadminBackupsHealthApi.ts`; `fetchBackups` — `backups_api/SuperadminBackupsApi.ts`; `createBackupSnapshot` — `backups_api/SuperadminBackupsApi.ts`; `restoreBackupSnapshot` — `backups_api/SuperadminBackupsApi.ts`; `fetchBackupDownloadUrl` — `backups_api/SuperadminBackupsApi.ts`; `fetchBackupSchedule` — `backups_api/SuperadminBackupsApi.ts`; `updateBackupSchedule` — `backups_api/SuperadminBackupsApi.ts`
+- **Runtime response validation:** Zod usage detected.
+
+No API field/method is invented where static source did not expose it; missing runtime confirmation remains `NOT VERIFIED`.
+
+## UI Data Requirements
+
+- **Data-bearing components:** `page.tsx`, `backups_components/SuperadminBackupsTriggerModal.tsx`, `backups_components/SuperadminBackupsV1GymHealthTable.tsx`, `backups_components/SuperadminBackupsTable.tsx`, `backups_components/SuperadminBackupsScheduleModal.tsx`, `backups_components/SuperadminBackupsV1HealthSummaryCards.tsx`, `backups_components/SuperadminBackupsV1RestoreTestHistoryPanel.tsx`, `backups_components/SuperadminBackupsClient.tsx`, `backups_components/SuperadminBackupsRestoreModal.tsx`, `backups_components/SuperadminBackupsEmptyState/SuperadminBackupsEmptyState.tsx`
+- **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
+- **Approved date/time evidence:** No `date-fns`/`dayjs` usage detected.
+- **Forms detected:** 1
+
+Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
+
+## Permissions and Security
+
+- **Permission symbols detected:** No explicit module permission symbols detected.
+- **Destructive-confirmation evidence:** No `useConfirm` detected.
+- **Mutation boundary:** TanStack Query `useMutation` is used for async mutations; loading comes from mutation state.
+- **Cross-feature dependency rule:** no sibling business feature imports are permitted unless explicitly documented as approved infrastructure.
+
+## Loading, Empty, and Error States
+
+- **`loading.tsx`:** `loading.tsx`
+- **`error.tsx`:** `error.tsx`
+- **Empty-state components:** `backups_components/SuperadminBackupsEmptyState/SuperadminBackupsEmptyState.tsx`
+- Source inspection alone does not prove browser runtime behavior; retry/focus/animation behavior remains `NOT VERIFIED` until the host app is executed.
+
+## Component Responsibility Map
+
+| Component File | Responsibility evidence |
+|---|---|
+| `page.tsx` | Pure Server Component for the backups page. Renders the interactive client component. |
+| `backups_components/SuperadminBackupsTriggerModal.tsx` | Confirmation view for the global backup trigger; asynchronous mutation is owned by the feature action hook. |
+| `backups_components/SuperadminBackupsV1GymHealthTable.tsx` | Renders the Superadmin backups V1 Backup health by gym view. |
+| `backups_components/SuperadminBackupsTable.tsx` | Renders the Backups Table component and its associated UI logic. |
+| `backups_components/SuperadminBackupsScheduleModal.tsx` | View-only modal for editing the Superadmin backup schedule. Server state and mutation lifecycle are owned by useSuperadminBackupsSchedule. |
+| `backups_components/SuperadminBackupsV1HealthSummaryCards.tsx` | Renders the Superadmin backups V1 BackupsHealthSummary summary cards. |
+| `backups_components/SuperadminBackupsV1RestoreTestHistoryPanel.tsx` | Renders the Superadmin backups V1 Restore test history view. |
+| `backups_components/SuperadminBackupsClient.tsx` | SuperadminBackupsClient.tsx renders the Database Backups page. Purely a view layer — backup data is fetched via useSuperadminBackupsData and rendered from query state. |
+| `backups_components/SuperadminBackupsRestoreModal.tsx` | Confirmation view for restoring a backup snapshot; mutation lifecycle is owned by the feature action hook. |
+| `backups_components/SuperadminBackupsEmptyState/SuperadminBackupsEmptyState.tsx` | Renders the empty state UI for the Backups table when no backups exist. |
+
+## Repository-Verified Repair Notes
+
+This addendum is generated from the current source tree and exists to make future AI context self-contained. It records actual source evidence and explicitly leaves unavailable runtime facts as `NOT VERIFIED`.
+
+
+## Edge Cases and AI Warnings
 - **Strict Isolation**: Never import admin or manager components into backups_health.
 - **Destructive Actions**: Any deletion or modification of backups_health records must use the Superadmin confirmation provider.
 - **Data Leakage**: Ensure API payloads for backups_health do not expose cross-tenant sensitive data.

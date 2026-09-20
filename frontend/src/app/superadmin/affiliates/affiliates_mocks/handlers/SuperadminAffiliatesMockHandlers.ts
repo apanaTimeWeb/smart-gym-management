@@ -7,8 +7,9 @@ import type { AffiliatePayoutRecord } from '@/app/superadmin/affiliates/affiliat
 import type { ApiResponse } from '@/lib/api';
 import { MOCK_SUPERADMIN_AFFILIATES } from '@/app/superadmin/affiliates/affiliates_mocks/fixtures/SuperadminAffiliatesMockFixtures';
 import { MOCK_SUPERADMIN_AFFILIATE_PAYOUT_HISTORY } from '@/app/superadmin/affiliates/affiliates_mocks/fixtures/SuperadminAffiliatesPayoutHistoryMockFixtures';
+import { AffiliatesUrlConfig } from '@/app/superadmin/affiliates/superadmin_affiliates_url_config';
 
-const BASE_URL = '*/api/v1/superadmin/affiliates';
+const BASE_URL = `*${AffiliatesUrlConfig.BACKEND_API.BASE}`;
 let mockAffiliates: Affiliate[] = [...MOCK_SUPERADMIN_AFFILIATES];
 
 export function resetSuperadminAffiliatesMockState(): void {

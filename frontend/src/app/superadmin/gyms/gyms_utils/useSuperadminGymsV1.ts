@@ -2,7 +2,7 @@
 // RESPONSIBILITY: Owns URL-backed tenant filter state and bulk-action mutation orchestration for the V1 business-controls feature.
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useRef } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { fetchGymsBusinessControls, updateGymsBulkAction } from '@/app/superadmin/gyms/gyms_api/SuperadminGymsBusinessControlsApi';
@@ -29,9 +29,21 @@ export function useSuperadminGymsV1() {
     queryFn: () => fetchGymsBusinessControls(queryParams),
   });
 
+  const idempotencyKeysRef = useRef(new Map<string, string>());
+  const getBulkIntentKey = (action: SuperadminGymsV1BulkAction, gymIds: string[], targetPlan?: string) => {
+    const intentKey = JSON.stringify([action, [...gymIds].sort(), targetPlan ?? null]);
+    const existing = idempotencyKeysRef.current.get(intentKey);
+    if (existing) return { intentKey, key: existing };
+    const key = crypto.randomUUID();
+    idempotencyKeysRef.current.set(intentKey, key);
+    return { intentKey, key };
+  };
+
   const bulkMutation = useMutation({
     mutationFn: ({ body, idempotencyKey }: { body: SuperadminGymsV1BulkMutationRequest; idempotencyKey: string }) => updateGymsBulkAction(body, idempotencyKey),
-    onSuccess: (response) => {
+    onSuccess: (response, variables) => {
+      const intentKey = JSON.stringify([variables.body.action, [...variables.body.gymIds].sort(), variables.body.targetPlan ?? null]);
+      idempotencyKeysRef.current.delete(intentKey);
       toast.success(response.message, { id: 'superadmin-gyms-v1-bulk-success' });
       void queryClient.invalidateQueries({ queryKey: ['superadmin', 'gyms_business_controls'] });
     },
@@ -53,7 +65,9 @@ export function useSuperadminGymsV1() {
       });
       if (!confirmed) return;
     }
-    await bulkMutation.mutateAsync({ body: { action, gymIds, ...(targetPlan ? { targetPlan } : {}) }, idempotencyKey: crypto.randomUUID() });
+    const body: SuperadminGymsV1BulkMutationRequest = { action, gymIds, ...(targetPlan ? { targetPlan } : {}) };
+    const { key: idempotencyKey } = getBulkIntentKey(action, gymIds, targetPlan);
+    await bulkMutation.mutateAsync({ body, idempotencyKey });
   };
 
   return { query, filterKey, setFilterKey, executeBulkAction, isBulkPending: bulkMutation.isPending };

@@ -11,6 +11,7 @@ import { useSuperadminGymsStore } from '@/app/superadmin/gyms/gyms_store/useSupe
 import { gymsApi } from '@/app/superadmin/gyms/gyms_api/SuperadminGymsApi';
 import { useUrlState } from '@/hooks/useUrlState';
 /** Owns URL-synchronized toolbar state and delegates export execution to the Gyms API client. */
+/** Purpose: Owns the useSuperadminGymsToolbar data/state orchestration for this Superadmin feature and exposes its typed UI-facing contract. */
 export function useSuperadminGymsToolbar() {
     const { getParam, setParam } = useUrlState();
     const search = getParam('search', '');

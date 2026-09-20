@@ -52,7 +52,7 @@ export default function SuperadminTicketsClient() {
       <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
     </div>
     <SuperadminTicketsReplyModal isOpen={!!replyModalTicketId} onClose={() => setReplyModalTicketId(null)} ticketId={replyModalTicketId} />
-    {assignModalTicketId ? (<div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="superadmin-ticket-assign-title">
+    {assignModalTicketId ? (<div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="superadmin-ticket-assign-title">
       <div className="w-full max-w-sm space-y-4 rounded-xl border border-border bg-overlay p-6 shadow-dialog">
         <h2 id="superadmin-ticket-assign-title" className="text-base font-bold text-primary">Assign Ticket</h2>
         <p className="text-sm text-secondary">Enter the name or email of the team member to assign this ticket to.</p>
@@ -62,7 +62,7 @@ export default function SuperadminTicketsClient() {
         <div className="flex justify-end gap-3">
           <button type="button" onClick={() => { setAssignModalTicketId(null); setAssigneeInput(''); }} disabled={isAssigning} className="rounded-lg border border-border px-4 py-2 text-sm text-primary hover:bg-surface-hover motion-safe:transition-all motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">Cancel</button>
           <button type="button" onClick={() => void handleConfirmAssign()} disabled={!assigneeInput.trim() || isAssigning} className="inline-flex min-w-28 items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-on-primary hover:bg-primary-hover motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95 disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
-            {isAssigning ? <><Loader2 size={18} strokeWidth={2} className="motion-safe:animate-spin" />Saving...</> : 'Assign'}
+            {isAssigning ? <><Loader2 size={18} strokeWidth={2} className="motion-safe:animate-spin"/>Saving...</> : 'Assign'}
           </button>
         </div>
       </div>

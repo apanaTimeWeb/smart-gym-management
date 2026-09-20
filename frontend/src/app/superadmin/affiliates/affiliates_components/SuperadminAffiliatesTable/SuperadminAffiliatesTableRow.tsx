@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 import { useConfirm } from '@/components/ui/Feedback/ConfirmProvider';
 import SuperadminAffiliateStatusBadge from '@/app/superadmin/affiliates/affiliates_components/SuperadminAffiliateStatusBadge/SuperadminAffiliateStatusBadge';
 import type { Affiliate, AffiliateStatus } from '@/app/superadmin/affiliates/affiliates_types/SuperadminAffiliatesTypes';
-import { maskSensitiveData, formatCurrency, formatNumber } from '@/lib/formatters';
+import { maskSensitiveData, formatCurrencyFromMinorUnits, formatNumber } from '@/lib/formatters';
 import type { SuperadminAffiliatesTableRowProps } from '@/app/superadmin/affiliates/affiliates_types/SuperadminAffiliatesTableRowTypes';
 
 export default function SuperadminAffiliatesTableRow({ affiliate: aff, onToggleStatus, onEdit, onDelete, onPayCommission }: SuperadminAffiliatesTableRowProps) {
@@ -27,14 +27,14 @@ export default function SuperadminAffiliatesTableRow({ affiliate: aff, onToggleS
         {aff.conversionRate !== undefined ? `${aff.conversionRate}%` : 'â€”'}
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-success font-medium">
-        {formatCurrency(aff.commissionEarned)}
-        {aff.pendingPayout ? (<span className="ml-2 text-xs text-warning">({formatCurrency(aff.pendingPayout)} pending)</span>) : null}
+        {formatCurrencyFromMinorUnits(aff.commissionEarned)}
+        {aff.pendingPayout ? (<span className="ml-2 text-xs text-warning">({formatCurrencyFromMinorUnits(aff.pendingPayout)} pending)</span>) : null}
       </td>
       <td className="px-6 py-4 whitespace-nowrap">
         <SuperadminAffiliateStatusBadge status={aff.status}/>
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
-        <div className="flex items-center justify-end gap-2 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 motion-safe:transition-opacity">
+        <div className="flex items-center justify-end gap-2 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 lg:group-focus-within:opacity-100 motion-safe:transition-opacity">
           <button onClick={async (e) => {
             e.stopPropagation();
             if (aff.status === 'ACTIVE') {
@@ -58,23 +58,23 @@ export default function SuperadminAffiliatesTableRow({ affiliate: aff, onToggleS
                     onToggleStatus(aff.id, aff.status);
             }
         }} className="p-1.5 text-secondary hover:text-primary motion-safe:transition-colors" title={aff.status === 'ACTIVE' ? 'Suspend Affiliate' : 'Activate Affiliate'} aria-label={aff.status === 'ACTIVE' ? `Suspend ${aff.name}` : `Activate ${aff.name}`}>
-            {aff.status === 'ACTIVE' ? <Power className="w-4 h-4"/> : <Check className="w-4 h-4"/>}
+            {aff.status === 'ACTIVE' ? <Power size={18} className="w-4"/> : <Check size={18} className="w-4"/>}
           </button>
           {onPayCommission && (aff.pendingPayout ?? 0) > 0 && (<button onClick={async (e) => {
                 e.stopPropagation();
                 const ok = await confirm({
                     title: 'Pay Commission',
-                    message: `Pay ${formatCurrency(aff.pendingPayout || 0)} to ${aff.name}? This will trigger a bank transfer.`,
+                    message: `Pay ${formatCurrencyFromMinorUnits(aff.pendingPayout || 0)} to ${aff.name}? This will trigger a bank transfer.`,
                     type: 'warning',
                     confirmText: 'Pay Now',
                 });
                 if (ok)
                     onPayCommission(aff);
             }} className="p-1.5 text-secondary hover:text-success motion-safe:transition-colors" title="Pay Commission" aria-label={`Pay commission to ${aff.name}`}>
-              <Banknote className="w-4 h-4"/>
+              <Banknote size={18} className="w-4"/>
             </button>)}
           <button onClick={(e) => { e.stopPropagation(); onEdit(aff); }} className="p-1.5 text-secondary hover:text-info motion-safe:transition-colors" title="Edit Affiliate" aria-label={`Edit ${aff.name}`}>
-            <Pencil className="w-4 h-4"/>
+            <Pencil size={18} className="w-4"/>
           </button>
           <button onClick={async (e) => {
             e.stopPropagation();
@@ -88,7 +88,7 @@ export default function SuperadminAffiliatesTableRow({ affiliate: aff, onToggleS
                 onDelete(aff.id);
             }
         }} className="p-1.5 text-secondary hover:text-danger motion-safe:transition-colors" title="Delete Affiliate" aria-label={`Delete ${aff.name}`}>
-            <Trash2 className="w-4 h-4"/>
+            <Trash2 size={18} className="w-4"/>
           </button>
         </div>
       </td>

@@ -10,7 +10,7 @@ export function SuperadminMessagingNotificationsTab({ notifications, handleMarkR
     <div className="space-y-3">
       {notifications.map((notification) => (
         <div key={notification.id} className={`flex items-start gap-3 rounded-xl border border-border bg-card p-4 motion-safe:transition-colors ${notification.read ? 'opacity-60' : 'shadow-card'}`}>
-          <div className="mt-0.5">{notification.type === 'INFO' ? <Info className="h-5 w-5 shrink-0 text-info" strokeWidth={2} aria-hidden="true" /> : <AlertTriangle className={`h-5 w-5 shrink-0 ${notification.type === 'WARNING' ? 'text-warning' : 'text-danger'}`} strokeWidth={2} aria-hidden="true" />}</div>
+          <div className="mt-0.5">{notification.type === 'INFO' ? <Info size={18} className="h-5 shrink-0 text-info" strokeWidth={2} aria-hidden="true"/> : <AlertTriangle size={18} className={`h-5 shrink-0 ${notification.type === 'WARNING' ? 'text-warning' : 'text-danger'}`} strokeWidth={2} aria-hidden="true"/>}</div>
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
               <p className={`text-sm font-semibold ${notification.read ? 'text-secondary' : 'text-primary'}`}>{notification.title}</p>
@@ -21,7 +21,7 @@ export function SuperadminMessagingNotificationsTab({ notifications, handleMarkR
           </div>
           {!notification.read && (
             <button type="button" onClick={() => { void handleMarkRead(notification.id); }} disabled={isMarkingRead} aria-label={`Mark ${notification.title} as read`} title="Mark as read" className="shrink-0 rounded-lg p-1.5 text-secondary motion-safe:transition-colors hover:bg-input hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:opacity-50">
-              <X size={18} strokeWidth={2} />
+              <X size={18} strokeWidth={2}/>
             </button>
           )}
         </div>

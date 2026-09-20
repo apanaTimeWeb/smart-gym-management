@@ -4,9 +4,10 @@
 // RESPONSIBILITY: Custom hook managing the URL-backed state for the Dashboard date filter.
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
-type SuperadminDashboardCustomDateField = 'start' | 'end';
+import type { SuperadminDashboardCustomDateField } from '@/app/superadmin/dashboard/dashboard_types/SuperadminDashboardDateFilterTypes';
 
 import type { TimeRange } from '@/app/superadmin/dashboard/dashboard_types/SuperadminDashboardTypes';
+import { getSuperadminDashboardPresetRange } from '@/app/superadmin/dashboard/dashboard_utils/SuperadminDashboardDateRangeUtils';
 /**
  * Purpose: Custom hook managing the URL-backed state for the Dashboard date filter.
  * Inputs: values defined by the exported hook signature.
@@ -53,40 +54,13 @@ export function useSuperadminDashboardDateFilter() {
         router.replace(`${pathname}?${params.toString()}`, { scroll: false });
     }, [router, searchParams, pathname]);
     const handlePresetChange = useCallback((preset: string) => {
-        const today = new Date();
-        let from = '';
-        let to = '';
-        switch (preset) {
-            case 'this_month':
-                from = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0] || '';
-                to = new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString().split('T')[0] || '';
-                break;
-            case 'last_month':
-                from = new Date(today.getFullYear(), today.getMonth() - 1, 1).toISOString().split('T')[0] || '';
-                to = new Date(today.getFullYear(), today.getMonth(), 0).toISOString().split('T')[0] || '';
-                break;
-            case 'last_3_months':
-                from = new Date(today.getFullYear(), today.getMonth() - 3, 1).toISOString().split('T')[0] || '';
-                to = new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString().split('T')[0] || '';
-                break;
-            case 'last_6_months':
-                from = new Date(today.getFullYear(), today.getMonth() - 6, 1).toISOString().split('T')[0] || '';
-                to = new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString().split('T')[0] || '';
-                break;
-            case 'this_year':
-                from = new Date(today.getFullYear(), 0, 1).toISOString().split('T')[0] || '';
-                to = new Date(today.getFullYear(), 11, 31).toISOString().split('T')[0] || '';
-                break;
-            default:
-                break;
-        }
+        const { from, to } = getSuperadminDashboardPresetRange(preset);
         const params = new URLSearchParams(searchParams.toString());
         params.set('range', preset);
         if (preset !== 'custom' && preset !== 'monthly' && preset !== 'yearly') {
             params.set('startDate', from);
             params.set('endDate', to);
-        }
-        else if (preset !== 'custom') {
+        } else if (preset !== 'custom') {
             params.delete('startDate');
             params.delete('endDate');
         }

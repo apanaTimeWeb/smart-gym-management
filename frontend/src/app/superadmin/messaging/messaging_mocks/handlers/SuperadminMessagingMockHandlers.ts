@@ -3,13 +3,14 @@ import { StatusCodes } from 'http-status-codes';
 import { delay, http, HttpResponse } from 'msw';
 import type { ApiResponse } from '@/lib/api';
 import type { TenantMessage, SuperadminNotification } from '@/app/superadmin/messaging/messaging_types/SuperadminMessagingTypes';
+import { MessagingUrlConfig } from '@/app/superadmin/messaging/superadmin_messaging_url_config';
 import {
   MOCK_SUPERADMIN_MESSAGING_MESSAGES,
   MOCK_SUPERADMIN_NOTIFICATIONS,
   MOCK_SUPERADMIN_MESSAGING_TENANTS,
 } from '@/app/superadmin/messaging/messaging_mocks/fixtures/SuperadminMessagingMockFixtures';
 
-const BASE_URL = '*/api/v1/superadmin/messaging';
+const BASE_URL = `*${MessagingUrlConfig.BACKEND_API.BASE}`;
 const DEFAULT_LIMIT = 10;
 
 let mockMessages = [...MOCK_SUPERADMIN_MESSAGING_MESSAGES];

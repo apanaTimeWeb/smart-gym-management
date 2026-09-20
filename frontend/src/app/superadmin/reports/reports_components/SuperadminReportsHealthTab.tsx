@@ -17,12 +17,12 @@ export function SuperadminReportsHealthTab({ sortedHealthData }: SuperadminRepor
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-border bg-input/40">
+            <tr className="border-b border-border bg-input">
               {['Gym', 'Plan', 'Score', 'Grade', 'Members', 'Last Login', 'Payment', 'Feature Use', 'Tickets'].map((h) => (<th key={h} className="text-left px-4 py-3 text-xs font-semibold text-secondary uppercase tracking-wider">{h}</th>))}
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
-            {sortedHealthData.map((row) => (<tr key={row.id} className="hover:bg-input/30 motion-safe:transition-colors">
+            {sortedHealthData.map((row) => (<tr key={row.id} className="hover:bg-input motion-safe:transition-colors">
                 <td className="px-4 py-3 font-medium text-primary">{row.gymName}</td>
                 <td className="px-4 py-3 text-secondary text-xs">{row.plan}</td>
                 <td className="px-4 py-3">

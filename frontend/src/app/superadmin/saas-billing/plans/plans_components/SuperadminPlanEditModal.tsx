@@ -54,7 +54,7 @@ export default function SuperadminPlanEditModal() {
         toast.error(error instanceof Error ? error.message : '', { id: 'superadmin-plan-update' });
       }
     };
-    return (<div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 backdrop-blur-sm p-4" role="dialog" aria-modal="true">
+    return (<div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay backdrop-blur-sm p-4" role="dialog" aria-modal="true">
       <div className="bg-overlay border border-border rounded-2xl w-full max-w-2xl max-h-screen overflow-hidden flex flex-col shadow-dialog">
         <div className="flex items-center justify-between p-6 border-b border-border">
           <h2 className="text-xl font-bold text-primary">Edit Subscription Plan</h2>

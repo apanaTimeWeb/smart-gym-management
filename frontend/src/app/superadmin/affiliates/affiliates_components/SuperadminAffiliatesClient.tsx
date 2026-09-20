@@ -30,12 +30,12 @@ export default function SuperadminAffiliatesClient() {
       <SuperadminAffiliatesStatsBar totalAffiliates={totalAffiliates} totalCommission={totalCommission}/>
 
       <div className="bg-card border border-border rounded-xl shadow-card overflow-hidden">
-        <div className="p-4 border-b border-border flex flex-col md:flex-row gap-4 justify-between items-center bg-input/20">
+        <div className="p-4 border-b border-border flex flex-col md:flex-row gap-4 justify-between items-center bg-input">
           <div className="flex bg-input border border-border rounded-lg p-1 w-full md:w-auto">
-            <button onClick={() => setActiveTab('AFFILIATES')} className={`flex-1 md:flex-none px-4 py-2 text-sm rounded-md font-medium motion-safe:transition-colors ${activeTab === 'AFFILIATES' ? 'bg-page text-primary shadow-card' : 'text-secondary hover:text-primary hover:bg-page/50'}`}>
+            <button onClick={() => setActiveTab('AFFILIATES')} className={`flex-1 md:flex-none px-4 py-2 text-sm rounded-md font-medium motion-safe:transition-colors ${activeTab === 'AFFILIATES' ? 'bg-page text-primary shadow-card' : 'text-secondary hover:text-primary hover:bg-page'}`}>
               Affiliates List
             </button>
-            <button onClick={() => setActiveTab('PAYOUTS')} className={`flex-1 md:flex-none px-4 py-2 text-sm rounded-md font-medium motion-safe:transition-colors ${activeTab === 'PAYOUTS' ? 'bg-page text-primary shadow-card' : 'text-secondary hover:text-primary hover:bg-page/50'}`}>
+            <button onClick={() => setActiveTab('PAYOUTS')} className={`flex-1 md:flex-none px-4 py-2 text-sm rounded-md font-medium motion-safe:transition-colors ${activeTab === 'PAYOUTS' ? 'bg-page text-primary shadow-card' : 'text-secondary hover:text-primary hover:bg-page'}`}>
               Payout History
             </button>
           </div>

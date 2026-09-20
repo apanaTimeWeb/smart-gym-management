@@ -7,7 +7,7 @@ import { ArrowLeft, Database, Save, Loader2, Eye, EyeOff } from 'lucide-react';
 import { GymsUrlConfig } from '@/app/superadmin/gyms/superadmin_gyms_url_config';
 import { useSuperadminAddGymForm } from '@/app/superadmin/gyms/gyms_components/SuperadminAddGymForm/useSuperadminAddGymForm';
 import { useUnsavedChangesGuard } from '@/hooks/useUnsavedChangesGuard';
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
 export default function SuperadminAddGymForm() {
     const { register, handleSubmit, onSubmit, control, errors, isDirty, isProvisioning, provisioningLogs, showPassword, setShowPassword, plans, loadingPlans, } = useSuperadminAddGymForm();
     useUnsavedChangesGuard(isDirty && !isProvisioning, 'You have unsaved gym details. Discard?');
@@ -70,13 +70,13 @@ export default function SuperadminAddGymForm() {
 
               <div className="space-y-2">
                 <label htmlFor="superadmin-add-gym-plan" className="text-sm font-bold text-secondary">SaaS Plan</label>
-                <div aria-labelledby="superadmin-add-gym-plan"><Controller name="plan" control={control} render={({ field }) => (<SearchableDropdown value={field.value || ''} onChange={field.onChange} options={plans ? plans.map((p) => ({ label: `${p.name} (${formatCurrency(Number(p.priceMonthly))}/mo)`, value: p.name })) : []} disabled={loadingPlans} placeholder={loadingPlans ? "Loading plans..." : "Select a plan"}/>)}/></div>
+                <div aria-labelledby="superadmin-add-gym-plan"><Controller name="plan" control={control} render={({ field }) => (<SearchableDropdown value={field.value || ''} onChange={field.onChange} options={plans ? plans.map((p) => ({ label: `${p.name} (${formatCurrencyFromMinorUnits(Number(p.priceMonthly))}/mo)`, value: p.name })) : []} disabled={loadingPlans} placeholder={loadingPlans ? "Loading plans..." : "Select a plan"}/>)}/></div>
                 {errors.plan && <p className="text-danger text-xs">{errors.plan.message}</p>}
               </div>
             </div>
 
             <div className="pt-4 border-t border-border flex justify-end">
-              <button type="submit" disabled={isProvisioning} className="flex items-center gap-2 bg-primary hover:bg-primary-hover disabled:bg-primary/50 text-on-primary px-6 py-2.5 rounded-lg font-medium motion-safe:transition-colors">
+              <button type="submit" disabled={isProvisioning} className="flex items-center gap-2 bg-primary hover:bg-primary-hover disabled:bg-primary-subtle text-on-primary px-6 py-2.5 rounded-lg font-medium motion-safe:transition-colors">
                 {isProvisioning ? (<><Loader2 size={18} className="motion-safe:animate-spin"/> Provisioning DB...</>) : (<><Save size={18}/> Provision Gym</>)}
               </button>
             </div>
@@ -86,7 +86,7 @@ export default function SuperadminAddGymForm() {
         {/* Provisioning Console / Status */}
         <div className="bg-page border border-border rounded-xl p-6 shadow-card">
           <div className="flex items-center gap-2 mb-4 text-primary font-bold border-b border-border pb-4">
-            <Database className="w-5 h-5 text-primary"/>
+            <Database size={18} className="w-5 text-primary"/>
             Provisioning Console
           </div>
           <div className="bg-card rounded-lg p-4 font-mono text-xs text-secondary h-64 overflow-y-auto space-y-2 border border-border">

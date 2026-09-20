@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Renders the Superadmin plans V1 Plan comparison view.
 'use client';
-import { displayValue, formatCurrency, formatNumber } from '@/lib/formatters';
+import { displayValue, formatCurrencyFromMinorUnits, formatNumber } from '@/lib/formatters';
 import Panel from '@/components/ui/Panel';
 import type { SuperadminPlansV1SectionProps } from '@/app/superadmin/saas-billing/plans/plans_types/SuperadminPlansV1Types.ts';
 export default function SuperadminPlansV1ComparisonPanel({ data }: SuperadminPlansV1SectionProps) {
@@ -32,7 +32,7 @@ export default function SuperadminPlansV1ComparisonPanel({ data }: SuperadminPla
             {p.name}
           </td>
           <td className="px-3 py-3 text-primary">
-            {formatCurrency(p.monthly)}
+            {formatCurrencyFromMinorUnits(p.monthly)}
           </td>
           <td className="px-3 py-3 text-secondary">
             {p.members < 0 ? 'Unlimited' : formatNumber(p.members)}

@@ -1,3 +1,4 @@
+// DATA FLOW: Inputs enter useSuperadminGlobalAuditData, flow through its feature-owned state/API dependencies, and return typed UI state/actions to the owning Superadmin feature.
 // RESPONSIBILITY: Owns Global Audit Logs query state for the Superadmin audit route.
 'use client';
 import { useMemo } from 'react';

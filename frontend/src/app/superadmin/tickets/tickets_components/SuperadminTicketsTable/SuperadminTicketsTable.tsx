@@ -1,5 +1,6 @@
 // RESPONSIBILITY: Renders the data table for Support Tickets
 'use client';
+import { getSuperadminTicketsSlaRemainingMs } from '@/app/superadmin/tickets/tickets_utils/SuperadminTicketsSlaUtils';
 import { MessageSquare, CheckCircle2, UserCheck, AlertOctagon, ExternalLink } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import type { SupportTicket } from '@/app/superadmin/tickets/tickets_types/SuperadminTicketsTypes';
@@ -15,12 +16,12 @@ export default function SuperadminTicketsTable({ tickets, onReply, onClose, onAs
     const getSlaStatus = (ticket: SupportTicket) => {
         if (!ticket.slaDeadline)
             return { label: 'No SLA', color: 'text-secondary', icon: null };
-        const diff = new Date(ticket.slaDeadline).getTime() - new Date().getTime();
+        const diff = getSuperadminTicketsSlaRemainingMs(ticket.slaDeadline);
         if (diff < 0)
-            return { label: 'Breached', color: 'text-danger', icon: <AlertOctagon className="w-3 h-3"/> };
+            return { label: 'Breached', color: 'text-danger', icon: <AlertOctagon size={18} className="w-3"/> };
         if (diff < 12 * 60 * 60 * 1000)
-            return { label: 'Approaching', color: 'text-warning', icon: <AlertOctagon className="w-3 h-3"/> };
-        return { label: 'OK', color: 'text-success', icon: <CheckCircle2 className="w-3 h-3"/> };
+            return { label: 'Approaching', color: 'text-warning', icon: <AlertOctagon size={18} className="w-3"/> };
+        return { label: 'OK', color: 'text-success', icon: <CheckCircle2 size={18} className="w-3"/> };
     };
     return (<div className="overflow-x-auto flex-1">
       <table className="w-full text-left border-collapse min-w-max">
@@ -53,7 +54,7 @@ export default function SuperadminTicketsTable({ tickets, onReply, onClose, onAs
                     e.stopPropagation();
                     router.push(`${TicketsUrlConfig.PAGES.GYMS}?id=${ticket.tenantId}`);
                 }} className="flex items-center gap-1 hover:text-primary motion-safe:transition-colors" title="View Gym">
-                    {ticket.tenantName} <ExternalLink className="w-3 h-3"/>
+                    {ticket.tenantName} <ExternalLink size={18} className="w-3"/>
                   </button>
                 </td>
                 <td className="p-4 text-sm text-primary font-medium">{ticket.subject}</td>
@@ -74,13 +75,13 @@ export default function SuperadminTicketsTable({ tickets, onReply, onClose, onAs
                 <td className="p-4 text-sm text-right">
                   <div className="flex items-center justify-end gap-1">
                       <button onClick={(e) => { e.stopPropagation(); onReply(ticket.id); }} className="p-2 text-primary hover:bg-primary-subtle rounded-lg motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" title="Reply to ticket" aria-label={`Reply to ticket ${ticket.id}`}>
-                      <MessageSquare className="w-4 h-4"/>
+                      <MessageSquare size={18} className="w-4"/>
                     </button>
                     {onAssign && (<button onClick={(e) => { e.stopPropagation(); onAssign(ticket.id); }} className="p-2 text-secondary hover:bg-input hover:text-primary rounded-lg motion-safe:transition-colors" title="Assign To">
-                        <UserCheck className="w-4 h-4"/>
+                        <UserCheck size={18} className="w-4"/>
                       </button>)}
                     {onClose && ticket.status !== 'RESOLVED' && ticket.status !== 'CLOSED' && (<button onClick={(e) => { e.stopPropagation(); onClose(ticket.id); }} className="p-2 text-success hover:bg-success-bg rounded-lg motion-safe:transition-colors" title="Close Ticket">
-                        <CheckCircle2 className="w-4 h-4"/>
+                        <CheckCircle2 size={18} className="w-4"/>
                       </button>)}
                   </div>
                 </td>

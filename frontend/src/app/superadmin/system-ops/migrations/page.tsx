@@ -1,5 +1,5 @@
-import { Suspense } from 'react';
 // RESPONSIBILITY: Server component entry point for the Superadmin Migrations module.
+import { Suspense } from 'react';
 import type { Metadata } from 'next';
 import SuperadminMigrationsClient from '@/app/superadmin/system-ops/migrations/migrations_components/SuperadminMigrationsClient';
 export const metadata: Metadata = {

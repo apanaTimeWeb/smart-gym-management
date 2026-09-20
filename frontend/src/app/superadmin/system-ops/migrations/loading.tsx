@@ -11,7 +11,7 @@ export default function MigrationsLoading() {
 
       <div className="bg-card border border-border rounded-xl shadow-card overflow-hidden">
         {/* Table header skeleton */}
-        <div className="h-12 border-b border-border bg-skeleton-base/40 motion-safe:animate-pulse"/>
+        <div className="h-12 border-b border-border bg-skeleton-base motion-safe:animate-pulse"/>
         {/* Table rows skeleton — 5 rows matching migrations table layout */}
         <div className="divide-y divide-border">
           {[1, 2, 3, 4, 5].map((i) => (<div key={`skeleton-${i}`} className="p-4 flex items-center gap-6">

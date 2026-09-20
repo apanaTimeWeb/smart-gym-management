@@ -6,10 +6,11 @@
  */
 'use client';
 import { useState } from 'react';
-import { getDateRange, serializeSuperadminCustomDateRange } from '@/app/superadmin/messaging/messaging_components/SuperadminMessagingDateRangeUtils';
+import { getDateRange, serializeSuperadminCustomDateRange } from '@/app/superadmin/messaging/messaging_utils/SuperadminMessagingDateRangeUtils';
 import type { DateRangeOption } from '@/app/superadmin/messaging/messaging_components/SuperadminMessagingDateRangeConstants';
 
 /** Owns date-range picker interaction state and emits normalized ranges to the parent feature view. */
+/** Purpose: Owns the useSuperadminMessagingDateRangePicker data/state orchestration for this Superadmin feature and exposes its typed UI-facing contract. */
 export function useSuperadminMessagingDateRangePicker(onRangeChange: (start: string, end: string) => void) {
   const [range, setRange] = useState<DateRangeOption>('this_month');
   const [customStart, setCustomStart] = useState('');

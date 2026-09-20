@@ -44,7 +44,68 @@ The dashboard module is responsible for the Superadmin business workflow managin
 - Deprecated marker-only and JSON-stringify tautology tests were removed from the module test tree.
 - Dependency-backed `tsc`, lint, Vitest runtime, Playwright, and real browser responsive execution require the host application environment and remain unverified here.
 
-## Edge Cases / AI Warnings
+## Data and State Architecture
+
+- **Actual feature root:** `dashboard`
+- **Server state:** TanStack Query `useQuery` detected.
+- **Zustand stores:** None detected.
+- **Context files:** None detected.
+- **Custom hooks:** `dashboard_utils/useSuperadminDashboardV1.ts`, `dashboard_components/SuperadminDashboardDateFilterDropdown/useSuperadminDashboardDateFilter.ts`, `dashboard_components/SuperadminDashboardView/useSuperadminDashboardView.ts`, `dashboard_components/SuperadminDashboardView/useSuperadminDashboardDateRangeSuffix.ts`
+- **URL state:** No `useUrlState` detected.
+- **Observed query keys:** `['superadmin', 'dashboard_business_overview']`, `['superadmin', 'dashboard', timeRange, startDate, endDate]`
+
+## API Contract
+
+- **API files:** `dashboard_api/SuperadminDashboardApi.ts`, `dashboard_api/SuperadminDashboardBusinessOverviewApi.ts`
+- **Detected API symbols:** `fetchDashboard` — `dashboard_api/SuperadminDashboardApi.ts`; `fetchDashboardMetrics` — `dashboard_api/SuperadminDashboardApi.ts`; `fetchDashboardBusinessOverview` — `dashboard_api/SuperadminDashboardBusinessOverviewApi.ts`
+- **Runtime response validation:** Zod usage detected.
+
+No API field/method is invented where static source did not expose it; missing runtime confirmation remains `NOT VERIFIED`.
+
+## UI Data Requirements
+
+- **Data-bearing components:** `page.tsx`, `dashboard_components/SuperadminDashboardV1IncomeGymsAndAlertsSection.tsx`, `dashboard_components/SuperadminDashboardV1RetentionSummaryCards.tsx`, `dashboard_components/SuperadminDashboardV1BusinessOverviewHeader.tsx`, `dashboard_components/SuperadminDashboardDateFilterDropdown/SuperadminDashboardDateFilterDropdown.tsx`, `dashboard_components/SuperadminDashboardView/SuperadminDashboardRecentOnboards.tsx`, `dashboard_components/SuperadminDashboardView/SuperadminDashboardView.tsx`, `dashboard_components/SuperadminDashboardView/SuperadminDashboardCharts.tsx`, `dashboard_components/SuperadminDashboardView/SuperadminDashboardKpiGrid.tsx`, `dashboard_components/SuperadminDashboardView/SuperadminDashboardHeader.tsx`
+- **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
+- **Approved date/time evidence:** No `date-fns`/`dayjs` usage detected.
+- **Forms detected:** 0
+
+Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
+
+## Permissions and Security
+
+- **Permission symbols detected:** No explicit module permission symbols detected.
+- **Destructive-confirmation evidence:** No `useConfirm` detected.
+- **Mutation boundary:** No direct TanStack Query `useMutation` usage detected.
+- **Cross-feature dependency rule:** no sibling business feature imports are permitted unless explicitly documented as approved infrastructure.
+
+## Loading, Empty, and Error States
+
+- **`loading.tsx`:** `loading.tsx`
+- **`error.tsx`:** `error.tsx`
+- **Empty-state components:** None detected.
+- Source inspection alone does not prove browser runtime behavior; retry/focus/animation behavior remains `NOT VERIFIED` until the host app is executed.
+
+## Component Responsibility Map
+
+| Component File | Responsibility evidence |
+|---|---|
+| `page.tsx` | Server Component entry point for the Dashboard page. Delegates rendering to SuperadminDashboardView. |
+| `dashboard_components/SuperadminDashboardV1IncomeGymsAndAlertsSection.tsx` | Renders the Superadmin dashboard V1 Why monthly income changed, Top & at-risk gyms, Critical platform alerts view. |
+| `dashboard_components/SuperadminDashboardV1RetentionSummaryCards.tsx` | Renders the Superadmin dashboard V1 DashboardRetentionSummary summary cards. |
+| `dashboard_components/SuperadminDashboardV1BusinessOverviewHeader.tsx` | Renders the Superadmin dashboard V1 DashboardBusinessOverviewHeader. |
+| `dashboard_components/SuperadminDashboardDateFilterDropdown/SuperadminDashboardDateFilterDropdown.tsx` | Pure View component for the Dashboard date filter dropdown, consuming its local hook. |
+| `dashboard_components/SuperadminDashboardView/SuperadminDashboardRecentOnboards.tsx` | Renders the recent tenant onboarding records and navigates to the tenant detail page. |
+| `dashboard_components/SuperadminDashboardView/SuperadminDashboardView.tsx` | Pure View component for the Dashboard. Renders KPI cards, charts, and recent onboards by consuming useSuperadminDashboardView. |
+| `dashboard_components/SuperadminDashboardView/SuperadminDashboardCharts.tsx` | Renders the Dashboard revenue, growth, plan, and geography ApexCharts. No data fetching. |
+| `dashboard_components/SuperadminDashboardView/SuperadminDashboardKpiGrid.tsx` | Renders the Dashboard KPI cards. No API calls. |
+| `dashboard_components/SuperadminDashboardView/SuperadminDashboardHeader.tsx` | Renders the Dashboard header with the local date filter. No API calls. |
+
+## Repository-Verified Repair Notes
+
+This addendum is generated from the current source tree and exists to make future AI context self-contained. It records actual source evidence and explicitly leaves unavailable runtime facts as `NOT VERIFIED`.
+
+
+## Edge Cases and AI Warnings
 - **Strict Isolation**: Never import admin or manager components into dashboard.
 - **Destructive Actions**: Any deletion or modification of dashboard records must use the Superadmin confirmation provider.
 - **Data Leakage**: Ensure API payloads for dashboard do not expose cross-tenant sensitive data.

@@ -1,16 +1,16 @@
 // RESPONSIBILITY: Renders the Superadmin invoices summary statistics.
 'use client';
 import { AlertCircle, DollarSign } from 'lucide-react';
-import { formatCurrency, formatNumber } from '@/lib/formatters';
+import { formatCurrencyFromMinorUnits, formatNumber } from '@/lib/formatters';
 import { useDateRangeSuffix } from '@/hooks/useDateRangeSuffix';
 import type { SuperadminInvoicesStatsBarProps } from '@/app/superadmin/saas-billing/invoices/invoices_types/SuperadminInvoicesStatsBarTypes';
 
 export default function SuperadminInvoicesStatsBar({ totalRevenue, failedRevenue, pendingRevenue, overdueCount, }: SuperadminInvoicesStatsBarProps) {
     const dateSuffix = useDateRangeSuffix(false);
     const cards = [
-        { label: `Total Collected${dateSuffix}`, value: formatCurrency(totalRevenue), tone: 'success', Icon: DollarSign },
-        { label: `Failed Payments${dateSuffix}`, value: formatCurrency(failedRevenue), tone: 'danger', Icon: AlertCircle },
-        { label: `Pending Revenue${dateSuffix}`, value: formatCurrency(pendingRevenue), tone: 'warning', Icon: DollarSign },
+        { label: `Total Collected${dateSuffix}`, value: formatCurrencyFromMinorUnits(totalRevenue), tone: 'success', Icon: DollarSign },
+        { label: `Failed Payments${dateSuffix}`, value: formatCurrencyFromMinorUnits(failedRevenue), tone: 'danger', Icon: AlertCircle },
+        { label: `Pending Revenue${dateSuffix}`, value: formatCurrencyFromMinorUnits(pendingRevenue), tone: 'warning', Icon: DollarSign },
         { label: `Overdue Count${dateSuffix}`, value: formatNumber(overdueCount), tone: 'danger', Icon: AlertCircle },
     ] as const;
     return (<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">

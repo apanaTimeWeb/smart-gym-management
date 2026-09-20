@@ -14,13 +14,13 @@ export function SuperadminMessagingMessagesTab({ search, setSearch, channelFilte
       <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
         <label className="relative block w-full max-w-md">
           <span className="sr-only">Search tenant messages</span>
-          <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-secondary" size={18} strokeWidth={2} />
+          <Search size={18} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-secondary" strokeWidth={2}/>
           <input type="search" value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search tenant, subject, or message..." className="w-full rounded-lg border border-border bg-input py-2 pl-10 pr-3 text-sm text-primary focus:border-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary" />
         </label>
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <div className="flex flex-wrap gap-2">
             {(['ALL', 'EMAIL', 'SMS', 'IN_APP'] as const).map((channel) => (
-              <button key={channel} type="button" onClick={() => setChannelFilter(channel)} className={`rounded-lg border px-3 py-2 text-xs font-medium motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${channelFilter === channel ? 'border-primary/30 bg-primary-subtle text-primary' : 'border-border bg-input text-secondary hover:text-primary'}`}>
+              <button key={channel} type="button" onClick={() => setChannelFilter(channel)} className={`rounded-lg border px-3 py-2 text-xs font-medium motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${channelFilter === channel ? 'border-border bg-primary-subtle text-primary' : 'border-border bg-input text-secondary hover:text-primary'}`}>
                 {channel}
               </button>
             ))}
@@ -34,7 +34,7 @@ export function SuperadminMessagingMessagesTab({ search, setSearch, channelFilte
           <table className="w-full text-sm">
             <caption className="sr-only">Superadmin tenant messages</caption>
             <thead>
-              <tr className="border-b border-border bg-input/40">
+              <tr className="border-b border-border bg-input">
                 <th scope="col" className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-secondary">Tenant</th>
                 <th scope="col" className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-secondary">Channel</th>
                 <th scope="col" className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-secondary">Subject</th>
@@ -44,13 +44,13 @@ export function SuperadminMessagingMessagesTab({ search, setSearch, channelFilte
             </thead>
             <tbody className="divide-y divide-border">
               {messages.map((message) => (
-                <tr key={message.id} className="motion-safe:transition-colors hover:bg-input/30">
+                <tr key={message.id} className="motion-safe:transition-colors hover:bg-input">
                   <td className="px-4 py-3 font-medium text-primary">{message.tenantName}</td>
                   <td className="px-4 py-3">
                     <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold ${CHANNEL_STYLES[message.channel]}`}>
-                      {message.channel === 'EMAIL' && <Mail size={11} aria-hidden="true" />}
-                      {message.channel === 'SMS' && <MessageSquare size={11} aria-hidden="true" />}
-                      {message.channel === 'IN_APP' && <Bell size={11} aria-hidden="true" />}
+                      {message.channel === 'EMAIL' && <Mail size={18} aria-hidden="true"/>}
+                      {message.channel === 'SMS' && <MessageSquare size={18} aria-hidden="true"/>}
+                      {message.channel === 'IN_APP' && <Bell size={18} aria-hidden="true"/>}
                       {message.channel}
                     </span>
                   </td>

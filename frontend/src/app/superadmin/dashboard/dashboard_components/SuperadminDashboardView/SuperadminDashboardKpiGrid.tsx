@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import type { SuperadminDashboardKpiGridProps } from '@/app/superadmin/dashboard/dashboard_types/SuperadminDashboardTypes';
 import { useSuperadminDashboardDateRangeSuffix } from '@/app/superadmin/dashboard/dashboard_components/SuperadminDashboardView/useSuperadminDashboardDateRangeSuffix';
 import { DashboardUrlConfig } from '@/app/superadmin/dashboard/superadmin_dashboard_url_config';
-import { formatCurrency, formatNumber } from '@/lib/formatters';
+import { formatCurrencyFromMinorUnits, formatNumber } from '@/lib/formatters';
 export function SuperadminDashboardKpiGrid({ metrics, revenueChartData, timeMultiplier, mrrLabel }: SuperadminDashboardKpiGridProps) {
     const router = useRouter();
     const dateSuffix = useSuperadminDashboardDateRangeSuffix();
@@ -19,7 +19,7 @@ export function SuperadminDashboardKpiGrid({ metrics, revenueChartData, timeMult
     const kpiCards = [
         {
             label: mrrLabel + dateSuffix,
-            value: formatCurrency(Math.round((metrics.monthlyRecurringRevenue || 0) * timeMultiplier)),
+            value: formatCurrencyFromMinorUnits(Math.round((metrics.monthlyRecurringRevenue || 0) * timeMultiplier)),
             trend: metrics.mrrDeltaPercent !== undefined
                 ? `${metrics.mrrDeltaPercent > 0 ? '+' : ''}${metrics.mrrDeltaPercent}% vs last month`
                 : mrrTrendStr,
@@ -57,7 +57,7 @@ export function SuperadminDashboardKpiGrid({ metrics, revenueChartData, timeMult
         },
         {
             label: 'Avg. Income per Gym',
-            value: formatCurrency(metrics.arpu || 0),
+            value: formatCurrencyFromMinorUnits(metrics.arpu || 0),
             trend: undefined,
             trendUp: true,
             icon: DollarSign,
@@ -84,7 +84,7 @@ export function SuperadminDashboardKpiGrid({ metrics, revenueChartData, timeMult
         },
         {
             label: 'PENDING REVENUE',
-            value: formatCurrency(metrics.pendingRevenue || 0),
+            value: formatCurrencyFromMinorUnits(metrics.pendingRevenue || 0),
             trend: undefined,
             trendUp: true,
             icon: CreditCard,

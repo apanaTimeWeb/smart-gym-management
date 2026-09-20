@@ -3,17 +3,7 @@
 // DATA FLOW: Component -> useSuperadminPlansStore.ts -> UI Components
 import { create } from 'zustand';
 import type { SubscriptionPlan } from '@/app/superadmin/saas-billing/plans/plans_types/SuperadminPlansTypes';
-interface PlansStoreState {
-    // ── Modal UI ──────────────────────────────────────────────────────────────
-    isCreateModalOpen: boolean;
-    isEditModalOpen: boolean;
-    selectedPlan: SubscriptionPlan | null;
-    // ── Actions ───────────────────────────────────────────────────────────────
-    openCreateModal: () => void;
-    closeCreateModal: () => void;
-    openEditModal: (plan: SubscriptionPlan) => void;
-    closeEditModal: () => void;
-}
+import type { SuperadminPlansStoreState } from '@/app/superadmin/saas-billing/plans/plans_types/SuperadminPlansStoreTypes';
 /**
  * Purpose: Zustand store for the Plans module. Manages only modal UI state.
  * Inputs: values defined by the exported hook signature.
@@ -21,7 +11,7 @@ interface PlansStoreState {
  * Side effects: remain scoped to the owning feature or approved application infrastructure.
  * Invariant: does not move feature business state into unrelated modules.
  */
-export const useSuperadminPlansStore = create<PlansStoreState>((set) => ({
+export const useSuperadminPlansStore = create<SuperadminPlansStoreState>((set) => ({
     isCreateModalOpen: false,
     isEditModalOpen: false,
     selectedPlan: null,

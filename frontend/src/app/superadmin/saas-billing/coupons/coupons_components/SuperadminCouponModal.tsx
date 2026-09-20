@@ -13,7 +13,7 @@ export const SuperadminCouponModal: React.FC<SuperadminCouponModalProps> = ({ is
     useUnsavedChangesGuard(isOpen && form.formState.isDirty);
     if (!isOpen)
         return null;
-    return (<div className="fixed inset-0 bg-overlay/80 z-40 flex items-center justify-center p-4 backdrop-blur-sm" role="dialog" aria-modal="true">
+    return (<div className="fixed inset-0 bg-overlay z-40 flex items-center justify-center p-4 backdrop-blur-sm" role="dialog" aria-modal="true">
       <div className="bg-overlay border border-border rounded-2xl w-full max-w-md shadow-dialog overflow-hidden flex flex-col">
         <div className="flex items-center justify-between px-7 py-5 border-b border-border">
           <h2 className="text-lg font-bold text-primary">Create Global Coupon</h2>
@@ -36,7 +36,7 @@ export const SuperadminCouponModal: React.FC<SuperadminCouponModalProps> = ({ is
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-1.5">
               <label className="text-sm font-bold text-secondary">Discount Type <span className="text-danger">*</span></label>
-              <Controller name="discountType" control={form.control} render={({ field }) => (<SearchableDropdown value={field.value || ''} onChange={field.onChange} options={SUPERADMIN_COUPON_DISCOUNT_TYPE_OPTIONS}/>)}/>
+              <Controller name="discountType" control={form.control} render={({ field }) => (<SearchableDropdown value={field.value || ''} onChange={field.onChange} options={SUPERADMIN_COUPON_DISCOUNT_TYPE_OPTIONS as any}/>)}/>
               {form.formState.errors.discountType && <span className="text-xs text-danger">{form.formState.errors.discountType.message}</span>}
             </div>
 

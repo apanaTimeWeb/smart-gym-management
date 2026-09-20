@@ -44,13 +44,30 @@ const UserGrowthPointSchema = z.object({
     count: z.number(),
 }).passthrough();
 export const AnalyticsApiDataSchema = z.object({
-    activeUsers: z.number(),
-    monthlyRecurringRevenue: z.number(),
-    cancellationRate: z.number(),
-    newSignups: z.number(),
-    revenueHistory: z.array(RevenueHistoryPointSchema),
-    userGrowth: z.array(UserGrowthPointSchema),
-});
+    metrics: z.object({
+        mrr: z.number(),
+        arr: z.number(),
+        cancellationRate: z.number(),
+        ltv: z.number(),
+        cac: z.number(),
+        activeTenants: z.number(),
+        arpu: z.number(),
+        mrrDeltaPercent: z.number(),
+        arrDeltaPercent: z.number(),
+        cancellationDeltaPercent: z.number().optional(),
+    }),
+    monthly: z.array(z.object({
+        month: z.string(),
+        mrr: z.number(),
+        tenantCount: z.number(),
+        cancelledCount: z.number(),
+    })),
+    planRevenue: z.array(z.object({
+        plan: z.string(),
+        revenue: z.number(),
+        tenantCount: z.number(),
+    })).optional(),
+}).passthrough();
 export type RevenueHistoryPoint = z.infer<typeof RevenueHistoryPointSchema>;
 export type UserGrowthPoint = z.infer<typeof UserGrowthPointSchema>;
 export const RevenueChartDataSchema = z.object({ month: z.string(), mrr: z.number() });

@@ -1,152 +1,80 @@
+// RESPONSIBILITY: Renders the selected White-labeling domain drawer and delegates status mutations to the feature hook.
 'use client';
-import { X, CheckCircle, AlertTriangle, RefreshCw } from 'lucide-react';
-import { useSuperadminWhiteLabelingStore } from '../white-labeling_store/useSuperadminWhiteLabelingStore';
-import { useUpdateSuperadminDomainStatus } from '../white-labeling_hooks/useSuperadminWhiteLabeling';
-import type { WhiteLabelDomain } from '../white-labeling_types/SuperadminWhiteLabelingTypes';
-import { useEffect } from 'react';
 
-interface SuperadminWhiteLabelingDrawerProps {
-  domains: WhiteLabelDomain[];
-}
+import { useEffect, useRef } from 'react';
+import { AlertTriangle, CheckCircle, Loader2, X } from 'lucide-react';
+import { useConfirm } from '@/components/ui/Feedback/ConfirmProvider';
+import { formatDate } from '@/lib/formatters';
+import { useSuperadminWhiteLabelingStore } from '@/app/superadmin/white-labeling/white-labeling_store/useSuperadminWhiteLabelingStore';
+import { useUpdateSuperadminDomainStatus } from '@/app/superadmin/white-labeling/white-labeling_hooks/useSuperadminWhiteLabeling';
+import type { WhiteLabelDomain } from '@/app/superadmin/white-labeling/white-labeling_types/SuperadminWhiteLabelingTypes';
+import { SUPERADMIN_WHITE_LABELING_DNS_GUIDANCE } from '@/app/superadmin/white-labeling/white-labeling_constants/SuperadminWhiteLabelingConstants';
+import type { SuperadminWhiteLabelingDrawerProps } from '@/app/superadmin/white-labeling/white-labeling_types/SuperadminWhiteLabelingComponentTypes';
+
 
 export default function SuperadminWhiteLabelingDrawer({ domains }: SuperadminWhiteLabelingDrawerProps) {
   const { selectedDomainId, setSelectedDomainId } = useSuperadminWhiteLabelingStore();
-  const { mutate: updateStatus, isPending } = useUpdateSuperadminDomainStatus();
+  const { mutateAsync: updateStatus, isPending } = useUpdateSuperadminDomainStatus();
+  const { confirm } = useConfirm();
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const restoreFocusRef = useRef<HTMLElement | null>(null);
+  const domain = domains.find((item) => item.id === selectedDomainId);
 
-  const domain = domains.find(d => d.id === selectedDomainId);
-
-  // Close drawer on escape key
   useEffect(() => {
-    const handleEsc = (e: KeyboardEvent) => { if (e.key === 'Escape') setSelectedDomainId(null); };
-    window.addEventListener('keydown', handleEsc);
-    return () => window.removeEventListener('keydown', handleEsc);
-  }, [setSelectedDomainId]);
+    if (!domain) return;
+    restoreFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    closeButtonRef.current?.focus();
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') { event.preventDefault(); setSelectedDomainId(null); return; }
+      if (event.key !== 'Tab') return;
+      const root = document.getElementById('superadmin-white-labeling-drawer');
+      if (!root) return;
+      const focusable = Array.from(root.querySelectorAll<HTMLElement>('button:not([disabled]), a[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled])'));
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => {
+      window.removeEventListener('keydown', onKeyDown);
+      restoreFocusRef.current?.focus();
+    };
+  }, [domain, setSelectedDomainId]);
 
   if (!domain) return null;
 
+  const markFailed = async () => {
+    const confirmed = await confirm({ title: 'Mark Domain as Failed', message: `Mark ${domain.domain} as failed? This changes its current verification state.`, type: 'danger', confirmText: 'Mark Failed' });
+    if (confirmed) await updateStatus({ id: domain.id, dto: { status: 'failed' } });
+  };
+
+  const markVerified = async () => { await updateStatus({ id: domain.id, dto: { status: 'active' } }); };
+
   return (
     <>
-      <div 
-        className="fixed inset-0 bg-overlay/90 backdrop-blur-sm z-50 motion-safe:transition-opacity"
-        onClick={() => setSelectedDomainId(null)}
-        aria-hidden="true"
-      />
-      
-      <div className="fixed inset-y-0 right-0 w-full max-w-md bg-card border-l border-border shadow-2xl z-50 flex flex-col motion-safe:transition-transform motion-safe:duration-300">
-        
-        {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-border shrink-0">
-          <div>
-            <h2 className="text-xl font-bold text-primary">Manage Domain</h2>
-            <p className="text-sm text-secondary mt-1">{domain.gymName}</p>
-          </div>
-          <button 
-            onClick={() => setSelectedDomainId(null)}
-            className="p-2 -mr-2 rounded-lg text-secondary hover:text-primary hover:bg-input motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
-            aria-label="Close panel"
-          >
-            <X className="w-5 h-5" />
-          </button>
+      <div className="fixed inset-0 z-40 bg-overlay backdrop-blur-sm motion-safe:transition-opacity" onClick={() => setSelectedDomainId(null)} aria-hidden="true" />
+      <aside id="superadmin-white-labeling-drawer" className="fixed inset-y-0 right-0 z-40 flex w-full max-w-md flex-col border-l border-border bg-overlay shadow-dialog motion-safe:transition-transform motion-safe:duration-slow" aria-labelledby="superadmin-white-labeling-drawer-title" aria-modal="true" role="dialog">
+        <div className="flex shrink-0 items-center justify-between border-b border-border p-6">
+          <div className="min-w-0"><h2 id="superadmin-white-labeling-drawer-title" className="text-xl font-bold text-primary">Manage Domain</h2><p className="mt-1 truncate text-sm text-secondary" title={domain.gymName}>{domain.gymName}</p></div>
+          <button ref={closeButtonRef} type="button" onClick={() => setSelectedDomainId(null)} className="min-h-11 min-w-11 rounded-lg p-2 text-secondary hover:bg-input hover:text-primary motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page" aria-label="Close panel"><X size={18} className="h-5" aria-hidden="true"/></button>
         </div>
 
-        {/* Content */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-8 custom-scrollbar">
-          
-          <div className="space-y-4">
-            <h3 className="text-sm font-semibold text-primary uppercase tracking-wider">Domain Configuration</h3>
-            <div className="bg-input rounded-xl p-4 border border-border">
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-sm text-secondary">Target Domain</span>
-                <span className="text-sm font-medium text-primary bg-page px-2 py-1 rounded-md">{domain.domain}</span>
-              </div>
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-sm text-secondary">DNS Status</span>
-                <span className={`text-sm font-medium ${domain.status === 'active' ? 'text-success' : domain.status === 'failed' ? 'text-danger' : 'text-warning'}`}>
-                  {domain.status.charAt(0).toUpperCase() + domain.status.slice(1)}
-                </span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-secondary">SSL Certificate</span>
-                <span className={`text-sm font-medium ${domain.sslStatus === 'issued' ? 'text-success' : domain.sslStatus === 'failed' ? 'text-danger' : 'text-warning'}`}>
-                  {domain.sslStatus.charAt(0).toUpperCase() + domain.sslStatus.slice(1)}
-                </span>
-              </div>
-            </div>
-          </div>
+        <div className="flex-1 space-y-8 overflow-y-auto p-6 custom-scrollbar">
+          <section className="space-y-4"><h3 className="text-sm font-semibold uppercase tracking-wider text-primary">Domain Configuration</h3><div className="space-y-3 rounded-xl border border-border bg-input p-4 text-sm"><div className="flex items-center justify-between gap-3"><span className="text-secondary">Target Domain</span><span className="max-w-60 truncate rounded-md bg-page px-2 py-1 font-medium text-primary" title={domain.domain}>{domain.domain}</span></div><div className="flex items-center justify-between gap-3"><span className="text-secondary">DNS Status</span><span className={`${domain.status === 'active' ? 'text-success' : domain.status === 'failed' ? 'text-danger' : 'text-warning'} font-medium`}>{domain.status}</span></div><div className="flex items-center justify-between gap-3"><span className="text-secondary">SSL Certificate</span><span className={`${domain.sslStatus === 'issued' ? 'text-success' : domain.sslStatus === 'failed' ? 'text-danger' : 'text-warning'} font-medium`}>{domain.sslStatus}</span></div><div className="flex items-center justify-between gap-3"><span className="text-secondary">Added On</span><span className="text-primary">{formatDate(domain.createdAt)}</span></div></div></section>
 
-          <div className="space-y-4">
-            <h3 className="text-sm font-semibold text-primary uppercase tracking-wider">Branding Profile</h3>
-            <div className="bg-input rounded-xl p-4 border border-border space-y-4">
-              <div className="flex items-center gap-4">
-                <span className="text-sm text-secondary w-24">App Logo</span>
-                {domain.logoUrl ? (
-                  <div className="w-12 h-12 rounded-lg bg-page border border-border bg-cover bg-center shadow-sm" style={{ backgroundImage: `url(${domain.logoUrl})` }} />
-                ) : (
-                  <span className="text-sm font-medium text-primary bg-page px-3 py-1.5 rounded-md border border-border">Not Provided</span>
-                )}
-              </div>
-              <div className="flex items-center gap-4">
-                <span className="text-sm text-secondary w-24">Theme Color</span>
-                {domain.primaryColor ? (
-                  <div className="flex items-center gap-2">
-                    <div className="w-6 h-6 rounded-full border border-border shadow-sm" style={{ backgroundColor: domain.primaryColor }} />
-                    <span className="text-sm font-mono text-primary">{domain.primaryColor}</span>
-                  </div>
-                ) : (
-                  <span className="text-sm font-medium text-primary bg-page px-3 py-1.5 rounded-md border border-border">Default</span>
-                )}
-              </div>
-            </div>
-          </div>
+          <section className="space-y-4"><h3 className="text-sm font-semibold uppercase tracking-wider text-primary">Branding Profile</h3><div className="space-y-4 rounded-xl border border-border bg-input p-4"><div className="flex items-center gap-4"><span className="w-24 shrink-0 text-sm text-secondary">App Logo</span>{domain.logoUrl ? <span className="truncate text-sm font-medium text-primary" title={domain.logoUrl}>Configured</span> : <span className="rounded-md border border-border bg-page px-3 py-1.5 text-sm font-medium text-primary">Not Provided</span>}</div><div className="flex items-center gap-4"><span className="w-24 shrink-0 text-sm text-secondary">Theme Color</span>{domain.primaryColor ? <div className="flex min-w-0 items-center gap-2"><div className="h-6 w-6 shrink-0 rounded-full border border-border" style={{ backgroundColor: domain.primaryColor }} aria-hidden="true" /><span className="truncate font-mono text-sm text-primary">{domain.primaryColor}</span></div> : <span className="rounded-md border border-border bg-page px-3 py-1.5 text-sm font-medium text-primary">Default</span>}</div></div></section>
 
-          <div className="space-y-4">
-            <h3 className="text-sm font-semibold text-primary uppercase tracking-wider">DNS Instructions for Gym</h3>
-            <div className="bg-page rounded-xl p-4 border border-border text-sm text-secondary space-y-2">
-              <p>The gym owner needs to add the following DNS records to their domain registrar:</p>
-              <div className="bg-input p-3 rounded-md font-mono text-xs border border-border text-primary overflow-x-auto">
-                <p>Type: CNAME</p>
-                <p>Name: @</p>
-                <p>Value: proxy.gymsmart360.com</p>
-              </div>
-              <p className="text-xs text-tertiary mt-2">DNS propagation may take up to 48 hours.</p>
-            </div>
-          </div>
-
+          <section className="space-y-4"><h3 className="text-sm font-semibold uppercase tracking-wider text-primary">DNS Instructions for Gym</h3><div className="space-y-2 rounded-xl border border-border bg-page p-4 text-sm text-secondary"><p>The gym owner needs to add the following DNS records to their domain registrar:</p><div className="overflow-x-auto rounded-md border border-border bg-input p-3 font-mono text-xs text-primary"><p>Type: {SUPERADMIN_WHITE_LABELING_DNS_GUIDANCE.recordType}</p><p>Name: {SUPERADMIN_WHITE_LABELING_DNS_GUIDANCE.recordName}</p><p>Value: {SUPERADMIN_WHITE_LABELING_DNS_GUIDANCE.recordValue}</p></div><p className="text-xs text-disabled">{SUPERADMIN_WHITE_LABELING_DNS_GUIDANCE.propagationMessage}</p></div></section>
         </div>
 
-        {/* Footer Actions */}
-        <div className="p-6 border-t border-border bg-page/50 shrink-0 space-y-3">
-          {domain.status !== 'active' && (
-            <button
-              onClick={() => updateStatus({ id: domain.id, dto: { status: 'active' } })}
-              disabled={isPending}
-              className="w-full flex items-center justify-center gap-2 bg-success-bg text-success border border-success/20 py-2.5 rounded-lg font-medium hover:bg-success-bg hover:text-white motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-success disabled:opacity-50"
-            >
-              <CheckCircle className="w-4 h-4" />
-              Mark as Verified
-            </button>
-          )}
-
-          {domain.status === 'pending' && (
-            <button
-              onClick={() => updateStatus({ id: domain.id, dto: { status: 'failed' } })}
-              disabled={isPending}
-              className="w-full flex items-center justify-center gap-2 bg-danger-bg text-danger border border-danger/20 py-2.5 rounded-lg font-medium hover:bg-danger-bg hover:text-white motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger disabled:opacity-50"
-            >
-              <AlertTriangle className="w-4 h-4" />
-              Mark as Failed
-            </button>
-          )}
-
-          <button
-            onClick={() => setSelectedDomainId(null)}
-            className="w-full py-2.5 rounded-lg font-medium bg-input text-primary hover:bg-border motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
-          >
-            Close
-          </button>
+        <div className="shrink-0 space-y-3 border-t border-border bg-page p-6">
+          {domain.status !== 'active' ? <button type="button" onClick={() => void markVerified()} disabled={isPending} className="flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-success px-4 py-2.5 font-medium text-on-success motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page disabled:cursor-not-allowed disabled:opacity-50"><CheckCircle size={18} aria-hidden="true"/>{isPending ? <><Loader2 size={18} className="motion-safe:animate-spin" aria-hidden="true" /> Saving...</> : <>Mark as Verified</>}</button> : null}
+          {domain.status === 'pending' ? <button type="button" onClick={() => void markFailed()} disabled={isPending} className="flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-danger px-4 py-2.5 font-medium text-on-danger motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page disabled:cursor-not-allowed disabled:opacity-50"><AlertTriangle size={18} aria-hidden="true"/>{isPending ? <><Loader2 size={18} className="motion-safe:animate-spin" aria-hidden="true" /> Saving...</> : <>Mark as Failed</>}</button> : null}
+          <button type="button" onClick={() => setSelectedDomainId(null)} className="min-h-11 w-full rounded-lg bg-input px-4 py-2.5 font-medium text-primary hover:bg-border motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page">Close</button>
         </div>
-        
-      </div>
+      </aside>
     </>
   );
 }

@@ -3,7 +3,7 @@
 import dynamic from 'next/dynamic';
 import { SUPERADMIN_DASHBOARD_CHART_COLORS } from '@/app/superadmin/dashboard/dashboard_utils/SuperadminDashboardConstants';
 import type { SuperadminDashboardChartsProps, RevenueChartData, GrowthChartData } from '@/app/superadmin/dashboard/dashboard_types/SuperadminDashboardTypes';
-import { formatCurrency, formatNumber } from '@/lib/formatters';
+import { formatCurrencyFromMinorUnits, formatNumber } from '@/lib/formatters';
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 export function SuperadminDashboardCharts({ metrics, revenueChartData, growthChartData, timeMultiplier, mrrLabel }: SuperadminDashboardChartsProps) {
     const chartOptions = {
@@ -24,7 +24,7 @@ export function SuperadminDashboardCharts({ metrics, revenueChartData, growthCha
         yaxis: {
             labels: {
                 style: { colors: SUPERADMIN_DASHBOARD_CHART_COLORS.TEXT_SECONDARY },
-                formatter: (val: number) => formatCurrency(val / 1000).replace('.00', '') + 'k',
+                formatter: (val: number) => formatCurrencyFromMinorUnits(val / 1000).replace('.00', '') + 'k',
             },
         },
         grid: { borderColor: SUPERADMIN_DASHBOARD_CHART_COLORS.BORDER, strokeDashArray: 4 },
@@ -62,7 +62,7 @@ export function SuperadminDashboardCharts({ metrics, revenueChartData, growthCha
         dataLabels: { enabled: false },
         tooltip: {
             theme: 'dark' as const,
-            y: { formatter: (val: number) => formatCurrency(val) },
+            y: { formatter: (val: number) => formatCurrencyFromMinorUnits(val) },
         },
         legend: { position: 'bottom' as const, labels: { colors: SUPERADMIN_DASHBOARD_CHART_COLORS.TEXT_SECONDARY } },
     };
@@ -75,19 +75,19 @@ export function SuperadminDashboardCharts({ metrics, revenueChartData, growthCha
             enabled: true,
             offsetX: 20,
             style: { fontSize: '12px', colors: [SUPERADMIN_DASHBOARD_CHART_COLORS.TEXT_SECONDARY] },
-            formatter: (val: number) => formatCurrency(val / 1000).replace('.00', '') + 'k'
+            formatter: (val: number) => formatCurrencyFromMinorUnits(val / 1000).replace('.00', '') + 'k'
         },
         stroke: { show: true, width: 1, colors: ['transparent'] },
         xaxis: {
             categories: (metrics.revenueByGeography || []).map((g) => g.region),
-            labels: { style: { colors: SUPERADMIN_DASHBOARD_CHART_COLORS.TEXT_SECONDARY }, formatter: (val: number) => formatCurrency(val / 1000).replace('.00', '') + 'k' },
+            labels: { style: { colors: SUPERADMIN_DASHBOARD_CHART_COLORS.TEXT_SECONDARY }, formatter: (val: number) => formatCurrencyFromMinorUnits(val / 1000).replace('.00', '') + 'k' },
             axisBorder: { show: false },
             axisTicks: { show: false },
         },
         yaxis: { labels: { style: { colors: SUPERADMIN_DASHBOARD_CHART_COLORS.TEXT_SECONDARY } } },
         grid: { borderColor: SUPERADMIN_DASHBOARD_CHART_COLORS.BORDER, strokeDashArray: 4, xaxis: { lines: { show: true } }, yaxis: { lines: { show: false } } },
         theme: { mode: 'dark' as const },
-        tooltip: { theme: 'dark' as const, y: { formatter: (val: number) => formatCurrency(val) } },
+        tooltip: { theme: 'dark' as const, y: { formatter: (val: number) => formatCurrencyFromMinorUnits(val) } },
     };
     const geoChartSeries = [{
             name: 'Revenue',
@@ -97,7 +97,7 @@ export function SuperadminDashboardCharts({ metrics, revenueChartData, growthCha
       <div className="lg:col-span-2 bg-card border border-border rounded-xl p-6 shadow-card">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-base font-semibold text-primary">{mrrLabel} Growth</h2>
-          {metrics.arrDeltaPercent !== undefined && (<span className={`text-xs font-medium px-2.5 py-1 rounded-full ${metrics.arrDeltaPercent >= 0 ? 'bg-success-bg text-success border border-success/20' : 'bg-danger-bg text-danger border border-danger/20'}`}>
+          {metrics.arrDeltaPercent !== undefined && (<span className={`text-xs font-medium px-2.5 py-1 rounded-full ${metrics.arrDeltaPercent >= 0 ? 'bg-success-bg text-success border border-border' : 'bg-danger-bg text-danger border border-border'}`}>
               ARR Trend: {metrics.arrDeltaPercent > 0 ? '+' : ''}{metrics.arrDeltaPercent}%
             </span>)}
         </div>

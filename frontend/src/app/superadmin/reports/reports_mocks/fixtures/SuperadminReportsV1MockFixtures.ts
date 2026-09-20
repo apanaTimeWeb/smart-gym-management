@@ -7,7 +7,7 @@ const base = {
     { name: 'Customer churn', current: 5.2, previous: 6.1, change: -14.8 },
   ],
   planComparison: [
-    { name: 'Starter', income: 220000, gyms: 92 }, { name: 'Professional', income: 610000, gyms: 318 }, { name: 'Business', income: 410000, gyms: 154 }, { name: 'Enterprise', income: 155000, gyms: 41 },
+    { name: 'Starter', income: 22000000, gyms: 92 }, { name: 'Professional', income: 61000000, gyms: 318 }, { name: 'Business', income: 41000000, gyms: 154 }, { name: 'Enterprise', income: 15500000, gyms: 41 },
   ],
   regionComparison: [
     { name: 'Delhi NCR', current: 410000, previous: 370000 }, { name: 'Mumbai', current: 300000, previous: 281000 }, { name: 'Bengaluru', current: 268000, previous: 251000 }, { name: 'Pune', current: 154000, previous: 147000 },

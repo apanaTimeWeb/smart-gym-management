@@ -1,3 +1,4 @@
+// DATA FLOW: Inputs enter useSuperadminReportsPage, flow through its feature-owned state/API dependencies, and return typed UI state/actions to the owning Superadmin feature.
 // RESPONSIBILITY: Owns all Reports server-state queries and keeps query parameters identical across revenue, cancellation, and health requests.
 'use client';
 import { useQuery } from '@tanstack/react-query';

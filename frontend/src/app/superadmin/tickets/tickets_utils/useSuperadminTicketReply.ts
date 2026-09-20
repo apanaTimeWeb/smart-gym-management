@@ -11,6 +11,7 @@ import { replySchema } from '@/app/superadmin/tickets/tickets_types/SuperadminTi
 import type { SuperadminTicketsReplyFormValues } from '@/app/superadmin/tickets/tickets_types/SuperadminTicketsReplyFormTypes';
 
 /** Owns ticket reply mutations, including payload validation and detail/list cache invalidation. */
+/** Purpose: Owns the useSuperadminTicketReply data/state orchestration for this Superadmin feature and exposes its typed UI-facing contract. */
 export function useSuperadminTicketReply() {
   const queryClient = useQueryClient();
   const mutation = useMutation({

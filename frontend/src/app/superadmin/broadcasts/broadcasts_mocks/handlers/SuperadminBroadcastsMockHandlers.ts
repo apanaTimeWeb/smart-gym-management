@@ -5,10 +5,12 @@ import type { ApiResponse } from '@/lib/api';
 import { BroadcastsUrlConfig } from '@/app/superadmin/broadcasts/superadmin_broadcasts_url_config';
 import { MOCK_SUPERADMIN_BROADCASTS, SUPERADMIN_BROADCAST_TENANTS } from '@/app/superadmin/broadcasts/broadcasts_mocks/fixtures/SuperadminBroadcastsMockFixtures';
 import type { SuperadminBroadcastDeliveryResult } from '@/app/superadmin/broadcasts/broadcasts_types/SuperadminBroadcastDeliveryTypes';
+
+type SuperadminBroadcastMutationResponse = ApiResponse<Broadcast> | ApiResponse<SuperadminBroadcastDeliveryResult> | ApiResponse<null>;
 const BASE_URL = '*/superadmin/broadcasts';
 let mockBroadcasts = [...MOCK_SUPERADMIN_BROADCASTS];
 const deliveredRecipientsByBroadcast = new Map<string, Set<string>>();
-const idempotentBroadcastResponses = new Map<string, any>();
+const idempotentBroadcastResponses = new Map<string, SuperadminBroadcastMutationResponse>();
 export function resetSuperadminBroadcastsMockState(): void {
   mockBroadcasts = [...MOCK_SUPERADMIN_BROADCASTS];
   deliveredRecipientsByBroadcast.clear();

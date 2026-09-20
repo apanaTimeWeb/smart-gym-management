@@ -9,7 +9,7 @@ import type { SuperadminInvoicesLogPaymentModalProps } from '@/app/superadmin/sa
 export default function SuperadminInvoicesLogPaymentModal({ onClose, selectedGym, isGymDropdownOpen, setIsGymDropdownOpen, gymSearchTerm, setGymSearchTerm, filteredTenantsForDropdown, handleSelectGym, paymentMethod, setPaymentMethod, onSave }: SuperadminInvoicesLogPaymentModalProps) {
     const [amount, setAmount] = useState('');
     return (<div className="fixed inset-0 z-40 flex items-center justify-center p-4" role="dialog" aria-modal="true">
-      <div className="absolute inset-0 bg-overlay/80 backdrop-blur-sm" onClick={onClose}/>
+      <div className="absolute inset-0 bg-overlay backdrop-blur-sm" onClick={onClose}/>
       <div className="relative bg-overlay border border-border rounded-2xl shadow-popover w-full max-w-md overflow-hidden motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95 motion-safe:duration-base">
         <div className="flex items-center justify-between p-5 border-b border-border">
           <h2 className="text-xl font-bold text-primary">Log Manual Payment</h2>
@@ -31,7 +31,7 @@ export default function SuperadminInvoicesLogPaymentModal({ onClose, selectedGym
             {isGymDropdownOpen && (<div className="absolute z-30 top-full mt-1 left-0 right-0 bg-overlay border border-border rounded-lg shadow-popover overflow-hidden max-h-64 flex flex-col motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95 motion-safe:duration-100">
                 <div className="p-2 border-b border-border bg-header">
                   <div className="relative">
-                    <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-secondary"/>
+                    <Search size={18} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-secondary"/>
                     <input type="text" placeholder="Search gym by name..." className="w-full pl-8 pr-3 py-1.5 bg-input border border-border rounded text-sm text-primary focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page focus:border-primary" value={gymSearchTerm} onChange={(e) => setGymSearchTerm(e.target.value)} onClick={(e) => e.stopPropagation()} autoFocus/>
                   </div>
                 </div>
@@ -48,7 +48,7 @@ export default function SuperadminInvoicesLogPaymentModal({ onClose, selectedGym
           <div>
             <label className="block text-sm font-medium text-secondary mb-1.5">Amount (₹)</label>
             <div className="relative">
-              <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary"/>
+              <DollarSign size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary"/>
               <input type="number" min="0" onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+')
         e.preventDefault(); }} value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="e.g. 4999" className="w-full pl-9 pr-4 py-2.5 bg-input border border-border rounded-lg text-sm text-primary focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page focus:border-primary"/>
             </div>

@@ -117,34 +117,33 @@
 }
 
 /* ─── Animation Utility Classes ───────────────────────────────────────────── */
-/* These classes reference the keyframes above. Because keyframes are guarded  */
-/* by no-preference media query, applying these on reduced-motion devices is   */
-/* harmless — the browser will simply not find the keyframe to run.            */
+/* All animation application is guarded by reduced-motion preference.         */
+@media (prefers-reduced-motion: no-preference) {
+  .animate-superadmin-fade-in-up {
+    animation: superadmin-fade-in-up 0.3s ease-out both;
+  }
 
-.animate-superadmin-fade-in-up {
-  animation: superadmin-fade-in-up 0.25s ease-out both;  /* ≈ duration-slow */
-}
+  .animate-superadmin-fade-in {
+    animation: superadmin-fade-in 0.2s ease-out both;
+  }
 
-.animate-superadmin-fade-in {
-  animation: superadmin-fade-in 0.2s ease-out both;      /* ≈ duration-base */
-}
+  .animate-superadmin-slide-in-right {
+    animation: superadmin-slide-in-right 0.3s ease-out both;
+  }
 
-.animate-superadmin-slide-in-right {
-  animation: superadmin-slide-in-right 0.25s ease-out both; /* ≈ duration-slow */
-}
+  .animate-superadmin-glow-pulse {
+    animation: superadmin-glow-pulse 2s ease-in-out infinite;
+  }
 
-.animate-superadmin-glow-pulse {
-  animation: superadmin-glow-pulse 2s ease-in-out infinite;
-}
-
-.ghost-login-ripple::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: var(--surface-hover);
-  animation: superadmin-ripple 0.5s linear forwards;  /* ≈ duration-xslow */
-  pointer-events: none;
+  .ghost-login-ripple::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: var(--surface-hover);
+    animation: superadmin-ripple 0.5s linear forwards;
+    pointer-events: none;
+  }
 }
 
 /* ─── Status Dot Indicator ────────────────────────────────────────────────── */

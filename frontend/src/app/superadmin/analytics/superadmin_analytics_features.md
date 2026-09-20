@@ -44,7 +44,65 @@ The analytics module is responsible for the Superadmin business workflow managin
 - Deprecated marker-only and JSON-stringify tautology tests were removed from the module test tree.
 - Dependency-backed `tsc`, lint, Vitest runtime, Playwright, and real browser responsive execution require the host application environment and remain unverified here.
 
-## Edge Cases / AI Warnings
+## Data and State Architecture
+
+- **Actual feature root:** `analytics`
+- **Server state:** TanStack Query `useQuery` detected.
+- **Zustand stores:** None detected.
+- **Context files:** None detected.
+- **Custom hooks:** `analytics_utils/useSuperadminAnalyticsPage.ts`, `analytics_utils/useSuperadminAnalyticsV1.ts`
+- **URL state:** No `useUrlState` detected.
+- **Observed query keys:** `['superadmin', 'analytics', timeRange, customStart, customEnd]`, `['superadmin', 'analytics_retention_insights']`
+
+## API Contract
+
+- **API files:** `analytics_api/SuperadminAnalyticsRetentionInsightsApi.ts`, `analytics_api/SuperadminAnalyticsApi.ts`
+- **Detected API symbols:** `fetchAnalyticsRetentionInsights` — `analytics_api/SuperadminAnalyticsRetentionInsightsApi.ts`; `fetchRevenueMetrics` — `analytics_api/SuperadminAnalyticsApi.ts`
+- **Runtime response validation:** Zod usage detected.
+
+No API field/method is invented where static source did not expose it; missing runtime confirmation remains `NOT VERIFIED`.
+
+## UI Data Requirements
+
+- **Data-bearing components:** `page.tsx`, `analytics_components/SuperadminAnalyticsV1CohortRetentionTable.tsx`, `analytics_components/SuperadminAnalyticsV1RetentionSummaryCards.tsx`, `analytics_components/SuperadminAnalyticsClient.tsx`, `analytics_components/SuperadminAnalyticsDateFilterDropdown.tsx`, `analytics_components/SuperadminAnalyticsV1AdoptionAndAcquisitionSection.tsx`, `analytics_components/SuperadminAnalyticsV1IncomeMovementAndRevenueShareSection.tsx`
+- **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
+- **Approved date/time evidence:** No `date-fns`/`dayjs` usage detected.
+- **Forms detected:** 0
+
+Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
+
+## Permissions and Security
+
+- **Permission symbols detected:** No explicit module permission symbols detected.
+- **Destructive-confirmation evidence:** No `useConfirm` detected.
+- **Mutation boundary:** No direct TanStack Query `useMutation` usage detected.
+- **Cross-feature dependency rule:** no sibling business feature imports are permitted unless explicitly documented as approved infrastructure.
+
+## Loading, Empty, and Error States
+
+- **`loading.tsx`:** `loading.tsx`
+- **`error.tsx`:** `error.tsx`
+- **Empty-state components:** None detected.
+- Source inspection alone does not prove browser runtime behavior; retry/focus/animation behavior remains `NOT VERIFIED` until the host app is executed.
+
+## Component Responsibility Map
+
+| Component File | Responsibility evidence |
+|---|---|
+| `page.tsx` | Renders the page component. |
+| `analytics_components/SuperadminAnalyticsV1CohortRetentionTable.tsx` | Renders the Superadmin analytics V1 Cohort retention view. |
+| `analytics_components/SuperadminAnalyticsV1RetentionSummaryCards.tsx` | Renders the Superadmin analytics V1 AnalyticsRetentionSummary summary cards. |
+| `analytics_components/SuperadminAnalyticsClient.tsx` | Renders the Revenue Analytics dashboard â€” KPI cards + ApexCharts area/bar charts. |
+| `analytics_components/SuperadminAnalyticsDateFilterDropdown.tsx` | A unified Date Filter dropdown used across Superadmin pages (Dashboard, Analytics, Invoices, Coupons, Onboarding, Reports). |
+| `analytics_components/SuperadminAnalyticsV1AdoptionAndAcquisitionSection.tsx` | Renders the Superadmin analytics V1 Feature adoption, Acquisition source comparison view. |
+| `analytics_components/SuperadminAnalyticsV1IncomeMovementAndRevenueShareSection.tsx` | Renders the Superadmin analytics V1 Income movement, Revenue share concentration view. |
+
+## Repository-Verified Repair Notes
+
+This addendum is generated from the current source tree and exists to make future AI context self-contained. It records actual source evidence and explicitly leaves unavailable runtime facts as `NOT VERIFIED`.
+
+
+## Edge Cases and AI Warnings
 - **Strict Isolation**: Never import admin or manager components into analytics.
 - **Destructive Actions**: Any deletion or modification of analytics records must use the Superadmin confirmation provider.
 - **Data Leakage**: Ensure API payloads for analytics do not expose cross-tenant sensitive data.

@@ -10,19 +10,7 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 import { gymsApi } from '@/app/superadmin/gyms/gyms_api/SuperadminGymsApi';
 import { GymsUrlConfig } from '@/app/superadmin/gyms/superadmin_gyms_url_config';
 
-/** Describes the active tenant identity while the Superadmin is impersonating a gym tenant. */
-export interface SuperadminGymGhostTenant {
-  id: string;
-  name: string;
-  plan: string;
-  adminEmail: string;
-}
-
-interface SuperadminGymGhostLoginState {
-  ghostTenant: SuperadminGymGhostTenant | null;
-  startGhostLogin: (tenant: SuperadminGymGhostTenant) => void;
-  exitGhostLogin: () => Promise<void>;
-}
+import type { SuperadminGymGhostLoginState, SuperadminGymGhostTenant } from '@/app/superadmin/gyms/gyms_types/SuperadminGymGhostLoginTypes';
 
 /** Returns the feature-scoped ghost-login store used by Superadmin tenant impersonation flows. */
 export const useSuperadminGymGhostLoginStore = create<SuperadminGymGhostLoginState>()(persist((set) => ({

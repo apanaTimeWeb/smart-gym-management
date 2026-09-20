@@ -45,7 +45,63 @@ The global_audit_investigation module is responsible for the Superadmin business
 - Deprecated marker-only and JSON-stringify tautology tests were removed from the module test tree.
 - Dependency-backed `tsc`, lint, Vitest runtime, Playwright, and real browser responsive execution require the host application environment and remain unverified here.
 
-## Edge Cases / AI Warnings
+## Data and State Architecture
+
+- **Actual feature root:** `global-audit`
+- **Server state:** TanStack Query `useQuery` detected.
+- **Zustand stores:** None detected.
+- **Context files:** None detected.
+- **Custom hooks:** `global-audit_utils/useSuperadminGlobalAuditV1.ts`, `global-audit_utils/useSuperadminGlobalAuditData.ts`
+- **URL state:** `useUrlState` detected.
+- **Observed query keys:** `['superadmin', 'global_audit_investigation']`, `['superadmin', 'global-audit', queryParams]`
+
+## API Contract
+
+- **API files:** `global-audit_api/SuperadminGlobalAuditInvestigationApi.ts`, `global-audit_api/SuperadminGlobalAuditApi.ts`
+- **Detected API symbols:** `fetchGlobalAuditInvestigation` — `global-audit_api/SuperadminGlobalAuditInvestigationApi.ts`; `fetchGlobalLogs` — `global-audit_api/SuperadminGlobalAuditApi.ts`
+- **Runtime response validation:** Zod usage detected.
+
+No API field/method is invented where static source did not expose it; missing runtime confirmation remains `NOT VERIFIED`.
+
+## UI Data Requirements
+
+- **Data-bearing components:** `page.tsx`, `global-audit_components/SuperadminGlobalAuditV1SuspiciousActivityPanel.tsx`, `global-audit_components/SuperadminGlobalAuditClient.tsx`, `global-audit_components/SuperadminGlobalAuditV1BeforeAndAfterChangesPanel.tsx`, `global-audit_components/SuperadminGlobalAuditV1InvestigationSummaryCards.tsx`
+- **Approved formatting evidence:** No approved global formatting helper detected.
+- **Approved date/time evidence:** No `date-fns`/`dayjs` usage detected.
+- **Forms detected:** 0
+
+Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
+
+## Permissions and Security
+
+- **Permission symbols detected:** No explicit module permission symbols detected.
+- **Destructive-confirmation evidence:** No `useConfirm` detected.
+- **Mutation boundary:** No direct TanStack Query `useMutation` usage detected.
+- **Cross-feature dependency rule:** no sibling business feature imports are permitted unless explicitly documented as approved infrastructure.
+
+## Loading, Empty, and Error States
+
+- **`loading.tsx`:** `loading.tsx`
+- **`error.tsx`:** `error.tsx`
+- **Empty-state components:** None detected.
+- Source inspection alone does not prove browser runtime behavior; retry/focus/animation behavior remains `NOT VERIFIED` until the host app is executed.
+
+## Component Responsibility Map
+
+| Component File | Responsibility evidence |
+|---|---|
+| `page.tsx` | Server component entry point for the Superadmin Global Audit module. |
+| `global-audit_components/SuperadminGlobalAuditV1SuspiciousActivityPanel.tsx` | Renders the Superadmin global-audit V1 Suspicious activity view. |
+| `global-audit_components/SuperadminGlobalAuditClient.tsx` | Renders the Global Audit Logs dashboard for superadmins to monitor system-wide security events. |
+| `global-audit_components/SuperadminGlobalAuditV1BeforeAndAfterChangesPanel.tsx` | Renders the Superadmin global-audit V1 Before & after changes view. |
+| `global-audit_components/SuperadminGlobalAuditV1InvestigationSummaryCards.tsx` | Provides working risk/filter selection for the Superadmin audit-investigation insight view. |
+
+## Repository-Verified Repair Notes
+
+This addendum is generated from the current source tree and exists to make future AI context self-contained. It records actual source evidence and explicitly leaves unavailable runtime facts as `NOT VERIFIED`.
+
+
+## Edge Cases and AI Warnings
 - **Strict Isolation**: Never import admin or manager components into global_audit_investigation.
 - **Destructive Actions**: Any deletion or modification of global_audit_investigation records must use the Superadmin confirmation provider.
 - **Data Leakage**: Ensure API payloads for global_audit_investigation do not expose cross-tenant sensitive data.

@@ -1,5 +1,6 @@
 // DATA FLOW: Superadmin UI → useSuperadminGymEditModal → Superadmin module API/state → consuming component
 'use client';
+import { useUnsavedChangesGuard } from '@/hooks/useUnsavedChangesGuard';
 // RESPONSIBILITY: Handles form validation, modal state, and API submission for editing a Gym.
 // DATA FLOW: SuperadminGymEditModal -> useSuperadminGymEditModal -> API
 import { useEffect } from 'react';
@@ -58,6 +59,7 @@ export function useSuperadminGymEditModal() {
             toast.error((err as Error).message, { id: 'failed-to-update-gym' });
         }
     });
+    useUnsavedChangesGuard(isDirty && isEditModalOpen && !editMutation.isPending, 'You have unsaved gym changes. Discard?');
     const onSubmit = async (data: GymEditFormValues) => {
         if (selectedGym) {
             editMutation.mutate(data);

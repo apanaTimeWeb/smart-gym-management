@@ -11,7 +11,7 @@ import Pagination from '@/components/ui/Pagination';
 import CopyButton from '@/components/ui/CopyButton';
 import type { KeyboardEvent } from 'react';
 import { GYMS_PLAN_COLORS } from '@/app/superadmin/gyms/gyms_utils/SuperadminGymsConstants';
-import { formatCurrency, formatDate } from '@/lib/formatters';
+import { formatCurrencyFromMinorUnits, formatDate } from '@/lib/formatters';
 import SuperadminGymsTableSortIcon from '@/app/superadmin/gyms/gyms_components/SuperadminGymsTable/SuperadminGymsTableSortIcon';
 // Rule 68: TABLE_COLUMN_COUNT must match <th> count AND colSpan on empty state
 const TABLE_COLUMN_COUNT = 8; // Name | Owner | Plan | Members | MRR | Status | Last Login | Actions
@@ -61,7 +61,7 @@ export default function SuperadminGymsTable() {
       </div>);
     }
     if (isError) {
-        return (<div role="alert" className="flex min-h-80 flex-col items-center justify-center gap-3 rounded-xl border border-danger/30 bg-danger-bg p-8 text-center">
+        return (<div role="alert" className="flex min-h-80 flex-col items-center justify-center gap-3 rounded-xl border border-border bg-danger-bg p-8 text-center">
         <p className="text-danger">Unable to load gyms.</p>
         <button type="button" onClick={() => void refetch()} className="min-h-11 rounded-md border border-border px-4 py-2 text-sm text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">Retry</button>
       </div>);
@@ -101,7 +101,7 @@ export default function SuperadminGymsTable() {
                 handleRowClick(gym);
               }
             };
-            return (<tr key={gym.id} onClick={() => handleRowClick(gym)} onKeyDown={handleRowKeyDown} tabIndex={0} className="hover:bg-card/50 focus-visible:bg-card/50 motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset">
+            return (<tr key={gym.id} onClick={() => handleRowClick(gym)} onKeyDown={handleRowKeyDown} tabIndex={0} className="hover:bg-card focus-visible:bg-card motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset">
                 <td className="p-4 max-w-48">
                   <p className="font-semibold text-primary truncate" title={gym.name}>{gym.name}</p>
                   <span className="flex items-center gap-1 text-xs text-disabled mt-1">
@@ -123,13 +123,13 @@ export default function SuperadminGymsTable() {
                 </td>
                 <td className="p-4 text-success font-medium text-right">
                   {/* Design Â§21: Indian Numbering System â€” â‚¹1,23,456 */}
-                  {formatCurrency(gym.monthlyRevenue)}
+                  {formatCurrencyFromMinorUnits(gym.monthlyRevenue)}
                 </td>
                 <td className="p-4">
                   <div className="flex justify-center">
-                    {gym.status === 'ACTIVE' ? (<span className="flex items-center gap-1 text-success text-xs font-semibold bg-success-bg px-2.5 py-1 rounded-full border border-success/20">
+                    {gym.status === 'ACTIVE' ? (<span className="flex items-center gap-1 text-success text-xs font-semibold bg-success-bg px-2.5 py-1 rounded-full border border-border">
                         <CheckCircle2 size={18}/> Active
-                      </span>) : gym.status === 'SUSPENDED' ? (<span className="flex items-center gap-1 text-danger text-xs font-semibold bg-danger-bg px-2.5 py-1 rounded-full border border-danger/20">
+                      </span>) : gym.status === 'SUSPENDED' ? (<span className="flex items-center gap-1 text-danger text-xs font-semibold bg-danger-bg px-2.5 py-1 rounded-full border border-border">
                         <Ban size={18}/> Suspended
                       </span>) : (<span className="text-secondary text-xs font-semibold bg-input px-2.5 py-1 rounded-full border border-border">{gym.status}</span>)}
                   </div>
@@ -141,7 +141,7 @@ export default function SuperadminGymsTable() {
                 </td>
                 <td className="p-4 text-right">
                   {/* Rule 64: opacity-100 on mobile, hover-only on lg+ */}
-                  <div className="flex items-center justify-end gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 motion-safe:transition-opacity">
+                  <div className="flex items-center justify-end gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 lg:group-focus-within:opacity-100 motion-safe:transition-opacity">
                     {isActionLoading ? (<div className="p-2 text-primary">
                         <Loader2 size={18} className="motion-safe:animate-spin"/>
                       </div>) : (<>

@@ -11,7 +11,7 @@ export const SuperadminAffiliateModal: React.FC<SuperadminAffiliateModalProps> =
     useUnsavedChangesGuard(isOpen && isDirty);
     if (!isOpen)
         return null;
-    return (<div className="fixed inset-0 bg-overlay/80 z-40 flex items-center justify-center p-4 backdrop-blur-sm" role="dialog" aria-modal="true">
+    return (<div className="fixed inset-0 bg-overlay z-40 flex items-center justify-center p-4 backdrop-blur-sm" role="dialog" aria-modal="true">
       <div className="bg-overlay border border-border rounded-2xl w-full max-w-md shadow-dialog overflow-hidden flex flex-col">
         <div className="flex items-center justify-between px-7 py-5 border-b border-border">
           <h2 className="text-lg font-bold text-primary">

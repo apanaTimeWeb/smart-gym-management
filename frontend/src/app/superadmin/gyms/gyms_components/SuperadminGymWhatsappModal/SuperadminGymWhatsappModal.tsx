@@ -10,7 +10,7 @@ export default function SuperadminGymWhatsappModal() {
     useUnsavedChangesGuard(isWhatsappModalOpen && isDirty);
     if (!isWhatsappModalOpen || !selectedGym)
         return null;
-    return (<div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 p-4" role="dialog" aria-modal="true">
+    return (<div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay p-4" role="dialog" aria-modal="true">
       <div className="bg-overlay rounded-2xl p-7 max-w-md w-full border border-border shadow-dialog relative">
         <button onClick={closeWhatsappModal} className="absolute top-5 right-5 text-secondary hover:text-primary motion-safe:transition-colors">
           <X size={18}/>

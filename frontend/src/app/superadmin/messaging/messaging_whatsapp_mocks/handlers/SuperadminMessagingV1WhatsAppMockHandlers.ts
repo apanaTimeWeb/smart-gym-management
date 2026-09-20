@@ -1,9 +1,10 @@
 import { StatusCodes } from 'http-status-codes';
 import { http, HttpResponse, delay } from 'msw';
 import type { ApiResponse } from '@/lib/api';
+import { MessagingUrlConfig } from '@/app/superadmin/messaging/superadmin_messaging_url_config';
 import { SuperadminWhatsAppCampaignSchema, SuperadminWhatsAppCreateCampaignPayloadSchema, type SuperadminWhatsAppCampaign, type SuperadminWhatsAppBulkCenterData, } from '@/app/superadmin/messaging/messaging_whatsapp_types/SuperadminMessagingV1WhatsAppTypes';
 import { SUPERADMIN_WHATSAPP_BULK_CENTER_MOCK_FIXTURE } from '@/app/superadmin/messaging/messaging_whatsapp_mocks/fixtures/SuperadminMessagingV1WhatsAppMockFixtures';
-const BASE_URL = '*/api/v1/superadmin/messaging/whatsapp';
+const BASE_URL = `*${MessagingUrlConfig.WHATSAPP_BASE}`;
 let mockCampaigns = [...SUPERADMIN_WHATSAPP_BULK_CENTER_MOCK_FIXTURE.campaigns];
 
 export function resetSuperadminMessagingV1WhatsAppMockState(): void {

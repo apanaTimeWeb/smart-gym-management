@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Renders the Server Infrastructure page showing real-time node health metrics. Fetches data directly using TanStack Query.
 'use client';
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { Cpu, HardDrive, Server, Zap, RefreshCcw, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import type { InfrastructureNode } from '@/app/superadmin/system-ops/infrastructure/infrastructure_types/SuperadminInfrastructureTypes';
@@ -20,6 +20,7 @@ export default function SuperadminInfrastructureClient() {
     const statusFilter = getParam('statusFilter', 'ALL');
     const setStatusFilter = (val: string) => setParam('statusFilter', val);
     const { confirm } = useConfirm();
+    const globalFlushIdempotencyKeyRef = useRef<string | null>(null);
     const queryParams = useMemo(() => {
         const p: Record<string, string> = {};
         if (statusFilter && statusFilter !== 'ALL')
@@ -42,22 +43,17 @@ export default function SuperadminInfrastructureClient() {
         if (!confirmed)
             return;
         try {
-            const response = await flushGlobalCache(crypto.randomUUID());
+            globalFlushIdempotencyKeyRef.current ??= crypto.randomUUID();
+            const response = await flushGlobalCache(globalFlushIdempotencyKeyRef.current);
             toast.success(response.message, { id: 'superadmin-infrastructure-flush-global' });
+            globalFlushIdempotencyKeyRef.current = null;
         } catch (error: unknown) {
             toast.error(error instanceof Error ? error.message : '', { id: 'superadmin-infrastructure-flush-global' });
         }
     };
-    const handleFlushSpecific = async (tenantIds: string[]) => {
-        const confirmed = await confirm({
-            title: 'Flush Tenant Cache',
-            message: `Are you sure you want to flush the Redis cache for ${tenantIds.length} selected tenant${tenantIds.length === 1 ? '' : 's'}?`,
-            confirmText: 'Flush Cache',
-            type: 'warning'
-        });
-        if (!confirmed) return;
+    const handleFlushSpecific = async (tenantIds: string[], idempotencyKey: string) => {
         try {
-            const response = await flushTenantCache({ tenantIds, idempotencyKey: crypto.randomUUID() });
+            const response = await flushTenantCache({ tenantIds, idempotencyKey });
             toast.success(response.message, { id: 'superadmin-infrastructure-flush-tenant' });
         } catch (error: unknown) {
             toast.error(error instanceof Error ? error.message : '', { id: 'superadmin-infrastructure-flush-tenant' });
@@ -91,8 +87,8 @@ export default function SuperadminInfrastructureClient() {
         </div>
         <div className="flex items-center gap-4">
           <SearchableDropdown value={statusFilter} onChange={(val) => setStatusFilter(val as string)} options={SUPERADMIN_INFRASTRUCTURE_STATUS_OPTIONS} className="w-40"/>
-          <button onClick={() => { refetchNodes(); refetchRedis(); }} disabled={isFetchingNodes || isFetchingRedis} className="bg-primary text-on-primary px-4 py-2 rounded-lg font-medium hover:opacity-90 motion-safe:transition-opacity flex items-center gap-2 border border-primary disabled:opacity-50">
-            <RefreshCcw className={`w-4 h-4 ${isFetchingNodes || isFetchingRedis ? 'motion-safe:animate-spin' : ''}`}/> Force Sync Metrics
+          <button onClick={() => { refetchNodes(); refetchRedis(); }} disabled={isFetchingNodes || isFetchingRedis} className="bg-primary text-on-primary px-4 py-2 rounded-lg font-medium hover:bg-primary-hover motion-safe:transition-opacity flex items-center gap-2 border border-primary disabled:opacity-50">
+            <RefreshCcw size={18} className={`w-4 ${isFetchingNodes || isFetchingRedis ? 'motion-safe:animate-spin' : ''}`}/> Force Sync Metrics
           </button>
         </div>
       </div>
@@ -102,7 +98,7 @@ export default function SuperadminInfrastructureClient() {
         <div className="bg-card border border-border rounded-xl p-6 relative overflow-hidden group">
           <div className="absolute top-0 right-0 w-32 h-32 bg-primary-subtle rounded-bl-full -z-10 group-hover:bg-primary-subtle motion-safe:transition-colors"/>
           <div className="flex items-center gap-3 mb-6">
-            <div className="p-2 bg-primary-subtle rounded-lg text-primary"><Cpu className="w-6 h-6"/></div>
+            <div className="p-2 bg-primary-subtle rounded-lg text-primary"><Cpu size={18} className="w-6"/></div>
             <h2 className="text-lg font-bold text-primary">CPU Usage</h2>
           </div>
           <div className="flex items-end gap-2 mb-2">
@@ -119,7 +115,7 @@ export default function SuperadminInfrastructureClient() {
         <div className="bg-card border border-border rounded-xl p-6 relative overflow-hidden group">
           <div className="absolute top-0 right-0 w-32 h-32 bg-warning-bg rounded-bl-full -z-10 group-hover:bg-warning-bg motion-safe:transition-colors"/>
           <div className="flex items-center gap-3 mb-6">
-            <div className="p-2 bg-warning-bg rounded-lg text-warning"><Server className="w-6 h-6"/></div>
+            <div className="p-2 bg-warning-bg rounded-lg text-warning"><Server size={18} className="w-6"/></div>
             <h2 className="text-lg font-bold text-primary">Memory (RAM)</h2>
           </div>
           <div className="flex items-end gap-2 mb-2">
@@ -136,7 +132,7 @@ export default function SuperadminInfrastructureClient() {
         <div className="bg-card border border-border rounded-xl p-6 relative overflow-hidden group">
           <div className="absolute top-0 right-0 w-32 h-32 bg-success-bg rounded-bl-full -z-10 group-hover:bg-success-bg motion-safe:transition-colors"/>
           <div className="flex items-center gap-3 mb-6">
-            <div className="p-2 bg-success-bg rounded-lg text-success"><HardDrive className="w-6 h-6"/></div>
+            <div className="p-2 bg-success-bg rounded-lg text-success"><HardDrive size={18} className="w-6"/></div>
             <h2 className="text-lg font-bold text-primary">Storage (SSD)</h2>
           </div>
           <div className="flex items-end gap-2 mb-2">
@@ -159,7 +155,7 @@ export default function SuperadminInfrastructureClient() {
           {/* REDIS MEMORY */}
           <div className="bg-card border border-border rounded-xl p-6 relative overflow-hidden group">
             <div className="flex items-center gap-3 mb-6">
-              <div className="p-2 bg-primary-subtle rounded-lg text-primary"><Zap className="w-6 h-6"/></div>
+              <div className="p-2 bg-primary-subtle rounded-lg text-primary"><Zap size={18} className="w-6"/></div>
               <h2 className="text-lg font-bold text-primary">Redis Memory</h2>
             </div>
             <div className="flex items-end gap-2 mb-2">
@@ -175,7 +171,7 @@ export default function SuperadminInfrastructureClient() {
           {/* REDIS HIT RATIO */}
           <div className="bg-card border border-border rounded-xl p-6 relative overflow-hidden group">
             <div className="flex items-center gap-3 mb-6">
-              <div className="p-2 bg-success-bg rounded-lg text-success"><RefreshCcw className="w-6 h-6"/></div>
+              <div className="p-2 bg-success-bg rounded-lg text-success"><RefreshCcw size={18} className="w-6"/></div>
               <h2 className="text-lg font-bold text-primary">Cache Hit Ratio</h2>
             </div>
             <div className="flex items-end gap-2 mb-2">
@@ -203,15 +199,15 @@ export default function SuperadminInfrastructureClient() {
 
       <div className="bg-card border border-border rounded-xl p-6">
         <div className="flex items-center gap-2 mb-4">
-          <Zap className="w-5 h-5 text-primary"/>
+          <Zap size={18} className="w-5 text-primary"/>
           <h2 className="text-xl font-bold text-primary">Redis Cache Global Control</h2>
         </div>
         <p className="text-sm text-secondary mb-6">
           The SaaS platform uses Redis to cache massive multi-tenant API responses. If gyms are reporting stale data, you can forcefully flush the global cache across all tenants here.
         </p>
         <div className="flex flex-col sm:flex-row gap-4">
-          <button onClick={handleFlushAll} disabled={isFlushingGlobal} className="flex items-center justify-center gap-2 bg-primary-subtle text-on-success px-5 py-2.5 rounded-lg font-medium hover:opacity-90 motion-safe:transition-opacity min-w-44 disabled:opacity-50">
-            {isFlushingGlobal ? <Loader2 className="w-5 h-5 motion-safe:animate-spin"/> : null}
+          <button onClick={handleFlushAll} disabled={isFlushingGlobal} className="flex items-center justify-center gap-2 bg-primary text-on-primary px-5 py-2.5 rounded-lg font-medium hover:bg-primary-hover motion-safe:transition-opacity min-w-44 disabled:opacity-50">
+            {isFlushingGlobal ? <Loader2 size={18} className="w-5 motion-safe:animate-spin"/> : null}
             Flush All Tenants
           </button>
           <button onClick={() => setIsFlushModalOpen(true)} className="flex items-center justify-center gap-2 bg-transparent text-primary px-5 py-2.5 rounded-lg font-medium hover:bg-border motion-safe:transition-colors border border-border min-w-44 disabled:opacity-50">

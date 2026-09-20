@@ -1,26 +1,27 @@
 // RESPONSIBILITY: Renders the subscription renewal calendar view for Gym tenants.
 'use client';
 import { useMemo } from 'react';
+import { format, getMonth, getYear, parseISO, startOfToday } from 'date-fns';
+import { getSuperadminGymsCalendarGrid } from '@/app/superadmin/gyms/gyms_utils/SuperadminGymsCalendarUtils';
 import { useSuperadminGymsTable } from '@/app/superadmin/gyms/gyms_components/SuperadminGymsTable/useSuperadminGymsTable';
 import type { Tenant } from '@/app/superadmin/gyms/gyms_types/SuperadminGymsTypes';
 export default function SuperadminGymsCalendar() {
     const { filteredGyms, isPending, isError, handleRowClick } = useSuperadminGymsTable();
     // Create a simple calendar grid for the current month
     const { daysInMonth, startDay, currentYear, currentMonth, monthName } = useMemo(() => {
-        const today = new Date();
-        const year = today.getFullYear();
-        const month = today.getMonth();
-        const daysInMonth = new Date(year, month + 1, 0).getDate();
-        const startDay = new Date(year, month, 1).getDay();
-        const monthName = new Intl.DateTimeFormat('en-IN', { month: 'long' }).format(today);
+        const today = startOfToday();
+        const year = getYear(today);
+        const month = getMonth(today);
+        const { daysInMonth, leadingEmptyDays: startDay } = getSuperadminGymsCalendarGrid(year, month);
+        const monthName = format(today, 'MMMM');
         return { daysInMonth, startDay, currentYear: year, currentMonth: month, monthName };
     }, []);
     const gymsByDate = useMemo(() => {
         const map: Record<number, Tenant[]> = {};
         filteredGyms.forEach(gym => {
             const dateValue = gym.trialEndsAt ?? gym.createdAt;
-            const date = new Date(dateValue);
-            if (Number.isNaN(date.getTime()) || date.getFullYear() !== currentYear || date.getMonth() !== currentMonth) return;
+            const date = parseISO(dateValue);
+            if (Number.isNaN(date.getTime()) || getYear(date) !== currentYear || getMonth(date) !== currentMonth) return;
             const day = date.getDate();
             map[day] ??= [];
             map[day].push(gym);
@@ -32,7 +33,7 @@ export default function SuperadminGymsCalendar() {
     }
 
     if (isError) {
-        return <div role="alert" className="flex min-h-80 items-center justify-center rounded-xl border border-danger/30 bg-danger-bg p-8 text-danger">Unable to load renewal calendar.</div>;
+        return <div role="alert" className="flex min-h-80 items-center justify-center rounded-xl border border-border bg-danger-bg p-8 text-danger">Unable to load renewal calendar.</div>;
     }
     const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
     const blanks = Array.from({ length: startDay }, (_, i) => i);
@@ -56,7 +57,7 @@ export default function SuperadminGymsCalendar() {
         
         {days.map(day => {
             const dayGyms = gymsByDate[day] || [];
-            return (<div key={day} className="bg-card min-h-32 p-2 hover:bg-input/50 motion-safe:transition-colors group border-t border-border">
+            return (<div key={day} className="bg-card min-h-32 p-2 hover:bg-input motion-safe:transition-colors group border-t border-border">
               <div className="flex justify-between items-start mb-2">
                 <span className="text-sm font-medium text-primary">{day}</span>
                 {dayGyms.length > 0 && (<span className="text-xs bg-primary-subtle text-primary px-1.5 rounded-full font-medium">{dayGyms.length}</span>)}

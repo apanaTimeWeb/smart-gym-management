@@ -2,9 +2,10 @@ import { http, HttpResponse, delay } from 'msw';
 import type { SupportTicket } from '@/app/superadmin/tickets/tickets_types/SuperadminTicketsTypes';
 import { MOCK_TICKETS } from '@/app/superadmin/tickets/tickets_mocks/fixtures/SuperadminTicketsMockData';
 import type { ApiResponse } from '@/lib/api';
+import { TicketsUrlConfig } from '@/app/superadmin/tickets/superadmin_tickets_url_config';
 import { StatusCodes } from 'http-status-codes';
 import { replySchema, TicketAssigneeInputSchema } from '@/app/superadmin/tickets/tickets_types/SuperadminTicketsTypes';
-const BASE_URL = '*/api/v1/superadmin/tickets';
+const BASE_URL = `*${TicketsUrlConfig.BACKEND_API.BASE}`;
 let mockTickets = [...MOCK_TICKETS];
 export function resetSuperadminTicketsMockState(): void {
     mockTickets = [...MOCK_TICKETS];

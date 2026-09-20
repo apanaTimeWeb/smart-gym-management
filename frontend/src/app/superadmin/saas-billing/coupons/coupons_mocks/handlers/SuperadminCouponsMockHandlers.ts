@@ -2,9 +2,11 @@ import { StatusCodes } from 'http-status-codes';
 import { http, HttpResponse, delay } from 'msw';
 import { CouponSchema, CouponStatusSchema } from '@/app/superadmin/saas-billing/coupons/coupons_types/SuperadminCouponsTypes';
 import type { Coupon, RedemptionRecord } from '@/app/superadmin/saas-billing/coupons/coupons_types/SuperadminCouponsTypes';
+import { CouponsUrlConfig } from '@/app/superadmin/saas-billing/coupons/superadmin_coupons_url_config';
 import type { ApiResponse } from '@/lib/api';
 import { MOCK_SUPERADMIN_COUPONS } from '@/app/superadmin/saas-billing/coupons/coupons_mocks/fixtures/SuperadminCouponsMockFixtures';
-const BASE_URL = '*/api/v1/superadmin/saas-billing/coupons';
+import { formatSuperadminCouponDateForInput } from '@/app/superadmin/saas-billing/coupons/coupons_utils/SuperadminCouponsDateUtils';
+const BASE_URL = `*${CouponsUrlConfig.BACKEND_API.BASE}`;
 let mockCoupons: Coupon[] = [...MOCK_SUPERADMIN_COUPONS];
 export function resetSuperadminCouponsMockState(): void { mockCoupons = MOCK_SUPERADMIN_COUPONS.map((coupon) => ({ ...coupon, redemptions: coupon.redemptions ? [...coupon.redemptions] : [] })); }
 export const superadminCouponsHandlers = [
@@ -48,7 +50,7 @@ export const superadminCouponsHandlers = [
             discountType: body.discountType || 'PERCENTAGE',
             discountValue: body.discountValue || 10,
             maxUses: body.maxUses || 100,
-            expiryDate: body.expiryDate || (new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] as string),
+            expiryDate: body.expiryDate || formatSuperadminCouponDateForInput(new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()),
             redemptions: [],
         };
         mockCoupons = [newCoupon, ...mockCoupons];

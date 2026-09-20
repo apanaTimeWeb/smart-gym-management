@@ -10,7 +10,7 @@ import { CHART_COLORS } from '@/components/ui/ChartConstants';
 import { SuperadminAnalyticsDateFilterDropdown } from '@/app/superadmin/analytics/analytics_components/SuperadminAnalyticsDateFilterDropdown';
 import { useDateRangeSuffix } from '@/hooks/useDateRangeSuffix';
 // Heavy chart component â€” code-split via dynamic import (Rule 15, Design Â§10)
-import { formatCurrency, formatKPI, formatDecimal } from '@/lib/formatters';
+import { formatCurrencyFromMinorUnits, formatKPI, formatDecimal } from '@/lib/formatters';
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 export default function SuperadminAnalyticsClient() {
     const { metrics, monthlyData, isPending, isError: error } = useSuperadminAnalyticsPage();
@@ -50,7 +50,7 @@ export default function SuperadminAnalyticsClient() {
     const kpiCards = [
         {
             label: 'Monthly Income' + dateSuffix,
-            value: formatCurrency(metrics.mrr),
+            value: formatCurrencyFromMinorUnits(metrics.mrr),
             delta: mrrDelta,
             deltaUp: (metrics.mrrDeltaPercent ?? 0) >= 0,
             icon: IndianRupee,
@@ -59,7 +59,7 @@ export default function SuperadminAnalyticsClient() {
         },
         {
             label: 'ARR' + dateSuffix,
-            value: formatCurrency(metrics.arr),
+            value: formatCurrencyFromMinorUnits(metrics.arr),
             delta: arrDelta,
             deltaUp: (metrics.arrDeltaPercent ?? 0) >= 0,
             icon: TrendingUp,
@@ -87,7 +87,7 @@ export default function SuperadminAnalyticsClient() {
         {
             label: 'Avg. Income per Gym' + dateSuffix,
             // Design Â§21: Indian currency â€” â‚¹1,24,500
-            value: formatCurrency(arpu),
+            value: formatCurrencyFromMinorUnits(arpu),
             delta: 'Avg revenue per gym',
             deltaUp: true,
             icon: DollarSign,
@@ -202,22 +202,22 @@ export default function SuperadminAnalyticsClient() {
         <div className="bg-card border border-border rounded-xl p-6 shadow-card">
           <div className="flex items-center gap-3 mb-2">
             <div className="w-8 h-8 rounded-lg bg-primary-subtle flex items-center justify-center">
-              <Activity className="w-5 h-5 text-primary"/>
+              <Activity size={18} className="w-5 text-primary"/>
             </div>
             <span className="text-secondary text-xs font-medium uppercase tracking-wider">LTV (Lifetime Value)</span>
           </div>
-          <p className="text-3xl font-bold text-primary mt-3">{formatCurrency(metrics.ltv)}</p>
+          <p className="text-3xl font-bold text-primary mt-3">{formatCurrencyFromMinorUnits(metrics.ltv)}</p>
           <p className="text-xs text-success mt-2 font-medium">â†‘ Per tenant average</p>
         </div>
 
         <div className="bg-card border border-border rounded-xl p-6 shadow-card">
           <div className="flex items-center gap-3 mb-2">
             <div className="w-8 h-8 rounded-lg bg-warning-bg flex items-center justify-center">
-              <IndianRupee className="w-5 h-5 text-warning"/>
+              <IndianRupee size={18} className="w-5 text-warning"/>
             </div>
             <span className="text-secondary text-xs font-medium uppercase tracking-wider">CAC (Customer Acquisition Cost)</span>
           </div>
-          <p className="text-3xl font-bold text-primary mt-3">{formatCurrency(metrics.cac)}</p>
+          <p className="text-3xl font-bold text-primary mt-3">{formatCurrencyFromMinorUnits(metrics.cac)}</p>
           <p className="text-xs text-secondary mt-2">LTV:CAC = {metrics.cac > 0 ? formatDecimal(metrics.ltv / metrics.cac, 1) : 'â€”'}x</p>
         </div>
       </div>

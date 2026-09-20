@@ -1,52 +1,27 @@
-// RESPONSIBILITY: Renders the Reports Date Preset Dropdown component and its associated UI logic.
+// RESPONSIBILITY: Renders the Reports date preset selector and emits the selected preset plus calculated range to its parent.
 'use client';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
+import { getSuperadminReportsPresetRange } from '@/app/superadmin/reports/reports_utils/SuperadminReportsDateRangeUtils';
+import { SUPERADMIN_REPORTS_DATE_PRESET_OPTIONS } from '@/app/superadmin/reports/reports_utils/SuperadminReportsConstants';
 import type { DatePreset, SuperadminReportsDatePresetDropdownProps } from '@/app/superadmin/reports/reports_types/SuperadminReportsDatePresetDropdownTypes';
 
-
 export function SuperadminReportsDatePresetDropdown({ value, onChange }: SuperadminReportsDatePresetDropdownProps) {
-    const handlePresetChange = (preset: string) => {
-        const today = new Date();
-        let from = '';
-        let to = '';
-        switch (preset) {
-            case 'THIS_MONTH':
-                from = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0] || '';
-                to = new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString().split('T')[0] || '';
-                break;
-            case 'LAST_MONTH':
-                from = new Date(today.getFullYear(), today.getMonth() - 1, 1).toISOString().split('T')[0] || '';
-                to = new Date(today.getFullYear(), today.getMonth(), 0).toISOString().split('T')[0] || '';
-                break;
-            case 'LAST_3_MONTHS':
-                from = new Date(today.getFullYear(), today.getMonth() - 3, 1).toISOString().split('T')[0] || '';
-                to = new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString().split('T')[0] || '';
-                break;
-            case 'LAST_6_MONTHS':
-                from = new Date(today.getFullYear(), today.getMonth() - 6, 1).toISOString().split('T')[0] || '';
-                to = new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString().split('T')[0] || '';
-                break;
-            case 'THIS_YEAR':
-                from = new Date(today.getFullYear(), 0, 1).toISOString().split('T')[0] || '';
-                to = new Date(today.getFullYear(), 11, 31).toISOString().split('T')[0] || '';
-                break;
-            default:
-                // 'CUSTOM' - do not auto-set dates
-                break;
-        }
-        onChange(preset as DatePreset, from, to);
-    };
-    const OPTIONS = [
-        { value: 'THIS_MONTH', label: 'This Month' },
-        { value: 'LAST_MONTH', label: 'Last Month' },
-        { value: 'LAST_3_MONTHS', label: 'Last 3 Months' },
-        { value: 'LAST_6_MONTHS', label: 'Last 6 Months' },
-        { value: 'THIS_YEAR', label: 'This Year' },
-        { value: 'CUSTOM', label: 'Custom Range' },
-    ];
-    return (<div className="w-48 bg-input border border-border rounded-lg shadow-card">
-      <SearchableDropdown options={OPTIONS} value={value} onChange={(val) => handlePresetChange(String(val))} className="bg-transparent border-transparent"/>
-    </div>);
+  const handlePresetChange = (presetValue: string) => {
+    const preset = presetValue as DatePreset;
+    const { from, to } = getSuperadminReportsPresetRange(preset);
+    onChange(preset, from, to);
+  };
+
+  return (
+    <div className="w-48 rounded-lg border border-border bg-input shadow-card">
+      <SearchableDropdown
+        options={SUPERADMIN_REPORTS_DATE_PRESET_OPTIONS as any}
+        value={value}
+        onChange={(nextValue) => handlePresetChange(String(nextValue))}
+        className="border-transparent bg-transparent"
+      />
+    </div>
+  );
 }
 
 export type { DatePreset } from '@/app/superadmin/reports/reports_types/SuperadminReportsDatePresetDropdownTypes';

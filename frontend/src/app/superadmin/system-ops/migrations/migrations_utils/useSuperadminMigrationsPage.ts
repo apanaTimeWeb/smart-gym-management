@@ -3,6 +3,7 @@
 // DATA FLOW: URL/page → useSuperadminMigrationsPage → TanStack Query → migration view.
 // RESPONSIBILITY: Owns Superadmin migration query state, deployment mutation state, confirmation, and query reconciliation.
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useRef } from 'react';
 import toast from 'react-hot-toast';
 import { migrationsApi } from '@/app/superadmin/system-ops/migrations/migrations_api/SuperadminMigrationsApi';
 import { useConfirm } from '@/components/ui/Feedback/ConfirmProvider';
@@ -17,6 +18,7 @@ const MIGRATIONS_QUERY_KEY = ['superadmin', 'migrations', 'list'] as const;
 export function useSuperadminMigrationsPage() {
     const queryClient = useQueryClient();
     const { confirm } = useConfirm();
+    const idempotencyKeyRef = useRef<string | null>(null);
     const migrationsQuery = useQuery({
         queryKey: MIGRATIONS_QUERY_KEY,
         queryFn: () => migrationsApi.fetchMigrations(),
@@ -26,6 +28,7 @@ export function useSuperadminMigrationsPage() {
         onSuccess: (response) => {
             toast.success(response.message, { id: 'superadmin-migrations-deploy-success' });
             void queryClient.invalidateQueries({ queryKey: MIGRATIONS_QUERY_KEY });
+            idempotencyKeyRef.current = null;
         },
         onError: (error: unknown) => {
             toast.error(error instanceof Error ? error.message : '', {
@@ -46,7 +49,12 @@ export function useSuperadminMigrationsPage() {
         });
         if (!confirmed)
             return false;
-        await deployMutation.mutateAsync({ targetVersion: normalizedVersion, idempotencyKey: crypto.randomUUID() });
+        idempotencyKeyRef.current ??= crypto.randomUUID();
+        try {
+            await deployMutation.mutateAsync({ targetVersion: normalizedVersion, idempotencyKey: idempotencyKeyRef.current });
+        } catch (error: unknown) {
+            throw error;
+        }
         return true;
     };
     return {

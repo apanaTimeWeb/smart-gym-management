@@ -1,6 +1,7 @@
 import { renderHook, act } from '@testing-library/react';
 import { useSuperadminDashboardDateFilter } from '@/app/superadmin/dashboard/dashboard_components/SuperadminDashboardDateFilterDropdown/useSuperadminDashboardDateFilter';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
+import { DashboardUrlConfig } from '@/app/superadmin/dashboard/superadmin_dashboard_url_config';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 vi.mock('next/navigation', () => ({
     useRouter: vi.fn(() => ({ replace: vi.fn() })),
@@ -12,7 +13,7 @@ describe('useSuperadminDashboardDateFilter', () => {
     beforeEach(() => {
         vi.clearAllMocks();
         (useRouter as unknown as ReturnType<typeof vi.fn>).mockReturnValue({ replace: replaceMock });
-        (usePathname as unknown as ReturnType<typeof vi.fn>).mockReturnValue('/superadmin/dashboard');
+        (usePathname as unknown as ReturnType<typeof vi.fn>).mockReturnValue(DashboardUrlConfig.PAGES.MAIN);
     });
     it('should initialize with this_month by default', () => {
         (useSearchParams as unknown as ReturnType<typeof vi.fn>).mockReturnValue({

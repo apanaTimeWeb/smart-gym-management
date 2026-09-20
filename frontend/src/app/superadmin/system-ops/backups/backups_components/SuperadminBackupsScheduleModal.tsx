@@ -9,6 +9,7 @@ import { SuperadminBackupsScheduleInputSchema, type SuperadminBackupsScheduleInp
 import { SUPERADMIN_BACKUPS_DEFAULT_CRON, SUPERADMIN_BACKUPS_MAX_RETENTION_DAYS, SUPERADMIN_BACKUPS_MIN_RETENTION_DAYS } from '@/app/superadmin/system-ops/backups/backups_utils/SuperadminBackupsScheduleConstants';
 import { useSuperadminBackupsSchedule } from '@/app/superadmin/system-ops/backups/backups_utils/useSuperadminBackupsSchedule';
 import type { SuperadminBackupsScheduleModalProps } from '@/app/superadmin/system-ops/backups/backups_types/SuperadminBackupsScheduleModalTypes';
+import { useUnsavedChangesGuard } from '@/hooks/useUnsavedChangesGuard';
 
 
 
@@ -25,6 +26,8 @@ export default function SuperadminBackupsScheduleModal({ isOpen, onClose }: Supe
     reset({ cronExpression: schedule.cronExpression, retentionDays: schedule.retentionDays });
   }, [isOpen, reset, schedule]);
 
+  useUnsavedChangesGuard(isOpen && isDirty && !isSaving, 'You have unsaved changes. Are you sure you want to leave? Your changes will be lost?');
+
   if (!isOpen) return null;
 
   const handleSave = async (input: SuperadminBackupsScheduleInput) => {
@@ -39,11 +42,11 @@ export default function SuperadminBackupsScheduleModal({ isOpen, onClose }: Supe
   };
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 backdrop-blur-sm p-4" role="dialog" aria-modal="true" aria-labelledby="superadmin-backups-schedule-title">
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay backdrop-blur-sm p-4" role="dialog" aria-modal="true" aria-labelledby="superadmin-backups-schedule-title">
       <div className="bg-overlay w-full max-w-md rounded-xl shadow-dialog overflow-hidden border border-border">
         <div className="p-6">
           <div className="w-12 h-12 rounded-full bg-info-bg flex items-center justify-center mb-4" aria-hidden="true">
-            <Clock size={18} strokeWidth={2} className="text-info" />
+            <Clock size={18} strokeWidth={2} className="text-info"/>
           </div>
           <h2 id="superadmin-backups-schedule-title" className="text-lg font-bold text-primary mb-2">Automated Backup Schedule</h2>
           <p className="text-sm text-secondary mb-6">Configure when automated global database snapshots run and how long they are retained.</p>
@@ -64,8 +67,8 @@ export default function SuperadminBackupsScheduleModal({ isOpen, onClose }: Supe
               {queryError && <p className="text-xs text-danger" role="alert">{queryError instanceof Error ? queryError.message : ''}</p>}
               <div className="flex gap-3 justify-end pt-2">
                 <button type="button" onClick={onClose} disabled={isSaving} className="px-4 py-2 rounded-md font-medium border border-border text-primary hover:bg-surface-hover motion-safe:transition-all motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">Cancel</button>
-                <button type="submit" disabled={isSaving || !isDirty} className="px-4 py-2 rounded-md font-medium bg-primary text-on-primary hover:bg-primary-hover flex items-center gap-2 motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95 disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
-                  {isSaving ? <><Loader2 size={18} strokeWidth={2} className="motion-safe:animate-spin" />Saving...</> : <><Check size={18} strokeWidth={2} />Save Schedule</>}
+                <button type="submit" disabled={isSaving || !isDirty} className="min-w-32 px-4 py-2 rounded-md font-medium bg-primary text-on-primary hover:bg-primary-hover flex items-center justify-center gap-2 motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95 disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                  {isSaving ? <><Loader2 size={18} strokeWidth={2} className="motion-safe:animate-spin"/>Saving...</> : <><Check size={18} strokeWidth={2}/>Save Schedule</>}
                 </button>
               </div>
             </form>
