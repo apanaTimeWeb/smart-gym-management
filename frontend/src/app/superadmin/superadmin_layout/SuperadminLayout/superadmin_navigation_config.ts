@@ -23,6 +23,7 @@ import { UsageMetersUrlConfig } from '@/app/superadmin/usage-meters/superadmin_u
 import { SuperadminTeamUrlConfig } from '@/app/superadmin/team/superadmin_team_url_config';
 import { SuperadminIntegrationsUrlConfig } from '@/app/superadmin/integrations/superadmin_integrations_url_config';
 import { SuperadminComplianceUrlConfig } from '@/app/superadmin/compliance/superadmin_compliance_url_config';
+import { SuperadminSystemOpsUrlConfig } from '@/app/superadmin/system-ops/superadmin_system_ops_url_config';
 
 export const SuperadminNavigationConfig = [
   { group: 'Overview', items: [{ name: 'Dashboard', href: DashboardUrlConfig.PAGES.MAIN, icon: LayoutDashboard }] },
@@ -49,7 +50,7 @@ export const SuperadminNavigationConfig = [
     { name: 'Affiliate Partners', href: AffiliatesUrlConfig.PAGES.MAIN, icon: Users },
     { name: 'Platform Team', href: SuperadminTeamUrlConfig.PAGES.MAIN, icon: UsersRound },
     { name: 'Integrations & Webhooks', href: SuperadminIntegrationsUrlConfig.PAGES.MAIN, icon: PlugZap },
-    { name: 'System Ops', href: '/superadmin/system-ops', icon: ServerCog },
+    { name: 'System Ops', href: SuperadminSystemOpsUrlConfig.PAGES.MAIN, icon: ServerCog },
     { name: 'Global Audit Logs', href: GlobalAuditUrlConfig.PAGES.MAIN, icon: History },
     { name: 'Global Settings', href: SettingsUrlConfig.PAGES.MAIN, icon: Settings },
   ] },

@@ -2,6 +2,7 @@
 // RESPONSIBILITY: Owns Superadmin Plans list server queries, mutation orchestration, cache invalidation and destructive confirmation.
 'use client';
 
+import { useRef } from 'react';
 import toast from 'react-hot-toast';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { plansApi } from '@/app/superadmin/saas-billing/plans/plans_api/SuperadminPlansApi';
@@ -21,6 +22,7 @@ export function useSuperadminPlansList() {
   const openEditModal = useSuperadminPlansStore((state) => state.openEditModal);
   const queryClient = useQueryClient();
   const { confirm } = useConfirm();
+  const idempotencyKeysRef = useRef(new Map<string, string>());
 
   const plansQuery = useQuery({
     queryKey: ['superadmin', 'plans'],
@@ -29,8 +31,10 @@ export function useSuperadminPlansList() {
 
   const deleteMutation = useMutation({
     mutationFn: ({ id, idempotencyKey }: SuperadminPlanListMutationInput) => plansApi.deletePlan(id, idempotencyKey),
-    onSuccess: (response) => {
+    onSuccess: (response, variables) => {
       toast.success(response.message, { id: 'superadmin-plan-delete-success' });
+      idempotencyKeysRef.current.delete(`delete:${variables.id}`);
+      idempotencyKeysRef.current.delete(`archive:${variables.id}`);
       void queryClient.invalidateQueries({ queryKey: ['superadmin', 'plans'] });
     },
     onError: (error: unknown) => {
@@ -68,7 +72,9 @@ export function useSuperadminPlansList() {
     );
     if (!confirmed) return;
 
-    const idempotencyKey = crypto.randomUUID();
+    const keyName = `${hasActiveTenants ? 'archive' : 'delete'}:${plan.id}`;
+    idempotencyKeysRef.current.set(keyName, idempotencyKeysRef.current.get(keyName) ?? crypto.randomUUID());
+    const idempotencyKey = idempotencyKeysRef.current.get(keyName) as string;
     if (hasActiveTenants) {
       archiveMutation.mutate({ id: plan.id, idempotencyKey });
       return;

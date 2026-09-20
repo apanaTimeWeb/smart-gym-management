@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Renders the Superadmin analytics V1 Feature adoption, Acquisition source comparison view.
 'use client';
-import { formatCurrency, formatNumber, formatPercent1dp } from '@/lib/formatters';
+import { formatCurrencyFromMinorUnits, formatNumber, formatPercent1dp } from '@/lib/formatters';
 import Panel from '@/components/ui/Panel';
 import type { SuperadminAnalyticsV1SectionProps } from '@/app/superadmin/analytics/analytics_types/SuperadminAnalyticsV1Types.ts';
 export default function SuperadminAnalyticsV1AdoptionAndAcquisitionSection({ data }: SuperadminAnalyticsV1SectionProps) {
@@ -57,7 +57,7 @@ export default function SuperadminAnalyticsV1AdoptionAndAcquisitionSection({ dat
         </div>
         <div className="mt-2 flex items-center justify-between text-xs text-secondary">
           <span>
-            {formatCurrency(s.monthlyIncome)}
+            {formatCurrencyFromMinorUnits(s.monthlyIncome)}
           </span>
           <span>
             {formatPercent1dp(s.churn)}

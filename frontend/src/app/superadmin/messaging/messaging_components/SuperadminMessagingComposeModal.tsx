@@ -3,25 +3,28 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, Controller } from 'react-hook-form';
-import { Send, X } from 'lucide-react';
+import { Loader2, Send, X } from 'lucide-react';
 import { SuperadminMessagingTenantDropdown } from '@/app/superadmin/messaging/messaging_components/SuperadminMessagingTenantDropdown';
 import { SuperadminMessagingComposeSchema, type SuperadminMessagingComposeValues } from '@/app/superadmin/messaging/messaging_schemas/SuperadminMessagingComposeSchema';
 import type { SuperadminMessagingComposeModalProps } from '@/app/superadmin/messaging/messaging_types/SuperadminMessagingComposeModalTypes';
+import { useUnsavedChangesGuard } from '@/hooks/useUnsavedChangesGuard';
 
 export function SuperadminMessagingComposeModal({ tenants, isSubmitting, onClose, onSend }: SuperadminMessagingComposeModalProps) {
-  const { control, register, handleSubmit, formState: { errors } } = useForm<SuperadminMessagingComposeValues>({
+  const { control, register, handleSubmit, formState: { errors, isDirty } } = useForm<SuperadminMessagingComposeValues>({
     resolver: zodResolver(SuperadminMessagingComposeSchema),
     defaultValues: { tenantId: '', channel: 'EMAIL', subject: '', body: '' },
     mode: 'onSubmit',
   });
 
+  useUnsavedChangesGuard(isDirty && !isSubmitting, 'You have unsaved changes. Are you sure you want to leave? Your changes will be lost?');
+
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="superadmin-compose-title">
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="superadmin-compose-title">
       <div className="w-full max-w-lg space-y-4 rounded-2xl border border-border bg-overlay p-6 shadow-dialog">
         <div className="flex items-center justify-between">
           <h2 id="superadmin-compose-title" className="text-lg font-bold text-primary">Compose Message</h2>
           <button type="button" onClick={onClose} disabled={isSubmitting} aria-label="Close compose modal" className="rounded-lg p-1.5 text-secondary motion-safe:transition-colors hover:bg-input hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:opacity-50">
-            <X size={18} strokeWidth={2} />
+            <X size={18} strokeWidth={2}/>
           </button>
         </div>
 
@@ -44,7 +47,7 @@ export function SuperadminMessagingComposeModal({ tenants, isSubmitting, onClose
               render={({ field }) => (
                 <div className="flex gap-2">
                   {(['EMAIL', 'SMS', 'IN_APP'] as const).map((channel) => (
-                    <button key={channel} type="button" onClick={() => field.onChange(channel)} className={`flex-1 rounded-lg border py-2 text-xs font-medium motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${field.value === channel ? 'border-primary/30 bg-primary-subtle text-primary' : 'border-border bg-input text-secondary hover:text-primary'}`}>
+                    <button key={channel} type="button" onClick={() => field.onChange(channel)} className={`flex-1 rounded-lg border py-2 text-xs font-medium motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${field.value === channel ? 'border-border bg-primary-subtle text-primary' : 'border-border bg-input text-secondary hover:text-primary'}`}>
                       {channel}
                     </button>
                   ))}
@@ -70,8 +73,8 @@ export function SuperadminMessagingComposeModal({ tenants, isSubmitting, onClose
 
           <div className="flex justify-end gap-3 pt-2">
             <button type="button" onClick={onClose} disabled={isSubmitting} className="rounded-lg bg-input px-4 py-2 text-sm text-secondary motion-safe:transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:opacity-50">Cancel</button>
-            <button type="submit" disabled={isSubmitting} className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-on-primary motion-safe:transition-colors hover:bg-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-60">
-              <Send size={18} strokeWidth={2} /> {isSubmitting ? 'Sending...' : 'Send'}
+            <button type="submit" disabled={isSubmitting} className="flex min-w-24 items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-on-primary motion-safe:transition-colors hover:bg-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-60">
+              {isSubmitting ? <Loader2 size={18} className="motion-safe:animate-spin" aria-hidden="true"/> : <Send size={18} strokeWidth={2} aria-hidden="true"/>} {isSubmitting ? 'Sending...' : 'Send'}
             </button>
           </div>
         </form>

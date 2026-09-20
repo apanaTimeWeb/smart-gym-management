@@ -1,5 +1,6 @@
 // DATA FLOW: Superadmin UI → useSuperadminAddGymForm → Superadmin module API/state → consuming component
 'use client';
+import { useUnsavedChangesGuard } from '@/hooks/useUnsavedChangesGuard';
 // RESPONSIBILITY: Manages form state, validation, and API submission for onboarding a new gym.
 // DATA FLOW: SuperadminAddGymForm -> useSuperadminAddGymForm -> gymsApi.createGym
 import { useState } from 'react';
@@ -29,6 +30,7 @@ export function useSuperadminAddGymForm() {
         defaultValues: { plan: '' },
     });
     const { onSubmit, isProvisioning, provisioningLogs } = useSuperadminAddGymFormSubmit();
+    useUnsavedChangesGuard(form.formState.isDirty && !isProvisioning, 'You have unsaved gym details. Discard?');
     return {
         form,
         register: form.register,

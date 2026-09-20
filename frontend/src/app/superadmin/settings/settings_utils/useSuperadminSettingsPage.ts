@@ -1,3 +1,4 @@
+// DATA FLOW: Inputs enter useSuperadminSettingsPage, flow through its feature-owned state/API dependencies, and return typed UI state/actions to the owning Superadmin feature.
 // RESPONSIBILITY: Owns Platform Settings server state and update mutations.
 'use client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';

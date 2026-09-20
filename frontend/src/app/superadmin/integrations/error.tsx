@@ -1,5 +1,5 @@
-
 // RESPONSIBILITY: Route-level Superadmin recovery boundary.
+
 'use client';
 
 import type { SuperadminRouteErrorProps } from '@/app/superadmin/integrations/integrations_types/SuperadminRouteErrorTypes';

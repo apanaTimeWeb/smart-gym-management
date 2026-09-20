@@ -56,7 +56,7 @@ export default function SuperadminMessagingClient() {
 
   if (messaging.isError) {
     return (
-      <div className="rounded-xl border border-danger/30 bg-danger-bg p-6 text-center">
+      <div className="rounded-xl border border-border bg-danger-bg p-6 text-center">
         <p className="font-semibold text-danger">{messaging.error}</p>
         <button type="button" onClick={() => { void messaging.refetchAll(); }} className="mt-4 rounded-lg border border-border bg-input px-4 py-2 text-sm text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
           Retry
@@ -73,12 +73,12 @@ export default function SuperadminMessagingClient() {
           <p className="mt-1 text-sm text-secondary">Direct tenant-owner/admin/manager email or SMS and in-app notifications.</p>
         </div>
         {messaging.tab === 'messages' ? (
-          <button type="button" onClick={() => setComposeOpen(true)} className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-on-primary shadow-card shadow-primary/20 motion-safe:transition-colors hover:bg-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
-            <Plus size={18} strokeWidth={2} /> Compose Message
+          <button type="button" onClick={() => setComposeOpen(true)} className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-on-primary shadow-card shadow-card motion-safe:transition-colors hover:bg-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+            <Plus size={18} strokeWidth={2}/> Compose Message
           </button>
         ) : messaging.unreadCount > 0 ? (
           <button type="button" onClick={() => { void handleMarkAllRead(); }} disabled={messaging.isMarkingAllRead} className="flex items-center gap-2 rounded-lg border border-border bg-input px-4 py-2 text-sm text-secondary motion-safe:transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-60">
-            <CheckCheck size={18} strokeWidth={2} /> {messaging.isMarkingAllRead ? 'Marking...' : 'Mark All Read'}
+            <CheckCheck size={18} strokeWidth={2}/> {messaging.isMarkingAllRead ? 'Marking...' : 'Mark All Read'}
           </button>
         ) : null}
       </div>

@@ -1,5 +1,6 @@
 // DATA FLOW: Superadmin UI → useSuperadminBroadcastsPage → Superadmin module API/state → consuming component
 'use client';
+import { useUnsavedChangesGuard } from '@/hooks/useUnsavedChangesGuard';
 // RESPONSIBILITY: useSuperadminBroadcastsPage.ts encapsulates all state and async logic for the Broadcasts page.
 // DATA FLOW: broadcastsApi → useSuperadminBroadcastsPage → SuperadminBroadcastsClient
 import { useState, useCallback, useRef } from 'react';
@@ -45,6 +46,7 @@ export const useSuperadminBroadcastsPage = () => {
         ...queueState,
         createIdempotencyKey: stableCreateIdempotencyKey,
     });
+    useUnsavedChangesGuard(form.formState.isDirty && isModalOpen && !isMutating, 'You have an unsaved broadcast. Discard?');
     const handleCreateBroadcast = useCallback(async (data: BroadcastFormData) => {
         const { scheduledDate, ...rest } = data;
         const payload = scheduledDate ? { ...rest, scheduledDate } : rest;

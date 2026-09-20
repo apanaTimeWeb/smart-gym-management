@@ -1,5 +1,6 @@
 // DATA FLOW: Superadmin UI → useSuperadminGymWhatsappModal → Superadmin module API/state → consuming component
 'use client';
+import { useUnsavedChangesGuard } from '@/hooks/useUnsavedChangesGuard';
 // RESPONSIBILITY: Handles form validation, modal state, and API submission for sending a WhatsApp message to a Gym owner.
 // DATA FLOW: SuperadminGymWhatsappModal -> useSuperadminGymWhatsappModal -> API
 import { useEffect } from 'react';
@@ -12,6 +13,8 @@ import { useSuperadminGymsStore } from '@/app/superadmin/gyms/gyms_store/useSupe
 import { gymsApi } from '@/app/superadmin/gyms/gyms_api/SuperadminGymsApi';
 import { WhatsAppFormatter } from '@/lib/whatsapp_formatter';
 import { gymWhatsappSchema, type GymWhatsappFormValues } from '@/app/superadmin/gyms/gyms_types/SuperadminGymsSchema';
+import { GymsUrlConfig } from '@/app/superadmin/gyms/superadmin_gyms_url_config';
+import { formatSuperadminGymWhatsappReceiptDate } from '@/app/superadmin/gyms/gyms_utils/SuperadminGymWhatsappReceiptUtils';
 /**
  * Purpose: Handles form validation, modal state, and API submission for sending a WhatsApp message to a Gym owner.
  * Inputs: values defined by the exported hook signature.
@@ -36,6 +39,7 @@ export function useSuperadminGymWhatsappModal() {
             reset({ subject: '', message: '' });
         }
     }, [isWhatsappModalOpen, reset]);
+    useUnsavedChangesGuard(isDirty && isWhatsappModalOpen && !isSubmitting, 'You have an unsent WhatsApp message. Discard?');
     const whatsappMutation = useMutation({
         mutationFn: (data: GymWhatsappFormValues & {
             phone: string;
@@ -45,10 +49,7 @@ export function useSuperadminGymWhatsappModal() {
         onSuccess: (res, data) => {
             if (data.phone) {
                 const cleanPhone = String(data.phone).replace(/\D/g, '');
-                const dateStr = new Intl.DateTimeFormat('en-IN', {
-                    day: '2-digit', month: 'short', year: 'numeric',
-                    hour: '2-digit', minute: '2-digit', hour12: true
-                }).format(new Date());
+                const dateStr = formatSuperadminGymWhatsappReceiptDate();
                 const waText = WhatsAppFormatter.formatReceipt({
                     title: 'Smart Gym 360',
                     subtitle: String(data.subject),
@@ -67,7 +68,7 @@ export function useSuperadminGymWhatsappModal() {
                     ],
                     footer: 'Powered by Smart Gym 360'
                 });
-                window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(waText)}`, '_blank');
+                window.open(GymsUrlConfig.EXTERNAL.WHATSAPP_CLICK_TO_CHAT(cleanPhone, waText), '_blank', 'noopener,noreferrer');
             }
             toast.success(res.message, { id: 'superadmin-toast-e6e0b4a6e8' });
             closeWhatsappModal();

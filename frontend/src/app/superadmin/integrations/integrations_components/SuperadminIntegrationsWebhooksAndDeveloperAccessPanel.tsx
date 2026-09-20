@@ -94,7 +94,8 @@ export default function SuperadminIntegrationsWebhooksAndDeveloperAccessPanel({ 
   </Panel>
   
   <SuperadminGenerateApiKeyModal 
-    isOpen={isApiKeyModalOpen} 
+    isOpen={isApiKeyModalOpen}
+    tenants={data.tenants}
     onClose={() => setIsApiKeyModalOpen(false)} 
   />
     </div>);

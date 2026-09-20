@@ -7,6 +7,7 @@ import { useQueryClient, useQuery } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useUrlState } from '@/hooks/useUrlState';
+import { useUnsavedChangesGuard } from '@/hooks/useUnsavedChangesGuard';
 import { couponsApi } from '@/app/superadmin/saas-billing/coupons/coupons_api/SuperadminCouponsApi';
 import { CouponSchema, type CouponFormData } from '@/app/superadmin/saas-billing/coupons/coupons_types/SuperadminCouponsTypes';
 import type { Coupon, CouponKpiFilter } from '@/app/superadmin/saas-billing/coupons/coupons_types/SuperadminCouponsTypes';
@@ -71,6 +72,7 @@ export const useSuperadminCoupons = () => {
         },
     });
     const { isMutating, handleCreateCoupon, handleUpdateCoupon, handleDeleteCoupon, handleToggleRestore, handleToggleStatus, } = useSuperadminCouponsMutations(updateCoupons, setIsModalOpen, setIsEditModalOpen, setSelectedCoupon, selectedCoupon, form);
+    useUnsavedChangesGuard(form.formState.isDirty && (isModalOpen || isEditModalOpen) && !isMutating, 'You have unsaved coupon changes. Discard?');
     const filteredCoupons = coupons;
     const activeCoupons = useMemo(() => filteredCoupons.filter(c => c.status === 'ACTIVE' && !c.isDeleted).length, [filteredCoupons]);
     const totalRedeemed = useMemo(() => filteredCoupons.reduce((sum, c) => sum + c.currentUses, 0), [filteredCoupons]);

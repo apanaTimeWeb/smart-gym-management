@@ -2,7 +2,7 @@
 'use client';
 // DATA FLOW: superadminApi -> useQuery -> SuperadminPlansList
 import { Check, Edit2, Trash2, Loader2, Archive } from 'lucide-react';
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
 import type { SubscriptionPlan } from '@/app/superadmin/saas-billing/plans/plans_types/SuperadminPlansTypes';
 import { useSuperadminPlansList } from '@/app/superadmin/saas-billing/plans/plans_components/useSuperadminPlansList';
 export default function SuperadminPlansList() {
@@ -29,7 +29,7 @@ export default function SuperadminPlansList() {
             <div className="mb-4">
               <h2 className="text-xl font-bold text-primary">{plan.name}</h2>
               <div className="flex items-end gap-1 mt-2">
-                <span className="text-3xl font-extrabold text-primary">{formatCurrency(Number(plan.priceMonthly))}</span>
+                <span className="text-3xl font-extrabold text-primary">{formatCurrencyFromMinorUnits(Number(plan.priceMonthly))}</span>
                 <span className="text-secondary font-medium mb-1">/ mo</span>
               </div>
             </div>
@@ -49,7 +49,7 @@ export default function SuperadminPlansList() {
               </p>
               <div className="pt-2">
                 {plan.features?.map((feat: string, idx: number) => (<div key={feat} className="flex items-center gap-2 mb-2 text-sm text-secondary">
-                    <Check className="w-4 h-4 text-success shrink-0"/>
+                    <Check size={18} className="w-4 text-success shrink-0"/>
                     {feat}
                   </div>))}
               </div>
@@ -59,9 +59,9 @@ export default function SuperadminPlansList() {
               <button onClick={() => openEditModal(plan)} disabled={isDeleting || deleteMutation.isPending} aria-label={`Edit ${plan.name}`} className="flex-1 py-2.5 flex items-center justify-center bg-input hover:bg-primary-subtle hover:text-on-primary text-primary rounded-xl motion-safe:transition-colors border border-border disabled:opacity-50">
                 <Edit2 size={18}/>
               </button>
-              <button onClick={() => confirmPlanDestructiveAction(plan)} disabled={isDeleting || deleteMutation.isPending || archiveMutation.isPending} aria-label={`Delete or archive ${plan.name}`} title={(plan.activeTenants ?? 0) > 0 ? 'Archive plan (has active gyms)' : 'Delete plan'} className="flex-1 py-2.5 flex items-center justify-center bg-input hover:bg-danger-bg-danger-bg text-secondary rounded-xl motion-safe:transition-colors border border-border disabled:opacity-50">
+              <button onClick={() => confirmPlanDestructiveAction(plan)} disabled={isDeleting || deleteMutation.isPending || archiveMutation.isPending} aria-label={`Delete or archive ${plan.name}`} title={(plan.activeTenants ?? 0) > 0 ? 'Archive plan (has active gyms)' : 'Delete plan'} className="flex-1 py-2.5 flex items-center justify-center bg-input hover:bg-danger-bg text-secondary rounded-xl motion-safe:transition-colors border border-border disabled:opacity-50">
                 {isDeleting || archiveMutation.isPending
-                    ? <Loader2 className="w-5 h-5 motion-safe:animate-spin"/>
+                    ? <Loader2 size={18} className="w-5 motion-safe:animate-spin"/>
                     : (plan.activeTenants ?? 0) > 0
                         ? <Archive size={18}/>
                         : <Trash2 size={18}/>}

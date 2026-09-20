@@ -39,7 +39,7 @@ export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> =
             setValue('targetGymIds', [...targetGymIds, id], { shouldValidate: true });
         }
     };
-    return (<div className="fixed inset-0 bg-overlay/80 z-40 flex items-center justify-center p-4 backdrop-blur-sm" role="dialog" aria-modal="true">
+    return (<div className="fixed inset-0 bg-overlay z-40 flex items-center justify-center p-4 backdrop-blur-sm" role="dialog" aria-modal="true">
       <div className="bg-overlay border border-border rounded-2xl w-full max-w-md shadow-dialog overflow-hidden flex flex-col">
         <div className="flex items-center justify-between px-7 py-5 border-b border-border">
           <h2 className="text-lg font-bold text-primary">{isEditMode ? 'Edit Broadcast' : 'New Broadcast'}</h2>
@@ -70,7 +70,7 @@ export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> =
                 </button>
               </div>
               <div className="bg-input border border-border rounded-xl max-h-40 overflow-y-auto custom-scrollbar p-2 grid grid-cols-2 gap-2">
-                {isPendingGyms ? (<div className="col-span-2 flex justify-center py-4 text-primary"><Loader2 className="w-5 h-5 motion-safe:animate-spin"/></div>) : gyms?.map(gym => (<label key={gym.id} className="flex items-center gap-2 cursor-pointer p-2 hover:bg-overlay rounded-lg motion-safe:transition-colors border border-transparent hover:border-border">
+                {isPendingGyms ? (<div className="col-span-2 flex justify-center py-4 text-primary"><Loader2 size={18} className="w-5 motion-safe:animate-spin"/></div>) : gyms?.map(gym => (<label key={gym.id} className="flex items-center gap-2 cursor-pointer p-2 hover:bg-overlay rounded-lg motion-safe:transition-colors border border-transparent hover:border-border">
                     <input type="checkbox" checked={targetGymIds?.includes(gym.id)} onChange={() => handleToggleGym(gym.id)} className="w-4 h-4 rounded text-primary focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page accent-primary"/>
                     <div className="flex flex-col overflow-hidden">
                       <span className="text-sm font-medium text-primary truncate">{gym.name}</span>
@@ -108,14 +108,14 @@ export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> =
 
           {status === 'SENT' && (<div className="space-y-3">
               {/* Bug #21 fix: Recipient count preview */}
-              <div className="bg-primary-subtle border border-primary/20 rounded-lg p-4 flex items-center gap-3">
-                <Users className="w-5 h-5 text-primary shrink-0"/>
+              <div className="bg-primary-subtle border border-border rounded-lg p-4 flex items-center gap-3">
+                <Users size={18} className="w-5 text-primary shrink-0"/>
                 <p className="text-sm text-primary">
                   This broadcast will reach{' '}
                   <strong className="text-primary">{previewRecipientCount} active gym{previewRecipientCount !== 1 ? 's' : ''}</strong>.
                 </p>
               </div>
-              <div className="bg-warning-bg border border-warning/20 rounded-lg p-4">
+              <div className="bg-warning-bg border border-border rounded-lg p-4">
                 <p className="text-sm text-warning font-medium">
                   ⚠️ You are about to send this broadcast immediately to <strong>{targetGymIds.length}</strong> {targetGymIds.length === 1 ? 'gym' : 'gyms'}. This action cannot be undone.
                 </p>
@@ -127,7 +127,7 @@ export const SuperadminBroadcastModal: React.FC<SuperadminBroadcastModalProps> =
               Cancel
             </button>
             <button type="submit" disabled={isMutating} className="px-5 py-2.5 bg-primary hover:bg-primary-hover text-on-primary font-medium rounded-lg motion-safe:transition-colors text-sm disabled:opacity-50 flex items-center justify-center min-w-32">
-              {isMutating ? <Loader2 className="w-4 h-4 motion-safe:animate-spin"/> : status === 'SENT' ? `Send to ${targetGymIds.length} Gyms` : 'Save Broadcast'}
+              {isMutating ? <Loader2 size={18} className="w-4 motion-safe:animate-spin"/> : status === 'SENT' ? `Send to ${targetGymIds.length} Gyms` : 'Save Broadcast'}
             </button>
           </div>
         </form>

@@ -2,7 +2,7 @@
 'use client';
 // RESPONSIBILITY: Hook to manage the state and logic of the SuperadminGymDeleteModal.
 // DATA FLOW: SuperadminGymDeleteModal -> useSuperadminGymDeleteModal -> API
-import { useState, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
 import { useSuperadminGymsStore } from '@/app/superadmin/gyms/gyms_store/useSuperadminGymsStore';
@@ -20,6 +20,7 @@ export function useSuperadminGymDeleteModal() {
     const gymToDelete = useSuperadminGymsStore(state => state.gymToDelete);
     const queryClient = useQueryClient();
     const [confirmText, setConfirmText] = useState('');
+    const idempotencyKeyRef = useRef<string | null>(null);
     // Reset confirmation text whenever the modal opens or closes
     // EXPLANATION: Synchronize component state with external dependencies.
     // EFFECT DEPENDENCIES: Documented intentionally.
@@ -34,6 +35,7 @@ export function useSuperadminGymDeleteModal() {
         mutationFn: ({ id, idempotencyKey }: { id: string; idempotencyKey: string }) => gymsApi.deleteGym(id, idempotencyKey),
         onSuccess: (res) => {
             toast.success(res.message, { id: 'superadmin-toast-f1e29ad0b1' });
+            idempotencyKeyRef.current = null;
             queryClient.invalidateQueries({ queryKey: ['superadmin', 'gyms'] });
             closeDeleteModal();
         },
@@ -43,7 +45,8 @@ export function useSuperadminGymDeleteModal() {
     });
     const handleConfirmDelete = () => {
         if (confirmText === 'DELETE' && gymToDelete) {
-            deleteMutation.mutate({ id: gymToDelete.id, idempotencyKey: crypto.randomUUID() });
+            idempotencyKeyRef.current ??= crypto.randomUUID();
+            deleteMutation.mutate({ id: gymToDelete.id, idempotencyKey: idempotencyKeyRef.current });
         }
     };
     return {

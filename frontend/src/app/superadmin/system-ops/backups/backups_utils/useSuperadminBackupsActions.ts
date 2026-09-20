@@ -1,3 +1,4 @@
+// DATA FLOW: Inputs enter useSuperadminBackupsActions, flow through its feature-owned state/API dependencies, and return typed UI state/actions to the owning Superadmin feature.
 // RESPONSIBILITY: Owns Backup trigger, restore, and download actions; UI components consume feature-local actions only.
 'use client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';

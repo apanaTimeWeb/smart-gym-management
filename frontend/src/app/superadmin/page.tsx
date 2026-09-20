@@ -1,15 +1,7 @@
-import { Suspense } from 'react';
-// RESPONSIBILITY: Server Component that acts as the entry point for the Tenants (Gyms) list page.
-import type { Metadata } from 'next';
-import SuperadminGymsClient from '@/app/superadmin/gyms/gyms_components/SuperadminGymsClient';
-import { SuperadminErrorBoundary } from '@/app/superadmin/superadmin_layout/SuperadminLayout/SuperadminErrorBoundary';
-export const metadata: Metadata = {
-    title: 'Gyms | Superadmin',
-    description: 'Manage gyms.',
-};
-export default function GymsPage() {
-    // In the future, server-side fetching can happen here before passing data to SuperadminGymsClient
-    return (<SuperadminErrorBoundary>
-      <SuperadminGymsClient />
-    </SuperadminErrorBoundary>);
+// RESPONSIBILITY: Redirects the Superadmin role root route to the canonical Dashboard route.
+import { redirect } from 'next/navigation';
+import { DashboardUrlConfig } from '@/app/superadmin/dashboard/superadmin_dashboard_url_config';
+
+export default function SuperadminHomePage() {
+  redirect(DashboardUrlConfig.PAGES.MAIN);
 }

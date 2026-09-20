@@ -1,3 +1,4 @@
+// DATA FLOW: Inputs enter useSuperadminTicketMutations, flow through its feature-owned state/API dependencies, and return typed UI state/actions to the owning Superadmin feature.
 // RESPONSIBILITY: Owns Superadmin ticket close and assignment mutations; UI components consume only typed mutation actions.
 'use client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';

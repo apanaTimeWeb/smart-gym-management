@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Renders the Superadmin invoices V1 Recovery schedule, Refunds, credits & write-offs view.
 'use client';
-import { formatCurrency, formatNumber, formatDateTime } from '@/lib/formatters';
+import { formatCurrencyFromMinorUnits, formatNumber, formatDateTime } from '@/lib/formatters';
 import Panel from '@/components/ui/Panel';
 import type { SuperadminInvoicesV1SectionProps } from '@/app/superadmin/saas-billing/invoices/invoices_types/SuperadminInvoicesV1Types.ts';
 import { getSuperadminInvoicesStatusBadgeClasses } from '@/app/superadmin/saas-billing/invoices/invoices_utils/SuperadminInvoicesStatusBadgeConfig';
@@ -31,7 +31,7 @@ export default function SuperadminInvoicesV1RecoveryAndFinancialAdjustmentsSecti
         </div>
         <div className="text-right">
           <p className="font-medium text-primary">
-            {formatCurrency(r.amount)}
+            {formatCurrencyFromMinorUnits(r.amount)}
           </p>
           <span className={`text-xs font-semibold ${getSuperadminInvoicesStatusBadgeClasses(r.status)}`}>
             {r.status}

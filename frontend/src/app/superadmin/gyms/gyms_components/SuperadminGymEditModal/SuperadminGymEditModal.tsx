@@ -6,14 +6,14 @@ import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import { X, Eye, EyeOff } from 'lucide-react';
 import { useSuperadminGymEditModal } from '@/app/superadmin/gyms/gyms_components/SuperadminGymEditModal/useSuperadminGymEditModal';
 import { useUnsavedChangesGuard } from '@/hooks/useUnsavedChangesGuard';
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
 export default function SuperadminGymEditModal() {
     const { isEditModalOpen, closeEditModal, selectedGym, plans, loadingPlans, register, handleSubmit, onSubmit, control, errors, isDirty, isSubmitting, } = useSuperadminGymEditModal();
     useUnsavedChangesGuard(isDirty);
     const [showPassword, setShowPassword] = React.useState(false);
     if (!isEditModalOpen || !selectedGym)
         return null;
-    return (<div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 p-4" role="dialog" aria-modal="true">
+    return (<div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay p-4" role="dialog" aria-modal="true">
       <div className="bg-overlay rounded-2xl p-7 max-w-md w-full border border-border shadow-dialog relative">
         <button onClick={closeEditModal} className="absolute top-5 right-5 text-secondary hover:text-primary motion-safe:transition-colors">
           <X size={18}/>
@@ -52,7 +52,7 @@ export default function SuperadminGymEditModal() {
             <div className="relative">
               <input type={showPassword ? "text" : "password"} {...register('temporaryPassword')} className="w-full bg-input border border-border rounded-lg px-4 py-2.5 text-sm text-primary focus:border-primary focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page motion-safe:transition-colors pr-10" placeholder="Leave blank to keep current"/>
               <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary hover:text-primary motion-safe:transition-colors" aria-label="Toggle password visibility">
-                {showPassword ? <EyeOff className="w-4 h-4"/> : <Eye className="w-4 h-4"/>}
+                {showPassword ? <EyeOff size={18} className="w-4"/> : <Eye size={18} className="w-4"/>}
               </button>
             </div>
             {errors.temporaryPassword && <p className="text-xs text-danger mt-1">{errors.temporaryPassword.message}</p>}
@@ -60,7 +60,7 @@ export default function SuperadminGymEditModal() {
 
           <div>
             <label className="block text-sm font-bold text-secondary mb-1">Subscription Plan <span className="text-danger">*</span></label>
-            <Controller name="plan" control={control} render={({ field }) => (<SearchableDropdown value={field.value || ''} onChange={field.onChange} options={plans ? plans.map((p) => ({ label: `${p.name} (${formatCurrency(Number(p.priceMonthly))}/mo)`, value: p.name })) : []} disabled={loadingPlans} placeholder={loadingPlans ? "Loading plans..." : "Select a plan"}/>)}/>
+            <Controller name="plan" control={control} render={({ field }) => (<SearchableDropdown value={field.value || ''} onChange={field.onChange} options={plans ? plans.map((p) => ({ label: `${p.name} (${formatCurrencyFromMinorUnits(Number(p.priceMonthly))}/mo)`, value: p.name })) : []} disabled={loadingPlans} placeholder={loadingPlans ? "Loading plans..." : "Select a plan"}/>)}/>
             {errors.plan && <p className="text-xs text-danger mt-1">{errors.plan.message}</p>}
           </div>
 

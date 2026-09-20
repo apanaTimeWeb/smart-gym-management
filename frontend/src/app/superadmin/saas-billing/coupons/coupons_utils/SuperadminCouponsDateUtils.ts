@@ -1,4 +1,14 @@
-// RESPONSIBILITY: Returns today's ISO calendar date for coupon expiry UI without embedding browser-date logic in JSX.
+// RESPONSIBILITY: Converts API coupon dates into HTML date-input values.
+/** Converts an API ISO date to the yyyy-MM-dd form required by an HTML date input. */
+export function formatSuperadminCouponDateForInput(value: string): string {
+  const date = new Date(value);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+/** Returns today's date in yyyy-MM-dd format for input min/max */
 export function getSuperadminCouponsTodayISODate(): string {
-  return new Date().toISOString().slice(0, 10);
+  return formatSuperadminCouponDateForInput(new Date().toISOString());
 }

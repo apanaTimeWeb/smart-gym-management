@@ -3,7 +3,7 @@
 import { FileCheck2, Landmark, ShieldCheck } from 'lucide-react';
 import type { SuperadminComplianceSectionProps } from '@/app/superadmin/compliance/compliance_types/SuperadminComplianceTypes';
 export default function SuperadminComplianceReadinessPanel({ data }: SuperadminComplianceSectionProps) {
-    return (<div className="rounded-xl border border-border bg-info-bg/20 p-4">
+    return (<div className="rounded-xl border border-border bg-info-bg p-4">
   <div className="flex gap-3">
     <FileCheck2 size={18} className="mt-0.5 text-info"/>
     <div>
@@ -14,7 +14,7 @@ export default function SuperadminComplianceReadinessPanel({ data }: SuperadminC
         Tax configuration and registration data should stay aligned with your accounting and legal process.
       </p>
     </div>
-    <ShieldCheck size={18} className="ml-auto  text-success"/>
+    <ShieldCheck size={18} className="ml-auto text-success"/>
   </div>
     </div>);
 }

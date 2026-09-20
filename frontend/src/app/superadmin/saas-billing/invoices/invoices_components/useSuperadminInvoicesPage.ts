@@ -2,7 +2,7 @@
 'use client';
 // RESPONSIBILITY: Encapsulates local UI state for the Invoices page (filtering, modal state, derived stats).
 // DATA FLOW: useSuperadminInvoicesStore -> useSuperadminInvoicesPage -> SuperadminInvoicesClient
-import { useState, useMemo } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { useUrlState } from '@/hooks/useUrlState';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { invoicesApi } from '@/app/superadmin/saas-billing/invoices/invoices_api/SuperadminInvoicesApi';
@@ -40,6 +40,7 @@ export function useSuperadminInvoicesPage() {
     const [isGymDropdownOpen, setIsGymDropdownOpen] = useState(false);
     const [selectedGymId, setSelectedGymId] = useState('');
     const [paymentMethod, setPaymentMethod] = useState('UPI');
+    const paymentIdempotencyKeyRef = useRef<string | null>(null);
     const queryParams = useMemo(() => {
         const p: Record<string, string> = {};
         if (search)
@@ -83,6 +84,7 @@ export function useSuperadminInvoicesPage() {
             if (res.success && res.data) {
                 queryClient.invalidateQueries({ queryKey: ['superadmin', 'invoices'] });
                 toast.success(res.message, { id: 'superadmin-toast-bddec4ac4d' });
+                paymentIdempotencyKeyRef.current = null;
             }
             else {
                 toast.error(res.message, { id: 'superadmin-toast-812ab1a64a' });
@@ -95,7 +97,8 @@ export function useSuperadminInvoicesPage() {
     const handleLogManualPayment = async (gymId: string, amount: number, planName: string) => {
         const confirmed = await confirm({ title: 'Record Manual Payment', message: `Record INR ${amount} payment for ${planName} as a tenant invoice payment?`, type: 'warning', confirmText: 'Record Payment', cancelText: 'Cancel' });
         if (!confirmed) return false;
-        await logManualPaymentMutation.mutateAsync({ gymId, amount, planName, idempotencyKey: crypto.randomUUID() });
+        paymentIdempotencyKeyRef.current ??= crypto.randomUUID();
+        await logManualPaymentMutation.mutateAsync({ gymId, amount, planName, idempotencyKey: paymentIdempotencyKeyRef.current });
         return true;
     };
     // filtering moved to server

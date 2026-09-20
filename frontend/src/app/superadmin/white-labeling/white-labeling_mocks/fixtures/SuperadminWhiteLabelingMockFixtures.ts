@@ -1,4 +1,4 @@
-import type { WhiteLabelDomain } from '../../white-labeling_types/SuperadminWhiteLabelingTypes';
+import type { WhiteLabelDomain } from '@/app/superadmin/white-labeling/white-labeling_types/SuperadminWhiteLabelingTypes';
 
 export const mockWhiteLabelDomains: WhiteLabelDomain[] = [
   {

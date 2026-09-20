@@ -3,15 +3,16 @@ import { StatusCodes } from 'http-status-codes';
 import type { CreateManualPaymentDto, SaaSInvoice } from '@/app/superadmin/saas-billing/invoices/invoices_types/SuperadminInvoicesTypes';
 import { CreateManualPaymentDtoSchema } from '@/app/superadmin/saas-billing/invoices/invoices_types/SuperadminInvoicesTypes';
 import type { ApiResponse } from '@/lib/api';
+import { InvoicesUrlConfig } from '@/app/superadmin/saas-billing/invoices/superadmin_invoices_url_config';
 import { MOCK_INVOICE_TENANTS, MOCK_SUPERADMIN_INVOICES } from '@/app/superadmin/saas-billing/invoices/invoices_mocks/fixtures/SuperadminInvoicesMockFixtures';
-const BASE_URL = '*/api/v1/superadmin/saas-billing/invoices';
+const BASE_URL = `*${InvoicesUrlConfig.BACKEND_API.BASE}`;
 let mockInvoices: SaaSInvoice[] = [...MOCK_SUPERADMIN_INVOICES];
 
 export function resetSuperadminInvoicesMockState(): void {
   mockInvoices = [...MOCK_SUPERADMIN_INVOICES];
 }
 export const superadminInvoicesHandlers = [
-    http.get('*/api/v1/api/gyms', async () => HttpResponse.json({ success: true, message: 'Success', data: MOCK_INVOICE_TENANTS })),
+    http.get(`*${InvoicesUrlConfig.BACKEND_API.TENANTS}`, async () => HttpResponse.json({ success: true, message: 'Success', data: MOCK_INVOICE_TENANTS })),
     http.get(BASE_URL, async ({ request }) => {
         await delay(400);
         const url = new URL(request.url);

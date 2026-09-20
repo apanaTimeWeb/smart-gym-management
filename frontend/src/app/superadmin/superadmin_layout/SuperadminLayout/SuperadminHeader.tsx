@@ -1,93 +1,90 @@
-// RESPONSIBILITY: SuperadminHeader.tsx renders the top navigation bar for the SaaS module.
+// RESPONSIBILITY: Renders the fixed Superadmin header, responsive navigation trigger, notification link, theme toggle, and profile menu. No business API calls.
 'use client';
-// Applies glassmorphism per Design §12.2 (bg-card/80 backdrop-blur-md).
-// Handles theme toggling and profile dropdown actions. No business logic or API calls.
-import { useState, useRef, useEffect } from 'react';
-import { LogOut, Settings, Menu } from 'lucide-react';
+
+import { useEffect, useRef, useState } from 'react';
+import { Bell, Loader2, LogOut, Menu, Settings } from 'lucide-react';
 import Link from 'next/link';
 import { ThemeToggle } from '@/components/ThemeToggle';
-import { SettingsUrlConfig } from '@/app/superadmin/settings/superadmin_settings_url_config';
 import { logout } from '@/lib/api';
-import SuperadminMessagingNotificationBell from '@/app/superadmin/messaging/messaging_components/SuperadminMessagingNotificationBell/SuperadminMessagingNotificationBell';
-export default function SuperadminHeader() {
-    const [showProfile, setShowProfile] = useState(false);
-    const profileRef = useRef<HTMLDivElement>(null);
-    const [mounted, setMounted] = useState(false);
-    // Sets mounted=true once on client-side hydration to enable ThemeToggle to render safely without SSR mismatch.
-    // Dependency: [] — runs once on mount only.
-// EFFECT INTENT: registers/removes a browser event listener and keeps the listener aligned with its captured values.
-    useEffect(() => {
-        Promise.resolve().then(() => setMounted(true));
-    }, []);
-    // Closes profile dropdown when clicking anywhere outside the profile ref container.
-    // Dependency: [] — event listener is set once on mount, no dynamic deps.
-// EFFECT INTENT: registers/removes a browser event listener and keeps the listener aligned with its captured values.
-    useEffect(() => {
-        function handleClickOutside(event: MouseEvent) {
-            if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
-                setShowProfile(false);
-            }
-        }
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, []);
-    function handleToggleSidebar() {
-        window.dispatchEvent(new Event('toggle-sidebar'));
+import { SettingsUrlConfig } from '@/app/superadmin/settings/superadmin_settings_url_config';
+import { MessagingUrlConfig } from '@/app/superadmin/messaging/superadmin_messaging_url_config';
+import type { SuperadminHeaderProps } from '@/app/superadmin/superadmin_layout/SuperadminLayout/SuperadminHeaderTypes';
+
+export default function SuperadminHeader({ isCollapsed }: SuperadminHeaderProps) {
+  const [showProfile, setShowProfile] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const profileRef = useRef<HTMLDivElement>(null);
+  const profileTriggerRef = useRef<HTMLButtonElement>(null);
+  const profileMenuRef = useRef<HTMLDivElement>(null);
+
+  // EFFECT INTENT: waits for client hydration before rendering the theme control to avoid server/client theme mismatch.
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // EFFECT INTENT: closes the profile popover on outside pointer interaction and returns focus to the trigger when dismissed by Escape.
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (profileRef.current && !profileRef.current.contains(event.target as Node)) setShowProfile(false);
+    };
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape' || !showProfile) return;
+      event.preventDefault();
+      setShowProfile(false);
+      profileTriggerRef.current?.focus();
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleEscape);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, [showProfile]);
+
+  // EFFECT INTENT: places keyboard focus inside the opened profile menu so keyboard users do not have to tab through the page shell again.
+  useEffect(() => {
+    if (!showProfile) return undefined;
+    const firstMenuItem = profileMenuRef.current?.querySelector<HTMLElement>('[role="menuitem"]');
+    firstMenuItem?.focus();
+    return undefined;
+  }, [showProfile]);
+
+  const handleToggleSidebar = () => window.dispatchEvent(new Event('toggle-sidebar'));
+  const handleToggleProfile = () => setShowProfile((value) => !value);
+  const handleCloseProfile = () => setShowProfile(false);
+
+  const handleLogout = async () => {
+    if (isLoggingOut) return;
+    handleCloseProfile();
+    setIsLoggingOut(true);
+    try {
+      await logout();
+    } finally {
+      setIsLoggingOut(false);
     }
-    function handleToggleProfile() {
-        setShowProfile(prev => !prev);
-    }
-    function handleCloseProfile() {
-        setShowProfile(false);
-    }
-    async function handleLogout() {
-        handleCloseProfile();
-        await logout();
-    }
-    return (
-    // Design §12.2: Sticky headers use translucent bg + backdrop-blur for glassmorphism depth
-    <header className="bg-card/80 backdrop-blur-md border-b border-border px-6 py-4 flex items-center justify-between sticky top-0 z-20">
-      <div className="flex flex-wrap items-center gap-4">
-        <button className="lg:hidden p-2 -ml-3 text-secondary hover:text-primary motion-safe:transition-colors bg-input hover:bg-page rounded-lg border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page" onClick={handleToggleSidebar} aria-label="Toggle Sidebar" title="Toggle Sidebar">
-          <Menu size={18}/>
-        </button>
-        <div>
-          <h1 className="text-xl font-bold text-primary">SaaS Platform</h1>
-          <p className="text-sm text-secondary mt-0.5">Master Control Panel</p>
-        </div>
+  };
+
+  return (
+    <header className={`fixed inset-x-0 top-0 z-20 flex min-h-16 items-center justify-between border-b border-border bg-header px-6 py-3 backdrop-blur-md motion-safe:transition-[padding] motion-safe:duration-slow ${isCollapsed ? 'md:pl-16 xl:pl-16' : 'md:pl-16 xl:pl-60'}`}>
+      <div className="flex min-w-0 items-center gap-4">
+        <button type="button" className="flex min-h-11 min-w-11 items-center justify-center rounded-lg border border-border bg-input text-secondary hover:bg-page hover:text-primary motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page md:hidden" onClick={handleToggleSidebar} aria-label="Toggle Sidebar" title="Toggle Sidebar"><Menu size={18} aria-hidden="true" /></button>
+        <div className="min-w-0"><h1 className="truncate text-xl font-bold text-primary">SaaS Platform</h1><p className="truncate text-sm text-secondary">Master Control Panel</p></div>
       </div>
 
-      <div className="flex flex-wrap items-center gap-4">
-        {/* Notification Bell */}
-        {mounted && <SuperadminMessagingNotificationBell />}
+      <div className="flex items-center gap-3">
+        <Link href={`${MessagingUrlConfig.PAGES.MAIN}?tab=notifications`} aria-label="Open notifications" title="Notifications" className="flex min-h-11 min-w-11 items-center justify-center rounded-lg border border-border bg-input text-secondary hover:bg-page hover:text-primary motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"><Bell size={18} aria-hidden="true" /></Link>
+        {mounted ? <ThemeToggle /> : null}
 
-        {/* Theme Toggle - accessible dark/light mode switcher */}
-        {mounted && <ThemeToggle />}
-
-        {/* Profile Dropdown */}
         <div className="relative" ref={profileRef}>
-          <button onClick={handleToggleProfile} aria-label="Open profile menu" aria-expanded={showProfile} className="w-9 h-9 rounded-full flex items-center justify-center text-on-primary text-sm font-bold cursor-pointer motion-safe:transition-transform motion-safe:hover:scale-105 shadow-card bg-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page">
-            SA
-          </button>
-
-          {showProfile && (<div role="menu" aria-label="Profile menu" className="absolute right-0 mt-2 w-56 bg-popover rounded-xl shadow-popover border border-border overflow-hidden z-30 motion-safe:animate-superadmin-fade-in-up">
-              <div className="px-4 py-3 border-b border-border bg-header">
-                <p className="text-sm font-semibold text-primary">Superadmin</p>
-                <p className="text-xs text-secondary">admin@gymsmart.com</p>
-                <p className="text-xs text-warning bg-warning-bg inline-block px-1.5 rounded-md font-medium mt-0.5">GOD MODE</p>
-              </div>
-              <div className="py-1">
-                <Link href={SettingsUrlConfig.PAGES.MAIN} role="menuitem" className="flex items-center gap-2 px-4 py-2 text-sm text-secondary hover:text-primary hover:bg-input motion-safe:transition-colors focus-visible:outline-none focus-visible:bg-input" onClick={handleCloseProfile}>
-                  <Settings className="w-4 h-4"/> Platform Settings
-                </Link>
-              </div>
-              <div className="border-t border-border py-1 bg-header">
-                <button role="menuitem" className="w-full flex items-center gap-2 px-4 py-2 text-sm text-danger hover:bg-danger-bg font-medium motion-safe:transition-colors focus-visible:outline-none focus-visible:bg-danger-bg" onClick={handleLogout}>
-                  <LogOut className="w-4 h-4"/> Exit SaaS Panel
-                </button>
-              </div>
-            </div>)}
+          <button ref={profileTriggerRef} type="button" onClick={handleToggleProfile} aria-label="Open profile menu" aria-expanded={showProfile} aria-haspopup="menu" className="flex min-h-11 min-w-11 items-center justify-center rounded-full bg-primary text-sm font-bold text-on-primary shadow-card motion-safe:transition-transform motion-safe:hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page">SA</button>
+          {showProfile ? <div ref={profileMenuRef} role="menu" aria-label="Profile menu" className="absolute right-0 z-30 mt-2 w-56 overflow-hidden rounded-xl border border-border bg-popover shadow-popover motion-safe:animate-superadmin-fade-in-up">
+            <div className="border-b border-border bg-header px-4 py-3"><p className="text-sm font-semibold text-primary">Superadmin</p><p className="mt-0.5 text-xs text-secondary">Platform administrator</p></div>
+            <div className="py-1"><Link href={SettingsUrlConfig.PAGES.MAIN} role="menuitem" tabIndex={0} className="flex min-h-11 items-center gap-2 px-4 py-2 text-sm text-secondary hover:bg-input hover:text-primary motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset" onClick={handleCloseProfile}><Settings size={18} aria-hidden="true" />Platform Settings</Link></div>
+            <div className="border-t border-border bg-header py-1"><button type="button" role="menuitem" disabled={isLoggingOut} className="flex min-h-11 w-full items-center gap-2 px-4 py-2 text-sm font-medium text-danger hover:bg-danger-bg motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger focus-visible:ring-inset disabled:cursor-not-allowed disabled:opacity-50" onClick={() => void handleLogout()}>{isLoggingOut ? <Loader2 size={18} className="motion-safe:animate-spin" aria-hidden="true" /> : <LogOut size={18} aria-hidden="true" />}{isLoggingOut ? 'Signing out...' : 'Exit SaaS Panel'}</button></div>
+          </div> : null}
         </div>
       </div>
-    </header>);
+    </header>
+  );
 }

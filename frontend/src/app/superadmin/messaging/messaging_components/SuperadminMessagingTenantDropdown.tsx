@@ -32,13 +32,13 @@ export function SuperadminMessagingTenantDropdown({ value, onChange, tenants }: 
         <span className={selected ? 'text-primary' : 'text-secondary'}>
           {selected ? `${selected.name} — ${selected.plan}` : 'Select tenant...'}
         </span>
-        <ChevronDown className="w-5 h-5 text-secondary shrink-0" strokeWidth={2}/>
+        <ChevronDown size={18} className="w-5 text-secondary shrink-0" strokeWidth={2}/>
       </button>
 
       {open && (<div className="absolute z-30 mt-1 w-full overflow-hidden rounded-lg border border-border bg-popover shadow-popover">
           <div className="p-2 border-b border-border">
             <div className="relative">
-              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-secondary"/>
+              <Search size={18} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-secondary"/>
               <input type="text" autoFocus placeholder="Search gyms..." value={query} onChange={(e) => setQuery(e.target.value)} className="w-full pl-8 pr-3 py-1.5 bg-input border border-border rounded-md text-sm text-primary focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary"/>
             </div>
           </div>

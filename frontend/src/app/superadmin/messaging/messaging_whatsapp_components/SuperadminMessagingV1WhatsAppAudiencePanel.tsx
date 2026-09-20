@@ -16,7 +16,7 @@ export default function SuperadminMessagingV1WhatsAppAudiencePanel({ audiences, 
           {audiences.map((audience) => {
             const count = getWhatsAppAudienceCount(recipients, audience.id, tenantId);
             const selected = audience.id === audienceId;
-            return (<button key={audience.id} type="button" onClick={() => onAudienceChange(audience.id)} className={`rounded-xl border p-4 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${selected ? 'border-primary/50 bg-primary-subtle' : 'border-border bg-input/30 hover:border-primary/30'}`} aria-pressed={selected}>
+            return (<button key={audience.id} type="button" onClick={() => onAudienceChange(audience.id)} className={`rounded-xl border p-4 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${selected ? 'border-border bg-primary-subtle' : 'border-border bg-input hover:border-border'}`} aria-pressed={selected}>
                 <div className="flex items-start justify-between gap-3">
                   <span className="flex size-9 items-center justify-center rounded-lg bg-card text-primary"><UsersRound size={18} aria-hidden="true"/></span>
                   <span className="text-lg font-bold text-primary">{formatNumber(count)}</span>
@@ -26,8 +26,8 @@ export default function SuperadminMessagingV1WhatsAppAudiencePanel({ audiences, 
               </button>);
         })}
         </div>
-        <div className="rounded-xl border border-border bg-input/30 p-4">
-          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-secondary"><Building2 size={15} aria-hidden="true"/> Gym scope</div>
+        <div className="rounded-xl border border-border bg-input p-4">
+          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-secondary"><Building2 size={18} aria-hidden="true"/> Gym scope</div>
           <label htmlFor="whatsapp-tenant-scope" className="sr-only">Gym scope</label>
           <select id="whatsapp-tenant-scope" value={tenantId} onChange={(event) => onTenantChange(event.target.value)} className="mt-3 w-full rounded-lg border border-border bg-card px-3 py-2 text-sm text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
             <option value="ALL_TENANTS">All gyms</option>

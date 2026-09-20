@@ -78,15 +78,15 @@ export default function SuperadminBroadcastQueueModal({ isOpen, onClose, recipie
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-overlay/80 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="superadmin-broadcast-queue-title">
+    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-overlay backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="superadmin-broadcast-queue-title">
       <div className="bg-overlay rounded-xl shadow-dialog w-full max-w-lg border border-border flex flex-col overflow-hidden">
         <div className="px-6 py-4 bg-primary-subtle flex items-center justify-between">
           <div className="min-w-0">
             <h2 id="superadmin-broadcast-queue-title" className="truncate text-on-primary font-bold text-lg">Automated Broadcast</h2>
-            <p className="text-on-primary/80 text-xs">Processing delivery for {recipients.length} selected tenants.</p>
+            <p className="text-on-primary text-xs">Processing delivery for {recipients.length} selected tenants.</p>
           </div>
-          <button type="button" onClick={onClose} aria-label="Close broadcast delivery queue" className="min-h-11 min-w-11 inline-flex items-center justify-center rounded-full text-on-primary/80 hover:text-on-primary hover:bg-primary-hover motion-safe:transition-all motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
-            <X size={18} strokeWidth={2} />
+          <button type="button" onClick={onClose} aria-label="Close broadcast delivery queue" className="min-h-11 min-w-11 inline-flex items-center justify-center rounded-full text-on-primary hover:text-on-primary hover:bg-primary-hover motion-safe:transition-all motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+            <X size={18} strokeWidth={2}/>
           </button>
         </div>
 
@@ -98,7 +98,7 @@ export default function SuperadminBroadcastQueueModal({ isOpen, onClose, recipie
             const isDone = state === 'DELIVERED';
             const isFailed = state === 'FAILED';
             return (
-              <div key={recipient.id} className={`p-4 rounded-lg border flex items-center justify-between motion-safe:transition-all motion-safe:duration-base ${isProcessing ? 'border-primary bg-primary-subtle' : isDone ? 'border-success/30 bg-success-bg/30' : isFailed ? 'border-danger/30 bg-danger-bg/30' : 'border-border bg-input'}`}>
+              <div key={recipient.id} className={`p-4 rounded-lg border flex items-center justify-between motion-safe:transition-all motion-safe:duration-base ${isProcessing ? 'border-primary bg-primary-subtle' : isDone ? 'border-border bg-success-bg' : isFailed ? 'border-border bg-danger-bg' : 'border-border bg-input'}`}>
                 <div className="min-w-0">
                   <p className="truncate font-bold text-primary text-sm">{recipient.name}</p>
                   <p className="truncate text-xs text-secondary mt-0.5 font-mono">{maskSensitiveData(recipient.phone, 'phone')}</p>
@@ -106,19 +106,19 @@ export default function SuperadminBroadcastQueueModal({ isOpen, onClose, recipie
                 </div>
                 <div className="flex items-center gap-3 shrink-0">
                   <div className={`flex flex-col items-center gap-1 ${isDone || isProcessing ? 'text-success' : isFailed ? 'text-danger' : 'text-disabled'}`} aria-label="WhatsApp delivery channel">
-                    <Phone size={18} strokeWidth={2} />
+                    <Phone size={18} strokeWidth={2}/>
                     <span className="text-xs font-bold">WA</span>
                   </div>
                   <div className={`flex flex-col items-center gap-1 ${isDone || isProcessing ? 'text-primary' : 'text-disabled'}`} aria-label="In-app notification channel">
-                    <Bell size={18} strokeWidth={2} />
+                    <Bell size={18} strokeWidth={2}/>
                     <span className="text-xs font-bold">APP</span>
                   </div>
                   <div className="ml-3 w-20 min-h-11 flex items-center justify-end gap-2">
-                    {isProcessing ? <Loader2 size={18} strokeWidth={2} className="text-primary motion-safe:animate-spin" aria-label="Delivering" /> : null}
-                    {isDone ? <CheckCircle size={18} strokeWidth={2} className="text-success" aria-label="Delivered" /> : null}
+                    {isProcessing ? <Loader2 size={18} strokeWidth={2} className="text-primary motion-safe:animate-spin" aria-label="Delivering"/> : null}
+                    {isDone ? <CheckCircle size={18} strokeWidth={2} className="text-success" aria-label="Delivered"/> : null}
                     {isFailed ? (
-                      <button type="button" onClick={() => { setLastError(null); setStates((previous) => ({ ...previous, [recipient.id]: 'PENDING' })); const index = recipients.findIndex((item) => item.id === recipient.id); setCurrentIndex(index); }} className="inline-flex items-center justify-center gap-1 rounded-md border border-danger/30 px-2 py-1 text-xs font-medium text-danger hover:bg-danger-bg motion-safe:transition-all motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" aria-label={`Retry delivery to ${recipient.name}`}>
-                        <RotateCcw size={18} strokeWidth={2} />Retry
+                      <button type="button" onClick={() => { setLastError(null); setStates((previous) => ({ ...previous, [recipient.id]: 'PENDING' })); const index = recipients.findIndex((item) => item.id === recipient.id); setCurrentIndex(index); }} className="inline-flex items-center justify-center gap-1 rounded-md border border-border px-2 py-1 text-xs font-medium text-danger hover:bg-danger-bg motion-safe:transition-all motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" aria-label={`Retry delivery to ${recipient.name}`}>
+                        <RotateCcw size={18} strokeWidth={2}/>Retry
                       </button>
                     ) : null}
                     {state === 'PENDING' && !isReady ? <span className="w-2 h-2 rounded-full bg-border" aria-hidden="true" /> : null}

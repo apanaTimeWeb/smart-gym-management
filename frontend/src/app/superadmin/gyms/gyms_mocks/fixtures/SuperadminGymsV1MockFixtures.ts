@@ -25,9 +25,9 @@ export const SUPERADMIN_GYMS_BUSINESS_CONTROLS_MOCK_FIXTURE: SuperadminGymsV1Dat
     { key: 'payment-recovery', label: 'Payment recovery queue' },
   ],
   rows: [
-    { id: 'tenant-bc-1', name: 'Iron Core Fitness', status: 'ACTIVE', region: 'Delhi', plan: 'Business', income: 148000, health: 94, usage: 71, trialDays: 0, paymentRecoveryOpen: false, lastAction: null },
-    { id: 'tenant-bc-2', name: 'Prime Motion', status: 'TRIAL', region: 'Pune', plan: 'Starter', income: 51000, health: 58, usage: 94, trialDays: 3, paymentRecoveryOpen: false, lastAction: null },
-    { id: 'tenant-bc-3', name: 'FitNest Studio', status: 'ACTIVE', region: 'Mumbai', plan: 'Professional', income: 89000, health: 88, usage: 67, trialDays: 0, paymentRecoveryOpen: true, lastAction: null },
-    { id: 'tenant-bc-4', name: 'Urban Strength', status: 'ACTIVE', region: 'Bengaluru', plan: 'Professional', income: 76000, health: 63, usage: 91, trialDays: 0, paymentRecoveryOpen: false, lastAction: null },
+    { id: 'tenant-bc-1', name: 'Iron Core Fitness', status: 'ACTIVE', region: 'Delhi', plan: 'Business', income: 14800000, health: 94, usage: 71, trialDays: 0, paymentRecoveryOpen: false, lastAction: null },
+    { id: 'tenant-bc-2', name: 'Prime Motion', status: 'TRIAL', region: 'Pune', plan: 'Starter', income: 5100000, health: 58, usage: 94, trialDays: 3, paymentRecoveryOpen: false, lastAction: null },
+    { id: 'tenant-bc-3', name: 'FitNest Studio', status: 'ACTIVE', region: 'Mumbai', plan: 'Professional', income: 8900000, health: 88, usage: 67, trialDays: 0, paymentRecoveryOpen: true, lastAction: null },
+    { id: 'tenant-bc-4', name: 'Urban Strength', status: 'ACTIVE', region: 'Bengaluru', plan: 'Professional', income: 7600000, health: 63, usage: 91, trialDays: 0, paymentRecoveryOpen: false, lastAction: null },
   ],
 };

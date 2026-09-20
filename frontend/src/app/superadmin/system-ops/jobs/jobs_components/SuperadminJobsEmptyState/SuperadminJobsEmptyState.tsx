@@ -6,7 +6,7 @@ export default function SuperadminJobsEmptyState({ isFiltered }: SuperadminJobsE
       <td colSpan={7} className="py-16">
         <div className="flex flex-col items-center justify-center text-center px-4">
           <div className="w-12 h-12 rounded-full bg-input flex items-center justify-center mb-4">
-            <Activity className="w-6 h-6 text-secondary"/>
+            <Activity size={18} className="w-6 text-secondary"/>
           </div>
           <h3 className="text-sm font-semibold text-primary mb-1">
             {isFiltered ? 'No jobs found' : 'No jobs available'}

@@ -50,7 +50,7 @@ export const featuresApi = {
     }),
     createReleaseNote: (body: Partial<ReleaseNote>, idempotencyKey?: string) => apiFetch<ApiResponse<ReleaseNote>>(`${FeaturesUrlConfig.BACKEND_API.BASE}/notes`, {
         method: 'POST',
-        body: JSON.stringify(body),
+        body: JSON.stringify({ ...body, date: body.date ?? new Date().toISOString() }),
         headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined,
         dataSchema: ReleaseNoteSchema,
     }),

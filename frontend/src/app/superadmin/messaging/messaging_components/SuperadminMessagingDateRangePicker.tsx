@@ -12,7 +12,7 @@ export default function SuperadminMessagingDateRangePicker({ onRangeChange }: Su
   const { range, customStart, customEnd, handleRangeChange, handleCustomStartChange, handleCustomEndChange } = useSuperadminMessagingDateRangePicker(onRangeChange);
   return (
     <div className="flex items-center gap-3 bg-page border border-border rounded-lg p-1.5 shadow-card">
-      <div className="pl-2" aria-hidden="true"><Calendar size={18} strokeWidth={2} className="text-secondary" /></div>
+      <div className="pl-2" aria-hidden="true"><Calendar size={18} strokeWidth={2} className="text-secondary"/></div>
       <div className="w-40 border-none">
         <SearchableDropdown options={SUPERADMIN_MESSAGING_DATE_RANGE_OPTIONS.map((option) => ({ value: option.value, label: option.label }))} value={range} onChange={handleRangeChange} className="border-none bg-transparent !p-0" />
       </div>

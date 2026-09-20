@@ -1,3 +1,4 @@
+// DATA FLOW: Inputs enter useSuperadminInvoiceActions, flow through its feature-owned state/API dependencies, and return typed UI state/actions to the owning Superadmin feature.
 // RESPONSIBILITY: Owns invoice export/download/email actions for Superadmin invoice surfaces.
 'use client';
 import { useMutation } from '@tanstack/react-query';

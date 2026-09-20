@@ -44,7 +44,69 @@ The reports_comparison module is responsible for the Superadmin business workflo
 - Deprecated marker-only and JSON-stringify tautology tests were removed from the module test tree.
 - Dependency-backed `tsc`, lint, Vitest runtime, Playwright, and real browser responsive execution require the host application environment and remain unverified here.
 
-## Edge Cases / AI Warnings
+## Data and State Architecture
+
+- **Actual feature root:** `reports`
+- **Server state:** TanStack Query `useQuery` detected.
+- **Zustand stores:** None detected.
+- **Context files:** None detected.
+- **Custom hooks:** `reports_utils/useSuperadminReportsPage.ts`, `reports_utils/useSuperadminReportsV1.ts`
+- **URL state:** `useUrlState` detected.
+- **Observed query keys:** `['superadmin', 'reports', 'revenue', queryParams]`, `['superadmin', 'reports', 'cancellations', queryParams]`, `['superadmin', 'reports', 'health', queryParams]`, `['superadmin', 'reports_comparison', params]`
+
+## API Contract
+
+- **API files:** `reports_api/SuperadminReportsComparisonApi.ts`, `reports_api/SuperadminReportsApi.ts`
+- **Detected API symbols:** `fetchReportsComparison` — `reports_api/SuperadminReportsComparisonApi.ts`; `fetchRevenueData` — `reports_api/SuperadminReportsApi.ts`; `fetchCancellationsData` — `reports_api/SuperadminReportsApi.ts`; `fetchHealthData` — `reports_api/SuperadminReportsApi.ts`
+- **Runtime response validation:** Zod usage detected.
+
+No API field/method is invented where static source did not expose it; missing runtime confirmation remains `NOT VERIFIED`.
+
+## UI Data Requirements
+
+- **Data-bearing components:** `page.tsx`, `reports_components/SuperadminReportsV1ComparisonControls.tsx`, `reports_components/SuperadminReportsClient.tsx`, `reports_components/SuperadminReportsExportButton.tsx`, `reports_components/SuperadminReportsSummaryCards.tsx`, `reports_components/SuperadminReportsDatePresetDropdown.tsx`, `reports_components/SuperadminReportsV1PlanAndRegionComparison.tsx`, `reports_components/SuperadminReportsHealthTab.tsx`, `reports_components/SuperadminReportsCancellationsTab.tsx`, `reports_components/SuperadminReportsV1ComparisonSummary.tsx`, `reports_components/SuperadminReportsRevenueTab.tsx`
+- **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
+- **Approved date/time evidence:** No `date-fns`/`dayjs` usage detected.
+- **Forms detected:** 0
+
+Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
+
+## Permissions and Security
+
+- **Permission symbols detected:** No explicit module permission symbols detected.
+- **Destructive-confirmation evidence:** No `useConfirm` detected.
+- **Mutation boundary:** No direct TanStack Query `useMutation` usage detected.
+- **Cross-feature dependency rule:** no sibling business feature imports are permitted unless explicitly documented as approved infrastructure.
+
+## Loading, Empty, and Error States
+
+- **`loading.tsx`:** `loading.tsx`
+- **`error.tsx`:** `error.tsx`
+- **Empty-state components:** None detected.
+- Source inspection alone does not prove browser runtime behavior; retry/focus/animation behavior remains `NOT VERIFIED` until the host app is executed.
+
+## Component Responsibility Map
+
+| Component File | Responsibility evidence |
+|---|---|
+| `page.tsx` | Renders the page component and its associated UI logic. |
+| `reports_components/SuperadminReportsV1ComparisonControls.tsx` | Renders report period/segment controls from server-provided definitions and exports the selected comparison dataset. |
+| `reports_components/SuperadminReportsClient.tsx` | Renders Reports from hook-owned server state and URL-owned filters. No direct API calls occur in this component. |
+| `reports_components/SuperadminReportsExportButton.tsx` | Renders the Reports Export Button component and its associated UI logic. |
+| `reports_components/SuperadminReportsSummaryCards.tsx` | Renders the Reports Summary Cards component and its associated UI logic. |
+| `reports_components/SuperadminReportsDatePresetDropdown.tsx` | Renders the Reports date preset selector and emits the selected preset plus calculated range to its parent. |
+| `reports_components/SuperadminReportsV1PlanAndRegionComparison.tsx` | Renders the Superadmin reports V1 Plan comparison, Region comparison view. |
+| `reports_components/SuperadminReportsHealthTab.tsx` | Renders the Reports Health Tab component and its associated UI logic. |
+| `reports_components/SuperadminReportsCancellationsTab.tsx` | Renders the Reports Cancellations Tab component and its associated UI logic. |
+| `reports_components/SuperadminReportsV1ComparisonSummary.tsx` | Renders the Superadmin reports V1 ReportsComparisonSummary. |
+| `reports_components/SuperadminReportsRevenueTab.tsx` | Renders the Reports Revenue Tab component and its associated UI logic. |
+
+## Repository-Verified Repair Notes
+
+This addendum is generated from the current source tree and exists to make future AI context self-contained. It records actual source evidence and explicitly leaves unavailable runtime facts as `NOT VERIFIED`.
+
+
+## Edge Cases and AI Warnings
 - **Strict Isolation**: Never import admin or manager components into reports_comparison.
 - **Destructive Actions**: Any deletion or modification of reports_comparison records must use the Superadmin confirmation provider.
 - **Data Leakage**: Ensure API payloads for reports_comparison do not expose cross-tenant sensitive data.

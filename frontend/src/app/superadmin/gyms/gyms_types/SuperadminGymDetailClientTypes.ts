@@ -1,12 +1,13 @@
-// RESPONSIBILITY: Defines the prop contract for the legacy Superadmin gym detail view.
-// DATA FLOW: Dynamic route param → SuperadminGymDetailClientProps → SuperadminGymDetailClient.
+// RESPONSIBILITY: Defines the client-only route prop and tab identifiers for the Superadmin Gym Detail view.
 export interface SuperadminGymDetailClientProps {
   gymId: string;
 }
 
-export interface SuperadminGymDetailRowProps {
-  label: string;
-  value: string | null | undefined;
-  emphasis?: boolean;
-  emphasisWarning?: boolean;
-}
+export const SUPERADMIN_GYM_DETAIL_CLIENT_TABS = [
+  { id: 'overview', label: 'Overview' },
+  { id: 'branches', label: 'Branches & Franchises' },
+  { id: 'lifecycle', label: 'Lifecycle & Billing' },
+  { id: 'whitelabel', label: 'White-labeling' },
+] as const;
+
+export type SuperadminGymDetailClientTab = typeof SUPERADMIN_GYM_DETAIL_CLIENT_TABS[number]['id'];

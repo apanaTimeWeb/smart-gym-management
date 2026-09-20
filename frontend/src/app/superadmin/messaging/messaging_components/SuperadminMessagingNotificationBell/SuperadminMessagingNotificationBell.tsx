@@ -26,14 +26,14 @@ export default function SuperadminMessagingNotificationBell() {
   return (
     <div className="relative" ref={popoverRef}>
       <button type="button" onClick={() => setOpen((value) => !value)} className="relative min-h-11 min-w-11 p-2 text-secondary hover:text-primary hover:bg-input rounded-full motion-safe:transition-all motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" aria-label="View notifications" aria-expanded={open}>
-        <Bell size={18} strokeWidth={2} />
+        <Bell size={18} strokeWidth={2}/>
         {unreadCount > 0 && <span className="absolute top-1 right-1 min-w-4 h-4 px-1 bg-danger text-on-danger text-xs font-bold flex items-center justify-center rounded-full border-2 border-border" aria-label={`${unreadCount} unread notifications`}>{unreadCount > 9 ? '9+' : unreadCount}</span>}
       </button>
       {open && (
         <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-popover rounded-xl shadow-popover border border-border overflow-hidden z-30">
           <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-header">
             <div><h3 className="text-sm font-bold text-primary">Notifications</h3><p className="text-xs text-secondary mt-0.5">You have {unreadCount} unread messages</p></div>
-            {unreadCount > 0 && <button type="button" onClick={() => markAllRead()} disabled={isMarkingAllRead} className="text-xs font-semibold text-primary hover:text-primary-hover motion-safe:transition-all motion-safe:duration-base flex items-center gap-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-md min-h-11 px-2"><CheckCheck size={18} strokeWidth={2} /> Mark all read</button>}
+            {unreadCount > 0 && <button type="button" onClick={() => markAllRead()} disabled={isMarkingAllRead} className="text-xs font-semibold text-primary hover:text-primary-hover motion-safe:transition-all motion-safe:duration-base flex items-center gap-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-md min-h-11 px-2"><CheckCheck size={18} strokeWidth={2}/> Mark all read</button>}
           </div>
           <div className="max-h-96 overflow-y-auto custom-scrollbar">
             {notifications.length === 0 ? <div className="p-6 text-center text-secondary text-sm">No notifications right now.</div> : (

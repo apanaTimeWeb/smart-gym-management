@@ -27,7 +27,7 @@ export default function SuperadminMessagingV1WhatsAppQueuePanel({ queue, activeI
       <div className="space-y-5">
         <ProgressBar label={`${formatNumber(sent + skipped)} of ${formatNumber(queue.length)} completed`} value={progress}/>
 
-        {active ? (<div className="rounded-2xl border border-primary/30 bg-primary-subtle p-5">
+        {active ? (<div className="rounded-2xl border border-border bg-primary-subtle p-5">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
               <div className="min-w-0">
                 <p className="text-xs font-semibold uppercase tracking-wider text-primary">Current recipient · {formatNumber(activeIndex + 1)} / {formatNumber(queue.length)}</p>
@@ -38,26 +38,26 @@ export default function SuperadminMessagingV1WhatsAppQueuePanel({ queue, activeI
                 <p className="mt-3 line-clamp-2 text-sm text-secondary">{active.message}</p>
               </div>
               <div className="flex flex-wrap gap-2 lg:max-w-sm lg:justify-end">
-                <button type="button" onClick={() => onOpen(activeIndex)} className="inline-flex items-center gap-2 rounded-lg border border-primary/40 bg-primary-subtle px-3 py-2 text-sm font-semibold text-primary hover:bg-primary-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
-                  <MessageCircle size={17} aria-hidden="true"/> Open WhatsApp
+                <button type="button" onClick={() => onOpen(activeIndex)} className="inline-flex items-center gap-2 rounded-lg border border-border bg-primary-subtle px-3 py-2 text-sm font-semibold text-primary hover:bg-primary-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+                  <MessageCircle size={18} aria-hidden="true"/> Open WhatsApp
                 </button>
                 <button type="button" onClick={() => onMarkSent(activeIndex)} className="inline-flex items-center gap-2 rounded-lg bg-primary px-3 py-2 text-sm font-semibold text-on-primary hover:bg-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
-                  <Check size={17} aria-hidden="true"/> Mark Sent & Next
+                  <Check size={18} aria-hidden="true"/> Mark Sent & Next
                 </button>
                 <button type="button" onClick={() => onSkip(activeIndex)} className="inline-flex items-center gap-2 rounded-lg border border-border bg-input px-3 py-2 text-sm font-medium text-secondary hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
-                  <SkipForward size={17} aria-hidden="true"/> Skip
+                  <SkipForward size={18} aria-hidden="true"/> Skip
                 </button>
               </div>
             </div>
             <p className="mt-4 flex items-center gap-2 text-xs text-secondary">
-              <ExternalLink size={13} aria-hidden="true"/> Opening a chat does not prove the message was sent; use “Mark Sent” after pressing Send in WhatsApp.
+              <ExternalLink size={18} aria-hidden="true"/> Opening a chat does not prove the message was sent; use “Mark Sent” after pressing Send in WhatsApp.
             </p>
-          </div>) : (<div className="rounded-2xl border border-success/30 bg-success-bg/20 p-5 text-sm text-primary">Queue complete. {formatNumber(sent)} marked sent and {formatNumber(skipped)} skipped.</div>)}
+          </div>) : (<div className="rounded-2xl border border-border bg-success-bg p-5 text-sm text-primary">Queue complete. {formatNumber(sent)} marked sent and {formatNumber(skipped)} skipped.</div>)}
 
         <div className="overflow-x-auto rounded-xl border border-border">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-border bg-input/40 text-left text-xs uppercase tracking-wider text-secondary">
+              <tr className="border-b border-border bg-input text-left text-xs uppercase tracking-wider text-secondary">
                 <th className="px-3 py-3">Recipient</th>
                 <th className="px-3 py-3">Gym</th>
                 <th className="px-3 py-3">Status</th>

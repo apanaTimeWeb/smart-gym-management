@@ -2,26 +2,7 @@
 // RESPONSIBILITY: Zustand store that manages UI state (modals, view mode) for the Gyms module.
 // DATA FLOW: Component -> useSuperadminGymsStore.ts -> UI Components
 import { create } from 'zustand';
-export type SuperadminGymsViewMode = 'list' | 'calendar';
-
-import type { Tenant } from '@/app/superadmin/gyms/gyms_types/SuperadminGymsTypes';
-export interface GymsState {
-    // UI State
-    viewMode: SuperadminGymsViewMode;
-    selectedGym: Tenant | null;
-    isEditModalOpen: boolean;
-    isWhatsappModalOpen: boolean;
-    isDeleteModalOpen: boolean;
-    gymToDelete: Tenant | null;
-    // Actions
-    setViewMode: (mode: SuperadminGymsViewMode) => void;
-    openEditModal: (gym: Tenant) => void;
-    closeEditModal: () => void;
-    openWhatsappModal: (gym: Tenant) => void;
-    closeWhatsappModal: () => void;
-    openDeleteModal: (gym: Tenant) => void;
-    closeDeleteModal: () => void;
-}
+import type { SuperadminGymsState } from '@/app/superadmin/gyms/gyms_types/SuperadminGymsStoreTypes';
 /**
  * Purpose: Zustand store that manages UI state (modals, view mode) for the Gyms module.
  * Inputs: values defined by the exported hook signature.
@@ -29,7 +10,7 @@ export interface GymsState {
  * Side effects: remain scoped to the owning feature or approved application infrastructure.
  * Invariant: does not move feature business state into unrelated modules.
  */
-export const useSuperadminGymsStore = create<GymsState>((set) => ({
+export const useSuperadminGymsStore = create<SuperadminGymsState>((set) => ({
     viewMode: 'list',
     selectedGym: null,
     isEditModalOpen: false,

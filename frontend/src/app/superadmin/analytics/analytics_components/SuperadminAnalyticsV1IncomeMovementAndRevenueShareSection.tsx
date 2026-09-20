@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Renders the Superadmin analytics V1 Income movement, Revenue share concentration view.
 'use client';
-import { formatCurrency, formatNumber, formatPercent1dp } from '@/lib/formatters';
+import { formatCurrencyFromMinorUnits, formatNumber, formatPercent1dp } from '@/lib/formatters';
 import ApexBarChart from '@/components/ui/ApexBarChart';
 import Panel from '@/components/ui/Panel';
 import type { SuperadminAnalyticsV1SectionProps } from '@/app/superadmin/analytics/analytics_types/SuperadminAnalyticsV1Types.ts';
@@ -8,7 +8,7 @@ export default function SuperadminAnalyticsV1IncomeMovementAndRevenueShareSectio
     return <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
   <Panel title="Income movement" description="Where monthly income moved during the period.">
     <div className="h-72">
-      <ApexBarChart categories={data.movement.map((x) => x.label)} series={[{ name: 'Monthly income change', data: data.movement.map((x) => x.value) }]} horizontal valueFormatter={(v) => formatCurrency(v)}/>
+      <ApexBarChart categories={data.movement.map((x) => x.label)} series={[{ name: 'Monthly income change', data: data.movement.map((x) => x.value) }]} horizontal valueFormatter={(v) => formatCurrencyFromMinorUnits(v)}/>
     </div>
   </Panel>
   <Panel title="Revenue share concentration" description="Shows how dependent the platform is on a few groups.">

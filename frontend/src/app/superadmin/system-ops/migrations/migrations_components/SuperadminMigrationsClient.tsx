@@ -30,7 +30,7 @@ export default function SuperadminMigrationsClient() {
     if (isError) {
         return (<div className="p-6">
         <div className="rounded-xl border border-border bg-card p-8 text-center">
-          <AlertTriangle className="mx-auto mb-3 h-8 w-8 text-danger" aria-hidden="true"/>
+          <AlertTriangle size={18} className="mx-auto mb-3 text-danger" aria-hidden="true"/>
           <p className="font-semibold text-primary">Schema rollout history could not be loaded.</p>
           <button type="button" onClick={() => void refetch()} className="mt-4 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-on-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
             Retry
@@ -52,7 +52,7 @@ export default function SuperadminMigrationsClient() {
             {validationMessage && <p id="superadmin-migration-version-error" className="mt-1 text-xs text-danger" role="alert">{validationMessage}</p>}
           </div>
           <button type="button" onClick={handleRollout} disabled={isDeploying} className="min-w-40 flex items-center justify-center gap-2 bg-primary text-on-primary px-4 py-2 rounded-lg font-medium hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
-            {isDeploying ? <Loader2 className="w-5 h-5 motion-safe:animate-spin" aria-hidden="true"/> : <Database size={18} aria-hidden="true"/>}
+            {isDeploying ? <Loader2 size={18} className="w-5 motion-safe:animate-spin" aria-hidden="true"/> : <Database size={18} aria-hidden="true"/>}
             {isDeploying ? 'Deploying…' : 'Deploy New Schema'}
           </button>
         </div>
@@ -71,7 +71,7 @@ export default function SuperadminMigrationsClient() {
                   <td className="px-6 py-4"><span className="font-mono font-bold text-primary">{migration.version}</span></td>
                   <td className="px-6 py-4">
                     <p className="text-sm text-primary">{migration.description}</p>
-                    {migration.errorLog && <p className="text-xs text-danger mt-1 flex items-center gap-1"><AlertTriangle className="w-3 h-3" aria-hidden="true"/>{migration.errorLog}</p>}
+                    {migration.errorLog && <p className="text-xs text-danger mt-1 flex items-center gap-1"><AlertTriangle size={18} className="w-3" aria-hidden="true"/>{migration.errorLog}</p>}
                   </td>
                   <td className="px-6 py-4 text-sm text-secondary">{migration.targetTenants ?? '—'}</td>
                   <td className="px-6 py-4"><SuperadminMigrationStatusBadge status={migration.status}/></td>

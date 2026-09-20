@@ -1,32 +1,21 @@
+// RESPONSIBILITY: Renders the route-segment error boundary for the White-labeling feature and exposes a safe retry action.
 'use client';
-import { useEffect } from 'react';
 import { AlertTriangle, RefreshCcw } from 'lucide-react';
 
-export default function SuperadminWhiteLabelingError({
-  error,
-  reset,
-}: {
-  error: Error & { digest?: string };
-  reset: () => void;
-}) {
-  useEffect(() => {
-    // Intentionally omitting console.log in production UI code as per architecture rules
-  }, [error]);
-
+export default function SuperadminWhiteLabelingError({ reset }: { error: Error & { digest?: string }; reset: () => void }) {
   return (
-    <div className="flex flex-col items-center justify-center min-h-[400px] bg-card rounded-xl border border-border p-6 text-center space-y-4">
-      <div className="w-16 h-16 rounded-full bg-danger-bg flex items-center justify-center">
-        <AlertTriangle className="w-8 h-8 text-danger" />
+    <section className="flex min-h-96 flex-col items-center justify-center space-y-4 rounded-xl border border-border bg-card p-6 text-center" role="alert" aria-labelledby="superadmin-white-labeling-error-title">
+      <div className="flex h-16 w-16 items-center justify-center rounded-full bg-danger-bg">
+        <AlertTriangle size={32} className="text-danger" aria-hidden="true" />
       </div>
-      <h2 className="text-xl font-bold text-primary">Failed to load White-Labeling module</h2>
-      <p className="text-secondary max-w-md">An unexpected error occurred while loading the domain configuration data.</p>
-      <button
-        onClick={reset}
-        className="mt-4 flex items-center gap-2 px-6 py-2.5 bg-primary text-on-primary rounded-lg font-medium hover:opacity-90 motion-safe:transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
-      >
-        <RefreshCcw className="w-4 h-4" />
+      <div>
+        <h2 id="superadmin-white-labeling-error-title" className="text-xl font-bold text-primary">White-labeling could not be loaded.</h2>
+        <p className="mt-2 max-w-md text-sm text-secondary">The domain configuration view is temporarily unavailable.</p>
+      </div>
+      <button type="button" onClick={reset} className="mt-4 flex min-h-11 min-w-32 items-center justify-center gap-2 rounded-lg bg-primary px-6 py-2.5 font-medium text-on-primary hover:bg-primary-hover motion-safe:transition-all motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page">
+        <RefreshCcw size={18} aria-hidden="true" />
         Retry
       </button>
-    </div>
+    </section>
   );
 }

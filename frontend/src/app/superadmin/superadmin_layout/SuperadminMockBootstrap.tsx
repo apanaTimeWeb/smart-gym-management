@@ -20,6 +20,7 @@ import { superadminInvoicesHandlers } from '@/app/superadmin/saas-billing/invoic
 import { superadminJobsHandlers } from '@/app/superadmin/system-ops/jobs/jobs_mocks/handlers/SuperadminJobsMockHandlers';
 import { superadminMessagingHandlers } from '@/app/superadmin/messaging/messaging_mocks/handlers/SuperadminMessagingMockHandlers';
 import { superadminMigrationsHandlers } from '@/app/superadmin/system-ops/migrations/migrations_mocks/handlers/SuperadminMigrationsMockHandlers';
+import { superadminSystemOpsHandlers } from '@/app/superadmin/system-ops/system-ops_mocks/handlers/SuperadminSystemOpsMockHandlers';
 import { superadminPlansHandlers } from '@/app/superadmin/saas-billing/plans/plans_mocks/handlers/SuperadminPlansMockHandlers';
 import { superadminProfileHandlers } from '@/app/superadmin/profile/profile_mocks/handlers/SuperadminProfileMockHandlers';
 import { superadminReportsHandlers } from '@/app/superadmin/reports/reports_mocks/handlers/SuperadminReportsMockHandlers';
@@ -33,7 +34,7 @@ if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'production' && !i
       ...superadminTeamHandlers, ...superadminIntegrationsHandlers, ...superadminComplianceHandlers,
       ...superadminDashboardHandlers, ...superadminGymsHandlers, ...superadminGymDetailHandlers, ...superadminPlansHandlers, ...superadminInvoicesHandlers,
       ...superadminAnalyticsHandlers, ...superadminReportsHandlers,
-      ...superadminFeaturesHandlers, ...superadminInfrastructureHandlers, ...superadminJobsHandlers, ...superadminBackupsHandlers, ...superadminGlobalAuditHandlers, ...superadminSettingsHandlers,
+      ...superadminFeaturesHandlers, ...superadminSystemOpsHandlers, ...superadminInfrastructureHandlers, ...superadminJobsHandlers, ...superadminBackupsHandlers, ...superadminGlobalAuditHandlers, ...superadminSettingsHandlers,
       ...superadminAffiliatesHandlers, ...superadminCouponsHandlers, ...superadminProfileHandlers, ...superadminMigrationsHandlers, ...superadminUsageMetersHandlers,
       ...superadminBroadcastsHandlers, ...superadminMessagingHandlers, ...superadminTicketsHandlers,
     );

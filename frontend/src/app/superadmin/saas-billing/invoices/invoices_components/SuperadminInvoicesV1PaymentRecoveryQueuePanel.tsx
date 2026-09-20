@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Renders the Superadmin invoices V1 Payment recovery queue view.
 'use client';
-import { formatCurrency, formatNumber, formatDateTime } from '@/lib/formatters';
+import { formatCurrencyFromMinorUnits, formatNumber, formatDateTime } from '@/lib/formatters';
 import Panel from '@/components/ui/Panel';
 import type { SuperadminInvoicesV1SectionProps } from '@/app/superadmin/saas-billing/invoices/invoices_types/SuperadminInvoicesV1Types.ts';
 export default function SuperadminInvoicesV1PaymentRecoveryQueuePanel({ data }: SuperadminInvoicesV1SectionProps) {
@@ -38,7 +38,7 @@ export default function SuperadminInvoicesV1PaymentRecoveryQueuePanel({ data }: 
             {r.invoice}
           </td>
           <td className="px-3 py-3 text-primary">
-            {formatCurrency(r.amount)}
+            {formatCurrencyFromMinorUnits(r.amount)}
           </td>
           <td className="px-3 py-3 text-secondary">
             {formatNumber(r.attempts)}

@@ -14,9 +14,9 @@ export default function SuperadminMessagingV1WhatsAppPreviewPanel({ recipient, t
       {!recipient ? (<div className="flex min-h-48 items-center justify-center rounded-xl border border-dashed border-border p-6 text-center text-sm text-secondary">
           Choose an audience with at least one WhatsApp-ready recipient to preview the message.
         </div>) : (<div className="grid gap-4 lg:grid-cols-2">
-          <div className="rounded-2xl border border-border bg-input/30 p-5">
+          <div className="rounded-2xl border border-border bg-input p-5">
             <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-secondary">
-              <Eye size={15} aria-hidden="true"/> Example recipient
+              <Eye size={18} aria-hidden="true"/> Example recipient
             </div>
             <div className="mt-3 flex items-center justify-between gap-3">
               <Tooltip content={recipient.contactName}>
@@ -29,11 +29,11 @@ export default function SuperadminMessagingV1WhatsAppPreviewPanel({ recipient, t
               <p className="mt-3 whitespace-pre-wrap text-sm leading-6 text-secondary">{displayValue(preview, '—')}</p>
             </div>
           </div>
-          <div className="rounded-2xl border border-primary/20 bg-primary-subtle p-5">
+          <div className="rounded-2xl border border-border bg-primary-subtle p-5">
             <p className="text-xs font-semibold uppercase tracking-wider text-primary">How free mode works</p>
             <p className="mt-2 text-sm leading-6 text-secondary">Each queue step opens a WhatsApp chat with the message already filled in. You press WhatsApp's Send button, then mark the item sent in Superadmin.</p>
             <div className="mt-4 flex items-center gap-2 text-xs text-secondary">
-              <ExternalLink size={14} aria-hidden="true"/> No paid messaging API is required for this workflow.
+              <ExternalLink size={18} aria-hidden="true"/> No paid messaging API is required for this workflow.
             </div>
           </div>
         </div>)}

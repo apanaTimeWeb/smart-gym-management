@@ -2,7 +2,7 @@
 import dynamic from 'next/dynamic';
 import { CHART_COLORS } from '@/components/ui/ChartConstants';
 import type { SuperadminReportsRevenueTabProps } from '@/app/superadmin/reports/reports_types/SuperadminReportsTabTypes';
-import { formatCurrency, formatKPI } from '@/lib/formatters';
+import { formatCurrencyFromMinorUnits, formatKPI } from '@/lib/formatters';
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 export function SuperadminReportsRevenueTab({ revenueData }: SuperadminReportsRevenueTabProps) {
     const revenueChartOptions = {
@@ -43,17 +43,17 @@ export function SuperadminReportsRevenueTab({ revenueData }: SuperadminReportsRe
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-border bg-input/40">
+              <tr className="border-b border-border bg-input">
                 {['Month', 'Monthly Income', 'New Revenue', 'Lost Income', 'Net Revenue', 'Gyms'].map((h) => (<th key={h} className="text-left px-4 py-3 text-xs font-semibold text-secondary uppercase tracking-wider">{h}</th>))}
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {revenueData.map((row) => (<tr key={row.month} className="hover:bg-input/30 motion-safe:transition-colors">
+              {revenueData.map((row) => (<tr key={row.month} className="hover:bg-input motion-safe:transition-colors">
                   <td className="px-4 py-3 font-medium text-primary">{row.month}</td>
-                  <td className="px-4 py-3 text-primary">{formatCurrency(row.mrr)}</td>
-                  <td className="px-4 py-3 text-success">+{formatCurrency(row.newRevenue)}</td>
-                  <td className="px-4 py-3 text-danger">-{formatCurrency(row.cancelledRevenue)}</td>
-                  <td className="px-4 py-3 font-semibold text-primary">{formatCurrency(row.netRevenue)}</td>
+                  <td className="px-4 py-3 text-primary">{formatCurrencyFromMinorUnits(row.mrr)}</td>
+                  <td className="px-4 py-3 text-success">+{formatCurrencyFromMinorUnits(row.newRevenue)}</td>
+                  <td className="px-4 py-3 text-danger">-{formatCurrencyFromMinorUnits(row.cancelledRevenue)}</td>
+                  <td className="px-4 py-3 font-semibold text-primary">{formatCurrencyFromMinorUnits(row.netRevenue)}</td>
                   <td className="px-4 py-3 text-secondary">{row.tenantCount}</td>
                 </tr>))}
             </tbody>

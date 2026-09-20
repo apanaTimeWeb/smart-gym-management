@@ -30,54 +30,39 @@ export function useSuperadminFeaturesData() {
     const updateFeatureFlagStatusMutation = useMutation({
         mutationFn: ({ id, enabled, idempotencyKey }: SuperadminFeatureFlagStatusMutationInput) => enabled ? featuresApi.activateFeatureFlag(id, idempotencyKey) : featuresApi.suspendFeatureFlag(id, idempotencyKey),
         onSuccess: (res) => {
+            if (!res.data) return;
             queryClient.setQueryData(queryKey, (old: {
                 flags: FeatureFlag[];
                 notes: ReleaseNote[];
             } | undefined) => {
-                if (!old)
-                    return old;
-                return {
-                    flags: old.flags.map((f) => {
-                        const flagData = res.data as FeatureFlag;
-                        return f.id === flagData?.id ? flagData : f;
-                    }),
-                    notes: old.notes,
-                };
+                if (!old) return old;
+                return { flags: old.flags.map((f) => f.id === res.data?.id ? res.data : f), notes: old.notes };
             });
         },
     });
     const updateFlagMutation = useMutation({
         mutationFn: ({ id, body, idempotencyKey }: SuperadminFeatureFlagUpdateMutationInput) => featuresApi.updateFeatureFlag(id, body, idempotencyKey),
         onSuccess: (res) => {
+            if (!res.data) return;
             queryClient.setQueryData(queryKey, (old: {
                 flags: FeatureFlag[];
                 notes: ReleaseNote[];
             } | undefined) => {
-                if (!old)
-                    return old;
-                return {
-                    flags: old.flags.map((f) => {
-                        const flagData = res.data as FeatureFlag;
-                        return f.id === flagData?.id ? flagData : f;
-                    }),
-                    notes: old.notes,
-                };
+                if (!old) return old;
+                return { flags: old.flags.map((f) => f.id === res.data?.id ? res.data : f), notes: old.notes };
             });
         },
     });
     const publishNoteMutation = useMutation({
         mutationFn: ({ data, idempotencyKey }: SuperadminReleaseNoteCreateMutationInput) => featuresApi.createReleaseNote(data, idempotencyKey),
         onSuccess: (res) => {
+            if (!res.data) return;
             queryClient.setQueryData(queryKey, (old: {
                 flags: FeatureFlag[];
                 notes: ReleaseNote[];
             } | undefined) => {
-                if (!old)
-                    return old;
-                return {
-                    flags: old.flags,
-                    notes: [(res.data as ReleaseNote), ...old.notes],
-                };
+                if (!old) return old;
+                return { flags: old.flags, notes: [res.data, ...old.notes] };
             });
         },
     });
@@ -91,5 +76,6 @@ export function useSuperadminFeaturesData() {
         publishNote: publishNoteMutation.mutateAsync,
         isPublishing: publishNoteMutation.isPending,
         updateFlag: updateFlagMutation.mutateAsync,
+        refetch: query.refetch,
     };
 }

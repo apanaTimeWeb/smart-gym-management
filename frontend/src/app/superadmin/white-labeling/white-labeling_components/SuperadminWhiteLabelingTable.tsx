@@ -1,98 +1,55 @@
+// RESPONSIBILITY: Renders White-labeling domain records as a clickable desktop table and mobile card stack. No API calls.
 'use client';
-import { BadgeCheck, Clock, XCircle } from 'lucide-react';
-import type { WhiteLabelDomain } from '../white-labeling_types/SuperadminWhiteLabelingTypes';
-import { useSuperadminWhiteLabelingStore } from '../white-labeling_store/useSuperadminWhiteLabelingStore';
 
-interface SuperadminWhiteLabelingTableProps {
-  domains: WhiteLabelDomain[];
-}
+import type { KeyboardEvent } from 'react';
+import Tooltip from '@/components/ui/Tooltip';
+import { formatDate } from '@/lib/formatters';
+import type { WhiteLabelDomain } from '@/app/superadmin/white-labeling/white-labeling_types/SuperadminWhiteLabelingTypes';
+import type { SuperadminWhiteLabelingTableProps } from '@/app/superadmin/white-labeling/white-labeling_types/SuperadminWhiteLabelingComponentTypes';
+import SuperadminWhiteLabelingStatusBadge from '@/app/superadmin/white-labeling/white-labeling_components/SuperadminWhiteLabelingStatusBadge';
+import { useSuperadminWhiteLabelingStore } from '@/app/superadmin/white-labeling/white-labeling_store/useSuperadminWhiteLabelingStore';
+import SuperadminWhiteLabelingEmptyState from '@/app/superadmin/white-labeling/white-labeling_components/SuperadminWhiteLabelingEmptyState';
+
+function openDomain(id: string) { useSuperadminWhiteLabelingStore.getState().setSelectedDomainId(id); }
 
 export default function SuperadminWhiteLabelingTable({ domains }: SuperadminWhiteLabelingTableProps) {
-  const { setSelectedDomainId } = useSuperadminWhiteLabelingStore();
+  if (domains.length === 0) return <SuperadminWhiteLabelingEmptyState />;
 
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'active':
-      case 'issued':
-        return <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-success-bg text-success"><BadgeCheck className="w-3.5 h-3.5" /> {status.charAt(0).toUpperCase() + status.slice(1)}</span>;
-      case 'pending':
-        return <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-warning-bg text-warning"><Clock className="w-3.5 h-3.5" /> Pending</span>;
-      case 'failed':
-        return <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-danger-bg text-danger"><XCircle className="w-3.5 h-3.5" /> Failed</span>;
-    }
+  const handleRowKeyDown = (event: KeyboardEvent<HTMLTableRowElement>, id: string) => {
+    if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); openDomain(id); }
   };
 
-  if (domains.length === 0) {
-    return (
-      <div className="bg-card rounded-xl border border-border flex flex-col items-center justify-center p-12 text-center">
-        <div className="w-16 h-16 rounded-full bg-input flex items-center justify-center mb-4">
-          <Clock className="w-8 h-8 text-secondary" />
-        </div>
-        <h3 className="text-lg font-bold text-primary mb-1">No Custom Domains Found</h3>
-        <p className="text-sm text-secondary max-w-sm">No domains match your current search or filter criteria. Adjust your filters to see more results.</p>
-      </div>
-    );
-  }
-
   return (
-    <div className="bg-card rounded-xl border border-border overflow-hidden">
-      <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse">
-          <thead>
-            <tr className="border-b border-border bg-page/50">
-              <th className="p-4 text-xs font-semibold text-secondary uppercase tracking-wider">Gym Name</th>
-              <th className="p-4 text-xs font-semibold text-secondary uppercase tracking-wider">Domain</th>
-              <th className="p-4 text-xs font-semibold text-secondary uppercase tracking-wider">Status</th>
-              <th className="p-4 text-xs font-semibold text-secondary uppercase tracking-wider">SSL</th>
-              <th className="p-4 text-xs font-semibold text-secondary uppercase tracking-wider">Added On</th>
-              <th className="p-4 text-xs font-semibold text-secondary uppercase tracking-wider text-right">Action</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-border">
-            {domains.map((domain) => (
-              <tr key={domain.id} className="hover:bg-input/50 motion-safe:transition-colors">
-                <td className="p-4">
-                  <div className="flex items-center gap-3">
-                    {domain.logoUrl ? (
-                      <div 
-                        className="w-8 h-8 rounded-md bg-page border border-border shrink-0 bg-cover bg-center" 
-                        style={{ backgroundImage: `url(${domain.logoUrl})` }}
-                        aria-label={`${domain.gymName} logo`}
-                      />
-                    ) : (
-                      <div 
-                        className="w-8 h-8 rounded-md bg-input border border-border shrink-0 flex items-center justify-center text-xs font-bold text-secondary"
-                        style={{ backgroundColor: domain.primaryColor ? `${domain.primaryColor}20` : undefined, color: domain.primaryColor || undefined }}
-                      >
-                        {domain.gymName.charAt(0)}
-                      </div>
-                    )}
-                    <span className="text-sm font-medium text-primary block truncate max-w-[160px]" title={domain.gymName}>
-                      {domain.gymName}
-                    </span>
-                  </div>
-                </td>
-                <td className="p-4">
-                  <span className="text-sm text-primary font-mono">{domain.domain}</span>
-                </td>
-                <td className="p-4">{getStatusBadge(domain.status)}</td>
-                <td className="p-4">{getStatusBadge(domain.sslStatus)}</td>
-                <td className="p-4 text-sm text-secondary">
-                  {new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(new Date(domain.createdAt))}
-                </td>
-                <td className="p-4 text-right">
-                  <button
-                    onClick={() => setSelectedDomainId(domain.id)}
-                    className="text-sm font-medium text-brand hover:text-brand-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand rounded-md px-2 py-1 motion-safe:transition-colors"
-                  >
-                    Manage
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+    <>
+      <div className="hidden overflow-hidden rounded-xl border border-border bg-card md:block">
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse text-left">
+            <caption className="sr-only">White-labeling custom domains</caption>
+            <thead><tr className="border-b border-border bg-surface-highlight"><th className="w-48 p-4 text-xs font-semibold uppercase tracking-wider text-secondary">Gym Name</th><th className="min-w-40 p-4 text-xs font-semibold uppercase tracking-wider text-secondary">Domain</th><th className="w-28 p-4 text-xs font-semibold uppercase tracking-wider text-secondary">Status</th><th className="w-28 p-4 text-xs font-semibold uppercase tracking-wider text-secondary">SSL</th><th className="w-32 p-4 text-xs font-semibold uppercase tracking-wider text-secondary">Added On</th></tr></thead>
+            <tbody className="divide-y divide-border">
+              {domains.map((domain) => (
+                <tr key={domain.id} tabIndex={0} onClick={() => openDomain(domain.id)} onKeyDown={(event) => handleRowKeyDown(event, domain.id)} className="cursor-pointer motion-safe:transition-colors hover:bg-surface-hover focus-visible:bg-surface-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset">
+                  <td className="max-w-48 p-4"><Tooltip content={domain.gymName}><span className="block truncate font-medium text-primary">{domain.gymName}</span></Tooltip></td>
+                  <td className="p-4"><Tooltip content={domain.domain}><span className="block max-w-60 truncate font-mono text-sm text-primary">{domain.domain}</span></Tooltip></td>
+                  <td className="p-4"><SuperadminWhiteLabelingStatusBadge status={domain.status} /></td>
+                  <td className="p-4"><SuperadminWhiteLabelingStatusBadge status={domain.sslStatus} /></td>
+                  <td className="p-4 text-sm text-secondary">{formatDate(domain.createdAt)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
+
+      <div className="space-y-3 md:hidden" aria-label="White-labeling custom domains">
+        {domains.map((domain) => (
+          <button key={domain.id} type="button" onClick={() => openDomain(domain.id)} className="block min-h-11 w-full rounded-xl border border-border bg-card p-4 text-left motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page">
+            <div className="flex items-start justify-between gap-3"><span className="min-w-0 truncate font-semibold text-primary">{domain.gymName}</span><SuperadminWhiteLabelingStatusBadge status={domain.status} /></div>
+            <p className="mt-2 truncate font-mono text-sm text-secondary">{domain.domain}</p>
+            <div className="mt-3 grid grid-cols-2 gap-3 text-xs text-secondary"><div><span className="block text-disabled">SSL</span><SuperadminWhiteLabelingStatusBadge status={domain.sslStatus} /></div><div><span className="block text-disabled">Added</span><span>{formatDate(domain.createdAt)}</span></div></div>
+          </button>
+        ))}
+      </div>
+    </>
   );
 }

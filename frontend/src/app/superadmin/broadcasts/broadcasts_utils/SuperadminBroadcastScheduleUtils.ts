@@ -8,7 +8,7 @@ export function splitSuperadminBroadcastScheduleDateTime(value?: string | null):
   if (!value) return { date: '', time: '' };
   const parsed = new Date(value);
   return {
-    date: parsed.toISOString().slice(0, 10),
-    time: parsed.toISOString().slice(11, 16),
+    date: `${parsed.getFullYear()}-${String(parsed.getMonth() + 1).padStart(2, '0')}-${String(parsed.getDate()).padStart(2, '0')}`,
+    time: `${String(parsed.getHours()).padStart(2, '0')}:${String(parsed.getMinutes()).padStart(2, '0')}`,
   };
 }

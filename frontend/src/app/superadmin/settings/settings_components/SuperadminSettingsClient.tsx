@@ -44,7 +44,7 @@ export default function SuperadminSettingsClient() {
 
   if (query.isError) {
     return (
-      <div className="flex min-h-80 flex-col items-center justify-center gap-3 rounded-xl border border-danger/30 bg-danger-bg p-6 text-center">
+      <div className="flex min-h-80 flex-col items-center justify-center gap-3 rounded-xl border border-border bg-danger-bg p-6 text-center">
         <p className="font-medium text-danger">Platform settings could not be loaded.</p>
         <button type="button" onClick={() => void query.refetch()} className="min-h-11 rounded-md border border-border px-4 py-2 text-sm text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95">Retry</button>
       </div>
@@ -69,7 +69,7 @@ export default function SuperadminSettingsClient() {
         {Object.entries(groupedSettings).map(([category, items]) => (
           <section key={category} className="rounded-xl border border-border bg-card p-6">
             <div className="mb-4 flex items-center gap-2 border-b border-border pb-4">
-              <Settings size={18} strokeWidth={2} className="text-primary" aria-hidden="true" />
+              <Settings size={18} strokeWidth={2} className="text-primary" aria-hidden="true"/>
               <h2 className="text-lg font-bold uppercase text-primary">{category}</h2>
             </div>
             <div className="space-y-4 text-sm">
@@ -91,7 +91,7 @@ export default function SuperadminSettingsClient() {
                       )}
                       {hasChanges && (
                         <button type="button" onClick={() => void handleSave(setting.id)} disabled={isSavingThis} aria-label={`Save ${setting.key}`} className="min-h-11 min-w-11 rounded-lg bg-primary-subtle p-2 text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-60 motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95">
-                          <Save size={18} strokeWidth={2} aria-hidden="true" />
+                          <Save size={18} strokeWidth={2} aria-hidden="true"/>
                         </button>
                       )}
                     </div>
@@ -103,17 +103,17 @@ export default function SuperadminSettingsClient() {
         ))}
         <section className="rounded-xl border border-border bg-card p-6">
           <div className="mb-4 flex items-center gap-2 border-b border-border pb-4">
-            <FileText size={18} strokeWidth={2} className="text-primary" aria-hidden="true" />
+            <FileText size={18} strokeWidth={2} className="text-primary" aria-hidden="true"/>
             <h2 className="text-lg font-bold uppercase text-primary">Changelog</h2>
           </div>
           <div className="space-y-6 text-sm">
-            <div className="relative border-l-2 border-primary/20 pb-2 pl-6">
+            <div className="relative border-l-2 border-border pb-2 pl-6">
               <div className="absolute -left-2 top-1 h-3 w-3 rounded-full bg-primary" />
               <h3 className="mb-1 text-base font-semibold text-primary">v2.4.1 (Current)</h3>
               <p className="mb-2 text-xs text-secondary">Released on Sept 09, 2026</p>
               <ul className="list-disc space-y-1 pl-4 text-secondary"><li>Added support for trialGyms count in dashboard.</li><li>Fixed overdue invoices KPI aggregation bug.</li><li>Added &quot;Revenue by Plan Tier&quot; donut chart.</li></ul>
             </div>
-            <div className="relative border-l-2 border-primary/20 pb-2 pl-6">
+            <div className="relative border-l-2 border-border pb-2 pl-6">
               <div className="absolute -left-2 top-1 h-3 w-3 rounded-full bg-border" />
               <h3 className="mb-1 text-base font-semibold text-primary">v2.4.0</h3>
               <p className="mb-2 text-xs text-secondary">Released on Aug 21, 2026</p>

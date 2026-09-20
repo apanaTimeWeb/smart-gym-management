@@ -10,7 +10,7 @@ import type { SuperadminJobsTableProps } from '@/app/superadmin/system-ops/jobs/
 const STATUS_STYLES: Record<BackgroundJob['status'], string> = {
     ACTIVE: 'text-primary bg-primary-subtle',
     COMPLETED: 'text-success bg-success-bg',
-    FAILED: 'text-danger-danger-bg/10',
+    FAILED: 'text-danger bg-danger-bg',
     DELAYED: 'text-warning bg-warning-bg',
     CANCELLED: 'text-secondary bg-surface-highlight',
 };
@@ -44,7 +44,7 @@ export default function SuperadminJobsTable({ jobs, allJobsFiltered, selectedJob
                 durationMs?: number;
                 finishedAt?: string;
             };
-            return (<tr key={job.id} tabIndex={0} aria-label={`Inspect job ${job.id}`} onClick={() => onInspect(job)} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); onInspect(job); } }} className="hover:bg-card/50 motion-safe:transition-colors group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset">
+            return (<tr key={job.id} tabIndex={0} aria-label={`Inspect job ${job.id}`} onClick={() => onInspect(job)} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); onInspect(job); } }} className="hover:bg-card motion-safe:transition-colors group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset">
                 <td className="p-4 text-center" onClick={(e) => e.stopPropagation()}>
                   <input type="checkbox" aria-label={`Select job ${job.id}`} className="rounded border-border text-primary cursor-pointer w-4 h-4" checked={selectedJobIds.has(job.id)} onChange={() => toggleSelection(job.id)}/>
                 </td>
@@ -68,7 +68,7 @@ export default function SuperadminJobsTable({ jobs, allJobsFiltered, selectedJob
                   <div className="font-mono mt-1 text-primary">Duration: {formatDuration(jobExt.durationMs)}</div>
                 </td>
                 <td className="p-4 text-right" onClick={(e) => e.stopPropagation()}>
-                  <div className="flex items-center justify-end gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 motion-safe:transition-opacity">
+                  <div className="flex items-center justify-end gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 lg:group-focus-within:opacity-100 motion-safe:transition-opacity">
                     {job.status === 'FAILED' && (<button onClick={() => onRetry(job.id)} className="p-1.5 text-secondary hover:text-success hover:bg-success-bg rounded-lg motion-safe:transition-colors" title="Retry Job" aria-label={`Retry job ${job.id}`}>
                         <RefreshCw size={18} strokeWidth={2}/>
                       </button>)}

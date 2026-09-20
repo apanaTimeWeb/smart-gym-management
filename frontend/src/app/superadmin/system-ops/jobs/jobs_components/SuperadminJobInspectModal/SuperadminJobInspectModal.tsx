@@ -22,13 +22,13 @@ export default function SuperadminJobInspectModal({ job, onClose }: SuperadminJo
         finishedAt?: string;
         payload?: unknown;
     };
-    return (<div role="dialog" aria-modal="true" aria-label={`Inspect job ${job.id}`} className="fixed inset-0 bg-overlay/80 z-40 flex items-center justify-center p-4 backdrop-blur-sm motion-safe:animate-in motion-safe:fade-in">
+    return (<div role="dialog" aria-modal="true" aria-label={`Inspect job ${job.id}`} className="fixed inset-0 bg-overlay z-40 flex items-center justify-center p-4 backdrop-blur-sm motion-safe:animate-in motion-safe:fade-in">
       <div className="bg-card border border-border rounded-2xl w-full max-w-2xl shadow-dialog overflow-hidden flex flex-col max-h-screen">
         {/* Modal Header */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-border bg-sidebar/30 shrink-0">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-border bg-sidebar shrink-0">
           <div>
             <h2 className="text-xl font-bold text-primary flex items-center gap-2">
-              <Eye className="text-primary w-5 h-5"/>
+              <Eye size={18} className="text-primary"/>
               Inspect Job: <span className="font-mono text-sm text-secondary ml-1">{job.id}</span>
             </h2>
             <p className="text-sm text-secondary mt-1">
@@ -68,9 +68,9 @@ export default function SuperadminJobInspectModal({ job, onClose }: SuperadminJo
           {/* Error Trace */}
           {job.error && (<div>
               <h3 className="text-xs font-semibold text-danger mb-3 uppercase tracking-wider flex items-center gap-1">
-                <AlertTriangle className="w-3.5 h-3.5"/> Error Trace
+                <AlertTriangle size={18} className="w-3.5"/> Error Trace
               </h3>
-              <div className="bg-danger-bg border border-danger/20 text-danger p-4 rounded-lg text-sm font-mono overflow-x-auto whitespace-pre-wrap">
+              <div className="bg-danger-bg border border-border text-danger p-4 rounded-lg text-sm font-mono overflow-x-auto whitespace-pre-wrap">
                 {job.error}
               </div>
             </div>)}

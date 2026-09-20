@@ -2,22 +2,7 @@
 // RESPONSIBILITY: Zustand store for Superadmin Tickets UI state (filters, pagination, modals)
 import { create } from 'zustand';
 import type { TicketStatus, TicketPriority } from '@/app/superadmin/tickets/tickets_types/SuperadminTicketsTypes';
-interface SuperadminTicketsState {
-    search: string;
-    setSearch: (search: string) => void;
-    showFilter: boolean;
-    setShowFilter: (show: boolean) => void;
-    statusFilter: TicketStatus | 'ALL';
-    setStatusFilter: (status: TicketStatus | 'ALL') => void;
-    priorityFilter: TicketPriority | 'ALL';
-    setPriorityFilter: (priority: TicketPriority | 'ALL') => void;
-    currentPage: number;
-    setCurrentPage: (page: number) => void;
-    replyModalTicketId: string | null;
-    setReplyModalTicketId: (id: string | null) => void;
-    assignModalTicketId: string | null;
-    setAssignModalTicketId: (id: string | null) => void;
-}
+import type { SuperadminTicketsState } from '@/app/superadmin/tickets/tickets_types/SuperadminTicketsStoreTypes';
 /**
  * Purpose: Zustand store for Superadmin Tickets UI state (filters, pagination, modals).
  * Inputs: values defined by the exported hook signature.

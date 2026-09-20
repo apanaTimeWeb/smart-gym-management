@@ -1,47 +1,27 @@
-// DATA FLOW: Superadmin UI → useSuperadminCouponsMutation → Superadmin module API/state → consuming component
+// DATA FLOW: Superadmin UI → useSuperadminCouponsMutation → TanStack Query mutation → caller callback.
+// RESPONSIBILITY: Provides the Coupons feature's shared mutation lifecycle without owning server data.
 'use client';
-// RESPONSIBILITY: Generic mutation hook for all Superadmin write operations (POST/PATCH/DELETE). Manages isMutating state, shows toasts from backend message, and calls onSuccess/onError callbacks.
-// DATA FLOW: Component -> useSuperadminCouponsMutation.ts -> API/Store
-import { useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
-interface MutationOptions {
-    toastId?: string;
-    onSuccess?: (data: unknown) => void;
-    onError?: (error: Error) => void;
-}
-/**
- * Hook to manage loading states and error handling for API mutations (POST/PATCH/DELETE)
- */
+import type { SuperadminCouponsMutationExecutor, SuperadminCouponsMutationOptions } from '@/app/superadmin/saas-billing/coupons/coupons_types/SuperadminCouponsMutationTypes';
+
+/** Runs one coupon mutation while TanStack Query owns the asynchronous lifecycle and the hook owns user feedback. */
 export function useSuperadminCouponsMutation() {
-    const [isMutating, setIsMutating] = useState(false);
-    const mutate = async <T,>(mutationFn: () => Promise<{
-        success: boolean;
-        data?: T | null;
-        message?: string;
-    }>, options?: MutationOptions) => {
-        setIsMutating(true);
-        try {
-            const response = await mutationFn();
-            const responseData = response.data !== undefined ? response.data : response;
-            if (response.message) {
-                toast.success(response.message, { id: options?.toastId ?? `superadmin-coupons-${crypto.randomUUID()}` });
-            }
-            if (options?.onSuccess) {
-                options.onSuccess(responseData);
-            }
-            return responseData;
-        }
-        catch (error: unknown) {
-            const errorObj = error instanceof Error ? error : new Error(String(error));
-            toast.error(errorObj.message, { id: options?.toastId ?? `superadmin-coupons-error-${crypto.randomUUID()}` });
-            if (options?.onError) {
-                options.onError(errorObj);
-            }
-            throw error;
-        }
-        finally {
-            setIsMutating(false);
-        }
-    };
-    return { mutate, isMutating };
+  const mutation = useMutation({
+    mutationFn: async ({ execute, options }: { execute: SuperadminCouponsMutationExecutor<unknown>; options: SuperadminCouponsMutationOptions }) => {
+      const response = await execute();
+      if (!response.success) throw new Error(response.message);
+      if (response.message) toast.success(response.message, { id: options.toastId });
+      options.onSuccess?.(response.data ?? null);
+      return response.data ?? null;
+    },
+    onError: (error: unknown, variables) => {
+      const errorObject = error instanceof Error ? error : new Error(String(error));
+      toast.error(errorObject.message, { id: variables.options.toastId });
+      variables.options.onError?.(errorObject);
+    },
+  });
+  const mutate = <T,>(execute: SuperadminCouponsMutationExecutor<T>, options: SuperadminCouponsMutationOptions) =>
+    mutation.mutateAsync({ execute: execute as SuperadminCouponsMutationExecutor<unknown>, options }) as Promise<T | null>;
+  return { mutate, isMutating: mutation.isPending };
 }

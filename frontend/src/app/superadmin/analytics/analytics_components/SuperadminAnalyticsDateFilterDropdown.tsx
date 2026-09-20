@@ -4,26 +4,19 @@
 import { useCallback } from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
+import { SUPERADMIN_ANALYTICS_DATE_FILTER_OPTIONS } from '@/app/superadmin/analytics/analytics_utils/SuperadminAnalyticsDateFilterConstants';
+import { getSuperadminAnalyticsPresetRange } from '@/app/superadmin/analytics/analytics_utils/SuperadminAnalyticsDateRangeUtils';
+import type { SuperadminAnalyticsDateFilterBoundary, SuperadminAnalyticsDateRange } from '@/app/superadmin/analytics/analytics_types/SuperadminAnalyticsDateFilterTypes';
 
 
-const OPTIONS = [
-    { value: 'this_month', label: 'This Month' },
-    { value: 'last_month', label: 'Last Month' },
-    { value: 'last_3_months', label: 'Last 3 Months' },
-    { value: 'last_6_months', label: 'Last 6 Months' },
-    { value: 'this_year', label: 'This Year' },
-    { value: 'monthly', label: 'Monthly (All Time)' }, // Keep compatibility with dashboard
-    { value: 'yearly', label: 'Yearly (All Time)' }, // Keep compatibility with dashboard
-    { value: 'custom', label: 'Custom Range' },
-];
 export function SuperadminAnalyticsDateFilterDropdown() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const pathname = usePathname();
-    const value = (searchParams.get('range') as TimeRange) ?? 'this_month';
+    const value = (searchParams.get('range') as SuperadminAnalyticsDateRange) ?? 'this_month';
     const currentStartDate = searchParams.get('startDate') || '';
     const currentEndDate = searchParams.get('endDate') || '';
-    const handleCustomDateChange = useCallback((type: DateFilterBoundary, val: string) => {
+    const handleCustomDateChange = useCallback((type: SuperadminAnalyticsDateFilterBoundary, val: string) => {
         const params = new URLSearchParams(searchParams.toString());
         params.set('range', 'custom');
         if (type === 'start') {
@@ -41,40 +34,13 @@ export function SuperadminAnalyticsDateFilterDropdown() {
         router.replace(`${pathname}?${params.toString()}`, { scroll: false });
     }, [router, searchParams, pathname]);
     const handlePresetChange = useCallback((preset: string) => {
-        const today = new Date();
-        let from = '';
-        let to = '';
-        switch (preset) {
-            case 'this_month':
-                from = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0] || '';
-                to = new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString().split('T')[0] || '';
-                break;
-            case 'last_month':
-                from = new Date(today.getFullYear(), today.getMonth() - 1, 1).toISOString().split('T')[0] || '';
-                to = new Date(today.getFullYear(), today.getMonth(), 0).toISOString().split('T')[0] || '';
-                break;
-            case 'last_3_months':
-                from = new Date(today.getFullYear(), today.getMonth() - 3, 1).toISOString().split('T')[0] || '';
-                to = new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString().split('T')[0] || '';
-                break;
-            case 'last_6_months':
-                from = new Date(today.getFullYear(), today.getMonth() - 6, 1).toISOString().split('T')[0] || '';
-                to = new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString().split('T')[0] || '';
-                break;
-            case 'this_year':
-                from = new Date(today.getFullYear(), 0, 1).toISOString().split('T')[0] || '';
-                to = new Date(today.getFullYear(), 11, 31).toISOString().split('T')[0] || '';
-                break;
-            default:
-                break;
-        }
+        const { from, to } = getSuperadminAnalyticsPresetRange(preset);
         const params = new URLSearchParams(searchParams.toString());
         params.set('range', preset);
         if (preset !== 'custom' && preset !== 'monthly' && preset !== 'yearly') {
             params.set('startDate', from);
             params.set('endDate', to);
-        }
-        else if (preset !== 'custom') {
+        } else if (preset !== 'custom') {
             params.delete('startDate');
             params.delete('endDate');
         }
@@ -82,7 +48,7 @@ export function SuperadminAnalyticsDateFilterDropdown() {
     }, [router, searchParams, pathname]);
     return (<div className="flex items-center gap-2 flex-wrap">
       <div className="w-48 bg-input border border-border rounded-lg shadow-card shrink-0">
-        <SearchableDropdown options={OPTIONS} value={value} onChange={(val) => handlePresetChange(String(val))} className="bg-transparent border-transparent"/>
+        <SearchableDropdown options={SUPERADMIN_ANALYTICS_DATE_FILTER_OPTIONS as any} value={value} onChange={(val) => handlePresetChange(String(val))} className="bg-transparent border-transparent"/>
       </div>
 
       {value === 'custom' && (<div className="flex items-center gap-2 bg-input border border-border rounded-lg shadow-card px-3 py-2 shrink-0">
@@ -97,7 +63,4 @@ export function SuperadminAnalyticsDateFilterDropdown() {
 
 
 
-export type TimeRange = 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'yearly' | 'custom' | 'this_month' | 'last_month' | 'last_3_months' | 'last_6_months' | 'this_year';
-
-export type DateFilterBoundary = 'start' | 'end';
 

@@ -5,21 +5,23 @@
  * DATA FLOW: usageMetersApi -> SuperadminUsageMetersClient -> UI
  */
 // RESPONSIBILITY: Renders the SuperadminUsageMetersClient component.
-import { useState, useEffect } from 'react';
 import { useSuperadminUsageMetersPage } from '@/app/superadmin/usage-meters/usage-meters_utils/useSuperadminUsageMetersPage';
 import type { UsageMeter } from '@/app/superadmin/usage-meters/usage-meters_types/SuperadminUsageMetersTypes';
-import { HardDrive, MessageSquare, Users, Calendar } from 'lucide-react';
-import { getProgressColor, getPercentage, formatUsageStorage } from '@/app/superadmin/usage-meters/usage-meters_utils/SuperadminUsageMetersUtils';
-import { formatNumber } from '@/lib/formatters';
+import { HardDrive, MessageSquare, Users } from 'lucide-react';
+import { getProgressColor, getPercentage } from '@/app/superadmin/usage-meters/usage-meters_utils/SuperadminUsageMetersUtils';
+import { displayValue, formatNumber } from '@/lib/formatters';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
+import { useUrlState } from '@/hooks/useUrlState';
+import { SUPERADMIN_USAGE_METERS_DATE_RANGE_OPTIONS } from '@/app/superadmin/usage-meters/usage-meters_utils/SuperadminUsageMetersConstants';
 export default function SuperadminUsageMetersClient() {
-    const [dateRange, setDateRange] = useState('this_month');
-    const [customFrom, setCustomFrom] = useState('');
-    const [customTo, setCustomTo] = useState('');
+    const { getParam, setParam } = useUrlState();
+    const dateRange = getParam('range', 'this_month');
+    const customFrom = getParam('from', '');
+    const customTo = getParam('to', '');
     const query = useSuperadminUsageMetersPage(
         dateRange === 'custom' ? { range: dateRange, ...(customFrom ? { from: customFrom } : {}), ...(customTo ? { to: customTo } : {}) } : { range: dateRange }
     );
-    const { data: queryData, isPending, isError } = query;
+    const { data: queryData, isPending } = query;
 
         const displayMeters = queryData?.data || [];
     if (isPending) {
@@ -36,17 +38,13 @@ export default function SuperadminUsageMetersClient() {
         
         <div className="flex flex-wrap items-center gap-3">
           <div className="relative w-48">
-            <SearchableDropdown value={dateRange} onChange={(val) => setDateRange(val as string)} options={[
-            { value: 'this_week', label: 'This Week' },
-            { value: 'this_month', label: 'This Month' },
-            { value: 'custom', label: 'Custom Range' },
-        ]}/>
+            <SearchableDropdown value={dateRange} onChange={(val) => setParam('range', String(val))} options={SUPERADMIN_USAGE_METERS_DATE_RANGE_OPTIONS as any}/>
           </div>
 
           {dateRange === 'custom' && (<div className="flex items-center gap-2">
-              <input type="date" value={customFrom} onChange={(e) => setCustomFrom(e.target.value)} className="bg-card border border-border rounded-lg px-3 py-2 text-sm text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"/>
+              <input type="date" value={customFrom} onChange={(e) => setParam('from', e.target.value)} className="bg-card border border-border rounded-lg px-3 py-2 text-sm text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"/>
               <span className="text-secondary">to</span>
-              <input type="date" value={customTo} onChange={(e) => setCustomTo(e.target.value)} className="bg-card border border-border rounded-lg px-3 py-2 text-sm text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"/>
+              <input type="date" value={customTo} onChange={(e) => setParam('to', e.target.value)} className="bg-card border border-border rounded-lg px-3 py-2 text-sm text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"/>
             </div>)}
         </div>
       </div>
@@ -57,7 +55,7 @@ export default function SuperadminUsageMetersClient() {
             const mediaGb = meter.mediaGb || ((meter as unknown as Record<string, unknown>).storageGb as number) || 0;
             const totalStorage = dbGb + mediaGb;
             return (<div key={meter.id} className="bg-card border border-border rounded-xl p-6 shadow-card hover:shadow-card motion-safe:transition-shadow">
-            <h3 className="text-lg font-bold text-primary mb-4 truncate" title={meter.tenantName}>{meter.tenantName}</h3>
+            <h3 className="text-lg font-bold text-primary mb-4 truncate" title={displayValue(meter.tenantName)}>{displayValue(meter.tenantName)}</h3>
             
             <div className="space-y-5">
               {/* SMS Meter */}
@@ -80,12 +78,12 @@ export default function SuperadminUsageMetersClient() {
                   <span className="flex items-center gap-1.5 text-secondary font-medium">
                     <HardDrive size={18}/> Total Storage (GB)
                   </span>
-                  <span className="text-primary font-semibold">${totalStorage.toLocaleString('en-IN', { maximumFractionDigits: 2 })} GB
+                  <span className="text-primary font-semibold">{formatNumber(totalStorage)} GB
                   </span>
                 </div>
                 <div className="h-2 w-full bg-input rounded-full overflow-hidden flex">
-                  <div className="h-full bg-primary" style={{ width: `${getPercentage(dbGb, meter.storageLimitGb)}%` }} title={`Database: ${dbGb} GB`}/>
-                  <div className="h-full bg-warning" style={{ width: `${getPercentage(mediaGb, meter.storageLimitGb)}%` }} title={`Binary: ${mediaGb} GB`}/>
+                  <div className="h-full bg-primary" style={{ width: `${getPercentage(dbGb, meter.storageLimitGb)}%` }} title={`Database: ${formatNumber(dbGb)} GB`}/>
+                  <div className="h-full bg-warning" style={{ width: `${getPercentage(mediaGb, meter.storageLimitGb)}%` }} title={`Binary: ${formatNumber(mediaGb)} GB`}/>
                 </div>
                 <div className="flex justify-between text-xs mt-1.5 text-secondary">
                   <div className="flex items-center gap-1">

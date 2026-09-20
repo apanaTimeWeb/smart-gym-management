@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Renders the Superadmin global-audit V1 Suspicious activity view.
 'use client';
 import { CircleAlert } from 'lucide-react';
-import { getSuperadminGlobalAuditStatusBadgeClasses } from '@/app/superadmin/global-audit/global_audit_utils/SuperadminGlobalAuditStatusBadgeConfig';
+import { getSuperadminGlobalAuditStatusBadgeClasses } from '@/app/superadmin/global-audit/global-audit_utils/SuperadminGlobalAuditStatusBadgeConfig';
 import Panel from '@/components/ui/Panel';
 import type { SuperadminGlobalAuditV1SectionProps } from '@/app/superadmin/global-audit/global-audit_types/SuperadminGlobalAuditV1Types.ts';
 export default function SuperadminGlobalAuditV1SuspiciousActivityPanel({ data }: SuperadminGlobalAuditV1SectionProps) {

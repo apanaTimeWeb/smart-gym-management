@@ -1,6 +1,10 @@
 export const GymsUrlConfig = {
+    EXTERNAL: {
+        WHATSAPP_CLICK_TO_CHAT: (phone: string, message: string) => `https://wa.me/${phone}?text=${encodeURIComponent(message)}`,
+    },
     PAGES: {
         MAIN: "/superadmin/gyms",
+        BILLING_PLANS: '/superadmin/saas-billing/plans',
         ADD: "/superadmin/gyms/add",
     },
     BACKEND_API: {

@@ -53,10 +53,10 @@ export default function SuperadminBackupsClient() {
         </div>
         <div className="flex items-center gap-2">
           <button onClick={() => setScheduleModalOpen(true)} className="bg-input text-primary px-4 py-2 rounded-lg font-medium hover:bg-border motion-safe:transition-colors border border-border flex items-center gap-2">
-            <Clock className="w-4 h-4"/> Configure Schedule
+            <Clock size={18} className="w-4"/> Configure Schedule
           </button>
           <button onClick={() => setTriggerModalOpen(true)} disabled={isTriggering} className="bg-primary text-on-primary px-4 py-2 rounded-lg font-medium hover:bg-primary-hover motion-safe:transition-colors flex items-center gap-2 disabled:opacity-50">
-            <DatabaseBackup className="w-4 h-4"/> {isTriggering ? 'Creating Snapshot...' : 'Global Snapshot'}
+            <DatabaseBackup size={18} className="w-4"/> {isTriggering ? 'Creating Snapshot...' : 'Global Snapshot'}
           </button>
         </div>
       </div>
@@ -65,7 +65,7 @@ export default function SuperadminBackupsClient() {
         <div className="bg-card border border-border rounded-xl shadow-card overflow-hidden flex flex-col min-h-96">
         <div className="p-4 border-b border-border flex flex-col sm:flex-row gap-4 justify-between items-center">
           <div className="relative w-full max-w-md">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary"/>
+            <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary"/>
             <input type="text" placeholder="Search by gym name or database..." className="w-full pl-9 pr-4 py-2 bg-input border border-border rounded-lg text-sm text-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary" value={search} onChange={(e) => {
             setSearch(e.target.value);
         }}/>

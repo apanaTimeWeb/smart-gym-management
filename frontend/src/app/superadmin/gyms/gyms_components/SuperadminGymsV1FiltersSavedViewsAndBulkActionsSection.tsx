@@ -63,7 +63,7 @@ export default function SuperadminGymsV1FiltersSavedViewsAndBulkActionsSection({
         <div className="space-y-2">
           {data.saved.map((view) => (
             <button key={view.key} type="button" onClick={() => onSavedViewChange(view.key)} className={`flex min-h-11 w-full items-center justify-between rounded-md border px-3 py-2 text-left text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${selectedFilterKey === view.key ? 'border-primary bg-primary-subtle text-primary' : 'border-border text-primary'}`}>
-              <span className="truncate">{view.label}</span><Filter size={18} aria-hidden="true" className="text-primary" />
+              <span className="truncate">{view.label}</span><Filter size={18} aria-hidden="true" className="text-primary"/>
             </button>
           ))}
         </div>
@@ -90,7 +90,7 @@ export default function SuperadminGymsV1FiltersSavedViewsAndBulkActionsSection({
           </select>
           {pendingAction === 'Move plan' ? <select value={targetPlan} onChange={(event) => setTargetPlan(event.target.value)} className="min-h-11 w-full rounded-md border border-border bg-input px-3 py-2 text-sm text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">{SUPERADMIN_GYMS_V1_PLAN_OPTIONS.map((plan) => <option key={plan} value={plan}>{plan}</option>)}</select> : null}
           <button type="button" onClick={() => void handleBulkAction()} disabled={!pendingAction || selectedGymIds.length === 0 || isBulkPending} className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md bg-primary px-3 py-2 text-sm font-medium text-on-primary hover:bg-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50">
-            {pendingAction === 'Export selected' ? <Download size={18} aria-hidden="true" /> : <UsersRound size={18} aria-hidden="true" />}
+            {pendingAction === 'Export selected' ? <Download size={18} aria-hidden="true"/> : <UsersRound size={18} aria-hidden="true"/>}
             {isBulkPending ? 'Applying…' : 'Apply action'}
           </button>
         </div>

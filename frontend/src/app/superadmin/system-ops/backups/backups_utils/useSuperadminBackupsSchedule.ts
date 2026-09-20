@@ -11,6 +11,7 @@ import { SuperadminBackupsScheduleInputSchema, type SuperadminBackupsScheduleInp
 import { SUPERADMIN_BACKUPS_SCHEDULE_QUERY_KEY } from '@/app/superadmin/system-ops/backups/backups_utils/SuperadminBackupsScheduleConstants';
 
 /** Owns the Backups schedule query and validates schedule mutations before cache reconciliation. */
+/** Purpose: Owns the useSuperadminBackupsSchedule data/state orchestration for this Superadmin feature and exposes its typed UI-facing contract. */
 export function useSuperadminBackupsSchedule(enabled: boolean) {
   const queryClient = useQueryClient();
   const query = useQuery({

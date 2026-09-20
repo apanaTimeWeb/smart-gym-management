@@ -12,16 +12,10 @@ export const WhiteLabelDomainSchema = z.object({
   createdAt: z.string().datetime(),
 });
 
-export const WhiteLabelDomainsListResponseSchema = z.object({
-  data: z.array(WhiteLabelDomainSchema),
-  message: z.string().optional(),
-});
+export const WhiteLabelDomainsDataSchema = z.array(WhiteLabelDomainSchema);
 
 export const UpdateDomainStatusSchema = z.object({
   status: z.enum(['pending', 'active', 'failed']),
 });
 
-export const UpdateDomainStatusResponseSchema = z.object({
-  data: WhiteLabelDomainSchema,
-  message: z.string(),
-});
+export const UpdateDomainStatusDataSchema = WhiteLabelDomainSchema;

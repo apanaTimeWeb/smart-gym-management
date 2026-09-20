@@ -15,7 +15,7 @@ export default function SuperadminIntegrationsClient() {
       </div>);
     }
     if (isError || !data) {
-        return (<div className="rounded-xl border border-danger/30 bg-danger-bg p-5" role="alert">
+        return (<div className="rounded-xl border border-border bg-danger-bg p-5" role="alert">
   <p className="font-semibold text-danger">
     Integrations data could not be loaded.
   </p>

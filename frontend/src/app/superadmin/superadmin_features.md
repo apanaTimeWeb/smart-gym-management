@@ -1,54 +1,49 @@
 # Superadmin — Role Feature Map
 
 ## Module Purpose
-The Superadmin role owns global SaaS tenant operations, financial controls, system health, messaging, support, configuration, and operational audit surfaces. The role operates across the feature modules listed below while business behavior remains module-owned for repair isolation. This document is the role-level index; feature-specific details live in each module's `[module]_features.md` file. The role does not own backend implementation or sibling-feature business logic.
+The `superadmin` role is the role container for global SaaS administration. Business behavior remains inside individual feature modules; this file maps the active route surface and preserves the AI isolation boundary.
 
-## Active Feature Routes
+## Actual Route Inventory
 
-| Feature | Route | Primary Surface |
-|---|---|---|
-| Analytics | `/superadmin/analytics` | Analytics client |
-| Backups | `/superadmin/system-ops/backups` | Backup schedule, restore, health |
-| Branches | `/superadmin/branches` | Branch management |
-| Broadcasts | `/superadmin/broadcasts` | Broadcast composition and delivery |
-| Cancellations | `/superadmin/cancellations` | Cancellation alerts and retention |
-| Compliance | `/superadmin/compliance` | Compliance monitoring |
-| Coupons | `/superadmin/saas-billing/coupons` | Coupon management and redemptions |
-| Dashboard | `/superadmin/dashboard` | SaaS operating dashboard |
-| Features | `/superadmin/features` | Feature flag/rollout management |
-| Franchises | `/superadmin/franchises` | Franchise operations |
-| Global Audit | `/superadmin/global-audit` | Audit ledger |
-| Gyms | `/superadmin/gyms` | Tenant management and gym detail |
-| Infrastructure | `/superadmin/system-ops/infrastructure` | Tenant/system infrastructure |
-| Integrations | `/superadmin/integrations` | Integration status |
-| Invoices | `/superadmin/saas-billing/invoices` | Billing/invoice operations |
-| Jobs | `/superadmin/system-ops/jobs` | Background job operations |
-| Messaging | `/superadmin/messaging` | Messaging operations |
-| Migrations | `/superadmin/system-ops/migrations` | Migration operations |
-| Offboarding | `/superadmin/offboarding` | Offboarding queue |
-| Onboarding | `/superadmin/onboarding` | Tenant onboarding |
-| Plans | `/superadmin/saas-billing/plans` | Plan management |
-| Profile | `/superadmin/profile` | Superadmin profile |
-| Reports | `/superadmin/reports` | Reporting |
-| Segments | `/superadmin/segments` | Tenant segments |
-| Settings | `/superadmin/settings` | Platform settings |
-| System | `/superadmin/system` | System controls |
-| Team | `/superadmin/team` | Superadmin team |
-| Tickets | `/superadmin/tickets` | Support tickets |
-| Usage Meters | `/superadmin/usage-meters` | Usage tracking |
+| Route | Directory |
+|---|---|
+| `/affiliates` | `affiliates` |
+| `/analytics` | `analytics` |
+| `/broadcasts` | `broadcasts` |
+| `/compliance` | `compliance` |
+| `/dashboard` | `dashboard` |
+| `/features` | `features` |
+| `/global-audit` | `global-audit` |
+| `/gyms/[id]` | `gyms/[id]` |
+| `/gyms/add` | `gyms/add` |
+| `/gyms` | `gyms` |
+| `/integrations` | `integrations` |
+| `/messaging` | `messaging` |
+| `/` | `.` |
+| `/profile` | `profile` |
+| `/reports` | `reports` |
+| `/saas-billing/coupons` | `saas-billing/coupons` |
+| `/saas-billing/invoices` | `saas-billing/invoices` |
+| `/saas-billing/plans` | `saas-billing/plans` |
+| `/settings` | `settings` |
+| `/system-ops/backups` | `system-ops/backups` |
+| `/system-ops/infrastructure` | `system-ops/infrastructure` |
+| `/system-ops/jobs` | `system-ops/jobs` |
+| `/system-ops/migrations` | `system-ops/migrations` |
+| `/system-ops` | `system-ops` |
+| `/team` | `team` |
+| `/tickets` | `tickets` |
+| `/usage-meters` | `usage-meters` |
+| `/white-labeling` | `white-labeling` |
 
-## Active Route Tree Rule
-Each route page mounts one canonical client tree and one query/data-source family. Legacy page-level `V1Client` components are removed from the release tree, so active routes do not carry parallel base + V1 presentations.
+## Role / Feature Boundary
 
-## Approved External Dependencies
+- Role container: `superadmin/`
+- Feature repair unit: individual business feature directory.
+- Business Feature Dependencies: **None unless explicitly documented by the owning feature.**
+- Role-Level Business Dependencies: **None.**
+- Shared infrastructure must remain zero-business and explicitly approved by the architecture documentation.
 
-### Application Infrastructure
-- `@/lib/*` transport/formatting infrastructure as explicitly imported by feature modules.
-- `@/components/*` zero-business UI primitives where explicitly imported.
-- `superadmin_components/SuperadminLayout` and other role-shell infrastructure only for navigation, providers, and generic interaction primitives.
+## Completion Contract
 
-### Business Feature Dependencies
-- None as a role-wide business rule. Cross-feature reuse should occur through approved infrastructure only.
-
-### Role-Level Business Dependencies
-- None.
+A route is not complete merely because it renders. Its actionable controls, state transitions, loading/empty/error/retry paths, navigation/return flows, mock/API behavior, permissions, accessibility, responsive behavior, and documented terminal states must be verified.

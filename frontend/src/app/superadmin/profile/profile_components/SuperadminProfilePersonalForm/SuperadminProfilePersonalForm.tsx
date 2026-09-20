@@ -76,7 +76,7 @@ export default function SuperadminProfilePersonalForm({ profile, isSaving, onSav
 
       <div className="flex justify-end pt-2">
         <button type="submit" disabled={isSaving || !isDirty} className="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-hover text-on-primary font-semibold text-sm rounded-lg motion-safe:transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
-          {isSaving && <Loader2 className="w-4 h-4 motion-safe:animate-spin" strokeWidth={2}/>}
+          {isSaving && <Loader2 size={18} className="w-4 motion-safe:animate-spin" strokeWidth={2}/>}
           {isSaving ? 'Saving...' : 'Save Changes'}
         </button>
       </div>

@@ -1,21 +1,14 @@
+// DATA FLOW: Inputs enter useSuperadminWhiteLabelingStore, flow through its feature-owned state/API dependencies, and return typed UI state/actions to the owning Superadmin feature.
+// RESPONSIBILITY: Owns UI-only White-labeling selection state. Search/filter state belongs to the URL.
+'use client';
 import { create } from 'zustand';
 
 interface SuperadminWhiteLabelingState {
-  searchQuery: string;
-  statusFilter: 'all' | 'pending' | 'active' | 'failed';
   selectedDomainId: string | null;
-  setSearchQuery: (query: string) => void;
-  setStatusFilter: (filter: 'all' | 'pending' | 'active' | 'failed') => void;
   setSelectedDomainId: (id: string | null) => void;
-  reset: () => void;
 }
 
 export const useSuperadminWhiteLabelingStore = create<SuperadminWhiteLabelingState>((set) => ({
-  searchQuery: '',
-  statusFilter: 'all',
   selectedDomainId: null,
-  setSearchQuery: (query) => set({ searchQuery: query }),
-  setStatusFilter: (filter) => set({ statusFilter: filter }),
-  setSelectedDomainId: (id) => set({ selectedDomainId: id }),
-  reset: () => set({ searchQuery: '', statusFilter: 'all', selectedDomainId: null }),
+  setSelectedDomainId: (selectedDomainId) => set({ selectedDomainId }),
 }));

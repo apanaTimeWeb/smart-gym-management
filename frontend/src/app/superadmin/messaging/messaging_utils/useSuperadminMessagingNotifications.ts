@@ -10,6 +10,7 @@ import { superadminMessagingApi } from '@/app/superadmin/messaging/messaging_api
 export const SUPERADMIN_MESSAGING_NOTIFICATIONS_QUERY_KEY = ['superadmin', 'messaging', 'notifications'] as const;
 
 /** Returns notification server state and exposes feature-owned read mutations for the Superadmin shell. */
+/** Purpose: Owns the useSuperadminMessagingNotifications data/state orchestration for this Superadmin feature and exposes its typed UI-facing contract. */
 export function useSuperadminMessagingNotifications() {
   const queryClient = useQueryClient();
   const query = useQuery({ queryKey: SUPERADMIN_MESSAGING_NOTIFICATIONS_QUERY_KEY, queryFn: () => superadminMessagingApi.fetchNotifications() });

@@ -13,5 +13,5 @@ export interface SuperadminFeatureRolloutModalProps {
     isOpen: boolean;
     onClose: () => void;
     flag: FeatureFlag | null;
-    onSaveRollout: (tenantIds: string[]) => Promise<void>;
+    onSaveRollout: (tenantIds: string[], idempotencyKey: string) => Promise<void>;
 }

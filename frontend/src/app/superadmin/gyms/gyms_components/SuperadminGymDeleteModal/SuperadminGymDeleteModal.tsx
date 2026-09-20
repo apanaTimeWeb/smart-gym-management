@@ -9,7 +9,7 @@ export default function SuperadminGymDeleteModal() {
         return null;
     const isDeleteEnabled = confirmText === 'DELETE' && actionLoadingId !== gymToDelete.id;
     const isDeleting = actionLoadingId === gymToDelete.id;
-    return (<div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 p-4" role="dialog" aria-modal="true">
+    return (<div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay p-4" role="dialog" aria-modal="true">
       <div className="bg-overlay rounded-2xl p-7 max-w-md w-full border border-danger shadow-dialog relative">
         <button onClick={closeDeleteModal} className="absolute top-5 right-5 text-secondary hover:text-primary motion-safe:transition-colors" disabled={isDeleting}>
           <X size={18}/>
@@ -17,7 +17,7 @@ export default function SuperadminGymDeleteModal() {
 
         <div className="flex items-center gap-3 mb-4">
           <div className="bg-danger-bg p-2 rounded-full">
-            <AlertTriangle className="w-6 h-6 text-danger"/>
+            <AlertTriangle size={18} className="w-6 text-danger"/>
           </div>
           <h2 className="text-lg font-bold text-primary">Delete Gym</h2>
         </div>
@@ -26,7 +26,7 @@ export default function SuperadminGymDeleteModal() {
           You are about to permanently delete <strong>{gymToDelete.name}</strong> and all associated data. This action cannot be undone.
         </p>
 
-        <div className="bg-danger-bg border border-danger/30 rounded-lg p-4 mb-6">
+        <div className="bg-danger-bg border border-border rounded-lg p-4 mb-6">
           <label className="block text-sm font-bold text-secondary mb-2">
             Please type <span className="text-primary font-mono select-none">DELETE</span> to confirm.
           </label>
@@ -37,7 +37,7 @@ export default function SuperadminGymDeleteModal() {
           <button type="button" onClick={closeDeleteModal} className="px-5 py-2.5 rounded-lg text-sm font-medium text-primary border border-border hover:bg-page motion-safe:transition-colors" disabled={isDeleting}>
             Cancel
           </button>
-          <button type="button" onClick={handleConfirmDelete} className="px-5 py-2.5 rounded-lg text-sm font-medium text-on-danger bg-danger hover:bg-danger/90 motion-safe:transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled={!isDeleteEnabled}>
+          <button type="button" onClick={handleConfirmDelete} className="px-5 py-2.5 rounded-lg text-sm font-medium text-on-danger bg-danger hover:bg-danger-bg motion-safe:transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled={!isDeleteEnabled}>
             {isDeleting ? 'Deleting...' : 'Confirm Delete'}
           </button>
         </div>

@@ -1,3 +1,4 @@
+// DATA FLOW: Inputs enter useSuperadminFeatureHistory, flow through its feature-owned state/API dependencies, and return typed UI state/actions to the owning Superadmin feature.
 // RESPONSIBILITY: Owns server-state loading for feature-flag change history and exposes query state to the history view.
 'use client';
 import { useQuery } from '@tanstack/react-query';

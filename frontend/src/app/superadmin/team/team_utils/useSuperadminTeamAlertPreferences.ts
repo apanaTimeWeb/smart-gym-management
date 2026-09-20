@@ -1,3 +1,4 @@
+// DATA FLOW: Inputs enter useSuperadminTeamAlertPreferences, flow through its feature-owned state/API dependencies, and return typed UI state/actions to the owning Superadmin feature.
 // RESPONSIBILITY: Owns Team alert-preference mutation and Query reconciliation.
 'use client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';

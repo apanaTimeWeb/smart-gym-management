@@ -11,14 +11,8 @@ import SuperadminInvoicesAgingReport from '@/app/superadmin/saas-billing/invoice
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
 import toast from 'react-hot-toast';
 import { useState } from 'react';
+import { SUPERADMIN_INVOICE_STATUS_OPTIONS } from '@/app/superadmin/saas-billing/invoices/invoices_utils/SuperadminInvoicesConstants';
 import type { InvoicesTab } from '@/app/superadmin/saas-billing/invoices/invoices_types/SuperadminInvoicesClientTypes';
-const STATUS_OPTIONS = [
-    { value: '', label: 'All Statuses' },
-    { value: 'PAID', label: 'Paid' },
-    { value: 'PENDING', label: 'Pending' },
-    { value: 'OVERDUE', label: 'Overdue' },
-    { value: 'FAILED', label: 'Failed' },
-];
 
 export default function SuperadminInvoicesClient() {
     const [activeTab, setActiveTab] = useState<InvoicesTab>('ALL');
@@ -31,7 +25,7 @@ export default function SuperadminInvoicesClient() {
         <div className="h-28 bg-card rounded-xl border border-border"/>
       </div>
       <div className="bg-card rounded-xl border border-border overflow-hidden">
-        <div className="h-12 bg-border/30"/>
+        <div className="h-12 bg-surface-highlight"/>
         {[...Array(6)].map((_, i) => <div key={`skeleton-${i}`} className="h-12 border-t border-border"/>)}
       </div>
     </div>);
@@ -43,12 +37,12 @@ export default function SuperadminInvoicesClient() {
       <SuperadminInvoicesStatsBar totalRevenue={totalRevenue} failedRevenue={failedRevenue} pendingRevenue={pendingRevenue} overdueCount={overdueCount}/>
 
       <div className="bg-card border border-border rounded-xl shadow-card overflow-hidden">
-        <div className="p-4 border-b border-border flex flex-col md:flex-row gap-4 justify-between items-center bg-input/20">
+        <div className="p-4 border-b border-border flex flex-col md:flex-row gap-4 justify-between items-center bg-input">
           <div className="flex bg-input border border-border rounded-lg p-1 w-full md:w-auto">
-            <button onClick={() => setActiveTab('ALL')} className={`flex-1 md:flex-none px-4 py-2 text-sm rounded-md font-medium motion-safe:transition-colors ${activeTab === 'ALL' ? 'bg-page text-primary shadow-card' : 'text-secondary hover:text-primary hover:bg-page/50'}`}>
+            <button onClick={() => setActiveTab('ALL')} className={`flex-1 md:flex-none px-4 py-2 text-sm rounded-md font-medium motion-safe:transition-colors ${activeTab === 'ALL' ? 'bg-page text-primary shadow-card' : 'text-secondary hover:text-primary hover:bg-page'}`}>
               All Invoices
             </button>
-            <button onClick={() => setActiveTab('AGING')} className={`flex-1 md:flex-none px-4 py-2 text-sm rounded-md font-medium motion-safe:transition-colors ${activeTab === 'AGING' ? 'bg-page text-primary shadow-card' : 'text-secondary hover:text-primary hover:bg-page/50'}`}>
+            <button onClick={() => setActiveTab('AGING')} className={`flex-1 md:flex-none px-4 py-2 text-sm rounded-md font-medium motion-safe:transition-colors ${activeTab === 'AGING' ? 'bg-page text-primary shadow-card' : 'text-secondary hover:text-primary hover:bg-page'}`}>
               Aging Report
             </button>
           </div>
@@ -57,12 +51,12 @@ export default function SuperadminInvoicesClient() {
         {activeTab === 'AGING' ? (<SuperadminInvoicesAgingReport invoices={invoices}/>) : (<>
             <div className="p-4 border-b border-border flex gap-4">
               <div className="relative flex-1 max-w-md">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary"/>
+                <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary"/>
                 <input type="text" placeholder="Search by invoice ID or gym name..." className="w-full pl-9 pr-4 py-2 bg-input border border-border rounded-lg text-sm text-primary focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page focus:border-primary" value={search} onChange={(e) => setSearch(e.target.value)}/>
               </div>
               <div className="flex gap-2">
                 <div className="w-40 border-none bg-input rounded-lg">
-                  <SearchableDropdown options={STATUS_OPTIONS} value={statusFilter || ''} onChange={(val) => setStatusFilter(val ? String(val) : null)} className="bg-transparent border-border"/>
+                  <SearchableDropdown options={SUPERADMIN_INVOICE_STATUS_OPTIONS as any} value={statusFilter || ''} onChange={(val) => setStatusFilter(val ? String(val) : null)} className="bg-transparent border-border"/>
                 </div>
               </div>
             </div>

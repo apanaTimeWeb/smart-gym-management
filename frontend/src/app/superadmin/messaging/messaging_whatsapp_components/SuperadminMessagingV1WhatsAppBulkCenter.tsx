@@ -93,14 +93,14 @@ export default function SuperadminMessagingV1WhatsAppBulkCenter({ data }: Supera
     return (<section className="mt-8 space-y-6">
       <Panel title="Smart Bulk WhatsApp" description="Free guided tenant communication for Superadmin. Use personalized click-to-chat links for owners, admins, and managers without a paid messaging API.">
         <div className="grid gap-4 lg:grid-cols-2">
-          <div className="rounded-2xl border border-primary/20 bg-primary-subtle p-5">
-            <div className="flex items-start gap-3"><span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary text-on-primary"><Rocket size={19} aria-hidden="true"/></span><div><p className="text-sm font-semibold text-primary">Tenant-first bulk communication</p><p className="mt-1 text-sm leading-6 text-secondary">Target gyms by subscription, onboarding, risk, maintenance impact, or contact role. Gym member messaging stays in Admin / Manager.</p></div></div>
+          <div className="rounded-2xl border border-border bg-primary-subtle p-5">
+            <div className="flex items-start gap-3"><span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary text-on-primary"><Rocket size={18} aria-hidden="true"/></span><div><p className="text-sm font-semibold text-primary">Tenant-first bulk communication</p><p className="mt-1 text-sm leading-6 text-secondary">Target gyms by subscription, onboarding, risk, maintenance impact, or contact role. Gym member messaging stays in Admin / Manager.</p></div></div>
           </div>
-          <div className="rounded-2xl border border-border bg-input/30 p-5">
-            <div className="flex items-start gap-3"><ShieldCheck size={19} className="mt-0.5 shrink-0 text-primary" aria-hidden="true"/><div><p className="text-sm font-semibold text-primary">Free mode stays transparent</p><p className="mt-1 text-xs leading-5 text-secondary">Superadmin prepares the message and opens the WhatsApp chat. The operator presses WhatsApp's Send action, then marks the queue item sent or skipped.</p></div></div>
+          <div className="rounded-2xl border border-border bg-input p-5">
+            <div className="flex items-start gap-3"><ShieldCheck size={18} className="mt-0.5 shrink-0 text-primary" aria-hidden="true"/><div><p className="text-sm font-semibold text-primary">Free mode stays transparent</p><p className="mt-1 text-xs leading-5 text-secondary">Superadmin prepares the message and opens the WhatsApp chat. The operator presses WhatsApp's Send action, then marks the queue item sent or skipped.</p></div></div>
           </div>
         </div>
-        <div className="mt-4 flex flex-wrap items-center gap-2 rounded-xl border border-border bg-input/30 px-4 py-3 text-xs text-secondary"><Building2 size={14} aria-hidden="true"/><span className="font-semibold text-primary">Scope locked to tenants:</span> owners · admins · managers only</div>
+        <div className="mt-4 flex flex-wrap items-center gap-2 rounded-xl border border-border bg-input px-4 py-3 text-xs text-secondary"><Building2 size={18} aria-hidden="true"/><span className="font-semibold text-primary">Scope locked to tenants:</span> owners · admins · managers only</div>
       </Panel>
 
       <SuperadminMessagingV1WhatsAppTemplatePicker templates={data.templates} selectedId={templateId} onSelect={handleTemplateSelect}/>

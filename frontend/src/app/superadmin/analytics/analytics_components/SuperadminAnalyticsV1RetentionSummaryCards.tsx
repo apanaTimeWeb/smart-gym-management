@@ -1,6 +1,6 @@
 // RESPONSIBILITY: Renders the Superadmin analytics V1 AnalyticsRetentionSummary summary cards.
 'use client';
-import { formatCurrency, formatNumber, formatPercent1dp } from '@/lib/formatters';
+import { formatCurrencyFromMinorUnits, formatNumber, formatPercent1dp } from '@/lib/formatters';
 import MetricCard from '@/components/ui/MetricCard';
 import type { SuperadminAnalyticsV1SectionProps } from '@/app/superadmin/analytics/analytics_types/SuperadminAnalyticsV1Types.ts';
 export default function SuperadminAnalyticsV1RetentionSummaryCards({ data }: SuperadminAnalyticsV1SectionProps) {
