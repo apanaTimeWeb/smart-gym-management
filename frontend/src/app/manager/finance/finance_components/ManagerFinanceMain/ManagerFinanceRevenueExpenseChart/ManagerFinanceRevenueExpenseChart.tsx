@@ -11,7 +11,7 @@ export function ManagerFinanceRevenueExpenseChart({ data }: { data: { month: str
   const options = {
     chart: { background: 'transparent', toolbar: { show: false }, fontFamily: 'Inter, sans-serif' },
     plotOptions: { bar: { borderRadius: 4, columnWidth: '55%' } },
-    colors: ['var(--chart-warning)', 'var(--chart-danger)'],
+    colors: ['var(--chart-primary)'],
     grid: { borderColor: 'var(--chart-grid)', strokeDashArray: 4 },
     tooltip: { theme: 'dark' as const },
     xaxis: {
@@ -24,14 +24,13 @@ export function ManagerFinanceRevenueExpenseChart({ data }: { data: { month: str
   
   return (
     <div className="bg-card border border-border rounded-xl p-5">
-      <p className="text-sm font-semibold text-primary mb-2">Revenue vs Expenses</p>
+      <p className="text-sm font-semibold text-primary mb-2">Revenue Trend</p>
       <Chart
         type="bar"
         height={280}
         options={options}
         series={[
           { name: 'Revenue',  data: data.map(d => d.revenue) },
-          { name: 'Expenses', data: data.map(d => d.expenses ?? 0) },
         ]}
       />
     </div>

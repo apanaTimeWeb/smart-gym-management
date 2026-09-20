@@ -9,7 +9,7 @@ import { ThemeToggle } from '@/components/ThemeToggle';
 import { MANAGER_HEADER_NAVIGATION } from '@/app/manager/manager_navigation/ManagerHeaderNavigationConfig';
 import type { ManagerHeaderProps } from '@/app/manager/manager_components/ManagerLayout/ManagerLayoutTypes';
 
-export default function ManagerHeader({ title, subtitle }: ManagerHeaderProps) {
+export default function ManagerHeader({ title, subtitle, action }: ManagerHeaderProps) {
   const [showProfile, setShowProfile] = useState(false);
   const router = useRouter();
   const profileRef = useRef<HTMLDivElement>(null);
@@ -33,7 +33,7 @@ export default function ManagerHeader({ title, subtitle }: ManagerHeaderProps) {
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 h-16 bg-header/95 backdrop-blur-md border-b border-border px-4 lg:px-6 flex items-center justify-between">
-      <div className="flex flex-wrap items-center gap-4">
+      <div className="flex flex-wrap items-center gap-4 flex-1">
         <button
           aria-label="Toggle Sidebar"
           className="min-h-11 min-w-11 p-2 -ml-3 text-secondary hover:text-primary motion-safe:transition-colors bg-input hover:bg-page rounded-lg border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
@@ -45,6 +45,18 @@ export default function ManagerHeader({ title, subtitle }: ManagerHeaderProps) {
           <h1 className="text-page-title font-bold text-primary">{title}</h1>
           {subtitle && <p className="text-sm text-secondary mt-0.5">{subtitle}</p>}
         </div>
+        
+        {action && (
+          <div className="hidden sm:block ml-4 pl-4 border-l border-border">
+            <button 
+              onClick={action.onClick}
+              className="flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-lg bg-primary text-on-primary hover:opacity-90 motion-safe:transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+            >
+              {action.icon}
+              {action.label}
+            </button>
+          </div>
+        )}
       </div>
       <div className="flex flex-wrap items-center gap-4">
 

@@ -3,7 +3,7 @@
 // Membership Settings, and Notification Templates.
 
 // ─── Enums & Literal Types ────────────────────────────────────────────────────
-export type SettingsTab = 'region' | 'gym_profile' | 'operating_hours' | 'membership' | 'notification_templates';
+export type SettingsTab = 'region' | 'gym_profile' | 'operating_hours';
 export type ManagerSettingsNotificationChannel = 'whatsapp' | 'email' | 'both';
 export type NotificationTemplateType = 'renewal_reminder' | 'payment_receipt' | 'welcome_message' | 'expiry_alert' | 'payment_due';
 export type RecurringFrequency = 'Daily' | 'Weekly' | 'Monthly';
@@ -107,8 +107,6 @@ export const SETTINGS_TABS: { id: SettingsTab; label: string }[] = [
   { id: 'region', label: 'Region & Notifications' },
   { id: 'gym_profile', label: 'Gym Profile' },
   { id: 'operating_hours', label: 'Operating Hours' },
-  { id: 'membership', label: 'Membership Settings' },
-  { id: 'notification_templates', label: 'Notification Templates' },
 ];
 
 export const DAYS_OF_WEEK: DayOfWeek[] = [

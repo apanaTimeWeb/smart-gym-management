@@ -1,4 +1,6 @@
 import { managerAttendanceHandlers } from '@/app/manager/attendance/attendance_mocks/handlers/ManagerAttendanceMockHandlers';
+import { managerMaintenanceMockHandlers } from '@/app/manager/maintenance/maintenance_mocks/handlers/ManagerMaintenanceMockHandlers';
+import { managerGrievanceMockHandlers } from '@/app/manager/grievance/grievance_mocks/handlers/ManagerGrievanceMockHandlers';
 import { managerCommunicationsHandlers } from '@/app/manager/communications/communications_mocks/handlers/ManagerCommunicationsMockHandlers';
 import { managerDashboardHandlers } from '@/app/manager/dashboard/dashboard_mocks/handlers/ManagerDashboardMockHandlers';
 import { managerExpensesHandlers } from '@/app/manager/expenses/expenses_mocks/handlers/ManagerExpensesMockHandlers';
@@ -21,6 +23,8 @@ import { managerWorkoutHandlers } from '@/app/manager/workout/workout_mocks/hand
 
 export const managerHandlers = [
   ...managerAttendanceHandlers,
+  ...managerMaintenanceMockHandlers,
+  ...managerGrievanceMockHandlers,
   ...managerCommunicationsHandlers,
   ...managerDashboardHandlers,
   ...managerExpensesHandlers,

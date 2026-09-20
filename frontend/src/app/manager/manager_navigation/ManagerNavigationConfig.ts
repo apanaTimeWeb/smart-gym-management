@@ -1,8 +1,8 @@
 // RESPONSIBILITY: Role-container navigation configuration only. No feature business behavior.
 import {
   LayoutDashboard, Users, FileBarChart,
-  UserCog, Utensils, Dumbbell,
-  MessageSquare, CalendarCheck, CalendarClock, Receipt, Tags, Megaphone, Gift,
+  UserCog, Utensils, Dumbbell, Wrench,
+  MessageSquare, CalendarCheck, CalendarClock, Receipt, Tags, Megaphone, Gift, Frown
 } from 'lucide-react';
 import { ManagerAttendanceUrlConfig } from '@/app/manager/attendance/attendance_url_config';
 import { ManagerCommunicationsUrlConfig } from '@/app/manager/communications/communications_url_config';
@@ -35,6 +35,7 @@ export const MANAGER_NAV_GROUPS = [
       { href: '/manager/members', label: 'Member Management', icon: Users },
       { href: '/manager/attendance', label: 'Attendance', icon: CalendarCheck },
       { href: '/manager/plans', label: 'Membership / Plans', icon: Tags },
+      { href: '/manager/maintenance', label: 'Maintenance', icon: Wrench },
     ],
   },
   {
@@ -61,6 +62,7 @@ export const MANAGER_NAV_GROUPS = [
       { href: '/manager/communications', label: 'Communications', icon: Megaphone },
       { href: '/manager/referrals', label: 'Referrals & Rewards', icon: Gift },
       { href: '/manager/notifications', label: 'Notifications', icon: MessageSquare },
+      { href: '/manager/grievance', label: 'Grievances', icon: Frown },
     ],
   },
 
