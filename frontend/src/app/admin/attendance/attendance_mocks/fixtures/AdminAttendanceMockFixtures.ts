@@ -18,15 +18,33 @@ import type { AdminAttendanceRecord, AdminAttendanceTrendPoint } from '@/app/adm
 export const MOCK_ADMIN_ATTENDANCE_RECORDS = [
   {
     id: 'a1', memberId: 'm1', memberName: 'Rahul Sharma', memberPhone: '9876543210',
-    branchId: 'b1', branchName: 'Downtown Main', checkInTime: '2026-10-15T06:30:00Z',
-    checkOutTime: '2026-10-15T08:00:00Z', date: '2026-10-15', status: 'present', planName: 'Annual Pro',
+    branchId: 'b1', branchName: 'Downtown Main', checkInTime: '2026-09-19T06:30:00Z',
+    checkOutTime: '2026-09-19T08:00:00Z', date: '2026-09-19', status: 'present', planName: 'Annual Pro',
     sessionType: 'General'
   },
   {
     id: 'a2', memberId: 'm2', memberName: 'Priya Singh', memberPhone: '9876543211',
-    branchId: 'b2', branchName: 'Westside Gym', checkInTime: '2026-10-15T07:15:00Z',
-    checkOutTime: null, date: '2026-10-15', status: 'present', planName: 'Quarterly Classic',
-    sessionType: 'PT', trainerName: 'Amit Kumar'
+    branchId: 'b1', branchName: 'Downtown Main', checkInTime: '2026-09-19T07:15:00Z',
+    checkOutTime: '2026-09-19T08:45:00Z', date: '2026-09-19', status: 'present', planName: 'Gold Plan',
+    sessionType: 'PT', trainerId: 't1', trainerName: 'Vikram'
+  },
+  {
+    id: 'a3', memberId: 'm3', memberName: 'Amit Patel', memberPhone: '9876543212',
+    branchId: 'b2', branchName: 'Uptown Branch', checkInTime: '2026-09-19T18:00:00Z',
+    checkOutTime: null, date: '2026-09-19', status: 'present', planName: 'Monthly Flex',
+    sessionType: 'General'
+  },
+  {
+    id: 'a4', memberId: 'm4', memberName: 'Sneha Joshi', memberPhone: '9876543213',
+    branchId: 'b1', branchName: 'Downtown Main', checkInTime: '2026-09-19T09:30:00Z',
+    checkOutTime: '2026-09-19T10:30:00Z', date: '2026-09-19', status: 'late', planName: 'Silver Plan',
+    sessionType: 'Class'
+  },
+  {
+    id: 'a5', memberId: 'm5', memberName: 'Kiran Kumar', memberPhone: '9876543214',
+    branchId: 'b3', branchName: 'Suburban Elite', checkInTime: '2026-09-19T05:45:00Z',
+    checkOutTime: '2026-09-19T07:00:00Z', date: '2026-09-19', status: 'present', planName: 'Annual Pro',
+    sessionType: 'General'
   }
 ];
 
