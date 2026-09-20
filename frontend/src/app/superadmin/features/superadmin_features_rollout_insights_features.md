@@ -1,92 +1,117 @@
-# Feature Rollout & Release Control — Feature Map
+﻿# Superadmin Features Rollout Insights â€” Feature Map
 
 ## Module Purpose
-This Superadmin-only feature gives platform operators a focused workspace for feature rollout & release control. It exists at `/superadmin/features` and is intentionally limited to platform-level tenant/SaaS operations; gym-staff daily operations are outside this boundary. The V1 layer keeps the UI backend-ready by flowing server data through its module API, Zod contract, module-owned MSW fixture/handler, and TanStack Query hook.
+The features_rollout_insights module is responsible for the Superadmin business workflow managing Features_rollout_insights. It enables superadmins to view, monitor, and control the lifecycle and configurations of Features_rollout_insights across all SaaS tenants. All related business behavior, API contracts, validation, server-state hooks, fixtures, and MSW handlers are strictly isolated within this feature boundary to prevent cross-tenant or cross-module leakage.
 
 ## Directory Structure
+
 | Folder | Responsibility | Key Files |
 |---|---|---|
-| `features/` | Owns this Superadmin route and all feature-specific artifacts. | `page.tsx`, `loading.tsx`, `error.tsx`, `SuperadminFeaturesV1Client.tsx` |
-| `features_api/` | Calls the feature endpoint and validates the response data. | API service for `GET /api/superadmin/features/rollout-insights` |
-| `features_types/` | Owns the response data contract and runtime validation. | V1 type/schema file |
-| `features_mocks/handlers/` | Intercepts the V1 endpoint in frontend-first development. | V1 MSW handler |
-| `features_mocks/fixtures/` | Owns realistic V1 server-like data. | V1 mock fixture |
-| `features_utils/` | Orchestrates TanStack Query for this feature. | `useSuperadminFeaturesV1.ts` |
+| `features_api/` | Feature-owned responsibility for features api. | `SuperadminFeaturesApi.ts`, `SuperadminFeaturesRolloutInsightsApi.ts` |
+| `features_mocks/` | Feature-owned responsibility for features mocks. | `(directory present; no direct files)` |
+| `features_tests/` | Feature-owned responsibility for features tests. | `SuperadminFeaturesBasic.test.tsx`, `SuperadminFeaturesRolloutInsights.test.ts` |
+| `features_types/` | Feature-owned responsibility for features types. | `SuperadminFeatureHistoryModalTypes.ts`, `SuperadminFeaturesMutationTypes.ts`, `SuperadminFeaturesTypes.ts`, `SuperadminFeaturesUiTypes.ts`, `SuperadminFeaturesV1Types.ts` |
+| `features_utils/` | Feature-owned responsibility for features utils. | `useSuperadminFeatureHistory.ts`, `useSuperadminFeatureRolloutData.ts`, `useSuperadminFeaturesData.ts`, `useSuperadminFeaturesV1.ts` |
+
+## Approved External Dependencies
+
+### Application Infrastructure
+- `@/app/superadmin/superadmin_components` â€” role-shell/generic interaction infrastructure only.
+- `@/lib/*` and `@/components/*` â€” only approved application infrastructure imported by this feature.
+
+### Business Feature Dependencies
+- None
+
+### Role-Level Business Dependencies
+- None
 
 ## Feature Inventory
-| Feature | Route | What the User Can Do | Main API Calls | Status |
+
+| Surface | Route | Implemented User Actions | API Boundary | Status |
 |---|---|---|---|---|
-| Feature Rollout & Release Control | `/superadmin/features` | rollout control, platform release log, rollback readiness. | `GET /api/superadmin/features/rollout-insights` | ✅ V1 mocked and rendered |
+| Superadmin Features Rollout Insights | `/superadmin/features` | save; save rollout; show flags tab; show notes tab; submit; toggle | `SuperadminFeaturesApi.ts`, `SuperadminFeaturesRolloutInsightsApi.ts` | Source-verified; host runtime pending |
 
 ## User Flows & Interactions
-1. Superadmin opens `/superadmin/features` and the client view requests the feature payload through `useSuperadminFeaturesV1.ts`.
-2. TanStack Query receives the module API response and renders the documented panels, metrics, comparisons, charts, tables, and/or alerts.
-3. The module fixture supplies realistic values for the visible UI while the backend is unavailable.
-4. A request failure stays inside the module and exposes a user-safe Retry action rather than a raw backend error.
+
+1. Open the /superadmin/features_rollout_insights route to load the Features_rollout_insights data context securely via TanStack Query.
+2. Interact with the Features_rollout_insights dashboard using available search, filter, and pagination controls.
+3. Execute module-specific CRUD or business mutations (like updating Features_rollout_insights status) through feature-owned API contracts.
+4. All mutations trigger optimistic updates or immediate invalidation to reconcile success/error states on the same client surface.
+
+## Verification Notes
+- Active route pages mount one primary client tree; no `V1Client` import is mounted from route `page.tsx`.
+- Mutable mock-state handlers have reset functions covered by tests where present.
+- Deprecated marker-only and JSON-stringify tautology tests were removed from the module test tree.
+- Dependency-backed `tsc`, lint, Vitest runtime, Playwright, and real browser responsive execution require the host application environment and remain unverified here.
 
 ## Data and State Architecture
-- **Server state:** TanStack Query; no API response data is stored in Zustand or React Context.
-- **UI state:** local component state only where the feature has private display state; shared UI state stays module-scoped if added later.
-- **Query key:** feature hook owns a Superadmin-namespaced query key.
-- **Mock ownership:** fixture and MSW handler both remain inside `features/`.
+
+- **Actual feature root:** `features`
+- **Server state:** TanStack Query `useQuery` detected.
+- **Zustand stores:** None detected.
+- **Context files:** None detected.
+- **Custom hooks:** `features_utils/useSuperadminFeaturesV1.ts`, `features_utils/useSuperadminFeatureRolloutData.ts`, `features_utils/useSuperadminFeatureHistory.ts`, `features_utils/useSuperadminFeaturesData.ts`
+- **URL state:** No `useUrlState` detected.
+- **Observed query keys:** `['superadmin', 'features_rollout_insights']`, `['superadmin', 'features', 'tenants']`, `['superadmin', 'features', 'history', flagId]`
 
 ## API Contract
-All calls use the global transport `@/lib/api` and the feature URL config.
 
-| Function | Method | Endpoint | Request | Response `data` type |
-|---|---|---|---|---|
-| `fetchFeatureRolloutInsights` | GET | `GET /api/superadmin/features/rollout-insights` | None in V1 | Module V1 data schema |
+- **API files:** `features_api/SuperadminFeaturesRolloutInsightsApi.ts`, `features_api/SuperadminFeaturesApi.ts`
+- **Detected API symbols:** `fetchFeatureRolloutInsights` — `features_api/SuperadminFeaturesRolloutInsightsApi.ts`; `fetchTenants` — `features_api/SuperadminFeaturesApi.ts`; `fetchFeatures` — `features_api/SuperadminFeaturesApi.ts`; `fetchFeatureFlagHistory` — `features_api/SuperadminFeaturesApi.ts`; `createFeatureFlag` — `features_api/SuperadminFeaturesApi.ts`; `updateFeatureFlag` — `features_api/SuperadminFeaturesApi.ts`; `activateFeatureFlag` — `features_api/SuperadminFeaturesApi.ts`; `suspendFeatureFlag` — `features_api/SuperadminFeaturesApi.ts`; `deleteFeatureFlag` — `features_api/SuperadminFeaturesApi.ts`; `createReleaseNote` — `features_api/SuperadminFeaturesApi.ts`; `updateReleaseNote` — `features_api/SuperadminFeaturesApi.ts`; `deleteReleaseNote` — `features_api/SuperadminFeaturesApi.ts`
+- **Runtime response validation:** Zod usage detected.
 
-The V1 handler returns the canonical flat `ApiResponse<T>` payload. Response data is validated at the API boundary using the module-owned Zod schema.
+No API field/method is invented where static source did not expose it; missing runtime confirmation remains `NOT VERIFIED`.
 
 ## UI Data Requirements
-| UI Data | Source | Validation/Mock Ownership |
-|---|---|---|
-| `data.rollouts` | GET /api/superadmin/features/rollout-insights | Module-owned Zod contract + MSW fixture |
-| `data.feature` | GET /api/superadmin/features/rollout-insights | Module-owned Zod contract + MSW fixture |
-| `data.rollout` | GET /api/superadmin/features/rollout-insights | Module-owned Zod contract + MSW fixture |
-| `data.target` | GET /api/superadmin/features/rollout-insights | Module-owned Zod contract + MSW fixture |
-| `data.status` | GET /api/superadmin/features/rollout-insights | Module-owned Zod contract + MSW fixture |
-| `data.health` | GET /api/superadmin/features/rollout-insights | Module-owned Zod contract + MSW fixture |
-| `data.releases` | GET /api/superadmin/features/rollout-insights | Module-owned Zod contract + MSW fixture |
-| `data.version` | GET /api/superadmin/features/rollout-insights | Module-owned Zod contract + MSW fixture |
-| `data.date` | GET /api/superadmin/features/rollout-insights | Module-owned Zod contract + MSW fixture |
-| `data.summary` | GET /api/superadmin/features/rollout-insights | Module-owned Zod contract + MSW fixture |
-| `data.impact` | GET /api/superadmin/features/rollout-insights | Module-owned Zod contract + MSW fixture |
-| `data.rollback` | GET /api/superadmin/features/rollout-insights | Module-owned Zod contract + MSW fixture |
-| `data.lastRollback` | GET /api/superadmin/features/rollout-insights | Module-owned Zod contract + MSW fixture |
-| `data.lastHealthy` | GET /api/superadmin/features/rollout-insights | Module-owned Zod contract + MSW fixture |
-| `data.message` | GET /api/superadmin/features/rollout-insights | Module-owned Zod contract + MSW fixture |
-| `data.success` | GET /api/superadmin/features/rollout-insights | Module-owned Zod contract + MSW fixture |
 
-The consuming component is the source for the exact rendered sub-fields. V1 business values are not embedded in JSX.
+- **Data-bearing components:** `page.tsx`, `features_components/SuperadminFeaturesTierMatrix.tsx`, `features_components/SuperadminFeaturesV1ReleaseAndRollbackSection.tsx`, `features_components/SuperadminFeaturesV1RolloutControlPanel.tsx`, `features_components/SuperadminFeatureRolloutModal.tsx`, `features_components/SuperadminFeaturesClient.tsx`, `features_components/SuperadminFeatureHistoryModal.tsx`
+- **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
+- **Approved date/time evidence:** No `date-fns`/`dayjs` usage detected.
+- **Forms detected:** 1
+
+Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
 
 ## Permissions and Security
-- **Required role:** `SUPERADMIN`, with backend authorization remaining authoritative.
-- **Cross-role isolation:** no Admin, Manager, Trainer, or other business-role implementation is imported.
-- **Financial/destructive controls:** any future mutation must use the existing Superadmin confirmation contract and authoritative backend response.
-- **Sensitive data:** user-facing identifiers and long dynamic text must follow the existing Superadmin masking/truncation rules.
+
+- **Permission symbols detected:** No explicit module permission symbols detected.
+- **Destructive-confirmation evidence:** `useConfirm` detected.
+- **Mutation boundary:** TanStack Query `useMutation` is used for async mutations; loading comes from mutation state.
+- **Cross-feature dependency rule:** no sibling business feature imports are permitted unless explicitly documented as approved infrastructure.
 
 ## Loading, Empty, and Error States
-- **Loading:** route `loading.tsx` or V1 client structural skeleton mirrors the major content blocks rather than using a full-page spinner.
-- **Error:** route `error.tsx` and/or V1 client retry state shows a concise user-safe explanation and Retry action.
-- **Empty:** entity/list sections use the module's existing empty-state pattern where applicable.
 
-## Edge Cases and AI Warnings
-- **Do not hardcode server records in JSX:** all business data belongs to the API contract and module-owned fixture.
-- **Do not import sibling business logic:** duplicate small domain contracts locally rather than creating cross-module coupling.
-- **Do not bypass the module API:** UI must not read fixtures directly.
-- **Keep response shape flat:** V1 handlers return `ApiResponse<T>` with the V1 data object directly under `data`.
-- **Keep user-facing terms simple:** technical SaaS abbreviations should remain internal; display plain labels such as `Monthly income`, `Gym retention`, and `Income lost`.
-- **Keep documentation fresh:** update this feature map when the route, endpoint, UI fields, or flow changes.
+- **`loading.tsx`:** `loading.tsx`
+- **`error.tsx`:** `error.tsx`
+- **Empty-state components:** None detected.
+- Source inspection alone does not prove browser runtime behavior; retry/focus/animation behavior remains `NOT VERIFIED` until the host app is executed.
 
 ## Component Responsibility Map
-| Component | Responsibility |
-|---|---|
-| `SuperadminFeaturesV1Client.tsx` | Renders the Superadmin-only feature view and consumes the query state. |
-| `useSuperadminFeaturesV1.ts` | Owns TanStack Query orchestration and exposes server state without JSX. |
 
-## External Infrastructure Dependencies
-- `@/lib/api` — global API transport.
-- `@/lib/formatters` — centralized numeric/date/currency formatting where needed.
-- Existing Superadmin shared presentation primitives and authentication infrastructure.
+| Component File | Responsibility evidence |
+|---|---|
+| `page.tsx` | Pure Server Component for the features page. Renders the interactive client component. |
+| `features_components/SuperadminFeaturesTierMatrix.tsx` | Renders the documented SaaS-tier availability matrix as a read-only configuration view. It performs no mutations. |
+| `features_components/SuperadminFeaturesV1ReleaseAndRollbackSection.tsx` | Renders the Superadmin features V1 Platform release log, Rollback readiness view. |
+| `features_components/SuperadminFeaturesV1RolloutControlPanel.tsx` | Renders the Superadmin features V1 Rollout control view. |
+| `features_components/SuperadminFeatureRolloutModal.tsx` | Renders the SuperadminFeatureRolloutModal and delegates canary tenant selection persistence to the feature mutation boundary. |
+| `features_components/SuperadminFeaturesClient.tsx` | Renders the Product Management page — feature flag toggles and release note publishing. |
+| `features_components/SuperadminFeatureHistoryModal.tsx` | Renders one feature flag's change history from the feature-owned API/query boundary. |
+
+## Repository-Verified Repair Notes
+
+This addendum is generated from the current source tree and exists to make future AI context self-contained. It records actual source evidence and explicitly leaves unavailable runtime facts as `NOT VERIFIED`.
+
+
+## Edge Cases and AI Warnings
+- **Strict Isolation**: Never import admin or manager components into features_rollout_insights.
+- **Destructive Actions**: Any deletion or modification of features_rollout_insights records must use the Superadmin confirmation provider.
+- **Data Leakage**: Ensure API payloads for features_rollout_insights do not expose cross-tenant sensitive data.
+
+## Rule Compliance Checklist
+- [x] Canonical feature-owned API/type directories are used.
+- [x] No active route page mounts a parallel `V1Client` tree.
+- [x] Module-owned mock reset coverage is present where mutable handlers exist.
+- [x] Feature docs contain a concrete directory map and compliance checklist.
+- [x] No marker-only or JSON-stringify tautology test remains.
+- [ ] Host dependency-backed build/lint/runtime verification â€” unavailable in source-only package.
+

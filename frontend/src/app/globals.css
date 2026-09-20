@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @plugin "@tailwindcss/typography";
+@source not "**/*.md";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -39,12 +40,26 @@
   --color-skeleton-base: var(--skeleton-base);
   --color-skeleton-highlight: var(--skeleton-highlight);
 
-  /* Surface elevation tokens (Design System §28) */
+  --color-on-primary: var(--text-on-primary);
+  --color-on-danger: var(--text-on-danger);
+  --color-on-success: var(--text-on-success);
+  --color-on-info: var(--text-on-info);
+  
+  --color-surface-hover: var(--surface-hover);
+  --color-surface-highlight: var(--surface-highlight);
+  --color-surface-zebra: var(--surface-zebra);
+
+  --shadow-card: var(--shadow-card);
+  --shadow-popover: var(--shadow-popover);
+  --shadow-dialog: var(--shadow-dialog);
+  --shadow-toast: var(--shadow-toast);
+
+  /* Surface elevation tokens (Design System 28) */
   --color-floating: var(--bg-floating);
   --color-overlay: var(--bg-overlay);
   --color-popover: var(--bg-popover);
 
-  /* Payment mode tokens (Design System §1) */
+  /* Payment mode tokens (Design System 1) */
   --color-pay-cash: var(--pay-cash);
   --color-pay-cash-bg: var(--pay-cash-bg);
   --color-pay-upi: var(--pay-upi);
@@ -54,14 +69,14 @@
   --color-pay-bank: var(--pay-bank);
   --color-pay-bank-bg: var(--pay-bank-bg);
 
-  /* Border radius scale (Design System §1) */
+  /* Border radius scale (Design System 1) */
   --radius-sm: var(--border-radius-sm);
   --radius-md: var(--border-radius-md);
   --radius-lg: var(--border-radius-lg);
   --radius-xl: var(--border-radius-xl);
   --radius-full: var(--border-radius-full);
 
-  /* Motion token scale (Design System §27) */
+  /* Motion token scale (Design System 27) */
   --duration-fast: 150ms;
   --duration-base: 200ms;
   --duration-slow: 300ms;
@@ -73,41 +88,66 @@
 }
 
 :root {
+  /* Layout & Geometry Tokens */
+  --layout-header-height: 64px;
+  --layout-sidebar-width: 240px;
+  --layout-sidebar-width-collapsed: 60px;
+  --layout-content-padding: 24px;
+  --control-height: 40px;
+  --table-row-height: 48px;
+  --table-row-height-compact: 32px;
+  --modal-width: 480px;
+  --drawer-width: 480px;
+  --touch-target-min: 44px;
+
+  /* Typography Sizes */
+  --font-size-page-title: 22px;
+  --font-size-section-title: 16px;
+  --font-size-label: 14px;
+  --font-size-kpi: 28px;
+  --font-size-table-header: 12px;
+  --font-size-body: 14px;
+  --font-size-caption: 12px;
+  --font-size-badge: 11px;
+
   /* LIGHT MODE VARIABLES (Championship Gold) */
-  --primary: #EAB308; /* yellow-500 (Gold) */
-  --primary-hover: #CA8A04; /* yellow-600 */
-  --primary-subtle: #FEF9C3; /* yellow-100 */
+  --primary: #FACC15;
+  --primary-hover: #EAB308;
+  --primary-subtle: #FEF9C3;
   
-  --bg-page: #F4F4F5; /* zinc-100 */
-  --bg-card: #FFFFFF; /* white */
-  --bg-sidebar: #FAFAFA; /* zinc-50 */
+  --bg-page: #F4F4F5;
+  --bg-card: #FFFFFF;
+  --bg-sidebar: #FAFAFA;
   --bg-header: #FFFFFF;
   --bg-input: #FFFFFF;
 
-  /* Surface elevation (Light Mode — elevation via shadow, Design System §28) */
   --bg-floating: #FFFFFF;
   --bg-overlay: #FAFAFA;
   --bg-popover: #F4F4F5;
   
-  --border: #E4E4E7; /* zinc-200 */
+  --border: #E4E4E7;
   --border-focus: #EAB308;
   
-  --text-primary: #000000; /* true black */
-  --text-secondary: #52525B; /* zinc-600 */
-  --text-disabled: #A1A1AA; /* zinc-400 */
+  --text-primary: #000000;
+  --text-secondary: #52525B;
+  --text-disabled: #A1A1AA;
   
-  --success: #10B981;
+  --text-on-primary: #000000;
+  --text-on-danger: #FFFFFF;
+  --text-on-success: #FFFFFF;
+  --text-on-info: #FFFFFF;
+  
+  --success: #047857; /* Emerald 700 */
   --success-bg: #D1FAE5;
-  --warning: #F59E0B;
+  --warning: #B45309; /* Amber 700 */
   --warning-bg: #FEF3C7;
-  --danger: #EF4444;
+  --danger: #B91C1C; /* Red 700 */
   --danger-bg: #FEE2E2;
-  --info: #3B82F6;
+  --info: #1D4ED8; /* Blue 700 */
   --info-bg: #DBEAFE;
-  --purple: #8B5CF6;
+  --purple: #6D28D9; /* Violet 700 */
   --purple-bg: #EDE9FE;
 
-  /* Payment mode colors — Light Mode (Design System §1) */
   --pay-cash: #0F766E;
   --pay-cash-bg: #CCFBF1;
   --pay-upi: #0E7490;
@@ -124,50 +164,71 @@
   --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
 
-  /* Border radius scale (Design System §1) */
+  --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-popover: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-dialog: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-toast: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+
   --border-radius-sm: 4px;
   --border-radius-md: 8px;
   --border-radius-lg: 12px;
   --border-radius-xl: 16px;
   --border-radius-full: 999px;
+  
+  --chart-primary: #EAB308;
+  --chart-success: #10B981;
+  --chart-danger: #EF4444;
+  --chart-warning: #F59E0B;
+  --chart-info: #3B82F6;
+  --chart-secondary: #8B5CF6;
+  --chart-grid: rgba(0, 0, 0, 0.05);
+  --chart-tooltip-bg: #FFFFFF;
+
+  --surface-hover: rgba(234, 179, 8, 0.08);
+  --surface-highlight: rgba(234, 179, 8, 0.05);
+  --surface-zebra: #FAFAFA;
+  --overlay-backdrop: rgba(0, 0, 0, 0.6);
+  --focus-ring: #EAB308;
 }
 
 .dark {
-  /* DARK MODE VARIABLES (Luxury Premium Gold) */
-  --primary: #FACC15; /* Premium Gold (yellow-400) */
-  --primary-hover: #EAB308; /* yellow-500 */
-  --primary-subtle: rgba(250, 204, 21, 0.15); /* Soft Glow */
+  --primary: #FACC15;
+  --primary-hover: #EAB308;
+  --primary-subtle: rgba(250, 204, 21, 0.15);
   
-  --bg-page: #050505; /* Softened Black */
-  --bg-card: #111111; /* Elevated Dark */
+  --bg-page: #050505;
+  --bg-card: #111111;
   --bg-sidebar: #050505; 
   --bg-header: #111111; 
   --bg-input: #1A1A1A; 
 
-  /* Surface elevation (Dark Mode — elevation via lightness, Design System §28) */
   --bg-floating: #1A1A1A;
   --bg-overlay: #242424;
   --bg-popover: #2E2E2E;
   
-  --border: #27272A; /* zinc-800 */
+  --border: #27272A;
   --border-focus: #FACC15;
   
-  --text-primary: #FFFFFF; /* True White */
-  --text-secondary: #A1A1AA; /* zinc-400 */
-  --text-disabled: #52525B; /* zinc-600 */
+  --text-primary: #FFFFFF;
+  --text-secondary: #A1A1AA;
+  --text-disabled: #52525B;
   
-  --success: #22C55E; /* Stronger Fitness Green */
+  --text-on-primary: #000000;
+  --text-on-danger: #FFFFFF;
+  --text-on-success: #FFFFFF;
+  --text-on-info: #FFFFFF;
+  
+  --success: #22C55E;
   --success-bg: #064E3B;
-  --warning: #F59E0B; /* Amber */
+  --warning: #F59E0B;
   --warning-bg: #451A03;
-  --danger: #EF4444; /* Red */
+  --danger: #EF4444;
   --danger-bg: #450A0A;
   --info: #3B82F6;
   --info-bg: #1E3A5F;
   --purple: #C084FC;
   --purple-bg: #3B0764;
 
-  /* Payment mode colors — Dark Mode (Design System §1) */
   --pay-cash: #5EEAD4;
   --pay-cash-bg: #134E4A;
   --pay-upi: #67E8F9;
@@ -182,14 +243,33 @@
 
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.5);
   --shadow: 0 4px 12px 0 rgb(0 0 0 / 0.8);
-  --shadow-md: 0 8px 24px 0 rgba(250, 204, 21, 0.05); /* Very subtle gold ambient shadow */
+  --shadow-md: 0 8px 24px 0 rgba(250, 204, 21, 0.05);
 
-  /* Border radius scale (shared — same in both modes) */
+  --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.5);
+  --shadow-popover: 0 8px 24px 0 rgba(250, 204, 21, 0.05);
+  --shadow-dialog: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+  --shadow-toast: 0 10px 15px -3px rgba(0, 0, 0, 0.8);
+
   --border-radius-sm: 4px;
   --border-radius-md: 8px;
   --border-radius-lg: 12px;
   --border-radius-xl: 16px;
   --border-radius-full: 999px;
+  
+  --chart-primary: #FACC15;
+  --chart-success: #22C55E;
+  --chart-danger: #EF4444;
+  --chart-warning: #F59E0B;
+  --chart-info: #3B82F6;
+  --chart-secondary: #C084FC;
+  --chart-grid: rgba(255, 255, 255, 0.05);
+  --chart-tooltip-bg: #111111;
+
+  --surface-hover: rgba(250, 204, 21, 0.08);
+  --surface-highlight: rgba(250, 204, 21, 0.05);
+  --surface-zebra: #141414;
+  --overlay-backdrop: rgba(0, 0, 0, 0.6);
+  --focus-ring: #FACC15;
 }
 
 @layer base {
@@ -199,7 +279,6 @@
     background-color: var(--bg-page);
     color: var(--text-primary);
   }
-  /* Premium thin scrollbars (Design System §12 — 6px) */
   ::-webkit-scrollbar { width: 6px; height: 6px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
@@ -208,8 +287,6 @@
 
 html { scroll-behavior: smooth; }
 
-/* ── WCAG Motion Accessibility (Design System §27) ────────────────────────── */
-/* Disables all animation for users who have set prefers-reduced-motion in OS  */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;

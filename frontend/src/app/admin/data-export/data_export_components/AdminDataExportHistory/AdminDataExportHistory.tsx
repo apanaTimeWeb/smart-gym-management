@@ -1,17 +1,20 @@
 "use client";
+import { format } from 'date-fns';
+import { formatNumber } from '@/lib/formatters';
 // RESPONSIBILITY: Table showing export job history with server-side pagination, filter, and sortable headers.
 
-import { displayValue } from '@/app/admin/admin_utils/AdminDisplayValue';
+import { displayValue } from '@/app/admin/admin_layout/admin_utils/AdminDisplayValue';
 import { CheckCircle, ChevronsUpDown, ChevronDown, ChevronUp, Download, Loader2, Trash2, XCircle } from 'lucide-react';
 import { useAdminDataExportLogic } from '@/app/admin/data-export/data_export_context/useAdminDataExportLogic';
-import { AdminTableSkeleton } from '@/app/admin/admin_components/AdminShared/AdminTableSkeleton';
-import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
-import { AdminSearchableDropdown } from '@/app/admin/admin_components/AdminShared/AdminSearchableDropdown';
+import AdminTableSkeleton from '@/app/admin/admin_layout/AdminShared/AdminTableSkeleton';
+import AdminPagination from '@/app/admin/admin_layout/AdminShared/AdminPagination';
+import { AdminSearchableDropdown } from '@/app/admin/admin_layout/AdminShared/AdminSearchableDropdown/AdminSearchableDropdown';
 import { EXPORT_STATUS_OPTIONS } from '@/app/admin/data-export/data_export_utils/AdminDataExportSharedConstants';
 import type { DataExportSortDirection, DataExportSortKey, ExportJob, ExportStatus } from '@/app/admin/data-export/data_export_types/AdminDataExportTypes';
+import AdminDataExportEmptyState from '@/app/admin/data-export/data_export_components/AdminDataExportEmptyState/AdminDataExportEmptyState';
 
-const STATUS_STYLES: Record<string, string> = { completed: 'bg-success-bg text-success', processing: 'bg-warning-bg text-warning', failed: 'bg-danger-bg text-danger' };
-const STATUS_ICONS: Record<string, React.ReactNode> = { completed: <CheckCircle size={11} />, processing: <Loader2 size={11} className="motion-safe:animate-spin" />, failed: <XCircle size={11} /> };
+const STATUS_STYLES: Record<string, string> = { completed: 'bg-success text-on-success', processing: 'bg-warning-bg text-warning', failed: 'bg-danger text-on-danger' };
+const STATUS_ICONS: Record<string, React.ReactNode> = { completed: <CheckCircle size={11} />, processing: <Loader2 size={11} className="motion-safe:animate-spin motion-safe:duration-base" />, failed: <XCircle size={11} /> };
 const DATA_TYPE_LABELS: Record<string, string> = { members: 'Members', payments: 'Payments', attendance: 'Attendance', staff: 'Staff', full_report: 'Full Report' };
 const HEADERS: ReadonlyArray<{ key: DataExportSortKey | 'actions'; label: string; sortable: boolean }> = [
   { key: 'dataType', label: 'Data Type', sortable: true }, { key: 'format', label: 'Format', sortable: true }, { key: 'dateFrom', label: 'Gyms / Date', sortable: true },
@@ -38,14 +41,14 @@ export default function AdminDataExportHistory() {
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between flex-wrap gap-3">
-        <p className="text-sm font-semibold text-foreground">Export History</p>
+        <p className="text-sm font-semibold text-primary">Export History</p>
         <div className="w-44"><AdminSearchableDropdown options={EXPORT_STATUS_OPTIONS} value={logic.statusFilter} onChange={(val) => { if (val === 'all' || val === 'completed' || val === 'processing' || val === 'failed') logic.setStatusFilter(val as ExportStatus | 'all'); }} placeholder="All Status" /></div>
       </div>
       {logic.status === 'pending' ? <AdminTableSkeleton rows={5} cols={HEADERS.length} /> : (
         <div className="bg-card rounded-xl border border-border overflow-hidden">
           <div className="overflow-x-auto">
             <table data-admin-responsive-table className="w-full">
-              <thead><tr className="bg-primary/5 border-b border-border">
+              <thead><tr className="bg-surface-highlight border-b border-border">
                 {HEADERS.map((header) => (
                   <th role="button" tabIndex={0} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); event.currentTarget.click(); } }}  key={header.key} className={`px-4 py-3 text-left text-xs font-semibold text-secondary uppercase tracking-wider whitespace-nowrap ${header.sortable ? 'cursor-pointer' : ''}`} onClick={() => header.sortable && logic.onSort(header.key as DataExportSortKey)}>
                     <div className="flex items-center gap-1.5">{header.label}{header.sortable && getSortIcon(header.key as DataExportSortKey, logic.sortKey, logic.sortDir)}</div>
@@ -53,18 +56,18 @@ export default function AdminDataExportHistory() {
                 ))}
               </tr></thead>
               <tbody className="divide-y divide-border">
-                {logic.jobs.length === 0 ? <tr><td colSpan={HEADERS.length} className="px-4 py-16 text-center text-sm text-secondary">No export jobs found for the current filters.</td></tr> : logic.jobs.map((job) => (
-                  <tr key={job.id} className="hover:bg-primary/5 motion-safe:transition-colors group">
-                    <td className="px-4 py-3 text-sm font-medium text-foreground">{DATA_TYPE_LABELS[job.dataType] ?? job.dataType}</td>
+                {logic.jobs.length === 0 ? <tr><td colSpan={HEADERS.length}><AdminDataExportEmptyState /></td></tr> : logic.jobs.map((job) => (
+                  <tr key={job.id} className="hover:bg-surface-highlight motion-safe:transition-colors group motion-safe:duration-base">
+                    <td className="px-4 py-3 text-sm font-medium text-primary">{DATA_TYPE_LABELS[job.dataType] ?? job.dataType}</td>
                     <td className="px-4 py-3 text-sm text-secondary uppercase">{job.format}</td>
                     <td className="px-4 py-3 text-xs text-secondary whitespace-nowrap"><span className="block max-w-36 truncate">{job.gymNames.join(', ')}</span><span>{job.dateFrom} → {job.dateTo}</span></td>
-                    <td className="px-4 py-3 text-sm text-foreground">{displayValue(job.rowCount?.toLocaleString('en-IN'))}</td>
+                    <td className="px-4 py-3 text-sm text-primary">{displayValue(job.rowCount !== undefined ? formatNumber(job.rowCount) : undefined)}</td>
                     <td className="px-4 py-3 text-sm text-secondary">{job.fileSizeKb !== undefined ? `${job.fileSizeKb} KB` : '—'}</td>
                     <td className="px-4 py-3"><span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold capitalize ${STATUS_STYLES[job.status] ?? 'bg-input text-secondary'}`}>{STATUS_ICONS[job.status]}{job.status}</span></td>
-                    <td className="px-4 py-3 text-xs text-secondary whitespace-nowrap">{new Date(job.createdAt).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })}</td>
+                    <td className="px-4 py-3 text-xs text-secondary whitespace-nowrap">{format(new Date(job.createdAt), 'dd MMM yyyy, hh:mm a')}</td>
                     <td className="px-4 py-3"><div className="flex items-center gap-1">
-                      {job.status === 'completed' && <button onClick={(event) => { event.stopPropagation(); downloadExport(job); }} className="p-1.5 rounded-lg hover:bg-input text-secondary hover:text-primary motion-safe:transition-colors" aria-label="Download export" title="Download export"><Download size={15} /></button>}
-                      <button onClick={(event) => { event.stopPropagation(); logic.deleteJob(job.id); }} className="p-1.5 rounded-lg hover:bg-danger-bg text-secondary hover:text-danger motion-safe:transition-colors" aria-label="Delete export job" title="Delete export"><Trash2 size={15} /></button>
+                      {job.status === 'completed' && <button onClick={(event) => { event.stopPropagation(); downloadExport(job); }} className="min-h-11 min-w-11 p-1.5 rounded-lg hover:bg-input text-secondary hover:text-primary motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page" aria-label="Download export" title="Download export"><Download size={15} /></button>}
+                      <button onClick={(event) => { event.stopPropagation(); logic.deleteJob(job.id); }} className="min-h-11 min-w-11 p-1.5 rounded-lg hover:bg-danger-bg text-secondary hover:text-danger motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page" aria-label="Delete export job" title="Delete export"><Trash2 size={15} /></button>
                     </div></td>
                   </tr>
                 ))}

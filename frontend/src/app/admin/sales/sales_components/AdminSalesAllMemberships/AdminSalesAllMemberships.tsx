@@ -1,14 +1,15 @@
 "use client";
+import { format } from 'date-fns';
 import { formatCurrency } from '@/lib/formatters';
 import type { MembershipFilter } from '@/app/admin/sales/sales_types/AdminSalesAllMembershipsTypes';
 // RESPONSIBILITY: Renders the paginated, filterable table of all gym memberships. KPI cards (Rule 74) double as interactive filters. Receives data via SalesContext. No API calls.
 
 import { useState, useMemo } from 'react';
 import { useAdminSalesLogic } from '@/app/admin/sales/sales_context/useAdminSalesLogic';
-import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
+import AdminPagination from '@/app/admin/admin_layout/AdminShared/AdminPagination';
 import AdminSalesEmptyState from '@/app/admin/sales/sales_components/AdminSalesEmptyState/AdminSalesEmptyState';
 import type { Member } from '@/app/admin/sales/sales_types/AdminSalesTypes';
-import { ADMIN_ITEMS_PER_PAGE } from '@/app/admin/admin_url_config';
+const SALES_ITEMS_PER_PAGE = 10;
 import { Users, CheckCircle, AlertTriangle, XCircle } from 'lucide-react';
 
 
@@ -52,24 +53,24 @@ export default function AdminSalesAllMemberships() {
     return allMemberships.filter(m => getMembershipFilter(m) === activeFilter);
   }, [allMemberships, activeFilter]);
 
-  const totalPages = Math.ceil((activeFilter === 'All' ? allMembershipsTotal : filtered.length) / ADMIN_ITEMS_PER_PAGE) || 1;
+  const totalPages = Math.ceil((activeFilter === 'All' ? allMembershipsTotal : filtered.length) / SALES_ITEMS_PER_PAGE) || 1;
 
   const kpiCards = [
-    { filter: 'All' as MembershipFilter, label: 'Total Members', count: counts.All, icon: Users, color: 'text-primary', bg: 'bg-primary/10', activeBorder: 'border-primary' },
-    { filter: 'Active' as MembershipFilter, label: 'Active', count: counts.Active, icon: CheckCircle, color: 'text-success', bg: 'bg-success/10', activeBorder: 'border-success' },
-    { filter: 'Expiring Soon' as MembershipFilter, label: 'Expiring Soon', count: counts['Expiring Soon'], icon: AlertTriangle, color: 'text-warning', bg: 'bg-warning/10', activeBorder: 'border-warning' },
-    { filter: 'Expired' as MembershipFilter, label: 'Expired', count: counts.Expired, icon: XCircle, color: 'text-danger', bg: 'bg-danger/10', activeBorder: 'border-danger' },
+    { filter: 'All' as MembershipFilter, label: 'Total Members', count: counts.All, icon: Users, color: 'text-primary', bg: 'bg-primary-subtle', activeBorder: 'border-primary' },
+    { filter: 'Active' as MembershipFilter, label: 'Active', count: counts.Active, icon: CheckCircle, color: 'text-success', bg: 'bg-success-bg', activeBorder: 'border-success' },
+    { filter: 'Expiring Soon' as MembershipFilter, label: 'Expiring Soon', count: counts['Expiring Soon'], icon: AlertTriangle, color: 'text-warning', bg: 'bg-warning-bg', activeBorder: 'border-warning' },
+    { filter: 'Expired' as MembershipFilter, label: 'Expired', count: counts.Expired, icon: XCircle, color: 'text-danger', bg: 'bg-danger-bg', activeBorder: 'border-danger' },
   ];
 
   if (status === 'pending') {
     return (
       <div className="space-y-4">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          {["row-1", "row-2", "row-3", "row-4"].map(i => <div key={i} className="motion-safe:animate-pulse h-20 bg-input rounded-xl border border-border" />)}
+          {["row-1", "row-2", "row-3", "row-4"].map(i => <div key={`sales-membership-skeleton-${i}`} className="motion-safe:animate-pulse h-20 bg-input rounded-xl border border-border motion-safe:duration-base" />)}
         </div>
         <div className="space-y-2">
           {[...Array(6)].map((_, i) => (
-            <div key={i} className="motion-safe:animate-pulse h-12 bg-card rounded border border-border" />
+            <div key={`sales-membership-skeleton-${i}`} className="motion-safe:animate-pulse h-12 bg-card rounded border border-border motion-safe:duration-base" />
           ))}
         </div>
       </div>
@@ -84,10 +85,10 @@ export default function AdminSalesAllMemberships() {
           <button
             key={filter}
             onClick={() => { setActiveFilter(filter);  }}
-            className={`text-left p-4 rounded-xl border-2 motion-safe:transition-all motion-safe:duration-200 bg-card hover:shadow-md ${
+            className={`focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page text-left p-4 rounded-xl border-2 motion-safe:transition-all motion-safe:duration-base bg-card hover:shadow-card ${
               activeFilter === filter
-                ? `${activeBorder} shadow-sm`
-                : 'border-border hover:border-border/80'
+                ? `${activeBorder} shadow-card`
+                : 'border-border hover:border-border'
             }`}
           >
             <div className="flex items-center gap-2 mb-2">
@@ -96,7 +97,7 @@ export default function AdminSalesAllMemberships() {
               </div>
               <span className="text-xs font-medium text-secondary">{label}</span>
             </div>
-            <div className={`text-2xl font-bold ${activeFilter === filter ? color : 'text-foreground'}`}>
+            <div className={`text-2xl font-bold ${activeFilter === filter ? color : 'text-primary'}`}>
               {count}
             </div>
           </button>
@@ -119,21 +120,21 @@ export default function AdminSalesAllMemberships() {
             {filtered.map((r: Member) => {
               const daysLeft = getDaysLeft(r.expiryDate);
               return (
-                <tr key={r.id} className="hover:bg-primary/5 motion-safe:transition-colors bg-card">
-                  <td className="px-4 py-3 text-sm font-medium text-foreground">{r.name}</td>
+                <tr key={r.id} className="hover:bg-surface-highlight motion-safe:transition-colors bg-card motion-safe:duration-base">
+                  <td className="px-4 py-3 text-sm font-medium text-primary">{r.name}</td>
                   <td className="px-4 py-3 text-sm text-secondary">{r.plan?.name ?? `Plan #${r.planId}`}</td>
-                  <td className="px-4 py-3 text-sm text-secondary">{new Date(r.joinDate).toLocaleDateString('en-IN')}</td>
-                  <td className="px-4 py-3 text-sm text-secondary">{new Date(r.expiryDate).toLocaleDateString('en-IN')}</td>
+                  <td className="px-4 py-3 text-sm text-secondary">{format(new Date(r.joinDate), 'dd MMM yyyy')}</td>
+                  <td className="px-4 py-3 text-sm text-secondary">{format(new Date(r.expiryDate), 'dd MMM yyyy')}</td>
                   <td className="px-4 py-3">
                     <span className={`text-xs px-2.5 py-0.5 rounded-full font-semibold ${
                       r.status?.toUpperCase() === 'ACTIVE'
-                        ? 'bg-success-bg text-success'
-                        : 'bg-danger-bg text-danger'
+                        ? 'bg-success text-on-success'
+                        : 'bg-danger text-on-danger'
                     }`}>
                       {r.status}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-sm font-medium text-foreground">{formatCurrency(r.paidAmount || 0)}</td>
+                  <td className="px-4 py-3 text-sm font-medium text-primary">{formatCurrency(r.paidAmount || 0)}</td>
                   <td className={`px-4 py-3 text-sm font-medium ${getDaysLeftColorClass(daysLeft)}`}>
                     {daysLeft <= 0 ? 'Expired' : `${daysLeft}d`}
                   </td>

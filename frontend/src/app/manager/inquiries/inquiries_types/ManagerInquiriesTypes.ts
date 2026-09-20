@@ -1,19 +1,21 @@
 // RESPONSIBILITY: Defines all TypeScript types and interfaces for the Inquiries module.
 
-import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
-import type { MessageType, ManagerMessageRecipient } from '@/app/manager/manager_components/ManagerFeedback/ManagerMessageModal';
-import type { InquiryFormValues } from '@/app/manager/inquiries/inquiries_utils/ManagerInquiriesSharedConstants';
+import type { InquiryFormValues } from '@/app/manager/inquiries/inquiries_types/ManagerInquiriesFormTypes';
+import type { ManagerInquiriesMessageType, ManagerInquiriesMessageRecipient } from '@/app/manager/inquiries/inquiries_types/ManagerInquiriesMessageTypes';
+import type { ManagerToastType } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerToastTypes';
 import type { ApiResponse } from '@/lib/api';
 
-export interface InquiriesContextType {
+
+export interface ManagerInquiriesViewModel {
   // Query Data
   inquiries: Inquiry[];
   stats: InquiryStats | null;
-  isLoading: boolean;
+  isPending: boolean;
   isError: boolean;
+  errorMessage: string;
   totalInquiries: number;
-  toast: { message: string; type: ToastType } | null;
-  showToast: (msg: string, t: ToastType) => void;
+  toast: { message: string; type: ManagerToastType } | null;
+  showToast: (msg: string, t: ManagerToastType) => void;
   hideToast: () => void;
 
   search: string;
@@ -47,13 +49,13 @@ export interface InquiriesContextType {
   updateStatus: (id: string, status: string) => Promise<void>;
 
   // Message Modal State
-  msgModal: { open: boolean; recipient: ManagerMessageRecipient; type: MessageType; message: string; subject?: string } | null;
-  openMsg: (inq: Inquiry, type: MessageType) => void;
+  msgModal: { open: boolean; recipient: ManagerInquiriesMessageRecipient; type: ManagerInquiriesMessageType; message: string; subject?: string } | null;
+  openMsg: (inq: Inquiry, type: ManagerInquiriesMessageType) => void;
   closeMsg: () => void;
 
   // Bulk Message Modal State
-  bulkMsgModal: { open: boolean; type: MessageType; recipients: ManagerMessageRecipient[] } | null;
-  openBulkMsg: (type: MessageType) => void;
+  bulkMsgModal: { open: boolean; type: ManagerInquiriesMessageType; recipients: ManagerInquiriesMessageRecipient[] } | null;
+  openBulkMsg: (type: ManagerInquiriesMessageType) => void;
   closeBulkMsg: () => void;
 
   convertLead: Inquiry | null;

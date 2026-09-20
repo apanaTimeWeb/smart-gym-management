@@ -1,18 +1,18 @@
 "use client";
 // RESPONSIBILITY: Renders the read-only paginated attendance records table with status badges and duration.
 
-import { displayValue } from '@/app/admin/admin_utils/AdminDisplayValue';
-import { maskSensitiveData } from '@/app/admin/admin_utils/AdminMaskSensitiveData';
+import { displayValue } from '@/app/admin/admin_layout/admin_utils/AdminDisplayValue';
+import { maskSensitiveData } from '@/app/admin/admin_layout/admin_utils/AdminMaskSensitiveData';
 import { useAdminAttendanceLogic } from '@/app/admin/attendance/attendance_context/useAdminAttendanceLogic';
 import { useAdminAttendanceStore } from '@/app/admin/attendance/attendance_store/useAdminAttendanceStore';
 import AdminAttendanceEmptyState from '@/app/admin/attendance/attendance_components/AdminAttendanceEmptyState/AdminAttendanceEmptyState';
-import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
+import AdminPagination from '@/app/admin/admin_layout/AdminShared/AdminPagination';
 import { ATTENDANCE_TABLE_HEADERS, ATTENDANCE_ITEMS_PER_PAGE, computeDuration } from '@/app/admin/attendance/attendance_utils/AdminAttendanceSharedConstants';
 
 const STATUS_STYLES: Record<string, string> = {
-  present: 'bg-success/10 text-success',
-  late:    'bg-warning/10 text-warning',
-  absent:  'bg-danger/10  text-danger',
+  present: 'bg-success text-on-success',
+  late:    'bg-warning-bg text-warning',
+  absent:  'bg-danger  text-on-danger',
 };
 
 export default function AdminAttendanceTable() {
@@ -30,7 +30,7 @@ export default function AdminAttendanceTable() {
       <div className="overflow-x-auto">
         <table data-admin-responsive-table className="w-full text-left border-collapse">
           <thead>
-            <tr className="bg-primary/5 border-b border-border">
+            <tr className="bg-surface-highlight border-b border-border">
               {ATTENDANCE_TABLE_HEADERS.map((h) => (
                 <th
                   key={h}
@@ -43,14 +43,14 @@ export default function AdminAttendanceTable() {
           </thead>
           <tbody className="divide-y divide-border">
             {records.map((r) => (
-              <tr key={r.id} className="hover:bg-primary/5 motion-safe:transition-colors">
+              <tr key={r.id} className="hover:bg-surface-highlight motion-safe:transition-colors motion-safe:duration-base">
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary text-xs font-bold flex-shrink-0">
+                    <div className="w-8 h-8 rounded-full bg-primary-subtle flex items-center justify-center text-primary text-xs font-bold flex-shrink-0">
                       {r.memberName.charAt(0).toUpperCase()}
                     </div>
                     <div>
-                      <p className="text-sm font-semibold text-foreground">{r.memberName}</p>
+                      <p className="text-sm font-semibold text-primary">{r.memberName}</p>
                       <p className="text-xs text-secondary">
                         {maskSensitiveData(r.memberPhone)}
                       </p>
@@ -58,23 +58,23 @@ export default function AdminAttendanceTable() {
                   </div>
                 </td>
                 <td className="px-4 py-3">
-                  <span className="text-sm text-foreground">{r.branchName}</span>
+                  <span className="text-sm text-primary">{r.branchName}</span>
                 </td>
                 <td className="px-4 py-3">
-                  <span className="text-sm text-foreground">{r.planName}</span>
+                  <span className="text-sm text-primary">{r.planName}</span>
                 </td>
                 <td className="px-4 py-3">
-                  <span className="text-sm text-foreground">
+                  <span className="text-sm text-primary">
                     {r.sessionType === 'PT' ? displayValue(r.trainerName) : '—'}
                   </span>
                 </td>
                 <td className="px-4 py-3">
-                  <span className="text-sm text-foreground whitespace-nowrap">
+                  <span className="text-sm text-primary whitespace-nowrap">
                     {displayValue(r.checkInTime)}
                   </span>
                 </td>
                 <td className="px-4 py-3">
-                  <span className="text-sm text-foreground whitespace-nowrap">
+                  <span className="text-sm text-primary whitespace-nowrap">
                     {displayValue(r.checkOutTime)}
                   </span>
                 </td>

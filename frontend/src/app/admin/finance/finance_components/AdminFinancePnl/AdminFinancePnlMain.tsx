@@ -23,14 +23,14 @@ export default function AdminFinancePnlMain() {
     toggleExpand,
     sortedData,
     aggregates,
-    isLoading,
+    isPending,
     isError,
   } = useAdminFinancePnlLogic();
 
   const periodLabel = PNL_PERIOD_OPTIONS.find((o) => o.value === period)?.label ?? 'This Month';
 
   return (
-    <div className="min-h-full pb-10 bg-background text-foreground">
+    <div className="min-h-full pb-10 bg-page text-primary">
 
       <div className="p-6 space-y-6">
 
@@ -40,7 +40,7 @@ export default function AdminFinancePnlMain() {
             period={period}
             onPeriodChange={setPeriod}
           />
-          {isLoading && <Loader2 size={18} className="motion-safe:animate-spin text-secondary" />}
+          {isPending && <Loader2 size={18} className="motion-safe:animate-spin text-secondary motion-safe:duration-base" />}
         </div>
 
         {/* KPI Cards */}
@@ -57,7 +57,7 @@ export default function AdminFinancePnlMain() {
         <div>
           <div className="flex items-center justify-between mb-3">
             <div>
-              <h2 className="text-base font-semibold text-foreground">Branch-wise Breakdown</h2>
+              <h2 className="text-base font-semibold text-primary">Branch-wise Breakdown</h2>
               <p className="text-xs text-secondary mt-0.5">
                 Click any row to expand revenue &amp; expense details. Click column headers to sort.
               </p>
@@ -65,7 +65,7 @@ export default function AdminFinancePnlMain() {
             {statusFilter !== 'ALL' && (
               <button
                 onClick={() => setStatusFilter('ALL')}
-                className="text-xs font-semibold text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded"
+                className="motion-safe:transition-all motion-safe:duration-base ease-in-out text-xs font-semibold text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded"
               >
                 Clear filter ×
               </button>

@@ -1,24 +1,27 @@
 "use client";
-import { formatCurrency } from '@/lib/formatters';
+import { format } from 'date-fns';
 // RESPONSIBILITY: Renders the list of members with pending payments, including skeleton loader, pagination, and overdue details. Receives data via SalesContext.
+import { formatCurrency, formatNumber} from '@/lib/formatters';
 
 import { useAdminSalesLogic } from '@/app/admin/sales/sales_context/useAdminSalesLogic';
-import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
+import { SalesUrlConfig } from '@/app/admin/sales/admin_sales_url_config';
+import AdminPagination from '@/app/admin/admin_layout/AdminShared/AdminPagination';
 import AdminSalesEmptyState from '@/app/admin/sales/sales_components/AdminSalesEmptyState/AdminSalesEmptyState';
 import type { PendingPaymentMember } from '@/app/admin/sales/sales_types/AdminSalesTypes';
-import { ADMIN_ITEMS_PER_PAGE, GYM_DETAILS } from '@/app/admin/admin_url_config';
+import { GYM_DETAILS } from '@/app/admin/admin_url_config';
+const SALES_ITEMS_PER_PAGE = 10;
 import { WhatsAppFormatter } from '@/lib/whatsapp_formatter';
 
 export default function AdminSalesPendingPayments() {
-  const { currentPage, setCurrentPage, pendingPayments, pendingTotal, status, showToast } = useAdminSalesLogic();
+  const { currentPage, setCurrentPage, pendingPayments, pendingTotal, status } = useAdminSalesLogic();
 
-  const totalPages = Math.ceil(pendingTotal / ADMIN_ITEMS_PER_PAGE) || 1;
+  const totalPages = Math.ceil(pendingTotal / SALES_ITEMS_PER_PAGE) || 1;
 
   if (status === 'pending') {
     return (
       <div className="space-y-3">
         {[...Array(5)].map((_, i) => (
-          <div key={i} className="motion-safe:animate-pulse flex items-center justify-between p-4 border border-border rounded-xl bg-card">
+          <div key={`sales-pending-skeleton-${i}`} className="motion-safe:animate-pulse flex items-center justify-between p-4 border border-border rounded-xl bg-card motion-safe:duration-base">
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 bg-input rounded-full"></div>
               <div>
@@ -46,13 +49,13 @@ export default function AdminSalesPendingPayments() {
       </p>
       <div className="space-y-3">
         {pendingPayments.map((p: PendingPaymentMember) => (
-          <div key={p.id} className="flex items-center justify-between p-4 border border-border rounded-xl hover:border-warning motion-safe:transition-all motion-safe:duration-200 ease-in-out motion-safe:hover:-translate-y-1 hover:shadow-lg bg-card">
+          <div key={p.id} className="flex items-center justify-between p-4 border border-border rounded-xl hover:border-warning motion-safe:transition-all motion-safe:duration-base ease-in-out motion-safe:hover:-translate-y-1 hover:shadow-card bg-card">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 bg-danger-bg rounded-full flex items-center justify-center text-danger font-semibold text-sm">
+              <div className="w-9 h-9 bg-danger rounded-full flex items-center justify-center text-on-danger font-semibold text-sm">
                 {p.name.charAt(0)}
               </div>
               <div>
-                <p className="font-medium text-foreground">{p.name}</p>
+                <p className="font-medium text-primary">{p.name}</p>
                 <p className="text-xs text-secondary">{p.plan || 'Standard'} Plan</p>
               </div>
             </div>
@@ -66,7 +69,7 @@ export default function AdminSalesPendingPayments() {
                   const waText = WhatsAppFormatter.formatReceipt({
                     title: GYM_DETAILS.name,
                     subtitle: 'Payment Reminder',
-                    date: new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }),
+                    date: format(new Date(), 'dd MMM yyyy'),
                     customerInfo: {
                       'Member': p.name,
                       'Plan': p.plan || 'Standard',
@@ -75,19 +78,18 @@ export default function AdminSalesPendingPayments() {
                       {
                         title: 'Outstanding Dues',
                         items: {
-                          'Pending Amount': `Rs ${p.pendingAmount?.toLocaleString() || 0}`,
+                          'Pending Amount': formatCurrency(p.pendingAmount ?? 0),
                           'Overdue By': `${p.daysOverdue || 0} days`,
                         }
                       }
                     ],
                     footer: 'Please clear dues ASAP to avoid service interruption.'
                   });
-                  window.open(`https://wa.me/91${p.phone?.replace(/\D/g, '') || ''}?text=${encodeURIComponent(waText)}`, '_blank');
-                  showToast(`Reminder sent via WhatsApp to ${p.name}`, 'success');
+                  window.open(SalesUrlConfig.EXTERNAL.WHATSAPP_WEB(p.phone ?? '', waText), '_blank', 'noopener,noreferrer');
                 }}
-                className="px-3 py-1.5 text-xs text-primary-foreground bg-primary rounded-lg font-medium motion-safe:transition-all motion-safe:duration-200 ease-in-out hover:bg-primary-hover motion-safe:active:scale-95 flex items-center gap-2"
+                className="px-3 py-1.5 text-xs text-on-primary bg-primary rounded-lg font-medium motion-safe:transition-all motion-safe:duration-base ease-in-out hover:bg-primary-hover motion-safe:active:scale-95 flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
               >
-                Send Reminder
+                Open Reminder in WhatsApp
               </button>
             </div>
           </div>

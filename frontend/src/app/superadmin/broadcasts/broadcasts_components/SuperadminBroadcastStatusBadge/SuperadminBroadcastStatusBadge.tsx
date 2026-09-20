@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Renders the status badge pill for a single broadcast. Purely presentational — maps BroadcastStatus to design system colors.
 'use client';
-import type { BroadcastStatusBadgeProps } from '@/app/superadmin/broadcasts/superadmin_broadcasts_types/superadmin_broadcasts_types';
-export default function SuperadminBroadcastStatusBadge({ status }: BroadcastStatusBadgeProps) {
+import type { SuperadminBroadcastStatusBadgeProps } from '@/app/superadmin/broadcasts/broadcasts_types/SuperadminBroadcastsTypes';
+export default function SuperadminBroadcastStatusBadge({ status }: SuperadminBroadcastStatusBadgeProps) {
     switch (status) {
         case 'SENT':
             return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-success-bg text-success">SENT</span>;

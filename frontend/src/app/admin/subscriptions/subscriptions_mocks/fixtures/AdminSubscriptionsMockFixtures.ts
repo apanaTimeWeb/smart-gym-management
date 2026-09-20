@@ -24,6 +24,8 @@ export const MOCK_CURRENT_SUBSCRIPTION: CurrentSubscription = {
 
 import type { SaaSPlan, Invoice, PaymentMethod } from '@/app/admin/subscriptions/subscriptions_types/AdminSubscriptionsTypes';
 
+export const MOCK_ADMIN_SUBSCRIPTION_INVOICE_PDF_URL = 'data:application/pdf;base64,JVBERi0xLjQKMSAwIG9iaiA8PCAvVHlwZSAvQ2F0YWxvZyAvUGFnZXMgMiAwIFIgPj4gZW5kb2JqCjIgMCBvYmogPDwgL1R5cGUgL1BhZ2VzIC9LaWRzIFszIDAgUiBdIC9Db3VudCAxID4+IGVuZG9iagozIDAgb2JqIDw8IC9UeXBlIC9QYWdlIC9QYXJlbnQgMiAwIFIgL01lZGlhQm94IFswIDAgNTk1LjI4IDg0MS44OV0gL0NvbnRlbnRzIDQgMCBSID4+IGVuZG9iago0IDAgb2JqIDw8IC9MZW5ndGggNDkgPj4gc3RyZWFtCkJUIAovRjEgMTIgVGYKNTAgNzkwIFRkCihTbWFydCBHeW0gMzYwIEZha3RlZCBJbnZvaWNlKSBUagpFVAplbmRzdHJlYW0gZW5kb2JqCjUgMCBvYmogPDwgPj4gZW5kb2JqCnhyZWYKNCAwMDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDAwMDkgMDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDAwNjMgMDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDAxMTQgMDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDAyMTUgMDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDAzMTQgMDAwMDAwMDAwIDY1NTM1IGYgCnRyYWlsZXIKPDwgL1Jvb3QgMSAwIFIgPj4Kc3RhcnR4cmVmCjM0MAolJUVPRg==';
+
 export const MOCK_SAAS_PLANS: SaaSPlan[] = [
   {
     id: 'plan_starter',
@@ -84,14 +86,14 @@ export const MOCK_SAAS_PLANS: SaaSPlan[] = [
 ];
 
 export const MOCK_INVOICES: Invoice[] = [
-  { id: 'inv1', invoiceNo: 'INV-2025-006', date: '2026-06-01', dueDate: '2026-06-07', amount: 4999, status: 'paid',    planName: 'Growth', billingCycle: 'monthly', pdfUrl: '#' },
-  { id: 'inv2', invoiceNo: 'INV-2025-005', date: '2026-05-01', dueDate: '2026-05-07', amount: 4999, status: 'paid',    planName: 'Growth', billingCycle: 'monthly', pdfUrl: '#' },
-  { id: 'inv3', invoiceNo: 'INV-2025-004', date: '2026-04-01', dueDate: '2026-04-07', amount: 4999, status: 'paid',    planName: 'Growth', billingCycle: 'monthly', pdfUrl: '#' },
-  { id: 'inv4', invoiceNo: 'INV-2025-003', date: '2026-03-01', dueDate: '2026-03-07', amount: 4999, status: 'paid',    planName: 'Growth', billingCycle: 'monthly', pdfUrl: '#' },
-  { id: 'inv5', invoiceNo: 'INV-2025-002', date: '2026-02-01', dueDate: '2026-02-07', amount: 4999, status: 'paid',    planName: 'Growth', billingCycle: 'monthly', pdfUrl: '#' },
-  { id: 'inv6', invoiceNo: 'INV-2025-001', date: '2026-01-01', dueDate: '2026-01-07', amount: 3999, status: 'paid',    planName: 'Starter', billingCycle: 'monthly', pdfUrl: '#' },
-  { id: 'inv7', invoiceNo: 'INV-2024-012', date: '2026-12-01', dueDate: '2026-12-07', amount: 3999, status: 'failed',  planName: 'Starter', billingCycle: 'monthly', pdfUrl: '#' },
-  { id: 'inv8', invoiceNo: 'INV-2024-011', date: '2026-11-01', dueDate: '2026-11-07', amount: 3999, status: 'paid',    planName: 'Starter', billingCycle: 'monthly', pdfUrl: '#' },
+  { id: 'inv1', invoiceNo: 'INV-2025-006', date: '2026-06-01', dueDate: '2026-06-07', amount: 4999, status: 'paid',    planName: 'Growth', billingCycle: 'monthly', pdfUrl: MOCK_ADMIN_SUBSCRIPTION_INVOICE_PDF_URL },
+  { id: 'inv2', invoiceNo: 'INV-2025-005', date: '2026-05-01', dueDate: '2026-05-07', amount: 4999, status: 'paid',    planName: 'Growth', billingCycle: 'monthly', pdfUrl: MOCK_ADMIN_SUBSCRIPTION_INVOICE_PDF_URL },
+  { id: 'inv3', invoiceNo: 'INV-2025-004', date: '2026-04-01', dueDate: '2026-04-07', amount: 4999, status: 'paid',    planName: 'Growth', billingCycle: 'monthly', pdfUrl: MOCK_ADMIN_SUBSCRIPTION_INVOICE_PDF_URL },
+  { id: 'inv4', invoiceNo: 'INV-2025-003', date: '2026-03-01', dueDate: '2026-03-07', amount: 4999, status: 'paid',    planName: 'Growth', billingCycle: 'monthly', pdfUrl: MOCK_ADMIN_SUBSCRIPTION_INVOICE_PDF_URL },
+  { id: 'inv5', invoiceNo: 'INV-2025-002', date: '2026-02-01', dueDate: '2026-02-07', amount: 4999, status: 'paid',    planName: 'Growth', billingCycle: 'monthly', pdfUrl: MOCK_ADMIN_SUBSCRIPTION_INVOICE_PDF_URL },
+  { id: 'inv6', invoiceNo: 'INV-2025-001', date: '2026-01-01', dueDate: '2026-01-07', amount: 3999, status: 'paid',    planName: 'Starter', billingCycle: 'monthly', pdfUrl: MOCK_ADMIN_SUBSCRIPTION_INVOICE_PDF_URL },
+  { id: 'inv7', invoiceNo: 'INV-2024-012', date: '2026-12-01', dueDate: '2026-12-07', amount: 3999, status: 'failed',  planName: 'Starter', billingCycle: 'monthly', pdfUrl: MOCK_ADMIN_SUBSCRIPTION_INVOICE_PDF_URL },
+  { id: 'inv8', invoiceNo: 'INV-2024-011', date: '2026-11-01', dueDate: '2026-11-07', amount: 3999, status: 'paid',    planName: 'Starter', billingCycle: 'monthly', pdfUrl: MOCK_ADMIN_SUBSCRIPTION_INVOICE_PDF_URL },
 ];
 
 export const MOCK_PAYMENT_METHODS: PaymentMethod[] = [

@@ -1,14 +1,26 @@
-import { http, HttpResponse } from 'msw';
-import { MANAGER_HTTP_STATUS } from '@/app/manager/manager_utils/ManagerHttpStatus';
-import { MOCK_PRODUCTS, MOCK_ORDERS, MOCK_STORE_SUMMARY } from '@/app/manager/store/store_fixtures/ManagerStoreMockData';
-import { productSchema, orderSchema } from '@/app/manager/store/store_types/ManagerStoreSchema';
 import { StatusCodes } from 'http-status-codes';
+import { http, HttpResponse } from 'msw';
+import { MANAGER_HTTP_STATUS } from '@/app/manager/manager_infrastructure/ManagerHttpStatus';
+import { managerMockApiUrl } from '@/app/manager/manager_infrastructure/ManagerMockApiUrl';
+import { MOCK_PRODUCTS, MOCK_ORDERS, MOCK_STORE_SUMMARY } from '@/app/manager/store/store_fixtures/ManagerStoreMockData';
+import { productSchema, orderSchema } from '@/app/manager/store/store_schemas/ManagerStoreSchema';
+import { ManagerStoreUrlConfig } from '@/app/manager/store/store_url_config';
+
 
 let productsDb = [...MOCK_PRODUCTS];
 let ordersDb = [...MOCK_ORDERS];
 
+export let mockProductIdCounter = 1000;
+let mockOrderIdCounter = 1000;
+export function resetManagerStoreMockState(): void {
+  productsDb = [...MOCK_PRODUCTS];
+  ordersDb = [...MOCK_ORDERS];
+  mockProductIdCounter = 1000;
+  mockOrderIdCounter = 1000;
+}
+
 export const managerStoreHandlers = [
-  http.get(`/api/v1/manager/store/products`, ({ request }) => {
+  http.get(managerMockApiUrl(ManagerStoreUrlConfig.BACKEND_API.PRODUCTS_BASE), ({ request }) => {
     const url = new URL(request.url);
     const search = (url.searchParams.get('search') || '').trim().toLowerCase();
     const category = (url.searchParams.get('category') || '').trim().toLowerCase();
@@ -26,17 +38,16 @@ export const managerStoreHandlers = [
     return HttpResponse.json({ success: true, message: 'Products fetched', data: { products: filtered.slice(start, start + limit), total: filtered.length, page, limit } });
   }),
 
-  http.post(`/api/v1/manager/store/products`, async ({ request }) => {
+  http.post(managerMockApiUrl(ManagerStoreUrlConfig.BACKEND_API.PRODUCTS_BASE), async ({ request }) => {
     const body = await request.json() as Record<string, unknown>;
     const parsedBody = productSchema.partial().safeParse(body);
     if (!parsedBody.success) return HttpResponse.json({ success: false, message: 'Invalid product payload', data: null }, { status: StatusCodes.BAD_REQUEST });
     const newProduct = productSchema.parse({
       ...parsedBody.data,
-      id: `prod-${Date.now()}`,
+      id: `prod-${mockProductIdCounter++}`,
       isActive: parsedBody.data.isActive ?? true,
       stock: parsedBody.data.stock ?? 0,
-      price: parsedBody.data.price ?? 0,
-    });
+      price: parsedBody.data.price ?? 0 });
     productsDb = [newProduct, ...productsDb];
     return HttpResponse.json({
       success: true,
@@ -45,7 +56,7 @@ export const managerStoreHandlers = [
     });
   }),
 
-  http.patch(`/api/v1/manager/store/products/:id`, async ({ request, params }) => {
+  http.patch(managerMockApiUrl(ManagerStoreUrlConfig.BACKEND_API.PRODUCT_UPDATE(':id')), async ({ request, params }) => {
     const body = await request.json() as Record<string, unknown>;
     const parsedBody = productSchema.partial().safeParse(body);
     if (!parsedBody.success) return HttpResponse.json({ success: false, message: 'Invalid product payload', data: null }, { status: StatusCodes.BAD_REQUEST });
@@ -60,13 +71,13 @@ export const managerStoreHandlers = [
     return HttpResponse.json({ success: false, message: 'Not found' }, { status: MANAGER_HTTP_STATUS.NOT_FOUND });
   }),
 
-  http.delete(`/api/v1/manager/store/products/:id`, ({ params }) => {
+  http.delete(managerMockApiUrl(ManagerStoreUrlConfig.BACKEND_API.PRODUCT_UPDATE(':id')), ({ params }) => {
     const { id } = params;
     productsDb = productsDb.filter(p => p.id !== id);
     return HttpResponse.json({ success: true, message: 'Product deleted', data: { id } });
   }),
 
-  http.get(`/api/v1/manager/store/orders`, ({ request }) => {
+  http.get(managerMockApiUrl(ManagerStoreUrlConfig.BACKEND_API.ORDERS_BASE), ({ request }) => {
     const url = new URL(request.url);
     const search = (url.searchParams.get('search') || '').trim().toLowerCase();
     const page = Math.max(Number(url.searchParams.get('page') || '1'), 1);
@@ -79,24 +90,23 @@ export const managerStoreHandlers = [
     return HttpResponse.json({ success: true, message: 'Orders fetched', data: { orders: filtered.slice(start, start + limit), total: filtered.length, page, limit } });
   }),
 
-  http.post(`/api/v1/manager/store/orders`, async ({ request }) => {
+  http.post(managerMockApiUrl(ManagerStoreUrlConfig.BACKEND_API.ORDERS_BASE), async ({ request }) => {
     const body = await request.json() as Record<string, unknown>;
     const parsedBody = orderSchema.partial().safeParse(body);
     if (!parsedBody.success) return HttpResponse.json({ success: false, message: 'Invalid order payload', data: null }, { status: StatusCodes.BAD_REQUEST });
     const newOrder = orderSchema.parse({
       ...parsedBody.data,
-      id: `ord-${Date.now()}`,
+      id: `ord-${mockOrderIdCounter++}`,
       createdAt: new Date().toISOString(),
       returnStatus: parsedBody.data.returnStatus ?? 'NONE',
       total: parsedBody.data.total ?? 0,
       method: parsedBody.data.method ?? 'Cash',
-      status: parsedBody.data.status ?? 'COMPLETED',
-    });
+      status: parsedBody.data.status ?? 'COMPLETED' });
     ordersDb = [newOrder, ...ordersDb];
     return HttpResponse.json({ success: true, message: 'Order created', data: newOrder });
   }),
 
-  http.get(`/api/v1/manager/store/summary`, () => {
+  http.get(managerMockApiUrl(ManagerStoreUrlConfig.BACKEND_API.SUMMARY), () => {
     return HttpResponse.json({
       success: true,
       message: 'Store summary fetched',

@@ -3,8 +3,18 @@
 // RESPONSIBILITY: Encapsulates functionality for useSuperadminFeaturesData.ts
 // DATA FLOW: Component -> useSuperadminFeaturesData.ts -> API/Store
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { featuresApi } from '@/app/superadmin/features/superadmin_features_api/superadmin_features_api';
-import type { FeatureFlag, ReleaseNote } from '@/app/superadmin/features/superadmin_features_types/superadmin_features_types';
+import { featuresApi } from '@/app/superadmin/features/features_api/SuperadminFeaturesApi';
+import type { FeatureFlag, ReleaseNote } from '@/app/superadmin/features/features_types/SuperadminFeaturesTypes';
+import type { SuperadminFeatureFlagStatusMutationInput, SuperadminFeatureFlagUpdateMutationInput, SuperadminReleaseNoteCreateMutationInput } from '@/app/superadmin/features/features_types/SuperadminFeaturesMutationTypes';
+
+
+/**
+ * Purpose: Encapsulates functionality for useSuperadminFeaturesData.ts.
+ * Inputs: values defined by the exported hook signature.
+ * Output: the hook's typed state/actions/query contract.
+ * Side effects: remain scoped to the owning feature or approved application infrastructure.
+ * Invariant: does not move feature business state into unrelated modules.
+ */
 export function useSuperadminFeaturesData() {
     const queryClient = useQueryClient();
     const queryKey = ['superadmin', 'features'];
@@ -17,72 +27,55 @@ export function useSuperadminFeaturesData() {
             return res.data;
         }
     });
-    const toggleFlagMutation = useMutation({
-        mutationFn: (id: string) => featuresApi.toggleFlag(id),
+    const updateFeatureFlagStatusMutation = useMutation({
+        mutationFn: ({ id, enabled, idempotencyKey }: SuperadminFeatureFlagStatusMutationInput) => enabled ? featuresApi.activateFeatureFlag(id, idempotencyKey) : featuresApi.suspendFeatureFlag(id, idempotencyKey),
         onSuccess: (res) => {
+            if (!res.data) return;
             queryClient.setQueryData(queryKey, (old: {
                 flags: FeatureFlag[];
                 notes: ReleaseNote[];
             } | undefined) => {
-                if (!old)
-                    return old;
-                return {
-                    flags: old.flags.map((f) => {
-                        const flagData = res.data as FeatureFlag;
-                        return f.id === flagData?.id ? flagData : f;
-                    }),
-                    notes: old.notes,
-                };
+                if (!old) return old;
+                return { flags: old.flags.map((f) => f.id === res.data?.id ? res.data : f), notes: old.notes };
             });
         },
     });
     const updateFlagMutation = useMutation({
-        mutationFn: ({ id, body }: {
-            id: string;
-            body: Partial<FeatureFlag>;
-        }) => featuresApi.updateFlag(id, body),
+        mutationFn: ({ id, body, idempotencyKey }: SuperadminFeatureFlagUpdateMutationInput) => featuresApi.updateFeatureFlag(id, body, idempotencyKey),
         onSuccess: (res) => {
+            if (!res.data) return;
             queryClient.setQueryData(queryKey, (old: {
                 flags: FeatureFlag[];
                 notes: ReleaseNote[];
             } | undefined) => {
-                if (!old)
-                    return old;
-                return {
-                    flags: old.flags.map((f) => {
-                        const flagData = res.data as FeatureFlag;
-                        return f.id === flagData?.id ? flagData : f;
-                    }),
-                    notes: old.notes,
-                };
+                if (!old) return old;
+                return { flags: old.flags.map((f) => f.id === res.data?.id ? res.data : f), notes: old.notes };
             });
         },
     });
     const publishNoteMutation = useMutation({
-        mutationFn: (data: Partial<ReleaseNote>) => featuresApi.createNote(data),
+        mutationFn: ({ data, idempotencyKey }: SuperadminReleaseNoteCreateMutationInput) => featuresApi.createReleaseNote(data, idempotencyKey),
         onSuccess: (res) => {
+            if (!res.data) return;
             queryClient.setQueryData(queryKey, (old: {
                 flags: FeatureFlag[];
                 notes: ReleaseNote[];
             } | undefined) => {
-                if (!old)
-                    return old;
-                return {
-                    flags: old.flags,
-                    notes: [(res.data as ReleaseNote), ...old.notes],
-                };
+                if (!old) return old;
+                return { flags: old.flags, notes: [res.data, ...old.notes] };
             });
         },
     });
     return {
         data: query.data,
-        isLoading: query.isLoading,
+        isPending: query.isPending,
         isError: query.isError,
         error: query.error,
-        toggleFlag: toggleFlagMutation.mutateAsync,
-        isToggling: toggleFlagMutation.isPending,
+        updateFeatureFlagStatus: updateFeatureFlagStatusMutation.mutateAsync,
+        isUpdatingFeatureFlagStatus: updateFeatureFlagStatusMutation.isPending,
         publishNote: publishNoteMutation.mutateAsync,
         isPublishing: publishNoteMutation.isPending,
         updateFlag: updateFlagMutation.mutateAsync,
+        refetch: query.refetch,
     };
 }

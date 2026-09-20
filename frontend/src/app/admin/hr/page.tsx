@@ -16,7 +16,9 @@ export default async function HrPage() {
     initialData = {
       staff: staffRes.data?.staff || (Array.isArray(staffRes.data) ? staffRes.data : []),
       payrolls: payrollRes.data?.payrolls || (Array.isArray(payrollRes.data) ? payrollRes.data : []),
-      summary: summaryRes.data || null
+      summary: summaryRes.data || null,
+      totalStaff: staffRes.data?.total || 0,
+      totalPayrolls: payrollRes.data?.total || 0
     };
   } catch {
     // SSR data fetch failed gracefully — client-side hook will re-fetch

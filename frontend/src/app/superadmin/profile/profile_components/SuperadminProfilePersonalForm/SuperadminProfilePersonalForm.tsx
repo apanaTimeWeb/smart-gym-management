@@ -7,15 +7,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2 } from 'lucide-react';
 import type { SuperadminProfileData, UpdateSuperadminProfilePayload } from '@/app/superadmin/profile/profile_types/SuperadminProfileTypes';
 import { TIMEZONE_OPTIONS, LANGUAGE_OPTIONS } from '@/app/superadmin/profile/profile_utils/SuperadminProfileConstants';
-import { personalSchema, type PersonalFormValues } from '@/app/superadmin/profile/profile_utils/SuperadminProfilePersonalForm.schema';
-import { useSuperadminUnsavedChangesGuard } from '@/app/superadmin/superadmin_utils/useSuperadminUnsavedChangesGuard';
-interface SuperadminProfilePersonalFormProps {
-    profile: SuperadminProfileData;
-    isSaving: boolean;
-    onSave: (payload: UpdateSuperadminProfilePayload) => void;
-}
+import { personalSchema } from '@/app/superadmin/profile/profile_utils/SuperadminProfilePersonalFormSchema';
+import type { SuperadminProfilePersonalFormValues } from '@/app/superadmin/profile/profile_types/SuperadminProfilePersonalFormTypes';
+import { useUnsavedChangesGuard } from '@/hooks/useUnsavedChangesGuard';
+import type { SuperadminProfilePersonalFormProps } from '@/app/superadmin/profile/profile_types/SuperadminProfilePersonalFormTypes';
+
 export default function SuperadminProfilePersonalForm({ profile, isSaving, onSave, }: SuperadminProfilePersonalFormProps) {
-    const { register, handleSubmit, reset, formState: { errors, isDirty }, } = useForm<PersonalFormValues>({
+    const { register, handleSubmit, reset, formState: { errors, isDirty }, } = useForm<SuperadminProfilePersonalFormValues>({
         resolver: zodResolver(personalSchema),
         defaultValues: {
             name: profile.name,
@@ -24,10 +22,11 @@ export default function SuperadminProfilePersonalForm({ profile, isSaving, onSav
             language: profile.language ?? 'en',
         },
     });
-    useSuperadminUnsavedChangesGuard(isDirty, "You have unsaved changes in your profile. Are you sure you want to leave?");
+    useUnsavedChangesGuard(isDirty, "You have unsaved changes in your profile. Are you sure you want to leave?");
     // Rule 53: reset when profile prop changes (e.g. after successful save)
     // EXPLANATION: Synchronize component state with external dependencies.
     // EFFECT DEPENDENCIES: Documented intentionally.
+    // EFFECT INTENT: Synchronize local UI state with the listed inputs and clean up any browser/resource subscription created by this effect.
     useEffect(() => {
         reset({
             name: profile.name,
@@ -36,7 +35,7 @@ export default function SuperadminProfilePersonalForm({ profile, isSaving, onSav
             language: profile.language ?? 'en',
         });
     }, [profile, reset]);
-    const inputClass = 'w-full px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary';
+    const inputClass = 'w-full px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-primary focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary';
     return (<form onSubmit={handleSubmit(onSave)} className="space-y-5">
       <div>
         <label className="block text-sm font-medium text-secondary mb-1.5">
@@ -76,8 +75,8 @@ export default function SuperadminProfilePersonalForm({ profile, isSaving, onSav
       </div>
 
       <div className="flex justify-end pt-2">
-        <button type="submit" disabled={isSaving || !isDirty} className="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-hover text-black font-semibold text-sm rounded-lg motion-safe:transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
-          {isSaving && <Loader2 className="w-4 h-4 motion-safe:animate-spin" strokeWidth={2}/>}
+        <button type="submit" disabled={isSaving || !isDirty} className="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-hover text-on-primary font-semibold text-sm rounded-lg motion-safe:transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+          {isSaving && <Loader2 size={18} className="w-4 motion-safe:animate-spin" strokeWidth={2}/>}
           {isSaving ? 'Saving...' : 'Save Changes'}
         </button>
       </div>

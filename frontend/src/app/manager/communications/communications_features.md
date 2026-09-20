@@ -8,12 +8,18 @@ Manager Communications is the tenant-scoped outbound messaging workspace. Manage
 |---|---|---|
 | `communications_api/` | Feature-owned responsibility for the communications module. | `ManagerCommunicationsApi.ts` |
 | `communications_components/` | Feature-owned responsibility for the communications module. | `—` |
-| `communications_context/` | Feature-owned responsibility for the communications module. | `ManagerUseManagerChurnRecoveryLogic.ts; ManagerUseManagerChurnRecoveryMutations.ts; ManagerUseManagerChurnRecoveryQueries.ts; ManagerUseManagerCommunicationsLogic.ts; ManagerUseManagerCommunicationsMutations.ts; ManagerUseManagerCommunicationsQueries.ts` |
+| `communications_hooks/` | Feature-owned responsibility for the communications module. | `ManagerUseManagerChurnRecoveryLogic.ts; ManagerUseManagerChurnRecoveryMutations.ts; ManagerUseManagerChurnRecoveryQueries.ts; ManagerUseManagerCommunicationsLogic.ts; ManagerUseManagerCommunicationsMutations.ts; ManagerUseManagerCommunicationsQueries.ts` |
 | `communications_fixtures/` | Feature-owned responsibility for the communications module. | `ManagerCommunicationsMockData.ts` |
 | `communications_mocks/` | Feature-owned responsibility for the communications module. | `—` |
 | `communications_store/` | Feature-owned responsibility for the communications module. | `ManagerUseManagerCommunicationsStore.ts` |
 | `communications_types/` | Feature-owned responsibility for the communications module. | `ManagerCommunicationsSchema.ts; ManagerCommunications_types.ts` |
 | `communications_utils/` | Feature-owned responsibility for the communications module. | `ManagerCommunicationsSharedConstants.ts` |
+
+## Approved External Dependencies
+
+- Global framework/application infrastructure documented by the architecture standard may be used when required.
+- Approved zero-business UI primitives may be imported from Manager application infrastructure.
+- Sibling feature business logic, state, API services, fixtures, and tests are not dependencies.
 
 ## Feature Inventory
 | Feature | Route | What the User Can Do | Main API Calls | Status |
@@ -41,7 +47,7 @@ Manager Communications is the tenant-scoped outbound messaging workspace. Manage
 4. The module consumes the authoritative backend response and refreshes the affected churn/campaign views.
 
 ## Data and State Architecture
-TanStack Query owns communications server/API data. UI-only filters, tabs, selections, and draft state remain local state or module-scoped Zustand where shared. React Context is limited to stable cross-tree concerns and does not become the source of truth for API data. Query keys are module-prefixed.
+TanStack Query owns communications server/API data. URL query parameters are the source of truth for searchable/filterable/paginated state and active history tab state. Zustand is limited to transient composer/selections UI state; it never owns API data or URL-backed filters. Query keys are module-prefixed.
 
 ## API Contract
 | Function | Method | Endpoint | Request | Response `data` type |

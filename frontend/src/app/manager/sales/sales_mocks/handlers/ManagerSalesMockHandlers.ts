@@ -1,14 +1,17 @@
 import { http, HttpResponse } from 'msw';
+import { managerMockApiUrl } from '@/app/manager/manager_infrastructure/ManagerMockApiUrl';
 import { 
   MOCK_SALES_OVERVIEW, 
   MOCK_MEMBERSHIP_REPORT, 
   MOCK_PENDING_PAYMENTS, 
   MOCK_ALL_MEMBERSHIPS 
 } from '@/app/manager/sales/sales_fixtures/ManagerSalesMockData';
+import { ManagerSalesUrlConfig } from '@/app/manager/sales/sales_url_config';
 import type { MembershipTotals } from '@/app/manager/sales/sales_types/ManagerSalesTypes';
 
+
 export const managerSalesHandlers = [
-  http.get(`/api/v1/manager/sales/overview`, () => {
+  http.get(managerMockApiUrl(ManagerSalesUrlConfig.BACKEND_API.OVERVIEW), () => {
     return HttpResponse.json({
       success: true,
       message: 'Overview fetched',
@@ -16,7 +19,7 @@ export const managerSalesHandlers = [
     });
   }),
 
-  http.get(`/api/v1/manager/sales/membership-report`, ({ request }) => {
+  http.get(managerMockApiUrl(ManagerSalesUrlConfig.BACKEND_API.MEMBERSHIP_REPORT), ({ request }) => {
     const url = new URL(request.url);
     const search = url.searchParams.get('search')?.trim().toLowerCase() || '';
     const page = Math.max(Number(url.searchParams.get('page') || '1'), 1);
@@ -30,12 +33,11 @@ export const managerSalesHandlers = [
       totalReceivable: filtered.reduce((sum, item) => sum + (item.receivable || 0), 0),
       totalReceived: filtered.reduce((sum, item) => sum + (item.received || 0), 0),
       remaining: filtered.reduce((sum, item) => sum + (item.remaining || 0), 0),
-      refunds: filtered.reduce((sum, item) => sum + (item.refund || 0), 0),
-    };
+      refunds: filtered.reduce((sum, item) => sum + (item.refund || 0), 0) };
     return HttpResponse.json({ success: true, message: 'Report fetched', data: { report, totals, total: filtered.length, page, limit } });
   }),
 
-  http.get(`/api/v1/manager/sales/pending-payments`, ({ request }) => {
+  http.get(managerMockApiUrl(ManagerSalesUrlConfig.BACKEND_API.PENDING_PAYMENTS), ({ request }) => {
     const url = new URL(request.url);
     const search = url.searchParams.get('search')?.toLowerCase();
     
@@ -53,7 +55,7 @@ export const managerSalesHandlers = [
     });
   }),
 
-  http.get(`/api/v1/manager/sales/all-memberships`, ({ request }) => {
+  http.get(managerMockApiUrl(ManagerSalesUrlConfig.BACKEND_API.ALL_MEMBERSHIPS), ({ request }) => {
     const url = new URL(request.url);
     const search = url.searchParams.get('search')?.toLowerCase();
     

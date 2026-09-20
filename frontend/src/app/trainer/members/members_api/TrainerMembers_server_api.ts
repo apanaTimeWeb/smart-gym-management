@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Server-side API fetching for the members module.
 import { ssrApiFetch } from '@/lib/server-api';
 import type { ApiResponse } from '@/lib/api';
-import { MembersUrlConfig } from '@/app/trainer/Trainer_url_config';
+import { MembersUrlConfig } from '@/app/trainer/members/members_url_config';
 
 export const ssrMembersApi = {
   fetchMembers: (params?: Record<string, string>) => {

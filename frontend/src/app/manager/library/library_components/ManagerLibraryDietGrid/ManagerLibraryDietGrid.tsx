@@ -1,108 +1,38 @@
+// RESPONSIBILITY: Renders the Diet Plan collection cards and delegates edit/delete behavior to the Library hook.
 'use client';
-// RESPONSIBILITY: Renders the diet plan cards grid with macronutrient info and action buttons.
-import { useLibraryContext } from '@/app/manager/library/library_context/ManagerLibraryContext';
+import { Apple, Edit2, Flame, Trash2 } from 'lucide-react';
+import ManagerLibraryEmptyState from '@/app/manager/library/library_components/ManagerLibraryEmptyState/ManagerLibraryEmptyState';
+import { useManagerLibraryLogic } from '@/app/manager/library/library_hooks/ManagerUseManagerLibraryLogic';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
-import { Apple, Edit2, Trash2, Flame, Loader2 } from 'lucide-react';
-import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
-import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
+import { MANAGER_GENERIC_ERROR_MESSAGE } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
+import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_infrastructure/ManagerPaginationDefaults';
+
 
 export default function ManagerLibraryDietGrid() {
-  const { confirm } = useConfirm();
-  const { dietPlans, totalDietPlans, isLoading, isError, debouncedSearch, currentPage, setCurrentPage, openEditDiet, deleteDietPlan } = useLibraryContext();
-
+  const { dietPlans, totalDietPlans, isPending, isError, errorMessage, currentPage, setCurrentPage, openAddDiet, openEditDiet, deleteDietPlan, loadAll } = useManagerLibraryLogic();
   const totalPages = Math.max(1, Math.ceil(totalDietPlans / MANAGER_ITEMS_PER_PAGE));
-  const currentData = dietPlans;
-
-  if (isLoading) {
-    return (
-      <div className="flex justify-center py-10">
-        <Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" />
-      </div>
-    );
-  }
-
-  if (isError) {
-    return (
-      <div role="alert" className="py-12 text-center space-y-3">
-        <p className="text-sm font-semibold text-danger">Unable to load diet plans.</p>
-      </div>
-    );
-  }
-
+  if (isPending) return <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3" aria-label="Loading diet plans">{['diet-a', 'diet-b', 'diet-c', 'diet-d', 'diet-e', 'diet-f'].map((id) => <div key={id} className="h-48 rounded-xl border border-border bg-skeleton-base p-5 motion-safe:animate-pulse"><div className="h-10 w-10 rounded-xl bg-skeleton-highlight" /><div className="mt-4 h-4 w-3/4 rounded bg-skeleton-highlight" /><div className="mt-2 h-3 w-1/2 rounded bg-skeleton-highlight" /><div className="mt-8 h-3 w-full rounded bg-skeleton-highlight" /></div>)}</div>;
+  if (isError) return <div role="alert" className="flex min-h-64 flex-col items-center justify-center gap-3 rounded-xl border border-danger bg-danger-bg p-6 text-center"><p className="text-sm font-semibold text-danger">{errorMessage || MANAGER_GENERIC_ERROR_MESSAGE}</p><button type="button" onClick={() => void loadAll()} className="min-h-11 rounded-lg bg-primary text-on-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">Retry</button></div>;
+  if (dietPlans.length === 0) return <div className="space-y-5"><ManagerLibraryEmptyState view="diet" onAdd={openAddDiet} /><ManagerPagination currentPage={currentPage} totalPages={totalPages} totalItems={totalDietPlans} itemsPerPage={MANAGER_ITEMS_PER_PAGE} onPageChange={setCurrentPage} /></div>;
   return (
-    <div className="flex flex-col h-full">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 flex-1">
-        {currentData.map(dp => (
-          <div 
-            key={dp.id} 
-            className="rounded-xl border border-border bg-card p-5 hover:shadow-md motion-safe:transition-shadow flex flex-col cursor-pointer"
-            onClick={() => openEditDiet(dp)}
-          >
-            <div className="flex justify-between items-start mb-3">
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-success/10 text-success shrink-0">
-                <Apple size={20} />
-              </div>
-              <div className="flex gap-2">
-                <button 
-                  onClick={(e) => { e.stopPropagation(); openEditDiet(dp); }}
-                  className="p-1.5 rounded hover:bg-primary/10 motion-safe:transition-colors text-secondary hover:text-primary"
-                  title="Edit"
-                >
-                  <Edit2 size={16} />
-                </button>
-                <button 
-                  onClick={async (e) => { 
-                    e.stopPropagation(); 
-                    const ok = await confirm({
-                      title: 'Delete Diet Plan',
-                      message: `Are you sure you want to delete diet plan "${dp.name}"?`,
-                      type: 'danger',
-                      confirmText: 'Delete'
-                    });
-                    if (ok) {
-                      deleteDietPlan(dp.id); 
-                    }
-                  }}
-                  className="p-1.5 rounded motion-safe:transition-colors text-danger hover:bg-danger/10"
-                  title="Delete"
-                >
-                  <Trash2 size={16} />
-                </button>
-              </div>
+    <div className="flex h-full flex-col gap-5">
+      <div className="grid flex-1 grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+        {dietPlans.map((diet) => (
+          <article key={diet.id} className="flex cursor-pointer flex-col rounded-xl border border-border bg-card p-5 shadow-card motion-safe:transition-all motion-safe:duration-base motion-safe:hover:-translate-y-1" tabIndex={0} onClick={() => openEditDiet(diet)} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); openEditDiet(diet); } }}>
+            <div className="mb-3 flex items-start justify-between gap-3"><div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-success-bg text-success"><Apple size={18} aria-hidden="true" /></div><div className="flex gap-1">
+              <button type="button" onClick={(event) => { event.stopPropagation(); openEditDiet(diet); }} aria-label={`Edit ${diet.name}`} className="min-h-11 min-w-11 rounded-lg text-secondary hover:bg-surface-hover hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-safe:transition-all motion-safe:duration-base"><Edit2 size={18} className="mx-auto" aria-hidden="true" /></button>
+              <button type="button" onClick={(event) => { event.stopPropagation(); void deleteDietPlan(diet.id); }} aria-label={`Delete ${diet.name}`} className="min-h-11 min-w-11 rounded-lg text-danger hover:bg-danger-bg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger motion-safe:transition-all motion-safe:duration-base"><Trash2 size={18} className="mx-auto" aria-hidden="true" /></button>
+            </div></div>
+            <h3 className="truncate text-sm font-bold text-primary" title={diet.name}>{diet.name}</h3>
+            <p className="mt-1 text-xs text-secondary">{diet.goal}</p>
+            <div className="mt-auto space-y-1 border-t border-border pt-3">
+              <div className="flex items-center gap-2 text-xs text-secondary"><Flame size={18} className="text-warning" aria-hidden="true" /><span>{diet.calories ?? '—'} kcal/day</span></div>
+              <p className="text-xs text-secondary">Protein {diet.protein ?? '—'}g · Carbs {diet.carbs ?? '—'}g · Fats {diet.fats ?? '—'}g</p>
             </div>
-
-            <h4 className="font-bold text-foreground line-clamp-1 mb-1">{dp.name}</h4>
-            <p className="text-xs text-secondary mb-3">{dp.goal}</p>
-            
-            <div className="mt-auto pt-3 border-t border-border space-y-1">
-              {dp.calories && (
-                <div className="flex items-center gap-2 text-xs text-secondary">
-                  <Flame size={14} className="text-warning" />
-                  <span>{dp.calories} kcal/day</span>
-                </div>
-              )}
-              {dp.protein && (
-                <p className="text-xs text-secondary">🥩 Protein: {dp.protein}g · Carbs: {dp.carbs}g · Fats: {dp.fats}g</p>
-              )}
-            </div>
-          </div>
+          </article>
         ))}
-        {currentData.length === 0 && (
-          <div className="col-span-full py-10 text-center text-secondary text-sm">
-            No diet plans found for the current search.
-          </div>
-        )}
       </div>
-
-      <div className="mt-6">
-          <ManagerPagination 
-            currentPage={currentPage} 
-            totalPages={totalPages} 
-            totalItems={totalDietPlans} 
-            itemsPerPage={MANAGER_ITEMS_PER_PAGE} 
-            onPageChange={setCurrentPage} 
-          />
-        </div>
+      <ManagerPagination currentPage={currentPage} totalPages={totalPages} totalItems={totalDietPlans} itemsPerPage={MANAGER_ITEMS_PER_PAGE} onPageChange={setCurrentPage} />
     </div>
   );
 }

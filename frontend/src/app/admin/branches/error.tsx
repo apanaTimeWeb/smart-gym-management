@@ -5,9 +5,10 @@ import Link from 'next/link';
 import { useEffect } from 'react';
 import { AlertTriangle } from 'lucide-react';
 import { StatusCodes } from 'http-status-codes';
-import { logErrorToMonitoring } from '@/app/admin/admin_utils/AdminMonitoring';
+import { logErrorToMonitoring } from '@/app/admin/admin_layout/admin_utils/AdminMonitoring';
 
 export default function AdminBranchesError({ error, reset }: { error: Error & { digest?: string }, reset: () => void }) {
+// EFFECT: Synchronizes this component effect with its declared React dependencies in branches/error.tsx.
   useEffect(() => {
     // Log the route-level error once while keeping internal error details out of the UI.
     logErrorToMonitoring(error, { module: 'branches' });
@@ -18,7 +19,7 @@ export default function AdminBranchesError({ error, reset }: { error: Error & { 
       <div className="min-h-full flex flex-col items-center justify-center p-8 text-center">
         <h2 className="text-2xl font-bold mb-4 text-danger">Access Denied</h2>
         <p className="text-secondary mb-6">You don&apos;t have permission to view this page.</p>
-        <Link href={ADMIN_DASHBOARD_ROUTE} className="px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary-hover motion-safe:transition-colors">
+        <Link href={ADMIN_DASHBOARD_ROUTE} className="px-4 py-2 rounded-md bg-primary text-on-primary hover:bg-primary-hover motion-safe:transition-colors motion-safe:duration-base">
           Return to Dashboard
         </Link>
       </div>
@@ -28,11 +29,11 @@ export default function AdminBranchesError({ error, reset }: { error: Error & { 
   return (
     <div className="min-h-96 flex flex-col items-center justify-center text-center p-6 bg-card rounded-2xl border border-border mt-4">
       <AlertTriangle className="w-12 h-12 text-danger mb-4" />
-      <h3 className="text-lg font-bold text-foreground mb-2">Something went wrong</h3>
+      <h3 className="text-lg font-bold text-primary mb-2">Something went wrong</h3>
       <p className="text-secondary">Please retry. If the issue continues, contact support.</p>
       <button
         onClick={() => reset()}
-        className="px-4 py-2 mt-4 bg-primary text-primary-foreground rounded-lg hover:bg-primary-hover motion-safe:transition-colors"
+        className="px-4 py-2 mt-4 bg-primary text-on-primary rounded-lg hover:bg-primary-hover motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
       >
         Try again
       </button>

@@ -1,53 +1,53 @@
 # Admin — Theme Portability Contract
 
-The Admin module depends on the global design token system. The consuming project must provide these semantic Tailwind tokens through its global CSS/design configuration. The module does not define private hardcoded colors in JSX.
+The Admin role shell and its feature modules consume the host application's canonical semantic theme tokens. Business behavior is not defined by this contract.
 
-## Surface Tokens
+## Core surface tokens
+- `--bg-page` via `bg-page`
+- `--bg-card` via `bg-card`
+- `--bg-sidebar` via `bg-sidebar`
+- `--bg-header` via `bg-header`
+- `--bg-input` via `bg-input`
+- `--bg-floating` via `bg-floating`
+- `--bg-overlay` via `bg-overlay`
+- `--bg-popover` via `bg-popover`
+- `--surface-hover` via `bg-surface-hover`
+- `--surface-highlight` via `bg-surface-highlight`
+- `--surface-zebra` via `bg-surface-zebra`
 
-- `bg-page` / `--bg-page` — route/page background.
-- `bg-card` / `--bg-card` — cards, tables, panels.
-- `bg-sidebar` / `--bg-sidebar` — Admin navigation surface.
-- `bg-header` / `--bg-header` — Admin header surface.
-- `bg-input` / `--bg-input` — form controls.
-- `bg-floating` / `--bg-floating` — floating UI surfaces.
-- `bg-popover` / `--bg-popover` — dropdown/popover surfaces.
-- `bg-overlay` / `--bg-overlay` — modal/overlay surfaces.
+## Text / border / focus tokens
+- `--text-primary` via `text-primary`
+- `--text-secondary` via `text-secondary`
+- `--text-disabled` via `text-disabled`
+- `--text-on-primary` via `text-on-primary`
+- `--text-on-danger` via `text-on-danger`
+- `--text-on-success` via `text-on-success`
+- `--text-on-info` via `text-on-info`
+- `--border` via `border-border`
+- `--border-focus` via `border-focus`
+- `--focus-ring` via `ring-primary`
 
-## Text / Focus Tokens
+## Semantic status tokens
+- `--success-text` / `--success-bg` via `text-success` / `bg-success`
+- `--warning-text` / `--warning-bg` via `text-warning` / `bg-warning`
+- `--danger-text` / `--danger-bg` via `text-danger` / `bg-danger`
+- `--info-text` / `--info-bg` via `text-info` / `bg-info`
+- `--purple-text` / `--purple-bg` for feature-defined purple statuses where applicable
 
-- `text-primary` / `--text-primary` — primary content.
-- `text-secondary` / `--text-secondary` — secondary content.
-- `text-disabled` / `--text-disabled` — disabled content.
-- `text-primary-foreground` — foreground for primary/status surfaces where the design contract calls for it.
-- `border-border` / `--border` — standard borders.
-- `border-border-focus` / `--border-focus` — focused controls.
+## Chart tokens
+- `--chart-primary`, `--chart-success`, `--chart-danger`, `--chart-warning`, `--chart-info`, `--chart-secondary`, `--chart-grid`, `--chart-tooltip-bg`
 
-## Semantic Status Tokens
+## Payment tokens
+- `--pay-cash-text`, `--pay-cash-bg`
+- `--pay-upi-text`, `--pay-upi-bg`
+- `--pay-card-text`, `--pay-card-bg`
+- `--pay-bank-text`, `--pay-bank-bg`
 
-- `primary`, `primary-hover`, `primary-subtle`
-- `success`, `success-bg`
-- `warning`, `warning-bg`
-- `danger`, `danger-bg`
-- `info`, `info-bg`
-- `purple`, `purple-bg`
+## Layout / typography / motion
+- Layout tokens: `--layout-header-height`, `--layout-sidebar-width`, `--layout-sidebar-width-collapsed`, `--layout-content-padding`, `--control-height`, `--touch-target-min`, `--table-row-height`, `--modal-width`, `--drawer-width`
+- Typography tokens: `--font-size-page-title`, `--font-size-section-title`, `--font-size-badge`, `--font-size-kpi`, `--font-size-table-header`, `--font-size-body`, `--font-size-caption`
+- Skeleton tokens: `--skeleton-base`, `--skeleton-highlight`
+- Shadow tokens: `--shadow-card`, `--shadow-popover`, `--shadow-dialog`, `--shadow-toast`
 
-## Payment Tokens
-
-- `pay-cash`, `pay-cash-bg`
-- `pay-upi`, `pay-upi-bg`
-- `pay-card`, `pay-card-bg`
-- `pay-bank`, `pay-bank-bg`
-
-## Loading / Motion
-
-- `skeleton-base`, `skeleton-highlight`
-- All transitions/animations use `motion-safe:` unless a documented accessibility exception exists.
-- Route-level loading uses shape-matched skeletons; button-level asynchronous feedback may use a spinner.
-
-## Layout Contract
-
-The Admin shell follows the documented z-index scale: header `z-20`, dropdown/popover `z-30`, modal `z-40`, toast `z-50`. The active sidebar item uses the documented subtle primary background + gold edge treatment rather than a solid primary fill.
-
-## Portability Requirement
-
-When copying this module into another project, provide the above global design tokens and the application's approved API/auth/permission/monitoring infrastructure. Do not introduce module-local hex values merely to compensate for missing global tokens.
+## Portability requirement
+The host project must map these variables to semantic Tailwind utilities exactly as defined by `web_global_design.md`. Feature code must not introduce raw hex/RGBA values or arbitrary Tailwind color utilities to compensate for missing tokens.

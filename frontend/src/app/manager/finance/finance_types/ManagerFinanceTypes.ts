@@ -2,10 +2,10 @@
 // Includes Indian GST compliance fields: gstAmount, discountAmount, couponCode on Payment,
 // and gstCollected, totalRefunds on FinanceSummary.
 
-import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
-import type { AddPaymentFormValues } from '@/app/manager/finance/finance_utils/ManagerFinanceSharedConstants';
+import type { ManagerToastType } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerToastTypes';
 
 export type PaymentStatus = 'PAID' | 'PENDING' | 'REFUNDED' | 'PARTIAL';
+export type ManagerFinanceExportFormat = 'csv' | 'pdf';
 export type PaymentMethod = 'UPI' | 'Cash' | 'Card' | 'NetBanking' | 'Cheque' | 'Other';
 
 export interface FinanceInitialData {
@@ -14,16 +14,17 @@ export interface FinanceInitialData {
   summary: FinanceSummary | null;
 }
 
-export interface FinanceContextType {
+export interface ManagerFinanceViewModel {
   payments: Payment[];
   totalPayments: number;
   summary: FinanceSummary | null;
-  isLoading: boolean;
+  isPending: boolean;
   isError: boolean;
+  errorMessage: string;
   saving: boolean;
   error: string;
-  toast: { message: string; type: ToastType } | null;
-  showToast: (msg: string, t: ToastType) => void;
+  toast: { message: string; type: ManagerToastType } | null;
+  showToast: (msg: string, t: ManagerToastType) => void;
   hideToast: () => void;
   loadAll: () => Promise<void>;
   showModal: boolean;
@@ -37,7 +38,7 @@ export interface FinanceContextType {
   endDate: string;
   setDateRange: (start: string, end: string) => void;
   // Export
-  exportPayments: (format: 'csv' | 'pdf') => void;
+  exportPayments: (format: ManagerFinanceExportFormat) => void;
 }
 
 // ─── Payment ─────────────────────────────────────────────────────────────────

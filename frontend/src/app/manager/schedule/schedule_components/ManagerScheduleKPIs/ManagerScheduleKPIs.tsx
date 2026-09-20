@@ -1,12 +1,13 @@
-'use client';
 // RESPONSIBILITY: Renders the 4 KPI stat cards for the Schedule module (total trainers, on duty today, on leave, shifts this week).
+'use client';
 import { Users, UserCheck, UserX, CalendarDays } from 'lucide-react';
-import ManagerStatCard from '@/app/manager/manager_components/ManagerShared/ManagerStatCard';
-import { useScheduleContext } from '@/app/manager/schedule/schedule_context/ManagerScheduleContext';
 import { useDateRangeSuffix } from '@/lib/useDateRangeSuffix';
+import ManagerStatCard from '@/app/manager/manager_components/ManagerShared/ManagerStatCard';
+import { useManagerScheduleLogic } from '@/app/manager/schedule/schedule_hooks/ManagerUseManagerScheduleLogic';
+
 
 export default function ManagerScheduleKPIs() {
-  const { kpis, status } = useScheduleContext();
+  const { kpis, status } = useManagerScheduleLogic();
   const dateSuffix = useDateRangeSuffix();
 
   if (status === 'pending' || !kpis) {
@@ -25,29 +26,29 @@ export default function ManagerScheduleKPIs() {
         title={`Total Trainers${dateSuffix}`}
         value={kpis.totalTrainers}
         icon={Users}
-        iconBg="rgba(250,204,21,0.12)"
-        iconColor="var(--primary)"
+        iconBg="bg-primary-subtle"
+        iconColor="text-primary"
       />
       <ManagerStatCard
         title={`On Duty Today${dateSuffix}`}
         value={kpis.trainersOnDutyToday}
         icon={UserCheck}
-        iconBg="rgba(34,197,94,0.12)"
-        iconColor="var(--success)"
+        iconBg="bg-success-bg"
+        iconColor="text-success"
       />
       <ManagerStatCard
         title={`On Leave Today${dateSuffix}`}
         value={kpis.trainersOnLeaveToday}
         icon={UserX}
-        iconBg="rgba(245,158,11,0.12)"
-        iconColor="var(--warning)"
+        iconBg="bg-warning-bg"
+        iconColor="text-warning"
       />
       <ManagerStatCard
         title={`Shifts This Week${dateSuffix}`}
         value={kpis.totalShiftsThisWeek}
         icon={CalendarDays}
-        iconBg="rgba(59,130,246,0.12)"
-        iconColor="var(--info)"
+        iconBg="bg-info-bg"
+        iconColor="text-info"
       />
     </div>
   );

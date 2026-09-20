@@ -11,9 +11,9 @@ vi.mock('next/navigation', () => ({
     usePathname: vi.fn(() => ''),
     useSearchParams: vi.fn(() => ({ get: vi.fn(), set: vi.fn() })),
 }));
-vi.mock('@/app/superadmin/dashboard/dashboard_api/superadmin_dashboard_api', () => ({
+vi.mock('@/app/superadmin/dashboard/dashboard_api/SuperadminDashboardApi', () => ({
     superadminDashboardApi: {
-        fetchDashboardData: vi.fn(),
+        fetchDashboard: vi.fn(),
     },
 }));
 describe('useSuperadminDashboardView', () => {
@@ -26,12 +26,12 @@ describe('useSuperadminDashboardView', () => {
         });
         (useQuery as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
             data: null,
-            isLoading: false,
+            isPending: false,
             isError: false,
         });
         const { result } = renderHook(() => useSuperadminDashboardView());
         expect(result.current.timeRange).toBe('this_month');
-        expect(result.current.isLoading).toBe(false);
+        expect(result.current.isPending).toBe(false);
     });
     it('should parse custom date range correctly', () => {
         (useSearchParams as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
@@ -47,7 +47,7 @@ describe('useSuperadminDashboardView', () => {
         });
         (useQuery as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
             data: { data: { metrics: {}, revenue: [], growth: [] } },
-            isLoading: false,
+            isPending: false,
             isError: false,
         });
         const { result } = renderHook(() => useSuperadminDashboardView());
@@ -62,11 +62,11 @@ describe('useSuperadminDashboardView', () => {
         });
         (useQuery as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
             data: null,
-            isLoading: true,
+            isPending: true,
             isError: false,
         });
         const { result } = renderHook(() => useSuperadminDashboardView());
-        expect(result.current.isLoading).toBe(true);
+        expect(result.current.isPending).toBe(true);
     });
     it('should return fetchState error when query is in error', () => {
         (useSearchParams as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
@@ -74,7 +74,7 @@ describe('useSuperadminDashboardView', () => {
         });
         (useQuery as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
             data: null,
-            isLoading: false,
+            isPending: false,
             isError: true,
         });
         const { result } = renderHook(() => useSuperadminDashboardView());

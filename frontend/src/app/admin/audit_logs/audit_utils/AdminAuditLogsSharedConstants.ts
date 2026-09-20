@@ -1,5 +1,5 @@
 // RESPONSIBILITY: Constants, mock data, and filter options for the Audit Logs module.
-import type { AuditLog, AuditKPIData } from '@/app/admin/audit_logs/audit_types/AdminAuditTypes';
+import type { AuditLog, AuditKPIData } from '@/app/admin/audit_logs/audit_types/AdminAuditLogsTypes';
 
 export const AUDIT_ITEMS_PER_PAGE = 10;
 
@@ -30,7 +30,3 @@ export const AUDIT_GYM_OPTIONS = [
   { value: 'b3', label: 'Powai' },
   { value: 'b4', label: 'Thane' },
 ];
-
-
-
-export { MOCK_AUDIT_LOGS, MOCK_AUDIT_KPI } from '@/app/admin/audit_logs/audit_logs_mocks/fixtures/AdminAuditLogsMockFixtures';

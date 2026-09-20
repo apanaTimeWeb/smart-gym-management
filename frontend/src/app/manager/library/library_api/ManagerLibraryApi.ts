@@ -1,36 +1,52 @@
-import { apiFetch, type ApiResponse } from '@/lib/api';
+// RESPONSIBILITY: Defines the Manager Library HTTP contract; request/response validation stays at this boundary.
+import { z } from 'zod';
+import { apiFetch } from '@/lib/api';
+import { dietPlanSchema, exerciseSchema } from '@/app/manager/library/library_schemas/ManagerLibrarySchema';
 import { ManagerLibraryUrlConfig } from '@/app/manager/library/library_url_config';
 import type { DietPlan, Exercise } from '@/app/manager/library/library_types/ManagerLibraryTypes';
-import { dietPlanSchema, exerciseSchema } from '@/app/manager/library/library_types/ManagerLibrarySchema';
-import { z } from 'zod';
+import type { ApiResponse } from '@/lib/api';
+
+
+export type ManagerLibraryListParams = Record<string, string>;
+
+const withIdempotencyHeader = (idempotencyKey?: string): HeadersInit | undefined =>
+  idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined;
 
 export const libraryApi = {
-  fetchExercises: async (params?: Record<string, string>): Promise<ApiResponse<{ exercises: Exercise[]; total: number }>> => {
-    const query = new URLSearchParams(params || {}).toString();
-    return apiFetch(`${ManagerLibraryUrlConfig.BACKEND_API.BASE}/exercises${query ? `?${query}` : ''}`, { dataSchema: z.object({ exercises: z.array(exerciseSchema), total: z.number() }) });
-  },
-  
-  createExercise: async (body: Partial<Exercise>): Promise<ApiResponse<Exercise>> => {
-    return apiFetch(`${ManagerLibraryUrlConfig.BACKEND_API.BASE}/exercises`, { method: 'POST', body: JSON.stringify(body), dataSchema: exerciseSchema });
-  },
-  
-  updateExercise: async (id: string, body: Partial<Exercise>): Promise<ApiResponse<Exercise>> => {
-    return apiFetch(`${ManagerLibraryUrlConfig.BACKEND_API.BASE}/exercises/${id}`, { method: 'PATCH', body: JSON.stringify(body), dataSchema: exerciseSchema });
-  },
-  
-  deleteExercise: async (id: string): Promise<ApiResponse<{ id: string }>> => {
-    return apiFetch(`${ManagerLibraryUrlConfig.BACKEND_API.BASE}/exercises/${id}`, { method: 'DELETE', dataSchema: z.object({ id: z.string() }) });
-  },
-  
-  fetchDietPlans: (params?: Record<string, string>) => {
-    const q = params ? '?' + new URLSearchParams(params).toString() : '';
-    return apiFetch<{ dietPlans: DietPlan[]; total: number }>(`${ManagerLibraryUrlConfig.BACKEND_API.DIET_PLANS_BASE}${q}`, {
-      dataSchema: z.object({ dietPlans: z.array(dietPlanSchema), total: z.number() })
+  fetchExercises: async (params?: ManagerLibraryListParams): Promise<ApiResponse<{ exercises: Exercise[]; total: number }>> => {
+    const query = new URLSearchParams(params ?? {}).toString();
+    return apiFetch(`${ManagerLibraryUrlConfig.BACKEND_API.EXERCISES_BASE}${query ? `?${query}` : ''}`, {
+      dataSchema: z.object({ exercises: z.array(exerciseSchema), total: z.number() }),
     });
   },
-  createDietPlan: (body: Partial<DietPlan>) =>
-    apiFetch<DietPlan>(ManagerLibraryUrlConfig.BACKEND_API.DIET_PLANS_BASE, { method: 'POST', body: JSON.stringify(body), dataSchema: dietPlanSchema }),
-  updateDietPlan: (id: string, body: Partial<DietPlan>) =>
-    apiFetch<DietPlan>(ManagerLibraryUrlConfig.BACKEND_API.DIET_PLAN_UPDATE(id), { method: 'PATCH', body: JSON.stringify(body), dataSchema: dietPlanSchema }),
-  deleteDietPlan: (id: string) => apiFetch<{ id: string }>(ManagerLibraryUrlConfig.BACKEND_API.DIET_PLAN_DELETE(id), { method: 'DELETE', dataSchema: z.object({ id: z.string() }) }),
+  createExercise: async (body: Partial<Exercise>): Promise<ApiResponse<Exercise>> => apiFetch(
+    ManagerLibraryUrlConfig.BACKEND_API.EXERCISES_BASE,
+    { method: 'POST', body: JSON.stringify(body), dataSchema: exerciseSchema },
+  ),
+  updateExercise: async (id: string, body: Partial<Exercise>): Promise<ApiResponse<Exercise>> => apiFetch(
+    ManagerLibraryUrlConfig.BACKEND_API.EXERCISE_UPDATE(id),
+    { method: 'PATCH', body: JSON.stringify(body), dataSchema: exerciseSchema },
+  ),
+  deleteExercise: async (id: string, idempotencyKey?: string): Promise<ApiResponse<{ id: string }>> => apiFetch(
+    ManagerLibraryUrlConfig.BACKEND_API.EXERCISE_DELETE(id),
+    { method: 'DELETE', headers: withIdempotencyHeader(idempotencyKey), dataSchema: z.object({ id: z.string() }) },
+  ),
+  fetchDietPlans: async (params?: ManagerLibraryListParams): Promise<ApiResponse<{ dietPlans: DietPlan[]; total: number }>> => {
+    const query = new URLSearchParams(params ?? {}).toString();
+    return apiFetch(`${ManagerLibraryUrlConfig.BACKEND_API.DIET_PLANS_BASE}${query ? `?${query}` : ''}`, {
+      dataSchema: z.object({ dietPlans: z.array(dietPlanSchema), total: z.number() }),
+    });
+  },
+  createDietPlan: async (body: Partial<DietPlan>): Promise<ApiResponse<DietPlan>> => apiFetch(
+    ManagerLibraryUrlConfig.BACKEND_API.DIET_PLANS_BASE,
+    { method: 'POST', body: JSON.stringify(body), dataSchema: dietPlanSchema },
+  ),
+  updateDietPlan: async (id: string, body: Partial<DietPlan>): Promise<ApiResponse<DietPlan>> => apiFetch(
+    ManagerLibraryUrlConfig.BACKEND_API.DIET_PLAN_UPDATE(id),
+    { method: 'PATCH', body: JSON.stringify(body), dataSchema: dietPlanSchema },
+  ),
+  deleteDietPlan: async (id: string, idempotencyKey?: string): Promise<ApiResponse<{ id: string }>> => apiFetch(
+    ManagerLibraryUrlConfig.BACKEND_API.DIET_PLAN_DELETE(id),
+    { method: 'DELETE', headers: withIdempotencyHeader(idempotencyKey), dataSchema: z.object({ id: z.string() }) },
+  ),
 };

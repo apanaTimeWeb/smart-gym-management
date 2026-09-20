@@ -1,15 +1,18 @@
+// RESPONSIBILITY: Renders the all-memberships sales table and its feature-owned actions.
 'use client';
-// RESPONSIBILITY: Renders the paginated table of all gym memberships with status filter tabs. Receives data via ManagerSalesContext. No API calls.
 import { useState } from 'react';
-import { useSalesContext } from '@/app/manager/sales/sales_context/ManagerSalesContext';
+import { formatCurrencyFromMinorUnits , formatDate} from '@/lib/formatters';
 import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
-import { formatCurrency , formatDate} from '@/lib/formatters';
+import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
+import { MANAGER_GENERIC_ERROR_MESSAGE } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
+import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_infrastructure/ManagerPaginationDefaults';
 import ManagerSalesEmptyState from '@/app/manager/sales/sales_components/ManagerSalesEmptyState/ManagerSalesEmptyState';
+import { MANAGER_MEMBERSHIP_FILTERS } from '@/app/manager/sales/sales_constants/ManagerSalesFilterConstants';
+import { MANAGER_SALES_MEMBERSHIP_TABLE_HEADERS } from '@/app/manager/sales/sales_constants/ManagerSalesTableConstants';
+import { useManagerSalesLogic } from '@/app/manager/sales/sales_hooks/ManagerUseManagerSalesLogic';
 import type { SalesMemberSnapshot } from '@/app/manager/sales/sales_types/ManagerSalesMemberSnapshot';
-import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
 
-const MEMBERSHIP_FILTERS = ['All', 'Active', 'Expiring Soon', 'Expired'] as const;
-const TABLE_HEADERS = ['Member', 'Plan', 'Start', 'End Date', 'Status', 'Amount', 'Days Left'] as const;
+
 
 /** Returns the Tailwind text color class for the days-left column based on urgency. */
 function getDaysLeftColorClass(daysLeft: number): string {
@@ -21,7 +24,7 @@ function getDaysLeftColorClass(daysLeft: number): string {
 
 export default function ManagerSalesAllMemberships() {
   const [filter, setFilter] = useState('All');
-  const { currentPage, setCurrentPage, allMemberships, allMembershipsTotal, isLoading, isError } = useSalesContext();
+  const { currentPage, setCurrentPage, allMemberships, allMembershipsTotal, isPending, isError, errorMessage } = useManagerSalesLogic();
   const [now] = useState(() => Date.now());
 
   const totalPages = Math.ceil(allMembershipsTotal / MANAGER_ITEMS_PER_PAGE) || 1;
@@ -37,7 +40,7 @@ export default function ManagerSalesAllMemberships() {
     return true;
   });
 
-  if (isLoading) {
+  if (isPending) {
     return (
       <div className="space-y-2">
         {[...Array(6)].map((_, i) => (
@@ -49,9 +52,9 @@ export default function ManagerSalesAllMemberships() {
 
   if (isError) {
     return (
-      <div className="text-center py-16 bg-card rounded-2xl border border-danger/30">
-        <p className="text-danger font-medium">Failed to load memberships.</p>
-        <p className="text-sm mt-1 text-secondary">Please check your connection and try again.</p>
+      <div className="text-center py-16 bg-card rounded-2xl border border-danger">
+        <p className="text-danger font-medium">{errorMessage || MANAGER_GENERIC_ERROR_MESSAGE}</p>
+        <span className="text-sm text-secondary">Retry the request.</span>
       </div>
     );
   }
@@ -59,14 +62,14 @@ export default function ManagerSalesAllMemberships() {
   return (
     <div>
       <div className="flex flex-wrap gap-2 mb-4">
-        {MEMBERSHIP_FILTERS.map(f => (
+        {MANAGER_MEMBERSHIP_FILTERS.map(f => (
           <button
             key={f}
             onClick={() => setFilter(f)}
             className={`px-3 py-1.5 text-xs rounded-full font-medium border motion-safe:transition-colors ${
               f === filter
-                ? 'bg-primary text-primary-foreground border-transparent'
-                : 'border-border text-secondary hover:text-foreground'
+                ? 'bg-primary-subtle text-primary border-transparent'
+                : 'border-border text-secondary hover:text-primary'
             }`}
           >
             {f}
@@ -78,7 +81,7 @@ export default function ManagerSalesAllMemberships() {
         <table className="w-full">
           <thead className="bg-input">
             <tr>
-              {TABLE_HEADERS.map(h => (
+              {MANAGER_SALES_MEMBERSHIP_TABLE_HEADERS.map(h => (
                 <th key={h} className="text-left text-xs font-semibold text-secondary uppercase tracking-wider px-4 py-3">
                   {h}
                 </th>
@@ -88,20 +91,20 @@ export default function ManagerSalesAllMemberships() {
           <tbody className="divide-y divide-border">
             {filteredMemberships.map((r: SalesMemberSnapshot) => (
               <tr key={r.id} className="hover:bg-primary-subtle motion-safe:transition-colors">
-                <td className="px-4 py-3 text-sm font-medium text-foreground">{r.name}</td>
+                <td className="px-4 py-3 text-sm font-medium text-primary">{r.name}</td>
                 <td className="px-4 py-3 text-sm text-secondary">{r.plan?.name ?? `Plan #${r.planId}`}</td>
                 <td className="px-4 py-3 text-sm text-secondary">{formatDate(r.joinDate)}</td>
                 <td className="px-4 py-3 text-sm text-secondary">{formatDate(r.expiryDate)}</td>
                 <td className="px-4 py-3">
                   <span className={`text-xs px-2.5 py-0.5 rounded-full font-semibold ${
                     r.status === 'ACTIVE'
-                      ? 'bg-success-bg text-success'
-                      : 'bg-danger-bg text-danger'
+                      ? 'bg-success text-on-success'
+                      : 'bg-danger text-on-danger'
                   }`}>
                     {r.status}
                   </span>
                 </td>
-                <td className="px-4 py-3 text-sm font-medium text-foreground">{formatCurrency(r.paidAmount || 0)}</td>
+                <td className="px-4 py-3 text-sm font-medium text-primary">{formatCurrencyFromMinorUnits(r.paidAmount || 0, ManagerEnvConfig.currencyCode)}</td>
                 <td className={`px-4 py-3 text-sm font-medium ${getDaysLeftColorClass(
                   Math.max(0, Math.floor((new Date(r.expiryDate).getTime() - now) / 86400000))
                 )}`}>

@@ -5,6 +5,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { settingsApi } from '@/app/admin/settings/settings_api/AdminSettingsApi';
 
+/** Coordinates SettingsData state, data flow, and feature behavior. */
 export function useAdminSettingsData() {
   return useQuery({
     queryKey: ['admin', 'settings'],

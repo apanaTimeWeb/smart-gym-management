@@ -1,20 +1,21 @@
+// RESPONSIBILITY: Renders the expenses trend visualization from feature-owned analytics data.
 'use client';
-// RESPONSIBILITY: Renders the Manager ExpensesChart presentation layer for the Manager module.
 import React, { useMemo } from 'react';
 import dynamic from 'next/dynamic';
-import { useExpensesListQuery } from '@/app/manager/expenses/expenses_api/ManagerUseManagerExpensesQueries';
-import { formatCurrency, formatKPI } from '@/lib/formatters';
-import { Loader2 } from 'lucide-react';
+import { formatCurrencyFromMinorUnits, formatKPI } from '@/lib/formatters';
+import { MANAGER_EXPENSE_CHART_COLORS } from '@/app/manager/expenses/expenses_constants/ManagerExpensesChartConstants';
+import { useExpensesListQuery } from '@/app/manager/expenses/expenses_hooks/ManagerUseManagerExpensesQueries';
+import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
+
 
 const Chart = dynamic(() => import('react-apexcharts'), {
   ssr: false,
-  loading: () => <div className="flex items-center justify-center h-64"><Loader2 className="w-6 h-6 motion-safe:animate-spin text-primary" /></div>,
-});
+  loading: () => <div className="h-64 rounded-xl bg-card motion-safe:animate-pulse" aria-hidden="true" /> });
 
-const COLORS = ['var(--warning)', 'var(--info)', 'var(--success)', 'var(--danger)', 'var(--primary)', 'var(--warning)'];
+
 
 export default function ManagerExpensesChart() {
-  const { data, isLoading, isError } = useExpensesListQuery({ limit: '1000' });
+  const { data, isPending, isError } = useExpensesListQuery({ limit: '1000' });
   const expenses = data?.expenses || [];
 
   const chartData = useMemo(() => {
@@ -39,12 +40,13 @@ export default function ManagerExpensesChart() {
     return chartDataArray.sort((a, b) => (b.value || 0) - (a.value || 0));
   }, [expenses]);
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-full min-h-72">
-        <Loader2 className="w-8 h-8 motion-safe:animate-spin text-primary" />
+  if (isPending) {
+    return <div className="min-h-72 space-y-4 p-4" aria-label="Loading expense chart">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+        {['expense-kpi-a','expense-kpi-b','expense-kpi-c'].map((key) => <div key={key} className="h-20 rounded-lg bg-skeleton-base motion-safe:animate-pulse" />)}
       </div>
-    );
+      <div className="h-72 rounded-lg bg-skeleton-base motion-safe:animate-pulse" />
+    </div>;
   }
 
   if (isError || chartData.length === 0) {
@@ -61,21 +63,20 @@ export default function ManagerExpensesChart() {
 
   const options = {
     chart: { background: 'transparent', toolbar: { show: false }, fontFamily: 'Inter, sans-serif' },
-    colors: chartData.map((_, i) => COLORS[i % COLORS.length]) as string[],
+    colors: chartData.map((_, i) => MANAGER_EXPENSE_CHART_COLORS[i % MANAGER_EXPENSE_CHART_COLORS.length]) as string[],
     plotOptions: {
       bar: { borderRadius: 4, distributed: true }
     },
-    grid: { borderColor: 'rgba(255,255,255,0.05)', strokeDashArray: 4 },
+    grid: { borderColor: 'var(--chart-grid)', strokeDashArray: 4 },
     tooltip: { 
       theme: 'dark' as const,
-      y: { formatter: (v: number) => formatCurrency(v) }
+      y: { formatter: (v: number) => formatCurrencyFromMinorUnits(v, ManagerEnvConfig.currencyCode) }
     },
     xaxis: {
       categories: chartData.map(d => d.name),
       labels: { style: { colors: 'var(--text-secondary)', fontSize: '12px' } },
       axisBorder: { show: false }, 
-      axisTicks: { show: false },
-    },
+      axisTicks: { show: false } },
     yaxis: { 
       labels: { style: { colors: 'var(--text-secondary)', fontSize: '12px' }, formatter: (v: number) => formatKPI(v) } 
     },
@@ -89,13 +90,13 @@ export default function ManagerExpensesChart() {
         <div className="p-4 bg-input rounded-lg border border-border">
           <p className="text-sm font-bold text-secondary uppercase tracking-wider mb-1">Total Tracked Expenses</p>
           <p className="text-2xl font-black text-danger">
-            {formatCurrency(totalThisMonth)}
+            {formatCurrencyFromMinorUnits(totalThisMonth, ManagerEnvConfig.currencyCode)}
           </p>
         </div>
         <div className="p-4 bg-input rounded-lg border border-border">
           <p className="text-sm font-bold text-secondary uppercase tracking-wider mb-1">Highest Category</p>
           <p className="text-2xl font-black text-warning">
-            {highestCategory ? `${highestCategory.name} (${formatCurrency(highestCategory.value || 0)})` : 'N/A'}
+            {highestCategory ? `${highestCategory.name} (${formatCurrencyFromMinorUnits(highestCategory.value || 0, ManagerEnvConfig.currencyCode)})` : 'N/A'}
           </p>
         </div>
         <div className="p-4 bg-input rounded-lg border border-border">

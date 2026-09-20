@@ -2,9 +2,10 @@
 // RESPONSIBILITY: Encapsulates all P&L state, sorting, filtering, and derived aggregates.
 // DATA FLOW: AdminFinancePnlConstants → useAdminFinancePnlLogic → AdminFinancePnlMain → child components
 
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { financeApi } from '@/app/admin/finance/finance_api/AdminFinanceApi';
+import { useAdminUrlQuerySync } from '@/app/admin/admin_layout/admin_utils/useAdminUrlQuerySync';
 import type {
   BranchPnlRecord,
   BranchPnlAggregates,
@@ -26,48 +27,37 @@ export function useAdminFinancePnlLogic() {
   const [sortDir, setSortDir] = useState<PnlSortDirection>('desc');
   const [expandedBranchId, setExpandedBranchId] = useState<string | null>(null);
 
-  const { data: rawDataResponse, isLoading, isError } = useQuery({
-    queryKey: ['admin', 'finance', 'pnl', period],
+  useAdminUrlQuerySync([
+    { key: 'period', value: period, defaultValue: 'THIS_MONTH', setValue: (value) => setPeriod(value as PnlPeriod) },
+    { key: 'status', value: statusFilter, defaultValue: 'ALL', setValue: (value) => setStatusFilter(value as PnlStatusFilter) },
+  ]);
+
+  const filteredQuery = useQuery({
+    queryKey: ['admin', 'finance', 'pnl', { period, status: statusFilter, sortKey, sortDir }],
+    queryFn: () => financeApi.fetchBranchPnl(period, { status: statusFilter, sortKey, sortDir }),
+  });
+
+  const aggregateQuery = useQuery({
+    queryKey: ['admin', 'finance', 'pnl-summary', { period }],
     queryFn: () => financeApi.fetchBranchPnl(period),
   });
 
-  // Raw data for selected period
-  const rawData: BranchPnlRecord[] = useMemo(() => {
-    return rawDataResponse?.data || [];
-  }, [rawDataResponse]);
+  const sortedData: BranchPnlRecord[] = filteredQuery.data?.data ?? [];
+  const rawData: BranchPnlRecord[] = aggregateQuery.data?.data ?? [];
 
-  // Apply status filter
-  const filteredData = useMemo<BranchPnlRecord[]>(() => {
-    if (statusFilter === 'ALL') return rawData;
-    return rawData.filter((b) => b.status === statusFilter);
-  }, [rawData, statusFilter]);
+  const aggregates: BranchPnlAggregates = {
+    totalRevenue: rawData.reduce((sum, branch) => sum + branch.revenue, 0),
+    totalExpenses: rawData.reduce((sum, branch) => sum + branch.expenses, 0),
+    totalNetProfit: rawData.reduce((sum, branch) => sum + branch.netProfit, 0),
+    overallMarginPct: rawData.reduce((sum, branch) => sum + branch.revenue, 0) > 0
+      ? rawData.reduce((sum, branch) => sum + branch.netProfit, 0) / rawData.reduce((sum, branch) => sum + branch.revenue, 0) * 100
+      : 0,
+    profitableBranches: rawData.filter((branch) => branch.status === 'PROFITABLE').length,
+    lossMakingBranches: rawData.filter((branch) => branch.status === 'LOSS').length,
+  };
 
-  // Apply sort
-  const sortedData = useMemo<BranchPnlRecord[]>(() => {
-    return [...filteredData].sort((a, b) => {
-      const aVal = a[sortKey];
-      const bVal = b[sortKey];
-      if (typeof aVal === 'string' && typeof bVal === 'string') {
-        return sortDir === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
-      }
-      if (typeof aVal === 'number' && typeof bVal === 'number') {
-        return sortDir === 'asc' ? aVal - bVal : bVal - aVal;
-      }
-      return 0;
-    });
-  }, [filteredData, sortKey, sortDir]);
-
-  // Derived aggregates over the FULL (unfiltered) raw data for KPI cards
-  const aggregates = useMemo<BranchPnlAggregates>(() => {
-    const totalRevenue  = rawData.reduce((s, b) => s + b.revenue, 0);
-    const totalExpenses = rawData.reduce((s, b) => s + b.expenses, 0);
-    const totalNetProfit = rawData.reduce((s, b) => s + b.netProfit, 0);
-    const overallMarginPct = totalRevenue > 0 ? (totalNetProfit / totalRevenue) * 100 : 0;
-    const profitableBranches  = rawData.filter((b) => b.status === 'PROFITABLE').length;
-    const lossMakingBranches  = rawData.filter((b) => b.status === 'LOSS').length;
-    return { totalRevenue, totalExpenses, totalNetProfit, overallMarginPct, profitableBranches, lossMakingBranches };
-  }, [rawData]);
-
+  const isPending = filteredQuery.isPending || aggregateQuery.isPending;
+  const isError = filteredQuery.isError || aggregateQuery.isError;
   /** Toggle sort: same key flips direction; new key defaults to desc */
   function handleSort(key: PnlSortKey) {
     if (sortKey === key) {
@@ -96,7 +86,7 @@ export function useAdminFinancePnlLogic() {
     sortedData,
     aggregates,
     isEmpty: sortedData.length === 0,
-    isLoading,
+    isPending,
     isError,
   };
 }

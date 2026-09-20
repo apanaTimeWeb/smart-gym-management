@@ -2,7 +2,7 @@
 
 ## Cross-Role Imports
 - NEVER import from `/admin`, `/trainer`, `/superadmin`, or any other role folder.
-- Allowed shared imports: `src/components/ui/`, `src/lib/`, `@/app/manager/manager_components/ManagerShared/` (visual primitives only), `@/app/manager/manager_utils/`.
+- Allowed shared imports: `src/components/ui/`, `src/lib/`, `@/app/manager/manager_components/ManagerShared/` (visual primitives only), `@/app/manager/manager_infrastructure/`.
 
 ## No Direct Member Data Mutation
 - This module is READ-ONLY with respect to member data. It fetches member segments for targeting but NEVER modifies member records.
@@ -42,11 +42,13 @@
 - Do not hold searchable/filterable/paginated state in Zustand or local `useState` only.
 
 ## No Multiple Competing State Sources
-- Do not duplicate the same filter in URL + Zustand + local state simultaneously. URL is the source of truth; Zustand mirrors only for in-session fallback.
+- Do not duplicate searchable/filterable/paginated state in URL + Zustand + local state.
+- URL query parameters are the canonical source of truth for search, channel/reason filters, tab, and pagination.
+- Zustand may own transient composer/selection UI state only; it must not mirror URL-backed query state.
 
 ## No Direct Number Formatting
 - Never use `.toFixed()`, `.toLocaleString()`, or manual `₹` concatenation.
-- Always use `formatCurrency()`, `formatNumber()`, `formatPercentage()` from `@/lib/formatters`.
+- Always use `formatCurrencyFromMinorUnits()`, `formatNumber()`, `formatPercentage()` from `@/lib/formatters`.
 
 ## No Scattered Toast Messages
 - Toast success/error strings must come from a centralized message source, not be scattered in mutation `onSuccess`/`onError` callbacks as inline string literals.

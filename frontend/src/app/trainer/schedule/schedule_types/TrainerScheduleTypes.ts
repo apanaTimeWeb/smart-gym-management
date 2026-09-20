@@ -1,9 +1,12 @@
 // RESPONSIBILITY: Zod schemas and derived types for the Trainer Schedule and Leave management.
 // DATA FLOW: API layer → Zod parse → typed domain types → TanStack Query → UI
 import { z } from 'zod';
+import { LEAVE_TYPE_OPTIONS } from '@/app/trainer/schedule/schedule_utils/TrainerScheduleSharedConstants';
 
 export const DayOfWeekSchema = z.enum(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']);
 export type DayOfWeek = z.infer<typeof DayOfWeekSchema>;
+export const WEEKLY_AVAILABILITY_TIME_FIELDS = ['startTime', 'endTime'] as const;
+export type WeeklyAvailabilityTimeField = (typeof WEEKLY_AVAILABILITY_TIME_FIELDS)[number];
 
 export const WeeklyAvailabilitySchema = z.object({
   day: DayOfWeekSchema,
@@ -13,10 +16,15 @@ export const WeeklyAvailabilitySchema = z.object({
 });
 export type WeeklyAvailability = z.infer<typeof WeeklyAvailabilitySchema>;
 
+export const TrainerWeeklyAvailabilityFormSchema = z.object({
+  days: z.array(WeeklyAvailabilitySchema).length(7),
+});
+export type TrainerWeeklyAvailabilityFormValues = z.infer<typeof TrainerWeeklyAvailabilityFormSchema>;
+
 export const LeaveStatusSchema = z.enum(['PENDING', 'APPROVED', 'REJECTED']);
 export type LeaveStatus = z.infer<typeof LeaveStatusSchema>;
 
-export const LEAVE_TYPE_OPTIONS = ['Sick Leave', 'Casual Leave', 'Emergency', 'Personal', 'Other'] as const;
+
 export const LeaveTypeSchema = z.enum(LEAVE_TYPE_OPTIONS);
 export type LeaveType = z.infer<typeof LeaveTypeSchema>;
 
@@ -62,22 +70,3 @@ export const ScheduleResponseSchema = z.object({
   leaves: z.array(LeaveRequestSchema),
 });
 export type ScheduleResponse = z.infer<typeof ScheduleResponseSchema>;
-
-// Legacy context type for transition (will be removed)
-/** @deprecated — replaced by queries and Zustand store */
-export interface TrainerScheduleContextType {
-  activeTab: 'availability' | 'leaves';
-  setActiveTab: (tab: 'availability' | 'leaves') => void;
-  showLeaveModal: boolean;
-  setShowLeaveModal: (show: boolean) => void;
-  openLeaveModal: () => void;
-  submitLeave: (data: Partial<LeaveRequest>) => Promise<void>;
-  saveAvailability: (data: WeeklyAvailability[]) => Promise<void>;
-}
-
-export interface TrainerScheduleState {
-  activeTab: 'availability' | 'leaves';
-  setActiveTab: (tab: 'availability' | 'leaves') => void;
-  showLeaveModal: boolean;
-  setShowLeaveModal: (show: boolean) => void;
-}

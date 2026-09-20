@@ -1,4 +1,5 @@
 "use client";
+import { format } from 'date-fns';
 import { formatCurrency } from '@/lib/formatters';
 // RESPONSIBILITY: Main orchestrator for the Subscriptions / Billing module — tabs for overview, plans, invoices, payment.
 
@@ -38,11 +39,11 @@ export default function AdminSubscriptionsMain() {
               </div>
               <div>
                 <p className="text-xs text-secondary uppercase tracking-wider font-semibold">Current Plan</p>
-                <p className="text-xl font-bold text-foreground">{subscription.planName}</p>
+                <p className="text-xl font-bold text-primary">{subscription.planName}</p>
                 <p className="text-sm text-secondary mt-0.5">
                   {formatCurrency(subscription.monthlyPrice)}/month · Renews{' '}
-                  <span className="font-semibold text-foreground">
-                    {new Date(subscription.nextBillingDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+                  <span className="font-semibold text-primary">
+                    {format(new Date(subscription.nextBillingDate), 'd MMM yyyy')}
                   </span>
                 </p>
               </div>
@@ -52,17 +53,17 @@ export default function AdminSubscriptionsMain() {
               <button
                 onClick={toggleAutoRenew}
                 disabled={togglingAutoRenew}
-                className="flex items-center gap-1.5 text-sm font-medium motion-safe:transition-colors disabled:opacity-50"
+                className="min-h-11 min-w-11 flex items-center gap-1.5 text-sm font-medium motion-safe:transition-colors disabled:opacity-50 motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
                 aria-label="Toggle auto-renew"
               >
                 {togglingAutoRenew
-                  ? <Loader2 size={20} className="motion-safe:animate-spin text-primary" />
+                  ? <Loader2 size={20} className="motion-safe:animate-spin text-primary motion-safe:duration-base" />
                   : subscription.autoRenew
                     ? <ToggleRight size={28} className="text-success" />
                     : <ToggleLeft size={28} className="text-secondary" />
                 }
                 <span className={subscription.autoRenew ? 'text-success' : 'text-secondary'}>
-                  {subscription.autoRenew ? 'On' : 'Off'}
+                  {togglingAutoRenew ? 'Saving...' : subscription.autoRenew ? 'On' : 'Off'}
                 </span>
               </button>
             </div>
@@ -71,7 +72,7 @@ export default function AdminSubscriptionsMain() {
 
         {status === 'pending' && (
           <div className="flex items-center justify-center py-10">
-            <RefreshCw size={20} className="motion-safe:animate-spin text-primary" />
+            <RefreshCw size={20} className="motion-safe:animate-spin text-primary motion-safe:duration-base" />
           </div>
         )}
 
@@ -86,10 +87,10 @@ export default function AdminSubscriptionsMain() {
                 <button
                   key={tab.key}
                   onClick={() => setActiveTab(tab.key)}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium motion-safe:transition-colors ${
+                  className={`focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page px-4 py-2 rounded-lg text-sm font-medium motion-safe:transition-colors ${
                     activeTab === tab.key
-                      ? 'bg-card text-foreground shadow-sm border border-border'
-                      : 'text-secondary hover:text-foreground'
+                      ? 'bg-card text-primary shadow-card border border-border'
+                      : 'text-secondary hover:text-primary'
                   }`}
                 >
                   {tab.label}

@@ -1,11 +1,10 @@
+// RESPONSIBILITY: Renders the two rows of KPI metric stat cards on the dashboard using live data from the Dashboard TanStack Query response.
 'use client';
-// RESPONSIBILITY: Renders the two rows of KPI metric stat cards on the dashboard using live data from DashboardContext.
-import { formatNumber } from '@/lib/formatters';
 import { useTrainerDashboardQuery } from '@/app/trainer/dashboard/dashboard_queries/useTrainerDashboardQuery';
 import TrainerStatCard from '@/app/trainer/trainer_components/TrainerShared/TrainerStatCard';
-import { Users, UserCheck, CalendarCheck, Clock, Dumbbell, Activity, DollarSign, Star, CalendarClock, TrendingUp } from 'lucide-react';
+import { Users, CalendarCheck, Clock, Dumbbell } from 'lucide-react';
 import { useDateRangeSuffix } from '@/lib/useDateRangeSuffix';
-import { formatCurrency } from '@/lib/formatters';
+import { formatNumber } from '@/lib/formatters';
 
 export default function TrainerDashboardKPIs() {
   const { data: stats } = useTrainerDashboardQuery();
@@ -19,16 +18,16 @@ export default function TrainerDashboardKPIs() {
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-4">
         <TrainerStatCard
           title={`Today's Sessions${dateSuffix}`}
-          value={s.todaysSessions.toLocaleString()}
+          value={formatNumber(s.todaysSessions)}
           change={`${s.completedSessions}/${s.todaysSessions} Completed`}
           changeType="neutral"
           icon={Clock}
-          iconBg="bg-primary/10"
+          iconBg="bg-primary-subtle"
           iconColor="text-primary"
         />
         <TrainerStatCard
           title={`My Members${dateSuffix}`}
-          value={s.myMembersCount.toLocaleString()}
+          value={formatNumber(s.myMembersCount)}
           change="Assigned to you"
           changeType="neutral"
           icon={Users}
@@ -37,7 +36,7 @@ export default function TrainerDashboardKPIs() {
         />
         <TrainerStatCard
           title={`Today's Attendance${dateSuffix}`}
-          value={s.todaysAttendance.toLocaleString()}
+          value={formatNumber(s.todaysAttendance)}
           change="Members present today"
           changeType="neutral"
           icon={CalendarCheck}
@@ -46,66 +45,12 @@ export default function TrainerDashboardKPIs() {
         />
         <TrainerStatCard
           title={`Pending Plans${dateSuffix}`}
-          value={s.pendingWorkoutPlans.toLocaleString()}
+          value={formatNumber(s.pendingWorkoutPlans)}
           change="Workout plans to create"
           changeType="down"
           icon={Dumbbell}
           iconBg="bg-warning-bg"
           iconColor="text-warning"
-        />
-        <TrainerStatCard
-          title={`Total PT Revenue${dateSuffix}`}
-          value={formatCurrency(s.totalPTRevenue ?? 0)}
-          change="This month"
-          changeType="neutral"
-          icon={DollarSign}
-          iconBg="bg-success-bg"
-          iconColor="text-success"
-        />
-        <TrainerStatCard
-          title={`Weekly Sessions${dateSuffix}`}
-          value={s.weeklySessionsCompleted?.toLocaleString() ?? '0'}
-          change="Completed"
-          changeType="neutral"
-          icon={Activity}
-          iconBg="bg-primary/10"
-          iconColor="text-primary"
-        />
-        <TrainerStatCard
-          title={`Avg Session Rating${dateSuffix}`}
-          value={formatNumber(s.avgSessionRating ?? 0)}
-          change="Out of 5.0"
-          changeType="neutral"
-          icon={Star}
-          iconBg="bg-warning-bg"
-          iconColor="text-warning"
-        />
-        <TrainerStatCard
-          title={`Active Clients${dateSuffix}`}
-          value={s.activeClientsCount?.toLocaleString() ?? '0'}
-          change="Currently active"
-          changeType="neutral"
-          icon={UserCheck}
-          iconBg="bg-info-bg"
-          iconColor="text-info"
-        />
-        <TrainerStatCard
-          title={`Attendance Rate${dateSuffix}`}
-          value={`${s.attendanceRate ?? 0}%`}
-          change="Average attendance"
-          changeType="neutral"
-          icon={TrendingUp}
-          iconBg="bg-primary/10"
-          iconColor="text-primary"
-        />
-        <TrainerStatCard
-          title={`Next Session${dateSuffix}`}
-          value={s.nextSessionTime ?? 'N/A'}
-          change="Upcoming"
-          changeType="neutral"
-          icon={CalendarClock}
-          iconBg="bg-info-bg"
-          iconColor="text-info"
         />
       </div>
     </>

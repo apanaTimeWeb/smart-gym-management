@@ -1,12 +1,22 @@
+import { resetSuperadminMessagingMockState } from '@/app/superadmin/messaging/messaging_mocks/handlers/SuperadminMessagingMockHandlers';
+import { resetSuperadminMessagingV1WhatsAppMockState } from '@/app/superadmin/messaging/messaging_whatsapp_mocks/handlers/SuperadminMessagingV1WhatsAppMockHandlers';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import SuperadminMessagingV1WhatsAppBulkCenter from '@/app/superadmin/messaging/messaging_whatsapp_components/SuperadminMessagingV1WhatsAppBulkCenter';
 import { SUPERADMIN_WHATSAPP_BULK_CENTER_MOCK_FIXTURE } from '@/app/superadmin/messaging/messaging_whatsapp_mocks/fixtures/SuperadminMessagingV1WhatsAppMockFixtures';
-import { createSuperadminWhatsAppCampaign } from '@/app/superadmin/messaging/messaging_whatsapp_api/superadmin_messaging_whatsapp_api';
-vi.mock('@/app/superadmin/messaging/messaging_whatsapp_api/superadmin_messaging_whatsapp_api', () => ({
-    createSuperadminWhatsAppCampaign: vi.fn(),
+import { createWhatsAppCampaign } from '@/app/superadmin/messaging/messaging_whatsapp_api/SuperadminMessagingWhatsappApi';
+vi.mock('@/app/superadmin/messaging/messaging_whatsapp_api/SuperadminMessagingWhatsappApi', () => ({
+    createWhatsAppCampaign: vi.fn(),
 }));
-const mockedCreateCampaign = vi.mocked(createSuperadminWhatsAppCampaign);
+const mockedCreateCampaign = vi.mocked(createWhatsAppCampaign);
+beforeEach(() => {
+  resetSuperadminMessagingV1WhatsAppMockState();
+});
+
+beforeEach(() => {
+  resetSuperadminMessagingMockState();
+});
+
 describe('Superadmin tenant Smart Bulk WhatsApp', () => {
     afterEach(() => vi.restoreAllMocks());
     beforeEach(() => {

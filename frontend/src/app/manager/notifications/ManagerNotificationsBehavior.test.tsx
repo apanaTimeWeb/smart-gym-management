@@ -1,11 +1,11 @@
-import { describe, it, expect, beforeAll, afterAll, afterEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import ManagerNotificationsMain from '@/app/manager/notifications/notifications_components/ManagerNotificationsMain/ManagerNotificationsMain';
-import { managerMswServer } from '@/app/manager/manager_mocks/ManagerMswTestServer';
-import { notificationsApi } from '@/app/manager/notifications/notifications_api/ManagerNotificationsApi';
-import { ManagerTestProviders } from '@/app/manager/manager_mocks/ManagerTestProviders';
-
 import { http, HttpResponse } from 'msw';
+import { describe, it, expect, beforeAll, afterAll, afterEach } from 'vitest';
+import { managerMswServer } from '@/app/manager/manager_mocks/ManagerMswTestServer';
+import { ManagerTestProviders } from '@/app/manager/manager_mocks/ManagerTestProviders';
+import { notificationsApi } from '@/app/manager/notifications/notifications_api/ManagerNotificationsApi';
+import ManagerNotificationsMain from '@/app/manager/notifications/notifications_components/ManagerNotificationsMain/ManagerNotificationsMain';
+
 beforeAll(() => managerMswServer.listen({ onUnhandledRequest: 'error' }));
 afterEach(() => managerMswServer.resetHandlers());
 afterAll(() => managerMswServer.close());

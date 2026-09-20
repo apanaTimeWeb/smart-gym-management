@@ -1,6 +1,16 @@
-import { describe, expect, it } from 'vitest';
+import { resetSuperadminMessagingMockState } from '@/app/superadmin/messaging/messaging_mocks/handlers/SuperadminMessagingMockHandlers';
+import { resetSuperadminMessagingV1WhatsAppMockState } from '@/app/superadmin/messaging/messaging_whatsapp_mocks/handlers/SuperadminMessagingV1WhatsAppMockHandlers';
+import {describe, expect, it, beforeEach} from 'vitest';
 import { SUPERADMIN_WHATSAPP_BULK_CENTER_MOCK_FIXTURE } from '@/app/superadmin/messaging/messaging_whatsapp_mocks/fixtures/SuperadminMessagingV1WhatsAppMockFixtures';
 import { buildWhatsAppLink, getWhatsAppAudienceCount, isWhatsAppRecipientReady, replaceWhatsAppVariables } from '@/app/superadmin/messaging/messaging_whatsapp_utils/SuperadminMessagingV1WhatsAppUtils';
+beforeEach(() => {
+  resetSuperadminMessagingV1WhatsAppMockState();
+});
+
+beforeEach(() => {
+  resetSuperadminMessagingMockState();
+});
+
 describe('Superadmin tenant WhatsApp free workflow utilities', () => {
     const subscriptionRecipient = SUPERADMIN_WHATSAPP_BULK_CENTER_MOCK_FIXTURE.recipients[0]!;
     it('personalizes tenant contact and platform lifecycle fields with explicit fallbacks', () => {

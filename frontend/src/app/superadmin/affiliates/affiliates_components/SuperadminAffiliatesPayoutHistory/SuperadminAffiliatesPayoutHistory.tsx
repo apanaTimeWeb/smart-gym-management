@@ -1,69 +1,13 @@
-// RESPONSIBILITY: Renders the payout history for affiliates.
+// RESPONSIBILITY: Renders server-backed affiliate payout history passed from the feature page query.
 'use client';
-import React, { useMemo } from 'react';
-import type { Affiliate } from '@/app/superadmin/affiliates/superadmin_affiliates_types/superadmin_affiliates_types';
-import { formatCurrency, formatDate } from '@/lib/formatters';
-export default function SuperadminAffiliatesPayoutHistory({ affiliates }: {
-    affiliates: Affiliate[];
-}) {
-    // Generate mock payout history based on affiliates
-    const payouts = useMemo(() => {
-        return affiliates.flatMap((aff, index) => {
-            if (aff.commissionEarned <= 0)
-                return [];
-            const count = Math.max(1, index % 3);
-            return Array.from({ length: count }).map((_, i) => ({
-                id: `payout-${aff.id}-${i}`,
-                affiliateName: aff.name,
-                affiliateId: aff.id,
-                amount: Math.round(aff.commissionEarned / count),
-                status: i === 0 && index % 2 === 0 ? 'PENDING' : 'COMPLETED',
-                date: new Date(Date.now() - (i * 30 * 24 * 60 * 60 * 1000)).toISOString().split('T')[0],
-                method: i % 2 === 0 ? 'Bank Transfer' : 'PayPal',
-                referenceId: `REF-${Math.floor(Math.random() * 100000)}`
-            }));
-        }).sort((a, b) => new Date(b.date || '').getTime() - new Date(a.date || '').getTime());
-    }, [affiliates]);
-    if (payouts.length === 0) {
-        return (<div className="p-8 text-center text-secondary border border-border bg-card rounded-xl">
-        No payout history available.
-      </div>);
-    }
-    return (<div className="overflow-x-auto bg-card border border-border rounded-xl shadow-sm">
-      <table className="w-full text-left border-collapse min-w-max">
-        <thead>
-          <tr className="bg-primary/10 border-b border-border text-secondary text-sm">
-            <th className="p-4 font-semibold uppercase text-xs tracking-wider">Date</th>
-            <th className="p-4 font-semibold uppercase text-xs tracking-wider">Affiliate</th>
-            <th className="p-4 font-semibold uppercase text-xs tracking-wider">Amount</th>
-            <th className="p-4 font-semibold uppercase text-xs tracking-wider">Method</th>
-            <th className="p-4 font-semibold uppercase text-xs tracking-wider">Ref ID</th>
-            <th className="p-4 font-semibold uppercase text-xs tracking-wider">Status</th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-border">
-          {payouts.map((payout) => (<tr key={payout.id} className="hover:bg-input/50 motion-safe:transition-colors">
-              <td className="p-4 text-sm text-secondary">
-                {formatDate(payout.date)}
-              </td>
-              <td className="p-4">
-                <span className="text-foreground font-medium">{payout.affiliateName}</span>
-                <span className="block text-xs text-disabled">{payout.affiliateId}</span>
-              </td>
-              <td className="p-4 font-medium text-foreground">
-                {formatCurrency(payout.amount)}
-              </td>
-              <td className="p-4 text-sm text-secondary">{payout.method}</td>
-              <td className="p-4 text-xs font-mono text-secondary">{payout.referenceId}</td>
-              <td className="p-4">
-                {payout.status === 'COMPLETED' ? (<span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-success/10 text-success border border-success/20">
-                    Completed
-                  </span>) : (<span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-warning/10 text-warning border border-warning/20">
-                    Pending
-                  </span>)}
-              </td>
-            </tr>))}
-        </tbody>
-      </table>
-    </div>);
+import { Loader2 } from 'lucide-react';
+import { formatCurrencyFromMinorUnits, formatDate } from '@/lib/formatters';
+import type { AffiliatePayoutRecord } from '@/app/superadmin/affiliates/affiliates_types/SuperadminAffiliatesTypes';
+import type { SuperadminAffiliatesPayoutHistoryProps } from '@/app/superadmin/affiliates/affiliates_components/SuperadminAffiliatesPayoutHistory/SuperadminAffiliatesPayoutHistoryTypes';
+
+export default function SuperadminAffiliatesPayoutHistory({ payouts, isPending, isError, onRetry }: SuperadminAffiliatesPayoutHistoryProps) {
+  if (isPending) return <div className="flex min-h-48 items-center justify-center gap-2 text-secondary" aria-busy="true"><Loader2 size={18} className="motion-safe:animate-spin"/> Loading payout history…</div>;
+  if (isError) return <div role="alert" className="rounded-lg border border-border bg-danger-bg p-5 text-sm text-danger">Unable to load payout history. <button type="button" onClick={onRetry} className="ml-1 underline underline-offset-2">Retry</button></div>;
+  if (payouts.length === 0) return <div className="rounded-lg border border-border bg-card p-8 text-center text-secondary">No payout history available.</div>;
+  return <div className="overflow-x-auto rounded-xl border border-border bg-card shadow-card"><table className="w-full min-w-max border-collapse text-left"><thead><tr className="border-b border-border bg-primary-subtle text-secondary"><th className="p-4 text-xs font-semibold uppercase tracking-wider">Date</th><th className="p-4 text-xs font-semibold uppercase tracking-wider">Affiliate</th><th className="p-4 text-xs font-semibold uppercase tracking-wider">Amount</th><th className="p-4 text-xs font-semibold uppercase tracking-wider">Method</th><th className="p-4 text-xs font-semibold uppercase tracking-wider">Ref ID</th><th className="p-4 text-xs font-semibold uppercase tracking-wider">Status</th></tr></thead><tbody className="divide-y divide-border">{payouts.map((payout: AffiliatePayoutRecord) => <tr key={payout.id} className="motion-safe:transition-colors hover:bg-input"><td className="p-4 text-sm text-secondary">{formatDate(payout.paidAt)}</td><td className="p-4"><span className="font-medium text-primary">{payout.affiliateName}</span><span className="block text-xs text-disabled">{payout.affiliateId}</span></td><td className="p-4 font-medium text-primary">{formatCurrencyFromMinorUnits(payout.amount)}</td><td className="p-4 text-sm text-secondary">{payout.method === 'BANK_TRANSFER' ? 'Bank Transfer' : 'PayPal'}</td><td className="p-4 text-xs font-mono text-secondary">{payout.referenceId}</td><td className="p-4">{payout.status === 'COMPLETED' ? <span className="rounded-full border border-border bg-success-bg px-2.5 py-1 text-xs font-semibold text-success">Completed</span> : <span className="rounded-full border border-border bg-warning-bg px-2.5 py-1 text-xs font-semibold text-warning">Pending</span>}</td></tr>)}</tbody></table></div>;
 }

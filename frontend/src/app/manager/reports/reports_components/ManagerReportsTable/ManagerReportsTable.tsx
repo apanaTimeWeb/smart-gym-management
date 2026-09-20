@@ -1,140 +1,27 @@
-'use client';
 // RESPONSIBILITY: Renders the data table for the active report tab — Revenue, Attendance, Members, or Expenses.
-import { useReportsContext } from '@/app/manager/reports/reports_context/ManagerReportsContext';
-import { EXPENSE_CATEGORY_STYLES } from '@/app/manager/reports/reports_utils/ManagerReportsSharedConstants';
-import { formatCurrency, formatNumber } from '@/lib/formatters';
+'use client';
+import { ManagerReportsAttendanceTable } from '@/app/manager/reports/reports_components/ManagerReportsTable/ManagerReportsAttendanceTable/ManagerReportsAttendanceTable';
+import { ManagerReportsExpensesTable } from '@/app/manager/reports/reports_components/ManagerReportsTable/ManagerReportsExpensesTable/ManagerReportsExpensesTable';
+import { ManagerReportsMembersTable } from '@/app/manager/reports/reports_components/ManagerReportsTable/ManagerReportsMembersTable/ManagerReportsMembersTable';
+import { ManagerReportsRevenueTable } from '@/app/manager/reports/reports_components/ManagerReportsTable/ManagerReportsRevenueTable/ManagerReportsRevenueTable';
+import { useManagerReportsLogic } from '@/app/manager/reports/reports_hooks/ManagerUseManagerReportsLogic';
 
-const formatReportCurrency = (value: number) => formatCurrency(value);
 
-function RevenueTable() {
-  const { summary } = useReportsContext();
-  const data = summary?.revenueData ?? [];
-  return (
-    <table className="w-full">
-      <thead className="bg-primary/5">
-        <tr>
-          {['Month', 'Revenue', 'Expenses', 'Net Profit'].map(h => (
-            <th key={h} className="text-left text-xs font-semibold text-secondary uppercase tracking-wider px-5 py-3">{h}</th>
-          ))}
-        </tr>
-      </thead>
-      <tbody className="divide-y divide-border">
-        {data.map(d => (
-          <tr key={d.month} className="hover:bg-primary/5 motion-safe:transition-colors">
-            <td className="px-5 py-3.5 text-sm font-medium text-foreground">{d.month}</td>
-            <td className="px-5 py-3.5 text-sm text-success font-semibold">{formatReportCurrency(d.revenue)}</td>
-            <td className="px-5 py-3.5 text-sm text-danger">{formatReportCurrency(d.expenses)}</td>
-            <td className={`px-5 py-3.5 text-sm font-semibold ${d.profit >= 0 ? 'text-success' : 'text-danger'}`}>{formatReportCurrency(d.profit)}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  );
-}
-
-function AttendanceTable() {
-  const { summary } = useReportsContext();
-  const data = (summary?.attendanceData ?? []).slice(-14);
-  return (
-    <table className="w-full">
-      <thead className="bg-primary/5">
-        <tr>
-          {['Date', 'Present', 'Absent', 'Rate'].map(h => (
-            <th key={h} className="text-left text-xs font-semibold text-secondary uppercase tracking-wider px-5 py-3">{h}</th>
-          ))}
-        </tr>
-      </thead>
-      <tbody className="divide-y divide-border">
-        {data.map((d) => (
-          <tr key={d.date} className="hover:bg-primary/5 motion-safe:transition-colors">
-            <td className="px-5 py-3.5 text-sm text-foreground">{d.date}</td>
-            <td className="px-5 py-3.5 text-sm text-success font-semibold">{formatNumber(d.present)}</td>
-            <td className="px-5 py-3.5 text-sm text-danger">{formatNumber(d.absent)}</td>
-            <td className="px-5 py-3.5 text-sm font-semibold text-primary">{d.rate}%</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  );
-}
-
-function MembersTable() {
-  const { summary } = useReportsContext();
-  const data = summary?.memberChurnData ?? [];
-  return (
-    <table className="w-full">
-      <thead className="bg-primary/5">
-        <tr>
-          {['Month', 'New Members', 'Lost', 'Active'].map(h => (
-            <th key={h} className="text-left text-xs font-semibold text-secondary uppercase tracking-wider px-5 py-3">{h}</th>
-          ))}
-        </tr>
-      </thead>
-      <tbody className="divide-y divide-border">
-        {data.map(d => (
-          <tr key={d.month} className="hover:bg-primary/5 motion-safe:transition-colors">
-            <td className="px-5 py-3.5 text-sm font-medium text-foreground">{d.month}</td>
-            <td className="px-5 py-3.5 text-sm text-success font-semibold">+{formatNumber(d.newMembers)}</td>
-            <td className="px-5 py-3.5 text-sm text-danger">-{formatNumber(d.churned)}</td>
-            <td className="px-5 py-3.5 text-sm font-semibold text-foreground">{formatNumber(d.active)}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  );
-}
-
-function ExpensesTable() {
-  const { summary } = useReportsContext();
-  const data = summary?.expenseBreakdown ?? [];
-  return (
-    <table className="w-full">
-      <thead className="bg-primary/5">
-        <tr>
-          {['Category', 'Amount', 'Share'].map(h => (
-            <th key={h} className="text-left text-xs font-semibold text-secondary uppercase tracking-wider px-5 py-3">{h}</th>
-          ))}
-        </tr>
-      </thead>
-      <tbody className="divide-y divide-border">
-        {data.map(d => {
-          const style = EXPENSE_CATEGORY_STYLES[d.category] ?? { bg: 'bg-secondary/10', text: 'text-secondary' };
-          return (
-            <tr key={d.category} className="hover:bg-primary/5 motion-safe:transition-colors">
-              <td className="px-5 py-3.5">
-                <span className={`text-xs font-semibold px-2.5 py-0.5 rounded-full ${style.bg} ${style.text}`}>{d.category}</span>
-              </td>
-              <td className="px-5 py-3.5 text-sm font-semibold text-foreground">{formatReportCurrency(d.amount)}</td>
-              <td className="px-5 py-3.5">
-                <div className="flex items-center gap-2">
-                  <div className="flex-1 h-2 bg-input rounded-full overflow-hidden max-w-32">
-                    <div className="h-full bg-primary rounded-full" style={{ width: `${d.percentage}%` }} />
-                  </div>
-                  <span className="text-xs text-secondary">{d.percentage}%</span>
-                </div>
-              </td>
-            </tr>
-          );
-        })}
-      </tbody>
-    </table>
-  );
-}
 
 export default function ManagerReportsTable() {
-  const { tab, summary } = useReportsContext();
+  const { tab, summary } = useManagerReportsLogic();
   if (!summary) return null;
 
   return (
-    <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm">
+    <div className="bg-card border border-border rounded-xl overflow-hidden shadow-card">
       <div className="px-5 py-3.5 border-b border-border">
-        <p className="text-sm font-semibold text-foreground">{tab} Data</p>
+        <p className="text-sm font-semibold text-primary">{tab} Data</p>
       </div>
       <div className="overflow-x-auto">
-        {tab === 'Revenue'    && <RevenueTable    />}
-        {tab === 'Attendance' && <AttendanceTable />}
-        {tab === 'Members'    && <MembersTable    />}
-        {tab === 'Expenses'   && <ExpensesTable   />}
+        {tab === 'Revenue'    && <ManagerReportsRevenueTable    />}
+        {tab === 'Attendance' && <ManagerReportsAttendanceTable />}
+        {tab === 'Members'    && <ManagerReportsMembersTable    />}
+        {tab === 'Expenses'   && <ManagerReportsExpensesTable   />}
       </div>
     </div>
   );

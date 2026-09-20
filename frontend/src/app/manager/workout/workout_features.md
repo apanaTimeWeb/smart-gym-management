@@ -8,11 +8,17 @@ Manager Workout is the branch workout-plan and exercise-library workspace. Manag
 |---|---|---|
 | `workout_api/` | Feature-owned responsibility for the workout module. | `ManagerUseManagerWorkoutMutations.ts; ManagerUseManagerWorkoutQueries.ts; ManagerWorkoutApi.ts` |
 | `workout_components/` | Feature-owned responsibility for the workout module. | `—` |
-| `workout_context/` | Feature-owned responsibility for the workout module. | `ManagerWorkoutContext.tsx` |
+| `workout_hooks/` | Feature-owned responsibility for the workout module. | `ManagerUseManagerWorkoutLogic.ts` |
 | `workout_fixtures/` | Feature-owned responsibility for the workout module. | `ManagerWorkoutAssignmentMockData.ts; ManagerWorkoutMockData.ts` |
 | `workout_mocks/` | Feature-owned responsibility for the workout module. | `—` |
 | `workout_types/` | Feature-owned responsibility for the workout module. | `ManagerWorkoutAssignmentTypes.ts; ManagerWorkoutSchema.ts; ManagerWorkoutSnapshotTypes.ts; ManagerWorkoutTypes.ts` |
 | `workout_utils/` | Feature-owned responsibility for the workout module. | `ManagerWorkoutSharedConstants.ts` |
+
+## Approved External Dependencies
+
+- Global framework/application infrastructure documented by the architecture standard may be used when required.
+- Approved zero-business UI primitives may be imported from Manager application infrastructure.
+- Sibling feature business logic, state, API services, fixtures, and tests are not dependencies.
 
 ## Feature Inventory
 | Feature | Route | What the User Can Do | Main API Calls | Status |
@@ -38,7 +44,7 @@ Manager Workout is the branch workout-plan and exercise-library workspace. Manag
 3. Create/update/delete exercise mutations use the typed API response.
 
 ## Data and State Architecture
-TanStack Query owns workout server/API data. UI-only filters, tabs, selections, and draft state remain local state or module-scoped Zustand where shared. React Context is limited to stable cross-tree concerns and does not become the source of truth for API data. Query keys are module-prefixed.
+TanStack Query owns workout server/API data. UI-only filters, tabs, selections, and draft state remain local state or module-scoped Zustand where shared. module-local state/query layer is limited to stable cross-tree concerns and does not become the source of truth for API data. Query keys are module-prefixed.
 
 ## API Contract
 | Function | Method | Endpoint | Request | Response `data` type |
@@ -87,11 +93,11 @@ TanStack Query owns workout server/API data. UI-only filters, tabs, selections, 
 - Module `error.tsx` provides a safe retry fallback and does not expose raw backend/stack-trace text.
 
 ## Edge Cases and AI Warnings
-- **Do not confuse `/manager/workouts` with `/manager/workout/assignments`; they are distinct contracts:** Do not confuse `/manager/workouts` with `/manager/workout/assignments`; they are distinct contracts.
-- **Workout/exercise deletes are destructive and require confirmation:** Workout/exercise deletes are destructive and require confirmation.
-- **Exercise category is optional and must use displayValue() when blank:** Exercise category is optional and must use displayValue() when blank.
-- **Assignment records must come from their dedicated endpoint and fixture, not workout-plan constants:** Assignment records must come from their dedicated endpoint and fixture, not workout-plan constants.
-- **Workout tags/exercise groups must be rendered from response arrays rather than hardcoded UI samples:** Workout tags/exercise groups must be rendered from response arrays rather than hardcoded UI samples.
+- **Do not confuse `/manager/workouts` with `/manager/workout/assignments`; they are distinct contracts.**
+- **Workout/exercise deletes are destructive and require confirmation.**
+- **Exercise category is optional and must use `displayValue()` when blank.**
+- **Assignment records must come from their dedicated endpoint and fixture, not workout-plan constants.**
+- **Workout tags/exercise groups must be rendered from response arrays rather than hardcoded UI samples.**
 
 ## Component Responsibility Map
 | Component File | Responsibility |
@@ -99,11 +105,11 @@ TanStack Query owns workout server/API data. UI-only filters, tabs, selections, 
 | `workout/workout_components/ManagerWorkoutBanner/ManagerWorkoutBanner.tsx` | Renders the top banner/hero section with module title and CTA for the Workout Library. |
 | `workout/workout_components/ManagerWorkoutExerciseModal/ManagerWorkoutExerciseModal.tsx` | Form modal for creating or editing a single exercise entry in the Workout Library module. |
 | `workout/workout_components/ManagerWorkoutExerciseTable/ManagerWorkoutExerciseTable.tsx` | Renders the exercises data table with muscle group, category, and inline edit/delete actions. |
-| `workout/workout_components/ManagerWorkoutMain/ManagerWorkoutMain.tsx` | Entry component for the Workout Library module. Wraps the UI in the context provider and handles page layout. |
+| `workout/workout_components/ManagerWorkoutMain/ManagerWorkoutMain.tsx` | Framework entry component for the Workout module; delegates the interactive surface to `ManagerWorkoutContent`. |
 | `workout/workout_components/ManagerWorkoutModal/ManagerWorkoutModal.tsx` | Form modal for creating or editing a workout plan in the Workout Library module. |
 | `workout/workout_components/ManagerWorkoutPlansGrid/ManagerWorkoutPlansGrid.tsx` | Renders the grid of workout plan cards with exercises count and action buttons. |
 | `workout/workout_components/ManagerWorkoutToolbar/ManagerWorkoutToolbar.tsx` | Renders the search input, muscle group filter, and Add Plan CTA for the Workout Library. |
-| `workout/workout_context/ManagerWorkoutContext.tsx` | Provides UI orchestration state to the Workout Library module hierarchy using URL parameters for filtering. |
+| `workout/workout_hooks/ManagerUseManagerWorkoutLogic.ts` | Provides UI orchestration state to the Workout Library module hierarchy using URL parameters for filtering. |
 
 ## Rule Compliance Checklist
 - [x] Module-owned API, types/schemas, fixtures, handlers, tests, and feature documentation are scoped to this module.

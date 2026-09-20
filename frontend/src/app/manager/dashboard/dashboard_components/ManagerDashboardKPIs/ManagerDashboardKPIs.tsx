@@ -1,23 +1,22 @@
+// RESPONSIBILITY: Renders the two rows of KPI metric stat cards on the dashboard using server data from the dashboard TanStack Query contract.
 'use client';
-// RESPONSIBILITY: Renders the two rows of KPI metric stat cards on the dashboard using live data from DashboardContext.
-import { useDashboardStatsQuery } from '@/app/manager/dashboard/dashboard_api/ManagerUseManagerDashboardQueries';
-import { useManagerDashboardStore } from '@/app/manager/dashboard/dashboard_store/ManagerUseManagerDashboardStore';
-import ManagerStatCard from '@/app/manager/manager_components/ManagerShared/ManagerStatCard';
-import { formatCurrency, formatKPI } from '@/lib/formatters';
 import { Users, DollarSign, TrendingUp, AlertCircle, CheckCircle, Clock, UserCheck, ShoppingCart, Snowflake, TrendingDown, Target } from 'lucide-react';
+import { formatCurrencyFromMinorUnits, formatKPI } from '@/lib/formatters';
+import { useDashboardStatsQuery } from '@/app/manager/dashboard/dashboard_hooks/ManagerUseManagerDashboardQueries';
+import { useManagerDashboardUrlState } from '@/app/manager/dashboard/dashboard_hooks/ManagerUseManagerDashboardUrlState';
+import ManagerStatCard from '@/app/manager/manager_components/ManagerShared/ManagerStatCard';
+import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
+
 
 export default function ManagerDashboardKPIs() {
-  const { timeRange } = useManagerDashboardStore();
-  const { data: stats } = useDashboardStatsQuery({ range: timeRange });
+  const { range } = useManagerDashboardUrlState();
+  const { data: stats } = useDashboardStatsQuery({ range });
   
   if (!stats) return null;
   const s = stats;
 
-  const multiplier = timeRange === 'weekly' ? 0.25 : timeRange === 'yearly' ? 12 : timeRange === 'custom' ? 1.5 : 1;
-  const timeLabel = timeRange === 'weekly' ? 'This week' : timeRange === 'yearly' ? 'This year' : timeRange === 'custom' ? 'Selected range' : 'This month';
-  const revLabel = timeRange === 'weekly' ? 'Weekly Revenue' : timeRange === 'yearly' ? 'Yearly Revenue' : timeRange === 'custom' ? 'Custom Revenue' : 'Monthly Revenue';
-  const memLabel = timeRange === 'weekly' ? 'New Members (Week)' : timeRange === 'yearly' ? 'New Members (Year)' : timeRange === 'custom' ? 'New Members (Custom)' : 'New Members (Month)';
-  const inqLabel = timeRange === 'weekly' ? 'New Inquiries (Week)' : timeRange === 'yearly' ? 'New Inquiries (Year)' : timeRange === 'custom' ? 'New Inquiries (Custom)' : 'New Inquiries (Month)';
+  const timeLabel = range === 'weekly' ? 'This week' : range === 'yearly' ? 'This year' : range === 'custom' ? 'Selected range' : 'This month';
+  const inqLabel = range === 'weekly' ? 'New Inquiries (Week)' : range === 'yearly' ? 'New Inquiries (Year)' : range === 'custom' ? 'New Inquiries (Custom)' : 'New Inquiries (Month)';
 
   return (
     <>
@@ -33,7 +32,7 @@ export default function ManagerDashboardKPIs() {
         />
         <ManagerStatCard
           title="Today's Collection"
-          value={formatCurrency(s.monthlyRevenue * multiplier)}
+          value={formatCurrencyFromMinorUnits(s.todayCollection, ManagerEnvConfig.currencyCode)}
           change="Daily revenue"
           changeType="up"
           icon={DollarSign}
@@ -51,7 +50,7 @@ export default function ManagerDashboardKPIs() {
         />
         <ManagerStatCard
           title="Pending Dues"
-          value={formatCurrency(s.pendingPayments)}
+          value={formatCurrencyFromMinorUnits(s.pendingPayments, ManagerEnvConfig.currencyCode)}
           change={`${s.membersByStatus?.pending || 0} members`}
           changeType="down"
           icon={AlertCircle}
@@ -63,11 +62,11 @@ export default function ManagerDashboardKPIs() {
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mt-6">
         <ManagerStatCard
           title="New Registrations"
-          value={formatKPI(Math.round(s.newMembersThisMonth * multiplier))}
+          value={formatKPI(s.newMembersThisMonth)}
           change={timeLabel}
           changeType="up"
           icon={TrendingUp}
-          iconBg="bg-primary/10"
+          iconBg="bg-primary-subtle"
           iconColor="text-primary"
         />
         <ManagerStatCard
@@ -90,7 +89,7 @@ export default function ManagerDashboardKPIs() {
         />
         <ManagerStatCard
           title={inqLabel}
-          value={formatKPI(Math.round(s.newInquiries * multiplier))}
+          value={formatKPI(s.newInquiries)}
           change={`${s.totalInquiries} total`}
           changeType="up"
           icon={CheckCircle}
@@ -103,7 +102,7 @@ export default function ManagerDashboardKPIs() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mt-6">
         <ManagerStatCard
           title="Today's Collection"
-          value={formatCurrency(s.todayCollection || 0)}
+          value={formatCurrencyFromMinorUnits(s.todayCollection || 0, ManagerEnvConfig.currencyCode)}
           change="Daily revenue"
           changeType="up"
           icon={DollarSign}
@@ -121,7 +120,7 @@ export default function ManagerDashboardKPIs() {
         />
         <ManagerStatCard
           title="PT Revenue"
-          value={formatCurrency(s.totalPTRevenue || 0)}
+          value={formatCurrencyFromMinorUnits(s.totalPTRevenue || 0, ManagerEnvConfig.currencyCode)}
           change="This Month"
           changeType="neutral"
           icon={Target}
@@ -134,7 +133,7 @@ export default function ManagerDashboardKPIs() {
           change="Currently on hold"
           changeType="neutral"
           icon={Snowflake}
-          iconBg="bg-primary/10"
+          iconBg="bg-primary-subtle"
           iconColor="text-primary"
         />
         <ManagerStatCard

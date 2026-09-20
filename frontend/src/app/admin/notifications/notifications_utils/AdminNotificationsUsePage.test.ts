@@ -15,14 +15,14 @@ vi.mock('@/app/admin/notifications/notifications_api/AdminNotificationsApi', () 
 }));
 
 beforeEach(() => {
-  mockUseQuery.mockReturnValue({ data: { data: [] }, isLoading: false, isError: false, refetch: vi.fn() });
+  mockUseQuery.mockReturnValue({ data: { data: [] }, isPending: false, isError: false, status: 'success', refetch: vi.fn() });
 });
 
 describe('useAdminNotificationsPage', () => {
   it('exposes notifications from the TanStack Query response', () => {
     mockUseQuery.mockReturnValueOnce({
       data: { data: [{ id: '1', title: 'Payment received', body: 'Invoice #1', createdAt: '2026-09-16T10:00:00Z', read: false, severity: 'INFO' }] },
-      isLoading: false, isError: false, refetch: vi.fn(),
+      isPending: false, isError: false, status: 'success', refetch: vi.fn(),
     });
     const { result } = renderHook(() => useAdminNotificationsPage());
     expect(result.current.notifications[0]?.id).toBe('1');

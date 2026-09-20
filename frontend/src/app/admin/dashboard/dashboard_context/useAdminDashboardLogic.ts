@@ -6,11 +6,11 @@ import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'next/navigation';
 import { dashboardApi } from '@/app/admin/dashboard/dashboard_api/AdminDashboardApi';
 import type { DashboardStats } from '@/app/admin/dashboard/dashboard_types/AdminDashboardTypes';
-import { useAdminGlobalStore } from '@/app/admin/admin_store/useAdminGlobalStore';
 
+/** Coordinates DashboardLogic state, data flow, and feature behavior. */
 export function useAdminDashboardLogic(initialData?: DashboardStats | null) {
   const searchParams = useSearchParams();
-  const { selectedBranchId } = useAdminGlobalStore();
+  const selectedBranchId = searchParams.get('branchId') || 'all';
   const range = searchParams.get('range') || 'this_month';
   const startDate = searchParams.get('startDate') || undefined;
   const endDate = searchParams.get('endDate') || undefined;

@@ -1,49 +1,44 @@
-# Trainer Repair Status
+# Trainer V2 Repair Status
 
-## Updated State
+## Final Status
+**ARCHIVE-LEVEL REPAIR COMPLETE — RUNTIME NOT VERIFIED**
 
-The Trainer role was repaired against the supplied frontend architecture and Smart Gym 360 global design requirements, plus the latest Trainer audit report.
+## Target
+`trainer/` role package with 11 route pages and 16 documented feature maps.
 
-## Confirmed Fixes
+## V2 Source-Level Completion
+- Canonical Trainer URL config normalized to `trainer_url_config.ts`.
+- Canonical API envelope validation centralized through `TrainerApiResponseSchema.ts` helper.
+- Explicit `any`, TS suppression, relative imports, native dialogs, raw TSX colors and semantic opacity modifiers: all statically clean.
+- All 204 discovered interactive controls have source-level `focus-visible:` coverage.
+- Static no-op handler signatures: 0.
+- ApexCharts consumers use document theme state instead of hardcoded dark mode.
+- Workout and schedule mutation tests now explicitly verify idempotency headers.
+- Non-framework component responsibility metadata complete.
+- Feature-owned docs/support artifacts preserved.
 
-- One Trainer-wide toast feedback mechanism using `useTrainerFeedback()` with stable IDs and a single `TrainerToastHost`.
-- Removed feature-local toast state, inline toast JSX, and direct toast-library usage from feature logic.
-- Removed the feature-local earnings currency formatter; earnings now use `@/lib/formatters`.
-- Added one API behavior test file for each of the 11 Trainer features.
-- Expanded `TrainerCriticalFlows.spec.ts` to cover role access, destructive confirmation, schedule validation, URL state, read-only earnings, profile controls, and responsive shell checks.
-- Preserved zero cross-feature business imports, module isolation, file-size ceilings, unsaved-change guard, and existing MSW ownership.
-- Updated affected feature/forbidden documentation.
+## Verification Boundary
+The supplied archive does not include the parent application's runtime/configuration surface. Therefore the following remain **NOT VERIFIED**:
+- strict `tsc --noEmit`
+- ESLint/Prettier/Tailwind gates
+- Vitest execution
+- Playwright E2E
+- production Next.js build
+- MSW bootstrap
+- top-loader registration
+- hydration
+- responsive browser testing
+- accessibility technology testing
+- SCA/gitleaks/CI/CODEOWNERS
 
-## Static Verification
+## Scores
+- BEFORE REPAIR SCORE: **7.4/10**
+- AFTER REPAIR SCORE: **8.3/10 — NOT FULLY VERIFIED**
+- Improvement: **+0.9/10**
 
-{
-  "cross_feature_business_imports": 0,
-  "legacy_toast_calls": 0,
-  "local_format_currency_defs": 0,
-  "any_ts_ignore_console_alert": 0,
-  "api_behavior_test_files": 11,
-  "component_behavior_test_files": 10,
-  "shared_feedback_behavior_test_files": 1,
-  "e2e_tests": 9,
-  "pages": 11,
-  "loading": 11,
-  "error": 11,
-  "not_found": 11
-}
-
-## NOT VERIFIED
-
-The archive still contains only the Trainer role tree. Project-root verification remains required for `package.json`, `tsconfig.json`, ESLint/Tailwind rules, Husky/lint-staged, CI, CODEOWNERS, dependency vulnerability scans, Gitleaks, and the real Vitest/Playwright/production build execution.
-
-## Acceptance
-
-The module is ready to be integrated into the real repository and then run through the project-level typecheck, lint, test, build, and security gates. Source-level repaired issues are complete; repository/runtime verification remains explicitly NOT VERIFIED until those project-root checks are executed.
-
-## Latest Re-audit Fixes
-
-- Removed the dangling `toast` reference from `library/library_context/TrainerUseLibraryLogic.ts`; the returned logic object no longer references deleted local toast state.
-- Added component-level behavior tests for Dashboard, Earnings, Library, Members, Notifications, Profile, Progress Tracking, Schedule, Sessions, and Workout, plus the existing Attendance calendar behavior test and the shared Trainer feedback behavior test.
-- Added explicit shared feedback tests proving stable success/error deduplication IDs and backend-message propagation.
-- Added a session component test proving cancellation requires confirmation before the mutation executes and that the backend success message reaches the shared feedback API.
-- Added a progress component test proving deletion is blocked when confirmation is declined.
-- Updated this status document to avoid claiming the new tests replace repository-level typecheck/build verification.
+## Artifacts
+- `TRAINER_FINAL_REPAIR_REPORT.md`
+- `TRAINER_STATIC_VERIFICATION_V2.json`
+- `TRAINER_CHANGED_FILES.txt`
+- `TRAINER_CHANGE_MANIFEST.json`
+- `TRAINER_ROOT_INTEGRATION_CHECKLIST.md`

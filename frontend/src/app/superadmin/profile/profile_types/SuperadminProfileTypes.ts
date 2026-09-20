@@ -34,6 +34,6 @@ export const SuperadminProfileDataSchema = z.object({
     email: z.string(),
     role: z.string(),
     avatarUrl: z.string().optional(),
-    lastLogin: z.string(),
+    lastLoginAt: z.string(),
     twoFactorEnabled: z.boolean()
 });

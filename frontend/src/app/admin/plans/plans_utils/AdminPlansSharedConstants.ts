@@ -1,23 +1,15 @@
 // RESPONSIBILITY: Centralized constants, Zod schema, and shared data for the Plans module. Single source of truth for tiers, pricing, and form defaults.
+
+export const TIERS = ['Bronze', 'Silver', 'Gold'] as const;
+
+import { planFormSchema } from '@/app/admin/plans/plans_types/AdminPlansSchemas';
+
 import { z } from 'zod';
-
-export const TIERS = ['BASIC', 'GOLD', 'PREMIUM'];
-
-export const PlanSchema = z.object({
-  name: z.string().min(2, 'Name is required'),
-  tier: z.string(),
-  price1Month:  z.string().refine(val => !isNaN(Number(val)) && Number(val) >= 0, 'Valid price required'),
-  price3Month:  z.string().refine(val => !isNaN(Number(val)) && Number(val) >= 0, 'Valid price required'),
-  price6Month:  z.string().refine(val => !isNaN(Number(val)) && Number(val) >= 0, 'Valid price required'),
-  price12Month: z.string().refine(val => !isNaN(Number(val)) && Number(val) >= 0, 'Valid price required'),
-  priceCustom:  z.string().refine(val => !isNaN(Number(val)) && Number(val) >= 0, 'Valid price required'),
-  features: z.string().min(2, 'Features are required')
-});
-export type PlanFormValues = z.infer<typeof PlanSchema>;
+export type PlanFormValues = z.infer<typeof planFormSchema>;
 
 export const EMPTY_PLAN_FORM: PlanFormValues = { 
  name: '', 
- tier: 'BASIC', 
+ tier: 'Gold', 
  price1Month: '', 
  price3Month: '', 
  price6Month: '', 
@@ -26,3 +18,4 @@ export const EMPTY_PLAN_FORM: PlanFormValues = {
  features: '' 
 };
 
+export const PLANS_ITEMS_PER_PAGE = 10;

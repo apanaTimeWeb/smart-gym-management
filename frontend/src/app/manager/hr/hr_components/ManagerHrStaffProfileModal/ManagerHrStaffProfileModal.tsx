@@ -1,44 +1,47 @@
+// RESPONSIBILITY: Renders the HR staff profile dialog from feature-owned staff data.
 'use client';
-// RESPONSIBILITY: Renders a read-only profile modal for a staff member.
-import { useHrContext } from '@/app/manager/hr/hr_context/ManagerHrContext';
 import { X, Edit2, Phone, Mail, Calendar, MapPin, IndianRupee, Hash } from 'lucide-react';
-import { formatCurrency , formatDate} from '@/lib/formatters';
+import { formatCurrencyFromMinorUnits , formatDate} from '@/lib/formatters';
+import { useManagerHrLogic } from '@/app/manager/hr/hr_hooks/ManagerUseManagerHrLogic';
+import ManagerTooltip from '@/app/manager/manager_components/ManagerFeedback/ManagerTooltip';
+import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
+
 
 export default function ManagerHrStaffProfileModal() {
-  const { viewProfileData, setViewProfileData, openEdit } = useHrContext();
+  const { viewProfileData, setViewProfileData, openEdit } = useManagerHrLogic();
 
   if (!viewProfileData) return null;
   const s = viewProfileData;
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-foreground/60 backdrop-blur-sm">
-      <div className="rounded-2xl shadow-xl w-full max-w-lg overflow-hidden bg-card border-2 border-primary/20">
-        <div className="relative h-24 bg-gradient-to-r from-primary to-primary/60">
+    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-overlay-backdrop backdrop-blur-sm">
+      <div className="rounded-2xl shadow-dialog w-full max-w-lg overflow-hidden bg-overlay border-2 border-border">
+        <div className="relative h-24 bg-primary text-on-primary">
           <button 
             type="button" 
             onClick={() => setViewProfileData(null)} 
-            className="absolute top-4 right-4 p-2 rounded-full bg-foreground/20 hover:bg-foreground/40 motion-safe:transition-colors text-primary-foreground"
+            className="absolute top-4 right-4 p-2 rounded-full bg-overlay-backdrop hover:bg-overlay-backdrop motion-safe:transition-colors text-on-primary"
           >
-            <X size={20} />
+            <X size={18} />
           </button>
         </div>
         
         <div className="px-8 pb-8 relative">
           <div className="flex justify-between items-end -mt-10 mb-6">
-            <div className="w-24 h-24 rounded-2xl flex items-center justify-center font-bold text-4xl bg-card border-4 border-card text-primary shadow-lg shadow-lg">
+            <div className="w-24 h-24 rounded-2xl flex items-center justify-center font-bold text-4xl bg-overlay border-4 border-card text-primary shadow-card shadow-card">
               {(s.name || '?').charAt(0).toUpperCase()}
             </div>
             <button 
               onClick={() => { setViewProfileData(null); openEdit(s); }}
-              className="flex items-center gap-2 px-4 py-2 bg-primary/10 hover:bg-primary/20 text-primary font-semibold rounded-xl motion-safe:transition-colors mb-2"
+              className="flex items-center gap-2 px-4 py-2 bg-primary-subtle hover:bg-primary-subtle text-primary font-semibold rounded-xl motion-safe:transition-colors mb-2"
             >
-              <Edit2 size={16} /> Edit Profile
+              <Edit2 size={18} /> Edit Profile
             </button>
           </div>
 
           <div className="mb-6">
-            <h3 className="text-2xl font-bold text-foreground">{s.name}</h3>
-            <p className="text-sm font-medium text-primary mt-1 px-3 py-1 bg-primary/10 inline-block rounded-md">{s.role}</p>
+            <h3 className="text-2xl font-bold text-primary">{s.name}</h3>
+            <p className="text-sm font-medium text-primary mt-1 px-3 py-1 bg-primary-subtle inline-block rounded-md">{s.role}</p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-6">
@@ -46,7 +49,7 @@ export default function ManagerHrStaffProfileModal() {
               <Phone className="w-5 h-5 text-secondary mt-0.5" />
               <div>
                 <p className="text-xs text-secondary mb-0.5">Phone</p>
-                <p className="text-sm font-semibold text-foreground">{s.phone || 'N/A'}</p>
+                <p className="text-sm font-semibold text-primary">{s.phone || 'N/A'}</p>
               </div>
             </div>
             
@@ -54,7 +57,7 @@ export default function ManagerHrStaffProfileModal() {
               <Mail className="w-5 h-5 text-secondary mt-0.5" />
               <div>
                 <p className="text-xs text-secondary mb-0.5">Email</p>
-                <p className="text-sm font-semibold text-foreground truncate max-w-40" title={s.email}>{s.email || 'N/A'}</p>
+                <ManagerTooltip content={s.email || 'N/A'}><p className="text-sm font-semibold text-primary truncate max-w-40">{s.email || 'N/A'}</p></ManagerTooltip>
               </div>
             </div>
             
@@ -62,7 +65,7 @@ export default function ManagerHrStaffProfileModal() {
               <Calendar className="w-5 h-5 text-secondary mt-0.5" />
               <div>
                 <p className="text-xs text-secondary mb-0.5">Join Date</p>
-                <p className="text-sm font-semibold text-foreground">{s.joinDate ? formatDate(s.joinDate) : 'N/A'}</p>
+                <p className="text-sm font-semibold text-primary">{s.joinDate ? formatDate(s.joinDate) : 'N/A'}</p>
               </div>
             </div>
 
@@ -70,7 +73,7 @@ export default function ManagerHrStaffProfileModal() {
               <IndianRupee className="w-5 h-5 text-secondary mt-0.5" />
               <div>
                 <p className="text-xs text-secondary mb-0.5">Monthly Salary</p>
-                <p className="text-sm font-bold text-success">{formatCurrency(s.salary || 0)}</p>
+                <p className="text-sm font-bold text-success">{formatCurrencyFromMinorUnits(s.salary || 0, ManagerEnvConfig.currencyCode)}</p>
               </div>
             </div>
 
@@ -78,7 +81,7 @@ export default function ManagerHrStaffProfileModal() {
               <IndianRupee className="w-5 h-5 text-danger mt-0.5" />
               <div>
                 <p className="text-xs text-secondary mb-0.5">Advance Balance</p>
-                <p className="text-sm font-bold text-danger">{formatCurrency(s.advanceSalary || 0)}</p>
+                <p className="text-sm font-bold text-danger">{formatCurrencyFromMinorUnits(s.advanceSalary || 0, ManagerEnvConfig.currencyCode)}</p>
               </div>
             </div>
 
@@ -86,7 +89,7 @@ export default function ManagerHrStaffProfileModal() {
               <IndianRupee className="w-5 h-5 text-warning mt-0.5" />
               <div>
                 <p className="text-xs text-secondary mb-0.5">Current Due</p>
-                <p className="text-sm font-bold text-warning">{formatCurrency(s.currentDue || 0)}</p>
+                <p className="text-sm font-bold text-warning">{formatCurrencyFromMinorUnits(s.currentDue || 0, ManagerEnvConfig.currencyCode)}</p>
               </div>
             </div>
 
@@ -94,7 +97,7 @@ export default function ManagerHrStaffProfileModal() {
               <Hash className="w-5 h-5 text-secondary mt-0.5" />
               <div>
                 <p className="text-xs text-secondary mb-0.5">Aadhaar No.</p>
-                <p className="text-sm font-semibold text-foreground">{s.aadhaar || 'N/A'}</p>
+                <p className="text-sm font-semibold text-primary">{s.aadhaar || 'N/A'}</p>
               </div>
             </div>
 
@@ -102,7 +105,7 @@ export default function ManagerHrStaffProfileModal() {
               <span className="w-5 h-5 flex items-center justify-center font-bold text-xs text-secondary mt-0.5 border border-secondary rounded-sm">UPI</span>
               <div>
                 <p className="text-xs text-secondary mb-0.5">UPI ID</p>
-                <p className="text-sm font-semibold text-foreground">{s.upiId || 'N/A'}</p>
+                <p className="text-sm font-semibold text-primary">{s.upiId || 'N/A'}</p>
               </div>
             </div>
 
@@ -110,7 +113,7 @@ export default function ManagerHrStaffProfileModal() {
               <MapPin className="w-5 h-5 text-secondary mt-0.5" />
               <div>
                 <p className="text-xs text-secondary mb-0.5">Address</p>
-                <p className="text-sm font-semibold text-foreground whitespace-pre-line">{s.address || 'N/A'}</p>
+                <p className="text-sm font-semibold text-primary whitespace-pre-line">{s.address || 'N/A'}</p>
               </div>
             </div>
           </div>
@@ -125,7 +128,7 @@ export default function ManagerHrStaffProfileModal() {
              </div>
              <div>
                <p className="text-xs text-secondary mb-1">Gender</p>
-               <p className="text-sm font-semibold text-foreground capitalize">{s.gender?.toLowerCase() || 'N/A'}</p>
+               <p className="text-sm font-semibold text-primary capitalize">{s.gender?.toLowerCase() || 'N/A'}</p>
              </div>
           </div>
         </div>

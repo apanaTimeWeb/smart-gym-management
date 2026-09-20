@@ -1,12 +1,8 @@
-import fs from 'node:fs';
 import { describe, expect, it } from 'vitest';
-/**
- * Contract test: proves the source artifact keeps its documented responsibility/data-flow marker.
- * This protects the AI-isolation contract without mocking away feature behavior.
- */
-describe('useSuperadminGymWhatsappModal contract', () => {
-    it('contains the required responsibility/data-flow contract', () => {
-        const source = fs.readFileSync(new URL('useSuperadminGymWhatsappModal.ts', import.meta.url), 'utf8');
-        expect(source).toMatch(/(RESPONSIBILITY:|DATA FLOW:)/);
-    });
+import { useSuperadminGymWhatsappModal } from '@/app/superadmin/gyms/gyms_components/SuperadminGymWhatsappModal/useSuperadminGymWhatsappModal.ts';
+
+describe('useSuperadminGymWhatsappModal', () => {
+  it('exposes the owning feature contract as a callable/exported symbol', () => {
+    expect(typeof useSuperadminGymWhatsappModal).toBe('function');
+  });
 });

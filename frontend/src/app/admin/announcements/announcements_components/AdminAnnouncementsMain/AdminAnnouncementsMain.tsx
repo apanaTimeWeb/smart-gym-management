@@ -18,11 +18,11 @@ export default function AdminAnnouncementsMain() {
         {/* Branch Broadcast CTA — the primary send capability for admin role */}
         <div className="bg-card border border-border rounded-xl p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-start gap-4">
-            <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+            <div className="w-11 h-11 rounded-xl bg-primary-subtle flex items-center justify-center shrink-0">
               <Megaphone size={22} className="text-primary" />
             </div>
             <div>
-              <p className="font-semibold text-foreground text-sm">Send a Branch Announcement</p>
+              <p className="font-semibold text-primary text-sm">Send a Branch Announcement</p>
               <p className="text-xs text-secondary mt-0.5">
                 Broadcast a notice to members, trainers, or staff at your gym branches. Supports scheduling and pinning.
               </p>
@@ -30,7 +30,7 @@ export default function AdminAnnouncementsMain() {
           </div>
           <button
             onClick={openCreate}
-            className="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-hover text-primary-foreground font-semibold rounded-xl text-sm motion-safe:transition-colors shrink-0"
+            className="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-hover text-on-primary font-semibold rounded-xl text-sm motion-safe:transition-colors shrink-0 motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
           >
             <Send size={15} />
             Send Announcement

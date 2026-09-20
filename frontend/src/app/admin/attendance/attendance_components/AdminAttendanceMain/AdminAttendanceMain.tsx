@@ -12,10 +12,10 @@ export default function AdminAttendanceMain() {
   const { status, error, loadAll } = useAdminAttendanceLogic();
 
   return (
-    <div className="min-h-full pb-10 bg-background text-foreground">
+    <div className="min-h-full pb-10 bg-page text-primary">
 
       {/* Read-only notice banner */}
-      <div className="mx-6 mt-4 flex items-center gap-2.5 px-4 py-2.5 bg-info/10 border border-info/20 rounded-xl">
+      <div className="mx-6 mt-4 flex items-center gap-2.5 px-4 py-2.5 bg-info-bg border border-border rounded-xl">
         <ShieldAlert size={15} strokeWidth={2} className="text-info flex-shrink-0" />
         <p className="text-xs text-info font-medium">
           View-only mode — Manual check-in is managed by Branch Managers.
@@ -24,11 +24,11 @@ export default function AdminAttendanceMain() {
 
       <div className="p-6 space-y-5">
         {status === 'error' && (
-          <div className="flex items-center justify-between bg-danger/10 border border-danger/20 rounded-xl px-4 py-3">
+          <div className="flex items-center justify-between bg-danger-bg border border-border rounded-xl px-4 py-3">
             <p className="text-sm text-danger">{error}</p>
             <button
               onClick={() => void loadAll()}
-              className="flex items-center gap-1.5 text-xs font-semibold text-danger hover:underline"
+              className="motion-safe:transition-all motion-safe:duration-base ease-in-out flex items-center gap-1.5 text-xs font-semibold text-danger hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
             >
               <RefreshCw size={13} /> Retry
             </button>
@@ -41,7 +41,7 @@ export default function AdminAttendanceMain() {
 
         <div className="bg-card rounded-xl border border-border p-4 space-y-4">
           <div className="flex items-center justify-between">
-            <p className="text-sm font-semibold text-foreground">Attendance Records</p>
+            <p className="text-sm font-semibold text-primary">Attendance Records</p>
           </div>
           <AdminAttendanceToolbar />
           <AdminAttendanceTable />

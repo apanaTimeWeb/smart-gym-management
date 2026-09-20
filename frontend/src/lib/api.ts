@@ -118,7 +118,12 @@ export async function apiFetch<T = unknown, Z extends z.ZodTypeAny = z.ZodTypeAn
           finalRes = await fetch(`${BASE_URL}${path}`, { ...rest, headers });
         }
       } else {
-        // Refresh failed, session genuinely expired
+        // In dev/demo mode (no real backend), fall back to mock data instead of logging out
+        if (process.env.NODE_ENV !== 'production') {
+          console.warn(`[MOCK] Backend 401 for ${path} in dev mode — falling back to mock data`);
+          return getMockResponse(path) as T;
+        }
+        // Production: session genuinely expired — force logout
         await fetch(AuthUrlConfig.PROXY_API.LOGOUT, { method: 'POST' });
         window.location.replace(AuthUrlConfig.PAGES.LOGIN);
         throw new Error('Session expired. Please login again.');
@@ -128,6 +133,12 @@ export async function apiFetch<T = unknown, Z extends z.ZodTypeAny = z.ZodTypeAn
     // ── 5xx server error fallback ─────────────────────────────────────────────
     if (finalRes.status >= 500) {
       console.warn(`[MOCK] Backend returned ${finalRes.status} for ${path} — falling back to mock data`);
+      return getMockResponse(path) as T;
+    }
+
+    // ── Dev mode: unhandled 4xx → fall back to mock data ─────────────────────
+    if (process.env.NODE_ENV !== 'production' && finalRes.status >= 400) {
+      console.warn(`[MOCK] Backend returned ${finalRes.status} for ${path} in dev mode — falling back to mock data`);
       return getMockResponse(path) as T;
     }
   } catch (_networkErr) {

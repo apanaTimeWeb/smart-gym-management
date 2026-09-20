@@ -1,3 +1,4 @@
+import { StatusCodes } from 'http-status-codes';
 // RESPONSIBILITY: Owns MSW handlers for the Admin announcements feature.
 // DATA FLOW: announcements API client → module-owned MSW handler → module-owned fixture → TanStack Query/UI.
 import { http, HttpResponse } from 'msw';
@@ -13,19 +14,20 @@ function asRecord(value: unknown): JsonObject {
 }
 
 const ok = <T>(data: T, message = 'Success') =>
-  HttpResponse.json({ success: true, message, data, meta: { total: Array.isArray(data) ? data.length : 1, page: 1, limit: 50, totalPages: 1 } });
+  HttpResponse.json({ success: true, message, data });
 
 const paged = <T>(data: T[], page: number, limit: number, message = 'Success') => {
   const safeLimit = Math.max(1, limit);
   const safePage = Math.max(1, page);
   const start = (safePage - 1) * safeLimit;
   const pageData = data.slice(start, start + safeLimit);
-  return HttpResponse.json({ success: true, message, data: pageData, meta: { total: data.length, page: safePage, limit: safeLimit, totalPages: Math.max(1, Math.ceil(data.length / safeLimit)) } });
+  return HttpResponse.json({ success: true, message, data: pageData, meta: { total: data.length, page: safePage, limit: safeLimit, totalPages: Math.max(1, Math.ceil(data.length / safeLimit)), hasNextPage: safePage < Math.max(1, Math.ceil(data.length / safeLimit)), hasPrevPage: safePage > 1 } });
 };
 
-import { MOCK_ANNOUNCEMENTS } from '@/app/admin/announcements/announcements_mocks/fixtures/AdminAnnouncementsMockFixtures';
+import type { Announcement } from '@/app/admin/announcements/announcements_types/AdminAnnouncementsTypes';
+import { getAdminAnnouncementsMockState, setAdminAnnouncementsMockState } from '@/app/admin/announcements/announcements_mocks/fixtures/AdminAnnouncementsMockState';
 
-type AnnouncementRecord = typeof MOCK_ANNOUNCEMENTS[number];
+type AnnouncementRecord = Announcement;
 const gymNameByGymId: Record<string, string> = { g1: 'Andheri East', g2: 'Bandra West', g3: 'Powai', g4: 'Thane' };
 
 function gymNamesFor(ids: string[]): string[] { return ids.map((id) => gymNameByGymId[id] ?? id); }
@@ -77,7 +79,7 @@ export const adminAnnouncementsMockHandlers = [
     const status = url.searchParams.get('status');
     const priority = url.searchParams.get('priority');
     const gymId = url.searchParams.get('gymId');
-    const filtered = MOCK_ANNOUNCEMENTS.filter((item) => {
+    const filtered = getAdminAnnouncementsMockState().filter((item) => {
       const matchSearch = !search || item.title.toLowerCase().includes(search) || item.body.toLowerCase().includes(search);
       const matchStatus = !status || item.status === status;
       const matchPriority = !priority || item.priority === priority;
@@ -87,38 +89,39 @@ export const adminAnnouncementsMockHandlers = [
     return paged(filtered, page, limit);
   }),
   http.get('*/admin/announcements/fetchKPIs', () => ok({
-    total: MOCK_ANNOUNCEMENTS.length,
-    active: MOCK_ANNOUNCEMENTS.filter((item) => item.status === 'active').length,
-    scheduled: MOCK_ANNOUNCEMENTS.filter((item) => item.status === 'scheduled').length,
-    expired: MOCK_ANNOUNCEMENTS.filter((item) => item.status === 'expired').length,
-    totalViews: MOCK_ANNOUNCEMENTS.reduce((sum, item) => sum + item.viewCount, 0),
-    pinned: MOCK_ANNOUNCEMENTS.filter((item) => item.isPinned).length,
+    total: getAdminAnnouncementsMockState().length,
+    active: getAdminAnnouncementsMockState().filter((item) => item.status === 'active').length,
+    scheduled: getAdminAnnouncementsMockState().filter((item) => item.status === 'scheduled').length,
+    expired: getAdminAnnouncementsMockState().filter((item) => item.status === 'expired').length,
+    totalViews: getAdminAnnouncementsMockState().reduce((sum, item) => sum + item.viewCount, 0),
+    pinned: getAdminAnnouncementsMockState().filter((item) => item.isPinned).length,
   })),
   http.post('*/admin/announcements/createAnnouncement', async ({ request }) => {
     const record = buildAnnouncementRecord(asRecord(await parseRequestBody(request)));
-    MOCK_ANNOUNCEMENTS.unshift(record);
+    setAdminAnnouncementsMockState([record, ...getAdminAnnouncementsMockState()]);
     return ok(record, 'Announcement created');
   }),
   http.post('*/admin/announcements/updateAnnouncement', async ({ request }) => {
     const body = asRecord(await parseRequestBody(request));
-    const index = MOCK_ANNOUNCEMENTS.findIndex((item) => item.id === String(body.id));
-    if (index === -1) return HttpResponse.json({ success: false, message: 'Announcement not found' }, { status: 404 });
-    const updated = applyAnnouncementUpdate(MOCK_ANNOUNCEMENTS[index]!, body);
-    MOCK_ANNOUNCEMENTS[index] = updated;
+    const index = getAdminAnnouncementsMockState().findIndex((item) => item.id === String(body.id));
+    if (index === -1) return HttpResponse.json({ success: false, message: 'Announcement not found' }, { status: StatusCodes.NOT_FOUND });
+    const updated = applyAnnouncementUpdate(getAdminAnnouncementsMockState()[index]!, body);
+    setAdminAnnouncementsMockState(getAdminAnnouncementsMockState().map((item, itemIndex) => itemIndex === index ? updated : item));
     return ok(updated, 'Announcement updated');
   }),
   http.delete('*/admin/announcements/deleteAnnouncement', async ({ request }) => {
     const body = asRecord(await parseRequestBody(request));
-    const index = MOCK_ANNOUNCEMENTS.findIndex((item) => item.id === String(body.id));
-    if (index === -1) return HttpResponse.json({ success: false, message: 'Announcement not found' }, { status: 404 });
-    MOCK_ANNOUNCEMENTS.splice(index, 1);
+    const index = getAdminAnnouncementsMockState().findIndex((item) => item.id === String(body.id));
+    if (index === -1) return HttpResponse.json({ success: false, message: 'Announcement not found' }, { status: StatusCodes.NOT_FOUND });
+    setAdminAnnouncementsMockState(getAdminAnnouncementsMockState().filter((_, itemIndex) => itemIndex !== index));
     return ok(null, 'Announcement deleted');
   }),
   http.post('*/admin/announcements/togglePin', async ({ request }) => {
     const body = asRecord(await parseRequestBody(request));
-    const record = MOCK_ANNOUNCEMENTS.find((item) => item.id === String(body.id));
-    if (!record) return HttpResponse.json({ success: false, message: 'Announcement not found' }, { status: 404 });
-    record.isPinned = !record.isPinned;
-    return ok(record, 'Announcement updated');
+    const record = getAdminAnnouncementsMockState().find((item) => item.id === String(body.id));
+    if (!record) return HttpResponse.json({ success: false, message: 'Announcement not found' }, { status: StatusCodes.NOT_FOUND });
+    const updated = { ...record, isPinned: !record.isPinned };
+    setAdminAnnouncementsMockState(getAdminAnnouncementsMockState().map((item) => item.id === updated.id ? updated : item));
+    return ok(updated, 'Announcement updated');
   })
 ];

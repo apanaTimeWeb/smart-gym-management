@@ -7,19 +7,19 @@ import SuperadminIntegrationsWebhooksAndDeveloperAccessPanel from '@/app/superad
 import { useSuperadminIntegrationsPage } from '@/app/superadmin/integrations/integrations_utils/useSuperadminIntegrationsPage';
 export default function SuperadminIntegrationsClient() {
     // DATA FLOW: API → useSuperadminIntegrationsPage → focused child views.
-    const { data, isLoading, isError, refetch } = useSuperadminIntegrationsPage();
-    if (isLoading) {
+    const { data, isPending, isError, refetch } = useSuperadminIntegrationsPage();
+    if (isPending) {
         return (<div className="space-y-4" aria-busy="true">
         <div className="h-32 rounded-xl bg-skeleton-base motion-safe:animate-pulse"/>
         <div className="h-96 rounded-xl bg-skeleton-base motion-safe:animate-pulse"/>
       </div>);
     }
     if (isError || !data) {
-        return (<div className="rounded-xl border border-danger/30 bg-danger-bg p-5" role="alert">
+        return (<div className="rounded-xl border border-border bg-danger-bg p-5" role="alert">
   <p className="font-semibold text-danger">
     Integrations data could not be loaded.
   </p>
-  <button type="button" onClick={() => refetch()} className="mt-3 rounded-md border border-border px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95">
+  <button type="button" onClick={() => refetch()} className="mt-3 rounded-md border border-border px-3 py-2 text-sm text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95">
     Retry
   </button>
         </div>);

@@ -8,11 +8,17 @@ Manager Store is the branch inventory and POS workspace. Managers can browse/sea
 |---|---|---|
 | `store_api/` | Feature-owned responsibility for the store module. | `ManagerStoreApi.ts; ManagerStoreServerApi.ts` |
 | `store_components/` | Feature-owned responsibility for the store module. | `—` |
-| `store_context/` | Feature-owned responsibility for the store module. | `ManagerStoreContext.tsx; ManagerUseManagerStoreLogic.ts; ManagerUseManagerStoreOrder.ts; ManagerUseManagerStoreProducts.ts; ManagerUseManagerStoreQueries.ts` |
+| `store_hooks/` | Feature-owned responsibility for the store module. | `ManagerUseManagerStoreLogic.ts; ManagerUseManagerStoreLogic.ts; ManagerUseManagerStoreOrder.ts; ManagerUseManagerStoreProducts.ts; ManagerUseManagerStoreQueries.ts` |
 | `store_fixtures/` | Feature-owned responsibility for the store module. | `ManagerStoreMockData.ts` |
 | `store_mocks/` | Feature-owned responsibility for the store module. | `—` |
 | `store_types/` | Feature-owned responsibility for the store module. | `ManagerStoreSchema.ts; ManagerStoreTypes.ts` |
 | `store_utils/` | Feature-owned responsibility for the store module. | `ManagerStoreSharedConstants.ts` |
+
+## Approved External Dependencies
+
+- Global framework/application infrastructure documented by the architecture standard may be used when required.
+- Approved zero-business UI primitives may be imported from Manager application infrastructure.
+- Sibling feature business logic, state, API services, fixtures, and tests are not dependencies.
 
 ## Feature Inventory
 | Feature | Route | What the User Can Do | Main API Calls | Status |
@@ -38,7 +44,7 @@ Manager Store is the branch inventory and POS workspace. Managers can browse/sea
 4. The authoritative Order response updates orders/summary state and the backend message is displayed.
 
 ## Data and State Architecture
-TanStack Query owns store server/API data. UI-only filters, tabs, selections, and draft state remain local state or module-scoped Zustand where shared. React Context is limited to stable cross-tree concerns and does not become the source of truth for API data. Query keys are module-prefixed.
+TanStack Query owns store server/API data. UI-only filters, tabs, selections, and draft state remain local state or module-scoped Zustand where shared. module-local state/query layer is limited to stable cross-tree concerns and does not become the source of truth for API data. Query keys are module-prefixed.
 
 ## API Contract
 | Function | Method | Endpoint | Request | Response `data` type |
@@ -90,20 +96,20 @@ TanStack Query owns store server/API data. UI-only filters, tabs, selections, an
 - **Order creation is financial and must not optimistically invent totals after submission:** Order creation is financial and must not optimistically invent totals after submission.
 - **Store summary low-stock records are a server response, not a UI constant:** Store summary low-stock records are a server response, not a UI constant.
 - **Pagination and search parameters must be explicitly propagated to the API wrapper:** Pagination and search parameters must be explicitly propagated to the API wrapper.
-- **Product/order numeric values use formatCurrency/formatNumber rather than raw concatenation:** Product/order numeric values use formatCurrency/formatNumber rather than raw concatenation.
+- **Product/order numeric values use formatCurrencyFromMinorUnits/formatNumber rather than raw concatenation:** Product/order numeric values use formatCurrencyFromMinorUnits/formatNumber rather than raw concatenation.
 
 ## Component Responsibility Map
 | Component File | Responsibility |
 |---|---|
 | `store/store_components/ManagerStoreFilters/ManagerStoreFilters.tsx` | Renders the Manager StoreFilters presentation layer for the Manager module. |
 | `store/store_components/ManagerStoreKPIs/ManagerStoreKPIs.tsx` | Renders the top KPI stat cards (total products, orders, revenue) for the Store module. |
-| `store/store_components/ManagerStoreMain/ManagerStoreMain.tsx` | Entry component for the Store module. Wraps the UI in the context provider and handles page layout. |
+| `store/store_components/ManagerStoreMain/ManagerStoreMain.tsx` | Framework entry component for the Store module; delegates feature behavior and UI composition to `ManagerStoreContent`. |
 | `store/store_components/ManagerStoreOrderTable/ManagerStoreOrderTable.tsx` | Renders the paginated order history table with status badges and customer info. |
 | `store/store_components/ManagerStorePosModal/ManagerStorePosModal.tsx` | Point-of-sale modal for processing a new product sale/order in the Store module. |
 | `store/store_components/ManagerStoreProductGrid/ManagerStoreProductGrid.tsx` | Renders the product cards grid with stock status, price, and quick-action buttons. |
 | `store/store_components/ManagerStoreProductModal/ManagerStoreProductModal.tsx` | Form modal for creating or editing a gym store product in the Store module. |
 | `store/store_components/ManagerStoreToolbar/ManagerStoreToolbar.tsx` | Renders the search input, category filter, and Add Product CTA for the Store module. |
-| `store/store_context/ManagerStoreContext.tsx` | Provides UI orchestration state to the Store module hierarchy. Async data is managed in useManagerStoreLogic. |
+| `store/store_hooks/ManagerUseManagerStoreLogic.ts` | Provides UI orchestration state to the Store module hierarchy. Async data is managed in useManagerStoreLogic. |
 
 ## Rule Compliance Checklist
 - [x] Module-owned API, types/schemas, fixtures, handlers, tests, and feature documentation are scoped to this module.

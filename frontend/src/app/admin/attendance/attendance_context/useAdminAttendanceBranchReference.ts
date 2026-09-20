@@ -3,6 +3,7 @@
 // DATA FLOW: AdminAttendanceBranchReferenceApi → TanStack Query → Admin attendance component.
 import { useQuery } from '@tanstack/react-query';
 import { AdminAttendanceBranchReferenceApi } from '@/app/admin/attendance/attendance_api/AdminAttendanceBranchReferenceApi';
+/** Coordinates AttendanceBranchReference state, data flow, and feature behavior. */
 export function useAdminAttendanceBranchReference() {
-  return useQuery({ queryKey: ['admin','attendance','branch-reference'], queryFn: async () => (await AdminAttendanceBranchReferenceApi.fetch()).data ?? [], staleTime: 300000 });
+  return useQuery({ queryKey: ['admin','attendance','branch-reference'], queryFn: async () => (await AdminAttendanceBranchReferenceApi.fetchAttendanceBranchReferences()).data ?? [], staleTime: 300000 });
 }

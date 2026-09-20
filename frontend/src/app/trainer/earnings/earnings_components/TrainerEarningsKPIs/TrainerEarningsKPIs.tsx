@@ -1,8 +1,8 @@
-'use client';
 // RESPONSIBILITY: Renders the TrainerEarningsKPIs UI for the owning Trainer feature; data access remains in the feature API/query layer.
+'use client';
 import { IndianRupee, Clock, Activity, Target, Minus } from 'lucide-react';
 import { useTrainerEarningsQuery } from '@/app/trainer/earnings/earnings_queries/useTrainerEarningsQuery';
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrencyFromMinorUnits, formatNumber } from '@/lib/formatters';
 import { useDateRangeSuffix } from '@/lib/useDateRangeSuffix';
 
 export default function TrainerEarningsKPIs() {
@@ -21,11 +21,11 @@ export default function TrainerEarningsKPIs() {
   }
 
   const cards = [
-    { label: 'Total Earnings' + dateSuffix, value: formatCurrency(kpis.totalEarnings), icon: IndianRupee, color: 'text-success', bg: 'bg-success/10' },
-    { label: 'Pending Payouts' + dateSuffix, value: formatCurrency(kpis.pendingPayouts), icon: Clock, color: 'text-warning', bg: 'bg-warning/10' },
-    { label: 'Sessions Completed' + dateSuffix, value: kpis.sessionsCompleted.toString(), icon: Activity, color: 'text-info', bg: 'bg-info/10' },
+    { label: 'Total Earnings' + dateSuffix, value: formatCurrencyFromMinorUnits(kpis.totalEarnings, 'INR'), icon: IndianRupee, color: 'text-success', bg: 'bg-success-bg' },
+    { label: 'Pending Payouts' + dateSuffix, value: formatCurrencyFromMinorUnits(kpis.pendingPayouts, 'INR'), icon: Clock, color: 'text-warning', bg: 'bg-warning-bg' },
+    { label: 'Sessions Completed' + dateSuffix, value: formatNumber(kpis.sessionsCompleted), icon: Activity, color: 'text-info', bg: 'bg-info-bg' },
     { label: 'Commission Rate' + dateSuffix, value: `${kpis.commissionRate}%`, icon: Target, color: 'text-primary', bg: 'bg-primary-subtle' },
-    { label: 'Tax Deducted (TDS)' + dateSuffix, value: formatCurrency(kpis.taxDeduction), icon: Minus, color: 'text-danger', bg: 'bg-danger/10' },
+    { label: 'Tax Deducted (TDS)' + dateSuffix, value: formatCurrencyFromMinorUnits(kpis.taxDeduction, 'INR'), icon: Minus, color: 'text-danger', bg: 'bg-danger-bg' },
   ];
 
   return (
@@ -33,14 +33,14 @@ export default function TrainerEarningsKPIs() {
       {cards.map(c => {
         const Icon = c.icon;
         return (
-          <div key={c.label} className="bg-card border border-border rounded-xl p-5 flex flex-col justify-between hover:border-primary/50 motion-safe:transition-colors">
+          <div key={c.label} className="bg-card border border-border rounded-xl p-5 flex flex-col justify-between hover:border-primary motion-safe:transition-colors motion-safe:duration-base">
             <div className="flex items-start justify-between">
               <p className="text-xs font-medium text-secondary uppercase tracking-wider">{c.label}</p>
               <div className={`w-8 h-8 rounded-full flex items-center justify-center ${c.bg}`}>
-                <Icon size={16} className={c.color} />
+                <Icon size={18} className={c.color} />
               </div>
             </div>
-            <p className="text-2xl font-bold text-foreground mt-4">{c.value}</p>
+            <p className="text-2xl font-bold text-primary mt-4">{c.value}</p>
           </div>
         );
       })}

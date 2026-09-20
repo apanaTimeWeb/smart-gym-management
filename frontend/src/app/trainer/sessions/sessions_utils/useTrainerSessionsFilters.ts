@@ -1,9 +1,11 @@
+'use client';
 // RESPONSIBILITY: Custom hook managing Trainer Sessions URL-based filters.
 // DATA FLOW: URL search params <-> useTrainerSessionsFilters <-> useTrainerSessionsQuery
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { useCallback } from 'react';
 import { type SessionFilter, SessionFilterSchema } from '@/app/trainer/sessions/sessions_types/TrainerSessionsTypes';
 
+/** Owns useTrainerSessionsFilters behavior for this Trainer module. */
 export function useTrainerSessionsFilters() {
   const searchParams = useSearchParams();
   const router = useRouter();

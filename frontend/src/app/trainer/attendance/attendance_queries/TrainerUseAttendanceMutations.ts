@@ -1,12 +1,12 @@
+'use client';
 // RESPONSIBILITY: TanStack mutation hooks for Attendance module write operations.
 // DATA FLOW: Component → useMutation → attendance_api → invalidate query cache
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { getUser } from '@/lib/api';
 import {
   createAttendanceRecord,
-  checkoutAttendance,
+  checkOutAttendance,
   selfCheckInAttendance,
-  type AttendanceFetchParams,
 } from '@/app/trainer/attendance/attendance_api/TrainerAttendance_api';
 import type { CreateAttendanceDto } from '@/app/trainer/attendance/attendance_types/TrainerAttendance_types';
 
@@ -19,24 +19,24 @@ export function useAttendanceMutations() {
   };
 
   const markAttendance = useMutation({
-    mutationFn: (dto: CreateAttendanceDto) => createAttendanceRecord(dto),
+    mutationFn: ({ dto, idempotencyKey }: { dto: CreateAttendanceDto; idempotencyKey: string }) => createAttendanceRecord(dto, idempotencyKey),
     onSuccess: invalidateAttendance,
   });
 
   const selfCheckIn = useMutation({
-    mutationFn: () => {
+    mutationFn: ({ idempotencyKey }: { idempotencyKey: string }) => {
       const user = getUser();
       if (!user?.id) throw new Error('Trainer ID not found');
-      return selfCheckInAttendance(String(user.id));
+      return selfCheckInAttendance(String(user.id), idempotencyKey);
     },
     onSuccess: invalidateAttendance,
   });
 
   const selfCheckOut = useMutation({
-    mutationFn: () => {
+    mutationFn: ({ idempotencyKey }: { idempotencyKey: string }) => {
       const user = getUser();
       if (!user?.id) throw new Error('Trainer ID not found');
-      return checkoutAttendance(String(user.id), new Date().toISOString());
+      return checkOutAttendance(String(user.id), new Date().toISOString(), idempotencyKey);
     },
     onSuccess: invalidateAttendance,
   });

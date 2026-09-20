@@ -18,6 +18,7 @@ interface AdminAttendanceStoreState {
   setVisibleColumns: (cols: string[]) => void;
 }
 
+/** Coordinates AttendanceStore state, data flow, and feature behavior. */
 export const useAdminAttendanceStore = create<AdminAttendanceStoreState>((set) => ({
   search: '',
   setSearch: (s) => set({ search: s, currentPage: 1 }),

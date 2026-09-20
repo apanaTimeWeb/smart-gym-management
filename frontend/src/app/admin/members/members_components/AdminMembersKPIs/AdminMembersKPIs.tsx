@@ -3,7 +3,7 @@
 
 import { Users, UserCheck, Clock, IndianRupee } from 'lucide-react';
 import { useAdminMembersLogic } from '@/app/admin/members/members_context/useAdminMembersLogic';
-import { formatCurrency } from '@/lib/formatters';
+import { formatCurrency, formatNumber} from '@/lib/formatters';
 import { useDateRangeSuffix } from '@/lib/useDateRangeSuffix';
 
 export default function AdminMembersKPIs() {
@@ -14,29 +14,29 @@ export default function AdminMembersKPIs() {
   const cards = [
     {
       title: 'Total Members' + dateSuffix,
-      value: summary.totalMembers.toLocaleString('en-IN'),
+      value: formatNumber(summary.totalMembers),
       sub: `+${summary.newThisMonth} this month`,
       subColor: 'text-success',
       icon: Users,
-      iconBg: 'bg-info/20',
+      iconBg: 'bg-info-bg',
       iconColor: 'text-info',
     },
     {
       title: 'Active Members' + dateSuffix,
-      value: summary.activeMembers.toLocaleString('en-IN'),
+      value: formatNumber(summary.activeMembers),
       sub: `${Math.round((summary.activeMembers / summary.totalMembers) * 100)}% of total`,
       subColor: 'text-secondary',
       icon: UserCheck,
-      iconBg: 'bg-success/20',
+      iconBg: 'bg-success-bg',
       iconColor: 'text-success',
     },
     {
       title: 'Expiring This Month' + dateSuffix,
-      value: summary.expiringThisMonth.toLocaleString('en-IN'),
+      value: formatNumber(summary.expiringThisMonth),
       sub: `${summary.expiringThisWeek} expiring this week`,
       subColor: 'text-warning',
       icon: Clock,
-      iconBg: 'bg-warning/20',
+      iconBg: 'bg-warning-bg',
       iconColor: 'text-warning',
     },
     {
@@ -45,7 +45,7 @@ export default function AdminMembersKPIs() {
       sub: `${summary.pendingMembers} members with dues`,
       subColor: 'text-danger',
       icon: IndianRupee,
-      iconBg: 'bg-danger/20',
+      iconBg: 'bg-danger-bg',
       iconColor: 'text-danger',
     },
   ];
@@ -55,11 +55,11 @@ export default function AdminMembersKPIs() {
       {cards.map((c) => {
         const Icon = c.icon;
         return (
-          <div key={c.title} className="bg-card rounded-xl p-5 border border-border hover:border-primary motion-safe:transition-all motion-safe:duration-200">
+          <div key={c.title} className="bg-card rounded-xl p-5 border border-border hover:border-primary motion-safe:transition-all motion-safe:duration-base">
             <div className="flex items-start justify-between">
               <div className="flex-1 min-w-0">
                 <p className="text-xs font-medium text-secondary uppercase tracking-wider">{c.title}</p>
-                <p className="text-2xl font-bold text-foreground mt-1">{c.value}</p>
+                <p className="text-2xl font-bold text-primary mt-1">{c.value}</p>
                 <p className={`text-xs mt-1 font-medium ${c.subColor}`}>{c.sub}</p>
               </div>
               <div className={`w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 ml-3 ${c.iconBg}`}>

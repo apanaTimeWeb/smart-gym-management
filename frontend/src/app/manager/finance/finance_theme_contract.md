@@ -1,29 +1,48 @@
-# Manager Finance — Theme Contract
+# Manager Finance Module Theme Contract
 
-The Finance module tracks payments, revenue, and high-level KPIs. It uses semantic tokens for highlighting different payment methods, statuses, and revenue trends.
+This contract belongs only to `src/app/manager/finance`. It records the exact global semantic theme variables consumed by the current implementation. The global design system remains the visual source of truth.
 
-## Semantic Colors
+## Consumed Global Semantic Tokens
 
-- `--primary`: Used for primary actions and highlighted text. (e.g., `#EAB308` or `#FACC15` in charts)
-- `--primary-foreground`: Text color on primary backgrounds.
-- `--secondary`: Used for secondary/fallback text and neutral status backgrounds.
-- `--secondary-foreground`: Text color on secondary backgrounds.
-- `--success`: Used for Cash payments and positive financial indicators. (e.g., `text-success`, `bg-success/10`)
-- `--warning`: Used for Card payments and pending statuses. (e.g., `text-warning`, `bg-warning/10`)
-- `--danger`: Used for unpaid/failed transactions and expense trends in charts. (e.g., `#EF4444` in charts, `text-danger`)
+| CSS Variable | Current Usage |
+| --- | --- |
+| `--bg-card` | card/panel surface |
+| `--bg-input` | input surface |
+| `--bg-overlay` | dialog/drawer surface |
+| `--bg-page` | page surface |
+| `--border` | standard borders/dividers |
+| `--chart-grid` | semantic token consumed by the feature |
+| `--chart-primary` | semantic token consumed by the feature |
+| `--danger-bg` | subtle danger surface |
+| `--danger-text` | danger text |
+| `--focus-ring` | keyboard focus ring |
+| `--info` | solid info surface |
+| `--info-bg` | subtle info surface |
+| `--info-text` | info text |
+| `--primary` | primary brand/active controls |
+| `--primary-hover` | primary hover state |
+| `--primary-subtle` | subtle primary surfaces |
+| `--shadow-card` | card elevation |
+| `--shadow-dialog` | dialog elevation |
+| `--skeleton-base` | skeleton base |
+| `--skeleton-highlight` | skeleton highlight |
+| `--success-bg` | subtle success surface |
+| `--success-text` | success text |
+| `--text-on-info` | text on solid info |
+| `--text-on-primary` | text on solid primary |
+| `--text-primary` | primary text |
+| `--text-secondary` | secondary text/labels |
+| `--warning-bg` | subtle warning surface |
+| `--warning-text` | warning text |
 
-## Backgrounds and Surfaces
+## Binding Rules
 
-- `--bg-page`: The main background of the finance view.
-- `--bg-card`: The background of KPI cards, charts, and the payments table.
-- `--bg-input`: Background for the tab switcher and input elements.
-- `--border`: Standard border color for all cards and table divisions.
+- No raw hex colors, arbitrary Tailwind color values, or raw RGBA colors may be introduced into module JSX.
+- Semantic background opacity modifiers such as `bg-success/10` and `bg-primary/20` are forbidden.
+- Solid semantic backgrounds require the appropriate documented on-color; otherwise use the subtle `*-bg` variant.
+- Feature-specific business status mappings remain local to this feature.
+- No feature-local CSS variable is defined by this module unless explicitly documented here.
 
-## External Chart Limitations
+## Portability
 
-Third-party chart libraries (like ApexCharts) sometimes cannot resolve CSS custom properties directly depending on how they render to canvas or SVG. In these explicit cases, the Finance module maps theme semantics to hardcoded hex values strictly inside the chart configuration options (e.g., `#FACC15` for primary/revenue, `#EF4444` for danger/expenses, and `#A1A1AA` for neutral text). These hex values are not allowed in regular JSX `className` props.
-
-## Loading and Empty States
-
-- `--skeleton-base`: Base color for loading skeletons.
-- `--skeleton-highlight`: Highlight color for loading skeletons.
+When this feature is copied to another compatible application, define the listed semantic variables through that application's canonical global theme stylesheet and preserve the same semantic meanings.

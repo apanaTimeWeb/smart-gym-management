@@ -1,49 +1,66 @@
 "use client";
+// RESPONSIBILITY: Renders the sortable membership receivable report and its server-backed empty/error states.
 import { formatCurrency } from '@/lib/formatters';
-// RESPONSIBILITY: Provides the implementation for AdminSalesMembershipReport.tsx functionality within its module.
-
-
 import { useAdminSalesLogic } from '@/app/admin/sales/sales_context/useAdminSalesLogic';
-import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
-import { ChevronDown, ChevronUp, ChevronsUpDown, Loader2 } from 'lucide-react';
-import type { AdminSalesMembershipSortKey } from '@/app/admin/sales/sales_types/AdminSalesUiTypes';
-import type { AdminSortDirection } from '@/app/admin/admin_types/AdminSortTypes';
+import AdminSalesEmptyState from '@/app/admin/sales/sales_components/AdminSalesEmptyState/AdminSalesEmptyState';
+import { ChevronDown, ChevronUp, ChevronsUpDown } from 'lucide-react';
 import { useMemo, useState } from 'react';
-import { ADMIN_ITEMS_PER_PAGE } from '@/app/admin/admin_url_config';
+import type { AdminSalesMembershipSortKey } from '@/app/admin/sales/sales_types/AdminSalesUiTypes';
+import type { AdminSalesSortDirection } from '@/app/admin/sales/sales_types/AdminSalesSortTypes';
 import type { MembershipReportItem } from '@/app/admin/sales/sales_types/AdminSalesTypes';
 
 export default function AdminSalesMembershipReport() {
-  const { search, currentPage, setCurrentPage, membershipReport, membershipTotals, status } = useAdminSalesLogic();
-  
-  const [sortKey, setAdminSalesMembershipSortKey] = useState<AdminSalesMembershipSortKey>('receivable');
-  const [sortDir, setSortDir] = useState<AdminSortDirection>('desc');
-  const filtered = membershipReport.filter((r: MembershipReportItem) => 
-    (r.plan || '').toLowerCase().includes(search.toLowerCase())
-  );
+  const { membershipReport, membershipTotals, status } = useAdminSalesLogic();
+  const [sortKey, setSortKey] = useState<AdminSalesMembershipSortKey>('receivable');
+  const [sortDir, setSortDir] = useState<AdminSalesSortDirection>('desc');
 
-  
-  const sorted = useMemo(() => [...filtered].sort((a,b)=>{const av=a[sortKey],bv=b[sortKey]; const result=typeof av==='number'&&typeof bv==='number'?av-bv:String(av??'').localeCompare(String(bv??''),undefined,{numeric:true}); return sortDir==='asc'?result:-result;}), [filtered,sortKey,sortDir]);
-  const handleSort=(key:AdminSalesMembershipSortKey)=>{if(sortKey===key)setSortDir(d=>d==='asc'?'desc':'asc');else{setAdminSalesMembershipSortKey(key);setSortDir('desc');}};
-  const totalPages = Math.ceil(sorted.length / ADMIN_ITEMS_PER_PAGE) || 1;
-  const paginated = sorted.slice((currentPage - 1) * ADMIN_ITEMS_PER_PAGE, currentPage * ADMIN_ITEMS_PER_PAGE);
+  const sortedRows = useMemo(() => {
+    return [...membershipReport].sort((left: MembershipReportItem, right: MembershipReportItem) => {
+      const leftValue = left[sortKey];
+      const rightValue = right[sortKey];
+      const result = typeof leftValue === 'number' && typeof rightValue === 'number'
+        ? leftValue - rightValue
+        : String(leftValue ?? '').localeCompare(String(rightValue ?? ''), undefined, { numeric: true });
+      return sortDir === 'asc' ? result : -result;
+    });
+  }, [membershipReport, sortKey, sortDir]);
+
+  const handleSort = (key: AdminSalesMembershipSortKey) => {
+    if (sortKey === key) {
+      setSortDir((current) => (current === 'asc' ? 'desc' : 'asc'));
+      return;
+    }
+    setSortKey(key);
+    setSortDir('desc');
+  };
+
+  const sortableColumns: Array<{ key: AdminSalesMembershipSortKey; label: string }> = [
+    { key: 'plan', label: 'Plan' },
+    { key: 'receivable', label: 'Total Receivable' },
+    { key: 'received', label: 'Amount Received' },
+    { key: 'remaining', label: 'Remaining' },
+    { key: 'refund', label: 'Refund' },
+  ];
 
   if (status === 'pending') {
     return (
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto" aria-busy="true" aria-label="Loading membership report">
         <table data-admin-responsive-table className="w-full">
           <thead className="bg-input">
             <tr>
-              {['Plan', 'Total Receivable', 'Amount Received', 'Remaining', 'Refund'].map((h,index) => { const keys: AdminSalesMembershipSortKey[]=['plan','receivable','received','remaining','refund']; const key=keys[index] as AdminSalesMembershipSortKey; return <th role="button" tabIndex={0} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); event.currentTarget.click(); } }}  key={h} onClick={()=>handleSort(key)} className="text-left text-xs font-semibold text-secondary uppercase tracking-wider px-4 py-3 cursor-pointer select-none" aria-sort={sortKey===key?(sortDir==='asc'?'ascending':'descending'):'none'}><div className="flex items-center gap-1.5">{h}{sortKey===key?(sortDir==='asc'?<ChevronUp size={13} className="text-primary"/>:<ChevronDown size={13} className="text-primary"/>):<ChevronsUpDown size={13} className="text-disabled"/>}</div></th>; })}
+              {sortableColumns.map(({ key, label }) => (
+                <th key={key} className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-secondary">
+                  {label}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
-            {[...Array(5)].map((_, i) => (
-              <tr key={`skeleton-${i}`} className="motion-safe:animate-pulse bg-card">
-                <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-24"></div></td>
-                <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-20"></div></td>
-                <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-20"></div></td>
-                <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-20"></div></td>
-                <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-16"></div></td>
+            {Array.from({ length: 5 }, (_, index) => (
+              <tr key={`membership-report-skeleton-${index}`} className="motion-safe:animate-pulse bg-card motion-safe:duration-base">
+                {sortableColumns.map(({ key }) => (
+                  <td key={key} className="px-4 py-4"><div className="h-4 w-24 rounded bg-skeleton-base" /></td>
+                ))}
               </tr>
             ))}
           </tbody>
@@ -54,53 +71,65 @@ export default function AdminSalesMembershipReport() {
 
   if (status === 'error') {
     return (
-      <div className="text-center py-16 bg-card rounded-2xl border border-danger/30">
-        <p className="text-danger font-medium">Failed to load membership report.</p>
-        <p className="text-sm mt-1 text-secondary">Please check your connection and try again.</p>
-      </div>
+      <AdminSalesEmptyState
+        message="Unable to load membership report"
+        subtext="Refresh the Sales view and try again."
+      />
+    );
+  }
+
+  if (sortedRows.length === 0) {
+    return (
+      <AdminSalesEmptyState
+        message="No membership report data"
+        subtext="No membership receivable records match the current Sales filters."
+      />
     );
   }
 
   return (
-  <>
- <div className="overflow-x-auto">
- <table data-admin-responsive-table className="w-full">
- <thead className="bg-input">
- <tr>
- {['Plan', 'Total Receivable', 'Amount Received', 'Remaining', 'Refund'].map(h => (
- <th key={h} className="text-left text-xs font-semibold text-secondary uppercase tracking-wider px-4 py-3">
- {h}
- </th>
- ))}
- </tr>
- </thead>
-  <tbody className="divide-y divide-border">
-  {paginated.map((r) => (
-  <tr key={r.plan} className="hover:bg-primary-subtle motion-safe:transition-colors">
-  <td className="px-4 py-3 text-sm font-medium text-foreground">{r.plan || ''}</td>
-  <td className="px-4 py-3 text-sm text-secondary">{formatCurrency(r.receivable || 0)}</td>
-  <td className="px-4 py-3 text-sm font-medium text-success dark:text-success">{formatCurrency(r.received || 0)}</td>
-  <td className="px-4 py-3 text-sm font-medium text-warning dark:text-warning">{formatCurrency(r.remaining || 0)}</td>
-  <td className="px-4 py-3 text-sm text-danger">{formatCurrency(r.refund || 0)}</td>
-  </tr>
-  ))}
- <tr className="bg-input font-semibold border-t-2 border-border">
- <td className="px-4 py-3 text-sm text-foreground">Total</td>
- <td className="px-4 py-3 text-sm text-foreground">{formatCurrency(membershipTotals.totalReceivable || 0)}</td>
- <td className="px-4 py-3 text-sm text-success dark:text-success">{formatCurrency(membershipTotals.totalReceived || 0)}</td>
- <td className="px-4 py-3 text-sm text-warning dark:text-warning">{formatCurrency(membershipTotals.remaining || 0)}</td>
- <td className="px-4 py-3 text-sm text-danger dark:text-danger">{formatCurrency(membershipTotals.refunds || 0)}</td>
- </tr>
-  </tbody>
-  </table>
-  </div>
-  <div className="mt-4 pt-4 border-t border-border">
-      <AdminPagination 
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={setCurrentPage}
-      />
+    <div className="overflow-x-auto">
+      <table data-admin-responsive-table className="w-full">
+        <thead className="bg-input">
+          <tr>
+            {sortableColumns.map(({ key, label }) => (
+              <th key={key} scope="col" className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-secondary">
+                <button
+                  type="button"
+                  onClick={() => handleSort(key)}
+                  className="min-h-11 min-w-11 motion-safe:transition-all motion-safe:duration-base ease-in-out inline-flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  aria-label={`Sort membership report by ${label}`}
+                  aria-sort={sortKey === key ? (sortDir === 'asc' ? 'ascending' : 'descending') : 'none'}
+                  title={`Sort by ${label}`}
+                >
+                  {label}
+                  {sortKey === key
+                    ? (sortDir === 'asc' ? <ChevronUp size={13} aria-hidden="true" className="text-primary" /> : <ChevronDown size={13} aria-hidden="true" className="text-primary" />)
+                    : <ChevronsUpDown size={13} aria-hidden="true" className="text-disabled" />}
+                </button>
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-border">
+          {sortedRows.map((row) => (
+            <tr key={row.id ?? row.plan ?? row.name} className="bg-card motion-safe:transition-colors hover:bg-surface-highlight motion-safe:duration-base">
+              <td className="px-4 py-3 text-sm font-medium text-primary">{row.plan ?? row.name ?? '—'}</td>
+              <td className="px-4 py-3 text-sm text-secondary">{formatCurrency(row.receivable ?? 0)}</td>
+              <td className="px-4 py-3 text-sm font-medium text-success">{formatCurrency(row.received ?? 0)}</td>
+              <td className="px-4 py-3 text-sm font-medium text-warning">{formatCurrency(row.remaining ?? 0)}</td>
+              <td className="px-4 py-3 text-sm text-danger">{formatCurrency(row.refund ?? 0)}</td>
+            </tr>
+          ))}
+          <tr className="border-t-2 border-border bg-input font-semibold">
+            <td className="px-4 py-3 text-sm text-primary">Total</td>
+            <td className="px-4 py-3 text-sm text-primary">{formatCurrency(membershipTotals.totalReceivable ?? 0)}</td>
+            <td className="px-4 py-3 text-sm text-success">{formatCurrency(membershipTotals.totalReceived ?? 0)}</td>
+            <td className="px-4 py-3 text-sm text-warning">{formatCurrency(membershipTotals.remaining ?? 0)}</td>
+            <td className="px-4 py-3 text-sm text-danger">{formatCurrency(membershipTotals.refunds ?? 0)}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-  </>
   );
 }

@@ -1,11 +1,11 @@
-import { describe, it, expect, beforeAll, afterAll, afterEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
+import { http, HttpResponse } from 'msw';
+import { describe, it, expect, beforeAll, afterAll, afterEach } from 'vitest';
+import { dashboardApi } from '@/app/manager/dashboard/dashboard_api/ManagerDashboardApi';
 import ManagerDashboardMain from '@/app/manager/dashboard/dashboard_components/ManagerDashboardMain/ManagerDashboardMain';
 import { managerMswServer } from '@/app/manager/manager_mocks/ManagerMswTestServer';
-import { dashboardApi } from '@/app/manager/dashboard/dashboard_api/ManagerDashboardApi';
 import { ManagerTestProviders } from '@/app/manager/manager_mocks/ManagerTestProviders';
 
-import { http, HttpResponse } from 'msw';
 beforeAll(() => managerMswServer.listen({ onUnhandledRequest: 'error' }));
 afterEach(() => managerMswServer.resetHandlers());
 afterAll(() => managerMswServer.close());
@@ -28,8 +28,7 @@ it('renders dashboard empty collection states from an MSW empty response', async
       http.get('/api/v1/manager/dashboard/stats', () => HttpResponse.json({
         success: true,
         message: 'Empty dashboard collections',
-        data: { ...MOCK_DASHBOARD_STATS, recentMembers: [], recentPayments: [], pendingPaymentsList: [], expiringMemberships: [], memberGrowth: [], revenueChart: [], membersByPlan: [] },
-      }))
+        data: { ...MOCK_DASHBOARD_STATS, recentMembers: [], recentPayments: [], pendingPaymentsList: [], expiringMemberships: [], memberGrowth: [], revenueChart: [], membersByPlan: [] } }))
     );
     render(<ManagerTestProviders><ManagerDashboardMain initialData={null} /></ManagerTestProviders>);
     expect(await screen.findByText('No members yet. Add your first member!')).toBeInTheDocument();

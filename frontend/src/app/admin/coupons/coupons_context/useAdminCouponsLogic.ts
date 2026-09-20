@@ -2,19 +2,24 @@
 // RESPONSIBILITY: Custom hook encapsulating all business logic for the Coupons module.
 // DATA FLOW: AdminCouponsMain → useAdminCouponsLogic → couponsApi
 
-import { useCallback } from 'react';
+import { useCallback, useRef } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { adminToast } from '@/app/admin/admin_components/AdminFeedback/AdminToastService';
+import { adminToast } from '@/app/admin/admin_layout/AdminFeedback/AdminToastService';
 import { couponsApi } from '@/app/admin/coupons/coupons_api/AdminCouponsApi';
 import { useAdminCouponsStore } from '@/app/admin/coupons/coupons_store/useAdminCouponsStore';
-import { useAdminUrlQuerySync } from '@/app/admin/admin_utils/useAdminUrlQuerySync';
-import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/useAdminConfirm';
+import { useAdminUrlQuerySync } from '@/app/admin/admin_layout/admin_utils/useAdminUrlQuerySync';
+import { useAdminConfirm } from '@/app/admin/admin_layout/AdminFeedback/useAdminConfirm';
+import { clearAdminIdempotencyKey, getAdminIdempotencyKey } from '@/app/admin/admin_layout/admin_utils/AdminIdempotencyIntentStore';
 import { EMPTY_COUPON_FORM, COUPONS_ITEMS_PER_PAGE } from '@/app/admin/coupons/coupons_utils/AdminCouponsSharedConstants';
 import type { Coupon, CouponFormValues } from '@/app/admin/coupons/coupons_types/AdminCouponsTypes';
 
+/** Coordinates CouponsLogic state, data flow, and feature behavior. */
 export function useAdminCouponsLogic() {
   const { confirm } = useAdminConfirm();
   const qc = useQueryClient();
+  const idempotencyKeysRef = useRef(new Map<string, string>());
+  const getIntentKey = useCallback((intentId: string) => getAdminIdempotencyKey(idempotencyKeysRef.current, intentId), []);
+  const clearIntentKey = useCallback((intentId: string) => clearAdminIdempotencyKey(idempotencyKeysRef.current, intentId), []);
   const { showModal, setShowModal, editId, setEditId, form, setForm, search, statusFilter, currentPage, setCurrentPage, dateRange, setDateRange } = useAdminCouponsStore();
   useAdminUrlQuerySync([
     { key: 'search', value: search, defaultValue: '', setValue: useAdminCouponsStore.getState().setSearch },
@@ -50,8 +55,8 @@ export function useAdminCouponsLogic() {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id: string) => couponsApi.deleteCoupon(id),
-    onSuccess: (res) => { adminToast.success(res.message, 'admin-success-1eef48be92'); qc.invalidateQueries({ queryKey: ['admin', 'coupons', 'list'] }); },
+    mutationFn: ({ id, idempotencyKey }: { id: string; idempotencyKey: string }) => couponsApi.deleteCoupon(id, idempotencyKey),
+    onSuccess: (res, variables) => { adminToast.success(res.message, 'admin-success-1eef48be92'); idempotencyKeysRef.current.delete(`delete-coupon:${variables.id}`); qc.invalidateQueries({ queryKey: ['admin', 'coupons', 'list'] }); },
     onError: (err) => adminToast.error((err as Error).message, 'admin-error-aedbe2342a'),
   });
 
@@ -88,10 +93,11 @@ export function useAdminCouponsLogic() {
   }, [editId, createMutation, updateMutation]);
 
   const deleteCoupon = useCallback(async (id: string) => {
+    const intentId = `delete-coupon:${id}`;
     const ok = await confirm({ title: 'Delete Coupon', message: 'This coupon will be permanently deleted. This action cannot be undone.', confirmText: 'Delete', type: 'danger' });
-    if (!ok) return;
-    deleteMutation.mutate(id);
-  }, [confirm, deleteMutation]);
+    if (!ok) { clearIntentKey(intentId); return; }
+    deleteMutation.mutate({ id, idempotencyKey: getIntentKey(intentId) });
+  }, [confirm, clearIntentKey, deleteMutation, getIntentKey]);
 
   const toggleCoupon = useCallback((id: string) => { toggleMutation.mutate(id); }, [toggleMutation]);
 

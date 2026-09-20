@@ -6,16 +6,16 @@
 import dynamic from 'next/dynamic';
 import { TrendingUp, Users, IndianRupee, Activity, ArrowDownRight, DollarSign } from 'lucide-react';
 import { useSuperadminAnalyticsPage } from '@/app/superadmin/analytics/analytics_utils/useSuperadminAnalyticsPage';
-import { CHART_COLORS } from '@/app/superadmin/superadmin_utils/SuperadminChartConstants';
-import { SuperadminDateFilterDropdown } from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminDateFilterDropdown';
-import { useSuperadminDateRangeSuffix } from '@/app/superadmin/superadmin_components/SuperadminShared/useSuperadminDateRangeSuffix';
+import { CHART_COLORS } from '@/components/ui/ChartConstants';
+import { SuperadminAnalyticsDateFilterDropdown } from '@/app/superadmin/analytics/analytics_components/SuperadminAnalyticsDateFilterDropdown';
+import { useDateRangeSuffix } from '@/hooks/useDateRangeSuffix';
 // Heavy chart component â€” code-split via dynamic import (Rule 15, Design Â§10)
-import { formatCurrency, formatKPI, formatDecimal } from '@/lib/formatters';
+import { formatCurrencyFromMinorUnits, formatKPI, formatDecimal } from '@/lib/formatters';
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 export default function SuperadminAnalyticsClient() {
-    const { metrics, monthlyData, isLoading, isError: error } = useSuperadminAnalyticsPage();
-    const dateSuffix = useSuperadminDateRangeSuffix();
-    if (isLoading) {
+    const { metrics, monthlyData, isPending, isError: error } = useSuperadminAnalyticsPage();
+    const dateSuffix = useDateRangeSuffix();
+    if (isPending) {
         return (<div className="space-y-6">
         <div>
           <div className="h-8 w-64 bg-skeleton-base motion-safe:animate-pulse rounded mb-2"/>
@@ -50,20 +50,20 @@ export default function SuperadminAnalyticsClient() {
     const kpiCards = [
         {
             label: 'Monthly Income' + dateSuffix,
-            value: formatCurrency(metrics.mrr),
+            value: formatCurrencyFromMinorUnits(metrics.mrr),
             delta: mrrDelta,
             deltaUp: (metrics.mrrDeltaPercent ?? 0) >= 0,
             icon: IndianRupee,
-            iconBg: 'bg-success/10',
+            iconBg: "bg-success-bg",
             iconColor: 'text-success',
         },
         {
             label: 'ARR' + dateSuffix,
-            value: formatCurrency(metrics.arr),
+            value: formatCurrencyFromMinorUnits(metrics.arr),
             delta: arrDelta,
             deltaUp: (metrics.arrDeltaPercent ?? 0) >= 0,
             icon: TrendingUp,
-            iconBg: 'bg-primary/10',
+            iconBg: "bg-primary-subtle",
             iconColor: 'text-primary',
         },
         {
@@ -81,17 +81,17 @@ export default function SuperadminAnalyticsClient() {
             delta: undefined,
             deltaUp: true,
             icon: Users,
-            iconBg: 'bg-warning/10',
+            iconBg: "bg-warning-bg",
             iconColor: 'text-warning',
         },
         {
             label: 'Avg. Income per Gym' + dateSuffix,
             // Design Â§21: Indian currency â€” â‚¹1,24,500
-            value: formatCurrency(arpu),
+            value: formatCurrencyFromMinorUnits(arpu),
             delta: 'Avg revenue per gym',
             deltaUp: true,
             icon: DollarSign,
-            iconBg: 'bg-primary/10',
+            iconBg: "bg-primary-subtle",
             iconColor: 'text-primary',
         },
     ];
@@ -153,11 +153,11 @@ export default function SuperadminAnalyticsClient() {
       {/* Page Header + Time Range Filter */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Revenue Analytics</h1>
+          <h1 className="text-2xl font-bold text-primary">Revenue Analytics</h1>
           <p className="text-secondary mt-1 text-sm">Global SaaS metrics and financial intelligence.</p>
         </div>
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
-          <SuperadminDateFilterDropdown />
+          <SuperadminAnalyticsDateFilterDropdown />
         </div>
       </div>
 
@@ -165,14 +165,14 @@ export default function SuperadminAnalyticsClient() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
         {kpiCards.map((card) => {
             const Icon = card.icon;
-            return (<div key={card.label} className="bg-card border border-border p-6 rounded-xl shadow-sm motion-safe:hover:-translate-y-1 motion-safe:hover:shadow-lg motion-safe:transition-all motion-safe:duration-base bg-gradient-to-b from-warning-bg to-transparent">
+            return (<div key={card.label} className="bg-card border border-border p-6 rounded-xl shadow-card motion-safe:hover:-translate-y-1 motion-safe:hover:shadow-card motion-safe:transition-all motion-safe:duration-base">
               <div className="flex items-center justify-between mb-4">
                 <span className="text-secondary font-medium text-xs uppercase tracking-wider">{card.label}</span>
                 <div className={`w-8 h-8 rounded-lg ${card.iconBg} flex items-center justify-center`}>
                   <Icon className={`w-5 h-5 ${card.iconColor}`}/>
                 </div>
               </div>
-              <p className="text-3xl font-bold text-foreground">{card.value}</p>
+              <p className="text-3xl font-bold text-primary">{card.value}</p>
               {card.delta && (<p className={`text-xs mt-2 font-medium ${card.deltaUp ? 'text-success' : 'text-secondary'}`}>
                   {card.deltaUp ? 'â†‘' : 'â†“'} {card.delta}
                 </p>)}
@@ -182,15 +182,15 @@ export default function SuperadminAnalyticsClient() {
 
       {/* Charts Row â€” Design Â§10: ApexCharts area + bar */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
-          <h2 className="text-base font-semibold text-foreground mb-6">Monthly Income Growth Trend</h2>
+        <div className="bg-card border border-border rounded-xl p-6 shadow-card">
+          <h2 className="text-base font-semibold text-primary mb-6">Monthly Income Growth Trend</h2>
           <div className="h-72">
             <Chart options={mrrAreaOptions} series={mrrAreaSeries} type="area" height="100%"/>
           </div>
         </div>
 
-        <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
-          <h2 className="text-base font-semibold text-foreground mb-6">Gym Growth vs Members Lost</h2>
+        <div className="bg-card border border-border rounded-xl p-6 shadow-card">
+          <h2 className="text-base font-semibold text-primary mb-6">Gym Growth vs Members Lost</h2>
           <div className="h-72">
             <Chart options={tenantBarOptions} series={tenantBarSeries} type="bar" height="100%"/>
           </div>
@@ -199,25 +199,25 @@ export default function SuperadminAnalyticsClient() {
 
       {/* Secondary Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
+        <div className="bg-card border border-border rounded-xl p-6 shadow-card">
           <div className="flex items-center gap-3 mb-2">
-            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-              <Activity className="w-5 h-5 text-primary"/>
+            <div className="w-8 h-8 rounded-lg bg-primary-subtle flex items-center justify-center">
+              <Activity size={18} className="w-5 text-primary"/>
             </div>
             <span className="text-secondary text-xs font-medium uppercase tracking-wider">LTV (Lifetime Value)</span>
           </div>
-          <p className="text-3xl font-bold text-foreground mt-3">{formatCurrency(metrics.ltv)}</p>
+          <p className="text-3xl font-bold text-primary mt-3">{formatCurrencyFromMinorUnits(metrics.ltv)}</p>
           <p className="text-xs text-success mt-2 font-medium">â†‘ Per tenant average</p>
         </div>
 
-        <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
+        <div className="bg-card border border-border rounded-xl p-6 shadow-card">
           <div className="flex items-center gap-3 mb-2">
-            <div className="w-8 h-8 rounded-lg bg-warning/10 flex items-center justify-center">
-              <IndianRupee className="w-5 h-5 text-warning"/>
+            <div className="w-8 h-8 rounded-lg bg-warning-bg flex items-center justify-center">
+              <IndianRupee size={18} className="w-5 text-warning"/>
             </div>
             <span className="text-secondary text-xs font-medium uppercase tracking-wider">CAC (Customer Acquisition Cost)</span>
           </div>
-          <p className="text-3xl font-bold text-foreground mt-3">{formatCurrency(metrics.cac)}</p>
+          <p className="text-3xl font-bold text-primary mt-3">{formatCurrencyFromMinorUnits(metrics.cac)}</p>
           <p className="text-xs text-secondary mt-2">LTV:CAC = {metrics.cac > 0 ? formatDecimal(metrics.ltv / metrics.cac, 1) : 'â€”'}x</p>
         </div>
       </div>

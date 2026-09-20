@@ -1,33 +1,50 @@
 import { http, HttpResponse } from 'msw';
-import { MANAGER_HTTP_STATUS } from '@/app/manager/manager_utils/ManagerHttpStatus';
-import { MOCK_PLANS } from '@/app/manager/plans/plans_fixtures/ManagerPlansMockData';
-import type { Plan } from '@/app/manager/plans/plans_types/ManagerPlansTypes';
+import { MANAGER_HTTP_STATUS } from '@/app/manager/manager_infrastructure/ManagerHttpStatus';
+import { managerMockApiUrl } from '@/app/manager/manager_infrastructure/ManagerMockApiUrl';
 import { MOCK_PLANS_MEMBERSHIP_OVERVIEW } from '@/app/manager/plans/plans_fixtures/ManagerPlansMembershipMockData';
+import { MOCK_PLANS } from '@/app/manager/plans/plans_fixtures/ManagerPlansMockData';
+import { ManagerPlansUrlConfig } from '@/app/manager/plans/plans_url_config';
+import type { Plan } from '@/app/manager/plans/plans_types/ManagerPlansTypes';
+
 
 let mockPlans = [...MOCK_PLANS];
+let mockMembershipOverview = structuredClone(MOCK_PLANS_MEMBERSHIP_OVERVIEW);
+
+let mockChangeRequestIdCounter = 1000;
+let mockPlanIdCounter = 1000;
+export function resetManagerPlansMockState(): void {
+  mockPlans = [...MOCK_PLANS];
+  mockMembershipOverview = structuredClone(MOCK_PLANS_MEMBERSHIP_OVERVIEW);
+  mockChangeRequestIdCounter = 1000;
+  mockPlanIdCounter = 1000;
+}
 
 export const managerPlansHandlers = [
-  http.get(`/api/v1/manager/plans/membership-overview`, () =>
-    HttpResponse.json({ success: true, message: 'Membership overview fetched', data: MOCK_PLANS_MEMBERSHIP_OVERVIEW })
+  http.get(managerMockApiUrl(ManagerPlansUrlConfig.BACKEND_API.MEMBERSHIP_OVERVIEW), () =>
+    HttpResponse.json({ success: true, message: 'Membership overview fetched', data: mockMembershipOverview })
   ),
-  http.post(`/api/v1/manager/plans/membership-activate`, async ({ request }) => {
-    await request.json();
+  http.post(managerMockApiUrl(ManagerPlansUrlConfig.BACKEND_API.MEMBERSHIP_ACTIVATE), async ({ request }) => {
+    const body = await request.json() as { memberId: string; planId: string; startDate: string };
+    mockMembershipOverview = { ...mockMembershipOverview, memberOptions: mockMembershipOverview.memberOptions.map((member) => member.id === body.memberId ? { ...member, planId: body.planId, status: 'ACTIVE', expiryDate: body.startDate } : member) };
     return HttpResponse.json({ success: true, message: 'Membership activated successfully', data: {} });
   }),
-  http.post(`/api/v1/manager/plans/membership-renew`, async ({ request }) => {
-    await request.json();
+  http.post(managerMockApiUrl(ManagerPlansUrlConfig.BACKEND_API.MEMBERSHIP_RENEW), async ({ request }) => {
+    const body = await request.json() as { memberId: string; planId: string; newExpiryDate: string };
+    const update = (member: typeof mockMembershipOverview.memberOptions[number]) => member.id === body.memberId ? { ...member, planId: body.planId, expiryDate: body.newExpiryDate, status: 'ACTIVE' } : member;
+    mockMembershipOverview = { memberOptions: mockMembershipOverview.memberOptions.map(update), renewalCandidates: mockMembershipOverview.renewalCandidates.map(update) };
     return HttpResponse.json({ success: true, message: 'Membership renewed successfully', data: {} });
   }),
-  http.post(`/api/v1/manager/plans/membership-freeze`, async ({ request }) => {
-    await request.json();
+  http.post(managerMockApiUrl(ManagerPlansUrlConfig.BACKEND_API.MEMBERSHIP_FREEZE), async ({ request }) => {
+    const body = await request.json() as { memberId: string; freezeFrom: string; freezeUntil: string };
+    mockMembershipOverview = { ...mockMembershipOverview, memberOptions: mockMembershipOverview.memberOptions.map((member) => member.id === body.memberId ? { ...member, status: 'FROZEN', expiryDate: body.freezeUntil } : member) };
     return HttpResponse.json({ success: true, message: 'Membership freeze applied successfully', data: {} });
   }),
-  http.post(`/api/v1/manager/plans/change-requests`, async ({ request }) => {
+  http.post(managerMockApiUrl(ManagerPlansUrlConfig.BACKEND_API.CHANGE_REQUESTS), async ({ request }) => {
     await request.json();
-    return HttpResponse.json({ success: true, message: 'Plan change request submitted', data: { requestId: `change-${Date.now()}`, status: 'PENDING' } });
+    return HttpResponse.json({ success: true, message: 'Plan change request submitted', data: { requestId: `change-${mockChangeRequestIdCounter++}`, status: 'PENDING' } });
   }),
 
-  http.get(`/api/v1/manager/plans`, ({ request }) => {
+  http.get(managerMockApiUrl(ManagerPlansUrlConfig.BACKEND_API.BASE), ({ request }) => {
     const url = new URL(request.url);
     const search = (url.searchParams.get('search') || '').trim().toLowerCase();
     const tier = (url.searchParams.get('tier') || '').trim();
@@ -41,19 +58,19 @@ export const managerPlansHandlers = [
     return HttpResponse.json({ success: true, message: 'Success', data: { plans: filtered, total: filtered.length } });
   }),
 
-  http.get(`/api/v1/manager/plans/:id`, ({ params }) => {
+  http.get(managerMockApiUrl(ManagerPlansUrlConfig.BACKEND_API.GET_ONE(':id')), ({ params }) => {
     const plan = mockPlans.find(p => p.id === params.id) || mockPlans[0];
     return HttpResponse.json({ success: true, message: 'Success', data: plan });
   }),
 
-  http.post(`/api/v1/manager/plans`, async ({ request }) => {
+  http.post(managerMockApiUrl(ManagerPlansUrlConfig.BACKEND_API.BASE), async ({ request }) => {
     const body = await request.json() as Partial<Plan>;
-    const newPlan = { ...mockPlans[0], ...body, id: `plan-${Date.now()}` } as Plan;
+    const newPlan = { ...mockPlans[0], ...body, id: `plan-${mockPlanIdCounter++}` } as Plan;
     mockPlans = [newPlan, ...mockPlans];
     return HttpResponse.json({ success: true, message: 'Created', data: newPlan });
   }),
 
-  http.patch(`/api/v1/manager/plans/:id`, async ({ request, params }) => {
+  http.patch(managerMockApiUrl(ManagerPlansUrlConfig.BACKEND_API.GET_ONE(':id')), async ({ request, params }) => {
     const body = await request.json() as Partial<Plan>;
     const idx = mockPlans.findIndex(p => p.id === params.id);
     if (idx === -1) return HttpResponse.json({ success: false, message: 'Not found' }, { status: MANAGER_HTTP_STATUS.NOT_FOUND });
@@ -61,7 +78,7 @@ export const managerPlansHandlers = [
     return HttpResponse.json({ success: true, message: 'Updated', data: mockPlans[idx] });
   }),
 
-  http.delete(`/api/v1/manager/plans/:id`, ({ params }) => {
+  http.delete(managerMockApiUrl(ManagerPlansUrlConfig.BACKEND_API.GET_ONE(':id')), ({ params }) => {
     mockPlans = mockPlans.filter(p => p.id !== params.id);
     return HttpResponse.json({ success: true, message: 'Removed', data: { id: params.id } });
   }),

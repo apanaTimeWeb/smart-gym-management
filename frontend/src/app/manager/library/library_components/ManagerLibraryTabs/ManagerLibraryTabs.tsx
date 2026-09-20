@@ -1,39 +1,27 @@
+// RESPONSIBILITY: Renders Library collection tabs plus search/refresh/create controls; all data actions are delegated to the feature hook.
 'use client';
-// RESPONSIBILITY: Renders the tabbed view switching between Diet Plans and Exercises in the Diet Library.
-import { RefreshCw, Plus, Search } from 'lucide-react';
-import { useLibraryContext } from '@/app/manager/library/library_context/ManagerLibraryContext';
+import { Plus, RefreshCw, Search } from 'lucide-react';
+import { useManagerLibraryLogic } from '@/app/manager/library/library_hooks/ManagerUseManagerLibraryLogic';
+
+
 export default function ManagerLibraryTabs() {
-  const { loadAll, openAddDiet, search, setSearch, setCurrentPage } = useLibraryContext();
-
+  const { view, setView, loadAll, openAddDiet, openAddExercise, search, setSearch } = useManagerLibraryLogic();
+  const isDiet = view === 'diet';
   return (
-    <div className="border-b border-border flex flex-wrap gap-4 justify-between items-center bg-card p-2 sm:p-0">
-      <div className="flex overflow-x-auto">
-        <h2 className="px-5 py-3.5 text-lg font-bold text-foreground whitespace-nowrap">View Diet Plans</h2>
+    <div className="flex flex-col gap-3 border-b border-border bg-card p-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+      <div className="flex overflow-x-auto" role="tablist" aria-label="Library collections">
+        <button type="button" role="tab" aria-selected={isDiet} onClick={() => setView('diet')} className={`min-h-11 whitespace-nowrap border-b-2 px-5 py-3 text-sm font-semibold motion-safe:transition-all motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${isDiet ? 'border-primary text-primary' : 'border-transparent text-secondary hover:text-primary'}`}>Diet Plans</button>
+        <button type="button" role="tab" aria-selected={!isDiet} onClick={() => setView('exercises')} className={`min-h-11 whitespace-nowrap border-b-2 px-5 py-3 text-sm font-semibold motion-safe:transition-all motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${!isDiet ? 'border-primary text-primary' : 'border-transparent text-secondary hover:text-primary'}`}>Exercises</button>
       </div>
-      <div className="px-4 flex flex-wrap gap-3 items-center">
-        <div className="relative">
-          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary" />
-          <input 
-            value={search} 
-            onChange={e => { setSearch(e.target.value);  }} 
-            placeholder="Search diet plans..." 
-            className="pl-9 pr-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary w-40 sm:w-full sm:max-w-64 bg-input text-foreground" 
-          />
+      <div className="flex flex-col gap-2 px-2 sm:flex-row sm:flex-wrap sm:items-center sm:px-4">
+        <div className="relative min-w-0 sm:w-64">
+          <Search size={18} aria-hidden="true" className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-secondary" />
+          <label htmlFor="manager-library-search" className="sr-only">Search {isDiet ? 'diet plans' : 'exercises'}</label>
+          <input id="manager-library-search" value={search} onChange={(event) => setSearch(event.target.value)} placeholder={`Search ${isDiet ? 'diet plans' : 'exercises'}...`} className="w-full rounded-lg border border-border bg-input py-2 pl-9 pr-3 text-sm text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" />
         </div>
- <button 
- onClick={loadAll} 
- className="flex items-center gap-2 px-3 py-2 text-sm border border-border rounded-lg hover:bg-primary-subtle text-secondary motion-safe:transition-colors"
- >
- <RefreshCw size={14} />
- </button>
- <button 
- onClick={openAddDiet} 
- className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-lg motion-safe:transition-colors hover:bg-primary/90" 
- >
- <Plus size={14} /> Add Diet Plan
- </button>
- </div>
- </div>
- );
+        <button type="button" onClick={() => void loadAll()} aria-label="Refresh library" className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg border border-border text-secondary motion-safe:transition-all motion-safe:duration-base hover:bg-surface-hover hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"><RefreshCw size={18} aria-hidden="true" /></button>
+        <button type="button" onClick={isDiet ? openAddDiet : openAddExercise} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-primary px-4 text-sm font-semibold text-on-primary motion-safe:transition-all motion-safe:duration-base motion-safe:hover:brightness-95 motion-safe:active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"><Plus size={18} aria-hidden="true" /> Add {isDiet ? 'Diet Plan' : 'Exercise'}</button>
+      </div>
+    </div>
+  );
 }
-

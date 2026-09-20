@@ -38,13 +38,13 @@ export default function AdminAuditLogsToolbar() {
       <div className="flex flex-col md:flex-row gap-3">
         {/* Search */}
         <div className="relative flex-1">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary" />
+          <span className="absolute inset-y-0 left-3 flex items-center"><Search size={14} className="text-secondary" /></span>
           <input
             type="text"
             placeholder="Search by action, user, details, IP..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 bg-input border border-border rounded-xl text-sm text-foreground focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary"
+            className="w-full pl-9 pr-4 py-2 bg-input border border-border rounded-xl text-sm text-primary focus-visible:outline-none focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary"
             aria-label="Search audit logs"
           />
         </div>
@@ -54,7 +54,7 @@ export default function AdminAuditLogsToolbar() {
           {hasActiveFilters && (
             <button
               onClick={resetFilters}
-              className="flex items-center gap-1.5 px-3 py-2 bg-input border border-border rounded-xl text-sm text-secondary hover:text-foreground motion-safe:transition-colors"
+              className="min-h-11 min-w-11 flex items-center gap-1.5 px-3 py-2 bg-input border border-border rounded-xl text-sm text-secondary hover:text-primary motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
               aria-label="Reset filters"
             >
               <RotateCcw size={13} /> Reset
@@ -62,7 +62,7 @@ export default function AdminAuditLogsToolbar() {
           )}
           <button
             onClick={() => exportCSV(filtered)}
-            className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-xl text-sm font-semibold hover:bg-primary-hover motion-safe:transition-colors"
+            className="min-h-11 min-w-11 flex items-center gap-2 px-4 py-2 bg-primary text-on-primary rounded-xl text-sm font-semibold hover:bg-primary-hover motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
             aria-label="Export logs as CSV"
           >
             <Download size={14} /> Export CSV
@@ -75,7 +75,7 @@ export default function AdminAuditLogsToolbar() {
         <select
           value={severityFilter}
           onChange={e => setSeverityFilter(e.target.value)}
-          className="bg-input border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary"
+          className="bg-input border border-border rounded-xl px-3 py-2 text-sm text-primary focus-visible:outline-none focus-visible:border-primary"
           aria-label="Filter by severity"
         >
           {AUDIT_SEVERITY_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
@@ -83,7 +83,7 @@ export default function AdminAuditLogsToolbar() {
         <select
           value={moduleFilter}
           onChange={e => setModuleFilter(e.target.value)}
-          className="bg-input border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary"
+          className="bg-input border border-border rounded-xl px-3 py-2 text-sm text-primary focus-visible:outline-none focus-visible:border-primary"
           aria-label="Filter by module"
         >
           {AUDIT_MODULE_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
@@ -91,7 +91,7 @@ export default function AdminAuditLogsToolbar() {
         <select
           value={branchFilter}
           onChange={e => setBranchFilter(e.target.value)}
-          className="bg-input border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary"
+          className="bg-input border border-border rounded-xl px-3 py-2 text-sm text-primary focus-visible:outline-none focus-visible:border-primary"
           aria-label="Filter by branch"
         >
           {AUDIT_GYM_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
@@ -101,7 +101,7 @@ export default function AdminAuditLogsToolbar() {
             type="date"
             value={dateFrom}
             onChange={e => setDateFrom(e.target.value)}
-            className="bg-input border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary"
+            className="bg-input border border-border rounded-xl px-3 py-2 text-sm text-primary focus-visible:outline-none focus-visible:border-primary"
             aria-label="Date from"
           />
           <span className="text-secondary text-xs">to</span>
@@ -109,7 +109,7 @@ export default function AdminAuditLogsToolbar() {
             type="date"
             value={dateTo}
             onChange={e => setDateTo(e.target.value)}
-            className="bg-input border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary"
+            className="bg-input border border-border rounded-xl px-3 py-2 text-sm text-primary focus-visible:outline-none focus-visible:border-primary"
             aria-label="Date to"
           />
         </div>

@@ -2,15 +2,14 @@
 // RESPONSIBILITY: Renders dynamic charts visualizing staff performance metrics (sessions, additions).
 
 import dynamic from 'next/dynamic';
-import { ADMIN_CHART_THEME } from '@/app/admin/admin_utils/AdminChartThemeTokens';
+import { ADMIN_CHART_THEME } from '@/app/admin/admin_layout/admin_utils/AdminChartThemeTokens';
 import type { StaffPerformanceRecord } from '@/app/admin/hr/hr_types/AdminHrPerformanceTypes';
 
 // Rule 15: Lazy loading heavy chart libraries
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
-interface AdminHrPerformanceChartsProps {
-  data: StaffPerformanceRecord[];
-}
+import type { AdminHrPerformanceChartsProps } from '@/app/admin/hr/hr_types/AdminHrPerformanceChartsPropsTypes';
+
 
 export default function AdminHrPerformanceCharts({ data }: AdminHrPerformanceChartsProps) {
   // Aggregate Top 5 Trainers by Sessions

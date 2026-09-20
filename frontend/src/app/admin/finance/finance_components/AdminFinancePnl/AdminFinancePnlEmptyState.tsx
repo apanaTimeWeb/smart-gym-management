@@ -4,12 +4,10 @@
 import { BarChart3 } from 'lucide-react';
 import type { PnlStatusFilter } from '@/app/admin/finance/finance_types/AdminFinanceTypes';
 
-interface AdminFinancePnlEmptyStateProps {
-  statusFilter: PnlStatusFilter;
-  onReset: () => void;
-}
+import type { AdminFinancePnlEmptyStateProps } from '@/app/admin/finance/finance_types/AdminFinancePnlEmptyStatePropsTypes';
 
-const EMPTY_MESSAGES: Record<PnlStatusFilter, string> = {
+
+const EMPTY_MESSAGES: Record<string, string> = {
   ALL:        'No branch P&L data found for this period.',
   PROFITABLE: 'No profitable branches found for this period.',
   BREAKEVEN:  'No break-even branches found for this period.',
@@ -24,12 +22,12 @@ export default function AdminFinancePnlEmptyState({ statusFilter, onReset }: Adm
           <div className="w-14 h-14 rounded-2xl bg-input flex items-center justify-center border border-border">
             <BarChart3 size={24} strokeWidth={2} className="text-secondary" />
           </div>
-          <p className="text-sm font-semibold text-foreground">{EMPTY_MESSAGES[statusFilter]}</p>
+          <p className="text-sm font-semibold text-primary">{EMPTY_MESSAGES[statusFilter]}</p>
           <p className="text-xs text-secondary">Try changing the period or clearing the filter.</p>
           {statusFilter !== 'ALL' && (
             <button
               onClick={onReset}
-              className="mt-1 px-4 py-2 text-xs font-semibold bg-primary text-primary-foreground rounded-lg hover:bg-primary-hover motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              className="mt-1 px-4 py-2 text-xs font-semibold bg-primary text-on-primary rounded-lg hover:bg-primary-hover motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-safe:duration-base"
             >
               Clear Filter
             </button>

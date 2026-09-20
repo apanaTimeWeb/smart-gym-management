@@ -6,10 +6,10 @@ import SuperadminBroadcastsTable from '@/app/superadmin/broadcasts/broadcasts_co
 import SuperadminBroadcastsEmptyState from '@/app/superadmin/broadcasts/broadcasts_components/SuperadminBroadcastsEmptyState/SuperadminBroadcastsEmptyState';
 import { SuperadminBroadcastModal } from '@/app/superadmin/broadcasts/broadcasts_components/SuperadminBroadcastModal';
 import SuperadminBroadcastQueueModal from '@/app/superadmin/broadcasts/broadcasts_components/SuperadminBroadcastQueueModal';
-import SuperadminPagination from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminPagination';
+import Pagination from '@/components/ui/Pagination';
 export default function SuperadminBroadcastsClient() {
-    const { broadcasts, searchQuery, setSearchQuery, statusFilter, setStatusFilter, currentPage, totalPages, setCurrentPage, isModalOpen, setIsModalOpen, form, handleCreateBroadcast, handleDeleteBroadcast, handleSendBroadcast, openEditModal, openCreateModal, editingId, isMutating, fetchState, error, queueModalOpen, queueRecipients, queueTitle, onQueueComplete, setQueueModalOpen } = useSuperadminBroadcastsPage();
-    const isLoading = fetchState === 'pending';
+    const { broadcasts, searchQuery, setSearchQuery, statusFilter, setStatusFilter, currentPage, totalPages, setCurrentPage, isModalOpen, setIsModalOpen, form, handleCreateBroadcast, handleDeleteBroadcast, handleSendBroadcast, openEditModal, openCreateModal, editingId, isMutating, fetchState, error, queueModalOpen, queueRecipients, queueBroadcastId, queueTitle, onQueueComplete, setQueueModalOpen } = useSuperadminBroadcastsPage();
+    const isPending = fetchState === 'pending';
     if (fetchState === 'pending')
         return (<div className="space-y-6 motion-safe:animate-pulse">
       <div className="h-8 bg-card rounded w-48"/>
@@ -22,11 +22,11 @@ export default function SuperadminBroadcastsClient() {
 
       {broadcasts.length === 0 ? (<SuperadminBroadcastsEmptyState onCreateClick={openCreateModal}/>) : (<>
           <SuperadminBroadcastsTable onCreateClick={openCreateModal} broadcasts={broadcasts} onSend={handleSendBroadcast} onEdit={openEditModal} onDelete={handleDeleteBroadcast}/>
-          <SuperadminPagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage}/>
+          <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage}/>
         </>)}
 
       <SuperadminBroadcastModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} form={form} onSubmit={handleCreateBroadcast} isEditMode={!!editingId} isMutating={isMutating}/>
 
-      <SuperadminBroadcastQueueModal isOpen={queueModalOpen} onClose={() => setQueueModalOpen(false)} recipients={queueRecipients} broadcastTitle={queueTitle} onComplete={onQueueComplete}/>
+      <SuperadminBroadcastQueueModal isOpen={queueModalOpen} onClose={() => setQueueModalOpen(false)} recipients={queueRecipients} broadcastId={queueBroadcastId} broadcastTitle={queueTitle} onComplete={onQueueComplete}/>
     </div>);
 }

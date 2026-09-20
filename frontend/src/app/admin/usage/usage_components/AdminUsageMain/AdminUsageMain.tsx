@@ -1,4 +1,5 @@
 "use client";
+import { format } from 'date-fns';
 // RESPONSIBILITY: Main entry point for Admin Usage & Subscription page. Composes metric cards and plan cards.
 
 import { useRef } from 'react';
@@ -17,35 +18,35 @@ export default function AdminUsageMain() {
   };
 
   return (
-    <div className="min-h-full pb-10 bg-background text-foreground">
+    <div className="min-h-full pb-10 bg-page text-primary">
       <div className="p-6 space-y-6">
         {status === 'pending' && !data ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4" aria-label="Loading usage data">
-            {['usage-1','usage-2','usage-3','usage-4','usage-5','usage-6'].map((skeletonId) => <div key={skeletonId} className="h-28 rounded-xl bg-skeleton-base motion-safe:animate-pulse" />)}
+            {['usage-1','usage-2','usage-3','usage-4','usage-5','usage-6'].map((skeletonId) => <div key={skeletonId} className="h-28 rounded-xl bg-skeleton-base motion-safe:animate-pulse motion-safe:duration-base" />)}
           </div>
         ) : null}
 
         {/* Current Plan Banner */}
-        <div className="bg-card rounded-xl border border-primary/30 p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="bg-card rounded-xl border border-border p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="p-3 bg-primary/20 rounded-xl">
+            <div className="p-3 bg-primary-subtle rounded-xl">
               <CreditCard size={22} className="text-primary" strokeWidth={2} />
             </div>
             <div>
               <p className="text-xs text-secondary uppercase tracking-wider font-semibold">Current Plan</p>
-              <p className="text-xl font-bold text-foreground">{data?.planName}</p>
+              <p className="text-xl font-bold text-primary">{data?.planName}</p>
               <p className="text-sm text-secondary mt-0.5">{formatCurrency(data?.monthlyPrice || 0)} / month</p>
             </div>
           </div>
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
             <div className="flex items-center gap-2 text-sm text-secondary">
               <Calendar size={15} className="text-warning" />
-              <span>Renews <span className="font-semibold text-foreground">{data?.billingCycleEnd ? new Date(data.billingCycleEnd).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : 'N/A'}</span></span>
+              <span>Renews <span className="font-semibold text-primary">{data?.billingCycleEnd ? format(new Date(data.billingCycleEnd), 'd MMM yyyy') : 'N/A'}</span></span>
             </div>
             <button
               onClick={() => void refresh()}
               disabled={status === 'pending'}
-              className="flex items-center gap-2 px-4 py-2 border border-border rounded-xl text-sm font-medium text-secondary hover:text-foreground hover:bg-input motion-safe:transition-all motion-safe:duration-200 motion-safe:active:scale-95 disabled:opacity-50"
+              className="flex items-center gap-2 px-4 py-2 border border-border rounded-xl text-sm font-medium text-secondary hover:text-primary hover:bg-input motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95 disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
             >
               <RefreshCw size={14} className={status === 'pending' ? 'motion-safe:animate-spin' : ''} />
               Refresh
@@ -55,7 +56,7 @@ export default function AdminUsageMain() {
 
         {/* Usage Metrics Grid */}
         <div>
-          <h2 className="text-sm font-bold text-foreground mb-3 uppercase tracking-wider">Resource Usage</h2>
+          <h2 className="text-sm font-bold text-primary mb-3 uppercase tracking-wider">Resource Usage</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
             {metrics.map((m) => (
               <AdminUsageMetricCard key={m.label} metric={m} onUpgrade={handleUpgrade} />

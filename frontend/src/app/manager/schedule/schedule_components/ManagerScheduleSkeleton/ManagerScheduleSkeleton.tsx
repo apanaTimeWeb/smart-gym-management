@@ -1,6 +1,4 @@
 // RESPONSIBILITY: Skeleton loader for the Schedule module
-import React from 'react';
-
 export default function ManagerScheduleSkeleton() {
   return (
     <div className="min-h-full pb-10 motion-safe:animate-pulse motion-reduce:animate-none">

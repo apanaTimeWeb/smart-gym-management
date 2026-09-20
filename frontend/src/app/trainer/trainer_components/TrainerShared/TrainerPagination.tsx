@@ -1,14 +1,9 @@
-'use client';
 // RESPONSIBILITY: Renders the pagination bar (Previous/Next + page info + rows-per-page) shared across all TRAINER table views.
+'use client';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import type { TrainerPaginationProps } from '@/app/trainer/trainer_components/trainer_components_types/TrainerPaginationProps';
 
-interface TrainerPaginationProps {
-  currentPage: number;
-  totalPages: number;
-  onPageChange: (page: number) => void;
-  totalItems?: number;
-  itemsPerPage?: number;
-}
+
 
 export default function TrainerPagination({ currentPage, totalPages, onPageChange, totalItems, itemsPerPage }: TrainerPaginationProps) {
   const startItem = totalItems !== undefined && itemsPerPage !== undefined ? (currentPage - 1) * itemsPerPage + 1 : null;
@@ -25,10 +20,10 @@ export default function TrainerPagination({ currentPage, totalPages, onPageChang
     <div className="px-5 py-4 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-border">
       {startItem !== null && endItem !== null && totalItems !== undefined ? (
         <div className="text-sm text-center sm:text-left text-secondary">
-          Showing <span className="font-medium text-foreground">{startItem}</span> to <span className="font-medium text-foreground">{endItem}</span> of <span className="font-medium text-foreground">{totalItems}</span> results
+          Showing <span className="font-medium text-primary">{startItem}</span> to <span className="font-medium text-primary">{endItem}</span> of <span className="font-medium text-primary">{totalItems}</span> results
         </div>
       ) : (
-        <div className="text-sm text-secondary">Page <span className="font-medium text-foreground">{currentPage}</span> of <span className="font-medium text-foreground">{totalPages}</span></div>
+        <div className="text-sm text-secondary">Page <span className="font-medium text-primary">{currentPage}</span> of <span className="font-medium text-primary">{totalPages}</span></div>
       )}
 
       <div className="flex items-center gap-1">
@@ -37,7 +32,7 @@ export default function TrainerPagination({ currentPage, totalPages, onPageChang
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
           aria-label="Previous page"
-          className="p-2 rounded-lg text-secondary hover:text-foreground hover:bg-input disabled:opacity-50 disabled:cursor-not-allowed motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          className="p-2 rounded-lg text-secondary hover:text-primary hover:bg-input disabled:opacity-50 disabled:cursor-not-allowed motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
         >
           <ChevronLeft size={18} strokeWidth={2} />
         </button>
@@ -53,7 +48,7 @@ export default function TrainerPagination({ currentPage, totalPages, onPageChang
                 onClick={() => onPageChange(page)}
                 aria-current={currentPage === page ? 'page' : undefined}
                 aria-label={`Go to page ${page}`}
-                className={`w-8 h-8 flex items-center justify-center rounded-lg text-sm font-medium motion-safe:transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${currentPage === page ? 'bg-primary text-primary-foreground' : 'text-secondary hover:text-foreground hover:bg-input'}`}
+                className={`w-8 h-8 flex items-center justify-center rounded-lg text-sm font-medium motion-safe:transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${currentPage === page ? 'bg-primary text-on-primary' : 'text-secondary hover:text-primary hover:bg-input'}`}
               >
                 {page}
               </button>
@@ -66,7 +61,7 @@ export default function TrainerPagination({ currentPage, totalPages, onPageChang
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
           aria-label="Next page"
-          className="p-2 rounded-lg text-secondary hover:text-foreground hover:bg-input disabled:opacity-50 disabled:cursor-not-allowed motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          className="p-2 rounded-lg text-secondary hover:text-primary hover:bg-input disabled:opacity-50 disabled:cursor-not-allowed motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
         >
           <ChevronRight size={18} strokeWidth={2} />
         </button>

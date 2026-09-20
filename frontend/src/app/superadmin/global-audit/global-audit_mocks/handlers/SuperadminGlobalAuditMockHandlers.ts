@@ -1,7 +1,7 @@
 import { http, HttpResponse, delay } from 'msw';
 import { MOCK_SUPERADMIN_GLOBAL_AUDIT } from '@/app/superadmin/global-audit/global-audit_mocks/fixtures/SuperadminGlobalAuditMockFixtures';
 import type { ApiResponse } from '@/lib/api';
-import type { AuditLog, GlobalAuditListMeta } from '@/app/superadmin/global-audit/superadmin_global-audit_types/superadmin_global-audit_types';
+import type { AuditLog, GlobalAuditListMeta } from '@/app/superadmin/global-audit/global-audit_types/SuperadminGlobalAuditTypes';
 const BASE_URL = '*/superadmin/audit-logs';
 export const superadminGlobalAuditHandlers = [
     http.get(BASE_URL, async ({ request }) => {

@@ -1,12 +1,12 @@
 // RESPONSIBILITY: Renders the Superadmin tickets V1 Operator workload, Backlog age view.
 'use client';
 import { formatNumber } from '@/lib/formatters';
-import SuperadminV1ApexBarChart from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminV1ApexBarChart';
-import SuperadminV1Panel from '@/app/superadmin/superadmin_components/SuperadminShared/SuperadminV1Panel';
+import ApexBarChart from '@/components/ui/ApexBarChart';
+import Panel from '@/components/ui/Panel';
 import type { SuperadminTicketsV1SectionProps } from '@/app/superadmin/tickets/tickets_types/SuperadminTicketsV1Types.ts';
 export default function SuperadminTicketsV1OperatorWorkloadAndBacklogSection({ data }: SuperadminTicketsV1SectionProps) {
     return <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
-  <SuperadminV1Panel title="Operator workload" description="Open work and overdue service targets by support operator.">
+  <Panel title="Operator workload" description="Open work and overdue service targets by support operator.">
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
         <thead>
@@ -30,7 +30,7 @@ export default function SuperadminTicketsV1OperatorWorkloadAndBacklogSection({ d
         </thead>
         <tbody>
           {data.agents.map((a) => <tr key={a.name} className="border-b border-border">
-            <td className="px-3 py-3 font-medium text-foreground">
+            <td className="px-3 py-3 font-medium text-primary">
               {a.name}
             </td>
             <td className="px-3 py-3 text-secondary">
@@ -49,11 +49,11 @@ export default function SuperadminTicketsV1OperatorWorkloadAndBacklogSection({ d
         </tbody>
       </table>
     </div>
-  </SuperadminV1Panel>
-  <SuperadminV1Panel title="Backlog age" description="Older tickets need faster attention.">
+  </Panel>
+  <Panel title="Backlog age" description="Older tickets need faster attention.">
     <div className="h-64">
-      <SuperadminV1ApexBarChart categories={data.aging.map((x) => x.bucket)} series={[{ name: 'Tickets', data: data.aging.map((x) => x.count) }]} valueFormatter={(v) => formatNumber(v)}/>
+      <ApexBarChart categories={data.aging.map((x) => x.bucket)} series={[{ name: 'Tickets', data: data.aging.map((x) => x.count) }]} valueFormatter={(v) => formatNumber(v)}/>
     </div>
-  </SuperadminV1Panel>
+  </Panel>
     </div>;
 }

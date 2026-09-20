@@ -15,6 +15,7 @@ interface AdminReportsStore {
   setSelectedGymId: (id: string) => void;
 }
 
+/** Coordinates ReportsStore state, data flow, and feature behavior. */
 export const useAdminReportsStore = create<AdminReportsStore>((set) => ({
   activeTab: 'revenue',
   setActiveTab: (tab) => set({ activeTab: tab }),

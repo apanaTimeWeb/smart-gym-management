@@ -1,91 +1,116 @@
-# Audit Investigation — Feature Map
+﻿# Superadmin Global Audit Investigation â€” Feature Map
 
 ## Module Purpose
-This Superadmin-only feature gives platform operators a focused workspace for audit investigation. It exists at `/superadmin/global-audit` and is intentionally limited to platform-level tenant/SaaS operations; gym-staff daily operations are outside this boundary. The V1 layer keeps the UI backend-ready by flowing server data through its module API, Zod contract, module-owned MSW fixture/handler, and TanStack Query hook.
+The global_audit_investigation module is responsible for the Superadmin business workflow managing Global_audit_investigation. It enables superadmins to view, monitor, and control the lifecycle and configurations of Global_audit_investigation across all SaaS tenants. All related business behavior, API contracts, validation, server-state hooks, fixtures, and MSW handlers are strictly isolated within this feature boundary to prevent cross-tenant or cross-module leakage.
 
 ## Directory Structure
+
 | Folder | Responsibility | Key Files |
 |---|---|---|
-| `global-audit/` | Owns this Superadmin route and all feature-specific artifacts. | `page.tsx`, `loading.tsx`, `error.tsx`, `SuperadminGlobalAuditV1Client.tsx` |
-| `global-audit_api/` | Calls the feature endpoint and validates the response data. | API service for `GET /api/superadmin/global-audit/investigation` |
-| `global-audit_types/` | Owns the response data contract and runtime validation. | V1 type/schema file |
-| `global-audit_mocks/handlers/` | Intercepts the V1 endpoint in frontend-first development. | V1 MSW handler |
-| `global-audit_mocks/fixtures/` | Owns realistic V1 server-like data. | V1 mock fixture |
-| `global-audit_utils/` | Orchestrates TanStack Query for this feature. | `useSuperadminGlobalAuditV1.ts` |
+| `global-audit_api/` | Feature-owned responsibility for global-audit api. | `SuperadminGlobalAuditApi.ts`, `SuperadminGlobalAuditInvestigationApi.ts` |
+| `global-audit_mocks/` | Feature-owned responsibility for global-audit mocks. | `(directory present; no direct files)` |
+| `global-audit_tests/` | Feature-owned responsibility for global-audit tests. | `SuperadminGlobal-auditBasic.test.tsx`, `SuperadminGlobalAuditInvestigation.test.ts` |
+| `global-audit_types/` | Feature-owned responsibility for global-audit types. | `SuperadminGlobalAuditFilterTypes.ts`, `SuperadminGlobalAuditTypes.ts`, `SuperadminGlobalAuditV1Types.ts` |
+| `global-audit_utils/` | Feature-owned responsibility for global-audit utils. | `SuperadminGlobalAuditConstants.ts`, `useSuperadminGlobalAuditData.ts`, `useSuperadminGlobalAuditV1.ts` |
+| `global_audit_utils/` | Feature-owned responsibility for global audit utils. | `SuperadminGlobalAuditStatusBadgeConfig.ts` |
+
+## Approved External Dependencies
+
+### Application Infrastructure
+- `@/app/superadmin/superadmin_components` â€” role-shell/generic interaction infrastructure only.
+- `@/lib/*` and `@/components/*` â€” only approved application infrastructure imported by this feature.
+
+### Business Feature Dependencies
+- None
+
+### Role-Level Business Dependencies
+- None
 
 ## Feature Inventory
-| Feature | Route | What the User Can Do | Main API Calls | Status |
+
+| Surface | Route | Implemented User Actions | API Boundary | Status |
 |---|---|---|---|---|
-| Audit Investigation | `/superadmin/global-audit` | before/after changes, suspicious activity. | `GET /api/superadmin/global-audit/investigation` | ✅ V1 mocked and rendered |
+| Superadmin Global Audit Investigation | `/superadmin/global-audit` | view the module surface; use the documented filters and controls; open supported detail/edit surfaces | `SuperadminGlobalAuditInvestigationApi.ts`, `SuperadminGlobalAuditApi.ts` | Source-verified; host runtime pending |
 
 ## User Flows & Interactions
-1. Superadmin opens `/superadmin/global-audit` and the client view requests the feature payload through `useSuperadminGlobalAuditV1.ts`.
-2. TanStack Query receives the module API response and renders the documented panels, metrics, comparisons, charts, tables, and/or alerts.
-3. The module fixture supplies realistic values for the visible UI while the backend is unavailable.
-4. A request failure stays inside the module and exposes a user-safe Retry action rather than a raw backend error.
+
+1. Open the /superadmin/global_audit_investigation route to load the Global_audit_investigation data context securely via TanStack Query.
+2. Interact with the Global_audit_investigation dashboard using available search, filter, and pagination controls.
+3. Execute module-specific CRUD or business mutations (like updating Global_audit_investigation status) through feature-owned API contracts.
+4. All mutations trigger optimistic updates or immediate invalidation to reconcile success/error states on the same client surface.
+
+## Verification Notes
+- Active route pages mount one primary client tree; no `V1Client` import is mounted from route `page.tsx`.
+- Mutable mock-state handlers have reset functions covered by tests where present.
+- Deprecated marker-only and JSON-stringify tautology tests were removed from the module test tree.
+- Dependency-backed `tsc`, lint, Vitest runtime, Playwright, and real browser responsive execution require the host application environment and remain unverified here.
 
 ## Data and State Architecture
-- **Server state:** TanStack Query; no API response data is stored in Zustand or React Context.
-- **UI state:** local component state only where the feature has private display state; shared UI state stays module-scoped if added later.
-- **Query key:** feature hook owns a Superadmin-namespaced query key.
-- **Mock ownership:** fixture and MSW handler both remain inside `global-audit/`.
+
+- **Actual feature root:** `global-audit`
+- **Server state:** TanStack Query `useQuery` detected.
+- **Zustand stores:** None detected.
+- **Context files:** None detected.
+- **Custom hooks:** `global-audit_utils/useSuperadminGlobalAuditV1.ts`, `global-audit_utils/useSuperadminGlobalAuditData.ts`
+- **URL state:** `useUrlState` detected.
+- **Observed query keys:** `['superadmin', 'global_audit_investigation']`, `['superadmin', 'global-audit', queryParams]`
 
 ## API Contract
-All calls use the global transport `@/lib/api` and the feature URL config.
 
-| Function | Method | Endpoint | Request | Response `data` type |
-|---|---|---|---|---|
-| `fetchGlobalAuditInvestigation` | GET | `GET /api/superadmin/global-audit/investigation` | None in V1 | Module V1 data schema |
+- **API files:** `global-audit_api/SuperadminGlobalAuditInvestigationApi.ts`, `global-audit_api/SuperadminGlobalAuditApi.ts`
+- **Detected API symbols:** `fetchGlobalAuditInvestigation` — `global-audit_api/SuperadminGlobalAuditInvestigationApi.ts`; `fetchGlobalLogs` — `global-audit_api/SuperadminGlobalAuditApi.ts`
+- **Runtime response validation:** Zod usage detected.
 
-The V1 handler returns the canonical flat `ApiResponse<T>` payload. Response data is validated at the API boundary using the module-owned Zod schema.
+No API field/method is invented where static source did not expose it; missing runtime confirmation remains `NOT VERIFIED`.
 
 ## UI Data Requirements
-| UI Data | Source | Validation/Mock Ownership |
-|---|---|---|
-| `data.changes` | GET /api/superadmin/global-audit/investigation | Module-owned Zod contract + MSW fixture |
-| `data.time` | GET /api/superadmin/global-audit/investigation | Module-owned Zod contract + MSW fixture |
-| `data.actor` | GET /api/superadmin/global-audit/investigation | Module-owned Zod contract + MSW fixture |
-| `data.action` | GET /api/superadmin/global-audit/investigation | Module-owned Zod contract + MSW fixture |
-| `data.resource` | GET /api/superadmin/global-audit/investigation | Module-owned Zod contract + MSW fixture |
-| `data.before` | GET /api/superadmin/global-audit/investigation | Module-owned Zod contract + MSW fixture |
-| `data.after` | GET /api/superadmin/global-audit/investigation | Module-owned Zod contract + MSW fixture |
-| `data.risk` | GET /api/superadmin/global-audit/investigation | Module-owned Zod contract + MSW fixture |
-| `data.anomalies` | GET /api/superadmin/global-audit/investigation | Module-owned Zod contract + MSW fixture |
-| `data.title` | GET /api/superadmin/global-audit/investigation | Module-owned Zod contract + MSW fixture |
-| `data.detail` | GET /api/superadmin/global-audit/investigation | Module-owned Zod contract + MSW fixture |
-| `data.severity` | GET /api/superadmin/global-audit/investigation | Module-owned Zod contract + MSW fixture |
-| `data.filters` | GET /api/superadmin/global-audit/investigation | Module-owned Zod contract + MSW fixture |
-| `data.message` | GET /api/superadmin/global-audit/investigation | Module-owned Zod contract + MSW fixture |
-| `data.success` | GET /api/superadmin/global-audit/investigation | Module-owned Zod contract + MSW fixture |
 
-The consuming component is the source for the exact rendered sub-fields. V1 business values are not embedded in JSX.
+- **Data-bearing components:** `page.tsx`, `global-audit_components/SuperadminGlobalAuditV1SuspiciousActivityPanel.tsx`, `global-audit_components/SuperadminGlobalAuditClient.tsx`, `global-audit_components/SuperadminGlobalAuditV1BeforeAndAfterChangesPanel.tsx`, `global-audit_components/SuperadminGlobalAuditV1InvestigationSummaryCards.tsx`
+- **Approved formatting evidence:** No approved global formatting helper detected.
+- **Approved date/time evidence:** No `date-fns`/`dayjs` usage detected.
+- **Forms detected:** 0
+
+Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
 
 ## Permissions and Security
-- **Required role:** `SUPERADMIN`, with backend authorization remaining authoritative.
-- **Cross-role isolation:** no Admin, Manager, Trainer, or other business-role implementation is imported.
-- **Financial/destructive controls:** any future mutation must use the existing Superadmin confirmation contract and authoritative backend response.
-- **Sensitive data:** user-facing identifiers and long dynamic text must follow the existing Superadmin masking/truncation rules.
+
+- **Permission symbols detected:** No explicit module permission symbols detected.
+- **Destructive-confirmation evidence:** No `useConfirm` detected.
+- **Mutation boundary:** No direct TanStack Query `useMutation` usage detected.
+- **Cross-feature dependency rule:** no sibling business feature imports are permitted unless explicitly documented as approved infrastructure.
 
 ## Loading, Empty, and Error States
-- **Loading:** route `loading.tsx` or V1 client structural skeleton mirrors the major content blocks rather than using a full-page spinner.
-- **Error:** route `error.tsx` and/or V1 client retry state shows a concise user-safe explanation and Retry action.
-- **Empty:** entity/list sections use the module's existing empty-state pattern where applicable.
 
-## Edge Cases and AI Warnings
-- **Do not hardcode server records in JSX:** all business data belongs to the API contract and module-owned fixture.
-- **Do not import sibling business logic:** duplicate small domain contracts locally rather than creating cross-module coupling.
-- **Do not bypass the module API:** UI must not read fixtures directly.
-- **Keep response shape flat:** V1 handlers return `ApiResponse<T>` with the V1 data object directly under `data`.
-- **Keep user-facing terms simple:** technical SaaS abbreviations should remain internal; display plain labels such as `Monthly income`, `Gym retention`, and `Income lost`.
-- **Keep documentation fresh:** update this feature map when the route, endpoint, UI fields, or flow changes.
+- **`loading.tsx`:** `loading.tsx`
+- **`error.tsx`:** `error.tsx`
+- **Empty-state components:** None detected.
+- Source inspection alone does not prove browser runtime behavior; retry/focus/animation behavior remains `NOT VERIFIED` until the host app is executed.
 
 ## Component Responsibility Map
-| Component | Responsibility |
-|---|---|
-| `SuperadminGlobalAuditV1Client.tsx` | Renders the Superadmin-only feature view and consumes the query state. |
-| `useSuperadminGlobalAuditV1.ts` | Owns TanStack Query orchestration and exposes server state without JSX. |
 
-## External Infrastructure Dependencies
-- `@/lib/api` — global API transport.
-- `@/lib/formatters` — centralized numeric/date/currency formatting where needed.
-- Existing Superadmin shared presentation primitives and authentication infrastructure.
+| Component File | Responsibility evidence |
+|---|---|
+| `page.tsx` | Server component entry point for the Superadmin Global Audit module. |
+| `global-audit_components/SuperadminGlobalAuditV1SuspiciousActivityPanel.tsx` | Renders the Superadmin global-audit V1 Suspicious activity view. |
+| `global-audit_components/SuperadminGlobalAuditClient.tsx` | Renders the Global Audit Logs dashboard for superadmins to monitor system-wide security events. |
+| `global-audit_components/SuperadminGlobalAuditV1BeforeAndAfterChangesPanel.tsx` | Renders the Superadmin global-audit V1 Before & after changes view. |
+| `global-audit_components/SuperadminGlobalAuditV1InvestigationSummaryCards.tsx` | Provides working risk/filter selection for the Superadmin audit-investigation insight view. |
+
+## Repository-Verified Repair Notes
+
+This addendum is generated from the current source tree and exists to make future AI context self-contained. It records actual source evidence and explicitly leaves unavailable runtime facts as `NOT VERIFIED`.
+
+
+## Edge Cases and AI Warnings
+- **Strict Isolation**: Never import admin or manager components into global_audit_investigation.
+- **Destructive Actions**: Any deletion or modification of global_audit_investigation records must use the Superadmin confirmation provider.
+- **Data Leakage**: Ensure API payloads for global_audit_investigation do not expose cross-tenant sensitive data.
+
+## Rule Compliance Checklist
+- [x] Canonical feature-owned API/type directories are used.
+- [x] No active route page mounts a parallel `V1Client` tree.
+- [x] Module-owned mock reset coverage is present where mutable handlers exist.
+- [x] Feature docs contain a concrete directory map and compliance checklist.
+- [x] No marker-only or JSON-stringify tautology test remains.
+- [ ] Host dependency-backed build/lint/runtime verification â€” unavailable in source-only package.
+

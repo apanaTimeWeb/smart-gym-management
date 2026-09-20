@@ -1,4 +1,4 @@
-import type { SuperadminDashboardApiData } from '@/app/superadmin/dashboard/superadmin_dashboard_types/superadmin_dashboard_types';
+import type { SuperadminDashboardApiData } from '@/app/superadmin/dashboard/dashboard_types/SuperadminDashboardTypes';
 export const MOCK_SUPERADMIN_DASHBOARD_DATA: SuperadminDashboardApiData = {
     metrics: {
         totalGyms: 120,
@@ -8,12 +8,12 @@ export const MOCK_SUPERADMIN_DASHBOARD_DATA: SuperadminDashboardApiData = {
         totalEndUsers: 15400,
         monthlyRecurringRevenue: 250000,
         overdueInvoicesCount: 12,
-        pendingRevenue: 15000,
+        pendingRevenue: 1500000,
         recentOnboards: [
             {
                 id: 't1', name: 'Iron Paradise', ownerName: 'John Doe', adminEmail: 'john@iron.com',
                 phone: '9876543210', status: 'ACTIVE', plan: 'Pro', createdAt: '2026-08-01',
-                memberCount: 200, monthlyRevenue: 5000, databaseVersion: 'v1.2'
+                memberCount: 200, monthlyRevenue: 500000, databaseVersion: 'v1.2'
             },
             {
                 id: 't2', name: 'Fit Life Studio', ownerName: 'Jane Smith', adminEmail: 'jane@fitlife.com',
@@ -26,24 +26,24 @@ export const MOCK_SUPERADMIN_DASHBOARD_DATA: SuperadminDashboardApiData = {
         arrDeltaPercent: 24.0,
         arpu: 2380,
         revenueByTier: [
-            { plan: 'Basic', amount: 50000, tenantCount: 50 },
-            { plan: 'Pro', amount: 150000, tenantCount: 55 },
-            { plan: 'Enterprise', amount: 50000, tenantCount: 15 }
+            { plan: 'Basic', amount: 5000000, tenantCount: 50 },
+            { plan: 'Pro', amount: 15000000, tenantCount: 55 },
+            { plan: 'Enterprise', amount: 5000000, tenantCount: 15 }
         ],
         platformHealthScore: 92,
         revenueByGeography: [
-            { region: 'India', revenue: 175000 },
-            { region: 'UAE', revenue: 45000 },
-            { region: 'Singapore', revenue: 30000 },
+            { region: 'India', revenue: 17500000 },
+            { region: 'UAE', revenue: 4500000 },
+            { region: 'Singapore', revenue: 3000000 },
         ],
     },
     revenue: [
-        { month: 'Jan', mrr: 150000 },
-        { month: 'Feb', mrr: 160000 },
-        { month: 'Mar', mrr: 180000 },
-        { month: 'Apr', mrr: 210000 },
-        { month: 'May', mrr: 230000 },
-        { month: 'Jun', mrr: 250000 },
+        { month: 'Jan', mrr: 15000000 },
+        { month: 'Feb', mrr: 16000000 },
+        { month: 'Mar', mrr: 18000000 },
+        { month: 'Apr', mrr: 21000000 },
+        { month: 'May', mrr: 23000000 },
+        { month: 'Jun', mrr: 25000000 },
     ],
     growth: [
         { month: 'Jan', gyms: 50 },

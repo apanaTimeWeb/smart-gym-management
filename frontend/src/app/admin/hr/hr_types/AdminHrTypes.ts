@@ -1,10 +1,18 @@
 import type { QueryStatus } from '@tanstack/react-query';
 // RESPONSIBILITY: TypeScript contracts for the Admin HR module.
-import type { AdminToastType } from '@/app/admin/admin_components/AdminFeedback/AdminToastTypes';
+import type { AdminToastType } from '@/app/admin/admin_layout/AdminFeedback/AdminToastTypes';
+
+export type AdminHrSortDirection = 'asc' | 'desc';
+export type AdminHrSalaryType = 'Monthly' | 'Daily';
+export type AdminHrLedgerEntryType = 'Salary Generated' | 'Salary Paid' | 'Advance Given' | 'Due Paid';
+export type AdminHrStaffSortKey = 'name' | 'branch' | 'role' | 'phone' | 'salary' | 'advanceSalary' | 'joinDate';
+export type AdminHrPayrollSortKey = 'staffName' | 'month' | 'amount' | 'paidAmount' | 'pendingAmount' | 'status' | 'paidAt';
 
 export interface HrInitialData {
   staff: Staff[];
+  totalStaff: number;
   payrolls: Payroll[];
+  totalPayrolls: number;
   summary: HrSummary | null;
 }
 
@@ -26,7 +34,13 @@ export interface HrUiContextType {
   setRoleFilter: (s: string) => void;
   currentPage: number;
   setCurrentPage: (p: number) => void;
-  showToast: (msg: string, type: AdminToastType) => void;
+  staffSortKey: string;
+  staffSortDir: AdminHrSortDirection;
+  setStaffSort: (key: AdminHrStaffSortKey, direction: AdminHrSortDirection) => void;
+  payrollSortKey: string;
+  payrollSortDir: AdminHrSortDirection;
+  setPayrollSort: (key: AdminHrPayrollSortKey, direction: AdminHrSortDirection) => void;
+  showToast: (msg: string, type: AdminToastType, id?: string) => void;
   showModal: boolean;
   setShowModal: (show: boolean) => void;
   showPayrollModal: boolean;
@@ -51,7 +65,9 @@ export interface HrUiContextType {
 
 export interface HrServerState {
   staff: Staff[];
+  totalStaff: number;
   payrolls: Payroll[];
+  totalPayrolls: number;
   summary: HrSummary | null;
   status: QueryStatus;
   error: string;
@@ -86,7 +102,7 @@ export interface Staff {
   joinDate: string;
   joiningDate?: string;
   isActive: boolean;
-  salaryType?: 'Monthly' | 'Daily';
+  salaryType?: AdminHrSalaryType;
   paymentCycle?: string;
   currentDue?: number;
   assignedBranches?: string[];
@@ -126,13 +142,18 @@ export interface HrSummary {
 }
 
 
+export interface AdminHrBranchReference {
+  id: string;
+  name: string;
+}
+
 export type AdminHrLedgerSortKey = 'date' | 'type' | 'credit' | 'debit' | 'balance';
 export type AdminHrLedgerSortDirection = 'asc' | 'desc';
 export interface LedgerEntry {
   id: string;
   staffId: string;
   date: string;
-  type: 'Salary Generated' | 'Salary Paid' | 'Advance Given' | 'Due Paid';
+  type: AdminHrLedgerEntryType;
   credit: number;
   debit: number;
   balance: number;
@@ -141,3 +162,24 @@ export interface LedgerEntry {
   paymentMode?: string;
   openingBalance?: number;
 }
+
+export type PayrollFormValues = { staffId: string; month: string; amount: number; paidAmount: number; notes?: string };
+
+export type StaffFormValues = {
+  name: string;
+  email: string;
+  phone: string;
+  role: string;
+  salary: number;
+  branch: string;
+  gender: 'MALE' | 'FEMALE' | 'OTHER';
+  address?: string;
+  joinDate: string;
+  temporaryPassword?: string;
+  isActive: boolean;
+  aadhaar?: string;
+  upiId?: string;
+  advanceSalary?: number;
+  assignedBranches?: string[];
+  primaryBranchId?: string;
+};

@@ -1,23 +1,17 @@
 // RESPONSIBILITY: Renders a single KPI stat card (icon, label, big number, trend). Used in dashboard and module KPI rows.
-import type { LucideIcon } from 'lucide-react';
+import type { TrainerStatCardProps } from '@/app/trainer/trainer_components/trainer_components_types/TrainerStatCardProps';
 
-interface TrainerStatCardProps {
- title: string;
- value: string | number;
- change?: string;
- changeType?: 'up' | 'down' | 'neutral';
- icon: LucideIcon;
- iconBg: string;
- iconColor: string;
-}
+import { TRAINER_STAT_CARD_CHANGE_TYPES } from '@/app/trainer/trainer_components/trainer_components_types/TrainerStatCardTypes';
+
+
 
 export default function TrainerStatCard({ title, value, change, changeType = 'neutral', icon: Icon, iconBg, iconColor }: TrainerStatCardProps) {
  return (
- <div className="bg-card rounded-xl p-5 shadow-sm border border-border hover:border-primary motion-safe:transition-colors">
+ <div className="bg-card rounded-xl p-5 shadow-card border border-border hover:border-primary motion-safe:transition-colors motion-safe:duration-base">
  <div className="flex items-center justify-between">
  <div>
  <p className="text-xs font-medium text-secondary uppercase tracking-wider">{title}</p>
- <p className="text-3xl font-bold text-foreground mt-1">{value}</p>
+ <p className="text-3xl font-bold text-primary mt-1">{value}</p>
  {change && (
  <p className={`text-xs mt-1 font-medium ${
  changeType === 'up' ? 'text-success' :

@@ -1,41 +1,23 @@
+// RESPONSIBILITY: Route-segment error boundary for Manager Settings; logs safe diagnostics and exposes the framework reset action.
 'use client';
-
-// RESPONSIBILITY: Renders the module-specific route error fallback and records safe diagnostic metadata.
 import { useEffect } from 'react';
 import { AlertTriangle } from 'lucide-react';
 import { logger } from '@/lib/logger';
+import { ManagerSettingsUrlConfig } from '@/app/manager/settings/settings_url_config';
 
-export default function ManagerSettingsError({
-  error,
-  reset,
-}: {
-  error: Error & { digest?: string };
-  reset: () => void;
-}) {
+
+export default function ManagerSettingsError({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
+// EFFECT: Effect lifecycle and dependency list are intentionally scoped to values that control this side effect.
   useEffect(() => {
-    logger.error('Manager module route error', {
-      route: '/manager/settings',
-      module: 'manager/settings',
-      errorDigest: error.digest,
-      timestamp: new Date().toISOString(),
-    });
+    logger.error('Manager settings route error', { route: ManagerSettingsUrlConfig.PAGES.SETTINGS, module: 'manager/settings', errorDigest: error.digest, timestamp: new Date().toISOString() });
   }, [error]);
-
   return (
-    <div className="min-h-full flex items-center justify-center p-6 bg-page">
-      <div className="bg-card border border-danger/20 p-8 rounded-2xl shadow-xl max-w-md w-full text-center space-y-4">
-        <div className="w-14 h-14 bg-danger/10 rounded-full flex items-center justify-center mx-auto text-danger">
-          <AlertTriangle size={28} />
-        </div>
-        <h2 className="text-xl font-bold text-foreground">Settings Unavailable</h2>
+    <div className="flex min-h-full items-center justify-center bg-page p-6">
+      <div className="w-full max-w-md space-y-4 rounded-2xl border border-danger bg-overlay p-8 text-center shadow-dialog">
+        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-danger-bg text-danger"><AlertTriangle size={18} aria-hidden="true" /></div>
+        <h2 className="text-xl font-bold text-primary">Settings Unavailable</h2>
         <p className="text-sm text-secondary">We couldn't load the settings module. Please try again.</p>
-        {error.digest && <p className="text-xs text-secondary/60">Ref: {error.digest}</p>}
-        <button
-          onClick={reset}
-          className="px-6 py-2.5 bg-primary text-primary-foreground font-medium rounded-xl hover:opacity-90 motion-safe:transition-opacity"
-        >
-          Try Again
-        </button>
+        <button type="button" onClick={reset} className="min-h-11 rounded-xl bg-primary px-6 font-medium text-on-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-safe:transition-all motion-safe:duration-base">Try Again</button>
       </div>
     </div>
   );

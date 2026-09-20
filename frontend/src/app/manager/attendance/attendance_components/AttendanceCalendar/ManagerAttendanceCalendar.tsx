@@ -1,17 +1,19 @@
+// RESPONSIBILITY: Renders the attendance calendar and its feature-owned day interactions.
 'use client';
-// RESPONSIBILITY: Renders a month-wise calendar view of attendance for a specific user.
 import React, { useState } from 'react';
-import { useAttendanceContext } from '@/app/manager/attendance/attendance_context/ManagerAttendanceContext';
-import { useAttendanceHistoryQuery } from '@/app/manager/attendance/attendance_api/ManagerUseManagerAttendanceQueries';
 import { X, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
+import { useManagerAttendanceLogic } from '@/app/manager/attendance/attendance_hooks/ManagerUseManagerAttendanceLogic';
+import { useAttendanceHistoryQuery } from '@/app/manager/attendance/attendance_hooks/ManagerUseManagerAttendanceQueries';
+import { formatAttendanceMonthYear } from '@/app/manager/attendance/attendance_utils/ManagerAttendanceSharedConstants';
 
-export default function AttendanceCalendar() {
-  const { calendarUser, setCalendarUser, showToast } = useAttendanceContext();
+
+export default function ManagerAttendanceCalendar() {
+  const { calendarUser, setCalendarUser, showToast } = useManagerAttendanceLogic();
   const [currentDate, setCurrentDate] = useState(new Date());
 
   const monthStr = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`;
   
-  const { data: historyData, isLoading: loading, isError, error } = useAttendanceHistoryQuery(
+  const { data: historyData, isPending: loading, isError, error } = useAttendanceHistoryQuery(
     calendarUser?.id || '',
     calendarUser?.type || 'MEMBER',
     monthStr
@@ -58,13 +60,13 @@ export default function AttendanceCalendar() {
   });
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center bg-foreground/50 p-4 motion-safe:animate-in fade-in duration-200">
-      <div className="w-full max-w-md bg-card shadow-xl flex flex-col max-h-full rounded-2xl border-2 border-primary overflow-hidden">
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay-backdrop p-4 motion-safe:animate-in motion-safe:fade-in motion-safe:duration-base">
+      <div className="w-full max-w-md bg-card shadow-card flex flex-col max-h-full rounded-2xl border-2 border-primary overflow-hidden">
         
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-border">
           <div>
-            <h2 className="text-lg font-semibold text-foreground">
+            <h2 className="text-lg font-semibold text-primary">
               Attendance History
             </h2>
             <p className="text-sm text-secondary">
@@ -72,23 +74,25 @@ export default function AttendanceCalendar() {
             </p>
           </div>
           <button
+            type="button"
+            aria-label="Close attendance calendar"
             onClick={() => setCalendarUser(null)}
-            className="p-2 rounded-md hover:bg-background text-secondary motion-safe:transition-colors"
+            className="min-h-11 min-w-11 flex items-center justify-center p-2 rounded-md hover:bg-page text-secondary motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
-            <X size={20} />
+            <X size={18} />
           </button>
         </div>
 
         {/* Controls */}
         <div className="p-4 pb-2 flex items-center justify-between">
-          <button onClick={prevMonth} className="p-2 rounded-md hover:bg-background border border-border">
-            <ChevronLeft size={16} />
+          <button type="button" aria-label="Previous month" onClick={prevMonth} className="min-h-11 min-w-11 flex items-center justify-center p-2 rounded-md hover:bg-page border border-border motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+            <ChevronLeft size={18} />
           </button>
-          <span className="text-xl font-bold text-foreground">
-            {currentDate.toLocaleString('default', { month: 'long', year: 'numeric' })}
+          <span className="text-xl font-bold text-primary">
+            {formatAttendanceMonthYear(currentDate)}
           </span>
-          <button onClick={nextMonth} className="p-2 rounded-md hover:bg-background border border-border">
-            <ChevronRight size={16} />
+          <button type="button" aria-label="Next month" onClick={nextMonth} className="min-h-11 min-w-11 flex items-center justify-center p-2 rounded-md hover:bg-page border border-border motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+            <ChevronRight size={18} />
           </button>
         </div>
         
@@ -110,7 +114,7 @@ export default function AttendanceCalendar() {
               </div>
               <div className="grid grid-cols-7 gap-1.5 motion-safe:animate-pulse">
                 {[...Array(35)].map((_, i) => (
-                  <div key={`skeleton-${i}`} className="aspect-square rounded-md bg-muted" />
+                  <div key={`skeleton-${i}`} className="aspect-square rounded-md bg-input" />
                 ))}
               </div>
             </div>
@@ -121,7 +125,7 @@ export default function AttendanceCalendar() {
               </div>
               <div className="grid grid-cols-7 gap-1.5">
                 {blanks.map(b => (
-                  <div key={`blank-${b}`} className="aspect-square rounded-md bg-background/30" />
+                  <div key={`blank-${b}`} className="aspect-square rounded-md bg-page" />
                 ))}
                 {days.map(day => {
                   const status = getStatusForDay(day);
@@ -133,10 +137,10 @@ export default function AttendanceCalendar() {
                       key={day}
                       className={`
                         aspect-square flex items-center justify-center rounded-md border-none text-xs font-bold motion-safe:transition-all
-                        ${isPresent ? 'bg-success text-primary-foreground hover:scale-110' : ''}
-                        ${isAbsent ? 'bg-danger text-primary-foreground hover:scale-110' : ''}
-                        ${isLeave ? 'bg-primary text-primary-foreground hover:scale-110' : ''}
-                        ${status === 'NONE' ? 'bg-background border border-border text-secondary' : ''}
+                        ${isPresent ? 'bg-success text-on-success motion-safe:hover:scale-110' : ''}
+                        ${isAbsent ? 'bg-danger text-on-danger motion-safe:hover:scale-110' : ''}
+                        ${isLeave ? 'bg-primary text-on-primary motion-safe:hover:scale-110' : ''}
+                        ${status === 'NONE' ? 'bg-page border border-border text-secondary' : ''}
                       `}
                     >
                       {day}
@@ -152,3 +156,4 @@ export default function AttendanceCalendar() {
     </div>
   );
 }
+

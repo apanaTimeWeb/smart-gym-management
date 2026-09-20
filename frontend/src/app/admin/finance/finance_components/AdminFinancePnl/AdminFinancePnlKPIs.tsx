@@ -5,11 +5,8 @@
 import { TrendingUp, TrendingDown, IndianRupee, Percent, Building2, AlertTriangle } from 'lucide-react';
 import type { BranchPnlAggregates, PnlStatusFilter } from '@/app/admin/finance/finance_types/AdminFinanceTypes';
 
-interface AdminFinancePnlKPIsProps {
-  aggregates: BranchPnlAggregates;
-  statusFilter: PnlStatusFilter;
-  onStatusFilterChange: (f: PnlStatusFilter) => void;
-}
+import type { AdminFinancePnlKPIsProps } from '@/app/admin/finance/finance_types/AdminFinancePnlKPIsPropsTypes';
+
 
 import {formatKPI, formatPercent1dp} from '@/lib/formatters';
 
@@ -24,7 +21,7 @@ export default function AdminFinancePnlKPIs({
       value: formatKPI(aggregates.totalRevenue),
       icon: IndianRupee,
       iconColor: 'text-success',
-      iconBg: 'bg-success/10',
+      iconBg: 'bg-success-bg',
       activeBorder: 'border-success',
       filter: 'ALL' as PnlStatusFilter,
       subtext: 'All branches combined',
@@ -34,7 +31,7 @@ export default function AdminFinancePnlKPIs({
       value: formatKPI(aggregates.totalExpenses),
       icon: TrendingDown,
       iconColor: 'text-danger',
-      iconBg: 'bg-danger/10',
+      iconBg: 'bg-danger-bg',
       activeBorder: 'border-danger',
       filter: 'ALL' as PnlStatusFilter,
       subtext: 'Operational costs',
@@ -44,7 +41,7 @@ export default function AdminFinancePnlKPIs({
       value: formatKPI(aggregates.totalNetProfit),
       icon: aggregates.totalNetProfit >= 0 ? TrendingUp : TrendingDown,
       iconColor: aggregates.totalNetProfit >= 0 ? 'text-success' : 'text-danger',
-      iconBg: aggregates.totalNetProfit >= 0 ? 'bg-success/10' : 'bg-danger/10',
+      iconBg: aggregates.totalNetProfit >= 0 ? 'bg-success-bg' : 'bg-danger-bg',
       activeBorder: aggregates.totalNetProfit >= 0 ? 'border-success' : 'border-danger',
       filter: 'ALL' as PnlStatusFilter,
       subtext: `${formatPercent1dp(aggregates.overallMarginPct)}% margin`,
@@ -54,7 +51,7 @@ export default function AdminFinancePnlKPIs({
       value: `${aggregates.profitableBranches}`,
       icon: Building2,
       iconColor: 'text-primary',
-      iconBg: 'bg-primary/10',
+      iconBg: 'bg-primary-subtle',
       activeBorder: 'border-primary',
       filter: 'PROFITABLE' as PnlStatusFilter,
       subtext: 'Click to filter table',
@@ -64,7 +61,7 @@ export default function AdminFinancePnlKPIs({
       value: `${aggregates.lossMakingBranches}`,
       icon: AlertTriangle,
       iconColor: 'text-danger',
-      iconBg: 'bg-danger/10',
+      iconBg: 'bg-danger-bg',
       activeBorder: 'border-danger',
       filter: 'LOSS' as PnlStatusFilter,
       subtext: 'Click to filter table',
@@ -74,7 +71,7 @@ export default function AdminFinancePnlKPIs({
       value: `${formatPercent1dp(aggregates.overallMarginPct)}%`,
       icon: Percent,
       iconColor: 'text-warning',
-      iconBg: 'bg-warning/10',
+      iconBg: 'bg-warning-bg',
       activeBorder: 'border-warning',
       filter: 'ALL' as PnlStatusFilter,
       subtext: 'Across all branches',
@@ -93,8 +90,8 @@ export default function AdminFinancePnlKPIs({
               if (!isInteractive) return;
               onStatusFilterChange(isActive ? 'ALL' : k.filter);
             }}
-            className={`text-left rounded-xl p-4 border-2 bg-card motion-safe:transition-all motion-safe:duration-200 ${
-              isInteractive ? 'cursor-pointer hover:shadow-md motion-safe:hover:-translate-y-0.5' : 'cursor-default'
+            className={`min-h-11 min-w-11 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page text-left rounded-xl p-4 border-2 bg-card motion-safe:transition-all motion-safe:duration-base ${
+              isInteractive ? 'cursor-pointer hover:shadow-card motion-safe:hover:-translate-y-0.5' : 'cursor-default'
             } ${isActive ? k.activeBorder : 'border-border'}`}
             aria-pressed={isInteractive ? isActive : undefined}
             aria-label={isInteractive ? `Filter by ${k.label}` : undefined}
@@ -103,7 +100,7 @@ export default function AdminFinancePnlKPIs({
               <k.icon size={18} strokeWidth={2} className={k.iconColor} />
             </div>
             <p className="text-xs font-medium text-secondary uppercase tracking-wider truncate">{k.label}</p>
-            <p className={`text-xl font-bold mt-0.5 ${isActive ? k.iconColor : 'text-foreground'}`}>{k.value}</p>
+            <p className={`text-xl font-bold mt-0.5 ${isActive ? k.iconColor : 'text-primary'}`}>{k.value}</p>
             <p className="text-xs text-disabled mt-0.5 truncate">{k.subtext}</p>
           </button>
         );

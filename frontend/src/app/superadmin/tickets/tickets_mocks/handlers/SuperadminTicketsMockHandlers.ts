@@ -1,9 +1,16 @@
 import { http, HttpResponse, delay } from 'msw';
-import type { SupportTicket } from '@/app/superadmin/tickets/superadmin_tickets_types/superadmin_tickets_types';
+import type { SupportTicket } from '@/app/superadmin/tickets/tickets_types/SuperadminTicketsTypes';
 import { MOCK_TICKETS } from '@/app/superadmin/tickets/tickets_mocks/fixtures/SuperadminTicketsMockData';
 import type { ApiResponse } from '@/lib/api';
-const BASE_URL = '*/api/v1/superadmin/tickets';
+import { TicketsUrlConfig } from '@/app/superadmin/tickets/superadmin_tickets_url_config';
+import { StatusCodes } from 'http-status-codes';
+import { replySchema, TicketAssigneeInputSchema } from '@/app/superadmin/tickets/tickets_types/SuperadminTicketsTypes';
+const BASE_URL = `*${TicketsUrlConfig.BACKEND_API.BASE}`;
 let mockTickets = [...MOCK_TICKETS];
+export function resetSuperadminTicketsMockState(): void {
+    mockTickets = [...MOCK_TICKETS];
+}
+
 export const superadminTicketsHandlers = [
     http.get(BASE_URL, async ({ request }) => {
         await delay(400);
@@ -39,7 +46,7 @@ export const superadminTicketsHandlers = [
         const id = params.id as string;
         const ticket = mockTickets.find(t => t.id === id);
         if (!ticket) {
-            return HttpResponse.json<ApiResponse<SupportTicket>>({ success: false, message: 'Not found', data: null as unknown as SupportTicket }, { status: 404 });
+            return HttpResponse.json<ApiResponse<SupportTicket>>({ success: false, message: 'Not found', data: null as unknown as SupportTicket }, { status: StatusCodes.NOT_FOUND });
         }
         return HttpResponse.json<ApiResponse<SupportTicket>>({
             success: true,
@@ -60,7 +67,7 @@ export const superadminTicketsHandlers = [
             return t;
         });
         if (!updated) {
-            return HttpResponse.json<ApiResponse<SupportTicket>>({ success: false, message: 'Not found', data: null as unknown as SupportTicket }, { status: 404 });
+            return HttpResponse.json<ApiResponse<SupportTicket>>({ success: false, message: 'Not found', data: null as unknown as SupportTicket }, { status: StatusCodes.NOT_FOUND });
         }
         return HttpResponse.json<ApiResponse<SupportTicket>>({
             success: true,
@@ -80,7 +87,7 @@ export const superadminTicketsHandlers = [
             return t;
         });
         if (!updated) {
-            return HttpResponse.json<ApiResponse<SupportTicket>>({ success: false, message: 'Not found', data: null as unknown as SupportTicket }, { status: 404 });
+            return HttpResponse.json<ApiResponse<SupportTicket>>({ success: false, message: 'Not found', data: null as unknown as SupportTicket }, { status: StatusCodes.NOT_FOUND });
         }
         return HttpResponse.json<ApiResponse<SupportTicket>>({
             success: true,
@@ -88,12 +95,40 @@ export const superadminTicketsHandlers = [
             data: updated,
         });
     }),
+    http.post(`${BASE_URL}/:id/reply`, async ({ params, request }) => {
+        await delay(400);
+        const id = params.id as string;
+        const parsed = replySchema.safeParse(await request.json());
+        if (!parsed.success) {
+            return HttpResponse.json<ApiResponse<SupportTicket>>({ success: false, message: 'Reply text is required', data: null as unknown as SupportTicket }, { status: StatusCodes.BAD_REQUEST });
+        }
+        const replyText = parsed.data.replyText.trim();
+        let updated: SupportTicket | null = null;
+        mockTickets = mockTickets.map((ticket) => {
+            if (ticket.id !== id) return ticket;
+            const existingMessages = ticket.messages ?? [];
+            const reply = {
+                id: `msg-${Date.now()}`,
+                senderId: 'superadmin',
+                senderName: 'Superadmin',
+                senderRole: 'SUPERADMIN' as const,
+                content: replyText,
+                createdAt: new Date().toISOString(),
+            };
+            updated = { ...ticket, messages: [...existingMessages, reply], status: ticket.status === 'CLOSED' ? 'CLOSED' : 'IN_PROGRESS', firstResponseAt: ticket.firstResponseAt ?? reply.createdAt, lastUpdated: reply.createdAt };
+            return updated;
+        });
+        if (!updated) return HttpResponse.json<ApiResponse<SupportTicket>>({ success: false, message: 'Not found', data: null as unknown as SupportTicket }, { status: StatusCodes.NOT_FOUND });
+        return HttpResponse.json<ApiResponse<SupportTicket>>({ success: true, message: 'Reply sent', data: updated });
+    }),
     http.post(`${BASE_URL}/:id/assign`, async ({ params, request }) => {
         await delay(400);
         const id = params.id as string;
-        const { assignee } = (await request.json()) as {
-            assignee: string;
-        };
+        const parsed = TicketAssigneeInputSchema.safeParse(await request.json());
+        if (!parsed.success) {
+            return HttpResponse.json<ApiResponse<SupportTicket>>({ success: false, message: 'Assignee is required', data: null as unknown as SupportTicket }, { status: StatusCodes.BAD_REQUEST });
+        }
+        const assignee = parsed.data.assignee;
         let updated: SupportTicket | null = null;
         mockTickets = mockTickets.map(t => {
             if (t.id === id) {
@@ -103,7 +138,7 @@ export const superadminTicketsHandlers = [
             return t;
         });
         if (!updated) {
-            return HttpResponse.json<ApiResponse<SupportTicket>>({ success: false, message: 'Not found', data: null as unknown as SupportTicket }, { status: 404 });
+            return HttpResponse.json<ApiResponse<SupportTicket>>({ success: false, message: 'Not found', data: null as unknown as SupportTicket }, { status: StatusCodes.NOT_FOUND });
         }
         return HttpResponse.json<ApiResponse<SupportTicket>>({
             success: true,

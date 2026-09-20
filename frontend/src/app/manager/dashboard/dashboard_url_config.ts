@@ -1,11 +1,10 @@
 // RESPONSIBILITY: Owns every route path used by the Manager dashboard module.
 export const ManagerDashboardUrlConfig = {
   PAGES: {
-    HOME: '/manager/dashboard',
-  },
+    HOME: '/manager/dashboard' },
+  NAV: { MEMBERS: '/manager/members', FINANCE: '/manager/finance' },
   BACKEND_API: {
     STATS: '/manager/dashboard/stats',
     CHARTS: '/manager/dashboard/charts',
-    RECENT: '/manager/dashboard/recent',
-  }
+    RECENT: '/manager/dashboard/recent' }
 };

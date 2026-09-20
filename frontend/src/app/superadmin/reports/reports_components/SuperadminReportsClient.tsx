@@ -1,184 +1,79 @@
-// RESPONSIBILITY: Global Reports page — Revenue export (CSV/PDF), Cancellations analysis, Tenant health scores.
+// RESPONSIBILITY: Renders Reports from hook-owned server state and URL-owned filters. No direct API calls occur in this component.
 'use client';
-// All data imported from reports_constants. Pure view layer.
-// DATA FLOW: reports_constants → SuperadminReportsClient → tabs + charts + tables
-import { useState, useEffect, useMemo } from 'react';
-import { IndianRupee, TrendingDown, HeartPulse, Search } from 'lucide-react';
-import toast from 'react-hot-toast';
+import type { ChangeEvent } from 'react';
+import { formatDecimal } from '@/lib/formatters';
+import type { SuperadminReportsTab } from '@/app/superadmin/reports/reports_types/SuperadminReportsTabTypes';
+import { Search } from 'lucide-react';
 import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
-import type { RevenueRow, CancellationsRecord, TenantHealthScore, ReportsTab } from '@/app/superadmin/reports/reports_types/superadmin_reports_types';
-import { useQuery } from '@tanstack/react-query';
-import { superadminReportsApi } from '@/app/superadmin/reports/reports_api/superadmin_reports_api';
-import { useSuperadminUrlState } from '@/app/superadmin/superadmin_utils/useSuperadminUrlState';
-import { SuperadminReportsDatePresetDropdown, type DatePreset } from '@/app/superadmin/reports/reports_components/SuperadminReportsDatePresetDropdown';
+import type { CancellationsRecord, TenantHealthScore, SuperadminReportsDateField } from '@/app/superadmin/reports/reports_types/SuperadminReportsTypes';
+import { SUPERADMIN_REPORT_PLAN_OPTIONS } from '@/app/superadmin/reports/reports_utils/SuperadminReportsConstants';
+import type { DatePreset } from '@/app/superadmin/reports/reports_types/SuperadminReportsDatePresetDropdownTypes';
+import { useSuperadminReportsPage } from '@/app/superadmin/reports/reports_utils/useSuperadminReportsPage';
+import { useUrlState } from '@/hooks/useUrlState';
+import { SuperadminReportsDatePresetDropdown } from '@/app/superadmin/reports/reports_components/SuperadminReportsDatePresetDropdown';
 import { SuperadminReportsExportButton } from '@/app/superadmin/reports/reports_components/SuperadminReportsExportButton';
 import { SuperadminReportsSummaryCards } from '@/app/superadmin/reports/reports_components/SuperadminReportsSummaryCards';
 import { SuperadminReportsRevenueTab } from '@/app/superadmin/reports/reports_components/SuperadminReportsRevenueTab';
 import { SuperadminReportsCancellationsTab } from '@/app/superadmin/reports/reports_components/SuperadminReportsCancellationsTab';
 import { SuperadminReportsHealthTab } from '@/app/superadmin/reports/reports_components/SuperadminReportsHealthTab';
-const PLAN_OPTIONS = [
-    { value: 'ALL', label: 'All Plans' },
-    { value: 'ENTERPRISE', label: 'Enterprise' },
-    { value: 'PRO', label: 'Pro' },
-    { value: 'STARTER', label: 'Starter' },
-    { value: 'BASIC', label: 'Basic' },
-];
+
 export default function SuperadminReportsClient() {
-    const { getParam, setParam, setParams } = useSuperadminUrlState();
-    const tab = (getParam('tab', 'revenue') as ReportsTab);
-    const setTab = (t: string) => setParam('tab', t);
-    const today = new Date();
-    const firstDay = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0];
-    const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString().split('T')[0];
-    const datePreset = (getParam('preset', 'THIS_MONTH') as DatePreset);
-    const dateFrom = getParam('startDate', firstDay);
-    const dateTo = getParam('endDate', lastDay);
-    const searchQuery = getParam('search', '');
-    const planFilter = getParam('planFilter', 'ALL');
-    const setDatePreset = (p: string) => setParam('preset', p);
-    const setDateFrom = (d: string) => setParam('startDate', d);
-    const setDateTo = (d: string) => setParam('endDate', d);
-    const setSearchQuery = (s: string) => setParam('search', s);
-    const setPlanFilter = (p: string) => setParam('planFilter', p);
-    const queryParams = useMemo(() => {
-        const p: Record<string, string> = {};
-        if (searchQuery)
-            p.search = searchQuery;
-        if (planFilter && planFilter !== 'ALL')
-            p.planFilter = planFilter;
-        if (dateFrom)
-            p.startDate = dateFrom;
-        if (dateTo)
-            p.endDate = dateTo;
-        return p;
-    }, [searchQuery, planFilter, dateFrom, dateTo]);
-    const { data: revRes, isLoading: revLoading, isError: revError } = useQuery({ queryKey: ['superadmin', 'reports', 'revenue', queryParams], queryFn: () => superadminReportsApi.fetchRevenueData(queryParams) });
-    const { data: canRes, isLoading: canLoading, isError: canError } = useQuery({ queryKey: ['superadmin', 'reports', 'cancellations', queryParams], queryFn: () => superadminReportsApi.fetchCancellationsData(queryParams) });
-    const { data: healthRes, isLoading: healthLoading, isError: healthError } = useQuery({ queryKey: ['superadmin', 'reports', 'health', queryParams], queryFn: () => superadminReportsApi.fetchHealthData(queryParams) });
-    const revenueData = (revRes?.data as unknown as RevenueRow[]) || [];
-    const cancellationsData = (canRes?.data as unknown as CancellationsRecord[]) || [];
-    const healthData = (healthRes?.data as unknown as TenantHealthScore[]) || [];
-    const handleDatePresetChange = (preset: DatePreset, from: string, to: string) => {
-        setDatePreset(preset);
-        if (preset !== 'CUSTOM') {
-            setDateFrom(from);
-            setDateTo(to);
-        }
-    };
-    const handleDateFromChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const val = e.target.value;
-        if (dateTo && val > dateTo) {
-            toast.error('Start date cannot be after end date', { id: 'start-date-cannot-be-after-end-date' });
-            return;
-        }
-        setDatePreset('CUSTOM');
-        setDateFrom(val);
-    };
-    const handleDateToChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const val = e.target.value;
-        if (dateFrom && val < dateFrom) {
-            toast.error('End date cannot be before start date', { id: 'end-date-cannot-be-before-start-date' });
-            return;
-        }
-        setDatePreset('CUSTOM');
-        setDateTo(val);
-    };
-    function handleExportCSV() {
-        let csvRows: string[] = [];
-        if (tab === 'revenue') {
-            csvRows = [
-                ['Month', 'Monthly Income', 'New Revenue', 'Lost Income', 'Net Revenue', 'Gyms'].join(','),
-                ...revenueData.map(r => [r.month, r.mrr, r.newRevenue, r.cancelledRevenue, r.netRevenue, r.tenantCount].join(','))
-            ];
-        }
-        else if (tab === 'cancellations') {
-            csvRows = [
-                ['Gym', 'Owner', 'Plan', 'Left On', 'Reason', 'Lost Monthly Income', 'Days Active'].join(','),
-                ...cancellationsData.map(c => [c.gymName, c.ownerName, c.plan, c.cancelledAt, c.reason, c.mrr, c.daysActive].join(','))
-            ];
-        }
-        else {
-            csvRows = [
-                ['Gym', 'Plan', 'Score', 'Grade', 'Members', 'Last Login', 'Payment Health', 'Feature Usage', 'Tickets'].join(','),
-                ...healthData.map(h => [h.gymName, h.plan, h.score, h.grade, h.memberCount, h.lastLogin, h.paymentHealth, h.featureUsage, h.supportTickets].join(','))
-            ];
-        }
-        const blob = new Blob([csvRows.join('\n')], { type: 'text/csv' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `superadmin_${tab}_report.csv`;
-        a.click();
-        toast.success('Report downloaded successfully', { id: 'report-downloaded-successfully' });
-    }
-    function handleExportPDF() {
-        window.print();
-    }
-    const lastRow = revenueData.length > 0 ? revenueData[revenueData.length - 1] : { mrr: 0 };
-    const totalMRR = lastRow?.mrr || 0;
-    const totalCancelledRevenue = cancellationsData.reduce((s, c) => s + c.mrr, 0);
-    const avgHealthScore = healthData.length > 0 ? Math.round(healthData.reduce((s, h) => s + h.score, 0) / healthData.length) : 0;
-    const dateSuffixMap: Record<string, string> = {
-        'THIS_MONTH': 'this month',
-        'LAST_MONTH': 'last month',
-        'THIS_QUARTER': 'this quarter',
-        'THIS_YEAR': 'this year',
-        'LAST_YEAR': 'last year',
-        'CUSTOM': `from ${dateFrom} to ${dateTo}`
-    };
-    const computedDateSuffix = dateSuffixMap[datePreset] || '';
-    const avgDaysActive = cancellationsData.length > 0 ? Math.round(cancellationsData.reduce((s, c) => s + c.daysActive, 0) / cancellationsData.length) : 0;
-    const sortedHealthData = [...healthData].sort((a, b) => b.score - a.score);
-    const isLoading = revLoading || canLoading || healthLoading;
-    const error = revError || canError || healthError;
-    if (isLoading)
-        return <div className="p-8 text-center text-secondary motion-safe:animate-pulse">Loading reports...</div>;
-    if (error)
-        return <div className="p-8 text-center text-danger">{error}</div>;
-    return (<div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">Reports & Exports</h1>
-          <p className="text-secondary mt-1 text-sm">Revenue reports, members lost analysis, and gym health scores.</p>
-        </div>
-        <SuperadminReportsExportButton onExportCSV={handleExportCSV} onExportPDF={handleExportPDF}/>
-      </div>
-
-      <SuperadminReportsSummaryCards totalMRR={totalMRR} totalCancelledRevenue={totalCancelledRevenue} cancellationsCount={cancellationsData.length} avgHealthScore={avgHealthScore} healthDataLength={healthData.length} dateSuffix={computedDateSuffix}/>
-
-      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-        <div className="flex items-center gap-3 flex-wrap">
-          <SuperadminReportsDatePresetDropdown value={datePreset} onChange={handleDatePresetChange}/>
-          <input type="date" value={dateFrom} onChange={handleDateFromChange} className="px-3 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary"/>
-          <span className="text-secondary text-sm">to</span>
-          <input type="date" value={dateTo} onChange={handleDateToChange} className="px-3 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary"/>
-        </div>
-
-        {tab !== 'revenue' && (<div className="flex items-center gap-3 flex-wrap w-full sm:w-auto">
-            <div className="relative flex-1 sm:w-64">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary"/>
-              <input type="text" placeholder="Search by gym name..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full pl-9 pr-4 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary"/>
-            </div>
-            <div className="w-40 border-none bg-input rounded-lg">
-              <SearchableDropdown options={PLAN_OPTIONS} value={planFilter} onChange={(val) => setPlanFilter(String(val))} className="bg-transparent border-border"/>
-            </div>
-          </div>)}
-      </div>
-
-      {/* Tabs */}
-      <div className="flex gap-1 bg-input border border-border rounded-xl p-1 w-fit flex-wrap">
-        {([
-            { key: 'revenue' as const, label: 'Revenue Report', icon: IndianRupee },
-            { key: 'cancellations' as const, label: 'Members Lost Analysis', icon: TrendingDown },
-            { key: 'health' as const, label: 'Gym Health', icon: HeartPulse },
-        ]).map(({ key, label, icon: Icon }) => (<button key={key} onClick={() => setTab(key)} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${tab === key ? 'bg-card text-foreground shadow-sm' : 'text-secondary hover:text-foreground'}`}>
-            <Icon size={18} strokeWidth={2}/> {label}
-          </button>))}
-      </div>
-
-      {tab === 'revenue' && <SuperadminReportsRevenueTab revenueData={revenueData}/>}
-      {tab === 'cancellations' && <SuperadminReportsCancellationsTab cancellationsData={cancellationsData} filteredCancellationsData={cancellationsData} totalCancelledRevenue={totalCancelledRevenue} avgDaysActive={avgDaysActive}/>}
-      {tab === 'health' && <SuperadminReportsHealthTab sortedHealthData={sortedHealthData}/>}
-    </div>);
+  const { getParam, setParam } = useUrlState();
+  const tab = (getParam('tab', 'revenue') === 'cancellations' || getParam('tab', 'revenue') === 'health' ? getParam('tab', 'revenue') : 'revenue') as SuperadminReportsTab;
+  const datePreset = getParam('preset', 'THIS_MONTH');
+  const dateFrom = getParam('startDate', '');
+  const dateTo = getParam('endDate', '');
+  const searchQuery = getParam('search', '');
+  const planFilter = getParam('planFilter', 'ALL');
+  const queryParams: Record<string,string> = { preset: datePreset };
+  if (dateFrom) queryParams.startDate = dateFrom;
+  if (dateTo) queryParams.endDate = dateTo;
+  if (searchQuery) queryParams.search = searchQuery;
+  if (planFilter !== 'ALL') queryParams.plan = planFilter;
+  const { revenue, cancellations, health } = useSuperadminReportsPage(queryParams);
+  const revenueData = revenue.data?.data ?? [];
+  const cancellationsData: CancellationsRecord[] = cancellations.data?.data ?? [];
+  const healthData: TenantHealthScore[] = health.data?.data ?? [];
+  const isPending = revenue.isPending || cancellations.isPending || health.isPending;
+  const isError = revenue.isError || cancellations.isError || health.isError;
+  const handleDateChange = (key: SuperadminReportsDateField) => (event: ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    if (key === 'startDate' && dateTo && value > dateTo) return;
+    if (key === 'endDate' && dateFrom && value < dateFrom) return;
+    setParam('preset', 'CUSTOM');
+    setParam(key, value);
+  };
+  const handleExportCSV = () => {
+    const headers: string[] = tab === 'revenue'
+      ? ['Month', 'Monthly Income', 'New Revenue', 'Lost Income', 'Net Revenue', 'Gyms']
+      : tab === 'cancellations'
+        ? ['Gym', 'Owner', 'Plan', 'Left On', 'Reason', 'Lost Monthly Income', 'Days Active']
+        : ['Gym', 'Plan', 'Score', 'Grade', 'Members', 'Last Login', 'Payment Health', 'Feature Usage', 'Tickets'];
+    const rows = tab === 'revenue'
+      ? revenueData.map((row) => [row.month, row.mrr, row.newRevenue, row.cancelledRevenue, row.netRevenue, row.tenantCount])
+      : tab === 'cancellations'
+        ? cancellationsData.map((row) => [row.gymName, row.ownerName, row.plan, row.cancelledAt, row.reason, row.mrr, row.daysActive])
+        : healthData.map((row) => [row.gymName, row.plan, row.score, row.grade, row.memberCount, row.lastLogin, row.paymentHealth, row.featureUsage, row.supportTickets]);
+    const csv = [headers, ...rows].map((row) => row.map((value) => `"${String(value ?? '').replaceAll('"','""')}"`).join(',')).join('\n');
+    const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.download = `superadmin_${tab}_report.csv`;
+    anchor.click();
+    URL.revokeObjectURL(url);
+  };
+  if (isPending) return <div className="space-y-4 p-8" aria-busy="true"><div className="h-8 w-52 rounded bg-skeleton-base motion-safe:animate-pulse" /><div className="h-72 rounded-xl bg-skeleton-base motion-safe:animate-pulse" /></div>;
+  if (isError) return <div className="flex min-h-80 flex-col items-center justify-center gap-3 rounded-xl border border-border bg-danger-bg p-8 text-center"><p className="font-medium text-danger">Reports could not be loaded.</p><button type="button" onClick={() => { void revenue.refetch(); void cancellations.refetch(); void health.refetch(); }} className="min-h-11 rounded-md border border-border px-4 py-2 text-sm text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">Retry</button></div>;
+  const totalMRR = revenueData.at(-1)?.mrr ?? 0;
+  const totalCancelledRevenue = cancellationsData.reduce((sum,row)=>sum+row.mrr,0);
+  const avgHealthScore = healthData.length ? Math.round(healthData.reduce((sum,row)=>sum+row.score,0)/healthData.length) : 0;
+  const previousMRR = revenueData.length > 1 ? revenueData.at(-2)?.mrr ?? null : null;
+  const incomeChangePercent = previousMRR && previousMRR !== 0 ? Number(formatDecimal(((totalMRR - previousMRR) / previousMRR) * 100, 1)) : null;
+  return (<div className="space-y-6">
+    <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center"><div><h1 className="text-2xl font-bold text-primary">Reports &amp; Exports</h1><p className="mt-1 text-sm text-secondary">Revenue reports, tenant cancellations analysis, and tenant health scores.</p></div><SuperadminReportsExportButton onExportCSV={handleExportCSV} onExportPDF={()=>window.print()} /></div>
+    <SuperadminReportsSummaryCards totalMRR={totalMRR} totalCancelledRevenue={totalCancelledRevenue} cancellationsCount={cancellationsData.length} avgHealthScore={avgHealthScore} healthDataLength={healthData.length} incomeChangePercent={incomeChangePercent} dateSuffix={datePreset.toLowerCase().replaceAll('_',' ')} />
+    <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center"><div className="flex flex-wrap items-center gap-3"><SuperadminReportsDatePresetDropdown value={datePreset as DatePreset} onChange={(preset,from,to)=>{setParam('preset',preset);if(preset!=='CUSTOM'){setParam('startDate',from);setParam('endDate',to);}}}/><input aria-label="Report start date" type="date" value={dateFrom} max={dateTo || undefined} onChange={handleDateChange('startDate')} className="min-h-11 rounded-lg border border-border bg-input px-3 py-2 text-sm text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"/><span className="text-sm text-secondary">to</span><input aria-label="Report end date" type="date" value={dateTo} min={dateFrom || undefined} onChange={handleDateChange('endDate')} className="min-h-11 rounded-lg border border-border bg-input px-3 py-2 text-sm text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"/></div>{tab!=='revenue'&&<div className="flex flex-wrap items-center gap-3"><div className="relative"><Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary" aria-hidden="true"/><input aria-label="Search reports by gym" value={searchQuery} onChange={(event)=>setParam('search',event.target.value)} placeholder="Search by gym name..." className="min-h-11 rounded-lg border border-border bg-input py-2 pl-10 pr-3 text-sm text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"/></div><SearchableDropdown value={planFilter} onChange={(value)=>setParam('planFilter',String(value))} options={SUPERADMIN_REPORT_PLAN_OPTIONS.map(option=>({label:option.label,value:option.value}))}/></div>}</div>
+    <div className="flex gap-2 border-b border-border">{(['revenue','cancellations','health'] as const).map(item=><button key={item} type="button" onClick={()=>setParam('tab',item)} aria-pressed={tab===item} className={`min-h-11 border-b-2 px-4 py-2 text-sm font-medium capitalize focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${tab===item?'border-primary text-primary':'border-transparent text-secondary'}`}>{item}</button>)}</div>
+    {tab==='revenue'?<SuperadminReportsRevenueTab revenueData={revenueData}/>:tab==='cancellations'?<SuperadminReportsCancellationsTab cancellationsData={cancellationsData} filteredCancellationsData={cancellationsData} totalCancelledRevenue={totalCancelledRevenue} avgDaysActive={cancellationsData.length?Math.round(cancellationsData.reduce((sum,row)=>sum+row.daysActive,0)/cancellationsData.length):0}/>:<SuperadminReportsHealthTab sortedHealthData={healthData}/>}
+  </div>);
 }

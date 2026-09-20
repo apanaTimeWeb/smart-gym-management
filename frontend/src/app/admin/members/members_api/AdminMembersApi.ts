@@ -10,6 +10,7 @@ export const ADMIN_MEMBERS_URLS = {
   list: AdminMembersUrlConfig.api.base,
   summary: `${AdminMembersUrlConfig.api.base}/summary`,
   detail: (memberId: string) => AdminMembersUrlConfig.api.detail(memberId),
+  export: AdminMembersUrlConfig.api.export,
 } as const;
 
 export interface FetchMembersParams {
@@ -33,5 +34,17 @@ export const adminMembersApi = {
   },
   fetchMemberById: async (memberId: string) => {
     return apiFetch<ApiResponse<AdminMember>>(ADMIN_MEMBERS_URLS.detail(memberId), { dataSchema: adminMemberSchema });
+  },
+  exportMembers: async (params: Omit<FetchMembersParams, 'page' | 'limit'>) => {
+    const query = new URLSearchParams(
+      Object.entries(params).reduce<Record<string, string>>((acc, [key, value]) => {
+        if (value !== undefined && value !== '') acc[key] = String(value);
+        return acc;
+      }, {}),
+    ).toString();
+    return apiFetch<ApiResponse<string>>(
+      `${ADMIN_MEMBERS_URLS.export}${query ? '?' + query : ''}`,
+      { dataSchema: z.string() },
+    );
   },
 };

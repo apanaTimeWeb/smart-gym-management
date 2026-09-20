@@ -1,18 +1,3 @@
-// RESPONSIBILITY: Next.js loading.tsx � renders skeleton loader fallback while Attendance tracking module data loads.
-import { TableSkeleton } from '@/app/trainer/trainer_components/TrainerShared/TrainerTableSkeleton';
-export default function Loading() {
- return (
- <div className="min-h-screen flex flex-col p-6 space-y-5 bg-background">
- <div className="h-20 bg-card rounded-xl motion-safe:animate-pulse"></div>
- 
- <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
- {[1, 2, 3].map(i => (
- <div key={`skeleton-${i}`} className="h-24 bg-card rounded-xl motion-safe:animate-pulse"></div>
- ))}
- </div>
- 
- <TableSkeleton rows={8} />
- </div>
- );
-}
-
+// RESPONSIBILITY: Renders the owning Trainer route loading state using the module design-system patterns.
+import TrainerAttendanceLoadingSkeleton from '@/app/trainer/attendance/attendance_components/TrainerAttendanceLoadingSkeleton/TrainerAttendanceLoadingSkeleton';
+export default function Loading() { return <TrainerAttendanceLoadingSkeleton />; }

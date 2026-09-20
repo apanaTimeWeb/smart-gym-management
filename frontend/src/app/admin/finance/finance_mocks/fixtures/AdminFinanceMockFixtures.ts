@@ -106,3 +106,14 @@ export const MOCK_ADMIN_BRANCH_PNL: BranchPnlRecord[] = [
 
 
 // --- From AdminHrMockData.ts ---
+
+
+export const MOCK_ADMIN_BRANCH_PNL_BY_PERIOD: Record<string, BranchPnlRecord[]> = {
+  THIS_MONTH: MOCK_ADMIN_BRANCH_PNL,
+  LAST_MONTH: MOCK_ADMIN_BRANCH_PNL.map((row) => ({ ...row, revenue: Math.round(row.revenue * 0.94), expenses: Math.round(row.expenses * 0.91), netProfit: Math.round(row.netProfit * 0.97) })),
+  Q1: MOCK_ADMIN_BRANCH_PNL.map((row) => ({ ...row, revenue: Math.round(row.revenue * 0.86), expenses: Math.round(row.expenses * 0.88), netProfit: Math.round(row.netProfit * 0.83) })),
+  Q2: MOCK_ADMIN_BRANCH_PNL.map((row) => ({ ...row, revenue: Math.round(row.revenue * 1.03), expenses: Math.round(row.expenses * 1.01), netProfit: Math.round(row.netProfit * 1.06) })),
+  Q3: MOCK_ADMIN_BRANCH_PNL.map((row) => ({ ...row, revenue: Math.round(row.revenue * 1.09), expenses: Math.round(row.expenses * 1.07), netProfit: Math.round(row.netProfit * 1.12) })),
+  Q4: MOCK_ADMIN_BRANCH_PNL.map((row) => ({ ...row, revenue: Math.round(row.revenue * 1.15), expenses: Math.round(row.expenses * 1.11), netProfit: Math.round(row.netProfit * 1.21) })),
+  THIS_YEAR: MOCK_ADMIN_BRANCH_PNL.map((row) => ({ ...row, revenue: Math.round(row.revenue * 1.18), expenses: Math.round(row.expenses * 1.13), netProfit: Math.round(row.netProfit * 1.25) })),
+};

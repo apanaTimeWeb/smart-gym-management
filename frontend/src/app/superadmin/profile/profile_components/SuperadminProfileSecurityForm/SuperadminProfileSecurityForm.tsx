@@ -6,24 +6,20 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Eye, EyeOff, Loader2, ShieldCheck, ShieldOff } from 'lucide-react';
 import type { SuperadminProfileData, UpdateSuperadminPasswordPayload, Toggle2FAPayload, } from '@/app/superadmin/profile/profile_types/SuperadminProfileTypes';
-import { passwordSchema, type PasswordFormValues } from '@/app/superadmin/profile/profile_utils/SuperadminProfileSecurityForm.schema';
-import { useSuperadminUnsavedChangesGuard } from '@/app/superadmin/superadmin_utils/useSuperadminUnsavedChangesGuard';
-interface SuperadminProfileSecurityFormProps {
-    profile: SuperadminProfileData;
-    isSavingPassword: boolean;
-    isTogglingTwoFA: boolean;
-    onSavePassword: (payload: UpdateSuperadminPasswordPayload) => void;
-    onToggle2FA: (payload: Toggle2FAPayload) => void;
-}
+import { passwordSchema } from '@/app/superadmin/profile/profile_utils/SuperadminProfileSecurityFormSchema';
+import type { SuperadminProfileSecurityFormValues } from '@/app/superadmin/profile/profile_types/SuperadminProfileSecurityFormTypes';
+import { useUnsavedChangesGuard } from '@/hooks/useUnsavedChangesGuard';
+import type { SuperadminProfileSecurityFormProps } from '@/app/superadmin/profile/profile_types/SuperadminProfileSecurityFormTypes';
+
 export default function SuperadminProfileSecurityForm({ profile, isSavingPassword, isTogglingTwoFA, onSavePassword, onToggle2FA, }: SuperadminProfileSecurityFormProps) {
     const [showCurrent, setShowCurrent] = useState(false);
     const [showNew, setShowNew] = useState(false);
     const [showConfirm, setShowConfirm] = useState(false);
     const [twoFAPassword, setTwoFAPassword] = useState('');
     const [showTwoFAPassword, setShowTwoFAPassword] = useState(false);
-    const { register, handleSubmit, reset, formState: { errors, isDirty }, } = useForm<PasswordFormValues>({ resolver: zodResolver(passwordSchema) });
-    useSuperadminUnsavedChangesGuard(isDirty, "You have unsaved changes in your password form. Are you sure you want to leave?");
-    function handlePasswordSubmit(values: PasswordFormValues) {
+    const { register, handleSubmit, reset, formState: { errors, isDirty }, } = useForm<SuperadminProfileSecurityFormValues>({ resolver: zodResolver(passwordSchema) });
+    useUnsavedChangesGuard(isDirty, "You have unsaved changes in your password form. Are you sure you want to leave?");
+    function handlePasswordSubmit(values: SuperadminProfileSecurityFormValues) {
         onSavePassword(values);
         reset();
     }
@@ -33,11 +29,11 @@ export default function SuperadminProfileSecurityForm({ profile, isSavingPasswor
         onToggle2FA({ enabled: !profile.twoFactorEnabled, password: twoFAPassword });
         setTwoFAPassword('');
     }
-    const inputClass = 'w-full px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary';
+    const inputClass = 'w-full px-4 py-2.5 bg-input border border-border rounded-lg text-sm text-primary focus:outline-none focus:border-primary focus-visible:ring-2 focus-visible:ring-primary';
     return (<div className="space-y-8">
       {/* Change Password */}
       <div>
-        <h3 className="text-base font-semibold text-foreground mb-4">Change Password</h3>
+        <h3 className="text-base font-semibold text-primary mb-4">Change Password</h3>
         <form onSubmit={handleSubmit(handlePasswordSubmit)} className="space-y-4">
           {[
             { id: 'currentPassword', label: 'Current Password', show: showCurrent, toggle: () => setShowCurrent((v) => !v) },
@@ -48,19 +44,19 @@ export default function SuperadminProfileSecurityForm({ profile, isSavingPasswor
                 {label} <span className="text-danger">*</span>
               </label>
               <div className="relative">
-                <input {...register(id as keyof PasswordFormValues)} type={show ? 'text' : 'password'} className={`${inputClass} pr-10`}/>
-                <button type="button" onClick={toggle} aria-label={show ? 'Hide password' : 'Show password'} className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary hover:text-foreground focus-visible:outline-none">
-                  {show ? <EyeOff className="w-4 h-4" strokeWidth={2}/> : <Eye className="w-4 h-4" strokeWidth={2}/>}
+                <input {...register(id as keyof SuperadminProfileSecurityFormValues)} type={show ? 'text' : 'password'} className={`${inputClass} pr-10`}/>
+                <button type="button" onClick={toggle} aria-label={show ? 'Hide password' : 'Show password'} className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary hover:text-primary focus-visible:outline-none">
+                  {show ? <EyeOff size={18} className="w-4" strokeWidth={2}/> : <Eye size={18} className="w-4" strokeWidth={2}/>}
                 </button>
               </div>
-              {errors[id as keyof PasswordFormValues] && (<p className="mt-1 text-xs text-danger" role="alert">
-                  {errors[id as keyof PasswordFormValues]?.message}
+              {errors[id as keyof SuperadminProfileSecurityFormValues] && (<p className="mt-1 text-xs text-danger" role="alert">
+                  {errors[id as keyof SuperadminProfileSecurityFormValues]?.message}
                 </p>)}
             </div>))}
 
           <div className="flex justify-end pt-1">
-            <button type="submit" disabled={isSavingPassword || !isDirty} className="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-hover text-black font-semibold text-sm rounded-lg motion-safe:transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
-              {isSavingPassword && <Loader2 className="w-4 h-4 motion-safe:animate-spin" strokeWidth={2}/>}
+            <button type="submit" disabled={isSavingPassword || !isDirty} className="flex items-center gap-2 px-5 py-2.5 bg-primary-subtle hover:bg-primary-hover text-primary font-semibold text-sm rounded-lg motion-safe:transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+              {isSavingPassword && <Loader2 size={18} className="w-4 motion-safe:animate-spin" strokeWidth={2}/>}
               {isSavingPassword ? 'Updating...' : 'Update Password'}
             </button>
           </div>
@@ -71,7 +67,7 @@ export default function SuperadminProfileSecurityForm({ profile, isSavingPasswor
       <div className="border-t border-border pt-6">
         <div className="flex items-start justify-between mb-4">
           <div>
-            <h3 className="text-base font-semibold text-foreground">Two-Factor Authentication</h3>
+            <h3 className="text-base font-semibold text-primary">Two-Factor Authentication</h3>
             <p className="text-sm text-secondary mt-0.5">
               {profile.twoFactorEnabled
             ? 'Your account is protected with 2FA.'
@@ -80,8 +76,8 @@ export default function SuperadminProfileSecurityForm({ profile, isSavingPasswor
           </div>
           <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${profile.twoFactorEnabled ? 'bg-success-bg text-success' : 'bg-danger-bg text-danger'}`}>
             {profile.twoFactorEnabled
-            ? <><ShieldCheck className="w-3 h-3" strokeWidth={2}/> Enabled</>
-            : <><ShieldOff className="w-3 h-3" strokeWidth={2}/> Disabled</>}
+            ? <><ShieldCheck size={18} className="w-3" strokeWidth={2}/> Enabled</>
+            : <><ShieldOff size={18} className="w-3" strokeWidth={2}/> Disabled</>}
           </div>
         </div>
 
@@ -92,16 +88,16 @@ export default function SuperadminProfileSecurityForm({ profile, isSavingPasswor
             </label>
             <div className="relative max-w-sm">
               <input type={showTwoFAPassword ? 'text' : 'password'} value={twoFAPassword} onChange={(e) => setTwoFAPassword(e.target.value)} placeholder="Enter your current password" className={`${inputClass} pr-10`}/>
-              <button type="button" onClick={() => setShowTwoFAPassword((v) => !v)} aria-label={showTwoFAPassword ? 'Hide password' : 'Show password'} className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary hover:text-foreground focus-visible:outline-none">
-                {showTwoFAPassword ? <EyeOff className="w-4 h-4" strokeWidth={2}/> : <Eye className="w-4 h-4" strokeWidth={2}/>}
+              <button type="button" onClick={() => setShowTwoFAPassword((v) => !v)} aria-label={showTwoFAPassword ? 'Hide password' : 'Show password'} className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary hover:text-primary focus-visible:outline-none">
+                {showTwoFAPassword ? <EyeOff size={18} className="w-4" strokeWidth={2}/> : <Eye size={18} className="w-4" strokeWidth={2}/>}
               </button>
             </div>
           </div>
 
           <button type="button" onClick={handleToggle2FA} disabled={isTogglingTwoFA || !twoFAPassword.trim()} className={`flex items-center gap-2 px-5 py-2.5 font-semibold text-sm rounded-lg motion-safe:transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 ${profile.twoFactorEnabled
-            ? 'bg-danger-bg text-danger hover:bg-danger hover:text-white focus-visible:ring-danger'
-            : 'bg-success-bg text-success hover:bg-success hover:text-white focus-visible:ring-success'}`}>
-            {isTogglingTwoFA && <Loader2 className="w-4 h-4 motion-safe:animate-spin" strokeWidth={2}/>}
+            ? 'bg-danger-bg-danger-bg focus-visible:ring-danger'
+            : 'bg-success-bg-success-bg focus-visible:ring-success'}`}>
+            {isTogglingTwoFA && <Loader2 size={18} className="w-4 motion-safe:animate-spin" strokeWidth={2}/>}
             {profile.twoFactorEnabled ? 'Disable 2FA' : 'Enable 2FA'}
           </button>
         </div>

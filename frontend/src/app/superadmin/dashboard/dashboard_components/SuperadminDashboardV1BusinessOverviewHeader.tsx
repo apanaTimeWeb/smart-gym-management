@@ -3,7 +3,7 @@
 import type { SuperadminDashboardV1SectionProps } from '@/app/superadmin/dashboard/dashboard_types/SuperadminDashboardV1Types.ts';
 export default function SuperadminDashboardV1BusinessOverviewHeader({ data }: SuperadminDashboardV1SectionProps) {
     return <div className="flex flex-col gap-1">
-  <h2 className="text-lg font-semibold text-foreground">
+  <h2 className="text-lg font-semibold text-primary">
     Income & Retention Snapshot
   </h2>
   <p className="text-sm text-secondary">

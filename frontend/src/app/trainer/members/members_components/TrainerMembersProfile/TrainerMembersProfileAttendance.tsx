@@ -1,5 +1,5 @@
-'use client';
 // RESPONSIBILITY: Renders the member's current month attendance history in a full monthly calendar format.
+'use client';
 // Strictly view-only: trainers can monitor member consistency but cannot alter attendance logs.
 
 import { useMemo } from 'react';
@@ -7,6 +7,8 @@ import { Calendar as CalendarIcon, CheckCircle2, XCircle, AlertCircle, ShieldChe
 import { useTrainerMembersStore } from '@/app/trainer/members/members_store/useTrainerMembersStore';
 import { useTrainerSelectedMember } from '@/app/trainer/members/members_queries/useTrainerSelectedMember';
 import { useTrainerMemberAttendanceQuery } from '@/app/trainer/members/members_queries/useTrainerMembersQuery';
+import { format } from 'date-fns';
+import { formatNumber } from '@/lib/formatters';
 
 export default function TrainerMembersProfileAttendance() {
   const { member: selectedMember } = useTrainerSelectedMember();
@@ -17,7 +19,7 @@ export default function TrainerMembersProfileAttendance() {
   const currentMonth = now.getMonth();
   const todayDate = now.getDate();
 
-  const monthName = now.toLocaleString('en-US', { month: 'long' });
+  const monthName = format(now, 'MMMM');
 
   // Calculate calendar dimensions
   const daysInMonth = useMemo(() => new Date(currentYear, currentMonth + 1, 0).getDate(), [currentYear, currentMonth]);
@@ -55,11 +57,11 @@ export default function TrainerMembersProfileAttendance() {
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <h3 className="text-lg font-bold text-foreground flex items-center gap-2">
+            <h3 className="text-lg font-bold text-primary flex items-center gap-2">
               <CalendarIcon size={18} className="text-primary" /> {monthName} {currentYear} Attendance
             </h3>
-            <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary-subtle text-primary border border-primary/20 flex items-center gap-1">
-              <ShieldCheck size={12} /> View Only
+            <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary-subtle text-primary border border-primary flex items-center gap-1">
+              <ShieldCheck size={18} /> View Only
             </span>
           </div>
           <p className="text-sm text-secondary mt-0.5">
@@ -73,31 +75,31 @@ export default function TrainerMembersProfileAttendance() {
         <div className="bg-card border border-border rounded-xl p-4">
           <p className="text-xs font-medium text-secondary">Present Days</p>
           <p className="text-2xl font-bold text-success mt-1 flex items-center gap-2">
-            {presentCount} <span className="text-xs text-secondary font-normal">days</span>
+            {formatNumber(presentCount)} <span className="text-xs text-secondary font-normal">days</span>
           </p>
         </div>
         <div className="bg-card border border-border rounded-xl p-4">
           <p className="text-xs font-medium text-secondary">Absent Days</p>
           <p className="text-2xl font-bold text-danger mt-1 flex items-center gap-2">
-            {absentCount} <span className="text-xs text-secondary font-normal">days</span>
+            {formatNumber(absentCount)} <span className="text-xs text-secondary font-normal">days</span>
           </p>
         </div>
         <div className="bg-card border border-border rounded-xl p-4">
           <p className="text-xs font-medium text-secondary">Rest / Off Days</p>
           <p className="text-2xl font-bold text-warning mt-1 flex items-center gap-2">
-            {leaveCount} <span className="text-xs text-secondary font-normal">days</span>
+            {formatNumber(leaveCount)} <span className="text-xs text-secondary font-normal">days</span>
           </p>
         </div>
         <div className="bg-card border border-border rounded-xl p-4">
           <p className="text-xs font-medium text-secondary">Attendance Rate</p>
           <p className={`text-2xl font-bold mt-1 ${attendancePct >= 75 ? 'text-success' : 'text-danger'}`}>
-            {attendancePct}%
+            {formatNumber(attendancePct)}%
           </p>
         </div>
       </div>
 
       {/* Monthly Calendar View */}
-      <div className="bg-card border border-border rounded-2xl p-5 shadow-sm space-y-4">
+      <div className="bg-card border border-border rounded-2xl p-5 shadow-card space-y-4">
         <div className="grid grid-cols-7 gap-2 text-center pb-2 border-b border-border">
           {weekDays.map(wd => (
             <div key={wd} className="text-xs font-bold text-secondary uppercase tracking-wider py-1">
@@ -109,27 +111,27 @@ export default function TrainerMembersProfileAttendance() {
         <div className="grid grid-cols-7 gap-2">
           {/* Empty offset padding for days before the 1st */}
           {Array.from({ length: firstDayIndex }).map((_, i) => (
-            <div key={`empty-${i}`} className="h-20 rounded-xl bg-input/20 border border-transparent" />
+            <div key={`empty-${i}`} className="h-20 rounded-xl bg-input border border-transparent" />
           ))}
 
           {/* Calendar day cells */}
           {daysArray.map(({ day, status, isToday, isPastOrToday }) => {
-            let statusStyle = 'bg-input/40 text-secondary border-border';
+            let statusStyle = 'bg-floating text-secondary border-border';
             let badgeStyle = 'text-secondary';
             let label = 'Upcoming';
 
             if (isPastOrToday) {
               if (status === 'P') {
-                statusStyle = 'bg-success-bg/80 text-success border-success/30 hover:border-success/60';
-                badgeStyle = 'bg-success text-white';
+                statusStyle = 'bg-success-bg text-success border-success hover:border-success/60';
+                badgeStyle = 'bg-success text-on-success';
                 label = 'Present';
               } else if (status === 'A') {
-                statusStyle = 'bg-danger-bg/80 text-danger border-danger/30 hover:border-danger/60';
-                badgeStyle = 'bg-danger text-white';
+                statusStyle = 'bg-danger-bg text-danger border-danger hover:border-danger/60';
+                badgeStyle = 'bg-danger text-on-danger';
                 label = 'Absent';
               } else if (status === 'L') {
-                statusStyle = 'bg-warning-bg/80 text-warning border-warning/30 hover:border-warning/60';
-                badgeStyle = 'bg-warning text-white';
+                statusStyle = 'bg-warning-bg text-warning border-warning/30 hover:border-warning/60';
+                badgeStyle = 'bg-warning text-on-primary';
                 label = 'Rest';
               }
             }
@@ -138,15 +140,15 @@ export default function TrainerMembersProfileAttendance() {
               <div
                 key={day}
                 className={`h-20 rounded-xl p-2.5 border flex flex-col justify-between motion-safe:transition-all relative ${statusStyle} ${
-                  isToday ? 'ring-2 ring-primary ring-offset-2 ring-offset-bg-page' : ''
+                  isToday ? 'ring-2 ring-primary  ' : ''
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <span className={`text-sm font-bold ${isToday ? 'text-primary' : 'text-foreground'}`}>
+                  <span className={`text-sm font-bold ${isToday ? 'text-primary' : 'text-primary'}`}>
                     {day}
                   </span>
                   {isToday && (
-                    <span className="text-xs font-extrabold uppercase px-1.5 py-0.5 rounded bg-primary text-white tracking-wide">
+                    <span className="text-xs font-extrabold uppercase px-1.5 py-0.5 rounded bg-primary text-on-primary tracking-wide">
                       Today
                     </span>
                   )}
@@ -155,14 +157,14 @@ export default function TrainerMembersProfileAttendance() {
                 <div className="mt-auto">
                   {isPastOrToday ? (
                     <span className={`inline-flex items-center gap-1 text-xs font-bold px-2 py-0.5 rounded-md ${badgeStyle}`}>
-                      {status === 'P' && <CheckCircle2 size={11} />}
-                      {status === 'A' && <XCircle size={11} />}
-                      {status === 'L' && <AlertCircle size={11} />}
+                      {status === 'P' && <CheckCircle2 size={18} />}
+                      {status === 'A' && <XCircle size={18} />}
+                      {status === 'L' && <AlertCircle size={18} />}
                       {label}
                     </span>
                   ) : (
-                    <span className="text-xs text-secondary/60">
-                      —
+                    <span className="text-xs text-disabled">
+                      â€”
                     </span>
                   )}
                 </div>
@@ -173,9 +175,9 @@ export default function TrainerMembersProfileAttendance() {
       </div>
 
       {/* Legend Footer */}
-      <div className="flex flex-wrap items-center justify-between gap-4 p-4 bg-input/40 border border-border rounded-xl text-xs text-secondary">
+      <div className="flex flex-wrap items-center justify-between gap-4 p-4 bg-floating border border-border rounded-xl text-xs text-secondary">
         <div className="flex items-center gap-4 flex-wrap">
-          <span className="font-semibold text-foreground">Legend:</span>
+          <span className="font-semibold text-primary">Legend:</span>
           <span className="flex items-center gap-1.5">
             <span className="w-3 h-3 rounded-full bg-success"></span> Present (P)
           </span>
@@ -189,10 +191,11 @@ export default function TrainerMembersProfileAttendance() {
             <span className="w-3 h-3 rounded-full bg-border"></span> Future / Pending
           </span>
         </div>
-        <p className="text-secondary/70">
+        <p className="text-disabled">
           Syncs with main branch biometrics in real-time.
         </p>
       </div>
     </div>
   );
 }
+

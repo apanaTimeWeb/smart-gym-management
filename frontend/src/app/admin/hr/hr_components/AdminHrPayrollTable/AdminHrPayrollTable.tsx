@@ -1,163 +1,39 @@
 "use client";
-import { formatCurrency } from '@/lib/formatters';
-// RESPONSIBILITY: Renders the payroll records table with pay status badges and mark-as-paid inline action.
+import { format } from 'date-fns';
+// RESPONSIBILITY: Renders the Admin HR payroll list from the server-backed query, keeping search/month/sort/pagination state in the feature URL.
 
+import { formatCurrency } from '@/lib/formatters';
 import { useHrContext } from '@/app/admin/hr/hr_context/AdminHrContext';
 import type { AdminHrPayrollSortKey } from '@/app/admin/hr/hr_types/AdminHrUiTypes';
-import type { AdminSortDirection } from '@/app/admin/admin_types/AdminSortTypes';
-import { useMemo, useState } from 'react';
-import { PAYROLL_TABLE_HEADERS } from '@/app/admin/hr/hr_utils/AdminHrSharedConstants';
-import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
-import { CheckCircle2, Download, ChevronDown, ChevronUp, ChevronsUpDown } from 'lucide-react';
-import { ADMIN_ITEMS_PER_PAGE } from '@/app/admin/admin_url_config';
+import type { AdminHrSortDirection } from '@/app/admin/hr/hr_types/AdminHrSortTypes';
+import { CheckCircle2, Download } from 'lucide-react';
+import { PAYROLL_TABLE_HEADERS, HR_ITEMS_PER_PAGE } from '@/app/admin/hr/hr_utils/AdminHrSharedConstants';
+import AdminPagination from '@/app/admin/admin_layout/AdminShared/AdminPagination';
+import AdminHrEmptyState from '@/app/admin/hr/hr_components/AdminHrEmptyState/AdminHrEmptyState';
+import AdminHrPayrollSortIndicator from '@/app/admin/hr/hr_components/AdminHrPayrollTable/AdminHrPayrollSortIndicator';
+
+const PAYROLL_SORT_KEYS: Partial<Record<string, AdminHrPayrollSortKey>> = { Staff: 'staffName', Month: 'month', 'Net Payable': 'amount', 'Paid Amount': 'paidAmount', Pending: 'pendingAmount', Status: 'status', 'Paid On': 'paidAt' };
+
 
 export default function AdminHrPayrollTable() {
-  const { payrolls, search, currentPage, setCurrentPage, setPaymentModal, setShowPayrollModal, status, payrollMonth, staff } = useHrContext();
-  const [sortKey, setSortKey] = useState<AdminHrPayrollSortKey>('month');
-  const [sortDir, setSortDir] = useState<AdminSortDirection>('desc');
+  const { payrolls, currentPage, setCurrentPage, setPaymentModal, setShowPayrollModal, status, totalPayrolls, staff, payrollSortKey, payrollSortDir, setPayrollSort } = useHrContext();
+  const handleSort = (key: AdminHrPayrollSortKey) => setPayrollSort(key, payrollSortKey === key && payrollSortDir === 'asc' ? 'desc' : 'asc');
+  const renderHeader = (header: string) => {
+    const key = PAYROLL_SORT_KEYS[header];
+    if (!key) return header;
+    return <button type="button" onClick={() => handleSort(key)} className="motion-safe:transition-all motion-safe:duration-base ease-in-out inline-flex min-h-11 items-center gap-1.5 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded" aria-label={`Sort by ${header}`} >{header}<AdminHrPayrollSortIndicator active={payrollSortKey === key} direction={payrollSortDir} /></button>;
+  };
 
-  const filtered = payrolls.filter(p => {
-    const nameMatch = (p.staff?.name || '').toLowerCase().includes(search.toLowerCase());
-    const roleMatch = (p.staff?.role || '').toLowerCase().includes(search.toLowerCase());
-    
-    // payrollMonth is YYYY-MM
-    let isTargetMonth = true;
-    if (payrollMonth) {
-      const [y, m] = payrollMonth.split('-');
-      const d = new Date(Number(y), Number(m) - 1, 1);
-      const targetStr = d.toLocaleString('en-US', { month: 'long', year: 'numeric' });
-      isTargetMonth = (p.month === targetStr) || (p.month === payrollMonth);
-    }
-    
-    return (nameMatch || roleMatch) && isTargetMonth;
-  });
-
-    const sorted = useMemo(() => [...filtered].sort((a,b)=>{const av=a[sortKey], bv=b[sortKey]; const result=typeof av==='number'&&typeof bv==='number'?av-bv:String(av??'').localeCompare(String(bv??''),undefined,{numeric:true}); return sortDir==='asc'?result:-result;}), [filtered,sortKey,sortDir]);
-  const handleSort=(key:AdminHrPayrollSortKey)=>{if(sortKey===key)setSortDir(d=>d==='asc'?'desc':'asc');else{setSortKey(key);setSortDir('asc');}};
-  const totalPages = Math.ceil(sorted.length / ADMIN_ITEMS_PER_PAGE);
-  const currentData = sorted.slice((currentPage - 1) * ADMIN_ITEMS_PER_PAGE, currentPage * ADMIN_ITEMS_PER_PAGE);
-
-  if (status === 'pending') {
-    return (
-      <div className="flex flex-col h-full">
-        <div className="overflow-x-auto flex-1">
-          <table data-admin-responsive-table className="w-full">
-            <thead className="bg-input text-secondary">
-              <tr>
-                {PAYROLL_TABLE_HEADERS.map(h => (
-                  <th key={h} className="text-left text-xs font-semibold uppercase tracking-wider px-4 py-3">{h}</th>
-                ))}
-                <th className="text-right text-xs font-semibold uppercase tracking-wider px-4 py-3">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border">
-              {[...Array(5)].map((_, i) => (
-                <tr key={`skeleton-${i}`} className="motion-safe:animate-pulse bg-card">
-                  <td className="px-4 py-4">
-                    <div className="h-4 bg-muted rounded w-32 mb-2"></div>
-                    <div className="h-3 bg-muted rounded w-20"></div>
-                  </td>
-                  <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-16"></div></td>
-                  <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-24"></div></td>
-                  <td className="px-4 py-4"><div className="h-5 bg-muted rounded-full w-16"></div></td>
-                  <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-20"></div></td>
-                  <td className="px-4 py-4 text-right"><div className="h-8 bg-muted rounded-lg w-24 ml-auto"></div></td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    );
-  }
+  if (status === 'pending') return <div className="flex flex-col h-full"><div className="overflow-x-auto flex-1"><table data-admin-responsive-table className="w-full"><thead className="bg-input text-secondary"><tr>{PAYROLL_TABLE_HEADERS.map((header) => <th key={header} aria-sort={PAYROLL_SORT_KEYS[header] && payrollSortKey === PAYROLL_SORT_KEYS[header] ? (payrollSortDir === 'asc' ? 'ascending' : 'descending') : 'none'} className="text-left text-xs font-semibold uppercase tracking-wider px-4 py-3">{renderHeader(header)}</th>)}<th className="text-right text-xs font-semibold uppercase tracking-wider px-4 py-3">Actions</th></tr></thead><tbody className="divide-y divide-border">{['payroll-skeleton-1','payroll-skeleton-2','payroll-skeleton-3','payroll-skeleton-4','payroll-skeleton-5'].map((key) => <tr key={key} className="motion-safe:animate-pulse bg-card motion-safe:duration-base">{['a','b','c','d','e','f','g','h'].map((cell) => <td key={`${key}-${cell}`} className="px-4 py-4"><div className="h-4 bg-skeleton-base rounded w-24" /></td>)}<td className="px-4 py-4"><div className="h-8 bg-skeleton-base rounded w-24 ml-auto" /></td></tr>)}</tbody></table></div></div>;
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex justify-end mb-4">
-        <button onClick={() => setShowPayrollModal(true)} className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-semibold hover:bg-primary/90 motion-safe:transition-colors">
-          Bulk Generate Payroll
-        </button>
-      </div>
-      <div className="overflow-x-auto flex-1">
-        <table data-admin-responsive-table className="w-full">
-          <thead className="bg-input text-secondary">
-            <tr>
-              {PAYROLL_TABLE_HEADERS.map(h => (
-                <th key={h} className="text-left text-xs font-semibold uppercase tracking-wider px-4 py-3">
-                  {h}
-                </th>
-              ))}
-              <th className="text-right text-xs font-semibold uppercase tracking-wider px-4 py-3">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-border">
-            {currentData.map(p => (
-              <tr key={p.id} className="motion-safe:transition-colors hover:bg-primary/5 bg-card">
-                <td className="px-4 py-3">
-                  <p className="text-sm font-medium text-primary">
-                    {p.staff?.name || `Staff #${p.staffId}`}
-                  </p>
-                  <div className="text-xs text-secondary">
-                    {p.staff?.role}
-                  </div>
-                </td>
-                <td className="px-4 py-3 text-sm text-primary">{p.month}</td>
-                <td className="px-4 py-3 text-sm font-medium text-right">
-                  {formatCurrency((staff.find(s => String(s.id) === String(p.staffId))?.salary) || 0)}
-                </td>
-                <td className="px-4 py-3 text-sm font-bold text-foreground text-right">{formatCurrency(p.amount || 0)}</td>
-                <td className="px-4 py-3 text-sm font-bold text-success text-right">{formatCurrency(p.paidAmount || 0)}</td>
-                <td className="px-4 py-3 text-sm font-bold text-danger text-right">{formatCurrency(p.pendingAmount || 0)}</td>
-                <td className="px-4 py-3">
-                  <span 
-                    className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${
-                      p.status.toLowerCase() === 'paid' ? 'bg-success/10 text-success' : 'bg-warning/10 text-warning'
-                    }`}
-                  >
-                    {p.status}
-                  </span>
-                </td>
-                <td className="px-4 py-3 text-sm text-secondary">
-                  {p.paidAt ? new Date(p.paidAt).toLocaleDateString('en-IN') : '—'}
-                </td>
-                <td className="px-4 py-3 text-right">
-                  <div className="flex justify-end gap-2">
-                    <button onClick={() => { const csv = `Employee,Month,Amount,Status\n${p.staff?.name ?? p.staffId},${p.month},${p.amount},${p.status}`; const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' })); const anchor = document.createElement('a'); anchor.href = url; anchor.download = `payslip-${p.id}.csv`; anchor.click(); URL.revokeObjectURL(url); }} className="flex items-center justify-center gap-2 px-3 py-2 text-sm font-semibold text-secondary border border-border rounded-lg hover:bg-border motion-safe:transition-colors">
-                      <Download size={16} /> Payslip
-                    </button>
-                    {p.status.toLowerCase() !== 'paid' && (
-                      <button 
-                        onClick={() => setPaymentModal({
-                          payrollId: p.id,
-                          staffName: p.staff?.name || `Staff #${p.staffId}`,
-                          pendingAmount: p.pendingAmount
-                        })}
-                        className="flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-lg hover:bg-primary/90 motion-safe:transition-colors"
-                      >
-                        <CheckCircle2 size={16} /> Pay
-                      </button>
-                    )}
-                  </div>
-                </td>
-              </tr>
-            ))}
-            {currentData.length === 0 && (
-              <tr>
-                <td colSpan={PAYROLL_TABLE_HEADERS.length + 1} className="text-center py-10 text-sm text-secondary">
-                  No payroll records found.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-      <AdminPagination 
-        currentPage={currentPage} 
-        totalPages={totalPages} 
-        totalItems={filtered.length} 
-        itemsPerPage={ADMIN_ITEMS_PER_PAGE} 
-        onPageChange={setCurrentPage} 
-      />
+      <div className="flex justify-end mb-4"><button type="button" onClick={() => setShowPayrollModal(true)} className="min-h-11 flex items-center gap-2 px-4 py-2 bg-primary text-on-primary rounded-lg text-sm font-semibold hover:bg-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-safe:transition-colors motion-safe:duration-base">Bulk Generate Payroll</button></div>
+      <div className="overflow-x-auto flex-1"><table data-admin-responsive-table className="w-full"><thead className="bg-input text-secondary"><tr>{PAYROLL_TABLE_HEADERS.map((header) => <th key={header} aria-sort={PAYROLL_SORT_KEYS[header] && payrollSortKey === PAYROLL_SORT_KEYS[header] ? (payrollSortDir === 'asc' ? 'ascending' : 'descending') : 'none'} className="text-left text-xs font-semibold uppercase tracking-wider px-4 py-3">{renderHeader(header)}</th>)}<th className="text-right text-xs font-semibold uppercase tracking-wider px-4 py-3">Actions</th></tr></thead><tbody className="divide-y divide-border">
+        {payrolls.map((payroll) => { const salary = staff.find((member) => member.id === payroll.staffId)?.salary ?? 0; return <tr key={payroll.id} className="motion-safe:transition-colors hover:bg-surface-hover bg-card motion-safe:duration-base"><td className="px-4 py-3"><p className="text-sm font-medium text-primary">{payroll.staff?.name || `Staff #${payroll.staffId}`}</p><div className="text-xs text-secondary">{payroll.staff?.role}</div></td><td className="px-4 py-3 text-sm text-primary">{payroll.month}</td><td className="px-4 py-3 text-sm font-medium text-right">{formatCurrency(salary)}</td><td className="px-4 py-3 text-sm font-bold text-primary text-right">{formatCurrency(payroll.amount || 0)}</td><td className="px-4 py-3 text-sm font-bold text-success text-right">{formatCurrency(payroll.paidAmount || 0)}</td><td className="px-4 py-3 text-sm font-bold text-danger text-right">{formatCurrency(payroll.pendingAmount || 0)}</td><td className="px-4 py-3"><span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${payroll.status.toLowerCase() === 'paid' ? 'bg-success text-on-success' : 'bg-warning-bg text-warning'}`}>{payroll.status}</span></td><td className="px-4 py-3 text-sm text-secondary">{payroll.paidAt ? format(new Date(payroll.paidAt), 'dd MMM yyyy') : '—'}</td><td className="px-4 py-3 text-right"><div className="flex justify-end gap-2"><button type="button" onClick={() => { const csv = `Employee,Month,Amount,Status\n${payroll.staff?.name ?? payroll.staffId},${payroll.month},${payroll.amount},${payroll.status}`; const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' })); const anchor = document.createElement('a'); anchor.href = url; anchor.download = `payslip-${payroll.id}.csv`; anchor.click(); URL.revokeObjectURL(url); }} className="min-h-11 flex items-center justify-center gap-2 px-3 py-2 text-sm font-semibold text-secondary border border-border rounded-lg hover:bg-surface-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-safe:transition-colors motion-safe:duration-base" aria-label={`Download payslip for ${payroll.staff?.name ?? payroll.staffId}`}><Download size={16} /> Payslip</button>{payroll.status.toLowerCase() !== 'paid' && <button type="button" onClick={() => setPaymentModal({ payrollId: payroll.id, staffName: payroll.staff?.name || `Staff #${payroll.staffId}`, pendingAmount: payroll.pendingAmount })} className="min-h-11 flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold text-on-primary bg-primary rounded-lg hover:bg-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-safe:transition-colors motion-safe:duration-base" aria-label={`Pay ${payroll.staff?.name ?? payroll.staffId}`}><CheckCircle2 size={16} /> Pay</button>}</div></td></tr>; })}
+        {payrolls.length === 0 && <tr><td colSpan={PAYROLL_TABLE_HEADERS.length + 1}><AdminHrEmptyState title="No payroll records found" description="No payroll records match the selected filters." /></td></tr>}
+      </tbody></table></div>
+      <AdminPagination currentPage={currentPage} totalPages={Math.max(1, Math.ceil(totalPayrolls / HR_ITEMS_PER_PAGE))} totalItems={totalPayrolls} itemsPerPage={HR_ITEMS_PER_PAGE} onPageChange={setCurrentPage} />
     </div>
   );
 }

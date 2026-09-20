@@ -4,11 +4,12 @@
 import { useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { plansApi } from '@/app/admin/plans/plans_api/AdminPlansApi';
-import { useDebounce } from '@/app/admin/admin_utils/useAdminDebounce';
-import { useAdminUrlQuerySync } from '@/app/admin/admin_utils/useAdminUrlQuerySync';
+import { useDebounce } from '@/app/admin/admin_layout/admin_utils/useAdminDebounce';
+import { useAdminUrlQuerySync } from '@/app/admin/admin_layout/admin_utils/useAdminUrlQuerySync';
 import type { PlanRevenueRecord, RevenueAggregates, RevenuePeriod, RevenueSortDirection, RevenueSortKey } from '@/app/admin/plans/plans_types/AdminPlansRevenueTypes';
-import { ADMIN_ITEMS_PER_PAGE } from '@/app/admin/admin_url_config';
+const PLANS_ITEMS_PER_PAGE = 10;
 
+/** Coordinates PlansRevenueLogic state, data flow, and feature behavior. */
 export function useAdminPlansRevenueLogic() {
   const [period, setPeriod] = useState<RevenuePeriod>('THIS_MONTH');
   const [searchQuery, setSearchQuery] = useState('');
@@ -24,8 +25,8 @@ export function useAdminPlansRevenueLogic() {
   ]);
 
   const query = useQuery({
-    queryKey: ['admin', 'plans', 'revenue', { period, search: debouncedSearch, sortKey, sortDir, page: currentPage, limit: ADMIN_ITEMS_PER_PAGE }],
-    queryFn: () => plansApi.fetchPlanRevenue(period, { search: debouncedSearch, sortKey, sortDir, page: currentPage, limit: ADMIN_ITEMS_PER_PAGE }),
+    queryKey: ['admin', 'plans', 'revenue', { period, search: debouncedSearch, sortKey, sortDir, page: currentPage, limit: PLANS_ITEMS_PER_PAGE }],
+    queryFn: () => plansApi.fetchPlanRevenue(period, { search: debouncedSearch, sortKey, sortDir, page: currentPage, limit: PLANS_ITEMS_PER_PAGE }),
   });
   const revenueData = query.data?.data ?? [];
   const handleSort = (key: RevenueSortKey) => { if (sortKey === key) setSortDir((prev) => prev === 'asc' ? 'desc' : 'asc'); else { setSortKey(key); setSortDir('desc'); } setCurrentPage(1); };
@@ -40,5 +41,5 @@ export function useAdminPlansRevenueLogic() {
     }), { totalRevenue: 0, totalSubscriptions: 0, avgRenewalRate: 0, topPerformingPlanName: source[0]!.planName });
   }, [query.data?.data]);
   const avgRenewalRate = revenueData.length ? aggregates.avgRenewalRate / revenueData.length : 0;
-  return { period, setPeriod, searchQuery, setSearchQuery, sortKey, sortDir, handleSort, sortedData: revenueData as PlanRevenueRecord[], aggregates: { ...aggregates, avgRenewalRate }, isLoading: query.isLoading, isError: query.isError, currentPage, setCurrentPage, totalPages: query.data?.meta?.totalPages ?? 1, totalItems: query.data?.meta?.total ?? 0 };
+  return { period, setPeriod, searchQuery, setSearchQuery, sortKey, sortDir, handleSort, sortedData: revenueData as PlanRevenueRecord[], aggregates: { ...aggregates, avgRenewalRate }, isPending: query.isPending, isError: query.isError, currentPage, setCurrentPage, totalPages: query.data?.meta?.totalPages ?? 1, totalItems: query.data?.meta?.total ?? 0 };
 }

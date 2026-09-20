@@ -5,14 +5,14 @@ import { formatCurrency } from '@/lib/formatters';
 import { Edit2, Trash2, ToggleLeft, ToggleRight, Copy } from 'lucide-react';
 import { useAdminCouponsLogic } from '@/app/admin/coupons/coupons_context/useAdminCouponsLogic';
 import AdminCouponsEmptyState from '@/app/admin/coupons/coupons_components/AdminCouponsEmptyState/AdminCouponsEmptyState';
-import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
-import { AdminTableSkeleton } from '@/app/admin/admin_components/AdminShared/AdminTableSkeleton';
+import AdminPagination from '@/app/admin/admin_layout/AdminShared/AdminPagination';
+import AdminTableSkeleton from '@/app/admin/admin_layout/AdminShared/AdminTableSkeleton';
 import type { Coupon } from '@/app/admin/coupons/coupons_types/AdminCouponsTypes';
 
 const STATUS_STYLES: Record<string, string> = {
-  active: 'bg-success-bg text-success',
+  active: 'bg-success text-on-success',
   inactive: 'bg-warning-bg text-warning',
-  expired: 'bg-danger-bg text-danger',
+  expired: 'bg-danger text-on-danger',
 };
 
 const TABLE_HEADERS = ['Code', 'Type / Value', 'Assigned Gyms', 'Usage', 'Valid Until', 'Status', 'Actions'];
@@ -31,7 +31,7 @@ export default function AdminCouponsTable() {
       <div className="overflow-x-auto">
         <table data-admin-responsive-table className="w-full">
           <thead>
-            <tr className="bg-primary/5">
+            <tr className="bg-surface-highlight">
               {TABLE_HEADERS.map(h => (
                 <th key={h} className="px-5 py-3 text-left text-xs font-semibold text-secondary uppercase tracking-wider whitespace-nowrap">{h}</th>
               ))}
@@ -41,7 +41,7 @@ export default function AdminCouponsTable() {
             {coupons.map((coupon: Coupon) => (
               <tr
                 key={coupon.id}
-                className="hover:bg-primary/5 motion-safe:transition-colors cursor-pointer group"
+                className="hover:bg-surface-highlight motion-safe:transition-colors cursor-pointer group motion-safe:duration-base"
                 role="button"
                 tabIndex={0}
                 aria-label={`Edit coupon ${coupon.code}`}
@@ -55,10 +55,10 @@ export default function AdminCouponsTable() {
               >
                 <td className="px-5 py-4">
                   <div className="flex items-center gap-2">
-                    <span className="font-mono text-sm font-bold text-primary bg-primary-subtle px-2 py-0.5 rounded">{coupon.code}</span>
+                    <span className="font-mono text-sm font-bold text-on-primary bg-primary-subtle px-2 py-0.5 rounded">{coupon.code}</span>
                     <button
                       onClick={(e) => { e.stopPropagation(); handleCopy(coupon.code); }}
-                      className="opacity-100 lg:opacity-0 lg:group-hover:opacity-100 motion-safe:transition-opacity text-secondary hover:text-foreground"
+                      className="min-h-11 min-w-11 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 motion-safe:transition-opacity text-secondary hover:text-primary motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
                       aria-label="Copy coupon code"
                     >
                       <Copy size={13} />
@@ -66,53 +66,53 @@ export default function AdminCouponsTable() {
                   </div>
                   <p className="text-xs text-secondary mt-1 truncate max-w-48">{coupon.description}</p>
                 </td>
-                <td className="px-5 py-4 text-sm font-semibold text-foreground">
+                <td className="px-5 py-4 text-sm font-semibold text-primary">
                   {coupon.type === 'percentage' ? `${coupon.value}% off` : `${formatCurrency(coupon.value)} off`}
                   {coupon.minOrderAmount > 0 && <p className="text-xs text-secondary font-normal">Min: {formatCurrency(coupon.minOrderAmount)}</p>}
                 </td>
-                <td className="px-5 py-4 text-sm text-foreground">
+                <td className="px-5 py-4 text-sm text-primary">
                   {coupon.assignedGymNames.join(', ')}
                 </td>
                 <td className="px-5 py-4">
                   {coupon.usageLimit ? (
                     <>
-                      <div className="text-sm text-foreground">{coupon.usedCount} / {coupon.usageLimit} Used</div>
+                      <div className="text-sm text-primary">{coupon.usedCount} / {coupon.usageLimit} Used</div>
                       <div className="mt-1 h-1.5 bg-input rounded-full w-20">
                         <div
-                          className="h-1.5 bg-primary rounded-full"
+                          className="h-1.5 bg-primary-subtle rounded-full"
                           style={{ width: `${Math.min(100, (coupon.usedCount / coupon.usageLimit) * 100)}%` }}
                         />
                       </div>
                     </>
                   ) : (
-                    <div className="text-sm text-foreground">{coupon.usedCount} Used (Unlimited)</div>
+                    <div className="text-sm text-primary">{coupon.usedCount} Used (Unlimited)</div>
                   )}
                 </td>
-                <td className="px-5 py-4 text-sm text-foreground whitespace-nowrap">{coupon.validUntil}</td>
+                <td className="px-5 py-4 text-sm text-primary whitespace-nowrap">{coupon.validUntil}</td>
                 <td className="px-5 py-4">
                   <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold capitalize ${STATUS_STYLES[coupon.status] ?? 'bg-input text-secondary'}`}>
                     {coupon.status}
                   </span>
                 </td>
                 <td className="px-5 py-4">
-                  <div className="flex items-center gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 motion-safe:transition-opacity">
+                  <div className="flex items-center gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 motion-safe:transition-opacity motion-safe:duration-base">
                     <button
                       onClick={(e) => { e.stopPropagation(); toggleCoupon(coupon.id); }}
-                      className="p-1.5 rounded-lg hover:bg-input text-secondary hover:text-foreground motion-safe:transition-colors"
+                      className="min-h-11 min-w-11 p-1.5 rounded-lg hover:bg-input text-secondary hover:text-primary motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
                       aria-label={coupon.status === 'active' ? 'Deactivate coupon' : 'Activate coupon'}
                     >
                       {coupon.status === 'active' ? <ToggleRight size={16} className="text-success" /> : <ToggleLeft size={16} />}
                     </button>
                     <button
                       onClick={(e) => { e.stopPropagation(); openEdit(coupon); }}
-                      className="p-1.5 rounded-lg hover:bg-input text-secondary hover:text-foreground motion-safe:transition-colors"
+                      className="min-h-11 min-w-11 p-1.5 rounded-lg hover:bg-input text-secondary hover:text-primary motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
                       aria-label="Edit coupon"
                     >
                       <Edit2 size={15} />
                     </button>
                     <button
                       onClick={(e) => { e.stopPropagation(); deleteCoupon(coupon.id); }}
-                      className="p-1.5 rounded-lg hover:bg-danger-bg text-secondary hover:text-danger motion-safe:transition-colors"
+                      className="min-h-11 min-w-11 p-1.5 rounded-lg hover:bg-danger-bg text-secondary hover:text-danger motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
                       aria-label="Delete coupon"
                     >
                       <Trash2 size={15} />

@@ -4,13 +4,15 @@
 
 import { useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { adminToast } from '@/app/admin/admin_components/AdminFeedback/AdminToastService';
+import { adminToast } from '@/app/admin/admin_layout/AdminFeedback/AdminToastService';
 import { gymHealthAlertsApi } from '@/app/admin/gym-health-alerts/gym_health_alerts_api/AdminGymHealthAlertsApi';
 import { useAdminGymHealthAlertsStore } from '@/app/admin/gym-health-alerts/gym_health_alerts_store/useAdminGymHealthAlertsStore';
-import { useAdminUrlQuerySync } from '@/app/admin/admin_utils/useAdminUrlQuerySync';
-import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/useAdminConfirm';
+import { useAdminUrlQuerySync } from '@/app/admin/admin_layout/admin_utils/useAdminUrlQuerySync';
+import { useAdminConfirm } from '@/app/admin/admin_layout/AdminFeedback/useAdminConfirm';
 import { GYM_HEALTH_ITEMS_PER_PAGE } from '@/app/admin/gym-health-alerts/gym_health_alerts_utils/AdminGymHealthAlertsSharedConstants';
+import type { AlertSeverity, AlertType, AdminGymHealthAlertResolution } from '@/app/admin/gym-health-alerts/gym_health_alerts_types/AdminGymHealthAlertsTypes';
 
+/** Coordinates GymHealthAlertsLogic state, data flow, and feature behavior. */
 export function useAdminGymHealthAlertsLogic() {
   const { confirm } = useAdminConfirm();
   const qc = useQueryClient();
@@ -29,9 +31,10 @@ export function useAdminGymHealthAlertsLogic() {
     { key: 'page', value: currentPage, defaultValue: 1, setValue: (value) => setCurrentPage(Math.max(1, Number(value) || 1)) },
   ]);
 
+  const alertParams = { page: currentPage, limit: GYM_HEALTH_ITEMS_PER_PAGE, severity: severityFilter === 'all' ? undefined : (severityFilter as AlertSeverity), alertType: typeFilter === 'all' ? undefined : (typeFilter as AlertType), gymId: gymFilter === 'all' ? undefined : gymFilter, resolved: resolvedFilter === 'all' ? undefined : (resolvedFilter as AdminGymHealthAlertResolution) };
   const alertsQuery = useQuery({
-    queryKey: ['admin', 'gym-health-alerts', 'alerts'],
-    queryFn: () => gymHealthAlertsApi.fetchAlerts().then((r) => r.data || []),
+    queryKey: ['admin', 'gym-health-alerts', 'alerts', alertParams],
+    queryFn: () => gymHealthAlertsApi.fetchAlerts(alertParams).then((r) => r),
     staleTime: 1000 * 60 * 2,
     refetchInterval: 60000,
   });
@@ -42,19 +45,9 @@ export function useAdminGymHealthAlertsLogic() {
     staleTime: 1000 * 60 * 5,
   });
 
-  const alerts = alertsQuery.data ?? [];
+  const alerts = alertsQuery.data?.data ?? [];
   const status = alertsQuery.status;
-
-  const filtered = alerts.filter((a) => {
-    const matchSeverity = severityFilter === 'all' || a.severity === severityFilter;
-    const matchType = typeFilter === 'all' || a.alertType === typeFilter;
-    const matchGym = gymFilter === 'all' || a.gymId === gymFilter;
-    const matchResolved = resolvedFilter === 'all' || (resolvedFilter === 'active' ? !a.isResolved : a.isResolved);
-    return matchSeverity && matchType && matchGym && matchResolved;
-  });
-
-  const totalPages = Math.max(1, Math.ceil(filtered.length / GYM_HEALTH_ITEMS_PER_PAGE));
-  const paginated = filtered.slice((currentPage - 1) * GYM_HEALTH_ITEMS_PER_PAGE, currentPage * GYM_HEALTH_ITEMS_PER_PAGE);
+  const totalItems = alertsQuery.data?.meta?.total ?? alerts.length;
 
   const resolveMutation = useMutation({
     mutationFn: (id: string) => gymHealthAlertsApi.resolveAlert(id),
@@ -78,13 +71,13 @@ export function useAdminGymHealthAlertsLogic() {
   }, [confirm, dismissMutation]);
 
   return {
-    alerts: paginated, allAlerts: filtered, status, kpis,
+    alerts, allAlerts: alerts, status, kpis,
     severityFilter, setSeverityFilter,
     typeFilter, setTypeFilter,
     gymFilter, setGymFilter,
     resolvedFilter, setResolvedFilter,
     currentPage, setCurrentPage,
-    totalPages, totalItems: filtered.length,
+    totalPages: Math.max(1, Math.ceil(totalItems / GYM_HEALTH_ITEMS_PER_PAGE)), totalItems,
     resolveAlert, dismissAlert,
   };
 }

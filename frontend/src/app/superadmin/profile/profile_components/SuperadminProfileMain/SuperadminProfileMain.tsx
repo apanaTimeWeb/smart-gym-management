@@ -26,7 +26,7 @@ export default function SuperadminProfileMain() {
     }
     return (<div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-foreground">My Profile</h1>
+        <h1 className="text-2xl font-bold text-primary">My Profile</h1>
         <p className="text-secondary mt-1 text-sm">
           Manage your personal information and account security settings.
         </p>
@@ -39,12 +39,12 @@ export default function SuperadminProfileMain() {
         </div>
 
         {/* Tabbed Forms */}
-        <div className="lg:col-span-3 bg-card border border-border rounded-xl shadow-sm overflow-hidden">
+        <div className="lg:col-span-3 bg-card border border-border rounded-xl shadow-card overflow-hidden">
           {/* Tab Bar */}
           <div className="flex border-b border-border">
             {TABS.map((tab) => (<button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`px-6 py-3.5 text-sm font-medium motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset ${activeTab === tab.id
                 ? 'text-primary border-b-2 border-primary'
-                : 'text-secondary hover:text-foreground'}`}>
+                : 'text-secondary hover:text-primary'}`}>
                 {tab.label}
               </button>))}
           </div>

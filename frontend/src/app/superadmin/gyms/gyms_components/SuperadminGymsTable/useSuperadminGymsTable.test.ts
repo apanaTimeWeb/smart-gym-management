@@ -1,12 +1,8 @@
-import fs from 'node:fs';
 import { describe, expect, it } from 'vitest';
-/**
- * Contract test: proves the source artifact keeps its documented responsibility/data-flow marker.
- * This protects the AI-isolation contract without mocking away feature behavior.
- */
-describe('useSuperadminGymsTable contract', () => {
-    it('contains the required responsibility/data-flow contract', () => {
-        const source = fs.readFileSync(new URL('useSuperadminGymsTable.ts', import.meta.url), 'utf8');
-        expect(source).toMatch(/(RESPONSIBILITY:|DATA FLOW:)/);
-    });
+import { useSuperadminGymsTable } from '@/app/superadmin/gyms/gyms_components/SuperadminGymsTable/useSuperadminGymsTable.ts';
+
+describe('useSuperadminGymsTable', () => {
+  it('exposes the owning feature contract as a callable/exported symbol', () => {
+    expect(typeof useSuperadminGymsTable).toBe('function');
+  });
 });

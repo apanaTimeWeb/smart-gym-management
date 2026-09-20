@@ -4,12 +4,13 @@
 
 import { useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { adminToast } from '@/app/admin/admin_components/AdminFeedback/AdminToastService';
+import { adminToast } from '@/app/admin/admin_layout/AdminFeedback/AdminToastService';
 import { permissionsApi } from '@/app/admin/permissions/permissions_api/AdminPermissionsApi';
-import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/useAdminConfirm';
+import { useAdminConfirm } from '@/app/admin/admin_layout/AdminFeedback/useAdminConfirm';
 import { useAdminPermissionsStore } from '@/app/admin/permissions/permissions_store/useAdminPermissionsStore';
 import type { RolePermissions, GymPermissionOverride, PermissionsData, RoleType } from '@/app/admin/permissions/permissions_types/AdminPermissionsTypes';
 
+/** Coordinates PermissionsLogic state, data flow, and feature behavior. */
 export function useAdminPermissionsLogic() {
   const qc = useQueryClient();
   const { confirm } = useAdminConfirm();

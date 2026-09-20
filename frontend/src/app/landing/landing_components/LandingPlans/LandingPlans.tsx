@@ -14,7 +14,7 @@ export default function LandingPlans() {
     <section id="plans" className="py-24 px-4 bg-background">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <div className="inline-block text-xs font-bold tracking-widest uppercase text-warning bg-warning/10 border border-warning/20 rounded-full px-4 py-2 mb-5">
+          <div className="inline-block text-xs font-bold tracking-widest uppercase text-warning bg-warning-bg border border-warning/20 rounded-full px-4 py-2 mb-5">
             Membership Plans
           </div>
           <h2 className="text-4xl sm:text-5xl font-black text-white mb-4">
@@ -31,7 +31,7 @@ export default function LandingPlans() {
           {PLANS.map((p) => (
             <div key={p.name} className={`relative bg-card border-2 rounded-2xl p-6 hover:bg-white/10 transition-all flex flex-col ${p.color} ${p.badge ? 'transform lg:-translate-y-4 shadow-2xl' : ''}`}>
               {p.badge && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 text-xs font-bold px-4 py-1.5 rounded-full text-white whitespace-nowrap bg-warning">
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 text-xs font-bold px-4 py-1.5 rounded-full text-on-primary whitespace-nowrap bg-warning">
                   ⭐ {p.badge}
                 </div>
               )}
@@ -55,7 +55,7 @@ export default function LandingPlans() {
               </div>
               <Link
                 href={LandingUrlConfig.ANCHORS.BOOKING}
-                className={`block text-center py-3 rounded-xl text-sm font-bold transition-all hover:scale-105 ${p.badge ? 'bg-primary text-white hover:bg-primary-hover' : 'border border-border text-white hover:border-warning/50'}`}
+                className={`block text-center py-3 rounded-xl text-sm font-bold transition-all hover:scale-105 ${p.badge ? 'bg-primary-subtle text-white hover:bg-primary-hover' : 'border border-border text-white hover:border-warning/50'}`}
               >
                 Buy Membership
               </Link>

@@ -1,3 +1,4 @@
+// RESPONSIBILITY: Framework route artifact for ..
 export default function SuperadminLoading() {
     return (
         <main className="space-y-6 p-6" aria-busy="true">

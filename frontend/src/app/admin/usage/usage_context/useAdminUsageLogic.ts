@@ -5,11 +5,12 @@
 import { useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { adminUsageApi } from '@/app/admin/usage/usage_api/AdminUsageApi';
-import { useAdminConfirm } from '@/app/admin/admin_components/AdminFeedback/useAdminConfirm';
-import { useAdminToastStore } from '@/app/admin/admin_store/useAdminToastStore';
+import { useAdminConfirm } from '@/app/admin/admin_layout/AdminFeedback/useAdminConfirm';
+import { useAdminToastStore } from '@/app/admin/admin_layout/admin_store/useAdminToastStore';
 import { PLAN_TIERS, USAGE_WARNING_THRESHOLD, USAGE_CRITICAL_THRESHOLD } from '@/app/admin/usage/usage_utils/AdminUsageSharedConstants';
 import type { AdminUsageData, AdminUsageMetric } from '@/app/admin/usage/usage_types/AdminUsageTypes';
 
+/** Coordinates UsageLogic state, data flow, and feature behavior. */
 export function useAdminUsageLogic() {
   const query = useQuery({
     queryKey: ['admin', 'usage', 'current'],
@@ -58,9 +59,9 @@ export function useAdminUsageLogic() {
     setPendingUpgradePlan(planName);
     try {
       const response = await upgradeMutation.mutateAsync(planName);
-      showToast(response.message, 'success');
+      showToast(response.message, 'success', `usage-upgrade-success-${planName}`);
     } catch (error) {
-      showToast(error instanceof Error ? error.message : 'Unable to send upgrade request.', 'error');
+      showToast(error instanceof Error ? error.message : 'Unable to send upgrade request.', 'error', `usage-upgrade-error-${planName}`);
     }
   };
 

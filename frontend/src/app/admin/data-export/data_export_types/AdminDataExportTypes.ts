@@ -5,6 +5,7 @@ export type ExportDataType = 'members' | 'payments' | 'attendance' | 'staff' | '
 export type ExportStatus = 'completed' | 'processing' | 'failed';
 export type DataExportSortKey = 'dataType' | 'format' | 'dateFrom' | 'rowCount' | 'fileSizeKb' | 'status' | 'createdAt';
 export type DataExportSortDirection = 'asc' | 'desc';
+export type AdminDataExportFormStatus = 'pending' | 'error' | 'success';
 
 export interface ExportJob {
   id: string;
@@ -47,7 +48,7 @@ export interface AdminDataExportQueryParams {
 
 export interface AdminDataExportHistoryProps {
   jobs: ExportJob[];
-  status: 'pending' | 'error' | 'success';
+  status: AdminDataExportFormStatus;
   statusFilter: ExportStatus | 'all';
   setStatusFilter: (value: ExportStatus | 'all') => void;
   currentPage: number;

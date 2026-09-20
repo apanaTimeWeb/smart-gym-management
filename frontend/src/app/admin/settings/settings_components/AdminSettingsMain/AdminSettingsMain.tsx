@@ -6,7 +6,7 @@ import AdminSettingsBanner from '@/app/admin/settings/settings_components/AdminS
 
 export default function AdminSettingsMain() {
   return (
-    <div className="min-h-full pb-10 settings-module bg-background text-foreground">
+    <div className="min-h-full pb-10 settings-module bg-page text-primary">
       <div className="p-6">
         <AdminSettingsContent />
         <AdminSettingsBanner />

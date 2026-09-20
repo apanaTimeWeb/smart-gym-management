@@ -1,40 +1,26 @@
-'use client';
 // RESPONSIBILITY: Renders the modal form for creating or editing an expense.
-import { useEffect } from 'react';
-import { useExpensesContext } from '@/app/manager/expenses/expenses_context/ManagerExpensesContext';
-import { ExpenseSchema, EXPENSE_CATEGORIES, EXPENSE_STATUS_LABELS, type ExpenseFormValues } from '@/app/manager/expenses/expenses_utils/ManagerExpensesSharedConstants';
-import { useManagerUnsavedChangesGuard } from '@/app/manager/manager_utils/ManagerUnsavedChangesGuard';
+'use client';
 import { X, Save } from 'lucide-react';
-import { useForm, Controller } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
+import { Controller } from 'react-hook-form';
+import { useManagerExpensesForm } from '@/app/manager/expenses/expenses_hooks/ManagerUseManagerExpensesForm';
+import { EXPENSE_CATEGORIES, EXPENSE_STATUS_LABELS, MANAGER_EXPENSE_MAX_AMOUNT_MAJOR_UNITS } from '@/app/manager/expenses/expenses_utils/ManagerExpensesSharedConstants';
+import ManagerSearchableDropdown from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
+
 
 export default function ManagerExpensesModal() {
-  const { showModal, setShowModal, editId, editData, saveExpense, saving } = useExpensesContext();
+  const { showModal, editId, saving, form, handleClose, submit } = useManagerExpensesForm();
+  const { register, control, formState: { errors } } = form;
 
-  const { register, handleSubmit, reset, control, formState: { errors, isDirty } } = useForm<ExpenseFormValues>({
-    resolver: zodResolver(ExpenseSchema),
-    defaultValues: editData || { status: 'PAID', date: new Date().toISOString().split('T')[0] || '' },
-  });
-
-  useManagerUnsavedChangesGuard(isDirty && showModal);
-
-  useEffect(() => {
-    if (showModal && editData) reset(editData);
-  }, [showModal, editData, reset]);
-
-  const onSubmit = (data: ExpenseFormValues) => saveExpense(data);
-  
   if (!showModal) return null;
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-foreground/60">
-      <div className="bg-card rounded-2xl shadow-xl w-full max-w-md overflow-visible border border-border max-h-full flex flex-col">
-        <div className="sticky top-0 bg-card px-6 py-4 border-b border-border flex items-center justify-between z-10 rounded-t-2xl">
+    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-overlay-backdrop">
+      <div className="bg-overlay rounded-2xl shadow-dialog w-full max-w-md overflow-visible border border-border max-h-full flex flex-col">
+        <div className="sticky top-0 bg-overlay px-6 py-4 border-b border-border flex items-center justify-between z-10 rounded-t-2xl">
           <h3 className="text-lg font-bold text-primary">{editId ? 'Edit Expense' : 'Add Expense'}</h3>
           <button
             type="button"
-            onClick={() => setShowModal(false)}
+            onClick={handleClose}
             className="p-2 rounded-lg motion-safe:transition-colors hover:bg-primary-subtle text-secondary"
             aria-label="Close modal"
           >
@@ -42,7 +28,7 @@ export default function ManagerExpensesModal() {
           </button>
         </div>
         <div className="overflow-y-auto flex-1">
-          <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-4 pb-32">
+          <form onSubmit={submit} className="p-6 space-y-4 pb-32">
             <div>
               <label className="block text-sm font-medium text-secondary mb-1">Title</label>
               <input
@@ -62,7 +48,7 @@ export default function ManagerExpensesModal() {
                 name="category"
                 control={control}
                 render={({ field }) => (
-                  <SearchableDropdown
+                  <ManagerSearchableDropdown
                     value={field.value || ''}
                     onChange={field.onChange}
                     options={EXPENSE_CATEGORIES.map(c => ({ label: c, value: c }))}
@@ -78,6 +64,8 @@ export default function ManagerExpensesModal() {
                 <label className="block text-sm font-medium text-secondary mb-1">Amount (₹)</label>
                 <input
                   type="number"
+                  min="0"
+                  max={MANAGER_EXPENSE_MAX_AMOUNT_MAJOR_UNITS}
                   step="0.01"
                   placeholder="0.00"
                   {...register('amount', { valueAsNumber: true })}
@@ -150,19 +138,19 @@ export default function ManagerExpensesModal() {
             <div className="flex gap-3 pt-2">
               <button
                 type="button"
-                onClick={() => setShowModal(false)}
-                className="flex-1 py-2.5 border border-border rounded-xl text-sm font-medium text-primary hover:bg-primary-subtle motion-safe:transition-all duration-200 active:scale-95"
+                onClick={handleClose}
+                className="flex-1 py-2.5 border border-border rounded-xl text-sm font-medium text-primary hover:bg-primary-subtle motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={saving}
-                className="flex-1 py-2.5 rounded-xl text-sm font-bold bg-primary text-primary-foreground flex items-center justify-center gap-2 disabled:opacity-70 hover:bg-primary-hover motion-safe:transition-all duration-200 active:scale-95"
+                className="min-w-32 flex-1 py-2.5 rounded-xl text-sm font-bold bg-primary text-on-primary flex items-center justify-center gap-2 disabled:opacity-70 hover:bg-primary-hover motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95"
               >
                 {saving
-                  ? <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full motion-safe:animate-spin" />
-                  : <><Save size={15} />{editId ? 'Update' : 'Save Expense'}</>
+                  ? <div className="w-4 h-4 border-2 border-border border-t-on-primary rounded-full motion-safe:animate-spin" />
+                  : <><Save size={18} />{editId ? 'Update' : 'Save Expense'}</>
                 }
               </button>
             </div>

@@ -8,11 +8,17 @@ Manager Sales is the membership-sales and collections reporting workspace. Manag
 |---|---|---|
 | `sales_api/` | Feature-owned responsibility for the sales module. | `ManagerSalesApi.ts; ManagerSalesServerApi.ts; ManagerUseManagerSalesQueries.ts` |
 | `sales_components/` | Feature-owned responsibility for the sales module. | `—` |
-| `sales_context/` | Feature-owned responsibility for the sales module. | `ManagerSalesContext.tsx; ManagerUseManagerSalesLogic.ts` |
+| `sales_hooks/` | Feature-owned responsibility for the sales module. | `ManagerUseManagerSalesLogic.ts; ManagerUseManagerSalesLogic.ts` |
 | `sales_fixtures/` | Feature-owned responsibility for the sales module. | `ManagerSalesMockData.ts` |
 | `sales_mocks/` | Feature-owned responsibility for the sales module. | `—` |
 | `sales_types/` | Feature-owned responsibility for the sales module. | `ManagerSalesMemberSnapshot.ts; ManagerSalesSchema.ts; ManagerSalesTypes.ts` |
 | `sales_utils/` | Feature-owned responsibility for the sales module. | `ManagerSalesSharedConstants.ts` |
+
+## Approved External Dependencies
+
+- Global framework/application infrastructure documented by the architecture standard may be used when required.
+- Approved zero-business UI primitives may be imported from Manager application infrastructure.
+- Sibling feature business logic, state, API services, fixtures, and tests are not dependencies.
 
 ## Feature Inventory
 | Feature | Route | What the User Can Do | Main API Calls | Status |
@@ -30,7 +36,7 @@ Manager Sales is the membership-sales and collections reporting workspace. Manag
 4. The selected tab renders only its response contract.
 
 ## Data and State Architecture
-TanStack Query owns sales server/API data. UI-only filters, tabs, selections, and draft state remain local state or module-scoped Zustand where shared. React Context is limited to stable cross-tree concerns and does not become the source of truth for API data. Query keys are module-prefixed.
+TanStack Query owns sales server/API data. UI-only filters, tabs, selections, and draft state remain local state or module-scoped Zustand where shared. module-local state/query layer is limited to stable cross-tree concerns and does not become the source of truth for API data. Query keys are module-prefixed.
 
 ## API Contract
 | Function | Method | Endpoint | Request | Response `data` type |
@@ -81,15 +87,15 @@ TanStack Query owns sales server/API data. UI-only filters, tabs, selections, an
 ## Component Responsibility Map
 | Component File | Responsibility |
 |---|---|
-| `sales/sales_components/ManagerSalesAllMemberships/ManagerSalesAllMemberships.tsx` | Renders the paginated table of all gym memberships with status filter tabs. Receives data via ManagerSalesContext. No API calls. |
+| `sales/sales_components/ManagerSalesAllMemberships/ManagerSalesAllMemberships.tsx` | Renders the paginated table of all gym memberships with status filter tabs. Receives data via ManagerUseManagerSalesLogic. No API calls. |
 | `sales/sales_components/ManagerSalesEmptyState/ManagerSalesEmptyState.tsx` | Renders the empty state UI for Sales module lists. Receives a message and optional subtext via props. No API calls. |
-| `sales/sales_components/ManagerSalesMain/ManagerSalesMain.tsx` | Provides the implementation for ManagerSalesMain.tsx functionality within its module. |
+| `sales/sales_components/ManagerSalesMain/ManagerSalesMain.tsx` | Framework entry component for the Sales module; delegates feature behavior and UI composition to `ManagerSalesContent`. |
 | `sales/sales_components/ManagerSalesMembershipReport/ManagerSalesMembershipReport.tsx` | Provides the implementation for ManagerSalesMembershipReport.tsx functionality within its module. |
 | `sales/sales_components/ManagerSalesOverview/ManagerSalesOverview.tsx` | Renders the Manager SalesOverview presentation layer for the Manager module. |
-| `sales/sales_components/ManagerSalesPendingPayments/ManagerSalesPendingPayments.tsx` | Renders the list of members with pending payments, including skeleton loader, pagination, and overdue details. Receives data via ManagerSalesContext. |
+| `sales/sales_components/ManagerSalesPendingPayments/ManagerSalesPendingPayments.tsx` | Renders the list of members with pending payments, including skeleton loader, pagination, and overdue details. Receives data via ManagerUseManagerSalesLogic. |
 | `sales/sales_components/ManagerSalesTabs/ManagerSalesTabs.tsx` | Provides the implementation for ManagerSalesTabs.tsx functionality within its module. |
 | `sales/sales_components/ManagerSalesToolbar/ManagerSalesToolbar.tsx` | Provides the implementation for ManagerSalesToolbar.tsx functionality within its module. |
-| `sales/sales_context/ManagerSalesContext.tsx` | Provides sales module state (revenue data, membership reports, pending payments) to all Sales components via React Context. Sync UI state only — async data must migrate to Zustand (see ManagerUseManagerSalesLogic.ts). |
+| `sales/sales_hooks/ManagerUseManagerSalesLogic.ts` | Provides sales module state (revenue data, membership reports, pending payments) to all Sales components via module-local state/query layer. Sync UI state only — async data must migrate to Zustand (see ManagerUseManagerSalesLogic.ts). |
 
 ## Rule Compliance Checklist
 - [x] Module-owned API, types/schemas, fixtures, handlers, tests, and feature documentation are scoped to this module.

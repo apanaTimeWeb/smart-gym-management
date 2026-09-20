@@ -2,7 +2,7 @@
 // RESPONSIBILITY: Provides the implementation for AdminSalesTabs.tsx functionality within its module.
 
 import { useAdminSalesLogic } from '@/app/admin/sales/sales_context/useAdminSalesLogic';
-import { SALES_TABS } from '@/app/admin/sales/sales_utils/AdminSalesSharedConstants';
+import { SALES_TABS } from '@/app/admin/sales/sales_utils/AdminSalesUiConstants';
 
 export default function AdminSalesTabs() {
  const { tab, setTab } = useAdminSalesLogic();
@@ -13,10 +13,10 @@ export default function AdminSalesTabs() {
  <button 
  key={t} 
  onClick={() => setTab(t)}
- className={`px-5 py-3.5 text-sm font-medium motion-safe:transition-colors border-b-2 whitespace-nowrap ${
+ className={`focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page px-5 py-3.5 text-sm font-medium motion-safe:transition-colors border-b-2 whitespace-nowrap ${
  tab === t 
- ? 'text-primary bg-primary/5 border-primary' 
- : 'border-transparent text-secondary hover:text-foreground'
+ ? 'text-primary bg-surface-highlight border-primary' 
+ : 'border-transparent text-secondary hover:text-primary'
  }`}
  >
  {t}

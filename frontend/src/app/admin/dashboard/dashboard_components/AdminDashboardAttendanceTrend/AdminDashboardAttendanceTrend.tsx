@@ -1,8 +1,10 @@
 "use client";
+import { format } from 'date-fns';
+import { formatNumber } from '@/lib/formatters';
 // RESPONSIBILITY: Renders the cross-branch daily attendance trend chart using ApexCharts.
 
 import dynamic from 'next/dynamic';
-import { ADMIN_CHART_THEME } from '@/app/admin/admin_utils/AdminChartThemeTokens';
+import { ADMIN_CHART_THEME } from '@/app/admin/admin_layout/admin_utils/AdminChartThemeTokens';
 import { CalendarCheck } from 'lucide-react';
 import { useAdminDashboardLogic } from '@/app/admin/dashboard/dashboard_context/useAdminDashboardLogic';
 
@@ -11,7 +13,7 @@ const ReactApexChart = dynamic(() => import('react-apexcharts'), { ssr: false })
 export default function AdminDashboardAttendanceTrend() {
   const { stats } = useAdminDashboardLogic();
   const attendance = stats?.attendanceTrend ?? [];
-  const labels = attendance.map((item) => new Date(item.date).toLocaleDateString('en-IN', { weekday: 'short' }));
+  const labels = attendance.map((item) => format(new Date(item.date), 'EEE'));
   const values = attendance.map((item) => item.count);
   const options: ApexCharts.ApexOptions = {
     chart: {
@@ -55,19 +57,19 @@ export default function AdminDashboardAttendanceTrend() {
   const avg = values.length ? Math.round(total / values.length) : 0;
 
   return (
-    <div className="bg-card/60 backdrop-blur-xl border border-border rounded-2xl shadow-lg p-6">
+    <div className="bg-card backdrop-blur-xl border border-border rounded-2xl shadow-card p-6">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 bg-info/20 rounded-xl">
+          <div className="p-2.5 bg-info-bg rounded-xl">
             <CalendarCheck size={18} strokeWidth={2} className="text-info" />
           </div>
           <div>
-            <h2 className="text-base font-bold text-foreground">Weekly Attendance</h2>
+            <h2 className="text-base font-bold text-primary">Weekly Attendance</h2>
             <p className="text-xs text-secondary">Cross-branch daily check-ins</p>
           </div>
         </div>
         <div className="text-right">
-          <p className="text-lg font-bold text-foreground">{total.toLocaleString('en-IN')}</p>
+          <p className="text-lg font-bold text-primary">{formatNumber(total)}</p>
           <p className="text-xs text-secondary">Avg {avg}/day</p>
         </div>
       </div>

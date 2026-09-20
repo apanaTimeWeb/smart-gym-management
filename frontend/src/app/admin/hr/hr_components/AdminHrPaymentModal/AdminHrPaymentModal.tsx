@@ -27,17 +27,17 @@ export default function AdminHrPaymentModal() {
   };
 
   return (
-    <div data-admin-dialog="true" role="dialog" aria-modal="true" tabIndex={-1} className="fixed inset-0 z-40 flex items-center justify-center bg-overlay backdrop-blur-sm p-4 motion-safe:animate-in motion-safe:fade-in motion-safe:duration-200">
-      <div className="bg-card/95 backdrop-blur-xl rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden motion-safe:animate-in motion-safe:zoom-in-95 motion-safe:duration-200 border border-border/5">
+    <div data-admin-dialog="true" role="dialog" aria-modal="true" tabIndex={-1} className="fixed inset-0 z-40 flex items-center justify-center bg-overlay backdrop-blur-sm p-4 motion-safe:animate-in motion-safe:fade-in motion-safe:duration-base">
+      <div className="bg-card backdrop-blur-xl rounded-2xl shadow-dialog w-full max-w-sm overflow-hidden motion-safe:animate-in motion-safe:zoom-in-95 motion-safe:duration-base border border-border">
         <div className="p-5 flex justify-between items-center border-b border-border">
-          <h3 className="font-bold text-foreground">Pay Salary</h3>
-          <button type="button" onClick={() => setPaymentModal(null)} className="p-1.5 text-secondary hover:text-foreground hover:bg-card/10 rounded-md motion-safe:transition-colors"><X size={18} /></button>
+          <h3 className="font-bold text-primary">Pay Salary</h3>
+          <button type="button" onClick={() => setPaymentModal(null)} className="p-1.5 text-secondary hover:text-primary hover:bg-surface-hover rounded-md motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"><X size={18} /></button>
         </div>
         
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          <div className="p-4 rounded-xl bg-card/5 border border-border/5 mb-2">
+          <div className="p-4 rounded-xl bg-surface-hover border border-border mb-2">
             <p className="text-sm text-secondary mb-1">
-              Staff: <strong className="text-foreground">{paymentModal.staffName}</strong>
+              Staff: <strong className="text-primary">{paymentModal.staffName}</strong>
             </p>
             <p className="text-sm text-secondary">
               Pending: <strong className="text-danger font-bold text-lg">{formatCurrency(paymentModal.pendingAmount)}</strong>
@@ -50,7 +50,7 @@ export default function AdminHrPaymentModal() {
               <button 
                 type="button" 
                 onClick={() => setAmount(paymentModal.pendingAmount)}
-                className="text-xs font-bold text-primary hover:text-primary/80 motion-safe:transition-colors"
+                className="text-xs font-bold text-primary hover:text-primary motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
               >
                 Pay Full
               </button>
@@ -69,7 +69,7 @@ export default function AdminHrPaymentModal() {
                   const val = e.target.value;
                   setAmount(val === '' ? '' : Number(val));
                 }}
-                className="w-full pl-9 pr-4 py-2.5 bg-input/50 border border-border rounded-xl text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-foreground motion-safe:transition-all"
+                className="w-full pl-9 pr-4 py-2.5 bg-input border border-border rounded-xl text-sm focus-visible:outline-none focus-visible:border-primary focus-visible:ring-1 focus-visible:ring-primary text-primary motion-safe:transition-all motion-safe:duration-base"
               />
             </div>
           </div>
@@ -78,7 +78,7 @@ export default function AdminHrPaymentModal() {
             <button
               type="submit"
               disabled={isSubmitting || Number(amount) <= 0 || Number(amount) > paymentModal.pendingAmount}
-              className="w-full py-2.5 bg-primary text-primary-foreground text-sm font-bold rounded-xl hover:bg-primary/90 motion-safe:transition-all motion-safe:hover:scale-105 motion-safe:active:scale-95 shadow-lg disabled:opacity-50 disabled:hover:scale-100 disabled:shadow-none"
+              className="w-full py-2.5 bg-primary text-on-primary text-sm font-bold rounded-xl hover:bg-primary-hover motion-safe:transition-all motion-safe:hover:scale-105 motion-safe:active:scale-95 shadow-dialog disabled:opacity-50 disabled:hover:scale-100 disabled:shadow-none motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
             >
               {isSubmitting ? 'Recording...' : 'Confirm Payment'}
             </button>

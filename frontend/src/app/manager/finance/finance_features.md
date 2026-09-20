@@ -8,11 +8,17 @@ Manager Finance is the branch payment and revenue workspace. Managers can review
 |---|---|---|
 | `finance_api/` | Feature-owned responsibility for the finance module. | `ManagerFinanceApi.ts; ManagerUseManagerFinanceQueries.ts` |
 | `finance_components/` | Feature-owned responsibility for the finance module. | `—` |
-| `finance_context/` | Feature-owned responsibility for the finance module. | `ManagerFinanceContext.tsx` |
+| `finance_hooks/` | Feature-owned responsibility for the finance module. | `ManagerUseManagerFinanceLogic.ts` |
 | `finance_fixtures/` | Feature-owned responsibility for the finance module. | `ManagerFinanceMockData.ts` |
 | `finance_mocks/` | Feature-owned responsibility for the finance module. | `—` |
 | `finance_types/` | Feature-owned responsibility for the finance module. | `ManagerFinanceSchema.ts; ManagerFinanceTypes.ts` |
 | `finance_utils/` | Feature-owned responsibility for the finance module. | `ManagerFinanceSharedConstants.ts` |
+
+## Approved External Dependencies
+
+- Global framework/application infrastructure documented by the architecture standard may be used when required.
+- Approved zero-business UI primitives may be imported from Manager application infrastructure.
+- Sibling feature business logic, state, API services, fixtures, and tests are not dependencies.
 
 ## Feature Inventory
 | Feature | Route | What the User Can Do | Main API Calls | Status |
@@ -35,7 +41,7 @@ Manager Finance is the branch payment and revenue workspace. Managers can review
 3. The response provides the report URL/file contract; the UI does not fabricate an export payload.
 
 ## Data and State Architecture
-TanStack Query owns finance server/API data. UI-only filters, tabs, selections, and draft state remain local state or module-scoped Zustand where shared. React Context is limited to stable cross-tree concerns and does not become the source of truth for API data. Query keys are module-prefixed.
+TanStack Query owns finance server/API data. UI-only filters, tabs, selections, and draft state remain local state or module-scoped Zustand where shared. module-local state/query layer is limited to stable cross-tree concerns and does not become the source of truth for API data. Query keys are module-prefixed.
 
 ## API Contract
 | Function | Method | Endpoint | Request | Response `data` type |
@@ -89,10 +95,10 @@ TanStack Query owns finance server/API data. UI-only filters, tabs, selections, 
 |---|---|
 | `finance/finance_components/ManagerFinanceMain/ManagerFinanceFilters.tsx` | Renders the Manager FinanceFilters presentation layer for the Manager module. |
 | `finance/finance_components/ManagerFinanceMain/ManagerFinanceKpiCards.tsx` | Renders the Manager FinanceKpiCards presentation layer for the Manager module. |
-| `finance/finance_components/ManagerFinanceMain/ManagerFinanceMain.tsx` | Orchestrator for the Finance module — KPIs, tabbed Payments table + Summary chart. |
+| `finance/finance_components/ManagerFinanceMain/ManagerFinanceMain.tsx` | Framework entry component for the Finance module; delegates feature behavior and UI composition to `ManagerFinanceContent`. |
 | `finance/finance_components/ManagerFinanceMain/ManagerFinanceRevenueChart.tsx` | Renders the Manager FinanceRevenueChart presentation layer for the Manager module. |
 | `finance/finance_components/ManagerFinanceMain/ManagerFinanceTable.tsx` | Renders the Manager FinanceTable presentation layer for the Manager module. |
-| `finance/finance_context/ManagerFinanceContext.tsx` | React Context — bridges TanStack Query with UI state (filters, tab, pagination). |
+| `finance/finance_hooks/ManagerUseManagerFinanceLogic.ts` | module-local state/query layer — bridges TanStack Query with UI state (filters, tab, pagination). |
 
 ## Rule Compliance Checklist
 - [x] Module-owned API, types/schemas, fixtures, handlers, tests, and feature documentation are scoped to this module.

@@ -1,39 +1,53 @@
-# Manager Communications Theme Contract
+# Manager Communications Module Theme Contract
 
-This contract defines the semantic CSS tokens required for the **Manager Communications** module. All components within this module must adhere exclusively to these tokens. Arbitrary values (`bg-blue-500`, `text-[#ff0000]`, `bg-[var(--danger)]`) are strictly prohibited.
+This contract belongs only to `src/app/manager/communications`. It records the exact global semantic theme variables consumed by the current implementation. The global design system remains the visual source of truth.
 
-## Core Backgrounds
-* `--bg-page` - Primary application background.
-* `--bg-card` - Background for modules, modals, and tables (e.g. `ManagerCommunicationsMain`, `ManagerCommunicationsHistory`).
-* `--bg-input` - Background for input fields, textareas, and dropdowns.
-* `--bg-muted` - Background for muted/inactive UI elements.
+## Consumed Global Semantic Tokens
 
-## Borders
-* `--border` - Default border for cards, table rows, and modals.
-* `--border-danger` - Validation error state border (e.g. required field in forms).
+| CSS Variable | Current Usage |
+| --- | --- |
+| `--bg-card` | card/panel surface |
+| `--bg-input` | input surface |
+| `--bg-overlay` | dialog/drawer surface |
+| `--bg-page` | page surface |
+| `--border` | standard borders/dividers |
+| `--border-focus` | focused border |
+| `--danger` | solid danger surface |
+| `--danger-bg` | subtle danger surface |
+| `--danger-text` | danger text |
+| `--focus-ring` | keyboard focus ring |
+| `--info` | solid info surface |
+| `--info-bg` | subtle info surface |
+| `--info-text` | info text |
+| `--primary` | primary brand/active controls |
+| `--primary-hover` | primary hover state |
+| `--primary-subtle` | subtle primary surfaces |
+| `--shadow-card` | card elevation |
+| `--shadow-dialog` | dialog elevation |
+| `--skeleton-base` | skeleton base |
+| `--skeleton-highlight` | skeleton highlight |
+| `--success` | solid success surface |
+| `--success-bg` | subtle success surface |
+| `--success-text` | success text |
+| `--text-disabled` | disabled text |
+| `--text-on-danger` | text on solid danger |
+| `--text-on-info` | text on solid info |
+| `--text-on-primary` | text on solid primary |
+| `--text-on-success` | text on solid success |
+| `--text-primary` | primary text |
+| `--text-secondary` | secondary text/labels |
+| `--warning` | solid warning surface |
+| `--warning-bg` | subtle warning surface |
+| `--warning-text` | warning text |
 
-## Text Colors
-* `--text-primary` - Default high-contrast text.
-* `--text-secondary` - Subdued text (e.g. descriptions, timestamps).
-* `--text-foreground` - Primary reading text.
+## Binding Rules
 
-## Semantic Status / KPIs
-The communications module requires specific semantic colors for representing campaign status and KPI indicators:
+- No raw hex colors, arbitrary Tailwind color values, or raw RGBA colors may be introduced into module JSX.
+- Semantic background opacity modifiers such as `bg-success/10` and `bg-primary/20` are forbidden.
+- Solid semantic backgrounds require the appropriate documented on-color; otherwise use the subtle `*-bg` variant.
+- Feature-specific business status mappings remain local to this feature.
+- No feature-local CSS variable is defined by this module unless explicitly documented here.
 
-### Backgrounds
-* `--info-bg` - Background for active states or informational icons.
-* `--warning-bg` - Background for partial successes or warning states.
-* `--success-bg` - Background for sent statuses or successful outcomes.
-* `--danger-bg` - Background for failed statuses or alerts.
-* `--primary-subtle` - Background for hover states on rows and buttons.
+## Portability
 
-### Text
-* `--text-info` - Text for informational content.
-* `--text-warning` - Text for warnings or partial success.
-* `--text-success` - Text for successful sent messages.
-* `--text-danger` - Text for failed messages or destructive actions.
-* `--text-primary` (brand) - Brand color for action buttons (e.g., Send Campaign, Switch Tabs).
-
-## Motion & Skeleton
-* `motion-safe:animate-pulse` - Wrapper for loading skeletons.
-* `--skeleton-base` / `--skeleton-highlight` - Default loading skeleton colors mapped to `bg-muted`.
+When this feature is copied to another compatible application, define the listed semantic variables through that application's canonical global theme stylesheet and preserve the same semantic meanings.

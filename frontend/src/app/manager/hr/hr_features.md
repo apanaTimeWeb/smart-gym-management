@@ -8,11 +8,17 @@ Manager HR is the branch staff and payroll workspace. Managers can search and ma
 |---|---|---|
 | `hr_api/` | Feature-owned responsibility for the hr module. | `ManagerHrApi.ts; ManagerHrServerApi.ts; ManagerUseManagerHrLedgerQuery.ts; ManagerUseManagerHrQueries.ts; ManagerUseManagerHrStaffAttendanceQuery.ts` |
 | `hr_components/` | Feature-owned responsibility for the hr module. | `—` |
-| `hr_context/` | Feature-owned responsibility for the hr module. | `ManagerHrContext.tsx; ManagerUseManagerHrLogic.ts; ManagerUseManagerHrMutations.ts; ManagerUseManagerHrPayrollMutations.ts; ManagerUseManagerHrStaffMutations.ts; ManagerUseManagerHrUIState.ts` |
+| `hr_hooks/` | Feature-owned responsibility for the hr module. | `ManagerUseManagerHrLogic.ts; ManagerUseManagerHrLogic.ts; ManagerUseManagerHrMutations.ts; ManagerUseManagerHrPayrollMutations.ts; ManagerUseManagerHrStaffMutations.ts; ManagerUseManagerHrUIState.ts` |
 | `hr_fixtures/` | Feature-owned responsibility for the hr module. | `ManagerHrMockData.ts` |
 | `hr_mocks/` | Feature-owned responsibility for the hr module. | `—` |
 | `hr_types/` | Feature-owned responsibility for the hr module. | `ManagerHrSchema.ts; ManagerHrTypes.ts` |
 | `hr_utils/` | Feature-owned responsibility for the hr module. | `ManagerHrAdvanceFormSchema.ts; ManagerHrDueFormSchema.ts; ManagerHrExportUtils.ts; ManagerHrSharedConstants.ts` |
+
+## Approved External Dependencies
+
+- Global framework/application infrastructure documented by the architecture standard may be used when required.
+- Approved zero-business UI primitives may be imported from Manager application infrastructure.
+- Sibling feature business logic, state, API services, fixtures, and tests are not dependencies.
 
 ## Feature Inventory
 | Feature | Route | What the User Can Do | Main API Calls | Status |
@@ -46,7 +52,7 @@ Manager HR is the branch staff and payroll workspace. Managers can search and ma
 4. The backend response message is shown and payroll queries are refreshed/reconciled.
 
 ## Data and State Architecture
-TanStack Query owns hr server/API data. UI-only filters, tabs, selections, and draft state remain local state or module-scoped Zustand where shared. React Context is limited to stable cross-tree concerns and does not become the source of truth for API data. Query keys are module-prefixed.
+TanStack Query owns hr server/API data. UI-only filters, tabs, selections, and draft state remain local state or module-scoped Zustand where shared. module-local state/query layer is limited to stable cross-tree concerns and does not become the source of truth for API data. Query keys are module-prefixed.
 
 ## API Contract
 | Function | Method | Endpoint | Request | Response `data` type |
@@ -122,7 +128,7 @@ TanStack Query owns hr server/API data. UI-only filters, tabs, selections, and d
 | `hr/hr_components/ManagerHrDueTable/ManagerHrDueTable.tsx` | Presents the outstanding payroll-due workflow using RHF for draft state and the HR mutation hook for server reconciliation. |
 | `hr/hr_components/ManagerHrKPIs/ManagerHrKPIs.tsx` | Renders the top KPI stat cards (total staff, active staff, payroll metrics) for the HR module. |
 | `hr/hr_components/ManagerHrLedgerTable/ManagerHrLedgerTable.tsx` | Renders the Manager HrLedgerTable presentation layer for the Manager module. |
-| `hr/hr_components/ManagerHrMain/ManagerHrMain.tsx` | Entry component for the HR module. Wraps the UI in the context provider and handles page layout. |
+| `hr/hr_components/ManagerHrMain/ManagerHrMain.tsx` | Framework entry component for the HR module; delegates feature behavior and UI composition to `ManagerHrContent`. |
 | `hr/hr_components/ManagerHrPaymentModal/ManagerHrPaymentModal.tsx` | Renders a modal to record a partial or full salary payment for staff. |
 | `hr/hr_components/ManagerHrPayrollModal/ManagerHrPayrollModal.tsx` | Form modal for creating a new payroll entry for a staff member in the HR module. |
 | `hr/hr_components/ManagerHrPayrollTable/ManagerHrPayrollTable.tsx` | Renders the payroll records table with pay status badges and mark-as-paid inline action. |
@@ -130,7 +136,7 @@ TanStack Query owns hr server/API data. UI-only filters, tabs, selections, and d
 | `hr/hr_components/ManagerHrStaffProfileModal/ManagerHrStaffProfileModal.tsx` | Renders a read-only profile modal for a staff member. |
 | `hr/hr_components/ManagerHrStaffTable/ManagerHrStaffTable.tsx` | Renders the paginated staff members table with inline row actions. |
 | `hr/hr_components/ManagerHrTabs/ManagerHrTabs.tsx` | Renders the tabbed view switching between the Staff and Payroll tables in the HR module. |
-| `hr/hr_context/ManagerHrContext.tsx` | Provides UI orchestration state to the HR module hierarchy. Async data is managed in useManagerHrLogic. |
+| `hr/hr_hooks/ManagerUseManagerHrLogic.ts` | Provides UI orchestration state to the HR module hierarchy. Async data is managed in useManagerHrLogic. |
 
 ## Rule Compliance Checklist
 - [x] Module-owned API, types/schemas, fixtures, handlers, tests, and feature documentation are scoped to this module.

@@ -8,14 +8,17 @@ import { useEffect, useMemo } from 'react';
 import debounce from 'lodash.debounce';
 import toast from 'react-hot-toast';
 import { useSuperadminGymsStore } from '@/app/superadmin/gyms/gyms_store/useSuperadminGymsStore';
-import { gymsApi } from '@/app/superadmin/gyms/superadmin_gyms_api/superadmin_gyms_api';
-import { useSuperadminUrlState } from '@/app/superadmin/superadmin_utils/useSuperadminUrlState';
+import { gymsApi } from '@/app/superadmin/gyms/gyms_api/SuperadminGymsApi';
+import { useUrlState } from '@/hooks/useUrlState';
+/** Owns URL-synchronized toolbar state and delegates export execution to the Gyms API client. */
+/** Purpose: Owns the useSuperadminGymsToolbar data/state orchestration for this Superadmin feature and exposes its typed UI-facing contract. */
 export function useSuperadminGymsToolbar() {
-    const { getParam, setParam } = useSuperadminUrlState();
+    const { getParam, setParam } = useUrlState();
     const search = getParam('search', '');
     const statusFilter = getParam('statusFilter', 'All');
     const planFilter = getParam('planFilter', 'All');
     const debouncedSearchChange = useMemo(() => debounce((value: string) => { setParam('search', value); setParam('page', '1'); }, 300), [setParam]);
+// EFFECT INTENT: synchronizes this client-side side effect with the dependency list; changes to captured values intentionally re-run it.
     useEffect(() => () => debouncedSearchChange.cancel(), [debouncedSearchChange]);
     const handleSearchChange = (value: string) => debouncedSearchChange(value);
     const setStatusFilter = (value: string) => { setParam('statusFilter', value); setParam('page', '1'); };
@@ -23,12 +26,11 @@ export function useSuperadminGymsToolbar() {
     const viewMode = useSuperadminGymsStore(state => state.viewMode);
     const setViewMode = useSuperadminGymsStore(state => state.setViewMode);
     const handleExportGyms = async () => {
-        toast.loading('Exporting gyms...', { id: 'gyms-export' });
         try {
-            const res = await gymsApi.exportGymsCSV({ search, ...(statusFilter !== 'All' ? { status: statusFilter } : {}), ...(planFilter !== 'All' ? { plan: planFilter } : {}) });
+            const res = await gymsApi.exportGymsReport({ search, ...(statusFilter !== 'All' ? { status: statusFilter } : {}), ...(planFilter !== 'All' ? { plan: planFilter } : {}) });
             if (res.data?.downloadUrl) { window.open(res.data.downloadUrl, '_blank'); toast.success(res.message, { id: 'gyms-export' }); }
             else toast.error(res.message, { id: 'gyms-export' });
-        } catch (error: unknown) { toast.error(error instanceof Error ? error.message : 'Unable to export gyms.', { id: 'gyms-export' }); }
+        } catch (error: unknown) { toast.error(error instanceof Error ? error.message : '', { id: 'gyms-export' }); }
     };
     return { search, handleSearchChange, statusFilter, setStatusFilter, planFilter, setPlanFilter, viewMode, setViewMode, handleExportGyms };
 }

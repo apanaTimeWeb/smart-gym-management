@@ -3,7 +3,7 @@ import {
   LayoutDashboard, ClipboardList, FileBarChart,
   IndianRupee, Settings, Building2, Users, ShieldAlert, Gauge, Bell,
   BarChart3, Tag, ShieldCheck, Wallet, Ban, BellRing, Download, Activity,
-  CreditCard, TrendingUp, Target, CalendarCheck
+  CreditCard, TrendingUp, Target, CalendarCheck, MessageSquare
 } from 'lucide-react';
 import { env } from '@/config/env';
 
@@ -45,6 +45,7 @@ export const ADMIN_NAV_GROUPS = [
     group: 'Communication',
     items: [
       { href: '/admin/announcements',       label: 'Announcements',    icon: BellRing },
+      { href: '/admin/campaigns',           label: 'Campaigns',        icon: MessageSquare },
     ]
   },
   {
@@ -74,17 +75,8 @@ export const GYM_DETAILS = {
   phone: env.NEXT_PUBLIC_GYM_PHONE,
 };
 
-export const ADMIN_ITEMS_PER_PAGE = 10;
-
-export const STATUS_STYLES: Record<string, string> = {
-  active: 'text-success bg-success-bg border-success/20',
-  expired: 'text-danger bg-danger-bg border-danger/20',
-  pending: 'text-warning bg-warning-bg border-warning/20',
-  frozen: 'text-info bg-info-bg border-info/20',
-};
 
 export const ADMIN_MONITORING_LOG_URL = '/admin/system/log';
 export const ADMIN_DASHBOARD_URL = '/admin/dashboard';
 
 export const ADMIN_DASHBOARD_ROUTE = '/admin/dashboard';
-export const ADMIN_MEMBERS_ROUTE = '/admin/members';

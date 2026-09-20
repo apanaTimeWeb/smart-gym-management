@@ -1,0 +1,3 @@
+// RESPONSIBILITY: Owns default state for the aggregated Manager Settings form.
+import type { ManagerAllSettings } from '@/app/manager/settings/settings_types/ManagerSettingsTypes';
+export const EMPTY_MANAGER_SETTINGS: ManagerAllSettings = { preferences: { language: 'en-US', timezone: 'Asia/Kolkata', pushNotificationsEnabled: true, emailDailyReports: true }, gymProfile: { gymName: '', address: '', city: '', state: '', pincode: '', phone: '', email: '' }, operatingHours: [], membershipSettings: { gracePeriodDays: 0, autoSuspendOnExpiry: false, autoSuspendAfterDays: 0, allowFreeze: false, maxFreezeDaysPerYear: 0, reminderDaysBefore: 0 }, notificationTemplates: [] };

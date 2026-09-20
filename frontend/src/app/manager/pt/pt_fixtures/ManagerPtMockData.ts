@@ -6,8 +6,7 @@ export const MOCK_PT_KPIS: PtDashboardKpis = {
   totalActiveAssignments: 42,
   sessionsScheduledToday: 18,
   packagesExpiringSoon: 7,
-  monthlyPtRevenue: 245000,
-};
+  monthlyPtRevenue: 24500000 };
 
 export const MOCK_PT_PACKAGES: PtPackage[] = [
   {
@@ -15,25 +14,22 @@ export const MOCK_PT_PACKAGES: PtPackage[] = [
     name: 'Kickstarter PT',
     sessionCount: 12,
     durationDays: 30,
-    price: 12000,
-    description: '12 sessions per month. Ideal for beginners starting their fitness journey.',
-  },
+    price: 1200000,
+    description: '12 sessions per month. Ideal for beginners starting their fitness journey.' },
   {
     id: 'pkg-2',
     name: 'Transformation Elite',
     sessionCount: 24,
     durationDays: 60,
-    price: 22000,
-    description: '24 sessions across 2 months with personalized diet monitoring.',
-  },
+    price: 2200000,
+    description: '24 sessions across 2 months with personalized diet monitoring.' },
   {
     id: 'pkg-3',
     name: 'Pro Bodybuilding',
     sessionCount: 36,
     durationDays: 90,
-    price: 30000,
-    description: 'Advanced 3-month prep package for serious athletes.',
-  },
+    price: 3000000,
+    description: 'Advanced 3-month prep package for serious athletes.' },
 ];
 
 export const MOCK_PT_WORKLOAD: PtTrainerWorkload[] = [
@@ -43,32 +39,28 @@ export const MOCK_PT_WORKLOAD: PtTrainerWorkload[] = [
     activeClients: 12,
     totalSessionsConducted: 450,
     rating: 4.8,
-    status: 'Fully Booked',
-  },
+    status: 'Fully Booked' },
   {
     trainerId: 'tr-2',
     trainerName: 'Priya Sharma',
     activeClients: 8,
     totalSessionsConducted: 320,
     rating: 4.9,
-    status: 'Available',
-  },
+    status: 'Available' },
   {
     trainerId: 'tr-3',
     trainerName: 'Rahul Verma',
     activeClients: 15,
     totalSessionsConducted: 610,
     rating: 4.7,
-    status: 'Fully Booked',
-  },
+    status: 'Fully Booked' },
   {
     trainerId: 'tr-4',
     trainerName: 'Anjali Desai',
     activeClients: 5,
     totalSessionsConducted: 120,
     rating: 4.5,
-    status: 'Available',
-  },
+    status: 'Available' },
 ];
 
 export const MOCK_PT_ASSIGNMENTS: PtAssignment[] = [
@@ -87,8 +79,7 @@ export const MOCK_PT_ASSIGNMENTS: PtAssignment[] = [
     endDate: '2023-11-01',
     paymentStatus: 'PAID',
     amountPaid: 24000,
-    totalAmount: 24000,
-  },
+    totalAmount: 2400000 },
   {
     id: 'asg-2',
     memberId: 'mem-102',
@@ -104,8 +95,7 @@ export const MOCK_PT_ASSIGNMENTS: PtAssignment[] = [
     endDate: '2023-11-10',
     paymentStatus: 'PENDING',
     amountPaid: 5000,
-    totalAmount: 12000,
-  },
+    totalAmount: 1200000 },
   {
     id: 'asg-3',
     memberId: 'mem-103',
@@ -121,8 +111,7 @@ export const MOCK_PT_ASSIGNMENTS: PtAssignment[] = [
     endDate: '2023-11-15',
     paymentStatus: 'PAID',
     amountPaid: 36000,
-    totalAmount: 36000,
-  },
+    totalAmount: 3600000 },
   {
     id: 'asg-4',
     memberId: 'mem-104',
@@ -138,8 +127,7 @@ export const MOCK_PT_ASSIGNMENTS: PtAssignment[] = [
     endDate: '2023-10-20',
     paymentStatus: 'PAID',
     amountPaid: 12000,
-    totalAmount: 12000,
-  },
+    totalAmount: 1200000 },
   {
     id: 'asg-5',
     memberId: 'mem-105',
@@ -155,6 +143,5 @@ export const MOCK_PT_ASSIGNMENTS: PtAssignment[] = [
     endDate: '2023-12-01',
     paymentStatus: 'PENDING',
     amountPaid: 10000,
-    totalAmount: 24000,
-  },
+    totalAmount: 2400000 },
 ];

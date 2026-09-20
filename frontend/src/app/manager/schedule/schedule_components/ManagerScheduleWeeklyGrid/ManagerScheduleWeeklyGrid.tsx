@@ -1,15 +1,16 @@
-'use client';
 // RESPONSIBILITY: Renders the 7-day weekly schedule grid showing all trainer shifts per day column.
+'use client';
 import { Plus, Pencil, Trash2, CalendarX } from 'lucide-react';
-import { useScheduleContext } from '@/app/manager/schedule/schedule_context/ManagerScheduleContext';
-import { SHIFT_DAYS, SHIFT_STATUS_STYLES } from '@/app/manager/schedule/schedule_utils/ManagerScheduleSharedConstants';
-import type { ShiftDay, TrainerShift } from '@/app/manager/schedule/schedule_types/ManagerScheduleTypes';
 import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
 import ManagerEmptyState from '@/app/manager/manager_components/ManagerFeedback/ManagerEmptyState';
 import ManagerTooltip from '@/app/manager/manager_components/ManagerFeedback/ManagerTooltip';
+import { useManagerScheduleLogic } from '@/app/manager/schedule/schedule_hooks/ManagerUseManagerScheduleLogic';
+import { SHIFT_DAYS, SHIFT_STATUS_STYLES } from '@/app/manager/schedule/schedule_utils/ManagerScheduleSharedConstants';
+import type { ShiftDay, TrainerShift } from '@/app/manager/schedule/schedule_types/ManagerScheduleTypes';
+
 
 export default function ManagerScheduleWeeklyGrid() {
-  const { trainers, selectedDay, openAddShift, openEditShift, deleteShift } = useScheduleContext();
+  const { trainers, selectedDay, openAddShift, openEditShift, deleteShift } = useManagerScheduleLogic();
   const { confirm } = useConfirm();
 
   const days: ShiftDay[] = selectedDay === 'All' ? SHIFT_DAYS : [selectedDay];
@@ -19,15 +20,14 @@ export default function ManagerScheduleWeeklyGrid() {
       title: 'Remove Shift',
       message: `Remove ${shift.day} shift for ${shift.trainerName}? This cannot be undone.`,
       confirmText: 'Remove',
-      type: 'danger',
-    });
+      type: 'danger' });
     if (ok) await deleteShift(shift.id);
   };
 
   if (trainers.length === 0) {
     return (
       <ManagerEmptyState
-        icon={<CalendarX size={32} />}
+        icon={<CalendarX size={18} />}
         title="No trainers found"
         subtitle="Add trainers in the HR module before assigning shifts."
       />
@@ -38,8 +38,8 @@ export default function ManagerScheduleWeeklyGrid() {
     <div className="overflow-x-auto rounded-xl border border-border bg-card">
       <table className="w-full text-left border-collapse min-w-224">
         <thead>
-          <tr className="border-b border-border bg-primary/5">
-            <th className="py-3 px-4 text-xs font-semibold text-secondary uppercase tracking-wider w-44 sticky left-0 bg-primary/5 z-10">
+          <tr className="border-b border-border bg-primary-subtle">
+            <th className="py-3 px-4 text-xs font-semibold text-secondary uppercase tracking-wider w-44 sticky left-0 bg-primary-subtle z-10">
               Trainer
             </th>
             {days.map(day => (
@@ -51,10 +51,10 @@ export default function ManagerScheduleWeeklyGrid() {
         </thead>
         <tbody className="divide-y divide-border">
           {trainers.map(trainer => (
-            <tr key={trainer.trainerId} className="hover:bg-primary/5 motion-safe:transition-colors">
+            <tr key={trainer.trainerId} className="hover:bg-primary-subtle motion-safe:transition-colors">
               <td className="py-3 px-4 sticky left-0 bg-card z-10 flex flex-col items-start justify-center gap-0.5">
                 <ManagerTooltip content={trainer.trainerName}>
-                  <p className="text-sm font-semibold text-foreground truncate max-w-40">{trainer.trainerName}</p>
+                  <p className="text-sm font-semibold text-primary truncate max-w-40">{trainer.trainerName}</p>
                 </ManagerTooltip>
                 <ManagerTooltip content={trainer.trainerRole}>
                   <p className="text-xs text-secondary truncate max-w-40">{trainer.trainerRole}</p>
@@ -81,27 +81,27 @@ export default function ManagerScheduleWeeklyGrid() {
                         <div className="absolute top-1 right-1 hidden group-hover:flex gap-1">
                           <button
                             onClick={e => { e.stopPropagation(); openEditShift(shift); }}
-                            className="p-0.5 rounded bg-card/80 hover:bg-card text-secondary hover:text-foreground motion-safe:transition-colors"
+                            className="p-0.5 rounded bg-card hover:bg-card text-secondary hover:text-primary motion-safe:transition-colors"
                             aria-label="Edit shift"
                           >
-                            <Pencil size={11} />
+                            <Pencil size={18} />
                           </button>
                           <button
                             onClick={e => { e.stopPropagation(); void handleDelete(shift); }}
-                            className="p-0.5 rounded bg-card/80 hover:bg-card text-secondary hover:text-danger motion-safe:transition-colors"
+                            className="p-0.5 rounded bg-card hover:bg-card text-secondary hover:text-danger motion-safe:transition-colors"
                             aria-label="Delete shift"
                           >
-                            <Trash2 size={11} />
+                            <Trash2 size={18} />
                           </button>
                         </div>
                       </div>
                     ) : (
                       <button
                         onClick={() => openAddShift(trainer.trainerId)}
-                        className="w-full h-10 rounded-lg border border-dashed border-border hover:border-primary hover:bg-primary/5 flex items-center justify-center text-secondary hover:text-primary motion-safe:transition-colors"
+                        className="w-full h-10 rounded-lg border border-dashed border-border hover:border-primary hover:bg-primary-subtle flex items-center justify-center text-secondary hover:text-primary motion-safe:transition-colors"
                         aria-label={`Add shift for ${trainer.trainerName} on ${day}`}
                       >
-                        <Plus size={14} />
+                        <Plus size={18} />
                       </button>
                     )}
                   </td>

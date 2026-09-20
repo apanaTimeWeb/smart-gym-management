@@ -8,11 +8,16 @@ interface AdminSubscriptionsStore {
   setActiveTab: (t: AdminSubscriptionsTab) => void;
   showUpgradeConfirm: string | null;
   setShowUpgradeConfirm: (planId: string | null) => void;
+  currentInvoicePage: number;
+  setCurrentInvoicePage: (page: number) => void;
 }
 
+/** Coordinates SubscriptionsStore state, data flow, and feature behavior. */
 export const useAdminSubscriptionsStore = create<AdminSubscriptionsStore>((set) => ({
   activeTab: 'overview',
   setActiveTab: (t) => set({ activeTab: t }),
   showUpgradeConfirm: null,
   setShowUpgradeConfirm: (planId) => set({ showUpgradeConfirm: planId }),
+  currentInvoicePage: 1,
+  setCurrentInvoicePage: (page) => set({ currentInvoicePage: Math.max(1, page) }),
 }));

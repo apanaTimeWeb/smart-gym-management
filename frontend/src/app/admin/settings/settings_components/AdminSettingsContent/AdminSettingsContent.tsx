@@ -15,11 +15,11 @@ export default function AdminSettingsContent() {
   const searchParams = useSearchParams();
   const activeTabId = searchParams.get('tab') || 'profile';
 
-  const { data: settingsData, isLoading, isError, error } = useAdminSettingsData();
+  const { data: settingsData, isPending, isError, error } = useAdminSettingsData();
 
-  if (isLoading) {
+  if (isPending) {
     return (
-      <div className="max-w-7xl mx-auto space-y-6 motion-safe:animate-pulse">
+      <div className="max-w-7xl mx-auto space-y-6 motion-safe:animate-pulse motion-safe:duration-base">
         <div className="h-40 bg-card rounded-xl border border-border"></div>
         <div className="h-96 bg-card rounded-xl border border-border"></div>
       </div>

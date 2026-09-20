@@ -1,44 +1,17 @@
-# Superadmin Module — Theme Portability Contract
+# Superadmin — Theme Contract
 
-To ensure this module can be safely ported or re-themed without breaking, it strictly relies on the following CSS variables defined in the global design system (`globals.css` -> `tailwind.config.ts`), as well as localized variables in `superadmin.css`.
+## Required semantic tokens
 
-**DO NOT hardcode Tailwind colors (e.g., `bg-blue-500`, `text-[#1A1A2E]`) anywhere in this module.**
+`bg-page`, `bg-card`, `bg-header`, `bg-sidebar`, `bg-input`, `bg-floating`, `bg-overlay`, `bg-popover`, `bg-skeleton-base`, `bg-skeleton-highlight`, `bg-surface-hover`, `bg-surface-highlight`, `bg-surface-zebra`, `bg-primary`, `bg-primary-subtle`, `text-primary`, `text-secondary`, `text-disabled`, `text-on-primary`, `text-on-danger`, `text-on-success`, `text-on-info`, `text-success`, `text-warning`, `text-danger`, `text-info`, `bg-success-bg`, `bg-warning-bg`, `bg-danger-bg`, `bg-info-bg`, `border-border`, `border-focus`, `ring-primary`, `shadow-card`, `shadow-popover`, `shadow-dialog`, `shadow-toast`.
 
-## Core Backgrounds
-- `--bg-page`: Main page background.
-- `--bg-card`: Background for cards, panels, and tables.
-- `--bg-sidebar`: Superadmin sidebar background.
-- `--bg-header`: Top navbar background.
-- `--bg-input`: Form input background.
+## Geometry / typography
+Use the global `Inter` typography, layout geometry, control heights, touch targets, table row heights, radii, and spacing defined by `web_global_design(1).md`.
 
-## Borders
-- `--border`: Standard card, table, and input borders.
-- `--border-focus`: Active input focus ring.
+## Interaction
+Use explicit focus-visible states, motion-safe transitions/animations, keyboard/touch alternatives, semantic modal/popover surfaces, and documented z-index layers.
 
-## Typography
-- `--text-primary`: Primary headings, table values.
-- `--text-secondary`: Labels, captions, placeholders.
-- `--text-disabled`: Disabled state text.
+## Responsive
+Maintain usability at desktop, tablet, and narrow mobile widths. Dense tables follow the documented mobile card-stack strategy.
 
-## Status Colors (Background & Text)
-- `--success`: Active, Working, Paid.
-- `--warning`: Pending, Expiring.
-- `--danger`: Overdue, Suspended.
-- `--info`: New, Neutral.
-
-## Skeletons
-- `--skeleton-base`: Loading skeleton base.
-- `--skeleton-highlight`: Loading skeleton shimmer.
-
-## Surface Elevation (Design System §28 — Dark Mode Depth)
-Used to convey visual depth in dark mode where shadows are invisible.
-- `--bg-floating` (`bg-floating`): Inputs, code blocks — Layer 2.
-- `--bg-overlay` (`bg-overlay`): Modals, dialogs, drawers — Layer 3.
-- `--bg-popover` (`bg-popover`): Dropdowns, tooltips, command palette — Layer 4.
-
-**Rule:** Modals use `bg-overlay`, dropdowns use `bg-popover`. In light mode, combine with `shadow-2xl`. In dark mode, elevation + `border border-border` provides depth.
-
-## Accent — Purple (Plans & Enterprise Badges)
-Used for Enterprise plan badges and end-user count metrics.
-- `--purple`: Text color for purple accent elements (e.g., `text-purple`).
-- `--purple-bg` / `bg-purple-bg`: Background for purple badge chips.
+## Prohibited
+No hardcoded feature colors, arbitrary CSS-variable Tailwind values, semantic background opacity modifiers, random z-index values, or feature-specific global theme definitions.

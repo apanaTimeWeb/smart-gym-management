@@ -1,0 +1,184 @@
+"use client";
+// RESPONSIBILITY: Renders the collapsible left navigation sidebar with nav items, user identity footer, and mobile drawer. No API calls.
+
+import { useState, useEffect, useMemo } from 'react';
+import { usePathname } from 'next/navigation';
+import Link from 'next/link';
+import Image from 'next/image';
+import { Search } from 'lucide-react';
+import { getUser } from '@/lib/api';
+import { ADMIN_NAV_GROUPS } from '@/app/admin/admin_url_config';
+
+import type { AdminSidebarProps } from '@/app/admin/admin_layout/AdminLayout/AdminLayoutTypes';
+
+export default function AdminSidebar({ isCollapsed, setIsCollapsed }: AdminSidebarProps) {
+  const pathname = usePathname();
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const user = getUser();
+
+  // Sets mounted=true once on client-side hydration to safely read user data (avoids SSR mismatch).
+  /* eslint-disable react-hooks/set-state-in-effect */
+// EFFECT: Synchronizes this component effect with its declared React dependencies in admin_layout/AdminLayout/AdminSidebar.tsx.
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+  /* eslint-enable react-hooks/set-state-in-effect */
+
+  // Listens for the global 'toggle-sidebar' event dispatched by AdminHeader's hamburger button.
+  // On mobile (<1024px) toggles the drawer; on desktop toggles the collapsed icon-only mode.
+// EFFECT: Synchronizes this component effect with its declared React dependencies in admin_layout/AdminLayout/AdminSidebar.tsx.
+  useEffect(() => {
+    const handleToggle = () => {
+      if (window.innerWidth < 1024) {
+        setIsMobileOpen(v => !v);
+      } else {
+        setIsCollapsed(!isCollapsed);
+      }
+    };
+    window.addEventListener('toggle-sidebar', handleToggle);
+    return () => window.removeEventListener('toggle-sidebar', handleToggle);
+  }, [isCollapsed, setIsCollapsed]);
+
+  // Closes the mobile drawer whenever the route changes (user navigated to a new page).
+  /* eslint-disable react-hooks/set-state-in-effect */
+// EFFECT: Synchronizes this component effect with its declared React dependencies in admin_layout/AdminLayout/AdminSidebar.tsx.
+  useEffect(() => {
+    setIsMobileOpen(false);
+  }, [pathname]);
+  /* eslint-enable react-hooks/set-state-in-effect */
+
+  // Filter groups based on search query
+  const filteredNavGroups = useMemo(() => {
+    if (!searchQuery.trim()) return ADMIN_NAV_GROUPS;
+    const lowerQuery = searchQuery.toLowerCase();
+    
+    return ADMIN_NAV_GROUPS
+      .map(group => ({
+        ...group,
+        items: group.items.filter(item => item.label.toLowerCase().includes(lowerQuery))
+      }))
+      .filter(group => group.items.length > 0);
+  }, [searchQuery]);
+
+  return (
+    <>
+      {/* Mobile Backdrop */}
+      {isMobileOpen && (
+        <div
+          className="fixed inset-0 bg-overlay backdrop-blur-sm z-40 lg:hidden motion-safe:transition-opacity motion-safe:duration-base"
+          onClick={() => setIsMobileOpen(false)}
+        />
+      )}
+
+      <aside className={`fixed left-0 top-16 bottom-0 bg-sidebar border-r border-border z-20 flex flex-col motion-safe:transition-all motion-safe:duration-slow ${
+        isCollapsed ? 'lg:w-16' : 'lg:w-60'
+      } ${
+        isMobileOpen ? 'w-64 left-0' : 'w-64 -left-64 lg:left-0'
+      }`}>
+
+        {/* Logo & Toggle */}
+        <div className="flex items-center justify-center px-4 py-5 border-b border-border shrink-0">
+          <div className="flex items-center gap-3 overflow-hidden">
+            <Image src="/logo.png" alt="GymSmart ADMIN" width={44} height={44} className="object-contain min-w-11 rounded-lg" />
+            {(!isCollapsed || isMobileOpen) && (
+              <div className="whitespace-nowrap motion-safe:transition-opacity motion-safe:duration-slow flex flex-col">
+                <span className="text-primary font-bold text-lg leading-tight tracking-tight">GymSmart</span>
+                <span className="text-xs text-warning font-bold uppercase tracking-wider -mt-0.5">ADMIN System</span>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Search Box */}
+        {(!isCollapsed || isMobileOpen) && (
+          <div className="px-4 py-3 border-b border-border shrink-0">
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <Search size={16} className="text-secondary" />
+              </div>
+              <input
+                type="text"
+                placeholder="Search menu..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="block w-full pl-9 pr-3 py-2 min-h-11 border border-border rounded-lg leading-5 bg-input text-primary placeholder-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary sm:text-sm motion-safe:transition-colors motion-safe:duration-base"
+              />
+            </div>
+          </div>
+        )}
+        
+        {isCollapsed && !isMobileOpen && (
+          <div className="flex items-center justify-center px-4 py-3 border-b border-border shrink-0">
+            <button
+              onClick={() => setIsCollapsed(false)}
+              aria-label="Search menu"
+              className="min-h-11 min-w-11 p-2 rounded-lg text-secondary hover:text-primary hover:bg-input motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary motion-safe:duration-base"
+            >
+              <Search size={18} />
+            </button>
+          </div>
+        )}
+
+        {/* Nav */}
+        <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-4 custom-scrollbar">
+          {filteredNavGroups.length === 0 ? (
+            <div className="text-center py-4 text-sm text-secondary">
+              No matches found
+            </div>
+          ) : (
+            filteredNavGroups.map((group) => (
+              <div key={group.group}>
+                {(!isCollapsed || isMobileOpen) && (
+                  <p className="text-xs font-semibold text-disabled mb-2 px-2 uppercase tracking-wider">
+                    {group.group}
+                  </p>
+                )}
+                <div className="space-y-1">
+                  {group.items.map((item) => {
+                    const active = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href));
+                    const Icon = item.icon;
+                    const showLabel = !isCollapsed || isMobileOpen;
+
+                    return (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        title={!showLabel ? item.label : ''}
+                        className={`flex items-center gap-3 py-2.5 rounded-xl font-medium motion-safe:transition-all motion-safe:duration-base group cursor-pointer ${
+                          !showLabel ? 'justify-center px-0' : 'px-3.5'
+                        } ${
+                          active
+                            ? 'bg-primary-subtle text-primary border-l-2 border-primary'
+                            : 'text-secondary hover:text-primary hover:bg-primary-subtle border-l-2 border-transparent'
+                        }`}
+                        
+                      >
+                        <Icon size={22} className={active ? 'text-primary' : 'text-secondary group-hover:text-primary motion-safe:transition-colors'} />
+                        {showLabel && <span className="text-sm whitespace-nowrap">{item.label}</span>}
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            ))
+          )}
+        </nav>
+
+        {/* User */}
+        <div className={`px-4 py-4 border-t border-border bg-header shrink-0 flex items-center ${(!isCollapsed || isMobileOpen) ? 'gap-3' : 'justify-center'}`}>
+          <div className="w-10 h-10 min-w-10 rounded-full flex items-center justify-center text-on-primary text-sm font-bold border border-border bg-primary">
+            {mounted ? (user?.name?.charAt(0)?.toUpperCase() || 'A') : 'A'}
+          </div>
+          {(!isCollapsed || isMobileOpen) && (
+            <div className="whitespace-nowrap overflow-hidden flex-1">
+              <div className="text-primary text-sm font-bold truncate">{mounted ? (user?.name || 'Admin User') : 'Admin User'}</div>
+              <div className="text-secondary text-xs truncate">{mounted ? (user?.role || 'Super Admin') : 'Super Admin'}</div>
+            </div>
+          )}
+        </div>
+      </aside>
+    </>
+  );
+}

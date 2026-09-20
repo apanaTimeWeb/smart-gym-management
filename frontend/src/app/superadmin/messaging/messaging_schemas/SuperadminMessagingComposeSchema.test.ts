@@ -1,5 +1,15 @@
-import { describe, expect, it } from 'vitest';
+import { resetSuperadminMessagingMockState } from '@/app/superadmin/messaging/messaging_mocks/handlers/SuperadminMessagingMockHandlers';
+import { resetSuperadminMessagingV1WhatsAppMockState } from '@/app/superadmin/messaging/messaging_whatsapp_mocks/handlers/SuperadminMessagingV1WhatsAppMockHandlers';
+import {describe, expect, it, beforeEach} from 'vitest';
 import { SuperadminMessagingComposeSchema } from '@/app/superadmin/messaging/messaging_schemas/SuperadminMessagingComposeSchema';
+
+beforeEach(() => {
+  resetSuperadminMessagingV1WhatsAppMockState();
+});
+
+beforeEach(() => {
+  resetSuperadminMessagingMockState();
+});
 
 describe('SuperadminMessagingComposeSchema', () => {
   it('rejects incomplete tenant-level messages before the API is called', () => {

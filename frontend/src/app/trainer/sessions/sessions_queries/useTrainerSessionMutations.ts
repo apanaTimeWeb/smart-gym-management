@@ -1,40 +1,42 @@
+'use client';
 // RESPONSIBILITY: Custom mutation hooks for Trainer Sessions.
 // DATA FLOW: Component -> useTrainerSessionMutations -> API
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   createTrainerSession,
   updateTrainerSession,
-  cancelTrainerSession,
+  markTrainerSessionNoShow,
   markTrainerSessionAttendance,
 } from '@/app/trainer/sessions/sessions_api/TrainerSessionsApi';
 import type { CreateSessionDto } from '@/app/trainer/sessions/sessions_types/TrainerSessionsTypes';
 
+/** Owns useTrainerSessionMutations behavior for this Trainer module. */
 export function useTrainerSessionMutations() {
   const queryClient = useQueryClient();
 
   const createSession = useMutation({
-    mutationFn: (dto: CreateSessionDto) => createTrainerSession(dto),
+    mutationFn: ({ dto, idempotencyKey }: { dto: CreateSessionDto; idempotencyKey: string }) => createTrainerSession(dto, idempotencyKey),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['trainer', 'sessions'] });
     },
   });
 
   const updateSession = useMutation({
-    mutationFn: ({ id, dto }: { id: string; dto: Partial<CreateSessionDto> }) => updateTrainerSession(id, dto),
+    mutationFn: ({ id, dto, idempotencyKey }: { id: string; dto: Partial<CreateSessionDto>; idempotencyKey: string }) => updateTrainerSession(id, dto, idempotencyKey),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['trainer', 'sessions'] });
     },
   });
 
-  const cancelSession = useMutation({
-    mutationFn: (id: string) => cancelTrainerSession(id),
+  const markNoShowSession = useMutation({
+    mutationFn: ({ id, idempotencyKey }: { id: string; idempotencyKey: string }) => markTrainerSessionNoShow(id, idempotencyKey),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['trainer', 'sessions'] });
     },
   });
 
   const markAttendance = useMutation({
-    mutationFn: ({ id, memberIds }: { id: string; memberIds: string[] }) => markTrainerSessionAttendance(id, memberIds),
+    mutationFn: ({ id, memberIds, idempotencyKey }: { id: string; memberIds: string[]; idempotencyKey: string }) => markTrainerSessionAttendance(id, memberIds, idempotencyKey),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['trainer', 'sessions'] });
     },
@@ -43,7 +45,7 @@ export function useTrainerSessionMutations() {
   return {
     createSession,
     updateSession,
-    cancelSession,
+    markNoShowSession,
     markAttendance,
   };
 }

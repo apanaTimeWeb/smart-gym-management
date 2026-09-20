@@ -1,17 +1,17 @@
 // RESPONSIBILITY: Shared display constants for the Superadmin tenant messaging module.
-import type { MessageChannel, MessageStatus } from '@/app/superadmin/messaging/messaging_types/superadmin_messaging_types';
+import type { MessageChannel, MessageStatus } from '@/app/superadmin/messaging/messaging_types/SuperadminMessagingTypes';
 
 export const ITEMS_PER_PAGE = 10;
 
 export const CHANNEL_STYLES: Record<MessageChannel, string> = {
-  EMAIL: 'bg-primary/10 text-primary border border-primary/30',
-  SMS: 'bg-success/10 text-success border border-success/30',
-  IN_APP: 'bg-info/10 text-info border border-info/30',
+  EMAIL: 'bg-primary-subtle text-primary border border-border',
+  SMS: 'bg-success-bg text-success border border-border',
+  IN_APP: 'bg-info-bg text-info border border-border',
 };
 
 export const MESSAGE_STATUS_STYLES: Record<MessageStatus, string> = {
-  SENT: 'bg-success/10 text-success border border-success/30',
+  SENT: 'bg-success-bg text-success border border-border',
   DRAFT: 'bg-input text-secondary border border-border',
-  FAILED: 'bg-danger/10 text-danger border border-danger/30',
-  SCHEDULED: 'bg-warning/10 text-warning border border-warning/30',
+  FAILED: 'bg-danger-bg text-danger border border-border',
+  SCHEDULED: 'bg-warning-bg text-warning border border-border',
 };

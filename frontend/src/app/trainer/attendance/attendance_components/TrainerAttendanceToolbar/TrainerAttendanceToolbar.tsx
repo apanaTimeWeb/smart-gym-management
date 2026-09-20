@@ -1,59 +1,35 @@
+// RESPONSIBILITY: Toolbar for Attendance â€” tabs, search, date filter, view-mode toggle, and action buttons.
 'use client';
-// RESPONSIBILITY: Toolbar for Attendance — tabs, search, date filter, view-mode toggle, and action buttons.
-// DATA FLOW: props (from TrainerAttendanceMain) → URL state via useAttendanceFilters setters
-import { useState, useEffect } from 'react';
+// DATA FLOW: props (from TrainerAttendanceMain) â†’ URL state via useAttendanceFilters setters
+import { useState } from 'react';
 import { RefreshCw, Search, Calendar as CalendarIcon, List, Plus, LogIn, LogOut, Loader2 } from 'lucide-react';
-import { ATTENDANCE_TABS, ATTENDANCE_DATE_FILTER_OPTIONS, type AttendanceTab } from '@/app/trainer/attendance/attendance_utils/TrainerAttendanceSharedConstants';
+import { ATTENDANCE_TABS, ATTENDANCE_DATE_FILTER_OPTIONS } from '@/app/trainer/attendance/attendance_utils/TrainerAttendanceSharedConstants';
+import type { TrainerAttendanceToolbarProps } from '@/app/trainer/attendance/attendance_components/TrainerAttendanceToolbar/TrainerAttendanceToolbarTypes';
 import TrainerSearchableDropdown from '@/app/trainer/trainer_components/TrainerShared/TrainerSearchableDropdown/TrainerSearchableDropdown';
-
-interface TrainerAttendanceToolbarProps {
-  tab: AttendanceTab;
-  setTab: (t: AttendanceTab) => void;
-  viewMode: 'calendar' | 'table';
-  search: string;
-  setSearch: (s: string) => void;
-  filterDate: string;
-  setFilterDate: (d: string) => void;
-  onAddRecord: () => void;
-  onRefresh: () => void;
-  onSelfCheckIn: () => void;
-  onSelfCheckOut: () => void;
-  selfCheckInPending: boolean;
-  selfCheckOutPending: boolean;
-  setViewMode?: (v: 'calendar' | 'table') => void;
-}
 
 export default function TrainerAttendanceToolbar({
   tab, setTab, viewMode, search, setSearch,
   filterDate, setFilterDate,
   onAddRecord, onRefresh, onSelfCheckIn, onSelfCheckOut,
-  selfCheckInPending, selfCheckOutPending,
+  selfCheckInPending, selfCheckOutPending, isRefreshing,
   setViewMode,
 }: TrainerAttendanceToolbarProps) {
   const [localSearch, setLocalSearch] = useState(search);
 
-  useEffect(() => { setLocalSearch(search); }, [search]);
-
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      if (localSearch !== search) setSearch(localSearch);
-    }, 300);
-    return () => clearTimeout(handler);
-  }, [localSearch, search, setSearch]);
 
   return (
     <div className="border-b border-border flex flex-col sm:flex-row justify-between items-start sm:items-center">
       {/* Tabs */}
       <div className="flex">
         {ATTENDANCE_TABS.map(t => (
-          <button
+          <button type="button"
             key={t}
             onClick={() => setTab(t)}
             className={`px-5 py-3.5 text-sm font-medium motion-safe:transition-colors border-b-2 ${
               tab === t
-                ? 'text-primary bg-primary-subtle border-primary'
-                : 'border-transparent text-secondary hover:text-foreground'
-            }`}
+                ? 'text-on-primary bg-primary-subtle border-primary'
+                : 'border-transparent text-secondary hover:text-primary'
+            } focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page`}
           >
             {t}
           </button>
@@ -65,39 +41,39 @@ export default function TrainerAttendanceToolbar({
         {/* My Attendance view toggle */}
         {tab === 'My Attendance' && setViewMode && (
           <div className="flex bg-input border border-border rounded-lg p-0.5">
-            <button
+            <button type="button"
               onClick={() => setViewMode('calendar')}
               className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-md motion-safe:transition-all ${
-                viewMode === 'calendar' ? 'bg-card text-primary shadow-sm' : 'text-secondary hover:text-foreground'
-              }`}
+                viewMode === 'calendar' ? 'bg-card text-primary shadow-card' : 'text-secondary hover:text-primary'
+              } focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page`}
             >
-              <CalendarIcon size={14} /> Calendar
+              <CalendarIcon size={18} /> Calendar
             </button>
-            <button
+            <button type="button"
               onClick={() => setViewMode('table')}
               className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-md motion-safe:transition-all ${
-                viewMode === 'table' ? 'bg-card text-primary shadow-sm' : 'text-secondary hover:text-foreground'
-              }`}
+                viewMode === 'table' ? 'bg-card text-primary shadow-card' : 'text-secondary hover:text-primary'
+              } focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page`}
             >
-              <List size={14} /> List
+              <List size={18} /> List
             </button>
           </div>
         )}
 
         {/* Search */}
         <div className="relative">
-          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary" />
+          <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary" />
           <input
             value={localSearch}
-            onChange={e => setLocalSearch(e.target.value)}
+            onChange={e => { const value = e.target.value; setLocalSearch(value); setSearch(value); }}
             placeholder={`Search ${tab.toLowerCase()}...`}
-            className="pl-9 pr-3 py-2 border border-border bg-input text-foreground rounded-lg text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary w-40 sm:w-56"
+            className="pl-9 pr-3 py-2 border border-border bg-input text-primary rounded-lg text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary w-40 sm:w-56"
           />
         </div>
 
         {/* Date filter */}
         <TrainerSearchableDropdown
-          options={ATTENDANCE_DATE_FILTER_OPTIONS}
+          options={ATTENDANCE_DATE_FILTER_OPTIONS as unknown as { label: string; value: string }[]}
           value={filterDate}
           onChange={(val: string | number) => setFilterDate(String(val))}
           placeholder="Filter by date"
@@ -105,31 +81,31 @@ export default function TrainerAttendanceToolbar({
         />
 
         {/* Refresh */}
-        <button
+        <button type="button"
           onClick={onRefresh}
-          className="flex items-center gap-2 px-3 py-2 text-sm border border-border rounded-lg hover:bg-primary-subtle text-secondary motion-safe:transition-colors"
+          className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page min-w-11 min-h-11 flex items-center justify-center gap-2 px-3 py-2 text-sm border border-border rounded-lg hover:bg-primary-subtle text-secondary motion-safe:transition-colors motion-safe:duration-base"
           aria-label="Refresh attendance records"
         >
-          <RefreshCw size={14} />
+          {isRefreshing ? <Loader2 size={18} className="motion-safe:animate-spin" /> : <RefreshCw size={18} />}
         </button>
 
         {/* Self Check-in / Check-out (My Attendance tab only) */}
         {tab === 'My Attendance' && (
           <>
-            <button
+            <button type="button"
               onClick={onSelfCheckIn}
               disabled={selfCheckInPending}
-              className="flex items-center gap-2 px-3 py-2 text-sm bg-success text-white rounded-lg hover:opacity-90 disabled:opacity-70 motion-safe:transition-opacity"
+              className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page min-w-28 min-h-11 flex items-center justify-center gap-2 px-3 py-2 text-sm bg-success text-on-success rounded-lg hover:bg-primary-hover disabled:opacity-70 motion-safe:transition-opacity"
             >
-              {selfCheckInPending ? <Loader2 size={14} className="motion-safe:animate-spin" /> : <LogIn size={14} />}
+              {selfCheckInPending ? <Loader2 size={18} className="motion-safe:animate-spin" /> : <LogIn size={18} />}
               Check In
             </button>
-            <button
+            <button type="button"
               onClick={onSelfCheckOut}
               disabled={selfCheckOutPending}
-              className="flex items-center gap-2 px-3 py-2 text-sm bg-warning text-white rounded-lg hover:opacity-90 disabled:opacity-70 motion-safe:transition-opacity"
+              className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page min-w-28 min-h-11 flex items-center justify-center gap-2 px-3 py-2 text-sm bg-warning-bg text-warning rounded-lg hover:bg-primary-hover disabled:opacity-70 motion-safe:transition-opacity"
             >
-              {selfCheckOutPending ? <Loader2 size={14} className="motion-safe:animate-spin" /> : <LogOut size={14} />}
+              {selfCheckOutPending ? <Loader2 size={18} className="motion-safe:animate-spin" /> : <LogOut size={18} />}
               Check Out
             </button>
           </>
@@ -137,14 +113,15 @@ export default function TrainerAttendanceToolbar({
 
         {/* Add Record */}
         {tab === 'Members' && (
-          <button
+          <button type="button"
             onClick={onAddRecord}
-            className="flex items-center gap-2 px-3 py-2 text-sm bg-primary text-white rounded-lg hover:opacity-90 motion-safe:transition-opacity"
+            className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page min-w-28 min-h-11 flex items-center justify-center gap-2 px-3 py-2 text-sm bg-primary-subtle text-primary rounded-lg hover:bg-primary-subtle motion-safe:transition-colors"
           >
-            <Plus size={14} /> Add Record
+            <Plus size={18} /> Add Record
           </button>
         )}
       </div>
     </div>
   );
 }
+

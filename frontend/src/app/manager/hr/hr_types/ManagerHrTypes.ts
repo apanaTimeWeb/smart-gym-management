@@ -1,12 +1,12 @@
 // RESPONSIBILITY: Defines the TypeScript types and interfaces for the HR module.
 // Includes Indian payroll compliance: TDS/PF/ESI deductions, bank details, PAN, department, emergencyContact.
 
-import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
-import type { EMPTY_STAFF } from '@/app/manager/hr/hr_utils/ManagerHrSharedConstants';
-import type React from 'react';
+import type { ManagerToastType } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerToastTypes';
 
 export type SalaryType = 'Monthly' | 'Daily';
 export type PaymentCycle = 'Monthly' | 'Bi-Weekly' | 'Weekly';
+export type ManagerHrGender = 'MALE' | 'FEMALE' | 'OTHER';
+export type ManagerHrLedgerEntryType = 'Salary Generated' | 'Salary Paid' | 'Advance Given' | 'Due Paid';
 
 export interface HrInitialData {
   staff: Staff[];
@@ -14,16 +14,16 @@ export interface HrInitialData {
   summary: HrSummary | null;
 }
 
-export interface HrContextType {
+export interface ManagerHrViewModel {
   staff: Staff[];
   totalStaff: number;
   payrolls: Payroll[];
   totalPayrolls: number;
   summary: HrSummary | null;
-  isLoading: boolean;
+  isPending: boolean;
   isError: boolean;
   error: string;
-  toast: { message: string; type: ToastType } | null;
+  toast: { message: string; type: ManagerToastType } | null;
 
   search: string;
   debouncedSearch: string;
@@ -33,7 +33,7 @@ export interface HrContextType {
   currentPage: number;
   setCurrentPage: (p: number) => void;
 
-  showToast: (msg: string, t: ToastType) => void;
+  showToast: (msg: string, t: ManagerToastType) => void;
   hideToast: () => void;
   loadAll: () => Promise<void>;
 
@@ -55,14 +55,14 @@ export interface HrContextType {
   openEdit: (s: Staff) => void;
   openAddPayroll: () => void;
   saveStaff: (data: Partial<Staff> & { joinDate?: string | Date; salary?: string | number }) => void;
-  savePayroll: (data: Partial<Payroll> & { amount?: string | number }) => void;
+  savePayroll: (data: Partial<Payroll> & { amount?: string | number; idempotencyKey: string }) => Promise<void>;
   deleteStaff: (id: string) => Promise<void>;
   toggleStaffStatus: (staff: Staff) => Promise<void>;
-  markPayrollPaid: (id: string, amount: number) => void;
-  giveAdvance: (data: { staffId: string; amount: number; notes?: string; date?: string; paymentMode?: string }) => void;
-  payDue: (data: { staffId: string; amount: number; notes?: string; date?: string; paymentMode?: string }) => void;
+  markPayrollPaid: (id: string, amount: number, idempotencyKey: string) => Promise<void>;
+  giveAdvance: (data: { staffId: string; amount: number; notes?: string; date?: string; paymentMode?: string }, idempotencyKey: string) => Promise<void>;
+  payDue: (data: { staffId: string; amount: number; notes?: string; date?: string; paymentMode?: string }, idempotencyKey: string) => Promise<void>;
   // Indian payroll compliance actions (CRITICAL)
-  bulkGeneratePayroll: (month: string) => Promise<void>;
+  bulkGeneratePayroll: (month: string, idempotencyKey: string) => Promise<void>;
   downloadPayslip: (payrollId: string) => Promise<void>;
   exportStaff: () => void;
 
@@ -157,7 +157,7 @@ export interface LedgerEntry {
   id: string;
   staffId: string;
   date: string;
-  type: 'Salary Generated' | 'Salary Paid' | 'Advance Given' | 'Due Paid';
+  type: ManagerHrLedgerEntryType;
   credit: number;
   debit: number;
   balance: number;

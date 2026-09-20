@@ -1,5 +1,6 @@
 // DATA FLOW: Superadmin UI → useSuperadminGymEditModal → Superadmin module API/state → consuming component
 'use client';
+import { useUnsavedChangesGuard } from '@/hooks/useUnsavedChangesGuard';
 // RESPONSIBILITY: Handles form validation, modal state, and API submission for editing a Gym.
 // DATA FLOW: SuperadminGymEditModal -> useSuperadminGymEditModal -> API
 import { useEffect } from 'react';
@@ -9,14 +10,21 @@ import { z } from 'zod';
 import toast from 'react-hot-toast';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSuperadminGymsStore } from '@/app/superadmin/gyms/gyms_store/useSuperadminGymsStore';
-import { gymsApi } from '@/app/superadmin/gyms/superadmin_gyms_api/superadmin_gyms_api';
-import { gymEditSchema, type GymEditFormValues } from '@/app/superadmin/gyms/superadmin_gyms_types/superadmin_gyms_schema';
+import { gymsApi } from '@/app/superadmin/gyms/gyms_api/SuperadminGymsApi';
+import { gymEditSchema, type GymEditFormValues } from '@/app/superadmin/gyms/gyms_types/SuperadminGymsSchema';
+/**
+ * Purpose: Handles form validation, modal state, and API submission for editing a Gym.
+ * Inputs: values defined by the exported hook signature.
+ * Output: the hook's typed state/actions/query contract.
+ * Side effects: remain scoped to the owning feature or approved application infrastructure.
+ * Invariant: does not move feature business state into unrelated modules.
+ */
 export function useSuperadminGymEditModal() {
     const isEditModalOpen = useSuperadminGymsStore(state => state.isEditModalOpen);
     const closeEditModal = useSuperadminGymsStore(state => state.closeEditModal);
     const selectedGym = useSuperadminGymsStore(state => state.selectedGym);
     const queryClient = useQueryClient();
-    const { data: fetchRes, isLoading: loadingPlans } = useQuery({
+    const { data: fetchRes, isPending: loadingPlans } = useQuery({
         queryKey: ['superadmin', 'gyms', 'subscription-plans'],
         queryFn: () => gymsApi.fetchSubscriptionPlans(),
     });
@@ -27,6 +35,7 @@ export function useSuperadminGymEditModal() {
     // RESPONSIBILITY: Handle side-effects for useSuperadminGymEditModal
     // EXPLANATION: Synchronize component state with external dependencies.
     // EFFECT DEPENDENCIES: Documented intentionally.
+    // EFFECT INTENT: Synchronize local/UI state with the listed external dependencies.
     useEffect(() => {
         if (selectedGym && isEditModalOpen) {
             reset({
@@ -50,6 +59,7 @@ export function useSuperadminGymEditModal() {
             toast.error((err as Error).message, { id: 'failed-to-update-gym' });
         }
     });
+    useUnsavedChangesGuard(isDirty && isEditModalOpen && !editMutation.isPending, 'You have unsaved gym changes. Discard?');
     const onSubmit = async (data: GymEditFormValues) => {
         if (selectedGym) {
             editMutation.mutate(data);

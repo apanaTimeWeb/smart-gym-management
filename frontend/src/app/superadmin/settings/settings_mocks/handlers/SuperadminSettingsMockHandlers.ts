@@ -2,6 +2,10 @@ import { http, HttpResponse, delay } from 'msw';
 import { MOCK_PLATFORM_SETTINGS } from '@/app/superadmin/settings/settings_mocks/fixtures/SuperadminSettingsMockData';
 const BASE_URL = '*/superadmin/settings';
 let mockSettings = [...MOCK_PLATFORM_SETTINGS];
+
+export function resetSuperadminSettingsMockState(): void {
+  mockSettings = [...MOCK_PLATFORM_SETTINGS];
+}
 export const superadminSettingsHandlers = [
     http.get(BASE_URL, async () => {
         await delay(300);

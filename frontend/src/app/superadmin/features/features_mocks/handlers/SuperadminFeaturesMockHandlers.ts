@@ -1,12 +1,26 @@
+import { StatusCodes } from 'http-status-codes';
+import { FeaturesUrlConfig } from '@/app/superadmin/features/superadmin_features_url_config';
+import { formatSuperadminFeaturesCalendarDate } from '@/app/superadmin/features/features_utils/SuperadminFeaturesDateUtils';
 import { http, HttpResponse, delay } from 'msw';
-import type { FeatureFlag, ReleaseNote } from '@/app/superadmin/features/superadmin_features_types/superadmin_features_types';
+import type { FeatureFlag, ReleaseNote, SuperadminFeatureHistoryEntry } from '@/app/superadmin/features/features_types/SuperadminFeaturesTypes';
 import type { ApiResponse } from '@/lib/api';
-import { SUPERADMIN_FEATURE_FLAGS, SUPERADMIN_RELEASE_NOTES, SUPERADMIN_FEATURE_TENANTS } from '@/app/superadmin/features/features_mocks/fixtures/SuperadminFeaturesMockFixtures';
-const BASE_URL = '*/api/v1/superadmin/features';
+import { SUPERADMIN_FEATURE_FLAGS, SUPERADMIN_RELEASE_NOTES, SUPERADMIN_FEATURE_TENANTS, SUPERADMIN_FEATURE_HISTORY } from '@/app/superadmin/features/features_mocks/fixtures/SuperadminFeaturesMockFixtures';
+const BASE_URL = `*${FeaturesUrlConfig.BACKEND_API.BASE}`;
 export let mockFlags: FeatureFlag[] = [...SUPERADMIN_FEATURE_FLAGS];
 export let mockNotes: ReleaseNote[] = [...SUPERADMIN_RELEASE_NOTES];
+
+export function resetSuperadminFeaturesMockState(): void {
+    mockFlags = [...SUPERADMIN_FEATURE_FLAGS];
+    mockNotes = [...SUPERADMIN_RELEASE_NOTES];
+}
 export const superadminFeaturesHandlers = [
-    http.get('*/api/v1/api/gyms', async () => HttpResponse.json({ success: true, message: 'Success', data: SUPERADMIN_FEATURE_TENANTS })),
+    http.get(`*${FeaturesUrlConfig.BACKEND_API.TENANTS}`, async () => HttpResponse.json({ success: true, message: 'Success', data: SUPERADMIN_FEATURE_TENANTS })),
+    http.get(`${BASE_URL}/flags/:id/history`, async ({ params }) => {
+        await delay(250);
+        const id = String(params.id);
+        const history: SuperadminFeatureHistoryEntry[] = SUPERADMIN_FEATURE_HISTORY[id] ?? [];
+        return HttpResponse.json<ApiResponse<SuperadminFeatureHistoryEntry[]>>({ success: true, message: 'Feature history loaded', data: history });
+    }),
     http.get(BASE_URL, async () => {
         await delay(400);
         return HttpResponse.json<ApiResponse<{
@@ -49,7 +63,7 @@ export const superadminFeaturesHandlers = [
             return f;
         });
         if (!updated) {
-            return HttpResponse.json<ApiResponse<FeatureFlag>>({ success: false, message: 'Not found', data: null }, { status: 404 });
+            return HttpResponse.json<ApiResponse<FeatureFlag>>({ success: false, message: 'Not found', data: null }, { status: StatusCodes.NOT_FOUND });
         }
         return HttpResponse.json<ApiResponse<FeatureFlag>>({
             success: true,
@@ -69,7 +83,7 @@ export const superadminFeaturesHandlers = [
             return f;
         });
         if (!updated) {
-            return HttpResponse.json<ApiResponse<FeatureFlag>>({ success: false, message: 'Not found', data: null }, { status: 404 });
+            return HttpResponse.json<ApiResponse<FeatureFlag>>({ success: false, message: 'Not found', data: null }, { status: StatusCodes.NOT_FOUND });
         }
         return HttpResponse.json<ApiResponse<FeatureFlag>>({
             success: true,
@@ -96,7 +110,7 @@ export const superadminFeaturesHandlers = [
             version: body.version || 'v1.0.0',
             title: body.title || 'New Note',
             content: body.content || '',
-            date: body.date || new Date().toISOString().split('T')[0] as string,
+            date: body.date || formatSuperadminFeaturesCalendarDate(new Date()),
             isPublished: body.isPublished || false,
         };
         mockNotes = [newNote, ...mockNotes];
@@ -119,7 +133,7 @@ export const superadminFeaturesHandlers = [
             return n;
         });
         if (!updated) {
-            return HttpResponse.json<ApiResponse<ReleaseNote>>({ success: false, message: 'Not found', data: null }, { status: 404 });
+            return HttpResponse.json<ApiResponse<ReleaseNote>>({ success: false, message: 'Not found', data: null }, { status: StatusCodes.NOT_FOUND });
         }
         return HttpResponse.json<ApiResponse<ReleaseNote>>({
             success: true,

@@ -6,11 +6,12 @@
 // DataFlow: Imported by useTrainerSessionsLogic, TrainerSessionsMain, and session sub-components.
 
 import { z } from 'zod';
+import { createTrainerApiResponseSchema } from '@/app/trainer/trainer_utils/TrainerApiResponseSchema';
 
 export const SessionTypeSchema = z.enum(['PT', 'Group']);
 export type SessionType = z.infer<typeof SessionTypeSchema>;
 
-export const SessionStatusSchema = z.enum(['Upcoming', 'Completed', 'Cancelled']);
+export const SessionStatusSchema = z.enum(['Upcoming', 'Completed', 'No Show']);
 export type SessionStatus = z.infer<typeof SessionStatusSchema>;
 
 export const SessionFilterSchema = z.union([z.literal('All'), SessionTypeSchema]);
@@ -57,8 +58,4 @@ export type CreateSessionDto = z.infer<typeof CreateSessionDtoSchema>;
 
 
 export const TrainerSessionMemberSchema = z.object({ id: z.string(), name: z.string() });
-export const TrainerSessionMembersResponseSchema = z.object({
-  success: z.boolean(),
-  message: z.string(),
-  data: z.array(TrainerSessionMemberSchema),
-});
+export const TrainerSessionMembersResponseSchema = createTrainerApiResponseSchema(z.array(TrainerSessionMemberSchema));

@@ -4,7 +4,7 @@
 import { Search } from 'lucide-react';
 import { useAdminAttendanceStore } from '@/app/admin/attendance/attendance_store/useAdminAttendanceStore';
 import { useAdminAttendanceBranchReference } from '@/app/admin/attendance/attendance_context/useAdminAttendanceBranchReference';
-import { AdminSearchableDropdown } from '@/app/admin/admin_components/AdminShared/AdminSearchableDropdown';
+import { AdminSearchableDropdown } from '@/app/admin/admin_layout/AdminShared/AdminSearchableDropdown/AdminSearchableDropdown';
 import { ATTENDANCE_STATUS_OPTIONS, DATE_RANGE_OPTIONS } from '@/app/admin/attendance/attendance_utils/AdminAttendanceSharedConstants';
 import type { AttendanceStatus, DateRangeFilter } from '@/app/admin/attendance/attendance_types/AdminAttendanceTypes';
 import type { AdminAttendanceBranchReference } from '@/app/admin/attendance/attendance_types/AdminAttendanceBranchReferenceTypes';
@@ -22,13 +22,13 @@ export default function AdminAttendanceToolbar() {
   return (
     <div className="flex flex-col sm:flex-row gap-3 flex-wrap">
       <div className="relative flex-1 min-w-48">
-        <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary pointer-events-none" />
+        <span className="absolute inset-y-0 left-3 flex items-center"><Search size={16} className="text-secondary pointer-events-none" /></span>
         <input
           type="text"
           placeholder="Search by member name or phone..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full pl-9 pr-4 py-2.5 bg-input border border-border rounded-xl text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary placeholder:text-secondary"
+          className="w-full pl-9 pr-4 py-2.5 bg-input border border-border rounded-xl text-sm text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary placeholder:text-secondary"
           aria-label="Search attendance records"
         />
       </div>

@@ -5,7 +5,7 @@ import { AdminDashboardUrlConfig } from '@/app/admin/dashboard/admin_dashboard_u
 import { useEffect } from "react";
 import Link from 'next/link';
 import { StatusCodes } from 'http-status-codes';
-import { logErrorToMonitoring } from '@/app/admin/admin_utils/AdminMonitoring';
+import { logErrorToMonitoring } from '@/app/admin/admin_layout/admin_utils/AdminMonitoring';
 
 export default function DashboardError({
   error,
@@ -14,6 +14,7 @@ export default function DashboardError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+// EFFECT: Synchronizes this component effect with its declared React dependencies in dashboard/error.tsx.
   useEffect(() => {
     // Log the route-level error once while keeping internal error details out of the UI.
     logErrorToMonitoring(error, { module: 'dashboard' });
@@ -24,7 +25,7 @@ export default function DashboardError({
       <div className="min-h-full flex flex-col items-center justify-center p-8 text-center">
         <h2 className="text-2xl font-bold mb-4 text-danger">Access Denied</h2>
         <p className="text-secondary mb-6">You don&apos;t have permission to view this page.</p>
-        <Link href={AdminDashboardUrlConfig.root} className="px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary-hover motion-safe:transition-colors">
+        <Link href={AdminDashboardUrlConfig.root} className="px-4 py-2 rounded-md bg-primary text-on-primary hover:bg-primary-hover motion-safe:transition-colors motion-safe:duration-base">
           Return to Dashboard
         </Link>
       </div>
@@ -37,7 +38,7 @@ export default function DashboardError({
         <p className="font-medium text-danger">Something went wrong!</p>        <p className="text-sm mt-1 text-secondary">Please retry. If the problem continues, contact support with the current request time.</p>
         <button
           onClick={() => reset()}
-          className="mt-4 px-4 py-2 rounded-md font-medium text-primary-foreground bg-primary hover:bg-primary-hover motion-safe:transition-colors"
+          className="mt-4 px-4 py-2 rounded-md font-medium text-on-primary bg-primary hover:bg-primary-hover motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
         >
           Try again
         </button>

@@ -17,10 +17,10 @@ export default function AdminBlacklistTabs() {
           <button
             key={tab.value}
             onClick={() => setActiveTab(tab.value)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium motion-safe:transition-all ${
+            className={`focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium motion-safe:transition-all ${
               isActive
-                ? 'bg-card text-foreground shadow-sm border border-border'
-                : 'text-secondary hover:text-foreground'
+                ? 'bg-card text-primary shadow-card border border-border'
+                : 'text-secondary hover:text-primary'
             }`}
           >
             {tab.value === 'cross-branch' && <Globe size={14} />}

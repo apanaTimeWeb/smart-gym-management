@@ -1,4 +1,5 @@
 "use client";
+import { formatNumber } from '@/lib/formatters';
 // RESPONSIBILITY: Renders 4 read-only KPI stat cards for Admin Attendance — today's count, present, late, weekly avg.
 
 import { CalendarCheck, UserCheck, Clock, TrendingUp } from 'lucide-react';
@@ -13,38 +14,38 @@ export default function AdminAttendanceKPIs() {
   const cards = [
     {
       title: "Today's Check-Ins",
-      value: summary.todayTotal.toLocaleString('en-IN'),
+      value: formatNumber(summary.todayTotal),
       sub: `Peak: ${summary.peakHour}`,
       subColor: 'text-secondary',
       icon: CalendarCheck,
-      iconBg: 'bg-primary/20',
+      iconBg: 'bg-primary-subtle',
       iconColor: 'text-primary',
     },
     {
       title: 'Present Today',
-      value: summary.todayPresent.toLocaleString('en-IN'),
+      value: formatNumber(summary.todayPresent),
       sub: `${Math.round((summary.todayPresent / summary.todayTotal) * 100)}% attendance rate`,
       subColor: 'text-success',
       icon: UserCheck,
-      iconBg: 'bg-success/20',
+      iconBg: 'bg-success-bg',
       iconColor: 'text-success',
     },
     {
       title: 'Late Arrivals',
-      value: summary.todayLate.toLocaleString('en-IN'),
+      value: formatNumber(summary.todayLate),
       sub: `${Math.round((summary.todayLate / summary.todayTotal) * 100)}% of today's check-ins`,
       subColor: 'text-warning',
       icon: Clock,
-      iconBg: 'bg-warning/20',
+      iconBg: 'bg-warning-bg',
       iconColor: 'text-warning',
     },
     {
       title: 'Weekly Average',
-      value: summary.weeklyAverage.toLocaleString('en-IN'),
+      value: formatNumber(summary.weeklyAverage),
       sub: `${trendPositive ? '↑' : '↓'} ${Math.abs(summary.trendVsLastWeek)}% vs last week`,
       subColor: trendPositive ? 'text-success' : 'text-danger',
       icon: TrendingUp,
-      iconBg: 'bg-info/20',
+      iconBg: 'bg-info-bg',
       iconColor: 'text-info',
     },
   ];
@@ -56,12 +57,12 @@ export default function AdminAttendanceKPIs() {
         return (
           <div
             key={c.title}
-            className="bg-card rounded-xl p-5 border border-border hover:border-primary motion-safe:transition-all motion-safe:duration-200"
+            className="bg-card rounded-xl p-5 border border-border hover:border-primary motion-safe:transition-all motion-safe:duration-base"
           >
             <div className="flex items-start justify-between">
               <div className="flex-1 min-w-0">
                 <p className="text-xs font-medium text-secondary uppercase tracking-wider">{c.title}</p>
-                <p className="text-2xl font-bold text-foreground mt-1">{c.value}</p>
+                <p className="text-2xl font-bold text-primary mt-1">{c.value}</p>
                 <p className={`text-xs mt-1 font-medium ${c.subColor}`}>{c.sub}</p>
               </div>
               <div className={`w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 ml-3 ${c.iconBg}`}>

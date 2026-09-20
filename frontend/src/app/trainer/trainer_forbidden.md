@@ -1,16 +1,14 @@
-# Trainer — Forbidden Patterns
+# Trainer Role-Shell Forbidden Patterns
 
-- Cross-feature Trainer business imports.
-- Feature-specific mock data outside the owning feature.
-- Hardcoded business fallback records in components/hooks/stores/Context.
-- Hardcoded internal routes outside `Trainer_url_config.ts`.
-- API calls directly inside presentation-only components.
-- API data stored as the primary source in Zustand/Context.
-- `any`, `@ts-ignore`, `@ts-nocheck`, or barrel `index.ts` re-exports.
-- Raw backend/technical error details shown to users.
-- Arbitrary Tailwind visual values without a documented exception.
-- Unguarded non-essential animations/transitions.
-- Destructive or financial mutations without documented confirmation.
+This file governs only genuine Trainer-wide shell/infrastructure concerns. Feature business rules belong to the owning feature module.
 
-- Do not render ad-hoc inline toast JSX inside feature components.
-- Do not import `react-hot-toast` directly outside `trainer_components/TrainerFeedback/useTrainerFeedback.ts` or its host.
+1. No relative imports for module code.
+2. No barrel files.
+3. No role-wide business component/store/hook/API/type/fixture bucket.
+4. `trainer_components/` may contain only zero-business shell primitives, shell components, or explicitly global Trainer infrastructure.
+5. Feature-specific URLs belong to each feature's `[module]_url_config.ts`; `trainer_url_config.ts` owns role-shell page navigation only.
+6. Server/API data belongs to feature TanStack Query layers, not Trainer shell state.
+7. Trainer feedback must sanitize user-visible exception text.
+8. Destructive confirmation UI must remain keyboard accessible, focus managed, and free of raw backend details.
+9. Shell components must consume global semantic theme tokens.
+10. Feature-local defects must not be repaired by modifying unrelated business modules.

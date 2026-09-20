@@ -1,12 +1,10 @@
-import fs from 'node:fs';
+// RESPONSIBILITY: Verifies the public utility contract of the owning feature utility module.
 import { describe, expect, it } from 'vitest';
-/**
- * Contract test: proves the source artifact keeps its documented responsibility/data-flow marker.
- * This protects the AI-isolation contract without mocking away feature behavior.
- */
-describe('useSuperadminProfilePage contract', () => {
-    it('contains the required responsibility/data-flow contract', () => {
-        const source = fs.readFileSync(new URL('useSuperadminProfilePage.ts', import.meta.url), 'utf8');
-        expect(source).toMatch(/(RESPONSIBILITY:|DATA FLOW:)/);
-    });
+import { useSuperadminProfilePage } from '@/app/superadmin/profile/profile_utils/useSuperadminProfilePage';
+
+
+describe('useSuperadminProfilePage', () => {
+  it('exports the hook as a callable contract', () => {
+    expect(typeof useSuperadminProfilePage).toBe('function');
+  });
 });

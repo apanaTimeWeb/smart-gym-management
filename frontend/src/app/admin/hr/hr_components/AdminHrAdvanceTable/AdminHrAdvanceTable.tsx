@@ -23,16 +23,16 @@ export default function AdminHrAdvanceTable() {
 
   return (
     <div className="max-w-2xl mx-auto bg-card p-6 rounded-xl border border-border">
-      <h2 className="text-xl font-bold mb-6 text-foreground">Give Advance Payment</h2>
+      <h2 className="text-xl font-bold mb-6 text-primary">Give Advance Payment</h2>
       
       <form onSubmit={handleSubmit} className="space-y-5">
         <div>
-          <label className="block text-sm font-medium mb-1 text-foreground">Staff Member *</label>
+          <label className="block text-sm font-medium mb-1 text-primary">Staff Member *</label>
           <select 
             required
             value={selectedStaffId}
             onChange={(e) => setSelectedStaffId(e.target.value)}
-            className="w-full px-3 py-2 border border-border rounded-lg text-sm bg-card text-foreground focus:ring-2 focus:ring-primary"
+            className="w-full px-3 py-2 border border-border rounded-lg text-sm bg-card text-primary focus-visible:ring-2 focus-visible:ring-primary"
           >
             <option value="" disabled>Select Staff</option>
             {staff.map(s => (
@@ -42,7 +42,7 @@ export default function AdminHrAdvanceTable() {
         </div>
 
         {selectedStaff && (
-          <div className="p-4 bg-primary/5 rounded-lg border border-primary/20 text-sm">
+          <div className="p-4 bg-surface-highlight rounded-lg border border-border text-sm">
             <p><strong>Current Advance Balance:</strong> {formatCurrency(selectedStaff.advanceSalary || 0)}</p>
             <p className="text-secondary text-xs mt-1">Advances are automatically deducted from the next payroll calculation.</p>
           </div>
@@ -50,18 +50,18 @@ export default function AdminHrAdvanceTable() {
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium mb-1 text-foreground">Amount (₹) *</label>
+            <label className="block text-sm font-medium mb-1 text-primary">Amount (₹) *</label>
             <input 
               type="number" required min="1"
               value={amount} onChange={(e) => setAmount(e.target.value)}
-              className="w-full px-3 py-2 border border-border rounded-lg text-sm bg-card text-foreground"
+              className="w-full px-3 py-2 border border-border rounded-lg text-sm bg-card text-primary"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1 text-foreground">Payment Mode</label>
+            <label className="block text-sm font-medium mb-1 text-primary">Payment Mode</label>
             <select 
               value={paymentMode} onChange={(e) => setPaymentMode(e.target.value)}
-              className="w-full px-3 py-2 border border-border rounded-lg text-sm bg-card text-foreground"
+              className="w-full px-3 py-2 border border-border rounded-lg text-sm bg-card text-primary"
             >
               <option value="Cash">Cash</option>
               <option value="Bank Transfer">Bank Transfer</option>
@@ -72,10 +72,10 @@ export default function AdminHrAdvanceTable() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1 text-foreground">Notes / Reason</label>
+          <label className="block text-sm font-medium mb-1 text-primary">Notes / Reason</label>
           <textarea 
             value={notes} onChange={(e) => setNotes(e.target.value)}
-            className="w-full px-3 py-2 border border-border rounded-lg text-sm bg-card text-foreground min-h-20"
+            className="w-full px-3 py-2 border border-border rounded-lg text-sm bg-card text-primary min-h-20"
             placeholder="e.g. Festival advance, medical emergency..."
           />
         </div>
@@ -84,7 +84,7 @@ export default function AdminHrAdvanceTable() {
           <button 
             type="submit" 
             disabled={saving || !selectedStaffId || !amount}
-            className="px-6 py-2 bg-primary text-primary-foreground rounded-lg font-medium disabled:opacity-50"
+            className="motion-safe:transition-all motion-safe:duration-base ease-in-out px-6 py-2 bg-primary text-on-primary rounded-lg font-medium disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
           >
             {saving ? 'Processing...' : 'Give Advance'}
           </button>

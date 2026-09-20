@@ -1,3 +1,4 @@
+'use client';
 // RESPONSIBILITY: Generic debounce hook shared across all TRAINER modules.
 // Prevents excessive API calls by delaying a value update until the user stops typing.
 // Use this for all search inputs and filter inputs that trigger backend calls (Rule 15).

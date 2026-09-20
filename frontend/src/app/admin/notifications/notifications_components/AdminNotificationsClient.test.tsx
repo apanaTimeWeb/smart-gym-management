@@ -16,7 +16,7 @@ vi.mock('@/app/admin/notifications/notifications_utils/useAdminNotificationsPage
   }),
 }));
 
-vi.mock('@/app/admin/admin_components/AdminFeedback/useAdminConfirm', () => ({
+vi.mock('@/app/admin/admin_layout/AdminFeedback/useAdminConfirm', () => ({
   useAdminConfirm: () => ({ confirm: vi.fn().mockResolvedValue(true) }),
 }));
 

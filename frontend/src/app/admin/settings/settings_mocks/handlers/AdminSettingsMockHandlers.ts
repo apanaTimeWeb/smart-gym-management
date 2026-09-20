@@ -17,19 +17,19 @@ function asRecord(value: unknown): JsonObject {
 }
 
 const ok = <T>(data: T, message = 'Success') =>
-  HttpResponse.json({ success: true, message, data, meta: { total: Array.isArray(data) ? data.length : 1, page: 1, limit: 50, totalPages: 1 } });
+  HttpResponse.json({ success: true, message, data });
 
 const paged = <T>(data: T[], page: number, limit: number, message = 'Success') => {
   const safeLimit = Math.max(1, limit);
   const safePage = Math.max(1, page);
   const start = (safePage - 1) * safeLimit;
   const pageData = data.slice(start, start + safeLimit);
-  return HttpResponse.json({ success: true, message, data: pageData, meta: { total: data.length, page: safePage, limit: safeLimit, totalPages: Math.max(1, Math.ceil(data.length / safeLimit)) } });
+  return HttpResponse.json({ success: true, message, data: pageData, meta: { total: data.length, page: safePage, limit: safeLimit, totalPages: Math.max(1, Math.ceil(data.length / safeLimit)), hasNextPage: safePage < Math.max(1, Math.ceil(data.length / safeLimit)), hasPrevPage: safePage > 1 } });
 };
 
 
 export const adminSettingsMockHandlers = [
-  http.get('*/admin/permissions/fetchPermissions', ({ request }) => { const url = new URL(request.url); if (url.searchParams.get('consumer') !== 'settings') return; return HttpResponse.json({ success: true, message: 'Success', data: { roleDefaults: MOCK_ADMIN_SETTINGS_ROLE_PERMISSIONS, gymOverrides: [] }, meta: { total: 1, page: 1, limit: 50, totalPages: 1 } }); }),
+  http.get('*/admin/permissions/fetchPermissions', ({ request }) => { const url = new URL(request.url); if (url.searchParams.get('consumer') !== 'settings') return; return HttpResponse.json({ success: true, message: 'Success', data: { roleDefaults: MOCK_ADMIN_SETTINGS_ROLE_PERMISSIONS, gymOverrides: [] } }); }),
   http.get('*/admin/settings/fetchSettings', () => ok(settingsState)),
   http.post('*/admin/settings/updateSettings', async ({ request }) => { const body = await parseRequestBody(request); const incoming = asRecord(body); const next = { ...settingsState }; for (const section of ['profile', 'notifications', 'integration', 'gst', 'payment', 'general']) { const value = incoming[section]; if (value && typeof value === 'object' && !Array.isArray(value)) (next as Record<string, Record<string, unknown>>)[section] = { ...(next as Record<string, Record<string, unknown>>)[section], ...(value as Record<string, unknown>) }; } settingsState = next; return ok(settingsState, 'Settings updated'); })
 ];

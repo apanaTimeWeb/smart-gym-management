@@ -1,8 +1,9 @@
 import { http, HttpResponse, delay } from 'msw';
-import type { RevenueRow, CancellationsRecord, TenantHealthScore } from '@/app/superadmin/reports/reports_types/superadmin_reports_types';
+import type { RevenueRow, CancellationsRecord, TenantHealthScore } from '@/app/superadmin/reports/reports_types/SuperadminReportsTypes';
+import { ReportsUrlConfig } from '@/app/superadmin/reports/superadmin_reports_url_config';
 import type { ApiResponse } from '@/lib/api';
 import { MOCK_SUPERADMIN_REPORTS_REVENUE, MOCK_SUPERADMIN_REPORTS_CANCELLATIONS, MOCK_SUPERADMIN_REPORTS_HEALTH } from '@/app/superadmin/reports/reports_mocks/fixtures/SuperadminReportsMockFixtures';
-const BASE_URL = '*/api/v1/superadmin/reports';
+const BASE_URL = `*${ReportsUrlConfig.BACKEND_API.BASE}`;
 export const superadminReportsHandlers = [
     http.get(`${BASE_URL}/revenue`, async ({ request }) => {
         await delay(300);

@@ -1,10 +1,12 @@
-'use client';
 // RESPONSIBILITY: Contains logic, types, or component definition for this module.
-import { useMembersContext } from '@/app/manager/members/members_context/ManagerMembersContext';
-import { useFetchAttendance } from '@/app/manager/members/members_api/ManagerUseManagerMembersQueries';
+﻿'use client';
+import { useManagerMembersLogic } from '@/app/manager/members/members_hooks/ManagerUseManagerMembersLogic';
+import { useFetchAttendance } from '@/app/manager/members/members_hooks/ManagerUseManagerMembersQueries';
+import { formatMemberMonthYear } from '@/app/manager/members/members_utils/ManagerMembersDateFormatters';
+
 
 export default function ManagerProfileAttendance() {
-  const { selectedMember } = useMembersContext();
+  const { selectedMember } = useManagerMembersLogic();
   const { data: att = [] } = useFetchAttendance(selectedMember?.id || '');
 
   if (!selectedMember) return null;
@@ -33,8 +35,8 @@ export default function ManagerProfileAttendance() {
         <p className="text-sm font-medium text-secondary">
           Current Month Attendance
         </p>
-        <span className="text-sm font-bold text-primary bg-primary-subtle px-3 py-1 rounded-full">
-          {new Date().toLocaleString('default', { month: 'long', year: 'numeric' })}
+        <span className="text-sm font-bold text-on-primary bg-primary-subtle px-3 py-1 rounded-full">
+          {formatMemberMonthYear(new Date())}
         </span>
       </div>
       
@@ -43,8 +45,8 @@ export default function ManagerProfileAttendance() {
           <div 
             key={day} 
             className={`h-10 w-full rounded-lg flex items-center justify-center text-xs font-bold border-none ${
-              status === 'P' ? 'bg-success text-primary-foreground' 
-              : status === 'A' ? 'bg-danger text-primary-foreground' 
+              status === 'P' ? 'bg-success text-on-success' 
+              : status === 'A' ? 'bg-danger text-on-danger' 
               : 'bg-input text-secondary border border-border'
             }`}
           >
@@ -55,3 +57,4 @@ export default function ManagerProfileAttendance() {
     </div>
   );
 }
+

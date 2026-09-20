@@ -1,11 +1,10 @@
 // RESPONSIBILITY: Renders the Reports Health Tab component and its associated UI logic.
 import { CheckCircle2, AlertTriangle, XCircle } from 'lucide-react';
-import type { TenantHealthScore } from '@/app/superadmin/reports/reports_types/superadmin_reports_types';
+import type { TenantHealthScore } from '@/app/superadmin/reports/reports_types/SuperadminReportsTypes';
+import type { SuperadminReportsHealthTabProps } from '@/app/superadmin/reports/reports_types/SuperadminReportsTabTypes';
 import { formatNumber } from '@/lib/formatters';
 import { GRADE_STYLES, PAYMENT_HEALTH_STYLES, TICKET_DANGER_THRESHOLD, TICKET_WARNING_THRESHOLD, } from '@/app/superadmin/reports/reports_types/SuperadminReportsConstants';
-export function SuperadminReportsHealthTab({ sortedHealthData, }: {
-    sortedHealthData: TenantHealthScore[];
-}) {
+export function SuperadminReportsHealthTab({ sortedHealthData }: SuperadminReportsHealthTabProps) {
     function renderTicketCount(count: number) {
         const color = count > TICKET_DANGER_THRESHOLD
             ? 'text-danger'
@@ -14,24 +13,24 @@ export function SuperadminReportsHealthTab({ sortedHealthData, }: {
                 : 'text-secondary';
         return <span className={`text-xs font-medium ${color}`}>{count}</span>;
     }
-    return (<div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
+    return (<div className="bg-card border border-border rounded-xl shadow-card overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-border bg-input/40">
+            <tr className="border-b border-border bg-input">
               {['Gym', 'Plan', 'Score', 'Grade', 'Members', 'Last Login', 'Payment', 'Feature Use', 'Tickets'].map((h) => (<th key={h} className="text-left px-4 py-3 text-xs font-semibold text-secondary uppercase tracking-wider">{h}</th>))}
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
-            {sortedHealthData.map((row: TenantHealthScore) => (<tr key={row.id} className="hover:bg-input/30 motion-safe:transition-colors">
-                <td className="px-4 py-3 font-medium text-foreground">{row.gymName}</td>
+            {sortedHealthData.map((row) => (<tr key={row.id} className="hover:bg-input motion-safe:transition-colors">
+                <td className="px-4 py-3 font-medium text-primary">{row.gymName}</td>
                 <td className="px-4 py-3 text-secondary text-xs">{row.plan}</td>
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-2">
                     <div className="w-16 h-1.5 bg-input rounded-full overflow-hidden">
-                      <div className={`h-full rounded-full ${row.score >= 80 ? 'bg-success' : row.score >= 60 ? 'bg-primary' : row.score >= 40 ? 'bg-warning' : 'bg-danger'}`} style={{ width: `${row.score}%` }}/>
+                      <div className={`h-full rounded-full ${row.score >= 80 ? 'bg-success-bg' : row.score >= 60 ? 'bg-primary-subtle' : row.score >= 40 ? 'bg-warning-bg' : 'bg-danger-bg'}`} style={{ width: `${row.score}%` }}/>
                     </div>
-                    <span className="text-foreground font-medium text-xs">{formatNumber(row.score)}</span>
+                    <span className="text-primary font-medium text-xs">{formatNumber(row.score)}</span>
                   </div>
                 </td>
                 <td className="px-4 py-3">

@@ -11,22 +11,22 @@ export function AdminSettingsPaymentGateway({ initialData }: { initialData: Paym
   const onSubmit = (data: PaymentGatewaySettingsType) => mutation.mutate(data);
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="bg-card rounded-xl shadow-sm border border-border mt-6">
+    <form onSubmit={form.handleSubmit(onSubmit)} className="bg-card rounded-xl shadow-card border border-border mt-6">
       <div className="px-6 py-4 border-b border-border flex items-center justify-between flex-wrap gap-3">
-        <h2 className="font-bold text-foreground text-lg">Payment Gateway</h2>
+        <h2 className="font-bold text-primary text-lg">Payment Gateway</h2>
         <div className="flex gap-2">
           <button
             type="button"
             onClick={() => form.reset(initialData)}
             disabled={!form.formState.isDirty || mutation.isPending}
-            className="px-4 py-2 text-sm border border-border rounded-lg hover:bg-input text-secondary flex items-center gap-2 motion-safe:transition-colors disabled:opacity-50"
+            className="px-4 py-2 text-sm border border-border rounded-lg hover:bg-input text-secondary flex items-center gap-2 motion-safe:transition-colors disabled:opacity-50 motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
           >
             <RefreshCw size={14} /> Reset
           </button>
           <button
             type="submit"
             disabled={mutation.isPending}
-            className="px-4 py-2 text-sm bg-primary text-primary-foreground rounded-lg font-medium flex items-center gap-2 disabled:opacity-70 hover:bg-primary-hover motion-safe:transition-colors"
+            className="px-4 py-2 text-sm bg-primary text-on-primary rounded-lg font-medium flex items-center gap-2 disabled:opacity-70 hover:bg-primary-hover motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
           >
             <Save size={14} /> {mutation.isPending ? 'Saving...' : 'Save Changes'}
           </button>
@@ -34,18 +34,18 @@ export function AdminSettingsPaymentGateway({ initialData }: { initialData: Paym
       </div>
 
       <div className="p-6 space-y-6">
-        <div className="bg-input/40 rounded-xl border border-border p-4 space-y-4">
+        <div className="bg-input rounded-xl border border-border p-4 space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+              <div className="w-8 h-8 rounded-lg bg-primary-subtle flex items-center justify-center">
                 <CreditCard size={16} className="text-primary" />
               </div>
-              <p className="text-sm font-semibold text-foreground">Razorpay</p>
+              <p className="text-sm font-semibold text-primary">Razorpay</p>
             </div>
             <div className="w-48">
               <AdminSettingsToggleSwitch
                 checked={formValues.razorpayEnabled ?? initialData.razorpayEnabled}
-                onChange={(v) => form.setValue('razorpayEnabled', v, { shouldDirty: true })}
+                onChange={(v: boolean) => form.setValue('razorpayEnabled', v, { shouldDirty: true })}
                 label=""
               />
             </div>
@@ -58,7 +58,7 @@ export function AdminSettingsPaymentGateway({ initialData }: { initialData: Paym
                   type="text"
                   {...form.register('razorpayKeyId')}
                   placeholder="rzp_live_..."
-                  className="w-full px-3 py-2 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-input text-foreground font-mono"
+                  className="w-full px-3 py-2 text-sm border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-primary font-mono"
                 />
               </div>
               <div>
@@ -67,25 +67,25 @@ export function AdminSettingsPaymentGateway({ initialData }: { initialData: Paym
                   type="password"
                   {...form.register('razorpayWebhookSecret')}
                   placeholder="whsec_..."
-                  className="w-full px-3 py-2 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-input text-foreground"
+                  className="w-full px-3 py-2 text-sm border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-primary"
                 />
               </div>
             </div>
           )}
         </div>
 
-        <div className="bg-input/40 rounded-xl border border-border p-4 space-y-4">
+        <div className="bg-input rounded-xl border border-border p-4 space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-success/10 flex items-center justify-center">
+              <div className="w-8 h-8 rounded-lg bg-success-bg flex items-center justify-center">
                 <Receipt size={16} className="text-success" />
               </div>
-              <p className="text-sm font-semibold text-foreground">UPI / QR Code</p>
+              <p className="text-sm font-semibold text-primary">UPI / QR Code</p>
             </div>
             <div className="w-48">
               <AdminSettingsToggleSwitch
                 checked={formValues.upiEnabled ?? initialData.upiEnabled}
-                onChange={(v) => form.setValue('upiEnabled', v, { shouldDirty: true })}
+                onChange={(v: boolean) => form.setValue('upiEnabled', v, { shouldDirty: true })}
                 label=""
               />
             </div>
@@ -97,25 +97,25 @@ export function AdminSettingsPaymentGateway({ initialData }: { initialData: Paym
                 type="text"
                 {...form.register('upiId')}
                 placeholder="yourgym@upi"
-                className="w-full px-3 py-2 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-input text-foreground"
+                className="w-full px-3 py-2 text-sm border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-primary"
               />
             </div>
           )}
         </div>
 
         <div className="space-y-3 pt-2 border-t border-border">
-          <p className="text-sm font-semibold text-foreground">Receipt Settings</p>
-          <div className="flex items-center justify-between p-3 bg-input/40 rounded-xl border border-border">
+          <p className="text-sm font-semibold text-primary">Receipt Settings</p>
+          <div className="flex items-center justify-between p-3 bg-input rounded-xl border border-border">
             <AdminSettingsToggleSwitch
               checked={formValues.cashEnabled ?? initialData.cashEnabled}
-              onChange={(v) => form.setValue('cashEnabled', v, { shouldDirty: true })}
+              onChange={(v: boolean) => form.setValue('cashEnabled', v, { shouldDirty: true })}
               label="Accept Cash Payments"
             />
           </div>
-          <div className="flex items-center justify-between p-3 bg-input/40 rounded-xl border border-border">
+          <div className="flex items-center justify-between p-3 bg-input rounded-xl border border-border">
             <AdminSettingsToggleSwitch
               checked={formValues.autoReceiptEnabled ?? initialData.autoReceiptEnabled}
-              onChange={(v) => form.setValue('autoReceiptEnabled', v, { shouldDirty: true })}
+              onChange={(v: boolean) => form.setValue('autoReceiptEnabled', v, { shouldDirty: true })}
               label="Auto-generate receipt on payment"
             />
           </div>
@@ -126,9 +126,9 @@ export function AdminSettingsPaymentGateway({ initialData }: { initialData: Paym
               {...form.register('receiptPrefix')}
               maxLength={6}
               placeholder="GS"
-              className="w-32 px-3 py-2.5 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-input text-foreground font-mono uppercase"
+              className="w-32 px-3 py-2.5 text-sm border border-border rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-primary font-mono uppercase"
             />
-            {form.formState.errors.receiptPrefix && <p className="text-xs text-danger mt-1">{form.formState.errors.receiptPrefix.message}</p>}
+            {form.formState.errors.receiptPrefix && <p className="text-xs text-danger mt-1">{form.formState.errors.receiptPrefix.message as string}</p>}
             <p className="text-xs text-secondary mt-1">e.g. prefix GS → receipt GS-00123</p>
           </div>
         </div>

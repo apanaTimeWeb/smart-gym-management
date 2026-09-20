@@ -24,7 +24,7 @@ export default function LandingError({
         </p>
         <button
           onClick={() => reset()}
-          className="mt-4 px-8 py-3 bg-danger hover:opacity-90 text-white font-bold rounded-xl transition-all"
+          className="mt-4 px-8 py-3 bg-danger-bg hover:opacity-90 text-white font-bold rounded-xl transition-all"
         >
           Try Again
         </button>

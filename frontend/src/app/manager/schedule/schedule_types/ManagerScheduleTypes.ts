@@ -2,9 +2,9 @@
 // HIGHLY RECOMMENDED additions: ClassBatch interface, location + substituteTrainerId
 // on TrainerShift, class occupancy KPIs.
 
-import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
-
+import type { ManagerToastType } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerToastTypes';
 import type { QueryStatus } from '@tanstack/react-query';
+
 export type ShiftDay = 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday' | 'Sunday';
 export type ShiftStatus = 'Active' | 'Off' | 'Leave';
 
@@ -78,15 +78,15 @@ export interface CreateShiftDto {
 export interface UpdateShiftDto extends Partial<CreateShiftDto> {}
 
 // ─── Context ──────────────────────────────────────────────────────────────────
-export interface ScheduleContextType {
+export interface ManagerScheduleViewModel {
   trainers: TrainerScheduleSummary[];
   kpis: ScheduleKPIData | null;
   status: QueryStatus;
   error: string;
-  toast: { message: string; type: ToastType } | null;
-  showToast: (msg: string, t: ToastType) => void;
+  toast: { message: string; type: ManagerToastType } | null;
+  showToast: (msg: string, t: ManagerToastType) => void;
   hideToast: () => void;
-  loadAll: () => Promise<unknown>;
+  loadAll: () => Promise<void>;
   selectedDay: ShiftDay | 'All';
   setSelectedDay: (day: ShiftDay | 'All') => void;
   search: string;

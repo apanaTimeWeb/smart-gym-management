@@ -1,11 +1,11 @@
-'use client';
 // RESPONSIBILITY: Renders the TrainerEarningsMain UI for the owning Trainer feature; data access remains in the feature API/query layer.
+'use client';
 import { AlertCircle } from 'lucide-react';
 import { useTrainerEarningsQuery } from '@/app/trainer/earnings/earnings_queries/useTrainerEarningsQuery';
 import TrainerEarningsKPIs from '@/app/trainer/earnings/earnings_components/TrainerEarningsKPIs/TrainerEarningsKPIs';
 import TrainerEarningsPending from '@/app/trainer/earnings/earnings_components/TrainerEarningsPending/TrainerEarningsPending';
 import TrainerEarningsHistory from '@/app/trainer/earnings/earnings_components/TrainerEarningsHistory/TrainerEarningsHistory';
-import { TrainerDateFilterDropdown } from '@/app/trainer/trainer_components/TrainerShared/TrainerDateFilterDropdown';
+import TrainerEarningsDateFilterDropdown from '@/app/trainer/earnings/earnings_components/TrainerEarningsDateFilterDropdown/TrainerEarningsDateFilterDropdown';
 
 export default function TrainerEarningsMain() {
   const { isLoading, isError, error, refetch } = useTrainerEarningsQuery();
@@ -21,8 +21,8 @@ export default function TrainerEarningsMain() {
   if (isError) {
     return (
       <div className="p-6">
-        <div className="bg-danger/10 border border-danger rounded-xl p-4 flex items-center gap-3 text-danger max-w-md">
-          <AlertCircle size={24} />
+        <div className="bg-danger-bg border border-danger rounded-xl p-4 flex items-center gap-3 text-danger max-w-md">
+          <AlertCircle size={18} />
           <div>
             <p className="font-bold">Failed to load earnings data</p>
             <p className="text-sm mt-1">Unable to load earnings right now. Please retry.</p>
@@ -37,7 +37,7 @@ export default function TrainerEarningsMain() {
       <div className="p-6 space-y-6">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold">Earnings</h1>
-          <TrainerDateFilterDropdown />
+          <TrainerEarningsDateFilterDropdown />
         </div>
         <TrainerEarningsKPIs />
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

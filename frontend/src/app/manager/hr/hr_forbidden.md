@@ -12,7 +12,7 @@ To maintain extreme isolation and enterprise-grade architecture in the Manager H
 
 ## 3. Theming & Formatting
 - **No Arbitrary Classes:** Raw Tailwind values (e.g., `text-[#FF0000]`, `bg-[var(--danger)]`) are strictly prohibited. You MUST use semantic tokens defined in `hr_theme_contract.md` (e.g., `text-danger`, `bg-warning`).
-- **No Inline Currency Formatting:** Never use `.toLocaleString()` or string concatenations for currency (`₹${value}`). All monetary values MUST pass through `formatCurrency()` from `@/lib/formatters`.
+- **No Inline Currency Formatting:** Never use `.toLocaleString()` or string concatenations for currency (`₹${value}`). All monetary values MUST pass through `formatCurrencyFromMinorUnits()` from `@/lib/formatters`.
 
 ## 4. Destructive Actions
 - **No Direct `window.confirm`:** Changing a staff's status (suspension/firing) or deleting records must use the centralized `useConfirm()` hook.

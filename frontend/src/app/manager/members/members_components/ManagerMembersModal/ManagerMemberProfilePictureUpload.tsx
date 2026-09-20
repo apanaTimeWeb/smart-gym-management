@@ -1,5 +1,5 @@
-'use client';
 // RESPONSIBILITY: Renders the profile picture upload placeholder in the Add Member form.
+'use client';
 // Used by ManagerMembersModal. Extracted to keep the modal under the 300-line ceiling (Rule 1).
 import { Camera } from 'lucide-react';
 
@@ -13,7 +13,7 @@ export default function ManagerMemberProfilePictureUpload() {
   return (
     <div className="flex flex-col items-center justify-center mb-6 pb-6 border-b border-border">
       <div className="w-24 h-24 rounded-full bg-input border-2 border-dashed border-border flex flex-col items-center justify-center text-secondary mb-3 relative overflow-hidden group cursor-pointer hover:border-primary motion-safe:transition-colors">
-        <Camera size={24} className="mb-1 group-hover:text-primary motion-safe:transition-colors" />
+        <Camera size={18} className="mb-1 group-hover:text-primary motion-safe:transition-colors" />
         <span className="text-xs font-medium group-hover:text-primary motion-safe:transition-colors">Upload</span>
         <input
           type="file"

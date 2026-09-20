@@ -1,7 +1,8 @@
 // RESPONSIBILITY: Displays an empty-state explanation for the Trainer Diet Library.
 import { Apple } from 'lucide-react';
+import type { TrainerLibraryEmptyStateProps } from '@/app/trainer/library/library_types/TrainerLibraryEmptyStateProps';
 
-export interface TrainerLibraryEmptyStateProps { search: string; }
+
 
 export default function TrainerLibraryEmptyState({ search }: TrainerLibraryEmptyStateProps) {
   return (

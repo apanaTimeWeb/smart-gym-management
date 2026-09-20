@@ -8,10 +8,16 @@ Manager Settings is the branch configuration workspace. Managers can update lang
 |---|---|---|
 | `settings_api/` | Feature-owned responsibility for the settings module. | `ManagerSettingsApi.ts; ManagerUseManagerSettingsQuery.ts` |
 | `settings_components/` | Feature-owned responsibility for the settings module. | `—` |
-| `settings_context/` | Feature-owned responsibility for the settings module. | `ManagerUseManagerSettingsLogic.ts` |
+| `settings_hooks/` | Feature-owned responsibility for the settings module. | `ManagerUseManagerSettingsLogic.ts` |
 | `settings_fixtures/` | Feature-owned responsibility for the settings module. | `ManagerSettingsMockData.ts` |
 | `settings_mocks/` | Feature-owned responsibility for the settings module. | `—` |
 | `settings_types/` | Feature-owned responsibility for the settings module. | `ManagerSettingsSchema.ts; ManagerSettingsTypes.ts` |
+
+## Approved External Dependencies
+
+- Global framework/application infrastructure documented by the architecture standard may be used when required.
+- Approved zero-business UI primitives may be imported from Manager application infrastructure.
+- Sibling feature business logic, state, API services, fixtures, and tests are not dependencies.
 
 ## Feature Inventory
 | Feature | Route | What the User Can Do | Main API Calls | Status |
@@ -27,7 +33,7 @@ Manager Settings is the branch configuration workspace. Managers can update lang
 4. updateSettings() submits the partial settings payload and the authoritative response becomes the rendered state.
 
 ## Data and State Architecture
-TanStack Query owns settings server/API data. UI-only filters, tabs, selections, and draft state remain local state or module-scoped Zustand where shared. React Context is limited to stable cross-tree concerns and does not become the source of truth for API data. Query keys are module-prefixed.
+TanStack Query owns settings server/API data. UI-only filters, tabs, selections, and draft state remain local state or module-scoped Zustand where shared. module-local state/query layer is limited to stable cross-tree concerns and does not become the source of truth for API data. Query keys are module-prefixed.
 
 ## API Contract
 | Function | Method | Endpoint | Request | Response `data` type |

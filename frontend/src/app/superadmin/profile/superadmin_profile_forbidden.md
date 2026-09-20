@@ -2,7 +2,7 @@
 
 These rules are absolute for this module. No exceptions.
 
-1. **No API calls in `.tsx` files** — All fetch/mutation calls must go through `superadmin_profile_api.ts`. Components receive data and callbacks via props only.
+1. **No API calls in `.tsx` files** — All fetch/mutation calls must go through `profile_\1.ts`. Components receive data and callbacks via props only.
 
 2. **No hardcoded credentials or PII** — Never embed real passwords, tokens, or personal data in mock objects or test fixtures.
 

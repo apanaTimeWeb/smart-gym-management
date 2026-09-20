@@ -3,22 +3,12 @@
 // Shows revenue source split + expense category split + MoM delta context. No API calls.
 
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
+import AdminFinancePnlBreakdownBar from '@/app/admin/finance/finance_components/AdminFinancePnl/AdminFinancePnlBreakdownBar';
 import type { BranchPnlRecord } from '@/app/admin/finance/finance_types/AdminFinanceTypes';
 import {formatCurrency, formatPercent1dp} from '@/lib/formatters';
 
-interface AdminFinancePnlRowBreakdownProps {
-  branch: BranchPnlRecord;
-  colSpan: number;
-}
+import type { AdminFinancePnlRowBreakdownProps } from '@/app/admin/finance/finance_types/AdminFinancePnlRowBreakdownPropsTypes';
 
-function Bar({ value, max, colorClass }: { value: number; max: number; colorClass: string }) {
-  const pct = max > 0 ? Math.min((value / max) * 100, 100) : 0;
-  return (
-    <div className="w-full h-1.5 bg-border rounded-full overflow-hidden">
-      <div className={`h-full rounded-full ${colorClass}`} style={{ width: `${pct}%` }} />
-    </div>
-  );
-}
 
 export default function AdminFinancePnlRowBreakdown({ branch, colSpan }: AdminFinancePnlRowBreakdownProps) {
   const { revenueBreakdown: rev, expenseBreakdown: exp, momDelta, netProfit, revenue, expenses } = branch;
@@ -43,7 +33,7 @@ export default function AdminFinancePnlRowBreakdown({ branch, colSpan }: AdminFi
 
   return (
     <tr>
-      <td colSpan={colSpan} className="bg-input/40 border-b border-border px-6 py-5">
+      <td colSpan={colSpan} className="bg-input border-b border-border px-6 py-5">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
           {/* Revenue Breakdown */}
@@ -54,9 +44,9 @@ export default function AdminFinancePnlRowBreakdown({ branch, colSpan }: AdminFi
                 <div key={item.label}>
                   <div className="flex justify-between text-xs mb-1">
                     <span className="text-secondary">{item.label}</span>
-                    <span className="text-foreground font-medium">{formatCurrency(item.value)}</span>
+                    <span className="text-primary font-medium">{formatCurrency(item.value)}</span>
                   </div>
-                  <Bar value={item.value} max={revenue} colorClass="bg-success/70" />
+                  <AdminFinancePnlBreakdownBar value={item.value} max={revenue} colorClass="bg-success-bg" />
                 </div>
               ))}
             </div>
@@ -70,9 +60,9 @@ export default function AdminFinancePnlRowBreakdown({ branch, colSpan }: AdminFi
                 <div key={item.label}>
                   <div className="flex justify-between text-xs mb-1">
                     <span className="text-secondary">{item.label}</span>
-                    <span className="text-foreground font-medium">{formatCurrency(item.value)}</span>
+                    <span className="text-primary font-medium">{formatCurrency(item.value)}</span>
                   </div>
-                  <Bar value={item.value} max={expenses} colorClass="bg-danger/60" />
+                  <AdminFinancePnlBreakdownBar value={item.value} max={expenses} colorClass="bg-danger-bg" />
                 </div>
               ))}
             </div>
@@ -91,7 +81,7 @@ export default function AdminFinancePnlRowBreakdown({ branch, colSpan }: AdminFi
                 <span className="text-sm font-semibold text-danger">{formatCurrency(expenses)}</span>
               </div>
               <div className="border-t border-border pt-3 flex justify-between items-center">
-                <span className="text-xs font-bold text-foreground">Net Profit</span>
+                <span className="text-xs font-bold text-primary">Net Profit</span>
                 <span className={`text-sm font-bold ${netProfit >= 0 ? 'text-success' : 'text-danger'}`}>
                   {formatCurrency(netProfit)}
                 </span>

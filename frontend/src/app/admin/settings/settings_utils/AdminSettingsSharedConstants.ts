@@ -1,3 +1,4 @@
+export type AdminSettingsTwoFactorMethod = 'SMS' | 'TOTP';
 // RESPONSIBILITY: Centralized constants, schema, and shared utilities for the Settings module.
 import { Building, Bell, Shield, Smartphone, Settings as SettingsIcon, Receipt, CreditCard } from 'lucide-react';
 
@@ -19,7 +20,7 @@ export const EMPTY_SETTINGS_FORM = {
   city: '',
   gstNumber: '',
   twoFactorEnabled: false,
-  twoFactorMethod: 'SMS' as 'SMS' | 'TOTP',
+  twoFactorMethod: 'SMS' as AdminSettingsTwoFactorMethod,
 };
 
 export const GST_STATE_CODES = [
@@ -58,5 +59,3 @@ export const BACKUP_FREQUENCY_OPTIONS = [
   { value: 'weekly', label: 'Weekly' },
   { value: 'monthly', label: 'Monthly' },
 ];
-
-export { MOCK_ROLES } from '@/app/admin/settings/settings_mocks/fixtures/AdminSettingsMockFixtures';

@@ -1,7 +1,11 @@
 export interface BranchExpenseItem { id: string; label: string; amount: number; category: string; date: string; }
 export interface BranchRevenueItem { id: string; label: string; amount: number; method: string; date: string; }
-export interface BranchStaffMember { id: string; name: string; role: string; shift: string; status: 'active' | 'on-leave'; }
-export interface BranchStudent { id: string; name: string; plan: string; status: 'active' | 'expired'; joinDate: string; }
+export type AdminBranchStaffStatus = 'active' | 'on-leave';
+export type AdminBranchStudentStatus = 'active' | 'expired';
+export type AdminBranchStatus = 'active' | 'inactive';
+
+export interface BranchStaffMember { id: string; name: string; role: string; shift: string; status: AdminBranchStaffStatus; }
+export interface BranchStudent { id: string; name: string; plan: string; status: AdminBranchStudentStatus; joinDate: string; }
 
 export interface Branch {
   id: string;
@@ -17,7 +21,7 @@ export interface Branch {
   maxCapacity?: number;
   currentOccupancy?: number;
   equipmentCount?: number;
-  status: 'active' | 'inactive';
+  status: AdminBranchStatus;
   revenue: number;
   expenses: number;
   studentsCount: number;
@@ -27,3 +31,5 @@ export interface Branch {
   staffList?: BranchStaffMember[];
   studentList?: BranchStudent[];
 }
+
+export type { AdminBranchesTimeRange } from '@/app/admin/branches/branches_types/AdminBranchesTimeRangeTypes';

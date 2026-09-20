@@ -34,4 +34,5 @@ export interface UpdateTrainerPasswordPayload {
   confirmPassword: string;
 }
 
-export type TrainerProfileTab = 'personal' | 'security';
+export const TRAINER_PROFILE_TAB_IDS = ['personal', 'security'] as const;
+export type TrainerProfileTab = (typeof TRAINER_PROFILE_TAB_IDS)[number];

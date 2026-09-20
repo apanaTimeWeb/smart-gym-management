@@ -1,26 +1,10 @@
 "use client";
 // RESPONSIBILITY: Payment method management — list, set default, remove.
 
-import { CreditCard, Smartphone, Building2, Star, Trash2, CheckCircle } from 'lucide-react';
+import { CreditCard, Star, Trash2, CheckCircle } from 'lucide-react';
 import { useAdminSubscriptionsLogic } from '@/app/admin/subscriptions/subscriptions_context/useAdminSubscriptionsLogic';
-import type { PaymentMethod } from '@/app/admin/subscriptions/subscriptions_types/AdminSubscriptionsTypes';
-
-function PaymentMethodIcon({ type }: { type: PaymentMethod['type'] }) {
-  if (type === 'upi') return <Smartphone size={18} className="text-success" />;
-  if (type === 'netbanking') return <Building2 size={18} className="text-info" />;
-  return <CreditCard size={18} className="text-primary" />;
-}
-
-function PaymentMethodLabel({ pm }: { pm: PaymentMethod }) {
-  if (pm.type === 'upi') return <span className="text-sm font-semibold text-foreground">{pm.upiId}</span>;
-  if (pm.type === 'netbanking') return <span className="text-sm font-semibold text-foreground">{pm.bankName} Net Banking</span>;
-  return (
-    <span className="text-sm font-semibold text-foreground">
-      {pm.brand} •••• {pm.last4}
-      <span className="text-xs text-secondary ml-2">Exp {pm.expiryMonth}/{pm.expiryYear}</span>
-    </span>
-  );
-}
+import AdminSubscriptionsPaymentMethodIcon from '@/app/admin/subscriptions/subscriptions_components/AdminSubscriptionsPaymentMethod/AdminSubscriptionsPaymentMethodIcon';
+import AdminSubscriptionsPaymentMethodLabel from '@/app/admin/subscriptions/subscriptions_components/AdminSubscriptionsPaymentMethod/AdminSubscriptionsPaymentMethodLabel';
 
 export default function AdminSubscriptionsPaymentMethod() {
   const { paymentMethods, setDefaultPaymentMethod, handleRemovePaymentMethod } = useAdminSubscriptionsLogic();
@@ -30,7 +14,7 @@ export default function AdminSubscriptionsPaymentMethod() {
       <div className="flex items-center justify-between p-4 border-b border-border">
         <div className="flex items-center gap-2">
           <CreditCard size={16} className="text-primary" />
-          <h3 className="font-semibold text-foreground text-sm">Payment Methods</h3>
+          <h3 className="font-semibold text-primary text-sm">Payment Methods</h3>
         </div>
 
       </div>
@@ -38,13 +22,13 @@ export default function AdminSubscriptionsPaymentMethod() {
         {paymentMethods.length === 0 ? (
           <div className="p-8 text-center text-sm text-secondary">No payment methods added</div>
         ) : paymentMethods.map(pm => (
-          <div key={pm.id} className="flex items-center justify-between p-4 hover:bg-input/40 motion-safe:transition-colors">
+          <div key={pm.id} className="flex items-center justify-between p-4 hover:bg-input motion-safe:transition-colors motion-safe:duration-base">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-input border border-border flex items-center justify-center">
-                <PaymentMethodIcon type={pm.type} />
+                <AdminSubscriptionsPaymentMethodIcon type={pm.type} />
               </div>
               <div>
-                <PaymentMethodLabel pm={pm} />
+                <AdminSubscriptionsPaymentMethodLabel paymentMethod={pm} />
                 {pm.isDefault && (
                   <div className="flex items-center gap-1 mt-0.5">
                     <CheckCircle size={11} className="text-success" />
@@ -57,14 +41,14 @@ export default function AdminSubscriptionsPaymentMethod() {
               {!pm.isDefault && (
                 <button
                   onClick={() => setDefaultPaymentMethod(pm.id)}
-                  className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-secondary border border-border rounded-lg hover:text-foreground hover:bg-input motion-safe:transition-colors"
+                  className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-secondary border border-border rounded-lg hover:text-primary hover:bg-input motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
                 >
                   <Star size={11} /> Set Default
                 </button>
               )}
               <button
                 onClick={() => handleRemovePaymentMethod(pm.id)}
-                className="p-1.5 rounded-lg text-secondary hover:text-danger hover:bg-danger-bg motion-safe:transition-colors"
+                className="min-h-11 min-w-11 p-1.5 rounded-lg text-secondary hover:text-danger hover:bg-danger-bg motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
                 aria-label="Remove payment method"
               >
                 <Trash2 size={14} />

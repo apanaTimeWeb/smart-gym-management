@@ -1,11 +1,15 @@
 // RESPONSIBILITY: Defines strict types and API response interfaces for the Attendance module.
 // Includes durationMinutes, lateMinutes, checkInMethod for time-tracking analytics.
 
+import type { AttendanceFormValues } from '@/app/manager/attendance/attendance_types/ManagerAttendanceFormTypes';
 import type { MemberSnapshot, StaffSnapshot } from '@/app/manager/attendance/attendance_types/ManagerAttendanceSnapshotTypes';
-import type { ToastType } from '@/app/manager/manager_components/ManagerFeedback/ManagerToast';
-import type { AttendanceTab, EMPTY_ATTENDANCE_FORM } from '@/app/manager/attendance/attendance_utils/ManagerAttendanceSharedConstants';
-import type React from 'react';
+import type { AttendanceTab } from '@/app/manager/attendance/attendance_utils/ManagerAttendanceSharedConstants';
+import type { ManagerToastType } from '@/app/manager/manager_components/ManagerFeedback/manager_feedback_types/ManagerToastTypes';
+import type { Dispatch, SetStateAction } from 'react';
 
+
+
+export type ManagerAttendancePersonType = 'MEMBER' | 'STAFF';
 
 // CRITICAL — DB column needed for analytics
 export type CheckInMethod = 'QR' | 'Manual' | 'Biometric';
@@ -42,16 +46,17 @@ export interface AttendanceResponse {
   total: number;
 }
 
-export interface AttendanceContextType {
+export interface ManagerAttendanceViewModel {
   records: Attendance[];
   todayStats: AttendanceStatsResponse;
   members: MemberSnapshot[];
   staff: StaffSnapshot[];
   totalRecords: number;
-  isLoading: boolean;
+  isPending: boolean;
   isError: boolean;
+  errorMessage: string;
   saving: boolean;
-  toast: { message: string; type: ToastType } | null;
+  toast: { message: string; type: ManagerToastType } | null;
 
   tab: AttendanceTab;
   setTab: (t: AttendanceTab) => void;
@@ -68,16 +73,16 @@ export interface AttendanceContextType {
   showModal: boolean;
   setShowModal: (show: boolean) => void;
 
-  calendarUser: { id: string; name: string; type: 'MEMBER' | 'STAFF' } | null;
-  setCalendarUser: (user: { id: string; name: string; type: 'MEMBER' | 'STAFF' } | null) => void;
+  calendarUser: { id: string; name: string; type: ManagerAttendancePersonType } | null;
+  setCalendarUser: (user: { id: string; name: string; type: ManagerAttendancePersonType } | null) => void;
 
-  form: typeof EMPTY_ATTENDANCE_FORM;
-  setForm: React.Dispatch<React.SetStateAction<typeof EMPTY_ATTENDANCE_FORM>>;
+  form: AttendanceFormValues;
+  setForm: Dispatch<SetStateAction<AttendanceFormValues>>;
 
-  showToast: (msg: string, t: ToastType) => void;
+  showToast: (msg: string, t: ManagerToastType) => void;
   hideToast: () => void;
 
   loadAll: () => Promise<void>;
-  markAttendance: (data: typeof EMPTY_ATTENDANCE_FORM) => Promise<void>;
+  markAttendance: (data: AttendanceFormValues) => Promise<void>;
   exportAttendance: () => void;
 }

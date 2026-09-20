@@ -1,6 +1,7 @@
 // RESPONSIBILITY: TypeScript types for the Gym Health Alerts module.
 
 export type AlertSeverity = 'critical' | 'warning' | 'info';
+export type AdminGymHealthAlertResolution = 'active' | 'resolved';
 export type AlertType =
   | 'no_new_members'
   | 'revenue_drop'
@@ -39,5 +40,5 @@ export interface AdminGymHealthAlertsQueryParams {
   severity?: AlertSeverity;
   alertType?: AlertType;
   gymId?: string;
-  resolved?: 'active' | 'resolved';
+  resolved?: AdminGymHealthAlertResolution;
 }

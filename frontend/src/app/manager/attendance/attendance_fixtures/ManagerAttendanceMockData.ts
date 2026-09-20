@@ -3,8 +3,7 @@ import type { Attendance, AttendanceStatsResponse } from '@/app/manager/attendan
 export const MOCK_ATTENDANCE_STATS: AttendanceStatsResponse = {
   totalCheckIns: 120,
   memberCheckIns: 105,
-  staffCheckIns: 15,
-};
+  staffCheckIns: 15 };
 
 export const MOCK_ATTENDANCE_RECORDS: Attendance[] = [
   {
@@ -17,8 +16,7 @@ export const MOCK_ATTENDANCE_RECORDS: Attendance[] = [
     status: 'Present',
     member: { name: 'Rahul Sharma' },
     checkInMethod: 'Biometric',
-    durationMinutes: 90,
-  },
+    durationMinutes: 90 },
   {
     id: '2',
     memberId: 2,
@@ -29,8 +27,7 @@ export const MOCK_ATTENDANCE_RECORDS: Attendance[] = [
     status: 'Present',
     member: { name: 'Priya Singh' },
     checkInMethod: 'QR',
-    durationMinutes: 90,
-  },
+    durationMinutes: 90 },
   {
     id: '3',
     staffId: 1,
@@ -41,8 +38,7 @@ export const MOCK_ATTENDANCE_RECORDS: Attendance[] = [
     status: 'Present',
     staff: { name: 'Amit Kumar' },
     checkInMethod: 'Biometric',
-    durationMinutes: 540,
-  },
+    durationMinutes: 540 },
   {
     id: '4',
     memberId: 3,
@@ -51,8 +47,7 @@ export const MOCK_ATTENDANCE_RECORDS: Attendance[] = [
     type: 'MEMBER',
     status: 'Present',
     member: { name: 'Neha Gupta' },
-    checkInMethod: 'Manual',
-  },
+    checkInMethod: 'Manual' },
   {
     id: '5',
     memberId: 4,
@@ -63,8 +58,7 @@ export const MOCK_ATTENDANCE_RECORDS: Attendance[] = [
     status: 'Present',
     member: { name: 'Vikram Singh' },
     checkInMethod: 'QR',
-    durationMinutes: 120,
-  },
+    durationMinutes: 120 },
   { id: '6', memberId: 5, date: new Date(Date.now() - 2 * 86400000).toISOString().split('T')[0] || '', checkIn: '06:45', checkOut: '08:00', type: 'MEMBER', status: 'Present', member: { name: 'Rohit Mehta' }, checkInMethod: 'QR', durationMinutes: 75 },
   { id: '7', memberId: 6, date: new Date(Date.now() - 3 * 86400000).toISOString().split('T')[0] || '', checkIn: '07:15', type: 'MEMBER', status: 'Late', member: { name: 'Kavya Singh' }, checkInMethod: 'Manual', lateMinutes: 15 },
   { id: '8', staffId: 2, date: new Date(Date.now() - 3 * 86400000).toISOString().split('T')[0] || '', checkIn: '06:00', checkOut: '15:00', type: 'STAFF', status: 'Present', staff: { name: 'Anjali Desai' }, checkInMethod: 'Biometric', durationMinutes: 540 },

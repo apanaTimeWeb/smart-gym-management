@@ -1,9 +1,9 @@
 "use client";
-import { formatKPI } from '@/lib/formatters';
+import { formatCurrency, formatKPI } from '@/lib/formatters';
 // RESPONSIBILITY: Renders the Revenue & Profit Trend area chart using ApexCharts (Recharts is forbidden per Rule 62).
 
 import dynamic from 'next/dynamic';
-import { ADMIN_CHART_THEME } from '@/app/admin/admin_utils/AdminChartThemeTokens';
+import { ADMIN_CHART_THEME } from '@/app/admin/admin_layout/admin_utils/AdminChartThemeTokens';
 import { BarChart3 } from 'lucide-react';
 import { useAdminDashboardLogic } from '@/app/admin/dashboard/dashboard_context/useAdminDashboardLogic';
 
@@ -57,7 +57,7 @@ export default function AdminDashboardRevenueTrend() {
       theme: 'dark',
       y: {
         formatter: (v) =>
-          new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(v),
+          formatCurrency(v),
       },
     },
     legend: {
@@ -73,13 +73,13 @@ export default function AdminDashboardRevenueTrend() {
   ];
 
   return (
-    <div className="bg-card/60 backdrop-blur-xl border border-border rounded-2xl shadow-lg p-6">
+    <div className="bg-card backdrop-blur-xl border border-border rounded-2xl shadow-card p-6">
       <div className="flex items-center gap-3 mb-4">
-        <div className="p-2.5 bg-success/20 text-success rounded-xl">
+        <div className="p-2.5 bg-success text-on-success rounded-xl">
           <BarChart3 size={18} strokeWidth={2} />
         </div>
         <div>
-          <h2 className="text-base font-bold text-foreground">Revenue & Profit Trend</h2>
+          <h2 className="text-base font-bold text-primary">Revenue & Profit Trend</h2>
           <p className="text-xs text-secondary">6-month trailing performance</p>
         </div>
       </div>

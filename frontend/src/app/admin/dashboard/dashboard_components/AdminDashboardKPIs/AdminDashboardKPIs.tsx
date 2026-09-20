@@ -2,8 +2,8 @@
 // RESPONSIBILITY: Renders the two rows of KPI metric stat cards on the dashboard using live data from AdminDashboardContext.
 
 import { useAdminDashboardLogic } from '@/app/admin/dashboard/dashboard_context/useAdminDashboardLogic';
-import AdminStatCard from '@/app/admin/admin_components/AdminShared/AdminStatCard';
-import { formatCurrency } from '@/lib/formatters';
+import AdminStatCard from '@/app/admin/admin_layout/AdminShared/AdminStatCard';
+import { formatCurrency, formatNumber} from '@/lib/formatters';
 import { Users, DollarSign, TrendingUp, AlertCircle, Clock, UserCheck } from 'lucide-react';
 import { useDateRangeSuffix } from '@/lib/useDateRangeSuffix';
 
@@ -20,20 +20,20 @@ export default function AdminDashboardKPIs() {
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 mb-4">
       <AdminStatCard
         title={`Avg. Attendance/Day${dateSuffix}`}
-        value={(s.avgAttendance ?? 0).toLocaleString()}
+        value={formatNumber(s.avgAttendance ?? 0)}
         change="This month"
         changeType="up"
         icon={Users}
-        iconBg="bg-primary/20"
+        iconBg="bg-primary-subtle"
         iconColor="text-primary"
       />
       <AdminStatCard
         title={`Renewals Pending${dateSuffix}`}
-        value={(s.renewalsPending ?? 0).toLocaleString()}
+        value={formatNumber(s.renewalsPending ?? 0)}
         change="Next 7 days"
         changeType="down"
         icon={Clock}
-        iconBg="bg-warning/20"
+        iconBg="bg-warning-bg"
         iconColor="text-warning"
       />
     </div>
@@ -44,7 +44,7 @@ export default function AdminDashboardKPIs() {
         change="All Time"
         changeType="neutral"
         icon={DollarSign}
-        iconBg="bg-primary/20"
+        iconBg="bg-primary-subtle"
         iconColor="text-primary"
       />
       <AdminStatCard
@@ -53,16 +53,16 @@ export default function AdminDashboardKPIs() {
         change="All Time"
         changeType="up"
         icon={TrendingUp}
-        iconBg="bg-success/20"
+        iconBg="bg-success-bg"
         iconColor="text-success"
       />
       <AdminStatCard
         title={`Active Members${dateSuffix}`}
-        value={(s.activeMembers || 0).toLocaleString()}
+        value={formatNumber(s.activeMembers || 0)}
         change={`${s.totalMembers ? Math.round((s.activeMembers / s.totalMembers) * 100) : 0}% capacity`}
         changeType="neutral"
         icon={UserCheck}
-        iconBg="bg-info/20"
+        iconBg="bg-info-bg"
         iconColor="text-info"
       />
       <AdminStatCard
@@ -71,7 +71,7 @@ export default function AdminDashboardKPIs() {
         change={`${s.membersByStatus?.pending || 0} members due`}
         changeType="down"
         icon={AlertCircle}
-        iconBg="bg-danger/20"
+        iconBg="bg-danger-bg"
         iconColor="text-danger"
       />
     </div>

@@ -1,4 +1,4 @@
-import type { AuditLog } from '@/app/superadmin/global-audit/superadmin_global-audit_types/superadmin_global-audit_types';
+import type { AuditLog } from '@/app/superadmin/global-audit/global-audit_types/SuperadminGlobalAuditTypes';
 export const MOCK_SUPERADMIN_GLOBAL_AUDIT: AuditLog[] = [
     { id: 'al1', timestamp: '2026-09-15T10:00:00Z', actor: 'superadmin@system.com', actorRole: 'SUPERADMIN', actorType: 'SUPERADMIN', action: 'CREATED_TENANT', resource: 'Tenant', resourceId: 't3', details: 'Created tenant CrossFit Box', ipAddress: '192.168.1.1', sessionId: 'ses-001', severity: 'INFO' },
     { id: 'al2', timestamp: '2026-09-14T14:30:00Z', actor: 'admin@iron.com', actorRole: 'ADMIN', tenantId: 't1', tenantName: 'Iron Paradise', actorType: 'TENANT', action: 'DELETED_MEMBER', resource: 'Member', resourceId: 'm123', details: 'Deleted inactive member record', ipAddress: '10.0.0.5', sessionId: 'ses-002', severity: 'WARNING' },

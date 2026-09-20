@@ -6,5 +6,6 @@ export const AdminMembersUrlConfig = {
     branchReference: '/admin/branches/fetchBranches',
     base: '/admin/members',
     detail: (memberId: string) => `/admin/members/${encodeURIComponent(memberId)}`,
+    export: '/admin/members/export',
   },
 } as const;

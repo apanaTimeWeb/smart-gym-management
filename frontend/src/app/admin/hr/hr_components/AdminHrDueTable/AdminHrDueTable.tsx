@@ -28,24 +28,24 @@ export default function AdminHrDueTable() {
     <div className="max-w-4xl mx-auto space-y-6">
       
       {staffWithDues.length > 0 && (
-        <div className="bg-warning/10 border border-warning/30 rounded-xl p-4 flex gap-3 items-start">
+        <div className="bg-warning-bg border border-warning rounded-xl p-4 flex gap-3 items-start">
           <AlertCircle className="text-warning mt-0.5" size={20} />
           <div>
             <h4 className="font-semibold text-warning text-sm">Outstanding Dues</h4>
             <p className="text-sm text-secondary mt-1">
               You have {staffWithDues.length} staff members with pending salary dues. Total outstanding: 
-              <strong className="ml-1 text-foreground">{formatCurrency(staffWithDues.reduce((sum, s) => sum + (s.currentDue || 0), 0))}</strong>
+              <strong className="ml-1 text-primary">{formatCurrency(staffWithDues.reduce((sum, s) => sum + (s.currentDue || 0), 0))}</strong>
             </p>
           </div>
         </div>
       )}
 
       <div className="bg-card p-6 rounded-xl border border-border">
-        <h2 className="text-xl font-bold mb-6 text-foreground">Pay Outstanding Due</h2>
+        <h2 className="text-xl font-bold mb-6 text-primary">Pay Outstanding Due</h2>
         
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-sm font-medium mb-1 text-foreground">Staff Member *</label>
+            <label className="block text-sm font-medium mb-1 text-primary">Staff Member *</label>
             <select 
               required
               value={selectedStaffId}
@@ -54,7 +54,7 @@ export default function AdminHrDueTable() {
                 const s = staff.find(st => String(st.id) === e.target.value);
                 if (s && s.currentDue) setAmount(String(s.currentDue));
               }}
-              className="w-full px-3 py-2 border border-border rounded-lg text-sm bg-card text-foreground focus:ring-2 focus:ring-primary"
+              className="w-full px-3 py-2 border border-border rounded-lg text-sm bg-card text-primary focus-visible:ring-2 focus-visible:ring-primary"
             >
               <option value="" disabled>Select Staff</option>
               {staff.map(s => (
@@ -64,7 +64,7 @@ export default function AdminHrDueTable() {
           </div>
 
           {selectedStaff && (
-            <div className="p-4 bg-hr-highlight/10 rounded-lg border border-hr-highlight/30 text-sm">
+            <div className="p-4 bg-warning-bg rounded-lg border border-warning text-sm">
               <p><strong>Current Due Amount:</strong> {formatCurrency(selectedStaff.currentDue || 0)}</p>
               <p className="text-secondary text-xs mt-1">This is the unpaid portion of past payrolls.</p>
             </div>
@@ -72,18 +72,18 @@ export default function AdminHrDueTable() {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-1 text-foreground">Amount to Pay (₹) *</label>
+              <label className="block text-sm font-medium mb-1 text-primary">Amount to Pay (₹) *</label>
               <input 
                 type="number" required min="1" max={selectedStaff?.currentDue || undefined}
                 value={amount} onChange={(e) => setAmount(e.target.value)}
-                className="w-full px-3 py-2 border border-border rounded-lg text-sm bg-card text-foreground"
+                className="w-full px-3 py-2 border border-border rounded-lg text-sm bg-card text-primary"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1 text-foreground">Payment Mode</label>
+              <label className="block text-sm font-medium mb-1 text-primary">Payment Mode</label>
               <select 
                 value={paymentMode} onChange={(e) => setPaymentMode(e.target.value)}
-                className="w-full px-3 py-2 border border-border rounded-lg text-sm bg-card text-foreground"
+                className="w-full px-3 py-2 border border-border rounded-lg text-sm bg-card text-primary"
               >
                 <option value="Cash">Cash</option>
                 <option value="Bank Transfer">Bank Transfer</option>
@@ -94,10 +94,10 @@ export default function AdminHrDueTable() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1 text-foreground">Notes</label>
+            <label className="block text-sm font-medium mb-1 text-primary">Notes</label>
             <textarea 
               value={notes} onChange={(e) => setNotes(e.target.value)}
-              className="w-full px-3 py-2 border border-border rounded-lg text-sm bg-card text-foreground min-h-20"
+              className="w-full px-3 py-2 border border-border rounded-lg text-sm bg-card text-primary min-h-20"
               placeholder="e.g. Clearing Oct pending salary..."
             />
           </div>
@@ -106,7 +106,7 @@ export default function AdminHrDueTable() {
             <button 
               type="submit" 
               disabled={saving || !selectedStaffId || !amount || Number(amount) <= 0 || (selectedStaff && Number(amount) > (selectedStaff.currentDue || 0))}
-              className="px-6 py-2 bg-primary text-primary-foreground rounded-lg font-medium disabled:opacity-50"
+              className="motion-safe:transition-all motion-safe:duration-base ease-in-out px-6 py-2 bg-primary text-on-primary rounded-lg font-medium disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
             >
               {saving ? 'Processing...' : 'Pay Due'}
             </button>

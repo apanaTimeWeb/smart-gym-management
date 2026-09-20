@@ -8,11 +8,17 @@ Manager Attendance is the branch attendance workspace for recording and reviewin
 |---|---|---|
 | `attendance_api/` | Feature-owned responsibility for the attendance module. | `ManagerAttendanceApi.ts; ManagerUseManagerAttendanceQueries.ts` |
 | `attendance_components/` | Feature-owned responsibility for the attendance module. | `—` |
-| `attendance_context/` | Feature-owned responsibility for the attendance module. | `ManagerAttendanceContext.tsx; ManagerUseManagerAttendanceLogic.ts; ManagerUseManagerAttendanceMutations.ts` |
+| `attendance_hooks/` | Feature-owned responsibility for the attendance module. | `ManagerUseManagerAttendanceLogic.ts; ManagerUseManagerAttendanceLogic.ts; ManagerUseManagerAttendanceMutations.ts` |
 | `attendance_fixtures/` | Feature-owned responsibility for the attendance module. | `ManagerAttendanceMockData.ts` |
 | `attendance_mocks/` | Feature-owned responsibility for the attendance module. | `—` |
 | `attendance_types/` | Feature-owned responsibility for the attendance module. | `ManagerAttendanceSchema.ts; ManagerAttendanceSnapshotTypes.ts; ManagerAttendanceTypes.ts` |
 | `attendance_utils/` | Feature-owned responsibility for the attendance module. | `ManagerAttendanceSharedConstants.ts` |
+
+## Approved External Dependencies
+
+- Global framework/application infrastructure documented by the architecture standard may be used when required.
+- Approved zero-business UI primitives may be imported from Manager application infrastructure.
+- Sibling feature business logic, state, API services, fixtures, and tests are not dependencies.
 
 ## Feature Inventory
 | Feature | Route | What the User Can Do | Main API Calls | Status |
@@ -38,7 +44,7 @@ Manager Attendance is the branch attendance workspace for recording and reviewin
 5. The table renders the returned page without client-side dataset slicing.
 
 ## Data and State Architecture
-TanStack Query owns attendance server/API data. UI-only filters, tabs, selections, and draft state remain local state or module-scoped Zustand where shared. React Context is limited to stable cross-tree concerns and does not become the source of truth for API data. Query keys are module-prefixed.
+TanStack Query owns attendance server/API data. UI-only filters, tabs, selections, and draft state remain local state or module-scoped Zustand where shared. module-local state/query layer is limited to stable cross-tree concerns and does not become the source of truth for API data. Query keys are module-prefixed.
 
 ## API Contract
 | Function | Method | Endpoint | Request | Response `data` type |
@@ -95,8 +101,8 @@ TanStack Query owns attendance server/API data. UI-only filters, tabs, selection
 | `attendance/attendance_components/AttendanceTable/ManagerAttendanceTable.tsx` | Renders the attendance data table and pagination controls. |
 | `attendance/attendance_components/AttendanceToolbar/ManagerAttendanceToolbar.tsx` | Provides the search, filter tabs, and action buttons for the Attendance module. |
 | `attendance/attendance_components/ManagerAttendanceKPIs/ManagerAttendanceKPIs.tsx` | Renders the top KPI stat cards (total check-ins, member check-ins, staff check-ins) for the Attendance module. |
-| `attendance/attendance_components/ManagerAttendanceMain/ManagerAttendanceMain.tsx` | Entry component for the Attendance module that wraps the UI in the context provider and handles the core page layout. |
-| `attendance/attendance_context/ManagerAttendanceContext.tsx` | Provides UI orchestration state to the attendance module hierarchy. Async data is managed in useManagerAttendanceLogic. |
+| `attendance/attendance_components/ManagerAttendanceMain/ManagerAttendanceMain.tsx` | Framework entry component for the Attendance module; delegates feature UI and state orchestration to `ManagerAttendanceContent`. |
+| `attendance/attendance_hooks/ManagerUseManagerAttendanceLogic.ts` | Provides UI orchestration state to the attendance module hierarchy. Async data is managed in useManagerAttendanceLogic. |
 
 ## Rule Compliance Checklist
 - [x] Module-owned API, types/schemas, fixtures, handlers, tests, and feature documentation are scoped to this module.

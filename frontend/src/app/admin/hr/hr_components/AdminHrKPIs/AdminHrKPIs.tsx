@@ -10,16 +10,16 @@ export default function AdminHrKPIs() {
 
 
   const kpis = [
-    { label: 'Total Salary Generated', value: formatCurrency(summary?.totalSalaryThisMonth || 0), icon: DollarSign, colorClass: 'text-primary', bgClass: 'bg-primary/10' },
-    { label: 'Total Paid', value: formatCurrency(summary?.totalSalaryPaid || 0), icon: UserCheck, colorClass: 'text-success', bgClass: 'bg-success/10' },
-    { label: 'Outstanding Due', value: formatCurrency(summary?.totalSalaryDue || 0), icon: FileText, colorClass: 'text-warning', bgClass: 'bg-warning/10' },
-    { label: 'Advance Given', value: formatCurrency(summary?.totalAdvanceGiven || 0), icon: DollarSign, colorClass: 'text-danger', bgClass: 'bg-danger/10' },
+    { label: 'Total Salary Generated', value: formatCurrency(summary?.totalSalaryThisMonth || 0), icon: DollarSign, colorClass: 'text-primary', bgClass: 'bg-primary-subtle' },
+    { label: 'Total Paid', value: formatCurrency(summary?.totalSalaryPaid || 0), icon: UserCheck, colorClass: 'text-success', bgClass: 'bg-success-bg' },
+    { label: 'Outstanding Due', value: formatCurrency(summary?.totalSalaryDue || 0), icon: FileText, colorClass: 'text-warning', bgClass: 'bg-warning-bg' },
+    { label: 'Advance Given', value: formatCurrency(summary?.totalAdvanceGiven || 0), icon: DollarSign, colorClass: 'text-danger', bgClass: 'bg-danger-bg' },
   ];
 
   return (
     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
       {kpis.map((k) => (
-        <div key={k.label} className="rounded-xl p-4 shadow-sm border border-border bg-card flex items-center gap-3">
+        <div key={k.label} className="rounded-xl p-4 shadow-card border border-border bg-card flex items-center gap-3">
           <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${k.bgClass}`}>
             <k.icon size={19} className={k.colorClass} />
           </div>

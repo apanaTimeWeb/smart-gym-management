@@ -8,15 +8,21 @@ Manager PT is the personal-training operations workspace. Managers can review PT
 |---|---|---|
 | `pt_api/` | Feature-owned responsibility for the pt module. | `ManagerPtApi.ts` |
 | `pt_components/` | Feature-owned responsibility for the pt module. | `—` |
-| `pt_context/` | Feature-owned responsibility for the pt module. | `ManagerUseManagerPtLogic.ts` |
+| `pt_hooks/` | Feature-owned responsibility for the pt module. | `ManagerUseManagerPtLogic.ts` |
 | `pt_fixtures/` | Feature-owned responsibility for the pt module. | `ManagerPtMockData.ts` |
 | `pt_mocks/` | Feature-owned responsibility for the pt module. | `—` |
 | `pt_types/` | Feature-owned responsibility for the pt module. | `ManagerPtAssignmentSchema.ts; ManagerPtSchema.ts; ManagerPtTypes.ts` |
 
+## Approved External Dependencies
+
+- Global framework/application infrastructure documented by the architecture standard may be used when required.
+- Approved zero-business UI primitives may be imported from Manager application infrastructure.
+- Sibling feature business logic, state, API services, fixtures, and tests are not dependencies.
+
 ## Feature Inventory
 | Feature | Route | What the User Can Do | Main API Calls | Status |
 |---|---|---|---|---|
-| fetchDashboardKpis | `/manager/pt` | Uses the fetchDashboardKpis workflow with typed request/response handling. | `GET /manager/pt/kpis` | ✅ Implemented |
+| fetchPtDashboardKpis | `/manager/pt` | Uses the fetchPtDashboardKpis workflow with typed request/response handling. | `GET /manager/pt/kpis` | ✅ Implemented |
 | fetchWorkload | `/manager/pt` | Uses the fetchWorkload workflow with typed request/response handling. | `GET /manager/pt/workload` | ✅ Implemented |
 | fetchPackages | `/manager/pt` | Uses the fetchPackages workflow with typed request/response handling. | `GET /manager/pt/packages` | ✅ Implemented |
 | fetchAssignments | `/manager/pt` | Uses the fetchAssignments workflow with typed request/response handling. | `GET /manager/pt/assignments` | ✅ Implemented |
@@ -35,12 +41,12 @@ Manager PT is the personal-training operations workspace. Managers can review PT
 3. The server response updates the assignment counts and revenue-related display.
 
 ## Data and State Architecture
-TanStack Query owns pt server/API data. UI-only filters, tabs, selections, and draft state remain local state or module-scoped Zustand where shared. React Context is limited to stable cross-tree concerns and does not become the source of truth for API data. Query keys are module-prefixed.
+TanStack Query owns pt server/API data. UI-only filters, tabs, selections, and draft state remain local state or module-scoped Zustand where shared. module-local state/query layer is limited to stable cross-tree concerns and does not become the source of truth for API data. Query keys are module-prefixed.
 
 ## API Contract
 | Function | Method | Endpoint | Request | Response `data` type |
 |---|---|---|---|---|
-| `fetchDashboardKpis` | `GET` | `/api/v1/manager/pt/kpis` | `—` | `PtDashboardKpis` |
+| `fetchPtDashboardKpis` | `GET` | `/api/v1/manager/pt/kpis` | `—` | `PtDashboardKpis` |
 | `fetchWorkload` | `GET` | `/api/v1/manager/pt/workload` | `—` | `PtTrainerWorkload[]` |
 | `fetchPackages` | `GET` | `/api/v1/manager/pt/packages` | `—` | `PtPackage[]` |
 | `fetchAssignments` | `GET` | `/api/v1/manager/pt/assignments` | `{ page?, limit?, search?, trainerId?, status? }` | `PtAssignmentsResponse` |
@@ -77,7 +83,7 @@ TanStack Query owns pt server/API data. UI-only filters, tabs, selections, and d
 - Module `error.tsx` provides a safe retry fallback and does not expose raw backend/stack-trace text.
 
 ## Edge Cases and AI Warnings
-- **PT revenue values must use formatCurrency:** PT revenue values must use formatCurrency.
+- **PT revenue values must use formatCurrencyFromMinorUnits:** PT revenue values must use formatCurrencyFromMinorUnits.
 - **Assignment completion changes a server-side session count; reconcile with the response:** Assignment completion changes a server-side session count; reconcile with the response.
 - **Do not store assignment arrays in Zustand:** Do not store assignment arrays in Zustand.
 - **Optional nextSessionDate must render via centralized date formatting/empty fallback:** Optional nextSessionDate must render via centralized date formatting/empty fallback.

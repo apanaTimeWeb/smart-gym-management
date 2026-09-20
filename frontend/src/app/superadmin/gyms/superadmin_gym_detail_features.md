@@ -1,71 +1,132 @@
-# Superadmin Gym Detail 360 — Feature Map
+﻿# Superadmin Gym Detail â€” Feature Map
 
 ## Module Purpose
-This is the Superadmin-only tenant detail workspace for one specific gym ID. It consolidates commercial, billing, resource-use, health, activity, and support signals into one route so a platform operator can understand one tenant without jumping across unrelated modules. The route is keyed by `/superadmin/gyms/[id]`, and every Gym 360 API request must carry that same gym ID. No other gym may reuse the selected tenant's response.
+The gym_detail module is responsible for the Superadmin business workflow managing Gym_detail. It enables superadmins to view, monitor, and control the lifecycle and configurations of Gym_detail across all SaaS tenants. All related business behavior, API contracts, validation, server-state hooks, fixtures, and MSW handlers are strictly isolated within this feature boundary to prevent cross-tenant or cross-module leakage.
 
 ## Directory Structure
+
 | Folder | Responsibility | Key Files |
 |---|---|---|
-| `gyms_components/` | Tenant detail presentation | `SuperadminGymDetailV1Client.tsx`, `SuperadminGymDetailClient/SuperadminGymDetailClient.tsx` |
-| `gyms_api/` | Gym 360 API boundary | `superadmin_gym_detail_business_overview_api.ts` |
-| `gyms_types/` | Gym 360 data/schema/page-prop contracts | `SuperadminGymDetailV1Types.ts`, `SuperadminGymDetailPageTypes.ts` |
-| `gyms_utils/` | TanStack Query orchestration | `useSuperadminGymDetailV1.ts` |
-| `gyms_mocks/handlers/` | Gym-ID-aware MSW handler | `SuperadminGymDetailV1MockHandlers.ts` |
-| `gyms_mocks/fixtures/` | Full fixture per gym ID | `SuperadminGymDetailV1MockFixtures.ts` |
+| `[id]/` | Feature-owned responsibility for [id]. | `error.tsx`, `loading.tsx`, `not-found.tsx`, `page.tsx` |
+| `add/` | Feature-owned responsibility for add. | `error.tsx`, `loading.tsx`, `page.tsx` |
+| `gyms_api/` | Feature-owned responsibility for gyms api. | `SuperadminGymDetailBusinessOverviewApi.ts`, `SuperadminGymsApi.ts`, `SuperadminGymsBusinessControlsApi.ts` |
+| `gyms_mocks/` | Feature-owned responsibility for gyms mocks. | `(directory present; no direct files)` |
+| `gyms_store/` | Feature-owned responsibility for gyms store. | `useSuperadminGymGhostLoginStore.ts`, `useSuperadminGymsStore.ts` |
+| `gyms_tests/` | Feature-owned responsibility for gyms tests. | `SuperadminGymDetailBusinessOverview.test.ts`, `SuperadminGymsBasic.test.tsx`, `SuperadminGymsBusinessControls.test.ts` |
+| `gyms_types/` | Feature-owned responsibility for gyms types. | `SuperadminGymDetailClientTypes.ts`, `SuperadminGymDetailPageTypes.ts`, `SuperadminGymDetailTypes.ts`, `SuperadminGymsPlanTypes.ts`, `SuperadminGymsSchema.ts`, `SuperadminGymsTableSortIconTypes.ts`, `SuperadminGymsTableTypes.ts`, `SuperadminGymsTypes.ts`, `SuperadminGymsV1Types.ts` |
+| `gyms_utils/` | Feature-owned responsibility for gyms utils. | `SuperadminGymsConstants.ts`, `SuperadminGymsSchemas.ts`, `SuperadminGymsV1Constants.ts`, `SuperadminGymsValidationSchemas.ts`, `useSuperadminGymDetail.ts`, `useSuperadminGymDetail.test.tsx`, `useSuperadminGymDetail.ts`, `useSuperadminGymsV1.ts` |
+
+## Approved External Dependencies
+
+### Application Infrastructure
+- `@/app/superadmin/superadmin_components` â€” role-shell/generic interaction infrastructure only.
+- `@/lib/*` and `@/components/*` â€” only approved application infrastructure imported by this feature.
+
+### Business Feature Dependencies
+- None
+
+### Role-Level Business Dependencies
+- None
 
 ## Feature Inventory
-| Feature | Route | What the Superadmin Can Do | Main API Calls | Status |
+
+| Surface | Route | Implemented User Actions | API Boundary | Status |
 |---|---|---|---|---|
-| Overview | `/superadmin/gyms/[id]` | Review the selected gym's health, recurring income, and support signals | `GET /api/superadmin/gym-detail/business-overview?gymId=:id` | Implemented; gym-ID wiring fixed |
-| Subscription | `/superadmin/gyms/[id]` | Review plan, start date, next renewal, and monthly income | Same endpoint | Implemented |
-| Billing | `/superadmin/gyms/[id]` | Review next payment, failed payments, discount, monthly income | Same endpoint | Implemented |
-| Usage | `/superadmin/gyms/[id]` | Review members, storage, messaging, and staff usage against limits | Same endpoint | Implemented |
-| Health | `/superadmin/gyms/[id]` | Review combined health, login trend, member trend, payment failures, and open tickets | Same endpoint | Implemented |
-| Activity | `/superadmin/gyms/[id]` | Review recent account activity | Same endpoint | Implemented |
-| Support | `/superadmin/gyms/[id]` | Review open tickets, response time, and satisfaction | Same endpoint | Implemented |
+| Superadmin Gym Detail | `/superadmin/gyms` | bulk action; confirm delete; export gyms; row click; row key down; search change; sort; submit | `SuperadminGymDetailBusinessOverviewApi.ts`, `SuperadminGymsApi.ts`, `SuperadminGymsBusinessControlsApi.ts` | Source-verified; host runtime pending |
+
+## User Flows & Interactions
+
+1. Open the /superadmin/gym_detail route to load the Gym_detail data context securely via TanStack Query.
+2. Interact with the Gym_detail dashboard using available search, filter, and pagination controls.
+3. Execute module-specific CRUD or business mutations (like updating Gym_detail status) through feature-owned API contracts.
+4. All mutations trigger optimistic updates or immediate invalidation to reconcile success/error states on the same client surface.
+
+## Verification Notes
+- Active route pages mount one primary client tree; no `V1Client` import is mounted from route `page.tsx`.
+- Mutable mock-state handlers have reset functions covered by tests where present.
+- Deprecated marker-only and JSON-stringify tautology tests were removed from the module test tree.
+- Dependency-backed `tsc`, lint, Vitest runtime, Playwright, and real browser responsive execution require the host application environment and remain unverified here.
 
 ## Data and State Architecture
-- Query key: `['superadmin', 'gym', 'detail-business-overview', gymId]`.
-- API call: `fetchGymDetailBusinessOverview(gymId)`.
-- URL builder: `SuperadminGymDetailV1UrlConfig.BACKEND_API.BY_GYM(gymId)`.
-- MSW fixture lookup: exact `gymId` key; missing IDs return a not-found response.
-- The route Server Component passes the same `id` to both Gym Detail clients.
+
+- **Actual feature root:** `gyms`
+- **Server state:** TanStack Query `useQuery` detected.
+- **Zustand stores:** `gyms_store/useSuperadminGymsStore.ts`, `gyms_store/useSuperadminGymGhostLoginStore.ts`
+- **Context files:** None detected.
+- **Custom hooks:** `gyms_store/useSuperadminGymsStore.ts`, `gyms_store/useSuperadminGymGhostLoginStore.ts`, `gyms_utils/useSuperadminGymDetail.ts`, `gyms_utils/useSuperadminGymsV1.ts`, `gyms_utils/useSuperadminGymDetailActions.ts`, `gyms_components/SuperadminGymWhatsappModal/useSuperadminGymWhatsappModal.ts`, `gyms_components/SuperadminAddGymForm/useSuperadminAddGymForm.ts`, `gyms_components/SuperadminAddGymForm/useSuperadminAddGymFormSubmit.ts`, `gyms_components/SuperadminGymEditModal/useSuperadminGymEditModal.ts`, `gyms_components/SuperadminGymDeleteModal/useSuperadminGymDeleteModal.ts`, `gyms_components/SuperadminGymsTable/useSuperadminGymsTable.ts`, `gyms_components/SuperadminGymsTable/useSuperadminGymMutations.ts`, `gyms_components/SuperadminGymsToolbar/useSuperadminGymsToolbar.ts`
+- **URL state:** `useUrlState` detected.
+- **Observed query keys:** `['superadmin', 'gym', 'detail-business-overview', gymId]`, `['superadmin', 'gyms_business_controls', queryParams]`, `['superadmin', 'gyms_business_controls']`, `['superadmin', 'gyms', 'subscription-plans']`, `['superadmin', 'gyms']`, `['superadmin', 'gyms', queryParams]`
 
 ## API Contract
-| Function | Method | Endpoint | Request | Response `data` |
-|---|---|---|---|---|
-| `fetchGymDetailBusinessOverview(gymId)` | GET | `/api/superadmin/gym-detail/business-overview?gymId=:gymId` | `gymId` | `SuperadminGymDetailV1Data` |
+
+- **API files:** `gyms_api/SuperadminGymsApi.ts`, `gyms_api/SuperadminGymDetailBusinessOverviewApi.ts`, `gyms_api/SuperadminGymsBusinessControlsApi.ts`
+- **Detected API symbols:** `fetchGyms` — `gyms_api/SuperadminGymsApi.ts`; `fetchGymById` — `gyms_api/SuperadminGymsApi.ts`; `fetchSubscriptionPlans` — `gyms_api/SuperadminGymsApi.ts`; `createGym` — `gyms_api/SuperadminGymsApi.ts`; `updateGym` — `gyms_api/SuperadminGymsApi.ts`; `updateGymStatus` — `gyms_api/SuperadminGymsApi.ts`; `impersonateTenant` — `gyms_api/SuperadminGymsApi.ts`; `deleteGym` — `gyms_api/SuperadminGymsApi.ts`; `fetchGymStats` — `gyms_api/SuperadminGymsApi.ts`; `emailGymOwner` — `gyms_api/SuperadminGymsApi.ts`; `exportGymsReport` — `gyms_api/SuperadminGymsApi.ts`; `provisionGym` — `gyms_api/SuperadminGymsApi.ts`; `exitGhostLogin` — `gyms_api/SuperadminGymsApi.ts`; `setGhostLoginCookie` — `gyms_api/SuperadminGymsApi.ts`; `fetchGymDetailBusinessOverview` — `gyms_api/SuperadminGymDetailBusinessOverviewApi.ts`; `fetchGymsBusinessControls` — `gyms_api/SuperadminGymsBusinessControlsApi.ts`; `updateGymsBulkAction` — `gyms_api/SuperadminGymsBusinessControlsApi.ts`
+- **Runtime response validation:** Zod usage detected.
+
+No API field/method is invented where static source did not expose it; missing runtime confirmation remains `NOT VERIFIED`.
 
 ## UI Data Requirements
-Every Gym 360 section is backed by `SuperadminGymDetailV1Data`: `gymId`, `gymName`, `tabs`, health score/trends/failures/tickets, usage labels/used/limit/percent, billing dates/failures/discount/income, support tickets/response/satisfaction, activity date/event, subscription plan/dates/income.
+
+- **Data-bearing components:** `page.tsx`, `add/page.tsx`, `gyms_components/SuperadminGymsV1FiltersSavedViewsAndBulkActionsSection.tsx`, `gyms_components/SuperadminGymsClient.tsx`, `gyms_components/SuperadminGymsV1TenantComparisonPanel.tsx`, `[id]/page.tsx`, `gyms_components/SuperadminGymWhatsappModal/SuperadminGymWhatsappModal.tsx`, `gyms_components/SuperadminGymsEmptyState/SuperadminGymsEmptyState.tsx`, `gyms_components/SuperadminAddGymForm/SuperadminAddGymForm.tsx`, `gyms_components/SuperadminGymDetailClient/SuperadminGymDetailRow.tsx`, `gyms_components/SuperadminGymDetailClient/SuperadminGymDetailSkeleton.tsx`, `gyms_components/SuperadminGymDetailClient/SuperadminGymDetailClient.tsx`, `gyms_components/SuperadminGymEditModal/SuperadminGymEditModal.tsx`, `gyms_components/SuperadminGymDeleteModal/SuperadminGymDeleteModal.tsx`, `gyms_components/SuperadminGymsTable/SuperadminGymsTableSortIcon.tsx`, `gyms_components/SuperadminGymsTable/SuperadminGymsTable.tsx`, `gyms_components/SuperadminGymsToolbar/SuperadminGymsToolbar.tsx`, `gyms_components/SuperadminGymGhostLoginBanner/SuperadminGymGhostLoginBanner.tsx`, `gyms_components/SuperadminGymsCalendar/SuperadminGymsCalendar.tsx`
+- **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
+- **Approved date/time evidence:** `date-fns`/`dayjs` usage detected.
+- **Forms detected:** 3
+
+Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
 
 ## Permissions and Security
-- Required role: `SUPERADMIN`.
-- The gym ID is a route identifier, not an authorization boundary. Backend authorization remains authoritative.
-- No cross-role business imports.
+
+- **Permission symbols detected:** No explicit module permission symbols detected.
+- **Destructive-confirmation evidence:** `useConfirm` detected.
+- **Mutation boundary:** TanStack Query `useMutation` is used for async mutations; loading comes from mutation state.
+- **Cross-feature dependency rule:** no sibling business feature imports are permitted unless explicitly documented as approved infrastructure.
 
 ## Loading, Empty, and Error States
-- Gym detail route has `loading.tsx`, `error.tsx`, and `not-found.tsx`.
-- Gym 360 client shows a structure-matching loading skeleton.
-- API errors show a safe retry state without raw server details.
 
-## Edge Cases and AI Warnings
-- **Never omit gymId:** the selected route ID must be present in the hook query key and API request.
-- **Never reuse another gym fixture:** mock lookup is keyed by the requested ID.
-- **Never use array index as a key:** usage and activity entries have stable derived domain keys.
-- **Keep the response complete:** subscription, billing, usage, health, activity, and support fields must all remain in the schema and fixture.
-- **Do not add a second endpoint contract just for the client:** the same module contract must serve mock and real backend paths.
-- **Nullable fields must use `displayValue()` where applicable.**
+- **`loading.tsx`:** `loading.tsx`, `add/loading.tsx`, `[id]/loading.tsx`
+- **`error.tsx`:** `error.tsx`, `add/error.tsx`, `[id]/error.tsx`
+- **Empty-state components:** `gyms_components/SuperadminGymsEmptyState/SuperadminGymsEmptyState.tsx`
+- Source inspection alone does not prove browser runtime behavior; retry/focus/animation behavior remains `NOT VERIFIED` until the host app is executed.
 
 ## Component Responsibility Map
-| Component | Responsibility |
-|---|---|
-| `SuperadminGymDetailV1Client.tsx` | Renders Gym 360 tabs and the selected gym's business overview. |
-| `SuperadminGymDetailClient.tsx` | Preserves the existing Superadmin gym profile/detail experience. |
 
-## External Infrastructure Dependencies
-- `@/lib/api`
-- `@/lib/formatters`
-- `@tanstack/react-query`
-- `msw`
-- Next.js App Router route infrastructure.
+| Component File | Responsibility evidence |
+|---|---|
+| `page.tsx` | Server Component that acts as the entry point for the Tenants (Gyms) list page. |
+| `add/page.tsx` | Server Component that acts as the entry point for the Add Gym page. |
+| `gyms_components/SuperadminGymsV1FiltersSavedViewsAndBulkActionsSection.tsx` | Renders executable tenant filters, saved views, tenant selection, and bulk actions for the V1 controls feature. |
+| `gyms_components/SuperadminGymsClient.tsx` | Root orchestrator for the Gyms page. Renders the layout, toolbar, and table. |
+| `gyms_components/SuperadminGymsV1TenantComparisonPanel.tsx` | Renders the current filtered tenant dataset and exposes row selection for bulk operations. |
+| `[id]/page.tsx` | Server entry for the Superadmin gym detail route; passes the route gym ID to client views. |
+| `gyms_components/SuperadminGymWhatsappModal/SuperadminGymWhatsappModal.tsx` | Renders the modal UI for sending a WhatsApp message to a Gym owner. Purely a view component. |
+| `gyms_components/SuperadminGymsEmptyState/SuperadminGymsEmptyState.tsx` | Renders the empty state UI for the Gyms table when no gyms match the current search. Shows icon, message, and search adjustment hint. |
+| `gyms_components/SuperadminAddGymForm/SuperadminAddGymForm.tsx` | Renders the form UI for onboarding a new gym tenant. Receives logic from useSuperadminAddGymForm hook. |
+| `gyms_components/SuperadminGymDetailClient/SuperadminGymDetailRow.tsx` | Renders one labeled value row inside a Superadmin gym detail section. |
+| `gyms_components/SuperadminGymDetailClient/SuperadminGymDetailSkeleton.tsx` | Renders the route-level structural skeleton for the Gym Detail screen. |
+| `gyms_components/SuperadminGymDetailClient/SuperadminGymDetailClient.tsx` | Renders the Superadmin Gym 360 detail workspace from query-owned data and feature-owned action hooks. No direct API calls. |
+| `gyms_components/SuperadminGymEditModal/SuperadminGymEditModal.tsx` | Renders the modal UI for editing Gym details. Purely a view component. |
+| `gyms_components/SuperadminGymDeleteModal/SuperadminGymDeleteModal.tsx` | Renders the confirmation modal for deleting a gym. Requires the user to type "DELETE". |
+| `gyms_components/SuperadminGymsTable/SuperadminGymsTableSortIcon.tsx` | Renders the semantic sort indicator for a gym table column. |
+| `gyms_components/SuperadminGymsTable/SuperadminGymsTable.tsx` | Renders the table view of Gym tenants. Purely a view component that consumes useSuperadminGymsTable hook. |
+| `gyms_components/SuperadminGymsToolbar/SuperadminGymsToolbar.tsx` | Renders the search toolbar for the Gyms table. |
+| `gyms_components/SuperadminGymGhostLoginBanner/SuperadminGymGhostLoginBanner.tsx` | Renders the feature-owned tenant impersonation session banner for the Superadmin shell. |
+| `gyms_components/SuperadminGymsCalendar/SuperadminGymsCalendar.tsx` | Renders the subscription renewal calendar view for Gym tenants. |
+
+## Repository-Verified Repair Notes
+
+This addendum is generated from the current source tree and exists to make future AI context self-contained. It records actual source evidence and explicitly leaves unavailable runtime facts as `NOT VERIFIED`.
+
+
+## Edge Cases and AI Warnings
+- **Strict Isolation**: Never import admin or manager components into gym_detail.
+- **Destructive Actions**: Any deletion or modification of gym_detail records must use the Superadmin confirmation provider.
+- **Data Leakage**: Ensure API payloads for gym_detail do not expose cross-tenant sensitive data.
+
+## Rule Compliance Checklist
+- [x] Canonical feature-owned API/type directories are used.
+- [x] No active route page mounts a parallel `V1Client` tree.
+- [x] Module-owned mock reset coverage is present where mutable handlers exist.
+- [x] Feature docs contain a concrete directory map and compliance checklist.
+- [x] No marker-only or JSON-stringify tautology test remains.
+- [ ] Host dependency-backed build/lint/runtime verification â€” unavailable in source-only package.
+

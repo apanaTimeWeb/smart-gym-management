@@ -10,9 +10,15 @@ Manager Dashboard is the branch operating overview. It displays management KPIs,
 | `dashboard_components/` | Feature-owned responsibility for the dashboard module. | `—` |
 | `dashboard_fixtures/` | Feature-owned responsibility for the dashboard module. | `ManagerDashboardMockData.ts` |
 | `dashboard_mocks/` | Feature-owned responsibility for the dashboard module. | `—` |
-| `dashboard_store/` | Feature-owned responsibility for the dashboard module. | `ManagerUseManagerDashboardStore.ts` |
+| `dashboard_hooks/` | Owns dashboard URL query state; does not store server data. | `ManagerUseManagerDashboardUrlState.ts` |
 | `dashboard_types/` | Feature-owned responsibility for the dashboard module. | `ManagerDashboardSchema.ts; ManagerDashboardTypes.ts` |
 | `dashboard_utils/` | Feature-owned responsibility for the dashboard module. | `ManagerDashboardSharedConstants.ts` |
+
+## Approved External Dependencies
+
+- Global framework/application infrastructure documented by the architecture standard may be used when required.
+- Approved zero-business UI primitives may be imported from Manager application infrastructure.
+- Sibling feature business logic, state, API services, fixtures, and tests are not dependencies.
 
 ## Feature Inventory
 | Feature | Route | What the User Can Do | Main API Calls | Status |
@@ -27,12 +33,12 @@ Manager Dashboard is the branch operating overview. It displays management KPIs,
 4. TanStack Query exposes the response to KPI/chart/table sections, each with its own loading/error handling.
 
 ## Data and State Architecture
-TanStack Query owns dashboard server/API data. UI-only filters, tabs, selections, and draft state remain local state or module-scoped Zustand where shared. React Context is limited to stable cross-tree concerns and does not become the source of truth for API data. Query keys are module-prefixed.
+TanStack Query owns dashboard server/API data. Dashboard reporting range and custom dates are URL state; no Zustand store owns these server-query parameters. Module-local state is limited to transient UI state and does not become the source of truth for API data. Query keys are module-prefixed.
 
 ## API Contract
 | Function | Method | Endpoint | Request | Response `data` type |
 |---|---|---|---|---|
-| `fetchDashboardStats` | `GET` | `/api/v1/manager/dashboard/stats` | `{ timeRange?, startDate?, endDate? }` | `DashboardStats` |
+| `fetchDashboardStats` | `GET` | `/api/v1/manager/dashboard/stats` | `{ range?, startDate?, endDate? }` | `DashboardStats` |
 
 ## UI Data Requirements
 | UI Element | Required Field(s) | API Endpoint | Response Path | Nullable? | Mocked? |
@@ -77,8 +83,8 @@ TanStack Query owns dashboard server/API data. UI-only filters, tabs, selections
 | Component File | Responsibility |
 |---|---|
 | `dashboard/dashboard_components/ManagerDashboardExpiringMemberships/ManagerDashboardExpiringMemberships.tsx` | Renders the expiring memberships list on the dashboard. |
-| `dashboard/dashboard_components/ManagerDashboardKPIs/ManagerDashboardKPIs.tsx` | Renders the two rows of KPI metric stat cards on the dashboard using live data from DashboardContext. |
-| `dashboard/dashboard_components/ManagerDashboardMain/ManagerDashboardMain.tsx` | Main entry point for the dashboard module. Renders layout, handles high-level loading/error states, and sets up Context. |
+| `dashboard/dashboard_components/ManagerDashboardKPIs/ManagerDashboardKPIs.tsx` | Renders the two rows of KPI metric stat cards on the dashboard using live data from the dashboard TanStack Query contract. |
+| `dashboard/dashboard_components/ManagerDashboardMain/ManagerDashboardMain.tsx` | Entry component for the Dashboard module; delegates dashboard UI, loading, query and error behavior to module-owned child components. |
 | `dashboard/dashboard_components/ManagerDashboardMemberGrowthChart/ManagerDashboardMemberGrowthChart.tsx` | Renders the Manager DashboardMemberGrowthChart presentation layer for the Manager module. |
 | `dashboard/dashboard_components/ManagerDashboardMembershipDistribution/ManagerDashboardMembershipDistribution.tsx` | Renders the distribution of members by plan on the dashboard. |
 | `dashboard/dashboard_components/ManagerDashboardPendingPayments/ManagerDashboardPendingPayments.tsx` | Renders the pending payments list on the dashboard with a local search filter. |
@@ -88,6 +94,7 @@ TanStack Query owns dashboard server/API data. UI-only filters, tabs, selections
 
 ## Rule Compliance Checklist
 - [x] Module-owned API, types/schemas, fixtures, handlers, tests, and feature documentation are scoped to this module.
+- [x] Reporting range and custom dates are URL state and are propagated into the dashboard Query key/request.
 - [x] API calls use the module API client and typed response contracts.
 - [x] Server-backed pagination/filter/search follows explicit parameter propagation where applicable.
 - [x] UI Data Requirements map displayed values to concrete endpoints and response paths.

@@ -2,7 +2,7 @@
 // RESPONSIBILITY: Renders the 7-day attendance trend bar chart using ApexCharts. Read-only, no mutations.
 
 import dynamic from 'next/dynamic';
-import { ADMIN_CHART_THEME } from '@/app/admin/admin_utils/AdminChartThemeTokens';
+import { ADMIN_CHART_THEME } from '@/app/admin/admin_layout/admin_utils/AdminChartThemeTokens';
 import { useAdminAttendanceLogic } from '@/app/admin/attendance/attendance_context/useAdminAttendanceLogic';
 
 const ReactApexChart = dynamic(() => import('react-apexcharts'), { ssr: false });
@@ -47,7 +47,7 @@ export default function AdminAttendanceTrendChart() {
     <div className="bg-card rounded-xl border border-border p-5">
       <div className="flex items-center justify-between mb-4">
         <div>
-          <p className="text-sm font-semibold text-foreground">Weekly Attendance Trend</p>
+          <p className="text-sm font-semibold text-primary">Weekly Attendance Trend</p>
           <p className="text-xs text-secondary mt-0.5">Daily check-in count for the current week</p>
         </div>
       </div>

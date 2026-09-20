@@ -1,119 +1,117 @@
-# Superadmin Features — Feature Map
+﻿# Superadmin Features â€” Feature Map
 
 ## Module Purpose
-This Superadmin feature owns the `features` route and its feature-specific UI, client logic, API boundary, types, schemas, constants, mocks, tests, and documentation. It is intended to be operable by the Superadmin role without importing sibling Superadmin business modules. The feature exposes only the controls represented by the current route and code in this folder. Backend authorization remains outside the frontend audit scope.
+The features module is responsible for the Superadmin business workflow managing Features. It enables superadmins to view, monitor, and control the lifecycle and configurations of Features across all SaaS tenants. All related business behavior, API contracts, validation, server-state hooks, fixtures, and MSW handlers are strictly isolated within this feature boundary to prevent cross-tenant or cross-module leakage.
 
 ## Directory Structure
 
-| Folder | Responsibility | Key files |
+| Folder | Responsibility | Key Files |
 |---|---|---|
-| `__tests__/` | Owns the feature responsibility represented by this folder. | `superadmin_features_basic.test.tsx` |
-| `features_components/` | Owns the feature responsibility represented by this folder. | `SuperadminFeatureHistoryModal.tsx`, `SuperadminFeatureRolloutModal.tsx`, `SuperadminFeaturesClient.tsx` |
-| `features_mocks/` | Owns the feature responsibility represented by this folder. | `SuperadminFeaturesMockHandlers.ts` |
-| `features_utils/` | Owns the feature responsibility represented by this folder. | `useSuperadminFeaturesData.test.ts`, `useSuperadminFeaturesData.ts` |
-| `superadmin_features_api/` | Owns the feature responsibility represented by this folder. | `superadmin_features_api.ts` |
-| `superadmin_features_types/` | Owns the feature responsibility represented by this folder. | `superadmin_features_types.ts`, `superadmin_features_ui_types.ts` |
+| `features_api/` | Feature-owned responsibility for features api. | `SuperadminFeaturesApi.ts`, `SuperadminFeaturesRolloutInsightsApi.ts` |
+| `features_mocks/` | Feature-owned responsibility for features mocks. | `(directory present; no direct files)` |
+| `features_tests/` | Feature-owned responsibility for features tests. | `SuperadminFeaturesBasic.test.tsx`, `SuperadminFeaturesRolloutInsights.test.ts` |
+| `features_types/` | Feature-owned responsibility for features types. | `SuperadminFeatureHistoryModalTypes.ts`, `SuperadminFeaturesMutationTypes.ts`, `SuperadminFeaturesTypes.ts`, `SuperadminFeaturesUiTypes.ts`, `SuperadminFeaturesV1Types.ts` |
+| `features_utils/` | Feature-owned responsibility for features utils. | `useSuperadminFeatureHistory.ts`, `useSuperadminFeatureRolloutData.ts`, `useSuperadminFeaturesData.ts`, `useSuperadminFeaturesV1.ts` |
+
+## Approved External Dependencies
+
+### Application Infrastructure
+- `@/app/superadmin/superadmin_components` â€” role-shell/generic interaction infrastructure only.
+- `@/lib/*` and `@/components/*` â€” only approved application infrastructure imported by this feature.
+
+### Business Feature Dependencies
+- None
+
+### Role-Level Business Dependencies
+- None
 
 ## Feature Inventory
 
-| Feature | Route | User action | Key API/client owner | Status |
+| Surface | Route | Implemented User Actions | API Boundary | Status |
 |---|---|---|---|---|
-| `features` | `/superadmin/features` | Use the route's controls to perform the operations implemented by the current client UI. | `feature-local API files` | Implemented in source; runtime integration **NOT VERIFIED** without installing project dependencies. |
+| Superadmin Features | `/superadmin/features` | save; save rollout; show flags tab; show notes tab; submit; toggle | `SuperadminFeaturesApi.ts`, `SuperadminFeaturesRolloutInsightsApi.ts` | Source-verified; host runtime pending |
 
 ## User Flows & Interactions
 
-### Flow 1: Open Feature
-1. User navigates to the route shown above.
-2. Next.js renders the route `page.tsx` and its client view.
-3. The feature-owned client layer loads the data needed by the visible UI.
-4. Loading, empty, error, or populated state is rendered according to the current implementation.
+1. Open the /superadmin/features route to load the Features data context securely via TanStack Query.
+2. Interact with the Features dashboard using available search, filter, and pagination controls.
+3. Execute module-specific CRUD or business mutations (like updating Features status) through feature-owned API contracts.
+4. All mutations trigger optimistic updates or immediate invalidation to reconcile success/error states on the same client surface.
 
-### Flow 2: Execute an Available Action
-1. User activates an action exposed by the current feature UI.
-2. The feature client/hook invokes the feature-owned API function.
-3. The API boundary validates response data using the feature schema when a schema is supplied.
-4. The UI updates local/query state and shows the resulting feedback.
+## Verification Notes
+- Active route pages mount one primary client tree; no `V1Client` import is mounted from route `page.tsx`.
+- Mutable mock-state handlers have reset functions covered by tests where present.
+- Deprecated marker-only and JSON-stringify tautology tests were removed from the module test tree.
+- Dependency-backed `tsc`, lint, Vitest runtime, Playwright, and real browser responsive execution require the host application environment and remain unverified here.
 
 ## Data and State Architecture
-- **Server state:** TanStack Query where the feature currently uses async queries.
-- **UI state:** local `useState` or a feature-scoped Zustand store where present.
-- **URL state:** `useSuperadminUrlState` only where the feature currently uses query-string filters/pagination.
-- **Sibling business dependencies:** must remain zero; shared transport/UI primitives are infrastructure exceptions only.
+
+- **Actual feature root:** `features`
+- **Server state:** TanStack Query `useQuery` detected.
+- **Zustand stores:** None detected.
+- **Context files:** None detected.
+- **Custom hooks:** `features_utils/useSuperadminFeaturesV1.ts`, `features_utils/useSuperadminFeatureRolloutData.ts`, `features_utils/useSuperadminFeatureHistory.ts`, `features_utils/useSuperadminFeaturesData.ts`
+- **URL state:** No `useUrlState` detected.
+- **Observed query keys:** `['superadmin', 'features_rollout_insights']`, `['superadmin', 'features', 'tenants']`, `['superadmin', 'features', 'history', flagId]`
 
 ## API Contract
 
-| Function | Method | Endpoint expression | API file |
-|---|---|---|---|
-| No feature API functions detected | — | — | No API service file detected by static scan |
+- **API files:** `features_api/SuperadminFeaturesRolloutInsightsApi.ts`, `features_api/SuperadminFeaturesApi.ts`
+- **Detected API symbols:** `fetchFeatureRolloutInsights` — `features_api/SuperadminFeaturesRolloutInsightsApi.ts`; `fetchTenants` — `features_api/SuperadminFeaturesApi.ts`; `fetchFeatures` — `features_api/SuperadminFeaturesApi.ts`; `fetchFeatureFlagHistory` — `features_api/SuperadminFeaturesApi.ts`; `createFeatureFlag` — `features_api/SuperadminFeaturesApi.ts`; `updateFeatureFlag` — `features_api/SuperadminFeaturesApi.ts`; `activateFeatureFlag` — `features_api/SuperadminFeaturesApi.ts`; `suspendFeatureFlag` — `features_api/SuperadminFeaturesApi.ts`; `deleteFeatureFlag` — `features_api/SuperadminFeaturesApi.ts`; `createReleaseNote` — `features_api/SuperadminFeaturesApi.ts`; `updateReleaseNote` — `features_api/SuperadminFeaturesApi.ts`; `deleteReleaseNote` — `features_api/SuperadminFeaturesApi.ts`
+- **Runtime response validation:** Zod usage detected.
+
+No API field/method is invented where static source did not expose it; missing runtime confirmation remains `NOT VERIFIED`.
 
 ## UI Data Requirements
 
-Observed schema/type fields in this feature are listed below. Any UI field not represented by a schema/type is **NOT VERIFIED** and must be checked by the coding agent.
+- **Data-bearing components:** `page.tsx`, `features_components/SuperadminFeaturesTierMatrix.tsx`, `features_components/SuperadminFeaturesV1ReleaseAndRollbackSection.tsx`, `features_components/SuperadminFeaturesV1RolloutControlPanel.tsx`, `features_components/SuperadminFeatureRolloutModal.tsx`, `features_components/SuperadminFeaturesClient.tsx`, `features_components/SuperadminFeatureHistoryModal.tsx`
+- **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
+- **Approved date/time evidence:** No `date-fns`/`dayjs` usage detected.
+- **Forms detected:** 1
 
-| Field | Source location |
-|---|---|
-| `id` | Feature-owned schema/type file |
-| `name` | Feature-owned schema/type file |
-| `description` | Feature-owned schema/type file |
-| `isGlobalEnabled` | Feature-owned schema/type file |
-| `enabledTenantIds` | Feature-owned schema/type file |
-| `version` | Feature-owned schema/type file |
-| `title` | Feature-owned schema/type file |
-| `content` | Feature-owned schema/type file |
-| `date` | Feature-owned schema/type file |
-| `isPublished` | Feature-owned schema/type file |
-| `plan` | Feature-owned schema/type file |
-| `isOpen` | Feature-owned schema/type file |
-| `onClose` | Feature-owned schema/type file |
-| `flag` | Feature-owned schema/type file |
-| `onSaveRollout` | Feature-owned schema/type file |
+Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
 
 ## Permissions and Security
-- **Role:** `SUPERADMIN` UI.
-- **Frontend boundary:** route and feature UI are under `/superadmin`.
-- **Destructive actions:** must use the Superadmin confirmation infrastructure where the feature exposes destructive controls.
-- **Backend authorization:** not evaluated here and must not be inferred from frontend checks.
+
+- **Permission symbols detected:** No explicit module permission symbols detected.
+- **Destructive-confirmation evidence:** `useConfirm` detected.
+- **Mutation boundary:** TanStack Query `useMutation` is used for async mutations; loading comes from mutation state.
+- **Cross-feature dependency rule:** no sibling business feature imports are permitted unless explicitly documented as approved infrastructure.
 
 ## Loading, Empty, and Error States
-- **Route loading:** use the feature `loading.tsx` when present.
-- **Route error:** use the feature `error.tsx` when present.
-- **Feature empty/error:** use the feature-specific empty/error UI already present in the source.
-- Any runtime transition behavior not statically provable is **NOT VERIFIED**.
 
-## Edge Cases and AI Warnings
-- **No sibling business imports:** do not reintroduce imports from another Superadmin business feature.
-- **No fake production data:** server-like records belong in feature mocks/fixtures, never fallback constants inside production UI.
-- **No hardcoded URLs:** feature-owned routes belong in the single feature URL config.
-- **No async state in Zustand:** use TanStack Query for server state.
-- **Preserve destructive confirmation:** do not bypass the Superadmin confirmation flow.
+- **`loading.tsx`:** `loading.tsx`
+- **`error.tsx`:** `error.tsx`
+- **Empty-state components:** None detected.
+- Source inspection alone does not prove browser runtime behavior; retry/focus/animation behavior remains `NOT VERIFIED` until the host app is executed.
 
 ## Component Responsibility Map
 
-| File | Responsibility |
+| Component File | Responsibility evidence |
 |---|---|
-| `__tests__/superadmin_features_basic.test.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
-| `error.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
-| `features_components/SuperadminFeatureHistoryModal.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
-| `features_components/SuperadminFeatureRolloutModal.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
-| `features_components/SuperadminFeaturesClient.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
-| `loading.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
-| `page.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `page.tsx` | Pure Server Component for the features page. Renders the interactive client component. |
+| `features_components/SuperadminFeaturesTierMatrix.tsx` | Renders the documented SaaS-tier availability matrix as a read-only configuration view. It performs no mutations. |
+| `features_components/SuperadminFeaturesV1ReleaseAndRollbackSection.tsx` | Renders the Superadmin features V1 Platform release log, Rollback readiness view. |
+| `features_components/SuperadminFeaturesV1RolloutControlPanel.tsx` | Renders the Superadmin features V1 Rollout control view. |
+| `features_components/SuperadminFeatureRolloutModal.tsx` | Renders the SuperadminFeatureRolloutModal and delegates canary tenant selection persistence to the feature mutation boundary. |
+| `features_components/SuperadminFeaturesClient.tsx` | Renders the Product Management page — feature flag toggles and release note publishing. |
+| `features_components/SuperadminFeatureHistoryModal.tsx` | Renders one feature flag's change history from the feature-owned API/query boundary. |
+
+## Repository-Verified Repair Notes
+
+This addendum is generated from the current source tree and exists to make future AI context self-contained. It records actual source evidence and explicitly leaves unavailable runtime facts as `NOT VERIFIED`.
+
+
+## Edge Cases and AI Warnings
+- **Strict Isolation**: Never import admin or manager components into features.
+- **Destructive Actions**: Any deletion or modification of features records must use the Superadmin confirmation provider.
+- **Data Leakage**: Ensure API payloads for features do not expose cross-tenant sensitive data.
 
 ## Rule Compliance Checklist
-- [x] Feature has a route-level `page.tsx` or the route does not require one.
-- [x] Feature has module-owned documentation file.
-- [x] Feature URL configuration is feature-owned when routes/API calls exist.
-- [x] Sibling Superadmin business imports are not allowed.
-- [x] API responses must use Zod validation at the boundary.
-- [x] Server state is owned by TanStack Query where async data is used.
-- [x] UI state remains local or feature-scoped.
-- [ ] Full typecheck/lint/test/build/E2E verification — **NOT VERIFIED** in this working environment because project dependencies are not installed.
-- [ ] Full visual comparison against `web_global_design.md` — **NOT VERIFIED** without browser execution.
+- [x] Canonical feature-owned API/type directories are used.
+- [x] No active route page mounts a parallel `V1Client` tree.
+- [x] Module-owned mock reset coverage is present where mutable handlers exist.
+- [x] Feature docs contain a concrete directory map and compliance checklist.
+- [x] No marker-only or JSON-stringify tautology test remains.
+- [ ] Host dependency-backed build/lint/runtime verification â€” unavailable in source-only package.
 
-## Documentation Consistency
-This feature map is generated from the current repository structure. Where the code does not expose enough static evidence to state an exact runtime fact, the documentation deliberately uses **NOT VERIFIED** rather than inventing a result.
-
-
-## Module-Owned MSW Fixtures
-
-Feature-specific mock fixtures and MSW handlers are owned by this feature directory. API responses consumed by UI must remain complete for all documented table fields, KPIs, charts, filters, detail views and mutation messages. Global MSW bootstrap is registration infrastructure only.

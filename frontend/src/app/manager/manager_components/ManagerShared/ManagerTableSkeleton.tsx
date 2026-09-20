@@ -1,21 +1,27 @@
-// RESPONSIBILITY: Renders animated skeleton loader rows that match the data table layout. Used as placeholder while API data loads (Rule 26).
-import React from 'react';
+// RESPONSIBILITY: Renders a table-shaped loading skeleton using the global semantic skeleton tokens and documented 48px row geometry.
+'use client';
+import type { ManagerTableSkeletonProps } from '@/app/manager/manager_components/ManagerShared/manager_shared_types/ManagerTableSkeletonTypes';
 
-export const TableSkeleton = ({ rows = 6 }: { rows?: number }) => {
+const SKELETON_ROW_KEYS = ['row-a', 'row-b', 'row-c', 'row-d', 'row-e', 'row-f', 'row-g', 'row-h'] as const;
+
+export const ManagerTableSkeleton = ({ rows = 6 }: ManagerTableSkeletonProps) => {
+  const visibleRows = SKELETON_ROW_KEYS.slice(0, Math.min(rows, SKELETON_ROW_KEYS.length));
   return (
-    <div className="w-full bg-card border border-border rounded-xl overflow-hidden mt-4">
-      <div className="w-full h-12 bg-primary/10 border-b border-border"></div>
+    <div className="mt-4 w-full overflow-hidden rounded-xl border border-border bg-card">
+      <div className="h-12 w-full border-b border-border bg-surface-highlight" />
       <div className="flex flex-col">
-        {Array.from({ length: rows }).map((_, i) => (
-          <div key={`skeleton-${i}`} className="flex items-center gap-4 px-6 h-15 border-b border-border motion-safe:animate-pulse">
-            <div className="h-4 bg-input rounded w-1/4"></div>
-            <div className="h-4 bg-input rounded w-1/5"></div>
-            <div className="h-4 bg-input rounded w-1/6"></div>
-            <div className="h-4 bg-input rounded w-1/4"></div>
-            <div className="h-4 bg-input rounded w-12 ml-auto"></div>
+        {visibleRows.map((key) => (
+          <div key={key} className="flex h-12 items-center gap-4 border-b border-border px-6 motion-safe:animate-pulse">
+            <div className="h-4 w-1/4 rounded bg-skeleton-base" />
+            <div className="h-4 w-1/5 rounded bg-skeleton-base" />
+            <div className="h-4 w-1/6 rounded bg-skeleton-base" />
+            <div className="h-4 w-1/4 rounded bg-skeleton-base" />
+            <div className="ml-auto h-4 w-12 rounded bg-skeleton-base" />
           </div>
         ))}
       </div>
     </div>
   );
 };
+
+export default ManagerTableSkeleton;

@@ -1,19 +1,14 @@
-'use client';
 // RESPONSIBILITY: Renders the TrainerSessionsScheduleModal UI for the owning Trainer feature; data access remains in the feature API/query layer.
-import React from 'react';
+'use client';
+import React, { useRef } from 'react';
 import { X, Loader2 } from 'lucide-react';
 import { useTrainerScheduleForm } from '@/app/trainer/sessions/sessions_components/TrainerSessionsScheduleModal/useTrainerScheduleForm';
 import TrainerSearchableDropdown from '@/app/trainer/trainer_components/TrainerShared/TrainerSearchableDropdown/TrainerSearchableDropdown';
 import { useTrainerUnsavedChangesGuard } from '@/app/trainer/trainer_utils/TrainerUseWarnIfUnsavedChanges';
 import { DURATION_OPTIONS } from '@/app/trainer/sessions/sessions_utils/TrainerSessionsSharedConstants';
-import type { CreateSessionDto } from '@/app/trainer/sessions/sessions_types/TrainerSessionsTypes';
-
-interface TrainerSessionsScheduleModalProps {
-  onClose: () => void;
-  onSubmit: (dto: CreateSessionDto) => Promise<void>;
-  memberOptions: { value: string; label: string }[];
-  isSubmitting: boolean;
-}
+import { useTrainerDialogFocusTrap } from '@/app/trainer/trainer_components/TrainerShared/useTrainerDialogFocusTrap';
+import type { SessionType } from '@/app/trainer/sessions/sessions_types/TrainerSessionsTypes';
+import type { TrainerSessionsScheduleModalProps } from '@/app/trainer/sessions/sessions_components/TrainerSessionsScheduleModal/TrainerSessionsScheduleModalTypes';
 
 export default function TrainerSessionsScheduleModal({
   onClose,
@@ -21,6 +16,7 @@ export default function TrainerSessionsScheduleModal({
   memberOptions,
   isSubmitting,
 }: TrainerSessionsScheduleModalProps) {
+  const dialogRef = useRef<HTMLDivElement>(null);
   const { form, handleSubmit } = useTrainerScheduleForm(onSubmit);
   const { register, watch, setValue, formState: { errors, isDirty } } = form;
 
@@ -29,19 +25,20 @@ export default function TrainerSessionsScheduleModal({
   const selectedMemberId = watch('memberId');
   const selectedDuration = watch('duration');
 
-  useTrainerUnsavedChangesGuard(isDirty && !isSubmitting);
+  const guardNavigation = useTrainerUnsavedChangesGuard(isDirty && !isSubmitting);
+  useTrainerDialogFocusTrap({ isOpen: true, dialogRef, onEscape: () => void guardNavigation(onClose) });
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay/80 backdrop-blur-sm p-4">
-      <div className="bg-overlay w-full max-w-md rounded-2xl shadow-2xl border border-border overflow-hidden motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95 motion-safe:duration-200">
+    <div className="fixed inset-0 z-40 flex items-center justify-center bg-overlay backdrop-blur-sm p-4" role="presentation">
+      <div ref={dialogRef} className="bg-overlay w-full max-w-md rounded-2xl shadow-dialog border border-border overflow-hidden motion-safe:animate-in motion-safe:fade-in motion-safe:zoom-in-95 motion-safe:duration-base">
         <div className="flex items-center justify-between p-5 border-b border-border">
-          <h3 className="text-lg font-bold text-foreground">Schedule PT Session</h3>
-          <button
-            onClick={onClose}
-            className="text-secondary hover:text-foreground hover:bg-input p-1 rounded-lg motion-safe:transition-colors"
+          <h3 id="trainer-session-schedule-title" className="text-lg font-bold text-primary">Schedule PT Session</h3>
+          <button type="button"
+            onClick={() => void guardNavigation(onClose)}
+            className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page text-secondary hover:text-primary hover:bg-input p-1 rounded-lg motion-safe:transition-colors motion-safe:duration-base"
             aria-label="Close modal"
           >
-            <X size={20} />
+            <X size={18} />
           </button>
         </div>
         <form onSubmit={handleSubmit} className="p-5 space-y-4">
@@ -50,7 +47,7 @@ export default function TrainerSessionsScheduleModal({
             <TrainerSearchableDropdown
               options={[{value: 'PT', label: 'Personal Training'}, {value: 'Group', label: 'Group Class'}]}
               value={selectedType}
-              onChange={(val: string | number) => setValue('type', val as 'PT' | 'Group', { shouldValidate: true })}
+              onChange={(val: string | number) => setValue('type', val as SessionType, { shouldValidate: true })}
               placeholder="-- Choose Type --"
             />
             {errors.type && <p className="text-xs text-danger mt-1">{errors.type.message}</p>}
@@ -71,7 +68,7 @@ export default function TrainerSessionsScheduleModal({
               <input
                 type="date"
                 {...register('date')}
-                className="w-full px-3 py-2 border border-border rounded-lg bg-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full px-3 py-2 border border-border rounded-lg bg-input text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               />
               {errors.date && <p className="text-xs text-danger mt-1">{errors.date.message}</p>}
             </div>
@@ -80,7 +77,7 @@ export default function TrainerSessionsScheduleModal({
               <input
                 type="time"
                 {...register('time')}
-                className="w-full px-3 py-2 border border-border rounded-lg bg-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full px-3 py-2 border border-border rounded-lg bg-input text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               />
               {errors.time && <p className="text-xs text-danger mt-1">{errors.time.message}</p>}
             </div>
@@ -98,17 +95,17 @@ export default function TrainerSessionsScheduleModal({
           <div className="pt-4 flex justify-end gap-2 border-t border-border mt-4">
             <button
               type="button"
-              onClick={onClose}
-              className="px-4 py-2 text-sm font-semibold text-secondary hover:text-foreground hover:bg-input rounded-lg motion-safe:transition-colors"
+              onClick={() => void guardNavigation(onClose)}
+              className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page px-4 py-2 text-sm font-semibold text-secondary hover:text-primary hover:bg-input rounded-lg motion-safe:transition-colors motion-safe:duration-base"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-primary rounded-lg hover:bg-primary/90 motion-safe:transition-colors disabled:opacity-70"
+              className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page flex items-center gap-2 px-4 py-2 text-sm font-semibold text-on-primary bg-primary rounded-lg hover:bg-primary-hover motion-safe:transition-colors disabled:opacity-70"
             >
-              {isSubmitting && <Loader2 size={16} className="motion-safe:animate-spin" />}
+              {isSubmitting && <Loader2 size={18} className="motion-safe:animate-spin" />}
               Confirm Assignment
             </button>
           </div>

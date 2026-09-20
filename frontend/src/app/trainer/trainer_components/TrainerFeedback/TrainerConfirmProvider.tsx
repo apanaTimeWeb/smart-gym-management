@@ -1,49 +1,38 @@
+// RESPONSIBILITY: Provides the programmatic confirm() API to Trainer features and owns only transient dialog state; no server/API data is stored here.
 'use client';
-// RESPONSIBILITY: Provides a programmatic confirm() API to all TRAINER components via React Context. Renders a single shared TrainerConfirmModal at the root level. No async data — sync UI state only.
-import React, { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
+import { createContext, useCallback, useMemo, useRef, useState, type ReactNode } from 'react';
 import TrainerConfirmModal from '@/app/trainer/trainer_components/TrainerFeedback/TrainerConfirmModal';
+import type { TrainerConfirmContextValue, TrainerConfirmOptions } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerConfirmTypes';
 
-interface ConfirmOptions {
-  title: string;
-  message: string;
-  confirmText?: string;
-  cancelText?: string;
-  type?: 'danger' | 'warning' | 'info';
-}
-
-interface ConfirmContextType {
-  confirm: (options: ConfirmOptions) => Promise<boolean>;
-}
-
-const ConfirmContext = createContext<ConfirmContextType | undefined>(undefined);
+export const ConfirmContext = createContext<TrainerConfirmContextValue | undefined>(undefined);
 
 export function TrainerConfirmProvider({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [options, setOptions] = useState<ConfirmOptions | null>(null);
-  const [resolver, setResolver] = useState<{ resolve: (value: boolean) => void } | null>(null);
+  const [options, setOptions] = useState<TrainerConfirmOptions | null>(null);
+  const [resolver, setResolver] = useState<((value: boolean) => void) | null>(null);
+  const triggerRef = useRef<HTMLElement | null>(null);
 
-  const confirm = useCallback((options: ConfirmOptions) => {
-    setOptions(options);
+  const settle = useCallback((result: boolean) => {
+    resolver?.(result);
+    setResolver(null);
+    setOptions(null);
+    setIsOpen(false);
+    requestAnimationFrame(() => triggerRef.current?.focus());
+  }, [resolver]);
+
+  const confirm = useCallback((nextOptions: TrainerConfirmOptions) => {
+    triggerRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    setOptions(nextOptions);
     setIsOpen(true);
-    return new Promise<boolean>((resolve) => {
-      setResolver({ resolve });
-    });
+    return new Promise<boolean>((resolve) => setResolver(() => resolve));
   }, []);
 
-  const handleConfirm = () => {
-    resolver?.resolve(true);
-    setIsOpen(false);
-  };
-
-  const handleCancel = () => {
-    resolver?.resolve(false);
-    setIsOpen(false);
-  };
+  const value = useMemo<TrainerConfirmContextValue>(() => ({ confirm }), [confirm]);
 
   return (
-    <ConfirmContext.Provider value={{ confirm }}>
+    <ConfirmContext.Provider value={value}>
       {children}
-      {options && (
+      {options ? (
         <TrainerConfirmModal
           isOpen={isOpen}
           title={options.title}
@@ -51,17 +40,12 @@ export function TrainerConfirmProvider({ children }: { children: ReactNode }) {
           confirmText={options.confirmText}
           cancelText={options.cancelText}
           type={options.type}
-          onConfirm={handleConfirm}
-          onCancel={handleCancel}
+          requireTypedConfirmation={options.requireTypedConfirmation}
+          confirmationPhrase={options.confirmationPhrase}
+          onConfirm={() => settle(true)}
+          onCancel={() => settle(false)}
         />
-      )}
+      ) : null}
     </ConfirmContext.Provider>
   );
 }
-
-export const useConfirm = () => {
-  const context = useContext(ConfirmContext);
-  if (!context) throw new Error("useConfirm must be used within TrainerConfirmProvider");
-  return context;
-};
-

@@ -1,26 +1,29 @@
-'use client';
 // RESPONSIBILITY: Renders the paginated staff members table with inline row actions.
+'use client';
+import { Edit2, Trash2, CheckCircle2, Ban, PlayCircle, Users, Download } from 'lucide-react';
+import { displayValue, formatCurrencyFromMinorUnits, formatDate, maskSensitiveData } from '@/lib/formatters';
+import { useManagerHrLogic } from '@/app/manager/hr/hr_hooks/ManagerUseManagerHrLogic';
+import { STAFF_TABLE_HEADERS } from '@/app/manager/hr/hr_utils/ManagerHrSharedConstants';
+import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
+import ManagerEmptyState from '@/app/manager/manager_components/ManagerFeedback/ManagerEmptyState';
+import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
+import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
+import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_infrastructure/ManagerPaginationDefaults';
+
 // Rule 71 FIX: toggleStaffStatus now uses useConfirm() modal before firing.
 // Rule 48 FIX: Uses ManagerEmptyState component for empty state.
-import { useHrContext } from '@/app/manager/hr/hr_context/ManagerHrContext';
-import { STAFF_TABLE_HEADERS } from '@/app/manager/hr/hr_utils/ManagerHrSharedConstants';
-import { Edit2, Trash2, CheckCircle2, Ban, PlayCircle, Users, Download } from 'lucide-react';
-import { useConfirm } from '@/app/manager/manager_components/ManagerFeedback/ManagerConfirmProvider';
-import ManagerPagination from '@/app/manager/manager_components/ManagerShared/ManagerPagination';
-import { MANAGER_ITEMS_PER_PAGE } from '@/app/manager/manager_utils/ManagerSharedConstants';
-import ManagerEmptyState from '@/app/manager/manager_components/ManagerFeedback/ManagerEmptyState';
-import { displayValue, formatCurrency, formatDate, maskSensitiveData } from '@/lib/formatters';
+
 
 export default function ManagerHrStaffTable() {
-  const { staff, totalStaff, isLoading, debouncedSearch, currentPage, setCurrentPage, openEdit, deleteStaff, toggleStaffStatus, setViewProfileData, exportStaff } = useHrContext();
+  const { staff, totalStaff, isPending, debouncedSearch, currentPage, setCurrentPage, openEdit, deleteStaff, toggleStaffStatus, setViewProfileData, exportStaff } = useManagerHrLogic();
   const { confirm } = useConfirm();
 
   const totalPages = Math.max(1, Math.ceil(totalStaff / MANAGER_ITEMS_PER_PAGE));
 
-  if (isLoading) {
+  if (isPending) {
     return (
       <div className="flex flex-col h-full">
-        <div className="overflow-x-auto flex-1">
+        <div className="hidden lg:block overflow-x-auto flex-1">
           <table className="w-full">
             <thead className="bg-input text-secondary">
               <tr>
@@ -34,16 +37,16 @@ export default function ManagerHrStaffTable() {
               {[...Array(5)].map((_, i) => (
                 <tr key={`staff-loading-${i}`} className="motion-safe:animate-pulse">
                   <td className="px-4 py-4 flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-muted"></div>
-                    <div><div className="h-4 bg-muted rounded w-24 mb-1"></div><div className="h-3 bg-muted rounded w-32"></div></div>
+                    <div className="w-8 h-8 rounded-full bg-input"></div>
+                    <div><div className="h-4 bg-input rounded w-24 mb-1"></div><div className="h-3 bg-input rounded w-32"></div></div>
                   </td>
-                  <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-20"></div></td>
-                  <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-16"></div></td>
-                  <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-24"></div></td>
-                  <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-20"></div></td>
-                  <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-24"></div></td>
-                  <td className="px-4 py-4"><div className="h-4 bg-muted rounded w-20"></div></td>
-                  <td className="px-4 py-4"><div className="h-6 bg-muted rounded w-16 ml-auto"></div></td>
+                  <td className="px-4 py-4"><div className="h-4 bg-input rounded w-20"></div></td>
+                  <td className="px-4 py-4"><div className="h-4 bg-input rounded w-16"></div></td>
+                  <td className="px-4 py-4"><div className="h-4 bg-input rounded w-24"></div></td>
+                  <td className="px-4 py-4"><div className="h-4 bg-input rounded w-20"></div></td>
+                  <td className="px-4 py-4"><div className="h-4 bg-input rounded w-24"></div></td>
+                  <td className="px-4 py-4"><div className="h-4 bg-input rounded w-20"></div></td>
+                  <td className="px-4 py-4"><div className="h-6 bg-input rounded w-16 ml-auto"></div></td>
                 </tr>
               ))}
             </tbody>
@@ -59,10 +62,10 @@ export default function ManagerHrStaffTable() {
       <div className="flex justify-end px-4 pt-3">
         <button
           onClick={() => exportStaff()}
-          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium border border-border rounded-lg hover:bg-primary-subtle text-secondary hover:text-foreground motion-safe:transition-colors"
+          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium border border-border rounded-lg hover:bg-primary-subtle text-secondary hover:text-primary motion-safe:transition-colors"
           aria-label="Export staff list as CSV"
         >
-          <Download size={13} /> Export CSV
+          <Download size={18} /> Export CSV
         </button>
       </div>
       <div className="overflow-x-auto flex-1">
@@ -81,7 +84,7 @@ export default function ManagerHrStaffTable() {
             {staff.map(s => (
               <tr 
                 key={s.id} 
-                className="motion-safe:transition-colors hover:bg-primary/5 cursor-pointer" 
+                className="motion-safe:transition-colors hover:bg-surface-hover cursor-pointer" 
                 tabIndex={0}
                 role="button"
                 aria-label={`Open staff profile for ${s.name}`}
@@ -95,7 +98,7 @@ export default function ManagerHrStaffTable() {
               >
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm bg-primary/10 text-primary">
+                    <div className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm bg-primary-subtle text-primary">
                       {(s.name || '?').charAt(0).toUpperCase()}
                     </div>
                     <div>
@@ -107,18 +110,18 @@ export default function ManagerHrStaffTable() {
                 <td className="px-4 py-3 text-sm text-primary">{s.role}</td>
                 <td className="px-4 py-3">
                   {s.isActive === false ? (
-                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-danger/10 text-danger border border-danger/20">
+                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-danger text-on-danger border border-border">
                       <Ban className="w-3 h-3" /> Suspended
                     </span>
                   ) : (
-                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-success/10 text-success border border-success/20">
+                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-success text-on-success border border-border">
                       <CheckCircle2 className="w-3 h-3" /> Active
                     </span>
                   )}
                 </td>
                 <td className="px-4 py-3 text-sm text-secondary">{maskSensitiveData(s.phone)}</td>
-                <td className="px-4 py-3 text-sm font-medium text-success text-right">{formatCurrency(s.salary || 0)}</td>
-                <td className="px-4 py-3 text-sm font-medium text-primary text-right">{s.advanceSalary && s.advanceSalary > 0 ? formatCurrency(s.advanceSalary) : displayValue(null)}</td>
+                <td className="px-4 py-3 text-sm font-medium text-success text-right">{formatCurrencyFromMinorUnits(s.salary || 0, ManagerEnvConfig.currencyCode)}</td>
+                <td className="px-4 py-3 text-sm font-medium text-primary text-right">{s.advanceSalary && s.advanceSalary > 0 ? formatCurrencyFromMinorUnits(s.advanceSalary, ManagerEnvConfig.currencyCode) : displayValue(null)}</td>
                 <td className="px-4 py-3 text-sm text-secondary">
                   {displayValue(s.joinDate ? formatDate(s.joinDate) : null)}
                 </td>
@@ -135,26 +138,25 @@ export default function ManagerHrStaffTable() {
                             ? `Suspend "${s.name}"? They will no longer be able to check in until reactivated.`
                             : `Activate "${s.name}"? They will regain normal access.`,
                           type: isSuspending ? 'danger' : 'info',
-                          confirmText: isSuspending ? 'Suspend' : 'Activate',
-                        });
+                          confirmText: isSuspending ? 'Suspend' : 'Activate' });
                         if (ok) toggleStaffStatus(s);
                       }}
-                      className={`p-1.5 rounded-lg motion-safe:transition-all duration-200 ease-in-out ${
+                      className={`p-1.5 rounded-lg motion-safe:transition-all motion-safe:duration-base ease-in-out ${
                         s.isActive === false
-                          ? 'text-success hover:bg-success/10'
-                          : 'text-danger hover:bg-danger/10'
+                          ? 'text-success hover:bg-success-bg'
+                          : 'text-danger hover:bg-danger-bg'
                       }`}
                       title={s.isActive === false ? 'Activate Staff' : 'Suspend Staff'}
                       aria-label={s.isActive === false ? `Activate ${s.name}` : `Suspend ${s.name}`}
                     >
-                      {s.isActive === false ? <PlayCircle size={16} /> : <Ban size={16} />}
+                      {s.isActive === false ? <PlayCircle size={18} /> : <Ban size={18} />}
                     </button>
                     <button 
                       onClick={(e) => { e.stopPropagation(); openEdit(s); }} 
-                      className="p-1.5 rounded hover:bg-primary/10 motion-safe:transition-colors text-secondary hover:text-primary"
+                      className="p-1.5 rounded hover:bg-primary-subtle motion-safe:transition-colors text-secondary hover:text-primary"
                       title="Edit"
                     >
-                      <Edit2 size={16} />
+                      <Edit2 size={18} />
                     </button>
                     <button 
                       onClick={async (e) => { 
@@ -169,10 +171,10 @@ export default function ManagerHrStaffTable() {
                           deleteStaff(s.id); 
                         }
                       }}
-                      className="p-1.5 rounded motion-safe:transition-colors text-danger hover:bg-danger/10"
+                      className="p-1.5 rounded motion-safe:transition-colors text-danger hover:bg-danger-bg"
                       title="Delete"
                     >
-                      <Trash2 size={16} />
+                      <Trash2 size={18} />
                     </button>
                   </div>
                 </td>
@@ -182,7 +184,7 @@ export default function ManagerHrStaffTable() {
               <tr>
                 <td colSpan={STAFF_TABLE_HEADERS.length + 1} className="p-0 border-b-0">
                   <ManagerEmptyState 
-                    icon={<Users size={32} />}
+                    icon={<Users size={18} />}
                     title={debouncedSearch ? 'No staff found' : 'No staff members yet'}
                     subtitle={debouncedSearch ? 'Try adjusting your search or filters.' : 'Add your first staff member to manage their payroll and attendance.'}
                   />
@@ -191,6 +193,43 @@ export default function ManagerHrStaffTable() {
             )}
           </tbody>
         </table>
+      </div>
+      <div className="lg:hidden flex-1 overflow-y-auto divide-y divide-border">
+        {staff.map((s) => (
+          <article key={`mobile-staff-${s.id}`} className="p-4 bg-card space-y-3">
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <p className="font-semibold text-primary truncate">{s.name}</p>
+                <p className="text-xs text-secondary truncate">{s.email || '—'}</p>
+              </div>
+              <span className={`shrink-0 px-2 py-1 rounded-full text-badge font-semibold ${s.isActive === false ? 'bg-danger text-on-danger' : 'bg-success text-on-success'}`}>
+                {s.isActive === false ? 'Inactive' : 'Active'}
+              </span>
+            </div>
+            <div className="grid grid-cols-2 gap-3 text-sm">
+              <div><p className="text-xs text-secondary">Role</p><p className="text-primary truncate">{s.role || '—'}</p></div>
+              <div><p className="text-xs text-secondary">Phone</p><p className="text-primary truncate">{s.phone || '—'}</p></div>
+              <div><p className="text-xs text-secondary">Salary</p><p className="text-primary">{formatCurrencyFromMinorUnits(s.salary || 0)}</p></div>
+              <div><p className="text-xs text-secondary">Join Date</p><p className="text-primary">{s.joinDate ? formatDate(s.joinDate) : '—'}</p></div>
+            </div>
+            <div className="flex justify-end gap-2">
+              <button type="button" onClick={() => openEdit(s)} className="min-h-11 min-w-11 p-2 rounded-md text-secondary hover:text-primary motion-safe:transition-colors" aria-label={`Edit ${s.name}`}><Edit2 size={18} /></button>
+              <button type="button" onClick={() => setViewProfileData(s)} className="min-h-11 min-w-11 p-2 rounded-md text-secondary hover:text-primary motion-safe:transition-colors" aria-label={`View ${s.name}`}><Users size={18} /></button>
+              <button type="button" onClick={async () => {
+                const isSuspending = s.isActive !== false;
+                const ok = await confirm({ title: isSuspending ? 'Suspend Staff Member' : 'Activate Staff Member', message: isSuspending ? `Suspend "${s.name}"? They will no longer be able to check in until reactivated.` : `Activate "${s.name}"? They will regain normal access.`, type: isSuspending ? 'danger' : 'info', confirmText: isSuspending ? 'Suspend' : 'Activate' });
+                if (ok) toggleStaffStatus(s);
+              }} className={`min-h-11 min-w-11 p-2 rounded-md motion-safe:transition-colors ${s.isActive === false ? 'text-success hover:bg-success-bg' : 'text-danger hover:bg-danger-bg'}`} aria-label={s.isActive === false ? `Activate ${s.name}` : `Suspend ${s.name}`}><Ban size={18} /></button>
+              <button type="button" onClick={async () => {
+                const ok = await confirm({ title: 'Delete Staff', message: `Are you sure you want to delete staff member "${s.name}"? This action cannot be undone.`, type: 'danger', confirmText: 'Delete' });
+                if (ok) deleteStaff(s.id);
+              }} className="min-h-11 min-w-11 p-2 rounded-md text-danger hover:bg-danger-bg motion-safe:transition-colors" aria-label={`Delete ${s.name}`}><Trash2 size={18} /></button>
+            </div>
+          </article>
+        ))}
+        {staff.length === 0 && (
+          <div className="p-0"><ManagerEmptyState icon={<Users size={18} />} title={debouncedSearch ? 'No staff found' : 'No staff members yet'} subtitle={debouncedSearch ? 'Try adjusting your search or filters.' : 'Add your first staff member to manage their payroll and attendance.'} /></div>
+        )}
       </div>
       <ManagerPagination 
         currentPage={currentPage} 

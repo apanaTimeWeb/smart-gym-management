@@ -1,125 +1,181 @@
-// RESPONSIBILITY: Client component for /superadmin/gyms/[id] — full gym detail view.
+// RESPONSIBILITY: Renders the Superadmin Gym 360 detail workspace from query-owned data and feature-owned action hooks. No direct API calls.
 'use client';
-// Shows subscription info, usage stats, location, GSTIN, trial expiry, and payment history.
-// DATA FLOW: useQuery(['superadmin','gyms',gymId]) → SuperadminGymDetailClient → Tabs
-import { useQuery } from '@tanstack/react-query';
+
+import { useState } from 'react';
+import { Activity, ArrowLeft, Building2, Clock, CreditCard, Link as LinkIcon, MapPin, Palette, Ticket, User } from 'lucide-react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Building2, User, CreditCard, Activity, MapPin, Shield, Clock } from 'lucide-react';
-import { gymsApi } from '@/app/superadmin/gyms/superadmin_gyms_api/superadmin_gyms_api';
-import type { Tenant } from '@/app/superadmin/gyms/superadmin_gyms_types/superadmin_gyms_types';
-import { formatCurrency, formatDate } from '@/lib/formatters';
+import { formatCurrencyFromMinorUnits, formatDate, formatNumber, displayValue } from '@/lib/formatters';
 import { GymsUrlConfig } from '@/app/superadmin/gyms/superadmin_gyms_url_config';
-interface SuperadminGymDetailClientProps {
-    gymId: string;
-}
+import { useSuperadminGymDetail } from '@/app/superadmin/gyms/gyms_utils/useSuperadminGymDetail';
+import { useSuperadminGymDetailActions } from '@/app/superadmin/gyms/gyms_utils/useSuperadminGymDetailActions';
+import { getSuperadminGymStatusBadgeClasses } from '@/app/superadmin/gyms/gyms_utils/SuperadminGymsConstants';
+import { SUPERADMIN_GYM_DETAIL_CLIENT_TABS, type SuperadminGymDetailClientProps, type SuperadminGymDetailClientTab } from '@/app/superadmin/gyms/gyms_types/SuperadminGymDetailClientTypes';
+import type { SuperadminGymDetailStatus } from '@/app/superadmin/gyms/gyms_types/SuperadminGymDetailTypes';
+import SuperadminGymDetailRow from '@/app/superadmin/gyms/gyms_components/SuperadminGymDetailClient/SuperadminGymDetailRow';
+import SuperadminGymDetailSkeleton from '@/app/superadmin/gyms/gyms_components/SuperadminGymDetailClient/SuperadminGymDetailSkeleton';
+
+const SUPERADMIN_GYM_DETAIL_BILLING_ROUTE = GymsUrlConfig.PAGES.BILLING_PLANS;
+
+
 export default function SuperadminGymDetailClient({ gymId }: SuperadminGymDetailClientProps) {
-    const router = useRouter();
-    const { data: res, isLoading, isError } = useQuery({
-        queryKey: ['superadmin', 'gyms', gymId],
-        queryFn: () => gymsApi.fetchGymById(gymId),
-    });
-    const gym = res?.data as Tenant;
-    if (isLoading) {
-        return (<div className="space-y-6 motion-safe:animate-pulse">
-        <div className="h-8 w-48 bg-skeleton-base rounded"/>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {[1, 2, 3].map((i) => <div key={`skeleton-${i}`} className="h-32 bg-skeleton-base rounded-xl border border-border"/>)}
-        </div>
-        <div className="h-64 bg-skeleton-base rounded-xl border border-border"/>
-      </div>);
-    }
-    if (isError || !gym) {
-        return (<div className="p-8 text-center">
-        <p className="text-danger font-medium mb-4">Failed to load gym details.</p>
-        <button onClick={() => router.back()} className="text-primary hover:underline">Go Back</button>
-      </div>);
-    }
-    return (<div className="space-y-6">
-      {/* Back Navigation */}
-      <button onClick={() => router.push(GymsUrlConfig.PAGES.MAIN)} className="flex items-center gap-2 text-secondary hover:text-foreground motion-safe:transition-colors text-sm">
-        <ArrowLeft className="w-4 h-4"/> Back to Gyms
+  const router = useRouter();
+  const query = useSuperadminGymDetail(gymId);
+  const gym = query.data?.data;
+  const { startGhostLogin, isStartingGhostLogin } = useSuperadminGymDetailActions();
+  const [activeTab, setActiveTab] = useState<SuperadminGymDetailClientTab>('overview');
+
+  if (query.isPending) return <SuperadminGymDetailSkeleton />;
+
+  if (query.isError || !gym) {
+    return (
+      <section className="rounded-xl border border-border bg-danger-bg p-8 text-center" role="alert">
+        <p className="mb-4 font-medium text-danger">Failed to load gym details.</p>
+        <button type="button" onClick={() => void query.refetch()} className="min-h-11 rounded-md border border-border px-4 py-2 text-sm text-primary motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page">Retry</button>
+      </section>
+    );
+  }
+
+  const gymForGhostLogin = { id: gym.gymId, name: gym.gymName, plan: gym.plan, adminEmail: gym.adminEmail };
+  const status = gym.status as SuperadminGymDetailStatus;
+
+  return (
+    <section className="space-y-6" aria-labelledby="superadmin-gym-detail-title">
+      <button type="button" onClick={() => router.push(GymsUrlConfig.PAGES.MAIN)} className="flex min-h-11 items-center gap-2 text-sm text-secondary hover:text-primary motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page">
+        <ArrowLeft size={18} aria-hidden="true"/> Back to Gyms
       </button>
 
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">{gym.name}</h1>
-          <p className="text-secondary text-sm mt-1">Gym ID: {gym.id}</p>
+      <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
+        <div className="min-w-0">
+          <h1 id="superadmin-gym-detail-title" className="truncate text-2xl font-bold text-primary" title={gym.gymName}>{displayValue(gym.gymName)}</h1>
+          <p className="mt-1 text-sm text-secondary">Gym ID: {displayValue(gym.gymId)}</p>
         </div>
-        <span className={`px-3 py-1 rounded-full text-sm font-semibold ${gym.status === 'ACTIVE' ? 'bg-success/10 text-success border border-success/20' :
-            gym.status === 'SUSPENDED' ? 'bg-danger-bg text-danger border border-destructive/20' :
-                gym.status === 'TRIAL' ? 'bg-warning/10 text-warning border border-warning/20' :
-                    'bg-input text-secondary border border-border'}`}>{gym.status}</span>
-      </div>
-
-      {/* KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-card border border-border rounded-xl p-5 flex items-center gap-4">
-          <div className="p-3 bg-primary/10 rounded-lg"><User className="w-5 h-5 text-primary"/></div>
-          <div>
-            <p className="text-xs text-secondary uppercase tracking-wider">Members</p>
-            <p className="text-2xl font-bold text-foreground">{gym.memberCount}</p>
-          </div>
-        </div>
-        <div className="bg-card border border-border rounded-xl p-5 flex items-center gap-4">
-          <div className="p-3 bg-success/10 rounded-lg"><CreditCard className="w-5 h-5 text-success"/></div>
-          <div>
-            <p className="text-xs text-secondary uppercase tracking-wider">Monthly Revenue</p>
-            <p className="text-2xl font-bold text-foreground">{formatCurrency(gym.monthlyRevenue)}</p>
-          </div>
-        </div>
-        <div className="bg-card border border-border rounded-xl p-5 flex items-center gap-4">
-          <div className="p-3 bg-purple/10 rounded-lg"><Activity className="w-5 h-5 text-purple"/></div>
-          <div>
-            <p className="text-xs text-secondary uppercase tracking-wider">Plan</p>
-            <p className="text-2xl font-bold text-foreground">{gym.plan?.toUpperCase() || '—'}</p>
-          </div>
-        </div>
-        <div className="bg-card border border-border rounded-xl p-5 flex items-center gap-4">
-          <div className="p-3 bg-warning/10 rounded-lg"><Clock className="w-5 h-5 text-warning"/></div>
-          <div>
-            <p className="text-xs text-secondary uppercase tracking-wider">DB Version</p>
-            <p className="text-lg font-bold text-foreground">{gym.databaseVersion || '—'}</p>
-          </div>
+        <div className="flex flex-wrap items-center gap-3">
+          <button type="button" onClick={() => startGhostLogin(gymForGhostLogin)} disabled={isStartingGhostLogin} className="min-h-11 rounded-lg border border-border bg-input px-4 py-2 text-sm font-medium text-primary motion-safe:transition-all motion-safe:duration-base motion-safe:active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page disabled:cursor-not-allowed disabled:opacity-50">
+            {isStartingGhostLogin ? 'Opening Admin…' : 'Ghost Login (Impersonate)'}
+          </button>
+          <span className={`inline-flex items-center rounded-full border px-3 py-1 text-sm font-semibold ${getSuperadminGymStatusBadgeClasses(status as any)}`}>{displayValue(status)}</span>
         </div>
       </div>
 
-      {/* Detail Sections */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Contact Info */}
-        <div className="bg-card border border-border rounded-xl p-6 space-y-4">
-          <h2 className="text-base font-semibold text-foreground flex items-center gap-2">
-            <User className="w-4 h-4 text-primary"/> Owner & Contact
-          </h2>
-          <div className="space-y-3 text-sm">
-            <div className="flex justify-between"><span className="text-secondary">Owner</span><span className="text-foreground font-medium">{gym.ownerName}</span></div>
-            <div className="flex justify-between"><span className="text-secondary">Email</span><span className="text-foreground font-medium">{gym.adminEmail}</span></div>
-            <div className="flex justify-between"><span className="text-secondary">Phone</span><span className="text-foreground font-medium">{gym.phone}</span></div>
-            <div className="flex justify-between"><span className="text-secondary">Onboarded</span><span className="text-foreground font-medium">{formatDate(gym.createdAt)}</span></div>
-            <div className="flex justify-between"><span className="text-secondary">Last Login</span><span className="text-foreground font-medium">{gym.lastLoginAt ? formatDate(gym.lastLoginAt) : '—'}</span></div>
-          </div>
-        </div>
+      <nav className="flex w-full overflow-x-auto border-b border-border" aria-label="Gym detail sections">
+        {SUPERADMIN_GYM_DETAIL_CLIENT_TABS.map((tab) => (
+          <button key={tab.id} type="button" onClick={() => setActiveTab(tab.id)} aria-current={activeTab === tab.id ? 'page' : undefined} className={`min-h-11 whitespace-nowrap border-b-2 px-4 py-3 text-sm font-medium motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset ${activeTab === tab.id ? 'border-primary text-primary' : 'border-transparent text-secondary hover:border-border hover:text-primary'}`}>
+            {tab.label}
+          </button>
+        ))}
+      </nav>
 
-        {/* Location & Legal */}
-        <div className="bg-card border border-border rounded-xl p-6 space-y-4">
-          <h2 className="text-base font-semibold text-foreground flex items-center gap-2">
-            <MapPin className="w-4 h-4 text-primary"/> Location & Legal
-          </h2>
-          <div className="space-y-3 text-sm">
-            <div className="flex justify-between"><span className="text-secondary">City</span><span className="text-foreground font-medium">{gym.city || '—'}</span></div>
-            <div className="flex justify-between"><span className="text-secondary">State</span><span className="text-foreground font-medium">{gym.state || '—'}</span></div>
-            <div className="flex justify-between"><span className="text-secondary">Country</span><span className="text-foreground font-medium">{gym.country || '—'}</span></div>
-            <div className="flex justify-between"><span className="text-secondary">GSTIN</span>
-              <span className={`font-mono font-medium ${gym.gstin ? 'text-foreground' : 'text-danger'}`}>
-                {gym.gstin || '⚠ Not set'}
-              </span>
+      {activeTab === 'overview' && (
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              { label: 'Members', value: formatNumber(gym.memberCount), icon: User, tone: 'bg-primary-subtle text-primary' },
+              { label: 'Monthly Revenue', value: formatCurrencyFromMinorUnits(gym.monthlyRevenue), icon: CreditCard, tone: 'bg-success-bg text-success' },
+              { label: 'Plan', value: displayValue(gym.plan).toUpperCase(), icon: Activity, tone: 'bg-purple-bg text-purple-text' },
+              { label: 'DB Version', value: displayValue(gym.databaseVersion), icon: Clock, tone: 'bg-warning-bg text-warning' },
+            ].map(({ label, value, icon: Icon, tone }) => (
+              <div key={label} className="flex items-center gap-4 rounded-xl border border-border bg-card p-5">
+                <div className={`rounded-lg p-3 ${tone}`}><Icon size={18} aria-hidden="true" /></div>
+                <div className="min-w-0"><p className="text-xs uppercase tracking-wider text-secondary">{label}</p><p className="truncate text-2xl font-bold text-primary">{value}</p></div>
+              </div>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div className="space-y-4 rounded-xl border border-border bg-card p-6">
+              <h2 className="flex items-center gap-2 text-base font-semibold text-primary"><User size={18} aria-hidden="true"/> Owner &amp; Contact</h2>
+              <div className="space-y-3 text-sm">
+                <SuperadminGymDetailRow label="Owner" value={gym.ownerName} />
+                <SuperadminGymDetailRow label="Email" value={gym.adminEmail} />
+                <SuperadminGymDetailRow label="Phone" value={gym.phone} />
+                <SuperadminGymDetailRow label="Onboarded" value={formatDate(gym.createdAt)} />
+              </div>
             </div>
-            {gym.status === 'TRIAL' && gym.trialEndsAt && (<div className="flex justify-between">
-                <span className="text-secondary">Trial Ends</span>
-                <span className="text-warning font-medium">{formatDate(gym.trialEndsAt)}</span>
-              </div>)}
+            <div className="space-y-4 rounded-xl border border-border bg-card p-6">
+              <h2 className="flex items-center gap-2 text-base font-semibold text-primary"><MapPin size={18} aria-hidden="true"/> Location &amp; Legal</h2>
+              <div className="space-y-3 text-sm">
+                <SuperadminGymDetailRow label="City" value={gym.city} />
+                <SuperadminGymDetailRow label="State" value={gym.state} />
+                <SuperadminGymDetailRow label="Country" value={gym.country} />
+                <SuperadminGymDetailRow label="GSTIN" value={gym.gstin} emphasis={!gym.gstin} />
+                {status === 'TRIAL' && gym.trialEndsAt ? <SuperadminGymDetailRow label="Trial Ends" value={formatDate(gym.trialEndsAt)} emphasisWarning /> : null}
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>);
+      )}
+
+      {activeTab === 'branches' && (
+        <div className="space-y-4">
+          <div className="rounded-xl border border-border bg-card p-8 text-center">
+            <Building2 size={18} className="mx-auto mb-4 text-disabled" aria-hidden="true"/>
+            <h2 className="mb-2 text-xl font-bold text-primary">Branch &amp; Franchise Overview</h2>
+            <p className="mx-auto max-w-md text-secondary">Branch and franchise management is handled exclusively by the Gym Admin portal. As Superadmin, you have read-only visibility into this tenant&apos;s physical locations.</p>
+          </div>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            {[
+              { label: 'Total Branches', note: 'Synced from Admin portal', icon: Building2 },
+              { label: 'Franchise Partners', note: 'Read-only for Superadmin', icon: Ticket },
+              { label: 'Active Locations', note: 'Contact gym admin to modify', icon: MapPin },
+            ].map(({ label, note, icon: Icon }) => (
+              <div key={label} className="flex items-center gap-4 rounded-xl border border-border bg-card p-5">
+                <div className="rounded-lg bg-primary-subtle p-3 text-primary"><Icon size={20} aria-hidden="true" /></div>
+                <div><p className="text-xs uppercase tracking-wider text-secondary">{label}</p><p className="text-2xl font-bold text-primary">—</p><p className="mt-0.5 text-xs text-disabled">{note}</p></div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {activeTab === 'lifecycle' && (
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          <div className="space-y-6 rounded-xl border border-border bg-card p-6">
+            <h2 className="flex items-center gap-2 text-lg font-bold text-primary"><CreditCard size={18} aria-hidden="true"/> Current SaaS Plan</h2>
+            <div className="relative overflow-hidden rounded-lg border border-border bg-floating p-5">
+              <p className="text-sm text-secondary">Active Plan</p>
+              <p className="text-3xl font-bold text-primary">{displayValue(gym.subscription.plan).toUpperCase()}</p>
+              <p className="mt-2 flex items-center gap-1 text-sm text-success"><span className="inline-block h-2 w-2 rounded-full bg-success" aria-hidden="true" /> Active Subscription</p>
+            </div>
+            <Link href={SUPERADMIN_GYM_DETAIL_BILLING_ROUTE} className="block min-h-11 rounded-lg border border-border px-4 py-2.5 text-center font-medium text-primary hover:bg-surface-hover motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page">Manage Billing &amp; Plans</Link>
+          </div>
+          <div className="space-y-6 rounded-xl border border-border bg-card p-6">
+            <h2 className="flex items-center gap-2 text-lg font-bold text-primary"><Ticket size={18} aria-hidden="true"/> Onboarding Status</h2>
+            <ul className="space-y-4">
+              {[
+                ['Account Created', 'Complete', 'success'],
+                ['Billing Configured', 'Complete', 'success'],
+                ['First Branch Added', 'Pending', 'warning'],
+              ].map(([label, value, tone]) => (
+                <li key={label} className="flex items-center justify-between rounded-lg border border-border bg-floating p-3 text-sm">
+                  <span className="font-medium text-primary">{label}</span>
+                  <span className={`rounded px-2 py-1 text-xs font-semibold ${tone === 'success' ? 'bg-success-bg text-success' : 'bg-warning-bg text-warning'}`}>{value}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      )}
+
+      {activeTab === 'whitelabel' && (
+        <div className="space-y-6 rounded-xl border border-border bg-card p-8">
+          <div className="flex items-start gap-3 border-b border-border pb-6">
+            <div className="rounded-lg bg-primary-subtle p-3 text-primary"><Palette size={18} aria-hidden="true"/></div>
+            <div>
+              <h2 className="mb-2 text-xl font-bold text-primary">Brand Identity</h2>
+              <p className="text-sm text-secondary">Branding controls are intentionally read-only on Gym Detail. The dedicated White-labeling feature owns domain and branding mutations.</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <div className="rounded-lg border border-border bg-floating p-4"><p className="text-xs uppercase tracking-wider text-secondary">Gym</p><p className="mt-1 truncate font-semibold text-primary" title={gym.gymName}>{gym.gymName}</p></div>
+            <div className="rounded-lg border border-border bg-floating p-4"><p className="text-xs uppercase tracking-wider text-secondary">Plan</p><p className="mt-1 font-semibold text-primary">{gym.plan}</p></div>
+            <div className="rounded-lg border border-border bg-floating p-4"><p className="text-xs uppercase tracking-wider text-secondary">Status</p><p className="mt-1 font-semibold text-primary">{gym.status}</p></div>
+          </div>
+          <div className="rounded-lg border border-border bg-warning-bg p-4 text-sm text-warning">
+            <div className="flex items-center gap-2"><LinkIcon size={18} aria-hidden="true"/><span>Use the dedicated White-labeling module for documented branding/domain management.</span></div>
+          </div>
+        </div>
+      )}
+    </section>
+  );
 }

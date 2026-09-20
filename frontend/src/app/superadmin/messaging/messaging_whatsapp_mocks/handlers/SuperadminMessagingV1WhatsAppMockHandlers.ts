@@ -1,9 +1,15 @@
+import { StatusCodes } from 'http-status-codes';
 import { http, HttpResponse, delay } from 'msw';
 import type { ApiResponse } from '@/lib/api';
+import { MessagingUrlConfig } from '@/app/superadmin/messaging/superadmin_messaging_url_config';
 import { SuperadminWhatsAppCampaignSchema, SuperadminWhatsAppCreateCampaignPayloadSchema, type SuperadminWhatsAppCampaign, type SuperadminWhatsAppBulkCenterData, } from '@/app/superadmin/messaging/messaging_whatsapp_types/SuperadminMessagingV1WhatsAppTypes';
 import { SUPERADMIN_WHATSAPP_BULK_CENTER_MOCK_FIXTURE } from '@/app/superadmin/messaging/messaging_whatsapp_mocks/fixtures/SuperadminMessagingV1WhatsAppMockFixtures';
-const BASE_URL = '*/api/v1/superadmin/messaging/whatsapp';
+const BASE_URL = `*${MessagingUrlConfig.WHATSAPP_BASE}`;
 let mockCampaigns = [...SUPERADMIN_WHATSAPP_BULK_CENTER_MOCK_FIXTURE.campaigns];
+
+export function resetSuperadminMessagingV1WhatsAppMockState(): void {
+  mockCampaigns = [...SUPERADMIN_WHATSAPP_BULK_CENTER_MOCK_FIXTURE.campaigns];
+}
 export const superadminMessagingV1WhatsAppHandlers = [
     http.get(`${BASE_URL}/bulk-center`, async () => {
         await delay(300);
@@ -25,7 +31,7 @@ export const superadminMessagingV1WhatsAppHandlers = [
                 success: false,
                 message: 'Campaign details are invalid.',
                 data: null,
-            }, { status: 400 });
+            }, { status: StatusCodes.BAD_REQUEST });
         }
         const audience = SUPERADMIN_WHATSAPP_BULK_CENTER_MOCK_FIXTURE.audiences.find((item) => item.id === payload.data.audienceId);
         const template = SUPERADMIN_WHATSAPP_BULK_CENTER_MOCK_FIXTURE.templates.find((item) => item.id === payload.data.templateId);
@@ -34,7 +40,7 @@ export const superadminMessagingV1WhatsAppHandlers = [
                 success: false,
                 message: 'Audience or template not found.',
                 data: null,
-            }, { status: 404 });
+            }, { status: StatusCodes.NOT_FOUND });
         }
         const campaign = SuperadminWhatsAppCampaignSchema.parse({
             id: `camp-${Date.now()}`,

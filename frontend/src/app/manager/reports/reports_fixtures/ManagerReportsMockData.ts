@@ -2,21 +2,20 @@ import type { ReportSummary } from '@/app/manager/reports/reports_types/ManagerR
 
 export const MOCK_REPORT_SUMMARY: ReportSummary = {
   kpis: {
-    totalRevenue: 1500000,
+    totalRevenue: 150000000,
     totalMembers: 450,
     avgAttendanceRate: 65,
     totalExpenses: 250000,
     netProfit: 1250000,
     newMembersThisMonth: 25,
     churnRate: 2.5,
-    activeMembers: 420,
-  },
+    activeMembers: 420 },
   revenueData: [
-    { month: 'Jan', revenue: 110000, expenses: 20000, profit: 90000 },
-    { month: 'Feb', revenue: 115000, expenses: 22000, profit: 93000 },
-    { month: 'Mar', revenue: 120000, expenses: 21000, profit: 99000 },
-    { month: 'Apr', revenue: 118000, expenses: 25000, profit: 93000 },
-    { month: 'May', revenue: 125000, expenses: 20000, profit: 105000 },
+    { month: 'Jan', revenue: 11000000, expenses: 2000000, profit: 9000000 },
+    { month: 'Feb', revenue: 11500000, expenses: 2200000, profit: 9300000 },
+    { month: 'Mar', revenue: 12000000, expenses: 2100000, profit: 9900000 },
+    { month: 'Apr', revenue: 11800000, expenses: 2500000, profit: 9300000 },
+    { month: 'May', revenue: 12500000, expenses: 2000000, profit: 10500000 },
   ],
   attendanceData: [
     { date: 'Mon', present: 150, absent: 50, rate: 75 },
@@ -31,9 +30,9 @@ export const MOCK_REPORT_SUMMARY: ReportSummary = {
     { month: 'Mar', newMembers: 35, churned: 8, active: 440 },
   ],
   expenseBreakdown: [
-    { category: 'Rent', amount: 100000, percentage: 40 },
-    { category: 'Salaries', amount: 90000, percentage: 36 },
-    { category: 'Equipment Maintenance', amount: 35000, percentage: 14 },
-    { category: 'Utilities', amount: 25000, percentage: 10 },
+    { category: 'Rent', amount: 10000000, percentage: 40 },
+    { category: 'Salaries', amount: 9000000, percentage: 36 },
+    { category: 'Equipment Maintenance', amount: 3500000, percentage: 14 },
+    { category: 'Utilities', amount: 2500000, percentage: 10 },
   ]
 };

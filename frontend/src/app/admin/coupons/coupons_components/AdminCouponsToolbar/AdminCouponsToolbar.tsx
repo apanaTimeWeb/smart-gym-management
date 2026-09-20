@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { useAdminCouponsStore } from '@/app/admin/coupons/coupons_store/useAdminCouponsStore';
 import { useAdminCouponsLogic } from '@/app/admin/coupons/coupons_context/useAdminCouponsLogic';
 import { COUPON_STATUS_OPTIONS } from '@/app/admin/coupons/coupons_utils/AdminCouponsSharedConstants';
-import { AdminSearchableDropdown } from '@/app/admin/admin_components/AdminShared/AdminSearchableDropdown';
+import { AdminSearchableDropdown } from '@/app/admin/admin_layout/AdminShared/AdminSearchableDropdown/AdminSearchableDropdown';
 
 export default function AdminCouponsToolbar() {
   const { statusFilter, setStatusFilter, setSearch, dateRange, setDateRange } = useAdminCouponsStore();
@@ -22,13 +22,13 @@ export default function AdminCouponsToolbar() {
     <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
       <div className="flex flex-wrap gap-3 items-center w-full sm:w-auto">
         <div className="relative">
-          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary" />
+          <span className="absolute inset-y-0 left-3 flex items-center"><Search size={15} className="text-secondary" /></span>
           <input
             type="text"
             placeholder="Search by code or description..."
             value={localSearch}
             onChange={handleSearchChange}
-            className="pl-9 pr-4 py-2 bg-input border border-border rounded-lg text-sm text-foreground placeholder:text-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary w-64"
+            className="pl-9 pr-4 py-2 bg-input border border-border rounded-lg text-sm text-primary placeholder:text-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary w-64"
             aria-label="Search coupons"
           />
         </div>
@@ -56,7 +56,7 @@ export default function AdminCouponsToolbar() {
       </div>
       <button
         onClick={openAdd}
-        className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-semibold hover:bg-primary-hover motion-safe:transition-colors motion-safe:active:scale-95 whitespace-nowrap"
+        className="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary rounded-lg text-sm font-semibold hover:bg-primary-hover motion-safe:transition-colors motion-safe:active:scale-95 whitespace-nowrap motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
       >
         <Plus size={16} />
         New Coupon

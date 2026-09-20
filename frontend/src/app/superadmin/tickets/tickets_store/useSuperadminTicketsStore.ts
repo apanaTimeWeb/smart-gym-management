@@ -1,23 +1,15 @@
 // DATA FLOW: feature API/schema → hook/context → useSuperadminTicketsStore consumers.
 // RESPONSIBILITY: Zustand store for Superadmin Tickets UI state (filters, pagination, modals)
 import { create } from 'zustand';
-import type { TicketStatus, TicketPriority } from '@/app/superadmin/tickets/superadmin_tickets_types/superadmin_tickets_types';
-interface SuperadminTicketsState {
-    search: string;
-    setSearch: (search: string) => void;
-    showFilter: boolean;
-    setShowFilter: (show: boolean) => void;
-    statusFilter: TicketStatus | 'ALL';
-    setStatusFilter: (status: TicketStatus | 'ALL') => void;
-    priorityFilter: TicketPriority | 'ALL';
-    setPriorityFilter: (priority: TicketPriority | 'ALL') => void;
-    currentPage: number;
-    setCurrentPage: (page: number) => void;
-    replyModalTicketId: string | null;
-    setReplyModalTicketId: (id: string | null) => void;
-    assignModalTicketId: string | null;
-    setAssignModalTicketId: (id: string | null) => void;
-}
+import type { TicketStatus, TicketPriority } from '@/app/superadmin/tickets/tickets_types/SuperadminTicketsTypes';
+import type { SuperadminTicketsState } from '@/app/superadmin/tickets/tickets_types/SuperadminTicketsStoreTypes';
+/**
+ * Purpose: Zustand store for Superadmin Tickets UI state (filters, pagination, modals).
+ * Inputs: values defined by the exported hook signature.
+ * Output: the hook's typed state/actions/query contract.
+ * Side effects: remain scoped to the owning feature or approved application infrastructure.
+ * Invariant: does not move feature business state into unrelated modules.
+ */
 export const useSuperadminTicketsStore = create<SuperadminTicketsState>((set) => ({
     search: '',
     setSearch: (search) => set({ search, currentPage: 1 }),

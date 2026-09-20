@@ -1,10 +1,10 @@
 // RESPONSIBILITY: Provides the implementation for loading.tsx functionality within its module.
-import { AdminTableSkeleton } from '@/app/admin/admin_components/AdminShared/AdminTableSkeleton';
+import AdminTableSkeleton from '@/app/admin/admin_layout/AdminShared/AdminTableSkeleton';
 export default function Loading() {
  return (
- <div className="min-h-screen flex flex-col p-6 space-y-5 bg-background">
+ <div className="min-h-screen flex flex-col p-6 space-y-5 bg-page">
  {/* Header Skeleton */}
- <div className="h-10 bg-skeleton-base motion-safe:animate-pulse rounded-md w-1/4"></div>
+ <div className="h-10 bg-skeleton-base motion-safe:animate-pulse rounded-md w-1/4 motion-safe:duration-base"></div>
  {/* Table Skeleton */}
  <AdminTableSkeleton rows={8} />
  </div>

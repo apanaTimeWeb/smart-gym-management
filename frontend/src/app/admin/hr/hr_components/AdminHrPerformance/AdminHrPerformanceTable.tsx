@@ -1,28 +1,18 @@
 "use client";
-import { formatDecimal } from '@/lib/formatters';
 // RESPONSIBILITY: Renders sortable table displaying detailed staff performance metrics.
 
-import { ChevronDown, ChevronUp, ChevronsUpDown } from 'lucide-react';
+import { formatDecimal } from '@/lib/formatters';
 import { PERFORMANCE_TABLE_HEADERS, PERFORMANCE_STATUS_CONFIG } from '@/app/admin/hr/hr_utils/AdminHrPerformanceConstants';
+import AdminHrEmptyState from '@/app/admin/hr/hr_components/AdminHrEmptyState/AdminHrEmptyState';
+import AdminHrPerformanceTableSortIcon from '@/app/admin/hr/hr_components/AdminHrPerformance/AdminHrPerformanceTableSortIcon';
 import type {
   StaffPerformanceRecord,
   PerformanceSortKey,
   PerformanceSortDirection,
 } from '@/app/admin/hr/hr_types/AdminHrPerformanceTypes';
 
-interface AdminHrPerformanceTableProps {
-  data: StaffPerformanceRecord[];
-  sortKey: PerformanceSortKey;
-  sortDir: PerformanceSortDirection;
-  onSort: (key: PerformanceSortKey) => void;
-}
+import type { AdminHrPerformanceTableProps } from '@/app/admin/hr/hr_types/AdminHrPerformanceTablePropsTypes';
 
-function SortIcon({ col, sortKey, sortDir }: { col: string; sortKey: string; sortDir: string }) {
-  if (col !== sortKey) return <ChevronsUpDown size={12} className="text-disabled" />;
-  return sortDir === 'asc'
-    ? <ChevronUp size={12} className="text-primary" />
-    : <ChevronDown size={12} className="text-primary" />;
-}
 
 export default function AdminHrPerformanceTable({
   data,
@@ -35,20 +25,21 @@ export default function AdminHrPerformanceTable({
       <div className="overflow-x-auto">
         <table data-admin-responsive-table className="w-full text-left border-collapse">
           <thead>
-            <tr className="bg-primary/5 border-b border-border">
+            <tr className="bg-surface-highlight border-b border-border">
               {PERFORMANCE_TABLE_HEADERS.map((h) => (
-                <th role="button" tabIndex={0} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); event.currentTarget.click(); } }} 
+                <th role="button" tabIndex={0} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); event.currentTarget.click(); } }}
                   key={h.key}
                   className={`px-4 py-3 text-xs font-semibold text-secondary uppercase tracking-wider select-none whitespace-nowrap ${
-                    h.sortable ? 'cursor-pointer hover:text-foreground motion-safe:transition-colors' : ''
+                    h.sortable ? 'cursor-pointer hover:text-primary motion-safe:transition-colors' : ''
                   }`}
                   onClick={() => {
                     if (h.sortable) onSort(h.key as PerformanceSortKey);
                   }}
+                  aria-sort={sortKey===h.key ? (sortDir==='asc' ? 'ascending' : 'descending') : 'none'}
                 >
                   <div className="flex items-center gap-1.5">
                     {h.label}
-                    {h.sortable && <SortIcon col={h.key} sortKey={sortKey} sortDir={sortDir} />}
+                    {h.sortable && <AdminHrPerformanceTableSortIcon column={h.key} sortKey={sortKey} sortDir={sortDir} />}
                   </div>
                 </th>
               ))}
@@ -57,55 +48,29 @@ export default function AdminHrPerformanceTable({
           <tbody className="divide-y divide-border">
             {data.length === 0 ? (
               <tr>
-                <td colSpan={7} className="py-16 text-center text-secondary text-sm">
-                  No performance data available.
-                </td>
+                <td colSpan={7}><AdminHrEmptyState title="No performance data available" description="No performance records match the current filters." /></td>
               </tr>
             ) : (
               data.map((staff) => {
                 const statusCfg = PERFORMANCE_STATUS_CONFIG[staff.status];
-                
                 return (
-                  <tr key={staff.id} className="hover:bg-input motion-safe:transition-colors">
-                    {/* Staff Name & Branch */}
+                  <tr key={staff.id} className="hover:bg-input motion-safe:transition-colors motion-safe:duration-base">
                     <td className="px-4 py-3.5">
                       <div className="flex items-center gap-2.5">
-                        <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary text-xs font-bold flex-shrink-0">
+                        <div className="w-8 h-8 rounded-lg bg-primary-subtle flex items-center justify-center text-primary text-xs font-bold flex-shrink-0">
                           {staff.name.charAt(0)}
                         </div>
                         <div className="min-w-0">
-                          <p className="text-sm font-semibold text-foreground truncate">{staff.name}</p>
+                          <p className="text-sm font-semibold text-primary truncate">{staff.name}</p>
                           <p className="text-xs text-disabled truncate">{staff.branchName}</p>
                         </div>
                       </div>
                     </td>
-
-                    {/* Role */}
-                    <td className="px-4 py-3.5 text-sm text-secondary">
-                      {staff.role}
-                    </td>
-
-                    {/* Sessions */}
-                    <td className="px-4 py-3.5 text-sm font-medium text-foreground">
-                      {staff.sessionsTaken > 0 ? staff.sessionsTaken : '-'}
-                    </td>
-
-                    {/* Members Added */}
-                    <td className="px-4 py-3.5 text-sm font-medium text-foreground">
-                      {staff.membersAdded > 0 ? staff.membersAdded : '-'}
-                    </td>
-
-                    {/* Attendance */}
-                    <td className="px-4 py-3.5 text-sm font-medium text-foreground">
-                      {staff.attendancePct}%
-                    </td>
-
-                    {/* Rating */}
-                    <td className="px-4 py-3.5 text-sm font-bold text-foreground">
-                      {formatDecimal(staff.rating)} <span className="text-warning text-xs">★</span>
-                    </td>
-
-                    {/* Status Badge */}
+                    <td className="px-4 py-3.5 text-sm text-secondary">{staff.role}</td>
+                    <td className="px-4 py-3.5 text-sm font-medium text-primary">{staff.sessionsTaken > 0 ? staff.sessionsTaken : '-'}</td>
+                    <td className="px-4 py-3.5 text-sm font-medium text-primary">{staff.membersAdded > 0 ? staff.membersAdded : '-'}</td>
+                    <td className="px-4 py-3.5 text-sm font-medium text-primary">{staff.attendancePct}%</td>
+                    <td className="px-4 py-3.5 text-sm font-bold text-primary">{formatDecimal(staff.rating)} <span className="text-warning text-xs">★</span></td>
                     <td className="px-4 py-3.5">
                       <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${statusCfg?.bgClass} ${statusCfg?.textClass}`}>
                         {statusCfg?.label || staff.status}

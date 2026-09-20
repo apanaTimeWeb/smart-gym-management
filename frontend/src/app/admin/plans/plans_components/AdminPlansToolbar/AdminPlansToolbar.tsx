@@ -1,74 +1,50 @@
 "use client";
-// RESPONSIBILITY: Renders the search input and "Create Plan" CTA button for the Plans module toolbar.
+// RESPONSIBILITY: Renders Plans search/filter/refresh/create controls using the single Plans logic owner supplied by the module entry point.
 
-import { useState, useEffect } from 'react';
-import { RefreshCw, Plus, Search } from 'lucide-react';
-import { useAdminPlansLogic } from '@/app/admin/plans/plans_context/useAdminPlansLogic';
-import { useAdminPlansStore } from '@/app/admin/plans/plans_store/useAdminPlansStore';
+import { useEffect, useState } from 'react';
+import { Plus, RefreshCw, Search } from 'lucide-react';
+import type { PlansContextType } from '@/app/admin/plans/plans_types/AdminPlansTypes';
 import { TIERS } from '@/app/admin/plans/plans_utils/AdminPlansSharedConstants';
 
-export default function AdminPlansToolbar() {
-  const { plans, status, saving, search, setSearch, tierFilter, setTierFilter, currentPage, setCurrentPage, loadPlans, openAdd, openEdit, savePlan, deletePlan } = useAdminPlansLogic();
-  const { showModal, setShowModal, editId, form, setForm } = useAdminPlansStore();
-
+export default function AdminPlansToolbar({ logic }: { logic: PlansContextType }) {
+  const { plans, search, setSearch, tierFilter, setTierFilter, loadPlans, openAdd } = logic;
   const [localSearch, setLocalSearch] = useState(search);
 
-  /* eslint-disable react-hooks/set-state-in-effect */
+// EFFECT: Synchronizes this component effect with its declared React dependencies in plans/plans_components/AdminPlansToolbar/AdminPlansToolbar.tsx.
   useEffect(() => {
     setLocalSearch(search);
   }, [search]);
-  /* eslint-enable react-hooks/set-state-in-effect */
 
+// EFFECT: Synchronizes this component effect with its declared React dependencies in plans/plans_components/AdminPlansToolbar/AdminPlansToolbar.tsx.
   useEffect(() => {
-    const timer = setTimeout(() => {
-      if (localSearch !== search) {
-        setSearch(localSearch);
-        
-      }
-    }, 300);
-    return () => clearTimeout(timer);
-  }, [localSearch, search, setSearch, setCurrentPage]);
+    if (localSearch === search) return;
+    const timer = window.setTimeout(() => setSearch(localSearch), 300);
+    return () => window.clearTimeout(timer);
+  }, [localSearch, search, setSearch]);
 
   return (
-    <div className="bg-card rounded-xl shadow-sm border border-border p-4 flex flex-wrap gap-3 justify-between items-center mb-6">
+    <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border bg-card p-4 shadow-card">
       <div className="flex flex-wrap items-center gap-4">
-        <p className="text-sm text-secondary hidden sm:block">
-          Active Plans: <span className="font-bold text-primary">{plans.length}</span>
-        </p>
+        <p className="hidden text-sm text-secondary sm:block">Active Plans: <span className="font-bold text-primary">{plans.length}</span></p>
         <div className="relative">
-          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary" />
-          <input 
-            value={localSearch} 
-            onChange={e => setLocalSearch(e.target.value)} 
-            placeholder="Search plans..." 
-            className="pl-9 pr-3 py-2 border border-border rounded-lg text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg-page w-48 sm:w-full sm:w-64  bg-input text-primary" 
-          />
+          <span className="absolute inset-y-0 left-3 flex items-center"><Search size={18} className="text-secondary" aria-hidden="true" /></span>
+          <label htmlFor="admin-plans-search" className="sr-only">Search plans</label>
+          <input id="admin-plans-search" value={localSearch} onChange={(event) => setLocalSearch(event.target.value)} placeholder="Search plans..." className="w-48 rounded-lg border border-border bg-input py-2 pl-9 pr-3 text-sm text-primary focus-visible:border-focus focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary sm:w-64" />
         </div>
-        <select 
-          value={tierFilter} 
-          onChange={e => setTierFilter(e.target.value)} 
-          className="px-3 py-2 border border-border rounded-lg text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary bg-input text-foreground"
-        >
+        <label htmlFor="admin-plans-tier" className="sr-only">Filter plans by tier</label>
+        <select id="admin-plans-tier" value={tierFilter} onChange={(event) => setTierFilter(event.target.value)} className="rounded-lg border border-border bg-input px-3 py-2 text-sm text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
           <option value="All">All Tiers</option>
-          {TIERS.map(t => (
-            <option key={t} value={t}>{t}</option>
-          ))}
+          {TIERS.map((tier) => <option key={tier} value={tier}>{tier}</option>)}
         </select>
       </div>
       <div className="flex flex-wrap gap-2">
- <button 
- onClick={loadPlans} 
- className="flex items-center gap-2 px-3 py-2 text-sm border border-border rounded-lg hover:bg-primary-subtle text-secondary motion-safe:transition-colors"
- >
- <RefreshCw size={14} />
- </button>
- <button 
- onClick={openAdd} 
- className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-lg motion-safe:transition-colors hover:bg-primary/90" 
- >
- <Plus size={16} /> Create Plan
- </button>
- </div>
- </div>
- );
+        <button type="button" onClick={() => void loadPlans()} aria-label="Refresh plans" className="min-h-11 min-w-11 flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm text-secondary motion-safe:transition-colors motion-safe:duration-base hover:bg-primary-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+          <RefreshCw size={18} aria-hidden="true" />
+        </button>
+        <button type="button" onClick={openAdd} className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-on-primary motion-safe:transition-colors motion-safe:duration-base hover:bg-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+          <Plus size={18} aria-hidden="true" /> Create Plan
+        </button>
+      </div>
+    </div>
+  );
 }

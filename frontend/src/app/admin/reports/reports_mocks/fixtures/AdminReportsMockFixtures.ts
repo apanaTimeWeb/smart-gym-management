@@ -3,6 +3,9 @@
 
 import type { ReportData, ReportDateRange } from '@/app/admin/reports/reports_types/AdminReportsTypes';
 
+export const ADMIN_REPORTS_DEMO_PDF_URL = 'data:application/pdf;base64,JVBERi0xLjQKJeLjz9MKMSAwIG9iago8PCAvVHlwZSAvQ2F0YWxvZyAvUGFnZXMgMiAwIFIgPj4KZW5kb2JqCjIgMCBvYmoKPDwgL1R5cGUgL1BhZ2VzIC9LaWRzIFszIDAgUl0gL0NvdW50IDEgPj4KZW5kb2JqCjMgMCBvYmoKPDwgL1R5cGUgL1BhZ2UgL1BhcmVudCAyIDAgUiAvTWVkaWFCb3ggWzAgMCA2MTIgNzkyXSAvUmVzb3VyY2VzIDw8IC9Gb250IDw8IC9GMSA1IDAgUiA+PiA+PiAvQ29udGVudHMgNCAwIFIgPj4KZW5kb2JqCjQgMCBvYmoKPDwgL0xlbmd0aCAxMTggPj4Kc3RyZWFtCkJUCi9GMSAxOCBUZgo3MiA3MjAgVGQKKEFkbWluIFJlcG9ydHMgRGVtbyBFeHBvcnQpIFRqCi9GMSAxMCBUZgowIC0yNCBUZAooR2VuZXJhdGVkIGJ5IGZyb250ZW5kIGRlbW8gdHJhbnNwb3J0KSBUagpFVAplbmRzdHJlYW0KZW5kb2JqCjUgMCBvYmoKPDwgL1R5cGUgL0ZvbnQgL1N1YnR5cGUgL1R5cGUxIC9CYXNlRm9udCAvSGVsdmV0aWNhID4+CmVuZG9iagp4cmVmCjAgNgowMDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDAwMTUgMDAwMDAgbiAKMDAwMDAwMDA2NCAwMDAwMCBuIAowMDAwMDAwMTIxIDAwMDAwIG4gCjAwMDAwMDAyNDcgMDAwMDAgbiAKMDAwMDAwMDQxNSAwMDAwMCBuIAp0cmFpbGVyCjw8IC9TaXplIDYgL1Jvb3QgMSAwIFIgPj4Kc3RhcnR4cmVmCjQ4NQolJUVPRgo=';
+export const ADMIN_REPORTS_DEMO_XLSX_URL = 'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,UEsDBBQAAAAIAMSVMV0KCHnMCwEAAKgCAAATAAAAW0NvbnRlbnRfVHlwZXNdLnhtbA==';
+
 export const MOCK_ADMIN_REPORTS: ReportData = {
   revenueByGym: [
     { gymId: 'g1', gymName: 'Downtown Main', revenue: 1500000, expenses: 800000, profit: 700000, trend: 'up', trendPercent: 5 },
@@ -124,7 +127,7 @@ export function getAdminReportsFixture({ gymId = 'all', dateRange = 'this_month'
       netProfit: selectedProfit,
       totalMembers: selectedMembers,
       newMembers: selectedNewMembers,
-      avgAttendanceRate: Number(attendanceRate.toFixed(1)),
+      avgAttendanceRate: Math.round(attendanceRate * 10) / 10,
       totalPayroll: selectedPayroll,
     },
   };

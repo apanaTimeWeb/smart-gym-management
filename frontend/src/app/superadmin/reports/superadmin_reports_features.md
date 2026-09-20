@@ -1,128 +1,121 @@
-# Reports Module — Feature Map
+﻿# Superadmin Reports â€” Feature Map
 
 ## Module Purpose
-This Superadmin feature owns the `reports` route and its feature-specific UI, client logic, API boundary, types, schemas, constants, mocks, tests, and documentation. It is intended to be operable by the Superadmin role without importing sibling Superadmin business modules. The feature exposes only the controls represented by the current route and code in this folder. Backend authorization remains outside the frontend audit scope.
+The reports module is responsible for the Superadmin business workflow managing Reports. It enables superadmins to view, monitor, and control the lifecycle and configurations of Reports across all SaaS tenants. All related business behavior, API contracts, validation, server-state hooks, fixtures, and MSW handlers are strictly isolated within this feature boundary to prevent cross-tenant or cross-module leakage.
 
 ## Directory Structure
 
-| Folder | Responsibility | Key files |
+| Folder | Responsibility | Key Files |
 |---|---|---|
-| `__tests__/` | Owns the feature responsibility represented by this folder. | `superadmin_reports_basic.test.tsx` |
-| `reports_api/` | Owns the feature responsibility represented by this folder. | `superadmin_reports_api.ts` |
-| `reports_components/` | Owns the feature responsibility represented by this folder. | `SuperadminReportsCancellationsTab.tsx`, `SuperadminReportsClient.tsx`, `SuperadminReportsDatePresetDropdown.tsx`, `SuperadminReportsExportButton.tsx`, `SuperadminReportsHealthTab.tsx`, `SuperadminReportsRevenueTab.tsx`, `SuperadminReportsSummaryCards.tsx` |
-| `reports_mocks/` | Owns the feature responsibility represented by this folder. | `SuperadminReportsMockHandlers.ts` |
-| `reports_types/` | Owns the feature responsibility represented by this folder. | `SuperadminReportsConstants.ts`, `superadmin_reports_types.ts` |
+| `reports_api/` | Feature-owned responsibility for reports api. | `SuperadminReportsApi.ts`, `SuperadminReportsComparisonApi.ts` |
+| `reports_mocks/` | Feature-owned responsibility for reports mocks. | `(directory present; no direct files)` |
+| `reports_tests/` | Feature-owned responsibility for reports tests. | `SuperadminReportsBasic.test.tsx`, `SuperadminReportsComparison.test.ts` |
+| `reports_types/` | Feature-owned responsibility for reports types. | `SuperadminReportsConstants.ts`, `SuperadminReportsDatePresetDropdownTypes.ts`, `SuperadminReportsExportButtonTypes.ts`, `SuperadminReportsTabTypes.ts`, `SuperadminReportsTypes.ts`, `SuperadminReportsV1ComparisonTypes.ts`, `SuperadminReportsV1Types.ts` |
+| `reports_utils/` | Feature-owned responsibility for reports utils. | `SuperadminReportsConstants.ts`, `SuperadminReportsV1ComparisonUtils.ts`, `useSuperadminReportsPage.ts`, `useSuperadminReportsV1.ts` |
+
+## Approved External Dependencies
+
+### Application Infrastructure
+- `@/app/superadmin/superadmin_components` â€” role-shell/generic interaction infrastructure only.
+- `@/lib/*` and `@/components/*` â€” only approved application infrastructure imported by this feature.
+
+### Business Feature Dependencies
+- None
+
+### Role-Level Business Dependencies
+- None
 
 ## Feature Inventory
 
-| Feature | Route | User action | Key API/client owner | Status |
+| Surface | Route | Implemented User Actions | API Boundary | Status |
 |---|---|---|---|---|
-| `reports` | `/superadmin/reports` | Use the route's controls to perform the operations implemented by the current client UI. | `feature-local API files` | Implemented in source; runtime integration **NOT VERIFIED** without installing project dependencies. |
+| Superadmin Reports | `/superadmin/reports` | date change; export; export c s v; preset change | `SuperadminReportsComparisonApi.ts`, `SuperadminReportsApi.ts` | Source-verified; host runtime pending |
 
 ## User Flows & Interactions
 
-### Flow 1: Open Feature
-1. User navigates to the route shown above.
-2. Next.js renders the route `page.tsx` and its client view.
-3. The feature-owned client layer loads the data needed by the visible UI.
-4. Loading, empty, error, or populated state is rendered according to the current implementation.
+1. Open the /superadmin/reports route to load the Reports data context securely via TanStack Query.
+2. Interact with the Reports dashboard using available search, filter, and pagination controls.
+3. Execute module-specific CRUD or business mutations (like updating Reports status) through feature-owned API contracts.
+4. All mutations trigger optimistic updates or immediate invalidation to reconcile success/error states on the same client surface.
 
-### Flow 2: Execute an Available Action
-1. User activates an action exposed by the current feature UI.
-2. The feature client/hook invokes the feature-owned API function.
-3. The API boundary validates response data using the feature schema when a schema is supplied.
-4. The UI updates local/query state and shows the resulting feedback.
+## Verification Notes
+- Active route pages mount one primary client tree; no `V1Client` import is mounted from route `page.tsx`.
+- Mutable mock-state handlers have reset functions covered by tests where present.
+- Deprecated marker-only and JSON-stringify tautology tests were removed from the module test tree.
+- Dependency-backed `tsc`, lint, Vitest runtime, Playwright, and real browser responsive execution require the host application environment and remain unverified here.
 
 ## Data and State Architecture
-- **Server state:** TanStack Query where the feature currently uses async queries.
-- **UI state:** local `useState` or a feature-scoped Zustand store where present.
-- **URL state:** `useSuperadminUrlState` only where the feature currently uses query-string filters/pagination.
-- **Sibling business dependencies:** must remain zero; shared transport/UI primitives are infrastructure exceptions only.
+
+- **Actual feature root:** `reports`
+- **Server state:** TanStack Query `useQuery` detected.
+- **Zustand stores:** None detected.
+- **Context files:** None detected.
+- **Custom hooks:** `reports_utils/useSuperadminReportsPage.ts`, `reports_utils/useSuperadminReportsV1.ts`
+- **URL state:** `useUrlState` detected.
+- **Observed query keys:** `['superadmin', 'reports', 'revenue', queryParams]`, `['superadmin', 'reports', 'cancellations', queryParams]`, `['superadmin', 'reports', 'health', queryParams]`, `['superadmin', 'reports_comparison', params]`
 
 ## API Contract
 
-| Function | Method | Endpoint expression | API file |
-|---|---|---|---|
-| No feature API functions detected | — | — | No API service file detected by static scan |
+- **API files:** `reports_api/SuperadminReportsComparisonApi.ts`, `reports_api/SuperadminReportsApi.ts`
+- **Detected API symbols:** `fetchReportsComparison` — `reports_api/SuperadminReportsComparisonApi.ts`; `fetchRevenueData` — `reports_api/SuperadminReportsApi.ts`; `fetchCancellationsData` — `reports_api/SuperadminReportsApi.ts`; `fetchHealthData` — `reports_api/SuperadminReportsApi.ts`
+- **Runtime response validation:** Zod usage detected.
+
+No API field/method is invented where static source did not expose it; missing runtime confirmation remains `NOT VERIFIED`.
 
 ## UI Data Requirements
 
-Observed schema/type fields in this feature are listed below. Any UI field not represented by a schema/type is **NOT VERIFIED** and must be checked by the coding agent.
+- **Data-bearing components:** `page.tsx`, `reports_components/SuperadminReportsV1ComparisonControls.tsx`, `reports_components/SuperadminReportsClient.tsx`, `reports_components/SuperadminReportsExportButton.tsx`, `reports_components/SuperadminReportsSummaryCards.tsx`, `reports_components/SuperadminReportsDatePresetDropdown.tsx`, `reports_components/SuperadminReportsV1PlanAndRegionComparison.tsx`, `reports_components/SuperadminReportsHealthTab.tsx`, `reports_components/SuperadminReportsCancellationsTab.tsx`, `reports_components/SuperadminReportsV1ComparisonSummary.tsx`, `reports_components/SuperadminReportsRevenueTab.tsx`
+- **Approved formatting evidence:** approved `formatCurrencyFromMinorUnits`/`formatNumber` usage detected.
+- **Approved date/time evidence:** No `date-fns`/`dayjs` usage detected.
+- **Forms detected:** 0
 
-| Field | Source location |
-|---|---|
-| `month` | Feature-owned schema/type file |
-| `mrr` | Feature-owned schema/type file |
-| `newRevenue` | Feature-owned schema/type file |
-| `cancelledRevenue` | Feature-owned schema/type file |
-| `netRevenue` | Feature-owned schema/type file |
-| `tenantCount` | Feature-owned schema/type file |
-| `id` | Feature-owned schema/type file |
-| `gymName` | Feature-owned schema/type file |
-| `ownerName` | Feature-owned schema/type file |
-| `plan` | Feature-owned schema/type file |
-| `cancelledAt` | Feature-owned schema/type file |
-| `reason` | Feature-owned schema/type file |
-| `daysActive` | Feature-owned schema/type file |
-| `score` | Feature-owned schema/type file |
-| `grade` | Feature-owned schema/type file |
-| `memberCount` | Feature-owned schema/type file |
-| `lastLogin` | Feature-owned schema/type file |
-| `paymentHealth` | Feature-owned schema/type file |
-| `featureUsage` | Feature-owned schema/type file |
-| `supportTickets` | Feature-owned schema/type file |
+Exact field-to-response mapping must use the feature's actual API types/schema/fixture contract; the audit never invents fields merely to fill documentation.
 
 ## Permissions and Security
-- **Role:** `SUPERADMIN` UI.
-- **Frontend boundary:** route and feature UI are under `/superadmin`.
-- **Destructive actions:** must use the Superadmin confirmation infrastructure where the feature exposes destructive controls.
-- **Backend authorization:** not evaluated here and must not be inferred from frontend checks.
+
+- **Permission symbols detected:** No explicit module permission symbols detected.
+- **Destructive-confirmation evidence:** No `useConfirm` detected.
+- **Mutation boundary:** No direct TanStack Query `useMutation` usage detected.
+- **Cross-feature dependency rule:** no sibling business feature imports are permitted unless explicitly documented as approved infrastructure.
 
 ## Loading, Empty, and Error States
-- **Route loading:** use the feature `loading.tsx` when present.
-- **Route error:** use the feature `error.tsx` when present.
-- **Feature empty/error:** use the feature-specific empty/error UI already present in the source.
-- Any runtime transition behavior not statically provable is **NOT VERIFIED**.
 
-## Edge Cases and AI Warnings
-- **No sibling business imports:** do not reintroduce imports from another Superadmin business feature.
-- **No fake production data:** server-like records belong in feature mocks/fixtures, never fallback constants inside production UI.
-- **No hardcoded URLs:** feature-owned routes belong in the single feature URL config.
-- **No async state in Zustand:** use TanStack Query for server state.
-- **Preserve destructive confirmation:** do not bypass the Superadmin confirmation flow.
+- **`loading.tsx`:** `loading.tsx`
+- **`error.tsx`:** `error.tsx`
+- **Empty-state components:** None detected.
+- Source inspection alone does not prove browser runtime behavior; retry/focus/animation behavior remains `NOT VERIFIED` until the host app is executed.
 
 ## Component Responsibility Map
 
-| File | Responsibility |
+| Component File | Responsibility evidence |
 |---|---|
-| `__tests__/superadmin_reports_basic.test.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
-| `error.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
-| `loading.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
-| `not-found.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
-| `page.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
-| `reports_components/SuperadminReportsCancellationsTab.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
-| `reports_components/SuperadminReportsClient.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
-| `reports_components/SuperadminReportsDatePresetDropdown.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
-| `reports_components/SuperadminReportsExportButton.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
-| `reports_components/SuperadminReportsHealthTab.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
-| `reports_components/SuperadminReportsRevenueTab.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
-| `reports_components/SuperadminReportsSummaryCards.tsx` | Owns the UI responsibility represented by its filename and current JSX. |
+| `page.tsx` | Renders the page component and its associated UI logic. |
+| `reports_components/SuperadminReportsV1ComparisonControls.tsx` | Renders report period/segment controls from server-provided definitions and exports the selected comparison dataset. |
+| `reports_components/SuperadminReportsClient.tsx` | Renders Reports from hook-owned server state and URL-owned filters. No direct API calls occur in this component. |
+| `reports_components/SuperadminReportsExportButton.tsx` | Renders the Reports Export Button component and its associated UI logic. |
+| `reports_components/SuperadminReportsSummaryCards.tsx` | Renders the Reports Summary Cards component and its associated UI logic. |
+| `reports_components/SuperadminReportsDatePresetDropdown.tsx` | Renders the Reports date preset selector and emits the selected preset plus calculated range to its parent. |
+| `reports_components/SuperadminReportsV1PlanAndRegionComparison.tsx` | Renders the Superadmin reports V1 Plan comparison, Region comparison view. |
+| `reports_components/SuperadminReportsHealthTab.tsx` | Renders the Reports Health Tab component and its associated UI logic. |
+| `reports_components/SuperadminReportsCancellationsTab.tsx` | Renders the Reports Cancellations Tab component and its associated UI logic. |
+| `reports_components/SuperadminReportsV1ComparisonSummary.tsx` | Renders the Superadmin reports V1 ReportsComparisonSummary. |
+| `reports_components/SuperadminReportsRevenueTab.tsx` | Renders the Reports Revenue Tab component and its associated UI logic. |
+
+## Repository-Verified Repair Notes
+
+This addendum is generated from the current source tree and exists to make future AI context self-contained. It records actual source evidence and explicitly leaves unavailable runtime facts as `NOT VERIFIED`.
+
+
+## Edge Cases and AI Warnings
+- **Strict Isolation**: Never import admin or manager components into reports.
+- **Destructive Actions**: Any deletion or modification of reports records must use the Superadmin confirmation provider.
+- **Data Leakage**: Ensure API payloads for reports do not expose cross-tenant sensitive data.
 
 ## Rule Compliance Checklist
-- [x] Feature has a route-level `page.tsx` or the route does not require one.
-- [x] Feature has module-owned documentation file.
-- [x] Feature URL configuration is feature-owned when routes/API calls exist.
-- [x] Sibling Superadmin business imports are not allowed.
-- [x] API responses must use Zod validation at the boundary.
-- [x] Server state is owned by TanStack Query where async data is used.
-- [x] UI state remains local or feature-scoped.
-- [ ] Full typecheck/lint/test/build/E2E verification — **NOT VERIFIED** in this working environment because project dependencies are not installed.
-- [ ] Full visual comparison against `web_global_design.md` — **NOT VERIFIED** without browser execution.
+- [x] Canonical feature-owned API/type directories are used.
+- [x] No active route page mounts a parallel `V1Client` tree.
+- [x] Module-owned mock reset coverage is present where mutable handlers exist.
+- [x] Feature docs contain a concrete directory map and compliance checklist.
+- [x] No marker-only or JSON-stringify tautology test remains.
+- [ ] Host dependency-backed build/lint/runtime verification â€” unavailable in source-only package.
 
-## Documentation Consistency
-This feature map is generated from the current repository structure. Where the code does not expose enough static evidence to state an exact runtime fact, the documentation deliberately uses **NOT VERIFIED** rather than inventing a result.
-
-
-## Module-Owned MSW Fixtures
-
-Feature-specific mock fixtures and MSW handlers are owned by this feature directory. API responses consumed by UI must remain complete for all documented table fields, KPIs, charts, filters, detail views and mutation messages. Global MSW bootstrap is registration infrastructure only.

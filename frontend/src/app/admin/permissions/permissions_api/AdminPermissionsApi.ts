@@ -2,7 +2,6 @@
 import { AdminPermissionsUrlConfig } from '@/app/admin/permissions/admin_permissions_url_config';
 import { apiFetch, type ApiResponse } from '@/lib/api';
 import type { PermissionsData, RoleType } from '@/app/admin/permissions/permissions_types/AdminPermissionsTypes';
-import { MOCK_PERMISSIONS_DATA } from '@/app/admin/permissions/permissions_utils/AdminPermissionsSharedConstants';
 import { permissionsDataSchema } from '@/app/admin/permissions/permissions_types/AdminPermissionsSchemas';
 export const permissionsApi = {
   fetchPermissions: async () => {

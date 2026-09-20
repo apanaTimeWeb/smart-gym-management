@@ -1,25 +1,15 @@
-'use client';
 // RESPONSIBILITY: Paginated, searchable, filterable table of churned/exited members in the Churn Recovery tab.
+'use client';
 import { Search, ChevronLeft, ChevronRight } from 'lucide-react';
-import ManagerChurnRecoveryTableRow from '@/app/manager/communications/communications_components/ManagerChurnRecovery/ManagerChurnRecoveryTableRow';
 import ManagerChurnRecoveryEmptyState from '@/app/manager/communications/communications_components/ManagerChurnRecovery/ManagerChurnRecoveryEmptyState';
-import type { ChurnedMember } from '@/app/manager/communications/communications_types/ManagerCommunications_types';
+import ManagerChurnRecoveryTableRow from '@/app/manager/communications/communications_components/ManagerChurnRecovery/ManagerChurnRecoveryTableRow';
+import { MANAGER_CHURN_RECOVERY_TABLE_HEADERS } from '@/app/manager/communications/communications_constants/ManagerCommunicationsTableConstants';
 import { CANCELLATIONS_REASON_OPTIONS, CANCELLATIONS_ITEMS_PER_PAGE } from '@/app/manager/communications/communications_utils/ManagerCommunicationsSharedConstants';
+import { MANAGER_GENERIC_ERROR_MESSAGE } from '@/app/manager/manager_infrastructure/ManagerErrorMessage';
+import type { ManagerChurnRecoveryTableProps } from '@/app/manager/communications/communications_types/ManagerChurnRecoveryTableTypes';
 
-interface ManagerChurnRecoveryTableProps {
-  members: ChurnedMember[];
-  allFilteredCount: number;
-  isLoading: boolean;
-  isError: boolean;
-  churnSearch: string;
-  onSearchChange: (s: string) => void;
-  churnReasonFilter: string;
-  onReasonFilterChange: (r: string) => void;
-  currentPage: number;
-  totalPages: number;
-  onPageChange: (p: number) => void;
-  onOpenComposer: (memberId: string) => void;
-}
+
+
 
 /** Masks a phone number: 98****2310 */
 function maskPhone(phone: string): string {
@@ -27,14 +17,14 @@ function maskPhone(phone: string): string {
   return phone.slice(0, 2) + '****' + phone.slice(-4);
 }
 
-const TABLE_HEADERS = ['Member / Plan', 'Phone', 'Exit Date', 'Since Exit', 'Reason', 'Status', 'Action'];
+
 
 const SKELETON_ROW_COUNT = 5;
 
 export default function ManagerChurnRecoveryTable({
   members,
   allFilteredCount,
-  isLoading, isError,
+  isPending, isError, errorMessage,
   churnSearch,
   onSearchChange,
   churnReasonFilter,
@@ -42,8 +32,7 @@ export default function ManagerChurnRecoveryTable({
   currentPage,
   totalPages,
   onPageChange,
-  onOpenComposer,
-}: ManagerChurnRecoveryTableProps) {
+  onOpenComposer }: ManagerChurnRecoveryTableProps) {
   const startEntry = allFilteredCount === 0 ? 0 : (currentPage - 1) * CANCELLATIONS_ITEMS_PER_PAGE + 1;
   const endEntry   = Math.min(currentPage * CANCELLATIONS_ITEMS_PER_PAGE, allFilteredCount);
 
@@ -53,13 +42,13 @@ export default function ManagerChurnRecoveryTable({
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 p-4 border-b border-border">
         {/* Search */}
         <div className="relative flex-1 w-full sm:max-w-xs">
-          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary pointer-events-none" />
+          <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary pointer-events-none" />
           <input
             type="text"
             placeholder="Search by name..."
             value={churnSearch}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 text-sm bg-input border border-border rounded-lg text-foreground placeholder:text-secondary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary motion-safe:transition-colors"
+            className="w-full pl-9 pr-3 py-2 text-sm bg-input border border-border rounded-lg text-primary placeholder:text-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary motion-safe:transition-colors"
             aria-label="Search churned members"
           />
         </div>
@@ -73,8 +62,8 @@ export default function ManagerChurnRecoveryTable({
               onClick={() => onReasonFilterChange(opt.value)}
               className={`px-3 py-1.5 rounded-lg text-xs font-medium motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
                 churnReasonFilter === opt.value
-                  ? 'bg-primary text-primary-foreground'
-                  : 'bg-input border border-border text-secondary hover:text-foreground'
+                  ? 'bg-primary text-on-primary'
+                  : 'bg-input border border-border text-secondary hover:text-primary'
               }`}
             >
               {opt.label}
@@ -87,8 +76,8 @@ export default function ManagerChurnRecoveryTable({
       <div className="overflow-x-auto">
         <table className="w-full text-left" role="grid" aria-label="Churned members table">
           <thead>
-            <tr className="bg-primary-subtle/30 border-b border-border">
-              {TABLE_HEADERS.map((h) => (
+            <tr className="bg-primary-subtle border-b border-border">
+              {MANAGER_CHURN_RECOVERY_TABLE_HEADERS.map((h) => (
                 <th
                   key={h}
                   scope="col"
@@ -100,21 +89,21 @@ export default function ManagerChurnRecoveryTable({
             </tr>
           </thead>
           <tbody>
-            {isLoading ? (
+            {isPending ? (
               Array.from({ length: SKELETON_ROW_COUNT }).map((_, i) => (
                 <tr key={`churn-skeleton-${i}`} className="border-b border-border">
-                  {TABLE_HEADERS.map((h) => (
+                  {MANAGER_CHURN_RECOVERY_TABLE_HEADERS.map((h) => (
                     <td key={h} className="px-4 py-3">
-                      <div className="h-4 bg-skeleton-base rounded motion-safe:animate-pulse" style={{ width: `${60 + Math.random() * 40}%` }} />
+                      <div className="h-4 w-3/4 bg-skeleton-base rounded motion-safe:animate-pulse" />
                     </td>
                   ))}
                 </tr>
               ))
             ) : isError ? (
-              <tr><td colSpan={TABLE_HEADERS.length} className="py-12 text-center text-danger text-sm">Unable to load churned members.</td></tr>
+              <tr><td colSpan={MANAGER_CHURN_RECOVERY_TABLE_HEADERS.length} className="py-12 text-center text-danger text-sm">{errorMessage || MANAGER_GENERIC_ERROR_MESSAGE}</td></tr>
             ) : members.length === 0 ? (
               <tr>
-                <td colSpan={TABLE_HEADERS.length}>
+                <td colSpan={MANAGER_CHURN_RECOVERY_TABLE_HEADERS.length}>
                   <ManagerChurnRecoveryEmptyState />
                 </td>
               </tr>
@@ -144,11 +133,11 @@ export default function ManagerChurnRecoveryTable({
               onClick={() => onPageChange(currentPage - 1)}
               disabled={currentPage === 1}
               aria-label="Previous page"
-              className="p-1.5 rounded-lg border border-border text-secondary hover:text-foreground disabled:opacity-40 disabled:cursor-not-allowed motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              className="p-1.5 rounded-lg border border-border text-secondary hover:text-primary disabled:opacity-40 disabled:cursor-not-allowed motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
-              <ChevronLeft size={16} />
+              <ChevronLeft size={18} />
             </button>
-            <span className="text-xs text-foreground font-medium px-2">
+            <span className="text-xs text-primary font-medium px-2">
               {currentPage} / {totalPages}
             </span>
             <button
@@ -156,9 +145,9 @@ export default function ManagerChurnRecoveryTable({
               onClick={() => onPageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
               aria-label="Next page"
-              className="p-1.5 rounded-lg border border-border text-secondary hover:text-foreground disabled:opacity-40 disabled:cursor-not-allowed motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              className="p-1.5 rounded-lg border border-border text-secondary hover:text-primary disabled:opacity-40 disabled:cursor-not-allowed motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
-              <ChevronRight size={16} />
+              <ChevronRight size={18} />
             </button>
           </div>
         </div>

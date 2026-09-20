@@ -1,3 +1,4 @@
+// DATA FLOW: Manager feature UI/state → owning custom hook → approved API/query/mutation layer → observable UI state.
 /**
  * RESPONSIBILITY: Zustand store that manages UI state for the Members module.
  * DATA FLOW: UI Components -> useManagerMembersStore
@@ -25,5 +26,4 @@ export const useManagerMembersStore = create<MembersUIState>((set, get) => ({
       const updatedAtt = currentAtt.map(a => a.day === day ? { ...a, status: a.status === 'NONE' ? 'P' : a.status === 'P' ? 'A' : 'NONE' } : a);
       return { attMap: { ...state.attMap, [memberId]: updatedAtt } };
     });
-  },
-}));
+  } }));

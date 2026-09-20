@@ -15,7 +15,7 @@ export const couponsApi = {
   fetchCoupons: async (params?: AdminCouponsQueryParams) => apiFetch<ApiResponse<Coupon[]>>(`${AdminCouponsUrlConfig.api.base}/fetchCoupons${buildQuery(params)}`, { method: 'GET', dataSchema: z.array(couponSchema) }),
   createCoupon: async (payload: Partial<Coupon>) => apiFetch<ApiResponse<Coupon>>(`${AdminCouponsUrlConfig.api.base}/createCoupon`, { method: 'POST', body: JSON.stringify(payload), dataSchema: couponSchema }),
   updateCoupon: async (id: string, payload: Partial<Coupon>) => apiFetch<ApiResponse<Coupon>>(`${AdminCouponsUrlConfig.api.base}/updateCoupon`, { method: 'POST', body: JSON.stringify({ id, ...payload }), dataSchema: couponSchema }),
-  deleteCoupon: async (id: string) => apiFetch<ApiResponse<null>>(`${AdminCouponsUrlConfig.api.base}/deleteCoupon`, { method: 'DELETE', body: JSON.stringify({ id }), dataSchema: z.null() }),
+  deleteCoupon: async (id: string, idempotencyKey: string) => apiFetch<ApiResponse<null>>(`${AdminCouponsUrlConfig.api.base}/deleteCoupon`, { method: 'DELETE', body: JSON.stringify({ id }), headers: { 'Idempotency-Key': idempotencyKey }, dataSchema: z.null() }),
   toggleCoupon: async (id: string) => apiFetch<ApiResponse<Coupon>>(`${AdminCouponsUrlConfig.api.base}/toggleCoupon`, { method: 'POST', body: JSON.stringify({ id }), dataSchema: couponSchema }),
 };
 

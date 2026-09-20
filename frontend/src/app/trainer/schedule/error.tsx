@@ -1,29 +1,8 @@
+// RESPONSIBILITY: Renders the owning Trainer route error state using the module design-system patterns.
 'use client';
-// RESPONSIBILITY: Renders the error UI for the owning Trainer feature; data access remains in the feature API/query layer.
-import { AlertTriangle, RefreshCcw } from 'lucide-react';
+import TrainerRouteErrorFallback from '@/app/trainer/trainer_components/TrainerFeedback/TrainerRouteErrorFallback';
+import { ScheduleUrlConfig } from '@/app/trainer/schedule/schedule_url_config';
 
-export default function ErrorBoundary({
-  error,
-  reset,
-}: {
-  error: Error & { digest?: string }
-  reset: () => void
-}) {
-  return (
-    <div className="min-h-96 flex flex-col items-center justify-center p-6 text-center space-y-4">
-      <div className="w-16 h-16 bg-danger/10 rounded-full flex items-center justify-center text-danger">
-        <AlertTriangle size={32} />
-      </div>
-      <h2 className="text-2xl font-black text-foreground tracking-tight">Something went wrong!</h2>
-      <p className="text-secondary max-w-md">
-        We encountered an issue loading your schedule. Please try again.
-      </p>
-      <button
-        onClick={reset}
-        className="mt-4 flex items-center gap-2 px-6 py-2.5 bg-primary text-primary-foreground font-bold rounded-xl hover:opacity-90 motion-safe:transition-opacity"
-      >
-        <RefreshCcw size={18} /> Try again
-      </button>
-    </div>
-  );
+export default function ScheduleRouteError({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
+  return <TrainerRouteErrorFallback moduleName="schedule" route={ScheduleUrlConfig.PAGES.LIST} errorDigest={error.digest} reset={reset} />;
 }

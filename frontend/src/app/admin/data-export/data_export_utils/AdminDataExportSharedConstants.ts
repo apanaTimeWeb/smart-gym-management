@@ -1,5 +1,4 @@
 // RESPONSIBILITY: Centralized constants, mock data, and Zod schema for the Data Export module.
-import { z } from 'zod';
 import type { ExportJob, DataExportKPIData } from '@/app/admin/data-export/data_export_types/AdminDataExportTypes';
 
 export const DATA_TYPE_OPTIONS = [
@@ -33,13 +32,7 @@ export const EXPORT_STATUS_OPTIONS = [
 
 export const DATA_EXPORT_ITEMS_PER_PAGE = 10;
 
-export const ExportFormSchema = z.object({
-  dataType: z.enum(['members', 'payments', 'attendance', 'staff', 'full_report']),
-  format: z.enum(['csv', 'excel', 'pdf']),
-  gymIds: z.array(z.string()).min(1, 'Select at least one gym'),
-  dateFrom: z.string().min(1, 'Start date is required'),
-  dateTo: z.string().min(1, 'End date is required'),
-});
+
 
 export const EMPTY_EXPORT_FORM = {
   dataType: 'members' as const,
@@ -48,7 +41,3 @@ export const EMPTY_EXPORT_FORM = {
   dateFrom: '',
   dateTo: '',
 };
-
-
-
-export { MOCK_EXPORT_JOBS, MOCK_DATA_EXPORT_KPI } from '@/app/admin/data-export/data-export_mocks/fixtures/AdminDataExportMockFixtures';

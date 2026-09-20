@@ -1,20 +1,23 @@
 "use client";
+import { format } from 'date-fns';
+import { formatNumber } from '@/lib/formatters';
 // RESPONSIBILITY: Paginated table of audit log events with severity color coding and row-click detail drawer.
 
 import { useState } from 'react';
 import {
   Trash2, Edit, PlusCircle, AlertCircle, LogIn, Users, CreditCard, Settings, ShieldAlert ,
 } from 'lucide-react';
-import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
-import AdminTableSkeleton from '@/app/admin/admin_components/AdminShared/AdminTableSkeleton';
+import AdminPagination from '@/app/admin/admin_layout/AdminShared/AdminPagination';
+import AdminTableSkeleton from '@/app/admin/admin_layout/AdminShared/AdminTableSkeleton';
 import AdminAuditLogsDetailDrawer from '@/app/admin/audit_logs/audit_components/AdminAuditLogsDetailDrawer/AdminAuditLogsDetailDrawer';
 import { useAdminAuditLogsLogic } from '@/app/admin/audit_logs/audit_context/useAdminAuditLogsLogic';
-import type { AuditLog } from '@/app/admin/audit_logs/audit_types/AdminAuditTypes';
+import type { AuditLog } from '@/app/admin/audit_logs/audit_types/AdminAuditLogsTypes';
+import AdminAuditLogsEmptyState from '@/app/admin/audit_logs/audit_components/AdminAuditLogsEmptyState/AdminAuditLogsEmptyState';
 
 const SEVERITY_STYLES: Record<string, string> = {
-  high:   'bg-danger-bg text-danger border border-danger/30',
-  medium: 'bg-warning-bg text-warning border border-warning/30',
-  low:    'bg-success-bg text-success border border-success/30',
+  high:   'bg-danger text-on-danger border border-danger',
+  medium: 'bg-warning-bg text-warning border border-warning',
+  low:    'bg-success text-on-success border border-success',
 };
 
 function getActionIcon(action: string) {
@@ -47,7 +50,7 @@ export default function AdminAuditLogsTable() {
         <div className="overflow-x-auto">
           <table data-admin-responsive-table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-primary/5 border-b border-border">
+              <tr className="bg-surface-highlight border-b border-border">
                 {['Timestamp', 'Action & Module', 'Performed By', 'Branch', 'Details', 'Severity'].map(h => (
                   <th key={h} className="p-4 text-xs font-semibold text-secondary uppercase tracking-wider whitespace-nowrap">{h}</th>
                 ))}
@@ -56,15 +59,12 @@ export default function AdminAuditLogsTable() {
             <tbody className="divide-y divide-border">
               {paginated.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="p-12 text-center">
-                    <ShieldAlert size={32} className="mx-auto mb-3 opacity-30 text-secondary" />
-                    <p className="text-sm text-secondary">No logs match your filters</p>
-                  </td>
+                  <td colSpan={6}><AdminAuditLogsEmptyState /></td>
                 </tr>
               ) : paginated.map((log: AuditLog) => (
                 <tr
                   key={log.id}
-                  className="hover:bg-input/40 motion-safe:transition-colors cursor-pointer group"
+                  className="hover:bg-input motion-safe:transition-colors cursor-pointer group motion-safe:duration-base"
                   role="button"
                   tabIndex={0}
                   aria-label={`Open audit log ${log.action.replace(/_/g, ' ')}`}
@@ -77,7 +77,7 @@ export default function AdminAuditLogsTable() {
                   }}
                 >
                   <td className="p-4 text-xs text-secondary whitespace-nowrap">
-                    {new Date(log.timestamp).toLocaleString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                    {format(new Date(log.timestamp), 'dd MMM, hh:mm a')}
                   </td>
                   <td className="p-4">
                     <div className="flex items-center gap-2.5">
@@ -85,12 +85,12 @@ export default function AdminAuditLogsTable() {
                         {getActionIcon(log.action)}
                       </div>
                       <div>
-                        <p className="text-sm font-semibold text-foreground">{log.action.replace(/_/g, ' ')}</p>
+                        <p className="text-sm font-semibold text-primary">{log.action.replace(/_/g, ' ')}</p>
                         <p className="text-xs text-secondary">{log.module}</p>
                       </div>
                     </div>
                   </td>
-                  <td className="p-4 text-sm text-foreground whitespace-nowrap">{log.user}</td>
+                  <td className="p-4 text-sm text-primary whitespace-nowrap">{log.user}</td>
                   <td className="p-4 text-xs text-secondary whitespace-nowrap">
                     {log.branchId === 'all' ? 'Global' : log.branchId}
                   </td>
@@ -119,7 +119,7 @@ export default function AdminAuditLogsTable() {
       </div>
 
       {selectedLog && (
-        <AdminAuditLogsDetailDrawer log={selectedLog} onClose={() => setSelectedLog(null)} />
+        <AdminAuditLogsDetailDrawer log={selectedLog} isOpen={true} onClose={() => setSelectedLog(null)} />
       )}
     </>
   );

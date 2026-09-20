@@ -2,20 +2,29 @@
 'use client';
 // RESPONSIBILITY: Hook to manage the state and logic of the SuperadminGymDeleteModal.
 // DATA FLOW: SuperadminGymDeleteModal -> useSuperadminGymDeleteModal -> API
-import { useState, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
 import { useSuperadminGymsStore } from '@/app/superadmin/gyms/gyms_store/useSuperadminGymsStore';
-import { gymsApi } from '@/app/superadmin/gyms/superadmin_gyms_api/superadmin_gyms_api';
+import { gymsApi } from '@/app/superadmin/gyms/gyms_api/SuperadminGymsApi';
+/**
+ * Purpose: Hook to manage the state and logic of the SuperadminGymDeleteModal.
+ * Inputs: values defined by the exported hook signature.
+ * Output: the hook's typed state/actions/query contract.
+ * Side effects: remain scoped to the owning feature or approved application infrastructure.
+ * Invariant: does not move feature business state into unrelated modules.
+ */
 export function useSuperadminGymDeleteModal() {
     const isDeleteModalOpen = useSuperadminGymsStore(state => state.isDeleteModalOpen);
     const closeDeleteModal = useSuperadminGymsStore(state => state.closeDeleteModal);
     const gymToDelete = useSuperadminGymsStore(state => state.gymToDelete);
     const queryClient = useQueryClient();
     const [confirmText, setConfirmText] = useState('');
+    const idempotencyKeyRef = useRef<string | null>(null);
     // Reset confirmation text whenever the modal opens or closes
     // EXPLANATION: Synchronize component state with external dependencies.
     // EFFECT DEPENDENCIES: Documented intentionally.
+    // EFFECT INTENT: Synchronize local/UI state with the listed external dependencies.
     useEffect(() => {
         if (!isDeleteModalOpen) {
             // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -23,9 +32,10 @@ export function useSuperadminGymDeleteModal() {
         }
     }, [isDeleteModalOpen]);
     const deleteMutation = useMutation({
-        mutationFn: (id: string) => gymsApi.deleteGym(id),
+        mutationFn: ({ id, idempotencyKey }: { id: string; idempotencyKey: string }) => gymsApi.deleteGym(id, idempotencyKey),
         onSuccess: (res) => {
             toast.success(res.message, { id: 'superadmin-toast-f1e29ad0b1' });
+            idempotencyKeyRef.current = null;
             queryClient.invalidateQueries({ queryKey: ['superadmin', 'gyms'] });
             closeDeleteModal();
         },
@@ -35,7 +45,8 @@ export function useSuperadminGymDeleteModal() {
     });
     const handleConfirmDelete = () => {
         if (confirmText === 'DELETE' && gymToDelete) {
-            deleteMutation.mutate(gymToDelete.id);
+            idempotencyKeyRef.current ??= crypto.randomUUID();
+            deleteMutation.mutate({ id: gymToDelete.id, idempotencyKey: idempotencyKeyRef.current });
         }
     };
     return {

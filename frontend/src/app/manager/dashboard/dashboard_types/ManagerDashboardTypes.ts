@@ -2,42 +2,30 @@
 // and chart data shapes. CRITICAL: 5 missing KPIs added — churnRate, revenueGrowthPercent,
 // todayCollection, frozenMembershipsCount, totalPTRevenue.
 
-import type { QueryStatus } from '@tanstack/react-query';
 export type TimeRange = 'weekly' | 'monthly' | 'yearly' | 'custom';
 
-export interface DashboardContextType {
-  stats: DashboardStats | null;
-  status: QueryStatus;
-  error: string;
-  timeRange: TimeRange;
-  setTimeRange: (range: TimeRange) => void;
-  startDate: string;
-  endDate: string;
-  setCustomDateRange: (start: string, end: string) => void;
-}
-
 export interface RecentMember {
-  id: string;
-  name: string;
-  plan: string | { name: string };
+  id: string; 
+  name: string; 
+  plan: string | { name: string }; 
   status: string;
-  joinDate: string;
+  joinDate: string; 
   paidAmount: number;
 }
 
 export interface RecentPayment {
-  id: string;
-  invoiceNumber: string;
-  amount: number;
-  method: string;
+  id: string; 
+  invoiceNumber: string; 
+  amount: number; 
+  method: string; 
   paidAt: string;
   member: { name: string };
 }
 
 export interface PendingPayment {
-  id: string;
-  name: string;
-  pendingAmount: number;
+  id: string; 
+  name: string; 
+  pendingAmount: number; 
   expiryDate: string;
 }
 

@@ -8,11 +8,17 @@ Manager Expenses is the branch expense register and reporting view. Managers can
 |---|---|---|
 | `expenses_api/` | Feature-owned responsibility for the expenses module. | `ManagerExpensesApi.ts; ManagerUseManagerExpensesMutations.ts; ManagerUseManagerExpensesQueries.ts` |
 | `expenses_components/` | Feature-owned responsibility for the expenses module. | `—` |
-| `expenses_context/` | Feature-owned responsibility for the expenses module. | `ManagerExpensesContext.tsx` |
+| `expenses_hooks/` | Feature-owned responsibility for the expenses module. | `ManagerUseManagerExpensesLogic.ts` |
 | `expenses_fixtures/` | Feature-owned responsibility for the expenses module. | `ManagerExpensesMockData.ts` |
 | `expenses_mocks/` | Feature-owned responsibility for the expenses module. | `—` |
 | `expenses_types/` | Feature-owned responsibility for the expenses module. | `ManagerExpensesSchema.ts; ManagerExpensesTypes.ts` |
 | `expenses_utils/` | Feature-owned responsibility for the expenses module. | `ManagerExpensesSharedConstants.ts` |
+
+## Approved External Dependencies
+
+- Global framework/application infrastructure documented by the architecture standard may be used when required.
+- Approved zero-business UI primitives may be imported from Manager application infrastructure.
+- Sibling feature business logic, state, API services, fixtures, and tests are not dependencies.
 
 ## Feature Inventory
 | Feature | Route | What the User Can Do | Main API Calls | Status |
@@ -37,7 +43,7 @@ Manager Expenses is the branch expense register and reporting view. Managers can
 4. The response message is surfaced and the query cache is reconciled with the authoritative response.
 
 ## Data and State Architecture
-TanStack Query owns expenses server/API data. UI-only filters, tabs, selections, and draft state remain local state or module-scoped Zustand where shared. React Context is limited to stable cross-tree concerns and does not become the source of truth for API data. Query keys are module-prefixed.
+TanStack Query owns expenses server/API data. UI-only filters, tabs, selections, and draft state remain local state or module-scoped Zustand where shared. module-local state/query layer is limited to stable cross-tree concerns and does not become the source of truth for API data. Query keys are module-prefixed.
 
 ## API Contract
 | Function | Method | Endpoint | Request | Response `data` type |
@@ -82,7 +88,7 @@ TanStack Query owns expenses server/API data. UI-only filters, tabs, selections,
 - **Delete expense is destructive and must use double confirmation:** Delete expense is destructive and must use double confirmation.
 - **Receipt/reference URLs are optional and must render a deliberate empty fallback:** Receipt/reference URLs are optional and must render a deliberate empty fallback.
 - **Never infer a payment mode or status when the backend returned null/undefined:** Never infer a payment mode or status when the backend returned null/undefined.
-- **Expense amounts must use formatCurrency, not raw numeric concatenation:** Expense amounts must use formatCurrency, not raw numeric concatenation.
+- **Expense amounts must use formatCurrencyFromMinorUnitsFromMinorUnits, not raw numeric concatenation:** Expense amounts must use formatCurrencyFromMinorUnitsFromMinorUnits, not raw numeric concatenation.
 - **Pagination totals must come from the server response after filters are applied:** Pagination totals must come from the server response after filters are applied.
 - **Do not import expense constants or fixtures from Finance or another business module:** Do not import expense constants or fixtures from Finance or another business module.
 
@@ -90,12 +96,12 @@ TanStack Query owns expenses server/API data. UI-only filters, tabs, selections,
 | Component File | Responsibility |
 |---|---|
 | `expenses/expenses_components/ManagerExpensesKPIs/ManagerExpensesKPIs.tsx` | Renders high-level KPIs for the Expenses module. |
-| `expenses/expenses_components/ManagerExpensesMain/ManagerExpensesChart.tsx` | Renders the Manager ExpensesChart presentation layer for the Manager module. |
-| `expenses/expenses_components/ManagerExpensesMain/ManagerExpensesMain.tsx` | Main container for the Expenses module. Owns the ExpensesProvider and assembles Header, Toolbar, KPIs, Table, and Modal. |
+| `expenses/expenses_components/ManagerExpensesMain/ManagerExpensesChart.tsx` | Renders the Manager ManagerReportsExpensesChart presentation layer for the Manager module. |
+| `expenses/expenses_components/ManagerExpensesMain/ManagerExpensesMain.tsx` | Framework entry component for the Expenses module; delegates feature behavior and UI composition to `ManagerExpensesContent`. |
 | `expenses/expenses_components/ManagerExpensesModal/ManagerExpensesModal.tsx` | Renders the modal form for creating or editing an expense. |
 | `expenses/expenses_components/ManagerExpensesTable/ManagerExpensesTable.tsx` | Renders the primary tabular list of expenses with actions and pagination. |
 | `expenses/expenses_components/ManagerExpensesToolbar/ManagerExpensesToolbar.tsx` | Renders the action bar for Expenses: Search, Filters, and "Add Expense" button. |
-| `expenses/expenses_context/ManagerExpensesContext.tsx` | Provides local UI state (filtering, pagination, modal visibility) for the Expenses module. |
+| `expenses/expenses_hooks/ManagerUseManagerExpensesLogic.ts` | Provides local UI state (filtering, pagination, modal visibility) for the Expenses module. |
 
 ## Rule Compliance Checklist
 - [x] Module-owned API, types/schemas, fixtures, handlers, tests, and feature documentation are scoped to this module.

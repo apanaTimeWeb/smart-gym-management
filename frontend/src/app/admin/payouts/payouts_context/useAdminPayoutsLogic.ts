@@ -6,10 +6,11 @@ import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { payoutsApi } from '@/app/admin/payouts/payouts_api/AdminPayoutsApi';
 import { useAdminPayoutsStore } from '@/app/admin/payouts/payouts_store/useAdminPayoutsStore';
-import { useAdminUrlQuerySync } from '@/app/admin/admin_utils/useAdminUrlQuerySync';
+import { useAdminUrlQuerySync } from '@/app/admin/admin_layout/admin_utils/useAdminUrlQuerySync';
 import { PAYOUTS_ITEMS_PER_PAGE } from '@/app/admin/payouts/payouts_utils/AdminPayoutsSharedConstants';
 import type { PayoutSortDirection, PayoutSortKey, PnlSortDirection, PnlSortKey } from '@/app/admin/payouts/payouts_types/AdminPayoutsTypes';
 
+/** Coordinates PayoutsLogic state, data flow, and feature behavior. */
 export function useAdminPayoutsLogic() {
   const { activeTab, setActiveTab, monthFilter, setMonthFilter, gymFilter, setGymFilter, statusFilter, setStatusFilter, currentPage, setCurrentPage } = useAdminPayoutsStore();
   const [payoutSortKey, setPayoutSortKey] = useState<PayoutSortKey>('month');
@@ -29,7 +30,7 @@ export function useAdminPayoutsLogic() {
     staleTime: 1000 * 60 * 5,
   });
 
-  const { data: pnlData = [], isLoading: loadingPnL } = useQuery({
+  const { data: pnlData = [], isPending: pendingPnl } = useQuery({
     queryKey: ['admin', 'payouts', 'pnl', { month: monthFilter, gymId: gymFilter, sortKey: pnlSortKey, sortDir: pnlSortDir }],
     queryFn: () => payoutsApi.fetchPnL({ month: monthFilter, gymId: gymFilter, sortKey: pnlSortKey, sortDir: pnlSortDir }).then((r) => r.data || []),
     staleTime: 1000 * 60 * 5,
@@ -64,7 +65,7 @@ export function useAdminPayoutsLogic() {
     kpis,
     totalPages,
     totalItems: payoutsResponse?.meta?.total ?? filteredPayouts.length,
-    loadingPnL,
+    pendingPnl,
     payoutSortKey, payoutSortDir,
     onPayoutSort: (key: PayoutSortKey) => { if (payoutSortKey === key) setPayoutSortDir((current: PayoutSortDirection) => current === 'asc' ? 'desc' : 'asc'); else { setPayoutSortKey(key); setPayoutSortDir('desc'); } setCurrentPage(1); },
     pnlSortKey, pnlSortDir,

@@ -8,11 +8,17 @@ Manager Plans is the membership plan administration workspace. Managers can brow
 |---|---|---|
 | `plans_api/` | Feature-owned responsibility for the plans module. | `ManagerPlansApi.ts; ManagerPlansChangeRequestApi.ts; ManagerPlansMembershipApi.ts; ManagerPlansServerApi.ts; ManagerUseManagerPlansMembershipMutations.ts; ManagerUseManagerPlansMembershipQueries.ts; ManagerUseManagerPlansQueries.ts` |
 | `plans_components/` | Feature-owned responsibility for the plans module. | `—` |
-| `plans_context/` | Feature-owned responsibility for the plans module. | `ManagerPlansContext.tsx` |
+| `plans_hooks/` | Feature-owned responsibility for the plans module. | `ManagerUseManagerPlansLogic.ts` |
 | `plans_fixtures/` | Feature-owned responsibility for the plans module. | `ManagerPlansMembershipMockData.ts; ManagerPlansMockData.ts` |
 | `plans_mocks/` | Feature-owned responsibility for the plans module. | `—` |
 | `plans_types/` | Feature-owned responsibility for the plans module. | `ManagerPlansChangeRequestSchema.ts; ManagerPlansChangeRequestTypes.ts; ManagerPlansMembershipSchema.ts; ManagerPlansMembershipTypes.ts; ManagerPlansSchema.ts; ManagerPlansTypes.ts` |
 | `plans_utils/` | Feature-owned responsibility for the plans module. | `ManagerPlansMembershipSchemas.ts; ManagerPlansSharedConstants.ts` |
+
+## Approved External Dependencies
+
+- Global framework/application infrastructure documented by the architecture standard may be used when required.
+- Approved zero-business UI primitives may be imported from Manager application infrastructure.
+- Sibling feature business logic, state, API services, fixtures, and tests are not dependencies.
 
 ## Feature Inventory
 | Feature | Route | What the User Can Do | Main API Calls | Status |
@@ -39,7 +45,7 @@ Manager Plans is the membership plan administration workspace. Managers can brow
 3. The backend response and message drive the UI; no optimistic destructive update is used.
 
 ## Data and State Architecture
-TanStack Query owns plans server/API data. UI-only filters, tabs, selections, and draft state remain local state or module-scoped Zustand where shared. React Context is limited to stable cross-tree concerns and does not become the source of truth for API data. Query keys are module-prefixed.
+TanStack Query owns plans server/API data. UI-only filters, tabs, selections, and draft state remain local state or module-scoped Zustand where shared. module-local state/query layer is limited to stable cross-tree concerns and does not become the source of truth for API data. Query keys are module-prefixed.
 
 ## API Contract
 | Function | Method | Endpoint | Request | Response `data` type |
@@ -91,11 +97,11 @@ TanStack Query owns plans server/API data. UI-only filters, tabs, selections, an
 |---|---|
 | `plans/plans_components/ManagerPlansMain/ManagerPlanCard.tsx` | Pure display component rendering a single membership plan. |
 | `plans/plans_components/ManagerPlansMain/ManagerPlansGrid.tsx` | Renders the grid of plans or loading/empty states. |
-| `plans/plans_components/ManagerPlansMain/ManagerPlansMain.tsx` | Orchestrator for the Plans module. |
+| `plans/plans_components/ManagerPlansMain/ManagerPlansMain.tsx` | Framework entry component for the Plans module; delegates feature behavior and UI composition to `ManagerPlansContent`. |
 | `plans/plans_components/ManagerPlansMain/ManagerPlansRequestChangeModal.tsx` | Renders the modal to request a change to a plan. |
 | `plans/plans_components/ManagerPlansMain/ManagerPlansTabs.tsx` | Renders Manager plan tabs, lifecycle forms, and API-backed expiry/renewal views. |
 | `plans/plans_components/ManagerPlansMain/ManagerPlansToolbar.tsx` | Renders search and filter controls for the plans list. |
-| `plans/plans_context/ManagerPlansContext.tsx` | React Context — bridges TanStack Query plans with UI state (search, filters, modal) synced to URL. |
+| `plans/plans_hooks/ManagerUseManagerPlansLogic.ts` | module-local state/query layer — bridges TanStack Query plans with UI state (search, filters, modal) synced to URL. |
 
 ## Rule Compliance Checklist
 - [x] Module-owned API, types/schemas, fixtures, handlers, tests, and feature documentation are scoped to this module.

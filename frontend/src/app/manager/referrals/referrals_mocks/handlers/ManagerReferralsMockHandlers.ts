@@ -1,12 +1,21 @@
 import { http, HttpResponse } from 'msw';
-import { MANAGER_HTTP_STATUS } from '@/app/manager/manager_utils/ManagerHttpStatus';
+import { MANAGER_HTTP_STATUS } from '@/app/manager/manager_infrastructure/ManagerHttpStatus';
+import { managerMockApiUrl } from '@/app/manager/manager_infrastructure/ManagerMockApiUrl';
 import { MOCK_REFERRALS, MOCK_REFERRALS_KPIS } from '@/app/manager/referrals/referrals_fixtures/ManagerReferralsMockData';
+import { ManagerReferralsUrlConfig } from '@/app/manager/referrals/referrals_url_config';
 import type { ManagerReferral, CreateReferralDto } from '@/app/manager/referrals/referrals_types/ManagerReferralsTypes';
 
+
+let mockReferralIdCounter = 1000;
 let mockReferrals = [...MOCK_REFERRALS];
 
+export function resetManagerReferralsMockState(): void {
+  mockReferralIdCounter = 1000;
+  mockReferrals = [...MOCK_REFERRALS];
+}
+
 export const managerReferralsHandlers = [
-  http.get(`/api/v1/manager/referrals/kpis`, () => {
+  http.get(managerMockApiUrl(ManagerReferralsUrlConfig.BACKEND_API.KPIS), () => {
     return HttpResponse.json({
       success: true,
       message: 'KPIs fetched',
@@ -14,7 +23,7 @@ export const managerReferralsHandlers = [
     });
   }),
 
-  http.get(`/api/v1/manager/referrals`, ({ request }) => {
+  http.get(managerMockApiUrl(ManagerReferralsUrlConfig.BACKEND_API.BASE), ({ request }) => {
     const url = new URL(request.url);
     const page = Number(url.searchParams.get('page') || '1');
     const limit = Number(url.searchParams.get('limit') || '10');
@@ -34,10 +43,10 @@ export const managerReferralsHandlers = [
     });
   }),
 
-  http.post(`/api/v1/manager/referrals`, async ({ request }) => {
+  http.post(managerMockApiUrl(ManagerReferralsUrlConfig.BACKEND_API.BASE), async ({ request }) => {
     const dto = await request.json() as CreateReferralDto;
     const newRef: ManagerReferral = {
-      id: `ref-${Date.now()}`,
+      id: `ref-${mockReferralIdCounter++}`,
       referrerName: dto.referrerName,
       referrerId: dto.referrerId,
       refereeName: dto.refereeName,
@@ -45,9 +54,8 @@ export const managerReferralsHandlers = [
       dateReferred: new Date().toISOString().split('T')[0] || '',
       status: 'PENDING',
       rewardStatus: 'N/A',
-      rewardAmount: 500,
-      rewardType: 'CASH',
-    };
+      rewardAmount: 50000,
+      rewardType: 'CASH' };
     mockReferrals = [newRef, ...mockReferrals];
     return HttpResponse.json({
       success: true,
@@ -56,7 +64,7 @@ export const managerReferralsHandlers = [
     });
   }),
 
-  http.post(`/api/v1/manager/referrals/:id/claim`, ({ params }) => {
+  http.post(managerMockApiUrl(ManagerReferralsUrlConfig.BACKEND_API.CLAIM(':id')), ({ params }) => {
     const { id } = params;
     const idx = mockReferrals.findIndex(r => r.id === id);
     if (idx === -1) {

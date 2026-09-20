@@ -1,13 +1,14 @@
-'use client';
 // RESPONSIBILITY: Provides the search, filter tabs, and action buttons for the Attendance module.
+'use client';
 import { useState, useEffect } from 'react';
 import { RefreshCw, Plus, Search, Download } from 'lucide-react';
-import { useAttendanceContext } from '@/app/manager/attendance/attendance_context/ManagerAttendanceContext';
+import { useManagerAttendanceLogic } from '@/app/manager/attendance/attendance_hooks/ManagerUseManagerAttendanceLogic';
 import { ATTENDANCE_TABS } from '@/app/manager/attendance/attendance_utils/ManagerAttendanceSharedConstants';
-import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
+import ManagerSearchableDropdown from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
 
-export default function AttendanceToolbar() {
-  const { tab, setTab, loadAll, setShowModal, search, setSearch, dateFilter, setDateFilter, statusFilter, setStatusFilter, setCurrentPage, exportAttendance } = useAttendanceContext();
+
+export default function ManagerAttendanceToolbar() {
+  const { tab, setTab, loadAll, setShowModal, search, setSearch, dateFilter, setDateFilter, statusFilter, setStatusFilter, setCurrentPage, exportAttendance } = useManagerAttendanceLogic();
   const [prevSearch, setPrevSearch] = useState(search);
   const [localSearch, setLocalSearch] = useState(search);
 
@@ -16,6 +17,7 @@ export default function AttendanceToolbar() {
     setLocalSearch(search);
   }
 
+// EFFECT: Effect lifecycle and dependency list are intentionally scoped to values that control this side effect.
   useEffect(() => {
     const timer = setTimeout(() => {
       if (localSearch !== search) {
@@ -35,8 +37,8 @@ export default function AttendanceToolbar() {
  onClick={() => setTab(t)}
  className={`whitespace-nowrap px-5 py-3.5 text-sm font-medium motion-safe:transition-colors border-b-2 ${
  tab === t 
- ? 'text-primary bg-primary-subtle border-primary' 
- : 'border-transparent text-secondary hover:text-foreground'
+ ? 'text-on-primary bg-primary-subtle border-primary' 
+ : 'border-transparent text-secondary hover:text-primary'
  }`}
  >
  {t}
@@ -45,12 +47,12 @@ export default function AttendanceToolbar() {
  </div>
   <div className="p-4 flex flex-col sm:flex-row gap-3 items-center w-full lg:w-auto border-t lg:border-t-0 border-border">
     <div className="relative w-full sm:w-auto">
-      <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary" />
+      <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary" />
       <input 
         value={localSearch} 
         onChange={e => setLocalSearch(e.target.value)} 
         placeholder={`Search ${tab.toLowerCase()}...`} 
-        className="pl-9 pr-3 py-2 border border-border bg-input text-foreground rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary w-full sm:w-64"
+        className="pl-9 pr-3 py-2 border border-border bg-input text-primary rounded-lg text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary w-full sm:w-64"
       />
     </div>
     
@@ -59,12 +61,12 @@ export default function AttendanceToolbar() {
         type="date"
         value={dateFilter}
         onChange={(e) => setDateFilter(e.target.value)}
-        className="px-3 py-2 border border-border bg-input text-foreground rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary w-full"
+        className="px-3 py-2 border border-border bg-input text-primary rounded-lg text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary w-full"
       />
     </div>
     
-    <div className="w-full sm:w-auto z-50">
-      <SearchableDropdown
+    <div className="w-full sm:w-auto z-30">
+      <ManagerSearchableDropdown
         value={statusFilter || 'All'}
         onChange={(v) => setStatusFilter(String(v) === 'All' ? '' : String(v))}
         options={[{label: 'All Status', value: 'All'}, {label: 'Present', value: 'Present'}, {label: 'Absent', value: 'Absent'}, {label: 'Late', value: 'Late'}]}
@@ -74,22 +76,24 @@ export default function AttendanceToolbar() {
 
     <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto ml-auto">
  <button 
+ type="button"
+ aria-label="Refresh attendance"
  onClick={loadAll} 
- className="flex justify-center items-center gap-2 px-3 py-2 text-sm border border-border rounded-lg hover:bg-primary-subtle text-secondary motion-safe:transition-colors w-full sm:w-auto"
+ className="min-h-11 min-w-11 flex justify-center items-center gap-2 px-3 py-2 text-sm border border-border rounded-lg hover:bg-primary-subtle text-secondary motion-safe:transition-colors w-full sm:w-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
  >
- <RefreshCw size={14} />
+ <RefreshCw size={18} />
  </button>
  <button 
  onClick={() => exportAttendance && exportAttendance()} 
- className="flex justify-center items-center gap-2 px-3 py-2 text-sm border border-border rounded-lg hover:bg-info/10 text-info motion-safe:transition-colors w-full sm:w-auto"
+ className="flex justify-center items-center gap-2 px-3 py-2 text-sm border border-border rounded-lg hover:bg-info-bg text-info motion-safe:transition-colors w-full sm:w-auto"
  >
- <Download size={14} /> Export
+ <Download size={18} /> Export
  </button>
  <button 
  onClick={() => setShowModal(true)} 
- className="flex justify-center items-center gap-2 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-lg motion-safe:transition-opacity hover:opacity-90 w-full sm:w-auto" 
+ className="flex justify-center items-center gap-2 px-4 py-2 text-sm font-semibold text-on-info bg-primary-subtle rounded-lg motion-safe:transition-opacity hover:opacity-90 w-full sm:w-auto" 
  >
- <Plus size={14} /> Mark Attendance
+ <Plus size={18} /> Mark Attendance
  </button>
  </div>
  </div>

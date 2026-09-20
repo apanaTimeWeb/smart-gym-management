@@ -2,6 +2,10 @@ import type { QueryStatus } from '@tanstack/react-query';
 // RESPONSIBILITY: Provides the implementation for AdminFinanceTypes.ts functionality within its module.
 
 
+export type AdminFinanceExpenseUrlParamKey = 'expenseCategory' | 'expensePage';
+export type AdminFinancePaymentMode = 'CASH' | 'UPI' | 'CARD' | 'ONLINE';
+export type AdminFinancePaymentType = 'PAYMENT' | 'REFUND' | 'ADJUSTMENT';
+
 export interface FinanceInitialData {
   payments: Payment[];
   totalPayments: number;
@@ -30,13 +34,13 @@ export interface Payment {
   memberId: string; 
   amount: number; 
   method: string;
-  paymentMode?: 'CASH' | 'UPI' | 'CARD' | 'ONLINE';
+  paymentMode?: AdminFinancePaymentMode;
   gstAmount?: number;
   taxRate?: number;
   invoiceNumber?: string;
   hsn_code?: string;
   planId?: string;
-  type?: 'PAYMENT' | 'REFUND' | 'ADJUSTMENT';
+  type?: AdminFinancePaymentType;
   status: string; 
   notes?: string; 
   invoiceNo: string; 

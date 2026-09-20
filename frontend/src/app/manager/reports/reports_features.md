@@ -6,24 +6,30 @@ Manager Reports is the branch reporting workspace for financial, attendance, mem
 ## Directory Structure
 | Folder | Responsibility | Key Files |
 |---|---|---|
-| `reports_api/` | Feature-owned responsibility for the reports module. | `ManagerReportsApi.ts` |
+| `reports_api/` | Reports API contract plus feature-local binary export transport. | `ManagerReportsApi.ts; ManagerReportsBinaryDownload.ts` |
 | `reports_components/` | Feature-owned responsibility for the reports module. | `—` |
-| `reports_context/` | Feature-owned responsibility for the reports module. | `ManagerReportsContext.tsx` |
+| `reports_hooks/` | Feature-owned responsibility for the reports module. | `ManagerUseManagerReportsLogic.ts` |
 | `reports_fixtures/` | Feature-owned responsibility for the reports module. | `ManagerReportsMockData.ts` |
 | `reports_mocks/` | Feature-owned responsibility for the reports module. | `—` |
 | `reports_types/` | Feature-owned responsibility for the reports module. | `ManagerReportsSchema.ts; ManagerReportsTypes.ts` |
 | `reports_utils/` | Feature-owned responsibility for the reports module. | `ManagerReportsSharedConstants.ts` |
 
+## Approved External Dependencies
+
+- Global framework/application infrastructure documented by the architecture standard may be used when required.
+- Approved zero-business UI primitives may be imported from Manager application infrastructure.
+- Sibling feature business logic, state, API services, fixtures, and tests are not dependencies.
+
 ## Feature Inventory
 | Feature | Route | What the User Can Do | Main API Calls | Status |
 |---|---|---|---|---|
-| fetchSummary | `/manager/reports` | Uses the fetchSummary workflow with typed request/response handling. | `GET /manager/reports/summary` | ✅ Implemented |
+| fetchReportsSummary | `/manager/reports` | Uses the fetchReportsSummary workflow with typed request/response handling. | `GET /manager/reports/summary` | ✅ Implemented |
 | exportReportsReport | `/manager/reports` | Uses the exportReportsReport workflow with typed request/response handling. | `GET /manager/reports/export` | ✅ Implemented |
 
 ## User Flows & Interactions
 ### Flow 1: Review report
 1. Manager chooses the report range/tab.
-2. fetchSummary(params) loads the report summary.
+2. fetchReportsSummary(params) loads the report summary.
 3. The KPI and chart/table sections render from the returned report contract.
 4. MSW fixtures include complete series data and deterministic empty/error variants.
 ### Flow 2: Export report
@@ -32,12 +38,12 @@ Manager Reports is the branch reporting workspace for financial, attendance, mem
 3. The response is treated as an export/download response rather than current-page table data.
 
 ## Data and State Architecture
-TanStack Query owns reports server/API data. UI-only filters, tabs, selections, and draft state remain local state or module-scoped Zustand where shared. React Context is limited to stable cross-tree concerns and does not become the source of truth for API data. Query keys are module-prefixed.
+TanStack Query owns reports server/API data. UI-only filters, tabs, selections, and draft state remain local state or module-scoped Zustand where shared. module-local state/query layer is limited to stable cross-tree concerns and does not become the source of truth for API data. Query keys are module-prefixed.
 
 ## API Contract
 | Function | Method | Endpoint | Request | Response `data` type |
 |---|---|---|---|---|
-| `fetchSummary` | `GET` | `/api/v1/manager/reports/summary` | `{ startDate?, endDate?, range? }` | `ReportSummary` |
+| `fetchReportsSummary` | `GET` | `/api/v1/manager/reports/summary` | `{ startDate?, endDate?, range? }` | `ReportSummary` |
 | `exportReportsReport` | `GET` | `/api/v1/manager/reports/export` | `{ tab: string; params?: Record<string,string> }` | `Blob` |
 
 ## UI Data Requirements
@@ -73,7 +79,7 @@ TanStack Query owns reports server/API data. UI-only filters, tabs, selections, 
 ## Edge Cases and AI Warnings
 - **Report chart values must come from the report response; never embed static series in chart config:** Report chart values must come from the report response; never embed static series in chart config.
 - **Exports must not export only the currently rendered table rows unless explicitly defined by the backend contract:** Exports must not export only the currently rendered table rows unless explicitly defined by the backend contract.
-- **Date-range selection must affect fetchSummary parameters:** Date-range selection must affect fetchSummary parameters.
+- **Date-range selection must affect fetchReportsSummary parameters:** Date-range selection must affect fetchReportsSummary parameters.
 - **Financial report values use centralized currency/number formatting:** Financial report values use centralized currency/number formatting.
 - **Export failures should remain visible to the reports module and provide retry guidance:** Export failures should remain visible to the reports module and provide retry guidance.
 
@@ -82,9 +88,9 @@ TanStack Query owns reports server/API data. UI-only filters, tabs, selections, 
 |---|---|
 | `reports/reports_components/ManagerReportsCharts/ManagerReportsCharts.tsx` | ApexCharts-based charts for each report tab — Revenue, Attendance, Members, Expenses. |
 | `reports/reports_components/ManagerReportsKPIs/ManagerReportsKPIs.tsx` | KPI stat cards row for the Manager Reports module. |
-| `reports/reports_components/ManagerReportsMain/ManagerReportsMain.tsx` | Orchestrator for the Reports module — KPIs, tab switcher, charts, table, and CSV export. |
+| `reports/reports_components/ManagerReportsMain/ManagerReportsMain.tsx` | Framework entry component for the Reports module; delegates report UI and state orchestration to `ManagerReportsContent`. |
 | `reports/reports_components/ManagerReportsTable/ManagerReportsTable.tsx` | Renders the data table for the active report tab — Revenue, Attendance, Members, or Expenses. |
-| `reports/reports_context/ManagerReportsContext.tsx` | Bridges URL-owned report controls with module server state. |
+| `reports/reports_hooks/ManagerUseManagerReportsLogic.ts` | Bridges URL-owned report controls with module server state. |
 
 ## Rule Compliance Checklist
 - [x] Module-owned API, types/schemas, fixtures, handlers, tests, and feature documentation are scoped to this module.

@@ -1,19 +1,17 @@
-"use client";
-// DATA FLOW: feature API/schema → hook/context → useAdminBranchesQueries consumers.
-// RESPONSIBILITY: React Query hook for fetching admin branches from the real API.
-// Rule 3B: No static mock data — all data comes from the backend via apiFetch.
-
+'use client';
+// DATA FLOW: UI range state → Admin Branches API → module-owned MSW transport → TanStack Query.
+// RESPONSIBILITY: Owns server-state queries for branch list and branch detail.
 import { useQuery } from '@tanstack/react-query';
 import { branchesApi } from '@/app/admin/branches/branches_api/AdminBranchesApi';
-import type { Branch } from '@/app/admin/branches/branches_types/AdminBranchesTypes';
+import type { AdminBranchesTimeRange } from '@/app/admin/branches/branches_types/AdminBranchesTimeRangeTypes';
 
-export const useAdminBranchesQueries = () => {
-  return useQuery({
-    queryKey: ['admin', 'branches'],
-    queryFn: async () => {
-      const res = await branchesApi.fetchBranches();
-      return (res.data ?? []) as Branch[];
-    },
-    staleTime: 5 * 60 * 1000, // 5 minutes — branches change infrequently
+/** Coordinates BranchesQueries state, data flow, and feature behavior. */
+export const useAdminBranchesQueries = (params: { timeRange: AdminBranchesTimeRange; startDate: string; endDate: string }) => {
+  const listQuery = useQuery({
+    queryKey: ['admin', 'branches', 'list', params],
+    queryFn: () => branchesApi.fetchBranches({ range: params.timeRange, startDate: params.startDate, endDate: params.endDate }),
+    staleTime: 5 * 60 * 1000,
   });
+
+  return listQuery;
 };

@@ -12,12 +12,12 @@ export default function AdminCouponsEmptyState() {
         <Tag size={28} className="text-primary" />
       </div>
       <div className="text-center">
-        <p className="text-base font-semibold text-foreground">No coupons found</p>
+        <p className="text-base font-semibold text-primary">No coupons found</p>
         <p className="text-sm text-secondary mt-1">Create your first discount coupon to get started</p>
       </div>
       <button
         onClick={openAdd}
-        className="px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-semibold hover:bg-primary-hover motion-safe:transition-colors"
+        className="px-4 py-2 bg-primary text-on-primary rounded-lg text-sm font-semibold hover:bg-primary-hover motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page"
       >
         Create Coupon
       </button>

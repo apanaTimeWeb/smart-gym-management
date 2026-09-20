@@ -4,11 +4,11 @@
 import { Globe, Building2, ToggleLeft, ToggleRight, Trash2, Unlock } from 'lucide-react';
 import { useAdminBlacklistLogic } from '@/app/admin/blacklist/blacklist_context/useAdminBlacklistLogic';
 import type { BlacklistedMember } from '@/app/admin/blacklist/blacklist_types/AdminBlacklistTypes';
-import { AdminTableSkeleton } from '@/app/admin/admin_components/AdminShared/AdminTableSkeleton';
-import AdminPagination from '@/app/admin/admin_components/AdminShared/AdminPagination';
+import AdminTableSkeleton from '@/app/admin/admin_layout/AdminShared/AdminTableSkeleton';
+import AdminPagination from '@/app/admin/admin_layout/AdminShared/AdminPagination';
 import AdminBlacklistEmptyState from '@/app/admin/blacklist/blacklist_components/AdminBlacklistEmptyState/AdminBlacklistEmptyState';
-import { maskSensitiveData } from '@/app/admin/admin_utils/AdminMaskSensitiveData';
-import { displayValue } from '@/app/admin/admin_utils/AdminDisplayValue';
+import { maskSensitiveData } from '@/app/admin/admin_layout/admin_utils/AdminMaskSensitiveData';
+import { displayValue } from '@/app/admin/admin_layout/admin_utils/AdminDisplayValue';
 
 const HEADERS = ['Member', 'Contact', 'Reason', 'Scope', 'Blacklisted By', 'Date', 'Status', 'Actions'];
 
@@ -23,26 +23,26 @@ export default function AdminBlacklistTable() {
       <div className="overflow-x-auto">
         <table data-admin-responsive-table className="w-full">
           <thead>
-            <tr className="bg-danger/5">
+            <tr className="bg-danger-bg">
               {HEADERS.map(h => <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-secondary uppercase tracking-wider whitespace-nowrap">{h}</th>)}
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
             {members.map((m: BlacklistedMember) => (
-              <tr key={m.id} className="hover:bg-danger/5 motion-safe:transition-colors group">
+              <tr key={m.id} className="hover:bg-danger-bg motion-safe:transition-colors group motion-safe:duration-base">
                 <td className="px-4 py-3">
-                  <p className="text-sm font-medium text-foreground">{m.memberName}</p>
+                  <p className="text-sm font-medium text-primary">{m.memberName}</p>
                   <p className="text-xs text-secondary">ID: {m.memberId}</p>
                 </td>
                 <td className="px-4 py-3">
-                  <p className="text-sm text-foreground">{maskSensitiveData(m.memberPhone)}</p>
+                  <p className="text-sm text-primary">{maskSensitiveData(m.memberPhone)}</p>
                   <p className="text-xs text-secondary truncate max-w-40">{displayValue(m.memberEmail)}</p>
                 </td>
                 <td className="px-4 py-3 max-w-56">
-                  <p className="text-sm text-foreground line-clamp-2">{m.reason}</p>
+                  <p className="text-sm text-primary line-clamp-2">{m.reason}</p>
                 </td>
                 <td className="px-4 py-3">
-                  <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${m.scope === 'global' ? 'bg-danger-bg text-danger' : 'bg-warning-bg text-warning'}`}>
+                  <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${m.scope === 'global' ? 'bg-danger text-on-danger' : 'bg-warning-bg text-warning'}`}>
                     {m.scope === 'global' ? <Globe size={11} /> : <Building2 size={11} />}
                     {m.scope === 'global' ? 'Global' : m.assignedGymNames.join(', ')}
                   </span>
@@ -50,16 +50,16 @@ export default function AdminBlacklistTable() {
                 <td className="px-4 py-3 text-sm text-secondary">{m.blacklistedBy}</td>
                 <td className="px-4 py-3 text-sm text-secondary whitespace-nowrap">{m.blacklistedAt}</td>
                 <td className="px-4 py-3">
-                  <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${m.isActive ? 'bg-danger-bg text-danger' : 'bg-input text-secondary'}`}>
+                  <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold ${m.isActive ? 'bg-danger text-on-danger' : 'bg-input text-secondary'}`}>
                     {m.isActive ? 'Active' : 'Inactive'}
                   </span>
                 </td>
                 <td className="px-4 py-3">
-                  <div className="flex items-center gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 motion-safe:transition-opacity">
-                    <button onClick={() => toggleBlacklist(m.id)} className="p-1.5 rounded-lg hover:bg-input text-secondary hover:text-foreground motion-safe:transition-colors" aria-label="Toggle blacklist">
+                  <div className="flex items-center gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 motion-safe:transition-opacity motion-safe:duration-base">
+                    <button onClick={() => toggleBlacklist(m.id)} className="min-h-11 min-w-11 p-1.5 rounded-lg hover:bg-input text-secondary hover:text-primary motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page" aria-label="Toggle blacklist">
                       {m.isActive ? <ToggleRight size={16} className="text-danger" /> : <ToggleLeft size={16} />}
                     </button>
-                    <button onClick={() => removeFromBlacklist(m.id, m.memberName)} className="p-1.5 rounded-lg hover:bg-success/10 text-secondary hover:text-success motion-safe:transition-colors" aria-label="Unblock member" title="Unblock">
+                    <button onClick={() => removeFromBlacklist(m.id, m.memberName)} className="min-h-11 min-w-11 p-1.5 rounded-lg hover:bg-success-bg text-secondary hover:text-success motion-safe:transition-colors motion-safe:duration-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page" aria-label="Unblock member" title="Unblock">
                       <Unlock size={15} />
                     </button>
                   </div>

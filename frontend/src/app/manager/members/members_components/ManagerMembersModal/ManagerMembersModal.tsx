@@ -1,22 +1,25 @@
-'use client';
 // RESPONSIBILITY: Renders a modal for creating or editing a member.
-import { useEffect } from 'react';
+'use client';
+import { useIsMutating } from '@tanstack/react-query';
 import { X, Save } from 'lucide-react';
 import { Controller } from 'react-hook-form';
-import { SearchableDropdown } from '@/components/ui/SearchableDropdown';
-import { useMembersContext } from '@/app/manager/members/members_context/ManagerMembersContext';
-import { useFetchPlans } from '@/app/manager/members/members_api/ManagerUseManagerMembersQueries';
-import { useIsMutating } from '@tanstack/react-query';
-import { MEMBERS_CYCLE_LABELS, getPriceForCycle, formatCurrency, type MemberFormValues, GENDER_OPTIONS, MEMBER_EDIT_STATUS_OPTIONS } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
+import { formatCurrencyFromMinorUnits } from '@/lib/formatters';
+import ManagerSearchableDropdown from '@/app/manager/manager_components/ManagerShared/ManagerSearchableDropdown';
+import { ManagerEnvConfig } from '@/app/manager/manager_infrastructure/ManagerEnvConfig';
 import ManagerMemberProfilePictureUpload from '@/app/manager/members/members_components/ManagerMembersModal/ManagerMemberProfilePictureUpload';
-import { useManagerUnsavedChangesGuard } from '@/app/manager/manager_utils/ManagerUnsavedChangesGuard';
 import { useManagerMembersModalForm } from '@/app/manager/members/members_components/ManagerMembersModal/ManagerUseManagerMembersModalForm';
+import { useManagerMembersLogic } from '@/app/manager/members/members_hooks/ManagerUseManagerMembersLogic';
+import { useFetchPlans } from '@/app/manager/members/members_hooks/ManagerUseManagerMembersQueries';
+import { getPriceForCycle, GENDER_OPTIONS, MEMBER_EDIT_STATUS_OPTIONS, MANAGER_MEMBER_MAX_AMOUNT_MAJOR_UNITS, MANAGER_MEMBER_MAX_CUSTOM_DAYS } from '@/app/manager/members/members_utils/ManagerMembersSharedConstants';
+import { MEMBERS_CYCLE_LABELS } from '@/app/manager/members/members_utils/ManagerMembersUiConstants';
+import type { MemberFormValues } from '@/app/manager/members/members_schemas/ManagerMembersFormSchema';
+
 
 export default function ManagerMembersModal() {
   const {
     showAddModal, setShowAddModal, editId, editData,
     saveMember
-  } = useMembersContext();
+  } = useManagerMembersLogic();
 
   const { data: plansData } = useFetchPlans();
   const plans = plansData || [];
@@ -27,29 +30,25 @@ export default function ManagerMembersModal() {
     register,
     handleSubmit,
     errors,
-    isDirty,
     watchPlanId,
     watchBillingCycle,
     watchCustomDays,
-    selectedPlan,
-  } = useManagerMembersModalForm(editData, showAddModal, plans, saveMember, editId);
-
-  useManagerUnsavedChangesGuard(isDirty && !saving);
+    selectedPlan, handleClose } = useManagerMembersModalForm(editData, showAddModal, plans, setShowAddModal, saveMember, editId);
 
   if (!showAddModal) return null;
 
   return (
-    <div className="fixed inset-0 bg-foreground/60 z-40 flex items-center justify-center p-4">
-      <div className="bg-card rounded-2xl shadow-2xl shadow-2xl w-full max-w-2xl max-h-full overflow-y-auto border-2 border-warning">
-        <div className="sticky top-0 px-8 py-5 border-b border-border bg-card flex items-center justify-between z-10">
-          <h3 className="text-xl font-bold text-foreground">{editId ? 'Edit Member' : 'Add New Member'}</h3>
+    <div className="fixed inset-0 bg-overlay-backdrop z-40 flex items-center justify-center p-4">
+      <div className="bg-overlay rounded-2xl shadow-dialog w-full max-w-2xl max-h-full overflow-y-auto border-2 border-warning">
+        <div className="sticky top-0 px-8 py-5 border-b border-border bg-overlay flex items-center justify-between z-10">
+          <h3 className="text-xl font-bold text-primary">{editId ? 'Edit Member' : 'Add New Member'}</h3>
           <button
             type="button"
-            onClick={() => setShowAddModal(false)}
-            className="p-2 rounded-full hover:bg-primary/10 motion-safe:transition-colors text-secondary hover:text-primary"
+            onClick={handleClose}
+            className="p-2 rounded-full hover:bg-primary-subtle motion-safe:transition-colors text-secondary hover:text-primary"
             aria-label="Close modal"
           >
-            <X size={20} />
+            <X size={18} />
           </button>
         </div>
         <form onSubmit={handleSubmit} className="p-6">
@@ -76,7 +75,7 @@ export default function ManagerMembersModal() {
                     if (e.key.length === 1 && !/^[0-9]$/.test(e.key) && !e.ctrlKey && !e.metaKey) e.preventDefault(); 
                   } : undefined}
                   {...register(f.key as keyof MemberFormValues)}
-                  className={`w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary motion-safe:transition-all duration-200 ${
+                  className={`w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary motion-safe:transition-all motion-safe:duration-base ${
                     errors[f.key as keyof MemberFormValues] ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
                   }`}
                 />
@@ -92,7 +91,7 @@ export default function ManagerMembersModal() {
                 name="gender"
                 control={useFormReturn.control}
                 render={({ field }) => (
-                  <SearchableDropdown
+                  <ManagerSearchableDropdown
                     value={field.value || ''}
                     onChange={field.onChange}
                     options={GENDER_OPTIONS}
@@ -108,7 +107,7 @@ export default function ManagerMembersModal() {
                   name="status"
                   control={useFormReturn.control}
                   render={({ field }) => (
-                    <SearchableDropdown
+                    <ManagerSearchableDropdown
                       value={field.value || 'ACTIVE'}
                       onChange={field.onChange}
                       options={MEMBER_EDIT_STATUS_OPTIONS}
@@ -124,7 +123,7 @@ export default function ManagerMembersModal() {
                 name="planId"
                 control={useFormReturn.control}
                 render={({ field }) => (
-                  <SearchableDropdown
+                  <ManagerSearchableDropdown
                     options={plans.map(p => ({ value: p.id, label: p.name }))}
                     value={field.value}
                     onChange={field.onChange}
@@ -141,10 +140,10 @@ export default function ManagerMembersModal() {
                 name="billingCycle"
                 control={useFormReturn.control}
                 render={({ field }) => (
-                  <SearchableDropdown
+                  <ManagerSearchableDropdown
                     value={field.value || ''}
                     onChange={field.onChange}
-                    options={Object.entries(MEMBERS_CYCLE_LABELS).map(([val, label]) => ({ label, value: val }))}
+                    options={Object.entries(MEMBERS_CYCLE_LABELS).map(([val, label]) => ({ label: label as string, value: val }))}
                     disabled={!!editId}
                   />
                 )}
@@ -155,12 +154,14 @@ export default function ManagerMembersModal() {
                 <label className="block text-sm font-medium text-secondary mb-0.5">Custom Days</label>
                 <input
                   type="number"
-                  min="0"
+                  min="1"
+                  max={MANAGER_MEMBER_MAX_CUSTOM_DAYS}
+                  step="1"
                   readOnly={!!editId}
                   onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+') e.preventDefault(); }}
                   {...register('customDays')}
                   placeholder="e.g. 15"
-                  className={`w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary motion-safe:transition-all duration-200 ${
+                  className={`w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary motion-safe:transition-all motion-safe:duration-base ${
                     errors.customDays ? 'border-danger focus-visible:ring-danger' : 'border-border focus-visible:ring-primary'
                   } ${editId ? 'opacity-80 cursor-not-allowed' : ''}`}
                 />
@@ -171,16 +172,16 @@ export default function ManagerMembersModal() {
             )}
 
             {watchPlanId && (
-              <div className="sm:col-span-2 bg-warning-bg rounded-xl p-4 text-sm border border-warning/30 flex justify-between items-center">
+              <div className="sm:col-span-2 bg-warning-bg rounded-xl p-4 text-sm border border-warning flex justify-between items-center">
                 <div>
                   <span className="font-semibold text-warning">Calculated Price:</span>
                   <span className="text-warning ml-1 font-bold">
-                    {formatCurrency(getPriceForCycle(selectedPlan, watchBillingCycle, Number(watchCustomDays) || 0))}
+                    {formatCurrencyFromMinorUnits(getPriceForCycle(selectedPlan, watchBillingCycle, Number(watchCustomDays) || 0), ManagerEnvConfig.currencyCode)}
                   </span>
                 </div>
                 {watchBillingCycle === 'CUSTOM' && (
                   <div className="text-warning text-xs opacity-80">
-                    (Per Day: {formatCurrency(selectedPlan?.priceCustom || 0)} × {watchCustomDays || 0} days)
+                    (Per Day: {formatCurrencyFromMinorUnits(selectedPlan?.priceCustom || 0, ManagerEnvConfig.currencyCode)} × {watchCustomDays || 0} days)
                   </div>
                 )}
               </div>
@@ -192,7 +193,7 @@ export default function ManagerMembersModal() {
                 type="date"
                 readOnly={!!editId}
                 {...register('joinDate')}
-                className={`w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary motion-safe:transition-all duration-200 ${editId ? 'opacity-80 cursor-not-allowed' : ''}`}
+                className={`w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary motion-safe:transition-all motion-safe:duration-base ${editId ? 'opacity-80 cursor-not-allowed' : ''}`}
               />
             </div>
             <div>
@@ -201,12 +202,12 @@ export default function ManagerMembersModal() {
                 type="date"
                 readOnly
                 {...register('expiryDate')}
-                className="w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none bg-input text-primary motion-safe:transition-all duration-200 opacity-80 cursor-not-allowed"
+                className="w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none bg-input text-primary motion-safe:transition-all motion-safe:duration-base opacity-80 cursor-not-allowed"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-secondary mb-0.5">Total Plan Amount ({formatCurrency(0).replace(/0/g, '').trim()})</label>
+              <label className="block text-sm font-medium text-secondary mb-0.5">Total Plan Amount ({formatCurrencyFromMinorUnits(0, ManagerEnvConfig.currencyCode).replace(/0/g, '').trim()})</label>
               <input
                 type="number"
                 readOnly
@@ -215,14 +216,16 @@ export default function ManagerMembersModal() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-secondary mb-0.5">Amount Paid ({formatCurrency(0).replace(/0/g, '').trim()})</label>
+              <label className="block text-sm font-medium text-secondary mb-0.5">Amount Paid ({formatCurrencyFromMinorUnits(0, ManagerEnvConfig.currencyCode).replace(/0/g, '').trim()})</label>
               <input
                 type="number"
                 min="0"
+                max={MANAGER_MEMBER_MAX_AMOUNT_MAJOR_UNITS}
+                step="0.01"
                 readOnly={!!editId}
                 onKeyDown={(e) => { if (e.key === '-' || e.key === 'e' || e.key === '+') e.preventDefault(); }}
                 {...register('paidAmount', { valueAsNumber: true })}
-                className={`w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary motion-safe:transition-all duration-200 ${editId ? 'opacity-80 cursor-not-allowed' : ''}`}
+                className={`w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary motion-safe:transition-all motion-safe:duration-base ${editId ? 'opacity-80 cursor-not-allowed' : ''}`}
               />
             </div>
             
@@ -232,7 +235,7 @@ export default function ManagerMembersModal() {
                 rows={2}
                 placeholder="e.g. Asthma, Knee injury, High BP..."
                 {...register('medicalHistory')}
-                className="w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary motion-safe:transition-all duration-200 border-border focus-visible:ring-primary"
+                className="w-full border rounded-xl px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 bg-input text-primary motion-safe:transition-all motion-safe:duration-base border-border focus-visible:ring-primary"
               />
             </div>
           </div>
@@ -240,20 +243,20 @@ export default function ManagerMembersModal() {
           <div className="flex justify-end gap-3 mt-8 pt-6 border-t border-border">
             <button
               type="button"
-              onClick={() => setShowAddModal(false)}
-              className="px-6 py-2.5 text-sm font-semibold rounded-xl border border-border text-secondary hover:bg-primary/5 hover:text-primary motion-safe:transition-colors"
+              onClick={handleClose}
+              className="px-6 py-2.5 text-sm font-semibold rounded-xl border border-border text-secondary hover:bg-primary-subtle hover:text-primary motion-safe:transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={saving}
-              className="px-8 py-2.5 rounded-xl text-sm font-bold text-primary-foreground flex items-center justify-center gap-2 disabled:opacity-70 motion-safe:transition-all hover:shadow-lg hover:shadow-primary/30 active:scale-95 bg-primary"
+              className="min-w-32 px-8 py-2.5 rounded-xl text-sm font-bold text-on-primary flex items-center justify-center gap-2 disabled:opacity-70 motion-safe:transition-all hover:shadow-card hover:shadow-card motion-safe:active:scale-95 bg-primary"
             >
               {saving ? (
-                <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full motion-safe:animate-spin" />
+                <div className="w-4 h-4 border-2 border-border border-t-on-primary rounded-full motion-safe:animate-spin" />
               ) : (
-                <><Save size={16} /> {editId ? 'Update' : 'Add Member'}</>
+                <><Save size={18} /> {editId ? 'Update' : 'Add Member'}</>
               )}
             </button>
           </div>
