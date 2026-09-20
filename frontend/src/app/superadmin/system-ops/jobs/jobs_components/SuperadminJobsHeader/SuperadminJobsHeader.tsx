@@ -57,7 +57,7 @@ export default function SuperadminJobsHeader({ selectedCount, isRetrying, status
 
         {selectedCount > 0 && (<div className="flex items-center gap-3 motion-safe:animate-in motion-safe:slide-in-from-right-4">
             <span className="text-sm font-medium text-primary">{selectedCount} selected</span>
-            <button onClick={onBulkRetry} className="flex items-center gap-1.5 bg-primary text-on-primary px-3 py-1.5 rounded-md text-sm hover:bg-primary-hover motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+            <button onClick={onBulkRetry} className="flex items-center gap-1.5 bg-primary text-on-danger px-3 py-1.5 rounded-md text-sm hover:bg-primary-hover motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
               <RefreshCw size={18} strokeWidth={2}/> Retry
             </button>
             <button onClick={onBulkDelete} className="flex items-center gap-1.5 bg-danger text-on-danger px-3 py-1.5 rounded-md text-sm hover:opacity-90 motion-safe:transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger">

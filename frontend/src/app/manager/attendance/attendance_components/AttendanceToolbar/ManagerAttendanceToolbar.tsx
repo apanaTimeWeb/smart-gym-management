@@ -89,7 +89,7 @@ export default function ManagerAttendanceToolbar() {
  </button>
  <button 
  onClick={() => setShowModal(true)} 
- className="flex justify-center items-center gap-2 px-4 py-2 text-sm font-semibold text-on-primary bg-primary rounded-lg motion-safe:transition-opacity hover:opacity-90 w-full sm:w-auto" 
+ className="flex justify-center items-center gap-2 px-4 py-2 text-sm font-semibold text-on-info bg-primary rounded-lg motion-safe:transition-opacity hover:opacity-90 w-full sm:w-auto" 
  >
  <Plus size={18} /> Mark Attendance
  </button>

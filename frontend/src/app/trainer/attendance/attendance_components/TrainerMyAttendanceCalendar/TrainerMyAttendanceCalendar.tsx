@@ -208,7 +208,7 @@ export default function TrainerMyAttendanceCalendar({ records }: TrainerMyAttend
                 label = 'Absent';
               } else if (status === 'L') {
                 statusStyle = 'bg-warning-bg text-warning border-warning/30 hover:border-warning/60';
-                badgeStyle = 'bg-warning text-on-primary';
+                badgeStyle = 'bg-warning text-white';
                 label = 'Weekly Off';
               }
             }
@@ -225,7 +225,7 @@ export default function TrainerMyAttendanceCalendar({ records }: TrainerMyAttend
                     {day}
                   </span>
                   {isToday && (
-                    <span className="text-xs font-extrabold uppercase px-1.5 py-0.5 rounded bg-primary text-on-primary tracking-wide">
+                    <span className="text-xs font-extrabold uppercase px-1.5 py-0.5 rounded bg-primary text-white tracking-wide">
                       Today
                     </span>
                   )}

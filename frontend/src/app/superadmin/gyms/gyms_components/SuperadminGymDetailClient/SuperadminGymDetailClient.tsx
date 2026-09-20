@@ -241,7 +241,7 @@ export default function SuperadminGymDetailClient({ gymId }: SuperadminGymDetail
            </div>
 
            <div className="flex justify-end pt-6 border-t border-border">
-             <button type="button" className="flex items-center gap-2 px-6 py-3 bg-primary text-on-primary rounded-lg font-medium hover:bg-primary-hover transition-all shadow-md shadow-primary/20 active:scale-95">
+             <button type="button" className="flex items-center gap-2 px-6 py-3 bg-primary text-on-success rounded-lg font-medium hover:bg-primary-hover transition-all shadow-md shadow-primary/20 active:scale-95">
                <Save size={18} />
                Save White-label Settings
              </button>

@@ -185,7 +185,7 @@ export default function SuperadminFeaturesClient() {
                   <textarea rows={5} {...register('content')} className="w-full bg-input border border-border rounded-lg px-3 py-2 text-sm text-primary resize-none" placeholder="We just shipped..."></textarea>
                   {errors.content && <p className="text-xs text-danger mt-1">{errors.content.message}</p>}
                 </div>
-                <button type="submit" disabled={isPublishing} className="w-full bg-primary text-on-primary py-2.5 rounded-lg font-medium hover:bg-primary-hover motion-safe:transition-colors disabled:opacity-70">
+                <button type="submit" disabled={isPublishing} className="w-full bg-primary text-on-success py-2.5 rounded-lg font-medium hover:bg-primary-hover motion-safe:transition-colors disabled:opacity-70">
                   {isPublishing ? 'Publishing...' : 'Publish to All Gyms'}
                 </button>
               </div>

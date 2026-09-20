@@ -67,7 +67,7 @@ export default function ManagerSalesAllMemberships() {
             onClick={() => setFilter(f)}
             className={`px-3 py-1.5 text-xs rounded-full font-medium border motion-safe:transition-colors ${
               f === filter
-                ? 'bg-primary text-on-primary border-transparent'
+                ? 'bg-primary text-white border-transparent'
                 : 'border-border text-secondary hover:text-primary'
             }`}
           >

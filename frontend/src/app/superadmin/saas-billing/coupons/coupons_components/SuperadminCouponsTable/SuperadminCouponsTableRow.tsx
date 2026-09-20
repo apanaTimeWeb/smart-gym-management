@@ -66,8 +66,8 @@ export default function SuperadminCouponsTableRow({ coupon, onToggleStatus, onEd
             <button title={cpn.status === 'ACTIVE' ? 'Deactivate Coupon' : 'Activate Coupon'} aria-label={cpn.status === 'ACTIVE' ? 'Deactivate Coupon' : 'Activate Coupon'} onClick={(e) => { e.stopPropagation(); onToggleStatus(cpn.id, cpn.status); }} disabled={cpn.status === 'EXPIRED' || cpn.status === 'DEPLETED'} className={`p-1.5 rounded-md border border-border motion-safe:transition-all motion-safe:duration-base motion-safe:ease-in-out ${cpn.status === 'EXPIRED' || cpn.status === 'DEPLETED'
                 ? 'opacity-30 cursor-not-allowed bg-input'
                 : cpn.status === 'ACTIVE'
-                    ? 'text-success hover:text-on-primary bg-success/10 hover:bg-success'
-                    : 'text-secondary hover:text-on-primary bg-input hover:bg-surface-hover'}`}>
+                    ? 'text-success hover:text-on-success bg-success/10 hover:bg-success'
+                    : 'text-secondary hover:text-white bg-input hover:bg-surface-hover'}`}>
               {cpn.status === 'ACTIVE' ? <ToggleRight className="w-4 h-4"/> : <ToggleLeft className="w-4 h-4"/>}
             </button>
             <button title="Edit Coupon" aria-label="Edit Coupon" onClick={(e) => { e.stopPropagation(); onEdit(cpn); }} className="text-secondary hover:text-primary motion-safe:transition-colors p-1.5 bg-input hover:bg-primary/10 rounded-md border border-border">

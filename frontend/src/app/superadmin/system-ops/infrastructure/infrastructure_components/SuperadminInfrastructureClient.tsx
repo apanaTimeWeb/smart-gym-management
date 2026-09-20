@@ -210,7 +210,7 @@ export default function SuperadminInfrastructureClient() {
           The SaaS platform uses Redis to cache massive multi-tenant API responses. If gyms are reporting stale data, you can forcefully flush the global cache across all tenants here.
         </p>
         <div className="flex flex-col sm:flex-row gap-4">
-          <button onClick={handleFlushAll} disabled={isFlushingGlobal} className="flex items-center justify-center gap-2 bg-primary text-on-primary px-5 py-2.5 rounded-lg font-medium hover:opacity-90 motion-safe:transition-opacity min-w-44 disabled:opacity-50">
+          <button onClick={handleFlushAll} disabled={isFlushingGlobal} className="flex items-center justify-center gap-2 bg-primary text-on-success px-5 py-2.5 rounded-lg font-medium hover:opacity-90 motion-safe:transition-opacity min-w-44 disabled:opacity-50">
             {isFlushingGlobal ? <Loader2 className="w-5 h-5 motion-safe:animate-spin"/> : null}
             Flush All Tenants
           </button>

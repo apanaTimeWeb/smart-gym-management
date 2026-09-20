@@ -99,7 +99,7 @@ export default function ManagerAddPaymentModal() {
             <button
               type="submit"
               disabled={isSubmitting || !amount}
-              className="min-w-32 flex-1 px-4 py-2.5 text-sm font-semibold text-on-primary bg-primary hover:bg-primary/90 rounded-xl motion-safe:transition-colors disabled:opacity-50"
+              className="min-w-32 flex-1 px-4 py-2.5 text-sm font-semibold text-white bg-primary hover:bg-primary/90 rounded-xl motion-safe:transition-colors disabled:opacity-50"
             >
               {isSubmitting ? 'Recording...' : 'Confirm Payment'}
             </button>

@@ -144,14 +144,14 @@ export default function ManagerQrScannerModal({ open, onClose }: ManagerQrScanne
                   {status === 'ACTIVE' ? (
                     <button
                       onClick={handleCheckIn}
-                      className="w-full py-4 bg-success hover:bg-success/90 text-on-primary text-lg font-black rounded-2xl motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-success flex items-center justify-center gap-2"
+                      className="w-full py-4 bg-success hover:bg-success/90 text-on-success text-lg font-black rounded-2xl motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-success flex items-center justify-center gap-2"
                     >
                       <UserCheck size={18} /> Verify Face &amp; Check-in
                     </button>
                   ) : (
                     <button
                       onClick={resetStatus}
-                      className="w-full py-4 bg-danger hover:bg-danger/90 text-on-primary text-lg font-black rounded-2xl motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-danger flex items-center justify-center gap-2"
+                      className="w-full py-4 bg-danger hover:bg-danger/90 text-on-danger text-lg font-black rounded-2xl motion-safe:transition-colors focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-danger flex items-center justify-center gap-2"
                     >
                       <AlertCircle size={18} /> Block &amp; Collect Payment
                     </button>

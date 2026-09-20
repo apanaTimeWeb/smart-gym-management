@@ -36,7 +36,7 @@ export default function SuperadminGymWhatsappModal() {
             <button type="button" onClick={closeWhatsappModal} className="px-5 py-2.5 rounded-lg text-sm font-medium text-primary border border-border hover:bg-page motion-safe:transition-colors" disabled={isSubmitting}>
               Cancel
             </button>
-            <button type="submit" className="px-5 py-2.5 rounded-lg text-sm font-medium text-on-primary bg-success hover:bg-success motion-safe:transition-colors disabled:opacity-50" disabled={isSubmitting}>
+            <button type="submit" className="px-5 py-2.5 rounded-lg text-sm font-medium text-on-success bg-success hover:bg-success motion-safe:transition-colors disabled:opacity-50" disabled={isSubmitting}>
               {isSubmitting ? 'Sending...' : 'Send WhatsApp'}
             </button>
           </div>

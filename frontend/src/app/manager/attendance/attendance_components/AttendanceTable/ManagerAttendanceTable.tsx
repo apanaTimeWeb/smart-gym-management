@@ -75,7 +75,7 @@ export default function ManagerAttendanceTable() {
                   {/* Name */}
                   <td className="px-4 py-3 whitespace-nowrap">
                     <div className="flex items-center gap-2">
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-on-primary text-xs font-bold ${
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold ${
                         r.type === 'MEMBER' ? 'bg-info' : 'bg-success'
                       }`}>
                         {(r.member?.name || r.staff?.name || '?').charAt(0)}

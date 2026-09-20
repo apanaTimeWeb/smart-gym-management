@@ -86,13 +86,13 @@ export default function ManagerProfileOverview() {
           <div className="grid grid-cols-2 gap-3 mb-5">
             <button 
               onClick={() => openMsg(selectedMember, 'whatsapp')} 
-              className="flex items-center justify-center gap-2 p-3 text-sm font-semibold text-on-primary rounded-xl motion-safe:transition-all hover:-translate-y-0.5 hover:shadow-card bg-success" 
+              className="flex items-center justify-center gap-2 p-3 text-sm font-semibold text-on-success rounded-xl motion-safe:transition-all hover:-translate-y-0.5 hover:shadow-card bg-success" 
             >
               <MessageCircle size={18} /> WhatsApp
             </button>
             <button 
               onClick={() => openMsg(selectedMember, 'email')} 
-              className="flex items-center justify-center gap-2 p-3 text-sm font-semibold text-on-primary rounded-xl motion-safe:transition-all hover:-translate-y-0.5 hover:shadow-card bg-info" 
+              className="flex items-center justify-center gap-2 p-3 text-sm font-semibold text-on-info rounded-xl motion-safe:transition-all hover:-translate-y-0.5 hover:shadow-card bg-info" 
             >
               <Mail size={18} /> Email
             </button>

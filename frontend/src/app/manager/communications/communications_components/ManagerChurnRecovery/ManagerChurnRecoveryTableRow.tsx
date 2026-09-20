@@ -85,7 +85,7 @@ export default function ManagerChurnRecoveryTableRow({
             type="button"
             aria-label={`Send win-back message to ${member.name}`}
             onClick={(e) => { e.stopPropagation(); onOpenComposer(member.memberId); }}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-primary text-on-primary motion-safe:transition-all motion-safe:hover:bg-primary-hover motion-safe:active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-primary text-on-success motion-safe:transition-all motion-safe:hover:bg-primary-hover motion-safe:active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
             <Send size={18} />
             Win-Back

@@ -139,7 +139,7 @@ export default function ManagerHrPayrollTable() {
                     {p.status !== 'Paid' && (
                       <button
                         onClick={() => setPaymentModal({ payrollId: p.id, staffName: p.staff?.name || `Staff #${p.staffId}`, pendingAmount: p.pendingAmount || p.amount })}
-                        className="flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold text-on-primary bg-primary rounded-lg hover:bg-primary/90 motion-safe:transition-colors"
+                        className="flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold text-on-success bg-primary rounded-lg hover:bg-primary/90 motion-safe:transition-colors"
                       >
                         <Banknote size={18} /> Pay Salary
                       </button>

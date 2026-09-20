@@ -138,7 +138,7 @@ export default function ManagerAttendanceCalendar() {
                         aspect-square flex items-center justify-center rounded-md border-none text-xs font-bold motion-safe:transition-all
                         ${isPresent ? 'bg-success text-on-success motion-safe:hover:scale-110' : ''}
                         ${isAbsent ? 'bg-danger text-on-danger motion-safe:hover:scale-110' : ''}
-                        ${isLeave ? 'bg-primary text-on-primary motion-safe:hover:scale-110' : ''}
+                        ${isLeave ? 'bg-primary text-white motion-safe:hover:scale-110' : ''}
                         ${status === 'NONE' ? 'bg-page border border-border text-secondary' : ''}
                       `}
                     >

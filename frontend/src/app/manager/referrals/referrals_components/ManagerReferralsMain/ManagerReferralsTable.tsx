@@ -122,7 +122,7 @@ export default function ManagerReferralsTable() {
                         <button
                           onClick={() => claimReward(ref.id)}
                           disabled={isClaiming}
-                          className="inline-flex items-center gap-1 px-3 py-1.5 bg-primary text-on-primary rounded text-xs font-bold hover:bg-primary-hover motion-safe:transition-colors disabled:opacity-50"
+                          className="inline-flex items-center gap-1 px-3 py-1.5 bg-primary text-white rounded text-xs font-bold hover:bg-primary-hover motion-safe:transition-colors disabled:opacity-50"
                         >
                           <IndianRupee size={18} /> Claim {formatCurrencyFromMinorUnits(ref.rewardAmount ?? 0, ManagerEnvConfig.currencyCode)}
                         </button>

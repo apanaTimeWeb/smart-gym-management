@@ -17,7 +17,7 @@ export default function AdminCampaignsError({ error, reset }: { error: Error & {
       </p>
       <button
         onClick={() => reset()}
-        className="rounded-lg bg-danger px-4 py-2 text-sm font-semibold text-on-primary hover:bg-danger/90 transition-colors"
+        className="rounded-lg bg-danger px-4 py-2 text-sm font-semibold text-on-danger hover:bg-danger/90 transition-colors"
       >
         Try Again
       </button>

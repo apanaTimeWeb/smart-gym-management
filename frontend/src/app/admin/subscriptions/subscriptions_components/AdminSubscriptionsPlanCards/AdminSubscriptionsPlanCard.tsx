@@ -12,7 +12,7 @@ export default function AdminSubscriptionsPlanCard({ plan, onUpgrade, upgrading 
     <div className={`relative bg-card border rounded-xl p-5 flex flex-col gap-4 motion-safe:transition-all motion-safe:duration-base motion-safe:hover:-translate-y-1 hover:shadow-card ${plan.isCurrent ? 'border-primary shadow-card' : 'border-border'}`}>
       {plan.isPopular && (
         <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-          <span className="flex items-center gap-1 px-3 py-1 bg-primary text-on-primary text-xs font-bold rounded-full shadow">
+          <span className="flex items-center gap-1 px-3 py-1 bg-primary text-on-success text-xs font-bold rounded-full shadow">
             <Star size={10} fill="currentColor" /> Most Popular
           </span>
         </div>
@@ -58,7 +58,7 @@ export default function AdminSubscriptionsPlanCard({ plan, onUpgrade, upgrading 
         <button
           onClick={() => onUpgrade(plan.id, plan.name)}
           disabled={upgrading}
-          className="py-2.5 text-sm font-semibold bg-primary text-on-primary rounded-xl hover:bg-primary-hover motion-safe:transition-colors flex items-center justify-center gap-2 disabled:opacity-60 motion-safe:duration-base"
+          className="py-2.5 text-sm font-semibold bg-primary text-on-success rounded-xl hover:bg-primary-hover motion-safe:transition-colors flex items-center justify-center gap-2 disabled:opacity-60 motion-safe:duration-base"
         >
           <Zap size={14} /> Upgrade to {plan.name}
         </button>
