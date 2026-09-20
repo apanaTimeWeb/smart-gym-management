@@ -1,6 +1,6 @@
 'use client';
 // RESPONSIBILITY: Renders the TrainerEarningsHistory UI for the owning Trainer feature; data access remains in the feature API/query layer.
-import { Search, FileText, Download, Loader2 } from 'lucide-react';
+import { Search, Download, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useTrainerEarningsStore } from '@/app/trainer/earnings/earnings_store/useTrainerEarningsStore';
@@ -9,6 +9,7 @@ import { PAYOUT_STATUS_STYLES } from '@/app/trainer/earnings/earnings_utils/Trai
 import { formatCurrency } from '@/lib/formatters';
 import { EarningsUrlConfig } from '@/app/trainer/earnings/earnings_url_config';
 import { formatDate } from '@/lib/formatters';
+import TrainerEarningsEmptyState from '@/app/trainer/earnings/earnings_components/TrainerEarningsEmptyState/TrainerEarningsEmptyState';
 
 export default function TrainerEarningsHistory() {
   const { search, setSearch, currentPage, setCurrentPage } = useTrainerEarningsStore();
@@ -101,11 +102,7 @@ export default function TrainerEarningsHistory() {
       {/* Table */}
       <div className="flex-1 overflow-x-auto custom-scrollbar">
         {history.length === 0 ? (
-          <div className="p-12 flex flex-col items-center justify-center text-center h-full">
-            <FileText size={32} className="text-disabled mb-3" />
-            <p className="text-sm font-semibold text-primary">No records found</p>
-            <p className="text-xs text-secondary mt-1">Try adjusting your search criteria.</p>
-          </div>
+          <TrainerEarningsEmptyState />
         ) : (
           <table className="w-full text-left border-collapse min-w-full">
             <thead>

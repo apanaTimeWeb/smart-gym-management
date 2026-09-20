@@ -1,3 +1,4 @@
+'use client';
 // RESPONSIBILITY: Renders the TrainerMembersProfileAssessment route/UI for the owning Trainer feature; data access remains in the feature API/query layer.
 import { Activity, Save, Loader2 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
@@ -67,7 +68,7 @@ export default function TrainerMembersProfileAssessment() {
         <button 
           type="submit" 
           disabled={!isDirty || isSubmitting}
-          className="flex items-center gap-2 px-5 py-2.5 bg-primary text-on-primary rounded-xl text-sm font-semibold hover:opacity-90 disabled:opacity-50 transition-opacity"
+          className="flex items-center gap-2 px-5 py-2.5 bg-primary text-on-primary rounded-xl text-sm font-semibold hover:opacity-90 disabled:opacity-50 motion-safe:transition-opacity"
         >
           {isSubmitting ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
           Save Assessment

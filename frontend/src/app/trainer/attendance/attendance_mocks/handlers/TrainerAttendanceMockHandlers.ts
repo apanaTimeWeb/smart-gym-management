@@ -37,3 +37,4 @@ export const trainerAttendanceHandlers = [
     await delay(MOCK_FAST_DELAY_MS); const index = attendanceDB.findIndex(r => r.staffId === params.staffId && r.type === 'STAFF' && !r.checkOut); if (index === -1) return HttpResponse.json({ success: false, message: 'No open attendance found.', data: null }, { status: StatusCodes.NOT_FOUND }); const body = await request.json() as { checkOutTime?: unknown }; const checkOut = typeof body.checkOutTime === 'string' ? body.checkOutTime : new Date().toISOString(); attendanceDB[index] = { ...attendanceDB[index]!, checkOut }; return HttpResponse.json({ success: true, message: 'Check-out recorded.', data: null });
   }),
 ];
+

@@ -29,6 +29,13 @@ export const MEMBER_STATUS_OPTIONS = [
   { label: 'New Members', value: 'NEW' }
 ];
 
+export const TRAINER_MEMBER_PROGRESS_OPTIONS = [
+  { label: 'All Progress', value: 'All' },
+  { label: 'Good', value: 'Good' },
+  { label: 'Average', value: 'Average' },
+  { label: 'Needs Attention', value: 'Needs Attention' }
+];
+
 export const GENDER_OPTIONS = [
   { label: 'Male', value: 'MALE' },
   { label: 'Female', value: 'FEMALE' },

@@ -20,6 +20,7 @@ import TrainerSessionsEditModal from '@/app/trainer/sessions/sessions_components
 import TrainerSessionsKPIs from '@/app/trainer/sessions/sessions_components/TrainerSessionsKPIs/TrainerSessionsKPIs';
 import TrainerSessionsScheduleModal from '@/app/trainer/sessions/sessions_components/TrainerSessionsScheduleModal/TrainerSessionsScheduleModal';
 import TrainerSessionsLoadingSkeleton from '@/app/trainer/sessions/sessions_components/TrainerSessionsLoadingSkeleton/TrainerSessionsLoadingSkeleton';
+import TrainerSessionsEmptyState from '@/app/trainer/sessions/sessions_components/TrainerSessionsEmptyState/TrainerSessionsEmptyState';
 
 export default function TrainerSessionsMain() {
   const { filter, setFilter, date, setDate } = useTrainerSessionsFilters();
@@ -184,11 +185,7 @@ export default function TrainerSessionsMain() {
             ))}
 
             {filteredSessions.length === 0 && (
-              <div className="bg-card rounded-xl border border-border border-dashed p-10 flex flex-col items-center justify-center text-center">
-                <CalendarIcon size={48} className="text-secondary opacity-50 mb-4" />
-                <h3 className="text-lg font-bold text-primary">No sessions found</h3>
-                <p className="text-secondary mt-1">You have no scheduled sessions for this day.</p>
-              </div>
+              <TrainerSessionsEmptyState onSchedule={() => setShowScheduleModal(true)} />
             )}
           </div>
         )}

@@ -10,6 +10,7 @@ import { useTrainerWorkoutStore } from '@/app/trainer/workout/workout_store/useT
 import { useTrainerWorkoutMutations } from '@/app/trainer/workout/workout_queries/TrainerUseWorkoutMutations';
 import { useConfirm } from '@/app/trainer/trainer_components/TrainerFeedback/TrainerConfirmProvider';
 import { Edit2, Trash2 } from 'lucide-react';
+import TrainerWorkoutEmptyState from '@/app/trainer/workout/workout_components/TrainerWorkoutEmptyState/TrainerWorkoutEmptyState';
 
 export default function TrainerWorkoutPlansGrid() {
   const { search, category, page, setPage } = useTrainerWorkoutFilters();
@@ -101,8 +102,8 @@ export default function TrainerWorkoutPlansGrid() {
           </div>
         ))}
         {workouts.length === 0 && (
-          <div className="col-span-full text-center py-10 text-secondary">
-            No workout plans found matching &quot;{search}&quot;.
+          <div className="col-span-full">
+            <TrainerWorkoutEmptyState onAdd={() => setShowWkModal(true)} />
           </div>
         )}
       </div>

@@ -1,31 +1,20 @@
-'use client';
+﻿'use client';
 // RESPONSIBILITY: Renders the toolbar for searching and filtering members.
-import { useState, useEffect } from 'react';
 import { Search, RefreshCw } from 'lucide-react';
-import { useTrainerMembersStore } from '@/app/trainer/members/members_store/useTrainerMembersStore';
-import { useTrainerMembersFilters } from '@/app/trainer/members/members_utils/useTrainerMembersFilters';
-import { useQueryClient } from '@tanstack/react-query';
+import { useTrainerMembersToolbar } from '@/app/trainer/members/members_components/TrainerMembersToolbar/useTrainerMembersToolbar';
 import TrainerSearchableDropdown from '@/app/trainer/trainer_components/TrainerShared/TrainerSearchableDropdown/TrainerSearchableDropdown';
-import { MEMBER_STATUS_OPTIONS } from '@/app/trainer/members/members_utils/TrainerMembersSharedConstants';
+import { MEMBER_STATUS_OPTIONS, TRAINER_MEMBER_PROGRESS_OPTIONS } from '@/app/trainer/members/members_utils/TrainerMembersSharedConstants';
 
 export default function TrainerMembersToolbar() {
-  const { search, setSearch, statusFilter, setStatusFilter, progressStatusFilter, setProgressStatusFilter } = useTrainerMembersFilters();
-  const queryClient = useQueryClient();
-  const [localSearch, setLocalSearch] = useState(search);
-
-  useEffect(() => { setTimeout(() => setLocalSearch(search), 0); }, [search]);
-
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      if (localSearch !== search) {
-        setSearch(localSearch);
-      }
-    }, 300);
-    return () => clearTimeout(handler);
-  }, [localSearch, search, setSearch]);
-  const handleRefresh = () => {
-    queryClient.invalidateQueries({ queryKey: ['trainer', 'members'] });
-  };
+  const {
+    localSearch,
+    setLocalSearch,
+    statusFilter,
+    setStatusFilter,
+    progressStatusFilter,
+    setProgressStatusFilter,
+    handleRefresh
+  } = useTrainerMembersToolbar();
 
   return (
     <div className="bg-card rounded-xl shadow-card border border-border p-4 flex flex-wrap gap-3 items-center justify-between">
@@ -49,21 +38,15 @@ export default function TrainerMembersToolbar() {
           value={progressStatusFilter}
           onChange={(val: string | number) => setProgressStatusFilter(String(val))}
           className="w-48"
-          options={[
-            { label: 'All Progress', value: 'All' },
-            { label: 'Good', value: 'Good' },
-            { label: 'Average', value: 'Average' },
-            { label: 'Needs Attention', value: 'Needs Attention' }
-          ]}
+          options={TRAINER_MEMBER_PROGRESS_OPTIONS}
         />
-  <button type="button" 
-  onClick={handleRefresh} 
-  className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page flex items-center gap-2 px-3 py-2.5 text-sm border border-border rounded-xl hover:opacity-80 text-primary"
-  >
-  <RefreshCw size={14} /> Refresh
-  </button>
-  </div>
- </div>
- );
+        <button type="button" 
+          onClick={handleRefresh} 
+          className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-page flex items-center gap-2 px-3 py-2.5 text-sm border border-border rounded-xl hover:opacity-80 text-primary"
+        >
+          <RefreshCw size={14} /> Refresh
+        </button>
+      </div>
+    </div>
+  );
 }
-

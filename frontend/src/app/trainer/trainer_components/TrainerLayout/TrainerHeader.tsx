@@ -1,11 +1,11 @@
-'use client';
+﻿'use client';
 // RESPONSIBILITY: Renders the fixed Trainer shell header: sidebar toggle, page title, theme toggle, notification navigation, and accessible profile menu. It owns no feature/business data.
 import { useEffect, useRef, useState } from 'react';
 import { Bell, LogOut, Menu, User } from 'lucide-react';
 import Link from 'next/link';
 import { getUser, logout } from '@/lib/api';
 import { ThemeToggle } from '@/components/ThemeToggle';
-import { TrainerPageUrlConfig } from '@/app/trainer/Trainer_url_config';
+import { TrainerPageUrlConfig } from '@/app/trainer/trainer_url_config';
 import type { TrainerHeaderProps } from '@/app/trainer/trainer_components/TrainerLayout/TrainerLayoutTypes';
 
 export default function TrainerHeader({ title, subtitle }: TrainerHeaderProps) {

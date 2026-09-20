@@ -1,10 +1,10 @@
-'use client';
+﻿'use client';
 // RESPONSIBILITY: Root shell layout for all TRAINER pages. Composes TrainerSidebar with the main content area. Manages sidebar collapsed state only.
 import { useState, type ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
 import TrainerSidebar from '@/app/trainer/trainer_components/TrainerLayout/TrainerSidebar';
 import TrainerHeader from '@/app/trainer/trainer_components/TrainerLayout/TrainerHeader';
-import { TrainerPageUrlConfig } from '@/app/trainer/Trainer_url_config';
+import { TrainerPageUrlConfig } from '@/app/trainer/trainer_url_config';
 
 const routeTitleMap: Record<string, { title: string; subtitle: string }> = {
   [TrainerPageUrlConfig.DASHBOARD]: { title: 'Dashboard', subtitle: "Welcome back, Trainer! Here's your gym overview." },

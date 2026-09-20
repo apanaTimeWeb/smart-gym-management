@@ -7,10 +7,12 @@ import {
   AttendanceRecordSchema,
   AttendanceStatsSchema,
   AttendanceMemberBasicSchema,
-  type AttendanceRecord,
-  type AttendanceStats,
-  type AttendanceMemberBasic,
-  type CreateAttendanceDto,
+} from '@/app/trainer/attendance/attendance_types/TrainerAttendance_types';
+import type {
+  AttendanceRecord,
+  AttendanceStats,
+  AttendanceMemberBasic,
+  CreateAttendanceDto,
 } from '@/app/trainer/attendance/attendance_types/TrainerAttendance_types';
 import type { TrainerAttendanceFetchParams } from '@/app/trainer/attendance/attendance_types/TrainerAttendanceInteractionTypes';
 
@@ -73,3 +75,4 @@ export async function selfCheckInAttendance(staffId: string): Promise<{ message:
   const response = createTrainerApiResponseSchema(z.null()).parse(raw);
   return { message: response.message };
 }
+

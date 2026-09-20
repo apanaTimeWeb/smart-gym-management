@@ -1,8 +1,8 @@
-// RESPONSIBILITY: Renders the not-found route/UI for the owning Trainer feature; data access remains in the feature API/query layer.
+﻿// RESPONSIBILITY: Renders the not-found route/UI for the owning Trainer feature; data access remains in the feature API/query layer.
 import { AttendanceUrlConfig } from '@/app/trainer/attendance/attendance_url_config';
 import Link from 'next/link';
 import { SearchX } from 'lucide-react';
-import { TrainerPageUrlConfig } from '@/app/trainer/Trainer_url_config';
+import { TrainerPageUrlConfig } from '@/app/trainer/trainer_url_config';
 
 export default function NotFound() {
   return (
