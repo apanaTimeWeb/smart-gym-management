@@ -3,7 +3,7 @@
 
 import { Column, Entity, PrimaryGeneratedColumn, Index } from 'typeorm';
 
-@Entity('admins')
+@Entity('admin_admins')
 @Index('UQ_admins_email', ['email'], { unique: true })
 export class CoreMasterAdminEntity {
   @PrimaryGeneratedColumn('uuid', { primaryKeyConstraintName: 'PK_admins' })

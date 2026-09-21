@@ -8,7 +8,7 @@ export enum IntegrationKeyStatus {
   REVOKED = 'REVOKED',
 }
 
-@Entity('integration_keys')
+@Entity('superadmin_integration_keys')
 @Index('IDX_integration_keys_updated_at', ['updatedAt'])
 export class IntegrationKeyEntity extends BaseEntity {
   @Column({ name: 'tenant_id', type: 'varchar', length: 500 })

@@ -11,7 +11,7 @@ export enum BackgroundJobStatus {
   CANCELLED = 'CANCELLED',
 }
 
-@Entity('background_jobs')
+@Entity('superadmin_background_jobs')
 @Index('IDX_background_jobs_updated_at', ['updatedAt'])
 export class BackgroundJobEntity extends BaseEntity {
   @Column({ name: 'queue_name', type: 'varchar', length: 500 })

@@ -15,7 +15,7 @@ export enum CouponStatus {
   DEPLETED = 'DEPLETED',
 }
 
-@Entity('coupons')
+@Entity('superadmin_coupons')
 @Index('IDX_coupons_updated_at', ['updatedAt'])
 export class CouponEntity extends BaseEntity {
   @Index('IDX_coupons_code')

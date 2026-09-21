@@ -22,7 +22,7 @@ export enum SaasInvoiceInvoiceType {
   SETUPFEE = 'SETUP_FEE',
 }
 
-@Entity('saas_invoices')
+@Entity('superadmin_saas_invoices')
 @Index('IDX_saas_invoices_updated_at', ['updatedAt'])
 export class SaasInvoiceEntity extends BaseEntity {
   @Column({ name: 'tenant_id', type: 'varchar', length: 500 })

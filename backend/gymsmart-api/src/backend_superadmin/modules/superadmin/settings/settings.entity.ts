@@ -3,7 +3,7 @@
 import { Column, Entity, Index } from 'typeorm';
 import { BaseEntity } from '@/backend_superadmin/core/database/base.entity';
 
-@Entity('platform_settings')
+@Entity('superadmin_platform_settings')
 @Index('IDX_platform_settings_updated_at', ['updatedAt'])
 export class PlatformSettingEntity extends BaseEntity {
   @Index('IDX_platform_settings_key')

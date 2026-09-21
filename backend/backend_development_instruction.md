@@ -1593,7 +1593,6 @@ Pytest E2E tests MUST verify:
 - pagination/filter/sort behavior where applicable
 - mutation side effects where observable
 - regression behavior for fixed bugs
-
 ### Anti-False-Passing Rule
 
 A test is invalid if the test would still pass after the behavior it claims to protect
@@ -1607,5 +1606,11 @@ The build passing is not equivalent to behavioral correctness.
 ### Strict Case Sensitivity for File Names and Imports (Linux/CI Compatibility)
 
 All imports and file paths MUST exactly match the casing of the actual file on disk. While development often happens on Windows/macOS (which have case-insensitive file systems), production deployments and CI pipelines typically run on Linux (which has a strict case-sensitive file system).
-- **Rule:** A mismatch between import case (e.g., 	rainer_url_config) and file case (e.g., Trainer_url_config.ts) will cause the build to fail in CI/CD.
+- **Rule:** A mismatch between import case (e.g., `trainer_url_config`) and file case (e.g., `Trainer_url_config.ts`) will cause the build to fail in CI/CD.
 - **Enforcement:** Always double-check that the casing of module prefixes and filenames in imports matches exactly. If you rename a file, ensure the git index catches the case change (e.g., using git mv).
+
+
+## 102. Database Table Naming & Prefixing in Monoliths
+* **The Rule:** When multiple sub-domains (e.g. Admin, Superadmin, Auth) share a single monolithic database, all non-shared database tables MUST be explicitly prefixed with their domain name inside the Entity decorator (e.g., `@Entity('admin_campaigns')`, `@Entity('superadmin_saas_invoices')`).
+* **Implementation:** Always use **Explicit Hardcoding** (Option 1) in the `@Entity()` decorator rather than relying on a custom TypeORM Naming Strategy.
+* **Why:** A global Naming Strategy blindly prefixes all tables based on folder structure. This breaks **shared tables** (like `tenants` or `audit_logs`) by splitting them into multiple disconnected tables (`admin_tenants`, `superadmin_tenants`, etc.). Explicit hardcoding ensures shared tables remain central (`core_tenants` or `tenants`) while module-specific tables remain safely isolated and clearly identifiable in code.

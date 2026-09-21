@@ -20,7 +20,7 @@ export enum SupportTicketPriority {
   URGENT = 'URGENT',
 }
 
-@Entity('support_tickets')
+@Entity('superadmin_support_tickets')
 @Index('IDX_support_tickets_updated_at', ['updatedAt'])
 export class SupportTicketEntity extends BaseEntity {
   @Column({ name: 'tenant_id', type: 'varchar', length: 500 })

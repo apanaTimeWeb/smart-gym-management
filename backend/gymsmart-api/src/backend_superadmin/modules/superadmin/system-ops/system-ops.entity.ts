@@ -3,7 +3,7 @@
 import { Column, Entity, Index } from 'typeorm';
 import { BaseEntity } from '@/backend_superadmin/core/database/base.entity';
 
-@Entity('system_ops_snapshots')
+@Entity('superadmin_system_ops_snapshots')
 @Index('IDX_system_ops_snapshots_kind', ['kind'])
 @Index('IDX_system_ops_snapshots_updated_at', ['updatedAt'])
 export class SystemOpsContractSnapshotEntity extends BaseEntity {

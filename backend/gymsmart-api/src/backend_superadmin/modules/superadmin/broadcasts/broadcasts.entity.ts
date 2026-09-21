@@ -15,7 +15,7 @@ export enum BroadcastAudience {
   SUSPENDEDONLY = 'SUSPENDED_ONLY',
 }
 
-@Entity('broadcasts')
+@Entity('superadmin_broadcasts')
 @Index('IDX_broadcasts_updated_at', ['updatedAt'])
 export class BroadcastEntity extends BaseEntity {
   @Column({ name: 'title', type: 'varchar', length: 500 })

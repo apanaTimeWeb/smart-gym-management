@@ -16,7 +16,7 @@ export enum TenantMessageStatus {
   SCHEDULED = 'SCHEDULED',
 }
 
-@Entity('tenant_messages')
+@Entity('superadmin_tenant_messages')
 @Index('IDX_tenant_messages_updated_at', ['updatedAt'])
 export class TenantMessageEntity extends BaseEntity {
   @Column({ name: 'tenant_id', type: 'varchar', length: 500 })

@@ -2,7 +2,7 @@
 // FLOW: Features release-note service -> FeatureReleaseNoteEntity -> PostgreSQL `feature_release_notes`.
 import { Column, Entity, Index } from 'typeorm';
 import { BaseEntity } from '@/backend_superadmin/core/database/base.entity';
-@Entity('feature_release_notes')
+@Entity('superadmin_feature_release_notes')
 @Index('IDX_feature_release_notes_date', ['date'])
 export class FeatureReleaseNoteEntity extends BaseEntity {
   @Column({ name: 'version', type: 'varchar', length: 100 }) version!: string;

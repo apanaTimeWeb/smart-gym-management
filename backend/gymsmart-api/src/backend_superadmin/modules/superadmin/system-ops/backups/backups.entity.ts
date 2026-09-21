@@ -9,7 +9,7 @@ export enum BackupRecordStatus {
   SUCCESS = 'SUCCESS',
 }
 
-@Entity('backup_records')
+@Entity('superadmin_backup_records')
 @Index('IDX_backup_records_updated_at', ['updatedAt'])
 export class BackupRecordEntity extends BaseEntity {
   @Column({ name: 'tenant_name', type: 'varchar', length: 500 })

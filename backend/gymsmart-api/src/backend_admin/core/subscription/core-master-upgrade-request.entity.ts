@@ -3,7 +3,7 @@
 
 import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity('upgrade_requests_master')
+@Entity('admin_upgrade_requests_master')
 @Index('IDX_upgrade_requests_master_tenant_id', ['tenantId'])
 export class CoreMasterUpgradeRequestEntity {
   @PrimaryGeneratedColumn('uuid', { primaryKeyConstraintName: 'PK_upgrade_requests_master' })

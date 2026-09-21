@@ -15,7 +15,7 @@ export enum WhiteLabelDomainSslStatus {
   Failed = 'failed',
 }
 
-@Entity('white_label_domains')
+@Entity('superadmin_white_label_domains')
 @Index('IDX_white_label_domains_updated_at', ['updatedAt'])
 export class WhiteLabelDomainEntity extends BaseEntity {
   @Column({ name: 'gym_id', type: 'varchar', length: 500 })

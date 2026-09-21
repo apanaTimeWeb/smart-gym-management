@@ -3,7 +3,7 @@
 import { Column, Entity, Index } from 'typeorm';
 import { BaseEntity } from '@/backend_superadmin/core/database/base.entity';
 
-@Entity('compliance_snapshots')
+@Entity('superadmin_compliance_snapshots')
 @Index('IDX_compliance_snapshots_updated_at', ['updatedAt'])
 export class ComplianceSnapshotEntity extends BaseEntity {
   @Column({ name: 'kind', type: 'varchar', length: 500 })

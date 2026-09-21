@@ -9,7 +9,7 @@ export enum InfrastructureNodeStatus {
   DOWN = 'DOWN',
 }
 
-@Entity('infrastructure_nodes')
+@Entity('superadmin_infrastructure_nodes')
 @Index('IDX_infrastructure_nodes_updated_at', ['updatedAt'])
 export class InfrastructureNodeEntity extends BaseEntity {
   @Column({ name: 'name', type: 'varchar', length: 500 })

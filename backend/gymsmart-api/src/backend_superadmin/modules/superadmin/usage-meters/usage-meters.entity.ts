@@ -3,7 +3,7 @@
 import { Column, Entity, Index } from 'typeorm';
 import { BaseEntity } from '@/backend_superadmin/core/database/base.entity';
 
-@Entity('usage_meters')
+@Entity('superadmin_usage_meters')
 @Index('IDX_usage_meters_updated_at', ['updatedAt'])
 export class UsageMeterEntity extends BaseEntity {
   @Column({ name: 'tenant_id', type: 'varchar', length: 500 })

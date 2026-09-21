@@ -8,7 +8,7 @@ export enum AffiliateStatus {
   INACTIVE = 'INACTIVE',
 }
 
-@Entity('affiliates')
+@Entity('superadmin_affiliates')
 @Index('IDX_affiliates_updated_at', ['updatedAt'])
 export class AffiliateEntity extends BaseEntity {
   @Column({ name: 'name', type: 'varchar', length: 500 })

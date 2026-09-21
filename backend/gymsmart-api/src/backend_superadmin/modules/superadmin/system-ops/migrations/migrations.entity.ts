@@ -13,7 +13,7 @@ export enum MigrationLogStatus {
   ROLLBACK = 'ROLLBACK',
 }
 
-@Entity('migration_logs')
+@Entity('superadmin_migration_logs')
 @Index('IDX_migration_logs_updated_at', ['updatedAt'])
 export class MigrationLogEntity extends BaseEntity {
   @Column({ name: 'version', type: 'varchar', length: 500 })

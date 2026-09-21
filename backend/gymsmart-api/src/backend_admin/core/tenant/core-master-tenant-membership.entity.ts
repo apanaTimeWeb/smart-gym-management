@@ -3,7 +3,7 @@
 
 import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity('tenant_memberships')
+@Entity('admin_tenant_memberships')
 @Index('IDX_tenant_memberships_actor', ['actorId'])
 @Index('IDX_tenant_memberships_tenant', ['tenantId'])
 @Index('UQ_tenant_memberships_actor_tenant', ['actorId', 'tenantId'], { unique: true })
