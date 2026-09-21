@@ -14,6 +14,6 @@ export class BackupsHealthService {
     void input;
     const payload = await this.repository.findLatestByKind(BACKUPS_SNAPSHOT_KINDS.HEALTH);
     if (payload === null) throw new NotFoundException('Contract state is not provisioned');
-    return payload as BackupsHealthResponseDto;
+    return payload as unknown as BackupsHealthResponseDto;
   }
 }

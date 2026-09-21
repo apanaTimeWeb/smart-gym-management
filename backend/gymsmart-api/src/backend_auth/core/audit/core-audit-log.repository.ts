@@ -27,6 +27,6 @@ export class CoreAuditLogRepository extends CoreBaseRepository<CoreAuditLogEntit
       updatedAt: now,
       deletedAt: null,
     });
-    await this.getRepository().insert(entity);
+    await this.getRepository().insert(entity as any);
   }
 }

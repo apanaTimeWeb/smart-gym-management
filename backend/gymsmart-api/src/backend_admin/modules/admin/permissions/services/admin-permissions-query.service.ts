@@ -21,6 +21,6 @@ export class AdminPermissionsQueryService {
    */
   async fetchPermissions(_query?: AdminPermissionsQueryDto): Promise<AdminPermissionsDataDto> {
     const result = await this.repository.findFirstSnapshot(); 
-    return (result ? this.mapper.toResponse(this.mapper.toDomain(result)) : {}) as AdminPermissionsDataDto;
+    return (result ? this.mapper.toResponse(this.mapper.toDomain(result)) : {}) as unknown as AdminPermissionsDataDto;
   }
 }

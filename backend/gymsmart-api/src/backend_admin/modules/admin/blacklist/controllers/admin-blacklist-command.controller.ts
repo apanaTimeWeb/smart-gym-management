@@ -25,14 +25,14 @@ export class AdminBlacklistCommandController {
   @ApiOperation({ summary: 'Execute addToBlacklist' })
   @ApiResponse({ status: HttpStatus.OK, type: AdminBlacklistedMemberDto })
   async createRecord(@Body() dto: AdminBlacklistMutationDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<AdminBlacklistedMemberDto> {
-    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.createRecord(dto));
+    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.createRecord(dto as unknown as Record<string, unknown>));
   }
 
   // SLA: STANDARD
   @Delete('removeFromBlacklist')
   @ApiOperation({ summary: 'Execute removeFromBlacklist' })
   @ApiResponse({ status: HttpStatus.OK })
-  async markAsDeleted(@Body() dto: AdminBlacklistIdDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<void> {
+  async markAsDeleted(@Body() dto: AdminBlacklistIdDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<unknown> {
     return this.idempotency.executeOnce(idempotencyKey, async () => this.service.markAsDeleted(dto.id));
   }
 

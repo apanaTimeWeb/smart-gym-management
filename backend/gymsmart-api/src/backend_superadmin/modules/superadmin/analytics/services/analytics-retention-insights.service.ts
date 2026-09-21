@@ -14,6 +14,6 @@ export class AnalyticsRetentionInsightsService {
     void input;
     const payload = await this.repository.findLatestByKind(ANALYTICS_SNAPSHOT_KINDS.RETENTION_INSIGHTS);
     if (payload === null) throw new NotFoundException('Contract state is not provisioned');
-    return payload as AnalyticsRetentionInsightsResponseDto;
+    return payload as unknown as AnalyticsRetentionInsightsResponseDto;
   }
 }

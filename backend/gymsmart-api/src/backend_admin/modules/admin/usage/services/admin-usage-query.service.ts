@@ -21,7 +21,7 @@ export class AdminUsageQueryService {
    */
   async fetchUsage(query: AdminUsageQueryDto): Promise<AdminUsageDataDto> {
     const snapshot = await this.repository.findFirstSnapshot(); 
-    return (snapshot ? this.mapper.toResponse(this.mapper.toDomain(snapshot)) : {}) as AdminUsageDataDto;
+    return (snapshot ? this.mapper.toResponse(this.mapper.toDomain(snapshot)) : {}) as unknown as AdminUsageDataDto;
   }
 
   /** @description Executes fetchPlans for the Admin usage feature.

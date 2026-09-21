@@ -29,7 +29,7 @@ export class AdminSalesQueryService {
    */
   async fetchOverview(query: AdminSalesQueryDto): Promise<AdminSalesOverviewResponseDto> {
     const snapshot = await this.repository.findFirstSnapshot(); 
-    return { monthlyRevenue: snapshot ? (snapshot.payload['monthlyRevenue'] as any) ?? [] : [] } as AdminSalesOverviewResponseDto;
+    return { monthlyRevenue: snapshot ? (snapshot.payload['monthlyRevenue'] as any) ?? [] : [] } as unknown as AdminSalesOverviewResponseDto;
   }
 
   /** @description Executes fetchReferralSources for the Admin sales feature.
@@ -46,7 +46,7 @@ export class AdminSalesQueryService {
    */
   async fetchMembershipReport(query: AdminSalesQueryDto): Promise<AdminSalesMembershipReportResponseDto> {
     const snapshot = await this.repository.findFirstSnapshot(); 
-    return (snapshot ? snapshot.payload['report'] ?? { report: [], totals: {} } : { report: [], totals: {} }) as AdminSalesMembershipReportResponseDto;
+    return (snapshot ? snapshot.payload['report'] ?? { report: [], totals: {} } : { report: [], totals: {} }) as unknown as AdminSalesMembershipReportResponseDto;
   }
 
   /** @description Executes fetchPendingPayments for the Admin sales feature.
@@ -55,7 +55,7 @@ export class AdminSalesQueryService {
    */
   async fetchPendingPayments(query: AdminSalesQueryDto): Promise<AdminSalesPendingPaymentsResponseDto> {
     const snapshot = await this.repository.findFirstSnapshot(); 
-    return (snapshot ? snapshot.payload['members'] ?? { members: [], total: 0 } : { members: [], total: 0 }) as AdminSalesPendingPaymentsResponseDto;
+    return (snapshot ? snapshot.payload['members'] ?? { members: [], total: 0 } : { members: [], total: 0 }) as unknown as AdminSalesPendingPaymentsResponseDto;
   }
 
   /** @description Executes fetchAllMemberships for the Admin sales feature.
@@ -64,7 +64,7 @@ export class AdminSalesQueryService {
    */
   async fetchAllMemberships(query: AdminSalesQueryDto): Promise<AdminSalesAllMembershipsResponseDto> {
     const snapshot = await this.repository.findFirstSnapshot(); 
-    return (snapshot ? snapshot.payload['allMemberships'] ?? { members: [], total: 0 } : { members: [], total: 0 }) as AdminSalesAllMembershipsResponseDto;
+    return (snapshot ? snapshot.payload['allMemberships'] ?? { members: [], total: 0 } : { members: [], total: 0 }) as unknown as AdminSalesAllMembershipsResponseDto;
   }
 
   /** @description Executes fetchStoreOrders for the Admin sales feature.
@@ -73,7 +73,7 @@ export class AdminSalesQueryService {
    */
   async fetchStoreOrders(query: AdminSalesQueryDto): Promise<AdminSalesStoreOrdersResponseDto> {
     const snapshot = await this.repository.findFirstSnapshot(); 
-    return (snapshot ? snapshot.payload['orders'] ?? { orders: [], total: 0 } : { orders: [], total: 0 }) as AdminSalesStoreOrdersResponseDto;
+    return (snapshot ? snapshot.payload['orders'] ?? { orders: [], total: 0 } : { orders: [], total: 0 }) as unknown as AdminSalesStoreOrdersResponseDto;
   }
 
   /** @description Executes fetchStoreSummary for the Admin sales feature.
@@ -82,6 +82,6 @@ export class AdminSalesQueryService {
    */
   async fetchStoreSummary(query: AdminSalesQueryDto): Promise<AdminSalesStoreSummaryResponseDto> {
     const snapshot = await this.repository.findFirstSnapshot(); 
-    return (snapshot ? snapshot.payload['storeSummary'] ?? { summary: null } : { summary: null }) as AdminSalesStoreSummaryResponseDto;
+    return (snapshot ? snapshot.payload['storeSummary'] ?? { summary: null } : { summary: null }) as unknown as AdminSalesStoreSummaryResponseDto;
   }
 }

@@ -14,6 +14,6 @@ export class InfrastructureApiHealthService {
     void input;
     const payload = await this.repository.findLatestByKind(INFRASTRUCTURE_SNAPSHOT_KINDS.API_HEALTH);
     if (payload === null) throw new NotFoundException('Contract state is not provisioned');
-    return payload as InfrastructureApiHealthResponseDto;
+    return payload as unknown as InfrastructureApiHealthResponseDto;
   }
 }

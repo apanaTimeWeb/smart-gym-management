@@ -30,7 +30,7 @@ export class CoreIdempotencyRepository extends CoreBaseRepository<CoreIdempotenc
     scope: string,
     key: string,
   ): Promise<CoreIdempotencyRecordEntity | null> {
-    const repository = this.resolveRepository(context.manager);
+    const repository = this.repositoryFor(context);
     return repository.findOne({ where: { scope, key } });
   }
 
@@ -49,7 +49,7 @@ export class CoreIdempotencyRepository extends CoreBaseRepository<CoreIdempotenc
     key: string,
     requestHash: string,
   ): Promise<boolean> {
-    const repository = this.resolveRepository(context.manager);
+    const repository = this.repositoryFor(context);
     const result = await repository
       .createQueryBuilder()
       .insert()
@@ -75,7 +75,7 @@ export class CoreIdempotencyRepository extends CoreBaseRepository<CoreIdempotenc
     key: string,
     response: ApiResponse<null>,
   ): Promise<void> {
-    const repository = this.resolveRepository(context.manager);
+    const repository = this.repositoryFor(context);
     const result = await repository.update(
       { scope, key },
       { processing: false, response },

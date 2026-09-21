@@ -14,6 +14,6 @@ export class BroadcastsAudienceInsightsService {
     void input;
     const payload = await this.repository.findLatestByKind(BROADCASTS_SNAPSHOT_KINDS.AUDIENCE_INSIGHTS);
     if (payload === null) throw new NotFoundException('Contract state is not provisioned');
-    return payload as BroadcastsAudienceInsightsResponseDto;
+    return payload as unknown as BroadcastsAudienceInsightsResponseDto;
   }
 }

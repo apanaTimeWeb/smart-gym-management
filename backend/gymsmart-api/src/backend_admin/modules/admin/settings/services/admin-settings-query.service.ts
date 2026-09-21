@@ -21,7 +21,7 @@ export class AdminSettingsQueryService {
    */
   async fetchSettings(query: AdminSettingsQueryDto): Promise<AdminSettingsResponseDto> {
     const snapshot = await this.repository.findFirstSnapshot(); 
-    return (snapshot ? this.mapper.toResponse(this.mapper.toDomain(snapshot)) : {}) as AdminSettingsResponseDto;
+    return (snapshot ? this.mapper.toResponse(this.mapper.toDomain(snapshot)) : {}) as unknown as AdminSettingsResponseDto;
   }
 
   /** @description Executes fetchNotificationSettings for the Admin settings feature.
@@ -30,7 +30,7 @@ export class AdminSettingsQueryService {
    */
   async fetchNotificationSettings(query: AdminSettingsQueryDto): Promise<AdminNotificationsSettingsDto> {
     const snapshot = await this.repository.findFirstSnapshot(); 
-    return (snapshot ? (snapshot.payload.notifications ?? {}) : {}) as AdminNotificationsSettingsDto;
+    return (snapshot ? (snapshot.payload.notifications ?? {}) : {}) as unknown as AdminNotificationsSettingsDto;
   }
 
   /** @description Executes fetchRolePermissionReference for the Admin settings feature.

@@ -21,7 +21,7 @@ export class AdminAttendanceQueryService {
    */
   async fetchAttendance(query: AdminAttendanceQueryDto): Promise<AdminAttendanceRecordDto[]> {
     const result = await this.repository.findAll(query); 
-    return result.items.map((entity) => this.mapper.toResponse(this.mapper.toDomain(entity))) as AdminAttendanceRecordDto[];
+    return result.items.map((entity) => this.mapper.toResponse(this.mapper.toDomain(entity))) as unknown as AdminAttendanceRecordDto[];
   }
 
   /** @description Executes fetchSummary for the Admin attendance feature.
@@ -30,7 +30,7 @@ export class AdminAttendanceQueryService {
    */
   async fetchSummary(_query?: AdminAttendanceQueryDto): Promise<AdminAttendanceSummaryDto> {
     const result = await this.repository.findFirstSnapshot(); 
-    return (result ? result.payload : {}) as AdminAttendanceSummaryDto;
+    return (result ? result.payload : {}) as unknown as AdminAttendanceSummaryDto;
   }
 
   /** @description Executes fetchTrend for the Admin attendance feature.
@@ -39,6 +39,6 @@ export class AdminAttendanceQueryService {
    */
   async fetchTrend(_query?: AdminAttendanceQueryDto): Promise<AdminAttendanceTrendPointDto[]> {
     const result = await this.repository.findFirstSnapshot(); 
-    return (result && Array.isArray(result.payload) ? result.payload : []) as AdminAttendanceTrendPointDto[];
+    return (result && Array.isArray(result.payload) ? result.payload : []) as unknown as AdminAttendanceTrendPointDto[];
   }
 }

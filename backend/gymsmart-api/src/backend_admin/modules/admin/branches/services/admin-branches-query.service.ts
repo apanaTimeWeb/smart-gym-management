@@ -21,7 +21,7 @@ export class AdminBranchesQueryService {
    */
   async fetchBranches(query: AdminBranchesQueryDto): Promise<AdminBranchDto[]> {
     const result = await this.repository.findAll(query); 
-    return result.items.map((entity) => this.mapper.toResponse(this.mapper.toDomain(entity))) as AdminBranchDto[];
+    return result.items.map((entity) => this.mapper.toResponse(this.mapper.toDomain(entity))) as unknown as AdminBranchDto[];
   }
 
   /** @description Executes findById for the Admin branches feature.
@@ -30,6 +30,6 @@ export class AdminBranchesQueryService {
    */
   async findById(id: string): Promise<AdminBranchDto | null> {
     const entity = await this.repository.findByIdOrThrow(id); 
-    return this.mapper.toResponse(this.mapper.toDomain(entity)) as AdminBranchDto | null;
+    return this.mapper.toResponse(this.mapper.toDomain(entity)) as unknown as AdminBranchDto | null;
   }
 }

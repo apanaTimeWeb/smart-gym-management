@@ -19,6 +19,6 @@ export class IntegrationsGenerateKeyService {
     if (!label || !tenantId) throw new BadRequestException('label and tenantId are required');
     const secret = `sk_live_${randomBytes(24).toString('hex')}`;
     const created = await this.repository.createIntegrations({ tenantId, label, status: IntegrationKeyStatus.ACTIVE, lastUsed: null, rateLimit: 100, secretHash: createHash('sha256').update(secret).digest('hex') } as never);
-    return { key: { id: created.id, tenant: created.tenantId, label: created.label, status: created.status, lastUsed: created.lastUsed ? created.lastUsed.toISOString() : null, rateLimit: created.rateLimit.toString() }, secretKey: secret } as SuperadminGenerateApiKeyResultDto;
+    return { key: { id: created.id, tenant: created.tenantId, label: created.label, status: created.status, lastUsed: created.lastUsed ? created.lastUsed.toISOString() : null, rateLimit: created.rateLimit.toString() }, secretKey: secret } as unknown as SuperadminGenerateApiKeyResultDto;
   }
 }

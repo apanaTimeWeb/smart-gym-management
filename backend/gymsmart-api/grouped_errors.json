@@ -1,0 +1,250 @@
+{
+  "src/backend_admin/core/auth/core-rate-limit.guard.ts": [
+    "src/backend_admin/core/auth/core-rate-limit.guard.ts(4,53): error TS2724: '\"@nestjs/common\"' has no exported member named 'TooManyRequestsException'. Did you mean 'BadRequestException'?\r"
+  ],
+  "src/backend_admin/modules/admin/announcements/controllers/admin-announcements-command.controller.ts": [
+    "src/backend_admin/modules/admin/announcements/controllers/admin-announcements-command.controller.ts(62,5): error TS2322: Type 'null' is not assignable to type 'void'.\r",
+    "src/backend_admin/modules/admin/announcements/controllers/admin-announcements-command.controller.ts(70,5): error TS2322: Type 'null' is not assignable to type 'void'.\r"
+  ],
+  "src/backend_admin/modules/admin/announcements/services/admin-announcements-command.service.ts": [
+    "src/backend_admin/modules/admin/announcements/services/admin-announcements-command.service.ts(25,55): error TS2345: Argument of type 'AdminAnnouncementsMutationDto' is not assignable to parameter of type 'Record<string, unknown>'.\r",
+    "src/backend_admin/modules/admin/announcements/services/admin-announcements-command.service.ts(35,57): error TS2345: Argument of type 'AdminAnnouncementsMutationDto' is not assignable to parameter of type 'Record<string, unknown>'.\r",
+    "src/backend_admin/modules/admin/announcements/services/admin-announcements-command.service.ts(67,22): error TS2352: Conversion of type 'Record<string, unknown>' to type 'AdminAnnouncementDto' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r"
+  ],
+  "src/backend_admin/modules/admin/announcements/services/admin-announcements-query.service.ts": [
+    "src/backend_admin/modules/admin/announcements/services/admin-announcements-query.service.ts(24,12): error TS2352: Conversion of type 'Record<string, unknown>[]' to type 'AdminAnnouncementDto[]' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r",
+    "src/backend_admin/modules/admin/announcements/services/admin-announcements-query.service.ts(33,12): error TS2352: Conversion of type 'Record<string, unknown>' to type 'AdminAnnouncementKPIDataDto' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r"
+  ],
+  "src/backend_admin/modules/admin/attendance/services/admin-attendance-query.service.ts": [
+    "src/backend_admin/modules/admin/attendance/services/admin-attendance-query.service.ts(24,12): error TS2352: Conversion of type 'Record<string, unknown>[]' to type 'AdminAttendanceRecordDto[]' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r",
+    "src/backend_admin/modules/admin/attendance/services/admin-attendance-query.service.ts(33,12): error TS2352: Conversion of type 'Record<string, unknown>' to type 'AdminAttendanceSummaryDto' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r"
+  ],
+  "src/backend_admin/modules/admin/audit_logs/mappers/admin-audit_logs.mapper.spec.ts": [
+    "src/backend_admin/modules/admin/audit_logs/mappers/admin-audit_logs.mapper.spec.ts(15,56): error TS2345: Argument of type 'AdminAuditLogsEntity & { id: string; createdAt: Date; updatedAt: Date; name: string; status: string; payload: { visibleField: string; }; }' is not assignable to parameter of type 'CoreAuditLogEntity'.\r"
+  ],
+  "src/backend_admin/modules/admin/audit_logs/services/admin-audit_logs-query.service.ts": [
+    "src/backend_admin/modules/admin/audit_logs/services/admin-audit_logs-query.service.ts(21,12): error TS2352: Conversion of type 'Record<string, unknown>[]' to type 'AdminAuditLogDto[]' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r"
+  ],
+  "src/backend_admin/modules/admin/blacklist/controllers/admin-blacklist-command.controller.ts": [
+    "src/backend_admin/modules/admin/blacklist/controllers/admin-blacklist-command.controller.ts(36,5): error TS2322: Type 'null' is not assignable to type 'void'.\r"
+  ],
+  "src/backend_admin/modules/admin/blacklist/services/admin-blacklist-command.service.ts": [
+    "src/backend_admin/modules/admin/blacklist/services/admin-blacklist-command.service.ts(67,22): error TS2352: Conversion of type 'Record<string, unknown>' to type 'AdminBlacklistedMemberDto' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r"
+  ],
+  "src/backend_admin/modules/admin/blacklist/services/admin-blacklist-query.service.ts": [
+    "src/backend_admin/modules/admin/blacklist/services/admin-blacklist-query.service.ts(24,12): error TS2352: Conversion of type 'Record<string, unknown>[]' to type 'AdminBlacklistedMemberDto[]' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r",
+    "src/backend_admin/modules/admin/blacklist/services/admin-blacklist-query.service.ts(33,12): error TS2352: Conversion of type 'Record<string, unknown>' to type 'AdminBlacklistKPIDataDto' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r"
+  ],
+  "src/backend_admin/modules/admin/branches/services/admin-branches-query.service.ts": [
+    "src/backend_admin/modules/admin/branches/services/admin-branches-query.service.ts(24,12): error TS2352: Conversion of type 'Record<string, unknown>[]' to type 'AdminBranchDto[]' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r",
+    "src/backend_admin/modules/admin/branches/services/admin-branches-query.service.ts(33,12): error TS2352: Conversion of type 'Record<string, unknown>' to type 'AdminBranchDto' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r"
+  ],
+  "src/backend_admin/modules/admin/campaigns/services/admin-campaigns-query.service.ts": [
+    "src/backend_admin/modules/admin/campaigns/services/admin-campaigns-query.service.ts(24,12): error TS2352: Conversion of type 'Record<string, unknown>[]' to type 'AdminCampaignsAudienceDto[]' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r",
+    "src/backend_admin/modules/admin/campaigns/services/admin-campaigns-query.service.ts(33,12): error TS2352: Conversion of type 'Record<string, unknown>[]' to type 'AdminCampaignsTemplateDto[]' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r"
+  ],
+  "src/backend_admin/modules/admin/coupons/controllers/admin-coupons-command.controller.ts": [
+    "src/backend_admin/modules/admin/coupons/controllers/admin-coupons-command.controller.ts(28,12): error TS2352: Conversion of type 'Promise<Record<string, unknown>>' to type 'Promise<AdminCouponDto>' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r",
+    "src/backend_admin/modules/admin/coupons/controllers/admin-coupons-command.controller.ts(28,95): error TS2345: Argument of type 'AdminCouponsMutationDto' is not assignable to parameter of type 'Record<string, unknown>'.\r",
+    "src/backend_admin/modules/admin/coupons/controllers/admin-coupons-command.controller.ts(38,12): error TS2352: Conversion of type 'Promise<Record<string, unknown>>' to type 'Promise<AdminCouponDto>' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r",
+    "src/backend_admin/modules/admin/coupons/controllers/admin-coupons-command.controller.ts(38,97): error TS2345: Argument of type 'AdminCouponsMutationDto' is not assignable to parameter of type 'Record<string, unknown>'.\r",
+    "src/backend_admin/modules/admin/coupons/controllers/admin-coupons-command.controller.ts(48,12): error TS2352: Conversion of type 'Promise<null>' to type 'Promise<void>' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r"
+  ],
+  "src/backend_admin/modules/admin/coupons/services/admin-coupons-query.service.ts": [
+    "src/backend_admin/modules/admin/coupons/services/admin-coupons-query.service.ts(24,12): error TS2352: Conversion of type 'Record<string, unknown>[]' to type 'AdminCouponDto[]' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r",
+    "src/backend_admin/modules/admin/coupons/services/admin-coupons-query.service.ts(29,24): error TS2352: Conversion of type 'Record<string, unknown>' to type 'AdminCouponsKPIDataDto' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r"
+  ],
+  "src/backend_admin/modules/admin/data-export/controllers/admin-data_export-command.controller.ts": [
+    "src/backend_admin/modules/admin/data-export/controllers/admin-data_export-command.controller.ts(28,12): error TS2352: Conversion of type 'Promise<Record<string, unknown>>' to type 'Promise<AdminExportJobDto>' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r",
+    "src/backend_admin/modules/admin/data-export/controllers/admin-data_export-command.controller.ts(28,98): error TS2345: Argument of type 'AdminDataExportMutationDto' is not assignable to parameter of type 'Record<string, unknown>'.\r",
+    "src/backend_admin/modules/admin/data-export/controllers/admin-data_export-command.controller.ts(36,12): error TS2352: Conversion of type 'Promise<null>' to type 'Promise<void>' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r"
+  ],
+  "src/backend_admin/modules/admin/data-export/services/admin-data_export-query.service.ts": [
+    "src/backend_admin/modules/admin/data-export/services/admin-data_export-query.service.ts(33,12): error TS2352: Conversion of type 'Record<string, unknown>' to type 'AdminDataExportKPIDataDto' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r"
+  ],
+  "src/backend_admin/modules/admin/finance/services/admin-finance-query.service.ts": [
+    "src/backend_admin/modules/admin/finance/services/admin-finance-query.service.ts(24,24): error TS2352: Conversion of type 'Record<string, unknown>' to type 'AdminFinancePaymentResponseDto' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r",
+    "src/backend_admin/modules/admin/finance/services/admin-finance-query.service.ts(51,24): error TS2352: Conversion of type 'Record<string, unknown>' to type 'AdminFinanceExpenseResponseDto' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r"
+  ],
+  "src/backend_admin/modules/admin/gym-health-alerts/services/admin-gym_health_alerts-query.service.ts": [
+    "src/backend_admin/modules/admin/gym-health-alerts/services/admin-gym_health_alerts-query.service.ts(24,12): error TS2352: Conversion of type 'Record<string, unknown>[]' to type 'AdminGymHealthAlertDto[]' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r",
+    "src/backend_admin/modules/admin/gym-health-alerts/services/admin-gym_health_alerts-query.service.ts(33,12): error TS2352: Conversion of type 'Record<string, unknown>' to type 'AdminGymHealthKPIDataDto' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r"
+  ],
+  "src/backend_admin/modules/admin/hr/controllers/admin-hr-command.controller.ts": [
+    "src/backend_admin/modules/admin/hr/controllers/admin-hr-command.controller.ts(28,12): error TS2352: Conversion of type 'Promise<Record<string, unknown>>' to type 'Promise<AdminHrStaffDto>' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r",
+    "src/backend_admin/modules/admin/hr/controllers/admin-hr-command.controller.ts(36,12): error TS2352: Conversion of type 'Promise<Record<string, unknown>>' to type 'Promise<AdminHrStaffDto>' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r",
+    "src/backend_admin/modules/admin/hr/controllers/admin-hr-command.controller.ts(44,12): error TS2352: Conversion of type 'Promise<null>' to type 'Promise<void>' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r",
+    "src/backend_admin/modules/admin/hr/controllers/admin-hr-command.controller.ts(52,5): error TS2322: Type 'Record<string, unknown>' is not assignable to type 'void'.\r",
+    "src/backend_admin/modules/admin/hr/controllers/admin-hr-command.controller.ts(60,12): error TS2352: Conversion of type 'Promise<Record<string, unknown>>' to type 'Promise<AdminHrPayrollDto>' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r",
+    "src/backend_admin/modules/admin/hr/controllers/admin-hr-command.controller.ts(68,12): error TS2352: Conversion of type 'Promise<Record<string, unknown>>' to type 'Promise<AdminHrPayrollDto>' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r",
+    "src/backend_admin/modules/admin/hr/controllers/admin-hr-command.controller.ts(76,12): error TS2352: Conversion of type 'Promise<Record<string, unknown>>' to type 'Promise<AdminHrPayrollDto>' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r",
+    "src/backend_admin/modules/admin/hr/controllers/admin-hr-command.controller.ts(84,12): error TS2352: Conversion of type 'Promise<Record<string, unknown>>' to type 'Promise<void>' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r",
+    "src/backend_admin/modules/admin/hr/controllers/admin-hr-command.controller.ts(92,12): error TS2352: Conversion of type 'Promise<Record<string, unknown>>' to type 'Promise<void>' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r"
+  ],
+  "src/backend_admin/modules/admin/hr/mappers/admin-hr.mapper.spec.ts": [
+    "src/backend_admin/modules/admin/hr/mappers/admin-hr.mapper.spec.ts(14,20): error TS2554: Expected 1 arguments, but got 0.\r"
+  ],
+  "src/backend_admin/modules/admin/hr/services/admin-hr-query.service.ts": [
+    "src/backend_admin/modules/admin/hr/services/admin-hr-query.service.ts(39,12): error TS2352: Conversion of type 'Record<string, unknown>' to type 'AdminHrStaffDto' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r"
+  ],
+  "src/backend_admin/modules/admin/members/mappers/admin-members.mapper.spec.ts": [
+    "src/backend_admin/modules/admin/members/mappers/admin-members.mapper.spec.ts(17,21): error TS2339: Property 'createdAt' does not exist on type 'AdminMemberDto'.\r",
+    "src/backend_admin/modules/admin/members/mappers/admin-members.mapper.spec.ts(18,21): error TS2339: Property 'updatedAt' does not exist on type 'AdminMemberDto'.\r"
+  ],
+  "src/backend_admin/modules/admin/notifications/services/admin-notifications-command.service.ts": [
+    "src/backend_admin/modules/admin/notifications/services/admin-notifications-command.service.ts(44,22): error TS2352: Conversion of type 'Record<string, unknown>' to type 'AdminNotificationDto' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r"
+  ],
+  "src/backend_admin/modules/admin/notifications/services/admin-notifications-query.service.ts": [
+    "src/backend_admin/modules/admin/notifications/services/admin-notifications-query.service.ts(24,12): error TS2352: Conversion of type 'Record<string, unknown>[]' to type 'AdminNotificationDto[]' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r"
+  ],
+  "src/backend_admin/modules/admin/payouts/services/admin-payouts-query.service.ts": [
+    "src/backend_admin/modules/admin/payouts/services/admin-payouts-query.service.ts(42,12): error TS2352: Conversion of type 'Record<string, unknown>' to type 'AdminPayoutsKPIDataDto' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r"
+  ],
+  "src/backend_admin/modules/admin/permissions/services/admin-permissions-command.service.ts": [
+    "src/backend_admin/modules/admin/permissions/services/admin-permissions-command.service.ts(45,22): error TS2352: Conversion of type 'Record<string, unknown>' to type 'AdminPermissionsDataDto' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r"
+  ],
+  "src/backend_admin/modules/admin/permissions/services/admin-permissions-query.service.ts": [
+    "src/backend_admin/modules/admin/permissions/services/admin-permissions-query.service.ts(24,12): error TS2352: Conversion of type 'Record<string, unknown>' to type 'AdminPermissionsDataDto' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r"
+  ],
+  "src/backend_admin/modules/admin/plans/controllers/admin-plans-command.controller.ts": [
+    "src/backend_admin/modules/admin/plans/controllers/admin-plans-command.controller.ts(28,12): error TS2352: Conversion of type 'Promise<Record<string, unknown>>' to type 'Promise<AdminPlanDto>' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r",
+    "src/backend_admin/modules/admin/plans/controllers/admin-plans-command.controller.ts(28,95): error TS2345: Argument of type 'AdminPlansMutationDto' is not assignable to parameter of type 'Record<string, unknown>'.\r",
+    "src/backend_admin/modules/admin/plans/controllers/admin-plans-command.controller.ts(38,12): error TS2352: Conversion of type 'Promise<Record<string, unknown>>' to type 'Promise<AdminPlanDto>' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r",
+    "src/backend_admin/modules/admin/plans/controllers/admin-plans-command.controller.ts(38,97): error TS2345: Argument of type 'AdminPlansMutationDto' is not assignable to parameter of type 'Record<string, unknown>'.\r",
+    "src/backend_admin/modules/admin/plans/controllers/admin-plans-command.controller.ts(46,12): error TS2352: Conversion of type 'Promise<null>' to type 'Promise<void>' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r",
+    "src/backend_admin/modules/admin/plans/controllers/admin-plans-command.controller.ts(46,96): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.\r"
+  ],
+  "src/backend_admin/modules/admin/plans/controllers/admin-plans-query.controller.ts": [
+    "src/backend_admin/modules/admin/plans/controllers/admin-plans-query.controller.ts(11,30): error TS2305: Module '\"@/backend_admin/modules/admin/plans/dtos/admin-plans-query.dto\"' has no exported member 'AdminPlansIdDto'.\r"
+  ],
+  "src/backend_admin/modules/admin/plans/services/admin-plans-query.service.ts": [
+    "src/backend_admin/modules/admin/plans/services/admin-plans-query.service.ts(23,94): error TS2352: Conversion of type 'Record<string, unknown>' to type 'AdminPlanDto' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r",
+    "src/backend_admin/modules/admin/plans/services/admin-plans-query.service.ts(31,70): error TS2352: Conversion of type 'Record<string, unknown>' to type 'AdminPlanDto' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r"
+  ],
+  "src/backend_admin/modules/admin/profile/services/admin-profile-command.service.ts": [
+    "src/backend_admin/modules/admin/profile/services/admin-profile-command.service.ts(27,75): error TS2345: Argument of type 'AdminProfileMutationDto' is not assignable to parameter of type 'Record<string, unknown>'.\r",
+    "src/backend_admin/modules/admin/profile/services/admin-profile-command.service.ts(27,119): error TS2345: Argument of type 'AdminProfileMutationDto' is not assignable to parameter of type 'Record<string, unknown>'.\r",
+    "src/backend_admin/modules/admin/profile/services/admin-profile-command.service.ts(28,22): error TS2352: Conversion of type 'Record<string, unknown>' to type 'AdminProfileDto' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r"
+  ],
+  "src/backend_admin/modules/admin/profile/services/admin-profile-query.service.ts": [
+    "src/backend_admin/modules/admin/profile/services/admin-profile-query.service.ts(24,12): error TS2352: Conversion of type 'Record<string, unknown>' to type 'AdminProfileDto' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r"
+  ],
+  "src/backend_admin/modules/admin/reports/controllers/admin-reports-command.controller.ts": [
+    "src/backend_admin/modules/admin/reports/controllers/admin-reports-command.controller.ts(27,98): error TS2345: Argument of type 'AdminReportsMutationDto' is not assignable to parameter of type 'Record<string, unknown>'.\r"
+  ],
+  "src/backend_admin/modules/admin/reports/services/admin-reports-query.service.ts": [
+    "src/backend_admin/modules/admin/reports/services/admin-reports-query.service.ts(24,12): error TS2352: Conversion of type 'Record<string, unknown>' to type 'AdminReportsDataResponseDto' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r"
+  ],
+  "src/backend_admin/modules/admin/settings/controllers/admin-settings-command.controller.ts": [
+    "src/backend_admin/modules/admin/settings/controllers/admin-settings-command.controller.ts(28,12): error TS2352: Conversion of type 'Promise<Record<string, unknown>>' to type 'Promise<AdminSettingsResponseDto>' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r",
+    "src/backend_admin/modules/admin/settings/controllers/admin-settings-command.controller.ts(28,40): error TS2345: Argument of type 'AdminSettingsMutationDto' is not assignable to parameter of type 'Record<string, unknown>'.\r",
+    "src/backend_admin/modules/admin/settings/controllers/admin-settings-command.controller.ts(36,12): error TS2352: Conversion of type 'Promise<null>' to type 'Promise<void>' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r",
+    "src/backend_admin/modules/admin/settings/controllers/admin-settings-command.controller.ts(44,12): error TS2352: Conversion of type 'Promise<null>' to type 'Promise<void>' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r",
+    "src/backend_admin/modules/admin/settings/controllers/admin-settings-command.controller.ts(52,12): error TS2352: Conversion of type 'Promise<null>' to type 'Promise<void>' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r"
+  ],
+  "src/backend_admin/modules/admin/settings/services/admin-settings-query.service.ts": [
+    "src/backend_admin/modules/admin/settings/services/admin-settings-query.service.ts(24,12): error TS2352: Conversion of type 'Record<string, unknown>' to type 'AdminSettingsResponseDto' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r"
+  ],
+  "src/backend_admin/modules/admin/subscriptions/controllers/admin-subscriptions-command.controller.ts": [
+    "src/backend_admin/modules/admin/subscriptions/controllers/admin-subscriptions-command.controller.ts(25,12): error TS2352: Conversion of type 'Promise<null>' to type 'Promise<void>' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r",
+    "src/backend_admin/modules/admin/subscriptions/controllers/admin-subscriptions-command.controller.ts(33,12): error TS2352: Conversion of type 'Promise<null>' to type 'Promise<void>' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r",
+    "src/backend_admin/modules/admin/subscriptions/controllers/admin-subscriptions-command.controller.ts(41,12): error TS2352: Conversion of type 'Promise<null>' to type 'Promise<void>' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r",
+    "src/backend_admin/modules/admin/subscriptions/controllers/admin-subscriptions-command.controller.ts(49,12): error TS2352: Conversion of type 'Promise<null>' to type 'Promise<void>' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r"
+  ],
+  "src/backend_admin/modules/admin/subscriptions/services/admin-subscriptions-query.service.ts": [
+    "src/backend_admin/modules/admin/subscriptions/services/admin-subscriptions-query.service.ts(63,12): error TS2352: Conversion of type 'Record<string, unknown>' to type 'AdminSubscriptionKPIDataDto' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r"
+  ],
+  "src/backend_admin/modules/admin/usage/controllers/admin-usage-command.controller.ts": [
+    "src/backend_admin/modules/admin/usage/controllers/admin-usage-command.controller.ts(14,10): error TS2724: '\"@/backend_admin/modules/admin/usage/dtos/admin-usage-response.dto\"' has no exported member named 'AdminUsageUpgradeResponseDto'. Did you mean 'AdminUsageUpgradeRequestDto'?\r",
+    "src/backend_admin/modules/admin/usage/controllers/admin-usage-command.controller.ts(28,103): error TS2345: Argument of type 'AdminUsageMutationDto' is not assignable to parameter of type 'Record<string, unknown>'.\r"
+  ],
+  "src/backend_admin/modules/admin/usage/services/admin-usage-query.service.ts": [
+    "src/backend_admin/modules/admin/usage/services/admin-usage-query.service.ts(24,12): error TS2352: Conversion of type 'Record<string, unknown>' to type 'AdminUsageDataDto' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r"
+  ],
+  "src/backend_auth/core/audit/core-audit-log.repository.ts": [
+    "src/backend_auth/core/audit/core-audit-log.repository.ts(30,39): error TS2345: Argument of type 'CoreAuditLogEntity' is not assignable to parameter of type '_QueryDeepPartialEntity<CoreAuditLogEntity> | _QueryDeepPartialEntity<CoreAuditLogEntity>[]'.\r"
+  ],
+  "src/backend_auth/core/rate-limit/core-rate-limit.service.ts": [
+    "src/backend_auth/core/rate-limit/core-rate-limit.service.ts(4,22): error TS2724: '\"@nestjs/common\"' has no exported member named 'TooManyRequestsException'. Did you mean 'BadRequestException'?\r"
+  ],
+  "src/backend_auth/core/security/core-jwt-auth.guard.ts": [
+    "src/backend_auth/core/security/core-jwt-auth.guard.ts(32,76): error TS2339: Property 'AUTHENTICATION_REQUIRED' does not exist on type '{ readonly SUCCESS: \"Request completed successfully.\"; readonly VALIDATION: \"Validation failed. Please check the highlighted fields.\"; readonly INTERNAL_ERROR: \"An unexpected error occurred.\"; readonly REQUEST_TIMEOUT: \"Request exceeded the synchronous SLA.\"; readonly RATE_LIMITED: \"Rate limit exceeded.\"; }'.\r",
+    "src/backend_auth/core/security/core-jwt-auth.guard.ts(57,66): error TS2339: Property 'INVALID_ACCESS_TOKEN' does not exist on type '{ readonly SUCCESS: \"Request completed successfully.\"; readonly VALIDATION: \"Validation failed. Please check the highlighted fields.\"; readonly INTERNAL_ERROR: \"An unexpected error occurred.\"; readonly REQUEST_TIMEOUT: \"Request exceeded the synchronous SLA.\"; readonly RATE_LIMITED: \"Rate limit exceeded.\"; }'.\r"
+  ],
+  "src/backend_auth/core/security/core-roles.guard.ts": [
+    "src/backend_auth/core/security/core-roles.guard.ts(22,126): error TS2339: Property 'REQUIRED_ROLE_MISSING' does not exist on type '{ readonly SUCCESS: \"Request completed successfully.\"; readonly VALIDATION: \"Validation failed. Please check the highlighted fields.\"; readonly INTERNAL_ERROR: \"An unexpected error occurred.\"; readonly REQUEST_TIMEOUT: \"Request exceeded the synchronous SLA.\"; readonly RATE_LIMITED: \"Rate limit exceeded.\"; }'.\r"
+  ],
+  "src/backend_auth/modules/auth/repositories/auth-refresh-session.repository.ts": [
+    "src/backend_auth/modules/auth/repositories/auth-refresh-session.repository.ts(39,39): error TS2345: Argument of type '{ id: string; deletedAt: null; }' is not assignable to parameter of type 'string | number | string[] | Date | ObjectId | number[] | Date[] | ObjectId[] | FindOptionsWhere<AuthRefreshSessionEntity> | FindOptionsWhere<...>[]'.\r",
+    "src/backend_auth/modules/auth/repositories/auth-refresh-session.repository.ts(44,39): error TS2345: Argument of type '{ id: string; deletedAt: null; }' is not assignable to parameter of type 'string | number | string[] | Date | ObjectId | number[] | Date[] | ObjectId[] | FindOptionsWhere<AuthRefreshSessionEntity> | FindOptionsWhere<...>[]'.\r"
+  ],
+  "src/backend_auth/modules/auth/repositories/auth-user.repository.ts": [
+    "src/backend_auth/modules/auth/repositories/auth-user.repository.ts(24,7): error TS2322: Type '{ email: string; status: AuthUserStatus.ACTIVE; deletedAt: null; }' is not assignable to type 'FindOptionsWhere<AuthUserEntity> | FindOptionsWhere<AuthUserEntity>[] | undefined'.\r",
+    "src/backend_auth/modules/auth/repositories/auth-user.repository.ts(40,42): error TS2322: Type '{ id: string; status: AuthUserStatus.ACTIVE; deletedAt: null; }' is not assignable to type 'FindOptionsWhere<AuthUserEntity> | FindOptionsWhere<AuthUserEntity>[] | undefined'.\r"
+  ],
+  "src/backend_auth/modules/auth/services/auth-login.service.ts": [
+    "src/backend_auth/modules/auth/services/auth-login.service.ts(52,61): error TS18047: 'credentials' is possibly 'null'.\r",
+    "src/backend_auth/modules/auth/services/auth-login.service.ts(55,44): error TS2345: Argument of type 'AuthCredentialRecord | null' is not assignable to parameter of type 'AuthCredentialRecord'.\r"
+  ],
+  "src/backend_landing/core/context/request-context.middleware.ts": [
+    "src/backend_landing/core/context/request-context.middleware.ts(18,35): error TS2769: No overload matches this call.\r"
+  ],
+  "src/backend_landing/core/idempotency/idempotency.repository.ts": [
+    "src/backend_landing/core/idempotency/idempotency.repository.ts(33,29): error TS2339: Property 'resolveRepository' does not exist on type 'CoreIdempotencyRepository'.\r",
+    "src/backend_landing/core/idempotency/idempotency.repository.ts(52,29): error TS2339: Property 'resolveRepository' does not exist on type 'CoreIdempotencyRepository'.\r",
+    "src/backend_landing/core/idempotency/idempotency.repository.ts(78,29): error TS2339: Property 'resolveRepository' does not exist on type 'CoreIdempotencyRepository'.\r"
+  ],
+  "src/backend_landing/core/observability/metrics.middleware.ts": [
+    "src/backend_landing/core/observability/metrics.middleware.ts(14,35): error TS2769: No overload matches this call.\r"
+  ],
+  "src/backend_landing/core/security/rate-limit.decorator.ts": [
+    "src/backend_landing/core/security/rate-limit.decorator.ts(5,15): error TS2395: Individual declarations in merged declaration 'RateLimitTier' must be all exported or all local.\r",
+    "src/backend_landing/core/security/rate-limit.decorator.ts(9,14): error TS2395: Individual declarations in merged declaration 'RateLimitTier' must be all exported or all local.\r"
+  ],
+  "src/backend_landing/core/security/rate-limit.guard.ts": [
+    "src/backend_landing/core/security/rate-limit.guard.ts(3,65): error TS2724: '\"@nestjs/common\"' has no exported member named 'TooManyRequestsException'. Did you mean 'BadRequestException'?\r",
+    "src/backend_landing/core/security/rate-limit.guard.ts(28,20): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type '{ readonly PUBLIC_MUTATION: { readonly maxRequests: 10; readonly windowSeconds: 60; }; readonly PUBLIC_GENERAL: { readonly maxRequests: 60; readonly windowSeconds: 60; }; }'.\r"
+  ],
+  "src/backend_landing/core/tenant/tenant-resolution.middleware.ts": [
+    "src/backend_landing/core/tenant/tenant-resolution.middleware.ts(27,42): error TS2769: No overload matches this call.\r",
+    "src/backend_landing/core/tenant/tenant-resolution.middleware.ts(28,34): error TS2769: No overload matches this call.\r",
+    "src/backend_landing/core/tenant/tenant-resolution.middleware.ts(29,44): error TS2769: No overload matches this call.\r",
+    "src/backend_landing/core/tenant/tenant-resolution.middleware.ts(37,7): error TS2347: Untyped function calls may not accept type arguments.\r",
+    "src/backend_landing/core/tenant/tenant-resolution.middleware.ts(42,26): error TS2347: Untyped function calls may not accept type arguments.\r"
+  ],
+  "src/backend_landing/main.ts": [
+    "src/backend_landing/main.ts(45,7): error TS2339: Property 'useBodyParser' does not exist on type 'INestApplication<any>'.\r"
+  ],
+  "src/backend_superadmin/core/cache/rate-limit.guard.ts": [
+    "src/backend_superadmin/core/cache/rate-limit.guard.ts(3,53): error TS2724: '\"@nestjs/common\"' has no exported member named 'TooManyRequestsException'. Did you mean 'BadRequestException'?\r"
+  ],
+  "src/backend_superadmin/core/core.module.ts": [
+    "src/backend_superadmin/core/core.module.ts(34,64): error TS2322: Type '(config: ConfigService) => { secret: string; signOptions: { expiresIn: string; }; }' is not assignable to type '(...args: any[]) => JwtModuleOptions | Promise<JwtModuleOptions>'.\r"
+  ],
+  "src/backend_superadmin/core/database/master-data-source.ts": [
+    "src/backend_superadmin/core/database/master-data-source.ts(47,47): error TS2307: Cannot find module '@/backend_superadmin/modules/superadmin/saas-billing/coupons/coupons-contract-snapshot.entity' or its corresponding type declarations.\r"
+  ],
+  "src/backend_superadmin/core/database/seed.ts": [
+    "src/backend_superadmin/core/database/seed.ts(10,41): error TS2307: Cannot find module '@/backend_superadmin/modules/superadmin/analytics/analytics-contract-snapshot.entity' or its corresponding type declarations.\r",
+    "src/backend_superadmin/core/database/seed.ts(10,307): error TS2307: Cannot find module '@/backend_superadmin/modules/superadmin/compliance/compliance-contract-snapshot.entity' or its corresponding type declarations.\r",
+    "src/backend_superadmin/core/database/seed.ts(10,436): error TS2307: Cannot find module '@/backend_superadmin/modules/superadmin/dashboard/dashboard-contract-snapshot.entity' or its corresponding type declarations.\r",
+    "src/backend_superadmin/core/database/seed.ts(10,1114): error TS2307: Cannot find module '@/backend_superadmin/modules/superadmin/reports/reports-contract-snapshot.entity' or its corresponding type declarations.\r",
+    "src/backend_superadmin/core/database/seed.ts(10,1364): error TS2307: Cannot find module '@/backend_superadmin/modules/superadmin/team/team-contract-snapshot.entity' or its corresponding type declarations.\r",
+    "src/backend_superadmin/core/database/seed.ts(10,2579): error TS2307: Cannot find module '@/backend_superadmin/modules/superadmin/saas-billing/coupons/coupons-contract-snapshot.entity' or its corresponding type declarations.\r",
+    "src/backend_superadmin/core/database/seed.ts(42,106): error TS2345: Argument of type 'TenantEntity' is not assignable to parameter of type '_QueryDeepPartialEntity<TenantEntity> | _QueryDeepPartialEntity<TenantEntity>[]'.\r"
+  ],
+  "src/backend_superadmin/modules/auth/auth.service.ts": [
+    "src/backend_superadmin/modules/auth/auth.service.ts(3,22): error TS2724: '\"@nestjs/common\"' has no exported member named 'TooManyRequestsException'. Did you mean 'BadRequestException'?\r",
+    "src/backend_superadmin/modules/auth/auth.service.ts(48,40): error TS2769: No overload matches this call.\r",
+    "src/backend_superadmin/modules/auth/auth.service.ts(49,41): error TS2769: No overload matches this call.\r"
+  ],
+  "src/backend_superadmin/modules/superadmin/broadcasts/broadcasts-query.controller.ts": [
+    "src/backend_superadmin/modules/superadmin/broadcasts/broadcasts-query.controller.ts(25,89): error TS2740: Type '{ data: BroadcastsResponseDto[]; meta: PaginationMeta; }' is missing the following properties from type 'BroadcastsResponseDto[]': length, pop, push, concat, and 35 more.\r"
+  ],
+  "src/backend_superadmin/modules/superadmin/gyms/gyms-special.controller.ts": [
+    "src/backend_superadmin/modules/superadmin/gyms/gyms-special.controller.ts(58,128): error TS2352: Conversion of type 'Record<string, unknown>' to type 'GymDetailBusinessOverviewResponseDto' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r"
+  ],
+  "src/backend_superadmin/modules/superadmin/gyms/services/gyms-provision.service.ts": [
+    "src/backend_superadmin/modules/superadmin/gyms/services/gyms-provision.service.ts(15,15): error TS2305: Module '\"@/backend_superadmin/modules/superadmin/gyms/types/gyms.interfaces\"' has no exported member 'GymsProvisionInput'.\r"
+  ]
+}

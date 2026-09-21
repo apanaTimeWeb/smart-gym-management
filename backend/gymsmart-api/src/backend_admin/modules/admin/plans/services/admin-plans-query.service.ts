@@ -20,7 +20,7 @@ export class AdminPlansQueryService {
    * @returns Frontend contract response.
    */
   async fetchAllPlans(query: AdminPlansQueryDto): Promise<AdminPlanDto[]> {
-    const result = await this.repository.findAll(query); return result.items.map((entity) => this.mapper.toResponse(this.mapper.toDomain(entity)) as AdminPlanDto);
+    const result = await this.repository.findAll(query); return result.items.map((entity) => this.mapper.toResponse(this.mapper.toDomain(entity)) as unknown as AdminPlanDto);
   }
 
   /** @description Executes fetchPlanById for the Admin plans feature.
@@ -28,7 +28,7 @@ export class AdminPlansQueryService {
    * @returns Frontend contract response.
    */
   async fetchPlanById(id: string): Promise<AdminPlanDto> {
-    const entity = await this.repository.findByIdOrThrow(id); return this.mapper.toResponse(this.mapper.toDomain(entity)) as AdminPlanDto;
+    const entity = await this.repository.findByIdOrThrow(id); return this.mapper.toResponse(this.mapper.toDomain(entity)) as unknown as AdminPlanDto;
   }
 
   /** @description Executes fetchPlanRevenue for the Admin plans feature.
@@ -36,6 +36,6 @@ export class AdminPlansQueryService {
    * @returns Frontend contract response.
    */
   async fetchPlanRevenue(_query?: AdminPlansQueryDto): Promise<AdminPlanRevenueRecordDto[]> {
-    const snapshot = await this.repository.findFirstSnapshot(); return snapshot ? (snapshot.payload.revenue ?? []) as AdminPlanRevenueRecordDto[] : [];
+    const snapshot = await this.repository.findFirstSnapshot(); return snapshot ? (snapshot.payload.revenue ?? []) as unknown as AdminPlanRevenueRecordDto[] : [];
   }
 }

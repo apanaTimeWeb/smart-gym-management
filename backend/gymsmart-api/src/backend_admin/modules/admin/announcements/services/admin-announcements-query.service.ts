@@ -21,7 +21,7 @@ export class AdminAnnouncementsQueryService {
    */
   async fetchAnnouncements(query: AdminAnnouncementsQueryDto): Promise<AdminAnnouncementDto[]> {
     const result = await this.repository.findAll(query); 
-    return result.items.map((entity) => this.mapper.toResponse(this.mapper.toDomain(entity))) as AdminAnnouncementDto[];
+    return result.items.map((entity) => this.mapper.toResponse(this.mapper.toDomain(entity))) as unknown as AdminAnnouncementDto[];
   }
 
   /** @description Executes fetchKPIs for the Admin announcements feature.
@@ -30,6 +30,6 @@ export class AdminAnnouncementsQueryService {
    */
   async fetchKPIs(query: AdminAnnouncementsQueryDto): Promise<AdminAnnouncementKPIDataDto> {
     const snapshot = await this.repository.findFirstSnapshot(); 
-    return (snapshot ? snapshot.payload : {}) as AdminAnnouncementKPIDataDto;
+    return (snapshot ? snapshot.payload : {}) as unknown as AdminAnnouncementKPIDataDto;
   }
 }

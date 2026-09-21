@@ -24,7 +24,7 @@ export class AdminProfileCommandController {
   @ApiOperation({ summary: 'Execute updateProfile' })
   @ApiResponse({ status: HttpStatus.OK, type: AdminProfileDto })
   async updateProfile(@Body() dto: AdminProfileMutationDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<AdminProfileDto> {
-    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.updateProfile(dto)) as Promise<AdminProfileDto>;
+    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.updateProfile(dto as unknown as Record<string, unknown>)) as unknown as Promise<AdminProfileDto>;
   }
 
   // SLA: STANDARD
@@ -35,6 +35,6 @@ export class AdminProfileCommandController {
     const newPassword = String(body.newPassword ?? body.password ?? '');
     return this.idempotency.executeOnce(idempotencyKey, async () => {
         await this.service.updatePassword(newPassword);
-    }) as Promise<void>;
+    }) as unknown as Promise<void>;
   }
 }

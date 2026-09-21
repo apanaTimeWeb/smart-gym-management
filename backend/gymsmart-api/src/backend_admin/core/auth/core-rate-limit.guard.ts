@@ -1,7 +1,7 @@
-﻿// RESPONSIBILITY: Applies Redis-backed request throttling from centralized tiers without hardcoded controller limits.
+// RESPONSIBILITY: Applies Redis-backed request throttling from centralized tiers without hardcoded controller limits.
 // FLOW: Request â†’ CoreRateLimitGuard â†’ CoreRateLimitConfig â†’ Redis window counter.
 
-import { CanActivate, ExecutionContext, Injectable, TooManyRequestsException } from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable, HttpException, HttpStatus } from '@nestjs/common';
 
 import { CoreRateLimitConfig } from '@/backend_admin/core/config/core-rate-limit.config';
 import { CoreRedisService } from '@/backend_admin/core/redis/core-redis.service';
@@ -20,7 +20,7 @@ export class CoreRateLimitGuard implements CanActivate {
     const key = `rate:${subject}:${String(request.method)}:${path}:${Math.floor(Date.now() / (tier.windowSeconds * 1000))}`;
     const count = await this.redis.increment(key);
     if (count === 1) await this.redis.setWithTtl(`${key}:ttl`, '1', tier.windowSeconds);
-    if (count > tier.limit) throw new TooManyRequestsException('Rate limit exceeded.');
+    if (count > tier.limit) throw new HttpException('Rate limit exceeded.', HttpStatus.TOO_MANY_REQUESTS);
     return true;
   }
 }

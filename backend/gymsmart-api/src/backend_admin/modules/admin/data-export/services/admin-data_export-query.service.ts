@@ -30,6 +30,6 @@ export class AdminDataExportQueryService {
    */
   async fetchKPIs(query: AdminDataExportQueryDto): Promise<AdminDataExportKPIDataDto> {
     const snapshot = await this.repository.findFirstSnapshot(); 
-    return (snapshot ? snapshot.payload : {}) as AdminDataExportKPIDataDto;
+    return (snapshot ? snapshot.payload : {}) as unknown as AdminDataExportKPIDataDto;
   }
 }

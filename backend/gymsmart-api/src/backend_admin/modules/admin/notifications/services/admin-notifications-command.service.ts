@@ -41,7 +41,7 @@ export class AdminNotificationsCommandService {
    * @returns Frontend response object.
    */
   private async response(entity: Parameters<AdminNotificationsMapper['toDomain']>[0], action: string): Promise<AdminNotificationDto> {
-    const response = this.mapper.toResponse(this.mapper.toDomain(entity)) as AdminNotificationDto;
+    const response = this.mapper.toResponse(this.mapper.toDomain(entity)) as unknown as AdminNotificationDto;
     await this.audit(entity.id, action, response as any);
     return response;
   }

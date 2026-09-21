@@ -14,6 +14,6 @@ export class InvoicesRecoveryCenterService {
     void input;
     const payload = await this.repository.findLatestByKind(INVOICES_SNAPSHOT_KINDS.RECOVERY_CENTER);
     if (payload === null) throw new NotFoundException('Contract state is not provisioned');
-    return payload as InvoicesRecoveryCenterResponseDto;
+    return payload as unknown as InvoicesRecoveryCenterResponseDto;
   }
 }

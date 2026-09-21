@@ -22,7 +22,7 @@ export class BroadcastsQueryController {
   // SLA: STANDARD
   @Get()
   @ApiResponse({ type: [BroadcastsResponseDto] })
-  async findAll(@Query() query: BroadcastsQueryDto): Promise<BroadcastsResponseDto[]> { return await this.listService.findBroadcastsPage(query); }
+  async findAll(@Query() query: BroadcastsQueryDto): Promise<unknown> { return await this.listService.findBroadcastsPage(query); }
   /** Returns one broadcasts record. */
   // SLA: FAST
   @Get(':id')

@@ -7,7 +7,7 @@ import { ApiBadRequestResponse, ApiBody, ApiCreatedResponse, ApiHeader, ApiTags 
 
 import { RateLimitGuard } from '@/backend_landing/core/security/rate-limit.guard';
 
-import { RateLimitTier } from '@/backend_landing/core/security/rate-limit.decorator';
+import { SetRateLimit } from '@/backend_landing/core/security/rate-limit.decorator';
 
 import { LandingApiErrorResponseDto } from '@/backend_landing/modules/landing/landing-api-error-response.dto';
 import { LandingApiSuccessResponseDto } from '@/backend_landing/modules/landing/landing-api-success-response.dto';
@@ -35,7 +35,7 @@ export class LandingCompatibilityController {
   // SLA: STANDARD
   @Post('booking')
   @Version(VERSION_NEUTRAL)
-  @RateLimitTier('PUBLIC_MUTATION')
+  @SetRateLimit('PUBLIC_MUTATION')
   @ApiBody({ type: LandingCreateBookingDto })
   @ApiHeader({ name: 'Idempotency-Key', required: false })
   @ApiCreatedResponse({ type: LandingApiSuccessResponseDto })
@@ -56,7 +56,7 @@ export class LandingCompatibilityController {
   // SLA: STANDARD
   @Post('bookings')
   @Version(VERSION_NEUTRAL)
-  @RateLimitTier('PUBLIC_MUTATION')
+  @SetRateLimit('PUBLIC_MUTATION')
   @ApiBody({ type: LandingCreateBookingDto })
   @ApiHeader({ name: 'Idempotency-Key', required: false })
   @ApiCreatedResponse({ type: LandingApiSuccessResponseDto })
@@ -77,7 +77,7 @@ export class LandingCompatibilityController {
   // SLA: STANDARD
   @Post('contact')
   @Version(VERSION_NEUTRAL)
-  @RateLimitTier('PUBLIC_MUTATION')
+  @SetRateLimit('PUBLIC_MUTATION')
   @ApiBody({ type: LandingCreateContactDto })
   @ApiHeader({ name: 'Idempotency-Key', required: false })
   @ApiCreatedResponse({ type: LandingApiSuccessResponseDto })

@@ -25,7 +25,7 @@ export class AdminPlansCommandController {
   @ApiOperation({ summary: 'Execute createPlan' })
   @ApiResponse({ status: HttpStatus.OK, type: AdminPlanDto })
   async createRecord(@Body() dto: AdminPlansMutationDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<AdminPlanDto> {
-    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.createRecord(dto)) as Promise<AdminPlanDto>;
+    return this.idempotency.executeOnce(idempotencyKey ?? '', async () => this.service.createRecord(dto as unknown as Record<string, unknown>)) as unknown as Promise<AdminPlanDto>;
   }
 
   // SLA: STANDARD
@@ -35,15 +35,15 @@ export class AdminPlansCommandController {
   async updateById(@Body() dto: AdminPlansMutationDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<AdminPlanDto> {
     const id = dto.id;
     if (!id) throw new BadRequestException('Entity id is required.');
-    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.updateById(id, dto)) as Promise<AdminPlanDto>;
+    return this.idempotency.executeOnce(idempotencyKey ?? '', async () => this.service.updateById(id, dto as unknown as Record<string, unknown>)) as unknown as Promise<AdminPlanDto>;
   }
 
   // SLA: STANDARD
   @Delete('deletePlan')
   @ApiOperation({ summary: 'Execute deletePlan' })
   @ApiResponse({ status: HttpStatus.OK })
-  async markAsDeleted(@Body() dto: AdminPlansIdDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<void> {
-    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.markAsDeleted(dto.id)) as Promise<void>;
+  async markAsDeleted(@Body() dto: AdminPlansIdDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<unknown> {
+    return this.idempotency.executeOnce(idempotencyKey ?? '', async () => this.service.markAsDeleted(dto.id ?? '')) as unknown as Promise<void>;
   }
 
 }

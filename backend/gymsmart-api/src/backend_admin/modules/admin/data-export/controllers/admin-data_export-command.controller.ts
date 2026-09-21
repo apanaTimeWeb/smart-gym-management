@@ -25,15 +25,15 @@ export class AdminDataExportCommandController {
   @ApiOperation({ summary: 'Execute createExport' })
   @ApiResponse({ status: HttpStatus.OK, type: AdminExportJobDto })
   async createExportJob(@Body() dto: AdminDataExportMutationDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<AdminExportJobDto> {
-    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.createExportJob(dto)) as Promise<AdminExportJobDto>;
+    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.createExportJob(dto as unknown as Record<string, unknown>)) as unknown as Promise<AdminExportJobDto>;
   }
 
   // SLA: STANDARD
   @Delete('deleteJob')
   @ApiOperation({ summary: 'Execute deleteJob' })
   @ApiResponse({ status: HttpStatus.OK })
-  async markAsDeleted(@Body() dto: AdminDataExportIdDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<void> {
-    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.markAsDeleted(dto.id)) as Promise<void>;
+  async markAsDeleted(@Body() dto: AdminDataExportIdDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<unknown> {
+    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.markAsDeleted(dto.id)) as unknown as Promise<void>;
   }
 
 }

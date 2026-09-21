@@ -21,12 +21,12 @@ export class AdminCouponsQueryService {
    */
   async fetchCoupons(query: AdminCouponsQueryDto): Promise<AdminCouponDto[]> {
     const result = await this.repository.findAll(query); 
-    return result.items.map((entity) => this.mapper.toResponse(this.mapper.toDomain(entity))) as AdminCouponDto[];
+    return result.items.map((entity) => this.mapper.toResponse(this.mapper.toDomain(entity))) as unknown as AdminCouponDto[];
   }
   /** @description Returns the persisted KPI snapshot required by the Admin coupons dashboard. @returns KPI data object. */
   async fetchKPIs(): Promise<AdminCouponsKPIDataDto> {
     const snapshot = await this.repository.findFirstSnapshot();
-    return snapshot ? (snapshot.payload as AdminCouponsKPIDataDto) : {} as AdminCouponsKPIDataDto;
+    return snapshot ? (snapshot.payload as unknown as AdminCouponsKPIDataDto) : {} as unknown as AdminCouponsKPIDataDto;
   }
 
 }

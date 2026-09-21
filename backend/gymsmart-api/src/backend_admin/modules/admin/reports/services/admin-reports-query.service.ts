@@ -21,6 +21,6 @@ export class AdminReportsQueryService {
    */
   async fetchReportData(_query?: AdminReportsQueryDto): Promise<AdminReportsDataResponseDto> {
     const snapshot = await this.repository.findFirstSnapshot(); 
-    return (snapshot ? this.mapper.toResponse(this.mapper.toDomain(snapshot)) : {}) as AdminReportsDataResponseDto;
+    return (snapshot ? this.mapper.toResponse(this.mapper.toDomain(snapshot)) : {}) as unknown as AdminReportsDataResponseDto;
   }
 }

@@ -14,6 +14,6 @@ export class DashboardMetricsService {
     void input;
     const payload = await this.repository.findLatestByKind(DASHBOARD_SNAPSHOT_KINDS.METRICS);
     if (payload === null) throw new NotFoundException('Contract state is not provisioned');
-    return payload as DashboardResponseDataDto;
+    return payload as unknown as DashboardResponseDataDto;
   }
 }

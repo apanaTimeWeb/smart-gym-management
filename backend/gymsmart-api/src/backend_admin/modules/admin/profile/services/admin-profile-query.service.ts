@@ -21,6 +21,6 @@ export class AdminProfileQueryService {
    */
   async fetchProfile(query: AdminProfileQueryDto): Promise<AdminProfileDto> {
     const snapshot = await this.repository.findFirstSnapshot(); 
-    return (snapshot ? this.mapper.toResponse(this.mapper.toDomain(snapshot)) : {}) as AdminProfileDto;
+    return (snapshot ? this.mapper.toResponse(this.mapper.toDomain(snapshot)) : {}) as unknown as AdminProfileDto;
   }
 }

@@ -50,3 +50,14 @@ export interface GymsDomainModel { id: string; createdAt: Date; updatedAt: Date;
   subscriptionHistory: unknown;
   usageStats: unknown;
 }
+
+export interface GymsProvisionInput {
+  gymName: string;
+  ownerName: string;
+  adminEmail: string;
+  phone: string;
+  plan: string;
+  aadharNumber: string;
+  temporaryPassword: string;
+  initialStatus?: string;
+}

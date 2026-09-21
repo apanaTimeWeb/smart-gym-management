@@ -49,10 +49,10 @@ export class AuthLoginService {
     await this.assertNotLocked(normalizedEmail);
     const credentials = await this.userRepository.findCredentialsByEmail(normalizedEmail);
     if (!credentials) await this.rejectInvalidLogin(normalizedEmail);
-    const valid = await AuthPasswordUtils.compare(password, credentials.passwordHash);
+    const valid = await AuthPasswordUtils.compare(password, credentials!.passwordHash);
     if (!valid) await this.rejectInvalidLogin(normalizedEmail);
     await this.clearLockout(normalizedEmail);
-    return this.createAuthenticatedSession(credentials);
+    return this.createAuthenticatedSession(credentials!);
   }
 
   /** @description Normalizes user-entered email before any authentication lookup. @param email - User-entered email. @returns Canonical lowercase email. */

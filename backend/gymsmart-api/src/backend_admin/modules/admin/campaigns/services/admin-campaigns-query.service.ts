@@ -21,7 +21,7 @@ export class AdminCampaignsQueryService {
    */
   async fetchAudiences(query: AdminCampaignsQueryDto): Promise<AdminCampaignsAudienceDto[]> {
     const result = await this.repository.findAll(query); 
-    return result.items.map((entity) => this.mapper.toResponse(this.mapper.toDomain(entity))) as AdminCampaignsAudienceDto[];
+    return result.items.map((entity) => this.mapper.toResponse(this.mapper.toDomain(entity))) as unknown as AdminCampaignsAudienceDto[];
   }
 
   /** @description Executes fetchTemplates for the Admin campaigns feature.
@@ -30,7 +30,7 @@ export class AdminCampaignsQueryService {
    */
   async fetchTemplates(query: AdminCampaignsQueryDto): Promise<AdminCampaignsTemplateDto[]> {
     const result = await this.repository.findAll(query); 
-    return result.items.map((entity) => this.mapper.toResponse(this.mapper.toDomain(entity))) as AdminCampaignsTemplateDto[];
+    return result.items.map((entity) => this.mapper.toResponse(this.mapper.toDomain(entity))) as unknown as AdminCampaignsTemplateDto[];
   }
 
   /** @description Executes fetchRecipients for the Admin campaigns feature.
@@ -39,6 +39,6 @@ export class AdminCampaignsQueryService {
    */
   async fetchRecipients(query: AdminCampaignsQueryDto): Promise<AdminCampaignsRecipientsDataDto> {
     const snapshot = await this.repository.findFirstSnapshot();
-    return { recipients: snapshot && Array.isArray(snapshot.payload.recipients) ? snapshot.payload.recipients : [] } as AdminCampaignsRecipientsDataDto;
+    return { recipients: snapshot && Array.isArray(snapshot.payload.recipients) ? snapshot.payload.recipients : [] } as unknown as AdminCampaignsRecipientsDataDto;
   }
 }

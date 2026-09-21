@@ -14,6 +14,6 @@ export class SettingsGovernanceService {
     void input;
     const payload = await this.repository.findLatestByKind(SETTINGS_SNAPSHOT_KINDS.GOVERNANCE);
     if (payload === null) throw new NotFoundException('Contract state is not provisioned');
-    return payload as SettingsGovernanceResponseDto;
+    return payload as unknown as SettingsGovernanceResponseDto;
   }
 }

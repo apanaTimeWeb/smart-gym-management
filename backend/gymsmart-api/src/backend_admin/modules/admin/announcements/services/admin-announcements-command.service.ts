@@ -22,7 +22,7 @@ export class AdminAnnouncementsCommandService {
    * @returns Promise<AdminAnnouncementDto> frontend-facing result.
    */
   async createRecord(input: AdminAnnouncementsMutationDto): Promise<AdminAnnouncementDto> {
-    const entity = await this.repository.createRecord(input);
+    const entity = await this.repository.createRecord(input as unknown as Record<string, unknown>);
     return this.response(entity, 'CREATED');
   }
 
@@ -32,7 +32,7 @@ export class AdminAnnouncementsCommandService {
    * @returns Promise<AdminAnnouncementDto> frontend-facing result.
    */
   async updateById(id: string, input: AdminAnnouncementsMutationDto): Promise<AdminAnnouncementDto> {
-    const entity = await this.repository.updateById(id, input);
+    const entity = await this.repository.updateById(id, input as unknown as Record<string, unknown>);
     return this.response(entity, 'UPDATED');
   }
 
@@ -64,7 +64,7 @@ export class AdminAnnouncementsCommandService {
    * @returns Frontend response object.
    */
   private async response(entity: Parameters<AdminAnnouncementsMapper['toDomain']>[0], action: string): Promise<AdminAnnouncementDto> {
-    const response = this.mapper.toResponse(this.mapper.toDomain(entity)) as AdminAnnouncementDto;
+    const response = this.mapper.toResponse(this.mapper.toDomain(entity)) as unknown as AdminAnnouncementDto;
     await this.audit(entity.id, action, response as any);
     return response;
   }

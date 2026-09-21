@@ -14,6 +14,6 @@ export class MessagingWhatsAppBulkCenterService {
     void input;
     const payload = await this.repository.findLatestByKind(MESSAGING_SNAPSHOT_KINDS.WHATSAPP_BULK_CENTER);
     if (payload === null) throw new NotFoundException('Contract state is not provisioned');
-    return payload as MessagingWhatsAppBulkCenterResponseDto;
+    return payload as unknown as MessagingWhatsAppBulkCenterResponseDto;
   }
 }

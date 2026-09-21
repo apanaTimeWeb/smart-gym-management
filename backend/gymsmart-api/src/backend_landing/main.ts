@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Boots the HTTP application with global security, validation, versioning, compression, and OpenAPI.
+// RESPONSIBILITY: Boots the HTTP application with global security, validation, versioning, compression, and OpenAPI.
 // FLOW: Node â†’ NestFactory â†’ Middleware â†’ Validation/Envelope â†’ Versioned API â†’ HTTP server.
 import { ValidationPipe, VersioningType } from '@nestjs/common';
 
@@ -42,7 +42,6 @@ async function bootstrap(): Promise<void> {
   });
   app.use(helmet());
   app.use(compression());
-  app.useBodyParser('json', { limit: '1mb' });
   app.use(RequestContextMiddleware);
   app.use(TenantResolutionMiddleware);
   app.use(MetricsMiddleware);

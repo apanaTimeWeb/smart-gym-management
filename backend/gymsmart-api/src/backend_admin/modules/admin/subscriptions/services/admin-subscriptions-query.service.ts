@@ -49,18 +49,18 @@ export class AdminSubscriptionsQueryService {
       pdfUrl: this.stringValue(invoice.payload.pdfUrl, ''),
       taxAmount: typeof invoice.payload.taxAmount === 'number' ? invoice.payload.taxAmount : undefined,
       gstNumber: typeof invoice.payload.gstNumber === 'string' ? invoice.payload.gstNumber : undefined,
-    })) as AdminInvoiceDto[];
+    })) as unknown as AdminInvoiceDto[];
   }
 
   /** @description Returns active saved payment methods for the authenticated tenant. @param query Request query. @returns Payment method contracts. */
   async fetchPaymentMethods(_query: AdminSubscriptionsQueryDto): Promise<AdminPaymentMethodDto[]> {
     const methods = await this.repository.findActivePaymentMethods();
-    return methods.map((method) => ({ id: method.id, ...method.payload, isDefault: method.isDefault })) as AdminPaymentMethodDto[];
+    return methods.map((method) => ({ id: method.id, ...method.payload, isDefault: method.isDefault })) as unknown as AdminPaymentMethodDto[];
   }
 
   /** @description Calculates subscription KPIs from master subscription and invoice state. @param query Request query. @returns KPI contract. */
   async fetchKPIs(_query: AdminSubscriptionsQueryDto): Promise<AdminSubscriptionKPIDataDto> {
-    return (await this.repository.findKpis()) as AdminSubscriptionKPIDataDto;
+    return (await this.repository.findKpis()) as unknown as AdminSubscriptionKPIDataDto;
   }
 
   private subscriptionResponse(payload: Record<string, unknown>, plan: CoreMasterPlanEntity, subscription: { autoRenew: boolean }): AdminCurrentSubscriptionDto {
@@ -80,7 +80,7 @@ export class AdminSubscriptionsQueryService {
       memberLimit: this.numberValue(plan.payload.memberLimit ?? payload.memberLimit),
       staffLimit: this.numberValue(plan.payload.staffLimit ?? payload.staffLimit),
       storageGb: this.numberValue(plan.payload.storageGb ?? payload.storageGb),
-    } as AdminCurrentSubscriptionDto;
+    } as unknown as AdminCurrentSubscriptionDto;
   }
 
   private planResponse(plan: CoreMasterPlanEntity, isCurrent: boolean): AdminSaaSPlanDto {
@@ -97,7 +97,7 @@ export class AdminSubscriptionsQueryService {
       features: Array.isArray(plan.payload.features) ? plan.payload.features.filter((value): value is string => typeof value === 'string') : [],
       isPopular: plan.payload.isPopular === true,
       isCurrent,
-    } as AdminSaaSPlanDto;
+    } as unknown as AdminSaaSPlanDto;
   }
 
   private stringValue(value: unknown, fallback: string): string {

@@ -11,7 +11,7 @@ import { CoreIdempotencyService } from '@/backend_admin/core/idempotency/core-id
 import { AdminUsageCommandService } from '@/backend_admin/modules/admin/usage/services/admin-usage-command.service';
 import { AdminUsageMutationDto } from '@/backend_admin/modules/admin/usage/dtos/admin-usage-mutation.dto';
 import { AdminUsageIdDto } from '@/backend_admin/modules/admin/usage/dtos/admin-usage-id.dto';
-import { AdminUsageUpgradeResponseDto } from '@/backend_admin/modules/admin/usage/dtos/admin-usage-response.dto';
+import { AdminUsageUpgradeRequestDto } from '@/backend_admin/modules/admin/usage/dtos/admin-usage-response.dto';
 
 @ApiTags('Admin / usage')
 @UseGuards(CoreJwtAuthGuard, CoreRolesGuard)
@@ -23,9 +23,9 @@ export class AdminUsageCommandController {
   // SLA: STANDARD
   @Post('upgrade-request')
   @ApiOperation({ summary: 'Execute createUpgradeRequest' })
-  @ApiResponse({ status: HttpStatus.OK, type: AdminUsageUpgradeResponseDto })
-  async createUpgradeRequest(@Body() dto: AdminUsageMutationDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<AdminUsageUpgradeResponseDto> {
-    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.createUpgradeRequest(dto)) as Promise<AdminUsageUpgradeResponseDto>;
+  @ApiResponse({ status: HttpStatus.OK, type: AdminUsageUpgradeRequestDto })
+  async createUpgradeRequest(@Body() dto: AdminUsageMutationDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<unknown> {
+    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.createUpgradeRequest(dto as unknown as Record<string, unknown>)) as unknown as Promise<unknown>;
   }
 
 }

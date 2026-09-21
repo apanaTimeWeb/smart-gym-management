@@ -6,7 +6,7 @@ import { ApiBadRequestResponse, ApiBody, ApiCreatedResponse, ApiHeader, ApiTags 
 
 import { RateLimitGuard } from '@/backend_landing/core/security/rate-limit.guard';
 
-import { RateLimitTier } from '@/backend_landing/core/security/rate-limit.decorator';
+import { SetRateLimit } from '@/backend_landing/core/security/rate-limit.decorator';
 
 import { LandingCreateBookingDto } from '@/backend_landing/modules/landing/dtos/landing-create-booking.dto';
 
@@ -34,7 +34,7 @@ export class LandingCommandController {
   // SLA: STANDARD
   @Post('booking')
   @Version('1')
-  @RateLimitTier('PUBLIC_MUTATION')
+  @SetRateLimit('PUBLIC_MUTATION')
   @ApiBody({ type: LandingCreateBookingDto })
   @ApiHeader({ name: 'Idempotency-Key', required: false, description: 'Optional retry key; recommended for duplicate-safe resubmission.' })
   @ApiCreatedResponse({ type: LandingApiSuccessResponseDto, description: 'Booking accepted and stored.' })
@@ -55,7 +55,7 @@ export class LandingCommandController {
   // SLA: STANDARD
   @Post('contact')
   @Version('1')
-  @RateLimitTier('PUBLIC_MUTATION')
+  @SetRateLimit('PUBLIC_MUTATION')
   @ApiBody({ type: LandingCreateContactDto })
   @ApiHeader({ name: 'Idempotency-Key', required: false, description: 'Optional retry key; recommended for duplicate-safe resubmission.' })
   @ApiCreatedResponse({ type: LandingApiSuccessResponseDto, description: 'Contact message accepted and stored.' })

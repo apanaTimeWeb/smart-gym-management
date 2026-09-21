@@ -1,6 +1,6 @@
-﻿// RESPONSIBILITY: Enforces centralized Redis-backed request limits without embedding numeric limits in controllers.
+// RESPONSIBILITY: Enforces centralized Redis-backed request limits without embedding numeric limits in controllers.
 // FLOW: HTTP request â†’ RateLimitGuard â†’ Redis fixed window â†’ allow or reject.
-import { CanActivate, ExecutionContext, HttpStatus, Injectable, TooManyRequestsException } from '@nestjs/common';
+import { CanActivate, ExecutionContext, HttpStatus, Injectable, HttpException } from '@nestjs/common';
 
 import { Reflector } from '@nestjs/core';
 
@@ -25,19 +25,19 @@ export class RateLimitGuard implements CanActivate {
     const tier = this.reflector.get(RATE_LIMIT_TIER_KEY, context.getHandler());
     if (!tier || process.env.DEFAULT_RATE_LIMIT_ENABLED === 'false') return true;
     const request = context.switchToHttp().getRequest<Request>();
-    const config = RATE_LIMIT_CONFIG[tier];
+    const config = RATE_LIMIT_CONFIG[tier as keyof typeof RATE_LIMIT_CONFIG];
     const key = this.buildKey(request);
     const count = await this.redis.client.incr(key);
     if (count === 1) await this.redis.client.expire(key, config.windowSeconds);
     if (count <= config.maxRequests) return true;
-    throw new TooManyRequestsException({
+    throw new HttpException({
       success: false,
       message: 'Too many requests. Please try again later.',
       data: null,
       error: 'RATE_LIMIT_EXCEEDED',
       errorCode: 'CORE.RATE_LIMIT.EXCEEDED',
       statusCode: HttpStatus.TOO_MANY_REQUESTS,
-    });
+    }, HttpStatus.TOO_MANY_REQUESTS);
   }
 
   /** @description Builds a fixed-window Redis key using route-level identity. @param request - Express request. @returns Redis key. */

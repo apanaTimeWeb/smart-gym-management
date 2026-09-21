@@ -14,6 +14,6 @@ export class JobsQueueHealthService {
     void input;
     const payload = await this.repository.findLatestByKind(JOBS_SNAPSHOT_KINDS.QUEUE_HEALTH);
     if (payload === null) throw new NotFoundException('Contract state is not provisioned');
-    return payload as JobsQueueHealthResponseDto;
+    return payload as unknown as JobsQueueHealthResponseDto;
   }
 }

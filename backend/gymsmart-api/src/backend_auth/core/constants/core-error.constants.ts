@@ -25,5 +25,8 @@ export const CoreErrorConstants = {
     INTERNAL_ERROR: 'An unexpected error occurred.',
     REQUEST_TIMEOUT: 'Request exceeded the synchronous SLA.',
     RATE_LIMITED: 'Rate limit exceeded.',
+    AUTHENTICATION_REQUIRED: 'Authentication is required.',
+    INVALID_ACCESS_TOKEN: 'Access token is invalid or expired.',
+    REQUIRED_ROLE_MISSING: 'You do not have permission to perform this action.',
   },
 } as const;

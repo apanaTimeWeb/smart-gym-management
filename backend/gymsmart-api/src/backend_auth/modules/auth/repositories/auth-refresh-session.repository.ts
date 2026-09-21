@@ -9,7 +9,7 @@ import { AuthRefreshSessionMapper } from '@/backend_auth/modules/auth/mappers/au
 
 import { CoreRequestContextService } from '@/backend_auth/core/context/core-request-context';
 import type { AuthSessionDomain } from '@/backend_auth/modules/auth/auth.interfaces';
-import { DataSource } from 'typeorm';
+import { DataSource, IsNull } from 'typeorm';
 @Injectable()
 export class AuthRefreshSessionRepository extends CoreBaseRepository<AuthRefreshSessionEntity> {
   constructor(dataSource: DataSource, requestContext: CoreRequestContextService) {
@@ -36,11 +36,11 @@ export class AuthRefreshSessionRepository extends CoreBaseRepository<AuthRefresh
 
   /** @description Replaces one stored refresh-token hash and expiry. @param sessionId - Session UUID. @param tokenHash - New token hash. @param expiresAt - New UTC expiry. @returns void. */
   async rotateRefreshSession(sessionId: string, tokenHash: string, expiresAt: Date): Promise<void> {
-    await this.getRepository().update({ id: sessionId, deletedAt: null }, { refreshTokenHash: tokenHash, expiresAt, revokedAt: null, updatedAt: new Date() });
+    await this.getRepository().update({ id: sessionId, deletedAt: IsNull() }, { refreshTokenHash: tokenHash, expiresAt, revokedAt: null, updatedAt: new Date() });
   }
 
   /** @description Revokes one refresh session without deleting its row. @param sessionId - Session UUID. @returns void. */
   async revokeRefreshSession(sessionId: string): Promise<void> {
-    await this.getRepository().update({ id: sessionId, deletedAt: null }, { revokedAt: new Date(), updatedAt: new Date() });
+    await this.getRepository().update({ id: sessionId, deletedAt: IsNull() }, { revokedAt: new Date(), updatedAt: new Date() });
   }
 }

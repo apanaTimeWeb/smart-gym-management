@@ -39,7 +39,7 @@ export class AdminMembersMapper {
       totalVisits: domain.data.totalVisits ? Number(domain.data.totalVisits) : undefined,
       dateOfBirth: domain.data.dateOfBirth ? String(domain.data.dateOfBirth) : undefined,
       address: domain.data.address ? String(domain.data.address) : undefined,
-    } as AdminMemberDto;
+    } as unknown as AdminMemberDto;
   }
 
   /** @description Converts a domain model to a summary frontend response object. @param domain Domain model. @returns Response-safe object. */

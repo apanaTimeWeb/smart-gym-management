@@ -18,6 +18,6 @@ export class MessagingWhatsAppCampaignService {
     const message = typeof body?.message === 'string' ? body.message : '';
     if (!tenantId || !message) throw new BadRequestException('tenantId and message are required');
     const created = await this.repository.createMessaging({ tenantId, tenantName, channel: TenantMessageChannel.WHATSAPP, subject, body: message, status: TenantMessageStatus.QUEUED, sentAt: null, scheduledAt: body?.scheduledAt ? new Date(String(body.scheduledAt)) : null } as never);
-    return { id: created.id, status: created.status, queuedAt: created.createdAt.toISOString() } as MessagingWhatsAppCampaignResponseDto;
+    return { id: created.id, status: created.status, queuedAt: created.createdAt.toISOString() } as unknown as MessagingWhatsAppCampaignResponseDto;
   }
 }

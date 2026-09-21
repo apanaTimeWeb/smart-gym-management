@@ -24,8 +24,8 @@ export class AdminProfileCommandService {
   /** @description Updates self-service profile fields while rejecting immutable identity changes. @param input Profile fields from the frontend. @returns Updated profile. @throws UnauthorizedException when actor is missing. */
   async updateProfile(input: AdminProfileMutationDto): Promise<AdminProfileDto> {
     const current = await this.repository.findFirstSnapshot();
-    const entity = current ? await this.repository.updateById(current.id, input) : await this.repository.createRecord(input);
-    const response = this.mapper.toResponse(this.mapper.toDomain(entity)) as AdminProfileDto;
+    const entity = current ? await this.repository.updateById(current.id, input as unknown as Record<string, unknown>) : await this.repository.createRecord(input as unknown as Record<string, unknown>);
+    const response = this.mapper.toResponse(this.mapper.toDomain(entity)) as unknown as AdminProfileDto;
     await this.auditTrail.record({ action: 'ADMIN.PROFILE.UPDATED', entityType: 'AdminProfile', entityId: entity.id, oldValue: current?.payload ?? null, newValue: response, module: 'profile', severity: 'low' });
     return response;
   }

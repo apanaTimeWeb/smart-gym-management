@@ -28,29 +28,13 @@ import { DashboardSnapshotEntity } from '@/backend_superadmin/modules/superadmin
 import { AnalyticsSnapshotEntity } from '@/backend_superadmin/modules/superadmin/analytics/analytics.entity';
 import { ComplianceSnapshotEntity } from '@/backend_superadmin/modules/superadmin/compliance/compliance.entity';
 import { ReportSnapshotEntity } from '@/backend_superadmin/modules/superadmin/reports/reports.entity';
-import { SystemOpsContractSnapshotEntity } from '@/backend_superadmin/modules/superadmin/system-ops/system-ops.entity';
 import { AuditLogEntity } from '@/backend_superadmin/modules/superadmin/global-audit/global-audit.entity';
-import { GymDetailContractSnapshotEntity } from '@/backend_superadmin/modules/superadmin/gyms/gym-detail-contract-snapshot.entity';
-import { JobsContractSnapshotEntity } from '@/backend_superadmin/modules/superadmin/system-ops/jobs/jobs-contract-snapshot.entity';
-import { InfrastructureContractSnapshotEntity } from '@/backend_superadmin/modules/superadmin/system-ops/infrastructure/infrastructure-contract-snapshot.entity';
-import { BackupsContractSnapshotEntity } from '@/backend_superadmin/modules/superadmin/system-ops/backups/backups-contract-snapshot.entity';
-import { InvoicesContractSnapshotEntity } from '@/backend_superadmin/modules/superadmin/saas-billing/invoices/invoices-contract-snapshot.entity';
-import { PlansContractSnapshotEntity } from '@/backend_superadmin/modules/superadmin/saas-billing/plans/plans-contract-snapshot.entity';
-import { TicketsContractSnapshotEntity } from '@/backend_superadmin/modules/superadmin/tickets/tickets-contract-snapshot.entity';
-import { IntegrationsContractSnapshotEntity } from '@/backend_superadmin/modules/superadmin/integrations/integrations-contract-snapshot.entity';
-import { MessagingContractSnapshotEntity } from '@/backend_superadmin/modules/superadmin/messaging/messaging-contract-snapshot.entity';
-import { GlobalAuditContractSnapshotEntity } from '@/backend_superadmin/modules/superadmin/global-audit/global-audit-contract-snapshot.entity';
-import { FeaturesContractSnapshotEntity } from '@/backend_superadmin/modules/superadmin/features/features-contract-snapshot.entity';
-import { SettingsContractSnapshotEntity } from '@/backend_superadmin/modules/superadmin/settings/settings-contract-snapshot.entity';
-import { BroadcastsContractSnapshotEntity } from '@/backend_superadmin/modules/superadmin/broadcasts/broadcasts-contract-snapshot.entity';
-import { BackupScheduleContractSnapshotEntity } from '@/backend_superadmin/modules/superadmin/system-ops/backups/backup-schedule-contract-snapshot.entity';
-import { CouponsContractSnapshotEntity } from '@/backend_superadmin/modules/superadmin/saas-billing/coupons/coupons-contract-snapshot.entity';
 config();
 export const MasterDataSource = new DataSource({
   type: 'postgres',
   url: process.env.DATABASE_URL,
   synchronize: false,
-  entities: [AffiliateEntity, BroadcastEntity, TenantEntity, SupportTicketEntity, PlatformSettingEntity, TenantMessageEntity, SuperadminNotificationEntity, SubscriptionPlanEntity, CouponEntity, SaasInvoiceEntity, UsageMeterEntity, WhiteLabelDomainEntity, BackgroundJobEntity, MigrationLogEntity, BackupRecordEntity, InfrastructureNodeEntity, SuperadminProfileEntity, FeatureFlagEntity, FeatureReleaseNoteEntity, IntegrationKeyEntity, TeamSnapshotEntity, DashboardSnapshotEntity, AnalyticsSnapshotEntity, ComplianceSnapshotEntity, ReportSnapshotEntity, SystemOpsContractSnapshotEntity, AuditLogEntity, BroadcastsContractSnapshotEntity, JobsContractSnapshotEntity, InfrastructureContractSnapshotEntity, BackupsContractSnapshotEntity, InvoicesContractSnapshotEntity, PlansContractSnapshotEntity, TicketsContractSnapshotEntity, IntegrationsContractSnapshotEntity, MessagingContractSnapshotEntity, GlobalAuditContractSnapshotEntity, FeaturesContractSnapshotEntity, SettingsContractSnapshotEntity, GymDetailContractSnapshotEntity, CouponsContractSnapshotEntity, BackupScheduleContractSnapshotEntity],
+  entities: [AffiliateEntity, BroadcastEntity, TenantEntity, SupportTicketEntity, PlatformSettingEntity, TenantMessageEntity, SuperadminNotificationEntity, SubscriptionPlanEntity, CouponEntity, SaasInvoiceEntity, UsageMeterEntity, WhiteLabelDomainEntity, BackgroundJobEntity, MigrationLogEntity, BackupRecordEntity, InfrastructureNodeEntity, SuperadminProfileEntity, FeatureFlagEntity, FeatureReleaseNoteEntity, IntegrationKeyEntity, TeamSnapshotEntity, DashboardSnapshotEntity, AnalyticsSnapshotEntity, ComplianceSnapshotEntity, ReportSnapshotEntity, AuditLogEntity],
   migrations: [join(__dirname, '../../migrations/*.{js,ts}')],
   extra: { max: Number(process.env.DATABASE_POOL_MAX ?? 20), connectionTimeoutMillis: Number(process.env.DATABASE_ACQUIRE_TIMEOUT_MS ?? 30000), idleTimeoutMillis: Number(process.env.DATABASE_IDLE_TIMEOUT_MS ?? 10000), statement_timeout: Number(process.env.DATABASE_STATEMENT_TIMEOUT_MS ?? 30000) },
 });

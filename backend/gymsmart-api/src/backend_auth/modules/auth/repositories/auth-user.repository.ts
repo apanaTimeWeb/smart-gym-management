@@ -11,7 +11,7 @@ import { AuthUserMapper } from '@/backend_auth/modules/auth/mappers/auth-user.ma
 
 import { CoreRequestContextService } from '@/backend_auth/core/context/core-request-context';
 import type { AuthCredentialRecord, AuthSeedUserInput, AuthUserDomain } from '@/backend_auth/modules/auth/auth.interfaces';
-import { DataSource } from 'typeorm';
+import { DataSource, IsNull } from 'typeorm';
 @Injectable()
 export class AuthUserRepository extends CoreBaseRepository<AuthUserEntity> {
   constructor(dataSource: DataSource, requestContext: CoreRequestContextService) {
@@ -21,7 +21,7 @@ export class AuthUserRepository extends CoreBaseRepository<AuthUserEntity> {
   /** @description Finds credentials for one normalized active email. @param email - Normalized email. @returns Credential record or null. */
   async findCredentialsByEmail(email: string): Promise<AuthCredentialRecord | null> {
     const entity = await this.getRepository().findOne({
-      where: { email: email.toLowerCase(), status: AuthUserStatus.ACTIVE, deletedAt: null },
+      where: { email: email.toLowerCase(), status: AuthUserStatus.ACTIVE, deletedAt: IsNull() },
       select: ['id', 'name', 'email', 'passwordHash', 'role', 'tenantId'],
     });
     return entity ? AuthUserMapper.toCredentials(entity) : null;
@@ -37,7 +37,7 @@ export class AuthUserRepository extends CoreBaseRepository<AuthUserEntity> {
 
   /** @description Checks whether an active non-deleted user exists. @param id - User UUID. @returns True when active. */
   async doesUserExist(id: string): Promise<boolean> {
-    return this.getRepository().exists({ where: { id, status: AuthUserStatus.ACTIVE, deletedAt: null } });
+    return this.getRepository().exists({ where: { id, status: AuthUserStatus.ACTIVE, deletedAt: IsNull() } });
   }
 
   /** @description Creates or updates one deterministic Auth seed identity through a named repository mutation. @param input - Seed identity and hashed password. @returns void. */

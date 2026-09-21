@@ -31,7 +31,7 @@ import { UnitOfWorkService } from '@/backend_superadmin/core/database/unit-of-wo
 
 @Global()
 @Module({
-  imports: [JwtModule.registerAsync({ inject: [ConfigService], useFactory: (config: ConfigService) => ({ secret: config.getOrThrow<string>('app.jwtAccessSecret'), signOptions: { expiresIn: config.getOrThrow<string>('app.jwtAccessTtl') } }) })],
+  imports: [JwtModule.registerAsync({ inject: [ConfigService], useFactory: (config: ConfigService) => ({ secret: config.getOrThrow<string>('app.jwtAccessSecret'), signOptions: { expiresIn: config.getOrThrow<string>('app.jwtAccessTtl') as any } }) })],
   controllers: [MetricsController],
   providers: [
     RedisService, IdempotencyService, IdempotencyInterceptor, JwtAuthGuard, RolesGuard,

@@ -14,6 +14,6 @@ export class GlobalAuditInvestigationService {
     void input;
     const payload = await this.repository.findLatestByKind(GLOBAL_AUDIT_SNAPSHOT_KINDS.INVESTIGATION);
     if (payload === null) throw new NotFoundException('Contract state is not provisioned');
-    return payload as GlobalAuditInvestigationResponseDto;
+    return payload as unknown as GlobalAuditInvestigationResponseDto;
   }
 }

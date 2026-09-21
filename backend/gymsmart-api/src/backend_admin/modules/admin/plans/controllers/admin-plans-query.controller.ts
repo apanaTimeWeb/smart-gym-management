@@ -8,7 +8,8 @@ import { CoreRoles } from '@/backend_admin/core/auth/core-roles.decorator';
 import { CoreRolesGuard } from '@/backend_admin/core/auth/core-roles.guard';
 import { CoreAdminRole } from '@/backend_admin/core/tenant/core-tenant.constants';
 import { AdminPlansQueryService } from '@/backend_admin/modules/admin/plans/services/admin-plans-query.service';
-import { AdminPlansQueryDto, AdminPlansIdDto } from '@/backend_admin/modules/admin/plans/dtos/admin-plans-query.dto';
+import { AdminPlansQueryDto } from '@/backend_admin/modules/admin/plans/dtos/admin-plans-query.dto';
+import { AdminPlansIdDto } from '@/backend_admin/modules/admin/plans/dtos/admin-plans-id.dto';
 import { AdminPlanDto, AdminPlanRevenueRecordDto } from '@/backend_admin/modules/admin/plans/dtos/admin-plans-response.dto';
 
 @ApiTags('Admin / plans')
@@ -30,8 +31,8 @@ export class AdminPlansQueryController {
   @Post('fetchPlanById')
   @ApiOperation({ summary: 'Execute fetchPlanById' })
   @ApiResponse({ status: HttpStatus.OK, type: AdminPlanDto })
-  async fetchPlanById(@Body() body: AdminPlansIdDto, @Query('id') queryId?: string): Promise<AdminPlanDto> {
-    return this.service.fetchPlanById(body.id ?? queryId ?? '');
+  async fetchPlanById(@Query('id') queryId?: string): Promise<AdminPlanDto> {
+    return this.service.fetchPlanById(queryId ?? '');
   }
 
   // SLA: STANDARD

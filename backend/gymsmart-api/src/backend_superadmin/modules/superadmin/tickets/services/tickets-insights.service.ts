@@ -14,6 +14,6 @@ export class TicketsInsightsService {
     void input;
     const payload = await this.repository.findLatestByKind(TICKETS_SNAPSHOT_KINDS.SERVICE_INSIGHTS);
     if (payload === null) throw new NotFoundException('Contract state is not provisioned');
-    return payload as TicketsServiceInsightsResponseDto;
+    return payload as unknown as TicketsServiceInsightsResponseDto;
   }
 }

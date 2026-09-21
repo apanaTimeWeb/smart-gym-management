@@ -25,6 +25,6 @@ export class AdminDashboardMapper {
       createdAt: domain.createdAt,
       updatedAt: domain.updatedAt,
       ...(domain.data as any),
-    } as AdminDashboardResponseDto;
+    } as unknown as AdminDashboardResponseDto;
   }
 }

@@ -42,7 +42,7 @@ export class AdminPermissionsCommandService {
    * @returns Frontend response object.
    */
   private async response(entity: Parameters<AdminPermissionsMapper['toDomain']>[0], action: string): Promise<AdminPermissionsDataDto> {
-    const response = this.mapper.toResponse(this.mapper.toDomain(entity)) as AdminPermissionsDataDto;
+    const response = this.mapper.toResponse(this.mapper.toDomain(entity)) as unknown as AdminPermissionsDataDto;
     await this.audit(entity.id, action, response as any);
     return response;
   }

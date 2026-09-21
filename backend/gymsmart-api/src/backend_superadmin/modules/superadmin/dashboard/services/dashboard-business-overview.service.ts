@@ -14,6 +14,6 @@ export class DashboardBusinessOverviewService {
     void input;
     const payload = await this.repository.findLatestByKind(DASHBOARD_SNAPSHOT_KINDS.BUSINESS_OVERVIEW);
     if (payload === null) throw new NotFoundException('Contract state is not provisioned');
-    return payload as DashboardBusinessOverviewResponseDto;
+    return payload as unknown as DashboardBusinessOverviewResponseDto;
   }
 }

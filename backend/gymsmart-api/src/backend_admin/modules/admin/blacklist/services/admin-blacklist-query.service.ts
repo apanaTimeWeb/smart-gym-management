@@ -21,7 +21,7 @@ export class AdminBlacklistQueryService {
    */
   async fetchBlacklist(query: AdminBlacklistQueryDto): Promise<AdminBlacklistedMemberDto[]> {
     const result = await this.repository.findAll(query); 
-    return result.items.map((entity) => this.mapper.toResponse(this.mapper.toDomain(entity))) as AdminBlacklistedMemberDto[];
+    return result.items.map((entity) => this.mapper.toResponse(this.mapper.toDomain(entity))) as unknown as AdminBlacklistedMemberDto[];
   }
 
   /** @description Executes fetchKPIs for the Admin blacklist feature.
@@ -30,6 +30,6 @@ export class AdminBlacklistQueryService {
    */
   async fetchKPIs(query: AdminBlacklistQueryDto): Promise<AdminBlacklistKPIDataDto> {
     const snapshot = await this.repository.findFirstSnapshot(); 
-    return (snapshot ? snapshot.payload : {}) as AdminBlacklistKPIDataDto;
+    return (snapshot ? snapshot.payload : {}) as unknown as AdminBlacklistKPIDataDto;
   }
 }

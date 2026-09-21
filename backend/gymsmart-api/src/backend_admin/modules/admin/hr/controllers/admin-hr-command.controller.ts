@@ -25,7 +25,7 @@ export class AdminHrCommandController {
   @ApiOperation({ summary: 'Execute createStaff' })
   @ApiResponse({ status: HttpStatus.OK, type: AdminHrStaffDto })
   async createStaff(@Body() dto: AdminHrMutationDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<AdminHrStaffDto> {
-    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.createStaff(dto as any)) as Promise<AdminHrStaffDto>;
+    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.createStaff(dto as any)) as unknown as Promise<AdminHrStaffDto>;
   }
 
   // SLA: STANDARD
@@ -33,22 +33,22 @@ export class AdminHrCommandController {
   @ApiOperation({ summary: 'Execute updateStaff' })
   @ApiResponse({ status: HttpStatus.OK, type: AdminHrStaffDto })
   async updateStaff(@Param('id') id: string, @Body() dto: AdminHrMutationDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<AdminHrStaffDto> {
-    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.updateStaff(id, dto as any)) as Promise<AdminHrStaffDto>;
+    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.updateStaff(id, dto as any)) as unknown as Promise<AdminHrStaffDto>;
   }
 
   // SLA: STANDARD
   @Delete('staff/:id')
   @ApiOperation({ summary: 'Execute deleteStaff' })
   @ApiResponse({ status: HttpStatus.OK })
-  async deleteStaff(@Param('id') id: string, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<void> {
-    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.deleteStaff(id)) as Promise<void>;
+  async deleteStaff(@Param('id') id: string, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<unknown> {
+    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.deleteStaff(id)) as unknown as Promise<void>;
   }
 
   // SLA: STANDARD
   @Post('staff/bulk-deactivate')
   @ApiOperation({ summary: 'Execute bulkDeactivate' })
   @ApiResponse({ status: HttpStatus.OK })
-  async bulkDeactivate(@Body() dto: AdminHrMutationDto): Promise<void> {
+  async bulkDeactivate(@Body() dto: AdminHrMutationDto): Promise<unknown> {
     return this.service.bulkDeactivate(dto.ids || []);
   }
 
@@ -57,7 +57,7 @@ export class AdminHrCommandController {
   @ApiOperation({ summary: 'Execute createPayroll' })
   @ApiResponse({ status: HttpStatus.OK, type: AdminHrPayrollDto })
   async createPayroll(@Body() dto: AdminHrMutationDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<AdminHrPayrollDto> {
-    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.createPayroll(dto as any)) as Promise<AdminHrPayrollDto>;
+    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.createPayroll(dto as any)) as unknown as Promise<AdminHrPayrollDto>;
   }
 
   // SLA: STANDARD
@@ -65,7 +65,7 @@ export class AdminHrCommandController {
   @ApiOperation({ summary: 'Execute updatePayroll' })
   @ApiResponse({ status: HttpStatus.OK, type: AdminHrPayrollDto })
   async updatePayroll(@Param('id') id: string, @Body() dto: AdminHrMutationDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<AdminHrPayrollDto> {
-    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.updatePayroll(id, dto as any)) as Promise<AdminHrPayrollDto>;
+    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.updatePayroll(id, dto as any)) as unknown as Promise<AdminHrPayrollDto>;
   }
 
   // SLA: STANDARD
@@ -73,23 +73,23 @@ export class AdminHrCommandController {
   @ApiOperation({ summary: 'Execute updatePayrollStatus' })
   @ApiResponse({ status: HttpStatus.OK, type: AdminHrPayrollDto })
   async updatePayrollStatus(@Param('id') id: string, @Body() dto: AdminHrMutationDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<AdminHrPayrollDto> {
-    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.updatePayrollStatus(id, dto.status ?? '')) as Promise<AdminHrPayrollDto>;
+    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.updatePayrollStatus(id, dto.status ?? '')) as unknown as Promise<AdminHrPayrollDto>;
   }
 
   // SLA: STANDARD
   @Post('advances')
   @ApiOperation({ summary: 'Execute createAdvance' })
   @ApiResponse({ status: HttpStatus.OK })
-  async createAdvance(@Body() dto: AdminHrMutationDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<void> {
-    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.createAdvance(dto as any)) as Promise<void>;
+  async createAdvance(@Body() dto: AdminHrMutationDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<unknown> {
+    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.createAdvance(dto as any)) as unknown as Promise<void>;
   }
 
   // SLA: STANDARD
   @Post('dues/pay')
   @ApiOperation({ summary: 'Execute payDue' })
   @ApiResponse({ status: HttpStatus.OK })
-  async payDue(@Body() dto: AdminHrMutationDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<void> {
-    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.payDue(dto as any)) as Promise<void>;
+  async payDue(@Body() dto: AdminHrMutationDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<unknown> {
+    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.payDue(dto as any)) as unknown as Promise<void>;
   }
 
 }

@@ -21,7 +21,7 @@ export class AdminPayoutsQueryService {
    */
   async fetchPayouts(query: AdminPayoutsQueryDto): Promise<AdminGymPayoutDto[]> {
     const snapshot = await this.repository.findFirstSnapshot(); 
-    return (snapshot ? snapshot.payload['payouts'] ?? [] : []) as AdminGymPayoutDto[];
+    return (snapshot ? snapshot.payload['payouts'] ?? [] : []) as unknown as AdminGymPayoutDto[];
   }
 
   /** @description Executes fetchPnl for the Admin payouts feature.
@@ -30,7 +30,7 @@ export class AdminPayoutsQueryService {
    */
   async fetchPnl(query: AdminPayoutsQueryDto): Promise<AdminPnLEntryDto[]> {
     const snapshot = await this.repository.findFirstSnapshot(); 
-    return (snapshot ? snapshot.payload['pnl'] ?? [] : []) as AdminPnLEntryDto[];
+    return (snapshot ? snapshot.payload['pnl'] ?? [] : []) as unknown as AdminPnLEntryDto[];
   }
 
   /** @description Executes fetchKPIs for the Admin payouts feature.
@@ -39,6 +39,6 @@ export class AdminPayoutsQueryService {
    */
   async fetchKPIs(query: AdminPayoutsQueryDto): Promise<AdminPayoutsKPIDataDto> {
     const snapshot = await this.repository.findFirstSnapshot(); 
-    return (snapshot ? snapshot.payload : {}) as AdminPayoutsKPIDataDto;
+    return (snapshot ? snapshot.payload : {}) as unknown as AdminPayoutsKPIDataDto;
   }
 }

@@ -1,6 +1,6 @@
-﻿// RESPONSIBILITY: Implements Superadmin authentication, refresh rotation, login lockout, and logout semantics.
+// RESPONSIBILITY: Implements Superadmin authentication, refresh rotation, login lockout, and logout semantics.
 // FLOW: credentials -> failed-attempt counter -> profile -> bcrypt/JWT/Redis -> token response.
-import { Injectable, TooManyRequestsException, UnauthorizedException } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
@@ -17,7 +17,7 @@ export class AuthService {
   async login(email: string, password: string): Promise<{ accessToken: string; refreshToken: string; user: { id: string; email: string; role: SuperadminRole } }> {
     const normalizedEmail = email.trim().toLowerCase();
     const lockKey = `auth:lock:${normalizedEmail}`;
-    if (await this.redis.get(lockKey)) throw new TooManyRequestsException('Account temporarily locked');
+    if (await this.redis.get(lockKey)) throw new HttpException('Account temporarily locked', HttpStatus.TOO_MANY_REQUESTS);
     const user = await this.repository.findByEmail(normalizedEmail);
     if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
       const attemptKey = `auth:failed:${normalizedEmail}`;
@@ -45,8 +45,8 @@ export class AuthService {
 
   /** Issues a new access/refresh token pair for verified claims. */
   private async issueTokens(claims: JwtClaims): Promise<{ accessToken: string; refreshToken: string }> {
-    const accessToken = await this.jwt.signAsync(claims, { secret: this.config.getOrThrow<string>('app.jwtAccessSecret'), expiresIn: this.config.getOrThrow<string>('app.jwtAccessTtl') });
-    const refreshToken = await this.jwt.signAsync({ ...claims, jti: randomUUID() }, { secret: this.config.getOrThrow<string>('app.jwtRefreshSecret'), expiresIn: this.config.getOrThrow<string>('app.jwtRefreshTtl') });
+    const accessToken = await this.jwt.signAsync(claims, { secret: this.config.getOrThrow<string>('app.jwtAccessSecret'), expiresIn: this.config.getOrThrow<string>('app.jwtAccessTtl') as any });
+    const refreshToken = await this.jwt.signAsync({ ...claims, jti: randomUUID() }, { secret: this.config.getOrThrow<string>('app.jwtRefreshSecret'), expiresIn: this.config.getOrThrow<string>('app.jwtRefreshTtl') as any });
     return { accessToken, refreshToken };
   }
 

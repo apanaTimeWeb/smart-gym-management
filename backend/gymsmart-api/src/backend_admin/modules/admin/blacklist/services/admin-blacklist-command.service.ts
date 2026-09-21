@@ -64,7 +64,7 @@ export class AdminBlacklistCommandService {
    * @returns Frontend response object.
    */
   private async response(entity: Parameters<AdminBlacklistMapper['toDomain']>[0], action: string): Promise<AdminBlacklistedMemberDto> {
-    const response = this.mapper.toResponse(this.mapper.toDomain(entity)) as AdminBlacklistedMemberDto;
+    const response = this.mapper.toResponse(this.mapper.toDomain(entity)) as unknown as AdminBlacklistedMemberDto;
     await this.audit(entity.id, action, response as any);
     return response;
   }

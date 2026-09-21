@@ -25,7 +25,7 @@ export class AdminCouponsCommandController {
   @ApiOperation({ summary: 'Execute createCoupon' })
   @ApiResponse({ status: HttpStatus.OK, type: AdminCouponDto })
   async createRecord(@Body() dto: AdminCouponsMutationDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<AdminCouponDto> {
-    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.createRecord(dto)) as Promise<AdminCouponDto>;
+    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.createRecord(dto as unknown as Record<string, unknown>)) as unknown as Promise<AdminCouponDto>;
   }
 
   // SLA: STANDARD
@@ -35,7 +35,7 @@ export class AdminCouponsCommandController {
   async updateById(@Body() dto: AdminCouponsMutationDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<AdminCouponDto> {
     const id = dto.id;
     if (!id) throw new BadRequestException('Coupon id is required.');
-    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.updateById(id, dto)) as Promise<AdminCouponDto>;
+    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.updateById(id, dto as unknown as Record<string, unknown>)) as unknown as Promise<AdminCouponDto>;
   }
 
   // SLA: STANDARD
@@ -45,7 +45,7 @@ export class AdminCouponsCommandController {
   async markAsDeleted(@Body() dto: AdminCouponsIdDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<void> {
     const id = dto.id;
     if (!id) throw new BadRequestException('Coupon id is required.');
-    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.markAsDeleted(id)) as Promise<void>;
+    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.markAsDeleted(id)) as unknown as Promise<void>;
   }
 
   // SLA: STANDARD
@@ -58,7 +58,7 @@ export class AdminCouponsCommandController {
     return this.idempotency.executeOnce(idempotencyKey, async () => {
       // Mapping to toggleActiveById in the service since it already existed
       return (this.service as any).toggleActiveById(id);
-    }) as Promise<AdminCouponDto>;
+    }) as unknown as Promise<AdminCouponDto>;
   }
 
 }

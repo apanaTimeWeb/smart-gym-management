@@ -25,31 +25,31 @@ export class AdminSettingsCommandController {
   @ApiOperation({ summary: 'Execute updateSettings' })
   @ApiResponse({ status: HttpStatus.OK, type: AdminSettingsResponseDto })
   async updateSettings(@Body() dto: AdminSettingsMutationDto): Promise<AdminSettingsResponseDto> {
-    return this.service.updateSettings(dto) as Promise<AdminSettingsResponseDto>;
+    return this.service.updateSettings(dto as unknown as Record<string, unknown>) as unknown as Promise<AdminSettingsResponseDto>;
   }
 
   // SLA: STANDARD
   @Post('2fa/enable')
   @ApiOperation({ summary: 'Execute enable2fa' })
   @ApiResponse({ status: HttpStatus.OK })
-  async enableTwoFactor(): Promise<void> {
-    return this.service.enableTwoFactor() as Promise<void>;
+  async enableTwoFactor(): Promise<unknown> {
+    return this.service.enableTwoFactor() as unknown as Promise<void>;
   }
 
   // SLA: STANDARD
   @Post('2fa/disable')
   @ApiOperation({ summary: 'Execute disable2fa' })
   @ApiResponse({ status: HttpStatus.OK })
-  async disableTwoFactor(): Promise<void> {
-    return this.service.disableTwoFactor() as Promise<void>;
+  async disableTwoFactor(): Promise<unknown> {
+    return this.service.disableTwoFactor() as unknown as Promise<void>;
   }
 
   // SLA: STANDARD
   @Post('2fa/verify')
   @ApiOperation({ summary: 'Execute verify2fa' })
   @ApiResponse({ status: HttpStatus.OK })
-  async verifyTwoFactor(): Promise<void> {
-    return this.service.verifyTwoFactor() as Promise<void>;
+  async verifyTwoFactor(): Promise<unknown> {
+    return this.service.verifyTwoFactor() as unknown as Promise<void>;
   }
 
 }

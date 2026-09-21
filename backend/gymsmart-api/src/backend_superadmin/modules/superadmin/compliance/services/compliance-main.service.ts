@@ -14,6 +14,6 @@ export class ComplianceMainService {
     void input;
     const payload = await this.repository.findLatestByKind(COMPLIANCE_SNAPSHOT_KINDS.MAIN);
     if (payload === null) throw new NotFoundException('Contract state is not provisioned');
-    return payload as ComplianceResponseDataDto;
+    return payload as unknown as ComplianceResponseDataDto;
   }
 }

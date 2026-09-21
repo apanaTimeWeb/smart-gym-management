@@ -21,7 +21,7 @@ export class AdminGymHealthAlertsQueryService {
    */
   async fetchAlerts(query: AdminGymHealthAlertsQueryDto): Promise<AdminGymHealthAlertDto[]> {
     const result = await this.repository.findAll(query); 
-    return result.items.map((entity) => this.mapper.toResponse(this.mapper.toDomain(entity))) as AdminGymHealthAlertDto[];
+    return result.items.map((entity) => this.mapper.toResponse(this.mapper.toDomain(entity))) as unknown as AdminGymHealthAlertDto[];
   }
 
   /** @description Executes fetchKPIs for the Admin gym-health-alerts feature.
@@ -30,6 +30,6 @@ export class AdminGymHealthAlertsQueryService {
    */
   async fetchKPIs(query: AdminGymHealthAlertsQueryDto): Promise<AdminGymHealthKPIDataDto> {
     const snapshot = await this.repository.findFirstSnapshot(); 
-    return (snapshot ? snapshot.payload : {}) as AdminGymHealthKPIDataDto;
+    return (snapshot ? snapshot.payload : {}) as unknown as AdminGymHealthKPIDataDto;
   }
 }

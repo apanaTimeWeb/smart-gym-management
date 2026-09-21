@@ -21,6 +21,6 @@ export class AdminNotificationsQueryService {
    */
   async listNotifications(query: AdminNotificationsQueryDto): Promise<AdminNotificationDto[]> {
     const result = await this.repository.findAll(query); 
-    return result.items.map((entity) => this.mapper.toResponse(this.mapper.toDomain(entity))) as AdminNotificationDto[];
+    return result.items.map((entity) => this.mapper.toResponse(this.mapper.toDomain(entity))) as unknown as AdminNotificationDto[];
   }
 }

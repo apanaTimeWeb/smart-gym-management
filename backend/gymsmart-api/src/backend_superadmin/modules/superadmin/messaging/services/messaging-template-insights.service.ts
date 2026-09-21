@@ -14,6 +14,6 @@ export class MessagingTemplateInsightsService {
     void input;
     const payload = await this.repository.findLatestByKind(MESSAGING_SNAPSHOT_KINDS.TEMPLATE_INSIGHTS);
     if (payload === null) throw new NotFoundException('Contract state is not provisioned');
-    return payload as MessagingTemplateInsightsResponseDto;
+    return payload as unknown as MessagingTemplateInsightsResponseDto;
   }
 }

@@ -1,7 +1,7 @@
-﻿// RESPONSIBILITY: Applies centralized Redis-backed API rate-limit tiers using configuration-owned thresholds.
+// RESPONSIBILITY: Applies centralized Redis-backed API rate-limit tiers using configuration-owned thresholds.
 // FLOW: CoreRateLimitGuard -> CoreRateLimitService -> RATE_LIMIT_CONFIG -> Redis.
 
-import { Injectable, TooManyRequestsException } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
 import { CoreRedisService } from '@/backend_auth/core/cache/core-redis.service';
@@ -16,7 +16,7 @@ export class CoreRateLimitService {
   async assertAllowed(tier: CoreRateLimitTier, subject: string): Promise<void> {
     const { max, ttlSeconds } = this.resolveTier(tier);
     const count = await this.redis.incrementWithExpiry(`rate-limit:${tier}:${subject}`, ttlSeconds);
-    if (count > max) throw new TooManyRequestsException(CoreErrorConstants.MESSAGE.RATE_LIMITED);
+    if (count > max) throw new HttpException(CoreErrorConstants.MESSAGE.RATE_LIMITED, HttpStatus.TOO_MANY_REQUESTS);
   }
 
   /** @description Resolves one tier from the centralized registry and validated environment configuration. @param tier - Requested tier. @returns Maximum requests and window duration. */

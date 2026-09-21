@@ -20,6 +20,6 @@ export class AdminDashboardQueryService {
    * @returns Frontend contract response.
    */
   async fetchDashboardStats(_query?: AdminDashboardQueryDto): Promise<AdminDashboardResponseDto> {
-    const snapshot = await this.repository.findFirstSnapshot(); return snapshot ? this.mapper.toResponse(this.mapper.toDomain(snapshot)) : {} as AdminDashboardResponseDto;
+    const snapshot = await this.repository.findFirstSnapshot(); return snapshot ? this.mapper.toResponse(this.mapper.toDomain(snapshot)) : {} as unknown as AdminDashboardResponseDto;
   }
 }

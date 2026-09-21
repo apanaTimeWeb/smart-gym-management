@@ -14,6 +14,6 @@ export class PlansBusinessControlsService {
     void input;
     const payload = await this.repository.findLatestByKind(PLANS_SNAPSHOT_KINDS.BUSINESS_CONTROLS);
     if (payload === null) throw new NotFoundException('Contract state is not provisioned');
-    return payload as PlansBusinessControlsResponseDto;
+    return payload as unknown as PlansBusinessControlsResponseDto;
   }
 }

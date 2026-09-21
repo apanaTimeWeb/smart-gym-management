@@ -21,7 +21,7 @@ export class AdminFinanceQueryService {
    */
   async fetchPayments(query: AdminFinanceQueryDto): Promise<AdminFinancePaymentResponseDto> {
     const snapshot = await this.repository.findFirstSnapshot(); 
-    return snapshot ? (this.mapper.toResponse(this.mapper.toDomain(snapshot)) as AdminFinancePaymentResponseDto) : { payments: [], total: 0 };
+    return snapshot ? (this.mapper.toResponse(this.mapper.toDomain(snapshot)) as unknown as AdminFinancePaymentResponseDto) : { payments: [], total: 0 };
   }
 
   /** @description Executes fetchSummary for the Admin finance feature.
@@ -30,7 +30,7 @@ export class AdminFinanceQueryService {
    */
   async fetchSummary(query: AdminFinanceQueryDto): Promise<AdminFinanceSummaryResponseDto> {
     const snapshot = await this.repository.findFirstSnapshot(); 
-    return snapshot ? ((snapshot.payload.summary as any) ?? {}) as AdminFinanceSummaryResponseDto : {} as AdminFinanceSummaryResponseDto;
+    return snapshot ? ((snapshot.payload.summary as any) ?? {}) as unknown as AdminFinanceSummaryResponseDto : {} as unknown as AdminFinanceSummaryResponseDto;
   }
 
   /** @description Executes fetchPnl for the Admin finance feature.
@@ -39,7 +39,7 @@ export class AdminFinanceQueryService {
    */
   async fetchPnl(query: AdminFinanceQueryDto): Promise<AdminFinancePnlRecordDto[]> {
     const snapshot = await this.repository.findFirstSnapshot(); 
-    return snapshot ? ((snapshot.payload.pnl as any) ?? []) as AdminFinancePnlRecordDto[] : [];
+    return snapshot ? ((snapshot.payload.pnl as any) ?? []) as unknown as AdminFinancePnlRecordDto[] : [];
   }
 
   /** @description Executes fetchExpenses for the Admin finance feature.
@@ -48,6 +48,6 @@ export class AdminFinanceQueryService {
    */
   async fetchExpenses(query: AdminFinanceQueryDto): Promise<AdminFinanceExpenseResponseDto> {
     const snapshot = await this.repository.findFirstSnapshot(); 
-    return snapshot ? (this.mapper.toResponse(this.mapper.toDomain(snapshot)) as AdminFinanceExpenseResponseDto) : { expenses: [], total: 0, totalAmount: 0 };
+    return snapshot ? (this.mapper.toResponse(this.mapper.toDomain(snapshot)) as unknown as AdminFinanceExpenseResponseDto) : { expenses: [], total: 0, totalAmount: 0 };
   }
 }

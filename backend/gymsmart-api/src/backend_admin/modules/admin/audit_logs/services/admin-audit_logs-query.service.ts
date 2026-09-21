@@ -18,7 +18,7 @@ export class AdminAuditLogsQueryService {
   /** @description Returns immutable audit logs with server-side pagination and UI filters. @param query Validated query. @returns Paginated frontend audit contract. */
   async fetchLogs(query: AdminAuditLogsQueryDto): Promise<AdminAuditLogDto[]> {
     const result = await this.repository.findAll(query);
-    return result.items.map((entity) => this.mapper.toResponse(this.mapper.toDomain(entity))) as AdminAuditLogDto[];
+    return result.items.map((entity) => this.mapper.toResponse(this.mapper.toDomain(entity))) as unknown as AdminAuditLogDto[];
   }
 
   /** @description Returns KPI counts computed from the real audit table. @param query Validated query. @returns KPI contract. */
