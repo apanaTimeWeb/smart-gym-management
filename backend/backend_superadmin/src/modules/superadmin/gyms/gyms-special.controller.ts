@@ -26,13 +26,13 @@ export class GymsSpecialController {
   /** Executes GET /superadmin/gyms/business-controls. */
   @ApiOperation({ summary: 'GET /superadmin/gyms/business-controls' })
   @Get('superadmin/gyms/business-controls')
-  async businessControls(@Query() query: Record<string, string>): Promise<GymsBusinessControlsResponseDto> { return await this.businessControlsService.findGymsBusinessControls({ query }) as unknown as GymsBusinessControlsResponseDto; }
+  async businessControls(@Query() query: Record<string, string>): Promise<GymsBusinessControlsResponseDto> { return await this.businessControlsService.findGymsBusinessControls({ query }) as GymsBusinessControlsResponseDto; }
 
   /** Executes POST /superadmin/gyms/business-controls. */
   @RequireIdempotencyKey()
   @ApiOperation({ summary: 'POST /superadmin/gyms/business-controls' })
   @Post('superadmin/gyms/business-controls')
-  async bulkAction(@Body() body: GymsBusinessControlsBulkActionDto): Promise<GymsBusinessControlsResponseDto> { return await this.bulkActionService.applyGymsBulkAction(body) as unknown as GymsBusinessControlsResponseDto; }
+  async bulkAction(@Body() body: GymsBusinessControlsBulkActionDto): Promise<GymsBusinessControlsResponseDto> { return await this.bulkActionService.applyGymsBulkAction(body) as GymsBusinessControlsResponseDto; }
 
 
   /** Returns live Gym aggregate statistics. */
@@ -55,6 +55,6 @@ export class GymsSpecialController {
   /** Executes GET /superadmin/gym-detail/business-overview. */
   @ApiOperation({ summary: 'GET /superadmin/gym-detail/business-overview' })
   @Get('superadmin/gym-detail/business-overview')
-  async detailBusinessOverview(@Query() query: Record<string, string>): Promise<GymDetailBusinessOverviewResponseDto> { return await this.detailBusinessOverviewService.findGymsDetailBusinessOverview({ query }) as unknown as GymDetailBusinessOverviewResponseDto; }
+  async detailBusinessOverview(@Query() query: Record<string, string>): Promise<GymDetailBusinessOverviewResponseDto> { return await this.detailBusinessOverviewService.findGymsDetailBusinessOverview({ query }) as GymDetailBusinessOverviewResponseDto; }
 
 }

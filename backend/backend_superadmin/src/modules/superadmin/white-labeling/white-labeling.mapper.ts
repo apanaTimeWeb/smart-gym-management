@@ -5,7 +5,7 @@ import type { WhiteLabelingDomainModel } from '@/modules/superadmin/white-labeli
 
 export class WhiteLabelingMapper {
   /** Maps a persistence entity to the domain representation. */
-  static toDomain(entity: WhiteLabelDomainEntity): WhiteLabelingDomainModel { return { ...entity } as unknown as WhiteLabelingDomainModel; }
+  static toDomain(entity: WhiteLabelDomainEntity): WhiteLabelingDomainModel { return { ...entity } as WhiteLabelingDomainModel; }
 
   /** Maps persistence entities to domain representations. */
   static toDomainList(entities: WhiteLabelDomainEntity[]): WhiteLabelingDomainModel[] { return entities.map(WhiteLabelingMapper.toDomain); }
