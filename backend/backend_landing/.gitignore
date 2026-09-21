@@ -1,8 +1,0 @@
-node_modules/
-dist/
-coverage/
-.env
-*.log
-.DS_Store
-.pytest_cache/
-__pycache__/

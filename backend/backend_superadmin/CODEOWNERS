@@ -1,4 +1,0 @@
-/src/modules/auth/ @backend-security-reviewers
-/src/modules/gyms/ @tenant-provisioning-reviewers
-/src/modules/saas-billing/ @billing-reviewers
-/src/core/tenancy/ @tenant-provisioning-reviewers

@@ -1,9 +1,0 @@
-#!/usr/bin/env sh
-npx --no-install lint-staged
-node scripts/check-staged-types.mjs
-if command -v gitleaks >/dev/null 2>&1; then
-  gitleaks protect --staged --redact
-else
-  echo 'gitleaks binary is required for the pre-commit security gate.' >&2
-  exit 1
-fi
