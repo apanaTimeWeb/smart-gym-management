@@ -1,7 +1,9 @@
 // RESPONSIBILITY: Owns the single Redis client used by rate limiting and idempotency infrastructure.
 // FLOW: AppModule → RedisInfrastructureModule → RedisService → Redis server.
 import { Injectable, OnModuleDestroy } from '@nestjs/common';
+
 import Redis from 'ioredis';
+
 
 @Injectable()
 export class RedisService implements OnModuleDestroy {

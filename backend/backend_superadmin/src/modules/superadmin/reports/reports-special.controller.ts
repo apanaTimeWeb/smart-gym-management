@@ -20,11 +20,11 @@ export class ReportsSpecialController {
   /** Executes GET /superadmin/reports. */
   @ApiOperation({ summary: 'GET /superadmin/reports' })
   @Get('superadmin/reports')
-  async main(@Query() query: Record<string, string>): Promise<unknown> { return await this.mainService.findReportsData(); }
+  async main(@Query() query: Record<string, string>): Promise<unknown> { return await this.mainService.findReportsData(query); }
 
   /** Executes GET /superadmin/reports/comparison. */
   @ApiOperation({ summary: 'GET /superadmin/reports/comparison' })
   @Get('superadmin/reports/comparison')
-  async comparison(@Query() query: Record<string, string>): Promise<unknown> { return await this.comparisonService.findReportsComparison(); }
+  async comparison(@Query() query: Record<string, string>): Promise<unknown> { return await this.comparisonService.findReportsComparison(query); }
 
 }

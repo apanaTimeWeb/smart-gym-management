@@ -55,7 +55,7 @@ None. This feature must not import sibling business modules directly.
 - `@/modules/superadmin/saas-billing/plans/plans-contract-snapshot.entity`
 - `@/modules/superadmin/saas-billing/plans/plans-contract-snapshot.repository`
 - `@/modules/superadmin/saas-billing/plans/plans-query.controller`
-- `@/modules/superadmin/saas-billing/plans/plans-special.controller`
+- `@/modules/superadmin/saas-billing/plans/plans-query.controller`
 - `@/modules/superadmin/saas-billing/plans/plans.constants`
 - `@/modules/superadmin/saas-billing/plans/plans.entity`
 - `@/modules/superadmin/saas-billing/plans/plans.mapper`

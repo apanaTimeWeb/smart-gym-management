@@ -63,7 +63,7 @@ The SaaS Billing container coordinates the Superadmin billing feature family. Co
 | `plans/plans-contract-snapshot.entity.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
 | `plans/plans-contract-snapshot.repository.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
 | `plans/plans-query.controller.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
-| `plans/plans-special.controller.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
+| `plans/plans-query.controller.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
 | `plans/plans.constants.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
 | `plans/plans.entity.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
 | `plans/plans.exceptions.ts` | Owns the single business or infrastructure responsibility encoded by its filename. It must not absorb unrelated feature behavior. |
@@ -107,7 +107,7 @@ The SaaS Billing container coordinates the Superadmin billing feature family. Co
 | `plans-command.controller.ts` | DELETE | `/superadmin/saas-billing/plans:id` | Implements the `DELETE /superadmin/saas-billing/plans:id` contract for this feature. | DTO validated at controller boundary | Feature response contract |
 | `plans-query.controller.ts` | GET | `/superadmin/saas-billing/plans` | Implements the `GET /superadmin/saas-billing/plans` contract for this feature. | DTO validated at controller boundary | Feature response contract |
 | `plans-query.controller.ts` | GET | `/superadmin/saas-billing/plans:id` | Implements the `GET /superadmin/saas-billing/plans:id` contract for this feature. | DTO validated at controller boundary | Feature response contract |
-| `plans-special.controller.ts` | GET | `superadmin/saas-billing/plans/business-controls` | Implements the `GET superadmin/saas-billing/plans/business-controls` contract for this feature. | DTO validated at controller boundary | Feature response contract |
+| `plans-query.controller.ts` | GET | `superadmin/saas-billing/plans/business-controls` | Implements the `GET superadmin/saas-billing/plans/business-controls` contract for this feature. | DTO validated at controller boundary | Feature response contract |
 ## Approved External Dependencies
 - **Business Feature Dependencies**: None by direct import. Cross-feature runtime coupling must use registered events.
 - **Infrastructure Dependencies**: Core configuration, authentication/authorization, PostgreSQL/TypeORM, Redis where applicable, canonical response/error infrastructure.

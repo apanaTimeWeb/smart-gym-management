@@ -28,6 +28,7 @@ export class InfrastructureSpecialController {
   /** Executes GET /superadmin/system-ops/infrastructure/uptime. */
   @ApiOperation({ summary: 'GET /superadmin/system-ops/infrastructure/uptime' })
   @Get('superadmin/system-ops/infrastructure/uptime')
+  @Get('superadmin/system-ops/infrastructure/uptime-history')
   async uptime(@Query() query: Record<string, string>): Promise<unknown> { return await this.uptimeService.findInfrastructureUptime(); }
 
   /** Executes POST /superadmin/system-ops/infrastructure/redis/flush-global. */

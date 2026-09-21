@@ -2,7 +2,7 @@
 // FLOW: HTTP request body → AdminUsageMutationDto → service business validation → repository mutation.
 
 import { Type } from 'class-transformer';
-import { IsArray, IsBoolean, IsNumber, IsObject, IsOptional, IsString, IsUUID } from 'class-validator';
+import { IsNumber, IsOptional, IsString, IsUUID, MinLength } from 'class-validator';
 
 export class AdminUsageMutationDto {
   @IsOptional()
@@ -72,7 +72,7 @@ export class AdminUsageMutationDto {
   @IsNumber()
   usagePercent?: number;
 
-  @IsOptional()
   @IsString()
-  planName?: string;
+  @MinLength(2)
+  planName!: string;
 }

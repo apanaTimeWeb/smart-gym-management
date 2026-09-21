@@ -6,6 +6,8 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { CoreSla, CoreSlaCategory } from '@/core/http/core-sla.decorator';
 import { CoreMetricsService } from '@/core/metrics/core-metrics.service';
+import { CoreRateLimit } from '@/core/rate-limit/core-rate-limit.decorator';
+import { CoreRateLimitTier } from '@/core/rate-limit/core-rate-limit.constants';
 import { CorePublic } from '@/core/security/core-public.decorator';
 
 import type { Response } from 'express';
@@ -18,6 +20,7 @@ export class CoreMetricsController {
   @ApiOperation({ summary: 'Expose Prometheus metrics.' })
   @ApiResponse({ status: HttpStatus.OK, description: 'Prometheus metrics exposition text.' })
   @CorePublic()
+  @CoreRateLimit(CoreRateLimitTier.METRICS)
   @Header('Cache-Control', 'no-store')
   @CoreSla(CoreSlaCategory.FAST)
   // SLA: FAST

@@ -1,12 +1,15 @@
-// RESPONSIBILITY: Maps Gyms ORM entities into domain-safe response data.
-// FLOW: TypeORM entity -> GymsMapper -> domain model -> response DTO.
+// RESPONSIBILITY: Maps Gym ORM entities into a frontend-safe domain representation without exposing encrypted sensitive persistence fields.
+// FLOW: TypeORM TenantEntity -> GymsMapper -> public Gym domain/response DTO.
 import type { TenantEntity } from '@/modules/superadmin/gyms/gyms.entity';
 import type { GymsDomainModel } from '@/modules/superadmin/gyms/types/gyms.interfaces';
 
 export class GymsMapper {
-  /** Maps a persistence entity to the domain representation. */
-  static toDomain(entity: TenantEntity): GymsDomainModel { return { ...entity } as GymsDomainModel; }
+  /** Maps one persistence entity to the public Gym domain model and omits encrypted Aadhaar ciphertext. */
+  static toDomain(entity: TenantEntity): GymsDomainModel {
+    const { aadharNumberEncrypted: _redacted, ...safe } = entity;
+    return safe as GymsDomainModel;
+  }
 
-  /** Maps persistence entities to domain representations. */
-  static toDomainList(entities: TenantEntity[]): GymsDomainModel[] { return entities.map(GymsMapper.toDomain); }
+  /** Maps multiple Gym entities into safe domain models. */
+  static toDomainList(entities: TenantEntity[]): GymsDomainModel[] { return entities.map((item) => GymsMapper.toDomain(item)); }
 }

@@ -4,11 +4,12 @@
 import { Injectable } from '@nestjs/common';
 
 import { CoreAuditService } from '@/core/audit/core-audit.service';
-import { AuthConstants } from '@/modules/auth/auth.constants';
 import { AuthRefreshRejectedException, AuthRefreshReuseDetectedException } from '@/modules/auth/auth.exceptions';
+import { AuthConstants } from '@/modules/auth/auth.constants';
 import { AuthRefreshSessionRepository } from '@/modules/auth/repositories/auth-refresh-session.repository';
-import { AuthUserRepository } from '@/modules/auth/repositories/auth-user.repository';
 import { AuthRefreshRevocationService } from '@/modules/auth/services/auth-refresh-revocation.service';
+import { AuthUserRepository } from '@/modules/auth/repositories/auth-user.repository';
+import { AuthAuditRoleMapper } from '@/modules/auth/utils/auth-audit-role.mapper';
 import { AuthTokenUtils } from '@/modules/auth/utils/auth-token.utils';
 
 import type { AuthRefreshDomainResult, AuthSessionDomain, AuthUserDomain } from '@/modules/auth/auth.interfaces';
@@ -69,7 +70,7 @@ export class AuthRefreshService {
     const refreshToken = this.tokenUtils.createRefreshToken(user.id, sessionId);
     const expiresAt = new Date(Date.now() + this.refreshTtlMs());
     await this.sessionRepository.rotateRefreshSession(sessionId, this.tokenUtils.hashRefreshToken(refreshToken), expiresAt);
-    await this.audit.record({ actorId: user.id, actorRole: user.role, action: AuthConstants.AUDIT.REFRESH_ROTATED, entityType: 'auth_refresh_session', entityId: sessionId, oldValue: null, newValue: { rotated: true }, ipAddress: this.audit.getRequestMetadata().ipAddress });
+    await this.audit.record({ actorId: user.id, actorRole: AuthAuditRoleMapper(user.role), action: AuthConstants.AUDIT.REFRESH_ROTATED, entityType: 'auth_refresh_session', entityId: sessionId, oldValue: null, newValue: { rotated: true }, ipAddress: this.audit.getRequestMetadata().ipAddress });
     return this.tokenUtils.toRefreshResult(accessToken, refreshToken);
   }
 

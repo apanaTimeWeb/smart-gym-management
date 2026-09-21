@@ -1,10 +1,15 @@
 // RESPONSIBILITY: Caches one TypeORM DataSource per trusted tenant database within a bounded process budget.
 // FLOW: Trusted Tenant → TenantDataSourceManager → TypeORM DataSource cache.
 import { Injectable, OnModuleDestroy } from '@nestjs/common';
+
 import { DataSource } from 'typeorm';
+
 import { MasterTenantEntity } from '@/core/tenant/master-tenant.entity';
+
 import { buildTenantDataSourceOptions } from '@/core/database/tenant-data-source-options';
+
 import { DATABASE_CONFIG } from '@/core/config/database.config';
+
 
 @Injectable()
 export class TenantDataSourceManagerService implements OnModuleDestroy {
@@ -20,6 +25,18 @@ export class TenantDataSourceManagerService implements OnModuleDestroy {
     await dataSource.initialize();
     this.dataSources.set(tenant.id, dataSource);
     return dataSource;
+  }
+
+  /**
+   * @description Releases one cached tenant DataSource before disposable test database cleanup.
+   * @param tenantId - Tenant UUID whose connection pool should be destroyed.
+   * @returns Resolves after the cached DataSource is destroyed when present.
+   */
+  async destroy(tenantId: string): Promise<void> {
+    const dataSource = this.dataSources.get(tenantId);
+    if (!dataSource) return;
+    if (dataSource.isInitialized) await dataSource.destroy();
+    this.dataSources.delete(tenantId);
   }
 
   /** @description Closes all cached tenant connections during graceful shutdown. @returns Resolves after all initialized pools are closed. */

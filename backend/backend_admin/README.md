@@ -69,3 +69,6 @@ Unit tests live beside the micro-feature files.
 Pytest E2E lives under `e2e/admin/<feature>/` and is written as a real HTTP client.
 
 The archive contains an explicit phase report documenting what was created from the supplied frontend contract.
+
+## Corrected package notes
+See `CORRECTION_REPORT.md` for the concrete changes in the corrected archive. The package intentionally does not claim live runtime verification without installed dependencies and a running PostgreSQL/Redis environment.

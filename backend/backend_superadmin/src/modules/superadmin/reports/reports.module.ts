@@ -13,11 +13,12 @@ import { ReportsUpdateService } from '@/modules/superadmin/reports/services/repo
 import { ReportsDeleteService } from '@/modules/superadmin/reports/services/reports-delete.service';
 import { ReportsMainService } from '@/modules/superadmin/reports/services/reports-main.service';
 import { ReportsComparisonService } from '@/modules/superadmin/reports/services/reports-comparison.service';
+import { ReportsDataService } from '@/modules/superadmin/reports/services/reports-data.service';
 import { ReportsSpecialController } from '@/modules/superadmin/reports/reports-special.controller';
 @Module({
   imports: [TypeOrmModule.forFeature([ReportSnapshotEntity])],
   controllers: [ReportsQueryController, ReportsCommandController, ReportsSpecialController],
-  providers: [ReportsMainService, ReportsComparisonService, ReportsRepository, ReportsListService, ReportsFindService, ReportsCreateService, ReportsUpdateService, ReportsDeleteService],
+  providers: [ReportsDataService, ReportsMainService, ReportsComparisonService, ReportsRepository, ReportsListService, ReportsFindService, ReportsCreateService, ReportsUpdateService, ReportsDeleteService],
   exports: [ReportsRepository],
 })
 export class ReportsModule {}

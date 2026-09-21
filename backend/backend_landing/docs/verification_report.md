@@ -1,23 +1,31 @@
-# V1 Verification Report
+# Corrected Backend Verification Report
 
-## PASS
+## Static PASS
 
-- TypeScript authored-file syntax transpile check: PASS.
-- Python E2E syntax check (`py_compile`): PASS.
-- Architecture verifier: PASS.
-- Authored controller/service/repository/entity/DTO/module file ceilings: PASS.
-- Prohibited relative-import scan: PASS.
-- Alias-import existence scan: PASS (166 local alias imports checked).
-- No authored `console.log`, `require()`, TypeScript suppressions, or raw `any` usage detected after comment-aware scanning.
+- All authored TypeScript files parse successfully with the TypeScript compiler parser.
+- All Landing and core edited files retain required `// RESPONSIBILITY:` / `// FLOW:` headers.
+- Import groups are mechanically ordered and separated according to Rule 88 in the architecture verifier.
+- Relative imports, raw `any`, TypeScript suppression directives, and `console.log` patterns remain blocked by the architecture verifier.
+- Controller/service/repository/entity/module file ceilings remain within Rule 75 limits.
+- Python E2E files compile successfully.
+- The corrected archive contains no `node_modules`, `dist`, coverage output, `.pyc`, or `__pycache__` artifacts.
 
-## NOT VERIFIED
+## Corrected architecture areas
 
-- Full dependency-resolved `tsc --noEmit`.
-- Full ESLint run.
-- Jest execution with installed Nest/TypeORM dependencies.
-- Live Postgres + Redis integration tests.
-- Running `docker compose` services in the supplied environment.
+- Anonymous Landing tenant selection is application-controlled through `PUBLIC_TENANT_ID`; arbitrary tenant headers are rejected.
+- Idempotency reservations and completed responses are durable in tenant PostgreSQL and are written in the same transaction as the mutation; Redis is a replay cache only.
+- Landing repositories inherit `CoreBaseRepository`, and `CoreBaseEntity` declares the shared UUID identity abstraction.
+- A disposable test-tenant provisioning API is available only in `NODE_ENV=test`; Pytest creates and cleans up a fresh tenant/database per session.
+- Swagger now documents concrete Landing success and error envelopes.
+- CI/pre-commit configuration includes typecheck, lint-staged, formatting, dependency audit, secrets scanning, and SAST gates.
+- Rule 88 import ordering is mechanically checked.
 
-## Environment Limitation
+## Not runtime-verified in this environment
 
-`npm install` and `npm install --package-lock-only` both exceeded the available execution window in this environment. No `node_modules` directory is included in the release archive, and no runtime verification is claimed as complete where dependencies were unavailable.
+- Full dependency-resolved `npm run typecheck`.
+- Full ESLint execution with installed dependencies.
+- Jest execution with NestJS/TypeORM runtime dependencies.
+- Live PostgreSQL/Redis API execution and isolated tenant provisioning.
+- Actual GitHub branch-protection enforcement and human approval records.
+
+The archive is corrected statically, but these runtime/deployment gates still require execution in the target environment.

@@ -47,7 +47,6 @@ export interface GymsDomainModel { id: string; createdAt: Date; updatedAt: Date;
   lastActiveAt: Date | null;
   staffCount: number;
   databaseName: string;
-  aadharNumberEncrypted: string;
   subscriptionHistory: unknown;
   usageStats: unknown;
 }

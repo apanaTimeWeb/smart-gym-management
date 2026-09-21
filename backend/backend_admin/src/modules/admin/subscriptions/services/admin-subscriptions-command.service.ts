@@ -1,86 +1,46 @@
-// RESPONSIBILITY: Owns write-side use cases for Admin subscriptions; persistence remains behind the feature repository.
-// FLOW: AdminSubscriptionsCommandController -> AdminSubscriptionsCommandService -> named repository mutation -> audit trail.
+// RESPONSIBILITY: Owns write-side Admin subscription use cases and records immutable mutation audit events.
+// FLOW: Command controller → command service → master repository → audit trail.
 
 import { Injectable } from '@nestjs/common';
 import { CoreAuditTrailService } from '@/core/audit/core-audit-trail.service';
 import { AdminSubscriptionsRepository } from '@/modules/admin/subscriptions/repositories/admin-subscriptions-repository';
-import { AdminSubscriptionsMapper } from '@/modules/admin/subscriptions/mappers/admin-subscriptions.mapper';
 
 @Injectable()
 export class AdminSubscriptionsCommandService {
   constructor(
     private readonly repository: AdminSubscriptionsRepository,
-    private readonly mapper: AdminSubscriptionsMapper,
-    private readonly auditTrail: CoreAuditTrailService
+    private readonly auditTrail: CoreAuditTrailService,
   ) {}
 
-  /**
-   * @description Executes the upgradePlan mutation through the repository boundary.
-   * @param input Validated mutation input and/or identifier.
-   * @returns Promise<null> frontend-facing result.
-   */
+  /** @description Upgrades the current tenant subscription to the requested active plan. @param planId Active plan UUID. @returns Null per frontend contract. */
   async upgradePlan(planId: string): Promise<null> {
-    const snapshot = await this.repository.findFirstSnapshot();
-    if (!snapshot) throw new Error('SUBSCRIPTION_NOT_FOUND');
-    await this.repository.updateById(snapshot.id, { planId });
+    const subscription = await this.repository.upgradePlan(planId);
+    await this.audit(subscription.id, 'UPGRADED', { planId: subscription.planId, status: subscription.status });
     return null;
   }
 
-  /**
-   * @description Executes the toggleAutoRenew mutation through the repository boundary.
-   * @param input Validated mutation input and/or identifier.
-   * @returns Promise<null> frontend-facing result.
-   */
+  /** @description Toggles auto-renewal for the current tenant subscription. @returns Null per frontend contract. */
   async toggleAutoRenew(): Promise<null> {
-    const snapshot = await this.repository.findFirstSnapshot();
-    if (!snapshot) throw new Error('SUBSCRIPTION_NOT_FOUND');
-    await this.repository.updateById(snapshot.id, { autoRenew: snapshot.payload.autoRenew !== true });
+    const subscription = await this.repository.toggleAutoRenew();
+    await this.audit(subscription.id, 'AUTO_RENEW_TOGGLED', { autoRenew: subscription.autoRenew });
     return null;
   }
 
-  /**
-   * @description Executes the setDefaultPaymentMethod mutation through the repository boundary.
-   * @param input Validated mutation input and/or identifier.
-   * @returns Promise<null> frontend-facing result.
-   */
-  async setDefaultPaymentMethod(id: string): Promise<null> {
-    const snapshot = await this.repository.findFirstSnapshot();
-    if (!snapshot) throw new Error('SUBSCRIPTION_NOT_FOUND');
-    await this.repository.updateById(snapshot.id, { defaultPaymentMethodId: id });
+  /** @description Sets a tenant payment method as the default. @param paymentMethodId Payment method UUID. @returns Null per frontend contract. */
+  async setDefaultPaymentMethod(paymentMethodId: string): Promise<null> {
+    const paymentMethod = await this.repository.setDefaultPaymentMethod(paymentMethodId);
+    await this.audit(paymentMethod.id, 'PAYMENT_METHOD_DEFAULTED', { paymentMethodId: paymentMethod.id });
     return null;
   }
 
-  /**
-   * @description Executes the removePaymentMethod mutation through the repository boundary.
-   * @param input Validated mutation input and/or identifier.
-   * @returns Promise<null> frontend-facing result.
-   */
-  async removePaymentMethod(id: string): Promise<null> {
-    await this.repository.markAsDeleted(id);
-    await this.audit(id, 'DELETED', { deleted: true });
+  /** @description Deactivates a non-default tenant payment method without hard deletion. @param paymentMethodId Payment method UUID. @returns Null per frontend contract. */
+  async removePaymentMethod(paymentMethodId: string): Promise<null> {
+    await this.repository.deactivatePaymentMethod(paymentMethodId);
+    await this.audit(paymentMethodId, 'PAYMENT_METHOD_REMOVED', { paymentMethodId, isActive: false });
     return null;
   }
 
-  /**
-   * @description Maps the persisted entity, writes its mutation audit event, and returns frontend-safe data.
-   * @param entity Persisted entity.
-   * @param action Mutation action.
-   * @returns Frontend response object.
-   */
-  private async response(entity: Parameters<AdminSubscriptionsMapper['toDomain']>[0], action: string): Promise<Record<string, unknown>> {
-    const response = this.mapper.toResponse(this.mapper.toDomain(entity));
-    await this.audit(entity.id, action, response);
-    return response;
-  }
-
-  /**
-   * @description Persists an immutable audit record for the current feature mutation.
-   * @param entityId Changed record UUID.
-   * @param action Audit action.
-   * @param newValue New-state summary.
-   * @returns Audit record UUID.
-   */
   private async audit(entityId: string, action: string, newValue: Record<string, unknown>): Promise<string> {
-    return this.auditTrail.record({ action: `ADMIN_${action}`, entityType: 'AdminFeature', entityId, oldValue: null, newValue, ipAddress: null, severity: 'low', module: 'admin' });
+    return this.auditTrail.record({ action: `ADMIN.SUBSCRIPTIONS.${action}`, entityType: 'Subscription', entityId, oldValue: null, newValue, severity: 'low', module: 'Finance' });
   }
 }

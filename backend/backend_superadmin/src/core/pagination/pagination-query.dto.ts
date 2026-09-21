@@ -1,9 +1,26 @@
-// RESPONSIBILITY: Defines the canonical pagination/sorting query contract.
-// FLOW: HTTP query -> DTO validation -> repository page query -> PaginationMeta.
+// RESPONSIBILITY: Defines the canonical pagination query contract shared by every paginated feature.
+// FLOW: HTTP query -> PaginationQueryDto -> feature query DTO -> repository.
+import { Type } from 'class-transformer';
 import { IsIn, IsInt, IsOptional, Max, Min } from 'class-validator';
+
 export class PaginationQueryDto {
-  @IsInt() @Min(1) page = 1;
-  @IsInt() @Min(1) @Max(100) limit = 25;
-  @IsIn(['ASC', 'DESC']) sortOrder: 'ASC' | 'DESC' = 'DESC';
-  @IsOptional() sortBy = 'createdAt';
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  page = 1;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  @Max(100)
+  limit = 20;
+
+  @IsOptional()
+  @IsIn(['ASC', 'DESC'])
+  sortOrder: 'ASC' | 'DESC' = 'DESC';
+
+  @IsOptional()
+  sortBy = 'createdAt';
 }

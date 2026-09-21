@@ -17,11 +17,12 @@ import { InvoicesStatusService } from '@/modules/superadmin/saas-billing/invoice
 import { InvoicesManualPaymentService } from '@/modules/superadmin/saas-billing/invoices/services/invoices-manual-payment.service';
 import { InvoicesRecoveryCenterService } from '@/modules/superadmin/saas-billing/invoices/services/invoices-recovery-center.service';
 import { InvoicesResendService } from '@/modules/superadmin/saas-billing/invoices/services/invoices-resend.service';
+import { InvoicesExportService } from '@/modules/superadmin/saas-billing/invoices/services/invoices-export.service';
 import { InvoicesSpecialController } from '@/modules/superadmin/saas-billing/invoices/invoices-special.controller';
 @Module({
   imports: [TypeOrmModule.forFeature([InvoicesContractSnapshotEntity, SaasInvoiceEntity])],
   controllers: [InvoicesQueryController, InvoicesCommandController, InvoicesSpecialController],
-  providers: [InvoicesContractSnapshotRepository, InvoicesManualPaymentService, InvoicesRecoveryCenterService, InvoicesResendService, InvoicesRepository, InvoicesListService, InvoicesFindService, InvoicesCreateService, InvoicesUpdateService, InvoicesDeleteService, InvoicesStatusService],
+  providers: [InvoicesExportService, InvoicesContractSnapshotRepository, InvoicesManualPaymentService, InvoicesRecoveryCenterService, InvoicesResendService, InvoicesRepository, InvoicesListService, InvoicesFindService, InvoicesCreateService, InvoicesUpdateService, InvoicesDeleteService, InvoicesStatusService],
   exports: [InvoicesRepository],
 })
 export class InvoicesModule {}

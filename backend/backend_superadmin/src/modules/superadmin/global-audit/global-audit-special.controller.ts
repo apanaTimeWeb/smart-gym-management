@@ -19,6 +19,7 @@ export class GlobalAuditSpecialController {
   /** Executes GET /superadmin/global-audit/investigation. */
   @ApiOperation({ summary: 'GET /superadmin/global-audit/investigation' })
   @Get('superadmin/global-audit/investigation')
+  @Get('superadmin/audit-logs/investigation')
   async investigation(@Query() query: Record<string, string>): Promise<unknown> { return await this.investigationService.findGlobalAuditInvestigation(); }
 
 }

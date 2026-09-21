@@ -7,8 +7,9 @@ import { LoggerModule } from 'nestjs-pino';
 
 import { CoreRequestContextService } from '@/core/context/core-request-context';
 import { CoreRequestContextModule } from '@/core/context/core-request-context.module';
+import type { CoreRouteRequest } from '@/core/http/core-http.interfaces';
 
-import type { Request, Response } from 'express';
+import type { Response } from 'express';
 /** @description Resolves the matched route template without exposing raw URL values. @param request - Express request with optional route metadata. @returns Matched route template or unknown. */
 function routeTemplate(request: CoreRouteRequest): string {
   const path = request.route?.path;

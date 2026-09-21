@@ -1,108 +1,45 @@
-// RESPONSIBILITY: Owns all TypeORM persistence operations for Admin audit_logs; services never call save() directly.
-// FLOW: AdminAuditLogsService → AdminAuditLogsRepository → TypeORM → PostgreSQL audit_log_views.
+// RESPONSIBILITY: Owns read-only queries against the tenant's immutable audit_logs table.
+// FLOW: Admin audit query service → tenant DataSource → CoreAuditLogEntity → pagination metadata.
 
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CorePaginatedResult } from '@/core/types/core-api-response.types';
-import { CoreTenantRepositoryBase } from '@/core/database/core-tenant-repository.base';
 import { CoreTenantDataSourceManager } from '@/core/database/core-tenant-data-source.manager';
-import { buildPaginationMeta, resolveSafeSort } from '@/core/pagination/core-pagination';
-import { AdminAuditLogsEntity } from '@/modules/admin/audit_logs/entities/admin-audit_logs-entity';
+import { CoreAuditLogEntity } from '@/core/audit/core-audit-log.entity';
+import { buildPaginationMeta } from '@/core/pagination/core-pagination';
 import { AdminAuditLogsQueryDto } from '@/modules/admin/audit_logs/dtos/admin-audit_logs-query.dto';
 
 @Injectable()
-export class AdminAuditLogsRepository extends CoreTenantRepositoryBase<AdminAuditLogsEntity> {
-  constructor(tenantManager: CoreTenantDataSourceManager) { super(tenantManager); }
+export class AdminAuditLogsRepository {
+  constructor(private readonly tenantManager: CoreTenantDataSourceManager) {}
 
-
-  /** @description Finds a paginated, tenant-scoped collection using allowlisted sorting and parameterized JSONB filters.
-   * @param query Validated pagination/filter query.
-   * @returns Paginated ORM entities.
-   */
-  async findAll(query: AdminAuditLogsQueryDto): Promise<CorePaginatedResult<AdminAuditLogsEntity>> {
+  /** @description Finds tenant-scoped immutable audit events with server-side filters and pagination. @param query Validated UI filters. @returns Paginated audit rows. */
+  async findAll(query: AdminAuditLogsQueryDto): Promise<CorePaginatedResult<CoreAuditLogEntity>> {
     const source = await this.tenantManager.getCurrent();
-    const repository = source.getRepository(AdminAuditLogsEntity);
-    const builder = repository.createQueryBuilder('entity');
-    if (query.search) builder.andWhere('entity.payload::text ILIKE :search', { search: `%${query.search}%` });
-    if (query.branchId) builder.andWhere(`entity.payload ->> 'branchId' = :branchId`, { branchId: query.branchId });
-    if (query.gymId) builder.andWhere(`entity.payload ->> 'gymId' = :gymId`, { gymId: query.gymId });
-    if (query.status) builder.andWhere(`entity.payload ->> 'status' = :status`, { status: query.status });
-    const order = resolveSafeSort(query.sortKey);
-    const direction = query.sortDir ?? 'DESC';
-    const column = order === 'createdAt' ? 'created_at' : 'updated_at';
-    builder.orderBy(`entity.${column}`, direction);
-    const [items,total] = await builder.skip((query.page - 1) * query.limit).take(query.limit).getManyAndCount();
+    const repository = source.getRepository(CoreAuditLogEntity);
+    const builder = repository.createQueryBuilder('audit');
+    if (query.search) builder.andWhere('(audit.action ILIKE :search OR audit.entity_type ILIKE :search OR audit.module ILIKE :search OR audit.actor_id::text ILIKE :search)', { search: `%${query.search}%` });
+    if (query.severity) builder.andWhere('audit.severity = :severity', { severity: query.severity });
+    if (query.module) builder.andWhere('audit.module = :module', { module: query.module });
+    if (query.branchId) builder.andWhere("COALESCE(audit.new_value, '{}'::jsonb) ->> 'branchId' = :branchId", { branchId: query.branchId });
+    if (query.dateFrom) builder.andWhere('audit.timestamp >= :dateFrom', { dateFrom: query.dateFrom });
+    if (query.dateTo) builder.andWhere('audit.timestamp < (CAST(:dateTo AS timestamptz) + INTERVAL \'1 day\')', { dateTo: query.dateTo });
+    builder.orderBy('audit.timestamp', 'DESC');
+    const [items, total] = await builder.skip((query.page - 1) * query.limit).take(query.limit).getManyAndCount();
     return { items, meta: buildPaginationMeta(total, query.page, query.limit) };
   }
 
-  /** @description Finds a non-deleted record by UUID.
-   * @param id Record UUID.
-   * @returns Entity or null.
-   */
-  async findById(id: string): Promise<AdminAuditLogsEntity | null> {
+  /** @description Calculates audit-log KPI counts directly from immutable audit rows. @param query Validated optional filters. @returns KPI contract. */
+  async findKpis(_query: AdminAuditLogsQueryDto): Promise<Record<string, number>> {
     const source = await this.tenantManager.getCurrent();
-    return source.getRepository(AdminAuditLogsEntity).findOne({ where: { id } });
+    const repository = source.getRepository(CoreAuditLogEntity);
+    const [totalEvents, highSeverity, mediumSeverity, lowSeverity, eventsToday, uniqueUsers] = await Promise.all([
+      repository.count(),
+      repository.count({ where: { severity: 'high' } }),
+      repository.count({ where: { severity: 'medium' } }),
+      repository.count({ where: { severity: 'low' } }),
+      repository.createQueryBuilder('audit').where('audit.timestamp >= CURRENT_DATE').getCount(),
+      repository.createQueryBuilder('audit').select('COUNT(DISTINCT audit.actor_id)', 'count').where('audit.actor_id IS NOT NULL').getRawOne<{ count: string }>(),
+    ]);
+    return { totalEvents, highSeverity, mediumSeverity, lowSeverity, eventsToday, uniqueUsers: Number(uniqueUsers?.count ?? 0) };
   }
-
-  /** @description Finds a record and fails immediately when it does not exist.
-   * @param id Record UUID.
-   * @returns Existing entity.
-   * @throws NotFoundException when the record is absent.
-   */
-  async findByIdOrThrow(id: string): Promise<AdminAuditLogsEntity> {
-    const entity = await this.findById(id);
-    if (!entity) throw new NotFoundException(`AuditLogs record not found.`);
-    return entity;
-  }
-
-  /** @description Creates one persisted feature record.
-   * @param input Frontend-derived validated fields.
-   * @returns Persisted entity.
-   */
-  async createRecord(input: Record<string, unknown>): Promise<AdminAuditLogsEntity> {
-    const source = await this.tenantManager.getCurrent();
-    const repository = source.getRepository(AdminAuditLogsEntity);
-    const entity = repository.create({
-      payload: { ...input },
-      name: typeof input.name === 'string' ? input.name : null,
-      status: typeof input.status === 'string' ? input.status : null,
-      branchId: typeof input.branchId === 'string' ? input.branchId : null,
-    });
-    return repository.save(entity);
-  }
-
-  /** @description Updates persisted JSONB contract data through the repository boundary.
-   * @param id Record UUID.
-   * @param input Validated update fields.
-   * @returns Updated entity.
-   */
-  async updateById(id: string, input: Record<string, unknown>): Promise<AdminAuditLogsEntity> {
-    const source = await this.tenantManager.getCurrent();
-    const repository = source.getRepository(AdminAuditLogsEntity);
-    const entity = await this.findByIdOrThrow(id);
-    entity.payload = { ...entity.payload, ...input };
-    entity.name = typeof entity.payload.name === 'string' ? entity.payload.name : entity.name;
-    entity.status = typeof entity.payload.status === 'string' ? entity.payload.status : entity.status;
-    entity.branchId = typeof entity.payload.branchId === 'string' ? entity.payload.branchId : entity.branchId;
-    return repository.save(entity);
-  }
-
-  /** @description Soft-deletes a feature record without physical row removal.
-   * @param id Record UUID.
-   * @returns No value.
-   */
-  async markAsDeleted(id: string): Promise<AdminAuditLogsEntity> {
-    const source = await this.tenantManager.getCurrent();
-    const repository = source.getRepository(AdminAuditLogsEntity);
-    const entity = await this.findByIdOrThrow(id);
-    await repository.softDelete(id);
-    return entity;
-  }
-  /** @description Reads the first tenant-scoped snapshot used by read models and seed data.
-   * @returns Snapshot entity or null.
-   */
-  async findFirstSnapshot(): Promise<AdminAuditLogsEntity | null> {
-    const source = await this.tenantManager.getCurrent();
-    return source.getRepository(AdminAuditLogsEntity).findOne({ order: { createdAt: 'ASC' } });
-  }
-
 }

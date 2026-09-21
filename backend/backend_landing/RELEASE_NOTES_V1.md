@@ -12,11 +12,11 @@ This V1 is a NestJS + PostgreSQL + TypeORM backend vertical slice generated from
 - Database-per-tenant PostgreSQL routing using a master tenant registry.
 - TypeORM repositories isolated behind a tenant-aware UnitOfWork.
 - Atomic booking/contact persistence with audit records.
-- Redis rate limiting and idempotency replay.
-- Soft-delete base entity.
+- Redis rate limiting plus transactionally durable PostgreSQL idempotency records with Redis replay caching.
+- Soft-delete base entity with a shared UUID identity abstraction and shared repository boundary.
 - Prometheus metrics, OpenTelemetry auto-instrumentation, structured logging, health probes, Helmet, CORS, compression, graceful shutdown.
 - Explicit database migrations, indexes, enum/check constraints, and tenant pool budgeting.
-- Co-located Jest unit tests and black-box Pytest E2E tests.
+- Co-located Jest unit tests plus isolated black-box Pytest E2E tests with disposable per-run tenant databases.
 - Module feature/dependency/forbidden documentation, source specs, CI workflow, and pre-commit gate.
 
 ## Verification state

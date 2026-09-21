@@ -1,11 +1,15 @@
-// RESPONSIBILITY: Defines the ORM-independent domain shape for Admin audit_logs records.
-// FLOW: PostgreSQL entity → AdminAuditLogsMapper → AdminAuditLogsDomainModel → service.
+// RESPONSIBILITY: Defines the ORM-independent domain contract consumed by the Admin audit-log UI.
+// FLOW: Core audit entity → mapper → domain model → API response.
 
 export interface AdminAuditLogsDomainModel {
   id: string;
-  createdAt: string;
-  updatedAt: string;
-  name?: string | null;
-  status?: string | null;
-  data: Record<string, unknown>;
+  timestamp: string;
+  action: string;
+  user: string;
+  branchId: string;
+  details: string;
+  severity: 'high' | 'medium' | 'low';
+  ip: string;
+  module: 'Finance' | 'Members' | 'HR' | 'Plans' | 'Auth' | 'Settings' | 'Branches' | 'Store' | 'Attendance';
+  affectedRecordId?: string;
 }

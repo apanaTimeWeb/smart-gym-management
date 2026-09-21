@@ -13,13 +13,15 @@ import { GymsBusinessControlsResponseDto } from '@/modules/superadmin/gyms/gyms-
 import { GymDetailBusinessOverviewResponseDto } from '@/modules/superadmin/gyms/gym-detail-business-overview-response.dto';
 import { GymsBulkActionService } from '@/modules/superadmin/gyms/services/gyms-bulk-action.service';
 import { GymsDetailBusinessOverviewService } from '@/modules/superadmin/gyms/services/gyms-detail-business-overview.service';
+import { GymsOperationalService } from '@/modules/superadmin/gyms/services/gyms-operational.service';
+import { GymsOwnerEmailDto } from '@/modules/superadmin/gyms/dtos/gyms-owner-email.dto';
 
 @ApiTags('gyms-special')
 @Controller()
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class GymsSpecialController {
-  constructor(private readonly businessControlsService: GymsBusinessControlsService, private readonly bulkActionService: GymsBulkActionService, private readonly detailBusinessOverviewService: GymsDetailBusinessOverviewService) {}
+  constructor(private readonly businessControlsService: GymsBusinessControlsService, private readonly bulkActionService: GymsBulkActionService, private readonly detailBusinessOverviewService: GymsDetailBusinessOverviewService, private readonly operationalService: GymsOperationalService) {}
 
   /** Executes GET /superadmin/gyms/business-controls. */
   @ApiOperation({ summary: 'GET /superadmin/gyms/business-controls' })
@@ -31,6 +33,24 @@ export class GymsSpecialController {
   @ApiOperation({ summary: 'POST /superadmin/gyms/business-controls' })
   @Post('superadmin/gyms/business-controls')
   async bulkAction(@Body() body: GymsBusinessControlsBulkActionDto): Promise<GymsBusinessControlsResponseDto> { return await this.bulkActionService.applyGymsBulkAction(body) as unknown as GymsBusinessControlsResponseDto; }
+
+
+  /** Returns live Gym aggregate statistics. */
+  @ApiOperation({ summary: 'GET /superadmin/gyms/stats' })
+  @Get('superadmin/gyms/stats')
+  async stats(): Promise<{ totalActive: number; totalSuspended: number; mrrContribution: number }> { return this.operationalService.stats(); }
+
+  /** Sends an owner-message command after verifying the Gym exists. */
+  @RequireIdempotencyKey()
+  @ApiOperation({ summary: 'POST /superadmin/gyms/:id/email' })
+  @Post('superadmin/gyms/:id/email')
+  async emailOwner(@Param('id') id: string, @Body() body: GymsOwnerEmailDto): Promise<null> { return this.operationalService.emailOwner(id, body.subject, body.message); }
+
+  /** Issues a short-lived, signed impersonation artifact for the tenant boundary. */
+  @RequireIdempotencyKey()
+  @ApiOperation({ summary: 'POST /superadmin/gyms/:id/impersonate' })
+  @Post('superadmin/gyms/:id/impersonate')
+  async impersonate(@Param('id') id: string): Promise<{ token: string }> { return this.operationalService.impersonate(id); }
 
   /** Executes GET /superadmin/gym-detail/business-overview. */
   @ApiOperation({ summary: 'GET /superadmin/gym-detail/business-overview' })

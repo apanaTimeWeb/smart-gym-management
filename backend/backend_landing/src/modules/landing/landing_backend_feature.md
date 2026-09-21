@@ -8,6 +8,9 @@ The `landing` module is the public GymSmart conversion boundary exposed to visit
 | File | Responsibility |
 |---|---|
 | `landing-command.controller.ts` | Receives `POST /landing/booking` and `POST /landing/contact`; no business logic. |
+| `landing-api-success-response.dto.ts` | Documents the concrete successful null-data response envelope for Swagger. |
+| `landing-api-error-response.dto.ts` | Documents the canonical validation/business error envelope for Swagger. |
+| `landing.seeder.ts` | Provides deterministic/idempotent seed hook; current Landing has no reference data requiring inserts. |
 | `dtos/landing-create-booking.dto.ts` | Validates name/email/phone/UTC date/booking type. |
 | `dtos/landing-create-contact.dto.ts` | Validates name/email/message. |
 | `services/landing-booking-orchestrator.service.ts` | Opens booking transaction and coordinates idempotency. |
@@ -20,9 +23,13 @@ The `landing` module is the public GymSmart conversion boundary exposed to visit
 | `entities/landing-booking.entity.ts` | Maps `landing_bookings`. |
 | `entities/landing-contact.entity.ts` | Maps `landing_contacts`. |
 | `entities/landing-audit-log.entity.ts` | Maps `audit_logs`. |
-| `mappers/*` | Translate ORM entities to domain objects and persistence inputs. |
+| `mappers/landing-booking.mapper.ts` | Translates booking ORM entities and application input. |
+| `mappers/landing-contact.mapper.ts` | Translates contact ORM entities and application input. |
 | `landing.constants.ts` | Error messages, mutation scopes, and field limits. |
-| `landing-exceptions.ts` | Typed Landing exceptions. |
+| `landing.exceptions.ts` | Typed Landing HTTP exceptions. |
+| `repositories/landing-booking.repository.ts` | Owns booking persistence and inherits `CoreBaseRepository`. |
+| `repositories/landing-contact.repository.ts` | Owns contact persistence and inherits `CoreBaseRepository`. |
+| `repositories/landing-audit-log.repository.ts` | Owns audit-log persistence and inherits `CoreBaseRepository`. |
 
 ## Feature Inventory
 
@@ -39,9 +46,10 @@ The `landing` module is the public GymSmart conversion boundary exposed to visit
 - Runtime/event dependencies: `LANDING.BOOKING.CREATED`, `LANDING.CONTACT.CREATED` are the registered names reserved for future asynchronous consumers; current frontend flows do not require consumers.
 
 ## Data and State Architecture
-- DB entities: `landing_bookings`, `landing_contacts`, `audit_logs`.
+- DB entities: `landing_bookings`, `landing_contacts`, `audit_logs`, `idempotency_records` (shared core infrastructure table in each tenant database).
+- Constraints: `PK_landing_bookings`, `CHK_landing_bookings_type`, `CHK_landing_bookings_phone`, `PK_landing_contacts`, `PK_audit_logs`, `PK_idempotency_records`, `UQ_idempotency_records_scope_key`, `CHK_idempotency_records_completed_has_response`. 
 - Tenant database: each active tenant receives its own PostgreSQL database; Landing rows never use a shared `tenant_id`.
-- Redis keys (canonical idempotency store):
+- Redis keys (replay cache only; durable state is PostgreSQL):
   - `rate:{ip}:{method}:{path}` with the configured rate-limit window.
   - `idempotency:landing.booking.create:{key}` TTL 24h.
   - `idempotency:landing.contact.create:{key}` TTL 24h.
@@ -54,13 +62,14 @@ The `landing` module is the public GymSmart conversion boundary exposed to visit
 ### Booking
 1. `LandingCommandController` receives `POST /api/v1/landing/booking`.
 2. Global `ValidationPipe` validates and normalizes `LandingCreateBookingDto`.
-3. `TenantResolutionMiddleware` establishes the configured public tenant context or validates a supplied active tenant.
-4. `LandingBookingOrchestratorService` computes a deterministic request hash and performs the Redis idempotency check.
+3. `TenantResolutionMiddleware` establishes only the configured public tenant for anonymous Landing traffic; arbitrary tenant selection is rejected.
+4. `LandingBookingOrchestratorService` computes a deterministic request hash and checks the Redis replay cache before opening the transaction.
 5. `TypeOrmUnitOfWorkService` opens a tenant PostgreSQL transaction.
 6. `LandingBookingService` calls `LandingBookingRepository.createBooking()`.
 7. `LandingAuditLogRepository.recordCreate()` records the mutation in the same transaction.
-8. The transaction commits, then the canonical response is stored for idempotent replay.
-9. The controller result is returned through the canonical response path.
+8. The response is stored in `idempotency_records` inside the same transaction as the booking and audit row.
+9. After commit, Redis is populated as a best-effort replay cache; Redis failure cannot turn a committed mutation into a 503.
+10. The controller result is returned through the canonical response path.
 
 ### Contact
 1. `LandingCommandController` receives `POST /api/v1/landing/contact`.
@@ -70,7 +79,7 @@ The `landing` module is the public GymSmart conversion boundary exposed to visit
 5. `TypeOrmUnitOfWorkService` opens a tenant transaction.
 6. `LandingContactService` calls `LandingContactRepository.createContact()`.
 7. `LandingAuditLogRepository.recordCreate()` writes the audit trail atomically.
-8. The transaction commits and the canonical response is stored for replay.
+8. The response is stored in `idempotency_records` inside the same transaction; Redis is populated only as a best-effort replay cache after commit.
 
 ## File Responsibility Map
 - `landing-command.controller.ts` — HTTP boundary only; MUST NOT contain business logic.
@@ -81,11 +90,12 @@ The `landing` module is the public GymSmart conversion boundary exposed to visit
 - `landing-contact.service.ts` — contact business flow only; MUST NOT access ORM APIs.
 - `landing-contact.repository.ts` — contact DB access only.
 - `landing-audit-log.repository.ts` — audit persistence only; MUST NOT own HTTP behavior.
-- `mappers/*` — domain/ORM translation only.
+- `landing-booking.mapper.ts` — booking ORM/domain translation only.
+- `landing-contact.mapper.ts` — contact ORM/domain translation only.
 
 ## Permissions and Security
 - Endpoint access: public/unauthenticated visitor.
-- Tenant rule: a configured public tenant is used when the frontend supplies no tenant header; an explicitly supplied `x-tenant-id` is accepted only after active master-db resolution.
+- Tenant rule: anonymous Landing traffic can only use the configured `PUBLIC_TENANT_ID`; a different client-supplied `x-tenant-id` is rejected. Non-public traffic requires an authenticated actor whose authorized tenant set contains the selected tenant.
 - Resource-level checks: not applicable because the current frontend creates new records and does not expose read/edit/delete operations.
 - Idempotency: supported with `Idempotency-Key` for both resource-creation mutations.
 
@@ -126,10 +136,13 @@ The `landing` module is the public GymSmart conversion boundary exposed to visit
 
 ## Rule Compliance Checklist
 - [x] Rule 7: TypeORM is the single project ORM and DB access is isolated behind repositories.
-- [x] Rule 19: Feature documentation is co-located with the module.
+- [x] Rule 19: Feature documentation is co-located with the module and updated with this repair.
+- [x] Rule 39: Anonymous Landing traffic cannot select arbitrary tenant databases; tenant selection is application-controlled for public routes.
+- [x] Rule 58: Landing repositories inherit CoreBaseRepository and CoreBaseEntity declares the common UUID identity abstraction.
+- [x] Rule 81: Landing endpoints are fully implemented; no production stub remains.
 - [x] Rule 28: Global response envelope infrastructure exists.
 - [x] Rule 29: Soft deletes are represented with `deleted_at` and repository filters.
-- [x] Rule 31: Idempotency is supported on resource-creation mutations.
+- [x] Rule 31: Idempotency is transactionally durable in tenant PostgreSQL with Redis replay caching; frontend retry support remains dependent on the frontend sending the same `Idempotency-Key` for a mutation intent.
 - [x] Rule 34: No list queries or N+1 patterns are present in the current feature.
 - [x] Rule 36: DTO + service/database fail-fast validation exists.
 - [x] Rule 48: Command controller is isolated; no query controller is needed for the current frontend because there are no Landing GET API calls.

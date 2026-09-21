@@ -31,7 +31,7 @@ This module provides the backend capability consumed by the frontend `audit_logs
 - **Runtime/Event Dependencies**: None declared in this v1 package unless listed in the dependency document.
 
 ## Data and State Architecture
-- DB Entities: `audit_logs` tenant table/entity plus JSONB frontend contract payload.
+- DB Entities: Core `audit_logs` tenant table/entity written by CoreAuditTrailService; this feature is read-only over immutable audit rows.
 - Redis Caching Keys: No feature-specific cache key is required in v1 unless later documented.
 - Event Emitters: None declared in v1.
 - Background Jobs: Data export uses the background-job pattern documented at core level; other endpoints are synchronous unless the route contract indicates otherwise.
@@ -40,7 +40,7 @@ This module provides the backend capability consumed by the frontend `audit_logs
 ## Business Flow / Key Sequences
 1. Controller receives the frontend-aligned request.
 2. Global validation, JWT authentication, tenant authorization, and canonical response/error infrastructure execute at the framework boundary.
-3. The feature service validates the business state and calls only the feature repository.
+3. The read service calls only the feature repository; no feature snapshot table is treated as audit truth.
 4. The repository resolves the trusted tenant DataSource, performs parameterized TypeORM access, and returns an entity/domain mapping.
 5. Mutation results are audited and returned through the canonical response interceptor.
 
@@ -115,4 +115,4 @@ The frozen contract is derived from the supplied frontend source. This v1 packag
 - [ ] Rule 89: ORM entities are mapped before business use.
 - [ ] Rule 92: User-controlled ORM identifiers are allowlisted.
 - [ ] Rule 93: Security-sensitive areas require human review.
-- [ ] Rule 101: Tests must prove observable behavior.
+- [ ] Rule 101: Tests must prove observable behavior; live integration execution remains unverified in this offline package build.

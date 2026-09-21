@@ -18,10 +18,14 @@ import { MessagingTemplateInsightsService } from '@/modules/superadmin/messaging
 import { MessagingWhatsAppBulkCenterService } from '@/modules/superadmin/messaging/services/messaging-whatsapp-bulk-center.service';
 import { MessagingWhatsAppCampaignService } from '@/modules/superadmin/messaging/services/messaging-whatsapp-campaign.service';
 import { MessagingSpecialController } from '@/modules/superadmin/messaging/messaging-special.controller';
+import { SuperadminNotificationEntity } from '@/modules/superadmin/messaging/messaging-notification.entity';
+import { MessagingNotificationRepository } from '@/modules/superadmin/messaging/messaging-notification.repository';
+import { MessagingNotificationService } from '@/modules/superadmin/messaging/services/messaging-notification.service';
+import { MessagingNotificationController } from '@/modules/superadmin/messaging/messaging-notification.controller';
 @Module({
-  imports: [TypeOrmModule.forFeature([MessagingContractSnapshotEntity, TenantMessageEntity])],
-  controllers: [MessagingQueryController, MessagingCommandController, MessagingSpecialController],
-  providers: [MessagingContractSnapshotRepository, MessagingTemplateInsightsService, MessagingWhatsAppBulkCenterService, MessagingWhatsAppCampaignService, MessagingRepository, MessagingListService, MessagingFindService, MessagingCreateService, MessagingUpdateService, MessagingDeleteService, MessagingStatusService],
+  imports: [TypeOrmModule.forFeature([MessagingContractSnapshotEntity, TenantMessageEntity, SuperadminNotificationEntity])],
+  controllers: [MessagingQueryController, MessagingCommandController, MessagingSpecialController, MessagingNotificationController],
+  providers: [MessagingNotificationRepository, MessagingNotificationService, MessagingContractSnapshotRepository, MessagingTemplateInsightsService, MessagingWhatsAppBulkCenterService, MessagingWhatsAppCampaignService, MessagingRepository, MessagingListService, MessagingFindService, MessagingCreateService, MessagingUpdateService, MessagingDeleteService, MessagingStatusService],
   exports: [MessagingRepository],
 })
 export class MessagingModule {}

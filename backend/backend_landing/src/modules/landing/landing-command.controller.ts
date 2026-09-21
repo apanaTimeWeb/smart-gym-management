@@ -1,14 +1,26 @@
 // RESPONSIBILITY: Accepts public Landing command requests and delegates immediately to micro-feature orchestrators.
 // FLOW: HTTP POST → DTO validation → Landing orchestrator → canonical response.
-import { Body, Controller, Headers, HttpStatus, Post, UseGuards, Version } from '@nestjs/common';
-import { ApiBody, ApiHeader, ApiResponse, ApiTags } from '@nestjs/swagger';
-import type { ApiResponse } from '@/core/types/api-response.types';
+import { Body, Controller, Headers, Post, UseGuards, Version } from '@nestjs/common';
+
+import { ApiBadRequestResponse, ApiBody, ApiCreatedResponse, ApiHeader, ApiTags } from '@nestjs/swagger';
+
 import { RateLimitGuard } from '@/core/security/rate-limit.guard';
+
 import { RateLimitTier } from '@/core/security/rate-limit.decorator';
+
 import { LandingCreateBookingDto } from '@/modules/landing/dtos/landing-create-booking.dto';
+
 import { LandingCreateContactDto } from '@/modules/landing/dtos/landing-create-contact.dto';
+
+import { LandingApiErrorResponseDto } from '@/modules/landing/landing-api-error-response.dto';
+import { LandingApiSuccessResponseDto } from '@/modules/landing/landing-api-response.dto';
+
 import { LandingBookingOrchestratorService } from '@/modules/landing/services/landing-booking-orchestrator.service';
+
 import { LandingContactOrchestratorService } from '@/modules/landing/services/landing-contact-orchestrator.service';
+
+import type { ApiResponse } from '@/core/types/api-response.types';
+
 
 @ApiTags('landing')
 @Controller('landing')
@@ -25,7 +37,8 @@ export class LandingCommandController {
   @RateLimitTier('PUBLIC_MUTATION')
   @ApiBody({ type: LandingCreateBookingDto })
   @ApiHeader({ name: 'Idempotency-Key', required: false, description: 'Optional retry key; recommended for duplicate-safe resubmission.' })
-  @ApiResponse({ status: HttpStatus.CREATED, description: 'Booking accepted and stored.' })
+  @ApiCreatedResponse({ type: LandingApiSuccessResponseDto, description: 'Booking accepted and stored.' })
+  @ApiBadRequestResponse({ type: LandingApiErrorResponseDto, description: 'Validation failure using the canonical error envelope.' })
   async createBooking(
     @Body() dto: LandingCreateBookingDto,
     @Headers('idempotency-key') idempotencyKey?: string,
@@ -45,7 +58,8 @@ export class LandingCommandController {
   @RateLimitTier('PUBLIC_MUTATION')
   @ApiBody({ type: LandingCreateContactDto })
   @ApiHeader({ name: 'Idempotency-Key', required: false, description: 'Optional retry key; recommended for duplicate-safe resubmission.' })
-  @ApiResponse({ status: HttpStatus.CREATED, description: 'Contact message accepted and stored.' })
+  @ApiCreatedResponse({ type: LandingApiSuccessResponseDto, description: 'Contact message accepted and stored.' })
+  @ApiBadRequestResponse({ type: LandingApiErrorResponseDto, description: 'Validation failure using the canonical error envelope.' })
   async createContact(
     @Body() dto: LandingCreateContactDto,
     @Headers('idempotency-key') idempotencyKey?: string,

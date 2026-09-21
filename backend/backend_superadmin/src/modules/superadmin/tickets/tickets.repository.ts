@@ -5,7 +5,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BaseRepository } from '@/core/database/base.repository';
 import { TransactionContext } from '@/core/database/transaction-context';
-import { SupportTicketEntity } from '@/modules/superadmin/tickets/tickets.entity';
+import { randomUUID } from 'node:crypto';
+
+import { SupportTicketEntity, SupportTicketStatus } from '@/modules/superadmin/tickets/tickets.entity';
 import type { TicketsListQuery, TicketsCreateInput, TicketsUpdateInput } from '@/modules/superadmin/tickets/types/tickets.interfaces';
 
 @Injectable()
@@ -40,5 +42,20 @@ export class TicketsRepository extends BaseRepository<SupportTicketEntity> {
 
   /** Soft-deletes one tickets record. */
   async deleteTicketsById(id: string): Promise<void> { await this.findByIdOrThrow(id); await this.softDeleteById(id); }
+
+  /** Changes the ticket status through an intention-revealing repository method. */
+  async setStatus(id: string, status: SupportTicketStatus): Promise<SupportTicketEntity> { await this.findByIdOrThrow(id); await this.activeRepository.update({ id } as never, { status } as never); return this.findByIdOrThrow(id); }
+
+  /** Stores an assignment target on the ticket. */
+  async assignById(id: string, assignee: string): Promise<SupportTicketEntity> { if (!assignee.trim()) throw new Error('Assignee is required'); await this.findByIdOrThrow(id); await this.activeRepository.update({ id } as never, { assignedTo: assignee } as never); return this.findByIdOrThrow(id); }
+
+  /** Stores the latest reply content as an immutable message entry. */
+  async replyById(id: string, replyText: string): Promise<SupportTicketEntity> {
+    if (!replyText.trim()) throw new Error('Reply text is required');
+    const current = await this.findByIdOrThrow(id);
+    const messages = Array.isArray(current.messages) ? current.messages : [];
+    await this.activeRepository.update({ id } as never, { messages: [...messages, { id: randomUUID(), body: replyText.trim(), createdAt: new Date().toISOString() }] } as never);
+    return this.findByIdOrThrow(id);
+  }
 
 }

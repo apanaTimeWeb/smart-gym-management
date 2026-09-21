@@ -1,30 +1,44 @@
-// RESPONSIBILITY: Describes the frontend-consumed response fields for Admin audit_logs.
+// RESPONSIBILITY: Describes the exact frontend-consumed Admin audit-log row and KPI response fields.
+// FLOW: Audit repository/domain → response mapper → canonical ApiResponse envelope.
+
 import { ApiProperty } from '@nestjs/swagger';
 
-// FLOW: Repository domain → AuditLogs response mapper → ApiResponse<T>.
-
 export class AdminAuditLogsResponseDto {
+  @ApiProperty()
   id!: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: createdAt' })
-  createdAt?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: updatedAt' })
-  updatedAt?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: timestamp' })
-  timestamp?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: action' })
-  action?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: user' })
-  user?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: branchId' })
-  branchId?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: details' })
-  details?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: severity' })
-  severity?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: module' })
-  module?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: userAgent' })
+  @ApiProperty()
+  timestamp!: string;
+  @ApiProperty()
+  action!: string;
+  @ApiProperty()
+  user!: string;
+  @ApiProperty()
+  branchId!: string;
+  @ApiProperty()
+  details!: string;
+  @ApiProperty({ enum: ['high', 'medium', 'low'] })
+  severity!: string;
+  @ApiProperty()
+  ip!: string;
+  @ApiProperty({ enum: ['Finance', 'Members', 'HR', 'Plans', 'Auth', 'Settings', 'Branches', 'Store', 'Attendance'] })
+  module!: string;
+  @ApiProperty({ required: false })
   userAgent?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: affectedRecordId' })
+  @ApiProperty({ required: false })
   affectedRecordId?: string;
+}
+
+export class AdminAuditLogsKpiResponseDto {
+  @ApiProperty()
+  totalEvents!: number;
+  @ApiProperty()
+  highSeverity!: number;
+  @ApiProperty()
+  mediumSeverity!: number;
+  @ApiProperty()
+  lowSeverity!: number;
+  @ApiProperty()
+  eventsToday!: number;
+  @ApiProperty()
+  uniqueUsers!: number;
 }

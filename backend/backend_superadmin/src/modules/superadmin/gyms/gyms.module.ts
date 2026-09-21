@@ -20,10 +20,13 @@ import { GymsDetailBusinessOverviewService } from '@/modules/superadmin/gyms/ser
 import { GymsSpecialController } from '@/modules/superadmin/gyms/gyms-special.controller';
 import { GymsLookupController } from '@/modules/superadmin/gyms/gyms-lookup.controller';
 import { GymsLookupService } from '@/modules/superadmin/gyms/services/gyms-lookup.service';
+import { GymsProvisionService } from '@/modules/superadmin/gyms/services/gyms-provision.service';
+import { GymsOperationalService } from '@/modules/superadmin/gyms/services/gyms-operational.service';
+import { JwtModule } from '@nestjs/jwt';
 @Module({
-  imports: [TypeOrmModule.forFeature([GymDetailContractSnapshotEntity, TenantEntity])],
+  imports: [TypeOrmModule.forFeature([GymDetailContractSnapshotEntity, TenantEntity]), JwtModule.register({})],
   controllers: [GymsQueryController, GymsCommandController, GymsSpecialController, GymsLookupController],
-  providers: [GymDetailContractSnapshotRepository, GymsBusinessControlsService, GymsBulkActionService, GymsDetailBusinessOverviewService, GymsRepository, GymsListService, GymsFindService, GymsCreateService, GymsUpdateService, GymsDeleteService, GymsStatusService, GymsLookupService],
+  providers: [GymDetailContractSnapshotRepository, GymsBusinessControlsService, GymsBulkActionService, GymsDetailBusinessOverviewService, GymsRepository, GymsListService, GymsFindService, GymsCreateService, GymsUpdateService, GymsDeleteService, GymsStatusService, GymsLookupService, GymsProvisionService, GymsOperationalService],
   exports: [GymsRepository],
 })
 export class GymsModule {}

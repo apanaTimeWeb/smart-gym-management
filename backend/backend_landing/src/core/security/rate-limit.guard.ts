@@ -1,11 +1,17 @@
 // RESPONSIBILITY: Enforces centralized Redis-backed request limits without embedding numeric limits in controllers.
 // FLOW: HTTP request → RateLimitGuard → Redis fixed window → allow or reject.
 import { CanActivate, ExecutionContext, HttpStatus, Injectable, TooManyRequestsException } from '@nestjs/common';
+
 import { Reflector } from '@nestjs/core';
-import type { Request } from 'express';
+
 import { RATE_LIMIT_CONFIG } from '@/core/config/rate-limit.config';
+
 import { RATE_LIMIT_TIER_KEY } from '@/core/security/rate-limit.decorator';
+
 import { RedisService } from '@/core/redis/redis.service';
+
+import type { Request } from 'express';
+
 
 @Injectable()
 export class RateLimitGuard implements CanActivate {

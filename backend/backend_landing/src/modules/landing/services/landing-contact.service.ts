@@ -1,12 +1,19 @@
 // RESPONSIBILITY: Implements contact-message business behavior only; it does not own HTTP or ORM persistence details.
 // FLOW: LandingContactOrchestrator → LandingContactService → LandingContactRepository.
 import { Injectable } from '@nestjs/common';
-import type { LandingContactDomainModel } from '@/modules/landing/domain/landing-contact.domain';
-import type { LandingCreateContactInput } from '@/modules/landing/services/landing-contact-input.types';
+
 import { LandingContactRepository } from '@/modules/landing/repositories/landing-contact.repository';
+
 import { LandingAuditLogRepository } from '@/modules/landing/repositories/landing-audit-log.repository';
-import type { TransactionContext } from '@/core/database/transaction-context';
+
 import { LANDING_ERRORS } from '@/modules/landing/landing.constants';
+
+import type { LandingContactDomainModel } from '@/modules/landing/domain/landing-contact.domain';
+
+import type { LandingCreateContactInput } from '@/modules/landing/services/landing-contact-input.types';
+
+import type { TransactionContext } from '@/core/database/transaction-context';
+
 
 @Injectable()
 export class LandingContactService {

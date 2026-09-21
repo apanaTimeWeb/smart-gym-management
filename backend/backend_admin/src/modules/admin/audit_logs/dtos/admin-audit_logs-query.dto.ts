@@ -1,56 +1,28 @@
-// RESPONSIBILITY: Validates and normalizes frontend query/filter parameters for Admin audit_logs.
-// FLOW: HTTP query → AdminAuditLogsQueryDto → repository allowlists → PostgreSQL query.
+// RESPONSIBILITY: Validates and normalizes frontend filters for Admin audit logs.
+// FLOW: HTTP query → AdminAuditLogsQueryDto → repository allowlists → tenant audit_logs query.
 
-import { Type } from 'class-transformer';
-import { IsOptional, IsString, IsIn, IsNumber } from 'class-validator';
+import { IsIn, IsISO8601, IsOptional, IsString, IsUUID } from 'class-validator';
 import { CorePaginationQueryDto } from '@/core/dto/core-pagination-query.dto';
 
 export class AdminAuditLogsQueryDto extends CorePaginationQueryDto {
   @IsOptional()
-  @IsString()
+  @IsUUID()
   branchId?: string;
 
   @IsOptional()
-  @IsString()
-  gymId?: string;
-
-  @IsOptional()
-  @IsString()
-  range?: string;
-
-  @IsOptional()
-  @IsString()
-  startDate?: string;
-
-  @IsOptional()
-  @IsString()
-  endDate?: string;
-
-  @IsOptional()
-  @IsString()
-  status?: string;
-
-  @IsOptional()
-  @IsString()
-  priority?: string;
-
-  @IsOptional()
-  @IsString()
+  @IsIn(['high', 'medium', 'low'])
   severity?: string;
 
   @IsOptional()
-  @IsString()
-  dateRange?: string;
+  @IsIn(['Finance', 'Members', 'HR', 'Plans', 'Auth', 'Settings', 'Branches', 'Store', 'Attendance'])
+  module?: string;
+
 
   @IsOptional()
-  @IsString()
-  period?: string;
+  @IsISO8601()
+  dateFrom?: string;
 
   @IsOptional()
-  @IsString()
-  month?: string;
-
-  @IsOptional()
-  @IsString()
-  consumer?: string;
+  @IsISO8601()
+  dateTo?: string;
 }

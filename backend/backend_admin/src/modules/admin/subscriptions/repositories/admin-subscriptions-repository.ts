@@ -1,108 +1,163 @@
-// RESPONSIBILITY: Owns all TypeORM persistence operations for Admin subscriptions; services never call save() directly.
-// FLOW: AdminSubscriptionsService → AdminSubscriptionsRepository → TypeORM → PostgreSQL subscriptions.
+// RESPONSIBILITY: Owns master-database persistence for Admin subscription state, plans, invoices, and payment methods.
+// FLOW: Admin subscriptions service → repository → trusted tenant context → master TypeORM repository → PostgreSQL.
 
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectDataSource } from '@nestjs/typeorm';
+import { DataSource } from 'typeorm';
 import { CorePaginatedResult } from '@/core/types/core-api-response.types';
-import { CoreTenantRepositoryBase } from '@/core/database/core-tenant-repository.base';
+import { CoreRequestContextService } from '@/core/context/core-request-context.service';
 import { CoreTenantDataSourceManager } from '@/core/database/core-tenant-data-source.manager';
-import { buildPaginationMeta, resolveSafeSort } from '@/core/pagination/core-pagination';
+import { buildPaginationMeta } from '@/core/pagination/core-pagination';
+import { CoreMasterSubscriptionEntity } from '@/core/subscription/core-master-subscription.entity';
+import { CoreMasterPlanEntity } from '@/core/subscription/core-master-plan.entity';
+import { CoreMasterInvoiceEntity } from '@/core/subscription/core-master-invoice.entity';
+import { CoreMasterPaymentMethodEntity } from '@/core/subscription/core-master-payment-method.entity';
 import { AdminSubscriptionsEntity } from '@/modules/admin/subscriptions/entities/admin-subscriptions-entity';
 import { AdminSubscriptionsQueryDto } from '@/modules/admin/subscriptions/dtos/admin-subscriptions-query.dto';
 
 @Injectable()
-export class AdminSubscriptionsRepository extends CoreTenantRepositoryBase<AdminSubscriptionsEntity> {
-  constructor(tenantManager: CoreTenantDataSourceManager) { super(tenantManager); }
+export class AdminSubscriptionsRepository {
+  constructor(
+    private readonly tenantManager: CoreTenantDataSourceManager,
+    private readonly requestContext: CoreRequestContextService,
+    @InjectDataSource() private readonly masterDataSource: DataSource,
+  ) {}
 
+  /** @description Finds the authenticated tenant's current master subscription. @returns Subscription or null. */
+  async findCurrentSubscription(): Promise<CoreMasterSubscriptionEntity | null> {
+    return this.masterDataSource.getRepository(CoreMasterSubscriptionEntity).findOne({
+      where: { tenantId: this.requestContext.get().tenantId },
+    });
+  }
 
-  /** @description Finds a paginated, tenant-scoped collection using allowlisted sorting and parameterized JSONB filters.
-   * @param query Validated pagination/filter query.
-   * @returns Paginated ORM entities.
-   */
-  async findAll(query: AdminSubscriptionsQueryDto): Promise<CorePaginatedResult<AdminSubscriptionsEntity>> {
-    const source = await this.tenantManager.getCurrent();
-    const repository = source.getRepository(AdminSubscriptionsEntity);
-    const builder = repository.createQueryBuilder('entity');
-    if (query.search) builder.andWhere('entity.payload::text ILIKE :search', { search: `%${query.search}%` });
-    if (query.branchId) builder.andWhere(`entity.payload ->> 'branchId' = :branchId`, { branchId: query.branchId });
-    if (query.gymId) builder.andWhere(`entity.payload ->> 'gymId' = :gymId`, { gymId: query.gymId });
-    if (query.status) builder.andWhere(`entity.payload ->> 'status' = :status`, { status: query.status });
-    const order = resolveSafeSort(query.sortKey);
-    const direction = query.sortDir ?? 'DESC';
-    const column = order === 'createdAt' ? 'created_at' : 'updated_at';
-    builder.orderBy(`entity.${column}`, direction);
-    const [items,total] = await builder.skip((query.page - 1) * query.limit).take(query.limit).getManyAndCount();
+  /** @description Finds active SaaS plans available to the tenant. @returns Active plans. */
+  async findActivePlans(): Promise<CoreMasterPlanEntity[]> {
+    return this.masterDataSource.getRepository(CoreMasterPlanEntity).find({ where: { isActive: true }, order: { name: 'ASC' } });
+  }
+
+  /** @description Finds tenant invoices with server-side pagination. @param query Frontend pagination query. @returns Paginated invoices. */
+  async findMasterInvoices(query: AdminSubscriptionsQueryDto): Promise<CorePaginatedResult<CoreMasterInvoiceEntity>> {
+    const repository = this.masterDataSource.getRepository(CoreMasterInvoiceEntity);
+    const tenantId = this.requestContext.get().tenantId;
+    const builder = repository.createQueryBuilder('invoice').where('invoice.tenant_id = :tenantId', { tenantId });
+    builder.orderBy('invoice.issued_at', 'DESC');
+    const [items, total] = await builder.skip((query.page - 1) * query.limit).take(query.limit).getManyAndCount();
     return { items, meta: buildPaginationMeta(total, query.page, query.limit) };
   }
 
-  /** @description Finds a non-deleted record by UUID.
-   * @param id Record UUID.
-   * @returns Entity or null.
-   */
-  async findById(id: string): Promise<AdminSubscriptionsEntity | null> {
-    const source = await this.tenantManager.getCurrent();
-    return source.getRepository(AdminSubscriptionsEntity).findOne({ where: { id } });
-  }
-
-  /** @description Finds a record and fails immediately when it does not exist.
-   * @param id Record UUID.
-   * @returns Existing entity.
-   * @throws NotFoundException when the record is absent.
-   */
-  async findByIdOrThrow(id: string): Promise<AdminSubscriptionsEntity> {
-    const entity = await this.findById(id);
-    if (!entity) throw new NotFoundException(`Subscriptions record not found.`);
-    return entity;
-  }
-
-  /** @description Creates one persisted feature record.
-   * @param input Frontend-derived validated fields.
-   * @returns Persisted entity.
-   */
-  async createRecord(input: Record<string, unknown>): Promise<AdminSubscriptionsEntity> {
-    const source = await this.tenantManager.getCurrent();
-    const repository = source.getRepository(AdminSubscriptionsEntity);
-    const entity = repository.create({
-      payload: { ...input },
-      name: typeof input.name === 'string' ? input.name : null,
-      status: typeof input.status === 'string' ? input.status : null,
-      branchId: typeof input.branchId === 'string' ? input.branchId : null,
+  /** @description Finds active tenant payment methods. @returns Active payment methods. */
+  async findActivePaymentMethods(): Promise<CoreMasterPaymentMethodEntity[]> {
+    return this.masterDataSource.getRepository(CoreMasterPaymentMethodEntity).find({
+      where: { tenantId: this.requestContext.get().tenantId, isActive: true },
+      order: { isDefault: 'DESC', id: 'ASC' },
     });
-    return repository.save(entity);
   }
 
-  /** @description Updates persisted JSONB contract data through the repository boundary.
-   * @param id Record UUID.
-   * @param input Validated update fields.
-   * @returns Updated entity.
-   */
-  async updateById(id: string, input: Record<string, unknown>): Promise<AdminSubscriptionsEntity> {
-    const source = await this.tenantManager.getCurrent();
-    const repository = source.getRepository(AdminSubscriptionsEntity);
-    const entity = await this.findByIdOrThrow(id);
-    entity.payload = { ...entity.payload, ...input };
-    entity.name = typeof entity.payload.name === 'string' ? entity.payload.name : entity.name;
-    entity.status = typeof entity.payload.status === 'string' ? entity.payload.status : entity.status;
-    entity.branchId = typeof entity.payload.branchId === 'string' ? entity.payload.branchId : entity.branchId;
-    return repository.save(entity);
+  /** @description Calculates subscription KPI values from master billing state. @returns Frontend KPI contract. */
+  async findKpis(): Promise<Record<string, unknown>> {
+    const tenantId = this.requestContext.get().tenantId;
+    const subscription = await this.findCurrentSubscription();
+    if (!subscription) throw new NotFoundException('Subscription not found.');
+    const plan = subscription.planId
+      ? await this.masterDataSource.getRepository(CoreMasterPlanEntity).findOne({ where: { id: subscription.planId, isActive: true } })
+      : null;
+    if (!plan) throw new NotFoundException('Subscription plan not found.');
+
+    const invoiceCount = await this.masterDataSource.getRepository(CoreMasterInvoiceEntity).count({ where: { tenantId } });
+    const annual = this.toMajorUnits(plan.annualPriceMinor);
+    const monthly = this.toMajorUnits(plan.monthlyPriceMinor);
+    const payload = subscription.payload ?? {};
+    const nextBillingAmount = typeof payload.nextBillingAmount === 'number' ? payload.nextBillingAmount : annual;
+    const nextBillingDate = typeof payload.nextBillingDate === 'string' ? payload.nextBillingDate : null;
+    const daysUntilRenewal = nextBillingDate ? Math.max(0, Math.ceil((new Date(nextBillingDate).getTime() - Date.now()) / 86_400_000)) : 0;
+
+    return {
+      currentPlan: plan.name,
+      monthlySpend: typeof payload.monthlySpend === 'number' ? payload.monthlySpend : monthly,
+      totalInvoices: invoiceCount,
+      nextBillingAmount,
+      daysUntilRenewal,
+      savedWithAnnual: Math.max(0, monthly * 12 - annual),
+    };
   }
 
-  /** @description Soft-deletes a feature record without physical row removal.
-   * @param id Record UUID.
-   * @returns No value.
-   */
-  async markAsDeleted(id: string): Promise<AdminSubscriptionsEntity> {
-    const source = await this.tenantManager.getCurrent();
-    const repository = source.getRepository(AdminSubscriptionsEntity);
-    const entity = await this.findByIdOrThrow(id);
-    await repository.softDelete(id);
-    return entity;
+  /** @description Upgrades the current tenant subscription to an active master plan atomically. @param planId Target plan UUID. @returns Updated subscription. */
+  async upgradePlan(planId: string): Promise<CoreMasterSubscriptionEntity> {
+    return this.masterDataSource.transaction(async (manager) => {
+      const tenantId = this.requestContext.get().tenantId;
+      const subscriptionRepository = manager.getRepository(CoreMasterSubscriptionEntity);
+      const planRepository = manager.getRepository(CoreMasterPlanEntity);
+      const subscription = await subscriptionRepository.findOne({ where: { tenantId } });
+      if (!subscription) throw new NotFoundException('Subscription not found.');
+      const plan = await planRepository.findOne({ where: { id: planId, isActive: true } });
+      if (!plan) throw new NotFoundException('Subscription plan not found.');
+      subscription.planId = plan.id;
+      subscription.status = 'active';
+      subscription.payload = {
+        ...subscription.payload,
+        planName: plan.name,
+        tier: plan.tier,
+        monthlyPrice: this.toMajorUnits(plan.monthlyPriceMinor),
+        annualPrice: this.toMajorUnits(plan.annualPriceMinor),
+        memberLimit: this.numberFromPayload(plan.payload.memberLimit, subscription.payload.memberLimit),
+        staffLimit: this.numberFromPayload(plan.payload.staffLimit, subscription.payload.staffLimit),
+        storageGb: this.numberFromPayload(plan.payload.storageGb, subscription.payload.storageGb),
+        gymCount: this.numberFromPayload(subscription.payload.gymCount, 0),
+      };
+      return subscriptionRepository.save(subscription);
+    });
   }
-  /** @description Reads the first tenant-scoped snapshot used by read models and seed data.
-   * @returns Snapshot entity or null.
-   */
+
+  /** @description Toggles auto-renewal for the current tenant subscription atomically. @returns Updated subscription. */
+  async toggleAutoRenew(): Promise<CoreMasterSubscriptionEntity> {
+    const tenantId = this.requestContext.get().tenantId;
+    return this.masterDataSource.transaction(async (manager) => {
+      const repository = manager.getRepository(CoreMasterSubscriptionEntity);
+      const subscription = await repository.findOne({ where: { tenantId } });
+      if (!subscription) throw new NotFoundException('Subscription not found.');
+      subscription.autoRenew = !subscription.autoRenew;
+      subscription.payload = { ...subscription.payload, autoRenew: subscription.autoRenew };
+      return repository.save(subscription);
+    });
+  }
+
+  /** @description Sets one active payment method as default and clears the tenant's prior default atomically. @param paymentMethodId Payment method UUID. @returns Updated default payment method. */
+  async setDefaultPaymentMethod(paymentMethodId: string): Promise<CoreMasterPaymentMethodEntity> {
+    const tenantId = this.requestContext.get().tenantId;
+    return this.masterDataSource.transaction(async (manager) => {
+      const repository = manager.getRepository(CoreMasterPaymentMethodEntity);
+      const paymentMethod = await repository.findOne({ where: { id: paymentMethodId, tenantId, isActive: true } });
+      if (!paymentMethod) throw new NotFoundException('Payment method not found.');
+      await repository.update({ tenantId, isActive: true }, { isDefault: false });
+      paymentMethod.isDefault = true;
+      return repository.save(paymentMethod);
+    });
+  }
+
+  /** @description Deactivates a payment method without physically deleting the master record. @param paymentMethodId Payment method UUID. @returns Completion promise. */
+  async deactivatePaymentMethod(paymentMethodId: string): Promise<void> {
+    const repository = this.masterDataSource.getRepository(CoreMasterPaymentMethodEntity);
+    const tenantId = this.requestContext.get().tenantId;
+    const paymentMethod = await repository.findOne({ where: { id: paymentMethodId, tenantId, isActive: true } });
+    if (!paymentMethod) throw new NotFoundException('Payment method not found.');
+    paymentMethod.isActive = false;
+    paymentMethod.isDefault = false;
+    await repository.save(paymentMethod);
+  }
+
+  // Legacy tenant snapshot methods remain private-compatible for older integration tooling; Admin runtime reads/writes use master entities above.
   async findFirstSnapshot(): Promise<AdminSubscriptionsEntity | null> {
     const source = await this.tenantManager.getCurrent();
     return source.getRepository(AdminSubscriptionsEntity).findOne({ order: { createdAt: 'ASC' } });
   }
 
+  /** @description Converts integer minor-unit money to the frontend's major-unit number contract. @param minorValue Database minor units. @returns Major units. */
+  private toMajorUnits(minorValue: string): number {
+    return Number(minorValue) / 100;
+  }
+
+  /** @description Chooses a numeric plan payload value with a safe fallback. @param value Candidate value. @param fallback Fallback number. @returns Normalized number. */
+  private numberFromPayload(value: unknown, fallback: unknown): number {
+    return typeof value === 'number' && Number.isFinite(value) ? value : typeof fallback === 'number' && Number.isFinite(fallback) ? fallback : 0;
+  }
 }

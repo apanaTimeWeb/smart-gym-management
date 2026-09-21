@@ -1,8 +1,11 @@
 // RESPONSIBILITY: Converts all HTTP exceptions into the canonical response envelope and normalizes validation errors.
 // FLOW: Pipe/service exception → ValidationExceptionFilter → canonical ApiResponse<null>.
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus } from '@nestjs/common';
+
 import type { Response } from 'express';
+
 import type { ApiResponse, ValidationErrorItem } from '@/core/types/api-response.types';
+
 
 interface ValidationPayload {
   message?: string | string[];

@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Verifies one focused Auth behavior without testing implementation details outside its micro-feature.
 // FLOW: Jest -> focused Auth unit -> mocked boundary -> observable behavior assertion.
 
-import { AuthCommandController } from '@/modules/auth/auth-command.controller';
+import { AuthCommandController } from '@/modules/auth/controllers/auth-command.controller';
 import { AuthRole } from '@/modules/auth/auth.roles.constants';
 describe('AuthCommandController', () => {
   it('delegates login to the session orchestrator and maps the domain result', async () => {

@@ -1,21 +1,37 @@
 // RESPONSIBILITY: Boots the HTTP application with global security, validation, versioning, compression, and OpenAPI.
 // FLOW: Node → NestFactory → Middleware → Validation/Envelope → Versioned API → HTTP server.
-import '@/core/observability/telemetry-bootstrap';
-import 'reflect-metadata';
-import 'module-alias/register';
-import 'dotenv/config';
-import compression from 'compression';
-import helmet from 'helmet';
 import { ValidationPipe, VersioningType } from '@nestjs/common';
+
 import { NestFactory } from '@nestjs/core';
+
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+
+import 'reflect-metadata';
+
+import 'module-alias/register';
+
+import 'dotenv/config';
+
+import compression from 'compression';
+
+import helmet from 'helmet';
+
 import { Logger } from 'nestjs-pino';
+
 import { AppModule } from '@/app.module';
+
+import '@/core/observability/telemetry-bootstrap';
+
 import { ValidationExceptionFilter } from '@/core/http/validation-exception.filter';
+
 import { RequestContextMiddleware } from '@/core/context/request-context.middleware';
+
 import { TenantResolutionMiddleware } from '@/core/tenant/tenant-resolution.middleware';
+
 import { MetricsMiddleware } from '@/core/observability/metrics.middleware';
+
 import { ResponseInterceptor } from '@/core/http/response.interceptor';
+
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule, { bufferLogs: true });

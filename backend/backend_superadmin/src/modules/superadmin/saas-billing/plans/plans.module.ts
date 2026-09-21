@@ -14,11 +14,11 @@ import { PlansCreateService } from '@/modules/superadmin/saas-billing/plans/serv
 import { PlansUpdateService } from '@/modules/superadmin/saas-billing/plans/services/plans-update.service';
 import { PlansDeleteService } from '@/modules/superadmin/saas-billing/plans/services/plans-delete.service';
 import { PlansBusinessControlsService } from '@/modules/superadmin/saas-billing/plans/services/plans-business-controls.service';
-import { PlansSpecialController } from '@/modules/superadmin/saas-billing/plans/plans-special.controller';
+import { PlansArchiveService } from '@/modules/superadmin/saas-billing/plans/services/plans-archive.service';
 @Module({
   imports: [TypeOrmModule.forFeature([PlansContractSnapshotEntity, SubscriptionPlanEntity])],
-  controllers: [PlansQueryController, PlansCommandController, PlansSpecialController],
-  providers: [PlansContractSnapshotRepository, PlansBusinessControlsService, PlansRepository, PlansListService, PlansFindService, PlansCreateService, PlansUpdateService, PlansDeleteService],
+  controllers: [PlansQueryController, PlansCommandController],
+  providers: [PlansArchiveService, PlansContractSnapshotRepository, PlansBusinessControlsService, PlansRepository, PlansListService, PlansFindService, PlansCreateService, PlansUpdateService, PlansDeleteService],
   exports: [PlansRepository],
 })
 export class PlansModule {}

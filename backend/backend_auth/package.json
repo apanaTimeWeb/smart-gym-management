@@ -9,9 +9,9 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json",
-    "start": "node --require @opentelemetry/auto-instrumentations-node/register dist/app-main.js",
-    "start:dev": "tsx watch src/app-main.ts",
-    "start:prod": "node --require @opentelemetry/auto-instrumentations-node/register dist/app-main.js",
+    "start": "node --require @opentelemetry/auto-instrumentations-node/register dist/core-app-main.js",
+    "start:dev": "tsx watch src/core-app-main.ts",
+    "start:prod": "node --require @opentelemetry/auto-instrumentations-node/register dist/core-app-main.js",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -31,7 +31,7 @@
     "migration:run": "npm run typeorm -- -d ./src/core/database/core-data-source.ts migration:run",
     "migration:revert": "npm run typeorm -- -d ./src/core/database/core-data-source.ts migration:revert",
     "seed": "tsx src/core/database/core-master-seeder.ts",
-    "start:dev:otel": "node --require @opentelemetry/auto-instrumentations-node/register --import tsx/esm ./src/app-main.ts"
+    "start:dev:otel": "node --require @opentelemetry/auto-instrumentations-node/register --import tsx/esm ./src/core-app-main.ts"
   },
   "dependencies": {
     "@nestjs/common": "12.0.3",

@@ -72,7 +72,7 @@ Content-Type: application/json
 }
 ```
 
-For duplicate-sensitive retries, clients should send an `Idempotency-Key` header. The backend supports Redis-backed idempotency for these mutations without changing the current frontend request body.
+For duplicate-sensitive retries, clients should send an `Idempotency-Key` header. The backend uses durable PostgreSQL idempotency state with Redis replay caching for these mutations without changing the current frontend request body.
 
 ## Architecture
 
@@ -82,7 +82,11 @@ The backend uses the feature module as the AI repair unit:
 
 Persistence is isolated behind repositories; TypeORM entities never escape into services.
 
-Tenant context is request-scoped through AsyncLocalStorage. The current public Landing frontend has no tenant selector/header in its contract, so anonymous Landing requests use `PUBLIC_TENANT_ID`; an explicitly supplied tenant id must resolve to an active tenant in the master database before it is used.
+Tenant context is request-scoped through AsyncLocalStorage. The current public Landing frontend has no tenant selector/header in its contract, so anonymous Landing requests use only `PUBLIC_TENANT_ID`; a different client-supplied tenant id is rejected. Non-public routes require an authenticated actor whose authorized tenant set contains the selected tenant.
+
+## Isolated E2E testing
+
+Run the backend with `NODE_ENV=test` and set `E2E_BOOTSTRAP_TOKEN`. The Pytest fixture provisions a fresh tenant database through the test-only provisioning API, runs Landing API tests against that tenant, then destroys the disposable tenant and database. The test-only API is rejected outside `NODE_ENV=test`.
 
 ## Runtime verification limits
 

@@ -35,4 +35,5 @@ export const buildValidatedConfig = registerAs('app', () => ({
   publicTenantSlug: required('PUBLIC_TENANT_SLUG'),
   publicTenantName: required('PUBLIC_TENANT_NAME'),
   healthDeepToken: required('HEALTH_DEEP_TOKEN'),
+  e2eBootstrapToken: (process.env.NODE_ENV ?? 'development') === 'test' ? required('E2E_BOOTSTRAP_TOKEN') : undefined,
 }));

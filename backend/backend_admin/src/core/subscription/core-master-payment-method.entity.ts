@@ -25,6 +25,9 @@ export class CoreMasterPaymentMethodEntity {
 
   isDefault!: boolean;
 
+  @Column({ name: 'is_active', type: 'boolean', default: true })
+  isActive!: boolean;
+
   @Column({ name: 'payload', type: 'jsonb', default: () => "'{}'::jsonb" })
 
   payload!: Record<string, unknown>;

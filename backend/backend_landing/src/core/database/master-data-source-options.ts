@@ -1,9 +1,13 @@
 // RESPONSIBILITY: Builds the master PostgreSQL TypeORM DataSource options and explicit pool policy.
 // FLOW: Environment → master DataSource options → TypeORM.
 import { join } from 'node:path';
-import type { DataSourceOptions } from 'typeorm';
+
 import { DATABASE_CONFIG } from '@/core/config/database.config';
+
 import { MasterTenantEntity } from '@/core/tenant/master-tenant.entity';
+
+import type { DataSourceOptions } from 'typeorm';
+
 
 /** @description Builds the master PostgreSQL TypeORM options from validated process configuration. @returns Master DataSource configuration. */
 export function buildMasterDataSourceOptions(): DataSourceOptions {

@@ -16,10 +16,12 @@ import { TicketsDeleteService } from '@/modules/superadmin/tickets/services/tick
 import { TicketsStatusService } from '@/modules/superadmin/tickets/services/tickets-status.service';
 import { TicketsInsightsService } from '@/modules/superadmin/tickets/services/tickets-insights.service';
 import { TicketsSpecialController } from '@/modules/superadmin/tickets/tickets-special.controller';
+import { TicketsActionsController } from '@/modules/superadmin/tickets/tickets-actions.controller';
+import { TicketsActionsService } from '@/modules/superadmin/tickets/services/tickets-actions.service';
 @Module({
   imports: [TypeOrmModule.forFeature([TicketsContractSnapshotEntity, SupportTicketEntity])],
-  controllers: [TicketsQueryController, TicketsCommandController, TicketsSpecialController],
-  providers: [TicketsContractSnapshotRepository, TicketsInsightsService, TicketsRepository, TicketsListService, TicketsFindService, TicketsCreateService, TicketsUpdateService, TicketsDeleteService, TicketsStatusService],
+  controllers: [TicketsQueryController, TicketsCommandController, TicketsSpecialController, TicketsActionsController],
+  providers: [TicketsActionsService, TicketsContractSnapshotRepository, TicketsInsightsService, TicketsRepository, TicketsListService, TicketsFindService, TicketsCreateService, TicketsUpdateService, TicketsDeleteService, TicketsStatusService],
   exports: [TicketsRepository],
 })
 export class TicketsModule {}

@@ -2,8 +2,9 @@
 // FLOW: GET /auth/me -> verified JWT -> AuthMeService -> domain user -> response mapper -> envelope.
 
 import { Controller, Get, HttpStatus, Req } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
+import { CoreApiErrorSwagger, CoreApiResponseSwagger } from '@/core/http/core-api-response.swagger';
 import { CoreSla, CoreSlaCategory } from '@/core/http/core-sla.decorator';
 import { CoreRateLimitTier } from '@/core/rate-limit/core-rate-limit.constants';
 import { CoreRateLimit } from '@/core/rate-limit/core-rate-limit.decorator';
@@ -15,7 +16,6 @@ import { AuthMeService } from '@/modules/auth/services/auth-me.service';
 import { AuthApiResponseMapper } from '@/modules/auth/utils/auth-api-response.mapper';
 
 import type { AuthQueryRequest } from '@/modules/auth/auth-http.interfaces';
-import type { CoreJwtClaims } from '@/core/security/core-jwt-claims';
 
 @ApiTags('Auth')
 @Controller({ path: 'auth', version: '1' })
@@ -27,7 +27,10 @@ export class AuthQueryController {
   @CoreRoles(...AUTH_ALL_ROLES)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Return the authoritative authenticated user identity.' })
-  @ApiResponse({ status: HttpStatus.OK, type: AuthUserResponseDto })
+  @CoreApiResponseSwagger(AuthUserResponseDto, HttpStatus.OK)
+  @CoreApiErrorSwagger(HttpStatus.UNAUTHORIZED, 'CORE.HTTP.UNAUTHORIZED')
+  @CoreApiErrorSwagger(HttpStatus.FORBIDDEN, 'CORE.HTTP.FORBIDDEN')
+  @CoreApiErrorSwagger(HttpStatus.TOO_MANY_REQUESTS, 'CORE.HTTP.TOO_MANY_REQUESTS')
   @CoreSla(CoreSlaCategory.STANDARD)
   // SLA: STANDARD
   async findAuthenticatedUser(@Req() request: AuthQueryRequest): Promise<AuthUserResponseDto> {

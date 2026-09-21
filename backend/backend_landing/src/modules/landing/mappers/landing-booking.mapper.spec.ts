@@ -1,8 +1,11 @@
 // RESPONSIBILITY: Proves booking ORM-to-domain translation preserves the frontend contract semantics.
 // FLOW: Unit test → LandingBookingMapper → domain object.
 import { LandingBookingMapper } from '@/modules/landing/mappers/landing-booking.mapper';
+
 import { LandingBookingType } from '@/modules/landing/enums/landing-booking-type.enum';
+
 import { LandingBookingEntity } from '@/modules/landing/entities/landing-booking.entity';
+
 
 describe('LandingBookingMapper', () => {
   it('maps UTC dates and booking type without changing values', () => {

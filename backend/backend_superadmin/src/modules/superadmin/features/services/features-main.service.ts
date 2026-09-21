@@ -1,17 +1,16 @@
-// RESPONSIBILITY: Returns the exact Feature Flags + Release Notes contract consumed by Superadmin.
-// FLOW: Controller -> FeaturesMainService -> FeaturesContractSnapshotRepository -> PostgreSQL.
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { FeaturesContractSnapshotRepository } from '@/modules/superadmin/features/features-contract-snapshot.repository';
-import { FEATURES_SNAPSHOT_KINDS } from '@/modules/superadmin/features/features.constants';
-
+// RESPONSIBILITY: Returns live feature-flag and release-note state for the Superadmin frontend contract.
+// FLOW: Controller -> FeaturesMainService -> FeaturesRepository + FeatureReleaseNoteRepository -> public contract.
+import { Injectable } from '@nestjs/common';
+import { FeaturesRepository } from '@/modules/superadmin/features/features.repository';
+import { FeatureReleaseNoteRepository } from '@/modules/superadmin/features/features-release-note.repository';
+import { FeaturesMapper } from '@/modules/superadmin/features/features.mapper';
 @Injectable()
 export class FeaturesMainService {
-  constructor(private readonly repository: FeaturesContractSnapshotRepository) {}
-
-  /** Returns the complete feature flags and release notes contract. */
-  async findFeaturesData(): Promise<unknown> {
-    const payload = await this.repository.findLatestByKind(FEATURES_SNAPSHOT_KINDS.MAIN);
-    if (payload === null) throw new NotFoundException('Feature flags contract is not provisioned');
-    return payload;
+  constructor(private readonly repository: FeaturesRepository, private readonly releaseNotes: FeatureReleaseNoteRepository) {}
+  /** Returns the complete live feature flags + release notes contract. */
+  async findFeaturesData(): Promise<{ flags: ReturnType<typeof FeaturesMapper.toDomainList>; notes: Array<{ id: string; version: string; title: string; content: string; date: string; isPublished: boolean }> }> {
+    const page = await this.repository.findPage({ page: 1, limit: 100, sortBy: 'updatedAt', sortOrder: 'DESC' });
+    const notes = await this.releaseNotes.findAll();
+    return { flags: FeaturesMapper.toDomainList(page.items), notes: notes.map((item) => ({ id: item.id, version: item.version, title: item.title, content: item.content, date: item.date.toISOString(), isPublished: item.isPublished })) };
   }
 }

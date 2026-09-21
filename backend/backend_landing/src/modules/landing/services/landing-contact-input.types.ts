@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Defines application-layer inputs for contact persistence without coupling repositories to HTTP DTO classes.
-// FLOW: DTO → orchestrator/service input → repository.
+// RESPONSIBILITY: Defines the sanitized application-layer input contract for Landing contact operations.
+// FLOW: Landing DTO → LandingContactOrchestratorService → LandingContactService → LandingContactRepository.
 export interface LandingCreateContactInput {
   name: string;
   email: string;

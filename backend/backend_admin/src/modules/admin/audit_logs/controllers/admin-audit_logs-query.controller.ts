@@ -9,7 +9,7 @@ import { CoreRolesGuard } from '@/core/auth/core-roles.guard';
 import { CoreAdminRole } from '@/core/tenant/core-tenant.constants';
 import { AdminAuditLogsQueryService } from '@/modules/admin/audit_logs/services/admin-audit_logs-query.service';
 import { AdminAuditLogsQueryDto } from '@/modules/admin/audit_logs/dtos/admin-audit_logs-query.dto';
-import { AdminAuditLogsResponseDto } from '@/modules/admin/audit_logs/dtos/admin-audit_logs-response.dto';
+import { AdminAuditLogsKpiResponseDto, AdminAuditLogsResponseDto } from '@/modules/admin/audit_logs/dtos/admin-audit_logs-response.dto';
 
 @ApiTags('Admin / audit_logs')
 @Controller('admin/audit_logs')
@@ -29,7 +29,7 @@ export class AdminAuditLogsQueryController {
   // SLA: STANDARD
   @Get('fetchKPIs')
   @ApiOperation({ summary: 'Execute fetchKPIs' })
-  @ApiResponse({ status: HttpStatus.OK, type: AdminAuditLogsResponseDto })
+  @ApiResponse({ status: HttpStatus.OK, type: AdminAuditLogsKpiResponseDto })
   async fetchKPIs(@Query() query: AdminAuditLogsQueryDto): Promise<unknown> {
     return this.service.fetchKPIs(query);
   }

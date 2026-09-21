@@ -8,8 +8,8 @@ This feature implements the authentication contract actually required by the sup
 
 | File | Responsibility |
 |---|---|
-| auth-command.controller.ts | Owns POST login/refresh/logout HTTP operations only. |
-| auth-query.controller.ts | Owns GET /auth/me only. |
+| controllers/auth-command.controller.ts | Owns POST login/refresh/logout HTTP operations only. |
+| controllers/auth-query.controller.ts | Owns GET /auth/me only. |
 | orchestrators/auth-session.orchestrator.ts | Owns login/refresh/logout transaction boundaries and committed replay-recovery orchestration. |
 | services/auth-login.service.ts | Owns credential verification, Redis lockout counters, token/session creation. |
 | services/auth-refresh.service.ts | Owns refresh JWT validation and locked token rotation semantics. |
@@ -35,6 +35,7 @@ This feature implements the authentication contract actually required by the sup
 | utils/auth-password.utils.ts | Isolates bcrypt hashing/comparison. |
 | utils/auth-lockout.utils.ts | Derives privacy-preserving Redis lockout keys. |
 | utils/auth-api-response.mapper.ts | Maps domain results to HTTP response DTOs. |
+| utils/auth-audit-role.mapper.ts | Converts AuthRole to the core audit actor-role enum. |
 | auth.seeder.ts | Provides deterministic, idempotent, explicitly enabled seed identities. |
 | auth_dependencies.md | Declares Auth business/infrastructure/event dependencies. |
 | auth_forbidden.md | Documents module-specific prohibited patterns. |
@@ -128,8 +129,8 @@ This feature implements the authentication contract actually required by the sup
 
 ## File Responsibility Map
 
-- `auth-command.controller.ts` — HTTP write endpoints; MUST NOT access TypeORM or implement credential rules.
-- `auth-query.controller.ts` — HTTP read endpoint; MUST NOT access TypeORM or trust request-body identity.
+- `controllers/auth-command.controller.ts` — HTTP write endpoints; MUST NOT access TypeORM or implement credential rules.
+- `controllers/auth-query.controller.ts` — HTTP read endpoint; MUST NOT access TypeORM or trust request-body identity.
 - `auth-session.orchestrator.ts` — Transaction/recovery orchestration; MUST NOT implement password or token policy.
 - `auth-login.service.ts` — Login mechanics; MUST NOT access ORM entities or generic persistence methods.
 - `auth-refresh.service.ts` — Refresh semantics; MUST NOT bypass `findSessionByIdForUpdate()`.
@@ -205,11 +206,11 @@ CODEOWNERS path: `src/modules/auth/` → human security-owner review required be
 
 - [x] Rules 1–8: Isolated micro-features, DTO/domain/constant/exception/repository/adapter boundaries; TypeORM is the single approved ORM.
 - [x] Rules 9–10: HTTP statuses use Nest `HttpStatus`; source imports use the `@/*` path alias with no relative imports.
-- [x] Rules 11–19: Co-located Jest tests, Swagger decorators, validated config, structured logging, DI, API collection, and module documentation are present.
-- [x] Rules 20–27: Compression, rate limiting, migrations, graceful shutdown, URI versioning and the two-tier Jest/Pytest strategy are configured.
+- [x] Rules 11–19: Co-located Jest tests, canonical Swagger envelope decorators, validated config, structured logging, DI, API collection, and module documentation are present.
+- [x] Rules 20–27: Compression, centralized rate limiting (including public health/metrics endpoints), migrations, graceful shutdown, URI versioning and the two-tier Jest/Pytest strategy are configured.
 - [x] Rule 28: Global canonical `ApiResponse<T>` response envelope is enforced.
 - [x] Rule 29: Soft-delete base entity/repository pattern is used; no Auth hard-delete endpoint exists.
-- [x] Rule 30: Login, lockout, refresh rotation/reuse and logout security state changes are audited.
+- [x] Rule 30: Login, lockout, refresh rotation/reuse and logout security state changes are audited with server-derived request metadata when available.
 - [x] Rule 31: No Auth endpoint in the supplied contract requires a dedicated idempotency key.
 - [x] Rule 32: Structured logs, Prometheus metrics and OpenTelemetry bootstrap are included.
 - [x] Rule 33: `.env.example` only documents local configuration; production secrets must come from a secrets manager.
@@ -218,14 +219,14 @@ CODEOWNERS path: `src/modules/auth/` → human security-owner review required be
 - [x] Rule 36: Fail-fast exceptions and explicit transaction error handling are implemented.
 - [x] Rules 37–40: Strict payload limits, frontend-first naming, master-database Auth scope, and future tenant boundary are documented.
 - [x] Rule 41: Refresh-session rotation uses pessimistic locking.
-- [x] Rules 42–43: No scheduled job exists in Auth; Auth E2E does not claim tenant lifecycle coverage because no tenant contract is supplied.
+- [ ] Rule 43: Full isolated test-tenant/database lifecycle remains BLOCKED_BY_SUPPLIED_SCOPE until the project tenant-provisioning contract is supplied; Auth E2E must not be treated as proof of it.
 - [x] Rules 44–47: Centralized rate-limit registry and adapter/security extension points are established; no Auth external adapter/webhook is required.
 - [x] Rules 48–52: Query/command separation, dependency mapping, event naming policy, changelog, and JWT rotation are represented.
 - [x] Rules 53–54: No Auth sensitive field requiring application-layer encryption is currently stored; brute-force lockout is implemented at 5 failed attempts by default and audited.
 - [x] Rules 55–63: Deterministic seeder, strict null safety, AsyncLocalStorage, base entity/repository, SLA declarations, named FK convention and explicit DB pool policy are implemented.
 - [x] Rules 64–66: Machine-readable errors and plural snake_case table names are implemented.
 - [x] Rule 67: Frozen Auth contract is documented from the supplied frontend before implementation.
-- [x] Rules 68–74: Health levels, strict tsconfig, typed ORM boundaries, UTC/ISO semantics, 1MB default payload limit, and mechanical isolation are configured.
+- [x] Rules 68–74: Health levels, strict tsconfig, typed ORM boundaries, UTC/ISO semantics, 1MB default payload limit, and lint-level module boundary enforcement are configured.
 - [x] Rule 75: Auth files remain below their hard ceilings.
 - [x] Rules 76–80: Responsibility/flow comments and JSDoc coverage are enforced for authored backend methods in scope.
 - [x] Rule 81: No stub endpoint is left in the mergeable implementation.
@@ -236,20 +237,24 @@ CODEOWNERS path: `src/modules/auth/` → human security-owner review required be
 - [x] Rule 85: Auth services use guard-clause control flow.
 - [x] Rule 86: Method names are intention-revealing verbs; `findByIdOrThrow` is used for required records.
 - [x] Rule 87: Service methods are micro-featured and within the architecture's line budget.
-- [x] Rule 88: ESLint `import-x/order` mechanically enforces import ordering.
+- [x] Rule 88: ESLint `import-x/order` mechanically enforces import ordering and the known core violations have been corrected.
 - [x] Rule 89: Dedicated mappers prevent ORM entities from reaching services.
 - [x] Rule 90: CI defines typecheck, lint, SCA, SAST, secrets scanning and tests.
-- [x] Rule 91: Pre-commit hooks run lint-staged, tsc, Prettier and Gitleaks when installed.
+- [x] Rule 91: Pre-commit uses staged-file linting/formatting/type checking plus staged Gitleaks scanning; full-repository gates remain in CI.
 - [x] Rule 92: User-controlled dynamic ORM order/where fields are absent from Auth.
 - [x] Rule 93: Auth requires human CODEOWNERS review.
 - [x] Rule 94: Canonical pagination types/utilities are installed for future list endpoints; Auth currently has no paginated endpoint.
-- [x] Rule 95: Auth role/status persistence uses TypeScript enums and class-validator/DB enum enforcement where applicable.
+- [x] Rule 95: Auth roles/statuses and core audit actor-role persistence use enum-backed TypeScript/PostgreSQL representations.
 - [x] Rule 96: Central scheduled-job registry exists; Auth declares no scheduled job.
 - [x] Rule 97: DB/Redis operations use explicit timeout tiers; HTTP SLA is declared with `@CoreSla` plus required comments.
 - [x] Rule 98: Global validation pipe/filter produces the canonical `validationErrors` shape including nested dot paths.
 - [x] Rule 99: All Auth mutations are named repository methods; services never mutate ORM entities or call `save()` directly.
 - [x] Rule 100: Auth and audit DB constraints are explicitly named and documented above.
 - [x] Rule 101: Unit/E2E tests assert observable login, lockout, refresh rotation/replay, logout, authoritative identity and validation behavior.
+
+## Post-Audit Repair Status
+
+The current source incorporates the verified Stage 2 repairs for logger typing, Swagger envelope documentation, public rate-limit coverage, import ordering, logout audit IP propagation, enum-driven audit actor roles, staged pre-commit gates, and module-prefix bootstrap naming. Full DB-per-tenant provisioning/routing and isolated test-tenant E2E lifecycle remain outside the supplied Auth-only scope and must not be represented as implemented here.
 
 ## Verification Notes
 

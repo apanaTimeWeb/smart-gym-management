@@ -1,15 +1,25 @@
-// RESPONSIBILITY: Owns the booking transaction boundary, idempotency, and controlled infrastructure-error translation.
-// FLOW: LandingCommandController → BookingOrchestrator → Idempotency → UnitOfWork → BookingService.
-import { Injectable } from '@nestjs/common';
+// RESPONSIBILITY: Owns the booking transaction boundary and durable idempotency orchestration; it must not contain persistence details.
+// FLOW: LandingCommandController → LandingBookingOrchestratorService → IdempotencyService + UnitOfWork → LandingBookingService.
 import { createHash } from 'node:crypto';
+
+import { HttpException, Injectable } from '@nestjs/common';
+
 import { PinoLogger } from 'nestjs-pino';
-import type { ApiResponse } from '@/core/types/api-response.types';
+
 import { TypeOrmUnitOfWorkService } from '@/core/database/typeorm-unit-of-work.service';
-import { LandingBookingService } from '@/modules/landing/services/landing-booking.service';
-import { LandingBookingType } from '@/modules/landing/enums/landing-booking-type.enum';
+
 import { IdempotencyService } from '@/core/idempotency/idempotency.service';
-import { LANDING_ERRORS, LANDING_ENDPOINT_SCOPES } from '@/modules/landing/landing.constants';
+
+import { LandingBookingType } from '@/modules/landing/enums/landing-booking-type.enum';
+
+import { LANDING_ENDPOINT_SCOPES, LANDING_ERRORS } from '@/modules/landing/landing.constants';
+
 import { LandingBookingUnavailableException } from '@/modules/landing/landing.exceptions';
+
+import { LandingBookingService } from '@/modules/landing/services/landing-booking.service';
+
+import type { ApiResponse } from '@/core/types/api-response.types';
+
 
 @Injectable()
 export class LandingBookingOrchestratorService {
@@ -22,31 +32,67 @@ export class LandingBookingOrchestratorService {
     this.logger.setContext(LandingBookingOrchestratorService.name);
   }
 
-  /** @description Executes booking creation atomically and replays a matching idempotency result. @param input - Booking application input. @param idempotencyKey - Optional retry key. @returns Canonical null-data response. @throws LandingBookingUnavailableException when persistence is unavailable. */
-  async createBooking(input: { name: string; email: string; phone: string; date: Date; type: LandingBookingType }, idempotencyKey?: string): Promise<ApiResponse<null>> {
+  /**
+   * @description Creates a booking atomically and makes the completed mutation safe to replay after Redis failures or retries.
+   * @param input - Sanitized booking input.
+   * @param idempotencyKey - Optional client retry key.
+   * @returns Canonical null-data response.
+   */
+  async createBooking(
+    input: { name: string; email: string; phone: string; date: Date; type: LandingBookingType },
+    idempotencyKey?: string,
+  ): Promise<ApiResponse<null>> {
     const requestHash = this.hash(input);
-    const replay = idempotencyKey ? await this.idempotency.acquire(LANDING_ENDPOINT_SCOPES.BOOKING, idempotencyKey, requestHash) : null;
-    if (replay) return replay;
+    const cached = idempotencyKey
+      ? await this.idempotency.getCachedResponse(LANDING_ENDPOINT_SCOPES.BOOKING, idempotencyKey, requestHash)
+      : null;
+    if (cached) return cached;
+
     try {
-      return await this.execute(input, idempotencyKey, requestHash);
+      const result = await this.unitOfWork.runInTransaction(async (context) => {
+        if (idempotencyKey) {
+          const replay = await this.idempotency.reserveOrReplay(
+            context,
+            LANDING_ENDPOINT_SCOPES.BOOKING,
+            idempotencyKey,
+            requestHash,
+          );
+          if (replay) return replay;
+        }
+        await this.bookingService.createBooking(input, context);
+        const response: ApiResponse<null> = {
+          success: true,
+          message: LANDING_ERRORS.BOOKING_CREATED,
+          data: null,
+        };
+        if (idempotencyKey) {
+          await this.idempotency.completeWithinTransaction(
+            context,
+            LANDING_ENDPOINT_SCOPES.BOOKING,
+            idempotencyKey,
+            response,
+          );
+        }
+        return response;
+      });
+
+      if (idempotencyKey) {
+        await this.idempotency.storeCached(
+          LANDING_ENDPOINT_SCOPES.BOOKING,
+          idempotencyKey,
+          requestHash,
+          result,
+        );
+      }
+      return result;
     } catch (error: unknown) {
-      if (idempotencyKey) await this.idempotency.release(LANDING_ENDPOINT_SCOPES.BOOKING, idempotencyKey, requestHash);
+      if (error instanceof HttpException) throw error;
       this.logger.error({ error: error instanceof Error ? error.message : String(error) }, 'Landing booking transaction failed.');
       throw new LandingBookingUnavailableException();
     }
   }
 
-  private async execute(
-    input: { name: string; email: string; phone: string; date: Date; type: LandingBookingType },
-    idempotencyKey: string | undefined,
-    requestHash: string,
-  ): Promise<ApiResponse<null>> {
-    await this.unitOfWork.runInTransaction(async (context) => this.bookingService.createBooking(input, context));
-    const response: ApiResponse<null> = { success: true, message: LANDING_ERRORS.BOOKING_CREATED, data: null };
-    if (idempotencyKey) await this.idempotency.store(LANDING_ENDPOINT_SCOPES.BOOKING, idempotencyKey, requestHash, response);
-    return response;
-  }
-
+  /** @description Produces a deterministic SHA-256 fingerprint of normalized booking input for idempotency comparison. @param input - Normalized booking input. @returns SHA-256 request fingerprint. */
   private hash(input: unknown): string {
     return createHash('sha256').update(JSON.stringify(input)).digest('hex');
   }

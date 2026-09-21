@@ -1,9 +1,13 @@
 // RESPONSIBILITY: Establishes request-scoped correlation and trace context at the HTTP boundary.
 // FLOW: Incoming HTTP request → RequestContextService.run → downstream middleware/controllers.
-import { NextFunction, Request, Response } from 'express';
 import { randomUUID } from 'node:crypto';
+
+import { NextFunction, Request, Response } from 'express';
+
 import { trace } from '@opentelemetry/api';
+
 import { RequestContextService } from '@/core/context/request-context.service';
+
 
 /** @description Establishes request correlation state before downstream execution. @param request - Express request. @param response - Express response. @param next - Downstream callback. @returns Nothing. */
 export const RequestContextMiddleware = (

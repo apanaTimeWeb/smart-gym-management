@@ -75,6 +75,6 @@ export class AdminBlacklistCommandService {
    * @returns Audit record UUID.
    */
   private async audit(entityId: string, action: string, newValue: Record<string, unknown>): Promise<string> {
-    return this.auditTrail.record({ action: `ADMIN_${action}`, entityType: 'AdminFeature', entityId, oldValue: null, newValue, ipAddress: null, severity: 'low', module: 'admin' });
+    return this.auditTrail.record({ action: `ADMIN_${action}`, entityType: 'AdminFeature', entityId, oldValue: null, newValue, ipAddress: null, severity: 'low', module: 'Members' });
   }
 }

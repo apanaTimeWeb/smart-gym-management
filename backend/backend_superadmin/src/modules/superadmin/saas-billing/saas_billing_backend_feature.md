@@ -73,7 +73,7 @@ The SaaS Billing container coordinates the Superadmin billing feature family. Co
 | `plans/plans-contract-snapshot.entity.ts` | Maps one PostgreSQL table or contract-snapshot table to TypeORM. |
 | `plans/plans-contract-snapshot.repository.ts` | Owns TypeORM queries and intention-revealing persistence mutations for this feature. |
 | `plans/plans-query.controller.ts` | Exposes the HTTP boundary and forwards requests to one or more local use-case services. |
-| `plans/plans-special.controller.ts` | Exposes the HTTP boundary and forwards requests to one or more local use-case services. |
+| `plans/plans-query.controller.ts` | Exposes the HTTP boundary and forwards requests to one or more local use-case services. |
 | `plans/plans.constants.ts` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
 | `plans/plans.entity.ts` | Maps one PostgreSQL table or contract-snapshot table to TypeORM. |
 | `plans/plans.exceptions.ts` | Documents the feature boundary, dependencies, forbidden operations, or API contract. |
@@ -124,7 +124,7 @@ The SaaS Billing container coordinates the Superadmin billing feature family. Co
 | `plans/plans-command.controller.ts` / `remove` | DELETE | `/superadmin/saas-billing/plans/:id` | Soft-deletes the resource and keeps the historical row recoverable. | `None` | `void` |
 | `plans/plans-query.controller.ts` / `findAll` | GET | `/superadmin/saas-billing/plans` | Returns a paginated collection using the feature query contract. | `None` | `unknown` |
 | `plans/plans-query.controller.ts` / `findOne` | GET | `/superadmin/saas-billing/plans/:id` | Returns one active resource after resource and authorization checks. | `None` | `unknown` |
-| `plans/plans-special.controller.ts` / `businessControls` | GET | `/superadmin/saas-billing/plans/business-controls` | Returns the complete frontend business-controls contract including segments, filters, bulk vocabulary, saved views, and rows. | `None` | `Record<string, unknown` |
+| `plans/plans-query.controller.ts` / `businessControls` | GET | `/superadmin/saas-billing/plans/business-controls` | Returns the complete frontend business-controls contract including segments, filters, bulk vocabulary, saved views, and rows. | `None` | `Record<string, unknown` |
 
 ## Approved External Dependencies
 - **Business Feature Dependencies**: None by direct business-code import. Runtime event dependencies are documented explicitly below.

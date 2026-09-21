@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+set -eu
+npm run typecheck
+npm run lint:staged
+if command -v gitleaks >/dev/null 2>&1; then
+  gitleaks protect --staged --redact
+else
+  echo 'gitleaks is required for backend pre-commit security scanning.' >&2
+  exit 1
+fi

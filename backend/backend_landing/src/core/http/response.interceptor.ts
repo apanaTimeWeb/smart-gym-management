@@ -1,10 +1,15 @@
 // RESPONSIBILITY: Wraps successful application results in the canonical response envelope unless an infrastructure endpoint opts out.
 // FLOW: Controller result → ResponseInterceptor → ApiResponse<T> JSON or native infrastructure body.
 import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
+
 import { Reflector } from '@nestjs/core';
+
 import { map, Observable } from 'rxjs';
-import type { ApiResponse } from '@/core/types/api-response.types';
+
 import { SKIP_RESPONSE_ENVELOPE } from '@/core/http/skip-response-envelope.decorator';
+
+import type { ApiResponse } from '@/core/types/api-response.types';
+
 
 @Injectable()
 export class ResponseInterceptor<T> implements NestInterceptor<T, ApiResponse<T>> {

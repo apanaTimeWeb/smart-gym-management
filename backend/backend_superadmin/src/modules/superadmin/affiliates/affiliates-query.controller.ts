@@ -9,13 +9,19 @@ import { SuperadminRole } from '@/core/auth/auth.types';
 import { AffiliatesQueryDto } from '@/modules/superadmin/affiliates/dtos/affiliates-query.dto';
 import { AffiliatesListService } from '@/modules/superadmin/affiliates/services/affiliates-list.service';
 import { AffiliatesFindService } from '@/modules/superadmin/affiliates/services/affiliates-find.service';
+import { AffiliatesPayoutService } from '@/modules/superadmin/affiliates/services/affiliates-payout.service';
 
 @ApiTags('affiliates')
 @Controller('/superadmin/affiliates')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class AffiliatesQueryController {
-  constructor(private readonly listService: AffiliatesListService, private readonly findService: AffiliatesFindService) {}
+  constructor(private readonly listService: AffiliatesListService, private readonly findService: AffiliatesFindService, private readonly payoutService: AffiliatesPayoutService) {}
+  /** Returns payout history across active affiliates. */
+  // SLA: STANDARD
+  @Get('payout-history')
+  async payoutHistory(): Promise<unknown[]> { return this.payoutService.history(); }
+
   /** Returns a paginated affiliates list. */
   // SLA: STANDARD
   @Get()

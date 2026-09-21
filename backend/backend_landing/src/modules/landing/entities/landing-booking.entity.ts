@@ -1,8 +1,11 @@
 // RESPONSIBILITY: Maps Landing bookings to the tenant PostgreSQL table without leaking ORM entities into services.
 // FLOW: LandingBookingRepository → TypeORM entity → PostgreSQL landing_bookings.
 import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
+
 import { CoreBaseEntity } from '@/core/database/base.entity';
+
 import { LandingBookingType } from '@/modules/landing/enums/landing-booking-type.enum';
+
 
 @Entity('landing_bookings')
 @Index('IDX_landing_bookings_created_at', ['createdAt'])

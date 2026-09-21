@@ -8,6 +8,8 @@ import { HealthCheck, HealthCheckService, TypeOrmHealthIndicator } from '@nestjs
 import { CoreRedisService } from '@/core/cache/core-redis.service';
 import { TIMEOUT_CONFIG } from '@/core/config/timeout.config';
 import { CoreSla, CoreSlaCategory } from '@/core/http/core-sla.decorator';
+import { CoreRateLimit } from '@/core/rate-limit/core-rate-limit.decorator';
+import { CoreRateLimitTier } from '@/core/rate-limit/core-rate-limit.constants';
 import { CorePublic } from '@/core/security/core-public.decorator';
 
 import type { HealthCheckResult } from '@nestjs/terminus';
@@ -22,6 +24,7 @@ export class CoreHealthController {
 
   @Get('live')
   @CorePublic()
+  @CoreRateLimit(CoreRateLimitTier.HEALTH_LIVE)
   @ApiOperation({ summary: 'Process liveness probe.' })
   @ApiResponse({ status: HttpStatus.OK, description: 'Process is alive.' })
   @CoreSla(CoreSlaCategory.FAST)
@@ -33,6 +36,7 @@ export class CoreHealthController {
 
   @Get('ready')
   @CorePublic()
+  @CoreRateLimit(CoreRateLimitTier.HEALTH_READY)
   @ApiOperation({ summary: 'Dependency readiness probe.' })
   @ApiResponse({ status: HttpStatus.OK, description: 'Database and Redis are reachable.' })
   @CoreSla(CoreSlaCategory.STANDARD)

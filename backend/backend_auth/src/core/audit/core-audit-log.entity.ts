@@ -3,6 +3,7 @@
 
 import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 
+import { CoreAuditActorRole } from '@/core/audit/core-audit.constants';
 import { CoreBaseEntity } from '@/core/database/core-base-entity';
 @Entity('audit_logs')
 @Index('IDX_audit_logs_entity_type_entity_id', ['entityType', 'entityId'])
@@ -12,7 +13,7 @@ export class CoreAuditLogEntity extends CoreBaseEntity {
   id!: string;
 
   @Column({ name: 'actor_id', type: 'uuid', nullable: true }) actorId!: string | null;
-  @Column({ name: 'actor_role', type: 'varchar', length: 32, nullable: true }) actorRole!: string | null;
+  @Column({ name: 'actor_role', type: 'enum', enum: CoreAuditActorRole, enumName: 'core_audit_logs_actor_role_enum', nullable: true }) actorRole!: CoreAuditActorRole | null;
   @Column({ name: 'action', type: 'varchar', length: 150 }) action!: string;
   @Column({ name: 'entity_type', type: 'varchar', length: 150 }) entityType!: string;
   @Column({ name: 'entity_id', type: 'uuid', nullable: true }) entityId!: string | null;

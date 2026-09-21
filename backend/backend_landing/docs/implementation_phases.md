@@ -16,13 +16,13 @@
 - PostgreSQL 17 + TypeORM 1.x.
 - Master tenant registry and database-per-tenant routing.
 - AsyncLocalStorage request context and OpenTelemetry instrumentation.
-- Redis-backed rate limiting and idempotency.
+- Redis-backed rate limiting plus durable transaction-scoped idempotency records with Redis replay caching.
 - Global validation, response envelope, structured logging, health probes, compression, Helmet, CORS, and Prometheus metrics.
 
 ## Phase 3 — Landing Feature Slice
 - Command controller only because the supplied frontend has no Landing GET API.
 - Booking and contact DTOs, domain models, mappers, repositories, services, and orchestrators.
-- Atomic transaction + audit trail.
+- Atomic transaction + audit trail + durable idempotency completion in the same transaction.
 - Soft-delete columns and explicit named database constraints.
 - Versioned canonical endpoints plus documented compatibility aliases.
 
@@ -33,10 +33,10 @@
 - Graceful shutdown and tenant DataSource cleanup.
 
 ## Phase 5 — Verification Assets
-- Co-located Jest unit tests for mapping, service behavior, and idempotency replay.
+- Co-located Jest unit tests for mapping, repository soft-delete scope, mutation behavior, and durable idempotency replay.
 - Python Pytest black-box lifecycle suite for booking/contact.
 - Architecture verifier, forbidden-pattern checks, README, feature map, dependency map, and forbidden-pattern document.
-- Human-review gate for tenant/provisioning/public-write/security-sensitive changes.
+- Test-only isolated tenant provisioning/cleanup API plus human-review gate for tenant/provisioning/public-write/security-sensitive changes.
 
 ## Phase 6 — Release Package
 - Static syntax verification performed.

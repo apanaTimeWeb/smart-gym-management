@@ -1,23 +1,28 @@
-// RESPONSIBILITY: Owns all TypeORM persistence operations for Admin usage; services never call save() directly.
-// FLOW: AdminUsageService → AdminUsageRepository → TypeORM → PostgreSQL usage_snapshots.
+// RESPONSIBILITY: Owns tenant usage reads and master-database upgrade-request persistence for Admin usage.
+// FLOW: Usage query/command service → repository → trusted tenant/master repositories → PostgreSQL.
 
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectDataSource } from '@nestjs/typeorm';
+import { DataSource } from 'typeorm';
 import { CorePaginatedResult } from '@/core/types/core-api-response.types';
+import { CoreRequestContextService } from '@/core/context/core-request-context.service';
 import { CoreTenantRepositoryBase } from '@/core/database/core-tenant-repository.base';
 import { CoreTenantDataSourceManager } from '@/core/database/core-tenant-data-source.manager';
+import { CoreMasterPlanEntity } from '@/core/subscription/core-master-plan.entity';
+import { CoreMasterUpgradeRequestEntity } from '@/core/subscription/core-master-upgrade-request.entity';
 import { buildPaginationMeta, resolveSafeSort } from '@/core/pagination/core-pagination';
 import { AdminUsageEntity } from '@/modules/admin/usage/entities/admin-usage-entity';
 import { AdminUsageQueryDto } from '@/modules/admin/usage/dtos/admin-usage-query.dto';
 
 @Injectable()
 export class AdminUsageRepository extends CoreTenantRepositoryBase<AdminUsageEntity> {
-  constructor(tenantManager: CoreTenantDataSourceManager) { super(tenantManager); }
+  constructor(
+    tenantManager: CoreTenantDataSourceManager,
+    private readonly requestContext: CoreRequestContextService,
+    @InjectDataSource() private readonly masterDataSource: DataSource,
+  ) { super(tenantManager); }
 
-
-  /** @description Finds a paginated, tenant-scoped collection using allowlisted sorting and parameterized JSONB filters.
-   * @param query Validated pagination/filter query.
-   * @returns Paginated ORM entities.
-   */
+  /** @description Finds paginated tenant usage snapshot records for legacy/admin read tooling. @param query Validated pagination/filter query. @returns Paginated usage entities. */
   async findAll(query: AdminUsageQueryDto): Promise<CorePaginatedResult<AdminUsageEntity>> {
     const source = await this.tenantManager.getCurrent();
     const repository = source.getRepository(AdminUsageEntity);
@@ -30,79 +35,27 @@ export class AdminUsageRepository extends CoreTenantRepositoryBase<AdminUsageEnt
     const direction = query.sortDir ?? 'DESC';
     const column = order === 'createdAt' ? 'created_at' : 'updated_at';
     builder.orderBy(`entity.${column}`, direction);
-    const [items,total] = await builder.skip((query.page - 1) * query.limit).take(query.limit).getManyAndCount();
+    const [items, total] = await builder.skip((query.page - 1) * query.limit).take(query.limit).getManyAndCount();
     return { items, meta: buildPaginationMeta(total, query.page, query.limit) };
   }
 
-  /** @description Finds a non-deleted record by UUID.
-   * @param id Record UUID.
-   * @returns Entity or null.
-   */
-  async findById(id: string): Promise<AdminUsageEntity | null> {
-    const source = await this.tenantManager.getCurrent();
-    return source.getRepository(AdminUsageEntity).findOne({ where: { id } });
-  }
-
-  /** @description Finds a record and fails immediately when it does not exist.
-   * @param id Record UUID.
-   * @returns Existing entity.
-   * @throws NotFoundException when the record is absent.
-   */
-  async findByIdOrThrow(id: string): Promise<AdminUsageEntity> {
-    const entity = await this.findById(id);
-    if (!entity) throw new NotFoundException(`Usage record not found.`);
-    return entity;
-  }
-
-  /** @description Creates one persisted feature record.
-   * @param input Frontend-derived validated fields.
-   * @returns Persisted entity.
-   */
-  async createRecord(input: Record<string, unknown>): Promise<AdminUsageEntity> {
-    const source = await this.tenantManager.getCurrent();
-    const repository = source.getRepository(AdminUsageEntity);
-    const entity = repository.create({
-      payload: { ...input },
-      name: typeof input.name === 'string' ? input.name : null,
-      status: typeof input.status === 'string' ? input.status : null,
-      branchId: typeof input.branchId === 'string' ? input.branchId : null,
-    });
-    return repository.save(entity);
-  }
-
-  /** @description Updates persisted JSONB contract data through the repository boundary.
-   * @param id Record UUID.
-   * @param input Validated update fields.
-   * @returns Updated entity.
-   */
-  async updateById(id: string, input: Record<string, unknown>): Promise<AdminUsageEntity> {
-    const source = await this.tenantManager.getCurrent();
-    const repository = source.getRepository(AdminUsageEntity);
-    const entity = await this.findByIdOrThrow(id);
-    entity.payload = { ...entity.payload, ...input };
-    entity.name = typeof entity.payload.name === 'string' ? entity.payload.name : entity.name;
-    entity.status = typeof entity.payload.status === 'string' ? entity.payload.status : entity.status;
-    entity.branchId = typeof entity.payload.branchId === 'string' ? entity.payload.branchId : entity.branchId;
-    return repository.save(entity);
-  }
-
-  /** @description Soft-deletes a feature record without physical row removal.
-   * @param id Record UUID.
-   * @returns No value.
-   */
-  async markAsDeleted(id: string): Promise<AdminUsageEntity> {
-    const source = await this.tenantManager.getCurrent();
-    const repository = source.getRepository(AdminUsageEntity);
-    const entity = await this.findByIdOrThrow(id);
-    await repository.softDelete(id);
-    return entity;
-  }
-  /** @description Reads the first tenant-scoped snapshot used by read models and seed data.
-   * @returns Snapshot entity or null.
-   */
+  /** @description Finds the first tenant usage snapshot for existing read contracts. @returns Snapshot or null. */
   async findFirstSnapshot(): Promise<AdminUsageEntity | null> {
     const source = await this.tenantManager.getCurrent();
     return source.getRepository(AdminUsageEntity).findOne({ order: { createdAt: 'ASC' } });
   }
 
+  /** @description Creates a master-database plan upgrade request scoped to the authenticated tenant. @param planName Requested plan name. @returns Frontend upgrade-request contract. */
+  async createMasterUpgradeRequest(planName: string): Promise<Record<string, unknown>> {
+    const tenantId = this.requestContext.get().tenantId;
+    return this.masterDataSource.transaction(async (manager) => {
+      const planRepository = manager.getRepository(CoreMasterPlanEntity);
+      const requestRepository = manager.getRepository(CoreMasterUpgradeRequestEntity);
+      const plan = await planRepository.createQueryBuilder('plan').where('LOWER(plan.name) = LOWER(:planName)', { planName: planName.trim() }).andWhere('plan.is_active = true').getOne();
+      if (!plan) throw new NotFoundException('Requested subscription plan not found.');
+      const request = requestRepository.create({ tenantId, requestedPlanId: plan.id, status: 'PENDING', payload: { planName: plan.name } });
+      const saved = await requestRepository.save(request);
+      return { requestId: saved.id, planName: plan.name, status: 'pending', requestedAt: new Date().toISOString() };
+    });
+  }
 }

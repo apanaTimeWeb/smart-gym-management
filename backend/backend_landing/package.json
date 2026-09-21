@@ -22,7 +22,9 @@
     "bootstrap:local": "npm run migration:master:run && npm run seed:local",
     "e2e": "pytest -q e2e",
     "architecture:verify": "tsx ./scripts/verify-architecture.ts",
-    "verify": "npm run typecheck && npm run lint && npm run architecture:verify && npm test"
+    "verify": "npm run typecheck && npm run lint && npm run architecture:verify && npm test",
+    "prepare": "husky",
+    "lint:staged": "lint-staged"
   },
   "_moduleAliases": {
     "@": "dist"
@@ -65,6 +67,18 @@
     "ts-jest": "^29.4.4",
     "tsx": "^4.20.5",
     "typescript": "^5.9.2",
-    "typescript-eslint": "^8.43.0"
+    "typescript-eslint": "^8.43.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.6",
+    "prettier": "^3.6.2"
+  },
+  "lint-staged": {
+    "*.{ts,mts,cts}": [
+      "eslint --fix",
+      "prettier --check"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "prettier --check"
+    ]
   }
 }

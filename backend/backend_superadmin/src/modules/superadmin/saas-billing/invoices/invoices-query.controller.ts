@@ -9,17 +9,27 @@ import { SuperadminRole } from '@/core/auth/auth.types';
 import { InvoicesQueryDto } from '@/modules/superadmin/saas-billing/invoices/dtos/invoices-query.dto';
 import { InvoicesListService } from '@/modules/superadmin/saas-billing/invoices/services/invoices-list.service';
 import { InvoicesFindService } from '@/modules/superadmin/saas-billing/invoices/services/invoices-find.service';
+import { InvoicesExportService } from '@/modules/superadmin/saas-billing/invoices/services/invoices-export.service';
+import { InvoicesExportQueryDto } from '@/modules/superadmin/saas-billing/invoices/dtos/invoices-export-query.dto';
 
 @ApiTags('invoices')
 @Controller('/superadmin/saas-billing/invoices')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class InvoicesQueryController {
-  constructor(private readonly listService: InvoicesListService, private readonly findService: InvoicesFindService) {}
+  constructor(private readonly listService: InvoicesListService, private readonly findService: InvoicesFindService, private readonly exportService: InvoicesExportService) {}
   /** Returns a paginated invoices list. */
   // SLA: STANDARD
   @Get()
   async findAll(@Query() query: InvoicesQueryDto): Promise<unknown> { return await this.listService.findInvoicesPage(query); }
+  /** Returns an export resource URI for the selected invoice filters. */
+  @Get('export')
+  async export(@Query() query: InvoicesExportQueryDto): Promise<{ downloadUrl: string }> { return this.exportService.export(query.tenantId, query.status); }
+
+  /** Returns an invoice download resource URI. */
+  @Get(':id/download')
+  async download(@Param('id') id: string): Promise<{ downloadUrl: string }> { return this.exportService.findDownload(id); }
+
   /** Returns one invoices record. */
   // SLA: FAST
   @Get(':id')

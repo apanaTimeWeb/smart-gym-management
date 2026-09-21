@@ -33,9 +33,29 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: npm install --no-audit --no-fund
-      - run: npm run typecheck
-      - run: npm run lint
-      - run: npm run architecture:verify
-      - run: npm test -- --coverage
-      - run: npm audit --omit=dev --audit-level=high
+          cache: npm
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: TypeScript strict compile
+        run: npm run typecheck
+      - name: ESLint
+        run: npm run lint
+      - name: Architecture and import-order gates
+        run: npm run architecture:verify
+      - name: Prettier
+        run: npx prettier --check .
+      - name: Unit tests
+        run: npm test -- --coverage
+      - name: Dependency vulnerability gate
+        run: npm audit --omit=dev --audit-level=high
+      - name: Secrets detection
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_ENABLE_COMMENTS: false
+      - name: SAST
+        uses: semgrep/semgrep-action@v1
+        with:
+          config: >-
+            p/ci
+            p/typescript

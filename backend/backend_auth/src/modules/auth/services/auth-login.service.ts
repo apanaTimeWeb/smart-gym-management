@@ -11,6 +11,7 @@ import { AuthConstants } from '@/modules/auth/auth.constants';
 import { AuthAccountLockedException, AuthInvalidCredentialsException } from '@/modules/auth/auth.exceptions';
 import { AuthRefreshSessionRepository } from '@/modules/auth/repositories/auth-refresh-session.repository';
 import { AuthUserRepository } from '@/modules/auth/repositories/auth-user.repository';
+import { AuthAuditRoleMapper } from '@/modules/auth/utils/auth-audit-role.mapper';
 import { AuthLockoutUtils } from '@/modules/auth/utils/auth-lockout.utils';
 import { AuthPasswordUtils } from '@/modules/auth/utils/auth-password.utils';
 import { AuthTokenUtils } from '@/modules/auth/utils/auth-token.utils';
@@ -83,7 +84,7 @@ export class AuthLoginService {
     const expiresAt = new Date(Date.now() + this.refreshTtlMs());
     await this.sessionRepository.createRefreshSession(credentials.id, sessionId, this.tokenUtils.hashRefreshToken(refreshToken), expiresAt);
     const user: AuthUserDomain = { id: credentials.id, name: credentials.name, email: credentials.email, role: credentials.role, ...(credentials.tenantId ? { tenantId: credentials.tenantId } : {}) };
-    await this.audit.record({ actorId: user.id, actorRole: user.role, action: AuthConstants.AUDIT.LOGIN_SUCCESS, entityType: 'auth_user', entityId: user.id, oldValue: null, newValue: { sessionId }, ipAddress: this.audit.getRequestMetadata().ipAddress });
+    await this.audit.record({ actorId: user.id, actorRole: AuthAuditRoleMapper(user.role), action: AuthConstants.AUDIT.LOGIN_SUCCESS, entityType: 'auth_user', entityId: user.id, oldValue: null, newValue: { sessionId }, ipAddress: this.audit.getRequestMetadata().ipAddress });
     return { accessToken, refreshToken, user };
   }
 

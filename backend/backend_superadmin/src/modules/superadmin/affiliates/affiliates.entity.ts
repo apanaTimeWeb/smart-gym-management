@@ -39,4 +39,6 @@ export class AffiliateEntity extends BaseEntity {
   referralCount!: number;
   @Column({ name: 'conversion_rate', type: 'numeric', precision: 7, scale: 3, default: 0, transformer: { to: (value: number): number => value, from: (value: string): number => Number(value) } })
   conversionRate!: number;
+  @Column({ name: 'payout_history', type: 'jsonb', default: () => "'[]'::jsonb" })
+  payoutHistory!: unknown;
 }

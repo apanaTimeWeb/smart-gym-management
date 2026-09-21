@@ -6,8 +6,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { CoreAuditModule } from '@/core/audit/core-audit.module';
 import { CoreDatabaseModule } from '@/core/database/core-database.module';
-import { AuthCommandController } from '@/modules/auth/auth-command.controller';
-import { AuthQueryController } from '@/modules/auth/auth-query.controller';
+import { AuthCommandController } from '@/modules/auth/controllers/auth-command.controller';
+import { AuthQueryController } from '@/modules/auth/controllers/auth-query.controller';
 import { AuthSeeder } from '@/modules/auth/auth.seeder';
 import { AuthRefreshSessionEntity } from '@/modules/auth/entities/auth-refresh-session.entity';
 import { AuthUserEntity } from '@/modules/auth/entities/auth-user.entity';

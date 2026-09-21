@@ -2,6 +2,7 @@
 // FLOW: AdminHrService → AdminHrRepository → TypeORM → PostgreSQL staff.
 
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { CoreEncryptionService } from '@/core/security/core-encryption.service';
 import { CorePaginatedResult } from '@/core/types/core-api-response.types';
 import { CoreTenantRepositoryBase } from '@/core/database/core-tenant-repository.base';
 import { CoreTenantDataSourceManager } from '@/core/database/core-tenant-data-source.manager';
@@ -11,7 +12,7 @@ import { AdminHrQueryDto } from '@/modules/admin/hr/dtos/admin-hr-query.dto';
 
 @Injectable()
 export class AdminHrRepository extends CoreTenantRepositoryBase<AdminHrEntity> {
-  constructor(tenantManager: CoreTenantDataSourceManager) { super(tenantManager); }
+  constructor(tenantManager: CoreTenantDataSourceManager, private readonly encryption: CoreEncryptionService) { super(tenantManager); }
 
 
   /** @description Finds a paginated, tenant-scoped collection using allowlisted sorting and parameterized JSONB filters.
@@ -62,7 +63,7 @@ export class AdminHrRepository extends CoreTenantRepositoryBase<AdminHrEntity> {
     const source = await this.tenantManager.getCurrent();
     const repository = source.getRepository(AdminHrEntity);
     const entity = repository.create({
-      payload: { ...input },
+      payload: this.protectSensitivePayload(input),
       name: typeof input.name === 'string' ? input.name : null,
       status: typeof input.status === 'string' ? input.status : null,
       branchId: typeof input.branchId === 'string' ? input.branchId : null,
@@ -79,11 +80,22 @@ export class AdminHrRepository extends CoreTenantRepositoryBase<AdminHrEntity> {
     const source = await this.tenantManager.getCurrent();
     const repository = source.getRepository(AdminHrEntity);
     const entity = await this.findByIdOrThrow(id);
-    entity.payload = { ...entity.payload, ...input };
+    entity.payload = { ...entity.payload, ...this.protectSensitivePayload(input) };
     entity.name = typeof entity.payload.name === 'string' ? entity.payload.name : entity.name;
     entity.status = typeof entity.payload.status === 'string' ? entity.payload.status : entity.status;
     entity.branchId = typeof entity.payload.branchId === 'string' ? entity.payload.branchId : entity.branchId;
     return repository.save(entity);
+  }
+
+
+  /** @description Encrypts regulated HR fields before they cross the persistence boundary. @param input Incoming staff fields. @returns Protected payload. */
+  private protectSensitivePayload(input: Record<string, unknown>): Record<string, unknown> {
+    const payload = { ...input };
+    for (const field of ['aadhaar', 'bankAccountNumber', 'medicalNotes']) {
+      const value = payload[field];
+      if (typeof value === 'string' && value.length > 0 && !this.encryption.isEncrypted(value)) payload[field] = this.encryption.encrypt(value);
+    }
+    return payload;
   }
 
   /** @description Soft-deletes a feature record without physical row removal.

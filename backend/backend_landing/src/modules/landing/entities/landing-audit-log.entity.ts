@@ -1,8 +1,11 @@
 // RESPONSIBILITY: Maps immutable business activity records into the tenant audit_logs table.
 // FLOW: Repository mutation → AuditLogRepository → audit_logs.
 import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
+
 import { CoreBaseEntity } from '@/core/database/base.entity';
+
 import { LandingAuditActorRole } from '@/modules/landing/enums/landing-audit-actor-role.enum';
+
 
 @Entity('audit_logs')
 @Index('IDX_audit_logs_entity', ['entityType', 'entityId'])

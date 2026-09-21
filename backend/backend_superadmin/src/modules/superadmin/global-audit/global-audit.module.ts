@@ -15,9 +15,10 @@ import { GlobalAuditUpdateService } from '@/modules/superadmin/global-audit/serv
 import { GlobalAuditDeleteService } from '@/modules/superadmin/global-audit/services/global-audit-delete.service';
 import { GlobalAuditInvestigationService } from '@/modules/superadmin/global-audit/services/global-audit-investigation.service';
 import { GlobalAuditSpecialController } from '@/modules/superadmin/global-audit/global-audit-special.controller';
+import { GlobalAuditFrontendContractController } from '@/modules/superadmin/global-audit/global-audit-frontend-contract.controller';
 @Module({
   imports: [TypeOrmModule.forFeature([GlobalAuditContractSnapshotEntity, AuditLogEntity])],
-  controllers: [GlobalAuditQueryController, GlobalAuditCommandController, GlobalAuditSpecialController],
+  controllers: [GlobalAuditQueryController, GlobalAuditCommandController, GlobalAuditSpecialController, GlobalAuditFrontendContractController],
   providers: [GlobalAuditContractSnapshotRepository, GlobalAuditInvestigationService, GlobalAuditRepository, GlobalAuditListService, GlobalAuditFindService, GlobalAuditCreateService, GlobalAuditUpdateService, GlobalAuditDeleteService],
   exports: [GlobalAuditRepository],
 })

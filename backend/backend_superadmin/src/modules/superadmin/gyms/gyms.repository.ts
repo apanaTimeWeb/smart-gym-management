@@ -37,6 +37,12 @@ export class GymsRepository extends BaseRepository<TenantEntity> {
   /** Applies an intention-revealing update to a gyms record. */
   async updateGymsById(id: string, input: GymsUpdateInput): Promise<TenantEntity> { await this.activeRepository.update({ id } as never, input as never); return this.findByIdOrThrow(id); }
 
+  /** Returns live aggregate Gym statistics from the authoritative tenants table. */
+  async getStats(): Promise<{ totalActive: number; totalSuspended: number; mrrContribution: number }> {
+    const rows = await this.activeRepository.query('SELECT COUNT(*) FILTER (WHERE status = $1 AND deleted_at IS NULL)::int AS "totalActive", COUNT(*) FILTER (WHERE status = $2 AND deleted_at IS NULL)::int AS "totalSuspended", COALESCE(SUM(monthly_revenue) FILTER (WHERE deleted_at IS NULL), 0)::int AS "mrrContribution" FROM tenants', ['ACTIVE', 'SUSPENDED']) as Array<{ totalActive: number; totalSuspended: number; mrrContribution: number }>;
+    return rows[0] ?? { totalActive: 0, totalSuspended: 0, mrrContribution: 0 };
+  }
+
   /** Soft-deletes one gyms record. */
   async deleteGymsById(id: string): Promise<void> { await this.findByIdOrThrow(id); await this.softDeleteById(id); }
 

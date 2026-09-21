@@ -12,10 +12,11 @@ import { AffiliatesCreateService } from '@/modules/superadmin/affiliates/service
 import { AffiliatesUpdateService } from '@/modules/superadmin/affiliates/services/affiliates-update.service';
 import { AffiliatesDeleteService } from '@/modules/superadmin/affiliates/services/affiliates-delete.service';
 import { AffiliatesStatusService } from '@/modules/superadmin/affiliates/services/affiliates-status.service';
+import { AffiliatesPayoutService } from '@/modules/superadmin/affiliates/services/affiliates-payout.service';
 @Module({
   imports: [TypeOrmModule.forFeature([AffiliateEntity])],
   controllers: [AffiliatesQueryController, AffiliatesCommandController],
-  providers: [AffiliatesRepository, AffiliatesListService, AffiliatesFindService, AffiliatesCreateService, AffiliatesUpdateService, AffiliatesDeleteService, AffiliatesStatusService],
+  providers: [AffiliatesPayoutService, AffiliatesRepository, AffiliatesListService, AffiliatesFindService, AffiliatesCreateService, AffiliatesUpdateService, AffiliatesDeleteService, AffiliatesStatusService],
   exports: [AffiliatesRepository],
 })
 export class AffiliatesModule {}

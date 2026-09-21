@@ -13,13 +13,15 @@ import { PlansCreateDto } from '@/modules/superadmin/saas-billing/plans/dtos/pla
 import { PlansUpdateService } from '@/modules/superadmin/saas-billing/plans/services/plans-update.service';
 import { PlansUpdateDto } from '@/modules/superadmin/saas-billing/plans/dtos/plans-update.dto';
 import { PlansDeleteService } from '@/modules/superadmin/saas-billing/plans/services/plans-delete.service';
+import { PlansArchiveService } from '@/modules/superadmin/saas-billing/plans/services/plans-archive.service';
+import { RequireIdempotencyKey } from '@/core/cache/idempotency.decorator';
 
 @ApiTags('plans')
 @Controller('/superadmin/saas-billing/plans')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class PlansCommandController {
-  constructor(private readonly createService: PlansCreateService, private readonly updateService: PlansUpdateService, private readonly deleteService: PlansDeleteService) {}
+  constructor(private readonly createService: PlansCreateService, private readonly updateService: PlansUpdateService, private readonly deleteService: PlansDeleteService, private readonly archiveService: PlansArchiveService) {}
 
   /** Handles the create mutation for the feature. */
   @ApiOperation({ summary: 'create plans' })
@@ -43,5 +45,10 @@ export class PlansCommandController {
     @RequireIdempotencyKey()
   @HttpCode(HttpStatus.OK)
     async remove(@Param('id') id: string): Promise<void> { await this.deleteService.deletePlans(id); }
+
+  /** Archives a plan using the soft state transition required by the frontend. */
+  @Patch(':id/archive')
+  @RequireIdempotencyKey()
+  async archive(@Param('id') id: string): Promise<unknown> { return this.archiveService.archive(id); }
 
 }

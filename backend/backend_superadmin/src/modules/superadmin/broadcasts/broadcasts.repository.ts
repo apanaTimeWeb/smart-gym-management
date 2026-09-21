@@ -40,4 +40,17 @@ export class BroadcastsRepository extends BaseRepository<BroadcastEntity> {
   /** Soft-deletes one broadcasts record. */
   async deleteBroadcastsById(id: string): Promise<void> { await this.findByIdOrThrow(id); await this.softDeleteById(id); }
 
+  /** Counts current broadcast recipients from the target tenant IDs. */
+  async countRecipients(): Promise<number> {
+    const rows = await this.activeRepository.createQueryBuilder('item').select('COALESCE(SUM(item.total_recipients), 0)', 'count').getRawOne<{ count: string }>();
+    return Number(rows?.count ?? 0);
+  }
+
+  /** Updates one broadcast delivery counter inside the repository boundary. */
+  async recordDelivery(id: string, delivered: boolean): Promise<void> {
+    await this.findByIdOrThrow(id);
+    if (delivered) await this.activeRepository.increment({ id } as never, 'deliveredCount', 1);
+    else await this.activeRepository.increment({ id } as never, 'failedCount', 1);
+  }
+
 }

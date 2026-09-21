@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Defines application-layer inputs for booking persistence without coupling repositories to HTTP DTO classes.
-// FLOW: DTO → orchestrator/service input → repository.
+// RESPONSIBILITY: Defines the sanitized application-layer input contract for Landing booking operations.
+// FLOW: Landing DTO → LandingBookingOrchestratorService → LandingBookingService → LandingBookingRepository.
 import type { LandingBookingType } from '@/modules/landing/enums/landing-booking-type.enum';
 
 export interface LandingCreateBookingInput {

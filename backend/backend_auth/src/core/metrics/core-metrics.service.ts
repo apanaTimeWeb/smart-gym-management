@@ -2,10 +2,9 @@
 // FLOW: CoreMetricsInterceptor -> CoreMetricsService -> Prometheus Registry -> /metrics.
 
 import { Injectable } from '@nestjs/common';
-
-import type { OnModuleInit } from '@nestjs/common';
 import { Counter, Gauge, Histogram, Registry, collectDefaultMetrics } from '@prometheus-io/client';
 
+import type { OnModuleInit } from '@nestjs/common';
 import type { Pool } from 'pg';
 import type { DataSource } from 'typeorm';
 @Injectable()

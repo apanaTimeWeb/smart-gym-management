@@ -1,11 +1,15 @@
-// RESPONSIBILITY: Registers the shared idempotency service.
-// FLOW: AppModule → IdempotencyModule → IdempotencyService.
+// RESPONSIBILITY: Registers durable and cached idempotency infrastructure for critical mutation protection.
+// FLOW: AppModule → IdempotencyModule → IdempotencyService + CoreIdempotencyRepository.
 import { Global, Module } from '@nestjs/common';
+
+import { CoreIdempotencyRepository } from '@/core/idempotency/idempotency.repository';
+
 import { IdempotencyService } from '@/core/idempotency/idempotency.service';
+
 
 @Global()
 @Module({
-  providers: [IdempotencyService],
-  exports: [IdempotencyService],
+  providers: [CoreIdempotencyRepository, IdempotencyService],
+  exports: [CoreIdempotencyRepository, IdempotencyService],
 })
 export class IdempotencyModule {}

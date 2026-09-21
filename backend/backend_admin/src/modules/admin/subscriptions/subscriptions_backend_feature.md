@@ -40,7 +40,7 @@ This module provides the backend capability consumed by the frontend `subscripti
 - **Runtime/Event Dependencies**: None declared in this v1 package unless listed in the dependency document.
 
 ## Data and State Architecture
-- DB Entities: `subscriptions` tenant table/entity plus JSONB frontend contract payload.
+- DB Entities: Master `subscriptions_master`, `plans_master`, `invoices_master`, and `payment_methods_master`; Admin subscription runtime reads/writes these master records for the authenticated tenant.
 - Redis Caching Keys: No feature-specific cache key is required in v1 unless later documented.
 - Event Emitters: None declared in v1.
 - Background Jobs: Data export uses the background-job pattern documented at core level; other endpoints are synchronous unless the route contract indicates otherwise.
@@ -83,7 +83,7 @@ This module provides the backend capability consumed by the frontend `subscripti
 | `GET /api/v1/admin/subscriptions/fetchKPIs` | ADMIN, SUPERADMIN, MANAGER | Tenant context is verified against the authenticated actor before DataSource selection; resource-level checks are feature-specific when applicable. |
 
 ## Edge Cases / AI Warnings
-- Never bypass the `subscriptions` repository boundary; direct ORM access from services violates Rule 89 and risks persistence leakage. — see Rules 7, 89.
+- Never bypass the `subscriptions` repository backed by master billing entities boundary; direct ORM access from services violates Rule 89 and risks persistence leakage. — see Rules 7, 89.
 - Never trust a client-supplied tenant identifier; tenant authorization must occur before DataSource resolution. — see Rule 39.
 - Never change a frozen response field or nested structure unilaterally; doing so breaks the frontend contract. — see Rules 67 and 82A.
 - Never implement a critical mutation without the idempotency contract where the operation can be retried. — see Rule 31.
@@ -133,7 +133,7 @@ The frozen contract is derived from the supplied frontend source. This v1 packag
 - [ ] Rule 7: TypeORM is the single approved ORM and remains behind repositories.
 - [ ] Rule 19: This document is updated with module code changes.
 - [ ] Rule 28: Canonical response envelope is provided globally.
-- [ ] Rule 29: Soft deletes only.
+- [x] Rule 29: Payment-method removal is implemented as master-record soft deactivation (`is_active=false`).
 - [ ] Rule 31: Idempotency applied to critical mutations.
 - [ ] Rule 34: N+1 reviewed.
 - [ ] Rule 36: Fail-fast on missing resources.
@@ -144,7 +144,7 @@ The frozen contract is derived from the supplied frontend source. This v1 packag
 - [ ] Rule 82A: Response DTO covers the frontend UI data contract.
 - [ ] Rule 83: RBAC uses controller-layer typed role guards.
 - [ ] Rule 85/87: Guard clauses and small single-purpose service methods.
-- [ ] Rule 89: ORM entities are mapped before business use.
+- [x] Rule 89: ORM access is confined to the repository boundary; services receive repository results only.
 - [ ] Rule 92: User-controlled ORM identifiers are allowlisted.
 - [ ] Rule 93: Security-sensitive areas require human review.
 - [ ] Rule 101: Tests must prove observable behavior.

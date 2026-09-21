@@ -5,7 +5,8 @@
 
 ## Infrastructure Dependencies
 - Master tenant registry and tenant DataSource resolution.
-- Redis for rate limiting and idempotency.
+- Redis for rate limiting and best-effort idempotency replay caching.
+- Durable tenant PostgreSQL `idempotency_records` state for transactionally safe reservations/completions.
 - TypeORM/PostgreSQL through repository boundaries.
 - Global response interceptor, validation filter, structured logger, AsyncLocalStorage request context, health/metrics infrastructure.
 

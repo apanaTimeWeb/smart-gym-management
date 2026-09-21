@@ -16,10 +16,12 @@ import { BroadcastsDeleteService } from '@/modules/superadmin/broadcasts/service
 import { BroadcastsStatusService } from '@/modules/superadmin/broadcasts/services/broadcasts-status.service';
 import { BroadcastsAudienceInsightsService } from '@/modules/superadmin/broadcasts/services/broadcasts-audience-insights.service';
 import { BroadcastsSpecialController } from '@/modules/superadmin/broadcasts/broadcasts-special.controller';
+import { BroadcastsContractController } from '@/modules/superadmin/broadcasts/broadcasts-contract.controller';
+import { BroadcastsDeliveryService } from '@/modules/superadmin/broadcasts/services/broadcasts-delivery.service';
 @Module({
   imports: [TypeOrmModule.forFeature([BroadcastsContractSnapshotEntity, BroadcastEntity])],
-  controllers: [BroadcastsQueryController, BroadcastsCommandController, BroadcastsSpecialController],
-  providers: [BroadcastsContractSnapshotRepository, BroadcastsAudienceInsightsService, BroadcastsRepository, BroadcastsListService, BroadcastsFindService, BroadcastsCreateService, BroadcastsUpdateService, BroadcastsDeleteService, BroadcastsStatusService],
+  controllers: [BroadcastsQueryController, BroadcastsCommandController, BroadcastsSpecialController, BroadcastsContractController],
+  providers: [BroadcastsContractSnapshotRepository, BroadcastsDeliveryService, BroadcastsAudienceInsightsService, BroadcastsRepository, BroadcastsListService, BroadcastsFindService, BroadcastsCreateService, BroadcastsUpdateService, BroadcastsDeleteService, BroadcastsStatusService],
   exports: [BroadcastsRepository],
 })
 export class BroadcastsModule {}

@@ -2,8 +2,9 @@
 // FLOW: POST /auth/login|refresh|logout -> DTO/header -> AuthSessionOrchestrator -> response mapper -> envelope.
 
 import { Body, Controller, Headers, HttpCode, HttpStatus, Post, Req } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
+import { CoreApiErrorSwagger, CoreApiResponseSwagger, CoreApiValidationErrorSwagger } from '@/core/http/core-api-response.swagger';
 import { CoreSla, CoreSlaCategory } from '@/core/http/core-sla.decorator';
 import { CoreRateLimitTier } from '@/core/rate-limit/core-rate-limit.constants';
 import { CoreRateLimit } from '@/core/rate-limit/core-rate-limit.decorator';
@@ -17,7 +18,6 @@ import { AuthRefreshResponseDto } from '@/modules/auth/dtos/auth-refresh-respons
 import { AuthSessionOrchestrator } from '@/modules/auth/orchestrators/auth-session.orchestrator';
 import { AuthApiResponseMapper } from '@/modules/auth/utils/auth-api-response.mapper';
 
-import type { CoreJwtClaims } from '@/core/security/core-jwt-claims';
 import type { AuthRequest } from '@/modules/auth/auth-http.interfaces';
 import type { AuthRole } from '@/modules/auth/auth.roles.constants';
 
@@ -32,7 +32,11 @@ export class AuthCommandController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Authenticate a user and create a refresh session.' })
   @ApiBody({ type: AuthLoginDto })
-  @ApiResponse({ status: HttpStatus.OK, type: AuthLoginResponseDto })
+  @CoreApiResponseSwagger(AuthLoginResponseDto, HttpStatus.OK)
+  @CoreApiValidationErrorSwagger()
+  @CoreApiErrorSwagger(HttpStatus.UNAUTHORIZED, 'AUTH.LOGIN.BACKEND_REJECTED')
+  @CoreApiErrorSwagger(HttpStatus.LOCKED, 'AUTH.ACCOUNT.LOCKED')
+  @CoreApiErrorSwagger(HttpStatus.TOO_MANY_REQUESTS, 'CORE.HTTP.TOO_MANY_REQUESTS')
   @CoreSla(CoreSlaCategory.STANDARD)
   // SLA: STANDARD
   async login(@Body() dto: AuthLoginDto): Promise<AuthLoginResponseDto> {
@@ -45,7 +49,10 @@ export class AuthCommandController {
   @CoreRateLimit(CoreRateLimitTier.AUTH_REFRESH)
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Rotate an Auth refresh token.' })
-  @ApiResponse({ status: HttpStatus.OK, type: AuthRefreshResponseDto })
+  @ApiHeader({ name: 'Authorization', description: 'Bearer refresh token.', required: true })
+  @CoreApiResponseSwagger(AuthRefreshResponseDto, HttpStatus.OK)
+  @CoreApiErrorSwagger(HttpStatus.UNAUTHORIZED, 'AUTH.REFRESH.REJECTED')
+  @CoreApiErrorSwagger(HttpStatus.TOO_MANY_REQUESTS, 'CORE.HTTP.TOO_MANY_REQUESTS')
   @CoreSla(CoreSlaCategory.STANDARD)
   // SLA: STANDARD
   async refresh(@Headers('authorization') authorization?: string): Promise<AuthRefreshResponseDto> {
@@ -61,7 +68,18 @@ export class AuthCommandController {
   @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Revoke the current Auth refresh session.' })
-  @ApiResponse({ status: HttpStatus.OK, description: 'Logout completed.' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Logout completed with data: null in the canonical envelope.',
+    schema: {
+      type: 'object',
+      required: ['success', 'message', 'data'],
+      properties: { success: { type: 'boolean', example: true }, message: { type: 'string' }, data: { nullable: true, example: null } },
+    },
+  })
+  @CoreApiErrorSwagger(HttpStatus.UNAUTHORIZED, 'CORE.HTTP.UNAUTHORIZED')
+  @CoreApiErrorSwagger(HttpStatus.FORBIDDEN, 'CORE.HTTP.FORBIDDEN')
+  @CoreApiErrorSwagger(HttpStatus.TOO_MANY_REQUESTS, 'CORE.HTTP.TOO_MANY_REQUESTS')
   @CoreSla(CoreSlaCategory.STANDARD)
   // SLA: STANDARD
   async logout(@Req() request: AuthRequest): Promise<null> {

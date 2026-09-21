@@ -14,13 +14,16 @@ import { GymsUpdateService } from '@/modules/superadmin/gyms/services/gyms-updat
 import { GymsUpdateDto } from '@/modules/superadmin/gyms/dtos/gyms-update.dto';
 import { GymsDeleteService } from '@/modules/superadmin/gyms/services/gyms-delete.service';
 import { GymsStatusService } from '@/modules/superadmin/gyms/services/gyms-status.service';
+import { GymsProvisionService } from '@/modules/superadmin/gyms/services/gyms-provision.service';
+import { GymsProvisionDto } from '@/modules/superadmin/gyms/dtos/gyms-provision.dto';
+import { GymsOwnerEmailDto } from '@/modules/superadmin/gyms/dtos/gyms-owner-email.dto';
 
 @ApiTags('gyms')
 @Controller('/superadmin/gyms')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles(SuperadminRole.SUPERADMIN)
 export class GymsCommandController {
-  constructor(private readonly createService: GymsCreateService, private readonly updateService: GymsUpdateService, private readonly deleteService: GymsDeleteService, private readonly statusService: GymsStatusService) {}
+  constructor(private readonly createService: GymsCreateService, private readonly updateService: GymsUpdateService, private readonly deleteService: GymsDeleteService, private readonly statusService: GymsStatusService, private readonly provisionService: GymsProvisionService) {}
 
   /** Handles the create mutation for the feature. */
   @ApiOperation({ summary: 'create gyms' })
@@ -29,6 +32,14 @@ export class GymsCommandController {
     @RequireIdempotencyKey()
   @UseGuards(RateLimitGuard)
     async create(@Body() body: GymsCreateDto): Promise<unknown> { return this.createService.createGyms(body); }
+
+
+  /** Provisions a new isolated tenant using client-owned fields only. */
+  @ApiOperation({ summary: 'provision gym' })
+  @Post('/provision')
+  @RequireIdempotencyKey()
+  @UseGuards(RateLimitGuard)
+  async provision(@Body() body: GymsProvisionDto): Promise<unknown> { return this.provisionService.provisionGym(body); }
 
   /** Handles the update mutation for the feature. */
   @ApiOperation({ summary: 'update gyms' })

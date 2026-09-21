@@ -5,6 +5,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { FeaturesContractSnapshotEntity } from '@/modules/superadmin/features/features-contract-snapshot.entity';
 import { FeaturesContractSnapshotRepository } from '@/modules/superadmin/features/features-contract-snapshot.repository';
 import { FeatureFlagEntity } from '@/modules/superadmin/features/features.entity';
+import { FeatureReleaseNoteEntity } from '@/modules/superadmin/features/features-release-note.entity';
+import { FeatureReleaseNoteRepository } from '@/modules/superadmin/features/features-release-note.repository';
+import { FeaturesReleaseNoteService } from '@/modules/superadmin/features/services/features-release-note.service';
 import { FeaturesRepository } from '@/modules/superadmin/features/features.repository';
 import { FeaturesQueryController } from '@/modules/superadmin/features/features-query.controller';
 import { FeaturesCommandController } from '@/modules/superadmin/features/features-command.controller';
@@ -17,9 +20,9 @@ import { FeaturesRolloutInsightsService } from '@/modules/superadmin/features/se
 import { FeaturesMainService } from '@/modules/superadmin/features/services/features-main.service';
 import { FeaturesSpecialController } from '@/modules/superadmin/features/features-special.controller';
 @Module({
-  imports: [TypeOrmModule.forFeature([FeaturesContractSnapshotEntity, FeatureFlagEntity])],
+  imports: [TypeOrmModule.forFeature([FeaturesContractSnapshotEntity, FeatureFlagEntity, FeatureReleaseNoteEntity])],
   controllers: [FeaturesQueryController, FeaturesCommandController, FeaturesSpecialController],
-  providers: [FeaturesContractSnapshotRepository, FeaturesRolloutInsightsService, FeaturesMainService, FeaturesRepository, FeaturesListService, FeaturesFindService, FeaturesCreateService, FeaturesUpdateService, FeaturesDeleteService],
+  providers: [FeaturesContractSnapshotRepository, FeatureReleaseNoteRepository, FeaturesReleaseNoteService, FeaturesRolloutInsightsService, FeaturesMainService, FeaturesRepository, FeaturesListService, FeaturesFindService, FeaturesCreateService, FeaturesUpdateService, FeaturesDeleteService],
   exports: [FeaturesRepository],
 })
 export class FeaturesModule {}

@@ -9,6 +9,7 @@ import { TenantEntity } from '@/modules/superadmin/gyms/gyms.entity';
 import { SupportTicketEntity } from '@/modules/superadmin/tickets/tickets.entity';
 import { PlatformSettingEntity } from '@/modules/superadmin/settings/settings.entity';
 import { TenantMessageEntity } from '@/modules/superadmin/messaging/messaging.entity';
+import { SuperadminNotificationEntity } from '@/modules/superadmin/messaging/messaging-notification.entity';
 import { SubscriptionPlanEntity } from '@/modules/superadmin/saas-billing/plans/plans.entity';
 import { CouponEntity } from '@/modules/superadmin/saas-billing/coupons/coupons.entity';
 import { SaasInvoiceEntity } from '@/modules/superadmin/saas-billing/invoices/invoices.entity';
@@ -20,6 +21,7 @@ import { BackupRecordEntity } from '@/modules/superadmin/system-ops/backups/back
 import { InfrastructureNodeEntity } from '@/modules/superadmin/system-ops/infrastructure/infrastructure.entity';
 import { SuperadminProfileEntity } from '@/modules/superadmin/profile/profile.entity';
 import { FeatureFlagEntity } from '@/modules/superadmin/features/features.entity';
+import { FeatureReleaseNoteEntity } from '@/modules/superadmin/features/features-release-note.entity';
 import { IntegrationKeyEntity } from '@/modules/superadmin/integrations/integrations.entity';
 import { TeamSnapshotEntity } from '@/modules/superadmin/team/team.entity';
 import { DashboardSnapshotEntity } from '@/modules/superadmin/dashboard/dashboard.entity';
@@ -48,7 +50,7 @@ export const MasterDataSource = new DataSource({
   type: 'postgres',
   url: process.env.DATABASE_URL,
   synchronize: false,
-  entities: [AffiliateEntity, BroadcastEntity, TenantEntity, SupportTicketEntity, PlatformSettingEntity, TenantMessageEntity, SubscriptionPlanEntity, CouponEntity, SaasInvoiceEntity, UsageMeterEntity, WhiteLabelDomainEntity, BackgroundJobEntity, MigrationLogEntity, BackupRecordEntity, InfrastructureNodeEntity, SuperadminProfileEntity, FeatureFlagEntity, IntegrationKeyEntity, TeamSnapshotEntity, DashboardSnapshotEntity, AnalyticsSnapshotEntity, ComplianceSnapshotEntity, ReportSnapshotEntity, SystemOpsContractSnapshotEntity, AuditLogEntity, BroadcastsContractSnapshotEntity, JobsContractSnapshotEntity, InfrastructureContractSnapshotEntity, BackupsContractSnapshotEntity, InvoicesContractSnapshotEntity, PlansContractSnapshotEntity, TicketsContractSnapshotEntity, IntegrationsContractSnapshotEntity, MessagingContractSnapshotEntity, GlobalAuditContractSnapshotEntity, FeaturesContractSnapshotEntity, SettingsContractSnapshotEntity, GymDetailContractSnapshotEntity, CouponsContractSnapshotEntity, BackupScheduleContractSnapshotEntity],
+  entities: [AffiliateEntity, BroadcastEntity, TenantEntity, SupportTicketEntity, PlatformSettingEntity, TenantMessageEntity, SuperadminNotificationEntity, SubscriptionPlanEntity, CouponEntity, SaasInvoiceEntity, UsageMeterEntity, WhiteLabelDomainEntity, BackgroundJobEntity, MigrationLogEntity, BackupRecordEntity, InfrastructureNodeEntity, SuperadminProfileEntity, FeatureFlagEntity, FeatureReleaseNoteEntity, IntegrationKeyEntity, TeamSnapshotEntity, DashboardSnapshotEntity, AnalyticsSnapshotEntity, ComplianceSnapshotEntity, ReportSnapshotEntity, SystemOpsContractSnapshotEntity, AuditLogEntity, BroadcastsContractSnapshotEntity, JobsContractSnapshotEntity, InfrastructureContractSnapshotEntity, BackupsContractSnapshotEntity, InvoicesContractSnapshotEntity, PlansContractSnapshotEntity, TicketsContractSnapshotEntity, IntegrationsContractSnapshotEntity, MessagingContractSnapshotEntity, GlobalAuditContractSnapshotEntity, FeaturesContractSnapshotEntity, SettingsContractSnapshotEntity, GymDetailContractSnapshotEntity, CouponsContractSnapshotEntity, BackupScheduleContractSnapshotEntity],
   migrations: [join(__dirname, '../../migrations/*.{js,ts}')],
   extra: { max: Number(process.env.DATABASE_POOL_MAX ?? 20), connectionTimeoutMillis: Number(process.env.DATABASE_ACQUIRE_TIMEOUT_MS ?? 30000), idleTimeoutMillis: Number(process.env.DATABASE_IDLE_TIMEOUT_MS ?? 10000), statement_timeout: Number(process.env.DATABASE_STATEMENT_TIMEOUT_MS ?? 30000) },
 });

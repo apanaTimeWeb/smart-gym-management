@@ -1,11 +1,19 @@
 // RESPONSIBILITY: Builds tenant-specific PostgreSQL TypeORM options without exposing ORM details to business services.
 // FLOW: Trusted Tenant → TenantDataSourceManager → TypeORM DataSource.
 import { join } from 'node:path';
-import type { DataSourceOptions } from 'typeorm';
+
 import { DATABASE_CONFIG } from '@/core/config/database.config';
+
+import { CoreIdempotencyRecordEntity } from '@/core/idempotency/core-idempotency-record.entity';
+
 import { LandingBookingEntity } from '@/modules/landing/entities/landing-booking.entity';
+
 import { LandingContactEntity } from '@/modules/landing/entities/landing-contact.entity';
+
 import { LandingAuditLogEntity } from '@/modules/landing/entities/landing-audit-log.entity';
+
+import type { DataSourceOptions } from 'typeorm';
+
 
 /** @description Builds tenant-specific PostgreSQL TypeORM options for one trusted database. @param databaseName - Tenant database name from the master registry. @returns Tenant DataSource configuration. */
 export function buildTenantDataSourceOptions(databaseName: string): DataSourceOptions {
@@ -20,6 +28,7 @@ export function buildTenantDataSourceOptions(databaseName: string): DataSourceOp
       LandingBookingEntity,
       LandingContactEntity,
       LandingAuditLogEntity,
+      CoreIdempotencyRecordEntity,
     ],
     migrations: [join(__dirname, 'migrations/tenant/*.{js,ts}')],
     synchronize: false,

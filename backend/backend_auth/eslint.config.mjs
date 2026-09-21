@@ -6,6 +6,20 @@ export default tseslint.config(
   { ignores: ['dist/**', 'node_modules/**', 'coverage/**'] },
   eslint.configs.recommended,
   ...tseslint.configs.recommendedTypeChecked,
+
+  {
+    files: ['src/modules/auth/**/*.ts'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            { group: ['@/modules/admin/**', '@/modules/manager/**', '@/modules/trainer/**', '@/modules/member/**'], message: 'Auth must not directly import sibling business modules; use declared infrastructure or events.' },
+          ],
+        },
+      ],
+    },
+  },
   {
     files: ['**/*.ts'],
     plugins: { 'import-x': importPlugin },
