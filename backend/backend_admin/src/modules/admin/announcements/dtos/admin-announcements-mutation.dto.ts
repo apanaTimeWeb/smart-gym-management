@@ -1,77 +1,54 @@
 // RESPONSIBILITY: Validates mutation fields exposed by the Admin announcements frontend contract.
 // FLOW: HTTP request body → AdminAnnouncementsMutationDto → service business validation → repository mutation.
 
-import { Type } from 'class-transformer';
-import { IsArray, IsBoolean, IsNumber, IsObject, IsOptional, IsString, IsUUID } from 'class-validator';
+import { ApiPropertyOptional } from '@nestjs/swagger';
+import { IsArray, IsBoolean, IsEnum, IsOptional, IsString } from 'class-validator';
 
 export class AdminAnnouncementsMutationDto {
   @IsOptional()
-  @IsUUID()
+  @IsString()
+  @ApiPropertyOptional()
   id?: string;
 
   @IsOptional()
   @IsString()
+  @ApiPropertyOptional()
   title?: string;
 
   @IsOptional()
   @IsString()
+  @ApiPropertyOptional()
   body?: string;
 
   @IsOptional()
-  @IsString()
+  @IsEnum(['high', 'medium', 'low'])
+  @ApiPropertyOptional({ enum: ['high', 'medium', 'low'] })
   priority?: string;
 
   @IsOptional()
-  @IsString()
-  status?: string;
-
-  @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @IsEnum(['all', 'members', 'managers', 'trainers', 'staff'], { each: true })
+  @ApiPropertyOptional({ enum: ['all', 'members', 'managers', 'trainers', 'staff'], isArray: true })
   audience?: string[];
 
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
+  @ApiPropertyOptional()
   gymIds?: string[];
 
   @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  gymNames?: string[];
-
-  @IsOptional()
   @IsString()
+  @ApiPropertyOptional()
   publishedAt?: string;
 
   @IsOptional()
   @IsString()
+  @ApiPropertyOptional()
   expiresAt?: string;
 
   @IsOptional()
-  @Type(() => Number)
-  @IsNumber()
-  createdBy?: number;
-
-  @IsOptional()
-  @Type(() => Number)
-  @IsNumber()
-  viewCount?: number;
-
-  @IsOptional()
   @IsBoolean()
+  @ApiPropertyOptional()
   isPinned?: boolean;
-
-  @IsOptional()
-  @IsString()
-  deliveryStatus?: string;
-
-  @IsOptional()
-  @IsBoolean()
-  pushNotificationSent?: boolean;
-
-  @IsOptional()
-  @Type(() => Number)
-  @IsNumber()
-  acknowledgedCount?: number;
 }

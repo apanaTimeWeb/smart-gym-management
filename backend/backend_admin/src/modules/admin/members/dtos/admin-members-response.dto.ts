@@ -1,46 +1,40 @@
 // RESPONSIBILITY: Describes the frontend-consumed response fields for Admin members.
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 // FLOW: Repository domain → Members response mapper → ApiResponse<T>.
 
-export class AdminMembersResponseDto {
-  id!: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: createdAt' })
-  createdAt?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: updatedAt' })
-  updatedAt?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: name' })
-  name?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: email' })
-  email?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: phone' })
-  phone?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: branchId' })
-  branchId?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: branchName' })
-  branchName?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: planName' })
-  planName?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: status' })
-  status?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: joinDate' })
-  joinDate?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: expiryDate' })
-  expiryDate?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: pendingAmount' })
-  pendingAmount?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: gender' })
-  gender?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: referralSource' })
-  referralSource?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: photo' })
-  photo?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: lastCheckIn' })
-  lastCheckIn?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: totalVisits' })
-  totalVisits?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: dateOfBirth' })
-  dateOfBirth?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: address' })
-  address?: string;
+export class AdminMemberDto {
+  @ApiProperty() id!: string;
+  @ApiProperty() name!: string;
+  @ApiProperty() email!: string;
+  @ApiProperty() phone!: string;
+  @ApiProperty() branchId!: string;
+  @ApiProperty() branchName!: string;
+  @ApiProperty() planName!: string;
+  @ApiProperty({ enum: ['active', 'expired', 'pending', 'frozen'] }) status!: string;
+  @ApiProperty() joinDate!: string;
+  @ApiProperty() expiryDate!: string;
+  @ApiProperty() pendingAmount!: number;
+  @ApiProperty({ enum: ['Male', 'Female', 'Other'] }) gender!: string;
+  @ApiPropertyOptional() referralSource?: string;
+  @ApiPropertyOptional() photo?: string;
+  @ApiPropertyOptional() lastCheckIn?: string;
+  @ApiPropertyOptional() totalVisits?: number;
+  @ApiPropertyOptional() dateOfBirth?: string;
+  @ApiPropertyOptional() address?: string;
+}
+
+export class AdminMembersListResponseDto {
+  @ApiProperty({ type: [AdminMemberDto] }) data!: AdminMemberDto[];
+}
+
+export class AdminMembersSummaryDto {
+  @ApiProperty() totalMembers!: number;
+  @ApiProperty() activeMembers!: number;
+  @ApiProperty() expiredMembers!: number;
+  @ApiProperty() pendingMembers!: number;
+  @ApiProperty() expiringThisWeek!: number;
+  @ApiProperty() expiringThisMonth!: number;
+  @ApiProperty() totalOutstanding!: number;
+  @ApiProperty() newThisMonth!: number;
 }

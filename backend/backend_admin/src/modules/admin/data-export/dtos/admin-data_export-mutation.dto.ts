@@ -1,64 +1,38 @@
 // RESPONSIBILITY: Validates mutation fields exposed by the Admin data-export frontend contract.
 // FLOW: HTTP request body → AdminDataExportMutationDto → service business validation → repository mutation.
 
-import { Type } from 'class-transformer';
-import { IsArray, IsBoolean, IsNumber, IsObject, IsOptional, IsString, IsUUID } from 'class-validator';
+import { ApiPropertyOptional } from '@nestjs/swagger';
+import { IsArray, IsEnum, IsOptional, IsString } from 'class-validator';
 
 export class AdminDataExportMutationDto {
   @IsOptional()
-  @IsUUID()
+  @IsString()
+  @ApiPropertyOptional()
   id?: string;
 
   @IsOptional()
-  @IsString()
+  @IsEnum(['members', 'payments', 'attendance', 'staff', 'full_report'])
+  @ApiPropertyOptional({ enum: ['members', 'payments', 'attendance', 'staff', 'full_report'] })
   dataType?: string;
 
   @IsOptional()
-  @IsString()
+  @IsEnum(['csv', 'excel', 'pdf'])
+  @ApiPropertyOptional({ enum: ['csv', 'excel', 'pdf'] })
   format?: string;
 
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
+  @ApiPropertyOptional()
   gymIds?: string[];
 
   @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  gymNames?: string[];
-
-  @IsOptional()
   @IsString()
+  @ApiPropertyOptional()
   dateFrom?: string;
 
   @IsOptional()
   @IsString()
+  @ApiPropertyOptional()
   dateTo?: string;
-
-  @IsOptional()
-  @IsString()
-  status?: string;
-
-  @IsOptional()
-  @Type(() => Number)
-  @IsNumber()
-  rowCount?: number;
-
-  @IsOptional()
-  @Type(() => Number)
-  @IsNumber()
-  fileSizeKb?: number;
-
-  @IsOptional()
-  @IsString()
-  completedAt?: string;
-
-  @IsOptional()
-  @Type(() => Number)
-  @IsNumber()
-  createdBy?: number;
-
-  @IsOptional()
-  @IsString()
-  downloadUrl?: string;
 }

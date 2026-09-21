@@ -1,9 +1,9 @@
 // RESPONSIBILITY: Describes the exact frontend-consumed Admin audit-log row and KPI response fields.
 // FLOW: Audit repository/domain → response mapper → canonical ApiResponse envelope.
 
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-export class AdminAuditLogsResponseDto {
+export class AdminAuditLogDto {
   @ApiProperty()
   id!: string;
   @ApiProperty()
@@ -22,10 +22,15 @@ export class AdminAuditLogsResponseDto {
   ip!: string;
   @ApiProperty({ enum: ['Finance', 'Members', 'HR', 'Plans', 'Auth', 'Settings', 'Branches', 'Store', 'Attendance'] })
   module!: string;
-  @ApiProperty({ required: false })
+  @ApiPropertyOptional()
   userAgent?: string;
-  @ApiProperty({ required: false })
+  @ApiPropertyOptional()
   affectedRecordId?: string;
+}
+
+export class AdminAuditLogListResponseDto {
+  @ApiProperty({ type: [AdminAuditLogDto] })
+  data!: AdminAuditLogDto[];
 }
 
 export class AdminAuditLogsKpiResponseDto {

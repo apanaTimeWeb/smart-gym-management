@@ -9,7 +9,7 @@ import { CoreRolesGuard } from '@/core/auth/core-roles.guard';
 import { CoreAdminRole } from '@/core/tenant/core-tenant.constants';
 import { AdminGymHealthAlertsQueryService } from '@/modules/admin/gym-health-alerts/services/admin-gym_health_alerts-query.service';
 import { AdminGymHealthAlertsQueryDto } from '@/modules/admin/gym-health-alerts/dtos/admin-gym_health_alerts-query.dto';
-import { AdminGymHealthAlertsResponseDto } from '@/modules/admin/gym-health-alerts/dtos/admin-gym_health_alerts-response.dto';
+import { AdminGymHealthAlertListResponseDto, AdminGymHealthKPIDataDto } from '@/modules/admin/gym-health-alerts/dtos/admin-gym_health_alerts-response.dto';
 
 @ApiTags('Admin / gym-health-alerts')
 @Controller('admin/gym-health-alerts')
@@ -21,17 +21,17 @@ export class AdminGymHealthAlertsQueryController {
   // SLA: STANDARD
   @Get('fetchAlerts')
   @ApiOperation({ summary: 'Execute fetchAlerts' })
-  @ApiResponse({ status: HttpStatus.OK, type: AdminGymHealthAlertsResponseDto })
-  async fetchAlerts(@Query() query: AdminGymHealthAlertsQueryDto): Promise<unknown> {
-    return this.service.fetchAlerts(query);
+  @ApiResponse({ status: HttpStatus.OK, type: AdminGymHealthAlertListResponseDto })
+  async fetchAlerts(@Query() query: AdminGymHealthAlertsQueryDto): Promise<AdminGymHealthAlertListResponseDto> {
+    return this.service.fetchAlerts(query) as unknown as AdminGymHealthAlertListResponseDto;
   }
 
   // SLA: STANDARD
   @Get('fetchKPIs')
   @ApiOperation({ summary: 'Execute fetchKPIs' })
-  @ApiResponse({ status: HttpStatus.OK, type: AdminGymHealthAlertsResponseDto })
-  async fetchKPIs(@Query() query: AdminGymHealthAlertsQueryDto): Promise<unknown> {
-    return this.service.fetchKPIs(query);
+  @ApiResponse({ status: HttpStatus.OK, type: AdminGymHealthKPIDataDto })
+  async fetchKPIs(@Query() query: AdminGymHealthAlertsQueryDto): Promise<AdminGymHealthKPIDataDto> {
+    return this.service.fetchKPIs(query) as unknown as AdminGymHealthKPIDataDto;
   }
 
 }

@@ -9,7 +9,7 @@ import { CoreRolesGuard } from '@/core/auth/core-roles.guard';
 import { CoreAdminRole } from '@/core/tenant/core-tenant.constants';
 import { AdminBranchesQueryService } from '@/modules/admin/branches/services/admin-branches-query.service';
 import { AdminBranchesQueryDto } from '@/modules/admin/branches/dtos/admin-branches-query.dto';
-import { AdminBranchesResponseDto } from '@/modules/admin/branches/dtos/admin-branches-response.dto';
+import { AdminBranchDto, AdminBranchListResponseDto } from '@/modules/admin/branches/dtos/admin-branches-response.dto';
 
 @ApiTags('Admin / branches')
 @Controller('admin/branches')
@@ -21,17 +21,17 @@ export class AdminBranchesQueryController {
   // SLA: STANDARD
   @Get('fetchBranches')
   @ApiOperation({ summary: 'Execute fetchBranches' })
-  @ApiResponse({ status: HttpStatus.OK, type: AdminBranchesResponseDto })
-  async fetchBranches(@Query() query: AdminBranchesQueryDto): Promise<unknown> {
-    return this.service.fetchBranches(query);
+  @ApiResponse({ status: HttpStatus.OK, type: AdminBranchListResponseDto })
+  async fetchBranches(@Query() query: AdminBranchesQueryDto): Promise<AdminBranchListResponseDto> {
+    return this.service.fetchBranches(query) as unknown as AdminBranchListResponseDto;
   }
 
   // SLA: STANDARD
   @Get(':id')
   @ApiOperation({ summary: 'Execute findById' })
-  @ApiResponse({ status: HttpStatus.OK, type: AdminBranchesResponseDto })
-  async findById(@Param('id') id: string): Promise<unknown> {
-    return this.service.findById(id);
+  @ApiResponse({ status: HttpStatus.OK, type: AdminBranchDto })
+  async findById(@Param('id') id: string): Promise<AdminBranchDto | null> {
+    return this.service.findById(id) as unknown as AdminBranchDto | null;
   }
 
 }

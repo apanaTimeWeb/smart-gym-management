@@ -1,52 +1,108 @@
 // RESPONSIBILITY: Describes the frontend-consumed response fields for Admin branches.
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 // FLOW: Repository domain → Branches response mapper → ApiResponse<T>.
 
-export class AdminBranchesResponseDto {
+export class AdminBranchExpenseItemDto {
+  @ApiProperty()
   id!: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: createdAt' })
-  createdAt?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: updatedAt' })
-  updatedAt?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: name' })
-  name?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: branchCode' })
+  @ApiProperty()
+  label!: string;
+  @ApiProperty()
+  amount!: number;
+  @ApiProperty()
+  category!: string;
+  @ApiProperty()
+  date!: string;
+}
+
+export class AdminBranchRevenueItemDto {
+  @ApiProperty()
+  id!: string;
+  @ApiProperty()
+  label!: string;
+  @ApiProperty()
+  amount!: number;
+  @ApiProperty()
+  method!: string;
+  @ApiProperty()
+  date!: string;
+}
+
+export class AdminBranchStaffMemberDto {
+  @ApiProperty()
+  id!: string;
+  @ApiProperty()
+  name!: string;
+  @ApiProperty()
+  role!: string;
+  @ApiProperty()
+  shift!: string;
+  @ApiProperty({ enum: ['active', 'on-leave'] })
+  status!: string;
+}
+
+export class AdminBranchStudentDto {
+  @ApiProperty()
+  id!: string;
+  @ApiProperty()
+  name!: string;
+  @ApiProperty()
+  plan!: string;
+  @ApiProperty({ enum: ['active', 'expired'] })
+  status!: string;
+  @ApiProperty()
+  joinDate!: string;
+}
+
+export class AdminBranchDto {
+  @ApiProperty()
+  id!: string;
+  @ApiProperty()
+  name!: string;
+  @ApiPropertyOptional()
   branchCode?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: gstNumber' })
+  @ApiPropertyOptional()
   gstNumber?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: address' })
+  @ApiPropertyOptional()
   address?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: contactPhone' })
+  @ApiProperty()
+  location!: string;
+  @ApiPropertyOptional()
   contactPhone?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: contactEmail' })
+  @ApiPropertyOptional()
   contactEmail?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: openingTime' })
+  @ApiPropertyOptional()
   openingTime?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: closingTime' })
+  @ApiPropertyOptional()
   closingTime?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: maxCapacity' })
+  @ApiPropertyOptional()
   maxCapacity?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: currentOccupancy' })
+  @ApiPropertyOptional()
   currentOccupancy?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: equipmentCount' })
+  @ApiPropertyOptional()
   equipmentCount?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: status' })
-  status?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: revenue' })
-  revenue?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: expenses' })
-  expenses?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: studentsCount' })
-  studentsCount?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: staffCount' })
-  staffCount?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: expenseItems' })
-  expenseItems?: Record<string, unknown>;
-  @ApiProperty({ required: false, description: 'Frontend contract field: revenueItems' })
-  revenueItems?: Record<string, unknown>;
-  @ApiProperty({ required: false, description: 'Frontend contract field: staffList' })
-  staffList?: Record<string, unknown>;
-  @ApiProperty({ required: false, description: 'Frontend contract field: studentList' })
-  studentList?: Record<string, unknown>;
+  @ApiProperty({ enum: ['active', 'inactive'] })
+  status!: string;
+  @ApiProperty()
+  revenue!: number;
+  @ApiProperty()
+  expenses!: number;
+  @ApiProperty()
+  studentsCount!: number;
+  @ApiProperty()
+  staffCount!: number;
+  @ApiPropertyOptional({ type: [AdminBranchExpenseItemDto] })
+  expenseItems?: AdminBranchExpenseItemDto[];
+  @ApiPropertyOptional({ type: [AdminBranchRevenueItemDto] })
+  revenueItems?: AdminBranchRevenueItemDto[];
+  @ApiPropertyOptional({ type: [AdminBranchStaffMemberDto] })
+  staffList?: AdminBranchStaffMemberDto[];
+  @ApiPropertyOptional({ type: [AdminBranchStudentDto] })
+  studentList?: AdminBranchStudentDto[];
+}
+
+export class AdminBranchListResponseDto {
+  @ApiProperty({ type: [AdminBranchDto] })
+  data!: AdminBranchDto[];
 }

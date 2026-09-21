@@ -1,63 +1,48 @@
 // RESPONSIBILITY: Validates mutation fields exposed by the Admin blacklist frontend contract.
 // FLOW: HTTP request body → AdminBlacklistMutationDto → service business validation → repository mutation.
 
-import { Type } from 'class-transformer';
-import { IsArray, IsBoolean, IsNumber, IsObject, IsOptional, IsString, IsUUID } from 'class-validator';
+import { ApiPropertyOptional } from '@nestjs/swagger';
+import { IsArray, IsEnum, IsOptional, IsString } from 'class-validator';
 
 export class AdminBlacklistMutationDto {
   @IsOptional()
-  @IsUUID()
+  @IsString()
+  @ApiPropertyOptional()
   id?: string;
 
   @IsOptional()
-  @Type(() => Number)
-  @IsNumber()
-  memberId?: number;
+  @IsString()
+  @ApiPropertyOptional()
+  memberId?: string;
 
   @IsOptional()
   @IsString()
-  name?: string;
+  @ApiPropertyOptional()
+  memberName?: string;
 
   @IsOptional()
   @IsString()
-  phone?: string;
+  @ApiPropertyOptional()
+  memberPhone?: string;
 
   @IsOptional()
   @IsString()
-  email?: string;
+  @ApiPropertyOptional()
+  memberEmail?: string;
 
   @IsOptional()
   @IsString()
+  @ApiPropertyOptional()
   reason?: string;
 
   @IsOptional()
-  @Type(() => Number)
-  @IsNumber()
-  blacklistedBy?: number;
-
-  @IsOptional()
-  @IsString()
-  blacklistedAt?: string;
-
-  @IsOptional()
-  @IsString()
+  @IsEnum(['global', 'specific'])
+  @ApiPropertyOptional({ enum: ['global', 'specific'] })
   scope?: string;
 
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
+  @ApiPropertyOptional()
   assignedGyms?: string[];
-
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  assignedGymNames?: string[];
-
-  @IsOptional()
-  @IsBoolean()
-  isActive?: boolean;
-
-  @IsOptional()
-  @IsObject()
-  history?: Record<string, unknown>;
 }

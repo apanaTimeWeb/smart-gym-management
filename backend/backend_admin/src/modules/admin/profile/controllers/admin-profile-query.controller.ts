@@ -9,7 +9,7 @@ import { CoreRolesGuard } from '@/core/auth/core-roles.guard';
 import { CoreAdminRole } from '@/core/tenant/core-tenant.constants';
 import { AdminProfileQueryService } from '@/modules/admin/profile/services/admin-profile-query.service';
 import { AdminProfileQueryDto } from '@/modules/admin/profile/dtos/admin-profile-query.dto';
-import { AdminProfileResponseDto } from '@/modules/admin/profile/dtos/admin-profile-response.dto';
+import { AdminProfileDto } from '@/modules/admin/profile/dtos/admin-profile-response.dto';
 
 @ApiTags('Admin / profile')
 @Controller('admin/adminProfile')
@@ -21,9 +21,9 @@ export class AdminProfileQueryController {
   // SLA: STANDARD
   @Get('fetchProfile')
   @ApiOperation({ summary: 'Execute fetchProfile' })
-  @ApiResponse({ status: HttpStatus.OK, type: AdminProfileResponseDto })
-  async fetchProfile(@Query() query: AdminProfileQueryDto): Promise<unknown> {
-    return this.service.fetchProfile(query);
+  @ApiResponse({ status: HttpStatus.OK, type: AdminProfileDto })
+  async fetchProfile(@Query() query: AdminProfileQueryDto): Promise<AdminProfileDto> {
+    return this.service.fetchProfile(query) as unknown as AdminProfileDto;
   }
 
 }

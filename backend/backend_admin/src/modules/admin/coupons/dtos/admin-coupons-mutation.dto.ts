@@ -1,67 +1,85 @@
 // RESPONSIBILITY: Validates mutation fields exposed by the Admin coupons frontend contract.
 // FLOW: HTTP request body → AdminCouponsMutationDto → service business validation → repository mutation.
 
+import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsArray, IsBoolean, IsNumber, IsObject, IsOptional, IsString, IsUUID } from 'class-validator';
+import { IsArray, IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class AdminCouponsMutationDto {
   @IsOptional()
-  @IsUUID()
+  @IsString()
+  @ApiPropertyOptional()
   id?: string;
 
   @IsOptional()
   @IsString()
+  @ApiPropertyOptional()
   code?: string;
 
   @IsOptional()
   @IsString()
+  @ApiPropertyOptional()
   description?: string;
 
   @IsOptional()
-  @IsString()
+  @IsEnum(['percentage', 'flat'])
+  @ApiPropertyOptional({ enum: ['percentage', 'flat'] })
   type?: string;
 
   @IsOptional()
-  @IsString()
-  value?: string;
-
-  @IsOptional()
-  @IsString()
-  minOrderAmount?: string;
-
-  @IsOptional()
-  @IsString()
-  maxDiscount?: string;
-
-  @IsOptional()
-  @Type(() => Number)
   @IsNumber()
+  @Type(() => Number)
+  @ApiPropertyOptional()
+  value?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  @ApiPropertyOptional()
+  minOrderAmount?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  @ApiPropertyOptional()
+  maxDiscount?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  @ApiPropertyOptional()
   usageLimit?: number;
 
   @IsOptional()
-  @Type(() => Number)
   @IsNumber()
+  @Type(() => Number)
+  @ApiPropertyOptional()
   usedCount?: number;
 
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
+  @ApiPropertyOptional()
   assignedGyms?: string[];
 
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
+  @ApiPropertyOptional()
   assignedGymNames?: string[];
 
   @IsOptional()
   @IsString()
+  @ApiPropertyOptional()
   validFrom?: string;
 
   @IsOptional()
   @IsString()
+  @ApiPropertyOptional()
   validUntil?: string;
 
   @IsOptional()
-  @IsString()
+  @IsEnum(['active', 'inactive', 'expired'])
+  @ApiPropertyOptional({ enum: ['active', 'inactive', 'expired'] })
   status?: string;
 }

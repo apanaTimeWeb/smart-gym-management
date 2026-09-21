@@ -22,15 +22,15 @@ export class AdminUsageQueryController {
   @Get()
   @ApiOperation({ summary: 'Execute fetchUsage' })
   @ApiResponse({ status: HttpStatus.OK, type: AdminUsageResponseDto })
-  async fetchUsage(@Query() query: AdminUsageQueryDto): Promise<unknown> {
-    return this.service.fetchUsage(query);
+  async fetchUsage(@Query() query: AdminUsageQueryDto): Promise<AdminUsageResponseDto> {
+    return this.service.fetchUsage(query) as unknown as AdminUsageResponseDto;
   }
 
   // SLA: STANDARD
   @Get('plans')
   @ApiOperation({ summary: 'Execute fetchPlans' })
-  @ApiResponse({ status: HttpStatus.OK, type: AdminUsageResponseDto })
-  async fetchPlans(@Query() query: AdminUsageQueryDto): Promise<unknown> {
+  @ApiResponse({ status: HttpStatus.OK })
+  async fetchPlans(@Query() query: AdminUsageQueryDto): Promise<any> {
     return this.service.fetchPlans(query);
   }
 

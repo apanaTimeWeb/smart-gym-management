@@ -23,16 +23,16 @@ export class AdminGymHealthAlertsCommandController {
   @Post('resolveAlert')
   @ApiOperation({ summary: 'Execute resolveAlert' })
   @ApiResponse({ status: HttpStatus.OK })
-  async resolveAlertById(@Body() dto: AdminGymHealthAlertsIdDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<unknown> {
-    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.resolveAlertById(dto.id));
+  async resolveAlertById(@Body() dto: AdminGymHealthAlertsIdDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<void> {
+    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.resolveAlertById(dto.id)) as Promise<void>;
   }
 
   // SLA: STANDARD
   @Post('dismissAlert')
   @ApiOperation({ summary: 'Execute dismissAlert' })
   @ApiResponse({ status: HttpStatus.OK })
-  async dismissAlertById(@Body() dto: AdminGymHealthAlertsIdDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<unknown> {
-    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.dismissAlertById(dto.id));
+  async dismissAlertById(@Body() dto: AdminGymHealthAlertsIdDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<void> {
+    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.dismissAlertById(dto.id)) as Promise<void>;
   }
 
 }

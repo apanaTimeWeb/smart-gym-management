@@ -21,32 +21,32 @@ export class AdminSubscriptionsCommandController {
   @Post('upgradePlan')
   @ApiOperation({ summary: 'Execute upgradePlan' })
   @ApiResponse({ status: HttpStatus.OK })
-  async upgradePlan(@Body(new ParseUUIDPipe()) planId: string, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<unknown> {
-    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.upgradePlan(planId));
+  async upgradePlan(@Body(new ParseUUIDPipe()) planId: string, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<void> {
+    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.upgradePlan(planId)) as Promise<void>;
   }
 
   // SLA: STANDARD
   @Post('toggleAutoRenew')
   @ApiOperation({ summary: 'Execute toggleAutoRenew' })
   @ApiResponse({ status: HttpStatus.OK })
-  async toggleAutoRenew(@Headers('Idempotency-Key') idempotencyKey?: string): Promise<unknown> {
-    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.toggleAutoRenew());
+  async toggleAutoRenew(@Headers('Idempotency-Key') idempotencyKey?: string): Promise<void> {
+    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.toggleAutoRenew()) as Promise<void>;
   }
 
   // SLA: STANDARD
   @Post('setDefaultPaymentMethod')
   @ApiOperation({ summary: 'Execute setDefaultPaymentMethod' })
   @ApiResponse({ status: HttpStatus.OK })
-  async setDefaultPaymentMethod(@Body(new ParseUUIDPipe()) paymentMethodId: string, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<unknown> {
-    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.setDefaultPaymentMethod(paymentMethodId));
+  async setDefaultPaymentMethod(@Body(new ParseUUIDPipe()) paymentMethodId: string, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<void> {
+    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.setDefaultPaymentMethod(paymentMethodId)) as Promise<void>;
   }
 
   // SLA: STANDARD
   @Delete('removePaymentMethod')
   @ApiOperation({ summary: 'Execute removePaymentMethod' })
   @ApiResponse({ status: HttpStatus.OK })
-  async removePaymentMethod(@Body(new ParseUUIDPipe()) paymentMethodId: string, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<unknown> {
-    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.removePaymentMethod(paymentMethodId));
+  async removePaymentMethod(@Body(new ParseUUIDPipe()) paymentMethodId: string, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<void> {
+    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.removePaymentMethod(paymentMethodId)) as Promise<void>;
   }
 
 }

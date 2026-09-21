@@ -11,6 +11,7 @@ import { CoreIdempotencyService } from '@/core/idempotency/core-idempotency.serv
 import { AdminPlansCommandService } from '@/modules/admin/plans/services/admin-plans-command.service';
 import { AdminPlansMutationDto } from '@/modules/admin/plans/dtos/admin-plans-mutation.dto';
 import { AdminPlansIdDto } from '@/modules/admin/plans/dtos/admin-plans-id.dto';
+import { AdminPlanDto } from '@/modules/admin/plans/dtos/admin-plans-response.dto';
 
 @ApiTags('Admin / plans')
 @UseGuards(CoreJwtAuthGuard, CoreRolesGuard)
@@ -22,29 +23,27 @@ export class AdminPlansCommandController {
   // SLA: STANDARD
   @Post('createPlan')
   @ApiOperation({ summary: 'Execute createPlan' })
-  @ApiResponse({ status: HttpStatus.OK })
-  async createRecord(@Body() dto: AdminPlansMutationDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<unknown> {
-    const operation = async (): Promise<unknown> => this.service.createRecord(dto as unknown as Record<string, unknown>);
-    return idempotencyKey ? this.idempotency.executeOnce(idempotencyKey, operation) : operation();
+  @ApiResponse({ status: HttpStatus.OK, type: AdminPlanDto })
+  async createRecord(@Body() dto: AdminPlansMutationDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<AdminPlanDto> {
+    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.createRecord(dto)) as Promise<AdminPlanDto>;
   }
 
   // SLA: STANDARD
   @Post('updatePlan')
   @ApiOperation({ summary: 'Execute updatePlan' })
-  @ApiResponse({ status: HttpStatus.OK })
-  async updateById(@Body() dto: AdminPlansMutationDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<unknown> {
+  @ApiResponse({ status: HttpStatus.OK, type: AdminPlanDto })
+  async updateById(@Body() dto: AdminPlansMutationDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<AdminPlanDto> {
     const id = dto.id;
     if (!id) throw new BadRequestException('Entity id is required.');
-    const operation = async (): Promise<unknown> => this.service.updateById(id, dto as unknown as Record<string, unknown>);
-    return idempotencyKey ? this.idempotency.executeOnce(idempotencyKey, operation) : operation();
+    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.updateById(id, dto)) as Promise<AdminPlanDto>;
   }
 
   // SLA: STANDARD
   @Delete('deletePlan')
   @ApiOperation({ summary: 'Execute deletePlan' })
   @ApiResponse({ status: HttpStatus.OK })
-  async markAsDeleted(@Body() dto: AdminPlansIdDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<unknown> {
-    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.markAsDeleted(dto.id));
+  async markAsDeleted(@Body() dto: AdminPlansIdDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<void> {
+    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.markAsDeleted(dto.id)) as Promise<void>;
   }
 
 }

@@ -23,8 +23,8 @@ export class AdminReportsCommandController {
   @Post('exportReport')
   @ApiOperation({ summary: 'Execute exportReport' })
   @ApiResponse({ status: HttpStatus.OK })
-  async createExportJob(@Body() dto: AdminReportsMutationDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<unknown> {
-    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.createExportJob(dto as unknown as Record<string, unknown>));
+  async createExportJob(@Body() dto: AdminReportsMutationDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<any> {
+    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.createExportJob(dto));
   }
 
 }

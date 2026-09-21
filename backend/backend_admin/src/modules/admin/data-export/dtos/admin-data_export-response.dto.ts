@@ -1,36 +1,49 @@
 // RESPONSIBILITY: Describes the frontend-consumed response fields for Admin data-export.
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 // FLOW: Repository domain → DataExport response mapper → ApiResponse<T>.
 
-export class AdminDataExportResponseDto {
+export class AdminExportJobDto {
+  @ApiProperty()
   id!: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: createdAt' })
-  createdAt?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: updatedAt' })
-  updatedAt?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: dataType' })
-  dataType?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: format' })
-  format?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: gymIds' })
-  gymIds?: string[];
-  @ApiProperty({ required: false, description: 'Frontend contract field: gymNames' })
-  gymNames?: string[];
-  @ApiProperty({ required: false, description: 'Frontend contract field: dateFrom' })
-  dateFrom?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: dateTo' })
-  dateTo?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: status' })
-  status?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: rowCount' })
+  @ApiProperty({ enum: ['members', 'payments', 'attendance', 'staff', 'full_report'] })
+  dataType!: string;
+  @ApiProperty({ enum: ['csv', 'excel', 'pdf'] })
+  format!: string;
+  @ApiProperty({ type: [String] })
+  gymIds!: string[];
+  @ApiProperty({ type: [String] })
+  gymNames!: string[];
+  @ApiProperty()
+  dateFrom!: string;
+  @ApiProperty()
+  dateTo!: string;
+  @ApiProperty({ enum: ['completed', 'processing', 'failed'] })
+  status!: string;
+  @ApiPropertyOptional()
   rowCount?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: fileSizeKb' })
+  @ApiPropertyOptional()
   fileSizeKb?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: completedAt' })
+  @ApiProperty()
+  createdAt!: string;
+  @ApiPropertyOptional()
   completedAt?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: createdBy' })
-  createdBy?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: downloadUrl' })
-  downloadUrl?: string;
+  @ApiProperty()
+  createdBy!: string;
+}
+
+export class AdminExportJobListResponseDto {
+  @ApiProperty({ type: [AdminExportJobDto] })
+  data!: AdminExportJobDto[];
+}
+
+export class AdminDataExportKPIDataDto {
+  @ApiProperty()
+  totalExports!: number;
+  @ApiProperty()
+  totalRowsExported!: number;
+  @ApiProperty()
+  lastExportDate!: string;
+  @ApiProperty()
+  pendingJobs!: number;
 }

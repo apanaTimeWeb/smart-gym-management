@@ -22,15 +22,15 @@ export class AdminSettingsQueryController {
   @Get('fetchSettings')
   @ApiOperation({ summary: 'Execute fetchSettings' })
   @ApiResponse({ status: HttpStatus.OK, type: AdminSettingsResponseDto })
-  async fetchSettings(@Query() query: AdminSettingsQueryDto): Promise<unknown> {
-    return this.service.fetchSettings(query);
+  async fetchSettings(@Query() query: AdminSettingsQueryDto): Promise<AdminSettingsResponseDto> {
+    return this.service.fetchSettings(query) as unknown as AdminSettingsResponseDto;
   }
 
   // SLA: STANDARD
   @Get('notifications')
   @ApiOperation({ summary: 'Execute fetchNotificationSettings' })
   @ApiResponse({ status: HttpStatus.OK, type: AdminSettingsResponseDto })
-  async fetchNotificationSettings(@Query() query: AdminSettingsQueryDto): Promise<unknown> {
+  async fetchNotificationSettings(@Query() query: AdminSettingsQueryDto): Promise<any> {
     return this.service.fetchNotificationSettings(query);
   }
 
@@ -38,7 +38,7 @@ export class AdminSettingsQueryController {
   @Get('../permissions/fetchPermissions')
   @ApiOperation({ summary: 'Execute fetchRolePermissionReference' })
   @ApiResponse({ status: HttpStatus.OK, type: AdminSettingsResponseDto })
-  async fetchRolePermissionReference(@Query() query: AdminSettingsQueryDto): Promise<unknown> {
+  async fetchRolePermissionReference(@Query() query: AdminSettingsQueryDto): Promise<any> {
     return this.service.fetchRolePermissionReference(query);
   }
 
@@ -46,7 +46,7 @@ export class AdminSettingsQueryController {
   @Get('2fa/status')
   @ApiOperation({ summary: 'Execute status2fa' })
   @ApiResponse({ status: HttpStatus.OK, type: AdminSettingsResponseDto })
-  async status2fa(@Query() query: AdminSettingsQueryDto): Promise<unknown> {
+  async status2fa(@Query() query: AdminSettingsQueryDto): Promise<any> {
     return this.service.status2fa(query);
   }
 

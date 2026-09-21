@@ -1,56 +1,51 @@
 // RESPONSIBILITY: Describes the frontend-consumed response fields for Admin payouts.
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 // FLOW: Repository domain → Payouts response mapper → ApiResponse<T>.
 
-export class AdminPayoutsResponseDto {
-  id!: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: createdAt' })
-  createdAt?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: updatedAt' })
-  updatedAt?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: gymId' })
-  gymId?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: gymName' })
-  gymName?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: month' })
-  month?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: grossRevenue' })
-  grossRevenue?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: staffPayroll' })
-  staffPayroll?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: operationalExpenses' })
-  operationalExpenses?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: platformFee' })
-  platformFee?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: netProfit' })
-  netProfit?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: payoutStatus' })
-  payoutStatus?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: paidOn' })
-  paidOn?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: approvedBy' })
-  approvedBy?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: approvedAt' })
-  approvedAt?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: rejectionReason' })
-  rejectionReason?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: revenue' })
-  revenue?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: cogs' })
-  cogs?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: grossProfit' })
-  grossProfit?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: staffCost' })
-  staffCost?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: rentUtilities' })
-  rentUtilities?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: marketing' })
-  marketing?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: miscExpenses' })
-  miscExpenses?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: ebitda' })
-  ebitda?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: tax' })
-  tax?: number;
+export class AdminGymPayoutDto {
+  @ApiProperty() gymId!: string;
+  @ApiProperty() gymName!: string;
+  @ApiProperty() month!: string;
+  @ApiProperty() grossRevenue!: number;
+  @ApiProperty() staffPayroll!: number;
+  @ApiProperty() operationalExpenses!: number;
+  @ApiProperty() platformFee!: number;
+  @ApiProperty() netProfit!: number;
+  @ApiProperty({ enum: ['paid', 'pending', 'processing'] }) payoutStatus!: string;
+  @ApiPropertyOptional() paidOn?: string;
+  @ApiPropertyOptional() approvedBy?: string;
+  @ApiPropertyOptional() approvedAt?: string;
+  @ApiPropertyOptional() rejectionReason?: string;
+}
+
+export class AdminGymPayoutListResponseDto {
+  @ApiProperty({ type: [AdminGymPayoutDto] }) data!: AdminGymPayoutDto[];
+}
+
+export class AdminPnLEntryDto {
+  @ApiProperty() gymId!: string;
+  @ApiProperty() gymName!: string;
+  @ApiProperty() month!: string;
+  @ApiProperty() revenue!: number;
+  @ApiProperty() cogs!: number;
+  @ApiProperty() grossProfit!: number;
+  @ApiProperty() staffCost!: number;
+  @ApiProperty() rentUtilities!: number;
+  @ApiProperty() marketing!: number;
+  @ApiProperty() miscExpenses!: number;
+  @ApiProperty() ebitda!: number;
+  @ApiProperty() tax!: number;
+  @ApiProperty() netProfit!: number;
+}
+
+export class AdminPnLEntryListResponseDto {
+  @ApiProperty({ type: [AdminPnLEntryDto] }) data!: AdminPnLEntryDto[];
+}
+
+export class AdminPayoutsKPIDataDto {
+  @ApiProperty() totalNetProfit!: number;
+  @ApiProperty() totalGrossRevenue!: number;
+  @ApiProperty() totalExpenses!: number;
+  @ApiProperty() pendingPayouts!: number;
 }

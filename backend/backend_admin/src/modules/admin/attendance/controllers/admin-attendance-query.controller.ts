@@ -9,7 +9,7 @@ import { CoreRolesGuard } from '@/core/auth/core-roles.guard';
 import { CoreAdminRole } from '@/core/tenant/core-tenant.constants';
 import { AdminAttendanceQueryService } from '@/modules/admin/attendance/services/admin-attendance-query.service';
 import { AdminAttendanceQueryDto } from '@/modules/admin/attendance/dtos/admin-attendance-query.dto';
-import { AdminAttendanceResponseDto } from '@/modules/admin/attendance/dtos/admin-attendance-response.dto';
+import { AdminAttendanceListResponseDto, AdminAttendanceSummaryResponseDto, AdminAttendanceTrendResponseDto } from '@/modules/admin/attendance/dtos/admin-attendance-response.dto';
 
 @ApiTags('Admin / attendance')
 @Controller('admin/attendance')
@@ -21,25 +21,25 @@ export class AdminAttendanceQueryController {
   // SLA: STANDARD
   @Get()
   @ApiOperation({ summary: 'Execute fetchAttendance' })
-  @ApiResponse({ status: HttpStatus.OK, type: AdminAttendanceResponseDto })
-  async fetchAttendance(@Query() query: AdminAttendanceQueryDto): Promise<unknown> {
-    return this.service.fetchAttendance(query);
+  @ApiResponse({ status: HttpStatus.OK, type: AdminAttendanceListResponseDto })
+  async fetchAttendance(@Query() query: AdminAttendanceQueryDto): Promise<AdminAttendanceListResponseDto> {
+    return this.service.fetchAttendance(query) as unknown as AdminAttendanceListResponseDto;
   }
 
   // SLA: STANDARD
   @Get('summary')
   @ApiOperation({ summary: 'Execute fetchSummary' })
-  @ApiResponse({ status: HttpStatus.OK, type: AdminAttendanceResponseDto })
-  async fetchSummary(@Query() query: AdminAttendanceQueryDto): Promise<unknown> {
-    return this.service.fetchSummary(query);
+  @ApiResponse({ status: HttpStatus.OK, type: AdminAttendanceSummaryResponseDto })
+  async fetchSummary(@Query() query: AdminAttendanceQueryDto): Promise<AdminAttendanceSummaryResponseDto> {
+    return this.service.fetchSummary(query) as unknown as AdminAttendanceSummaryResponseDto;
   }
 
   // SLA: STANDARD
   @Get('trend')
   @ApiOperation({ summary: 'Execute fetchTrend' })
-  @ApiResponse({ status: HttpStatus.OK, type: AdminAttendanceResponseDto })
-  async fetchTrend(@Query() query: AdminAttendanceQueryDto): Promise<unknown> {
-    return this.service.fetchTrend(query);
+  @ApiResponse({ status: HttpStatus.OK, type: AdminAttendanceTrendResponseDto })
+  async fetchTrend(@Query() query: AdminAttendanceQueryDto): Promise<AdminAttendanceTrendResponseDto> {
+    return this.service.fetchTrend(query) as unknown as AdminAttendanceTrendResponseDto;
   }
 
 }

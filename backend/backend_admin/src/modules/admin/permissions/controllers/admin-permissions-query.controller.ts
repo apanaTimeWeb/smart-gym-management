@@ -9,7 +9,7 @@ import { CoreRolesGuard } from '@/core/auth/core-roles.guard';
 import { CoreAdminRole } from '@/core/tenant/core-tenant.constants';
 import { AdminPermissionsQueryService } from '@/modules/admin/permissions/services/admin-permissions-query.service';
 import { AdminPermissionsQueryDto } from '@/modules/admin/permissions/dtos/admin-permissions-query.dto';
-import { AdminPermissionsResponseDto } from '@/modules/admin/permissions/dtos/admin-permissions-response.dto';
+import { AdminPermissionsDataDto } from '@/modules/admin/permissions/dtos/admin-permissions-response.dto';
 
 @ApiTags('Admin / permissions')
 @Controller('admin/permissions')
@@ -21,9 +21,9 @@ export class AdminPermissionsQueryController {
   // SLA: STANDARD
   @Get('fetchPermissions')
   @ApiOperation({ summary: 'Execute fetchPermissions' })
-  @ApiResponse({ status: HttpStatus.OK, type: AdminPermissionsResponseDto })
-  async fetchPermissions(@Query() query: AdminPermissionsQueryDto): Promise<unknown> {
-    return this.service.fetchPermissions(query);
+  @ApiResponse({ status: HttpStatus.OK, type: AdminPermissionsDataDto })
+  async fetchPermissions(@Query() query: AdminPermissionsQueryDto): Promise<AdminPermissionsDataDto> {
+    return this.service.fetchPermissions(query) as unknown as AdminPermissionsDataDto;
   }
 
 }

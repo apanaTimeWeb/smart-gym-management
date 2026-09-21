@@ -11,6 +11,7 @@ import { CoreIdempotencyService } from '@/core/idempotency/core-idempotency.serv
 import { AdminAnnouncementsCommandService } from '@/modules/admin/announcements/services/admin-announcements-command.service';
 import { AdminAnnouncementsMutationDto } from '@/modules/admin/announcements/dtos/admin-announcements-mutation.dto';
 import { AdminAnnouncementsIdDto } from '@/modules/admin/announcements/dtos/admin-announcements-id.dto';
+import { AdminAnnouncementDto } from '@/modules/admin/announcements/dtos/admin-announcements-response.dto';
 
 @ApiTags('Admin / announcements')
 @UseGuards(CoreJwtAuthGuard, CoreRolesGuard)
@@ -22,62 +23,66 @@ export class AdminAnnouncementsCommandController {
   /** @description Creates an announcement through the frontend-compatible alias. @returns Created announcement. */
   @Post()
   @ApiOperation({ summary: 'Create announcement' })
-  async createAlias(@Body() dto: AdminAnnouncementsMutationDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<unknown> {
-    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.createRecord(dto as unknown as Record<string, unknown>));
+  @ApiResponse({ status: HttpStatus.OK, type: AdminAnnouncementDto })
+  async createAlias(@Body() dto: AdminAnnouncementsMutationDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<AdminAnnouncementDto> {
+    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.createRecord(dto)) as Promise<AdminAnnouncementDto>;
   }
 
   /** @description Creates an announcement using the legacy frontend action path. @returns Created announcement. */
   @Post('createAnnouncement')
   @ApiOperation({ summary: 'Execute createAnnouncement' })
-  @ApiResponse({ status: HttpStatus.OK })
-  async createRecord(@Body() dto: AdminAnnouncementsMutationDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<unknown> {
-    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.createRecord(dto as unknown as Record<string, unknown>));
+  @ApiResponse({ status: HttpStatus.OK, type: AdminAnnouncementDto })
+  async createRecord(@Body() dto: AdminAnnouncementsMutationDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<AdminAnnouncementDto> {
+    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.createRecord(dto)) as Promise<AdminAnnouncementDto>;
   }
 
   /** @description Updates an announcement using the frontend action path. @returns Updated announcement. */
   @Post('updateAnnouncement')
   @ApiOperation({ summary: 'Execute updateAnnouncement' })
-  @ApiResponse({ status: HttpStatus.OK })
-  async updateById(@Body() dto: AdminAnnouncementsMutationDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<unknown> {
+  @ApiResponse({ status: HttpStatus.OK, type: AdminAnnouncementDto })
+  async updateById(@Body() dto: AdminAnnouncementsMutationDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<AdminAnnouncementDto> {
     const id = dto.id;
     if (!id) throw new BadRequestException('Entity id is required.');
-    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.updateById(id, dto as unknown as Record<string, unknown>));
+    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.updateById(id, dto)) as Promise<AdminAnnouncementDto>;
   }
 
   /** @description Updates an announcement by UUID. @returns Updated announcement. */
   @Patch(':id')
   @ApiOperation({ summary: 'Update announcement by UUID' })
-  async updateRest(@Param('id') id: string, @Body() dto: AdminAnnouncementsMutationDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<unknown> {
-    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.updateById(id, dto as unknown as Record<string, unknown>));
+  @ApiResponse({ status: HttpStatus.OK, type: AdminAnnouncementDto })
+  async updateRest(@Param('id') id: string, @Body() dto: AdminAnnouncementsMutationDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<AdminAnnouncementDto> {
+    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.updateById(id, dto)) as Promise<AdminAnnouncementDto>;
   }
 
   /** @description Soft-deletes an announcement by frontend action path. @returns Mutation result. */
   @Delete('deleteAnnouncement')
   @ApiOperation({ summary: 'Execute deleteAnnouncement' })
   @ApiResponse({ status: HttpStatus.OK })
-  async markAsDeleted(@Body() dto: AdminAnnouncementsIdDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<unknown> {
-    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.markAsDeleted(dto.id));
+  async markAsDeleted(@Body() dto: AdminAnnouncementsIdDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<void> {
+    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.markAsDeleted(dto.id)) as Promise<void>;
   }
 
   /** @description Soft-deletes an announcement by UUID. @returns Mutation result. */
   @Delete(':id')
   @ApiOperation({ summary: 'Delete announcement using soft delete' })
-  async deleteRest(@Param('id') id: string, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<unknown> {
-    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.markAsDeleted(id));
+  @ApiResponse({ status: HttpStatus.OK })
+  async deleteRest(@Param('id') id: string, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<void> {
+    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.markAsDeleted(id)) as Promise<void>;
   }
 
   /** @description Toggles pinned state through the frontend action path. @returns Updated announcement. */
   @Post('togglePin')
   @ApiOperation({ summary: 'Execute togglePin' })
-  @ApiResponse({ status: HttpStatus.OK })
-  async togglePinById(@Body() dto: AdminAnnouncementsIdDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<unknown> {
-    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.togglePinById(dto.id));
+  @ApiResponse({ status: HttpStatus.OK, type: AdminAnnouncementDto })
+  async togglePinById(@Body() dto: AdminAnnouncementsIdDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<AdminAnnouncementDto> {
+    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.togglePinById(dto.id)) as Promise<AdminAnnouncementDto>;
   }
 
   /** @description Toggles pinned state by UUID. @returns Updated announcement. */
   @Patch(':id/pin')
   @ApiOperation({ summary: 'Toggle announcement pin state' })
-  async togglePinRest(@Param('id') id: string, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<unknown> {
-    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.togglePinById(id));
+  @ApiResponse({ status: HttpStatus.OK, type: AdminAnnouncementDto })
+  async togglePinRest(@Param('id') id: string, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<AdminAnnouncementDto> {
+    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.togglePinById(id)) as Promise<AdminAnnouncementDto>;
   }
 }

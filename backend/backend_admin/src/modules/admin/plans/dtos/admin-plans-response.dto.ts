@@ -1,36 +1,38 @@
 // RESPONSIBILITY: Describes the frontend-consumed response fields for Admin plans.
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 // FLOW: Repository domain → Plans response mapper → ApiResponse<T>.
 
-export class AdminPlansResponseDto {
-  id!: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: createdAt' })
-  createdAt?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: updatedAt' })
-  updatedAt?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: name' })
-  name?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: tier' })
-  tier?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: price1Month' })
-  price1Month?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: price3Month' })
-  price3Month?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: price6Month' })
-  price6Month?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: price12Month' })
-  price12Month?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: features' })
-  features?: string[];
-  @ApiProperty({ required: false, description: 'Frontend contract field: isActive' })
-  isActive?: boolean;
-  @ApiProperty({ required: false, description: 'Frontend contract field: freezeAllowed' })
-  freezeAllowed?: boolean;
-  @ApiProperty({ required: false, description: 'Frontend contract field: joiningFee' })
-  joiningFee?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: ptSessionsIncluded' })
-  ptSessionsIncluded?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: taxRate' })
-  taxRate?: number;
+export class AdminPlanDto {
+  @ApiProperty() id!: string;
+  @ApiProperty() name!: string;
+  @ApiProperty() tier!: string;
+  @ApiProperty() price1Month!: number;
+  @ApiProperty() price3Month!: number;
+  @ApiProperty() price6Month!: number;
+  @ApiProperty() price12Month!: number;
+  @ApiProperty({ type: [String] }) features!: string[];
+  @ApiProperty() isActive!: boolean;
+  @ApiPropertyOptional() freezeAllowed?: boolean;
+  @ApiPropertyOptional() joiningFee?: number;
+  @ApiPropertyOptional() ptSessionsIncluded?: number;
+  @ApiPropertyOptional() taxRate?: number;
+}
+
+export class AdminPlanListResponseDto {
+  @ApiProperty({ type: [AdminPlanDto] }) data!: AdminPlanDto[];
+}
+
+export class AdminPlanRevenueRecordDto {
+  @ApiProperty() id!: string;
+  @ApiProperty() planName!: string;
+  @ApiProperty() tier!: string;
+  @ApiProperty() totalRevenue!: number;
+  @ApiProperty() activeSubscriptions!: number;
+  @ApiProperty() newSignups!: number;
+  @ApiProperty() renewalRate!: number;
+}
+
+export class AdminPlanRevenueListResponseDto {
+  @ApiProperty({ type: [AdminPlanRevenueRecordDto] }) data!: AdminPlanRevenueRecordDto[];
 }

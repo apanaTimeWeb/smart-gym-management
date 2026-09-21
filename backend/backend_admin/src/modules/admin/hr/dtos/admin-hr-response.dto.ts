@@ -1,90 +1,102 @@
 // RESPONSIBILITY: Describes the frontend-consumed response fields for Admin hr.
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 // FLOW: Repository domain → Hr response mapper → ApiResponse<T>.
 
-export class AdminHrResponseDto {
-  id!: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: createdAt' })
-  createdAt?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: updatedAt' })
-  updatedAt?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: staff' })
-  staff?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: total' })
-  total?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: employeeId' })
-  employeeId?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: name' })
-  name?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: email' })
-  email?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: phone' })
-  phone?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: role' })
-  role?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: salary' })
-  salary?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: branch' })
-  branch?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: gender' })
-  gender?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: address' })
-  address?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: aadhaar' })
-  aadhaar?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: upiId' })
-  upiId?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: bankAccountNumber' })
-  bankAccountNumber?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: advanceSalary' })
-  advanceSalary?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: joinDate' })
-  joinDate?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: isActive' })
-  isActive?: boolean;
-  @ApiProperty({ required: false, description: 'Frontend contract field: salaryType' })
-  salaryType?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: paymentCycle' })
-  paymentCycle?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: currentDue' })
-  currentDue?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: assignedBranches' })
-  assignedBranches?: string[];
-  @ApiProperty({ required: false, description: 'Frontend contract field: primaryBranchId' })
-  primaryBranchId?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: emergencyContactName' })
-  emergencyContactName?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: emergencyContactPhone' })
-  emergencyContactPhone?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: department' })
-  department?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: certifications' })
-  certifications?: string[];
-  @ApiProperty({ required: false, description: 'Frontend contract field: contractType' })
-  contractType?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: terminationDate' })
-  terminationDate?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: payrolls' })
-  payrolls?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: month' })
-  month?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: amount' })
-  amount?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: paidAmount' })
-  paidAmount?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: pendingAmount' })
-  pendingAmount?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: status' })
-  status?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: paidAt' })
-  paidAt?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: notes' })
-  notes?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: ledger' })
-  ledger?: Record<string, unknown>;
-  @ApiProperty({ required: false, description: 'Frontend contract field: advances' })
-  advances?: Record<string, unknown>;
-  @ApiProperty({ required: false, description: 'Frontend contract field: performance' })
-  performance?: Record<string, unknown>;
+export class AdminHrStaffDto {
+  @ApiProperty() id!: string;
+  @ApiPropertyOptional() employeeId?: string;
+  @ApiProperty() name!: string;
+  @ApiProperty() email!: string;
+  @ApiProperty() phone!: string;
+  @ApiProperty() role!: string;
+  @ApiProperty() salary!: number;
+  @ApiProperty() branch!: string;
+  @ApiProperty() gender!: string;
+  @ApiPropertyOptional() address?: string;
+  @ApiPropertyOptional() aadhaar?: string;
+  @ApiPropertyOptional() upiId?: string;
+  @ApiPropertyOptional() bankAccountNumber?: string;
+  @ApiPropertyOptional() advanceSalary?: number;
+  @ApiProperty() joinDate!: string;
+  @ApiPropertyOptional() joiningDate?: string;
+  @ApiProperty() isActive!: boolean;
+  @ApiPropertyOptional() salaryType?: string;
+  @ApiPropertyOptional() paymentCycle?: string;
+  @ApiPropertyOptional() currentDue?: number;
+  @ApiPropertyOptional({ type: [String] }) assignedBranches?: string[];
+  @ApiPropertyOptional() primaryBranchId?: string;
+  @ApiPropertyOptional() emergencyContactName?: string;
+  @ApiPropertyOptional() emergencyContactPhone?: string;
+  @ApiPropertyOptional() department?: string;
+  @ApiPropertyOptional({ type: [String] }) certifications?: string[];
+  @ApiPropertyOptional() contractType?: string;
+  @ApiPropertyOptional() terminationDate?: string;
+}
+
+export class AdminHrStaffListResponseDto {
+  @ApiProperty({ type: [AdminHrStaffDto] }) staff!: AdminHrStaffDto[];
+  @ApiProperty() total!: number;
+}
+
+export class AdminHrStaffRoleDto {
+  @ApiProperty() name!: string;
+  @ApiProperty() role!: string;
+}
+
+export class AdminHrPayrollDto {
+  @ApiProperty() id!: string;
+  @ApiProperty() staffId!: string;
+  @ApiProperty() month!: string;
+  @ApiProperty() amount!: number;
+  @ApiProperty() paidAmount!: number;
+  @ApiProperty() pendingAmount!: number;
+  @ApiProperty() status!: string;
+  @ApiPropertyOptional() paidAt?: string;
+  @ApiPropertyOptional() notes?: string;
+  @ApiPropertyOptional({ type: AdminHrStaffRoleDto }) staff?: AdminHrStaffRoleDto;
+}
+
+export class AdminHrPayrollListResponseDto {
+  @ApiProperty({ type: [AdminHrPayrollDto] }) payrolls!: AdminHrPayrollDto[];
+  @ApiProperty() total!: number;
+}
+
+export class AdminHrSummaryDto {
+  @ApiProperty() totalSalaryThisMonth!: number;
+  @ApiProperty() totalSalaryPaid!: number;
+  @ApiProperty() totalSalaryDue!: number;
+  @ApiProperty() totalAdvanceGiven!: number;
+  @ApiProperty() pendingPaymentsCount!: number;
+  @ApiProperty() totalStaff!: number;
+  @ApiProperty() activeStaff!: number;
+  @ApiProperty() totalPayrollThisMonth!: number;
+  @ApiProperty() paidCount!: number;
+  @ApiProperty() pendingCount!: number;
+}
+
+export class AdminHrLedgerEntryDto {
+  @ApiProperty() id!: string;
+  @ApiProperty() staffId!: string;
+  @ApiProperty() date!: string;
+  @ApiProperty() type!: string;
+  @ApiProperty() credit!: number;
+  @ApiProperty() debit!: number;
+  @ApiProperty() balance!: number;
+  @ApiPropertyOptional() notes?: string;
+  @ApiPropertyOptional() referenceNo?: string;
+  @ApiPropertyOptional() paymentMode?: string;
+  @ApiPropertyOptional() openingBalance?: number;
+}
+
+export class AdminHrStaffPerformanceRecordDto {
+  @ApiProperty() id!: string;
+  @ApiProperty() name!: string;
+  @ApiProperty() role!: string;
+  @ApiProperty() branchName!: string;
+  @ApiProperty() sessionsTaken!: number;
+  @ApiProperty() membersAdded!: number;
+  @ApiProperty() attendancePct!: number;
+  @ApiProperty() rating!: number;
+  @ApiProperty({ enum: ['EXCELLENT', 'AVERAGE', 'POOR'] }) status!: string;
 }

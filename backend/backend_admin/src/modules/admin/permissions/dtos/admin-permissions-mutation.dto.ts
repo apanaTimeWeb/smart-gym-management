@@ -1,57 +1,27 @@
 // RESPONSIBILITY: Validates mutation fields exposed by the Admin permissions frontend contract.
 // FLOW: HTTP request body → AdminPermissionsMutationDto → service business validation → repository mutation.
 
-import { Type } from 'class-transformer';
-import { IsArray, IsBoolean, IsNumber, IsObject, IsOptional, IsString, IsUUID } from 'class-validator';
+import { ApiPropertyOptional } from '@nestjs/swagger';
+import { IsObject, IsOptional, IsString } from 'class-validator';
 
 export class AdminPermissionsMutationDto {
   @IsOptional()
-  @IsUUID()
-  id?: string;
-
-  @IsOptional()
-  @IsObject()
-  roleDefaults?: Record<string, unknown>;
-
-  @IsOptional()
-  @IsObject()
-  gymOverrides?: Record<string, unknown>;
-
-  @IsOptional()
   @IsString()
+  @ApiPropertyOptional()
   role?: string;
 
   @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  permissions?: string[];
-
-  @IsOptional()
-  @Type(() => Number)
-  @IsNumber()
-  gymId?: number;
+  @IsObject()
+  @ApiPropertyOptional()
+  permissions?: Record<string, boolean>;
 
   @IsOptional()
   @IsString()
-  gymName?: string;
+  @ApiPropertyOptional()
+  gymId?: string;
 
   @IsOptional()
   @IsObject()
-  overrides?: Record<string, unknown>;
-
-  @IsOptional()
-  @IsString()
-  key?: string;
-
-  @IsOptional()
-  @IsString()
-  label?: string;
-
-  @IsOptional()
-  @IsString()
-  group?: string;
-
-  @IsOptional()
-  @IsString()
-  description?: string;
+  @ApiPropertyOptional()
+  overrides?: Record<string, boolean>;
 }

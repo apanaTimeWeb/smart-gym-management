@@ -3,22 +3,53 @@ import { ApiProperty } from '@nestjs/swagger';
 
 // FLOW: Repository domain → Campaigns response mapper → ApiResponse<T>.
 
-export class AdminCampaignsResponseDto {
+export class AdminCampaignsAudienceDto {
+  @ApiProperty()
   id!: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: createdAt' })
-  createdAt?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: updatedAt' })
-  updatedAt?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: name' })
-  name?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: description' })
-  description?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: title' })
-  title?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: body' })
-  body?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: type' })
-  type?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: recipients' })
-  recipients?: string[];
+  @ApiProperty()
+  name!: string;
+  @ApiProperty()
+  description!: string;
+}
+
+export class AdminCampaignsTemplateDto {
+  @ApiProperty()
+  id!: string;
+  @ApiProperty()
+  title!: string;
+  @ApiProperty()
+  body!: string;
+  @ApiProperty({ enum: ['FEE_REMINDER', 'OVERDUE', 'RENEWAL', 'CUSTOM'] })
+  type!: string;
+}
+
+export class AdminCampaignsRecipientDto {
+  @ApiProperty()
+  id!: string;
+  @ApiProperty()
+  name!: string;
+  @ApiProperty()
+  phone!: string;
+  @ApiProperty()
+  branchName!: string;
+}
+
+export class AdminCampaignsAudiencesResponseDto {
+  @ApiProperty({ type: [AdminCampaignsAudienceDto] })
+  data!: AdminCampaignsAudienceDto[];
+}
+
+export class AdminCampaignsTemplatesResponseDto {
+  @ApiProperty({ type: [AdminCampaignsTemplateDto] })
+  data!: AdminCampaignsTemplateDto[];
+}
+
+export class AdminCampaignsRecipientsDataDto {
+  @ApiProperty({ type: [AdminCampaignsRecipientDto] })
+  recipients!: AdminCampaignsRecipientDto[];
+}
+
+export class AdminCampaignsRecipientsResponseDto {
+  @ApiProperty({ type: AdminCampaignsRecipientsDataDto })
+  data!: AdminCampaignsRecipientsDataDto;
 }

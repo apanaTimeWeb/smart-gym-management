@@ -1,50 +1,84 @@
 // RESPONSIBILITY: Describes the frontend-consumed response fields for Admin subscriptions.
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 // FLOW: Repository domain → Subscriptions response mapper → ApiResponse<T>.
 
-export class AdminSubscriptionsResponseDto {
-  id!: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: createdAt' })
-  createdAt?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: updatedAt' })
-  updatedAt?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: planId' })
-  planId?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: planName' })
-  planName?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: tier' })
-  tier?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: monthlyPrice' })
-  monthlyPrice?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: annualPrice' })
-  annualPrice?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: billingCycle' })
-  billingCycle?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: status' })
-  status?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: currentPeriodStart' })
-  currentPeriodStart?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: currentPeriodEnd' })
-  currentPeriodEnd?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: nextBillingDate' })
-  nextBillingDate?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: autoRenew' })
-  autoRenew?: boolean;
-  @ApiProperty({ required: false, description: 'Frontend contract field: gymCount' })
-  gymCount?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: memberLimit' })
-  memberLimit?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: staffLimit' })
-  staffLimit?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: storageGb' })
-  storageGb?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: plans' })
-  plans?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: invoices' })
-  invoices?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: paymentMethods' })
-  paymentMethods?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: kpi' })
-  kpi?: Record<string, unknown>;
+export class AdminCurrentSubscriptionDto {
+  @ApiProperty() planId!: string;
+  @ApiProperty() planName!: string;
+  @ApiProperty({ enum: ['starter', 'growth', 'pro', 'enterprise'] }) tier!: string;
+  @ApiProperty() monthlyPrice!: number;
+  @ApiProperty() annualPrice!: number;
+  @ApiProperty({ enum: ['monthly', 'annual'] }) billingCycle!: string;
+  @ApiProperty({ enum: ['active', 'cancelled', 'past_due'] }) status!: string;
+  @ApiProperty() currentPeriodStart!: string;
+  @ApiProperty() currentPeriodEnd!: string;
+  @ApiProperty() nextBillingDate!: string;
+  @ApiProperty() autoRenew!: boolean;
+  @ApiProperty() gymCount!: number;
+  @ApiProperty() memberLimit!: number;
+  @ApiProperty() staffLimit!: number;
+  @ApiProperty() storageGb!: number;
+}
+
+export class AdminSaaSPlanDto {
+  @ApiProperty() id!: string;
+  @ApiProperty() name!: string;
+  @ApiProperty({ enum: ['starter', 'growth', 'pro', 'enterprise'] }) tier!: string;
+  @ApiProperty() monthlyPrice!: number;
+  @ApiProperty() annualPrice!: number;
+  @ApiProperty() gymLimit!: number;
+  @ApiProperty() memberLimit!: number;
+  @ApiProperty() staffLimit!: number;
+  @ApiProperty() storageGb!: number;
+  @ApiProperty({ type: [String] }) features!: string[];
+  @ApiProperty() isPopular!: boolean;
+  @ApiProperty() isCurrent!: boolean;
+}
+
+export class AdminSaaSPlanListResponseDto {
+  @ApiProperty({ type: [AdminSaaSPlanDto] }) data!: AdminSaaSPlanDto[];
+}
+
+export class AdminInvoiceDto {
+  @ApiProperty() id!: string;
+  @ApiProperty() invoiceNo!: string;
+  @ApiProperty() date!: string;
+  @ApiProperty() dueDate!: string;
+  @ApiProperty() amount!: number;
+  @ApiProperty({ enum: ['paid', 'pending', 'failed', 'refunded'] }) status!: string;
+  @ApiProperty() planName!: string;
+  @ApiProperty({ enum: ['monthly', 'annual'] }) billingCycle!: string;
+  @ApiProperty() pdfUrl!: string;
+  @ApiPropertyOptional() taxAmount?: number;
+  @ApiPropertyOptional() gstNumber?: string;
+}
+
+export class AdminInvoiceListResponseDto {
+  @ApiProperty({ type: [AdminInvoiceDto] }) data!: AdminInvoiceDto[];
+}
+
+export class AdminPaymentMethodDto {
+  @ApiProperty() id!: string;
+  @ApiProperty({ enum: ['card', 'upi', 'netbanking'] }) type!: string;
+  @ApiPropertyOptional() last4?: string;
+  @ApiPropertyOptional() brand?: string;
+  @ApiPropertyOptional() upiId?: string;
+  @ApiPropertyOptional() bankName?: string;
+  @ApiPropertyOptional() expiryMonth?: number;
+  @ApiPropertyOptional() expiryYear?: number;
+  @ApiProperty() isDefault!: boolean;
+}
+
+export class AdminPaymentMethodListResponseDto {
+  @ApiProperty({ type: [AdminPaymentMethodDto] }) data!: AdminPaymentMethodDto[];
+}
+
+export class AdminSubscriptionKPIDataDto {
+  @ApiProperty() currentPlan!: string;
+  @ApiProperty() monthlySpend!: number;
+  @ApiProperty() totalInvoices!: number;
+  @ApiProperty() nextBillingAmount!: number;
+  @ApiProperty() daysUntilRenewal!: number;
+  @ApiProperty() savedWithAnnual!: number;
 }

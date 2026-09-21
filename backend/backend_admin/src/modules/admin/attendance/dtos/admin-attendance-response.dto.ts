@@ -1,38 +1,74 @@
 // RESPONSIBILITY: Describes the frontend-consumed response fields for Admin attendance.
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 // FLOW: Repository domain → Attendance response mapper → ApiResponse<T>.
 
-export class AdminAttendanceResponseDto {
+export class AdminAttendanceRecordDto {
+  @ApiProperty()
   id!: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: createdAt' })
-  createdAt?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: updatedAt' })
-  updatedAt?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: memberId' })
-  memberId?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: memberName' })
-  memberName?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: memberPhone' })
-  memberPhone?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: branchId' })
-  branchId?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: branchName' })
-  branchName?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: checkInTime' })
-  checkInTime?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: checkOutTime' })
+  @ApiProperty()
+  memberId!: string;
+  @ApiProperty()
+  memberName!: string;
+  @ApiProperty()
+  memberPhone!: string;
+  @ApiProperty()
+  branchId!: string;
+  @ApiProperty()
+  branchName!: string;
+  @ApiProperty()
+  checkInTime!: string;
+  @ApiPropertyOptional()
   checkOutTime?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: date' })
-  date?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: status' })
-  status?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: planName' })
-  planName?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: trainerId' })
+  @ApiProperty()
+  date!: string;
+  @ApiProperty({ enum: ['present', 'absent', 'late'] })
+  status!: string;
+  @ApiProperty()
+  planName!: string;
+  @ApiPropertyOptional()
   trainerId?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: trainerName' })
+  @ApiPropertyOptional()
   trainerName?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: sessionType' })
+  @ApiPropertyOptional({ enum: ['General', 'PT', 'Class'] })
   sessionType?: string;
+}
+
+export class AdminAttendanceSummaryDto {
+  @ApiProperty()
+  todayTotal!: number;
+  @ApiProperty()
+  todayPresent!: number;
+  @ApiProperty()
+  todayLate!: number;
+  @ApiProperty()
+  weeklyAverage!: number;
+  @ApiProperty()
+  peakHour!: string;
+  @ApiProperty()
+  trendVsLastWeek!: number;
+  @ApiProperty()
+  uniqueMembersThisMonth!: number;
+}
+
+export class AdminAttendanceTrendPointDto {
+  @ApiProperty()
+  date!: string;
+  @ApiProperty()
+  count!: number;
+}
+
+export class AdminAttendanceListResponseDto {
+  @ApiProperty({ type: [AdminAttendanceRecordDto] })
+  data!: AdminAttendanceRecordDto[];
+}
+
+export class AdminAttendanceSummaryResponseDto {
+  @ApiProperty({ type: AdminAttendanceSummaryDto })
+  data!: AdminAttendanceSummaryDto;
+}
+
+export class AdminAttendanceTrendResponseDto {
+  @ApiProperty({ type: [AdminAttendanceTrendPointDto] })
+  data!: AdminAttendanceTrendPointDto[];
 }

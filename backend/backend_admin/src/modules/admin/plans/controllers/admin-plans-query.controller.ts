@@ -10,7 +10,7 @@ import { CoreAdminRole } from '@/core/tenant/core-tenant.constants';
 import { AdminPlansQueryService } from '@/modules/admin/plans/services/admin-plans-query.service';
 import { AdminPlansQueryDto } from '@/modules/admin/plans/dtos/admin-plans-query.dto';
 import { AdminPlansIdDto } from '@/modules/admin/plans/dtos/admin-plans-id.dto';
-import { AdminPlansResponseDto } from '@/modules/admin/plans/dtos/admin-plans-response.dto';
+import { AdminPlanListResponseDto, AdminPlanDto, AdminPlanRevenueListResponseDto } from '@/modules/admin/plans/dtos/admin-plans-response.dto';
 
 @ApiTags('Admin / plans')
 @Controller('admin/plans')
@@ -22,25 +22,25 @@ export class AdminPlansQueryController {
   // SLA: STANDARD
   @Get('fetchAllPlans')
   @ApiOperation({ summary: 'Execute fetchAllPlans' })
-  @ApiResponse({ status: HttpStatus.OK, type: AdminPlansResponseDto })
-  async fetchAllPlans(@Query() query: AdminPlansQueryDto): Promise<unknown> {
-    return this.service.fetchAllPlans(query);
+  @ApiResponse({ status: HttpStatus.OK, type: AdminPlanListResponseDto })
+  async fetchAllPlans(@Query() query: AdminPlansQueryDto): Promise<AdminPlanListResponseDto> {
+    return this.service.fetchAllPlans(query) as unknown as AdminPlanListResponseDto;
   }
 
   // SLA: STANDARD
   @Get('fetchPlanById')
   @ApiOperation({ summary: 'Execute fetchPlanById' })
-  @ApiResponse({ status: HttpStatus.OK, type: AdminPlansResponseDto })
-  async fetchPlanById(@Body() body: AdminPlansIdDto, @Query('id') queryId?: string): Promise<unknown> {
-    return this.service.fetchPlanById(body.id ?? queryId ?? '');
+  @ApiResponse({ status: HttpStatus.OK, type: AdminPlanDto })
+  async fetchPlanById(@Body() body: AdminPlansIdDto, @Query('id') queryId?: string): Promise<AdminPlanDto> {
+    return this.service.fetchPlanById(body.id ?? queryId ?? '') as unknown as AdminPlanDto;
   }
 
   // SLA: STANDARD
   @Get('fetchPlanRevenue')
   @ApiOperation({ summary: 'Execute fetchPlanRevenue' })
-  @ApiResponse({ status: HttpStatus.OK, type: AdminPlansResponseDto })
-  async fetchPlanRevenue(@Query() query: AdminPlansQueryDto): Promise<unknown> {
-    return this.service.fetchPlanRevenue(query);
+  @ApiResponse({ status: HttpStatus.OK, type: AdminPlanRevenueListResponseDto })
+  async fetchPlanRevenue(@Query() query: AdminPlansQueryDto): Promise<AdminPlanRevenueListResponseDto> {
+    return this.service.fetchPlanRevenue(query) as unknown as AdminPlanRevenueListResponseDto;
   }
 
 }

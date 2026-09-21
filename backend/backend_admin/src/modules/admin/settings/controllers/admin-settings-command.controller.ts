@@ -11,6 +11,7 @@ import { CoreIdempotencyService } from '@/core/idempotency/core-idempotency.serv
 import { AdminSettingsCommandService } from '@/modules/admin/settings/services/admin-settings-command.service';
 import { AdminSettingsMutationDto } from '@/modules/admin/settings/dtos/admin-settings-mutation.dto';
 import { AdminSettingsIdDto } from '@/modules/admin/settings/dtos/admin-settings-id.dto';
+import { AdminSettingsResponseDto } from '@/modules/admin/settings/dtos/admin-settings-response.dto';
 
 @ApiTags('Admin / settings')
 @UseGuards(CoreJwtAuthGuard, CoreRolesGuard)
@@ -22,33 +23,33 @@ export class AdminSettingsCommandController {
   // SLA: STANDARD
   @Post('updateSettings')
   @ApiOperation({ summary: 'Execute updateSettings' })
-  @ApiResponse({ status: HttpStatus.OK })
-  async updateSettings(@Body() dto: AdminSettingsMutationDto): Promise<unknown> {
-    return this.service.updateSettings(dto as unknown as Record<string, unknown>);
+  @ApiResponse({ status: HttpStatus.OK, type: AdminSettingsResponseDto })
+  async updateSettings(@Body() dto: AdminSettingsMutationDto): Promise<AdminSettingsResponseDto> {
+    return this.service.updateSettings(dto) as Promise<AdminSettingsResponseDto>;
   }
 
   // SLA: STANDARD
   @Post('2fa/enable')
   @ApiOperation({ summary: 'Execute enable2fa' })
   @ApiResponse({ status: HttpStatus.OK })
-  async enableTwoFactor(): Promise<unknown> {
-    return this.service.enableTwoFactor();
+  async enableTwoFactor(): Promise<void> {
+    return this.service.enableTwoFactor() as Promise<void>;
   }
 
   // SLA: STANDARD
   @Post('2fa/disable')
   @ApiOperation({ summary: 'Execute disable2fa' })
   @ApiResponse({ status: HttpStatus.OK })
-  async disableTwoFactor(): Promise<unknown> {
-    return this.service.disableTwoFactor();
+  async disableTwoFactor(): Promise<void> {
+    return this.service.disableTwoFactor() as Promise<void>;
   }
 
   // SLA: STANDARD
   @Post('2fa/verify')
   @ApiOperation({ summary: 'Execute verify2fa' })
   @ApiResponse({ status: HttpStatus.OK })
-  async verifyTwoFactor(): Promise<unknown> {
-    return this.service.verifyTwoFactor();
+  async verifyTwoFactor(): Promise<void> {
+    return this.service.verifyTwoFactor() as Promise<void>;
   }
 
 }

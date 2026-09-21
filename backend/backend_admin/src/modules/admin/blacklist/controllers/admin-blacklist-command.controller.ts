@@ -11,6 +11,7 @@ import { CoreIdempotencyService } from '@/core/idempotency/core-idempotency.serv
 import { AdminBlacklistCommandService } from '@/modules/admin/blacklist/services/admin-blacklist-command.service';
 import { AdminBlacklistIdDto } from '@/modules/admin/blacklist/dtos/admin-blacklist-id.dto';
 import { AdminBlacklistMutationDto } from '@/modules/admin/blacklist/dtos/admin-blacklist-mutation.dto';
+import { AdminBlacklistedMemberDto } from '@/modules/admin/blacklist/dtos/admin-blacklist-response.dto';
 
 @ApiTags('Admin / blacklist')
 @UseGuards(CoreJwtAuthGuard, CoreRolesGuard)
@@ -22,33 +23,33 @@ export class AdminBlacklistCommandController {
   // SLA: STANDARD
   @Post('addToBlacklist')
   @ApiOperation({ summary: 'Execute addToBlacklist' })
-  @ApiResponse({ status: HttpStatus.OK })
-  async createRecord(@Body() dto: AdminBlacklistMutationDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<unknown> {
-    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.createRecord(dto as unknown as Record<string, unknown>));
+  @ApiResponse({ status: HttpStatus.OK, type: AdminBlacklistedMemberDto })
+  async createRecord(@Body() dto: AdminBlacklistMutationDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<AdminBlacklistedMemberDto> {
+    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.createRecord(dto)) as Promise<AdminBlacklistedMemberDto>;
   }
 
   // SLA: STANDARD
   @Delete('removeFromBlacklist')
   @ApiOperation({ summary: 'Execute removeFromBlacklist' })
   @ApiResponse({ status: HttpStatus.OK })
-  async markAsDeleted(@Body() dto: AdminBlacklistIdDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<unknown> {
-    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.markAsDeleted(dto.id));
+  async markAsDeleted(@Body() dto: AdminBlacklistIdDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<void> {
+    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.markAsDeleted(dto.id)) as Promise<void>;
   }
 
   // SLA: STANDARD
   @Post('toggleBlacklist')
   @ApiOperation({ summary: 'Execute toggleBlacklist' })
-  @ApiResponse({ status: HttpStatus.OK })
-  async toggleActiveById(@Body() dto: AdminBlacklistIdDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<unknown> {
-    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.toggleActiveById(dto.id));
+  @ApiResponse({ status: HttpStatus.OK, type: AdminBlacklistedMemberDto })
+  async toggleActiveById(@Body() dto: AdminBlacklistIdDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<AdminBlacklistedMemberDto> {
+    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.toggleActiveById(dto.id)) as Promise<AdminBlacklistedMemberDto>;
   }
 
   // SLA: STANDARD
   @Post('propagateToAllBranches')
   @ApiOperation({ summary: 'Execute propagateToAllBranches' })
-  @ApiResponse({ status: HttpStatus.OK })
-  async propagateById(@Body() dto: AdminBlacklistIdDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<unknown> {
-    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.propagateById(dto.id));
+  @ApiResponse({ status: HttpStatus.OK, type: AdminBlacklistedMemberDto })
+  async propagateById(@Body() dto: AdminBlacklistIdDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<AdminBlacklistedMemberDto> {
+    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.propagateById(dto.id)) as Promise<AdminBlacklistedMemberDto>;
   }
 
 }

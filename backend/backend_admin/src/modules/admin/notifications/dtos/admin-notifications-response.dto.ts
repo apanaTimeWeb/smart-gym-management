@@ -1,24 +1,28 @@
 // RESPONSIBILITY: Describes the frontend-consumed response fields for Admin notifications.
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 // FLOW: Repository domain → Notifications response mapper → ApiResponse<T>.
 
-export class AdminNotificationsResponseDto {
+export class AdminNotificationDto {
+  @ApiProperty()
   id!: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: createdAt' })
-  createdAt?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: updatedAt' })
-  updatedAt?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: title' })
-  title?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: body' })
-  body?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: severity' })
-  severity?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: read' })
-  read?: boolean;
-  @ApiProperty({ required: false, description: 'Frontend contract field: branchId' })
-  branchId?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: branchName' })
+  @ApiProperty()
+  title!: string;
+  @ApiProperty()
+  body!: string;
+  @ApiProperty({ enum: ['INFO', 'WARNING', 'CRITICAL'] })
+  severity!: string;
+  @ApiProperty()
+  read!: boolean;
+  @ApiProperty()
+  createdAt!: string;
+  @ApiPropertyOptional()
+  branchId?: string;
+  @ApiPropertyOptional()
   branchName?: string;
+}
+
+export class AdminNotificationListResponseDto {
+  @ApiProperty({ type: [AdminNotificationDto] })
+  data!: AdminNotificationDto[];
 }

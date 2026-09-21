@@ -10,6 +10,7 @@ import { CoreAdminRole } from '@/core/tenant/core-tenant.constants';
 import { CoreIdempotencyService } from '@/core/idempotency/core-idempotency.service';
 import { AdminProfileCommandService } from '@/modules/admin/profile/services/admin-profile-command.service';
 import { AdminProfileMutationDto } from '@/modules/admin/profile/dtos/admin-profile-mutation.dto';
+import { AdminProfileDto } from '@/modules/admin/profile/dtos/admin-profile-response.dto';
 
 @ApiTags('Admin / profile')
 @UseGuards(CoreJwtAuthGuard, CoreRolesGuard)
@@ -21,20 +22,19 @@ export class AdminProfileCommandController {
   // SLA: STANDARD
   @Post('updateProfile')
   @ApiOperation({ summary: 'Execute updateProfile' })
-  @ApiResponse({ status: HttpStatus.OK })
-  async updateProfile(@Body() dto: AdminProfileMutationDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<unknown> {
-    return idempotencyKey
-      ? this.idempotency.executeOnce(idempotencyKey, async () => this.service.updateProfile(dto as unknown as Record<string, unknown>))
-      : this.service.updateProfile(dto as unknown as Record<string, unknown>);
+  @ApiResponse({ status: HttpStatus.OK, type: AdminProfileDto })
+  async updateProfile(@Body() dto: AdminProfileMutationDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<AdminProfileDto> {
+    return this.idempotency.executeOnce(idempotencyKey, async () => this.service.updateProfile(dto as any)) as Promise<AdminProfileDto>;
   }
 
   // SLA: STANDARD
   @Post('updatePassword')
   @ApiOperation({ summary: 'Execute updatePassword' })
   @ApiResponse({ status: HttpStatus.OK })
-  async updatePassword(@Body() body: AdminProfileMutationDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<unknown> {
+  async updatePassword(@Body() body: AdminProfileMutationDto, @Headers('Idempotency-Key') idempotencyKey?: string): Promise<void> {
     const newPassword = String(body.newPassword ?? body.password ?? '');
-    const operation = async (): Promise<null> => this.service.updatePassword(newPassword);
-    return idempotencyKey ? this.idempotency.executeOnce(idempotencyKey, operation) : operation();
+    return this.idempotency.executeOnce(idempotencyKey, async () => {
+        await this.service.updatePassword(newPassword);
+    }) as Promise<void>;
   }
 }

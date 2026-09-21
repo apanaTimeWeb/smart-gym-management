@@ -9,7 +9,7 @@ import { CoreRolesGuard } from '@/core/auth/core-roles.guard';
 import { CoreAdminRole } from '@/core/tenant/core-tenant.constants';
 import { AdminNotificationsQueryService } from '@/modules/admin/notifications/services/admin-notifications-query.service';
 import { AdminNotificationsQueryDto } from '@/modules/admin/notifications/dtos/admin-notifications-query.dto';
-import { AdminNotificationsResponseDto } from '@/modules/admin/notifications/dtos/admin-notifications-response.dto';
+import { AdminNotificationListResponseDto } from '@/modules/admin/notifications/dtos/admin-notifications-response.dto';
 
 @ApiTags('Admin / notifications')
 @Controller('admin/notifications')
@@ -21,9 +21,9 @@ export class AdminNotificationsQueryController {
   // SLA: STANDARD
   @Get()
   @ApiOperation({ summary: 'Execute listNotifications' })
-  @ApiResponse({ status: HttpStatus.OK, type: AdminNotificationsResponseDto })
-  async listNotifications(@Query() query: AdminNotificationsQueryDto): Promise<unknown> {
-    return this.service.listNotifications(query);
+  @ApiResponse({ status: HttpStatus.OK, type: AdminNotificationListResponseDto })
+  async listNotifications(@Query() query: AdminNotificationsQueryDto): Promise<AdminNotificationListResponseDto> {
+    return this.service.listNotifications(query) as unknown as AdminNotificationListResponseDto;
   }
 
 }

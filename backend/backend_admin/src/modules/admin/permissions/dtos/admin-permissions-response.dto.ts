@@ -3,32 +3,27 @@ import { ApiProperty } from '@nestjs/swagger';
 
 // FLOW: Repository domain → Permissions response mapper → ApiResponse<T>.
 
-export class AdminPermissionsResponseDto {
-  id!: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: createdAt' })
-  createdAt?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: updatedAt' })
-  updatedAt?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: roleDefaults' })
-  roleDefaults?: Record<string, unknown>;
-  @ApiProperty({ required: false, description: 'Frontend contract field: gymOverrides' })
-  gymOverrides?: Record<string, unknown>;
-  @ApiProperty({ required: false, description: 'Frontend contract field: role' })
-  role?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: permissions' })
-  permissions?: string[];
-  @ApiProperty({ required: false, description: 'Frontend contract field: gymId' })
-  gymId?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: gymName' })
-  gymName?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: overrides' })
-  overrides?: Record<string, unknown>;
-  @ApiProperty({ required: false, description: 'Frontend contract field: key' })
-  key?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: label' })
-  label?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: group' })
-  group?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: description' })
-  description?: string;
+export class AdminRolePermissionsDto {
+  @ApiProperty({ enum: ['manager', 'trainer'] })
+  role!: string;
+  @ApiProperty({ type: Object, additionalProperties: { type: 'boolean' } })
+  permissions!: Record<string, boolean>;
+}
+
+export class AdminGymPermissionOverrideDto {
+  @ApiProperty()
+  gymId!: string;
+  @ApiProperty()
+  gymName!: string;
+  @ApiProperty({ enum: ['manager', 'trainer'] })
+  role!: string;
+  @ApiProperty({ type: Object, additionalProperties: { type: 'boolean' } })
+  overrides!: Record<string, boolean>;
+}
+
+export class AdminPermissionsDataDto {
+  @ApiProperty({ type: [AdminRolePermissionsDto] })
+  roleDefaults!: AdminRolePermissionsDto[];
+  @ApiProperty({ type: [AdminGymPermissionOverrideDto] })
+  gymOverrides!: AdminGymPermissionOverrideDto[];
 }

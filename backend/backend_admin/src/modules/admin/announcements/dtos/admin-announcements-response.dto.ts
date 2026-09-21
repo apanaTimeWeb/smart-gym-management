@@ -1,42 +1,70 @@
 // RESPONSIBILITY: Describes the frontend-consumed response fields for Admin announcements.
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 // FLOW: Repository domain → Announcements response mapper → ApiResponse<T>.
 
-export class AdminAnnouncementsResponseDto {
+export class AdminAnnouncementViewsByBranchDto {
+  @ApiProperty()
+  branchId!: string;
+  @ApiProperty()
+  count!: number;
+}
+
+export class AdminAnnouncementDto {
+  @ApiProperty()
   id!: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: createdAt' })
-  createdAt?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: updatedAt' })
-  updatedAt?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: title' })
-  title?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: body' })
-  body?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: priority' })
-  priority?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: status' })
-  status?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: audience' })
-  audience?: string[];
-  @ApiProperty({ required: false, description: 'Frontend contract field: gymIds' })
-  gymIds?: string[];
-  @ApiProperty({ required: false, description: 'Frontend contract field: gymNames' })
-  gymNames?: string[];
-  @ApiProperty({ required: false, description: 'Frontend contract field: publishedAt' })
-  publishedAt?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: expiresAt' })
-  expiresAt?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: createdBy' })
-  createdBy?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: viewCount' })
-  viewCount?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: isPinned' })
-  isPinned?: boolean;
-  @ApiProperty({ required: false, description: 'Frontend contract field: deliveryStatus' })
+  @ApiProperty()
+  title!: string;
+  @ApiProperty()
+  body!: string;
+  @ApiProperty({ enum: ['high', 'medium', 'low'] })
+  priority!: string;
+  @ApiProperty({ enum: ['active', 'scheduled', 'expired', 'draft'] })
+  status!: string;
+  @ApiProperty({ type: [String], enum: ['all', 'members', 'managers', 'trainers', 'staff'] })
+  audience!: string[];
+  @ApiProperty({ type: [String] })
+  gymIds!: string[];
+  @ApiProperty({ type: [String] })
+  gymNames!: string[];
+  @ApiProperty()
+  publishedAt!: string;
+  @ApiProperty()
+  expiresAt!: string;
+  @ApiProperty()
+  createdBy!: string;
+  @ApiProperty()
+  createdAt!: string;
+  @ApiProperty()
+  viewCount!: number;
+  @ApiPropertyOptional({ type: [AdminAnnouncementViewsByBranchDto] })
+  viewsByBranch?: AdminAnnouncementViewsByBranchDto[];
+  @ApiProperty()
+  isPinned!: boolean;
+  @ApiPropertyOptional()
   deliveryStatus?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: pushNotificationSent' })
+  @ApiPropertyOptional()
   pushNotificationSent?: boolean;
-  @ApiProperty({ required: false, description: 'Frontend contract field: acknowledgedCount' })
+  @ApiPropertyOptional()
   acknowledgedCount?: number;
+}
+
+export class AdminAnnouncementListResponseDto {
+  @ApiProperty({ type: [AdminAnnouncementDto] })
+  data!: AdminAnnouncementDto[];
+}
+
+export class AdminAnnouncementKPIDataDto {
+  @ApiProperty()
+  total!: number;
+  @ApiProperty()
+  active!: number;
+  @ApiProperty()
+  scheduled!: number;
+  @ApiProperty()
+  expired!: number;
+  @ApiProperty()
+  totalViews!: number;
+  @ApiProperty()
+  pinned!: number;
 }

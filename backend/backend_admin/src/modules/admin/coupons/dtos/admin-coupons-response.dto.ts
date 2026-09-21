@@ -3,36 +3,51 @@ import { ApiProperty } from '@nestjs/swagger';
 
 // FLOW: Repository domain → Coupons response mapper → ApiResponse<T>.
 
-export class AdminCouponsResponseDto {
+export class AdminCouponDto {
+  @ApiProperty()
   id!: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: createdAt' })
-  createdAt?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: updatedAt' })
-  updatedAt?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: code' })
-  code?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: description' })
-  description?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: type' })
-  type?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: value' })
-  value?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: minOrderAmount' })
-  minOrderAmount?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: maxDiscount' })
-  maxDiscount?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: usageLimit' })
-  usageLimit?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: usedCount' })
-  usedCount?: number;
-  @ApiProperty({ required: false, description: 'Frontend contract field: assignedGyms' })
-  assignedGyms?: string[];
-  @ApiProperty({ required: false, description: 'Frontend contract field: assignedGymNames' })
-  assignedGymNames?: string[];
-  @ApiProperty({ required: false, description: 'Frontend contract field: validFrom' })
-  validFrom?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: validUntil' })
-  validUntil?: string;
-  @ApiProperty({ required: false, description: 'Frontend contract field: status' })
-  status?: string;
+  @ApiProperty()
+  code!: string;
+  @ApiProperty()
+  description!: string;
+  @ApiProperty({ enum: ['percentage', 'flat'] })
+  type!: string;
+  @ApiProperty()
+  value!: number;
+  @ApiProperty()
+  minOrderAmount!: number;
+  @ApiProperty()
+  maxDiscount!: number;
+  @ApiProperty()
+  usageLimit!: number;
+  @ApiProperty()
+  usedCount!: number;
+  @ApiProperty({ type: [String] })
+  assignedGyms!: string[];
+  @ApiProperty({ type: [String] })
+  assignedGymNames!: string[];
+  @ApiProperty()
+  validFrom!: string;
+  @ApiProperty()
+  validUntil!: string;
+  @ApiProperty({ enum: ['active', 'inactive', 'expired'] })
+  status!: string;
+  @ApiProperty()
+  createdAt!: string;
+}
+
+export class AdminCouponListResponseDto {
+  @ApiProperty({ type: [AdminCouponDto] })
+  data!: AdminCouponDto[];
+}
+
+export class AdminCouponsKPIDataDto {
+  @ApiProperty()
+  totalCoupons!: number;
+  @ApiProperty()
+  activeCoupons!: number;
+  @ApiProperty()
+  totalRedeemed!: number;
+  @ApiProperty()
+  revenueLost!: number;
 }

@@ -9,7 +9,7 @@ import { CoreRolesGuard } from '@/core/auth/core-roles.guard';
 import { CoreAdminRole } from '@/core/tenant/core-tenant.constants';
 import { AdminBlacklistQueryService } from '@/modules/admin/blacklist/services/admin-blacklist-query.service';
 import { AdminBlacklistQueryDto } from '@/modules/admin/blacklist/dtos/admin-blacklist-query.dto';
-import { AdminBlacklistResponseDto } from '@/modules/admin/blacklist/dtos/admin-blacklist-response.dto';
+import { AdminBlacklistListResponseDto, AdminBlacklistKPIDataDto } from '@/modules/admin/blacklist/dtos/admin-blacklist-response.dto';
 
 @ApiTags('Admin / blacklist')
 @Controller('admin/blacklist')
@@ -21,17 +21,17 @@ export class AdminBlacklistQueryController {
   // SLA: STANDARD
   @Get('fetchBlacklist')
   @ApiOperation({ summary: 'Execute fetchBlacklist' })
-  @ApiResponse({ status: HttpStatus.OK, type: AdminBlacklistResponseDto })
-  async fetchBlacklist(@Query() query: AdminBlacklistQueryDto): Promise<unknown> {
-    return this.service.fetchBlacklist(query);
+  @ApiResponse({ status: HttpStatus.OK, type: AdminBlacklistListResponseDto })
+  async fetchBlacklist(@Query() query: AdminBlacklistQueryDto): Promise<AdminBlacklistListResponseDto> {
+    return this.service.fetchBlacklist(query) as unknown as AdminBlacklistListResponseDto;
   }
 
   // SLA: STANDARD
   @Get('fetchKPIs')
   @ApiOperation({ summary: 'Execute fetchKPIs' })
-  @ApiResponse({ status: HttpStatus.OK, type: AdminBlacklistResponseDto })
-  async fetchKPIs(@Query() query: AdminBlacklistQueryDto): Promise<unknown> {
-    return this.service.fetchKPIs(query);
+  @ApiResponse({ status: HttpStatus.OK, type: AdminBlacklistKPIDataDto })
+  async fetchKPIs(@Query() query: AdminBlacklistQueryDto): Promise<AdminBlacklistKPIDataDto> {
+    return this.service.fetchKPIs(query) as unknown as AdminBlacklistKPIDataDto;
   }
 
 }

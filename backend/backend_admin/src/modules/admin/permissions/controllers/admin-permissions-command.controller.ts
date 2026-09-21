@@ -11,6 +11,7 @@ import { CoreIdempotencyService } from '@/core/idempotency/core-idempotency.serv
 import { AdminPermissionsCommandService } from '@/modules/admin/permissions/services/admin-permissions-command.service';
 import { AdminPermissionsMutationDto } from '@/modules/admin/permissions/dtos/admin-permissions-mutation.dto';
 import { AdminPermissionsIdDto } from '@/modules/admin/permissions/dtos/admin-permissions-id.dto';
+import { AdminPermissionsDataDto } from '@/modules/admin/permissions/dtos/admin-permissions-response.dto';
 
 @ApiTags('Admin / permissions')
 @UseGuards(CoreJwtAuthGuard, CoreRolesGuard)
@@ -22,17 +23,17 @@ export class AdminPermissionsCommandController {
   // SLA: STANDARD
   @Post('updateRolePermissions')
   @ApiOperation({ summary: 'Execute updateRolePermissions' })
-  @ApiResponse({ status: HttpStatus.OK })
-  async updateRolePermissions(@Body() dto: AdminPermissionsMutationDto): Promise<unknown> {
-    return this.service.updateRolePermissions(String(dto.role ?? ''), (dto.permissions ?? {}) as Record<string, boolean>);
+  @ApiResponse({ status: HttpStatus.OK, type: AdminPermissionsDataDto })
+  async updateRolePermissions(@Body() dto: AdminPermissionsMutationDto): Promise<AdminPermissionsDataDto> {
+    return this.service.updateRolePermissions(dto.role ?? '', dto.permissions ?? {}) as unknown as Promise<AdminPermissionsDataDto>;
   }
 
   // SLA: STANDARD
   @Post('updateGymOverride')
   @ApiOperation({ summary: 'Execute updateGymOverride' })
-  @ApiResponse({ status: HttpStatus.OK })
-  async updateGymOverride(@Body() dto: AdminPermissionsMutationDto): Promise<unknown> {
-    return this.service.updateGymOverride(String(dto.gymId ?? ''), String(dto.role ?? ''), (dto.overrides ?? {}) as Record<string, boolean>);
+  @ApiResponse({ status: HttpStatus.OK, type: AdminPermissionsDataDto })
+  async updateGymOverride(@Body() dto: AdminPermissionsMutationDto): Promise<AdminPermissionsDataDto> {
+    return this.service.updateGymOverride(dto.gymId ?? '', dto.role ?? '', dto.overrides ?? {}) as unknown as Promise<AdminPermissionsDataDto>;
   }
 
 }
