@@ -9,6 +9,8 @@ import { SuperadminRole } from '@/core/auth/auth.types';
 import { MessagingQueryDto } from '@/modules/superadmin/messaging/dtos/messaging-query.dto';
 import { MessagingListService } from '@/modules/superadmin/messaging/services/messaging-list.service';
 import { MessagingFindService } from '@/modules/superadmin/messaging/services/messaging-find.service';
+import { MessagingResponseDto } from '@/modules/superadmin/messaging/responses/messaging-response.dto';
+import { ApiResponse } from '@nestjs/swagger';
 
 @ApiTags('messaging')
 @Controller('/superadmin/messaging')
@@ -19,9 +21,10 @@ export class MessagingQueryController {
   /** Returns a paginated messaging list. */
   // SLA: STANDARD
   @Get()
-  async findAll(@Query() query: MessagingQueryDto): Promise<unknown> { return await this.listService.findMessagingPage(query); }
+  async findAll(@Query() query: MessagingQueryDto): Promise<{ data: MessagingResponseDto[]; meta: any }> { return (await this.listService.findMessagingPage(query)) as any; }
   /** Returns one messaging record. */
   // SLA: FAST
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<unknown> { return await this.findService.findMessagingById(id); }
+  @ApiResponse({ type: MessagingResponseDto })
+  async findOne(@Param('id') id: string): Promise<MessagingResponseDto> { return (await this.findService.findMessagingById(id)) as unknown as MessagingResponseDto; }
 }

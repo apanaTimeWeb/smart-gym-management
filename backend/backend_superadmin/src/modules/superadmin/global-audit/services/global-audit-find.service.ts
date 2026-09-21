@@ -3,10 +3,10 @@
 import { Injectable } from '@nestjs/common';
 import { GlobalAuditRepository } from '@/modules/superadmin/global-audit/global-audit.repository';
 import { GlobalAuditMapper } from '@/modules/superadmin/global-audit/global-audit.mapper';
-import type { GlobalAuditDomainModel } from '@/modules/superadmin/global-audit/types/global-audit.interfaces';
+import { GlobalAuditResponseDto } from '@/modules/superadmin/global-audit/responses/global-audit-response.dto';
 @Injectable()
 export class GlobalAuditFindService {
   constructor(private readonly repository: GlobalAuditRepository) {}
   /** Retrieves one active global-audit record by UUID. */
-  async findGlobalAuditById(id: string): Promise<GlobalAuditDomainModel> { return GlobalAuditMapper.toDomain(await this.repository.findByIdOrThrow(id)); }
+  async findGlobalAuditById(id: string): Promise<GlobalAuditResponseDto> { return GlobalAuditMapper.toResponse(GlobalAuditMapper.toDomain(await this.repository.findByIdOrThrow(id))); }
 }

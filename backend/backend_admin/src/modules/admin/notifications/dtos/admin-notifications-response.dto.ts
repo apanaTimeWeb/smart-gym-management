@@ -21,8 +21,3 @@ export class AdminNotificationDto {
   @ApiPropertyOptional()
   branchName?: string;
 }
-
-export class AdminNotificationListResponseDto {
-  @ApiProperty({ type: [AdminNotificationDto] })
-  data!: AdminNotificationDto[];
-}

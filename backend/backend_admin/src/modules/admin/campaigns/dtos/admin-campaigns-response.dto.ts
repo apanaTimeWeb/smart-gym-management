@@ -34,22 +34,9 @@ export class AdminCampaignsRecipientDto {
   branchName!: string;
 }
 
-export class AdminCampaignsAudiencesResponseDto {
-  @ApiProperty({ type: [AdminCampaignsAudienceDto] })
-  data!: AdminCampaignsAudienceDto[];
-}
-
-export class AdminCampaignsTemplatesResponseDto {
-  @ApiProperty({ type: [AdminCampaignsTemplateDto] })
-  data!: AdminCampaignsTemplateDto[];
-}
-
 export class AdminCampaignsRecipientsDataDto {
   @ApiProperty({ type: [AdminCampaignsRecipientDto] })
   recipients!: AdminCampaignsRecipientDto[];
 }
 
-export class AdminCampaignsRecipientsResponseDto {
-  @ApiProperty({ type: AdminCampaignsRecipientsDataDto })
-  data!: AdminCampaignsRecipientsDataDto;
-}
+

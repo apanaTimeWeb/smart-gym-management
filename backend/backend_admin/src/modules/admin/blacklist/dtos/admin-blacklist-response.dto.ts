@@ -43,10 +43,6 @@ export class AdminBlacklistedMemberDto {
   history?: AdminBlacklistHistoryDto[];
 }
 
-export class AdminBlacklistListResponseDto {
-  @ApiProperty({ type: [AdminBlacklistedMemberDto] })
-  data!: AdminBlacklistedMemberDto[];
-}
 
 export class AdminBlacklistKPIDataDto {
   @ApiProperty()

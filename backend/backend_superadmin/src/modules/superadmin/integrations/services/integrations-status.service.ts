@@ -3,10 +3,10 @@
 import { Injectable } from '@nestjs/common';
 import { IntegrationsRepository } from '@/modules/superadmin/integrations/integrations.repository';
 import { IntegrationsMapper } from '@/modules/superadmin/integrations/integrations.mapper';
-import type { IntegrationsDomainModel } from '@/modules/superadmin/integrations/types/integrations.interfaces';
+import { IntegrationsResponseDto } from '@/modules/superadmin/integrations/responses/integrations-response.dto';
 @Injectable()
 export class IntegrationsStatusService {
   constructor(private readonly repository: IntegrationsRepository) {}
   /** Changes a status value after controller-level role authorization. */
-  async changeIntegrationsStatus(id: string, status: string): Promise<IntegrationsDomainModel> { return IntegrationsMapper.toDomain(await this.repository.updateIntegrationsById(id, { status })); }
+  async changeIntegrationsStatus(id: string, status: string): Promise<IntegrationsResponseDto> { return IntegrationsMapper.toResponse(IntegrationsMapper.toDomain(await this.repository.updateIntegrationsById(id, { status: status as any }))); }
 }

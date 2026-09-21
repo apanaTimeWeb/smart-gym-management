@@ -14,6 +14,8 @@ import { BroadcastsUpdateService } from '@/modules/superadmin/broadcasts/service
 import { BroadcastsUpdateDto } from '@/modules/superadmin/broadcasts/dtos/broadcasts-update.dto';
 import { BroadcastsDeleteService } from '@/modules/superadmin/broadcasts/services/broadcasts-delete.service';
 import { BroadcastsStatusService } from '@/modules/superadmin/broadcasts/services/broadcasts-status.service';
+import { BroadcastsResponseDto } from '@/modules/superadmin/broadcasts/responses/broadcasts-response.dto';
+import { ApiResponse } from '@nestjs/swagger';
 
 @ApiTags('broadcasts')
 @Controller('/superadmin/broadcasts')
@@ -28,14 +30,16 @@ export class BroadcastsCommandController {
     @HttpCode(HttpStatus.CREATED)
     @RequireIdempotencyKey()
   @UseGuards(RateLimitGuard)
-    async create(@Body() body: BroadcastsCreateDto): Promise<unknown> { return this.createService.createBroadcasts(body); }
+    @ApiResponse({ type: BroadcastsResponseDto })
+    async create(@Body() body: BroadcastsCreateDto): Promise<BroadcastsResponseDto> { return this.createService.createBroadcasts(body); }
 
   /** Handles the update mutation for the feature. */
   @ApiOperation({ summary: 'update broadcasts' })
   @Patch(':id')
     @RequireIdempotencyKey()
   @UseGuards(RateLimitGuard)
-    async update(@Param('id') id: string, @Body() body: BroadcastsUpdateDto): Promise<unknown> { return this.updateService.updateBroadcasts(id, body); }
+    @ApiResponse({ type: BroadcastsResponseDto })
+    async update(@Param('id') id: string, @Body() body: BroadcastsUpdateDto): Promise<BroadcastsResponseDto> { return this.updateService.updateBroadcasts(id, body); }
 
   /** Handles the remove mutation for the feature. */
   @ApiOperation({ summary: 'remove broadcasts' })
@@ -49,6 +53,7 @@ export class BroadcastsCommandController {
   @ApiOperation({ summary: 'changeStatus broadcasts' })
   @Patch(':id/status')
     @UseGuards(RateLimitGuard)
-    async changeStatus(@Param('id') id: string, @Body() body: { status: string }): Promise<unknown> { return this.statusService.changeBroadcastsStatus(id, body.status); }
+    @ApiResponse({ type: BroadcastsResponseDto })
+    async changeStatus(@Param('id') id: string, @Body() body: { status: string }): Promise<BroadcastsResponseDto> { return this.statusService.changeBroadcastsStatus(id, body.status); }
 
 }

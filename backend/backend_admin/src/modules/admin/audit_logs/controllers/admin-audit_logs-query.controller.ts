@@ -9,7 +9,7 @@ import { CoreRolesGuard } from '@/core/auth/core-roles.guard';
 import { CoreAdminRole } from '@/core/tenant/core-tenant.constants';
 import { AdminAuditLogsQueryService } from '@/modules/admin/audit_logs/services/admin-audit_logs-query.service';
 import { AdminAuditLogsQueryDto } from '@/modules/admin/audit_logs/dtos/admin-audit_logs-query.dto';
-import { AdminAuditLogsKpiResponseDto, AdminAuditLogListResponseDto } from '@/modules/admin/audit_logs/dtos/admin-audit_logs-response.dto';
+import { AdminAuditLogsKpiDto, AdminAuditLogDto } from '@/modules/admin/audit_logs/dtos/admin-audit_logs-response.dto';
 
 @ApiTags('Admin / audit_logs')
 @Controller('admin/audit_logs')
@@ -21,17 +21,17 @@ export class AdminAuditLogsQueryController {
   // SLA: STANDARD
   @Get('fetchLogs')
   @ApiOperation({ summary: 'Execute fetchLogs' })
-  @ApiResponse({ status: HttpStatus.OK, type: AdminAuditLogListResponseDto })
-  async fetchLogs(@Query() query: AdminAuditLogsQueryDto): Promise<AdminAuditLogListResponseDto> {
-    return this.service.fetchLogs(query) as unknown as AdminAuditLogListResponseDto;
+  @ApiResponse({ status: HttpStatus.OK, type: [AdminAuditLogDto] })
+  async fetchLogs(@Query() query: AdminAuditLogsQueryDto): Promise<AdminAuditLogDto[]> {
+    return this.service.fetchLogs(query);
   }
 
   // SLA: STANDARD
   @Get('fetchKPIs')
   @ApiOperation({ summary: 'Execute fetchKPIs' })
-  @ApiResponse({ status: HttpStatus.OK, type: AdminAuditLogsKpiResponseDto })
-  async fetchKPIs(@Query() query: AdminAuditLogsQueryDto): Promise<AdminAuditLogsKpiResponseDto> {
-    return this.service.fetchKPIs(query) as unknown as AdminAuditLogsKpiResponseDto;
+  @ApiResponse({ status: HttpStatus.OK, type: AdminAuditLogsKpiDto })
+  async fetchKPIs(@Query() query: AdminAuditLogsQueryDto): Promise<AdminAuditLogsKpiDto> {
+    return this.service.fetchKPIs(query);
   }
 
 }

@@ -9,7 +9,7 @@ import { CoreRolesGuard } from '@/core/auth/core-roles.guard';
 import { CoreAdminRole } from '@/core/tenant/core-tenant.constants';
 import { AdminPayoutsQueryService } from '@/modules/admin/payouts/services/admin-payouts-query.service';
 import { AdminPayoutsQueryDto } from '@/modules/admin/payouts/dtos/admin-payouts-query.dto';
-import { AdminGymPayoutListResponseDto, AdminPnLEntryListResponseDto, AdminPayoutsKPIDataDto } from '@/modules/admin/payouts/dtos/admin-payouts-response.dto';
+import { AdminGymPayoutDto, AdminPnLEntryDto, AdminPayoutsKPIDataDto } from '@/modules/admin/payouts/dtos/admin-payouts-response.dto';
 
 @ApiTags('Admin / payouts')
 @Controller('admin/payouts')
@@ -21,17 +21,17 @@ export class AdminPayoutsQueryController {
   // SLA: STANDARD
   @Get('fetchPayouts')
   @ApiOperation({ summary: 'Execute fetchPayouts' })
-  @ApiResponse({ status: HttpStatus.OK, type: AdminGymPayoutListResponseDto })
-  async fetchPayouts(@Query() query: AdminPayoutsQueryDto): Promise<AdminGymPayoutListResponseDto> {
-    return this.service.fetchPayouts(query) as unknown as AdminGymPayoutListResponseDto;
+  @ApiResponse({ status: HttpStatus.OK, type: [AdminGymPayoutDto] })
+  async fetchPayouts(@Query() query: AdminPayoutsQueryDto): Promise<AdminGymPayoutDto[]> {
+    return this.service.fetchPayouts(query);
   }
 
   // SLA: STANDARD
   @Get('fetchPnL')
   @ApiOperation({ summary: 'Execute fetchPnl' })
-  @ApiResponse({ status: HttpStatus.OK, type: AdminPnLEntryListResponseDto })
-  async fetchPnl(@Query() query: AdminPayoutsQueryDto): Promise<AdminPnLEntryListResponseDto> {
-    return this.service.fetchPnl(query) as unknown as AdminPnLEntryListResponseDto;
+  @ApiResponse({ status: HttpStatus.OK, type: [AdminPnLEntryDto] })
+  async fetchPnl(@Query() query: AdminPayoutsQueryDto): Promise<AdminPnLEntryDto[]> {
+    return this.service.fetchPnl(query);
   }
 
   // SLA: STANDARD
@@ -39,7 +39,7 @@ export class AdminPayoutsQueryController {
   @ApiOperation({ summary: 'Execute fetchKPIs' })
   @ApiResponse({ status: HttpStatus.OK, type: AdminPayoutsKPIDataDto })
   async fetchKPIs(@Query() query: AdminPayoutsQueryDto): Promise<AdminPayoutsKPIDataDto> {
-    return this.service.fetchKPIs(query) as unknown as AdminPayoutsKPIDataDto;
+    return this.service.fetchKPIs(query);
   }
 
 }

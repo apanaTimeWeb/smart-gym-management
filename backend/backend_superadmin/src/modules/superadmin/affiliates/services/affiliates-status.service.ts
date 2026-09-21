@@ -3,10 +3,10 @@
 import { Injectable } from '@nestjs/common';
 import { AffiliatesRepository } from '@/modules/superadmin/affiliates/affiliates.repository';
 import { AffiliatesMapper } from '@/modules/superadmin/affiliates/affiliates.mapper';
-import type { AffiliatesDomainModel } from '@/modules/superadmin/affiliates/types/affiliates.interfaces';
+import { AffiliatesResponseDto } from '@/modules/superadmin/affiliates/responses/affiliates-response.dto';
 @Injectable()
 export class AffiliatesStatusService {
   constructor(private readonly repository: AffiliatesRepository) {}
   /** Changes a status value after controller-level role authorization. */
-  async changeAffiliatesStatus(id: string, status: string): Promise<AffiliatesDomainModel> { return AffiliatesMapper.toDomain(await this.repository.updateAffiliatesById(id, { status })); }
+  async changeAffiliatesStatus(id: string, status: string): Promise<AffiliatesResponseDto> { return AffiliatesMapper.toResponse(AffiliatesMapper.toDomain(await this.repository.updateAffiliatesById(id, { status }))); }
 }

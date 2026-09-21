@@ -9,7 +9,7 @@ import { CoreRolesGuard } from '@/core/auth/core-roles.guard';
 import { CoreAdminRole } from '@/core/tenant/core-tenant.constants';
 import { AdminCouponsQueryService } from '@/modules/admin/coupons/services/admin-coupons-query.service';
 import { AdminCouponsQueryDto } from '@/modules/admin/coupons/dtos/admin-coupons-query.dto';
-import { AdminCouponListResponseDto, AdminCouponsKPIDataDto } from '@/modules/admin/coupons/dtos/admin-coupons-response.dto';
+import { AdminCouponDto, AdminCouponsKPIDataDto } from '@/modules/admin/coupons/dtos/admin-coupons-response.dto';
 
 @ApiTags('Admin / coupons')
 @Controller('admin/coupons')
@@ -21,9 +21,9 @@ export class AdminCouponsQueryController {
   // SLA: STANDARD
   @Get('fetchCoupons')
   @ApiOperation({ summary: 'Execute fetchCoupons' })
-  @ApiResponse({ status: HttpStatus.OK, type: AdminCouponListResponseDto })
-  async fetchCoupons(@Query() query: AdminCouponsQueryDto): Promise<AdminCouponListResponseDto> {
-    return this.service.fetchCoupons(query) as unknown as AdminCouponListResponseDto;
+  @ApiResponse({ status: HttpStatus.OK, type: [AdminCouponDto] })
+  async fetchCoupons(@Query() query: AdminCouponsQueryDto): Promise<AdminCouponDto[]> {
+    return this.service.fetchCoupons(query);
   }
 
   // SLA: STANDARD
@@ -31,7 +31,7 @@ export class AdminCouponsQueryController {
   @ApiOperation({ summary: 'Fetch coupon KPIs' })
   @ApiResponse({ status: HttpStatus.OK, type: AdminCouponsKPIDataDto })
   async fetchKPIs(): Promise<AdminCouponsKPIDataDto> {
-    return this.service.fetchKPIs() as unknown as AdminCouponsKPIDataDto;
+    return this.service.fetchKPIs();
   }
 
 }

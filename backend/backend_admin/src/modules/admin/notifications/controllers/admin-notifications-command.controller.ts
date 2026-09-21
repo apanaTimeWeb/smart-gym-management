@@ -25,7 +25,7 @@ export class AdminNotificationsCommandController {
   @ApiOperation({ summary: 'Execute markRead' })
   @ApiResponse({ status: HttpStatus.OK, type: AdminNotificationDto })
   async markAsReadById(@Param('id') id: string): Promise<AdminNotificationDto | null> {
-    return this.service.markAsReadById(id) as Promise<AdminNotificationDto | null>;
+    return this.service.markAsReadById(id);
   }
 
   // SLA: STANDARD
@@ -33,7 +33,7 @@ export class AdminNotificationsCommandController {
   @ApiOperation({ summary: 'Execute markAllRead' })
   @ApiResponse({ status: HttpStatus.OK })
   async markAllRead(): Promise<void> {
-    return this.service.markAllRead() as Promise<void>;
+    return this.service.markAllRead();
   }
 
 }

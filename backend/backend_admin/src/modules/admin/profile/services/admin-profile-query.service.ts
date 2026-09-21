@@ -5,6 +5,7 @@ import { Injectable } from '@nestjs/common';
 import { AdminProfileRepository } from '@/modules/admin/profile/repositories/admin-profile-repository';
 import { AdminProfileMapper } from '@/modules/admin/profile/mappers/admin-profile.mapper';
 import { AdminProfileQueryDto } from '@/modules/admin/profile/dtos/admin-profile-query.dto';
+import { AdminProfileDto } from '@/modules/admin/profile/dtos/admin-profile-response.dto';
 
 @Injectable()
 export class AdminProfileQueryService {
@@ -18,7 +19,8 @@ export class AdminProfileQueryService {
    * @param query Validated query when applicable.
    * @returns Frontend contract response.
    */
-  async fetchProfile(query: AdminProfileQueryDto): Promise<Record<string, unknown>> {
-    const snapshot = await this.repository.findFirstSnapshot(); return snapshot ? this.mapper.toResponse(this.mapper.toDomain(snapshot)) : {};
+  async fetchProfile(query: AdminProfileQueryDto): Promise<AdminProfileDto> {
+    const snapshot = await this.repository.findFirstSnapshot(); 
+    return (snapshot ? this.mapper.toResponse(this.mapper.toDomain(snapshot)) : {}) as AdminProfileDto;
   }
 }

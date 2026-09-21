@@ -6,13 +6,20 @@ import type { CorePaginationMeta } from '@/core/types/core-api-response.types';
 import { CoreMasterPlanEntity } from '@/core/subscription/core-master-plan.entity';
 import { AdminSubscriptionsQueryDto } from '@/modules/admin/subscriptions/dtos/admin-subscriptions-query.dto';
 import { AdminSubscriptionsRepository } from '@/modules/admin/subscriptions/repositories/admin-subscriptions-repository';
+import { 
+  AdminCurrentSubscriptionDto, 
+  AdminSaaSPlanDto, 
+  AdminInvoiceDto, 
+  AdminPaymentMethodDto, 
+  AdminSubscriptionKPIDataDto 
+} from '@/modules/admin/subscriptions/dtos/admin-subscriptions-response.dto';
 
 @Injectable()
 export class AdminSubscriptionsQueryService {
   constructor(private readonly repository: AdminSubscriptionsRepository) {}
 
   /** @description Returns the current subscription in the exact frontend-consumed shape. @param query Request query. @returns Current subscription contract. */
-  async fetchSubscription(_query: AdminSubscriptionsQueryDto): Promise<Record<string, unknown>> {
+  async fetchSubscription(_query: AdminSubscriptionsQueryDto): Promise<AdminCurrentSubscriptionDto> {
     const subscription = await this.repository.findCurrentSubscription();
     if (!subscription) throw new Error('SUBSCRIPTION_NOT_FOUND');
     const plans = await this.repository.findActivePlans();
@@ -22,44 +29,41 @@ export class AdminSubscriptionsQueryService {
   }
 
   /** @description Returns active SaaS plans with the current plan marker. @param query Request query. @returns SaaS plan list. */
-  async fetchPlans(_query: AdminSubscriptionsQueryDto): Promise<Record<string, unknown>[]> {
+  async fetchPlans(_query: AdminSubscriptionsQueryDto): Promise<AdminSaaSPlanDto[]> {
     const [plans, subscription] = await Promise.all([this.repository.findActivePlans(), this.repository.findCurrentSubscription()]);
     return plans.map((plan) => this.planResponse(plan, subscription?.planId === plan.id));
   }
 
   /** @description Returns tenant-scoped invoice history with canonical pagination metadata. @param query Page and limit. @returns Paginated invoice contracts. */
-  async fetchInvoices(query: AdminSubscriptionsQueryDto): Promise<{ items: Record<string, unknown>[]; meta: CorePaginationMeta }> {
+  async fetchInvoices(query: AdminSubscriptionsQueryDto): Promise<AdminInvoiceDto[]> {
     const result = await this.repository.findMasterInvoices(query);
-    return {
-      items: result.items.map((invoice) => ({
-        id: invoice.id,
-        invoiceNo: invoice.invoiceNo,
-        date: this.stringValue(invoice.payload.date, invoice.issuedAt.toISOString()),
-        dueDate: this.stringValue(invoice.payload.dueDate, invoice.issuedAt.toISOString()),
-        amount: Number(invoice.amountMinor) / 100,
-        status: this.stringValue(invoice.payload.status, invoice.status).toLowerCase(),
-        planName: this.stringValue(invoice.payload.planName, ''),
-        billingCycle: this.stringValue(invoice.payload.billingCycle, 'monthly'),
-        pdfUrl: this.stringValue(invoice.payload.pdfUrl, ''),
-        taxAmount: typeof invoice.payload.taxAmount === 'number' ? invoice.payload.taxAmount : undefined,
-        gstNumber: typeof invoice.payload.gstNumber === 'string' ? invoice.payload.gstNumber : undefined,
-      })),
-      meta: result.meta,
-    };
+    return result.items.map((invoice) => ({
+      id: invoice.id,
+      invoiceNo: invoice.invoiceNo,
+      date: this.stringValue(invoice.payload.date, invoice.issuedAt.toISOString()),
+      dueDate: this.stringValue(invoice.payload.dueDate, invoice.issuedAt.toISOString()),
+      amount: Number(invoice.amountMinor) / 100,
+      status: this.stringValue(invoice.payload.status, invoice.status).toLowerCase(),
+      planName: this.stringValue(invoice.payload.planName, ''),
+      billingCycle: this.stringValue(invoice.payload.billingCycle, 'monthly'),
+      pdfUrl: this.stringValue(invoice.payload.pdfUrl, ''),
+      taxAmount: typeof invoice.payload.taxAmount === 'number' ? invoice.payload.taxAmount : undefined,
+      gstNumber: typeof invoice.payload.gstNumber === 'string' ? invoice.payload.gstNumber : undefined,
+    })) as AdminInvoiceDto[];
   }
 
   /** @description Returns active saved payment methods for the authenticated tenant. @param query Request query. @returns Payment method contracts. */
-  async fetchPaymentMethods(_query: AdminSubscriptionsQueryDto): Promise<Record<string, unknown>[]> {
+  async fetchPaymentMethods(_query: AdminSubscriptionsQueryDto): Promise<AdminPaymentMethodDto[]> {
     const methods = await this.repository.findActivePaymentMethods();
-    return methods.map((method) => ({ id: method.id, ...method.payload, isDefault: method.isDefault }));
+    return methods.map((method) => ({ id: method.id, ...method.payload, isDefault: method.isDefault })) as AdminPaymentMethodDto[];
   }
 
   /** @description Calculates subscription KPIs from master subscription and invoice state. @param query Request query. @returns KPI contract. */
-  async fetchKPIs(_query: AdminSubscriptionsQueryDto): Promise<Record<string, unknown>> {
-    return this.repository.findKpis();
+  async fetchKPIs(_query: AdminSubscriptionsQueryDto): Promise<AdminSubscriptionKPIDataDto> {
+    return (await this.repository.findKpis()) as AdminSubscriptionKPIDataDto;
   }
 
-  private subscriptionResponse(payload: Record<string, unknown>, plan: CoreMasterPlanEntity, subscription: { autoRenew: boolean }): Record<string, unknown> {
+  private subscriptionResponse(payload: Record<string, unknown>, plan: CoreMasterPlanEntity, subscription: { autoRenew: boolean }): AdminCurrentSubscriptionDto {
     return {
       planId: plan.id,
       planName: plan.name,
@@ -76,10 +80,10 @@ export class AdminSubscriptionsQueryService {
       memberLimit: this.numberValue(plan.payload.memberLimit ?? payload.memberLimit),
       staffLimit: this.numberValue(plan.payload.staffLimit ?? payload.staffLimit),
       storageGb: this.numberValue(plan.payload.storageGb ?? payload.storageGb),
-    };
+    } as AdminCurrentSubscriptionDto;
   }
 
-  private planResponse(plan: CoreMasterPlanEntity, isCurrent: boolean): Record<string, unknown> {
+  private planResponse(plan: CoreMasterPlanEntity, isCurrent: boolean): AdminSaaSPlanDto {
     return {
       id: plan.id,
       name: plan.name,
@@ -93,7 +97,7 @@ export class AdminSubscriptionsQueryService {
       features: Array.isArray(plan.payload.features) ? plan.payload.features.filter((value): value is string => typeof value === 'string') : [],
       isPopular: plan.payload.isPopular === true,
       isCurrent,
-    };
+    } as AdminSaaSPlanDto;
   }
 
   private stringValue(value: unknown, fallback: string): string {

@@ -15,6 +15,8 @@ import { AffiliatesUpdateDto } from '@/modules/superadmin/affiliates/dtos/affili
 import { AffiliatesDeleteService } from '@/modules/superadmin/affiliates/services/affiliates-delete.service';
 import { AffiliatesStatusService } from '@/modules/superadmin/affiliates/services/affiliates-status.service';
 import { AffiliatesPayoutService } from '@/modules/superadmin/affiliates/services/affiliates-payout.service';
+import { AffiliatesResponseDto } from '@/modules/superadmin/affiliates/responses/affiliates-response.dto';
+import { ApiResponse } from '@nestjs/swagger';
 
 @ApiTags('affiliates')
 @Controller('/superadmin/affiliates')
@@ -29,19 +31,22 @@ export class AffiliatesCommandController {
     @HttpCode(HttpStatus.CREATED)
     @RequireIdempotencyKey()
   @UseGuards(RateLimitGuard)
-    async create(@Body() body: AffiliatesCreateDto): Promise<unknown> { return this.createService.createAffiliates(body); }
+    @ApiResponse({ type: AffiliatesResponseDto })
+    async create(@Body() body: AffiliatesCreateDto): Promise<AffiliatesResponseDto> { return this.createService.createAffiliates(body); }
 
   /** Handles the update mutation for the feature. */
   @ApiOperation({ summary: 'update affiliates' })
   @Patch(':id')
     @RequireIdempotencyKey()
   @UseGuards(RateLimitGuard)
-    async update(@Param('id') id: string, @Body() body: AffiliatesUpdateDto): Promise<unknown> { return this.updateService.updateAffiliates(id, body); }
+    @ApiResponse({ type: AffiliatesResponseDto })
+    async update(@Param('id') id: string, @Body() body: AffiliatesUpdateDto): Promise<AffiliatesResponseDto> { return this.updateService.updateAffiliates(id, body); }
 
   /** Pays the affiliate's current pending commission. */
   @RequireIdempotencyKey()
   @Post(':id/pay')
-  async pay(@Param('id') id: string): Promise<unknown> { return this.payoutService.pay(id); }
+  @ApiResponse({ type: AffiliatesResponseDto })
+  async pay(@Param('id') id: string): Promise<AffiliatesResponseDto> { return this.payoutService.pay(id); }
 
   /** Handles the remove mutation for the feature. */
   @ApiOperation({ summary: 'remove affiliates' })
@@ -55,6 +60,7 @@ export class AffiliatesCommandController {
   @ApiOperation({ summary: 'changeStatus affiliates' })
   @Patch(':id/status')
     @UseGuards(RateLimitGuard)
-    async changeStatus(@Param('id') id: string, @Body() body: { status: string }): Promise<unknown> { return this.statusService.changeAffiliatesStatus(id, body.status); }
+    @ApiResponse({ type: AffiliatesResponseDto })
+    async changeStatus(@Param('id') id: string, @Body() body: { status: string }): Promise<AffiliatesResponseDto> { return this.statusService.changeAffiliatesStatus(id, body.status); }
 
 }

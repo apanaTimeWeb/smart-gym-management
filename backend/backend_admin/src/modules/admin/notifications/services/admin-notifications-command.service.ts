@@ -5,6 +5,7 @@ import { Injectable } from '@nestjs/common';
 import { CoreAuditTrailService } from '@/core/audit/core-audit-trail.service';
 import { AdminNotificationsRepository } from '@/modules/admin/notifications/repositories/admin-notifications-repository';
 import { AdminNotificationsMapper } from '@/modules/admin/notifications/mappers/admin-notifications.mapper';
+import { AdminNotificationDto } from '@/modules/admin/notifications/dtos/admin-notifications-response.dto';
 
 @Injectable()
 export class AdminNotificationsCommandService {
@@ -17,9 +18,9 @@ export class AdminNotificationsCommandService {
   /**
    * @description Executes the markRead mutation through the repository boundary.
    * @param input Validated mutation input and/or identifier.
-   * @returns Promise<Record<string, unknown>> frontend-facing result.
+   * @returns Promise<AdminNotificationDto> frontend-facing result.
    */
-  async markAsReadById(id: string): Promise<Record<string, unknown>> {
+  async markAsReadById(id: string): Promise<AdminNotificationDto> {
     const entity = await this.repository.markAsReadById(id);
     return this.response(entity, 'READ');
   }
@@ -27,11 +28,10 @@ export class AdminNotificationsCommandService {
   /**
    * @description Executes the markAllRead mutation through the repository boundary.
    * @param input Validated mutation input and/or identifier.
-   * @returns Promise<Record<string, unknown>> frontend-facing result.
+   * @returns Promise<void> frontend-facing result.
    */
-  async markAllRead(): Promise<Record<string, unknown>> {
-    const affected = await this.repository.markAllRead();
-    return { affected };
+  async markAllRead(): Promise<void> {
+    await this.repository.markAllRead();
   }
 
   /**
@@ -40,9 +40,9 @@ export class AdminNotificationsCommandService {
    * @param action Mutation action.
    * @returns Frontend response object.
    */
-  private async response(entity: Parameters<AdminNotificationsMapper['toDomain']>[0], action: string): Promise<Record<string, unknown>> {
-    const response = this.mapper.toResponse(this.mapper.toDomain(entity));
-    await this.audit(entity.id, action, response);
+  private async response(entity: Parameters<AdminNotificationsMapper['toDomain']>[0], action: string): Promise<AdminNotificationDto> {
+    const response = this.mapper.toResponse(this.mapper.toDomain(entity)) as AdminNotificationDto;
+    await this.audit(entity.id, action, response as any);
     return response;
   }
 

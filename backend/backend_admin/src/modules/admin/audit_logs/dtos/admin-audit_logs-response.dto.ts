@@ -28,12 +28,7 @@ export class AdminAuditLogDto {
   affectedRecordId?: string;
 }
 
-export class AdminAuditLogListResponseDto {
-  @ApiProperty({ type: [AdminAuditLogDto] })
-  data!: AdminAuditLogDto[];
-}
-
-export class AdminAuditLogsKpiResponseDto {
+export class AdminAuditLogsKpiDto {
   @ApiProperty()
   totalEvents!: number;
   @ApiProperty()

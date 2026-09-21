@@ -14,6 +14,8 @@ import { MessagingUpdateService } from '@/modules/superadmin/messaging/services/
 import { MessagingUpdateDto } from '@/modules/superadmin/messaging/dtos/messaging-update.dto';
 import { MessagingDeleteService } from '@/modules/superadmin/messaging/services/messaging-delete.service';
 import { MessagingStatusService } from '@/modules/superadmin/messaging/services/messaging-status.service';
+import { MessagingResponseDto } from '@/modules/superadmin/messaging/responses/messaging-response.dto';
+import { ApiResponse } from '@nestjs/swagger';
 
 @ApiTags('messaging')
 @Controller('/superadmin/messaging')
@@ -28,14 +30,16 @@ export class MessagingCommandController {
     @HttpCode(HttpStatus.CREATED)
     @RequireIdempotencyKey()
   @UseGuards(RateLimitGuard)
-    async create(@Body() body: MessagingCreateDto): Promise<unknown> { return this.createService.createMessaging(body); }
+    @ApiResponse({ type: MessagingResponseDto })
+    async create(@Body() body: MessagingCreateDto): Promise<MessagingResponseDto> { return (this.createService.createMessaging(body)) as unknown as MessagingResponseDto; }
 
   /** Handles the update mutation for the feature. */
   @ApiOperation({ summary: 'update messaging' })
   @Patch(':id')
     @RequireIdempotencyKey()
   @UseGuards(RateLimitGuard)
-    async update(@Param('id') id: string, @Body() body: MessagingUpdateDto): Promise<unknown> { return this.updateService.updateMessaging(id, body); }
+    @ApiResponse({ type: MessagingResponseDto })
+    async update(@Param('id') id: string, @Body() body: MessagingUpdateDto): Promise<MessagingResponseDto> { return (this.updateService.updateMessaging(id, body)) as unknown as MessagingResponseDto; }
 
   /** Handles the remove mutation for the feature. */
   @ApiOperation({ summary: 'remove messaging' })
@@ -49,6 +53,7 @@ export class MessagingCommandController {
   @ApiOperation({ summary: 'changeStatus messaging' })
   @Patch(':id/status')
     @UseGuards(RateLimitGuard)
-    async changeStatus(@Param('id') id: string, @Body() body: { status: string }): Promise<unknown> { return this.statusService.changeMessagingStatus(id, body.status); }
+    @ApiResponse({ type: MessagingResponseDto })
+    async changeStatus(@Param('id') id: string, @Body() body: { status: string }): Promise<MessagingResponseDto> { return (this.statusService.changeMessagingStatus(id, body.status)) as unknown as MessagingResponseDto; }
 
 }

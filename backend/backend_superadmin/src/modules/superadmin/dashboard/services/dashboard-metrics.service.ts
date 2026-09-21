@@ -3,16 +3,17 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { DashboardRepository } from '@/modules/superadmin/dashboard/dashboard.repository';
 import { DASHBOARD_SNAPSHOT_KINDS } from '@/modules/superadmin/dashboard/dashboard.constants';
+import { DashboardResponseDataDto } from '@/modules/superadmin/dashboard/dashboard-response-data.dto';
 
 @Injectable()
 export class DashboardMetricsService {
   constructor(private readonly repository: DashboardRepository) {}
 
   /** Returns the latest persisted frontend contract payload for this use case. */
-  async findDashboardMetrics(input: Record<string, unknown> = {}): Promise<unknown> {
+  async findDashboardMetrics(input: Record<string, unknown> = {}): Promise<DashboardResponseDataDto> {
     void input;
     const payload = await this.repository.findLatestByKind(DASHBOARD_SNAPSHOT_KINDS.METRICS);
     if (payload === null) throw new NotFoundException('Contract state is not provisioned');
-    return payload;
+    return payload as DashboardResponseDataDto;
   }
 }

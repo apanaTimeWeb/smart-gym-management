@@ -32,10 +32,6 @@ export class AdminExportJobDto {
   createdBy!: string;
 }
 
-export class AdminExportJobListResponseDto {
-  @ApiProperty({ type: [AdminExportJobDto] })
-  data!: AdminExportJobDto[];
-}
 
 export class AdminDataExportKPIDataDto {
   @ApiProperty()

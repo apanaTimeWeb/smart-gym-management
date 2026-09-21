@@ -23,7 +23,7 @@ export class AdminReportsQueryController {
   @ApiOperation({ summary: 'Execute fetchReportData' })
   @ApiResponse({ status: HttpStatus.OK, type: AdminReportsDataResponseDto })
   async fetchReportData(@Query() query: AdminReportsQueryDto): Promise<AdminReportsDataResponseDto> {
-    return this.service.fetchReportData(query) as unknown as AdminReportsDataResponseDto;
+    return this.service.fetchReportData(query);
   }
 
   // SLA: STANDARD
@@ -31,7 +31,7 @@ export class AdminReportsQueryController {
   @ApiOperation({ summary: 'Fetch revenue report' })
   @ApiResponse({ status: HttpStatus.OK, type: AdminReportsDataResponseDto })
   async fetchRevenue(): Promise<AdminReportsDataResponseDto> {
-    return this.service.fetchReportData() as unknown as AdminReportsDataResponseDto;
+    return this.service.fetchReportData();
   }
 
   // SLA: STANDARD
@@ -39,7 +39,7 @@ export class AdminReportsQueryController {
   @ApiOperation({ summary: 'Fetch attendance report' })
   @ApiResponse({ status: HttpStatus.OK, type: AdminReportsDataResponseDto })
   async fetchAttendance(): Promise<AdminReportsDataResponseDto> {
-    return this.service.fetchReportData() as unknown as AdminReportsDataResponseDto;
+    return this.service.fetchReportData();
   }
 
   // SLA: STANDARD
@@ -47,7 +47,7 @@ export class AdminReportsQueryController {
   @ApiOperation({ summary: 'Fetch membership report' })
   @ApiResponse({ status: HttpStatus.OK, type: AdminReportsDataResponseDto })
   async fetchMembers(): Promise<AdminReportsDataResponseDto> {
-    return this.service.fetchReportData() as unknown as AdminReportsDataResponseDto;
+    return this.service.fetchReportData();
   }
 
   // SLA: STANDARD
@@ -55,7 +55,7 @@ export class AdminReportsQueryController {
   @ApiOperation({ summary: 'Fetch payroll report' })
   @ApiResponse({ status: HttpStatus.OK, type: AdminReportsDataResponseDto })
   async fetchPayroll(): Promise<AdminReportsDataResponseDto> {
-    return this.service.fetchReportData() as unknown as AdminReportsDataResponseDto;
+    return this.service.fetchReportData();
   }
 
   // SLA: STANDARD
@@ -63,7 +63,7 @@ export class AdminReportsQueryController {
   @ApiOperation({ summary: 'Fetch PnL report' })
   @ApiResponse({ status: HttpStatus.OK, type: AdminReportsDataResponseDto })
   async fetchPnl(): Promise<AdminReportsDataResponseDto> {
-    return this.service.fetchReportData() as unknown as AdminReportsDataResponseDto;
+    return this.service.fetchReportData();
   }
 
 }

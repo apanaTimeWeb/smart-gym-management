@@ -9,7 +9,7 @@ import { CoreRolesGuard } from '@/core/auth/core-roles.guard';
 import { CoreAdminRole } from '@/core/tenant/core-tenant.constants';
 import { AdminCampaignsQueryService } from '@/modules/admin/campaigns/services/admin-campaigns-query.service';
 import { AdminCampaignsQueryDto } from '@/modules/admin/campaigns/dtos/admin-campaigns-query.dto';
-import { AdminCampaignsAudiencesResponseDto, AdminCampaignsTemplatesResponseDto, AdminCampaignsRecipientsResponseDto } from '@/modules/admin/campaigns/dtos/admin-campaigns-response.dto';
+import { AdminCampaignsAudienceDto, AdminCampaignsTemplateDto, AdminCampaignsRecipientsDataDto } from '@/modules/admin/campaigns/dtos/admin-campaigns-response.dto';
 
 @ApiTags('Admin / campaigns / compatibility')
 @Controller('api/admin/campaigns')
@@ -21,24 +21,24 @@ export class AdminCampaignsLegacyQueryController {
   // SLA: STANDARD
   @Get('audiences')
   @ApiOperation({ summary: 'Campaign audiences compatibility endpoint' })
-  @ApiResponse({ status: HttpStatus.OK, type: AdminCampaignsAudiencesResponseDto })
-  fetchAudiences(@Query() query: AdminCampaignsQueryDto): Promise<AdminCampaignsAudiencesResponseDto> {
-    return this.service.fetchAudiences(query) as unknown as Promise<AdminCampaignsAudiencesResponseDto>;
+  @ApiResponse({ status: HttpStatus.OK, type: [AdminCampaignsAudienceDto] })
+  fetchAudiences(@Query() query: AdminCampaignsQueryDto): Promise<AdminCampaignsAudienceDto[]> {
+    return this.service.fetchAudiences(query);
   }
 
   // SLA: STANDARD
   @Get('templates')
   @ApiOperation({ summary: 'Campaign templates compatibility endpoint' })
-  @ApiResponse({ status: HttpStatus.OK, type: AdminCampaignsTemplatesResponseDto })
-  fetchTemplates(@Query() query: AdminCampaignsQueryDto): Promise<AdminCampaignsTemplatesResponseDto> {
-    return this.service.fetchTemplates(query) as unknown as Promise<AdminCampaignsTemplatesResponseDto>;
+  @ApiResponse({ status: HttpStatus.OK, type: [AdminCampaignsTemplateDto] })
+  fetchTemplates(@Query() query: AdminCampaignsQueryDto): Promise<AdminCampaignsTemplateDto[]> {
+    return this.service.fetchTemplates(query);
   }
 
   // SLA: STANDARD
   @Get('recipients')
   @ApiOperation({ summary: 'Campaign recipients compatibility endpoint' })
-  @ApiResponse({ status: HttpStatus.OK, type: AdminCampaignsRecipientsResponseDto })
-  fetchRecipients(@Query() query: AdminCampaignsQueryDto): Promise<AdminCampaignsRecipientsResponseDto> {
-    return this.service.fetchRecipients(query) as unknown as Promise<AdminCampaignsRecipientsResponseDto>;
+  @ApiResponse({ status: HttpStatus.OK, type: AdminCampaignsRecipientsDataDto })
+  fetchRecipients(@Query() query: AdminCampaignsQueryDto): Promise<AdminCampaignsRecipientsDataDto> {
+    return this.service.fetchRecipients(query);
   }
 }

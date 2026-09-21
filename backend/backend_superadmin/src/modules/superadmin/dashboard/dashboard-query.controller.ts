@@ -9,6 +9,8 @@ import { SuperadminRole } from '@/core/auth/auth.types';
 import { DashboardQueryDto } from '@/modules/superadmin/dashboard/dtos/dashboard-query.dto';
 import { DashboardListService } from '@/modules/superadmin/dashboard/services/dashboard-list.service';
 import { DashboardFindService } from '@/modules/superadmin/dashboard/services/dashboard-find.service';
+import { DashboardResponseDto } from '@/modules/superadmin/dashboard/responses/dashboard-response.dto';
+import { ApiResponse } from '@nestjs/swagger';
 
 @ApiTags('dashboard')
 @Controller('/superadmin/dashboard')
@@ -19,5 +21,6 @@ export class DashboardQueryController {
   /** Returns one dashboard record. */
   // SLA: FAST
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<unknown> { return await this.findService.findDashboardById(id); }
+  @ApiResponse({ type: DashboardResponseDto })
+  async findOne(@Param('id') id: string): Promise<DashboardResponseDto> { return await this.findService.findDashboardById(id); }
 }

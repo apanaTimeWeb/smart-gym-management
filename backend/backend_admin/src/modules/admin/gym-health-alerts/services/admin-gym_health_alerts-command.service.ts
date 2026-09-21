@@ -17,21 +17,21 @@ export class AdminGymHealthAlertsCommandService {
   /**
    * @description Executes the resolveAlert mutation through the repository boundary.
    * @param input Validated mutation input and/or identifier.
-   * @returns Promise<Record<string, unknown>> frontend-facing result.
+   * @returns Promise<void> frontend-facing result.
    */
-  async resolveAlertById(id: string): Promise<Record<string, unknown>> {
+  async resolveAlertById(id: string): Promise<void> {
     const entity = await this.repository.resolveAlertById(id);
-    return this.response(entity, 'ALERT_UPDATED');
+    await this.response(entity, 'ALERT_UPDATED');
   }
 
   /**
    * @description Executes the dismissAlert mutation through the repository boundary.
    * @param input Validated mutation input and/or identifier.
-   * @returns Promise<Record<string, unknown>> frontend-facing result.
+   * @returns Promise<void> frontend-facing result.
    */
-  async dismissAlertById(id: string): Promise<Record<string, unknown>> {
+  async dismissAlertById(id: string): Promise<void> {
     const entity = await this.repository.dismissAlertById(id);
-    return this.response(entity, 'ALERT_UPDATED');
+    await this.response(entity, 'ALERT_UPDATED');
   }
 
   /**
@@ -40,10 +40,9 @@ export class AdminGymHealthAlertsCommandService {
    * @param action Mutation action.
    * @returns Frontend response object.
    */
-  private async response(entity: Parameters<AdminGymHealthAlertsMapper['toDomain']>[0], action: string): Promise<Record<string, unknown>> {
+  private async response(entity: Parameters<AdminGymHealthAlertsMapper['toDomain']>[0], action: string): Promise<void> {
     const response = this.mapper.toResponse(this.mapper.toDomain(entity));
-    await this.audit(entity.id, action, response);
-    return response;
+    await this.audit(entity.id, action, response as Record<string, unknown>);
   }
 
   /**

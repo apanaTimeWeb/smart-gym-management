@@ -3,10 +3,10 @@
 import { Injectable } from '@nestjs/common';
 import { ComplianceRepository } from '@/modules/superadmin/compliance/compliance.repository';
 import { ComplianceMapper } from '@/modules/superadmin/compliance/compliance.mapper';
-import type { ComplianceDomainModel } from '@/modules/superadmin/compliance/types/compliance.interfaces';
+import { ComplianceResponseDto } from '@/modules/superadmin/compliance/responses/compliance-response.dto';
 @Injectable()
 export class ComplianceFindService {
   constructor(private readonly repository: ComplianceRepository) {}
   /** Retrieves one active compliance record by UUID. */
-  async findComplianceById(id: string): Promise<ComplianceDomainModel> { return ComplianceMapper.toDomain(await this.repository.findByIdOrThrow(id)); }
+  async findComplianceById(id: string): Promise<ComplianceResponseDto> { return ComplianceMapper.toResponse(ComplianceMapper.toDomain(await this.repository.findByIdOrThrow(id))); }
 }

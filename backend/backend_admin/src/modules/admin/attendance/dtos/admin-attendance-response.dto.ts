@@ -58,17 +58,4 @@ export class AdminAttendanceTrendPointDto {
   count!: number;
 }
 
-export class AdminAttendanceListResponseDto {
-  @ApiProperty({ type: [AdminAttendanceRecordDto] })
-  data!: AdminAttendanceRecordDto[];
-}
 
-export class AdminAttendanceSummaryResponseDto {
-  @ApiProperty({ type: AdminAttendanceSummaryDto })
-  data!: AdminAttendanceSummaryDto;
-}
-
-export class AdminAttendanceTrendResponseDto {
-  @ApiProperty({ type: [AdminAttendanceTrendPointDto] })
-  data!: AdminAttendanceTrendPointDto[];
-}

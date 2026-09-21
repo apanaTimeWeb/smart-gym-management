@@ -5,6 +5,8 @@ import { Injectable } from '@nestjs/common';
 import { CoreAuditTrailService } from '@/core/audit/core-audit-trail.service';
 import { AdminAnnouncementsRepository } from '@/modules/admin/announcements/repositories/admin-announcements-repository';
 import { AdminAnnouncementsMapper } from '@/modules/admin/announcements/mappers/admin-announcements.mapper';
+import { AdminAnnouncementDto } from '@/modules/admin/announcements/dtos/admin-announcements-response.dto';
+import { AdminAnnouncementsMutationDto } from '@/modules/admin/announcements/dtos/admin-announcements-mutation.dto';
 
 @Injectable()
 export class AdminAnnouncementsCommandService {
@@ -17,9 +19,9 @@ export class AdminAnnouncementsCommandService {
   /**
    * @description Executes the createAnnouncement mutation through the repository boundary.
    * @param input Validated mutation input and/or identifier.
-   * @returns Promise<Record<string, unknown>> frontend-facing result.
+   * @returns Promise<AdminAnnouncementDto> frontend-facing result.
    */
-  async createRecord(input: Record<string, unknown>): Promise<Record<string, unknown>> {
+  async createRecord(input: AdminAnnouncementsMutationDto): Promise<AdminAnnouncementDto> {
     const entity = await this.repository.createRecord(input);
     return this.response(entity, 'CREATED');
   }
@@ -27,9 +29,9 @@ export class AdminAnnouncementsCommandService {
   /**
    * @description Executes the updateAnnouncement mutation through the repository boundary.
    * @param input Validated mutation input and/or identifier.
-   * @returns Promise<Record<string, unknown>> frontend-facing result.
+   * @returns Promise<AdminAnnouncementDto> frontend-facing result.
    */
-  async updateById(id: string, input: Record<string, unknown>): Promise<Record<string, unknown>> {
+  async updateById(id: string, input: AdminAnnouncementsMutationDto): Promise<AdminAnnouncementDto> {
     const entity = await this.repository.updateById(id, input);
     return this.response(entity, 'UPDATED');
   }
@@ -48,9 +50,9 @@ export class AdminAnnouncementsCommandService {
   /**
    * @description Executes the togglePin mutation through the repository boundary.
    * @param input Validated mutation input and/or identifier.
-   * @returns Promise<Record<string, unknown>> frontend-facing result.
+   * @returns Promise<AdminAnnouncementDto> frontend-facing result.
    */
-  async togglePinById(id: string): Promise<Record<string, unknown>> {
+  async togglePinById(id: string): Promise<AdminAnnouncementDto> {
     const entity = await this.repository.togglePinById(id);
     return this.response(entity, 'PIN_TOGGLED');
   }
@@ -61,9 +63,9 @@ export class AdminAnnouncementsCommandService {
    * @param action Mutation action.
    * @returns Frontend response object.
    */
-  private async response(entity: Parameters<AdminAnnouncementsMapper['toDomain']>[0], action: string): Promise<Record<string, unknown>> {
-    const response = this.mapper.toResponse(this.mapper.toDomain(entity));
-    await this.audit(entity.id, action, response);
+  private async response(entity: Parameters<AdminAnnouncementsMapper['toDomain']>[0], action: string): Promise<AdminAnnouncementDto> {
+    const response = this.mapper.toResponse(this.mapper.toDomain(entity)) as AdminAnnouncementDto;
+    await this.audit(entity.id, action, response as any);
     return response;
   }
 

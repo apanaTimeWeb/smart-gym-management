@@ -49,10 +49,6 @@ export class AdminAnnouncementDto {
   acknowledgedCount?: number;
 }
 
-export class AdminAnnouncementListResponseDto {
-  @ApiProperty({ type: [AdminAnnouncementDto] })
-  data!: AdminAnnouncementDto[];
-}
 
 export class AdminAnnouncementKPIDataDto {
   @ApiProperty()

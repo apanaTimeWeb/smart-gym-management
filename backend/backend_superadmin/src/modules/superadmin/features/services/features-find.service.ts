@@ -3,10 +3,10 @@
 import { Injectable } from '@nestjs/common';
 import { FeaturesRepository } from '@/modules/superadmin/features/features.repository';
 import { FeaturesMapper } from '@/modules/superadmin/features/features.mapper';
-import type { FeaturesDomainModel } from '@/modules/superadmin/features/types/features.interfaces';
+import { FeaturesResponseDto } from '@/modules/superadmin/features/responses/features-response.dto';
 @Injectable()
 export class FeaturesFindService {
   constructor(private readonly repository: FeaturesRepository) {}
   /** Retrieves one active features record by UUID. */
-  async findFeaturesById(id: string): Promise<FeaturesDomainModel> { return FeaturesMapper.toDomain(await this.repository.findByIdOrThrow(id)); }
+  async findFeaturesById(id: string): Promise<FeaturesResponseDto> { return FeaturesMapper.toResponse(FeaturesMapper.toDomain(await this.repository.findByIdOrThrow(id))); }
 }

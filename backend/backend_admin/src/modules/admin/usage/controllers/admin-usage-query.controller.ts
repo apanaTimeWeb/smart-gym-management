@@ -9,7 +9,7 @@ import { CoreRolesGuard } from '@/core/auth/core-roles.guard';
 import { CoreAdminRole } from '@/core/tenant/core-tenant.constants';
 import { AdminUsageQueryService } from '@/modules/admin/usage/services/admin-usage-query.service';
 import { AdminUsageQueryDto } from '@/modules/admin/usage/dtos/admin-usage-query.dto';
-import { AdminUsageResponseDto } from '@/modules/admin/usage/dtos/admin-usage-response.dto';
+import { AdminUsageDataDto } from '@/modules/admin/usage/dtos/admin-usage-response.dto';
 
 @ApiTags('Admin / usage')
 @Controller('admin/usage')
@@ -21,9 +21,9 @@ export class AdminUsageQueryController {
   // SLA: STANDARD
   @Get()
   @ApiOperation({ summary: 'Execute fetchUsage' })
-  @ApiResponse({ status: HttpStatus.OK, type: AdminUsageResponseDto })
-  async fetchUsage(@Query() query: AdminUsageQueryDto): Promise<AdminUsageResponseDto> {
-    return this.service.fetchUsage(query) as unknown as AdminUsageResponseDto;
+  @ApiResponse({ status: HttpStatus.OK, type: AdminUsageDataDto })
+  async fetchUsage(@Query() query: AdminUsageQueryDto): Promise<AdminUsageDataDto> {
+    return this.service.fetchUsage(query);
   }
 
   // SLA: STANDARD

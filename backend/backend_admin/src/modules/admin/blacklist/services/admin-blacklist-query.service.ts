@@ -5,6 +5,7 @@ import { Injectable } from '@nestjs/common';
 import { AdminBlacklistRepository } from '@/modules/admin/blacklist/repositories/admin-blacklist-repository';
 import { AdminBlacklistMapper } from '@/modules/admin/blacklist/mappers/admin-blacklist.mapper';
 import { AdminBlacklistQueryDto } from '@/modules/admin/blacklist/dtos/admin-blacklist-query.dto';
+import { AdminBlacklistedMemberDto, AdminBlacklistKPIDataDto } from '@/modules/admin/blacklist/dtos/admin-blacklist-response.dto';
 
 @Injectable()
 export class AdminBlacklistQueryService {
@@ -18,15 +19,17 @@ export class AdminBlacklistQueryService {
    * @param query Validated query when applicable.
    * @returns Frontend contract response.
    */
-  async fetchBlacklist(query: AdminBlacklistQueryDto): Promise<Record<string, unknown>[]> {
-    const result = await this.repository.findAll(query); return result.items.map((entity) => this.mapper.toResponse(this.mapper.toDomain(entity)));
+  async fetchBlacklist(query: AdminBlacklistQueryDto): Promise<AdminBlacklistedMemberDto[]> {
+    const result = await this.repository.findAll(query); 
+    return result.items.map((entity) => this.mapper.toResponse(this.mapper.toDomain(entity))) as AdminBlacklistedMemberDto[];
   }
 
   /** @description Executes fetchKPIs for the Admin blacklist feature.
    * @param query Validated query when applicable.
    * @returns Frontend contract response.
    */
-  async fetchKPIs(query: AdminBlacklistQueryDto): Promise<Record<string, unknown>> {
-    const snapshot = await this.repository.findFirstSnapshot(); return snapshot ? (snapshot.payload as Record<string, unknown>) : {};
+  async fetchKPIs(query: AdminBlacklistQueryDto): Promise<AdminBlacklistKPIDataDto> {
+    const snapshot = await this.repository.findFirstSnapshot(); 
+    return (snapshot ? snapshot.payload : {}) as AdminBlacklistKPIDataDto;
   }
 }

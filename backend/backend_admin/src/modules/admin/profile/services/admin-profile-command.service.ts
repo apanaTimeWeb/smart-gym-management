@@ -8,6 +8,8 @@ import { CoreRequestContextService } from '@/core/context/core-request-context.s
 import { CoreAuditTrailService } from '@/core/audit/core-audit-trail.service';
 import { AdminProfileRepository } from '@/modules/admin/profile/repositories/admin-profile-repository';
 import { AdminProfileMapper } from '@/modules/admin/profile/mappers/admin-profile.mapper';
+import { AdminProfileMutationDto } from '@/modules/admin/profile/dtos/admin-profile-mutation.dto';
+import { AdminProfileDto } from '@/modules/admin/profile/dtos/admin-profile-response.dto';
 
 @Injectable()
 export class AdminProfileCommandService {
@@ -20,10 +22,10 @@ export class AdminProfileCommandService {
   ) {}
 
   /** @description Updates self-service profile fields while rejecting immutable identity changes. @param input Profile fields from the frontend. @returns Updated profile. @throws UnauthorizedException when actor is missing. */
-  async updateProfile(input: Record<string, unknown>): Promise<Record<string, unknown>> {
+  async updateProfile(input: AdminProfileMutationDto): Promise<AdminProfileDto> {
     const current = await this.repository.findFirstSnapshot();
     const entity = current ? await this.repository.updateById(current.id, input) : await this.repository.createRecord(input);
-    const response = this.mapper.toResponse(this.mapper.toDomain(entity));
+    const response = this.mapper.toResponse(this.mapper.toDomain(entity)) as AdminProfileDto;
     await this.auditTrail.record({ action: 'ADMIN.PROFILE.UPDATED', entityType: 'AdminProfile', entityId: entity.id, oldValue: current?.payload ?? null, newValue: response, module: 'profile', severity: 'low' });
     return response;
   }

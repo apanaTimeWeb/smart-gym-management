@@ -9,6 +9,8 @@ import { SuperadminRole } from '@/core/auth/auth.types';
 import { BroadcastsQueryDto } from '@/modules/superadmin/broadcasts/dtos/broadcasts-query.dto';
 import { BroadcastsListService } from '@/modules/superadmin/broadcasts/services/broadcasts-list.service';
 import { BroadcastsFindService } from '@/modules/superadmin/broadcasts/services/broadcasts-find.service';
+import { BroadcastsResponseDto } from '@/modules/superadmin/broadcasts/responses/broadcasts-response.dto';
+import { ApiResponse } from '@nestjs/swagger';
 
 @ApiTags('broadcasts')
 @Controller('/superadmin/broadcasts')
@@ -19,9 +21,11 @@ export class BroadcastsQueryController {
   /** Returns a paginated broadcasts list. */
   // SLA: STANDARD
   @Get()
-  async findAll(@Query() query: BroadcastsQueryDto): Promise<unknown> { return await this.listService.findBroadcastsPage(query); }
+  @ApiResponse({ type: [BroadcastsResponseDto] })
+  async findAll(@Query() query: BroadcastsQueryDto): Promise<BroadcastsResponseDto[]> { return await this.listService.findBroadcastsPage(query); }
   /** Returns one broadcasts record. */
   // SLA: FAST
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<unknown> { return await this.findService.findBroadcastsById(id); }
+  @ApiResponse({ type: BroadcastsResponseDto })
+  async findOne(@Param('id') id: string): Promise<BroadcastsResponseDto> { return await this.findService.findBroadcastsById(id); }
 }

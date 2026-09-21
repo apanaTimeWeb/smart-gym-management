@@ -34,7 +34,7 @@ export class AdminFinancePaymentDto {
 
 export class AdminFinancePaymentResponseDto {
   @ApiProperty({ type: [AdminFinancePaymentDto] }) payments!: AdminFinancePaymentDto[];
-  @ApiProperty() totalPayments!: number;
+  @ApiProperty() total!: number;
 }
 
 export class AdminFinanceExpenseDto {
@@ -54,7 +54,8 @@ export class AdminFinanceExpenseDto {
 
 export class AdminFinanceExpenseResponseDto {
   @ApiProperty({ type: [AdminFinanceExpenseDto] }) expenses!: AdminFinanceExpenseDto[];
-  @ApiProperty() totalExpenses!: number;
+  @ApiProperty() total!: number;
+  @ApiProperty() totalAmount!: number;
 }
 
 class RevenueByMethodDto {
@@ -109,16 +110,4 @@ export class AdminFinancePnlRecordDto {
   @ApiProperty({ type: BranchExpenseBreakdownDto }) expenseBreakdown!: BranchExpenseBreakdownDto;
 }
 
-class BranchPnlAggregatesDto {
-  @ApiProperty() totalRevenue!: number;
-  @ApiProperty() totalExpenses!: number;
-  @ApiProperty() totalNetProfit!: number;
-  @ApiProperty() overallMarginPct!: number;
-  @ApiProperty() profitableBranches!: number;
-  @ApiProperty() lossMakingBranches!: number;
-}
 
-export class AdminFinancePnlResponseDto {
-  @ApiProperty({ type: [AdminFinancePnlRecordDto] }) records!: AdminFinancePnlRecordDto[];
-  @ApiProperty({ type: BranchPnlAggregatesDto }) aggregates!: BranchPnlAggregatesDto;
-}

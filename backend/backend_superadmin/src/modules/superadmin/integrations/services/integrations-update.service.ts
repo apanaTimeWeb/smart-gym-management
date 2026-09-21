@@ -3,10 +3,11 @@
 import { Injectable } from '@nestjs/common';
 import { IntegrationsRepository } from '@/modules/superadmin/integrations/integrations.repository';
 import { IntegrationsMapper } from '@/modules/superadmin/integrations/integrations.mapper';
-import type { IntegrationsDomainModel, IntegrationsUpdateInput } from '@/modules/superadmin/integrations/types/integrations.interfaces';
+import type { IntegrationsUpdateInput } from '@/modules/superadmin/integrations/types/integrations.interfaces';
+import { IntegrationsResponseDto } from '@/modules/superadmin/integrations/responses/integrations-response.dto';
 @Injectable()
 export class IntegrationsUpdateService {
   constructor(private readonly repository: IntegrationsRepository) {}
   /** Updates a integrations record by UUID. */
-  async updateIntegrations(id: string, input: IntegrationsUpdateInput): Promise<IntegrationsDomainModel> { return IntegrationsMapper.toDomain(await this.repository.updateIntegrationsById(id, input)); }
+  async updateIntegrations(id: string, input: IntegrationsUpdateInput): Promise<IntegrationsResponseDto> { return IntegrationsMapper.toResponse(IntegrationsMapper.toDomain(await this.repository.updateIntegrationsById(id, input))); }
 }

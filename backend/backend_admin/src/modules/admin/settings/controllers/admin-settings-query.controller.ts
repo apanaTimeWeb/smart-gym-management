@@ -9,7 +9,7 @@ import { CoreRolesGuard } from '@/core/auth/core-roles.guard';
 import { CoreAdminRole } from '@/core/tenant/core-tenant.constants';
 import { AdminSettingsQueryService } from '@/modules/admin/settings/services/admin-settings-query.service';
 import { AdminSettingsQueryDto } from '@/modules/admin/settings/dtos/admin-settings-query.dto';
-import { AdminSettingsResponseDto } from '@/modules/admin/settings/dtos/admin-settings-response.dto';
+import { AdminSettingsResponseDto, AdminNotificationsSettingsDto } from '@/modules/admin/settings/dtos/admin-settings-response.dto';
 
 @ApiTags('Admin / settings')
 @Controller('admin/settings')
@@ -23,14 +23,14 @@ export class AdminSettingsQueryController {
   @ApiOperation({ summary: 'Execute fetchSettings' })
   @ApiResponse({ status: HttpStatus.OK, type: AdminSettingsResponseDto })
   async fetchSettings(@Query() query: AdminSettingsQueryDto): Promise<AdminSettingsResponseDto> {
-    return this.service.fetchSettings(query) as unknown as AdminSettingsResponseDto;
+    return this.service.fetchSettings(query);
   }
 
   // SLA: STANDARD
   @Get('notifications')
   @ApiOperation({ summary: 'Execute fetchNotificationSettings' })
-  @ApiResponse({ status: HttpStatus.OK, type: AdminSettingsResponseDto })
-  async fetchNotificationSettings(@Query() query: AdminSettingsQueryDto): Promise<any> {
+  @ApiResponse({ status: HttpStatus.OK, type: AdminNotificationsSettingsDto })
+  async fetchNotificationSettings(@Query() query: AdminSettingsQueryDto): Promise<AdminNotificationsSettingsDto> {
     return this.service.fetchNotificationSettings(query);
   }
 

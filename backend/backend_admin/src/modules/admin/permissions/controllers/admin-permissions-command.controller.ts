@@ -25,7 +25,7 @@ export class AdminPermissionsCommandController {
   @ApiOperation({ summary: 'Execute updateRolePermissions' })
   @ApiResponse({ status: HttpStatus.OK, type: AdminPermissionsDataDto })
   async updateRolePermissions(@Body() dto: AdminPermissionsMutationDto): Promise<AdminPermissionsDataDto> {
-    return this.service.updateRolePermissions(dto.role ?? '', dto.permissions ?? {}) as unknown as Promise<AdminPermissionsDataDto>;
+    return this.service.updateRolePermissions(dto.role ?? '', dto.permissions ?? {});
   }
 
   // SLA: STANDARD
@@ -33,7 +33,7 @@ export class AdminPermissionsCommandController {
   @ApiOperation({ summary: 'Execute updateGymOverride' })
   @ApiResponse({ status: HttpStatus.OK, type: AdminPermissionsDataDto })
   async updateGymOverride(@Body() dto: AdminPermissionsMutationDto): Promise<AdminPermissionsDataDto> {
-    return this.service.updateGymOverride(dto.gymId ?? '', dto.role ?? '', dto.overrides ?? {}) as unknown as Promise<AdminPermissionsDataDto>;
+    return this.service.updateGymOverride(dto.gymId ?? '', dto.role ?? '', dto.overrides ?? {});
   }
 
 }

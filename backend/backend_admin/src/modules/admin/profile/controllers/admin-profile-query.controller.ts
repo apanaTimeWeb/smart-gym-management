@@ -23,7 +23,7 @@ export class AdminProfileQueryController {
   @ApiOperation({ summary: 'Execute fetchProfile' })
   @ApiResponse({ status: HttpStatus.OK, type: AdminProfileDto })
   async fetchProfile(@Query() query: AdminProfileQueryDto): Promise<AdminProfileDto> {
-    return this.service.fetchProfile(query) as unknown as AdminProfileDto;
+    return this.service.fetchProfile(query);
   }
 
 }

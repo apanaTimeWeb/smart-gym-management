@@ -24,10 +24,6 @@ export class AdminMemberDto {
   @ApiPropertyOptional() address?: string;
 }
 
-export class AdminMembersListResponseDto {
-  @ApiProperty({ type: [AdminMemberDto] }) data!: AdminMemberDto[];
-}
-
 export class AdminMembersSummaryDto {
   @ApiProperty() totalMembers!: number;
   @ApiProperty() activeMembers!: number;

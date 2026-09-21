@@ -9,7 +9,7 @@ import { CoreRolesGuard } from '@/core/auth/core-roles.guard';
 import { CoreAdminRole } from '@/core/tenant/core-tenant.constants';
 import { AdminDataExportQueryService } from '@/modules/admin/data-export/services/admin-data_export-query.service';
 import { AdminDataExportQueryDto } from '@/modules/admin/data-export/dtos/admin-data_export-query.dto';
-import { AdminExportJobListResponseDto, AdminDataExportKPIDataDto } from '@/modules/admin/data-export/dtos/admin-data_export-response.dto';
+import { AdminExportJobDto, AdminDataExportKPIDataDto } from '@/modules/admin/data-export/dtos/admin-data_export-response.dto';
 
 @ApiTags('Admin / data-export')
 @Controller('admin/data-export')
@@ -21,9 +21,9 @@ export class AdminDataExportQueryController {
   // SLA: STANDARD
   @Get('fetchJobs')
   @ApiOperation({ summary: 'Execute fetchJobs' })
-  @ApiResponse({ status: HttpStatus.OK, type: AdminExportJobListResponseDto })
-  async fetchJobs(@Query() query: AdminDataExportQueryDto): Promise<AdminExportJobListResponseDto> {
-    return this.service.fetchJobs(query) as unknown as AdminExportJobListResponseDto;
+  @ApiResponse({ status: HttpStatus.OK, type: [AdminExportJobDto] })
+  async fetchJobs(@Query() query: AdminDataExportQueryDto): Promise<AdminExportJobDto[]> {
+    return this.service.fetchJobs(query);
   }
 
   // SLA: STANDARD
@@ -31,7 +31,7 @@ export class AdminDataExportQueryController {
   @ApiOperation({ summary: 'Execute fetchKPIs' })
   @ApiResponse({ status: HttpStatus.OK, type: AdminDataExportKPIDataDto })
   async fetchKPIs(@Query() query: AdminDataExportQueryDto): Promise<AdminDataExportKPIDataDto> {
-    return this.service.fetchKPIs(query) as unknown as AdminDataExportKPIDataDto;
+    return this.service.fetchKPIs(query);
   }
 
 }

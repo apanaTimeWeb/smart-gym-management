@@ -5,13 +5,14 @@ import { ComplianceRepository } from '@/modules/superadmin/compliance/compliance
 import { ComplianceMapper } from '@/modules/superadmin/compliance/compliance.mapper';
 import { buildPaginationMeta } from '@/core/pagination/pagination.utils';
 import type { ComplianceListQuery } from '@/modules/superadmin/compliance/types/compliance.interfaces';
+import { ComplianceResponseDto } from '@/modules/superadmin/compliance/responses/compliance-response.dto';
 
 @Injectable()
 export class ComplianceListService {
   constructor(private readonly repository: ComplianceRepository) {}
   /** Returns a paginated collection using an allowlisted sort field. */
-  async findCompliancePage(query: ComplianceListQuery): Promise<{ data: ReturnType<typeof ComplianceMapper['toDomain']>[]; meta: ReturnType<typeof buildPaginationMeta> }> {
+  async findCompliancePage(query: ComplianceListQuery): Promise<{ data: ComplianceResponseDto[]; meta: ReturnType<typeof buildPaginationMeta> }> {
     const result = await this.repository.findPage(query);
-    return { data: ComplianceMapper.toDomainList(result.items), meta: buildPaginationMeta(query.page, query.limit, result.total) };
+    return { data: result.items.map(e => ComplianceMapper.toResponse(ComplianceMapper.toDomain(e))), meta: buildPaginationMeta(query.page, query.limit, result.total) };
   }
 }

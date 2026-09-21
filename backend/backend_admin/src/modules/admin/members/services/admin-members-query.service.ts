@@ -5,6 +5,7 @@ import { Injectable } from '@nestjs/common';
 import { AdminMembersRepository } from '@/modules/admin/members/repositories/admin-members-repository';
 import { AdminMembersMapper } from '@/modules/admin/members/mappers/admin-members.mapper';
 import { AdminMembersQueryDto } from '@/modules/admin/members/dtos/admin-members-query.dto';
+import { AdminMemberDto, AdminMembersSummaryDto } from '@/modules/admin/members/dtos/admin-members-response.dto';
 
 @Injectable()
 export class AdminMembersQueryService {
@@ -18,7 +19,7 @@ export class AdminMembersQueryService {
    * @param query Validated query when applicable.
    * @returns Frontend contract response.
    */
-  async listMembers(query: AdminMembersQueryDto): Promise<Record<string, unknown>[]> {
+  async listMembers(query: AdminMembersQueryDto): Promise<AdminMemberDto[]> {
     const result = await this.repository.findAll(query); return result.items.map((entity) => this.mapper.toResponse(this.mapper.toDomain(entity)));
   }
 
@@ -26,15 +27,16 @@ export class AdminMembersQueryService {
    * @param query Validated query when applicable.
    * @returns Frontend contract response.
    */
-  async fetchSummary(_query?: AdminMembersQueryDto): Promise<Record<string, unknown>> {
-    const result = await this.repository.findFirstSnapshot(); return result ? this.mapper.toResponse(this.mapper.toDomain(result)) : {};
+  async fetchSummary(_query?: AdminMembersQueryDto): Promise<AdminMembersSummaryDto> {
+    const result = await this.repository.findFirstSnapshot(); 
+    return result ? this.mapper.toSummaryResponse(this.mapper.toDomain(result)) : this.mapper.toSummaryResponse(this.mapper.toDomain({} as any));
   }
 
   /** @description Executes findMemberById for the Admin members feature.
    * @param query Validated query when applicable.
    * @returns Frontend contract response.
    */
-  async findMemberById(id: string): Promise<Record<string, unknown>> {
+  async findMemberById(id: string): Promise<AdminMemberDto> {
     const entity = await this.repository.findByIdOrThrow(id); return this.mapper.toResponse(this.mapper.toDomain(entity));
   }
 
@@ -43,6 +45,6 @@ export class AdminMembersQueryService {
    * @returns Frontend contract response.
    */
   async exportMembers(_query?: AdminMembersQueryDto): Promise<string> {
-    const snapshot = await this.repository.findFirstSnapshot(); const rows = Array.isArray(snapshot?.payload.members) ? snapshot.payload.members : []; return rows.map((item) => Object.values(item as Record<string, unknown>).join(',')).join('\n');
+    const snapshot = await this.repository.findFirstSnapshot(); const rows = Array.isArray(snapshot?.payload?.members) ? snapshot.payload.members : []; return rows.map((item) => Object.values(item as Record<string, unknown>).join(',')).join('\n');
   }
 }

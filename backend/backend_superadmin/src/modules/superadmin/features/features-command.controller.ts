@@ -17,6 +17,8 @@ import { FeaturesCreateService } from '@/modules/superadmin/features/services/fe
 import { FeaturesUpdateService } from '@/modules/superadmin/features/services/features-update.service';
 import { FeaturesDeleteService } from '@/modules/superadmin/features/services/features-delete.service';
 import { FeaturesRepository } from '@/modules/superadmin/features/features.repository';
+import { FeaturesResponseDto } from '@/modules/superadmin/features/responses/features-response.dto';
+import { ApiResponse } from '@nestjs/swagger';
 
 @ApiTags('features')
 @Controller('/superadmin/features')
@@ -36,7 +38,8 @@ export class FeaturesCommandController {
   @HttpCode(HttpStatus.CREATED)
   @UseGuards(RateLimitGuard)
   @RequireIdempotencyKey()
-  async createFlag(@Body() body: FeaturesCreateDto): Promise<unknown> {
+  @ApiResponse({ type: FeaturesResponseDto })
+  async createFlag(@Body() body: FeaturesCreateDto): Promise<FeaturesResponseDto> {
     return this.createService.createFeatures(body);
   }
 
@@ -45,7 +48,8 @@ export class FeaturesCommandController {
   @Patch('flags/:id')
   @UseGuards(RateLimitGuard)
   @RequireIdempotencyKey()
-  async updateFlag(@Param('id') id: string, @Body() body: FeaturesUpdateDto): Promise<unknown> {
+  @ApiResponse({ type: FeaturesResponseDto })
+  async updateFlag(@Param('id') id: string, @Body() body: FeaturesUpdateDto): Promise<FeaturesResponseDto> {
     return this.updateService.updateFeatures(id, body);
   }
 
@@ -54,7 +58,8 @@ export class FeaturesCommandController {
   @Post('flags/:id/toggle')
   @UseGuards(RateLimitGuard)
   @RequireIdempotencyKey()
-  async toggleFlag(@Param('id') id: string): Promise<unknown> {
+  @ApiResponse({ type: FeaturesResponseDto })
+  async toggleFlag(@Param('id') id: string): Promise<FeaturesResponseDto> {
     const current = await this.repository.findByIdOrThrow(id);
     const next = !current.isGlobalEnabled;
     const history = Array.isArray(current.history) ? current.history : [];
@@ -62,7 +67,10 @@ export class FeaturesCommandController {
       isGlobalEnabled: next,
       history: [...history, { id: randomUUID(), action: next ? 'ENABLED' : 'DISABLED', user: 'SUPERADMIN', timestamp: new Date().toISOString() }],
     });
-    return this.repository.findByIdOrThrow(id);
+    const entity = await this.repository.findByIdOrThrow(id);
+    const dto = new FeaturesResponseDto();
+    Object.assign(dto, entity);
+    return dto;
   }
 
   /** Soft-deletes a feature flag. */

@@ -9,6 +9,8 @@ import { SuperadminRole } from '@/core/auth/auth.types';
 import { ComplianceQueryDto } from '@/modules/superadmin/compliance/dtos/compliance-query.dto';
 import { ComplianceListService } from '@/modules/superadmin/compliance/services/compliance-list.service';
 import { ComplianceFindService } from '@/modules/superadmin/compliance/services/compliance-find.service';
+import { ComplianceResponseDto } from '@/modules/superadmin/compliance/responses/compliance-response.dto';
+import { ApiResponse } from '@nestjs/swagger';
 
 @ApiTags('compliance')
 @Controller('/superadmin/compliance')
@@ -19,5 +21,6 @@ export class ComplianceQueryController {
   /** Returns one compliance record. */
   // SLA: FAST
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<unknown> { return await this.findService.findComplianceById(id); }
+  @ApiResponse({ type: ComplianceResponseDto })
+  async findOne(@Param('id') id: string): Promise<ComplianceResponseDto> { return await this.findService.findComplianceById(id); }
 }

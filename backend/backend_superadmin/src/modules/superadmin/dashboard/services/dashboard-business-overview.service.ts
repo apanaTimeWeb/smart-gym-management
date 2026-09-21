@@ -1,7 +1,7 @@
 // RESPONSIBILITY: Reads the frontend contract state owned by this feature from PostgreSQL; no mock data is returned by the service.
 // FLOW: Controller -> DashboardBusinessOverviewService -> DashboardRepository -> contract snapshot row -> canonical response interceptor.
 import { Injectable, NotFoundException } from '@nestjs/common';
-import type { DashboardBusinessOverviewResponseDto } from '@/modules/superadmin/dashboard/dashboard-business-overview-response.dto';
+import { DashboardBusinessOverviewResponseDto } from '@/modules/superadmin/dashboard/dashboard-business-overview-response.dto';
 import { DashboardRepository } from '@/modules/superadmin/dashboard/dashboard.repository';
 import { DASHBOARD_SNAPSHOT_KINDS } from '@/modules/superadmin/dashboard/dashboard.constants';
 

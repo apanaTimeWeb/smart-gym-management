@@ -9,6 +9,8 @@ import { SuperadminRole } from '@/core/auth/auth.types';
 import { IntegrationsQueryDto } from '@/modules/superadmin/integrations/dtos/integrations-query.dto';
 import { IntegrationsListService } from '@/modules/superadmin/integrations/services/integrations-list.service';
 import { IntegrationsFindService } from '@/modules/superadmin/integrations/services/integrations-find.service';
+import { IntegrationsResponseDto } from '@/modules/superadmin/integrations/responses/integrations-response.dto';
+import { ApiResponse } from '@nestjs/swagger';
 
 @ApiTags('integrations')
 @Controller('/superadmin/integrations')
@@ -19,5 +21,6 @@ export class IntegrationsQueryController {
   /** Returns one integrations record. */
   // SLA: FAST
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<unknown> { return await this.findService.findIntegrationsById(id); }
+  @ApiResponse({ type: IntegrationsResponseDto })
+  async findOne(@Param('id') id: string): Promise<IntegrationsResponseDto> { return (await this.findService.findIntegrationsById(id)) as unknown as IntegrationsResponseDto; }
 }

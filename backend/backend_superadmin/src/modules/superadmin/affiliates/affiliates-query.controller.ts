@@ -10,6 +10,8 @@ import { AffiliatesQueryDto } from '@/modules/superadmin/affiliates/dtos/affilia
 import { AffiliatesListService } from '@/modules/superadmin/affiliates/services/affiliates-list.service';
 import { AffiliatesFindService } from '@/modules/superadmin/affiliates/services/affiliates-find.service';
 import { AffiliatesPayoutService } from '@/modules/superadmin/affiliates/services/affiliates-payout.service';
+import { AffiliatesResponseDto, AffiliatePayoutRecordDto } from '@/modules/superadmin/affiliates/responses/affiliates-response.dto';
+import { ApiResponse } from '@nestjs/swagger';
 
 @ApiTags('affiliates')
 @Controller('/superadmin/affiliates')
@@ -20,14 +22,17 @@ export class AffiliatesQueryController {
   /** Returns payout history across active affiliates. */
   // SLA: STANDARD
   @Get('payout-history')
-  async payoutHistory(): Promise<unknown[]> { return this.payoutService.history(); }
+  @ApiResponse({ type: [AffiliatePayoutRecordDto] })
+  async payoutHistory(): Promise<AffiliatePayoutRecordDto[]> { return this.payoutService.history(); }
 
   /** Returns a paginated affiliates list. */
   // SLA: STANDARD
   @Get()
-  async findAll(@Query() query: AffiliatesQueryDto): Promise<unknown> { return await this.listService.findAffiliatesPage(query); }
+  @ApiResponse({ type: [AffiliatesResponseDto] })
+  async findAll(@Query() query: AffiliatesQueryDto): Promise<AffiliatesResponseDto[]> { return await this.listService.findAffiliatesPage(query); }
   /** Returns one affiliates record. */
   // SLA: FAST
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<unknown> { return await this.findService.findAffiliatesById(id); }
+  @ApiResponse({ type: AffiliatesResponseDto })
+  async findOne(@Param('id') id: string): Promise<AffiliatesResponseDto> { return await this.findService.findAffiliatesById(id); }
 }

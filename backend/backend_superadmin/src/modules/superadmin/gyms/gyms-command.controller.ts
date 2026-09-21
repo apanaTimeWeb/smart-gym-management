@@ -17,6 +17,8 @@ import { GymsStatusService } from '@/modules/superadmin/gyms/services/gyms-statu
 import { GymsProvisionService } from '@/modules/superadmin/gyms/services/gyms-provision.service';
 import { GymsProvisionDto } from '@/modules/superadmin/gyms/dtos/gyms-provision.dto';
 import { GymsOwnerEmailDto } from '@/modules/superadmin/gyms/dtos/gyms-owner-email.dto';
+import { GymsResponseDto } from '@/modules/superadmin/gyms/responses/gyms-response.dto';
+import { ApiResponse } from '@nestjs/swagger';
 
 @ApiTags('gyms')
 @Controller('/superadmin/gyms')
@@ -31,7 +33,8 @@ export class GymsCommandController {
     @HttpCode(HttpStatus.CREATED)
     @RequireIdempotencyKey()
   @UseGuards(RateLimitGuard)
-    async create(@Body() body: GymsCreateDto): Promise<unknown> { return this.createService.createGyms(body); }
+    @ApiResponse({ type: GymsResponseDto })
+    async create(@Body() body: GymsCreateDto): Promise<GymsResponseDto> { return (this.createService.createGyms(body)) as unknown as GymsResponseDto; }
 
 
   /** Provisions a new isolated tenant using client-owned fields only. */
@@ -39,14 +42,16 @@ export class GymsCommandController {
   @Post('/provision')
   @RequireIdempotencyKey()
   @UseGuards(RateLimitGuard)
-  async provision(@Body() body: GymsProvisionDto): Promise<unknown> { return this.provisionService.provisionGym(body); }
+  @ApiResponse({ type: GymsResponseDto })
+  async provision(@Body() body: GymsProvisionDto): Promise<GymsResponseDto> { return (this.provisionService.provisionGym(body)) as unknown as GymsResponseDto; }
 
   /** Handles the update mutation for the feature. */
   @ApiOperation({ summary: 'update gyms' })
   @Patch(':id')
     @RequireIdempotencyKey()
   @UseGuards(RateLimitGuard)
-    async update(@Param('id') id: string, @Body() body: GymsUpdateDto): Promise<unknown> { return this.updateService.updateGyms(id, body); }
+    @ApiResponse({ type: GymsResponseDto })
+    async update(@Param('id') id: string, @Body() body: GymsUpdateDto): Promise<GymsResponseDto> { return (this.updateService.updateGyms(id, body)) as unknown as GymsResponseDto; }
 
   /** Handles the remove mutation for the feature. */
   @ApiOperation({ summary: 'remove gyms' })
@@ -60,6 +65,7 @@ export class GymsCommandController {
   @ApiOperation({ summary: 'changeStatus gyms' })
   @Patch(':id/status')
     @UseGuards(RateLimitGuard)
-    async changeStatus(@Param('id') id: string, @Body() body: { status: string }): Promise<unknown> { return this.statusService.changeGymsStatus(id, body.status); }
+    @ApiResponse({ type: GymsResponseDto })
+    async changeStatus(@Param('id') id: string, @Body() body: { status: string }): Promise<GymsResponseDto> { return (this.statusService.changeGymsStatus(id, body.status)) as unknown as GymsResponseDto; }
 
 }

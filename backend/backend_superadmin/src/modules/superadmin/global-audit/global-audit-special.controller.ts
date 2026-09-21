@@ -8,6 +8,7 @@ import { RolesGuard } from '@/core/auth/roles.guard';
 import { Roles } from '@/core/auth/roles.decorator';
 import { SuperadminRole } from '@/core/auth/auth.types';
 import { GlobalAuditInvestigationService } from '@/modules/superadmin/global-audit/services/global-audit-investigation.service';
+import { ApiResponse } from '@nestjs/swagger';
 
 @ApiTags('global-audit-special')
 @Controller()
@@ -20,6 +21,7 @@ export class GlobalAuditSpecialController {
   @ApiOperation({ summary: 'GET /superadmin/global-audit/investigation' })
   @Get('superadmin/global-audit/investigation')
   @Get('superadmin/audit-logs/investigation')
-  async investigation(@Query() query: Record<string, string>): Promise<unknown> { return await this.investigationService.findGlobalAuditInvestigation(); }
+  @ApiResponse({ type: GlobalAuditInvestigationResponseDto })
+  async investigation(@Query() query: Record<string, string>): Promise<GlobalAuditInvestigationResponseDto> { return (await this.investigationService.findGlobalAuditInvestigation()) as unknown as GlobalAuditInvestigationResponseDto; }
 
 }

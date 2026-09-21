@@ -12,6 +12,8 @@ import { ComplianceCreateDto } from '@/modules/superadmin/compliance/dtos/compli
 import { ComplianceUpdateService } from '@/modules/superadmin/compliance/services/compliance-update.service';
 import { ComplianceUpdateDto } from '@/modules/superadmin/compliance/dtos/compliance-update.dto';
 import { ComplianceDeleteService } from '@/modules/superadmin/compliance/services/compliance-delete.service';
+import { ComplianceResponseDto } from '@/modules/superadmin/compliance/responses/compliance-response.dto';
+import { ApiResponse } from '@nestjs/swagger';
 
 @ApiTags('compliance')
 @Controller('/superadmin/compliance')
@@ -25,13 +27,15 @@ export class ComplianceCommandController {
   @Post()
     @HttpCode(HttpStatus.CREATED)
     @UseGuards(RateLimitGuard)
-    async create(@Body() body: ComplianceCreateDto): Promise<unknown> { return this.createService.createCompliance(body); }
+    @ApiResponse({ type: ComplianceResponseDto })
+    async create(@Body() body: ComplianceCreateDto): Promise<ComplianceResponseDto> { return this.createService.createCompliance(body); }
 
   /** Handles the update mutation for the feature. */
   @ApiOperation({ summary: 'update compliance' })
   @Patch(':id')
     @UseGuards(RateLimitGuard)
-    async update(@Param('id') id: string, @Body() body: ComplianceUpdateDto): Promise<unknown> { return this.updateService.updateCompliance(id, body); }
+    @ApiResponse({ type: ComplianceResponseDto })
+    async update(@Param('id') id: string, @Body() body: ComplianceUpdateDto): Promise<ComplianceResponseDto> { return this.updateService.updateCompliance(id, body); }
 
   /** Handles the remove mutation for the feature. */
   @ApiOperation({ summary: 'remove compliance' })

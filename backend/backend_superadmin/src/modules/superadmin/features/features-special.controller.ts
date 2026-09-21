@@ -13,6 +13,8 @@ import { FeaturesReleaseNoteService } from '@/modules/superadmin/features/servic
 import { FeaturesReleaseNoteCreateDto } from '@/modules/superadmin/features/dtos/features-release-note-create.dto';
 import { FeaturesReleaseNoteUpdateDto } from '@/modules/superadmin/features/dtos/features-release-note-update.dto';
 import { RequireIdempotencyKey } from '@/core/cache/idempotency.decorator';
+import { FeaturesResponseDataDto, ReleaseNoteDto } from '@/modules/superadmin/features/features-response-data.dto';
+import { ApiResponse } from '@nestjs/swagger';
 
 @ApiTags('features-special')
 @Controller()
@@ -24,17 +26,20 @@ export class FeaturesSpecialController {
   /** Executes GET /superadmin/features/rollout-insights. */
   @ApiOperation({ summary: 'GET /superadmin/features/rollout-insights' })
   @Get('superadmin/features/rollout-insights')
+  @ApiResponse({ type: FeaturesRolloutInsightsResponseDto })
   async findFeaturesRolloutInsights(): Promise<FeaturesRolloutInsightsResponseDto> { return await this.rolloutInsightsService.findFeaturesRolloutInsights(); }
 
   /** Creates a release note. */
   @RequireIdempotencyKey()
   @Post('superadmin/features/notes')
-  async createReleaseNote(@Body() body: FeaturesReleaseNoteCreateDto): Promise<unknown> { return this.releaseNoteService.create(body); }
+  @ApiResponse({ type: ReleaseNoteDto })
+  async createReleaseNote(@Body() body: FeaturesReleaseNoteCreateDto): Promise<ReleaseNoteDto> { return this.releaseNoteService.create(body) as unknown as ReleaseNoteDto; }
 
   /** Updates a release note. */
   @RequireIdempotencyKey()
   @Patch('superadmin/features/notes/:id')
-  async updateReleaseNote(@Param('id') id: string, @Body() body: FeaturesReleaseNoteUpdateDto): Promise<unknown> { return this.releaseNoteService.update(id, body); }
+  @ApiResponse({ type: ReleaseNoteDto })
+  async updateReleaseNote(@Param('id') id: string, @Body() body: FeaturesReleaseNoteUpdateDto): Promise<ReleaseNoteDto> { return this.releaseNoteService.update(id, body) as unknown as ReleaseNoteDto; }
 
   /** Deletes a release note using soft-delete. */
   @RequireIdempotencyKey()
@@ -44,5 +49,6 @@ export class FeaturesSpecialController {
   /** Executes GET /superadmin/features. */
   @ApiOperation({ summary: 'GET /superadmin/features' })
   @Get('superadmin/features')
-  async findFeaturesData(): Promise<unknown> { return await this.mainService.findFeaturesData(); }
+  @ApiResponse({ type: FeaturesResponseDataDto })
+  async findFeaturesData(): Promise<FeaturesResponseDataDto> { return await this.mainService.findFeaturesData() as unknown as FeaturesResponseDataDto; }
 }

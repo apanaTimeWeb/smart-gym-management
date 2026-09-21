@@ -3,10 +3,11 @@
 import { Injectable } from '@nestjs/common';
 import { GymsRepository } from '@/modules/superadmin/gyms/gyms.repository';
 import { GymsMapper } from '@/modules/superadmin/gyms/gyms.mapper';
-import type { GymsCreateInput, GymsDomainModel } from '@/modules/superadmin/gyms/types/gyms.interfaces';
+import type { GymsCreateInput } from '@/modules/superadmin/gyms/types/gyms.interfaces';
+import { GymsResponseDto } from '@/modules/superadmin/gyms/responses/gyms-response.dto';
 @Injectable()
 export class GymsCreateService {
   constructor(private readonly repository: GymsRepository) {}
   /** Creates a new gyms record. */
-  async createGyms(input: GymsCreateInput): Promise<GymsDomainModel> { return GymsMapper.toDomain(await this.repository.createGyms(input)); }
+  async createGyms(input: GymsCreateInput): Promise<GymsResponseDto> { return GymsMapper.toResponse(GymsMapper.toDomain(await this.repository.createGyms(input))); }
 }

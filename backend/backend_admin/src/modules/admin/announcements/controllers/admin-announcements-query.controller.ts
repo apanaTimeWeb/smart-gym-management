@@ -9,7 +9,7 @@ import { CoreRolesGuard } from '@/core/auth/core-roles.guard';
 import { CoreAdminRole } from '@/core/tenant/core-tenant.constants';
 import { AdminAnnouncementsQueryService } from '@/modules/admin/announcements/services/admin-announcements-query.service';
 import { AdminAnnouncementsQueryDto } from '@/modules/admin/announcements/dtos/admin-announcements-query.dto';
-import { AdminAnnouncementListResponseDto, AdminAnnouncementKPIDataDto } from '@/modules/admin/announcements/dtos/admin-announcements-response.dto';
+import { AdminAnnouncementDto, AdminAnnouncementKPIDataDto } from '@/modules/admin/announcements/dtos/admin-announcements-response.dto';
 
 @ApiTags('Admin / announcements')
 @Controller('admin/announcements')
@@ -21,9 +21,9 @@ export class AdminAnnouncementsQueryController {
   // SLA: STANDARD
   @Get('fetchAnnouncements')
   @ApiOperation({ summary: 'Execute fetchAnnouncements' })
-  @ApiResponse({ status: HttpStatus.OK, type: AdminAnnouncementListResponseDto })
-  async fetchAnnouncements(@Query() query: AdminAnnouncementsQueryDto): Promise<AdminAnnouncementListResponseDto> {
-    return this.service.fetchAnnouncements(query) as unknown as AdminAnnouncementListResponseDto;
+  @ApiResponse({ status: HttpStatus.OK, type: [AdminAnnouncementDto] })
+  async fetchAnnouncements(@Query() query: AdminAnnouncementsQueryDto): Promise<AdminAnnouncementDto[]> {
+    return this.service.fetchAnnouncements(query);
   }
 
   // SLA: STANDARD
@@ -31,7 +31,7 @@ export class AdminAnnouncementsQueryController {
   @ApiOperation({ summary: 'Execute fetchKPIs' })
   @ApiResponse({ status: HttpStatus.OK, type: AdminAnnouncementKPIDataDto })
   async fetchKPIs(@Query() query: AdminAnnouncementsQueryDto): Promise<AdminAnnouncementKPIDataDto> {
-    return this.service.fetchKPIs(query) as unknown as AdminAnnouncementKPIDataDto;
+    return this.service.fetchKPIs(query);
   }
 
 }

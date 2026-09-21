@@ -9,6 +9,8 @@ import { SuperadminRole } from '@/core/auth/auth.types';
 import { AnalyticsQueryDto } from '@/modules/superadmin/analytics/dtos/analytics-query.dto';
 import { AnalyticsListService } from '@/modules/superadmin/analytics/services/analytics-list.service';
 import { AnalyticsFindService } from '@/modules/superadmin/analytics/services/analytics-find.service';
+import { AnalyticsResponseDto } from '@/modules/superadmin/analytics/responses/analytics-response.dto';
+import { ApiResponse } from '@nestjs/swagger';
 
 @ApiTags('analytics')
 @Controller('/superadmin/analytics')
@@ -19,5 +21,6 @@ export class AnalyticsQueryController {
   /** Returns one analytics record. */
   // SLA: FAST
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<unknown> { return await this.findService.findAnalyticsById(id); }
+  @ApiResponse({ type: AnalyticsResponseDto })
+  async findOne(@Param('id') id: string): Promise<AnalyticsResponseDto> { return await this.findService.findAnalyticsById(id); }
 }

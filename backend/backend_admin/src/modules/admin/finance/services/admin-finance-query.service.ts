@@ -5,6 +5,7 @@ import { Injectable } from '@nestjs/common';
 import { AdminFinanceRepository } from '@/modules/admin/finance/repositories/admin-finance-repository';
 import { AdminFinanceMapper } from '@/modules/admin/finance/mappers/admin-finance.mapper';
 import { AdminFinanceQueryDto } from '@/modules/admin/finance/dtos/admin-finance-query.dto';
+import { AdminFinancePaymentResponseDto, AdminFinanceSummaryResponseDto, AdminFinancePnlRecordDto, AdminFinanceExpenseResponseDto } from '@/modules/admin/finance/dtos/admin-finance-response.dto';
 
 @Injectable()
 export class AdminFinanceQueryService {
@@ -18,31 +19,35 @@ export class AdminFinanceQueryService {
    * @param query Validated query when applicable.
    * @returns Frontend contract response.
    */
-  async fetchPayments(query: AdminFinanceQueryDto): Promise<Record<string, unknown>> {
-    const snapshot = await this.repository.findFirstSnapshot(); return snapshot ? this.mapper.toResponse(this.mapper.toDomain(snapshot)) : { payments: [], total: 0 };
+  async fetchPayments(query: AdminFinanceQueryDto): Promise<AdminFinancePaymentResponseDto> {
+    const snapshot = await this.repository.findFirstSnapshot(); 
+    return snapshot ? (this.mapper.toResponse(this.mapper.toDomain(snapshot)) as AdminFinancePaymentResponseDto) : { payments: [], total: 0 };
   }
 
   /** @description Executes fetchSummary for the Admin finance feature.
    * @param query Validated query when applicable.
    * @returns Frontend contract response.
    */
-  async fetchSummary(query: AdminFinanceQueryDto): Promise<Record<string, unknown>> {
-    const snapshot = await this.repository.findFirstSnapshot(); return snapshot ? (snapshot.payload.summary as Record<string, unknown> ?? {}) : {};
+  async fetchSummary(query: AdminFinanceQueryDto): Promise<AdminFinanceSummaryResponseDto> {
+    const snapshot = await this.repository.findFirstSnapshot(); 
+    return snapshot ? ((snapshot.payload.summary as any) ?? {}) as AdminFinanceSummaryResponseDto : {} as AdminFinanceSummaryResponseDto;
   }
 
   /** @description Executes fetchPnl for the Admin finance feature.
    * @param query Validated query when applicable.
    * @returns Frontend contract response.
    */
-  async fetchPnl(query: AdminFinanceQueryDto): Promise<Record<string, unknown>[]> {
-    const snapshot = await this.repository.findFirstSnapshot(); return snapshot ? (snapshot.payload.pnl as Record<string, unknown>[] ?? []) : [];
+  async fetchPnl(query: AdminFinanceQueryDto): Promise<AdminFinancePnlRecordDto[]> {
+    const snapshot = await this.repository.findFirstSnapshot(); 
+    return snapshot ? ((snapshot.payload.pnl as any) ?? []) as AdminFinancePnlRecordDto[] : [];
   }
 
   /** @description Executes fetchExpenses for the Admin finance feature.
    * @param query Validated query when applicable.
    * @returns Frontend contract response.
    */
-  async fetchExpenses(query: AdminFinanceQueryDto): Promise<Record<string, unknown>> {
-    const snapshot = await this.repository.findFirstSnapshot(); return snapshot ? this.mapper.toResponse(this.mapper.toDomain(snapshot)) : { expenses: [], total: 0, totalAmount: 0 };
+  async fetchExpenses(query: AdminFinanceQueryDto): Promise<AdminFinanceExpenseResponseDto> {
+    const snapshot = await this.repository.findFirstSnapshot(); 
+    return snapshot ? (this.mapper.toResponse(this.mapper.toDomain(snapshot)) as AdminFinanceExpenseResponseDto) : { expenses: [], total: 0, totalAmount: 0 };
   }
 }

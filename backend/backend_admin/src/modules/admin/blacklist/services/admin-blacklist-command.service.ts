@@ -5,6 +5,8 @@ import { Injectable } from '@nestjs/common';
 import { CoreAuditTrailService } from '@/core/audit/core-audit-trail.service';
 import { AdminBlacklistRepository } from '@/modules/admin/blacklist/repositories/admin-blacklist-repository';
 import { AdminBlacklistMapper } from '@/modules/admin/blacklist/mappers/admin-blacklist.mapper';
+import { AdminBlacklistedMemberDto } from '@/modules/admin/blacklist/dtos/admin-blacklist-response.dto';
+import { AdminBlacklistMutationDto } from '@/modules/admin/blacklist/dtos/admin-blacklist-mutation.dto';
 
 @Injectable()
 export class AdminBlacklistCommandService {
@@ -17,10 +19,10 @@ export class AdminBlacklistCommandService {
   /**
    * @description Executes the addToBlacklist mutation through the repository boundary.
    * @param input Validated mutation input and/or identifier.
-   * @returns Promise<Record<string, unknown>> frontend-facing result.
+   * @returns Promise<AdminBlacklistedMemberDto> frontend-facing result.
    */
-  async createRecord(input: Record<string, unknown>): Promise<Record<string, unknown>> {
-    const entity = await this.repository.createRecord(input);
+  async createRecord(input: AdminBlacklistMutationDto): Promise<AdminBlacklistedMemberDto> {
+    const entity = await this.repository.createRecord(input as Record<string, unknown>);
     return this.response(entity, 'CREATED');
   }
 
@@ -38,9 +40,9 @@ export class AdminBlacklistCommandService {
   /**
    * @description Executes the toggleBlacklist mutation through the repository boundary.
    * @param input Validated mutation input and/or identifier.
-   * @returns Promise<Record<string, unknown>> frontend-facing result.
+   * @returns Promise<AdminBlacklistedMemberDto> frontend-facing result.
    */
-  async toggleActiveById(id: string): Promise<Record<string, unknown>> {
+  async toggleActiveById(id: string): Promise<AdminBlacklistedMemberDto> {
     const entity = await this.repository.toggleActiveById(id);
     return this.response(entity, 'STATUS_TOGGLED');
   }
@@ -48,9 +50,9 @@ export class AdminBlacklistCommandService {
   /**
    * @description Executes the propagateToAllBranches mutation through the repository boundary.
    * @param input Validated mutation input and/or identifier.
-   * @returns Promise<Record<string, unknown>> frontend-facing result.
+   * @returns Promise<AdminBlacklistedMemberDto> frontend-facing result.
    */
-  async propagateById(id: string): Promise<Record<string, unknown>> {
+  async propagateById(id: string): Promise<AdminBlacklistedMemberDto> {
     const entity = await this.repository.propagateById(id);
     return this.response(entity, 'PROPAGATED');
   }
@@ -61,9 +63,9 @@ export class AdminBlacklistCommandService {
    * @param action Mutation action.
    * @returns Frontend response object.
    */
-  private async response(entity: Parameters<AdminBlacklistMapper['toDomain']>[0], action: string): Promise<Record<string, unknown>> {
-    const response = this.mapper.toResponse(this.mapper.toDomain(entity));
-    await this.audit(entity.id, action, response);
+  private async response(entity: Parameters<AdminBlacklistMapper['toDomain']>[0], action: string): Promise<AdminBlacklistedMemberDto> {
+    const response = this.mapper.toResponse(this.mapper.toDomain(entity)) as AdminBlacklistedMemberDto;
+    await this.audit(entity.id, action, response as any);
     return response;
   }
 

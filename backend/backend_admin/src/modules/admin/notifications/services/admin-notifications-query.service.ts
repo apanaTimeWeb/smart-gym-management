@@ -5,6 +5,7 @@ import { Injectable } from '@nestjs/common';
 import { AdminNotificationsRepository } from '@/modules/admin/notifications/repositories/admin-notifications-repository';
 import { AdminNotificationsMapper } from '@/modules/admin/notifications/mappers/admin-notifications.mapper';
 import { AdminNotificationsQueryDto } from '@/modules/admin/notifications/dtos/admin-notifications-query.dto';
+import { AdminNotificationDto } from '@/modules/admin/notifications/dtos/admin-notifications-response.dto';
 
 @Injectable()
 export class AdminNotificationsQueryService {
@@ -18,7 +19,8 @@ export class AdminNotificationsQueryService {
    * @param query Validated query when applicable.
    * @returns Frontend contract response.
    */
-  async listNotifications(query: AdminNotificationsQueryDto): Promise<Record<string, unknown>[]> {
-    const result = await this.repository.findAll(query); return result.items.map((entity) => this.mapper.toResponse(this.mapper.toDomain(entity)));
+  async listNotifications(query: AdminNotificationsQueryDto): Promise<AdminNotificationDto[]> {
+    const result = await this.repository.findAll(query); 
+    return result.items.map((entity) => this.mapper.toResponse(this.mapper.toDomain(entity))) as AdminNotificationDto[];
   }
 }

@@ -9,6 +9,8 @@ import { Roles } from '@/core/auth/roles.decorator';
 import { SuperadminRole } from '@/core/auth/auth.types';
 import { IntegrationsMainService } from '@/modules/superadmin/integrations/services/integrations-main.service';
 import { IntegrationsGenerateKeyService } from '@/modules/superadmin/integrations/services/integrations-generate-key.service';
+import { SuperadminIntegrationsResponseDataDto, SuperadminGenerateApiKeyResultDto } from '@/modules/superadmin/integrations/responses/integrations-response-data.dto';
+import { ApiResponse } from '@nestjs/swagger';
 
 @ApiTags('integrations-special')
 @Controller()
@@ -20,12 +22,14 @@ export class IntegrationsSpecialController {
   /** Executes GET /superadmin/integrations. */
   @ApiOperation({ summary: 'GET /superadmin/integrations' })
   @Get('superadmin/integrations')
-  async main(@Query() query: Record<string, string>): Promise<unknown> { return await this.mainService.findIntegrationsData(); }
+  @ApiResponse({ type: SuperadminIntegrationsResponseDataDto })
+  async main(@Query() query: Record<string, string>): Promise<SuperadminIntegrationsResponseDataDto> { return (await this.mainService.findIntegrationsData()) as unknown as SuperadminIntegrationsResponseDataDto; }
 
   /** Executes POST /superadmin/integrations/keys. */
   @RequireIdempotencyKey()
   @ApiOperation({ summary: 'POST /superadmin/integrations/keys' })
   @Post('superadmin/integrations/keys')
-  async generateKey(@Body() body: Record<string, unknown>): Promise<unknown> { return await this.generateKeyService.generateIntegrationKey({ body }); }
+  @ApiResponse({ type: SuperadminGenerateApiKeyResultDto })
+  async generateKey(@Body() body: Record<string, unknown>): Promise<SuperadminGenerateApiKeyResultDto> { return (await this.generateKeyService.generateIntegrationKey({ body })) as unknown as SuperadminGenerateApiKeyResultDto; }
 
 }

@@ -5,6 +5,7 @@ import { Injectable } from '@nestjs/common';
 import { AdminCampaignsRepository } from '@/modules/admin/campaigns/repositories/admin-campaigns-repository';
 import { AdminCampaignsMapper } from '@/modules/admin/campaigns/mappers/admin-campaigns.mapper';
 import { AdminCampaignsQueryDto } from '@/modules/admin/campaigns/dtos/admin-campaigns-query.dto';
+import { AdminCampaignsAudienceDto, AdminCampaignsTemplateDto, AdminCampaignsRecipientsDataDto } from '@/modules/admin/campaigns/dtos/admin-campaigns-response.dto';
 
 @Injectable()
 export class AdminCampaignsQueryService {
@@ -18,24 +19,26 @@ export class AdminCampaignsQueryService {
    * @param query Validated query when applicable.
    * @returns Frontend contract response.
    */
-  async fetchAudiences(query: AdminCampaignsQueryDto): Promise<Record<string, unknown>[]> {
-    const result = await this.repository.findAll(query); return result.items.map((entity) => this.mapper.toResponse(this.mapper.toDomain(entity)));
+  async fetchAudiences(query: AdminCampaignsQueryDto): Promise<AdminCampaignsAudienceDto[]> {
+    const result = await this.repository.findAll(query); 
+    return result.items.map((entity) => this.mapper.toResponse(this.mapper.toDomain(entity))) as AdminCampaignsAudienceDto[];
   }
 
   /** @description Executes fetchTemplates for the Admin campaigns feature.
    * @param query Validated query when applicable.
    * @returns Frontend contract response.
    */
-  async fetchTemplates(query: AdminCampaignsQueryDto): Promise<Record<string, unknown>[]> {
-    const result = await this.repository.findAll(query); return result.items.map((entity) => this.mapper.toResponse(this.mapper.toDomain(entity)));
+  async fetchTemplates(query: AdminCampaignsQueryDto): Promise<AdminCampaignsTemplateDto[]> {
+    const result = await this.repository.findAll(query); 
+    return result.items.map((entity) => this.mapper.toResponse(this.mapper.toDomain(entity))) as AdminCampaignsTemplateDto[];
   }
 
   /** @description Executes fetchRecipients for the Admin campaigns feature.
    * @param query Validated query when applicable.
    * @returns Frontend contract response.
    */
-  async fetchRecipients(query: AdminCampaignsQueryDto): Promise<Record<string, unknown>> {
+  async fetchRecipients(query: AdminCampaignsQueryDto): Promise<AdminCampaignsRecipientsDataDto> {
     const snapshot = await this.repository.findFirstSnapshot();
-    return { recipients: snapshot && Array.isArray(snapshot.payload.recipients) ? snapshot.payload.recipients : [] };
+    return { recipients: snapshot && Array.isArray(snapshot.payload.recipients) ? snapshot.payload.recipients : [] } as AdminCampaignsRecipientsDataDto;
   }
 }

@@ -3,10 +3,10 @@
 import { Injectable } from '@nestjs/common';
 import { BroadcastsRepository } from '@/modules/superadmin/broadcasts/broadcasts.repository';
 import { BroadcastsMapper } from '@/modules/superadmin/broadcasts/broadcasts.mapper';
-import type { BroadcastsDomainModel } from '@/modules/superadmin/broadcasts/types/broadcasts.interfaces';
+import { BroadcastsResponseDto } from '@/modules/superadmin/broadcasts/responses/broadcasts-response.dto';
 @Injectable()
 export class BroadcastsFindService {
   constructor(private readonly repository: BroadcastsRepository) {}
   /** Retrieves one active broadcasts record by UUID. */
-  async findBroadcastsById(id: string): Promise<BroadcastsDomainModel> { return BroadcastsMapper.toDomain(await this.repository.findByIdOrThrow(id)); }
+  async findBroadcastsById(id: string): Promise<BroadcastsResponseDto> { return BroadcastsMapper.toResponse(BroadcastsMapper.toDomain(await this.repository.findByIdOrThrow(id))); }
 }

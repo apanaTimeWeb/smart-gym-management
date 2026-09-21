@@ -36,10 +36,6 @@ export class AdminGymHealthAlertDto {
   snoozeUntil?: string;
 }
 
-export class AdminGymHealthAlertListResponseDto {
-  @ApiProperty({ type: [AdminGymHealthAlertDto] })
-  data!: AdminGymHealthAlertDto[];
-}
 
 export class AdminGymHealthKPIDataDto {
   @ApiProperty()

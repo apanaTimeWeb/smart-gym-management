@@ -19,8 +19,6 @@ export class AdminPlanDto {
   @ApiPropertyOptional() taxRate?: number;
 }
 
-export class AdminPlanListResponseDto {
-  @ApiProperty({ type: [AdminPlanDto] }) data!: AdminPlanDto[];
 }
 
 export class AdminPlanRevenueRecordDto {
@@ -31,8 +29,4 @@ export class AdminPlanRevenueRecordDto {
   @ApiProperty() activeSubscriptions!: number;
   @ApiProperty() newSignups!: number;
   @ApiProperty() renewalRate!: number;
-}
-
-export class AdminPlanRevenueListResponseDto {
-  @ApiProperty({ type: [AdminPlanRevenueRecordDto] }) data!: AdminPlanRevenueRecordDto[];
 }

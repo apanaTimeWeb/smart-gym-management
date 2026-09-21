@@ -36,10 +36,6 @@ export class AdminCouponDto {
   createdAt!: string;
 }
 
-export class AdminCouponListResponseDto {
-  @ApiProperty({ type: [AdminCouponDto] })
-  data!: AdminCouponDto[];
-}
 
 export class AdminCouponsKPIDataDto {
   @ApiProperty()

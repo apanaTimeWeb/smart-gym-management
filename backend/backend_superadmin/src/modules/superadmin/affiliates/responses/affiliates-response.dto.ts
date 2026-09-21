@@ -21,7 +21,7 @@ export class AffiliatesResponseDto {
   @ApiPropertyOptional()
   pendingPayout!: number;
   @ApiPropertyOptional()
-  bankDetails!: Record<string, unknown> | unknown[] | null;
+  bankDetails!: string;
   @ApiPropertyOptional()
   status!: string;
   @ApiPropertyOptional()
@@ -30,4 +30,15 @@ export class AffiliatesResponseDto {
   referralCount!: number;
   @ApiPropertyOptional()
   conversionRate!: number;
+}
+
+export class AffiliatePayoutRecordDto {
+  @ApiPropertyOptional() id!: string;
+  @ApiPropertyOptional() affiliateId!: string;
+  @ApiPropertyOptional() affiliateName!: string;
+  @ApiPropertyOptional() amount!: number;
+  @ApiPropertyOptional({ enum: ['BANK_TRANSFER', 'PAYPAL'] }) method!: string;
+  @ApiPropertyOptional() referenceId!: string;
+  @ApiPropertyOptional({ enum: ['PENDING', 'COMPLETED'] }) status!: string;
+  @ApiPropertyOptional() paidAt!: string;
 }

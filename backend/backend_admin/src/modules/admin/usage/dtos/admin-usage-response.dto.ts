@@ -55,10 +55,6 @@ export class AdminUsageDataDto {
   usageHistory!: AdminUsageHistoryPointDto[];
 }
 
-export class AdminUsageResponseDto {
-  @ApiProperty({ type: AdminUsageDataDto })
-  data!: AdminUsageDataDto;
-}
 
 export class AdminUsageUpgradeRequestDto {
   @ApiProperty()
@@ -71,7 +67,3 @@ export class AdminUsageUpgradeRequestDto {
   requestedAt!: string;
 }
 
-export class AdminUsageUpgradeResponseDto {
-  @ApiProperty({ type: AdminUsageUpgradeRequestDto })
-  data!: AdminUsageUpgradeRequestDto;
-}

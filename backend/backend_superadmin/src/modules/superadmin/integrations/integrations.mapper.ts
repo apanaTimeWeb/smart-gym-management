@@ -2,6 +2,7 @@
 // FLOW: TypeORM entity -> IntegrationsMapper -> domain model -> response DTO.
 import type { IntegrationKeyEntity } from '@/modules/superadmin/integrations/integrations.entity';
 import type { IntegrationsDomainModel } from '@/modules/superadmin/integrations/types/integrations.interfaces';
+import { IntegrationsResponseDto } from '@/modules/superadmin/integrations/responses/integrations-response.dto';
 
 export class IntegrationsMapper {
   /** Maps a persistence entity to the domain representation. */
@@ -9,4 +10,10 @@ export class IntegrationsMapper {
 
   /** Maps persistence entities to domain representations. */
   static toDomainList(entities: IntegrationKeyEntity[]): IntegrationsDomainModel[] { return entities.map(IntegrationsMapper.toDomain); }
+
+  static toResponse(domain: IntegrationsDomainModel): IntegrationsResponseDto {
+    const dto = new IntegrationsResponseDto();
+    Object.assign(dto, domain);
+    return dto;
+  }
 }

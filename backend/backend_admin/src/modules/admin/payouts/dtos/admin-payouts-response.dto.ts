@@ -19,10 +19,6 @@ export class AdminGymPayoutDto {
   @ApiPropertyOptional() rejectionReason?: string;
 }
 
-export class AdminGymPayoutListResponseDto {
-  @ApiProperty({ type: [AdminGymPayoutDto] }) data!: AdminGymPayoutDto[];
-}
-
 export class AdminPnLEntryDto {
   @ApiProperty() gymId!: string;
   @ApiProperty() gymName!: string;
@@ -37,10 +33,6 @@ export class AdminPnLEntryDto {
   @ApiProperty() ebitda!: number;
   @ApiProperty() tax!: number;
   @ApiProperty() netProfit!: number;
-}
-
-export class AdminPnLEntryListResponseDto {
-  @ApiProperty({ type: [AdminPnLEntryDto] }) data!: AdminPnLEntryDto[];
 }
 
 export class AdminPayoutsKPIDataDto {

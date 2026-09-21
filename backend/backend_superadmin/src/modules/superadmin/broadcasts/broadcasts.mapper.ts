@@ -2,6 +2,7 @@
 // FLOW: TypeORM entity -> BroadcastsMapper -> domain model -> response DTO.
 import type { BroadcastEntity } from '@/modules/superadmin/broadcasts/broadcasts.entity';
 import type { BroadcastsDomainModel } from '@/modules/superadmin/broadcasts/types/broadcasts.interfaces';
+import { BroadcastsResponseDto } from '@/modules/superadmin/broadcasts/responses/broadcasts-response.dto';
 
 export class BroadcastsMapper {
   /** Maps a persistence entity to the domain representation. */
@@ -9,4 +10,10 @@ export class BroadcastsMapper {
 
   /** Maps persistence entities to domain representations. */
   static toDomainList(entities: BroadcastEntity[]): BroadcastsDomainModel[] { return entities.map(BroadcastsMapper.toDomain); }
+
+  static toResponse(domain: BroadcastsDomainModel): BroadcastsResponseDto {
+    const dto = new BroadcastsResponseDto();
+    Object.assign(dto, domain);
+    return dto;
+  }
 }

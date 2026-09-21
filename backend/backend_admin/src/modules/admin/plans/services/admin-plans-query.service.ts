@@ -5,6 +5,7 @@ import { Injectable } from '@nestjs/common';
 import { AdminPlansRepository } from '@/modules/admin/plans/repositories/admin-plans-repository';
 import { AdminPlansMapper } from '@/modules/admin/plans/mappers/admin-plans.mapper';
 import { AdminPlansQueryDto } from '@/modules/admin/plans/dtos/admin-plans-query.dto';
+import { AdminPlanDto, AdminPlanRevenueRecordDto } from '@/modules/admin/plans/dtos/admin-plans-response.dto';
 
 @Injectable()
 export class AdminPlansQueryService {
@@ -18,23 +19,23 @@ export class AdminPlansQueryService {
    * @param query Validated query when applicable.
    * @returns Frontend contract response.
    */
-  async fetchAllPlans(query: AdminPlansQueryDto): Promise<unknown[]> {
-    const snapshot = await this.repository.findFirstSnapshot(); return snapshot ? (snapshot.payload.plans as unknown[] ?? []) : [];
+  async fetchAllPlans(query: AdminPlansQueryDto): Promise<AdminPlanDto[]> {
+    const result = await this.repository.findAll(query); return result.items.map((entity) => this.mapper.toResponse(this.mapper.toDomain(entity)) as AdminPlanDto);
   }
 
   /** @description Executes fetchPlanById for the Admin plans feature.
    * @param query Validated query when applicable.
    * @returns Frontend contract response.
    */
-  async fetchPlanById(id: string): Promise<Record<string, unknown>> {
-    const entity = await this.repository.findByIdOrThrow(id); return this.mapper.toResponse(this.mapper.toDomain(entity));
+  async fetchPlanById(id: string): Promise<AdminPlanDto> {
+    const entity = await this.repository.findByIdOrThrow(id); return this.mapper.toResponse(this.mapper.toDomain(entity)) as AdminPlanDto;
   }
 
   /** @description Executes fetchPlanRevenue for the Admin plans feature.
    * @param query Validated query when applicable.
    * @returns Frontend contract response.
    */
-  async fetchPlanRevenue(query: AdminPlansQueryDto): Promise<unknown> {
-    const snapshot = await this.repository.findFirstSnapshot(); return snapshot ? snapshot.payload.planRevenue ?? [] : [];
+  async fetchPlanRevenue(_query?: AdminPlansQueryDto): Promise<AdminPlanRevenueRecordDto[]> {
+    const snapshot = await this.repository.findFirstSnapshot(); return snapshot ? (snapshot.payload.revenue ?? []) as AdminPlanRevenueRecordDto[] : [];
   }
 }

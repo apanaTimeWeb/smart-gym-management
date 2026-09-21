@@ -11,6 +11,8 @@ import { RequireIdempotencyKey } from '@/core/cache/idempotency.decorator';
 import { BroadcastsRepository } from '@/modules/superadmin/broadcasts/broadcasts.repository';
 import { BroadcastsDeliveryService } from '@/modules/superadmin/broadcasts/services/broadcasts-delivery.service';
 import { BroadcastDeliveryDto } from '@/modules/superadmin/broadcasts/dtos/broadcast-delivery.dto';
+import { SuperadminBroadcastDeliveryResultDto } from '@/modules/superadmin/broadcasts/responses/broadcasts-response.dto';
+import { ApiResponse } from '@nestjs/swagger';
 
 @ApiTags('broadcasts-contract')
 @Controller('/superadmin/broadcasts')
@@ -26,7 +28,8 @@ export class BroadcastsContractController {
   /** Records a recipient delivery result. */
   @Post(':broadcastId/deliveries/:recipientId')
   @RequireIdempotencyKey()
-  async deliver(@Param('broadcastId') broadcastId: string, @Param('recipientId') recipientId: string, @Body() body: BroadcastDeliveryDto): Promise<unknown> {
+  @ApiResponse({ type: SuperadminBroadcastDeliveryResultDto })
+  async deliver(@Param('broadcastId') broadcastId: string, @Param('recipientId') recipientId: string, @Body() body: BroadcastDeliveryDto): Promise<SuperadminBroadcastDeliveryResultDto> {
     return this.deliveryService.deliver({ broadcastId: body.broadcastId || broadcastId, recipientId: body.recipientId || recipientId });
   }
 }

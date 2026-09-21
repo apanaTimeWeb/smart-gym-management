@@ -12,6 +12,8 @@ import { GlobalAuditCreateDto } from '@/modules/superadmin/global-audit/dtos/glo
 import { GlobalAuditUpdateService } from '@/modules/superadmin/global-audit/services/global-audit-update.service';
 import { GlobalAuditUpdateDto } from '@/modules/superadmin/global-audit/dtos/global-audit-update.dto';
 import { GlobalAuditDeleteService } from '@/modules/superadmin/global-audit/services/global-audit-delete.service';
+import { GlobalAuditResponseDto } from '@/modules/superadmin/global-audit/responses/global-audit-response.dto';
+import { ApiResponse } from '@nestjs/swagger';
 
 @ApiTags('global-audit')
 @Controller('/superadmin/global-audit')
@@ -25,13 +27,15 @@ export class GlobalAuditCommandController {
   @Post()
     @HttpCode(HttpStatus.CREATED)
     @UseGuards(RateLimitGuard)
-    async create(@Body() body: GlobalAuditCreateDto): Promise<unknown> { return this.createService.createGlobalAudit(body); }
+    @ApiResponse({ type: GlobalAuditResponseDto })
+    async create(@Body() body: GlobalAuditCreateDto): Promise<GlobalAuditResponseDto> { return (this.createService.createGlobalAudit(body)) as unknown as GlobalAuditResponseDto; }
 
   /** Handles the update mutation for the feature. */
   @ApiOperation({ summary: 'update global-audit' })
   @Patch(':id')
     @UseGuards(RateLimitGuard)
-    async update(@Param('id') id: string, @Body() body: GlobalAuditUpdateDto): Promise<unknown> { return this.updateService.updateGlobalAudit(id, body); }
+    @ApiResponse({ type: GlobalAuditResponseDto })
+    async update(@Param('id') id: string, @Body() body: GlobalAuditUpdateDto): Promise<GlobalAuditResponseDto> { return (this.updateService.updateGlobalAudit(id, body)) as unknown as GlobalAuditResponseDto; }
 
   /** Handles the remove mutation for the feature. */
   @ApiOperation({ summary: 'remove global-audit' })

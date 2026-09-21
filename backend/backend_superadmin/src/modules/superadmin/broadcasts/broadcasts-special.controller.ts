@@ -8,6 +8,9 @@ import { RolesGuard } from '@/core/auth/roles.guard';
 import { Roles } from '@/core/auth/roles.decorator';
 import { SuperadminRole } from '@/core/auth/auth.types';
 import { BroadcastsAudienceInsightsService } from '@/modules/superadmin/broadcasts/services/broadcasts-audience-insights.service';
+import { BroadcastsAudienceInsightsService } from '@/modules/superadmin/broadcasts/services/broadcasts-audience-insights.service';
+import { BroadcastsAudienceInsightsResponseDto } from '@/modules/superadmin/broadcasts/broadcasts-audience-insights-response.dto';
+import { ApiResponse } from '@nestjs/swagger';
 
 @ApiTags('broadcasts-special')
 @Controller()
@@ -19,6 +22,7 @@ export class BroadcastsSpecialController {
   /** Executes GET /superadmin/broadcasts/audience-insights. */
   @ApiOperation({ summary: 'GET /superadmin/broadcasts/audience-insights' })
   @Get('superadmin/broadcasts/audience-insights')
-  async audienceInsights(@Query() query: Record<string, string>): Promise<unknown> { return await this.audienceInsightsService.findBroadcastsAudienceInsights(); }
+  @ApiResponse({ type: BroadcastsAudienceInsightsResponseDto })
+  async audienceInsights(@Query() query: Record<string, string>): Promise<BroadcastsAudienceInsightsResponseDto> { return await this.audienceInsightsService.findBroadcastsAudienceInsights(); }
 
 }

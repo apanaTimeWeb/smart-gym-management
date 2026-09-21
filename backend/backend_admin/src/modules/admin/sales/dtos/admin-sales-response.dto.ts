@@ -18,10 +18,6 @@ export class ReferralDataPointDto {
   @ApiProperty() revenue!: number;
 }
 
-export class AdminSalesReferralResponseDto {
-  @ApiProperty({ type: [ReferralDataPointDto] }) data!: ReferralDataPointDto[];
-}
-
 export class MembershipReportItemDto {
   @ApiPropertyOptional() id?: number;
   @ApiPropertyOptional() name?: string;

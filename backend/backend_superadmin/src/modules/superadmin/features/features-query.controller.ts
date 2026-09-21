@@ -10,6 +10,9 @@ import { FeaturesQueryDto } from '@/modules/superadmin/features/dtos/features-qu
 import { FeaturesListService } from '@/modules/superadmin/features/services/features-list.service';
 import { FeaturesFindService } from '@/modules/superadmin/features/services/features-find.service';
 import { FeaturesRepository } from '@/modules/superadmin/features/features.repository';
+import { FeaturesResponseDto } from '@/modules/superadmin/features/responses/features-response.dto';
+import { SuperadminFeatureHistoryEntryDto } from '@/modules/superadmin/features/features-response-data.dto';
+import { ApiResponse } from '@nestjs/swagger';
 
 @ApiTags('features')
 @Controller('/superadmin/features')
@@ -20,10 +23,12 @@ export class FeaturesQueryController {
   /** Returns the audit history for one feature flag. */
   // SLA: FAST
   @Get('flags/:id/history')
-  async history(@Param('id') id: string): Promise<unknown[]> { const flag = await this.repository.findByIdOrThrow(id); return Array.isArray(flag.history) ? flag.history : []; }
+  @ApiResponse({ type: [SuperadminFeatureHistoryEntryDto] })
+  async history(@Param('id') id: string): Promise<SuperadminFeatureHistoryEntryDto[]> { const flag = await this.repository.findByIdOrThrow(id); return (Array.isArray(flag.history) ? flag.history : []) as unknown as SuperadminFeatureHistoryEntryDto[]; }
 
   /** Returns one features record. */
   // SLA: FAST
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<unknown> { return await this.findService.findFeaturesById(id); }
+  @ApiResponse({ type: FeaturesResponseDto })
+  async findOne(@Param('id') id: string): Promise<FeaturesResponseDto> { return await this.findService.findFeaturesById(id); }
 }

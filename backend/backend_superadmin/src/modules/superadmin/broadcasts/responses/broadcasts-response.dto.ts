@@ -10,8 +10,8 @@ export class BroadcastsResponseDto {
   content!: string;
   @ApiPropertyOptional()
   status!: string;
-  @ApiPropertyOptional()
-  targetGymIds!: Record<string, unknown> | unknown[] | null;
+  @ApiPropertyOptional({ type: [String] })
+  targetGymIds!: string[];
   @ApiPropertyOptional()
   scheduledDate!: string | null;
   @ApiPropertyOptional()
@@ -24,4 +24,25 @@ export class BroadcastsResponseDto {
   failedCount!: number;
   @ApiPropertyOptional()
   audience!: string;
+}
+
+export class SuperadminBroadcastsTenantDto {
+  @ApiPropertyOptional() id!: string;
+  @ApiPropertyOptional() name!: string;
+  @ApiPropertyOptional() plan!: string;
+  @ApiPropertyOptional() ownerName?: string;
+  @ApiPropertyOptional() phone?: string;
+}
+
+export class SuperadminBroadcastDeliveryResultDto {
+  @ApiPropertyOptional({ type: BroadcastsResponseDto }) broadcast!: BroadcastsResponseDto;
+  @ApiPropertyOptional() recipientId!: string;
+  @ApiPropertyOptional() deliveryStatus!: string;
+  @ApiPropertyOptional() deliveredAt?: string | null;
+}
+
+export class BroadcastAudienceInsightsDto {
+  @ApiPropertyOptional() segments!: any[];
+  @ApiPropertyOptional() channels!: any[];
+  @ApiPropertyOptional() templates!: string[];
 }

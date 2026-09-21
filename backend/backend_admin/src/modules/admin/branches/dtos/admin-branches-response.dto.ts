@@ -102,7 +102,3 @@ export class AdminBranchDto {
   studentList?: AdminBranchStudentDto[];
 }
 
-export class AdminBranchListResponseDto {
-  @ApiProperty({ type: [AdminBranchDto] })
-  data!: AdminBranchDto[];
-}

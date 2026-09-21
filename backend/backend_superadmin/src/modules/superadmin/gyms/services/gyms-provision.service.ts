@@ -3,21 +3,33 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { randomUUID } from 'node:crypto';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { EncryptionService } from '@/core/security/encryption.service';
 import { TenantDatabaseProvisionerService } from '@/core/tenancy/tenant-database-provisioner.service';
 import { TenantRegistryRepository } from '@/core/tenancy/tenant-registry.repository';
 import { GymsRepository } from '@/modules/superadmin/gyms/gyms.repository';
+import { FeaturesRepository } from '@/modules/superadmin/features/features.repository';
 import { GymsMapper } from '@/modules/superadmin/gyms/gyms.mapper';
 import { GymsStatus } from '@/modules/superadmin/gyms/dtos/gyms-create.dto';
-import type { GymsDomainModel } from '@/modules/superadmin/gyms/types/gyms.interfaces';
-import type { GymsProvisionDto } from '@/modules/superadmin/gyms/dtos/gyms-provision.dto';
+import { GymsResponseDto } from '@/modules/superadmin/gyms/responses/gyms-response.dto';
+import type { GymsProvisionInput } from '@/modules/superadmin/gyms/types/gyms.interfaces';
 
 @Injectable()
 export class GymsProvisionService {
-  constructor(private readonly repository: GymsRepository, private readonly encryption: EncryptionService, private readonly provisioner: TenantDatabaseProvisionerService, private readonly registry: TenantRegistryRepository) {}
+  constructor(
+    private readonly repository: GymsRepository,
+    private readonly encryption: EncryptionService,
+    private readonly provisioner: TenantDatabaseProvisionerService,
+    private readonly registry: TenantRegistryRepository,
+    private readonly featuresRepository: FeaturesRepository,
+    private readonly eventEmitter: EventEmitter2,
+  ) {}
 
-  /** Provisions a tenant and returns only the frozen frontend-safe Tenant response fields. */
-  async provisionGym(input: GymsProvisionDto): Promise<GymsDomainModel> {
+  /**
+   * Orchestrates the complex multi-step tenant provisioning workflow.
+   * Emits an integration event so other bounded contexts can react to the new tenant.
+   */
+  async provisionGym(input: GymsProvisionInput): Promise<GymsResponseDto> {
     const tenantId = randomUUID();
     const databaseName = await this.provisioner.provision(tenantId);
     try {
@@ -27,7 +39,11 @@ export class GymsProvisionService {
       });
       const passwordHash = await bcrypt.hash(input.temporaryPassword, 12);
       await this.registry.createAdminAccount(tenant.id, tenant.adminEmail, passwordHash);
-      return GymsMapper.toDomain(tenant);
+
+      // The event listener doesn't need the decrypted secrets.
+      this.eventEmitter.emit('superadmin.tenant.provisioned', { tenantId: tenant.id, plan: tenant.plan });
+
+      return GymsMapper.toResponse(GymsMapper.toDomain(tenant));
     } catch (error) {
       await this.provisioner.drop(databaseName);
       throw new InternalServerErrorException(error instanceof Error ? error.message : 'Tenant provisioning failed');

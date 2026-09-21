@@ -5,6 +5,7 @@ import { Injectable } from '@nestjs/common';
 import { AdminCouponsRepository } from '@/modules/admin/coupons/repositories/admin-coupons-repository';
 import { AdminCouponsMapper } from '@/modules/admin/coupons/mappers/admin-coupons.mapper';
 import { AdminCouponsQueryDto } from '@/modules/admin/coupons/dtos/admin-coupons-query.dto';
+import { AdminCouponDto, AdminCouponsKPIDataDto } from '@/modules/admin/coupons/dtos/admin-coupons-response.dto';
 
 @Injectable()
 export class AdminCouponsQueryService {
@@ -18,13 +19,14 @@ export class AdminCouponsQueryService {
    * @param query Validated query when applicable.
    * @returns Frontend contract response.
    */
-  async fetchCoupons(query: AdminCouponsQueryDto): Promise<Record<string, unknown>[]> {
-    const result = await this.repository.findAll(query); return result.items.map((entity) => this.mapper.toResponse(this.mapper.toDomain(entity)));
+  async fetchCoupons(query: AdminCouponsQueryDto): Promise<AdminCouponDto[]> {
+    const result = await this.repository.findAll(query); 
+    return result.items.map((entity) => this.mapper.toResponse(this.mapper.toDomain(entity))) as AdminCouponDto[];
   }
   /** @description Returns the persisted KPI snapshot required by the Admin coupons dashboard. @returns KPI data object. */
-  async fetchKPIs(): Promise<Record<string, unknown>> {
+  async fetchKPIs(): Promise<AdminCouponsKPIDataDto> {
     const snapshot = await this.repository.findFirstSnapshot();
-    return snapshot ? (snapshot.payload as Record<string, unknown>) : {};
+    return snapshot ? (snapshot.payload as AdminCouponsKPIDataDto) : {} as AdminCouponsKPIDataDto;
   }
 
 }

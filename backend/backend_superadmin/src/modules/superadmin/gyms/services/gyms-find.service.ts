@@ -3,10 +3,10 @@
 import { Injectable } from '@nestjs/common';
 import { GymsRepository } from '@/modules/superadmin/gyms/gyms.repository';
 import { GymsMapper } from '@/modules/superadmin/gyms/gyms.mapper';
-import type { GymsDomainModel } from '@/modules/superadmin/gyms/types/gyms.interfaces';
+import { GymsResponseDto } from '@/modules/superadmin/gyms/responses/gyms-response.dto';
 @Injectable()
 export class GymsFindService {
   constructor(private readonly repository: GymsRepository) {}
   /** Retrieves one active gyms record by UUID. */
-  async findGymsById(id: string): Promise<GymsDomainModel> { return GymsMapper.toDomain(await this.repository.findByIdOrThrow(id)); }
+  async findGymsById(id: string): Promise<GymsResponseDto> { return GymsMapper.toResponse(GymsMapper.toDomain(await this.repository.findByIdOrThrow(id))); }
 }

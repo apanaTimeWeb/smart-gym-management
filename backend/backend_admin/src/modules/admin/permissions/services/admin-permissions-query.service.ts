@@ -5,6 +5,7 @@ import { Injectable } from '@nestjs/common';
 import { AdminPermissionsRepository } from '@/modules/admin/permissions/repositories/admin-permissions-repository';
 import { AdminPermissionsMapper } from '@/modules/admin/permissions/mappers/admin-permissions.mapper';
 import { AdminPermissionsQueryDto } from '@/modules/admin/permissions/dtos/admin-permissions-query.dto';
+import { AdminPermissionsDataDto } from '@/modules/admin/permissions/dtos/admin-permissions-response.dto';
 
 @Injectable()
 export class AdminPermissionsQueryService {
@@ -18,7 +19,8 @@ export class AdminPermissionsQueryService {
    * @param query Validated query when applicable.
    * @returns Frontend contract response.
    */
-  async fetchPermissions(_query?: AdminPermissionsQueryDto): Promise<Record<string, unknown>> {
-    const result = await this.repository.findFirstSnapshot(); return result ? this.mapper.toResponse(this.mapper.toDomain(result)) : {};
+  async fetchPermissions(_query?: AdminPermissionsQueryDto): Promise<AdminPermissionsDataDto> {
+    const result = await this.repository.findFirstSnapshot(); 
+    return (result ? this.mapper.toResponse(this.mapper.toDomain(result)) : {}) as AdminPermissionsDataDto;
   }
 }

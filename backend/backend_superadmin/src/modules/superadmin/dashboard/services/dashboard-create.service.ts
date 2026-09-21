@@ -3,10 +3,11 @@
 import { Injectable } from '@nestjs/common';
 import { DashboardRepository } from '@/modules/superadmin/dashboard/dashboard.repository';
 import { DashboardMapper } from '@/modules/superadmin/dashboard/dashboard.mapper';
-import type { DashboardCreateInput, DashboardDomainModel } from '@/modules/superadmin/dashboard/types/dashboard.interfaces';
+import type { DashboardCreateInput } from '@/modules/superadmin/dashboard/types/dashboard.interfaces';
+import { DashboardResponseDto } from '@/modules/superadmin/dashboard/responses/dashboard-response.dto';
 @Injectable()
 export class DashboardCreateService {
   constructor(private readonly repository: DashboardRepository) {}
   /** Creates a new dashboard record. */
-  async createDashboard(input: DashboardCreateInput): Promise<DashboardDomainModel> { return DashboardMapper.toDomain(await this.repository.createDashboard(input)); }
+  async createDashboard(input: DashboardCreateInput): Promise<DashboardResponseDto> { return DashboardMapper.toResponse(DashboardMapper.toDomain(await this.repository.createDashboard(input))); }
 }

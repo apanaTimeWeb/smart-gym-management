@@ -14,6 +14,8 @@ import { IntegrationsUpdateService } from '@/modules/superadmin/integrations/ser
 import { IntegrationsUpdateDto } from '@/modules/superadmin/integrations/dtos/integrations-update.dto';
 import { IntegrationsDeleteService } from '@/modules/superadmin/integrations/services/integrations-delete.service';
 import { IntegrationsStatusService } from '@/modules/superadmin/integrations/services/integrations-status.service';
+import { IntegrationsResponseDto } from '@/modules/superadmin/integrations/responses/integrations-response.dto';
+import { ApiResponse } from '@nestjs/swagger';
 
 @ApiTags('integrations')
 @Controller('/superadmin/integrations')
@@ -28,14 +30,16 @@ export class IntegrationsCommandController {
     @HttpCode(HttpStatus.CREATED)
     @RequireIdempotencyKey()
   @UseGuards(RateLimitGuard)
-    async create(@Body() body: IntegrationsCreateDto): Promise<unknown> { return this.createService.createIntegrations(body); }
+    @ApiResponse({ type: IntegrationsResponseDto })
+    async create(@Body() body: IntegrationsCreateDto): Promise<IntegrationsResponseDto> { return (this.createService.createIntegrations(body)) as unknown as IntegrationsResponseDto; }
 
   /** Handles the update mutation for the feature. */
   @ApiOperation({ summary: 'update integrations' })
   @Patch(':id')
     @RequireIdempotencyKey()
   @UseGuards(RateLimitGuard)
-    async update(@Param('id') id: string, @Body() body: IntegrationsUpdateDto): Promise<unknown> { return this.updateService.updateIntegrations(id, body); }
+    @ApiResponse({ type: IntegrationsResponseDto })
+    async update(@Param('id') id: string, @Body() body: IntegrationsUpdateDto): Promise<IntegrationsResponseDto> { return (this.updateService.updateIntegrations(id, body)) as unknown as IntegrationsResponseDto; }
 
   /** Handles the remove mutation for the feature. */
   @ApiOperation({ summary: 'remove integrations' })
@@ -49,6 +53,7 @@ export class IntegrationsCommandController {
   @ApiOperation({ summary: 'changeStatus integrations' })
   @Patch(':id/status')
     @UseGuards(RateLimitGuard)
-    async changeStatus(@Param('id') id: string, @Body() body: { status: string }): Promise<unknown> { return this.statusService.changeIntegrationsStatus(id, body.status); }
+    @ApiResponse({ type: IntegrationsResponseDto })
+    async changeStatus(@Param('id') id: string, @Body() body: { status: string }): Promise<IntegrationsResponseDto> { return (this.statusService.changeIntegrationsStatus(id, body.status)) as unknown as IntegrationsResponseDto; }
 
 }

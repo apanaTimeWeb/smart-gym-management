@@ -11,9 +11,9 @@ import { AdminSubscriptionsQueryService } from '@/modules/admin/subscriptions/se
 import { AdminSubscriptionsQueryDto } from '@/modules/admin/subscriptions/dtos/admin-subscriptions-query.dto';
 import { 
   AdminCurrentSubscriptionDto, 
-  AdminSaaSPlanListResponseDto, 
-  AdminInvoiceListResponseDto, 
-  AdminPaymentMethodListResponseDto, 
+  AdminSaaSPlanDto, 
+  AdminInvoiceDto, 
+  AdminPaymentMethodDto, 
   AdminSubscriptionKPIDataDto 
 } from '@/modules/admin/subscriptions/dtos/admin-subscriptions-response.dto';
 
@@ -29,31 +29,31 @@ export class AdminSubscriptionsQueryController {
   @ApiOperation({ summary: 'Execute fetchSubscription' })
   @ApiResponse({ status: HttpStatus.OK, type: AdminCurrentSubscriptionDto })
   async fetchSubscription(@Query() query: AdminSubscriptionsQueryDto): Promise<AdminCurrentSubscriptionDto> {
-    return this.service.fetchSubscription(query) as unknown as AdminCurrentSubscriptionDto;
+    return this.service.fetchSubscription(query);
   }
 
   // SLA: STANDARD
   @Get('fetchPlans')
   @ApiOperation({ summary: 'Execute fetchPlans' })
-  @ApiResponse({ status: HttpStatus.OK, type: AdminSaaSPlanListResponseDto })
-  async fetchPlans(@Query() query: AdminSubscriptionsQueryDto): Promise<AdminSaaSPlanListResponseDto> {
-    return this.service.fetchPlans(query) as unknown as AdminSaaSPlanListResponseDto;
+  @ApiResponse({ status: HttpStatus.OK, type: [AdminSaaSPlanDto] })
+  async fetchPlans(@Query() query: AdminSubscriptionsQueryDto): Promise<AdminSaaSPlanDto[]> {
+    return this.service.fetchPlans(query);
   }
 
   // SLA: STANDARD
   @Get('fetchInvoices')
   @ApiOperation({ summary: 'Execute fetchInvoices' })
-  @ApiResponse({ status: HttpStatus.OK, type: AdminInvoiceListResponseDto })
-  async fetchInvoices(@Query() query: AdminSubscriptionsQueryDto): Promise<AdminInvoiceListResponseDto> {
-    return this.service.fetchInvoices(query) as unknown as AdminInvoiceListResponseDto;
+  @ApiResponse({ status: HttpStatus.OK, type: [AdminInvoiceDto] })
+  async fetchInvoices(@Query() query: AdminSubscriptionsQueryDto): Promise<AdminInvoiceDto[]> {
+    return this.service.fetchInvoices(query);
   }
 
   // SLA: STANDARD
   @Get('fetchPaymentMethods')
   @ApiOperation({ summary: 'Execute fetchPaymentMethods' })
-  @ApiResponse({ status: HttpStatus.OK, type: AdminPaymentMethodListResponseDto })
-  async fetchPaymentMethods(@Query() query: AdminSubscriptionsQueryDto): Promise<AdminPaymentMethodListResponseDto> {
-    return this.service.fetchPaymentMethods(query) as unknown as AdminPaymentMethodListResponseDto;
+  @ApiResponse({ status: HttpStatus.OK, type: [AdminPaymentMethodDto] })
+  async fetchPaymentMethods(@Query() query: AdminSubscriptionsQueryDto): Promise<AdminPaymentMethodDto[]> {
+    return this.service.fetchPaymentMethods(query);
   }
 
   // SLA: STANDARD
@@ -61,7 +61,7 @@ export class AdminSubscriptionsQueryController {
   @ApiOperation({ summary: 'Execute fetchKPIs' })
   @ApiResponse({ status: HttpStatus.OK, type: AdminSubscriptionKPIDataDto })
   async fetchKPIs(@Query() query: AdminSubscriptionsQueryDto): Promise<AdminSubscriptionKPIDataDto> {
-    return this.service.fetchKPIs(query) as unknown as AdminSubscriptionKPIDataDto;
+    return this.service.fetchKPIs(query);
   }
 
 }

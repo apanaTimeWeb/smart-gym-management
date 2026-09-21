@@ -30,7 +30,7 @@ export class AdminHrQueryController {
   @ApiOperation({ summary: 'Execute fetchStaff' })
   @ApiResponse({ status: HttpStatus.OK, type: AdminHrStaffListResponseDto })
   async fetchStaff(@Query() query: AdminHrQueryDto): Promise<AdminHrStaffListResponseDto> {
-    return this.service.fetchStaff(query) as unknown as AdminHrStaffListResponseDto;
+    return this.service.fetchStaff(query);
   }
 
   // SLA: STANDARD
@@ -38,7 +38,7 @@ export class AdminHrQueryController {
   @ApiOperation({ summary: 'Execute fetchStaffById' })
   @ApiResponse({ status: HttpStatus.OK, type: AdminHrStaffDto })
   async fetchStaffById(@Param('id') id: string): Promise<AdminHrStaffDto> {
-    return this.service.fetchStaffById(id) as unknown as AdminHrStaffDto;
+    return this.service.fetchStaffById(id);
   }
 
   // SLA: STANDARD
@@ -46,7 +46,7 @@ export class AdminHrQueryController {
   @ApiOperation({ summary: 'Execute fetchPayrolls' })
   @ApiResponse({ status: HttpStatus.OK, type: AdminHrPayrollListResponseDto })
   async fetchPayrolls(@Query() query: AdminHrQueryDto): Promise<AdminHrPayrollListResponseDto> {
-    return this.service.fetchPayrolls(query) as unknown as AdminHrPayrollListResponseDto;
+    return this.service.fetchPayrolls(query);
   }
 
   // SLA: STANDARD
@@ -54,7 +54,7 @@ export class AdminHrQueryController {
   @ApiOperation({ summary: 'Execute fetchSummary' })
   @ApiResponse({ status: HttpStatus.OK, type: AdminHrSummaryDto })
   async fetchSummary(@Query() query: AdminHrQueryDto): Promise<AdminHrSummaryDto> {
-    return this.service.fetchSummary(query) as unknown as AdminHrSummaryDto;
+    return this.service.fetchSummary(query);
   }
 
   // SLA: STANDARD
@@ -62,7 +62,7 @@ export class AdminHrQueryController {
   @ApiOperation({ summary: 'Execute fetchLedger' })
   @ApiResponse({ status: HttpStatus.OK, type: [AdminHrLedgerEntryDto] })
   async fetchLedger(@Query() query: AdminHrQueryDto): Promise<AdminHrLedgerEntryDto[]> {
-    return this.service.fetchLedger(query) as unknown as AdminHrLedgerEntryDto[];
+    return this.service.fetchLedger(query);
   }
 
   // SLA: STANDARD
@@ -70,7 +70,7 @@ export class AdminHrQueryController {
   @ApiOperation({ summary: 'Execute fetchPerformance' })
   @ApiResponse({ status: HttpStatus.OK, type: [AdminHrStaffPerformanceRecordDto] })
   async fetchPerformance(@Query() query: AdminHrQueryDto): Promise<AdminHrStaffPerformanceRecordDto[]> {
-    return this.service.fetchPerformance(query) as unknown as AdminHrStaffPerformanceRecordDto[];
+    return this.service.fetchPerformance(query);
   }
 
 }

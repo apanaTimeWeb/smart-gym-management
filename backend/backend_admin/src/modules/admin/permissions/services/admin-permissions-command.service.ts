@@ -5,6 +5,7 @@ import { Injectable } from '@nestjs/common';
 import { CoreAuditTrailService } from '@/core/audit/core-audit-trail.service';
 import { AdminPermissionsRepository } from '@/modules/admin/permissions/repositories/admin-permissions-repository';
 import { AdminPermissionsMapper } from '@/modules/admin/permissions/mappers/admin-permissions.mapper';
+import { AdminPermissionsDataDto } from '@/modules/admin/permissions/dtos/admin-permissions-response.dto';
 
 @Injectable()
 export class AdminPermissionsCommandService {
@@ -17,9 +18,9 @@ export class AdminPermissionsCommandService {
   /**
    * @description Executes the updateRolePermissions mutation through the repository boundary.
    * @param input Validated mutation input and/or identifier.
-   * @returns Promise<Record<string, unknown>> frontend-facing result.
+   * @returns Promise<AdminPermissionsDataDto> frontend-facing result.
    */
-  async updateRolePermissions(role: string, permissions: Record<string, boolean>): Promise<Record<string, unknown>> {
+  async updateRolePermissions(role: string, permissions: Record<string, boolean>): Promise<AdminPermissionsDataDto> {
     const entity = await this.repository.updateRolePermissions(role, permissions);
     return this.response(entity, 'PERMISSIONS_UPDATED');
   }
@@ -27,9 +28,9 @@ export class AdminPermissionsCommandService {
   /**
    * @description Executes the updateGymOverride mutation through the repository boundary.
    * @param input Validated mutation input and/or identifier.
-   * @returns Promise<Record<string, unknown>> frontend-facing result.
+   * @returns Promise<AdminPermissionsDataDto> frontend-facing result.
    */
-  async updateGymOverride(gymId: string, role: string, overrides: Record<string, boolean>): Promise<Record<string, unknown>> {
+  async updateGymOverride(gymId: string, role: string, overrides: Record<string, boolean>): Promise<AdminPermissionsDataDto> {
     const entity = await this.repository.updateGymOverride(gymId, role, overrides);
     return this.response(entity, 'PERMISSIONS_UPDATED');
   }
@@ -40,9 +41,9 @@ export class AdminPermissionsCommandService {
    * @param action Mutation action.
    * @returns Frontend response object.
    */
-  private async response(entity: Parameters<AdminPermissionsMapper['toDomain']>[0], action: string): Promise<Record<string, unknown>> {
-    const response = this.mapper.toResponse(this.mapper.toDomain(entity));
-    await this.audit(entity.id, action, response);
+  private async response(entity: Parameters<AdminPermissionsMapper['toDomain']>[0], action: string): Promise<AdminPermissionsDataDto> {
+    const response = this.mapper.toResponse(this.mapper.toDomain(entity)) as AdminPermissionsDataDto;
+    await this.audit(entity.id, action, response as any);
     return response;
   }
 

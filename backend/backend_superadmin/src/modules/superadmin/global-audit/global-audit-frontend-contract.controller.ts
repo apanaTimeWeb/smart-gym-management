@@ -7,6 +7,7 @@ import { RolesGuard } from '@/core/auth/roles.guard';
 import { Roles } from '@/core/auth/roles.decorator';
 import { SuperadminRole } from '@/core/auth/auth.types';
 import { GlobalAuditListService } from '@/modules/superadmin/global-audit/services/global-audit-list.service';
+import { GlobalAuditResponseDto } from '@/modules/superadmin/global-audit/responses/global-audit-response.dto';
 
 @ApiTags('audit-logs')
 @Controller('/superadmin/audit-logs')
@@ -16,5 +17,5 @@ export class GlobalAuditFrontendContractController {
   constructor(private readonly listService: GlobalAuditListService) {}
   /** Returns the audit log collection through the frontend route alias. */
   @Get()
-  async list(@Query() query: Record<string, unknown>): Promise<unknown> { return this.listService.findGlobalAuditPage(query as never); }
+  async list(@Query() query: Record<string, unknown>): Promise<{ data: GlobalAuditResponseDto[]; meta: any }> { return (this.listService.findGlobalAuditPage(query as never)) as any; }
 }

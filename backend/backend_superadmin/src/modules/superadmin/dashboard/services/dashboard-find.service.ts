@@ -3,10 +3,10 @@
 import { Injectable } from '@nestjs/common';
 import { DashboardRepository } from '@/modules/superadmin/dashboard/dashboard.repository';
 import { DashboardMapper } from '@/modules/superadmin/dashboard/dashboard.mapper';
-import type { DashboardDomainModel } from '@/modules/superadmin/dashboard/types/dashboard.interfaces';
+import { DashboardResponseDto } from '@/modules/superadmin/dashboard/responses/dashboard-response.dto';
 @Injectable()
 export class DashboardFindService {
   constructor(private readonly repository: DashboardRepository) {}
   /** Retrieves one active dashboard record by UUID. */
-  async findDashboardById(id: string): Promise<DashboardDomainModel> { return DashboardMapper.toDomain(await this.repository.findByIdOrThrow(id)); }
+  async findDashboardById(id: string): Promise<DashboardResponseDto> { return DashboardMapper.toResponse(DashboardMapper.toDomain(await this.repository.findByIdOrThrow(id))); }
 }

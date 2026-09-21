@@ -3,10 +3,10 @@
 import { Injectable } from '@nestjs/common';
 import { MessagingRepository } from '@/modules/superadmin/messaging/messaging.repository';
 import { MessagingMapper } from '@/modules/superadmin/messaging/messaging.mapper';
-import type { MessagingDomainModel } from '@/modules/superadmin/messaging/types/messaging.interfaces';
+import { MessagingResponseDto } from '@/modules/superadmin/messaging/responses/messaging-response.dto';
 @Injectable()
 export class MessagingFindService {
   constructor(private readonly repository: MessagingRepository) {}
   /** Retrieves one active messaging record by UUID. */
-  async findMessagingById(id: string): Promise<MessagingDomainModel> { return MessagingMapper.toDomain(await this.repository.findByIdOrThrow(id)); }
+  async findMessagingById(id: string): Promise<MessagingResponseDto> { return MessagingMapper.toResponse(MessagingMapper.toDomain(await this.repository.findByIdOrThrow(id))); }
 }

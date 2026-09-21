@@ -12,6 +12,8 @@ import { AnalyticsCreateDto } from '@/modules/superadmin/analytics/dtos/analytic
 import { AnalyticsUpdateService } from '@/modules/superadmin/analytics/services/analytics-update.service';
 import { AnalyticsUpdateDto } from '@/modules/superadmin/analytics/dtos/analytics-update.dto';
 import { AnalyticsDeleteService } from '@/modules/superadmin/analytics/services/analytics-delete.service';
+import { AnalyticsResponseDto } from '@/modules/superadmin/analytics/responses/analytics-response.dto';
+import { ApiResponse } from '@nestjs/swagger';
 
 @ApiTags('analytics')
 @Controller('/superadmin/analytics')
@@ -25,13 +27,15 @@ export class AnalyticsCommandController {
   @Post()
     @HttpCode(HttpStatus.CREATED)
     @UseGuards(RateLimitGuard)
-    async create(@Body() body: AnalyticsCreateDto): Promise<unknown> { return this.createService.createAnalytics(body); }
+    @ApiResponse({ type: AnalyticsResponseDto })
+    async create(@Body() body: AnalyticsCreateDto): Promise<AnalyticsResponseDto> { return this.createService.createAnalytics(body); }
 
   /** Handles the update mutation for the feature. */
   @ApiOperation({ summary: 'update analytics' })
   @Patch(':id')
     @UseGuards(RateLimitGuard)
-    async update(@Param('id') id: string, @Body() body: AnalyticsUpdateDto): Promise<unknown> { return this.updateService.updateAnalytics(id, body); }
+    @ApiResponse({ type: AnalyticsResponseDto })
+    async update(@Param('id') id: string, @Body() body: AnalyticsUpdateDto): Promise<AnalyticsResponseDto> { return this.updateService.updateAnalytics(id, body); }
 
   /** Handles the remove mutation for the feature. */
   @ApiOperation({ summary: 'remove analytics' })

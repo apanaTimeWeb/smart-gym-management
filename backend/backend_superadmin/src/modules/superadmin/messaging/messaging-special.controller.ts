@@ -1,14 +1,16 @@
 // RESPONSIBILITY: Owns explicitly versioned/specialized frontend contract endpoints for the messaging feature.
 // FLOW: HTTP -> specialized micro-service -> typed result -> canonical response interceptor.
 import { RequireIdempotencyKey } from '@/core/cache/idempotency.decorator';
-import type { MessagingWhatsAppBulkCenterResponseDto } from '@/modules/superadmin/messaging/messaging-whatsapp-bulk-center-response.dto';
-import type { MessagingTemplateInsightsResponseDto } from '@/modules/superadmin/messaging/messaging-template-insights-response.dto';
+import { MessagingWhatsAppBulkCenterResponseDto } from '@/modules/superadmin/messaging/messaging-whatsapp-bulk-center-response.dto';
+import { MessagingTemplateInsightsResponseDto } from '@/modules/superadmin/messaging/messaging-template-insights-response.dto';
+import { MessagingWhatsAppCampaignResponseDto } from '@/modules/superadmin/messaging/responses/messaging-whatsapp-campaign-response.dto';
 import { Body, Controller, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '@/core/auth/jwt-auth.guard';
 import { RolesGuard } from '@/core/auth/roles.guard';
 import { Roles } from '@/core/auth/roles.decorator';
 import { SuperadminRole } from '@/core/auth/auth.types';
+import { ApiResponse } from '@nestjs/swagger';
 import { MessagingTemplateInsightsService } from '@/modules/superadmin/messaging/services/messaging-template-insights.service';
 import { MessagingWhatsAppBulkCenterService } from '@/modules/superadmin/messaging/services/messaging-whatsapp-bulk-center.service';
 import { MessagingWhatsAppCampaignService } from '@/modules/superadmin/messaging/services/messaging-whatsapp-campaign.service';
@@ -23,17 +25,20 @@ export class MessagingSpecialController {
   /** Executes GET /superadmin/messaging/template-insights. */
   @ApiOperation({ summary: 'GET /superadmin/messaging/template-insights' })
   @Get('superadmin/messaging/template-insights')
-  async templateInsights(@Query() query: Record<string, string>): Promise<unknown> { return await this.templateInsightsService.findMessagingTemplateInsights(); }
+  @ApiResponse({ type: MessagingTemplateInsightsResponseDto })
+  async templateInsights(@Query() query: Record<string, string>): Promise<MessagingTemplateInsightsResponseDto> { return (await this.templateInsightsService.findMessagingTemplateInsights()) as unknown as MessagingTemplateInsightsResponseDto; }
 
   /** Executes GET /superadmin/messaging/whatsapp/bulk-center. */
   @ApiOperation({ summary: 'GET /superadmin/messaging/whatsapp/bulk-center' })
   @Get('superadmin/messaging/whatsapp/bulk-center')
-  async whatsappBulkCenter(@Query() query: Record<string, string>): Promise<unknown> { return await this.whatsappBulkCenterService.findMessagingWhatsAppBulkCenter(); }
+  @ApiResponse({ type: MessagingWhatsAppBulkCenterResponseDto })
+  async whatsappBulkCenter(@Query() query: Record<string, string>): Promise<MessagingWhatsAppBulkCenterResponseDto> { return (await this.whatsappBulkCenterService.findMessagingWhatsAppBulkCenter()) as unknown as MessagingWhatsAppBulkCenterResponseDto; }
 
   /** Executes POST /superadmin/messaging/whatsapp/campaigns. */
   @RequireIdempotencyKey()
   @ApiOperation({ summary: 'POST /superadmin/messaging/whatsapp/campaigns' })
   @Post('superadmin/messaging/whatsapp/campaigns')
-  async whatsappCampaign(@Body() body: Record<string, unknown>): Promise<unknown> { return await this.whatsappCampaignService.createMessagingWhatsAppCampaign({ body }); }
+  @ApiResponse({ type: MessagingWhatsAppCampaignResponseDto })
+  async whatsappCampaign(@Body() body: Record<string, unknown>): Promise<MessagingWhatsAppCampaignResponseDto> { return (await this.whatsappCampaignService.createMessagingWhatsAppCampaign({ body })) as unknown as MessagingWhatsAppCampaignResponseDto; }
 
 }

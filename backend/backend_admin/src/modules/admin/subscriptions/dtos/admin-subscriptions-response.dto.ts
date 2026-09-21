@@ -36,10 +36,6 @@ export class AdminSaaSPlanDto {
   @ApiProperty() isCurrent!: boolean;
 }
 
-export class AdminSaaSPlanListResponseDto {
-  @ApiProperty({ type: [AdminSaaSPlanDto] }) data!: AdminSaaSPlanDto[];
-}
-
 export class AdminInvoiceDto {
   @ApiProperty() id!: string;
   @ApiProperty() invoiceNo!: string;
@@ -54,10 +50,6 @@ export class AdminInvoiceDto {
   @ApiPropertyOptional() gstNumber?: string;
 }
 
-export class AdminInvoiceListResponseDto {
-  @ApiProperty({ type: [AdminInvoiceDto] }) data!: AdminInvoiceDto[];
-}
-
 export class AdminPaymentMethodDto {
   @ApiProperty() id!: string;
   @ApiProperty({ enum: ['card', 'upi', 'netbanking'] }) type!: string;
@@ -68,10 +60,6 @@ export class AdminPaymentMethodDto {
   @ApiPropertyOptional() expiryMonth?: number;
   @ApiPropertyOptional() expiryYear?: number;
   @ApiProperty() isDefault!: boolean;
-}
-
-export class AdminPaymentMethodListResponseDto {
-  @ApiProperty({ type: [AdminPaymentMethodDto] }) data!: AdminPaymentMethodDto[];
 }
 
 export class AdminSubscriptionKPIDataDto {

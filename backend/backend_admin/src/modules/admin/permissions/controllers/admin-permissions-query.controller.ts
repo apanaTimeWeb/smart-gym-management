@@ -23,7 +23,7 @@ export class AdminPermissionsQueryController {
   @ApiOperation({ summary: 'Execute fetchPermissions' })
   @ApiResponse({ status: HttpStatus.OK, type: AdminPermissionsDataDto })
   async fetchPermissions(@Query() query: AdminPermissionsQueryDto): Promise<AdminPermissionsDataDto> {
-    return this.service.fetchPermissions(query) as unknown as AdminPermissionsDataDto;
+    return this.service.fetchPermissions(query);
   }
 
 }

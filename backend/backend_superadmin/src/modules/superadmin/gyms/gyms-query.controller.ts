@@ -10,6 +10,8 @@ import { GymsQueryDto } from '@/modules/superadmin/gyms/dtos/gyms-query.dto';
 import { GymsListService } from '@/modules/superadmin/gyms/services/gyms-list.service';
 import { GymsFindService } from '@/modules/superadmin/gyms/services/gyms-find.service';
 import { GymsOperationalService } from '@/modules/superadmin/gyms/services/gyms-operational.service';
+import { GymsResponseDto } from '@/modules/superadmin/gyms/responses/gyms-response.dto';
+import { ApiResponse } from '@nestjs/swagger';
 
 @ApiTags('gyms')
 @Controller('/superadmin/gyms')
@@ -20,7 +22,7 @@ export class GymsQueryController {
   /** Returns a paginated gyms list. */
   // SLA: STANDARD
   @Get()
-  async findAll(@Query() query: GymsQueryDto): Promise<unknown> { return await this.listService.findGymsPage(query); }
+  async findAll(@Query() query: GymsQueryDto): Promise<{ data: GymsResponseDto[]; meta: any }> { return (await this.listService.findGymsPage(query)) as any; }
   /** Returns the Gym export resource URI. */
   @Get('export')
   async export(): Promise<{ downloadUrl: string }> { return this.operationalService.exportGyms(); }
@@ -28,5 +30,6 @@ export class GymsQueryController {
   /** Returns one gyms record. */
   // SLA: FAST
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<unknown> { return await this.findService.findGymsById(id); }
+  @ApiResponse({ type: GymsResponseDto })
+  async findOne(@Param('id') id: string): Promise<GymsResponseDto> { return (await this.findService.findGymsById(id)) as unknown as GymsResponseDto; }
 }

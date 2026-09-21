@@ -12,6 +12,8 @@ import { DashboardCreateDto } from '@/modules/superadmin/dashboard/dtos/dashboar
 import { DashboardUpdateService } from '@/modules/superadmin/dashboard/services/dashboard-update.service';
 import { DashboardUpdateDto } from '@/modules/superadmin/dashboard/dtos/dashboard-update.dto';
 import { DashboardDeleteService } from '@/modules/superadmin/dashboard/services/dashboard-delete.service';
+import { DashboardResponseDto } from '@/modules/superadmin/dashboard/responses/dashboard-response.dto';
+import { ApiResponse } from '@nestjs/swagger';
 
 @ApiTags('dashboard')
 @Controller('/superadmin/dashboard')
@@ -25,13 +27,15 @@ export class DashboardCommandController {
   @Post()
     @HttpCode(HttpStatus.CREATED)
     @UseGuards(RateLimitGuard)
-    async create(@Body() body: DashboardCreateDto): Promise<unknown> { return this.createService.createDashboard(body); }
+    @ApiResponse({ type: DashboardResponseDto })
+    async create(@Body() body: DashboardCreateDto): Promise<DashboardResponseDto> { return this.createService.createDashboard(body); }
 
   /** Handles the update mutation for the feature. */
   @ApiOperation({ summary: 'update dashboard' })
   @Patch(':id')
     @UseGuards(RateLimitGuard)
-    async update(@Param('id') id: string, @Body() body: DashboardUpdateDto): Promise<unknown> { return this.updateService.updateDashboard(id, body); }
+    @ApiResponse({ type: DashboardResponseDto })
+    async update(@Param('id') id: string, @Body() body: DashboardUpdateDto): Promise<DashboardResponseDto> { return this.updateService.updateDashboard(id, body); }
 
   /** Handles the remove mutation for the feature. */
   @ApiOperation({ summary: 'remove dashboard' })

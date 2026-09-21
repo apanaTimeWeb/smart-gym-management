@@ -2,6 +2,7 @@
 // FLOW: TypeORM entity -> GlobalAuditMapper -> domain model -> response DTO.
 import type { AuditLogEntity } from '@/modules/superadmin/global-audit/global-audit.entity';
 import type { GlobalAuditDomainModel } from '@/modules/superadmin/global-audit/types/global-audit.interfaces';
+import { GlobalAuditResponseDto } from '@/modules/superadmin/global-audit/responses/global-audit-response.dto';
 
 export class GlobalAuditMapper {
   /** Maps a persistence entity to the domain representation. */
@@ -9,4 +10,10 @@ export class GlobalAuditMapper {
 
   /** Maps persistence entities to domain representations. */
   static toDomainList(entities: AuditLogEntity[]): GlobalAuditDomainModel[] { return entities.map(GlobalAuditMapper.toDomain); }
+
+  static toResponse(domain: GlobalAuditDomainModel): GlobalAuditResponseDto {
+    const dto = new GlobalAuditResponseDto();
+    Object.assign(dto, domain);
+    return dto;
+  }
 }
