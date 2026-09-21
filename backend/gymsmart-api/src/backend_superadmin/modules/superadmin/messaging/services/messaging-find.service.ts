@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes single-record retrieval for the messaging feature.
+﻿// RESPONSIBILITY: Executes single-record retrieval for the messaging feature.
 // FLOW: QueryController -> MessagingFindService -> repository findByIdOrThrow -> mapper.
 import { Injectable } from '@nestjs/common';
 import { MessagingRepository } from '@/backend_superadmin/modules/superadmin/messaging/messaging.repository';

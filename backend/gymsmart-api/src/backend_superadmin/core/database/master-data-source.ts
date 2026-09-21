@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Defines the single explicit TypeORM connection to the master PostgreSQL database.
+﻿// RESPONSIBILITY: Defines the single explicit TypeORM connection to the master PostgreSQL database.
 // FLOW: Config -> PostgreSQL master database -> all Superadmin/master repositories.
 import { DataSource } from 'typeorm';
 import { join } from 'node:path';

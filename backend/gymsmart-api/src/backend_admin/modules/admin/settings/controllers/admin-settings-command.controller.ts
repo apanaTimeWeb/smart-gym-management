@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Exposes mutation endpoints for Admin settings; contains HTTP concerns only.
+﻿// RESPONSIBILITY: Exposes mutation endpoints for Admin settings; contains HTTP concerns only.
 // FLOW: HTTP mutation -> AdminSettingsCommandController -> AdminSettingsCommandService.
 
 import { Body, Controller, Delete, Headers, HttpStatus, Patch, Post, UseGuards } from '@nestjs/common';

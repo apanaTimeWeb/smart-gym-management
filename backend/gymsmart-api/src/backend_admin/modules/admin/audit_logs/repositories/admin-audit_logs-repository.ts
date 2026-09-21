@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns read-only queries against the tenant's immutable audit_logs table.
-// FLOW: Admin audit query service → tenant DataSource → CoreAuditLogEntity → pagination metadata.
+﻿// RESPONSIBILITY: Owns read-only queries against the tenant's immutable audit_logs table.
+// FLOW: Admin audit query service â†’ tenant DataSource â†’ CoreAuditLogEntity â†’ pagination metadata.
 
 import { Injectable } from '@nestjs/common';
 import { CorePaginatedResult } from '@/backend_admin/core/types/core-api-response.types';

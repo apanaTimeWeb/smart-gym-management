@@ -1,12 +1,12 @@
-// RESPONSIBILITY: Builds the master PostgreSQL TypeORM DataSource options and explicit pool policy.
-// FLOW: Environment → master DataSource options → TypeORM.
+﻿// RESPONSIBILITY: Builds the master PostgreSQL TypeORM DataSource options and explicit pool policy.
+// FLOW: Environment â†’ master DataSource options â†’ TypeORM.
 import { join } from 'node:path';
 
 import { DATABASE_CONFIG } from '@/backend_landing/core/config/database.config';
 
 import { MasterTenantEntity } from '@/backend_landing/core/tenant/master-tenant.entity';
 
-import type { DataSourceOptions } from 'typeorm';
+import { DataSourceOptions } from 'typeorm';
 
 
 /** @description Builds the master PostgreSQL TypeORM options from validated process configuration. @returns Master DataSource configuration. */

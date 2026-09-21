@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+﻿import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
@@ -20,7 +20,7 @@ import { AppModule as LandingAppModule } from '@/backend_landing/app.module';
 
 // Import Global Guards & Interceptors from Admin (chosen as Master)
 import { CoreRateLimitGuard } from '@/backend_admin/core/auth/core-rate-limit.guard';
-import { CoreTenantContextInterceptor } from '@/backend_admin/core/response/core-tenant-context.interceptor';
+import { CoreTenantContextInterceptor } from '@/backend_admin/core/context/core-tenant-context.interceptor';
 import { CoreResponseInterceptor } from '@/backend_admin/core/response/core-response.interceptor';
 import { CoreValidationExceptionFilter } from '@/backend_admin/core/response/core-validation-exception.filter';
 import { CoreRolesGuard } from '@/backend_admin/core/auth/core-roles.guard';

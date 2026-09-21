@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Validates and normalizes frontend query/filter parameters for Admin gym-health-alerts.
-// FLOW: HTTP query → AdminGymHealthAlertsQueryDto → repository allowlists → PostgreSQL query.
+﻿// RESPONSIBILITY: Validates and normalizes frontend query/filter parameters for Admin gym-health-alerts.
+// FLOW: HTTP query â†’ AdminGymHealthAlertsQueryDto â†’ repository allowlists â†’ PostgreSQL query.
 
 import { Type } from 'class-transformer';
 import { IsOptional, IsString, IsIn, IsNumber } from 'class-validator';

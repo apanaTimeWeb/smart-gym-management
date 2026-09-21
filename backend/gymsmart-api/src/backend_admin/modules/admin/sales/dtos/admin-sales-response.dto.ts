@@ -1,7 +1,7 @@
-// RESPONSIBILITY: Describes the frontend-consumed response fields for Admin sales.
+﻿// RESPONSIBILITY: Describes the frontend-consumed response fields for Admin sales.
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-// FLOW: Repository domain → Sales response mapper → ApiResponse<T>.
+// FLOW: Repository domain â†’ Sales response mapper â†’ ApiResponse<T>.
 
 export class OverviewDataPointDto {
   @ApiProperty() date!: string;

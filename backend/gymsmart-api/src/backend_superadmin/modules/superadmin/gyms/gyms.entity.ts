@@ -1,4 +1,4 @@
-// RESPONSIBILITY: TypeORM persistence entity for gyms feature data stored in `tenants`.
+﻿// RESPONSIBILITY: TypeORM persistence entity for gyms feature data stored in `tenants`.
 // FLOW: gyms repository -> Tenant entity -> PostgreSQL `tenants`.
 import { Column, Entity, Index } from 'typeorm';
 import { BaseEntity } from '@/backend_superadmin/core/database/base.entity';

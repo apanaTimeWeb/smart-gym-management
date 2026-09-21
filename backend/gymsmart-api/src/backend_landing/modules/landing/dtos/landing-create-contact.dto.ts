@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Validates and normalizes the frontend contact request body.
-// FLOW: HTTP request → LandingCreateContactDto → ContactOrchestrator.
+﻿// RESPONSIBILITY: Validates and normalizes the frontend contact request body.
+// FLOW: HTTP request â†’ LandingCreateContactDto â†’ ContactOrchestrator.
 import { ApiProperty } from '@nestjs/swagger';
 
 import { Transform } from 'class-transformer';

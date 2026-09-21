@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Implements booking business behavior only; it does not own HTTP or ORM persistence details.
-// FLOW: LandingBookingOrchestrator → LandingBookingService → LandingBookingRepository.
+﻿// RESPONSIBILITY: Implements booking business behavior only; it does not own HTTP or ORM persistence details.
+// FLOW: LandingBookingOrchestrator â†’ LandingBookingService â†’ LandingBookingRepository.
 import { Injectable } from '@nestjs/common';
 
 import { LandingBookingRepository } from '@/backend_landing/modules/landing/repositories/landing-booking.repository';
@@ -12,7 +12,7 @@ import type { LandingBookingDomainModel } from '@/backend_landing/modules/landin
 
 import type { LandingCreateBookingInput } from '@/backend_landing/modules/landing/services/landing-booking-input.types';
 
-import type { TransactionContext } from '@/backend_landing/core/database/transaction-context';
+import { TransactionContext } from '@/backend_landing/core/database/transaction-context';
 
 
 @Injectable()

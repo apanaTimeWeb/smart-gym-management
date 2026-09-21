@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns PostgreSQL persistence for the Admin settings feature and its frontend-backed payload.
-// FLOW: Settings Repository → AdminSettingsEntity → PostgreSQL admin_settings table.
+﻿// RESPONSIBILITY: Owns PostgreSQL persistence for the Admin settings feature and its frontend-backed payload.
+// FLOW: Settings Repository â†’ AdminSettingsEntity â†’ PostgreSQL admin_settings table.
 
 import { Column, Entity, Index } from 'typeorm';
 import { CoreBaseEntity } from '@/backend_admin/core/database/core-base.entity';

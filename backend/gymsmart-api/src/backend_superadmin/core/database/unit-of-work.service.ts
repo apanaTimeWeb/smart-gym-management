@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Opens and closes PostgreSQL transactions through the project-wide UnitOfWork abstraction.
+﻿// RESPONSIBILITY: Opens and closes PostgreSQL transactions through the project-wide UnitOfWork abstraction.
 // FLOW: Orchestrator -> UnitOfWorkService -> TypeORM DataSource transaction -> repositories.
 import { Injectable } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';

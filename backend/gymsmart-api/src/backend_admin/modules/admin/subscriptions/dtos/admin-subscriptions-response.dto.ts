@@ -1,7 +1,7 @@
-// RESPONSIBILITY: Describes the frontend-consumed response fields for Admin subscriptions.
+﻿// RESPONSIBILITY: Describes the frontend-consumed response fields for Admin subscriptions.
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-// FLOW: Repository domain → Subscriptions response mapper → ApiResponse<T>.
+// FLOW: Repository domain â†’ Subscriptions response mapper â†’ ApiResponse<T>.
 
 export class AdminCurrentSubscriptionDto {
   @ApiProperty() planId!: string;

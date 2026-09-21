@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Defines the stable response data contract for profile endpoints.
+﻿// RESPONSIBILITY: Defines the stable response data contract for profile endpoints.
 // FLOW: Domain model -> ProfileResponseDto -> canonical ApiResponse envelope.
 import { ApiPropertyOptional } from '@nestjs/swagger';
 

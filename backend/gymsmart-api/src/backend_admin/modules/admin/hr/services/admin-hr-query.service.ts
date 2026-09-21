@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns read-side use cases for Admin hr; no write persistence occurs here.
-// FLOW: AdminHrQueryController → AdminHrQueryService → repository → mapper → ApiResponse.
+﻿// RESPONSIBILITY: Owns read-side use cases for Admin hr; no write persistence occurs here.
+// FLOW: AdminHrQueryController â†’ AdminHrQueryService â†’ repository â†’ mapper â†’ ApiResponse.
 
 import { Injectable } from '@nestjs/common';
 import { AdminHrRepository } from '@/backend_admin/modules/admin/hr/repositories/admin-hr-repository';

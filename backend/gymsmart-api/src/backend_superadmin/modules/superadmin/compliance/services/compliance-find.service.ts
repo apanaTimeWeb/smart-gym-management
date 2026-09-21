@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes single-record retrieval for the compliance feature.
+﻿// RESPONSIBILITY: Executes single-record retrieval for the compliance feature.
 // FLOW: QueryController -> ComplianceFindService -> repository findByIdOrThrow -> mapper.
 import { Injectable } from '@nestjs/common';
 import { ComplianceRepository } from '@/backend_superadmin/modules/superadmin/compliance/compliance.repository';

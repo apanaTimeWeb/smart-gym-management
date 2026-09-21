@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns PostgreSQL persistence for the Admin reports feature and its frontend-backed payload.
-// FLOW: Reports Repository → AdminReportsEntity → PostgreSQL report_snapshots table.
+﻿// RESPONSIBILITY: Owns PostgreSQL persistence for the Admin reports feature and its frontend-backed payload.
+// FLOW: Reports Repository â†’ AdminReportsEntity â†’ PostgreSQL report_snapshots table.
 
 import { Column, Entity, Index } from 'typeorm';
 import { CoreBaseEntity } from '@/backend_admin/core/database/core-base.entity';

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Defines the single canonical API response envelope shared by all JSON endpoints.
+﻿// RESPONSIBILITY: Defines the single canonical API response envelope shared by all JSON endpoints.
 // FLOW: Controller return -> CoreResponseInterceptor OR exception filter -> ApiResponse<T>.
 
 import type { PaginationMeta } from '@/backend_auth/core/types/pagination.types';

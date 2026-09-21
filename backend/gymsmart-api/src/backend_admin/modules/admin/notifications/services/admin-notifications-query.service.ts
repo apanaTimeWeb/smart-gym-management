@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns read-side use cases for Admin notifications; no write persistence occurs here.
-// FLOW: AdminNotificationsQueryController → AdminNotificationsQueryService → repository → mapper → ApiResponse.
+﻿// RESPONSIBILITY: Owns read-side use cases for Admin notifications; no write persistence occurs here.
+// FLOW: AdminNotificationsQueryController â†’ AdminNotificationsQueryService â†’ repository â†’ mapper â†’ ApiResponse.
 
 import { Injectable } from '@nestjs/common';
 import { AdminNotificationsRepository } from '@/backend_admin/modules/admin/notifications/repositories/admin-notifications-repository';

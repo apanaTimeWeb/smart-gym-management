@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Exposes the real Prometheus metrics registry as plain text without an API JSON envelope.
+﻿// RESPONSIBILITY: Exposes the real Prometheus metrics registry as plain text without an API JSON envelope.
 // FLOW: Prometheus scraper -> CoreMetricsController -> CoreMetricsService -> registry text.
 
 import { Controller, Get, Header, HttpStatus, Res } from '@nestjs/common';

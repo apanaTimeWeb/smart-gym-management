@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes partial update business flow for the messaging feature.
+﻿// RESPONSIBILITY: Executes partial update business flow for the messaging feature.
 // FLOW: CommandController -> MessagingUpdateService -> named repository mutation -> mapper.
 import { Injectable } from '@nestjs/common';
 import { MessagingRepository } from '@/backend_superadmin/modules/superadmin/messaging/messaging.repository';

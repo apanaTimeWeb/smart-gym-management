@@ -1,7 +1,7 @@
-// RESPONSIBILITY: Describes the frontend-consumed response fields for Admin reports.
+﻿// RESPONSIBILITY: Describes the frontend-consumed response fields for Admin reports.
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-// FLOW: Repository domain → Reports response mapper → ApiResponse<T>.
+// FLOW: Repository domain â†’ Reports response mapper â†’ ApiResponse<T>.
 
 class RevenueByGymDto {
   @ApiProperty() gymId!: string;

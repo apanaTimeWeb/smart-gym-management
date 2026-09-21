@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns read-side use cases for Admin blacklist; no write persistence occurs here.
-// FLOW: AdminBlacklistQueryController → AdminBlacklistQueryService → repository → mapper → ApiResponse.
+﻿// RESPONSIBILITY: Owns read-side use cases for Admin blacklist; no write persistence occurs here.
+// FLOW: AdminBlacklistQueryController â†’ AdminBlacklistQueryService â†’ repository â†’ mapper â†’ ApiResponse.
 
 import { Injectable } from '@nestjs/common';
 import { AdminBlacklistRepository } from '@/backend_admin/modules/admin/blacklist/repositories/admin-blacklist-repository';

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes paginated read logic for the jobs feature.
+﻿// RESPONSIBILITY: Executes paginated read logic for the jobs feature.
 // FLOW: QueryController -> JobsListService -> repository -> mapper -> response DTO.
 import { Injectable } from '@nestjs/common';
 import { JobsRepository } from '@/backend_superadmin/modules/superadmin/system-ops/jobs/jobs.repository';

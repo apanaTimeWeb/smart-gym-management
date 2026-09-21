@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Performs status transitions for broadcasts records through the repository boundary.
+﻿// RESPONSIBILITY: Performs status transitions for broadcasts records through the repository boundary.
 // FLOW: CommandController -> StatusService -> named repository update -> domain mapper.
 import { Injectable } from '@nestjs/common';
 import { BroadcastsRepository } from '@/backend_superadmin/modules/superadmin/broadcasts/broadcasts.repository';

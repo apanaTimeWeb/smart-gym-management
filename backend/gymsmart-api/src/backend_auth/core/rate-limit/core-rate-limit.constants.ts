@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Defines centralized rate-limit tiers for Auth endpoints.
+﻿// RESPONSIBILITY: Defines centralized rate-limit tiers for Auth endpoints.
 // FLOW: Controller decorator -> CoreRateLimitGuard -> tier configuration -> Redis.
 
 export enum CoreRateLimitTier {

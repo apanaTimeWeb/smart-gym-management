@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Translates Landing booking ORM entities into persistence-independent domain objects and inputs.
-// FLOW: ORM entity ↔ LandingBookingMapper ↔ LandingBookingDomainModel/service input.
+﻿// RESPONSIBILITY: Translates Landing booking ORM entities into persistence-independent domain objects and inputs.
+// FLOW: ORM entity â†” LandingBookingMapper â†” LandingBookingDomainModel/service input.
 import { Injectable } from '@nestjs/common';
 
 import { LandingBookingEntity } from '@/backend_landing/modules/landing/entities/landing-booking.entity';

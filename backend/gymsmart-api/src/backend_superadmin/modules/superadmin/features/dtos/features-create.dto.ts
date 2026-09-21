@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Validates creation payloads at the features HTTP boundary.
+﻿// RESPONSIBILITY: Validates creation payloads at the features HTTP boundary.
 // FLOW: HTTP JSON -> FeaturesCreateDto -> Features service.
 import { IsBoolean, IsDateString, IsEmail, IsEnum, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 export class FeaturesCreateDto {

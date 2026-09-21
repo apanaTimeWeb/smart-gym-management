@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes paginated read logic for the dashboard feature.
+﻿// RESPONSIBILITY: Executes paginated read logic for the dashboard feature.
 // FLOW: QueryController -> DashboardListService -> repository -> mapper -> response DTO.
 import { Injectable } from '@nestjs/common';
 import { DashboardRepository } from '@/backend_superadmin/modules/superadmin/dashboard/dashboard.repository';

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Converts Auth refresh-session entities into persistence-neutral session domain objects.
+﻿// RESPONSIBILITY: Converts Auth refresh-session entities into persistence-neutral session domain objects.
 // FLOW: AuthRefreshSessionRepository -> AuthRefreshSessionMapper -> Auth refresh service.
 
 import type { AuthSessionDomain } from '@/backend_auth/modules/auth/auth.interfaces';

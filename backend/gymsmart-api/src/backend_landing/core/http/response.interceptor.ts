@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Wraps successful application results in the canonical response envelope unless an infrastructure endpoint opts out.
-// FLOW: Controller result → ResponseInterceptor → ApiResponse<T> JSON or native infrastructure body.
+﻿// RESPONSIBILITY: Wraps successful application results in the canonical response envelope unless an infrastructure endpoint opts out.
+// FLOW: Controller result â†’ ResponseInterceptor â†’ ApiResponse<T> JSON or native infrastructure body.
 import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
 
 import { Reflector } from '@nestjs/core';

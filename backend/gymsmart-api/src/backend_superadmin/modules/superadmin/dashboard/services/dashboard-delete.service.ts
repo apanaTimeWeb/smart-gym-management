@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes the soft-delete flow for the dashboard feature.
+﻿// RESPONSIBILITY: Executes the soft-delete flow for the dashboard feature.
 // FLOW: CommandController -> DashboardDeleteService -> repository named soft-delete -> audit hook.
 import { Injectable } from '@nestjs/common';
 import { DashboardRepository } from '@/backend_superadmin/modules/superadmin/dashboard/dashboard.repository';

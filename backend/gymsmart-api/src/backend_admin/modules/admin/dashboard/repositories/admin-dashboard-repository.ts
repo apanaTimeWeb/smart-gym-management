@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns all TypeORM persistence operations for Admin dashboard; services never call save() directly.
-// FLOW: AdminDashboardService → AdminDashboardRepository → TypeORM → PostgreSQL dashboard_snapshots.
+﻿// RESPONSIBILITY: Owns all TypeORM persistence operations for Admin dashboard; services never call save() directly.
+// FLOW: AdminDashboardService â†’ AdminDashboardRepository â†’ TypeORM â†’ PostgreSQL dashboard_snapshots.
 
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CorePaginatedResult } from '@/backend_admin/core/types/core-api-response.types';

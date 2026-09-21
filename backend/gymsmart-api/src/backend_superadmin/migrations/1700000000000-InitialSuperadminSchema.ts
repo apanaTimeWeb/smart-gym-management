@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Creates the master PostgreSQL schema with explicit, human-readable constraint/index names.
+﻿// RESPONSIBILITY: Creates the master PostgreSQL schema with explicit, human-readable constraint/index names.
 // FLOW: TypeORM migration runner -> master DB DDL -> all Superadmin feature tables.
 import { MigrationInterface, QueryRunner } from 'typeorm';
 

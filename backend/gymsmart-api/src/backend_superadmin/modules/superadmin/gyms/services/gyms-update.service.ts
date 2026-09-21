@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes partial update business flow for the gyms feature.
+﻿// RESPONSIBILITY: Executes partial update business flow for the gyms feature.
 // FLOW: CommandController -> GymsUpdateService -> named repository mutation -> mapper.
 import { Injectable } from '@nestjs/common';
 import { GymsRepository } from '@/backend_superadmin/modules/superadmin/gyms/gyms.repository';

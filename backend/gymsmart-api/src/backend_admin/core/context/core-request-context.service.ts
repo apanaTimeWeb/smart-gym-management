@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Stores trusted tenant, actor and trace context using AsyncLocalStorage.
-// FLOW: Request boundary → CoreRequestContextService → deep services/repositories.
+﻿// RESPONSIBILITY: Stores trusted tenant, actor and trace context using AsyncLocalStorage.
+// FLOW: Request boundary â†’ CoreRequestContextService â†’ deep services/repositories.
 
 import { AsyncLocalStorage } from 'node:async_hooks';
 import { Injectable } from '@nestjs/common';

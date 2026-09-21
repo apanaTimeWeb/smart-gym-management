@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Maps Landing contact submissions to the tenant PostgreSQL table without exposing TypeORM to services.
-// FLOW: LandingContactRepository → TypeORM entity → PostgreSQL landing_contacts.
+﻿// RESPONSIBILITY: Maps Landing contact submissions to the tenant PostgreSQL table without exposing TypeORM to services.
+// FLOW: LandingContactRepository â†’ TypeORM entity â†’ PostgreSQL landing_contacts.
 import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 
 import { CoreBaseEntity } from '@/backend_landing/core/database/base.entity';

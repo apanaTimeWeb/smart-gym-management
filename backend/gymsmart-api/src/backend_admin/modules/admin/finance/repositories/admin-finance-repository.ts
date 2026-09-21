@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns all TypeORM persistence operations for Admin finance; services never call save() directly.
-// FLOW: AdminFinanceService → AdminFinanceRepository → TypeORM → PostgreSQL payment_transactions.
+﻿// RESPONSIBILITY: Owns all TypeORM persistence operations for Admin finance; services never call save() directly.
+// FLOW: AdminFinanceService â†’ AdminFinanceRepository â†’ TypeORM â†’ PostgreSQL payment_transactions.
 
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CorePaginatedResult } from '@/backend_admin/core/types/core-api-response.types';

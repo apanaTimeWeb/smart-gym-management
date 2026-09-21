@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes the soft-delete flow for the integrations feature.
+﻿// RESPONSIBILITY: Executes the soft-delete flow for the integrations feature.
 // FLOW: CommandController -> IntegrationsDeleteService -> repository named soft-delete -> audit hook.
 import { Injectable } from '@nestjs/common';
 import { IntegrationsRepository } from '@/backend_superadmin/modules/superadmin/integrations/integrations.repository';

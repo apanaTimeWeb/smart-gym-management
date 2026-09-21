@@ -1,7 +1,7 @@
-// RESPONSIBILITY: Describes the frontend-consumed response fields for Admin branches.
+﻿// RESPONSIBILITY: Describes the frontend-consumed response fields for Admin branches.
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-// FLOW: Repository domain → Branches response mapper → ApiResponse<T>.
+// FLOW: Repository domain â†’ Branches response mapper â†’ ApiResponse<T>.
 
 export class AdminBranchExpenseItemDto {
   @ApiProperty()

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Owns POST/PATCH/DELETE endpoints for the messaging feature; business logic stays in micro-services.
+﻿// RESPONSIBILITY: Owns POST/PATCH/DELETE endpoints for the messaging feature; business logic stays in micro-services.
 // FLOW: HTTP mutation -> DTO -> use-case service -> named repository mutation -> canonical response interceptor.
 import { RequireIdempotencyKey } from '@/backend_superadmin/core/cache/idempotency.decorator';
 import { Body, Controller, Delete, HttpCode, HttpStatus, Param, Patch, Post, UseGuards } from '@nestjs/common';

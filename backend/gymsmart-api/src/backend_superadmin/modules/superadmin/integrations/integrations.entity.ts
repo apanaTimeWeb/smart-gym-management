@@ -1,4 +1,4 @@
-// RESPONSIBILITY: TypeORM persistence entity for integrations feature data stored in `integration_keys`.
+﻿// RESPONSIBILITY: TypeORM persistence entity for integrations feature data stored in `integration_keys`.
 // FLOW: integrations repository -> IntegrationKey entity -> PostgreSQL `integration_keys`.
 import { Column, Entity, Index } from 'typeorm';
 import { BaseEntity } from '@/backend_superadmin/core/database/base.entity';

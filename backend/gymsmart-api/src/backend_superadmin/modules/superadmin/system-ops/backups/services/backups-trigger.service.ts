@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Records an explicit manual backup trigger in the backup feature state.
+﻿// RESPONSIBILITY: Records an explicit manual backup trigger in the backup feature state.
 // FLOW: Controller -> BackupsTriggerService -> BackupsRepository -> PostgreSQL.
 import { Injectable } from '@nestjs/common';
 import { BackupsRepository } from '@/backend_superadmin/modules/superadmin/system-ops/backups/backups.repository';

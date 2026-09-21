@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Provides the migration DataSource using the same explicit PostgreSQL pool policy as runtime infrastructure.
+﻿// RESPONSIBILITY: Provides the migration DataSource using the same explicit PostgreSQL pool policy as runtime infrastructure.
 // FLOW: TypeORM CLI -> CoreDataSource -> PostgreSQL migrations.
 
 import 'reflect-metadata';

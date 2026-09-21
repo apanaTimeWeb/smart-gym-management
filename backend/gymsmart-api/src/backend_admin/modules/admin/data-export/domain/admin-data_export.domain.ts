@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Defines the ORM-independent domain shape for Admin data-export records.
-// FLOW: PostgreSQL entity → AdminDataExportMapper → AdminDataExportDomainModel → service.
+﻿// RESPONSIBILITY: Defines the ORM-independent domain shape for Admin data-export records.
+// FLOW: PostgreSQL entity â†’ AdminDataExportMapper â†’ AdminDataExportDomainModel â†’ service.
 
 export interface AdminDataExportDomainModel {
   id: string;

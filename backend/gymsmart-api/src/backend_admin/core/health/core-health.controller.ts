@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Exposes liveness, readiness, and deep dependency health probes without business logic.
-// FLOW: Health request → master DB dependency check → probe response.
+﻿// RESPONSIBILITY: Exposes liveness, readiness, and deep dependency health probes without business logic.
+// FLOW: Health request â†’ master DB dependency check â†’ probe response.
 
 import { Controller, Get, HttpStatus } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Exposes mutation endpoints for Admin hr; contains HTTP concerns only.
+﻿// RESPONSIBILITY: Exposes mutation endpoints for Admin hr; contains HTTP concerns only.
 // FLOW: HTTP mutation -> AdminHrCommandController -> AdminHrCommandService.
 
 import { Body, Controller, Delete, Headers, HttpStatus, Param, Patch, Post, UseGuards } from '@nestjs/common';

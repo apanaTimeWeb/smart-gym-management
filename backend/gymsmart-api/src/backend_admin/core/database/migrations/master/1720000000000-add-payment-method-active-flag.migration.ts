@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Adds soft-deactivation state to master payment methods without deleting payment history.
-// FLOW: Migration → payment_methods_master.is_active → repository soft removal.
+﻿// RESPONSIBILITY: Adds soft-deactivation state to master payment methods without deleting payment history.
+// FLOW: Migration â†’ payment_methods_master.is_active â†’ repository soft removal.
 
 import { MigrationInterface, QueryRunner } from 'typeorm';
 

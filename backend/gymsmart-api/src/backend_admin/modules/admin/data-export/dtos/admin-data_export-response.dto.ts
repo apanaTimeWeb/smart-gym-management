@@ -1,7 +1,7 @@
-// RESPONSIBILITY: Describes the frontend-consumed response fields for Admin data-export.
+﻿// RESPONSIBILITY: Describes the frontend-consumed response fields for Admin data-export.
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-// FLOW: Repository domain → DataExport response mapper → ApiResponse<T>.
+// FLOW: Repository domain â†’ DataExport response mapper â†’ ApiResponse<T>.
 
 export class AdminExportJobDto {
   @ApiProperty()

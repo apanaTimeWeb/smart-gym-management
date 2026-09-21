@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Registers the only canonical backend logger with redaction and request correlation metadata.
+﻿// RESPONSIBILITY: Registers the only canonical backend logger with redaction and request correlation metadata.
 // FLOW: AppModule -> CoreLoggerModule -> nestjs-pino -> sanitized structured access log.
 
 import { Module } from '@nestjs/common';

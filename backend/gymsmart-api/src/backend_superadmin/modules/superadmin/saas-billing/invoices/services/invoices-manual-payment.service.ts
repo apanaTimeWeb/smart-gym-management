@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Records a manual invoice payment against the invoice identified by the frontend contract.
+﻿// RESPONSIBILITY: Records a manual invoice payment against the invoice identified by the frontend contract.
 // FLOW: Controller -> InvoicesManualPaymentService -> InvoicesRepository -> PostgreSQL.
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InvoicesRepository } from '@/backend_superadmin/modules/superadmin/saas-billing/invoices/invoices.repository';

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Declares the endpoint SLA category consumed by the timeout interceptor and operational tooling.
+﻿// RESPONSIBILITY: Declares the endpoint SLA category consumed by the timeout interceptor and operational tooling.
 // FLOW: Controller decorator -> CoreTimeoutInterceptor -> TIMEOUT_CONFIG -> bounded HTTP execution.
 
 import { SetMetadata } from '@nestjs/common';

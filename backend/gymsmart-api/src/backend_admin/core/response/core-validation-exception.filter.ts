@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Converts validation, HTTP, and unexpected exceptions into the canonical ApiResponse error envelope.
-// FLOW: Exception → canonical status/errorCode mapping → frontend error contract.
+﻿// RESPONSIBILITY: Converts validation, HTTP, and unexpected exceptions into the canonical ApiResponse error envelope.
+// FLOW: Exception â†’ canonical status/errorCode mapping â†’ frontend error contract.
 
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus } from '@nestjs/common';
 import type { Response } from 'express';

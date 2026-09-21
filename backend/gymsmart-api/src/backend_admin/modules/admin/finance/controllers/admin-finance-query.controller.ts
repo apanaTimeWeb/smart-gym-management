@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Exposes read-only Admin finance HTTP endpoints; contains no business logic.
+﻿// RESPONSIBILITY: Exposes read-only Admin finance HTTP endpoints; contains no business logic.
 // FLOW: HTTP GET -> AdminFinanceQueryController -> AdminFinanceQueryService -> repository.
 
 import { Controller, Get, HttpStatus, Query, UseGuards } from '@nestjs/common';

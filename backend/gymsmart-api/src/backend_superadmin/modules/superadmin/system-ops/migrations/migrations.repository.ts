@@ -32,7 +32,7 @@ export class MigrationsRepository extends BaseRepository<MigrationLogEntity> {
   async findByIdOrThrow(id: string): Promise<MigrationLogEntity> { return super.findByIdOrThrow(id, 'Migrations record not found'); }
 
   /** Creates and persists a migrations record. */
-  async createMigrations(input: MigrationsCreateInput): Promise<MigrationLogEntity> { const entity = this.activeRepository.create(input as never); return this.activeRepository.save(entity); }
+  async createMigrations(input: MigrationsCreateInput): Promise<MigrationLogEntity> { const entity = this.activeRepository.create(input as any); return this.activeRepository.save(entity); }
 
   /** Applies an intention-revealing update to a migrations record. */
   async updateMigrationsById(id: string, input: MigrationsUpdateInput): Promise<MigrationLogEntity> { await this.activeRepository.update({ id } as never, input as never); return this.findByIdOrThrow(id); }

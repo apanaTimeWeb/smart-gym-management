@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Defines the canonical Landing validation/business error response schema for OpenAPI documentation.
-// FLOW: HTTP exception → ValidationExceptionFilter → LandingApiErrorResponseDto-shaped JSON.
+﻿// RESPONSIBILITY: Defines the canonical Landing validation/business error response schema for OpenAPI documentation.
+// FLOW: HTTP exception â†’ ValidationExceptionFilter â†’ LandingApiErrorResponseDto-shaped JSON.
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class LandingApiErrorResponseDto {

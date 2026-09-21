@@ -1,4 +1,4 @@
-// RESPONSIBILITY: TypeORM persistence entity for plans feature data stored in `subscription_plans`.
+﻿// RESPONSIBILITY: TypeORM persistence entity for plans feature data stored in `subscription_plans`.
 // FLOW: plans repository -> SubscriptionPlan entity -> PostgreSQL `subscription_plans`.
 import { Column, Entity, Index } from 'typeorm';
 import { BaseEntity } from '@/backend_superadmin/core/database/base.entity';

@@ -1,5 +1,5 @@
-// RESPONSIBILITY: CLI DataSource for the seeded default tenant database migrations.
-// FLOW: CLI → environment tenant DB → TypeORM DataSource → tenant migrations.
+﻿// RESPONSIBILITY: CLI DataSource for the seeded default tenant database migrations.
+// FLOW: CLI â†’ environment tenant DB â†’ TypeORM DataSource â†’ tenant migrations.
 
 import 'reflect-metadata';
 import 'dotenv/config';

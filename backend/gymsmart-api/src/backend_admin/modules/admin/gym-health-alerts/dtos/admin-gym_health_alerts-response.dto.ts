@@ -1,7 +1,7 @@
-// RESPONSIBILITY: Describes the frontend-consumed response fields for Admin gym-health-alerts.
+﻿// RESPONSIBILITY: Describes the frontend-consumed response fields for Admin gym-health-alerts.
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-// FLOW: Repository domain → GymHealthAlerts response mapper → ApiResponse<T>.
+// FLOW: Repository domain â†’ GymHealthAlerts response mapper â†’ ApiResponse<T>.
 
 export class AdminGymHealthAlertDto {
   @ApiProperty()

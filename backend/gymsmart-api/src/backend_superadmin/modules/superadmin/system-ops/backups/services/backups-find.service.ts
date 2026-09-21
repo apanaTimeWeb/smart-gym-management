@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes single-record retrieval for the backups feature.
+﻿// RESPONSIBILITY: Executes single-record retrieval for the backups feature.
 // FLOW: QueryController -> BackupsFindService -> repository findByIdOrThrow -> mapper.
 import { Injectable } from '@nestjs/common';
 import { BackupsRepository } from '@/backend_superadmin/modules/superadmin/system-ops/backups/backups.repository';

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Enforces endpoint-declared synchronous SLA limits and converts overruns into canonical timeout exceptions.
+﻿// RESPONSIBILITY: Enforces endpoint-declared synchronous SLA limits and converts overruns into canonical timeout exceptions.
 // FLOW: HTTP request -> CoreSla metadata -> CoreTimeoutInterceptor -> controller/service -> response or timeout.
 
 import { Injectable, RequestTimeoutException } from '@nestjs/common';
@@ -9,7 +9,7 @@ import { TIMEOUT_CONFIG } from '@/backend_auth/core/config/timeout.config';
 import { CoreErrorConstants } from '@/backend_auth/core/constants/core-error.constants';
 import { CoreSlaCategory, CORE_SLA_CATEGORY } from '@/backend_auth/core/http/core-sla.decorator';
 
-import type { CallHandler, ExecutionContext, NestInterceptor } from '@nestjs/common';
+import { CallHandler, ExecutionContext, NestInterceptor } from '@nestjs/common';
 @Injectable()
 export class CoreTimeoutInterceptor implements NestInterceptor {
   constructor(private readonly reflector: Reflector) {}

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Validates client-owned affiliate creation input only.
+﻿// RESPONSIBILITY: Validates client-owned affiliate creation input only.
 // FLOW: HTTP -> AffiliatesCreateDto -> create service -> repository.
 import { IsEmail, IsString, Length } from 'class-validator';
 export class AffiliatesCreateDto {

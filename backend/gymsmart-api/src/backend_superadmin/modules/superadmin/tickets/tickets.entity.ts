@@ -1,4 +1,4 @@
-// RESPONSIBILITY: TypeORM persistence entity for tickets feature data stored in `support_tickets`.
+﻿// RESPONSIBILITY: TypeORM persistence entity for tickets feature data stored in `support_tickets`.
 // FLOW: tickets repository -> SupportTicket entity -> PostgreSQL `support_tickets`.
 import { Column, Entity, Index } from 'typeorm';
 import { BaseEntity } from '@/backend_superadmin/core/database/base.entity';

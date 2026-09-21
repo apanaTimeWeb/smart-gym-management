@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes creation business flow for the global-audit feature.
+﻿// RESPONSIBILITY: Executes creation business flow for the global-audit feature.
 // FLOW: CommandController -> GlobalAuditCreateService -> named repository mutation -> mapper.
 import { Injectable } from '@nestjs/common';
 import { GlobalAuditRepository } from '@/backend_superadmin/modules/superadmin/global-audit/global-audit.repository';

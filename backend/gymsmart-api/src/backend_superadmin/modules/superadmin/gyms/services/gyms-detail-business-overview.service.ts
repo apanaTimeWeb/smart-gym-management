@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Builds the gym detail business overview from the authoritative tenant record.
+﻿// RESPONSIBILITY: Builds the gym detail business overview from the authoritative tenant record.
 // FLOW: Controller -> GymsDetailBusinessOverviewService -> GymsRepository -> domain projection.
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { GymsRepository } from '@/backend_superadmin/modules/superadmin/gyms/gyms.repository';

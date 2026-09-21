@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Generates privacy-preserving Redis keys for Auth brute-force lockout state.
+﻿// RESPONSIBILITY: Generates privacy-preserving Redis keys for Auth brute-force lockout state.
 // FLOW: AuthLoginService -> AuthLockoutUtils -> SHA-256 fingerprint -> Redis.
 
 import { createHash } from 'node:crypto';

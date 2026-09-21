@@ -1,7 +1,7 @@
-// RESPONSIBILITY: Describes the frontend-consumed response fields for Admin dashboard.
+﻿// RESPONSIBILITY: Describes the frontend-consumed response fields for Admin dashboard.
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-// FLOW: Repository domain → Dashboard response mapper → ApiResponse<T>.
+// FLOW: Repository domain â†’ Dashboard response mapper â†’ ApiResponse<T>.
 
 class DashboardMemberGrowth {
   @ApiProperty() month!: string;

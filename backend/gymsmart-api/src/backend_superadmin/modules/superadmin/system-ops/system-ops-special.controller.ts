@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Owns the system-ops landing summary endpoint only; child operational features have their own feature modules.
+﻿// RESPONSIBILITY: Owns the system-ops landing summary endpoint only; child operational features have their own feature modules.
 // FLOW: HTTP GET -> SystemOpsSummaryService -> SystemOpsRepository -> canonical response envelope.
 import { Controller, Get, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';

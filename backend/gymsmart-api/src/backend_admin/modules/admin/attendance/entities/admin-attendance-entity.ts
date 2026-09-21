@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns PostgreSQL persistence for the Admin attendance feature and its frontend-backed payload.
-// FLOW: Attendance Repository → AdminAttendanceEntity → PostgreSQL attendance_records table.
+﻿// RESPONSIBILITY: Owns PostgreSQL persistence for the Admin attendance feature and its frontend-backed payload.
+// FLOW: Attendance Repository â†’ AdminAttendanceEntity â†’ PostgreSQL attendance_records table.
 
 import { Column, Entity, Index } from 'typeorm';
 import { CoreBaseEntity } from '@/backend_admin/core/database/core-base.entity';

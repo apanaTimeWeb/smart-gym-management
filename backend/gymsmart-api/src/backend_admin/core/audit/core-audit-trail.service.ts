@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Writes mutation audit records for HTTP, job, event, webhook, and command entry points.
-// FLOW: Mutation/orchestrator → CoreAuditTrailService → tenant audit_logs repository.
+﻿// RESPONSIBILITY: Writes mutation audit records for HTTP, job, event, webhook, and command entry points.
+// FLOW: Mutation/orchestrator â†’ CoreAuditTrailService â†’ tenant audit_logs repository.
 
 import { Injectable } from '@nestjs/common';
 import { CoreRequestContextService } from '@/backend_admin/core/context/core-request-context.service';

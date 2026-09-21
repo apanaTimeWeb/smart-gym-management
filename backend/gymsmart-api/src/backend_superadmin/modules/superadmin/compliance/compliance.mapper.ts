@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Maps Compliance ORM entities into domain-safe response data.
+﻿// RESPONSIBILITY: Maps Compliance ORM entities into domain-safe response data.
 // FLOW: TypeORM entity -> ComplianceMapper -> domain model -> response DTO.
 import type { ComplianceSnapshotEntity } from '@/backend_superadmin/modules/superadmin/compliance/compliance.entity';
 import type { ComplianceDomainModel } from '@/backend_superadmin/modules/superadmin/compliance/types/compliance.interfaces';

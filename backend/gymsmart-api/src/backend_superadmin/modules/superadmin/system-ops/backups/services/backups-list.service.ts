@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes paginated read logic for the backups feature.
+﻿// RESPONSIBILITY: Executes paginated read logic for the backups feature.
 // FLOW: QueryController -> BackupsListService -> repository -> mapper -> response DTO.
 import { Injectable } from '@nestjs/common';
 import { BackupsRepository } from '@/backend_superadmin/modules/superadmin/system-ops/backups/backups.repository';

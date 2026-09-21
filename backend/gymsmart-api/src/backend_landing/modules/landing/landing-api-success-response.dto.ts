@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Defines the concrete success response schema documented by the Landing frontend contract.
-// FLOW: Landing controller → ResponseInterceptor passthrough → LandingApiSuccessResponseDto-shaped JSON.
+﻿// RESPONSIBILITY: Defines the concrete success response schema documented by the Landing frontend contract.
+// FLOW: Landing controller â†’ ResponseInterceptor passthrough â†’ LandingApiSuccessResponseDto-shaped JSON.
 import { ApiProperty } from '@nestjs/swagger';
 
 export class LandingApiSuccessResponseDto {

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Deterministically seeds the team table for local/test environments.
+﻿// RESPONSIBILITY: Deterministically seeds the team table for local/test environments.
 // FLOW: Master seed -> TeamSeeder -> PostgreSQL repository.
 import { DataSource } from 'typeorm';
 import { TeamSnapshotEntity } from '@/backend_superadmin/modules/superadmin/team/team.entity';

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Converts controlled business errors into the canonical error envelope.
+﻿// RESPONSIBILITY: Converts controlled business errors into the canonical error envelope.
 // FLOW: Exception -> normalized status/errorCode -> ApiResponse<null>.
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus } from '@nestjs/common';
 import { Response } from 'express';

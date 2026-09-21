@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Preserves the exact `/api/admin/campaigns/*` paths published by the current Admin frontend.
-// FLOW: Legacy Campaign URL → AdminCampaignsLegacyQueryController → AdminCampaignsQueryService.
+﻿// RESPONSIBILITY: Preserves the exact `/api/admin/campaigns/*` paths published by the current Admin frontend.
+// FLOW: Legacy Campaign URL â†’ AdminCampaignsLegacyQueryController â†’ AdminCampaignsQueryService.
 
 import { Controller, Get, HttpStatus, Query, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';

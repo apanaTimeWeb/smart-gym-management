@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes the soft-delete flow for the profile feature.
+﻿// RESPONSIBILITY: Executes the soft-delete flow for the profile feature.
 // FLOW: CommandController -> ProfileDeleteService -> repository named soft-delete -> audit hook.
 import { Injectable } from '@nestjs/common';
 import { ProfileRepository } from '@/backend_superadmin/modules/superadmin/profile/profile.repository';

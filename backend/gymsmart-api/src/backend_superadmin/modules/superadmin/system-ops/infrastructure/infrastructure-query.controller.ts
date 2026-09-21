@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Owns GET endpoints for the infrastructure feature and contains no mutation logic.
+﻿// RESPONSIBILITY: Owns GET endpoints for the infrastructure feature and contains no mutation logic.
 // FLOW: HTTP GET -> DTO validation -> query service -> repository -> canonical response interceptor.
 import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';

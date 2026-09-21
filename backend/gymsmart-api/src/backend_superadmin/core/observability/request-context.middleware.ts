@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Initializes request-scoped AsyncLocalStorage context at the HTTP boundary.
+﻿// RESPONSIBILITY: Initializes request-scoped AsyncLocalStorage context at the HTTP boundary.
 // FLOW: HTTP request -> identifiers -> AsyncLocalStorage -> downstream pipeline.
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Exposes read-only Admin branches HTTP endpoints; contains no business logic.
+﻿// RESPONSIBILITY: Exposes read-only Admin branches HTTP endpoints; contains no business logic.
 // FLOW: HTTP GET -> AdminBranchesQueryController -> AdminBranchesQueryService -> repository.
 
 import { Controller, Get, HttpStatus, Param, Query, UseGuards } from '@nestjs/common';

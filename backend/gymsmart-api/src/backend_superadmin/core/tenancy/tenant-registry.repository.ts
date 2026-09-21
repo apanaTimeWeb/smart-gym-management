@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Owns master-database tenant registry metadata and tenant-admin credential records.
+﻿// RESPONSIBILITY: Owns master-database tenant registry metadata and tenant-admin credential records.
 // FLOW: Tenant provisioning -> registry repository -> tenants / tenant_admin_accounts.
 import { Injectable } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Enforces route-declared rate-limit tiers using actor ID or request IP.
+﻿// RESPONSIBILITY: Enforces route-declared rate-limit tiers using actor ID or request IP.
 // FLOW: HTTP request -> CoreRateLimitGuard -> CoreRateLimitService -> controller.
 
 import { Injectable } from '@nestjs/common';
@@ -7,7 +7,7 @@ import { Reflector } from '@nestjs/core';
 import { CORE_RATE_LIMIT_TIER } from '@/backend_auth/core/rate-limit/core-rate-limit.decorator';
 import { CoreRateLimitService } from '@/backend_auth/core/rate-limit/core-rate-limit.service';
 
-import type { CanActivate, ExecutionContext } from '@nestjs/common';
+import { CanActivate, ExecutionContext } from '@nestjs/common';
 import type { CoreRateLimitTier } from '@/backend_auth/core/rate-limit/core-rate-limit.constants';
 import type { CoreRateLimitedRequest } from '@/backend_auth/core/rate-limit/core-rate-limit.interfaces';
 

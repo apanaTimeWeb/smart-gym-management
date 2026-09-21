@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Implements Superadmin authentication, refresh rotation, login lockout, and logout semantics.
+﻿// RESPONSIBILITY: Implements Superadmin authentication, refresh rotation, login lockout, and logout semantics.
 // FLOW: credentials -> failed-attempt counter -> profile -> bcrypt/JWT/Redis -> token response.
 import { Injectable, TooManyRequestsException, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';

@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Defines the ORM-independent domain shape for Admin finance records.
-// FLOW: PostgreSQL entity → AdminFinanceMapper → AdminFinanceDomainModel → service.
+﻿// RESPONSIBILITY: Defines the ORM-independent domain shape for Admin finance records.
+// FLOW: PostgreSQL entity â†’ AdminFinanceMapper â†’ AdminFinanceDomainModel â†’ service.
 
 export interface AdminFinanceDomainModel {
   id: string;

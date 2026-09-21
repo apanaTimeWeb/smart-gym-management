@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Defines the canonical rate-limit tier registry without embedding route-specific limits in controllers or services.
+﻿// RESPONSIBILITY: Defines the canonical rate-limit tier registry without embedding route-specific limits in controllers or services.
 // FLOW: CoreRateLimitTier -> RATE_LIMIT_CONFIG -> ConfigService -> Redis rate-limit counter.
 
 import { CoreRateLimitTier } from '@/backend_auth/core/rate-limit/core-rate-limit.constants';

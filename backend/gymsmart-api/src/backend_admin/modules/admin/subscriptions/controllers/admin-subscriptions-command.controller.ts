@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Exposes mutation endpoints for Admin subscriptions; contains HTTP concerns only.
+﻿// RESPONSIBILITY: Exposes mutation endpoints for Admin subscriptions; contains HTTP concerns only.
 // FLOW: HTTP mutation -> AdminSubscriptionsCommandController -> AdminSubscriptionsCommandService.
 
 import { Body, Controller, Delete, Headers, HttpStatus, ParseUUIDPipe, Post, UseGuards } from '@nestjs/common';

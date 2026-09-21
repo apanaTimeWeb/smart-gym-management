@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Provides the sanitized audit boundary used by security-critical feature mutations.
+﻿// RESPONSIBILITY: Provides the sanitized audit boundary used by security-critical feature mutations.
 // FLOW: Feature service/orchestrator -> CoreAuditService -> CoreAuditLogRepository -> audit_logs.
 
 import { Injectable } from '@nestjs/common';
@@ -6,7 +6,7 @@ import { Injectable } from '@nestjs/common';
 import { CoreAuditLogRepository } from '@/backend_auth/core/audit/core-audit-log.repository';
 
 import type { CoreAuditLogInput } from '@/backend_auth/core/audit/core-audit-log.interfaces';
-import type { CoreRequestContextService } from '@/backend_auth/core/context/core-request-context';
+import { CoreRequestContextService } from '@/backend_auth/core/context/core-request-context';
 @Injectable()
 export class CoreAuditService {
   constructor(

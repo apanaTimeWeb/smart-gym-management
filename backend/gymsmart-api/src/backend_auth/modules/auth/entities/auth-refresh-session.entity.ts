@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Maps persisted refresh-session rotation state; only a token hash is stored.
+﻿// RESPONSIBILITY: Maps persisted refresh-session rotation state; only a token hash is stored.
 // FLOW: AuthRefreshSessionRepository -> AuthRefreshSessionEntity -> PostgreSQL auth_refresh_sessions.
 
 import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Unique } from 'typeorm';

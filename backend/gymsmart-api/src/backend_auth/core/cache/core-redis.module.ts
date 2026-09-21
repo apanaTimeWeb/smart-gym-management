@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Provides a single Redis connection service across the application.
+﻿// RESPONSIBILITY: Provides a single Redis connection service across the application.
 // FLOW: AppModule -> CoreRedisModule -> CoreRedisService -> feature/core consumers.
 
 import { Global, Module } from '@nestjs/common';

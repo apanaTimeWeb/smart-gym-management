@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Translates the TypeORM Admin members entity into an ORM-independent domain model and frontend response.
-// FLOW: AdminMembersEntity → AdminMembersMapper → domain/response object.
+﻿// RESPONSIBILITY: Translates the TypeORM Admin members entity into an ORM-independent domain model and frontend response.
+// FLOW: AdminMembersEntity â†’ AdminMembersMapper â†’ domain/response object.
 
 import { AdminMembersDomainModel } from '@/backend_admin/modules/admin/members/domain/admin-members.domain';
 import { AdminMembersEntity } from '@/backend_admin/modules/admin/members/entities/admin-members-entity';

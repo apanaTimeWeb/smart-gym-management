@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Master inventory for every distributed scheduled job in the application.
+﻿// RESPONSIBILITY: Master inventory for every distributed scheduled job in the application.
 // FLOW: Job implementation -> registry entry -> distributed scheduler/DLQ.
 export const SCHEDULED_JOBS_REGISTRY = [
   { name: 'SuperadminBackupHealthRefreshJob', module: 'system-ops/backups', file: 'src/modules/superadmin/system-ops/backups/jobs/superadmin-backup-health-refresh.job.ts', schedule: '*/15 * * * *', description: 'Refreshes backup health state for operational dashboards.', touchesEntities: ['backup_records'], failureBehavior: 'Moves exhausted work to the DLQ and logs the failure.', idempotent: true },

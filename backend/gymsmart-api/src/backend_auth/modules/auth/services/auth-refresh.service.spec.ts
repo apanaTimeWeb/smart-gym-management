@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Verifies one focused Auth behavior without testing implementation details outside its micro-feature.
+﻿// RESPONSIBILITY: Verifies one focused Auth behavior without testing implementation details outside its micro-feature.
 // FLOW: Jest -> focused Auth unit -> mocked boundary -> observable behavior assertion.
 
 import { ConfigService } from '@nestjs/config';

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes single-record retrieval for the plans feature.
+﻿// RESPONSIBILITY: Executes single-record retrieval for the plans feature.
 // FLOW: QueryController -> PlansFindService -> repository findByIdOrThrow -> mapper.
 import { Injectable } from '@nestjs/common';
 import { PlansRepository } from '@/backend_superadmin/modules/superadmin/saas-billing/plans/plans.repository';

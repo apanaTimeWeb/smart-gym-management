@@ -1,7 +1,7 @@
-// RESPONSIBILITY: Reads the frontend contract state owned by this feature from PostgreSQL; no mock data is returned by the service.
+﻿// RESPONSIBILITY: Reads the frontend contract state owned by this feature from PostgreSQL; no mock data is returned by the service.
 // FLOW: Controller -> MessagingTemplateInsightsService -> MessagingContractSnapshotRepository -> contract snapshot row -> canonical response interceptor.
 import { Injectable, NotFoundException } from '@nestjs/common';
-import type { MessagingTemplateInsightsResponseDto } from '@/backend_superadmin/modules/superadmin/messaging/messaging-template-insights-response.dto';
+import { MessagingTemplateInsightsResponseDto } from '@/backend_superadmin/modules/superadmin/messaging/messaging-template-insights-response.dto';
 import { MessagingContractSnapshotRepository } from '@/backend_superadmin/modules/superadmin/messaging/messaging-contract-snapshot.repository';
 import { MESSAGING_SNAPSHOT_KINDS } from '@/backend_superadmin/modules/superadmin/messaging/messaging.constants';
 

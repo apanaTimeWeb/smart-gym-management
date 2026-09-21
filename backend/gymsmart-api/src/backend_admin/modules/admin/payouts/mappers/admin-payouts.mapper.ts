@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Translates the TypeORM Admin payouts entity into an ORM-independent domain model and frontend response.
-// FLOW: AdminPayoutsEntity → AdminPayoutsMapper → domain/response object.
+﻿// RESPONSIBILITY: Translates the TypeORM Admin payouts entity into an ORM-independent domain model and frontend response.
+// FLOW: AdminPayoutsEntity â†’ AdminPayoutsMapper â†’ domain/response object.
 
 import { AdminPayoutsDomainModel } from '@/backend_admin/modules/admin/payouts/domain/admin-payouts.domain';
 import { AdminPayoutsEntity } from '@/backend_admin/modules/admin/payouts/entities/admin-payouts-entity';

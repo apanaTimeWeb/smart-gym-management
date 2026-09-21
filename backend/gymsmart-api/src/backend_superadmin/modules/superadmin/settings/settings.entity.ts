@@ -1,4 +1,4 @@
-// RESPONSIBILITY: TypeORM persistence entity for settings feature data stored in `platform_settings`.
+﻿// RESPONSIBILITY: TypeORM persistence entity for settings feature data stored in `platform_settings`.
 // FLOW: settings repository -> PlatformSetting entity -> PostgreSQL `platform_settings`.
 import { Column, Entity, Index } from 'typeorm';
 import { BaseEntity } from '@/backend_superadmin/core/database/base.entity';

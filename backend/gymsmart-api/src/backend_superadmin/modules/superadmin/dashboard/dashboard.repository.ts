@@ -31,7 +31,7 @@ export class DashboardRepository extends BaseRepository<DashboardSnapshotEntity>
   async findByIdOrThrow(id: string): Promise<DashboardSnapshotEntity> { return super.findByIdOrThrow(id, 'Dashboard record not found'); }
 
   /** Creates and persists a dashboard record. */
-  async createDashboard(input: DashboardCreateInput): Promise<DashboardSnapshotEntity> { const entity = this.activeRepository.create(input as never); return this.activeRepository.save(entity); }
+  async createDashboard(input: DashboardCreateInput): Promise<DashboardSnapshotEntity> { const entity = this.activeRepository.create(input as any); return this.activeRepository.save(entity); }
 
   /** Applies an intention-revealing update to a dashboard record. */
   async updateDashboardById(id: string, input: DashboardUpdateInput): Promise<DashboardSnapshotEntity> { await this.activeRepository.update({ id } as never, input as never); return this.findByIdOrThrow(id); }

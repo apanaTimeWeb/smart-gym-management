@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes single-record retrieval for the tickets feature.
+﻿// RESPONSIBILITY: Executes single-record retrieval for the tickets feature.
 // FLOW: QueryController -> TicketsFindService -> repository findByIdOrThrow -> mapper.
 import { Injectable } from '@nestjs/common';
 import { TicketsRepository } from '@/backend_superadmin/modules/superadmin/tickets/tickets.repository';

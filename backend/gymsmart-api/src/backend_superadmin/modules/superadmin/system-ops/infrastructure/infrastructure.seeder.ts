@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Deterministically seeds the infrastructure table for local/test environments.
+﻿// RESPONSIBILITY: Deterministically seeds the infrastructure table for local/test environments.
 // FLOW: Master seed -> InfrastructureSeeder -> PostgreSQL repository.
 import { DataSource } from 'typeorm';
 import { InfrastructureNodeEntity } from '@/backend_superadmin/modules/superadmin/system-ops/infrastructure/infrastructure.entity';

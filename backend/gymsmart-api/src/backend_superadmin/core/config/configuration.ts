@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Validates and exposes strongly typed application configuration.
+﻿// RESPONSIBILITY: Validates and exposes strongly typed application configuration.
 // FLOW: process.env -> Zod schema -> ConfigService -> infrastructure consumers.
 import { registerAs } from '@nestjs/config';
 import { z } from 'zod';

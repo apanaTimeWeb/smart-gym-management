@@ -1,4 +1,4 @@
-// RESPONSIBILITY: TypeORM persistence entity for affiliates feature data stored in `affiliates`.
+﻿// RESPONSIBILITY: TypeORM persistence entity for affiliates feature data stored in `affiliates`.
 // FLOW: affiliates repository -> Affiliate entity -> PostgreSQL `affiliates`.
 import { Column, Entity, Index } from 'typeorm';
 import { BaseEntity } from '@/backend_superadmin/core/database/base.entity';

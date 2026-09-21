@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Centralizes timeout budgets required by the backend architecture.
-// FLOW: Feature adapter/repository → CoreTimeoutConfig → operation timeout.
+﻿// RESPONSIBILITY: Centralizes timeout budgets required by the backend architecture.
+// FLOW: Feature adapter/repository â†’ CoreTimeoutConfig â†’ operation timeout.
 
 export const CoreTimeoutConfig = {
   EXTERNAL_API_DEFAULT_MS: 5_000,

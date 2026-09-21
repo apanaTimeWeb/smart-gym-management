@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Provides explicit PostgreSQL connection-pool settings.
-// FLOW: ConfigService → CoreDatabaseConfig → TypeORM DataSource options.
+﻿// RESPONSIBILITY: Provides explicit PostgreSQL connection-pool settings.
+// FLOW: ConfigService â†’ CoreDatabaseConfig â†’ TypeORM DataSource options.
 
 import { registerAs } from '@nestjs/config';
 

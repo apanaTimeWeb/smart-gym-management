@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Owns persistence for the backup schedule contract state.
+﻿// RESPONSIBILITY: Owns persistence for the backup schedule contract state.
 // FLOW: Backup schedule service -> repository -> TypeORM -> PostgreSQL.
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';

@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns PostgreSQL persistence for the Admin blacklist feature and its frontend-backed payload.
-// FLOW: Blacklist Repository → AdminBlacklistEntity → PostgreSQL blacklisted_members table.
+﻿// RESPONSIBILITY: Owns PostgreSQL persistence for the Admin blacklist feature and its frontend-backed payload.
+// FLOW: Blacklist Repository â†’ AdminBlacklistEntity â†’ PostgreSQL blacklisted_members table.
 
 import { Column, Entity, Index } from 'typeorm';
 import { CoreBaseEntity } from '@/backend_admin/core/database/core-base.entity';

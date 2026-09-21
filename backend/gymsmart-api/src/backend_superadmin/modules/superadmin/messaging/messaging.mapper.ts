@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Maps Messaging ORM entities into domain-safe response data.
+﻿// RESPONSIBILITY: Maps Messaging ORM entities into domain-safe response data.
 // FLOW: TypeORM entity -> MessagingMapper -> domain model -> response DTO.
 import type { TenantMessageEntity } from '@/backend_superadmin/modules/superadmin/messaging/messaging.entity';
 import type { MessagingDomainModel } from '@/backend_superadmin/modules/superadmin/messaging/types/messaging.interfaces';

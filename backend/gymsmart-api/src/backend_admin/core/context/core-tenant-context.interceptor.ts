@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Establishes trusted tenant context after JWT authentication and master-DB authorization.
-// FLOW: HTTP request → JWT actor/tenant → master authorization → AsyncLocalStorage → feature repository.
+﻿// RESPONSIBILITY: Establishes trusted tenant context after JWT authentication and master-DB authorization.
+// FLOW: HTTP request â†’ JWT actor/tenant â†’ master authorization â†’ AsyncLocalStorage â†’ feature repository.
 
 import { CallHandler, ExecutionContext, ForbiddenException, Injectable, NestInterceptor } from '@nestjs/common';
 import { Observable, from, throwError } from 'rxjs';

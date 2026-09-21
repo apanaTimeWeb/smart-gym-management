@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Describes the exact frontend-consumed Admin audit-log row and KPI response fields.
-// FLOW: Audit repository/domain → response mapper → canonical ApiResponse envelope.
+﻿// RESPONSIBILITY: Describes the exact frontend-consumed Admin audit-log row and KPI response fields.
+// FLOW: Audit repository/domain â†’ response mapper â†’ canonical ApiResponse envelope.
 
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 

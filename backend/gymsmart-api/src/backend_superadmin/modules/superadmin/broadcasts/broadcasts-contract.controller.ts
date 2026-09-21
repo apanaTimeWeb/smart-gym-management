@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Owns broadcast-specific frontend contract endpoints absent from generic CRUD controllers.
+﻿// RESPONSIBILITY: Owns broadcast-specific frontend contract endpoints absent from generic CRUD controllers.
 // FLOW: HTTP -> delivery/count service -> repository -> canonical response interceptor.
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';

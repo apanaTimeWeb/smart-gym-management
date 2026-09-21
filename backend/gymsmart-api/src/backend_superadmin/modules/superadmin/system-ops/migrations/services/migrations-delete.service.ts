@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes the soft-delete flow for the migrations feature.
+﻿// RESPONSIBILITY: Executes the soft-delete flow for the migrations feature.
 // FLOW: CommandController -> MigrationsDeleteService -> repository named soft-delete -> audit hook.
 import { Injectable } from '@nestjs/common';
 import { MigrationsRepository } from '@/backend_superadmin/modules/superadmin/system-ops/migrations/migrations.repository';

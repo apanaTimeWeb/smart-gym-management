@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Provides public liveness/readiness and protected deep health checks for the application.
+﻿// RESPONSIBILITY: Provides public liveness/readiness and protected deep health checks for the application.
 // FLOW: AppModule -> CoreHealthModule -> CoreHealthController -> PostgreSQL/Redis health indicators.
 
 import { Module } from '@nestjs/common';

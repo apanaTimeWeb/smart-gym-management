@@ -32,7 +32,7 @@ export class WhiteLabelingRepository extends BaseRepository<WhiteLabelDomainEnti
   async findByIdOrThrow(id: string): Promise<WhiteLabelDomainEntity> { return super.findByIdOrThrow(id, 'WhiteLabeling record not found'); }
 
   /** Creates and persists a white-labeling record. */
-  async createWhiteLabeling(input: WhiteLabelingCreateInput): Promise<WhiteLabelDomainEntity> { const entity = this.activeRepository.create(input as never); return this.activeRepository.save(entity); }
+  async createWhiteLabeling(input: WhiteLabelingCreateInput): Promise<WhiteLabelDomainEntity> { const entity = this.activeRepository.create(input as any); return this.activeRepository.save(entity); }
 
   /** Applies an intention-revealing update to a white-labeling record. */
   async updateWhiteLabelingById(id: string, input: WhiteLabelingUpdateInput): Promise<WhiteLabelDomainEntity> { await this.activeRepository.update({ id } as never, input as never); return this.findByIdOrThrow(id); }

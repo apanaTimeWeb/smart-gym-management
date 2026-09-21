@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Translates the TypeORM Admin reports entity into an ORM-independent domain model and frontend response.
-// FLOW: AdminReportsEntity → AdminReportsMapper → domain/response object.
+﻿// RESPONSIBILITY: Translates the TypeORM Admin reports entity into an ORM-independent domain model and frontend response.
+// FLOW: AdminReportsEntity â†’ AdminReportsMapper â†’ domain/response object.
 
 import { AdminReportsDomainModel } from '@/backend_admin/modules/admin/reports/domain/admin-reports.domain';
 import { AdminReportsEntity } from '@/backend_admin/modules/admin/reports/entities/admin-reports-entity';

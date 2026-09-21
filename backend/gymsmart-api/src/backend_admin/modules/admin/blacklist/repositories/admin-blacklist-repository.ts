@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns all TypeORM persistence operations for Admin blacklist; services never call save() directly.
-// FLOW: AdminBlacklistService → AdminBlacklistRepository → TypeORM → PostgreSQL blacklisted_members.
+﻿// RESPONSIBILITY: Owns all TypeORM persistence operations for Admin blacklist; services never call save() directly.
+// FLOW: AdminBlacklistService â†’ AdminBlacklistRepository â†’ TypeORM â†’ PostgreSQL blacklisted_members.
 
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CorePaginatedResult } from '@/backend_admin/core/types/core-api-response.types';

@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns read-side use cases for Admin branches; no write persistence occurs here.
-// FLOW: AdminBranchesQueryController → AdminBranchesQueryService → repository → mapper → ApiResponse.
+﻿// RESPONSIBILITY: Owns read-side use cases for Admin branches; no write persistence occurs here.
+// FLOW: AdminBranchesQueryController â†’ AdminBranchesQueryService â†’ repository â†’ mapper â†’ ApiResponse.
 
 import { Injectable } from '@nestjs/common';
 import { AdminBranchesRepository } from '@/backend_admin/modules/admin/branches/repositories/admin-branches-repository';

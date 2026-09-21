@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Implements the bulk-retry mutation against the jobs repository.
+﻿// RESPONSIBILITY: Implements the bulk-retry mutation against the jobs repository.
 // FLOW: Controller -> JobsBulkRetryService -> JobsRepository -> PostgreSQL.
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { JobsRepository } from '@/backend_superadmin/modules/superadmin/system-ops/jobs/jobs.repository';

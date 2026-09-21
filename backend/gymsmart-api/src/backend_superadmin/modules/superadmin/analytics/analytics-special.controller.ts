@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Owns explicitly versioned/specialized frontend contract endpoints for the analytics feature.
+﻿// RESPONSIBILITY: Owns explicitly versioned/specialized frontend contract endpoints for the analytics feature.
 // FLOW: HTTP -> specialized micro-service -> typed result -> canonical response interceptor.
 import { Body, Controller, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { AnalyticsResponseDto } from '@/backend_superadmin/modules/superadmin/analytics/responses/analytics-response.dto';

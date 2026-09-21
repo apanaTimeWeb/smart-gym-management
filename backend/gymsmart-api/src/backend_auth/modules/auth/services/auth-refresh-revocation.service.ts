@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Maintains the Redis refresh-token denylist required for immediate token revocation and replay hardening.
+﻿// RESPONSIBILITY: Maintains the Redis refresh-token denylist required for immediate token revocation and replay hardening.
 // FLOW: Auth refresh orchestrator/service -> AuthRefreshRevocationService -> Redis SHA-256 denylist key.
 
 import { createHash } from 'node:crypto';

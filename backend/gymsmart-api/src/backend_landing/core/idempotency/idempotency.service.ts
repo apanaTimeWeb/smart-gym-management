@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Provides Redis replay caching plus transactionally durable idempotency reservations for critical mutations.
-// FLOW: Command orchestrator → IdempotencyService → Redis cache + CoreIdempotencyRepository → tenant DB.
+﻿// RESPONSIBILITY: Provides Redis replay caching plus transactionally durable idempotency reservations for critical mutations.
+// FLOW: Command orchestrator â†’ IdempotencyService â†’ Redis cache + CoreIdempotencyRepository â†’ tenant DB.
 import { ConflictException, Injectable } from '@nestjs/common';
 
 import { RedisService } from '@/backend_landing/core/redis/redis.service';
@@ -10,7 +10,7 @@ import { CoreIdempotencyRecordEntity } from '@/backend_landing/core/idempotency/
 
 import { CORE_ERROR_MESSAGES } from '@/backend_landing/core/types/core-error.constants';
 
-import type { TransactionContext } from '@/backend_landing/core/database/transaction-context';
+import { TransactionContext } from '@/backend_landing/core/database/transaction-context';
 
 import type { ApiResponse } from '@/backend_landing/core/types/api-response.types';
 

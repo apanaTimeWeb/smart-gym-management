@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Owns explicitly versioned/specialized frontend contract endpoints for the messaging feature.
+﻿// RESPONSIBILITY: Owns explicitly versioned/specialized frontend contract endpoints for the messaging feature.
 // FLOW: HTTP -> specialized micro-service -> typed result -> canonical response interceptor.
 import { RequireIdempotencyKey } from '@/backend_superadmin/core/cache/idempotency.decorator';
 import { MessagingWhatsAppBulkCenterResponseDto } from '@/backend_superadmin/modules/superadmin/messaging/messaging-whatsapp-bulk-center-response.dto';

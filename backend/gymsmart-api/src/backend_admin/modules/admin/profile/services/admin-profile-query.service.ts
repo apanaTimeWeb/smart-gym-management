@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns read-side use cases for Admin profile; no write persistence occurs here.
-// FLOW: AdminProfileQueryController → AdminProfileQueryService → repository → mapper → ApiResponse.
+﻿// RESPONSIBILITY: Owns read-side use cases for Admin profile; no write persistence occurs here.
+// FLOW: AdminProfileQueryController â†’ AdminProfileQueryService â†’ repository â†’ mapper â†’ ApiResponse.
 
 import { Injectable } from '@nestjs/common';
 import { AdminProfileRepository } from '@/backend_admin/modules/admin/profile/repositories/admin-profile-repository';

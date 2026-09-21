@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Authenticates Admin users, enforces brute-force lockout, rotates refresh tokens, and revokes prior refresh tokens.
-// FLOW: Auth controller → CoreAuthService → master DB + Redis → short-lived access token + HttpOnly refresh cookie.
+﻿// RESPONSIBILITY: Authenticates Admin users, enforces brute-force lockout, rotates refresh tokens, and revokes prior refresh tokens.
+// FLOW: Auth controller â†’ CoreAuthService â†’ master DB + Redis â†’ short-lived access token + HttpOnly refresh cookie.
 
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';

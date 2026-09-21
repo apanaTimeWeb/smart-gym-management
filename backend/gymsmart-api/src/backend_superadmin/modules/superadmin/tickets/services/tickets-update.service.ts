@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes partial update business flow for the tickets feature.
+﻿// RESPONSIBILITY: Executes partial update business flow for the tickets feature.
 // FLOW: CommandController -> TicketsUpdateService -> named repository mutation -> mapper.
 import { Injectable } from '@nestjs/common';
 import { TicketsRepository } from '@/backend_superadmin/modules/superadmin/tickets/tickets.repository';

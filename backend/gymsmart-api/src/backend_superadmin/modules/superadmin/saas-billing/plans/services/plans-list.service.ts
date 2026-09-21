@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes paginated read logic for the plans feature.
+﻿// RESPONSIBILITY: Executes paginated read logic for the plans feature.
 // FLOW: QueryController -> PlansListService -> repository -> mapper -> response DTO.
 import { Injectable } from '@nestjs/common';
 import { PlansRepository } from '@/backend_superadmin/modules/superadmin/saas-billing/plans/plans.repository';

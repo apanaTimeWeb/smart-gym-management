@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Registers global observability services and the Prometheus metrics endpoint.
-// FLOW: AppModule → CoreObservabilityModule → MetricsController/MetricsService.
+﻿// RESPONSIBILITY: Registers global observability services and the Prometheus metrics endpoint.
+// FLOW: AppModule â†’ CoreObservabilityModule â†’ MetricsController/MetricsService.
 import { Global, Module } from '@nestjs/common';
 
 import { MetricsController } from '@/backend_landing/core/observability/metrics.controller';

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes paginated read logic for the compliance feature.
+﻿// RESPONSIBILITY: Executes paginated read logic for the compliance feature.
 // FLOW: QueryController -> ComplianceListService -> repository -> mapper -> response DTO.
 import { Injectable } from '@nestjs/common';
 import { ComplianceRepository } from '@/backend_superadmin/modules/superadmin/compliance/compliance.repository';

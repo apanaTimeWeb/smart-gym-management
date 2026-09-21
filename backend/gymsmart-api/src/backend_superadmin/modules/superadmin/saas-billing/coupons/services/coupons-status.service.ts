@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Performs status transitions for coupons records through the repository boundary.
+﻿// RESPONSIBILITY: Performs status transitions for coupons records through the repository boundary.
 // FLOW: CommandController -> StatusService -> named repository update -> domain mapper.
 import { Injectable } from '@nestjs/common';
 import { CouponsRepository } from '@/backend_superadmin/modules/superadmin/saas-billing/coupons/coupons.repository';

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Deterministically seeds the migrations table for local/test environments.
+﻿// RESPONSIBILITY: Deterministically seeds the migrations table for local/test environments.
 // FLOW: Master seed -> MigrationsSeeder -> PostgreSQL repository.
 import { DataSource } from 'typeorm';
 import { MigrationLogEntity } from '@/backend_superadmin/modules/superadmin/system-ops/migrations/migrations.entity';

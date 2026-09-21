@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Composes only the isolated Auth feature and its core infrastructure dependencies.
+﻿// RESPONSIBILITY: Composes only the isolated Auth feature and its core infrastructure dependencies.
 // FLOW: AuthModule -> controllers -> orchestrator/services -> repositories -> PostgreSQL/Redis/audit.
 
 import { Module } from '@nestjs/common';

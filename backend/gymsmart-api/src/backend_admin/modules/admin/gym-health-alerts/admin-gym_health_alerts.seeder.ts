@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Seeds deterministic development data for Admin gym-health-alerts; never used in production runtime.
+﻿// RESPONSIBILITY: Seeds deterministic development data for Admin gym-health-alerts; never used in production runtime.
 // FLOW: CoreTenantSeeder -> AdminGymHealthAlertsSeeder -> TypeORM -> usage_snapshots.
 
 import { DataSource } from 'typeorm';

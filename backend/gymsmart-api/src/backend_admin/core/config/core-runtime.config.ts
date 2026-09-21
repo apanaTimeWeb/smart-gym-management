@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Provides validated runtime configuration to infrastructure and application boundaries without raw environment reads in business logic.
-// FLOW: ConfigModule validation → CoreRuntimeConfig → infra providers/controllers.
+﻿// RESPONSIBILITY: Provides validated runtime configuration to infrastructure and application boundaries without raw environment reads in business logic.
+// FLOW: ConfigModule validation â†’ CoreRuntimeConfig â†’ infra providers/controllers.
 
 import { registerAs } from '@nestjs/config';
 

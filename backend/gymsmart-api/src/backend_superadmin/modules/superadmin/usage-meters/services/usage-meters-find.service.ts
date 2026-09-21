@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes single-record retrieval for the usage-meters feature.
+﻿// RESPONSIBILITY: Executes single-record retrieval for the usage-meters feature.
 // FLOW: QueryController -> UsageMetersFindService -> repository findByIdOrThrow -> mapper.
 import { Injectable } from '@nestjs/common';
 import { UsageMetersRepository } from '@/backend_superadmin/modules/superadmin/usage-meters/usage-meters.repository';

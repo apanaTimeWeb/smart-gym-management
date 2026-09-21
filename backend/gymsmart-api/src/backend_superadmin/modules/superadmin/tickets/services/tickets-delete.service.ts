@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes the soft-delete flow for the tickets feature.
+﻿// RESPONSIBILITY: Executes the soft-delete flow for the tickets feature.
 // FLOW: CommandController -> TicketsDeleteService -> repository named soft-delete -> audit hook.
 import { Injectable } from '@nestjs/common';
 import { TicketsRepository } from '@/backend_superadmin/modules/superadmin/tickets/tickets.repository';

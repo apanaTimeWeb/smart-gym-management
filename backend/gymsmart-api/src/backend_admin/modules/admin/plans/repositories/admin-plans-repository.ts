@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns all TypeORM persistence operations for Admin plans; services never call save() directly.
-// FLOW: AdminPlansService → AdminPlansRepository → TypeORM → PostgreSQL plans.
+﻿// RESPONSIBILITY: Owns all TypeORM persistence operations for Admin plans; services never call save() directly.
+// FLOW: AdminPlansService â†’ AdminPlansRepository â†’ TypeORM â†’ PostgreSQL plans.
 
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CorePaginatedResult } from '@/backend_admin/core/types/core-api-response.types';

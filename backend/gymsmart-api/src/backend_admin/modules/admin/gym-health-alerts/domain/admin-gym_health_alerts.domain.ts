@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Defines the ORM-independent domain shape for Admin gym-health-alerts records.
-// FLOW: PostgreSQL entity → AdminGymHealthAlertsMapper → AdminGymHealthAlertsDomainModel → service.
+﻿// RESPONSIBILITY: Defines the ORM-independent domain shape for Admin gym-health-alerts records.
+// FLOW: PostgreSQL entity â†’ AdminGymHealthAlertsMapper â†’ AdminGymHealthAlertsDomainModel â†’ service.
 
 export interface AdminGymHealthAlertsDomainModel {
   id: string;

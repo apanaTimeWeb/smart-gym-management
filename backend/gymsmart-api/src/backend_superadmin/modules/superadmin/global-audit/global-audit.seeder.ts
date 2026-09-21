@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Deterministically seeds the global-audit table for local/test environments.
+﻿// RESPONSIBILITY: Deterministically seeds the global-audit table for local/test environments.
 // FLOW: Master seed -> GlobalAuditSeeder -> PostgreSQL repository.
 import { DataSource } from 'typeorm';
 import { AuditLogEntity } from '@/backend_superadmin/modules/superadmin/global-audit/global-audit.entity';

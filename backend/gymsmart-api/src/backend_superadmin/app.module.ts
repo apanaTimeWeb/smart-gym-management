@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Composes the application module graph from core infrastructure, auth, health, and isolated Superadmin features.
+﻿// RESPONSIBILITY: Composes the application module graph from core infrastructure, auth, health, and isolated Superadmin features.
 // FLOW: Nest bootstrap -> AppModule -> CoreModule + Auth/Health/feature modules.
 import { Module } from '@nestjs/common';
 import { CoreModule } from '@/backend_superadmin/core/core.module';

@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Maps master-database actor-to-tenant authorization records used before tenant DataSource selection.
-// FLOW: Master DB → membership query → trusted tenant context → tenant DataSource.
+﻿// RESPONSIBILITY: Maps master-database actor-to-tenant authorization records used before tenant DataSource selection.
+// FLOW: Master DB â†’ membership query â†’ trusted tenant context â†’ tenant DataSource.
 
 import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 

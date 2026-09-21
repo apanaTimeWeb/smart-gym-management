@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Prevents duplicate critical mutations using an atomic Redis reservation followed by cached response replay.
-// FLOW: Command controller → CoreIdempotencyService → Redis atomic key → feature service → cached result.
+﻿// RESPONSIBILITY: Prevents duplicate critical mutations using an atomic Redis reservation followed by cached response replay.
+// FLOW: Command controller â†’ CoreIdempotencyService â†’ Redis atomic key â†’ feature service â†’ cached result.
 
 import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
 

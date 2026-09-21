@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Maps durable idempotency state used to make critical mutations safe across retries and Redis failures.
-// FLOW: IdempotencyService → CoreIdempotencyRepository → tenant PostgreSQL idempotency_records.
+﻿// RESPONSIBILITY: Maps durable idempotency state used to make critical mutations safe across retries and Redis failures.
+// FLOW: IdempotencyService â†’ CoreIdempotencyRepository â†’ tenant PostgreSQL idempotency_records.
 import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 
 import { CoreBaseEntity } from '@/backend_landing/core/database/base.entity';

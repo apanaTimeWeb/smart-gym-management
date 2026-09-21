@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Defines the canonical validation error item and validation-error response contract.
+﻿// RESPONSIBILITY: Defines the canonical validation error item and validation-error response contract.
 // FLOW: ValidationPipe -> CoreValidationExceptionFilter -> ValidationErrorResponse -> frontend.
 
 import type { ApiResponse } from '@/backend_auth/core/types/api-response.types';

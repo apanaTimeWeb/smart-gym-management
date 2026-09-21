@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Creates a pending tenant migration record and returns its exact frontend mutation contract.
+﻿// RESPONSIBILITY: Creates a pending tenant migration record and returns its exact frontend mutation contract.
 // FLOW: Controller -> MigrationsTriggerService -> MigrationsRepository -> PostgreSQL.
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { MigrationsRepository } from '@/backend_superadmin/modules/superadmin/system-ops/migrations/migrations.repository';

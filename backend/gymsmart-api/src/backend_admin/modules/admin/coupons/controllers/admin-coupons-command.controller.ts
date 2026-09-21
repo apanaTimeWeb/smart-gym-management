@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Exposes mutation endpoints for Admin coupons; contains HTTP concerns only.
-// FLOW: HTTP mutation → AdminCouponsCommandController → AdminCouponsCommandService.
+﻿// RESPONSIBILITY: Exposes mutation endpoints for Admin coupons; contains HTTP concerns only.
+// FLOW: HTTP mutation â†’ AdminCouponsCommandController â†’ AdminCouponsCommandService.
 
 import { BadRequestException, Body, Controller, Delete, Headers, HttpStatus, Patch, Post, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes the soft-delete flow for the usage-meters feature.
+﻿// RESPONSIBILITY: Executes the soft-delete flow for the usage-meters feature.
 // FLOW: CommandController -> UsageMetersDeleteService -> repository named soft-delete -> audit hook.
 import { Injectable } from '@nestjs/common';
 import { UsageMetersRepository } from '@/backend_superadmin/modules/superadmin/usage-meters/usage-meters.repository';

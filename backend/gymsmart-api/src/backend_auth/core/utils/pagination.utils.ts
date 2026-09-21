@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Builds canonical pagination metadata from the full filtered record count.
+﻿// RESPONSIBILITY: Builds canonical pagination metadata from the full filtered record count.
 // FLOW: Repository count -> buildPaginationMeta -> controller -> ApiResponse.meta.
 
 import type { PaginationMeta } from '@/backend_auth/core/types/pagination.types';

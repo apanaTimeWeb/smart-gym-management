@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Deterministically seeds the gyms table for local/test environments.
+﻿// RESPONSIBILITY: Deterministically seeds the gyms table for local/test environments.
 // FLOW: Master seed -> GymsSeeder -> PostgreSQL repository.
 import { DataSource } from 'typeorm';
 import { TenantEntity } from '@/backend_superadmin/modules/superadmin/gyms/gyms.entity';

@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns read-side use cases for Admin permissions; no write persistence occurs here.
-// FLOW: AdminPermissionsQueryController → AdminPermissionsQueryService → repository → mapper → ApiResponse.
+﻿// RESPONSIBILITY: Owns read-side use cases for Admin permissions; no write persistence occurs here.
+// FLOW: AdminPermissionsQueryController â†’ AdminPermissionsQueryService â†’ repository â†’ mapper â†’ ApiResponse.
 
 import { Injectable } from '@nestjs/common';
 import { AdminPermissionsRepository } from '@/backend_admin/modules/admin/permissions/repositories/admin-permissions-repository';

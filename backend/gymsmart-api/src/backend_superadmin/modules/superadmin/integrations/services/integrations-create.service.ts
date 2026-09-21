@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes creation business flow for the integrations feature.
+﻿// RESPONSIBILITY: Executes creation business flow for the integrations feature.
 // FLOW: CommandController -> IntegrationsCreateService -> named repository mutation -> mapper.
 import { Injectable } from '@nestjs/common';
 import { IntegrationsRepository } from '@/backend_superadmin/modules/superadmin/integrations/integrations.repository';

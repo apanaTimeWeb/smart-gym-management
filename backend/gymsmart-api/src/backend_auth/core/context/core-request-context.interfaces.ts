@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Defines the request-scoped context state propagated through AsyncLocalStorage.
+﻿// RESPONSIBILITY: Defines the request-scoped context state propagated through AsyncLocalStorage.
 // FLOW: CoreRequestContextMiddleware -> CoreRequestContextService -> CoreRequestContextState -> guards/services/repositories.
 
 import type { EntityManager } from 'typeorm';

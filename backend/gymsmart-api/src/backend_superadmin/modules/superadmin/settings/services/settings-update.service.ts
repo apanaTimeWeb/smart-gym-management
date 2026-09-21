@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes partial update business flow for the settings feature.
+﻿// RESPONSIBILITY: Executes partial update business flow for the settings feature.
 // FLOW: CommandController -> SettingsUpdateService -> named repository mutation -> mapper.
 import { Injectable } from '@nestjs/common';
 import { SettingsRepository } from '@/backend_superadmin/modules/superadmin/settings/settings.repository';

@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns all TypeORM persistence operations for Admin settings; services never call save() directly.
-// FLOW: AdminSettingsService → AdminSettingsRepository → TypeORM → PostgreSQL admin_settings.
+﻿// RESPONSIBILITY: Owns all TypeORM persistence operations for Admin settings; services never call save() directly.
+// FLOW: AdminSettingsService â†’ AdminSettingsRepository â†’ TypeORM â†’ PostgreSQL admin_settings.
 
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CorePaginatedResult } from '@/backend_admin/core/types/core-api-response.types';

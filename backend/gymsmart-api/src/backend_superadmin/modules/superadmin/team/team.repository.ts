@@ -31,7 +31,7 @@ export class TeamRepository extends BaseRepository<TeamSnapshotEntity> {
   async findByIdOrThrow(id: string): Promise<TeamSnapshotEntity> { return super.findByIdOrThrow(id, 'Team record not found'); }
 
   /** Creates and persists a team record. */
-  async createTeam(input: TeamCreateInput): Promise<TeamSnapshotEntity> { const entity = this.activeRepository.create(input as never); return this.activeRepository.save(entity); }
+  async createTeam(input: TeamCreateInput): Promise<TeamSnapshotEntity> { const entity = this.activeRepository.create(input as any); return this.activeRepository.save(entity); }
 
   /** Applies an intention-revealing update to a team record. */
   async updateTeamById(id: string, input: TeamUpdateInput): Promise<TeamSnapshotEntity> { await this.activeRepository.update({ id } as never, input as never); return this.findByIdOrThrow(id); }

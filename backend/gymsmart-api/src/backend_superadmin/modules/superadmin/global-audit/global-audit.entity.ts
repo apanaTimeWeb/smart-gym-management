@@ -1,4 +1,4 @@
-// RESPONSIBILITY: TypeORM persistence entity for global-audit feature data stored in `audit_logs`.
+﻿// RESPONSIBILITY: TypeORM persistence entity for global-audit feature data stored in `audit_logs`.
 // FLOW: global-audit repository -> AuditLog entity -> PostgreSQL `audit_logs`.
 import { Column, Entity, Index } from 'typeorm';
 import { BaseEntity } from '@/backend_superadmin/core/database/base.entity';

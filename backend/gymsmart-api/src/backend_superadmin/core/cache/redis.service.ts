@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Owns the infrastructure-level Redis client and primitive operations.
+﻿// RESPONSIBILITY: Owns the infrastructure-level Redis client and primitive operations.
 // FLOW: Core service -> RedisService -> Redis.
 import { Injectable, OnModuleDestroy } from '@nestjs/common';
 import Redis from 'ioredis';

@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Rewrites legacy frontend Admin API paths into the canonical /api/v1 namespace without changing feature semantics.
-// FLOW: Incoming /admin or /api/admin → rewrite → /api/v1/admin → Nest route.
+﻿// RESPONSIBILITY: Rewrites legacy frontend Admin API paths into the canonical /api/v1 namespace without changing feature semantics.
+// FLOW: Incoming /admin or /api/admin â†’ rewrite â†’ /api/v1/admin â†’ Nest route.
 
 import type { NextFunction, Request, Response } from 'express';
 

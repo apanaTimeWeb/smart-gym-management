@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Converts Auth TypeORM user entities into persistence-neutral domain contracts.
+﻿// RESPONSIBILITY: Converts Auth TypeORM user entities into persistence-neutral domain contracts.
 // FLOW: AuthUserRepository -> AuthUserMapper -> Auth domain/service.
 
 import type { AuthCredentialRecord, AuthUserDomain } from '@/backend_auth/modules/auth/auth.interfaces';

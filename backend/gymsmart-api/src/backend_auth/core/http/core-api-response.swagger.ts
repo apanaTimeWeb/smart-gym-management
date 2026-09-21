@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Produces reusable Swagger schemas that exactly describe the canonical ApiResponse<T> contract.
+﻿// RESPONSIBILITY: Produces reusable Swagger schemas that exactly describe the canonical ApiResponse<T> contract.
 // FLOW: Auth controller decorator -> Swagger schema generation -> ApiResponse<T> documentation.
 
 import { HttpStatus, applyDecorators } from '@nestjs/common';

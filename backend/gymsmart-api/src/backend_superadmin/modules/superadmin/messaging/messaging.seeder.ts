@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Deterministically seeds the messaging table for local/test environments.
+﻿// RESPONSIBILITY: Deterministically seeds the messaging table for local/test environments.
 // FLOW: Master seed -> MessagingSeeder -> PostgreSQL repository.
 import { DataSource } from 'typeorm';
 import { TenantMessageEntity } from '@/backend_superadmin/modules/superadmin/messaging/messaging.entity';

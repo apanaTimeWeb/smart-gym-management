@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Applies centralized Redis-backed API rate-limit tiers using configuration-owned thresholds.
+﻿// RESPONSIBILITY: Applies centralized Redis-backed API rate-limit tiers using configuration-owned thresholds.
 // FLOW: CoreRateLimitGuard -> CoreRateLimitService -> RATE_LIMIT_CONFIG -> Redis.
 
 import { Injectable, TooManyRequestsException } from '@nestjs/common';

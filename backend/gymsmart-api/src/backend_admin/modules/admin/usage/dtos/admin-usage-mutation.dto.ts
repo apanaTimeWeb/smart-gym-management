@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Validates mutation fields exposed by the Admin usage frontend contract.
-// FLOW: HTTP request body → AdminUsageMutationDto → service business validation → repository mutation.
+﻿// RESPONSIBILITY: Validates mutation fields exposed by the Admin usage frontend contract.
+// FLOW: HTTP request body â†’ AdminUsageMutationDto â†’ service business validation â†’ repository mutation.
 
 import { Type } from 'class-transformer';
 import { IsNumber, IsOptional, IsString, IsUUID, MinLength } from 'class-validator';

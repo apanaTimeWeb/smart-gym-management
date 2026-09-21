@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Defines stable contract-state and business constants for the infrastructure feature.
+﻿// RESPONSIBILITY: Defines stable contract-state and business constants for the infrastructure feature.
 // FLOW: Feature services -> constants -> repository/query behavior.
 
 export const INFRASTRUCTURE_SNAPSHOT_KINDS = Object.freeze({

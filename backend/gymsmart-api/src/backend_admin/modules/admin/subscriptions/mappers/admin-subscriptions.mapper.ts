@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Translates the TypeORM Admin subscriptions entity into an ORM-independent domain model and frontend response.
-// FLOW: AdminSubscriptionsEntity → AdminSubscriptionsMapper → domain/response object.
+﻿// RESPONSIBILITY: Translates the TypeORM Admin subscriptions entity into an ORM-independent domain model and frontend response.
+// FLOW: AdminSubscriptionsEntity â†’ AdminSubscriptionsMapper â†’ domain/response object.
 
 import { AdminSubscriptionsDomainModel } from '@/backend_admin/modules/admin/subscriptions/domain/admin-subscriptions.domain';
 import { AdminSubscriptionsEntity } from '@/backend_admin/modules/admin/subscriptions/entities/admin-subscriptions-entity';

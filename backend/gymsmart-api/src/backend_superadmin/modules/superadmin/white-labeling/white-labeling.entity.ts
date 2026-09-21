@@ -1,4 +1,4 @@
-// RESPONSIBILITY: TypeORM persistence entity for white-labeling feature data stored in `white_label_domains`.
+﻿// RESPONSIBILITY: TypeORM persistence entity for white-labeling feature data stored in `white_label_domains`.
 // FLOW: white-labeling repository -> WhiteLabelDomain entity -> PostgreSQL `white_label_domains`.
 import { Column, Entity, Index } from 'typeorm';
 import { BaseEntity } from '@/backend_superadmin/core/database/base.entity';

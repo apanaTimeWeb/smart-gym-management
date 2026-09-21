@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Returns the persisted uptime history contract for infrastructure diagnostics.
+﻿// RESPONSIBILITY: Returns the persisted uptime history contract for infrastructure diagnostics.
 // FLOW: Controller -> InfrastructureUptimeService -> InfrastructureContractSnapshotRepository -> PostgreSQL.
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InfrastructureContractSnapshotRepository } from '@/backend_superadmin/modules/superadmin/system-ops/infrastructure/infrastructure-contract-snapshot.repository';

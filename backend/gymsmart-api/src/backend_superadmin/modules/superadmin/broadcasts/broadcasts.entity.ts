@@ -1,4 +1,4 @@
-// RESPONSIBILITY: TypeORM persistence entity for broadcasts feature data stored in `broadcasts`.
+﻿// RESPONSIBILITY: TypeORM persistence entity for broadcasts feature data stored in `broadcasts`.
 // FLOW: broadcasts repository -> Broadcast entity -> PostgreSQL `broadcasts`.
 import { Column, Entity, Index } from 'typeorm';
 import { BaseEntity } from '@/backend_superadmin/core/database/base.entity';

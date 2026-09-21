@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes creation business flow for the reports feature.
+﻿// RESPONSIBILITY: Executes creation business flow for the reports feature.
 // FLOW: CommandController -> ReportsCreateService -> named repository mutation -> mapper.
 import { Injectable } from '@nestjs/common';
 import { ReportsRepository } from '@/backend_superadmin/modules/superadmin/reports/reports.repository';

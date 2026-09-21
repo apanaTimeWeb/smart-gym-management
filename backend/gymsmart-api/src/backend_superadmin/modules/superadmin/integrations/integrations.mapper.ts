@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Maps Integrations ORM entities into domain-safe response data.
+﻿// RESPONSIBILITY: Maps Integrations ORM entities into domain-safe response data.
 // FLOW: TypeORM entity -> IntegrationsMapper -> domain model -> response DTO.
 import type { IntegrationKeyEntity } from '@/backend_superadmin/modules/superadmin/integrations/integrations.entity';
 import type { IntegrationsDomainModel } from '@/backend_superadmin/modules/superadmin/integrations/types/integrations.interfaces';

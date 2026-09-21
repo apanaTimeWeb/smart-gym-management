@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Owns HTTP transport for Superadmin authentication, refresh-cookie rotation, and logout.
+﻿// RESPONSIBILITY: Owns HTTP transport for Superadmin authentication, refresh-cookie rotation, and logout.
 // FLOW: HTTP auth request -> DTO/cookie -> AuthService -> access/refresh response.
 import { Body, Controller, HttpCode, HttpStatus, Post, Req, Res } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';

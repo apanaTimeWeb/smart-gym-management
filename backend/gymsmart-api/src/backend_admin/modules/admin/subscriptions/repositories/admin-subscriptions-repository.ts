@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns master-database persistence for Admin subscription state, plans, invoices, and payment methods.
-// FLOW: Admin subscriptions service → repository → trusted tenant context → master TypeORM repository → PostgreSQL.
+﻿// RESPONSIBILITY: Owns master-database persistence for Admin subscription state, plans, invoices, and payment methods.
+// FLOW: Admin subscriptions service â†’ repository â†’ trusted tenant context â†’ master TypeORM repository â†’ PostgreSQL.
 
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';

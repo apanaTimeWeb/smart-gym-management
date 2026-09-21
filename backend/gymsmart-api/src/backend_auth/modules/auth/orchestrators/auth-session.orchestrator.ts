@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Defines Auth session transaction boundaries without owning credential or token business rules.
+﻿// RESPONSIBILITY: Defines Auth session transaction boundaries without owning credential or token business rules.
 // FLOW: AuthCommandController -> AuthSessionOrchestrator -> CoreTransactionService -> Auth micro-services/repositories.
 
 import { createHash } from 'node:crypto';

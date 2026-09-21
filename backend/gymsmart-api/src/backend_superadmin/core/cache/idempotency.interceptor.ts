@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Enforces and replays Idempotency-Key protected mutation responses through Redis.
+﻿// RESPONSIBILITY: Enforces and replays Idempotency-Key protected mutation responses through Redis.
 // FLOW: HTTP request -> handler metadata -> IdempotencyService -> controller result -> Redis replay.
 import { BadRequestException, CallHandler, ConflictException, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';

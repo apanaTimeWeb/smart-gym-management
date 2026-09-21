@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Bootstraps the HTTP application with security, payload limits, legacy path compatibility, validation, and Swagger.
-// FLOW: main() → NestFactory → middleware → global prefix → AppModule.
+﻿// RESPONSIBILITY: Bootstraps the HTTP application with security, payload limits, legacy path compatibility, validation, and Swagger.
+// FLOW: main() â†’ NestFactory â†’ middleware â†’ global prefix â†’ AppModule.
 
 import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';

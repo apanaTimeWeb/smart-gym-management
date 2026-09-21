@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes single-record retrieval for the analytics feature.
+﻿// RESPONSIBILITY: Executes single-record retrieval for the analytics feature.
 // FLOW: QueryController -> AnalyticsFindService -> repository findByIdOrThrow -> mapper.
 import { Injectable } from '@nestjs/common';
 import { AnalyticsRepository } from '@/backend_superadmin/modules/superadmin/analytics/analytics.repository';

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: TypeORM persistence entity for profile feature data stored in `superadmin_profiles`.
+﻿// RESPONSIBILITY: TypeORM persistence entity for profile feature data stored in `superadmin_profiles`.
 // FLOW: profile repository -> SuperadminProfile entity -> PostgreSQL `superadmin_profiles`.
 import { Column, Entity, Index } from 'typeorm';
 import { BaseEntity } from '@/backend_superadmin/core/database/base.entity';

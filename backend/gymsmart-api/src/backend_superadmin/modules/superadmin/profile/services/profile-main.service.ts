@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Reads the authenticated Superadmin profile for the profile page.
+﻿// RESPONSIBILITY: Reads the authenticated Superadmin profile for the profile page.
 // FLOW: ProfileSpecialController -> ProfileMainService -> ProfileRepository -> mapper.
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { ProfileRepository } from '@/backend_superadmin/modules/superadmin/profile/profile.repository';

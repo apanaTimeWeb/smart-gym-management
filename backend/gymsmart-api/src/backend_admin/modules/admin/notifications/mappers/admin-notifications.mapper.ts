@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Translates the TypeORM Admin notifications entity into an ORM-independent domain model and frontend response.
-// FLOW: AdminNotificationsEntity → AdminNotificationsMapper → domain/response object.
+﻿// RESPONSIBILITY: Translates the TypeORM Admin notifications entity into an ORM-independent domain model and frontend response.
+// FLOW: AdminNotificationsEntity â†’ AdminNotificationsMapper â†’ domain/response object.
 
 import { AdminNotificationsDomainModel } from '@/backend_admin/modules/admin/notifications/domain/admin-notifications.domain';
 import { AdminNotificationsEntity } from '@/backend_admin/modules/admin/notifications/entities/admin-notifications-entity';

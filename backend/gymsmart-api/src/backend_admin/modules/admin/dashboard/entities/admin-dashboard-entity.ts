@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns PostgreSQL persistence for the Admin dashboard feature and its frontend-backed payload.
-// FLOW: Dashboard Repository → AdminDashboardEntity → PostgreSQL dashboard_snapshots table.
+﻿// RESPONSIBILITY: Owns PostgreSQL persistence for the Admin dashboard feature and its frontend-backed payload.
+// FLOW: Dashboard Repository â†’ AdminDashboardEntity â†’ PostgreSQL dashboard_snapshots table.
 
 import { Column, Entity, Index } from 'typeorm';
 import { CoreBaseEntity } from '@/backend_admin/core/database/core-base.entity';

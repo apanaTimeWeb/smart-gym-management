@@ -1,4 +1,4 @@
-// RESPONSIBILITY: TypeORM persistence entity for analytics feature data stored in `analytics_snapshots`.
+﻿// RESPONSIBILITY: TypeORM persistence entity for analytics feature data stored in `analytics_snapshots`.
 // FLOW: analytics repository -> AnalyticsSnapshot entity -> PostgreSQL `analytics_snapshots`.
 import { Column, Entity, Index } from 'typeorm';
 import { BaseEntity } from '@/backend_superadmin/core/database/base.entity';

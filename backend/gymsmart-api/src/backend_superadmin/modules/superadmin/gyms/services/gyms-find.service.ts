@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes single-record retrieval for the gyms feature.
+﻿// RESPONSIBILITY: Executes single-record retrieval for the gyms feature.
 // FLOW: QueryController -> GymsFindService -> repository findByIdOrThrow -> mapper.
 import { Injectable } from '@nestjs/common';
 import { GymsRepository } from '@/backend_superadmin/modules/superadmin/gyms/gyms.repository';

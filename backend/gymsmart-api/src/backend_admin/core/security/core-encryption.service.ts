@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Encrypts sensitive fields before database persistence using AES-256-GCM.
-// FLOW: Domain sensitive value → CoreEncryptionService → validated ConfigService secret → encrypted DB payload.
+﻿// RESPONSIBILITY: Encrypts sensitive fields before database persistence using AES-256-GCM.
+// FLOW: Domain sensitive value â†’ CoreEncryptionService â†’ validated ConfigService secret â†’ encrypted DB payload.
 
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';

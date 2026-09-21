@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes single-record retrieval for the integrations feature.
+﻿// RESPONSIBILITY: Executes single-record retrieval for the integrations feature.
 // FLOW: QueryController -> IntegrationsFindService -> repository findByIdOrThrow -> mapper.
 import { Injectable } from '@nestjs/common';
 import { IntegrationsRepository } from '@/backend_superadmin/modules/superadmin/integrations/integrations.repository';

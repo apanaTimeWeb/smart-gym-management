@@ -1,4 +1,4 @@
-// RESPONSIBILITY: TypeORM persistence entity for migrations feature data stored in `migration_logs`.
+﻿// RESPONSIBILITY: TypeORM persistence entity for migrations feature data stored in `migration_logs`.
 // FLOW: migrations repository -> MigrationLog entity -> PostgreSQL `migration_logs`.
 import { Column, Entity, Index } from 'typeorm';
 import { BaseEntity } from '@/backend_superadmin/core/database/base.entity';

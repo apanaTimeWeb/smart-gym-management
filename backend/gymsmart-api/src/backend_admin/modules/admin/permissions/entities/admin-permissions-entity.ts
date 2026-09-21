@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns PostgreSQL persistence for the Admin permissions feature and its frontend-backed payload.
-// FLOW: Permissions Repository → AdminPermissionsEntity → PostgreSQL permission_overrides table.
+﻿// RESPONSIBILITY: Owns PostgreSQL persistence for the Admin permissions feature and its frontend-backed payload.
+// FLOW: Permissions Repository â†’ AdminPermissionsEntity â†’ PostgreSQL permission_overrides table.
 
 import { Column, Entity, Index } from 'typeorm';
 import { CoreBaseEntity } from '@/backend_admin/core/database/core-base.entity';

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Creates a durable WhatsApp campaign record in the messaging persistence boundary.
+﻿// RESPONSIBILITY: Creates a durable WhatsApp campaign record in the messaging persistence boundary.
 // FLOW: Controller -> MessagingWhatsAppCampaignService -> MessagingRepository -> QUEUED message.
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { MessagingRepository } from '@/backend_superadmin/modules/superadmin/messaging/messaging.repository';

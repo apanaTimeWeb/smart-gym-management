@@ -22,6 +22,6 @@ export class MessagingContractSnapshotRepository {
       await this.repository.update({ id } as never, { kind, payload, deletedAt: null } as never);
       return;
     }
-    await this.repository.insert(this.repository.create({ id, kind, payload }));
+    await this.repository.insert(this.repository.create({ id, kind, payload } as any));
   }
 }

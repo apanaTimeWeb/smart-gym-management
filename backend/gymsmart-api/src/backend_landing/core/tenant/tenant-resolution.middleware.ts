@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Establishes a trusted tenant context without allowing anonymous callers to select arbitrary tenant databases.
-// FLOW: HTTP request → public-route policy / authenticated actor → master tenant registry → RequestContext.
+﻿// RESPONSIBILITY: Establishes a trusted tenant context without allowing anonymous callers to select arbitrary tenant databases.
+// FLOW: HTTP request â†’ public-route policy / authenticated actor â†’ master tenant registry â†’ RequestContext.
 import { ForbiddenException } from '@nestjs/common';
 
 import { ConfigService } from '@nestjs/config';

@@ -1,7 +1,7 @@
-// RESPONSIBILITY: Produces the report comparison contract while honoring selected period/segment filters.
+﻿// RESPONSIBILITY: Produces the report comparison contract while honoring selected period/segment filters.
 // FLOW: Controller -> comparison service -> persisted snapshot -> normalized comparison response.
 import { Injectable, NotFoundException } from '@nestjs/common';
-import type { ReportsComparisonResponseDto } from '@/backend_superadmin/modules/superadmin/reports/reports-comparison-response.dto';
+import { ReportsComparisonResponseDto } from '@/backend_superadmin/modules/superadmin/reports/reports-comparison-response.dto';
 import { ReportsRepository } from '@/backend_superadmin/modules/superadmin/reports/reports.repository';
 import { REPORTS_SNAPSHOT_KINDS } from '@/backend_superadmin/modules/superadmin/reports/reports.constants';
 

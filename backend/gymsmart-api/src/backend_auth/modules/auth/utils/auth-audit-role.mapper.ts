@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Converts Auth roles into the finite audit actor-role enum without coupling core audit infrastructure to the Auth module.
+﻿// RESPONSIBILITY: Converts Auth roles into the finite audit actor-role enum without coupling core audit infrastructure to the Auth module.
 // FLOW: AuthRole -> AuthAuditRoleMapper -> CoreAuditLogInput.actorRole -> audit_logs enum.
 
 import { CoreAuditActorRole } from '@/backend_auth/core/audit/core-audit.constants';

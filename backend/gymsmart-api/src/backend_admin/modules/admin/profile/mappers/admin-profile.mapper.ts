@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Translates the TypeORM Admin profile entity into an ORM-independent domain model and frontend response.
-// FLOW: AdminProfileEntity → AdminProfileMapper → domain/response object.
+﻿// RESPONSIBILITY: Translates the TypeORM Admin profile entity into an ORM-independent domain model and frontend response.
+// FLOW: AdminProfileEntity â†’ AdminProfileMapper â†’ domain/response object.
 
 import { AdminProfileDomainModel } from '@/backend_admin/modules/admin/profile/domain/admin-profile.domain';
 import { AdminProfileEntity } from '@/backend_admin/modules/admin/profile/entities/admin-profile-entity';

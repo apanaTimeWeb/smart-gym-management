@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Updates the authenticated Admin profile in the tenant profile snapshot and password in the master authentication record.
-// FLOW: Profile command controller → AdminProfileCommandService → repository/master admin repo → audit trail.
+﻿// RESPONSIBILITY: Updates the authenticated Admin profile in the tenant profile snapshot and password in the master authentication record.
+// FLOW: Profile command controller â†’ AdminProfileCommandService â†’ repository/master admin repo â†’ audit trail.
 
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import argon2 from 'argon2';

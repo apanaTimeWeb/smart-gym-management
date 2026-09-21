@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Converts typed application, HTTP and validation failures into the canonical API error envelope.
+﻿// RESPONSIBILITY: Converts typed application, HTTP and validation failures into the canonical API error envelope.
 // FLOW: ValidationPipe/controller/service -> CoreValidationExceptionFilter -> ApiResponse<null>.
 
 import { BadRequestException, Catch, HttpException, HttpStatus } from '@nestjs/common';

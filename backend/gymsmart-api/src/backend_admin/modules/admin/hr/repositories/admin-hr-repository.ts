@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns all TypeORM persistence operations for Admin hr; services never call save() directly.
-// FLOW: AdminHrService → AdminHrRepository → TypeORM → PostgreSQL staff.
+﻿// RESPONSIBILITY: Owns all TypeORM persistence operations for Admin hr; services never call save() directly.
+// FLOW: AdminHrService â†’ AdminHrRepository â†’ TypeORM â†’ PostgreSQL staff.
 
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CoreEncryptionService } from '@/backend_admin/core/security/core-encryption.service';

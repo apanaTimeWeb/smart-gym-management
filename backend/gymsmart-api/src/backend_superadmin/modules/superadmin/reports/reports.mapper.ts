@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Maps Reports ORM entities into domain-safe response data.
+﻿// RESPONSIBILITY: Maps Reports ORM entities into domain-safe response data.
 // FLOW: TypeORM entity -> ReportsMapper -> domain model -> response DTO.
 import type { ReportSnapshotEntity } from '@/backend_superadmin/modules/superadmin/reports/reports.entity';
 import type { ReportsDomainModel } from '@/backend_superadmin/modules/superadmin/reports/types/reports.interfaces';

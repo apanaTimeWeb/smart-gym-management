@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Provides the common UUID identity, timestamp, and soft-delete abstraction inherited by database entities.
-// FLOW: Entity → CoreBaseEntity identity/timestamps/soft-delete → PostgreSQL row.
+﻿// RESPONSIBILITY: Provides the common UUID identity, timestamp, and soft-delete abstraction inherited by database entities.
+// FLOW: Entity â†’ CoreBaseEntity identity/timestamps/soft-delete â†’ PostgreSQL row.
 import { CreateDateColumn, DeleteDateColumn, UpdateDateColumn } from 'typeorm';
 
 export abstract class CoreBaseEntity {

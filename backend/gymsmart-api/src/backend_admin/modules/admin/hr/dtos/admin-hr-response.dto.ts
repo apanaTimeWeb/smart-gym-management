@@ -1,7 +1,7 @@
-// RESPONSIBILITY: Describes the frontend-consumed response fields for Admin hr.
+﻿// RESPONSIBILITY: Describes the frontend-consumed response fields for Admin hr.
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-// FLOW: Repository domain → Hr response mapper → ApiResponse<T>.
+// FLOW: Repository domain â†’ Hr response mapper â†’ ApiResponse<T>.
 
 export class AdminHrStaffDto {
   @ApiProperty() id!: string;

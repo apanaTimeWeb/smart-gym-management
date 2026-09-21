@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Proves booking ORM-to-domain translation preserves the frontend contract semantics.
-// FLOW: Unit test → LandingBookingMapper → domain object.
+﻿// RESPONSIBILITY: Proves booking ORM-to-domain translation preserves the frontend contract semantics.
+// FLOW: Unit test â†’ LandingBookingMapper â†’ domain object.
 import { LandingBookingMapper } from '@/backend_landing/modules/landing/mappers/landing-booking.mapper';
 
 import { LandingBookingType } from '@/backend_landing/modules/landing/enums/landing-booking-type.enum';

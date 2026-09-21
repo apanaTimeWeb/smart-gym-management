@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Defines infrastructure error categories, machine-readable error codes and canonical core messages.
+﻿// RESPONSIBILITY: Defines infrastructure error categories, machine-readable error codes and canonical core messages.
 // FLOW: Core exception/filter/interceptor -> CoreErrorConstants -> canonical API error contract.
 
 export const CoreErrorConstants = {

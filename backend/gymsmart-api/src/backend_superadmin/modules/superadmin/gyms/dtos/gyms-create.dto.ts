@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Validates standard Gym creation payloads for already-provisioned tenants without accepting server-managed fields.
+﻿// RESPONSIBILITY: Validates standard Gym creation payloads for already-provisioned tenants without accepting server-managed fields.
 // FLOW: HTTP POST /superadmin/gyms -> GymsCreateDto -> creation service.
 import { IsEmail, IsString, Length } from 'class-validator';
 

@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns PostgreSQL persistence for the Admin notifications feature and its frontend-backed payload.
-// FLOW: Notifications Repository → AdminNotificationsEntity → PostgreSQL notifications table.
+﻿// RESPONSIBILITY: Owns PostgreSQL persistence for the Admin notifications feature and its frontend-backed payload.
+// FLOW: Notifications Repository â†’ AdminNotificationsEntity â†’ PostgreSQL notifications table.
 
 import { Column, Entity, Index } from 'typeorm';
 import { CoreBaseEntity } from '@/backend_admin/core/database/core-base.entity';

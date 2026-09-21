@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Seeds the deterministic master tenant and Admin credential for local development.
+﻿// RESPONSIBILITY: Seeds the deterministic master tenant and Admin credential for local development.
 // FLOW: CLI -> master DataSource -> tenant row + admin row.
 
 import 'reflect-metadata';

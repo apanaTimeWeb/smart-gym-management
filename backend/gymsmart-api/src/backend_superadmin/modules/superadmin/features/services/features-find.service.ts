@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes single-record retrieval for the features feature.
+﻿// RESPONSIBILITY: Executes single-record retrieval for the features feature.
 // FLOW: QueryController -> FeaturesFindService -> repository findByIdOrThrow -> mapper.
 import { Injectable } from '@nestjs/common';
 import { FeaturesRepository } from '@/backend_superadmin/modules/superadmin/features/features.repository';

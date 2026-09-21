@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Validates a plan identifier for GET body compatibility.
-// FLOW: GET /admin/plans/fetchPlanById body/query → AdminPlansIdDto → query service.
+﻿// RESPONSIBILITY: Validates a plan identifier for GET body compatibility.
+// FLOW: GET /admin/plans/fetchPlanById body/query â†’ AdminPlansIdDto â†’ query service.
 
 import { IsOptional, IsUUID } from 'class-validator';
 

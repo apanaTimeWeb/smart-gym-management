@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes paginated read logic for the analytics feature.
+﻿// RESPONSIBILITY: Executes paginated read logic for the analytics feature.
 // FLOW: QueryController -> AnalyticsListService -> repository -> mapper -> response DTO.
 import { Injectable } from '@nestjs/common';
 import { AnalyticsRepository } from '@/backend_superadmin/modules/superadmin/analytics/analytics.repository';

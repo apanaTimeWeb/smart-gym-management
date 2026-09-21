@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Validates partial updates at the white-labeling HTTP boundary.
+﻿// RESPONSIBILITY: Validates partial updates at the white-labeling HTTP boundary.
 // FLOW: HTTP JSON -> WhiteLabelingUpdateDto -> WhiteLabeling service.
 import { IsBoolean, IsDateString, IsEmail, IsEnum, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 

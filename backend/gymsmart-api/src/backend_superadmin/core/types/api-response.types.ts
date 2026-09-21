@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Defines the canonical API response envelope and validation error contract.
+﻿// RESPONSIBILITY: Defines the canonical API response envelope and validation error contract.
 // FLOW: Controller return -> ResponseInterceptor/ExceptionFilter -> frontend ApiResponse<T>.
 import type { PaginationMeta } from '@/backend_superadmin/core/pagination/pagination.utils';
 export interface ValidationErrorItem { field: string; message: string; }

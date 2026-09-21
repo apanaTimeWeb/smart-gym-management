@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Owns audit_logs persistence using the current transaction manager when present; never returns ORM entities to services.
+﻿// RESPONSIBILITY: Owns audit_logs persistence using the current transaction manager when present; never returns ORM entities to services.
 // FLOW: CoreAuditService -> CoreAuditLogRepository -> TypeORM -> audit_logs.
 
 import { Injectable } from '@nestjs/common';
@@ -7,8 +7,8 @@ import { CoreAuditLogEntity } from '@/backend_auth/core/audit/core-audit-log.ent
 import { CoreBaseRepository } from '@/backend_auth/core/database/core-base-repository';
 
 import type { CoreAuditLogInput } from '@/backend_auth/core/audit/core-audit-log.interfaces';
-import type { CoreRequestContextService } from '@/backend_auth/core/context/core-request-context';
-import type { DataSource } from 'typeorm';
+import { CoreRequestContextService } from '@/backend_auth/core/context/core-request-context';
+import { DataSource } from 'typeorm';
 @Injectable()
 export class CoreAuditLogRepository extends CoreBaseRepository<CoreAuditLogEntity> {
   constructor(dataSource: DataSource, requestContext: CoreRequestContextService) {

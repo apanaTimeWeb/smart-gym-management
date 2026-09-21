@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Translates the TypeORM Admin gym-health-alerts entity into an ORM-independent domain model and frontend response.
-// FLOW: AdminGymHealthAlertsEntity → AdminGymHealthAlertsMapper → domain/response object.
+﻿// RESPONSIBILITY: Translates the TypeORM Admin gym-health-alerts entity into an ORM-independent domain model and frontend response.
+// FLOW: AdminGymHealthAlertsEntity â†’ AdminGymHealthAlertsMapper â†’ domain/response object.
 
 import { AdminGymHealthAlertsDomainModel } from '@/backend_admin/modules/admin/gym-health-alerts/domain/admin-gym_health_alerts.domain';
 import { AdminGymHealthAlertsEntity } from '@/backend_admin/modules/admin/gym-health-alerts/entities/admin-gym_health_alerts-entity';

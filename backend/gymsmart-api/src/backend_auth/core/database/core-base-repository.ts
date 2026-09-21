@@ -1,10 +1,10 @@
-// RESPONSIBILITY: Provides the shared TypeORM repository boundary with soft-delete filtering and transaction-aware manager resolution.
+﻿// RESPONSIBILITY: Provides the shared TypeORM repository boundary with soft-delete filtering and transaction-aware manager resolution.
 // FLOW: Feature repository -> CoreBaseRepository -> current transaction/root manager -> TypeORM.
 
 import { CoreRequestContextService } from '@/backend_auth/core/context/core-request-context';
 import { CoreEntityNotFoundException } from '@/backend_auth/core/exceptions/core-app.exception';
 
-import type { DataSource, EntityManager, ObjectLiteral, Repository } from 'typeorm';
+import { DataSource, EntityManager, ObjectLiteral, Repository } from 'typeorm';
 import type { CoreEntityClass } from '@/backend_auth/core/database/core-database.interfaces';
 
 export abstract class CoreBaseRepository<TEntity extends ObjectLiteral & { id: string; deletedAt: Date | null }> {

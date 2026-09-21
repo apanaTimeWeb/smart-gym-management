@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns explicit PostgreSQL connection pool settings required by the architecture.
-// FLOW: Config → database config → Master/Tenant DataSource factories.
+﻿// RESPONSIBILITY: Owns explicit PostgreSQL connection pool settings required by the architecture.
+// FLOW: Config â†’ database config â†’ Master/Tenant DataSource factories.
 export const DATABASE_CONFIG = {
   master: {
     max: Number(process.env.DB_POOL_MAX ?? 10),

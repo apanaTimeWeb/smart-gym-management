@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Maps profile persistence state into the public, credential-safe profile domain model.
+﻿// RESPONSIBILITY: Maps profile persistence state into the public, credential-safe profile domain model.
 // FLOW: TypeORM profile entity -> ProfileMapper -> public profile domain object.
 import type { SuperadminProfileEntity } from '@/backend_superadmin/modules/superadmin/profile/profile.entity';
 import type { ProfileDomainModel } from '@/backend_superadmin/modules/superadmin/profile/types/profile.interfaces';

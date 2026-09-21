@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Lazily caches TypeORM DataSources for authorized tenant databases while enforcing a global per-process pool budget.
-// FLOW: Trusted tenant context → master tenant metadata → bounded DataSource → feature repository.
+﻿// RESPONSIBILITY: Lazily caches TypeORM DataSources for authorized tenant databases while enforcing a global per-process pool budget.
+// FLOW: Trusted tenant context â†’ master tenant metadata â†’ bounded DataSource â†’ feature repository.
 
 import { Injectable, OnModuleDestroy } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';

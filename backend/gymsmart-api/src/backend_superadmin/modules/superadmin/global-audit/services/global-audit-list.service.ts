@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes paginated read logic for the global-audit feature.
+﻿// RESPONSIBILITY: Executes paginated read logic for the global-audit feature.
 // FLOW: QueryController -> GlobalAuditListService -> repository -> mapper -> response DTO.
 import { Injectable } from '@nestjs/common';
 import { GlobalAuditRepository } from '@/backend_superadmin/modules/superadmin/global-audit/global-audit.repository';

@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Builds tenant-specific PostgreSQL TypeORM options without exposing ORM details to business services.
-// FLOW: Trusted Tenant → TenantDataSourceManager → TypeORM DataSource.
+﻿// RESPONSIBILITY: Builds tenant-specific PostgreSQL TypeORM options without exposing ORM details to business services.
+// FLOW: Trusted Tenant â†’ TenantDataSourceManager â†’ TypeORM DataSource.
 import { join } from 'node:path';
 
 import { DATABASE_CONFIG } from '@/backend_landing/core/config/database.config';
@@ -12,7 +12,7 @@ import { LandingContactEntity } from '@/backend_landing/modules/landing/entities
 
 import { LandingAuditLogEntity } from '@/backend_landing/modules/landing/entities/landing-audit-log.entity';
 
-import type { DataSourceOptions } from 'typeorm';
+import { DataSourceOptions } from 'typeorm';
 
 
 /** @description Builds tenant-specific PostgreSQL TypeORM options for one trusted database. @param databaseName - Tenant database name from the master registry. @returns Tenant DataSource configuration. */

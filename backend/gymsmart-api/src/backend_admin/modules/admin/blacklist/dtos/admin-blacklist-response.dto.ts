@@ -1,7 +1,7 @@
-// RESPONSIBILITY: Describes the frontend-consumed response fields for Admin blacklist.
+﻿// RESPONSIBILITY: Describes the frontend-consumed response fields for Admin blacklist.
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-// FLOW: Repository domain → Blacklist response mapper → ApiResponse<T>.
+// FLOW: Repository domain â†’ Blacklist response mapper â†’ ApiResponse<T>.
 
 export class AdminBlacklistHistoryDto {
   @ApiProperty()

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Owns Redis connectivity and bounded-time cache primitives for rate limits and lockout.
+﻿// RESPONSIBILITY: Owns Redis connectivity and bounded-time cache primitives for rate limits and lockout.
 // FLOW: Feature/core service -> CoreRedisService -> Redis -> typed result.
 
 import { Injectable } from '@nestjs/common';

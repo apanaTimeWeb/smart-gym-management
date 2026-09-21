@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Signs/verifies Auth JWTs and hashes refresh tokens for persistence.
+﻿// RESPONSIBILITY: Signs/verifies Auth JWTs and hashes refresh tokens for persistence.
 // FLOW: Auth service -> AuthTokenUtils -> JWT signing/verification -> Auth session persistence.
 
 import { createHash, randomUUID } from 'node:crypto';

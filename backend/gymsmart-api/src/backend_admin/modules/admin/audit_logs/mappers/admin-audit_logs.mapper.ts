@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Translates the immutable core audit entity into the exact Admin audit-log response contract.
-// FLOW: CoreAuditLogEntity → AdminAuditLogsMapper → domain/response object.
+﻿// RESPONSIBILITY: Translates the immutable core audit entity into the exact Admin audit-log response contract.
+// FLOW: CoreAuditLogEntity â†’ AdminAuditLogsMapper â†’ domain/response object.
 
 import { Injectable } from '@nestjs/common';
 import { CoreAuditLogEntity } from '@/backend_admin/core/audit/core-audit-log.entity';

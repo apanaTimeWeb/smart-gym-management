@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Owns Auth write endpoints only; request validation and HTTP delegation stay here.
+﻿// RESPONSIBILITY: Owns Auth write endpoints only; request validation and HTTP delegation stay here.
 // FLOW: POST /auth/login|refresh|logout -> DTO/header -> AuthSessionOrchestrator -> response mapper -> envelope.
 
 import { Body, Controller, Headers, HttpCode, HttpStatus, Post, Req } from '@nestjs/common';

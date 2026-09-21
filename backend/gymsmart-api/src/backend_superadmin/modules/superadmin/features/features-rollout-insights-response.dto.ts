@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Defines the exact frontend-consumed response contract for this Superadmin use case.
+﻿// RESPONSIBILITY: Defines the exact frontend-consumed response contract for this Superadmin use case.
 // FLOW: Use-case service -> response DTO -> global response envelope.
 import { ApiProperty } from '@nestjs/swagger';
 

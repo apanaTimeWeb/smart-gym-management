@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Provides the infrastructure EventBus used for declared runtime feature dependencies.
-// FLOW: Feature service → CoreEventBus → registered event name → subscribers.
+﻿// RESPONSIBILITY: Provides the infrastructure EventBus used for declared runtime feature dependencies.
+// FLOW: Feature service â†’ CoreEventBus â†’ registered event name â†’ subscribers.
 
 import { Injectable } from '@nestjs/common';
 

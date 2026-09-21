@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns tenant usage reads and master-database upgrade-request persistence for Admin usage.
-// FLOW: Usage query/command service → repository → trusted tenant/master repositories → PostgreSQL.
+﻿// RESPONSIBILITY: Owns tenant usage reads and master-database upgrade-request persistence for Admin usage.
+// FLOW: Usage query/command service â†’ repository â†’ trusted tenant/master repositories â†’ PostgreSQL.
 
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';

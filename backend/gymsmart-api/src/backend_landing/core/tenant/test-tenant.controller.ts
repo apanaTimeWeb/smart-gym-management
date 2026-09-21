@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Provides test-only tenant provisioning and cleanup endpoints; never enabled for non-test environments.
-// FLOW: Pytest fixture → test tenant controller → TenantDatabaseProvisionerService → isolated PostgreSQL database.
+﻿// RESPONSIBILITY: Provides test-only tenant provisioning and cleanup endpoints; never enabled for non-test environments.
+// FLOW: Pytest fixture â†’ test tenant controller â†’ TenantDatabaseProvisionerService â†’ isolated PostgreSQL database.
 import { Controller, Delete, Headers, Param, Post, UnauthorizedException } from '@nestjs/common';
 
 import { ConfigService } from '@nestjs/config';

@@ -31,7 +31,7 @@ export class ComplianceRepository extends BaseRepository<ComplianceSnapshotEntit
   async findByIdOrThrow(id: string): Promise<ComplianceSnapshotEntity> { return super.findByIdOrThrow(id, 'Compliance record not found'); }
 
   /** Creates and persists a compliance record. */
-  async createCompliance(input: ComplianceCreateInput): Promise<ComplianceSnapshotEntity> { const entity = this.activeRepository.create(input as never); return this.activeRepository.save(entity); }
+  async createCompliance(input: ComplianceCreateInput): Promise<ComplianceSnapshotEntity> { const entity = this.activeRepository.create(input as any); return this.activeRepository.save(entity); }
 
   /** Applies an intention-revealing update to a compliance record. */
   async updateComplianceById(id: string, input: ComplianceUpdateInput): Promise<ComplianceSnapshotEntity> { await this.activeRepository.update({ id } as never, input as never); return this.findByIdOrThrow(id); }

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes paginated read logic for the tickets feature.
+﻿// RESPONSIBILITY: Executes paginated read logic for the tickets feature.
 // FLOW: QueryController -> TicketsListService -> repository -> mapper -> response DTO.
 import { Injectable } from '@nestjs/common';
 import { TicketsRepository } from '@/backend_superadmin/modules/superadmin/tickets/tickets.repository';

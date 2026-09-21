@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Converts NestJS validation failures into the canonical API validation envelope.
+﻿// RESPONSIBILITY: Converts NestJS validation failures into the canonical API validation envelope.
 // FLOW: BadRequestException -> validation parser -> ApiResponse validationErrors shape.
 import { ArgumentsHost, BadRequestException, Catch, ExceptionFilter } from '@nestjs/common';
 import { Response } from 'express';

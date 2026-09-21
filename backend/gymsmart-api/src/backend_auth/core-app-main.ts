@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Bootstraps NestJS with strict validation, security middleware, compression, URI versioning and Swagger.
+﻿// RESPONSIBILITY: Bootstraps NestJS with strict validation, security middleware, compression, URI versioning and Swagger.
 // FLOW: Process -> CoreAppModule -> middleware/guards/interceptors -> versioned controllers.
 
 import 'reflect-metadata';

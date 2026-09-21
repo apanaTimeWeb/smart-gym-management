@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Owns explicit transaction boundaries and binds the transaction manager into AsyncLocalStorage.
+﻿// RESPONSIBILITY: Owns explicit transaction boundaries and binds the transaction manager into AsyncLocalStorage.
 // FLOW: Feature orchestrator -> CoreTransactionService -> TypeORM transaction -> transaction-aware repositories.
 
 import { Injectable } from '@nestjs/common';
@@ -7,7 +7,7 @@ import { PinoLogger } from 'nestjs-pino';
 import { TIMEOUT_CONFIG } from '@/backend_auth/core/config/timeout.config';
 import { CoreRequestContextService } from '@/backend_auth/core/context/core-request-context';
 
-import type { DataSource, EntityManager } from 'typeorm';
+import { DataSource, EntityManager } from 'typeorm';
 @Injectable()
 export class CoreTransactionService {
   constructor(

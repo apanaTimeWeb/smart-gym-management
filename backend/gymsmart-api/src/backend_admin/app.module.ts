@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Composes framework infrastructure, master persistence, authentication, and isolated Admin feature modules.
-// FLOW: Config → master DataSource → Core infrastructure → Admin feature modules → controllers.
+﻿// RESPONSIBILITY: Composes framework infrastructure, master persistence, authentication, and isolated Admin feature modules.
+// FLOW: Config â†’ master DataSource â†’ Core infrastructure â†’ Admin feature modules â†’ controllers.
 
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes partial update business flow for the compliance feature.
+﻿// RESPONSIBILITY: Executes partial update business flow for the compliance feature.
 // FLOW: CommandController -> ComplianceUpdateService -> named repository mutation -> mapper.
 import { Injectable } from '@nestjs/common';
 import { ComplianceRepository } from '@/backend_superadmin/modules/superadmin/compliance/compliance.repository';

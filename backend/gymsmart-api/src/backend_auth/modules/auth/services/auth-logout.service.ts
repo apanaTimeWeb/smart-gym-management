@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Revokes the current refresh session and records a logout audit event.
+﻿// RESPONSIBILITY: Revokes the current refresh session and records a logout audit event.
 // FLOW: AuthCommandController -> AuthSessionOrchestrator -> AuthLogoutService -> session repository/audit.
 
 import { Injectable } from '@nestjs/common';

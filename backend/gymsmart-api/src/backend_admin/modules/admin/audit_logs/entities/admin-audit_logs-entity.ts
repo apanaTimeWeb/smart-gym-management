@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns PostgreSQL persistence for the Admin audit_logs feature and its frontend-backed payload.
-// FLOW: AuditLogs Repository → AdminAuditLogsEntity → PostgreSQL audit_log_views table.
+﻿// RESPONSIBILITY: Owns PostgreSQL persistence for the Admin audit_logs feature and its frontend-backed payload.
+// FLOW: AuditLogs Repository â†’ AdminAuditLogsEntity â†’ PostgreSQL audit_log_views table.
 
 import { Column, Entity, Index } from 'typeorm';
 import { CoreBaseEntity } from '@/backend_admin/core/database/core-base.entity';

@@ -1,4 +1,4 @@
-import { AdminPermissionsMapper } from '@/backend_admin/modules/admin/permissions/mappers/admin-permissions.mapper';
+﻿import { AdminPermissionsMapper } from '@/backend_admin/modules/admin/permissions/mappers/admin-permissions.mapper';
 import { AdminPermissionsEntity } from '@/backend_admin/modules/admin/permissions/entities/admin-permissions-entity';
 
 describe('AdminPermissionsMapper', () => {

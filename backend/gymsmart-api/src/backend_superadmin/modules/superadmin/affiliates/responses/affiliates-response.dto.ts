@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Defines the stable response data contract for affiliates endpoints.
+﻿// RESPONSIBILITY: Defines the stable response data contract for affiliates endpoints.
 // FLOW: Domain model -> AffiliatesResponseDto -> canonical ApiResponse envelope.
 import { ApiPropertyOptional } from '@nestjs/swagger';
 

@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns PostgreSQL persistence for the Admin plans feature and its frontend-backed payload.
-// FLOW: Plans Repository → AdminPlansEntity → PostgreSQL plans table.
+﻿// RESPONSIBILITY: Owns PostgreSQL persistence for the Admin plans feature and its frontend-backed payload.
+// FLOW: Plans Repository â†’ AdminPlansEntity â†’ PostgreSQL plans table.
 
 import { Column, Entity, Index } from 'typeorm';
 import { CoreBaseEntity } from '@/backend_admin/core/database/core-base.entity';

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Deterministically seeds the features table for local/test environments.
+﻿// RESPONSIBILITY: Deterministically seeds the features table for local/test environments.
 // FLOW: Master seed -> FeaturesSeeder -> PostgreSQL repository.
 import { DataSource } from 'typeorm';
 import { FeatureFlagEntity } from '@/backend_superadmin/modules/superadmin/features/features.entity';

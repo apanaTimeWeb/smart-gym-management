@@ -31,7 +31,7 @@ export class ProfileRepository extends BaseRepository<SuperadminProfileEntity> {
   async findByIdOrThrow(id: string): Promise<SuperadminProfileEntity> { return super.findByIdOrThrow(id, 'Profile record not found'); }
 
   /** Creates and persists a profile record. */
-  async createProfile(input: ProfileCreateInput): Promise<SuperadminProfileEntity> { const entity = this.activeRepository.create(input as never); return this.activeRepository.save(entity); }
+  async createProfile(input: ProfileCreateInput): Promise<SuperadminProfileEntity> { const entity = this.activeRepository.create(input as any); return this.activeRepository.save(entity); }
 
   /** Applies an intention-revealing update to a profile record. */
   async updateProfileById(id: string, input: ProfileUpdateInput): Promise<SuperadminProfileEntity> { await this.activeRepository.update({ id } as never, input as never); return this.findByIdOrThrow(id); }

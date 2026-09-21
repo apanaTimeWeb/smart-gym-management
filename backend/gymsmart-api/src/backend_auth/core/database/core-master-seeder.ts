@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Orchestrates deterministic module seeders in dependency order for local environments.
+﻿// RESPONSIBILITY: Orchestrates deterministic module seeders in dependency order for local environments.
 // FLOW: CLI -> CoreMasterSeeder -> AuthSeeder -> PostgreSQL master database.
 
 import { NestFactory } from '@nestjs/core';

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes single-record retrieval for the reports feature.
+﻿// RESPONSIBILITY: Executes single-record retrieval for the reports feature.
 // FLOW: QueryController -> ReportsFindService -> repository findByIdOrThrow -> mapper.
 import { Injectable } from '@nestjs/common';
 import { ReportsRepository } from '@/backend_superadmin/modules/superadmin/reports/reports.repository';

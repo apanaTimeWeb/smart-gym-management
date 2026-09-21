@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns PostgreSQL persistence for the Admin announcements feature and its frontend-backed payload.
-// FLOW: Announcements Repository → AdminAnnouncementsEntity → PostgreSQL announcements table.
+﻿// RESPONSIBILITY: Owns PostgreSQL persistence for the Admin announcements feature and its frontend-backed payload.
+// FLOW: Announcements Repository â†’ AdminAnnouncementsEntity â†’ PostgreSQL announcements table.
 
 import { Column, Entity, Index } from 'typeorm';
 import { CoreBaseEntity } from '@/backend_admin/core/database/core-base.entity';

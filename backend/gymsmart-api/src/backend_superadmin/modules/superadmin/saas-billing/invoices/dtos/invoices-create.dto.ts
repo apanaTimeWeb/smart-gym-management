@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Validates creation payloads at the invoices HTTP boundary.
+﻿// RESPONSIBILITY: Validates creation payloads at the invoices HTTP boundary.
 // FLOW: HTTP JSON -> InvoicesCreateDto -> Invoices service.
 import { Type } from 'class-transformer';
 import { IsBoolean, IsDate, IsEmail, IsEnum, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';

@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns all TypeORM persistence operations for Admin permissions; services never call save() directly.
-// FLOW: AdminPermissionsService → AdminPermissionsRepository → TypeORM → PostgreSQL permission_overrides.
+﻿// RESPONSIBILITY: Owns all TypeORM persistence operations for Admin permissions; services never call save() directly.
+// FLOW: AdminPermissionsService â†’ AdminPermissionsRepository â†’ TypeORM â†’ PostgreSQL permission_overrides.
 
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CorePaginatedResult } from '@/backend_admin/core/types/core-api-response.types';

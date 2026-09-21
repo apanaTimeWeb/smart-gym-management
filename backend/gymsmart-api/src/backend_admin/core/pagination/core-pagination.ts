@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Builds canonical pagination metadata and resolves only explicitly allowlisted sorting fields.
-// FLOW: Repository count/page → buildPaginationMeta() → CorePaginatedResult.
+﻿// RESPONSIBILITY: Builds canonical pagination metadata and resolves only explicitly allowlisted sorting fields.
+// FLOW: Repository count/page â†’ buildPaginationMeta() â†’ CorePaginatedResult.
 
 import type { CorePaginationMeta } from '@/backend_admin/core/types/core-api-response.types';
 

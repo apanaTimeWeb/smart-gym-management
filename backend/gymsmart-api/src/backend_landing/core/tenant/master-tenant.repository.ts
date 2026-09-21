@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns master-database tenant lookup, provisioning, and test-tenant lifecycle persistence.
-// FLOW: Tenant infrastructure → MasterTenantRepository → master tenants table.
+﻿// RESPONSIBILITY: Owns master-database tenant lookup, provisioning, and test-tenant lifecycle persistence.
+// FLOW: Tenant infrastructure â†’ MasterTenantRepository â†’ master tenants table.
 import { Injectable } from '@nestjs/common';
 
 import { InjectRepository } from '@nestjs/typeorm';

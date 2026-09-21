@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Exposes mutation endpoints for Admin gym-health-alerts; contains HTTP concerns only.
+﻿// RESPONSIBILITY: Exposes mutation endpoints for Admin gym-health-alerts; contains HTTP concerns only.
 // FLOW: HTTP mutation -> AdminGymHealthAlertsCommandController -> AdminGymHealthAlertsCommandService.
 
 import { Body, Controller, Headers, HttpStatus, Post, UseGuards } from '@nestjs/common';

@@ -19,6 +19,6 @@ export class SystemOpsRepository {
   async upsertSummary(payload: unknown): Promise<void> {
     const existing = await this.repository.findOne({ where: { kind: 'summary', deletedAt: null } as never, order: { updatedAt: 'DESC' } as never });
     if (existing) { await this.repository.update({ id: existing.id } as never, { payload, updatedAt: new Date() } as never); return; }
-    await this.repository.insert(this.repository.create({ kind: 'summary', payload }));
+    await this.repository.insert(this.repository.create({ kind: 'summary', payload } as any));
   }
 }

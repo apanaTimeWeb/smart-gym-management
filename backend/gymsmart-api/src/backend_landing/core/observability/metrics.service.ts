@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns Prometheus request metrics and the metrics registry.
-// FLOW: HTTP middleware → MetricsService → Prometheus registry → /metrics.
+﻿// RESPONSIBILITY: Owns Prometheus request metrics and the metrics registry.
+// FLOW: HTTP middleware â†’ MetricsService â†’ Prometheus registry â†’ /metrics.
 import { Injectable, OnModuleInit } from '@nestjs/common';
 
 import { Counter, Histogram, Registry, collectDefaultMetrics } from '@prometheus-io/client';

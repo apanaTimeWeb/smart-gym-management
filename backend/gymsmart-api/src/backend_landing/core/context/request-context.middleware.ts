@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Establishes request-scoped correlation and trace context at the HTTP boundary.
-// FLOW: Incoming HTTP request → RequestContextService.run → downstream middleware/controllers.
+﻿// RESPONSIBILITY: Establishes request-scoped correlation and trace context at the HTTP boundary.
+// FLOW: Incoming HTTP request â†’ RequestContextService.run â†’ downstream middleware/controllers.
 import { randomUUID } from 'node:crypto';
 
 import { NextFunction, Request, Response } from 'express';

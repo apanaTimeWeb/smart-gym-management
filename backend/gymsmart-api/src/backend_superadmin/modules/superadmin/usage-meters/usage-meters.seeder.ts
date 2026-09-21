@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Deterministically seeds the usage-meters table for local/test environments.
+﻿// RESPONSIBILITY: Deterministically seeds the usage-meters table for local/test environments.
 // FLOW: Master seed -> UsageMetersSeeder -> PostgreSQL repository.
 import { DataSource } from 'typeorm';
 import { UsageMeterEntity } from '@/backend_superadmin/modules/superadmin/usage-meters/usage-meters.entity';

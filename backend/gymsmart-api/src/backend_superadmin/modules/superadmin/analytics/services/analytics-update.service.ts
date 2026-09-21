@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes partial update business flow for the analytics feature.
+﻿// RESPONSIBILITY: Executes partial update business flow for the analytics feature.
 // FLOW: CommandController -> AnalyticsUpdateService -> named repository mutation -> mapper.
 import { Injectable } from '@nestjs/common';
 import { AnalyticsRepository } from '@/backend_superadmin/modules/superadmin/analytics/analytics.repository';

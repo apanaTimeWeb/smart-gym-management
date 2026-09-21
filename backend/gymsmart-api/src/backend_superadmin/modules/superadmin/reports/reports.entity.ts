@@ -1,4 +1,4 @@
-// RESPONSIBILITY: TypeORM persistence entity for reports feature data stored in `report_snapshots`.
+﻿// RESPONSIBILITY: TypeORM persistence entity for reports feature data stored in `report_snapshots`.
 // FLOW: reports repository -> ReportSnapshot entity -> PostgreSQL `report_snapshots`.
 import { Column, Entity, Index } from 'typeorm';
 import { BaseEntity } from '@/backend_superadmin/core/database/base.entity';

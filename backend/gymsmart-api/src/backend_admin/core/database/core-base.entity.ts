@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Defines the standard TypeORM base entity abstraction for tenant tables.
-// FLOW: Feature entity → CoreBaseEntity → PostgreSQL table with UUID/timestamps/soft-delete state.
+﻿// RESPONSIBILITY: Defines the standard TypeORM base entity abstraction for tenant tables.
+// FLOW: Feature entity â†’ CoreBaseEntity â†’ PostgreSQL table with UUID/timestamps/soft-delete state.
 
 import { CreateDateColumn, DeleteDateColumn, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Validates creation payloads at the white-labeling HTTP boundary.
+﻿// RESPONSIBILITY: Validates creation payloads at the white-labeling HTTP boundary.
 // FLOW: HTTP JSON -> WhiteLabelingCreateDto -> WhiteLabeling service.
 import { IsBoolean, IsDateString, IsEmail, IsEnum, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes the soft-delete flow for the global-audit feature.
+﻿// RESPONSIBILITY: Executes the soft-delete flow for the global-audit feature.
 // FLOW: CommandController -> GlobalAuditDeleteService -> repository named soft-delete -> audit hook.
 import { Injectable } from '@nestjs/common';
 import { GlobalAuditRepository } from '@/backend_superadmin/modules/superadmin/global-audit/global-audit.repository';

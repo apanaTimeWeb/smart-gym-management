@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Registers declared runtime events so feature dependencies cannot be implicit.
-// FLOW: Feature mutation → CoreEventBusService.emit → registry-approved event contract.
+﻿// RESPONSIBILITY: Registers declared runtime events so feature dependencies cannot be implicit.
+// FLOW: Feature mutation â†’ CoreEventBusService.emit â†’ registry-approved event contract.
 
 export const CORE_EVENT_REGISTRY = {
   ADMIN_ANNOUNCEMENT_CREATED: 'ADMIN.ANNOUNCEMENT.CREATED',

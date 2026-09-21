@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Declares controller-layer RBAC requirements with centralized role values.
+﻿// RESPONSIBILITY: Declares controller-layer RBAC requirements with centralized role values.
 // FLOW: @CoreRoles metadata -> CoreRolesGuard -> verified JWT role.
 
 import { SetMetadata } from '@nestjs/common';

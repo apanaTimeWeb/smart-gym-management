@@ -1,7 +1,7 @@
-// RESPONSIBILITY: Describes the frontend-consumed response fields for Admin members.
+﻿// RESPONSIBILITY: Describes the frontend-consumed response fields for Admin members.
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-// FLOW: Repository domain → Members response mapper → ApiResponse<T>.
+// FLOW: Repository domain â†’ Members response mapper â†’ ApiResponse<T>.
 
 export class AdminMemberDto {
   @ApiProperty() id!: string;

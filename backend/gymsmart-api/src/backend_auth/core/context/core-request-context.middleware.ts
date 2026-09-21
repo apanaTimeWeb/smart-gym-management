@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Creates per-request correlation context before authentication or business processing.
+﻿// RESPONSIBILITY: Creates per-request correlation context before authentication or business processing.
 // FLOW: Incoming request -> trace context -> AsyncLocalStorage -> guards/controllers/services/repositories.
 
 import { randomUUID } from 'node:crypto';

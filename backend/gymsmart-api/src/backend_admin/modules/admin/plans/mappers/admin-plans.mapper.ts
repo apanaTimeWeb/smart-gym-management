@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Translates the TypeORM Admin plans entity into an ORM-independent domain model and frontend response.
-// FLOW: AdminPlansEntity → AdminPlansMapper → domain/response object.
+﻿// RESPONSIBILITY: Translates the TypeORM Admin plans entity into an ORM-independent domain model and frontend response.
+// FLOW: AdminPlansEntity â†’ AdminPlansMapper â†’ domain/response object.
 
 import { AdminPlansDomainModel } from '@/backend_admin/modules/admin/plans/domain/admin-plans.domain';
 import { AdminPlansEntity } from '@/backend_admin/modules/admin/plans/entities/admin-plans-entity';

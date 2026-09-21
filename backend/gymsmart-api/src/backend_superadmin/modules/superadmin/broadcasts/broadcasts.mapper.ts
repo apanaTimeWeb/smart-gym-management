@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Maps Broadcasts ORM entities into domain-safe response data.
+﻿// RESPONSIBILITY: Maps Broadcasts ORM entities into domain-safe response data.
 // FLOW: TypeORM entity -> BroadcastsMapper -> domain model -> response DTO.
 import type { BroadcastEntity } from '@/backend_superadmin/modules/superadmin/broadcasts/broadcasts.entity';
 import type { BroadcastsDomainModel } from '@/backend_superadmin/modules/superadmin/broadcasts/types/broadcasts.interfaces';

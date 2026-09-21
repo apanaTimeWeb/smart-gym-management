@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Maps Team ORM entities into domain-safe response data.
+﻿// RESPONSIBILITY: Maps Team ORM entities into domain-safe response data.
 // FLOW: TypeORM entity -> TeamMapper -> domain model -> response DTO.
 import type { TeamSnapshotEntity } from '@/backend_superadmin/modules/superadmin/team/team.entity';
 import type { TeamDomainModel } from '@/backend_superadmin/modules/superadmin/team/types/team.interfaces';

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Performs status transitions for messaging records through the repository boundary.
+﻿// RESPONSIBILITY: Performs status transitions for messaging records through the repository boundary.
 // FLOW: CommandController -> StatusService -> named repository update -> domain mapper.
 import { Injectable } from '@nestjs/common';
 import { MessagingRepository } from '@/backend_superadmin/modules/superadmin/messaging/messaging.repository';

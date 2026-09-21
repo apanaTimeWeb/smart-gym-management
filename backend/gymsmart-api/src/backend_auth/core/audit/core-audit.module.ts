@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Registers and exports audit persistence infrastructure.
+﻿// RESPONSIBILITY: Registers and exports audit persistence infrastructure.
 // FLOW: AppModule -> CoreAuditModule -> CoreAuditService/Repository -> feature mutation flows.
 
 import { Module } from '@nestjs/common';

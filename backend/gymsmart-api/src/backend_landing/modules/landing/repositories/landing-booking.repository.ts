@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns all PostgreSQL persistence for Landing bookings; no service-level ORM access is allowed.
-// FLOW: LandingBookingService → LandingBookingRepository → CoreBaseRepository → TypeORM → landing_bookings.
+﻿// RESPONSIBILITY: Owns all PostgreSQL persistence for Landing bookings; no service-level ORM access is allowed.
+// FLOW: LandingBookingService â†’ LandingBookingRepository â†’ CoreBaseRepository â†’ TypeORM â†’ landing_bookings.
 import { Injectable } from '@nestjs/common';
 
 import { CoreBaseRepository } from '@/backend_landing/core/database/base.repository';
@@ -8,13 +8,13 @@ import { LandingBookingEntity } from '@/backend_landing/modules/landing/entities
 
 import { LandingBookingMapper } from '@/backend_landing/modules/landing/mappers/landing-booking.mapper';
 
-import type { Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 
 import type { LandingBookingDomainModel } from '@/backend_landing/modules/landing/domain/landing-booking.domain';
 
 import type { LandingCreateBookingInput } from '@/backend_landing/modules/landing/services/landing-booking-input.types';
 
-import type { TransactionContext } from '@/backend_landing/core/database/transaction-context';
+import { TransactionContext } from '@/backend_landing/core/database/transaction-context';
 
 
 @Injectable()

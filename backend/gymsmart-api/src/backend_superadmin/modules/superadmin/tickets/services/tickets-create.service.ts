@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes creation business flow for the tickets feature.
+﻿// RESPONSIBILITY: Executes creation business flow for the tickets feature.
 // FLOW: CommandController -> TicketsCreateService -> named repository mutation -> mapper.
 import { Injectable } from '@nestjs/common';
 import { TicketsRepository } from '@/backend_superadmin/modules/superadmin/tickets/tickets.repository';

@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Registers liveness, readiness, and protected deep dependency health checks.
-// FLOW: HTTP health request → HealthController → health service checks.
+﻿// RESPONSIBILITY: Registers liveness, readiness, and protected deep dependency health checks.
+// FLOW: HTTP health request â†’ HealthController â†’ health service checks.
 import { Global, Module } from '@nestjs/common';
 
 import { HealthController } from '@/backend_landing/core/health/health.controller';

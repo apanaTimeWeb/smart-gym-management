@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes paginated read logic for the broadcasts feature.
+﻿// RESPONSIBILITY: Executes paginated read logic for the broadcasts feature.
 // FLOW: QueryController -> BroadcastsListService -> repository -> mapper -> response DTO.
 import { Injectable } from '@nestjs/common';
 import { BroadcastsRepository } from '@/backend_superadmin/modules/superadmin/broadcasts/broadcasts.repository';

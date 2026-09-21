@@ -33,7 +33,7 @@ export class InvoicesRepository extends BaseRepository<SaasInvoiceEntity> {
   async findByIdOrThrow(id: string): Promise<SaasInvoiceEntity> { return super.findByIdOrThrow(id, 'Invoices record not found'); }
 
   /** Creates and persists a invoices record. */
-  async createInvoices(input: InvoicesCreateInput): Promise<SaasInvoiceEntity> { const entity = this.activeRepository.create(input as never); return this.activeRepository.save(entity); }
+  async createInvoices(input: InvoicesCreateInput): Promise<SaasInvoiceEntity> { const entity = this.activeRepository.create(input as any); return this.activeRepository.save(entity); }
 
   /** Applies an intention-revealing update to a invoices record. */
   async updateInvoicesById(id: string, input: InvoicesUpdateInput): Promise<SaasInvoiceEntity> { await this.activeRepository.update({ id } as never, input as never); return this.findByIdOrThrow(id); }

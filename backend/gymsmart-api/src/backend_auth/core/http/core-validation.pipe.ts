@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Configures the global validation pipe with strict payload rejection while preserving raw ValidationError trees.
+﻿// RESPONSIBILITY: Configures the global validation pipe with strict payload rejection while preserving raw ValidationError trees.
 // FLOW: HTTP payload -> CoreValidationPipe -> class-validator ValidationError[] -> CoreValidationExceptionFilter.
 
 import { BadRequestException, ValidationPipe } from '@nestjs/common';

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes paginated read logic for the integrations feature.
+﻿// RESPONSIBILITY: Executes paginated read logic for the integrations feature.
 // FLOW: QueryController -> IntegrationsListService -> repository -> mapper -> response DTO.
 import { Injectable } from '@nestjs/common';
 import { IntegrationsRepository } from '@/backend_superadmin/modules/superadmin/integrations/integrations.repository';

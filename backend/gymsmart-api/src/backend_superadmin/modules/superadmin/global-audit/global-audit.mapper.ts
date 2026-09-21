@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Maps GlobalAudit ORM entities into domain-safe response data.
+﻿// RESPONSIBILITY: Maps GlobalAudit ORM entities into domain-safe response data.
 // FLOW: TypeORM entity -> GlobalAuditMapper -> domain model -> response DTO.
 import type { AuditLogEntity } from '@/backend_superadmin/modules/superadmin/global-audit/global-audit.entity';
 import type { GlobalAuditDomainModel } from '@/backend_superadmin/modules/superadmin/global-audit/types/global-audit.interfaces';

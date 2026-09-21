@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes notification list and read-state business flows.
+﻿// RESPONSIBILITY: Executes notification list and read-state business flows.
 // FLOW: controller -> notification service -> notification repository.
 import { Injectable } from '@nestjs/common';
 import { MessagingNotificationRepository } from '@/backend_superadmin/modules/superadmin/messaging/messaging-notification.repository';

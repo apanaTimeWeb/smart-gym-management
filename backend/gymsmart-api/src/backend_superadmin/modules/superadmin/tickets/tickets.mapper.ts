@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Maps Tickets ORM entities into domain-safe response data.
+﻿// RESPONSIBILITY: Maps Tickets ORM entities into domain-safe response data.
 // FLOW: TypeORM entity -> TicketsMapper -> domain model -> response DTO.
 import type { SupportTicketEntity } from '@/backend_superadmin/modules/superadmin/tickets/tickets.entity';
 import type { TicketsDomainModel } from '@/backend_superadmin/modules/superadmin/tickets/types/tickets.interfaces';

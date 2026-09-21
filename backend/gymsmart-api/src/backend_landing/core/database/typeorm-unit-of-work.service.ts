@@ -1,12 +1,12 @@
-// RESPONSIBILITY: Opens and closes tenant PostgreSQL transactions behind the framework-neutral UnitOfWork abstraction.
-// FLOW: Orchestrator → TypeOrmUnitOfWork → TenantContextService → tenant DataSource.transaction → repositories.
+﻿// RESPONSIBILITY: Opens and closes tenant PostgreSQL transactions behind the framework-neutral UnitOfWork abstraction.
+// FLOW: Orchestrator â†’ TypeOrmUnitOfWork â†’ TenantContextService â†’ tenant DataSource.transaction â†’ repositories.
 import { Injectable } from '@nestjs/common';
 
 import { CoreUnitOfWork, TransactionContext } from '@/backend_landing/core/database/transaction-context';
 
 import { TenantContextService } from '@/backend_landing/core/tenant/tenant-context.service';
 
-import type { DataSource } from 'typeorm';
+import { DataSource } from 'typeorm';
 
 
 @Injectable()

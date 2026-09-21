@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes single-record retrieval for the team feature.
+﻿// RESPONSIBILITY: Executes single-record retrieval for the team feature.
 // FLOW: QueryController -> TeamFindService -> repository findByIdOrThrow -> mapper.
 import { Injectable } from '@nestjs/common';
 import { TeamRepository } from '@/backend_superadmin/modules/superadmin/team/team.repository';

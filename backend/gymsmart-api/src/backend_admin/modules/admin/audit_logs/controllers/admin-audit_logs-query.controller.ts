@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Exposes read-only Admin audit_logs HTTP endpoints; contains no business logic.
+﻿// RESPONSIBILITY: Exposes read-only Admin audit_logs HTTP endpoints; contains no business logic.
 // FLOW: HTTP GET -> AdminAuditLogsQueryController -> AdminAuditLogsQueryService -> repository.
 
 import { Controller, Get, HttpStatus, Query, UseGuards } from '@nestjs/common';

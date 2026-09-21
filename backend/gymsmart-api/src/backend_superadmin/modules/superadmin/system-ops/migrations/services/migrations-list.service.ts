@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes paginated read logic for the migrations feature.
+﻿// RESPONSIBILITY: Executes paginated read logic for the migrations feature.
 // FLOW: QueryController -> MigrationsListService -> repository -> mapper -> response DTO.
 import { Injectable } from '@nestjs/common';
 import { MigrationsRepository } from '@/backend_superadmin/modules/superadmin/system-ops/migrations/migrations.repository';

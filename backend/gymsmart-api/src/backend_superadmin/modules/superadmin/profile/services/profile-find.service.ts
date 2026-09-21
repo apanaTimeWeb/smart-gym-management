@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes single-record retrieval for the profile feature.
+﻿// RESPONSIBILITY: Executes single-record retrieval for the profile feature.
 // FLOW: QueryController -> ProfileFindService -> repository findByIdOrThrow -> mapper.
 import { Injectable } from '@nestjs/common';
 import { ProfileRepository } from '@/backend_superadmin/modules/superadmin/profile/profile.repository';

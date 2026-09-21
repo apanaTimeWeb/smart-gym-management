@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Defines the stable response data contract for tickets endpoints.
+﻿// RESPONSIBILITY: Defines the stable response data contract for tickets endpoints.
 // FLOW: Domain model -> TicketsResponseDto -> canonical ApiResponse envelope.
 import { ApiPropertyOptional } from '@nestjs/swagger';
 

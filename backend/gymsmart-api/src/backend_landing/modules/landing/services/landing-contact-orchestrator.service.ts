@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns the contact transaction boundary and durable idempotency orchestration; it must not contain persistence details.
-// FLOW: LandingCommandController → LandingContactOrchestratorService → IdempotencyService + UnitOfWork → LandingContactService.
+﻿// RESPONSIBILITY: Owns the contact transaction boundary and durable idempotency orchestration; it must not contain persistence details.
+// FLOW: LandingCommandController â†’ LandingContactOrchestratorService â†’ IdempotencyService + UnitOfWork â†’ LandingContactService.
 import { createHash } from 'node:crypto';
 
 import { HttpException, Injectable } from '@nestjs/common';

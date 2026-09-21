@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Deterministically seeds the tickets table for local/test environments.
+﻿// RESPONSIBILITY: Deterministically seeds the tickets table for local/test environments.
 // FLOW: Master seed -> TicketsSeeder -> PostgreSQL repository.
 import { DataSource } from 'typeorm';
 import { SupportTicketEntity } from '@/backend_superadmin/modules/superadmin/tickets/tickets.entity';

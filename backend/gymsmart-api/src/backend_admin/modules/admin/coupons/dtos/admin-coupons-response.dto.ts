@@ -1,7 +1,7 @@
-// RESPONSIBILITY: Describes the frontend-consumed response fields for Admin coupons.
+﻿// RESPONSIBILITY: Describes the frontend-consumed response fields for Admin coupons.
 import { ApiProperty } from '@nestjs/swagger';
 
-// FLOW: Repository domain → Coupons response mapper → ApiResponse<T>.
+// FLOW: Repository domain â†’ Coupons response mapper â†’ ApiResponse<T>.
 
 export class AdminCouponDto {
   @ApiProperty()

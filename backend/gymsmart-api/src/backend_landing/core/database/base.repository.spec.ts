@@ -1,11 +1,11 @@
-// RESPONSIBILITY: Proves the shared repository boundary excludes soft-deleted records by default.
-// FLOW: Unit test → CoreBaseRepository.findById → TypeORM repository mock.
+﻿// RESPONSIBILITY: Proves the shared repository boundary excludes soft-deleted records by default.
+// FLOW: Unit test â†’ CoreBaseRepository.findById â†’ TypeORM repository mock.
 import { Repository } from 'typeorm';
 
 import { CoreBaseEntity } from '@/backend_landing/core/database/base.entity';
 import { CoreBaseRepository } from '@/backend_landing/core/database/base.repository';
 
-import type { TransactionContext } from '@/backend_landing/core/database/transaction-context';
+import { TransactionContext } from '@/backend_landing/core/database/transaction-context';
 
 class ExampleEntity extends CoreBaseEntity {
   id = 'example-1';

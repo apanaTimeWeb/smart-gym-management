@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Central registry of runtime event names used for cross-feature decoupling.
+﻿// RESPONSIBILITY: Central registry of runtime event names used for cross-feature decoupling.
 // FLOW: Feature service -> EventRegistry constant -> event transport/consumer.
 export const EVENT_REGISTRY = {
   SUPERADMIN_GYM_CREATED: 'SUPERADMIN.GYM.CREATED',

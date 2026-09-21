@@ -1,7 +1,7 @@
-// RESPONSIBILITY: Owns explicitly versioned/specialized frontend contract endpoints for the jobs feature.
+﻿// RESPONSIBILITY: Owns explicitly versioned/specialized frontend contract endpoints for the jobs feature.
 // FLOW: HTTP -> specialized micro-service -> typed result -> canonical response interceptor.
 import { RequireIdempotencyKey } from '@/backend_superadmin/core/cache/idempotency.decorator';
-import type { JobsQueueHealthResponseDto } from '@/backend_superadmin/modules/superadmin/system-ops/jobs/jobs-queue-health-response.dto';
+import { JobsQueueHealthResponseDto } from '@/backend_superadmin/modules/superadmin/system-ops/jobs/jobs-queue-health-response.dto';
 import { Body, Controller, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '@/backend_superadmin/core/auth/jwt-auth.guard';

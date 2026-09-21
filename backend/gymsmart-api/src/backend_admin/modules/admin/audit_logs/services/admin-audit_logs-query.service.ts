@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns read-side audit-log use cases from the immutable core audit trail.
-// FLOW: AdminAuditLogsQueryController → service → repository → mapper → canonical envelope.
+﻿// RESPONSIBILITY: Owns read-side audit-log use cases from the immutable core audit trail.
+// FLOW: AdminAuditLogsQueryController â†’ service â†’ repository â†’ mapper â†’ canonical envelope.
 
 import { Injectable } from '@nestjs/common';
 import type { CorePaginationMeta } from '@/backend_admin/core/types/core-api-response.types';

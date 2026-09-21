@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Deterministically seeds the backups table for local/test environments.
+﻿// RESPONSIBILITY: Deterministically seeds the backups table for local/test environments.
 // FLOW: Master seed -> BackupsSeeder -> PostgreSQL repository.
 import { DataSource } from 'typeorm';
 import { BackupRecordEntity } from '@/backend_superadmin/modules/superadmin/system-ops/backups/backups.entity';

@@ -32,7 +32,7 @@ export class UsageMetersRepository extends BaseRepository<UsageMeterEntity> {
   async findByIdOrThrow(id: string): Promise<UsageMeterEntity> { return super.findByIdOrThrow(id, 'UsageMeters record not found'); }
 
   /** Creates and persists a usage-meters record. */
-  async createUsageMeters(input: UsageMetersCreateInput): Promise<UsageMeterEntity> { const entity = this.activeRepository.create(input as never); return this.activeRepository.save(entity); }
+  async createUsageMeters(input: UsageMetersCreateInput): Promise<UsageMeterEntity> { const entity = this.activeRepository.create(input as any); return this.activeRepository.save(entity); }
 
   /** Applies an intention-revealing update to a usage-meters record. */
   async updateUsageMetersById(id: string, input: UsageMetersUpdateInput): Promise<UsageMeterEntity> { await this.activeRepository.update({ id } as never, input as never); return this.findByIdOrThrow(id); }

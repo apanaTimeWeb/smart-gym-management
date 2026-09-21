@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Translates the TypeORM Admin hr entity into an ORM-independent domain model and frontend response.
-// FLOW: AdminHrEntity → AdminHrMapper → domain/response object.
+﻿// RESPONSIBILITY: Translates the TypeORM Admin hr entity into an ORM-independent domain model and frontend response.
+// FLOW: AdminHrEntity â†’ AdminHrMapper â†’ domain/response object.
 
 import { Injectable } from '@nestjs/common';
 import { CoreEncryptionService } from '@/backend_admin/core/security/core-encryption.service';

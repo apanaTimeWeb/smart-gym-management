@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Groups the Superadmin system-ops business features under the frontend-mirrored system-ops container.
+﻿// RESPONSIBILITY: Groups the Superadmin system-ops business features under the frontend-mirrored system-ops container.
 // FLOW: AppModule -> SystemOps container -> summary/backups/infrastructure/jobs/migrations features.
 import { Module } from '@nestjs/common';
 import { SystemOpsModule } from '@/backend_superadmin/modules/superadmin/system-ops/system-ops.module';

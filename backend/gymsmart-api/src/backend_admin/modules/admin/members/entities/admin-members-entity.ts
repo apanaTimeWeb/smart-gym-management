@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns PostgreSQL persistence for the Admin members feature and its frontend-backed payload.
-// FLOW: Members Repository → AdminMembersEntity → PostgreSQL members table.
+﻿// RESPONSIBILITY: Owns PostgreSQL persistence for the Admin members feature and its frontend-backed payload.
+// FLOW: Members Repository â†’ AdminMembersEntity â†’ PostgreSQL members table.
 
 import { Column, Entity, Index } from 'typeorm';
 import { CoreBaseEntity } from '@/backend_admin/core/database/core-base.entity';

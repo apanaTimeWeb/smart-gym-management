@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Registers security guards and request-level protections shared by backend modules.
-// FLOW: AppModule → CoreSecurityModule → RateLimitGuard.
+﻿// RESPONSIBILITY: Registers security guards and request-level protections shared by backend modules.
+// FLOW: AppModule â†’ CoreSecurityModule â†’ RateLimitGuard.
 import { Global, Module } from '@nestjs/common';
 
 import { RateLimitGuard } from '@/backend_landing/core/security/rate-limit.guard';

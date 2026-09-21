@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Centralizes Auth messages, machine-readable error codes, audit actions and security thresholds.
+﻿// RESPONSIBILITY: Centralizes Auth messages, machine-readable error codes, audit actions and security thresholds.
 // FLOW: Auth controllers/services -> AuthConstants -> API/audit/Redis behavior.
 
 export const AuthConstants = {

@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Boots the HTTP application with global security, validation, versioning, compression, and OpenAPI.
-// FLOW: Node → NestFactory → Middleware → Validation/Envelope → Versioned API → HTTP server.
+﻿// RESPONSIBILITY: Boots the HTTP application with global security, validation, versioning, compression, and OpenAPI.
+// FLOW: Node â†’ NestFactory â†’ Middleware â†’ Validation/Envelope â†’ Versioned API â†’ HTTP server.
 import { ValidationPipe, VersioningType } from '@nestjs/common';
 
 import { NestFactory } from '@nestjs/core';

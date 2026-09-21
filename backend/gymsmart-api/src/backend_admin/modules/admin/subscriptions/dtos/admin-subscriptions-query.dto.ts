@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Validates and normalizes frontend query/filter parameters for Admin subscriptions.
-// FLOW: HTTP query → AdminSubscriptionsQueryDto → repository allowlists → PostgreSQL query.
+﻿// RESPONSIBILITY: Validates and normalizes frontend query/filter parameters for Admin subscriptions.
+// FLOW: HTTP query â†’ AdminSubscriptionsQueryDto â†’ repository allowlists â†’ PostgreSQL query.
 
 import { Type } from 'class-transformer';
 import { IsOptional, IsString, IsIn, IsNumber } from 'class-validator';

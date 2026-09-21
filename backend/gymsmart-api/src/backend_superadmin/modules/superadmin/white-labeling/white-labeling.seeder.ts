@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Deterministically seeds the white-labeling table for local/test environments.
+﻿// RESPONSIBILITY: Deterministically seeds the white-labeling table for local/test environments.
 // FLOW: Master seed -> WhiteLabelingSeeder -> PostgreSQL repository.
 import { DataSource } from 'typeorm';
 import { WhiteLabelDomainEntity } from '@/backend_superadmin/modules/superadmin/white-labeling/white-labeling.entity';

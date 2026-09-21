@@ -1,5 +1,5 @@
-// RESPONSIBILITY: CLI DataSource for master database migrations and seeding.
-// FLOW: CLI → validated environment → master DataSource → migrations/seeder.
+﻿// RESPONSIBILITY: CLI DataSource for master database migrations and seeding.
+// FLOW: CLI â†’ validated environment â†’ master DataSource â†’ migrations/seeder.
 
 import 'reflect-metadata';
 import 'dotenv/config';

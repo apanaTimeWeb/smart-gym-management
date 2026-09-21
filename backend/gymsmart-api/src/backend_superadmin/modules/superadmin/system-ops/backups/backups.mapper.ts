@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Maps Backups ORM entities into domain-safe response data.
+﻿// RESPONSIBILITY: Maps Backups ORM entities into domain-safe response data.
 // FLOW: TypeORM entity -> BackupsMapper -> domain model -> response DTO.
 import type { BackupRecordEntity } from '@/backend_superadmin/modules/superadmin/system-ops/backups/backups.entity';
 import type { BackupsDomainModel } from '@/backend_superadmin/modules/superadmin/system-ops/backups/types/backups.interfaces';

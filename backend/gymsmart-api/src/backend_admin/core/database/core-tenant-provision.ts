@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Provisions the local/default tenant PostgreSQL database without creating a physical server per tenant.
+﻿// RESPONSIBILITY: Provisions the local/default tenant PostgreSQL database without creating a physical server per tenant.
 // FLOW: CLI -> master tenant metadata -> PostgreSQL CREATE DATABASE -> tenant migration command.
 
 import 'reflect-metadata';

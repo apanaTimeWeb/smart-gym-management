@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Creates secure invoice download/export contracts backed by live invoice rows.
+﻿// RESPONSIBILITY: Creates secure invoice download/export contracts backed by live invoice rows.
 // FLOW: Controller -> InvoicesExportService -> InvoicesRepository -> signed resource URL.
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InvoicesRepository } from '@/backend_superadmin/modules/superadmin/saas-billing/invoices/invoices.repository';

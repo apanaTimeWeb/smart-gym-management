@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Translates the TypeORM Admin blacklist entity into an ORM-independent domain model and frontend response.
-// FLOW: AdminBlacklistEntity → AdminBlacklistMapper → domain/response object.
+﻿// RESPONSIBILITY: Translates the TypeORM Admin blacklist entity into an ORM-independent domain model and frontend response.
+// FLOW: AdminBlacklistEntity â†’ AdminBlacklistMapper â†’ domain/response object.
 
 import { AdminBlacklistDomainModel } from '@/backend_admin/modules/admin/blacklist/domain/admin-blacklist.domain';
 import { AdminBlacklistEntity } from '@/backend_admin/modules/admin/blacklist/entities/admin-blacklist-entity';

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes single-record retrieval for the affiliates feature.
+﻿// RESPONSIBILITY: Executes single-record retrieval for the affiliates feature.
 // FLOW: QueryController -> AffiliatesFindService -> repository findByIdOrThrow -> mapper.
 import { Injectable } from '@nestjs/common';
 import { AffiliatesRepository } from '@/backend_superadmin/modules/superadmin/affiliates/affiliates.repository';

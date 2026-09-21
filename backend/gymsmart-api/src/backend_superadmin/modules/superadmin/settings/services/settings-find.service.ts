@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes single-record retrieval for the settings feature.
+﻿// RESPONSIBILITY: Executes single-record retrieval for the settings feature.
 // FLOW: QueryController -> SettingsFindService -> repository findByIdOrThrow -> mapper.
 import { Injectable } from '@nestjs/common';
 import { SettingsRepository } from '@/backend_superadmin/modules/superadmin/settings/settings.repository';

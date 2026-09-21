@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Defines the ORM-independent domain shape for Admin permissions records.
-// FLOW: PostgreSQL entity → AdminPermissionsMapper → AdminPermissionsDomainModel → service.
+﻿// RESPONSIBILITY: Defines the ORM-independent domain shape for Admin permissions records.
+// FLOW: PostgreSQL entity â†’ AdminPermissionsMapper â†’ AdminPermissionsDomainModel â†’ service.
 
 export interface AdminPermissionsDomainModel {
   id: string;

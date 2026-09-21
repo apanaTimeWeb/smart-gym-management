@@ -1,4 +1,4 @@
-// RESPONSIBILITY: TypeORM persistence entity for features feature data stored in `feature_flags`.
+﻿// RESPONSIBILITY: TypeORM persistence entity for features feature data stored in `feature_flags`.
 // FLOW: features repository -> FeatureFlag entity -> PostgreSQL `feature_flags`.
 import { Column, Entity, Index } from 'typeorm';
 import { BaseEntity } from '@/backend_superadmin/core/database/base.entity';

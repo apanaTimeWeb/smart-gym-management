@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Validates and standardizes paginated list query parameters.
-// FLOW: HTTP query → CorePaginationQueryDto → feature query DTO → repository query.
+﻿// RESPONSIBILITY: Validates and standardizes paginated list query parameters.
+// FLOW: HTTP query â†’ CorePaginationQueryDto â†’ feature query DTO â†’ repository query.
 
 import { Type } from 'class-transformer';
 import { IsIn, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';

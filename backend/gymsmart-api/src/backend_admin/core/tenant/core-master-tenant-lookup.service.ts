@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Resolves trusted tenant authorization and database-name metadata in the master database.
-// FLOW: JWT actor + tenant → membership verification → trusted tenant context → DataSource resolver.
+﻿// RESPONSIBILITY: Resolves trusted tenant authorization and database-name metadata in the master database.
+// FLOW: JWT actor + tenant â†’ membership verification â†’ trusted tenant context â†’ DataSource resolver.
 
 import { Injectable, ForbiddenException, NotFoundException } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';

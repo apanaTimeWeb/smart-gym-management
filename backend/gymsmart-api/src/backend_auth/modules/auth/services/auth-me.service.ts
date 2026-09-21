@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Resolves the authoritative active user identity for GET /auth/me.
+﻿// RESPONSIBILITY: Resolves the authoritative active user identity for GET /auth/me.
 // FLOW: AuthQueryController -> AuthMeService -> AuthUserRepository -> AuthUserEntity -> mapper.
 
 import { Injectable } from '@nestjs/common';

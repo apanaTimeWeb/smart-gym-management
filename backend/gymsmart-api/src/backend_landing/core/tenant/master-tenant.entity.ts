@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Maps the master tenants registry used for trusted tenant lookup and provisioning.
-// FLOW: Master tenant registry → TenantDatabaseProvisioner / TenantResolution → tenant DB.
+﻿// RESPONSIBILITY: Maps the master tenants registry used for trusted tenant lookup and provisioning.
+// FLOW: Master tenant registry â†’ TenantDatabaseProvisioner / TenantResolution â†’ tenant DB.
 import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 
 import { CoreBaseEntity } from '@/backend_landing/core/database/base.entity';

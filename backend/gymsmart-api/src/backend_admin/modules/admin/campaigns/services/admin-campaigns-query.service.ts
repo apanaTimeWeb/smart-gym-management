@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns read-side use cases for Admin campaigns; no write persistence occurs here.
-// FLOW: AdminCampaignsQueryController → AdminCampaignsQueryService → repository → mapper → ApiResponse.
+﻿// RESPONSIBILITY: Owns read-side use cases for Admin campaigns; no write persistence occurs here.
+// FLOW: AdminCampaignsQueryController â†’ AdminCampaignsQueryService â†’ repository â†’ mapper â†’ ApiResponse.
 
 import { Injectable } from '@nestjs/common';
 import { AdminCampaignsRepository } from '@/backend_admin/modules/admin/campaigns/repositories/admin-campaigns-repository';

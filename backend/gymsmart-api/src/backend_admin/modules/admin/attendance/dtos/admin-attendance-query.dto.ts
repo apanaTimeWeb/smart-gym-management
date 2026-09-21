@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Validates and normalizes frontend query/filter parameters for Admin attendance.
-// FLOW: HTTP query → AdminAttendanceQueryDto → repository allowlists → PostgreSQL query.
+﻿// RESPONSIBILITY: Validates and normalizes frontend query/filter parameters for Admin attendance.
+// FLOW: HTTP query â†’ AdminAttendanceQueryDto â†’ repository allowlists â†’ PostgreSQL query.
 
 import { Type } from 'class-transformer';
 import { IsOptional, IsString, IsIn, IsNumber } from 'class-validator';

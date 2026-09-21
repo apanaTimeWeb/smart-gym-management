@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Defines the stable response data contract for white-labeling endpoints.
+﻿// RESPONSIBILITY: Defines the stable response data contract for white-labeling endpoints.
 // FLOW: Domain model -> WhiteLabelingResponseDto -> canonical ApiResponse envelope.
 import { ApiPropertyOptional } from '@nestjs/swagger';
 

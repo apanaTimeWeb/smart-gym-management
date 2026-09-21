@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Validates partial updates at the messaging HTTP boundary.
+﻿// RESPONSIBILITY: Validates partial updates at the messaging HTTP boundary.
 // FLOW: HTTP JSON -> MessagingUpdateDto -> Messaging service.
 import { Type } from 'class-transformer';
 import { IsBoolean, IsDate, IsEmail, IsEnum, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes paginated read logic for the messaging feature.
+﻿// RESPONSIBILITY: Executes paginated read logic for the messaging feature.
 // FLOW: QueryController -> MessagingListService -> repository -> mapper -> response DTO.
 import { Injectable } from '@nestjs/common';
 import { MessagingRepository } from '@/backend_superadmin/modules/superadmin/messaging/messaging.repository';

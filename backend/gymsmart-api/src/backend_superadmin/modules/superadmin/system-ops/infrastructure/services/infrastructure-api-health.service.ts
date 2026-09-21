@@ -1,7 +1,7 @@
-// RESPONSIBILITY: Reads the frontend contract state owned by this feature from PostgreSQL; no mock data is returned by the service.
+﻿// RESPONSIBILITY: Reads the frontend contract state owned by this feature from PostgreSQL; no mock data is returned by the service.
 // FLOW: Controller -> InfrastructureApiHealthService -> InfrastructureContractSnapshotRepository -> contract snapshot row -> canonical response interceptor.
 import { Injectable, NotFoundException } from '@nestjs/common';
-import type { InfrastructureApiHealthResponseDto } from '@/backend_superadmin/modules/superadmin/system-ops/infrastructure/infrastructure-api-health-response.dto';
+import { InfrastructureApiHealthResponseDto } from '@/backend_superadmin/modules/superadmin/system-ops/infrastructure/infrastructure-api-health-response.dto';
 import { InfrastructureContractSnapshotRepository } from '@/backend_superadmin/modules/superadmin/system-ops/infrastructure/infrastructure-contract-snapshot.repository';
 import { INFRASTRUCTURE_SNAPSHOT_KINDS } from '@/backend_superadmin/modules/superadmin/system-ops/infrastructure/infrastructure.constants';
 

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Defines stable contract-state and business constants for the messaging feature.
+﻿// RESPONSIBILITY: Defines stable contract-state and business constants for the messaging feature.
 // FLOW: Feature services -> constants -> repository/query behavior.
 
 export const MESSAGING_SNAPSHOT_KINDS = Object.freeze({

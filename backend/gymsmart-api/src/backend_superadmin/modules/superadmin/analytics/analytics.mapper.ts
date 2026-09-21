@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Maps Analytics ORM entities into domain-safe response data.
+﻿// RESPONSIBILITY: Maps Analytics ORM entities into domain-safe response data.
 // FLOW: TypeORM entity -> AnalyticsMapper -> domain model -> response DTO.
 import type { AnalyticsSnapshotEntity } from '@/backend_superadmin/modules/superadmin/analytics/analytics.entity';
 import type { AnalyticsDomainModel } from '@/backend_superadmin/modules/superadmin/analytics/types/analytics.interfaces';

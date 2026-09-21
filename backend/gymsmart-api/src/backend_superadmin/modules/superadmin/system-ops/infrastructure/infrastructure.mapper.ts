@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Maps Infrastructure ORM entities into domain-safe response data.
+﻿// RESPONSIBILITY: Maps Infrastructure ORM entities into domain-safe response data.
 // FLOW: TypeORM entity -> InfrastructureMapper -> domain model -> response DTO.
 import type { InfrastructureNodeEntity } from '@/backend_superadmin/modules/superadmin/system-ops/infrastructure/infrastructure.entity';
 import type { InfrastructureDomainModel } from '@/backend_superadmin/modules/superadmin/system-ops/infrastructure/types/infrastructure.interfaces';

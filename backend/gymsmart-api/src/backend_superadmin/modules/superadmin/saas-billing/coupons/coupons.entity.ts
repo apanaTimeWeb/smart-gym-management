@@ -1,4 +1,4 @@
-// RESPONSIBILITY: TypeORM persistence entity for coupons feature data stored in `coupons`.
+﻿// RESPONSIBILITY: TypeORM persistence entity for coupons feature data stored in `coupons`.
 // FLOW: coupons repository -> Coupon entity -> PostgreSQL `coupons`.
 import { Column, Entity, Index } from 'typeorm';
 import { BaseEntity } from '@/backend_superadmin/core/database/base.entity';

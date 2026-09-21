@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Creates the master tenant registry schema used to resolve trusted tenant databases.
-// FLOW: Master migration runner → PostgreSQL master database → tenants table.
+﻿// RESPONSIBILITY: Creates the master tenant registry schema used to resolve trusted tenant databases.
+// FLOW: Master migration runner â†’ PostgreSQL master database â†’ tenants table.
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class CreateTenants20260921100000 implements MigrationInterface {

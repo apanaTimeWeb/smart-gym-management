@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Translates the TypeORM Admin attendance entity into an ORM-independent domain model and frontend response.
-// FLOW: AdminAttendanceEntity → AdminAttendanceMapper → domain/response object.
+﻿// RESPONSIBILITY: Translates the TypeORM Admin attendance entity into an ORM-independent domain model and frontend response.
+// FLOW: AdminAttendanceEntity â†’ AdminAttendanceMapper â†’ domain/response object.
 
 import { AdminAttendanceDomainModel } from '@/backend_admin/modules/admin/attendance/domain/admin-attendance.domain';
 import { AdminAttendanceEntity } from '@/backend_admin/modules/admin/attendance/entities/admin-attendance-entity';

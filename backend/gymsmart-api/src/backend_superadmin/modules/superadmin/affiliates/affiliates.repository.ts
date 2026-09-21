@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Owns PostgreSQL queries and named persistence mutations for the affiliates feature; no business logic.
+﻿// RESPONSIBILITY: Owns PostgreSQL queries and named persistence mutations for the affiliates feature; no business logic.
 // FLOW: affiliates service -> AffiliatesRepository -> TypeORM Repository<AffiliateEntity> -> PostgreSQL `affiliates`.
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';

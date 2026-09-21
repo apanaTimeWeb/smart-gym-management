@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Centralizes rate-limit tiers for public, authenticated and export operations.
-// FLOW: Request → CoreRateLimitGuard → CoreRateLimitConfig → allow/reject.
+﻿// RESPONSIBILITY: Centralizes rate-limit tiers for public, authenticated and export operations.
+// FLOW: Request â†’ CoreRateLimitGuard â†’ CoreRateLimitConfig â†’ allow/reject.
 
 export const CoreRateLimitConfig = {
   PUBLIC_AUTH: { limit: 5, windowSeconds: 60 },

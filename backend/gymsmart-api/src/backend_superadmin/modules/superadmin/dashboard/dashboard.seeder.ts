@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Deterministically seeds the dashboard table for local/test environments.
+﻿// RESPONSIBILITY: Deterministically seeds the dashboard table for local/test environments.
 // FLOW: Master seed -> DashboardSeeder -> PostgreSQL repository.
 import { DataSource } from 'typeorm';
 import { DashboardSnapshotEntity } from '@/backend_superadmin/modules/superadmin/dashboard/dashboard.entity';

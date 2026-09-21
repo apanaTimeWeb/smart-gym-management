@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes creation business flow for the analytics feature.
+﻿// RESPONSIBILITY: Executes creation business flow for the analytics feature.
 // FLOW: CommandController -> AnalyticsCreateService -> named repository mutation -> mapper.
 import { Injectable } from '@nestjs/common';
 import { AnalyticsRepository } from '@/backend_superadmin/modules/superadmin/analytics/analytics.repository';

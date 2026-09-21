@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Composes global infrastructure and the supplied Landing business feature only.
-// FLOW: Bootstrap → Config → Logger → Master DB → Redis → Tenant Context → LandingModule.
+﻿// RESPONSIBILITY: Composes global infrastructure and the supplied Landing business feature only.
+// FLOW: Bootstrap â†’ Config â†’ Logger â†’ Master DB â†’ Redis â†’ Tenant Context â†’ LandingModule.
 import { Module } from '@nestjs/common';
 
 import { ConfigModule, ConfigService } from '@nestjs/config';

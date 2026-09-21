@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns PostgreSQL persistence for the Admin hr feature and its frontend-backed payload.
-// FLOW: Hr Repository → AdminHrEntity → PostgreSQL staff table.
+﻿// RESPONSIBILITY: Owns PostgreSQL persistence for the Admin hr feature and its frontend-backed payload.
+// FLOW: Hr Repository â†’ AdminHrEntity â†’ PostgreSQL staff table.
 
 import { Column, Entity, Index } from 'typeorm';
 import { CoreBaseEntity } from '@/backend_admin/core/database/core-base.entity';

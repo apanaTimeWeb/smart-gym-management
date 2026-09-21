@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns write-side Admin subscription use cases and records immutable mutation audit events.
-// FLOW: Command controller → command service → master repository → audit trail.
+﻿// RESPONSIBILITY: Owns write-side Admin subscription use cases and records immutable mutation audit events.
+// FLOW: Command controller â†’ command service â†’ master repository â†’ audit trail.
 
 import { Injectable } from '@nestjs/common';
 import { CoreAuditTrailService } from '@/backend_admin/core/audit/core-audit-trail.service';

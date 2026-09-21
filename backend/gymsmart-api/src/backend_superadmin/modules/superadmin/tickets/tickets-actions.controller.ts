@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Owns ticket close, assign, and reply HTTP mutations required by the Superadmin frontend.
+﻿// RESPONSIBILITY: Owns ticket close, assign, and reply HTTP mutations required by the Superadmin frontend.
 // FLOW: HTTP -> DTO/body -> action service -> repository -> canonical response interceptor.
 import { Body, Controller, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';

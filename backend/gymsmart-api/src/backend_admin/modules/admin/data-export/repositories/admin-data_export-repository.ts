@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns all TypeORM persistence operations for Admin data-export; services never call save() directly.
-// FLOW: AdminDataExportService → AdminDataExportRepository → TypeORM → PostgreSQL data_export_jobs.
+﻿// RESPONSIBILITY: Owns all TypeORM persistence operations for Admin data-export; services never call save() directly.
+// FLOW: AdminDataExportService â†’ AdminDataExportRepository â†’ TypeORM â†’ PostgreSQL data_export_jobs.
 
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CorePaginatedResult } from '@/backend_admin/core/types/core-api-response.types';

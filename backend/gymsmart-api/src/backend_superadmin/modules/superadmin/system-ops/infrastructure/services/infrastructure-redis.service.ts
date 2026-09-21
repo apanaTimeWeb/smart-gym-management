@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Returns live Redis telemetry for the Superadmin infrastructure screen.
+﻿// RESPONSIBILITY: Returns live Redis telemetry for the Superadmin infrastructure screen.
 // FLOW: Controller -> InfrastructureRedisService -> RedisService -> Redis.
 import { Injectable } from '@nestjs/common';
 import { RedisService } from '@/backend_superadmin/core/cache/redis.service';

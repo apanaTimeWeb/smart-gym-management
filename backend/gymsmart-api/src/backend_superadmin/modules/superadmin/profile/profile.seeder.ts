@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Deterministically seeds the profile table for local/test environments.
+﻿// RESPONSIBILITY: Deterministically seeds the profile table for local/test environments.
 // FLOW: Master seed -> ProfileSeeder -> PostgreSQL repository.
 import { DataSource } from 'typeorm';
 import { SuperadminProfileEntity } from '@/backend_superadmin/modules/superadmin/profile/profile.entity';

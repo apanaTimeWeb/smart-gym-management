@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Maps Landing bookings to the tenant PostgreSQL table without leaking ORM entities into services.
-// FLOW: LandingBookingRepository → TypeORM entity → PostgreSQL landing_bookings.
+﻿// RESPONSIBILITY: Maps Landing bookings to the tenant PostgreSQL table without leaking ORM entities into services.
+// FLOW: LandingBookingRepository â†’ TypeORM entity â†’ PostgreSQL landing_bookings.
 import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 
 import { CoreBaseEntity } from '@/backend_landing/core/database/base.entity';

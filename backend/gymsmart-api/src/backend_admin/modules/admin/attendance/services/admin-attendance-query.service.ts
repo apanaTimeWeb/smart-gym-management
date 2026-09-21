@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns read-side use cases for Admin attendance; no write persistence occurs here.
-// FLOW: AdminAttendanceQueryController → AdminAttendanceQueryService → repository → mapper → ApiResponse.
+﻿// RESPONSIBILITY: Owns read-side use cases for Admin attendance; no write persistence occurs here.
+// FLOW: AdminAttendanceQueryController â†’ AdminAttendanceQueryService â†’ repository â†’ mapper â†’ ApiResponse.
 
 import { Injectable } from '@nestjs/common';
 import { AdminAttendanceRepository } from '@/backend_admin/modules/admin/attendance/repositories/admin-attendance-repository';

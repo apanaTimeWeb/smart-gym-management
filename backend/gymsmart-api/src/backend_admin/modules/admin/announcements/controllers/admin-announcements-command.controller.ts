@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Exposes mutation endpoints for Admin announcements; contains HTTP concerns only.
-// FLOW: HTTP mutation → AdminAnnouncementsCommandController → AdminAnnouncementsCommandService.
+﻿// RESPONSIBILITY: Exposes mutation endpoints for Admin announcements; contains HTTP concerns only.
+// FLOW: HTTP mutation â†’ AdminAnnouncementsCommandController â†’ AdminAnnouncementsCommandService.
 
 import { BadRequestException, Body, Controller, Delete, Headers, HttpStatus, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';

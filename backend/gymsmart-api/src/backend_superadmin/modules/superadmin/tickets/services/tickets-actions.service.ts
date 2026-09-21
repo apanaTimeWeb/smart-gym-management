@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes close, assignment, and reply mutations for support tickets.
+﻿// RESPONSIBILITY: Executes close, assignment, and reply mutations for support tickets.
 // FLOW: Controller -> action service -> repository named mutation -> updated ticket.
 import { Injectable } from '@nestjs/common';
 import { TicketsRepository } from '@/backend_superadmin/modules/superadmin/tickets/tickets.repository';

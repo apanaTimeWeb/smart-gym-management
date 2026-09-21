@@ -1,7 +1,7 @@
-// RESPONSIBILITY: Describes the frontend-consumed response fields for Admin payouts.
+﻿// RESPONSIBILITY: Describes the frontend-consumed response fields for Admin payouts.
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-// FLOW: Repository domain → Payouts response mapper → ApiResponse<T>.
+// FLOW: Repository domain â†’ Payouts response mapper â†’ ApiResponse<T>.
 
 export class AdminGymPayoutDto {
   @ApiProperty() gymId!: string;

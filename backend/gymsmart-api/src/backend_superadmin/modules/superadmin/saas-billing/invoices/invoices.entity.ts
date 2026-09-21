@@ -1,4 +1,4 @@
-// RESPONSIBILITY: TypeORM persistence entity for invoices feature data stored in `saas_invoices`.
+﻿// RESPONSIBILITY: TypeORM persistence entity for invoices feature data stored in `saas_invoices`.
 // FLOW: invoices repository -> SaasInvoice entity -> PostgreSQL `saas_invoices`.
 import { Column, Entity, Index } from 'typeorm';
 import { BaseEntity } from '@/backend_superadmin/core/database/base.entity';

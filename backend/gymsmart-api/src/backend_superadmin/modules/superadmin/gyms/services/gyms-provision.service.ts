@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Completes the Gym provisioning lifecycle including Aadhaar encryption, tenant DB creation, admin credential persistence, and tenant readiness.
+﻿// RESPONSIBILITY: Completes the Gym provisioning lifecycle including Aadhaar encryption, tenant DB creation, admin credential persistence, and tenant readiness.
 // FLOW: Provision DTO -> encryption -> tenant DB -> tenant migration -> master tenant/admin records -> domain response.
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
@@ -10,7 +10,7 @@ import { TenantRegistryRepository } from '@/backend_superadmin/core/tenancy/tena
 import { GymsRepository } from '@/backend_superadmin/modules/superadmin/gyms/gyms.repository';
 import { FeaturesRepository } from '@/backend_superadmin/modules/superadmin/features/features.repository';
 import { GymsMapper } from '@/backend_superadmin/modules/superadmin/gyms/gyms.mapper';
-import { GymsStatus } from '@/backend_superadmin/modules/superadmin/gyms/dtos/gyms-create.dto';
+import { GymsStatus } from '@/backend_superadmin/modules/superadmin/gyms/dtos/gyms-update.dto';
 import { GymsResponseDto } from '@/backend_superadmin/modules/superadmin/gyms/responses/gyms-response.dto';
 import type { GymsProvisionInput } from '@/backend_superadmin/modules/superadmin/gyms/types/gyms.interfaces';
 

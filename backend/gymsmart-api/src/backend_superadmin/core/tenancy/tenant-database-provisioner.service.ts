@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Provisions, migrates, and cleans up logical PostgreSQL tenant databases.
+﻿// RESPONSIBILITY: Provisions, migrates, and cleans up logical PostgreSQL tenant databases.
 // FLOW: Master provisioning -> CREATE DATABASE -> tenant migrations -> ready tenant database.
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';

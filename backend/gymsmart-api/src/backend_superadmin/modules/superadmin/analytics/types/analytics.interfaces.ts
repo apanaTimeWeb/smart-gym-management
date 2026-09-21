@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Defines domain/data transfer shapes for the analytics feature without ORM leakage.
+﻿// RESPONSIBILITY: Defines domain/data transfer shapes for the analytics feature without ORM leakage.
 // FLOW: DTO -> AnalyticsInput -> service -> repository; entity -> mapper -> response DTO.
 import type { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
 

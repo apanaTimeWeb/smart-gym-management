@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns PostgreSQL persistence for the Admin profile feature and its frontend-backed payload.
-// FLOW: Profile Repository → AdminProfileEntity → PostgreSQL admin_profiles table.
+﻿// RESPONSIBILITY: Owns PostgreSQL persistence for the Admin profile feature and its frontend-backed payload.
+// FLOW: Profile Repository â†’ AdminProfileEntity â†’ PostgreSQL admin_profiles table.
 
 import { Column, Entity, Index } from 'typeorm';
 import { CoreBaseEntity } from '@/backend_admin/core/database/core-base.entity';

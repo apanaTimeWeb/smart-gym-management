@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Maps WhiteLabeling ORM entities into domain-safe response data.
+﻿// RESPONSIBILITY: Maps WhiteLabeling ORM entities into domain-safe response data.
 // FLOW: TypeORM entity -> WhiteLabelingMapper -> domain model -> response DTO.
 import type { WhiteLabelDomainEntity } from '@/backend_superadmin/modules/superadmin/white-labeling/white-labeling.entity';
 import type { WhiteLabelingDomainModel } from '@/backend_superadmin/modules/superadmin/white-labeling/types/white-labeling.interfaces';

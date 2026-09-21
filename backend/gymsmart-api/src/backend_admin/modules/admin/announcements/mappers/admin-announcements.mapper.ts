@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Translates the TypeORM Admin announcements entity into an ORM-independent domain model and frontend response.
-// FLOW: AdminAnnouncementsEntity → AdminAnnouncementsMapper → domain/response object.
+﻿// RESPONSIBILITY: Translates the TypeORM Admin announcements entity into an ORM-independent domain model and frontend response.
+// FLOW: AdminAnnouncementsEntity â†’ AdminAnnouncementsMapper â†’ domain/response object.
 
 import { AdminAnnouncementsDomainModel } from '@/backend_admin/modules/admin/announcements/domain/admin-announcements.domain';
 import { AdminAnnouncementsEntity } from '@/backend_admin/modules/admin/announcements/entities/admin-announcements-entity';

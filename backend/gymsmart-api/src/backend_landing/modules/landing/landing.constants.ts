@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns Landing business error messages, limits, scopes, and canonical API semantics.
-// FLOW: Landing DTO/service → module constants → response/validation behavior.
+﻿// RESPONSIBILITY: Owns Landing business error messages, limits, scopes, and canonical API semantics.
+// FLOW: Landing DTO/service â†’ module constants â†’ response/validation behavior.
 export const LANDING_ERRORS = {
   BOOKING_SERVICE_UNAVAILABLE: 'Booking service is temporarily unavailable. Please try again.',
   CONTACT_SERVICE_UNAVAILABLE: 'Messaging service is temporarily unavailable. Please try again.',

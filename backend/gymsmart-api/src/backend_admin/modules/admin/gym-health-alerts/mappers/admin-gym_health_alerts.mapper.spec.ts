@@ -1,4 +1,4 @@
-import { AdminGymHealthAlertsMapper } from '@/backend_admin/modules/admin/gym-health-alerts/mappers/admin-gym_health_alerts.mapper';
+﻿import { AdminGymHealthAlertsMapper } from '@/backend_admin/modules/admin/gym-health-alerts/mappers/admin-gym_health_alerts.mapper';
 import { AdminGymHealthAlertsEntity } from '@/backend_admin/modules/admin/gym-health-alerts/entities/admin-gym_health_alerts-entity';
 
 describe('AdminGymHealthAlertsMapper', () => {

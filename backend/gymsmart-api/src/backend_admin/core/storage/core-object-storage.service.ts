@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Defines the object-storage boundary for uploaded and exported assets.
-// FLOW: Feature service → CoreObjectStorageService → cloud storage adapter boundary.
+﻿// RESPONSIBILITY: Defines the object-storage boundary for uploaded and exported assets.
+// FLOW: Feature service â†’ CoreObjectStorageService â†’ cloud storage adapter boundary.
 
 import { Injectable } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';

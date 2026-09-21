@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Enforces centralized Redis-backed request limits without embedding numeric limits in controllers.
-// FLOW: HTTP request → RateLimitGuard → Redis fixed window → allow or reject.
+﻿// RESPONSIBILITY: Enforces centralized Redis-backed request limits without embedding numeric limits in controllers.
+// FLOW: HTTP request â†’ RateLimitGuard â†’ Redis fixed window â†’ allow or reject.
 import { CanActivate, ExecutionContext, HttpStatus, Injectable, TooManyRequestsException } from '@nestjs/common';
 
 import { Reflector } from '@nestjs/core';

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: TypeORM persistence entity for usage-meters feature data stored in `usage_meters`.
+﻿// RESPONSIBILITY: TypeORM persistence entity for usage-meters feature data stored in `usage_meters`.
 // FLOW: usage-meters repository -> UsageMeter entity -> PostgreSQL `usage_meters`.
 import { Column, Entity, Index } from 'typeorm';
 import { BaseEntity } from '@/backend_superadmin/core/database/base.entity';

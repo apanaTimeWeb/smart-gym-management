@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Deterministically seeds the jobs table for local/test environments.
+﻿// RESPONSIBILITY: Deterministically seeds the jobs table for local/test environments.
 // FLOW: Master seed -> JobsSeeder -> PostgreSQL repository.
 import { DataSource } from 'typeorm';
 import { BackgroundJobEntity } from '@/backend_superadmin/modules/superadmin/system-ops/jobs/jobs.entity';

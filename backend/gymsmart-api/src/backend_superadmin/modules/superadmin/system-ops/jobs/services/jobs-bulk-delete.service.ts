@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Implements the bulk-delete mutation against the jobs repository.
+﻿// RESPONSIBILITY: Implements the bulk-delete mutation against the jobs repository.
 // FLOW: Controller -> JobsBulkDeleteService -> JobsRepository -> PostgreSQL.
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { JobsRepository } from '@/backend_superadmin/modules/superadmin/system-ops/jobs/jobs.repository';

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Provides the AsyncLocalStorage request context as a singleton core service.
+﻿// RESPONSIBILITY: Provides the AsyncLocalStorage request context as a singleton core service.
 // FLOW: AppModule -> CoreRequestContextModule -> CoreRequestContextService -> middleware/guards/repositories.
 
 import { Global, Module } from '@nestjs/common';

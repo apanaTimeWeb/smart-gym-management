@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Registers the Landing feature's command controller, services, repositories, mappers, and transaction adapter.
-// FLOW: AppModule → LandingModule → command controller → orchestrators → services → repositories.
+﻿// RESPONSIBILITY: Registers the Landing feature's command controller, services, repositories, mappers, and transaction adapter.
+// FLOW: AppModule â†’ LandingModule â†’ command controller â†’ orchestrators â†’ services â†’ repositories.
 import { Module } from '@nestjs/common';
 
 import { IdempotencyModule } from '@/backend_landing/core/idempotency/idempotency.module';

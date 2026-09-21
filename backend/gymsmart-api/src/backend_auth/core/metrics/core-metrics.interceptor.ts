@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Measures every HTTP request for real Prometheus request-count, latency and active-request metrics.
+﻿// RESPONSIBILITY: Measures every HTTP request for real Prometheus request-count, latency and active-request metrics.
 // FLOW: HTTP request -> CoreMetricsInterceptor -> controller -> CoreMetricsService -> Prometheus registry.
 
 import { HttpStatus, Injectable } from '@nestjs/common';
@@ -7,7 +7,7 @@ import { Observable, catchError, finalize, throwError } from 'rxjs';
 
 import { CoreMetricsService } from '@/backend_auth/core/metrics/core-metrics.service';
 
-import type { CallHandler, ExecutionContext, NestInterceptor } from '@nestjs/common';
+import { CallHandler, ExecutionContext, NestInterceptor } from '@nestjs/common';
 import type { CoreRouteRequest } from '@/backend_auth/core/http/core-http.interfaces';
 /** @description Resolves the matched route template used for Prometheus labels. @param request - Express request with route metadata. @returns Matched template or unknown. */
 function routeTemplate(request: CoreRouteRequest): string {

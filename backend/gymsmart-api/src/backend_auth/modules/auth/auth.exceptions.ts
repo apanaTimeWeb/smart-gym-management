@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Defines Auth-specific exceptions with stable HTTP statuses and machine-readable codes.
+﻿// RESPONSIBILITY: Defines Auth-specific exceptions with stable HTTP statuses and machine-readable codes.
 // FLOW: Auth service/repository failure -> Auth exception -> global error filter -> frontend envelope.
 
 import { HttpStatus } from '@nestjs/common';

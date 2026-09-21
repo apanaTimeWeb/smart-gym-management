@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Defines the exact user object shape consumed by the supplied frontend Auth schema.
+﻿// RESPONSIBILITY: Defines the exact user object shape consumed by the supplied frontend Auth schema.
 // FLOW: Auth domain user -> AuthApiResponseMapper -> AuthUserResponseDto -> API envelope.
 
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';

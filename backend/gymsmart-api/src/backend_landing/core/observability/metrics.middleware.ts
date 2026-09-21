@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Records HTTP request count and latency using low-cardinality route templates.
-// FLOW: HTTP request → downstream handler → response finish → MetricsService.
+﻿// RESPONSIBILITY: Records HTTP request count and latency using low-cardinality route templates.
+// FLOW: HTTP request â†’ downstream handler â†’ response finish â†’ MetricsService.
 import { Request, Response, NextFunction } from 'express';
 
 import { MetricsService } from '@/backend_landing/core/observability/metrics.service';

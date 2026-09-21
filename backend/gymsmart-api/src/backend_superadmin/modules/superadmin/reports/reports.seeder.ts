@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Deterministically seeds the reports table for local/test environments.
+﻿// RESPONSIBILITY: Deterministically seeds the reports table for local/test environments.
 // FLOW: Master seed -> ReportsSeeder -> PostgreSQL repository.
 import { DataSource } from 'typeorm';
 import { ReportSnapshotEntity } from '@/backend_superadmin/modules/superadmin/reports/reports.entity';

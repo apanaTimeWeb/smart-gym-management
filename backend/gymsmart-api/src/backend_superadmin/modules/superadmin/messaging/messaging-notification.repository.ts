@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Owns notification persistence and named read-state mutations.
+﻿// RESPONSIBILITY: Owns notification persistence and named read-state mutations.
 // FLOW: notification service -> TypeORM repository -> PostgreSQL `superadmin_notifications`.
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';

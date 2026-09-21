@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Maps the master auth_users table to TypeORM; it contains no business behavior.
+﻿// RESPONSIBILITY: Maps the master auth_users table to TypeORM; it contains no business behavior.
 // FLOW: AuthUserRepository -> AuthUserEntity -> PostgreSQL auth_users.
 
 import { Column, Entity, Index, PrimaryGeneratedColumn, Unique } from 'typeorm';

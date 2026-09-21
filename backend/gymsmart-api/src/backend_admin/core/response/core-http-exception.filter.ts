@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Converts unhandled HTTP/application errors into the canonical ApiResponse error envelope.
-// FLOW: Exception → CoreHttpExceptionFilter → errorCode/statusCode/message → frontend.
+﻿// RESPONSIBILITY: Converts unhandled HTTP/application errors into the canonical ApiResponse error envelope.
+// FLOW: Exception â†’ CoreHttpExceptionFilter â†’ errorCode/statusCode/message â†’ frontend.
 
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus } from '@nestjs/common';
 import type { Response } from 'express';

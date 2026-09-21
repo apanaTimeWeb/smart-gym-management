@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Registers only the system-ops landing summary feature; operational child features are registered by the container.
+﻿// RESPONSIBILITY: Registers only the system-ops landing summary feature; operational child features are registered by the container.
 // FLOW: Container -> summary controller/service/repository -> PostgreSQL contract snapshot.
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Registers shared framework-level infrastructure only; no business logic lives here.
+﻿// RESPONSIBILITY: Registers shared framework-level infrastructure only; no business logic lives here.
 // FLOW: AppModule -> CoreModule -> config/auth/redis/observability/tenancy infrastructure.
 import { Global, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Orchestrates master tenant registry operations without owning HTTP concerns.
+﻿// RESPONSIBILITY: Orchestrates master tenant registry operations without owning HTTP concerns.
 // FLOW: Controller/service -> registry service -> registry repository.
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { TenantRegistryRepository } from '@/backend_superadmin/core/tenancy/tenant-registry.repository';

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes single-record retrieval for the invoices feature.
+﻿// RESPONSIBILITY: Executes single-record retrieval for the invoices feature.
 // FLOW: QueryController -> InvoicesFindService -> repository findByIdOrThrow -> mapper.
 import { Injectable } from '@nestjs/common';
 import { InvoicesRepository } from '@/backend_superadmin/modules/superadmin/saas-billing/invoices/invoices.repository';

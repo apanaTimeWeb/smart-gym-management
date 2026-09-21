@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Stores the authoritative frontend backup-schedule contract state.
+﻿// RESPONSIBILITY: Stores the authoritative frontend backup-schedule contract state.
 // FLOW: Backup schedule service -> repository -> PostgreSQL backup schedule snapshot.
 import { Column, Entity, Index } from 'typeorm';
 import { BaseEntity } from '@/backend_superadmin/core/database/base.entity';

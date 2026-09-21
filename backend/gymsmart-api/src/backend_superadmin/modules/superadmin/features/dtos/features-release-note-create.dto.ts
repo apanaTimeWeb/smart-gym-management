@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Validates feature release-note creation input.
+﻿// RESPONSIBILITY: Validates feature release-note creation input.
 // FLOW: HTTP -> DTO -> release-note service -> repository.
 import { Type } from 'class-transformer';
 import { IsBoolean, IsDate, IsOptional, IsString, Length } from 'class-validator';

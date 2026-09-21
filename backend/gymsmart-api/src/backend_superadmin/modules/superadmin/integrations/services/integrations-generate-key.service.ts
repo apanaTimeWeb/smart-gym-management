@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Generates and persists a one-time integration secret for a tenant.
+﻿// RESPONSIBILITY: Generates and persists a one-time integration secret for a tenant.
 // FLOW: Controller -> IntegrationsGenerateKeyService -> crypto -> IntegrationsRepository -> response.
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { randomBytes, createHash } from 'node:crypto';

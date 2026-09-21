@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Owns feature flag create, update, toggle, and delete HTTP mutations.
+﻿// RESPONSIBILITY: Owns feature flag create, update, toggle, and delete HTTP mutations.
 // FLOW: HTTP mutation -> DTO -> feature service/repository -> canonical response interceptor.
 import { randomUUID } from 'node:crypto';
 

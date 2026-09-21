@@ -1,4 +1,4 @@
-// RESPONSIBILITY: TypeORM persistence entity for messaging feature data stored in `tenant_messages`.
+﻿// RESPONSIBILITY: TypeORM persistence entity for messaging feature data stored in `tenant_messages`.
 // FLOW: messaging repository -> TenantMessage entity -> PostgreSQL `tenant_messages`.
 import { Column, Entity, Index } from 'typeorm';
 import { BaseEntity } from '@/backend_superadmin/core/database/base.entity';

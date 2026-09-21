@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns read-side use cases for Admin payouts; no write persistence occurs here.
-// FLOW: AdminPayoutsQueryController → AdminPayoutsQueryService → repository → mapper → ApiResponse.
+﻿// RESPONSIBILITY: Owns read-side use cases for Admin payouts; no write persistence occurs here.
+// FLOW: AdminPayoutsQueryController â†’ AdminPayoutsQueryService â†’ repository â†’ mapper â†’ ApiResponse.
 
 import { Injectable } from '@nestjs/common';
 import { AdminPayoutsRepository } from '@/backend_admin/modules/admin/payouts/repositories/admin-payouts-repository';

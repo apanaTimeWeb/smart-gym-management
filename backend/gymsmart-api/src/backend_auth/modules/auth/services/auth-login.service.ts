@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Authenticates credentials, enforces Redis lockout, creates refresh sessions and records login audits.
+﻿// RESPONSIBILITY: Authenticates credentials, enforces Redis lockout, creates refresh sessions and records login audits.
 // FLOW: AuthSessionOrchestrator -> AuthLoginService -> Redis/UserRepository -> token/session/audit boundaries.
 
 import { randomUUID } from 'node:crypto';
@@ -17,7 +17,7 @@ import { AuthPasswordUtils } from '@/backend_auth/modules/auth/utils/auth-passwo
 import { AuthTokenUtils } from '@/backend_auth/modules/auth/utils/auth-token.utils';
 
 import type { AuthCredentialRecord, AuthLoginDomainResult, AuthUserDomain } from '@/backend_auth/modules/auth/auth.interfaces';
-import type { ConfigService } from '@nestjs/config';
+import { ConfigService } from '@nestjs/config';
 @Injectable()
 export class AuthLoginService {
   private readonly tokenUtils: AuthTokenUtils;

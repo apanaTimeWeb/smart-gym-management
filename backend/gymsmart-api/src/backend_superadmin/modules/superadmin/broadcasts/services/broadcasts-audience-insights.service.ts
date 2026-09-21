@@ -1,7 +1,7 @@
-// RESPONSIBILITY: Reads the frontend contract state owned by this feature from PostgreSQL; no mock data is returned by the service.
+﻿// RESPONSIBILITY: Reads the frontend contract state owned by this feature from PostgreSQL; no mock data is returned by the service.
 // FLOW: Controller -> BroadcastsAudienceInsightsService -> BroadcastsContractSnapshotRepository -> contract snapshot row -> canonical response interceptor.
 import { Injectable, NotFoundException } from '@nestjs/common';
-import type { BroadcastsAudienceInsightsResponseDto } from '@/backend_superadmin/modules/superadmin/broadcasts/broadcasts-audience-insights-response.dto';
+import { BroadcastsAudienceInsightsResponseDto } from '@/backend_superadmin/modules/superadmin/broadcasts/broadcasts-audience-insights-response.dto';
 import { BroadcastsContractSnapshotRepository } from '@/backend_superadmin/modules/superadmin/broadcasts/broadcasts-contract-snapshot.repository';
 import { BROADCASTS_SNAPSHOT_KINDS } from '@/backend_superadmin/modules/superadmin/broadcasts/broadcasts.constants';
 

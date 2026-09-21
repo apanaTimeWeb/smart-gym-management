@@ -1,7 +1,7 @@
-// RESPONSIBILITY: Describes the frontend-consumed response fields for Admin permissions.
+﻿// RESPONSIBILITY: Describes the frontend-consumed response fields for Admin permissions.
 import { ApiProperty } from '@nestjs/swagger';
 
-// FLOW: Repository domain → Permissions response mapper → ApiResponse<T>.
+// FLOW: Repository domain â†’ Permissions response mapper â†’ ApiResponse<T>.
 
 export class AdminRolePermissionsDto {
   @ApiProperty({ enum: ['manager', 'trainer'] })

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Registers the isolated Admin profile feature slice only.
+﻿// RESPONSIBILITY: Registers the isolated Admin profile feature slice only.
 // FLOW: Nest module -> controllers -> micro-services -> repository/mapper.
 
 import { Module } from '@nestjs/common';

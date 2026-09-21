@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Defines the canonical API response envelope shared by framework-level infrastructure.
-// FLOW: Controller return value → CoreResponseInterceptor → ApiResponse<T> JSON envelope.
+﻿// RESPONSIBILITY: Defines the canonical API response envelope shared by framework-level infrastructure.
+// FLOW: Controller return value â†’ CoreResponseInterceptor â†’ ApiResponse<T> JSON envelope.
 
 export interface CorePaginationMeta {
   total: number;

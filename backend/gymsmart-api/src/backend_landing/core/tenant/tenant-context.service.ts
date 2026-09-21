@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Resolves a trusted tenant database from request-scoped tenant context.
-// FLOW: RequestContext → MasterTenantRepository → TenantContextService → TenantDataSourceManager.
+﻿// RESPONSIBILITY: Resolves a trusted tenant database from request-scoped tenant context.
+// FLOW: RequestContext â†’ MasterTenantRepository â†’ TenantContextService â†’ TenantDataSourceManager.
 import { ForbiddenException, Injectable } from '@nestjs/common';
 
 import { RequestContextService } from '@/backend_landing/core/context/request-context.service';
@@ -8,7 +8,7 @@ import { MasterTenantRepository } from '@/backend_landing/core/tenant/master-ten
 
 import { TenantDataSourceManagerService } from '@/backend_landing/core/tenant/tenant-data-source-manager.service';
 
-import type { DataSource } from 'typeorm';
+import { DataSource } from 'typeorm';
 
 
 @Injectable()

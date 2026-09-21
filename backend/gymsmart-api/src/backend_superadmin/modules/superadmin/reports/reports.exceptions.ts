@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Defines business-specific exceptions for the reports feature.
+﻿// RESPONSIBILITY: Defines business-specific exceptions for the reports feature.
 // FLOW: Service -> ReportsBusinessException -> global DomainExceptionFilter -> canonical error envelope.
 import { HttpStatus } from '@nestjs/common';
 export class ReportsNotFoundException extends Error { readonly statusCode = HttpStatus.NOT_FOUND; readonly errorCode = 'REPORTS.RESOURCE.NOT_FOUND'; }

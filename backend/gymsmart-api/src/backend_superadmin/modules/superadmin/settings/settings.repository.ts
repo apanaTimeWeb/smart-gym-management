@@ -31,7 +31,7 @@ export class SettingsRepository extends BaseRepository<PlatformSettingEntity> {
   async findByIdOrThrow(id: string): Promise<PlatformSettingEntity> { return super.findByIdOrThrow(id, 'Settings record not found'); }
 
   /** Creates and persists a settings record. */
-  async createSettings(input: SettingsCreateInput): Promise<PlatformSettingEntity> { const entity = this.activeRepository.create(input as never); return this.activeRepository.save(entity); }
+  async createSettings(input: SettingsCreateInput): Promise<PlatformSettingEntity> { const entity = this.activeRepository.create(input as any); return this.activeRepository.save(entity); }
 
   /** Applies an intention-revealing update to a settings record. */
   async updateSettingsById(id: string, input: SettingsUpdateInput): Promise<PlatformSettingEntity> { await this.activeRepository.update({ id } as never, input as never); return this.findByIdOrThrow(id); }

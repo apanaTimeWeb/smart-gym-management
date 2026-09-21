@@ -1,7 +1,7 @@
-// RESPONSIBILITY: Owns explicitly versioned/specialized frontend contract endpoints for the features feature.
+﻿// RESPONSIBILITY: Owns explicitly versioned/specialized frontend contract endpoints for the features feature.
 // FLOW: HTTP -> specialized micro-service -> typed result -> canonical response interceptor.
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
-import type { FeaturesRolloutInsightsResponseDto } from '@/backend_superadmin/modules/superadmin/features/features-rollout-insights-response.dto';
+import { FeaturesRolloutInsightsResponseDto } from '@/backend_superadmin/modules/superadmin/features/features-rollout-insights-response.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '@/backend_superadmin/core/auth/jwt-auth.guard';
 import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';

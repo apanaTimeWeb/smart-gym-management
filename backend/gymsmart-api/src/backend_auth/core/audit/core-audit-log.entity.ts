@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Persists audit records for meaningful security and business state changes without storing secrets.
+﻿// RESPONSIBILITY: Persists audit records for meaningful security and business state changes without storing secrets.
 // FLOW: Feature service/orchestrator -> CoreAuditLogRepository -> audit_logs.
 
 import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';

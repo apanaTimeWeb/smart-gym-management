@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Caches one TypeORM DataSource per trusted tenant database within a bounded process budget.
-// FLOW: Trusted Tenant → TenantDataSourceManager → TypeORM DataSource cache.
+﻿// RESPONSIBILITY: Caches one TypeORM DataSource per trusted tenant database within a bounded process budget.
+// FLOW: Trusted Tenant â†’ TenantDataSourceManager â†’ TypeORM DataSource cache.
 import { Injectable, OnModuleDestroy } from '@nestjs/common';
 
 import { DataSource } from 'typeorm';

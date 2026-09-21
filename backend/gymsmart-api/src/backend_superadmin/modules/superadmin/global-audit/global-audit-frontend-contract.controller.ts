@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Exposes the frozen frontend audit-log route aliases without moving the global-audit business implementation.
+﻿// RESPONSIBILITY: Exposes the frozen frontend audit-log route aliases without moving the global-audit business implementation.
 // FLOW: HTTP alias -> existing GlobalAudit services -> repository -> canonical response envelope.
 import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';

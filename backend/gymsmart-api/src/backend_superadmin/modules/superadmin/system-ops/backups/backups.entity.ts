@@ -1,4 +1,4 @@
-// RESPONSIBILITY: TypeORM persistence entity for backups feature data stored in `backup_records`.
+﻿// RESPONSIBILITY: TypeORM persistence entity for backups feature data stored in `backup_records`.
 // FLOW: backups repository -> BackupRecord entity -> PostgreSQL `backup_records`.
 import { Column, Entity, Index } from 'typeorm';
 import { BaseEntity } from '@/backend_superadmin/core/database/base.entity';

@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Defines the ORM-independent domain contract consumed by the Admin audit-log UI.
-// FLOW: Core audit entity → mapper → domain model → API response.
+﻿// RESPONSIBILITY: Defines the ORM-independent domain contract consumed by the Admin audit-log UI.
+// FLOW: Core audit entity â†’ mapper â†’ domain model â†’ API response.
 
 export interface AdminAuditLogsDomainModel {
   id: string;

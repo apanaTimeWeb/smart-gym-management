@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Converts audit actor roles to the canonical finite enum without changing Auth role values.
+﻿// RESPONSIBILITY: Converts audit actor roles to the canonical finite enum without changing Auth role values.
 // FLOW: TypeORM migration runner -> PostgreSQL enum conversion -> audit_logs.actor_role.
 
 import type { MigrationInterface, QueryRunner } from 'typeorm';

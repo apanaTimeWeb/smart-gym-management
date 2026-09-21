@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns PostgreSQL persistence for the Admin campaigns feature and its frontend-backed payload.
-// FLOW: Campaigns Repository → AdminCampaignsEntity → PostgreSQL campaigns table.
+﻿// RESPONSIBILITY: Owns PostgreSQL persistence for the Admin campaigns feature and its frontend-backed payload.
+// FLOW: Campaigns Repository â†’ AdminCampaignsEntity â†’ PostgreSQL campaigns table.
 
 import { Column, Entity, Index } from 'typeorm';
 import { CoreBaseEntity } from '@/backend_admin/core/database/core-base.entity';

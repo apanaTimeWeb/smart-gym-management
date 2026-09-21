@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Verifies one focused Auth behavior without testing implementation details outside its micro-feature.
+﻿// RESPONSIBILITY: Verifies one focused Auth behavior without testing implementation details outside its micro-feature.
 // FLOW: Jest -> focused Auth unit -> mocked boundary -> observable behavior assertion.
 
 import { AuthCommandController } from '@/backend_auth/modules/auth/controllers/auth-command.controller';

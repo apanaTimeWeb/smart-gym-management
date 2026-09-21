@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Owns Auth-user persistence queries and named seed mutations; services never receive TypeORM entities.
+﻿// RESPONSIBILITY: Owns Auth-user persistence queries and named seed mutations; services never receive TypeORM entities.
 // FLOW: Auth service -> AuthUserRepository -> TypeORM AuthUserEntity -> AuthUserMapper -> domain contract.
 
 import { Injectable } from '@nestjs/common';
@@ -9,9 +9,9 @@ import { AuthUserStatus } from '@/backend_auth/modules/auth/auth.status.constant
 import { AuthUserEntity } from '@/backend_auth/modules/auth/entities/auth-user.entity';
 import { AuthUserMapper } from '@/backend_auth/modules/auth/mappers/auth-user.mapper';
 
-import type { CoreRequestContextService } from '@/backend_auth/core/context/core-request-context';
+import { CoreRequestContextService } from '@/backend_auth/core/context/core-request-context';
 import type { AuthCredentialRecord, AuthSeedUserInput, AuthUserDomain } from '@/backend_auth/modules/auth/auth.interfaces';
-import type { DataSource } from 'typeorm';
+import { DataSource } from 'typeorm';
 @Injectable()
 export class AuthUserRepository extends CoreBaseRepository<AuthUserEntity> {
   constructor(dataSource: DataSource, requestContext: CoreRequestContextService) {

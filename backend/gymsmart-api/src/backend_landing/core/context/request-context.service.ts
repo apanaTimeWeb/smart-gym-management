@@ -1,10 +1,10 @@
-// RESPONSIBILITY: Provides AsyncLocalStorage-backed request context without parameter prop-drilling.
-// FLOW: RequestContextMiddleware → RequestContextService → deep services/repositories.
+﻿// RESPONSIBILITY: Provides AsyncLocalStorage-backed request context without parameter prop-drilling.
+// FLOW: RequestContextMiddleware â†’ RequestContextService â†’ deep services/repositories.
 import { AsyncLocalStorage } from 'node:async_hooks';
 
 import { Injectable } from '@nestjs/common';
 
-import type { RequestContextValue } from '@/backend_landing/core/types/request-context.types';
+import { RequestContextValue } from '@/backend_landing/core/types/request-context.types';
 
 
 @Injectable()

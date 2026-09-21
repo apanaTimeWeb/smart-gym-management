@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Authorizes a Superadmin actor against an active tenant membership before tenant database selection.
+﻿// RESPONSIBILITY: Authorizes a Superadmin actor against an active tenant membership before tenant database selection.
 // FLOW: JWT actor -> master tenant membership -> trusted tenant context.
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { DataSource } from 'typeorm';

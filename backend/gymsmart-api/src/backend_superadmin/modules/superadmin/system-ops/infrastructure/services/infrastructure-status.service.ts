@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Performs status transitions for infrastructure records through the repository boundary.
+﻿// RESPONSIBILITY: Performs status transitions for infrastructure records through the repository boundary.
 // FLOW: CommandController -> StatusService -> named repository update -> domain mapper.
 import { Injectable } from '@nestjs/common';
 import { InfrastructureRepository } from '@/backend_superadmin/modules/superadmin/system-ops/infrastructure/infrastructure.repository';

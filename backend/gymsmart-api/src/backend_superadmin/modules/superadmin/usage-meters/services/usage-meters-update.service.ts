@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes partial update business flow for the usage-meters feature.
+﻿// RESPONSIBILITY: Executes partial update business flow for the usage-meters feature.
 // FLOW: CommandController -> UsageMetersUpdateService -> named repository mutation -> mapper.
 import { Injectable } from '@nestjs/common';
 import { UsageMetersRepository } from '@/backend_superadmin/modules/superadmin/usage-meters/usage-meters.repository';

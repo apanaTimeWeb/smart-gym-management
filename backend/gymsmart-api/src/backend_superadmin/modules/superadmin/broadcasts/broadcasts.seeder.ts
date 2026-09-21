@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Deterministically seeds the broadcasts table for local/test environments.
+﻿// RESPONSIBILITY: Deterministically seeds the broadcasts table for local/test environments.
 // FLOW: Master seed -> BroadcastsSeeder -> PostgreSQL repository.
 import { DataSource } from 'typeorm';
 import { BroadcastEntity } from '@/backend_superadmin/modules/superadmin/broadcasts/broadcasts.entity';

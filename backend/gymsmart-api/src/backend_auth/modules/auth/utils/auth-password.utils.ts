@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Isolates bcrypt credential hashing and comparison from Auth business logic.
+﻿// RESPONSIBILITY: Isolates bcrypt credential hashing and comparison from Auth business logic.
 // FLOW: AuthLoginService/AuthSeeder -> AuthPasswordUtils -> bcrypt.
 
 export class AuthPasswordUtils {

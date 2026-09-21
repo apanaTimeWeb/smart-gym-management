@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Composes core infrastructure and the supplied Auth feature without sibling business-module coupling.
+﻿// RESPONSIBILITY: Composes core infrastructure and the supplied Auth feature without sibling business-module coupling.
 // FLOW: Bootstrap -> CoreAppModule -> core infrastructure/Auth -> controllers/services/repositories.
 
 import { Module } from '@nestjs/common';

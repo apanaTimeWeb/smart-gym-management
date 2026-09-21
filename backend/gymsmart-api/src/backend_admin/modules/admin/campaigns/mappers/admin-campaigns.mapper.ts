@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Translates the TypeORM Admin campaigns entity into an ORM-independent domain model and frontend response.
-// FLOW: AdminCampaignsEntity → AdminCampaignsMapper → domain/response object.
+﻿// RESPONSIBILITY: Translates the TypeORM Admin campaigns entity into an ORM-independent domain model and frontend response.
+// FLOW: AdminCampaignsEntity â†’ AdminCampaignsMapper â†’ domain/response object.
 
 import { AdminCampaignsDomainModel } from '@/backend_admin/modules/admin/campaigns/domain/admin-campaigns.domain';
 import { AdminCampaignsEntity } from '@/backend_admin/modules/admin/campaigns/entities/admin-campaigns-entity';

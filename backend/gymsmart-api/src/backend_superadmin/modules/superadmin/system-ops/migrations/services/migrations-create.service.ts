@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes creation business flow for the migrations feature.
+﻿// RESPONSIBILITY: Executes creation business flow for the migrations feature.
 // FLOW: CommandController -> MigrationsCreateService -> named repository mutation -> mapper.
 import { Injectable } from '@nestjs/common';
 import { MigrationsRepository } from '@/backend_superadmin/modules/superadmin/system-ops/migrations/migrations.repository';

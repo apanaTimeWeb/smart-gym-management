@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Creates the minimal tenant-local operational tables required by the supplied Superadmin backend.
+﻿// RESPONSIBILITY: Creates the minimal tenant-local operational tables required by the supplied Superadmin backend.
 // FLOW: Tenant database initialization -> TypeORM migration -> tenant-local operational tables.
 import { MigrationInterface, QueryRunner } from 'typeorm';
 

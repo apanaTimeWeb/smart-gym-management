@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns read-side use cases for Admin gym-health-alerts; no write persistence occurs here.
-// FLOW: AdminGymHealthAlertsQueryController → AdminGymHealthAlertsQueryService → repository → mapper → ApiResponse.
+﻿// RESPONSIBILITY: Owns read-side use cases for Admin gym-health-alerts; no write persistence occurs here.
+// FLOW: AdminGymHealthAlertsQueryController â†’ AdminGymHealthAlertsQueryService â†’ repository â†’ mapper â†’ ApiResponse.
 
 import { Injectable } from '@nestjs/common';
 import { AdminGymHealthAlertsRepository } from '@/backend_admin/modules/admin/gym-health-alerts/repositories/admin-gym_health_alerts-repository';

@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns deterministic, idempotent Landing seed behavior; current Landing has no reference data that requires seeding.
-// FLOW: Local seed runner → LandingSeeder → no-op by design because bookings/contacts are real visitor data.
+﻿// RESPONSIBILITY: Owns deterministic, idempotent Landing seed behavior; current Landing has no reference data that requires seeding.
+// FLOW: Local seed runner â†’ LandingSeeder â†’ no-op by design because bookings/contacts are real visitor data.
 import { Injectable } from '@nestjs/common';
 
 @Injectable()

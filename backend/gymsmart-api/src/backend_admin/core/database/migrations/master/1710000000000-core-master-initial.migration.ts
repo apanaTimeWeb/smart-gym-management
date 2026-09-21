@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Creates master-database tables for tenant routing, Admin authentication, memberships, and commercial subscription state.
-// FLOW: TypeORM migration → PostgreSQL master DB → authentication/tenant/subscription services.
+﻿// RESPONSIBILITY: Creates master-database tables for tenant routing, Admin authentication, memberships, and commercial subscription state.
+// FLOW: TypeORM migration â†’ PostgreSQL master DB â†’ authentication/tenant/subscription services.
 
 import { MigrationInterface, QueryRunner } from 'typeorm';
 

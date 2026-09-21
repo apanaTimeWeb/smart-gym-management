@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Defines the backend login data shape consumed server-side by the frontend Auth proxy.
+﻿// RESPONSIBILITY: Defines the backend login data shape consumed server-side by the frontend Auth proxy.
 // FLOW: Auth session orchestrator -> mapper -> AuthLoginResponseDto -> canonical response envelope.
 
 import { ApiProperty } from '@nestjs/swagger';

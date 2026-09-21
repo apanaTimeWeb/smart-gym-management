@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Supplies the infrastructure-level soft-delete and fail-fast repository primitives required by every feature repository.
+﻿// RESPONSIBILITY: Supplies the infrastructure-level soft-delete and fail-fast repository primitives required by every feature repository.
 // FLOW: Feature repository -> BaseRepository -> TypeORM repository -> PostgreSQL.
 import { NotFoundException } from '@nestjs/common';
 import { EntityTarget, Repository, SelectQueryBuilder } from 'typeorm';

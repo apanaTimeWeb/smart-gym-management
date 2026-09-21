@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes paginated read logic for the infrastructure feature.
+﻿// RESPONSIBILITY: Executes paginated read logic for the infrastructure feature.
 // FLOW: QueryController -> InfrastructureListService -> repository -> mapper -> response DTO.
 import { Injectable } from '@nestjs/common';
 import { InfrastructureRepository } from '@/backend_superadmin/modules/superadmin/system-ops/infrastructure/infrastructure.repository';

@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Authenticates Bearer access tokens at the controller boundary and attaches the verified actor to the request.
-// FLOW: HTTP Authorization header → JWT verification → request.user → tenant authorization.
+﻿// RESPONSIBILITY: Authenticates Bearer access tokens at the controller boundary and attaches the verified actor to the request.
+// FLOW: HTTP Authorization header â†’ JWT verification â†’ request.user â†’ tenant authorization.
 
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';

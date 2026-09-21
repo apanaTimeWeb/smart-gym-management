@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes partial update business flow for the reports feature.
+﻿// RESPONSIBILITY: Executes partial update business flow for the reports feature.
 // FLOW: CommandController -> ReportsUpdateService -> named repository mutation -> mapper.
 import { Injectable } from '@nestjs/common';
 import { ReportsRepository } from '@/backend_superadmin/modules/superadmin/reports/reports.repository';

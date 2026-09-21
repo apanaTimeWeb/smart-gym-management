@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Persists the frontend-owned system-ops summary contract in the master database.
+﻿// RESPONSIBILITY: Persists the frontend-owned system-ops summary contract in the master database.
 // FLOW: SystemOpsContractSnapshotRepository -> TypeORM -> PostgreSQL `system_ops_snapshots`.
 import { Column, Entity, Index } from 'typeorm';
 import { BaseEntity } from '@/backend_superadmin/core/database/base.entity';

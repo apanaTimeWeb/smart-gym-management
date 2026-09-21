@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Enforces centralized Redis-backed API rate limits without embedding business thresholds in controllers.
+﻿// RESPONSIBILITY: Enforces centralized Redis-backed API rate limits without embedding business thresholds in controllers.
 // FLOW: Request context -> rate tier -> Redis INCR/EXPIRE -> permit or 429.
 import { CanActivate, ExecutionContext, Injectable, TooManyRequestsException } from '@nestjs/common';
 import { Request } from 'express';

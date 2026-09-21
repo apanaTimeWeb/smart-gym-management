@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Registers tenant master repositories, resolution, dynamic data sources, and provisioning infrastructure.
-// FLOW: AppModule → TenantInfrastructureModule → master tenant registry / tenant DataSource services.
+﻿// RESPONSIBILITY: Registers tenant master repositories, resolution, dynamic data sources, and provisioning infrastructure.
+// FLOW: AppModule â†’ TenantInfrastructureModule â†’ master tenant registry / tenant DataSource services.
 import { Global, Module } from '@nestjs/common';
 
 import { TypeOrmModule } from '@nestjs/typeorm';

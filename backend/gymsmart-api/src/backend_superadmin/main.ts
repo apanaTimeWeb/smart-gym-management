@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Boots NestJS with security middleware, strict validation, URI versioning, Swagger, logging, and graceful shutdown.
+﻿// RESPONSIBILITY: Boots NestJS with security middleware, strict validation, URI versioning, Swagger, logging, and graceful shutdown.
 // FLOW: process -> ConfigModule validation -> Nest application -> /api/v1 routes.
 import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';

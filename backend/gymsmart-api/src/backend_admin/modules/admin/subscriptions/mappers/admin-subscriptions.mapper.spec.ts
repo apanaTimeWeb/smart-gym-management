@@ -1,4 +1,4 @@
-import { AdminSubscriptionsMapper } from '@/backend_admin/modules/admin/subscriptions/mappers/admin-subscriptions.mapper';
+﻿import { AdminSubscriptionsMapper } from '@/backend_admin/modules/admin/subscriptions/mappers/admin-subscriptions.mapper';
 import { AdminSubscriptionsEntity } from '@/backend_admin/modules/admin/subscriptions/entities/admin-subscriptions-entity';
 
 describe('AdminSubscriptionsMapper', () => {

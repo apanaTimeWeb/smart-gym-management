@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Validates pagination, search, and sorting inputs for the gyms feature.
+﻿// RESPONSIBILITY: Validates pagination, search, and sorting inputs for the gyms feature.
 // FLOW: HTTP query -> class-validator -> GymsListQuery.
 import { IsIn, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 import { PaginationQueryDto } from '@/backend_superadmin/core/pagination/pagination-query.dto';

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Central inventory for distributed scheduled jobs and their operational contracts.
+﻿// RESPONSIBILITY: Central inventory for distributed scheduled jobs and their operational contracts.
 // FLOW: Job registration -> distributed scheduler -> queue -> worker -> audit/DLQ.
 export interface ScheduledJobDefinition {
   name: string;

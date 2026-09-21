@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Defines canonical timeout tiers for HTTP handlers and downstream infrastructure calls.
+﻿// RESPONSIBILITY: Defines canonical timeout tiers for HTTP handlers and downstream infrastructure calls.
 // FLOW: Endpoint/adapter/repository -> TIMEOUT_CONFIG -> bounded operation.
 
 export const TIMEOUT_CONFIG = {

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Owns named persistence operations for feature release notes.
+﻿// RESPONSIBILITY: Owns named persistence operations for feature release notes.
 // FLOW: release-note service -> repository -> FeatureReleaseNoteEntity -> PostgreSQL.
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';

@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns read-side use cases for Admin settings; no write persistence occurs here.
-// FLOW: AdminSettingsQueryController → AdminSettingsQueryService → repository → mapper → ApiResponse.
+﻿// RESPONSIBILITY: Owns read-side use cases for Admin settings; no write persistence occurs here.
+// FLOW: AdminSettingsQueryController â†’ AdminSettingsQueryService â†’ repository â†’ mapper â†’ ApiResponse.
 
 import { Injectable } from '@nestjs/common';
 import { AdminSettingsRepository } from '@/backend_admin/modules/admin/settings/repositories/admin-settings-repository';

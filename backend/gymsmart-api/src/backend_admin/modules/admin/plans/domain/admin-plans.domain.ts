@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Defines the ORM-independent domain shape for Admin plans records.
-// FLOW: PostgreSQL entity → AdminPlansMapper → AdminPlansDomainModel → service.
+﻿// RESPONSIBILITY: Defines the ORM-independent domain shape for Admin plans records.
+// FLOW: PostgreSQL entity â†’ AdminPlansMapper â†’ AdminPlansDomainModel â†’ service.
 
 export interface AdminPlansDomainModel {
   id: string;

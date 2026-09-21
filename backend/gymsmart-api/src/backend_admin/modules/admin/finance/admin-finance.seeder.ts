@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Seeds deterministic development data for Admin finance; never used in production runtime.
+﻿// RESPONSIBILITY: Seeds deterministic development data for Admin finance; never used in production runtime.
 // FLOW: CoreTenantSeeder -> AdminFinanceSeeder -> TypeORM -> usage_snapshots.
 
 import { DataSource } from 'typeorm';

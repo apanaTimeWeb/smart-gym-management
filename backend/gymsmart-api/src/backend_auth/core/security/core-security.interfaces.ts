@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Defines request shapes used only at the core security/controller boundary.
+﻿// RESPONSIBILITY: Defines request shapes used only at the core security/controller boundary.
 // FLOW: Express request -> CoreJwtAuthGuard/CoreRolesGuard -> typed security request contract.
 
 import type { Request } from 'express';

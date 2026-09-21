@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Registers the tenant-aware UnitOfWork adapter as shared framework infrastructure.
-// FLOW: AppModule → CoreDatabaseModule → TypeOrmUnitOfWorkService → TenantContextService → tenant DataSource.
+﻿// RESPONSIBILITY: Registers the tenant-aware UnitOfWork adapter as shared framework infrastructure.
+// FLOW: AppModule â†’ CoreDatabaseModule â†’ TypeOrmUnitOfWorkService â†’ TenantContextService â†’ tenant DataSource.
 import { Global, Module } from '@nestjs/common';
 
 import { TenantInfrastructureModule } from '@/backend_landing/core/tenant/tenant-infrastructure.module';

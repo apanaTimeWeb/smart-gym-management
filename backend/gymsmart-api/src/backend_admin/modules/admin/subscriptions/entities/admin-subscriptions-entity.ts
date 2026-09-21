@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns PostgreSQL persistence for the Admin subscriptions feature and its frontend-backed payload.
-// FLOW: Subscriptions Repository → AdminSubscriptionsEntity → PostgreSQL subscriptions table.
+﻿// RESPONSIBILITY: Owns PostgreSQL persistence for the Admin subscriptions feature and its frontend-backed payload.
+// FLOW: Subscriptions Repository â†’ AdminSubscriptionsEntity â†’ PostgreSQL subscriptions table.
 
 import { Column, Entity, Index } from 'typeorm';
 import { CoreBaseEntity } from '@/backend_admin/core/database/core-base.entity';

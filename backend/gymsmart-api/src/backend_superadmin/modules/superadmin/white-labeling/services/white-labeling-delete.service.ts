@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes the soft-delete flow for the white-labeling feature.
+﻿// RESPONSIBILITY: Executes the soft-delete flow for the white-labeling feature.
 // FLOW: CommandController -> WhiteLabelingDeleteService -> repository named soft-delete -> audit hook.
 import { Injectable } from '@nestjs/common';
 import { WhiteLabelingRepository } from '@/backend_superadmin/modules/superadmin/white-labeling/white-labeling.repository';

@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns read-side use cases for Admin coupons; no write persistence occurs here.
-// FLOW: AdminCouponsQueryController → AdminCouponsQueryService → repository → mapper → ApiResponse.
+﻿// RESPONSIBILITY: Owns read-side use cases for Admin coupons; no write persistence occurs here.
+// FLOW: AdminCouponsQueryController â†’ AdminCouponsQueryService â†’ repository â†’ mapper â†’ ApiResponse.
 
 import { Injectable } from '@nestjs/common';
 import { AdminCouponsRepository } from '@/backend_admin/modules/admin/coupons/repositories/admin-coupons-repository';

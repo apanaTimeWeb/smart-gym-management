@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Exposes Prometheus-compatible baseline metrics for application health and request volume.
-// FLOW: GET /metrics → CoreMetricsController → metric exposition.
+﻿// RESPONSIBILITY: Exposes Prometheus-compatible baseline metrics for application health and request volume.
+// FLOW: GET /metrics â†’ CoreMetricsController â†’ metric exposition.
 
 import { Controller, Get, Header } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';

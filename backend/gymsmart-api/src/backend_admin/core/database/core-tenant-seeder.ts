@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Orchestrates deterministic, idempotent seeding for the tenant database.
+﻿// RESPONSIBILITY: Orchestrates deterministic, idempotent seeding for the tenant database.
 // FLOW: CLI -> tenant DataSource -> module-local seeders -> feature tables + audit trail.
 
 import 'reflect-metadata';

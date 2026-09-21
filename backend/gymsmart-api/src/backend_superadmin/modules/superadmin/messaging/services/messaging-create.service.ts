@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes creation business flow for the messaging feature.
+﻿// RESPONSIBILITY: Executes creation business flow for the messaging feature.
 // FLOW: CommandController -> MessagingCreateService -> named repository mutation -> mapper.
 import { Injectable } from '@nestjs/common';
 import { MessagingRepository } from '@/backend_superadmin/modules/superadmin/messaging/messaging.repository';

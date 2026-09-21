@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Defines the stable response data contract for gyms endpoints.
+﻿// RESPONSIBILITY: Defines the stable response data contract for gyms endpoints.
 // FLOW: Domain model -> GymsResponseDto -> canonical ApiResponse envelope.
 import { ApiPropertyOptional } from '@nestjs/swagger';
 

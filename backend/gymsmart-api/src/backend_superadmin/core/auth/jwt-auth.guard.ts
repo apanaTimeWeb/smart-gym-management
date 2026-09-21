@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Validates access JWTs and attaches typed claims to the request boundary.
+﻿// RESPONSIBILITY: Validates access JWTs and attaches typed claims to the request boundary.
 // FLOW: Authorization header -> JWT verification -> AuthenticatedUser -> controller.
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';

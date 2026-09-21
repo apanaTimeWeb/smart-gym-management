@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Validates the exact Gyms V1 bulk-action request accepted by the frontend.
+﻿// RESPONSIBILITY: Validates the exact Gyms V1 bulk-action request accepted by the frontend.
 // FLOW: HTTP body -> class-validator -> GymsBulkActionService.
 import { IsArray, IsIn, IsOptional, IsString, IsUUID, ArrayNotEmpty } from 'class-validator';
 

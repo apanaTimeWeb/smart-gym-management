@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Persists feature release notes independently from feature flag state.
+﻿// RESPONSIBILITY: Persists feature release notes independently from feature flag state.
 // FLOW: Features release-note service -> FeatureReleaseNoteEntity -> PostgreSQL `feature_release_notes`.
 import { Column, Entity, Index } from 'typeorm';
 import { BaseEntity } from '@/backend_superadmin/core/database/base.entity';

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Exposes mutation endpoints for Admin plans; contains HTTP concerns only.
+﻿// RESPONSIBILITY: Exposes mutation endpoints for Admin plans; contains HTTP concerns only.
 // FLOW: HTTP mutation -> AdminPlansCommandController -> AdminPlansCommandService.
 
 import { BadRequestException, Body, Controller, Delete, Headers, HttpStatus, Patch, Post, UseGuards } from '@nestjs/common';

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Deterministically seeds the affiliates table for local/test environments.
+﻿// RESPONSIBILITY: Deterministically seeds the affiliates table for local/test environments.
 // FLOW: Master seed -> AffiliatesSeeder -> PostgreSQL repository.
 import { DataSource } from 'typeorm';
 import { AffiliateEntity } from '@/backend_superadmin/modules/superadmin/affiliates/affiliates.entity';

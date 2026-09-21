@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Attaches a central rate-limit tier to a controller route.
+﻿// RESPONSIBILITY: Attaches a central rate-limit tier to a controller route.
 // FLOW: Controller metadata -> CoreRateLimitGuard -> CoreRateLimitService.
 
 import { SetMetadata } from '@nestjs/common';

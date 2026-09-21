@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Returns the complete frontend system-ops summary contract from PostgreSQL.
+﻿// RESPONSIBILITY: Returns the complete frontend system-ops summary contract from PostgreSQL.
 // FLOW: Controller -> SystemOpsSummaryService -> SystemOpsRepository -> contract snapshot.
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { SystemOpsRepository } from '@/backend_superadmin/modules/superadmin/system-ops/system-ops.repository';

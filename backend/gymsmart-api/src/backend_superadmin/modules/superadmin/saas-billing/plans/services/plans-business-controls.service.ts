@@ -1,7 +1,7 @@
-// RESPONSIBILITY: Reads the frontend contract state owned by this feature from PostgreSQL; no mock data is returned by the service.
+﻿// RESPONSIBILITY: Reads the frontend contract state owned by this feature from PostgreSQL; no mock data is returned by the service.
 // FLOW: Controller -> PlansBusinessControlsService -> PlansContractSnapshotRepository -> contract snapshot row -> canonical response interceptor.
 import { Injectable, NotFoundException } from '@nestjs/common';
-import type { PlansBusinessControlsResponseDto } from '@/backend_superadmin/modules/superadmin/saas-billing/plans/plans-business-controls-response.dto';
+import { PlansBusinessControlsResponseDto } from '@/backend_superadmin/modules/superadmin/saas-billing/plans/plans-business-controls-response.dto';
 import { PlansContractSnapshotRepository } from '@/backend_superadmin/modules/superadmin/saas-billing/plans/plans-contract-snapshot.repository';
 import { PLANS_SNAPSHOT_KINDS } from '@/backend_superadmin/modules/superadmin/saas-billing/plans/plans.constants';
 

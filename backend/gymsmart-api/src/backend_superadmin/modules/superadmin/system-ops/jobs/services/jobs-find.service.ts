@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes single-record retrieval for the jobs feature.
+﻿// RESPONSIBILITY: Executes single-record retrieval for the jobs feature.
 // FLOW: QueryController -> JobsFindService -> repository findByIdOrThrow -> mapper.
 import { Injectable } from '@nestjs/common';
 import { JobsRepository } from '@/backend_superadmin/modules/superadmin/system-ops/jobs/jobs.repository';

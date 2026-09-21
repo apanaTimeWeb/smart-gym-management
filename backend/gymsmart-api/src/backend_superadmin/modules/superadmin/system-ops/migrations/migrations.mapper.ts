@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Maps Migrations ORM entities into domain-safe response data.
+﻿// RESPONSIBILITY: Maps Migrations ORM entities into domain-safe response data.
 // FLOW: TypeORM entity -> MigrationsMapper -> domain model -> response DTO.
 import type { MigrationLogEntity } from '@/backend_superadmin/modules/superadmin/system-ops/migrations/migrations.entity';
 import type { MigrationsDomainModel } from '@/backend_superadmin/modules/superadmin/system-ops/migrations/types/migrations.interfaces';

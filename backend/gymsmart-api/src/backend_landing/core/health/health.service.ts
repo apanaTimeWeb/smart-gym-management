@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Checks process, master PostgreSQL, Redis, and configured tenant dependency health.
-// FLOW: HealthController → HealthService → master DB/Redis/tenant DataSource.
+﻿// RESPONSIBILITY: Checks process, master PostgreSQL, Redis, and configured tenant dependency health.
+// FLOW: HealthController â†’ HealthService â†’ master DB/Redis/tenant DataSource.
 import { Injectable } from '@nestjs/common';
 
 import { DataSource } from 'typeorm';

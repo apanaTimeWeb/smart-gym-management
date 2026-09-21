@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Provides the shared Superadmin gym lookup used by frontend tenant selectors.
+﻿// RESPONSIBILITY: Provides the shared Superadmin gym lookup used by frontend tenant selectors.
 // FLOW: Query controller -> GymsLookupService -> GymsRepository -> PostgreSQL tenants.
 import { Injectable } from '@nestjs/common';
 import { GymsRepository } from '@/backend_superadmin/modules/superadmin/gyms/gyms.repository';

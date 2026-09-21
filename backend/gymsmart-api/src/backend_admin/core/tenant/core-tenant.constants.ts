@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Defines trusted tenant routing constants and roles.
-// FLOW: Authentication/authorization → tenant constants → feature guards.
+﻿// RESPONSIBILITY: Defines trusted tenant routing constants and roles.
+// FLOW: Authentication/authorization â†’ tenant constants â†’ feature guards.
 
 export enum CoreAdminRole {
   ADMIN = 'ADMIN',

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Returns live feature-flag and release-note state for the Superadmin frontend contract.
+﻿// RESPONSIBILITY: Returns live feature-flag and release-note state for the Superadmin frontend contract.
 // FLOW: Controller -> FeaturesMainService -> FeaturesRepository + FeatureReleaseNoteRepository -> public contract.
 import { Injectable } from '@nestjs/common';
 import { FeaturesRepository } from '@/backend_superadmin/modules/superadmin/features/features.repository';

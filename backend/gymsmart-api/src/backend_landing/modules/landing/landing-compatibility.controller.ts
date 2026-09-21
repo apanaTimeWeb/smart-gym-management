@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Preserves the unversioned frontend API namespace during the contract transition; no business logic.
-// FLOW: POST /api/landing/* → compatibility controller → same Landing orchestrators as /api/v1.
+﻿// RESPONSIBILITY: Preserves the unversioned frontend API namespace during the contract transition; no business logic.
+// FLOW: POST /api/landing/* â†’ compatibility controller â†’ same Landing orchestrators as /api/v1.
 // 
 import { Body, Controller, Headers, Post, UseGuards, Version, VERSION_NEUTRAL } from '@nestjs/common';
 
@@ -10,7 +10,7 @@ import { RateLimitGuard } from '@/backend_landing/core/security/rate-limit.guard
 import { RateLimitTier } from '@/backend_landing/core/security/rate-limit.decorator';
 
 import { LandingApiErrorResponseDto } from '@/backend_landing/modules/landing/landing-api-error-response.dto';
-import { LandingApiSuccessResponseDto } from '@/backend_landing/modules/landing/landing-api-response.dto';
+import { LandingApiSuccessResponseDto } from '@/backend_landing/modules/landing/landing-api-success-response.dto';
 
 import { LandingCreateBookingDto } from '@/backend_landing/modules/landing/dtos/landing-create-booking.dto';
 

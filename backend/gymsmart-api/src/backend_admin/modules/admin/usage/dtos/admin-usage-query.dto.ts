@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Validates and normalizes frontend query/filter parameters for Admin usage.
-// FLOW: HTTP query → AdminUsageQueryDto → repository allowlists → PostgreSQL query.
+﻿// RESPONSIBILITY: Validates and normalizes frontend query/filter parameters for Admin usage.
+// FLOW: HTTP query â†’ AdminUsageQueryDto â†’ repository allowlists â†’ PostgreSQL query.
 
 import { Type } from 'class-transformer';
 import { IsOptional, IsString, IsIn, IsNumber } from 'class-validator';

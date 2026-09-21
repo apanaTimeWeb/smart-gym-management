@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns read-side use cases for Admin dashboard; no write persistence occurs here.
-// FLOW: AdminDashboardQueryController → AdminDashboardQueryService → repository → mapper → ApiResponse.
+﻿// RESPONSIBILITY: Owns read-side use cases for Admin dashboard; no write persistence occurs here.
+// FLOW: AdminDashboardQueryController â†’ AdminDashboardQueryService â†’ repository â†’ mapper â†’ ApiResponse.
 
 import { Injectable } from '@nestjs/common';
 import { AdminDashboardRepository } from '@/backend_admin/modules/admin/dashboard/repositories/admin-dashboard-repository';

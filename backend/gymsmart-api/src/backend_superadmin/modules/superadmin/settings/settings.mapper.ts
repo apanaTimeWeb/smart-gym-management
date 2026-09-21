@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Maps Settings ORM entities into domain-safe response data.
+﻿// RESPONSIBILITY: Maps Settings ORM entities into domain-safe response data.
 // FLOW: TypeORM entity -> SettingsMapper -> domain model -> response DTO.
 import type { PlatformSettingEntity } from '@/backend_superadmin/modules/superadmin/settings/settings.entity';
 import type { SettingsDomainModel } from '@/backend_superadmin/modules/superadmin/settings/types/settings.interfaces';

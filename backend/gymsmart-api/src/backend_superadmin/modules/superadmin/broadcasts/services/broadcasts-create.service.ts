@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes creation business flow for the broadcasts feature.
+﻿// RESPONSIBILITY: Executes creation business flow for the broadcasts feature.
 // FLOW: CommandController -> BroadcastsCreateService -> named repository mutation -> mapper.
 import { Injectable } from '@nestjs/common';
 import { BroadcastsRepository } from '@/backend_superadmin/modules/superadmin/broadcasts/broadcasts.repository';

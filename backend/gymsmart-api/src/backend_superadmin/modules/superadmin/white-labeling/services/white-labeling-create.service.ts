@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes creation business flow for the white-labeling feature.
+﻿// RESPONSIBILITY: Executes creation business flow for the white-labeling feature.
 // FLOW: CommandController -> WhiteLabelingCreateService -> named repository mutation -> mapper.
 import { Injectable } from '@nestjs/common';
 import { WhiteLabelingRepository } from '@/backend_superadmin/modules/superadmin/white-labeling/white-labeling.repository';

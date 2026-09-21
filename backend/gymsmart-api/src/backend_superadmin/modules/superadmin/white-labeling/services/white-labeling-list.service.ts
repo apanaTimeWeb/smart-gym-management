@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes paginated read logic for the white-labeling feature.
+﻿// RESPONSIBILITY: Executes paginated read logic for the white-labeling feature.
 // FLOW: QueryController -> WhiteLabelingListService -> repository -> mapper -> response DTO.
 import { Injectable } from '@nestjs/common';
 import { WhiteLabelingRepository } from '@/backend_superadmin/modules/superadmin/white-labeling/white-labeling.repository';

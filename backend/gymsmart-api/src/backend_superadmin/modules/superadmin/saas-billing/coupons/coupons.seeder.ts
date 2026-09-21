@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Deterministically seeds the coupons table for local/test environments.
+﻿// RESPONSIBILITY: Deterministically seeds the coupons table for local/test environments.
 // FLOW: Master seed -> CouponsSeeder -> PostgreSQL repository.
 import { DataSource } from 'typeorm';
 import { CouponEntity } from '@/backend_superadmin/modules/superadmin/saas-billing/coupons/coupons.entity';

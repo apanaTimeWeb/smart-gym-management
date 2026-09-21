@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Validates partial updates at the infrastructure HTTP boundary.
+﻿// RESPONSIBILITY: Validates partial updates at the infrastructure HTTP boundary.
 // FLOW: HTTP JSON -> InfrastructureUpdateDto -> Infrastructure service.
 import { Type } from 'class-transformer';
 import { IsBoolean, IsDate, IsEmail, IsEnum, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';

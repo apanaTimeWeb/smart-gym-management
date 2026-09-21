@@ -1,4 +1,4 @@
-// RESPONSIBILITY: TypeORM persistence entity for team feature data stored in `superadmin_team_snapshots`.
+﻿// RESPONSIBILITY: TypeORM persistence entity for team feature data stored in `superadmin_team_snapshots`.
 // FLOW: team repository -> TeamSnapshot entity -> PostgreSQL `superadmin_team_snapshots`.
 import { Column, Entity, Index } from 'typeorm';
 import { BaseEntity } from '@/backend_superadmin/core/database/base.entity';

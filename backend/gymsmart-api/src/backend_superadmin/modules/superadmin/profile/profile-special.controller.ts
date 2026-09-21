@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Owns explicitly versioned/specialized frontend contract endpoints for the profile feature.
+﻿// RESPONSIBILITY: Owns explicitly versioned/specialized frontend contract endpoints for the profile feature.
 // FLOW: HTTP -> specialized micro-service -> typed result -> canonical response interceptor.
 import { RequireIdempotencyKey } from '@/backend_superadmin/core/cache/idempotency.decorator';
 import { Body, Controller, Get, Patch, Req, UseGuards } from '@nestjs/common';

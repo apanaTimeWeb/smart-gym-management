@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Deterministically seeds the invoices table for local/test environments.
+﻿// RESPONSIBILITY: Deterministically seeds the invoices table for local/test environments.
 // FLOW: Master seed -> InvoicesSeeder -> PostgreSQL repository.
 import { DataSource } from 'typeorm';
 import { SaasInvoiceEntity } from '@/backend_superadmin/modules/superadmin/saas-billing/invoices/invoices.entity';

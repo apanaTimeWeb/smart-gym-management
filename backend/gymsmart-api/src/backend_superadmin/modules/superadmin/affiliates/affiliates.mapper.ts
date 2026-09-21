@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Maps Affiliates ORM entities into domain-safe response data.
+﻿// RESPONSIBILITY: Maps Affiliates ORM entities into domain-safe response data.
 // FLOW: TypeORM entity -> AffiliatesMapper -> domain model -> response DTO.
 import type { AffiliateEntity } from '@/backend_superadmin/modules/superadmin/affiliates/affiliates.entity';
 import type { AffiliatesDomainModel } from '@/backend_superadmin/modules/superadmin/affiliates/types/affiliates.interfaces';

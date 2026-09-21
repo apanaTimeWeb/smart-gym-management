@@ -1,7 +1,7 @@
-// RESPONSIBILITY: Describes the frontend-consumed response fields for Admin usage.
+﻿// RESPONSIBILITY: Describes the frontend-consumed response fields for Admin usage.
 import { ApiProperty } from '@nestjs/swagger';
 
-// FLOW: Repository domain → Usage response mapper → ApiResponse<T>.
+// FLOW: Repository domain â†’ Usage response mapper â†’ ApiResponse<T>.
 
 export class AdminUsageHistoryPointDto {
   @ApiProperty()

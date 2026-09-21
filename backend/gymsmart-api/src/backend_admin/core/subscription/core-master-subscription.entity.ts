@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Maps master-database subscription and billing state required by the Admin domain.
-// FLOW: Master DB → entity → Admin subscription/plan services → canonical API response.
+﻿// RESPONSIBILITY: Maps master-database subscription and billing state required by the Admin domain.
+// FLOW: Master DB â†’ entity â†’ Admin subscription/plan services â†’ canonical API response.
 
 import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 

@@ -1,4 +1,4 @@
-import { AdminSalesMapper } from '@/backend_admin/modules/admin/sales/mappers/admin-sales.mapper';
+﻿import { AdminSalesMapper } from '@/backend_admin/modules/admin/sales/mappers/admin-sales.mapper';
 import { AdminSalesEntity } from '@/backend_admin/modules/admin/sales/entities/admin-sales-entity';
 
 describe('AdminSalesMapper', () => {

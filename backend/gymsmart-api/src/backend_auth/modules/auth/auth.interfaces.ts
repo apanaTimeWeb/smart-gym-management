@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Defines Auth domain contracts independent of TypeORM and HTTP DTO implementation details.
+﻿// RESPONSIBILITY: Defines Auth domain contracts independent of TypeORM and HTTP DTO implementation details.
 // FLOW: Repository -> domain object -> service/orchestrator -> response mapper/controller.
 
 import type { AuthRole } from '@/backend_auth/modules/auth/auth.roles.constants';

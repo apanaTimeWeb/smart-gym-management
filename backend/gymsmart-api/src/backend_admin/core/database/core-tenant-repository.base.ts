@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Provides the canonical tenant-scoped repository boundary and soft-delete primitives for all feature repositories.
-// FLOW: Feature repository → CoreTenantRepositoryBase → tenant DataSource → TypeORM repository.
+﻿// RESPONSIBILITY: Provides the canonical tenant-scoped repository boundary and soft-delete primitives for all feature repositories.
+// FLOW: Feature repository â†’ CoreTenantRepositoryBase â†’ tenant DataSource â†’ TypeORM repository.
 
 import { DataSource, EntityTarget, ObjectLiteral, Repository } from 'typeorm';
 import { CoreTenantDataSourceManager } from '@/backend_admin/core/database/core-tenant-data-source.manager';

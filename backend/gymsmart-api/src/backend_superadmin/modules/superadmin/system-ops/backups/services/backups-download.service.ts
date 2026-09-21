@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Creates an authorized download URL contract for a stored backup record.
+﻿// RESPONSIBILITY: Creates an authorized download URL contract for a stored backup record.
 // FLOW: Controller -> BackupsDownloadService -> BackupsRepository -> signed download contract.
 import { Injectable } from '@nestjs/common';
 import { BackupsRepository } from '@/backend_superadmin/modules/superadmin/system-ops/backups/backups.repository';

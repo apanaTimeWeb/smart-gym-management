@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Deterministically seeds the analytics table for local/test environments.
+﻿// RESPONSIBILITY: Deterministically seeds the analytics table for local/test environments.
 // FLOW: Master seed -> AnalyticsSeeder -> PostgreSQL repository.
 import { DataSource } from 'typeorm';
 import { AnalyticsSnapshotEntity } from '@/backend_superadmin/modules/superadmin/analytics/analytics.entity';

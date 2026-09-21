@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Maps UsageMeters ORM entities into domain-safe response data.
+﻿// RESPONSIBILITY: Maps UsageMeters ORM entities into domain-safe response data.
 // FLOW: TypeORM entity -> UsageMetersMapper -> domain model -> response DTO.
 import type { UsageMeterEntity } from '@/backend_superadmin/modules/superadmin/usage-meters/usage-meters.entity';
 import type { UsageMetersDomainModel } from '@/backend_superadmin/modules/superadmin/usage-meters/types/usage-meters.interfaces';

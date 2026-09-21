@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes paginated read logic for the reports feature.
+﻿// RESPONSIBILITY: Executes paginated read logic for the reports feature.
 // FLOW: QueryController -> ReportsListService -> repository -> mapper -> response DTO.
 import { Injectable } from '@nestjs/common';
 import { ReportsRepository } from '@/backend_superadmin/modules/superadmin/reports/reports.repository';

@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Maps immutable audit trail records stored in each tenant database.
-// FLOW: Mutation boundary → CoreAuditTrailService → audit_logs table.
+﻿// RESPONSIBILITY: Maps immutable audit trail records stored in each tenant database.
+// FLOW: Mutation boundary â†’ CoreAuditTrailService â†’ audit_logs table.
 
 import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 

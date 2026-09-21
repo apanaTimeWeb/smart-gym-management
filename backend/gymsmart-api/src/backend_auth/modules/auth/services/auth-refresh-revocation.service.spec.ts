@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Verifies refresh-token Redis denylist behavior and privacy-preserving key derivation.
+﻿// RESPONSIBILITY: Verifies refresh-token Redis denylist behavior and privacy-preserving key derivation.
 // FLOW: Test JWT string -> SHA-256 Redis key -> revoke/check operations.
 
 import { AuthRefreshRevocationService } from '@/backend_auth/modules/auth/services/auth-refresh-revocation.service';

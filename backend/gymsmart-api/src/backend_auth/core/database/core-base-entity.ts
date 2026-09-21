@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Provides mandatory UTC timestamps and soft-delete state to every ORM entity.
+﻿// RESPONSIBILITY: Provides mandatory UTC timestamps and soft-delete state to every ORM entity.
 // FLOW: Feature entity -> CoreBaseEntity -> TypeORM metadata -> PostgreSQL.
 
 import { CreateDateColumn, DeleteDateColumn, UpdateDateColumn } from 'typeorm';

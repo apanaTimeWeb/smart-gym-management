@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns PostgreSQL persistence for the Admin coupons feature and its frontend-backed payload.
-// FLOW: Coupons Repository → AdminCouponsEntity → PostgreSQL coupons table.
+﻿// RESPONSIBILITY: Owns PostgreSQL persistence for the Admin coupons feature and its frontend-backed payload.
+// FLOW: Coupons Repository â†’ AdminCouponsEntity â†’ PostgreSQL coupons table.
 
 import { Column, Entity, Index } from 'typeorm';
 import { CoreBaseEntity } from '@/backend_admin/core/database/core-base.entity';

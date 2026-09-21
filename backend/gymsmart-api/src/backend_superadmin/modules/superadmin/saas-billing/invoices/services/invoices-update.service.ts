@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes partial update business flow for the invoices feature.
+﻿// RESPONSIBILITY: Executes partial update business flow for the invoices feature.
 // FLOW: CommandController -> InvoicesUpdateService -> named repository mutation -> mapper.
 import { Injectable } from '@nestjs/common';
 import { InvoicesRepository } from '@/backend_superadmin/modules/superadmin/saas-billing/invoices/invoices.repository';

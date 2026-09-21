@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Validates and normalizes the frontend booking request body.
-// FLOW: HTTP request → LandingCreateBookingDto → BookingOrchestrator.
+﻿// RESPONSIBILITY: Validates and normalizes the frontend booking request body.
+// FLOW: HTTP request â†’ LandingCreateBookingDto â†’ BookingOrchestrator.
 import { ApiProperty } from '@nestjs/swagger';
 
 import { Transform } from 'class-transformer';

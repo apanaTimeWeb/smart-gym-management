@@ -1,4 +1,4 @@
-// RESPONSIBILITY: TypeORM persistence entity for infrastructure feature data stored in `infrastructure_nodes`.
+﻿// RESPONSIBILITY: TypeORM persistence entity for infrastructure feature data stored in `infrastructure_nodes`.
 // FLOW: infrastructure repository -> InfrastructureNode entity -> PostgreSQL `infrastructure_nodes`.
 import { Column, Entity, Index } from 'typeorm';
 import { BaseEntity } from '@/backend_superadmin/core/database/base.entity';

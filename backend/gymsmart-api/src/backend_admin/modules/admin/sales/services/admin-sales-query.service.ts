@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns read-side use cases for Admin sales; no write persistence occurs here.
-// FLOW: AdminSalesQueryController → AdminSalesQueryService → repository → mapper → ApiResponse.
+﻿// RESPONSIBILITY: Owns read-side use cases for Admin sales; no write persistence occurs here.
+// FLOW: AdminSalesQueryController â†’ AdminSalesQueryService â†’ repository â†’ mapper â†’ ApiResponse.
 
 import { Injectable } from '@nestjs/common';
 import { AdminSalesRepository } from '@/backend_admin/modules/admin/sales/repositories/admin-sales-repository';

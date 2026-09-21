@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Validates creation payloads at the usage-meters HTTP boundary.
+﻿// RESPONSIBILITY: Validates creation payloads at the usage-meters HTTP boundary.
 // FLOW: HTTP JSON -> UsageMetersCreateDto -> UsageMeters service.
 import { Type } from 'class-transformer';
 import { IsBoolean, IsDate, IsEmail, IsEnum, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';

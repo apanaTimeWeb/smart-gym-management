@@ -3,7 +3,11 @@
 
 import { AsyncLocalStorage } from 'node:async_hooks';
 
-import type { CoreRequestContextState } from '@/backend_auth/core/context/core-request-context.interfaces';
+import { Injectable } from '@nestjs/common';
+import { EntityManager } from 'typeorm';
+import { CoreRequestContextState } from '@/backend_auth/core/context/core-request-context.interfaces';
+
+@Injectable()
 export class CoreRequestContextService {
   private readonly storage = new AsyncLocalStorage<CoreRequestContextState>();
 

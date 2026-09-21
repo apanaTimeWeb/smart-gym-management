@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Accepts public Landing command requests and delegates immediately to micro-feature orchestrators.
-// FLOW: HTTP POST → DTO validation → Landing orchestrator → canonical response.
+﻿// RESPONSIBILITY: Accepts public Landing command requests and delegates immediately to micro-feature orchestrators.
+// FLOW: HTTP POST â†’ DTO validation â†’ Landing orchestrator â†’ canonical response.
 import { Body, Controller, Headers, Post, UseGuards, Version } from '@nestjs/common';
 
 import { ApiBadRequestResponse, ApiBody, ApiCreatedResponse, ApiHeader, ApiTags } from '@nestjs/swagger';
@@ -13,7 +13,7 @@ import { LandingCreateBookingDto } from '@/backend_landing/modules/landing/dtos/
 import { LandingCreateContactDto } from '@/backend_landing/modules/landing/dtos/landing-create-contact.dto';
 
 import { LandingApiErrorResponseDto } from '@/backend_landing/modules/landing/landing-api-error-response.dto';
-import { LandingApiSuccessResponseDto } from '@/backend_landing/modules/landing/landing-api-response.dto';
+import { LandingApiSuccessResponseDto } from '@/backend_landing/modules/landing/landing-api-success-response.dto';
 
 import { LandingBookingOrchestratorService } from '@/backend_landing/modules/landing/services/landing-booking-orchestrator.service';
 

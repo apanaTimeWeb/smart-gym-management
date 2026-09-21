@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Validates partial updates at the features HTTP boundary.
+﻿// RESPONSIBILITY: Validates partial updates at the features HTTP boundary.
 // FLOW: HTTP JSON -> FeaturesUpdateDto -> Features service.
 import { IsBoolean, IsDateString, IsEmail, IsEnum, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 export class FeaturesUpdateDto {

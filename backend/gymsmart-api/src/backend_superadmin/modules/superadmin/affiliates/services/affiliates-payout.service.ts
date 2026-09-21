@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes affiliate commission payouts and exposes payout history.
+﻿// RESPONSIBILITY: Executes affiliate commission payouts and exposes payout history.
 // FLOW: Controller -> AffiliatesPayoutService -> AffiliatesRepository -> persistent affiliate state.
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';

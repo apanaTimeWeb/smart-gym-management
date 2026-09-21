@@ -1,7 +1,7 @@
-// RESPONSIBILITY: Reads the frontend contract state owned by this feature from PostgreSQL; no mock data is returned by the service.
+﻿// RESPONSIBILITY: Reads the frontend contract state owned by this feature from PostgreSQL; no mock data is returned by the service.
 // FLOW: Controller -> GlobalAuditInvestigationService -> GlobalAuditContractSnapshotRepository -> contract snapshot row -> canonical response interceptor.
 import { Injectable, NotFoundException } from '@nestjs/common';
-import type { GlobalAuditInvestigationResponseDto } from '@/backend_superadmin/modules/superadmin/global-audit/global-audit-investigation-response.dto';
+import { GlobalAuditInvestigationResponseDto } from '@/backend_superadmin/modules/superadmin/global-audit/global-audit-investigation-response.dto';
 import { GlobalAuditContractSnapshotRepository } from '@/backend_superadmin/modules/superadmin/global-audit/global-audit-contract-snapshot.repository';
 import { GLOBAL_AUDIT_SNAPSHOT_KINDS } from '@/backend_superadmin/modules/superadmin/global-audit/global-audit.constants';
 

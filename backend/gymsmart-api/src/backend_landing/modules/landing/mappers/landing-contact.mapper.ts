@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Translates Landing contact ORM entities into domain objects and persistence inputs.
-// FLOW: ORM entity ↔ LandingContactMapper ↔ LandingContactDomainModel/service input.
+﻿// RESPONSIBILITY: Translates Landing contact ORM entities into domain objects and persistence inputs.
+// FLOW: ORM entity â†” LandingContactMapper â†” LandingContactDomainModel/service input.
 import { Injectable } from '@nestjs/common';
 
 import { LandingContactEntity } from '@/backend_landing/modules/landing/entities/landing-contact.entity';

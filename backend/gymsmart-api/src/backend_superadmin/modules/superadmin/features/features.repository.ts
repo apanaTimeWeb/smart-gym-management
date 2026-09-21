@@ -31,7 +31,7 @@ export class FeaturesRepository extends BaseRepository<FeatureFlagEntity> {
   async findByIdOrThrow(id: string): Promise<FeatureFlagEntity> { return super.findByIdOrThrow(id, 'Features record not found'); }
 
   /** Creates and persists a features record. */
-  async createFeatures(input: FeaturesCreateInput): Promise<FeatureFlagEntity> { const entity = this.activeRepository.create(input as never); return this.activeRepository.save(entity); }
+  async createFeatures(input: FeaturesCreateInput): Promise<FeatureFlagEntity> { const entity = this.activeRepository.create(input as any); return this.activeRepository.save(entity); }
 
   /** Applies an intention-revealing update to a features record. */
   async updateFeaturesById(id: string, input: FeaturesUpdateInput): Promise<FeatureFlagEntity> { await this.activeRepository.update({ id } as never, input as never); return this.findByIdOrThrow(id); }

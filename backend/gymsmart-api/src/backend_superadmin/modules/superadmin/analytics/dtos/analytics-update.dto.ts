@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Validates partial updates at the analytics HTTP boundary.
+﻿// RESPONSIBILITY: Validates partial updates at the analytics HTTP boundary.
 // FLOW: HTTP JSON -> AnalyticsUpdateDto -> Analytics service.
 import { IsBoolean, IsDateString, IsEmail, IsEnum, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 export class AnalyticsUpdateDto {

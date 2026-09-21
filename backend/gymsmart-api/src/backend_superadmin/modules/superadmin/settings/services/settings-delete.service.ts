@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes the soft-delete flow for the settings feature.
+﻿// RESPONSIBILITY: Executes the soft-delete flow for the settings feature.
 // FLOW: CommandController -> SettingsDeleteService -> repository named soft-delete -> audit hook.
 import { Injectable } from '@nestjs/common';
 import { SettingsRepository } from '@/backend_superadmin/modules/superadmin/settings/settings.repository';

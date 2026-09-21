@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns the booking transaction boundary and durable idempotency orchestration; it must not contain persistence details.
-// FLOW: LandingCommandController → LandingBookingOrchestratorService → IdempotencyService + UnitOfWork → LandingBookingService.
+﻿// RESPONSIBILITY: Owns the booking transaction boundary and durable idempotency orchestration; it must not contain persistence details.
+// FLOW: LandingCommandController â†’ LandingBookingOrchestratorService â†’ IdempotencyService + UnitOfWork â†’ LandingBookingService.
 import { createHash } from 'node:crypto';
 
 import { HttpException, Injectable } from '@nestjs/common';

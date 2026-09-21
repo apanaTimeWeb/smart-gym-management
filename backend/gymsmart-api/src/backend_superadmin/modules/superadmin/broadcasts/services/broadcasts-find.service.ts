@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes single-record retrieval for the broadcasts feature.
+﻿// RESPONSIBILITY: Executes single-record retrieval for the broadcasts feature.
 // FLOW: QueryController -> BroadcastsFindService -> repository findByIdOrThrow -> mapper.
 import { Injectable } from '@nestjs/common';
 import { BroadcastsRepository } from '@/backend_superadmin/modules/superadmin/broadcasts/broadcasts.repository';

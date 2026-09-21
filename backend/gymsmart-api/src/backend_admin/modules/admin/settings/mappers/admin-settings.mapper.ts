@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Translates the TypeORM Admin settings entity into an ORM-independent domain model and frontend response.
-// FLOW: AdminSettingsEntity → AdminSettingsMapper → domain/response object.
+﻿// RESPONSIBILITY: Translates the TypeORM Admin settings entity into an ORM-independent domain model and frontend response.
+// FLOW: AdminSettingsEntity â†’ AdminSettingsMapper â†’ domain/response object.
 
 import { AdminSettingsDomainModel } from '@/backend_admin/modules/admin/settings/domain/admin-settings.domain';
 import { AdminSettingsEntity } from '@/backend_admin/modules/admin/settings/entities/admin-settings-entity';

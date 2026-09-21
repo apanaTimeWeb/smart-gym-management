@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Owns explicitly versioned/specialized frontend contract endpoints for the dashboard feature.
+﻿// RESPONSIBILITY: Owns explicitly versioned/specialized frontend contract endpoints for the dashboard feature.
 // FLOW: HTTP -> specialized micro-service -> typed result -> canonical response interceptor.
 import { Body, Controller, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { DashboardBusinessOverviewResponseDto } from '@/backend_superadmin/modules/superadmin/dashboard/dashboard-business-overview-response.dto';

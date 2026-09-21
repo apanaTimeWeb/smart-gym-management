@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Translates the TypeORM Admin finance entity into an ORM-independent domain model and frontend response.
-// FLOW: AdminFinanceEntity → AdminFinanceMapper → domain/response object.
+﻿// RESPONSIBILITY: Translates the TypeORM Admin finance entity into an ORM-independent domain model and frontend response.
+// FLOW: AdminFinanceEntity â†’ AdminFinanceMapper â†’ domain/response object.
 
 import { AdminFinanceDomainModel } from '@/backend_admin/modules/admin/finance/domain/admin-finance.domain';
 import { AdminFinanceEntity } from '@/backend_admin/modules/admin/finance/entities/admin-finance-entity';

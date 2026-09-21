@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Provides authentication endpoints required before Admin tenant access.
-// FLOW: HTTP auth request → CoreAuthService → canonical response interceptor.
+﻿// RESPONSIBILITY: Provides authentication endpoints required before Admin tenant access.
+// FLOW: HTTP auth request â†’ CoreAuthService â†’ canonical response interceptor.
 
 import { BadRequestException, Body, Controller, Post, Req, Res } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';

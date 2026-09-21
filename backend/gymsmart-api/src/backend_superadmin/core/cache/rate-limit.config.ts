@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Defines the centralized rate-limit policy tiers used by the Redis guard.
+﻿// RESPONSIBILITY: Defines the centralized rate-limit policy tiers used by the Redis guard.
 // FLOW: Controller request -> tier lookup -> Redis counter -> allow/reject.
 export const RATE_LIMIT_TIERS = {
   PUBLIC_AUTH: { limit: 5, windowSeconds: 60 },

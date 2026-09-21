@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Provides request-local transaction context for TypeORM repositories without exposing ORM transactions to business services.
+﻿// RESPONSIBILITY: Provides request-local transaction context for TypeORM repositories without exposing ORM transactions to business services.
 // FLOW: UnitOfWorkService -> AsyncLocalStorage -> BaseRepository -> transactional EntityManager.
 import { AsyncLocalStorage } from 'node:async_hooks';
 import type { EntityManager } from 'typeorm';

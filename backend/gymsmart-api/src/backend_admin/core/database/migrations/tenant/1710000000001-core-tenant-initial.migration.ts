@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Creates tenant feature tables with explicit PostgreSQL constraints and soft-delete columns.
+﻿// RESPONSIBILITY: Creates tenant feature tables with explicit PostgreSQL constraints and soft-delete columns.
 // FLOW: TypeORM migration -> tenant PostgreSQL DB -> feature tables/indexes.
 
 import { MigrationInterface, QueryRunner } from 'typeorm';

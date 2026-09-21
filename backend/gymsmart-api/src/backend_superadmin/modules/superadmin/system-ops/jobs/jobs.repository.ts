@@ -33,7 +33,7 @@ export class JobsRepository extends BaseRepository<BackgroundJobEntity> {
   async findByIdOrThrow(id: string): Promise<BackgroundJobEntity> { return super.findByIdOrThrow(id, 'Jobs record not found'); }
 
   /** Creates and persists a jobs record. */
-  async createJobs(input: JobsCreateInput): Promise<BackgroundJobEntity> { const entity = this.activeRepository.create(input as never); return this.activeRepository.save(entity); }
+  async createJobs(input: JobsCreateInput): Promise<BackgroundJobEntity> { const entity = this.activeRepository.create(input as any); return this.activeRepository.save(entity); }
 
   /** Applies an intention-revealing update to a jobs record. */
   async updateJobsById(id: string, input: JobsUpdateInput): Promise<BackgroundJobEntity> { await this.activeRepository.update({ id } as never, input as never); return this.findByIdOrThrow(id); }

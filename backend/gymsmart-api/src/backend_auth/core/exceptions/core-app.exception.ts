@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Defines the normalized shape for typed application and infrastructure exceptions.
+﻿// RESPONSIBILITY: Defines the normalized shape for typed application and infrastructure exceptions.
 // FLOW: Feature/core exception -> CoreValidationExceptionFilter -> canonical HTTP error envelope.
 
 import { HttpStatus } from '@nestjs/common';

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Collects real Prometheus request and process metrics for the application observability surface.
+﻿// RESPONSIBILITY: Collects real Prometheus request and process metrics for the application observability surface.
 // FLOW: CoreMetricsInterceptor -> CoreMetricsService -> Prometheus Registry -> /metrics.
 
 import { Injectable } from '@nestjs/common';
@@ -6,7 +6,7 @@ import { Counter, Gauge, Histogram, Registry, collectDefaultMetrics } from '@pro
 
 import type { OnModuleInit } from '@nestjs/common';
 import type { Pool } from 'pg';
-import type { DataSource } from 'typeorm';
+import { DataSource } from 'typeorm';
 @Injectable()
 export class CoreMetricsService implements OnModuleInit {
   private readonly postgresPool?: Pool;

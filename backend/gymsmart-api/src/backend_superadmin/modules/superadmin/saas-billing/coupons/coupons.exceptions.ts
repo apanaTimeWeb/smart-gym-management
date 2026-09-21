@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Defines business-specific exceptions for the coupons feature.
+﻿// RESPONSIBILITY: Defines business-specific exceptions for the coupons feature.
 // FLOW: Service -> CouponsBusinessException -> global DomainExceptionFilter -> canonical error envelope.
 import { HttpStatus } from '@nestjs/common';
 export class CouponsNotFoundException extends Error { readonly statusCode = HttpStatus.NOT_FOUND; readonly errorCode = 'COUPONS.RESOURCE.NOT_FOUND'; }

@@ -1,4 +1,4 @@
-import { AdminPayoutsMapper } from '@/backend_admin/modules/admin/payouts/mappers/admin-payouts.mapper';
+﻿import { AdminPayoutsMapper } from '@/backend_admin/modules/admin/payouts/mappers/admin-payouts.mapper';
 import { AdminPayoutsEntity } from '@/backend_admin/modules/admin/payouts/entities/admin-payouts-entity';
 
 describe('AdminPayoutsMapper', () => {

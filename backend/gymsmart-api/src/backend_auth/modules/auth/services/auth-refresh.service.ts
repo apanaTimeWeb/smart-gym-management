@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Validates and rotates refresh sessions under a pessimistic row lock.
+﻿// RESPONSIBILITY: Validates and rotates refresh sessions under a pessimistic row lock.
 // FLOW: AuthSessionOrchestrator -> AuthRefreshService -> token verification -> locked repository -> audit.
 
 import { Injectable } from '@nestjs/common';
@@ -13,7 +13,7 @@ import { AuthAuditRoleMapper } from '@/backend_auth/modules/auth/utils/auth-audi
 import { AuthTokenUtils } from '@/backend_auth/modules/auth/utils/auth-token.utils';
 
 import type { AuthRefreshDomainResult, AuthSessionDomain, AuthUserDomain } from '@/backend_auth/modules/auth/auth.interfaces';
-import type { ConfigService } from '@nestjs/config';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthRefreshService {

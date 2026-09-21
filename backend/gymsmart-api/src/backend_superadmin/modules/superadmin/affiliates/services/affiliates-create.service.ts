@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes creation business flow for the affiliates feature.
+﻿// RESPONSIBILITY: Executes creation business flow for the affiliates feature.
 // FLOW: CommandController -> AffiliatesCreateService -> named repository mutation -> mapper.
 import { Injectable } from '@nestjs/common';
 import { AffiliatesRepository } from '@/backend_superadmin/modules/superadmin/affiliates/affiliates.repository';

@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns all PostgreSQL persistence for Landing contact messages.
-// FLOW: LandingContactService → LandingContactRepository → CoreBaseRepository → TypeORM → landing_contacts.
+﻿// RESPONSIBILITY: Owns all PostgreSQL persistence for Landing contact messages.
+// FLOW: LandingContactService â†’ LandingContactRepository â†’ CoreBaseRepository â†’ TypeORM â†’ landing_contacts.
 import { Injectable } from '@nestjs/common';
 
 import { CoreBaseRepository } from '@/backend_landing/core/database/base.repository';
@@ -8,13 +8,13 @@ import { LandingContactEntity } from '@/backend_landing/modules/landing/entities
 
 import { LandingContactMapper } from '@/backend_landing/modules/landing/mappers/landing-contact.mapper';
 
-import type { Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 
 import type { LandingContactDomainModel } from '@/backend_landing/modules/landing/domain/landing-contact.domain';
 
 import type { LandingCreateContactInput } from '@/backend_landing/modules/landing/services/landing-contact-input.types';
 
-import type { TransactionContext } from '@/backend_landing/core/database/transaction-context';
+import { TransactionContext } from '@/backend_landing/core/database/transaction-context';
 
 
 @Injectable()

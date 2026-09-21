@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Validates the exact frontend-frozen Auth login request contract.
+﻿// RESPONSIBILITY: Validates the exact frontend-frozen Auth login request contract.
 // FLOW: HTTP POST /auth/login -> AuthLoginDto -> AuthLoginService.
 
 import { ApiProperty } from '@nestjs/swagger';

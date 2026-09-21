@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns all TypeORM persistence operations for Admin notifications; services never call save() directly.
-// FLOW: AdminNotificationsService → AdminNotificationsRepository → TypeORM → PostgreSQL notifications.
+﻿// RESPONSIBILITY: Owns all TypeORM persistence operations for Admin notifications; services never call save() directly.
+// FLOW: AdminNotificationsService â†’ AdminNotificationsRepository â†’ TypeORM â†’ PostgreSQL notifications.
 
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CorePaginatedResult } from '@/backend_admin/core/types/core-api-response.types';

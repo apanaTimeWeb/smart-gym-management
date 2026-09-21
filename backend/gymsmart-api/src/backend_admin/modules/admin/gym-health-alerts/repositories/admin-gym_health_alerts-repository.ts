@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns all TypeORM persistence operations for Admin gym-health-alerts; services never call save() directly.
-// FLOW: AdminGymHealthAlertsService → AdminGymHealthAlertsRepository → TypeORM → PostgreSQL gym_health_alerts.
+﻿// RESPONSIBILITY: Owns all TypeORM persistence operations for Admin gym-health-alerts; services never call save() directly.
+// FLOW: AdminGymHealthAlertsService â†’ AdminGymHealthAlertsRepository â†’ TypeORM â†’ PostgreSQL gym_health_alerts.
 
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CorePaginatedResult } from '@/backend_admin/core/types/core-api-response.types';

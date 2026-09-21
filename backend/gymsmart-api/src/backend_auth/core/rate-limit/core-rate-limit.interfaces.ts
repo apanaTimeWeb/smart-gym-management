@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Defines rate-limit configuration and request-boundary contracts for core enforcement.
+﻿// RESPONSIBILITY: Defines rate-limit configuration and request-boundary contracts for core enforcement.
 // FLOW: Controller metadata -> CoreRateLimitGuard -> CoreRateLimitTier -> Redis rate window.
 
 import type { Request } from 'express';

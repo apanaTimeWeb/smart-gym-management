@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Defines the stable response data contract for global-audit endpoints.
+﻿// RESPONSIBILITY: Defines the stable response data contract for global-audit endpoints.
 // FLOW: Domain model -> GlobalAuditResponseDto -> canonical ApiResponse envelope.
 import { ApiPropertyOptional } from '@nestjs/swagger';
 

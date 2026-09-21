@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes creation business flow for the dashboard feature.
+﻿// RESPONSIBILITY: Executes creation business flow for the dashboard feature.
 // FLOW: CommandController -> DashboardCreateService -> named repository mutation -> mapper.
 import { Injectable } from '@nestjs/common';
 import { DashboardRepository } from '@/backend_superadmin/modules/superadmin/dashboard/dashboard.repository';

@@ -1,4 +1,4 @@
-import { AdminSettingsMapper } from '@/backend_admin/modules/admin/settings/mappers/admin-settings.mapper';
+﻿import { AdminSettingsMapper } from '@/backend_admin/modules/admin/settings/mappers/admin-settings.mapper';
 import { AdminSettingsEntity } from '@/backend_admin/modules/admin/settings/entities/admin-settings-entity';
 
 describe('AdminSettingsMapper', () => {

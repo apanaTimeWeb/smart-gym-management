@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Validates mutation fields exposed by the Admin reports frontend contract.
-// FLOW: HTTP request body → AdminReportsMutationDto → service business validation → repository mutation.
+﻿// RESPONSIBILITY: Validates mutation fields exposed by the Admin reports frontend contract.
+// FLOW: HTTP request body â†’ AdminReportsMutationDto â†’ service business validation â†’ repository mutation.
 
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsOptional, IsString } from 'class-validator';

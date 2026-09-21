@@ -1,12 +1,12 @@
-// RESPONSIBILITY: Owns transaction-scoped durable idempotency reservations and completion state.
-// FLOW: IdempotencyService → CoreIdempotencyRepository → tenant PostgreSQL idempotency_records.
+﻿// RESPONSIBILITY: Owns transaction-scoped durable idempotency reservations and completion state.
+// FLOW: IdempotencyService â†’ CoreIdempotencyRepository â†’ tenant PostgreSQL idempotency_records.
 import { Injectable } from '@nestjs/common';
 
 import { CoreBaseRepository } from '@/backend_landing/core/database/base.repository';
 
 import { CoreIdempotencyRecordEntity } from '@/backend_landing/core/idempotency/core-idempotency-record.entity';
 
-import type { TransactionContext } from '@/backend_landing/core/database/transaction-context';
+import { TransactionContext } from '@/backend_landing/core/database/transaction-context';
 
 import type { ApiResponse } from '@/backend_landing/core/types/api-response.types';
 

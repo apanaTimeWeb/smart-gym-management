@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Validates and normalizes process configuration before application startup.
-// FLOW: Environment → buildValidatedConfig → ConfigModule → consumers.
+﻿// RESPONSIBILITY: Validates and normalizes process configuration before application startup.
+// FLOW: Environment â†’ buildValidatedConfig â†’ ConfigModule â†’ consumers.
 import { registerAs } from '@nestjs/config';
 
 function required(name: string): string {

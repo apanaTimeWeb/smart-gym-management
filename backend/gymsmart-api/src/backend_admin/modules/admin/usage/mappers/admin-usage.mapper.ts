@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Translates the TypeORM Admin usage entity into an ORM-independent domain model and frontend response.
-// FLOW: AdminUsageEntity → AdminUsageMapper → domain/response object.
+﻿// RESPONSIBILITY: Translates the TypeORM Admin usage entity into an ORM-independent domain model and frontend response.
+// FLOW: AdminUsageEntity â†’ AdminUsageMapper â†’ domain/response object.
 
 import { AdminUsageDomainModel } from '@/backend_admin/modules/admin/usage/domain/admin-usage.domain';
 import { AdminUsageEntity } from '@/backend_admin/modules/admin/usage/entities/admin-usage-entity';

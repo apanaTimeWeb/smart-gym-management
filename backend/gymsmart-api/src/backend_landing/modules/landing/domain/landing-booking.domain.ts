@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Defines the persistence-independent Landing booking domain object.
-// FLOW: Repository mapper → LandingBookingDomainModel → Landing service.
+﻿// RESPONSIBILITY: Defines the persistence-independent Landing booking domain object.
+// FLOW: Repository mapper â†’ LandingBookingDomainModel â†’ Landing service.
 import type { LandingBookingType } from '@/backend_landing/modules/landing/enums/landing-booking-type.enum';
 
 export interface LandingBookingDomainModel {

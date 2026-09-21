@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Maps master-database tenant records used for tenant authorization and routing.
-// FLOW: Master DB → CoreMasterTenantEntity → CoreMasterTenantLookupService → Tenant DataSource.
+﻿// RESPONSIBILITY: Maps master-database tenant records used for tenant authorization and routing.
+// FLOW: Master DB â†’ CoreMasterTenantEntity â†’ CoreMasterTenantLookupService â†’ Tenant DataSource.
 
 import { Column, Entity, PrimaryGeneratedColumn, Index } from 'typeorm';
 

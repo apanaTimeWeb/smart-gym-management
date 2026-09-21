@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Validates partial updates at the usage-meters HTTP boundary.
+﻿// RESPONSIBILITY: Validates partial updates at the usage-meters HTTP boundary.
 // FLOW: HTTP JSON -> UsageMetersUpdateDto -> UsageMeters service.
 import { Type } from 'class-transformer';
 import { IsBoolean, IsDate, IsEmail, IsEnum, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';

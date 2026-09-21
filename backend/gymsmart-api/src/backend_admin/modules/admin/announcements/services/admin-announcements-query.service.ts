@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns read-side use cases for Admin announcements; no write persistence occurs here.
-// FLOW: AdminAnnouncementsQueryController → AdminAnnouncementsQueryService → repository → mapper → ApiResponse.
+﻿// RESPONSIBILITY: Owns read-side use cases for Admin announcements; no write persistence occurs here.
+// FLOW: AdminAnnouncementsQueryController â†’ AdminAnnouncementsQueryService â†’ repository â†’ mapper â†’ ApiResponse.
 
 import { Injectable } from '@nestjs/common';
 import { AdminAnnouncementsRepository } from '@/backend_admin/modules/admin/announcements/repositories/admin-announcements-repository';

@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns PostgreSQL persistence for the Admin payouts feature and its frontend-backed payload.
-// FLOW: Payouts Repository → AdminPayoutsEntity → PostgreSQL gym_payouts table.
+﻿// RESPONSIBILITY: Owns PostgreSQL persistence for the Admin payouts feature and its frontend-backed payload.
+// FLOW: Payouts Repository â†’ AdminPayoutsEntity â†’ PostgreSQL gym_payouts table.
 
 import { Column, Entity, Index } from 'typeorm';
 import { CoreBaseEntity } from '@/backend_admin/core/database/core-base.entity';

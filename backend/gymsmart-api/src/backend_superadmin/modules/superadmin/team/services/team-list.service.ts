@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes paginated read logic for the team feature.
+﻿// RESPONSIBILITY: Executes paginated read logic for the team feature.
 // FLOW: QueryController -> TeamListService -> repository -> mapper -> response DTO.
 import { Injectable } from '@nestjs/common';
 import { TeamRepository } from '@/backend_superadmin/modules/superadmin/team/team.repository';

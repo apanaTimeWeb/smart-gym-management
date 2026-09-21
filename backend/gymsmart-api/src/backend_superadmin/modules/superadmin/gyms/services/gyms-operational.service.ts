@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes gym operational commands that are not CRUD persistence operations.
+﻿// RESPONSIBILITY: Executes gym operational commands that are not CRUD persistence operations.
 // FLOW: Controller -> operational use case -> repository validation/audit -> response contract.
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';

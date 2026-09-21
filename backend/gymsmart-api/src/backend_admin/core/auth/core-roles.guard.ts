@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Enforces declarative controller-level role requirements after authentication and tenant authorization.
-// FLOW: Controller metadata → CoreRolesGuard → trusted request actor → allow/reject.
+﻿// RESPONSIBILITY: Enforces declarative controller-level role requirements after authentication and tenant authorization.
+// FLOW: Controller metadata â†’ CoreRolesGuard â†’ trusted request actor â†’ allow/reject.
 
 import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';

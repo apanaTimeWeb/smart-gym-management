@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Produces revenue, cancellation, and tenant-health report arrays from the persisted report dataset.
+﻿// RESPONSIBILITY: Produces revenue, cancellation, and tenant-health report arrays from the persisted report dataset.
 // FLOW: Controller -> report data service -> reports repository -> typed contract projection.
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { ReportsRepository } from '@/backend_superadmin/modules/superadmin/reports/reports.repository';

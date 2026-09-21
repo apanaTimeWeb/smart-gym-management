@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Defines the required metadata contract for every future distributed scheduled job.
+﻿// RESPONSIBILITY: Defines the required metadata contract for every future distributed scheduled job.
 // FLOW: Feature job declaration -> ScheduledJobDefinition -> centralized job registry -> distributed scheduler.
 
 export interface ScheduledJobDefinition {

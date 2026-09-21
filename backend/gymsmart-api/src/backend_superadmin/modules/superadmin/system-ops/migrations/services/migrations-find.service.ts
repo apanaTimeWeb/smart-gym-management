@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes single-record retrieval for the migrations feature.
+﻿// RESPONSIBILITY: Executes single-record retrieval for the migrations feature.
 // FLOW: QueryController -> MigrationsFindService -> repository findByIdOrThrow -> mapper.
 import { Injectable } from '@nestjs/common';
 import { MigrationsRepository } from '@/backend_superadmin/modules/superadmin/system-ops/migrations/migrations.repository';

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Performs status transitions for backups records through the repository boundary.
+﻿// RESPONSIBILITY: Performs status transitions for backups records through the repository boundary.
 // FLOW: CommandController -> StatusService -> named repository update -> domain mapper.
 import { Injectable } from '@nestjs/common';
 import { BackupsRepository } from '@/backend_superadmin/modules/superadmin/system-ops/backups/backups.repository';

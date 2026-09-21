@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Writes immutable audit records for critical Superadmin mutations.
+﻿// RESPONSIBILITY: Writes immutable audit records for critical Superadmin mutations.
 // FLOW: Mutation service -> AuditTrailService -> audit_logs repository -> PostgreSQL.
 import { Injectable } from '@nestjs/common';
 import { DataSource } from 'typeorm';

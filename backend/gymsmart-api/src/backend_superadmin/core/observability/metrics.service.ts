@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Provides Prometheus-compatible in-process metrics primitives for the Superadmin API.
+﻿// RESPONSIBILITY: Provides Prometheus-compatible in-process metrics primitives for the Superadmin API.
 // FLOW: Request/worker observers -> MetricsService -> /metrics text endpoint.
 import { Injectable } from '@nestjs/common';
 @Injectable()

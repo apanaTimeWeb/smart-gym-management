@@ -1,7 +1,7 @@
-// RESPONSIBILITY: Describes the frontend-consumed response fields for Admin attendance.
+﻿// RESPONSIBILITY: Describes the frontend-consumed response fields for Admin attendance.
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-// FLOW: Repository domain → Attendance response mapper → ApiResponse<T>.
+// FLOW: Repository domain â†’ Attendance response mapper â†’ ApiResponse<T>.
 
 export class AdminAttendanceRecordDto {
   @ApiProperty()

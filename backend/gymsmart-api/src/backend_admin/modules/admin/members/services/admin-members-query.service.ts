@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns read-side use cases for Admin members; no write persistence occurs here.
-// FLOW: AdminMembersQueryController → AdminMembersQueryService → repository → mapper → ApiResponse.
+﻿// RESPONSIBILITY: Owns read-side use cases for Admin members; no write persistence occurs here.
+// FLOW: AdminMembersQueryController â†’ AdminMembersQueryService â†’ repository â†’ mapper â†’ ApiResponse.
 
 import { Injectable } from '@nestjs/common';
 import { AdminMembersRepository } from '@/backend_admin/modules/admin/members/repositories/admin-members-repository';

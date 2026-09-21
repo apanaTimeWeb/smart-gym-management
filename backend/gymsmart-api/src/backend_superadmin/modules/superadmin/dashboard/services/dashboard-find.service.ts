@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes single-record retrieval for the dashboard feature.
+﻿// RESPONSIBILITY: Executes single-record retrieval for the dashboard feature.
 // FLOW: QueryController -> DashboardFindService -> repository findByIdOrThrow -> mapper.
 import { Injectable } from '@nestjs/common';
 import { DashboardRepository } from '@/backend_superadmin/modules/superadmin/dashboard/dashboard.repository';

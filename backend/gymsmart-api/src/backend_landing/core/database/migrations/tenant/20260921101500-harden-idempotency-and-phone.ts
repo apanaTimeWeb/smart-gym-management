@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Adds durable tenant idempotency state and aligns the Landing phone database invariant with the frozen API contract.
-// FLOW: Tenant migration runner → PostgreSQL → idempotency_records / landing_bookings constraints.
+﻿// RESPONSIBILITY: Adds durable tenant idempotency state and aligns the Landing phone database invariant with the frozen API contract.
+// FLOW: Tenant migration runner â†’ PostgreSQL â†’ idempotency_records / landing_bookings constraints.
 import type { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class HardenIdempotencyAndPhone20260921101500 implements MigrationInterface {

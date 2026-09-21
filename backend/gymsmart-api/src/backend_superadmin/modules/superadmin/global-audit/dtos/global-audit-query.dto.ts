@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Validates pagination, search, and sorting inputs for the global-audit feature.
+﻿// RESPONSIBILITY: Validates pagination, search, and sorting inputs for the global-audit feature.
 // FLOW: HTTP query -> class-validator -> GlobalAuditListQuery.
 import { IsIn, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 import { PaginationQueryDto } from '@/backend_superadmin/core/pagination/pagination-query.dto';

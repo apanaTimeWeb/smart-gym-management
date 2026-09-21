@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Defines the persistence-neutral audit event contract consumed by CoreAuditService.
+﻿// RESPONSIBILITY: Defines the persistence-neutral audit event contract consumed by CoreAuditService.
 // FLOW: Feature service/orchestrator -> CoreAuditService -> CoreAuditLogInput -> CoreAuditLogRepository.
 
 import type { CoreAuditActorRole } from '@/backend_auth/core/audit/core-audit.constants';

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Maps Gym ORM entities into a frontend-safe domain representation without exposing encrypted sensitive persistence fields.
+﻿// RESPONSIBILITY: Maps Gym ORM entities into a frontend-safe domain representation without exposing encrypted sensitive persistence fields.
 // FLOW: TypeORM TenantEntity -> GymsMapper -> public Gym domain/response DTO.
 import type { TenantEntity } from '@/backend_superadmin/modules/superadmin/gyms/gyms.entity';
 import type { GymsDomainModel } from '@/backend_superadmin/modules/superadmin/gyms/types/gyms.interfaces';

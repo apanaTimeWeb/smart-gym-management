@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Defines the only allowed pagination metadata shape for paginated API responses.
+﻿// RESPONSIBILITY: Defines the only allowed pagination metadata shape for paginated API responses.
 // FLOW: Repository count -> buildPaginationMeta -> response envelope meta.
 
 export interface PaginationMeta {

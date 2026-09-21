@@ -1,10 +1,10 @@
-// RESPONSIBILITY: Implements feature release-note CRUD and maps persistence into the frontend contract.
+﻿// RESPONSIBILITY: Implements feature release-note CRUD and maps persistence into the frontend contract.
 // FLOW: Controller -> FeaturesReleaseNoteService -> repository -> public response shape.
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
 import { FeatureReleaseNoteRepository } from '@/backend_superadmin/modules/superadmin/features/features-release-note.repository';
-import type { FeaturesReleaseNoteCreateDto } from '@/backend_superadmin/modules/superadmin/features/dtos/features-release-note-create.dto';
-import type { FeaturesReleaseNoteUpdateDto } from '@/backend_superadmin/modules/superadmin/features/dtos/features-release-note-update.dto';
+import { FeaturesReleaseNoteCreateDto } from '@/backend_superadmin/modules/superadmin/features/dtos/features-release-note-create.dto';
+import { FeaturesReleaseNoteUpdateDto } from '@/backend_superadmin/modules/superadmin/features/dtos/features-release-note-update.dto';
 @Injectable()
 export class FeaturesReleaseNoteService {
   constructor(private readonly repository: FeatureReleaseNoteRepository) {}

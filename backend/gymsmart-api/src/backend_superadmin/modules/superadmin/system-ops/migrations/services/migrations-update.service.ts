@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes partial update business flow for the migrations feature.
+﻿// RESPONSIBILITY: Executes partial update business flow for the migrations feature.
 // FLOW: CommandController -> MigrationsUpdateService -> named repository mutation -> mapper.
 import { Injectable } from '@nestjs/common';
 import { MigrationsRepository } from '@/backend_superadmin/modules/superadmin/system-ops/migrations/migrations.repository';

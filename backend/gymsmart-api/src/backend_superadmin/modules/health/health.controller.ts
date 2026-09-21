@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Exposes live/readiness/deep platform health probes for Kubernetes and internal operations.
+﻿// RESPONSIBILITY: Exposes live/readiness/deep platform health probes for Kubernetes and internal operations.
 // FLOW: Health route -> DB/Redis probes -> HTTP status.
 import { Controller, Get, HttpStatus, ServiceUnavailableException, UseGuards } from '@nestjs/common';
 import { DataSource } from 'typeorm';

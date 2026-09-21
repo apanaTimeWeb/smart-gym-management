@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Translates the TypeORM Admin sales entity into an ORM-independent domain model and frontend response.
-// FLOW: AdminSalesEntity → AdminSalesMapper → domain/response object.
+﻿// RESPONSIBILITY: Translates the TypeORM Admin sales entity into an ORM-independent domain model and frontend response.
+// FLOW: AdminSalesEntity â†’ AdminSalesMapper â†’ domain/response object.
 
 import { AdminSalesDomainModel } from '@/backend_admin/modules/admin/sales/domain/admin-sales.domain';
 import { AdminSalesEntity } from '@/backend_admin/modules/admin/sales/entities/admin-sales-entity';

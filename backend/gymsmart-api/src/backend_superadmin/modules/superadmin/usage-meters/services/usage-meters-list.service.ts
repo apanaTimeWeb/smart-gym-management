@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes paginated read logic for the usage-meters feature.
+﻿// RESPONSIBILITY: Executes paginated read logic for the usage-meters feature.
 // FLOW: QueryController -> UsageMetersListService -> repository -> mapper -> response DTO.
 import { Injectable } from '@nestjs/common';
 import { UsageMetersRepository } from '@/backend_superadmin/modules/superadmin/usage-meters/usage-meters.repository';

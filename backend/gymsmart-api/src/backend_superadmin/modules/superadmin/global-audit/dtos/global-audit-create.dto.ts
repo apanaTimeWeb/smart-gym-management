@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Validates creation payloads at the global-audit HTTP boundary.
+﻿// RESPONSIBILITY: Validates creation payloads at the global-audit HTTP boundary.
 // FLOW: HTTP JSON -> GlobalAuditCreateDto -> GlobalAudit service.
 import { IsBoolean, IsDateString, IsEmail, IsEnum, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 export class GlobalAuditCreateDto {

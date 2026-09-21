@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Exposes mutation endpoints for Admin notifications; contains HTTP concerns only.
+﻿// RESPONSIBILITY: Exposes mutation endpoints for Admin notifications; contains HTTP concerns only.
 // FLOW: HTTP mutation -> AdminNotificationsCommandController -> AdminNotificationsCommandService.
 
 import { Body, Controller, Delete, Headers, HttpStatus, Param, Patch, Post, UseGuards } from '@nestjs/common';

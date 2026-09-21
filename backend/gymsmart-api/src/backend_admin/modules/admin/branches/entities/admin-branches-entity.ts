@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns PostgreSQL persistence for the Admin branches feature and its frontend-backed payload.
-// FLOW: Branches Repository → AdminBranchesEntity → PostgreSQL branches table.
+﻿// RESPONSIBILITY: Owns PostgreSQL persistence for the Admin branches feature and its frontend-backed payload.
+// FLOW: Branches Repository â†’ AdminBranchesEntity â†’ PostgreSQL branches table.
 
 import { Column, Entity, Index } from 'typeorm';
 import { CoreBaseEntity } from '@/backend_admin/core/database/core-base.entity';

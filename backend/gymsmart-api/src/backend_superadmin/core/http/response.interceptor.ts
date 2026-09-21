@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Wraps every successful controller result in the canonical ApiResponse envelope.
+﻿// RESPONSIBILITY: Wraps every successful controller result in the canonical ApiResponse envelope.
 // FLOW: Controller result -> ResponseInterceptor -> { success, message, data, meta }.
 import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
 import { Observable, map } from 'rxjs';

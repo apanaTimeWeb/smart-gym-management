@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Registers durable and cached idempotency infrastructure for critical mutation protection.
-// FLOW: AppModule → IdempotencyModule → IdempotencyService + CoreIdempotencyRepository.
+﻿// RESPONSIBILITY: Registers durable and cached idempotency infrastructure for critical mutation protection.
+// FLOW: AppModule â†’ IdempotencyModule â†’ IdempotencyService + CoreIdempotencyRepository.
 import { Global, Module } from '@nestjs/common';
 
 import { CoreIdempotencyRepository } from '@/backend_landing/core/idempotency/idempotency.repository';

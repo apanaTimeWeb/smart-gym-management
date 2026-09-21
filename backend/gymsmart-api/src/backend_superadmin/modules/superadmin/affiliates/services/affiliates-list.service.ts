@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes paginated read logic for the affiliates feature.
+﻿// RESPONSIBILITY: Executes paginated read logic for the affiliates feature.
 // FLOW: QueryController -> AffiliatesListService -> repository -> mapper -> response DTO.
 import { Injectable } from '@nestjs/common';
 import { AffiliatesRepository } from '@/backend_superadmin/modules/superadmin/affiliates/affiliates.repository';

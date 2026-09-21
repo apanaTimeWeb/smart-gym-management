@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Defines the ORM-independent domain shape for Admin reports records.
-// FLOW: PostgreSQL entity → AdminReportsMapper → AdminReportsDomainModel → service.
+﻿// RESPONSIBILITY: Defines the ORM-independent domain shape for Admin reports records.
+// FLOW: PostgreSQL entity â†’ AdminReportsMapper â†’ AdminReportsDomainModel â†’ service.
 
 export interface AdminReportsDomainModel {
   id: string;

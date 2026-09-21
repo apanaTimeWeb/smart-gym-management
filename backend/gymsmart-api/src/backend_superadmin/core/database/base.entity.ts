@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Provides the canonical persistence identity and lifecycle fields shared by every TypeORM entity.
+﻿// RESPONSIBILITY: Provides the canonical persistence identity and lifecycle fields shared by every TypeORM entity.
 // FLOW: Feature entity -> BaseEntity -> PostgreSQL primary key + lifecycle columns.
 import { Column, PrimaryColumn } from 'typeorm';
 

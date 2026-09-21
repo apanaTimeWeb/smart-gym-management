@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Exposes Admin profile mutations using the exact frontend API action paths and HTTP concerns only.
-// FLOW: HTTP mutation → AdminProfileCommandController → AdminProfileCommandService.
+﻿// RESPONSIBILITY: Exposes Admin profile mutations using the exact frontend API action paths and HTTP concerns only.
+// FLOW: HTTP mutation â†’ AdminProfileCommandController â†’ AdminProfileCommandService.
 
 import { Body, Controller, Headers, HttpStatus, Post, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';

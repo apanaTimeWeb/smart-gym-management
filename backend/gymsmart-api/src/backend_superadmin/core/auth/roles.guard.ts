@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Enforces controller-layer RBAC using typed role metadata.
+﻿// RESPONSIBILITY: Enforces controller-layer RBAC using typed role metadata.
 // FLOW: @Roles metadata -> RolesGuard -> request.user.role -> allow/deny.
 import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Maps Invoices ORM entities into domain-safe response data.
+﻿// RESPONSIBILITY: Maps Invoices ORM entities into domain-safe response data.
 // FLOW: TypeORM entity -> InvoicesMapper -> domain model -> response DTO.
 import type { SaasInvoiceEntity } from '@/backend_superadmin/modules/superadmin/saas-billing/invoices/invoices.entity';
 import type { InvoicesDomainModel } from '@/backend_superadmin/modules/superadmin/saas-billing/invoices/types/invoices.interfaces';

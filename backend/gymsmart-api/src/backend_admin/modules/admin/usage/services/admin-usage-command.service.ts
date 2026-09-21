@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns the Admin usage upgrade-request use case and its audit event.
-// FLOW: Usage command controller → command service → master repository → audit trail.
+﻿// RESPONSIBILITY: Owns the Admin usage upgrade-request use case and its audit event.
+// FLOW: Usage command controller â†’ command service â†’ master repository â†’ audit trail.
 
 import { Injectable } from '@nestjs/common';
 import { CoreAuditTrailService } from '@/backend_admin/core/audit/core-audit-trail.service';

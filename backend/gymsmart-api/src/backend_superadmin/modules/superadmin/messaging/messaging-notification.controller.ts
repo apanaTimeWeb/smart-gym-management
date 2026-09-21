@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Owns notification read-state and notification retrieval endpoints.
+﻿// RESPONSIBILITY: Owns notification read-state and notification retrieval endpoints.
 // FLOW: HTTP -> notification service -> repository -> canonical response interceptor.
 import { Controller, Get, Param, Patch, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';

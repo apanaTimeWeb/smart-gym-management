@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Marks intentionally public routes for the global access-token guard.
+﻿// RESPONSIBILITY: Marks intentionally public routes for the global access-token guard.
 // FLOW: Controller metadata -> CoreJwtAuthGuard -> public route bypass.
 
 import { SetMetadata } from '@nestjs/common';

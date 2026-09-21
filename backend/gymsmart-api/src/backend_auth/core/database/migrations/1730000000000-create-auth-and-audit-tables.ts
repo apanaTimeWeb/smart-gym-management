@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Creates the master Auth/audit schema with explicit human-readable DB constraints and indexes.
+﻿// RESPONSIBILITY: Creates the master Auth/audit schema with explicit human-readable DB constraints and indexes.
 // FLOW: TypeORM migration runner -> PostgreSQL -> auth_users/auth_refresh_sessions/audit_logs.
 
 import type { MigrationInterface, QueryRunner } from 'typeorm';

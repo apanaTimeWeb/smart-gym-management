@@ -32,7 +32,7 @@ export class BackupsRepository extends BaseRepository<BackupRecordEntity> {
   async findByIdOrThrow(id: string): Promise<BackupRecordEntity> { return super.findByIdOrThrow(id, 'Backups record not found'); }
 
   /** Creates and persists a backups record. */
-  async createBackups(input: BackupsCreateInput): Promise<BackupRecordEntity> { const entity = this.activeRepository.create(input as never); return this.activeRepository.save(entity); }
+  async createBackups(input: BackupsCreateInput): Promise<BackupRecordEntity> { const entity = this.activeRepository.create(input as any); return this.activeRepository.save(entity); }
 
   /** Applies an intention-revealing update to a backups record. */
   async updateBackupsById(id: string, input: BackupsUpdateInput): Promise<BackupRecordEntity> { await this.activeRepository.update({ id } as never, input as never); return this.findByIdOrThrow(id); }

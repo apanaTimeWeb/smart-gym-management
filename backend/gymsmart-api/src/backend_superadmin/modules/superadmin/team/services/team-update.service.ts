@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes partial update business flow for the team feature.
+﻿// RESPONSIBILITY: Executes partial update business flow for the team feature.
 // FLOW: CommandController -> TeamUpdateService -> named repository mutation -> mapper.
 import { Injectable } from '@nestjs/common';
 import { TeamRepository } from '@/backend_superadmin/modules/superadmin/team/team.repository';

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Invalidates cache entries scoped to selected tenant IDs only.
+﻿// RESPONSIBILITY: Invalidates cache entries scoped to selected tenant IDs only.
 // FLOW: Controller -> InfrastructureFlushTenantService -> RedisService pattern deletion.
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { RedisService } from '@/backend_superadmin/core/cache/redis.service';

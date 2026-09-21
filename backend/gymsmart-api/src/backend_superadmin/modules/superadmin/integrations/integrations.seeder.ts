@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Deterministically seeds the integrations table for local/test environments.
+﻿// RESPONSIBILITY: Deterministically seeds the integrations table for local/test environments.
 // FLOW: Master seed -> IntegrationsSeeder -> PostgreSQL repository.
 import { DataSource } from 'typeorm';
 import { IntegrationKeyEntity } from '@/backend_superadmin/modules/superadmin/integrations/integrations.entity';

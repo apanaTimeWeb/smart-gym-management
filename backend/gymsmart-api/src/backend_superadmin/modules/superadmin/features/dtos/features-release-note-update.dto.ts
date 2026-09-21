@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Validates partial feature release-note updates.
+﻿// RESPONSIBILITY: Validates partial feature release-note updates.
 // FLOW: HTTP -> DTO -> release-note service -> repository.
 import { Type } from 'class-transformer';
 import { IsBoolean, IsDate, IsOptional, IsString, Length } from 'class-validator';

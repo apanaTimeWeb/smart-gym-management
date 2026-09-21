@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes partial update business flow for the dashboard feature.
+﻿// RESPONSIBILITY: Executes partial update business flow for the dashboard feature.
 // FLOW: CommandController -> DashboardUpdateService -> named repository mutation -> mapper.
 import { Injectable } from '@nestjs/common';
 import { DashboardRepository } from '@/backend_superadmin/modules/superadmin/dashboard/dashboard.repository';

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Exposes liveness, readiness and authenticated deep health probes for container orchestration.
+﻿// RESPONSIBILITY: Exposes liveness, readiness and authenticated deep health probes for container orchestration.
 // FLOW: Health probe -> CoreHealthController -> PostgreSQL/Redis dependency checks -> health result.
 
 import { Controller, Get, HttpStatus } from '@nestjs/common';

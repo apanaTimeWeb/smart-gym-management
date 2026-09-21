@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Wraps successful controller returns in the single canonical ApiResponse envelope and lifts pagination metadata.
-// FLOW: Controller return → CoreResponseInterceptor → ApiResponse<T> with data/meta.
+﻿// RESPONSIBILITY: Wraps successful controller returns in the single canonical ApiResponse envelope and lifts pagination metadata.
+// FLOW: Controller return â†’ CoreResponseInterceptor â†’ ApiResponse<T> with data/meta.
 
 import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
 import { Observable } from 'rxjs';

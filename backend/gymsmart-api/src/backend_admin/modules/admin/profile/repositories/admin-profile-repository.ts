@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns all TypeORM persistence operations for Admin profile; services never call save() directly.
-// FLOW: AdminProfileService → AdminProfileRepository → TypeORM → PostgreSQL admin_profiles.
+﻿// RESPONSIBILITY: Owns all TypeORM persistence operations for Admin profile; services never call save() directly.
+// FLOW: AdminProfileService â†’ AdminProfileRepository â†’ TypeORM â†’ PostgreSQL admin_profiles.
 
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CorePaginatedResult } from '@/backend_admin/core/types/core-api-response.types';

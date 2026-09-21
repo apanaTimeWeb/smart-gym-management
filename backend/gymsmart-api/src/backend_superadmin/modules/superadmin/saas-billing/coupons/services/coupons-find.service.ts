@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes single-record retrieval for the coupons feature.
+﻿// RESPONSIBILITY: Executes single-record retrieval for the coupons feature.
 // FLOW: QueryController -> CouponsFindService -> repository findByIdOrThrow -> mapper.
 import { Injectable } from '@nestjs/common';
 import { CouponsRepository } from '@/backend_superadmin/modules/superadmin/saas-billing/coupons/coupons.repository';

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes single-record retrieval for the global-audit feature.
+﻿// RESPONSIBILITY: Executes single-record retrieval for the global-audit feature.
 // FLOW: QueryController -> GlobalAuditFindService -> repository findByIdOrThrow -> mapper.
 import { Injectable } from '@nestjs/common';
 import { GlobalAuditRepository } from '@/backend_superadmin/modules/superadmin/global-audit/global-audit.repository';

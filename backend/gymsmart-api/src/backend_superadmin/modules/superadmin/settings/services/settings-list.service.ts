@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes paginated read logic for the settings feature.
+﻿// RESPONSIBILITY: Executes paginated read logic for the settings feature.
 // FLOW: QueryController -> SettingsListService -> repository -> mapper -> response DTO.
 import { Injectable } from '@nestjs/common';
 import { SettingsRepository } from '@/backend_superadmin/modules/superadmin/settings/settings.repository';

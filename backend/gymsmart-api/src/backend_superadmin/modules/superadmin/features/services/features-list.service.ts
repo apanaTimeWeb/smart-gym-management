@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes paginated read logic for the features feature.
+﻿// RESPONSIBILITY: Executes paginated read logic for the features feature.
 // FLOW: QueryController -> FeaturesListService -> repository -> mapper -> response DTO.
 import { Injectable } from '@nestjs/common';
 import { FeaturesRepository } from '@/backend_superadmin/modules/superadmin/features/features.repository';

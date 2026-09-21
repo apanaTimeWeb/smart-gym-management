@@ -1,7 +1,7 @@
-// RESPONSIBILITY: Describes the frontend-consumed response fields for Admin campaigns.
+﻿// RESPONSIBILITY: Describes the frontend-consumed response fields for Admin campaigns.
 import { ApiProperty } from '@nestjs/swagger';
 
-// FLOW: Repository domain → Campaigns response mapper → ApiResponse<T>.
+// FLOW: Repository domain â†’ Campaigns response mapper â†’ ApiResponse<T>.
 
 export class AdminCampaignsAudienceDto {
   @ApiProperty()

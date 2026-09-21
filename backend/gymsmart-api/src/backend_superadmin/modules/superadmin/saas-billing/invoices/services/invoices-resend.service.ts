@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Validates an invoice before queuing its communication resend intent.
+﻿// RESPONSIBILITY: Validates an invoice before queuing its communication resend intent.
 // FLOW: Controller -> InvoicesResendService -> InvoicesRepository -> accepted async intent.
 import { Injectable } from '@nestjs/common';
 import { InvoicesRepository } from '@/backend_superadmin/modules/superadmin/saas-billing/invoices/invoices.repository';

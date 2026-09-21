@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns PostgreSQL persistence for the Admin data-export feature and its frontend-backed payload.
-// FLOW: DataExport Repository → AdminDataExportEntity → PostgreSQL data_export_jobs table.
+﻿// RESPONSIBILITY: Owns PostgreSQL persistence for the Admin data-export feature and its frontend-backed payload.
+// FLOW: DataExport Repository â†’ AdminDataExportEntity â†’ PostgreSQL data_export_jobs table.
 
 import { Column, Entity, Index } from 'typeorm';
 import { CoreBaseEntity } from '@/backend_admin/core/database/core-base.entity';

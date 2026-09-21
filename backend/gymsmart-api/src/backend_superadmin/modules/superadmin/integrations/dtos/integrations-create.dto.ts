@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Validates creation payloads at the integrations HTTP boundary.
+﻿// RESPONSIBILITY: Validates creation payloads at the integrations HTTP boundary.
 // FLOW: HTTP JSON -> IntegrationsCreateDto -> Integrations service.
 import { Type } from 'class-transformer';
 import { IsBoolean, IsDate, IsEmail, IsEnum, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';

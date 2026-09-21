@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Owns refresh-session reads and named creation, rotation and revocation mutations.
+﻿// RESPONSIBILITY: Owns refresh-session reads and named creation, rotation and revocation mutations.
 // FLOW: Auth refresh/logout service -> AuthRefreshSessionRepository -> TypeORM -> AuthRefreshSessionMapper -> domain.
 
 import { Injectable } from '@nestjs/common';
@@ -7,9 +7,9 @@ import { CoreBaseRepository } from '@/backend_auth/core/database/core-base-repos
 import { AuthRefreshSessionEntity } from '@/backend_auth/modules/auth/entities/auth-refresh-session.entity';
 import { AuthRefreshSessionMapper } from '@/backend_auth/modules/auth/mappers/auth-refresh-session.mapper';
 
-import type { CoreRequestContextService } from '@/backend_auth/core/context/core-request-context';
+import { CoreRequestContextService } from '@/backend_auth/core/context/core-request-context';
 import type { AuthSessionDomain } from '@/backend_auth/modules/auth/auth.interfaces';
-import type { DataSource } from 'typeorm';
+import { DataSource } from 'typeorm';
 @Injectable()
 export class AuthRefreshSessionRepository extends CoreBaseRepository<AuthRefreshSessionEntity> {
   constructor(dataSource: DataSource, requestContext: CoreRequestContextService) {

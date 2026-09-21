@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Validates pagination, search, and sorting inputs for the usage-meters feature.
+﻿// RESPONSIBILITY: Validates pagination, search, and sorting inputs for the usage-meters feature.
 // FLOW: HTTP query -> class-validator -> UsageMetersListQuery.
 import { IsIn, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 import { PaginationQueryDto } from '@/backend_superadmin/core/pagination/pagination-query.dto';

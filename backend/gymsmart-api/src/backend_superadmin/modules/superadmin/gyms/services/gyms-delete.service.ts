@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes the soft-delete flow for the gyms feature.
+﻿// RESPONSIBILITY: Executes the soft-delete flow for the gyms feature.
 // FLOW: CommandController -> GymsDeleteService -> repository named soft-delete -> audit hook.
 import { Injectable } from '@nestjs/common';
 import { GymsRepository } from '@/backend_superadmin/modules/superadmin/gyms/gyms.repository';

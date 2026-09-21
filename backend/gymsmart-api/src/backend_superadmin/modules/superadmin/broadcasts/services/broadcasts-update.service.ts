@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes partial update business flow for the broadcasts feature.
+﻿// RESPONSIBILITY: Executes partial update business flow for the broadcasts feature.
 // FLOW: CommandController -> BroadcastsUpdateService -> named repository mutation -> mapper.
 import { Injectable } from '@nestjs/common';
 import { BroadcastsRepository } from '@/backend_superadmin/modules/superadmin/broadcasts/broadcasts.repository';

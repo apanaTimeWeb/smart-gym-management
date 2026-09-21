@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Deterministically seeds the compliance table for local/test environments.
+﻿// RESPONSIBILITY: Deterministically seeds the compliance table for local/test environments.
 // FLOW: Master seed -> ComplianceSeeder -> PostgreSQL repository.
 import { DataSource } from 'typeorm';
 import { ComplianceSnapshotEntity } from '@/backend_superadmin/modules/superadmin/compliance/compliance.entity';

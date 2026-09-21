@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Owns write-side use cases for Admin notifications; persistence remains behind the feature repository.
+﻿// RESPONSIBILITY: Owns write-side use cases for Admin notifications; persistence remains behind the feature repository.
 // FLOW: AdminNotificationsCommandController -> AdminNotificationsCommandService -> named repository mutation -> audit trail.
 
 import { Injectable } from '@nestjs/common';

@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Validates and normalizes frontend filters for Admin audit logs.
-// FLOW: HTTP query → AdminAuditLogsQueryDto → repository allowlists → tenant audit_logs query.
+﻿// RESPONSIBILITY: Validates and normalizes frontend filters for Admin audit logs.
+// FLOW: HTTP query â†’ AdminAuditLogsQueryDto â†’ repository allowlists â†’ tenant audit_logs query.
 
 import { IsIn, IsISO8601, IsOptional, IsString, IsUUID } from 'class-validator';
 import { CorePaginationQueryDto } from '@/backend_admin/core/dto/core-pagination-query.dto';

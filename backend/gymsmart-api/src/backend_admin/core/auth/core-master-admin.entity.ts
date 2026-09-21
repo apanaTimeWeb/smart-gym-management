@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Stores master-database admin authentication records.
-// FLOW: Master DB → CoreMasterAdminEntity → CoreAuthService → access/refresh tokens.
+﻿// RESPONSIBILITY: Stores master-database admin authentication records.
+// FLOW: Master DB â†’ CoreMasterAdminEntity â†’ CoreAuthService â†’ access/refresh tokens.
 
 import { Column, Entity, PrimaryGeneratedColumn, Index } from 'typeorm';
 

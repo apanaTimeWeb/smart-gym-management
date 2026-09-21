@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Owns write-side use cases for Admin blacklist; persistence remains behind the feature repository.
+﻿// RESPONSIBILITY: Owns write-side use cases for Admin blacklist; persistence remains behind the feature repository.
 // FLOW: AdminBlacklistCommandController -> AdminBlacklistCommandService -> named repository mutation -> audit trail.
 
 import { Injectable } from '@nestjs/common';

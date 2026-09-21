@@ -1,7 +1,7 @@
-// RESPONSIBILITY: Describes the frontend-consumed response fields for Admin announcements.
+﻿// RESPONSIBILITY: Describes the frontend-consumed response fields for Admin announcements.
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-// FLOW: Repository domain → Announcements response mapper → ApiResponse<T>.
+// FLOW: Repository domain â†’ Announcements response mapper â†’ ApiResponse<T>.
 
 export class AdminAnnouncementViewsByBranchDto {
   @ApiProperty()

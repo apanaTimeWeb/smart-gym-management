@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Defines the ORM-independent domain shape for Admin hr records.
-// FLOW: PostgreSQL entity → AdminHrMapper → AdminHrDomainModel → service.
+﻿// RESPONSIBILITY: Defines the ORM-independent domain shape for Admin hr records.
+// FLOW: PostgreSQL entity â†’ AdminHrMapper â†’ AdminHrDomainModel â†’ service.
 
 export interface AdminHrDomainModel {
   id: string;

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Maps Coupons ORM entities into domain-safe response data.
+﻿// RESPONSIBILITY: Maps Coupons ORM entities into domain-safe response data.
 // FLOW: TypeORM entity -> CouponsMapper -> domain model -> response DTO.
 import type { CouponEntity } from '@/backend_superadmin/modules/superadmin/saas-billing/coupons/coupons.entity';
 import type { CouponsDomainModel } from '@/backend_superadmin/modules/superadmin/saas-billing/coupons/types/coupons.interfaces';

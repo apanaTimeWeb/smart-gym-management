@@ -1,7 +1,7 @@
-// RESPONSIBILITY: Describes the frontend-consumed response fields for Admin settings.
+﻿// RESPONSIBILITY: Describes the frontend-consumed response fields for Admin settings.
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-// FLOW: Repository domain → Settings response mapper → ApiResponse<T>.
+// FLOW: Repository domain â†’ Settings response mapper â†’ ApiResponse<T>.
 
 export class AdminGymProfileDto {
   @ApiProperty()

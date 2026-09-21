@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns all TypeORM persistence operations for Admin attendance; services never call save() directly.
-// FLOW: AdminAttendanceService → AdminAttendanceRepository → TypeORM → PostgreSQL attendance_records.
+﻿// RESPONSIBILITY: Owns all TypeORM persistence operations for Admin attendance; services never call save() directly.
+// FLOW: AdminAttendanceService â†’ AdminAttendanceRepository â†’ TypeORM â†’ PostgreSQL attendance_records.
 
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CorePaginatedResult } from '@/backend_admin/core/types/core-api-response.types';

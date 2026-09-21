@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes partial update business flow for the integrations feature.
+﻿// RESPONSIBILITY: Executes partial update business flow for the integrations feature.
 // FLOW: CommandController -> IntegrationsUpdateService -> named repository mutation -> mapper.
 import { Injectable } from '@nestjs/common';
 import { IntegrationsRepository } from '@/backend_superadmin/modules/superadmin/integrations/integrations.repository';

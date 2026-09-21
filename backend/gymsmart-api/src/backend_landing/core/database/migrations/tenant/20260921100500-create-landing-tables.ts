@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Creates Landing tenant tables, audit trail, and explicit database constraints.
-// FLOW: Tenant provisioner → tenant migration runner → PostgreSQL tenant database.
+﻿// RESPONSIBILITY: Creates Landing tenant tables, audit trail, and explicit database constraints.
+// FLOW: Tenant provisioner â†’ tenant migration runner â†’ PostgreSQL tenant database.
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class CreateLandingTables20260921100500 implements MigrationInterface {

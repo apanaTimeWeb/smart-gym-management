@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Applies one broadcast recipient delivery result and keeps counts consistent.
+﻿// RESPONSIBILITY: Applies one broadcast recipient delivery result and keeps counts consistent.
 // FLOW: delivery command -> broadcast existence -> atomic count update -> response.
 import { Injectable } from '@nestjs/common';
 import { BroadcastsRepository } from '@/backend_superadmin/modules/superadmin/broadcasts/broadcasts.repository';

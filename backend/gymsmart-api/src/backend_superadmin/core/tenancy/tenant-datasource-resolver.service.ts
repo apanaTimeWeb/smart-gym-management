@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Resolves request-scoped tenant PostgreSQL DataSources under a global connection-pool budget.
+﻿// RESPONSIBILITY: Resolves request-scoped tenant PostgreSQL DataSources under a global connection-pool budget.
 // FLOW: actor + tenant -> authorization -> bounded LRU cache -> tenant DataSource.
 import { Injectable, OnModuleDestroy } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';

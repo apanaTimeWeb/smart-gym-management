@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Defines controller-level RBAC metadata for protected endpoints.
+﻿// RESPONSIBILITY: Defines controller-level RBAC metadata for protected endpoints.
 // FLOW: @Roles -> RolesGuard -> AuthenticatedUser.role.
 import { SetMetadata } from '@nestjs/common';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';

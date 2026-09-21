@@ -1,4 +1,4 @@
-import { AdminCampaignsMapper } from '@/backend_admin/modules/admin/campaigns/mappers/admin-campaigns.mapper';
+﻿import { AdminCampaignsMapper } from '@/backend_admin/modules/admin/campaigns/mappers/admin-campaigns.mapper';
 import { AdminCampaignsEntity } from '@/backend_admin/modules/admin/campaigns/entities/admin-campaigns-entity';
 
 describe('AdminCampaignsMapper', () => {

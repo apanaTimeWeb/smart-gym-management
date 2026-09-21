@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Validates Admin login input at the API boundary.
-// FLOW: POST /auth/login → CoreAuthLoginDto → CoreAuthService.
+﻿// RESPONSIBILITY: Validates Admin login input at the API boundary.
+// FLOW: POST /auth/login â†’ CoreAuthLoginDto â†’ CoreAuthService.
 
 import { IsEmail, IsString, MinLength } from 'class-validator';
 

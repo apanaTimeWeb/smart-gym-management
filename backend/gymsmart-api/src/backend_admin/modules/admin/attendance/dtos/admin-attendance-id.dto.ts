@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Validates identifiers used by destructive or action endpoints.
-// FLOW: HTTP body → Id DTO → command service → named repository mutation.
+﻿// RESPONSIBILITY: Validates identifiers used by destructive or action endpoints.
+// FLOW: HTTP body â†’ Id DTO â†’ command service â†’ named repository mutation.
 
 import { IsUUID } from 'class-validator';
 

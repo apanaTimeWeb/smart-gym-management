@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Maps immutable business activity records into the tenant audit_logs table.
-// FLOW: Repository mutation → AuditLogRepository → audit_logs.
+﻿// RESPONSIBILITY: Maps immutable business activity records into the tenant audit_logs table.
+// FLOW: Repository mutation â†’ AuditLogRepository â†’ audit_logs.
 import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 
 import { CoreBaseEntity } from '@/backend_landing/core/database/base.entity';

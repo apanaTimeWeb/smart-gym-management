@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Defines the authoritative Auth role registry used by persistence, JWT claims, validation and RBAC.
+﻿// RESPONSIBILITY: Defines the authoritative Auth role registry used by persistence, JWT claims, validation and RBAC.
 // FLOW: AuthRole -> JWT/domain/entity -> @CoreRoles -> controller authorization.
 
 export enum AuthRole {

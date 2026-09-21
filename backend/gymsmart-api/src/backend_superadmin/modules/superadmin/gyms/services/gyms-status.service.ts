@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Performs status transitions for gyms records through the repository boundary.
+﻿// RESPONSIBILITY: Performs status transitions for gyms records through the repository boundary.
 // FLOW: CommandController -> StatusService -> named repository update -> domain mapper.
 import { Injectable } from '@nestjs/common';
 import { GymsRepository } from '@/backend_superadmin/modules/superadmin/gyms/gyms.repository';

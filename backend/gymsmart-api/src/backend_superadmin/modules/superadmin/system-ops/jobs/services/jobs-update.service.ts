@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes partial update business flow for the jobs feature.
+﻿// RESPONSIBILITY: Executes partial update business flow for the jobs feature.
 // FLOW: CommandController -> JobsUpdateService -> named repository mutation -> mapper.
 import { Injectable } from '@nestjs/common';
 import { JobsRepository } from '@/backend_superadmin/modules/superadmin/system-ops/jobs/jobs.repository';

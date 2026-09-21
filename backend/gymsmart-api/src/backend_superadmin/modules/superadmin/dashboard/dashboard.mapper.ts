@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Maps Dashboard ORM entities into domain-safe response data.
+﻿// RESPONSIBILITY: Maps Dashboard ORM entities into domain-safe response data.
 // FLOW: TypeORM entity -> DashboardMapper -> domain model -> response DTO.
 import type { DashboardSnapshotEntity } from '@/backend_superadmin/modules/superadmin/dashboard/dashboard.entity';
 import type { DashboardDomainModel } from '@/backend_superadmin/modules/superadmin/dashboard/types/dashboard.interfaces';

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Registers PostgreSQL TypeORM persistence with explicit pool, query-timeout and migration-only schema settings.
+﻿// RESPONSIBILITY: Registers PostgreSQL TypeORM persistence with explicit pool, query-timeout and migration-only schema settings.
 // FLOW: AppModule -> CoreDatabaseModule -> TypeORM DataSource -> PostgreSQL.
 
 import { Global, Module } from '@nestjs/common';

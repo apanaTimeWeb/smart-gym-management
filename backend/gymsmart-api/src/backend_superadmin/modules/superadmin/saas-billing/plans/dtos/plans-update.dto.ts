@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Validates partial updates at the plans HTTP boundary.
+﻿// RESPONSIBILITY: Validates partial updates at the plans HTTP boundary.
 // FLOW: HTTP JSON -> PlansUpdateDto -> Plans service.
 import { IsBoolean, IsDateString, IsEmail, IsEnum, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 export class PlansUpdateDto {

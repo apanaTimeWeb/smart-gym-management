@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Defines Landing-specific typed exceptions used by service and orchestration layers.
-// FLOW: Service/Orchestrator → typed exception → global HTTP error handling.
+﻿// RESPONSIBILITY: Defines Landing-specific typed exceptions used by service and orchestration layers.
+// FLOW: Service/Orchestrator â†’ typed exception â†’ global HTTP error handling.
 import { HttpException, HttpStatus } from '@nestjs/common';
 
 import { LANDING_ERRORS } from '@/backend_landing/modules/landing/landing.constants';

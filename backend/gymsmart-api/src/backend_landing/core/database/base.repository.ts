@@ -1,11 +1,11 @@
-// RESPONSIBILITY: Provides shared transaction-aware repository helpers, UUID lookup semantics, and soft-delete filtering.
-// FLOW: Feature repository → CoreBaseRepository → TypeORM repository → PostgreSQL.
+﻿// RESPONSIBILITY: Provides shared transaction-aware repository helpers, UUID lookup semantics, and soft-delete filtering.
+// FLOW: Feature repository â†’ CoreBaseRepository â†’ TypeORM repository â†’ PostgreSQL.
 import { NotFoundException } from '@nestjs/common';
 
 import { IsNull, Repository } from 'typeorm';
 
 import type { EntityTarget } from 'typeorm';
-import type { TransactionContext } from '@/backend_landing/core/database/transaction-context';
+import { TransactionContext } from '@/backend_landing/core/database/transaction-context';
 import type { CoreBaseEntity } from '@/backend_landing/core/database/base.entity';
 
 

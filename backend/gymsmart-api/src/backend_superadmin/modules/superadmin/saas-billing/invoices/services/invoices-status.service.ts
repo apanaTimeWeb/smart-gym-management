@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Performs status transitions for invoices records through the repository boundary.
+﻿// RESPONSIBILITY: Performs status transitions for invoices records through the repository boundary.
 // FLOW: CommandController -> StatusService -> named repository update -> domain mapper.
 import { Injectable } from '@nestjs/common';
 import { InvoicesRepository } from '@/backend_superadmin/modules/superadmin/saas-billing/invoices/invoices.repository';

@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns PostgreSQL persistence for the Admin sales feature and its frontend-backed payload.
-// FLOW: Sales Repository → AdminSalesEntity → PostgreSQL sales_snapshots table.
+﻿// RESPONSIBILITY: Owns PostgreSQL persistence for the Admin sales feature and its frontend-backed payload.
+// FLOW: Sales Repository â†’ AdminSalesEntity â†’ PostgreSQL sales_snapshots table.
 
 import { Column, Entity, Index } from 'typeorm';
 import { CoreBaseEntity } from '@/backend_admin/core/database/core-base.entity';

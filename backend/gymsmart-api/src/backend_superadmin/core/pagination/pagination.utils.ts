@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Builds the canonical pagination metadata required by every paginated API response.
+﻿// RESPONSIBILITY: Builds the canonical pagination metadata required by every paginated API response.
 // FLOW: validated page/limit + repository total -> buildPaginationMeta -> ApiResponse.meta.
 export interface PaginationMeta {
   total: number;

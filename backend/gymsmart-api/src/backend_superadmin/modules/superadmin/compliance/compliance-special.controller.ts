@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Owns explicitly versioned/specialized frontend contract endpoints for the compliance feature.
+﻿// RESPONSIBILITY: Owns explicitly versioned/specialized frontend contract endpoints for the compliance feature.
 // FLOW: HTTP -> specialized micro-service -> typed result -> canonical response interceptor.
 import { Body, Controller, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { ComplianceResponseDataDto } from '@/backend_superadmin/modules/superadmin/compliance/compliance-response-data.dto';

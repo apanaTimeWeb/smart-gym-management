@@ -1,7 +1,7 @@
-// RESPONSIBILITY: Describes the frontend-consumed response fields for Admin finance.
+﻿// RESPONSIBILITY: Describes the frontend-consumed response fields for Admin finance.
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-// FLOW: Repository domain → Finance response mapper → ApiResponse<T>.
+// FLOW: Repository domain â†’ Finance response mapper â†’ ApiResponse<T>.
 
 class AdminPaymentMemberDto {
   @ApiProperty() name!: string;

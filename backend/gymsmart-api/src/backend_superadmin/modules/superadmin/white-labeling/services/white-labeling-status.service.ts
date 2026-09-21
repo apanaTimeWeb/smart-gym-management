@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Applies an explicit white-label domain status transition and returns the persisted domain object.
+﻿// RESPONSIBILITY: Applies an explicit white-label domain status transition and returns the persisted domain object.
 // FLOW: WhiteLabelingCommandController -> WhiteLabelingStatusService -> repository -> mapper.
 import { Injectable } from '@nestjs/common';
 import { WhiteLabelingRepository } from '@/backend_superadmin/modules/superadmin/white-labeling/white-labeling.repository';

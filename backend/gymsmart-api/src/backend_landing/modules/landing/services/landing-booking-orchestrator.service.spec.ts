@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Proves durable idempotency replay and Redis-cache failure behavior for booking mutations.
-// FLOW: Unit test → LandingBookingOrchestratorService → durable idempotency + UnitOfWork + BookingService.
+﻿// RESPONSIBILITY: Proves durable idempotency replay and Redis-cache failure behavior for booking mutations.
+// FLOW: Unit test â†’ LandingBookingOrchestratorService â†’ durable idempotency + UnitOfWork + BookingService.
 import { HttpException, HttpStatus } from '@nestjs/common';
 
 import { LandingBookingType } from '@/backend_landing/modules/landing/enums/landing-booking-type.enum';

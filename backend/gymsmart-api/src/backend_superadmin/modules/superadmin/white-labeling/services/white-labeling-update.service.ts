@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes partial update business flow for the white-labeling feature.
+﻿// RESPONSIBILITY: Executes partial update business flow for the white-labeling feature.
 // FLOW: CommandController -> WhiteLabelingUpdateService -> named repository mutation -> mapper.
 import { Injectable } from '@nestjs/common';
 import { WhiteLabelingRepository } from '@/backend_superadmin/modules/superadmin/white-labeling/white-labeling.repository';

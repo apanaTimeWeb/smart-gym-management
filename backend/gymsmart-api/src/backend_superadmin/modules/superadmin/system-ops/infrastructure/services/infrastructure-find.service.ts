@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes single-record retrieval for the infrastructure feature.
+﻿// RESPONSIBILITY: Executes single-record retrieval for the infrastructure feature.
 // FLOW: QueryController -> InfrastructureFindService -> repository findByIdOrThrow -> mapper.
 import { Injectable } from '@nestjs/common';
 import { InfrastructureRepository } from '@/backend_superadmin/modules/superadmin/system-ops/infrastructure/infrastructure.repository';

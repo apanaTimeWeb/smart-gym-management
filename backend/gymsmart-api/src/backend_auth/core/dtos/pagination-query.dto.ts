@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Validates canonical one-indexed pagination query parameters for all paginated endpoints.
+﻿// RESPONSIBILITY: Validates canonical one-indexed pagination query parameters for all paginated endpoints.
 // FLOW: HTTP query -> PaginationQueryDto -> repository/query service.
 
 import { Type } from 'class-transformer';

@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns all TypeORM persistence operations for Admin sales; services never call save() directly.
-// FLOW: AdminSalesService → AdminSalesRepository → TypeORM → PostgreSQL sales_snapshots.
+﻿// RESPONSIBILITY: Owns all TypeORM persistence operations for Admin sales; services never call save() directly.
+// FLOW: AdminSalesService â†’ AdminSalesRepository â†’ TypeORM â†’ PostgreSQL sales_snapshots.
 
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CorePaginatedResult } from '@/backend_admin/core/types/core-api-response.types';

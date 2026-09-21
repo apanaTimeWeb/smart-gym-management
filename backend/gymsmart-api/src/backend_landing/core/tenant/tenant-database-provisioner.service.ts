@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Provisions deterministic application tenants and disposable isolated test tenants with explicit cleanup.
-// FLOW: Provision request/CLI → MasterTenantRepository → CREATE DATABASE → tenant migrations → tenant runtime.
+﻿// RESPONSIBILITY: Provisions deterministic application tenants and disposable isolated test tenants with explicit cleanup.
+// FLOW: Provision request/CLI â†’ MasterTenantRepository â†’ CREATE DATABASE â†’ tenant migrations â†’ tenant runtime.
 import { randomUUID } from 'node:crypto';
 
 import { Injectable } from '@nestjs/common';

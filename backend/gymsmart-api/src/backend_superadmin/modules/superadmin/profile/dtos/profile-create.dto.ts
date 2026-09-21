@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Validates creation payloads at the profile HTTP boundary.
+﻿// RESPONSIBILITY: Validates creation payloads at the profile HTTP boundary.
 // FLOW: HTTP JSON -> ProfileCreateDto -> Profile service.
 import { Type } from 'class-transformer';
 import { IsBoolean, IsDate, IsEmail, IsEnum, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';

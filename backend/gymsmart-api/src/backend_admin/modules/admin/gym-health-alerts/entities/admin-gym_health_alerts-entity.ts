@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns PostgreSQL persistence for the Admin gym-health-alerts feature and its frontend-backed payload.
-// FLOW: GymHealthAlerts Repository → AdminGymHealthAlertsEntity → PostgreSQL gym_health_alerts table.
+﻿// RESPONSIBILITY: Owns PostgreSQL persistence for the Admin gym-health-alerts feature and its frontend-backed payload.
+// FLOW: GymHealthAlerts Repository â†’ AdminGymHealthAlertsEntity â†’ PostgreSQL gym_health_alerts table.
 
 import { Column, Entity, Index } from 'typeorm';
 import { CoreBaseEntity } from '@/backend_admin/core/database/core-base.entity';

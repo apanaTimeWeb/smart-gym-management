@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Persists a Superadmin team alert event in the audit trail.
+﻿// RESPONSIBILITY: Persists a Superadmin team alert event in the audit trail.
 // FLOW: Controller -> TeamAlertsService -> AuditTrailService -> audit_logs.
 import { Injectable } from '@nestjs/common';
 import { AuditTrailService } from '@/backend_superadmin/core/observability/audit-trail.service';

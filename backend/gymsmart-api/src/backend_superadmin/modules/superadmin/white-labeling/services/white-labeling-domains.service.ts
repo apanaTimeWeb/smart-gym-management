@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Returns live white-label domains from the owning repository.
+﻿// RESPONSIBILITY: Returns live white-label domains from the owning repository.
 // FLOW: Controller -> WhiteLabelingDomainsService -> WhiteLabelingRepository -> domain rows.
 import { Injectable } from '@nestjs/common';
 import { WhiteLabelingRepository } from '@/backend_superadmin/modules/superadmin/white-labeling/white-labeling.repository';

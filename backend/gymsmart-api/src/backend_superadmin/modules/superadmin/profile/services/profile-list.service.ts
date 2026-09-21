@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes paginated read logic for the profile feature.
+﻿// RESPONSIBILITY: Executes paginated read logic for the profile feature.
 // FLOW: QueryController -> ProfileListService -> repository -> mapper -> response DTO.
 import { Injectable } from '@nestjs/common';
 import { ProfileRepository } from '@/backend_superadmin/modules/superadmin/profile/profile.repository';

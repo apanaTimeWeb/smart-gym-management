@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Deterministically seeds the settings table for local/test environments.
+﻿// RESPONSIBILITY: Deterministically seeds the settings table for local/test environments.
 // FLOW: Master seed -> SettingsSeeder -> PostgreSQL repository.
 import { DataSource } from 'typeorm';
 import { PlatformSettingEntity } from '@/backend_superadmin/modules/superadmin/settings/settings.entity';

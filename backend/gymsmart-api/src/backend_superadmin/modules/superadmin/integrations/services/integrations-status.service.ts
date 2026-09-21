@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Performs status transitions for integrations records through the repository boundary.
+﻿// RESPONSIBILITY: Performs status transitions for integrations records through the repository boundary.
 // FLOW: CommandController -> StatusService -> named repository update -> domain mapper.
 import { Injectable } from '@nestjs/common';
 import { IntegrationsRepository } from '@/backend_superadmin/modules/superadmin/integrations/integrations.repository';

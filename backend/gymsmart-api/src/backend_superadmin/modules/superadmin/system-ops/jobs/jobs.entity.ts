@@ -1,4 +1,4 @@
-// RESPONSIBILITY: TypeORM persistence entity for jobs feature data stored in `background_jobs`.
+﻿// RESPONSIBILITY: TypeORM persistence entity for jobs feature data stored in `background_jobs`.
 // FLOW: jobs repository -> BackgroundJob entity -> PostgreSQL `background_jobs`.
 import { Column, Entity, Index } from 'typeorm';
 import { BaseEntity } from '@/backend_superadmin/core/database/base.entity';

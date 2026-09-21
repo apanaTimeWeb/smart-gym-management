@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Maps Features ORM entities into domain-safe response data.
+﻿// RESPONSIBILITY: Maps Features ORM entities into domain-safe response data.
 // FLOW: TypeORM entity -> FeaturesMapper -> domain model -> response DTO.
 import type { FeatureFlagEntity } from '@/backend_superadmin/modules/superadmin/features/features.entity';
 import type { FeaturesDomainModel } from '@/backend_superadmin/modules/superadmin/features/types/features.interfaces';

@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Handles the update endpoint for the profile feature without owning unrelated business flows.
+﻿// RESPONSIBILITY: Handles the update endpoint for the profile feature without owning unrelated business flows.
 // FLOW: Controller -> ProfileUpdateService -> feature repository/infra dependency -> typed result.
 import { Injectable } from '@nestjs/common';
 import { ProfileRepository } from '@/backend_superadmin/modules/superadmin/profile/profile.repository';

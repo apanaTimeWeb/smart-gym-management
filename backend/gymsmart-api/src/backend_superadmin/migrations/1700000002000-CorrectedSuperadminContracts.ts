@@ -1,4 +1,4 @@
-import { MigrationInterface, QueryRunner } from 'typeorm';
+﻿import { MigrationInterface, QueryRunner } from 'typeorm';
 
 // RESPONSIBILITY: Create persistence tables required by the corrected Superadmin feature contracts.
 // FLOW: TypeORM migration runner -> create feature release notes + notifications tables and indexes.

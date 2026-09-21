@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Declares required typed roles for Admin controller endpoints.
-// FLOW: @CoreRoles() metadata → CoreRolesGuard → controller authorization.
+﻿// RESPONSIBILITY: Declares required typed roles for Admin controller endpoints.
+// FLOW: @CoreRoles() metadata â†’ CoreRolesGuard â†’ controller authorization.
 
 import { SetMetadata } from '@nestjs/common';
 import { CoreAdminRole } from '@/backend_admin/core/tenant/core-tenant.constants';

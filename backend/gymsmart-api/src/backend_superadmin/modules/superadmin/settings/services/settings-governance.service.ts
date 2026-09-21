@@ -1,7 +1,7 @@
-// RESPONSIBILITY: Reads the frontend contract state owned by this feature from PostgreSQL; no mock data is returned by the service.
+﻿// RESPONSIBILITY: Reads the frontend contract state owned by this feature from PostgreSQL; no mock data is returned by the service.
 // FLOW: Controller -> SettingsGovernanceService -> SettingsContractSnapshotRepository -> contract snapshot row -> canonical response interceptor.
 import { Injectable, NotFoundException } from '@nestjs/common';
-import type { SettingsGovernanceResponseDto } from '@/backend_superadmin/modules/superadmin/settings/settings-governance-response.dto';
+import { SettingsGovernanceResponseDto } from '@/backend_superadmin/modules/superadmin/settings/settings-governance-response.dto';
 import { SettingsContractSnapshotRepository } from '@/backend_superadmin/modules/superadmin/settings/settings-contract-snapshot.repository';
 import { SETTINGS_SNAPSHOT_KINDS } from '@/backend_superadmin/modules/superadmin/settings/settings.constants';
 

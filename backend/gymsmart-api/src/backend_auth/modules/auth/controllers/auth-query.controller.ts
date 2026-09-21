@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Owns Auth read endpoints only and delegates authoritative identity resolution to AuthMeService.
+﻿// RESPONSIBILITY: Owns Auth read endpoints only and delegates authoritative identity resolution to AuthMeService.
 // FLOW: GET /auth/me -> verified JWT -> AuthMeService -> domain user -> response mapper -> envelope.
 
 import { Controller, Get, HttpStatus, Req } from '@nestjs/common';

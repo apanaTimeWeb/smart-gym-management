@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns PostgreSQL persistence for the Admin usage feature and its frontend-backed payload.
-// FLOW: Usage Repository → AdminUsageEntity → PostgreSQL usage_snapshots table.
+﻿// RESPONSIBILITY: Owns PostgreSQL persistence for the Admin usage feature and its frontend-backed payload.
+// FLOW: Usage Repository â†’ AdminUsageEntity â†’ PostgreSQL usage_snapshots table.
 
 import { Column, Entity, Index } from 'typeorm';
 import { CoreBaseEntity } from '@/backend_admin/core/database/core-base.entity';

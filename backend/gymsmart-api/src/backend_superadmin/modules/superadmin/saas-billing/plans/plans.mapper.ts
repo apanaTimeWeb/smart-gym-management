@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Maps Plans ORM entities into domain-safe response data.
+﻿// RESPONSIBILITY: Maps Plans ORM entities into domain-safe response data.
 // FLOW: TypeORM entity -> PlansMapper -> domain model -> response DTO.
 import type { SubscriptionPlanEntity } from '@/backend_superadmin/modules/superadmin/saas-billing/plans/plans.entity';
 import type { PlansDomainModel } from '@/backend_superadmin/modules/superadmin/saas-billing/plans/types/plans.interfaces';

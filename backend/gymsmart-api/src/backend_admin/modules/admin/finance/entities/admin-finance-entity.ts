@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns PostgreSQL persistence for the Admin finance feature and its frontend-backed payload.
-// FLOW: Finance Repository → AdminFinanceEntity → PostgreSQL payment_transactions table.
+﻿// RESPONSIBILITY: Owns PostgreSQL persistence for the Admin finance feature and its frontend-backed payload.
+// FLOW: Finance Repository â†’ AdminFinanceEntity â†’ PostgreSQL payment_transactions table.
 
 import { Column, Entity, Index } from 'typeorm';
 import { CoreBaseEntity } from '@/backend_admin/core/database/core-base.entity';

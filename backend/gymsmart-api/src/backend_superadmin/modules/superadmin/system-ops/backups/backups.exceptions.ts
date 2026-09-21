@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Defines business-specific exceptions for the backups feature.
+﻿// RESPONSIBILITY: Defines business-specific exceptions for the backups feature.
 // FLOW: Service -> BackupsBusinessException -> global DomainExceptionFilter -> canonical error envelope.
 import { HttpStatus } from '@nestjs/common';
 export class BackupsNotFoundException extends Error { readonly statusCode = HttpStatus.NOT_FOUND; readonly errorCode = 'BACKUPS.RESOURCE.NOT_FOUND'; }

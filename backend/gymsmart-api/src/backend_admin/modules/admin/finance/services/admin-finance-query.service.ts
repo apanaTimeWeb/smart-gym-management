@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns read-side use cases for Admin finance; no write persistence occurs here.
-// FLOW: AdminFinanceQueryController → AdminFinanceQueryService → repository → mapper → ApiResponse.
+﻿// RESPONSIBILITY: Owns read-side use cases for Admin finance; no write persistence occurs here.
+// FLOW: AdminFinanceQueryController â†’ AdminFinanceQueryService â†’ repository â†’ mapper â†’ ApiResponse.
 
 import { Injectable } from '@nestjs/common';
 import { AdminFinanceRepository } from '@/backend_admin/modules/admin/finance/repositories/admin-finance-repository';

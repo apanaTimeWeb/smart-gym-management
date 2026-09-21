@@ -1,7 +1,7 @@
-// RESPONSIBILITY: Describes the frontend-consumed response fields for Admin plans.
+﻿// RESPONSIBILITY: Describes the frontend-consumed response fields for Admin plans.
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-// FLOW: Repository domain → Plans response mapper → ApiResponse<T>.
+// FLOW: Repository domain â†’ Plans response mapper â†’ ApiResponse<T>.
 
 export class AdminPlanDto {
   @ApiProperty() id!: string;
@@ -17,8 +17,6 @@ export class AdminPlanDto {
   @ApiPropertyOptional() joiningFee?: number;
   @ApiPropertyOptional() ptSessionsIncluded?: number;
   @ApiPropertyOptional() taxRate?: number;
-}
-
 }
 
 export class AdminPlanRevenueRecordDto {

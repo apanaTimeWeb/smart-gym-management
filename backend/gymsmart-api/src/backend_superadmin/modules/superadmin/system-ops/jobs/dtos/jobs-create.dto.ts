@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Validates creation payloads at the jobs HTTP boundary.
+﻿// RESPONSIBILITY: Validates creation payloads at the jobs HTTP boundary.
 // FLOW: HTTP JSON -> JobsCreateDto -> Jobs service.
 import { IsBoolean, IsDateString, IsEmail, IsEnum, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 

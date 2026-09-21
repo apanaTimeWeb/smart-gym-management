@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Applies Redis-backed request throttling from centralized tiers without hardcoded controller limits.
-// FLOW: Request → CoreRateLimitGuard → CoreRateLimitConfig → Redis window counter.
+﻿// RESPONSIBILITY: Applies Redis-backed request throttling from centralized tiers without hardcoded controller limits.
+// FLOW: Request â†’ CoreRateLimitGuard â†’ CoreRateLimitConfig â†’ Redis window counter.
 
 import { CanActivate, ExecutionContext, Injectable, TooManyRequestsException } from '@nestjs/common';
 

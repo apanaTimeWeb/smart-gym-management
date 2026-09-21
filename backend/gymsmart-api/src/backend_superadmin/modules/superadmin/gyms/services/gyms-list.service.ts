@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes paginated read logic for the gyms feature.
+﻿// RESPONSIBILITY: Executes paginated read logic for the gyms feature.
 // FLOW: QueryController -> GymsListService -> repository -> mapper -> response DTO.
 import { Injectable } from '@nestjs/common';
 import { GymsRepository } from '@/backend_superadmin/modules/superadmin/gyms/gyms.repository';

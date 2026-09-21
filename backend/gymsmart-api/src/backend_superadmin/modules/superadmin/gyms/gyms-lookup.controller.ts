@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Owns the single shared Superadmin gym lookup endpoint required by multiple frontend feature slices.
+﻿// RESPONSIBILITY: Owns the single shared Superadmin gym lookup endpoint required by multiple frontend feature slices.
 // FLOW: GET /gyms -> JwtAuthGuard -> RolesGuard -> GymsLookupService -> PostgreSQL -> response interceptor.
 import { Controller, Get, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';

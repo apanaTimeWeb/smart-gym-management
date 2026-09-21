@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Enforces declarative RBAC metadata at the HTTP controller boundary.
+﻿// RESPONSIBILITY: Enforces declarative RBAC metadata at the HTTP controller boundary.
 // FLOW: Controller @CoreRoles -> CoreRolesGuard -> verified JWT role -> decision.
 
 import { ForbiddenException, Injectable } from '@nestjs/common';
@@ -7,7 +7,7 @@ import { Reflector } from '@nestjs/core';
 import { CoreErrorConstants } from '@/backend_auth/core/constants/core-error.constants';
 import { CORE_ROLES } from '@/backend_auth/core/security/core-roles.decorator';
 
-import type { CanActivate, ExecutionContext } from '@nestjs/common';
+import { CanActivate, ExecutionContext } from '@nestjs/common';
 import type { CoreRoleRequest } from '@/backend_auth/core/security/core-security.interfaces';
 @Injectable()
 export class CoreRolesGuard implements CanActivate {

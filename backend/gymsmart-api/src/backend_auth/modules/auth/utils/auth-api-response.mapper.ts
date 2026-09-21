@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Maps Auth domain objects to HTTP DTOs without exposing TypeORM entities.
+﻿// RESPONSIBILITY: Maps Auth domain objects to HTTP DTOs without exposing TypeORM entities.
 // FLOW: Auth domain -> AuthApiResponseMapper -> response DTO -> global response envelope.
 
 import { AuthLoginResponseDto } from '@/backend_auth/modules/auth/dtos/auth-login-response.dto';

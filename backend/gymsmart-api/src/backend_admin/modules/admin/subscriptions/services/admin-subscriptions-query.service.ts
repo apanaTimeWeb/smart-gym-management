@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns read-side use cases for Admin subscriptions from the master billing store.
-// FLOW: AdminSubscriptionsQueryController → AdminSubscriptionsQueryService → repository → frontend contract.
+﻿// RESPONSIBILITY: Owns read-side use cases for Admin subscriptions from the master billing store.
+// FLOW: AdminSubscriptionsQueryController â†’ AdminSubscriptionsQueryService â†’ repository â†’ frontend contract.
 
 import { Injectable } from '@nestjs/common';
 import type { CorePaginationMeta } from '@/backend_admin/core/types/core-api-response.types';

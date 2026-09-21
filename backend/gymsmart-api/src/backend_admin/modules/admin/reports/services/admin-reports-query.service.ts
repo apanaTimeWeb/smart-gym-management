@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns read-side use cases for Admin reports; no write persistence occurs here.
-// FLOW: AdminReportsQueryController → AdminReportsQueryService → repository → mapper → ApiResponse.
+﻿// RESPONSIBILITY: Owns read-side use cases for Admin reports; no write persistence occurs here.
+// FLOW: AdminReportsQueryController â†’ AdminReportsQueryService â†’ repository â†’ mapper â†’ ApiResponse.
 
 import { Injectable } from '@nestjs/common';
 import { AdminReportsRepository } from '@/backend_admin/modules/admin/reports/repositories/admin-reports-repository';

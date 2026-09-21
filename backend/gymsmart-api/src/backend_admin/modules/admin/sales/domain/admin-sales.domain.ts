@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Defines the ORM-independent domain shape for Admin sales records.
-// FLOW: PostgreSQL entity → AdminSalesMapper → AdminSalesDomainModel → service.
+﻿// RESPONSIBILITY: Defines the ORM-independent domain shape for Admin sales records.
+// FLOW: PostgreSQL entity â†’ AdminSalesMapper â†’ AdminSalesDomainModel â†’ service.
 
 export interface AdminSalesDomainModel {
   id: string;

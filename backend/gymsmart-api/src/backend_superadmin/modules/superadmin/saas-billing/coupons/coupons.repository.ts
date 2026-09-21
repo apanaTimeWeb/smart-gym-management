@@ -32,7 +32,7 @@ export class CouponsRepository extends BaseRepository<CouponEntity> {
   async findByIdOrThrow(id: string): Promise<CouponEntity> { return super.findByIdOrThrow(id, 'Coupons record not found'); }
 
   /** Creates and persists a coupons record. */
-  async createCoupons(input: CouponsCreateInput): Promise<CouponEntity> { const entity = this.activeRepository.create(input as never); return this.activeRepository.save(entity); }
+  async createCoupons(input: CouponsCreateInput): Promise<CouponEntity> { const entity = this.activeRepository.create(input as any); return this.activeRepository.save(entity); }
 
   /** Applies an intention-revealing update to a coupons record. */
   async updateCouponsById(id: string, input: CouponsUpdateInput): Promise<CouponEntity> { await this.activeRepository.update({ id } as never, input as never); return this.findByIdOrThrow(id); }

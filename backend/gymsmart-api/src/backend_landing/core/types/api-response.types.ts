@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Defines the canonical response envelope shared by every HTTP success and error path.
-// FLOW: Controller return → ResponseInterceptor → ApiResponse<T>.
+﻿// RESPONSIBILITY: Defines the canonical response envelope shared by every HTTP success and error path.
+// FLOW: Controller return â†’ ResponseInterceptor â†’ ApiResponse<T>.
 export interface PaginationMeta {
   page: number;
   limit: number;

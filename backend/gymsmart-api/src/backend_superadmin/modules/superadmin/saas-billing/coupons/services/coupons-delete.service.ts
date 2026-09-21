@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Executes the soft-delete flow for the coupons feature.
+﻿// RESPONSIBILITY: Executes the soft-delete flow for the coupons feature.
 // FLOW: CommandController -> CouponsDeleteService -> repository named soft-delete -> audit hook.
 import { Injectable } from '@nestjs/common';
 import { CouponsRepository } from '@/backend_superadmin/modules/superadmin/saas-billing/coupons/coupons.repository';

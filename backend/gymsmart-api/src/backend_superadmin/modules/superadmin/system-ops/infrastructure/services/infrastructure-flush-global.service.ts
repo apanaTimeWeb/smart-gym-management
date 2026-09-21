@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Performs the explicitly requested global Redis cache flush.
+﻿// RESPONSIBILITY: Performs the explicitly requested global Redis cache flush.
 // FLOW: Controller -> InfrastructureFlushGlobalService -> RedisService -> Redis FLUSHDB.
 import { Injectable } from '@nestjs/common';
 import { RedisService } from '@/backend_superadmin/core/cache/redis.service';

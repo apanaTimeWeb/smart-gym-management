@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns read-side use cases for Admin data-export; no write persistence occurs here.
-// FLOW: AdminDataExportQueryController → AdminDataExportQueryService → repository → mapper → ApiResponse.
+﻿// RESPONSIBILITY: Owns read-side use cases for Admin data-export; no write persistence occurs here.
+// FLOW: AdminDataExportQueryController â†’ AdminDataExportQueryService â†’ repository â†’ mapper â†’ ApiResponse.
 
 import { Injectable } from '@nestjs/common';
 import { AdminDataExportRepository } from '@/backend_admin/modules/admin/data-export/repositories/admin-data_export-repository';

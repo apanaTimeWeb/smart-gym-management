@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Persists Superadmin notification records consumed by the messaging notification center.
+﻿// RESPONSIBILITY: Persists Superadmin notification records consumed by the messaging notification center.
 // FLOW: notification service -> TypeORM repository -> PostgreSQL `superadmin_notifications`.
 import { Column, Entity, Index } from 'typeorm';
 import { BaseEntity } from '@/backend_superadmin/core/database/base.entity';

@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Exposes Prometheus-formatted application metrics for monitoring systems.
-// FLOW: Prometheus scrape → MetricsController → MetricsService.
+﻿// RESPONSIBILITY: Exposes Prometheus-formatted application metrics for monitoring systems.
+// FLOW: Prometheus scrape â†’ MetricsController â†’ MetricsService.
 import { Controller, Get, Header } from '@nestjs/common';
 
 import { MetricsService } from '@/backend_landing/core/observability/metrics.service';

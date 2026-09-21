@@ -1,4 +1,4 @@
-// RESPONSIBILITY: TypeORM persistence entity for compliance feature data stored in `compliance_snapshots`.
+﻿// RESPONSIBILITY: TypeORM persistence entity for compliance feature data stored in `compliance_snapshots`.
 // FLOW: compliance repository -> ComplianceSnapshot entity -> PostgreSQL `compliance_snapshots`.
 import { Column, Entity, Index } from 'typeorm';
 import { BaseEntity } from '@/backend_superadmin/core/database/base.entity';

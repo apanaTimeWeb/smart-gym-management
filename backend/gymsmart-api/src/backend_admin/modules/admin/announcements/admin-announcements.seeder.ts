@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Seeds deterministic development data for Admin announcements; never used in production runtime.
+﻿// RESPONSIBILITY: Seeds deterministic development data for Admin announcements; never used in production runtime.
 // FLOW: CoreTenantSeeder -> AdminAnnouncementsSeeder -> TypeORM -> usage_snapshots.
 
 import { DataSource } from 'typeorm';

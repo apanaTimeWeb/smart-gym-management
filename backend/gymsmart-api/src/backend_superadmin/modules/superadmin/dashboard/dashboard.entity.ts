@@ -1,4 +1,4 @@
-// RESPONSIBILITY: TypeORM persistence entity for dashboard feature data stored in `dashboard_snapshots`.
+﻿// RESPONSIBILITY: TypeORM persistence entity for dashboard feature data stored in `dashboard_snapshots`.
 // FLOW: dashboard repository -> DashboardSnapshot entity -> PostgreSQL `dashboard_snapshots`.
 import { Column, Entity, Index } from 'typeorm';
 import { BaseEntity } from '@/backend_superadmin/core/database/base.entity';

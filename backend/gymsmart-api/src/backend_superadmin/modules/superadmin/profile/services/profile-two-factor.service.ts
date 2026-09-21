@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Enables or disables profile 2FA after validating the current password.
+﻿// RESPONSIBILITY: Enables or disables profile 2FA after validating the current password.
 // FLOW: ProfileSpecialController -> repository credential lookup -> bcrypt -> repository update -> mapper.
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';

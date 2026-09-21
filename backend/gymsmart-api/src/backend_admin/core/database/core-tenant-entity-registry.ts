@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Registers all tenant-scoped TypeORM entities for dynamic DataSources.
+﻿// RESPONSIBILITY: Registers all tenant-scoped TypeORM entities for dynamic DataSources.
 // FLOW: Tenant DataSource initialization -> CoreTenantEntityRegistry -> PostgreSQL metadata.
 
 import { AdminAnnouncementsEntity } from '@/backend_admin/modules/admin/announcements/entities/admin-announcements-entity';

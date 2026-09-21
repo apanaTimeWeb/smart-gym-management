@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Defines the canonical PostgreSQL connection-pool policy used by runtime and migration infrastructure.
+﻿// RESPONSIBILITY: Defines the canonical PostgreSQL connection-pool policy used by runtime and migration infrastructure.
 // FLOW: Environment config -> DATABASE_CONFIG -> TypeORM DataSource -> PostgreSQL.
 
 export const DATABASE_CONFIG = {

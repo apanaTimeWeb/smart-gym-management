@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Defines the typed authentication claims and role vocabulary used by the application.
+﻿// RESPONSIBILITY: Defines the typed authentication claims and role vocabulary used by the application.
 // FLOW: JWT claims -> JwtAuthGuard -> request.user -> RolesGuard.
 export enum SuperadminRole {
   SUPERADMIN = 'SUPERADMIN',

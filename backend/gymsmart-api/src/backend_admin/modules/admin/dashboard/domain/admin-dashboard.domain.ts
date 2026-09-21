@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Defines the ORM-independent domain shape for Admin dashboard records.
-// FLOW: PostgreSQL entity → AdminDashboardMapper → AdminDashboardDomainModel → service.
+﻿// RESPONSIBILITY: Defines the ORM-independent domain shape for Admin dashboard records.
+// FLOW: PostgreSQL entity â†’ AdminDashboardMapper â†’ AdminDashboardDomainModel â†’ service.
 
 export interface AdminDashboardDomainModel {
   id: string;

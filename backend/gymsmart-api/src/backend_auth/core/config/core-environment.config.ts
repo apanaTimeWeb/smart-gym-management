@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Validates runtime environment configuration at startup and exposes strongly typed values.
+﻿// RESPONSIBILITY: Validates runtime environment configuration at startup and exposes strongly typed values.
 // FLOW: ConfigModule -> CoreEnvironmentConfig -> core infrastructure and feature modules.
 
 import { registerAs } from '@nestjs/config';

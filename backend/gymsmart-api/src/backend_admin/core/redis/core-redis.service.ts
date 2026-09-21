@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns the single Redis client used for idempotency, lockout and rate-limit state.
-// FLOW: Core services → CoreRedisService → Redis.
+﻿// RESPONSIBILITY: Owns the single Redis client used for idempotency, lockout and rate-limit state.
+// FLOW: Core services â†’ CoreRedisService â†’ Redis.
 
 import { Injectable, OnModuleDestroy } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';

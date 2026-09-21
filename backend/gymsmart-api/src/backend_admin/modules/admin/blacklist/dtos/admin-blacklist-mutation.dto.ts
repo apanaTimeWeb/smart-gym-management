@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Validates mutation fields exposed by the Admin blacklist frontend contract.
-// FLOW: HTTP request body → AdminBlacklistMutationDto → service business validation → repository mutation.
+﻿// RESPONSIBILITY: Validates mutation fields exposed by the Admin blacklist frontend contract.
+// FLOW: HTTP request body â†’ AdminBlacklistMutationDto â†’ service business validation â†’ repository mutation.
 
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsArray, IsEnum, IsOptional, IsString } from 'class-validator';

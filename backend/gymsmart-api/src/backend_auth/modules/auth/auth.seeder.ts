@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Seeds deterministic Auth identities only when an explicit non-production seed flag is enabled.
+﻿// RESPONSIBILITY: Seeds deterministic Auth identities only when an explicit non-production seed flag is enabled.
 // FLOW: CoreMasterSeeder -> AuthSeeder -> AuthUserRepository -> PostgreSQL.
 
 import { Injectable } from '@nestjs/common';

@@ -1,9 +1,9 @@
-// RESPONSIBILITY: Builds the complete Gyms V1 business-controls response from the tenant repository.
+﻿// RESPONSIBILITY: Builds the complete Gyms V1 business-controls response from the tenant repository.
 // FLOW: Controller -> GymsBusinessControlsService -> GymsRepository -> contract data -> ResponseInterceptor.
 import { Injectable } from '@nestjs/common';
 import { GymsRepository } from '@/backend_superadmin/modules/superadmin/gyms/gyms.repository';
-import type { GymsListQuery } from '@/backend_superadmin/modules/superadmin/gyms/types/gyms.interfaces';
-import type { GymsBusinessControlsResponseDto } from '@/backend_superadmin/modules/superadmin/gyms/gyms-business-controls-response.dto';
+import { GymsListQuery } from '@/backend_superadmin/modules/superadmin/gyms/types/gyms.interfaces';
+import { GymsBusinessControlsResponseDto } from '@/backend_superadmin/modules/superadmin/gyms/gyms-business-controls-response.dto';
 
 @Injectable()
 export class GymsBusinessControlsService {
@@ -67,5 +67,5 @@ export class GymsBusinessControlsService {
   private savedViews(): Array<{ key: string; label: string }> { return [{ key: 'health-risk', label: 'High income + at risk' }, { key: 'trial', label: 'Trials ending soon' }, { key: 'payment-recovery', label: 'Payment recovery queue' }]; }
 
   /** Derives live segment counts from the current row set. */
-  private segments(rows: Array<Record<string, unknown>>): Array<{ name: string; count: number; rule: string }> { return [{ name: 'High income + at risk', count: rows.filter((row) => Number(row.income) > 5_000_000 && Number(row.health) < 70).length, rule: 'Monthly income above ₹50,000 and health below 70.' }, { name: 'Trial ending soon', count: rows.filter((row) => Number(row.trialDays) > 0 && Number(row.trialDays) <= 5).length, rule: 'Trial ends within 5 days.' }, { name: 'Usage almost full', count: rows.filter((row) => Number(row.usage) >= 90).length, rule: 'Any major limit above 90%.' }, { name: 'Payment recovery', count: rows.filter((row) => Boolean(row.paymentRecoveryOpen)).length, rule: 'Payment failed and recovery is still open.' }]; }
+  private segments(rows: Array<Record<string, unknown>>): Array<{ name: string; count: number; rule: string }> { return [{ name: 'High income + at risk', count: rows.filter((row) => Number(row.income) > 5_000_000 && Number(row.health) < 70).length, rule: 'Monthly income above â‚¹50,000 and health below 70.' }, { name: 'Trial ending soon', count: rows.filter((row) => Number(row.trialDays) > 0 && Number(row.trialDays) <= 5).length, rule: 'Trial ends within 5 days.' }, { name: 'Usage almost full', count: rows.filter((row) => Number(row.usage) >= 90).length, rule: 'Any major limit above 90%.' }, { name: 'Payment recovery', count: rows.filter((row) => Boolean(row.paymentRecoveryOpen)).length, rule: 'Payment failed and recovery is still open.' }]; }
 }

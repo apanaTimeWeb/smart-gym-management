@@ -1,4 +1,4 @@
-// RESPONSIBILITY: Maps Jobs ORM entities into domain-safe response data.
+﻿// RESPONSIBILITY: Maps Jobs ORM entities into domain-safe response data.
 // FLOW: TypeORM entity -> JobsMapper -> domain model -> response DTO.
 import type { BackgroundJobEntity } from '@/backend_superadmin/modules/superadmin/system-ops/jobs/jobs.entity';
 import type { JobsDomainModel } from '@/backend_superadmin/modules/superadmin/system-ops/jobs/types/jobs.interfaces';

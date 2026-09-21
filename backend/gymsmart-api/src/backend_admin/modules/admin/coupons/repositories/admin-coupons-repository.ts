@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns all TypeORM persistence operations for Admin coupons; services never call save() directly.
-// FLOW: AdminCouponsService → AdminCouponsRepository → TypeORM → PostgreSQL coupons.
+﻿// RESPONSIBILITY: Owns all TypeORM persistence operations for Admin coupons; services never call save() directly.
+// FLOW: AdminCouponsService â†’ AdminCouponsRepository â†’ TypeORM â†’ PostgreSQL coupons.
 
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CorePaginatedResult } from '@/backend_admin/core/types/core-api-response.types';

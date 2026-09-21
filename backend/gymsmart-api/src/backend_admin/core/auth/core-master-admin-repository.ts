@@ -1,5 +1,5 @@
-// RESPONSIBILITY: Owns TypeORM access to master Admin authentication records.
-// FLOW: Core/admin feature service → CoreMasterAdminRepository → TypeORM → master database.
+﻿// RESPONSIBILITY: Owns TypeORM access to master Admin authentication records.
+// FLOW: Core/admin feature service â†’ CoreMasterAdminRepository â†’ TypeORM â†’ master database.
 
 import { Injectable } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
