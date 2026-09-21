@@ -31,7 +31,7 @@ export class AnalyticsRepository extends BaseRepository<AnalyticsSnapshotEntity>
   async findByIdOrThrow(id: string): Promise<AnalyticsSnapshotEntity> { return super.findByIdOrThrow(id, 'Analytics record not found'); }
 
   /** Creates and persists a analytics record. */
-  async createAnalytics(input: AnalyticsCreateInput): Promise<AnalyticsSnapshotEntity> { const entity = this.activeRepository.create(input as any); return this.activeRepository.save(entity); }
+  async createAnalytics(input: AnalyticsCreateInput): Promise<AnalyticsSnapshotEntity> { const entity = this.activeRepository.create(input as {}); return this.activeRepository.save(entity as any) as any; }
 
   /** Applies an intention-revealing update to a analytics record. */
   async updateAnalyticsById(id: string, input: AnalyticsUpdateInput): Promise<AnalyticsSnapshotEntity> { await this.activeRepository.update({ id } as never, input as never); return this.findByIdOrThrow(id); }

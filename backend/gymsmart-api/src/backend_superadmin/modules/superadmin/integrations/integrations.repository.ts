@@ -33,7 +33,7 @@ export class IntegrationsRepository extends BaseRepository<IntegrationKeyEntity>
   async findByIdOrThrow(id: string): Promise<IntegrationKeyEntity> { return super.findByIdOrThrow(id, 'Integrations record not found'); }
 
   /** Creates and persists a integrations record. */
-  async createIntegrations(input: IntegrationsCreateInput): Promise<IntegrationKeyEntity> { const entity = this.activeRepository.create(input as any); return this.activeRepository.save(entity); }
+  async createIntegrations(input: IntegrationsCreateInput): Promise<IntegrationKeyEntity> { const entity = this.activeRepository.create(input as {}); return this.activeRepository.save(entity as any) as any; }
 
   /** Applies an intention-revealing update to a integrations record. */
   async updateIntegrationsById(id: string, input: IntegrationsUpdateInput): Promise<IntegrationKeyEntity> { await this.activeRepository.update({ id } as never, input as never); return this.findByIdOrThrow(id); }

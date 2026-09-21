@@ -32,7 +32,7 @@ export class GlobalAuditRepository extends BaseRepository<AuditLogEntity> {
   async findByIdOrThrow(id: string): Promise<AuditLogEntity> { return super.findByIdOrThrow(id, 'GlobalAudit record not found'); }
 
   /** Creates and persists a global-audit record. */
-  async createGlobalAudit(input: GlobalAuditCreateInput): Promise<AuditLogEntity> { const entity = this.activeRepository.create(input as any); return this.activeRepository.save(entity); }
+  async createGlobalAudit(input: GlobalAuditCreateInput): Promise<AuditLogEntity> { const entity = this.activeRepository.create(input as {}); return this.activeRepository.save(entity as any) as any; }
 
   /** Applies an intention-revealing update to a global-audit record. */
   async updateGlobalAuditById(id: string, input: GlobalAuditUpdateInput): Promise<AuditLogEntity> { await this.activeRepository.update({ id } as never, input as never); return this.findByIdOrThrow(id); }

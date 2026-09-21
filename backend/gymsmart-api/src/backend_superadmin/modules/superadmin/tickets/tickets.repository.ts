@@ -35,7 +35,7 @@ export class TicketsRepository extends BaseRepository<SupportTicketEntity> {
   async findByIdOrThrow(id: string): Promise<SupportTicketEntity> { return super.findByIdOrThrow(id, 'Tickets record not found'); }
 
   /** Creates and persists a tickets record. */
-  async createTickets(input: TicketsCreateInput): Promise<SupportTicketEntity> { const entity = this.activeRepository.create(input as any); return this.activeRepository.save(entity); }
+  async createTickets(input: TicketsCreateInput): Promise<SupportTicketEntity> { const entity = this.activeRepository.create(input as {}); return this.activeRepository.save(entity as any) as any; }
 
   /** Applies an intention-revealing update to a tickets record. */
   async updateTicketsById(id: string, input: TicketsUpdateInput): Promise<SupportTicketEntity> { await this.activeRepository.update({ id } as never, input as never); return this.findByIdOrThrow(id); }

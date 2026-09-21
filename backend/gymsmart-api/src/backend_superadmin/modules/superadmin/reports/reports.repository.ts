@@ -31,7 +31,7 @@ export class ReportsRepository extends BaseRepository<ReportSnapshotEntity> {
   async findByIdOrThrow(id: string): Promise<ReportSnapshotEntity> { return super.findByIdOrThrow(id, 'Reports record not found'); }
 
   /** Creates and persists a reports record. */
-  async createReports(input: ReportsCreateInput): Promise<ReportSnapshotEntity> { const entity = this.activeRepository.create(input as any); return this.activeRepository.save(entity); }
+  async createReports(input: ReportsCreateInput): Promise<ReportSnapshotEntity> { const entity = this.activeRepository.create(input as {}); return this.activeRepository.save(entity as any) as any; }
 
   /** Applies an intention-revealing update to a reports record. */
   async updateReportsById(id: string, input: ReportsUpdateInput): Promise<ReportSnapshotEntity> { await this.activeRepository.update({ id } as never, input as never); return this.findByIdOrThrow(id); }

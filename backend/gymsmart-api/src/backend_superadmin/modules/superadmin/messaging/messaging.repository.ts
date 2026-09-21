@@ -33,7 +33,7 @@ export class MessagingRepository extends BaseRepository<TenantMessageEntity> {
   async findByIdOrThrow(id: string): Promise<TenantMessageEntity> { return super.findByIdOrThrow(id, 'Messaging record not found'); }
 
   /** Creates and persists a messaging record. */
-  async createMessaging(input: MessagingCreateInput): Promise<TenantMessageEntity> { const entity = this.activeRepository.create(input as any); return this.activeRepository.save(entity); }
+  async createMessaging(input: MessagingCreateInput): Promise<TenantMessageEntity> { const entity = this.activeRepository.create(input as {}); return this.activeRepository.save(entity as any) as any; }
 
   /** Applies an intention-revealing update to a messaging record. */
   async updateMessagingById(id: string, input: MessagingUpdateInput): Promise<TenantMessageEntity> { await this.activeRepository.update({ id } as never, input as never); return this.findByIdOrThrow(id); }

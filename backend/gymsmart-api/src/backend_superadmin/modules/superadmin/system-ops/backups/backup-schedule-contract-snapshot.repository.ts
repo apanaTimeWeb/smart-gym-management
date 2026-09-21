@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Owns persistence for the backup schedule contract state.
+// RESPONSIBILITY: Owns persistence for the backup schedule contract state.
 // FLOW: Backup schedule service -> repository -> TypeORM -> PostgreSQL.
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -13,5 +13,5 @@ export class BackupScheduleContractSnapshotRepository {
   async findLatest(): Promise<unknown | null> { const row = await this.repository.findOne({ where: { kind: 'schedule', deletedAt: null } as never, order: { updatedAt: 'DESC' } as never }); return row?.payload ?? null; }
 
   /** Upserts the single authoritative schedule snapshot. */
-  async upsert(payload: unknown): Promise<void> { const existing = await this.repository.findOne({ where: { kind: 'schedule', deletedAt: null } as never, order: { updatedAt: 'DESC' } as never }); if (existing) { await this.repository.update({ id: existing.id } as never, { payload, updatedAt: new Date() } as never); return; } await this.repository.insert(this.repository.create({ kind: 'schedule', payload })); }
+  async upsert(payload: unknown): Promise<void> { const existing = await this.repository.findOne({ where: { kind: 'schedule', deletedAt: null } as never, order: { updatedAt: 'DESC' } as never }); if (existing) { await this.repository.update({ id: existing.id } as never, { payload, updatedAt: new Date() } as never); return; } await this.repository.insert(this.repository.create({ kind: 'schedule', payload }) as any); }
 }

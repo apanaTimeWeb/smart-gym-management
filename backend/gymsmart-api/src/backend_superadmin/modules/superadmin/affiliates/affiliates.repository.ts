@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Owns PostgreSQL queries and named persistence mutations for the affiliates feature; no business logic.
+// RESPONSIBILITY: Owns PostgreSQL queries and named persistence mutations for the affiliates feature; no business logic.
 // FLOW: affiliates service -> AffiliatesRepository -> TypeORM Repository<AffiliateEntity> -> PostgreSQL `affiliates`.
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -32,7 +32,7 @@ export class AffiliatesRepository extends BaseRepository<AffiliateEntity> {
   async findByIdOrThrow(id: string): Promise<AffiliateEntity> { return super.findByIdOrThrow(id, 'Affiliates record not found'); }
 
   /** Creates and persists a affiliates record. */
-  async createAffiliates(input: AffiliatesCreateInput): Promise<AffiliateEntity> { const entity = this.activeRepository.create({ name: input.name ?? '', email: input.email ?? '', phone: input.phone ?? '', referralCode: input.referralCode ?? '', totalReferred: 0, commissionEarned: 0, commissionRate: 0, pendingPayout: 0, bankDetails: {}, status: 'ACTIVE', joinedAt: input.joinedAt ?? new Date(), referralCount: 0, conversionRate: 0, payoutHistory: [] } as never); return this.activeRepository.save(entity); }
+  async createAffiliates(input: AffiliatesCreateInput): Promise<AffiliateEntity> { const entity = this.activeRepository.create({ name: input.name ?? '', email: input.email ?? '', phone: input.phone ?? '', referralCode: input.referralCode ?? '', totalReferred: 0, commissionEarned: 0, commissionRate: 0, pendingPayout: 0, bankDetails: {}, status: 'ACTIVE', joinedAt: input.joinedAt ?? new Date(), referralCount: 0, conversionRate: 0, payoutHistory: [] } as never); return this.activeRepository.save(entity as any) as any; }
 
   /** Applies an intention-revealing update to a affiliates record. */
   async updateAffiliatesById(id: string, input: AffiliatesUpdateInput): Promise<AffiliateEntity> { await this.activeRepository.update({ id } as never, input as never); return this.findByIdOrThrow(id); }

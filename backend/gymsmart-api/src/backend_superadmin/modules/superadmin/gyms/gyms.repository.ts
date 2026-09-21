@@ -32,7 +32,7 @@ export class GymsRepository extends BaseRepository<TenantEntity> {
   async findByIdOrThrow(id: string): Promise<TenantEntity> { return super.findByIdOrThrow(id, 'Gyms record not found'); }
 
   /** Creates and persists a gyms record. */
-  async createGyms(input: GymsCreateInput): Promise<TenantEntity> { const entity = this.activeRepository.create(input as any); return this.activeRepository.save(entity); }
+  async createGyms(input: GymsCreateInput): Promise<TenantEntity> { const entity = this.activeRepository.create(input as {}); return this.activeRepository.save(entity as any) as any; }
 
   /** Applies an intention-revealing update to a gyms record. */
   async updateGymsById(id: string, input: GymsUpdateInput): Promise<TenantEntity> { await this.activeRepository.update({ id } as never, input as never); return this.findByIdOrThrow(id); }

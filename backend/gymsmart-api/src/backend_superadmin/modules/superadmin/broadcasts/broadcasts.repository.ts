@@ -32,7 +32,7 @@ export class BroadcastsRepository extends BaseRepository<BroadcastEntity> {
   async findByIdOrThrow(id: string): Promise<BroadcastEntity> { return super.findByIdOrThrow(id, 'Broadcasts record not found'); }
 
   /** Creates and persists a broadcasts record. */
-  async createBroadcasts(input: BroadcastsCreateInput): Promise<BroadcastEntity> { const entity = this.activeRepository.create(input as any); return this.activeRepository.save(entity); }
+  async createBroadcasts(input: BroadcastsCreateInput): Promise<BroadcastEntity> { const entity = this.activeRepository.create(input as {}); return this.activeRepository.save(entity as any) as any; }
 
   /** Applies an intention-revealing update to a broadcasts record. */
   async updateBroadcastsById(id: string, input: BroadcastsUpdateInput): Promise<BroadcastEntity> { await this.activeRepository.update({ id } as never, input as never); return this.findByIdOrThrow(id); }

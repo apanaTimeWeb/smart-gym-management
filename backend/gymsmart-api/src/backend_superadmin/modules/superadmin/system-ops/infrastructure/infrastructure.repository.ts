@@ -32,7 +32,7 @@ export class InfrastructureRepository extends BaseRepository<InfrastructureNodeE
   async findByIdOrThrow(id: string): Promise<InfrastructureNodeEntity> { return super.findByIdOrThrow(id, 'Infrastructure record not found'); }
 
   /** Creates and persists a infrastructure record. */
-  async createInfrastructure(input: InfrastructureCreateInput): Promise<InfrastructureNodeEntity> { const entity = this.activeRepository.create(input as any); return this.activeRepository.save(entity); }
+  async createInfrastructure(input: InfrastructureCreateInput): Promise<InfrastructureNodeEntity> { const entity = this.activeRepository.create(input as {}); return this.activeRepository.save(entity as any) as any; }
 
   /** Applies an intention-revealing update to a infrastructure record. */
   async updateInfrastructureById(id: string, input: InfrastructureUpdateInput): Promise<InfrastructureNodeEntity> { await this.activeRepository.update({ id } as never, input as never); return this.findByIdOrThrow(id); }

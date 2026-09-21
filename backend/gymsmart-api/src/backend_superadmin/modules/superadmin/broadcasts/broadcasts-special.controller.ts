@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Owns explicitly versioned/specialized frontend contract endpoints for the broadcasts feature.
+// RESPONSIBILITY: Owns explicitly versioned/specialized frontend contract endpoints for the broadcasts feature.
 // FLOW: HTTP -> specialized micro-service -> typed result -> canonical response interceptor.
 import { Body, Controller, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { BroadcastsAudienceInsightsResponseDto } from '@/backend_superadmin/modules/superadmin/broadcasts/broadcasts-audience-insights-response.dto';
@@ -7,10 +7,7 @@ import { JwtAuthGuard } from '@/backend_superadmin/core/auth/jwt-auth.guard';
 import { RolesGuard } from '@/backend_superadmin/core/auth/roles.guard';
 import { Roles } from '@/backend_superadmin/core/auth/roles.decorator';
 import { SuperadminRole } from '@/backend_superadmin/core/auth/auth.types';
-import { BroadcastsAudienceInsightsService } from '@/backend_superadmin/modules/superadmin/broadcasts/services/broadcasts-audience-insights.service';
-import { BroadcastsAudienceInsightsService } from '@/backend_superadmin/modules/superadmin/broadcasts/services/broadcasts-audience-insights.service';
-import { BroadcastsAudienceInsightsResponseDto } from '@/backend_superadmin/modules/superadmin/broadcasts/broadcasts-audience-insights-response.dto';
-import { ApiResponse } from '@nestjs/swagger';
+import { BroadcastsAudienceInsightsService } from '@/backend_superadmin/modules/superadmin/broadcasts/services/broadcasts-audience-insights.service';import { ApiResponse } from '@nestjs/swagger';
 
 @ApiTags('broadcasts-special')
 @Controller()

@@ -31,7 +31,7 @@ export class PlansRepository extends BaseRepository<SubscriptionPlanEntity> {
   async findByIdOrThrow(id: string): Promise<SubscriptionPlanEntity> { return super.findByIdOrThrow(id, 'Plans record not found'); }
 
   /** Creates and persists a plans record. */
-  async createPlans(input: PlansCreateInput): Promise<SubscriptionPlanEntity> { const entity = this.activeRepository.create(input as any); return this.activeRepository.save(entity); }
+  async createPlans(input: PlansCreateInput): Promise<SubscriptionPlanEntity> { const entity = this.activeRepository.create(input as {}); return this.activeRepository.save(entity as any) as any; }
 
   /** Applies an intention-revealing update to a plans record. */
   async updatePlansById(id: string, input: PlansUpdateInput): Promise<SubscriptionPlanEntity> { await this.activeRepository.update({ id } as never, input as never); return this.findByIdOrThrow(id); }
