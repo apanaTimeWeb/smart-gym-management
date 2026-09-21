@@ -1,23 +1,26 @@
-﻿// RESPONSIBILITY: Owns the single Redis client used for idempotency, lockout and rate-limit state.
+// RESPONSIBILITY: Owns the single Redis client used for idempotency, lockout and rate-limit state.
 // FLOW: Core services â†’ CoreRedisService â†’ Redis.
 
 import { Injectable, OnModuleDestroy } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import Redis from 'ioredis';
+import RedisMock from 'ioredis-mock';
 
 @Injectable()
 export class CoreRedisService implements OnModuleDestroy {
   private readonly client: Redis;
+  private readonly url: string;
 
   constructor(config: ConfigService) {
-    this.client = new Redis(config.getOrThrow<string>('REDIS_URL'), {
+    this.url = config.getOrThrow<string>('REDIS_URL');
+    this.client = this.url === 'redis://mock' ? new RedisMock() as any as Redis : new Redis(this.url, {
       maxRetriesPerRequest: 1,
       lazyConnect: true,
     });
   }
 
   async connect(): Promise<void> {
-    if (this.client.status === 'wait') await this.client.connect();
+    if (this.url !== 'redis://mock' && this.client.status === 'wait') await this.client.connect();
   }
 
   /** @description Verifies Redis connectivity. @returns PONG response. */

@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Registers the gyms feature's controllers, ORM entity, repository, and isolated use-case services.
+// RESPONSIBILITY: Registers the gyms feature's controllers, ORM entity, repository, and isolated use-case services.
 // FLOW: Nest module graph -> controllers/services/repository -> PostgreSQL entity.
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -23,8 +23,10 @@ import { GymsLookupService } from '@/backend_superadmin/modules/superadmin/gyms/
 import { GymsProvisionService } from '@/backend_superadmin/modules/superadmin/gyms/services/gyms-provision.service';
 import { GymsOperationalService } from '@/backend_superadmin/modules/superadmin/gyms/services/gyms-operational.service';
 import { JwtModule } from '@nestjs/jwt';
+import { FeaturesModule } from '@/backend_superadmin/modules/superadmin/features/features.module';
+
 @Module({
-  imports: [TypeOrmModule.forFeature([GymDetailContractSnapshotEntity, TenantEntity]), JwtModule.register({})],
+  imports: [TypeOrmModule.forFeature([GymDetailContractSnapshotEntity, TenantEntity]), JwtModule.register({}), FeaturesModule],
   controllers: [GymsQueryController, GymsCommandController, GymsSpecialController, GymsLookupController],
   providers: [GymDetailContractSnapshotRepository, GymsBusinessControlsService, GymsBulkActionService, GymsDetailBusinessOverviewService, GymsRepository, GymsListService, GymsFindService, GymsCreateService, GymsUpdateService, GymsDeleteService, GymsStatusService, GymsLookupService, GymsProvisionService, GymsOperationalService],
   exports: [GymsRepository],

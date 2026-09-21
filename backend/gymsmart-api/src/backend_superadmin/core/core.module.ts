@@ -1,4 +1,4 @@
-﻿// RESPONSIBILITY: Registers shared framework-level infrastructure only; no business logic lives here.
+// RESPONSIBILITY: Registers shared framework-level infrastructure only; no business logic lives here.
 // FLOW: AppModule -> CoreModule -> config/auth/redis/observability/tenancy infrastructure.
 import { Global, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
@@ -37,7 +37,7 @@ import { UnitOfWorkService } from '@/backend_superadmin/core/database/unit-of-wo
     RedisService, IdempotencyService, IdempotencyInterceptor, JwtAuthGuard, RolesGuard,
 
     RateLimitGuard, TenantAuthorizationService, TenantDataSourceResolverService, TenantDatabaseProvisionerService, TenantRegistryRepository, TenantRegistryService, EncryptionService, MetricsService, AuditTrailService, EventBusService, TransactionContext, UnitOfWorkService],
-  exports: [RedisService, IdempotencyService, IdempotencyInterceptor, RateLimitGuard, JwtAuthGuard, RolesGuard, TenantAuthorizationService, TenantDataSourceResolverService, TenantDatabaseProvisionerService, TenantRegistryRepository, TenantRegistryService, EncryptionService, MetricsService, AuditTrailService, EventBusService, TransactionContext, UnitOfWorkService],
+  exports: [JwtModule, RedisService, IdempotencyService, IdempotencyInterceptor, RateLimitGuard, JwtAuthGuard, RolesGuard, TenantAuthorizationService, TenantDataSourceResolverService, TenantDatabaseProvisionerService, TenantRegistryRepository, TenantRegistryService, EncryptionService, MetricsService, AuditTrailService, EventBusService, TransactionContext, UnitOfWorkService],
 })
 export class CoreModule implements NestModule {
   /** Registers AsyncLocalStorage request context at the HTTP boundary. */

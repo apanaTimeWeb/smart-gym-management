@@ -1,9 +1,10 @@
-﻿// RESPONSIBILITY: Owns Redis connectivity and bounded-time cache primitives for rate limits and lockout.
+// RESPONSIBILITY: Owns Redis connectivity and bounded-time cache primitives for rate limits and lockout.
 // FLOW: Feature/core service -> CoreRedisService -> Redis -> typed result.
 
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import Redis from 'ioredis';
+import RedisMock from 'ioredis-mock';
 
 import { TIMEOUT_CONFIG } from '@/backend_auth/core/config/timeout.config';
 import { CoreRedisCounterTypeException, CoreRedisTimeoutException } from '@/backend_auth/core/exceptions/core-app.exception';
@@ -17,12 +18,13 @@ export class CoreRedisService implements OnModuleInit, OnModuleDestroy {
 
   /** @description Opens the configured Redis connection with a bounded connection timeout. @returns Promise completion. @throws CoreRedisTimeoutException when connection exceeds the configured budget. */
   async onModuleInit(): Promise<void> {
-    this.client = new Redis(this.configService.getOrThrow<string>('environment.REDIS_URL'), {
+    const url = this.configService.getOrThrow<string>('environment.REDIS_URL');
+    this.client = url === 'redis://mock' ? new RedisMock() as any as Redis : new Redis(url, {
       connectTimeout: TIMEOUT_CONFIG.REDIS_MS,
       maxRetriesPerRequest: 1,
       lazyConnect: true,
     });
-    await this.withTimeout(this.client.connect(), TIMEOUT_CONFIG.REDIS_MS, 'Redis connection timed out.');
+    if (url !== 'redis://mock') await this.withTimeout(this.client.connect(), TIMEOUT_CONFIG.REDIS_MS, 'Redis connection timed out.');
   }
 
   /** @description Closes the Redis connection during graceful shutdown. @returns Promise completion. @throws CoreRedisTimeoutException when shutdown exceeds the configured budget. */

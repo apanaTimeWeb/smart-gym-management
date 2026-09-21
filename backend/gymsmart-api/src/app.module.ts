@@ -1,9 +1,10 @@
-﻿import { Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import * as Joi from 'joi';
 import { LoggerModule } from 'nestjs-pino';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 // Config Loaders
 import { CoreDatabaseConfig } from '@/backend_admin/core/config/core-database.config';
@@ -11,6 +12,7 @@ import { CoreRuntimeConfig } from '@/backend_admin/core/config/core-runtime.conf
 import { CoreAppConfig } from '@/backend_admin/core/config/core-app.config';
 import { CoreEnvironmentConfig } from '@/backend_auth/core/config/core-environment.config';
 import { buildValidatedConfig } from '@/backend_landing/core/config/app.config';
+import superadminConfig from '@/backend_superadmin/core/config/configuration';
 
 // Import Domain Modules (These will be refactored to not have .forRoot calls)
 import { AppModule as AdminAppModule } from '@/backend_admin/app.module';
@@ -27,10 +29,11 @@ import { CoreRolesGuard } from '@/backend_admin/core/auth/core-roles.guard';
 
 @Module({
   imports: [
+    EventEmitterModule.forRoot(),
     // 1. Unified Config
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [CoreDatabaseConfig, CoreRuntimeConfig, CoreAppConfig, CoreEnvironmentConfig, buildValidatedConfig],
+      load: [CoreDatabaseConfig, CoreRuntimeConfig, CoreAppConfig, CoreEnvironmentConfig, buildValidatedConfig, superadminConfig],
       validationSchema: Joi.object({
         NODE_ENV: Joi.string().valid('development', 'test', 'staging', 'production').default('development'),
         PORT: Joi.number().port().default(5000),

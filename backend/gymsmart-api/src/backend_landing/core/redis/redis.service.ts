@@ -1,16 +1,17 @@
-﻿// RESPONSIBILITY: Owns the single Redis client used by rate limiting and idempotency infrastructure.
+// RESPONSIBILITY: Owns the single Redis client used by rate limiting and idempotency infrastructure.
 // FLOW: AppModule â†’ RedisInfrastructureModule â†’ RedisService â†’ Redis server.
 import { Injectable, OnModuleDestroy } from '@nestjs/common';
 
 import Redis from 'ioredis';
-
+import RedisMock from 'ioredis-mock';
 
 @Injectable()
 export class RedisService implements OnModuleDestroy {
   readonly client: Redis;
 
   constructor() {
-    this.client = new Redis(process.env.REDIS_URL ?? 'redis://localhost:6379', {
+    const url = process.env.REDIS_URL ?? 'redis://localhost:6379';
+    this.client = url === 'redis://mock' ? new RedisMock() as any as Redis : new Redis(url, {
       connectTimeout: Number(process.env.REDIS_CONNECT_TIMEOUT_MS ?? 10000),
       maxRetriesPerRequest: 2,
     });

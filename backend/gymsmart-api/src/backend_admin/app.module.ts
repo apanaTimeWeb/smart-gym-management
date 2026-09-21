@@ -1,7 +1,7 @@
-﻿// RESPONSIBILITY: Composes framework infrastructure, master persistence, authentication, and isolated Admin feature modules.
+// RESPONSIBILITY: Composes framework infrastructure, master persistence, authentication, and isolated Admin feature modules.
 // FLOW: Config â†’ master DataSource â†’ Core infrastructure â†’ Admin feature modules â†’ controllers.
 
-import { Module } from '@nestjs/common';
+import { Module, Global } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
@@ -62,6 +62,7 @@ import { AdminSettingsModule } from '@/backend_admin/modules/admin/settings/admi
 import { AdminSubscriptionsModule } from '@/backend_admin/modules/admin/subscriptions/admin-subscriptions.module';
 import { AdminUsageModule } from '@/backend_admin/modules/admin/usage/admin-usage.module';
 
+@Global()
 @Module({
   imports: [
 
@@ -106,6 +107,22 @@ import { AdminUsageModule } from '@/backend_admin/modules/admin/usage/admin-usag
 
     { provide: 'CONFIG_PORT', useFactory: (config: ConfigService) => config.get<number>('PORT', 3000), inject: [ConfigService] },
     { provide: 'CONFIG_CORS_ALLOWED_ORIGINS', useFactory: (config: ConfigService) => config.get<string>('CORS_ALLOWED_ORIGINS', '').split(',').map((v: string) => v.trim()).filter(Boolean), inject: [ConfigService] },
+  ],
+  exports: [
+    CoreRequestContextService,
+    CoreMasterTenantLookupService,
+    CoreTenantDataSourceManager,
+    CoreRedisService,
+    CoreIdempotencyService,
+    CoreAuditTrailService,
+    CoreEventBusService,
+    CoreEncryptionService,
+    CoreObjectStorageService,
+    CoreAuthService,
+    CoreMasterAdminRepository,
+    CoreRolesGuard,
+    'CONFIG_PORT',
+    'CONFIG_CORS_ALLOWED_ORIGINS',
   ],
 })
 export class AppModule {}
